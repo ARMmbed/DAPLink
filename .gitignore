@@ -1,18 +1,40 @@
-# Object files
+# Private settings
+private_settings.py
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
-*.ko
 
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Compiled Dynamic libraries
 *.so
-*.so.*
 *.dylib
 
-# Executables
-*.exe
-*.out
-*.app
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Python
+*.py[cod]
+
+# Eclipse Project Files
+.cproject
+.project
+.pydevproject
+
+# uVision generated files
+*.uvopt
+*.plg
+*.map
+*.lst
+*.Inp
+*.htm
+*.dep
+*.d
+*.crf
+*.bak
+
+*.axf
+*.S19
+*.bin
