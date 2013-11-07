@@ -84,7 +84,7 @@ const char root_dir1[] = {
     'M', 'B', 'E', 'D', ' ', 'L', 'O', 'A', 'D', 'E', 'R', 0x28, 0x0, 0x0, 0x0, 0x0,
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x85, 0x75, 0x8E, 0x41, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 
-    // crap for mac...
+    // support for mac...
     0x41, 0x2E, 0x0, 0x66, 0x0, 0x73, 0x0, 0x65, 0x0, 0x76, 0x0, 0xF, 0x0, 0xDA, 0x65, 0x0,
     0x6E, 0x0, 0x74, 0x0, 0x73, 0x0, 0x64, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF,
 
@@ -133,7 +133,7 @@ SECTOR sectors[7] = {
     {root_dir1, 18*16},
     {root_dir2, 0},
 
-    // contains mac crap :(
+    // support for mac
     {sect5, 6*16},
 
     // contains mbed.htm
@@ -634,8 +634,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
         if (jtag_flash_init == 1) {
 
 
-            // we erase the chip if we received crap before
-            // thank you mac os :(
+            // we erase the chip if we received unrelated data before (mac compatibility)
             if (maybe_erase && (block == theoretical_start_sector)) {
                 //if (!jtagEraseFlash())
                 //    return;
