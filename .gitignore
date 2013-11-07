@@ -25,10 +25,12 @@ private_settings.py
 
 # uVision generated files
 *.uvopt
+*.uvgui.*
+
 *.plg
 *.map
 *.lst
-*.Inp
+*.lnp
 *.htm
 *.dep
 *.d
