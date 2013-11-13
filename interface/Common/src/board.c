@@ -19,6 +19,10 @@
 #define BOARD_ID        "0200"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_FRDM_KL05Z)
+#define BOARD_ID        "0210"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #elif defined (BOARD_LPC812_MAX)
 #define BOARD_ID        "1050"
 #define BOARD_SECRET    "xxxxxxxx"
