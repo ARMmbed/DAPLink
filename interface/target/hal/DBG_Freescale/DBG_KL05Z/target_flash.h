@@ -92,7 +92,7 @@ static const TARGET_FLASH flash = {
 
     0x20002000, // program_buffer
     0x20000000, // algo_start
-    0x0000059c, // algo_size
+    0x00000598, // algo_size
     KL05Z_FLM,  // image
 
     512,        // ram_to_flash_bytes_to_be_written
