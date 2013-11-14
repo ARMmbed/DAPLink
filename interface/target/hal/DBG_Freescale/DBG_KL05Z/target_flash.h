@@ -88,7 +88,7 @@ static const TARGET_FLASH flash = {
     0x200000a0, // erase_sector
     0x200000be, // program_page
 
-    {0x20000001, 0x2000059c, 0x20001000}, // {stackSize, breakpoint, RSB, RSP}
+    {0x20000001, 0x20000598, 0x20001000}, // {breakpoint, const data (flashprg), stack_pointer}
 
     0x20002000, // program_buffer
     0x20000000, // algo_start
@@ -106,10 +106,10 @@ static uint8_t target_flash_init(uint32_t clk) {
     }
 
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
-        return 1;
+        return 0;
     }
 
-    return 2;
+    return 1;
 }
 
 static uint8_t target_flash_erase_sector(unsigned int sector) {
