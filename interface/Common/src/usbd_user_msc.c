@@ -34,6 +34,8 @@
 #   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL25Z)
 #   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_KL46Z)
+#   define WANTED_SIZE_IN_KB                        (256)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
 #endif
