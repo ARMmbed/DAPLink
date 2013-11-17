@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>mk20d5_kl05z_if</TargetName>
+      <TargetName>mk20d5_kl46z_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -733,7 +733,7 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>mk20d5_kl05z_openSDA_bootloader_if</TargetName>
+      <TargetName>mk20d5_kl46z_openSDA_bootloader_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -770,7 +770,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Obj\</OutputDirectory>
-          <OutputName>k20dx128_kl25z_if_mbed</OutputName>
+          <OutputName>k20dx128_kl46z_if_mbed</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -801,7 +801,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\mbed-Interface-v1-FRDM-KL05Z.S19" "#L"</UserProg1Name>
+            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\mbed-Interface-v1-FRDM-KL46Z.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1074,10 +1074,10 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls>-DKL05Z</MiscControls>
-              <Define>OFFSET_VTABLE_32K, TARGET_MK20D5, __RTX, DBG_KL05Z, BOARD_FRDM_KL05Z</Define>
+              <MiscControls>-DKL46Z</MiscControls>
+              <Define>OFFSET_VTABLE_32K, TARGET_MK20D5, __RTX, DBG_KL46Z, BOARD_FRDM_KL46Z</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Common\inc;..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\interface\cmsis;..\..\target\hal\DBG_Freescale\DBG_KL05Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos</IncludePath>
+              <IncludePath>..\..\Common\inc;..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\interface\cmsis;..\..\target\hal\DBG_Freescale\DBG_KL46Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
