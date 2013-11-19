@@ -25,6 +25,8 @@
 #include "version.h"
 #include "vector_table.h"
 
+#include "LPC11Uxx.h"
+
 // Reference to our main task
 OS_TID mainTask;
 
@@ -60,7 +62,7 @@ __task void led_task(void) {
 
 __task void main_task(void) {
     BOOL led_state = __FALSE;
-    uint8_t flags, time_blink_led;
+    uint8_t flags, time_blink_led = 1;
     mainTask=os_tsk_self();
 
 
@@ -69,23 +71,29 @@ __task void main_task(void) {
     update_html_file();
 
     usbd_init();
-    usbd_connect(__TRUE);
+    
+    while (1) {
+        usbd_connect(__TRUE);
 
-    os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
+        os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
 
-    os_dly_wait(200);
+        os_dly_wait(200);
 
-    usbd_connect(__FALSE);
+        usbd_connect(__FALSE);
 
-    // Find out what event happened
-    flags = os_evt_get();
-
-    time_blink_led = (flags & TRANSFER_FINISHED_SUCCESS) ? 50 : 10;
-
-    while(1) {
-        gpio_set_msd_led(led_state);
-        led_state = !led_state;
-        os_dly_wait(time_blink_led);
+        // Find out what event happened
+        flags = os_evt_get();
+        
+        if (flags & TRANSFER_FINISHED_SUCCESS) {
+                NVIC_SystemReset();
+        } else {
+            int i;
+            for (i = 0; i < 3; i++) {
+                gpio_set_msd_led(led_state);
+                led_state = !led_state;
+                os_dly_wait(time_blink_led);
+            }
+        }
     }
 }
 
@@ -94,7 +102,8 @@ int main (void) {
 
     gpio_init();
 
-    if (!gpio_get_pin_loader_state()) {
+    if (!gpio_get_pin_loader_state()) 
+        {
         os_sys_init(main_task);
     }
 

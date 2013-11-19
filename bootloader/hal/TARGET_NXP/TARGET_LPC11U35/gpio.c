@@ -34,8 +34,8 @@ void gpio_init(void) {
     LPC_GPIO->DIR[0]  |= (1UL << 11);
     LPC_GPIO->CLR[0]  |= (1UL << 11);
 
-    // configure p0_16 pin as input
-    LPC_GPIO->DIR[0]  &= ~(1UL << 16);
+    // configure p1_19 pin as input
+    LPC_GPIO->DIR[1]  &= ~(1UL << 19);
 }
 
 void gpio_set_dap_led(uint8_t state) {
@@ -63,7 +63,7 @@ void gpio_set_cdc_led(uint8_t state) {
 }
 
 uint8_t gpio_get_pin_loader_state(void) {
-    return LPC_GPIO->B[16];
+    return LPC_GPIO->B1[19];
 }
 
 
