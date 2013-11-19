@@ -427,6 +427,6 @@ __task void main_task(void) {
 }
 
 // Main Program
-int main (void) {
+int main (void) { 
   os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }
