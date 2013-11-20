@@ -191,8 +191,8 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 ENDIF
 
                 IF      :LNOT::DEF:NO_CRP
-;                AREA    |.ARM.__at_0x02FC|, CODE, READONLY
-;CRP_Key         DCD     0xFFFFFFFF
+                AREA    |.ARM.__at_0x02FC|, CODE, READONLY
+CRP_Key         DCD     0xFFFFFFFF
                 ENDIF
 
 

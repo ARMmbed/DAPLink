@@ -3989,7 +3989,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>NO_CRP</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
