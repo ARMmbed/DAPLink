@@ -20,7 +20,7 @@
 #include "swd_host.h"
 #include <stdint.h>
 
-#define FLASH_SECTOR_SIZE           (1024)
+#define FLASH_SECTOR_SIZE                  (1024)
 
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x400)
 
@@ -92,7 +92,7 @@ static const TARGET_FLASH flash = {
     0x200000bc, // erase_sector
     0x200000da, // program_page
 
-    {0x20000001, 0x20000608, 0x20001000}, // {stackSize, breakpoint, RSB, RSP}
+    {0x20000001, 0x20000608, 0x20001000}, // {breakpoint, const data (flashprg), stack_pointer}
 
     0x20002000, // program_buffer
     0x20000000, // algo_start

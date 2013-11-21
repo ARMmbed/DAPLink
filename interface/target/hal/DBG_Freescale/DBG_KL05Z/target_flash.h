@@ -78,7 +78,8 @@ static const uint32_t KL05Z_FLM[] = {
     /*0x540*/ 0x41521ac0, 0x428b0903, 0x10bd301, 0x41521ac0, 0x428b08c3, 0xcbd301, 0x41521ac0, 0x428b0883,
     /*0x560*/ 0x8bd301, 0x41521ac0, 0x843d2d9, 0xd301428bL, 0x1ac0004b, 0x1a414152, 0x4601d200, 0x41524663,
     /*0x580*/ 0x4610105b, 0x4240d301, 0xd5002b00L, 0x47704249, 0x105b4663, 0x4240d300, 0x2000b501, 0x46c046c0,
-    /*0x5A0*/ 0xb430bd02L, 0x1e644674, 0x1c647825, 0xd20042abL, 0x5d63461d, 0x18e3005b, 0x4718bc30, 0xfffffffeL
+    /*0x5A0*/ 0xb430bd02L, 0x1e644674, 0x1c647825, 0xd20042abL, 0x5d63461d, 0x18e3005b, 0x4718bc30, 0xfffffffeL,
+    /*0x5C0*/ 0xffffffffL, 0xfffffffeL, 0x0, 0x0
 };
 
 
@@ -89,11 +90,11 @@ static const TARGET_FLASH flash = {
     0x200000bc, // erase_sector
     0x200000da, // program_page
 
-    {0x20000001, 0x200005bc, 0x20001000}, // {breakpoint, const data (flashprg), stack_pointer}
+    {0x20000001, 0x200005d0, 0x20000800}, // {breakpoint, const data (flashprg), stack_pointer}
 
-    0x20002000, // program_buffer
+    0x20000a00, // program_buffer, reserve 512 byte buffer for the flash to be written
     0x20000000, // algo_start
-    0x000005bc, // algo_size
+    0x000005d0, // algo_size
     KL05Z_FLM,  // image
 
     512,        // ram_to_flash_bytes_to_be_written
