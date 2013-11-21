@@ -520,16 +520,22 @@ void failSWD() {
 extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
 static void initDisconnect(uint8_t success) {
-    drag_success = success;
-#if 0       // reset and run target
-    if (success) {
-        swd_set_target_state(RESET_RUN);
-    }
+#ifdef BOARD_UBLOX_C027
+    int autorset = (good_file == 2) && success;
+#else
+    autorset = true;
 #endif
+    drag_success = success;
+    if (autorset)
+        swd_set_target_state(RESET_RUN);
+    main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    // event to disconnect the usb
-    main_usb_disconnect_event();
+    if (!autorset)
+    {
+        // event to disconnect the usb
+        main_usb_disconnect_event();
+    }
     semihost_enable();
 }
 
@@ -643,7 +649,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             file_type == DOW_FILE || file_type == CRD_FILE || file_type == SPI_FILE) {
 
             hidden_file = (pDirEnts[i].attributes & 0x02) ? 1 : 0;
-
+            
             // compute the size of the file
             size = pDirEnts[i].filesize;
 
@@ -686,7 +692,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             }
 
             adapt_th_sector = 0;
-
+                        
             // on mac, with safari, we receive all the files with some more sectors at the beginning
             // we have to move the sectors... -> 2x slower
             if ((start_sector != 0) && (start_sector < begin_sector) && (current_sector - (begin_sector - start_sector) >= nb_sector)) {
@@ -718,6 +724,10 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             found = 1;
             idx = i; // this is the file we want
             good_file = 1;
+#if defined(BOARD_UBLOX_C027)
+            if (0 == memcmp((const char*)pDirEnts[i].filename, "AUTORSET", 8))
+                good_file = 2;
+#endif
             flash_addr_offset = offset;
             break;
         }
