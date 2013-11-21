@@ -226,6 +226,11 @@ __weak int32_t USBD_CDC_ACM_SetControlLineState (uint16_t ctrl_bmp) {
 
 /*----------------- USB CDC ACM user API functions ---------------------------*/
 
+/** \brief Number of free bytes in the Send buffer
+*/
+int32_t USBD_CDC_ACM_DataFree(void) {
+  return ((int32_t)usbd_cdc_acm_sendbuf_sz) - (data_to_send_wr - data_to_send_rd);
+}
 
 /** \brief  Sends data over the USB CDC ACM Virtual COM Port
 
@@ -464,6 +469,22 @@ void USBD_CDC_ACM_SOF_Event (void) {
     USBD_CDC_ACM_EP_BULKIN_HandleData();/* Handle data to send                */
     data_send_access = 0;               /* Allow access to send data          */
   }
+#ifdef TARGET_LPC11U35
+  /* EVIL HACK to recover from lost interrupts/events on the BULKIN endpoint  */  
+  /* this code idealy has to be replaced with a btter solution                */
+  else if (!data_send_access && data_send_active)
+  {
+      U32 * GetEpCmdStatPtr (U32 EPNum);
+      #define BUF_ACTIVE         (1UL << 31)
+      // check if the endpoint is not active anymore
+      if (!(*GetEpCmdStatPtr(usbd_cdc_acm_ep_bulkin | 0x80) & BUF_ACTIVE))
+      {
+          // assume that we lost and interrupt / event just clear the lock
+          data_send_active = 0; 
+      }
+  }
+  /* END EVIL HACK */
+#endif
 }
 
 
@@ -557,7 +578,7 @@ static void USBD_CDC_ACM_EP_BULKIN_HandleData (void) {
     }
                                         /* Send data                          */
     USBD_WriteEP(usbd_cdc_acm_ep_bulkin | 0x80, ptr_data_sent, len_to_send);
-
+    
     ptr_data_sent    += len_to_send;    /* Correct position of sent pointer   */
     data_to_send_rd  += len_to_send;    /* Correct num of bytes left to send  */
     if (ptr_data_sent == USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz)
@@ -623,7 +644,7 @@ void USBD_CDC_ACM_EP_BULKIN_Event (uint32_t event) {
     ) {
     return;
   }
-
+  
   data_send_access = 1;                 /* Block access to send data          */
   USBD_CDC_ACM_EP_BULKIN_HandleData (); /* Handle data to send                */
   data_send_access = 0;                 /* Allow access to send data          */

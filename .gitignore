@@ -5,6 +5,7 @@ private_settings.py
 *.slo
 *.lo
 *.o
+tmp/
 
 # Compiled Dynamic libraries
 *.so
