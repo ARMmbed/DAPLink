@@ -526,6 +526,7 @@ static void initDisconnect(uint8_t success) {
         swd_set_target_state(RESET_RUN);
     }
 #endif
+    main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
     // event to disconnect the usb
