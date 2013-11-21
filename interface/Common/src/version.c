@@ -230,6 +230,6 @@ uint8_t update_html_file(void) {
             usb_buffer[i++] = c;
         }
     } while (c != '\0');
-
+    memset(usb_buffer+i, ' ', 512 - i);
     return 1;  // Success
 }

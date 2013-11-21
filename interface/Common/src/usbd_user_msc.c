@@ -299,9 +299,9 @@ static const uint8_t root_dir1[] = {
     0x53, 0x59, 0x53, 0x54, 0x45, 0x4D, 0x7E, 0x31, 0x20, 0x20, 0x20, 0x16, 0x00, 0xA5, 0x85, 0x8A, 
     0x73, 0x43, 0x73, 0x43, 0x00, 0x00, 0x86, 0x8A, 0x73, 0x43, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00,
     
-    // mbed html file (size 257, cluster 3)
+    // mbed html file (size 512, cluster 3)
     'M', 'B', 'E', 'D', 0x20, 0x20, 0x20, 0x20, 'H', 'T', 'M', 0x20, 0x18, 0xB1, 0x74, 0x76,
-    0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x05, 0x0, 0x01, 0x01, 0x0, 0x0,
+    0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x05, 0x0, 0x00, 0x02, 0x0, 0x0,
 };
 
 // last 16 of the max 32 (mbr.max_root_dir_entries) root dir entries
@@ -529,8 +529,8 @@ static void initDisconnect(uint8_t success) {
     main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    // event to disconnect the usb
-    main_usb_disconnect_event();
+        // event to disconnect the usb
+        main_usb_disconnect_event();
     semihost_enable();
 }
 
@@ -644,7 +644,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             file_type == DOW_FILE || file_type == CRD_FILE || file_type == SPI_FILE) {
 
             hidden_file = (pDirEnts[i].attributes & 0x02) ? 1 : 0;
-
+            
             // compute the size of the file
             size = pDirEnts[i].filesize;
 
@@ -687,7 +687,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             }
 
             adapt_th_sector = 0;
-
+                        
             // on mac, with safari, we receive all the files with some more sectors at the beginning
             // we have to move the sectors... -> 2x slower
             if ((start_sector != 0) && (start_sector < begin_sector) && (current_sector - (begin_sector - start_sector) >= nb_sector)) {
