@@ -226,6 +226,11 @@ __weak int32_t USBD_CDC_ACM_SetControlLineState (uint16_t ctrl_bmp) {
 
 /*----------------- USB CDC ACM user API functions ---------------------------*/
 
+/** \brief Number of free bytes in the Send buffer
+*/
+int32_t USBD_CDC_ACM_DataFree(void) {
+  return ((int32_t)usbd_cdc_acm_sendbuf_sz) - (data_to_send_wr - data_to_send_rd);
+}
 
 /** \brief  Sends data over the USB CDC ACM Virtual COM Port
 

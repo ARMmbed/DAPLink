@@ -168,13 +168,21 @@ __task void serial_process() {
 
     while (1) {
 
-        len_data = uart_read_data(data, SIZE_DATA);
+        len_data = USBD_CDC_ACM_DataFree();
+        if (len_data > SIZE_DATA)
+            len_data = SIZE_DATA;
+        if (len_data)
+            len_data = uart_read_data(data, len_data);
         if (len_data) {
             if(USBD_CDC_ACM_DataSend(data , len_data))
                 main_blink_cdc_led(0);
         }
 
-        len_data = USBD_CDC_ACM_DataRead(data, SIZE_DATA);
+        len_data = uart_write_free();
+        if (len_data > SIZE_DATA)
+            len_data = SIZE_DATA;
+        if (len_data)
+            len_data = USBD_CDC_ACM_DataRead(data, len_data);
         if (len_data) {
             if (uart_write_data(data, len_data))
                 main_blink_cdc_led(0);
