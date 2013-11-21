@@ -23,7 +23,7 @@ static uint32_t tx_in_progress;
 extern uint32_t SystemCoreClock;
 
 // Size must be 2^n
-#define  BUFFER_SIZE          (64)
+#define  BUFFER_SIZE          (128)
 
 
 static struct {
@@ -290,6 +290,9 @@ int32_t uart_get_configuration (UART_Configuration *config) {
     return 1;
 }
 
+int32_t uart_write_free(void) {
+    return BUFFER_SIZE - (write_buffer.cnt_in - write_buffer.cnt_out);
+}
 
 int32_t uart_write_data (uint8_t *data, uint16_t size) {
     uint32_t cnt;
@@ -367,7 +370,7 @@ void UART_IRQHandler (void) {
 
     // handle received character
     if (((iir & 0x0E) == 0x04)  ||        // Rx interrupt (RDA)
-        ((iir & 0x0E) == 0xC0))  {        // Rx interrupt (CTI)
+        ((iir & 0x0E) == 0x0C))  {        // Rx interrupt (CTI)
         while (LPC_USART->LSR & 0x01) {
             len_in_buf = read_buffer.cnt_in - read_buffer.cnt_out;
             read_buffer.data[read_buffer.idx_in++] = LPC_USART->RBR;
