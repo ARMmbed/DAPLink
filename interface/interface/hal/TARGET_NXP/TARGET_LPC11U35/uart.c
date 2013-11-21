@@ -23,7 +23,7 @@ static uint32_t tx_in_progress;
 extern uint32_t SystemCoreClock;
 
 // Size must be 2^n
-#define  BUFFER_SIZE          (128)
+#define  BUFFER_SIZE          (64)
 
 
 static struct {
