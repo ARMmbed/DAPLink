@@ -36,6 +36,8 @@
 #   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_KL46Z)
 #   define WANTED_SIZE_IN_KB                        (256)
+#elif defined(DBG_K20D50M)
+#   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
 #endif
@@ -648,7 +650,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             file_type == DOW_FILE || file_type == CRD_FILE || file_type == SPI_FILE) {
 
             hidden_file = (pDirEnts[i].attributes & 0x02) ? 1 : 0;
-            
+
             // compute the size of the file
             size = pDirEnts[i].filesize;
 
@@ -691,7 +693,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             }
 
             adapt_th_sector = 0;
-                        
+
             // on mac, with safari, we receive all the files with some more sectors at the beginning
             // we have to move the sectors... -> 2x slower
             if ((start_sector != 0) && (start_sector < begin_sector) && (current_sector - (begin_sector - start_sector) >= nb_sector)) {
