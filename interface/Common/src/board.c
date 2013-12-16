@@ -29,7 +29,7 @@
 
 #elif defined (BOARD_UBLOX_C027)
 #define BOARD_ID        "1234"
-#define BOARD_SECRET    "xxxxxxxx"
+#define BOARD_SECRET    "78a0cd72"
 
 #endif
 
