@@ -158,8 +158,14 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 static __inline void PORT_SWD_SETUP (void) {
     LPC_GPIO->SET[0] = PIN_SWCLK;
     LPC_GPIO->SET[0] = PIN_SWDIO;
+#if defined(BOARD_UBLOX_C027)
+    // open drain logic
+    LPC_GPIO->CLR[0] = (PIN_nRESET); 
+    LPC_GPIO->DIR[0]  |= (PIN_SWCLK | PIN_SWDIO); 
+#else
     LPC_GPIO->SET[0] = PIN_nRESET;
     LPC_GPIO->DIR[0]  |= (PIN_SWCLK | PIN_SWDIO | PIN_nRESET);
+#endif
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -169,8 +175,14 @@ Disables the DAP Hardware I/O pins which configures:
 static __inline void PORT_OFF (void) {
     LPC_GPIO->CLR[0] = PIN_SWCLK;
     LPC_GPIO->CLR[0] = PIN_SWDIO;
+#if defined(BOARD_UBLOX_C027)
+    // open drain logic
+    LPC_GPIO->CLR[0] = (PIN_nRESET);
+    LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO); // reset not an output 
+#else
     LPC_GPIO->SET[0] = PIN_nRESET;
     LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO | PIN_nRESET);
+#endif
 }
 
 
@@ -315,10 +327,16 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 1: release device hardware reset.
 */
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+#if defined(BOARD_UBLOX_C027)
+    // open drain logic
+    if (bit) LPC_GPIO->DIR[0] &= ~PIN_nRESET; // input (pulled high external)
+    else     LPC_GPIO->DIR[0] |=  PIN_nRESET; // output (low)
+#else
     if (bit)
         LPC_GPIO->SET[0] = (PIN_nRESET);
     else
         LPC_GPIO->CLR[0] = (PIN_nRESET);
+#endif
 }
 
 ///@}
