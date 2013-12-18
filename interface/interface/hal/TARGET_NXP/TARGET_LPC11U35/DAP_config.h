@@ -161,8 +161,9 @@ static __inline uint32_t PORT_SWD_SETUP (void) {
     LPC_GPIO->SET[0] = PIN_SWDIO;
 #if defined(BOARD_UBLOX_C027)
     // open drain logic
-    LPC_GPIO->CLR[0] = (PIN_nRESET); 
-    LPC_GPIO->DIR[0]  |= (PIN_SWCLK | PIN_SWDIO);
+    LPC_GPIO->DIR[0] &= ~PIN_nRESET;
+    LPC_GPIO->CLR[0]  =  PIN_nRESET; 
+    LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO);
     return (LPC_GPIO->B[PIN_nRESET_IN_BIT] & 1);
 #else
     LPC_GPIO->SET[0] = PIN_nRESET;
@@ -180,8 +181,9 @@ static __inline void PORT_OFF (void) {
     LPC_GPIO->CLR[0] = PIN_SWDIO;
 #if defined(BOARD_UBLOX_C027)
     // open drain logic
-    LPC_GPIO->CLR[0] = (PIN_nRESET);
-    LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO); // reset not an output 
+    LPC_GPIO->DIR[0] &= ~PIN_nRESET; // reset not an output
+    LPC_GPIO->CLR[0]  =  PIN_nRESET;
+    LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO); 
 #else
     LPC_GPIO->SET[0] = PIN_nRESET;
     LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO | PIN_nRESET);
