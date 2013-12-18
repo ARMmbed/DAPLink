@@ -530,38 +530,7 @@ static void initDisconnect(uint8_t success) {
         // first we need to discoonect the usb stack 
         usbd_connect(0);
         
-        // taken code from the Nxp App Note AN11305 
-        // the calls to the usb stack are removed
-        
-        /* This data must be global so it is not read from the stack */
-        typedef void (*IAP)(uint32_t [], uint32_t []);
-        IAP iap_entry = (IAP)0x1fff1ff1;
-        static uint32_t command[5], result[4];
-        
-        /* make sure USB clock is turned on before calling ISP */
-        LPC_SYSCON->SYSAHBCLKCTRL |= 0x04000;
-        /* make sure 32-bit Timer 1 is turned on before calling ISP */
-        LPC_SYSCON->SYSAHBCLKCTRL |= 0x00400;
-        /* make sure GPIO clock is turned on before calling ISP */
-        LPC_SYSCON->SYSAHBCLKCTRL |= 0x00040;
-        /* make sure IO configuration clock is turned on before calling ISP */
-        LPC_SYSCON->SYSAHBCLKCTRL |= 0x10000;
-
-        /* make sure AHB clock divider is 1:1 */
-        LPC_SYSCON->SYSAHBCLKDIV = 1;
-
-        /* Send Reinvoke ISP command to ISP entry point*/
-        command[0] = 57;
-
-        /* Set stack pointer to ROM value (reset default) This must be the last
-         piece of code executed before calling ISP, because most C expressions
-         and function returns will fail after the stack pointer is changed. */
-        __set_MSP(*((uint32_t *)0x00000000));
-
-        /* Enter ISP. We call "iap_entry" to enter ISP because the ISP entry is done
-         through the same command interface as IAP. */
-        iap_entry(command, result);
-        // Not supposed to come back!
+        enter_isp();
     }
 #else
     autorst = false;
