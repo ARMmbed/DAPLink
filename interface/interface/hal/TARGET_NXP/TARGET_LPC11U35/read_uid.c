@@ -30,6 +30,7 @@ void read_unique_id(uint32_t * id) {
     *id = result[1] ^ result[2] ^ result[3] ^ result[4];
 }
 
+#ifdef BOARD_UBLOX_C027
 #include "LPC11Uxx.h"
 
 void enter_isp(void)
@@ -62,3 +63,4 @@ void enter_isp(void)
     iap_entry(command, result);
     // Not supposed to come back!
 }
+#endif

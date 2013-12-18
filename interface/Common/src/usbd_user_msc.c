@@ -521,6 +521,10 @@ void failSWD() {
 
 extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
+#ifdef BOARD_UBLOX_C027
+#include "read_uid.h"
+#endif
+
 static void initDisconnect(uint8_t success) {
 #ifdef BOARD_UBLOX_C027
     int autorst = (good_file == 2) && success;
