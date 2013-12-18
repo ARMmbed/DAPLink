@@ -221,8 +221,10 @@ static uint32_t DAP_Connect(uint8_t *request, uint8_t *response) {
 #if (DAP_SWD != 0)
     case DAP_PORT_SWD:
       DAP_Data.debug_port = DAP_PORT_SWD;
-      PORT_SWD_SETUP();
-      break;
+      if (!PORT_SWD_SETUP()) {
+        port = DAP_PORT_DISABLED;
+      }
+      break;    
 #endif
 #if (DAP_JTAG != 0)
     case DAP_PORT_JTAG:

@@ -402,6 +402,7 @@ static uint32_t flash_addr_offset = 0;
 #define RESERVED_BITS           4
 #define BAD_START_SECTOR        5
 #define TIMEOUT                 6
+#define TGT_POWER               7
 
 static uint8_t * reason_array[] = {
     "SWD ERROR",
@@ -411,6 +412,7 @@ static uint8_t * reason_array[] = {
     "RESERVED BITS",
     "BAD START SECTOR",
     "TIMEOUT",
+    "TARGET NOT POWERED",
 };
 
 #define MSC_TIMEOUT_SPLIT_FILES_EVENT   (0x1000)
@@ -594,7 +596,12 @@ int jtag_init() {
 
         semihost_disable();
 
-        PORT_SWD_SETUP();
+        if (!PORT_SWD_SETUP())
+        {
+            reason = TGT_POWER;
+            initDisconnect(0);
+            return 1;
+        }
 
         target_set_state(RESET_PROGRAM);
         if (!target_flash_init(SystemCoreClock)) {
