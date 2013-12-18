@@ -564,7 +564,7 @@ static void initDisconnect(uint8_t success) {
         // Not supposed to come back!
     }
 #else
-    autorset = true;
+    autorst = false;
 #endif
     drag_success = success;
     if (autorst)

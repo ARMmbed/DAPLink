@@ -81,8 +81,9 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t * data) {
 
 uint8_t swd_init(void) {
     DAP_Setup();
-    if (!PORT_SWD_SETUP())
+    if (!PORT_SWD_SETUP()) {
         return 0;
+    }
     return 1;
 }
 
