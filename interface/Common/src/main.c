@@ -243,8 +243,10 @@ __task void main_task(void) {
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 
+#ifndef BOARD_UBLOX_C027
     // Target running
     target_set_state(RESET_RUN_WITH_DEBUG);
+#endif
 
     // start semihost task
     semihost_init();
