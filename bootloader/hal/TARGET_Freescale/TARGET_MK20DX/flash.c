@@ -35,6 +35,8 @@
 #define EERAM_BLOCK_SIZE        0x00000800      /* 4 KB size  */
 #define DEFLASH_BLOCK_BASE      0x10000000
 
+FLASH_SSD_CONFIG flashSSDConfig; 
+
 int flash_init(uint32_t clk) {
     /* Write 0xC520 to the unlock register */
     WDOG_UNLOCK = 0xC520;

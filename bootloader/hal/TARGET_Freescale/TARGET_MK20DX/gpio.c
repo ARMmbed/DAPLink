@@ -18,7 +18,7 @@
 
 void gpio_init(void) {
     // clock for LED and button
-    SIM->SCGC5 | = SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
 
     // Green LED, only one LED available
     PORTD->PCR[4] = PORT_PCR_MUX(1);

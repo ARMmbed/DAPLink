@@ -25,7 +25,7 @@ void relocate_vector_table() {
     uint32_t i;
 
     // Copy and switch to dynamic vectors if the first time called
-    if (SCB->VTOR == NVIC_FLASH_VECTOR_ADDRESS) {
+    if (SCB->VTOR == 0) {
         uint32_t *old_vectors = vectors;
         vectors = (uint32_t*)NVIC_RAM_VECTOR_ADDRESS;
         for (i=0; i<NVIC_NUM_VECTORS; i++) {

@@ -16,7 +16,12 @@
 #include <RTL.h>
 #include <rl_usb.h>
 #include <string.h>
+#if defined(TARGET_LPC11U35)
 #include <LPC11Uxx.h>
+#elif defined(TARGET_MK20DX)
+#include <MK20D5.h>
+#endif
+
 
 #include "tasks.h"
 #include "flash.h"
@@ -276,7 +281,11 @@ static void initDisconnect(uint8_t success) {
 
 static int program_page(unsigned long adr, unsigned long sz, unsigned char *buf) {
     // USB interrupt will then be re-enabled in the flash programming thread
+#if defined(TARGET_LPC11U35)
     NVIC_DisableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+    NVIC_DisableIRQ(USB0_IRQn);
+#endif
     isr_evt_set(PROGRAM_PAGE_EVENT, flash_programming_task_id);
     return 0;
 }
@@ -325,7 +334,12 @@ __task void flash_programming_task(void) {
             flags = os_evt_get();
             if (flags & PROGRAM_PAGE_EVENT) {
                 flash_program_page_svc(flashPtr, 1024, (uint8_t *)BlockBuf);
+#if defined(TARGET_LPC11U35)
                 NVIC_EnableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+                NVIC_EnableIRQ(USB0_IRQn);;
+#endif
+                
             }
 
             if (flags & FLASH_INIT_EVENT) {
@@ -336,7 +350,11 @@ __task void flash_programming_task(void) {
                 for(i = START_APP_ADDRESS; i < END_FLASH; i += 0x1000) {
                     flash_erase_sector_svc(i);
                 }
+#if defined(TARGET_LPC11U35)
                 NVIC_EnableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+                NVIC_EnableIRQ(USB0_IRQn);;
+#endif
             }
         }
     }
@@ -410,7 +428,12 @@ int jtag_init() {
         }
 
         // USB interrupt will then be re-enabled in the flash programming thread
+#if defined(TARGET_LPC11U35)
         NVIC_DisableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+        NVIC_DisableIRQ(USB0_IRQn);
+#endif
+        
         isr_evt_set(FLASH_INIT_EVENT, flash_programming_task_id);
 
         jtag_flash_init = 1;
