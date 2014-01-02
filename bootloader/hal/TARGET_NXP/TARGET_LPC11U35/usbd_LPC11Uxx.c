@@ -29,7 +29,7 @@
 #define EP_TYPE            (1UL << 26)
 
 #define N_BYTES(n)         ((n & 0x3FF) << 16)
-#define BUF_ADDR(addr)     ((addr >> 6) & 0xFFFF)
+#define BUF_ADDR(addr)     (((addr) >> 6) & 0xFFFF)
 
 #define EP_OUT_IDX(EPNum)  (EPNum * 2    )
 #define EP_IN_IDX(EPNum)   (EPNum * 2 + 1)
@@ -108,7 +108,7 @@ void USBD_Init (void) {
   LPC_IOCON->PIO0_6    &=   ~7;
   LPC_IOCON->PIO0_6    |=   (1UL << 0); /* Secondary function USB CON         */
 
-  LPC_SYSCON->PDRUNCFG &+ ~((1UL << 8)| /* USB PLL powered                    */
+  LPC_SYSCON->PDRUNCFG &= ~((1UL << 8)| /* USB PLL powered                    */
                             (1UL <<10));/* USB transceiver powered            */
 
   LPC_USB->DATABUFSTART = EP_BUF_BASE & 0xFFC00000;
