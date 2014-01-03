@@ -30,13 +30,20 @@
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_KL05Z)
+#   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL25Z)
+#   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_KL46Z)
+#   define WANTED_SIZE_IN_KB                        (256)
+#elif defined(DBG_K20D50M)
 #   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
+#define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16)*1024)
 #define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16 + 8)*1024)
 #define WANTED_SECTORS_PER_CLUSTER  (8)
 
@@ -73,6 +80,7 @@
 
 #define SECTORS_ROOT_IDX        (1 + mbr.num_fats*MBR_SECTORS_PER_FAT)
 #define SECTORS_FIRST_FILE_IDX  (SECTORS_ROOT_IDX + 2)
+#define SECTORS_MBED_HTML_IDX   (SECTORS_FIRST_FILE_IDX + WANTED_SECTORS_PER_CLUSTER)
 #define SECTORS_SYSTEM_VOLUME_INFORMATION (SECTORS_FIRST_FILE_IDX  + WANTED_SECTORS_PER_CLUSTER)
 #define SECTORS_INDEXER_VOLUME_GUID       (SECTORS_SYSTEM_VOLUME_INFORMATION + WANTED_SECTORS_PER_CLUSTER)
 #define SECTORS_MBED_HTML_IDX   (SECTORS_INDEXER_VOLUME_GUID + WANTED_SECTORS_PER_CLUSTER)
@@ -242,6 +250,8 @@ static const uint8_t fat1[] = {
     0x00, 0x00,
     0x00, 0x00,
     0x00, 0x00,
+    0x00, 0x00,
+    0x00, 0x00,
 };
 
 static const uint8_t fat2[] = {0};
@@ -253,6 +263,7 @@ static const uint8_t fail[] = {
     0x18,0xB1,0x74,0x76,0x8E,0x41,0x8E,0x41,0x00,0x00, // Reserved
     0x8E,0x76,                                         // Time created or last updated
     0x8E,0x41,                                         // Date created or last updated
+    0x04,0x00,                                         // Starting cluster number for file
     0x06,0x00,                                         // Starting cluster number for file
     0x07,0x00,0x00,0x0                                 // File size in bytes
 };
@@ -289,6 +300,16 @@ static const uint8_t root_dir1[] = {
     0x54, 0x52, 0x41, 0x53, 0x48, 0x45, 0x7E, 0x31, 0x20, 0x20, 0x20, 0x22, 0x0, 0x32, 0x85, 0x75,
     0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x85, 0x75, 0x8E, 0x41, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 
+    // mbed html file (size 257, cluster 3)
+
+
+
+
+
+
+
+
+
     // Hidden files to keep windows 8.1 happy
     0x42, 0x20, 0x00, 0x49, 0x00, 0x6E, 0x00, 0x66, 0x00, 0x6F, 0x00, 0x0F, 0x00, 0x72, 0x72, 0x00, 
     0x6D, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6F, 0x00, 0x00, 0x00, 0x6E, 0x00, 0x00, 0x00,
@@ -299,9 +320,10 @@ static const uint8_t root_dir1[] = {
     0x53, 0x59, 0x53, 0x54, 0x45, 0x4D, 0x7E, 0x31, 0x20, 0x20, 0x20, 0x16, 0x00, 0xA5, 0x85, 0x8A, 
     0x73, 0x43, 0x73, 0x43, 0x00, 0x00, 0x86, 0x8A, 0x73, 0x43, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00,
     
-    // mbed html file (size 257, cluster 3)
+    // mbed html file (size 512, cluster 3)
     'M', 'B', 'E', 'D', 0x20, 0x20, 0x20, 0x20, 'H', 'T', 'M', 0x20, 0x18, 0xB1, 0x74, 0x76,
-    0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x05, 0x0, 0x01, 0x01, 0x0, 0x0,
+    0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x3, 0x0, 0x01, 0x01, 0x0, 0x0,
+    0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x05, 0x0, 0x00, 0x02, 0x0, 0x0,
 };
 
 // last 16 of the max 32 (mbr.max_root_dir_entries) root dir entries
@@ -369,6 +391,7 @@ SECTOR sectors[] = {
     {sect5, sizeof(sect5)},
 
     // contains mbed.htm
+    {(const uint8_t *)usb_buffer, 512}
     {(const uint8_t *)usb_buffer, 512},
 };
 
@@ -521,13 +544,18 @@ extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
 static void initDisconnect(uint8_t success) {
     drag_success = success;
+#if 0       // reset and run target
     if (success) {
         swd_set_target_state(RESET_RUN);
     }
+#endif
+    main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
     // event to disconnect the usb
     main_usb_disconnect_event();
+        // event to disconnect the usb
+        main_usb_disconnect_event();
     semihost_enable();
 }
 
@@ -618,6 +646,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 
     if (sector == SECTORS_ROOT_IDX) {
         // move past known existing files in the root dir
+        idx = (drag_success == 1) ? 9 : 10;
         idx = (drag_success == 1) ? 12 : 13;
     }
 
@@ -751,6 +780,8 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
 
             // add new entry in FAT
             if ((block == 1) && (drag_success == 0)) {
+                buf[6] = 0xff;
+                buf[7] = 0x0f;
                 buf[9] = 0xff;
                 buf[10] = 0x0f;
             } else if ((block == SECTORS_ROOT_IDX) && (drag_success == 0)) {
@@ -762,6 +793,7 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
                 memcpy(buf + sectors[block].length, fail, 16*2);
                 // adapt size of file according fail reason
                 buf[sectors[block].length + 28] = strlen((const char *)reason_array[reason]);
+                buf[sectors[block].length + 26] = 4;
                 buf[sectors[block].length + 26] = 6;
             }
         }
@@ -845,6 +877,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             }
         }
     }
+    if (block >= SECTORS_FIRST_FILE_IDX) {
     if (block >= SECTORS_ERROR_FILE_IDX) {
 
         main_usb_busy_event();

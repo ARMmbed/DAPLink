@@ -159,6 +159,9 @@ int32_t uart_get_configuration (UART_Configuration *config) {
     return 1;
 }
 
+int32_t uart_write_free(void) {
+    return BUFFER_SIZE - (write_buffer.cnt_in - write_buffer.cnt_out);
+}
 
 int32_t uart_write_data (uint8_t *data, uint16_t size) {
     uint32_t cnt;

@@ -15,28 +15,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-This script takes in output a .bin file associated to a flash algo:
-   fromelf --bin flash_algo.FLM -o out
-
-Then in the folder out, there is a file called PrgCode. This file is the binary which contains the flash algo
-
-Then it generates a new file containing an array which can then be used by the interface firmware
+This script takes as input an .axf file containing the flash algorithm to be
+loaded in the target RAM and it converts it to a binary array ready to be
+included in the CMSIS-DAP Interface Firmware source code.
 """
 from struct import unpack
+from os.path import join
+
 from utils import run_cmd
 from settings import *
+from paths import TMP_DIR
 
 
-ALGO_ELF_PATH = "./out/flash_algo.axf"
-ALGO_BIN_PATH = "./out/PrgCode"
-ALGO_TXT_PATH = "./out/flash_algo.txt"
+# INPUT
+ALGO_ELF_PATH = join(TMP_DIR, "flash_algo.axf")
 
 ALGO_START  = 0x10000000
 ALGO_OFFSET = 0x20
 
+# OUTPUT
+ALGO_BIN_PATH = join(TMP_DIR, "PrgCode")
+ALGO_TXT_PATH = join(TMP_DIR, "flash_algo.txt")
+
 
 def gen_flash_algo():
-    run_cmd(['fromelf', '--bin', ALGO_ELF_PATH, '-o', 'out'])
+    run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR])
     with open(ALGO_BIN_PATH, "rb") as f, open(ALGO_TXT_PATH, mode="w+") as res:
         # Flash Algorithm
         res.write("""
@@ -59,7 +62,7 @@ const uint32_t flash_algo_blob[] = {
         res.write("\n};\n")
         
         # Address of the functions within the flash algorithm
-        stdout, _, _ = run_cmd(['fromelf', '-s', ALGO_ELF_PATH])
+        stdout, _, _ = run_cmd([FROMELF, '-s', ALGO_ELF_PATH])
         res.write("""
 static const TARGET_FLASH flash = {
 """)

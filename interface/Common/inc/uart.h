@@ -71,6 +71,7 @@ extern int32_t  uart_uninitialize                (void);
 extern int32_t  uart_reset                       (void);
 extern int32_t  uart_set_configuration           (UART_Configuration *config);
 extern int32_t  uart_get_configuration           (UART_Configuration *config);
+extern int32_t  uart_write_free                  (void);
 extern int32_t  uart_write_data                  (uint8_t *data, uint16_t size);
 extern int32_t  uart_read_data                   (uint8_t *data, uint16_t size);
 
