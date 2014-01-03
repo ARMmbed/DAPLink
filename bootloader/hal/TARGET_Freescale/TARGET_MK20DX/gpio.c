@@ -25,7 +25,7 @@ void gpio_init(void) {
     PTD->PDOR = 1UL << 4;
 
     // RST button
-    PORTB->PCR[1] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
+    PORTB->PCR[1] = PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
 }
 
 void gpio_set_dap_led(uint8_t state) {
@@ -53,7 +53,7 @@ void gpio_set_cdc_led(uint8_t state) {
 }
 
 uint8_t gpio_get_pin_loader_state(void) {
-    return (PTD->PDIR & (1UL << 4));
+    return (PTB->PDIR & (1UL << 1));
 }
 
 
