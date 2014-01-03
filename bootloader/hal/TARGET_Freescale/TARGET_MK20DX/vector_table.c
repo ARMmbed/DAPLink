@@ -21,12 +21,12 @@
 #define NVIC_RAM_VECTOR_ADDRESS (0x1FFFE000)  // Vectors positioned at start of RAM
 
 void relocate_vector_table() {
-    uint32_t *vectors = (uint32_t*)SCB->VTOR;
+    uint32_t *vectors;
     uint32_t i;
 
     // Copy and switch to dynamic vectors if the first time called
-    if (SCB->VTOR == 0) {
-        uint32_t *old_vectors = vectors;
+    if (SCB->VTOR != NVIC_RAM_VECTOR_ADDRESS) {
+        uint32_t *old_vectors = (uint32_t*)START_APP_ADDRESS;
         vectors = (uint32_t*)NVIC_RAM_VECTOR_ADDRESS;
         for (i=0; i<NVIC_NUM_VECTORS; i++) {
             vectors[i] = old_vectors[i];

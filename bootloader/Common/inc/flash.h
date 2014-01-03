@@ -17,10 +17,19 @@
 #define FLASH_H
 
 #include <stdint.h>
-
+/* TODO move this to hal */
+#if defined(TARGET_LPC11U35)
 #define START_APP_ADDRESS (0x5000)
 #define SECTOR_SIZE       (0x1000)
 #define NB_SECTOR         (15)
+
+#elif defined(TARGET_MK20DX)
+#define START_APP_ADDRESS (0x5000)
+#define SECTOR_SIZE       (0x1000)
+#define NB_SECTOR         (30)
+
+#endif
+
 #define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
 
 int  flash_init         (uint32_t clk);
