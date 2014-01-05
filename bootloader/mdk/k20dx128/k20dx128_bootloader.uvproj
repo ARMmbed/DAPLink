@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>k20d5m_bootloader</TargetName>
+      <TargetName>k20dx128_bootloader</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
