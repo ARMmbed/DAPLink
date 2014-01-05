@@ -336,7 +336,7 @@
           <Cads>
             <interw>1</interw>
             <Optim>3</Optim>
-            <oTime>1</oTime>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
             <Strict>0</Strict>

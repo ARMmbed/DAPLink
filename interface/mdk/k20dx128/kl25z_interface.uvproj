@@ -398,9 +398,9 @@
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
             <File>
-              <FileName>startup_MK20D5.s</FileName>
+              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1124,9 +1124,9 @@
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
             <File>
-              <FileName>startup_MK20D5.s</FileName>
+              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1496,7 +1496,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Obj\</OutputDirectory>
-          <OutputName>mk20dx128_kl25z_if_mbed_bootloader</OutputName>
+          <OutputName>k20dx128_kl25z_if_mbed_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -1801,7 +1801,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TARGET_MK20D5, __RTX, DBG_KL25Z, BOARD_FRDM_KL25Z</Define>
+              <Define>OFFSET_VTABLE_20K, TARGET_MK20D5, __RTX, DBG_KL25Z, BOARD_FRDM_KL25Z</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\Common\inc;..\..\target\hal\DBG_Freescale\DBG_KL25Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos</IncludePath>
             </VariousControls>
@@ -1850,9 +1850,9 @@
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
             <File>
-              <FileName>startup_MK20D5.s</FileName>
+              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
             </File>
           </Files>
         </Group>
