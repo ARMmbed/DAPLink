@@ -56,7 +56,7 @@ int flash_init(uint32_t clk) {
     flashSSDConfig.DebugEnable        = 0;                       /* background debug mode enable bit */
     flashSSDConfig.CallBack           = NULL_CALLBACK;           /* pointer to callback function */
     if (FTFx_OK != pFlashInit(&flashSSDConfig))
-      return (1);
+        return (1);
 
     return 0;
 }

@@ -23,9 +23,10 @@ void gpio_init(void) {
     // Green LED, only one LED available
     PORTD->PCR[4] = PORT_PCR_MUX(1);
     PTD->PDOR = 1UL << 4;
+    PTD->PDDR = 1UL << 4;
 
     // RST button
-    PORTB->PCR[1] = PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
+    PORTB->PCR[1] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
 }
 
 void gpio_set_dap_led(uint8_t state) {
@@ -37,22 +38,25 @@ void gpio_set_dap_led(uint8_t state) {
 }
 
 void gpio_set_msd_led(uint8_t state) {
-    if (state) {
-        PTD->PCOR  |= 1UL << 4; // LED on
-    } else {
-        PTD->PSOR  |= 1UL << 4; // LED off
-    }
+    gpio_set_dap_led(state);
 }
 
 void gpio_set_cdc_led(uint8_t state) {
-    if (state) {
-        PTD->PCOR  |= 1UL << 4; // LED on
-    } else {
-        PTD->PSOR  |= 1UL << 4; // LED off
-    }
+    gpio_set_dap_led(state);
+}
+
+void time_delay_ms(uint32_t delay)
+{
+    SIM->SCGC5 |= SIM_SCGC5_LPTIMER_MASK;
+    LPTMR0->CMR = delay;
+    LPTMR0->PSR = LPTMR_PSR_PCS(1) | LPTMR_PSR_PBYP_MASK;
+    LPTMR0->CSR |= LPTMR_CSR_TEN_MASK;
+    while (!(LPTMR0->CSR & LPTMR_CSR_TCF_MASK));
+    LPTMR0->CSR &= ~LPTMR_CSR_TEN_MASK;
 }
 
 uint8_t gpio_get_pin_loader_state(void) {
+    time_delay_ms(2); //delay 2ms for pull-up enable
     return (PTB->PDIR & (1UL << 1));
 }
 
