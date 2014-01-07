@@ -527,7 +527,7 @@ extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
 static void initDisconnect(uint8_t success) {
     drag_success = success;
-#if 0       // reset and run target
+#if 1       // reset and run target
     if (success) {
         swd_set_target_state(RESET_RUN);
     }
