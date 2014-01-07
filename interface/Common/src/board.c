@@ -43,6 +43,10 @@
 #define BOARD_ID        "1234"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_LPC1114)
+#define BOARD_ID        "1114"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #endif
 
 BOARD board = {

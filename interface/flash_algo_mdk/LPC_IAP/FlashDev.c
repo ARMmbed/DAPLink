@@ -36,6 +36,42 @@ struct FlashDevice const FlashDevice  =  {
    SECTOR_END
 };
 #endif
+#ifdef LPC11xx_32
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "LPC11xx/122x/13xx IAP 32kB Flash", // Device Name 
+   ONCHIP,                     // Device Type
+   0x00000000,                 // Device Start Address
+   0x00008000,                 // Device Size (32kB)
+   1024,                       // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   300,                        // Program Page Timeout 300 mSec
+   3000,                       // Erase Sector Timeout 3000 mSec
+
+// Specify Size and Address of Sectors
+   0x001000, 0x000000,         // Sector Size  4kB (8 Sectors)
+   SECTOR_END
+};
+#endif
+#ifdef LPC8xx_4
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "LPC8xx IAP 4kB Flash",     // Device Name
+   ONCHIP,                     // Device Type
+   0x00000000,                 // Device Start Address
+   0x00001000,                 // Device Size (4kB)
+   256,                        // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   300,                        // Program Page Timeout 300 mSec
+   3000,                       // Erase Sector Timeout 3000 mSec
+
+// Specify Size and Address of Sectors
+   0x000400, 0x000000,         // Sector Size  1kB (4 Sectors)
+   SECTOR_END
+};
+#endif
 #else
 
 #ifdef LPC1700_512
