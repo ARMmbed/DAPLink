@@ -1075,7 +1075,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>-DKL25Z</MiscControls>
-              <Define>OFFSET_VTABLE_32K, TARGET_MK20D5, __RTX, DBG_KL25Z, BOARD_FRDM_KL25Z</Define>
+              <Define>OFFSET_VTABLE_32K, TARGET_MK20D5, __RTX, DBG_KL25Z, BOARD_FRDM_KL25Z, INTERFACE_GEN_32KHZ</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\Common\inc;..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\interface\cmsis;..\..\target\hal\DBG_Freescale\DBG_KL25Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos</IncludePath>
             </VariousControls>
