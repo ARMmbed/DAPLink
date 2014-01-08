@@ -191,9 +191,11 @@ void SystemInit (void) {
   /* MCG->C2: ??=0,??=0,RANGE0=2,HGO=0,EREFS=1,LP=0,IRCS=0 */
   MCG->C2 = (uint8_t)0x24u;
 #endif /* (CLOCK_SETUP == 2) */
-	
+
 #if defined(OFFSET_VTABLE_32K)
-		SCB->VTOR = 0x8000u;
+  SCB->VTOR = 0x8000u;
+#elif defined(OFFSET_VTABLE_20K)
+  SCB->VTOR = 0x5000u;
 #endif
 }
 
