@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef FLASH_H
-#define FLASH_H
+#include <MK20D5.h>
+#include "read_uid.h"
 
-#include <stdint.h>
-
-#define START_APP_ADDRESS (0x5000)
-#define SECTOR_SIZE       (0x1000)
-#define NB_SECTOR         (15)
-
-#define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
-
-int  flash_init         (uint32_t clk);
-int  flash_uninit       (uint32_t fnc);
-int  flash_erase_sector (uint32_t adr);
-int  flash_program_page (uint32_t adr, uint32_t sz, unsigned char *buf);
-
-int  __swi(3) flash_program_page_svc (uint32_t adr, uint32_t sz, uint8_t *buf);
-int  __swi(2) flash_erase_sector_svc (uint32_t addr);
-
-#endif
+void read_unique_id(uint32_t *id) {
+    *id = SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH ^ SIM->UIDH;
+}
