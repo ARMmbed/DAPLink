@@ -76,12 +76,17 @@ static const TARGET_FLASH flash = {
     0x200000AD, // EraseSector
     0x200000CB, // ProgramPage
 
-    {0x20000001, 0x20000418, 0x20001000}, // {breakpoint, static_base, stack_pointer}
+    // RAM start + 1, RAM start + size of algo??, top of stack = start of RAM + 4096??
+	{0x20000001, 0x20000000+sizeof(K64F_FLM), 0x20001000}, // {breakpoint, static_base, stack_pointer}
 
-    0x20003000, // program_buffer
-    0x20000000, // algo_start
-    0x00000418, // algo_size
-    K64F_FLM,  // image
+    // any valid RAM location with +512 bytes of headroom
+	0x20003000, // program_buffer
+    // start of RAM
+	0x20000000, // algo_start
+    // size of array above
+	sizeof(K64F_FLM), // algo_size
+    // flash algo instruction array
+	K64F_FLM,  // image
 
     512,        // ram_to_flash_bytes_to_be_written
 };

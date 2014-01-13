@@ -351,9 +351,10 @@ __task void main_task(void) {
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
-
                         // Update HTML file
                         update_html_file();
+						// Delay the connecting state before reconnecting to the host - improved usage with VMs
+						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }
                     break;
 

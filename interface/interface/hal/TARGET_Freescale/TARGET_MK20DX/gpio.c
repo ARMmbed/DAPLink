@@ -37,9 +37,11 @@ void gpio_init(void)
     // led on
     PTD->PCOR  |= 1UL << 4;
 
-
+#if defined(INTERFACE_GEN_32KHZ)
+#if defined(BOARD_FRDM_K64F)
+#error "Cannot use PTD6 for FRDM-K64F 32kHz clk"
+#endif
     // we use PTD6 to generate 32kHz clk
-
     // enable clk for portD
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
     // ftm0_ch6 (alternate function 4)
@@ -47,7 +49,6 @@ void gpio_init(void)
     // enable clk for ftm0
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
 
-#ifdef INTERFACE_GEN_32KHZ
     // configure PWM to generate a 32kHz clock used
     // by the RTC module of the target.
     // Choose EDGE-Aligned PWM:  selected when QUADEN=0, DECAPEN=0, COMBINE=0, CPWMS=0, and MSnB=1  (page 964)
@@ -82,6 +83,23 @@ void gpio_init(void)
 
     //enable write protection
     FTM0->MODE &= ~FTM_MODE_WPDIS_MASK;
+	
+#endif
+
+#if defined(BOARD_FRDM_K64F)
+// POWER_EN (PTD5) and VTRG_FAULT_B (PTD6) introduced with K64
+//	VTRG_FAULT_B not currently implemented. Just power the target ;)
+    // enable clock PORTD
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+    // configure pin as GPIO
+    PORTD->PCR[6] = PORT_PCR_MUX(1);
+	// force always on logic 1
+	// enable off - enable output
+    PTD->PDOR = 1UL << 6;
+    PTD->PDDR = 1UL << 6;
+    // enable on
+    PTD->PCOR  |= 1UL << 6;
+
 #endif
 }
 
