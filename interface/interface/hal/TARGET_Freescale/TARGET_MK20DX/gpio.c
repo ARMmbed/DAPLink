@@ -94,11 +94,8 @@ void gpio_init(void)
     // configure pin as GPIO
     PORTD->PCR[6] = PORT_PCR_MUX(1);
 	// force always on logic 1
-	// enable off - enable output
     PTD->PDOR = 1UL << 6;
     PTD->PDDR = 1UL << 6;
-    // enable on
-    PTD->PCOR  |= 1UL << 6;
 
 #endif
 }
