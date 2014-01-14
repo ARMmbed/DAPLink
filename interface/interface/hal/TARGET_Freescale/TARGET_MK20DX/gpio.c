@@ -89,13 +89,14 @@ void gpio_init(void)
 #if defined(BOARD_FRDM_K64F)
 // POWER_EN (PTD5) and VTRG_FAULT_B (PTD6) introduced with K64
 //	VTRG_FAULT_B not currently implemented. Just power the target ;)
-    // enable clock PORTD
+	
+	// enable clock PORTD
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
     // configure pin as GPIO
     PORTD->PCR[6] = PORT_PCR_MUX(1);
 	// force always on logic 1
-    PTD->PDOR = 1UL << 6;
-    PTD->PDDR = 1UL << 6;
+    PTD->PDOR |= 1UL << 6;
+    PTD->PDDR |= 1UL << 6;
 
 #endif
 }
