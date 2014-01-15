@@ -41,3 +41,9 @@ tmp/
 *.axf
 *.S19
 *.bin
+
+# cscope
+cscope.*
+
+# ctags
+tags
