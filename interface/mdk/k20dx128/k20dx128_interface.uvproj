@@ -613,7 +613,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -907,7 +907,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -1388,7 +1388,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1682,7 +1682,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -2163,7 +2163,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2974,7 +2974,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3268,7 +3268,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -3785,7 +3785,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4560,7 +4560,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5371,7 +5371,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6182,7 +6182,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6957,7 +6957,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7768,7 +7768,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8062,7 +8062,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -8579,7 +8579,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9354,7 +9354,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10165,7 +10165,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10459,7 +10459,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -10698,7 +10698,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>RAM_TARGET</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -10976,7 +10976,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -11183,7 +11183,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Obj\</OutputDirectory>
-          <OutputName>k20dx128_k64f_opensda_bootloader_if</OutputName>
+          <OutputName>k20dx128_k64f_if_mbed_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -11270,7 +11270,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -11509,7 +11509,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>RAM_TARGET</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -11787,7 +11787,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\DBG_K64F\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>

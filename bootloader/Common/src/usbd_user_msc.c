@@ -355,7 +355,7 @@ __task void flash_programming_task(void) {
                 flash_init(SystemCoreClock);
 
                 // erase flash for new binary
-                for(i = START_APP_ADDRESS; i < END_FLASH; i += 0x1000) {
+                for(i = START_APP_ADDRESS; i < END_FLASH; i += SECTOR_SIZE) {
                     flash_erase_sector_svc(i);
                 }
                 enable_usb_irq();
