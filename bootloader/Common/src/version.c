@@ -21,7 +21,9 @@
 #include "mbed_htm.h"
 #include "read_uid.h"
 
-extern uint8_t BlockBuf[1024];
+//extern uint8_t BlockBuf[1024];
+// came from usdb_user_msc.c
+uint8_t BlockBuf[1024];
 
 // Filenames
 #define HTML_FILE "MBED.HTM"
