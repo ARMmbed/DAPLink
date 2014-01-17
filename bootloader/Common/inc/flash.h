@@ -19,8 +19,8 @@
 #include <stdint.h>
 
 #define START_APP_ADDRESS (0x5000)
-#define SECTOR_SIZE       (0x1000)
-#define NB_SECTOR         (15)
+#define SECTOR_SIZE       (0x400)
+#define NB_SECTOR         (128)
 
 #define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
 

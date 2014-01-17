@@ -26,7 +26,7 @@
 #include "vector_table.h"
 
 // Reference to our main task
-OS_TID mainTask;
+OS_TID mainTask, ledTask;
 
 #define INITIAL_SP      (*(uint32_t *)(START_APP_ADDRESS))
 #define RESET_HANDLER   (*(uint32_t *)(START_APP_ADDRESS + 4))
@@ -61,10 +61,9 @@ __task void led_task(void) {
 __task void main_task(void) {
     BOOL led_state = __FALSE;
     uint8_t flags, time_blink_led;
-    mainTask=os_tsk_self();
-
-
-    os_tsk_create(led_task, LED_TASK_PRIORITY);
+    
+	mainTask=os_tsk_self();
+	ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
 
     update_html_file();
 
@@ -79,9 +78,11 @@ __task void main_task(void) {
 
     // Find out what event happened
     flags = os_evt_get();
-
-    time_blink_led = (flags & TRANSFER_FINISHED_SUCCESS) ? 50 : 10;
-
+	
+    time_blink_led = (flags & TRANSFER_FINISHED_SUCCESS) ? 10 : 50;
+	// if we blink here, dont do it in a thread
+	os_tsk_delete(ledTask);
+	
     while(1) {
         gpio_set_msd_led(led_state);
         led_state = !led_state;

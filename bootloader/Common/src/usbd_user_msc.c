@@ -456,7 +456,7 @@ static void initDisconnect(uint8_t success) {
     drag_success = success;
     init(1);
     main_transfer_finished(success);
-    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
+	isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
 }
 
 static void disable_usb_irq(void){
@@ -537,7 +537,8 @@ __task void flash_programming_task(void) {
 
                 // erase flash for new binary
                 for(i = START_APP_ADDRESS; i < END_FLASH; i += SECTOR_SIZE) {
-                    flash_erase_sector_svc(i);
+                    // TODO: failing to erase device flash
+					flash_erase_sector_svc(i);
                 }
                 enable_usb_irq();
             }
