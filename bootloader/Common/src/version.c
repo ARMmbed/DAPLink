@@ -17,16 +17,10 @@
 
 #include "main.h"
 #include "version.h"
-
 #include "mbed_htm.h"
 #include "read_uid.h"
 
-//extern uint8_t BlockBuf[1024];
-// came from usdb_user_msc.c
-uint8_t BlockBuf[1024];
-
-// Filenames
-#define HTML_FILE "MBED.HTM"
+extern uint8_t BlockBuf[];
 
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
@@ -34,8 +28,8 @@ const char *fw_version = (const char *)FW_BUILD;
 static uint32_t unique_id;
 static uint8_t already_unique_id = 0;
 static uint32_t auth;
-uint8_t string_auth[21 + 4];
-uint8_t string_auth_descriptor[2+21*2];
+uint8_t string_auth[25 + 4];
+uint8_t string_auth_descriptor[2+25*2];
 static const char nybble_chars[] = "0123456789ABCDEF";
 
 static void setup_string_id_auth(void);
@@ -221,7 +215,7 @@ uint8_t update_html_file(void) {
     do {
         c=get_html_character(&html);
         if (c != '\0') {
-            BlockBuf[512 + i++] = c;
+            BlockBuf[i++] = c;
         }
     } while (c != '\0');
 

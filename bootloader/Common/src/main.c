@@ -90,8 +90,8 @@ __task void main_task(void) {
 }
 
 // Main Program
-int main (void) {
-
+int main (void)
+{	
     gpio_init();
 
     if (!gpio_get_pin_loader_state()) {

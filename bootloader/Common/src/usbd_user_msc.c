@@ -16,7 +16,10 @@
 #include <RTL.h>
 #include <rl_usb.h>
 #include <string.h>
-
+#include "flash.h"
+#include "main.h"
+#include "tasks.h"
+#include "version.h"
 
 #if defined(TARGET_LPC11U35)
 #include <LPC11Uxx.h>
@@ -153,10 +156,7 @@ __packed typedef struct FatDirectoryEntry {
 
 //------------------------------------------------------------------------- END
 
-//extern uint32_t usb_buffer[];
-uint32_t usb_buffer[];
-
-//extern USB_CONNECT usb_state;
+uint32_t BlockBuf[1024];
 
 typedef struct sector {
     const uint8_t * sect;
@@ -254,8 +254,8 @@ static const uint8_t fail[] = {
 
 // first 16 of the max 32 (mbr.max_root_dir_entries) root dir entries
 static const uint8_t root_dir1[] = {
-    // volume label "MBED"
-    'M', 'B', 'E', 'D', 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x28, 0x0, 0x0, 0x0, 0x0,
+    // volume label "BOOTLOADER"
+    'B', 'O', 'O', 'T', 'L', 'O', 'A', 'D', 'E', 'R', 0x20, 0x28, 0x0, 0x0, 0x0, 0x0,
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x85, 0x75, 0x8E, 0x41, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 
     // Hidden files to keep mac happy
@@ -295,7 +295,7 @@ static const uint8_t root_dir1[] = {
     0x73, 0x43, 0x73, 0x43, 0x00, 0x00, 0x86, 0x8A, 0x73, 0x43, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00,
     
     // mbed html file (size 512, cluster 3)
-    'M', 'B', 'E', 'D', 0x20, 0x20, 0x20, 0x20, 'H', 'T', 'M', 0x20, 0x18, 0xB1, 0x74, 0x76,
+    'B', 'O', 'O', 'T', 'L', 'O', 'A', 'D', 'H', 'T', 'M', 0x20, 0x18, 0xB1, 0x74, 0x76,
     0x8E, 0x41, 0x8E, 0x41, 0x0, 0x0, 0x8E, 0x76, 0x8E, 0x41, 0x05, 0x0, 0x00, 0x02, 0x0, 0x0,
 };
 
@@ -364,7 +364,7 @@ SECTOR sectors[] = {
     {sect5, sizeof(sect5)},
 
     // contains mbed.htm
-    {(const uint8_t *)usb_buffer, 512},
+    {(const uint8_t *)BlockBuf, 512},
 };
 
 static uint32_t size;
@@ -373,8 +373,8 @@ static uint32_t current_sector;
 static uint8_t sector_received_first;
 static uint8_t root_dir_received_first;
 static uint32_t jtag_flash_init;
-static uint32_t flashPtr;
-//static uint8_t need_restart_usb;
+static uint32_t flashPtr = START_APP_ADDRESS;
+static uint8_t need_restart_usb;
 static uint8_t flash_started;
 static uint32_t start_sector;
 static uint32_t theoretical_start_sector = 7;
@@ -385,7 +385,7 @@ static uint8_t maybe_erase;
 static uint32_t previous_sector;
 static uint32_t begin_sector;
 static uint8_t task_first_started;
-//static uint8_t listen_msc_isr = 1;
+static uint8_t listen_msc_isr = 1;
 static uint8_t drag_success = 1;
 static uint8_t reason = 0;
 static uint32_t flash_addr_offset = 0;
@@ -413,30 +413,152 @@ static uint8_t * reason_array[] = {
 #define MSC_TIMEOUT_STOP_EVENT          (0x4000)
 #define MSC_TIMEOUT_RESTART_EVENT       (0x8000)
 
+#define PROGRAM_PAGE_EVENT              (0x0008)
+#define FLASH_INIT_EVENT                (0x0004)
+
 // 30 s timeout
 #define TIMEOUT_S 3000
 
-//static U64 msc_task_stack[MSC_TASK_STACK/8];
+static U64 msc_task_stack[MSC_TASK_STACK/8];
 
 // Reference to the msc task
 static OS_TID msc_valid_file_timeout_task_id;
+static OS_TID flash_programming_task_id;
 
 static void init(uint8_t jtag);
 static void initDisconnect(uint8_t success);
+
+static void init(unsigned char jtag) {
+    size = 0;
+    nb_sector = 0;
+    current_sector = 0;
+    if (jtag) {
+        jtag_flash_init = 0;
+        theoretical_start_sector = (drag_success) ? 7 : 8;
+        good_file = 0;
+        program_page_error = 0;
+        maybe_erase = 0;
+        previous_sector = 0;
+    }
+    begin_sector = 0;
+    flashPtr = START_APP_ADDRESS;
+    sector_received_first = 0;
+    root_dir_received_first = 0;
+    need_restart_usb = 0;
+    flash_started = 0;
+    start_sector = 0;
+    msc_event_timeout = 0;
+    USBD_MSC_BlockBuf   = (uint8_t *)BlockBuf;
+    listen_msc_isr = 1;
+}
+
+static void initDisconnect(uint8_t success) {
+    drag_success = success;
+    init(1);
+    main_transfer_finished(success);
+    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
+}
+
+static void disable_usb_irq(void){
+#if defined(TARGET_LPC11U35)
+    NVIC_DisableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+    NVIC_DisableIRQ(USB0_IRQn);
+#endif
+}
+
+static void enable_usb_irq(void){
+#if defined(TARGET_LPC11U35)
+    NVIC_EnableIRQ(USB_IRQn);
+#elif defined(TARGET_MK20DX)
+    NVIC_EnableIRQ(USB0_IRQn);
+#endif
+}
+
+static int program_page(unsigned long adr, unsigned long sz, unsigned char *buf) {
+    // USB interrupt will then be re-enabled in the flash programming thread
+    disable_usb_irq();
+    isr_evt_set(PROGRAM_PAGE_EVENT, flash_programming_task_id);
+    return 0;
+}
+
+static int program_sector() {
+    // if we have received two sectors, write into flash
+    if (!(current_sector % 2)) {
+        //flash_erase_sector(flashPtr);
+        if (program_page(flashPtr, 1024, (uint8_t *)BlockBuf)) {
+            // even if there is an error, adapt flashptr
+            flashPtr += 1024;
+            return 1;
+        }
+
+        // if we just wrote the last sector -> disconnect usb
+        if (current_sector == nb_sector) {
+            initDisconnect(1);
+            return 0;
+        }
+
+        flashPtr += 1024;
+
+    }
+
+    // we have to write the last sector which has a size of half a page
+    if (current_sector == nb_sector) {
+        if (current_sector % 2) {
+            //flash_erase_sector(flashPtr);
+            if (program_page(flashPtr, 1024, (uint8_t *)BlockBuf)) {
+                return 1;
+            }
+        }
+        initDisconnect(1);
+    }
+    return 0;
+}
+
+extern uint32_t SystemCoreClock;
+
+__task void flash_programming_task(void) {
+    uint32_t flags = 0, i;
+    OS_RESULT res;
+    flash_programming_task_id = os_tsk_self();
+    while(1) {
+        res = os_evt_wait_or(PROGRAM_PAGE_EVENT | FLASH_INIT_EVENT, NO_TIMEOUT);
+        if (res == OS_R_EVT) {
+            flags = os_evt_get();
+            if (flags & PROGRAM_PAGE_EVENT) {
+                flash_program_page_svc(flashPtr, 1024, (uint8_t *)BlockBuf);
+                enable_usb_irq();
+
+            }
+
+            if (flags & FLASH_INIT_EVENT) {
+                // init flash
+                flash_init(SystemCoreClock);
+
+                // erase flash for new binary
+                for(i = START_APP_ADDRESS; i < END_FLASH; i += SECTOR_SIZE) {
+                    flash_erase_sector_svc(i);
+                }
+                enable_usb_irq();
+            }
+        }
+    }
+}
 
 // this task is responsible to check
 // when we receive a root directory where there
 // is a valid .bin file and when we have received
 // all the sectors that we don't receive new valid sectors
 // after a certain timeout
-__task void msc_valid_file_timeout_task(void) {
+__task void msc_valid_file_timeout_task(void)
+{
     uint32_t flags = 0;
     OS_RESULT res;
     uint32_t start_timeout_time = 0, time_now = 0;
     uint8_t timer_started = 0;
     msc_valid_file_timeout_task_id = os_tsk_self();
-    while (1) {
-        res = os_evt_wait_or(MSC_TIMEOUT_SPLIT_FILES_EVENT | MSC_TIMEOUT_START_EVENT | MSC_TIMEOUT_STOP_EVENT | MSC_TIMEOUT_RESTART_EVENT, 100);
+    while(1) {
+        res = os_evt_wait_or(MSC_TIMEOUT_SPLIT_FILES_EVENT | MSC_TIMEOUT_START_EVENT | MSC_TIMEOUT_STOP_EVENT, 100);
 
         if (res == OS_R_EVT) {
 
@@ -448,6 +570,9 @@ __task void msc_valid_file_timeout_task(void) {
 
                 if (msc_event_timeout == 1) {
                     // if the program reaches this point -> it means that no sectors have been received in the meantime
+                    if (current_sector % 2) {
+                        program_page(flashPtr, 1024, (uint8_t *)BlockBuf);
+                    }
                     initDisconnect(1);
                     msc_event_timeout = 0;
                 }
@@ -460,12 +585,6 @@ __task void msc_valid_file_timeout_task(void) {
 
             if (flags & MSC_TIMEOUT_STOP_EVENT) {
                 timer_started = 0;
-            }
-
-            if (flags & MSC_TIMEOUT_RESTART_EVENT) {
-                if (timer_started) {
-                    start_timeout_time = os_time_get();
-                }
             }
 
         } else {
@@ -482,82 +601,30 @@ __task void msc_valid_file_timeout_task(void) {
     }
 }
 
-void init(uint8_t jtag) {
-    size = 0;
-    nb_sector = 0;
-    current_sector = 0;
-    if (jtag) {
-        jtag_flash_init = 0;
-        theoretical_start_sector = (drag_success) ? 7 : 8;
-        good_file = 0;
-        program_page_error = 0;
-        maybe_erase = 0;
-        previous_sector = 0;
+int jtag_init() 
+{
+    if (jtag_flash_init != 1) {
+        if (need_restart_usb == 1) {
+            reason = SWD_PORT_IN_USE;
+            initDisconnect(0);
+            return 1;
+        }
+
+        // USB interrupt will then be re-enabled in the flash programming thread
+        disable_usb_irq();
+
+        isr_evt_set(FLASH_INIT_EVENT, flash_programming_task_id);
+
+        jtag_flash_init = 1;
     }
-    begin_sector = 0;
-    flashPtr = 0;
-    sector_received_first = 0;
-    root_dir_received_first = 0;
-    //need_restart_usb = 0;
-    flash_started = 0;
-    start_sector = 0;
-    msc_event_timeout = 0;
-    USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
-    //listen_msc_isr = 1;
-    flash_addr_offset = 0;
-}
-
-void failSWD() {
-    reason = SWD_ERROR;
-    initDisconnect(0);
-}
-
-//extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
-
-static void initDisconnect(uint8_t success) {
-    drag_success = success;
-#if 0       // reset and run target
-    if (success) {
-        swd_set_target_state(RESET_RUN);
-    }
-#endif
-//    main_blink_msd_led(0);
-    init(1);
-    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    // event to disconnect the usb
-//    main_usb_disconnect_event();
-//    semihost_enable();
-}
-
-extern uint32_t SystemCoreClock;
-
-int jtag_init() {
-//    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
-//        need_restart_usb = 1;
-//    }
-
-//    if ((jtag_flash_init != 1) && (DAP_Data.debug_port == DAP_PORT_DISABLED)) {
-//        if (need_restart_usb == 1) {
-//            reason = SWD_PORT_IN_USE;
-//            initDisconnect(0);
-//            return 1;
-//        }
-
-//        semihost_disable();
-
-//        PORT_SWD_SETUP();
-
-//        target_set_state(RESET_PROGRAM);
-//        if (!target_flash_init(SystemCoreClock)) {
-//            failSWD();
-//            return 1;
-//        }
-
-//        jtag_flash_init = 1;
-//    }
     return 0;
 }
 
+
+//void failSWD() {
+//    reason = SWD_ERROR;
+//    initDisconnect(0);
+//}
 
 static const FILE_TYPE_MAPPING file_type_infos[] = {
     { BIN_FILE, {'B', 'I', 'N'}, 0x00000000 },
@@ -689,23 +756,12 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 
                 // we need to copy all the sectors
                 // we don't listen to msd interrupt
-                //listen_msc_isr = 0;
+                listen_msc_isr = 0;
 
                 move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
                 nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
                 for (i = 0; i < nb_sector_to_move; i++) {
-//                    if (!swd_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
-//                        failSWD();
-//                        return -1;
-//                    }
-//                    if (!target_flash_erase_sector(i)) {
-//                        failSWD();
-//                        return -1;
-//                    }
-//                    if (!target_flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
-//                        failSWD();
-//                        return -1;
-//                    }
+					program_page(START_APP_ADDRESS + i*1024, 1024, (uint8_t *)BlockBuf);
                 }
                 initDisconnect(1);
                 return -1;
@@ -724,6 +780,10 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             initDisconnect(0);
             return -1;
         }
+		else {
+			// TODO: left overs from bootloader, CMSIS integration. Not sure what it does
+			idx += 32;
+		}
     }
 
     if (adapt_th_sector) {
@@ -734,16 +794,17 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 }
 
 
-void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
-//    if ((usb_state != USB_CONNECTED) || (listen_msc_isr == 0))
-//        return;
+void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
+{
+    if (listen_msc_isr == 0)
+        return;
 
     if (USBD_MSC_MediaReady) {
         // blink led not permanently
-//        main_blink_msd_led(0);
+        //mainBlinkMsdLED(0);
         memset(buf, 0, 512);
 
-        // Handle MBR, FAT1 sectors, FAT2 sectors, root1, root2 and mac file
+        //if (block < 9) {
         if (block <= SECTORS_FIRST_FILE_IDX) {
             memcpy(buf, sectors[block].sect, sectors[block].length);
 
@@ -751,12 +812,12 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
             if ((block == 1) && (drag_success == 0)) {
                 buf[9] = 0xff;
                 buf[10] = 0x0f;
+            //} else if ((block == 3) && (drag_success == 0)) {
             } else if ((block == SECTORS_ROOT_IDX) && (drag_success == 0)) {
-                /* Appends a new directory entry at the end of the root file system.
-                    The entry is a copy of "fail[]" and the size is updated to match the
-                    length of the error reason string. The entry's set to point to cluster
-                    4 which is the first after the mbed.htm file."
-                */
+                // Appends a new directory entry at the end of the root file system.
+                //	The entry is a copy of "fail[]" and the size is updated to match the
+                //	length of the error reason string. The entry's set to point to cluster
+                //	4 which is the first after the mbed.htm file."
                 memcpy(buf + sectors[block].length, fail, 16*2);
                 // adapt size of file according fail reason
                 buf[sectors[block].length + 28] = strlen((const char *)reason_array[reason]);
@@ -773,47 +834,23 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
-//            update_html_file();
+            update_html_file();
         }
-        // send error message file
-        else if (block == SECTORS_ERROR_FILE_IDX) {
+        else if (block == 9) {
             memcpy(buf, reason_array[reason], strlen((const char *)reason_array[reason]));
         }
     }
 }
 
-static int programPage() {
-    //The timeout task's timer is resetted every 256kB that is flashed.
-    if ((flashPtr >= 0x40000) && ((flashPtr & 0x3ffff) == 0)) {
-        isr_evt_set(MSC_TIMEOUT_RESTART_EVENT, msc_valid_file_timeout_task_id);
-    }
-
-    // if we have received two sectors, write into flash
-//    if (!target_flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
-//        // even if there is an error, adapt flashptr
-//        flashPtr += FLASH_PROGRAM_PAGE_SIZE;
-//        return 1;
-//    }
-
-    // if we just wrote the last sector -> disconnect usb
-    if (current_sector == nb_sector) {
-        initDisconnect(1);
-        return 0;
-    }
-
-    flashPtr += FLASH_PROGRAM_PAGE_SIZE;
-
-    return 0;
-}
-
-
-void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
+void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
+{
     int idx_size = 0;
 
-//    if ((usb_state != USB_CONNECTED) || (listen_msc_isr == 0))
-//        return;
+    if (listen_msc_isr == 0)
+        return;
 
     // we recieve the root directory
+    //if ((block == 3) || (block == 4)) {
     if ((block == SECTORS_ROOT_IDX) || (block == (SECTORS_ROOT_IDX+1))) {
         // try to find a .bin file in the root directory
         idx_size = search_bin_file(buf, block);
@@ -821,9 +858,8 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
         // .bin file exists
         if (idx_size != -1) {
 
-            if (sector_received_first == 0) {
+            if (sector_received_first == 0)
                 root_dir_received_first = 1;
-            }
 
             // this means that we have received the sectors before root dir (linux)
             // we have to flush the last page into the target flash
@@ -835,7 +871,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
                 return;
             }
 
-            // means that we are receiving additional sectors
+            // means that we are receiving additionnal sectors
             // at the end of the file ===> we ignore them
             if ((sector_received_first == 1) && (start_sector == begin_sector) && (current_sector > nb_sector) && (jtag_flash_init == 1)) {
                 initDisconnect(1);
@@ -843,13 +879,13 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             }
         }
     }
+    //if (block > 4) {
     if (block >= SECTORS_ERROR_FILE_IDX) {
 
-//        main_usb_busy_event();
+        //mainUSBBusyEvent();
 
-        if (root_dir_received_first == 0) {
+        if (root_dir_received_first == 0)
             sector_received_first = 1;
-        }
 
         // if we don't receive consecutive sectors
         // set maybe erase in case we receive other sectors
@@ -864,21 +900,15 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
 
         // init jtag if needed
         if (jtag_init() == 1) {
-            return;
+        	return;
         }
 
         if (jtag_flash_init == 1) {
 
-//            main_blink_msd_led(1);
-
-            // We erase the chip if we received unrelated data before (mac compatibility)
+            // we erase the chip if we received unrelated data before (mac compatibility)
             if (maybe_erase && (block == theoretical_start_sector)) {
-                // avoid erasing the internal flash if only the external flash will be updated
-                if (flash_addr_offset == 0) {
-//                    if (!target_flash_erase_chip()) {
-//                    return;
-//                    }
-                }
+                //if (!jtagEraseFlash())
+                //    return;
                 maybe_erase = 0;
                 program_page_error = 0;
             }
@@ -916,19 +946,17 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             }
 
             if (flash_started && (block == theoretical_start_sector)) {
-                // avoid erasing the internal flash if only the external flash will be updated
-                if (flash_addr_offset == 0) {
-//                    if (!target_flash_erase_chip()) {
-//                    return;
-//                    }
-                }
+                //if (!jtagEraseFlash())
+                //    return;
                 maybe_erase = 0;
                 program_page_error = 0;
             }
 
             previous_sector = block;
+            // adapt index in buffer
             current_sector++;
-            if (programPage() == 1) {
+            USBD_MSC_BlockBuf = (current_sector % 2) ? (uint8_t *)BlockBuf + 512 : (uint8_t *)BlockBuf;
+            if (program_sector() == 1) {
                 if (good_file) {
                     reason = RESERVED_BITS;
                     initDisconnect(0);
@@ -941,18 +969,20 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
     }
 }
 
-
-void usbd_msc_init () {
+void usbd_msc_init(void)
+{
     if (!task_first_started) {
         task_first_started = 1;
-        //os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
+        os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
+        os_tsk_create(flash_programming_task, FLASH_PROGRAMMING_TASK_PRIORITY);
     }
 
+    //USBD_MSC_MemorySize = 512*512;
     USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
     USBD_MSC_BlockSize  = 512;
     USBD_MSC_BlockGroup = 1;
     USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
-    USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
-    USBD_MSC_MediaReady = __TRUE;
+    USBD_MSC_BlockBuf   = (uint8_t *)BlockBuf;
+    USBD_MSC_MediaReady = 1;
 }
 
