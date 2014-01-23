@@ -164,7 +164,7 @@ void main_disable_debug_event(void) {
 
 __task void serial_process() {
     uint8_t data[SIZE_DATA];
-    uint8_t len_data = 0;
+    int32_t len_data = 0;
 
     while (1) {
 
