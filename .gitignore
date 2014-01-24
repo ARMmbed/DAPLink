@@ -41,3 +41,15 @@ tmp/
 *.axf
 *.S19
 *.bin
+
+# JLink files
+JLink*.*
+
+# Output directories
+Output
+Lst
+Obj
+
+# tags file
+tags
+
