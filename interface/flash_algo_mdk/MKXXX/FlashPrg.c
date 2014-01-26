@@ -55,10 +55,20 @@
   #define PBLOCK_SIZE             0x00040000      /* 256 KB     */
   #define EERAM_BLOCK_SIZE        0x00000800      /* 4 KB size  */
   #define DEFLASH_BLOCK_BASE      0x10000000
+#elif defined (MKP256)
+
+  #define PBLOCK_SIZE             0x00040000      /* 256 KB     */
+  #define EERAM_BLOCK_SIZE        0x00000000      /* 4 KB size  */
+  #define DEFLASH_BLOCK_BASE      0x10000000
 #elif defined (MKP512_50MHZ)
 
   #define PBLOCK_SIZE             0x00080000      /* 512 KB     */
   #define EERAM_BLOCK_SIZE        0x00000800      /* 4 KB size  */
+  #define DEFLASH_BLOCK_BASE      0x10000000
+#elif defined (MKP32_48MHZ)
+
+  #define PBLOCK_SIZE             0x00008000      /* 32 KB     */
+  #define EERAM_BLOCK_SIZE        0x00000000      /* 4 KB size  */
   #define DEFLASH_BLOCK_BASE      0x10000000
 #else
   #define PBLOCK_SIZE             0x00040000      /* 256 KB     */
@@ -79,7 +89,7 @@ const unsigned long unsecureword = 0xFFFFFFFE;
  *    Return Value:   0 - OK,  1 - Failed
  */
 #if defined (MKP128_48MHZ) || defined (MKP64_48MHZ) || defined (MKP32_48MHZ) \
-    || defined (MKPIFR_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ)
+    || defined (MKPIFR_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ) || defined (MKP256)
  #define SIM_COPC                      *((volatile unsigned long *)0x40048100)
 #else
  #define WDOG_UNLOCK                   *((volatile unsigned short *)0x4005200E)
@@ -93,7 +103,7 @@ const unsigned long unsecureword = 0xFFFFFFFE;
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
   base_adr = adr;
 #if defined (MKP128_48MHZ) || defined (MKP64_48MHZ) || defined (MKP32_48MHZ) \
-    || defined (MKPIFR_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ)
+    || defined (MKPIFR_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ) || defined (MKP256)
   SIM_COPC = 0x00u;
 #else
   /* Write 0xC520 to the unlock register */
