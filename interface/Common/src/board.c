@@ -15,7 +15,7 @@
  */
 #include "board.h"
 
-#if defined (BOARD_FRDM_KL25Z)
+#if defined (BOARD_FRDM_KL25Z) || defined (BOARD_TWR_KL25Z48M)
 #define BOARD_ID        "0200"
 #define BOARD_SECRET    "xxxxxxxx"
 
