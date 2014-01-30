@@ -16,13 +16,10 @@
 #include <MK20D5.h>
 #include "uart.h"
 #include <string.h>
-#include <RTL.h>
 
 extern uint32_t SystemCoreClock;
 
 static void clear_buffers(void);
-
-static OS_MUT uart_mutex;
 
 // Size must be 2^n for using quick wrap around
 #define  BUFFER_SIZE          (512)
@@ -36,14 +33,9 @@ struct {
 } write_buffer, read_buffer;
 
 uint32_t tx_in_progress = 0;
-uint32_t uartIRQCalled = 0;
-uint32_t errorCount = 0;
-uint32_t uartBufferOverflowCount = 0;
 
 void clear_buffers(void)
 {
-    os_mut_wait(&uart_mutex, 0xFFFF);
-
     memset((void*)&read_buffer, 0xBB, sizeof(read_buffer.data));
     read_buffer.idx_in = 0;
     read_buffer.idx_out = 0;
@@ -54,37 +46,35 @@ void clear_buffers(void)
     write_buffer.idx_out = 0;
     write_buffer.cnt_in = 0;
     write_buffer.cnt_out = 0;
-
-    os_mut_release(&uart_mutex);
 }
 
 int32_t uart_initialize (void) {
 
     NVIC_DisableIRQ(UART1_RX_TX_IRQn);
 
-    os_mut_init(&uart_mutex);
-
     clear_buffers();
 
     // enable clk PORTC
     SIM->SCGC5 |= SIM_SCGC5_PORTC_MASK;
+
     // enable clk uart
     SIM->SCGC4 |= SIM_SCGC4_UART1_MASK;
+
+    // disable interrupt
+    NVIC_DisableIRQ (UART1_RX_TX_IRQn);
+
+    // Enable receiver and transmitter
+    UART1->C2 |= UART_C2_RE_MASK | UART_C2_TE_MASK;
 
     // alternate 3: UART1
     PORTC->PCR[3] = (3 << 8);
     PORTC->PCR[4] = (3 << 8);
 
-    // transmitter and receiver enabled
-    UART1->C2 |= UART_C2_RE_MASK | UART_C2_TE_MASK;
-
     // Enable receive interrupt
     UART1->C2 |= UART_C2_RIE_MASK;
 
-    NVIC_ClearPendingIRQ(UART1_ERR_IRQn);
     NVIC_ClearPendingIRQ(UART1_RX_TX_IRQn);
 
-    NVIC_EnableIRQ(UART1_ERR_IRQn);
     NVIC_EnableIRQ(UART1_RX_TX_IRQn);
 
     return 1;
@@ -131,6 +121,9 @@ int32_t uart_set_configuration (UART_Configuration *config) {
     // disable interrupt
     NVIC_DisableIRQ (UART1_RX_TX_IRQn);
 
+    // Disable receiver and transmitter while updating
+    UART1->C2 &= ~(UART_C2_RE_MASK | UART_C2_TE_MASK);
+
     clear_buffers();
 
     // set data bits, stop bits, parity
@@ -167,7 +160,11 @@ int32_t uart_set_configuration (UART_Configuration *config) {
     UART1->BDH = (UART1->BDH & ~(UART_BDH_SBR_MASK)) | ((dll >> 8) & UART_BDH_SBR_MASK);
     UART1->BDL = (UART1->BDL & ~(UART_BDL_SBR_MASK)) | (dll & UART_BDL_SBR_MASK);
 
+    // Enable transmitter and receiver
+    UART1->C2 |= UART_C2_RE_MASK | UART_C2_TE_MASK;
+
     // Enable UART interrupt
+    NVIC_ClearPendingIRQ (UART1_RX_TX_IRQn);
     NVIC_EnableIRQ (UART1_RX_TX_IRQn);
 
     return 1;
@@ -192,8 +189,6 @@ int32_t uart_write_data (uint8_t *data, uint16_t size) {
     }
 
     cnt = 0;
-
-    os_mut_wait(&uart_mutex, 0xFFFF);
 
     while (size--) {
         len_in_buf = write_buffer.cnt_in - write_buffer.cnt_out;
@@ -221,8 +216,6 @@ int32_t uart_write_data (uint8_t *data, uint16_t size) {
         UART1->C2 |= UART_C2_TIE_MASK;
     }
 
-    os_mut_release(&uart_mutex);
-
     return cnt;
 }
 
@@ -234,8 +227,6 @@ int32_t uart_read_data (uint8_t *data, uint16_t size) {
     }
 
     cnt = 0;
-
-    os_mut_wait(&uart_mutex, 0xFFFF);
 
     while (size--) {
         if (read_buffer.cnt_in != read_buffer.cnt_out) {
@@ -250,21 +241,12 @@ int32_t uart_read_data (uint8_t *data, uint16_t size) {
         }
     }
 
-    os_mut_release(&uart_mutex);
-
     return cnt;
-}
-
-void UART1_ERR_IRQHandler (void) {
-    while(1);
 }
 
 void UART1_RX_TX_IRQHandler (void) {
     uint32_t s1;
-    int16_t  len_in_buf;
     volatile uint8_t errorData;
-
-    uartIRQCalled++;
 
     // read interrupt status
     s1 = UART1->S1;
@@ -289,19 +271,13 @@ void UART1_RX_TX_IRQHandler (void) {
     if (s1 & UART_S1_RDRF_MASK) {
         if ((s1 & UART_S1_NF_MASK) || (s1 & UART_S1_FE_MASK))
         {
-            errorCount++;
             errorData = UART1->D;
         }
         else
         {
-            len_in_buf = read_buffer.cnt_in - read_buffer.cnt_out;
             read_buffer.data[read_buffer.idx_in++] = UART1->D;
             read_buffer.idx_in &= (BUFFER_SIZE - 1);
             read_buffer.cnt_in++;
-            // if buffer full: write by dropping oldest characters
-            if (len_in_buf >= BUFFER_SIZE) {
-                uartBufferOverflowCount++;
-            }
         }
     }
 }
