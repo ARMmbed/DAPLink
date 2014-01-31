@@ -47,6 +47,7 @@ void gpio_init(void)
     // enable clk for ftm0
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
 
+#ifdef INTERFACE_GEN_32KHZ
     // configure PWM to generate a 32kHz clock used
     // by the RTC module of the target.
     // Choose EDGE-Aligned PWM:  selected when QUADEN=0, DECAPEN=0, COMBINE=0, CPWMS=0, and MSnB=1  (page 964)
@@ -81,7 +82,7 @@ void gpio_init(void)
 
     //enable write protection
     FTM0->MODE &= ~FTM_MODE_WPDIS_MASK;
-
+#endif
 }
 
 void gpio_set_dap_led(uint8_t state)

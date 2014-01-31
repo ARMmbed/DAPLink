@@ -30,10 +30,18 @@
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_KL05Z)
+#   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL25Z)
+#   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_KL46Z)
+#   define WANTED_SIZE_IN_KB                        (256)
+#elif defined(DBG_K20D50M)
 #   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
+#elif defined(DBG_LPC1114)
+#   define WANTED_SIZE_IN_KB                        (32)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS

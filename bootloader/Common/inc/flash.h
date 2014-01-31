@@ -21,6 +21,7 @@
 #define START_APP_ADDRESS (0x5000)
 #define SECTOR_SIZE       (0x1000)
 #define NB_SECTOR         (15)
+
 #define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
 
 int  flash_init         (uint32_t clk);

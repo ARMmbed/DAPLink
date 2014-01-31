@@ -17,9 +17,20 @@
 #include "..\FlashOS.H"        // FlashOS Structures
 
 // Memory Mapping Control
+#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#define MEMMAP   (*((volatile unsigned long *) 0x40048000))
+#else
 #define MEMMAP   (*((volatile unsigned char *) 0x400FC040))
+#endif
 
 #ifdef MBED
+
+#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#define MAINCLKSEL (*((volatile unsigned long *) 0x40048070))
+#define MAINCLKUEN (*((volatile unsigned long *) 0x40048074))
+#define MAINCLKDIV (*((volatile unsigned long *) 0x40048078))
+#else
+
 /* Phase Locked Loop (Main PLL) */
 #define PLL0CON           (*((volatile unsigned char *) 0x400FC080))
 #define PLL0CFG           (*((volatile unsigned long *) 0x400FC084))
@@ -39,6 +50,7 @@
 #define PLLSTAT_LOCK     (1<<26)
 #define SCS_OSCEN         (1<<5)
 #define SCS_OSCSTAT      (1<<6)
+#endif
 
 #else
 // Phase Locked Loop (Main PLL)
@@ -67,6 +79,12 @@
 #ifdef LPC1700_32
 #define END_SECTOR     7
 #endif
+#ifdef LPC11xx_32
+#define END_SECTOR     7
+#endif
+#ifdef LPC8xx_4
+#define END_SECTOR     3
+#endif
 
 /* Code Read Protection (CRP) */
 #define CRP_ADDRESS (0x000002FC)
@@ -75,9 +93,14 @@
 #define CRP2        (0x87654321)
 #define CRP3        (0x43218765)
 #define IS_CRP_VALUE(v) ((v==NO_ISP) || (v==CRP1) || (v==CRP2) || (v==CRP3))
-#define NO_CRP      (1)     /* Forbid programming if CRP is enabled. */
 
+#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#define NO_CRP      (0)
+#define _CCLK (12000)
+#else
+#define NO_CRP      (1)     /* Forbid programming if CRP is enabled. */
 unsigned long _CCLK;           // CCLK in kHz
+#endif
 
 struct sIAP {                  // IAP Structure
   unsigned long cmd;           // Command
@@ -94,6 +117,7 @@ typedef void (*IAP_Entry) (unsigned long *cmd, unsigned long *stat);
 
 /*
  * Get Sector Number
+
  *    Parameter:      adr:  Sector Address
  *    Return Value:   Sector Number
  */
@@ -101,10 +125,16 @@ typedef void (*IAP_Entry) (unsigned long *cmd, unsigned long *stat);
 unsigned long GetSecNum (unsigned long adr) {
   unsigned long n;
 
+#if defined(LPC8xx_4)
+  n = adr >> 10;                               //  1kB Sector
+#elif defined(LPC11xx_32)
+  n = adr >> 12;                               //  4kB Sector
+#else
   n = adr >> 12;                               //  4kB Sector
   if (n >= 0x10) {
     n = 0x0E + (n >> 3);                       // 32kB Sector
   }
+#endif
 
   return (n);                                  // Sector Number
 }
@@ -120,6 +150,19 @@ unsigned long GetSecNum (unsigned long adr) {
  */
 
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
+
+#if defined(LPC11xx_32) || defined(LPC8xx_4)
+
+  MAINCLKSEL = 0;                              // Select Internal RC Oscillator
+  MAINCLKUEN = 1;                              // Update Main Clock Source
+  MAINCLKUEN = 0;                              // Toggle Update Register
+  MAINCLKUEN = 1;
+  while (!(MAINCLKUEN & 1));                   // Wait until updated
+  MAINCLKDIV = 1;                              // Set Main Clock divider to 1
+
+  MEMMAP     = 0x02;                           // User Flash Mode
+
+#else
 
   /* TODO: Could check for valid part ID here */
 
@@ -166,6 +209,7 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
   MEMMAP  = 0x01;
 
   _CCLK = 60000; /* 60MHz */
+#endif
 
   return (0);
 }
@@ -211,6 +255,22 @@ int UnInit (unsigned long fnc) {
 
 int EraseChip (void) {
 
+#if defined(LPC11xx_32) || defined (LPC8xx_4)
+
+  IAP.cmd    = 50;                             // Prepare Sector for Erase
+  IAP.par[0] = 0;                              // Start Sector
+  IAP.par[1] = 0;                              // End Sector
+  IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
+  if (IAP.stat) return (1);                    // Command Failed
+
+  IAP.cmd    = 52;                             // Erase Sector
+  IAP.par[0] = 0;                              // Start Sector
+  IAP.par[1] = 0;                              // End Sector
+  IAP.par[2] = _CCLK;                          // CCLK in kHz
+  IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
+  if (IAP.stat) return (1);                    // Command Failed
+
+#else
   IAP.cmd    = 50;                             // Prepare Sector for Erase
   IAP.par[0] = 0;                              // Start Sector
   IAP.par[1] = END_SECTOR;                     // End Sector
@@ -223,8 +283,9 @@ int EraseChip (void) {
   IAP.par[2] = _CCLK;                          // CCLK in kHz
   IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
   if (IAP.stat) return (1);                    // Command Failed
+#endif
 
-  return (0);                                  // Finished without Errors
+return (0);                                    // Finished without Errors
 }
 
 
@@ -302,10 +363,14 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf) {
   IAP.cmd    = 51;                             // Copy RAM to Flash
   IAP.par[0] = adr;                            // Destination Flash Address
   IAP.par[1] = (unsigned long)buf;             // Source RAM Address
-  IAP.par[2] = 512;                           // Fixed Page Size
+#if defined(LPC11xx_32) || defined(LPC8xx_4)
+  IAP.par[2] = 256;                            // Fixed Page Size
+#else
+  IAP.par[2] = 512;                            // Fixed Page Size
+#endif
   IAP.par[3] = _CCLK;                          // CCLK in kHz
   IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
   if (IAP.stat) return (1);                    // Command Failed
 
-  return (0);                                  // Finished without Errors
+return (0);                                  // Finished without Errors
 }

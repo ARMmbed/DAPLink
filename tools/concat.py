@@ -23,7 +23,8 @@ from paths import *
 
 
 BOOTLOADER_SIZES = {
-    'LPC11U35': 0x5000
+    'LPC11U35': 0x5000,
+    'K20DX128': 0x5000,
 }
 
 
@@ -32,7 +33,7 @@ def merge(bootloader_path, interface_path, image_path, interface_start=None):
     interface_size = getsize(interface_path)
     if bootloader_size == 0 or interface_size == 0:
         raise Exception("empty program")
-    
+
     with open(bootloader_path, 'rb') as bootloader, open(interface_path, 'rb') as interface, open(image_path, 'wb') as image:
         if interface_start is None:
             offset = bootloader_size
@@ -40,14 +41,14 @@ def merge(bootloader_path, interface_path, image_path, interface_start=None):
             if bootloader_size > interface_start:
                 raise Exception("bootloader overflow in interface area")
             offset = interface_start
-        
+
         # Copy bootloader
         image.write(bootloader.read())
-        
+
         # Write padding
         for _ in range(offset - bootloader_size):
             image.write(pack('B', 0xFF))
-        
+
         # Copy interface
         image.write(interface.read())
 
@@ -55,18 +56,18 @@ def merge(bootloader_path, interface_path, image_path, interface_start=None):
 if __name__ == '__main__':
     options = get_options()
     print 'Generating image for (if: %s, target: %s)' % (options.interface, options.target)
-    
+
     bootloader_elf = get_bootloader_path(options.interface)
-    print 'Bootloader: %s' % bootloader_elf 
-    
+    print 'Bootloader: %s' % bootloader_elf
+
     interface_elf = get_interface_path(options.interface, options.target)
     print 'Interface : %s' % interface_elf
-    
+
     image_bin = get_image_path(options.interface, options.target)
     print 'Image     : %s' % image_bin
-    
+
     gen_binary(bootloader_elf, TMP_BOOTLOADER_BIN_PATH, is_lpc(options.interface))
     gen_binary(interface_elf , TMP_INTERFACE_BIN_PATH)
-    
+
     merge(TMP_BOOTLOADER_BIN_PATH, TMP_INTERFACE_BIN_PATH, image_bin,
           BOOTLOADER_SIZES[options.interface])

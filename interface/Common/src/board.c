@@ -19,6 +19,18 @@
 #define BOARD_ID        "0200"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_FRDM_KL05Z)
+#define BOARD_ID        "0210"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_KL46Z)
+#define BOARD_ID        "0220"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_K20D50M)
+#define BOARD_ID        "0230"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #elif defined (BOARD_LPC812_MAX)
 #define BOARD_ID        "1050"
 #define BOARD_SECRET    "xxxxxxxx"
@@ -30,6 +42,10 @@
 #elif defined (BOARD_UBLOX_C027)
 #define BOARD_ID        "1234"
 #define BOARD_SECRET    "78a0cd72"
+
+#elif defined (BOARD_LPC1114)
+#define BOARD_ID        "1114"
+#define BOARD_SECRET    "xxxxxxxx"
 
 #endif
 
