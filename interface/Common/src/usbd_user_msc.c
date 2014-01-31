@@ -545,7 +545,7 @@ static void initDisconnect(uint8_t success) {
         enter_isp();
     }
 #else
-    autorst = false;
+    int autorst = false;
 #endif
     drag_success = success;
     if (autorst)
