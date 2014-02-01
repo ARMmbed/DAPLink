@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "../FlashOS.H"        // FlashOS Structures
 #include "SSD_Types.h"
 #include "SSD_FTFx.h"
 #include "SSD_FTFx_Internal.h"

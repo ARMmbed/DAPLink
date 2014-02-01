@@ -570,6 +570,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1391,6 +1396,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1649,7 +1659,7 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>k20dx128_kl25z_mbed_bootloader</TargetName>
+      <TargetName>k20dx128_kl25z_mbed_bootloader_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -2211,6 +2221,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3033,6 +3048,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3854,6 +3874,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4674,6 +4699,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5532,6 +5562,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6389,6 +6424,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6647,7 +6687,7 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>k20dx128_k20dx_mbed_bootloader</TargetName>
+      <TargetName>k20dx128_k20dx_mbed_bootloader_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -7209,6 +7249,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8067,6 +8112,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -8924,6 +8974,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -9182,7 +9237,7 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>k20dx128_kl05z_mbed_bootloader</TargetName>
+      <TargetName>k20dx128_kl05z_mbed_bootloader_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -9744,6 +9799,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10602,6 +10662,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -11459,6 +11524,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -11717,7 +11787,7 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>k20dx128_kl46z_mbed_bootloader</TargetName>
+      <TargetName>k20dx128_kl46z_mbed_bootloader_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -12279,6 +12349,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -13137,6 +13212,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -13993,6 +14073,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -14851,6 +14936,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -15707,6 +15797,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -16565,6 +16660,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -17422,6 +17522,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -18242,6 +18347,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -19064,6 +19174,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -19884,6 +19999,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
