@@ -141,7 +141,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -155,7 +155,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
+            <Driver>BIN\ULP2CM3.DLL</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -570,6 +570,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -907,7 +912,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -916,7 +921,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1345,6 +1350,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1682,7 +1692,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -1691,7 +1701,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -2120,6 +2130,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2457,7 +2472,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -2466,7 +2481,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -2930,6 +2945,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3742,6 +3762,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4516,6 +4541,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5328,6 +5358,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6139,6 +6174,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6913,6 +6953,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7725,6 +7770,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -8536,6 +8586,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -9310,6 +9365,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
