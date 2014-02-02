@@ -98,6 +98,22 @@
 
     #define BM_FTFx_FSEC_SEC BM_FTFE_FSEC_SEC
     #define BM_FTFx_FSEC_KEYEN BM_FTFE_FSEC_KEYEN
+#elif defined(FTFL)
+    #define FTFx FTFL
+
+    #define HW_FTFx_FSTAT HW_FTFL_FSTAT
+    #define HW_FTFx_FSTAT_WR HW_FTFL_FSTAT_WR
+
+    #define BM_FTFx_FSTAT_CCIF BM_FTFL_FSTAT_CCIF
+    #define BM_FTFx_FSTAT_RDCOLERR BM_FTFL_FSTAT_RDCOLERR
+    #define BM_FTFx_FSTAT_ACCERR BM_FTFL_FSTAT_ACCERR
+    #define BM_FTFx_FSTAT_FPVIOL BM_FTFL_FSTAT_FPVIOL
+    #define BM_FTFx_FSTAT_MGSTAT0 BM_FTFL_FSTAT_MGSTAT0
+
+    #define HW_FTFx_FCCOBx_WR(n, v) HW_FTFL_FCCOB##n##_WR(v)
+
+    #define BM_FTFx_FSEC_SEC BM_FTFL_FSEC_SEC
+    #define BM_FTFx_FSEC_KEYEN BM_FTFL_FSEC_KEYEN
 #else
     #error "Unknown flash controller"
 #endif

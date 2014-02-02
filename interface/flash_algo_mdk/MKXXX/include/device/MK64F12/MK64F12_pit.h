@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -79,11 +79,11 @@ typedef union _hw_pit_mcr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PIT_MCR               (*(__IO hw_pit_mcr_t *) HW_PIT_MCR_ADDR)
-#define HW_PIT_MCR_RD            (HW_PIT_MCR.U)
+#define HW_PIT_MCR_RD()          (HW_PIT_MCR.U)
 #define HW_PIT_MCR_WR(v)         (HW_PIT_MCR.U = (v))
-#define HW_PIT_MCR_SET(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD |  (v)))
-#define HW_PIT_MCR_CLR(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD & ~(v)))
-#define HW_PIT_MCR_TOG(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD ^  (v)))
+#define HW_PIT_MCR_SET(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD() |  (v)))
+#define HW_PIT_MCR_CLR(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD() & ~(v)))
+#define HW_PIT_MCR_TOG(v)        (HW_PIT_MCR_WR(HW_PIT_MCR_RD() ^  (v)))
 #endif
 //@}
 

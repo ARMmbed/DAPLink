@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -68,8 +68,8 @@ typedef union _hw_mcm_plasc
     struct _hw_mcm_plasc_bitfields
     {
         uint16_t ASC : 8;              //!< [7:0] Each bit in the ASC field indicates
-                                       //!< whether there is a corresponding connection to the crossbar switch's
-                                       //!< slave input port.
+                                       //! whether there is a corresponding connection to the crossbar switch's slave
+                                       //! input port.
         uint16_t RESERVED0 : 8;        //!< [15:8]
     } B;
 } hw_mcm_plasc_t;
@@ -83,7 +83,7 @@ typedef union _hw_mcm_plasc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_PLASC             (*(__I hw_mcm_plasc_t *) HW_MCM_PLASC_ADDR)
-#define HW_MCM_PLASC_RD          (HW_MCM_PLASC.U)
+#define HW_MCM_PLASC_RD()        (HW_MCM_PLASC.U)
 #endif
 //@}
 
@@ -128,7 +128,7 @@ typedef union _hw_mcm_plamc
     struct _hw_mcm_plamc_bitfields
     {
         uint16_t AMC : 8;              //!< [7:0] Each bit in the AMC field indicates
-                                       //!< whether there is a corresponding connection to the AXBS master input port.
+                                       //! whether there is a corresponding connection to the AXBS master input port.
         uint16_t RESERVED0 : 8;        //!< [15:8]
     } B;
 } hw_mcm_plamc_t;
@@ -142,7 +142,7 @@ typedef union _hw_mcm_plamc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_PLAMC             (*(__I hw_mcm_plamc_t *) HW_MCM_PLAMC_ADDR)
-#define HW_MCM_PLAMC_RD          (HW_MCM_PLAMC.U)
+#define HW_MCM_PLAMC_RD()        (HW_MCM_PLAMC.U)
 #endif
 //@}
 
@@ -200,7 +200,7 @@ typedef union _hw_mcm_placr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_PLACR             (*(__I hw_mcm_placr_t *) HW_MCM_PLACR_ADDR)
-#define HW_MCM_PLACR_RD          (HW_MCM_PLACR.U)
+#define HW_MCM_PLACR_RD()        (HW_MCM_PLACR.U)
 #endif
 //@}
 
@@ -273,11 +273,11 @@ typedef union _hw_mcm_isr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_ISR               (*(__IO hw_mcm_isr_t *) HW_MCM_ISR_ADDR)
-#define HW_MCM_ISR_RD            (HW_MCM_ISR.U)
+#define HW_MCM_ISR_RD()          (HW_MCM_ISR.U)
 #define HW_MCM_ISR_WR(v)         (HW_MCM_ISR.U = (v))
-#define HW_MCM_ISR_SET(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD |  (v)))
-#define HW_MCM_ISR_CLR(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD & ~(v)))
-#define HW_MCM_ISR_TOG(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD ^  (v)))
+#define HW_MCM_ISR_SET(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() |  (v)))
+#define HW_MCM_ISR_CLR(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() & ~(v)))
+#define HW_MCM_ISR_TOG(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() ^  (v)))
 #endif
 //@}
 
@@ -684,11 +684,11 @@ typedef union _hw_mcm_etbcc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_ETBCC             (*(__IO hw_mcm_etbcc_t *) HW_MCM_ETBCC_ADDR)
-#define HW_MCM_ETBCC_RD          (HW_MCM_ETBCC.U)
+#define HW_MCM_ETBCC_RD()        (HW_MCM_ETBCC.U)
 #define HW_MCM_ETBCC_WR(v)       (HW_MCM_ETBCC.U = (v))
-#define HW_MCM_ETBCC_SET(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD |  (v)))
-#define HW_MCM_ETBCC_CLR(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD & ~(v)))
-#define HW_MCM_ETBCC_TOG(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD ^  (v)))
+#define HW_MCM_ETBCC_SET(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() |  (v)))
+#define HW_MCM_ETBCC_CLR(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() & ~(v)))
+#define HW_MCM_ETBCC_TOG(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() ^  (v)))
 #endif
 //@}
 
@@ -748,7 +748,7 @@ typedef union _hw_mcm_etbcc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RSPT field to a new value.
-#define BW_MCM_ETBCC_RSPT(v) (HW_MCM_ETBCC_WR((HW_MCM_ETBCC_RD & ~BM_MCM_ETBCC_RSPT) | BF_MCM_ETBCC_RSPT(v)))
+#define BW_MCM_ETBCC_RSPT(v) (HW_MCM_ETBCC_WR((HW_MCM_ETBCC_RD() & ~BM_MCM_ETBCC_RSPT) | BF_MCM_ETBCC_RSPT(v)))
 #endif
 //@}
 
@@ -869,11 +869,11 @@ typedef union _hw_mcm_etbrl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_ETBRL             (*(__IO hw_mcm_etbrl_t *) HW_MCM_ETBRL_ADDR)
-#define HW_MCM_ETBRL_RD          (HW_MCM_ETBRL.U)
+#define HW_MCM_ETBRL_RD()        (HW_MCM_ETBRL.U)
 #define HW_MCM_ETBRL_WR(v)       (HW_MCM_ETBRL.U = (v))
-#define HW_MCM_ETBRL_SET(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD |  (v)))
-#define HW_MCM_ETBRL_CLR(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD & ~(v)))
-#define HW_MCM_ETBRL_TOG(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD ^  (v)))
+#define HW_MCM_ETBRL_SET(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() |  (v)))
+#define HW_MCM_ETBRL_CLR(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() & ~(v)))
+#define HW_MCM_ETBRL_TOG(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() ^  (v)))
 #endif
 //@}
 
@@ -902,7 +902,7 @@ typedef union _hw_mcm_etbrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RELOAD field to a new value.
-#define BW_MCM_ETBRL_RELOAD(v) (HW_MCM_ETBRL_WR((HW_MCM_ETBRL_RD & ~BM_MCM_ETBRL_RELOAD) | BF_MCM_ETBRL_RELOAD(v)))
+#define BW_MCM_ETBRL_RELOAD(v) (HW_MCM_ETBRL_WR((HW_MCM_ETBRL_RD() & ~BM_MCM_ETBRL_RELOAD) | BF_MCM_ETBRL_RELOAD(v)))
 #endif
 //@}
 
@@ -935,7 +935,7 @@ typedef union _hw_mcm_etbcnt
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_ETBCNT            (*(__I hw_mcm_etbcnt_t *) HW_MCM_ETBCNT_ADDR)
-#define HW_MCM_ETBCNT_RD         (HW_MCM_ETBCNT.U)
+#define HW_MCM_ETBCNT_RD()       (HW_MCM_ETBCNT.U)
 #endif
 //@}
 
@@ -993,11 +993,11 @@ typedef union _hw_mcm_pid
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MCM_PID               (*(__IO hw_mcm_pid_t *) HW_MCM_PID_ADDR)
-#define HW_MCM_PID_RD            (HW_MCM_PID.U)
+#define HW_MCM_PID_RD()          (HW_MCM_PID.U)
 #define HW_MCM_PID_WR(v)         (HW_MCM_PID.U = (v))
-#define HW_MCM_PID_SET(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD |  (v)))
-#define HW_MCM_PID_CLR(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD & ~(v)))
-#define HW_MCM_PID_TOG(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD ^  (v)))
+#define HW_MCM_PID_SET(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() |  (v)))
+#define HW_MCM_PID_CLR(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() & ~(v)))
+#define HW_MCM_PID_TOG(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() ^  (v)))
 #endif
 //@}
 
@@ -1025,7 +1025,7 @@ typedef union _hw_mcm_pid
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PID field to a new value.
-#define BW_MCM_PID_PID(v)    (HW_MCM_PID_WR((HW_MCM_PID_RD & ~BM_MCM_PID_PID) | BF_MCM_PID_PID(v)))
+#define BW_MCM_PID_PID(v)    (HW_MCM_PID_WR((HW_MCM_PID_RD() & ~BM_MCM_PID_PID) | BF_MCM_PID_PID(v)))
 #endif
 //@}
 

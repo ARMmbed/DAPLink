@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -17,12 +17,17 @@
 #ifndef _REGS_H
 #define _REGS_H  1
 
+#include <stdint.h>
+#include <stdlib.h>
+
 //
 // define base address of the register block only if it is not already
 // defined, which allows the compiler to override at build time for
 // users who've mapped their registers to locations other than the
 // physical location
 //
+
+#include <stdint.h>
 
 #ifndef REGS_BASE
 #define REGS_BASE 0x00000000
@@ -45,6 +50,12 @@ typedef unsigned int reg32_t;
 #endif
 #define     __O     volatile             /*!< Defines 'write only' permissions                */
 #define     __IO    volatile             /*!< Defines 'read / write' permissions              */
+
+#define BME_AND_MASK	(1<<26)
+#define BME_OR_MASK		(1<<27)
+#define BME_XOR_MASK	(3<<26)
+#define BME_BFI_MASK(BIT,WIDTH)		(1<<28) | (BIT<<23) | ((WIDTH-1)<<19)
+#define BME_UBFX_MASK(BIT,WIDTH)	(1<<28) | (BIT<<23) | ((WIDTH-1)<<19)
 
 /**
  * @brief Macro to access a single bit of a 32-bit peripheral register (bit band region

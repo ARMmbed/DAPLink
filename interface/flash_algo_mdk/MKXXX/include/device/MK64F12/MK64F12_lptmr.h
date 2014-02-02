@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -80,11 +80,11 @@ typedef union _hw_lptmr_csr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LPTMR_CSR             (*(__IO hw_lptmr_csr_t *) HW_LPTMR_CSR_ADDR)
-#define HW_LPTMR_CSR_RD          (HW_LPTMR_CSR.U)
+#define HW_LPTMR_CSR_RD()        (HW_LPTMR_CSR.U)
 #define HW_LPTMR_CSR_WR(v)       (HW_LPTMR_CSR.U = (v))
-#define HW_LPTMR_CSR_SET(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD |  (v)))
-#define HW_LPTMR_CSR_CLR(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD & ~(v)))
-#define HW_LPTMR_CSR_TOG(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD ^  (v)))
+#define HW_LPTMR_CSR_SET(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD() |  (v)))
+#define HW_LPTMR_CSR_CLR(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD() & ~(v)))
+#define HW_LPTMR_CSR_TOG(v)      (HW_LPTMR_CSR_WR(HW_LPTMR_CSR_RD() ^  (v)))
 #endif
 //@}
 
@@ -241,7 +241,7 @@ typedef union _hw_lptmr_csr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TPS field to a new value.
-#define BW_LPTMR_CSR_TPS(v)  (HW_LPTMR_CSR_WR((HW_LPTMR_CSR_RD & ~BM_LPTMR_CSR_TPS) | BF_LPTMR_CSR_TPS(v)))
+#define BW_LPTMR_CSR_TPS(v)  (HW_LPTMR_CSR_WR((HW_LPTMR_CSR_RD() & ~BM_LPTMR_CSR_TPS) | BF_LPTMR_CSR_TPS(v)))
 #endif
 //@}
 
@@ -333,11 +333,11 @@ typedef union _hw_lptmr_psr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LPTMR_PSR             (*(__IO hw_lptmr_psr_t *) HW_LPTMR_PSR_ADDR)
-#define HW_LPTMR_PSR_RD          (HW_LPTMR_PSR.U)
+#define HW_LPTMR_PSR_RD()        (HW_LPTMR_PSR.U)
 #define HW_LPTMR_PSR_WR(v)       (HW_LPTMR_PSR.U = (v))
-#define HW_LPTMR_PSR_SET(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD |  (v)))
-#define HW_LPTMR_PSR_CLR(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD & ~(v)))
-#define HW_LPTMR_PSR_TOG(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD ^  (v)))
+#define HW_LPTMR_PSR_SET(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD() |  (v)))
+#define HW_LPTMR_PSR_CLR(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD() & ~(v)))
+#define HW_LPTMR_PSR_TOG(v)      (HW_LPTMR_PSR_WR(HW_LPTMR_PSR_RD() ^  (v)))
 #endif
 //@}
 
@@ -374,7 +374,7 @@ typedef union _hw_lptmr_psr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PCS field to a new value.
-#define BW_LPTMR_PSR_PCS(v)  (HW_LPTMR_PSR_WR((HW_LPTMR_PSR_RD & ~BM_LPTMR_PSR_PCS) | BF_LPTMR_PSR_PCS(v)))
+#define BW_LPTMR_PSR_PCS(v)  (HW_LPTMR_PSR_WR((HW_LPTMR_PSR_RD() & ~BM_LPTMR_PSR_PCS) | BF_LPTMR_PSR_PCS(v)))
 #endif
 //@}
 
@@ -465,7 +465,7 @@ typedef union _hw_lptmr_psr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PRESCALE field to a new value.
-#define BW_LPTMR_PSR_PRESCALE(v) (HW_LPTMR_PSR_WR((HW_LPTMR_PSR_RD & ~BM_LPTMR_PSR_PRESCALE) | BF_LPTMR_PSR_PRESCALE(v)))
+#define BW_LPTMR_PSR_PRESCALE(v) (HW_LPTMR_PSR_WR((HW_LPTMR_PSR_RD() & ~BM_LPTMR_PSR_PRESCALE) | BF_LPTMR_PSR_PRESCALE(v)))
 #endif
 //@}
 
@@ -498,11 +498,11 @@ typedef union _hw_lptmr_cmr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LPTMR_CMR             (*(__IO hw_lptmr_cmr_t *) HW_LPTMR_CMR_ADDR)
-#define HW_LPTMR_CMR_RD          (HW_LPTMR_CMR.U)
+#define HW_LPTMR_CMR_RD()        (HW_LPTMR_CMR.U)
 #define HW_LPTMR_CMR_WR(v)       (HW_LPTMR_CMR.U = (v))
-#define HW_LPTMR_CMR_SET(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD |  (v)))
-#define HW_LPTMR_CMR_CLR(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD & ~(v)))
-#define HW_LPTMR_CMR_TOG(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD ^  (v)))
+#define HW_LPTMR_CMR_SET(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD() |  (v)))
+#define HW_LPTMR_CMR_CLR(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD() & ~(v)))
+#define HW_LPTMR_CMR_TOG(v)      (HW_LPTMR_CMR_WR(HW_LPTMR_CMR_RD() ^  (v)))
 #endif
 //@}
 
@@ -534,7 +534,7 @@ typedef union _hw_lptmr_cmr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the COMPARE field to a new value.
-#define BW_LPTMR_CMR_COMPARE(v) (HW_LPTMR_CMR_WR((HW_LPTMR_CMR_RD & ~BM_LPTMR_CMR_COMPARE) | BF_LPTMR_CMR_COMPARE(v)))
+#define BW_LPTMR_CMR_COMPARE(v) (HW_LPTMR_CMR_WR((HW_LPTMR_CMR_RD() & ~BM_LPTMR_CMR_COMPARE) | BF_LPTMR_CMR_COMPARE(v)))
 #endif
 //@}
 
@@ -567,11 +567,11 @@ typedef union _hw_lptmr_cnr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LPTMR_CNR             (*(__IO hw_lptmr_cnr_t *) HW_LPTMR_CNR_ADDR)
-#define HW_LPTMR_CNR_RD          (HW_LPTMR_CNR.U)
+#define HW_LPTMR_CNR_RD()        (HW_LPTMR_CNR.U)
 #define HW_LPTMR_CNR_WR(v)       (HW_LPTMR_CNR.U = (v))
-#define HW_LPTMR_CNR_SET(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD |  (v)))
-#define HW_LPTMR_CNR_CLR(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD & ~(v)))
-#define HW_LPTMR_CNR_TOG(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD ^  (v)))
+#define HW_LPTMR_CNR_SET(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD() |  (v)))
+#define HW_LPTMR_CNR_CLR(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD() & ~(v)))
+#define HW_LPTMR_CNR_TOG(v)      (HW_LPTMR_CNR_WR(HW_LPTMR_CNR_RD() ^  (v)))
 #endif
 //@}
 
@@ -597,7 +597,7 @@ typedef union _hw_lptmr_cnr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the COUNTER field to a new value.
-#define BW_LPTMR_CNR_COUNTER(v) (HW_LPTMR_CNR_WR((HW_LPTMR_CNR_RD & ~BM_LPTMR_CNR_COUNTER) | BF_LPTMR_CNR_COUNTER(v)))
+#define BW_LPTMR_CNR_COUNTER(v) (HW_LPTMR_CNR_WR((HW_LPTMR_CNR_RD() & ~BM_LPTMR_CNR_COUNTER) | BF_LPTMR_CNR_COUNTER(v)))
 #endif
 //@}
 

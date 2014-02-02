@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -80,22 +80,22 @@ typedef union _hw_axbs_prsn
     struct _hw_axbs_prsn_bitfields
     {
         uint32_t M0 : 3;               //!< [2:0] Master 0 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED0 : 1;        //!< [3]
         uint32_t M1 : 3;               //!< [6:4] Master 1 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED1 : 1;        //!< [7]
         uint32_t M2 : 3;               //!< [10:8] Master 2 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED2 : 1;        //!< [11]
         uint32_t M3 : 3;               //!< [14:12] Master 3 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED3 : 1;        //!< [15]
         uint32_t M4 : 3;               //!< [18:16] Master 4 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED4 : 1;        //!< [19]
         uint32_t M5 : 3;               //!< [22:20] Master 5 Priority. Sets the arbitration
-                                       //!< priority for this port on the associated slave port.
+                                       //! priority for this port on the associated slave port.
         uint32_t RESERVED5 : 9;        //!< [31:23]
     } B;
 } hw_axbs_prsn_t;
@@ -578,11 +578,11 @@ typedef union _hw_axbs_mgpcr0
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR0           (*(__IO hw_axbs_mgpcr0_t *) HW_AXBS_MGPCR0_ADDR)
-#define HW_AXBS_MGPCR0_RD        (HW_AXBS_MGPCR0.U)
+#define HW_AXBS_MGPCR0_RD()      (HW_AXBS_MGPCR0.U)
 #define HW_AXBS_MGPCR0_WR(v)     (HW_AXBS_MGPCR0.U = (v))
-#define HW_AXBS_MGPCR0_SET(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD |  (v)))
-#define HW_AXBS_MGPCR0_CLR(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD & ~(v)))
-#define HW_AXBS_MGPCR0_TOG(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD ^  (v)))
+#define HW_AXBS_MGPCR0_SET(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() |  (v)))
+#define HW_AXBS_MGPCR0_CLR(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() & ~(v)))
+#define HW_AXBS_MGPCR0_TOG(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() ^  (v)))
 #endif
 //@}
 
@@ -622,7 +622,7 @@ typedef union _hw_axbs_mgpcr0
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR0_AULB(v) (HW_AXBS_MGPCR0_WR((HW_AXBS_MGPCR0_RD & ~BM_AXBS_MGPCR0_AULB) | BF_AXBS_MGPCR0_AULB(v)))
+#define BW_AXBS_MGPCR0_AULB(v) (HW_AXBS_MGPCR0_WR((HW_AXBS_MGPCR0_RD() & ~BM_AXBS_MGPCR0_AULB) | BF_AXBS_MGPCR0_AULB(v)))
 #endif
 //@}
 
@@ -660,11 +660,11 @@ typedef union _hw_axbs_mgpcr1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR1           (*(__IO hw_axbs_mgpcr1_t *) HW_AXBS_MGPCR1_ADDR)
-#define HW_AXBS_MGPCR1_RD        (HW_AXBS_MGPCR1.U)
+#define HW_AXBS_MGPCR1_RD()      (HW_AXBS_MGPCR1.U)
 #define HW_AXBS_MGPCR1_WR(v)     (HW_AXBS_MGPCR1.U = (v))
-#define HW_AXBS_MGPCR1_SET(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD |  (v)))
-#define HW_AXBS_MGPCR1_CLR(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD & ~(v)))
-#define HW_AXBS_MGPCR1_TOG(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD ^  (v)))
+#define HW_AXBS_MGPCR1_SET(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() |  (v)))
+#define HW_AXBS_MGPCR1_CLR(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() & ~(v)))
+#define HW_AXBS_MGPCR1_TOG(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() ^  (v)))
 #endif
 //@}
 
@@ -704,7 +704,7 @@ typedef union _hw_axbs_mgpcr1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR1_AULB(v) (HW_AXBS_MGPCR1_WR((HW_AXBS_MGPCR1_RD & ~BM_AXBS_MGPCR1_AULB) | BF_AXBS_MGPCR1_AULB(v)))
+#define BW_AXBS_MGPCR1_AULB(v) (HW_AXBS_MGPCR1_WR((HW_AXBS_MGPCR1_RD() & ~BM_AXBS_MGPCR1_AULB) | BF_AXBS_MGPCR1_AULB(v)))
 #endif
 //@}
 
@@ -742,11 +742,11 @@ typedef union _hw_axbs_mgpcr2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR2           (*(__IO hw_axbs_mgpcr2_t *) HW_AXBS_MGPCR2_ADDR)
-#define HW_AXBS_MGPCR2_RD        (HW_AXBS_MGPCR2.U)
+#define HW_AXBS_MGPCR2_RD()      (HW_AXBS_MGPCR2.U)
 #define HW_AXBS_MGPCR2_WR(v)     (HW_AXBS_MGPCR2.U = (v))
-#define HW_AXBS_MGPCR2_SET(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD |  (v)))
-#define HW_AXBS_MGPCR2_CLR(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD & ~(v)))
-#define HW_AXBS_MGPCR2_TOG(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD ^  (v)))
+#define HW_AXBS_MGPCR2_SET(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() |  (v)))
+#define HW_AXBS_MGPCR2_CLR(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() & ~(v)))
+#define HW_AXBS_MGPCR2_TOG(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() ^  (v)))
 #endif
 //@}
 
@@ -786,7 +786,7 @@ typedef union _hw_axbs_mgpcr2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR2_AULB(v) (HW_AXBS_MGPCR2_WR((HW_AXBS_MGPCR2_RD & ~BM_AXBS_MGPCR2_AULB) | BF_AXBS_MGPCR2_AULB(v)))
+#define BW_AXBS_MGPCR2_AULB(v) (HW_AXBS_MGPCR2_WR((HW_AXBS_MGPCR2_RD() & ~BM_AXBS_MGPCR2_AULB) | BF_AXBS_MGPCR2_AULB(v)))
 #endif
 //@}
 
@@ -824,11 +824,11 @@ typedef union _hw_axbs_mgpcr3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR3           (*(__IO hw_axbs_mgpcr3_t *) HW_AXBS_MGPCR3_ADDR)
-#define HW_AXBS_MGPCR3_RD        (HW_AXBS_MGPCR3.U)
+#define HW_AXBS_MGPCR3_RD()      (HW_AXBS_MGPCR3.U)
 #define HW_AXBS_MGPCR3_WR(v)     (HW_AXBS_MGPCR3.U = (v))
-#define HW_AXBS_MGPCR3_SET(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD |  (v)))
-#define HW_AXBS_MGPCR3_CLR(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD & ~(v)))
-#define HW_AXBS_MGPCR3_TOG(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD ^  (v)))
+#define HW_AXBS_MGPCR3_SET(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() |  (v)))
+#define HW_AXBS_MGPCR3_CLR(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() & ~(v)))
+#define HW_AXBS_MGPCR3_TOG(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() ^  (v)))
 #endif
 //@}
 
@@ -868,7 +868,7 @@ typedef union _hw_axbs_mgpcr3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR3_AULB(v) (HW_AXBS_MGPCR3_WR((HW_AXBS_MGPCR3_RD & ~BM_AXBS_MGPCR3_AULB) | BF_AXBS_MGPCR3_AULB(v)))
+#define BW_AXBS_MGPCR3_AULB(v) (HW_AXBS_MGPCR3_WR((HW_AXBS_MGPCR3_RD() & ~BM_AXBS_MGPCR3_AULB) | BF_AXBS_MGPCR3_AULB(v)))
 #endif
 //@}
 
@@ -906,11 +906,11 @@ typedef union _hw_axbs_mgpcr4
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR4           (*(__IO hw_axbs_mgpcr4_t *) HW_AXBS_MGPCR4_ADDR)
-#define HW_AXBS_MGPCR4_RD        (HW_AXBS_MGPCR4.U)
+#define HW_AXBS_MGPCR4_RD()      (HW_AXBS_MGPCR4.U)
 #define HW_AXBS_MGPCR4_WR(v)     (HW_AXBS_MGPCR4.U = (v))
-#define HW_AXBS_MGPCR4_SET(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD |  (v)))
-#define HW_AXBS_MGPCR4_CLR(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD & ~(v)))
-#define HW_AXBS_MGPCR4_TOG(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD ^  (v)))
+#define HW_AXBS_MGPCR4_SET(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() |  (v)))
+#define HW_AXBS_MGPCR4_CLR(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() & ~(v)))
+#define HW_AXBS_MGPCR4_TOG(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() ^  (v)))
 #endif
 //@}
 
@@ -950,7 +950,7 @@ typedef union _hw_axbs_mgpcr4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR4_AULB(v) (HW_AXBS_MGPCR4_WR((HW_AXBS_MGPCR4_RD & ~BM_AXBS_MGPCR4_AULB) | BF_AXBS_MGPCR4_AULB(v)))
+#define BW_AXBS_MGPCR4_AULB(v) (HW_AXBS_MGPCR4_WR((HW_AXBS_MGPCR4_RD() & ~BM_AXBS_MGPCR4_AULB) | BF_AXBS_MGPCR4_AULB(v)))
 #endif
 //@}
 
@@ -988,11 +988,11 @@ typedef union _hw_axbs_mgpcr5
 
 #ifndef __LANGUAGE_ASM__
 #define HW_AXBS_MGPCR5           (*(__IO hw_axbs_mgpcr5_t *) HW_AXBS_MGPCR5_ADDR)
-#define HW_AXBS_MGPCR5_RD        (HW_AXBS_MGPCR5.U)
+#define HW_AXBS_MGPCR5_RD()      (HW_AXBS_MGPCR5.U)
 #define HW_AXBS_MGPCR5_WR(v)     (HW_AXBS_MGPCR5.U = (v))
-#define HW_AXBS_MGPCR5_SET(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD |  (v)))
-#define HW_AXBS_MGPCR5_CLR(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD & ~(v)))
-#define HW_AXBS_MGPCR5_TOG(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD ^  (v)))
+#define HW_AXBS_MGPCR5_SET(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() |  (v)))
+#define HW_AXBS_MGPCR5_CLR(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() & ~(v)))
+#define HW_AXBS_MGPCR5_TOG(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() ^  (v)))
 #endif
 //@}
 
@@ -1032,7 +1032,7 @@ typedef union _hw_axbs_mgpcr5
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR5_AULB(v) (HW_AXBS_MGPCR5_WR((HW_AXBS_MGPCR5_RD & ~BM_AXBS_MGPCR5_AULB) | BF_AXBS_MGPCR5_AULB(v)))
+#define BW_AXBS_MGPCR5_AULB(v) (HW_AXBS_MGPCR5_WR((HW_AXBS_MGPCR5_RD() & ~BM_AXBS_MGPCR5_AULB) | BF_AXBS_MGPCR5_AULB(v)))
 #endif
 //@}
 

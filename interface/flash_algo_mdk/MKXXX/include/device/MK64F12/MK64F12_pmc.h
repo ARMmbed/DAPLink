@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -89,11 +89,11 @@ typedef union _hw_pmc_lvdsc1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PMC_LVDSC1            (*(__IO hw_pmc_lvdsc1_t *) HW_PMC_LVDSC1_ADDR)
-#define HW_PMC_LVDSC1_RD         (HW_PMC_LVDSC1.U)
+#define HW_PMC_LVDSC1_RD()       (HW_PMC_LVDSC1.U)
 #define HW_PMC_LVDSC1_WR(v)      (HW_PMC_LVDSC1.U = (v))
-#define HW_PMC_LVDSC1_SET(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD |  (v)))
-#define HW_PMC_LVDSC1_CLR(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD & ~(v)))
-#define HW_PMC_LVDSC1_TOG(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD ^  (v)))
+#define HW_PMC_LVDSC1_SET(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() |  (v)))
+#define HW_PMC_LVDSC1_CLR(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() & ~(v)))
+#define HW_PMC_LVDSC1_TOG(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() ^  (v)))
 #endif
 //@}
 
@@ -127,7 +127,7 @@ typedef union _hw_pmc_lvdsc1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LVDV field to a new value.
-#define BW_PMC_LVDSC1_LVDV(v) (HW_PMC_LVDSC1_WR((HW_PMC_LVDSC1_RD & ~BM_PMC_LVDSC1_LVDV) | BF_PMC_LVDSC1_LVDV(v)))
+#define BW_PMC_LVDSC1_LVDV(v) (HW_PMC_LVDSC1_WR((HW_PMC_LVDSC1_RD() & ~BM_PMC_LVDSC1_LVDV) | BF_PMC_LVDSC1_LVDV(v)))
 #endif
 //@}
 
@@ -273,11 +273,11 @@ typedef union _hw_pmc_lvdsc2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PMC_LVDSC2            (*(__IO hw_pmc_lvdsc2_t *) HW_PMC_LVDSC2_ADDR)
-#define HW_PMC_LVDSC2_RD         (HW_PMC_LVDSC2.U)
+#define HW_PMC_LVDSC2_RD()       (HW_PMC_LVDSC2.U)
 #define HW_PMC_LVDSC2_WR(v)      (HW_PMC_LVDSC2.U = (v))
-#define HW_PMC_LVDSC2_SET(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD |  (v)))
-#define HW_PMC_LVDSC2_CLR(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD & ~(v)))
-#define HW_PMC_LVDSC2_TOG(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD ^  (v)))
+#define HW_PMC_LVDSC2_SET(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() |  (v)))
+#define HW_PMC_LVDSC2_CLR(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() & ~(v)))
+#define HW_PMC_LVDSC2_TOG(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() ^  (v)))
 #endif
 //@}
 
@@ -312,7 +312,7 @@ typedef union _hw_pmc_lvdsc2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LVWV field to a new value.
-#define BW_PMC_LVDSC2_LVWV(v) (HW_PMC_LVDSC2_WR((HW_PMC_LVDSC2_RD & ~BM_PMC_LVDSC2_LVWV) | BF_PMC_LVDSC2_LVWV(v)))
+#define BW_PMC_LVDSC2_LVWV(v) (HW_PMC_LVDSC2_WR((HW_PMC_LVDSC2_RD() & ~BM_PMC_LVDSC2_LVWV) | BF_PMC_LVDSC2_LVWV(v)))
 #endif
 //@}
 
@@ -433,11 +433,11 @@ typedef union _hw_pmc_regsc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PMC_REGSC             (*(__IO hw_pmc_regsc_t *) HW_PMC_REGSC_ADDR)
-#define HW_PMC_REGSC_RD          (HW_PMC_REGSC.U)
+#define HW_PMC_REGSC_RD()        (HW_PMC_REGSC.U)
 #define HW_PMC_REGSC_WR(v)       (HW_PMC_REGSC.U = (v))
-#define HW_PMC_REGSC_SET(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD |  (v)))
-#define HW_PMC_REGSC_CLR(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD & ~(v)))
-#define HW_PMC_REGSC_TOG(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD ^  (v)))
+#define HW_PMC_REGSC_SET(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() |  (v)))
+#define HW_PMC_REGSC_CLR(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() & ~(v)))
+#define HW_PMC_REGSC_TOG(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() ^  (v)))
 #endif
 //@}
 

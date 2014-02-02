@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -84,7 +84,7 @@ static const uint32_t __g_regs_AIPS_base_addresses[] = {
 /*!
  * @brief HW_AIPS_MPRA - Master Privilege Register A (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x77700000U
  *
  * The MPRA specifies identical 4-bit fields defining the access-privilege level
  * associated with a bus master to various peripherals on the chip. The register
@@ -100,7 +100,31 @@ typedef union _hw_aips_mpra
     uint32_t U;
     struct _hw_aips_mpra_bitfields
     {
-        uint32_t RESERVED0 : 32;       //!< [31:0]
+        uint32_t RESERVED0 : 8;        //!< [7:0]
+        uint32_t MPL5 : 1;             //!< [8] Master 5 Privilege Level
+        uint32_t MTW5 : 1;             //!< [9] Master 5 Trusted For Writes
+        uint32_t MTR5 : 1;             //!< [10] Master 5 Trusted For Read
+        uint32_t RESERVED1 : 1;        //!< [11]
+        uint32_t MPL4 : 1;             //!< [12] Master 4 Privilege Level
+        uint32_t MTW4 : 1;             //!< [13] Master 4 Trusted For Writes
+        uint32_t MTR4 : 1;             //!< [14] Master 4 Trusted For Read
+        uint32_t RESERVED2 : 1;        //!< [15]
+        uint32_t MPL3 : 1;             //!< [16] Master 3 Privilege Level
+        uint32_t MTW3 : 1;             //!< [17] Master 3 Trusted For Writes
+        uint32_t MTR3 : 1;             //!< [18] Master 3 Trusted For Read
+        uint32_t RESERVED3 : 1;        //!< [19]
+        uint32_t MPL2 : 1;             //!< [20] Master 2 Privilege Level
+        uint32_t MTW2 : 1;             //!< [21] Master 2 Trusted For Writes
+        uint32_t MTR2 : 1;             //!< [22] Master 2 Trusted For Read
+        uint32_t RESERVED4 : 1;        //!< [23]
+        uint32_t MPL1 : 1;             //!< [24] Master 1 Privilege Level
+        uint32_t MTW1 : 1;             //!< [25] Master 1 Trusted for Writes
+        uint32_t MTR1 : 1;             //!< [26] Master 1 Trusted for Read
+        uint32_t RESERVED5 : 1;        //!< [27]
+        uint32_t MPL0 : 1;             //!< [28] Master 0 Privilege Level
+        uint32_t MTW0 : 1;             //!< [29] Master 0 Trusted For Writes
+        uint32_t MTR0 : 1;             //!< [30] Master 0 Trusted For Read
+        uint32_t RESERVED6 : 1;        //!< [31]
     } B;
 } hw_aips_mpra_t;
 #endif
@@ -125,6 +149,510 @@ typedef union _hw_aips_mpra
  * Constants & macros for individual AIPS_MPRA bitfields
  */
 
+/*!
+ * @name Register AIPS_MPRA, field MPL5[8] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL5    (8U)          //!< Bit position for AIPS_MPRA_MPL5.
+#define BM_AIPS_MPRA_MPL5    (0x00000100U) //!< Bit mask for AIPS_MPRA_MPL5.
+#define BS_AIPS_MPRA_MPL5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL5.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL5 field.
+#define BR_AIPS_MPRA_MPL5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL5))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL5.
+#define BF_AIPS_MPRA_MPL5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL5), uint32_t) & BM_AIPS_MPRA_MPL5)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL5 field to a new value.
+#define BW_AIPS_MPRA_MPL5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL5) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW5[9] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW5    (9U)          //!< Bit position for AIPS_MPRA_MTW5.
+#define BM_AIPS_MPRA_MTW5    (0x00000200U) //!< Bit mask for AIPS_MPRA_MTW5.
+#define BS_AIPS_MPRA_MTW5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW5.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW5 field.
+#define BR_AIPS_MPRA_MTW5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW5))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW5.
+#define BF_AIPS_MPRA_MTW5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW5), uint32_t) & BM_AIPS_MPRA_MTW5)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW5 field to a new value.
+#define BW_AIPS_MPRA_MTW5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW5) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR5[10] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR5    (10U)         //!< Bit position for AIPS_MPRA_MTR5.
+#define BM_AIPS_MPRA_MTR5    (0x00000400U) //!< Bit mask for AIPS_MPRA_MTR5.
+#define BS_AIPS_MPRA_MTR5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR5.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR5 field.
+#define BR_AIPS_MPRA_MTR5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR5))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR5.
+#define BF_AIPS_MPRA_MTR5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR5), uint32_t) & BM_AIPS_MPRA_MTR5)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR5 field to a new value.
+#define BW_AIPS_MPRA_MTR5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR5) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MPL4[12] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL4    (12U)         //!< Bit position for AIPS_MPRA_MPL4.
+#define BM_AIPS_MPRA_MPL4    (0x00001000U) //!< Bit mask for AIPS_MPRA_MPL4.
+#define BS_AIPS_MPRA_MPL4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL4.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL4 field.
+#define BR_AIPS_MPRA_MPL4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL4))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL4.
+#define BF_AIPS_MPRA_MPL4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL4), uint32_t) & BM_AIPS_MPRA_MPL4)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL4 field to a new value.
+#define BW_AIPS_MPRA_MPL4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL4) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW4[13] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW4    (13U)         //!< Bit position for AIPS_MPRA_MTW4.
+#define BM_AIPS_MPRA_MTW4    (0x00002000U) //!< Bit mask for AIPS_MPRA_MTW4.
+#define BS_AIPS_MPRA_MTW4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW4.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW4 field.
+#define BR_AIPS_MPRA_MTW4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW4))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW4.
+#define BF_AIPS_MPRA_MTW4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW4), uint32_t) & BM_AIPS_MPRA_MTW4)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW4 field to a new value.
+#define BW_AIPS_MPRA_MTW4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW4) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR4[14] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR4    (14U)         //!< Bit position for AIPS_MPRA_MTR4.
+#define BM_AIPS_MPRA_MTR4    (0x00004000U) //!< Bit mask for AIPS_MPRA_MTR4.
+#define BS_AIPS_MPRA_MTR4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR4.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR4 field.
+#define BR_AIPS_MPRA_MTR4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR4))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR4.
+#define BF_AIPS_MPRA_MTR4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR4), uint32_t) & BM_AIPS_MPRA_MTR4)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR4 field to a new value.
+#define BW_AIPS_MPRA_MTR4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR4) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MPL3[16] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL3    (16U)         //!< Bit position for AIPS_MPRA_MPL3.
+#define BM_AIPS_MPRA_MPL3    (0x00010000U) //!< Bit mask for AIPS_MPRA_MPL3.
+#define BS_AIPS_MPRA_MPL3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL3.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL3 field.
+#define BR_AIPS_MPRA_MPL3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL3))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL3.
+#define BF_AIPS_MPRA_MPL3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL3), uint32_t) & BM_AIPS_MPRA_MPL3)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL3 field to a new value.
+#define BW_AIPS_MPRA_MPL3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL3) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW3[17] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW3    (17U)         //!< Bit position for AIPS_MPRA_MTW3.
+#define BM_AIPS_MPRA_MTW3    (0x00020000U) //!< Bit mask for AIPS_MPRA_MTW3.
+#define BS_AIPS_MPRA_MTW3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW3.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW3 field.
+#define BR_AIPS_MPRA_MTW3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW3))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW3.
+#define BF_AIPS_MPRA_MTW3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW3), uint32_t) & BM_AIPS_MPRA_MTW3)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW3 field to a new value.
+#define BW_AIPS_MPRA_MTW3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW3) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR3[18] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR3    (18U)         //!< Bit position for AIPS_MPRA_MTR3.
+#define BM_AIPS_MPRA_MTR3    (0x00040000U) //!< Bit mask for AIPS_MPRA_MTR3.
+#define BS_AIPS_MPRA_MTR3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR3.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR3 field.
+#define BR_AIPS_MPRA_MTR3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR3))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR3.
+#define BF_AIPS_MPRA_MTR3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR3), uint32_t) & BM_AIPS_MPRA_MTR3)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR3 field to a new value.
+#define BW_AIPS_MPRA_MTR3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR3) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MPL2[20] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL2    (20U)         //!< Bit position for AIPS_MPRA_MPL2.
+#define BM_AIPS_MPRA_MPL2    (0x00100000U) //!< Bit mask for AIPS_MPRA_MPL2.
+#define BS_AIPS_MPRA_MPL2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL2.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL2 field.
+#define BR_AIPS_MPRA_MPL2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL2))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL2.
+#define BF_AIPS_MPRA_MPL2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL2), uint32_t) & BM_AIPS_MPRA_MPL2)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL2 field to a new value.
+#define BW_AIPS_MPRA_MPL2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL2) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW2[21] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW2    (21U)         //!< Bit position for AIPS_MPRA_MTW2.
+#define BM_AIPS_MPRA_MTW2    (0x00200000U) //!< Bit mask for AIPS_MPRA_MTW2.
+#define BS_AIPS_MPRA_MTW2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW2.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW2 field.
+#define BR_AIPS_MPRA_MTW2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW2))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW2.
+#define BF_AIPS_MPRA_MTW2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW2), uint32_t) & BM_AIPS_MPRA_MTW2)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW2 field to a new value.
+#define BW_AIPS_MPRA_MTW2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW2) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR2[22] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR2    (22U)         //!< Bit position for AIPS_MPRA_MTR2.
+#define BM_AIPS_MPRA_MTR2    (0x00400000U) //!< Bit mask for AIPS_MPRA_MTR2.
+#define BS_AIPS_MPRA_MTR2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR2.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR2 field.
+#define BR_AIPS_MPRA_MTR2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR2))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR2.
+#define BF_AIPS_MPRA_MTR2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR2), uint32_t) & BM_AIPS_MPRA_MTR2)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR2 field to a new value.
+#define BW_AIPS_MPRA_MTR2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR2) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MPL1[24] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL1    (24U)         //!< Bit position for AIPS_MPRA_MPL1.
+#define BM_AIPS_MPRA_MPL1    (0x01000000U) //!< Bit mask for AIPS_MPRA_MPL1.
+#define BS_AIPS_MPRA_MPL1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL1.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL1 field.
+#define BR_AIPS_MPRA_MPL1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL1))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL1.
+#define BF_AIPS_MPRA_MPL1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL1), uint32_t) & BM_AIPS_MPRA_MPL1)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL1 field to a new value.
+#define BW_AIPS_MPRA_MPL1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL1) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW1[25] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW1    (25U)         //!< Bit position for AIPS_MPRA_MTW1.
+#define BM_AIPS_MPRA_MTW1    (0x02000000U) //!< Bit mask for AIPS_MPRA_MTW1.
+#define BS_AIPS_MPRA_MTW1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW1.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW1 field.
+#define BR_AIPS_MPRA_MTW1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW1))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW1.
+#define BF_AIPS_MPRA_MTW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW1), uint32_t) & BM_AIPS_MPRA_MTW1)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW1 field to a new value.
+#define BW_AIPS_MPRA_MTW1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW1) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR1[26] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR1    (26U)         //!< Bit position for AIPS_MPRA_MTR1.
+#define BM_AIPS_MPRA_MTR1    (0x04000000U) //!< Bit mask for AIPS_MPRA_MTR1.
+#define BS_AIPS_MPRA_MTR1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR1.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR1 field.
+#define BR_AIPS_MPRA_MTR1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR1))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR1.
+#define BF_AIPS_MPRA_MTR1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR1), uint32_t) & BM_AIPS_MPRA_MTR1)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR1 field to a new value.
+#define BW_AIPS_MPRA_MTR1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR1) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MPL0[28] (RW)
+ *
+ * Specifies how the privilege level of the master is determined.
+ *
+ * Values:
+ * - 0 - Accesses from this master are forced to user-mode.
+ * - 1 - Accesses from this master are not forced to user-mode.
+ */
+//@{
+#define BP_AIPS_MPRA_MPL0    (28U)         //!< Bit position for AIPS_MPRA_MPL0.
+#define BM_AIPS_MPRA_MPL0    (0x10000000U) //!< Bit mask for AIPS_MPRA_MPL0.
+#define BS_AIPS_MPRA_MPL0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL0.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MPL0 field.
+#define BR_AIPS_MPRA_MPL0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL0))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MPL0.
+#define BF_AIPS_MPRA_MPL0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL0), uint32_t) & BM_AIPS_MPRA_MPL0)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MPL0 field to a new value.
+#define BW_AIPS_MPRA_MPL0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL0) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTW0[29] (RW)
+ *
+ * Determines whether the master is trusted for write accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for write accesses.
+ * - 1 - This master is trusted for write accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTW0    (29U)         //!< Bit position for AIPS_MPRA_MTW0.
+#define BM_AIPS_MPRA_MTW0    (0x20000000U) //!< Bit mask for AIPS_MPRA_MTW0.
+#define BS_AIPS_MPRA_MTW0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW0.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTW0 field.
+#define BR_AIPS_MPRA_MTW0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW0))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTW0.
+#define BF_AIPS_MPRA_MTW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW0), uint32_t) & BM_AIPS_MPRA_MTW0)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTW0 field to a new value.
+#define BW_AIPS_MPRA_MTW0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW0) = (v))
+#endif
+//@}
+
+/*!
+ * @name Register AIPS_MPRA, field MTR0[30] (RW)
+ *
+ * Determines whether the master is trusted for read accesses.
+ *
+ * Values:
+ * - 0 - This master is not trusted for read accesses.
+ * - 1 - This master is trusted for read accesses.
+ */
+//@{
+#define BP_AIPS_MPRA_MTR0    (30U)         //!< Bit position for AIPS_MPRA_MTR0.
+#define BM_AIPS_MPRA_MTR0    (0x40000000U) //!< Bit mask for AIPS_MPRA_MTR0.
+#define BS_AIPS_MPRA_MTR0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR0.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the AIPS_MPRA_MTR0 field.
+#define BR_AIPS_MPRA_MTR0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR0))
+#endif
+
+//! @brief Format value for bitfield AIPS_MPRA_MTR0.
+#define BF_AIPS_MPRA_MTR0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR0), uint32_t) & BM_AIPS_MPRA_MTR0)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the MTR0 field to a new value.
+#define BW_AIPS_MPRA_MTR0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR0) = (v))
+#endif
+//@}
+
 //-------------------------------------------------------------------------------------------
 // HW_AIPS_PACRA - Peripheral Access Control Register
 //-------------------------------------------------------------------------------------------
@@ -133,7 +661,7 @@ typedef union _hw_aips_mpra
 /*!
  * @brief HW_AIPS_PACRA - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x50004000U
  *
  * Each PACR register consists of eight 4-bit PACR fields. Each PACR field
  * defines the access levels for a particular peripheral. The mapping between a
@@ -976,7 +1504,7 @@ typedef union _hw_aips_pacra
 /*!
  * @brief HW_AIPS_PACRB - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44004400U
  *
  * Each PACR register consists of eight 4-bit PACR fields. Each PACR field
  * defines the access levels for a particular peripheral. The mapping between a
@@ -2662,7 +3190,7 @@ typedef union _hw_aips_pacrc
 /*!
  * @brief HW_AIPS_PACRD - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x00000004U
  *
  * Each PACR register consists of eight 4-bit PACR fields. Each PACR field
  * defines the access levels for a particular peripheral. The mapping between a
@@ -3505,7 +4033,7 @@ typedef union _hw_aips_pacrd
 /*!
  * @brief HW_AIPS_PACRE - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -4324,7 +4852,7 @@ typedef union _hw_aips_pacre
 /*!
  * @brief HW_AIPS_PACRF - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -5143,7 +5671,7 @@ typedef union _hw_aips_pacrf
 /*!
  * @brief HW_AIPS_PACRG - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -5962,7 +6490,7 @@ typedef union _hw_aips_pacrg
 /*!
  * @brief HW_AIPS_PACRH - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -6781,7 +7309,7 @@ typedef union _hw_aips_pacrh
 /*!
  * @brief HW_AIPS_PACRI - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -7600,7 +8128,7 @@ typedef union _hw_aips_pacri
 /*!
  * @brief HW_AIPS_PACRJ - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -8419,7 +8947,7 @@ typedef union _hw_aips_pacrj
 /*!
  * @brief HW_AIPS_PACRK - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -9238,7 +9766,7 @@ typedef union _hw_aips_pacrk
 /*!
  * @brief HW_AIPS_PACRL - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -10057,7 +10585,7 @@ typedef union _hw_aips_pacrl
 /*!
  * @brief HW_AIPS_PACRM - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -10876,7 +11404,7 @@ typedef union _hw_aips_pacrm
 /*!
  * @brief HW_AIPS_PACRN - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -11695,7 +12223,7 @@ typedef union _hw_aips_pacrn
 /*!
  * @brief HW_AIPS_PACRO - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -12514,7 +13042,7 @@ typedef union _hw_aips_pacro
 /*!
  * @brief HW_AIPS_PACRP - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44444444U
  *
  * This section describes PACR registers E - P, which control peripheral slots
  * 32 - 127. See PACRPeripheral Access Control Register for the description of
@@ -13333,7 +13861,7 @@ typedef union _hw_aips_pacrp
 /*!
  * @brief HW_AIPS_PACRU - Peripheral Access Control Register (RW)
  *
- * Reset value: 0x00000000U
+ * Reset value: 0x44000000U
  *
  * PACRU defines the access levels for the two global spaces.
  */

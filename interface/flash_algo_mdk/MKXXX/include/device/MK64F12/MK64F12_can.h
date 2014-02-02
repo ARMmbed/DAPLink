@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -2395,10 +2395,10 @@ typedef union _hw_can_iflag1
         uint32_t BUF0I : 1;            //!< [0] Buffer MB0 Interrupt Or "reserved"
         uint32_t BUF4TO1I : 4;         //!< [4:1] Buffer MB i Interrupt Or "reserved"
         uint32_t BUF5I : 1;            //!< [5] Buffer MB5 Interrupt Or "Frames
-                                       //!< available in Rx FIFO"
+                                       //! available in Rx FIFO"
         uint32_t BUF6I : 1;            //!< [6] Buffer MB6 Interrupt Or "Rx FIFO Warning"
         uint32_t BUF7I : 1;            //!< [7] Buffer MB7 Interrupt Or "Rx FIFO
-                                       //!< Overflow"
+                                       //! Overflow"
         uint32_t BUF31TO8I : 24;       //!< [31:8] Buffer MBi Interrupt
     } B;
 } hw_can_iflag1_t;
@@ -2648,7 +2648,7 @@ typedef union _hw_can_ctrl2
     {
         uint32_t RESERVED0 : 16;       //!< [15:0]
         uint32_t EACEN : 1;            //!< [16] Entire Frame Arbitration Field
-                                       //!< Comparison Enable For Rx Mailboxes
+                                       //! Comparison Enable For Rx Mailboxes
         uint32_t RRS : 1;              //!< [17] Remote Request Storing
         uint32_t MRP : 1;              //!< [18] Mailboxes Reception Priority
         uint32_t TASD : 5;             //!< [23:19] Tx Arbitration Start Delay
@@ -3218,7 +3218,7 @@ typedef union _hw_can_rxfir
     struct _hw_can_rxfir_bitfields
     {
         uint32_t IDHIT : 9;            //!< [8:0] Identifier Acceptance Filter Hit
-                                       //!< Indicator
+                                       //! Indicator
         uint32_t RESERVED0 : 23;       //!< [31:9]
     } B;
 } hw_can_rxfir_t;
@@ -3276,17 +3276,17 @@ typedef union _hw_can_cs
     struct _hw_can_cs_bitfields
     {
         uint32_t TIME_STAMP : 16;      //!< [15:0] Free-Running Counter Time
-                                       //!< stamp. This 16-bit field is a copy of the Free-Running Timer, captured for
-                                       //!< Tx and Rx frames at the time when the beginning of the Identifier
-                                       //!< field appears on the CAN bus.
+                                       //! stamp. This 16-bit field is a copy of the Free-Running Timer, captured for
+                                       //! Tx and Rx frames at the time when the beginning of the Identifier
+                                       //! field appears on the CAN bus.
         uint32_t DLC : 4;              //!< [19:16] Length of the data to be
-                                       //!< stored/transmitted.
+                                       //! stored/transmitted.
         uint32_t RTR : 1;              //!< [20] Remote Transmission Request. One/zero for
-                                       //!< remote/data frame.
+                                       //! remote/data frame.
         uint32_t IDE : 1;              //!< [21] ID Extended. One/zero for
-                                       //!< extended/standard format frame.
+                                       //! extended/standard format frame.
         uint32_t SRR : 1;              //!< [22] Substitute Remote Request. Contains a
-                                       //!< fixed recessive bit.
+                                       //! fixed recessive bit.
         uint32_t RESERVED0 : 1;        //!< [23] Reserved
         uint32_t CODE : 4;             //!< [27:24] Reserved
         uint32_t RESERVED1 : 4;        //!< [31:28] Reserved
@@ -3463,13 +3463,13 @@ typedef union _hw_can_id
     struct _hw_can_id_bitfields
     {
         uint32_t EXT : 18;             //!< [17:0] Contains extended (LOW word)
-                                       //!< identifier of message buffer.
+                                       //! identifier of message buffer.
         uint32_t STD : 11;             //!< [28:18] Contains standard/extended (HIGH
-                                       //!< word) identifier of message buffer.
+                                       //! word) identifier of message buffer.
         uint32_t PRIO : 3;             //!< [31:29] Local priority. This 3-bit fieldis
-                                       //!< only used when LPRIO_EN bit is set in MCR and it only makes sense for
-                                       //!< Tx buffers. These bits are not transmitted. They are appended to the
-                                       //!< regular ID to define the transmission priority.
+                                       //! only used when LPRIO_EN bit is set in MCR and it only makes sense for Tx
+                                       //! buffers. These bits are not transmitted. They are appended to the
+                                       //! regular ID to define the transmission priority.
     } B;
 } hw_can_id_t;
 #endif

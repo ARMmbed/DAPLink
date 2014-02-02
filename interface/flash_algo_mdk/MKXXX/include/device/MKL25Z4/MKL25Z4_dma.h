@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -29,22 +29,11 @@
  * DMA Controller
  *
  * Registers defined in this header file:
- * - HW_DMA_SAR0 - Source Address Register
- * - HW_DMA_DAR0 - Destination Address Register
- * - HW_DMA_DSR_BCR0 - DMA Status Register / Byte Count Register
- * - HW_DMA_DCR0 - DMA Control Register
- * - HW_DMA_SAR1 - Source Address Register
- * - HW_DMA_DAR1 - Destination Address Register
- * - HW_DMA_DSR_BCR1 - DMA Status Register / Byte Count Register
- * - HW_DMA_DCR1 - DMA Control Register
- * - HW_DMA_SAR2 - Source Address Register
- * - HW_DMA_DAR2 - Destination Address Register
- * - HW_DMA_DSR_BCR2 - DMA Status Register / Byte Count Register
- * - HW_DMA_DCR2 - DMA Control Register
- * - HW_DMA_SAR3 - Source Address Register
- * - HW_DMA_DAR3 - Destination Address Register
- * - HW_DMA_DSR_BCR3 - DMA Status Register / Byte Count Register
- * - HW_DMA_DCR3 - DMA Control Register
+ * - HW_DMA_SARn - Source Address Register
+ * - HW_DMA_DARn - Destination Address Register
+ * - HW_DMA_DSR - DMA_DSR0 register.
+ * - HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register
+ * - HW_DMA_DCRn - DMA Control Register
  *
  * - hw_dma_t - Struct containing all module registers.
  */
@@ -53,420 +42,521 @@
 //@{
 #ifndef REGS_DMA_BASE
 #define HW_DMA_INSTANCE_COUNT (1U) //!< Number of instances of the DMA module.
-#define REGS_DMA_BASE (0x40008000U) //!< Base address for DMA.
+#define HW_DMA0 (0U) //!< Instance number for DMA.
+#define REGS_DMA0_BASE (0x40008000U) //!< Base address for DMA.
+
+//! @brief Table of base addresses for DMA instances.
+static const uint32_t __g_regs_DMA_base_addresses[] = {
+        REGS_DMA0_BASE,
+    };
+
+//! @brief Get the base address of DMA by instance number.
+//! @param x DMA instance number, from 0 through 0.
+#define REGS_DMA_BASE(x) (__g_regs_DMA_base_addresses[(x)])
+
+//! @brief Get the instance number given a base address.
+//! @param b Base address for an instance of DMA.
+#define REGS_DMA_INSTANCE(b) ((b) == REGS_DMA0_BASE ? HW_DMA0 : 0)
 #endif
 //@}
 
 //-------------------------------------------------------------------------------------------
-// HW_DMA_SAR0 - Source Address Register
+// HW_DMA_SARn - Source Address Register
 //-------------------------------------------------------------------------------------------
 
 #ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DMA_SAR0 - Source Address Register (RW)
+ * @brief HW_DMA_SARn - Source Address Register (RW)
  *
  * Reset value: 0x00000000U
  *
- * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes result in a bus error.
- * Only four values are allowed to be written to bits 31-20 of this register. A write of any other
- * value to these bits causes a configuration error when the channel starts to execute. For more
- * information about the configuration error, see the description of the field of DSR.
+ * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes
+ * result in a bus error. Only four values are allowed to be written to bits 31-20
+ * of this register. A write of any other value to these bits causes a
+ * configuration error when the channel starts to execute. For more information about the
+ * configuration error, see the description of the CEConfiguration error field of
+ * DSR.
  */
-typedef union _hw_dma_sar0
+typedef union _hw_dma_sarn
 {
     uint32_t U;
-    struct _hw_dma_sar0_bitfields
+    struct _hw_dma_sarn_bitfields
     {
-        uint32_t SAR : 32; //!< [31:0] Each SAR contains the byte address used by the DMA controller to read data.
+        uint32_t SAR : 32;             //!< [31:0]
     } B;
-} hw_dma_sar0_t;
+} hw_dma_sarn_t;
 #endif
 
 /*!
- * @name Constants and macros for entire DMA_SAR0 register
+ * @name Constants and macros for entire DMA_SARn register
  */
 //@{
-#define HW_DMA_SAR0_ADDR      (REGS_DMA_BASE + 0x100U)
+#define HW_DMA_SARn_COUNT (4U)
+
+#define HW_DMA_SARn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x100U + (0x10U * n))
 
 #ifndef __LANGUAGE_ASM__
-#define HW_DMA_SAR0           (*(__IO hw_dma_sar0_t *) HW_DMA_SAR0_ADDR)
-#define HW_DMA_SAR0_RD()      (HW_DMA_SAR0.U)
-#define HW_DMA_SAR0_WR(v)     (HW_DMA_SAR0.U = (v))
-#define HW_DMA_SAR0_SET(v)    (BME_OR32(HW_DMA_SAR0_ADDR, (uint32_t)(v)))
-#define HW_DMA_SAR0_CLR(v)    (BME_AND32(HW_DMA_SAR0_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_SAR0_TOG(v)    (BME_XOR32(HW_DMA_SAR0_ADDR, (uint32_t)(v)))
+#define HW_DMA_SARn(x, n)        (*(__IO hw_dma_sarn_t *) HW_DMA_SARn_ADDR(x, n))
+#define HW_DMA_SARn_RD(x, n)     (HW_DMA_SARn(x, n).U)
+#define HW_DMA_SARn_WR(x, n, v)  (HW_DMA_SARn(x, n).U = (v))
+#define HW_DMA_SARn_SET(x, n, v) (BME_OR32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(v)))
+#define HW_DMA_SARn_CLR(x, n, v) (BME_AND32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(~(v))))
+#define HW_DMA_SARn_TOG(x, n, v) (BME_XOR32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(v)))
 #endif
 //@}
 
 /*
- * constants & macros for individual DMA_SAR0 bitfields
+ * Constants & macros for individual DMA_SARn bitfields
  */
 
-/*! @name Register DMA_SAR0, field SAR[31:0] (RW)
+/*!
+ * @name Register DMA_SARn, field SAR[31:0] (RW)
  *
- * Each SAR contains the byte address used by the DMA controller to read data. The SARn is typically
- * aligned on a 0-modulo-ssize boundary—that is, on the natural alignment of the source data. Bits
- * 31-20 of this register must be written with one of only four allowed values. Each of these four
- * allowed values corresponds to a valid region of the device's memory map. The allowed values are:
- * 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with one of the allowed
- * values, bits 31-20 read back as the written value. After being written with any other value, bits
- * 31-20 read back as an indeterminate value.
+ * Each SAR contains the byte address used by the DMA controller to read data.
+ * The SARn is typically aligned on a 0-modulo-ssize boundary-that is, on the
+ * natural alignment of the source data. Bits 31-20 of this register must be written
+ * with one of only four allowed values. Each of these four allowed values
+ * corresponds to a valid region of the device's memory map. The allowed values are:
+ * 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with one of
+ * the allowed values, bits 31-20 read back as the written value. After being
+ * written with any other value, bits 31-20 read back as an indeterminate value.
  */
 //@{
-#define BP_DMA_SAR0_SAR      (0U)      //!< Bit position for DMA_SAR0_SAR.
-#define BM_DMA_SAR0_SAR      (0xffffffffU)  //!< Bit mask for DMA_SAR0_SAR.
+#define BP_DMA_SARn_SAR      (0U)          //!< Bit position for DMA_SARn_SAR.
+#define BM_DMA_SARn_SAR      (0xFFFFFFFFU) //!< Bit mask for DMA_SARn_SAR.
+#define BS_DMA_SARn_SAR      (32U)         //!< Bit field size in bits for DMA_SARn_SAR.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_SAR0_SAR field.
-#define BR_DMA_SAR0_SAR(v)   (BME_UBFX32(HW_DMA_SAR0_ADDR, BP_DMA_SAR0_SAR, 32))
+//! @brief Read current value of the DMA_SARn_SAR field.
+#define BR_DMA_SARn_SAR(x, n) (BME_UBFX32(HW_DMA_SARn_ADDR(x, n), BP_DMA_SARn_SAR, BS_DMA_SARn_SAR))
 #endif
 
-//! @brief Format value for bitfield DMA_SAR0_SAR.
-#define BF_DMA_SAR0_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SAR0_SAR), uint32_t) & BM_DMA_SAR0_SAR)
+//! @brief Format value for bitfield DMA_SARn_SAR.
+#define BF_DMA_SARn_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SARn_SAR), uint32_t) & BM_DMA_SARn_SAR)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SAR field to a new value.
-#define BW_DMA_SAR0_SAR(v)   (BME_BFI32(HW_DMA_SAR0_ADDR, ((uint32_t)(v) << BP_DMA_SAR0_SAR), BP_DMA_SAR0_SAR, 32))
+#define BW_DMA_SARn_SAR(x, n, v) (BME_BFI32(HW_DMA_SARn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_SARn_SAR), BP_DMA_SARn_SAR, 32))
 #endif
 //@}
-
 //-------------------------------------------------------------------------------------------
-// HW_DMA_DAR0 - Destination Address Register
+// HW_DMA_DARn - Destination Address Register
 //-------------------------------------------------------------------------------------------
 
 #ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DMA_DAR0 - Destination Address Register (RW)
+ * @brief HW_DMA_DARn - Destination Address Register (RW)
  *
  * Reset value: 0x00000000U
+ *
+ * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes
+ * result in a bus error. Only four values are allowed to be written to bits 31-20
+ * of this register. A write of any other value to these bits causes a
+ * configuration error when the channel starts to execute. For more information about the
+ * configuration error, see the description of the CEConfiguration error field of
+ * DSR.
  */
-typedef union _hw_dma_dar0
+typedef union _hw_dma_darn
 {
     uint32_t U;
-    struct _hw_dma_dar0_bitfields
+    struct _hw_dma_darn_bitfields
     {
-        uint32_t DAR : 32; //!< [31:0] Each DAR contains the byte address used by the DMA controller to write data.
+        uint32_t DAR : 32;             //!< [31:0]
     } B;
-} hw_dma_dar0_t;
+} hw_dma_darn_t;
 #endif
 
 /*!
- * @name Constants and macros for entire DMA_DAR0 register
+ * @name Constants and macros for entire DMA_DARn register
  */
 //@{
-#define HW_DMA_DAR0_ADDR      (REGS_DMA_BASE + 0x104U)
+#define HW_DMA_DARn_COUNT (4U)
+
+#define HW_DMA_DARn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x104U + (0x10U * n))
 
 #ifndef __LANGUAGE_ASM__
-#define HW_DMA_DAR0           (*(__IO hw_dma_dar0_t *) HW_DMA_DAR0_ADDR)
-#define HW_DMA_DAR0_RD()      (HW_DMA_DAR0.U)
-#define HW_DMA_DAR0_WR(v)     (HW_DMA_DAR0.U = (v))
-#define HW_DMA_DAR0_SET(v)    (BME_OR32(HW_DMA_DAR0_ADDR, (uint32_t)(v)))
-#define HW_DMA_DAR0_CLR(v)    (BME_AND32(HW_DMA_DAR0_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DAR0_TOG(v)    (BME_XOR32(HW_DMA_DAR0_ADDR, (uint32_t)(v)))
+#define HW_DMA_DARn(x, n)        (*(__IO hw_dma_darn_t *) HW_DMA_DARn_ADDR(x, n))
+#define HW_DMA_DARn_RD(x, n)     (HW_DMA_DARn(x, n).U)
+#define HW_DMA_DARn_WR(x, n, v)  (HW_DMA_DARn(x, n).U = (v))
+#define HW_DMA_DARn_SET(x, n, v) (BME_OR32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(v)))
+#define HW_DMA_DARn_CLR(x, n, v) (BME_AND32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(~(v))))
+#define HW_DMA_DARn_TOG(x, n, v) (BME_XOR32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(v)))
 #endif
 //@}
 
 /*
- * constants & macros for individual DMA_DAR0 bitfields
+ * Constants & macros for individual DMA_DARn bitfields
  */
 
-/*! @name Register DMA_DAR0, field DAR[31:0] (RW)
+/*!
+ * @name Register DMA_DARn, field DAR[31:0] (RW)
  *
- * Each DAR contains the byte address used by the DMA controller to write data. The DARn is
- * typically aligned on a 0-modulo-dsize boundary—that is, on the natural alignment of the
- * destination data. Bits 31-20 of this register must be written with one of only four allowed
- * values. Each of these four allowed values corresponds to a valid region of the device's memory
- * map. The allowed values are: 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written
- * with one of the allowed values, bits 31-20 read back as the written value. After being written
- * with any other value, bits 31-20 read back as an indeterminate value.
- *
- * Values:
- * -  - 
+ * Each DAR contains the byte address used by the DMA controller to write data.
+ * The DARn is typically aligned on a 0-modulo-dsize boundary-that is, on the
+ * natural alignment of the destination data. Bits 31-20 of this register must be
+ * written with one of only four allowed values. Each of these four allowed values
+ * corresponds to a valid region of the device's memory map. The allowed values
+ * are: 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with
+ * one of the allowed values, bits 31-20 read back as the written value. After
+ * being written with any other value, bits 31-20 read back as an indeterminate
+ * value.
  */
 //@{
-#define BP_DMA_DAR0_DAR      (0U)      //!< Bit position for DMA_DAR0_DAR.
-#define BM_DMA_DAR0_DAR      (0xffffffffU)  //!< Bit mask for DMA_DAR0_DAR.
+#define BP_DMA_DARn_DAR      (0U)          //!< Bit position for DMA_DARn_DAR.
+#define BM_DMA_DARn_DAR      (0xFFFFFFFFU) //!< Bit mask for DMA_DARn_DAR.
+#define BS_DMA_DARn_DAR      (32U)         //!< Bit field size in bits for DMA_DARn_DAR.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DAR0_DAR field.
-#define BR_DMA_DAR0_DAR(v)   (BME_UBFX32(HW_DMA_DAR0_ADDR, BP_DMA_DAR0_DAR, 32))
+//! @brief Read current value of the DMA_DARn_DAR field.
+#define BR_DMA_DARn_DAR(x, n) (BME_UBFX32(HW_DMA_DARn_ADDR(x, n), BP_DMA_DARn_DAR, BS_DMA_DARn_DAR))
 #endif
 
-//! @brief Format value for bitfield DMA_DAR0_DAR.
-#define BF_DMA_DAR0_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DAR0_DAR), uint32_t) & BM_DMA_DAR0_DAR)
+//! @brief Format value for bitfield DMA_DARn_DAR.
+#define BF_DMA_DARn_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DARn_DAR), uint32_t) & BM_DMA_DARn_DAR)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DAR field to a new value.
-#define BW_DMA_DAR0_DAR(v)   (BME_BFI32(HW_DMA_DAR0_ADDR, ((uint32_t)(v) << BP_DMA_DAR0_DAR), BP_DMA_DAR0_DAR, 32))
+#define BW_DMA_DARn_DAR(x, n, v) (BME_BFI32(HW_DMA_DARn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DARn_DAR), BP_DMA_DARn_DAR, 32))
 #endif
 //@}
-
 //-------------------------------------------------------------------------------------------
-// HW_DMA_DSR_BCR0 - DMA Status Register / Byte Count Register
+// HW_DMA_DSR - DMA_DSR0 register.
 //-------------------------------------------------------------------------------------------
 
 #ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DMA_DSR_BCR0 - DMA Status Register / Byte Count Register (RW)
+ * @brief HW_DMA_DSR - DMA_DSR0 register. (RW)
  *
- * Reset value: 0x00000000U
- *
- * DSR and BCR are two logical registers that occupy one 32-bit address. DSRn occupies bits 31–24,
- * and BCRn occupies bits 23–0. DSRn contains flags indicating the channel status, and BCRn contains
- * the number of bytes yet to be transferred for a given block. On the successful completion of the
- * write transfer, BCRn decrements by 1, 2, or 4 for 8-bit, 16-bit, or 32-bit accesses,
- * respectively. BCRn is cleared if a 1 is written to DSR[DONE]. In response to an event, the DMA
- * controller writes to the appropriate DSRn bit. Only a write to DSRn[DONE] results in action.
- * DSRn[DONE] is set when the block transfer is complete. When a transfer sequence is initiated and
- * BCRn[BCR] is not a multiple of 4 or 2 when the DMA is configured for 32-bit or 16-bit transfers,
- * respectively, DSRn[CE] is set and no transfer occurs.
+ * Reset value: 0x00U
  */
-typedef union _hw_dma_dsr_bcr0
+typedef union _hw_dma_dsr
 {
-    uint32_t U;
-    struct _hw_dma_dsr_bcr0_bitfields
+    uint8_t U;
+    struct _hw_dma_dsr_bitfields
     {
-        uint32_t BCR : 24; //!< [23:0] This field contains the number of bytes yet to be transferred for a given block.
-        uint32_t DONE : 1; //!< [24] Transactions done
-        uint32_t BSY : 1; //!< [25] Busy
-        uint32_t REQ : 1; //!< [26] Request
-        uint32_t RESERVED0 : 1; //!< [27] 
-        uint32_t BED : 1; //!< [28] Bus error on destination
-        uint32_t BES : 1; //!< [29] Bus error on source
-        uint32_t CE : 1; //!< [30] Configuration error
-        uint32_t RESERVED1 : 1; //!< [31] 
+        uint8_t RESERVED0 : 8;         //!< [7:0]
     } B;
-} hw_dma_dsr_bcr0_t;
+} hw_dma_dsr_t;
 #endif
 
 /*!
- * @name Constants and macros for entire DMA_DSR_BCR0 register
+ * @name Constants and macros for entire DMA_DSR register
  */
 //@{
-#define HW_DMA_DSR_BCR0_ADDR      (REGS_DMA_BASE + 0x108U)
+#define HW_DMA_DSR_COUNT (4U)
+
+#define HW_DMA_DSR_ADDR(x, n)    (REGS_DMA_BASE(x) + 0x10BU + (0x10U * n))
 
 #ifndef __LANGUAGE_ASM__
-#define HW_DMA_DSR_BCR0           (*(__IO hw_dma_dsr_bcr0_t *) HW_DMA_DSR_BCR0_ADDR)
-#define HW_DMA_DSR_BCR0_RD()      (HW_DMA_DSR_BCR0.U)
-#define HW_DMA_DSR_BCR0_WR(v)     (HW_DMA_DSR_BCR0.U = (v))
-#define HW_DMA_DSR_BCR0_SET(v)    (BME_OR32(HW_DMA_DSR_BCR0_ADDR, (uint32_t)(v)))
-#define HW_DMA_DSR_BCR0_CLR(v)    (BME_AND32(HW_DMA_DSR_BCR0_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DSR_BCR0_TOG(v)    (BME_XOR32(HW_DMA_DSR_BCR0_ADDR, (uint32_t)(v)))
+#define HW_DMA_DSR(x, n)         (*(__IO hw_dma_dsr_t *) HW_DMA_DSR_ADDR(x, n))
+#define HW_DMA_DSR_RD(x, n)      (HW_DMA_DSR(x, n).U)
+#define HW_DMA_DSR_WR(x, n, v)   (HW_DMA_DSR(x, n).U = (v))
+#define HW_DMA_DSR_SET(x, n, v)  (BME_OR8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(v)))
+#define HW_DMA_DSR_CLR(x, n, v)  (BME_AND8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(~(v))))
+#define HW_DMA_DSR_TOG(x, n, v)  (BME_XOR8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(v)))
 #endif
 //@}
 
 /*
- * constants & macros for individual DMA_DSR_BCR0 bitfields
+ * Constants & macros for individual DMA_DSR bitfields
  */
-
-/*! @name Register DMA_DSR_BCR0, field BCR[23:0] (RW)
- *
- * This field contains the number of bytes yet to be transferred for a given block. BCR must be
- * written with a value equal to or less than 0F_FFFFh. After being written with a value in this
- * range, bits 23-20 of BCR read back as 0000b. A write to BCR of a value greater than 0F_FFFFh
- * causes a configuration error when the channel starts to execute. After being written with a value
- * in this range, bits 23-20 of BCR read back as 0001b.
- */
-//@{
-#define BP_DMA_DSR_BCR0_BCR      (0U)      //!< Bit position for DMA_DSR_BCR0_BCR.
-#define BM_DMA_DSR_BCR0_BCR      (0x00ffffffU)  //!< Bit mask for DMA_DSR_BCR0_BCR.
+//-------------------------------------------------------------------------------------------
+// HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register
+//-------------------------------------------------------------------------------------------
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_BCR field.
-#define BR_DMA_DSR_BCR0_BCR(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_BCR, 24))
+/*!
+ * @brief HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register (RW)
+ *
+ * Reset value: 0x00000000U
+ *
+ * DSR and BCR are two logical registers that occupy one 32-bit address. DSRn
+ * occupies bits 31-24, and BCRn occupies bits 23-0. DSRn contains flags indicating
+ * the channel status, and BCRn contains the number of bytes yet to be
+ * transferred for a given block. On the successful completion of the write transfer, BCRn
+ * decrements by 1, 2, or 4 for 8-bit, 16-bit, or 32-bit accesses, respectively.
+ * BCRn is cleared if a 1 is written to DSR[DONE]. In response to an event, the
+ * DMA controller writes to the appropriate DSRn bit. Only a write to DSRn[DONE]
+ * results in action. DSRn[DONE] is set when the block transfer is complete. When
+ * a transfer sequence is initiated and BCRn[BCR] is not a multiple of 4 or 2
+ * when the DMA is configured for 32-bit or 16-bit transfers, respectively,
+ * DSRn[CE] is set and no transfer occurs.
+ */
+typedef union _hw_dma_dsr_bcrn
+{
+    uint32_t U;
+    struct _hw_dma_dsr_bcrn_bitfields
+    {
+        uint32_t BCR : 24;             //!< [23:0]
+        uint32_t DONE : 1;             //!< [24] Transactions done
+        uint32_t BSY : 1;              //!< [25] Busy
+        uint32_t REQ : 1;              //!< [26] Request
+        uint32_t RESERVED0 : 1;        //!< [27]
+        uint32_t BED : 1;              //!< [28] Bus error on destination
+        uint32_t BES : 1;              //!< [29] Bus error on source
+        uint32_t CE : 1;               //!< [30] Configuration error
+        uint32_t RESERVED1 : 1;        //!< [31]
+    } B;
+} hw_dma_dsr_bcrn_t;
 #endif
 
-//! @brief Format value for bitfield DMA_DSR_BCR0_BCR.
-#define BF_DMA_DSR_BCR0_BCR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR0_BCR), uint32_t) & BM_DMA_DSR_BCR0_BCR)
+/*!
+ * @name Constants and macros for entire DMA_DSR_BCRn register
+ */
+//@{
+#define HW_DMA_DSR_BCRn_COUNT (4U)
+
+#define HW_DMA_DSR_BCRn_ADDR(x, n) (REGS_DMA_BASE(x) + 0x108U + (0x10U * n))
+
+#ifndef __LANGUAGE_ASM__
+#define HW_DMA_DSR_BCRn(x, n)    (*(__IO hw_dma_dsr_bcrn_t *) HW_DMA_DSR_BCRn_ADDR(x, n))
+#define HW_DMA_DSR_BCRn_RD(x, n) (HW_DMA_DSR_BCRn(x, n).U)
+#define HW_DMA_DSR_BCRn_WR(x, n, v) (HW_DMA_DSR_BCRn(x, n).U = (v))
+#define HW_DMA_DSR_BCRn_SET(x, n, v) (BME_OR32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(v)))
+#define HW_DMA_DSR_BCRn_CLR(x, n, v) (BME_AND32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(~(v))))
+#define HW_DMA_DSR_BCRn_TOG(x, n, v) (BME_XOR32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(v)))
+#endif
+//@}
+
+/*
+ * Constants & macros for individual DMA_DSR_BCRn bitfields
+ */
+
+/*!
+ * @name Register DMA_DSR_BCRn, field BCR[23:0] (RW)
+ *
+ * This field contains the number of bytes yet to be transferred for a given
+ * block. BCR must be written with a value equal to or less than 0F_FFFFh. After
+ * being written with a value in this range, bits 23-20 of BCR read back as 1110b. A
+ * write to BCR of a value greater than 0F_FFFFh causes a configuration error
+ * when the channel starts to execute. After being written with a value in this
+ * range, bits 23-20 of BCR read back as 1111b.
+ */
+//@{
+#define BP_DMA_DSR_BCRn_BCR  (0U)          //!< Bit position for DMA_DSR_BCRn_BCR.
+#define BM_DMA_DSR_BCRn_BCR  (0x00FFFFFFU) //!< Bit mask for DMA_DSR_BCRn_BCR.
+#define BS_DMA_DSR_BCRn_BCR  (24U)         //!< Bit field size in bits for DMA_DSR_BCRn_BCR.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the DMA_DSR_BCRn_BCR field.
+#define BR_DMA_DSR_BCRn_BCR(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BCR, BS_DMA_DSR_BCRn_BCR))
+#endif
+
+//! @brief Format value for bitfield DMA_DSR_BCRn_BCR.
+#define BF_DMA_DSR_BCRn_BCR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCRn_BCR), uint32_t) & BM_DMA_DSR_BCRn_BCR)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BCR field to a new value.
-#define BW_DMA_DSR_BCR0_BCR(v)   (BME_BFI32(HW_DMA_DSR_BCR0_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR0_BCR), BP_DMA_DSR_BCR0_BCR, 24))
+#define BW_DMA_DSR_BCRn_BCR(x, n, v) (BME_BFI32(HW_DMA_DSR_BCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DSR_BCRn_BCR), BP_DMA_DSR_BCRn_BCR, 24))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field DONE[24] (W1C)
+/*!
+ * @name Register DMA_DSR_BCRn, field DONE[24] (W1C)
  *
- * Set when all DMA controller transactions complete as determined by transfer count, or based on
- * error conditions. When BCR reaches zero, DONE is set when the final transfer completes
- * successfully. DONE can also be used to abort a transfer by resetting the status bits. When a
- * transfer completes, software must clear DONE before reprogramming the DMA.
+ * Set when all DMA controller transactions complete as determined by transfer
+ * count, or based on error conditions. When BCR reaches zero, DONE is set when
+ * the final transfer completes successfully. DONE can also be used to abort a
+ * transfer by resetting the status bits. When a transfer completes, software must
+ * clear DONE before reprogramming the DMA.
  *
  * Values:
  * - 0 - DMA transfer is not yet complete. Writing a 0 has no effect.
- * - 1 - DMA transfer completed. Writing a 1 to this bit clears all DMA status bits and should be used in an
- *     interrupt service routine to clear the DMA interrupt and error bits.
+ * - 1 - DMA transfer completed. Writing a 1 to this bit clears all DMA status
+ *     bits and should be used in an interrupt service routine to clear the DMA
+ *     interrupt and error bits.
  */
 //@{
-#define BP_DMA_DSR_BCR0_DONE      (24U)      //!< Bit position for DMA_DSR_BCR0_DONE.
-#define BM_DMA_DSR_BCR0_DONE      (0x01000000U)  //!< Bit mask for DMA_DSR_BCR0_DONE.
+#define BP_DMA_DSR_BCRn_DONE (24U)         //!< Bit position for DMA_DSR_BCRn_DONE.
+#define BM_DMA_DSR_BCRn_DONE (0x01000000U) //!< Bit mask for DMA_DSR_BCRn_DONE.
+#define BS_DMA_DSR_BCRn_DONE (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_DONE.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_DONE field.
-#define BR_DMA_DSR_BCR0_DONE(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_DONE, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_DONE field.
+#define BR_DMA_DSR_BCRn_DONE(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_DONE, BS_DMA_DSR_BCRn_DONE))
 #endif
 
-//! @brief Format value for bitfield DMA_DSR_BCR0_DONE.
-#define BF_DMA_DSR_BCR0_DONE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR0_DONE), uint32_t) & BM_DMA_DSR_BCR0_DONE)
+//! @brief Format value for bitfield DMA_DSR_BCRn_DONE.
+#define BF_DMA_DSR_BCRn_DONE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCRn_DONE), uint32_t) & BM_DMA_DSR_BCRn_DONE)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DONE field to a new value.
-#define BW_DMA_DSR_BCR0_DONE(v)   (BME_BFI32(HW_DMA_DSR_BCR0_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR0_DONE), BP_DMA_DSR_BCR0_DONE, 1))
+#define BW_DMA_DSR_BCRn_DONE(x, n, v) (BME_BFI32(HW_DMA_DSR_BCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DSR_BCRn_DONE), BP_DMA_DSR_BCRn_DONE, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field BSY[25] (RO)
+/*!
+ * @name Register DMA_DSR_BCRn, field BSY[25] (RO)
  *
  * Values:
- * - 0 - DMA channel is inactive. Cleared when the DMA has finished the last transaction.
- * - 1 - BSY is set the first time the channel is enabled after a transfer is initiated.
+ * - 0 - DMA channel is inactive. Cleared when the DMA has finished the last
+ *     transaction.
+ * - 1 - BSY is set the first time the channel is enabled after a transfer is
+ *     initiated.
  */
 //@{
-#define BP_DMA_DSR_BCR0_BSY      (25U)      //!< Bit position for DMA_DSR_BCR0_BSY.
-#define BM_DMA_DSR_BCR0_BSY      (0x02000000U)  //!< Bit mask for DMA_DSR_BCR0_BSY.
+#define BP_DMA_DSR_BCRn_BSY  (25U)         //!< Bit position for DMA_DSR_BCRn_BSY.
+#define BM_DMA_DSR_BCRn_BSY  (0x02000000U) //!< Bit mask for DMA_DSR_BCRn_BSY.
+#define BS_DMA_DSR_BCRn_BSY  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BSY.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_BSY field.
-#define BR_DMA_DSR_BCR0_BSY(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_BSY, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_BSY field.
+#define BR_DMA_DSR_BCRn_BSY(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BSY, BS_DMA_DSR_BCRn_BSY))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field REQ[26] (RO)
+/*!
+ * @name Register DMA_DSR_BCRn, field REQ[26] (RO)
  *
  * Values:
- * - 0 - No request is pending or the channel is currently active. Cleared when the channel is selected.
- * - 1 - The DMA channel has a transfer remaining and the channel is not selected.
+ * - 0 - No request is pending or the channel is currently active. Cleared when
+ *     the channel is selected.
+ * - 1 - The DMA channel has a transfer remaining and the channel is not
+ *     selected.
  */
 //@{
-#define BP_DMA_DSR_BCR0_REQ      (26U)      //!< Bit position for DMA_DSR_BCR0_REQ.
-#define BM_DMA_DSR_BCR0_REQ      (0x04000000U)  //!< Bit mask for DMA_DSR_BCR0_REQ.
+#define BP_DMA_DSR_BCRn_REQ  (26U)         //!< Bit position for DMA_DSR_BCRn_REQ.
+#define BM_DMA_DSR_BCRn_REQ  (0x04000000U) //!< Bit mask for DMA_DSR_BCRn_REQ.
+#define BS_DMA_DSR_BCRn_REQ  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_REQ.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_REQ field.
-#define BR_DMA_DSR_BCR0_REQ(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_REQ, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_REQ field.
+#define BR_DMA_DSR_BCRn_REQ(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_REQ, BS_DMA_DSR_BCRn_REQ))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field BED[28] (RO)
+/*!
+ * @name Register DMA_DSR_BCRn, field BED[28] (RO)
  *
  * BED is cleared at hardware reset or by writing a 1 to the DONE bit.
  *
  * Values:
  * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the write portion of a transfer.
+ * - 1 - The DMA channel terminated with a bus error during the write portion of
+ *     a transfer.
  */
 //@{
-#define BP_DMA_DSR_BCR0_BED      (28U)      //!< Bit position for DMA_DSR_BCR0_BED.
-#define BM_DMA_DSR_BCR0_BED      (0x10000000U)  //!< Bit mask for DMA_DSR_BCR0_BED.
+#define BP_DMA_DSR_BCRn_BED  (28U)         //!< Bit position for DMA_DSR_BCRn_BED.
+#define BM_DMA_DSR_BCRn_BED  (0x10000000U) //!< Bit mask for DMA_DSR_BCRn_BED.
+#define BS_DMA_DSR_BCRn_BED  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BED.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_BED field.
-#define BR_DMA_DSR_BCR0_BED(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_BED, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_BED field.
+#define BR_DMA_DSR_BCRn_BED(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BED, BS_DMA_DSR_BCRn_BED))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field BES[29] (RO)
+/*!
+ * @name Register DMA_DSR_BCRn, field BES[29] (RO)
  *
  * BES is cleared at hardware reset or by writing a 1 to the DONE bit.
  *
  * Values:
  * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the read portion of a transfer.
+ * - 1 - The DMA channel terminated with a bus error during the read portion of
+ *     a transfer.
  */
 //@{
-#define BP_DMA_DSR_BCR0_BES      (29U)      //!< Bit position for DMA_DSR_BCR0_BES.
-#define BM_DMA_DSR_BCR0_BES      (0x20000000U)  //!< Bit mask for DMA_DSR_BCR0_BES.
+#define BP_DMA_DSR_BCRn_BES  (29U)         //!< Bit position for DMA_DSR_BCRn_BES.
+#define BM_DMA_DSR_BCRn_BES  (0x20000000U) //!< Bit mask for DMA_DSR_BCRn_BES.
+#define BS_DMA_DSR_BCRn_BES  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BES.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_BES field.
-#define BR_DMA_DSR_BCR0_BES(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_BES, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_BES field.
+#define BR_DMA_DSR_BCRn_BES(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BES, BS_DMA_DSR_BCRn_BES))
 #endif
 //@}
 
-/*! @name Register DMA_DSR_BCR0, field CE[30] (RO)
+/*!
+ * @name Register DMA_DSR_BCRn, field CE[30] (RO)
  *
- * Any of the following conditions causes a configuration error: BCR, SAR, or DAR does not match the
- * requested transfer size. A value greater than 0F_FFFFh is written to BCR. Bits 31-20 of SAR or
- * DAR are written with a value other than one of the allowed values. See and . SSIZE or DSIZE is
- * set to an unsupported value. BCR equals 0 when the DMA receives a start condition. CE is cleared
- * at hardware reset or by writing a 1 to the DONE bit.
+ * Any of the following conditions causes a configuration error: BCR, SAR, or
+ * DAR does not match the requested transfer size. A value greater than 0F_FFFFh is
+ * written to BCR. Bits 31-20 of SAR or DAR are written with a value other than
+ * one of the allowed values. See SAR and DAR . SSIZE or DSIZE is set to an
+ * unsupported value. BCR equals 0 when the DMA receives a start condition. CE is
+ * cleared at hardware reset or by writing a 1 to the DONE bit.
  *
  * Values:
  * - 0 - No configuration error exists.
  * - 1 - A configuration error has occurred.
  */
 //@{
-#define BP_DMA_DSR_BCR0_CE      (30U)      //!< Bit position for DMA_DSR_BCR0_CE.
-#define BM_DMA_DSR_BCR0_CE      (0x40000000U)  //!< Bit mask for DMA_DSR_BCR0_CE.
+#define BP_DMA_DSR_BCRn_CE   (30U)         //!< Bit position for DMA_DSR_BCRn_CE.
+#define BM_DMA_DSR_BCRn_CE   (0x40000000U) //!< Bit mask for DMA_DSR_BCRn_CE.
+#define BS_DMA_DSR_BCRn_CE   (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_CE.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR0_CE field.
-#define BR_DMA_DSR_BCR0_CE(v)   (BME_UBFX32(HW_DMA_DSR_BCR0_ADDR, BP_DMA_DSR_BCR0_CE, 1))
+//! @brief Read current value of the DMA_DSR_BCRn_CE field.
+#define BR_DMA_DSR_BCRn_CE(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_CE, BS_DMA_DSR_BCRn_CE))
 #endif
 //@}
-
 //-------------------------------------------------------------------------------------------
-// HW_DMA_DCR0 - DMA Control Register
+// HW_DMA_DCRn - DMA Control Register
 //-------------------------------------------------------------------------------------------
 
 #ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DMA_DCR0 - DMA Control Register (RW)
+ * @brief HW_DMA_DCRn - DMA Control Register (RW)
  *
  * Reset value: 0x00000000U
  */
-typedef union _hw_dma_dcr0
+typedef union _hw_dma_dcrn
 {
     uint32_t U;
-    struct _hw_dma_dcr0_bitfields
+    struct _hw_dma_dcrn_bitfields
     {
-        uint32_t LCH2 : 2; //!< [1:0] Link channel 2
-        uint32_t LCH1 : 2; //!< [3:2] Link channel 1
-        uint32_t LINKCC : 2; //!< [5:4] Link channel control
-        uint32_t RESERVED0 : 1; //!< [6] 
-        uint32_t D_REQ : 1; //!< [7] Disable request
-        uint32_t DMOD : 4; //!< [11:8] Destination address modulo
-        uint32_t SMOD : 4; //!< [15:12] Source address modulo
-        uint32_t START : 1; //!< [16] Start transfer
-        uint32_t DSIZE : 2; //!< [18:17] Destination size
-        uint32_t DINC : 1; //!< [19] Destination increment
-        uint32_t SSIZE : 2; //!< [21:20] Source size
-        uint32_t SINC : 1; //!< [22] Source increment
-        uint32_t EADREQ : 1; //!< [23] Enable asynchronous DMA requests
-        uint32_t RESERVED1 : 4; //!< [27:24] Reserved.
-        uint32_t AA : 1; //!< [28] Auto-align
-        uint32_t CS : 1; //!< [29] Cycle steal
-        uint32_t ERQ : 1; //!< [30] Enable peripheral request
-        uint32_t EINT : 1; //!< [31] Enable interrupt on completion of transfer
+        uint32_t LCH2 : 2;             //!< [1:0] Link channel 2
+        uint32_t LCH1 : 2;             //!< [3:2] Link channel 1
+        uint32_t LINKCC : 2;           //!< [5:4] Link channel control
+        uint32_t RESERVED0 : 1;        //!< [6]
+        uint32_t D_REQ : 1;            //!< [7] Disable request
+        uint32_t DMOD : 4;             //!< [11:8] Destination address modulo
+        uint32_t SMOD : 4;             //!< [15:12] Source address modulo
+        uint32_t START : 1;            //!< [16] Start transfer
+        uint32_t DSIZE : 2;            //!< [18:17] Destination size
+        uint32_t DINC : 1;             //!< [19] Destination increment
+        uint32_t SSIZE : 2;            //!< [21:20] Source size
+        uint32_t SINC : 1;             //!< [22] Source increment
+        uint32_t EADREQ : 1;           //!< [23] Enable asynchronous DMA requests
+        uint32_t RESERVED1 : 4;        //!< [27:24]
+        uint32_t AA : 1;               //!< [28] Auto-align
+        uint32_t CS : 1;               //!< [29] Cycle steal
+        uint32_t ERQ : 1;              //!< [30] Enable peripheral request
+        uint32_t EINT : 1;             //!< [31] Enable interrupt on completion of
+                                       //! transfer
     } B;
-} hw_dma_dcr0_t;
+} hw_dma_dcrn_t;
 #endif
 
 /*!
- * @name Constants and macros for entire DMA_DCR0 register
+ * @name Constants and macros for entire DMA_DCRn register
  */
 //@{
-#define HW_DMA_DCR0_ADDR      (REGS_DMA_BASE + 0x10cU)
+#define HW_DMA_DCRn_COUNT (4U)
+
+#define HW_DMA_DCRn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x10CU + (0x10U * n))
 
 #ifndef __LANGUAGE_ASM__
-#define HW_DMA_DCR0           (*(__IO hw_dma_dcr0_t *) HW_DMA_DCR0_ADDR)
-#define HW_DMA_DCR0_RD()      (HW_DMA_DCR0.U)
-#define HW_DMA_DCR0_WR(v)     (HW_DMA_DCR0.U = (v))
-#define HW_DMA_DCR0_SET(v)    (BME_OR32(HW_DMA_DCR0_ADDR, (uint32_t)(v)))
-#define HW_DMA_DCR0_CLR(v)    (BME_AND32(HW_DMA_DCR0_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DCR0_TOG(v)    (BME_XOR32(HW_DMA_DCR0_ADDR, (uint32_t)(v)))
+#define HW_DMA_DCRn(x, n)        (*(__IO hw_dma_dcrn_t *) HW_DMA_DCRn_ADDR(x, n))
+#define HW_DMA_DCRn_RD(x, n)     (HW_DMA_DCRn(x, n).U)
+#define HW_DMA_DCRn_WR(x, n, v)  (HW_DMA_DCRn(x, n).U = (v))
+#define HW_DMA_DCRn_SET(x, n, v) (BME_OR32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(v)))
+#define HW_DMA_DCRn_CLR(x, n, v) (BME_AND32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(~(v))))
+#define HW_DMA_DCRn_TOG(x, n, v) (BME_XOR32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(v)))
 #endif
 //@}
 
 /*
- * constants & macros for individual DMA_DCR0 bitfields
+ * Constants & macros for individual DMA_DCRn bitfields
  */
 
-/*! @name Register DMA_DCR0, field LCH2[1:0] (RW)
+/*!
+ * @name Register DMA_DCRn, field LCH2[1:0] (RW)
  *
- * Indicates the DMA channel assigned as link channel 2. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
+ * Indicates the DMA channel assigned as link channel 2. The link channel number
+ * cannot be the same as the currently executing channel, and generates a
+ * configuration error if this is attempted (DSRn[CE] is set).
  *
  * Values:
  * - 00 - DMA Channel 0
@@ -475,28 +565,30 @@ typedef union _hw_dma_dcr0
  * - 11 - DMA Channel 3
  */
 //@{
-#define BP_DMA_DCR0_LCH2      (0U)      //!< Bit position for DMA_DCR0_LCH2.
-#define BM_DMA_DCR0_LCH2      (0x00000003U)  //!< Bit mask for DMA_DCR0_LCH2.
+#define BP_DMA_DCRn_LCH2     (0U)          //!< Bit position for DMA_DCRn_LCH2.
+#define BM_DMA_DCRn_LCH2     (0x00000003U) //!< Bit mask for DMA_DCRn_LCH2.
+#define BS_DMA_DCRn_LCH2     (2U)          //!< Bit field size in bits for DMA_DCRn_LCH2.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_LCH2 field.
-#define BR_DMA_DCR0_LCH2(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_LCH2, 2))
+//! @brief Read current value of the DMA_DCRn_LCH2 field.
+#define BR_DMA_DCRn_LCH2(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LCH2, BS_DMA_DCRn_LCH2))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_LCH2.
-#define BF_DMA_DCR0_LCH2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_LCH2), uint32_t) & BM_DMA_DCR0_LCH2)
+//! @brief Format value for bitfield DMA_DCRn_LCH2.
+#define BF_DMA_DCRn_LCH2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LCH2), uint32_t) & BM_DMA_DCRn_LCH2)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LCH2 field to a new value.
-#define BW_DMA_DCR0_LCH2(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_LCH2), BP_DMA_DCR0_LCH2, 2))
+#define BW_DMA_DCRn_LCH2(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LCH2), BP_DMA_DCRn_LCH2, 2))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field LCH1[3:2] (RW)
+/*!
+ * @name Register DMA_DCRn, field LCH1[3:2] (RW)
  *
- * Indicates the DMA channel assigned as link channel 1. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
+ * Indicates the DMA channel assigned as link channel 1. The link channel number
+ * cannot be the same as the currently executing channel, and generates a
+ * configuration error if this is attempted (DSRn[CE] is set).
  *
  * Values:
  * - 00 - DMA Channel 0
@@ -505,91 +597,147 @@ typedef union _hw_dma_dcr0
  * - 11 - DMA Channel 3
  */
 //@{
-#define BP_DMA_DCR0_LCH1      (2U)      //!< Bit position for DMA_DCR0_LCH1.
-#define BM_DMA_DCR0_LCH1      (0x0000000cU)  //!< Bit mask for DMA_DCR0_LCH1.
+#define BP_DMA_DCRn_LCH1     (2U)          //!< Bit position for DMA_DCRn_LCH1.
+#define BM_DMA_DCRn_LCH1     (0x0000000CU) //!< Bit mask for DMA_DCRn_LCH1.
+#define BS_DMA_DCRn_LCH1     (2U)          //!< Bit field size in bits for DMA_DCRn_LCH1.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_LCH1 field.
-#define BR_DMA_DCR0_LCH1(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_LCH1, 2))
+//! @brief Read current value of the DMA_DCRn_LCH1 field.
+#define BR_DMA_DCRn_LCH1(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LCH1, BS_DMA_DCRn_LCH1))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_LCH1.
-#define BF_DMA_DCR0_LCH1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_LCH1), uint32_t) & BM_DMA_DCR0_LCH1)
+//! @brief Format value for bitfield DMA_DCRn_LCH1.
+#define BF_DMA_DCRn_LCH1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LCH1), uint32_t) & BM_DMA_DCRn_LCH1)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LCH1 field to a new value.
-#define BW_DMA_DCR0_LCH1(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_LCH1), BP_DMA_DCR0_LCH1, 2))
+#define BW_DMA_DCRn_LCH1(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LCH1), BP_DMA_DCRn_LCH1, 2))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field LINKCC[5:4] (RW)
+/*!
+ * @name Register DMA_DCRn, field LINKCC[5:4] (RW)
  *
- * Allows DMA channels to have their transfers linked. The current DMA channel triggers a DMA
- * request to the linked channels (LCH1 or LCH2) depending on the condition described by the LINKCC
- * bits. If not in cycle steal mode (DCRn[CS]=0) and LINKCC equals 01 or 10, no link to LCH1 occurs.
- * If LINKCC equals 01, a link to LCH1 is created after each cycle-steal transfer performed by the
- * current DMA channel is completed. As the last cycle-steal is performed and the BCR reaches zero ,
- * then the link to LCH1 is closed and a link to LCH2 is created.
+ * Allows DMA channels to have their transfers linked. The current DMA channel
+ * triggers a DMA request to the linked channels (LCH1 or LCH2) depending on the
+ * condition described by the LINKCC bits. If not in cycle steal mode (DCRn[CS]=0)
+ * and LINKCC equals 01 or 10, no link to LCH1 occurs. If LINKCC equals 01, a
+ * link to LCH1 is created after each cycle-steal transfer performed by the current
+ * DMA channel is completed. As the last cycle-steal is performed and the BCR
+ * reaches zero, then the link to LCH1 is closed and a link to LCH2 is created.
  *
  * Values:
  * - 00 - No channel-to-channel linking
- * - 01 - Perform a link to channel LCH1 after each cycle-steal transfer followed by a link to LCH2 after the
- *     BCR decrements to zero
+ * - 01 - Perform a link to channel LCH1 after each cycle-steal transfer
+ *     followed by a link to LCH2 after the BCR decrements to zero
  * - 10 - Perform a link to channel LCH1 after each cycle-steal transfer
  * - 11 - Perform a link to channel LCH1 after the BCR decrements to zero
  */
 //@{
-#define BP_DMA_DCR0_LINKCC      (4U)      //!< Bit position for DMA_DCR0_LINKCC.
-#define BM_DMA_DCR0_LINKCC      (0x00000030U)  //!< Bit mask for DMA_DCR0_LINKCC.
+#define BP_DMA_DCRn_LINKCC   (4U)          //!< Bit position for DMA_DCRn_LINKCC.
+#define BM_DMA_DCRn_LINKCC   (0x00000030U) //!< Bit mask for DMA_DCRn_LINKCC.
+#define BS_DMA_DCRn_LINKCC   (2U)          //!< Bit field size in bits for DMA_DCRn_LINKCC.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_LINKCC field.
-#define BR_DMA_DCR0_LINKCC(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_LINKCC, 2))
+//! @brief Read current value of the DMA_DCRn_LINKCC field.
+#define BR_DMA_DCRn_LINKCC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LINKCC, BS_DMA_DCRn_LINKCC))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_LINKCC.
-#define BF_DMA_DCR0_LINKCC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_LINKCC), uint32_t) & BM_DMA_DCR0_LINKCC)
+//! @brief Format value for bitfield DMA_DCRn_LINKCC.
+#define BF_DMA_DCRn_LINKCC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LINKCC), uint32_t) & BM_DMA_DCRn_LINKCC)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LINKCC field to a new value.
-#define BW_DMA_DCR0_LINKCC(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_LINKCC), BP_DMA_DCR0_LINKCC, 2))
+#define BW_DMA_DCRn_LINKCC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LINKCC), BP_DMA_DCRn_LINKCC, 2))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field D_REQ[7] (RW)
+/*!
+ * @name Register DMA_DCRn, field D_REQ[7] (RW)
  *
- * DMA hardware automatically clears the corresponding DCRn[ERQ] bit when the byte count register
- * reaches zero.
+ * DMA hardware automatically clears the corresponding DCRn[ERQ] bit when the
+ * byte count register reaches zero.
  *
  * Values:
  * - 0 - ERQ bit is not affected.
  * - 1 - ERQ bit is cleared when the BCR is exhausted.
  */
 //@{
-#define BP_DMA_DCR0_D_REQ      (7U)      //!< Bit position for DMA_DCR0_D_REQ.
-#define BM_DMA_DCR0_D_REQ      (0x00000080U)  //!< Bit mask for DMA_DCR0_D_REQ.
+#define BP_DMA_DCRn_D_REQ    (7U)          //!< Bit position for DMA_DCRn_D_REQ.
+#define BM_DMA_DCRn_D_REQ    (0x00000080U) //!< Bit mask for DMA_DCRn_D_REQ.
+#define BS_DMA_DCRn_D_REQ    (1U)          //!< Bit field size in bits for DMA_DCRn_D_REQ.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_D_REQ field.
-#define BR_DMA_DCR0_D_REQ(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_D_REQ, 1))
+//! @brief Read current value of the DMA_DCRn_D_REQ field.
+#define BR_DMA_DCRn_D_REQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_D_REQ, BS_DMA_DCRn_D_REQ))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_D_REQ.
-#define BF_DMA_DCR0_D_REQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_D_REQ), uint32_t) & BM_DMA_DCR0_D_REQ)
+//! @brief Format value for bitfield DMA_DCRn_D_REQ.
+#define BF_DMA_DCRn_D_REQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_D_REQ), uint32_t) & BM_DMA_DCRn_D_REQ)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the D_REQ field to a new value.
-#define BW_DMA_DCR0_D_REQ(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_D_REQ), BP_DMA_DCR0_D_REQ, 1))
+#define BW_DMA_DCRn_D_REQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_D_REQ), BP_DMA_DCRn_D_REQ, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field DMOD[11:8] (RW)
+/*!
+ * @name Register DMA_DCRn, field DMOD[11:8] (RW)
  *
- * Defines the size of the destination data circular buffer used by the DMA Controller. If enabled
- * (DMOD value is non-zero), the buffer base address is located on a boundary of the buffer size.
- * The value of this boundary depends on the initial destination address (DAR). The base address
- * should be aligned to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not
- * possible. The boundary is forced to the value determined by the upper address bits in the field
+ * Defines the size of the destination data circular buffer used by the DMA
+ * Controller. If enabled (DMOD value is non-zero), the buffer base address is
+ * located on a boundary of the buffer size. The value of this boundary depends on the
+ * initial destination address (DAR). The base address should be aligned to a
+ * 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible.
+ * The boundary is forced to the value determined by the upper address bits in the
+ * field selection.
+ *
+ * Values:
+ * - 0000 - Buffer disabled
+ * - 0001 - Circular buffer size is 16 bytes
+ * - 0010 - Circular buffer size is 32 bytes
+ * - 0011 - Circular buffer size is 64 bytes
+ * - 0100 - Circular buffer size is 128 bytes
+ * - 0101 - Circular buffer size is 256 bytes
+ * - 0110 - Circular buffer size is 512 bytes
+ * - 0111 - Circular buffer size is 1 KB
+ * - 1000 - Circular buffer size is 2 KB
+ * - 1001 - Circular buffer size is 4 KB
+ * - 1010 - Circular buffer size is 8 KB
+ * - 1011 - Circular buffer size is 16 KB
+ * - 1100 - Circular buffer size is 32 KB
+ * - 1101 - Circular buffer size is 64 KB
+ * - 1110 - Circular buffer size is 128 KB
+ * - 1111 - Circular buffer size is 256 KB
+ */
+//@{
+#define BP_DMA_DCRn_DMOD     (8U)          //!< Bit position for DMA_DCRn_DMOD.
+#define BM_DMA_DCRn_DMOD     (0x00000F00U) //!< Bit mask for DMA_DCRn_DMOD.
+#define BS_DMA_DCRn_DMOD     (4U)          //!< Bit field size in bits for DMA_DCRn_DMOD.
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Read current value of the DMA_DCRn_DMOD field.
+#define BR_DMA_DCRn_DMOD(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DMOD, BS_DMA_DCRn_DMOD))
+#endif
+
+//! @brief Format value for bitfield DMA_DCRn_DMOD.
+#define BF_DMA_DCRn_DMOD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DMOD), uint32_t) & BM_DMA_DCRn_DMOD)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the DMOD field to a new value.
+#define BW_DMA_DCRn_DMOD(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DMOD), BP_DMA_DCRn_DMOD, 4))
+#endif
+//@}
+
+/*!
+ * @name Register DMA_DCRn, field SMOD[15:12] (RW)
+ *
+ * Defines the size of the source data circular buffer used by the DMA
+ * Controller. If enabled (SMOD is non-zero), the buffer base address is located on a
+ * boundary of the buffer size. The value of this boundary is based upon the initial
+ * source address (SAR). The base address should be aligned to a
+ * 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible. The boundary is
+ * forced to the value determined by the upper address bits in the field
  * selection.
  *
  * Values:
@@ -611,88 +759,54 @@ typedef union _hw_dma_dcr0
  * - 1111 - Circular buffer size is 256 KB
  */
 //@{
-#define BP_DMA_DCR0_DMOD      (8U)      //!< Bit position for DMA_DCR0_DMOD.
-#define BM_DMA_DCR0_DMOD      (0x00000f00U)  //!< Bit mask for DMA_DCR0_DMOD.
+#define BP_DMA_DCRn_SMOD     (12U)         //!< Bit position for DMA_DCRn_SMOD.
+#define BM_DMA_DCRn_SMOD     (0x0000F000U) //!< Bit mask for DMA_DCRn_SMOD.
+#define BS_DMA_DCRn_SMOD     (4U)          //!< Bit field size in bits for DMA_DCRn_SMOD.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_DMOD field.
-#define BR_DMA_DCR0_DMOD(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_DMOD, 4))
+//! @brief Read current value of the DMA_DCRn_SMOD field.
+#define BR_DMA_DCRn_SMOD(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SMOD, BS_DMA_DCRn_SMOD))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_DMOD.
-#define BF_DMA_DCR0_DMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_DMOD), uint32_t) & BM_DMA_DCR0_DMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMOD field to a new value.
-#define BW_DMA_DCR0_DMOD(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_DMOD), BP_DMA_DCR0_DMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR0, field SMOD[15:12] (RW)
- *
- * Defines the size of the source data circular buffer used by the DMA Controller. If enabled (SMOD
- * is non-zero), the buffer base address is located on a boundary of the buffer size. The value of
- * this boundary is based upon the initial source address (SAR). The base address should be aligned
- * to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible. The boundary
- * is forced to the value determined by the upper address bits in the field selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR0_SMOD      (12U)      //!< Bit position for DMA_DCR0_SMOD.
-#define BM_DMA_DCR0_SMOD      (0x0000f000U)  //!< Bit mask for DMA_DCR0_SMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_SMOD field.
-#define BR_DMA_DCR0_SMOD(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_SMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR0_SMOD.
-#define BF_DMA_DCR0_SMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_SMOD), uint32_t) & BM_DMA_DCR0_SMOD)
+//! @brief Format value for bitfield DMA_DCRn_SMOD.
+#define BF_DMA_DCRn_SMOD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SMOD), uint32_t) & BM_DMA_DCRn_SMOD)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SMOD field to a new value.
-#define BW_DMA_DCR0_SMOD(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_SMOD), BP_DMA_DCR0_SMOD, 4))
+#define BW_DMA_DCRn_SMOD(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SMOD), BP_DMA_DCRn_SMOD, 4))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field START[16] (WORZ)
+/*!
+ * @name Register DMA_DCRn, field START[16] (WORZ)
  *
  * Values:
  * - 0 - DMA inactive
- * - 1 - The DMA begins the transfer in accordance to the values in the TCDn. START is cleared automatically
- *     after one module clock and always reads as logic 0.
+ * - 1 - The DMA begins the transfer in accordance to the values in the TCDn.
+ *     START is cleared automatically after one module clock and always reads as
+ *     logic 0.
  */
 //@{
-#define BP_DMA_DCR0_START      (16U)      //!< Bit position for DMA_DCR0_START.
-#define BM_DMA_DCR0_START      (0x00010000U)  //!< Bit mask for DMA_DCR0_START.
+#define BP_DMA_DCRn_START    (16U)         //!< Bit position for DMA_DCRn_START.
+#define BM_DMA_DCRn_START    (0x00010000U) //!< Bit mask for DMA_DCRn_START.
+#define BS_DMA_DCRn_START    (1U)          //!< Bit field size in bits for DMA_DCRn_START.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_START field.
-#define BR_DMA_DCR0_START(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_START, 1))
+//! @brief Read current value of the DMA_DCRn_START field.
+#define BR_DMA_DCRn_START(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_START, BS_DMA_DCRn_START))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_START.
-#define BF_DMA_DCR0_START(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_START), uint32_t) & BM_DMA_DCR0_START)
+//! @brief Format value for bitfield DMA_DCRn_START.
+#define BF_DMA_DCRn_START(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_START), uint32_t) & BM_DMA_DCRn_START)
+
+#ifndef __LANGUAGE_ASM__
+//! @brief Set the START field to a new value.
+#define BW_DMA_DCRn_START(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_START), BP_DMA_DCRn_START, 1))
+#endif
 //@}
 
-/*! @name Register DMA_DCR0, field DSIZE[18:17] (RW)
+/*!
+ * @name Register DMA_DCRn, field DSIZE[18:17] (RW)
  *
  * Determines the data size of the destination bus cycle for the DMA controller.
  *
@@ -700,54 +814,59 @@ typedef union _hw_dma_dcr0
  * - 00 - 32-bit
  * - 01 - 8-bit
  * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
+ * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly
+ *     specified at time of channel activation)
  */
 //@{
-#define BP_DMA_DCR0_DSIZE      (17U)      //!< Bit position for DMA_DCR0_DSIZE.
-#define BM_DMA_DCR0_DSIZE      (0x00060000U)  //!< Bit mask for DMA_DCR0_DSIZE.
+#define BP_DMA_DCRn_DSIZE    (17U)         //!< Bit position for DMA_DCRn_DSIZE.
+#define BM_DMA_DCRn_DSIZE    (0x00060000U) //!< Bit mask for DMA_DCRn_DSIZE.
+#define BS_DMA_DCRn_DSIZE    (2U)          //!< Bit field size in bits for DMA_DCRn_DSIZE.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_DSIZE field.
-#define BR_DMA_DCR0_DSIZE(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_DSIZE, 2))
+//! @brief Read current value of the DMA_DCRn_DSIZE field.
+#define BR_DMA_DCRn_DSIZE(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DSIZE, BS_DMA_DCRn_DSIZE))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_DSIZE.
-#define BF_DMA_DCR0_DSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_DSIZE), uint32_t) & BM_DMA_DCR0_DSIZE)
+//! @brief Format value for bitfield DMA_DCRn_DSIZE.
+#define BF_DMA_DCRn_DSIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DSIZE), uint32_t) & BM_DMA_DCRn_DSIZE)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DSIZE field to a new value.
-#define BW_DMA_DCR0_DSIZE(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_DSIZE), BP_DMA_DCR0_DSIZE, 2))
+#define BW_DMA_DCRn_DSIZE(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DSIZE), BP_DMA_DCRn_DSIZE, 2))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field DINC[19] (RW)
+/*!
+ * @name Register DMA_DCRn, field DINC[19] (RW)
  *
- * Controls whether the destination address increments after each successful transfer.
+ * Controls whether the destination address increments after each successful
+ * transfer.
  *
  * Values:
  * - 0 - No change to the DAR after a successful transfer.
  * - 1 - The DAR increments by 1, 2, 4 depending upon the size of the transfer.
  */
 //@{
-#define BP_DMA_DCR0_DINC      (19U)      //!< Bit position for DMA_DCR0_DINC.
-#define BM_DMA_DCR0_DINC      (0x00080000U)  //!< Bit mask for DMA_DCR0_DINC.
+#define BP_DMA_DCRn_DINC     (19U)         //!< Bit position for DMA_DCRn_DINC.
+#define BM_DMA_DCRn_DINC     (0x00080000U) //!< Bit mask for DMA_DCRn_DINC.
+#define BS_DMA_DCRn_DINC     (1U)          //!< Bit field size in bits for DMA_DCRn_DINC.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_DINC field.
-#define BR_DMA_DCR0_DINC(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_DINC, 1))
+//! @brief Read current value of the DMA_DCRn_DINC field.
+#define BR_DMA_DCRn_DINC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DINC, BS_DMA_DCRn_DINC))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_DINC.
-#define BF_DMA_DCR0_DINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_DINC), uint32_t) & BM_DMA_DCR0_DINC)
+//! @brief Format value for bitfield DMA_DCRn_DINC.
+#define BF_DMA_DCRn_DINC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DINC), uint32_t) & BM_DMA_DCRn_DINC)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DINC field to a new value.
-#define BW_DMA_DCR0_DINC(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_DINC), BP_DMA_DCR0_DINC, 1))
+#define BW_DMA_DCRn_DINC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DINC), BP_DMA_DCRn_DINC, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field SSIZE[21:20] (RW)
+/*!
+ * @name Register DMA_DCRn, field SSIZE[21:20] (RW)
  *
  * Determines the data size of the source bus cycle for the DMA controller.
  *
@@ -755,28 +874,30 @@ typedef union _hw_dma_dcr0
  * - 00 - 32-bit
  * - 01 - 8-bit
  * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
+ * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly
+ *     specified at time of channel activation)
  */
 //@{
-#define BP_DMA_DCR0_SSIZE      (20U)      //!< Bit position for DMA_DCR0_SSIZE.
-#define BM_DMA_DCR0_SSIZE      (0x00300000U)  //!< Bit mask for DMA_DCR0_SSIZE.
+#define BP_DMA_DCRn_SSIZE    (20U)         //!< Bit position for DMA_DCRn_SSIZE.
+#define BM_DMA_DCRn_SSIZE    (0x00300000U) //!< Bit mask for DMA_DCRn_SSIZE.
+#define BS_DMA_DCRn_SSIZE    (2U)          //!< Bit field size in bits for DMA_DCRn_SSIZE.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_SSIZE field.
-#define BR_DMA_DCR0_SSIZE(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_SSIZE, 2))
+//! @brief Read current value of the DMA_DCRn_SSIZE field.
+#define BR_DMA_DCRn_SSIZE(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SSIZE, BS_DMA_DCRn_SSIZE))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_SSIZE.
-#define BF_DMA_DCR0_SSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_SSIZE), uint32_t) & BM_DMA_DCR0_SSIZE)
+//! @brief Format value for bitfield DMA_DCRn_SSIZE.
+#define BF_DMA_DCRn_SSIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SSIZE), uint32_t) & BM_DMA_DCRn_SSIZE)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SSIZE field to a new value.
-#define BW_DMA_DCR0_SSIZE(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_SSIZE), BP_DMA_DCR0_SSIZE, 2))
+#define BW_DMA_DCRn_SSIZE(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SSIZE), BP_DMA_DCRn_SSIZE, 2))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field SINC[22] (RW)
+/*!
+ * @name Register DMA_DCRn, field SINC[22] (RW)
  *
  * Controls whether the source address increments after each successful transfer.
  *
@@ -785,2791 +906,169 @@ typedef union _hw_dma_dcr0
  * - 1 - The SAR increments by 1, 2, 4 as determined by the transfer size.
  */
 //@{
-#define BP_DMA_DCR0_SINC      (22U)      //!< Bit position for DMA_DCR0_SINC.
-#define BM_DMA_DCR0_SINC      (0x00400000U)  //!< Bit mask for DMA_DCR0_SINC.
+#define BP_DMA_DCRn_SINC     (22U)         //!< Bit position for DMA_DCRn_SINC.
+#define BM_DMA_DCRn_SINC     (0x00400000U) //!< Bit mask for DMA_DCRn_SINC.
+#define BS_DMA_DCRn_SINC     (1U)          //!< Bit field size in bits for DMA_DCRn_SINC.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_SINC field.
-#define BR_DMA_DCR0_SINC(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_SINC, 1))
+//! @brief Read current value of the DMA_DCRn_SINC field.
+#define BR_DMA_DCRn_SINC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SINC, BS_DMA_DCRn_SINC))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_SINC.
-#define BF_DMA_DCR0_SINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_SINC), uint32_t) & BM_DMA_DCR0_SINC)
+//! @brief Format value for bitfield DMA_DCRn_SINC.
+#define BF_DMA_DCRn_SINC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SINC), uint32_t) & BM_DMA_DCRn_SINC)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SINC field to a new value.
-#define BW_DMA_DCR0_SINC(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_SINC), BP_DMA_DCR0_SINC, 1))
+#define BW_DMA_DCRn_SINC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SINC), BP_DMA_DCRn_SINC, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field EADREQ[23] (RW)
+/*!
+ * @name Register DMA_DCRn, field EADREQ[23] (RW)
  *
- * Enables the channel to support asynchronous DREQs while the MCU is in Stop mode.
+ * Enables the channel to support asynchronous DREQs while the MCU is in Stop
+ * mode.
  *
  * Values:
  * - 0 - Disabled
  * - 1 - Enabled
  */
 //@{
-#define BP_DMA_DCR0_EADREQ      (23U)      //!< Bit position for DMA_DCR0_EADREQ.
-#define BM_DMA_DCR0_EADREQ      (0x00800000U)  //!< Bit mask for DMA_DCR0_EADREQ.
+#define BP_DMA_DCRn_EADREQ   (23U)         //!< Bit position for DMA_DCRn_EADREQ.
+#define BM_DMA_DCRn_EADREQ   (0x00800000U) //!< Bit mask for DMA_DCRn_EADREQ.
+#define BS_DMA_DCRn_EADREQ   (1U)          //!< Bit field size in bits for DMA_DCRn_EADREQ.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_EADREQ field.
-#define BR_DMA_DCR0_EADREQ(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_EADREQ, 1))
+//! @brief Read current value of the DMA_DCRn_EADREQ field.
+#define BR_DMA_DCRn_EADREQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_EADREQ, BS_DMA_DCRn_EADREQ))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_EADREQ.
-#define BF_DMA_DCR0_EADREQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_EADREQ), uint32_t) & BM_DMA_DCR0_EADREQ)
+//! @brief Format value for bitfield DMA_DCRn_EADREQ.
+#define BF_DMA_DCRn_EADREQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_EADREQ), uint32_t) & BM_DMA_DCRn_EADREQ)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the EADREQ field to a new value.
-#define BW_DMA_DCR0_EADREQ(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_EADREQ), BP_DMA_DCR0_EADREQ, 1))
+#define BW_DMA_DCRn_EADREQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_EADREQ), BP_DMA_DCRn_EADREQ, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field AA[28] (RW)
+/*!
+ * @name Register DMA_DCRn, field AA[28] (RW)
  *
- * AA and SIZE bits determine whether the source or destination is auto-aligned; that is, transfers
- * are optimized based on the address and size.
+ * AA and SIZE bits determine whether the source or destination is auto-aligned;
+ * that is, transfers are optimized based on the address and size.
  *
  * Values:
  * - 0 - Auto-align disabled
- * - 1 - If SSIZE indicates a transfer no smaller than DSIZE, source accesses are auto-aligned; otherwise,
- *     destination accesses are auto-aligned. Source alignment takes precedence over destination
- *     alignment. If auto-alignment is enabled, the appropriate address register increments,
- *     regardless of DINC or SINC.
+ * - 1 - If SSIZE indicates a transfer no smaller than DSIZE, source accesses
+ *     are auto-aligned; otherwise, destination accesses are auto-aligned. Source
+ *     alignment takes precedence over destination alignment. If auto-alignment is
+ *     enabled, the appropriate address register increments, regardless of DINC
+ *     or SINC.
  */
 //@{
-#define BP_DMA_DCR0_AA      (28U)      //!< Bit position for DMA_DCR0_AA.
-#define BM_DMA_DCR0_AA      (0x10000000U)  //!< Bit mask for DMA_DCR0_AA.
+#define BP_DMA_DCRn_AA       (28U)         //!< Bit position for DMA_DCRn_AA.
+#define BM_DMA_DCRn_AA       (0x10000000U) //!< Bit mask for DMA_DCRn_AA.
+#define BS_DMA_DCRn_AA       (1U)          //!< Bit field size in bits for DMA_DCRn_AA.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_AA field.
-#define BR_DMA_DCR0_AA(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_AA, 1))
+//! @brief Read current value of the DMA_DCRn_AA field.
+#define BR_DMA_DCRn_AA(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_AA, BS_DMA_DCRn_AA))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_AA.
-#define BF_DMA_DCR0_AA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_AA), uint32_t) & BM_DMA_DCR0_AA)
+//! @brief Format value for bitfield DMA_DCRn_AA.
+#define BF_DMA_DCRn_AA(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_AA), uint32_t) & BM_DMA_DCRn_AA)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the AA field to a new value.
-#define BW_DMA_DCR0_AA(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_AA), BP_DMA_DCR0_AA, 1))
+#define BW_DMA_DCRn_AA(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_AA), BP_DMA_DCRn_AA, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field CS[29] (RW)
+/*!
+ * @name Register DMA_DCRn, field CS[29] (RW)
  *
  * Values:
- * - 0 - DMA continuously makes read/write transfers until the BCR decrements to 0.
+ * - 0 - DMA continuously makes read/write transfers until the BCR decrements to
+ *     0.
  * - 1 - Forces a single read/write transfer per request.
  */
 //@{
-#define BP_DMA_DCR0_CS      (29U)      //!< Bit position for DMA_DCR0_CS.
-#define BM_DMA_DCR0_CS      (0x20000000U)  //!< Bit mask for DMA_DCR0_CS.
+#define BP_DMA_DCRn_CS       (29U)         //!< Bit position for DMA_DCRn_CS.
+#define BM_DMA_DCRn_CS       (0x20000000U) //!< Bit mask for DMA_DCRn_CS.
+#define BS_DMA_DCRn_CS       (1U)          //!< Bit field size in bits for DMA_DCRn_CS.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_CS field.
-#define BR_DMA_DCR0_CS(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_CS, 1))
+//! @brief Read current value of the DMA_DCRn_CS field.
+#define BR_DMA_DCRn_CS(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_CS, BS_DMA_DCRn_CS))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_CS.
-#define BF_DMA_DCR0_CS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_CS), uint32_t) & BM_DMA_DCR0_CS)
+//! @brief Format value for bitfield DMA_DCRn_CS.
+#define BF_DMA_DCRn_CS(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_CS), uint32_t) & BM_DMA_DCRn_CS)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CS field to a new value.
-#define BW_DMA_DCR0_CS(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_CS), BP_DMA_DCR0_CS, 1))
+#define BW_DMA_DCRn_CS(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_CS), BP_DMA_DCRn_CS, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field ERQ[30] (RW)
+/*!
+ * @name Register DMA_DCRn, field ERQ[30] (RW)
  *
- * Be careful: a collision can occur between the START bit and D_REQ when the ERQ bit is 1.
+ * Be careful: a collision can occur between the START bit and D_REQ when the
+ * ERQ bit is 1.
  *
  * Values:
  * - 0 - Peripheral request is ignored.
- * - 1 - Enables peripheral request to initiate transfer. A software-initiated request (setting the START
- *     bit) is always enabled.
+ * - 1 - Enables peripheral request to initiate transfer. A software-initiated
+ *     request (setting the START bit) is always enabled.
  */
 //@{
-#define BP_DMA_DCR0_ERQ      (30U)      //!< Bit position for DMA_DCR0_ERQ.
-#define BM_DMA_DCR0_ERQ      (0x40000000U)  //!< Bit mask for DMA_DCR0_ERQ.
+#define BP_DMA_DCRn_ERQ      (30U)         //!< Bit position for DMA_DCRn_ERQ.
+#define BM_DMA_DCRn_ERQ      (0x40000000U) //!< Bit mask for DMA_DCRn_ERQ.
+#define BS_DMA_DCRn_ERQ      (1U)          //!< Bit field size in bits for DMA_DCRn_ERQ.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_ERQ field.
-#define BR_DMA_DCR0_ERQ(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_ERQ, 1))
+//! @brief Read current value of the DMA_DCRn_ERQ field.
+#define BR_DMA_DCRn_ERQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_ERQ, BS_DMA_DCRn_ERQ))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_ERQ.
-#define BF_DMA_DCR0_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_ERQ), uint32_t) & BM_DMA_DCR0_ERQ)
+//! @brief Format value for bitfield DMA_DCRn_ERQ.
+#define BF_DMA_DCRn_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_ERQ), uint32_t) & BM_DMA_DCRn_ERQ)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the ERQ field to a new value.
-#define BW_DMA_DCR0_ERQ(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_ERQ), BP_DMA_DCR0_ERQ, 1))
+#define BW_DMA_DCRn_ERQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_ERQ), BP_DMA_DCRn_ERQ, 1))
 #endif
 //@}
 
-/*! @name Register DMA_DCR0, field EINT[31] (RW)
+/*!
+ * @name Register DMA_DCRn, field EINT[31] (RW)
  *
- * Determines whether an interrupt is generated by completing a transfer or by the occurrence of an
- * error condition.
+ * Determines whether an interrupt is generated by completing a transfer or by
+ * the occurrence of an error condition.
  *
  * Values:
  * - 0 - No interrupt is generated.
  * - 1 - Interrupt signal is enabled.
  */
 //@{
-#define BP_DMA_DCR0_EINT      (31U)      //!< Bit position for DMA_DCR0_EINT.
-#define BM_DMA_DCR0_EINT      (0x80000000U)  //!< Bit mask for DMA_DCR0_EINT.
+#define BP_DMA_DCRn_EINT     (31U)         //!< Bit position for DMA_DCRn_EINT.
+#define BM_DMA_DCRn_EINT     (0x80000000U) //!< Bit mask for DMA_DCRn_EINT.
+#define BS_DMA_DCRn_EINT     (1U)          //!< Bit field size in bits for DMA_DCRn_EINT.
 
 #ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR0_EINT field.
-#define BR_DMA_DCR0_EINT(v)   (BME_UBFX32(HW_DMA_DCR0_ADDR, BP_DMA_DCR0_EINT, 1))
+//! @brief Read current value of the DMA_DCRn_EINT field.
+#define BR_DMA_DCRn_EINT(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_EINT, BS_DMA_DCRn_EINT))
 #endif
 
-//! @brief Format value for bitfield DMA_DCR0_EINT.
-#define BF_DMA_DCR0_EINT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR0_EINT), uint32_t) & BM_DMA_DCR0_EINT)
+//! @brief Format value for bitfield DMA_DCRn_EINT.
+#define BF_DMA_DCRn_EINT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_EINT), uint32_t) & BM_DMA_DCRn_EINT)
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the EINT field to a new value.
-#define BW_DMA_DCR0_EINT(v)   (BME_BFI32(HW_DMA_DCR0_ADDR, ((uint32_t)(v) << BP_DMA_DCR0_EINT), BP_DMA_DCR0_EINT, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_SAR1 - Source Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_SAR1 - Source Address Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes result in a bus error.
- * Only four values are allowed to be written to bits 31-20 of this register. A write of any other
- * value to these bits causes a configuration error when the channel starts to execute. For more
- * information about the configuration error, see the description of the field of DSR.
- */
-typedef union _hw_dma_sar1
-{
-    uint32_t U;
-    struct _hw_dma_sar1_bitfields
-    {
-        uint32_t SAR : 32; //!< [31:0] Each SAR contains the byte address used by the DMA controller to read data.
-    } B;
-} hw_dma_sar1_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_SAR1 register
- */
-//@{
-#define HW_DMA_SAR1_ADDR      (REGS_DMA_BASE + 0x110U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_SAR1           (*(__IO hw_dma_sar1_t *) HW_DMA_SAR1_ADDR)
-#define HW_DMA_SAR1_RD()      (HW_DMA_SAR1.U)
-#define HW_DMA_SAR1_WR(v)     (HW_DMA_SAR1.U = (v))
-#define HW_DMA_SAR1_SET(v)    (BME_OR32(HW_DMA_SAR1_ADDR, (uint32_t)(v)))
-#define HW_DMA_SAR1_CLR(v)    (BME_AND32(HW_DMA_SAR1_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_SAR1_TOG(v)    (BME_XOR32(HW_DMA_SAR1_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_SAR1 bitfields
- */
-
-/*! @name Register DMA_SAR1, field SAR[31:0] (RW)
- *
- * Each SAR contains the byte address used by the DMA controller to read data. The SARn is typically
- * aligned on a 0-modulo-ssize boundary—that is, on the natural alignment of the source data. Bits
- * 31-20 of this register must be written with one of only four allowed values. Each of these four
- * allowed values corresponds to a valid region of the device's memory map. The allowed values are:
- * 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with one of the allowed
- * values, bits 31-20 read back as the written value. After being written with any other value, bits
- * 31-20 read back as an indeterminate value.
- */
-//@{
-#define BP_DMA_SAR1_SAR      (0U)      //!< Bit position for DMA_SAR1_SAR.
-#define BM_DMA_SAR1_SAR      (0xffffffffU)  //!< Bit mask for DMA_SAR1_SAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_SAR1_SAR field.
-#define BR_DMA_SAR1_SAR(v)   (BME_UBFX32(HW_DMA_SAR1_ADDR, BP_DMA_SAR1_SAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_SAR1_SAR.
-#define BF_DMA_SAR1_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SAR1_SAR), uint32_t) & BM_DMA_SAR1_SAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SAR field to a new value.
-#define BW_DMA_SAR1_SAR(v)   (BME_BFI32(HW_DMA_SAR1_ADDR, ((uint32_t)(v) << BP_DMA_SAR1_SAR), BP_DMA_SAR1_SAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DAR1 - Destination Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DAR1 - Destination Address Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dar1
-{
-    uint32_t U;
-    struct _hw_dma_dar1_bitfields
-    {
-        uint32_t DAR : 32; //!< [31:0] Each DAR contains the byte address used by the DMA controller to write data.
-    } B;
-} hw_dma_dar1_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DAR1 register
- */
-//@{
-#define HW_DMA_DAR1_ADDR      (REGS_DMA_BASE + 0x114U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DAR1           (*(__IO hw_dma_dar1_t *) HW_DMA_DAR1_ADDR)
-#define HW_DMA_DAR1_RD()      (HW_DMA_DAR1.U)
-#define HW_DMA_DAR1_WR(v)     (HW_DMA_DAR1.U = (v))
-#define HW_DMA_DAR1_SET(v)    (BME_OR32(HW_DMA_DAR1_ADDR, (uint32_t)(v)))
-#define HW_DMA_DAR1_CLR(v)    (BME_AND32(HW_DMA_DAR1_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DAR1_TOG(v)    (BME_XOR32(HW_DMA_DAR1_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DAR1 bitfields
- */
-
-/*! @name Register DMA_DAR1, field DAR[31:0] (RW)
- *
- * Each DAR contains the byte address used by the DMA controller to write data. The DARn is
- * typically aligned on a 0-modulo-dsize boundary—that is, on the natural alignment of the
- * destination data. Bits 31-20 of this register must be written with one of only four allowed
- * values. Each of these four allowed values corresponds to a valid region of the device's memory
- * map. The allowed values are: 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written
- * with one of the allowed values, bits 31-20 read back as the written value. After being written
- * with any other value, bits 31-20 read back as an indeterminate value.
- *
- * Values:
- * -  - 
- */
-//@{
-#define BP_DMA_DAR1_DAR      (0U)      //!< Bit position for DMA_DAR1_DAR.
-#define BM_DMA_DAR1_DAR      (0xffffffffU)  //!< Bit mask for DMA_DAR1_DAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DAR1_DAR field.
-#define BR_DMA_DAR1_DAR(v)   (BME_UBFX32(HW_DMA_DAR1_ADDR, BP_DMA_DAR1_DAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_DAR1_DAR.
-#define BF_DMA_DAR1_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DAR1_DAR), uint32_t) & BM_DMA_DAR1_DAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DAR field to a new value.
-#define BW_DMA_DAR1_DAR(v)   (BME_BFI32(HW_DMA_DAR1_ADDR, ((uint32_t)(v) << BP_DMA_DAR1_DAR), BP_DMA_DAR1_DAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DSR_BCR1 - DMA Status Register / Byte Count Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DSR_BCR1 - DMA Status Register / Byte Count Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * DSR and BCR are two logical registers that occupy one 32-bit address. DSRn occupies bits 31–24,
- * and BCRn occupies bits 23–0. DSRn contains flags indicating the channel status, and BCRn contains
- * the number of bytes yet to be transferred for a given block. On the successful completion of the
- * write transfer, BCRn decrements by 1, 2, or 4 for 8-bit, 16-bit, or 32-bit accesses,
- * respectively. BCRn is cleared if a 1 is written to DSR[DONE]. In response to an event, the DMA
- * controller writes to the appropriate DSRn bit. Only a write to DSRn[DONE] results in action.
- * DSRn[DONE] is set when the block transfer is complete. When a transfer sequence is initiated and
- * BCRn[BCR] is not a multiple of 4 or 2 when the DMA is configured for 32-bit or 16-bit transfers,
- * respectively, DSRn[CE] is set and no transfer occurs.
- */
-typedef union _hw_dma_dsr_bcr1
-{
-    uint32_t U;
-    struct _hw_dma_dsr_bcr1_bitfields
-    {
-        uint32_t BCR : 24; //!< [23:0] This field contains the number of bytes yet to be transferred for a given block.
-        uint32_t DONE : 1; //!< [24] Transactions done
-        uint32_t BSY : 1; //!< [25] Busy
-        uint32_t REQ : 1; //!< [26] Request
-        uint32_t RESERVED0 : 1; //!< [27] 
-        uint32_t BED : 1; //!< [28] Bus error on destination
-        uint32_t BES : 1; //!< [29] Bus error on source
-        uint32_t CE : 1; //!< [30] Configuration error
-        uint32_t RESERVED1 : 1; //!< [31] 
-    } B;
-} hw_dma_dsr_bcr1_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DSR_BCR1 register
- */
-//@{
-#define HW_DMA_DSR_BCR1_ADDR      (REGS_DMA_BASE + 0x118U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DSR_BCR1           (*(__IO hw_dma_dsr_bcr1_t *) HW_DMA_DSR_BCR1_ADDR)
-#define HW_DMA_DSR_BCR1_RD()      (HW_DMA_DSR_BCR1.U)
-#define HW_DMA_DSR_BCR1_WR(v)     (HW_DMA_DSR_BCR1.U = (v))
-#define HW_DMA_DSR_BCR1_SET(v)    (BME_OR32(HW_DMA_DSR_BCR1_ADDR, (uint32_t)(v)))
-#define HW_DMA_DSR_BCR1_CLR(v)    (BME_AND32(HW_DMA_DSR_BCR1_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DSR_BCR1_TOG(v)    (BME_XOR32(HW_DMA_DSR_BCR1_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DSR_BCR1 bitfields
- */
-
-/*! @name Register DMA_DSR_BCR1, field BCR[23:0] (RW)
- *
- * This field contains the number of bytes yet to be transferred for a given block. BCR must be
- * written with a value equal to or less than 0F_FFFFh. After being written with a value in this
- * range, bits 23-20 of BCR read back as 0000b. A write to BCR of a value greater than 0F_FFFFh
- * causes a configuration error when the channel starts to execute. After being written with a value
- * in this range, bits 23-20 of BCR read back as 0001b.
- */
-//@{
-#define BP_DMA_DSR_BCR1_BCR      (0U)      //!< Bit position for DMA_DSR_BCR1_BCR.
-#define BM_DMA_DSR_BCR1_BCR      (0x00ffffffU)  //!< Bit mask for DMA_DSR_BCR1_BCR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_BCR field.
-#define BR_DMA_DSR_BCR1_BCR(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_BCR, 24))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR1_BCR.
-#define BF_DMA_DSR_BCR1_BCR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR1_BCR), uint32_t) & BM_DMA_DSR_BCR1_BCR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BCR field to a new value.
-#define BW_DMA_DSR_BCR1_BCR(v)   (BME_BFI32(HW_DMA_DSR_BCR1_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR1_BCR), BP_DMA_DSR_BCR1_BCR, 24))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field DONE[24] (W1C)
- *
- * Set when all DMA controller transactions complete as determined by transfer count, or based on
- * error conditions. When BCR reaches zero, DONE is set when the final transfer completes
- * successfully. DONE can also be used to abort a transfer by resetting the status bits. When a
- * transfer completes, software must clear DONE before reprogramming the DMA.
- *
- * Values:
- * - 0 - DMA transfer is not yet complete. Writing a 0 has no effect.
- * - 1 - DMA transfer completed. Writing a 1 to this bit clears all DMA status bits and should be used in an
- *     interrupt service routine to clear the DMA interrupt and error bits.
- */
-//@{
-#define BP_DMA_DSR_BCR1_DONE      (24U)      //!< Bit position for DMA_DSR_BCR1_DONE.
-#define BM_DMA_DSR_BCR1_DONE      (0x01000000U)  //!< Bit mask for DMA_DSR_BCR1_DONE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_DONE field.
-#define BR_DMA_DSR_BCR1_DONE(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_DONE, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR1_DONE.
-#define BF_DMA_DSR_BCR1_DONE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR1_DONE), uint32_t) & BM_DMA_DSR_BCR1_DONE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONE field to a new value.
-#define BW_DMA_DSR_BCR1_DONE(v)   (BME_BFI32(HW_DMA_DSR_BCR1_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR1_DONE), BP_DMA_DSR_BCR1_DONE, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field BSY[25] (RO)
- *
- * Values:
- * - 0 - DMA channel is inactive. Cleared when the DMA has finished the last transaction.
- * - 1 - BSY is set the first time the channel is enabled after a transfer is initiated.
- */
-//@{
-#define BP_DMA_DSR_BCR1_BSY      (25U)      //!< Bit position for DMA_DSR_BCR1_BSY.
-#define BM_DMA_DSR_BCR1_BSY      (0x02000000U)  //!< Bit mask for DMA_DSR_BCR1_BSY.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_BSY field.
-#define BR_DMA_DSR_BCR1_BSY(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_BSY, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field REQ[26] (RO)
- *
- * Values:
- * - 0 - No request is pending or the channel is currently active. Cleared when the channel is selected.
- * - 1 - The DMA channel has a transfer remaining and the channel is not selected.
- */
-//@{
-#define BP_DMA_DSR_BCR1_REQ      (26U)      //!< Bit position for DMA_DSR_BCR1_REQ.
-#define BM_DMA_DSR_BCR1_REQ      (0x04000000U)  //!< Bit mask for DMA_DSR_BCR1_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_REQ field.
-#define BR_DMA_DSR_BCR1_REQ(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field BED[28] (RO)
- *
- * BED is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the write portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR1_BED      (28U)      //!< Bit position for DMA_DSR_BCR1_BED.
-#define BM_DMA_DSR_BCR1_BED      (0x10000000U)  //!< Bit mask for DMA_DSR_BCR1_BED.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_BED field.
-#define BR_DMA_DSR_BCR1_BED(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_BED, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field BES[29] (RO)
- *
- * BES is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the read portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR1_BES      (29U)      //!< Bit position for DMA_DSR_BCR1_BES.
-#define BM_DMA_DSR_BCR1_BES      (0x20000000U)  //!< Bit mask for DMA_DSR_BCR1_BES.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_BES field.
-#define BR_DMA_DSR_BCR1_BES(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_BES, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR1, field CE[30] (RO)
- *
- * Any of the following conditions causes a configuration error: BCR, SAR, or DAR does not match the
- * requested transfer size. A value greater than 0F_FFFFh is written to BCR. Bits 31-20 of SAR or
- * DAR are written with a value other than one of the allowed values. See and . SSIZE or DSIZE is
- * set to an unsupported value. BCR equals 0 when the DMA receives a start condition. CE is cleared
- * at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No configuration error exists.
- * - 1 - A configuration error has occurred.
- */
-//@{
-#define BP_DMA_DSR_BCR1_CE      (30U)      //!< Bit position for DMA_DSR_BCR1_CE.
-#define BM_DMA_DSR_BCR1_CE      (0x40000000U)  //!< Bit mask for DMA_DSR_BCR1_CE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR1_CE field.
-#define BR_DMA_DSR_BCR1_CE(v)   (BME_UBFX32(HW_DMA_DSR_BCR1_ADDR, BP_DMA_DSR_BCR1_CE, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DCR1 - DMA Control Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DCR1 - DMA Control Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dcr1
-{
-    uint32_t U;
-    struct _hw_dma_dcr1_bitfields
-    {
-        uint32_t LCH2 : 2; //!< [1:0] Link channel 2
-        uint32_t LCH1 : 2; //!< [3:2] Link channel 1
-        uint32_t LINKCC : 2; //!< [5:4] Link channel control
-        uint32_t RESERVED0 : 1; //!< [6] 
-        uint32_t D_REQ : 1; //!< [7] Disable request
-        uint32_t DMOD : 4; //!< [11:8] Destination address modulo
-        uint32_t SMOD : 4; //!< [15:12] Source address modulo
-        uint32_t START : 1; //!< [16] Start transfer
-        uint32_t DSIZE : 2; //!< [18:17] Destination size
-        uint32_t DINC : 1; //!< [19] Destination increment
-        uint32_t SSIZE : 2; //!< [21:20] Source size
-        uint32_t SINC : 1; //!< [22] Source increment
-        uint32_t EADREQ : 1; //!< [23] Enable asynchronous DMA requests
-        uint32_t RESERVED1 : 4; //!< [27:24] Reserved.
-        uint32_t AA : 1; //!< [28] Auto-align
-        uint32_t CS : 1; //!< [29] Cycle steal
-        uint32_t ERQ : 1; //!< [30] Enable peripheral request
-        uint32_t EINT : 1; //!< [31] Enable interrupt on completion of transfer
-    } B;
-} hw_dma_dcr1_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DCR1 register
- */
-//@{
-#define HW_DMA_DCR1_ADDR      (REGS_DMA_BASE + 0x11cU)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DCR1           (*(__IO hw_dma_dcr1_t *) HW_DMA_DCR1_ADDR)
-#define HW_DMA_DCR1_RD()      (HW_DMA_DCR1.U)
-#define HW_DMA_DCR1_WR(v)     (HW_DMA_DCR1.U = (v))
-#define HW_DMA_DCR1_SET(v)    (BME_OR32(HW_DMA_DCR1_ADDR, (uint32_t)(v)))
-#define HW_DMA_DCR1_CLR(v)    (BME_AND32(HW_DMA_DCR1_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DCR1_TOG(v)    (BME_XOR32(HW_DMA_DCR1_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DCR1 bitfields
- */
-
-/*! @name Register DMA_DCR1, field LCH2[1:0] (RW)
- *
- * Indicates the DMA channel assigned as link channel 2. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR1_LCH2      (0U)      //!< Bit position for DMA_DCR1_LCH2.
-#define BM_DMA_DCR1_LCH2      (0x00000003U)  //!< Bit mask for DMA_DCR1_LCH2.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_LCH2 field.
-#define BR_DMA_DCR1_LCH2(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_LCH2, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_LCH2.
-#define BF_DMA_DCR1_LCH2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_LCH2), uint32_t) & BM_DMA_DCR1_LCH2)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH2 field to a new value.
-#define BW_DMA_DCR1_LCH2(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_LCH2), BP_DMA_DCR1_LCH2, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field LCH1[3:2] (RW)
- *
- * Indicates the DMA channel assigned as link channel 1. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR1_LCH1      (2U)      //!< Bit position for DMA_DCR1_LCH1.
-#define BM_DMA_DCR1_LCH1      (0x0000000cU)  //!< Bit mask for DMA_DCR1_LCH1.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_LCH1 field.
-#define BR_DMA_DCR1_LCH1(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_LCH1, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_LCH1.
-#define BF_DMA_DCR1_LCH1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_LCH1), uint32_t) & BM_DMA_DCR1_LCH1)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH1 field to a new value.
-#define BW_DMA_DCR1_LCH1(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_LCH1), BP_DMA_DCR1_LCH1, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field LINKCC[5:4] (RW)
- *
- * Allows DMA channels to have their transfers linked. The current DMA channel triggers a DMA
- * request to the linked channels (LCH1 or LCH2) depending on the condition described by the LINKCC
- * bits. If not in cycle steal mode (DCRn[CS]=0) and LINKCC equals 01 or 10, no link to LCH1 occurs.
- * If LINKCC equals 01, a link to LCH1 is created after each cycle-steal transfer performed by the
- * current DMA channel is completed. As the last cycle-steal is performed and the BCR reaches zero ,
- * then the link to LCH1 is closed and a link to LCH2 is created.
- *
- * Values:
- * - 00 - No channel-to-channel linking
- * - 01 - Perform a link to channel LCH1 after each cycle-steal transfer followed by a link to LCH2 after the
- *     BCR decrements to zero
- * - 10 - Perform a link to channel LCH1 after each cycle-steal transfer
- * - 11 - Perform a link to channel LCH1 after the BCR decrements to zero
- */
-//@{
-#define BP_DMA_DCR1_LINKCC      (4U)      //!< Bit position for DMA_DCR1_LINKCC.
-#define BM_DMA_DCR1_LINKCC      (0x00000030U)  //!< Bit mask for DMA_DCR1_LINKCC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_LINKCC field.
-#define BR_DMA_DCR1_LINKCC(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_LINKCC, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_LINKCC.
-#define BF_DMA_DCR1_LINKCC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_LINKCC), uint32_t) & BM_DMA_DCR1_LINKCC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINKCC field to a new value.
-#define BW_DMA_DCR1_LINKCC(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_LINKCC), BP_DMA_DCR1_LINKCC, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field D_REQ[7] (RW)
- *
- * DMA hardware automatically clears the corresponding DCRn[ERQ] bit when the byte count register
- * reaches zero.
- *
- * Values:
- * - 0 - ERQ bit is not affected.
- * - 1 - ERQ bit is cleared when the BCR is exhausted.
- */
-//@{
-#define BP_DMA_DCR1_D_REQ      (7U)      //!< Bit position for DMA_DCR1_D_REQ.
-#define BM_DMA_DCR1_D_REQ      (0x00000080U)  //!< Bit mask for DMA_DCR1_D_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_D_REQ field.
-#define BR_DMA_DCR1_D_REQ(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_D_REQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_D_REQ.
-#define BF_DMA_DCR1_D_REQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_D_REQ), uint32_t) & BM_DMA_DCR1_D_REQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the D_REQ field to a new value.
-#define BW_DMA_DCR1_D_REQ(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_D_REQ), BP_DMA_DCR1_D_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field DMOD[11:8] (RW)
- *
- * Defines the size of the destination data circular buffer used by the DMA Controller. If enabled
- * (DMOD value is non-zero), the buffer base address is located on a boundary of the buffer size.
- * The value of this boundary depends on the initial destination address (DAR). The base address
- * should be aligned to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not
- * possible. The boundary is forced to the value determined by the upper address bits in the field
- * selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR1_DMOD      (8U)      //!< Bit position for DMA_DCR1_DMOD.
-#define BM_DMA_DCR1_DMOD      (0x00000f00U)  //!< Bit mask for DMA_DCR1_DMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_DMOD field.
-#define BR_DMA_DCR1_DMOD(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_DMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_DMOD.
-#define BF_DMA_DCR1_DMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_DMOD), uint32_t) & BM_DMA_DCR1_DMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMOD field to a new value.
-#define BW_DMA_DCR1_DMOD(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_DMOD), BP_DMA_DCR1_DMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field SMOD[15:12] (RW)
- *
- * Defines the size of the source data circular buffer used by the DMA Controller. If enabled (SMOD
- * is non-zero), the buffer base address is located on a boundary of the buffer size. The value of
- * this boundary is based upon the initial source address (SAR). The base address should be aligned
- * to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible. The boundary
- * is forced to the value determined by the upper address bits in the field selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR1_SMOD      (12U)      //!< Bit position for DMA_DCR1_SMOD.
-#define BM_DMA_DCR1_SMOD      (0x0000f000U)  //!< Bit mask for DMA_DCR1_SMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_SMOD field.
-#define BR_DMA_DCR1_SMOD(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_SMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_SMOD.
-#define BF_DMA_DCR1_SMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_SMOD), uint32_t) & BM_DMA_DCR1_SMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SMOD field to a new value.
-#define BW_DMA_DCR1_SMOD(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_SMOD), BP_DMA_DCR1_SMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field START[16] (WORZ)
- *
- * Values:
- * - 0 - DMA inactive
- * - 1 - The DMA begins the transfer in accordance to the values in the TCDn. START is cleared automatically
- *     after one module clock and always reads as logic 0.
- */
-//@{
-#define BP_DMA_DCR1_START      (16U)      //!< Bit position for DMA_DCR1_START.
-#define BM_DMA_DCR1_START      (0x00010000U)  //!< Bit mask for DMA_DCR1_START.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_START field.
-#define BR_DMA_DCR1_START(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_START, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_START.
-#define BF_DMA_DCR1_START(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_START), uint32_t) & BM_DMA_DCR1_START)
-//@}
-
-/*! @name Register DMA_DCR1, field DSIZE[18:17] (RW)
- *
- * Determines the data size of the destination bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR1_DSIZE      (17U)      //!< Bit position for DMA_DCR1_DSIZE.
-#define BM_DMA_DCR1_DSIZE      (0x00060000U)  //!< Bit mask for DMA_DCR1_DSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_DSIZE field.
-#define BR_DMA_DCR1_DSIZE(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_DSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_DSIZE.
-#define BF_DMA_DCR1_DSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_DSIZE), uint32_t) & BM_DMA_DCR1_DSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DSIZE field to a new value.
-#define BW_DMA_DCR1_DSIZE(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_DSIZE), BP_DMA_DCR1_DSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field DINC[19] (RW)
- *
- * Controls whether the destination address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to the DAR after a successful transfer.
- * - 1 - The DAR increments by 1, 2, 4 depending upon the size of the transfer.
- */
-//@{
-#define BP_DMA_DCR1_DINC      (19U)      //!< Bit position for DMA_DCR1_DINC.
-#define BM_DMA_DCR1_DINC      (0x00080000U)  //!< Bit mask for DMA_DCR1_DINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_DINC field.
-#define BR_DMA_DCR1_DINC(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_DINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_DINC.
-#define BF_DMA_DCR1_DINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_DINC), uint32_t) & BM_DMA_DCR1_DINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DINC field to a new value.
-#define BW_DMA_DCR1_DINC(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_DINC), BP_DMA_DCR1_DINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field SSIZE[21:20] (RW)
- *
- * Determines the data size of the source bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR1_SSIZE      (20U)      //!< Bit position for DMA_DCR1_SSIZE.
-#define BM_DMA_DCR1_SSIZE      (0x00300000U)  //!< Bit mask for DMA_DCR1_SSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_SSIZE field.
-#define BR_DMA_DCR1_SSIZE(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_SSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_SSIZE.
-#define BF_DMA_DCR1_SSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_SSIZE), uint32_t) & BM_DMA_DCR1_SSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSIZE field to a new value.
-#define BW_DMA_DCR1_SSIZE(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_SSIZE), BP_DMA_DCR1_SSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field SINC[22] (RW)
- *
- * Controls whether the source address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to SAR after a successful transfer.
- * - 1 - The SAR increments by 1, 2, 4 as determined by the transfer size.
- */
-//@{
-#define BP_DMA_DCR1_SINC      (22U)      //!< Bit position for DMA_DCR1_SINC.
-#define BM_DMA_DCR1_SINC      (0x00400000U)  //!< Bit mask for DMA_DCR1_SINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_SINC field.
-#define BR_DMA_DCR1_SINC(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_SINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_SINC.
-#define BF_DMA_DCR1_SINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_SINC), uint32_t) & BM_DMA_DCR1_SINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SINC field to a new value.
-#define BW_DMA_DCR1_SINC(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_SINC), BP_DMA_DCR1_SINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field EADREQ[23] (RW)
- *
- * Enables the channel to support asynchronous DREQs while the MCU is in Stop mode.
- *
- * Values:
- * - 0 - Disabled
- * - 1 - Enabled
- */
-//@{
-#define BP_DMA_DCR1_EADREQ      (23U)      //!< Bit position for DMA_DCR1_EADREQ.
-#define BM_DMA_DCR1_EADREQ      (0x00800000U)  //!< Bit mask for DMA_DCR1_EADREQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_EADREQ field.
-#define BR_DMA_DCR1_EADREQ(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_EADREQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_EADREQ.
-#define BF_DMA_DCR1_EADREQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_EADREQ), uint32_t) & BM_DMA_DCR1_EADREQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EADREQ field to a new value.
-#define BW_DMA_DCR1_EADREQ(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_EADREQ), BP_DMA_DCR1_EADREQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field AA[28] (RW)
- *
- * AA and SIZE bits determine whether the source or destination is auto-aligned; that is, transfers
- * are optimized based on the address and size.
- *
- * Values:
- * - 0 - Auto-align disabled
- * - 1 - If SSIZE indicates a transfer no smaller than DSIZE, source accesses are auto-aligned; otherwise,
- *     destination accesses are auto-aligned. Source alignment takes precedence over destination
- *     alignment. If auto-alignment is enabled, the appropriate address register increments,
- *     regardless of DINC or SINC.
- */
-//@{
-#define BP_DMA_DCR1_AA      (28U)      //!< Bit position for DMA_DCR1_AA.
-#define BM_DMA_DCR1_AA      (0x10000000U)  //!< Bit mask for DMA_DCR1_AA.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_AA field.
-#define BR_DMA_DCR1_AA(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_AA, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_AA.
-#define BF_DMA_DCR1_AA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_AA), uint32_t) & BM_DMA_DCR1_AA)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AA field to a new value.
-#define BW_DMA_DCR1_AA(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_AA), BP_DMA_DCR1_AA, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field CS[29] (RW)
- *
- * Values:
- * - 0 - DMA continuously makes read/write transfers until the BCR decrements to 0.
- * - 1 - Forces a single read/write transfer per request.
- */
-//@{
-#define BP_DMA_DCR1_CS      (29U)      //!< Bit position for DMA_DCR1_CS.
-#define BM_DMA_DCR1_CS      (0x20000000U)  //!< Bit mask for DMA_DCR1_CS.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_CS field.
-#define BR_DMA_DCR1_CS(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_CS, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_CS.
-#define BF_DMA_DCR1_CS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_CS), uint32_t) & BM_DMA_DCR1_CS)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS field to a new value.
-#define BW_DMA_DCR1_CS(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_CS), BP_DMA_DCR1_CS, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field ERQ[30] (RW)
- *
- * Be careful: a collision can occur between the START bit and D_REQ when the ERQ bit is 1.
- *
- * Values:
- * - 0 - Peripheral request is ignored.
- * - 1 - Enables peripheral request to initiate transfer. A software-initiated request (setting the START
- *     bit) is always enabled.
- */
-//@{
-#define BP_DMA_DCR1_ERQ      (30U)      //!< Bit position for DMA_DCR1_ERQ.
-#define BM_DMA_DCR1_ERQ      (0x40000000U)  //!< Bit mask for DMA_DCR1_ERQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_ERQ field.
-#define BR_DMA_DCR1_ERQ(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_ERQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_ERQ.
-#define BF_DMA_DCR1_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_ERQ), uint32_t) & BM_DMA_DCR1_ERQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERQ field to a new value.
-#define BW_DMA_DCR1_ERQ(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_ERQ), BP_DMA_DCR1_ERQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR1, field EINT[31] (RW)
- *
- * Determines whether an interrupt is generated by completing a transfer or by the occurrence of an
- * error condition.
- *
- * Values:
- * - 0 - No interrupt is generated.
- * - 1 - Interrupt signal is enabled.
- */
-//@{
-#define BP_DMA_DCR1_EINT      (31U)      //!< Bit position for DMA_DCR1_EINT.
-#define BM_DMA_DCR1_EINT      (0x80000000U)  //!< Bit mask for DMA_DCR1_EINT.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR1_EINT field.
-#define BR_DMA_DCR1_EINT(v)   (BME_UBFX32(HW_DMA_DCR1_ADDR, BP_DMA_DCR1_EINT, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR1_EINT.
-#define BF_DMA_DCR1_EINT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR1_EINT), uint32_t) & BM_DMA_DCR1_EINT)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EINT field to a new value.
-#define BW_DMA_DCR1_EINT(v)   (BME_BFI32(HW_DMA_DCR1_ADDR, ((uint32_t)(v) << BP_DMA_DCR1_EINT), BP_DMA_DCR1_EINT, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_SAR2 - Source Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_SAR2 - Source Address Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes result in a bus error.
- * Only four values are allowed to be written to bits 31-20 of this register. A write of any other
- * value to these bits causes a configuration error when the channel starts to execute. For more
- * information about the configuration error, see the description of the field of DSR.
- */
-typedef union _hw_dma_sar2
-{
-    uint32_t U;
-    struct _hw_dma_sar2_bitfields
-    {
-        uint32_t SAR : 32; //!< [31:0] Each SAR contains the byte address used by the DMA controller to read data.
-    } B;
-} hw_dma_sar2_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_SAR2 register
- */
-//@{
-#define HW_DMA_SAR2_ADDR      (REGS_DMA_BASE + 0x120U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_SAR2           (*(__IO hw_dma_sar2_t *) HW_DMA_SAR2_ADDR)
-#define HW_DMA_SAR2_RD()      (HW_DMA_SAR2.U)
-#define HW_DMA_SAR2_WR(v)     (HW_DMA_SAR2.U = (v))
-#define HW_DMA_SAR2_SET(v)    (BME_OR32(HW_DMA_SAR2_ADDR, (uint32_t)(v)))
-#define HW_DMA_SAR2_CLR(v)    (BME_AND32(HW_DMA_SAR2_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_SAR2_TOG(v)    (BME_XOR32(HW_DMA_SAR2_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_SAR2 bitfields
- */
-
-/*! @name Register DMA_SAR2, field SAR[31:0] (RW)
- *
- * Each SAR contains the byte address used by the DMA controller to read data. The SARn is typically
- * aligned on a 0-modulo-ssize boundary—that is, on the natural alignment of the source data. Bits
- * 31-20 of this register must be written with one of only four allowed values. Each of these four
- * allowed values corresponds to a valid region of the device's memory map. The allowed values are:
- * 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with one of the allowed
- * values, bits 31-20 read back as the written value. After being written with any other value, bits
- * 31-20 read back as an indeterminate value.
- */
-//@{
-#define BP_DMA_SAR2_SAR      (0U)      //!< Bit position for DMA_SAR2_SAR.
-#define BM_DMA_SAR2_SAR      (0xffffffffU)  //!< Bit mask for DMA_SAR2_SAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_SAR2_SAR field.
-#define BR_DMA_SAR2_SAR(v)   (BME_UBFX32(HW_DMA_SAR2_ADDR, BP_DMA_SAR2_SAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_SAR2_SAR.
-#define BF_DMA_SAR2_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SAR2_SAR), uint32_t) & BM_DMA_SAR2_SAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SAR field to a new value.
-#define BW_DMA_SAR2_SAR(v)   (BME_BFI32(HW_DMA_SAR2_ADDR, ((uint32_t)(v) << BP_DMA_SAR2_SAR), BP_DMA_SAR2_SAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DAR2 - Destination Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DAR2 - Destination Address Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dar2
-{
-    uint32_t U;
-    struct _hw_dma_dar2_bitfields
-    {
-        uint32_t DAR : 32; //!< [31:0] Each DAR contains the byte address used by the DMA controller to write data.
-    } B;
-} hw_dma_dar2_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DAR2 register
- */
-//@{
-#define HW_DMA_DAR2_ADDR      (REGS_DMA_BASE + 0x124U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DAR2           (*(__IO hw_dma_dar2_t *) HW_DMA_DAR2_ADDR)
-#define HW_DMA_DAR2_RD()      (HW_DMA_DAR2.U)
-#define HW_DMA_DAR2_WR(v)     (HW_DMA_DAR2.U = (v))
-#define HW_DMA_DAR2_SET(v)    (BME_OR32(HW_DMA_DAR2_ADDR, (uint32_t)(v)))
-#define HW_DMA_DAR2_CLR(v)    (BME_AND32(HW_DMA_DAR2_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DAR2_TOG(v)    (BME_XOR32(HW_DMA_DAR2_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DAR2 bitfields
- */
-
-/*! @name Register DMA_DAR2, field DAR[31:0] (RW)
- *
- * Each DAR contains the byte address used by the DMA controller to write data. The DARn is
- * typically aligned on a 0-modulo-dsize boundary—that is, on the natural alignment of the
- * destination data. Bits 31-20 of this register must be written with one of only four allowed
- * values. Each of these four allowed values corresponds to a valid region of the device's memory
- * map. The allowed values are: 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written
- * with one of the allowed values, bits 31-20 read back as the written value. After being written
- * with any other value, bits 31-20 read back as an indeterminate value.
- *
- * Values:
- * -  - 
- */
-//@{
-#define BP_DMA_DAR2_DAR      (0U)      //!< Bit position for DMA_DAR2_DAR.
-#define BM_DMA_DAR2_DAR      (0xffffffffU)  //!< Bit mask for DMA_DAR2_DAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DAR2_DAR field.
-#define BR_DMA_DAR2_DAR(v)   (BME_UBFX32(HW_DMA_DAR2_ADDR, BP_DMA_DAR2_DAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_DAR2_DAR.
-#define BF_DMA_DAR2_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DAR2_DAR), uint32_t) & BM_DMA_DAR2_DAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DAR field to a new value.
-#define BW_DMA_DAR2_DAR(v)   (BME_BFI32(HW_DMA_DAR2_ADDR, ((uint32_t)(v) << BP_DMA_DAR2_DAR), BP_DMA_DAR2_DAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DSR_BCR2 - DMA Status Register / Byte Count Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DSR_BCR2 - DMA Status Register / Byte Count Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * DSR and BCR are two logical registers that occupy one 32-bit address. DSRn occupies bits 31–24,
- * and BCRn occupies bits 23–0. DSRn contains flags indicating the channel status, and BCRn contains
- * the number of bytes yet to be transferred for a given block. On the successful completion of the
- * write transfer, BCRn decrements by 1, 2, or 4 for 8-bit, 16-bit, or 32-bit accesses,
- * respectively. BCRn is cleared if a 1 is written to DSR[DONE]. In response to an event, the DMA
- * controller writes to the appropriate DSRn bit. Only a write to DSRn[DONE] results in action.
- * DSRn[DONE] is set when the block transfer is complete. When a transfer sequence is initiated and
- * BCRn[BCR] is not a multiple of 4 or 2 when the DMA is configured for 32-bit or 16-bit transfers,
- * respectively, DSRn[CE] is set and no transfer occurs.
- */
-typedef union _hw_dma_dsr_bcr2
-{
-    uint32_t U;
-    struct _hw_dma_dsr_bcr2_bitfields
-    {
-        uint32_t BCR : 24; //!< [23:0] This field contains the number of bytes yet to be transferred for a given block.
-        uint32_t DONE : 1; //!< [24] Transactions done
-        uint32_t BSY : 1; //!< [25] Busy
-        uint32_t REQ : 1; //!< [26] Request
-        uint32_t RESERVED0 : 1; //!< [27] 
-        uint32_t BED : 1; //!< [28] Bus error on destination
-        uint32_t BES : 1; //!< [29] Bus error on source
-        uint32_t CE : 1; //!< [30] Configuration error
-        uint32_t RESERVED1 : 1; //!< [31] 
-    } B;
-} hw_dma_dsr_bcr2_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DSR_BCR2 register
- */
-//@{
-#define HW_DMA_DSR_BCR2_ADDR      (REGS_DMA_BASE + 0x128U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DSR_BCR2           (*(__IO hw_dma_dsr_bcr2_t *) HW_DMA_DSR_BCR2_ADDR)
-#define HW_DMA_DSR_BCR2_RD()      (HW_DMA_DSR_BCR2.U)
-#define HW_DMA_DSR_BCR2_WR(v)     (HW_DMA_DSR_BCR2.U = (v))
-#define HW_DMA_DSR_BCR2_SET(v)    (BME_OR32(HW_DMA_DSR_BCR2_ADDR, (uint32_t)(v)))
-#define HW_DMA_DSR_BCR2_CLR(v)    (BME_AND32(HW_DMA_DSR_BCR2_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DSR_BCR2_TOG(v)    (BME_XOR32(HW_DMA_DSR_BCR2_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DSR_BCR2 bitfields
- */
-
-/*! @name Register DMA_DSR_BCR2, field BCR[23:0] (RW)
- *
- * This field contains the number of bytes yet to be transferred for a given block. BCR must be
- * written with a value equal to or less than 0F_FFFFh. After being written with a value in this
- * range, bits 23-20 of BCR read back as 0000b. A write to BCR of a value greater than 0F_FFFFh
- * causes a configuration error when the channel starts to execute. After being written with a value
- * in this range, bits 23-20 of BCR read back as 0001b.
- */
-//@{
-#define BP_DMA_DSR_BCR2_BCR      (0U)      //!< Bit position for DMA_DSR_BCR2_BCR.
-#define BM_DMA_DSR_BCR2_BCR      (0x00ffffffU)  //!< Bit mask for DMA_DSR_BCR2_BCR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_BCR field.
-#define BR_DMA_DSR_BCR2_BCR(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_BCR, 24))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR2_BCR.
-#define BF_DMA_DSR_BCR2_BCR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR2_BCR), uint32_t) & BM_DMA_DSR_BCR2_BCR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BCR field to a new value.
-#define BW_DMA_DSR_BCR2_BCR(v)   (BME_BFI32(HW_DMA_DSR_BCR2_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR2_BCR), BP_DMA_DSR_BCR2_BCR, 24))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field DONE[24] (W1C)
- *
- * Set when all DMA controller transactions complete as determined by transfer count, or based on
- * error conditions. When BCR reaches zero, DONE is set when the final transfer completes
- * successfully. DONE can also be used to abort a transfer by resetting the status bits. When a
- * transfer completes, software must clear DONE before reprogramming the DMA.
- *
- * Values:
- * - 0 - DMA transfer is not yet complete. Writing a 0 has no effect.
- * - 1 - DMA transfer completed. Writing a 1 to this bit clears all DMA status bits and should be used in an
- *     interrupt service routine to clear the DMA interrupt and error bits.
- */
-//@{
-#define BP_DMA_DSR_BCR2_DONE      (24U)      //!< Bit position for DMA_DSR_BCR2_DONE.
-#define BM_DMA_DSR_BCR2_DONE      (0x01000000U)  //!< Bit mask for DMA_DSR_BCR2_DONE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_DONE field.
-#define BR_DMA_DSR_BCR2_DONE(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_DONE, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR2_DONE.
-#define BF_DMA_DSR_BCR2_DONE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR2_DONE), uint32_t) & BM_DMA_DSR_BCR2_DONE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONE field to a new value.
-#define BW_DMA_DSR_BCR2_DONE(v)   (BME_BFI32(HW_DMA_DSR_BCR2_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR2_DONE), BP_DMA_DSR_BCR2_DONE, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field BSY[25] (RO)
- *
- * Values:
- * - 0 - DMA channel is inactive. Cleared when the DMA has finished the last transaction.
- * - 1 - BSY is set the first time the channel is enabled after a transfer is initiated.
- */
-//@{
-#define BP_DMA_DSR_BCR2_BSY      (25U)      //!< Bit position for DMA_DSR_BCR2_BSY.
-#define BM_DMA_DSR_BCR2_BSY      (0x02000000U)  //!< Bit mask for DMA_DSR_BCR2_BSY.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_BSY field.
-#define BR_DMA_DSR_BCR2_BSY(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_BSY, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field REQ[26] (RO)
- *
- * Values:
- * - 0 - No request is pending or the channel is currently active. Cleared when the channel is selected.
- * - 1 - The DMA channel has a transfer remaining and the channel is not selected.
- */
-//@{
-#define BP_DMA_DSR_BCR2_REQ      (26U)      //!< Bit position for DMA_DSR_BCR2_REQ.
-#define BM_DMA_DSR_BCR2_REQ      (0x04000000U)  //!< Bit mask for DMA_DSR_BCR2_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_REQ field.
-#define BR_DMA_DSR_BCR2_REQ(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field BED[28] (RO)
- *
- * BED is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the write portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR2_BED      (28U)      //!< Bit position for DMA_DSR_BCR2_BED.
-#define BM_DMA_DSR_BCR2_BED      (0x10000000U)  //!< Bit mask for DMA_DSR_BCR2_BED.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_BED field.
-#define BR_DMA_DSR_BCR2_BED(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_BED, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field BES[29] (RO)
- *
- * BES is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the read portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR2_BES      (29U)      //!< Bit position for DMA_DSR_BCR2_BES.
-#define BM_DMA_DSR_BCR2_BES      (0x20000000U)  //!< Bit mask for DMA_DSR_BCR2_BES.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_BES field.
-#define BR_DMA_DSR_BCR2_BES(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_BES, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR2, field CE[30] (RO)
- *
- * Any of the following conditions causes a configuration error: BCR, SAR, or DAR does not match the
- * requested transfer size. A value greater than 0F_FFFFh is written to BCR. Bits 31-20 of SAR or
- * DAR are written with a value other than one of the allowed values. See and . SSIZE or DSIZE is
- * set to an unsupported value. BCR equals 0 when the DMA receives a start condition. CE is cleared
- * at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No configuration error exists.
- * - 1 - A configuration error has occurred.
- */
-//@{
-#define BP_DMA_DSR_BCR2_CE      (30U)      //!< Bit position for DMA_DSR_BCR2_CE.
-#define BM_DMA_DSR_BCR2_CE      (0x40000000U)  //!< Bit mask for DMA_DSR_BCR2_CE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR2_CE field.
-#define BR_DMA_DSR_BCR2_CE(v)   (BME_UBFX32(HW_DMA_DSR_BCR2_ADDR, BP_DMA_DSR_BCR2_CE, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DCR2 - DMA Control Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DCR2 - DMA Control Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dcr2
-{
-    uint32_t U;
-    struct _hw_dma_dcr2_bitfields
-    {
-        uint32_t LCH2 : 2; //!< [1:0] Link channel 2
-        uint32_t LCH1 : 2; //!< [3:2] Link channel 1
-        uint32_t LINKCC : 2; //!< [5:4] Link channel control
-        uint32_t RESERVED0 : 1; //!< [6] 
-        uint32_t D_REQ : 1; //!< [7] Disable request
-        uint32_t DMOD : 4; //!< [11:8] Destination address modulo
-        uint32_t SMOD : 4; //!< [15:12] Source address modulo
-        uint32_t START : 1; //!< [16] Start transfer
-        uint32_t DSIZE : 2; //!< [18:17] Destination size
-        uint32_t DINC : 1; //!< [19] Destination increment
-        uint32_t SSIZE : 2; //!< [21:20] Source size
-        uint32_t SINC : 1; //!< [22] Source increment
-        uint32_t EADREQ : 1; //!< [23] Enable asynchronous DMA requests
-        uint32_t RESERVED1 : 4; //!< [27:24] Reserved.
-        uint32_t AA : 1; //!< [28] Auto-align
-        uint32_t CS : 1; //!< [29] Cycle steal
-        uint32_t ERQ : 1; //!< [30] Enable peripheral request
-        uint32_t EINT : 1; //!< [31] Enable interrupt on completion of transfer
-    } B;
-} hw_dma_dcr2_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DCR2 register
- */
-//@{
-#define HW_DMA_DCR2_ADDR      (REGS_DMA_BASE + 0x12cU)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DCR2           (*(__IO hw_dma_dcr2_t *) HW_DMA_DCR2_ADDR)
-#define HW_DMA_DCR2_RD()      (HW_DMA_DCR2.U)
-#define HW_DMA_DCR2_WR(v)     (HW_DMA_DCR2.U = (v))
-#define HW_DMA_DCR2_SET(v)    (BME_OR32(HW_DMA_DCR2_ADDR, (uint32_t)(v)))
-#define HW_DMA_DCR2_CLR(v)    (BME_AND32(HW_DMA_DCR2_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DCR2_TOG(v)    (BME_XOR32(HW_DMA_DCR2_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DCR2 bitfields
- */
-
-/*! @name Register DMA_DCR2, field LCH2[1:0] (RW)
- *
- * Indicates the DMA channel assigned as link channel 2. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR2_LCH2      (0U)      //!< Bit position for DMA_DCR2_LCH2.
-#define BM_DMA_DCR2_LCH2      (0x00000003U)  //!< Bit mask for DMA_DCR2_LCH2.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_LCH2 field.
-#define BR_DMA_DCR2_LCH2(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_LCH2, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_LCH2.
-#define BF_DMA_DCR2_LCH2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_LCH2), uint32_t) & BM_DMA_DCR2_LCH2)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH2 field to a new value.
-#define BW_DMA_DCR2_LCH2(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_LCH2), BP_DMA_DCR2_LCH2, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field LCH1[3:2] (RW)
- *
- * Indicates the DMA channel assigned as link channel 1. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR2_LCH1      (2U)      //!< Bit position for DMA_DCR2_LCH1.
-#define BM_DMA_DCR2_LCH1      (0x0000000cU)  //!< Bit mask for DMA_DCR2_LCH1.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_LCH1 field.
-#define BR_DMA_DCR2_LCH1(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_LCH1, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_LCH1.
-#define BF_DMA_DCR2_LCH1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_LCH1), uint32_t) & BM_DMA_DCR2_LCH1)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH1 field to a new value.
-#define BW_DMA_DCR2_LCH1(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_LCH1), BP_DMA_DCR2_LCH1, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field LINKCC[5:4] (RW)
- *
- * Allows DMA channels to have their transfers linked. The current DMA channel triggers a DMA
- * request to the linked channels (LCH1 or LCH2) depending on the condition described by the LINKCC
- * bits. If not in cycle steal mode (DCRn[CS]=0) and LINKCC equals 01 or 10, no link to LCH1 occurs.
- * If LINKCC equals 01, a link to LCH1 is created after each cycle-steal transfer performed by the
- * current DMA channel is completed. As the last cycle-steal is performed and the BCR reaches zero ,
- * then the link to LCH1 is closed and a link to LCH2 is created.
- *
- * Values:
- * - 00 - No channel-to-channel linking
- * - 01 - Perform a link to channel LCH1 after each cycle-steal transfer followed by a link to LCH2 after the
- *     BCR decrements to zero
- * - 10 - Perform a link to channel LCH1 after each cycle-steal transfer
- * - 11 - Perform a link to channel LCH1 after the BCR decrements to zero
- */
-//@{
-#define BP_DMA_DCR2_LINKCC      (4U)      //!< Bit position for DMA_DCR2_LINKCC.
-#define BM_DMA_DCR2_LINKCC      (0x00000030U)  //!< Bit mask for DMA_DCR2_LINKCC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_LINKCC field.
-#define BR_DMA_DCR2_LINKCC(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_LINKCC, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_LINKCC.
-#define BF_DMA_DCR2_LINKCC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_LINKCC), uint32_t) & BM_DMA_DCR2_LINKCC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINKCC field to a new value.
-#define BW_DMA_DCR2_LINKCC(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_LINKCC), BP_DMA_DCR2_LINKCC, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field D_REQ[7] (RW)
- *
- * DMA hardware automatically clears the corresponding DCRn[ERQ] bit when the byte count register
- * reaches zero.
- *
- * Values:
- * - 0 - ERQ bit is not affected.
- * - 1 - ERQ bit is cleared when the BCR is exhausted.
- */
-//@{
-#define BP_DMA_DCR2_D_REQ      (7U)      //!< Bit position for DMA_DCR2_D_REQ.
-#define BM_DMA_DCR2_D_REQ      (0x00000080U)  //!< Bit mask for DMA_DCR2_D_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_D_REQ field.
-#define BR_DMA_DCR2_D_REQ(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_D_REQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_D_REQ.
-#define BF_DMA_DCR2_D_REQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_D_REQ), uint32_t) & BM_DMA_DCR2_D_REQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the D_REQ field to a new value.
-#define BW_DMA_DCR2_D_REQ(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_D_REQ), BP_DMA_DCR2_D_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field DMOD[11:8] (RW)
- *
- * Defines the size of the destination data circular buffer used by the DMA Controller. If enabled
- * (DMOD value is non-zero), the buffer base address is located on a boundary of the buffer size.
- * The value of this boundary depends on the initial destination address (DAR). The base address
- * should be aligned to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not
- * possible. The boundary is forced to the value determined by the upper address bits in the field
- * selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR2_DMOD      (8U)      //!< Bit position for DMA_DCR2_DMOD.
-#define BM_DMA_DCR2_DMOD      (0x00000f00U)  //!< Bit mask for DMA_DCR2_DMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_DMOD field.
-#define BR_DMA_DCR2_DMOD(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_DMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_DMOD.
-#define BF_DMA_DCR2_DMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_DMOD), uint32_t) & BM_DMA_DCR2_DMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMOD field to a new value.
-#define BW_DMA_DCR2_DMOD(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_DMOD), BP_DMA_DCR2_DMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field SMOD[15:12] (RW)
- *
- * Defines the size of the source data circular buffer used by the DMA Controller. If enabled (SMOD
- * is non-zero), the buffer base address is located on a boundary of the buffer size. The value of
- * this boundary is based upon the initial source address (SAR). The base address should be aligned
- * to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible. The boundary
- * is forced to the value determined by the upper address bits in the field selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR2_SMOD      (12U)      //!< Bit position for DMA_DCR2_SMOD.
-#define BM_DMA_DCR2_SMOD      (0x0000f000U)  //!< Bit mask for DMA_DCR2_SMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_SMOD field.
-#define BR_DMA_DCR2_SMOD(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_SMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_SMOD.
-#define BF_DMA_DCR2_SMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_SMOD), uint32_t) & BM_DMA_DCR2_SMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SMOD field to a new value.
-#define BW_DMA_DCR2_SMOD(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_SMOD), BP_DMA_DCR2_SMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field START[16] (WORZ)
- *
- * Values:
- * - 0 - DMA inactive
- * - 1 - The DMA begins the transfer in accordance to the values in the TCDn. START is cleared automatically
- *     after one module clock and always reads as logic 0.
- */
-//@{
-#define BP_DMA_DCR2_START      (16U)      //!< Bit position for DMA_DCR2_START.
-#define BM_DMA_DCR2_START      (0x00010000U)  //!< Bit mask for DMA_DCR2_START.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_START field.
-#define BR_DMA_DCR2_START(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_START, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_START.
-#define BF_DMA_DCR2_START(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_START), uint32_t) & BM_DMA_DCR2_START)
-//@}
-
-/*! @name Register DMA_DCR2, field DSIZE[18:17] (RW)
- *
- * Determines the data size of the destination bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR2_DSIZE      (17U)      //!< Bit position for DMA_DCR2_DSIZE.
-#define BM_DMA_DCR2_DSIZE      (0x00060000U)  //!< Bit mask for DMA_DCR2_DSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_DSIZE field.
-#define BR_DMA_DCR2_DSIZE(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_DSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_DSIZE.
-#define BF_DMA_DCR2_DSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_DSIZE), uint32_t) & BM_DMA_DCR2_DSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DSIZE field to a new value.
-#define BW_DMA_DCR2_DSIZE(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_DSIZE), BP_DMA_DCR2_DSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field DINC[19] (RW)
- *
- * Controls whether the destination address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to the DAR after a successful transfer.
- * - 1 - The DAR increments by 1, 2, 4 depending upon the size of the transfer.
- */
-//@{
-#define BP_DMA_DCR2_DINC      (19U)      //!< Bit position for DMA_DCR2_DINC.
-#define BM_DMA_DCR2_DINC      (0x00080000U)  //!< Bit mask for DMA_DCR2_DINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_DINC field.
-#define BR_DMA_DCR2_DINC(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_DINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_DINC.
-#define BF_DMA_DCR2_DINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_DINC), uint32_t) & BM_DMA_DCR2_DINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DINC field to a new value.
-#define BW_DMA_DCR2_DINC(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_DINC), BP_DMA_DCR2_DINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field SSIZE[21:20] (RW)
- *
- * Determines the data size of the source bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR2_SSIZE      (20U)      //!< Bit position for DMA_DCR2_SSIZE.
-#define BM_DMA_DCR2_SSIZE      (0x00300000U)  //!< Bit mask for DMA_DCR2_SSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_SSIZE field.
-#define BR_DMA_DCR2_SSIZE(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_SSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_SSIZE.
-#define BF_DMA_DCR2_SSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_SSIZE), uint32_t) & BM_DMA_DCR2_SSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSIZE field to a new value.
-#define BW_DMA_DCR2_SSIZE(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_SSIZE), BP_DMA_DCR2_SSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field SINC[22] (RW)
- *
- * Controls whether the source address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to SAR after a successful transfer.
- * - 1 - The SAR increments by 1, 2, 4 as determined by the transfer size.
- */
-//@{
-#define BP_DMA_DCR2_SINC      (22U)      //!< Bit position for DMA_DCR2_SINC.
-#define BM_DMA_DCR2_SINC      (0x00400000U)  //!< Bit mask for DMA_DCR2_SINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_SINC field.
-#define BR_DMA_DCR2_SINC(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_SINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_SINC.
-#define BF_DMA_DCR2_SINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_SINC), uint32_t) & BM_DMA_DCR2_SINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SINC field to a new value.
-#define BW_DMA_DCR2_SINC(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_SINC), BP_DMA_DCR2_SINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field EADREQ[23] (RW)
- *
- * Enables the channel to support asynchronous DREQs while the MCU is in Stop mode.
- *
- * Values:
- * - 0 - Disabled
- * - 1 - Enabled
- */
-//@{
-#define BP_DMA_DCR2_EADREQ      (23U)      //!< Bit position for DMA_DCR2_EADREQ.
-#define BM_DMA_DCR2_EADREQ      (0x00800000U)  //!< Bit mask for DMA_DCR2_EADREQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_EADREQ field.
-#define BR_DMA_DCR2_EADREQ(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_EADREQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_EADREQ.
-#define BF_DMA_DCR2_EADREQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_EADREQ), uint32_t) & BM_DMA_DCR2_EADREQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EADREQ field to a new value.
-#define BW_DMA_DCR2_EADREQ(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_EADREQ), BP_DMA_DCR2_EADREQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field AA[28] (RW)
- *
- * AA and SIZE bits determine whether the source or destination is auto-aligned; that is, transfers
- * are optimized based on the address and size.
- *
- * Values:
- * - 0 - Auto-align disabled
- * - 1 - If SSIZE indicates a transfer no smaller than DSIZE, source accesses are auto-aligned; otherwise,
- *     destination accesses are auto-aligned. Source alignment takes precedence over destination
- *     alignment. If auto-alignment is enabled, the appropriate address register increments,
- *     regardless of DINC or SINC.
- */
-//@{
-#define BP_DMA_DCR2_AA      (28U)      //!< Bit position for DMA_DCR2_AA.
-#define BM_DMA_DCR2_AA      (0x10000000U)  //!< Bit mask for DMA_DCR2_AA.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_AA field.
-#define BR_DMA_DCR2_AA(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_AA, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_AA.
-#define BF_DMA_DCR2_AA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_AA), uint32_t) & BM_DMA_DCR2_AA)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AA field to a new value.
-#define BW_DMA_DCR2_AA(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_AA), BP_DMA_DCR2_AA, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field CS[29] (RW)
- *
- * Values:
- * - 0 - DMA continuously makes read/write transfers until the BCR decrements to 0.
- * - 1 - Forces a single read/write transfer per request.
- */
-//@{
-#define BP_DMA_DCR2_CS      (29U)      //!< Bit position for DMA_DCR2_CS.
-#define BM_DMA_DCR2_CS      (0x20000000U)  //!< Bit mask for DMA_DCR2_CS.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_CS field.
-#define BR_DMA_DCR2_CS(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_CS, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_CS.
-#define BF_DMA_DCR2_CS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_CS), uint32_t) & BM_DMA_DCR2_CS)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS field to a new value.
-#define BW_DMA_DCR2_CS(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_CS), BP_DMA_DCR2_CS, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field ERQ[30] (RW)
- *
- * Be careful: a collision can occur between the START bit and D_REQ when the ERQ bit is 1.
- *
- * Values:
- * - 0 - Peripheral request is ignored.
- * - 1 - Enables peripheral request to initiate transfer. A software-initiated request (setting the START
- *     bit) is always enabled.
- */
-//@{
-#define BP_DMA_DCR2_ERQ      (30U)      //!< Bit position for DMA_DCR2_ERQ.
-#define BM_DMA_DCR2_ERQ      (0x40000000U)  //!< Bit mask for DMA_DCR2_ERQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_ERQ field.
-#define BR_DMA_DCR2_ERQ(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_ERQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_ERQ.
-#define BF_DMA_DCR2_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_ERQ), uint32_t) & BM_DMA_DCR2_ERQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERQ field to a new value.
-#define BW_DMA_DCR2_ERQ(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_ERQ), BP_DMA_DCR2_ERQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR2, field EINT[31] (RW)
- *
- * Determines whether an interrupt is generated by completing a transfer or by the occurrence of an
- * error condition.
- *
- * Values:
- * - 0 - No interrupt is generated.
- * - 1 - Interrupt signal is enabled.
- */
-//@{
-#define BP_DMA_DCR2_EINT      (31U)      //!< Bit position for DMA_DCR2_EINT.
-#define BM_DMA_DCR2_EINT      (0x80000000U)  //!< Bit mask for DMA_DCR2_EINT.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR2_EINT field.
-#define BR_DMA_DCR2_EINT(v)   (BME_UBFX32(HW_DMA_DCR2_ADDR, BP_DMA_DCR2_EINT, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR2_EINT.
-#define BF_DMA_DCR2_EINT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR2_EINT), uint32_t) & BM_DMA_DCR2_EINT)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EINT field to a new value.
-#define BW_DMA_DCR2_EINT(v)   (BME_BFI32(HW_DMA_DCR2_ADDR, ((uint32_t)(v) << BP_DMA_DCR2_EINT), BP_DMA_DCR2_EINT, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_SAR3 - Source Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_SAR3 - Source Address Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * For this register: Only 32-bit writes are allowed. 16-bit and 8-bit writes result in a bus error.
- * Only four values are allowed to be written to bits 31-20 of this register. A write of any other
- * value to these bits causes a configuration error when the channel starts to execute. For more
- * information about the configuration error, see the description of the field of DSR.
- */
-typedef union _hw_dma_sar3
-{
-    uint32_t U;
-    struct _hw_dma_sar3_bitfields
-    {
-        uint32_t SAR : 32; //!< [31:0] Each SAR contains the byte address used by the DMA controller to read data.
-    } B;
-} hw_dma_sar3_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_SAR3 register
- */
-//@{
-#define HW_DMA_SAR3_ADDR      (REGS_DMA_BASE + 0x130U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_SAR3           (*(__IO hw_dma_sar3_t *) HW_DMA_SAR3_ADDR)
-#define HW_DMA_SAR3_RD()      (HW_DMA_SAR3.U)
-#define HW_DMA_SAR3_WR(v)     (HW_DMA_SAR3.U = (v))
-#define HW_DMA_SAR3_SET(v)    (BME_OR32(HW_DMA_SAR3_ADDR, (uint32_t)(v)))
-#define HW_DMA_SAR3_CLR(v)    (BME_AND32(HW_DMA_SAR3_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_SAR3_TOG(v)    (BME_XOR32(HW_DMA_SAR3_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_SAR3 bitfields
- */
-
-/*! @name Register DMA_SAR3, field SAR[31:0] (RW)
- *
- * Each SAR contains the byte address used by the DMA controller to read data. The SARn is typically
- * aligned on a 0-modulo-ssize boundary—that is, on the natural alignment of the source data. Bits
- * 31-20 of this register must be written with one of only four allowed values. Each of these four
- * allowed values corresponds to a valid region of the device's memory map. The allowed values are:
- * 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written with one of the allowed
- * values, bits 31-20 read back as the written value. After being written with any other value, bits
- * 31-20 read back as an indeterminate value.
- */
-//@{
-#define BP_DMA_SAR3_SAR      (0U)      //!< Bit position for DMA_SAR3_SAR.
-#define BM_DMA_SAR3_SAR      (0xffffffffU)  //!< Bit mask for DMA_SAR3_SAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_SAR3_SAR field.
-#define BR_DMA_SAR3_SAR(v)   (BME_UBFX32(HW_DMA_SAR3_ADDR, BP_DMA_SAR3_SAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_SAR3_SAR.
-#define BF_DMA_SAR3_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SAR3_SAR), uint32_t) & BM_DMA_SAR3_SAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SAR field to a new value.
-#define BW_DMA_SAR3_SAR(v)   (BME_BFI32(HW_DMA_SAR3_ADDR, ((uint32_t)(v) << BP_DMA_SAR3_SAR), BP_DMA_SAR3_SAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DAR3 - Destination Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DAR3 - Destination Address Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dar3
-{
-    uint32_t U;
-    struct _hw_dma_dar3_bitfields
-    {
-        uint32_t DAR : 32; //!< [31:0] Each DAR contains the byte address used by the DMA controller to write data.
-    } B;
-} hw_dma_dar3_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DAR3 register
- */
-//@{
-#define HW_DMA_DAR3_ADDR      (REGS_DMA_BASE + 0x134U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DAR3           (*(__IO hw_dma_dar3_t *) HW_DMA_DAR3_ADDR)
-#define HW_DMA_DAR3_RD()      (HW_DMA_DAR3.U)
-#define HW_DMA_DAR3_WR(v)     (HW_DMA_DAR3.U = (v))
-#define HW_DMA_DAR3_SET(v)    (BME_OR32(HW_DMA_DAR3_ADDR, (uint32_t)(v)))
-#define HW_DMA_DAR3_CLR(v)    (BME_AND32(HW_DMA_DAR3_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DAR3_TOG(v)    (BME_XOR32(HW_DMA_DAR3_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DAR3 bitfields
- */
-
-/*! @name Register DMA_DAR3, field DAR[31:0] (RW)
- *
- * Each DAR contains the byte address used by the DMA controller to write data. The DARn is
- * typically aligned on a 0-modulo-dsize boundary—that is, on the natural alignment of the
- * destination data. Bits 31-20 of this register must be written with one of only four allowed
- * values. Each of these four allowed values corresponds to a valid region of the device's memory
- * map. The allowed values are: 0x000x_xxxx 0x1FFx_xxxx 0x200x_xxxx 0x400x_xxxx After being written
- * with one of the allowed values, bits 31-20 read back as the written value. After being written
- * with any other value, bits 31-20 read back as an indeterminate value.
- *
- * Values:
- * -  - 
- */
-//@{
-#define BP_DMA_DAR3_DAR      (0U)      //!< Bit position for DMA_DAR3_DAR.
-#define BM_DMA_DAR3_DAR      (0xffffffffU)  //!< Bit mask for DMA_DAR3_DAR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DAR3_DAR field.
-#define BR_DMA_DAR3_DAR(v)   (BME_UBFX32(HW_DMA_DAR3_ADDR, BP_DMA_DAR3_DAR, 32))
-#endif
-
-//! @brief Format value for bitfield DMA_DAR3_DAR.
-#define BF_DMA_DAR3_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DAR3_DAR), uint32_t) & BM_DMA_DAR3_DAR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DAR field to a new value.
-#define BW_DMA_DAR3_DAR(v)   (BME_BFI32(HW_DMA_DAR3_ADDR, ((uint32_t)(v) << BP_DMA_DAR3_DAR), BP_DMA_DAR3_DAR, 32))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DSR_BCR3 - DMA Status Register / Byte Count Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DSR_BCR3 - DMA Status Register / Byte Count Register (RW)
- *
- * Reset value: 0x00000000U
- *
- * DSR and BCR are two logical registers that occupy one 32-bit address. DSRn occupies bits 31–24,
- * and BCRn occupies bits 23–0. DSRn contains flags indicating the channel status, and BCRn contains
- * the number of bytes yet to be transferred for a given block. On the successful completion of the
- * write transfer, BCRn decrements by 1, 2, or 4 for 8-bit, 16-bit, or 32-bit accesses,
- * respectively. BCRn is cleared if a 1 is written to DSR[DONE]. In response to an event, the DMA
- * controller writes to the appropriate DSRn bit. Only a write to DSRn[DONE] results in action.
- * DSRn[DONE] is set when the block transfer is complete. When a transfer sequence is initiated and
- * BCRn[BCR] is not a multiple of 4 or 2 when the DMA is configured for 32-bit or 16-bit transfers,
- * respectively, DSRn[CE] is set and no transfer occurs.
- */
-typedef union _hw_dma_dsr_bcr3
-{
-    uint32_t U;
-    struct _hw_dma_dsr_bcr3_bitfields
-    {
-        uint32_t BCR : 24; //!< [23:0] This field contains the number of bytes yet to be transferred for a given block.
-        uint32_t DONE : 1; //!< [24] Transactions done
-        uint32_t BSY : 1; //!< [25] Busy
-        uint32_t REQ : 1; //!< [26] Request
-        uint32_t RESERVED0 : 1; //!< [27] 
-        uint32_t BED : 1; //!< [28] Bus error on destination
-        uint32_t BES : 1; //!< [29] Bus error on source
-        uint32_t CE : 1; //!< [30] Configuration error
-        uint32_t RESERVED1 : 1; //!< [31] 
-    } B;
-} hw_dma_dsr_bcr3_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DSR_BCR3 register
- */
-//@{
-#define HW_DMA_DSR_BCR3_ADDR      (REGS_DMA_BASE + 0x138U)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DSR_BCR3           (*(__IO hw_dma_dsr_bcr3_t *) HW_DMA_DSR_BCR3_ADDR)
-#define HW_DMA_DSR_BCR3_RD()      (HW_DMA_DSR_BCR3.U)
-#define HW_DMA_DSR_BCR3_WR(v)     (HW_DMA_DSR_BCR3.U = (v))
-#define HW_DMA_DSR_BCR3_SET(v)    (BME_OR32(HW_DMA_DSR_BCR3_ADDR, (uint32_t)(v)))
-#define HW_DMA_DSR_BCR3_CLR(v)    (BME_AND32(HW_DMA_DSR_BCR3_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DSR_BCR3_TOG(v)    (BME_XOR32(HW_DMA_DSR_BCR3_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DSR_BCR3 bitfields
- */
-
-/*! @name Register DMA_DSR_BCR3, field BCR[23:0] (RW)
- *
- * This field contains the number of bytes yet to be transferred for a given block. BCR must be
- * written with a value equal to or less than 0F_FFFFh. After being written with a value in this
- * range, bits 23-20 of BCR read back as 0000b. A write to BCR of a value greater than 0F_FFFFh
- * causes a configuration error when the channel starts to execute. After being written with a value
- * in this range, bits 23-20 of BCR read back as 0001b.
- */
-//@{
-#define BP_DMA_DSR_BCR3_BCR      (0U)      //!< Bit position for DMA_DSR_BCR3_BCR.
-#define BM_DMA_DSR_BCR3_BCR      (0x00ffffffU)  //!< Bit mask for DMA_DSR_BCR3_BCR.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_BCR field.
-#define BR_DMA_DSR_BCR3_BCR(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_BCR, 24))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR3_BCR.
-#define BF_DMA_DSR_BCR3_BCR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR3_BCR), uint32_t) & BM_DMA_DSR_BCR3_BCR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BCR field to a new value.
-#define BW_DMA_DSR_BCR3_BCR(v)   (BME_BFI32(HW_DMA_DSR_BCR3_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR3_BCR), BP_DMA_DSR_BCR3_BCR, 24))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field DONE[24] (W1C)
- *
- * Set when all DMA controller transactions complete as determined by transfer count, or based on
- * error conditions. When BCR reaches zero, DONE is set when the final transfer completes
- * successfully. DONE can also be used to abort a transfer by resetting the status bits. When a
- * transfer completes, software must clear DONE before reprogramming the DMA.
- *
- * Values:
- * - 0 - DMA transfer is not yet complete. Writing a 0 has no effect.
- * - 1 - DMA transfer completed. Writing a 1 to this bit clears all DMA status bits and should be used in an
- *     interrupt service routine to clear the DMA interrupt and error bits.
- */
-//@{
-#define BP_DMA_DSR_BCR3_DONE      (24U)      //!< Bit position for DMA_DSR_BCR3_DONE.
-#define BM_DMA_DSR_BCR3_DONE      (0x01000000U)  //!< Bit mask for DMA_DSR_BCR3_DONE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_DONE field.
-#define BR_DMA_DSR_BCR3_DONE(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_DONE, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DSR_BCR3_DONE.
-#define BF_DMA_DSR_BCR3_DONE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCR3_DONE), uint32_t) & BM_DMA_DSR_BCR3_DONE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONE field to a new value.
-#define BW_DMA_DSR_BCR3_DONE(v)   (BME_BFI32(HW_DMA_DSR_BCR3_ADDR, ((uint32_t)(v) << BP_DMA_DSR_BCR3_DONE), BP_DMA_DSR_BCR3_DONE, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field BSY[25] (RO)
- *
- * Values:
- * - 0 - DMA channel is inactive. Cleared when the DMA has finished the last transaction.
- * - 1 - BSY is set the first time the channel is enabled after a transfer is initiated.
- */
-//@{
-#define BP_DMA_DSR_BCR3_BSY      (25U)      //!< Bit position for DMA_DSR_BCR3_BSY.
-#define BM_DMA_DSR_BCR3_BSY      (0x02000000U)  //!< Bit mask for DMA_DSR_BCR3_BSY.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_BSY field.
-#define BR_DMA_DSR_BCR3_BSY(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_BSY, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field REQ[26] (RO)
- *
- * Values:
- * - 0 - No request is pending or the channel is currently active. Cleared when the channel is selected.
- * - 1 - The DMA channel has a transfer remaining and the channel is not selected.
- */
-//@{
-#define BP_DMA_DSR_BCR3_REQ      (26U)      //!< Bit position for DMA_DSR_BCR3_REQ.
-#define BM_DMA_DSR_BCR3_REQ      (0x04000000U)  //!< Bit mask for DMA_DSR_BCR3_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_REQ field.
-#define BR_DMA_DSR_BCR3_REQ(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field BED[28] (RO)
- *
- * BED is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the write portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR3_BED      (28U)      //!< Bit position for DMA_DSR_BCR3_BED.
-#define BM_DMA_DSR_BCR3_BED      (0x10000000U)  //!< Bit mask for DMA_DSR_BCR3_BED.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_BED field.
-#define BR_DMA_DSR_BCR3_BED(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_BED, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field BES[29] (RO)
- *
- * BES is cleared at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No bus error occurred.
- * - 1 - The DMA channel terminated with a bus error during the read portion of a transfer.
- */
-//@{
-#define BP_DMA_DSR_BCR3_BES      (29U)      //!< Bit position for DMA_DSR_BCR3_BES.
-#define BM_DMA_DSR_BCR3_BES      (0x20000000U)  //!< Bit mask for DMA_DSR_BCR3_BES.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_BES field.
-#define BR_DMA_DSR_BCR3_BES(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_BES, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DSR_BCR3, field CE[30] (RO)
- *
- * Any of the following conditions causes a configuration error: BCR, SAR, or DAR does not match the
- * requested transfer size. A value greater than 0F_FFFFh is written to BCR. Bits 31-20 of SAR or
- * DAR are written with a value other than one of the allowed values. See and . SSIZE or DSIZE is
- * set to an unsupported value. BCR equals 0 when the DMA receives a start condition. CE is cleared
- * at hardware reset or by writing a 1 to the DONE bit.
- *
- * Values:
- * - 0 - No configuration error exists.
- * - 1 - A configuration error has occurred.
- */
-//@{
-#define BP_DMA_DSR_BCR3_CE      (30U)      //!< Bit position for DMA_DSR_BCR3_CE.
-#define BM_DMA_DSR_BCR3_CE      (0x40000000U)  //!< Bit mask for DMA_DSR_BCR3_CE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCR3_CE field.
-#define BR_DMA_DSR_BCR3_CE(v)   (BME_UBFX32(HW_DMA_DSR_BCR3_ADDR, BP_DMA_DSR_BCR3_CE, 1))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DCR3 - DMA Control Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
-/*!
- * @brief HW_DMA_DCR3 - DMA Control Register (RW)
- *
- * Reset value: 0x00000000U
- */
-typedef union _hw_dma_dcr3
-{
-    uint32_t U;
-    struct _hw_dma_dcr3_bitfields
-    {
-        uint32_t LCH2 : 2; //!< [1:0] Link channel 2
-        uint32_t LCH1 : 2; //!< [3:2] Link channel 1
-        uint32_t LINKCC : 2; //!< [5:4] Link channel control
-        uint32_t RESERVED0 : 1; //!< [6] 
-        uint32_t D_REQ : 1; //!< [7] Disable request
-        uint32_t DMOD : 4; //!< [11:8] Destination address modulo
-        uint32_t SMOD : 4; //!< [15:12] Source address modulo
-        uint32_t START : 1; //!< [16] Start transfer
-        uint32_t DSIZE : 2; //!< [18:17] Destination size
-        uint32_t DINC : 1; //!< [19] Destination increment
-        uint32_t SSIZE : 2; //!< [21:20] Source size
-        uint32_t SINC : 1; //!< [22] Source increment
-        uint32_t EADREQ : 1; //!< [23] Enable asynchronous DMA requests
-        uint32_t RESERVED1 : 4; //!< [27:24] Reserved.
-        uint32_t AA : 1; //!< [28] Auto-align
-        uint32_t CS : 1; //!< [29] Cycle steal
-        uint32_t ERQ : 1; //!< [30] Enable peripheral request
-        uint32_t EINT : 1; //!< [31] Enable interrupt on completion of transfer
-    } B;
-} hw_dma_dcr3_t;
-#endif
-
-/*!
- * @name Constants and macros for entire DMA_DCR3 register
- */
-//@{
-#define HW_DMA_DCR3_ADDR      (REGS_DMA_BASE + 0x13cU)
-
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DCR3           (*(__IO hw_dma_dcr3_t *) HW_DMA_DCR3_ADDR)
-#define HW_DMA_DCR3_RD()      (HW_DMA_DCR3.U)
-#define HW_DMA_DCR3_WR(v)     (HW_DMA_DCR3.U = (v))
-#define HW_DMA_DCR3_SET(v)    (BME_OR32(HW_DMA_DCR3_ADDR, (uint32_t)(v)))
-#define HW_DMA_DCR3_CLR(v)    (BME_AND32(HW_DMA_DCR3_ADDR, (uint32_t)(~(v))))
-#define HW_DMA_DCR3_TOG(v)    (BME_XOR32(HW_DMA_DCR3_ADDR, (uint32_t)(v)))
-#endif
-//@}
-
-/*
- * constants & macros for individual DMA_DCR3 bitfields
- */
-
-/*! @name Register DMA_DCR3, field LCH2[1:0] (RW)
- *
- * Indicates the DMA channel assigned as link channel 2. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR3_LCH2      (0U)      //!< Bit position for DMA_DCR3_LCH2.
-#define BM_DMA_DCR3_LCH2      (0x00000003U)  //!< Bit mask for DMA_DCR3_LCH2.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_LCH2 field.
-#define BR_DMA_DCR3_LCH2(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_LCH2, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_LCH2.
-#define BF_DMA_DCR3_LCH2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_LCH2), uint32_t) & BM_DMA_DCR3_LCH2)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH2 field to a new value.
-#define BW_DMA_DCR3_LCH2(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_LCH2), BP_DMA_DCR3_LCH2, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field LCH1[3:2] (RW)
- *
- * Indicates the DMA channel assigned as link channel 1. The link channel number cannot be the same
- * as the currently executing channel, and generates a configuration error if this is attempted
- * (DSRn[CE] is set).
- *
- * Values:
- * - 00 - DMA Channel 0
- * - 01 - DMA Channel 1
- * - 10 - DMA Channel 2
- * - 11 - DMA Channel 3
- */
-//@{
-#define BP_DMA_DCR3_LCH1      (2U)      //!< Bit position for DMA_DCR3_LCH1.
-#define BM_DMA_DCR3_LCH1      (0x0000000cU)  //!< Bit mask for DMA_DCR3_LCH1.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_LCH1 field.
-#define BR_DMA_DCR3_LCH1(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_LCH1, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_LCH1.
-#define BF_DMA_DCR3_LCH1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_LCH1), uint32_t) & BM_DMA_DCR3_LCH1)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH1 field to a new value.
-#define BW_DMA_DCR3_LCH1(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_LCH1), BP_DMA_DCR3_LCH1, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field LINKCC[5:4] (RW)
- *
- * Allows DMA channels to have their transfers linked. The current DMA channel triggers a DMA
- * request to the linked channels (LCH1 or LCH2) depending on the condition described by the LINKCC
- * bits. If not in cycle steal mode (DCRn[CS]=0) and LINKCC equals 01 or 10, no link to LCH1 occurs.
- * If LINKCC equals 01, a link to LCH1 is created after each cycle-steal transfer performed by the
- * current DMA channel is completed. As the last cycle-steal is performed and the BCR reaches zero ,
- * then the link to LCH1 is closed and a link to LCH2 is created.
- *
- * Values:
- * - 00 - No channel-to-channel linking
- * - 01 - Perform a link to channel LCH1 after each cycle-steal transfer followed by a link to LCH2 after the
- *     BCR decrements to zero
- * - 10 - Perform a link to channel LCH1 after each cycle-steal transfer
- * - 11 - Perform a link to channel LCH1 after the BCR decrements to zero
- */
-//@{
-#define BP_DMA_DCR3_LINKCC      (4U)      //!< Bit position for DMA_DCR3_LINKCC.
-#define BM_DMA_DCR3_LINKCC      (0x00000030U)  //!< Bit mask for DMA_DCR3_LINKCC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_LINKCC field.
-#define BR_DMA_DCR3_LINKCC(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_LINKCC, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_LINKCC.
-#define BF_DMA_DCR3_LINKCC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_LINKCC), uint32_t) & BM_DMA_DCR3_LINKCC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINKCC field to a new value.
-#define BW_DMA_DCR3_LINKCC(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_LINKCC), BP_DMA_DCR3_LINKCC, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field D_REQ[7] (RW)
- *
- * DMA hardware automatically clears the corresponding DCRn[ERQ] bit when the byte count register
- * reaches zero.
- *
- * Values:
- * - 0 - ERQ bit is not affected.
- * - 1 - ERQ bit is cleared when the BCR is exhausted.
- */
-//@{
-#define BP_DMA_DCR3_D_REQ      (7U)      //!< Bit position for DMA_DCR3_D_REQ.
-#define BM_DMA_DCR3_D_REQ      (0x00000080U)  //!< Bit mask for DMA_DCR3_D_REQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_D_REQ field.
-#define BR_DMA_DCR3_D_REQ(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_D_REQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_D_REQ.
-#define BF_DMA_DCR3_D_REQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_D_REQ), uint32_t) & BM_DMA_DCR3_D_REQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the D_REQ field to a new value.
-#define BW_DMA_DCR3_D_REQ(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_D_REQ), BP_DMA_DCR3_D_REQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field DMOD[11:8] (RW)
- *
- * Defines the size of the destination data circular buffer used by the DMA Controller. If enabled
- * (DMOD value is non-zero), the buffer base address is located on a boundary of the buffer size.
- * The value of this boundary depends on the initial destination address (DAR). The base address
- * should be aligned to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not
- * possible. The boundary is forced to the value determined by the upper address bits in the field
- * selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR3_DMOD      (8U)      //!< Bit position for DMA_DCR3_DMOD.
-#define BM_DMA_DCR3_DMOD      (0x00000f00U)  //!< Bit mask for DMA_DCR3_DMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_DMOD field.
-#define BR_DMA_DCR3_DMOD(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_DMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_DMOD.
-#define BF_DMA_DCR3_DMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_DMOD), uint32_t) & BM_DMA_DCR3_DMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMOD field to a new value.
-#define BW_DMA_DCR3_DMOD(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_DMOD), BP_DMA_DCR3_DMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field SMOD[15:12] (RW)
- *
- * Defines the size of the source data circular buffer used by the DMA Controller. If enabled (SMOD
- * is non-zero), the buffer base address is located on a boundary of the buffer size. The value of
- * this boundary is based upon the initial source address (SAR). The base address should be aligned
- * to a 0-modulo-(circular buffer size) boundary. Misaligned buffers are not possible. The boundary
- * is forced to the value determined by the upper address bits in the field selection.
- *
- * Values:
- * - 0000 - Buffer disabled
- * - 0001 - Circular buffer size is 16 bytes
- * - 0010 - Circular buffer size is 32 bytes
- * - 0011 - Circular buffer size is 64 bytes
- * - 0100 - Circular buffer size is 128 bytes
- * - 0101 - Circular buffer size is 256 bytes
- * - 0110 - Circular buffer size is 512 bytes
- * - 0111 - Circular buffer size is 1 KB
- * - 1000 - Circular buffer size is 2 KB
- * - 1001 - Circular buffer size is 4 KB
- * - 1010 - Circular buffer size is 8 KB
- * - 1011 - Circular buffer size is 16 KB
- * - 1100 - Circular buffer size is 32 KB
- * - 1101 - Circular buffer size is 64 KB
- * - 1110 - Circular buffer size is 128 KB
- * - 1111 - Circular buffer size is 256 KB
- */
-//@{
-#define BP_DMA_DCR3_SMOD      (12U)      //!< Bit position for DMA_DCR3_SMOD.
-#define BM_DMA_DCR3_SMOD      (0x0000f000U)  //!< Bit mask for DMA_DCR3_SMOD.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_SMOD field.
-#define BR_DMA_DCR3_SMOD(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_SMOD, 4))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_SMOD.
-#define BF_DMA_DCR3_SMOD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_SMOD), uint32_t) & BM_DMA_DCR3_SMOD)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SMOD field to a new value.
-#define BW_DMA_DCR3_SMOD(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_SMOD), BP_DMA_DCR3_SMOD, 4))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field START[16] (WORZ)
- *
- * Values:
- * - 0 - DMA inactive
- * - 1 - The DMA begins the transfer in accordance to the values in the TCDn. START is cleared automatically
- *     after one module clock and always reads as logic 0.
- */
-//@{
-#define BP_DMA_DCR3_START      (16U)      //!< Bit position for DMA_DCR3_START.
-#define BM_DMA_DCR3_START      (0x00010000U)  //!< Bit mask for DMA_DCR3_START.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_START field.
-#define BR_DMA_DCR3_START(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_START, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_START.
-#define BF_DMA_DCR3_START(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_START), uint32_t) & BM_DMA_DCR3_START)
-//@}
-
-/*! @name Register DMA_DCR3, field DSIZE[18:17] (RW)
- *
- * Determines the data size of the destination bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR3_DSIZE      (17U)      //!< Bit position for DMA_DCR3_DSIZE.
-#define BM_DMA_DCR3_DSIZE      (0x00060000U)  //!< Bit mask for DMA_DCR3_DSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_DSIZE field.
-#define BR_DMA_DCR3_DSIZE(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_DSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_DSIZE.
-#define BF_DMA_DCR3_DSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_DSIZE), uint32_t) & BM_DMA_DCR3_DSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DSIZE field to a new value.
-#define BW_DMA_DCR3_DSIZE(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_DSIZE), BP_DMA_DCR3_DSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field DINC[19] (RW)
- *
- * Controls whether the destination address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to the DAR after a successful transfer.
- * - 1 - The DAR increments by 1, 2, 4 depending upon the size of the transfer.
- */
-//@{
-#define BP_DMA_DCR3_DINC      (19U)      //!< Bit position for DMA_DCR3_DINC.
-#define BM_DMA_DCR3_DINC      (0x00080000U)  //!< Bit mask for DMA_DCR3_DINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_DINC field.
-#define BR_DMA_DCR3_DINC(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_DINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_DINC.
-#define BF_DMA_DCR3_DINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_DINC), uint32_t) & BM_DMA_DCR3_DINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DINC field to a new value.
-#define BW_DMA_DCR3_DINC(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_DINC), BP_DMA_DCR3_DINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field SSIZE[21:20] (RW)
- *
- * Determines the data size of the source bus cycle for the DMA controller.
- *
- * Values:
- * - 00 - 32-bit
- * - 01 - 8-bit
- * - 10 - 16-bit
- * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel
- *     activation)
- */
-//@{
-#define BP_DMA_DCR3_SSIZE      (20U)      //!< Bit position for DMA_DCR3_SSIZE.
-#define BM_DMA_DCR3_SSIZE      (0x00300000U)  //!< Bit mask for DMA_DCR3_SSIZE.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_SSIZE field.
-#define BR_DMA_DCR3_SSIZE(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_SSIZE, 2))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_SSIZE.
-#define BF_DMA_DCR3_SSIZE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_SSIZE), uint32_t) & BM_DMA_DCR3_SSIZE)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSIZE field to a new value.
-#define BW_DMA_DCR3_SSIZE(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_SSIZE), BP_DMA_DCR3_SSIZE, 2))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field SINC[22] (RW)
- *
- * Controls whether the source address increments after each successful transfer.
- *
- * Values:
- * - 0 - No change to SAR after a successful transfer.
- * - 1 - The SAR increments by 1, 2, 4 as determined by the transfer size.
- */
-//@{
-#define BP_DMA_DCR3_SINC      (22U)      //!< Bit position for DMA_DCR3_SINC.
-#define BM_DMA_DCR3_SINC      (0x00400000U)  //!< Bit mask for DMA_DCR3_SINC.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_SINC field.
-#define BR_DMA_DCR3_SINC(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_SINC, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_SINC.
-#define BF_DMA_DCR3_SINC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_SINC), uint32_t) & BM_DMA_DCR3_SINC)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SINC field to a new value.
-#define BW_DMA_DCR3_SINC(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_SINC), BP_DMA_DCR3_SINC, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field EADREQ[23] (RW)
- *
- * Enables the channel to support asynchronous DREQs while the MCU is in Stop mode.
- *
- * Values:
- * - 0 - Disabled
- * - 1 - Enabled
- */
-//@{
-#define BP_DMA_DCR3_EADREQ      (23U)      //!< Bit position for DMA_DCR3_EADREQ.
-#define BM_DMA_DCR3_EADREQ      (0x00800000U)  //!< Bit mask for DMA_DCR3_EADREQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_EADREQ field.
-#define BR_DMA_DCR3_EADREQ(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_EADREQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_EADREQ.
-#define BF_DMA_DCR3_EADREQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_EADREQ), uint32_t) & BM_DMA_DCR3_EADREQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EADREQ field to a new value.
-#define BW_DMA_DCR3_EADREQ(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_EADREQ), BP_DMA_DCR3_EADREQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field AA[28] (RW)
- *
- * AA and SIZE bits determine whether the source or destination is auto-aligned; that is, transfers
- * are optimized based on the address and size.
- *
- * Values:
- * - 0 - Auto-align disabled
- * - 1 - If SSIZE indicates a transfer no smaller than DSIZE, source accesses are auto-aligned; otherwise,
- *     destination accesses are auto-aligned. Source alignment takes precedence over destination
- *     alignment. If auto-alignment is enabled, the appropriate address register increments,
- *     regardless of DINC or SINC.
- */
-//@{
-#define BP_DMA_DCR3_AA      (28U)      //!< Bit position for DMA_DCR3_AA.
-#define BM_DMA_DCR3_AA      (0x10000000U)  //!< Bit mask for DMA_DCR3_AA.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_AA field.
-#define BR_DMA_DCR3_AA(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_AA, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_AA.
-#define BF_DMA_DCR3_AA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_AA), uint32_t) & BM_DMA_DCR3_AA)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AA field to a new value.
-#define BW_DMA_DCR3_AA(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_AA), BP_DMA_DCR3_AA, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field CS[29] (RW)
- *
- * Values:
- * - 0 - DMA continuously makes read/write transfers until the BCR decrements to 0.
- * - 1 - Forces a single read/write transfer per request.
- */
-//@{
-#define BP_DMA_DCR3_CS      (29U)      //!< Bit position for DMA_DCR3_CS.
-#define BM_DMA_DCR3_CS      (0x20000000U)  //!< Bit mask for DMA_DCR3_CS.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_CS field.
-#define BR_DMA_DCR3_CS(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_CS, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_CS.
-#define BF_DMA_DCR3_CS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_CS), uint32_t) & BM_DMA_DCR3_CS)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS field to a new value.
-#define BW_DMA_DCR3_CS(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_CS), BP_DMA_DCR3_CS, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field ERQ[30] (RW)
- *
- * Be careful: a collision can occur between the START bit and D_REQ when the ERQ bit is 1.
- *
- * Values:
- * - 0 - Peripheral request is ignored.
- * - 1 - Enables peripheral request to initiate transfer. A software-initiated request (setting the START
- *     bit) is always enabled.
- */
-//@{
-#define BP_DMA_DCR3_ERQ      (30U)      //!< Bit position for DMA_DCR3_ERQ.
-#define BM_DMA_DCR3_ERQ      (0x40000000U)  //!< Bit mask for DMA_DCR3_ERQ.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_ERQ field.
-#define BR_DMA_DCR3_ERQ(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_ERQ, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_ERQ.
-#define BF_DMA_DCR3_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_ERQ), uint32_t) & BM_DMA_DCR3_ERQ)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERQ field to a new value.
-#define BW_DMA_DCR3_ERQ(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_ERQ), BP_DMA_DCR3_ERQ, 1))
-#endif
-//@}
-
-/*! @name Register DMA_DCR3, field EINT[31] (RW)
- *
- * Determines whether an interrupt is generated by completing a transfer or by the occurrence of an
- * error condition.
- *
- * Values:
- * - 0 - No interrupt is generated.
- * - 1 - Interrupt signal is enabled.
- */
-//@{
-#define BP_DMA_DCR3_EINT      (31U)      //!< Bit position for DMA_DCR3_EINT.
-#define BM_DMA_DCR3_EINT      (0x80000000U)  //!< Bit mask for DMA_DCR3_EINT.
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCR3_EINT field.
-#define BR_DMA_DCR3_EINT(v)   (BME_UBFX32(HW_DMA_DCR3_ADDR, BP_DMA_DCR3_EINT, 1))
-#endif
-
-//! @brief Format value for bitfield DMA_DCR3_EINT.
-#define BF_DMA_DCR3_EINT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCR3_EINT), uint32_t) & BM_DMA_DCR3_EINT)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EINT field to a new value.
-#define BW_DMA_DCR3_EINT(v)   (BME_BFI32(HW_DMA_DCR3_ADDR, ((uint32_t)(v) << BP_DMA_DCR3_EINT), BP_DMA_DCR3_EINT, 1))
+#define BW_DMA_DCRn_EINT(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_EINT), BP_DMA_DCRn_EINT, 1))
 #endif
 //@}
 
@@ -3583,32 +1082,29 @@ typedef union _hw_dma_dcr3
 #pragma pack(1)
 typedef struct _hw_dma
 {
-    uint32_t _reserved0[64];
-    __IO hw_dma_sar0_t SAR0; //!< [0x100] Source Address Register
-    __IO hw_dma_dar0_t DAR0; //!< [0x104] Destination Address Register
-    __IO hw_dma_dsr_bcr0_t DSR_BCR0; //!< [0x108] DMA Status Register / Byte Count Register
-    __IO hw_dma_dcr0_t DCR0; //!< [0x10c] DMA Control Register
-    __IO hw_dma_sar1_t SAR1; //!< [0x110] Source Address Register
-    __IO hw_dma_dar1_t DAR1; //!< [0x114] Destination Address Register
-    __IO hw_dma_dsr_bcr1_t DSR_BCR1; //!< [0x118] DMA Status Register / Byte Count Register
-    __IO hw_dma_dcr1_t DCR1; //!< [0x11c] DMA Control Register
-    __IO hw_dma_sar2_t SAR2; //!< [0x120] Source Address Register
-    __IO hw_dma_dar2_t DAR2; //!< [0x124] Destination Address Register
-    __IO hw_dma_dsr_bcr2_t DSR_BCR2; //!< [0x128] DMA Status Register / Byte Count Register
-    __IO hw_dma_dcr2_t DCR2; //!< [0x12c] DMA Control Register
-    __IO hw_dma_sar3_t SAR3; //!< [0x130] Source Address Register
-    __IO hw_dma_dar3_t DAR3; //!< [0x134] Destination Address Register
-    __IO hw_dma_dsr_bcr3_t DSR_BCR3; //!< [0x138] DMA Status Register / Byte Count Register
-    __IO hw_dma_dcr3_t DCR3; //!< [0x13c] DMA Control Register
+    uint8_t _reserved0[256];
+    struct {
+        __IO hw_dma_sarn_t SARn;           //!< [0x100] Source Address Register
+        __IO hw_dma_darn_t DARn;           //!< [0x104] Destination Address Register
+        union {
+            struct {
+                uint8_t _reserved0[3];
+                __IO hw_dma_dsr_t DSR;     //!< [0x10B] DMA_DSR0 register.
+            } DMA_DSR_ACCESS8BIT;
+            __IO hw_dma_dsr_bcrn_t DSR_BCRn; //!< [0x108] DMA Status Register / Byte Count Register
+        };
+        __IO hw_dma_dcrn_t DCRn;           //!< [0x10C] DMA Control Register
+    } DMA[4];
 } hw_dma_t;
 #pragma pack()
 
 //! @brief Macro to access all DMA registers.
+//! @param x DMA instance number.
 //! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_DMA</code>.
-#define HW_DMA     (*(hw_dma_t *) REGS_DMA_BASE)
+//!     use the '&' operator, like <code>&HW_DMA(0)</code>.
+#define HW_DMA(x)      (*(hw_dma_t *) REGS_DMA_BASE(x))
 #endif
 
 #endif // __HW_DMA_REGISTERS_H__
-// v20/130417/1.2.4
+// v22/130726/0.9
 // EOF

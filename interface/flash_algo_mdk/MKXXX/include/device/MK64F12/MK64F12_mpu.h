@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -83,11 +83,11 @@ typedef union _hw_mpu_cesr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_MPU_CESR              (*(__IO hw_mpu_cesr_t *) HW_MPU_CESR_ADDR)
-#define HW_MPU_CESR_RD           (HW_MPU_CESR.U)
+#define HW_MPU_CESR_RD()         (HW_MPU_CESR.U)
 #define HW_MPU_CESR_WR(v)        (HW_MPU_CESR.U = (v))
-#define HW_MPU_CESR_SET(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD |  (v)))
-#define HW_MPU_CESR_CLR(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD & ~(v)))
-#define HW_MPU_CESR_TOG(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD ^  (v)))
+#define HW_MPU_CESR_SET(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD() |  (v)))
+#define HW_MPU_CESR_CLR(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD() & ~(v)))
+#define HW_MPU_CESR_TOG(v)       (HW_MPU_CESR_WR(HW_MPU_CESR_RD() ^  (v)))
 #endif
 //@}
 
@@ -208,7 +208,7 @@ typedef union _hw_mpu_cesr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SPERR field to a new value.
-#define BW_MPU_CESR_SPERR(v) (HW_MPU_CESR_WR((HW_MPU_CESR_RD & ~BM_MPU_CESR_SPERR) | BF_MPU_CESR_SPERR(v)))
+#define BW_MPU_CESR_SPERR(v) (HW_MPU_CESR_WR((HW_MPU_CESR_RD() & ~BM_MPU_CESR_SPERR) | BF_MPU_CESR_SPERR(v)))
 #endif
 //@}
 
@@ -595,19 +595,19 @@ typedef union _hw_mpu_rgdn_word2
     {
         uint32_t M0UM : 3;             //!< [2:0] Bus Master 0 User Mode Access Control
         uint32_t M0SM : 2;             //!< [4:3] Bus Master 0 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M0PE : 1;             //!< [5] Bus Master 0 Process Identifier enable
         uint32_t M1UM : 3;             //!< [8:6] Bus Master 1 User Mode Access Control
         uint32_t M1SM : 2;             //!< [10:9] Bus Master 1 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M1PE : 1;             //!< [11] Bus Master 1 Process Identifier enable
         uint32_t M2UM : 3;             //!< [14:12] Bus Master 2 User Mode Access control
         uint32_t M2SM : 2;             //!< [16:15] Bus Master 2 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M2PE : 1;             //!< [17] Bus Master 2 Process Identifier Enable
         uint32_t M3UM : 3;             //!< [20:18] Bus Master 3 User Mode Access Control
         uint32_t M3SM : 2;             //!< [22:21] Bus Master 3 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M3PE : 1;             //!< [23] Bus Master 3 Process Identifier Enable
         uint32_t M4WE : 1;             //!< [24] Bus Master 4 Write Enable
         uint32_t M4RE : 1;             //!< [25] Bus Master 4 Read Enable
@@ -1316,19 +1316,19 @@ typedef union _hw_mpu_rgdaacn
     {
         uint32_t M0UM : 3;             //!< [2:0] Bus Master 0 User Mode Access Control
         uint32_t M0SM : 2;             //!< [4:3] Bus Master 0 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M0PE : 1;             //!< [5] Bus Master 0 Process Identifier Enable
         uint32_t M1UM : 3;             //!< [8:6] Bus Master 1 User Mode Access Control
         uint32_t M1SM : 2;             //!< [10:9] Bus Master 1 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M1PE : 1;             //!< [11] Bus Master 1 Process Identifier Enable
         uint32_t M2UM : 3;             //!< [14:12] Bus Master 2 User Mode Access Control
         uint32_t M2SM : 2;             //!< [16:15] Bus Master 2 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M2PE : 1;             //!< [17] Bus Master 2 Process Identifier Enable
         uint32_t M3UM : 3;             //!< [20:18] Bus Master 3 User Mode Access Control
         uint32_t M3SM : 2;             //!< [22:21] Bus Master 3 Supervisor Mode Access
-                                       //!< Control
+                                       //! Control
         uint32_t M3PE : 1;             //!< [23] Bus Master 3 Process Identifier Enable
         uint32_t M4WE : 1;             //!< [24] Bus Master 4 Write Enable
         uint32_t M4RE : 1;             //!< [25] Bus Master 4 Read Enable

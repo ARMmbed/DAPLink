@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -84,11 +84,11 @@ typedef union _hw_cmt_cgh1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CGH1              (*(__IO hw_cmt_cgh1_t *) HW_CMT_CGH1_ADDR)
-#define HW_CMT_CGH1_RD           (HW_CMT_CGH1.U)
+#define HW_CMT_CGH1_RD()         (HW_CMT_CGH1.U)
 #define HW_CMT_CGH1_WR(v)        (HW_CMT_CGH1.U = (v))
-#define HW_CMT_CGH1_SET(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD |  (v)))
-#define HW_CMT_CGH1_CLR(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD & ~(v)))
-#define HW_CMT_CGH1_TOG(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD ^  (v)))
+#define HW_CMT_CGH1_SET(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() |  (v)))
+#define HW_CMT_CGH1_CLR(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() & ~(v)))
+#define HW_CMT_CGH1_TOG(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() ^  (v)))
 #endif
 //@}
 
@@ -121,7 +121,7 @@ typedef union _hw_cmt_cgh1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PH field to a new value.
-#define BW_CMT_CGH1_PH(v)    (HW_CMT_CGH1_WR((HW_CMT_CGH1_RD & ~BM_CMT_CGH1_PH) | BF_CMT_CGH1_PH(v)))
+#define BW_CMT_CGH1_PH(v)    (HW_CMT_CGH1_WR((HW_CMT_CGH1_RD() & ~BM_CMT_CGH1_PH) | BF_CMT_CGH1_PH(v)))
 #endif
 //@}
 
@@ -156,11 +156,11 @@ typedef union _hw_cmt_cgl1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CGL1              (*(__IO hw_cmt_cgl1_t *) HW_CMT_CGL1_ADDR)
-#define HW_CMT_CGL1_RD           (HW_CMT_CGL1.U)
+#define HW_CMT_CGL1_RD()         (HW_CMT_CGL1.U)
 #define HW_CMT_CGL1_WR(v)        (HW_CMT_CGL1.U = (v))
-#define HW_CMT_CGL1_SET(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD |  (v)))
-#define HW_CMT_CGL1_CLR(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD & ~(v)))
-#define HW_CMT_CGL1_TOG(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD ^  (v)))
+#define HW_CMT_CGL1_SET(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() |  (v)))
+#define HW_CMT_CGL1_CLR(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() & ~(v)))
+#define HW_CMT_CGL1_TOG(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() ^  (v)))
 #endif
 //@}
 
@@ -193,7 +193,7 @@ typedef union _hw_cmt_cgl1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PL field to a new value.
-#define BW_CMT_CGL1_PL(v)    (HW_CMT_CGL1_WR((HW_CMT_CGL1_RD & ~BM_CMT_CGL1_PL) | BF_CMT_CGL1_PL(v)))
+#define BW_CMT_CGL1_PL(v)    (HW_CMT_CGL1_WR((HW_CMT_CGL1_RD() & ~BM_CMT_CGL1_PL) | BF_CMT_CGL1_PL(v)))
 #endif
 //@}
 
@@ -228,11 +228,11 @@ typedef union _hw_cmt_cgh2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CGH2              (*(__IO hw_cmt_cgh2_t *) HW_CMT_CGH2_ADDR)
-#define HW_CMT_CGH2_RD           (HW_CMT_CGH2.U)
+#define HW_CMT_CGH2_RD()         (HW_CMT_CGH2.U)
 #define HW_CMT_CGH2_WR(v)        (HW_CMT_CGH2.U = (v))
-#define HW_CMT_CGH2_SET(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD |  (v)))
-#define HW_CMT_CGH2_CLR(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD & ~(v)))
-#define HW_CMT_CGH2_TOG(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD ^  (v)))
+#define HW_CMT_CGH2_SET(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() |  (v)))
+#define HW_CMT_CGH2_CLR(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() & ~(v)))
+#define HW_CMT_CGH2_TOG(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() ^  (v)))
 #endif
 //@}
 
@@ -265,7 +265,7 @@ typedef union _hw_cmt_cgh2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SH field to a new value.
-#define BW_CMT_CGH2_SH(v)    (HW_CMT_CGH2_WR((HW_CMT_CGH2_RD & ~BM_CMT_CGH2_SH) | BF_CMT_CGH2_SH(v)))
+#define BW_CMT_CGH2_SH(v)    (HW_CMT_CGH2_WR((HW_CMT_CGH2_RD() & ~BM_CMT_CGH2_SH) | BF_CMT_CGH2_SH(v)))
 #endif
 //@}
 
@@ -300,11 +300,11 @@ typedef union _hw_cmt_cgl2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CGL2              (*(__IO hw_cmt_cgl2_t *) HW_CMT_CGL2_ADDR)
-#define HW_CMT_CGL2_RD           (HW_CMT_CGL2.U)
+#define HW_CMT_CGL2_RD()         (HW_CMT_CGL2.U)
 #define HW_CMT_CGL2_WR(v)        (HW_CMT_CGL2.U = (v))
-#define HW_CMT_CGL2_SET(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD |  (v)))
-#define HW_CMT_CGL2_CLR(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD & ~(v)))
-#define HW_CMT_CGL2_TOG(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD ^  (v)))
+#define HW_CMT_CGL2_SET(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() |  (v)))
+#define HW_CMT_CGL2_CLR(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() & ~(v)))
+#define HW_CMT_CGL2_TOG(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() ^  (v)))
 #endif
 //@}
 
@@ -337,7 +337,7 @@ typedef union _hw_cmt_cgl2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SL field to a new value.
-#define BW_CMT_CGL2_SL(v)    (HW_CMT_CGL2_WR((HW_CMT_CGL2_RD & ~BM_CMT_CGL2_SL) | BF_CMT_CGL2_SL(v)))
+#define BW_CMT_CGL2_SL(v)    (HW_CMT_CGL2_WR((HW_CMT_CGL2_RD() & ~BM_CMT_CGL2_SL) | BF_CMT_CGL2_SL(v)))
 #endif
 //@}
 
@@ -374,11 +374,11 @@ typedef union _hw_cmt_oc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_OC                (*(__IO hw_cmt_oc_t *) HW_CMT_OC_ADDR)
-#define HW_CMT_OC_RD             (HW_CMT_OC.U)
+#define HW_CMT_OC_RD()           (HW_CMT_OC.U)
 #define HW_CMT_OC_WR(v)          (HW_CMT_OC.U = (v))
-#define HW_CMT_OC_SET(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD |  (v)))
-#define HW_CMT_OC_CLR(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD & ~(v)))
-#define HW_CMT_OC_TOG(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD ^  (v)))
+#define HW_CMT_OC_SET(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() |  (v)))
+#define HW_CMT_OC_CLR(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() & ~(v)))
+#define HW_CMT_OC_TOG(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() ^  (v)))
 #endif
 //@}
 
@@ -511,11 +511,11 @@ typedef union _hw_cmt_msc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_MSC               (*(__IO hw_cmt_msc_t *) HW_CMT_MSC_ADDR)
-#define HW_CMT_MSC_RD            (HW_CMT_MSC.U)
+#define HW_CMT_MSC_RD()          (HW_CMT_MSC.U)
 #define HW_CMT_MSC_WR(v)         (HW_CMT_MSC.U = (v))
-#define HW_CMT_MSC_SET(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD |  (v)))
-#define HW_CMT_MSC_CLR(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD & ~(v)))
-#define HW_CMT_MSC_TOG(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD ^  (v)))
+#define HW_CMT_MSC_SET(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() |  (v)))
+#define HW_CMT_MSC_CLR(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() & ~(v)))
+#define HW_CMT_MSC_TOG(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() ^  (v)))
 #endif
 //@}
 
@@ -702,7 +702,7 @@ typedef union _hw_cmt_msc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CMTDIV field to a new value.
-#define BW_CMT_MSC_CMTDIV(v) (HW_CMT_MSC_WR((HW_CMT_MSC_RD & ~BM_CMT_MSC_CMTDIV) | BF_CMT_MSC_CMTDIV(v)))
+#define BW_CMT_MSC_CMTDIV(v) (HW_CMT_MSC_WR((HW_CMT_MSC_RD() & ~BM_CMT_MSC_CMTDIV) | BF_CMT_MSC_CMTDIV(v)))
 #endif
 //@}
 
@@ -764,11 +764,11 @@ typedef union _hw_cmt_cmd1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CMD1              (*(__IO hw_cmt_cmd1_t *) HW_CMT_CMD1_ADDR)
-#define HW_CMT_CMD1_RD           (HW_CMT_CMD1.U)
+#define HW_CMT_CMD1_RD()         (HW_CMT_CMD1.U)
 #define HW_CMT_CMD1_WR(v)        (HW_CMT_CMD1.U = (v))
-#define HW_CMT_CMD1_SET(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD |  (v)))
-#define HW_CMT_CMD1_CLR(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD & ~(v)))
-#define HW_CMT_CMD1_TOG(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD ^  (v)))
+#define HW_CMT_CMD1_SET(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() |  (v)))
+#define HW_CMT_CMD1_CLR(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() & ~(v)))
+#define HW_CMT_CMD1_TOG(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() ^  (v)))
 #endif
 //@}
 
@@ -796,7 +796,7 @@ typedef union _hw_cmt_cmd1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the MB field to a new value.
-#define BW_CMT_CMD1_MB(v)    (HW_CMT_CMD1_WR((HW_CMT_CMD1_RD & ~BM_CMT_CMD1_MB) | BF_CMT_CMD1_MB(v)))
+#define BW_CMT_CMD1_MB(v)    (HW_CMT_CMD1_WR((HW_CMT_CMD1_RD() & ~BM_CMT_CMD1_MB) | BF_CMT_CMD1_MB(v)))
 #endif
 //@}
 
@@ -831,11 +831,11 @@ typedef union _hw_cmt_cmd2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CMD2              (*(__IO hw_cmt_cmd2_t *) HW_CMT_CMD2_ADDR)
-#define HW_CMT_CMD2_RD           (HW_CMT_CMD2.U)
+#define HW_CMT_CMD2_RD()         (HW_CMT_CMD2.U)
 #define HW_CMT_CMD2_WR(v)        (HW_CMT_CMD2.U = (v))
-#define HW_CMT_CMD2_SET(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD |  (v)))
-#define HW_CMT_CMD2_CLR(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD & ~(v)))
-#define HW_CMT_CMD2_TOG(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD ^  (v)))
+#define HW_CMT_CMD2_SET(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() |  (v)))
+#define HW_CMT_CMD2_CLR(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() & ~(v)))
+#define HW_CMT_CMD2_TOG(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() ^  (v)))
 #endif
 //@}
 
@@ -863,7 +863,7 @@ typedef union _hw_cmt_cmd2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the MB field to a new value.
-#define BW_CMT_CMD2_MB(v)    (HW_CMT_CMD2_WR((HW_CMT_CMD2_RD & ~BM_CMT_CMD2_MB) | BF_CMT_CMD2_MB(v)))
+#define BW_CMT_CMD2_MB(v)    (HW_CMT_CMD2_WR((HW_CMT_CMD2_RD() & ~BM_CMT_CMD2_MB) | BF_CMT_CMD2_MB(v)))
 #endif
 //@}
 
@@ -898,11 +898,11 @@ typedef union _hw_cmt_cmd3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CMD3              (*(__IO hw_cmt_cmd3_t *) HW_CMT_CMD3_ADDR)
-#define HW_CMT_CMD3_RD           (HW_CMT_CMD3.U)
+#define HW_CMT_CMD3_RD()         (HW_CMT_CMD3.U)
 #define HW_CMT_CMD3_WR(v)        (HW_CMT_CMD3.U = (v))
-#define HW_CMT_CMD3_SET(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD |  (v)))
-#define HW_CMT_CMD3_CLR(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD & ~(v)))
-#define HW_CMT_CMD3_TOG(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD ^  (v)))
+#define HW_CMT_CMD3_SET(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() |  (v)))
+#define HW_CMT_CMD3_CLR(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() & ~(v)))
+#define HW_CMT_CMD3_TOG(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() ^  (v)))
 #endif
 //@}
 
@@ -930,7 +930,7 @@ typedef union _hw_cmt_cmd3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SB field to a new value.
-#define BW_CMT_CMD3_SB(v)    (HW_CMT_CMD3_WR((HW_CMT_CMD3_RD & ~BM_CMT_CMD3_SB) | BF_CMT_CMD3_SB(v)))
+#define BW_CMT_CMD3_SB(v)    (HW_CMT_CMD3_WR((HW_CMT_CMD3_RD() & ~BM_CMT_CMD3_SB) | BF_CMT_CMD3_SB(v)))
 #endif
 //@}
 
@@ -965,11 +965,11 @@ typedef union _hw_cmt_cmd4
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_CMD4              (*(__IO hw_cmt_cmd4_t *) HW_CMT_CMD4_ADDR)
-#define HW_CMT_CMD4_RD           (HW_CMT_CMD4.U)
+#define HW_CMT_CMD4_RD()         (HW_CMT_CMD4.U)
 #define HW_CMT_CMD4_WR(v)        (HW_CMT_CMD4.U = (v))
-#define HW_CMT_CMD4_SET(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD |  (v)))
-#define HW_CMT_CMD4_CLR(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD & ~(v)))
-#define HW_CMT_CMD4_TOG(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD ^  (v)))
+#define HW_CMT_CMD4_SET(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() |  (v)))
+#define HW_CMT_CMD4_CLR(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() & ~(v)))
+#define HW_CMT_CMD4_TOG(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() ^  (v)))
 #endif
 //@}
 
@@ -997,7 +997,7 @@ typedef union _hw_cmt_cmd4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SB field to a new value.
-#define BW_CMT_CMD4_SB(v)    (HW_CMT_CMD4_WR((HW_CMT_CMD4_RD & ~BM_CMT_CMD4_SB) | BF_CMT_CMD4_SB(v)))
+#define BW_CMT_CMD4_SB(v)    (HW_CMT_CMD4_WR((HW_CMT_CMD4_RD() & ~BM_CMT_CMD4_SB) | BF_CMT_CMD4_SB(v)))
 #endif
 //@}
 
@@ -1032,11 +1032,11 @@ typedef union _hw_cmt_pps
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_PPS               (*(__IO hw_cmt_pps_t *) HW_CMT_PPS_ADDR)
-#define HW_CMT_PPS_RD            (HW_CMT_PPS.U)
+#define HW_CMT_PPS_RD()          (HW_CMT_PPS.U)
 #define HW_CMT_PPS_WR(v)         (HW_CMT_PPS.U = (v))
-#define HW_CMT_PPS_SET(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD |  (v)))
-#define HW_CMT_PPS_CLR(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD & ~(v)))
-#define HW_CMT_PPS_TOG(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD ^  (v)))
+#define HW_CMT_PPS_SET(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() |  (v)))
+#define HW_CMT_PPS_CLR(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() & ~(v)))
+#define HW_CMT_PPS_TOG(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() ^  (v)))
 #endif
 //@}
 
@@ -1083,7 +1083,7 @@ typedef union _hw_cmt_pps
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PPSDIV field to a new value.
-#define BW_CMT_PPS_PPSDIV(v) (HW_CMT_PPS_WR((HW_CMT_PPS_RD & ~BM_CMT_PPS_PPSDIV) | BF_CMT_PPS_PPSDIV(v)))
+#define BW_CMT_PPS_PPSDIV(v) (HW_CMT_PPS_WR((HW_CMT_PPS_RD() & ~BM_CMT_PPS_PPSDIV) | BF_CMT_PPS_PPSDIV(v)))
 #endif
 //@}
 
@@ -1118,11 +1118,11 @@ typedef union _hw_cmt_dma
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CMT_DMA               (*(__IO hw_cmt_dma_t *) HW_CMT_DMA_ADDR)
-#define HW_CMT_DMA_RD            (HW_CMT_DMA.U)
+#define HW_CMT_DMA_RD()          (HW_CMT_DMA.U)
 #define HW_CMT_DMA_WR(v)         (HW_CMT_DMA.U = (v))
-#define HW_CMT_DMA_SET(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD |  (v)))
-#define HW_CMT_DMA_CLR(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD & ~(v)))
-#define HW_CMT_DMA_TOG(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD ^  (v)))
+#define HW_CMT_DMA_SET(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() |  (v)))
+#define HW_CMT_DMA_CLR(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() & ~(v)))
+#define HW_CMT_DMA_TOG(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() ^  (v)))
 #endif
 //@}
 

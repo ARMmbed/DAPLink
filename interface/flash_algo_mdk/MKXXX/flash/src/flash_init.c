@@ -43,6 +43,8 @@ volatile uint32_t * const kFCCOBx =
     (volatile uint32_t *)&FTFA->FCCOB3;
 #elif defined(FTFE)
     (volatile uint32_t *)&FTFE->FCCOB3;
+#elif defined(FTFL)
+    (volatile uint32_t *)&FTFL->FCCOB3;
 #else
     #error "Unknown flash controller"
 #endif
@@ -70,22 +72,7 @@ status_t flash_init(flash_driver_t * driver)
     // fill out a few of the structure members
     driver->PFlashBlockBase = FLASH_BLOCK_BASE;
     driver->PFlashTotalSize = flashDensity;
-
-#if (defined(FTFA))
     driver->PFlashBlockCount = FSL_FEATURE_FTFx_PBLOCK_COUNT;
-#elif (defined(FTFE))
-    if (HW_SIM_FCFG1.B.NVMSIZE == 0)
-    {
-        driver->PFlashBlockCount = 2;
-    }
-    else
-    {
-        driver->PFlashBlockCount = 1;
-    }
-#else
-    #error "Unknown flash controller"
-#endif
-
     driver->PFlashSectorSize = FSL_FEATURE_FTFx_PSECTOR_SIZE;
 
     return kStatus_Success;

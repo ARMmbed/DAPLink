@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -102,7 +102,7 @@ typedef union _hw_spi_mcr
         uint32_t MDIS : 1;             //!< [14] Module Disable
         uint32_t DOZE : 1;             //!< [15] Doze Enable
         uint32_t PCSIS : 6;            //!< [21:16] Peripheral Chip Select x Inactive
-                                       //!< State
+                                       //! State
         uint32_t RESERVED1 : 2;        //!< [23:22]
         uint32_t ROOE : 1;             //!< [24] Receive FIFO Overflow Overwrite Enable
         uint32_t PCSSE : 1;            //!< [25] Peripheral Chip Select Strobe Enable
@@ -1645,13 +1645,13 @@ typedef union _hw_spi_rser
     {
         uint32_t RESERVED0 : 16;       //!< [15:0]
         uint32_t RFDF_DIRS : 1;        //!< [16] Receive FIFO Drain DMA or Interrupt
-                                       //!< Request Select
+                                       //! Request Select
         uint32_t RFDF_RE : 1;          //!< [17] Receive FIFO Drain Request Enable
         uint32_t RESERVED1 : 1;        //!< [18]
         uint32_t RFOF_RE : 1;          //!< [19] Receive FIFO Overflow Request Enable
         uint32_t RESERVED2 : 4;        //!< [23:20]
         uint32_t TFFF_DIRS : 1;        //!< [24] Transmit FIFO Fill DMA or Interrupt
-                                       //!< Request Select
+                                       //! Request Select
         uint32_t TFFF_RE : 1;          //!< [25] Transmit FIFO Fill Request Enable
         uint32_t RESERVED3 : 1;        //!< [26]
         uint32_t TFUF_RE : 1;          //!< [27] Transmit FIFO Underflow Request Enable
@@ -2295,7 +2295,7 @@ typedef union _hw_spi_txfrn
     {
         uint32_t TXDATA : 16;          //!< [15:0] Transmit Data
         uint32_t TXCMD_TXDATA : 16;    //!< [31:16] Transmit Command or Transmit
-                                       //!< Data
+                                       //! Data
     } B;
 } hw_spi_txfrn_t;
 #endif

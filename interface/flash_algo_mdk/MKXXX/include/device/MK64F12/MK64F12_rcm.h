@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -88,7 +88,7 @@ typedef union _hw_rcm_srs0
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RCM_SRS0              (*(__I hw_rcm_srs0_t *) HW_RCM_SRS0_ADDR)
-#define HW_RCM_SRS0_RD           (HW_RCM_SRS0.U)
+#define HW_RCM_SRS0_RD()         (HW_RCM_SRS0.U)
 #endif
 //@}
 
@@ -289,7 +289,7 @@ typedef union _hw_rcm_srs1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RCM_SRS1              (*(__I hw_rcm_srs1_t *) HW_RCM_SRS1_ADDR)
-#define HW_RCM_SRS1_RD           (HW_RCM_SRS1.U)
+#define HW_RCM_SRS1_RD()         (HW_RCM_SRS1.U)
 #endif
 //@}
 
@@ -451,7 +451,7 @@ typedef union _hw_rcm_rpfc
     struct _hw_rcm_rpfc_bitfields
     {
         uint8_t RSTFLTSRW : 2;         //!< [1:0] Reset Pin Filter Select in Run and
-                                       //!< Wait Modes
+                                       //! Wait Modes
         uint8_t RSTFLTSS : 1;          //!< [2] Reset Pin Filter Select in Stop Mode
         uint8_t RESERVED0 : 5;         //!< [7:3]
     } B;
@@ -466,11 +466,11 @@ typedef union _hw_rcm_rpfc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RCM_RPFC              (*(__IO hw_rcm_rpfc_t *) HW_RCM_RPFC_ADDR)
-#define HW_RCM_RPFC_RD           (HW_RCM_RPFC.U)
+#define HW_RCM_RPFC_RD()         (HW_RCM_RPFC.U)
 #define HW_RCM_RPFC_WR(v)        (HW_RCM_RPFC.U = (v))
-#define HW_RCM_RPFC_SET(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD |  (v)))
-#define HW_RCM_RPFC_CLR(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD & ~(v)))
-#define HW_RCM_RPFC_TOG(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD ^  (v)))
+#define HW_RCM_RPFC_SET(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD() |  (v)))
+#define HW_RCM_RPFC_CLR(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD() & ~(v)))
+#define HW_RCM_RPFC_TOG(v)       (HW_RCM_RPFC_WR(HW_RCM_RPFC_RD() ^  (v)))
 #endif
 //@}
 
@@ -504,7 +504,7 @@ typedef union _hw_rcm_rpfc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RSTFLTSRW field to a new value.
-#define BW_RCM_RPFC_RSTFLTSRW(v) (HW_RCM_RPFC_WR((HW_RCM_RPFC_RD & ~BM_RCM_RPFC_RSTFLTSRW) | BF_RCM_RPFC_RSTFLTSRW(v)))
+#define BW_RCM_RPFC_RSTFLTSRW(v) (HW_RCM_RPFC_WR((HW_RCM_RPFC_RD() & ~BM_RCM_RPFC_RSTFLTSRW) | BF_RCM_RPFC_RSTFLTSRW(v)))
 #endif
 //@}
 
@@ -568,11 +568,11 @@ typedef union _hw_rcm_rpfw
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RCM_RPFW              (*(__IO hw_rcm_rpfw_t *) HW_RCM_RPFW_ADDR)
-#define HW_RCM_RPFW_RD           (HW_RCM_RPFW.U)
+#define HW_RCM_RPFW_RD()         (HW_RCM_RPFW.U)
 #define HW_RCM_RPFW_WR(v)        (HW_RCM_RPFW.U = (v))
-#define HW_RCM_RPFW_SET(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD |  (v)))
-#define HW_RCM_RPFW_CLR(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD & ~(v)))
-#define HW_RCM_RPFW_TOG(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD ^  (v)))
+#define HW_RCM_RPFW_SET(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD() |  (v)))
+#define HW_RCM_RPFW_CLR(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD() & ~(v)))
+#define HW_RCM_RPFW_TOG(v)       (HW_RCM_RPFW_WR(HW_RCM_RPFW_RD() ^  (v)))
 #endif
 //@}
 
@@ -634,7 +634,7 @@ typedef union _hw_rcm_rpfw
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RSTFLTSEL field to a new value.
-#define BW_RCM_RPFW_RSTFLTSEL(v) (HW_RCM_RPFW_WR((HW_RCM_RPFW_RD & ~BM_RCM_RPFW_RSTFLTSEL) | BF_RCM_RPFW_RSTFLTSEL(v)))
+#define BW_RCM_RPFW_RSTFLTSEL(v) (HW_RCM_RPFW_WR((HW_RCM_RPFW_RD() & ~BM_RCM_RPFW_RSTFLTSEL) | BF_RCM_RPFW_RSTFLTSEL(v)))
 #endif
 //@}
 
@@ -671,7 +671,7 @@ typedef union _hw_rcm_mr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RCM_MR                (*(__I hw_rcm_mr_t *) HW_RCM_MR_ADDR)
-#define HW_RCM_MR_RD             (HW_RCM_MR.U)
+#define HW_RCM_MR_RD()           (HW_RCM_MR.U)
 #endif
 //@}
 

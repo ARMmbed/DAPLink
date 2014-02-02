@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -748,15 +748,15 @@ typedef union _hw_fb_cspmcr
     {
         uint32_t RESERVED0 : 12;       //!< [11:0]
         uint32_t GROUP5 : 4;           //!< [15:12] FlexBus Signal Group 5 Multiplex
-                                       //!< control
+                                       //! control
         uint32_t GROUP4 : 4;           //!< [19:16] FlexBus Signal Group 4 Multiplex
-                                       //!< control
+                                       //! control
         uint32_t GROUP3 : 4;           //!< [23:20] FlexBus Signal Group 3 Multiplex
-                                       //!< control
+                                       //! control
         uint32_t GROUP2 : 4;           //!< [27:24] FlexBus Signal Group 2 Multiplex
-                                       //!< control
+                                       //! control
         uint32_t GROUP1 : 4;           //!< [31:28] FlexBus Signal Group 1 Multiplex
-                                       //!< control
+                                       //! control
     } B;
 } hw_fb_cspmcr_t;
 #endif
@@ -769,11 +769,11 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_FB_CSPMCR             (*(__IO hw_fb_cspmcr_t *) HW_FB_CSPMCR_ADDR)
-#define HW_FB_CSPMCR_RD          (HW_FB_CSPMCR.U)
+#define HW_FB_CSPMCR_RD()        (HW_FB_CSPMCR.U)
 #define HW_FB_CSPMCR_WR(v)       (HW_FB_CSPMCR.U = (v))
-#define HW_FB_CSPMCR_SET(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD |  (v)))
-#define HW_FB_CSPMCR_CLR(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD & ~(v)))
-#define HW_FB_CSPMCR_TOG(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD ^  (v)))
+#define HW_FB_CSPMCR_SET(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD() |  (v)))
+#define HW_FB_CSPMCR_CLR(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD() & ~(v)))
+#define HW_FB_CSPMCR_TOG(v)      (HW_FB_CSPMCR_WR(HW_FB_CSPMCR_RD() ^  (v)))
 #endif
 //@}
 
@@ -808,7 +808,7 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GROUP5 field to a new value.
-#define BW_FB_CSPMCR_GROUP5(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD & ~BM_FB_CSPMCR_GROUP5) | BF_FB_CSPMCR_GROUP5(v)))
+#define BW_FB_CSPMCR_GROUP5(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD() & ~BM_FB_CSPMCR_GROUP5) | BF_FB_CSPMCR_GROUP5(v)))
 #endif
 //@}
 
@@ -837,7 +837,7 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GROUP4 field to a new value.
-#define BW_FB_CSPMCR_GROUP4(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD & ~BM_FB_CSPMCR_GROUP4) | BF_FB_CSPMCR_GROUP4(v)))
+#define BW_FB_CSPMCR_GROUP4(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD() & ~BM_FB_CSPMCR_GROUP4) | BF_FB_CSPMCR_GROUP4(v)))
 #endif
 //@}
 
@@ -866,7 +866,7 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GROUP3 field to a new value.
-#define BW_FB_CSPMCR_GROUP3(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD & ~BM_FB_CSPMCR_GROUP3) | BF_FB_CSPMCR_GROUP3(v)))
+#define BW_FB_CSPMCR_GROUP3(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD() & ~BM_FB_CSPMCR_GROUP3) | BF_FB_CSPMCR_GROUP3(v)))
 #endif
 //@}
 
@@ -895,7 +895,7 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GROUP2 field to a new value.
-#define BW_FB_CSPMCR_GROUP2(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD & ~BM_FB_CSPMCR_GROUP2) | BF_FB_CSPMCR_GROUP2(v)))
+#define BW_FB_CSPMCR_GROUP2(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD() & ~BM_FB_CSPMCR_GROUP2) | BF_FB_CSPMCR_GROUP2(v)))
 #endif
 //@}
 
@@ -924,7 +924,7 @@ typedef union _hw_fb_cspmcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GROUP1 field to a new value.
-#define BW_FB_CSPMCR_GROUP1(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD & ~BM_FB_CSPMCR_GROUP1) | BF_FB_CSPMCR_GROUP1(v)))
+#define BW_FB_CSPMCR_GROUP1(v) (HW_FB_CSPMCR_WR((HW_FB_CSPMCR_RD() & ~BM_FB_CSPMCR_GROUP1) | BF_FB_CSPMCR_GROUP1(v)))
 #endif
 //@}
 

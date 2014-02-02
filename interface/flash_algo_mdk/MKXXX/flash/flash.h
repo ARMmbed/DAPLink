@@ -333,8 +333,10 @@ static inline void flash_cache_enable(bool doEnable)
 #else // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
     HW_FMC_PFB0CR.B.B0DCE = (uint32_t)doEnable;
     HW_FMC_PFB0CR.B.B0ICE = (uint32_t)doEnable;
+#if defined(HW_FMC_PFB1CR)
     HW_FMC_PFB1CR.B.B1DCE = (uint32_t)doEnable;
     HW_FMC_PFB1CR.B.B1ICE = (uint32_t)doEnable;
+#endif // HW_FMC_PFB1CR
 #endif // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
 }
 

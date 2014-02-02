@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -73,7 +73,7 @@ typedef union _hw_crc_datal
     struct _hw_crc_datal_bitfields
     {
         uint16_t DATAL : 16;           //!< [15:0] DATAL stores the lower 16 bits of
-                                       //!< the 16/32 bit CRC
+                                       //! the 16/32 bit CRC
     } B;
 } hw_crc_datal_t;
 #endif
@@ -86,11 +86,11 @@ typedef union _hw_crc_datal
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATAL             (*(__IO hw_crc_datal_t *) HW_CRC_DATAL_ADDR)
-#define HW_CRC_DATAL_RD          (HW_CRC_DATAL.U)
+#define HW_CRC_DATAL_RD()        (HW_CRC_DATAL.U)
 #define HW_CRC_DATAL_WR(v)       (HW_CRC_DATAL.U = (v))
-#define HW_CRC_DATAL_SET(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD |  (v)))
-#define HW_CRC_DATAL_CLR(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD & ~(v)))
-#define HW_CRC_DATAL_TOG(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD ^  (v)))
+#define HW_CRC_DATAL_SET(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD() |  (v)))
+#define HW_CRC_DATAL_CLR(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD() & ~(v)))
+#define HW_CRC_DATAL_TOG(v)      (HW_CRC_DATAL_WR(HW_CRC_DATAL_RD() ^  (v)))
 #endif
 //@}
 
@@ -116,7 +116,7 @@ typedef union _hw_crc_datal
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATAL field to a new value.
-#define BW_CRC_DATAL_DATAL(v) (HW_CRC_DATAL_WR((HW_CRC_DATAL_RD & ~BM_CRC_DATAL_DATAL) | BF_CRC_DATAL_DATAL(v)))
+#define BW_CRC_DATAL_DATAL(v) (HW_CRC_DATAL_WR((HW_CRC_DATAL_RD() & ~BM_CRC_DATAL_DATAL) | BF_CRC_DATAL_DATAL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -135,7 +135,7 @@ typedef union _hw_crc_datah
     struct _hw_crc_datah_bitfields
     {
         uint16_t DATAH : 16;           //!< [15:0] DATAH stores the high 16 bits of the
-                                       //!< 16/32 bit CRC
+                                       //! 16/32 bit CRC
     } B;
 } hw_crc_datah_t;
 #endif
@@ -148,11 +148,11 @@ typedef union _hw_crc_datah
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATAH             (*(__IO hw_crc_datah_t *) HW_CRC_DATAH_ADDR)
-#define HW_CRC_DATAH_RD          (HW_CRC_DATAH.U)
+#define HW_CRC_DATAH_RD()        (HW_CRC_DATAH.U)
 #define HW_CRC_DATAH_WR(v)       (HW_CRC_DATAH.U = (v))
-#define HW_CRC_DATAH_SET(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD |  (v)))
-#define HW_CRC_DATAH_CLR(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD & ~(v)))
-#define HW_CRC_DATAH_TOG(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD ^  (v)))
+#define HW_CRC_DATAH_SET(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD() |  (v)))
+#define HW_CRC_DATAH_CLR(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD() & ~(v)))
+#define HW_CRC_DATAH_TOG(v)      (HW_CRC_DATAH_WR(HW_CRC_DATAH_RD() ^  (v)))
 #endif
 //@}
 
@@ -178,7 +178,7 @@ typedef union _hw_crc_datah
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATAH field to a new value.
-#define BW_CRC_DATAH_DATAH(v) (HW_CRC_DATAH_WR((HW_CRC_DATAH_RD & ~BM_CRC_DATAH_DATAH) | BF_CRC_DATAH_DATAH(v)))
+#define BW_CRC_DATAH_DATAH(v) (HW_CRC_DATAH_WR((HW_CRC_DATAH_RD() & ~BM_CRC_DATAH_DATAH) | BF_CRC_DATAH_DATAH(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ typedef union _hw_crc_datall
     struct _hw_crc_datall_bitfields
     {
         uint8_t DATALL : 8;            //!< [7:0] CRCLL stores the first 8 bits of the
-                                       //!< 32 bit DATA
+                                       //! 32 bit DATA
     } B;
 } hw_crc_datall_t;
 #endif
@@ -210,11 +210,11 @@ typedef union _hw_crc_datall
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATALL            (*(__IO hw_crc_datall_t *) HW_CRC_DATALL_ADDR)
-#define HW_CRC_DATALL_RD         (HW_CRC_DATALL.U)
+#define HW_CRC_DATALL_RD()       (HW_CRC_DATALL.U)
 #define HW_CRC_DATALL_WR(v)      (HW_CRC_DATALL.U = (v))
-#define HW_CRC_DATALL_SET(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD |  (v)))
-#define HW_CRC_DATALL_CLR(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD & ~(v)))
-#define HW_CRC_DATALL_TOG(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD ^  (v)))
+#define HW_CRC_DATALL_SET(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD() |  (v)))
+#define HW_CRC_DATALL_CLR(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD() & ~(v)))
+#define HW_CRC_DATALL_TOG(v)     (HW_CRC_DATALL_WR(HW_CRC_DATALL_RD() ^  (v)))
 #endif
 //@}
 
@@ -240,7 +240,7 @@ typedef union _hw_crc_datall
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATALL field to a new value.
-#define BW_CRC_DATALL_DATALL(v) (HW_CRC_DATALL_WR((HW_CRC_DATALL_RD & ~BM_CRC_DATALL_DATALL) | BF_CRC_DATALL_DATALL(v)))
+#define BW_CRC_DATALL_DATALL(v) (HW_CRC_DATALL_WR((HW_CRC_DATALL_RD() & ~BM_CRC_DATALL_DATALL) | BF_CRC_DATALL_DATALL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ typedef union _hw_crc_datalu
     struct _hw_crc_datalu_bitfields
     {
         uint8_t DATALU : 8;            //!< [7:0] DATALL stores the second 8 bits of the
-                                       //!< 32 bit CRC
+                                       //! 32 bit CRC
     } B;
 } hw_crc_datalu_t;
 #endif
@@ -272,11 +272,11 @@ typedef union _hw_crc_datalu
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATALU            (*(__IO hw_crc_datalu_t *) HW_CRC_DATALU_ADDR)
-#define HW_CRC_DATALU_RD         (HW_CRC_DATALU.U)
+#define HW_CRC_DATALU_RD()       (HW_CRC_DATALU.U)
 #define HW_CRC_DATALU_WR(v)      (HW_CRC_DATALU.U = (v))
-#define HW_CRC_DATALU_SET(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD |  (v)))
-#define HW_CRC_DATALU_CLR(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD & ~(v)))
-#define HW_CRC_DATALU_TOG(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD ^  (v)))
+#define HW_CRC_DATALU_SET(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD() |  (v)))
+#define HW_CRC_DATALU_CLR(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD() & ~(v)))
+#define HW_CRC_DATALU_TOG(v)     (HW_CRC_DATALU_WR(HW_CRC_DATALU_RD() ^  (v)))
 #endif
 //@}
 
@@ -302,7 +302,7 @@ typedef union _hw_crc_datalu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATALU field to a new value.
-#define BW_CRC_DATALU_DATALU(v) (HW_CRC_DATALU_WR((HW_CRC_DATALU_RD & ~BM_CRC_DATALU_DATALU) | BF_CRC_DATALU_DATALU(v)))
+#define BW_CRC_DATALU_DATALU(v) (HW_CRC_DATALU_WR((HW_CRC_DATALU_RD() & ~BM_CRC_DATALU_DATALU) | BF_CRC_DATALU_DATALU(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -321,7 +321,7 @@ typedef union _hw_crc_datahl
     struct _hw_crc_datahl_bitfields
     {
         uint8_t DATAHL : 8;            //!< [7:0] DATAHL stores the third 8 bits of the
-                                       //!< 32 bit CRC
+                                       //! 32 bit CRC
     } B;
 } hw_crc_datahl_t;
 #endif
@@ -334,11 +334,11 @@ typedef union _hw_crc_datahl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATAHL            (*(__IO hw_crc_datahl_t *) HW_CRC_DATAHL_ADDR)
-#define HW_CRC_DATAHL_RD         (HW_CRC_DATAHL.U)
+#define HW_CRC_DATAHL_RD()       (HW_CRC_DATAHL.U)
 #define HW_CRC_DATAHL_WR(v)      (HW_CRC_DATAHL.U = (v))
-#define HW_CRC_DATAHL_SET(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD |  (v)))
-#define HW_CRC_DATAHL_CLR(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD & ~(v)))
-#define HW_CRC_DATAHL_TOG(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD ^  (v)))
+#define HW_CRC_DATAHL_SET(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD() |  (v)))
+#define HW_CRC_DATAHL_CLR(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD() & ~(v)))
+#define HW_CRC_DATAHL_TOG(v)     (HW_CRC_DATAHL_WR(HW_CRC_DATAHL_RD() ^  (v)))
 #endif
 //@}
 
@@ -364,7 +364,7 @@ typedef union _hw_crc_datahl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATAHL field to a new value.
-#define BW_CRC_DATAHL_DATAHL(v) (HW_CRC_DATAHL_WR((HW_CRC_DATAHL_RD & ~BM_CRC_DATAHL_DATAHL) | BF_CRC_DATAHL_DATAHL(v)))
+#define BW_CRC_DATAHL_DATAHL(v) (HW_CRC_DATAHL_WR((HW_CRC_DATAHL_RD() & ~BM_CRC_DATAHL_DATAHL) | BF_CRC_DATAHL_DATAHL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -383,7 +383,7 @@ typedef union _hw_crc_datahu
     struct _hw_crc_datahu_bitfields
     {
         uint8_t DATAHU : 8;            //!< [7:0] DATAHU stores the fourth 8 bits of the
-                                       //!< 32 bit CRC
+                                       //! 32 bit CRC
     } B;
 } hw_crc_datahu_t;
 #endif
@@ -396,11 +396,11 @@ typedef union _hw_crc_datahu
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATAHU            (*(__IO hw_crc_datahu_t *) HW_CRC_DATAHU_ADDR)
-#define HW_CRC_DATAHU_RD         (HW_CRC_DATAHU.U)
+#define HW_CRC_DATAHU_RD()       (HW_CRC_DATAHU.U)
 #define HW_CRC_DATAHU_WR(v)      (HW_CRC_DATAHU.U = (v))
-#define HW_CRC_DATAHU_SET(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD |  (v)))
-#define HW_CRC_DATAHU_CLR(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD & ~(v)))
-#define HW_CRC_DATAHU_TOG(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD ^  (v)))
+#define HW_CRC_DATAHU_SET(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD() |  (v)))
+#define HW_CRC_DATAHU_CLR(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD() & ~(v)))
+#define HW_CRC_DATAHU_TOG(v)     (HW_CRC_DATAHU_WR(HW_CRC_DATAHU_RD() ^  (v)))
 #endif
 //@}
 
@@ -426,7 +426,7 @@ typedef union _hw_crc_datahu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATAHU field to a new value.
-#define BW_CRC_DATAHU_DATAHU(v) (HW_CRC_DATAHU_WR((HW_CRC_DATAHU_RD & ~BM_CRC_DATAHU_DATAHU) | BF_CRC_DATAHU_DATAHU(v)))
+#define BW_CRC_DATAHU_DATAHU(v) (HW_CRC_DATAHU_WR((HW_CRC_DATAHU_RD() & ~BM_CRC_DATAHU_DATAHU) | BF_CRC_DATAHU_DATAHU(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -474,11 +474,11 @@ typedef union _hw_crc_data
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_DATA              (*(__IO hw_crc_data_t *) HW_CRC_DATA_ADDR)
-#define HW_CRC_DATA_RD           (HW_CRC_DATA.U)
+#define HW_CRC_DATA_RD()         (HW_CRC_DATA.U)
 #define HW_CRC_DATA_WR(v)        (HW_CRC_DATA.U = (v))
-#define HW_CRC_DATA_SET(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD |  (v)))
-#define HW_CRC_DATA_CLR(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD & ~(v)))
-#define HW_CRC_DATA_TOG(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD ^  (v)))
+#define HW_CRC_DATA_SET(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD() |  (v)))
+#define HW_CRC_DATA_CLR(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD() & ~(v)))
+#define HW_CRC_DATA_TOG(v)       (HW_CRC_DATA_WR(HW_CRC_DATA_RD() ^  (v)))
 #endif
 //@}
 
@@ -508,7 +508,7 @@ typedef union _hw_crc_data
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LL field to a new value.
-#define BW_CRC_DATA_LL(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD & ~BM_CRC_DATA_LL) | BF_CRC_DATA_LL(v)))
+#define BW_CRC_DATA_LL(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD() & ~BM_CRC_DATA_LL) | BF_CRC_DATA_LL(v)))
 #endif
 //@}
 
@@ -534,7 +534,7 @@ typedef union _hw_crc_data
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LU field to a new value.
-#define BW_CRC_DATA_LU(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD & ~BM_CRC_DATA_LU) | BF_CRC_DATA_LU(v)))
+#define BW_CRC_DATA_LU(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD() & ~BM_CRC_DATA_LU) | BF_CRC_DATA_LU(v)))
 #endif
 //@}
 
@@ -562,7 +562,7 @@ typedef union _hw_crc_data
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the HL field to a new value.
-#define BW_CRC_DATA_HL(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD & ~BM_CRC_DATA_HL) | BF_CRC_DATA_HL(v)))
+#define BW_CRC_DATA_HL(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD() & ~BM_CRC_DATA_HL) | BF_CRC_DATA_HL(v)))
 #endif
 //@}
 
@@ -590,7 +590,7 @@ typedef union _hw_crc_data
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the HU field to a new value.
-#define BW_CRC_DATA_HU(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD & ~BM_CRC_DATA_HU) | BF_CRC_DATA_HU(v)))
+#define BW_CRC_DATA_HU(v)    (HW_CRC_DATA_WR((HW_CRC_DATA_RD() & ~BM_CRC_DATA_HU) | BF_CRC_DATA_HU(v)))
 #endif
 //@}
 
@@ -629,11 +629,11 @@ typedef union _hw_crc_gpoly
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLY             (*(__IO hw_crc_gpoly_t *) HW_CRC_GPOLY_ADDR)
-#define HW_CRC_GPOLY_RD          (HW_CRC_GPOLY.U)
+#define HW_CRC_GPOLY_RD()        (HW_CRC_GPOLY.U)
 #define HW_CRC_GPOLY_WR(v)       (HW_CRC_GPOLY.U = (v))
-#define HW_CRC_GPOLY_SET(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD |  (v)))
-#define HW_CRC_GPOLY_CLR(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD & ~(v)))
-#define HW_CRC_GPOLY_TOG(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD ^  (v)))
+#define HW_CRC_GPOLY_SET(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() |  (v)))
+#define HW_CRC_GPOLY_CLR(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() & ~(v)))
+#define HW_CRC_GPOLY_TOG(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() ^  (v)))
 #endif
 //@}
 
@@ -661,7 +661,7 @@ typedef union _hw_crc_gpoly
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LOW field to a new value.
-#define BW_CRC_GPOLY_LOW(v)  (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD & ~BM_CRC_GPOLY_LOW) | BF_CRC_GPOLY_LOW(v)))
+#define BW_CRC_GPOLY_LOW(v)  (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD() & ~BM_CRC_GPOLY_LOW) | BF_CRC_GPOLY_LOW(v)))
 #endif
 //@}
 
@@ -686,7 +686,7 @@ typedef union _hw_crc_gpoly
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the HIGH field to a new value.
-#define BW_CRC_GPOLY_HIGH(v) (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD & ~BM_CRC_GPOLY_HIGH) | BF_CRC_GPOLY_HIGH(v)))
+#define BW_CRC_GPOLY_HIGH(v) (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD() & ~BM_CRC_GPOLY_HIGH) | BF_CRC_GPOLY_HIGH(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -705,7 +705,7 @@ typedef union _hw_crc_gpolyl
     struct _hw_crc_gpolyl_bitfields
     {
         uint16_t GPOLYL : 16;          //!< [15:0] POLYL stores the lower 16 bits of
-                                       //!< the 16/32 bit CRC polynomial value
+                                       //! the 16/32 bit CRC polynomial value
     } B;
 } hw_crc_gpolyl_t;
 #endif
@@ -718,11 +718,11 @@ typedef union _hw_crc_gpolyl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYL            (*(__IO hw_crc_gpolyl_t *) HW_CRC_GPOLYL_ADDR)
-#define HW_CRC_GPOLYL_RD         (HW_CRC_GPOLYL.U)
+#define HW_CRC_GPOLYL_RD()       (HW_CRC_GPOLYL.U)
 #define HW_CRC_GPOLYL_WR(v)      (HW_CRC_GPOLYL.U = (v))
-#define HW_CRC_GPOLYL_SET(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD |  (v)))
-#define HW_CRC_GPOLYL_CLR(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD & ~(v)))
-#define HW_CRC_GPOLYL_TOG(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD ^  (v)))
+#define HW_CRC_GPOLYL_SET(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() |  (v)))
+#define HW_CRC_GPOLYL_CLR(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() & ~(v)))
+#define HW_CRC_GPOLYL_TOG(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() ^  (v)))
 #endif
 //@}
 
@@ -748,7 +748,7 @@ typedef union _hw_crc_gpolyl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYL field to a new value.
-#define BW_CRC_GPOLYL_GPOLYL(v) (HW_CRC_GPOLYL_WR((HW_CRC_GPOLYL_RD & ~BM_CRC_GPOLYL_GPOLYL) | BF_CRC_GPOLYL_GPOLYL(v)))
+#define BW_CRC_GPOLYL_GPOLYL(v) (HW_CRC_GPOLYL_WR((HW_CRC_GPOLYL_RD() & ~BM_CRC_GPOLYL_GPOLYL) | BF_CRC_GPOLYL_GPOLYL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -767,7 +767,7 @@ typedef union _hw_crc_gpolyh
     struct _hw_crc_gpolyh_bitfields
     {
         uint16_t GPOLYH : 16;          //!< [15:0] POLYH stores the high 16 bits of
-                                       //!< the 16/32 bit CRC polynomial value
+                                       //! the 16/32 bit CRC polynomial value
     } B;
 } hw_crc_gpolyh_t;
 #endif
@@ -780,11 +780,11 @@ typedef union _hw_crc_gpolyh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYH            (*(__IO hw_crc_gpolyh_t *) HW_CRC_GPOLYH_ADDR)
-#define HW_CRC_GPOLYH_RD         (HW_CRC_GPOLYH.U)
+#define HW_CRC_GPOLYH_RD()       (HW_CRC_GPOLYH.U)
 #define HW_CRC_GPOLYH_WR(v)      (HW_CRC_GPOLYH.U = (v))
-#define HW_CRC_GPOLYH_SET(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD |  (v)))
-#define HW_CRC_GPOLYH_CLR(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD & ~(v)))
-#define HW_CRC_GPOLYH_TOG(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD ^  (v)))
+#define HW_CRC_GPOLYH_SET(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() |  (v)))
+#define HW_CRC_GPOLYH_CLR(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() & ~(v)))
+#define HW_CRC_GPOLYH_TOG(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() ^  (v)))
 #endif
 //@}
 
@@ -810,7 +810,7 @@ typedef union _hw_crc_gpolyh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYH field to a new value.
-#define BW_CRC_GPOLYH_GPOLYH(v) (HW_CRC_GPOLYH_WR((HW_CRC_GPOLYH_RD & ~BM_CRC_GPOLYH_GPOLYH) | BF_CRC_GPOLYH_GPOLYH(v)))
+#define BW_CRC_GPOLYH_GPOLYH(v) (HW_CRC_GPOLYH_WR((HW_CRC_GPOLYH_RD() & ~BM_CRC_GPOLYH_GPOLYH) | BF_CRC_GPOLYH_GPOLYH(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -829,7 +829,7 @@ typedef union _hw_crc_gpolyll
     struct _hw_crc_gpolyll_bitfields
     {
         uint8_t GPOLYLL : 8;           //!< [7:0] POLYLL stores the first 8 bits of the
-                                       //!< 32 bit CRC
+                                       //! 32 bit CRC
     } B;
 } hw_crc_gpolyll_t;
 #endif
@@ -842,11 +842,11 @@ typedef union _hw_crc_gpolyll
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYLL           (*(__IO hw_crc_gpolyll_t *) HW_CRC_GPOLYLL_ADDR)
-#define HW_CRC_GPOLYLL_RD        (HW_CRC_GPOLYLL.U)
+#define HW_CRC_GPOLYLL_RD()      (HW_CRC_GPOLYLL.U)
 #define HW_CRC_GPOLYLL_WR(v)     (HW_CRC_GPOLYLL.U = (v))
-#define HW_CRC_GPOLYLL_SET(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD |  (v)))
-#define HW_CRC_GPOLYLL_CLR(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD & ~(v)))
-#define HW_CRC_GPOLYLL_TOG(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD ^  (v)))
+#define HW_CRC_GPOLYLL_SET(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() |  (v)))
+#define HW_CRC_GPOLYLL_CLR(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() & ~(v)))
+#define HW_CRC_GPOLYLL_TOG(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() ^  (v)))
 #endif
 //@}
 
@@ -872,7 +872,7 @@ typedef union _hw_crc_gpolyll
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYLL field to a new value.
-#define BW_CRC_GPOLYLL_GPOLYLL(v) (HW_CRC_GPOLYLL_WR((HW_CRC_GPOLYLL_RD & ~BM_CRC_GPOLYLL_GPOLYLL) | BF_CRC_GPOLYLL_GPOLYLL(v)))
+#define BW_CRC_GPOLYLL_GPOLYLL(v) (HW_CRC_GPOLYLL_WR((HW_CRC_GPOLYLL_RD() & ~BM_CRC_GPOLYLL_GPOLYLL) | BF_CRC_GPOLYLL_GPOLYLL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -891,7 +891,7 @@ typedef union _hw_crc_gpolylu
     struct _hw_crc_gpolylu_bitfields
     {
         uint8_t GPOLYLU : 8;           //!< [7:0] POLYLL stores the second 8 bits of
-                                       //!< the 32 bit CRC
+                                       //! the 32 bit CRC
     } B;
 } hw_crc_gpolylu_t;
 #endif
@@ -904,11 +904,11 @@ typedef union _hw_crc_gpolylu
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYLU           (*(__IO hw_crc_gpolylu_t *) HW_CRC_GPOLYLU_ADDR)
-#define HW_CRC_GPOLYLU_RD        (HW_CRC_GPOLYLU.U)
+#define HW_CRC_GPOLYLU_RD()      (HW_CRC_GPOLYLU.U)
 #define HW_CRC_GPOLYLU_WR(v)     (HW_CRC_GPOLYLU.U = (v))
-#define HW_CRC_GPOLYLU_SET(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD |  (v)))
-#define HW_CRC_GPOLYLU_CLR(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD & ~(v)))
-#define HW_CRC_GPOLYLU_TOG(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD ^  (v)))
+#define HW_CRC_GPOLYLU_SET(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() |  (v)))
+#define HW_CRC_GPOLYLU_CLR(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() & ~(v)))
+#define HW_CRC_GPOLYLU_TOG(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() ^  (v)))
 #endif
 //@}
 
@@ -934,7 +934,7 @@ typedef union _hw_crc_gpolylu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYLU field to a new value.
-#define BW_CRC_GPOLYLU_GPOLYLU(v) (HW_CRC_GPOLYLU_WR((HW_CRC_GPOLYLU_RD & ~BM_CRC_GPOLYLU_GPOLYLU) | BF_CRC_GPOLYLU_GPOLYLU(v)))
+#define BW_CRC_GPOLYLU_GPOLYLU(v) (HW_CRC_GPOLYLU_WR((HW_CRC_GPOLYLU_RD() & ~BM_CRC_GPOLYLU_GPOLYLU) | BF_CRC_GPOLYLU_GPOLYLU(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -953,7 +953,7 @@ typedef union _hw_crc_gpolyhl
     struct _hw_crc_gpolyhl_bitfields
     {
         uint8_t GPOLYHL : 8;           //!< [7:0] POLYHL stores the third 8 bits of the
-                                       //!< 32 bit CRC
+                                       //! 32 bit CRC
     } B;
 } hw_crc_gpolyhl_t;
 #endif
@@ -966,11 +966,11 @@ typedef union _hw_crc_gpolyhl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYHL           (*(__IO hw_crc_gpolyhl_t *) HW_CRC_GPOLYHL_ADDR)
-#define HW_CRC_GPOLYHL_RD        (HW_CRC_GPOLYHL.U)
+#define HW_CRC_GPOLYHL_RD()      (HW_CRC_GPOLYHL.U)
 #define HW_CRC_GPOLYHL_WR(v)     (HW_CRC_GPOLYHL.U = (v))
-#define HW_CRC_GPOLYHL_SET(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD |  (v)))
-#define HW_CRC_GPOLYHL_CLR(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD & ~(v)))
-#define HW_CRC_GPOLYHL_TOG(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD ^  (v)))
+#define HW_CRC_GPOLYHL_SET(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() |  (v)))
+#define HW_CRC_GPOLYHL_CLR(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() & ~(v)))
+#define HW_CRC_GPOLYHL_TOG(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() ^  (v)))
 #endif
 //@}
 
@@ -996,7 +996,7 @@ typedef union _hw_crc_gpolyhl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYHL field to a new value.
-#define BW_CRC_GPOLYHL_GPOLYHL(v) (HW_CRC_GPOLYHL_WR((HW_CRC_GPOLYHL_RD & ~BM_CRC_GPOLYHL_GPOLYHL) | BF_CRC_GPOLYHL_GPOLYHL(v)))
+#define BW_CRC_GPOLYHL_GPOLYHL(v) (HW_CRC_GPOLYHL_WR((HW_CRC_GPOLYHL_RD() & ~BM_CRC_GPOLYHL_GPOLYHL) | BF_CRC_GPOLYHL_GPOLYHL(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -1015,7 +1015,7 @@ typedef union _hw_crc_gpolyhu
     struct _hw_crc_gpolyhu_bitfields
     {
         uint8_t GPOLYHU : 8;           //!< [7:0] POLYHU stores the fourth 8 bits of
-                                       //!< the 32 bit CRC
+                                       //! the 32 bit CRC
     } B;
 } hw_crc_gpolyhu_t;
 #endif
@@ -1028,11 +1028,11 @@ typedef union _hw_crc_gpolyhu
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_GPOLYHU           (*(__IO hw_crc_gpolyhu_t *) HW_CRC_GPOLYHU_ADDR)
-#define HW_CRC_GPOLYHU_RD        (HW_CRC_GPOLYHU.U)
+#define HW_CRC_GPOLYHU_RD()      (HW_CRC_GPOLYHU.U)
 #define HW_CRC_GPOLYHU_WR(v)     (HW_CRC_GPOLYHU.U = (v))
-#define HW_CRC_GPOLYHU_SET(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD |  (v)))
-#define HW_CRC_GPOLYHU_CLR(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD & ~(v)))
-#define HW_CRC_GPOLYHU_TOG(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD ^  (v)))
+#define HW_CRC_GPOLYHU_SET(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() |  (v)))
+#define HW_CRC_GPOLYHU_CLR(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() & ~(v)))
+#define HW_CRC_GPOLYHU_TOG(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() ^  (v)))
 #endif
 //@}
 
@@ -1058,7 +1058,7 @@ typedef union _hw_crc_gpolyhu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the GPOLYHU field to a new value.
-#define BW_CRC_GPOLYHU_GPOLYHU(v) (HW_CRC_GPOLYHU_WR((HW_CRC_GPOLYHU_RD & ~BM_CRC_GPOLYHU_GPOLYHU) | BF_CRC_GPOLYHU_GPOLYHU(v)))
+#define BW_CRC_GPOLYHU_GPOLYHU(v) (HW_CRC_GPOLYHU_WR((HW_CRC_GPOLYHU_RD() & ~BM_CRC_GPOLYHU_GPOLYHU) | BF_CRC_GPOLYHU_GPOLYHU(v)))
 #endif
 //@}
 
@@ -1101,11 +1101,11 @@ typedef union _hw_crc_ctrl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_CTRL              (*(__IO hw_crc_ctrl_t *) HW_CRC_CTRL_ADDR)
-#define HW_CRC_CTRL_RD           (HW_CRC_CTRL.U)
+#define HW_CRC_CTRL_RD()         (HW_CRC_CTRL.U)
 #define HW_CRC_CTRL_WR(v)        (HW_CRC_CTRL.U = (v))
-#define HW_CRC_CTRL_SET(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD |  (v)))
-#define HW_CRC_CTRL_CLR(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD & ~(v)))
-#define HW_CRC_CTRL_TOG(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD ^  (v)))
+#define HW_CRC_CTRL_SET(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() |  (v)))
+#define HW_CRC_CTRL_CLR(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() & ~(v)))
+#define HW_CRC_CTRL_TOG(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() ^  (v)))
 #endif
 //@}
 
@@ -1228,7 +1228,7 @@ typedef union _hw_crc_ctrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOTR field to a new value.
-#define BW_CRC_CTRL_TOTR(v)  (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD & ~BM_CRC_CTRL_TOTR) | BF_CRC_CTRL_TOTR(v)))
+#define BW_CRC_CTRL_TOTR(v)  (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD() & ~BM_CRC_CTRL_TOTR) | BF_CRC_CTRL_TOTR(v)))
 #endif
 //@}
 
@@ -1260,7 +1260,7 @@ typedef union _hw_crc_ctrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOT field to a new value.
-#define BW_CRC_CTRL_TOT(v)   (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD & ~BM_CRC_CTRL_TOT) | BF_CRC_CTRL_TOT(v)))
+#define BW_CRC_CTRL_TOT(v)   (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD() & ~BM_CRC_CTRL_TOT) | BF_CRC_CTRL_TOT(v)))
 #endif
 //@}
 //-------------------------------------------------------------------------------------------
@@ -1296,11 +1296,11 @@ typedef union _hw_crc_ctrlhu
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CRC_CTRLHU            (*(__IO hw_crc_ctrlhu_t *) HW_CRC_CTRLHU_ADDR)
-#define HW_CRC_CTRLHU_RD         (HW_CRC_CTRLHU.U)
+#define HW_CRC_CTRLHU_RD()       (HW_CRC_CTRLHU.U)
 #define HW_CRC_CTRLHU_WR(v)      (HW_CRC_CTRLHU.U = (v))
-#define HW_CRC_CTRLHU_SET(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD |  (v)))
-#define HW_CRC_CTRLHU_CLR(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD & ~(v)))
-#define HW_CRC_CTRLHU_TOG(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD ^  (v)))
+#define HW_CRC_CTRLHU_SET(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() |  (v)))
+#define HW_CRC_CTRLHU_CLR(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() & ~(v)))
+#define HW_CRC_CTRLHU_TOG(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() ^  (v)))
 #endif
 //@}
 
@@ -1410,7 +1410,7 @@ typedef union _hw_crc_ctrlhu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOTR field to a new value.
-#define BW_CRC_CTRLHU_TOTR(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD & ~BM_CRC_CTRLHU_TOTR) | BF_CRC_CTRLHU_TOTR(v)))
+#define BW_CRC_CTRLHU_TOTR(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD() & ~BM_CRC_CTRLHU_TOTR) | BF_CRC_CTRLHU_TOTR(v)))
 #endif
 //@}
 
@@ -1438,7 +1438,7 @@ typedef union _hw_crc_ctrlhu
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOT field to a new value.
-#define BW_CRC_CTRLHU_TOT(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD & ~BM_CRC_CTRLHU_TOT) | BF_CRC_CTRLHU_TOT(v)))
+#define BW_CRC_CTRLHU_TOT(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD() & ~BM_CRC_CTRLHU_TOT) | BF_CRC_CTRLHU_TOT(v)))
 #endif
 //@}
 

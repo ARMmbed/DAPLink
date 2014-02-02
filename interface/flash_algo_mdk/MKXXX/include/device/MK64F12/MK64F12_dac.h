@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -222,9 +222,9 @@ typedef union _hw_dac_sr
     struct _hw_dac_sr_bitfields
     {
         uint8_t DACBFRPBF : 1;         //!< [0] DAC Buffer Read Pointer Bottom
-                                       //!< Position Flag
+                                       //! Position Flag
         uint8_t DACBFRPTF : 1;         //!< [1] DAC Buffer Read Pointer Top Position
-                                       //!< Flag
+                                       //! Flag
         uint8_t DACBFWMF : 1;          //!< [2] DAC Buffer Watermark Flag
         uint8_t RESERVED0 : 5;         //!< [7:3]
     } B;
@@ -347,9 +347,9 @@ typedef union _hw_dac_c0
     struct _hw_dac_c0_bitfields
     {
         uint8_t DACBBIEN : 1;          //!< [0] DAC Buffer Read Pointer Bottom Flag
-                                       //!< Interrupt Enable
+                                       //! Interrupt Enable
         uint8_t DACBTIEN : 1;          //!< [1] DAC Buffer Read Pointer Top Flag
-                                       //!< Interrupt Enable
+                                       //! Interrupt Enable
         uint8_t DACBWIEN : 1;          //!< [2] DAC Buffer Watermark Interrupt Enable
         uint8_t LPEN : 1;              //!< [3] DAC Low Power Control
         uint8_t DACSWTRG : 1;          //!< [4] DAC Software Trigger

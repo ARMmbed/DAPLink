@@ -8,7 +8,7 @@
 **                          IAR ANSI C/C++ Compiler for ARM
 **
 **     Reference manual:    K64P144M120SF5RM, Rev.1, July 2013
-**     Version:             rev. 2.1, 2013-10-29
+**     Version:             rev. 2.2, 2013-12-09
 **
 **     Abstract:
 **         Provides a system configuration function and a global variable that
@@ -32,14 +32,17 @@
 **         PORTA, PORTB, PORTC, PORTE - registers for digital filter removed.
 **     - rev. 2.1 (2013-10-29)
 **         Definition of BITBAND macros updated to support peripherals with 32-bit acces disabled.
+**     - rev. 2.2 (2013-12-09)
+**         DMA - EARS register removed.
+**         AIPS0, AIPS1 - MPRA register updated.
 **
 ** ###################################################################
 */
 
 /*!
  * @file MK64F12
- * @version 2.1
- * @date 2013-10-29
+ * @version 2.2
+ * @date 2013-12-09
  * @brief Device specific configuration file for MK64F12 (header file)
  *
  * Provides a system configuration function and a global variable that contains

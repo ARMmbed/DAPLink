@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -82,7 +82,7 @@ static const uint32_t __g_regs_PORT_base_addresses[] = {
 /*!
  * @brief HW_PORT_PCRn - Pin Control Register n (RW)
  *
- * Reset value: 0x00000001U
+ * Reset value: 0x00000742U
  *
  * Refer to the Signal Multiplexing and Pin Assignment chapter for the reset
  * value of this device. See the GPIO Configuration section for details on the

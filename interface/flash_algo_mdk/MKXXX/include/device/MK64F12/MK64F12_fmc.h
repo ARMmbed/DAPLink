@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -100,11 +100,11 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_FMC_PFAPR             (*(__IO hw_fmc_pfapr_t *) HW_FMC_PFAPR_ADDR)
-#define HW_FMC_PFAPR_RD          (HW_FMC_PFAPR.U)
+#define HW_FMC_PFAPR_RD()        (HW_FMC_PFAPR.U)
 #define HW_FMC_PFAPR_WR(v)       (HW_FMC_PFAPR.U = (v))
-#define HW_FMC_PFAPR_SET(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD |  (v)))
-#define HW_FMC_PFAPR_CLR(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD & ~(v)))
-#define HW_FMC_PFAPR_TOG(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD ^  (v)))
+#define HW_FMC_PFAPR_SET(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() |  (v)))
+#define HW_FMC_PFAPR_CLR(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() & ~(v)))
+#define HW_FMC_PFAPR_TOG(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() ^  (v)))
 #endif
 //@}
 
@@ -139,7 +139,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M0AP field to a new value.
-#define BW_FMC_PFAPR_M0AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M0AP) | BF_FMC_PFAPR_M0AP(v)))
+#define BW_FMC_PFAPR_M0AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M0AP) | BF_FMC_PFAPR_M0AP(v)))
 #endif
 //@}
 
@@ -170,7 +170,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M1AP field to a new value.
-#define BW_FMC_PFAPR_M1AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M1AP) | BF_FMC_PFAPR_M1AP(v)))
+#define BW_FMC_PFAPR_M1AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M1AP) | BF_FMC_PFAPR_M1AP(v)))
 #endif
 //@}
 
@@ -201,7 +201,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M2AP field to a new value.
-#define BW_FMC_PFAPR_M2AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M2AP) | BF_FMC_PFAPR_M2AP(v)))
+#define BW_FMC_PFAPR_M2AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M2AP) | BF_FMC_PFAPR_M2AP(v)))
 #endif
 //@}
 
@@ -232,7 +232,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M3AP field to a new value.
-#define BW_FMC_PFAPR_M3AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M3AP) | BF_FMC_PFAPR_M3AP(v)))
+#define BW_FMC_PFAPR_M3AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M3AP) | BF_FMC_PFAPR_M3AP(v)))
 #endif
 //@}
 
@@ -263,7 +263,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M4AP field to a new value.
-#define BW_FMC_PFAPR_M4AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M4AP) | BF_FMC_PFAPR_M4AP(v)))
+#define BW_FMC_PFAPR_M4AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M4AP) | BF_FMC_PFAPR_M4AP(v)))
 #endif
 //@}
 
@@ -294,7 +294,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M5AP field to a new value.
-#define BW_FMC_PFAPR_M5AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M5AP) | BF_FMC_PFAPR_M5AP(v)))
+#define BW_FMC_PFAPR_M5AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M5AP) | BF_FMC_PFAPR_M5AP(v)))
 #endif
 //@}
 
@@ -325,7 +325,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M6AP field to a new value.
-#define BW_FMC_PFAPR_M6AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M6AP) | BF_FMC_PFAPR_M6AP(v)))
+#define BW_FMC_PFAPR_M6AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M6AP) | BF_FMC_PFAPR_M6AP(v)))
 #endif
 //@}
 
@@ -356,7 +356,7 @@ typedef union _hw_fmc_pfapr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the M7AP field to a new value.
-#define BW_FMC_PFAPR_M7AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD & ~BM_FMC_PFAPR_M7AP) | BF_FMC_PFAPR_M7AP(v)))
+#define BW_FMC_PFAPR_M7AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M7AP) | BF_FMC_PFAPR_M7AP(v)))
 #endif
 //@}
 
@@ -639,11 +639,11 @@ typedef union _hw_fmc_pfb0cr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_FMC_PFB0CR            (*(__IO hw_fmc_pfb0cr_t *) HW_FMC_PFB0CR_ADDR)
-#define HW_FMC_PFB0CR_RD         (HW_FMC_PFB0CR.U)
+#define HW_FMC_PFB0CR_RD()       (HW_FMC_PFB0CR.U)
 #define HW_FMC_PFB0CR_WR(v)      (HW_FMC_PFB0CR.U = (v))
-#define HW_FMC_PFB0CR_SET(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD |  (v)))
-#define HW_FMC_PFB0CR_CLR(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD & ~(v)))
-#define HW_FMC_PFB0CR_TOG(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD ^  (v)))
+#define HW_FMC_PFB0CR_SET(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() |  (v)))
+#define HW_FMC_PFB0CR_CLR(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() & ~(v)))
+#define HW_FMC_PFB0CR_TOG(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() ^  (v)))
 #endif
 //@}
 
@@ -823,7 +823,7 @@ typedef union _hw_fmc_pfb0cr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CRC field to a new value.
-#define BW_FMC_PFB0CR_CRC(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD & ~BM_FMC_PFB0CR_CRC) | BF_FMC_PFB0CR_CRC(v)))
+#define BW_FMC_PFB0CR_CRC(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CRC) | BF_FMC_PFB0CR_CRC(v)))
 #endif
 //@}
 
@@ -913,7 +913,7 @@ typedef union _hw_fmc_pfb0cr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CINV_WAY field to a new value.
-#define BW_FMC_PFB0CR_CINV_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD & ~BM_FMC_PFB0CR_CINV_WAY) | BF_FMC_PFB0CR_CINV_WAY(v)))
+#define BW_FMC_PFB0CR_CINV_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CINV_WAY) | BF_FMC_PFB0CR_CINV_WAY(v)))
 #endif
 //@}
 
@@ -943,7 +943,7 @@ typedef union _hw_fmc_pfb0cr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CLCK_WAY field to a new value.
-#define BW_FMC_PFB0CR_CLCK_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD & ~BM_FMC_PFB0CR_CLCK_WAY) | BF_FMC_PFB0CR_CLCK_WAY(v)))
+#define BW_FMC_PFB0CR_CLCK_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CLCK_WAY) | BF_FMC_PFB0CR_CLCK_WAY(v)))
 #endif
 //@}
 
@@ -1007,11 +1007,11 @@ typedef union _hw_fmc_pfb1cr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_FMC_PFB1CR            (*(__IO hw_fmc_pfb1cr_t *) HW_FMC_PFB1CR_ADDR)
-#define HW_FMC_PFB1CR_RD         (HW_FMC_PFB1CR.U)
+#define HW_FMC_PFB1CR_RD()       (HW_FMC_PFB1CR.U)
 #define HW_FMC_PFB1CR_WR(v)      (HW_FMC_PFB1CR.U = (v))
-#define HW_FMC_PFB1CR_SET(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD |  (v)))
-#define HW_FMC_PFB1CR_CLR(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD & ~(v)))
-#define HW_FMC_PFB1CR_TOG(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD ^  (v)))
+#define HW_FMC_PFB1CR_SET(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD() |  (v)))
+#define HW_FMC_PFB1CR_CLR(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD() & ~(v)))
+#define HW_FMC_PFB1CR_TOG(v)     (HW_FMC_PFB1CR_WR(HW_FMC_PFB1CR_RD() ^  (v)))
 #endif
 //@}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -128,7 +128,7 @@ typedef union _hw_uart_bdh
         uint8_t SBNS : 1;              //!< [5] Stop Bit Number Select
         uint8_t RXEDGIE : 1;           //!< [6] RxD Input Active Edge Interrupt Enable
         uint8_t LBKDIE : 1;            //!< [7] LIN Break Detect Interrupt or DMA
-                                       //!< Request Enable
+                                       //! Request Enable
     } B;
 } hw_uart_bdh_t;
 #endif
@@ -669,11 +669,11 @@ typedef union _hw_uart_c2
         uint8_t TE : 1;                //!< [3] Transmitter Enable
         uint8_t ILIE : 1;              //!< [4] Idle Line Interrupt DMA Transfer Enable
         uint8_t RIE : 1;               //!< [5] Receiver Full Interrupt or DMA Transfer
-                                       //!< Enable
+                                       //! Enable
         uint8_t TCIE : 1;              //!< [6] Transmission Complete Interrupt or DMA
-                                       //!< Transfer Enable
+                                       //! Transfer Enable
         uint8_t TIE : 1;               //!< [7] Transmitter Interrupt or DMA Transfer
-                                       //!< Enable.
+                                       //! Enable.
     } B;
 } hw_uart_c2_t;
 #endif
@@ -1589,7 +1589,7 @@ typedef union _hw_uart_c3
         uint8_t ORIE : 1;              //!< [3] Overrun Error Interrupt Enable
         uint8_t TXINV : 1;             //!< [4] Transmit Data Inversion.
         uint8_t TXDIR : 1;             //!< [5] Transmitter Pin Data Direction in
-                                       //!< Single-Wire mode
+                                       //! Single-Wire mode
         uint8_t T8 : 1;                //!< [6] Transmit Bit 8
         uint8_t R8 : 1;                //!< [7] Received Bit 8
     } B;
@@ -3874,11 +3874,11 @@ typedef union _hw_uart_ie7816
     {
         uint8_t RXTE : 1;              //!< [0] Receive Threshold Exceeded Interrupt Enable
         uint8_t TXTE : 1;              //!< [1] Transmit Threshold Exceeded Interrupt
-                                       //!< Enable
+                                       //! Enable
         uint8_t GTVE : 1;              //!< [2] Guard Timer Violated Interrupt Enable
         uint8_t RESERVED0 : 1;         //!< [3]
         uint8_t INITDE : 1;            //!< [4] Initial Character Detected Interrupt
-                                       //!< Enable
+                                       //! Enable
         uint8_t BWTE : 1;              //!< [5] Block Wait Timer Interrupt Enable
         uint8_t CWTE : 1;              //!< [6] Character Wait Timer Interrupt Enable
         uint8_t WTE : 1;               //!< [7] Wait Timer Interrupt Enable
@@ -4472,7 +4472,7 @@ typedef union _hw_uart_wp7816_t_type1
     {
         uint8_t BWI : 4;               //!< [3:0] Block Wait Time Integer(C7816[TTYPE] = 1)
         uint8_t CWI : 4;               //!< [7:4] Character Wait Time Integer (C7816[TTYPE]
-                                       //!< = 1)
+                                       //! = 1)
     } B;
 } hw_uart_wp7816_t_type1_t;
 #endif

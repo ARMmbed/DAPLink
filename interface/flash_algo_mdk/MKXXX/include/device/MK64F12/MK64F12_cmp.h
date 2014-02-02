@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -83,7 +83,7 @@ typedef union _hw_cmp_cr0
     struct _hw_cmp_cr0_bitfields
     {
         uint8_t HYSTCTR : 2;           //!< [1:0] Comparator hard block hysteresis
-                                       //!< control
+                                       //! control
         uint8_t RESERVED0 : 2;         //!< [3:2]
         uint8_t FILTER_CNT : 3;        //!< [6:4] Filter Sample Count
         uint8_t RESERVED1 : 1;         //!< [7]

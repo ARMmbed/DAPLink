@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -218,7 +218,7 @@ typedef union _hw_cau_ldr_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_LDR_CASR_VER(v) (HW_CAU_LDR_CASR_WR((HW_CAU_LDR_CASR_RD & ~BM_CAU_LDR_CASR_VER) | BF_CAU_LDR_CASR_VER(v)))
+#define BW_CAU_LDR_CASR_VER(v) (HW_CAU_LDR_CASR_WR((HW_CAU_LDR_CASR_RD() & ~BM_CAU_LDR_CASR_VER) | BF_CAU_LDR_CASR_VER(v)))
 #endif
 //@}
 
@@ -327,7 +327,7 @@ typedef union _hw_cau_str_casr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CAU_STR_CASR          (*(__I hw_cau_str_casr_t *) HW_CAU_STR_CASR_ADDR)
-#define HW_CAU_STR_CASR_RD       (HW_CAU_STR_CASR.U)
+#define HW_CAU_STR_CASR_RD()     (HW_CAU_STR_CASR.U)
 #endif
 //@}
 
@@ -418,7 +418,7 @@ typedef union _hw_cau_str_caa
 
 #ifndef __LANGUAGE_ASM__
 #define HW_CAU_STR_CAA           (*(__I hw_cau_str_caa_t *) HW_CAU_STR_CAA_ADDR)
-#define HW_CAU_STR_CAA_RD        (HW_CAU_STR_CAA.U)
+#define HW_CAU_STR_CAA_RD()      (HW_CAU_STR_CAA.U)
 #endif
 //@}
 
@@ -578,7 +578,7 @@ typedef union _hw_cau_adr_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_ADR_CASR_VER(v) (HW_CAU_ADR_CASR_WR((HW_CAU_ADR_CASR_RD & ~BM_CAU_ADR_CASR_VER) | BF_CAU_ADR_CASR_VER(v)))
+#define BW_CAU_ADR_CASR_VER(v) (HW_CAU_ADR_CASR_WR((HW_CAU_ADR_CASR_RD() & ~BM_CAU_ADR_CASR_VER) | BF_CAU_ADR_CASR_VER(v)))
 #endif
 //@}
 
@@ -770,7 +770,7 @@ typedef union _hw_cau_radr_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_RADR_CASR_VER(v) (HW_CAU_RADR_CASR_WR((HW_CAU_RADR_CASR_RD & ~BM_CAU_RADR_CASR_VER) | BF_CAU_RADR_CASR_VER(v)))
+#define BW_CAU_RADR_CASR_VER(v) (HW_CAU_RADR_CASR_WR((HW_CAU_RADR_CASR_RD() & ~BM_CAU_RADR_CASR_VER) | BF_CAU_RADR_CASR_VER(v)))
 #endif
 //@}
 
@@ -962,7 +962,7 @@ typedef union _hw_cau_xor_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_XOR_CASR_VER(v) (HW_CAU_XOR_CASR_WR((HW_CAU_XOR_CASR_RD & ~BM_CAU_XOR_CASR_VER) | BF_CAU_XOR_CASR_VER(v)))
+#define BW_CAU_XOR_CASR_VER(v) (HW_CAU_XOR_CASR_WR((HW_CAU_XOR_CASR_RD() & ~BM_CAU_XOR_CASR_VER) | BF_CAU_XOR_CASR_VER(v)))
 #endif
 //@}
 
@@ -1154,7 +1154,7 @@ typedef union _hw_cau_rotl_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_ROTL_CASR_VER(v) (HW_CAU_ROTL_CASR_WR((HW_CAU_ROTL_CASR_RD & ~BM_CAU_ROTL_CASR_VER) | BF_CAU_ROTL_CASR_VER(v)))
+#define BW_CAU_ROTL_CASR_VER(v) (HW_CAU_ROTL_CASR_WR((HW_CAU_ROTL_CASR_RD() & ~BM_CAU_ROTL_CASR_VER) | BF_CAU_ROTL_CASR_VER(v)))
 #endif
 //@}
 
@@ -1346,7 +1346,7 @@ typedef union _hw_cau_aesc_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_AESC_CASR_VER(v) (HW_CAU_AESC_CASR_WR((HW_CAU_AESC_CASR_RD & ~BM_CAU_AESC_CASR_VER) | BF_CAU_AESC_CASR_VER(v)))
+#define BW_CAU_AESC_CASR_VER(v) (HW_CAU_AESC_CASR_WR((HW_CAU_AESC_CASR_RD() & ~BM_CAU_AESC_CASR_VER) | BF_CAU_AESC_CASR_VER(v)))
 #endif
 //@}
 
@@ -1538,7 +1538,7 @@ typedef union _hw_cau_aesic_casr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VER field to a new value.
-#define BW_CAU_AESIC_CASR_VER(v) (HW_CAU_AESIC_CASR_WR((HW_CAU_AESIC_CASR_RD & ~BM_CAU_AESIC_CASR_VER) | BF_CAU_AESIC_CASR_VER(v)))
+#define BW_CAU_AESIC_CASR_VER(v) (HW_CAU_AESIC_CASR_WR((HW_CAU_AESIC_CASR_RD() & ~BM_CAU_AESIC_CASR_VER) | BF_CAU_AESIC_CASR_VER(v)))
 #endif
 //@}
 

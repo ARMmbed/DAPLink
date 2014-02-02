@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -71,7 +71,7 @@ typedef union _hw_pdb_sc
         uint32_t LDOK : 1;             //!< [0] Load OK
         uint32_t CONT : 1;             //!< [1] Continuous Mode Enable
         uint32_t MULT : 2;             //!< [3:2] Multiplication Factor Select for
-                                       //!< Prescaler
+                                       //! Prescaler
         uint32_t RESERVED0 : 1;        //!< [4]
         uint32_t PDBIE : 1;            //!< [5] PDB Interrupt Enable
         uint32_t PDBIF : 1;            //!< [6] PDB Interrupt Flag
@@ -95,11 +95,11 @@ typedef union _hw_pdb_sc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PDB_SC                (*(__IO hw_pdb_sc_t *) HW_PDB_SC_ADDR)
-#define HW_PDB_SC_RD             (HW_PDB_SC.U)
+#define HW_PDB_SC_RD()           (HW_PDB_SC.U)
 #define HW_PDB_SC_WR(v)          (HW_PDB_SC.U = (v))
-#define HW_PDB_SC_SET(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD |  (v)))
-#define HW_PDB_SC_CLR(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD & ~(v)))
-#define HW_PDB_SC_TOG(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD ^  (v)))
+#define HW_PDB_SC_SET(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD() |  (v)))
+#define HW_PDB_SC_CLR(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD() & ~(v)))
+#define HW_PDB_SC_TOG(v)         (HW_PDB_SC_WR(HW_PDB_SC_RD() ^  (v)))
 #endif
 //@}
 
@@ -194,7 +194,7 @@ typedef union _hw_pdb_sc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the MULT field to a new value.
-#define BW_PDB_SC_MULT(v)    (HW_PDB_SC_WR((HW_PDB_SC_RD & ~BM_PDB_SC_MULT) | BF_PDB_SC_MULT(v)))
+#define BW_PDB_SC_MULT(v)    (HW_PDB_SC_WR((HW_PDB_SC_RD() & ~BM_PDB_SC_MULT) | BF_PDB_SC_MULT(v)))
 #endif
 //@}
 
@@ -318,7 +318,7 @@ typedef union _hw_pdb_sc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TRGSEL field to a new value.
-#define BW_PDB_SC_TRGSEL(v)  (HW_PDB_SC_WR((HW_PDB_SC_RD & ~BM_PDB_SC_TRGSEL) | BF_PDB_SC_TRGSEL(v)))
+#define BW_PDB_SC_TRGSEL(v)  (HW_PDB_SC_WR((HW_PDB_SC_RD() & ~BM_PDB_SC_TRGSEL) | BF_PDB_SC_TRGSEL(v)))
 #endif
 //@}
 
@@ -358,7 +358,7 @@ typedef union _hw_pdb_sc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PRESCALER field to a new value.
-#define BW_PDB_SC_PRESCALER(v) (HW_PDB_SC_WR((HW_PDB_SC_RD & ~BM_PDB_SC_PRESCALER) | BF_PDB_SC_PRESCALER(v)))
+#define BW_PDB_SC_PRESCALER(v) (HW_PDB_SC_WR((HW_PDB_SC_RD() & ~BM_PDB_SC_PRESCALER) | BF_PDB_SC_PRESCALER(v)))
 #endif
 //@}
 
@@ -479,7 +479,7 @@ typedef union _hw_pdb_sc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the LDMOD field to a new value.
-#define BW_PDB_SC_LDMOD(v)   (HW_PDB_SC_WR((HW_PDB_SC_RD & ~BM_PDB_SC_LDMOD) | BF_PDB_SC_LDMOD(v)))
+#define BW_PDB_SC_LDMOD(v)   (HW_PDB_SC_WR((HW_PDB_SC_RD() & ~BM_PDB_SC_LDMOD) | BF_PDB_SC_LDMOD(v)))
 #endif
 //@}
 
@@ -512,11 +512,11 @@ typedef union _hw_pdb_mod
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PDB_MOD               (*(__IO hw_pdb_mod_t *) HW_PDB_MOD_ADDR)
-#define HW_PDB_MOD_RD            (HW_PDB_MOD.U)
+#define HW_PDB_MOD_RD()          (HW_PDB_MOD.U)
 #define HW_PDB_MOD_WR(v)         (HW_PDB_MOD.U = (v))
-#define HW_PDB_MOD_SET(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD |  (v)))
-#define HW_PDB_MOD_CLR(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD & ~(v)))
-#define HW_PDB_MOD_TOG(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD ^  (v)))
+#define HW_PDB_MOD_SET(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD() |  (v)))
+#define HW_PDB_MOD_CLR(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD() & ~(v)))
+#define HW_PDB_MOD_TOG(v)        (HW_PDB_MOD_WR(HW_PDB_MOD_RD() ^  (v)))
 #endif
 //@}
 
@@ -547,7 +547,7 @@ typedef union _hw_pdb_mod
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the MOD field to a new value.
-#define BW_PDB_MOD_MOD(v)    (HW_PDB_MOD_WR((HW_PDB_MOD_RD & ~BM_PDB_MOD_MOD) | BF_PDB_MOD_MOD(v)))
+#define BW_PDB_MOD_MOD(v)    (HW_PDB_MOD_WR((HW_PDB_MOD_RD() & ~BM_PDB_MOD_MOD) | BF_PDB_MOD_MOD(v)))
 #endif
 //@}
 
@@ -580,7 +580,7 @@ typedef union _hw_pdb_cnt
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PDB_CNT               (*(__I hw_pdb_cnt_t *) HW_PDB_CNT_ADDR)
-#define HW_PDB_CNT_RD            (HW_PDB_CNT.U)
+#define HW_PDB_CNT_RD()          (HW_PDB_CNT.U)
 #endif
 //@}
 
@@ -633,11 +633,11 @@ typedef union _hw_pdb_idly
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PDB_IDLY              (*(__IO hw_pdb_idly_t *) HW_PDB_IDLY_ADDR)
-#define HW_PDB_IDLY_RD           (HW_PDB_IDLY.U)
+#define HW_PDB_IDLY_RD()         (HW_PDB_IDLY.U)
 #define HW_PDB_IDLY_WR(v)        (HW_PDB_IDLY.U = (v))
-#define HW_PDB_IDLY_SET(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD |  (v)))
-#define HW_PDB_IDLY_CLR(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD & ~(v)))
-#define HW_PDB_IDLY_TOG(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD ^  (v)))
+#define HW_PDB_IDLY_SET(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD() |  (v)))
+#define HW_PDB_IDLY_CLR(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD() & ~(v)))
+#define HW_PDB_IDLY_TOG(v)       (HW_PDB_IDLY_WR(HW_PDB_IDLY_RD() ^  (v)))
 #endif
 //@}
 
@@ -669,7 +669,7 @@ typedef union _hw_pdb_idly
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the IDLY field to a new value.
-#define BW_PDB_IDLY_IDLY(v)  (HW_PDB_IDLY_WR((HW_PDB_IDLY_RD & ~BM_PDB_IDLY_IDLY) | BF_PDB_IDLY_IDLY(v)))
+#define BW_PDB_IDLY_IDLY(v)  (HW_PDB_IDLY_WR((HW_PDB_IDLY_RD() & ~BM_PDB_IDLY_IDLY) | BF_PDB_IDLY_IDLY(v)))
 #endif
 //@}
 
@@ -694,7 +694,7 @@ typedef union _hw_pdb_chnc1
         uint32_t EN : 8;               //!< [7:0] PDB Channel Pre-Trigger Enable
         uint32_t TOS : 8;              //!< [15:8] PDB Channel Pre-Trigger Output Select
         uint32_t BB : 8;               //!< [23:16] PDB Channel Pre-Trigger Back-to-Back
-                                       //!< Operation Enable
+                                       //! Operation Enable
         uint32_t RESERVED0 : 8;        //!< [31:24]
     } B;
 } hw_pdb_chnc1_t;
@@ -1260,11 +1260,11 @@ typedef union _hw_pdb_poen
 
 #ifndef __LANGUAGE_ASM__
 #define HW_PDB_POEN              (*(__IO hw_pdb_poen_t *) HW_PDB_POEN_ADDR)
-#define HW_PDB_POEN_RD           (HW_PDB_POEN.U)
+#define HW_PDB_POEN_RD()         (HW_PDB_POEN.U)
 #define HW_PDB_POEN_WR(v)        (HW_PDB_POEN.U = (v))
-#define HW_PDB_POEN_SET(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD |  (v)))
-#define HW_PDB_POEN_CLR(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD & ~(v)))
-#define HW_PDB_POEN_TOG(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD ^  (v)))
+#define HW_PDB_POEN_SET(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD() |  (v)))
+#define HW_PDB_POEN_CLR(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD() & ~(v)))
+#define HW_PDB_POEN_TOG(v)       (HW_PDB_POEN_WR(HW_PDB_POEN_RD() ^  (v)))
 #endif
 //@}
 
@@ -1296,7 +1296,7 @@ typedef union _hw_pdb_poen
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the POEN field to a new value.
-#define BW_PDB_POEN_POEN(v)  (HW_PDB_POEN_WR((HW_PDB_POEN_RD & ~BM_PDB_POEN_POEN) | BF_PDB_POEN_POEN(v)))
+#define BW_PDB_POEN_POEN(v)  (HW_PDB_POEN_WR((HW_PDB_POEN_RD() & ~BM_PDB_POEN_POEN) | BF_PDB_POEN_POEN(v)))
 #endif
 //@}
 

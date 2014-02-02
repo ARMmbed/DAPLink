@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -91,11 +91,11 @@ typedef union _hw_smc_pmprot
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SMC_PMPROT            (*(__IO hw_smc_pmprot_t *) HW_SMC_PMPROT_ADDR)
-#define HW_SMC_PMPROT_RD         (HW_SMC_PMPROT.U)
+#define HW_SMC_PMPROT_RD()       (HW_SMC_PMPROT.U)
 #define HW_SMC_PMPROT_WR(v)      (HW_SMC_PMPROT.U = (v))
-#define HW_SMC_PMPROT_SET(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD |  (v)))
-#define HW_SMC_PMPROT_CLR(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD & ~(v)))
-#define HW_SMC_PMPROT_TOG(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD ^  (v)))
+#define HW_SMC_PMPROT_SET(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD() |  (v)))
+#define HW_SMC_PMPROT_CLR(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD() & ~(v)))
+#define HW_SMC_PMPROT_TOG(v)     (HW_SMC_PMPROT_WR(HW_SMC_PMPROT_RD() ^  (v)))
 #endif
 //@}
 
@@ -229,11 +229,11 @@ typedef union _hw_smc_pmctrl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SMC_PMCTRL            (*(__IO hw_smc_pmctrl_t *) HW_SMC_PMCTRL_ADDR)
-#define HW_SMC_PMCTRL_RD         (HW_SMC_PMCTRL.U)
+#define HW_SMC_PMCTRL_RD()       (HW_SMC_PMCTRL.U)
 #define HW_SMC_PMCTRL_WR(v)      (HW_SMC_PMCTRL.U = (v))
-#define HW_SMC_PMCTRL_SET(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD |  (v)))
-#define HW_SMC_PMCTRL_CLR(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD & ~(v)))
-#define HW_SMC_PMCTRL_TOG(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD ^  (v)))
+#define HW_SMC_PMCTRL_SET(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD() |  (v)))
+#define HW_SMC_PMCTRL_CLR(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD() & ~(v)))
+#define HW_SMC_PMCTRL_TOG(v)     (HW_SMC_PMCTRL_WR(HW_SMC_PMCTRL_RD() ^  (v)))
 #endif
 //@}
 
@@ -277,7 +277,7 @@ typedef union _hw_smc_pmctrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the STOPM field to a new value.
-#define BW_SMC_PMCTRL_STOPM(v) (HW_SMC_PMCTRL_WR((HW_SMC_PMCTRL_RD & ~BM_SMC_PMCTRL_STOPM) | BF_SMC_PMCTRL_STOPM(v)))
+#define BW_SMC_PMCTRL_STOPM(v) (HW_SMC_PMCTRL_WR((HW_SMC_PMCTRL_RD() & ~BM_SMC_PMCTRL_STOPM) | BF_SMC_PMCTRL_STOPM(v)))
 #endif
 //@}
 
@@ -334,7 +334,7 @@ typedef union _hw_smc_pmctrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RUNM field to a new value.
-#define BW_SMC_PMCTRL_RUNM(v) (HW_SMC_PMCTRL_WR((HW_SMC_PMCTRL_RD & ~BM_SMC_PMCTRL_RUNM) | BF_SMC_PMCTRL_RUNM(v)))
+#define BW_SMC_PMCTRL_RUNM(v) (HW_SMC_PMCTRL_WR((HW_SMC_PMCTRL_RD() & ~BM_SMC_PMCTRL_RUNM) | BF_SMC_PMCTRL_RUNM(v)))
 #endif
 //@}
 
@@ -406,11 +406,11 @@ typedef union _hw_smc_vllsctrl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SMC_VLLSCTRL          (*(__IO hw_smc_vllsctrl_t *) HW_SMC_VLLSCTRL_ADDR)
-#define HW_SMC_VLLSCTRL_RD       (HW_SMC_VLLSCTRL.U)
+#define HW_SMC_VLLSCTRL_RD()     (HW_SMC_VLLSCTRL.U)
 #define HW_SMC_VLLSCTRL_WR(v)    (HW_SMC_VLLSCTRL.U = (v))
-#define HW_SMC_VLLSCTRL_SET(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD |  (v)))
-#define HW_SMC_VLLSCTRL_CLR(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD & ~(v)))
-#define HW_SMC_VLLSCTRL_TOG(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD ^  (v)))
+#define HW_SMC_VLLSCTRL_SET(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD() |  (v)))
+#define HW_SMC_VLLSCTRL_CLR(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD() & ~(v)))
+#define HW_SMC_VLLSCTRL_TOG(v)   (HW_SMC_VLLSCTRL_WR(HW_SMC_VLLSCTRL_RD() ^  (v)))
 #endif
 //@}
 
@@ -448,7 +448,7 @@ typedef union _hw_smc_vllsctrl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the VLLSM field to a new value.
-#define BW_SMC_VLLSCTRL_VLLSM(v) (HW_SMC_VLLSCTRL_WR((HW_SMC_VLLSCTRL_RD & ~BM_SMC_VLLSCTRL_VLLSM) | BF_SMC_VLLSCTRL_VLLSM(v)))
+#define BW_SMC_VLLSCTRL_VLLSM(v) (HW_SMC_VLLSCTRL_WR((HW_SMC_VLLSCTRL_RD() & ~BM_SMC_VLLSCTRL_VLLSM) | BF_SMC_VLLSCTRL_VLLSM(v)))
 #endif
 //@}
 
@@ -515,7 +515,7 @@ typedef union _hw_smc_pmstat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SMC_PMSTAT            (*(__I hw_smc_pmstat_t *) HW_SMC_PMSTAT_ADDR)
-#define HW_SMC_PMSTAT_RD         (HW_SMC_PMSTAT.U)
+#define HW_SMC_PMSTAT_RD()       (HW_SMC_PMSTAT.U)
 #endif
 //@}
 

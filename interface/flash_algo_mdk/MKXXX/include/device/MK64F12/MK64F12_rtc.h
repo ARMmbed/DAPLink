@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -79,11 +79,11 @@ typedef union _hw_rtc_tsr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_TSR               (*(__IO hw_rtc_tsr_t *) HW_RTC_TSR_ADDR)
-#define HW_RTC_TSR_RD            (HW_RTC_TSR.U)
+#define HW_RTC_TSR_RD()          (HW_RTC_TSR.U)
 #define HW_RTC_TSR_WR(v)         (HW_RTC_TSR.U = (v))
-#define HW_RTC_TSR_SET(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD |  (v)))
-#define HW_RTC_TSR_CLR(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD & ~(v)))
-#define HW_RTC_TSR_TOG(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD ^  (v)))
+#define HW_RTC_TSR_SET(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() |  (v)))
+#define HW_RTC_TSR_CLR(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() & ~(v)))
+#define HW_RTC_TSR_TOG(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() ^  (v)))
 #endif
 //@}
 
@@ -117,7 +117,7 @@ typedef union _hw_rtc_tsr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TSR field to a new value.
-#define BW_RTC_TSR_TSR(v)    (HW_RTC_TSR_WR((HW_RTC_TSR_RD & ~BM_RTC_TSR_TSR) | BF_RTC_TSR_TSR(v)))
+#define BW_RTC_TSR_TSR(v)    (HW_RTC_TSR_WR((HW_RTC_TSR_RD() & ~BM_RTC_TSR_TSR) | BF_RTC_TSR_TSR(v)))
 #endif
 //@}
 
@@ -150,11 +150,11 @@ typedef union _hw_rtc_tpr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_TPR               (*(__IO hw_rtc_tpr_t *) HW_RTC_TPR_ADDR)
-#define HW_RTC_TPR_RD            (HW_RTC_TPR.U)
+#define HW_RTC_TPR_RD()          (HW_RTC_TPR.U)
 #define HW_RTC_TPR_WR(v)         (HW_RTC_TPR.U = (v))
-#define HW_RTC_TPR_SET(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD |  (v)))
-#define HW_RTC_TPR_CLR(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD & ~(v)))
-#define HW_RTC_TPR_TOG(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD ^  (v)))
+#define HW_RTC_TPR_SET(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() |  (v)))
+#define HW_RTC_TPR_CLR(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() & ~(v)))
+#define HW_RTC_TPR_TOG(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() ^  (v)))
 #endif
 //@}
 
@@ -186,7 +186,7 @@ typedef union _hw_rtc_tpr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TPR field to a new value.
-#define BW_RTC_TPR_TPR(v)    (HW_RTC_TPR_WR((HW_RTC_TPR_RD & ~BM_RTC_TPR_TPR) | BF_RTC_TPR_TPR(v)))
+#define BW_RTC_TPR_TPR(v)    (HW_RTC_TPR_WR((HW_RTC_TPR_RD() & ~BM_RTC_TPR_TPR) | BF_RTC_TPR_TPR(v)))
 #endif
 //@}
 
@@ -218,11 +218,11 @@ typedef union _hw_rtc_tar
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_TAR               (*(__IO hw_rtc_tar_t *) HW_RTC_TAR_ADDR)
-#define HW_RTC_TAR_RD            (HW_RTC_TAR.U)
+#define HW_RTC_TAR_RD()          (HW_RTC_TAR.U)
 #define HW_RTC_TAR_WR(v)         (HW_RTC_TAR.U = (v))
-#define HW_RTC_TAR_SET(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD |  (v)))
-#define HW_RTC_TAR_CLR(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD & ~(v)))
-#define HW_RTC_TAR_TOG(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD ^  (v)))
+#define HW_RTC_TAR_SET(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() |  (v)))
+#define HW_RTC_TAR_CLR(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() & ~(v)))
+#define HW_RTC_TAR_TOG(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() ^  (v)))
 #endif
 //@}
 
@@ -252,7 +252,7 @@ typedef union _hw_rtc_tar
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TAR field to a new value.
-#define BW_RTC_TAR_TAR(v)    (HW_RTC_TAR_WR((HW_RTC_TAR_RD & ~BM_RTC_TAR_TAR) | BF_RTC_TAR_TAR(v)))
+#define BW_RTC_TAR_TAR(v)    (HW_RTC_TAR_WR((HW_RTC_TAR_RD() & ~BM_RTC_TAR_TAR) | BF_RTC_TAR_TAR(v)))
 #endif
 //@}
 
@@ -287,11 +287,11 @@ typedef union _hw_rtc_tcr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_TCR               (*(__IO hw_rtc_tcr_t *) HW_RTC_TCR_ADDR)
-#define HW_RTC_TCR_RD            (HW_RTC_TCR.U)
+#define HW_RTC_TCR_RD()          (HW_RTC_TCR.U)
 #define HW_RTC_TCR_WR(v)         (HW_RTC_TCR.U = (v))
-#define HW_RTC_TCR_SET(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD |  (v)))
-#define HW_RTC_TCR_CLR(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD & ~(v)))
-#define HW_RTC_TCR_TOG(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD ^  (v)))
+#define HW_RTC_TCR_SET(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() |  (v)))
+#define HW_RTC_TCR_CLR(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() & ~(v)))
+#define HW_RTC_TCR_TOG(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() ^  (v)))
 #endif
 //@}
 
@@ -328,7 +328,7 @@ typedef union _hw_rtc_tcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TCR field to a new value.
-#define BW_RTC_TCR_TCR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD & ~BM_RTC_TCR_TCR) | BF_RTC_TCR_TCR(v)))
+#define BW_RTC_TCR_TCR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD() & ~BM_RTC_TCR_TCR) | BF_RTC_TCR_TCR(v)))
 #endif
 //@}
 
@@ -357,7 +357,7 @@ typedef union _hw_rtc_tcr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CIR field to a new value.
-#define BW_RTC_TCR_CIR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD & ~BM_RTC_TCR_CIR) | BF_RTC_TCR_CIR(v)))
+#define BW_RTC_TCR_CIR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD() & ~BM_RTC_TCR_CIR) | BF_RTC_TCR_CIR(v)))
 #endif
 //@}
 
@@ -438,11 +438,11 @@ typedef union _hw_rtc_cr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_CR                (*(__IO hw_rtc_cr_t *) HW_RTC_CR_ADDR)
-#define HW_RTC_CR_RD             (HW_RTC_CR.U)
+#define HW_RTC_CR_RD()           (HW_RTC_CR.U)
 #define HW_RTC_CR_WR(v)          (HW_RTC_CR.U = (v))
-#define HW_RTC_CR_SET(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD |  (v)))
-#define HW_RTC_CR_CLR(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD & ~(v)))
-#define HW_RTC_CR_TOG(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD ^  (v)))
+#define HW_RTC_CR_SET(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() |  (v)))
+#define HW_RTC_CR_CLR(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() & ~(v)))
+#define HW_RTC_CR_TOG(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() ^  (v)))
 #endif
 //@}
 
@@ -785,11 +785,11 @@ typedef union _hw_rtc_sr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_SR                (*(__IO hw_rtc_sr_t *) HW_RTC_SR_ADDR)
-#define HW_RTC_SR_RD             (HW_RTC_SR.U)
+#define HW_RTC_SR_RD()           (HW_RTC_SR.U)
 #define HW_RTC_SR_WR(v)          (HW_RTC_SR.U = (v))
-#define HW_RTC_SR_SET(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD |  (v)))
-#define HW_RTC_SR_CLR(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD & ~(v)))
-#define HW_RTC_SR_TOG(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD ^  (v)))
+#define HW_RTC_SR_SET(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() |  (v)))
+#define HW_RTC_SR_CLR(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() & ~(v)))
+#define HW_RTC_SR_TOG(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() ^  (v)))
 #endif
 //@}
 
@@ -925,11 +925,11 @@ typedef union _hw_rtc_lr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_LR                (*(__IO hw_rtc_lr_t *) HW_RTC_LR_ADDR)
-#define HW_RTC_LR_RD             (HW_RTC_LR.U)
+#define HW_RTC_LR_RD()           (HW_RTC_LR.U)
 #define HW_RTC_LR_WR(v)          (HW_RTC_LR.U = (v))
-#define HW_RTC_LR_SET(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD |  (v)))
-#define HW_RTC_LR_CLR(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD & ~(v)))
-#define HW_RTC_LR_TOG(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD ^  (v)))
+#define HW_RTC_LR_SET(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() |  (v)))
+#define HW_RTC_LR_CLR(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() & ~(v)))
+#define HW_RTC_LR_TOG(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() ^  (v)))
 #endif
 //@}
 
@@ -1084,11 +1084,11 @@ typedef union _hw_rtc_ier
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_IER               (*(__IO hw_rtc_ier_t *) HW_RTC_IER_ADDR)
-#define HW_RTC_IER_RD            (HW_RTC_IER.U)
+#define HW_RTC_IER_RD()          (HW_RTC_IER.U)
 #define HW_RTC_IER_WR(v)         (HW_RTC_IER.U = (v))
-#define HW_RTC_IER_SET(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD |  (v)))
-#define HW_RTC_IER_CLR(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD & ~(v)))
-#define HW_RTC_IER_TOG(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD ^  (v)))
+#define HW_RTC_IER_SET(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() |  (v)))
+#define HW_RTC_IER_CLR(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() & ~(v)))
+#define HW_RTC_IER_TOG(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() ^  (v)))
 #endif
 //@}
 
@@ -1269,11 +1269,11 @@ typedef union _hw_rtc_war
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_WAR               (*(__IO hw_rtc_war_t *) HW_RTC_WAR_ADDR)
-#define HW_RTC_WAR_RD            (HW_RTC_WAR.U)
+#define HW_RTC_WAR_RD()          (HW_RTC_WAR.U)
 #define HW_RTC_WAR_WR(v)         (HW_RTC_WAR.U = (v))
-#define HW_RTC_WAR_SET(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD |  (v)))
-#define HW_RTC_WAR_CLR(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD & ~(v)))
-#define HW_RTC_WAR_TOG(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD ^  (v)))
+#define HW_RTC_WAR_SET(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() |  (v)))
+#define HW_RTC_WAR_CLR(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() & ~(v)))
+#define HW_RTC_WAR_TOG(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() ^  (v)))
 #endif
 //@}
 
@@ -1549,11 +1549,11 @@ typedef union _hw_rtc_rar
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RTC_RAR               (*(__IO hw_rtc_rar_t *) HW_RTC_RAR_ADDR)
-#define HW_RTC_RAR_RD            (HW_RTC_RAR.U)
+#define HW_RTC_RAR_RD()          (HW_RTC_RAR.U)
 #define HW_RTC_RAR_WR(v)         (HW_RTC_RAR.U = (v))
-#define HW_RTC_RAR_SET(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD |  (v)))
-#define HW_RTC_RAR_CLR(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD & ~(v)))
-#define HW_RTC_RAR_TOG(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD ^  (v)))
+#define HW_RTC_RAR_SET(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() |  (v)))
+#define HW_RTC_RAR_CLR(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() & ~(v)))
+#define HW_RTC_RAR_TOG(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() ^  (v)))
 #endif
 //@}
 

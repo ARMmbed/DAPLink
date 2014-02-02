@@ -40,13 +40,13 @@ ALGO_TXT_PATH = join(TMP_DIR, "flash_algo.txt")
 
 
 def gen_flash_algo():
-    run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR])
+    run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', ALGO_BIN_PATH])
     with open(ALGO_BIN_PATH, "rb") as f, open(ALGO_TXT_PATH, mode="w+") as res:
         # Flash Algorithm
         res.write("""
 const uint32_t flash_algo_blob[] = {
-    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,\n
-    /*0x020*/ """);
+    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
+    """);
         
         nb_bytes = 0x20
         
@@ -54,10 +54,10 @@ const uint32_t flash_algo_blob[] = {
         while bytes_read:
             bytes_read = unpack(str(len(bytes_read)/4) + 'I', bytes_read)
             for i in range(len(bytes_read)):
-                res.write(hex(bytes_read[i]) + ", ")
+                res.write(("0x%08x" % bytes_read[i]) + ", ")
                 nb_bytes += 4
                 if (nb_bytes % 0x20) == 0:
-                    res.write("\n    /*0x%03X*/ " % nb_bytes)
+                    res.write("\n    ") # % nb_bytes)
             bytes_read = f.read(1024)
         
         res.write("\n};\n")

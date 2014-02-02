@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -1417,7 +1417,7 @@ typedef union _hw_ftm_sync
         uint32_t CNTMIN : 1;           //!< [0] Minimum Loading Point Enable
         uint32_t CNTMAX : 1;           //!< [1] Maximum Loading Point Enable
         uint32_t REINIT : 1;           //!< [2] FTM Counter Reinitialization By
-                                       //!< Synchronization (FTM counter synchronization)
+                                       //! Synchronization (FTM counter synchronization)
         uint32_t SYNCHOM : 1;          //!< [3] Output Mask Synchronization
         uint32_t TRIG0 : 1;            //!< [4] PWM Synchronization Hardware Trigger 0
         uint32_t TRIG1 : 1;            //!< [5] PWM Synchronization Hardware Trigger 1
@@ -2268,9 +2268,9 @@ typedef union _hw_ftm_combine
         uint32_t COMBINE0 : 1;         //!< [0] Combine Channels For n = 0
         uint32_t COMP0 : 1;            //!< [1] Complement Of Channel (n) For n = 0
         uint32_t DECAPEN0 : 1;         //!< [2] Dual Edge Capture Mode Enable For n =
-                                       //!< 0
+                                       //! 0
         uint32_t DECAP0 : 1;           //!< [3] Dual Edge Capture Mode Captures For n =
-                                       //!< 0
+                                       //! 0
         uint32_t DTEN0 : 1;            //!< [4] Deadtime Enable For n = 0
         uint32_t SYNCEN0 : 1;          //!< [5] Synchronization Enable For n = 0
         uint32_t FAULTEN0 : 1;         //!< [6] Fault Control Enable For n = 0
@@ -2278,9 +2278,9 @@ typedef union _hw_ftm_combine
         uint32_t COMBINE1 : 1;         //!< [8] Combine Channels For n = 2
         uint32_t COMP1 : 1;            //!< [9] Complement Of Channel (n) For n = 2
         uint32_t DECAPEN1 : 1;         //!< [10] Dual Edge Capture Mode Enable For n
-                                       //!< = 2
+                                       //! = 2
         uint32_t DECAP1 : 1;           //!< [11] Dual Edge Capture Mode Captures For n
-                                       //!< = 2
+                                       //! = 2
         uint32_t DTEN1 : 1;            //!< [12] Deadtime Enable For n = 2
         uint32_t SYNCEN1 : 1;          //!< [13] Synchronization Enable For n = 2
         uint32_t FAULTEN1 : 1;         //!< [14] Fault Control Enable For n = 2
@@ -2288,9 +2288,9 @@ typedef union _hw_ftm_combine
         uint32_t COMBINE2 : 1;         //!< [16] Combine Channels For n = 4
         uint32_t COMP2 : 1;            //!< [17] Complement Of Channel (n) For n = 4
         uint32_t DECAPEN2 : 1;         //!< [18] Dual Edge Capture Mode Enable For n
-                                       //!< = 4
+                                       //! = 4
         uint32_t DECAP2 : 1;           //!< [19] Dual Edge Capture Mode Captures For n
-                                       //!< = 4
+                                       //! = 4
         uint32_t DTEN2 : 1;            //!< [20] Deadtime Enable For n = 4
         uint32_t SYNCEN2 : 1;          //!< [21] Synchronization Enable For n = 4
         uint32_t FAULTEN2 : 1;         //!< [22] Fault Control Enable For n = 4
@@ -2298,9 +2298,9 @@ typedef union _hw_ftm_combine
         uint32_t COMBINE3 : 1;         //!< [24] Combine Channels For n = 6
         uint32_t COMP3 : 1;            //!< [25] Complement Of Channel (n) for n = 6
         uint32_t DECAPEN3 : 1;         //!< [26] Dual Edge Capture Mode Enable For n
-                                       //!< = 6
+                                       //! = 6
         uint32_t DECAP3 : 1;           //!< [27] Dual Edge Capture Mode Captures For n
-                                       //!< = 6
+                                       //! = 6
         uint32_t DTEN3 : 1;            //!< [28] Deadtime Enable For n = 6
         uint32_t SYNCEN3 : 1;          //!< [29] Synchronization Enable For n = 6
         uint32_t FAULTEN3 : 1;         //!< [30] Fault Control Enable For n = 6
@@ -4558,9 +4558,9 @@ typedef union _hw_ftm_qdctrl
     {
         uint32_t QUADEN : 1;           //!< [0] Quadrature Decoder Mode Enable
         uint32_t TOFDIR : 1;           //!< [1] Timer Overflow Direction In Quadrature
-                                       //!< Decoder Mode
+                                       //! Decoder Mode
         uint32_t QUADIR : 1;           //!< [2] FTM Counter Direction In Quadrature
-                                       //!< Decoder Mode
+                                       //! Decoder Mode
         uint32_t QUADMODE : 1;         //!< [3] Quadrature Decoder Mode
         uint32_t PHBPOL : 1;           //!< [4] Phase B Input Polarity
         uint32_t PHAPOL : 1;           //!< [5] Phase A Input Polarity

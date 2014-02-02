@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -91,11 +91,11 @@ typedef union _hw_llwu_pe1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_PE1              (*(__IO hw_llwu_pe1_t *) HW_LLWU_PE1_ADDR)
-#define HW_LLWU_PE1_RD           (HW_LLWU_PE1.U)
+#define HW_LLWU_PE1_RD()         (HW_LLWU_PE1.U)
 #define HW_LLWU_PE1_WR(v)        (HW_LLWU_PE1.U = (v))
-#define HW_LLWU_PE1_SET(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD |  (v)))
-#define HW_LLWU_PE1_CLR(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD & ~(v)))
-#define HW_LLWU_PE1_TOG(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD ^  (v)))
+#define HW_LLWU_PE1_SET(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD() |  (v)))
+#define HW_LLWU_PE1_CLR(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD() & ~(v)))
+#define HW_LLWU_PE1_TOG(v)       (HW_LLWU_PE1_WR(HW_LLWU_PE1_RD() ^  (v)))
 #endif
 //@}
 
@@ -129,7 +129,7 @@ typedef union _hw_llwu_pe1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE0 field to a new value.
-#define BW_LLWU_PE1_WUPE0(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD & ~BM_LLWU_PE1_WUPE0) | BF_LLWU_PE1_WUPE0(v)))
+#define BW_LLWU_PE1_WUPE0(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD() & ~BM_LLWU_PE1_WUPE0) | BF_LLWU_PE1_WUPE0(v)))
 #endif
 //@}
 
@@ -159,7 +159,7 @@ typedef union _hw_llwu_pe1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE1 field to a new value.
-#define BW_LLWU_PE1_WUPE1(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD & ~BM_LLWU_PE1_WUPE1) | BF_LLWU_PE1_WUPE1(v)))
+#define BW_LLWU_PE1_WUPE1(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD() & ~BM_LLWU_PE1_WUPE1) | BF_LLWU_PE1_WUPE1(v)))
 #endif
 //@}
 
@@ -189,7 +189,7 @@ typedef union _hw_llwu_pe1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE2 field to a new value.
-#define BW_LLWU_PE1_WUPE2(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD & ~BM_LLWU_PE1_WUPE2) | BF_LLWU_PE1_WUPE2(v)))
+#define BW_LLWU_PE1_WUPE2(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD() & ~BM_LLWU_PE1_WUPE2) | BF_LLWU_PE1_WUPE2(v)))
 #endif
 //@}
 
@@ -219,7 +219,7 @@ typedef union _hw_llwu_pe1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE3 field to a new value.
-#define BW_LLWU_PE1_WUPE3(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD & ~BM_LLWU_PE1_WUPE3) | BF_LLWU_PE1_WUPE3(v)))
+#define BW_LLWU_PE1_WUPE3(v) (HW_LLWU_PE1_WR((HW_LLWU_PE1_RD() & ~BM_LLWU_PE1_WUPE3) | BF_LLWU_PE1_WUPE3(v)))
 #endif
 //@}
 
@@ -262,11 +262,11 @@ typedef union _hw_llwu_pe2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_PE2              (*(__IO hw_llwu_pe2_t *) HW_LLWU_PE2_ADDR)
-#define HW_LLWU_PE2_RD           (HW_LLWU_PE2.U)
+#define HW_LLWU_PE2_RD()         (HW_LLWU_PE2.U)
 #define HW_LLWU_PE2_WR(v)        (HW_LLWU_PE2.U = (v))
-#define HW_LLWU_PE2_SET(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD |  (v)))
-#define HW_LLWU_PE2_CLR(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD & ~(v)))
-#define HW_LLWU_PE2_TOG(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD ^  (v)))
+#define HW_LLWU_PE2_SET(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD() |  (v)))
+#define HW_LLWU_PE2_CLR(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD() & ~(v)))
+#define HW_LLWU_PE2_TOG(v)       (HW_LLWU_PE2_WR(HW_LLWU_PE2_RD() ^  (v)))
 #endif
 //@}
 
@@ -300,7 +300,7 @@ typedef union _hw_llwu_pe2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE4 field to a new value.
-#define BW_LLWU_PE2_WUPE4(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD & ~BM_LLWU_PE2_WUPE4) | BF_LLWU_PE2_WUPE4(v)))
+#define BW_LLWU_PE2_WUPE4(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD() & ~BM_LLWU_PE2_WUPE4) | BF_LLWU_PE2_WUPE4(v)))
 #endif
 //@}
 
@@ -330,7 +330,7 @@ typedef union _hw_llwu_pe2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE5 field to a new value.
-#define BW_LLWU_PE2_WUPE5(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD & ~BM_LLWU_PE2_WUPE5) | BF_LLWU_PE2_WUPE5(v)))
+#define BW_LLWU_PE2_WUPE5(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD() & ~BM_LLWU_PE2_WUPE5) | BF_LLWU_PE2_WUPE5(v)))
 #endif
 //@}
 
@@ -360,7 +360,7 @@ typedef union _hw_llwu_pe2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE6 field to a new value.
-#define BW_LLWU_PE2_WUPE6(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD & ~BM_LLWU_PE2_WUPE6) | BF_LLWU_PE2_WUPE6(v)))
+#define BW_LLWU_PE2_WUPE6(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD() & ~BM_LLWU_PE2_WUPE6) | BF_LLWU_PE2_WUPE6(v)))
 #endif
 //@}
 
@@ -390,7 +390,7 @@ typedef union _hw_llwu_pe2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE7 field to a new value.
-#define BW_LLWU_PE2_WUPE7(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD & ~BM_LLWU_PE2_WUPE7) | BF_LLWU_PE2_WUPE7(v)))
+#define BW_LLWU_PE2_WUPE7(v) (HW_LLWU_PE2_WR((HW_LLWU_PE2_RD() & ~BM_LLWU_PE2_WUPE7) | BF_LLWU_PE2_WUPE7(v)))
 #endif
 //@}
 
@@ -433,11 +433,11 @@ typedef union _hw_llwu_pe3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_PE3              (*(__IO hw_llwu_pe3_t *) HW_LLWU_PE3_ADDR)
-#define HW_LLWU_PE3_RD           (HW_LLWU_PE3.U)
+#define HW_LLWU_PE3_RD()         (HW_LLWU_PE3.U)
 #define HW_LLWU_PE3_WR(v)        (HW_LLWU_PE3.U = (v))
-#define HW_LLWU_PE3_SET(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD |  (v)))
-#define HW_LLWU_PE3_CLR(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD & ~(v)))
-#define HW_LLWU_PE3_TOG(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD ^  (v)))
+#define HW_LLWU_PE3_SET(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD() |  (v)))
+#define HW_LLWU_PE3_CLR(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD() & ~(v)))
+#define HW_LLWU_PE3_TOG(v)       (HW_LLWU_PE3_WR(HW_LLWU_PE3_RD() ^  (v)))
 #endif
 //@}
 
@@ -471,7 +471,7 @@ typedef union _hw_llwu_pe3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE8 field to a new value.
-#define BW_LLWU_PE3_WUPE8(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD & ~BM_LLWU_PE3_WUPE8) | BF_LLWU_PE3_WUPE8(v)))
+#define BW_LLWU_PE3_WUPE8(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD() & ~BM_LLWU_PE3_WUPE8) | BF_LLWU_PE3_WUPE8(v)))
 #endif
 //@}
 
@@ -501,7 +501,7 @@ typedef union _hw_llwu_pe3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE9 field to a new value.
-#define BW_LLWU_PE3_WUPE9(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD & ~BM_LLWU_PE3_WUPE9) | BF_LLWU_PE3_WUPE9(v)))
+#define BW_LLWU_PE3_WUPE9(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD() & ~BM_LLWU_PE3_WUPE9) | BF_LLWU_PE3_WUPE9(v)))
 #endif
 //@}
 
@@ -531,7 +531,7 @@ typedef union _hw_llwu_pe3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE10 field to a new value.
-#define BW_LLWU_PE3_WUPE10(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD & ~BM_LLWU_PE3_WUPE10) | BF_LLWU_PE3_WUPE10(v)))
+#define BW_LLWU_PE3_WUPE10(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD() & ~BM_LLWU_PE3_WUPE10) | BF_LLWU_PE3_WUPE10(v)))
 #endif
 //@}
 
@@ -561,7 +561,7 @@ typedef union _hw_llwu_pe3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE11 field to a new value.
-#define BW_LLWU_PE3_WUPE11(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD & ~BM_LLWU_PE3_WUPE11) | BF_LLWU_PE3_WUPE11(v)))
+#define BW_LLWU_PE3_WUPE11(v) (HW_LLWU_PE3_WR((HW_LLWU_PE3_RD() & ~BM_LLWU_PE3_WUPE11) | BF_LLWU_PE3_WUPE11(v)))
 #endif
 //@}
 
@@ -604,11 +604,11 @@ typedef union _hw_llwu_pe4
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_PE4              (*(__IO hw_llwu_pe4_t *) HW_LLWU_PE4_ADDR)
-#define HW_LLWU_PE4_RD           (HW_LLWU_PE4.U)
+#define HW_LLWU_PE4_RD()         (HW_LLWU_PE4.U)
 #define HW_LLWU_PE4_WR(v)        (HW_LLWU_PE4.U = (v))
-#define HW_LLWU_PE4_SET(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD |  (v)))
-#define HW_LLWU_PE4_CLR(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD & ~(v)))
-#define HW_LLWU_PE4_TOG(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD ^  (v)))
+#define HW_LLWU_PE4_SET(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD() |  (v)))
+#define HW_LLWU_PE4_CLR(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD() & ~(v)))
+#define HW_LLWU_PE4_TOG(v)       (HW_LLWU_PE4_WR(HW_LLWU_PE4_RD() ^  (v)))
 #endif
 //@}
 
@@ -642,7 +642,7 @@ typedef union _hw_llwu_pe4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE12 field to a new value.
-#define BW_LLWU_PE4_WUPE12(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD & ~BM_LLWU_PE4_WUPE12) | BF_LLWU_PE4_WUPE12(v)))
+#define BW_LLWU_PE4_WUPE12(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD() & ~BM_LLWU_PE4_WUPE12) | BF_LLWU_PE4_WUPE12(v)))
 #endif
 //@}
 
@@ -672,7 +672,7 @@ typedef union _hw_llwu_pe4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE13 field to a new value.
-#define BW_LLWU_PE4_WUPE13(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD & ~BM_LLWU_PE4_WUPE13) | BF_LLWU_PE4_WUPE13(v)))
+#define BW_LLWU_PE4_WUPE13(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD() & ~BM_LLWU_PE4_WUPE13) | BF_LLWU_PE4_WUPE13(v)))
 #endif
 //@}
 
@@ -702,7 +702,7 @@ typedef union _hw_llwu_pe4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE14 field to a new value.
-#define BW_LLWU_PE4_WUPE14(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD & ~BM_LLWU_PE4_WUPE14) | BF_LLWU_PE4_WUPE14(v)))
+#define BW_LLWU_PE4_WUPE14(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD() & ~BM_LLWU_PE4_WUPE14) | BF_LLWU_PE4_WUPE14(v)))
 #endif
 //@}
 
@@ -732,7 +732,7 @@ typedef union _hw_llwu_pe4
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WUPE15 field to a new value.
-#define BW_LLWU_PE4_WUPE15(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD & ~BM_LLWU_PE4_WUPE15) | BF_LLWU_PE4_WUPE15(v)))
+#define BW_LLWU_PE4_WUPE15(v) (HW_LLWU_PE4_WR((HW_LLWU_PE4_RD() & ~BM_LLWU_PE4_WUPE15) | BF_LLWU_PE4_WUPE15(v)))
 #endif
 //@}
 
@@ -779,11 +779,11 @@ typedef union _hw_llwu_me
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_ME               (*(__IO hw_llwu_me_t *) HW_LLWU_ME_ADDR)
-#define HW_LLWU_ME_RD            (HW_LLWU_ME.U)
+#define HW_LLWU_ME_RD()          (HW_LLWU_ME.U)
 #define HW_LLWU_ME_WR(v)         (HW_LLWU_ME.U = (v))
-#define HW_LLWU_ME_SET(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD |  (v)))
-#define HW_LLWU_ME_CLR(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD & ~(v)))
-#define HW_LLWU_ME_TOG(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD ^  (v)))
+#define HW_LLWU_ME_SET(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD() |  (v)))
+#define HW_LLWU_ME_CLR(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD() & ~(v)))
+#define HW_LLWU_ME_TOG(v)        (HW_LLWU_ME_WR(HW_LLWU_ME_RD() ^  (v)))
 #endif
 //@}
 
@@ -1062,11 +1062,11 @@ typedef union _hw_llwu_f1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_F1               (*(__IO hw_llwu_f1_t *) HW_LLWU_F1_ADDR)
-#define HW_LLWU_F1_RD            (HW_LLWU_F1.U)
+#define HW_LLWU_F1_RD()          (HW_LLWU_F1.U)
 #define HW_LLWU_F1_WR(v)         (HW_LLWU_F1.U = (v))
-#define HW_LLWU_F1_SET(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD |  (v)))
-#define HW_LLWU_F1_CLR(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD & ~(v)))
-#define HW_LLWU_F1_TOG(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD ^  (v)))
+#define HW_LLWU_F1_SET(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD() |  (v)))
+#define HW_LLWU_F1_CLR(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD() & ~(v)))
+#define HW_LLWU_F1_TOG(v)        (HW_LLWU_F1_WR(HW_LLWU_F1_RD() ^  (v)))
 #endif
 //@}
 
@@ -1353,11 +1353,11 @@ typedef union _hw_llwu_f2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_F2               (*(__IO hw_llwu_f2_t *) HW_LLWU_F2_ADDR)
-#define HW_LLWU_F2_RD            (HW_LLWU_F2.U)
+#define HW_LLWU_F2_RD()          (HW_LLWU_F2.U)
 #define HW_LLWU_F2_WR(v)         (HW_LLWU_F2.U = (v))
-#define HW_LLWU_F2_SET(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD |  (v)))
-#define HW_LLWU_F2_CLR(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD & ~(v)))
-#define HW_LLWU_F2_TOG(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD ^  (v)))
+#define HW_LLWU_F2_SET(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD() |  (v)))
+#define HW_LLWU_F2_CLR(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD() & ~(v)))
+#define HW_LLWU_F2_TOG(v)        (HW_LLWU_F2_WR(HW_LLWU_F2_RD() ^  (v)))
 #endif
 //@}
 
@@ -1646,7 +1646,7 @@ typedef union _hw_llwu_f3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_F3               (*(__I hw_llwu_f3_t *) HW_LLWU_F3_ADDR)
-#define HW_LLWU_F3_RD            (HW_LLWU_F3.U)
+#define HW_LLWU_F3_RD()          (HW_LLWU_F3.U)
 #endif
 //@}
 
@@ -1869,11 +1869,11 @@ typedef union _hw_llwu_filt1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_FILT1            (*(__IO hw_llwu_filt1_t *) HW_LLWU_FILT1_ADDR)
-#define HW_LLWU_FILT1_RD         (HW_LLWU_FILT1.U)
+#define HW_LLWU_FILT1_RD()       (HW_LLWU_FILT1.U)
 #define HW_LLWU_FILT1_WR(v)      (HW_LLWU_FILT1.U = (v))
-#define HW_LLWU_FILT1_SET(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD |  (v)))
-#define HW_LLWU_FILT1_CLR(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD & ~(v)))
-#define HW_LLWU_FILT1_TOG(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD ^  (v)))
+#define HW_LLWU_FILT1_SET(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD() |  (v)))
+#define HW_LLWU_FILT1_CLR(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD() & ~(v)))
+#define HW_LLWU_FILT1_TOG(v)     (HW_LLWU_FILT1_WR(HW_LLWU_FILT1_RD() ^  (v)))
 #endif
 //@}
 
@@ -1905,7 +1905,7 @@ typedef union _hw_llwu_filt1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FILTSEL field to a new value.
-#define BW_LLWU_FILT1_FILTSEL(v) (HW_LLWU_FILT1_WR((HW_LLWU_FILT1_RD & ~BM_LLWU_FILT1_FILTSEL) | BF_LLWU_FILT1_FILTSEL(v)))
+#define BW_LLWU_FILT1_FILTSEL(v) (HW_LLWU_FILT1_WR((HW_LLWU_FILT1_RD() & ~BM_LLWU_FILT1_FILTSEL) | BF_LLWU_FILT1_FILTSEL(v)))
 #endif
 //@}
 
@@ -1935,7 +1935,7 @@ typedef union _hw_llwu_filt1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FILTE field to a new value.
-#define BW_LLWU_FILT1_FILTE(v) (HW_LLWU_FILT1_WR((HW_LLWU_FILT1_RD & ~BM_LLWU_FILT1_FILTE) | BF_LLWU_FILT1_FILTE(v)))
+#define BW_LLWU_FILT1_FILTE(v) (HW_LLWU_FILT1_WR((HW_LLWU_FILT1_RD() & ~BM_LLWU_FILT1_FILTE) | BF_LLWU_FILT1_FILTE(v)))
 #endif
 //@}
 
@@ -2008,11 +2008,11 @@ typedef union _hw_llwu_filt2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_FILT2            (*(__IO hw_llwu_filt2_t *) HW_LLWU_FILT2_ADDR)
-#define HW_LLWU_FILT2_RD         (HW_LLWU_FILT2.U)
+#define HW_LLWU_FILT2_RD()       (HW_LLWU_FILT2.U)
 #define HW_LLWU_FILT2_WR(v)      (HW_LLWU_FILT2.U = (v))
-#define HW_LLWU_FILT2_SET(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD |  (v)))
-#define HW_LLWU_FILT2_CLR(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD & ~(v)))
-#define HW_LLWU_FILT2_TOG(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD ^  (v)))
+#define HW_LLWU_FILT2_SET(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD() |  (v)))
+#define HW_LLWU_FILT2_CLR(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD() & ~(v)))
+#define HW_LLWU_FILT2_TOG(v)     (HW_LLWU_FILT2_WR(HW_LLWU_FILT2_RD() ^  (v)))
 #endif
 //@}
 
@@ -2044,7 +2044,7 @@ typedef union _hw_llwu_filt2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FILTSEL field to a new value.
-#define BW_LLWU_FILT2_FILTSEL(v) (HW_LLWU_FILT2_WR((HW_LLWU_FILT2_RD & ~BM_LLWU_FILT2_FILTSEL) | BF_LLWU_FILT2_FILTSEL(v)))
+#define BW_LLWU_FILT2_FILTSEL(v) (HW_LLWU_FILT2_WR((HW_LLWU_FILT2_RD() & ~BM_LLWU_FILT2_FILTSEL) | BF_LLWU_FILT2_FILTSEL(v)))
 #endif
 //@}
 
@@ -2074,7 +2074,7 @@ typedef union _hw_llwu_filt2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FILTE field to a new value.
-#define BW_LLWU_FILT2_FILTE(v) (HW_LLWU_FILT2_WR((HW_LLWU_FILT2_RD & ~BM_LLWU_FILT2_FILTE) | BF_LLWU_FILT2_FILTE(v)))
+#define BW_LLWU_FILT2_FILTE(v) (HW_LLWU_FILT2_WR((HW_LLWU_FILT2_RD() & ~BM_LLWU_FILT2_FILTE) | BF_LLWU_FILT2_FILTE(v)))
 #endif
 //@}
 
@@ -2146,11 +2146,11 @@ typedef union _hw_llwu_rst
 
 #ifndef __LANGUAGE_ASM__
 #define HW_LLWU_RST              (*(__IO hw_llwu_rst_t *) HW_LLWU_RST_ADDR)
-#define HW_LLWU_RST_RD           (HW_LLWU_RST.U)
+#define HW_LLWU_RST_RD()         (HW_LLWU_RST.U)
 #define HW_LLWU_RST_WR(v)        (HW_LLWU_RST.U = (v))
-#define HW_LLWU_RST_SET(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD |  (v)))
-#define HW_LLWU_RST_CLR(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD & ~(v)))
-#define HW_LLWU_RST_TOG(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD ^  (v)))
+#define HW_LLWU_RST_SET(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD() |  (v)))
+#define HW_LLWU_RST_CLR(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD() & ~(v)))
+#define HW_LLWU_RST_TOG(v)       (HW_LLWU_RST_WR(HW_LLWU_RST_RD() ^  (v)))
 #endif
 //@}
 

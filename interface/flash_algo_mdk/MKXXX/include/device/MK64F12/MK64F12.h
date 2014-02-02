@@ -8,7 +8,7 @@
 **                          IAR ANSI C/C++ Compiler for ARM
 **
 **     Reference manual:    K64P144M120SF5RM, Rev.1, July 2013
-**     Version:             rev. 2.1, 2013-10-29
+**     Version:             rev. 2.2, 2013-12-09
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for MK64F12
@@ -30,14 +30,17 @@
 **         PORTA, PORTB, PORTC, PORTE - registers for digital filter removed.
 **     - rev. 2.1 (2013-10-29)
 **         Definition of BITBAND macros updated to support peripherals with 32-bit acces disabled.
+**     - rev. 2.2 (2013-12-09)
+**         DMA - EARS register removed.
+**         AIPS0, AIPS1 - MPRA register updated.
 **
 ** ###################################################################
 */
 
 /*!
  * @file MK64F12.h
- * @version 2.1
- * @date 2013-10-29
+ * @version 2.2
+ * @date 2013-12-09
  * @brief CMSIS Peripheral Access Layer for MK64F12
  *
  * CMSIS Peripheral Access Layer for MK64F12
@@ -46,6 +49,7 @@
 #if !defined(MK64F12_H_)
 #define MK64F12_H_                               /**< Symbol preventing repeated inclusion */
 
+#endif  /* #if !defined(MK64F12_H_) */
 
 
 /* ----------------------------------------------------------------------------
@@ -68,7 +72,7 @@
  * compatible) */
 #define MCU_MEM_MAP_VERSION 0x0200u
 /** Memory map minor version */
-#define MCU_MEM_MAP_VERSION_MINOR 0x0001u
+#define MCU_MEM_MAP_VERSION_MINOR 0x0002u
 
 /**
  * @brief Macro to calculate address of an aliased word in the peripheral
@@ -688,6 +692,43 @@ typedef struct {
  * @{
  */
 
+/* MPRA Bit Fields */
+#define AIPS_MPRA_MPL5_MASK                      0x100u
+#define AIPS_MPRA_MPL5_SHIFT                     8
+#define AIPS_MPRA_MTW5_MASK                      0x200u
+#define AIPS_MPRA_MTW5_SHIFT                     9
+#define AIPS_MPRA_MTR5_MASK                      0x400u
+#define AIPS_MPRA_MTR5_SHIFT                     10
+#define AIPS_MPRA_MPL4_MASK                      0x1000u
+#define AIPS_MPRA_MPL4_SHIFT                     12
+#define AIPS_MPRA_MTW4_MASK                      0x2000u
+#define AIPS_MPRA_MTW4_SHIFT                     13
+#define AIPS_MPRA_MTR4_MASK                      0x4000u
+#define AIPS_MPRA_MTR4_SHIFT                     14
+#define AIPS_MPRA_MPL3_MASK                      0x10000u
+#define AIPS_MPRA_MPL3_SHIFT                     16
+#define AIPS_MPRA_MTW3_MASK                      0x20000u
+#define AIPS_MPRA_MTW3_SHIFT                     17
+#define AIPS_MPRA_MTR3_MASK                      0x40000u
+#define AIPS_MPRA_MTR3_SHIFT                     18
+#define AIPS_MPRA_MPL2_MASK                      0x100000u
+#define AIPS_MPRA_MPL2_SHIFT                     20
+#define AIPS_MPRA_MTW2_MASK                      0x200000u
+#define AIPS_MPRA_MTW2_SHIFT                     21
+#define AIPS_MPRA_MTR2_MASK                      0x400000u
+#define AIPS_MPRA_MTR2_SHIFT                     22
+#define AIPS_MPRA_MPL1_MASK                      0x1000000u
+#define AIPS_MPRA_MPL1_SHIFT                     24
+#define AIPS_MPRA_MTW1_MASK                      0x2000000u
+#define AIPS_MPRA_MTW1_SHIFT                     25
+#define AIPS_MPRA_MTR1_MASK                      0x4000000u
+#define AIPS_MPRA_MTR1_SHIFT                     26
+#define AIPS_MPRA_MPL0_MASK                      0x10000000u
+#define AIPS_MPRA_MPL0_SHIFT                     28
+#define AIPS_MPRA_MTW0_MASK                      0x20000000u
+#define AIPS_MPRA_MTW0_SHIFT                     29
+#define AIPS_MPRA_MTR0_MASK                      0x40000000u
+#define AIPS_MPRA_MTR0_SHIFT                     30
 /* PACRA Bit Fields */
 #define AIPS_PACRA_TP7_MASK                      0x1u
 #define AIPS_PACRA_TP7_SHIFT                     0
@@ -3381,9 +3422,7 @@ typedef struct {
   __IO uint32_t ERR;                               /**< Error Register, offset: 0x2C */
        uint8_t RESERVED_4[4];
   __I  uint32_t HRS;                               /**< Hardware Request Status Register, offset: 0x34 */
-       uint8_t RESERVED_5[12];
-  __IO uint32_t EARS;                              /**< Enable Asynchronous Request in Stop Register, offset: 0x44 */
-       uint8_t RESERVED_6[184];
+       uint8_t RESERVED_5[200];
   __IO uint8_t DCHPRI3;                            /**< Channel n Priority Register, offset: 0x100 */
   __IO uint8_t DCHPRI2;                            /**< Channel n Priority Register, offset: 0x101 */
   __IO uint8_t DCHPRI1;                            /**< Channel n Priority Register, offset: 0x102 */
@@ -3400,7 +3439,7 @@ typedef struct {
   __IO uint8_t DCHPRI14;                           /**< Channel n Priority Register, offset: 0x10D */
   __IO uint8_t DCHPRI13;                           /**< Channel n Priority Register, offset: 0x10E */
   __IO uint8_t DCHPRI12;                           /**< Channel n Priority Register, offset: 0x10F */
-       uint8_t RESERVED_7[3824];
+       uint8_t RESERVED_6[3824];
   struct {                                         /* offset: 0x1000, array step: 0x20 */
     __IO uint32_t SADDR;                             /**< TCD Source Address, array offset: 0x1000, array step: 0x20 */
     __IO uint16_t SOFF;                              /**< TCD Signed Source Address Offset, array offset: 0x1004, array step: 0x20 */
@@ -3452,7 +3491,6 @@ typedef struct {
 #define DMA_INT_REG(base)                        ((base)->INT)
 #define DMA_ERR_REG(base)                        ((base)->ERR)
 #define DMA_HRS_REG(base)                        ((base)->HRS)
-#define DMA_EARS_REG(base)                       ((base)->EARS)
 #define DMA_DCHPRI3_REG(base)                    ((base)->DCHPRI3)
 #define DMA_DCHPRI2_REG(base)                    ((base)->DCHPRI2)
 #define DMA_DCHPRI1_REG(base)                    ((base)->DCHPRI1)
@@ -3771,39 +3809,6 @@ typedef struct {
 #define DMA_HRS_HRS14_SHIFT                      14
 #define DMA_HRS_HRS15_MASK                       0x8000u
 #define DMA_HRS_HRS15_SHIFT                      15
-/* EARS Bit Fields */
-#define DMA_EARS_EDREQ_0_MASK                    0x1u
-#define DMA_EARS_EDREQ_0_SHIFT                   0
-#define DMA_EARS_EDREQ_1_MASK                    0x2u
-#define DMA_EARS_EDREQ_1_SHIFT                   1
-#define DMA_EARS_EDREQ_2_MASK                    0x4u
-#define DMA_EARS_EDREQ_2_SHIFT                   2
-#define DMA_EARS_EDREQ_3_MASK                    0x8u
-#define DMA_EARS_EDREQ_3_SHIFT                   3
-#define DMA_EARS_EDREQ_4_MASK                    0x10u
-#define DMA_EARS_EDREQ_4_SHIFT                   4
-#define DMA_EARS_EDREQ_5_MASK                    0x20u
-#define DMA_EARS_EDREQ_5_SHIFT                   5
-#define DMA_EARS_EDREQ_6_MASK                    0x40u
-#define DMA_EARS_EDREQ_6_SHIFT                   6
-#define DMA_EARS_EDREQ_7_MASK                    0x80u
-#define DMA_EARS_EDREQ_7_SHIFT                   7
-#define DMA_EARS_EDREQ_8_MASK                    0x100u
-#define DMA_EARS_EDREQ_8_SHIFT                   8
-#define DMA_EARS_EDREQ_9_MASK                    0x200u
-#define DMA_EARS_EDREQ_9_SHIFT                   9
-#define DMA_EARS_EDREQ_10_MASK                   0x400u
-#define DMA_EARS_EDREQ_10_SHIFT                  10
-#define DMA_EARS_EDREQ_11_MASK                   0x800u
-#define DMA_EARS_EDREQ_11_SHIFT                  11
-#define DMA_EARS_EDREQ_12_MASK                   0x1000u
-#define DMA_EARS_EDREQ_12_SHIFT                  12
-#define DMA_EARS_EDREQ_13_MASK                   0x2000u
-#define DMA_EARS_EDREQ_13_SHIFT                  13
-#define DMA_EARS_EDREQ_14_MASK                   0x4000u
-#define DMA_EARS_EDREQ_14_SHIFT                  14
-#define DMA_EARS_EDREQ_15_MASK                   0x8000u
-#define DMA_EARS_EDREQ_15_SHIFT                  15
 /* DCHPRI3 Bit Fields */
 #define DMA_DCHPRI3_CHPRI_MASK                   0xFu
 #define DMA_DCHPRI3_CHPRI_SHIFT                  0
@@ -4087,7 +4092,6 @@ typedef struct {
 #define DMA_INT                                  DMA_INT_REG(DMA0)
 #define DMA_ERR                                  DMA_ERR_REG(DMA0)
 #define DMA_HRS                                  DMA_HRS_REG(DMA0)
-#define DMA_EARS                                 DMA_EARS_REG(DMA0)
 #define DMA_DCHPRI3                              DMA_DCHPRI3_REG(DMA0)
 #define DMA_DCHPRI2                              DMA_DCHPRI2_REG(DMA0)
 #define DMA_DCHPRI1                              DMA_DCHPRI1_REG(DMA0)
@@ -13396,7 +13400,40 @@ typedef struct {
  * @{
  */
 
-/* No backward compatibility issues. */
+#define DMA_EARS_REG(base)                       This_symbol_has_been_deprecated
+#define DMA_EARS                                 This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_0_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_0_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_1_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_1_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_2_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_2_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_3_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_3_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_4_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_4_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_5_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_5_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_6_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_6_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_7_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_7_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_8_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_8_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_9_MASK                    This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_9_SHIFT                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_10_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_10_SHIFT                  This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_11_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_11_SHIFT                  This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_12_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_12_SHIFT                  This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_13_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_13_SHIFT                  This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_14_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_14_SHIFT                  This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_15_MASK                   This_symbol_has_been_deprecated
+#define DMA_EARS_EDREQ_15_SHIFT                  This_symbol_has_been_deprecated
 
 /*!
  * @}
@@ -13412,5 +13449,4 @@ typedef struct {
   #endif /* (MCU_MEM_MAP_VERSION != 0x0200u) */
 #endif  /* #if !defined(MCU_MK64F12) */
 
-#endif  /* #if !defined(MK64F12_H_) */
 /* MK64F12.h, eof. */

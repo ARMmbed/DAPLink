@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -86,9 +86,9 @@ typedef union _hw_sim_sopt1
         uint32_t OSC32KSEL : 2;        //!< [19:18] 32K oscillator clock select
         uint32_t RESERVED2 : 9;        //!< [28:20]
         uint32_t USBVSTBY : 1;         //!< [29] USB voltage regulator in standby
-                                       //!< mode during VLPR and VLPW modes
+                                       //! mode during VLPR and VLPW modes
         uint32_t USBSSTBY : 1;         //!< [30] USB voltage regulator in standby
-                                       //!< mode during Stop, VLPS, LLS and VLLS modes.
+                                       //! mode during Stop, VLPS, LLS and VLLS modes.
         uint32_t USBREGEN : 1;         //!< [31] USB voltage regulator enable
     } B;
 } hw_sim_sopt1_t;
@@ -279,9 +279,9 @@ typedef union _hw_sim_sopt1cfg
         uint32_t RESERVED0 : 24;       //!< [23:0]
         uint32_t URWE : 1;             //!< [24] USB voltage regulator enable write enable
         uint32_t UVSWE : 1;            //!< [25] USB voltage regulator VLP standby write
-                                       //!< enable
+                                       //! enable
         uint32_t USSWE : 1;            //!< [26] USB voltage regulator stop standby
-                                       //!< write enable
+                                       //! write enable
         uint32_t RESERVED1 : 5;        //!< [31:27]
     } B;
 } hw_sim_sopt1cfg_t;
@@ -426,7 +426,7 @@ typedef union _hw_sim_sopt2
         uint32_t USBSRC : 1;           //!< [18] USB clock source select
         uint32_t RMIISRC : 1;          //!< [19] RMII clock source select
         uint32_t TIMESRC : 2;          //!< [21:20] IEEE 1588 timestamp clock source
-                                       //!< select
+                                       //! select
         uint32_t RESERVED4 : 6;        //!< [27:22]
         uint32_t SDHCSRC : 2;          //!< [29:28] SDHC clock source select
         uint32_t RESERVED5 : 2;        //!< [31:30]
@@ -782,25 +782,25 @@ typedef union _hw_sim_sopt4
         uint32_t FTM3FLT0 : 1;         //!< [12] FTM3 Fault 0 Select
         uint32_t RESERVED3 : 5;        //!< [17:13]
         uint32_t FTM1CH0SRC : 2;       //!< [19:18] FTM1 channel 0 input capture
-                                       //!< source select
+                                       //! source select
         uint32_t FTM2CH0SRC : 2;       //!< [21:20] FTM2 channel 0 input capture
-                                       //!< source select
+                                       //! source select
         uint32_t RESERVED4 : 2;        //!< [23:22]
         uint32_t FTM0CLKSEL : 1;       //!< [24] FlexTimer 0 External Clock Pin
-                                       //!< Select
+                                       //! Select
         uint32_t FTM1CLKSEL : 1;       //!< [25] FTM1 External Clock Pin Select
         uint32_t FTM2CLKSEL : 1;       //!< [26] FlexTimer 2 External Clock Pin
-                                       //!< Select
+                                       //! Select
         uint32_t FTM3CLKSEL : 1;       //!< [27] FlexTimer 3 External Clock Pin
-                                       //!< Select
+                                       //! Select
         uint32_t FTM0TRG0SRC : 1;      //!< [28] FlexTimer 0 Hardware Trigger 0
-                                       //!< Source Select
+                                       //! Source Select
         uint32_t FTM0TRG1SRC : 1;      //!< [29] FlexTimer 0 Hardware Trigger 1
-                                       //!< Source Select
+                                       //! Source Select
         uint32_t FTM3TRG0SRC : 1;      //!< [30] FlexTimer 3 Hardware Trigger 0
-                                       //!< Source Select
+                                       //! Source Select
         uint32_t FTM3TRG1SRC : 1;      //!< [31] FlexTimer 3 Hardware Trigger 1
-                                       //!< Source Select
+                                       //! Source Select
     } B;
 } hw_sim_sopt4_t;
 #endif

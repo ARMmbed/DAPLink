@@ -51,12 +51,16 @@ status_t flash_command_sequence(void)
 {
     // clear RDCOLERR & ACCERR & FPVIOL flag in flash status register
     HW_FTFx_FSTAT_WR(BM_FTFx_FSTAT_RDCOLERR | BM_FTFx_FSTAT_ACCERR | BM_FTFx_FSTAT_FPVIOL);
+    
+    __disable_irq();
 
     // clear CCIF bit
     HW_FTFx_FSTAT_WR(BM_FTFx_FSTAT_CCIF);
 
     // check CCIF bit of the flash status register, wait till it is set
     while (!(HW_FTFx_FSTAT.B.CCIF));
+    
+    __enable_irq();
 
     // Check error bits
     // Get flash status register value

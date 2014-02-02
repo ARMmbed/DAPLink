@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -80,11 +80,11 @@ typedef union _hw_rng_cr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RNG_CR                (*(__IO hw_rng_cr_t *) HW_RNG_CR_ADDR)
-#define HW_RNG_CR_RD             (HW_RNG_CR.U)
+#define HW_RNG_CR_RD()           (HW_RNG_CR.U)
 #define HW_RNG_CR_WR(v)          (HW_RNG_CR.U = (v))
-#define HW_RNG_CR_SET(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD |  (v)))
-#define HW_RNG_CR_CLR(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD & ~(v)))
-#define HW_RNG_CR_TOG(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD ^  (v)))
+#define HW_RNG_CR_SET(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD() |  (v)))
+#define HW_RNG_CR_CLR(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD() & ~(v)))
+#define HW_RNG_CR_TOG(v)         (HW_RNG_CR_WR(HW_RNG_CR_RD() ^  (v)))
 #endif
 //@}
 
@@ -284,7 +284,7 @@ typedef union _hw_rng_sr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RNG_SR                (*(__I hw_rng_sr_t *) HW_RNG_SR_ADDR)
-#define HW_RNG_SR_RD             (HW_RNG_SR.U)
+#define HW_RNG_SR_RD()           (HW_RNG_SR.U)
 #endif
 //@}
 
@@ -511,7 +511,7 @@ typedef union _hw_rng_er
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the EXT_ENT field to a new value.
-#define BW_RNG_ER_EXT_ENT(v) (HW_RNG_ER_WR((HW_RNG_ER_RD & ~BM_RNG_ER_EXT_ENT) | BF_RNG_ER_EXT_ENT(v)))
+#define BW_RNG_ER_EXT_ENT(v) (HW_RNG_ER_WR((HW_RNG_ER_RD() & ~BM_RNG_ER_EXT_ENT) | BF_RNG_ER_EXT_ENT(v)))
 #endif
 //@}
 
@@ -562,7 +562,7 @@ typedef union _hw_rng_or
 
 #ifndef __LANGUAGE_ASM__
 #define HW_RNG_OR                (*(__I hw_rng_or_t *) HW_RNG_OR_ADDR)
-#define HW_RNG_OR_RD             (HW_RNG_OR.U)
+#define HW_RNG_OR_RD()           (HW_RNG_OR.U)
 #endif
 //@}
 

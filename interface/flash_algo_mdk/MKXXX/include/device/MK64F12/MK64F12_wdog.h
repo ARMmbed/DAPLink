@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -94,11 +94,11 @@ typedef union _hw_wdog_stctrlh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_STCTRLH          (*(__IO hw_wdog_stctrlh_t *) HW_WDOG_STCTRLH_ADDR)
-#define HW_WDOG_STCTRLH_RD       (HW_WDOG_STCTRLH.U)
+#define HW_WDOG_STCTRLH_RD()     (HW_WDOG_STCTRLH.U)
 #define HW_WDOG_STCTRLH_WR(v)    (HW_WDOG_STCTRLH.U = (v))
-#define HW_WDOG_STCTRLH_SET(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD |  (v)))
-#define HW_WDOG_STCTRLH_CLR(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD & ~(v)))
-#define HW_WDOG_STCTRLH_TOG(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD ^  (v)))
+#define HW_WDOG_STCTRLH_SET(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD() |  (v)))
+#define HW_WDOG_STCTRLH_CLR(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD() & ~(v)))
+#define HW_WDOG_STCTRLH_TOG(v)   (HW_WDOG_STCTRLH_WR(HW_WDOG_STCTRLH_RD() ^  (v)))
 #endif
 //@}
 
@@ -424,7 +424,7 @@ typedef union _hw_wdog_stctrlh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BYTESEL field to a new value.
-#define BW_WDOG_STCTRLH_BYTESEL(v) (HW_WDOG_STCTRLH_WR((HW_WDOG_STCTRLH_RD & ~BM_WDOG_STCTRLH_BYTESEL) | BF_WDOG_STCTRLH_BYTESEL(v)))
+#define BW_WDOG_STCTRLH_BYTESEL(v) (HW_WDOG_STCTRLH_WR((HW_WDOG_STCTRLH_RD() & ~BM_WDOG_STCTRLH_BYTESEL) | BF_WDOG_STCTRLH_BYTESEL(v)))
 #endif
 //@}
 
@@ -487,11 +487,11 @@ typedef union _hw_wdog_stctrll
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_STCTRLL          (*(__IO hw_wdog_stctrll_t *) HW_WDOG_STCTRLL_ADDR)
-#define HW_WDOG_STCTRLL_RD       (HW_WDOG_STCTRLL.U)
+#define HW_WDOG_STCTRLL_RD()     (HW_WDOG_STCTRLL.U)
 #define HW_WDOG_STCTRLL_WR(v)    (HW_WDOG_STCTRLL.U = (v))
-#define HW_WDOG_STCTRLL_SET(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD |  (v)))
-#define HW_WDOG_STCTRLL_CLR(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD & ~(v)))
-#define HW_WDOG_STCTRLL_TOG(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD ^  (v)))
+#define HW_WDOG_STCTRLL_SET(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD() |  (v)))
+#define HW_WDOG_STCTRLL_CLR(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD() & ~(v)))
+#define HW_WDOG_STCTRLL_TOG(v)   (HW_WDOG_STCTRLL_WR(HW_WDOG_STCTRLL_RD() ^  (v)))
 #endif
 //@}
 
@@ -554,11 +554,11 @@ typedef union _hw_wdog_tovalh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_TOVALH           (*(__IO hw_wdog_tovalh_t *) HW_WDOG_TOVALH_ADDR)
-#define HW_WDOG_TOVALH_RD        (HW_WDOG_TOVALH.U)
+#define HW_WDOG_TOVALH_RD()      (HW_WDOG_TOVALH.U)
 #define HW_WDOG_TOVALH_WR(v)     (HW_WDOG_TOVALH.U = (v))
-#define HW_WDOG_TOVALH_SET(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD |  (v)))
-#define HW_WDOG_TOVALH_CLR(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD & ~(v)))
-#define HW_WDOG_TOVALH_TOG(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD ^  (v)))
+#define HW_WDOG_TOVALH_SET(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD() |  (v)))
+#define HW_WDOG_TOVALH_CLR(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD() & ~(v)))
+#define HW_WDOG_TOVALH_TOG(v)    (HW_WDOG_TOVALH_WR(HW_WDOG_TOVALH_RD() ^  (v)))
 #endif
 //@}
 
@@ -587,7 +587,7 @@ typedef union _hw_wdog_tovalh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOVALHIGH field to a new value.
-#define BW_WDOG_TOVALH_TOVALHIGH(v) (HW_WDOG_TOVALH_WR((HW_WDOG_TOVALH_RD & ~BM_WDOG_TOVALH_TOVALHIGH) | BF_WDOG_TOVALH_TOVALHIGH(v)))
+#define BW_WDOG_TOVALH_TOVALHIGH(v) (HW_WDOG_TOVALH_WR((HW_WDOG_TOVALH_RD() & ~BM_WDOG_TOVALH_TOVALHIGH) | BF_WDOG_TOVALH_TOVALHIGH(v)))
 #endif
 //@}
 
@@ -623,11 +623,11 @@ typedef union _hw_wdog_tovall
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_TOVALL           (*(__IO hw_wdog_tovall_t *) HW_WDOG_TOVALL_ADDR)
-#define HW_WDOG_TOVALL_RD        (HW_WDOG_TOVALL.U)
+#define HW_WDOG_TOVALL_RD()      (HW_WDOG_TOVALL.U)
 #define HW_WDOG_TOVALL_WR(v)     (HW_WDOG_TOVALL.U = (v))
-#define HW_WDOG_TOVALL_SET(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD |  (v)))
-#define HW_WDOG_TOVALL_CLR(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD & ~(v)))
-#define HW_WDOG_TOVALL_TOG(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD ^  (v)))
+#define HW_WDOG_TOVALL_SET(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD() |  (v)))
+#define HW_WDOG_TOVALL_CLR(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD() & ~(v)))
+#define HW_WDOG_TOVALL_TOG(v)    (HW_WDOG_TOVALL_WR(HW_WDOG_TOVALL_RD() ^  (v)))
 #endif
 //@}
 
@@ -656,7 +656,7 @@ typedef union _hw_wdog_tovall
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOVALLOW field to a new value.
-#define BW_WDOG_TOVALL_TOVALLOW(v) (HW_WDOG_TOVALL_WR((HW_WDOG_TOVALL_RD & ~BM_WDOG_TOVALL_TOVALLOW) | BF_WDOG_TOVALL_TOVALLOW(v)))
+#define BW_WDOG_TOVALL_TOVALLOW(v) (HW_WDOG_TOVALL_WR((HW_WDOG_TOVALL_RD() & ~BM_WDOG_TOVALL_TOVALLOW) | BF_WDOG_TOVALL_TOVALLOW(v)))
 #endif
 //@}
 
@@ -690,11 +690,11 @@ typedef union _hw_wdog_winh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_WINH             (*(__IO hw_wdog_winh_t *) HW_WDOG_WINH_ADDR)
-#define HW_WDOG_WINH_RD          (HW_WDOG_WINH.U)
+#define HW_WDOG_WINH_RD()        (HW_WDOG_WINH.U)
 #define HW_WDOG_WINH_WR(v)       (HW_WDOG_WINH.U = (v))
-#define HW_WDOG_WINH_SET(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD |  (v)))
-#define HW_WDOG_WINH_CLR(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD & ~(v)))
-#define HW_WDOG_WINH_TOG(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD ^  (v)))
+#define HW_WDOG_WINH_SET(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD() |  (v)))
+#define HW_WDOG_WINH_CLR(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD() & ~(v)))
+#define HW_WDOG_WINH_TOG(v)      (HW_WDOG_WINH_WR(HW_WDOG_WINH_RD() ^  (v)))
 #endif
 //@}
 
@@ -727,7 +727,7 @@ typedef union _hw_wdog_winh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WINHIGH field to a new value.
-#define BW_WDOG_WINH_WINHIGH(v) (HW_WDOG_WINH_WR((HW_WDOG_WINH_RD & ~BM_WDOG_WINH_WINHIGH) | BF_WDOG_WINH_WINHIGH(v)))
+#define BW_WDOG_WINH_WINHIGH(v) (HW_WDOG_WINH_WR((HW_WDOG_WINH_RD() & ~BM_WDOG_WINH_WINHIGH) | BF_WDOG_WINH_WINHIGH(v)))
 #endif
 //@}
 
@@ -761,11 +761,11 @@ typedef union _hw_wdog_winl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_WINL             (*(__IO hw_wdog_winl_t *) HW_WDOG_WINL_ADDR)
-#define HW_WDOG_WINL_RD          (HW_WDOG_WINL.U)
+#define HW_WDOG_WINL_RD()        (HW_WDOG_WINL.U)
 #define HW_WDOG_WINL_WR(v)       (HW_WDOG_WINL.U = (v))
-#define HW_WDOG_WINL_SET(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD |  (v)))
-#define HW_WDOG_WINL_CLR(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD & ~(v)))
-#define HW_WDOG_WINL_TOG(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD ^  (v)))
+#define HW_WDOG_WINL_SET(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD() |  (v)))
+#define HW_WDOG_WINL_CLR(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD() & ~(v)))
+#define HW_WDOG_WINL_TOG(v)      (HW_WDOG_WINL_WR(HW_WDOG_WINL_RD() ^  (v)))
 #endif
 //@}
 
@@ -798,7 +798,7 @@ typedef union _hw_wdog_winl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WINLOW field to a new value.
-#define BW_WDOG_WINL_WINLOW(v) (HW_WDOG_WINL_WR((HW_WDOG_WINL_RD & ~BM_WDOG_WINL_WINLOW) | BF_WDOG_WINL_WINLOW(v)))
+#define BW_WDOG_WINL_WINLOW(v) (HW_WDOG_WINL_WR((HW_WDOG_WINL_RD() & ~BM_WDOG_WINL_WINLOW) | BF_WDOG_WINL_WINLOW(v)))
 #endif
 //@}
 
@@ -830,11 +830,11 @@ typedef union _hw_wdog_refresh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_REFRESH          (*(__IO hw_wdog_refresh_t *) HW_WDOG_REFRESH_ADDR)
-#define HW_WDOG_REFRESH_RD       (HW_WDOG_REFRESH.U)
+#define HW_WDOG_REFRESH_RD()     (HW_WDOG_REFRESH.U)
 #define HW_WDOG_REFRESH_WR(v)    (HW_WDOG_REFRESH.U = (v))
-#define HW_WDOG_REFRESH_SET(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD |  (v)))
-#define HW_WDOG_REFRESH_CLR(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD & ~(v)))
-#define HW_WDOG_REFRESH_TOG(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD ^  (v)))
+#define HW_WDOG_REFRESH_SET(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD() |  (v)))
+#define HW_WDOG_REFRESH_CLR(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD() & ~(v)))
+#define HW_WDOG_REFRESH_TOG(v)   (HW_WDOG_REFRESH_WR(HW_WDOG_REFRESH_RD() ^  (v)))
 #endif
 //@}
 
@@ -866,7 +866,7 @@ typedef union _hw_wdog_refresh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WDOGREFRESH field to a new value.
-#define BW_WDOG_REFRESH_WDOGREFRESH(v) (HW_WDOG_REFRESH_WR((HW_WDOG_REFRESH_RD & ~BM_WDOG_REFRESH_WDOGREFRESH) | BF_WDOG_REFRESH_WDOGREFRESH(v)))
+#define BW_WDOG_REFRESH_WDOGREFRESH(v) (HW_WDOG_REFRESH_WR((HW_WDOG_REFRESH_RD() & ~BM_WDOG_REFRESH_WDOGREFRESH) | BF_WDOG_REFRESH_WDOGREFRESH(v)))
 #endif
 //@}
 
@@ -898,11 +898,11 @@ typedef union _hw_wdog_unlock
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_UNLOCK           (*(__IO hw_wdog_unlock_t *) HW_WDOG_UNLOCK_ADDR)
-#define HW_WDOG_UNLOCK_RD        (HW_WDOG_UNLOCK.U)
+#define HW_WDOG_UNLOCK_RD()      (HW_WDOG_UNLOCK.U)
 #define HW_WDOG_UNLOCK_WR(v)     (HW_WDOG_UNLOCK.U = (v))
-#define HW_WDOG_UNLOCK_SET(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD |  (v)))
-#define HW_WDOG_UNLOCK_CLR(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD & ~(v)))
-#define HW_WDOG_UNLOCK_TOG(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD ^  (v)))
+#define HW_WDOG_UNLOCK_SET(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD() |  (v)))
+#define HW_WDOG_UNLOCK_CLR(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD() & ~(v)))
+#define HW_WDOG_UNLOCK_TOG(v)    (HW_WDOG_UNLOCK_WR(HW_WDOG_UNLOCK_RD() ^  (v)))
 #endif
 //@}
 
@@ -937,7 +937,7 @@ typedef union _hw_wdog_unlock
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WDOGUNLOCK field to a new value.
-#define BW_WDOG_UNLOCK_WDOGUNLOCK(v) (HW_WDOG_UNLOCK_WR((HW_WDOG_UNLOCK_RD & ~BM_WDOG_UNLOCK_WDOGUNLOCK) | BF_WDOG_UNLOCK_WDOGUNLOCK(v)))
+#define BW_WDOG_UNLOCK_WDOGUNLOCK(v) (HW_WDOG_UNLOCK_WR((HW_WDOG_UNLOCK_RD() & ~BM_WDOG_UNLOCK_WDOGUNLOCK) | BF_WDOG_UNLOCK_WDOGUNLOCK(v)))
 #endif
 //@}
 
@@ -969,11 +969,11 @@ typedef union _hw_wdog_tmrouth
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_TMROUTH          (*(__IO hw_wdog_tmrouth_t *) HW_WDOG_TMROUTH_ADDR)
-#define HW_WDOG_TMROUTH_RD       (HW_WDOG_TMROUTH.U)
+#define HW_WDOG_TMROUTH_RD()     (HW_WDOG_TMROUTH.U)
 #define HW_WDOG_TMROUTH_WR(v)    (HW_WDOG_TMROUTH.U = (v))
-#define HW_WDOG_TMROUTH_SET(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD |  (v)))
-#define HW_WDOG_TMROUTH_CLR(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD & ~(v)))
-#define HW_WDOG_TMROUTH_TOG(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD ^  (v)))
+#define HW_WDOG_TMROUTH_SET(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD() |  (v)))
+#define HW_WDOG_TMROUTH_CLR(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD() & ~(v)))
+#define HW_WDOG_TMROUTH_TOG(v)   (HW_WDOG_TMROUTH_WR(HW_WDOG_TMROUTH_RD() ^  (v)))
 #endif
 //@}
 
@@ -1001,7 +1001,7 @@ typedef union _hw_wdog_tmrouth
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TIMEROUTHIGH field to a new value.
-#define BW_WDOG_TMROUTH_TIMEROUTHIGH(v) (HW_WDOG_TMROUTH_WR((HW_WDOG_TMROUTH_RD & ~BM_WDOG_TMROUTH_TIMEROUTHIGH) | BF_WDOG_TMROUTH_TIMEROUTHIGH(v)))
+#define BW_WDOG_TMROUTH_TIMEROUTHIGH(v) (HW_WDOG_TMROUTH_WR((HW_WDOG_TMROUTH_RD() & ~BM_WDOG_TMROUTH_TIMEROUTHIGH) | BF_WDOG_TMROUTH_TIMEROUTHIGH(v)))
 #endif
 //@}
 
@@ -1038,11 +1038,11 @@ typedef union _hw_wdog_tmroutl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_TMROUTL          (*(__IO hw_wdog_tmroutl_t *) HW_WDOG_TMROUTL_ADDR)
-#define HW_WDOG_TMROUTL_RD       (HW_WDOG_TMROUTL.U)
+#define HW_WDOG_TMROUTL_RD()     (HW_WDOG_TMROUTL.U)
 #define HW_WDOG_TMROUTL_WR(v)    (HW_WDOG_TMROUTL.U = (v))
-#define HW_WDOG_TMROUTL_SET(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD |  (v)))
-#define HW_WDOG_TMROUTL_CLR(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD & ~(v)))
-#define HW_WDOG_TMROUTL_TOG(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD ^  (v)))
+#define HW_WDOG_TMROUTL_SET(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD() |  (v)))
+#define HW_WDOG_TMROUTL_CLR(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD() & ~(v)))
+#define HW_WDOG_TMROUTL_TOG(v)   (HW_WDOG_TMROUTL_WR(HW_WDOG_TMROUTL_RD() ^  (v)))
 #endif
 //@}
 
@@ -1070,7 +1070,7 @@ typedef union _hw_wdog_tmroutl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TIMEROUTLOW field to a new value.
-#define BW_WDOG_TMROUTL_TIMEROUTLOW(v) (HW_WDOG_TMROUTL_WR((HW_WDOG_TMROUTL_RD & ~BM_WDOG_TMROUTL_TIMEROUTLOW) | BF_WDOG_TMROUTL_TIMEROUTLOW(v)))
+#define BW_WDOG_TMROUTL_TIMEROUTLOW(v) (HW_WDOG_TMROUTL_WR((HW_WDOG_TMROUTL_RD() & ~BM_WDOG_TMROUTL_TIMEROUTLOW) | BF_WDOG_TMROUTL_TIMEROUTLOW(v)))
 #endif
 //@}
 
@@ -1102,11 +1102,11 @@ typedef union _hw_wdog_rstcnt
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_RSTCNT           (*(__IO hw_wdog_rstcnt_t *) HW_WDOG_RSTCNT_ADDR)
-#define HW_WDOG_RSTCNT_RD        (HW_WDOG_RSTCNT.U)
+#define HW_WDOG_RSTCNT_RD()      (HW_WDOG_RSTCNT.U)
 #define HW_WDOG_RSTCNT_WR(v)     (HW_WDOG_RSTCNT.U = (v))
-#define HW_WDOG_RSTCNT_SET(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD |  (v)))
-#define HW_WDOG_RSTCNT_CLR(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD & ~(v)))
-#define HW_WDOG_RSTCNT_TOG(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD ^  (v)))
+#define HW_WDOG_RSTCNT_SET(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD() |  (v)))
+#define HW_WDOG_RSTCNT_CLR(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD() & ~(v)))
+#define HW_WDOG_RSTCNT_TOG(v)    (HW_WDOG_RSTCNT_WR(HW_WDOG_RSTCNT_RD() ^  (v)))
 #endif
 //@}
 
@@ -1136,7 +1136,7 @@ typedef union _hw_wdog_rstcnt
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RSTCNT field to a new value.
-#define BW_WDOG_RSTCNT_RSTCNT(v) (HW_WDOG_RSTCNT_WR((HW_WDOG_RSTCNT_RD & ~BM_WDOG_RSTCNT_RSTCNT) | BF_WDOG_RSTCNT_RSTCNT(v)))
+#define BW_WDOG_RSTCNT_RSTCNT(v) (HW_WDOG_RSTCNT_WR((HW_WDOG_RSTCNT_RD() & ~BM_WDOG_RSTCNT_RSTCNT) | BF_WDOG_RSTCNT_RSTCNT(v)))
 #endif
 //@}
 
@@ -1170,11 +1170,11 @@ typedef union _hw_wdog_presc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_WDOG_PRESC            (*(__IO hw_wdog_presc_t *) HW_WDOG_PRESC_ADDR)
-#define HW_WDOG_PRESC_RD         (HW_WDOG_PRESC.U)
+#define HW_WDOG_PRESC_RD()       (HW_WDOG_PRESC.U)
 #define HW_WDOG_PRESC_WR(v)      (HW_WDOG_PRESC.U = (v))
-#define HW_WDOG_PRESC_SET(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD |  (v)))
-#define HW_WDOG_PRESC_CLR(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD & ~(v)))
-#define HW_WDOG_PRESC_TOG(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD ^  (v)))
+#define HW_WDOG_PRESC_SET(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD() |  (v)))
+#define HW_WDOG_PRESC_CLR(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD() & ~(v)))
+#define HW_WDOG_PRESC_TOG(v)     (HW_WDOG_PRESC_WR(HW_WDOG_PRESC_RD() ^  (v)))
 #endif
 //@}
 
@@ -1204,7 +1204,7 @@ typedef union _hw_wdog_presc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the PRESCVAL field to a new value.
-#define BW_WDOG_PRESC_PRESCVAL(v) (HW_WDOG_PRESC_WR((HW_WDOG_PRESC_RD & ~BM_WDOG_PRESC_PRESCVAL) | BF_WDOG_PRESC_PRESCVAL(v)))
+#define BW_WDOG_PRESC_PRESCVAL(v) (HW_WDOG_PRESC_WR((HW_WDOG_PRESC_RD() & ~BM_WDOG_PRESC_PRESCVAL) | BF_WDOG_PRESC_PRESCVAL(v)))
 #endif
 //@}
 

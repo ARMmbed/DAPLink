@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -97,11 +97,11 @@ typedef union _hw_sdhc_dsaddr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_DSADDR           (*(__IO hw_sdhc_dsaddr_t *) HW_SDHC_DSADDR_ADDR)
-#define HW_SDHC_DSADDR_RD        (HW_SDHC_DSADDR.U)
+#define HW_SDHC_DSADDR_RD()      (HW_SDHC_DSADDR.U)
 #define HW_SDHC_DSADDR_WR(v)     (HW_SDHC_DSADDR.U = (v))
-#define HW_SDHC_DSADDR_SET(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD |  (v)))
-#define HW_SDHC_DSADDR_CLR(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD & ~(v)))
-#define HW_SDHC_DSADDR_TOG(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD ^  (v)))
+#define HW_SDHC_DSADDR_SET(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD() |  (v)))
+#define HW_SDHC_DSADDR_CLR(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD() & ~(v)))
+#define HW_SDHC_DSADDR_TOG(v)    (HW_SDHC_DSADDR_WR(HW_SDHC_DSADDR_RD() ^  (v)))
 #endif
 //@}
 
@@ -145,7 +145,7 @@ typedef union _hw_sdhc_dsaddr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DSADDR field to a new value.
-#define BW_SDHC_DSADDR_DSADDR(v) (HW_SDHC_DSADDR_WR((HW_SDHC_DSADDR_RD & ~BM_SDHC_DSADDR_DSADDR) | BF_SDHC_DSADDR_DSADDR(v)))
+#define BW_SDHC_DSADDR_DSADDR(v) (HW_SDHC_DSADDR_WR((HW_SDHC_DSADDR_RD() & ~BM_SDHC_DSADDR_DSADDR) | BF_SDHC_DSADDR_DSADDR(v)))
 #endif
 //@}
 
@@ -182,11 +182,11 @@ typedef union _hw_sdhc_blkattr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_BLKATTR          (*(__IO hw_sdhc_blkattr_t *) HW_SDHC_BLKATTR_ADDR)
-#define HW_SDHC_BLKATTR_RD       (HW_SDHC_BLKATTR.U)
+#define HW_SDHC_BLKATTR_RD()     (HW_SDHC_BLKATTR.U)
 #define HW_SDHC_BLKATTR_WR(v)    (HW_SDHC_BLKATTR.U = (v))
-#define HW_SDHC_BLKATTR_SET(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD |  (v)))
-#define HW_SDHC_BLKATTR_CLR(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD & ~(v)))
-#define HW_SDHC_BLKATTR_TOG(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD ^  (v)))
+#define HW_SDHC_BLKATTR_SET(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD() |  (v)))
+#define HW_SDHC_BLKATTR_CLR(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD() & ~(v)))
+#define HW_SDHC_BLKATTR_TOG(v)   (HW_SDHC_BLKATTR_WR(HW_SDHC_BLKATTR_RD() ^  (v)))
 #endif
 //@}
 
@@ -229,7 +229,7 @@ typedef union _hw_sdhc_blkattr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BLKSIZE field to a new value.
-#define BW_SDHC_BLKATTR_BLKSIZE(v) (HW_SDHC_BLKATTR_WR((HW_SDHC_BLKATTR_RD & ~BM_SDHC_BLKATTR_BLKSIZE) | BF_SDHC_BLKATTR_BLKSIZE(v)))
+#define BW_SDHC_BLKATTR_BLKSIZE(v) (HW_SDHC_BLKATTR_WR((HW_SDHC_BLKATTR_RD() & ~BM_SDHC_BLKATTR_BLKSIZE) | BF_SDHC_BLKATTR_BLKSIZE(v)))
 #endif
 //@}
 
@@ -278,7 +278,7 @@ typedef union _hw_sdhc_blkattr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BLKCNT field to a new value.
-#define BW_SDHC_BLKATTR_BLKCNT(v) (HW_SDHC_BLKATTR_WR((HW_SDHC_BLKATTR_RD & ~BM_SDHC_BLKATTR_BLKCNT) | BF_SDHC_BLKATTR_BLKCNT(v)))
+#define BW_SDHC_BLKATTR_BLKCNT(v) (HW_SDHC_BLKATTR_WR((HW_SDHC_BLKATTR_RD() & ~BM_SDHC_BLKATTR_BLKCNT) | BF_SDHC_BLKATTR_BLKCNT(v)))
 #endif
 //@}
 
@@ -312,11 +312,11 @@ typedef union _hw_sdhc_cmdarg
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_CMDARG           (*(__IO hw_sdhc_cmdarg_t *) HW_SDHC_CMDARG_ADDR)
-#define HW_SDHC_CMDARG_RD        (HW_SDHC_CMDARG.U)
+#define HW_SDHC_CMDARG_RD()      (HW_SDHC_CMDARG.U)
 #define HW_SDHC_CMDARG_WR(v)     (HW_SDHC_CMDARG.U = (v))
-#define HW_SDHC_CMDARG_SET(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD |  (v)))
-#define HW_SDHC_CMDARG_CLR(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD & ~(v)))
-#define HW_SDHC_CMDARG_TOG(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD ^  (v)))
+#define HW_SDHC_CMDARG_SET(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD() |  (v)))
+#define HW_SDHC_CMDARG_CLR(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD() & ~(v)))
+#define HW_SDHC_CMDARG_TOG(v)    (HW_SDHC_CMDARG_WR(HW_SDHC_CMDARG_RD() ^  (v)))
 #endif
 //@}
 
@@ -346,7 +346,7 @@ typedef union _hw_sdhc_cmdarg
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CMDARG field to a new value.
-#define BW_SDHC_CMDARG_CMDARG(v) (HW_SDHC_CMDARG_WR((HW_SDHC_CMDARG_RD & ~BM_SDHC_CMDARG_CMDARG) | BF_SDHC_CMDARG_CMDARG(v)))
+#define BW_SDHC_CMDARG_CMDARG(v) (HW_SDHC_CMDARG_WR((HW_SDHC_CMDARG_RD() & ~BM_SDHC_CMDARG_CMDARG) | BF_SDHC_CMDARG_CMDARG(v)))
 #endif
 //@}
 
@@ -432,11 +432,11 @@ typedef union _hw_sdhc_xfertyp
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_XFERTYP          (*(__IO hw_sdhc_xfertyp_t *) HW_SDHC_XFERTYP_ADDR)
-#define HW_SDHC_XFERTYP_RD       (HW_SDHC_XFERTYP.U)
+#define HW_SDHC_XFERTYP_RD()     (HW_SDHC_XFERTYP.U)
 #define HW_SDHC_XFERTYP_WR(v)    (HW_SDHC_XFERTYP.U = (v))
-#define HW_SDHC_XFERTYP_SET(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD |  (v)))
-#define HW_SDHC_XFERTYP_CLR(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD & ~(v)))
-#define HW_SDHC_XFERTYP_TOG(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD ^  (v)))
+#define HW_SDHC_XFERTYP_SET(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD() |  (v)))
+#define HW_SDHC_XFERTYP_CLR(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD() & ~(v)))
+#define HW_SDHC_XFERTYP_TOG(v)   (HW_SDHC_XFERTYP_WR(HW_SDHC_XFERTYP_RD() ^  (v)))
 #endif
 //@}
 
@@ -622,7 +622,7 @@ typedef union _hw_sdhc_xfertyp
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RSPTYP field to a new value.
-#define BW_SDHC_XFERTYP_RSPTYP(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD & ~BM_SDHC_XFERTYP_RSPTYP) | BF_SDHC_XFERTYP_RSPTYP(v)))
+#define BW_SDHC_XFERTYP_RSPTYP(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD() & ~BM_SDHC_XFERTYP_RSPTYP) | BF_SDHC_XFERTYP_RSPTYP(v)))
 #endif
 //@}
 
@@ -769,7 +769,7 @@ typedef union _hw_sdhc_xfertyp
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CMDTYP field to a new value.
-#define BW_SDHC_XFERTYP_CMDTYP(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD & ~BM_SDHC_XFERTYP_CMDTYP) | BF_SDHC_XFERTYP_CMDTYP(v)))
+#define BW_SDHC_XFERTYP_CMDTYP(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD() & ~BM_SDHC_XFERTYP_CMDTYP) | BF_SDHC_XFERTYP_CMDTYP(v)))
 #endif
 //@}
 
@@ -795,7 +795,7 @@ typedef union _hw_sdhc_xfertyp
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CMDINX field to a new value.
-#define BW_SDHC_XFERTYP_CMDINX(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD & ~BM_SDHC_XFERTYP_CMDINX) | BF_SDHC_XFERTYP_CMDINX(v)))
+#define BW_SDHC_XFERTYP_CMDINX(v) (HW_SDHC_XFERTYP_WR((HW_SDHC_XFERTYP_RD() & ~BM_SDHC_XFERTYP_CMDINX) | BF_SDHC_XFERTYP_CMDINX(v)))
 #endif
 //@}
 
@@ -829,7 +829,7 @@ typedef union _hw_sdhc_cmdrsp0
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_CMDRSP0          (*(__I hw_sdhc_cmdrsp0_t *) HW_SDHC_CMDRSP0_ADDR)
-#define HW_SDHC_CMDRSP0_RD       (HW_SDHC_CMDRSP0.U)
+#define HW_SDHC_CMDRSP0_RD()     (HW_SDHC_CMDRSP0.U)
 #endif
 //@}
 
@@ -881,7 +881,7 @@ typedef union _hw_sdhc_cmdrsp1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_CMDRSP1          (*(__I hw_sdhc_cmdrsp1_t *) HW_SDHC_CMDRSP1_ADDR)
-#define HW_SDHC_CMDRSP1_RD       (HW_SDHC_CMDRSP1.U)
+#define HW_SDHC_CMDRSP1_RD()     (HW_SDHC_CMDRSP1.U)
 #endif
 //@}
 
@@ -933,7 +933,7 @@ typedef union _hw_sdhc_cmdrsp2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_CMDRSP2          (*(__I hw_sdhc_cmdrsp2_t *) HW_SDHC_CMDRSP2_ADDR)
-#define HW_SDHC_CMDRSP2_RD       (HW_SDHC_CMDRSP2.U)
+#define HW_SDHC_CMDRSP2_RD()     (HW_SDHC_CMDRSP2.U)
 #endif
 //@}
 
@@ -1014,7 +1014,7 @@ typedef union _hw_sdhc_cmdrsp3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_CMDRSP3          (*(__I hw_sdhc_cmdrsp3_t *) HW_SDHC_CMDRSP3_ADDR)
-#define HW_SDHC_CMDRSP3_RD       (HW_SDHC_CMDRSP3.U)
+#define HW_SDHC_CMDRSP3_RD()     (HW_SDHC_CMDRSP3.U)
 #endif
 //@}
 
@@ -1067,11 +1067,11 @@ typedef union _hw_sdhc_datport
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_DATPORT          (*(__IO hw_sdhc_datport_t *) HW_SDHC_DATPORT_ADDR)
-#define HW_SDHC_DATPORT_RD       (HW_SDHC_DATPORT.U)
+#define HW_SDHC_DATPORT_RD()     (HW_SDHC_DATPORT.U)
 #define HW_SDHC_DATPORT_WR(v)    (HW_SDHC_DATPORT.U = (v))
-#define HW_SDHC_DATPORT_SET(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD |  (v)))
-#define HW_SDHC_DATPORT_CLR(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD & ~(v)))
-#define HW_SDHC_DATPORT_TOG(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD ^  (v)))
+#define HW_SDHC_DATPORT_SET(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD() |  (v)))
+#define HW_SDHC_DATPORT_CLR(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD() & ~(v)))
+#define HW_SDHC_DATPORT_TOG(v)   (HW_SDHC_DATPORT_WR(HW_SDHC_DATPORT_RD() ^  (v)))
 #endif
 //@}
 
@@ -1101,7 +1101,7 @@ typedef union _hw_sdhc_datport
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DATCONT field to a new value.
-#define BW_SDHC_DATPORT_DATCONT(v) (HW_SDHC_DATPORT_WR((HW_SDHC_DATPORT_RD & ~BM_SDHC_DATPORT_DATCONT) | BF_SDHC_DATPORT_DATCONT(v)))
+#define BW_SDHC_DATPORT_DATCONT(v) (HW_SDHC_DATPORT_WR((HW_SDHC_DATPORT_RD() & ~BM_SDHC_DATPORT_DATCONT) | BF_SDHC_DATPORT_DATCONT(v)))
 #endif
 //@}
 
@@ -1156,7 +1156,7 @@ typedef union _hw_sdhc_prsstat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_PRSSTAT          (*(__I hw_sdhc_prsstat_t *) HW_SDHC_PRSSTAT_ADDR)
-#define HW_SDHC_PRSSTAT_RD       (HW_SDHC_PRSSTAT.U)
+#define HW_SDHC_PRSSTAT_RD()     (HW_SDHC_PRSSTAT.U)
 #endif
 //@}
 
@@ -1595,7 +1595,7 @@ typedef union _hw_sdhc_proctl
         uint32_t RESERVED1 : 4;        //!< [23:20]
         uint32_t WECINT : 1;           //!< [24] Wakeup Event Enable On Card Interrupt
         uint32_t WECINS : 1;           //!< [25] Wakeup Event Enable On SD Card
-                                       //!< Insertion
+                                       //! Insertion
         uint32_t WECRM : 1;            //!< [26] Wakeup Event Enable On SD Card Removal
         uint32_t RESERVED2 : 5;        //!< [31:27]
     } B;
@@ -1610,11 +1610,11 @@ typedef union _hw_sdhc_proctl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_PROCTL           (*(__IO hw_sdhc_proctl_t *) HW_SDHC_PROCTL_ADDR)
-#define HW_SDHC_PROCTL_RD        (HW_SDHC_PROCTL.U)
+#define HW_SDHC_PROCTL_RD()      (HW_SDHC_PROCTL.U)
 #define HW_SDHC_PROCTL_WR(v)     (HW_SDHC_PROCTL.U = (v))
-#define HW_SDHC_PROCTL_SET(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD |  (v)))
-#define HW_SDHC_PROCTL_CLR(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD & ~(v)))
-#define HW_SDHC_PROCTL_TOG(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD ^  (v)))
+#define HW_SDHC_PROCTL_SET(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD() |  (v)))
+#define HW_SDHC_PROCTL_CLR(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD() & ~(v)))
+#define HW_SDHC_PROCTL_TOG(v)    (HW_SDHC_PROCTL_WR(HW_SDHC_PROCTL_RD() ^  (v)))
 #endif
 //@}
 
@@ -1683,7 +1683,7 @@ typedef union _hw_sdhc_proctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DTW field to a new value.
-#define BW_SDHC_PROCTL_DTW(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD & ~BM_SDHC_PROCTL_DTW) | BF_SDHC_PROCTL_DTW(v)))
+#define BW_SDHC_PROCTL_DTW(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD() & ~BM_SDHC_PROCTL_DTW) | BF_SDHC_PROCTL_DTW(v)))
 #endif
 //@}
 
@@ -1745,7 +1745,7 @@ typedef union _hw_sdhc_proctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the EMODE field to a new value.
-#define BW_SDHC_PROCTL_EMODE(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD & ~BM_SDHC_PROCTL_EMODE) | BF_SDHC_PROCTL_EMODE(v)))
+#define BW_SDHC_PROCTL_EMODE(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD() & ~BM_SDHC_PROCTL_EMODE) | BF_SDHC_PROCTL_EMODE(v)))
 #endif
 //@}
 
@@ -1832,7 +1832,7 @@ typedef union _hw_sdhc_proctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DMAS field to a new value.
-#define BW_SDHC_PROCTL_DMAS(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD & ~BM_SDHC_PROCTL_DMAS) | BF_SDHC_PROCTL_DMAS(v)))
+#define BW_SDHC_PROCTL_DMAS(v) (HW_SDHC_PROCTL_WR((HW_SDHC_PROCTL_RD() & ~BM_SDHC_PROCTL_DMAS) | BF_SDHC_PROCTL_DMAS(v)))
 #endif
 //@}
 
@@ -2120,11 +2120,11 @@ typedef union _hw_sdhc_sysctl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_SYSCTL           (*(__IO hw_sdhc_sysctl_t *) HW_SDHC_SYSCTL_ADDR)
-#define HW_SDHC_SYSCTL_RD        (HW_SDHC_SYSCTL.U)
+#define HW_SDHC_SYSCTL_RD()      (HW_SDHC_SYSCTL.U)
 #define HW_SDHC_SYSCTL_WR(v)     (HW_SDHC_SYSCTL.U = (v))
-#define HW_SDHC_SYSCTL_SET(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD |  (v)))
-#define HW_SDHC_SYSCTL_CLR(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD & ~(v)))
-#define HW_SDHC_SYSCTL_TOG(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD ^  (v)))
+#define HW_SDHC_SYSCTL_SET(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD() |  (v)))
+#define HW_SDHC_SYSCTL_CLR(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD() & ~(v)))
+#define HW_SDHC_SYSCTL_TOG(v)    (HW_SDHC_SYSCTL_WR(HW_SDHC_SYSCTL_RD() ^  (v)))
 #endif
 //@}
 
@@ -2292,7 +2292,7 @@ typedef union _hw_sdhc_sysctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DVS field to a new value.
-#define BW_SDHC_SYSCTL_DVS(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD & ~BM_SDHC_SYSCTL_DVS) | BF_SDHC_SYSCTL_DVS(v)))
+#define BW_SDHC_SYSCTL_DVS(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD() & ~BM_SDHC_SYSCTL_DVS) | BF_SDHC_SYSCTL_DVS(v)))
 #endif
 //@}
 
@@ -2342,7 +2342,7 @@ typedef union _hw_sdhc_sysctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the SDCLKFS field to a new value.
-#define BW_SDHC_SYSCTL_SDCLKFS(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD & ~BM_SDHC_SYSCTL_SDCLKFS) | BF_SDHC_SYSCTL_SDCLKFS(v)))
+#define BW_SDHC_SYSCTL_SDCLKFS(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD() & ~BM_SDHC_SYSCTL_SDCLKFS) | BF_SDHC_SYSCTL_SDCLKFS(v)))
 #endif
 //@}
 
@@ -2376,7 +2376,7 @@ typedef union _hw_sdhc_sysctl
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DTOCV field to a new value.
-#define BW_SDHC_SYSCTL_DTOCV(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD & ~BM_SDHC_SYSCTL_DTOCV) | BF_SDHC_SYSCTL_DTOCV(v)))
+#define BW_SDHC_SYSCTL_DTOCV(v) (HW_SDHC_SYSCTL_WR((HW_SDHC_SYSCTL_RD() & ~BM_SDHC_SYSCTL_DTOCV) | BF_SDHC_SYSCTL_DTOCV(v)))
 #endif
 //@}
 
@@ -2581,11 +2581,11 @@ typedef union _hw_sdhc_irqstat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_IRQSTAT          (*(__IO hw_sdhc_irqstat_t *) HW_SDHC_IRQSTAT_ADDR)
-#define HW_SDHC_IRQSTAT_RD       (HW_SDHC_IRQSTAT.U)
+#define HW_SDHC_IRQSTAT_RD()     (HW_SDHC_IRQSTAT.U)
 #define HW_SDHC_IRQSTAT_WR(v)    (HW_SDHC_IRQSTAT.U = (v))
-#define HW_SDHC_IRQSTAT_SET(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD |  (v)))
-#define HW_SDHC_IRQSTAT_CLR(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD & ~(v)))
-#define HW_SDHC_IRQSTAT_TOG(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD ^  (v)))
+#define HW_SDHC_IRQSTAT_SET(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD() |  (v)))
+#define HW_SDHC_IRQSTAT_CLR(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD() & ~(v)))
+#define HW_SDHC_IRQSTAT_TOG(v)   (HW_SDHC_IRQSTAT_WR(HW_SDHC_IRQSTAT_RD() ^  (v)))
 #endif
 //@}
 
@@ -3233,11 +3233,11 @@ typedef union _hw_sdhc_irqstaten
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_IRQSTATEN        (*(__IO hw_sdhc_irqstaten_t *) HW_SDHC_IRQSTATEN_ADDR)
-#define HW_SDHC_IRQSTATEN_RD     (HW_SDHC_IRQSTATEN.U)
+#define HW_SDHC_IRQSTATEN_RD()   (HW_SDHC_IRQSTATEN.U)
 #define HW_SDHC_IRQSTATEN_WR(v)  (HW_SDHC_IRQSTATEN.U = (v))
-#define HW_SDHC_IRQSTATEN_SET(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD |  (v)))
-#define HW_SDHC_IRQSTATEN_CLR(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD & ~(v)))
-#define HW_SDHC_IRQSTATEN_TOG(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD ^  (v)))
+#define HW_SDHC_IRQSTATEN_SET(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD() |  (v)))
+#define HW_SDHC_IRQSTATEN_CLR(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD() & ~(v)))
+#define HW_SDHC_IRQSTATEN_TOG(v) (HW_SDHC_IRQSTATEN_WR(HW_SDHC_IRQSTATEN_RD() ^  (v)))
 #endif
 //@}
 
@@ -3774,11 +3774,11 @@ typedef union _hw_sdhc_irqsigen
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_IRQSIGEN         (*(__IO hw_sdhc_irqsigen_t *) HW_SDHC_IRQSIGEN_ADDR)
-#define HW_SDHC_IRQSIGEN_RD      (HW_SDHC_IRQSIGEN.U)
+#define HW_SDHC_IRQSIGEN_RD()    (HW_SDHC_IRQSIGEN.U)
 #define HW_SDHC_IRQSIGEN_WR(v)   (HW_SDHC_IRQSIGEN.U = (v))
-#define HW_SDHC_IRQSIGEN_SET(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD |  (v)))
-#define HW_SDHC_IRQSIGEN_CLR(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD & ~(v)))
-#define HW_SDHC_IRQSIGEN_TOG(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD ^  (v)))
+#define HW_SDHC_IRQSIGEN_SET(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD() |  (v)))
+#define HW_SDHC_IRQSIGEN_CLR(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD() & ~(v)))
+#define HW_SDHC_IRQSIGEN_TOG(v)  (HW_SDHC_IRQSIGEN_WR(HW_SDHC_IRQSIGEN_RD() ^  (v)))
 #endif
 //@}
 
@@ -4298,7 +4298,7 @@ typedef union _hw_sdhc_ac12err
         uint32_t AC12IE : 1;           //!< [4] Auto CMD12 Index Error
         uint32_t RESERVED0 : 2;        //!< [6:5]
         uint32_t CNIBAC12E : 1;        //!< [7] Command Not Issued By Auto CMD12
-                                       //!< Error
+                                       //! Error
         uint32_t RESERVED1 : 24;       //!< [31:8]
     } B;
 } hw_sdhc_ac12err_t;
@@ -4312,7 +4312,7 @@ typedef union _hw_sdhc_ac12err
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_AC12ERR          (*(__I hw_sdhc_ac12err_t *) HW_SDHC_AC12ERR_ADDR)
-#define HW_SDHC_AC12ERR_RD       (HW_SDHC_AC12ERR.U)
+#define HW_SDHC_AC12ERR_RD()     (HW_SDHC_AC12ERR.U)
 #endif
 //@}
 
@@ -4488,7 +4488,7 @@ typedef union _hw_sdhc_htcapblt
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_HTCAPBLT         (*(__I hw_sdhc_htcapblt_t *) HW_SDHC_HTCAPBLT_ADDR)
-#define HW_SDHC_HTCAPBLT_RD      (HW_SDHC_HTCAPBLT.U)
+#define HW_SDHC_HTCAPBLT_RD()    (HW_SDHC_HTCAPBLT.U)
 #endif
 //@}
 
@@ -4660,11 +4660,11 @@ typedef union _hw_sdhc_wml
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_WML              (*(__IO hw_sdhc_wml_t *) HW_SDHC_WML_ADDR)
-#define HW_SDHC_WML_RD           (HW_SDHC_WML.U)
+#define HW_SDHC_WML_RD()         (HW_SDHC_WML.U)
 #define HW_SDHC_WML_WR(v)        (HW_SDHC_WML.U = (v))
-#define HW_SDHC_WML_SET(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD |  (v)))
-#define HW_SDHC_WML_CLR(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD & ~(v)))
-#define HW_SDHC_WML_TOG(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD ^  (v)))
+#define HW_SDHC_WML_SET(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD() |  (v)))
+#define HW_SDHC_WML_CLR(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD() & ~(v)))
+#define HW_SDHC_WML_TOG(v)       (HW_SDHC_WML_WR(HW_SDHC_WML_RD() ^  (v)))
 #endif
 //@}
 
@@ -4694,7 +4694,7 @@ typedef union _hw_sdhc_wml
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the RDWML field to a new value.
-#define BW_SDHC_WML_RDWML(v) (HW_SDHC_WML_WR((HW_SDHC_WML_RD & ~BM_SDHC_WML_RDWML) | BF_SDHC_WML_RDWML(v)))
+#define BW_SDHC_WML_RDWML(v) (HW_SDHC_WML_WR((HW_SDHC_WML_RD() & ~BM_SDHC_WML_RDWML) | BF_SDHC_WML_RDWML(v)))
 #endif
 //@}
 
@@ -4720,7 +4720,7 @@ typedef union _hw_sdhc_wml
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the WRWML field to a new value.
-#define BW_SDHC_WML_WRWML(v) (HW_SDHC_WML_WR((HW_SDHC_WML_RD & ~BM_SDHC_WML_WRWML) | BF_SDHC_WML_WRWML(v)))
+#define BW_SDHC_WML_WRWML(v) (HW_SDHC_WML_WR((HW_SDHC_WML_RD() & ~BM_SDHC_WML_WRWML) | BF_SDHC_WML_WRWML(v)))
 #endif
 //@}
 
@@ -4753,14 +4753,14 @@ typedef union _hw_sdhc_fevt
     {
         uint32_t AC12NE : 1;           //!< [0] Force Event Auto Command 12 Not Executed
         uint32_t AC12TOE : 1;          //!< [1] Force Event Auto Command 12 Time Out
-                                       //!< Error
+                                       //! Error
         uint32_t AC12CE : 1;           //!< [2] Force Event Auto Command 12 CRC Error
         uint32_t AC12EBE : 1;          //!< [3] Force Event Auto Command 12 End Bit
-                                       //!< Error
+                                       //! Error
         uint32_t AC12IE : 1;           //!< [4] Force Event Auto Command 12 Index Error
         uint32_t RESERVED0 : 2;        //!< [6:5]
         uint32_t CNIBAC12E : 1;        //!< [7] Force Event Command Not Executed By
-                                       //!< Auto Command 12 Error
+                                       //! Auto Command 12 Error
         uint32_t RESERVED1 : 8;        //!< [15:8]
         uint32_t CTOE : 1;             //!< [16] Force Event Command Time Out Error
         uint32_t CCE : 1;              //!< [17] Force Event Command CRC Error
@@ -5219,7 +5219,7 @@ typedef union _hw_sdhc_admaes
     struct _hw_sdhc_admaes_bitfields
     {
         uint32_t ADMAES : 2;           //!< [1:0] ADMA Error State (When ADMA Error Is
-                                       //!< Occurred.)
+                                       //! Occurred.)
         uint32_t ADMALME : 1;          //!< [2] ADMA Length Mismatch Error
         uint32_t ADMADCE : 1;          //!< [3] ADMA Descriptor Error
         uint32_t RESERVED0 : 28;       //!< [31:4]
@@ -5235,7 +5235,7 @@ typedef union _hw_sdhc_admaes
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_ADMAES           (*(__I hw_sdhc_admaes_t *) HW_SDHC_ADMAES_ADDR)
-#define HW_SDHC_ADMAES_RD        (HW_SDHC_ADMAES.U)
+#define HW_SDHC_ADMAES_RD()      (HW_SDHC_ADMAES.U)
 #endif
 //@}
 
@@ -5335,11 +5335,11 @@ typedef union _hw_sdhc_adsaddr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_ADSADDR          (*(__IO hw_sdhc_adsaddr_t *) HW_SDHC_ADSADDR_ADDR)
-#define HW_SDHC_ADSADDR_RD       (HW_SDHC_ADSADDR.U)
+#define HW_SDHC_ADSADDR_RD()     (HW_SDHC_ADSADDR.U)
 #define HW_SDHC_ADSADDR_WR(v)    (HW_SDHC_ADSADDR.U = (v))
-#define HW_SDHC_ADSADDR_SET(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD |  (v)))
-#define HW_SDHC_ADSADDR_CLR(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD & ~(v)))
-#define HW_SDHC_ADSADDR_TOG(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD ^  (v)))
+#define HW_SDHC_ADSADDR_SET(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD() |  (v)))
+#define HW_SDHC_ADSADDR_CLR(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD() & ~(v)))
+#define HW_SDHC_ADSADDR_TOG(v)   (HW_SDHC_ADSADDR_WR(HW_SDHC_ADSADDR_RD() ^  (v)))
 #endif
 //@}
 
@@ -5377,7 +5377,7 @@ typedef union _hw_sdhc_adsaddr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the ADSADDR field to a new value.
-#define BW_SDHC_ADSADDR_ADSADDR(v) (HW_SDHC_ADSADDR_WR((HW_SDHC_ADSADDR_RD & ~BM_SDHC_ADSADDR_ADSADDR) | BF_SDHC_ADSADDR_ADSADDR(v)))
+#define BW_SDHC_ADSADDR_ADSADDR(v) (HW_SDHC_ADSADDR_WR((HW_SDHC_ADSADDR_RD() & ~BM_SDHC_ADSADDR_ADSADDR) | BF_SDHC_ADSADDR_ADSADDR(v)))
 #endif
 //@}
 
@@ -5400,7 +5400,7 @@ typedef union _hw_sdhc_vendor
     {
         uint32_t EXTDMAEN : 1;         //!< [0] External DMA Request Enable
         uint32_t EXBLKNU : 1;          //!< [1] Exact Block Number Block Read Enable
-                                       //!< For SDIO CMD53
+                                       //! For SDIO CMD53
         uint32_t RESERVED0 : 14;       //!< [15:2]
         uint32_t INTSTVAL : 8;         //!< [23:16] Internal State Value
         uint32_t RESERVED1 : 8;        //!< [31:24]
@@ -5416,11 +5416,11 @@ typedef union _hw_sdhc_vendor
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_VENDOR           (*(__IO hw_sdhc_vendor_t *) HW_SDHC_VENDOR_ADDR)
-#define HW_SDHC_VENDOR_RD        (HW_SDHC_VENDOR.U)
+#define HW_SDHC_VENDOR_RD()      (HW_SDHC_VENDOR.U)
 #define HW_SDHC_VENDOR_WR(v)     (HW_SDHC_VENDOR.U = (v))
-#define HW_SDHC_VENDOR_SET(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD |  (v)))
-#define HW_SDHC_VENDOR_CLR(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD & ~(v)))
-#define HW_SDHC_VENDOR_TOG(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD ^  (v)))
+#define HW_SDHC_VENDOR_SET(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD() |  (v)))
+#define HW_SDHC_VENDOR_CLR(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD() & ~(v)))
+#define HW_SDHC_VENDOR_TOG(v)    (HW_SDHC_VENDOR_WR(HW_SDHC_VENDOR_RD() ^  (v)))
 #endif
 //@}
 
@@ -5545,11 +5545,11 @@ typedef union _hw_sdhc_mmcboot
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_MMCBOOT          (*(__IO hw_sdhc_mmcboot_t *) HW_SDHC_MMCBOOT_ADDR)
-#define HW_SDHC_MMCBOOT_RD       (HW_SDHC_MMCBOOT.U)
+#define HW_SDHC_MMCBOOT_RD()     (HW_SDHC_MMCBOOT.U)
 #define HW_SDHC_MMCBOOT_WR(v)    (HW_SDHC_MMCBOOT.U = (v))
-#define HW_SDHC_MMCBOOT_SET(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD |  (v)))
-#define HW_SDHC_MMCBOOT_CLR(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD & ~(v)))
-#define HW_SDHC_MMCBOOT_TOG(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD ^  (v)))
+#define HW_SDHC_MMCBOOT_SET(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD() |  (v)))
+#define HW_SDHC_MMCBOOT_CLR(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD() & ~(v)))
+#define HW_SDHC_MMCBOOT_TOG(v)   (HW_SDHC_MMCBOOT_WR(HW_SDHC_MMCBOOT_RD() ^  (v)))
 #endif
 //@}
 
@@ -5587,7 +5587,7 @@ typedef union _hw_sdhc_mmcboot
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the DTOCVACK field to a new value.
-#define BW_SDHC_MMCBOOT_DTOCVACK(v) (HW_SDHC_MMCBOOT_WR((HW_SDHC_MMCBOOT_RD & ~BM_SDHC_MMCBOOT_DTOCVACK) | BF_SDHC_MMCBOOT_DTOCVACK(v)))
+#define BW_SDHC_MMCBOOT_DTOCVACK(v) (HW_SDHC_MMCBOOT_WR((HW_SDHC_MMCBOOT_RD() & ~BM_SDHC_MMCBOOT_DTOCVACK) | BF_SDHC_MMCBOOT_DTOCVACK(v)))
 #endif
 //@}
 
@@ -5716,7 +5716,7 @@ typedef union _hw_sdhc_mmcboot
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BOOTBLKCNT field to a new value.
-#define BW_SDHC_MMCBOOT_BOOTBLKCNT(v) (HW_SDHC_MMCBOOT_WR((HW_SDHC_MMCBOOT_RD & ~BM_SDHC_MMCBOOT_BOOTBLKCNT) | BF_SDHC_MMCBOOT_BOOTBLKCNT(v)))
+#define BW_SDHC_MMCBOOT_BOOTBLKCNT(v) (HW_SDHC_MMCBOOT_WR((HW_SDHC_MMCBOOT_RD() & ~BM_SDHC_MMCBOOT_BOOTBLKCNT) | BF_SDHC_MMCBOOT_BOOTBLKCNT(v)))
 #endif
 //@}
 
@@ -5753,7 +5753,7 @@ typedef union _hw_sdhc_hostver
 
 #ifndef __LANGUAGE_ASM__
 #define HW_SDHC_HOSTVER          (*(__I hw_sdhc_hostver_t *) HW_SDHC_HOSTVER_ADDR)
-#define HW_SDHC_HOSTVER_RD       (HW_SDHC_HOSTVER.U)
+#define HW_SDHC_HOSTVER_RD()     (HW_SDHC_HOSTVER.U)
 #endif
 //@}
 

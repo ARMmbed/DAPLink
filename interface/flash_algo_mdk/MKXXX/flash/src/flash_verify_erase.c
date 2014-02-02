@@ -38,7 +38,7 @@
 //! @brief Flash verify unit of FTFx_VERIFY_SECTION cmd.
 enum _flash_verify_unit
 {
-#if (defined(FTFA))
+#if (defined(FTFA)) || (defined(FTFL))
     kFlashVerifyUnitInBytes = FSL_FEATURE_FTFx_LONGWORD_SIZE
 #elif (defined(FTFE))
     kFlashVerifyUnitInBytes = 16

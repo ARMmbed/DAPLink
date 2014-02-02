@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -63,8 +63,8 @@ typedef union _hw_vref_trm
     {
         uint8_t TRIM : 6;              //!< [5:0] Trim bits
         uint8_t CHOPEN : 1;            //!< [6] Chop oscillator enable. When set,
-                                       //!< internal chopping operation is enabled and the internal analog offset will
-                                       //!< be minimized.
+                                       //! internal chopping operation is enabled and the internal analog offset will
+                                       //! be minimized.
         uint8_t RESERVED0 : 1;         //!< [7]
     } B;
 } hw_vref_trm_t;
@@ -78,11 +78,11 @@ typedef union _hw_vref_trm
 
 #ifndef __LANGUAGE_ASM__
 #define HW_VREF_TRM              (*(__IO hw_vref_trm_t *) HW_VREF_TRM_ADDR)
-#define HW_VREF_TRM_RD           (HW_VREF_TRM.U)
+#define HW_VREF_TRM_RD()         (HW_VREF_TRM.U)
 #define HW_VREF_TRM_WR(v)        (HW_VREF_TRM.U = (v))
-#define HW_VREF_TRM_SET(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD |  (v)))
-#define HW_VREF_TRM_CLR(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD & ~(v)))
-#define HW_VREF_TRM_TOG(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD ^  (v)))
+#define HW_VREF_TRM_SET(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD() |  (v)))
+#define HW_VREF_TRM_CLR(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD() & ~(v)))
+#define HW_VREF_TRM_TOG(v)       (HW_VREF_TRM_WR(HW_VREF_TRM_RD() ^  (v)))
 #endif
 //@}
 
@@ -116,7 +116,7 @@ typedef union _hw_vref_trm
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TRIM field to a new value.
-#define BW_VREF_TRM_TRIM(v)  (HW_VREF_TRM_WR((HW_VREF_TRM_RD & ~BM_VREF_TRM_TRIM) | BF_VREF_TRM_TRIM(v)))
+#define BW_VREF_TRM_TRIM(v)  (HW_VREF_TRM_WR((HW_VREF_TRM_RD() & ~BM_VREF_TRM_TRIM) | BF_VREF_TRM_TRIM(v)))
 #endif
 //@}
 
@@ -171,7 +171,7 @@ typedef union _hw_vref_sc
         uint8_t VREFST : 1;            //!< [2] Internal Voltage Reference stable
         uint8_t RESERVED0 : 2;         //!< [4:3]
         uint8_t ICOMPEN : 1;           //!< [5] Second order curvature compensation
-                                       //!< enable
+                                       //! enable
         uint8_t REGEN : 1;             //!< [6] Regulator enable
         uint8_t VREFEN : 1;            //!< [7] Internal Voltage Reference enable
     } B;
@@ -186,11 +186,11 @@ typedef union _hw_vref_sc
 
 #ifndef __LANGUAGE_ASM__
 #define HW_VREF_SC               (*(__IO hw_vref_sc_t *) HW_VREF_SC_ADDR)
-#define HW_VREF_SC_RD            (HW_VREF_SC.U)
+#define HW_VREF_SC_RD()          (HW_VREF_SC.U)
 #define HW_VREF_SC_WR(v)         (HW_VREF_SC.U = (v))
-#define HW_VREF_SC_SET(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD |  (v)))
-#define HW_VREF_SC_CLR(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD & ~(v)))
-#define HW_VREF_SC_TOG(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD ^  (v)))
+#define HW_VREF_SC_SET(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD() |  (v)))
+#define HW_VREF_SC_CLR(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD() & ~(v)))
+#define HW_VREF_SC_TOG(v)        (HW_VREF_SC_WR(HW_VREF_SC_RD() ^  (v)))
 #endif
 //@}
 
@@ -224,7 +224,7 @@ typedef union _hw_vref_sc
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the MODE_LV field to a new value.
-#define BW_VREF_SC_MODE_LV(v) (HW_VREF_SC_WR((HW_VREF_SC_RD & ~BM_VREF_SC_MODE_LV) | BF_VREF_SC_MODE_LV(v)))
+#define BW_VREF_SC_MODE_LV(v) (HW_VREF_SC_WR((HW_VREF_SC_RD() & ~BM_VREF_SC_MODE_LV) | BF_VREF_SC_MODE_LV(v)))
 #endif
 //@}
 

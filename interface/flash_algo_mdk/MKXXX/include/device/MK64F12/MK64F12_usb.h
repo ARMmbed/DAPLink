@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -100,7 +100,7 @@ typedef union _hw_usb_perid
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_PERID             (*(__I hw_usb_perid_t *) HW_USB_PERID_ADDR)
-#define HW_USB_PERID_RD          (HW_USB_PERID.U)
+#define HW_USB_PERID_RD()        (HW_USB_PERID.U)
 #endif
 //@}
 
@@ -156,7 +156,7 @@ typedef union _hw_usb_idcomp
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_IDCOMP            (*(__I hw_usb_idcomp_t *) HW_USB_IDCOMP_ADDR)
-#define HW_USB_IDCOMP_RD         (HW_USB_IDCOMP.U)
+#define HW_USB_IDCOMP_RD()       (HW_USB_IDCOMP.U)
 #endif
 //@}
 
@@ -210,7 +210,7 @@ typedef union _hw_usb_rev
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_REV               (*(__I hw_usb_rev_t *) HW_USB_REV_ADDR)
-#define HW_USB_REV_RD            (HW_USB_REV.U)
+#define HW_USB_REV_RD()          (HW_USB_REV.U)
 #endif
 //@}
 
@@ -267,7 +267,7 @@ typedef union _hw_usb_addinfo
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_ADDINFO           (*(__I hw_usb_addinfo_t *) HW_USB_ADDINFO_ADDR)
-#define HW_USB_ADDINFO_RD        (HW_USB_ADDINFO.U)
+#define HW_USB_ADDINFO_RD()      (HW_USB_ADDINFO.U)
 #endif
 //@}
 
@@ -345,11 +345,11 @@ typedef union _hw_usb_otgistat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_OTGISTAT          (*(__IO hw_usb_otgistat_t *) HW_USB_OTGISTAT_ADDR)
-#define HW_USB_OTGISTAT_RD       (HW_USB_OTGISTAT.U)
+#define HW_USB_OTGISTAT_RD()     (HW_USB_OTGISTAT.U)
 #define HW_USB_OTGISTAT_WR(v)    (HW_USB_OTGISTAT.U = (v))
-#define HW_USB_OTGISTAT_SET(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD |  (v)))
-#define HW_USB_OTGISTAT_CLR(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD & ~(v)))
-#define HW_USB_OTGISTAT_TOG(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD ^  (v)))
+#define HW_USB_OTGISTAT_SET(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() |  (v)))
+#define HW_USB_OTGISTAT_CLR(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() & ~(v)))
+#define HW_USB_OTGISTAT_TOG(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() ^  (v)))
 #endif
 //@}
 
@@ -545,11 +545,11 @@ typedef union _hw_usb_otgicr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_OTGICR            (*(__IO hw_usb_otgicr_t *) HW_USB_OTGICR_ADDR)
-#define HW_USB_OTGICR_RD         (HW_USB_OTGICR.U)
+#define HW_USB_OTGICR_RD()       (HW_USB_OTGICR.U)
 #define HW_USB_OTGICR_WR(v)      (HW_USB_OTGICR.U = (v))
-#define HW_USB_OTGICR_SET(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD |  (v)))
-#define HW_USB_OTGICR_CLR(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD & ~(v)))
-#define HW_USB_OTGICR_TOG(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD ^  (v)))
+#define HW_USB_OTGICR_SET(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() |  (v)))
+#define HW_USB_OTGICR_CLR(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() & ~(v)))
+#define HW_USB_OTGICR_TOG(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() ^  (v)))
 #endif
 //@}
 
@@ -751,11 +751,11 @@ typedef union _hw_usb_otgstat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_OTGSTAT           (*(__IO hw_usb_otgstat_t *) HW_USB_OTGSTAT_ADDR)
-#define HW_USB_OTGSTAT_RD        (HW_USB_OTGSTAT.U)
+#define HW_USB_OTGSTAT_RD()      (HW_USB_OTGSTAT.U)
 #define HW_USB_OTGSTAT_WR(v)     (HW_USB_OTGSTAT.U = (v))
-#define HW_USB_OTGSTAT_SET(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD |  (v)))
-#define HW_USB_OTGSTAT_CLR(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD & ~(v)))
-#define HW_USB_OTGSTAT_TOG(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD ^  (v)))
+#define HW_USB_OTGSTAT_SET(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() |  (v)))
+#define HW_USB_OTGSTAT_CLR(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() & ~(v)))
+#define HW_USB_OTGSTAT_TOG(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() ^  (v)))
 #endif
 //@}
 
@@ -961,11 +961,11 @@ typedef union _hw_usb_otgctl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_OTGCTL            (*(__IO hw_usb_otgctl_t *) HW_USB_OTGCTL_ADDR)
-#define HW_USB_OTGCTL_RD         (HW_USB_OTGCTL.U)
+#define HW_USB_OTGCTL_RD()       (HW_USB_OTGCTL.U)
 #define HW_USB_OTGCTL_WR(v)      (HW_USB_OTGCTL.U = (v))
-#define HW_USB_OTGCTL_SET(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD |  (v)))
-#define HW_USB_OTGCTL_CLR(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD & ~(v)))
-#define HW_USB_OTGCTL_TOG(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD ^  (v)))
+#define HW_USB_OTGCTL_SET(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() |  (v)))
+#define HW_USB_OTGCTL_CLR(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() & ~(v)))
+#define HW_USB_OTGCTL_TOG(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() ^  (v)))
 #endif
 //@}
 
@@ -1124,11 +1124,11 @@ typedef union _hw_usb_istat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_ISTAT             (*(__IO hw_usb_istat_t *) HW_USB_ISTAT_ADDR)
-#define HW_USB_ISTAT_RD          (HW_USB_ISTAT.U)
+#define HW_USB_ISTAT_RD()        (HW_USB_ISTAT.U)
 #define HW_USB_ISTAT_WR(v)       (HW_USB_ISTAT.U = (v))
-#define HW_USB_ISTAT_SET(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD |  (v)))
-#define HW_USB_ISTAT_CLR(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD & ~(v)))
-#define HW_USB_ISTAT_TOG(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD ^  (v)))
+#define HW_USB_ISTAT_SET(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() |  (v)))
+#define HW_USB_ISTAT_CLR(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() & ~(v)))
+#define HW_USB_ISTAT_TOG(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() ^  (v)))
 #endif
 //@}
 
@@ -1388,11 +1388,11 @@ typedef union _hw_usb_inten
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_INTEN             (*(__IO hw_usb_inten_t *) HW_USB_INTEN_ADDR)
-#define HW_USB_INTEN_RD          (HW_USB_INTEN.U)
+#define HW_USB_INTEN_RD()        (HW_USB_INTEN.U)
 #define HW_USB_INTEN_WR(v)       (HW_USB_INTEN.U = (v))
-#define HW_USB_INTEN_SET(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD |  (v)))
-#define HW_USB_INTEN_CLR(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD & ~(v)))
-#define HW_USB_INTEN_TOG(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD ^  (v)))
+#define HW_USB_INTEN_SET(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() |  (v)))
+#define HW_USB_INTEN_CLR(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() & ~(v)))
+#define HW_USB_INTEN_TOG(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() ^  (v)))
 #endif
 //@}
 
@@ -1652,11 +1652,11 @@ typedef union _hw_usb_errstat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_ERRSTAT           (*(__IO hw_usb_errstat_t *) HW_USB_ERRSTAT_ADDR)
-#define HW_USB_ERRSTAT_RD        (HW_USB_ERRSTAT.U)
+#define HW_USB_ERRSTAT_RD()      (HW_USB_ERRSTAT.U)
 #define HW_USB_ERRSTAT_WR(v)     (HW_USB_ERRSTAT.U = (v))
-#define HW_USB_ERRSTAT_SET(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD |  (v)))
-#define HW_USB_ERRSTAT_CLR(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD & ~(v)))
-#define HW_USB_ERRSTAT_TOG(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD ^  (v)))
+#define HW_USB_ERRSTAT_SET(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() |  (v)))
+#define HW_USB_ERRSTAT_CLR(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() & ~(v)))
+#define HW_USB_ERRSTAT_TOG(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() ^  (v)))
 #endif
 //@}
 
@@ -1895,11 +1895,11 @@ typedef union _hw_usb_erren
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_ERREN             (*(__IO hw_usb_erren_t *) HW_USB_ERREN_ADDR)
-#define HW_USB_ERREN_RD          (HW_USB_ERREN.U)
+#define HW_USB_ERREN_RD()        (HW_USB_ERREN.U)
 #define HW_USB_ERREN_WR(v)       (HW_USB_ERREN.U = (v))
-#define HW_USB_ERREN_SET(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD |  (v)))
-#define HW_USB_ERREN_CLR(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD & ~(v)))
-#define HW_USB_ERREN_TOG(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD ^  (v)))
+#define HW_USB_ERREN_SET(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() |  (v)))
+#define HW_USB_ERREN_CLR(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() & ~(v)))
+#define HW_USB_ERREN_TOG(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() ^  (v)))
 #endif
 //@}
 
@@ -2134,7 +2134,7 @@ typedef union _hw_usb_stat
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_STAT              (*(__I hw_usb_stat_t *) HW_USB_STAT_ADDR)
-#define HW_USB_STAT_RD           (HW_USB_STAT.U)
+#define HW_USB_STAT_RD()         (HW_USB_STAT.U)
 #endif
 //@}
 
@@ -2220,7 +2220,7 @@ typedef union _hw_usb_ctl
         uint8_t TXSUSPENDTOKENBUSY : 1; //!< [5]
         uint8_t SE0 : 1;               //!< [6] Live USB Single Ended Zero signal
         uint8_t JSTATE : 1;            //!< [7] Live USB differential receiver JSTATE
-                                       //!< signal
+                                       //! signal
     } B;
 } hw_usb_ctl_t;
 #endif
@@ -2233,11 +2233,11 @@ typedef union _hw_usb_ctl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_CTL               (*(__IO hw_usb_ctl_t *) HW_USB_CTL_ADDR)
-#define HW_USB_CTL_RD            (HW_USB_CTL.U)
+#define HW_USB_CTL_RD()          (HW_USB_CTL.U)
 #define HW_USB_CTL_WR(v)         (HW_USB_CTL.U = (v))
-#define HW_USB_CTL_SET(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD |  (v)))
-#define HW_USB_CTL_CLR(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD & ~(v)))
-#define HW_USB_CTL_TOG(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD ^  (v)))
+#define HW_USB_CTL_SET(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() |  (v)))
+#define HW_USB_CTL_CLR(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() & ~(v)))
+#define HW_USB_CTL_TOG(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() ^  (v)))
 #endif
 //@}
 
@@ -2499,11 +2499,11 @@ typedef union _hw_usb_addr
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_ADDR              (*(__IO hw_usb_addr_t *) HW_USB_ADDR_ADDR)
-#define HW_USB_ADDR_RD           (HW_USB_ADDR.U)
+#define HW_USB_ADDR_RD()         (HW_USB_ADDR.U)
 #define HW_USB_ADDR_WR(v)        (HW_USB_ADDR.U = (v))
-#define HW_USB_ADDR_SET(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD |  (v)))
-#define HW_USB_ADDR_CLR(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD & ~(v)))
-#define HW_USB_ADDR_TOG(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD ^  (v)))
+#define HW_USB_ADDR_SET(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() |  (v)))
+#define HW_USB_ADDR_CLR(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() & ~(v)))
+#define HW_USB_ADDR_TOG(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() ^  (v)))
 #endif
 //@}
 
@@ -2532,7 +2532,7 @@ typedef union _hw_usb_addr
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the ADDR field to a new value.
-#define BW_USB_ADDR_ADDR(v)  (HW_USB_ADDR_WR((HW_USB_ADDR_RD & ~BM_USB_ADDR_ADDR) | BF_USB_ADDR_ADDR(v)))
+#define BW_USB_ADDR_ADDR(v)  (HW_USB_ADDR_WR((HW_USB_ADDR_RD() & ~BM_USB_ADDR_ADDR) | BF_USB_ADDR_ADDR(v)))
 #endif
 //@}
 
@@ -2596,11 +2596,11 @@ typedef union _hw_usb_bdtpage1
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_BDTPAGE1          (*(__IO hw_usb_bdtpage1_t *) HW_USB_BDTPAGE1_ADDR)
-#define HW_USB_BDTPAGE1_RD       (HW_USB_BDTPAGE1.U)
+#define HW_USB_BDTPAGE1_RD()     (HW_USB_BDTPAGE1.U)
 #define HW_USB_BDTPAGE1_WR(v)    (HW_USB_BDTPAGE1.U = (v))
-#define HW_USB_BDTPAGE1_SET(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD |  (v)))
-#define HW_USB_BDTPAGE1_CLR(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD & ~(v)))
-#define HW_USB_BDTPAGE1_TOG(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD ^  (v)))
+#define HW_USB_BDTPAGE1_SET(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() |  (v)))
+#define HW_USB_BDTPAGE1_CLR(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() & ~(v)))
+#define HW_USB_BDTPAGE1_TOG(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() ^  (v)))
 #endif
 //@}
 
@@ -2628,7 +2628,7 @@ typedef union _hw_usb_bdtpage1
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE1_BDTBA(v) (HW_USB_BDTPAGE1_WR((HW_USB_BDTPAGE1_RD & ~BM_USB_BDTPAGE1_BDTBA) | BF_USB_BDTPAGE1_BDTBA(v)))
+#define BW_USB_BDTPAGE1_BDTBA(v) (HW_USB_BDTPAGE1_WR((HW_USB_BDTPAGE1_RD() & ~BM_USB_BDTPAGE1_BDTBA) | BF_USB_BDTPAGE1_BDTBA(v)))
 #endif
 //@}
 
@@ -2663,11 +2663,11 @@ typedef union _hw_usb_frmnuml
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_FRMNUML           (*(__IO hw_usb_frmnuml_t *) HW_USB_FRMNUML_ADDR)
-#define HW_USB_FRMNUML_RD        (HW_USB_FRMNUML.U)
+#define HW_USB_FRMNUML_RD()      (HW_USB_FRMNUML.U)
 #define HW_USB_FRMNUML_WR(v)     (HW_USB_FRMNUML.U = (v))
-#define HW_USB_FRMNUML_SET(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD |  (v)))
-#define HW_USB_FRMNUML_CLR(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD & ~(v)))
-#define HW_USB_FRMNUML_TOG(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD ^  (v)))
+#define HW_USB_FRMNUML_SET(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() |  (v)))
+#define HW_USB_FRMNUML_CLR(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() & ~(v)))
+#define HW_USB_FRMNUML_TOG(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() ^  (v)))
 #endif
 //@}
 
@@ -2697,7 +2697,7 @@ typedef union _hw_usb_frmnuml
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FRM field to a new value.
-#define BW_USB_FRMNUML_FRM(v) (HW_USB_FRMNUML_WR((HW_USB_FRMNUML_RD & ~BM_USB_FRMNUML_FRM) | BF_USB_FRMNUML_FRM(v)))
+#define BW_USB_FRMNUML_FRM(v) (HW_USB_FRMNUML_WR((HW_USB_FRMNUML_RD() & ~BM_USB_FRMNUML_FRM) | BF_USB_FRMNUML_FRM(v)))
 #endif
 //@}
 
@@ -2733,11 +2733,11 @@ typedef union _hw_usb_frmnumh
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_FRMNUMH           (*(__IO hw_usb_frmnumh_t *) HW_USB_FRMNUMH_ADDR)
-#define HW_USB_FRMNUMH_RD        (HW_USB_FRMNUMH.U)
+#define HW_USB_FRMNUMH_RD()      (HW_USB_FRMNUMH.U)
 #define HW_USB_FRMNUMH_WR(v)     (HW_USB_FRMNUMH.U = (v))
-#define HW_USB_FRMNUMH_SET(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD |  (v)))
-#define HW_USB_FRMNUMH_CLR(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD & ~(v)))
-#define HW_USB_FRMNUMH_TOG(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD ^  (v)))
+#define HW_USB_FRMNUMH_SET(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() |  (v)))
+#define HW_USB_FRMNUMH_CLR(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() & ~(v)))
+#define HW_USB_FRMNUMH_TOG(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() ^  (v)))
 #endif
 //@}
 
@@ -2767,7 +2767,7 @@ typedef union _hw_usb_frmnumh
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the FRM field to a new value.
-#define BW_USB_FRMNUMH_FRM(v) (HW_USB_FRMNUMH_WR((HW_USB_FRMNUMH_RD & ~BM_USB_FRMNUMH_FRM) | BF_USB_FRMNUMH_FRM(v)))
+#define BW_USB_FRMNUMH_FRM(v) (HW_USB_FRMNUMH_WR((HW_USB_FRMNUMH_RD() & ~BM_USB_FRMNUMH_FRM) | BF_USB_FRMNUMH_FRM(v)))
 #endif
 //@}
 
@@ -2813,11 +2813,11 @@ typedef union _hw_usb_token
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_TOKEN             (*(__IO hw_usb_token_t *) HW_USB_TOKEN_ADDR)
-#define HW_USB_TOKEN_RD          (HW_USB_TOKEN.U)
+#define HW_USB_TOKEN_RD()        (HW_USB_TOKEN.U)
 #define HW_USB_TOKEN_WR(v)       (HW_USB_TOKEN.U = (v))
-#define HW_USB_TOKEN_SET(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD |  (v)))
-#define HW_USB_TOKEN_CLR(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD & ~(v)))
-#define HW_USB_TOKEN_TOG(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD ^  (v)))
+#define HW_USB_TOKEN_SET(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() |  (v)))
+#define HW_USB_TOKEN_CLR(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() & ~(v)))
+#define HW_USB_TOKEN_TOG(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() ^  (v)))
 #endif
 //@}
 
@@ -2846,7 +2846,7 @@ typedef union _hw_usb_token
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOKENENDPT field to a new value.
-#define BW_USB_TOKEN_TOKENENDPT(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD & ~BM_USB_TOKEN_TOKENENDPT) | BF_USB_TOKEN_TOKENENDPT(v)))
+#define BW_USB_TOKEN_TOKENENDPT(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD() & ~BM_USB_TOKEN_TOKENENDPT) | BF_USB_TOKEN_TOKENENDPT(v)))
 #endif
 //@}
 
@@ -2875,7 +2875,7 @@ typedef union _hw_usb_token
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the TOKENPID field to a new value.
-#define BW_USB_TOKEN_TOKENPID(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD & ~BM_USB_TOKEN_TOKENPID) | BF_USB_TOKEN_TOKENPID(v)))
+#define BW_USB_TOKEN_TOKENPID(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD() & ~BM_USB_TOKEN_TOKENPID) | BF_USB_TOKEN_TOKENPID(v)))
 #endif
 //@}
 
@@ -2924,11 +2924,11 @@ typedef union _hw_usb_softhld
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_SOFTHLD           (*(__IO hw_usb_softhld_t *) HW_USB_SOFTHLD_ADDR)
-#define HW_USB_SOFTHLD_RD        (HW_USB_SOFTHLD.U)
+#define HW_USB_SOFTHLD_RD()      (HW_USB_SOFTHLD.U)
 #define HW_USB_SOFTHLD_WR(v)     (HW_USB_SOFTHLD.U = (v))
-#define HW_USB_SOFTHLD_SET(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD |  (v)))
-#define HW_USB_SOFTHLD_CLR(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD & ~(v)))
-#define HW_USB_SOFTHLD_TOG(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD ^  (v)))
+#define HW_USB_SOFTHLD_SET(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() |  (v)))
+#define HW_USB_SOFTHLD_CLR(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() & ~(v)))
+#define HW_USB_SOFTHLD_TOG(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() ^  (v)))
 #endif
 //@}
 
@@ -2956,7 +2956,7 @@ typedef union _hw_usb_softhld
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the CNT field to a new value.
-#define BW_USB_SOFTHLD_CNT(v) (HW_USB_SOFTHLD_WR((HW_USB_SOFTHLD_RD & ~BM_USB_SOFTHLD_CNT) | BF_USB_SOFTHLD_CNT(v)))
+#define BW_USB_SOFTHLD_CNT(v) (HW_USB_SOFTHLD_WR((HW_USB_SOFTHLD_RD() & ~BM_USB_SOFTHLD_CNT) | BF_USB_SOFTHLD_CNT(v)))
 #endif
 //@}
 
@@ -2991,11 +2991,11 @@ typedef union _hw_usb_bdtpage2
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_BDTPAGE2          (*(__IO hw_usb_bdtpage2_t *) HW_USB_BDTPAGE2_ADDR)
-#define HW_USB_BDTPAGE2_RD       (HW_USB_BDTPAGE2.U)
+#define HW_USB_BDTPAGE2_RD()     (HW_USB_BDTPAGE2.U)
 #define HW_USB_BDTPAGE2_WR(v)    (HW_USB_BDTPAGE2.U = (v))
-#define HW_USB_BDTPAGE2_SET(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD |  (v)))
-#define HW_USB_BDTPAGE2_CLR(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD & ~(v)))
-#define HW_USB_BDTPAGE2_TOG(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD ^  (v)))
+#define HW_USB_BDTPAGE2_SET(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() |  (v)))
+#define HW_USB_BDTPAGE2_CLR(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() & ~(v)))
+#define HW_USB_BDTPAGE2_TOG(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() ^  (v)))
 #endif
 //@}
 
@@ -3024,7 +3024,7 @@ typedef union _hw_usb_bdtpage2
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE2_BDTBA(v) (HW_USB_BDTPAGE2_WR((HW_USB_BDTPAGE2_RD & ~BM_USB_BDTPAGE2_BDTBA) | BF_USB_BDTPAGE2_BDTBA(v)))
+#define BW_USB_BDTPAGE2_BDTBA(v) (HW_USB_BDTPAGE2_WR((HW_USB_BDTPAGE2_RD() & ~BM_USB_BDTPAGE2_BDTBA) | BF_USB_BDTPAGE2_BDTBA(v)))
 #endif
 //@}
 
@@ -3059,11 +3059,11 @@ typedef union _hw_usb_bdtpage3
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_BDTPAGE3          (*(__IO hw_usb_bdtpage3_t *) HW_USB_BDTPAGE3_ADDR)
-#define HW_USB_BDTPAGE3_RD       (HW_USB_BDTPAGE3.U)
+#define HW_USB_BDTPAGE3_RD()     (HW_USB_BDTPAGE3.U)
 #define HW_USB_BDTPAGE3_WR(v)    (HW_USB_BDTPAGE3.U = (v))
-#define HW_USB_BDTPAGE3_SET(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD |  (v)))
-#define HW_USB_BDTPAGE3_CLR(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD & ~(v)))
-#define HW_USB_BDTPAGE3_TOG(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD ^  (v)))
+#define HW_USB_BDTPAGE3_SET(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() |  (v)))
+#define HW_USB_BDTPAGE3_CLR(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() & ~(v)))
+#define HW_USB_BDTPAGE3_TOG(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() ^  (v)))
 #endif
 //@}
 
@@ -3092,7 +3092,7 @@ typedef union _hw_usb_bdtpage3
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE3_BDTBA(v) (HW_USB_BDTPAGE3_WR((HW_USB_BDTPAGE3_RD & ~BM_USB_BDTPAGE3_BDTBA) | BF_USB_BDTPAGE3_BDTBA(v)))
+#define BW_USB_BDTPAGE3_BDTBA(v) (HW_USB_BDTPAGE3_WR((HW_USB_BDTPAGE3_RD() & ~BM_USB_BDTPAGE3_BDTBA) | BF_USB_BDTPAGE3_BDTBA(v)))
 #endif
 //@}
 
@@ -3371,11 +3371,11 @@ typedef union _hw_usb_usbctrl
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_USBCTRL           (*(__IO hw_usb_usbctrl_t *) HW_USB_USBCTRL_ADDR)
-#define HW_USB_USBCTRL_RD        (HW_USB_USBCTRL.U)
+#define HW_USB_USBCTRL_RD()      (HW_USB_USBCTRL.U)
 #define HW_USB_USBCTRL_WR(v)     (HW_USB_USBCTRL.U = (v))
-#define HW_USB_USBCTRL_SET(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD |  (v)))
-#define HW_USB_USBCTRL_CLR(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD & ~(v)))
-#define HW_USB_USBCTRL_TOG(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD ^  (v)))
+#define HW_USB_USBCTRL_SET(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() |  (v)))
+#define HW_USB_USBCTRL_CLR(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() & ~(v)))
+#define HW_USB_USBCTRL_TOG(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() ^  (v)))
 #endif
 //@}
 
@@ -3475,7 +3475,7 @@ typedef union _hw_usb_observe
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_OBSERVE           (*(__I hw_usb_observe_t *) HW_USB_OBSERVE_ADDR)
-#define HW_USB_OBSERVE_RD        (HW_USB_OBSERVE.U)
+#define HW_USB_OBSERVE_RD()      (HW_USB_OBSERVE.U)
 #endif
 //@}
 
@@ -3573,11 +3573,11 @@ typedef union _hw_usb_control
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_CONTROL           (*(__IO hw_usb_control_t *) HW_USB_CONTROL_ADDR)
-#define HW_USB_CONTROL_RD        (HW_USB_CONTROL.U)
+#define HW_USB_CONTROL_RD()      (HW_USB_CONTROL.U)
 #define HW_USB_CONTROL_WR(v)     (HW_USB_CONTROL.U = (v))
-#define HW_USB_CONTROL_SET(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD |  (v)))
-#define HW_USB_CONTROL_CLR(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD & ~(v)))
-#define HW_USB_CONTROL_TOG(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD ^  (v)))
+#define HW_USB_CONTROL_SET(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() |  (v)))
+#define HW_USB_CONTROL_CLR(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() & ~(v)))
+#define HW_USB_CONTROL_TOG(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() ^  (v)))
 #endif
 //@}
 
@@ -3651,11 +3651,11 @@ typedef union _hw_usb_usbtrc0
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_USBTRC0           (*(__IO hw_usb_usbtrc0_t *) HW_USB_USBTRC0_ADDR)
-#define HW_USB_USBTRC0_RD        (HW_USB_USBTRC0.U)
+#define HW_USB_USBTRC0_RD()      (HW_USB_USBTRC0.U)
 #define HW_USB_USBTRC0_WR(v)     (HW_USB_USBTRC0.U = (v))
-#define HW_USB_USBTRC0_SET(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD |  (v)))
-#define HW_USB_USBTRC0_CLR(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD & ~(v)))
-#define HW_USB_USBTRC0_TOG(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD ^  (v)))
+#define HW_USB_USBTRC0_SET(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() |  (v)))
+#define HW_USB_USBTRC0_CLR(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() & ~(v)))
+#define HW_USB_USBTRC0_TOG(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() ^  (v)))
 #endif
 //@}
 
@@ -3792,11 +3792,11 @@ typedef union _hw_usb_usbfrmadjust
 
 #ifndef __LANGUAGE_ASM__
 #define HW_USB_USBFRMADJUST      (*(__IO hw_usb_usbfrmadjust_t *) HW_USB_USBFRMADJUST_ADDR)
-#define HW_USB_USBFRMADJUST_RD   (HW_USB_USBFRMADJUST.U)
+#define HW_USB_USBFRMADJUST_RD() (HW_USB_USBFRMADJUST.U)
 #define HW_USB_USBFRMADJUST_WR(v) (HW_USB_USBFRMADJUST.U = (v))
-#define HW_USB_USBFRMADJUST_SET(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD |  (v)))
-#define HW_USB_USBFRMADJUST_CLR(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD & ~(v)))
-#define HW_USB_USBFRMADJUST_TOG(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD ^  (v)))
+#define HW_USB_USBFRMADJUST_SET(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() |  (v)))
+#define HW_USB_USBFRMADJUST_CLR(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() & ~(v)))
+#define HW_USB_USBFRMADJUST_TOG(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() ^  (v)))
 #endif
 //@}
 
@@ -3828,7 +3828,7 @@ typedef union _hw_usb_usbfrmadjust
 
 #ifndef __LANGUAGE_ASM__
 //! @brief Set the ADJ field to a new value.
-#define BW_USB_USBFRMADJUST_ADJ(v) (HW_USB_USBFRMADJUST_WR((HW_USB_USBFRMADJUST_RD & ~BM_USB_USBFRMADJUST_ADJ) | BF_USB_USBFRMADJUST_ADJ(v)))
+#define BW_USB_USBFRMADJUST_ADJ(v) (HW_USB_USBFRMADJUST_WR((HW_USB_USBFRMADJUST_RD() & ~BM_USB_USBFRMADJUST_ADJ) | BF_USB_USBFRMADJUST_ADJ(v)))
 #endif
 //@}
 

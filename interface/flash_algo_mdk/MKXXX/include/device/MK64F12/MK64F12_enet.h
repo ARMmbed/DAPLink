@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -3644,7 +3644,7 @@ typedef union _hw_enet_rsfl
     struct _hw_enet_rsfl_bitfields
     {
         uint32_t RX_SECTION_FULL : 8;  //!< [7:0] Value Of Receive FIFO
-                                       //!< Section Full Threshold
+                                       //! Section Full Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_rsfl_t;
@@ -3713,10 +3713,10 @@ typedef union _hw_enet_rsem
     struct _hw_enet_rsem_bitfields
     {
         uint32_t RX_SECTION_EMPTY : 8; //!< [7:0] Value Of The Receive FIFO
-                                       //!< Section Empty Threshold
+                                       //! Section Empty Threshold
         uint32_t RESERVED0 : 8;        //!< [15:8]
         uint32_t STAT_SECTION_EMPTY : 5; //!< [20:16] RX Status FIFO Section
-                                       //!< Empty Threshold
+                                       //! Empty Threshold
         uint32_t RESERVED1 : 11;       //!< [31:21]
     } B;
 } hw_enet_rsem_t;
@@ -3810,7 +3810,7 @@ typedef union _hw_enet_raem
     struct _hw_enet_raem_bitfields
     {
         uint32_t RX_ALMOST_EMPTY : 8;  //!< [7:0] Value Of The Receive FIFO
-                                       //!< Almost Empty Threshold
+                                       //! Almost Empty Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_raem_t;
@@ -3876,7 +3876,7 @@ typedef union _hw_enet_rafl
     struct _hw_enet_rafl_bitfields
     {
         uint32_t RX_ALMOST_FULL : 8;   //!< [7:0] Value Of The Receive FIFO
-                                       //!< Almost Full Threshold
+                                       //! Almost Full Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_rafl_t;
@@ -3942,7 +3942,7 @@ typedef union _hw_enet_tsem
     struct _hw_enet_tsem_bitfields
     {
         uint32_t TX_SECTION_EMPTY : 8; //!< [7:0] Value Of The Transmit FIFO
-                                       //!< Section Empty Threshold
+                                       //! Section Empty Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_tsem_t;
@@ -4008,7 +4008,7 @@ typedef union _hw_enet_taem
     struct _hw_enet_taem_bitfields
     {
         uint32_t TX_ALMOST_EMPTY : 8;  //!< [7:0] Value of Transmit FIFO
-                                       //!< Almost Empty Threshold
+                                       //! Almost Empty Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_taem_t;
@@ -4074,7 +4074,7 @@ typedef union _hw_enet_tafl
     struct _hw_enet_tafl_bitfields
     {
         uint32_t TX_ALMOST_FULL : 8;   //!< [7:0] Value Of The Transmit FIFO
-                                       //!< Almost Full Threshold
+                                       //! Almost Full Threshold
         uint32_t RESERVED0 : 24;       //!< [31:8]
     } B;
 } hw_enet_tafl_t;
@@ -4419,14 +4419,14 @@ typedef union _hw_enet_racc
     struct _hw_enet_racc_bitfields
     {
         uint32_t PADREM : 1;           //!< [0] Enable Padding Removal For Short IP
-                                       //!< Frames
+                                       //! Frames
         uint32_t IPDIS : 1;            //!< [1] Enable Discard Of Frames With Wrong IPv4
-                                       //!< Header Checksum
+                                       //! Header Checksum
         uint32_t PRODIS : 1;           //!< [2] Enable Discard Of Frames With Wrong
-                                       //!< Protocol Checksum
+                                       //! Protocol Checksum
         uint32_t RESERVED0 : 3;        //!< [5:3]
         uint32_t LINEDIS : 1;          //!< [6] Enable Discard Of Frames With MAC
-                                       //!< Layer Errors
+                                       //! Layer Errors
         uint32_t SHIFT16 : 1;          //!< [7] RX FIFO Shift-16
         uint32_t RESERVED1 : 24;       //!< [31:8]
     } B;
@@ -7324,7 +7324,7 @@ typedef union _hw_enet_atinc
     struct _hw_enet_atinc_bitfields
     {
         uint32_t INC : 7;              //!< [6:0] Clock Period Of The Timestamping Clock
-                                       //!< (ts_clk) In Nanoseconds
+                                       //! (ts_clk) In Nanoseconds
         uint32_t RESERVED0 : 1;        //!< [7]
         uint32_t INC_CORR : 7;         //!< [14:8] Correction Increment Value
         uint32_t RESERVED1 : 17;       //!< [31:15]
