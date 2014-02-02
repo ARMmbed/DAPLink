@@ -15,7 +15,23 @@
  */
 #include <MK20D5.h>
 #include <RTL.h>
+#include "DAP_config.h"
 #include "gpio.h"
+
+#if defined(INTERFACE_GEN_32KHZ) && defined(INTERFACE_POWER_EN)
+#error "Cannot use 32kHz clock gen and power enable simultaneously."
+#endif
+
+// Pin definitions
+#define CLK_32K_PIN (6)     // PTD6
+#define POWER_EN_PIN (6)    // PTD6
+#define VTRG_FAULT_B (7)    // PTD7
+
+#if defined(BOARD_FRDM_K64F)
+    #define SDA_USB_P5V_SENSE (5)   // PTD5
+#elif defined(BOARD_FRDM_KL25Z)
+    #define SDA_USB_P5V_SENSE (7)   // PTD7
+#endif
 
 //static U16 isr_flags;
 //static OS_TID isr_notify;
@@ -25,27 +41,23 @@
 
 void gpio_init(void)
 {
-    // enable clock PORTD
-    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+    // enable clock to ports
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
+    
     // configure pin as GPIO
-    PORTD->PCR[4] = PORT_PCR_MUX(1);
+    LED_CONNECTED_PORT->PCR[LED_CONNECTED_BIT] = PORT_PCR_MUX(1);
 
     // led off - enable output
-    PTD->PDOR = 1UL << 4;
-    PTD->PDDR = 1UL << 4;
+    LED_CONNECTED_GPIO->PDOR = 1UL << LED_CONNECTED_BIT;
+    LED_CONNECTED_GPIO->PDDR = 1UL << LED_CONNECTED_BIT;
 
     // led on
-    PTD->PCOR  |= 1UL << 4;
+    LED_CONNECTED_GPIO->PCOR  |= 1UL << LED_CONNECTED_BIT;
 
 #if defined(INTERFACE_GEN_32KHZ)
-#if defined(BOARD_FRDM_K64F)
-#error "Cannot use PTD6 for FRDM-K64F 32kHz clk"
-#endif
     // we use PTD6 to generate 32kHz clk
-    // enable clk for portD
-    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
     // ftm0_ch6 (alternate function 4)
-    PORTD->PCR[6] = PORT_PCR_MUX(4) | PORT_PCR_DSE_MASK;
+    PORTD->PCR[CLK_32K_PIN] = PORT_PCR_MUX(4) | PORT_PCR_DSE_MASK;
     // enable clk for ftm0
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
 
@@ -84,19 +96,15 @@ void gpio_init(void)
     //enable write protection
     FTM0->MODE &= ~FTM_MODE_WPDIS_MASK;
 	
-#endif
-
-#if defined(BOARD_FRDM_K64F)
-// POWER_EN (PTD5) and VTRG_FAULT_B (PTD6) introduced with K64
-//	VTRG_FAULT_B not currently implemented. Just power the target ;)
+#elif defined(INTERFACE_POWER_EN)
+    // POWER_EN (PTD5) and VTRG_FAULT_B (PTD7)
+    //	VTRG_FAULT_B not currently implemented. Just power the target ;)
 	
-	// enable clock PORTD
-    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
     // configure pin as GPIO
-    PORTD->PCR[6] = PORT_PCR_MUX(1);
+    PORTD->PCR[POWER_EN_PIN] = PORT_PCR_MUX(1);
 	// force always on logic 1
-    PTD->PDOR |= 1UL << 6;
-    PTD->PDDR |= 1UL << 6;
+    PTD->PDOR |= 1UL << POWER_EN_PIN;
+    PTD->PDDR |= 1UL << POWER_EN_PIN;
 
 #endif
 }
@@ -104,9 +112,13 @@ void gpio_init(void)
 void gpio_set_dap_led(uint8_t state)
 {
     if (state)
-        PTD->PCOR  |= 1UL << 4; // LED on
+    {
+        LED_CONNECTED_GPIO->PCOR = 1UL << LED_CONNECTED_BIT; // LED on
+    }
     else
-        PTD->PSOR  |= 1UL << 4; // LED off
+    {
+        LED_CONNECTED_GPIO->PSOR = 1UL << LED_CONNECTED_BIT; // LED off
+    }
 }
 
 void gpio_set_cdc_led(uint8_t state)
@@ -133,24 +145,22 @@ void gpio_enable_button_flag(OS_TID task, U16 flags)
     //isr_notify=task;
     //isr_flags=flags;
 
-    SIM->SCGC5   |= (1UL << 12);
-
-    PORTB->PCR[1] |= PORT_PCR_ISF_MASK;
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
     //sw2 - interrupt on falling edge
-    PORTB->PCR[1] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(10)|PORT_PCR_MUX(1);
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(10)|PORT_PCR_MUX(1);
 
     NVIC_ClearPendingIRQ(PORTB_IRQn);
     NVIC_EnableIRQ(PORTB_IRQn);
-    return;
 }
 
 void PORTB_IRQHandler(void)
 {
-    if(PORTB->ISFR == (1<<1)) {
-        PORTB->PCR[1] |= PORT_PCR_ISF_MASK;
+    if (PIN_nRESET_PORT->ISFR == (1<<PIN_nRESET_BIT))
+    {
+        PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
         // Notify a task that the button has been pressed
         // disable interrupt
-        PORTB->PCR[1] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); // IRQ Falling edge
+        PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); // IRQ Falling edge
 
         //isr_evt_set(isr_flags, isr_notify);
     }

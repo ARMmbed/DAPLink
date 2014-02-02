@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "../FlashOS.H"        // FlashOS Structures
 
 #ifdef MKP64
 struct FlashDevice const FlashDevice  =  {

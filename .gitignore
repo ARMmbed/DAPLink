@@ -41,6 +41,8 @@ tmp/
 *.axf
 *.S19
 *.bin
+*.dep
+*.FLM
 
 # JLink files
 JLink*.*
@@ -50,6 +52,8 @@ Output
 Lst
 Obj
 
-# tags file
-tags
+# cscope
+cscope.*
 
+# ctags
+tags

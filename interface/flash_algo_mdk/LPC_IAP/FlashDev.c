@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "../FlashOS.H"        // FlashOS Structures
 
 #ifdef MBED
 #ifdef LPC1700_512

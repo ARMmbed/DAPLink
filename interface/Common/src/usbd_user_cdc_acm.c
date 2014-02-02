@@ -18,6 +18,7 @@
 
 #include "main.h"
 #include "target_reset.h"
+#include "serial.h"
 #include "uart.h"
 
 
@@ -33,7 +34,7 @@ UART_Configuration UART_Config;
     \return             1        Function succeeded.
  */
 int32_t USBD_CDC_ACM_PortInitialize (void) {
-    return (uart_initialize ());
+    return (serial_initialize ());
 }
 
 
@@ -46,7 +47,7 @@ int32_t USBD_CDC_ACM_PortInitialize (void) {
     \return             1        Function succeeded.
  */
 int32_t USBD_CDC_ACM_PortUninitialize (void) {
-    return (uart_uninitialize ());
+    return (serial_uninitialize ());
 }
 
 
@@ -59,7 +60,7 @@ int32_t USBD_CDC_ACM_PortUninitialize (void) {
     \return             1        Function succeeded.
  */
 int32_t USBD_CDC_ACM_PortReset (void) {
-    return (uart_reset ());
+    return (serial_reset ());
 }
 
 
@@ -79,7 +80,7 @@ int32_t USBD_CDC_ACM_PortSetLineCoding (CDC_LINE_CODING *line_coding) {
     UART_Config.StopBits    = (UART_StopBits) line_coding->bCharFormat;
     UART_Config.FlowControl = UART_FLOW_CONTROL_NONE;
 
-    return (uart_set_configuration (&UART_Config));
+    return (serial_set_configuration (&UART_Config));
 }
 
 
@@ -93,7 +94,7 @@ int32_t USBD_CDC_ACM_PortSetLineCoding (CDC_LINE_CODING *line_coding) {
     \return             1        Function succeeded.
  */
 int32_t USBD_CDC_ACM_PortGetLineCoding (CDC_LINE_CODING *line_coding) {
-    if (uart_get_configuration (&UART_Config)) {
+    if (serial_get_configuration (&UART_Config)) {
         line_coding->dwDTERate   = UART_Config.Baudrate;
         line_coding->bDataBits   = UART_Config.DataBits;
         line_coding->bParityType = UART_Config.Parity;
