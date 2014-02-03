@@ -56,7 +56,7 @@ static const TARGET_FLASH flash = {
 // RSB : base adreess is address of Execution Region PrgData in map file
 //       to access global/static data
 // RSP : Initial stack pointer
-{0x10000001, 0x10000020+0x00000120, 0x10001000}, // {breakpoint, RSB, RSP}
+{0x10000001, 0x10000020+0x00000120, 0x10001000-32}, // {breakpoint, RSB, RSP}
 
     0x10000200, // program_buffer
     0x10000000, // algo_start
