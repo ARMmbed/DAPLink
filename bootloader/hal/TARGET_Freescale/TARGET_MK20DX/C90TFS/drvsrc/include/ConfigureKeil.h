@@ -45,12 +45,11 @@
 #define PFLASH_IFR_ADDR           0x00000000
 #define DFLASH_IFR_ADDR           0x00800000
 
-#define SECTOR_SIZE               0x00000800 /* 2 KB size */
 #define BUFFER_SIZE_BYTE          0x10
 
 /* FTFx module base */
 #define FTFx_REG_BASE           0x40020000
-#define DFLASH_IFR_BASE         0x00800000    
+#define DFLASH_IFR_BASE         0x00800000
 #define PFLASH_BLOCK_BASE       0x00000000
 #define DEFLASH_BLOCK_BASE      0x10000000
 #define EERAM_BLOCK_BASE        0x14000000
