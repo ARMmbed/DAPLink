@@ -565,7 +565,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1291,7 +1291,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2017,7 +2017,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2743,7 +2743,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3469,7 +3469,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4195,7 +4195,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4921,7 +4921,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5647,7 +5647,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC810\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
