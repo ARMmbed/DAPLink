@@ -469,22 +469,6 @@ void USBD_CDC_ACM_SOF_Event (void) {
     USBD_CDC_ACM_EP_BULKIN_HandleData();/* Handle data to send                */
     data_send_access = 0;               /* Allow access to send data          */
   }
-#ifdef TARGET_LPC11U35
-  /* EVIL HACK to recover from lost interrupts/events on the BULKIN endpoint  */  
-  /* this code idealy has to be replaced with a btter solution                */
-  else if (!data_send_access && data_send_active)
-  {
-      U32 * GetEpCmdStatPtr (U32 EPNum);
-      #define BUF_ACTIVE         (1UL << 31)
-      // check if the endpoint is not active anymore
-      if (!(*GetEpCmdStatPtr(usbd_cdc_acm_ep_bulkin | 0x80) & BUF_ACTIVE))
-      {
-          // assume that we lost and interrupt / event just clear the lock
-          data_send_active = 0; 
-      }
-  }
-  /* END EVIL HACK */
-#endif
 }
 
 
