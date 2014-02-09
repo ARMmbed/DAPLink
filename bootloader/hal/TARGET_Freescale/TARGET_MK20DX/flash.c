@@ -20,10 +20,6 @@
 #include "SSD_FTFx_Internal.h"
 #include "ConfigureKeil.h"
 
-/* FTFL module base */
-#define FTFL_REG_BASE           0x40020000
-#define EERAM_BLOCK_BASE        0x14000000
-
 #define WDOG_UNLOCK                   *((volatile unsigned short *)0x4005200E)
 #define WDOG_STCTRLH                  *((volatile unsigned short *)0x40052000)
 #define WDOG_STCTRLH_WDOGEN_MASK_X    0x00000001
@@ -35,7 +31,7 @@
 #define EERAM_BLOCK_SIZE        0x00000800      /* 4 KB size  */
 #define DEFLASH_BLOCK_BASE      0x10000000
 
-FLASH_SSD_CONFIG flashSSDConfig; 
+FLASH_SSD_CONFIG flashSSDConfig;
 
 int flash_init(uint32_t clk) {
     /* Write 0xC520 to the unlock register */
@@ -45,7 +41,7 @@ int flash_init(uint32_t clk) {
     /* Clear the WDOGEN bit to disable the watchdog */
     WDOG_STCTRLH &= ~WDOG_STCTRLH_WDOGEN_MASK_X;
 
-    flashSSDConfig.ftfxRegBase        = FTFL_REG_BASE;           /* FTFL control register base */
+    flashSSDConfig.ftfxRegBase        = FTFx_REG_BASE;           /* FTFL control register base */
     flashSSDConfig.PFlashBlockBase    = 0;                       /* base address of PFlash block */
     flashSSDConfig.PFlashBlockSize    = PBLOCK_SIZE;             /* size of PFlash block */
 #if(DEBLOCK_SIZE != 0)
