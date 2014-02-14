@@ -35,7 +35,6 @@
 #endif
 
 typedef unsigned char BOOL;
-
 typedef signed char INT8;
 typedef unsigned char UINT8;
 typedef volatile signed char VINT8;

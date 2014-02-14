@@ -32,7 +32,7 @@ def merge(bootloader_path, interface_path, image_path, interface_start=None):
     bootloader_size = getsize(bootloader_path)
     interface_size = getsize(interface_path)
     if bootloader_size == 0 or interface_size == 0:
-        raise Exception("empty program")
+        raise Exception("empty program. Bootloader size: ", bootloader_size, " Interface size: ", interface_size)
 
     with open(bootloader_path, 'rb') as bootloader, open(interface_path, 'rb') as interface, open(image_path, 'wb') as image:
         if interface_start is None:
