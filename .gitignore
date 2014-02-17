@@ -41,3 +41,19 @@ tmp/
 *.axf
 *.S19
 *.bin
+*.dep
+*.FLM
+
+# JLink files
+JLink*.*
+
+# Output directories
+Output
+Lst
+Obj
+
+# cscope
+cscope.*
+
+# ctags
+tags

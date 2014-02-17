@@ -30,7 +30,8 @@ from paths import TMP_DIR
 # INPUT
 ALGO_ELF_PATH = join(TMP_DIR, "flash_algo.axf")
 
-ALGO_START  = 0x10000000
+#need to change this and take command line arguments for lpc11u35 or k20dx
+ALGO_START  = 0x20000000
 ALGO_OFFSET = 0x20
 
 # OUTPUT

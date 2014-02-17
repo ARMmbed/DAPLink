@@ -15,7 +15,10 @@
  */
 #include "board.h"
 
-#if defined (BOARD_FRDM_KL25Z)
+/* Each board should have a unique ID and secret. For information 
+ *	about obtaining a secret contact support@mbed.org
+ */
+#if defined (BOARD_FRDM_KL25Z) || defined (BOARD_TWR_KL25Z48M)
 #define BOARD_ID        "0200"
 #define BOARD_SECRET    "xxxxxxxx"
 
@@ -29,6 +32,22 @@
 
 #elif defined (BOARD_FRDM_K20D50M)
 #define BOARD_ID        "0230"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_K64F)
+#define BOARD_ID        "0240"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_KL02Z)
+#define BOARD_ID        "0250"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_KL26Z)
+#define BOARD_ID        "0260"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_FRDM_KE02Z)
+#define BOARD_ID        "0270"
 #define BOARD_SECRET    "xxxxxxxx"
 
 #elif defined (BOARD_LPC812_MAX)
@@ -49,7 +68,13 @@
 
 #endif
 
+#if !defined(BOARD_SECRET) || !defined(BOARD_ID)
+// TODO: how to check a string value using the preprocessor...
+#error contact support@mbed.org to obtain a secret and board ID
+#endif
+
 BOARD board = {
     BOARD_ID,      // board id
     BOARD_SECRET   // board secret
 };
+

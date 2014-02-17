@@ -80,10 +80,12 @@
   #define FLASH_DERIVATIVE      FTFx_KX_1024K_0K_16K_4K_0K
 #elif defined (MKP128_50MHZ) || defined (MKP64_50MHZ) || defined (MKPIFR_50MHZ) ||\
   defined (MKP32_50MHZ) || defined (MKD32_50MHZ) || defined (MKDIFR_50MHZ) || defined (MKPIFR_48MHZ) || defined (MKP128_48MHZ) ||\
-    defined (MKP64_48MHZ) || defined (MKP32_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ) || defined (MKD32_72MHZ)
+    defined (MKP64_48MHZ) || defined (MKP16_48MHZ) || defined (MKP8_48MHZ) || defined (MKD32_72MHZ)
   #define FLASH_DERIVATIVE      FTFx_KX_128K_32K_2K_1K_1K
 #elif defined (MKP256_50MHZ) || defined (MKD64_50MHZ) /* CL 08.08.2012: K12/K12/K21/K22*/
   #define FLASH_DERIVATIVE      FTFx_KX_256K_64K_2K_1K_1K
+#elif defined (MKP32_48MHZ)
+  #define FLASH_DERIVATIVE      FTFx_KX_32K_0K_0K_1K_0K
 #else
   #define FLASH_DERIVATIVE      FTFx_KX_256K_256K_4K_2K_2K
 #endif

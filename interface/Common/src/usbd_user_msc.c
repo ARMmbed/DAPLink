@@ -30,14 +30,20 @@
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_KL02Z)
+#   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL05Z)
 #   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL25Z)
+#   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_KL26Z)
 #   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_KL46Z)
 #   define WANTED_SIZE_IN_KB                        (256)
 #elif defined(DBG_K20D50M)
 #   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_K64F)
+#   define WANTED_SIZE_IN_KB                        (1024)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
 #elif defined(DBG_LPC1114)
@@ -537,8 +543,8 @@ static void initDisconnect(uint8_t success) {
     main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-        // event to disconnect the usb
-        main_usb_disconnect_event();
+    // event to disconnect the usb
+    main_usb_disconnect_event();
     semihost_enable();
 }
 
