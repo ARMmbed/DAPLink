@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "../FlashOS.H"        // FlashOS Structures
 
 // Memory Mapping Control
 #if defined(LPC11xx_32) || defined(LPC8xx_4)

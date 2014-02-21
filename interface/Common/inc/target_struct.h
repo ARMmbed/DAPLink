@@ -44,10 +44,10 @@ typedef struct {
 } TARGET_FLASH;
 
 typedef enum {
-    RESET_HOLD,                // Hold target in reset
-    RESET_PROGRAM,            // Reset target and setup for flash programming.
-    RESET_RUN,                // Reset target and run normally
-    RESET_RUN_WITH_DEBUG,   // Reset target and run with debug enabled (required for semihost)
+    RESET_HOLD,              // Hold target in reset
+    RESET_PROGRAM,           // Reset target and setup for flash programming.
+    RESET_RUN,               // Reset target and run normally
+    RESET_RUN_WITH_DEBUG,    // Reset target and run with debug enabled (required for semihost)
     NO_DEBUG,                // Disable debug on running target
     DEBUG                    // Enable debug on running target
 } TARGET_RESET_STATE;

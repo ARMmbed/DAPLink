@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 FROMELF = 'fromelf'
+UV4 = r'C:\Keil\UV4\UV4.exe'
 
 try:
     # Allow to overwrite the default settings without the need to edit the

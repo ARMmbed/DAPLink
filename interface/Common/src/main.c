@@ -24,6 +24,7 @@
 #include "gpio.h"
 #include "uart.h"
 #include "semihost.h"
+#include "serial.h"
 #include "tasks.h"
 
 #include "target_reset.h"
@@ -161,12 +162,41 @@ void main_disable_debug_event(void) {
 }
 
 #define SIZE_DATA (64)
+os_mbx_declare(serial_mailbox, 20);
 
 __task void serial_process() {
     uint8_t data[SIZE_DATA];
-    uint8_t len_data = 0;
+    int32_t len_data = 0;
+    void *msg;
 
     while (1) {
+
+        // Check our mailbox to see if we need to set anything up with the UART
+        // before we do any sending or receiving
+        if (os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK)
+        {
+            switch((SERIAL_MSG)(unsigned)msg)
+            {
+                case SERIAL_INITIALIZE:
+                    uart_initialize();
+                    break;
+                case SERIAL_UNINITIALIZE:
+                    uart_uninitialize();
+                    break;
+                case SERIAL_RESET:
+                    uart_reset();
+                    break;
+                case SERIAL_SET_CONFIGURATION:
+                    {
+                        UART_Configuration config;
+                        serial_get_configuration(&config);
+                        uart_set_configuration(&config);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         len_data = USBD_CDC_ACM_DataFree();
         if (len_data > SIZE_DATA)
@@ -211,6 +241,9 @@ __task void main_task(void) {
 
     // string containing unique ID
     uint8_t * id_str;
+
+    // Initialize our serial mailbox
+    os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
@@ -353,9 +386,10 @@ __task void main_task(void) {
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
-
                         // Update HTML file
                         update_html_file();
+						// Delay the connecting state before reconnecting to the host - improved usage with VMs
+						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }
                     break;
 
