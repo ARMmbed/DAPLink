@@ -18,6 +18,29 @@
 
 #include <stdint.h>
 
-void main_transfer_finished(uint8_t success);
+typedef enum {
+    USB_IDLE,
+    USB_ACTIVE
+} USB_BUSY;
+
+typedef enum {
+    USB_DISCONNECTED,
+    USB_CONNECTING,
+    USB_CONNECTED,
+    USB_CHECK_CONNECTED,
+    USB_CONFIGURED,
+    USB_DISCONNECTING,
+    USB_DISCONNECT_CONNECT
+} USB_CONNECT;
+
+void main_reset_target(uint8_t send_unique_id);
+void main_usb_configure_event(void);
+void main_usb_busy_event(void);
+void main_powerdown_event(void);
+void main_disable_debug_event(void);
+void main_usb_disconnect_event(void);
+void main_blink_dap_led(uint8_t permanent);
+void main_blink_msd_led(uint8_t permanent);
+void main_blink_cdc_led(uint8_t permanent);
 
 #endif

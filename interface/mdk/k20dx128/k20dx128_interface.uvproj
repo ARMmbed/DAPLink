@@ -141,7 +141,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -399,61 +399,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -463,11 +442,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -512,7 +486,7 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -555,36 +529,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -604,11 +553,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1225,61 +1169,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -1289,11 +1212,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -1338,79 +1256,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -1430,11 +1282,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2051,16 +1898,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -2101,11 +1938,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -2115,11 +1977,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -2164,79 +2021,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -2256,11 +2047,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2877,61 +2663,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -2941,11 +2706,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -2990,79 +2750,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -3082,11 +2776,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3703,61 +3392,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -3767,11 +3435,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -3816,79 +3479,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -3908,11 +3505,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4529,16 +4121,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -4579,11 +4161,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -4593,11 +4200,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -4642,79 +4244,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -4734,11 +4270,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -5355,52 +4886,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -5441,11 +4926,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -5455,11 +4965,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -5504,79 +5009,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -5596,11 +5035,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -6217,52 +5651,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -6303,11 +5691,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -6317,11 +5730,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -6366,79 +5774,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -6458,11 +5800,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -7079,16 +6416,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -7129,11 +6456,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -7143,11 +6495,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -7192,79 +6539,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -7284,11 +6565,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -7905,52 +7181,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -7991,11 +7221,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -8005,11 +7260,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -8054,79 +7304,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -8146,11 +7330,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -8767,52 +7946,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -8853,11 +7986,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -8867,11 +8025,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -8916,79 +8069,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -9008,11 +8095,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -9629,16 +8711,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -9679,11 +8751,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -9693,11 +8790,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -9742,79 +8834,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -9834,11 +8860,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -10455,52 +9476,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -10541,11 +9516,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -10555,11 +9555,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -10604,79 +9599,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -10696,11 +9625,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -11317,52 +10241,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -11403,11 +10281,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -11417,11 +10320,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -11466,79 +10364,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -11558,11 +10390,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -12179,16 +11006,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -12229,11 +11046,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -12243,11 +11085,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -12292,79 +11129,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -12384,11 +11155,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -13005,52 +11771,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -13091,11 +11811,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -13105,11 +11850,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -13154,79 +11894,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -13246,11 +11920,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -13867,52 +12536,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -13953,11 +12576,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -13967,11 +12615,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -14016,79 +12659,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -14108,11 +12685,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -14729,52 +13301,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -14815,11 +13341,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -14829,11 +13380,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -14878,79 +13424,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -14970,11 +13450,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -15591,52 +14066,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -15677,11 +14106,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -15691,11 +14145,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -15740,79 +14189,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -15832,11 +14215,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -16453,52 +14831,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -16539,11 +14871,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -16553,11 +14910,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -16602,79 +14954,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -16694,11 +14980,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -17315,52 +15596,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -17401,11 +15636,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -17415,11 +15675,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -17464,79 +15719,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -17556,11 +15745,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -18177,61 +16361,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -18241,11 +16404,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -18290,79 +16448,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -18382,11 +16474,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -19003,61 +17090,40 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>1</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Aads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -19067,11 +17133,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -19116,79 +17177,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -19208,11 +17203,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -19829,16 +17819,6 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_MK20D5_mbed_bootloader.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5_mbed_bootloader.s</FilePath>
-            </File>
-            <File>
               <FileName>startup_MK20D5.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
@@ -19879,11 +17859,36 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>system_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Common</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
             <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
@@ -19893,11 +17898,6 @@
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -19942,79 +17942,13 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
-            <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -20034,11 +17968,6 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
             </File>
           </Files>
         </Group>

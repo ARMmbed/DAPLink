@@ -14,16 +14,25 @@
  * limitations under the License.
  */
  
-/* RTL no timeout value */
-#define NO_TIMEOUT  (0xffff)
+#include <stdio.h>
 
-/* Task configuration (Priority, stacks etc.) */
-#define LOWEST_PRIORITY             (1)     /* Priority 0 is reserved for the RTX idle task */
-#define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
+#define ITM_Port8(n)    (*((volatile unsigned char *)(0xE0000000+4*n)))
+#define ITM_Port16(n)   (*((volatile unsigned short*)(0xE0000000+4*n)))
+#define ITM_Port32(n)   (*((volatile unsigned long *)(0xE0000000+4*n)))
 
-/* main.c */
-#define MSC_TASK_PRIORITY               (5)
-#define FLASH_PROGRAMMING_TASK_PRIORITY (10)
-#define LED_TASK_PRIORITY 							(15)
+#define DEMCR           (*((volatile unsigned long *)(0xE000EDFC)))
+#define TRCENA          0x01000000
+ 
+struct __FILE { int handle; /* Add whatever needed */ };
+FILE __stdout;
+FILE __stdin;
 
-#define MSC_TASK_STACK (200)
+int fputc(int ch, FILE *f) 
+{
+		if (DEMCR & TRCENA)
+		{
+			while (ITM_Port32(0) == 0);
+			ITM_Port8(0) = ch;
+		}
+		return(ch);
+}

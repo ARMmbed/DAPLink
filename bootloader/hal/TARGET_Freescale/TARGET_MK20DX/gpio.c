@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #include <MK20D5.h>
 #include "gpio.h"
 
-void gpio_init(void) {
+void time_delay_ms(uint32_t delay)
+{
+    SIM->SCGC5 |= SIM_SCGC5_LPTIMER_MASK;
+    LPTMR0->CMR = delay;
+    LPTMR0->PSR = LPTMR_PSR_PCS(1) | LPTMR_PSR_PBYP_MASK;
+    LPTMR0->CSR |= LPTMR_CSR_TEN_MASK;
+    while (!(LPTMR0->CSR & LPTMR_CSR_TCF_MASK));
+    LPTMR0->CSR &= ~LPTMR_CSR_TEN_MASK;
+		return;
+}
+
+void gpio_init(void) 
+{
     // clock for LED and button
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
 
@@ -27,37 +40,40 @@ void gpio_init(void) {
 
     // RST button
     PORTB->PCR[1] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
+	
+		// delay 2ms for pull-up enable
+		time_delay_ms(2);
+		return;
 }
 
-void gpio_set_dap_led(uint8_t state) {
+void gpio_set_dap_led(uint8_t state)
+{
     if (state) {
         PTD->PCOR  |= 1UL << 4; // LED on
     } else {
         PTD->PSOR  |= 1UL << 4; // LED off
     }
+		return;
 }
 
-void gpio_set_msd_led(uint8_t state) {
-    gpio_set_dap_led(state);
-}
-
-void gpio_set_cdc_led(uint8_t state) {
-    gpio_set_dap_led(state);
-}
-
-void time_delay_ms(uint32_t delay)
+void gpio_set_msd_led(uint8_t state)
 {
-    SIM->SCGC5 |= SIM_SCGC5_LPTIMER_MASK;
-    LPTMR0->CMR = delay;
-    LPTMR0->PSR = LPTMR_PSR_PCS(1) | LPTMR_PSR_PBYP_MASK;
-    LPTMR0->CSR |= LPTMR_CSR_TEN_MASK;
-    while (!(LPTMR0->CSR & LPTMR_CSR_TCF_MASK));
-    LPTMR0->CSR &= ~LPTMR_CSR_TEN_MASK;
+    gpio_set_dap_led(state);
+		return;
 }
 
-uint8_t gpio_get_pin_loader_state(void) {
-    time_delay_ms(2); //delay 2ms for pull-up enable
+void gpio_set_cdc_led(uint8_t state)
+{
+    gpio_set_dap_led(state);
+		return;
+}
+
+uint8_t gpio_get_pin_loader_state(void)
+{
     return (PTB->PDIR & (1UL << 1));
 }
 
-
+void mcu_reboot(void)
+{
+		NVIC_SystemReset();
+}

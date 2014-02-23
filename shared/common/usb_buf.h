@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-/* RTL no timeout value */
-#define NO_TIMEOUT  (0xffff)
+#ifndef USB_BUF_H
+#define USB_BUF_H
 
-/* Task configuration (Priority, stacks etc.) */
-#define LOWEST_PRIORITY             (1)     /* Priority 0 is reserved for the RTX idle task */
-#define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
+#include <stdint.h>
+//#include "target_flash.h"
 
-/* main.c */
-#define MSC_TASK_PRIORITY               (5)
-#define FLASH_PROGRAMMING_TASK_PRIORITY (10)
-#define LED_TASK_PRIORITY 							(15)
+#define FLASH_SECTOR_SIZE           (1024)
+uint32_t usb_buffer[FLASH_SECTOR_SIZE/4];
 
-#define MSC_TASK_STACK (200)
+#endif

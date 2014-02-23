@@ -141,7 +141,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>__RTX, TARGET_MK20DX, MKP128_50MHZ</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include;..\..\..\shared\common</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,9 +414,9 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
-              <FileName>flash_svc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\flash_svc.c</FilePath>
+              <FileName>SVC_Table.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -424,14 +424,14 @@
               <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
+              <FileName>flash_svc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\flash_svc.c</FilePath>
+            </File>
+            <File>
               <FileName>RTX_Config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
-            </File>
-            <File>
-              <FileName>SVC_Table.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
             </File>
             <File>
               <FileName>usb_config.c</FileName>
@@ -441,7 +441,7 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
+              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -487,18 +487,23 @@
             <File>
               <FileName>version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\version.c</FilePath>
+              <FilePath>..\..\..\shared\common\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>validate_user_application.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\common\validate_user_application.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\retarget.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL</GroupName>
           <Files>
-            <File>
-              <FileName>flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash.c</FilePath>
-            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -510,14 +515,24 @@
               <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\read_uid.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_MK20D5.c</FileName>
+              <FileName>flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_erase_read_write.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash_erase_read_write.c</FilePath>
             </File>
             <File>
               <FileName>vector_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\vector_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_MK20D5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
             </File>
             <File>
               <FileName>FlashEraseAllBlock.c</FileName>
@@ -548,63 +563,6 @@
         </Group>
         <Group>
           <GroupName>USBStack</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>2</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>0</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>0</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath>..\USBStack\INC</IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
           <Files>
             <File>
               <FileName>usbd_core.c</FileName>

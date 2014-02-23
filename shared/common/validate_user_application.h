@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-/* RTL no timeout value */
-#define NO_TIMEOUT  (0xffff)
 
-/* Task configuration (Priority, stacks etc.) */
-#define LOWEST_PRIORITY             (1)     /* Priority 0 is reserved for the RTX idle task */
-#define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
+#ifndef VALIDATE_USER_APPLICATION_H
+#define VALIDATE_USER_APPLICATION_H
 
-/* main.c */
-#define MSC_TASK_PRIORITY               (5)
-#define FLASH_PROGRAMMING_TASK_PRIORITY (10)
-#define LED_TASK_PRIORITY 							(15)
+int validate_user_application(int app_address);
 
-#define MSC_TASK_STACK (200)
+#endif
