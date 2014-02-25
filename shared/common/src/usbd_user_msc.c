@@ -22,6 +22,7 @@
 #include "version.h"
 #include "usb_buf.h"
 #include "flash_erase_read_write.h"
+#include "retarget.h"
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
@@ -45,7 +46,7 @@
 #   define WANTED_SIZE_IN_KB                        (32)
 #else
 #		warning target not defined properly
-#		define WANTED_SIZE_IN_KB												(32)
+#		define WANTED_SIZE_IN_KB					(128)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
@@ -438,8 +439,59 @@ static U64 msc_task_stack[MSC_TASK_STACK/8];
 // Reference to the msc task
 static OS_TID msc_valid_file_timeout_task_id;
 
-//static void init(uint8_t jtag);
-//static void initDisconnect(uint8_t success);
+static void init(uint8_t jtag);
+static void initDisconnect(uint8_t success);
+
+extern uint32_t SystemCoreClock;
+
+void failSWD() {
+    reason = SWD_ERROR;
+    initDisconnect(0);
+}
+
+void initDisconnect(uint8_t success) 
+{
+    drag_success = success;
+    dbg_message("success %d, reason %s", success, reason_array[reason]);
+#if 0       // reset and run target
+    if (success) {
+        swd_set_target_state(RESET_RUN);
+    }
+#endif
+    main_blink_msd_led(0);
+    //init(1); //TODO - should be done when we start a connection rather then at the end of one
+    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
+    // event to disconnect the usb
+    main_usb_disconnect_event();
+    //semihost_enable();
+}
+
+int jtag_init() {
+//    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
+//        need_restart_usb = 1;
+//    }
+
+    if ((jtag_flash_init != 1) /*&& (DAP_Data.debug_port == DAP_PORT_DISABLED)*/) {
+        if (need_restart_usb == 1) {
+            reason = SWD_PORT_IN_USE;
+            initDisconnect(0);
+            return 1;
+        }
+
+        //semihost_disable();
+
+        //PORT_SWD_SETUP();
+
+        //target_set_state(RESET_PROGRAM);
+        if (!_flash_init(SystemCoreClock)) {
+            failSWD();
+            return 1;
+        }
+
+        jtag_flash_init = 1;
+    }
+    return 0;
+}
 
 // this task is responsible to check
 // when we receive a root directory where there
@@ -524,14 +576,7 @@ void init(uint8_t jtag) {
     flash_addr_offset = 0;
 }
 
-void failSWD() {
-    reason = SWD_ERROR;
-    initDisconnect(0);
-}
-
 //extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
-
-extern uint32_t SystemCoreClock;
 
 
 static const FILE_TYPE_MAPPING file_type_infos[] = {
@@ -894,7 +939,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
                     if (!_flash_erase_chip()) {
-                    return;
+                        return;
                     }
                 }
                 maybe_erase = 0;

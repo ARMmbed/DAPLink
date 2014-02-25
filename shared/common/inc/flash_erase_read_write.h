@@ -26,8 +26,6 @@
 //#include "semihost.h"			//move to flashing files
 //#include "swd_host.h"			//move to flashing files
 
-void initDisconnect(uint8_t success);
-int jtag_init(void);
 
 
 uint8_t  _flash_init(uint32_t clk);

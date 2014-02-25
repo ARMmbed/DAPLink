@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>__RTX, TARGET_MK20DX, MKP128_50MHZ</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include;..\..\..\shared\common</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include;..\..\..\shared\common\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -441,7 +441,7 @@
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\usbd_user_msc.c</FilePath>
+              <FilePath>..\..\..\shared\common\src\usbd_user_msc.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -487,17 +487,58 @@
             <File>
               <FileName>version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\version.c</FilePath>
+              <FilePath>..\..\..\shared\common\src\version.c</FilePath>
             </File>
             <File>
               <FileName>validate_user_application.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\validate_user_application.c</FilePath>
+              <FilePath>..\..\..\shared\common\src\validate_user_application.c</FilePath>
             </File>
             <File>
               <FileName>retarget.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\retarget.c</FilePath>
+              <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <VariousControls>
+                      <MiscControls>--c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>

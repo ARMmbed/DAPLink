@@ -37,16 +37,16 @@ BIT dbg_msg;
 /*--------------------------- rt_set_PSP ------------------------------------*/
 
 __asm void rt_set_PSP (U32 stack) {
-        MSR     PSP,R0
-        BX      LR
+    MSR     PSP,R0
+    BX      LR
 }
 
 
 /*--------------------------- rt_get_PSP ------------------------------------*/
 
 __asm U32 rt_get_PSP (void) {
-        MRS     R0,PSP
-        BX      LR
+    MRS     R0,PSP
+    BX      LR
 }
 
 
@@ -54,17 +54,17 @@ __asm U32 rt_get_PSP (void) {
 
 __asm void os_set_env (void) {
    /* Switch to Unprivileged/Privileged Thread mode, use PSP. */
-        MOV     R0,SP                   ; PSP = MSP
-        MSR     PSP,R0
-        LDR     R0,=__cpp(&os_flags)
-        LDRB    R0,[R0]
-        LSLS    R0,#31
-        MOVNE   R0,#0x02                ; Privileged Thread mode, use PSP
-        MOVEQ   R0,#0x03                ; Unprivileged Thread mode, use PSP
-        MSR     CONTROL,R0
-        BX      LR
+    MOV     R0,SP                   ; PSP = MSP
+    MSR     PSP,R0
+    LDR     R0,=__cpp(&os_flags)
+    LDRB    R0,[R0]
+    LSLS    R0,#31
+    MOVNE   R0,#0x02                ; Privileged Thread mode, use PSP
+    MOVEQ   R0,#0x03                ; Unprivileged Thread mode, use PSP
+    MSR     CONTROL,R0
+    BX      LR
 
-        ALIGN
+    ALIGN
 }
 
 
@@ -72,17 +72,17 @@ __asm void os_set_env (void) {
 
 __asm void *_alloc_box (void *box_mem) {
    /* Function wrapper for Unprivileged/Privileged mode. */
-        LDR     R12,=__cpp(rt_alloc_box)
-        MRS     R3,IPSR
-        LSLS    R3,#24
-        BXNE    R12
-        MRS     R3,CONTROL
-        LSLS    R3,#31
-        BXEQ    R12
-        SVC     0
-        BX      LR
+    LDR     R12,=__cpp(rt_alloc_box)
+    MRS     R3,IPSR
+    LSLS    R3,#24
+    BXNE    R12
+    MRS     R3,CONTROL
+    LSLS    R3,#31
+    BXEQ    R12
+    SVC     0
+    BX      LR
 
-        ALIGN
+    ALIGN
 }
 
 
@@ -90,17 +90,17 @@ __asm void *_alloc_box (void *box_mem) {
 
 __asm int _free_box (void *box_mem, void *box) {
    /* Function wrapper for Unprivileged/Privileged mode. */
-        LDR     R12,=__cpp(rt_free_box)
-        MRS     R3,IPSR
-        LSLS    R3,#24
-        BXNE    R12
-        MRS     R3,CONTROL
-        LSLS    R3,#31
-        BXEQ    R12
-        SVC     0
-        BX      LR
+    LDR     R12,=__cpp(rt_free_box)
+    MRS     R3,IPSR
+    LSLS    R3,#24
+    BXNE    R12
+    MRS     R3,CONTROL
+    LSLS    R3,#31
+    BXEQ    R12
+    SVC     0
+    BX      LR
 
-        ALIGN
+    ALIGN
 }
 
 

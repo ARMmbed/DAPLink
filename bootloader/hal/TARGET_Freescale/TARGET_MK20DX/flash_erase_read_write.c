@@ -16,77 +16,43 @@
  
 #include "flash_erase_read_write.h"
 #include "flash.h"
-#include <string.h>
-
-void initDisconnect(uint8_t success) 
-{
-//    drag_success = success;
-//#if 0       // reset and run target
-//    if (success) {
-//        swd_set_target_state(RESET_RUN);
-//    }
-//#endif
-//    main_blink_msd_led(0);
-//    //init(1); //TODO - should be done when we start a connection rather then at the end of one
-//    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-//    // event to disconnect the usb
-//    main_usb_disconnect_event();
-//    semihost_enable();
-}
-
-int jtag_init() {
-//    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
-//        need_restart_usb = 1;
-//    }
-
-//    if ((jtag_flash_init != 1) && (DAP_Data.debug_port == DAP_PORT_DISABLED)) {
-//        if (need_restart_usb == 1) {
-//            reason = SWD_PORT_IN_USE;
-//            initDisconnect(0);
-//            return 1;
-//        }
-
-//        semihost_disable();
-
-//        PORT_SWD_SETUP();
-
-//        target_set_state(RESET_PROGRAM);
-//        if (!target_flash_init(SystemCoreClock)) {
-//            failSWD();
-//            return 1;
-//        }
-
-//        jtag_flash_init = 1;
-//    }
-    return 0;
-}
+#include "retarget.h"
 
 uint8_t _flash_init(uint32_t clk)
 {
-		return flash_init(clk);
+	return flash_init(clk);
 }
 
 uint8_t _flash_uninit(void)
 {
-		return flash_uninit(0);
+	return flash_uninit(0);
 }
 
 uint8_t _flash_erase_chip(void)
 {
-		return 0;
+	int i = START_APP_ADDRESS;
+    for(; i < END_FLASH; i += SECTOR_SIZE) {
+        dbg_message("break %x", i);
+        flash_erase_sector(i);
+    }
+    return 0;
 }
 
 uint8_t _flash_erase_sector(uint32_t adr)
 {
-		return flash_erase_sector_svc(adr);
+	return flash_erase_sector_svc(adr);
 }
 
 uint8_t _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
-		return flash_program_page_svc(adr, size, buf);
+	return flash_program_page_svc(adr, size, buf);
 }
 
 uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
-		return (uint32_t)memcpy(data, (void *)address, size);
+	char *start_address = (char *)address;
+    while(size--) {
+        *data++ = *(char *)address++;
+    }
+    return address - *(char *)start_address;
 }

@@ -30,7 +30,8 @@
 #include "validate_user_application.h"
 
 // libs
-#include <stdio.h>
+
+#include "retarget.h"
 
 //temp hacking. Shouldnt need this
 // Global state of usb
@@ -78,80 +79,90 @@ __task void led_task(void) {
 }
 
 // called from init disconnect to end the file update
-//void main_transfer_finished(uint8_t success) {
-//    if (success) {
-//        isr_evt_set(TRANSFER_FINISHED_SUCCESS, mainTask);
-//    } else {
-//        isr_evt_set(TRANSFER_FINISHED_FAIL, mainTask);
-//    }
-//}
+void main_transfer_finished(uint8_t success) {
+    if (success) {
+        isr_evt_set(TRANSFER_FINISHED_SUCCESS, mainTask);
+    } else {
+        isr_evt_set(TRANSFER_FINISHED_FAIL, mainTask);
+    }
+}
+
+// USB Events
+#define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
+
+// A new binary has been flashed in the target
+void main_usb_disconnect_event(void) {
+    //os_evt_set(FLAGS_MAIN_USB_DISCONNECT, mainTask);
+    os_evt_set(TRANSFER_FINISHED_FAIL, mainTask);
+    return;
+}
 
 __task void main_task(void)
 {
     BOOL led_state = __FALSE;
     uint8_t flags = 0, i = 0;
     
-		// create some tasks
-		mainTask = os_tsk_self();
-		ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
+	// create some tasks
+	mainTask = os_tsk_self();
+	ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
 
     //update_html_file();	// taken care of by USB in new virt. file system
-		// init and connect USB
+	// init and connect USB
     usbd_init();
     usbd_connect(__TRUE);
-		usb_state = USB_CONNECTED;	// hack to maintain compatibility with CMSIS-DAP for now
+	usb_state = USB_CONNECTED;	// hack to maintain compatibility with CMSIS-DAP for now
 	
-		// wait for the file transfer to complete (pass or fail)
+	// wait for the file transfer to complete (pass or fail)
     os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
 
     // delay the task
-		os_dly_wait(200);
+	os_dly_wait(200);
 
     // disconnect USB
-		usbd_connect(__FALSE);
+	usbd_connect(__FALSE);
 
     // Find out what event happened
     flags = os_evt_get();
 		
-		// if we blink here, dont do it in a thread
-		os_tsk_delete(ledTask);
+	// if we blink here, dont do it in a thread
+	os_tsk_delete(ledTask);
 		
-		if(flags & TRANSFER_FINISHED_SUCCESS)
-		{
-				// make sure the reset button isnt pressed. If so, wait...
-				while(!gpio_get_pin_loader_state());
-				// reboot the MCU and the app should run
-				mcu_reboot();
-		}
+	if(flags & TRANSFER_FINISHED_SUCCESS)
+	{
+		// make sure the reset button isnt pressed. If so, wait...
+		while(!gpio_get_pin_loader_state());
+		// reboot the MCU and the app should run
+		mcu_reboot();
+	}
 	
-		// programming failed so just flash to let the user know.
-		//	This should be 2 flashes per second
+	// programming failed so just flash to let the user know.
+	//	This should be 2 flashes per second
     while(1) 
+	{
+		i = (i>10) ? 0 : (++i);
+		os_dly_wait(25);
+		if(i<6)
 		{
-				i = (i>10) ? 0 : (++i);
-				os_dly_wait(50);
-				if(i<5)
-				{
-						gpio_set_msd_led(led_state);
-						led_state = !led_state;
-				}
+			gpio_set_msd_led(led_state);
+			led_state = !led_state;
+		}
     }
 }
 
 int main (void)
 {	
-		printf("BOOTLOADER\n");
-		// Configure the IO for LEDs and RST
-		gpio_init();
+	dbg_message("test SWO");
+    // Configure the IO for LEDs and RST
+	gpio_init();
 
-		// check if the RST button is pressed or that we have an invalid CMSIS-DAP application
-		if (!gpio_get_pin_loader_state() || !validate_user_application(START_APP_ADDRESS))
-		{
+    // check if the RST button is pressed or that we have an invalid CMSIS-DAP application
+	if (!gpio_get_pin_loader_state() || !validate_user_application(START_APP_ADDRESS))
+	{
         os_sys_init(main_task);	// start the main task to enumerate USB and wait for a CMSIS-DAP file
     }
 		
-		// looks like we do this for the CMSIS-DAP app. Seems risky since we are unaware of each other
-		relocate_vector_table();
+	// looks like we do this for the CMSIS-DAP app. Seems risky since we are unaware of each other
+	relocate_vector_table();
 
     // modify stack pointer and start app
     modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);

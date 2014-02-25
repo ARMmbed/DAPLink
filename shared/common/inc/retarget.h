@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef GPIO_H
-#define GPIO_H
 
-#include <stdint.h>
+#ifndef RETARGET_H
+#define RETARGET_H
 
-//TODO: find symbols from the Linker to do this
-#define FLASH_VALID_LO	0x410
-#define FLASH_VALID_HI	0x1FFFFFFF
+#include <stdio.h>
 
-#define RAM_VALID_LO	0x1FFFE000
-#define RAM_VALID_HI	0x20002000
-
-
-void gpio_init(void);
-void gpio_set_msd_led(uint8_t state);
-void gpio_set_cdc_led(uint8_t state);
-void gpio_set_dap_led(uint8_t state);
-uint8_t gpio_get_pin_loader_state(void);
-void mcu_reboot(void);
+#if (1)
+#define dbg_message(x, ...) do { fprintf(stdout, "Line: %d %s \t[MSG]"x"\n", __LINE__, __FILE__, ##__VA_ARGS__); } while (0)
+#else
+#define dbg_message(x, ...)
+#endif
 
 #endif

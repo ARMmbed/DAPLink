@@ -116,10 +116,12 @@ uint8_t * get_uid_string_interface(void) {
 static void compute_auth() {
     uint32_t id, fw, sec;
 	//id = atoi((uint8_t *)board.id  , 4, 16);	//TODO: used in dap but not bootloader
+    id = 1;
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
     auth ^= unique_id;
 	//sec = atoi((uint8_t *)(board.secret), 8, 16); //TODO: used in dap but not bootloader
+    sec = 30;
     auth ^= sec;
 }
 
