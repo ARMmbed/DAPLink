@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 
 #include "target_flash.h"
 #include "target_reset.h"

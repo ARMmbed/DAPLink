@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <MK20D5.h>
-#include <RTL.h>
+#include "MK20D5.h"
+#include "RTL.h"
 #include "DAP_config.h"
 #include "gpio.h"
 

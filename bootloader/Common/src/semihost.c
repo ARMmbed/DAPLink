@@ -15,7 +15,7 @@
  */
 #ifndef NO_SEMIHOST
 
-#include <RTL.h>
+#include "RTL.h"
 #include <string.h>
 
 #include "tasks.h"

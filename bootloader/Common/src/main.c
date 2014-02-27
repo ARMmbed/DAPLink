@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 #include "rl_usb.h"
 
 #include <string.h>
@@ -30,6 +30,7 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "version.h"
+#include "retarget.h"
 
 // Event flags for main task
 // Timers events
@@ -221,6 +222,7 @@ __task void serial_process() {
 }
 
 extern __task void hid_process(void);
+
 __task void main_task(void) {
     // State processing
     uint16_t flags;
@@ -243,7 +245,7 @@ __task void main_task(void) {
     uint8_t * id_str;
 
     // Initialize our serial mailbox
-    os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
+    //os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
@@ -271,17 +273,17 @@ __task void main_task(void) {
     usb_state_count = USB_CONNECT_DELAY;
 
     // Update HTML version information file
-    update_html_file();
+    //update_html_file();
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 
     // Target running
-    target_set_state(RESET_RUN_WITH_DEBUG);
+    //target_set_state(RESET_RUN_WITH_DEBUG);
 
     // start semihost task
-    semihost_init();
-    semihost_enable();
+    //semihost_init();
+    //semihost_enable();
 
     while(1) {
         os_evt_wait_or(   FLAGS_MAIN_RESET              // Put target in reset state
@@ -469,6 +471,9 @@ __task void main_task(void) {
 }
 
 // Main Program
-int main (void) {
-  os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
+int main (void)
+{
+    dbg_message("Built for BOOTLOADER");
+    os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
+    while(1);
 }
