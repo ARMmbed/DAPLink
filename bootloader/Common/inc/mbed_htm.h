@@ -18,7 +18,7 @@ const unsigned char WebSide[] = {
 "<!-- Version: " FW_BUILD " Build: " __DATE__ " " __TIME__ " -->\r\n"
 "<html>\r\n"
 "<head>\r\n"
-"<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code_bl=@A\"/>\r\n"
+"<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
 "<title>mbed Website Shortcut</title>\r\n"
 "</head>\r\n"
 "<body></body>\r\n"

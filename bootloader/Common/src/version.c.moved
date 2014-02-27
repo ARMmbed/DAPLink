@@ -17,10 +17,11 @@
 
 #include "main.h"
 #include "version.h"
+#include "board.h"
 #include "mbed_htm.h"
 #include "read_uid.h"
 
-//extern uint8_t BlockBuf[];
+extern uint8_t usb_buffer[];
 
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
@@ -67,6 +68,8 @@ static void setup_string_id_auth() {
 
     // string id
     for (i = 0; i < 4; i++)
+        string_auth[idx++] = board.id[i];
+    for (i = 0; i < 4; i++)
         string_auth[idx++] = fw_version[i];
     for (i = 0; i < 4; i++)
         get_byte_hex((unique_id >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
@@ -76,7 +79,6 @@ static void setup_string_id_auth() {
     for (i = 0; i < 4; i++)
         get_byte_hex((auth >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
     idx+=8;
-
     string_auth[idx] = 0;
 }
 
@@ -98,6 +100,11 @@ static void setup_string_descriptor() {
     string_auth_descriptor[idx] = 0;
 }
 
+
+uint8_t * get_uid_string(void) {
+    return string_auth;
+}
+
 uint8_t get_len_string_interface(void) {
     return 2 + strlen((const char *)(string_auth+4))*2;
 }
@@ -106,18 +113,20 @@ uint8_t * get_uid_string_interface(void) {
     return string_auth_descriptor;
 }
 
-const uint8_t board_secret[9] = "k4flu5fs";
-
 static void compute_auth() {
-    auth = atoi((uint8_t *)fw_version, 4, 16);
+    uint32_t id, fw, sec;
+    id = atoi((uint8_t *)board.id  , 4, 16);
+    fw = atoi((uint8_t *)fw_version, 4, 16);
+    auth = (id) | (fw << 16);
     auth ^= unique_id;
-    auth ^= atoi((uint8_t *)(board_secret), 8, 16);
+    sec = atoi((uint8_t *)(board.secret), 8, 16);
+    auth ^= sec;
 }
 
 // HTML character reader context
 typedef struct {
     uint8_t *phtml;        // Pointer to current position in HTML data in flash
-    uint8_t substitute;  // TRUE if characters should be read from a substitution string, otherwise read from HTML data.
+    uint8_t substitute;    // TRUE if characters should be read from a substitution string, otherwise read from HTML data.
 } HTMLCTX;
 
 
@@ -155,13 +164,15 @@ static uint8_t get_html_character(HTMLCTX *h) {
                 // Check next HTML character
                 s = *h->phtml;
 
-                switch (s) {
+                switch (s)  {
+
                     case 'A':
                         sptr = (uint8_t *)(string_auth+4);             // auth string
                         h->substitute = 1;
                         break;
 
                     // Add any additional substitutions here
+
                     default:
                         break;
                 }
@@ -187,6 +198,7 @@ static uint8_t get_html_character(HTMLCTX *h) {
             // Get next substitution character
             c = *sptr++;
         }
+
     } while (!valid);
 
     return c;
@@ -215,9 +227,9 @@ uint8_t update_html_file(void) {
     do {
         c=get_html_character(&html);
         if (c != '\0') {
-            BlockBuf[i++] = c;
+            usb_buffer[i++] = c;
         }
     } while (c != '\0');
-
+    memset(usb_buffer+i, ' ', 512 - i);
     return 1;  // Success
 }

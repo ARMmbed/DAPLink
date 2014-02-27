@@ -28,7 +28,11 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #define OS_TASKCNT    6
+    #if defined(NO_SEMIHOST)
+        #define OS_TASKCNT    12
+    #else
+        #define OS_TASKCNT    13
+    #endif
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -36,7 +40,7 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     0
+ #define OS_PRIVCNT     5
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
@@ -51,7 +55,7 @@
 // <i> Include the stack checking code for a stack overflow.
 // <i> Note that additional code reduces the Kernel performance.
 #ifndef OS_STKCHECK
- #define OS_STKCHECK    1
+ #define OS_STKCHECK    0
 #endif
 
 // <q>Run in privileged mode
@@ -69,11 +73,9 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-#if defined(TARGET_LPC11U35)
- #define OS_CLOCK       48000000
-#elif defined(TARGET_MK20DX)
- #define OS_CLOCK       48000000
-#endif
+    #if defined(TARGET_LPC11U35) || defined(TARGET_MK20D5)
+        #define OS_CLOCK       48000000
+    #endif
 #endif
 
 //   <o>Timer tick value [us] <1-1000000>
