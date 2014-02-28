@@ -20,32 +20,35 @@
 
 uint8_t _flash_init(uint32_t clk)
 {
-	return flash_init(clk);
+	//return flash_init(clk);
+    return 1;
 }
 
 uint8_t _flash_uninit(void)
 {
-	return flash_uninit(0);
+	//return flash_uninit(0);
+    return 1;
 }
 
 uint8_t _flash_erase_chip(void)
 {
 	int i = START_APP_ADDRESS;
     for(; i < END_FLASH; i += SECTOR_SIZE) {
-        dbg_message("break %x", i);
-        flash_erase_sector(i);
+        //flash_erase_sector(i);
     }
-    return 0;
+    return 1;
 }
 
 uint8_t _flash_erase_sector(uint32_t adr)
 {
-	return flash_erase_sector_svc(adr);
+	//return flash_erase_sector_svc(adr);
+    return 1;
 }
 
 uint8_t _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
-	return flash_program_page_svc(adr, size, buf);
+	//return flash_program_page_svc(adr, size, buf);
+    return 1;
 }
 
 uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size)

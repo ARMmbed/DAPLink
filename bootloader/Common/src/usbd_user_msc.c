@@ -17,16 +17,17 @@
 #include <rl_usb.h>
 #include <string.h>
 
-#include "target_flash.h"
-#include "target_reset.h"
-#include "DAP_config.h"
-#include "dap.h"
+//#include "target_flash.h"
+//#include "target_reset.h"
+//#include "DAP_config.h"
+//#include "dap.h"
 #include "main.h"
 #include "tasks.h"
-#include "semihost.h"
+//#include "semihost.h"
 #include "version.h"
-#include "swd_host.h"
+//#include "swd_host.h"
 #include "usb_buf.h"
+#include "flash_erase_read_write.h"
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
@@ -48,6 +49,9 @@
 #   define WANTED_SIZE_IN_KB                        (16)
 #elif defined(DBG_LPC1114)
 #   define WANTED_SIZE_IN_KB                        (32)
+#else
+#   define WANTED_SIZE_IN_KB                        (1024)
+#warning target not defined 1024
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
@@ -531,7 +535,7 @@ void failSWD() {
     initDisconnect(0);
 }
 
-extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
+/*DAP*///extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
 static void initDisconnect(uint8_t success) {
     drag_success = success;
@@ -545,29 +549,30 @@ static void initDisconnect(uint8_t success) {
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
     // event to disconnect the usb
     main_usb_disconnect_event();
-    semihost_enable();
+/*DAP*///    semihost_enable();
 }
 
 extern uint32_t SystemCoreClock;
 
 int jtag_init() {
-    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
-        need_restart_usb = 1;
-    }
+/*DAP*///    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
+/*DAP*///        need_restart_usb = 1;
+/*DAP*///    }
 
-    if ((jtag_flash_init != 1) && (DAP_Data.debug_port == DAP_PORT_DISABLED)) {
+    /*DAP*///if ((jtag_flash_init != 1) && (DAP_Data.debug_port == DAP_PORT_DISABLED)) {
+    if (jtag_flash_init != 1) {
         if (need_restart_usb == 1) {
             reason = SWD_PORT_IN_USE;
             initDisconnect(0);
             return 1;
         }
 
-        semihost_disable();
+/*DAP*///        semihost_disable();
 
-        PORT_SWD_SETUP();
+/*DAP*///        PORT_SWD_SETUP();
 
-        target_set_state(RESET_PROGRAM);
-        if (!target_flash_init(SystemCoreClock)) {
+/*DAP*///        target_set_state(RESET_PROGRAM);
+        if (!_flash_init(SystemCoreClock)) {
             failSWD();
             return 1;
         }
@@ -713,15 +718,15 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
                 move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
                 nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
                 for (i = 0; i < nb_sector_to_move; i++) {
-                    if (!swd_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+/*DAP*///                    if (!swd_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+/*DAP*///                        failSWD();
+/*DAP*///                        return -1;
+/*DAP*///                    }
+                    if (!_flash_erase_sector(i)) {
                         failSWD();
                         return -1;
                     }
-                    if (!target_flash_erase_sector(i)) {
-                        failSWD();
-                        return -1;
-                    }
-                    if (!target_flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+                    if (!_flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
                         failSWD();
                         return -1;
                     }
@@ -808,7 +813,7 @@ static int programPage() {
     }
 
     // if we have received two sectors, write into flash
-    if (!target_flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
+    if (!_flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
         // even if there is an error, adapt flashptr
         flashPtr += FLASH_PROGRAM_PAGE_SIZE;
         return 1;
@@ -894,7 +899,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (maybe_erase && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!target_flash_erase_chip()) {
+                    if (!_flash_erase_chip()) {
                     return;
                     }
                 }
@@ -937,7 +942,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (flash_started && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!target_flash_erase_chip()) {
+                    if (!_flash_erase_chip()) {
                     return;
                     }
                 }

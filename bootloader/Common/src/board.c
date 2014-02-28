@@ -70,7 +70,9 @@
 
 #if !defined(BOARD_SECRET) || !defined(BOARD_ID)
 // TODO: how to check a string value using the preprocessor...
-#error contact support@mbed.org to obtain a secret and board ID
+#warning contact support@mbed.org to obtain a secret and board ID
+#define BOARD_ID        "0000"
+#define BOARD_SECRET    "xxxxxxxx"
 #endif
 
 BOARD board = {

@@ -21,6 +21,8 @@
 #define CHECK_RANGE(i, min, max) (i < min) || (i > max) ? 0 : 1
 #define CHECK_VALUE(i, val) 	 (i == val) ? 1 : 0
 
+// later in a different file
+
 //The verification algorithm will simply check that vectors 0-6, 11-12, 
 //	and 14-15 all point to a valid memory region and are non-zero.
 int validate_user_application(int app_address)

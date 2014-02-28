@@ -44,7 +44,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\k20dx128_kl05z_if_mbed_bootloader\</OutputDirectory>
+          <OutputDirectory>.\Obj\k20dx128_kl05z_if\</OutputDirectory>
           <OutputName>k20dx128_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
@@ -341,8 +341,8 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>0</Optim>
-            <oTime>0</oTime>
+            <Optim>3</Optim>
+            <oTime>1</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
             <Strict>0</Strict>
@@ -355,9 +355,9 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>OFFSET_VTABLE_20K, TARGET_MK20D5, __RTX, DBG_KL05Z, BOARD_FRDM_KL05Z, INTERFACE_GEN_32KHZ,TARGET_MK20DX</Define>
+              <Define>TARGET_MK20D5, __RTX</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\Common\inc;..\..\target\hal\DBG_Freescale\DBG_KL05Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\..\shared\common\inc;..\..\hal\TARGET_Freescale\TARGET_MK20DX;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\Common\inc;..\..\target\hal\DBG_Freescale\DBG_KL05Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\..\shared\common\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -399,14 +399,14 @@
           <GroupName>CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>startup_MK20D5.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
-            </File>
-            <File>
               <FileName>system_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\system_MK20D5.c</FilePath>
+            </File>
+            <File>
+              <FileName>startup_MK20D5.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\startup_MK20D5.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -414,29 +414,14 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
-            </File>
-            <File>
-              <FileName>DAP.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\DAP.c</FilePath>
-            </File>
-            <File>
               <FileName>dap_vendor_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\dap_vendor_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
@@ -444,24 +429,9 @@
               <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
             </File>
             <File>
-              <FileName>semihost.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\semihost.c</FilePath>
-            </File>
-            <File>
               <FileName>SVC_Table.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
-            </File>
-            <File>
-              <FileName>SW_DP.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\SW_DP.c</FilePath>
-            </File>
-            <File>
-              <FileName>swd_host.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\swd_host.c</FilePath>
             </File>
             <File>
               <FileName>usb_config.c</FileName>
@@ -469,24 +439,9 @@
               <FilePath>..\..\Common\src\usb_config.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_user_cdc_acm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_cdc_acm.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_user_hid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_hid.c</FilePath>
-            </File>
-            <File>
-              <FileName>version.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\version.c</FilePath>
-            </File>
-            <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\usbd_user_msc.c</FilePath>
+              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -530,6 +485,21 @@
               </FileOption>
             </File>
             <File>
+              <FileName>version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\version.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
+            <File>
               <FileName>retarget.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
@@ -539,11 +509,21 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\common\src\validate_user_application.c</FilePath>
             </File>
+            <File>
+              <FileName>flash_erase_read_write.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\flash_erase_read_write.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HAL-Interface</GroupName>
           <Files>
+            <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\DAP_config.h</FilePath>
+            </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
@@ -563,6 +543,16 @@
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_buf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_buf.h</FilePath>
+            </File>
+            <File>
+              <FileName>vector_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_Freescale\vector_table.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -619,21 +609,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash_erase_read_write.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash_erase_read_write.c</FilePath>
-            </File>
-            <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\gpio.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -675,128 +650,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>read_uid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\read_uid.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>usbd_MK20D5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>vector_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\vector_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashEraseAllBlock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashEraseAllBlock.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashEraseSector.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashInit.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashInit.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashProgramLongword.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashProgramLongword.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashCommandSequence.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -861,34 +714,14 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>usbd_cdc_acm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\USBStack\SRC\usbd_cdc_acm.c</FilePath>
-            </File>
-            <File>
               <FileName>usbd_core.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\USBStack\SRC\usbd_core.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_core_cdc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\USBStack\SRC\usbd_core_cdc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_core_hid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\USBStack\SRC\usbd_core_hid.c</FilePath>
-            </File>
-            <File>
               <FileName>usbd_core_msc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\USBStack\SRC\usbd_core_msc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_hid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\USBStack\SRC\usbd_hid.c</FilePath>
             </File>
             <File>
               <FileName>usbd_msc.c</FileName>

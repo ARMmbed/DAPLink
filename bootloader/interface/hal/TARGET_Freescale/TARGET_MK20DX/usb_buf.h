@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef USB_BUF_H
+#define USB_BUF_H
 
 #include <stdint.h>
+//#include "target_flash.h"
 
-#define FW_BUILD "0201"
+#define FLASH_SECTOR_SIZE                  1024
 
-uint8_t  update_html_file(void);
-uint8_t  get_len_string_interface(void);
-uint8_t *get_uid_string_interface(void);
+uint32_t usb_buffer[FLASH_SECTOR_SIZE/4];
 
 #endif

@@ -29,17 +29,19 @@
 #define NB_SECTOR         (128)
 
 #else
-#error target not specified
+#warning target not specified
+#define SECTOR_SIZE       (0x400)
+#define NB_SECTOR         (128)
 #endif
 
 #define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
 
-int  flash_init         (uint32_t clk);
-int  flash_uninit       (uint32_t fnc);
-int  flash_erase_sector (uint32_t adr);
-int  flash_program_page (uint32_t adr, uint32_t sz, unsigned char *buf);
+//int  flash_init         (uint32_t clk);
+//int  flash_uninit       (uint32_t fnc);
+//int  flash_erase_sector (uint32_t adr);
+//int  flash_program_page (uint32_t adr, uint32_t sz, unsigned char *buf);
 
-int  __swi(3) flash_program_page_svc (uint32_t adr, uint32_t sz, uint8_t *buf);
-int  __swi(2) flash_erase_sector_svc (uint32_t addr);
+//int  __swi(3) flash_program_page_svc (uint32_t adr, uint32_t sz, uint8_t *buf);
+//int  __swi(2) flash_erase_sector_svc (uint32_t addr);
 
 #endif

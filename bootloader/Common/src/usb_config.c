@@ -44,7 +44,7 @@
 #define USBD_POWER                  0
 #define USBD_MAX_PACKET0            8
 #define USBD_DEVDESC_IDVENDOR       0x0D28
-#define USBD_DEVDESC_IDPRODUCT      0x0402
+#define USBD_DEVDESC_IDPRODUCT      0x0204
 #define USBD_DEVDESC_BCDDEVICE      0x0100
 
 //   <h> Configuration Settings
@@ -76,7 +76,7 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"MBED"
-#define USBD_STRDESC_PROD           L"MBED CMSIS-DAP"
+#define USBD_STRDESC_PROD           L"MBED BOOTLOADER"
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -120,9 +120,9 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#define USBD_HID_ENABLE             1
-#define USBD_HID_EP_INTIN           1
-#define USBD_HID_EP_INTOUT          1
+#define USBD_HID_ENABLE             0
+#define USBD_HID_EP_INTIN           4
+#define USBD_HID_EP_INTOUT          4
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          0
@@ -174,7 +174,7 @@
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
+                                    "bootloader "      \
                                     "1.0 "
 
 //     <e0.0> Audio Device (ADC)
@@ -276,15 +276,15 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
-#define USBD_CDC_ACM_ENABLE             1
+#define USBD_CDC_ACM_ENABLE             0
 #define USBD_CDC_ACM_EP_INTIN           3
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE  16
 #define USBD_CDC_ACM_HS_BINTERVAL       2
-#define USBD_CDC_ACM_EP_BULKIN          4
-#define USBD_CDC_ACM_EP_BULKOUT         4
+#define USBD_CDC_ACM_EP_BULKIN          1
+#define USBD_CDC_ACM_EP_BULKOUT         1
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
@@ -406,7 +406,7 @@
 #define USBD_ADC_CIF_NUM           (0)
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
-#define USBD_MSC_IF_NUM       (USBD_ADC_ENABLE*2+0)
+#define USBD_MSC_IF_NUM            (USBD_ADC_ENABLE*2+0)
 #define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+1)
 #define USBD_CDC_ACM_DIF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2)
 #define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
