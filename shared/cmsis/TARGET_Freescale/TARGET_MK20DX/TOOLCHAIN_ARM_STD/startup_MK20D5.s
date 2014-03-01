@@ -460,6 +460,12 @@ FSEC            EQU     0xFE
                 DCB     BackDoorK4, BackDoorK5, BackDoorK6, BackDoorK7
                 DCB     FPROT0,     FPROT1,     FPROT2,     FPROT3
                 DCB     FSEC,       FOPT,       FEPROT,     FDPROT
+                ELIF    :DEF:MBED_BOOTLOADER
+                AREA    |.ARM.__at_0x5400|, CODE, READONLY
+                DCB     BackDoorK0, BackDoorK1, BackDoorK2, BackDoorK3
+                DCB     BackDoorK4, BackDoorK5, BackDoorK6, BackDoorK7
+                DCB     FPROT0,     FPROT1,     FPROT2,     FPROT3
+                DCB     FSEC,       FOPT,       FEPROT,     FDPROT
                 ENDIF
 
                 AREA    |.text|, CODE, READONLY

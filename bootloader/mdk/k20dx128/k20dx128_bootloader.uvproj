@@ -495,11 +495,6 @@
               <FilePath>..\..\Common\src\board.c</FilePath>
             </File>
             <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
-            </File>
-            <File>
               <FileName>retarget.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
