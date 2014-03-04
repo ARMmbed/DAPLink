@@ -184,7 +184,7 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
 */
-static __inline uint32_t PORT_SWD_SETUP (void) {
+static __inline void PORT_SWD_SETUP (void) {
   PIN_SWCLK_GPIO->PSOR     = 1 << PIN_SWCLK_BIT;
   PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
   PIN_SWDIO_NOE_GPIO->PCOR = 1 << PIN_SWDIO_NOE_BIT;
@@ -199,7 +199,6 @@ static __inline uint32_t PORT_SWD_SETUP (void) {
     PTB->PDDR = PTB->PDDR | (1<<1); //output
 
   PORTB->PCR[1] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); /* IRQ Falling edge */    //disable interrupt
-  return 1;
 }
 
 /** Disable JTAG/SWD I/O Pins.

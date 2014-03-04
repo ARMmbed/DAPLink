@@ -154,7 +154,6 @@ static __inline void PORT_JTAG_SETUP (void) {}
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
- - return 1 if the SWD port is ready to be used.
 */
 static __inline void PORT_SWD_SETUP (void) {
     LPC_GPIO->SET[0] = PIN_SWCLK;
