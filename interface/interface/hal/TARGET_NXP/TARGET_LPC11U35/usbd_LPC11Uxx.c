@@ -361,6 +361,7 @@ void USBD_DisableEP (U32 EPNum) {
   *ptr = EP_DISABLED;
 
   if (EPNum & 0x80) {
+    EPNum &= 0x7F;
     LPC_USB->INTEN &= ~(1 << EP_IN_IDX(EPNum));
   }
   else {

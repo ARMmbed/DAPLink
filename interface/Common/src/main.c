@@ -30,6 +30,9 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "version.h"
+#ifdef BOARD_UBLOX_C027
+#include "DAP_config.h"
+#endif
 
 // Event flags for main task
 // Timers events
@@ -250,14 +253,21 @@ __task void main_task(void) {
 
     // leds
     gpio_init();
-
-    usbd_init();
-    swd_init();
-
-    // Turn on LED
+    // Turn off LED
     gpio_set_dap_led(1);
     gpio_set_cdc_led(1);
     gpio_set_msd_led(1);
+
+#ifdef BOARD_UBLOX_C027
+    PORT_SWD_SETUP();
+    // wait until reset is released
+    while (!PIN_nRESET_IN()) {
+        /* wait doing nothing */
+    }
+#endif 
+
+    usbd_init();
+    swd_init();
 
     // Setup reset button
     gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);

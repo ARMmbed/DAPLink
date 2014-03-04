@@ -156,7 +156,7 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
  - return 1 if the SWD port is ready to be used.
 */
-static __inline uint32_t PORT_SWD_SETUP (void) {
+static __inline void PORT_SWD_SETUP (void) {
     LPC_GPIO->SET[0] = PIN_SWCLK;
     LPC_GPIO->SET[0] = PIN_SWDIO;
 #if defined(BOARD_UBLOX_C027)
@@ -164,11 +164,9 @@ static __inline uint32_t PORT_SWD_SETUP (void) {
     LPC_GPIO->DIR[0] &= ~PIN_nRESET;
     LPC_GPIO->CLR[0]  =  PIN_nRESET; 
     LPC_GPIO->DIR[0] |= (PIN_SWCLK | PIN_SWDIO);
-    return (LPC_GPIO->B[PIN_nRESET_IN_BIT] & 1);
 #else
     LPC_GPIO->SET[0] = PIN_nRESET;
     LPC_GPIO->DIR[0]  |= (PIN_SWCLK | PIN_SWDIO | PIN_nRESET);
-    return 1;
 #endif
 }
 

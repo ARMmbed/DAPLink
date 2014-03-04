@@ -416,7 +416,6 @@ static uint32_t flash_addr_offset = 0;
 #define RESERVED_BITS           4
 #define BAD_START_SECTOR        5
 #define TIMEOUT                 6
-#define TGT_POWER               7
 
 static uint8_t * reason_array[] = {
     "SWD ERROR",
@@ -426,7 +425,6 @@ static uint8_t * reason_array[] = {
     "RESERVED BITS",
     "BAD START SECTOR",
     "TIMEOUT",
-    "TARGET NOT POWERED",
 };
 
 #define MSC_TIMEOUT_SPLIT_FILES_EVENT   (0x1000)
@@ -583,13 +581,8 @@ int jtag_init() {
 
         semihost_disable();
 
-        if (!PORT_SWD_SETUP())
-        {
-            reason = TGT_POWER;
-            initDisconnect(0);
-            return 1;
-        }
-
+        PORT_SWD_SETUP();
+        
         target_set_state(RESET_PROGRAM);
         if (!target_flash_init(SystemCoreClock)) {
             failSWD();
@@ -682,7 +675,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             file_type == DOW_FILE || file_type == CRD_FILE || file_type == SPI_FILE) {
 
             hidden_file = (pDirEnts[i].attributes & 0x02) ? 1 : 0;
-            
+
             // compute the size of the file
             size = pDirEnts[i].filesize;
 
@@ -725,7 +718,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             }
 
             adapt_th_sector = 0;
-                        
+
             // on mac, with safari, we receive all the files with some more sectors at the beginning
             // we have to move the sectors... -> 2x slower
             if ((start_sector != 0) && (start_sector < begin_sector) && (current_sector - (begin_sector - start_sector) >= nb_sector)) {
