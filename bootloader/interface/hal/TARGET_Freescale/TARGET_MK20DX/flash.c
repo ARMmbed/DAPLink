@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-// common API for MSC to work from (CMSIS-DAP or BOOTLOADER)
-#include "flash_erase_read_write.h" 
+#include "flash.h"        // FlashOS Structures
 
-// Specific respource for device FLASH read/write
 #include "SSD_Types.h"
 #include "SSD_FTFx.h"
 #include "SSD_FTFx_Internal.h"
@@ -26,19 +23,21 @@
 /* FTFL module base */
 #define FTFL_REG_BASE           0x40020000
 #define EERAM_BLOCK_BASE        0x14000000
-#define FLASH_CONFIG_FSEC       0x0000040C
+
+#define WDOG_UNLOCK                   *((volatile unsigned short *)0x4005200E)
+#define WDOG_STCTRLH                  *((volatile unsigned short *)0x40052000)
+#define WDOG_STCTRLH_WDOGEN_MASK_X    0x00000001
+
+#define FLASH_CONFIG_FSEC             0x0000040C
+
 /* k20 definitions */
 #define PBLOCK_SIZE             0x00020000      /* 128 KB     */
 #define EERAM_BLOCK_SIZE        0x00000800      /* 4 KB size  */
 #define DEFLASH_BLOCK_BASE      0x10000000
-#define WDOG_UNLOCK             *((volatile unsigned short *)0x4005200E)
-#define WDOG_STCTRLH            *((volatile unsigned short *)0x40052000)
-#define WDOG_STCTRLH_WDOGEN_MASK_X      0x00000001
 
-static FLASH_SSD_CONFIG flashSSDConfig; 
+FLASH_SSD_CONFIG flashSSDConfig; 
 
-int _flash_init(uint32_t clk)
-{
+int flash_init(uint32_t clk) {
     /* Write 0xC520 to the unlock register */
     WDOG_UNLOCK = 0xC520;
     /* Followed by 0xD928 to complete the unlock */
@@ -62,39 +61,27 @@ int _flash_init(uint32_t clk)
     return 0;
 }
 
-int _flash_uninit(void)
-{
+int flash_uninit(uint32_t fnc) {
     return 0;
 }
 
-int _flash_erase_chip(void)
-{
-    if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence)) {
+int flash_erase_chip(void) {
+    if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence))
         return (1);
-    }
+
     return (0);
 }
 
-int _flash_erase_sector(uint32_t adr)
-{
-    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, adr, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
+int flash_erase_sector(uint32_t adr) {
+    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, adr, FTFx_PSECTOR_SIZE, pFlashCommandSequence))
         return (1);
-    }
+
     return (0);
 }
 
-int _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
-{
-    if (FTFx_OK != pFlashProgramLongword(&flashSSDConfig, adr, size, (uint32_t)buf, pFlashCommandSequence)) {
+int flash_program_page(uint32_t adr, uint32_t sz, unsigned char *buf) {
+    if (FTFx_OK != pFlashProgramLongword(&flashSSDConfig, adr, sz, (uint32_t)buf, pFlashCommandSequence))
         return (1);
-    }
+
     return (0);
-}
-uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size)
-{
-	char *start_address = (char *)address;
-    while(size--) {
-        *data++ = *(char *)address++;
-    }
-    return address - *(char *)start_address;
 }

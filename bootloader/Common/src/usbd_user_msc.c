@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 #include <RTL.h>
-#include <rl_usb.h>
+#include "rl_usb.h"
+
 #include <string.h>
 
 //#include "target_flash.h"
 //#include "target_reset.h"
 //#include "DAP_config.h"
 //#include "dap.h"
+
+// needs LED flashing mehtods and USB STATE... Maybe do without USB state?!?
 #include "main.h"
+
 #include "tasks.h"
 //#include "semihost.h"
-#include "version.h"
+//#include "version.h"
 //#include "swd_host.h"
 #include "usb_buf.h"
 #include "flash_erase_read_write.h"
@@ -50,7 +54,7 @@
 #elif defined(DBG_LPC1114)
 #   define WANTED_SIZE_IN_KB                        (32)
 #else
-#   define WANTED_SIZE_IN_KB                        (1024)
+#   define WANTED_SIZE_IN_KB                        (128)
 #warning target not defined 1024
 #endif
 
@@ -797,7 +801,8 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
-            update_html_file();
+            // this is done in main when booting
+            //update_html_file();
         }
         // send error message file
         else if (block == SECTORS_ERROR_FILE_IDX) {
@@ -967,14 +972,17 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
 
 
 void usbd_msc_init () {
+    
+    // this should move to main so we can kill the task on reboot?!?
+    // this file shouldnt have the task and filesystem implementation. Need to break it up
     if (!task_first_started) {
         task_first_started = 1;
         os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
     }
 
     USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
-    USBD_MSC_BlockSize  = 512;
-    USBD_MSC_BlockGroup = 1;
+    USBD_MSC_BlockSize  = 512;  // need a define here
+    USBD_MSC_BlockGroup = 1;    // and here
     USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
     USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
     USBD_MSC_MediaReady = __TRUE;

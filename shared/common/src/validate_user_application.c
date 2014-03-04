@@ -16,7 +16,6 @@
 
 #include "validate_user_application.h"
 #include "flash_erase_read_write.h"
-#include "gpio.h"
 
 #define CHECK_RANGE(i, min, max) (i < min) || (i > max) ? 0 : 1
 #define CHECK_VALUE(i, val) 	 (i == val) ? 1 : 0

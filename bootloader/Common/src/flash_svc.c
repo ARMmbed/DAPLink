@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef GPIO_H
-#define GPIO_H
 
-// THIS file is common between bootloader and CMSIS-DAP
+#include "flash_erase_read_write.h" 
 
-// EACH needs to be implemented for each target in a C file
-void gpio_init(void);
-void gpio_set_dap_led(uint8_t state);
-void gpio_set_cdc_led(uint8_t state);
-void gpio_set_msd_led(uint8_t state);
-uint8_t gpio_get_rst_pin_state(void);
+int __SVC_2 (uint32_t addr) 
+{
+    return _flash_erase_sector(addr);
+}
 
-#endif
+int __SVC_3 (uint32_t adr, uint8_t * buf, uint32_t size)
+{
+    return _flash_program_page(adr, buf, size);
+}

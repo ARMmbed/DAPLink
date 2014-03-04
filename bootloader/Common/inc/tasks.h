@@ -22,16 +22,16 @@
 #define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
 
 #define MAIN_TASK_PRIORITY          (10)
-#define SERIAL_TASK_PRIORITY        (1)
+//#define SERIAL_TASK_PRIORITY        (1)
 #define TIMER_TASK_PRIORITY         (11)
-#define DAP_TASK_PRIORITY           (15)
+//#define DAP_TASK_PRIORITY           (15)
 #define MSC_TASK_PRIORITY           (5)
 #define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
-#define SEMIHOST_TASK_PRIORITY      (2)
+//#define SEMIHOST_TASK_PRIORITY      (2)
 
 #define TIMER_TASK_30_STACK (70)
-#define DAP_TASK_STACK (400)
-#define SERIAL_TASK_STACK (200)
+//#define DAP_TASK_STACK (400)
+//#define SERIAL_TASK_STACK (200)
 #define MSC_TASK_STACK (200)
 #define MAIN_TASK_STACK (200)
 

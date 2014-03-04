@@ -76,7 +76,7 @@
 #define pFlashProgramSection            (FlashProgramSection)
 #define pFlashProgramOnce               (FlashProgramOnce)
 #define pFlashProgramLongword           (FlashProgramLongword)
-#define pFlashProgramPhrase              (FlashProgramPhrase)
+#define pFlashProgramPhrase             (FlashProgramPhrase)
 #define pFlashProgramCheck              (FlashProgramCheck)
 #define pFlashGetSecurityState          (FlashGetSecurityState)
 #define pFlashGetInterruptEnable        (FlashGetInterruptEnable)

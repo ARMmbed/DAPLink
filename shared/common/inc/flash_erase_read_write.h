@@ -27,13 +27,22 @@
 //#include "swd_host.h"			//move to flashing files
 
 
+// This file is common to bootloading and to CMSIS-DAP (at ./shared/common/inc)
 
-uint8_t  _flash_init(uint32_t clk);
-uint8_t  _flash_uninit(void);
-uint8_t  _flash_erase_chip(void);
-uint8_t  _flash_erase_sector(uint32_t adr);
-uint8_t  _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
+// each Device should implement a C file with these modules that are specific (Bootloader)
+// CMSIS-DAP will have a common file with DAP commands
+int  _flash_init(uint32_t clk);
+int  _flash_uninit(void);
+int  _flash_erase_chip(void);
+int  _flash_erase_sector(uint32_t adr);
+int  _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size);
+
+
+// pulled over from original bootloader. Not sure if needed because with the copy of CMSIS-DAP 
+//  code structure
+int  __swi(3) flash_program_page_svc(uint32_t adr, uint8_t * buf, uint32_t size);
+int  __swi(2) flash_erase_sector_svc(uint32_t adr);
 
 #endif
 

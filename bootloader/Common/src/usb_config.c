@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 /*------------------------------------------------------------------------------
  *      USB Device Configuration
  *----------------------------------------------------------------------------*/
-
+ 
+//-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
+//
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1

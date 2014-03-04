@@ -14,33 +14,46 @@
  * limitations under the License.
  */
  
+
+// we include RTL.h for 4.71 in the CMSIS-DAP source but this <> include is referencing 4.73 in my Keil install dir...
 #include <RTL.h>
 #include "rl_usb.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdint.h>
+//#include <string.h>
+//#include <stdio.h>
+//#include <stdint.h>
 
+// common to all bootloader implementations
 #include "main.h"
 #include "gpio.h"
-#include <MK20D5.H>
 
 //#include "uart.h"
 //#include "semihost.h"
 //#include "serial.h"
+
+// common to all bootloader implementations
 #include "tasks.h"
 
 //#include "target_reset.h"
 //#include "swd_host.h"
+
+// badly named file. May need to be broken into a few modules
 #include "version.h"
+
+// debug macros that use ITM0. Does current implementation not working with RTX or when called from tasks - maybe usless it not over UART
+//  Common to Bootloader and CMSIS-DAP. Implementation would be device specific
 #include "retarget.h"
+
+// common to CMSIS-DAP and bootloader
 #include "validate_user_application.h"
+
+// only applicable to booloader
 #include "vector_table.h"
 
+// move to bootloader_config file...
 #define START_APP_ADDRESS 0x5000
 #define INITIAL_SP      (*(uint32_t *)(START_APP_ADDRESS))
 #define RESET_HANDLER   (*(uint32_t *)(START_APP_ADDRESS + 4))
-
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
@@ -84,7 +97,7 @@ typedef enum {
 
 // Reference to our main task
 OS_TID main_task_id;
-OS_TID serial_task_id;
+//OS_TID serial_task_id;
 
 // USB busy LED state; when TRUE the LED will flash once using 30mS clock tick
 //static uint8_t dap_led_usb_activity = 0;
@@ -116,8 +129,9 @@ __task void timer_task_30mS(void) {
     while(1) {
         os_itv_wait();
         os_evt_set(FLAGS_MAIN_30MS, main_task_id);
-        if (!(i++ % 3))
+        if (!(i++ % 3)) {
             os_evt_set(FLAGS_MAIN_90MS, main_task_id);
+        }
     }
 }
 
@@ -146,7 +160,7 @@ void main_reset_target(uint8_t send_unique_id) {
 
 // Flash MSD LED using 30mS tick
 void main_blink_msd_led(uint8_t permanent) {
-    msd_led_usb_activity=1;
+    msd_led_usb_activity = 1;
     msd_led_state = (permanent) ? LED_FLASH_PERMANENT : LED_FLASH;
     return;
 }
@@ -237,7 +251,7 @@ void main_usb_disconnect_event(void) {
 //}
 
 //extern __task void hid_process(void);
-int iii = 0;
+//int iii = 0;
 __task void main_task(void) 
 {
     // State processing
@@ -248,7 +262,7 @@ __task void main_task(void)
     // USB
     uint32_t usb_state_count;
     // thread running after usb connected started
-    uint8_t thread_started = 0;
+//    uint8_t thread_started = 0;
     // button state
     //uint8_t button_activated;
     // string containing unique ID
@@ -381,7 +395,7 @@ __task void main_task(void)
 
                 case USB_ACTIVE:
                     if (DECZERO(usb_busy_count) == 0) {
-                        usb_busy=USB_IDLE;
+                        usb_busy = USB_IDLE;
                     }
                     break;
 
@@ -423,11 +437,11 @@ __task void main_task(void)
 
                 case USB_CHECK_CONNECTED:
                     if(usbd_configured()) {
-                        if (!thread_started) {
-                            //os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
-                            //serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
-                            thread_started = 1;
-                        }
+//                        if (!thread_started) {
+//                            //os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
+//                            //serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
+//                            thread_started = 1;
+//                        }
                         usb_state = USB_CONNECTED;
                     }
                     break;
@@ -493,6 +507,6 @@ __task void main_task(void)
 // Main Program
 int main (void)
 {
-    dbg_message("Bootloader build");    // causes problems if used in the threads
+    dbg_message("Bootloader build");    // causes problems if used in the tasks
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

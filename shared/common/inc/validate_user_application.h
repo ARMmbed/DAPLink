@@ -17,6 +17,8 @@
 #ifndef VALIDATE_USER_APPLICATION_H
 #define VALIDATE_USER_APPLICATION_H
 
+
+// these need to move into a target specific file if cant be had from the linker
 #if   defined(TARGET_MK20D5)
 //TODO: find symbols from the Linker to do this
 #define FLASH_VALID_LO	0x410
