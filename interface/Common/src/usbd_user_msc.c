@@ -582,7 +582,7 @@ int jtag_init() {
         semihost_disable();
 
         PORT_SWD_SETUP();
-        
+
         target_set_state(RESET_PROGRAM);
         if (!target_flash_init(SystemCoreClock)) {
             failSWD();
