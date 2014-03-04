@@ -744,6 +744,7 @@ static uint8_t swd_init_debug(void) {
 
     DAP_Setup();
     PORT_SWD_SETUP();
+
     // call a target dependant function
     // this function can do several stuff before really
     // initing the debug
@@ -889,6 +890,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
         case DEBUG:
             DAP_Setup();
             PORT_SWD_SETUP();
+
             if (!JTAG2SWD()) {
                 return 0;
             }
