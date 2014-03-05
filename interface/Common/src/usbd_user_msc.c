@@ -533,18 +533,35 @@ void failSWD() {
 
 extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
-static void initDisconnect(uint8_t success) {
-    drag_success = success;
-#if 0       // reset and run target
-    if (success) {
-        swd_set_target_state(RESET_RUN);
-    }
+#ifdef BOARD_UBLOX_C027
+#include "read_uid.h"
 #endif
+
+static void initDisconnect(uint8_t success) {
+#ifdef BOARD_UBLOX_C027
+    int autorst = (good_file == 2) && success;
+    int autocrp = (good_file == 3) && success;
+    if (autocrp)
+    {
+        // first we need to discoonect the usb stack 
+        usbd_connect(0);
+        
+        enter_isp();
+    }
+#else
+    int autorst = false;
+#endif
+    drag_success = success;
+    if (autorst)
+        swd_set_target_state(RESET_RUN);
     main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    // event to disconnect the usb
-    main_usb_disconnect_event();
+    if (!autorst)
+    {
+        // event to disconnect the usb
+        main_usb_disconnect_event();
+    }
     semihost_enable();
 }
 
@@ -733,6 +750,12 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             found = 1;
             idx = i; // this is the file we want
             good_file = 1;
+#if defined(BOARD_UBLOX_C027)
+            if (0 == memcmp((const char*)pDirEnts[i].filename, "~AUTORST", 8))
+                good_file = 2;
+            else if (0 == memcmp((const char*)pDirEnts[i].filename, "~AUTOCRP", 8))
+                good_file = 3;
+#endif
             flash_addr_offset = offset;
             break;
         }
