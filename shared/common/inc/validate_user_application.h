@@ -17,22 +17,6 @@
 #ifndef VALIDATE_USER_APPLICATION_H
 #define VALIDATE_USER_APPLICATION_H
 
-
-// these need to move into a target specific file if cant be had from the linker
-#if   defined(TARGET_MK20D5)
-//TODO: find symbols from the Linker to do this
-#define FLASH_VALID_LO	0x410
-#define FLASH_VALID_HI	0x1FFFFFFF
-#define RAM_VALID_LO	0x1FFFE000
-#define RAM_VALID_HI	0x20002000
-
-#elif defined(TARGET_LPC11U35)
-
-#else
-#error TARGET_ not defined
-    
-#endif
-
 int validate_user_application(int app_address);
 
 #endif

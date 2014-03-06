@@ -16,7 +16,7 @@
  
 
 // we include RTL.h for 4.71 in the CMSIS-DAP source but this <> include is referencing 4.73 in my Keil install dir...
-#include <RTL.h>
+#include "RTL.h"
 #include "rl_usb.h"
 
 //#include <string.h>
@@ -38,7 +38,7 @@
 //#include "swd_host.h"
 
 // badly named file. May need to be broken into a few modules
-#include "version.h"
+#include "mbed_htm.h"
 
 // debug macros that use ITM0. Does current implementation not working with RTX or when called from tasks - maybe usless it not over UART
 //  Common to Bootloader and CMSIS-DAP. Implementation would be device specific
@@ -420,8 +420,6 @@ __task void main_task(void)
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
-                        // Update HTML file
-                        update_html_file();
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }

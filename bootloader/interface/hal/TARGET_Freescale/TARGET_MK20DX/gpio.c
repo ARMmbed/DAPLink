@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <MK20D5.h>
-#include "DAP_config.h"
+#include "MK20D5.h"
+
 #include "gpio.h"
 
 #define MSD_LED_BIT_NUMBER  (1UL << 4)
@@ -80,4 +80,3 @@ uint8_t gpio_get_rst_pin_state(void)
 {
     return (PTB->PDIR & (1UL << 1));
 }
-

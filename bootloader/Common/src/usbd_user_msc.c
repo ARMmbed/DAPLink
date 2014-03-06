@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 #include "rl_usb.h"
 
 #include <string.h>
@@ -32,34 +32,36 @@
 //#include "swd_host.h"
 #include "usb_buf.h"
 #include "flash_erase_read_write.h"
+#include "version.h"
+#include "board.h"
 
-#if defined(DBG_LPC1768)
-#   define WANTED_SIZE_IN_KB                        (512)
-#elif defined(DBG_KL02Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_KL05Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_KL25Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL26Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL46Z)
-#   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_K20D50M)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_K64F)
-#   define WANTED_SIZE_IN_KB                        (1024)
-#elif defined(DBG_LPC812)
-#   define WANTED_SIZE_IN_KB                        (16)
-#elif defined(DBG_LPC1114)
-#   define WANTED_SIZE_IN_KB                        (32)
-#else
-#   define WANTED_SIZE_IN_KB                        (128)
-#warning target not defined 1024
-#endif
+//#if defined(DBG_LPC1768)
+//#   define WANTED_SIZE_IN_KB                        (512)
+//#elif defined(DBG_KL02Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_KL05Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_KL25Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL26Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL46Z)
+//#   define WANTED_SIZE_IN_KB                        (256)
+//#elif defined(DBG_K20D50M)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_K64F)
+//#   define WANTED_SIZE_IN_KB                        (1024)
+//#elif defined(DBG_LPC812)
+//#   define WANTED_SIZE_IN_KB                        (16)
+//#elif defined(DBG_LPC1114)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#else
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#warning target not defined 1024
+//#endif
 
 //------------------------------------------------------------------- CONSTANTS
-#define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16 + 8)*1024)
+#define WANTED_SIZE_IN_BYTES        ((FLASH_SIZE_KB + 16 + 8)*1024)
 #define WANTED_SECTORS_PER_CLUSTER  (8)
 
 #define FLASH_PROGRAM_PAGE_SIZE         (512)
@@ -576,7 +578,7 @@ int jtag_init() {
 /*DAP*///        PORT_SWD_SETUP();
 
 /*DAP*///        target_set_state(RESET_PROGRAM);
-        if (!_flash_init(SystemCoreClock)) {
+        if (!flash_init(SystemCoreClock)) {
             failSWD();
             return 1;
         }
@@ -726,11 +728,11 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 /*DAP*///                        failSWD();
 /*DAP*///                        return -1;
 /*DAP*///                    }
-                    if (!_flash_erase_sector(i)) {
+                    if (!flash_erase_sector(i)) {
                         failSWD();
                         return -1;
                     }
-                    if (!_flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+                    if (!flash_program_page(i*SECTOR_SIZE, (uint8_t *)usb_buffer, SECTOR_SIZE)) {
                         failSWD();
                         return -1;
                     }
@@ -802,7 +804,7 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
             // this is done in main when booting
-            //update_html_file();
+            update_html_file();
         }
         // send error message file
         else if (block == SECTORS_ERROR_FILE_IDX) {
@@ -818,7 +820,7 @@ static int programPage() {
     }
 
     // if we have received two sectors, write into flash
-    if (!_flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
+    if (!flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
         // even if there is an error, adapt flashptr
         flashPtr += FLASH_PROGRAM_PAGE_SIZE;
         return 1;
@@ -904,7 +906,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (maybe_erase && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!_flash_erase_chip()) {
+                    if (!flash_erase_chip()) {
                     return;
                     }
                 }
@@ -947,7 +949,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (flash_started && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!_flash_erase_chip()) {
+                    if (!flash_erase_chip()) {
                     return;
                     }
                 }

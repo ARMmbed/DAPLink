@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include <stdint.h>
 #include <string.h>
 
-#include "main.h"
-#include "version.h"
-//#include "board.h"
 #include "mbed_htm.h"
 #include "read_uid.h"
+#include "board.h"
 
+// this is defined as uint32_t but if refernced as uint32_t it breaks the update_html_file logic
+// that method should be updated along with this. 
 extern uint8_t usb_buffer[];
 
 // Pointers to substitution strings
@@ -34,6 +36,19 @@ uint8_t string_auth_descriptor[2+25*2];
 static const char nybble_chars[] = "0123456789ABCDEF";
 
 static void setup_string_id_auth(void);
+
+const unsigned char WebSide[] = {
+"<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
+"<!-- Version: " FW_BUILD " Build: " __DATE__ " " __TIME__ " -->\r\n"
+"<html>\r\n"
+"<head>\r\n"
+"<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+"<title>mbed Website Shortcut</title>\r\n"
+"</head>\r\n"
+"<body></body>\r\n"
+"</html>\r\n"
+"\r\n"};
+
 
 static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
     *ch1 = nybble_chars[ ( b >> 4 ) & 0x0F ];
@@ -67,17 +82,21 @@ static void setup_string_id_auth() {
     idx += 4;
 
     // string id
-    for (i = 0; i < 4; i++)
-	//string_auth[idx++] = board.id[i]; //TODO: used in dap but not bootloader
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++) {
+        string_auth[idx++] = board.id[i];
+    }
+    for (i = 0; i < 4; i++) {
         string_auth[idx++] = fw_version[i];
-    for (i = 0; i < 4; i++)
+    }
+    for (i = 0; i < 4; i++) {
         get_byte_hex((unique_id >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
+    }
     idx+=8;
 
     //string auth
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++) {
         get_byte_hex((auth >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
+    }
     idx+=8;
     string_auth[idx] = 0;
 }
@@ -90,10 +109,12 @@ static void setup_string_descriptor() {
     idx += 2;
 
     for (i = 0; i < len*2; i++) {
-        if ((i % 2) == 0)
+        if ((i % 2) == 0) {
             string_auth_descriptor[idx + i] = string_auth[4 + i/2];
-        else
+        }
+        else {
             string_auth_descriptor[idx + i] = 0;
+        }
     }
     idx += len*2;
 
@@ -115,13 +136,11 @@ uint8_t * get_uid_string_interface(void) {
 
 static void compute_auth() {
     uint32_t id, fw, sec;
-	//id = atoi((uint8_t *)board.id  , 4, 16);	//TODO: used in dap but not bootloader
-    id = 1;
+    id = atoi((uint8_t *)board.id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
     auth ^= unique_id;
-	//sec = atoi((uint8_t *)(board.secret), 8, 16); //TODO: used in dap but not bootloader
-    sec = 30;
+    sec = atoi((uint8_t *)(board.secret), 8, 16);
     auth ^= sec;
 }
 
@@ -142,8 +161,8 @@ static uint8_t get_html_character(HTMLCTX *h) {
     // Returns the next character from the HTML data at h->phtml.
     // Substitutes special sequences @V etc. with variable text.
 
-    uint8_t c=0, s;           // Character from HTML data
-    static uint8_t *sptr;     // Pointer to substitution string data
+    uint8_t c=0, s;         // Character from HTML data
+    static uint8_t *sptr;   // Pointer to substitution string data
     uint8_t valid;          // Set to false if we need to read an additional character
 
     do {

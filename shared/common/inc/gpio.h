@@ -16,9 +16,12 @@
 #ifndef GPIO_H
 #define GPIO_H
 
+#include <stdint.h>
+
 // THIS file is common between bootloader and CMSIS-DAP
 
-// EACH needs to be implemented for each target in a C file
+// CMSIS-DAP each target needs a name_gpio.c file with #ifdef for the target type
+//  BOOTLOADER has a project file and one target so no problems
 void gpio_init(void);
 void gpio_set_dap_led(uint8_t state);
 void gpio_set_cdc_led(uint8_t state);

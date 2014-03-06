@@ -13,6 +13,8 @@
 ; * See the License for the specific language governing permissions and
 ; * limitations under the License.
 
+
+; *------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>

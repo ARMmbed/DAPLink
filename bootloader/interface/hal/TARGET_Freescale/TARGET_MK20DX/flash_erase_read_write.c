@@ -35,9 +35,9 @@
 #define WDOG_STCTRLH            *((volatile unsigned short *)0x40052000)
 #define WDOG_STCTRLH_WDOGEN_MASK_X      0x00000001
 
-static FLASH_SSD_CONFIG flashSSDConfig; 
+static FLASH_SSD_CONFIG flashSSDConfig;
 
-int _flash_init(uint32_t clk)
+int flash_init(uint32_t clk)
 {
     /* Write 0xC520 to the unlock register */
     WDOG_UNLOCK = 0xC520;
@@ -62,12 +62,12 @@ int _flash_init(uint32_t clk)
     return 0;
 }
 
-int _flash_uninit(void)
+int flash_uninit(void)
 {
     return 0;
 }
 
-int _flash_erase_chip(void)
+int flash_erase_chip(void)
 {
     if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence)) {
         return (1);
@@ -75,7 +75,7 @@ int _flash_erase_chip(void)
     return (0);
 }
 
-int _flash_erase_sector(uint32_t adr)
+int flash_erase_sector(uint32_t adr)
 {
     if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, adr, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
         return (1);
@@ -83,14 +83,14 @@ int _flash_erase_sector(uint32_t adr)
     return (0);
 }
 
-int _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
+int flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
     if (FTFx_OK != pFlashProgramLongword(&flashSSDConfig, adr, size, (uint32_t)buf, pFlashCommandSequence)) {
         return (1);
     }
     return (0);
 }
-uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size)
+uint32_t read_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
 	char *start_address = (char *)address;
     while(size--) {

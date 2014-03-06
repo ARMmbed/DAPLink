@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -183,7 +183,8 @@ void os_error (U32 err_code) {
  *      RTX Configuration Functions
  *---------------------------------------------------------------------------*/
 
-#include <RTX_lib.c>
+//#include <RTX_lib.c>
+#include "RTX_lib.c"
 
 /*----------------------------------------------------------------------------
  * end of file

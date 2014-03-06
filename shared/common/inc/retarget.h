@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 
-#if (1)
+#if (0)
 #define dbg_message(x, ...) do { fprintf(stdout, "Line: %d %s \t[MSG]"x"\n", __LINE__, __FILE__, ##__VA_ARGS__); } while (0)
 #else
 #define dbg_message(x, ...)

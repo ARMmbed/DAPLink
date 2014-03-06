@@ -31,12 +31,12 @@
 
 // each Device should implement a C file with these modules that are specific (Bootloader)
 // CMSIS-DAP will have a common file with DAP commands
-int  _flash_init(uint32_t clk);
-int  _flash_uninit(void);
-int  _flash_erase_chip(void);
-int  _flash_erase_sector(uint32_t adr);
-int  _flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
-uint32_t _read_memory(uint32_t address, uint8_t *data, uint32_t size);
+int  flash_init(uint32_t clk);
+int  flash_uninit(void);
+int  flash_erase_chip(void);
+int  flash_erase_sector(uint32_t adr);
+int  flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
+uint32_t read_memory(uint32_t address, uint8_t *data, uint32_t size);
 
 
 // pulled over from original bootloader. Not sure if needed because with the copy of CMSIS-DAP 
