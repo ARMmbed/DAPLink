@@ -93,7 +93,7 @@ FLASH_ALGO_PROJECTS = [
             'path' : r'interface\flash_algo_mdk\MKXXX\MKXX.uvproj',
             'targets' : [
                             'MK20DX128_Pflash',
-                            'MK64F1M0_Pflash',
+                            'MK64FN1M0_Pflash',
                             'MKL02Z32_Pflash',
                             'MKL05Z32_Pflash',
                             'MKL25Z128_Pflash',
