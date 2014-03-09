@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "flash.h"
+#include "flash_hal.h"
 
 int __SVC_2 (uint32_t addr) {
-    return flash_erase_sector(addr);
+    return flash_hal_erase_sector(addr);
 }
 
 int __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf) {
-    return flash_program_page(adr, sz, buf);
+    return flash_hal_program_page(adr, sz, buf);
 }

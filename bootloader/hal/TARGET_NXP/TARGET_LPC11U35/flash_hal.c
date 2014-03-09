@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "flash.h"        // FlashOS Structures
+#include "flash_hal.h"        // FlashOS Structures
 
 #define SET_VALID_CODE 1       // Set Valid User Code Signature
 #define END_SECTOR     15
@@ -50,16 +50,16 @@ static uint32_t GetSecNum (uint32_t adr) {
   return (n);                                  // Sector Number
 }
 
-int flash_init (uint32_t clk) {
+int flash_hal_init (uint32_t clk) {
   _CCLK = clk/1000;
   return (0);
 }
 
-int flash_uninit (uint32_t fnc) {
+int flash_hal_uninit (uint32_t fnc) {
   return (0);
 }
 
-int flash_erase_chip (void) {
+int flash_hal_erase_chip (void) {
   IAP.cmd    = 50;                             // Prepare Sector for Erase
   IAP.par[0] = 0;                              // Start Sector
   IAP.par[1] = END_SECTOR;                     // End Sector
@@ -76,7 +76,7 @@ int flash_erase_chip (void) {
   return (0);                                  // Finished without Errors
 }
 
-int flash_erase_sector (uint32_t adr) {
+int flash_hal_erase_sector (uint32_t adr) {
   uint32_t n = GetSecNum(adr);
 
   IAP.cmd    = 50;                             // Prepare Sector for Erase
@@ -97,7 +97,7 @@ int flash_erase_sector (uint32_t adr) {
   return (0);                                  // Finished without Errors
 }
 
-int flash_program_page (uint32_t adr, uint32_t sz, unsigned char *buf) {
+int flash_hal_program_page (uint32_t adr, uint32_t sz, unsigned char *buf) {
   uint32_t n;
 
 #if NO_CRP != 0

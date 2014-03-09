@@ -15,7 +15,7 @@
  */
 #include <LPC11Uxx.h>
 #include "vector_table.h"
-#include "flash.h"
+#include "flash_hal.h"
 
 #define NVIC_NUM_VECTORS (16 + 32)            // CORE + MCU Peripherals
 #define NVIC_RAM_VECTOR_ADDRESS (0x10000000)  // Vectors positioned at start of RAM
