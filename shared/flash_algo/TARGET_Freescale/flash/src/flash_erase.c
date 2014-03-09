@@ -54,10 +54,10 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
 
     // re-calculate the endAddress and align it to the start of the next sector
     // which will be used in the comparison below
-    if (endAddress % FSL_FEATURE_FTFx_PSECTOR_SIZE)
+    if (endAddress % FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE)
     {
-        numberOfSectors = endAddress / FSL_FEATURE_FTFx_PSECTOR_SIZE + 1;
-        endAddress = numberOfSectors * FSL_FEATURE_FTFx_PSECTOR_SIZE - 1;
+        numberOfSectors = endAddress / FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE + 1;
+        endAddress = numberOfSectors * FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE - 1;
     }
 
     // the start address will increment to the next sector address
@@ -79,7 +79,7 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
         else
         {
             // Increment to the next sector
-            start += FSL_FEATURE_FTFx_PSECTOR_SIZE;
+            start += FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE;
         }
     }
 

@@ -39,11 +39,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 volatile uint32_t * const kFCCOBx =
-#if defined(FTFA)
+#if FSL_FEATURE_FLASH_IS_FTFA
     (volatile uint32_t *)&FTFA->FCCOB3;
-#elif defined(FTFE)
+#elif FSL_FEATURE_FLASH_IS_FTFE
     (volatile uint32_t *)&FTFE->FCCOB3;
-#elif defined(FTFL)
+#elif FSL_FEATURE_FLASH_IS_FTFL
     (volatile uint32_t *)&FTFL->FCCOB3;
 #else
     #error "Unknown flash controller"
@@ -72,8 +72,13 @@ status_t flash_init(flash_driver_t * driver)
     // fill out a few of the structure members
     driver->PFlashBlockBase = FLASH_BLOCK_BASE;
     driver->PFlashTotalSize = flashDensity;
-    driver->PFlashBlockCount = FSL_FEATURE_FTFx_PBLOCK_COUNT;
-    driver->PFlashSectorSize = FSL_FEATURE_FTFx_PSECTOR_SIZE;
+    driver->PFlashBlockCount = FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT;
+    driver->PFlashSectorSize = FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE;
+
+    // copy flash_run_command() to RAM
+#if BL_TARGET_FLASH
+    copy_flash_run_command();
+#endif
 
     return kStatus_Success;
 }
@@ -86,9 +91,9 @@ status_t flash_check_range(flash_driver_t * driver, uint32_t start, uint32_t len
         return kStatus_InvalidArgument;
     }
 
-    // Verify the start and length are phrase-size aligned.
-    if ((start & (FSL_FEATURE_FTFx_PHRASE_SIZE - 1))
-        || (lengthInBytes & (FSL_FEATURE_FTFx_PHRASE_SIZE - 1)))
+    // Verify the start and length are write-unit-size aligned.
+    if ((start & (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE - 1))
+        || (lengthInBytes & (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE - 1)))
     {
         return kStatus_FlashAlignmentError;
     }

@@ -34,6 +34,15 @@
 #include "device/fsl_device_registers.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+// Declarations
+////////////////////////////////////////////////////////////////////////////////
+//! @brief Flash verify program unit of FTFx_PROGRAM_CHECK cmd.
+enum _flash_verify_program_unit
+{
+    kFlashVerifyProgramUnitInBytes = 4
+};
+
+////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -109,9 +118,9 @@ status_t flash_verify_program(flash_driver_t * driver,
             break;
         }
 
-        lengthInBytes -= FSL_FEATURE_FTFx_LONGWORD_SIZE;
-        expectedData += FSL_FEATURE_FTFx_LONGWORD_SIZE;
-        start += FSL_FEATURE_FTFx_LONGWORD_SIZE;
+        lengthInBytes -= kFlashVerifyProgramUnitInBytes;
+        expectedData += kFlashVerifyProgramUnitInBytes;
+        start += kFlashVerifyProgramUnitInBytes;
     }
 
     return(returnCode);

@@ -33,6 +33,7 @@
 
 #include "fsl_platform_status.h"
 #include "src/flash_features.h"
+#include "src/fsl_flash_features.h"
 #include "device/fsl_device_registers.h"
 #include <stdint.h>
 #include <stdbool.h>

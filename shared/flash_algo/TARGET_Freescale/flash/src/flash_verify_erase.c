@@ -38,12 +38,10 @@
 //! @brief Flash verify unit of FTFx_VERIFY_SECTION cmd.
 enum _flash_verify_unit
 {
-#if (defined(FTFA)) || (defined(FTFL))
-    kFlashVerifyUnitInBytes = FSL_FEATURE_FTFx_LONGWORD_SIZE
-#elif (defined(FTFE))
+#if FSL_FEATURE_FLASH_IS_FTFE
     kFlashVerifyUnitInBytes = 16
 #else
-    #error "Unknown flash controller"
+    kFlashVerifyUnitInBytes = FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE
 #endif
 };
 

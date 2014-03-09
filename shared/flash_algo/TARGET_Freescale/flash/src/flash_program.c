@@ -33,6 +33,10 @@
 #include "fsl_platform_common.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+// Declarations
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -56,11 +60,13 @@ status_t flash_program(flash_driver_t * driver, uint32_t start, uint32_t * src, 
         // preparing passing parameter to program the flash block
         kFCCOBx[0] = start;
         kFCCOBx[1] = *src++;
-#if (FSL_FEATURE_FTFx_PHRASE_SIZE == FSL_FEATURE_FTFx_LONGWORD_SIZE)
+#if (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE == 4)
         HW_FTFx_FCCOBx_WR(0, FTFx_PROGRAM_LONGWORD);
-#else
+#elif (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE == 8)
         kFCCOBx[2] = *src++;
         HW_FTFx_FCCOBx_WR(0, FTFx_PROGRAM_PHRASE);
+#else
+        #error "Untreated write-unit size"
 #endif
 
         // calling flash command sequence function to execute the command
@@ -74,10 +80,10 @@ status_t flash_program(flash_driver_t * driver, uint32_t start, uint32_t * src, 
         else
         {
             // update start address for next iteration
-            start += FSL_FEATURE_FTFx_PHRASE_SIZE;
+            start += FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE;
 
             // update lengthInBytes for next iteration
-            lengthInBytes -= FSL_FEATURE_FTFx_PHRASE_SIZE;
+            lengthInBytes -= FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE;
         }
     }
 
