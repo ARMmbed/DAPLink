@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>TARGET_MK20D5, __RTX, MKP128_50MHZ</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\target\hal\DBG_Freescale\DBG_KL05Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\..\shared\common\inc;..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\include;..\..\Common\src;..\..\..\shared\rtos</IncludePath>
+              <IncludePath>..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos\src;..\..\..\shared\rtos\inc;..\..\..\shared\USBStack\src;..\..\..\shared\USBStack\inc;..\..\..\shared\common\inc;..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\include;..\..\Common\src;..\..\Common\inc;..\..\hal\freescale\TARGET_MK20DX\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,70 +414,19 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
-              <FileName>SVC_Table.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
+              <FileName>mbed_htm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\common\src\mbed_htm.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>validate_user_application.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>RTX_Config.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_config.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls>--c99</MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
+              <FilePath>..\..\..\shared\common\src\validate_user_application.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
+              <FilePath>..\..\..\Shared\Common\src\usbd_user_msc.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -525,20 +474,35 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>BootloaderCommon</GroupName>
+          <Files>
             <File>
-              <FileName>validate_user_application.c</FileName>
+              <FileName>SVC_Table.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\validate_user_application.c</FilePath>
+              <FilePath>..\..\Common\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTX_Config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>flash_svc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\flash_svc.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbed_htm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\mbed_htm.c</FilePath>
             </File>
             <File>
               <FileName>board.c</FileName>
@@ -553,27 +517,27 @@
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\gpio.c</FilePath>
+              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\gpio.c</FilePath>
             </File>
             <File>
               <FileName>flash_erase_read_write.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\flash_erase_read_write.c</FilePath>
+              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\flash_erase_read_write.c</FilePath>
             </File>
             <File>
               <FileName>read_uid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\read_uid.c</FilePath>
+              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\read_uid.c</FilePath>
             </File>
             <File>
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
+              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\usbd_MK20D5.c</FilePath>
             </File>
             <File>
               <FileName>vector_table.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\vector_table.c</FilePath>
+              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\vector_table.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -583,27 +547,27 @@
             <File>
               <FileName>FlashCommandSequence.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
+              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
             </File>
             <File>
               <FileName>FlashEraseAllBlock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\source\FlashEraseAllBlock.c</FilePath>
+              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashEraseAllBlock.c</FilePath>
             </File>
             <File>
               <FileName>FlashEraseSector.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>
+              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>
             </File>
             <File>
               <FileName>FlashInit.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\source\FlashInit.c</FilePath>
+              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashInit.c</FilePath>
             </File>
             <File>
               <FileName>FlashProgramLongword.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\flash_algo_mdk\MKXXX\C90TFS\drvsrc\source\FlashProgramLongword.c</FilePath>
+              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashProgramLongword.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -633,62 +597,62 @@
             <File>
               <FileName>HAL_CM3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\HAL_CM3.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\HAL_CM3.c</FilePath>
             </File>
             <File>
               <FileName>rt_Event.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Event.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Event.c</FilePath>
             </File>
             <File>
               <FileName>rt_List.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_List.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_List.c</FilePath>
             </File>
             <File>
               <FileName>rt_Mailbox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Mailbox.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Mailbox.c</FilePath>
             </File>
             <File>
               <FileName>rt_MemBox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_MemBox.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_MemBox.c</FilePath>
             </File>
             <File>
               <FileName>rt_Mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Mutex.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Mutex.c</FilePath>
             </File>
             <File>
               <FileName>rt_Robin.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Robin.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Robin.c</FilePath>
             </File>
             <File>
               <FileName>rt_Semaphore.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Semaphore.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Semaphore.c</FilePath>
             </File>
             <File>
               <FileName>rt_System.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_System.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_System.c</FilePath>
             </File>
             <File>
               <FileName>rt_Task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Task.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Task.c</FilePath>
             </File>
             <File>
               <FileName>rt_Time.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Time.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Time.c</FilePath>
             </File>
             <File>
               <FileName>rt_Timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\rt_Timer.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\src\rt_Timer.c</FilePath>
             </File>
           </Files>
         </Group>

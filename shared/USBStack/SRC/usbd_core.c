@@ -17,7 +17,7 @@
 #include "rl_usb.h"
 #include <string.h>
 #include "usb_for_lib.h"
-#include "version.h"
+#include "mbed_htm.h"
 
 U16               USBD_DeviceStatus;
 U8                USBD_DeviceAddress;

@@ -21,30 +21,7 @@
 
 // Each board should have a unique ID and secret. For information 
 //  about obtaining a secret contact support@mbed.org
-#if   defined (TARGET_MK20D5)
-#define BOARD_ID        "ffff"
-#define BOARD_SECRET    "00000000"
-// these need to move into a target specific file if cant be had from the linker
-//TODO: find symbols from the Linker to do this
-#define FLASH_START	    0x410
-#define FLASH_END	    0x1FFFFFFF
-#define RAM_START       0x1FFFE000
-#define RAM_END	        0x20002000
-#define SECTOR_SIZE     1024
-#define FLASH_SIZE_KB   (128-5)
-
-#elif defined (TARGET_LPC11U35)
-#define BOARD_ID        "fffe"
-#define BOARD_SECRET    "00000000"
-#endif
-
-#if !defined(BOARD_SECRET) || !defined(BOARD_ID)
-// TODO: how to check a string value using the preprocessor...
-#error contact support@mbed.org to obtain a secret and board ID
-#define BOARD_ID        "0000"
-#define BOARD_SECRET    "xxxxxxxx"
-
-#endif
+#include "device_cfg.h"
 
 typedef struct {
     const uint8_t  id[5];

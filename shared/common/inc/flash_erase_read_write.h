@@ -31,12 +31,52 @@
 
 // each Device should implement a C file with these modules that are specific (Bootloader)
 // CMSIS-DAP will have a common file with DAP commands
+
+/**
+ Initialize the flash programming algorithm
+ @param  clk - parameter should be SystemCoreClock or the equivelant
+ @return 1 on success and 0 otherwise
+*/
 int  flash_init(uint32_t clk);
+
+/**
+ Un-initialize the flash
+ @param  none
+ @return 1 on success and 0 otherwise
+*/
 int  flash_uninit(void);
+
+/**
+ Erase the entire contents of flash memory
+ @param  none
+ @return 1 on success and 0 otherwise
+*/
 int  flash_erase_chip(void);
+
+/**
+ Erase a sector in flash memory
+ @param  adr - The start address of a sector to erase 
+ @return 1 on success and 0 otherwise
+*/
 int  flash_erase_sector(uint32_t adr);
+
+/**
+ Program a page into flash memory
+ @param  adr - The start address of a page in memory
+ @param  buf - The contents to be flashed into memory
+ @param  size - The amount of data in buf
+ @return 1 on success and 0 otherwise
+*/
 int  flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
-uint32_t read_memory(uint32_t address, uint8_t *data, uint32_t size);
+
+/**
+ Read the contents of memory
+ @param  adr - The start address of a page in memory
+ @param  buf - A buffer to read memory into. Must be as large or larger than size
+ @param  size - The amount of data to read into buf
+ @return The amount of data written into buf
+*/
+uint32_t read_memory(uint32_t adr, uint8_t *buf, uint32_t size);
 
 
 // pulled over from original bootloader. Not sure if needed because with the copy of CMSIS-DAP 

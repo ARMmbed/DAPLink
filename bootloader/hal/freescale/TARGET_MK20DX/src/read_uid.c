@@ -13,15 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "MK20D5.h"
+#include "read_uid.h"
 
-#include "flash_erase_read_write.h" 
-
-int __SVC_2 (uint32_t addr) 
-{
-    return flash_erase_sector(addr);
-}
-
-int __SVC_3 (uint32_t adr, uint8_t * buf, uint32_t size)
-{
-    return flash_program_page(adr, buf, size);
+void read_unique_id(uint32_t * id) {
+    *id = SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH ^ SIM->UIDH;
 }

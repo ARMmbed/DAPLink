@@ -31,10 +31,10 @@ int validate_user_application(int app_address)
     // Initial_SP
     for( ; i<(1*4); i+=4)
     {	
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];
         // check for a valid ram address.
-        if (!CHECK_RANGE(test_val, RAM_START, RAM_END)) {
+        if (!CHECK_RANGE(test_val, START_RAM, END_RAM)) {
             return 0;
         }
     }
@@ -46,17 +46,17 @@ int validate_user_application(int app_address)
     // UsageFault_Handler (Reserved on CM0+)
     for( ; i<(7*4); i+=4)
     {	
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, FLASH_START, FLASH_END)) {
+        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
             return 0;
         }
     }
     // RESERVED * 4
     for( ; i<(11*4); i+=4)
     {
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value.
         if (!CHECK_VALUE(test_val, 0)) {
@@ -67,17 +67,17 @@ int validate_user_application(int app_address)
     // DebugMon_Handler (Reserved on CM0+)
     for( ; i<(13*4); i+=4)
     {	
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, FLASH_START, FLASH_END)) {
+        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
             return 0;
         }
     }
     // RESERVED * 1
     for( ; i<(14*4); i+=4)
     {
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value
         if (!CHECK_VALUE(test_val, 0)) {
@@ -88,10 +88,10 @@ int validate_user_application(int app_address)
     // SysTick_Handler
     for( ; i<(16*4); i+=4)
     {	
-        _read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(app_address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, FLASH_START, FLASH_END)) {
+        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
             return 0;
         }
     }

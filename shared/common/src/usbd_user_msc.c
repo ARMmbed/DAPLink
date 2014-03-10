@@ -15,42 +15,53 @@
  */
 #include "RTL.h"
 #include "rl_usb.h"
+
 #include <string.h>
 
-#include "main.h"
-#include "tasks.h"
-#include "version.h"
-#include "usb_buf.h"
-#include "flash_erase_read_write.h"
-#include "retarget.h"
+//#include "target_flash.h"
+//#include "target_reset.h"
+//#include "DAP_config.h"
+//#include "dap.h"
 
-#if defined(DBG_LPC1768)
-#   define WANTED_SIZE_IN_KB                        (512)
-#elif defined(DBG_KL02Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_KL05Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_KL25Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL26Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL46Z)
-#   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_K20D50M)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_K64F)
-#   define WANTED_SIZE_IN_KB                        (1024)
-#elif defined(DBG_LPC812)
-#   define WANTED_SIZE_IN_KB                        (16)
-#elif defined(DBG_LPC1114)
-#   define WANTED_SIZE_IN_KB                        (32)
-#else
-#		warning target not defined properly
-#		define WANTED_SIZE_IN_KB					(128)
-#endif
+// needs LED flashing mehtods and USB STATE... Maybe do without USB state?!?
+#include "main.h"
+
+#include "tasks.h"
+//#include "semihost.h"
+//#include "version.h"
+//#include "swd_host.h"
+//#include "usb_buf.h"
+#include "flash_erase_read_write.h"
+#include "mbed_htm.h"
+#include "board.h"
+
+//#if defined(DBG_LPC1768)
+//#   define WANTED_SIZE_IN_KB                        (512)
+//#elif defined(DBG_KL02Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_KL05Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_KL25Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL26Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL46Z)
+//#   define WANTED_SIZE_IN_KB                        (256)
+//#elif defined(DBG_K20D50M)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_K64F)
+//#   define WANTED_SIZE_IN_KB                        (1024)
+//#elif defined(DBG_LPC812)
+//#   define WANTED_SIZE_IN_KB                        (16)
+//#elif defined(DBG_LPC1114)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#else
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#warning target not defined 1024
+//#endif
 
 //------------------------------------------------------------------- CONSTANTS
-#define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16 + 8)*1024)
+#define WANTED_SIZE_IN_BYTES        ((FLASH_SIZE_KB + 16 + 8)*1024)
 #define WANTED_SECTORS_PER_CLUSTER  (8)
 
 #define FLASH_PROGRAM_PAGE_SIZE         (512)
@@ -442,57 +453,6 @@ static OS_TID msc_valid_file_timeout_task_id;
 static void init(uint8_t jtag);
 static void initDisconnect(uint8_t success);
 
-extern uint32_t SystemCoreClock;
-
-void failSWD() {
-    reason = SWD_ERROR;
-    initDisconnect(0);
-}
-
-void initDisconnect(uint8_t success) 
-{
-    drag_success = success;
-    dbg_message("success %d, reason %s", success, reason_array[reason]);
-#if 0       // reset and run target
-    if (success) {
-        swd_set_target_state(RESET_RUN);
-    }
-#endif
-    main_blink_msd_led(0);
-    //init(1); //TODO - should be done when we start a connection rather then at the end of one
-    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    // event to disconnect the usb
-    main_usb_disconnect_event();
-    //semihost_enable();
-}
-
-int jtag_init() {
-//    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
-//        need_restart_usb = 1;
-//    }
-
-    if ((jtag_flash_init != 1) /*&& (DAP_Data.debug_port == DAP_PORT_DISABLED)*/) {
-        if (need_restart_usb == 1) {
-            reason = SWD_PORT_IN_USE;
-            initDisconnect(0);
-            return 1;
-        }
-
-        //semihost_disable();
-
-        //PORT_SWD_SETUP();
-
-        //target_set_state(RESET_PROGRAM);
-        if (!_flash_init(SystemCoreClock)) {
-            failSWD();
-            return 1;
-        }
-
-        jtag_flash_init = 1;
-    }
-    return 0;
-}
-
 // this task is responsible to check
 // when we receive a root directory where there
 // is a valid .bin file and when we have received
@@ -576,7 +536,57 @@ void init(uint8_t jtag) {
     flash_addr_offset = 0;
 }
 
-//extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
+void failSWD() {
+    reason = SWD_ERROR;
+    initDisconnect(0);
+}
+
+/*DAP*///extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
+
+static void initDisconnect(uint8_t success) {
+    drag_success = success;
+#if 0       // reset and run target
+    if (success) {
+        swd_set_target_state(RESET_RUN);
+    }
+#endif
+    main_blink_msd_led(0);
+    init(1);
+    isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
+    // event to disconnect the usb
+    main_usb_disconnect_event();
+/*DAP*///    semihost_enable();
+}
+
+extern uint32_t SystemCoreClock;
+
+int jtag_init() {
+/*DAP*///    if (DAP_Data.debug_port != DAP_PORT_DISABLED) {
+/*DAP*///        need_restart_usb = 1;
+/*DAP*///    }
+
+    /*DAP*///if ((jtag_flash_init != 1) && (DAP_Data.debug_port == DAP_PORT_DISABLED)) {
+    if (jtag_flash_init != 1) {
+        if (need_restart_usb == 1) {
+            reason = SWD_PORT_IN_USE;
+            initDisconnect(0);
+            return 1;
+        }
+
+/*DAP*///        semihost_disable();
+
+/*DAP*///        PORT_SWD_SETUP();
+
+/*DAP*///        target_set_state(RESET_PROGRAM);
+        if (flash_init(SystemCoreClock)) {
+            failSWD();
+            return 1;
+        }
+
+        jtag_flash_init = 1;
+    }
+    return 0;
+}
 
 
 static const FILE_TYPE_MAPPING file_type_infos[] = {
@@ -714,15 +724,15 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
                 move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
                 nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
                 for (i = 0; i < nb_sector_to_move; i++) {
-                    if (!_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+/*DAP*///                    if (!swd_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+/*DAP*///                        failSWD();
+/*DAP*///                        return -1;
+/*DAP*///                    }
+                    if (flash_erase_sector(i)) {
                         failSWD();
                         return -1;
                     }
-                    if (!_flash_erase_sector(i)) {
-                        failSWD();
-                        return -1;
-                    }
-                    if (!_flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+                    if (flash_program_page(i*SECTOR_SIZE, (uint8_t *)usb_buffer, SECTOR_SIZE)) {
                         failSWD();
                         return -1;
                     }
@@ -793,6 +803,7 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
+            // this is done in main when booting
             update_html_file();
         }
         // send error message file
@@ -809,7 +820,7 @@ static int programPage() {
     }
 
     // if we have received two sectors, write into flash
-    if (!_flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
+    if (flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
         // even if there is an error, adapt flashptr
         flashPtr += FLASH_PROGRAM_PAGE_SIZE;
         return 1;
@@ -895,7 +906,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (maybe_erase && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!_flash_erase_chip()) {
+                    if (flash_erase_chip()) {
                     return;
                     }
                 }
@@ -938,8 +949,8 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (flash_started && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (!_flash_erase_chip()) {
-                        return;
+                    if (flash_erase_chip()) {
+                    return;
                     }
                 }
                 maybe_erase = 0;
@@ -963,14 +974,17 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
 
 
 void usbd_msc_init () {
+    
+    // this should move to main so we can kill the task on reboot?!?
+    // this file shouldnt have the task and filesystem implementation. Need to break it up
     if (!task_first_started) {
         task_first_started = 1;
         os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
     }
 
     USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
-    USBD_MSC_BlockSize  = 512;
-    USBD_MSC_BlockGroup = 1;
+    USBD_MSC_BlockSize  = 512;  // need a define here
+    USBD_MSC_BlockGroup = 1;    // and here
     USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
     USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
     USBD_MSC_MediaReady = __TRUE;
