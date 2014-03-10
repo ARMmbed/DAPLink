@@ -427,6 +427,16 @@
               <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Shared\Common\src\usbd_user_msc.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\common\src\virtual_fs.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -468,11 +478,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
             </File>
           </Files>
         </Group>
