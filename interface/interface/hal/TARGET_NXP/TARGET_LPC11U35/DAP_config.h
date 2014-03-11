@@ -41,7 +41,7 @@ Provides definitions about:
 /// Port write operations in the Debug Unit by a Cortex-M MCU. Most Cortex-M processors
 /// requrie 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
 /// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be
-/// requrired.
+/// required.
 #define IO_PORT_WRITE_CYCLES    2               ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
@@ -50,11 +50,15 @@ Provides definitions about:
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if defined (BOARD_BAMBINO_210) || defined (BOARD_BAMBINO_210E)
+#define DAP_JTAG                0 //1               ///< JTAG Mode: 1 = available, 0 = not available.
+#else
 #define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available.
+#endif
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 /// This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
-#define DAP_JTAG_DEV_CNT        0               ///< Maximum number of JTAG devices on scan chain
+#define DAP_JTAG_DEV_CNT        8               ///< Maximum number of JTAG devices on scan chain
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.

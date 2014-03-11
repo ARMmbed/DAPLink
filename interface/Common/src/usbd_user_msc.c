@@ -48,6 +48,12 @@
 #   define WANTED_SIZE_IN_KB                        (16)
 #elif defined(DBG_LPC1114)
 #   define WANTED_SIZE_IN_KB                        (32)
+#elif defined(DBG_LPC4330)
+#   if defined(BOARD_BAMBINO_210E)
+#       define WANTED_SIZE_IN_KB                    (8192)
+#   else
+#       define WANTED_SIZE_IN_KB                    (4096)
+#   endif
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
