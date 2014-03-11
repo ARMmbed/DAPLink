@@ -22,7 +22,7 @@
 
 #include "board.h"
 // uint32_t makes sure this is aligned for Cortex M0
-uint32_t usb_buffer[SECTOR_SIZE/4] = {0};
+uint32_t usb_buffer[FLASH_SECTOR_SIZE/4] = {0};
 
 typedef struct __BUF_DESC {
   uint8_t    stat;

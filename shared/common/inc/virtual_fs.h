@@ -40,8 +40,8 @@
 #define WANTED_SIZE_IN_BYTES        ((FLASH_SIZE_KB + 16 + 8)*1024)
 #define WANTED_SECTORS_PER_CLUSTER  (8)
 
-#define FLASH_PROGRAM_PAGE_SIZE         (512)
-#define MBR_BYTES_PER_SECTOR            (512)
+#define FLASH_PROGRAM_PAGE_SIZE     (512)
+#define MBR_BYTES_PER_SECTOR        (512)
 
 //--------------------------------------------------------------------- DERIVED
 

@@ -555,11 +555,6 @@
               <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
             </File>
             <File>
-              <FileName>FlashEraseAllBlock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashEraseAllBlock.c</FilePath>
-            </File>
-            <File>
               <FileName>FlashEraseSector.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>

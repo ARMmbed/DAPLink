@@ -15,7 +15,9 @@
  */
  
 // common API for MSC to work from (CMSIS-DAP or BOOTLOADER)
-#include "flash_erase_read_write.h" 
+#include "MK20D5.H"
+#include "flash_erase_read_write.h"
+#include "device_cfg.h"
 
 // Specific respource for device FLASH read/write
 #include "SSD_Types.h"
@@ -67,29 +69,55 @@ int flash_uninit(void)
     return 0;
 }
 
+int erase_sector(uint32_t num)
+{
+    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, num*FLASH_SECTOR_SIZE, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
+        return 0;
+    }
+    return 1;
+}
+
 int flash_erase_chip(void)
 {
-    if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence)) {
-        return 0;
+//    if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence)) {
+//        return 0;
+//    }
+    int i = APP_START_ADR;
+    for( ; i<END_FLASH; i+=FLASH_SECTOR_SIZE) {
+        if (!flash_erase_sector(i/FLASH_SECTOR_SIZE)) {
+            return 0;
+        }
     }
     return 1;
 }
 
 int flash_erase_sector(uint32_t num)
 {
-    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, num*SECTOR_SIZE, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
-        return 0;
-    }
-    return 1;
+    int res = 0;
+    NVIC_DisableIRQ(USB0_IRQn);
+    res = erase_sector_svc(num);
+    NVIC_EnableIRQ(USB0_IRQn);
+    return res;
 }
 
-int flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
+int program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
     if (FTFx_OK != pFlashProgramLongword(&flashSSDConfig, adr, size, (uint32_t)buf, pFlashCommandSequence)) {
         return 0;
     }
     return 1;
 }
+   
+
+int flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
+{
+    int res = 0;
+    NVIC_DisableIRQ(USB0_IRQn);
+    res = program_page_svc(adr, buf, size);
+    NVIC_EnableIRQ(USB0_IRQn);
+    return res;
+}
+
 uint32_t read_memory(uint32_t adr, uint8_t *buf, uint32_t size)
 {
 	char *start_address = (char *)adr;

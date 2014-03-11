@@ -18,10 +18,10 @@
 
 int __SVC_2 (uint32_t addr) 
 {
-    return flash_erase_sector(addr);
+    return erase_sector(addr);
 }
 
 int __SVC_3 (uint32_t adr, uint8_t * buf, uint32_t size)
 {
-    return flash_program_page(adr, buf, size);
+    return program_page(adr, buf, size);
 }

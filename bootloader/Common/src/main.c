@@ -18,6 +18,7 @@
 // we include RTL.h for 4.71 in the CMSIS-DAP source but this <> include is referencing 4.73 in my Keil install dir...
 #include "RTL.h"
 #include "rl_usb.h"
+#include "MK20D5.h"
 
 //#include <string.h>
 //#include <stdio.h>
@@ -49,11 +50,11 @@
 
 // only applicable to booloader
 #include "vector_table.h"
+#include "device_cfg.h"
 
 // move to bootloader_config file...
-#define START_APP_ADDRESS 0x5000
-#define INITIAL_SP      (*(uint32_t *)(START_APP_ADDRESS))
-#define RESET_HANDLER   (*(uint32_t *)(START_APP_ADDRESS + 4))
+#define INITIAL_SP      (*(uint32_t *)(APP_START_ADR))
+#define RESET_HANDLER   (*(uint32_t *)(APP_START_ADR + 4))
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
@@ -273,17 +274,6 @@ __task void main_task(void)
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
-    // leds
-    gpio_init();
-    
-    // check for invalid app image or rst button press
-    if (gpio_get_rst_pin_state() && validate_user_application(START_APP_ADDRESS))
-    {
-        // looks like we do this for the CMSIS-DAP app. Seems risky since we are unaware of each other
-        relocate_vector_table();
-        // modify stack pointer and start app
-        modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
-    }
     
     usbd_init();
     //swd_init();
@@ -332,9 +322,9 @@ __task void main_task(void)
         // this happens when programming is complete. If 
         //  good we should NVIC_SystemReset()
         if (flags & FLAGS_MAIN_USB_DISCONNECT) {
-            usb_busy = USB_IDLE;                       // USB not busy
-            usb_state_count = 4;
-            usb_state = USB_DISCONNECT_CONNECT;        // disconnect the usb
+            usb_busy = USB_IDLE;        // USB not busy
+            usb_state_count = 10;       //(90ms * 10 = 900ms)
+            usb_state = USB_DISCONNECTING;        // disconnect the usb
         }
 
 //        if (flags & FLAGS_MAIN_RESET) {
@@ -409,7 +399,7 @@ __task void main_task(void)
 
                 case USB_DISCONNECTING:
                     // Wait until USB is idle before disconnecting
-                    if (usb_busy == USB_IDLE) {
+                    if (usb_busy == USB_IDLE && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
                         usb_state = USB_DISCONNECTED;
                     }
@@ -444,8 +434,11 @@ __task void main_task(void)
                     }
                     break;
 
-                case USB_CONNECTED:
                 case USB_DISCONNECTED:
+                    NVIC_SystemReset();
+                    break;
+                
+                case USB_CONNECTED:
                 default:
                     break;
             }
@@ -506,5 +499,17 @@ __task void main_task(void)
 int main (void)
 {
     dbg_message("Bootloader build");    // causes problems if used in the tasks
+    
+    // leds
+    gpio_init();
+    // check for invalid app image or rst button press
+    if (gpio_get_rst_pin_state() && validate_user_application(APP_START_ADR))
+    {
+        // looks like we do this for the CMSIS-DAP app. Seems risky since we are unaware of each other
+        relocate_vector_table();
+        // modify stack pointer and start app
+        modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
+    }
+    // either the rst pin was pressed or we have an empty app region
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

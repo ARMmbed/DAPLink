@@ -29,11 +29,11 @@
 /*!< BOARD_SECRET is mangaged by mbed.org To request a BOARD_SECRET email support@mbed.org Do not version this */
 #define BOARD_SECRET        "00000000"
 
-/*!< APP_START_ADR is the execution address for an application */
-#define APP_START_ADR       0xA000
-
 /*!< SECTOR_SIZE is the number of bytes in a sector used by flash erase and write and usb_buffer sizing */
-#define SECTOR_SIZE         0x400
+#define FLASH_SECTOR_SIZE   0x400
+
+/*!< APP_START_ADR is the execution address for an application */
+#define APP_START_ADR       0x5000
 
 /*!< NUM_OF_SECTORS is the integer representation of sectors in flash. Devices with multiple sizes should
         implement SECTOR_SIZE_A, SECTOR_SIZE_B etc and generate accordingly */
@@ -47,7 +47,7 @@
 #define START_FLASH	        0x410
 
 /*!< END_FLASH used to verify images in the NVIC table. Calculate accordingly if multiple sector sizes exist */
-#define END_FLASH           (FLASH_SIZE_KB*SECTOR_SIZE)
+#define END_FLASH           (FLASH_SIZE_KB*FLASH_SECTOR_SIZE)
 
 /*!< START_RAM used to verify images in the NVIC table. Defined by the linker control file */
 #define START_RAM           0x1FFFE000

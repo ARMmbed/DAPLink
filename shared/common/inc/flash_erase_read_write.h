@@ -78,11 +78,10 @@ int  flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 */
 uint32_t read_memory(uint32_t adr, uint8_t *buf, uint32_t size);
 
-
 // pulled over from original bootloader. Not sure if needed because with the copy of CMSIS-DAP 
 //  code structure
-int  __swi(3) flash_program_page_svc(uint32_t adr, uint8_t * buf, uint32_t size);
-int  __swi(2) flash_erase_sector_svc(uint32_t adr);
+int  __swi(2) erase_sector_svc(uint32_t num);
+int  __swi(3) program_page_svc(uint32_t adr, uint8_t * buf, uint32_t size);
 
 #endif
 

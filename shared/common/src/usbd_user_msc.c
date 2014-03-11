@@ -175,14 +175,13 @@ void init(uint8_t jtag) {
         previous_sector = 0;
     }
     begin_sector = 0;
-    flashPtr = 0;
+    flashPtr = 0;   // load the offset for the application
     sector_received_first = 0;
     root_dir_received_first = 0;
     need_restart_usb = 0;
     flash_started = 0;
     start_sector = 0;
     msc_event_timeout = 0;
-    USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
     listen_msc_isr = 1;
     flash_addr_offset = 0;
 }
@@ -229,7 +228,7 @@ int jtag_init() {
 /*DAP*///        PORT_SWD_SETUP();
 
 /*DAP*///        target_set_state(RESET_PROGRAM);
-        if (flash_init(SystemCoreClock)) {
+        if (!flash_init(SystemCoreClock)) {
             failSWD();
             return 1;
         }
@@ -379,11 +378,11 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 /*DAP*///                        failSWD();
 /*DAP*///                        return -1;
 /*DAP*///                    }
-                    if (flash_erase_sector(i)) {
+                    if (!flash_erase_sector(i)) {
                         failSWD();
                         return -1;
                     }
-                    if (flash_program_page(i*SECTOR_SIZE, (uint8_t *)usb_buffer, SECTOR_SIZE)) {
+                    if (!flash_program_page(i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
                         failSWD();
                         return -1;
                     }
@@ -421,7 +420,7 @@ static int programPage() {
     }
 
     // if we have received two sectors, write into flash
-    if (flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
+    if (!flash_program_page(flashPtr + flash_addr_offset + APP_START_ADR, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
         // even if there is an error, adapt flashptr
         flashPtr += FLASH_PROGRAM_PAGE_SIZE;
         return 1;
@@ -446,7 +445,7 @@ void usbd_msc_init () {
         task_first_started = 1;
         os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
     }
-
+    
     USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
     USBD_MSC_BlockSize  = 512;  // need a define here
     USBD_MSC_BlockGroup = 1;    // and here
@@ -571,7 +570,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (maybe_erase && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (flash_erase_chip()) {
+                    if (!flash_erase_chip()) {
                         return;
                     }
                 }
@@ -614,8 +613,8 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             if (flash_started && (block == theoretical_start_sector)) {
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
-                    if (flash_erase_chip()) {
-                    return;
+                    if (!flash_erase_chip()) {
+                        return;
                     }
                 }
                 maybe_erase = 0;
