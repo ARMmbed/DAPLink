@@ -146,7 +146,7 @@
 #define SYSOSCCTRL_Val        0x00000000              // Reset: 0x000
 #define WDTOSCCTRL_Val        0x00000000              // Reset: 0x000
 #define SYSPLLCTRL_Val        0x00000023              // Reset: 0x000
-#define SYSPLLCLKSEL_Val      0x00000000              // Reset: 0x000
+#define SYSPLLCLKSEL_Val      0x00000001              // Reset: 0x000
 #define MAINCLKSEL_Val        0x00000003              // Reset: 0x000
 #define SYSAHBCLKDIV_Val      0x00000001              // Reset: 0x001
 #define USBPLLCTRL_Val        0x00000023              // Reset: 0x000
