@@ -75,9 +75,9 @@ int flash_erase_chip(void)
     return 1;
 }
 
-int flash_erase_sector(uint32_t adr)
+int flash_erase_sector(uint32_t num)
 {
-    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, adr, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
+    if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, num*SECTOR_SIZE, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
         return 0;
     }
     return 1;

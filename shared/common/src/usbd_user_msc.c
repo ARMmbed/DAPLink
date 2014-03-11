@@ -414,6 +414,46 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
     return (found == 1) ? idx : -1;
 }
 
+static int programPage() {
+    //The timeout task's timer is resetted every 256kB that is flashed.
+    if ((flashPtr >= 0x40000) && ((flashPtr & 0x3ffff) == 0)) {
+        isr_evt_set(MSC_TIMEOUT_RESTART_EVENT, msc_valid_file_timeout_task_id);
+    }
+
+    // if we have received two sectors, write into flash
+    if (flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
+        // even if there is an error, adapt flashptr
+        flashPtr += FLASH_PROGRAM_PAGE_SIZE;
+        return 1;
+    }
+
+    // if we just wrote the last sector -> disconnect usb
+    if (current_sector == nb_sector) {
+        initDisconnect(1);
+        return 0;
+    }
+
+    flashPtr += FLASH_PROGRAM_PAGE_SIZE;
+
+    return 0;
+}
+
+void usbd_msc_init () {
+    
+    // this should move to main so we can kill the task on reboot?!?
+    // this file shouldnt have the task and filesystem implementation. Need to break it up
+    if (!task_first_started) {
+        task_first_started = 1;
+        os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
+    }
+
+    USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
+    USBD_MSC_BlockSize  = 512;  // need a define here
+    USBD_MSC_BlockGroup = 1;    // and here
+    USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
+    USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
+    USBD_MSC_MediaReady = __TRUE;
+}
 
 void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
     if ((usb_state != USB_CONNECTED) || (listen_msc_isr == 0))
@@ -454,7 +494,6 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
-            // this is done in main when booting
             update_html_file();
         }
         // send error message file
@@ -463,31 +502,6 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
     }
 }
-
-static int programPage() {
-    //The timeout task's timer is resetted every 256kB that is flashed.
-    if ((flashPtr >= 0x40000) && ((flashPtr & 0x3ffff) == 0)) {
-        isr_evt_set(MSC_TIMEOUT_RESTART_EVENT, msc_valid_file_timeout_task_id);
-    }
-
-    // if we have received two sectors, write into flash
-    if (flash_program_page(flashPtr + flash_addr_offset, (uint8_t *)usb_buffer, FLASH_PROGRAM_PAGE_SIZE)) {
-        // even if there is an error, adapt flashptr
-        flashPtr += FLASH_PROGRAM_PAGE_SIZE;
-        return 1;
-    }
-
-    // if we just wrote the last sector -> disconnect usb
-    if (current_sector == nb_sector) {
-        initDisconnect(1);
-        return 0;
-    }
-
-    flashPtr += FLASH_PROGRAM_PAGE_SIZE;
-
-    return 0;
-}
-
 
 void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
     int idx_size = 0;
@@ -558,7 +572,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
                 // avoid erasing the internal flash if only the external flash will be updated
                 if (flash_addr_offset == 0) {
                     if (flash_erase_chip()) {
-                    return;
+                        return;
                     }
                 }
                 maybe_erase = 0;
@@ -621,23 +635,5 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             }
         }
     }
-}
-
-
-void usbd_msc_init () {
-    
-    // this should move to main so we can kill the task on reboot?!?
-    // this file shouldnt have the task and filesystem implementation. Need to break it up
-    if (!task_first_started) {
-        task_first_started = 1;
-        os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
-    }
-
-    USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
-    USBD_MSC_BlockSize  = 512;  // need a define here
-    USBD_MSC_BlockGroup = 1;    // and here
-    USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
-    USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
-    USBD_MSC_MediaReady = __TRUE;
 }
 

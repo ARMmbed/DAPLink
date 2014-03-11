@@ -55,10 +55,10 @@ int  flash_erase_chip(void);
 
 /**
  Erase a sector in flash memory
- @param  adr - The start address of a sector to erase 
+ @param  num - The sector number to erase
  @return 1 on success and 0 otherwise
 */
-int  flash_erase_sector(uint32_t adr);
+int  flash_erase_sector(uint32_t num);
 
 /**
  Program a page into flash memory
