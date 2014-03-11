@@ -585,40 +585,7 @@ volatile uint32_t TrimValue;
 volatile unsigned int SOFIRQCount = 0;
 
 
-#define IRCCTRL (*(volatile unsigned long *)0x40048028)
-/*
- *  Calibrate IRC Clock based on the 32-bit timer0 counter.
- */
-void CalibrationIRCClock( void )
-{
-    uint32_t tic = LPC_CT32B0->TC;
-  if ( tic > (CALIB_REF+CALIB_DELTA) )
-  {
-    if ( (IRCCTRL & 0xFFFF) == 0 )
-    {
-      /* Fatal error */
-      while ( 1 );
-    }
-    IRCCTRL = IRCCTRL - 0x01;
-    TrimmingDecCount++;
-  }
-  else if ( tic < (CALIB_REF-CALIB_DELTA) )
-  {
-    if ( (IRCCTRL & 0xFFFF) == 0xFFFF )
-    {
-      /* Fatal error */
-      while ( 1 );
-    }
-    IRCCTRL = IRCCTRL + 0x01;
-    TrimmingIncCount++;
-  }
-  else
-  {
-    TrimmingNochange++;
-  }
-  TrimValue = IRCCTRL;
-  return;
-}
+
 
 /*
  *  Get USB Device Last Frame Number
@@ -725,7 +692,6 @@ void USB_IRQHandler (void) {
             /* Stop timer on odd SOF number */
             LPC_CT32B0->TCR = 0x00;         /* Stop counter */
             TimerStarted = 0;
-            CalibrationIRCClock();
         }
 #ifdef __RTX
     if (USBD_RTX_DevTask) {
