@@ -20,9 +20,35 @@
 
 #define FW_BUILD "0201"
 
-uint8_t   update_html_file        (void);
-uint8_t * get_uid_string          (void);
-uint8_t   get_len_string_interface(void);
-uint8_t * get_uid_string_interface(void);
+/**
+ Create the htm file and pass its into a buffer (done during USB MSC request)
+ @param  buffer - a buffer to write the htm file contents into
+ @param  size - the maximum size of the parameter buffer
+ @return 1 on success and 0 otherwise
+*/
+uint8_t update_html_file(uint8_t * buffer, uint32_t size);
+
+/**
+ Get the auth string. This is sent to authenticate 
+ the platform with mbed.org in the mbed.htm file
+ @param  none
+ @return a pointer to the UID string
+*/
+uint8_t *get_uid_string(void);
+
+/**
+ Get the UID string. Used in USB descriptor to identify 1 of 
+ many mbeds that can be connected to a single computer
+ @param  none
+ @return a pointer to the UID string
+*/
+uint8_t *get_uid_string_interface(void);
+
+/**
+ Get the UID string length.
+ @param  none
+ @return a pointer to the UID string
+*/
+uint8_t get_len_string_interface(void);
 
 #endif

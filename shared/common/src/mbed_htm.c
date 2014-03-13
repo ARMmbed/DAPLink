@@ -21,23 +21,22 @@
 #include "read_uid.h"
 #include "board.h"
 
-// this is defined as uint32_t but if refernced as uint32_t it breaks the update_html_file logic
-// that method should be updated along with this. 
-extern uint8_t usb_buffer[];
-
 // Pointers to substitution strings
-const char *fw_version = (const char *)FW_BUILD;
+static char const *fw_version = (const char *)FW_BUILD;
+
+//These variables need better naming to describe what they do
+// also with accesors, the accessor should match the var name
 
 static uint32_t unique_id;
 static uint8_t already_unique_id = 0;
 static uint32_t auth;
-uint8_t string_auth[25 + 4];
-uint8_t string_auth_descriptor[2+25*2];
-static const char nybble_chars[] = "0123456789ABCDEF";
+static uint8_t string_auth[25 + 4];
+static uint8_t string_auth_descriptor[2+25*2];
+static char const nybble_chars[] = "0123456789ABCDEF";
 
 static void setup_string_id_auth(void);
 
-const unsigned char WebSide[] = {
+static uint8_t const WebSide[] = {
 "<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
 "<!-- Version: " FW_BUILD " Build: " __DATE__ " " __TIME__ " -->\r\n"
 "<html>\r\n"
@@ -47,7 +46,8 @@ const unsigned char WebSide[] = {
 "</head>\r\n"
 "<body></body>\r\n"
 "</html>\r\n"
-"\r\n"};
+"\r\n"
+};
 
 
 static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
@@ -58,13 +58,17 @@ static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
 static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base) {
     uint32_t k = 0;
     uint8_t i, idx = 0;
-    for (i = 0; i < size; i++) {
-        if (*str >= '0' && *str <= '9')
+    for (i = 0; i < size; i++) 
+    {
+        if (*str >= '0' && *str <= '9') {
             idx = '0';
-        else if (*str >= 'A' && *str <= 'F')
+        }
+        else if (*str >= 'A' && *str <= 'F') {
             idx = 'A' - 10;
-        else if (*str >= 'a' && *str <= 'f')
+        }
+        else if (*str >= 'a' && *str <= 'f') {
             idx = 'a' - 10;
+        }
         k = k*base + (*str) - idx;
         str++;
     }
@@ -122,15 +126,17 @@ static void setup_string_descriptor() {
 }
 
 
-uint8_t * get_uid_string(void) {
+uint8_t *get_uid_string(void) {
     return string_auth;
 }
 
 uint8_t get_len_string_interface(void) {
+    // looks like this should be string_auth_descriptor?!?
+    // dont fully understand why the variable and func have different names...
     return 2 + strlen((const char *)(string_auth+4))*2;
 }
 
-uint8_t * get_uid_string_interface(void) {
+uint8_t *get_uid_string_interface(void) {
     return string_auth_descriptor;
 }
 
@@ -225,7 +231,7 @@ static uint8_t get_html_character(HTMLCTX *h) {
     return c;
 }
 
-uint8_t update_html_file(void) {
+uint8_t update_html_file (uint8_t * buffer, uint32_t size) {
     // Update a file containing the version information for this firmware
     // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
 
@@ -234,6 +240,8 @@ uint8_t update_html_file(void) {
 
     uint32_t i = 0;
 
+    //TODO: needs to be called from main for this before USB connects or the device will not be 
+    //  uniquely identified with a serial number. Should really be in a different config function
     if (already_unique_id == 0) {
         read_unique_id(&unique_id);
         compute_auth();
@@ -248,9 +256,9 @@ uint8_t update_html_file(void) {
     do {
         c=get_html_character(&html);
         if (c != '\0') {
-            usb_buffer[i++] = c;
+            buffer[i++] = c;
         }
     } while (c != '\0');
-    memset(usb_buffer+i, ' ', 512 - i);
+    memset(buffer+i, ' ', size - i);
     return 1;  // Success
 }

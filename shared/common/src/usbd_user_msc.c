@@ -493,7 +493,7 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
-            update_html_file();
+            update_html_file((uint8_t *)usb_buffer, 512);
         }
         // send error message file
         else if (block == SECTORS_ERROR_FILE_IDX) {

@@ -336,7 +336,7 @@ __task void main_task(void)
 ////                target_set_state(RESET_HOLD);
 
 ////                // send uid
-////                id_str = get_uid_string();
+////                id_str = get_uid_string(); // should this have been get_uid_string_interface()
 //////                USBD_CDC_ACM_DataSend(id_str, strlen((const char *)id_str));
 ////                send_uID = 0;
 ////            }
