@@ -32,6 +32,10 @@ Provides definitions about:
 
 #include "LPC11Uxx.h"                            // Debug Unit Cortex-M Processor Header File
 
+#if defined(BOARD_UBLOX_C027) || defined (BOARD_BAMBINO_210) || defined (BOARD_BAMBINO_210E)
+#define RESET_OPEN_DRAIN // Configure nReset as open drain
+#endif
+
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
 #define CPU_CLOCK               48000000        ///< Specifies the CPU Clock in Hz
@@ -41,7 +45,7 @@ Provides definitions about:
 /// Port write operations in the Debug Unit by a Cortex-M MCU. Most Cortex-M processors
 /// requrie 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
 /// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be
-/// requrired.
+/// required.
 #define IO_PORT_WRITE_CYCLES    2               ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
@@ -50,11 +54,16 @@ Provides definitions about:
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if defined (BOARD_BAMBINO_210) || defined (BOARD_BAMBINO_210E)
+// Implement JTAG option for debugging multicore targets
+#define DAP_JTAG                1               ///< JTAG Mode: 1 = available, 0 = not available.
+#else
 #define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available.
+#endif
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 /// This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
-#define DAP_JTAG_DEV_CNT        0               ///< Maximum number of JTAG devices on scan chain
+#define DAP_JTAG_DEV_CNT        8               ///< Maximum number of JTAG devices on scan chain
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.
@@ -76,7 +85,6 @@ Provides definitions about:
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
 #define DAP_PACKET_COUNT        1              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 
-
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
 /// known device.  In this case a Device Vendor and Device Name string is stored which
@@ -90,20 +98,32 @@ Provides definitions about:
 
 ///@}
 
-
 // Debug Port I/O Pins
+// For LPC11Uxx DAPs all SWD and JTAG pins are on GPIO port 0
 
-// SWCLK Pin
-#define PIN_SWCLK               (1<<7)
+// SWCLK/TCK Pin                PIO0_7
+#define PIN_SWCLK_IN_BIT        7
+#define PIN_SWCLK               (1 << PIN_SWCLK_IN_BIT)
 
-// SWDIO In/Out Pin
-#define PIN_SWDIO               (1<<8)
+// SWDIO/TMS In/Out Pin         PIO0_8
 #define PIN_SWDIO_IN_BIT        8
+#define PIN_SWDIO               (1 << PIN_SWDIO_IN_BIT)
 
-// nRESET Pin
-#define PIN_nRESET              (1<<2)
+// nRESET Pin                   PIO0_2
 #define PIN_nRESET_IN_BIT       2
+#define PIN_nRESET              (1 << PIN_nRESET_IN_BIT)
 
+#if (DAP_JTAG != 0)
+
+// TDI Pin                      PIO0_17
+#define PIN_TDI_IN_BIT          17
+#define PIN_TDI                 (1 << PIN_TDI_IN_BIT)
+
+// SWO/TDO Pin                  PIO0_9
+#define PIN_TDO_IN_BIT          9
+#define PIN_TDO                 (1 << PIN_TDO_IN_BIT)
+
+#endif // (DAP_JTAG != 0)
 
 //**************************************************************************************************
 /**
@@ -158,7 +178,7 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 static __inline void PORT_SWD_SETUP (void) {
     LPC_GPIO->SET[0] = PIN_SWCLK;
     LPC_GPIO->SET[0] = PIN_SWDIO;
-#if defined(BOARD_UBLOX_C027)
+#if defined(RESET_OPEN_DRAIN)
     // open drain logic
     LPC_GPIO->DIR[0] &= ~PIN_nRESET;
     LPC_GPIO->CLR[0]  =  PIN_nRESET; 
@@ -176,7 +196,7 @@ Disables the DAP Hardware I/O pins which configures:
 static __inline void PORT_OFF (void) {
     LPC_GPIO->CLR[0] = PIN_SWCLK;
     LPC_GPIO->CLR[0] = PIN_SWDIO;
-#if defined(BOARD_UBLOX_C027)
+#if defined(RESET_OPEN_DRAIN)
     // open drain logic
     LPC_GPIO->DIR[0] &= ~PIN_nRESET; // reset not an output
     LPC_GPIO->CLR[0]  =  PIN_nRESET;
@@ -329,7 +349,7 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 1: release device hardware reset.
 */
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
-#if defined(BOARD_UBLOX_C027)
+#if defined(RESET_OPEN_DRAIN)
     // open drain logic
     if (bit) LPC_GPIO->DIR[0] &= ~PIN_nRESET; // input (pulled high external)
     else     LPC_GPIO->DIR[0] |=  PIN_nRESET; // output (low)
