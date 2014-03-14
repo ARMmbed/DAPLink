@@ -499,7 +499,6 @@ __task void main_task(void)
 int main (void)
 {
     dbg_message("Bootloader build");    // causes problems if used in the tasks
-    
     // leds
     gpio_init();
     // check for invalid app image or rst button press
@@ -510,6 +509,8 @@ int main (void)
         // modify stack pointer and start app
         modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
     }
+    // config the usb interface descriptor and web auth token before USB connects
+    unique_string_auth_config();
     // either the rst pin was pressed or we have an empty app region
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

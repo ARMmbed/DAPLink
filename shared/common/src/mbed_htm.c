@@ -28,13 +28,12 @@ static char const *fw_version = (const char *)FW_BUILD;
 // also with accesors, the accessor should match the var name
 
 static uint32_t unique_id;
-static uint8_t already_unique_id = 0;
 static uint32_t auth;
-static uint8_t string_auth[25 + 4];
-static uint8_t string_auth_descriptor[2+25*2];
+static uint8_t string_web_auth[25 + 4];
+static uint8_t string_web_auth_wchar[2+25*2];
 static char const nybble_chars[] = "0123456789ABCDEF";
 
-static void setup_string_id_auth(void);
+static void setup_string_web_auth(void);
 
 static uint8_t const WebSide[] = {
 "<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
@@ -50,7 +49,7 @@ static uint8_t const WebSide[] = {
 };
 
 
-static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
+static void write_byte_ascii_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
     *ch1 = nybble_chars[ ( b >> 4 ) & 0x0F ];
     *ch2 = nybble_chars[ b & 0x0F ];
 }
@@ -75,69 +74,75 @@ static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base) {
     return k;
 }
 
-static void setup_string_id_auth() {
+static void setup_string_web_auth() {
     uint8_t i;
     uint8_t idx = 0;
 
-    string_auth[0] = '$';
-    string_auth[1] = '$';
-    string_auth[2] = '$';
-    string_auth[3] = 24;
+    string_web_auth[0] = '$';
+    string_web_auth[1] = '$';
+    string_web_auth[2] = '$';
+    string_web_auth[3] = 24;
     idx += 4;
 
     // string id
     for (i = 0; i < 4; i++) {
-        string_auth[idx++] = board.id[i];
+        string_web_auth[idx++] = board.id[i];
     }
     for (i = 0; i < 4; i++) {
-        string_auth[idx++] = fw_version[i];
+        string_web_auth[idx++] = fw_version[i];
     }
+    // writes 2 bytes at a time
     for (i = 0; i < 4; i++) {
-        get_byte_hex((unique_id >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
+        write_byte_ascii_hex((unique_id >> 8*(3 - i)) & 0xff, &string_web_auth[idx + 2*i], &string_web_auth[idx + 2*i + 1]);
     }
     idx+=8;
 
-    //string auth
+    //string auth (2 bytes at a time)
     for (i = 0; i < 4; i++) {
-        get_byte_hex((auth >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
+        write_byte_ascii_hex((auth >> 8*(3 - i)) & 0xff, &string_web_auth[idx + 2*i], &string_web_auth[idx + 2*i + 1]);
     }
     idx+=8;
-    string_auth[idx] = 0;
+    // null terminate
+    string_web_auth[idx] = 0;
 }
 
-static void setup_string_descriptor() {
+static void setup_string_usb_descriptor() {
     uint8_t i, idx = 0, len;
-    len = strlen((const char *)(string_auth+4));
-    string_auth_descriptor[0] = len*2 + 2;
-    string_auth_descriptor[1] = 3;
+    len = strlen((const char *)(string_web_auth+4));
+    string_web_auth_wchar[0] = len*2 + 2;
+    string_web_auth_wchar[1] = 3;
     idx += 2;
-
+    // convert char to wchar for usb
     for (i = 0; i < len*2; i++) {
         if ((i % 2) == 0) {
-            string_auth_descriptor[idx + i] = string_auth[4 + i/2];
+            string_web_auth_wchar[idx + i] = string_web_auth[4 + i/2];
         }
         else {
-            string_auth_descriptor[idx + i] = 0;
+            string_web_auth_wchar[idx + i] = 0;
         }
     }
     idx += len*2;
 
-    string_auth_descriptor[idx] = 0;
+    string_web_auth_wchar[idx] = 0;
 }
 
 
-uint8_t *get_uid_string(void) {
-    return string_auth;
+uint8_t *get_web_auth_string(void) {
+    return string_web_auth;
 }
 
-uint8_t get_len_string_interface(void) {
+uint8_t get_len_string_usb_descriptor(void) {
     // looks like this should be string_auth_descriptor?!?
     // dont fully understand why the variable and func have different names...
-    return 2 + strlen((const char *)(string_auth+4))*2;
+    //return 2 + strlen((const char *)(string_auth+4))*2;
+    // should be...
+    //return string_web_auth_wchar[0];
+    //or
+    return sizeof(string_web_auth_wchar);
 }
 
-uint8_t *get_uid_string_interface(void) {
-    return string_auth_descriptor;
+uint8_t *get_string_usb_descriptor(void) {
+    return string_web_auth_wchar;
 }
 
 static void compute_auth() {
@@ -194,7 +199,7 @@ static uint8_t get_html_character(HTMLCTX *h) {
                 switch (s)  {
 
                     case 'A':
-                        sptr = (uint8_t *)(string_auth+4);             // auth string
+                        sptr = (uint8_t *)(string_web_auth+4);             // auth string
                         h->substitute = 1;
                         break;
 
@@ -231,6 +236,14 @@ static uint8_t get_html_character(HTMLCTX *h) {
     return c;
 }
 
+void unique_string_auth_config(void)
+{
+    read_unique_id(&unique_id);
+    compute_auth();
+    setup_string_web_auth();
+    setup_string_usb_descriptor();
+}
+
 uint8_t update_html_file (uint8_t * buffer, uint32_t size) {
     // Update a file containing the version information for this firmware
     // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
@@ -239,16 +252,6 @@ uint8_t update_html_file (uint8_t * buffer, uint32_t size) {
     uint8_t c;                    // Current character from HTML reader
 
     uint32_t i = 0;
-
-    //TODO: needs to be called from main for this before USB connects or the device will not be 
-    //  uniquely identified with a serial number. Should really be in a different config function
-    if (already_unique_id == 0) {
-        read_unique_id(&unique_id);
-        compute_auth();
-        setup_string_id_auth();
-        setup_string_descriptor();
-        already_unique_id = 1;
-    }
 
     // Write file
     init_html(&html, (uint8_t *)WebSide);

@@ -23,7 +23,7 @@
 
 //The verification algorithm will simply check that vectors 0-6, 11-12, 
 //	and 14-15 all point to a valid memory region and are non-zero.
-int validate_user_application(int app_address)
+uint32_t validate_user_application(uint32_t app_address)
 {
     uint32_t i = 0;
     uint32_t mem[1];

@@ -39,7 +39,7 @@
 
 static FLASH_SSD_CONFIG flashSSDConfig;
 
-int flash_init(uint32_t clk)
+uint32_t flash_init(uint32_t clk)
 {
     /* Write 0xC520 to the unlock register */
     WDOG_UNLOCK = 0xC520;
@@ -64,12 +64,12 @@ int flash_init(uint32_t clk)
     return 1;
 }
 
-int flash_uninit(void)
+uint32_t flash_uninit(void)
 {
     return 0;
 }
 
-int erase_sector(uint32_t num)
+static uint32_t erase_sector(uint32_t num)
 {
     if (FTFx_OK != pFlashEraseSector(&flashSSDConfig, num*FLASH_SECTOR_SIZE, FTFx_PSECTOR_SIZE, pFlashCommandSequence)) {
         return 0;
@@ -77,11 +77,8 @@ int erase_sector(uint32_t num)
     return 1;
 }
 
-int flash_erase_chip(void)
+uint32_t flash_erase_chip(void)
 {
-//    if (FTFx_OK != pFlashEraseAllBlock(&flashSSDConfig,pFlashCommandSequence)) {
-//        return 0;
-//    }
     int i = APP_START_ADR;
     for( ; i<END_FLASH; i+=FLASH_SECTOR_SIZE) {
         if (!flash_erase_sector(i/FLASH_SECTOR_SIZE)) {
@@ -91,7 +88,12 @@ int flash_erase_chip(void)
     return 1;
 }
 
-int flash_erase_sector(uint32_t num)
+uint32_t __SVC_2 (uint32_t addr) 
+{
+    return erase_sector(addr);
+}
+
+uint32_t flash_erase_sector(uint32_t num)
 {
     int res = 0;
     NVIC_DisableIRQ(USB0_IRQn);
@@ -100,16 +102,21 @@ int flash_erase_sector(uint32_t num)
     return res;
 }
 
-int program_page(uint32_t adr, uint8_t * buf, uint32_t size)
+uint32_t program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
     if (FTFx_OK != pFlashProgramLongword(&flashSSDConfig, adr, size, (uint32_t)buf, pFlashCommandSequence)) {
         return 0;
     }
     return 1;
 }
+
+uint32_t __SVC_3 (uint32_t adr, uint8_t * buf, uint32_t size)
+{
+    return program_page(adr, buf, size);
+}
    
 
-int flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
+uint32_t flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
     int res = 0;
     NVIC_DisableIRQ(USB0_IRQn);

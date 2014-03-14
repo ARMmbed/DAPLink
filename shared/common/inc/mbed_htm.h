@@ -21,7 +21,16 @@
 #define FW_BUILD "0201"
 
 /**
+ Prepare UID for USB and also web auth token. Done before USB connects
+ @param  buffer - a buffer to write the htm file contents into
+ @param  size - the maximum size of the parameter buffer
+ @return 1 on success and 0 otherwise
+*/
+void unique_string_auth_config(void);
+
+/**
  Create the htm file and pass its into a buffer (done during USB MSC request)
+ and there is a note about USB not being enabled...
  @param  buffer - a buffer to write the htm file contents into
  @param  size - the maximum size of the parameter buffer
  @return 1 on success and 0 otherwise
@@ -37,18 +46,18 @@ uint8_t update_html_file(uint8_t * buffer, uint32_t size);
 uint8_t *get_uid_string(void);
 
 /**
- Get the UID string. Used in USB descriptor to identify 1 of 
+ Get the usb interface descriptor string. Used in USB descriptor to identify 1 of 
  many mbeds that can be connected to a single computer
  @param  none
  @return a pointer to the UID string
 */
-uint8_t *get_uid_string_interface(void);
+uint8_t *get_string_usb_descriptor(void);
 
 /**
- Get the UID string length.
+ Get the usb interface descriptor string length.
  @param  none
- @return a pointer to the UID string
+ @return the length of the interface descriptor string
 */
-uint8_t get_len_string_interface(void);
+uint8_t get_len_string_usb_descriptor(void);
 
 #endif

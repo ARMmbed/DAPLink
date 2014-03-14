@@ -14,6 +14,11 @@
  * limitations under the License.
  */
  
+ //TODO: still needs cleanup, and error code improvement. Use binary check for start of 
+ // bin file and validate the FLASH and RAM values as done at startup.
+ // config funcs needed and also another good comb through.
+ // validating the NVIC table should also allow us to ignore the file extensions...
+ 
 #include "RTL.h"
 #include "rl_usb.h"
 
