@@ -143,9 +143,11 @@ typedef struct sector {
 
 extern uint32_t usb_buffer[];
 extern SECTOR sectors[];
-extern const uint8_t * reason_array[];
-extern const uint8_t sect6[];
-extern const uint8_t sect7[];
-extern const uint8_t fail[];
+extern const uint8_t *reason_array[];
+extern uint8_t const sect6[];
+extern uint8_t const sect7[];
+extern uint8_t const fail[];
+extern uint32_t const sect6_size;
+extern uint32_t const sect7_size;
 
 #endif

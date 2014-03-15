@@ -355,7 +355,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TARGET_MK20D5, __RTX, MKP128_50MHZ, BOOTLOADER</Define>
+              <Define>TARGET_MK20D5, __RTX, MKP128_50MHZ</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos\src;..\..\..\shared\rtos\inc;..\..\..\shared\USBStack\src;..\..\..\shared\USBStack\inc;..\..\..\shared\common\inc;..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\include;..\..\Common\src;..\..\Common\inc;..\..\hal\freescale\TARGET_MK20DX\inc</IncludePath>
             </VariousControls>
@@ -471,7 +471,7 @@
                     <uSurpInc>2</uSurpInc>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
-                      <Define></Define>
+                      <Define>BOOTLOADER</Define>
                       <Undefine></Undefine>
                       <IncludePath></IncludePath>
                     </VariousControls>

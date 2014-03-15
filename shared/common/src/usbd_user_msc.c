@@ -66,7 +66,7 @@
 //#warning target not defined 1024
 //#endif
 
-#include "virtual_fs.h"
+#include "virtual_fs.h"  
 
 extern USB_CONNECT usb_state;
 
@@ -480,11 +480,11 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
         }
         // send System Volume Information
         else if (block == SECTORS_SYSTEM_VOLUME_INFORMATION) {
-            memcpy(buf, sect6, sizeof((uint8_t*)sect6));
+            memcpy(buf, sect6, sect6_size);
         }
         // send System Volume Information/IndexerVolumeGuid
         else if (block == SECTORS_INDEXER_VOLUME_GUID) {
-            memcpy(buf, sect7, sizeof((uint8_t*)sect7));
+            memcpy(buf, sect7, sect7_size);
         }
         // send mbed.html
         else if (block == SECTORS_MBED_HTML_IDX) {
@@ -506,6 +506,8 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
     // we recieve the root directory
     if ((block == SECTORS_ROOT_IDX) || (block == (SECTORS_ROOT_IDX+1))) {
         // try to find a .bin file in the root directory
+        //  not the best idean since OS's send files with different extensions. 
+        //  Chris R suggested looking for the valid NVIC table, maybe both
         idx_size = search_bin_file(buf, block);
 
         // .bin file exists
