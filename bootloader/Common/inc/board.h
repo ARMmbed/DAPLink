@@ -19,13 +19,15 @@
 
 #include <stdint.h>
 
-// Each board should have a unique ID and secret. For information 
-//  about obtaining a secret contact support@mbed.org
 #include "device_cfg.h"
 
+/**
+ @struct BOARD
+ @brief Each board should have a unique ID and secret. To obtain a secret contact support@mbed.org
+ */ 
 typedef struct {
-    const uint8_t  id[5];
-    const uint8_t  secret[9];
+    const uint8_t  id[5];       /*!< id is a 4 character ascii */
+    const uint8_t  secret[9];   /*!< secret is is 8 character acsii hex string */
 } BOARD;
 
 extern BOARD board;

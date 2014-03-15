@@ -22,8 +22,9 @@
 #define CHECK_VALUE(i, val) 	 (i == val) ? 1 : 0
 
 //The verification algorithm will simply check that vectors 0-6, 11-12, 
-//	and 14-15 all point to a valid memory region and are non-zero.
-uint32_t validate_user_application(uint32_t app_address)
+//	and 14-15 all point to a valid memory region and are non-zero and
+//  7-10 should be 0
+uint32_t validate_user_application(uint32_t address)
 {
     uint32_t i = 0;
     uint32_t mem[1];
@@ -31,7 +32,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // Initial_SP
     for( ; i<(1*4); i+=4)
     {	
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];
         // check for a valid ram address.
         if (!CHECK_RANGE(test_val, START_RAM, END_RAM)) {
@@ -46,7 +47,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // UsageFault_Handler (Reserved on CM0+)
     for( ; i<(7*4); i+=4)
     {	
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
         if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
@@ -56,7 +57,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // RESERVED * 4
     for( ; i<(11*4); i+=4)
     {
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value.
         if (!CHECK_VALUE(test_val, 0)) {
@@ -67,7 +68,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // DebugMon_Handler (Reserved on CM0+)
     for( ; i<(13*4); i+=4)
     {	
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
         if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
@@ -77,7 +78,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // RESERVED * 1
     for( ; i<(14*4); i+=4)
     {
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value
         if (!CHECK_VALUE(test_val, 0)) {
@@ -88,7 +89,7 @@ uint32_t validate_user_application(uint32_t app_address)
     // SysTick_Handler
     for( ; i<(16*4); i+=4)
     {	
-        read_memory(app_address+i, (uint8_t*)mem, 4);
+        read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
         if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {

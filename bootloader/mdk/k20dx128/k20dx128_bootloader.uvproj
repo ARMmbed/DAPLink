@@ -534,11 +534,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\usbd_MK20D5.c</FilePath>
             </File>
-            <File>
-              <FileName>vector_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\vector_table.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

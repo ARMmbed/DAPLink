@@ -16,6 +16,6 @@
 #include "MK20D5.h"
 #include "read_uid.h"
 
-void read_unique_id(uint32_t * id) {
-    *id = SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH ^ SIM->UIDH;
+uint32_t read_unique_id(void) {
+    return (SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH ^ SIM->UIDH);
 }

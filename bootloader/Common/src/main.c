@@ -14,47 +14,25 @@
  * limitations under the License.
  */
  
-
-// we include RTL.h for 4.71 in the CMSIS-DAP source but this <> include is referencing 4.73 in my Keil install dir...
-#include "RTL.h"
-#include "rl_usb.h"
-#include "MK20D5.h"
-
-//#include <string.h>
-//#include <stdio.h>
-//#include <stdint.h>
-
 // common to all bootloader implementations
 #include "main.h"
 #include "gpio.h"
-
-//#include "uart.h"
-//#include "semihost.h"
-//#include "serial.h"
-
-// common to all bootloader implementations
 #include "tasks.h"
-
-//#include "target_reset.h"
-//#include "swd_host.h"
-
-// badly named file. May need to be broken into a few modules
 #include "mbed_htm.h"
-
-// debug macros that use ITM0. Does current implementation not working with RTX or when called from tasks - maybe usless it not over UART
-//  Common to Bootloader and CMSIS-DAP. Implementation would be device specific
-#include "retarget.h"
-
-// common to CMSIS-DAP and bootloader
-#include "validate_user_application.h"
-
-// only applicable to booloader
-#include "vector_table.h"
 #include "device_cfg.h"
 
-// move to bootloader_config file...
-#define INITIAL_SP      (*(uint32_t *)(APP_START_ADR))
-#define RESET_HANDLER   (*(uint32_t *)(APP_START_ADR + 4))
+// common to bootloader and CMSIS-DAP
+#include "RTL.h"
+#include "rl_usb.h"
+#include "MK20D5.h"
+#include "usbd_user_msc.h"
+#include "validate_user_application.h"
+
+// debug macros that use ITM0. Does current implementation not working with RTX or
+//  when called from tasks maybe usless. Only good for debugging bootloader and 
+//  CMSIS-DAP when compiled for non-bootloader use
+#include "retarget.h"
+
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
@@ -65,17 +43,8 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 // Timers events
 #define FLAGS_MAIN_90MS           (1 << 0)
 #define FLAGS_MAIN_30MS           (1 << 1)
-
-// Reset events
-#define FLAGS_MAIN_RESET          (1 << 2)
-
 // USB Events
 #define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
-
-// Other Events
-#define FLAGS_MAIN_POWERDOWN      (1 << 4)
-#define FLAGS_MAIN_DISABLEDEBUG   (1 << 5)
-
 // Used by msd when flashing a new binary
 #define FLAGS_LED_BLINK_30MS      (1 << 6)
 
@@ -88,6 +57,7 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 #define STARTUP_DELAY           (0)
 // Decrement to zero
 #define DECZERO(x)              (x ? --x : 0)
+#define NO_TIMEOUT              (0xffff)
 
 // LED state
 typedef enum {
@@ -96,31 +66,21 @@ typedef enum {
     LED_FLASH_PERMANENT
 } LED_STATE;
 
-// Reference to our main task
-OS_TID main_task_id;
-//OS_TID serial_task_id;
-
-// USB busy LED state; when TRUE the LED will flash once using 30mS clock tick
-//static uint8_t dap_led_usb_activity = 0;
-//static uint8_t cdc_led_usb_activity = 0;
-static uint8_t msd_led_usb_activity = 0;
-
-//static LED_STATE dap_led_state = LED_FLASH;
-//static LED_STATE cdc_led_state = LED_FLASH;
-static LED_STATE msd_led_state = LED_FLASH;
-
-//static uint8_t send_uID = 0;
-
-// Global state of usb
+// Global state of usb used in 
 USB_CONNECT usb_state;
+
+// Reference to our main task
+OS_TID main_task_id, msc_task;
+
+static uint8_t msd_led_usb_activity = 0;
+static LED_STATE msd_led_state = LED_FLASH;
 
 static USB_BUSY usb_busy;
 static uint32_t usb_busy_count;
 
-static U64 stk_timer_30_task[TIMER_TASK_30_STACK/8];
-//static U64 stk_dap_task[DAP_TASK_STACK/8];
-//static U64 stk_serial_task[SERIAL_TASK_STACK/8];
-static U64 stk_main_task[MAIN_TASK_STACK/8];
+static U64 stk_timer_task[TIMER_TASK_STACK/8];
+static U64 stk_main_task [MAIN_TASK_STACK/8];
+static U64 stk_msc_task  [MSC_TASK_STACK/8];
 
 // Timer task, set flags every 30mS and 90mS
 __task void timer_task_30mS(void) {
@@ -136,29 +96,6 @@ __task void timer_task_30mS(void) {
     }
 }
 
-// Functions called from other tasks to trigger events in the main task
-void main_reset_target(uint8_t send_unique_id) {
-//    if (send_unique_id) {
-//        send_uID = 1;
-//    }
-    os_evt_set(FLAGS_MAIN_RESET, main_task_id);
-    return;
-}
-
-//// Flash DAP LED using 30mS tick
-//void main_blink_dap_led(uint8_t permanent) {
-//    //dap_led_usb_activity=1;
-//    //dap_led_state = (permanent) ? LED_FLASH_PERMANENT : LED_FLASH;
-//    return;
-//}
-
-//// Flash Serial LED using 30mS tick
-//void main_blink_cdc_led(uint8_t permanent) {
-//    //cdc_led_usb_activity=1;
-//    //cdc_led_state = (permanent) ? LED_FLASH_PERMANENT : LED_FLASH;
-//    return;
-//}
-
 // Flash MSD LED using 30mS tick
 void main_blink_msd_led(uint8_t permanent) {
     msd_led_usb_activity = 1;
@@ -170,7 +107,6 @@ void main_blink_msd_led(uint8_t permanent) {
 void main_usb_busy_event(void) {
     usb_busy_count = USB_BUSY_TIME;
     usb_busy = USB_ACTIVE;
-    //os_evt_set(FLAGS_MAIN_USB_BUSY, main_task_id);
     return;
 }
 
@@ -180,206 +116,54 @@ void main_usb_disconnect_event(void) {
     return;
 }
 
-//// Power down the interface
-//void main_powerdown_event(void) {
-//    os_evt_set(FLAGS_MAIN_POWERDOWN, main_task_id);
-//    return;
-//}
-
-//// Disable debug on target
-//void main_disable_debug_event(void) {
-//    os_evt_set(FLAGS_MAIN_DISABLEDEBUG, main_task_id);
-//    return;
-//}
-
-//#define SIZE_DATA (64)
-//os_mbx_declare(serial_mailbox, 20);
-
-//__task void serial_process() {
-//    uint8_t data[SIZE_DATA];
-//    int32_t len_data = 0;
-//    void *msg;
-
-//    while (1) {
-
-//        // Check our mailbox to see if we need to set anything up with the UART
-//        // before we do any sending or receiving
-//        if (os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK)
-//        {
-//            switch((SERIAL_MSG)(unsigned)msg)
-//            {
-//                case SERIAL_INITIALIZE:
-//                    uart_initialize();
-//                    break;
-//                case SERIAL_UNINITIALIZE:
-//                    uart_uninitialize();
-//                    break;
-//                case SERIAL_RESET:
-//                    uart_reset();
-//                    break;
-//                case SERIAL_SET_CONFIGURATION:
-//                    {
-//                        UART_Configuration config;
-//                        serial_get_configuration(&config);
-//                        uart_set_configuration(&config);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-
-//        len_data = USBD_CDC_ACM_DataFree();
-//        if (len_data > SIZE_DATA)
-//            len_data = SIZE_DATA;
-//        if (len_data)
-//            len_data = uart_read_data(data, len_data);
-//        if (len_data) {
-//            if(USBD_CDC_ACM_DataSend(data , len_data))
-//                main_blink_cdc_led(0);
-//        }
-
-//        len_data = uart_write_free();
-//        if (len_data > SIZE_DATA)
-//            len_data = SIZE_DATA;
-//        if (len_data)
-//            len_data = USBD_CDC_ACM_DataRead(data, len_data);
-//        if (len_data) {
-//            if (uart_write_data(data, len_data))
-//                main_blink_cdc_led(0);
-//        }
-//    }
-//}
-
-//extern __task void hid_process(void);
-//int iii = 0;
 __task void main_task(void) 
 {
     // State processing
     uint16_t flags;
     // LED
-    //uint8_t dap_led_value = 1, cdc_led_value = 1, 
     uint8_t msd_led_value = 1;
     // USB
     uint32_t usb_state_count;
-    // thread running after usb connected started
-//    uint8_t thread_started = 0;
-    // button state
-    //uint8_t button_activated;
-    // string containing unique ID
-//    uint8_t * id_str;
-
-    // Initialize our serial mailbox
-    //os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
     
-    usbd_init();
-    //swd_init();
-
     // Turn on LEDs
     gpio_set_dap_led(1);
     gpio_set_cdc_led(1);
     gpio_set_msd_led(1);
 
-    // Setup reset button
-    //gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
-    //button_activated = 1;
-
     // USB
+    usbd_init();
     usbd_connect(0);
     usb_busy = USB_IDLE;
     usb_busy_count = 0;
-    usb_state = USB_DISCONNECT_CONNECT; //was USB_CONNECTING
+    usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
 
-    // Update HTML version information file
-    //update_html_file();
-
     // Start timer tasks
-    os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
-
-    // Target running
-    //target_set_state(RESET_RUN_WITH_DEBUG);
-
-    // start semihost task
-    //semihost_init();
-    //semihost_enable();
+    os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_task, TIMER_TASK_STACK);
 
     while(1) {
-        os_evt_wait_or(   FLAGS_MAIN_RESET              // Put target in reset state
-                        | FLAGS_MAIN_90MS               // 90mS tick
+        // need to create a new event for programming failure
+        os_evt_wait_or(   FLAGS_MAIN_90MS               // 90mS tick
                         | FLAGS_MAIN_30MS               // 30mS tick
-                        | FLAGS_MAIN_POWERDOWN          // Power down interface
-                        | FLAGS_MAIN_DISABLEDEBUG       // Power down interface
-                        | FLAGS_MAIN_USB_DISCONNECT,    // Disable target debug
-                          NO_TIMEOUT );
+                        | FLAGS_MAIN_USB_DISCONNECT     // Disable target debug
+                        , NO_TIMEOUT );
 
         // Find out what event happened
         flags = os_evt_get();
 
-        // this happens when programming is complete. If 
-        //  good we should NVIC_SystemReset()
+        // this happens when programming is complete. Need to check if we were successful
+        //  or not and alert the user. Currently we reset but a partial or bad application 
+        //  flash can leave the device in a state that is undesired
         if (flags & FLAGS_MAIN_USB_DISCONNECT) {
-            usb_busy = USB_IDLE;        // USB not busy
-            usb_state_count = 10;       //(90ms * 10 = 900ms)
-            usb_state = USB_DISCONNECTING;        // disconnect the usb
+            usb_busy = USB_IDLE;            // USB not busy
+            usb_state_count = 10;           //(90ms * 10 = 900ms)
+            usb_state = USB_DISCONNECTING;  // disconnect the usb
         }
 
-//        if (flags & FLAGS_MAIN_RESET) {
-//            cdc_led_state = LED_OFF;
-//            gpio_set_cdc_led(0);
-//            //usbd_cdc_ser_flush();
-////            if (send_uID) {
-////                // set the target in reset to not receive char on the serial port
-////                target_set_state(RESET_HOLD);
-
-////                // send uid
-////                id_str = get_uid_string(); // should this have been get_uid_string_interface()
-//////                USBD_CDC_ACM_DataSend(id_str, strlen((const char *)id_str));
-////                send_uID = 0;
-////            }
-//            // Reset target
-//            //target_set_state(RESET_RUN);
-//            cdc_led_state = LED_FLASH;
-//            gpio_set_cdc_led(1);
-//            //button_activated = 0;
-//        }
-
-//        if (flags & FLAGS_MAIN_POWERDOWN) {
-//            // Stop semihost task
-//            //semihost_disable();
-
-//            // Disable debug
-//            //target_set_state(NO_DEBUG);
-
-//            // Disconnect USB
-//            usbd_connect(0);
-
-//            // Turn off LED
-//            gpio_set_dap_led(0);
-//            gpio_set_cdc_led(0);
-//            gpio_set_msd_led(0);
-
-//            // TODO: put the interface chip in sleep mode
-//            while (1) {    }
-//        }
-
-//        if (flags & FLAGS_MAIN_DISABLEDEBUG) {
-//            // Stop semihost task
-//            //semihost_disable();
-
-//            // Disable debug
-//            //target_set_state(NO_DEBUG);
-//        }
-
         if (flags & FLAGS_MAIN_90MS) {
-            //if (!button_activated) {
-            //    gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
-            //    button_activated = 1;
-            //}
-
             // Update USB busy status
             switch (usb_busy) {
 
@@ -401,6 +185,7 @@ __task void main_task(void)
                     // Wait until USB is idle before disconnecting
                     if (usb_busy == USB_IDLE && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
+                        os_tsk_delete(msc_task);
                         usb_state = USB_DISCONNECTED;
                     }
                     break;
@@ -418,6 +203,7 @@ __task void main_task(void)
                 case USB_CONNECTING:
                     // Wait before connecting
                     if (DECZERO(usb_state_count) == 0) {
+                        msc_task = os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, stk_msc_task, MSC_TASK_STACK);
                         usbd_connect(1);
                         usb_state = USB_CHECK_CONNECTED;
                     }
@@ -425,11 +211,6 @@ __task void main_task(void)
 
                 case USB_CHECK_CONNECTED:
                     if(usbd_configured()) {
-//                        if (!thread_started) {
-//                            //os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
-//                            //serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
-//                            thread_started = 1;
-//                        }
                         usb_state = USB_CONNECTED;
                     }
                     break;
@@ -446,21 +227,6 @@ __task void main_task(void)
 
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
-//            if (dap_led_usb_activity && ((dap_led_state == LED_FLASH) || (dap_led_state == LED_FLASH_PERMANENT))) {
-//                // Flash DAP LED ONCE
-//                if (dap_led_value) {
-//                    dap_led_value = 0; //Turn off
-//                } else {
-//                    dap_led_value = 1; // Turn on
-//                    if (dap_led_state == LED_FLASH) {
-//                        dap_led_usb_activity = 0;
-//                    }
-//                }
-
-//                // Update hardware
-//                gpio_set_dap_led(dap_led_value);
-//            }
-
             if (msd_led_usb_activity && ((msd_led_state == LED_FLASH) || (msd_led_state == LED_FLASH_PERMANENT))) {
                 // Flash MSD LED ONCE
                 if (msd_led_value) {
@@ -475,22 +241,6 @@ __task void main_task(void)
                 // Update hardware
                 gpio_set_msd_led(msd_led_value);
             }
-
-//            if (cdc_led_usb_activity && ((cdc_led_state == LED_FLASH) || (cdc_led_state == LED_FLASH_PERMANENT))) {
-//                // Flash CDC LED ONCE
-//                if (cdc_led_value) {
-//                    cdc_led_value = 0;
-//                } else {
-//                    cdc_led_value = 1; // Turn on
-//                    if (cdc_led_state == LED_FLASH) {
-//                        cdc_led_usb_activity = 0;
-//                    }
-//                }
-
-//                // Update hardware
-//                gpio_set_cdc_led(cdc_led_value);
-//            }
-
         }
     }
 }
@@ -498,14 +248,11 @@ __task void main_task(void)
 // Main Program
 int main (void)
 {
-    dbg_message("Bootloader build");    // causes problems if used in the tasks
-    // leds
+    // leds and button
     gpio_init();
     // check for invalid app image or rst button press
     if (gpio_get_rst_pin_state() && validate_user_application(APP_START_ADR))
     {
-        // looks like we do this for the CMSIS-DAP app. Seems risky since we are unaware of each other
-        relocate_vector_table();
         // modify stack pointer and start app
         modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
     }

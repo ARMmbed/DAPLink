@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include "device_cfg.h"
 
+// These error symbols messages need to match the text in reason_array and the order too
 #define SWD_ERROR               0
 #define BAD_EXTENSION_FILE      1
 #define NOT_CONSECUTIVE_SECTORS 2
@@ -28,7 +29,8 @@
 #define BAD_START_SECTOR        5
 #define TIMEOUT                 6
 
-#define NUM_FATS                2
+// These are defines to build the filesystem
+#define NUM_FATS                             2
 #define SECTORS_ROOT_IDX                    (1 + NUM_FATS*MBR_SECTORS_PER_FAT)
 #define SECTORS_FIRST_FILE_IDX              (SECTORS_ROOT_IDX + 2)
 #define SECTORS_SYSTEM_VOLUME_INFORMATION   (SECTORS_FIRST_FILE_IDX  + WANTED_SECTORS_PER_CLUSTER)
@@ -36,15 +38,13 @@
 #define SECTORS_MBED_HTML_IDX               (SECTORS_INDEXER_VOLUME_GUID + WANTED_SECTORS_PER_CLUSTER)
 #define SECTORS_ERROR_FILE_IDX              (SECTORS_MBED_HTML_IDX + WANTED_SECTORS_PER_CLUSTER)
 
-//------------------------------------------------------------------- CONSTANTS
+// CONSTANTS
 #define WANTED_SIZE_IN_BYTES        ((FLASH_SIZE_KB + 16 + 8)*1024)
 #define WANTED_SECTORS_PER_CLUSTER  (8)
-
 #define FLASH_PROGRAM_PAGE_SIZE     (512)
 #define MBR_BYTES_PER_SECTOR        (512)
 
-//--------------------------------------------------------------------- DERIVED
-
+// DERIVED
 #define MBR_NUM_NEEDED_SECTORS  (WANTED_SIZE_IN_BYTES / MBR_BYTES_PER_SECTOR)
 #define MBR_NUM_NEEDED_CLUSTERS (MBR_NUM_NEEDED_SECTORS / WANTED_SECTORS_PER_CLUSTER)
 

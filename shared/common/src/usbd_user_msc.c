@@ -87,7 +87,6 @@ static uint8_t program_page_error;
 static uint8_t maybe_erase;
 static uint32_t previous_sector;
 static uint32_t begin_sector;
-static uint8_t task_first_started;
 static uint8_t listen_msc_isr = 1;
 static uint8_t drag_success = 1;
 static uint8_t reason = 0;
@@ -100,8 +99,6 @@ static uint32_t flash_addr_offset = 0;
 
 // 30 s timeout
 #define TIMEOUT_S 3000
-
-static U64 msc_task_stack[MSC_TASK_STACK/8];
 
 // Reference to the msc task
 static OS_TID msc_valid_file_timeout_task_id;
@@ -379,10 +376,10 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
                 move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
                 nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
                 for (i = 0; i < nb_sector_to_move; i++) {
-/*DAP*///                    if (!swd_read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
-/*DAP*///                        failSWD();
-/*DAP*///                        return -1;
-/*DAP*///                    }
+                    if (!read_memory(move_sector_start + i*FLASH_SECTOR_SIZE, (uint8_t *)usb_buffer, FLASH_SECTOR_SIZE)) {
+                        failSWD();
+                        return -1;
+                    }
                     if (!flash_erase_sector(i)) {
                         failSWD();
                         return -1;
@@ -442,15 +439,8 @@ static int programPage() {
     return 0;
 }
 
-void usbd_msc_init () {
-    
-    // this should move to main so we can kill the task on reboot?!?
-    // this file shouldnt have the task and filesystem implementation. Need to break it up
-    if (!task_first_started) {
-        task_first_started = 1;
-        os_tsk_create_user(msc_valid_file_timeout_task, MSC_TASK_PRIORITY, msc_task_stack, MSC_TASK_STACK);
-    }
-    
+void usbd_msc_init ()
+{    
     USBD_MSC_MemorySize = MBR_NUM_NEEDED_SECTORS * MBR_BYTES_PER_SECTOR;
     USBD_MSC_BlockSize  = 512;  // need a define here
     USBD_MSC_BlockGroup = 1;    // and here
@@ -558,6 +548,8 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             return;
         }
 
+        // bootloader in win8.1 is triggering this state... over and over...
+        //  trying to write something like this {533683ac-37bf-4c61-b340-7a41379959d3}
         if (!flash_started && (block > theoretical_start_sector)) {
             theoretical_start_sector = block;
         }
@@ -588,6 +580,7 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
                 return;
             }
 
+            // this is triggering on win8.1... dont follow the logic yet.
             if ((flash_started == 0) && (theoretical_start_sector == block)) {
                 flash_started = 1;
                 isr_evt_set(MSC_TIMEOUT_START_EVENT, msc_valid_file_timeout_task_id);

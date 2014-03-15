@@ -16,23 +16,23 @@
 #ifndef TASK_H
 #define TASK_H
 
-#define NO_TIMEOUT  (0xffff)
+/*!< LOWEST_PRIORITY for RTOS tasks 0 is lowest and reserved for idle task */
+#define LOWEST_PRIORITY         (1)
+/*!< HIGHEST_PRIORITY for RTOS tasks 254 and 255 is reserved for RTX */
+#define HIGHEST_PRIORITY        (254)
 
-#define LOWEST_PRIORITY             (1)     /* Priority 0 is reserved for the RTX idle task */
-#define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
+/*!< MAIN_TASK_PRIORITY task priority that runs the main flag check and state machine */
+#define MAIN_TASK_PRIORITY      (10)
+/*!< TIMER_TASK_30_PRIORITY task priority that sets 30ms and 90ms flags */
+#define TIMER_TASK_30_PRIORITY  (11)
+/*!< MSC_TASK_PRIORITY task priority for the USB MSC task */
+#define MSC_TASK_PRIORITY       (5)
 
-#define MAIN_TASK_PRIORITY          (10)
-//#define SERIAL_TASK_PRIORITY        (1)
-#define TIMER_TASK_PRIORITY         (11)
-//#define DAP_TASK_PRIORITY           (15)
-#define MSC_TASK_PRIORITY           (5)
-#define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
-//#define SEMIHOST_TASK_PRIORITY      (2)
-
-#define TIMER_TASK_30_STACK (70)
-//#define DAP_TASK_STACK (400)
-//#define SERIAL_TASK_STACK (200)
-#define MSC_TASK_STACK (200)
-#define MAIN_TASK_STACK (200)
+/*!< TIMER_TASK_STACK size in bytes for the task stack */
+#define TIMER_TASK_STACK        (70)
+/*!< MSC_TASK_STACK size in bytes for the task stack */
+#define MSC_TASK_STACK          (200)
+/*!< MAIN_TASK_STACK size in bytes for the task stack */
+#define MAIN_TASK_STACK         (200)
 
 #endif

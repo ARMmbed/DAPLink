@@ -40,7 +40,7 @@
 #define NUM_OF_SECTORS      (128)
 
 /*!< FLASH_SIZE_KB is the size of flash for a given application */
-#define FLASH_SIZE_KB       (NUM_OF_SECTORS-5)
+#define FLASH_SIZE_KB       (NUM_OF_SECTORS-(APP_START_ADR/FLASH_SECTOR_SIZE))
 
 /*!< START_FLASH is the lowest ROM address executable code can be placed. Usually after the NVIC table 
         and is used to validate an image by looking at the NVIC entries */
@@ -54,5 +54,9 @@
 
 /*!< END_RAM used to verify images in the NVIC table. Defined by the linker control file */
 #define END_RAM	            0x20002000
+
+/*!< INITIAL_SP used to verify images in the NVIC table. Defined by the linker control file */
+#define INITIAL_SP      (*(uint32_t *)(APP_START_ADR))
+#define RESET_HANDLER   (*(uint32_t *)(APP_START_ADR + 4))
 
 #endif

@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #ifndef READ_UID_H
 #define READ_UID_H
 
 #include <stdint.h>
 
-void read_unique_id(uint32_t * id);
+/**
+ Get a unique ID from the MCU
+ @param  none
+ @return The devices unique ID
+*/
+uint32_t read_unique_id(void);
 
 #endif

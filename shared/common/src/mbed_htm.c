@@ -24,16 +24,10 @@
 // Pointers to substitution strings
 static char const *fw_version = (const char *)FW_BUILD;
 
-//These variables need better naming to describe what they do
-// also with accesors, the accessor should match the var name
-
 static uint32_t unique_id;
 static uint32_t auth;
 static uint8_t string_web_auth[25 + 4];
-static uint8_t string_web_auth_wchar[2+25*2];
-static char const nybble_chars[] = "0123456789ABCDEF";
-
-static void setup_string_web_auth(void);
+static uint8_t string_uid_wchar[2+25*2];
 
 static uint8_t const WebSide[] = {
 "<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
@@ -50,6 +44,7 @@ static uint8_t const WebSide[] = {
 
 
 static void write_byte_ascii_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
+    static char const nybble_chars[] = "0123456789ABCDEF";
     *ch1 = nybble_chars[ ( b >> 4 ) & 0x0F ];
     *ch2 = nybble_chars[ b & 0x0F ];
 }
@@ -109,21 +104,21 @@ static void setup_string_web_auth() {
 static void setup_string_usb_descriptor() {
     uint8_t i, idx = 0, len;
     len = strlen((const char *)(string_web_auth+4));
-    string_web_auth_wchar[0] = len*2 + 2;
-    string_web_auth_wchar[1] = 3;
+    string_uid_wchar[0] = len*2 + 2;
+    string_uid_wchar[1] = 3;
     idx += 2;
     // convert char to wchar for usb
     for (i = 0; i < len*2; i++) {
         if ((i % 2) == 0) {
-            string_web_auth_wchar[idx + i] = string_web_auth[4 + i/2];
+            string_uid_wchar[idx + i] = string_web_auth[4 + i/2];
         }
         else {
-            string_web_auth_wchar[idx + i] = 0;
+            string_uid_wchar[idx + i] = 0;
         }
     }
     idx += len*2;
 
-    string_web_auth_wchar[idx] = 0;
+    string_uid_wchar[idx] = 0;
 }
 
 
@@ -131,18 +126,12 @@ uint8_t *get_web_auth_string(void) {
     return string_web_auth;
 }
 
-uint8_t get_len_string_usb_descriptor(void) {
-    // looks like this should be string_auth_descriptor?!?
-    // dont fully understand why the variable and func have different names...
-    //return 2 + strlen((const char *)(string_auth+4))*2;
-    // should be...
-    //return string_web_auth_wchar[0];
-    //or
-    return sizeof(string_web_auth_wchar);
+uint8_t get_uid_string_len(void) {
+    return sizeof(string_uid_wchar);
 }
 
-uint8_t *get_string_usb_descriptor(void) {
-    return string_web_auth_wchar;
+uint8_t *get_uid_string(void) {
+    return string_uid_wchar;
 }
 
 static void compute_auth() {
@@ -238,7 +227,7 @@ static uint8_t get_html_character(HTMLCTX *h) {
 
 void unique_string_auth_config(void)
 {
-    read_unique_id(&unique_id);
+    unique_id = read_unique_id();
     compute_auth();
     setup_string_web_auth();
     setup_string_usb_descriptor();

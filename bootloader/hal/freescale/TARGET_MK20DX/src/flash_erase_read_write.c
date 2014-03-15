@@ -79,7 +79,7 @@ static uint32_t erase_sector(uint32_t num)
 
 uint32_t flash_erase_chip(void)
 {
-    int i = APP_START_ADR;
+    uint32_t i = APP_START_ADR;
     for( ; i<END_FLASH; i+=FLASH_SECTOR_SIZE) {
         if (!flash_erase_sector(i/FLASH_SECTOR_SIZE)) {
             return 0;
@@ -95,7 +95,7 @@ uint32_t __SVC_2 (uint32_t addr)
 
 uint32_t flash_erase_sector(uint32_t num)
 {
-    int res = 0;
+    uint32_t res = 0;
     NVIC_DisableIRQ(USB0_IRQn);
     res = erase_sector_svc(num);
     NVIC_EnableIRQ(USB0_IRQn);
@@ -118,7 +118,7 @@ uint32_t __SVC_3 (uint32_t adr, uint8_t * buf, uint32_t size)
 
 uint32_t flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 {
-    int res = 0;
+    uint32_t res = 0;
     NVIC_DisableIRQ(USB0_IRQn);
     res = program_page_svc(adr, buf, size);
     NVIC_EnableIRQ(USB0_IRQn);
@@ -127,9 +127,9 @@ uint32_t flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size)
 
 uint32_t read_memory(uint32_t adr, uint8_t *buf, uint32_t size)
 {
-	char *start_address = (char *)adr;
+	uint8_t *start_address = (uint8_t *)adr;
     while(size--) {
-        *buf++ = *(char *)adr++;
+        *buf++ = *(uint8_t *)adr++;
     }
-    return adr - *(char *)start_address;
+    return adr - *(uint8_t *)start_address;
 }

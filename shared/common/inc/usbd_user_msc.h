@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef VECTOR_TABLE_H
-#define VECTOR_TABLE_H
+ 
+#ifndef USBD_USER_MSC_H
+#define USBD_USER_MSC_H
 
-void relocate_vector_table(void);
+__task void msc_valid_file_timeout_task(void);
 
 #endif

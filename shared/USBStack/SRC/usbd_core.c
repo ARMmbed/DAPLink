@@ -362,8 +362,8 @@ __inline BOOL USBD_ReqGetDescriptor (void) {
 
             // added by sam to send unique id string descriptor
           if (USBD_SetupPacket.wValueL == 3) {
-              USBD_EP0Data.pData = get_string_usb_descriptor();
-              len = get_len_string_usb_descriptor();
+              USBD_EP0Data.pData = get_uid_string();
+              len = get_uid_string_len();
               break;
           }
 

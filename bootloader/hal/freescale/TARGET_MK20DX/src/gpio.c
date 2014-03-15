@@ -15,7 +15,6 @@
  */
  
 #include "MK20D5.h"
-
 #include "gpio.h"
 
 #define MSD_LED_BIT_NUMBER  (1UL << 4)

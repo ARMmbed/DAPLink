@@ -30,6 +30,27 @@
 
 //------------------------------------------------------------------------- END
 
+const uint8_t * reason_array[] = {
+    "SWD ERROR",
+    "BAD EXTENSION FILE",
+    "NOT CONSECUTIVE SECTORS",
+    "SWD PORT IN USE",
+    "RESERVED BITS",
+    "BAD START SECTOR",
+    "TIMEOUT",
+};
+
+const uint8_t fail[] = {
+    'F','A','I','L',' ',' ',' ',' ',                   // Filename
+    'T','X','T',                                       // Filename extension
+    0x20,                                              // File attributes
+    0x18,0xB1,0x74,0x76,0x8E,0x41,0x8E,0x41,0x00,0x00, // Reserved
+    0x8E,0x76,                                         // Time created or last updated
+    0x8E,0x41,                                         // Date created or last updated
+    0x06,0x00,                                         // Starting cluster number for file
+    0x07,0x00,0x00,0x0                                 // File size in bytes
+};
+
 #define MEDIA_DESCRIPTOR        (0xF0)
 
 static const mbr_t mbr = {
@@ -225,25 +246,4 @@ SECTOR sectors[] = {
 
     // contains mbed.htm
     {(const uint8_t *)usb_buffer, 512},
-};
-
-const uint8_t * reason_array[] = {
-    "SWD ERROR",
-    "BAD EXTENSION FILE",
-    "NOT CONSECUTIVE SECTORS",
-    "SWD PORT IN USE",
-    "RESERVED BITS",
-    "BAD START SECTOR",
-    "TIMEOUT",
-};
-
-const uint8_t fail[] = {
-    'F','A','I','L',' ',' ',' ',' ',                   // Filename
-    'T','X','T',                                       // Filename extension
-    0x20,                                              // File attributes
-    0x18,0xB1,0x74,0x76,0x8E,0x41,0x8E,0x41,0x00,0x00, // Reserved
-    0x8E,0x76,                                         // Time created or last updated
-    0x8E,0x41,                                         // Date created or last updated
-    0x06,0x00,                                         // Starting cluster number for file
-    0x07,0x00,0x00,0x0                                 // File size in bytes
 };

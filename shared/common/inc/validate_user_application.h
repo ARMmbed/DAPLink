@@ -22,9 +22,9 @@
 /**
  Validate the memory locations in the common part of ARM NVIC table
  Would still be good to write a CRC or checksum of the program flash somewhere
- @param  app_address - The starting address of the NVIC table in flash
+ @param  address - The starting address of the NVIC table to verify
  @return 1 on success and 0 otherwise
 */
-uint32_t validate_user_application(uint32_t app_address);
+uint32_t validate_user_application(uint32_t address);
 
 #endif
