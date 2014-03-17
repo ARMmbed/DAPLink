@@ -32,12 +32,12 @@ void read_unique_id(uint32_t * id) {
 
 #ifdef BOARD_UBLOX_C027
 #include "LPC11Uxx.h"
-
-void enter_isp(void)
+void __SVC_2 (void)
 {
     // taken code from the Nxp App Note AN11305 
     // the calls to the usb stack are removed
-
+    iap_entry = (IAP) IAP_LOCATION;
+    
     /* make sure USB clock is turned on before calling ISP */
     LPC_SYSCON->SYSAHBCLKCTRL |= 0x04000;
     /* make sure 32-bit Timer 1 is turned on before calling ISP */
@@ -52,7 +52,7 @@ void enter_isp(void)
 
     /* Send Reinvoke ISP command to ISP entry point*/
     command[0] = 57;
-
+    
     /* Set stack pointer to ROM value (reset default) This must be the last
      piece of code executed before calling ISP, because most C expressions
      and function returns will fail after the stack pointer is changed. */

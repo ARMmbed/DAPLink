@@ -22,11 +22,13 @@ SVC_Count       DCD     SVC_Cnt
 
 ; Import user SVC functions here.
                 IMPORT  __SVC_1
+                IMPORT  __SVC_2[WEAK]
 
                 EXPORT  SVC_Table
 SVC_Table
 ; Insert user SVC functions here. SVC 0 used by RTL Kernel.
-                DCD     __SVC_1                 ; user SVC function
+                DCD     __SVC_1               ; user SVC function
+                DCD     __SVC_2               ; user SVC function
 
 SVC_End
 
