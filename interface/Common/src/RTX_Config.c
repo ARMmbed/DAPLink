@@ -75,6 +75,8 @@
 #ifndef OS_CLOCK
     #if defined(TARGET_LPC11U35) || defined(TARGET_MK20D5)
         #define OS_CLOCK       48000000
+    #elif defined(TARGET_LPC4322)
+        #define OS_CLOCK      204000000
     #endif
 #endif
 
