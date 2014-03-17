@@ -20,6 +20,7 @@
 #include "tasks.h"
 #include "mbed_htm.h"
 #include "device_cfg.h"
+#include "vector_table.h"
 
 // common to bootloader and CMSIS-DAP
 #include "RTL.h"
@@ -253,6 +254,8 @@ int main (void)
     // check for invalid app image or rst button press
     if (gpio_get_rst_pin_state() && validate_user_application(APP_START_ADR))
     {
+        // change to the new vector table
+        relocate_vector_table_app();
         // modify stack pointer and start app
         modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
     }
