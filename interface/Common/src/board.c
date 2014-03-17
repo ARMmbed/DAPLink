@@ -66,6 +66,14 @@
 #define BOARD_ID        "1114"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_BAMBINO_210)
+#define BOARD_ID        "1600"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_BAMBINO_210E)
+#define BOARD_ID        "1605"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #endif
 
 #if !defined(BOARD_SECRET) || !defined(BOARD_ID)
