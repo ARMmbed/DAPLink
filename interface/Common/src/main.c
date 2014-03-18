@@ -32,7 +32,9 @@
 #include "swd_host.h"
 #include "version.h"
 #ifdef BOARD_UBLOX_C027
+#include <LPC11Uxx.h>
 #include "DAP_config.h"
+#include "read_uid.h"
 #endif
 
 #if defined(BOARD_LPC1549) || defined(BOARD_LPC11U68)
@@ -282,9 +284,14 @@ __task void main_task(void) {
 
 #ifdef BOARD_UBLOX_C027
     PORT_SWD_SETUP();
-    // wait until reset is released
+    // wait until reset output to the target is pulled high
     while (!PIN_nRESET_IN()) {
         /* wait doing nothing */
+    }
+    os_dly_wait(4);
+    // if the reset input from button is low then enter isp programming mode
+    if (!(LPC_GPIO->B[19/*RESET_PIN*/ + (1/*RESET_PORT*/ << 5)] & 1)) {
+        enter_isp();
     }
 #endif 
 

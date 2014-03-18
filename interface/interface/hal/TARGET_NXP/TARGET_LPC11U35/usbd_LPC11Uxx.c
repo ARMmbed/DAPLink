@@ -97,9 +97,6 @@ void USBD_Init (void) {
                                (1UL << 27);
 
 
-    // enable clk for timer (calibrate IRC)
-    LPC_SYSCON->SYSAHBCLKCTRL |= (1UL << 9);
-
   LPC_USB->DEVCMDSTAT  |=   (1UL << 9); /* PLL ON                             */
 
   LPC_IOCON->PIO0_3    &=  ~(0x1F    );
