@@ -54,6 +54,10 @@
 #   else
 #       define WANTED_SIZE_IN_KB                    (4096)
 #   endif
+#elif defined(DBG_LPC1549)
+#   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_LPC11U68)
+#   define WANTED_SIZE_IN_KB                        (256)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS

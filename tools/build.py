@@ -84,6 +84,16 @@ INTERFACE_PROJECTS = [
                             'lpc11u35_lpc1114_mbed_bootloader_if',
                             #'lpc11u35_lpc810_if'
                          ],
+        },
+        {
+            'target' : 'lpc4322',
+            'path' : r'interface\mdk\lpc4322\lpc4322_interface.uvproj',
+            'targets' : [
+                            'lpc4322_lpc1549_if',
+                            'lpc4322_lpc1549_dbg_sram',
+                            'lpc4322_lpc11U68_if',
+                            'lpc4322_lpc11U68_dbg_sram',
+                         ],
         }
     ]
 
@@ -134,7 +144,9 @@ FLASH_ALGO_PROJECTS = [
                             'LPC1700_IAP_32',
                             'LPC1700_IAP_512_MBED_60MHz',
                             'LPC11xx_IAP_32',
-                            'LPC8xx_IAP_4'
+                            'LPC8xx_IAP_4',
+                            'LPC1549_IAP_256',
+                            'LPC11U68_IAP_256'
                         ]
         }
     ]
