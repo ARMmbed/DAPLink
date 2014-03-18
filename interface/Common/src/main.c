@@ -29,7 +29,8 @@
 
 #include "target_reset.h"
 #include "swd_host.h"
-#include "version.h"
+#include "mbed_htm.h"
+//#include "version.h"
 
 // Event flags for main task
 // Timers events
@@ -260,7 +261,8 @@ __task void main_task(void) {
     gpio_set_msd_led(1);
 
     // Setup reset button
-    gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
+    //gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
+    // was in gpio interrupt
     button_activated = 1;
 
     // USB
@@ -271,7 +273,8 @@ __task void main_task(void) {
     usb_state_count = USB_CONNECT_DELAY;
 
     // Update HTML version information file
-    update_html_file();
+    //update_html_file();
+    unique_string_auth_config();
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
@@ -350,7 +353,8 @@ __task void main_task(void) {
 
         if (flags & FLAGS_MAIN_90MS) {
             if (!button_activated) {
-                gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
+                //gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
+                // was in irq gpio.c
                 button_activated = 1;
             }
 
@@ -385,7 +389,7 @@ __task void main_task(void) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
                         // Update HTML file
-                        update_html_file();
+                        //update_html_file();
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }

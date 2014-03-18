@@ -414,6 +414,11 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\common\src\board.c</FilePath>
+            </File>
+            <File>
               <FileName>mbed_htm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\common\src\mbed_htm.c</FilePath>
@@ -504,11 +509,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\usb_config.c</FilePath>
             </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -517,7 +517,7 @@
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\gpio.c</FilePath>
+              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\gpio.c</FilePath>
             </File>
             <File>
               <FileName>flash_erase_read_write.c</FileName>
@@ -527,17 +527,17 @@
             <File>
               <FileName>read_uid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\read_uid.c</FilePath>
+              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\read_uid.c</FilePath>
             </File>
             <File>
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\usbd_MK20D5.c</FilePath>
+              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
             </File>
             <File>
               <FileName>vector_table.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\vector_table.c</FilePath>
+              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\vector_table.c</FilePath>
             </File>
           </Files>
         </Group>

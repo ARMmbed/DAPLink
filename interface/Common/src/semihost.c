@@ -22,7 +22,8 @@
 #include "main.h"
 
 #include "target_reset.h"
-#include "version.h"
+#include "mbed_htm.h"
+//#include "version.h"
 #include "swd_host.h"
 #include "semihost.h"
 
