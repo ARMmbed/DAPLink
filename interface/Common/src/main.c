@@ -95,9 +95,18 @@ static LED_STATE msd_led_state = LED_FLASH;
 static uint8_t send_uID = 0;
 
 #ifdef USE_USB_EJECT_INSERT
+    typedef enum {
+        EJECT_INSERT_INACTIVE,
+        EJECT_INSERT_WAIT_TO_EJECT,
+        EJECT_INSERT_WAIT_TO_INSERT,
+    } EJECT_INSERT_MODE;
+
+    // Delay of ~0.5 second using 90ms ticks
+    #define EJECT_INSERT_DELAY_500MS  (5)
+
     // Variables to handle media eject/insert after a successful drag-n-drop
     extern BOOL USBD_MSC_MediaReadyEx;
-    static BOOL EjectInsertMediaMode = __FALSE;
+    static EJECT_INSERT_MODE EjectInsertMediaMode = EJECT_INSERT_INACTIVE;
     static BOOL EjectInsertMediaCounter = 0;
 #endif
 
@@ -349,9 +358,8 @@ __task void main_task(void) {
 
 #ifdef USE_USB_EJECT_INSERT
         if (flags & FLAGS_MAIN_USB_MEDIA_EJECT) {
-            EjectInsertMediaMode = __TRUE;
-            USBD_MSC_MediaReady = __FALSE;
-            EjectInsertMediaCounter = 5;
+            EjectInsertMediaMode = EJECT_INSERT_WAIT_TO_EJECT;
+            EjectInsertMediaCounter = EJECT_INSERT_DELAY_500MS;
         }
 #endif
 
@@ -409,12 +417,20 @@ __task void main_task(void) {
             }
 
 #ifdef USE_USB_EJECT_INSERT
-            if (EjectInsertMediaMode && !USBD_MSC_MediaReadyEx) {
+            if (EjectInsertMediaMode == EJECT_INSERT_WAIT_TO_EJECT) {
+                if (--EjectInsertMediaCounter == 0) {
+                    // Have waited ~0.5 second, time to eject media
+                    EjectInsertMediaMode = EJECT_INSERT_WAIT_TO_INSERT;
+                    EjectInsertMediaCounter = EJECT_INSERT_DELAY_500MS;
+                    USBD_MSC_MediaReady = __FALSE;
+                }
+            }
+            if ((EjectInsertMediaMode == EJECT_INSERT_WAIT_TO_INSERT) && !USBD_MSC_MediaReadyEx) {
                 // The host computer have questioned the state and received
                 // the message that the media has been removed
                 if (--EjectInsertMediaCounter == 0) {
                     // Have waited ~0.5 seconds after ejecting, time to insert media
-                    EjectInsertMediaMode = __FALSE;
+                    EjectInsertMediaMode = EJECT_INSERT_INACTIVE;
                     USBD_MSC_MediaReady = __TRUE;
                 }
             }

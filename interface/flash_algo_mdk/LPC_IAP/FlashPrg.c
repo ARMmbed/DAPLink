@@ -302,21 +302,6 @@ int EraseChip (void) {
   IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
   if (IAP.stat) return (1);                    // Command Failed
 
-#elif defined(LPC1549_256)
-
-  IAP.cmd    = 50;                             // Prepare Sector for Erase
-  IAP.par[0] = 0;                              // Start Sector
-  IAP.par[1] = 0;                              // End Sector
-  IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
-  if (IAP.stat) return (1);                    // Command Failed
-
-  IAP.cmd    = 52;                             // Erase Sector
-  IAP.par[0] = 0;                              // Start Sector
-  IAP.par[1] = 0;                              // End Sector
-  IAP.par[2] = _CCLK;                          // CCLK in kHz
-  IAP_Call (&IAP.cmd, &IAP.stat);              // Call IAP Command
-  if (IAP.stat) return (1);                    // Command Failed
-
 #else
   IAP.cmd    = 50;                             // Prepare Sector for Erase
   IAP.par[0] = 0;                              // Start Sector
