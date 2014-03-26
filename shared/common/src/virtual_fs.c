@@ -134,7 +134,7 @@ const uint8_t fat2[] = {0};
 
 // first 16 of the max 32 (mbr.max_root_dir_entries) root dir entries
 const uint8_t root_dir1[] = {
-    // volume label "MBED"
+    // volume label "MBED" or "BOOTLOADER"
 #if defined(BOOTLOADER)    
     'B', 'O', 'O', 'T', 'L', 'O', 'A', 'D', 'E', 'R', 0x20, 0x28, 0x0, 0x0, 0x0, 0x0,
 #else
