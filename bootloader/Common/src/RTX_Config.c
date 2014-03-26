@@ -75,6 +75,8 @@
 #ifndef OS_CLOCK
     #if defined(TARGET_LPC11U35) || defined(TARGET_MK20D5)
         #define OS_CLOCK       48000000
+    #else
+        #error  !! OS_CLOCK is not defined !!
     #endif
 #endif
 
@@ -183,7 +185,6 @@ void os_error (U32 err_code) {
  *      RTX Configuration Functions
  *---------------------------------------------------------------------------*/
 
-//#include <RTX_lib.c>
 #include "RTX_lib.c"
 
 /*----------------------------------------------------------------------------
