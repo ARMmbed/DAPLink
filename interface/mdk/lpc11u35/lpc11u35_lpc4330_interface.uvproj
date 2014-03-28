@@ -449,11 +449,6 @@
               <FilePath>..\..\Common\src\semihost.c</FilePath>
             </File>
             <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
-            </File>
-            <File>
               <FileName>SVC_Table.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
@@ -1196,11 +1191,6 @@
               <FileName>semihost.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\semihost.c</FilePath>
-            </File>
-            <File>
-              <FileName>serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
             <File>
               <FileName>SVC_Table.s</FileName>
