@@ -121,7 +121,7 @@
           <Simulator>
             <UseSimulator>0</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -132,7 +132,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -207,7 +207,7 @@
             <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M0"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
-            <mOS>0</mOS>
+            <mOS>1</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
             <hadIROM>1</hadIROM>
@@ -355,7 +355,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--no_inline</MiscControls>
-              <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E</Define>
+              <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E, NO_SEMIHOST</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NXP\DBG_LPC4330;..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35;..\..\interface\cmsis;..\..\interface\cmsis\TARGET_NXP\TARGET_LPC11UXX;..\..\..\shared\rtos</IncludePath>
             </VariousControls>
@@ -447,6 +447,11 @@
               <FileName>semihost.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\semihost.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
             <File>
               <FileName>SVC_Table.s</FileName>
@@ -865,7 +870,7 @@
           <Simulator>
             <UseSimulator>0</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -876,7 +881,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -1191,6 +1196,11 @@
               <FileName>semihost.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\semihost.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
             <File>
               <FileName>SVC_Table.s</FileName>

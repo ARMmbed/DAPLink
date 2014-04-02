@@ -548,7 +548,7 @@ extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 #endif
 
 static void initDisconnect(uint8_t success) {
-#ifdef BOARD_UBLOX_C027
+#if defined(BOARD_UBLOX_C027)
     int autorst = (good_file == 2) && success;
     int autocrp = (good_file == 3) && success;
     if (autocrp)
@@ -559,7 +559,7 @@ static void initDisconnect(uint8_t success) {
         enter_isp();
     }
 #else
-    int autorst = 0;
+    int autorst = success;
 #endif
     drag_success = success;
     if (autorst)

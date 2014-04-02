@@ -43,6 +43,26 @@
 #define REGWnR (1 << 16)
 
 #define MAX_SWD_RETRY 10
+#define MAX_TIMEOUT   10000  // Timeout for syscalls on target
+
+// Some targets require a soft reset for flash programming (RESET_PROGRAM).
+// Otherwise a hardware reset is the default. This will not affect
+// DAP operations as they are controlled by the remote debugger.
+#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E)
+#define CONF_SYSRESETREQ
+#endif
+
+#if defined(CONF_SYSRESETREQ)
+// SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
+#define SOFT_RESET  SYSRESETREQ
+
+#elif defined(CONF_VECTRESET)
+// VECTRESET - Software reset of Cortex-M core
+// For some Cortex-M devices, VECTRESET is the only way to reset the core.
+// VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
+#define SOFT_RESET  VECTRESET
+
+#endif
 
 typedef struct {
     uint32_t select;
@@ -593,7 +613,7 @@ uint8_t swd_is_semihost_event(uint32_t *r0, uint32_t *r1) {
 
 static uint8_t swd_wait_until_halted(void) {
     // Wait for target to stop
-    uint32_t val, i, timeout = 10000;
+    uint32_t val, i, timeout = MAX_TIMEOUT;
     for (i = 0; i < timeout; i++) {
 
         if (!swd_read_word(DBG_HCSR, &val)) {
@@ -840,6 +860,8 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             break;
 
         case RESET_PROGRAM:
+#if !defined(SOFT_RESET)
+            // Use hardware reset (HW RESET)
             // First reset
             swd_set_target_reset(1);
             os_dly_wait(2);
@@ -866,6 +888,33 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             os_dly_wait(2);
 
             swd_set_target_reset(0);
+#else            
+            if (!swd_init_debug()) {
+                return 0;
+            }
+
+            // Enable debug and halt the core (DHCSR <- 0xA05F0003)
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
+                return 0;
+            }
+            
+            // Wait until core is halted
+            do {
+                if (!swd_read_word(DBG_HCSR, &val)) {
+                    return 0;
+                }
+            } while((val & S_HALT) == 0);
+
+            // Enable halt on reset
+            if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
+                return 0;
+            }
+
+	        // Perform a soft reset
+            if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
+                return 0;
+            }
+#endif
             os_dly_wait(2);
 
             do {
