@@ -293,7 +293,7 @@ __task void main_task(void) {
 
 #ifndef BOARD_UBLOX_C027
     // Target running
-    target_set_state(RESET_RUN_WITH_DEBUG);
+    //target_set_state(RESET_RUN_WITH_DEBUG);
 #endif
 
     // start semihost task
