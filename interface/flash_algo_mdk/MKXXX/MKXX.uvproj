@@ -355,7 +355,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MK20DX128VLH5</Define>
+              <Define>CPU_MK20DX128VLH5, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -861,8 +861,8 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MK64FN1M0VMD12</Define>
+              <MiscControls>--diag_suppress=1 --gnu --c99</MiscControls>
+              <Define>CPU_MK64FN1M0VMD12, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -1369,7 +1369,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MKL02Z32VFM4</Define>
+              <Define>CPU_MKL02Z32VFM4, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -1876,7 +1876,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MKL05Z32VLF4</Define>
+              <Define>CPU_MKL05Z32VLF4, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -2383,7 +2383,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MKL25Z128VLK4</Define>
+              <Define>CPU_MKL25Z128VLK4, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -2890,7 +2890,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MKL25Z128VLK4</Define>
+              <Define>CPU_MKL25Z128VLK4, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
@@ -3397,7 +3397,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--diag_suppress=1 --gnu</MiscControls>
-              <Define>CPU_MKL46Z256VMC4</Define>
+              <Define>CPU_MKL46Z256VMC4, __NO_EMBEDDED_ASM</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\cmsis;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>

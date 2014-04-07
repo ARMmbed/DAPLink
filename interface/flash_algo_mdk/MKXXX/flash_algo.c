@@ -110,10 +110,10 @@ int EraseChip (void)
  */
 int EraseSector (unsigned long adr)
 {
-    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize);
+    int status = flash_erase(&g_flash, adr, 1);
     if (status == kStatus_Success)
     {
-        status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);
+        status = flash_verify_erase(&g_flash, adr, 1, kFlashMargin_Normal);
     }
     flash_cache_clear();
     return (status != kStatus_Success);

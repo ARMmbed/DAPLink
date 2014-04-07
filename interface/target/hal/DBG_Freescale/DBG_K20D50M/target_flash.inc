@@ -57,14 +57,21 @@ static const TARGET_FLASH flash = {
     0x200000C5, // EraseSector
     0x200000F7, // ProgramPage
 
-    {0x20000001, 0x20000000+sizeof(K20D50M_FLM), 0x20000c00}, // {breakpoint, static_base, stack_pointer}
+    // breakpoint = RAM start + 1
+    // RSB : base address is address of Execution Region PrgData in map file
+    //       to access global/static data
+    // RSP : Initial stack pointer
+	{
+	    0x20000001, // breakpoint instruction address
+	    0x20000000 + 0x20 + 0x3b4,  // static base register value (image start + header + static base offset)
+	    0x20000c00  // initial stack pointer
+	},
 
-    0x20001c00, // program_buffer
-    0x20000000, // algo_start
-    sizeof(K20D50M_FLM), // algo_size
-    K20D50M_FLM,  // image
-
-    512,        // ram_to_flash_bytes_to_be_written
+	0x20001c00, // program_buffer, any valid RAM location with +512 bytes of headroom
+	0x20000000, // algo_start, start of RAM
+	sizeof(K20D50M_FLM), // algo_size, size of array above
+	K20D50M_FLM,  // image, flash algo instruction array
+    512        // ram_to_flash_bytes_to_be_written
 };
 
 
