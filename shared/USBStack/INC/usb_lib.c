@@ -1177,19 +1177,19 @@ void USBD_RTX_TaskInit (void) {
 
   USBD_RTX_DevTask = 0;
   if (USBD_RTX_P_Device) {
-    USBD_RTX_DevTask = os_tsk_create(USBD_RTX_Device,     10);
+    USBD_RTX_DevTask = os_tsk_create(USBD_RTX_Device,      3);
   }
 
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
-      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 9);
+      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
     }
   }
 
   USBD_RTX_CoreTask = 0;
   if (USBD_RTX_P_Core) {
-    USBD_RTX_CoreTask = os_tsk_create(USBD_RTX_Core,       9);
+    USBD_RTX_CoreTask = os_tsk_create(USBD_RTX_Core,       2);
   }
 #endif
 }
@@ -1198,13 +1198,13 @@ void USBD_RTX_TaskInit (void) {
 /*------------------------------------------------------------------------------
  *      USB Device Descriptors
  *----------------------------------------------------------------------------*/
-#define USBD_CDC_ACM_DESC_LEN             (USB_INTERFACE_DESC_SIZE + /*USBD_MULTI_IF * USB_INTERFACE_ASSOC_DESC_SIZE +*/ 0x0013                     + \
+#define USBD_MSC_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
+#define USBD_CDC_ACM_DESC_LEN             (USB_INTERFACE_DESC_SIZE + /*USBD_MULTI_IF * USB_INTERFACE_ASSOC_DESC_SIZE +*/ 0x0013                 + \
                                            USB_ENDPOINT_DESC_SIZE + USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + USB_HID_DESC_SIZE                                                          + \
                                           (USB_ENDPOINT_DESC_SIZE*(1+(USBD_HID_EP_INTOUT != 0))))
-#define USBD_MSC_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_OFS                 (USB_CONFIGUARTION_DESC_SIZE + USB_INTERFACE_DESC_SIZE                                                + \
-                                           USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
+                                           USBD_MSC_ENABLE * USBD_MSC_DESC_LEN + USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
 
 #define USBD_WTOTALLENGTH                 (USB_CONFIGUARTION_DESC_SIZE +                 \
                                            USBD_CDC_ACM_DESC_LEN * USBD_CDC_ACM_ENABLE + \
@@ -1275,9 +1275,9 @@ const U8 USBD_DeviceDescriptor[] = {
   WBVAL(0x0110), /* 1.10 */             /* bcdUSB */
 #endif
 #if (USBD_MULTI_IF)
-  0x02,       /* bDeviceClass */
-  0x00,                                 /* bDeviceSubClass */
-  0x00,                                 /* bDeviceProtocol */
+  USB_DEVICE_CLASS_MISCELLANEOUS,       /* bDeviceClass */
+  0x02,                                 /* bDeviceSubClass */
+  0x01,                                 /* bDeviceProtocol */
 #elif (USBD_CDC_ACM_ENABLE)
   USB_DEVICE_CLASS_COMMUNICATIONS,      /* bDeviceClass CDC*/
   0x00,                                 /* bDeviceSubClass */
@@ -1734,9 +1734,14 @@ const U8 USBD_ConfigDescriptor[] = {
   ADC_EP
 #endif
 
+#if (USBD_MSC_ENABLE)
+  MSC_DESC
+  MSC_EP
+#endif
+
 #if (USBD_CDC_ACM_ENABLE)
 #if (USBD_MULTI_IF)
-  //CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM,2)
+  CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM,2)
 #endif
   CDC_ACM_DESC_IF0
   CDC_ACM_EP_IF0
@@ -1751,11 +1756,6 @@ const U8 USBD_ConfigDescriptor[] = {
 #else
   HID_EP
 #endif
-#endif
-
-#if (USBD_MSC_ENABLE)
-  MSC_DESC
-  MSC_EP
 #endif
 
 /* Terminator */                                                                                            \

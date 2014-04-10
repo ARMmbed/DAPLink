@@ -787,7 +787,6 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
 
 
 void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
-#if 0
     if ((usb_state != USB_CONNECTED) || (listen_msc_isr == 0))
         return;
 
@@ -833,11 +832,9 @@ void usbd_msc_read_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
             memcpy(buf, reason_array[reason], strlen((const char *)reason_array[reason]));
         }
     }
-#endif
 }
 
 static int programPage() {
-#if 0
     //The timeout task's timer is resetted every 256kB that is flashed.
     if ((flashPtr >= 0x40000) && ((flashPtr & 0x3ffff) == 0)) {
         isr_evt_set(MSC_TIMEOUT_RESTART_EVENT, msc_valid_file_timeout_task_id);
@@ -859,12 +856,10 @@ static int programPage() {
     flashPtr += FLASH_PROGRAM_PAGE_SIZE;
 
     return 0;
-#endif
 }
 
 
 void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) {
-#if 0
     int idx_size = 0;
 
     if ((usb_state != USB_CONNECTED) || (listen_msc_isr == 0))
@@ -996,7 +991,6 @@ void usbd_msc_write_sect (uint32_t block, uint8_t *buf, uint32_t num_of_blocks) 
             }
         }
     }
-#endif
 }
 
 
