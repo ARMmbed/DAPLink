@@ -35,7 +35,7 @@ Provides definitions about:
 // Board configuration options
 
 // Configure nReset as open drain
-#if defined(BOARD_UBLOX_C027) || defined (BOARD_BAMBINO_210) || defined (BOARD_BAMBINO_210E)
+#if defined(BOARD_UBLOX_C027)
 #define CONF_OPENDRAIN
 #endif
 
