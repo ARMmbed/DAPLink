@@ -96,7 +96,6 @@ void USBD_Init (void) {
   LPC_SYSCON->SYSAHBCLKCTRL |= (1UL << 14)|
                                (1UL << 27);
 
-
   LPC_USB->DEVCMDSTAT  |=   (1UL << 9); /* PLL ON                             */
 
   LPC_IOCON->PIO0_3    &=  ~(0x1F    );
@@ -358,7 +357,7 @@ void USBD_DisableEP (U32 EPNum) {
   *ptr = EP_DISABLED;
 
   if (EPNum & 0x80) {
-    EPNum &= 0x7F;
+    EPNum &= ~0x80;
     LPC_USB->INTEN &= ~(1 << EP_IN_IDX(EPNum));
   }
   else {
@@ -403,7 +402,7 @@ void USBD_SetStallEP (U32 EPNum) {
   }
   else {
     if (EPNum & 0x80) {
-      EPNum &= 0x7F;
+      EPNum &= ~0x80;
       LPC_USB->EPSKIP |= (1 << EP_IN_IDX(EPNum));
       while (LPC_USB->EPSKIP & (1 << EP_IN_IDX(EPNum)));
     }
@@ -568,22 +567,6 @@ U32 USBD_WriteEP (U32 EPNum, U8 *pData, U32 cnt) {
 }
 
 
-
-#define CALIB_REF           48000
-#define CALIB_DELTA         120     /* 0.25% error */
-
-volatile uint32_t TimerStarted = 0;         /* 0 is not started, 1 is started */
-
-/* Below are for debug purposes. */
-volatile uint32_t TrimmingIncCount = 0;
-volatile uint32_t TrimmingDecCount = 0;
-volatile uint32_t TrimmingNochange = 0;
-volatile uint32_t TrimValue;
-volatile unsigned int SOFIRQCount = 0;
-
-
-
-
 /*
  *  Get USB Device Last Frame Number
  *    Parameters:      None
@@ -603,14 +586,16 @@ void USB_IRQHandler (void) {
 
   U32 sts, val, num;
 
-  sts = LPC_USB->INTSTAT & LPC_USB->INTEN;
+  sts = LPC_USB->INTSTAT;
+  LPC_USB->INTSTAT = sts;
 
   /* Device Status Interrupt (Reset, Connect change, Suspend/Resume)          */
   if (sts & (1UL << 31)) {
     val = LPC_USB->DEVCMDSTAT;
 
-  /* reset interrupt                                                          */
+    /* reset interrupt                                                        */
     if (val & (1UL << 26)) {
+      LPC_USB->DEVCMDSTAT |= (1UL << 26);
       USBD_Reset();
       usbd_reset_core();
 #ifdef __RTX
@@ -622,41 +607,11 @@ void USB_IRQHandler (void) {
         USBD_P_Reset_Event();
       }
 #endif
-      LPC_USB->DEVCMDSTAT |= (1UL << 26);
-    }
-
-    /* suspend/resume interrupt                                               */
-    if (val & (1UL << 25)) {
-    /* suspend interrupt                                                      */
-      if (val & (1UL << 17)) {
-        USBD_Suspend();
-#ifdef __RTX
-        if (USBD_RTX_DevTask) {
-          isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
-        }
-#else
-        if (USBD_P_Suspend_Event) {
-          USBD_P_Suspend_Event();
-        }
-#endif
-      }
-    /* resume interrupt                                                       */
-      else {
-#ifdef __RTX
-        if (USBD_RTX_DevTask) {
-          isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
-        }
-#else
-        if (USBD_P_Resume_Event) {
-          USBD_P_Resume_Event();
-        }
-#endif
-      }
-      LPC_USB->DEVCMDSTAT |= (1UL << 25);
     }
 
     /* connect interrupt                                                      */
     if (val & (1UL << 24)) {
+      LPC_USB->DEVCMDSTAT |= (1UL << 24);
 #ifdef __RTX
       if (USBD_RTX_DevTask) {
         if (val & (1UL << 16)) {
@@ -671,25 +626,41 @@ void USB_IRQHandler (void) {
         USBD_P_Power_Event((val >> 16) & 1);
       }
 #endif
-      LPC_USB->DEVCMDSTAT |= (1UL << 24);
     }
-    LPC_USB->INTSTAT = (1UL << 31);
-  }
 
+    /* suspend/resume interrupt                                               */
+    if (val & (1 << 25)) {
+      LPC_USB->DEVCMDSTAT |= (1UL << 25);
+      /* suspend interrupt                                                    */
+      if (val & (1UL << 17)) {
+        USBD_Suspend();
+#ifdef __RTX
+        if (USBD_RTX_DevTask) {
+          isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
+        }
+#else
+        if (USBD_P_Suspend_Event) {
+          USBD_P_Suspend_Event();
+        }
+#endif
+      }
+      /* resume interrupt                                                     */
+      else {
+#ifdef __RTX
+        if (USBD_RTX_DevTask) {
+          isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
+        }
+#else
+        if (USBD_P_Resume_Event) {
+          USBD_P_Resume_Event();
+        }
+#endif
+      }
+    }
+  }
 
   /* Start of Frame                                                           */
   if (sts & (1UL << 30)) {
-        SOFIRQCount++;
-        if ( ((SOFIRQCount & 0x01)!= 0x0) && (TimerStarted==0) ) {
-            /* Start timer on even SOF number */
-            TimerStarted = 1;
-            LPC_CT32B0->TCR |= (0x1<<1);    /* Reset and then enable counter */
-            LPC_CT32B0->TCR = (0x1<<0);
-        } else if ( ((SOFIRQCount & 0x01)==0x0) && (TimerStarted != 0) ) {
-            /* Stop timer on odd SOF number */
-            LPC_CT32B0->TCR = 0x00;         /* Stop counter */
-            TimerStarted = 0;
-        }
 #ifdef __RTX
     if (USBD_RTX_DevTask) {
       isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
@@ -699,7 +670,6 @@ void USB_IRQHandler (void) {
       USBD_P_SOF_Event();
     }
 #endif
-    LPC_USB->INTSTAT = (1UL << 30);
   }
 
   /* EndPoint Interrupt                                                       */
@@ -707,9 +677,8 @@ void USB_IRQHandler (void) {
     for (num = 0; num < ((USBD_EP_NUM + 1) * 2); num++) {
       if (sts & (1UL << num)) {
 
-        val = LPC_USB->DEVCMDSTAT;
-  /*Setup                                                                     */
-        if ((num == 0) && (val & (1UL << 8))) {
+        /* Setup                                                              */
+        if ((num == 0) && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
 #ifdef __RTX
           if (USBD_RTX_EPTask[num / 2]) {
             isr_evt_set(USBD_EVT_SETUP, USBD_RTX_EPTask[num / 2]);
@@ -720,8 +689,7 @@ void USB_IRQHandler (void) {
           }
 #endif
         }
-
-  /*OUT                                                                       */
+        /* OUT                                                                */
         else if ((num % 2) == 0) {
 #ifdef __RTX
           if (USBD_RTX_EPTask[num / 2]) {
@@ -733,8 +701,7 @@ void USB_IRQHandler (void) {
           }
 #endif
         }
-
-  /*IN                                                                        */
+        /* IN                                                                 */
         else {
 #ifdef __RTX
           if (USBD_RTX_EPTask[num / 2]) {
@@ -746,11 +713,7 @@ void USB_IRQHandler (void) {
           }
 #endif
         }
-        LPC_USB->INTSTAT = (1UL << num);
       }
     }
   }
 }
-
-
-
