@@ -15,30 +15,21 @@
  */
 
 #include "../FlashOS.H"        // FlashOS Structures
+#include "FlashDev.h"
 
-#if defined(LPC1800_SPIFI)
 struct FlashDevice const FlashDevice = {
-   FLASH_DRV_VERS,             // Driver Version, do not modify!
-#if defined(LPC1800_8192)
-   "LPC18xx/43xx 4MB SPIFI",   // Device Name 
-#else
-   "LPC18xx/43xx 8MB SPIFI",   // Device Name 
-#endif
-   EXTSPI,                     // Device Type
-   0x14000000,                 // Device Start Address
-#if defined(LPC1800_8192)
-   0x00800000,                 // Device Size is 8MB
-#else
-   0x00400000,                 // Device Size is 4MB
-#endif
-   256,                        // Programming Page Size
-   0,                          // Reserved, must be 0
-   0xFF,                       // Initial Content of Erased Memory
-   500,                        // Program Page Timeout 100 mSec
-   5000,                       // Erase Sector Timeout 3000 mSec
+    FLASH_DRV_VERS,         // Driver Version, do not modify!
+    FLASH_DEV_NAME,         // Device Name
+    EXTSPI,                 // Device Type
+    FLASH_START,            // Device Start Address
+    FLASH_DEV_SIZE,         // Device Size
+    256,                    // Programming Page Size
+    0,                      // Reserved, must be 0
+    0xFF,                   // Initial Content of Erased Memory
+    500,                    // Program Page Timeout 500 mSec
+    5000,                   // Erase Sector Timeout 5000 mSec
 
-// Specify Size and Address of Sectors
-   0x010000, 0x000000,         // sectors are 64 KB
-   SECTOR_END
+    // Specify size and address of sectors for each region
+    FLASH_SECTOR_SIZE, 0x000000, // sector size, address
+    SECTOR_END
 };
-#endif // LPC1800_SPIFI
