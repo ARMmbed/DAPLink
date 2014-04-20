@@ -1,24 +1,18 @@
-/******************************************************************************
- * @file     JTAG_DP.c
- * @brief    CMSIS-DAP JTAG DP I/O
- * @version  V1.00
- * @date     31. May 2012
+/* CMSIS-DAP Interface Firmware
+ * Copyright (c) 2009-2013 ARM Limited
  *
- * @note
- * Copyright (C) 2012 ARM Limited. All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M
- * processor based microcontrollers.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * @par
- * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
- * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
- * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
- * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
- *
- ******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "DAP_config.h"
 #include "DAP.h"

@@ -385,7 +385,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35.sct</ScatterFile>
+            <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>

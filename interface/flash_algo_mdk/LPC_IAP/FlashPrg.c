@@ -17,7 +17,7 @@
 #include "../FlashOS.H"        // FlashOS Structures
 
 // Memory Mapping Control
-#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#if defined(LPC11xx_32) || defined(LPC8xx_4) || defined(LPC11U68_256)
 #define MEMMAP   (*((volatile unsigned long *) 0x40048000))
 #else
 #define MEMMAP   (*((volatile unsigned char *) 0x400FC040))
@@ -25,10 +25,19 @@
 
 #ifdef MBED
 
-#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#if defined(LPC11xx_32) || defined(LPC8xx_4) || defined(LPC11U68_256)
 #define MAINCLKSEL (*((volatile unsigned long *) 0x40048070))
 #define MAINCLKUEN (*((volatile unsigned long *) 0x40048074))
 #define MAINCLKDIV (*((volatile unsigned long *) 0x40048078))
+
+#elif defined(LPC1549_256)
+
+#define SYSMEMREMAP    (*((volatile unsigned long *) 0x40074000))
+#define MAINCLKSELA    (*((volatile unsigned long *) 0x40074080))
+#define MAINCLKSELB    (*((volatile unsigned long *) 0x40074084))
+#define SYSAHBCLKDIV   (*((volatile unsigned long *) 0x400740C0))
+#define SYSAHBCLKCTRL0 (*((volatile unsigned long *) 0x400740C4))
+
 #else
 
 /* Phase Locked Loop (Main PLL) */
@@ -85,6 +94,12 @@
 #ifdef LPC8xx_4
 #define END_SECTOR     3
 #endif
+#ifdef LPC1549_256
+#define END_SECTOR     63
+#endif
+#ifdef LPC11U68_256
+#define END_SECTOR     28
+#endif
 
 /* Code Read Protection (CRP) */
 #define CRP_ADDRESS (0x000002FC)
@@ -94,7 +109,7 @@
 #define CRP3        (0x43218765)
 #define IS_CRP_VALUE(v) ((v==NO_ISP) || (v==CRP1) || (v==CRP2) || (v==CRP3))
 
-#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#if defined(LPC11xx_32) || defined(LPC8xx_4) || defined(LPC1549_256) || defined(LPC11U68_256)
 #define NO_CRP      (0)
 #define _CCLK (12000)
 #else
@@ -112,7 +127,11 @@ struct sIAP {                  // IAP Structure
 
 /* IAP Call */
 typedef void (*IAP_Entry) (unsigned long *cmd, unsigned long *stat);
+#if defined(LPC1549_256)
+  #define IAP_Call ((IAP_Entry) 0x03000205)
+#else
 #define IAP_Call ((IAP_Entry) 0x1FFF1FF1)
+#endif
 
 
 /*
@@ -127,8 +146,13 @@ unsigned long GetSecNum (unsigned long adr) {
 
 #if defined(LPC8xx_4)
   n = adr >> 10;                               //  1kB Sector
-#elif defined(LPC11xx_32)
+#elif defined(LPC11xx_32) || defined(LPC1549_256)
   n = adr >> 12;                               //  4kB Sector
+#elif defined(LPC11U68_256)
+  n = adr >> 12;                               //  4kB Sector
+  if (n >= 0x18) {
+    n = 0x15 + (n >> 3);                       // 32kB Sector
+  }
 #else
   n = adr >> 12;                               //  4kB Sector
   if (n >= 0x10) {
@@ -151,7 +175,7 @@ unsigned long GetSecNum (unsigned long adr) {
 
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 
-#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#if defined(LPC11xx_32) || defined(LPC8xx_4) || defined(LPC11U68_256)
 
   MAINCLKSEL = 0;                              // Select Internal RC Oscillator
   MAINCLKUEN = 1;                              // Update Main Clock Source
@@ -161,6 +185,14 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
   MAINCLKDIV = 1;                              // Set Main Clock divider to 1
 
   MEMMAP     = 0x02;                           // User Flash Mode
+
+#elif defined(LPC1549_256)
+
+  MAINCLKSELA    = 0;                          // Select Internal RC Oscillator
+  MAINCLKSELB    = 0;                          // Select Internal RC Oscillator
+  SYSAHBCLKDIV   = 1;                          // Set System Clock divider to 1
+  SYSAHBCLKCTRL0 = 0x19b | (1<<9) | (1<<14) | (1<<15);   // Enable clocks, default+MUX+GPIO0+GPIO1
+  SYSMEMREMAP    = 0x02;                       // User Flash Mode
 
 #else
 
@@ -363,7 +395,7 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf) {
   IAP.cmd    = 51;                             // Copy RAM to Flash
   IAP.par[0] = adr;                            // Destination Flash Address
   IAP.par[1] = (unsigned long)buf;             // Source RAM Address
-#if defined(LPC11xx_32) || defined(LPC8xx_4)
+#if defined(LPC11xx_32) || defined(LPC8xx_4) || defined(LPC1549_256) || defined(LPC11U68_256)
   IAP.par[2] = 256;                            // Fixed Page Size
 #else
   IAP.par[2] = 512;                            // Fixed Page Size

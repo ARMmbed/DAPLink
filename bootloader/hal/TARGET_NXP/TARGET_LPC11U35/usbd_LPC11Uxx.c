@@ -782,8 +782,8 @@ void USB_IRQHandler (void) {
           }
 #endif
         }
+        LPC_USB->INTSTAT = (1UL << num);
       }
-      LPC_USB->INTSTAT = (1UL << num);
     }
   }
 }

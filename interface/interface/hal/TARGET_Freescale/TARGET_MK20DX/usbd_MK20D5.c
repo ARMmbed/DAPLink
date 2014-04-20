@@ -51,6 +51,10 @@ uint32_t Data1  = 0x55555555;
 #define OUT_TOKEN      0x01
 #define TOK_PID(idx)   ((BD[idx].stat >> 2) & 0x0F)
 
+__inline static void protected_and (uint32_t *addr, uint32_t val) { while(__strex((__ldrex(addr) & val),addr)); }
+__inline static void protected_or  (uint32_t *addr, uint32_t val) { while(__strex((__ldrex(addr) | val),addr)); }
+__inline static void protected_xor (uint32_t *addr, uint32_t val) { while(__strex((__ldrex(addr) ^ val),addr)); }
+
 /*
  *  USB Device Interrupt enable
  *   Called by USBD_Init to enable the USB Interrupt
@@ -329,12 +333,12 @@ void USBD_DisableEP (uint32_t EPNum) {
 void USBD_ResetEP (uint32_t EPNum) {
   if (EPNum & 0x80) {
     EPNum &= 0x0F;
-    Data1 |= (1 << ((EPNum * 2) + 1));
+    protected_or(&Data1, (1 << ((EPNum * 2) + 1)));
     BD[IDX(EPNum, TX, ODD )].buf_addr = (uint32_t) &(EPBuf[IDX(EPNum, TX, ODD )][0]);
     BD[IDX(EPNum, TX, EVEN)].buf_addr = 0;
   }
   else {
-    Data1 &= ~(1 << ((EPNum * 2)));
+    protected_and(&Data1, ~(1 << (EPNum * 2)));
     BD[IDX(EPNum, RX, ODD )].bc       = OutEpSize[EPNum];
     BD[IDX(EPNum, RX, ODD )].buf_addr = (uint32_t) &(EPBuf[IDX(EPNum, RX, ODD )][0]);
     BD[IDX(EPNum, RX, ODD )].stat     = BD_OWN_MASK | BD_DTS_MASK;
@@ -395,7 +399,6 @@ void USBD_ClearEPBuf (uint32_t EPNum) {
 uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
   uint32_t n, sz, idx, setup = 0;
 
-
   idx = IDX(EPNum, RX, 0);
   sz  = BD[idx].bc;
 
@@ -408,9 +411,11 @@ uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
   BD[idx].bc = OutEpSize[EPNum];
 
   if ((Data1 >> (idx / 2) & 1) == ((BD[idx].stat >> 6) & 1)) {
-    if (setup && (pData[6] == 0))       /* if no setup data stage,            */
-      Data1 &= ~1UL;                    /* set DATA0                          */
-    else Data1 ^= (1 << (idx / 2));
+    if (setup && (pData[6] == 0)) {     /* if no setup data stage,            */
+      protected_and(&Data1, ~1);           /* set DATA0                          */
+    } else {
+      protected_xor(&Data1, (1 << (idx / 2)));
+    }
   }
 
   if ((Data1 >> (idx / 2)) & 1) {
@@ -453,7 +458,7 @@ uint32_t USBD_WriteEP (uint32_t EPNum, uint8_t *pData, uint32_t cnt) {
   else {
     BD[idx].stat = BD_OWN_MASK | BD_DTS_MASK | BD_DATA01_MASK;
   }
-  Data1 ^= (1 << (idx / 2));
+  protected_xor(&Data1, (1 << (idx / 2)));
   return(cnt);
 }
 
@@ -486,9 +491,12 @@ U32 USBD_GetError (void) {
  *  USB Device Interrupt Service Routine
  */
 void USB0_IRQHandler(void) {
-  uint32_t istr, num, dir, ev_odd;
+  uint32_t istr, num, dir, ev_odd, stat;
 
-  istr = USB0->ISTAT & USB0->INTEN;
+  istr  = USB0->ISTAT;
+  stat  = USB0->STAT;
+  USB0->ISTAT = istr;
+  istr &= USB0->INTEN;
 
 /* reset interrupt                                                            */
   if (istr & USB_ISTAT_USBRST_MASK) {
@@ -503,7 +511,6 @@ void USB0_IRQHandler(void) {
       USBD_P_Reset_Event();
     }
 #endif
-    USB0->ISTAT = USB_ISTAT_USBRST_MASK;
   }
 
 /* suspend interrupt                                                          */
@@ -518,8 +525,6 @@ void USB0_IRQHandler(void) {
       USBD_P_Suspend_Event();
     }
 #endif
-    USB0->ISTAT = USB_ISTAT_SLEEP_MASK |
-                  USB_ISTAT_RESUME_MASK;
   }
 
 /* resume interrupt                                                           */
@@ -534,7 +539,6 @@ void USB0_IRQHandler(void) {
       USBD_P_Resume_Event();
     }
 #endif
-    USB0->ISTAT = USB_ISTAT_RESUME_MASK;
   }
 
 
@@ -549,7 +553,6 @@ void USB0_IRQHandler(void) {
       USBD_P_SOF_Event();
     }
 #endif
-    USB0->ISTAT = USB_ISTAT_SOFTOK_MASK;
   }
 
 
@@ -566,16 +569,15 @@ void USB0_IRQHandler(void) {
     }
 #endif
     USB0->ERRSTAT = 0xFF;
-    USB0->ISTAT = USB_ISTAT_ERROR_MASK;
   }
 
 
 /* token interrupt                                                            */
   if (istr & USB_ISTAT_TOKDNE_MASK) {
 
-    num    = (USB0->STAT >> 4) & 0x0F;
-    dir    = (USB0->STAT >> 3) & 0x01;
-    ev_odd = (USB0->STAT >> 2) & 0x01;
+    num    = (stat >> 4) & 0x0F;
+    dir    = (stat >> 3) & 0x01;
+    ev_odd = (stat >> 2) & 0x01;
 
 /* setup packet                                                               */
     if ((num == 0) && (TOK_PID((IDX(num, dir, ev_odd))) == SETUP_TOKEN)) {
@@ -620,28 +622,5 @@ void USB0_IRQHandler(void) {
 #endif
       }
     }
-    USB0->ISTAT = USB_ISTAT_TOKDNE_MASK;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -156,7 +156,7 @@ __packed typedef struct FatDirectoryEntry {
 
 //------------------------------------------------------------------------- END
 
-uint32_t BlockBuf[1024];
+uint32_t BlockBuf[1024/4];
 
 typedef struct sector {
     const uint8_t * sect;
