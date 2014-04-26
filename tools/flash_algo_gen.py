@@ -108,8 +108,12 @@ class FlashInfo(object):
 
 def gen_flash_algo():
     run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR_W_TERM])
-    flash_info = FlashInfo(DEV_INFO_PATH)
-    ALGO_START = flash_info.get_algo_start()
+    try:
+        flash_info = FlashInfo(DEV_INFO_PATH)
+        ALGO_START = flash_info.get_algo_start()
+    except IOError, e:
+        print repr(e), e
+        ALGO_START = 0x20000000
     print "ALGO_START = 0x%08x\n" % ALGO_START
 
     #flash_info.printInfo()
