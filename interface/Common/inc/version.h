@@ -15,7 +15,6 @@
  */
 #ifndef VERSION_H
 #define VERSION_H
-
 #include <stdint.h>
 
 #define FW_BUILD "0202"
