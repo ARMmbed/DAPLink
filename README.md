@@ -34,10 +34,10 @@ ToDo
 - Add srec file support (interface only I think)
 - etc...
 
+<!---
 
 **Contribution is welcomed on this branch**
 
-<!---
 Documentation
 -------------
 * [Porting the FW to new boards](http://mbed.org/handbook/cmsis-dap-interface-firmware)
