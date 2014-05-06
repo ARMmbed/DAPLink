@@ -484,11 +484,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -1020,11 +1015,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -1084,13 +1074,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>Cortex-M4</Device>
+          <Device>Cortex-M0+</Device>
           <Vendor>ARM</Vendor>
-          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M4") ESEL ELITTLE</Cpu>
+          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0+") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>5125</DeviceId>
+          <DeviceId>6268</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -1175,12 +1165,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>DLM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pEMBER</SimDlgDllArguments>
+          <SimDlgDll>DARMCM1.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
-          <TargetDlgDll>TLM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pEMBER</TargetDlgDllArguments>
+          <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -1244,7 +1234,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1280,7 +1270,7 @@
             <AdsLsxf>0</AdsLsxf>
             <RvctClst>1</RvctClst>
             <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
@@ -1297,7 +1287,7 @@
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>0</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>0</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -1449,7 +1439,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MKP128</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -1556,11 +1546,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -1620,13 +1605,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>Cortex-M4</Device>
+          <Device>Cortex-M0+</Device>
           <Vendor>ARM</Vendor>
-          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M4") ESEL ELITTLE</Cpu>
+          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0+") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>5125</DeviceId>
+          <DeviceId>6268</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -1711,12 +1696,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>DLM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pEMBER</SimDlgDllArguments>
+          <SimDlgDll>DARMCM1.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
-          <TargetDlgDll>TLM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pEMBER</TargetDlgDllArguments>
+          <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -1780,7 +1765,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1816,7 +1801,7 @@
             <AdsLsxf>0</AdsLsxf>
             <RvctClst>1</RvctClst>
             <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
@@ -1833,7 +1818,7 @@
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>0</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>0</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -1985,7 +1970,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MKP128</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -2092,11 +2077,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -2156,13 +2136,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>Cortex-M4</Device>
+          <Device>Cortex-M0+</Device>
           <Vendor>ARM</Vendor>
-          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M4") ESEL ELITTLE</Cpu>
+          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0+") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>5125</DeviceId>
+          <DeviceId>6268</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -2247,12 +2227,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>DLM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pEMBER</SimDlgDllArguments>
+          <SimDlgDll>DARMCM1.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
-          <TargetDlgDll>TLM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pEMBER</TargetDlgDllArguments>
+          <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -2316,7 +2296,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -2352,7 +2332,7 @@
             <AdsLsxf>0</AdsLsxf>
             <RvctClst>1</RvctClst>
             <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
@@ -2369,7 +2349,7 @@
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>0</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>0</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -2521,7 +2501,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MKP128</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -2628,11 +2608,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -2692,13 +2667,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>Cortex-M4</Device>
+          <Device>Cortex-M0+</Device>
           <Vendor>ARM</Vendor>
-          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M4") ESEL ELITTLE</Cpu>
+          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0+") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>5125</DeviceId>
+          <DeviceId>6268</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -2783,12 +2758,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>DLM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pEMBER</SimDlgDllArguments>
+          <SimDlgDll>DARMCM1.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
-          <TargetDlgDll>TLM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pEMBER</TargetDlgDllArguments>
+          <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -2852,7 +2827,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -2888,7 +2863,7 @@
             <AdsLsxf>0</AdsLsxf>
             <RvctClst>1</RvctClst>
             <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
@@ -2905,7 +2880,7 @@
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>0</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>0</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -3057,7 +3032,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MKP128</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -3164,11 +3139,6 @@
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
             </File>
             <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
-            </File>
-            <File>
               <FileName>flash_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
@@ -3228,13 +3198,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>Cortex-M4</Device>
+          <Device>Cortex-M0+</Device>
           <Vendor>ARM</Vendor>
-          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M4") ESEL ELITTLE</Cpu>
+          <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0+") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>5125</DeviceId>
+          <DeviceId>6268</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -3319,12 +3289,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>DLM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pEMBER</SimDlgDllArguments>
+          <SimDlgDll>DARMCM1.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
-          <TargetDlgDll>TLM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pEMBER</TargetDlgDllArguments>
+          <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -3388,7 +3358,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -3424,7 +3394,7 @@
             <AdsLsxf>0</AdsLsxf>
             <RvctClst>1</RvctClst>
             <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
@@ -3441,7 +3411,7 @@
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>0</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>0</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -3593,7 +3563,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MKP128</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -3698,11 +3668,6 @@
               <FileName>flash_erase_all.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
             </File>
             <File>
               <FileName>flash_init.c</FileName>
@@ -4234,11 +4199,6 @@
               <FileName>flash_erase_all.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash_get_property.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_get_property.c</FilePath>
             </File>
             <File>
               <FileName>flash_init.c</FileName>
