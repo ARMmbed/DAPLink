@@ -538,6 +538,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -938,7 +943,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1331,6 +1336,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1732,7 +1742,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -2125,6 +2135,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2526,7 +2541,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -2919,6 +2934,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3320,7 +3340,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -3713,6 +3733,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4114,7 +4139,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -4507,6 +4532,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4908,7 +4938,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -4922,7 +4952,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -5301,6 +5331,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5702,7 +5737,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -6095,6 +6130,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6496,7 +6536,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -6510,7 +6550,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -6889,6 +6929,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7684,6 +7729,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -8084,7 +8134,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -8477,6 +8527,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9272,6 +9327,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -9672,7 +9732,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -10065,6 +10125,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10466,7 +10531,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -10859,6 +10924,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -11260,7 +11330,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -11654,6 +11724,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -11961,7 +12036,7 @@
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\k20dx128_k64f_if\</ListingPath>
+          <ListingPath>.\Lst\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -12054,7 +12129,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -12068,7 +12143,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -12448,6 +12523,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -12755,7 +12835,7 @@
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\k20dx128_k64f_if_openSDA_bootloader\</ListingPath>
+          <ListingPath>.\Lst\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -13242,6 +13322,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -13549,7 +13634,7 @@
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\k20dx128_k64f_if_openSDA_bootloader\</ListingPath>
+          <ListingPath>.\Lst\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -13642,7 +13727,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -13656,7 +13741,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -14035,6 +14120,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -14436,7 +14526,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -14829,6 +14919,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -15624,6 +15719,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -16418,6 +16518,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -16818,7 +16923,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -17211,6 +17316,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -17612,7 +17722,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -18005,6 +18115,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -18406,7 +18521,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -18799,6 +18914,11 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\serial.c</FilePath>
             </File>
           </Files>
         </Group>
