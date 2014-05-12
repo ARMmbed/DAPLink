@@ -73,14 +73,13 @@ uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data) {
     uint16_t i = 0;
     
     if (flashAddr == 0x400) {
-        for (i = 0; i < 16; i++) {
-            if ((i != 12) && (i != 13) && (data[i] != 0xff)) {
-                return 0;
-            }
+        // make sure we can unsecure the device or dont program at all
+        if ((data[0xc] & 0x30) == 0x20) {
+            // Dis-allow programming mass-erase disable
+            return 0;
         }
-
-        // Check that FSEC does not enable security.
-        if (data[0xc] != 0xfe) {
+        // Security is OK long as we can mass-erase (comment the following out to enable target security)
+        if ((data[0xc] & 0x03) != 0x02) {
             return 0;
         }
     }
