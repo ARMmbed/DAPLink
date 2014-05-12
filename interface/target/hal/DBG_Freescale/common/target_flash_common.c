@@ -75,7 +75,7 @@ uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data) {
     if (flashAddr == 0x400) {
         // make sure we can unsecure the device or dont program at all
         if ((data[0xc] & 0x30) == 0x20) {
-            // Dis-allow programming mass-erase disable
+            // Dont allow programming mass-erase disabled state
             return 0;
         }
         // Security is OK long as we can mass-erase (comment the following out to enable target security)
