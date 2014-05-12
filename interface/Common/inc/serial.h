@@ -16,6 +16,8 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
+#include "uart.h"
+
 /* UART port assignments */
 #if defined(MBED_EXT) || defined (UART_TEST)
 #define UART_TARGET    (0)     /* UART connected to the external target via JTAG connector */
@@ -25,22 +27,23 @@
 #define UART_DEBUG     (0)     /* UART used for debug output */
 #endif
 
-typedef __packed struct {
-  U32 dwDTERate;    /* Data terminal rate in bits per second */
-  U8  bCharFormat;  /* Number of stop bits */
-  U8  bParityType;  /* Parity bit type */
-  U8  bDataBits;    /* Number of data bits */
-} UART_LINE_CODING;
+/* Serial Messages */
+typedef enum {
+    SERIAL_INITIALIZE,
+    SERIAL_UNINITIALIZE,
+    SERIAL_RESET,
+    SERIAL_SET_CONFIGURATION,
+    SERIAL_GET_CONFIGURATION
+} SERIAL_MSG;
 
-BOOL InitUART(int port);
-BOOL SetLineCoding(int port, UART_LINE_CODING l);
-void flushUartFIFO(int port);
+/* The purpose of these functions is to serialize access to the serial (currently just UART)
+ * driver. This keeps multiple threads from calling the UART init/config functions while the serial
+ * task is doing reads and writes. */
 
-void mputch(int port, char data);
-char getch(int port);
-char RxEmpty(int port);
-
-int serialFifoRead(U16 timeout);
-void setLoopbackMode(int port);
+int32_t  serial_initialize                  (void);
+int32_t  serial_uninitialize                (void);
+int32_t  serial_reset                       (void);
+int32_t  serial_set_configuration           (UART_Configuration *config);
+int32_t  serial_get_configuration           (UART_Configuration *config);
 
 #endif
