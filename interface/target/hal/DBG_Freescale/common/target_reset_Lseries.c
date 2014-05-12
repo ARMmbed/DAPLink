@@ -16,11 +16,11 @@
 #include "target_reset.h"
 #include "swd_host.h"
 
-#define MDM_STATUS 	0x01000000
-#define MDM_CTRL 		0x01000004     //
-#define MDM_IDR 		0x010000fc     // read-only identification register
+#define MDM_STATUS  0x01000000
+#define MDM_CTRL    0x01000004     //
+#define MDM_IDR     0x010000fc     // read-only identification register
 
-#define MCU_ID     	0x001c0020
+#define MCU_ID      0x001c0020
 
 void target_before_init_debug(void) {
     swd_set_target_reset(1);
