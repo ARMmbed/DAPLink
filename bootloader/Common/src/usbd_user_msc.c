@@ -16,7 +16,7 @@
 #include <RTL.h>
 #include <rl_usb.h>
 #include <string.h>
-#include "flash.h"
+#include "flash_hal.h"
 #include "main.h"
 #include "tasks.h"
 #include "version.h"
@@ -388,7 +388,6 @@ static uint8_t task_first_started;
 static uint8_t listen_msc_isr = 1;
 static uint8_t drag_success = 1;
 static uint8_t reason = 0;
-//static uint32_t flash_addr_offset = 0;
 
 #define SWD_ERROR               0
 #define BAD_EXTENSION_FILE      1
@@ -533,7 +532,7 @@ __task void flash_programming_task(void) {
 
             if (flags & FLASH_INIT_EVENT) {
                 // init flash
-                flash_init(SystemCoreClock);
+                flash_hal_init(SystemCoreClock);
 
                 // erase flash for new binary
                 for(i = START_APP_ADDRESS; i < END_FLASH; i += SECTOR_SIZE) {
@@ -675,8 +674,6 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
     int idx = 0;
     uint8_t found = 0;
     uint32_t i = 0;
-    //uint32_t move_sector_start = 0;
-    uint32_t nb_sector_to_move = 0;
     FILE_TYPE file_type;
     uint8_t hidden_file = 0, adapt_th_sector = 0;
     uint32_t offset = 0;
@@ -760,8 +757,8 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
                 // we don't listen to msd interrupt
                 listen_msc_isr = 0;
 
-                //move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
-                nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
+//                 uint32_t move_sector_start = (begin_sector - start_sector)*MBR_BYTES_PER_SECTOR;
+                uint32_t nb_sector_to_move = (nb_sector % 2) ? nb_sector/2 + 1 : nb_sector/2;
                 for (i = 0; i < nb_sector_to_move; i++) {
 					program_page(START_APP_ADDRESS + i*1024, 1024, (uint8_t *)BlockBuf);
                 }
@@ -772,7 +769,6 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             found = 1;
             idx = i; // this is the file we want
             good_file = 1;
-            //flash_addr_offset = offset;
             break;
         }
         // if we receive a new file which does not have the good extension

@@ -102,35 +102,13 @@ FLASH_ALGO_PROJECTS = [
             'target' : 'MKXXX',
             'path' : r'interface\flash_algo_mdk\MKXXX\MKXX.uvproj',
             'targets' : [
-                            'MKP128',
-                            'MKP256',
-                            'MKP256_50MHZ',
-                            'MKP512',
-                            'MKP512_50MHZ',
-                            'MKP512X',
-                            'MKP1024',
-                            'MKP128_50MHZ',
-                            'MKP128_48MHZ',
-                            'MKP64',
-                            'MKP64_50MHZ',
-                            'MKP64_48MHZ',
-                            'MKP32_50MHZ',
-                            'MKP32_48MHZ',
-                            'MKP16_48MHZ',
-                            'MKP8_48MHZ',
-                            'MKD32',
-                            'MKD32_50MHZ',
-                            'MKD32_72MHZ',
-                            'MKD64_50MHZ',
-                            'MKD128',
-                            'MKD256',
-                            'MKD512',
-                            'MKPIFR',
-                            'MKPIFR_48MHZ',
-                            'MKPIFR_50MHZ',
-                            'MKPIFR_120MHZ',
-                            'MKDIFR',
-                            'MKDIFR_50MHZ'
+                            'MK20DX128_Pflash',
+                            'MK64FN1M0_Pflash',
+                            'MKL02Z32_Pflash',
+                            'MKL05Z32_Pflash',
+                            'MKL25Z128_Pflash',
+                            'MKL26Z128_Pflash',
+                            'MKL46Z256_Pflash'
                         ]
         },
         {
@@ -242,7 +220,7 @@ class Builder(object):
     def _build_project_list(self, projects):
         for targetDict in projects:
             # Skip this target if it shouldn't be built.
-            if self.args.target and (not targetDict['target'].startswith(self.args.target.lower())):
+            if self.args.target and (not targetDict['target'].lower().startswith(self.args.target.lower())):
                 continue
             
             # Construct project path and name.

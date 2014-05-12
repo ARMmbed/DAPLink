@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #include "tasks.h"
-#include "flash.h"
+#include "flash_hal.h"
 #include "main.h"
 #include "gpio.h"
 #include "version.h"

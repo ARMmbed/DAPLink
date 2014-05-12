@@ -359,10 +359,10 @@
             <uC99>0</uC99>
             <useXO>0</useXO>
             <VariousControls>
-              <MiscControls></MiscControls>
-              <Define>__RTX, TARGET_MK20DX, MKP128_50MHZ</Define>
+              <MiscControls>--diag_suppress=2532</MiscControls>
+              <Define>__RTX, TARGET_MK20DX, CPU_MK20DX128VFM5</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\include</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -504,11 +504,6 @@
           <GroupName>HAL</GroupName>
           <Files>
             <File>
-              <FileName>flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash.c</FilePath>
-            </File>
-            <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\gpio.c</FilePath>
@@ -529,29 +524,50 @@
               <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\vector_table.c</FilePath>
             </File>
             <File>
-              <FileName>FlashEraseAllBlock.c</FileName>
+              <FileName>flash_hal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashEraseAllBlock.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashEraseSector.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashInit.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashInit.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashProgramLongword.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashProgramLongword.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashCommandSequence.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash_hal.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <VariousControls>
+                      <MiscControls>--gnu --c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -697,6 +713,138 @@
               <FileName>rt_Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\rtos\rt_Timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <VariousControls>
+                  <MiscControls>--gnu --c99</MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>SSD_FTFx_Common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\SSD_FTFx_Common.h</FilePath>
+            </File>
+            <File>
+              <FileName>fsl_flash_features.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\fsl_flash_features.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_features.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_features.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_densities.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_densities.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_command_sequence.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_command_sequence.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_densities_k_series.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_densities_k_series.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_erase.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_erase_all.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_program.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_program.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_erase.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_erase.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_erase_all.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_erase_all.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_program.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_program.c</FilePath>
             </File>
           </Files>
         </Group>

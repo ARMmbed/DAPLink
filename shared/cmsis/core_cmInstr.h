@@ -1,13 +1,13 @@
 /**************************************************************************//**
  * @file     core_cmInstr.h
  * @brief    CMSIS Cortex-M Core Instruction Access Header File
- * @version  V3.20
- * @date     05. March 2013
+ * @version  V3.30
+ * @date     17. February 2014
  *
  * @note
  *
  ******************************************************************************/
-/* Copyright (c) 2009 - 2013 ARM LIMITED
+/* Copyright (c) 2009 - 2014 ARM LIMITED
 
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
@@ -291,19 +291,6 @@ __attribute__((section(".revsh_text"))) __STATIC_INLINE __ASM int32_t __REVSH(in
 #endif /* (__CORTEX_M >= 0x03) */
 
 
-
-#elif defined ( __ICCARM__ ) /*------------------ ICC Compiler -------------------*/
-/* IAR iccarm specific functions */
-
-#include <cmsis_iar.h>
-
-
-#elif defined ( __TMS470__ ) /*---------------- TI CCS Compiler ------------------*/
-/* TI CCS specific functions */
-
-#include <cmsis_ccs.h>
-
-
 #elif defined ( __GNUC__ ) /*------------------ GNU Compiler ---------------------*/
 /* GNU gcc specific functions */
 
@@ -512,7 +499,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t __LDREXB(volatile uin
     */
    __ASM volatile ("ldrexb %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
 #endif
-   return(result);
+   return ((uint8_t) result);    /* Add explicit type cast here */
 }
 
 
@@ -535,7 +522,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint16_t __LDREXH(volatile ui
     */
    __ASM volatile ("ldrexh %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
 #endif
-   return(result);
+   return ((uint16_t) result);    /* Add explicit type cast here */
 }
 
 
@@ -568,7 +555,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __STREXB(uint8_t val
 {
    uint32_t result;
 
-   __ASM volatile ("strexb %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" (value) );
+   __ASM volatile ("strexb %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
    return(result);
 }
 
@@ -586,7 +573,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __STREXH(uint16_t va
 {
    uint32_t result;
 
-   __ASM volatile ("strexh %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" (value) );
+   __ASM volatile ("strexh %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
    return(result);
 }
 
@@ -661,25 +648,37 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __CLREX(void)
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t __CLZ(uint32_t value)
 {
-   uint32_t result;
+  uint32_t result;
 
   __ASM volatile ("clz %0, %1" : "=r" (result) : "r" (value) );
-  return(result);
+   return ((uint8_t) result);    /* Add explicit type cast here */
 }
 
 #endif /* (__CORTEX_M >= 0x03) */
 
 
+#elif defined ( __ICCARM__ ) /*------------------ ICC Compiler -------------------*/
+/* IAR iccarm specific functions */
+#include <cmsis_iar.h>
+
+
+#elif defined ( __TMS470__ ) /*---------------- TI CCS Compiler ------------------*/
+/* TI CCS specific functions */
+#include <cmsis_ccs.h>
 
 
 #elif defined ( __TASKING__ ) /*------------------ TASKING Compiler --------------*/
 /* TASKING carm specific functions */
-
 /*
  * The CMSIS functions have been implemented as intrinsics in the compiler.
  * Please use "carm -?i" to get an up to date list of all intrinsics,
  * Including the CMSIS ones.
  */
+
+
+#elif defined ( __CSMC__ ) /*------------------ COSMIC Compiler -------------------*/
+/* Cosmic specific functions */
+#include <cmsis_csm.h>
 
 #endif
 

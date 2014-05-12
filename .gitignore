@@ -57,3 +57,8 @@ cscope.*
 
 # ctags
 tags
+
+# Doxygen tags and html output
+*.tag
+html
+debug.txt
