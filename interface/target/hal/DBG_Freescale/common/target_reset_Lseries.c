@@ -16,11 +16,11 @@
 #include "target_reset.h"
 #include "swd_host.h"
 
-#define MDM_STATUS 	0x01000000
-#define MDM_CTRL 	0x01000004     //
-#define MDM_IDR 	0x010000fc     // read-only identification register
+#define MDM_STATUS  0x01000000
+#define MDM_CTRL    0x01000004     //
+#define MDM_IDR     0x010000fc     // read-only identification register
 
-#define MCU_ID     	0x001c0020
+#define MCU_ID      0x001c0020
 
 void target_before_init_debug(void) {
     swd_set_target_reset(1);
@@ -37,10 +37,6 @@ uint8_t target_unlock_sequence(void) {
     if (val != MCU_ID) {
         return 0;
     }
-
-//    if (!swd_read_ap(MDM_CTRL, &val)) {
-//        return 0;
-//    }
 
     if (!swd_read_ap(MDM_STATUS, &val)) {
         return 0;
@@ -65,15 +61,7 @@ uint8_t target_unlock_sequence(void) {
             }
         }
         // mass erase in progress
-        while (1) {
-//            if (!swd_write_ap(MDM_CTRL, 0)) {
-//                return 0;
-//            }
-
-//            if (!swd_read_ap(MDM_STATUS, &val)) {
-//                return 0;
-//            }
-            
+        while (1) {            
             // keep reading until procedure is complete
             if (!swd_read_ap(MDM_CTRL, &val)) {
                 return 0;

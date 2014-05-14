@@ -38,10 +38,6 @@ uint8_t target_unlock_sequence(void) {
         return 0;
     }
 
-//    if (!swd_read_ap(MDM_CTRL, &val)) {
-//        return 0;
-//    }
-
     if (!swd_read_ap(MDM_STATUS, &val)) {
         return 0;
     }
@@ -65,15 +61,7 @@ uint8_t target_unlock_sequence(void) {
             }
         }
         // mass erase in progress
-        while (1) {
-//            if (!swd_write_ap(MDM_CTRL, 0)) {
-//                return 0;
-//            }
-
-//            if (!swd_read_ap(MDM_STATUS, &val)) {
-//                return 0;
-//            }
-            
+        while (1) {            
             // keep reading until procedure is complete
             if (!swd_read_ap(MDM_CTRL, &val)) {
                 return 0;
