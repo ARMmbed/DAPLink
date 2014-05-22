@@ -5605,6 +5605,10 @@
     #define FSL_FEATURE_FLASH_IS_FTFE (0)
     /* @brief Is of type FTFL. */
     #define FSL_FEATURE_FLASH_IS_FTFL (0)
+    /* @brief Has flash cache control in FMC module. */
+    #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (0)
+    /* @brief Has flash cache control in MCM module. */
+    #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (1)
     /* @brief Number of P-Flash blocks. */
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
     /* @brief P-Flash block size. */
@@ -5613,6 +5617,12 @@
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE (1024)
     /* @brief P-Flash block write unit size. */
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE (4)
+    /* @brief P-Flash Erase sector command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTOR_CMD_ADDRESS_ALIGMENT (4)
+    /* @brief P-Flash Rrogram/Verify section command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT (4)
+    /* @brief P-Flash Program check command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT (4)
 // -------------------------------------------------
 #else
     #error "No valid CPU defined!"
