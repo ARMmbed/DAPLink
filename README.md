@@ -23,6 +23,9 @@ Interface:
 ToDo
 ------
 
+- Serial driver installer without mbed connected
+- Change USB descriptors to expose HID without needing the CDC driver
+- Implement XON/XOFF flowcontrol
 - Incorporate mbed build system
 - Change offset address to 0x8000 to match OpenSDA for Freescale only targets. NXP stays at 0x5000
 - Only erase sectors that code fits in
