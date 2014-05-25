@@ -2,13 +2,13 @@
 
 # CMSIS-DAP Interface Firmware
 # Copyright (c) 2009-2014 ARM Limited
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,13 +76,13 @@ INTERFACE_PROJECTS = [
             'path' : r'interface\mdk\lpc11u35\lpc11u35_interface.uvproj',
             'targets' : [
                             'lpc11u35_lpc812_if',
-                            'lpc11u35_lpc812_mbed_bootloader_if',
+                            'lpc11u35_lpc812_mbed_bootloader',
                             'lpc11u35_lpc1768_if',
                             'lpc11u35_lpc1768_mbed_bootloader',
                             'lpc11u35_ublox_if',
                             'lpc11u35_lpc1114_if',
-                            'lpc11u35_lpc1114_mbed_bootloader_if',
-                            #'lpc11u35_lpc810_if'
+                            'lpc11u35_lpc1114_mbed_bootloader',
+                            #'lpc11u35_lpc810_if' # fails build
                          ],
         },
         {
@@ -108,7 +108,8 @@ FLASH_ALGO_PROJECTS = [
                             'MKL05Z32_Pflash',
                             'MKL25Z128_Pflash',
                             'MKL26Z128_Pflash',
-                            'MKL46Z256_Pflash'
+                            'MKL46Z256_Pflash',
+                            'MK22F51212_Pflash'
                         ]
         },
         {
@@ -126,6 +127,15 @@ FLASH_ALGO_PROJECTS = [
                             'LPC1549_IAP_256',
                             'LPC11U68_IAP_256'
                         ]
+        },
+        {
+            'target' : 'LPC_SPIFI',
+            'path' : r'interface\flash_algo_mdk\LPC_SPIFI\LPC_SPIFI.uvproj',
+            'targets' : [
+                            'LPC1800_SPIFI_8M_4K',
+                            'LPC1800_SPIFI_4M_4K',
+                            'LPC1800_SPIFI_4M_64K',
+                        ]
         }
     ]
 
@@ -136,7 +146,7 @@ class BuildError(Exception): pass
 # @brief Class to build uVision projects.
 class UV4Project(object):
     # Status codes from building a project.
-    
+
     ## No warnings or errors.
     SUCCESS = 0
     ## Warnings only.
@@ -147,14 +157,14 @@ class UV4Project(object):
     INVALID_TARGET = 3
     ## The project file does not exit.
     INVALID_PROJECT = 15
-    
+
     ##
     # @brief Constructor.
     # @param self
     # @param project Path to the project file.
     def __init__(self, project):
         self.project = project
-    
+
     ##
     # @brief Build a target of the project.
     #
@@ -173,7 +183,7 @@ class UV4Project(object):
             argList += ['-t', target]
         if logFile:
             argList += ['-o', logFile]
-        
+
         # Run UV4 command.
         return subprocess.call(argList)
 
@@ -182,7 +192,7 @@ class UV4Project(object):
 class Builder(object):
     def __init__(self):
         self.rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
+
     def _read_options(self):
         # Build arg parser.
         parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -198,13 +208,13 @@ class Builder(object):
     def run(self):
         # Read command line arguments.
         self.args = self._read_options()
-        
+
         # Build all projects if no type was specified.
         if (not self.args.bootloader) and (not self.args.interface) and (not self.args.flash):
             self.args.bootloader = True
             self.args.interface = True
             self.args.flash = True
-        
+
         try:
             if self.args.bootloader:
                 self._build_project_list(BOOTLOADER_PROJECTS)
@@ -216,31 +226,31 @@ class Builder(object):
             return 1
         else:
             return 0
-    
+
     def _build_project_list(self, projects):
         for targetDict in projects:
             # Skip this target if it shouldn't be built.
             if self.args.target and (not targetDict['target'].lower().startswith(self.args.target.lower())):
                 continue
-            
+
             # Construct project path and name.
             projectPath = os.path.join(self.rootPath, targetDict['path'])
             projectName = os.path.basename(projectPath)
-            
+
             # Create the project file object.
             project = UV4Project(projectPath)
-            
+
             # Build all targets listed for this project.
             for targetName in targetDict['targets']:
                 print("Building target %s of %s..." % (targetName, projectName))
-                
+
                 status = project.build(targetName, self.args.log)
                 print("Status = %d" % status)
-                
+
                 if status != UV4Project.SUCCESS and status != UV4Project.WARNINGS:
                     print("* Error building target %s of %s" % (targetName, projectName))
                     raise BuildError
-        
+
 
 if __name__ == "__main__":
     exit(Builder().run())
