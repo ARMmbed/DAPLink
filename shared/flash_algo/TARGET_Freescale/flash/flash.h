@@ -32,7 +32,6 @@
 #define _FLASH_H_
 
 #include "fsl_platform_status.h"
-#include "src/flash_features.h"
 #include "src/fsl_flash_features.h"
 #include "device/fsl_device_registers.h"
 #include <stdint.h>
@@ -329,16 +328,16 @@ status_t flash_get_property(flash_driver_t * driver, flash_property_t whichPrope
  */
 static inline void flash_cache_enable(bool doEnable)
 {
-#if FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
     HW_MCM_PLACR.B.DFCC = (uint32_t)doEnable;
-#else // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#else // FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
     HW_FMC_PFB0CR.B.B0DCE = (uint32_t)doEnable;
     HW_FMC_PFB0CR.B.B0ICE = (uint32_t)doEnable;
 #if defined(HW_FMC_PFB1CR)
     HW_FMC_PFB1CR.B.B1DCE = (uint32_t)doEnable;
     HW_FMC_PFB1CR.B.B1ICE = (uint32_t)doEnable;
 #endif // HW_FMC_PFB1CR
-#endif // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#endif // FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
 }
 
 /*!
@@ -346,11 +345,11 @@ static inline void flash_cache_enable(bool doEnable)
  */
 static inline void flash_cache_clear(void)
 {
-#if FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
     HW_MCM_PLACR.B.CFCC = 1;
-#else // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#else // FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
     HW_FMC_PFB0CR.B.CINV_WAY = 0xf;
-#endif // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
+#endif // FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
 }
 
 //@}

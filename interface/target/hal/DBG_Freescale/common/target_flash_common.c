@@ -70,7 +70,6 @@ uint8_t target_flash_erase_chip(void) {
 //
 // FOPT can be set to any value.
 uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data) {
-    uint16_t i = 0;
     
     if (flashAddr == 0x400) {
         // make sure we can unsecure the device or dont program at all
