@@ -17,7 +17,7 @@
 #define VERSION_H
 #include <stdint.h>
 
-#define FW_BUILD "0202"
+#define FW_BUILD "0203"
 
 uint8_t update_html_file          (void);
 uint8_t * get_uid_string          (void);
