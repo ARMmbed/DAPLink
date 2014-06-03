@@ -8,6 +8,7 @@ The test suite should be ran on each of the following operating systems
   * Ubuntu Linux 12.04
   * Mac OS Mavericks
 
+The test(s) validates the following functionallities:
  * USB HID: CMSIS-DAP Debugging
   * Keil validation (windows only)
   * pyOCD basic_test.py
@@ -22,3 +23,5 @@ The test suite should be ran on each of the following operating systems
   * Firefox - latest
   * Safari - latest (Mac only)
   * cp, copy, xcopy, mv commands (based on OS compatibility)
+
+
