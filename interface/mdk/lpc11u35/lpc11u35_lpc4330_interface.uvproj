@@ -44,14 +44,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\</OutputDirectory>
+          <OutputDirectory>.\Obj\lpc11u35_lpc4330\</OutputDirectory>
           <OutputName>lpc11u35_lpc4330_if</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\</ListingPath>
+          <ListingPath>.\Lst\lpc11u35_lpc4330\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -76,8 +76,8 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
-            <UserProg1Name>$K\ARM\BIN\ELFDWT.EXE !L BASEADDRESS(0x0)</UserProg1Name>
-            <UserProg2Name>$K\ARM\ARMCC\BIN\fromelf.exe --bin --output .\Obj\lpc11u35_lpc4330_if.bin .\Obj\lpc11u35_lpc4330_if.axf</UserProg2Name>
+            <UserProg1Name>$KARM\BIN\ElfDwT.exe #L</UserProg1Name>
+            <UserProg2Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
@@ -128,7 +128,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -140,11 +139,9 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -356,8 +353,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--no_inline</MiscControls>
               <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E, NO_SEMIHOST</Define>
@@ -374,7 +369,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -391,7 +385,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35_LPC4330.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -526,8 +519,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -634,8 +625,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -652,7 +641,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -805,14 +793,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\</OutputDirectory>
-          <OutputName>lpc11u35_lpc4330_if_bootloader</OutputName>
+          <OutputDirectory>.\Obj\lpc11u35_lpc4330\</OutputDirectory>
+          <OutputName>lpc11u35_lpc4330_if_mbed</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\</ListingPath>
+          <ListingPath>.\Lst\lpc11u35_lpc4330\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -836,9 +824,9 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
-            <UserProg1Name>$K\ARM\BIN\ELFDWT.EXE !L BASEADDRESS(0x0)</UserProg1Name>
-            <UserProg2Name>$K\ARM\ARMCC\BIN\fromelf.exe --bin --output .\Obj\lpc11u35_lpc4330_if_bootloader.bin .\Obj\lpc11u35_lpc4330_if_bootloader.axf</UserProg2Name>
+            <RunUserProg2>0</RunUserProg2>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
+            <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
@@ -889,20 +877,17 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>7</TargetSelection>
@@ -1117,8 +1102,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E</Define>
@@ -1135,7 +1118,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -1152,7 +1134,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35_LPC4330_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -1287,8 +1268,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -1395,8 +1374,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1413,7 +1390,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>

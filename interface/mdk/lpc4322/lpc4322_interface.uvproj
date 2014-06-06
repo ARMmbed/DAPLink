@@ -128,7 +128,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -140,11 +139,9 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>12</TargetSelection>
+          <TargetSelection>13</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -356,8 +353,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>CORE_M4,TARGET_LPC4322, __RTX, DBG_LPC1549, BOARD_LPC1549,USE_FPU,INTERNAL_FLASH</Define>
@@ -374,7 +369,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -391,7 +385,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC4322\TOOLCHAIN_ARM_STD\LPC43xx.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -516,8 +509,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -639,8 +630,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -692,8 +681,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -710,7 +697,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -947,7 +933,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -959,8 +944,6 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>13</TargetSelection>
@@ -1175,8 +1158,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>CORE_M4,TARGET_LPC4322, __RTX, DBG_LPC1549, BOARD_LPC1549,USE_FPU</Define>
@@ -1193,7 +1174,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -1210,7 +1190,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC4322\TOOLCHAIN_ARM_STD\LPC4322_mbed_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -1335,8 +1314,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -1458,8 +1435,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1511,8 +1486,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1529,7 +1502,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1766,7 +1738,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -1778,8 +1749,6 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>1</TargetSelection>
@@ -1994,8 +1963,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>CORE_M4,TARGET_LPC4322, __RTX, DBG_LPC11U68, BOARD_LPC11U68,USE_FPU,INTERNAL_FLASH</Define>
@@ -2012,7 +1979,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -2029,7 +1995,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC4322\TOOLCHAIN_ARM_STD\LPC4322_mbed_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -2154,8 +2119,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -2282,8 +2245,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2330,8 +2291,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -2348,7 +2307,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -2585,7 +2543,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -2597,8 +2554,6 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>13</TargetSelection>
@@ -2813,8 +2768,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>CORE_M4,TARGET_LPC4322, __RTX, DBG_LPC11U68, BOARD_LPC11U68,USE_FPU</Define>
@@ -2831,7 +2784,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -2848,7 +2800,6 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC4322\TOOLCHAIN_ARM_STD\LPC4322_mbed_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -2973,8 +2924,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -3101,8 +3050,6 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -3149,8 +3096,6 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -3167,7 +3112,6 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>

@@ -44,8 +44,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\k20dx_kl25z_if\</OutputDirectory>
-          <OutputName>k20dx_kl25z_if</OutputName>
+          <OutputDirectory>.\Obj\k20dx128_kl25z_if\</OutputDirectory>
+          <OutputName>k20dx128_kl25z_if</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -866,7 +866,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_kl25z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1656,7 +1656,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_kl25z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -2511,7 +2511,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -3236,7 +3236,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_twr_kl25z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -3301,7 +3301,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -4026,7 +4026,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_twr_kl25z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -4091,7 +4091,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -4881,7 +4881,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -5606,7 +5606,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_k20d50_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -5671,7 +5671,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -6396,7 +6396,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_k20d50_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -6461,7 +6461,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -7976,7 +7976,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_kl05z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -8766,7 +8766,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_kl05z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -8831,7 +8831,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -10346,7 +10346,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_kl46z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -11136,7 +11136,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_kl46z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -11201,7 +11201,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -12716,7 +12716,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_k64f_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -12781,7 +12781,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -13506,7 +13506,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_k64f_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -13571,7 +13571,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -15086,7 +15086,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_kl02z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -15876,7 +15876,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_kl02z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -15941,7 +15941,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -17456,7 +17456,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_kl26z_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -17521,7 +17521,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -18246,7 +18246,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_kl26z_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -18311,7 +18311,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -19826,7 +19826,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>%KARM\ARMCC\bin\fromelf --m32combined --output=".\k20dx128_k22f_if_openSDA.S19" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --m32combined -o "$L@L.S19" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -19891,7 +19891,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -20652,7 +20652,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$KARM\ARMCC\BIN\FROMELF.EXE --BIN --OUTPUT=".\k20dx128_k22f_if_mbed.bin" "#L"</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -20717,7 +20717,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
