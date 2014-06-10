@@ -20,7 +20,8 @@
 #include <stdint.h>
 
 /**
- Get a unique ID from the MCU
+ Get a unique ID from the MCU. This is a 32-bit xor value created from the devices
+ UUID or similar registers
  @param  none
  @return The devices unique ID
 */

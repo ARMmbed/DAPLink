@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 
-#define FW_BUILD "0201"
+#define FW_BUILD "1000"
 
 /**
  Prepare UID for USB and also web auth token. Done before USB connects

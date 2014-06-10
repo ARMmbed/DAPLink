@@ -18,8 +18,15 @@
 #include "flash_erase_read_write.h"
 #include "device_cfg.h"
 
-#define CHECK_RANGE(i, min, max) (i < min) || (i > max) ? 0 : 1
-#define CHECK_VALUE(i, val) 	 (i == val) ? 1 : 0
+extern inline uint32_t check_range(const uint32_t test, const uint32_t min, const uint32_t max)
+{
+    return ((test < min) || (test > max)) ? 0 : 1;
+}
+
+static inline uint32_t check_value(const uint32_t test, const uint32_t val)
+{
+    return (test == val) ? 1 : 0;
+}
 
 //The verification algorithm will simply check that vectors 0-6, 11-12, 
 //	and 14-15 all point to a valid memory region and are non-zero and
@@ -35,7 +42,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];
         // check for a valid ram address.
-        if (!CHECK_RANGE(test_val, START_RAM, END_RAM)) {
+        if (0 == check_range(test_val, START_RAM, END_RAM)) {
             return 0;
         }
     }
@@ -50,7 +57,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
+        if (0 == check_range(test_val, (address+START_FLASH), END_FLASH)) {
             return 0;
         }
     }
@@ -60,7 +67,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value.
-        if (!CHECK_VALUE(test_val, 0)) {
+        if (0 == check_value(test_val, 0)) {
             return 0;
         }
     }
@@ -71,7 +78,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
+        if (0 == check_range(test_val, (address+START_FLASH), END_FLASH)) {
             return 0;
         }
     }
@@ -81,7 +88,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a known value
-        if (!CHECK_VALUE(test_val, 0)) {
+        if (0 == check_value(test_val, 0)) {
             return 0;
         }
     }
@@ -92,7 +99,7 @@ uint32_t validate_user_application(uint32_t address)
         read_memory(address+i, (uint8_t*)mem, 4);
         test_val = mem[0];    
         // check for a valid flash address.
-        if (!CHECK_RANGE(test_val, START_FLASH, END_FLASH)) {
+        if (0 == check_range(test_val, (address+START_FLASH), END_FLASH)) {
             return 0;
         }
     }

@@ -33,7 +33,7 @@
 #define FLASH_SECTOR_SIZE   0x400
 
 /*!< APP_START_ADR is the execution address for an application */
-#define APP_START_ADR       0x5000
+#define APP_START_ADR       0x8000
 
 /*!< NUM_OF_SECTORS is the integer representation of sectors in flash. Devices with multiple sizes should
         implement SECTOR_SIZE_A, SECTOR_SIZE_B etc and generate accordingly */
@@ -49,13 +49,13 @@
 /*!< END_FLASH used to verify images in the NVIC table. Calculate accordingly if multiple sector sizes exist */
 #define END_FLASH           (FLASH_SIZE_KB*FLASH_SECTOR_SIZE)
 
-/*!< START_RAM used to verify images in the NVIC table. Defined by the linker control file */
+/*!< START_RAM used to verify images in the NVIC table */
 #define START_RAM           0x1FFFE000
 
-/*!< END_RAM used to verify images in the NVIC table. Defined by the linker control file */
+/*!< END_RAM used to verify images in the NVIC table */
 #define END_RAM	            0x20002000
 
-/*!< INITIAL_SP used to verify images in the NVIC table. Defined by the linker control file */
+/*!< INITIAL_SP used to verify images in the NVIC table of the CMSIS-DAP debug application */
 #define INITIAL_SP      (*(uint32_t *)(APP_START_ADR))
 #define RESET_HANDLER   (*(uint32_t *)(APP_START_ADR + 4))
 

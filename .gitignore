@@ -57,3 +57,6 @@ cscope.*
 
 # ctags
 tags
+
+# PyCharm project files
+.idea

@@ -34,6 +34,6 @@ void relocate_vector_table_ram() {
 }
 
 void relocate_vector_table_app() {
-    // just change to the new app handlers in flash
+    // just change to the new app handlers in application flash
     SCB->VTOR = APP_START_ADR;
 }

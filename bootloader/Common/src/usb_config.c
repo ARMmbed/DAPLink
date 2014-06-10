@@ -177,8 +177,7 @@
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "BOOTLOADER "      \
-                                    "1.0 "
+                                    "BOOTLOADER "
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)

@@ -24,10 +24,10 @@
 // Pointers to substitution strings
 static char const *fw_version = (const char *)FW_BUILD;
 
-static uint32_t unique_id;
-static uint32_t auth;
-static uint8_t string_web_auth[25 + 4];
-static uint8_t string_uid_wchar[2+25*2];
+static uint32_t unique_id = 0;
+static uint32_t auth = 0;
+static uint8_t string_web_auth[25+4] = {""};
+static uint8_t string_uid_wchar[2+25*2] = {""};
 
 static uint8_t const WebSide[] = {
 "<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
@@ -51,7 +51,9 @@ static void write_byte_ascii_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
 
 static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base) {
     uint32_t k = 0;
-    uint8_t i, idx = 0;
+    uint8_t idx = 0;
+    uint8_t i = 0;
+    
     for (i = 0; i < size; i++) 
     {
         if (*str >= '0' && *str <= '9') {
@@ -70,7 +72,7 @@ static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base) {
 }
 
 static void setup_string_web_auth() {
-    uint8_t i;
+    uint8_t i = 0;
     uint8_t idx = 0;
 
     string_web_auth[0] = '$';
@@ -86,13 +88,13 @@ static void setup_string_web_auth() {
     for (i = 0; i < 4; i++) {
         string_web_auth[idx++] = fw_version[i];
     }
-    // writes 2 bytes at a time
+    // writes 2 bytes in string_web_auth at a time
     for (i = 0; i < 4; i++) {
         write_byte_ascii_hex((unique_id >> 8*(3 - i)) & 0xff, &string_web_auth[idx + 2*i], &string_web_auth[idx + 2*i + 1]);
     }
     idx+=8;
 
-    //string auth (2 bytes at a time)
+    //string auth (2 bytes in string_web_auth at a time)
     for (i = 0; i < 4; i++) {
         write_byte_ascii_hex((auth >> 8*(3 - i)) & 0xff, &string_web_auth[idx + 2*i], &string_web_auth[idx + 2*i + 1]);
     }
@@ -102,7 +104,10 @@ static void setup_string_web_auth() {
 }
 
 static void setup_string_usb_descriptor() {
-    uint8_t i, idx = 0, len;
+    uint8_t i = 0;
+    uint8_t idx = 0;
+    uint8_t len = 0;
+    
     len = strlen((const char *)(string_web_auth+4));
     string_uid_wchar[0] = len*2 + 2;
     string_uid_wchar[1] = 3;
@@ -135,7 +140,10 @@ uint8_t *get_uid_string(void) {
 }
 
 static void compute_auth() {
-    uint32_t id, fw, sec;
+    uint32_t id = 0;
+    uint32_t fw = 0;
+    uint32_t sec = 0;
+    
     id = atoi((uint8_t *)board.id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
@@ -150,6 +158,7 @@ typedef struct {
     uint8_t substitute;    // TRUE if characters should be read from a substitution string, otherwise read from HTML data.
 } HTMLCTX;
 
+HTMLCTX const html_ctx_init = {'\0', 0};
 
 static void init_html(HTMLCTX *h, uint8_t *ptr) {
     h->substitute = 0;
@@ -161,9 +170,10 @@ static uint8_t get_html_character(HTMLCTX *h) {
     // Returns the next character from the HTML data at h->phtml.
     // Substitutes special sequences @V etc. with variable text.
 
-    uint8_t c=0, s;         // Character from HTML data
-    static uint8_t *sptr;   // Pointer to substitution string data
-    uint8_t valid;          // Set to false if we need to read an additional character
+    uint8_t c = 0;
+    uint8_t s = 0;                  // Character from HTML data
+    static uint8_t *sptr = '\0';    // Pointer to substitution string data
+    uint8_t valid = 0;              // Set to false if we need to read an additional character
 
     do {
         valid = 1;
@@ -237,20 +247,19 @@ uint8_t update_html_file (uint8_t * buffer, uint32_t size) {
     // Update a file containing the version information for this firmware
     // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
 
-    HTMLCTX html;                 // HTML reader context
-    uint8_t c;                    // Current character from HTML reader
-
+    HTMLCTX html = html_ctx_init; // HTML reader context
+    uint8_t c = 0;                // Current character from HTML reader
     uint32_t i = 0;
 
     // Write file
     init_html(&html, (uint8_t *)WebSide);
 
     do {
-        c=get_html_character(&html);
+        c = get_html_character(&html);
         if (c != '\0') {
             buffer[i++] = c;
         }
     } while (c != '\0');
-    memset(buffer+i, ' ', size - i);
+    memset(buffer + i, ' ', size - i);
     return 1;  // Success
 }
