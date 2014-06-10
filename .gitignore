@@ -55,6 +55,9 @@ Obj
 # cscope
 cscope.*
 
+# PyCharm project files
+.idea
+
 # ctags
 tags
 
