@@ -29,10 +29,15 @@ BOOL gpio_reset_pin_is_input  = __TRUE;
 #define LED_CONNECTED_PORT      0
 #define LED_CONNECTED_BIT       8
 
-// ISP Control Pin            P2_3:  GPIO5[3]
-#define ISPCTRL_PORT          5
-#define ISPCTRL_BIT           3
-
+#ifdef BOARD_LPC4337
+  // ISP Control Pin            P2_11:  GPIO1[11]
+  #define ISPCTRL_PORT          1
+  #define ISPCTRL_BIT           11
+#else  
+  // ISP Control Pin            P2_3:  GPIO5[3]
+  #define ISPCTRL_PORT          5
+  #define ISPCTRL_BIT           3
+#endif
 
 // LPC43xx peripheral register bit masks (used by macros)
 #define CCU_CLK_CFG_RUN         (1UL << 0)
@@ -48,7 +53,11 @@ void gpio_init(void) {
     /* Configure I/O pins: function number, input buffer enabled,  */
     /*                     no pull-up/down                         */
     scu_pinmux(1, 1, GPIO_NOPULL, FUNC0);   /* LED:      GPIO0[8]  */
+#ifdef BOARD_LPC4337
+    scu_pinmux(2, 11, GPIO_NOPULL, FUNC0);  /* ISPCTRL:  GPIO1[11]  */
+#else  
     scu_pinmux(2, 3, GPIO_NOPULL, FUNC4);   /* ISPCTRL:  GPIO5[3]  */
+#endif
     scu_pinmux(2, 5, GPIO_PUP,    FUNC4);   /* nRESET:    GPIO5[5] */
     scu_pinmux(2, 6, GPIO_NOPULL, FUNC4);   /* nRESET_OE: GPIO5[6] */
 

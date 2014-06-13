@@ -93,6 +93,7 @@ INTERFACE_PROJECTS = [
                             'lpc4322_lpc1549_dbg_sram',
                             'lpc4322_lpc11U68_if',
                             'lpc4322_lpc11U68_dbg_sram',
+                            'lpc4322_lpc4337_if',
                          ],
         }
     ]
@@ -125,7 +126,8 @@ FLASH_ALGO_PROJECTS = [
                             #'LPC11xx_IAP_32',
                             'LPC8xx_IAP_4',
                             'LPC1549_IAP_256',
-                            'LPC11U68_IAP_256'
+                            'LPC11U68_IAP_256',
+                            'LPC4337_IAP_1024'
                         ]
         },
         {

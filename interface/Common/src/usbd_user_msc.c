@@ -60,6 +60,8 @@
 #   define WANTED_SIZE_IN_KB                        (512)
 #elif defined(DBG_LPC11U68)
 #   define WANTED_SIZE_IN_KB                        (256)
+#elif defined(DBG_LPC4337)
+#   define WANTED_SIZE_IN_KB                        (1024)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
