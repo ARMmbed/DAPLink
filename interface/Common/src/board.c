@@ -86,6 +86,10 @@
 #define BOARD_ID        "1168"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_LPC4337)
+#define BOARD_ID        "1062"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #endif
 
 #if !defined(BOARD_SECRET) || !defined(BOARD_ID)

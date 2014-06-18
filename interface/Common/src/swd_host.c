@@ -50,6 +50,8 @@
 // DAP operations as they are controlled by the remote debugger.
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E)
 #define CONF_SYSRESETREQ
+#elif defined(BOARD_LPC4337)
+#define CONF_VECTRESET
 #endif
 
 #if defined(CONF_SYSRESETREQ)
