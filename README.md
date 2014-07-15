@@ -6,7 +6,7 @@ Documentation
 -------------
 * [Porting the FW to new boards](http://mbed.org/handbook/cmsis-dap-interface-firmware)
 * [Signing the contributors agreement](https://mbed.org/contributor_agreement/)
-* [Pull request acceptance critera](https://mbed.org/teams/HDK-Development/wiki/
+* [Pull request acceptance critera](https://mbed.org/teams/HDK-Development/wiki/)
 
 Community
 ---------
