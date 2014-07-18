@@ -50,10 +50,10 @@ int flash_hal_erase_chip(void)
 
 int flash_hal_erase_sector(uint32_t adr)
 {
-    int status = flash_erase(&g_flash, adr, 1);
+    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize);
     if (status == kStatus_Success)
     {
-        status = flash_verify_erase(&g_flash, adr, 1, kFlashMargin_Normal);
+        status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);
     }
     flash_cache_clear();
     return (status != kStatus_Success);
