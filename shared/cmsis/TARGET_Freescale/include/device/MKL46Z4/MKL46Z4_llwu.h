@@ -21,7 +21,8 @@
 #ifndef __HW_LLWU_REGISTERS_H__
 #define __HW_LLWU_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL46Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL46Z4 LLWU
@@ -43,19 +44,12 @@
  * - hw_llwu_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_LLWU_BASE
-#define HW_LLWU_INSTANCE_COUNT (1U) //!< Number of instances of the LLWU module.
-#define REGS_LLWU_BASE (0x4007C000U) //!< Base address for LLWU.
-#endif
-//@}
+#define HW_LLWU_INSTANCE_COUNT (1U) /*!< Number of instances of the LLWU module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_PE1 - LLWU Pin Enable 1 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_PE1 - LLWU Pin Enable 1 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_PE1 - LLWU Pin Enable 1 register (RW)
  *
@@ -72,29 +66,26 @@ typedef union _hw_llwu_pe1
     uint8_t U;
     struct _hw_llwu_pe1_bitfields
     {
-        uint8_t WUPE0 : 2;             //!< [1:0] Wakeup Pin Enable For LLWU_P0
-        uint8_t WUPE1 : 2;             //!< [3:2] Wakeup Pin Enable For LLWU_P1
-        uint8_t WUPE2 : 2;             //!< [5:4] Wakeup Pin Enable For LLWU_P2
-        uint8_t WUPE3 : 2;             //!< [7:6] Wakeup Pin Enable For LLWU_P3
+        uint8_t WUPE0 : 2;             /*!< [1:0] Wakeup Pin Enable For LLWU_P0 */
+        uint8_t WUPE1 : 2;             /*!< [3:2] Wakeup Pin Enable For LLWU_P1 */
+        uint8_t WUPE2 : 2;             /*!< [5:4] Wakeup Pin Enable For LLWU_P2 */
+        uint8_t WUPE3 : 2;             /*!< [7:6] Wakeup Pin Enable For LLWU_P3 */
     } B;
 } hw_llwu_pe1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_PE1 register
  */
-//@{
-#define HW_LLWU_PE1_ADDR         (REGS_LLWU_BASE + 0x0U)
+/*@{*/
+#define HW_LLWU_PE1_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_PE1              (*(__IO hw_llwu_pe1_t *) HW_LLWU_PE1_ADDR)
-#define HW_LLWU_PE1_RD()         (HW_LLWU_PE1.U)
-#define HW_LLWU_PE1_WR(v)        (HW_LLWU_PE1.U = (v))
-#define HW_LLWU_PE1_SET(v)       (BME_OR8(HW_LLWU_PE1_ADDR, (uint8_t)(v)))
-#define HW_LLWU_PE1_CLR(v)       (BME_AND8(HW_LLWU_PE1_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_PE1_TOG(v)       (BME_XOR8(HW_LLWU_PE1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_PE1(x)           (*(__IO hw_llwu_pe1_t *) HW_LLWU_PE1_ADDR(x))
+#define HW_LLWU_PE1_RD(x)        (HW_LLWU_PE1(x).U)
+#define HW_LLWU_PE1_WR(x, v)     (HW_LLWU_PE1(x).U = (v))
+#define HW_LLWU_PE1_SET(x, v)    (BME_OR8(HW_LLWU_PE1_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_PE1_CLR(x, v)    (BME_AND8(HW_LLWU_PE1_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_PE1_TOG(x, v)    (BME_XOR8(HW_LLWU_PE1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_PE1 bitfields
@@ -111,24 +102,20 @@ typedef union _hw_llwu_pe1
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE1_WUPE0    (0U)          //!< Bit position for LLWU_PE1_WUPE0.
-#define BM_LLWU_PE1_WUPE0    (0x03U)       //!< Bit mask for LLWU_PE1_WUPE0.
-#define BS_LLWU_PE1_WUPE0    (2U)          //!< Bit field size in bits for LLWU_PE1_WUPE0.
+/*@{*/
+#define BP_LLWU_PE1_WUPE0    (0U)          /*!< Bit position for LLWU_PE1_WUPE0. */
+#define BM_LLWU_PE1_WUPE0    (0x03U)       /*!< Bit mask for LLWU_PE1_WUPE0. */
+#define BS_LLWU_PE1_WUPE0    (2U)          /*!< Bit field size in bits for LLWU_PE1_WUPE0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE1_WUPE0 field.
-#define BR_LLWU_PE1_WUPE0    (BME_UBFX8(HW_LLWU_PE1_ADDR, BP_LLWU_PE1_WUPE0, BS_LLWU_PE1_WUPE0))
-#endif
+/*! @brief Read current value of the LLWU_PE1_WUPE0 field. */
+#define BR_LLWU_PE1_WUPE0(x) (BME_UBFX8(HW_LLWU_PE1_ADDR(x), BP_LLWU_PE1_WUPE0, BS_LLWU_PE1_WUPE0))
 
-//! @brief Format value for bitfield LLWU_PE1_WUPE0.
-#define BF_LLWU_PE1_WUPE0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE1_WUPE0), uint8_t) & BM_LLWU_PE1_WUPE0)
+/*! @brief Format value for bitfield LLWU_PE1_WUPE0. */
+#define BF_LLWU_PE1_WUPE0(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE1_WUPE0) & BM_LLWU_PE1_WUPE0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE0 field to a new value.
-#define BW_LLWU_PE1_WUPE0(v) (BME_BFI8(HW_LLWU_PE1_ADDR, ((uint8_t)(v) << BP_LLWU_PE1_WUPE0), BP_LLWU_PE1_WUPE0, 2))
-#endif
-//@}
+/*! @brief Set the WUPE0 field to a new value. */
+#define BW_LLWU_PE1_WUPE0(x, v) (BME_BFI8(HW_LLWU_PE1_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE1_WUPE0), BP_LLWU_PE1_WUPE0, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE1, field WUPE1[3:2] (RW)
@@ -141,24 +128,20 @@ typedef union _hw_llwu_pe1
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE1_WUPE1    (2U)          //!< Bit position for LLWU_PE1_WUPE1.
-#define BM_LLWU_PE1_WUPE1    (0x0CU)       //!< Bit mask for LLWU_PE1_WUPE1.
-#define BS_LLWU_PE1_WUPE1    (2U)          //!< Bit field size in bits for LLWU_PE1_WUPE1.
+/*@{*/
+#define BP_LLWU_PE1_WUPE1    (2U)          /*!< Bit position for LLWU_PE1_WUPE1. */
+#define BM_LLWU_PE1_WUPE1    (0x0CU)       /*!< Bit mask for LLWU_PE1_WUPE1. */
+#define BS_LLWU_PE1_WUPE1    (2U)          /*!< Bit field size in bits for LLWU_PE1_WUPE1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE1_WUPE1 field.
-#define BR_LLWU_PE1_WUPE1    (BME_UBFX8(HW_LLWU_PE1_ADDR, BP_LLWU_PE1_WUPE1, BS_LLWU_PE1_WUPE1))
-#endif
+/*! @brief Read current value of the LLWU_PE1_WUPE1 field. */
+#define BR_LLWU_PE1_WUPE1(x) (BME_UBFX8(HW_LLWU_PE1_ADDR(x), BP_LLWU_PE1_WUPE1, BS_LLWU_PE1_WUPE1))
 
-//! @brief Format value for bitfield LLWU_PE1_WUPE1.
-#define BF_LLWU_PE1_WUPE1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE1_WUPE1), uint8_t) & BM_LLWU_PE1_WUPE1)
+/*! @brief Format value for bitfield LLWU_PE1_WUPE1. */
+#define BF_LLWU_PE1_WUPE1(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE1_WUPE1) & BM_LLWU_PE1_WUPE1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE1 field to a new value.
-#define BW_LLWU_PE1_WUPE1(v) (BME_BFI8(HW_LLWU_PE1_ADDR, ((uint8_t)(v) << BP_LLWU_PE1_WUPE1), BP_LLWU_PE1_WUPE1, 2))
-#endif
-//@}
+/*! @brief Set the WUPE1 field to a new value. */
+#define BW_LLWU_PE1_WUPE1(x, v) (BME_BFI8(HW_LLWU_PE1_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE1_WUPE1), BP_LLWU_PE1_WUPE1, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE1, field WUPE2[5:4] (RW)
@@ -171,24 +154,20 @@ typedef union _hw_llwu_pe1
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE1_WUPE2    (4U)          //!< Bit position for LLWU_PE1_WUPE2.
-#define BM_LLWU_PE1_WUPE2    (0x30U)       //!< Bit mask for LLWU_PE1_WUPE2.
-#define BS_LLWU_PE1_WUPE2    (2U)          //!< Bit field size in bits for LLWU_PE1_WUPE2.
+/*@{*/
+#define BP_LLWU_PE1_WUPE2    (4U)          /*!< Bit position for LLWU_PE1_WUPE2. */
+#define BM_LLWU_PE1_WUPE2    (0x30U)       /*!< Bit mask for LLWU_PE1_WUPE2. */
+#define BS_LLWU_PE1_WUPE2    (2U)          /*!< Bit field size in bits for LLWU_PE1_WUPE2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE1_WUPE2 field.
-#define BR_LLWU_PE1_WUPE2    (BME_UBFX8(HW_LLWU_PE1_ADDR, BP_LLWU_PE1_WUPE2, BS_LLWU_PE1_WUPE2))
-#endif
+/*! @brief Read current value of the LLWU_PE1_WUPE2 field. */
+#define BR_LLWU_PE1_WUPE2(x) (BME_UBFX8(HW_LLWU_PE1_ADDR(x), BP_LLWU_PE1_WUPE2, BS_LLWU_PE1_WUPE2))
 
-//! @brief Format value for bitfield LLWU_PE1_WUPE2.
-#define BF_LLWU_PE1_WUPE2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE1_WUPE2), uint8_t) & BM_LLWU_PE1_WUPE2)
+/*! @brief Format value for bitfield LLWU_PE1_WUPE2. */
+#define BF_LLWU_PE1_WUPE2(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE1_WUPE2) & BM_LLWU_PE1_WUPE2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE2 field to a new value.
-#define BW_LLWU_PE1_WUPE2(v) (BME_BFI8(HW_LLWU_PE1_ADDR, ((uint8_t)(v) << BP_LLWU_PE1_WUPE2), BP_LLWU_PE1_WUPE2, 2))
-#endif
-//@}
+/*! @brief Set the WUPE2 field to a new value. */
+#define BW_LLWU_PE1_WUPE2(x, v) (BME_BFI8(HW_LLWU_PE1_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE1_WUPE2), BP_LLWU_PE1_WUPE2, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE1, field WUPE3[7:6] (RW)
@@ -201,30 +180,25 @@ typedef union _hw_llwu_pe1
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE1_WUPE3    (6U)          //!< Bit position for LLWU_PE1_WUPE3.
-#define BM_LLWU_PE1_WUPE3    (0xC0U)       //!< Bit mask for LLWU_PE1_WUPE3.
-#define BS_LLWU_PE1_WUPE3    (2U)          //!< Bit field size in bits for LLWU_PE1_WUPE3.
+/*@{*/
+#define BP_LLWU_PE1_WUPE3    (6U)          /*!< Bit position for LLWU_PE1_WUPE3. */
+#define BM_LLWU_PE1_WUPE3    (0xC0U)       /*!< Bit mask for LLWU_PE1_WUPE3. */
+#define BS_LLWU_PE1_WUPE3    (2U)          /*!< Bit field size in bits for LLWU_PE1_WUPE3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE1_WUPE3 field.
-#define BR_LLWU_PE1_WUPE3    (BME_UBFX8(HW_LLWU_PE1_ADDR, BP_LLWU_PE1_WUPE3, BS_LLWU_PE1_WUPE3))
-#endif
+/*! @brief Read current value of the LLWU_PE1_WUPE3 field. */
+#define BR_LLWU_PE1_WUPE3(x) (BME_UBFX8(HW_LLWU_PE1_ADDR(x), BP_LLWU_PE1_WUPE3, BS_LLWU_PE1_WUPE3))
 
-//! @brief Format value for bitfield LLWU_PE1_WUPE3.
-#define BF_LLWU_PE1_WUPE3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE1_WUPE3), uint8_t) & BM_LLWU_PE1_WUPE3)
+/*! @brief Format value for bitfield LLWU_PE1_WUPE3. */
+#define BF_LLWU_PE1_WUPE3(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE1_WUPE3) & BM_LLWU_PE1_WUPE3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE3 field to a new value.
-#define BW_LLWU_PE1_WUPE3(v) (BME_BFI8(HW_LLWU_PE1_ADDR, ((uint8_t)(v) << BP_LLWU_PE1_WUPE3), BP_LLWU_PE1_WUPE3, 2))
-#endif
-//@}
+/*! @brief Set the WUPE3 field to a new value. */
+#define BW_LLWU_PE1_WUPE3(x, v) (BME_BFI8(HW_LLWU_PE1_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE1_WUPE3), BP_LLWU_PE1_WUPE3, 2))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_PE2 - LLWU Pin Enable 2 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_PE2 - LLWU Pin Enable 2 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_PE2 - LLWU Pin Enable 2 register (RW)
  *
@@ -241,29 +215,26 @@ typedef union _hw_llwu_pe2
     uint8_t U;
     struct _hw_llwu_pe2_bitfields
     {
-        uint8_t WUPE4 : 2;             //!< [1:0] Wakeup Pin Enable For LLWU_P4
-        uint8_t WUPE5 : 2;             //!< [3:2] Wakeup Pin Enable For LLWU_P5
-        uint8_t WUPE6 : 2;             //!< [5:4] Wakeup Pin Enable For LLWU_P6
-        uint8_t WUPE7 : 2;             //!< [7:6] Wakeup Pin Enable For LLWU_P7
+        uint8_t WUPE4 : 2;             /*!< [1:0] Wakeup Pin Enable For LLWU_P4 */
+        uint8_t WUPE5 : 2;             /*!< [3:2] Wakeup Pin Enable For LLWU_P5 */
+        uint8_t WUPE6 : 2;             /*!< [5:4] Wakeup Pin Enable For LLWU_P6 */
+        uint8_t WUPE7 : 2;             /*!< [7:6] Wakeup Pin Enable For LLWU_P7 */
     } B;
 } hw_llwu_pe2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_PE2 register
  */
-//@{
-#define HW_LLWU_PE2_ADDR         (REGS_LLWU_BASE + 0x1U)
+/*@{*/
+#define HW_LLWU_PE2_ADDR(x)      ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_PE2              (*(__IO hw_llwu_pe2_t *) HW_LLWU_PE2_ADDR)
-#define HW_LLWU_PE2_RD()         (HW_LLWU_PE2.U)
-#define HW_LLWU_PE2_WR(v)        (HW_LLWU_PE2.U = (v))
-#define HW_LLWU_PE2_SET(v)       (BME_OR8(HW_LLWU_PE2_ADDR, (uint8_t)(v)))
-#define HW_LLWU_PE2_CLR(v)       (BME_AND8(HW_LLWU_PE2_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_PE2_TOG(v)       (BME_XOR8(HW_LLWU_PE2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_PE2(x)           (*(__IO hw_llwu_pe2_t *) HW_LLWU_PE2_ADDR(x))
+#define HW_LLWU_PE2_RD(x)        (HW_LLWU_PE2(x).U)
+#define HW_LLWU_PE2_WR(x, v)     (HW_LLWU_PE2(x).U = (v))
+#define HW_LLWU_PE2_SET(x, v)    (BME_OR8(HW_LLWU_PE2_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_PE2_CLR(x, v)    (BME_AND8(HW_LLWU_PE2_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_PE2_TOG(x, v)    (BME_XOR8(HW_LLWU_PE2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_PE2 bitfields
@@ -280,24 +251,20 @@ typedef union _hw_llwu_pe2
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE2_WUPE4    (0U)          //!< Bit position for LLWU_PE2_WUPE4.
-#define BM_LLWU_PE2_WUPE4    (0x03U)       //!< Bit mask for LLWU_PE2_WUPE4.
-#define BS_LLWU_PE2_WUPE4    (2U)          //!< Bit field size in bits for LLWU_PE2_WUPE4.
+/*@{*/
+#define BP_LLWU_PE2_WUPE4    (0U)          /*!< Bit position for LLWU_PE2_WUPE4. */
+#define BM_LLWU_PE2_WUPE4    (0x03U)       /*!< Bit mask for LLWU_PE2_WUPE4. */
+#define BS_LLWU_PE2_WUPE4    (2U)          /*!< Bit field size in bits for LLWU_PE2_WUPE4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE2_WUPE4 field.
-#define BR_LLWU_PE2_WUPE4    (BME_UBFX8(HW_LLWU_PE2_ADDR, BP_LLWU_PE2_WUPE4, BS_LLWU_PE2_WUPE4))
-#endif
+/*! @brief Read current value of the LLWU_PE2_WUPE4 field. */
+#define BR_LLWU_PE2_WUPE4(x) (BME_UBFX8(HW_LLWU_PE2_ADDR(x), BP_LLWU_PE2_WUPE4, BS_LLWU_PE2_WUPE4))
 
-//! @brief Format value for bitfield LLWU_PE2_WUPE4.
-#define BF_LLWU_PE2_WUPE4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE2_WUPE4), uint8_t) & BM_LLWU_PE2_WUPE4)
+/*! @brief Format value for bitfield LLWU_PE2_WUPE4. */
+#define BF_LLWU_PE2_WUPE4(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE2_WUPE4) & BM_LLWU_PE2_WUPE4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE4 field to a new value.
-#define BW_LLWU_PE2_WUPE4(v) (BME_BFI8(HW_LLWU_PE2_ADDR, ((uint8_t)(v) << BP_LLWU_PE2_WUPE4), BP_LLWU_PE2_WUPE4, 2))
-#endif
-//@}
+/*! @brief Set the WUPE4 field to a new value. */
+#define BW_LLWU_PE2_WUPE4(x, v) (BME_BFI8(HW_LLWU_PE2_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE2_WUPE4), BP_LLWU_PE2_WUPE4, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE2, field WUPE5[3:2] (RW)
@@ -310,24 +277,20 @@ typedef union _hw_llwu_pe2
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE2_WUPE5    (2U)          //!< Bit position for LLWU_PE2_WUPE5.
-#define BM_LLWU_PE2_WUPE5    (0x0CU)       //!< Bit mask for LLWU_PE2_WUPE5.
-#define BS_LLWU_PE2_WUPE5    (2U)          //!< Bit field size in bits for LLWU_PE2_WUPE5.
+/*@{*/
+#define BP_LLWU_PE2_WUPE5    (2U)          /*!< Bit position for LLWU_PE2_WUPE5. */
+#define BM_LLWU_PE2_WUPE5    (0x0CU)       /*!< Bit mask for LLWU_PE2_WUPE5. */
+#define BS_LLWU_PE2_WUPE5    (2U)          /*!< Bit field size in bits for LLWU_PE2_WUPE5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE2_WUPE5 field.
-#define BR_LLWU_PE2_WUPE5    (BME_UBFX8(HW_LLWU_PE2_ADDR, BP_LLWU_PE2_WUPE5, BS_LLWU_PE2_WUPE5))
-#endif
+/*! @brief Read current value of the LLWU_PE2_WUPE5 field. */
+#define BR_LLWU_PE2_WUPE5(x) (BME_UBFX8(HW_LLWU_PE2_ADDR(x), BP_LLWU_PE2_WUPE5, BS_LLWU_PE2_WUPE5))
 
-//! @brief Format value for bitfield LLWU_PE2_WUPE5.
-#define BF_LLWU_PE2_WUPE5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE2_WUPE5), uint8_t) & BM_LLWU_PE2_WUPE5)
+/*! @brief Format value for bitfield LLWU_PE2_WUPE5. */
+#define BF_LLWU_PE2_WUPE5(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE2_WUPE5) & BM_LLWU_PE2_WUPE5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE5 field to a new value.
-#define BW_LLWU_PE2_WUPE5(v) (BME_BFI8(HW_LLWU_PE2_ADDR, ((uint8_t)(v) << BP_LLWU_PE2_WUPE5), BP_LLWU_PE2_WUPE5, 2))
-#endif
-//@}
+/*! @brief Set the WUPE5 field to a new value. */
+#define BW_LLWU_PE2_WUPE5(x, v) (BME_BFI8(HW_LLWU_PE2_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE2_WUPE5), BP_LLWU_PE2_WUPE5, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE2, field WUPE6[5:4] (RW)
@@ -340,24 +303,20 @@ typedef union _hw_llwu_pe2
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE2_WUPE6    (4U)          //!< Bit position for LLWU_PE2_WUPE6.
-#define BM_LLWU_PE2_WUPE6    (0x30U)       //!< Bit mask for LLWU_PE2_WUPE6.
-#define BS_LLWU_PE2_WUPE6    (2U)          //!< Bit field size in bits for LLWU_PE2_WUPE6.
+/*@{*/
+#define BP_LLWU_PE2_WUPE6    (4U)          /*!< Bit position for LLWU_PE2_WUPE6. */
+#define BM_LLWU_PE2_WUPE6    (0x30U)       /*!< Bit mask for LLWU_PE2_WUPE6. */
+#define BS_LLWU_PE2_WUPE6    (2U)          /*!< Bit field size in bits for LLWU_PE2_WUPE6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE2_WUPE6 field.
-#define BR_LLWU_PE2_WUPE6    (BME_UBFX8(HW_LLWU_PE2_ADDR, BP_LLWU_PE2_WUPE6, BS_LLWU_PE2_WUPE6))
-#endif
+/*! @brief Read current value of the LLWU_PE2_WUPE6 field. */
+#define BR_LLWU_PE2_WUPE6(x) (BME_UBFX8(HW_LLWU_PE2_ADDR(x), BP_LLWU_PE2_WUPE6, BS_LLWU_PE2_WUPE6))
 
-//! @brief Format value for bitfield LLWU_PE2_WUPE6.
-#define BF_LLWU_PE2_WUPE6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE2_WUPE6), uint8_t) & BM_LLWU_PE2_WUPE6)
+/*! @brief Format value for bitfield LLWU_PE2_WUPE6. */
+#define BF_LLWU_PE2_WUPE6(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE2_WUPE6) & BM_LLWU_PE2_WUPE6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE6 field to a new value.
-#define BW_LLWU_PE2_WUPE6(v) (BME_BFI8(HW_LLWU_PE2_ADDR, ((uint8_t)(v) << BP_LLWU_PE2_WUPE6), BP_LLWU_PE2_WUPE6, 2))
-#endif
-//@}
+/*! @brief Set the WUPE6 field to a new value. */
+#define BW_LLWU_PE2_WUPE6(x, v) (BME_BFI8(HW_LLWU_PE2_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE2_WUPE6), BP_LLWU_PE2_WUPE6, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE2, field WUPE7[7:6] (RW)
@@ -370,30 +329,25 @@ typedef union _hw_llwu_pe2
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE2_WUPE7    (6U)          //!< Bit position for LLWU_PE2_WUPE7.
-#define BM_LLWU_PE2_WUPE7    (0xC0U)       //!< Bit mask for LLWU_PE2_WUPE7.
-#define BS_LLWU_PE2_WUPE7    (2U)          //!< Bit field size in bits for LLWU_PE2_WUPE7.
+/*@{*/
+#define BP_LLWU_PE2_WUPE7    (6U)          /*!< Bit position for LLWU_PE2_WUPE7. */
+#define BM_LLWU_PE2_WUPE7    (0xC0U)       /*!< Bit mask for LLWU_PE2_WUPE7. */
+#define BS_LLWU_PE2_WUPE7    (2U)          /*!< Bit field size in bits for LLWU_PE2_WUPE7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE2_WUPE7 field.
-#define BR_LLWU_PE2_WUPE7    (BME_UBFX8(HW_LLWU_PE2_ADDR, BP_LLWU_PE2_WUPE7, BS_LLWU_PE2_WUPE7))
-#endif
+/*! @brief Read current value of the LLWU_PE2_WUPE7 field. */
+#define BR_LLWU_PE2_WUPE7(x) (BME_UBFX8(HW_LLWU_PE2_ADDR(x), BP_LLWU_PE2_WUPE7, BS_LLWU_PE2_WUPE7))
 
-//! @brief Format value for bitfield LLWU_PE2_WUPE7.
-#define BF_LLWU_PE2_WUPE7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE2_WUPE7), uint8_t) & BM_LLWU_PE2_WUPE7)
+/*! @brief Format value for bitfield LLWU_PE2_WUPE7. */
+#define BF_LLWU_PE2_WUPE7(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE2_WUPE7) & BM_LLWU_PE2_WUPE7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE7 field to a new value.
-#define BW_LLWU_PE2_WUPE7(v) (BME_BFI8(HW_LLWU_PE2_ADDR, ((uint8_t)(v) << BP_LLWU_PE2_WUPE7), BP_LLWU_PE2_WUPE7, 2))
-#endif
-//@}
+/*! @brief Set the WUPE7 field to a new value. */
+#define BW_LLWU_PE2_WUPE7(x, v) (BME_BFI8(HW_LLWU_PE2_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE2_WUPE7), BP_LLWU_PE2_WUPE7, 2))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_PE3 - LLWU Pin Enable 3 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_PE3 - LLWU Pin Enable 3 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_PE3 - LLWU Pin Enable 3 register (RW)
  *
@@ -410,29 +364,26 @@ typedef union _hw_llwu_pe3
     uint8_t U;
     struct _hw_llwu_pe3_bitfields
     {
-        uint8_t WUPE8 : 2;             //!< [1:0] Wakeup Pin Enable For LLWU_P8
-        uint8_t WUPE9 : 2;             //!< [3:2] Wakeup Pin Enable For LLWU_P9
-        uint8_t WUPE10 : 2;            //!< [5:4] Wakeup Pin Enable For LLWU_P10
-        uint8_t WUPE11 : 2;            //!< [7:6] Wakeup Pin Enable For LLWU_P11
+        uint8_t WUPE8 : 2;             /*!< [1:0] Wakeup Pin Enable For LLWU_P8 */
+        uint8_t WUPE9 : 2;             /*!< [3:2] Wakeup Pin Enable For LLWU_P9 */
+        uint8_t WUPE10 : 2;            /*!< [5:4] Wakeup Pin Enable For LLWU_P10 */
+        uint8_t WUPE11 : 2;            /*!< [7:6] Wakeup Pin Enable For LLWU_P11 */
     } B;
 } hw_llwu_pe3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_PE3 register
  */
-//@{
-#define HW_LLWU_PE3_ADDR         (REGS_LLWU_BASE + 0x2U)
+/*@{*/
+#define HW_LLWU_PE3_ADDR(x)      ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_PE3              (*(__IO hw_llwu_pe3_t *) HW_LLWU_PE3_ADDR)
-#define HW_LLWU_PE3_RD()         (HW_LLWU_PE3.U)
-#define HW_LLWU_PE3_WR(v)        (HW_LLWU_PE3.U = (v))
-#define HW_LLWU_PE3_SET(v)       (BME_OR8(HW_LLWU_PE3_ADDR, (uint8_t)(v)))
-#define HW_LLWU_PE3_CLR(v)       (BME_AND8(HW_LLWU_PE3_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_PE3_TOG(v)       (BME_XOR8(HW_LLWU_PE3_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_PE3(x)           (*(__IO hw_llwu_pe3_t *) HW_LLWU_PE3_ADDR(x))
+#define HW_LLWU_PE3_RD(x)        (HW_LLWU_PE3(x).U)
+#define HW_LLWU_PE3_WR(x, v)     (HW_LLWU_PE3(x).U = (v))
+#define HW_LLWU_PE3_SET(x, v)    (BME_OR8(HW_LLWU_PE3_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_PE3_CLR(x, v)    (BME_AND8(HW_LLWU_PE3_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_PE3_TOG(x, v)    (BME_XOR8(HW_LLWU_PE3_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_PE3 bitfields
@@ -449,24 +400,20 @@ typedef union _hw_llwu_pe3
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE3_WUPE8    (0U)          //!< Bit position for LLWU_PE3_WUPE8.
-#define BM_LLWU_PE3_WUPE8    (0x03U)       //!< Bit mask for LLWU_PE3_WUPE8.
-#define BS_LLWU_PE3_WUPE8    (2U)          //!< Bit field size in bits for LLWU_PE3_WUPE8.
+/*@{*/
+#define BP_LLWU_PE3_WUPE8    (0U)          /*!< Bit position for LLWU_PE3_WUPE8. */
+#define BM_LLWU_PE3_WUPE8    (0x03U)       /*!< Bit mask for LLWU_PE3_WUPE8. */
+#define BS_LLWU_PE3_WUPE8    (2U)          /*!< Bit field size in bits for LLWU_PE3_WUPE8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE3_WUPE8 field.
-#define BR_LLWU_PE3_WUPE8    (BME_UBFX8(HW_LLWU_PE3_ADDR, BP_LLWU_PE3_WUPE8, BS_LLWU_PE3_WUPE8))
-#endif
+/*! @brief Read current value of the LLWU_PE3_WUPE8 field. */
+#define BR_LLWU_PE3_WUPE8(x) (BME_UBFX8(HW_LLWU_PE3_ADDR(x), BP_LLWU_PE3_WUPE8, BS_LLWU_PE3_WUPE8))
 
-//! @brief Format value for bitfield LLWU_PE3_WUPE8.
-#define BF_LLWU_PE3_WUPE8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE3_WUPE8), uint8_t) & BM_LLWU_PE3_WUPE8)
+/*! @brief Format value for bitfield LLWU_PE3_WUPE8. */
+#define BF_LLWU_PE3_WUPE8(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE3_WUPE8) & BM_LLWU_PE3_WUPE8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE8 field to a new value.
-#define BW_LLWU_PE3_WUPE8(v) (BME_BFI8(HW_LLWU_PE3_ADDR, ((uint8_t)(v) << BP_LLWU_PE3_WUPE8), BP_LLWU_PE3_WUPE8, 2))
-#endif
-//@}
+/*! @brief Set the WUPE8 field to a new value. */
+#define BW_LLWU_PE3_WUPE8(x, v) (BME_BFI8(HW_LLWU_PE3_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE3_WUPE8), BP_LLWU_PE3_WUPE8, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE3, field WUPE9[3:2] (RW)
@@ -479,24 +426,20 @@ typedef union _hw_llwu_pe3
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE3_WUPE9    (2U)          //!< Bit position for LLWU_PE3_WUPE9.
-#define BM_LLWU_PE3_WUPE9    (0x0CU)       //!< Bit mask for LLWU_PE3_WUPE9.
-#define BS_LLWU_PE3_WUPE9    (2U)          //!< Bit field size in bits for LLWU_PE3_WUPE9.
+/*@{*/
+#define BP_LLWU_PE3_WUPE9    (2U)          /*!< Bit position for LLWU_PE3_WUPE9. */
+#define BM_LLWU_PE3_WUPE9    (0x0CU)       /*!< Bit mask for LLWU_PE3_WUPE9. */
+#define BS_LLWU_PE3_WUPE9    (2U)          /*!< Bit field size in bits for LLWU_PE3_WUPE9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE3_WUPE9 field.
-#define BR_LLWU_PE3_WUPE9    (BME_UBFX8(HW_LLWU_PE3_ADDR, BP_LLWU_PE3_WUPE9, BS_LLWU_PE3_WUPE9))
-#endif
+/*! @brief Read current value of the LLWU_PE3_WUPE9 field. */
+#define BR_LLWU_PE3_WUPE9(x) (BME_UBFX8(HW_LLWU_PE3_ADDR(x), BP_LLWU_PE3_WUPE9, BS_LLWU_PE3_WUPE9))
 
-//! @brief Format value for bitfield LLWU_PE3_WUPE9.
-#define BF_LLWU_PE3_WUPE9(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE3_WUPE9), uint8_t) & BM_LLWU_PE3_WUPE9)
+/*! @brief Format value for bitfield LLWU_PE3_WUPE9. */
+#define BF_LLWU_PE3_WUPE9(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE3_WUPE9) & BM_LLWU_PE3_WUPE9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE9 field to a new value.
-#define BW_LLWU_PE3_WUPE9(v) (BME_BFI8(HW_LLWU_PE3_ADDR, ((uint8_t)(v) << BP_LLWU_PE3_WUPE9), BP_LLWU_PE3_WUPE9, 2))
-#endif
-//@}
+/*! @brief Set the WUPE9 field to a new value. */
+#define BW_LLWU_PE3_WUPE9(x, v) (BME_BFI8(HW_LLWU_PE3_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE3_WUPE9), BP_LLWU_PE3_WUPE9, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE3, field WUPE10[5:4] (RW)
@@ -509,24 +452,20 @@ typedef union _hw_llwu_pe3
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE3_WUPE10   (4U)          //!< Bit position for LLWU_PE3_WUPE10.
-#define BM_LLWU_PE3_WUPE10   (0x30U)       //!< Bit mask for LLWU_PE3_WUPE10.
-#define BS_LLWU_PE3_WUPE10   (2U)          //!< Bit field size in bits for LLWU_PE3_WUPE10.
+/*@{*/
+#define BP_LLWU_PE3_WUPE10   (4U)          /*!< Bit position for LLWU_PE3_WUPE10. */
+#define BM_LLWU_PE3_WUPE10   (0x30U)       /*!< Bit mask for LLWU_PE3_WUPE10. */
+#define BS_LLWU_PE3_WUPE10   (2U)          /*!< Bit field size in bits for LLWU_PE3_WUPE10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE3_WUPE10 field.
-#define BR_LLWU_PE3_WUPE10   (BME_UBFX8(HW_LLWU_PE3_ADDR, BP_LLWU_PE3_WUPE10, BS_LLWU_PE3_WUPE10))
-#endif
+/*! @brief Read current value of the LLWU_PE3_WUPE10 field. */
+#define BR_LLWU_PE3_WUPE10(x) (BME_UBFX8(HW_LLWU_PE3_ADDR(x), BP_LLWU_PE3_WUPE10, BS_LLWU_PE3_WUPE10))
 
-//! @brief Format value for bitfield LLWU_PE3_WUPE10.
-#define BF_LLWU_PE3_WUPE10(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE3_WUPE10), uint8_t) & BM_LLWU_PE3_WUPE10)
+/*! @brief Format value for bitfield LLWU_PE3_WUPE10. */
+#define BF_LLWU_PE3_WUPE10(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE3_WUPE10) & BM_LLWU_PE3_WUPE10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE10 field to a new value.
-#define BW_LLWU_PE3_WUPE10(v) (BME_BFI8(HW_LLWU_PE3_ADDR, ((uint8_t)(v) << BP_LLWU_PE3_WUPE10), BP_LLWU_PE3_WUPE10, 2))
-#endif
-//@}
+/*! @brief Set the WUPE10 field to a new value. */
+#define BW_LLWU_PE3_WUPE10(x, v) (BME_BFI8(HW_LLWU_PE3_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE3_WUPE10), BP_LLWU_PE3_WUPE10, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE3, field WUPE11[7:6] (RW)
@@ -539,30 +478,25 @@ typedef union _hw_llwu_pe3
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE3_WUPE11   (6U)          //!< Bit position for LLWU_PE3_WUPE11.
-#define BM_LLWU_PE3_WUPE11   (0xC0U)       //!< Bit mask for LLWU_PE3_WUPE11.
-#define BS_LLWU_PE3_WUPE11   (2U)          //!< Bit field size in bits for LLWU_PE3_WUPE11.
+/*@{*/
+#define BP_LLWU_PE3_WUPE11   (6U)          /*!< Bit position for LLWU_PE3_WUPE11. */
+#define BM_LLWU_PE3_WUPE11   (0xC0U)       /*!< Bit mask for LLWU_PE3_WUPE11. */
+#define BS_LLWU_PE3_WUPE11   (2U)          /*!< Bit field size in bits for LLWU_PE3_WUPE11. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE3_WUPE11 field.
-#define BR_LLWU_PE3_WUPE11   (BME_UBFX8(HW_LLWU_PE3_ADDR, BP_LLWU_PE3_WUPE11, BS_LLWU_PE3_WUPE11))
-#endif
+/*! @brief Read current value of the LLWU_PE3_WUPE11 field. */
+#define BR_LLWU_PE3_WUPE11(x) (BME_UBFX8(HW_LLWU_PE3_ADDR(x), BP_LLWU_PE3_WUPE11, BS_LLWU_PE3_WUPE11))
 
-//! @brief Format value for bitfield LLWU_PE3_WUPE11.
-#define BF_LLWU_PE3_WUPE11(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE3_WUPE11), uint8_t) & BM_LLWU_PE3_WUPE11)
+/*! @brief Format value for bitfield LLWU_PE3_WUPE11. */
+#define BF_LLWU_PE3_WUPE11(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE3_WUPE11) & BM_LLWU_PE3_WUPE11)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE11 field to a new value.
-#define BW_LLWU_PE3_WUPE11(v) (BME_BFI8(HW_LLWU_PE3_ADDR, ((uint8_t)(v) << BP_LLWU_PE3_WUPE11), BP_LLWU_PE3_WUPE11, 2))
-#endif
-//@}
+/*! @brief Set the WUPE11 field to a new value. */
+#define BW_LLWU_PE3_WUPE11(x, v) (BME_BFI8(HW_LLWU_PE3_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE3_WUPE11), BP_LLWU_PE3_WUPE11, 2))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_PE4 - LLWU Pin Enable 4 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_PE4 - LLWU Pin Enable 4 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_PE4 - LLWU Pin Enable 4 register (RW)
  *
@@ -579,29 +513,26 @@ typedef union _hw_llwu_pe4
     uint8_t U;
     struct _hw_llwu_pe4_bitfields
     {
-        uint8_t WUPE12 : 2;            //!< [1:0] Wakeup Pin Enable For LLWU_P12
-        uint8_t WUPE13 : 2;            //!< [3:2] Wakeup Pin Enable For LLWU_P13
-        uint8_t WUPE14 : 2;            //!< [5:4] Wakeup Pin Enable For LLWU_P14
-        uint8_t WUPE15 : 2;            //!< [7:6] Wakeup Pin Enable For LLWU_P15
+        uint8_t WUPE12 : 2;            /*!< [1:0] Wakeup Pin Enable For LLWU_P12 */
+        uint8_t WUPE13 : 2;            /*!< [3:2] Wakeup Pin Enable For LLWU_P13 */
+        uint8_t WUPE14 : 2;            /*!< [5:4] Wakeup Pin Enable For LLWU_P14 */
+        uint8_t WUPE15 : 2;            /*!< [7:6] Wakeup Pin Enable For LLWU_P15 */
     } B;
 } hw_llwu_pe4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_PE4 register
  */
-//@{
-#define HW_LLWU_PE4_ADDR         (REGS_LLWU_BASE + 0x3U)
+/*@{*/
+#define HW_LLWU_PE4_ADDR(x)      ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_PE4              (*(__IO hw_llwu_pe4_t *) HW_LLWU_PE4_ADDR)
-#define HW_LLWU_PE4_RD()         (HW_LLWU_PE4.U)
-#define HW_LLWU_PE4_WR(v)        (HW_LLWU_PE4.U = (v))
-#define HW_LLWU_PE4_SET(v)       (BME_OR8(HW_LLWU_PE4_ADDR, (uint8_t)(v)))
-#define HW_LLWU_PE4_CLR(v)       (BME_AND8(HW_LLWU_PE4_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_PE4_TOG(v)       (BME_XOR8(HW_LLWU_PE4_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_PE4(x)           (*(__IO hw_llwu_pe4_t *) HW_LLWU_PE4_ADDR(x))
+#define HW_LLWU_PE4_RD(x)        (HW_LLWU_PE4(x).U)
+#define HW_LLWU_PE4_WR(x, v)     (HW_LLWU_PE4(x).U = (v))
+#define HW_LLWU_PE4_SET(x, v)    (BME_OR8(HW_LLWU_PE4_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_PE4_CLR(x, v)    (BME_AND8(HW_LLWU_PE4_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_PE4_TOG(x, v)    (BME_XOR8(HW_LLWU_PE4_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_PE4 bitfields
@@ -618,24 +549,20 @@ typedef union _hw_llwu_pe4
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE4_WUPE12   (0U)          //!< Bit position for LLWU_PE4_WUPE12.
-#define BM_LLWU_PE4_WUPE12   (0x03U)       //!< Bit mask for LLWU_PE4_WUPE12.
-#define BS_LLWU_PE4_WUPE12   (2U)          //!< Bit field size in bits for LLWU_PE4_WUPE12.
+/*@{*/
+#define BP_LLWU_PE4_WUPE12   (0U)          /*!< Bit position for LLWU_PE4_WUPE12. */
+#define BM_LLWU_PE4_WUPE12   (0x03U)       /*!< Bit mask for LLWU_PE4_WUPE12. */
+#define BS_LLWU_PE4_WUPE12   (2U)          /*!< Bit field size in bits for LLWU_PE4_WUPE12. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE4_WUPE12 field.
-#define BR_LLWU_PE4_WUPE12   (BME_UBFX8(HW_LLWU_PE4_ADDR, BP_LLWU_PE4_WUPE12, BS_LLWU_PE4_WUPE12))
-#endif
+/*! @brief Read current value of the LLWU_PE4_WUPE12 field. */
+#define BR_LLWU_PE4_WUPE12(x) (BME_UBFX8(HW_LLWU_PE4_ADDR(x), BP_LLWU_PE4_WUPE12, BS_LLWU_PE4_WUPE12))
 
-//! @brief Format value for bitfield LLWU_PE4_WUPE12.
-#define BF_LLWU_PE4_WUPE12(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE4_WUPE12), uint8_t) & BM_LLWU_PE4_WUPE12)
+/*! @brief Format value for bitfield LLWU_PE4_WUPE12. */
+#define BF_LLWU_PE4_WUPE12(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE4_WUPE12) & BM_LLWU_PE4_WUPE12)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE12 field to a new value.
-#define BW_LLWU_PE4_WUPE12(v) (BME_BFI8(HW_LLWU_PE4_ADDR, ((uint8_t)(v) << BP_LLWU_PE4_WUPE12), BP_LLWU_PE4_WUPE12, 2))
-#endif
-//@}
+/*! @brief Set the WUPE12 field to a new value. */
+#define BW_LLWU_PE4_WUPE12(x, v) (BME_BFI8(HW_LLWU_PE4_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE4_WUPE12), BP_LLWU_PE4_WUPE12, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE4, field WUPE13[3:2] (RW)
@@ -648,24 +575,20 @@ typedef union _hw_llwu_pe4
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE4_WUPE13   (2U)          //!< Bit position for LLWU_PE4_WUPE13.
-#define BM_LLWU_PE4_WUPE13   (0x0CU)       //!< Bit mask for LLWU_PE4_WUPE13.
-#define BS_LLWU_PE4_WUPE13   (2U)          //!< Bit field size in bits for LLWU_PE4_WUPE13.
+/*@{*/
+#define BP_LLWU_PE4_WUPE13   (2U)          /*!< Bit position for LLWU_PE4_WUPE13. */
+#define BM_LLWU_PE4_WUPE13   (0x0CU)       /*!< Bit mask for LLWU_PE4_WUPE13. */
+#define BS_LLWU_PE4_WUPE13   (2U)          /*!< Bit field size in bits for LLWU_PE4_WUPE13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE4_WUPE13 field.
-#define BR_LLWU_PE4_WUPE13   (BME_UBFX8(HW_LLWU_PE4_ADDR, BP_LLWU_PE4_WUPE13, BS_LLWU_PE4_WUPE13))
-#endif
+/*! @brief Read current value of the LLWU_PE4_WUPE13 field. */
+#define BR_LLWU_PE4_WUPE13(x) (BME_UBFX8(HW_LLWU_PE4_ADDR(x), BP_LLWU_PE4_WUPE13, BS_LLWU_PE4_WUPE13))
 
-//! @brief Format value for bitfield LLWU_PE4_WUPE13.
-#define BF_LLWU_PE4_WUPE13(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE4_WUPE13), uint8_t) & BM_LLWU_PE4_WUPE13)
+/*! @brief Format value for bitfield LLWU_PE4_WUPE13. */
+#define BF_LLWU_PE4_WUPE13(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE4_WUPE13) & BM_LLWU_PE4_WUPE13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE13 field to a new value.
-#define BW_LLWU_PE4_WUPE13(v) (BME_BFI8(HW_LLWU_PE4_ADDR, ((uint8_t)(v) << BP_LLWU_PE4_WUPE13), BP_LLWU_PE4_WUPE13, 2))
-#endif
-//@}
+/*! @brief Set the WUPE13 field to a new value. */
+#define BW_LLWU_PE4_WUPE13(x, v) (BME_BFI8(HW_LLWU_PE4_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE4_WUPE13), BP_LLWU_PE4_WUPE13, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE4, field WUPE14[5:4] (RW)
@@ -678,24 +601,20 @@ typedef union _hw_llwu_pe4
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE4_WUPE14   (4U)          //!< Bit position for LLWU_PE4_WUPE14.
-#define BM_LLWU_PE4_WUPE14   (0x30U)       //!< Bit mask for LLWU_PE4_WUPE14.
-#define BS_LLWU_PE4_WUPE14   (2U)          //!< Bit field size in bits for LLWU_PE4_WUPE14.
+/*@{*/
+#define BP_LLWU_PE4_WUPE14   (4U)          /*!< Bit position for LLWU_PE4_WUPE14. */
+#define BM_LLWU_PE4_WUPE14   (0x30U)       /*!< Bit mask for LLWU_PE4_WUPE14. */
+#define BS_LLWU_PE4_WUPE14   (2U)          /*!< Bit field size in bits for LLWU_PE4_WUPE14. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE4_WUPE14 field.
-#define BR_LLWU_PE4_WUPE14   (BME_UBFX8(HW_LLWU_PE4_ADDR, BP_LLWU_PE4_WUPE14, BS_LLWU_PE4_WUPE14))
-#endif
+/*! @brief Read current value of the LLWU_PE4_WUPE14 field. */
+#define BR_LLWU_PE4_WUPE14(x) (BME_UBFX8(HW_LLWU_PE4_ADDR(x), BP_LLWU_PE4_WUPE14, BS_LLWU_PE4_WUPE14))
 
-//! @brief Format value for bitfield LLWU_PE4_WUPE14.
-#define BF_LLWU_PE4_WUPE14(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE4_WUPE14), uint8_t) & BM_LLWU_PE4_WUPE14)
+/*! @brief Format value for bitfield LLWU_PE4_WUPE14. */
+#define BF_LLWU_PE4_WUPE14(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE4_WUPE14) & BM_LLWU_PE4_WUPE14)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE14 field to a new value.
-#define BW_LLWU_PE4_WUPE14(v) (BME_BFI8(HW_LLWU_PE4_ADDR, ((uint8_t)(v) << BP_LLWU_PE4_WUPE14), BP_LLWU_PE4_WUPE14, 2))
-#endif
-//@}
+/*! @brief Set the WUPE14 field to a new value. */
+#define BW_LLWU_PE4_WUPE14(x, v) (BME_BFI8(HW_LLWU_PE4_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE4_WUPE14), BP_LLWU_PE4_WUPE14, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_PE4, field WUPE15[7:6] (RW)
@@ -708,30 +627,25 @@ typedef union _hw_llwu_pe4
  * - 10 - External input pin enabled with falling edge detection
  * - 11 - External input pin enabled with any change detection
  */
-//@{
-#define BP_LLWU_PE4_WUPE15   (6U)          //!< Bit position for LLWU_PE4_WUPE15.
-#define BM_LLWU_PE4_WUPE15   (0xC0U)       //!< Bit mask for LLWU_PE4_WUPE15.
-#define BS_LLWU_PE4_WUPE15   (2U)          //!< Bit field size in bits for LLWU_PE4_WUPE15.
+/*@{*/
+#define BP_LLWU_PE4_WUPE15   (6U)          /*!< Bit position for LLWU_PE4_WUPE15. */
+#define BM_LLWU_PE4_WUPE15   (0xC0U)       /*!< Bit mask for LLWU_PE4_WUPE15. */
+#define BS_LLWU_PE4_WUPE15   (2U)          /*!< Bit field size in bits for LLWU_PE4_WUPE15. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_PE4_WUPE15 field.
-#define BR_LLWU_PE4_WUPE15   (BME_UBFX8(HW_LLWU_PE4_ADDR, BP_LLWU_PE4_WUPE15, BS_LLWU_PE4_WUPE15))
-#endif
+/*! @brief Read current value of the LLWU_PE4_WUPE15 field. */
+#define BR_LLWU_PE4_WUPE15(x) (BME_UBFX8(HW_LLWU_PE4_ADDR(x), BP_LLWU_PE4_WUPE15, BS_LLWU_PE4_WUPE15))
 
-//! @brief Format value for bitfield LLWU_PE4_WUPE15.
-#define BF_LLWU_PE4_WUPE15(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_PE4_WUPE15), uint8_t) & BM_LLWU_PE4_WUPE15)
+/*! @brief Format value for bitfield LLWU_PE4_WUPE15. */
+#define BF_LLWU_PE4_WUPE15(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_PE4_WUPE15) & BM_LLWU_PE4_WUPE15)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUPE15 field to a new value.
-#define BW_LLWU_PE4_WUPE15(v) (BME_BFI8(HW_LLWU_PE4_ADDR, ((uint8_t)(v) << BP_LLWU_PE4_WUPE15), BP_LLWU_PE4_WUPE15, 2))
-#endif
-//@}
+/*! @brief Set the WUPE15 field to a new value. */
+#define BW_LLWU_PE4_WUPE15(x, v) (BME_BFI8(HW_LLWU_PE4_ADDR(x), ((uint8_t)(v) << BP_LLWU_PE4_WUPE15), BP_LLWU_PE4_WUPE15, 2))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_ME - LLWU Module Enable register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_ME - LLWU Module Enable register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_ME - LLWU Module Enable register (RW)
  *
@@ -748,33 +662,30 @@ typedef union _hw_llwu_me
     uint8_t U;
     struct _hw_llwu_me_bitfields
     {
-        uint8_t WUME0 : 1;             //!< [0] Wakeup Module Enable For Module 0
-        uint8_t WUME1 : 1;             //!< [1] Wakeup Module Enable for Module 1
-        uint8_t WUME2 : 1;             //!< [2] Wakeup Module Enable For Module 2
-        uint8_t WUME3 : 1;             //!< [3] Wakeup Module Enable For Module 3
-        uint8_t WUME4 : 1;             //!< [4] Wakeup Module Enable For Module 4
-        uint8_t WUME5 : 1;             //!< [5] Wakeup Module Enable For Module 5
-        uint8_t WUME6 : 1;             //!< [6] Wakeup Module Enable For Module 6
-        uint8_t WUME7 : 1;             //!< [7] Wakeup Module Enable For Module 7
+        uint8_t WUME0 : 1;             /*!< [0] Wakeup Module Enable For Module 0 */
+        uint8_t WUME1 : 1;             /*!< [1] Wakeup Module Enable for Module 1 */
+        uint8_t WUME2 : 1;             /*!< [2] Wakeup Module Enable For Module 2 */
+        uint8_t WUME3 : 1;             /*!< [3] Wakeup Module Enable For Module 3 */
+        uint8_t WUME4 : 1;             /*!< [4] Wakeup Module Enable For Module 4 */
+        uint8_t WUME5 : 1;             /*!< [5] Wakeup Module Enable For Module 5 */
+        uint8_t WUME6 : 1;             /*!< [6] Wakeup Module Enable For Module 6 */
+        uint8_t WUME7 : 1;             /*!< [7] Wakeup Module Enable For Module 7 */
     } B;
 } hw_llwu_me_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_ME register
  */
-//@{
-#define HW_LLWU_ME_ADDR          (REGS_LLWU_BASE + 0x4U)
+/*@{*/
+#define HW_LLWU_ME_ADDR(x)       ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_ME               (*(__IO hw_llwu_me_t *) HW_LLWU_ME_ADDR)
-#define HW_LLWU_ME_RD()          (HW_LLWU_ME.U)
-#define HW_LLWU_ME_WR(v)         (HW_LLWU_ME.U = (v))
-#define HW_LLWU_ME_SET(v)        (BME_OR8(HW_LLWU_ME_ADDR, (uint8_t)(v)))
-#define HW_LLWU_ME_CLR(v)        (BME_AND8(HW_LLWU_ME_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_ME_TOG(v)        (BME_XOR8(HW_LLWU_ME_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_ME(x)            (*(__IO hw_llwu_me_t *) HW_LLWU_ME_ADDR(x))
+#define HW_LLWU_ME_RD(x)         (HW_LLWU_ME(x).U)
+#define HW_LLWU_ME_WR(x, v)      (HW_LLWU_ME(x).U = (v))
+#define HW_LLWU_ME_SET(x, v)     (BME_OR8(HW_LLWU_ME_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_ME_CLR(x, v)     (BME_AND8(HW_LLWU_ME_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_ME_TOG(x, v)     (BME_XOR8(HW_LLWU_ME_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_ME bitfields
@@ -789,24 +700,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME0     (0U)          //!< Bit position for LLWU_ME_WUME0.
-#define BM_LLWU_ME_WUME0     (0x01U)       //!< Bit mask for LLWU_ME_WUME0.
-#define BS_LLWU_ME_WUME0     (1U)          //!< Bit field size in bits for LLWU_ME_WUME0.
+/*@{*/
+#define BP_LLWU_ME_WUME0     (0U)          /*!< Bit position for LLWU_ME_WUME0. */
+#define BM_LLWU_ME_WUME0     (0x01U)       /*!< Bit mask for LLWU_ME_WUME0. */
+#define BS_LLWU_ME_WUME0     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME0 field.
-#define BR_LLWU_ME_WUME0     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME0, BS_LLWU_ME_WUME0))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME0 field. */
+#define BR_LLWU_ME_WUME0(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME0, BS_LLWU_ME_WUME0))
 
-//! @brief Format value for bitfield LLWU_ME_WUME0.
-#define BF_LLWU_ME_WUME0(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME0), uint8_t) & BM_LLWU_ME_WUME0)
+/*! @brief Format value for bitfield LLWU_ME_WUME0. */
+#define BF_LLWU_ME_WUME0(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME0) & BM_LLWU_ME_WUME0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME0 field to a new value.
-#define BW_LLWU_ME_WUME0(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME0), BP_LLWU_ME_WUME0, 1))
-#endif
-//@}
+/*! @brief Set the WUME0 field to a new value. */
+#define BW_LLWU_ME_WUME0(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME0), BP_LLWU_ME_WUME0, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME1[1] (RW)
@@ -817,24 +724,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME1     (1U)          //!< Bit position for LLWU_ME_WUME1.
-#define BM_LLWU_ME_WUME1     (0x02U)       //!< Bit mask for LLWU_ME_WUME1.
-#define BS_LLWU_ME_WUME1     (1U)          //!< Bit field size in bits for LLWU_ME_WUME1.
+/*@{*/
+#define BP_LLWU_ME_WUME1     (1U)          /*!< Bit position for LLWU_ME_WUME1. */
+#define BM_LLWU_ME_WUME1     (0x02U)       /*!< Bit mask for LLWU_ME_WUME1. */
+#define BS_LLWU_ME_WUME1     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME1 field.
-#define BR_LLWU_ME_WUME1     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME1, BS_LLWU_ME_WUME1))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME1 field. */
+#define BR_LLWU_ME_WUME1(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME1, BS_LLWU_ME_WUME1))
 
-//! @brief Format value for bitfield LLWU_ME_WUME1.
-#define BF_LLWU_ME_WUME1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME1), uint8_t) & BM_LLWU_ME_WUME1)
+/*! @brief Format value for bitfield LLWU_ME_WUME1. */
+#define BF_LLWU_ME_WUME1(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME1) & BM_LLWU_ME_WUME1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME1 field to a new value.
-#define BW_LLWU_ME_WUME1(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME1), BP_LLWU_ME_WUME1, 1))
-#endif
-//@}
+/*! @brief Set the WUME1 field to a new value. */
+#define BW_LLWU_ME_WUME1(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME1), BP_LLWU_ME_WUME1, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME2[2] (RW)
@@ -845,24 +748,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME2     (2U)          //!< Bit position for LLWU_ME_WUME2.
-#define BM_LLWU_ME_WUME2     (0x04U)       //!< Bit mask for LLWU_ME_WUME2.
-#define BS_LLWU_ME_WUME2     (1U)          //!< Bit field size in bits for LLWU_ME_WUME2.
+/*@{*/
+#define BP_LLWU_ME_WUME2     (2U)          /*!< Bit position for LLWU_ME_WUME2. */
+#define BM_LLWU_ME_WUME2     (0x04U)       /*!< Bit mask for LLWU_ME_WUME2. */
+#define BS_LLWU_ME_WUME2     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME2 field.
-#define BR_LLWU_ME_WUME2     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME2, BS_LLWU_ME_WUME2))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME2 field. */
+#define BR_LLWU_ME_WUME2(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME2, BS_LLWU_ME_WUME2))
 
-//! @brief Format value for bitfield LLWU_ME_WUME2.
-#define BF_LLWU_ME_WUME2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME2), uint8_t) & BM_LLWU_ME_WUME2)
+/*! @brief Format value for bitfield LLWU_ME_WUME2. */
+#define BF_LLWU_ME_WUME2(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME2) & BM_LLWU_ME_WUME2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME2 field to a new value.
-#define BW_LLWU_ME_WUME2(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME2), BP_LLWU_ME_WUME2, 1))
-#endif
-//@}
+/*! @brief Set the WUME2 field to a new value. */
+#define BW_LLWU_ME_WUME2(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME2), BP_LLWU_ME_WUME2, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME3[3] (RW)
@@ -873,24 +772,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME3     (3U)          //!< Bit position for LLWU_ME_WUME3.
-#define BM_LLWU_ME_WUME3     (0x08U)       //!< Bit mask for LLWU_ME_WUME3.
-#define BS_LLWU_ME_WUME3     (1U)          //!< Bit field size in bits for LLWU_ME_WUME3.
+/*@{*/
+#define BP_LLWU_ME_WUME3     (3U)          /*!< Bit position for LLWU_ME_WUME3. */
+#define BM_LLWU_ME_WUME3     (0x08U)       /*!< Bit mask for LLWU_ME_WUME3. */
+#define BS_LLWU_ME_WUME3     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME3 field.
-#define BR_LLWU_ME_WUME3     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME3, BS_LLWU_ME_WUME3))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME3 field. */
+#define BR_LLWU_ME_WUME3(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME3, BS_LLWU_ME_WUME3))
 
-//! @brief Format value for bitfield LLWU_ME_WUME3.
-#define BF_LLWU_ME_WUME3(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME3), uint8_t) & BM_LLWU_ME_WUME3)
+/*! @brief Format value for bitfield LLWU_ME_WUME3. */
+#define BF_LLWU_ME_WUME3(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME3) & BM_LLWU_ME_WUME3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME3 field to a new value.
-#define BW_LLWU_ME_WUME3(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME3), BP_LLWU_ME_WUME3, 1))
-#endif
-//@}
+/*! @brief Set the WUME3 field to a new value. */
+#define BW_LLWU_ME_WUME3(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME3), BP_LLWU_ME_WUME3, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME4[4] (RW)
@@ -901,24 +796,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME4     (4U)          //!< Bit position for LLWU_ME_WUME4.
-#define BM_LLWU_ME_WUME4     (0x10U)       //!< Bit mask for LLWU_ME_WUME4.
-#define BS_LLWU_ME_WUME4     (1U)          //!< Bit field size in bits for LLWU_ME_WUME4.
+/*@{*/
+#define BP_LLWU_ME_WUME4     (4U)          /*!< Bit position for LLWU_ME_WUME4. */
+#define BM_LLWU_ME_WUME4     (0x10U)       /*!< Bit mask for LLWU_ME_WUME4. */
+#define BS_LLWU_ME_WUME4     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME4 field.
-#define BR_LLWU_ME_WUME4     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME4, BS_LLWU_ME_WUME4))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME4 field. */
+#define BR_LLWU_ME_WUME4(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME4, BS_LLWU_ME_WUME4))
 
-//! @brief Format value for bitfield LLWU_ME_WUME4.
-#define BF_LLWU_ME_WUME4(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME4), uint8_t) & BM_LLWU_ME_WUME4)
+/*! @brief Format value for bitfield LLWU_ME_WUME4. */
+#define BF_LLWU_ME_WUME4(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME4) & BM_LLWU_ME_WUME4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME4 field to a new value.
-#define BW_LLWU_ME_WUME4(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME4), BP_LLWU_ME_WUME4, 1))
-#endif
-//@}
+/*! @brief Set the WUME4 field to a new value. */
+#define BW_LLWU_ME_WUME4(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME4), BP_LLWU_ME_WUME4, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME5[5] (RW)
@@ -929,24 +820,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME5     (5U)          //!< Bit position for LLWU_ME_WUME5.
-#define BM_LLWU_ME_WUME5     (0x20U)       //!< Bit mask for LLWU_ME_WUME5.
-#define BS_LLWU_ME_WUME5     (1U)          //!< Bit field size in bits for LLWU_ME_WUME5.
+/*@{*/
+#define BP_LLWU_ME_WUME5     (5U)          /*!< Bit position for LLWU_ME_WUME5. */
+#define BM_LLWU_ME_WUME5     (0x20U)       /*!< Bit mask for LLWU_ME_WUME5. */
+#define BS_LLWU_ME_WUME5     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME5 field.
-#define BR_LLWU_ME_WUME5     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME5, BS_LLWU_ME_WUME5))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME5 field. */
+#define BR_LLWU_ME_WUME5(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME5, BS_LLWU_ME_WUME5))
 
-//! @brief Format value for bitfield LLWU_ME_WUME5.
-#define BF_LLWU_ME_WUME5(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME5), uint8_t) & BM_LLWU_ME_WUME5)
+/*! @brief Format value for bitfield LLWU_ME_WUME5. */
+#define BF_LLWU_ME_WUME5(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME5) & BM_LLWU_ME_WUME5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME5 field to a new value.
-#define BW_LLWU_ME_WUME5(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME5), BP_LLWU_ME_WUME5, 1))
-#endif
-//@}
+/*! @brief Set the WUME5 field to a new value. */
+#define BW_LLWU_ME_WUME5(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME5), BP_LLWU_ME_WUME5, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME6[6] (RW)
@@ -957,24 +844,20 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME6     (6U)          //!< Bit position for LLWU_ME_WUME6.
-#define BM_LLWU_ME_WUME6     (0x40U)       //!< Bit mask for LLWU_ME_WUME6.
-#define BS_LLWU_ME_WUME6     (1U)          //!< Bit field size in bits for LLWU_ME_WUME6.
+/*@{*/
+#define BP_LLWU_ME_WUME6     (6U)          /*!< Bit position for LLWU_ME_WUME6. */
+#define BM_LLWU_ME_WUME6     (0x40U)       /*!< Bit mask for LLWU_ME_WUME6. */
+#define BS_LLWU_ME_WUME6     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME6 field.
-#define BR_LLWU_ME_WUME6     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME6, BS_LLWU_ME_WUME6))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME6 field. */
+#define BR_LLWU_ME_WUME6(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME6, BS_LLWU_ME_WUME6))
 
-//! @brief Format value for bitfield LLWU_ME_WUME6.
-#define BF_LLWU_ME_WUME6(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME6), uint8_t) & BM_LLWU_ME_WUME6)
+/*! @brief Format value for bitfield LLWU_ME_WUME6. */
+#define BF_LLWU_ME_WUME6(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME6) & BM_LLWU_ME_WUME6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME6 field to a new value.
-#define BW_LLWU_ME_WUME6(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME6), BP_LLWU_ME_WUME6, 1))
-#endif
-//@}
+/*! @brief Set the WUME6 field to a new value. */
+#define BW_LLWU_ME_WUME6(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME6), BP_LLWU_ME_WUME6, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_ME, field WUME7[7] (RW)
@@ -985,32 +868,27 @@ typedef union _hw_llwu_me
  * - 0 - Internal module flag not used as wakeup source
  * - 1 - Internal module flag used as wakeup source
  */
-//@{
-#define BP_LLWU_ME_WUME7     (7U)          //!< Bit position for LLWU_ME_WUME7.
-#define BM_LLWU_ME_WUME7     (0x80U)       //!< Bit mask for LLWU_ME_WUME7.
-#define BS_LLWU_ME_WUME7     (1U)          //!< Bit field size in bits for LLWU_ME_WUME7.
+/*@{*/
+#define BP_LLWU_ME_WUME7     (7U)          /*!< Bit position for LLWU_ME_WUME7. */
+#define BM_LLWU_ME_WUME7     (0x80U)       /*!< Bit mask for LLWU_ME_WUME7. */
+#define BS_LLWU_ME_WUME7     (1U)          /*!< Bit field size in bits for LLWU_ME_WUME7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_ME_WUME7 field.
-#define BR_LLWU_ME_WUME7     (BME_UBFX8(HW_LLWU_ME_ADDR, BP_LLWU_ME_WUME7, BS_LLWU_ME_WUME7))
-#endif
+/*! @brief Read current value of the LLWU_ME_WUME7 field. */
+#define BR_LLWU_ME_WUME7(x)  (BME_UBFX8(HW_LLWU_ME_ADDR(x), BP_LLWU_ME_WUME7, BS_LLWU_ME_WUME7))
 
-//! @brief Format value for bitfield LLWU_ME_WUME7.
-#define BF_LLWU_ME_WUME7(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_ME_WUME7), uint8_t) & BM_LLWU_ME_WUME7)
+/*! @brief Format value for bitfield LLWU_ME_WUME7. */
+#define BF_LLWU_ME_WUME7(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_ME_WUME7) & BM_LLWU_ME_WUME7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUME7 field to a new value.
-#define BW_LLWU_ME_WUME7(v)  (BME_BFI8(HW_LLWU_ME_ADDR, ((uint8_t)(v) << BP_LLWU_ME_WUME7), BP_LLWU_ME_WUME7, 1))
-#endif
-//@}
+/*! @brief Set the WUME7 field to a new value. */
+#define BW_LLWU_ME_WUME7(x, v) (BME_BFI8(HW_LLWU_ME_ADDR(x), ((uint8_t)(v) << BP_LLWU_ME_WUME7), BP_LLWU_ME_WUME7, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_F1 - LLWU Flag 1 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_F1 - LLWU Flag 1 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_LLWU_F1 - LLWU Flag 1 register (RW)
+ * @brief HW_LLWU_F1 - LLWU Flag 1 register (W1C)
  *
  * Reset value: 0x00U
  *
@@ -1029,33 +907,30 @@ typedef union _hw_llwu_f1
     uint8_t U;
     struct _hw_llwu_f1_bitfields
     {
-        uint8_t WUF0 : 1;              //!< [0] Wakeup Flag For LLWU_P0
-        uint8_t WUF1 : 1;              //!< [1] Wakeup Flag For LLWU_P1
-        uint8_t WUF2 : 1;              //!< [2] Wakeup Flag For LLWU_P2
-        uint8_t WUF3 : 1;              //!< [3] Wakeup Flag For LLWU_P3
-        uint8_t WUF4 : 1;              //!< [4] Wakeup Flag For LLWU_P4
-        uint8_t WUF5 : 1;              //!< [5] Wakeup Flag For LLWU_P5
-        uint8_t WUF6 : 1;              //!< [6] Wakeup Flag For LLWU_P6
-        uint8_t WUF7 : 1;              //!< [7] Wakeup Flag For LLWU_P7
+        uint8_t WUF0 : 1;              /*!< [0] Wakeup Flag For LLWU_P0 */
+        uint8_t WUF1 : 1;              /*!< [1] Wakeup Flag For LLWU_P1 */
+        uint8_t WUF2 : 1;              /*!< [2] Wakeup Flag For LLWU_P2 */
+        uint8_t WUF3 : 1;              /*!< [3] Wakeup Flag For LLWU_P3 */
+        uint8_t WUF4 : 1;              /*!< [4] Wakeup Flag For LLWU_P4 */
+        uint8_t WUF5 : 1;              /*!< [5] Wakeup Flag For LLWU_P5 */
+        uint8_t WUF6 : 1;              /*!< [6] Wakeup Flag For LLWU_P6 */
+        uint8_t WUF7 : 1;              /*!< [7] Wakeup Flag For LLWU_P7 */
     } B;
 } hw_llwu_f1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_F1 register
  */
-//@{
-#define HW_LLWU_F1_ADDR          (REGS_LLWU_BASE + 0x5U)
+/*@{*/
+#define HW_LLWU_F1_ADDR(x)       ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_F1               (*(__IO hw_llwu_f1_t *) HW_LLWU_F1_ADDR)
-#define HW_LLWU_F1_RD()          (HW_LLWU_F1.U)
-#define HW_LLWU_F1_WR(v)         (HW_LLWU_F1.U = (v))
-#define HW_LLWU_F1_SET(v)        (BME_OR8(HW_LLWU_F1_ADDR, (uint8_t)(v)))
-#define HW_LLWU_F1_CLR(v)        (BME_AND8(HW_LLWU_F1_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_F1_TOG(v)        (BME_XOR8(HW_LLWU_F1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_F1(x)            (*(__IO hw_llwu_f1_t *) HW_LLWU_F1_ADDR(x))
+#define HW_LLWU_F1_RD(x)         (HW_LLWU_F1(x).U)
+#define HW_LLWU_F1_WR(x, v)      (HW_LLWU_F1(x).U = (v))
+#define HW_LLWU_F1_SET(x, v)     (BME_OR8(HW_LLWU_F1_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_F1_CLR(x, v)     (BME_AND8(HW_LLWU_F1_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_F1_TOG(x, v)     (BME_XOR8(HW_LLWU_F1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_F1 bitfields
@@ -1071,24 +946,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P0 input was not a wakeup source
  * - 1 - LLWU_P0 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF0      (0U)          //!< Bit position for LLWU_F1_WUF0.
-#define BM_LLWU_F1_WUF0      (0x01U)       //!< Bit mask for LLWU_F1_WUF0.
-#define BS_LLWU_F1_WUF0      (1U)          //!< Bit field size in bits for LLWU_F1_WUF0.
+/*@{*/
+#define BP_LLWU_F1_WUF0      (0U)          /*!< Bit position for LLWU_F1_WUF0. */
+#define BM_LLWU_F1_WUF0      (0x01U)       /*!< Bit mask for LLWU_F1_WUF0. */
+#define BS_LLWU_F1_WUF0      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF0 field.
-#define BR_LLWU_F1_WUF0      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF0, BS_LLWU_F1_WUF0))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF0 field. */
+#define BR_LLWU_F1_WUF0(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF0, BS_LLWU_F1_WUF0))
 
-//! @brief Format value for bitfield LLWU_F1_WUF0.
-#define BF_LLWU_F1_WUF0(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF0), uint8_t) & BM_LLWU_F1_WUF0)
+/*! @brief Format value for bitfield LLWU_F1_WUF0. */
+#define BF_LLWU_F1_WUF0(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF0) & BM_LLWU_F1_WUF0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF0 field to a new value.
-#define BW_LLWU_F1_WUF0(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF0), BP_LLWU_F1_WUF0, 1))
-#endif
-//@}
+/*! @brief Set the WUF0 field to a new value. */
+#define BW_LLWU_F1_WUF0(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF0), BP_LLWU_F1_WUF0, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF1[1] (W1C)
@@ -1100,24 +971,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P1 input was not a wakeup source
  * - 1 - LLWU_P1 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF1      (1U)          //!< Bit position for LLWU_F1_WUF1.
-#define BM_LLWU_F1_WUF1      (0x02U)       //!< Bit mask for LLWU_F1_WUF1.
-#define BS_LLWU_F1_WUF1      (1U)          //!< Bit field size in bits for LLWU_F1_WUF1.
+/*@{*/
+#define BP_LLWU_F1_WUF1      (1U)          /*!< Bit position for LLWU_F1_WUF1. */
+#define BM_LLWU_F1_WUF1      (0x02U)       /*!< Bit mask for LLWU_F1_WUF1. */
+#define BS_LLWU_F1_WUF1      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF1 field.
-#define BR_LLWU_F1_WUF1      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF1, BS_LLWU_F1_WUF1))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF1 field. */
+#define BR_LLWU_F1_WUF1(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF1, BS_LLWU_F1_WUF1))
 
-//! @brief Format value for bitfield LLWU_F1_WUF1.
-#define BF_LLWU_F1_WUF1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF1), uint8_t) & BM_LLWU_F1_WUF1)
+/*! @brief Format value for bitfield LLWU_F1_WUF1. */
+#define BF_LLWU_F1_WUF1(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF1) & BM_LLWU_F1_WUF1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF1 field to a new value.
-#define BW_LLWU_F1_WUF1(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF1), BP_LLWU_F1_WUF1, 1))
-#endif
-//@}
+/*! @brief Set the WUF1 field to a new value. */
+#define BW_LLWU_F1_WUF1(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF1), BP_LLWU_F1_WUF1, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF2[2] (W1C)
@@ -1129,24 +996,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P2 input was not a wakeup source
  * - 1 - LLWU_P2 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF2      (2U)          //!< Bit position for LLWU_F1_WUF2.
-#define BM_LLWU_F1_WUF2      (0x04U)       //!< Bit mask for LLWU_F1_WUF2.
-#define BS_LLWU_F1_WUF2      (1U)          //!< Bit field size in bits for LLWU_F1_WUF2.
+/*@{*/
+#define BP_LLWU_F1_WUF2      (2U)          /*!< Bit position for LLWU_F1_WUF2. */
+#define BM_LLWU_F1_WUF2      (0x04U)       /*!< Bit mask for LLWU_F1_WUF2. */
+#define BS_LLWU_F1_WUF2      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF2 field.
-#define BR_LLWU_F1_WUF2      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF2, BS_LLWU_F1_WUF2))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF2 field. */
+#define BR_LLWU_F1_WUF2(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF2, BS_LLWU_F1_WUF2))
 
-//! @brief Format value for bitfield LLWU_F1_WUF2.
-#define BF_LLWU_F1_WUF2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF2), uint8_t) & BM_LLWU_F1_WUF2)
+/*! @brief Format value for bitfield LLWU_F1_WUF2. */
+#define BF_LLWU_F1_WUF2(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF2) & BM_LLWU_F1_WUF2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF2 field to a new value.
-#define BW_LLWU_F1_WUF2(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF2), BP_LLWU_F1_WUF2, 1))
-#endif
-//@}
+/*! @brief Set the WUF2 field to a new value. */
+#define BW_LLWU_F1_WUF2(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF2), BP_LLWU_F1_WUF2, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF3[3] (W1C)
@@ -1158,24 +1021,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P3 input was not a wakeup source
  * - 1 - LLWU_P3 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF3      (3U)          //!< Bit position for LLWU_F1_WUF3.
-#define BM_LLWU_F1_WUF3      (0x08U)       //!< Bit mask for LLWU_F1_WUF3.
-#define BS_LLWU_F1_WUF3      (1U)          //!< Bit field size in bits for LLWU_F1_WUF3.
+/*@{*/
+#define BP_LLWU_F1_WUF3      (3U)          /*!< Bit position for LLWU_F1_WUF3. */
+#define BM_LLWU_F1_WUF3      (0x08U)       /*!< Bit mask for LLWU_F1_WUF3. */
+#define BS_LLWU_F1_WUF3      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF3 field.
-#define BR_LLWU_F1_WUF3      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF3, BS_LLWU_F1_WUF3))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF3 field. */
+#define BR_LLWU_F1_WUF3(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF3, BS_LLWU_F1_WUF3))
 
-//! @brief Format value for bitfield LLWU_F1_WUF3.
-#define BF_LLWU_F1_WUF3(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF3), uint8_t) & BM_LLWU_F1_WUF3)
+/*! @brief Format value for bitfield LLWU_F1_WUF3. */
+#define BF_LLWU_F1_WUF3(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF3) & BM_LLWU_F1_WUF3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF3 field to a new value.
-#define BW_LLWU_F1_WUF3(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF3), BP_LLWU_F1_WUF3, 1))
-#endif
-//@}
+/*! @brief Set the WUF3 field to a new value. */
+#define BW_LLWU_F1_WUF3(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF3), BP_LLWU_F1_WUF3, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF4[4] (W1C)
@@ -1187,24 +1046,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P4 input was not a wakeup source
  * - 1 - LLWU_P4 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF4      (4U)          //!< Bit position for LLWU_F1_WUF4.
-#define BM_LLWU_F1_WUF4      (0x10U)       //!< Bit mask for LLWU_F1_WUF4.
-#define BS_LLWU_F1_WUF4      (1U)          //!< Bit field size in bits for LLWU_F1_WUF4.
+/*@{*/
+#define BP_LLWU_F1_WUF4      (4U)          /*!< Bit position for LLWU_F1_WUF4. */
+#define BM_LLWU_F1_WUF4      (0x10U)       /*!< Bit mask for LLWU_F1_WUF4. */
+#define BS_LLWU_F1_WUF4      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF4 field.
-#define BR_LLWU_F1_WUF4      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF4, BS_LLWU_F1_WUF4))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF4 field. */
+#define BR_LLWU_F1_WUF4(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF4, BS_LLWU_F1_WUF4))
 
-//! @brief Format value for bitfield LLWU_F1_WUF4.
-#define BF_LLWU_F1_WUF4(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF4), uint8_t) & BM_LLWU_F1_WUF4)
+/*! @brief Format value for bitfield LLWU_F1_WUF4. */
+#define BF_LLWU_F1_WUF4(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF4) & BM_LLWU_F1_WUF4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF4 field to a new value.
-#define BW_LLWU_F1_WUF4(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF4), BP_LLWU_F1_WUF4, 1))
-#endif
-//@}
+/*! @brief Set the WUF4 field to a new value. */
+#define BW_LLWU_F1_WUF4(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF4), BP_LLWU_F1_WUF4, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF5[5] (W1C)
@@ -1216,24 +1071,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P5 input was not a wakeup source
  * - 1 - LLWU_P5 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF5      (5U)          //!< Bit position for LLWU_F1_WUF5.
-#define BM_LLWU_F1_WUF5      (0x20U)       //!< Bit mask for LLWU_F1_WUF5.
-#define BS_LLWU_F1_WUF5      (1U)          //!< Bit field size in bits for LLWU_F1_WUF5.
+/*@{*/
+#define BP_LLWU_F1_WUF5      (5U)          /*!< Bit position for LLWU_F1_WUF5. */
+#define BM_LLWU_F1_WUF5      (0x20U)       /*!< Bit mask for LLWU_F1_WUF5. */
+#define BS_LLWU_F1_WUF5      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF5 field.
-#define BR_LLWU_F1_WUF5      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF5, BS_LLWU_F1_WUF5))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF5 field. */
+#define BR_LLWU_F1_WUF5(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF5, BS_LLWU_F1_WUF5))
 
-//! @brief Format value for bitfield LLWU_F1_WUF5.
-#define BF_LLWU_F1_WUF5(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF5), uint8_t) & BM_LLWU_F1_WUF5)
+/*! @brief Format value for bitfield LLWU_F1_WUF5. */
+#define BF_LLWU_F1_WUF5(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF5) & BM_LLWU_F1_WUF5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF5 field to a new value.
-#define BW_LLWU_F1_WUF5(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF5), BP_LLWU_F1_WUF5, 1))
-#endif
-//@}
+/*! @brief Set the WUF5 field to a new value. */
+#define BW_LLWU_F1_WUF5(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF5), BP_LLWU_F1_WUF5, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF6[6] (W1C)
@@ -1245,24 +1096,20 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P6 input was not a wakeup source
  * - 1 - LLWU_P6 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF6      (6U)          //!< Bit position for LLWU_F1_WUF6.
-#define BM_LLWU_F1_WUF6      (0x40U)       //!< Bit mask for LLWU_F1_WUF6.
-#define BS_LLWU_F1_WUF6      (1U)          //!< Bit field size in bits for LLWU_F1_WUF6.
+/*@{*/
+#define BP_LLWU_F1_WUF6      (6U)          /*!< Bit position for LLWU_F1_WUF6. */
+#define BM_LLWU_F1_WUF6      (0x40U)       /*!< Bit mask for LLWU_F1_WUF6. */
+#define BS_LLWU_F1_WUF6      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF6 field.
-#define BR_LLWU_F1_WUF6      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF6, BS_LLWU_F1_WUF6))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF6 field. */
+#define BR_LLWU_F1_WUF6(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF6, BS_LLWU_F1_WUF6))
 
-//! @brief Format value for bitfield LLWU_F1_WUF6.
-#define BF_LLWU_F1_WUF6(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF6), uint8_t) & BM_LLWU_F1_WUF6)
+/*! @brief Format value for bitfield LLWU_F1_WUF6. */
+#define BF_LLWU_F1_WUF6(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF6) & BM_LLWU_F1_WUF6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF6 field to a new value.
-#define BW_LLWU_F1_WUF6(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF6), BP_LLWU_F1_WUF6, 1))
-#endif
-//@}
+/*! @brief Set the WUF6 field to a new value. */
+#define BW_LLWU_F1_WUF6(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF6), BP_LLWU_F1_WUF6, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F1, field WUF7[7] (W1C)
@@ -1274,32 +1121,27 @@ typedef union _hw_llwu_f1
  * - 0 - LLWU_P7 input was not a wakeup source
  * - 1 - LLWU_P7 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F1_WUF7      (7U)          //!< Bit position for LLWU_F1_WUF7.
-#define BM_LLWU_F1_WUF7      (0x80U)       //!< Bit mask for LLWU_F1_WUF7.
-#define BS_LLWU_F1_WUF7      (1U)          //!< Bit field size in bits for LLWU_F1_WUF7.
+/*@{*/
+#define BP_LLWU_F1_WUF7      (7U)          /*!< Bit position for LLWU_F1_WUF7. */
+#define BM_LLWU_F1_WUF7      (0x80U)       /*!< Bit mask for LLWU_F1_WUF7. */
+#define BS_LLWU_F1_WUF7      (1U)          /*!< Bit field size in bits for LLWU_F1_WUF7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F1_WUF7 field.
-#define BR_LLWU_F1_WUF7      (BME_UBFX8(HW_LLWU_F1_ADDR, BP_LLWU_F1_WUF7, BS_LLWU_F1_WUF7))
-#endif
+/*! @brief Read current value of the LLWU_F1_WUF7 field. */
+#define BR_LLWU_F1_WUF7(x)   (BME_UBFX8(HW_LLWU_F1_ADDR(x), BP_LLWU_F1_WUF7, BS_LLWU_F1_WUF7))
 
-//! @brief Format value for bitfield LLWU_F1_WUF7.
-#define BF_LLWU_F1_WUF7(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F1_WUF7), uint8_t) & BM_LLWU_F1_WUF7)
+/*! @brief Format value for bitfield LLWU_F1_WUF7. */
+#define BF_LLWU_F1_WUF7(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F1_WUF7) & BM_LLWU_F1_WUF7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF7 field to a new value.
-#define BW_LLWU_F1_WUF7(v)   (BME_BFI8(HW_LLWU_F1_ADDR, ((uint8_t)(v) << BP_LLWU_F1_WUF7), BP_LLWU_F1_WUF7, 1))
-#endif
-//@}
+/*! @brief Set the WUF7 field to a new value. */
+#define BW_LLWU_F1_WUF7(x, v) (BME_BFI8(HW_LLWU_F1_ADDR(x), ((uint8_t)(v) << BP_LLWU_F1_WUF7), BP_LLWU_F1_WUF7, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_F2 - LLWU Flag 2 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_F2 - LLWU Flag 2 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_LLWU_F2 - LLWU Flag 2 register (RW)
+ * @brief HW_LLWU_F2 - LLWU Flag 2 register (W1C)
  *
  * Reset value: 0x00U
  *
@@ -1318,33 +1160,30 @@ typedef union _hw_llwu_f2
     uint8_t U;
     struct _hw_llwu_f2_bitfields
     {
-        uint8_t WUF8 : 1;              //!< [0] Wakeup Flag For LLWU_P8
-        uint8_t WUF9 : 1;              //!< [1] Wakeup Flag For LLWU_P9
-        uint8_t WUF10 : 1;             //!< [2] Wakeup Flag For LLWU_P10
-        uint8_t WUF11 : 1;             //!< [3] Wakeup Flag For LLWU_P11
-        uint8_t WUF12 : 1;             //!< [4] Wakeup Flag For LLWU_P12
-        uint8_t WUF13 : 1;             //!< [5] Wakeup Flag For LLWU_P13
-        uint8_t WUF14 : 1;             //!< [6] Wakeup Flag For LLWU_P14
-        uint8_t WUF15 : 1;             //!< [7] Wakeup Flag For LLWU_P15
+        uint8_t WUF8 : 1;              /*!< [0] Wakeup Flag For LLWU_P8 */
+        uint8_t WUF9 : 1;              /*!< [1] Wakeup Flag For LLWU_P9 */
+        uint8_t WUF10 : 1;             /*!< [2] Wakeup Flag For LLWU_P10 */
+        uint8_t WUF11 : 1;             /*!< [3] Wakeup Flag For LLWU_P11 */
+        uint8_t WUF12 : 1;             /*!< [4] Wakeup Flag For LLWU_P12 */
+        uint8_t WUF13 : 1;             /*!< [5] Wakeup Flag For LLWU_P13 */
+        uint8_t WUF14 : 1;             /*!< [6] Wakeup Flag For LLWU_P14 */
+        uint8_t WUF15 : 1;             /*!< [7] Wakeup Flag For LLWU_P15 */
     } B;
 } hw_llwu_f2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_F2 register
  */
-//@{
-#define HW_LLWU_F2_ADDR          (REGS_LLWU_BASE + 0x6U)
+/*@{*/
+#define HW_LLWU_F2_ADDR(x)       ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_F2               (*(__IO hw_llwu_f2_t *) HW_LLWU_F2_ADDR)
-#define HW_LLWU_F2_RD()          (HW_LLWU_F2.U)
-#define HW_LLWU_F2_WR(v)         (HW_LLWU_F2.U = (v))
-#define HW_LLWU_F2_SET(v)        (BME_OR8(HW_LLWU_F2_ADDR, (uint8_t)(v)))
-#define HW_LLWU_F2_CLR(v)        (BME_AND8(HW_LLWU_F2_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_F2_TOG(v)        (BME_XOR8(HW_LLWU_F2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_F2(x)            (*(__IO hw_llwu_f2_t *) HW_LLWU_F2_ADDR(x))
+#define HW_LLWU_F2_RD(x)         (HW_LLWU_F2(x).U)
+#define HW_LLWU_F2_WR(x, v)      (HW_LLWU_F2(x).U = (v))
+#define HW_LLWU_F2_SET(x, v)     (BME_OR8(HW_LLWU_F2_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_F2_CLR(x, v)     (BME_AND8(HW_LLWU_F2_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_F2_TOG(x, v)     (BME_XOR8(HW_LLWU_F2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_F2 bitfields
@@ -1360,24 +1199,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P8 input was not a wakeup source
  * - 1 - LLWU_P8 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF8      (0U)          //!< Bit position for LLWU_F2_WUF8.
-#define BM_LLWU_F2_WUF8      (0x01U)       //!< Bit mask for LLWU_F2_WUF8.
-#define BS_LLWU_F2_WUF8      (1U)          //!< Bit field size in bits for LLWU_F2_WUF8.
+/*@{*/
+#define BP_LLWU_F2_WUF8      (0U)          /*!< Bit position for LLWU_F2_WUF8. */
+#define BM_LLWU_F2_WUF8      (0x01U)       /*!< Bit mask for LLWU_F2_WUF8. */
+#define BS_LLWU_F2_WUF8      (1U)          /*!< Bit field size in bits for LLWU_F2_WUF8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF8 field.
-#define BR_LLWU_F2_WUF8      (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF8, BS_LLWU_F2_WUF8))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF8 field. */
+#define BR_LLWU_F2_WUF8(x)   (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF8, BS_LLWU_F2_WUF8))
 
-//! @brief Format value for bitfield LLWU_F2_WUF8.
-#define BF_LLWU_F2_WUF8(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF8), uint8_t) & BM_LLWU_F2_WUF8)
+/*! @brief Format value for bitfield LLWU_F2_WUF8. */
+#define BF_LLWU_F2_WUF8(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF8) & BM_LLWU_F2_WUF8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF8 field to a new value.
-#define BW_LLWU_F2_WUF8(v)   (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF8), BP_LLWU_F2_WUF8, 1))
-#endif
-//@}
+/*! @brief Set the WUF8 field to a new value. */
+#define BW_LLWU_F2_WUF8(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF8), BP_LLWU_F2_WUF8, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF9[1] (W1C)
@@ -1389,24 +1224,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P9 input was not a wakeup source
  * - 1 - LLWU_P9 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF9      (1U)          //!< Bit position for LLWU_F2_WUF9.
-#define BM_LLWU_F2_WUF9      (0x02U)       //!< Bit mask for LLWU_F2_WUF9.
-#define BS_LLWU_F2_WUF9      (1U)          //!< Bit field size in bits for LLWU_F2_WUF9.
+/*@{*/
+#define BP_LLWU_F2_WUF9      (1U)          /*!< Bit position for LLWU_F2_WUF9. */
+#define BM_LLWU_F2_WUF9      (0x02U)       /*!< Bit mask for LLWU_F2_WUF9. */
+#define BS_LLWU_F2_WUF9      (1U)          /*!< Bit field size in bits for LLWU_F2_WUF9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF9 field.
-#define BR_LLWU_F2_WUF9      (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF9, BS_LLWU_F2_WUF9))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF9 field. */
+#define BR_LLWU_F2_WUF9(x)   (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF9, BS_LLWU_F2_WUF9))
 
-//! @brief Format value for bitfield LLWU_F2_WUF9.
-#define BF_LLWU_F2_WUF9(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF9), uint8_t) & BM_LLWU_F2_WUF9)
+/*! @brief Format value for bitfield LLWU_F2_WUF9. */
+#define BF_LLWU_F2_WUF9(v)   ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF9) & BM_LLWU_F2_WUF9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF9 field to a new value.
-#define BW_LLWU_F2_WUF9(v)   (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF9), BP_LLWU_F2_WUF9, 1))
-#endif
-//@}
+/*! @brief Set the WUF9 field to a new value. */
+#define BW_LLWU_F2_WUF9(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF9), BP_LLWU_F2_WUF9, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF10[2] (W1C)
@@ -1418,24 +1249,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P10 input was not a wakeup source
  * - 1 - LLWU_P10 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF10     (2U)          //!< Bit position for LLWU_F2_WUF10.
-#define BM_LLWU_F2_WUF10     (0x04U)       //!< Bit mask for LLWU_F2_WUF10.
-#define BS_LLWU_F2_WUF10     (1U)          //!< Bit field size in bits for LLWU_F2_WUF10.
+/*@{*/
+#define BP_LLWU_F2_WUF10     (2U)          /*!< Bit position for LLWU_F2_WUF10. */
+#define BM_LLWU_F2_WUF10     (0x04U)       /*!< Bit mask for LLWU_F2_WUF10. */
+#define BS_LLWU_F2_WUF10     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF10 field.
-#define BR_LLWU_F2_WUF10     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF10, BS_LLWU_F2_WUF10))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF10 field. */
+#define BR_LLWU_F2_WUF10(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF10, BS_LLWU_F2_WUF10))
 
-//! @brief Format value for bitfield LLWU_F2_WUF10.
-#define BF_LLWU_F2_WUF10(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF10), uint8_t) & BM_LLWU_F2_WUF10)
+/*! @brief Format value for bitfield LLWU_F2_WUF10. */
+#define BF_LLWU_F2_WUF10(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF10) & BM_LLWU_F2_WUF10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF10 field to a new value.
-#define BW_LLWU_F2_WUF10(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF10), BP_LLWU_F2_WUF10, 1))
-#endif
-//@}
+/*! @brief Set the WUF10 field to a new value. */
+#define BW_LLWU_F2_WUF10(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF10), BP_LLWU_F2_WUF10, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF11[3] (W1C)
@@ -1447,24 +1274,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P11 input was not a wakeup source
  * - 1 - LLWU_P11 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF11     (3U)          //!< Bit position for LLWU_F2_WUF11.
-#define BM_LLWU_F2_WUF11     (0x08U)       //!< Bit mask for LLWU_F2_WUF11.
-#define BS_LLWU_F2_WUF11     (1U)          //!< Bit field size in bits for LLWU_F2_WUF11.
+/*@{*/
+#define BP_LLWU_F2_WUF11     (3U)          /*!< Bit position for LLWU_F2_WUF11. */
+#define BM_LLWU_F2_WUF11     (0x08U)       /*!< Bit mask for LLWU_F2_WUF11. */
+#define BS_LLWU_F2_WUF11     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF11. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF11 field.
-#define BR_LLWU_F2_WUF11     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF11, BS_LLWU_F2_WUF11))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF11 field. */
+#define BR_LLWU_F2_WUF11(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF11, BS_LLWU_F2_WUF11))
 
-//! @brief Format value for bitfield LLWU_F2_WUF11.
-#define BF_LLWU_F2_WUF11(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF11), uint8_t) & BM_LLWU_F2_WUF11)
+/*! @brief Format value for bitfield LLWU_F2_WUF11. */
+#define BF_LLWU_F2_WUF11(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF11) & BM_LLWU_F2_WUF11)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF11 field to a new value.
-#define BW_LLWU_F2_WUF11(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF11), BP_LLWU_F2_WUF11, 1))
-#endif
-//@}
+/*! @brief Set the WUF11 field to a new value. */
+#define BW_LLWU_F2_WUF11(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF11), BP_LLWU_F2_WUF11, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF12[4] (W1C)
@@ -1476,24 +1299,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P12 input was not a wakeup source
  * - 1 - LLWU_P12 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF12     (4U)          //!< Bit position for LLWU_F2_WUF12.
-#define BM_LLWU_F2_WUF12     (0x10U)       //!< Bit mask for LLWU_F2_WUF12.
-#define BS_LLWU_F2_WUF12     (1U)          //!< Bit field size in bits for LLWU_F2_WUF12.
+/*@{*/
+#define BP_LLWU_F2_WUF12     (4U)          /*!< Bit position for LLWU_F2_WUF12. */
+#define BM_LLWU_F2_WUF12     (0x10U)       /*!< Bit mask for LLWU_F2_WUF12. */
+#define BS_LLWU_F2_WUF12     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF12. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF12 field.
-#define BR_LLWU_F2_WUF12     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF12, BS_LLWU_F2_WUF12))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF12 field. */
+#define BR_LLWU_F2_WUF12(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF12, BS_LLWU_F2_WUF12))
 
-//! @brief Format value for bitfield LLWU_F2_WUF12.
-#define BF_LLWU_F2_WUF12(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF12), uint8_t) & BM_LLWU_F2_WUF12)
+/*! @brief Format value for bitfield LLWU_F2_WUF12. */
+#define BF_LLWU_F2_WUF12(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF12) & BM_LLWU_F2_WUF12)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF12 field to a new value.
-#define BW_LLWU_F2_WUF12(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF12), BP_LLWU_F2_WUF12, 1))
-#endif
-//@}
+/*! @brief Set the WUF12 field to a new value. */
+#define BW_LLWU_F2_WUF12(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF12), BP_LLWU_F2_WUF12, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF13[5] (W1C)
@@ -1505,24 +1324,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P13 input was not a wakeup source
  * - 1 - LLWU_P13 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF13     (5U)          //!< Bit position for LLWU_F2_WUF13.
-#define BM_LLWU_F2_WUF13     (0x20U)       //!< Bit mask for LLWU_F2_WUF13.
-#define BS_LLWU_F2_WUF13     (1U)          //!< Bit field size in bits for LLWU_F2_WUF13.
+/*@{*/
+#define BP_LLWU_F2_WUF13     (5U)          /*!< Bit position for LLWU_F2_WUF13. */
+#define BM_LLWU_F2_WUF13     (0x20U)       /*!< Bit mask for LLWU_F2_WUF13. */
+#define BS_LLWU_F2_WUF13     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF13 field.
-#define BR_LLWU_F2_WUF13     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF13, BS_LLWU_F2_WUF13))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF13 field. */
+#define BR_LLWU_F2_WUF13(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF13, BS_LLWU_F2_WUF13))
 
-//! @brief Format value for bitfield LLWU_F2_WUF13.
-#define BF_LLWU_F2_WUF13(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF13), uint8_t) & BM_LLWU_F2_WUF13)
+/*! @brief Format value for bitfield LLWU_F2_WUF13. */
+#define BF_LLWU_F2_WUF13(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF13) & BM_LLWU_F2_WUF13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF13 field to a new value.
-#define BW_LLWU_F2_WUF13(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF13), BP_LLWU_F2_WUF13, 1))
-#endif
-//@}
+/*! @brief Set the WUF13 field to a new value. */
+#define BW_LLWU_F2_WUF13(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF13), BP_LLWU_F2_WUF13, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF14[6] (W1C)
@@ -1534,24 +1349,20 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P14 input was not a wakeup source
  * - 1 - LLWU_P14 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF14     (6U)          //!< Bit position for LLWU_F2_WUF14.
-#define BM_LLWU_F2_WUF14     (0x40U)       //!< Bit mask for LLWU_F2_WUF14.
-#define BS_LLWU_F2_WUF14     (1U)          //!< Bit field size in bits for LLWU_F2_WUF14.
+/*@{*/
+#define BP_LLWU_F2_WUF14     (6U)          /*!< Bit position for LLWU_F2_WUF14. */
+#define BM_LLWU_F2_WUF14     (0x40U)       /*!< Bit mask for LLWU_F2_WUF14. */
+#define BS_LLWU_F2_WUF14     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF14. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF14 field.
-#define BR_LLWU_F2_WUF14     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF14, BS_LLWU_F2_WUF14))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF14 field. */
+#define BR_LLWU_F2_WUF14(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF14, BS_LLWU_F2_WUF14))
 
-//! @brief Format value for bitfield LLWU_F2_WUF14.
-#define BF_LLWU_F2_WUF14(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF14), uint8_t) & BM_LLWU_F2_WUF14)
+/*! @brief Format value for bitfield LLWU_F2_WUF14. */
+#define BF_LLWU_F2_WUF14(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF14) & BM_LLWU_F2_WUF14)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF14 field to a new value.
-#define BW_LLWU_F2_WUF14(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF14), BP_LLWU_F2_WUF14, 1))
-#endif
-//@}
+/*! @brief Set the WUF14 field to a new value. */
+#define BW_LLWU_F2_WUF14(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF14), BP_LLWU_F2_WUF14, 1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F2, field WUF15[7] (W1C)
@@ -1563,30 +1374,25 @@ typedef union _hw_llwu_f2
  * - 0 - LLWU_P15 input was not a wakeup source
  * - 1 - LLWU_P15 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F2_WUF15     (7U)          //!< Bit position for LLWU_F2_WUF15.
-#define BM_LLWU_F2_WUF15     (0x80U)       //!< Bit mask for LLWU_F2_WUF15.
-#define BS_LLWU_F2_WUF15     (1U)          //!< Bit field size in bits for LLWU_F2_WUF15.
+/*@{*/
+#define BP_LLWU_F2_WUF15     (7U)          /*!< Bit position for LLWU_F2_WUF15. */
+#define BM_LLWU_F2_WUF15     (0x80U)       /*!< Bit mask for LLWU_F2_WUF15. */
+#define BS_LLWU_F2_WUF15     (1U)          /*!< Bit field size in bits for LLWU_F2_WUF15. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F2_WUF15 field.
-#define BR_LLWU_F2_WUF15     (BME_UBFX8(HW_LLWU_F2_ADDR, BP_LLWU_F2_WUF15, BS_LLWU_F2_WUF15))
-#endif
+/*! @brief Read current value of the LLWU_F2_WUF15 field. */
+#define BR_LLWU_F2_WUF15(x)  (BME_UBFX8(HW_LLWU_F2_ADDR(x), BP_LLWU_F2_WUF15, BS_LLWU_F2_WUF15))
 
-//! @brief Format value for bitfield LLWU_F2_WUF15.
-#define BF_LLWU_F2_WUF15(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_F2_WUF15), uint8_t) & BM_LLWU_F2_WUF15)
+/*! @brief Format value for bitfield LLWU_F2_WUF15. */
+#define BF_LLWU_F2_WUF15(v)  ((uint8_t)((uint8_t)(v) << BP_LLWU_F2_WUF15) & BM_LLWU_F2_WUF15)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WUF15 field to a new value.
-#define BW_LLWU_F2_WUF15(v)  (BME_BFI8(HW_LLWU_F2_ADDR, ((uint8_t)(v) << BP_LLWU_F2_WUF15), BP_LLWU_F2_WUF15, 1))
-#endif
-//@}
+/*! @brief Set the WUF15 field to a new value. */
+#define BW_LLWU_F2_WUF15(x, v) (BME_BFI8(HW_LLWU_F2_ADDR(x), ((uint8_t)(v) << BP_LLWU_F2_WUF15), BP_LLWU_F2_WUF15, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_F3 - LLWU Flag 3 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_F3 - LLWU Flag 3 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_F3 - LLWU Flag 3 register (RO)
  *
@@ -1608,29 +1414,26 @@ typedef union _hw_llwu_f3
     uint8_t U;
     struct _hw_llwu_f3_bitfields
     {
-        uint8_t MWUF0 : 1;             //!< [0] Wakeup flag For module 0
-        uint8_t MWUF1 : 1;             //!< [1] Wakeup flag For module 1
-        uint8_t MWUF2 : 1;             //!< [2] Wakeup flag For module 2
-        uint8_t MWUF3 : 1;             //!< [3] Wakeup flag For module 3
-        uint8_t MWUF4 : 1;             //!< [4] Wakeup flag For module 4
-        uint8_t MWUF5 : 1;             //!< [5] Wakeup flag For module 5
-        uint8_t MWUF6 : 1;             //!< [6] Wakeup flag For module 6
-        uint8_t MWUF7 : 1;             //!< [7] Wakeup flag For module 7
+        uint8_t MWUF0 : 1;             /*!< [0] Wakeup flag For module 0 */
+        uint8_t MWUF1 : 1;             /*!< [1] Wakeup flag For module 1 */
+        uint8_t MWUF2 : 1;             /*!< [2] Wakeup flag For module 2 */
+        uint8_t MWUF3 : 1;             /*!< [3] Wakeup flag For module 3 */
+        uint8_t MWUF4 : 1;             /*!< [4] Wakeup flag For module 4 */
+        uint8_t MWUF5 : 1;             /*!< [5] Wakeup flag For module 5 */
+        uint8_t MWUF6 : 1;             /*!< [6] Wakeup flag For module 6 */
+        uint8_t MWUF7 : 1;             /*!< [7] Wakeup flag For module 7 */
     } B;
 } hw_llwu_f3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_F3 register
  */
-//@{
-#define HW_LLWU_F3_ADDR          (REGS_LLWU_BASE + 0x7U)
+/*@{*/
+#define HW_LLWU_F3_ADDR(x)       ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_F3               (*(__I hw_llwu_f3_t *) HW_LLWU_F3_ADDR)
-#define HW_LLWU_F3_RD()          (HW_LLWU_F3.U)
-#endif
-//@}
+#define HW_LLWU_F3(x)            (*(__I hw_llwu_f3_t *) HW_LLWU_F3_ADDR(x))
+#define HW_LLWU_F3_RD(x)         (HW_LLWU_F3(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_F3 bitfields
@@ -1647,16 +1450,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 0 input was not a wakeup source
  * - 1 - Module 0 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF0     (0U)          //!< Bit position for LLWU_F3_MWUF0.
-#define BM_LLWU_F3_MWUF0     (0x01U)       //!< Bit mask for LLWU_F3_MWUF0.
-#define BS_LLWU_F3_MWUF0     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF0.
+/*@{*/
+#define BP_LLWU_F3_MWUF0     (0U)          /*!< Bit position for LLWU_F3_MWUF0. */
+#define BM_LLWU_F3_MWUF0     (0x01U)       /*!< Bit mask for LLWU_F3_MWUF0. */
+#define BS_LLWU_F3_MWUF0     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF0 field.
-#define BR_LLWU_F3_MWUF0     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF0, BS_LLWU_F3_MWUF0))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF0 field. */
+#define BR_LLWU_F3_MWUF0(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF0, BS_LLWU_F3_MWUF0))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF1[1] (RO)
@@ -1669,16 +1470,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 1 input was not a wakeup source
  * - 1 - Module 1 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF1     (1U)          //!< Bit position for LLWU_F3_MWUF1.
-#define BM_LLWU_F3_MWUF1     (0x02U)       //!< Bit mask for LLWU_F3_MWUF1.
-#define BS_LLWU_F3_MWUF1     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF1.
+/*@{*/
+#define BP_LLWU_F3_MWUF1     (1U)          /*!< Bit position for LLWU_F3_MWUF1. */
+#define BM_LLWU_F3_MWUF1     (0x02U)       /*!< Bit mask for LLWU_F3_MWUF1. */
+#define BS_LLWU_F3_MWUF1     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF1 field.
-#define BR_LLWU_F3_MWUF1     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF1, BS_LLWU_F3_MWUF1))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF1 field. */
+#define BR_LLWU_F3_MWUF1(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF1, BS_LLWU_F3_MWUF1))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF2[2] (RO)
@@ -1691,16 +1490,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 2 input was not a wakeup source
  * - 1 - Module 2 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF2     (2U)          //!< Bit position for LLWU_F3_MWUF2.
-#define BM_LLWU_F3_MWUF2     (0x04U)       //!< Bit mask for LLWU_F3_MWUF2.
-#define BS_LLWU_F3_MWUF2     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF2.
+/*@{*/
+#define BP_LLWU_F3_MWUF2     (2U)          /*!< Bit position for LLWU_F3_MWUF2. */
+#define BM_LLWU_F3_MWUF2     (0x04U)       /*!< Bit mask for LLWU_F3_MWUF2. */
+#define BS_LLWU_F3_MWUF2     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF2 field.
-#define BR_LLWU_F3_MWUF2     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF2, BS_LLWU_F3_MWUF2))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF2 field. */
+#define BR_LLWU_F3_MWUF2(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF2, BS_LLWU_F3_MWUF2))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF3[3] (RO)
@@ -1713,16 +1510,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 3 input was not a wakeup source
  * - 1 - Module 3 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF3     (3U)          //!< Bit position for LLWU_F3_MWUF3.
-#define BM_LLWU_F3_MWUF3     (0x08U)       //!< Bit mask for LLWU_F3_MWUF3.
-#define BS_LLWU_F3_MWUF3     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF3.
+/*@{*/
+#define BP_LLWU_F3_MWUF3     (3U)          /*!< Bit position for LLWU_F3_MWUF3. */
+#define BM_LLWU_F3_MWUF3     (0x08U)       /*!< Bit mask for LLWU_F3_MWUF3. */
+#define BS_LLWU_F3_MWUF3     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF3 field.
-#define BR_LLWU_F3_MWUF3     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF3, BS_LLWU_F3_MWUF3))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF3 field. */
+#define BR_LLWU_F3_MWUF3(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF3, BS_LLWU_F3_MWUF3))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF4[4] (RO)
@@ -1735,16 +1530,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 4 input was not a wakeup source
  * - 1 - Module 4 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF4     (4U)          //!< Bit position for LLWU_F3_MWUF4.
-#define BM_LLWU_F3_MWUF4     (0x10U)       //!< Bit mask for LLWU_F3_MWUF4.
-#define BS_LLWU_F3_MWUF4     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF4.
+/*@{*/
+#define BP_LLWU_F3_MWUF4     (4U)          /*!< Bit position for LLWU_F3_MWUF4. */
+#define BM_LLWU_F3_MWUF4     (0x10U)       /*!< Bit mask for LLWU_F3_MWUF4. */
+#define BS_LLWU_F3_MWUF4     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF4 field.
-#define BR_LLWU_F3_MWUF4     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF4, BS_LLWU_F3_MWUF4))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF4 field. */
+#define BR_LLWU_F3_MWUF4(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF4, BS_LLWU_F3_MWUF4))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF5[5] (RO)
@@ -1757,16 +1550,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 5 input was not a wakeup source
  * - 1 - Module 5 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF5     (5U)          //!< Bit position for LLWU_F3_MWUF5.
-#define BM_LLWU_F3_MWUF5     (0x20U)       //!< Bit mask for LLWU_F3_MWUF5.
-#define BS_LLWU_F3_MWUF5     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF5.
+/*@{*/
+#define BP_LLWU_F3_MWUF5     (5U)          /*!< Bit position for LLWU_F3_MWUF5. */
+#define BM_LLWU_F3_MWUF5     (0x20U)       /*!< Bit mask for LLWU_F3_MWUF5. */
+#define BS_LLWU_F3_MWUF5     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF5 field.
-#define BR_LLWU_F3_MWUF5     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF5, BS_LLWU_F3_MWUF5))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF5 field. */
+#define BR_LLWU_F3_MWUF5(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF5, BS_LLWU_F3_MWUF5))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF6[6] (RO)
@@ -1779,16 +1570,14 @@ typedef union _hw_llwu_f3
  * - 0 - Module 6 input was not a wakeup source
  * - 1 - Module 6 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF6     (6U)          //!< Bit position for LLWU_F3_MWUF6.
-#define BM_LLWU_F3_MWUF6     (0x40U)       //!< Bit mask for LLWU_F3_MWUF6.
-#define BS_LLWU_F3_MWUF6     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF6.
+/*@{*/
+#define BP_LLWU_F3_MWUF6     (6U)          /*!< Bit position for LLWU_F3_MWUF6. */
+#define BM_LLWU_F3_MWUF6     (0x40U)       /*!< Bit mask for LLWU_F3_MWUF6. */
+#define BS_LLWU_F3_MWUF6     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF6 field.
-#define BR_LLWU_F3_MWUF6     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF6, BS_LLWU_F3_MWUF6))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF6 field. */
+#define BR_LLWU_F3_MWUF6(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF6, BS_LLWU_F3_MWUF6))
+/*@}*/
 
 /*!
  * @name Register LLWU_F3, field MWUF7[7] (RO)
@@ -1801,22 +1590,19 @@ typedef union _hw_llwu_f3
  * - 0 - Module 7 input was not a wakeup source
  * - 1 - Module 7 input was a wakeup source
  */
-//@{
-#define BP_LLWU_F3_MWUF7     (7U)          //!< Bit position for LLWU_F3_MWUF7.
-#define BM_LLWU_F3_MWUF7     (0x80U)       //!< Bit mask for LLWU_F3_MWUF7.
-#define BS_LLWU_F3_MWUF7     (1U)          //!< Bit field size in bits for LLWU_F3_MWUF7.
+/*@{*/
+#define BP_LLWU_F3_MWUF7     (7U)          /*!< Bit position for LLWU_F3_MWUF7. */
+#define BM_LLWU_F3_MWUF7     (0x80U)       /*!< Bit mask for LLWU_F3_MWUF7. */
+#define BS_LLWU_F3_MWUF7     (1U)          /*!< Bit field size in bits for LLWU_F3_MWUF7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_F3_MWUF7 field.
-#define BR_LLWU_F3_MWUF7     (BME_UBFX8(HW_LLWU_F3_ADDR, BP_LLWU_F3_MWUF7, BS_LLWU_F3_MWUF7))
-#endif
-//@}
+/*! @brief Read current value of the LLWU_F3_MWUF7 field. */
+#define BR_LLWU_F3_MWUF7(x)  (BME_UBFX8(HW_LLWU_F3_ADDR(x), BP_LLWU_F3_MWUF7, BS_LLWU_F3_MWUF7))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_FILT1 - LLWU Pin Filter 1 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_FILT1 - LLWU Pin Filter 1 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_FILT1 - LLWU Pin Filter 1 register (RW)
  *
@@ -1833,29 +1619,26 @@ typedef union _hw_llwu_filt1
     uint8_t U;
     struct _hw_llwu_filt1_bitfields
     {
-        uint8_t FILTSEL : 4;           //!< [3:0] Filter Pin Select
-        uint8_t RESERVED0 : 1;         //!< [4]
-        uint8_t FILTE : 2;             //!< [6:5] Digital Filter On External Pin
-        uint8_t FILTF : 1;             //!< [7] Filter Detect Flag
+        uint8_t FILTSEL : 4;           /*!< [3:0] Filter Pin Select */
+        uint8_t RESERVED0 : 1;         /*!< [4]  */
+        uint8_t FILTE : 2;             /*!< [6:5] Digital Filter On External Pin */
+        uint8_t FILTF : 1;             /*!< [7] Filter Detect Flag */
     } B;
 } hw_llwu_filt1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_FILT1 register
  */
-//@{
-#define HW_LLWU_FILT1_ADDR       (REGS_LLWU_BASE + 0x8U)
+/*@{*/
+#define HW_LLWU_FILT1_ADDR(x)    ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_FILT1            (*(__IO hw_llwu_filt1_t *) HW_LLWU_FILT1_ADDR)
-#define HW_LLWU_FILT1_RD()       (HW_LLWU_FILT1.U)
-#define HW_LLWU_FILT1_WR(v)      (HW_LLWU_FILT1.U = (v))
-#define HW_LLWU_FILT1_SET(v)     (BME_OR8(HW_LLWU_FILT1_ADDR, (uint8_t)(v)))
-#define HW_LLWU_FILT1_CLR(v)     (BME_AND8(HW_LLWU_FILT1_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_FILT1_TOG(v)     (BME_XOR8(HW_LLWU_FILT1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_FILT1(x)         (*(__IO hw_llwu_filt1_t *) HW_LLWU_FILT1_ADDR(x))
+#define HW_LLWU_FILT1_RD(x)      (HW_LLWU_FILT1(x).U)
+#define HW_LLWU_FILT1_WR(x, v)   (HW_LLWU_FILT1(x).U = (v))
+#define HW_LLWU_FILT1_SET(x, v)  (BME_OR8(HW_LLWU_FILT1_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_FILT1_CLR(x, v)  (BME_AND8(HW_LLWU_FILT1_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_FILT1_TOG(x, v)  (BME_XOR8(HW_LLWU_FILT1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_FILT1 bitfields
@@ -1870,24 +1653,20 @@ typedef union _hw_llwu_filt1
  * - 0000 - Select LLWU_P0 for filter
  * - 1111 - Select LLWU_P15 for filter
  */
-//@{
-#define BP_LLWU_FILT1_FILTSEL (0U)         //!< Bit position for LLWU_FILT1_FILTSEL.
-#define BM_LLWU_FILT1_FILTSEL (0x0FU)      //!< Bit mask for LLWU_FILT1_FILTSEL.
-#define BS_LLWU_FILT1_FILTSEL (4U)         //!< Bit field size in bits for LLWU_FILT1_FILTSEL.
+/*@{*/
+#define BP_LLWU_FILT1_FILTSEL (0U)         /*!< Bit position for LLWU_FILT1_FILTSEL. */
+#define BM_LLWU_FILT1_FILTSEL (0x0FU)      /*!< Bit mask for LLWU_FILT1_FILTSEL. */
+#define BS_LLWU_FILT1_FILTSEL (4U)         /*!< Bit field size in bits for LLWU_FILT1_FILTSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT1_FILTSEL field.
-#define BR_LLWU_FILT1_FILTSEL (BME_UBFX8(HW_LLWU_FILT1_ADDR, BP_LLWU_FILT1_FILTSEL, BS_LLWU_FILT1_FILTSEL))
-#endif
+/*! @brief Read current value of the LLWU_FILT1_FILTSEL field. */
+#define BR_LLWU_FILT1_FILTSEL(x) (BME_UBFX8(HW_LLWU_FILT1_ADDR(x), BP_LLWU_FILT1_FILTSEL, BS_LLWU_FILT1_FILTSEL))
 
-//! @brief Format value for bitfield LLWU_FILT1_FILTSEL.
-#define BF_LLWU_FILT1_FILTSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT1_FILTSEL), uint8_t) & BM_LLWU_FILT1_FILTSEL)
+/*! @brief Format value for bitfield LLWU_FILT1_FILTSEL. */
+#define BF_LLWU_FILT1_FILTSEL(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT1_FILTSEL) & BM_LLWU_FILT1_FILTSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTSEL field to a new value.
-#define BW_LLWU_FILT1_FILTSEL(v) (BME_BFI8(HW_LLWU_FILT1_ADDR, ((uint8_t)(v) << BP_LLWU_FILT1_FILTSEL), BP_LLWU_FILT1_FILTSEL, 4))
-#endif
-//@}
+/*! @brief Set the FILTSEL field to a new value. */
+#define BW_LLWU_FILT1_FILTSEL(x, v) (BME_BFI8(HW_LLWU_FILT1_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT1_FILTSEL), BP_LLWU_FILT1_FILTSEL, 4))
+/*@}*/
 
 /*!
  * @name Register LLWU_FILT1, field FILTE[6:5] (RW)
@@ -1900,24 +1679,20 @@ typedef union _hw_llwu_filt1
  * - 10 - Filter negedge detect enabled
  * - 11 - Filter any edge detect enabled
  */
-//@{
-#define BP_LLWU_FILT1_FILTE  (5U)          //!< Bit position for LLWU_FILT1_FILTE.
-#define BM_LLWU_FILT1_FILTE  (0x60U)       //!< Bit mask for LLWU_FILT1_FILTE.
-#define BS_LLWU_FILT1_FILTE  (2U)          //!< Bit field size in bits for LLWU_FILT1_FILTE.
+/*@{*/
+#define BP_LLWU_FILT1_FILTE  (5U)          /*!< Bit position for LLWU_FILT1_FILTE. */
+#define BM_LLWU_FILT1_FILTE  (0x60U)       /*!< Bit mask for LLWU_FILT1_FILTE. */
+#define BS_LLWU_FILT1_FILTE  (2U)          /*!< Bit field size in bits for LLWU_FILT1_FILTE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT1_FILTE field.
-#define BR_LLWU_FILT1_FILTE  (BME_UBFX8(HW_LLWU_FILT1_ADDR, BP_LLWU_FILT1_FILTE, BS_LLWU_FILT1_FILTE))
-#endif
+/*! @brief Read current value of the LLWU_FILT1_FILTE field. */
+#define BR_LLWU_FILT1_FILTE(x) (BME_UBFX8(HW_LLWU_FILT1_ADDR(x), BP_LLWU_FILT1_FILTE, BS_LLWU_FILT1_FILTE))
 
-//! @brief Format value for bitfield LLWU_FILT1_FILTE.
-#define BF_LLWU_FILT1_FILTE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT1_FILTE), uint8_t) & BM_LLWU_FILT1_FILTE)
+/*! @brief Format value for bitfield LLWU_FILT1_FILTE. */
+#define BF_LLWU_FILT1_FILTE(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT1_FILTE) & BM_LLWU_FILT1_FILTE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTE field to a new value.
-#define BW_LLWU_FILT1_FILTE(v) (BME_BFI8(HW_LLWU_FILT1_ADDR, ((uint8_t)(v) << BP_LLWU_FILT1_FILTE), BP_LLWU_FILT1_FILTE, 2))
-#endif
-//@}
+/*! @brief Set the FILTE field to a new value. */
+#define BW_LLWU_FILT1_FILTE(x, v) (BME_BFI8(HW_LLWU_FILT1_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT1_FILTE), BP_LLWU_FILT1_FILTE, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_FILT1, field FILTF[7] (W1C)
@@ -1930,30 +1705,25 @@ typedef union _hw_llwu_filt1
  * - 0 - Pin Filter 1 was not a wakeup source
  * - 1 - Pin Filter 1 was a wakeup source
  */
-//@{
-#define BP_LLWU_FILT1_FILTF  (7U)          //!< Bit position for LLWU_FILT1_FILTF.
-#define BM_LLWU_FILT1_FILTF  (0x80U)       //!< Bit mask for LLWU_FILT1_FILTF.
-#define BS_LLWU_FILT1_FILTF  (1U)          //!< Bit field size in bits for LLWU_FILT1_FILTF.
+/*@{*/
+#define BP_LLWU_FILT1_FILTF  (7U)          /*!< Bit position for LLWU_FILT1_FILTF. */
+#define BM_LLWU_FILT1_FILTF  (0x80U)       /*!< Bit mask for LLWU_FILT1_FILTF. */
+#define BS_LLWU_FILT1_FILTF  (1U)          /*!< Bit field size in bits for LLWU_FILT1_FILTF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT1_FILTF field.
-#define BR_LLWU_FILT1_FILTF  (BME_UBFX8(HW_LLWU_FILT1_ADDR, BP_LLWU_FILT1_FILTF, BS_LLWU_FILT1_FILTF))
-#endif
+/*! @brief Read current value of the LLWU_FILT1_FILTF field. */
+#define BR_LLWU_FILT1_FILTF(x) (BME_UBFX8(HW_LLWU_FILT1_ADDR(x), BP_LLWU_FILT1_FILTF, BS_LLWU_FILT1_FILTF))
 
-//! @brief Format value for bitfield LLWU_FILT1_FILTF.
-#define BF_LLWU_FILT1_FILTF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT1_FILTF), uint8_t) & BM_LLWU_FILT1_FILTF)
+/*! @brief Format value for bitfield LLWU_FILT1_FILTF. */
+#define BF_LLWU_FILT1_FILTF(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT1_FILTF) & BM_LLWU_FILT1_FILTF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTF field to a new value.
-#define BW_LLWU_FILT1_FILTF(v) (BME_BFI8(HW_LLWU_FILT1_ADDR, ((uint8_t)(v) << BP_LLWU_FILT1_FILTF), BP_LLWU_FILT1_FILTF, 1))
-#endif
-//@}
+/*! @brief Set the FILTF field to a new value. */
+#define BW_LLWU_FILT1_FILTF(x, v) (BME_BFI8(HW_LLWU_FILT1_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT1_FILTF), BP_LLWU_FILT1_FILTF, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LLWU_FILT2 - LLWU Pin Filter 2 register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LLWU_FILT2 - LLWU Pin Filter 2 register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LLWU_FILT2 - LLWU Pin Filter 2 register (RW)
  *
@@ -1970,29 +1740,26 @@ typedef union _hw_llwu_filt2
     uint8_t U;
     struct _hw_llwu_filt2_bitfields
     {
-        uint8_t FILTSEL : 4;           //!< [3:0] Filter Pin Select
-        uint8_t RESERVED0 : 1;         //!< [4]
-        uint8_t FILTE : 2;             //!< [6:5] Digital Filter On External Pin
-        uint8_t FILTF : 1;             //!< [7] Filter Detect Flag
+        uint8_t FILTSEL : 4;           /*!< [3:0] Filter Pin Select */
+        uint8_t RESERVED0 : 1;         /*!< [4]  */
+        uint8_t FILTE : 2;             /*!< [6:5] Digital Filter On External Pin */
+        uint8_t FILTF : 1;             /*!< [7] Filter Detect Flag */
     } B;
 } hw_llwu_filt2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LLWU_FILT2 register
  */
-//@{
-#define HW_LLWU_FILT2_ADDR       (REGS_LLWU_BASE + 0x9U)
+/*@{*/
+#define HW_LLWU_FILT2_ADDR(x)    ((x) + 0x9U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LLWU_FILT2            (*(__IO hw_llwu_filt2_t *) HW_LLWU_FILT2_ADDR)
-#define HW_LLWU_FILT2_RD()       (HW_LLWU_FILT2.U)
-#define HW_LLWU_FILT2_WR(v)      (HW_LLWU_FILT2.U = (v))
-#define HW_LLWU_FILT2_SET(v)     (BME_OR8(HW_LLWU_FILT2_ADDR, (uint8_t)(v)))
-#define HW_LLWU_FILT2_CLR(v)     (BME_AND8(HW_LLWU_FILT2_ADDR, (uint8_t)(~(v))))
-#define HW_LLWU_FILT2_TOG(v)     (BME_XOR8(HW_LLWU_FILT2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_LLWU_FILT2(x)         (*(__IO hw_llwu_filt2_t *) HW_LLWU_FILT2_ADDR(x))
+#define HW_LLWU_FILT2_RD(x)      (HW_LLWU_FILT2(x).U)
+#define HW_LLWU_FILT2_WR(x, v)   (HW_LLWU_FILT2(x).U = (v))
+#define HW_LLWU_FILT2_SET(x, v)  (BME_OR8(HW_LLWU_FILT2_ADDR(x), (uint8_t)(v)))
+#define HW_LLWU_FILT2_CLR(x, v)  (BME_AND8(HW_LLWU_FILT2_ADDR(x), (uint8_t)(~(v))))
+#define HW_LLWU_FILT2_TOG(x, v)  (BME_XOR8(HW_LLWU_FILT2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LLWU_FILT2 bitfields
@@ -2007,24 +1774,20 @@ typedef union _hw_llwu_filt2
  * - 0000 - Select LLWU_P0 for filter
  * - 1111 - Select LLWU_P15 for filter
  */
-//@{
-#define BP_LLWU_FILT2_FILTSEL (0U)         //!< Bit position for LLWU_FILT2_FILTSEL.
-#define BM_LLWU_FILT2_FILTSEL (0x0FU)      //!< Bit mask for LLWU_FILT2_FILTSEL.
-#define BS_LLWU_FILT2_FILTSEL (4U)         //!< Bit field size in bits for LLWU_FILT2_FILTSEL.
+/*@{*/
+#define BP_LLWU_FILT2_FILTSEL (0U)         /*!< Bit position for LLWU_FILT2_FILTSEL. */
+#define BM_LLWU_FILT2_FILTSEL (0x0FU)      /*!< Bit mask for LLWU_FILT2_FILTSEL. */
+#define BS_LLWU_FILT2_FILTSEL (4U)         /*!< Bit field size in bits for LLWU_FILT2_FILTSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT2_FILTSEL field.
-#define BR_LLWU_FILT2_FILTSEL (BME_UBFX8(HW_LLWU_FILT2_ADDR, BP_LLWU_FILT2_FILTSEL, BS_LLWU_FILT2_FILTSEL))
-#endif
+/*! @brief Read current value of the LLWU_FILT2_FILTSEL field. */
+#define BR_LLWU_FILT2_FILTSEL(x) (BME_UBFX8(HW_LLWU_FILT2_ADDR(x), BP_LLWU_FILT2_FILTSEL, BS_LLWU_FILT2_FILTSEL))
 
-//! @brief Format value for bitfield LLWU_FILT2_FILTSEL.
-#define BF_LLWU_FILT2_FILTSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT2_FILTSEL), uint8_t) & BM_LLWU_FILT2_FILTSEL)
+/*! @brief Format value for bitfield LLWU_FILT2_FILTSEL. */
+#define BF_LLWU_FILT2_FILTSEL(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT2_FILTSEL) & BM_LLWU_FILT2_FILTSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTSEL field to a new value.
-#define BW_LLWU_FILT2_FILTSEL(v) (BME_BFI8(HW_LLWU_FILT2_ADDR, ((uint8_t)(v) << BP_LLWU_FILT2_FILTSEL), BP_LLWU_FILT2_FILTSEL, 4))
-#endif
-//@}
+/*! @brief Set the FILTSEL field to a new value. */
+#define BW_LLWU_FILT2_FILTSEL(x, v) (BME_BFI8(HW_LLWU_FILT2_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT2_FILTSEL), BP_LLWU_FILT2_FILTSEL, 4))
+/*@}*/
 
 /*!
  * @name Register LLWU_FILT2, field FILTE[6:5] (RW)
@@ -2037,24 +1800,20 @@ typedef union _hw_llwu_filt2
  * - 10 - Filter negedge detect enabled
  * - 11 - Filter any edge detect enabled
  */
-//@{
-#define BP_LLWU_FILT2_FILTE  (5U)          //!< Bit position for LLWU_FILT2_FILTE.
-#define BM_LLWU_FILT2_FILTE  (0x60U)       //!< Bit mask for LLWU_FILT2_FILTE.
-#define BS_LLWU_FILT2_FILTE  (2U)          //!< Bit field size in bits for LLWU_FILT2_FILTE.
+/*@{*/
+#define BP_LLWU_FILT2_FILTE  (5U)          /*!< Bit position for LLWU_FILT2_FILTE. */
+#define BM_LLWU_FILT2_FILTE  (0x60U)       /*!< Bit mask for LLWU_FILT2_FILTE. */
+#define BS_LLWU_FILT2_FILTE  (2U)          /*!< Bit field size in bits for LLWU_FILT2_FILTE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT2_FILTE field.
-#define BR_LLWU_FILT2_FILTE  (BME_UBFX8(HW_LLWU_FILT2_ADDR, BP_LLWU_FILT2_FILTE, BS_LLWU_FILT2_FILTE))
-#endif
+/*! @brief Read current value of the LLWU_FILT2_FILTE field. */
+#define BR_LLWU_FILT2_FILTE(x) (BME_UBFX8(HW_LLWU_FILT2_ADDR(x), BP_LLWU_FILT2_FILTE, BS_LLWU_FILT2_FILTE))
 
-//! @brief Format value for bitfield LLWU_FILT2_FILTE.
-#define BF_LLWU_FILT2_FILTE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT2_FILTE), uint8_t) & BM_LLWU_FILT2_FILTE)
+/*! @brief Format value for bitfield LLWU_FILT2_FILTE. */
+#define BF_LLWU_FILT2_FILTE(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT2_FILTE) & BM_LLWU_FILT2_FILTE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTE field to a new value.
-#define BW_LLWU_FILT2_FILTE(v) (BME_BFI8(HW_LLWU_FILT2_ADDR, ((uint8_t)(v) << BP_LLWU_FILT2_FILTE), BP_LLWU_FILT2_FILTE, 2))
-#endif
-//@}
+/*! @brief Set the FILTE field to a new value. */
+#define BW_LLWU_FILT2_FILTE(x, v) (BME_BFI8(HW_LLWU_FILT2_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT2_FILTE), BP_LLWU_FILT2_FILTE, 2))
+/*@}*/
 
 /*!
  * @name Register LLWU_FILT2, field FILTF[7] (W1C)
@@ -2067,54 +1826,49 @@ typedef union _hw_llwu_filt2
  * - 0 - Pin Filter 2 was not a wakeup source
  * - 1 - Pin Filter 2 was a wakeup source
  */
-//@{
-#define BP_LLWU_FILT2_FILTF  (7U)          //!< Bit position for LLWU_FILT2_FILTF.
-#define BM_LLWU_FILT2_FILTF  (0x80U)       //!< Bit mask for LLWU_FILT2_FILTF.
-#define BS_LLWU_FILT2_FILTF  (1U)          //!< Bit field size in bits for LLWU_FILT2_FILTF.
+/*@{*/
+#define BP_LLWU_FILT2_FILTF  (7U)          /*!< Bit position for LLWU_FILT2_FILTF. */
+#define BM_LLWU_FILT2_FILTF  (0x80U)       /*!< Bit mask for LLWU_FILT2_FILTF. */
+#define BS_LLWU_FILT2_FILTF  (1U)          /*!< Bit field size in bits for LLWU_FILT2_FILTF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LLWU_FILT2_FILTF field.
-#define BR_LLWU_FILT2_FILTF  (BME_UBFX8(HW_LLWU_FILT2_ADDR, BP_LLWU_FILT2_FILTF, BS_LLWU_FILT2_FILTF))
-#endif
+/*! @brief Read current value of the LLWU_FILT2_FILTF field. */
+#define BR_LLWU_FILT2_FILTF(x) (BME_UBFX8(HW_LLWU_FILT2_ADDR(x), BP_LLWU_FILT2_FILTF, BS_LLWU_FILT2_FILTF))
 
-//! @brief Format value for bitfield LLWU_FILT2_FILTF.
-#define BF_LLWU_FILT2_FILTF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_LLWU_FILT2_FILTF), uint8_t) & BM_LLWU_FILT2_FILTF)
+/*! @brief Format value for bitfield LLWU_FILT2_FILTF. */
+#define BF_LLWU_FILT2_FILTF(v) ((uint8_t)((uint8_t)(v) << BP_LLWU_FILT2_FILTF) & BM_LLWU_FILT2_FILTF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTF field to a new value.
-#define BW_LLWU_FILT2_FILTF(v) (BME_BFI8(HW_LLWU_FILT2_ADDR, ((uint8_t)(v) << BP_LLWU_FILT2_FILTF), BP_LLWU_FILT2_FILTF, 1))
-#endif
-//@}
+/*! @brief Set the FILTF field to a new value. */
+#define BW_LLWU_FILT2_FILTF(x, v) (BME_BFI8(HW_LLWU_FILT2_ADDR(x), ((uint8_t)(v) << BP_LLWU_FILT2_FILTF), BP_LLWU_FILT2_FILTF, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_llwu_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_llwu_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All LLWU module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_llwu
 {
-    __IO hw_llwu_pe1_t PE1;                //!< [0x0] LLWU Pin Enable 1 register
-    __IO hw_llwu_pe2_t PE2;                //!< [0x1] LLWU Pin Enable 2 register
-    __IO hw_llwu_pe3_t PE3;                //!< [0x2] LLWU Pin Enable 3 register
-    __IO hw_llwu_pe4_t PE4;                //!< [0x3] LLWU Pin Enable 4 register
-    __IO hw_llwu_me_t ME;                  //!< [0x4] LLWU Module Enable register
-    __IO hw_llwu_f1_t F1;                  //!< [0x5] LLWU Flag 1 register
-    __IO hw_llwu_f2_t F2;                  //!< [0x6] LLWU Flag 2 register
-    __I hw_llwu_f3_t F3;                   //!< [0x7] LLWU Flag 3 register
-    __IO hw_llwu_filt1_t FILT1;            //!< [0x8] LLWU Pin Filter 1 register
-    __IO hw_llwu_filt2_t FILT2;            //!< [0x9] LLWU Pin Filter 2 register
+    __IO hw_llwu_pe1_t PE1;                /*!< [0x0] LLWU Pin Enable 1 register */
+    __IO hw_llwu_pe2_t PE2;                /*!< [0x1] LLWU Pin Enable 2 register */
+    __IO hw_llwu_pe3_t PE3;                /*!< [0x2] LLWU Pin Enable 3 register */
+    __IO hw_llwu_pe4_t PE4;                /*!< [0x3] LLWU Pin Enable 4 register */
+    __IO hw_llwu_me_t ME;                  /*!< [0x4] LLWU Module Enable register */
+    __IO hw_llwu_f1_t F1;                  /*!< [0x5] LLWU Flag 1 register */
+    __IO hw_llwu_f2_t F2;                  /*!< [0x6] LLWU Flag 2 register */
+    __I hw_llwu_f3_t F3;                   /*!< [0x7] LLWU Flag 3 register */
+    __IO hw_llwu_filt1_t FILT1;            /*!< [0x8] LLWU Pin Filter 1 register */
+    __IO hw_llwu_filt2_t FILT2;            /*!< [0x9] LLWU Pin Filter 2 register */
 } hw_llwu_t;
 #pragma pack()
 
-//! @brief Macro to access all LLWU registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_LLWU</code>.
-#define HW_LLWU        (*(hw_llwu_t *) REGS_LLWU_BASE)
-#endif
+/*! @brief Macro to access all LLWU registers. */
+/*! @param x LLWU module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_LLWU(LLWU_BASE)</code>. */
+#define HW_LLWU(x)     (*(hw_llwu_t *)(x))
 
-#endif // __HW_LLWU_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_LLWU_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

@@ -33,19 +33,6 @@
 #include "fsl_platform_common.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-// Declarations
-////////////////////////////////////////////////////////////////////////////////
-//! @brief Flash verify unit of FTFx_VERIFY_SECTION cmd.
-enum _flash_verify_unit
-{
-#if FSL_FEATURE_FLASH_IS_FTFE
-    kFlashVerifyUnitInBytes = 16
-#else
-    kFlashVerifyUnitInBytes = FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE
-#endif
-};
-
-////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +40,7 @@ enum _flash_verify_unit
 status_t flash_verify_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInBytes, flash_margin_value_t margin)
 {
     // Check arguments.
-    status_t returnCode = flash_check_range(driver, start, lengthInBytes);
+    status_t returnCode = flash_check_range(driver, start, lengthInBytes, FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT);
     if (returnCode)
     {
         return returnCode;
@@ -77,14 +64,14 @@ status_t flash_verify_erase(flash_driver_t * driver, uint32_t start, uint32_t le
             verifyLength = remainingBytes;
         }
 
-        uint32_t numberOfPhrases = verifyLength / kFlashVerifyUnitInBytes;
+        uint32_t numberOfPhrases = verifyLength / FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT;
 
         // Fill in verify section command parameters.
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(0, FTFx_VERIFY_SECTION);
-        HW_FTFx_FCCOBx_WR(4, numberOfPhrases >> 8);
-        HW_FTFx_FCCOBx_WR(5, numberOfPhrases & 0xFF);
-        HW_FTFx_FCCOBx_WR(6, margin);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_VERIFY_SECTION);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 4, numberOfPhrases >> 8);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 5, numberOfPhrases & 0xFF);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 6, margin);
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();

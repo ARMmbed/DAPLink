@@ -15,7 +15,7 @@
  */
 #include "board.h"
 
-/* Each board should have a unique ID and secret. For information 
+/* Each board should have a unique ID and secret. For information
  *	about obtaining a secret contact support@mbed.org
  */
 #if defined (BOARD_FRDM_KL25Z) || defined (BOARD_TWR_KL25Z48M)
@@ -52,6 +52,10 @@
 
 #elif defined (BOARD_FRDM_KE02Z)
 #define BOARD_ID        "0270"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_TWR_K24F)
+#define BOARD_ID        "0280"
 #define BOARD_SECRET    "xxxxxxxx"
 
 #elif defined (BOARD_LPC812_MAX)

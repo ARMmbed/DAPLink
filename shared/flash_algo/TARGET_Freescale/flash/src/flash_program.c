@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2013-2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,7 +30,8 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Declarations
@@ -49,7 +50,7 @@ status_t flash_program(flash_driver_t * driver, uint32_t start, uint32_t * src, 
     }
 
     // Check the supplied address range.
-    status_t returnCode = flash_check_range(driver, start, lengthInBytes);
+    status_t returnCode = flash_check_range(driver, start, lengthInBytes, FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE);
     if (returnCode)
     {
         return returnCode;
@@ -61,16 +62,22 @@ status_t flash_program(flash_driver_t * driver, uint32_t start, uint32_t * src, 
         kFCCOBx[0] = start;
         kFCCOBx[1] = *src++;
 #if (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE == 4)
-        HW_FTFx_FCCOBx_WR(0, FTFx_PROGRAM_LONGWORD);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_PROGRAM_LONGWORD);
 #elif (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE == 8)
         kFCCOBx[2] = *src++;
-        HW_FTFx_FCCOBx_WR(0, FTFx_PROGRAM_PHRASE);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_PROGRAM_PHRASE);
 #else
-        #error "Untreated write-unit size"
+        #error "Untreated program unit size"
 #endif
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();
+
+        // calling flash callback function if it is available
+        if (driver->PFlashCallback)
+        {
+            driver->PFlashCallback();
+        }
 
         // checking for the success of command execution
         if (kStatus_Success != returnCode)

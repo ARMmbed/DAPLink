@@ -21,7 +21,8 @@
 #ifndef __HW_FTFA_REGISTERS_H__
 #define __HW_FTFA_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL05Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL05Z4 FTFA
@@ -53,19 +54,12 @@
  * - hw_ftfa_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_FTFA_BASE
-#define HW_FTFA_INSTANCE_COUNT (1U) //!< Number of instances of the FTFA module.
-#define REGS_FTFA_BASE (0x40020000U) //!< Base address for FTFA.
-#endif
-//@}
+#define HW_FTFA_INSTANCE_COUNT (1U) /*!< Number of instances of the FTFA module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FSTAT - Flash Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FSTAT - Flash Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FSTAT - Flash Status Register (RW)
  *
@@ -83,32 +77,29 @@ typedef union _hw_ftfa_fstat
     uint8_t U;
     struct _hw_ftfa_fstat_bitfields
     {
-        uint8_t MGSTAT0 : 1;           //!< [0] Memory Controller Command Completion
-                                       //! Status Flag
-        uint8_t RESERVED0 : 3;         //!< [3:1]
-        uint8_t FPVIOL : 1;            //!< [4] Flash Protection Violation Flag
-        uint8_t ACCERR : 1;            //!< [5] Flash Access Error Flag
-        uint8_t RDCOLERR : 1;          //!< [6] Flash Read Collision Error Flag
-        uint8_t CCIF : 1;              //!< [7] Command Complete Interrupt Flag
+        uint8_t MGSTAT0 : 1;           /*!< [0] Memory Controller Command Completion
+                                        * Status Flag */
+        uint8_t RESERVED0 : 3;         /*!< [3:1]  */
+        uint8_t FPVIOL : 1;            /*!< [4] Flash Protection Violation Flag */
+        uint8_t ACCERR : 1;            /*!< [5] Flash Access Error Flag */
+        uint8_t RDCOLERR : 1;          /*!< [6] Flash Read Collision Error Flag */
+        uint8_t CCIF : 1;              /*!< [7] Command Complete Interrupt Flag */
     } B;
 } hw_ftfa_fstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FSTAT register
  */
-//@{
-#define HW_FTFA_FSTAT_ADDR       (REGS_FTFA_BASE + 0x0U)
+/*@{*/
+#define HW_FTFA_FSTAT_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FSTAT            (*(__IO hw_ftfa_fstat_t *) HW_FTFA_FSTAT_ADDR)
-#define HW_FTFA_FSTAT_RD()       (HW_FTFA_FSTAT.U)
-#define HW_FTFA_FSTAT_WR(v)      (HW_FTFA_FSTAT.U = (v))
-#define HW_FTFA_FSTAT_SET(v)     (BME_OR8(HW_FTFA_FSTAT_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FSTAT_CLR(v)     (BME_AND8(HW_FTFA_FSTAT_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FSTAT_TOG(v)     (BME_XOR8(HW_FTFA_FSTAT_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FSTAT(x)         (*(__IO hw_ftfa_fstat_t *) HW_FTFA_FSTAT_ADDR(x))
+#define HW_FTFA_FSTAT_RD(x)      (HW_FTFA_FSTAT(x).U)
+#define HW_FTFA_FSTAT_WR(x, v)   (HW_FTFA_FSTAT(x).U = (v))
+#define HW_FTFA_FSTAT_SET(x, v)  (BME_OR8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FSTAT_CLR(x, v)  (BME_AND8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FSTAT_TOG(x, v)  (BME_XOR8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FSTAT bitfields
@@ -125,16 +116,14 @@ typedef union _hw_ftfa_fstat
  * been launched. At some point during the execution of "command-N+1," the previous
  * result is discarded and any previous error is cleared.
  */
-//@{
-#define BP_FTFA_FSTAT_MGSTAT0 (0U)         //!< Bit position for FTFA_FSTAT_MGSTAT0.
-#define BM_FTFA_FSTAT_MGSTAT0 (0x01U)      //!< Bit mask for FTFA_FSTAT_MGSTAT0.
-#define BS_FTFA_FSTAT_MGSTAT0 (1U)         //!< Bit field size in bits for FTFA_FSTAT_MGSTAT0.
+/*@{*/
+#define BP_FTFA_FSTAT_MGSTAT0 (0U)         /*!< Bit position for FTFA_FSTAT_MGSTAT0. */
+#define BM_FTFA_FSTAT_MGSTAT0 (0x01U)      /*!< Bit mask for FTFA_FSTAT_MGSTAT0. */
+#define BS_FTFA_FSTAT_MGSTAT0 (1U)         /*!< Bit field size in bits for FTFA_FSTAT_MGSTAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_MGSTAT0 field.
-#define BR_FTFA_FSTAT_MGSTAT0 (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_MGSTAT0, BS_FTFA_FSTAT_MGSTAT0))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSTAT_MGSTAT0 field. */
+#define BR_FTFA_FSTAT_MGSTAT0(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_MGSTAT0, BS_FTFA_FSTAT_MGSTAT0))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSTAT, field FPVIOL[4] (W1C)
@@ -149,24 +138,20 @@ typedef union _hw_ftfa_fstat
  * - 0 - No protection violation detected
  * - 1 - Protection violation detected
  */
-//@{
-#define BP_FTFA_FSTAT_FPVIOL (4U)          //!< Bit position for FTFA_FSTAT_FPVIOL.
-#define BM_FTFA_FSTAT_FPVIOL (0x10U)       //!< Bit mask for FTFA_FSTAT_FPVIOL.
-#define BS_FTFA_FSTAT_FPVIOL (1U)          //!< Bit field size in bits for FTFA_FSTAT_FPVIOL.
+/*@{*/
+#define BP_FTFA_FSTAT_FPVIOL (4U)          /*!< Bit position for FTFA_FSTAT_FPVIOL. */
+#define BM_FTFA_FSTAT_FPVIOL (0x10U)       /*!< Bit mask for FTFA_FSTAT_FPVIOL. */
+#define BS_FTFA_FSTAT_FPVIOL (1U)          /*!< Bit field size in bits for FTFA_FSTAT_FPVIOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_FPVIOL field.
-#define BR_FTFA_FSTAT_FPVIOL (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_FPVIOL, BS_FTFA_FSTAT_FPVIOL))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_FPVIOL field. */
+#define BR_FTFA_FSTAT_FPVIOL(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_FPVIOL, BS_FTFA_FSTAT_FPVIOL))
 
-//! @brief Format value for bitfield FTFA_FSTAT_FPVIOL.
-#define BF_FTFA_FSTAT_FPVIOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_FPVIOL), uint8_t) & BM_FTFA_FSTAT_FPVIOL)
+/*! @brief Format value for bitfield FTFA_FSTAT_FPVIOL. */
+#define BF_FTFA_FSTAT_FPVIOL(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL) & BM_FTFA_FSTAT_FPVIOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FPVIOL field to a new value.
-#define BW_FTFA_FSTAT_FPVIOL(v) (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL), BP_FTFA_FSTAT_FPVIOL, 1))
-#endif
-//@}
+/*! @brief Set the FPVIOL field to a new value. */
+#define BW_FTFA_FSTAT_FPVIOL(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL), BP_FTFA_FSTAT_FPVIOL, 1))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSTAT, field ACCERR[5] (W1C)
@@ -181,24 +166,20 @@ typedef union _hw_ftfa_fstat
  * - 0 - No access error detected
  * - 1 - Access error detected
  */
-//@{
-#define BP_FTFA_FSTAT_ACCERR (5U)          //!< Bit position for FTFA_FSTAT_ACCERR.
-#define BM_FTFA_FSTAT_ACCERR (0x20U)       //!< Bit mask for FTFA_FSTAT_ACCERR.
-#define BS_FTFA_FSTAT_ACCERR (1U)          //!< Bit field size in bits for FTFA_FSTAT_ACCERR.
+/*@{*/
+#define BP_FTFA_FSTAT_ACCERR (5U)          /*!< Bit position for FTFA_FSTAT_ACCERR. */
+#define BM_FTFA_FSTAT_ACCERR (0x20U)       /*!< Bit mask for FTFA_FSTAT_ACCERR. */
+#define BS_FTFA_FSTAT_ACCERR (1U)          /*!< Bit field size in bits for FTFA_FSTAT_ACCERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_ACCERR field.
-#define BR_FTFA_FSTAT_ACCERR (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_ACCERR, BS_FTFA_FSTAT_ACCERR))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_ACCERR field. */
+#define BR_FTFA_FSTAT_ACCERR(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_ACCERR, BS_FTFA_FSTAT_ACCERR))
 
-//! @brief Format value for bitfield FTFA_FSTAT_ACCERR.
-#define BF_FTFA_FSTAT_ACCERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_ACCERR), uint8_t) & BM_FTFA_FSTAT_ACCERR)
+/*! @brief Format value for bitfield FTFA_FSTAT_ACCERR. */
+#define BF_FTFA_FSTAT_ACCERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR) & BM_FTFA_FSTAT_ACCERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACCERR field to a new value.
-#define BW_FTFA_FSTAT_ACCERR(v) (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR), BP_FTFA_FSTAT_ACCERR, 1))
-#endif
-//@}
+/*! @brief Set the ACCERR field to a new value. */
+#define BW_FTFA_FSTAT_ACCERR(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR), BP_FTFA_FSTAT_ACCERR, 1))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSTAT, field RDCOLERR[6] (W1C)
@@ -213,24 +194,20 @@ typedef union _hw_ftfa_fstat
  * - 0 - No collision error detected
  * - 1 - Collision error detected
  */
-//@{
-#define BP_FTFA_FSTAT_RDCOLERR (6U)        //!< Bit position for FTFA_FSTAT_RDCOLERR.
-#define BM_FTFA_FSTAT_RDCOLERR (0x40U)     //!< Bit mask for FTFA_FSTAT_RDCOLERR.
-#define BS_FTFA_FSTAT_RDCOLERR (1U)        //!< Bit field size in bits for FTFA_FSTAT_RDCOLERR.
+/*@{*/
+#define BP_FTFA_FSTAT_RDCOLERR (6U)        /*!< Bit position for FTFA_FSTAT_RDCOLERR. */
+#define BM_FTFA_FSTAT_RDCOLERR (0x40U)     /*!< Bit mask for FTFA_FSTAT_RDCOLERR. */
+#define BS_FTFA_FSTAT_RDCOLERR (1U)        /*!< Bit field size in bits for FTFA_FSTAT_RDCOLERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_RDCOLERR field.
-#define BR_FTFA_FSTAT_RDCOLERR (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_RDCOLERR, BS_FTFA_FSTAT_RDCOLERR))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_RDCOLERR field. */
+#define BR_FTFA_FSTAT_RDCOLERR(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_RDCOLERR, BS_FTFA_FSTAT_RDCOLERR))
 
-//! @brief Format value for bitfield FTFA_FSTAT_RDCOLERR.
-#define BF_FTFA_FSTAT_RDCOLERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_RDCOLERR), uint8_t) & BM_FTFA_FSTAT_RDCOLERR)
+/*! @brief Format value for bitfield FTFA_FSTAT_RDCOLERR. */
+#define BF_FTFA_FSTAT_RDCOLERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR) & BM_FTFA_FSTAT_RDCOLERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLERR field to a new value.
-#define BW_FTFA_FSTAT_RDCOLERR(v) (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR), BP_FTFA_FSTAT_RDCOLERR, 1))
-#endif
-//@}
+/*! @brief Set the RDCOLERR field to a new value. */
+#define BW_FTFA_FSTAT_RDCOLERR(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR), BP_FTFA_FSTAT_RDCOLERR, 1))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSTAT, field CCIF[7] (W1C)
@@ -246,30 +223,25 @@ typedef union _hw_ftfa_fstat
  * - 0 - Flash command in progress
  * - 1 - Flash command has completed
  */
-//@{
-#define BP_FTFA_FSTAT_CCIF   (7U)          //!< Bit position for FTFA_FSTAT_CCIF.
-#define BM_FTFA_FSTAT_CCIF   (0x80U)       //!< Bit mask for FTFA_FSTAT_CCIF.
-#define BS_FTFA_FSTAT_CCIF   (1U)          //!< Bit field size in bits for FTFA_FSTAT_CCIF.
+/*@{*/
+#define BP_FTFA_FSTAT_CCIF   (7U)          /*!< Bit position for FTFA_FSTAT_CCIF. */
+#define BM_FTFA_FSTAT_CCIF   (0x80U)       /*!< Bit mask for FTFA_FSTAT_CCIF. */
+#define BS_FTFA_FSTAT_CCIF   (1U)          /*!< Bit field size in bits for FTFA_FSTAT_CCIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_CCIF field.
-#define BR_FTFA_FSTAT_CCIF   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_CCIF, BS_FTFA_FSTAT_CCIF))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_CCIF field. */
+#define BR_FTFA_FSTAT_CCIF(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_CCIF, BS_FTFA_FSTAT_CCIF))
 
-//! @brief Format value for bitfield FTFA_FSTAT_CCIF.
-#define BF_FTFA_FSTAT_CCIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_CCIF), uint8_t) & BM_FTFA_FSTAT_CCIF)
+/*! @brief Format value for bitfield FTFA_FSTAT_CCIF. */
+#define BF_FTFA_FSTAT_CCIF(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_CCIF) & BM_FTFA_FSTAT_CCIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIF field to a new value.
-#define BW_FTFA_FSTAT_CCIF(v) (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_CCIF), BP_FTFA_FSTAT_CCIF, 1))
-#endif
-//@}
+/*! @brief Set the CCIF field to a new value. */
+#define BW_FTFA_FSTAT_CCIF(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_CCIF), BP_FTFA_FSTAT_CCIF, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCNFG - Flash Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCNFG - Flash Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCNFG - Flash Configuration Register (RW)
  *
@@ -284,30 +256,28 @@ typedef union _hw_ftfa_fcnfg
     uint8_t U;
     struct _hw_ftfa_fcnfg_bitfields
     {
-        uint8_t RESERVED0 : 4;         //!< [3:0]
-        uint8_t ERSSUSP : 1;           //!< [4] Erase Suspend
-        uint8_t ERSAREQ : 1;           //!< [5] Erase All Request
-        uint8_t RDCOLLIE : 1;          //!< [6] Read Collision Error Interrupt Enable
-        uint8_t CCIE : 1;              //!< [7] Command Complete Interrupt Enable
+        uint8_t RESERVED0 : 4;         /*!< [3:0]  */
+        uint8_t ERSSUSP : 1;           /*!< [4] Erase Suspend */
+        uint8_t ERSAREQ : 1;           /*!< [5] Erase All Request */
+        uint8_t RDCOLLIE : 1;          /*!< [6] Read Collision Error Interrupt Enable
+                                        * */
+        uint8_t CCIE : 1;              /*!< [7] Command Complete Interrupt Enable */
     } B;
 } hw_ftfa_fcnfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCNFG register
  */
-//@{
-#define HW_FTFA_FCNFG_ADDR       (REGS_FTFA_BASE + 0x1U)
+/*@{*/
+#define HW_FTFA_FCNFG_ADDR(x)    ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCNFG            (*(__IO hw_ftfa_fcnfg_t *) HW_FTFA_FCNFG_ADDR)
-#define HW_FTFA_FCNFG_RD()       (HW_FTFA_FCNFG.U)
-#define HW_FTFA_FCNFG_WR(v)      (HW_FTFA_FCNFG.U = (v))
-#define HW_FTFA_FCNFG_SET(v)     (BME_OR8(HW_FTFA_FCNFG_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCNFG_CLR(v)     (BME_AND8(HW_FTFA_FCNFG_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCNFG_TOG(v)     (BME_XOR8(HW_FTFA_FCNFG_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCNFG(x)         (*(__IO hw_ftfa_fcnfg_t *) HW_FTFA_FCNFG_ADDR(x))
+#define HW_FTFA_FCNFG_RD(x)      (HW_FTFA_FCNFG(x).U)
+#define HW_FTFA_FCNFG_WR(x, v)   (HW_FTFA_FCNFG(x).U = (v))
+#define HW_FTFA_FCNFG_SET(x, v)  (BME_OR8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCNFG_CLR(x, v)  (BME_AND8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCNFG_TOG(x, v)  (BME_XOR8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCNFG bitfields
@@ -323,24 +293,20 @@ typedef union _hw_ftfa_fcnfg
  * - 0 - No suspend requested
  * - 1 - Suspend the current Erase Flash Sector command execution.
  */
-//@{
-#define BP_FTFA_FCNFG_ERSSUSP (4U)         //!< Bit position for FTFA_FCNFG_ERSSUSP.
-#define BM_FTFA_FCNFG_ERSSUSP (0x10U)      //!< Bit mask for FTFA_FCNFG_ERSSUSP.
-#define BS_FTFA_FCNFG_ERSSUSP (1U)         //!< Bit field size in bits for FTFA_FCNFG_ERSSUSP.
+/*@{*/
+#define BP_FTFA_FCNFG_ERSSUSP (4U)         /*!< Bit position for FTFA_FCNFG_ERSSUSP. */
+#define BM_FTFA_FCNFG_ERSSUSP (0x10U)      /*!< Bit mask for FTFA_FCNFG_ERSSUSP. */
+#define BS_FTFA_FCNFG_ERSSUSP (1U)         /*!< Bit field size in bits for FTFA_FCNFG_ERSSUSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_ERSSUSP field.
-#define BR_FTFA_FCNFG_ERSSUSP (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_ERSSUSP, BS_FTFA_FCNFG_ERSSUSP))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_ERSSUSP field. */
+#define BR_FTFA_FCNFG_ERSSUSP(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_ERSSUSP, BS_FTFA_FCNFG_ERSSUSP))
 
-//! @brief Format value for bitfield FTFA_FCNFG_ERSSUSP.
-#define BF_FTFA_FCNFG_ERSSUSP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_ERSSUSP), uint8_t) & BM_FTFA_FCNFG_ERSSUSP)
+/*! @brief Format value for bitfield FTFA_FCNFG_ERSSUSP. */
+#define BF_FTFA_FCNFG_ERSSUSP(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP) & BM_FTFA_FCNFG_ERSSUSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERSSUSP field to a new value.
-#define BW_FTFA_FCNFG_ERSSUSP(v) (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP), BP_FTFA_FCNFG_ERSSUSP, 1))
-#endif
-//@}
+/*! @brief Set the ERSSUSP field to a new value. */
+#define BW_FTFA_FCNFG_ERSSUSP(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP), BP_FTFA_FCNFG_ERSSUSP, 1))
+/*@}*/
 
 /*!
  * @name Register FTFA_FCNFG, field ERSAREQ[5] (RO)
@@ -360,16 +326,14 @@ typedef union _hw_ftfa_fcnfg
  *     state, and release MCU security by setting the FSEC[SEC] field to the
  *     unsecure state.
  */
-//@{
-#define BP_FTFA_FCNFG_ERSAREQ (5U)         //!< Bit position for FTFA_FCNFG_ERSAREQ.
-#define BM_FTFA_FCNFG_ERSAREQ (0x20U)      //!< Bit mask for FTFA_FCNFG_ERSAREQ.
-#define BS_FTFA_FCNFG_ERSAREQ (1U)         //!< Bit field size in bits for FTFA_FCNFG_ERSAREQ.
+/*@{*/
+#define BP_FTFA_FCNFG_ERSAREQ (5U)         /*!< Bit position for FTFA_FCNFG_ERSAREQ. */
+#define BM_FTFA_FCNFG_ERSAREQ (0x20U)      /*!< Bit mask for FTFA_FCNFG_ERSAREQ. */
+#define BS_FTFA_FCNFG_ERSAREQ (1U)         /*!< Bit field size in bits for FTFA_FCNFG_ERSAREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_ERSAREQ field.
-#define BR_FTFA_FCNFG_ERSAREQ (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_ERSAREQ, BS_FTFA_FCNFG_ERSAREQ))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FCNFG_ERSAREQ field. */
+#define BR_FTFA_FCNFG_ERSAREQ(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_ERSAREQ, BS_FTFA_FCNFG_ERSAREQ))
+/*@}*/
 
 /*!
  * @name Register FTFA_FCNFG, field RDCOLLIE[6] (RW)
@@ -383,24 +347,20 @@ typedef union _hw_ftfa_fcnfg
  *     generated whenever a flash memory read collision error is detected (see the
  *     description of FSTAT[RDCOLERR]).
  */
-//@{
-#define BP_FTFA_FCNFG_RDCOLLIE (6U)        //!< Bit position for FTFA_FCNFG_RDCOLLIE.
-#define BM_FTFA_FCNFG_RDCOLLIE (0x40U)     //!< Bit mask for FTFA_FCNFG_RDCOLLIE.
-#define BS_FTFA_FCNFG_RDCOLLIE (1U)        //!< Bit field size in bits for FTFA_FCNFG_RDCOLLIE.
+/*@{*/
+#define BP_FTFA_FCNFG_RDCOLLIE (6U)        /*!< Bit position for FTFA_FCNFG_RDCOLLIE. */
+#define BM_FTFA_FCNFG_RDCOLLIE (0x40U)     /*!< Bit mask for FTFA_FCNFG_RDCOLLIE. */
+#define BS_FTFA_FCNFG_RDCOLLIE (1U)        /*!< Bit field size in bits for FTFA_FCNFG_RDCOLLIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_RDCOLLIE field.
-#define BR_FTFA_FCNFG_RDCOLLIE (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_RDCOLLIE, BS_FTFA_FCNFG_RDCOLLIE))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_RDCOLLIE field. */
+#define BR_FTFA_FCNFG_RDCOLLIE(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_RDCOLLIE, BS_FTFA_FCNFG_RDCOLLIE))
 
-//! @brief Format value for bitfield FTFA_FCNFG_RDCOLLIE.
-#define BF_FTFA_FCNFG_RDCOLLIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_RDCOLLIE), uint8_t) & BM_FTFA_FCNFG_RDCOLLIE)
+/*! @brief Format value for bitfield FTFA_FCNFG_RDCOLLIE. */
+#define BF_FTFA_FCNFG_RDCOLLIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE) & BM_FTFA_FCNFG_RDCOLLIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLLIE field to a new value.
-#define BW_FTFA_FCNFG_RDCOLLIE(v) (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE), BP_FTFA_FCNFG_RDCOLLIE, 1))
-#endif
-//@}
+/*! @brief Set the RDCOLLIE field to a new value. */
+#define BW_FTFA_FCNFG_RDCOLLIE(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE), BP_FTFA_FCNFG_RDCOLLIE, 1))
+/*@}*/
 
 /*!
  * @name Register FTFA_FCNFG, field CCIE[7] (RW)
@@ -412,30 +372,25 @@ typedef union _hw_ftfa_fcnfg
  * - 1 - Command complete interrupt enabled. An interrupt request is generated
  *     whenever the FSTAT[CCIF] flag is set.
  */
-//@{
-#define BP_FTFA_FCNFG_CCIE   (7U)          //!< Bit position for FTFA_FCNFG_CCIE.
-#define BM_FTFA_FCNFG_CCIE   (0x80U)       //!< Bit mask for FTFA_FCNFG_CCIE.
-#define BS_FTFA_FCNFG_CCIE   (1U)          //!< Bit field size in bits for FTFA_FCNFG_CCIE.
+/*@{*/
+#define BP_FTFA_FCNFG_CCIE   (7U)          /*!< Bit position for FTFA_FCNFG_CCIE. */
+#define BM_FTFA_FCNFG_CCIE   (0x80U)       /*!< Bit mask for FTFA_FCNFG_CCIE. */
+#define BS_FTFA_FCNFG_CCIE   (1U)          /*!< Bit field size in bits for FTFA_FCNFG_CCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_CCIE field.
-#define BR_FTFA_FCNFG_CCIE   (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_CCIE, BS_FTFA_FCNFG_CCIE))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_CCIE field. */
+#define BR_FTFA_FCNFG_CCIE(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_CCIE, BS_FTFA_FCNFG_CCIE))
 
-//! @brief Format value for bitfield FTFA_FCNFG_CCIE.
-#define BF_FTFA_FCNFG_CCIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_CCIE), uint8_t) & BM_FTFA_FCNFG_CCIE)
+/*! @brief Format value for bitfield FTFA_FCNFG_CCIE. */
+#define BF_FTFA_FCNFG_CCIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_CCIE) & BM_FTFA_FCNFG_CCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIE field to a new value.
-#define BW_FTFA_FCNFG_CCIE(v) (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_CCIE), BP_FTFA_FCNFG_CCIE, 1))
-#endif
-//@}
+/*! @brief Set the CCIE field to a new value. */
+#define BW_FTFA_FCNFG_CCIE(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_CCIE), BP_FTFA_FCNFG_CCIE, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FSEC - Flash Security Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FSEC - Flash Security Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FSEC - Flash Security Register (RO)
  *
@@ -452,25 +407,23 @@ typedef union _hw_ftfa_fsec
     uint8_t U;
     struct _hw_ftfa_fsec_bitfields
     {
-        uint8_t SEC : 2;               //!< [1:0] Flash Security
-        uint8_t FSLACC : 2;            //!< [3:2] Freescale Failure Analysis Access Code
-        uint8_t MEEN : 2;              //!< [5:4] Mass Erase Enable Bits
-        uint8_t KEYEN : 2;             //!< [7:6] Backdoor Key Security Enable
+        uint8_t SEC : 2;               /*!< [1:0] Flash Security */
+        uint8_t FSLACC : 2;            /*!< [3:2] Freescale Failure Analysis Access Code
+                                        * */
+        uint8_t MEEN : 2;              /*!< [5:4] Mass Erase Enable Bits */
+        uint8_t KEYEN : 2;             /*!< [7:6] Backdoor Key Security Enable */
     } B;
 } hw_ftfa_fsec_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FSEC register
  */
-//@{
-#define HW_FTFA_FSEC_ADDR        (REGS_FTFA_BASE + 0x2U)
+/*@{*/
+#define HW_FTFA_FSEC_ADDR(x)     ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FSEC             (*(__I hw_ftfa_fsec_t *) HW_FTFA_FSEC_ADDR)
-#define HW_FTFA_FSEC_RD()        (HW_FTFA_FSEC.U)
-#endif
-//@}
+#define HW_FTFA_FSEC(x)          (*(__I hw_ftfa_fsec_t *) HW_FTFA_FSEC_ADDR(x))
+#define HW_FTFA_FSEC_RD(x)       (HW_FTFA_FSEC(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FSEC bitfields
@@ -492,16 +445,14 @@ typedef union _hw_ftfa_fsec
  *     the flash memory module is unsecure.)
  * - 11 - MCU security status is secure
  */
-//@{
-#define BP_FTFA_FSEC_SEC     (0U)          //!< Bit position for FTFA_FSEC_SEC.
-#define BM_FTFA_FSEC_SEC     (0x03U)       //!< Bit mask for FTFA_FSEC_SEC.
-#define BS_FTFA_FSEC_SEC     (2U)          //!< Bit field size in bits for FTFA_FSEC_SEC.
+/*@{*/
+#define BP_FTFA_FSEC_SEC     (0U)          /*!< Bit position for FTFA_FSEC_SEC. */
+#define BM_FTFA_FSEC_SEC     (0x03U)       /*!< Bit mask for FTFA_FSEC_SEC. */
+#define BS_FTFA_FSEC_SEC     (2U)          /*!< Bit field size in bits for FTFA_FSEC_SEC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_SEC field.
-#define BR_FTFA_FSEC_SEC     (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_SEC, BS_FTFA_FSEC_SEC))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_SEC field. */
+#define BR_FTFA_FSEC_SEC(x)  (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_SEC, BS_FTFA_FSEC_SEC))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSEC, field FSLACC[3:2] (RO)
@@ -522,16 +473,14 @@ typedef union _hw_ftfa_fsec
  * - 10 - Freescale factory access denied
  * - 11 - Freescale factory access granted
  */
-//@{
-#define BP_FTFA_FSEC_FSLACC  (2U)          //!< Bit position for FTFA_FSEC_FSLACC.
-#define BM_FTFA_FSEC_FSLACC  (0x0CU)       //!< Bit mask for FTFA_FSEC_FSLACC.
-#define BS_FTFA_FSEC_FSLACC  (2U)          //!< Bit field size in bits for FTFA_FSEC_FSLACC.
+/*@{*/
+#define BP_FTFA_FSEC_FSLACC  (2U)          /*!< Bit position for FTFA_FSEC_FSLACC. */
+#define BM_FTFA_FSEC_FSLACC  (0x0CU)       /*!< Bit mask for FTFA_FSEC_FSLACC. */
+#define BS_FTFA_FSEC_FSLACC  (2U)          /*!< Bit field size in bits for FTFA_FSEC_FSLACC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_FSLACC field.
-#define BR_FTFA_FSEC_FSLACC  (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_FSLACC, BS_FTFA_FSEC_FSLACC))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_FSLACC field. */
+#define BR_FTFA_FSEC_FSLACC(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_FSLACC, BS_FTFA_FSEC_FSLACC))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSEC, field MEEN[5:4] (RO)
@@ -547,16 +496,14 @@ typedef union _hw_ftfa_fsec
  * - 10 - Mass erase is disabled
  * - 11 - Mass erase is enabled
  */
-//@{
-#define BP_FTFA_FSEC_MEEN    (4U)          //!< Bit position for FTFA_FSEC_MEEN.
-#define BM_FTFA_FSEC_MEEN    (0x30U)       //!< Bit mask for FTFA_FSEC_MEEN.
-#define BS_FTFA_FSEC_MEEN    (2U)          //!< Bit field size in bits for FTFA_FSEC_MEEN.
+/*@{*/
+#define BP_FTFA_FSEC_MEEN    (4U)          /*!< Bit position for FTFA_FSEC_MEEN. */
+#define BM_FTFA_FSEC_MEEN    (0x30U)       /*!< Bit mask for FTFA_FSEC_MEEN. */
+#define BS_FTFA_FSEC_MEEN    (2U)          /*!< Bit field size in bits for FTFA_FSEC_MEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_MEEN field.
-#define BR_FTFA_FSEC_MEEN    (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_MEEN, BS_FTFA_FSEC_MEEN))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_MEEN field. */
+#define BR_FTFA_FSEC_MEEN(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_MEEN, BS_FTFA_FSEC_MEEN))
+/*@}*/
 
 /*!
  * @name Register FTFA_FSEC, field KEYEN[7:6] (RO)
@@ -570,22 +517,19 @@ typedef union _hw_ftfa_fsec
  * - 10 - Backdoor key access enabled
  * - 11 - Backdoor key access disabled
  */
-//@{
-#define BP_FTFA_FSEC_KEYEN   (6U)          //!< Bit position for FTFA_FSEC_KEYEN.
-#define BM_FTFA_FSEC_KEYEN   (0xC0U)       //!< Bit mask for FTFA_FSEC_KEYEN.
-#define BS_FTFA_FSEC_KEYEN   (2U)          //!< Bit field size in bits for FTFA_FSEC_KEYEN.
+/*@{*/
+#define BP_FTFA_FSEC_KEYEN   (6U)          /*!< Bit position for FTFA_FSEC_KEYEN. */
+#define BM_FTFA_FSEC_KEYEN   (0xC0U)       /*!< Bit mask for FTFA_FSEC_KEYEN. */
+#define BS_FTFA_FSEC_KEYEN   (2U)          /*!< Bit field size in bits for FTFA_FSEC_KEYEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_KEYEN field.
-#define BR_FTFA_FSEC_KEYEN   (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_KEYEN, BS_FTFA_FSEC_KEYEN))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_KEYEN field. */
+#define BR_FTFA_FSEC_KEYEN(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_KEYEN, BS_FTFA_FSEC_KEYEN))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FOPT - Flash Option Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FOPT - Flash Option Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FOPT - Flash Option Register (RO)
  *
@@ -604,22 +548,19 @@ typedef union _hw_ftfa_fopt
     uint8_t U;
     struct _hw_ftfa_fopt_bitfields
     {
-        uint8_t OPT : 8;               //!< [7:0] Nonvolatile Option
+        uint8_t OPT : 8;               /*!< [7:0] Nonvolatile Option */
     } B;
 } hw_ftfa_fopt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FOPT register
  */
-//@{
-#define HW_FTFA_FOPT_ADDR        (REGS_FTFA_BASE + 0x3U)
+/*@{*/
+#define HW_FTFA_FOPT_ADDR(x)     ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FOPT             (*(__I hw_ftfa_fopt_t *) HW_FTFA_FOPT_ADDR)
-#define HW_FTFA_FOPT_RD()        (HW_FTFA_FOPT.U)
-#endif
-//@}
+#define HW_FTFA_FOPT(x)          (*(__I hw_ftfa_fopt_t *) HW_FTFA_FOPT_ADDR(x))
+#define HW_FTFA_FOPT_RD(x)       (HW_FTFA_FOPT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FOPT bitfields
@@ -631,22 +572,19 @@ typedef union _hw_ftfa_fopt
  * These bits are loaded from flash to this register at reset. Refer to the
  * device's Chip Configuration details for the definition and use of these bits.
  */
-//@{
-#define BP_FTFA_FOPT_OPT     (0U)          //!< Bit position for FTFA_FOPT_OPT.
-#define BM_FTFA_FOPT_OPT     (0xFFU)       //!< Bit mask for FTFA_FOPT_OPT.
-#define BS_FTFA_FOPT_OPT     (8U)          //!< Bit field size in bits for FTFA_FOPT_OPT.
+/*@{*/
+#define BP_FTFA_FOPT_OPT     (0U)          /*!< Bit position for FTFA_FOPT_OPT. */
+#define BM_FTFA_FOPT_OPT     (0xFFU)       /*!< Bit mask for FTFA_FOPT_OPT. */
+#define BS_FTFA_FOPT_OPT     (8U)          /*!< Bit field size in bits for FTFA_FOPT_OPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FOPT_OPT field.
-#define BR_FTFA_FOPT_OPT     (BME_UBFX8(HW_FTFA_FOPT_ADDR, BP_FTFA_FOPT_OPT, BS_FTFA_FOPT_OPT))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FOPT_OPT field. */
+#define BR_FTFA_FOPT_OPT(x)  (HW_FTFA_FOPT(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB3 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB3 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB3 - Flash Common Command Object Registers (RW)
  *
@@ -661,26 +599,23 @@ typedef union _hw_ftfa_fccob3
     uint8_t U;
     struct _hw_ftfa_fccob3_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB3 register
  */
-//@{
-#define HW_FTFA_FCCOB3_ADDR      (REGS_FTFA_BASE + 0x4U)
+/*@{*/
+#define HW_FTFA_FCCOB3_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB3           (*(__IO hw_ftfa_fccob3_t *) HW_FTFA_FCCOB3_ADDR)
-#define HW_FTFA_FCCOB3_RD()      (HW_FTFA_FCCOB3.U)
-#define HW_FTFA_FCCOB3_WR(v)     (HW_FTFA_FCCOB3.U = (v))
-#define HW_FTFA_FCCOB3_SET(v)    (BME_OR8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB3_CLR(v)    (BME_AND8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB3_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB3(x)        (*(__IO hw_ftfa_fccob3_t *) HW_FTFA_FCCOB3_ADDR(x))
+#define HW_FTFA_FCCOB3_RD(x)     (HW_FTFA_FCCOB3(x).U)
+#define HW_FTFA_FCCOB3_WR(x, v)  (HW_FTFA_FCCOB3(x).U = (v))
+#define HW_FTFA_FCCOB3_SET(x, v) (BME_OR8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB3_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB3_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB3 bitfields
@@ -716,30 +651,25 @@ typedef union _hw_ftfa_fccob3
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB3_CCOBn (0U)          //!< Bit position for FTFA_FCCOB3_CCOBn.
-#define BM_FTFA_FCCOB3_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB3_CCOBn.
-#define BS_FTFA_FCCOB3_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB3_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB3_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB3_CCOBn. */
+#define BM_FTFA_FCCOB3_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB3_CCOBn. */
+#define BS_FTFA_FCCOB3_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB3_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB3_CCOBn field.
-#define BR_FTFA_FCCOB3_CCOBn (BME_UBFX8(HW_FTFA_FCCOB3_ADDR, BP_FTFA_FCCOB3_CCOBn, BS_FTFA_FCCOB3_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB3_CCOBn field. */
+#define BR_FTFA_FCCOB3_CCOBn(x) (HW_FTFA_FCCOB3(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB3_CCOBn.
-#define BF_FTFA_FCCOB3_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB3_CCOBn), uint8_t) & BM_FTFA_FCCOB3_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB3_CCOBn. */
+#define BF_FTFA_FCCOB3_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB3_CCOBn) & BM_FTFA_FCCOB3_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB3_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB3_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB3_CCOBn), BP_FTFA_FCCOB3_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB3_CCOBn(x, v) (HW_FTFA_FCCOB3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB2 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB2 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB2 - Flash Common Command Object Registers (RW)
  *
@@ -754,26 +684,23 @@ typedef union _hw_ftfa_fccob2
     uint8_t U;
     struct _hw_ftfa_fccob2_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB2 register
  */
-//@{
-#define HW_FTFA_FCCOB2_ADDR      (REGS_FTFA_BASE + 0x5U)
+/*@{*/
+#define HW_FTFA_FCCOB2_ADDR(x)   ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB2           (*(__IO hw_ftfa_fccob2_t *) HW_FTFA_FCCOB2_ADDR)
-#define HW_FTFA_FCCOB2_RD()      (HW_FTFA_FCCOB2.U)
-#define HW_FTFA_FCCOB2_WR(v)     (HW_FTFA_FCCOB2.U = (v))
-#define HW_FTFA_FCCOB2_SET(v)    (BME_OR8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB2_CLR(v)    (BME_AND8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB2_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB2(x)        (*(__IO hw_ftfa_fccob2_t *) HW_FTFA_FCCOB2_ADDR(x))
+#define HW_FTFA_FCCOB2_RD(x)     (HW_FTFA_FCCOB2(x).U)
+#define HW_FTFA_FCCOB2_WR(x, v)  (HW_FTFA_FCCOB2(x).U = (v))
+#define HW_FTFA_FCCOB2_SET(x, v) (BME_OR8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB2_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB2_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB2 bitfields
@@ -809,30 +736,25 @@ typedef union _hw_ftfa_fccob2
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB2_CCOBn (0U)          //!< Bit position for FTFA_FCCOB2_CCOBn.
-#define BM_FTFA_FCCOB2_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB2_CCOBn.
-#define BS_FTFA_FCCOB2_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB2_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB2_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB2_CCOBn. */
+#define BM_FTFA_FCCOB2_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB2_CCOBn. */
+#define BS_FTFA_FCCOB2_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB2_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB2_CCOBn field.
-#define BR_FTFA_FCCOB2_CCOBn (BME_UBFX8(HW_FTFA_FCCOB2_ADDR, BP_FTFA_FCCOB2_CCOBn, BS_FTFA_FCCOB2_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB2_CCOBn field. */
+#define BR_FTFA_FCCOB2_CCOBn(x) (HW_FTFA_FCCOB2(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB2_CCOBn.
-#define BF_FTFA_FCCOB2_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB2_CCOBn), uint8_t) & BM_FTFA_FCCOB2_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB2_CCOBn. */
+#define BF_FTFA_FCCOB2_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB2_CCOBn) & BM_FTFA_FCCOB2_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB2_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB2_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB2_CCOBn), BP_FTFA_FCCOB2_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB2_CCOBn(x, v) (HW_FTFA_FCCOB2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB1 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB1 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB1 - Flash Common Command Object Registers (RW)
  *
@@ -847,26 +769,23 @@ typedef union _hw_ftfa_fccob1
     uint8_t U;
     struct _hw_ftfa_fccob1_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB1 register
  */
-//@{
-#define HW_FTFA_FCCOB1_ADDR      (REGS_FTFA_BASE + 0x6U)
+/*@{*/
+#define HW_FTFA_FCCOB1_ADDR(x)   ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB1           (*(__IO hw_ftfa_fccob1_t *) HW_FTFA_FCCOB1_ADDR)
-#define HW_FTFA_FCCOB1_RD()      (HW_FTFA_FCCOB1.U)
-#define HW_FTFA_FCCOB1_WR(v)     (HW_FTFA_FCCOB1.U = (v))
-#define HW_FTFA_FCCOB1_SET(v)    (BME_OR8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB1_CLR(v)    (BME_AND8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB1_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB1(x)        (*(__IO hw_ftfa_fccob1_t *) HW_FTFA_FCCOB1_ADDR(x))
+#define HW_FTFA_FCCOB1_RD(x)     (HW_FTFA_FCCOB1(x).U)
+#define HW_FTFA_FCCOB1_WR(x, v)  (HW_FTFA_FCCOB1(x).U = (v))
+#define HW_FTFA_FCCOB1_SET(x, v) (BME_OR8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB1_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB1_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB1 bitfields
@@ -902,30 +821,25 @@ typedef union _hw_ftfa_fccob1
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB1_CCOBn (0U)          //!< Bit position for FTFA_FCCOB1_CCOBn.
-#define BM_FTFA_FCCOB1_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB1_CCOBn.
-#define BS_FTFA_FCCOB1_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB1_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB1_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB1_CCOBn. */
+#define BM_FTFA_FCCOB1_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB1_CCOBn. */
+#define BS_FTFA_FCCOB1_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB1_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB1_CCOBn field.
-#define BR_FTFA_FCCOB1_CCOBn (BME_UBFX8(HW_FTFA_FCCOB1_ADDR, BP_FTFA_FCCOB1_CCOBn, BS_FTFA_FCCOB1_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB1_CCOBn field. */
+#define BR_FTFA_FCCOB1_CCOBn(x) (HW_FTFA_FCCOB1(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB1_CCOBn.
-#define BF_FTFA_FCCOB1_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB1_CCOBn), uint8_t) & BM_FTFA_FCCOB1_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB1_CCOBn. */
+#define BF_FTFA_FCCOB1_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB1_CCOBn) & BM_FTFA_FCCOB1_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB1_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB1_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB1_CCOBn), BP_FTFA_FCCOB1_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB1_CCOBn(x, v) (HW_FTFA_FCCOB1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB0 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB0 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB0 - Flash Common Command Object Registers (RW)
  *
@@ -940,26 +854,23 @@ typedef union _hw_ftfa_fccob0
     uint8_t U;
     struct _hw_ftfa_fccob0_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB0 register
  */
-//@{
-#define HW_FTFA_FCCOB0_ADDR      (REGS_FTFA_BASE + 0x7U)
+/*@{*/
+#define HW_FTFA_FCCOB0_ADDR(x)   ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB0           (*(__IO hw_ftfa_fccob0_t *) HW_FTFA_FCCOB0_ADDR)
-#define HW_FTFA_FCCOB0_RD()      (HW_FTFA_FCCOB0.U)
-#define HW_FTFA_FCCOB0_WR(v)     (HW_FTFA_FCCOB0.U = (v))
-#define HW_FTFA_FCCOB0_SET(v)    (BME_OR8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB0_CLR(v)    (BME_AND8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB0_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB0(x)        (*(__IO hw_ftfa_fccob0_t *) HW_FTFA_FCCOB0_ADDR(x))
+#define HW_FTFA_FCCOB0_RD(x)     (HW_FTFA_FCCOB0(x).U)
+#define HW_FTFA_FCCOB0_WR(x, v)  (HW_FTFA_FCCOB0(x).U = (v))
+#define HW_FTFA_FCCOB0_SET(x, v) (BME_OR8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB0_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB0_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB0 bitfields
@@ -995,30 +906,25 @@ typedef union _hw_ftfa_fccob0
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB0_CCOBn (0U)          //!< Bit position for FTFA_FCCOB0_CCOBn.
-#define BM_FTFA_FCCOB0_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB0_CCOBn.
-#define BS_FTFA_FCCOB0_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB0_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB0_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB0_CCOBn. */
+#define BM_FTFA_FCCOB0_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB0_CCOBn. */
+#define BS_FTFA_FCCOB0_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB0_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB0_CCOBn field.
-#define BR_FTFA_FCCOB0_CCOBn (BME_UBFX8(HW_FTFA_FCCOB0_ADDR, BP_FTFA_FCCOB0_CCOBn, BS_FTFA_FCCOB0_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB0_CCOBn field. */
+#define BR_FTFA_FCCOB0_CCOBn(x) (HW_FTFA_FCCOB0(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB0_CCOBn.
-#define BF_FTFA_FCCOB0_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB0_CCOBn), uint8_t) & BM_FTFA_FCCOB0_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB0_CCOBn. */
+#define BF_FTFA_FCCOB0_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB0_CCOBn) & BM_FTFA_FCCOB0_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB0_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB0_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB0_CCOBn), BP_FTFA_FCCOB0_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB0_CCOBn(x, v) (HW_FTFA_FCCOB0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB7 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB7 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB7 - Flash Common Command Object Registers (RW)
  *
@@ -1033,26 +939,23 @@ typedef union _hw_ftfa_fccob7
     uint8_t U;
     struct _hw_ftfa_fccob7_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB7 register
  */
-//@{
-#define HW_FTFA_FCCOB7_ADDR      (REGS_FTFA_BASE + 0x8U)
+/*@{*/
+#define HW_FTFA_FCCOB7_ADDR(x)   ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB7           (*(__IO hw_ftfa_fccob7_t *) HW_FTFA_FCCOB7_ADDR)
-#define HW_FTFA_FCCOB7_RD()      (HW_FTFA_FCCOB7.U)
-#define HW_FTFA_FCCOB7_WR(v)     (HW_FTFA_FCCOB7.U = (v))
-#define HW_FTFA_FCCOB7_SET(v)    (BME_OR8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB7_CLR(v)    (BME_AND8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB7_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB7(x)        (*(__IO hw_ftfa_fccob7_t *) HW_FTFA_FCCOB7_ADDR(x))
+#define HW_FTFA_FCCOB7_RD(x)     (HW_FTFA_FCCOB7(x).U)
+#define HW_FTFA_FCCOB7_WR(x, v)  (HW_FTFA_FCCOB7(x).U = (v))
+#define HW_FTFA_FCCOB7_SET(x, v) (BME_OR8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB7_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB7_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB7 bitfields
@@ -1088,30 +991,25 @@ typedef union _hw_ftfa_fccob7
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB7_CCOBn (0U)          //!< Bit position for FTFA_FCCOB7_CCOBn.
-#define BM_FTFA_FCCOB7_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB7_CCOBn.
-#define BS_FTFA_FCCOB7_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB7_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB7_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB7_CCOBn. */
+#define BM_FTFA_FCCOB7_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB7_CCOBn. */
+#define BS_FTFA_FCCOB7_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB7_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB7_CCOBn field.
-#define BR_FTFA_FCCOB7_CCOBn (BME_UBFX8(HW_FTFA_FCCOB7_ADDR, BP_FTFA_FCCOB7_CCOBn, BS_FTFA_FCCOB7_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB7_CCOBn field. */
+#define BR_FTFA_FCCOB7_CCOBn(x) (HW_FTFA_FCCOB7(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB7_CCOBn.
-#define BF_FTFA_FCCOB7_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB7_CCOBn), uint8_t) & BM_FTFA_FCCOB7_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB7_CCOBn. */
+#define BF_FTFA_FCCOB7_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB7_CCOBn) & BM_FTFA_FCCOB7_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB7_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB7_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB7_CCOBn), BP_FTFA_FCCOB7_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB7_CCOBn(x, v) (HW_FTFA_FCCOB7_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB6 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB6 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB6 - Flash Common Command Object Registers (RW)
  *
@@ -1126,26 +1024,23 @@ typedef union _hw_ftfa_fccob6
     uint8_t U;
     struct _hw_ftfa_fccob6_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB6 register
  */
-//@{
-#define HW_FTFA_FCCOB6_ADDR      (REGS_FTFA_BASE + 0x9U)
+/*@{*/
+#define HW_FTFA_FCCOB6_ADDR(x)   ((x) + 0x9U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB6           (*(__IO hw_ftfa_fccob6_t *) HW_FTFA_FCCOB6_ADDR)
-#define HW_FTFA_FCCOB6_RD()      (HW_FTFA_FCCOB6.U)
-#define HW_FTFA_FCCOB6_WR(v)     (HW_FTFA_FCCOB6.U = (v))
-#define HW_FTFA_FCCOB6_SET(v)    (BME_OR8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB6_CLR(v)    (BME_AND8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB6_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB6(x)        (*(__IO hw_ftfa_fccob6_t *) HW_FTFA_FCCOB6_ADDR(x))
+#define HW_FTFA_FCCOB6_RD(x)     (HW_FTFA_FCCOB6(x).U)
+#define HW_FTFA_FCCOB6_WR(x, v)  (HW_FTFA_FCCOB6(x).U = (v))
+#define HW_FTFA_FCCOB6_SET(x, v) (BME_OR8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB6_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB6_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB6 bitfields
@@ -1181,30 +1076,25 @@ typedef union _hw_ftfa_fccob6
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB6_CCOBn (0U)          //!< Bit position for FTFA_FCCOB6_CCOBn.
-#define BM_FTFA_FCCOB6_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB6_CCOBn.
-#define BS_FTFA_FCCOB6_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB6_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB6_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB6_CCOBn. */
+#define BM_FTFA_FCCOB6_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB6_CCOBn. */
+#define BS_FTFA_FCCOB6_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB6_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB6_CCOBn field.
-#define BR_FTFA_FCCOB6_CCOBn (BME_UBFX8(HW_FTFA_FCCOB6_ADDR, BP_FTFA_FCCOB6_CCOBn, BS_FTFA_FCCOB6_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB6_CCOBn field. */
+#define BR_FTFA_FCCOB6_CCOBn(x) (HW_FTFA_FCCOB6(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB6_CCOBn.
-#define BF_FTFA_FCCOB6_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB6_CCOBn), uint8_t) & BM_FTFA_FCCOB6_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB6_CCOBn. */
+#define BF_FTFA_FCCOB6_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB6_CCOBn) & BM_FTFA_FCCOB6_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB6_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB6_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB6_CCOBn), BP_FTFA_FCCOB6_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB6_CCOBn(x, v) (HW_FTFA_FCCOB6_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB5 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB5 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB5 - Flash Common Command Object Registers (RW)
  *
@@ -1219,26 +1109,23 @@ typedef union _hw_ftfa_fccob5
     uint8_t U;
     struct _hw_ftfa_fccob5_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB5 register
  */
-//@{
-#define HW_FTFA_FCCOB5_ADDR      (REGS_FTFA_BASE + 0xAU)
+/*@{*/
+#define HW_FTFA_FCCOB5_ADDR(x)   ((x) + 0xAU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB5           (*(__IO hw_ftfa_fccob5_t *) HW_FTFA_FCCOB5_ADDR)
-#define HW_FTFA_FCCOB5_RD()      (HW_FTFA_FCCOB5.U)
-#define HW_FTFA_FCCOB5_WR(v)     (HW_FTFA_FCCOB5.U = (v))
-#define HW_FTFA_FCCOB5_SET(v)    (BME_OR8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB5_CLR(v)    (BME_AND8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB5_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB5(x)        (*(__IO hw_ftfa_fccob5_t *) HW_FTFA_FCCOB5_ADDR(x))
+#define HW_FTFA_FCCOB5_RD(x)     (HW_FTFA_FCCOB5(x).U)
+#define HW_FTFA_FCCOB5_WR(x, v)  (HW_FTFA_FCCOB5(x).U = (v))
+#define HW_FTFA_FCCOB5_SET(x, v) (BME_OR8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB5_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB5_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB5 bitfields
@@ -1274,30 +1161,25 @@ typedef union _hw_ftfa_fccob5
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB5_CCOBn (0U)          //!< Bit position for FTFA_FCCOB5_CCOBn.
-#define BM_FTFA_FCCOB5_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB5_CCOBn.
-#define BS_FTFA_FCCOB5_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB5_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB5_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB5_CCOBn. */
+#define BM_FTFA_FCCOB5_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB5_CCOBn. */
+#define BS_FTFA_FCCOB5_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB5_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB5_CCOBn field.
-#define BR_FTFA_FCCOB5_CCOBn (BME_UBFX8(HW_FTFA_FCCOB5_ADDR, BP_FTFA_FCCOB5_CCOBn, BS_FTFA_FCCOB5_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB5_CCOBn field. */
+#define BR_FTFA_FCCOB5_CCOBn(x) (HW_FTFA_FCCOB5(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB5_CCOBn.
-#define BF_FTFA_FCCOB5_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB5_CCOBn), uint8_t) & BM_FTFA_FCCOB5_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB5_CCOBn. */
+#define BF_FTFA_FCCOB5_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB5_CCOBn) & BM_FTFA_FCCOB5_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB5_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB5_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB5_CCOBn), BP_FTFA_FCCOB5_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB5_CCOBn(x, v) (HW_FTFA_FCCOB5_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB4 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB4 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB4 - Flash Common Command Object Registers (RW)
  *
@@ -1312,26 +1194,23 @@ typedef union _hw_ftfa_fccob4
     uint8_t U;
     struct _hw_ftfa_fccob4_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB4 register
  */
-//@{
-#define HW_FTFA_FCCOB4_ADDR      (REGS_FTFA_BASE + 0xBU)
+/*@{*/
+#define HW_FTFA_FCCOB4_ADDR(x)   ((x) + 0xBU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB4           (*(__IO hw_ftfa_fccob4_t *) HW_FTFA_FCCOB4_ADDR)
-#define HW_FTFA_FCCOB4_RD()      (HW_FTFA_FCCOB4.U)
-#define HW_FTFA_FCCOB4_WR(v)     (HW_FTFA_FCCOB4.U = (v))
-#define HW_FTFA_FCCOB4_SET(v)    (BME_OR8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB4_CLR(v)    (BME_AND8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB4_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB4(x)        (*(__IO hw_ftfa_fccob4_t *) HW_FTFA_FCCOB4_ADDR(x))
+#define HW_FTFA_FCCOB4_RD(x)     (HW_FTFA_FCCOB4(x).U)
+#define HW_FTFA_FCCOB4_WR(x, v)  (HW_FTFA_FCCOB4(x).U = (v))
+#define HW_FTFA_FCCOB4_SET(x, v) (BME_OR8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB4_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB4_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB4 bitfields
@@ -1367,30 +1246,25 @@ typedef union _hw_ftfa_fccob4
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB4_CCOBn (0U)          //!< Bit position for FTFA_FCCOB4_CCOBn.
-#define BM_FTFA_FCCOB4_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB4_CCOBn.
-#define BS_FTFA_FCCOB4_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB4_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB4_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB4_CCOBn. */
+#define BM_FTFA_FCCOB4_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB4_CCOBn. */
+#define BS_FTFA_FCCOB4_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB4_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB4_CCOBn field.
-#define BR_FTFA_FCCOB4_CCOBn (BME_UBFX8(HW_FTFA_FCCOB4_ADDR, BP_FTFA_FCCOB4_CCOBn, BS_FTFA_FCCOB4_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB4_CCOBn field. */
+#define BR_FTFA_FCCOB4_CCOBn(x) (HW_FTFA_FCCOB4(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB4_CCOBn.
-#define BF_FTFA_FCCOB4_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB4_CCOBn), uint8_t) & BM_FTFA_FCCOB4_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB4_CCOBn. */
+#define BF_FTFA_FCCOB4_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB4_CCOBn) & BM_FTFA_FCCOB4_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB4_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB4_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB4_CCOBn), BP_FTFA_FCCOB4_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB4_CCOBn(x, v) (HW_FTFA_FCCOB4_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOBB - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOBB - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOBB - Flash Common Command Object Registers (RW)
  *
@@ -1405,26 +1279,23 @@ typedef union _hw_ftfa_fccobb
     uint8_t U;
     struct _hw_ftfa_fccobb_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccobb_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOBB register
  */
-//@{
-#define HW_FTFA_FCCOBB_ADDR      (REGS_FTFA_BASE + 0xCU)
+/*@{*/
+#define HW_FTFA_FCCOBB_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOBB           (*(__IO hw_ftfa_fccobb_t *) HW_FTFA_FCCOBB_ADDR)
-#define HW_FTFA_FCCOBB_RD()      (HW_FTFA_FCCOBB.U)
-#define HW_FTFA_FCCOBB_WR(v)     (HW_FTFA_FCCOBB.U = (v))
-#define HW_FTFA_FCCOBB_SET(v)    (BME_OR8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOBB_CLR(v)    (BME_AND8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOBB_TOG(v)    (BME_XOR8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOBB(x)        (*(__IO hw_ftfa_fccobb_t *) HW_FTFA_FCCOBB_ADDR(x))
+#define HW_FTFA_FCCOBB_RD(x)     (HW_FTFA_FCCOBB(x).U)
+#define HW_FTFA_FCCOBB_WR(x, v)  (HW_FTFA_FCCOBB(x).U = (v))
+#define HW_FTFA_FCCOBB_SET(x, v) (BME_OR8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOBB_CLR(x, v) (BME_AND8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOBB_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOBB bitfields
@@ -1460,30 +1331,25 @@ typedef union _hw_ftfa_fccobb
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOBB_CCOBn (0U)          //!< Bit position for FTFA_FCCOBB_CCOBn.
-#define BM_FTFA_FCCOBB_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOBB_CCOBn.
-#define BS_FTFA_FCCOBB_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOBB_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOBB_CCOBn (0U)          /*!< Bit position for FTFA_FCCOBB_CCOBn. */
+#define BM_FTFA_FCCOBB_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOBB_CCOBn. */
+#define BS_FTFA_FCCOBB_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOBB_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOBB_CCOBn field.
-#define BR_FTFA_FCCOBB_CCOBn (BME_UBFX8(HW_FTFA_FCCOBB_ADDR, BP_FTFA_FCCOBB_CCOBn, BS_FTFA_FCCOBB_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOBB_CCOBn field. */
+#define BR_FTFA_FCCOBB_CCOBn(x) (HW_FTFA_FCCOBB(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOBB_CCOBn.
-#define BF_FTFA_FCCOBB_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOBB_CCOBn), uint8_t) & BM_FTFA_FCCOBB_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOBB_CCOBn. */
+#define BF_FTFA_FCCOBB_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOBB_CCOBn) & BM_FTFA_FCCOBB_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOBB_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOBB_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOBB_CCOBn), BP_FTFA_FCCOBB_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOBB_CCOBn(x, v) (HW_FTFA_FCCOBB_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOBA - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOBA - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOBA - Flash Common Command Object Registers (RW)
  *
@@ -1498,26 +1364,23 @@ typedef union _hw_ftfa_fccoba
     uint8_t U;
     struct _hw_ftfa_fccoba_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccoba_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOBA register
  */
-//@{
-#define HW_FTFA_FCCOBA_ADDR      (REGS_FTFA_BASE + 0xDU)
+/*@{*/
+#define HW_FTFA_FCCOBA_ADDR(x)   ((x) + 0xDU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOBA           (*(__IO hw_ftfa_fccoba_t *) HW_FTFA_FCCOBA_ADDR)
-#define HW_FTFA_FCCOBA_RD()      (HW_FTFA_FCCOBA.U)
-#define HW_FTFA_FCCOBA_WR(v)     (HW_FTFA_FCCOBA.U = (v))
-#define HW_FTFA_FCCOBA_SET(v)    (BME_OR8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOBA_CLR(v)    (BME_AND8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOBA_TOG(v)    (BME_XOR8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOBA(x)        (*(__IO hw_ftfa_fccoba_t *) HW_FTFA_FCCOBA_ADDR(x))
+#define HW_FTFA_FCCOBA_RD(x)     (HW_FTFA_FCCOBA(x).U)
+#define HW_FTFA_FCCOBA_WR(x, v)  (HW_FTFA_FCCOBA(x).U = (v))
+#define HW_FTFA_FCCOBA_SET(x, v) (BME_OR8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOBA_CLR(x, v) (BME_AND8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOBA_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOBA bitfields
@@ -1553,30 +1416,25 @@ typedef union _hw_ftfa_fccoba
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOBA_CCOBn (0U)          //!< Bit position for FTFA_FCCOBA_CCOBn.
-#define BM_FTFA_FCCOBA_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOBA_CCOBn.
-#define BS_FTFA_FCCOBA_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOBA_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOBA_CCOBn (0U)          /*!< Bit position for FTFA_FCCOBA_CCOBn. */
+#define BM_FTFA_FCCOBA_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOBA_CCOBn. */
+#define BS_FTFA_FCCOBA_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOBA_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOBA_CCOBn field.
-#define BR_FTFA_FCCOBA_CCOBn (BME_UBFX8(HW_FTFA_FCCOBA_ADDR, BP_FTFA_FCCOBA_CCOBn, BS_FTFA_FCCOBA_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOBA_CCOBn field. */
+#define BR_FTFA_FCCOBA_CCOBn(x) (HW_FTFA_FCCOBA(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOBA_CCOBn.
-#define BF_FTFA_FCCOBA_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOBA_CCOBn), uint8_t) & BM_FTFA_FCCOBA_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOBA_CCOBn. */
+#define BF_FTFA_FCCOBA_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOBA_CCOBn) & BM_FTFA_FCCOBA_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOBA_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOBA_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOBA_CCOBn), BP_FTFA_FCCOBA_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOBA_CCOBn(x, v) (HW_FTFA_FCCOBA_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB9 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB9 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB9 - Flash Common Command Object Registers (RW)
  *
@@ -1591,26 +1449,23 @@ typedef union _hw_ftfa_fccob9
     uint8_t U;
     struct _hw_ftfa_fccob9_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob9_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB9 register
  */
-//@{
-#define HW_FTFA_FCCOB9_ADDR      (REGS_FTFA_BASE + 0xEU)
+/*@{*/
+#define HW_FTFA_FCCOB9_ADDR(x)   ((x) + 0xEU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB9           (*(__IO hw_ftfa_fccob9_t *) HW_FTFA_FCCOB9_ADDR)
-#define HW_FTFA_FCCOB9_RD()      (HW_FTFA_FCCOB9.U)
-#define HW_FTFA_FCCOB9_WR(v)     (HW_FTFA_FCCOB9.U = (v))
-#define HW_FTFA_FCCOB9_SET(v)    (BME_OR8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB9_CLR(v)    (BME_AND8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB9_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB9(x)        (*(__IO hw_ftfa_fccob9_t *) HW_FTFA_FCCOB9_ADDR(x))
+#define HW_FTFA_FCCOB9_RD(x)     (HW_FTFA_FCCOB9(x).U)
+#define HW_FTFA_FCCOB9_WR(x, v)  (HW_FTFA_FCCOB9(x).U = (v))
+#define HW_FTFA_FCCOB9_SET(x, v) (BME_OR8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB9_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB9_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB9 bitfields
@@ -1646,30 +1501,25 @@ typedef union _hw_ftfa_fccob9
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB9_CCOBn (0U)          //!< Bit position for FTFA_FCCOB9_CCOBn.
-#define BM_FTFA_FCCOB9_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB9_CCOBn.
-#define BS_FTFA_FCCOB9_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB9_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB9_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB9_CCOBn. */
+#define BM_FTFA_FCCOB9_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB9_CCOBn. */
+#define BS_FTFA_FCCOB9_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB9_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB9_CCOBn field.
-#define BR_FTFA_FCCOB9_CCOBn (BME_UBFX8(HW_FTFA_FCCOB9_ADDR, BP_FTFA_FCCOB9_CCOBn, BS_FTFA_FCCOB9_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB9_CCOBn field. */
+#define BR_FTFA_FCCOB9_CCOBn(x) (HW_FTFA_FCCOB9(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB9_CCOBn.
-#define BF_FTFA_FCCOB9_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB9_CCOBn), uint8_t) & BM_FTFA_FCCOB9_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB9_CCOBn. */
+#define BF_FTFA_FCCOB9_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB9_CCOBn) & BM_FTFA_FCCOB9_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB9_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB9_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB9_CCOBn), BP_FTFA_FCCOB9_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB9_CCOBn(x, v) (HW_FTFA_FCCOB9_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB8 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB8 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB8 - Flash Common Command Object Registers (RW)
  *
@@ -1684,26 +1534,23 @@ typedef union _hw_ftfa_fccob8
     uint8_t U;
     struct _hw_ftfa_fccob8_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob8_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB8 register
  */
-//@{
-#define HW_FTFA_FCCOB8_ADDR      (REGS_FTFA_BASE + 0xFU)
+/*@{*/
+#define HW_FTFA_FCCOB8_ADDR(x)   ((x) + 0xFU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB8           (*(__IO hw_ftfa_fccob8_t *) HW_FTFA_FCCOB8_ADDR)
-#define HW_FTFA_FCCOB8_RD()      (HW_FTFA_FCCOB8.U)
-#define HW_FTFA_FCCOB8_WR(v)     (HW_FTFA_FCCOB8.U = (v))
-#define HW_FTFA_FCCOB8_SET(v)    (BME_OR8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB8_CLR(v)    (BME_AND8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB8_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB8(x)        (*(__IO hw_ftfa_fccob8_t *) HW_FTFA_FCCOB8_ADDR(x))
+#define HW_FTFA_FCCOB8_RD(x)     (HW_FTFA_FCCOB8(x).U)
+#define HW_FTFA_FCCOB8_WR(x, v)  (HW_FTFA_FCCOB8(x).U = (v))
+#define HW_FTFA_FCCOB8_SET(x, v) (BME_OR8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB8_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB8_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FCCOB8 bitfields
@@ -1739,30 +1586,25 @@ typedef union _hw_ftfa_fccob8
  * be read and written as individual bytes, aligned words (2 bytes) or aligned
  * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB8_CCOBn (0U)          //!< Bit position for FTFA_FCCOB8_CCOBn.
-#define BM_FTFA_FCCOB8_CCOBn (0xFFU)       //!< Bit mask for FTFA_FCCOB8_CCOBn.
-#define BS_FTFA_FCCOB8_CCOBn (8U)          //!< Bit field size in bits for FTFA_FCCOB8_CCOBn.
+/*@{*/
+#define BP_FTFA_FCCOB8_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB8_CCOBn. */
+#define BM_FTFA_FCCOB8_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB8_CCOBn. */
+#define BS_FTFA_FCCOB8_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB8_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB8_CCOBn field.
-#define BR_FTFA_FCCOB8_CCOBn (BME_UBFX8(HW_FTFA_FCCOB8_ADDR, BP_FTFA_FCCOB8_CCOBn, BS_FTFA_FCCOB8_CCOBn))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB8_CCOBn field. */
+#define BR_FTFA_FCCOB8_CCOBn(x) (HW_FTFA_FCCOB8(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB8_CCOBn.
-#define BF_FTFA_FCCOB8_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB8_CCOBn), uint8_t) & BM_FTFA_FCCOB8_CCOBn)
+/*! @brief Format value for bitfield FTFA_FCCOB8_CCOBn. */
+#define BF_FTFA_FCCOB8_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB8_CCOBn) & BM_FTFA_FCCOB8_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFA_FCCOB8_CCOBn(v) (BME_BFI8(HW_FTFA_FCCOB8_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB8_CCOBn), BP_FTFA_FCCOB8_CCOBn, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB8_CCOBn(x, v) (HW_FTFA_FCCOB8_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT3 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT3 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT3 - Program Flash Protection Registers (RW)
  *
@@ -1794,26 +1636,23 @@ typedef union _hw_ftfa_fprot3
     uint8_t U;
     struct _hw_ftfa_fprot3_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT3 register
  */
-//@{
-#define HW_FTFA_FPROT3_ADDR      (REGS_FTFA_BASE + 0x10U)
+/*@{*/
+#define HW_FTFA_FPROT3_ADDR(x)   ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT3           (*(__IO hw_ftfa_fprot3_t *) HW_FTFA_FPROT3_ADDR)
-#define HW_FTFA_FPROT3_RD()      (HW_FTFA_FPROT3.U)
-#define HW_FTFA_FPROT3_WR(v)     (HW_FTFA_FPROT3.U = (v))
-#define HW_FTFA_FPROT3_SET(v)    (BME_OR8(HW_FTFA_FPROT3_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT3_CLR(v)    (BME_AND8(HW_FTFA_FPROT3_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT3_TOG(v)    (BME_XOR8(HW_FTFA_FPROT3_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT3(x)        (*(__IO hw_ftfa_fprot3_t *) HW_FTFA_FPROT3_ADDR(x))
+#define HW_FTFA_FPROT3_RD(x)     (HW_FTFA_FPROT3(x).U)
+#define HW_FTFA_FPROT3_WR(x, v)  (HW_FTFA_FPROT3(x).U = (v))
+#define HW_FTFA_FPROT3_SET(x, v) (BME_OR8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT3_CLR(x, v) (BME_AND8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT3_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FPROT3 bitfields
@@ -1844,30 +1683,25 @@ typedef union _hw_ftfa_fprot3
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT3_PROT  (0U)          //!< Bit position for FTFA_FPROT3_PROT.
-#define BM_FTFA_FPROT3_PROT  (0xFFU)       //!< Bit mask for FTFA_FPROT3_PROT.
-#define BS_FTFA_FPROT3_PROT  (8U)          //!< Bit field size in bits for FTFA_FPROT3_PROT.
+/*@{*/
+#define BP_FTFA_FPROT3_PROT  (0U)          /*!< Bit position for FTFA_FPROT3_PROT. */
+#define BM_FTFA_FPROT3_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT3_PROT. */
+#define BS_FTFA_FPROT3_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT3_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT3_PROT field.
-#define BR_FTFA_FPROT3_PROT  (BME_UBFX8(HW_FTFA_FPROT3_ADDR, BP_FTFA_FPROT3_PROT, BS_FTFA_FPROT3_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT3_PROT field. */
+#define BR_FTFA_FPROT3_PROT(x) (HW_FTFA_FPROT3(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT3_PROT.
-#define BF_FTFA_FPROT3_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT3_PROT), uint8_t) & BM_FTFA_FPROT3_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT3_PROT. */
+#define BF_FTFA_FPROT3_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT3_PROT) & BM_FTFA_FPROT3_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT3_PROT(v) (BME_BFI8(HW_FTFA_FPROT3_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT3_PROT), BP_FTFA_FPROT3_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT3_PROT(x, v) (HW_FTFA_FPROT3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT2 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT2 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT2 - Program Flash Protection Registers (RW)
  *
@@ -1899,26 +1733,23 @@ typedef union _hw_ftfa_fprot2
     uint8_t U;
     struct _hw_ftfa_fprot2_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT2 register
  */
-//@{
-#define HW_FTFA_FPROT2_ADDR      (REGS_FTFA_BASE + 0x11U)
+/*@{*/
+#define HW_FTFA_FPROT2_ADDR(x)   ((x) + 0x11U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT2           (*(__IO hw_ftfa_fprot2_t *) HW_FTFA_FPROT2_ADDR)
-#define HW_FTFA_FPROT2_RD()      (HW_FTFA_FPROT2.U)
-#define HW_FTFA_FPROT2_WR(v)     (HW_FTFA_FPROT2.U = (v))
-#define HW_FTFA_FPROT2_SET(v)    (BME_OR8(HW_FTFA_FPROT2_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT2_CLR(v)    (BME_AND8(HW_FTFA_FPROT2_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT2_TOG(v)    (BME_XOR8(HW_FTFA_FPROT2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT2(x)        (*(__IO hw_ftfa_fprot2_t *) HW_FTFA_FPROT2_ADDR(x))
+#define HW_FTFA_FPROT2_RD(x)     (HW_FTFA_FPROT2(x).U)
+#define HW_FTFA_FPROT2_WR(x, v)  (HW_FTFA_FPROT2(x).U = (v))
+#define HW_FTFA_FPROT2_SET(x, v) (BME_OR8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT2_CLR(x, v) (BME_AND8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT2_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FPROT2 bitfields
@@ -1949,30 +1780,25 @@ typedef union _hw_ftfa_fprot2
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT2_PROT  (0U)          //!< Bit position for FTFA_FPROT2_PROT.
-#define BM_FTFA_FPROT2_PROT  (0xFFU)       //!< Bit mask for FTFA_FPROT2_PROT.
-#define BS_FTFA_FPROT2_PROT  (8U)          //!< Bit field size in bits for FTFA_FPROT2_PROT.
+/*@{*/
+#define BP_FTFA_FPROT2_PROT  (0U)          /*!< Bit position for FTFA_FPROT2_PROT. */
+#define BM_FTFA_FPROT2_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT2_PROT. */
+#define BS_FTFA_FPROT2_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT2_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT2_PROT field.
-#define BR_FTFA_FPROT2_PROT  (BME_UBFX8(HW_FTFA_FPROT2_ADDR, BP_FTFA_FPROT2_PROT, BS_FTFA_FPROT2_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT2_PROT field. */
+#define BR_FTFA_FPROT2_PROT(x) (HW_FTFA_FPROT2(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT2_PROT.
-#define BF_FTFA_FPROT2_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT2_PROT), uint8_t) & BM_FTFA_FPROT2_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT2_PROT. */
+#define BF_FTFA_FPROT2_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT2_PROT) & BM_FTFA_FPROT2_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT2_PROT(v) (BME_BFI8(HW_FTFA_FPROT2_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT2_PROT), BP_FTFA_FPROT2_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT2_PROT(x, v) (HW_FTFA_FPROT2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT1 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT1 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT1 - Program Flash Protection Registers (RW)
  *
@@ -2004,26 +1830,23 @@ typedef union _hw_ftfa_fprot1
     uint8_t U;
     struct _hw_ftfa_fprot1_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT1 register
  */
-//@{
-#define HW_FTFA_FPROT1_ADDR      (REGS_FTFA_BASE + 0x12U)
+/*@{*/
+#define HW_FTFA_FPROT1_ADDR(x)   ((x) + 0x12U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT1           (*(__IO hw_ftfa_fprot1_t *) HW_FTFA_FPROT1_ADDR)
-#define HW_FTFA_FPROT1_RD()      (HW_FTFA_FPROT1.U)
-#define HW_FTFA_FPROT1_WR(v)     (HW_FTFA_FPROT1.U = (v))
-#define HW_FTFA_FPROT1_SET(v)    (BME_OR8(HW_FTFA_FPROT1_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT1_CLR(v)    (BME_AND8(HW_FTFA_FPROT1_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT1_TOG(v)    (BME_XOR8(HW_FTFA_FPROT1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT1(x)        (*(__IO hw_ftfa_fprot1_t *) HW_FTFA_FPROT1_ADDR(x))
+#define HW_FTFA_FPROT1_RD(x)     (HW_FTFA_FPROT1(x).U)
+#define HW_FTFA_FPROT1_WR(x, v)  (HW_FTFA_FPROT1(x).U = (v))
+#define HW_FTFA_FPROT1_SET(x, v) (BME_OR8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT1_CLR(x, v) (BME_AND8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT1_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FPROT1 bitfields
@@ -2054,30 +1877,25 @@ typedef union _hw_ftfa_fprot1
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT1_PROT  (0U)          //!< Bit position for FTFA_FPROT1_PROT.
-#define BM_FTFA_FPROT1_PROT  (0xFFU)       //!< Bit mask for FTFA_FPROT1_PROT.
-#define BS_FTFA_FPROT1_PROT  (8U)          //!< Bit field size in bits for FTFA_FPROT1_PROT.
+/*@{*/
+#define BP_FTFA_FPROT1_PROT  (0U)          /*!< Bit position for FTFA_FPROT1_PROT. */
+#define BM_FTFA_FPROT1_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT1_PROT. */
+#define BS_FTFA_FPROT1_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT1_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT1_PROT field.
-#define BR_FTFA_FPROT1_PROT  (BME_UBFX8(HW_FTFA_FPROT1_ADDR, BP_FTFA_FPROT1_PROT, BS_FTFA_FPROT1_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT1_PROT field. */
+#define BR_FTFA_FPROT1_PROT(x) (HW_FTFA_FPROT1(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT1_PROT.
-#define BF_FTFA_FPROT1_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT1_PROT), uint8_t) & BM_FTFA_FPROT1_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT1_PROT. */
+#define BF_FTFA_FPROT1_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT1_PROT) & BM_FTFA_FPROT1_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT1_PROT(v) (BME_BFI8(HW_FTFA_FPROT1_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT1_PROT), BP_FTFA_FPROT1_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT1_PROT(x, v) (HW_FTFA_FPROT1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT0 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT0 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT0 - Program Flash Protection Registers (RW)
  *
@@ -2109,26 +1927,23 @@ typedef union _hw_ftfa_fprot0
     uint8_t U;
     struct _hw_ftfa_fprot0_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT0 register
  */
-//@{
-#define HW_FTFA_FPROT0_ADDR      (REGS_FTFA_BASE + 0x13U)
+/*@{*/
+#define HW_FTFA_FPROT0_ADDR(x)   ((x) + 0x13U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT0           (*(__IO hw_ftfa_fprot0_t *) HW_FTFA_FPROT0_ADDR)
-#define HW_FTFA_FPROT0_RD()      (HW_FTFA_FPROT0.U)
-#define HW_FTFA_FPROT0_WR(v)     (HW_FTFA_FPROT0.U = (v))
-#define HW_FTFA_FPROT0_SET(v)    (BME_OR8(HW_FTFA_FPROT0_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT0_CLR(v)    (BME_AND8(HW_FTFA_FPROT0_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT0_TOG(v)    (BME_XOR8(HW_FTFA_FPROT0_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT0(x)        (*(__IO hw_ftfa_fprot0_t *) HW_FTFA_FPROT0_ADDR(x))
+#define HW_FTFA_FPROT0_RD(x)     (HW_FTFA_FPROT0(x).U)
+#define HW_FTFA_FPROT0_WR(x, v)  (HW_FTFA_FPROT0(x).U = (v))
+#define HW_FTFA_FPROT0_SET(x, v) (BME_OR8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT0_CLR(x, v) (BME_AND8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT0_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFA_FPROT0 bitfields
@@ -2159,64 +1974,59 @@ typedef union _hw_ftfa_fprot0
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT0_PROT  (0U)          //!< Bit position for FTFA_FPROT0_PROT.
-#define BM_FTFA_FPROT0_PROT  (0xFFU)       //!< Bit mask for FTFA_FPROT0_PROT.
-#define BS_FTFA_FPROT0_PROT  (8U)          //!< Bit field size in bits for FTFA_FPROT0_PROT.
+/*@{*/
+#define BP_FTFA_FPROT0_PROT  (0U)          /*!< Bit position for FTFA_FPROT0_PROT. */
+#define BM_FTFA_FPROT0_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT0_PROT. */
+#define BS_FTFA_FPROT0_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT0_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT0_PROT field.
-#define BR_FTFA_FPROT0_PROT  (BME_UBFX8(HW_FTFA_FPROT0_ADDR, BP_FTFA_FPROT0_PROT, BS_FTFA_FPROT0_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT0_PROT field. */
+#define BR_FTFA_FPROT0_PROT(x) (HW_FTFA_FPROT0(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT0_PROT.
-#define BF_FTFA_FPROT0_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT0_PROT), uint8_t) & BM_FTFA_FPROT0_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT0_PROT. */
+#define BF_FTFA_FPROT0_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT0_PROT) & BM_FTFA_FPROT0_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT0_PROT(v) (BME_BFI8(HW_FTFA_FPROT0_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT0_PROT), BP_FTFA_FPROT0_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT0_PROT(x, v) (HW_FTFA_FPROT0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_ftfa_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_ftfa_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All FTFA module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_ftfa
 {
-    __IO hw_ftfa_fstat_t FSTAT;            //!< [0x0] Flash Status Register
-    __IO hw_ftfa_fcnfg_t FCNFG;            //!< [0x1] Flash Configuration Register
-    __I hw_ftfa_fsec_t FSEC;               //!< [0x2] Flash Security Register
-    __I hw_ftfa_fopt_t FOPT;               //!< [0x3] Flash Option Register
-    __IO hw_ftfa_fccob3_t FCCOB3;          //!< [0x4] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob2_t FCCOB2;          //!< [0x5] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob1_t FCCOB1;          //!< [0x6] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob0_t FCCOB0;          //!< [0x7] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob7_t FCCOB7;          //!< [0x8] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob6_t FCCOB6;          //!< [0x9] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob5_t FCCOB5;          //!< [0xA] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob4_t FCCOB4;          //!< [0xB] Flash Common Command Object Registers
-    __IO hw_ftfa_fccobb_t FCCOBB;          //!< [0xC] Flash Common Command Object Registers
-    __IO hw_ftfa_fccoba_t FCCOBA;          //!< [0xD] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob9_t FCCOB9;          //!< [0xE] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob8_t FCCOB8;          //!< [0xF] Flash Common Command Object Registers
-    __IO hw_ftfa_fprot3_t FPROT3;          //!< [0x10] Program Flash Protection Registers
-    __IO hw_ftfa_fprot2_t FPROT2;          //!< [0x11] Program Flash Protection Registers
-    __IO hw_ftfa_fprot1_t FPROT1;          //!< [0x12] Program Flash Protection Registers
-    __IO hw_ftfa_fprot0_t FPROT0;          //!< [0x13] Program Flash Protection Registers
+    __IO hw_ftfa_fstat_t FSTAT;            /*!< [0x0] Flash Status Register */
+    __IO hw_ftfa_fcnfg_t FCNFG;            /*!< [0x1] Flash Configuration Register */
+    __I hw_ftfa_fsec_t FSEC;               /*!< [0x2] Flash Security Register */
+    __I hw_ftfa_fopt_t FOPT;               /*!< [0x3] Flash Option Register */
+    __IO hw_ftfa_fccob3_t FCCOB3;          /*!< [0x4] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob2_t FCCOB2;          /*!< [0x5] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob1_t FCCOB1;          /*!< [0x6] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob0_t FCCOB0;          /*!< [0x7] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob7_t FCCOB7;          /*!< [0x8] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob6_t FCCOB6;          /*!< [0x9] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob5_t FCCOB5;          /*!< [0xA] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob4_t FCCOB4;          /*!< [0xB] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccobb_t FCCOBB;          /*!< [0xC] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccoba_t FCCOBA;          /*!< [0xD] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob9_t FCCOB9;          /*!< [0xE] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob8_t FCCOB8;          /*!< [0xF] Flash Common Command Object Registers */
+    __IO hw_ftfa_fprot3_t FPROT3;          /*!< [0x10] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot2_t FPROT2;          /*!< [0x11] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot1_t FPROT1;          /*!< [0x12] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot0_t FPROT0;          /*!< [0x13] Program Flash Protection Registers */
 } hw_ftfa_t;
 #pragma pack()
 
-//! @brief Macro to access all FTFA registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_FTFA</code>.
-#define HW_FTFA        (*(hw_ftfa_t *) REGS_FTFA_BASE)
-#endif
+/*! @brief Macro to access all FTFA registers. */
+/*! @param x FTFA module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_FTFA(FTFA_BASE)</code>. */
+#define HW_FTFA(x)     (*(hw_ftfa_t *)(x))
 
-#endif // __HW_FTFA_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_FTFA_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

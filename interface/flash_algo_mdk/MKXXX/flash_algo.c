@@ -93,7 +93,7 @@ int UnInit (unsigned long fnc) {
 
 int EraseChip (void)
 {
-    int status = flash_erase_all(&g_flash);
+    int status = flash_erase_all(&g_flash, kFlashEraseKey);
     if (status == kStatus_Success)
     {
         status = flash_verify_erase_all(&g_flash, kFlashMargin_Normal);
@@ -110,7 +110,7 @@ int EraseChip (void)
  */
 int EraseSector (unsigned long adr)
 {
-    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize);
+    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashEraseKey);
     if (status == kStatus_Success)
     {
         status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);

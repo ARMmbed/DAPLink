@@ -39,7 +39,7 @@ int flash_hal_uninit(uint32_t fnc)
 
 int flash_hal_erase_chip(void)
 {
-    int status = flash_erase_all(&g_flash);
+    int status = flash_erase_all(&g_flash, kFlashEraseKey);
     if (status == kStatus_Success)
     {
         status = flash_verify_erase_all(&g_flash, kFlashMargin_Normal);
@@ -50,7 +50,7 @@ int flash_hal_erase_chip(void)
 
 int flash_hal_erase_sector(uint32_t adr)
 {
-    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize);
+    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashEraseKey);
     if (status == kStatus_Success)
     {
         status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);
@@ -65,7 +65,7 @@ int flash_hal_program_page(uint32_t adr, uint32_t sz, unsigned char *buf)
     if (status == kStatus_Success)
     {
         status = flash_verify_program(&g_flash, adr, sz,
-                              (const uint8_t *)buf, kFlashMargin_Normal,
+                              (const uint8_t *)buf, kFlashMargin_User,
                               NULL, NULL);
     }
     flash_cache_clear();

@@ -25,10 +25,10 @@ def run_cmd(command, wd=None, check_rc=True):
     p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=wd)
     stdout, stderr = p.communicate()
     rc = p.returncode
-    
+
     if check_rc and rc != 0:
         raise Exception('"%s" returned %d\n%s' % (' '.join(command), rc, stderr))
-    
+
     return stdout, stderr, rc
 
 

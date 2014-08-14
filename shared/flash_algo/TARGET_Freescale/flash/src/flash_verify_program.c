@@ -30,17 +30,9 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 #include "device/fsl_device_registers.h"
-
-////////////////////////////////////////////////////////////////////////////////
-// Declarations
-////////////////////////////////////////////////////////////////////////////////
-//! @brief Flash verify program unit of FTFx_PROGRAM_CHECK cmd.
-enum _flash_verify_program_unit
-{
-    kFlashVerifyProgramUnitInBytes = 4
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -60,7 +52,7 @@ status_t flash_verify_program(flash_driver_t * driver,
         return kStatus_InvalidArgument;
     }
 
-    status_t returnCode = flash_check_range(driver, start, lengthInBytes);
+    status_t returnCode = flash_check_range(driver, start, lengthInBytes, FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT);
     if (returnCode)
     {
         return returnCode;
@@ -70,8 +62,8 @@ status_t flash_verify_program(flash_driver_t * driver,
     {
         // preparing passing parameter to program check the flash block
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(0, FTFx_PROGRAM_CHECK);
-        HW_FTFx_FCCOBx_WR(4, margin);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_PROGRAM_CHECK);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 4, margin);
         kFCCOBx[2] = *(uint32_t *)expectedData;
 
         // calling flash command sequence function to execute the command
@@ -118,9 +110,9 @@ status_t flash_verify_program(flash_driver_t * driver,
             break;
         }
 
-        lengthInBytes -= kFlashVerifyProgramUnitInBytes;
-        expectedData += kFlashVerifyProgramUnitInBytes;
-        start += kFlashVerifyProgramUnitInBytes;
+        lengthInBytes -= FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT;
+        expectedData += FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT;
+        start += FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT;
     }
 
     return(returnCode);

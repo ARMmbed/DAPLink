@@ -21,7 +21,8 @@
 #ifndef __HW_FMC_REGISTERS_H__
 #define __HW_FMC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 FMC
@@ -43,19 +44,12 @@
  * - hw_fmc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_FMC_BASE
-#define HW_FMC_INSTANCE_COUNT (1U) //!< Number of instances of the FMC module.
-#define REGS_FMC_BASE (0x4001F000U) //!< Base address for FMC.
-#endif
-//@}
+#define HW_FMC_INSTANCE_COUNT (1U) /*!< Number of instances of the FMC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_PFAPR - Flash Access Protection Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_PFAPR - Flash Access Protection Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_PFAPR - Flash Access Protection Register (RW)
  *
@@ -66,35 +60,32 @@ typedef union _hw_fmc_pfapr
     uint32_t U;
     struct _hw_fmc_pfapr_bitfields
     {
-        uint32_t M0AP : 2;             //!< [1:0] Master 0 Access Protection
-        uint32_t M1AP : 2;             //!< [3:2] Master 1 Access Protection
-        uint32_t M2AP : 2;             //!< [5:4] Master 2 Access Protection
-        uint32_t M3AP : 2;             //!< [7:6] Master 3 Access Protection
-        uint32_t RESERVED0 : 8;        //!< [15:8]
-        uint32_t M0PFD : 1;            //!< [16] Master 0 Prefetch Disable
-        uint32_t M1PFD : 1;            //!< [17] Master 1 Prefetch Disable
-        uint32_t M2PFD : 1;            //!< [18] Master 2 Prefetch Disable
-        uint32_t M3PFD : 1;            //!< [19] Master 3 Prefetch Disable
-        uint32_t RESERVED1 : 12;       //!< [31:20]
+        uint32_t M0AP : 2;             /*!< [1:0] Master 0 Access Protection */
+        uint32_t M1AP : 2;             /*!< [3:2] Master 1 Access Protection */
+        uint32_t M2AP : 2;             /*!< [5:4] Master 2 Access Protection */
+        uint32_t M3AP : 2;             /*!< [7:6] Master 3 Access Protection */
+        uint32_t RESERVED0 : 8;        /*!< [15:8]  */
+        uint32_t M0PFD : 1;            /*!< [16] Master 0 Prefetch Disable */
+        uint32_t M1PFD : 1;            /*!< [17] Master 1 Prefetch Disable */
+        uint32_t M2PFD : 1;            /*!< [18] Master 2 Prefetch Disable */
+        uint32_t M3PFD : 1;            /*!< [19] Master 3 Prefetch Disable */
+        uint32_t RESERVED1 : 12;       /*!< [31:20]  */
     } B;
 } hw_fmc_pfapr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_PFAPR register
  */
-//@{
-#define HW_FMC_PFAPR_ADDR        (REGS_FMC_BASE + 0x0U)
+/*@{*/
+#define HW_FMC_PFAPR_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_PFAPR             (*(__IO hw_fmc_pfapr_t *) HW_FMC_PFAPR_ADDR)
-#define HW_FMC_PFAPR_RD()        (HW_FMC_PFAPR.U)
-#define HW_FMC_PFAPR_WR(v)       (HW_FMC_PFAPR.U = (v))
-#define HW_FMC_PFAPR_SET(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() |  (v)))
-#define HW_FMC_PFAPR_CLR(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() & ~(v)))
-#define HW_FMC_PFAPR_TOG(v)      (HW_FMC_PFAPR_WR(HW_FMC_PFAPR_RD() ^  (v)))
-#endif
-//@}
+#define HW_FMC_PFAPR(x)          (*(__IO hw_fmc_pfapr_t *) HW_FMC_PFAPR_ADDR(x))
+#define HW_FMC_PFAPR_RD(x)       (HW_FMC_PFAPR(x).U)
+#define HW_FMC_PFAPR_WR(x, v)    (HW_FMC_PFAPR(x).U = (v))
+#define HW_FMC_PFAPR_SET(x, v)   (HW_FMC_PFAPR_WR(x, HW_FMC_PFAPR_RD(x) |  (v)))
+#define HW_FMC_PFAPR_CLR(x, v)   (HW_FMC_PFAPR_WR(x, HW_FMC_PFAPR_RD(x) & ~(v)))
+#define HW_FMC_PFAPR_TOG(x, v)   (HW_FMC_PFAPR_WR(x, HW_FMC_PFAPR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_PFAPR bitfields
@@ -112,24 +103,20 @@ typedef union _hw_fmc_pfapr
  * - 10 - Only write accesses may be performed by this master
  * - 11 - Both read and write accesses may be performed by this master
  */
-//@{
-#define BP_FMC_PFAPR_M0AP    (0U)          //!< Bit position for FMC_PFAPR_M0AP.
-#define BM_FMC_PFAPR_M0AP    (0x00000003U) //!< Bit mask for FMC_PFAPR_M0AP.
-#define BS_FMC_PFAPR_M0AP    (2U)          //!< Bit field size in bits for FMC_PFAPR_M0AP.
+/*@{*/
+#define BP_FMC_PFAPR_M0AP    (0U)          /*!< Bit position for FMC_PFAPR_M0AP. */
+#define BM_FMC_PFAPR_M0AP    (0x00000003U) /*!< Bit mask for FMC_PFAPR_M0AP. */
+#define BS_FMC_PFAPR_M0AP    (2U)          /*!< Bit field size in bits for FMC_PFAPR_M0AP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M0AP field.
-#define BR_FMC_PFAPR_M0AP    (HW_FMC_PFAPR.B.M0AP)
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M0AP field. */
+#define BR_FMC_PFAPR_M0AP(x) (HW_FMC_PFAPR(x).B.M0AP)
 
-//! @brief Format value for bitfield FMC_PFAPR_M0AP.
-#define BF_FMC_PFAPR_M0AP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M0AP), uint32_t) & BM_FMC_PFAPR_M0AP)
+/*! @brief Format value for bitfield FMC_PFAPR_M0AP. */
+#define BF_FMC_PFAPR_M0AP(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M0AP) & BM_FMC_PFAPR_M0AP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M0AP field to a new value.
-#define BW_FMC_PFAPR_M0AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M0AP) | BF_FMC_PFAPR_M0AP(v)))
-#endif
-//@}
+/*! @brief Set the M0AP field to a new value. */
+#define BW_FMC_PFAPR_M0AP(x, v) (HW_FMC_PFAPR_WR(x, (HW_FMC_PFAPR_RD(x) & ~BM_FMC_PFAPR_M0AP) | BF_FMC_PFAPR_M0AP(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M1AP[3:2] (RW)
@@ -143,24 +130,20 @@ typedef union _hw_fmc_pfapr
  * - 10 - Only write accesses may be performed by this master
  * - 11 - Both read and write accesses may be performed by this master
  */
-//@{
-#define BP_FMC_PFAPR_M1AP    (2U)          //!< Bit position for FMC_PFAPR_M1AP.
-#define BM_FMC_PFAPR_M1AP    (0x0000000CU) //!< Bit mask for FMC_PFAPR_M1AP.
-#define BS_FMC_PFAPR_M1AP    (2U)          //!< Bit field size in bits for FMC_PFAPR_M1AP.
+/*@{*/
+#define BP_FMC_PFAPR_M1AP    (2U)          /*!< Bit position for FMC_PFAPR_M1AP. */
+#define BM_FMC_PFAPR_M1AP    (0x0000000CU) /*!< Bit mask for FMC_PFAPR_M1AP. */
+#define BS_FMC_PFAPR_M1AP    (2U)          /*!< Bit field size in bits for FMC_PFAPR_M1AP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M1AP field.
-#define BR_FMC_PFAPR_M1AP    (HW_FMC_PFAPR.B.M1AP)
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M1AP field. */
+#define BR_FMC_PFAPR_M1AP(x) (HW_FMC_PFAPR(x).B.M1AP)
 
-//! @brief Format value for bitfield FMC_PFAPR_M1AP.
-#define BF_FMC_PFAPR_M1AP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M1AP), uint32_t) & BM_FMC_PFAPR_M1AP)
+/*! @brief Format value for bitfield FMC_PFAPR_M1AP. */
+#define BF_FMC_PFAPR_M1AP(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M1AP) & BM_FMC_PFAPR_M1AP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M1AP field to a new value.
-#define BW_FMC_PFAPR_M1AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M1AP) | BF_FMC_PFAPR_M1AP(v)))
-#endif
-//@}
+/*! @brief Set the M1AP field to a new value. */
+#define BW_FMC_PFAPR_M1AP(x, v) (HW_FMC_PFAPR_WR(x, (HW_FMC_PFAPR_RD(x) & ~BM_FMC_PFAPR_M1AP) | BF_FMC_PFAPR_M1AP(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M2AP[5:4] (RW)
@@ -174,24 +157,20 @@ typedef union _hw_fmc_pfapr
  * - 10 - Only write accesses may be performed by this master
  * - 11 - Both read and write accesses may be performed by this master
  */
-//@{
-#define BP_FMC_PFAPR_M2AP    (4U)          //!< Bit position for FMC_PFAPR_M2AP.
-#define BM_FMC_PFAPR_M2AP    (0x00000030U) //!< Bit mask for FMC_PFAPR_M2AP.
-#define BS_FMC_PFAPR_M2AP    (2U)          //!< Bit field size in bits for FMC_PFAPR_M2AP.
+/*@{*/
+#define BP_FMC_PFAPR_M2AP    (4U)          /*!< Bit position for FMC_PFAPR_M2AP. */
+#define BM_FMC_PFAPR_M2AP    (0x00000030U) /*!< Bit mask for FMC_PFAPR_M2AP. */
+#define BS_FMC_PFAPR_M2AP    (2U)          /*!< Bit field size in bits for FMC_PFAPR_M2AP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M2AP field.
-#define BR_FMC_PFAPR_M2AP    (HW_FMC_PFAPR.B.M2AP)
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M2AP field. */
+#define BR_FMC_PFAPR_M2AP(x) (HW_FMC_PFAPR(x).B.M2AP)
 
-//! @brief Format value for bitfield FMC_PFAPR_M2AP.
-#define BF_FMC_PFAPR_M2AP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M2AP), uint32_t) & BM_FMC_PFAPR_M2AP)
+/*! @brief Format value for bitfield FMC_PFAPR_M2AP. */
+#define BF_FMC_PFAPR_M2AP(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M2AP) & BM_FMC_PFAPR_M2AP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M2AP field to a new value.
-#define BW_FMC_PFAPR_M2AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M2AP) | BF_FMC_PFAPR_M2AP(v)))
-#endif
-//@}
+/*! @brief Set the M2AP field to a new value. */
+#define BW_FMC_PFAPR_M2AP(x, v) (HW_FMC_PFAPR_WR(x, (HW_FMC_PFAPR_RD(x) & ~BM_FMC_PFAPR_M2AP) | BF_FMC_PFAPR_M2AP(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M3AP[7:6] (RW)
@@ -205,24 +184,20 @@ typedef union _hw_fmc_pfapr
  * - 10 - Only write accesses may be performed by this master
  * - 11 - Both read and write accesses may be performed by this master
  */
-//@{
-#define BP_FMC_PFAPR_M3AP    (6U)          //!< Bit position for FMC_PFAPR_M3AP.
-#define BM_FMC_PFAPR_M3AP    (0x000000C0U) //!< Bit mask for FMC_PFAPR_M3AP.
-#define BS_FMC_PFAPR_M3AP    (2U)          //!< Bit field size in bits for FMC_PFAPR_M3AP.
+/*@{*/
+#define BP_FMC_PFAPR_M3AP    (6U)          /*!< Bit position for FMC_PFAPR_M3AP. */
+#define BM_FMC_PFAPR_M3AP    (0x000000C0U) /*!< Bit mask for FMC_PFAPR_M3AP. */
+#define BS_FMC_PFAPR_M3AP    (2U)          /*!< Bit field size in bits for FMC_PFAPR_M3AP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M3AP field.
-#define BR_FMC_PFAPR_M3AP    (HW_FMC_PFAPR.B.M3AP)
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M3AP field. */
+#define BR_FMC_PFAPR_M3AP(x) (HW_FMC_PFAPR(x).B.M3AP)
 
-//! @brief Format value for bitfield FMC_PFAPR_M3AP.
-#define BF_FMC_PFAPR_M3AP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M3AP), uint32_t) & BM_FMC_PFAPR_M3AP)
+/*! @brief Format value for bitfield FMC_PFAPR_M3AP. */
+#define BF_FMC_PFAPR_M3AP(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M3AP) & BM_FMC_PFAPR_M3AP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M3AP field to a new value.
-#define BW_FMC_PFAPR_M3AP(v) (HW_FMC_PFAPR_WR((HW_FMC_PFAPR_RD() & ~BM_FMC_PFAPR_M3AP) | BF_FMC_PFAPR_M3AP(v)))
-#endif
-//@}
+/*! @brief Set the M3AP field to a new value. */
+#define BW_FMC_PFAPR_M3AP(x, v) (HW_FMC_PFAPR_WR(x, (HW_FMC_PFAPR_RD(x) & ~BM_FMC_PFAPR_M3AP) | BF_FMC_PFAPR_M3AP(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M0PFD[16] (RW)
@@ -235,24 +210,20 @@ typedef union _hw_fmc_pfapr
  * - 0 - Prefetching for this master is enabled.
  * - 1 - Prefetching for this master is disabled.
  */
-//@{
-#define BP_FMC_PFAPR_M0PFD   (16U)         //!< Bit position for FMC_PFAPR_M0PFD.
-#define BM_FMC_PFAPR_M0PFD   (0x00010000U) //!< Bit mask for FMC_PFAPR_M0PFD.
-#define BS_FMC_PFAPR_M0PFD   (1U)          //!< Bit field size in bits for FMC_PFAPR_M0PFD.
+/*@{*/
+#define BP_FMC_PFAPR_M0PFD   (16U)         /*!< Bit position for FMC_PFAPR_M0PFD. */
+#define BM_FMC_PFAPR_M0PFD   (0x00010000U) /*!< Bit mask for FMC_PFAPR_M0PFD. */
+#define BS_FMC_PFAPR_M0PFD   (1U)          /*!< Bit field size in bits for FMC_PFAPR_M0PFD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M0PFD field.
-#define BR_FMC_PFAPR_M0PFD   (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M0PFD))
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M0PFD field. */
+#define BR_FMC_PFAPR_M0PFD(x) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M0PFD))
 
-//! @brief Format value for bitfield FMC_PFAPR_M0PFD.
-#define BF_FMC_PFAPR_M0PFD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M0PFD), uint32_t) & BM_FMC_PFAPR_M0PFD)
+/*! @brief Format value for bitfield FMC_PFAPR_M0PFD. */
+#define BF_FMC_PFAPR_M0PFD(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M0PFD) & BM_FMC_PFAPR_M0PFD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M0PFD field to a new value.
-#define BW_FMC_PFAPR_M0PFD(v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M0PFD) = (v))
-#endif
-//@}
+/*! @brief Set the M0PFD field to a new value. */
+#define BW_FMC_PFAPR_M0PFD(x, v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M0PFD) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M1PFD[17] (RW)
@@ -265,24 +236,20 @@ typedef union _hw_fmc_pfapr
  * - 0 - Prefetching for this master is enabled.
  * - 1 - Prefetching for this master is disabled.
  */
-//@{
-#define BP_FMC_PFAPR_M1PFD   (17U)         //!< Bit position for FMC_PFAPR_M1PFD.
-#define BM_FMC_PFAPR_M1PFD   (0x00020000U) //!< Bit mask for FMC_PFAPR_M1PFD.
-#define BS_FMC_PFAPR_M1PFD   (1U)          //!< Bit field size in bits for FMC_PFAPR_M1PFD.
+/*@{*/
+#define BP_FMC_PFAPR_M1PFD   (17U)         /*!< Bit position for FMC_PFAPR_M1PFD. */
+#define BM_FMC_PFAPR_M1PFD   (0x00020000U) /*!< Bit mask for FMC_PFAPR_M1PFD. */
+#define BS_FMC_PFAPR_M1PFD   (1U)          /*!< Bit field size in bits for FMC_PFAPR_M1PFD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M1PFD field.
-#define BR_FMC_PFAPR_M1PFD   (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M1PFD))
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M1PFD field. */
+#define BR_FMC_PFAPR_M1PFD(x) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M1PFD))
 
-//! @brief Format value for bitfield FMC_PFAPR_M1PFD.
-#define BF_FMC_PFAPR_M1PFD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M1PFD), uint32_t) & BM_FMC_PFAPR_M1PFD)
+/*! @brief Format value for bitfield FMC_PFAPR_M1PFD. */
+#define BF_FMC_PFAPR_M1PFD(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M1PFD) & BM_FMC_PFAPR_M1PFD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M1PFD field to a new value.
-#define BW_FMC_PFAPR_M1PFD(v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M1PFD) = (v))
-#endif
-//@}
+/*! @brief Set the M1PFD field to a new value. */
+#define BW_FMC_PFAPR_M1PFD(x, v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M1PFD) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M2PFD[18] (RW)
@@ -295,24 +262,20 @@ typedef union _hw_fmc_pfapr
  * - 0 - Prefetching for this master is enabled.
  * - 1 - Prefetching for this master is disabled.
  */
-//@{
-#define BP_FMC_PFAPR_M2PFD   (18U)         //!< Bit position for FMC_PFAPR_M2PFD.
-#define BM_FMC_PFAPR_M2PFD   (0x00040000U) //!< Bit mask for FMC_PFAPR_M2PFD.
-#define BS_FMC_PFAPR_M2PFD   (1U)          //!< Bit field size in bits for FMC_PFAPR_M2PFD.
+/*@{*/
+#define BP_FMC_PFAPR_M2PFD   (18U)         /*!< Bit position for FMC_PFAPR_M2PFD. */
+#define BM_FMC_PFAPR_M2PFD   (0x00040000U) /*!< Bit mask for FMC_PFAPR_M2PFD. */
+#define BS_FMC_PFAPR_M2PFD   (1U)          /*!< Bit field size in bits for FMC_PFAPR_M2PFD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M2PFD field.
-#define BR_FMC_PFAPR_M2PFD   (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M2PFD))
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M2PFD field. */
+#define BR_FMC_PFAPR_M2PFD(x) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M2PFD))
 
-//! @brief Format value for bitfield FMC_PFAPR_M2PFD.
-#define BF_FMC_PFAPR_M2PFD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M2PFD), uint32_t) & BM_FMC_PFAPR_M2PFD)
+/*! @brief Format value for bitfield FMC_PFAPR_M2PFD. */
+#define BF_FMC_PFAPR_M2PFD(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M2PFD) & BM_FMC_PFAPR_M2PFD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M2PFD field to a new value.
-#define BW_FMC_PFAPR_M2PFD(v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M2PFD) = (v))
-#endif
-//@}
+/*! @brief Set the M2PFD field to a new value. */
+#define BW_FMC_PFAPR_M2PFD(x, v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M2PFD) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFAPR, field M3PFD[19] (RW)
@@ -325,30 +288,25 @@ typedef union _hw_fmc_pfapr
  * - 0 - Prefetching for this master is enabled.
  * - 1 - Prefetching for this master is disabled.
  */
-//@{
-#define BP_FMC_PFAPR_M3PFD   (19U)         //!< Bit position for FMC_PFAPR_M3PFD.
-#define BM_FMC_PFAPR_M3PFD   (0x00080000U) //!< Bit mask for FMC_PFAPR_M3PFD.
-#define BS_FMC_PFAPR_M3PFD   (1U)          //!< Bit field size in bits for FMC_PFAPR_M3PFD.
+/*@{*/
+#define BP_FMC_PFAPR_M3PFD   (19U)         /*!< Bit position for FMC_PFAPR_M3PFD. */
+#define BM_FMC_PFAPR_M3PFD   (0x00080000U) /*!< Bit mask for FMC_PFAPR_M3PFD. */
+#define BS_FMC_PFAPR_M3PFD   (1U)          /*!< Bit field size in bits for FMC_PFAPR_M3PFD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFAPR_M3PFD field.
-#define BR_FMC_PFAPR_M3PFD   (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M3PFD))
-#endif
+/*! @brief Read current value of the FMC_PFAPR_M3PFD field. */
+#define BR_FMC_PFAPR_M3PFD(x) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M3PFD))
 
-//! @brief Format value for bitfield FMC_PFAPR_M3PFD.
-#define BF_FMC_PFAPR_M3PFD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFAPR_M3PFD), uint32_t) & BM_FMC_PFAPR_M3PFD)
+/*! @brief Format value for bitfield FMC_PFAPR_M3PFD. */
+#define BF_FMC_PFAPR_M3PFD(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFAPR_M3PFD) & BM_FMC_PFAPR_M3PFD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M3PFD field to a new value.
-#define BW_FMC_PFAPR_M3PFD(v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR, BP_FMC_PFAPR_M3PFD) = (v))
-#endif
-//@}
+/*! @brief Set the M3PFD field to a new value. */
+#define BW_FMC_PFAPR_M3PFD(x, v) (BITBAND_ACCESS32(HW_FMC_PFAPR_ADDR(x), BP_FMC_PFAPR_M3PFD) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_PFB0CR - Flash Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_PFB0CR - Flash Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_PFB0CR - Flash Control Register (RW)
  *
@@ -359,37 +317,35 @@ typedef union _hw_fmc_pfb0cr
     uint32_t U;
     struct _hw_fmc_pfb0cr_bitfields
     {
-        uint32_t B0SEBE : 1;           //!< [0] Single Entry Buffer Enable
-        uint32_t B0IPE : 1;            //!< [1] Instruction Prefetch Enable
-        uint32_t B0DPE : 1;            //!< [2] Data Prefetch Enable
-        uint32_t B0ICE : 1;            //!< [3] Instruction Cache Enable
-        uint32_t B0DCE : 1;            //!< [4] Data Cache Enable
-        uint32_t CRCb : 3;             //!< [7:5] Cache Replacement Control
-        uint32_t RESERVED0 : 9;        //!< [16:8]
-        uint32_t B0MW : 2;             //!< [18:17] Memory Width
-        uint32_t S_B_INV : 1;          //!< [19] Invalidate Prefetch Speculation Buffer
-        uint32_t CINV_WAY : 4;         //!< [23:20] Cache Invalidate Way x
-        uint32_t CLCK_WAY : 4;         //!< [27:24] Cache Lock Way x
-        uint32_t B0RWSC : 4;           //!< [31:28] Read Wait State Control
+        uint32_t B0SEBE : 1;           /*!< [0] Single Entry Buffer Enable */
+        uint32_t B0IPE : 1;            /*!< [1] Instruction Prefetch Enable */
+        uint32_t B0DPE : 1;            /*!< [2] Data Prefetch Enable */
+        uint32_t B0ICE : 1;            /*!< [3] Instruction Cache Enable */
+        uint32_t B0DCE : 1;            /*!< [4] Data Cache Enable */
+        uint32_t CRC : 3;              /*!< [7:5] Cache Replacement Control */
+        uint32_t RESERVED0 : 9;        /*!< [16:8]  */
+        uint32_t B0MW : 2;             /*!< [18:17] Memory Width */
+        uint32_t S_B_INV : 1;          /*!< [19] Invalidate Prefetch Speculation
+                                        * Buffer */
+        uint32_t CINV_WAY : 4;         /*!< [23:20] Cache Invalidate Way x */
+        uint32_t CLCK_WAY : 4;         /*!< [27:24] Cache Lock Way x */
+        uint32_t B0RWSC : 4;           /*!< [31:28] Read Wait State Control */
     } B;
 } hw_fmc_pfb0cr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_PFB0CR register
  */
-//@{
-#define HW_FMC_PFB0CR_ADDR       (REGS_FMC_BASE + 0x4U)
+/*@{*/
+#define HW_FMC_PFB0CR_ADDR(x)    ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_PFB0CR            (*(__IO hw_fmc_pfb0cr_t *) HW_FMC_PFB0CR_ADDR)
-#define HW_FMC_PFB0CR_RD()       (HW_FMC_PFB0CR.U)
-#define HW_FMC_PFB0CR_WR(v)      (HW_FMC_PFB0CR.U = (v))
-#define HW_FMC_PFB0CR_SET(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() |  (v)))
-#define HW_FMC_PFB0CR_CLR(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() & ~(v)))
-#define HW_FMC_PFB0CR_TOG(v)     (HW_FMC_PFB0CR_WR(HW_FMC_PFB0CR_RD() ^  (v)))
-#endif
-//@}
+#define HW_FMC_PFB0CR(x)         (*(__IO hw_fmc_pfb0cr_t *) HW_FMC_PFB0CR_ADDR(x))
+#define HW_FMC_PFB0CR_RD(x)      (HW_FMC_PFB0CR(x).U)
+#define HW_FMC_PFB0CR_WR(x, v)   (HW_FMC_PFB0CR(x).U = (v))
+#define HW_FMC_PFB0CR_SET(x, v)  (HW_FMC_PFB0CR_WR(x, HW_FMC_PFB0CR_RD(x) |  (v)))
+#define HW_FMC_PFB0CR_CLR(x, v)  (HW_FMC_PFB0CR_WR(x, HW_FMC_PFB0CR_RD(x) & ~(v)))
+#define HW_FMC_PFB0CR_TOG(x, v)  (HW_FMC_PFB0CR_WR(x, HW_FMC_PFB0CR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_PFB0CR bitfields
@@ -406,24 +362,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Single entry buffer is disabled.
  * - 1 - Single entry buffer is enabled.
  */
-//@{
-#define BP_FMC_PFB0CR_B0SEBE (0U)          //!< Bit position for FMC_PFB0CR_B0SEBE.
-#define BM_FMC_PFB0CR_B0SEBE (0x00000001U) //!< Bit mask for FMC_PFB0CR_B0SEBE.
-#define BS_FMC_PFB0CR_B0SEBE (1U)          //!< Bit field size in bits for FMC_PFB0CR_B0SEBE.
+/*@{*/
+#define BP_FMC_PFB0CR_B0SEBE (0U)          /*!< Bit position for FMC_PFB0CR_B0SEBE. */
+#define BM_FMC_PFB0CR_B0SEBE (0x00000001U) /*!< Bit mask for FMC_PFB0CR_B0SEBE. */
+#define BS_FMC_PFB0CR_B0SEBE (1U)          /*!< Bit field size in bits for FMC_PFB0CR_B0SEBE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0SEBE field.
-#define BR_FMC_PFB0CR_B0SEBE (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0SEBE))
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_B0SEBE field. */
+#define BR_FMC_PFB0CR_B0SEBE(x) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0SEBE))
 
-//! @brief Format value for bitfield FMC_PFB0CR_B0SEBE.
-#define BF_FMC_PFB0CR_B0SEBE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_B0SEBE), uint32_t) & BM_FMC_PFB0CR_B0SEBE)
+/*! @brief Format value for bitfield FMC_PFB0CR_B0SEBE. */
+#define BF_FMC_PFB0CR_B0SEBE(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_B0SEBE) & BM_FMC_PFB0CR_B0SEBE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B0SEBE field to a new value.
-#define BW_FMC_PFB0CR_B0SEBE(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0SEBE) = (v))
-#endif
-//@}
+/*! @brief Set the B0SEBE field to a new value. */
+#define BW_FMC_PFB0CR_B0SEBE(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0SEBE) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0IPE[1] (RW)
@@ -435,24 +387,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Do not prefetch in response to instruction fetches.
  * - 1 - Enable prefetches in response to instruction fetches.
  */
-//@{
-#define BP_FMC_PFB0CR_B0IPE  (1U)          //!< Bit position for FMC_PFB0CR_B0IPE.
-#define BM_FMC_PFB0CR_B0IPE  (0x00000002U) //!< Bit mask for FMC_PFB0CR_B0IPE.
-#define BS_FMC_PFB0CR_B0IPE  (1U)          //!< Bit field size in bits for FMC_PFB0CR_B0IPE.
+/*@{*/
+#define BP_FMC_PFB0CR_B0IPE  (1U)          /*!< Bit position for FMC_PFB0CR_B0IPE. */
+#define BM_FMC_PFB0CR_B0IPE  (0x00000002U) /*!< Bit mask for FMC_PFB0CR_B0IPE. */
+#define BS_FMC_PFB0CR_B0IPE  (1U)          /*!< Bit field size in bits for FMC_PFB0CR_B0IPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0IPE field.
-#define BR_FMC_PFB0CR_B0IPE  (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0IPE))
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_B0IPE field. */
+#define BR_FMC_PFB0CR_B0IPE(x) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0IPE))
 
-//! @brief Format value for bitfield FMC_PFB0CR_B0IPE.
-#define BF_FMC_PFB0CR_B0IPE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_B0IPE), uint32_t) & BM_FMC_PFB0CR_B0IPE)
+/*! @brief Format value for bitfield FMC_PFB0CR_B0IPE. */
+#define BF_FMC_PFB0CR_B0IPE(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_B0IPE) & BM_FMC_PFB0CR_B0IPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B0IPE field to a new value.
-#define BW_FMC_PFB0CR_B0IPE(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0IPE) = (v))
-#endif
-//@}
+/*! @brief Set the B0IPE field to a new value. */
+#define BW_FMC_PFB0CR_B0IPE(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0IPE) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0DPE[2] (RW)
@@ -464,24 +412,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Do not prefetch in response to data references.
  * - 1 - Enable prefetches in response to data references.
  */
-//@{
-#define BP_FMC_PFB0CR_B0DPE  (2U)          //!< Bit position for FMC_PFB0CR_B0DPE.
-#define BM_FMC_PFB0CR_B0DPE  (0x00000004U) //!< Bit mask for FMC_PFB0CR_B0DPE.
-#define BS_FMC_PFB0CR_B0DPE  (1U)          //!< Bit field size in bits for FMC_PFB0CR_B0DPE.
+/*@{*/
+#define BP_FMC_PFB0CR_B0DPE  (2U)          /*!< Bit position for FMC_PFB0CR_B0DPE. */
+#define BM_FMC_PFB0CR_B0DPE  (0x00000004U) /*!< Bit mask for FMC_PFB0CR_B0DPE. */
+#define BS_FMC_PFB0CR_B0DPE  (1U)          /*!< Bit field size in bits for FMC_PFB0CR_B0DPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0DPE field.
-#define BR_FMC_PFB0CR_B0DPE  (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0DPE))
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_B0DPE field. */
+#define BR_FMC_PFB0CR_B0DPE(x) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0DPE))
 
-//! @brief Format value for bitfield FMC_PFB0CR_B0DPE.
-#define BF_FMC_PFB0CR_B0DPE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_B0DPE), uint32_t) & BM_FMC_PFB0CR_B0DPE)
+/*! @brief Format value for bitfield FMC_PFB0CR_B0DPE. */
+#define BF_FMC_PFB0CR_B0DPE(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_B0DPE) & BM_FMC_PFB0CR_B0DPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B0DPE field to a new value.
-#define BW_FMC_PFB0CR_B0DPE(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0DPE) = (v))
-#endif
-//@}
+/*! @brief Set the B0DPE field to a new value. */
+#define BW_FMC_PFB0CR_B0DPE(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0DPE) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0ICE[3] (RW)
@@ -492,24 +436,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Do not cache instruction fetches.
  * - 1 - Cache instruction fetches.
  */
-//@{
-#define BP_FMC_PFB0CR_B0ICE  (3U)          //!< Bit position for FMC_PFB0CR_B0ICE.
-#define BM_FMC_PFB0CR_B0ICE  (0x00000008U) //!< Bit mask for FMC_PFB0CR_B0ICE.
-#define BS_FMC_PFB0CR_B0ICE  (1U)          //!< Bit field size in bits for FMC_PFB0CR_B0ICE.
+/*@{*/
+#define BP_FMC_PFB0CR_B0ICE  (3U)          /*!< Bit position for FMC_PFB0CR_B0ICE. */
+#define BM_FMC_PFB0CR_B0ICE  (0x00000008U) /*!< Bit mask for FMC_PFB0CR_B0ICE. */
+#define BS_FMC_PFB0CR_B0ICE  (1U)          /*!< Bit field size in bits for FMC_PFB0CR_B0ICE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0ICE field.
-#define BR_FMC_PFB0CR_B0ICE  (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0ICE))
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_B0ICE field. */
+#define BR_FMC_PFB0CR_B0ICE(x) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0ICE))
 
-//! @brief Format value for bitfield FMC_PFB0CR_B0ICE.
-#define BF_FMC_PFB0CR_B0ICE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_B0ICE), uint32_t) & BM_FMC_PFB0CR_B0ICE)
+/*! @brief Format value for bitfield FMC_PFB0CR_B0ICE. */
+#define BF_FMC_PFB0CR_B0ICE(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_B0ICE) & BM_FMC_PFB0CR_B0ICE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B0ICE field to a new value.
-#define BW_FMC_PFB0CR_B0ICE(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0ICE) = (v))
-#endif
-//@}
+/*! @brief Set the B0ICE field to a new value. */
+#define BW_FMC_PFB0CR_B0ICE(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0ICE) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0DCE[4] (RW)
@@ -520,24 +460,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Do not cache data references.
  * - 1 - Cache data references.
  */
-//@{
-#define BP_FMC_PFB0CR_B0DCE  (4U)          //!< Bit position for FMC_PFB0CR_B0DCE.
-#define BM_FMC_PFB0CR_B0DCE  (0x00000010U) //!< Bit mask for FMC_PFB0CR_B0DCE.
-#define BS_FMC_PFB0CR_B0DCE  (1U)          //!< Bit field size in bits for FMC_PFB0CR_B0DCE.
+/*@{*/
+#define BP_FMC_PFB0CR_B0DCE  (4U)          /*!< Bit position for FMC_PFB0CR_B0DCE. */
+#define BM_FMC_PFB0CR_B0DCE  (0x00000010U) /*!< Bit mask for FMC_PFB0CR_B0DCE. */
+#define BS_FMC_PFB0CR_B0DCE  (1U)          /*!< Bit field size in bits for FMC_PFB0CR_B0DCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0DCE field.
-#define BR_FMC_PFB0CR_B0DCE  (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0DCE))
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_B0DCE field. */
+#define BR_FMC_PFB0CR_B0DCE(x) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0DCE))
 
-//! @brief Format value for bitfield FMC_PFB0CR_B0DCE.
-#define BF_FMC_PFB0CR_B0DCE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_B0DCE), uint32_t) & BM_FMC_PFB0CR_B0DCE)
+/*! @brief Format value for bitfield FMC_PFB0CR_B0DCE. */
+#define BF_FMC_PFB0CR_B0DCE(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_B0DCE) & BM_FMC_PFB0CR_B0DCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B0DCE field to a new value.
-#define BW_FMC_PFB0CR_B0DCE(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_B0DCE) = (v))
-#endif
-//@}
+/*! @brief Set the B0DCE field to a new value. */
+#define BW_FMC_PFB0CR_B0DCE(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_B0DCE) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field CRC[7:5] (RW)
@@ -552,24 +488,20 @@ typedef union _hw_fmc_pfb0cr
  * - 011 - Independent LRU with ways [0-2] for ifetches, [3] for data
  * - 1xx - Reserved
  */
-//@{
-#define BP_FMC_PFB0CR_CRC    (5U)          //!< Bit position for FMC_PFB0CR_CRC.
-#define BM_FMC_PFB0CR_CRC    (0x000000E0U) //!< Bit mask for FMC_PFB0CR_CRC.
-#define BS_FMC_PFB0CR_CRC    (3U)          //!< Bit field size in bits for FMC_PFB0CR_CRC.
+/*@{*/
+#define BP_FMC_PFB0CR_CRC    (5U)          /*!< Bit position for FMC_PFB0CR_CRC. */
+#define BM_FMC_PFB0CR_CRC    (0x000000E0U) /*!< Bit mask for FMC_PFB0CR_CRC. */
+#define BS_FMC_PFB0CR_CRC    (3U)          /*!< Bit field size in bits for FMC_PFB0CR_CRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_CRC field.
-#define BR_FMC_PFB0CR_CRC    (HW_FMC_PFB0CR.B.CRC)
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_CRC field. */
+#define BR_FMC_PFB0CR_CRC(x) (HW_FMC_PFB0CR(x).B.CRC)
 
-//! @brief Format value for bitfield FMC_PFB0CR_CRC.
-#define BF_FMC_PFB0CR_CRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_CRC), uint32_t) & BM_FMC_PFB0CR_CRC)
+/*! @brief Format value for bitfield FMC_PFB0CR_CRC. */
+#define BF_FMC_PFB0CR_CRC(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_CRC) & BM_FMC_PFB0CR_CRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC field to a new value.
-#define BW_FMC_PFB0CR_CRC(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CRC) | BF_FMC_PFB0CR_CRC(v)))
-#endif
-//@}
+/*! @brief Set the CRC field to a new value. */
+#define BW_FMC_PFB0CR_CRC(x, v) (HW_FMC_PFB0CR_WR(x, (HW_FMC_PFB0CR_RD(x) & ~BM_FMC_PFB0CR_CRC) | BF_FMC_PFB0CR_CRC(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0MW[18:17] (RO)
@@ -581,16 +513,14 @@ typedef union _hw_fmc_pfb0cr
  * - 01 - 64 bits
  * - 1x - Reserved
  */
-//@{
-#define BP_FMC_PFB0CR_B0MW   (17U)         //!< Bit position for FMC_PFB0CR_B0MW.
-#define BM_FMC_PFB0CR_B0MW   (0x00060000U) //!< Bit mask for FMC_PFB0CR_B0MW.
-#define BS_FMC_PFB0CR_B0MW   (2U)          //!< Bit field size in bits for FMC_PFB0CR_B0MW.
+/*@{*/
+#define BP_FMC_PFB0CR_B0MW   (17U)         /*!< Bit position for FMC_PFB0CR_B0MW. */
+#define BM_FMC_PFB0CR_B0MW   (0x00060000U) /*!< Bit mask for FMC_PFB0CR_B0MW. */
+#define BS_FMC_PFB0CR_B0MW   (2U)          /*!< Bit field size in bits for FMC_PFB0CR_B0MW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0MW field.
-#define BR_FMC_PFB0CR_B0MW   (HW_FMC_PFB0CR.B.B0MW)
-#endif
-//@}
+/*! @brief Read current value of the FMC_PFB0CR_B0MW field. */
+#define BR_FMC_PFB0CR_B0MW(x) (HW_FMC_PFB0CR(x).B.B0MW)
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field S_B_INV[19] (WORZ)
@@ -604,24 +534,17 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Speculation buffer and single entry buffer are not affected.
  * - 1 - Invalidate (clear) speculation buffer and single entry buffer.
  */
-//@{
-#define BP_FMC_PFB0CR_S_B_INV (19U)        //!< Bit position for FMC_PFB0CR_S_B_INV.
-#define BM_FMC_PFB0CR_S_B_INV (0x00080000U) //!< Bit mask for FMC_PFB0CR_S_B_INV.
-#define BS_FMC_PFB0CR_S_B_INV (1U)         //!< Bit field size in bits for FMC_PFB0CR_S_B_INV.
+/*@{*/
+#define BP_FMC_PFB0CR_S_B_INV (19U)        /*!< Bit position for FMC_PFB0CR_S_B_INV. */
+#define BM_FMC_PFB0CR_S_B_INV (0x00080000U) /*!< Bit mask for FMC_PFB0CR_S_B_INV. */
+#define BS_FMC_PFB0CR_S_B_INV (1U)         /*!< Bit field size in bits for FMC_PFB0CR_S_B_INV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_S_B_INV field.
-#define BR_FMC_PFB0CR_S_B_INV (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_S_B_INV))
-#endif
+/*! @brief Format value for bitfield FMC_PFB0CR_S_B_INV. */
+#define BF_FMC_PFB0CR_S_B_INV(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_S_B_INV) & BM_FMC_PFB0CR_S_B_INV)
 
-//! @brief Format value for bitfield FMC_PFB0CR_S_B_INV.
-#define BF_FMC_PFB0CR_S_B_INV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_S_B_INV), uint32_t) & BM_FMC_PFB0CR_S_B_INV)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the S_B_INV field to a new value.
-#define BW_FMC_PFB0CR_S_B_INV(v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR, BP_FMC_PFB0CR_S_B_INV) = (v))
-#endif
-//@}
+/*! @brief Set the S_B_INV field to a new value. */
+#define BW_FMC_PFB0CR_S_B_INV(x, v) (BITBAND_ACCESS32(HW_FMC_PFB0CR_ADDR(x), BP_FMC_PFB0CR_S_B_INV) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field CINV_WAY[23:20] (WORZ)
@@ -641,24 +564,17 @@ typedef union _hw_fmc_pfb0cr
  * - 1 - Invalidate cache way for the corresponding cache: clear the tag, data,
  *     and vld bits of ways selected
  */
-//@{
-#define BP_FMC_PFB0CR_CINV_WAY (20U)       //!< Bit position for FMC_PFB0CR_CINV_WAY.
-#define BM_FMC_PFB0CR_CINV_WAY (0x00F00000U) //!< Bit mask for FMC_PFB0CR_CINV_WAY.
-#define BS_FMC_PFB0CR_CINV_WAY (4U)        //!< Bit field size in bits for FMC_PFB0CR_CINV_WAY.
+/*@{*/
+#define BP_FMC_PFB0CR_CINV_WAY (20U)       /*!< Bit position for FMC_PFB0CR_CINV_WAY. */
+#define BM_FMC_PFB0CR_CINV_WAY (0x00F00000U) /*!< Bit mask for FMC_PFB0CR_CINV_WAY. */
+#define BS_FMC_PFB0CR_CINV_WAY (4U)        /*!< Bit field size in bits for FMC_PFB0CR_CINV_WAY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_CINV_WAY field.
-#define BR_FMC_PFB0CR_CINV_WAY (HW_FMC_PFB0CR.B.CINV_WAY)
-#endif
+/*! @brief Format value for bitfield FMC_PFB0CR_CINV_WAY. */
+#define BF_FMC_PFB0CR_CINV_WAY(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_CINV_WAY) & BM_FMC_PFB0CR_CINV_WAY)
 
-//! @brief Format value for bitfield FMC_PFB0CR_CINV_WAY.
-#define BF_FMC_PFB0CR_CINV_WAY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_CINV_WAY), uint32_t) & BM_FMC_PFB0CR_CINV_WAY)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CINV_WAY field to a new value.
-#define BW_FMC_PFB0CR_CINV_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CINV_WAY) | BF_FMC_PFB0CR_CINV_WAY(v)))
-#endif
-//@}
+/*! @brief Set the CINV_WAY field to a new value. */
+#define BW_FMC_PFB0CR_CINV_WAY(x, v) (HW_FMC_PFB0CR_WR(x, (HW_FMC_PFB0CR_RD(x) & ~BM_FMC_PFB0CR_CINV_WAY) | BF_FMC_PFB0CR_CINV_WAY(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field CLCK_WAY[27:24] (RW)
@@ -671,24 +587,20 @@ typedef union _hw_fmc_pfb0cr
  * - 0 - Cache way is unlocked and may be displaced
  * - 1 - Cache way is locked and its contents are not displaced
  */
-//@{
-#define BP_FMC_PFB0CR_CLCK_WAY (24U)       //!< Bit position for FMC_PFB0CR_CLCK_WAY.
-#define BM_FMC_PFB0CR_CLCK_WAY (0x0F000000U) //!< Bit mask for FMC_PFB0CR_CLCK_WAY.
-#define BS_FMC_PFB0CR_CLCK_WAY (4U)        //!< Bit field size in bits for FMC_PFB0CR_CLCK_WAY.
+/*@{*/
+#define BP_FMC_PFB0CR_CLCK_WAY (24U)       /*!< Bit position for FMC_PFB0CR_CLCK_WAY. */
+#define BM_FMC_PFB0CR_CLCK_WAY (0x0F000000U) /*!< Bit mask for FMC_PFB0CR_CLCK_WAY. */
+#define BS_FMC_PFB0CR_CLCK_WAY (4U)        /*!< Bit field size in bits for FMC_PFB0CR_CLCK_WAY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_CLCK_WAY field.
-#define BR_FMC_PFB0CR_CLCK_WAY (HW_FMC_PFB0CR.B.CLCK_WAY)
-#endif
+/*! @brief Read current value of the FMC_PFB0CR_CLCK_WAY field. */
+#define BR_FMC_PFB0CR_CLCK_WAY(x) (HW_FMC_PFB0CR(x).B.CLCK_WAY)
 
-//! @brief Format value for bitfield FMC_PFB0CR_CLCK_WAY.
-#define BF_FMC_PFB0CR_CLCK_WAY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_PFB0CR_CLCK_WAY), uint32_t) & BM_FMC_PFB0CR_CLCK_WAY)
+/*! @brief Format value for bitfield FMC_PFB0CR_CLCK_WAY. */
+#define BF_FMC_PFB0CR_CLCK_WAY(v) ((uint32_t)((uint32_t)(v) << BP_FMC_PFB0CR_CLCK_WAY) & BM_FMC_PFB0CR_CLCK_WAY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLCK_WAY field to a new value.
-#define BW_FMC_PFB0CR_CLCK_WAY(v) (HW_FMC_PFB0CR_WR((HW_FMC_PFB0CR_RD() & ~BM_FMC_PFB0CR_CLCK_WAY) | BF_FMC_PFB0CR_CLCK_WAY(v)))
-#endif
-//@}
+/*! @brief Set the CLCK_WAY field to a new value. */
+#define BW_FMC_PFB0CR_CLCK_WAY(x, v) (HW_FMC_PFB0CR_WR(x, (HW_FMC_PFB0CR_RD(x) & ~BM_FMC_PFB0CR_CLCK_WAY) | BF_FMC_PFB0CR_CLCK_WAY(v)))
+/*@}*/
 
 /*!
  * @name Register FMC_PFB0CR, field B0RWSC[31:28] (RO)
@@ -700,22 +612,19 @@ typedef union _hw_fmc_pfb0cr
  * value based on the ratio of the system clock speed to the flash clock speed. For
  * example, when this ratio is 4:1, the field's value is 3h.
  */
-//@{
-#define BP_FMC_PFB0CR_B0RWSC (28U)         //!< Bit position for FMC_PFB0CR_B0RWSC.
-#define BM_FMC_PFB0CR_B0RWSC (0xF0000000U) //!< Bit mask for FMC_PFB0CR_B0RWSC.
-#define BS_FMC_PFB0CR_B0RWSC (4U)          //!< Bit field size in bits for FMC_PFB0CR_B0RWSC.
+/*@{*/
+#define BP_FMC_PFB0CR_B0RWSC (28U)         /*!< Bit position for FMC_PFB0CR_B0RWSC. */
+#define BM_FMC_PFB0CR_B0RWSC (0xF0000000U) /*!< Bit mask for FMC_PFB0CR_B0RWSC. */
+#define BS_FMC_PFB0CR_B0RWSC (4U)          /*!< Bit field size in bits for FMC_PFB0CR_B0RWSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_PFB0CR_B0RWSC field.
-#define BR_FMC_PFB0CR_B0RWSC (HW_FMC_PFB0CR.B.B0RWSC)
-#endif
-//@}
+/*! @brief Read current value of the FMC_PFB0CR_B0RWSC field. */
+#define BR_FMC_PFB0CR_B0RWSC(x) (HW_FMC_PFB0CR(x).B.B0RWSC)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_TAGVDW0Sn - Cache Tag Storage
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_TAGVDW0Sn - Cache Tag Storage
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_TAGVDW0Sn - Cache Tag Storage (RW)
  *
@@ -731,31 +640,28 @@ typedef union _hw_fmc_tagvdw0sn
     uint32_t U;
     struct _hw_fmc_tagvdw0sn_bitfields
     {
-        uint32_t valid : 1;            //!< [0] 1-bit valid for cache entry
-        uint32_t RESERVED0 : 5;        //!< [5:1]
-        uint32_t tag : 13;             //!< [18:6] 13-bit tag for cache entry
-        uint32_t RESERVED1 : 13;       //!< [31:19]
+        uint32_t valid : 1;            /*!< [0] 1-bit valid for cache entry */
+        uint32_t RESERVED0 : 5;        /*!< [5:1]  */
+        uint32_t tag : 13;             /*!< [18:6] 13-bit tag for cache entry */
+        uint32_t RESERVED1 : 13;       /*!< [31:19]  */
     } B;
 } hw_fmc_tagvdw0sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_TAGVDW0Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_TAGVDW0Sn_COUNT (2U)
 
-#define HW_FMC_TAGVDW0Sn_ADDR(n) (REGS_FMC_BASE + 0x100U + (0x4U * n))
+#define HW_FMC_TAGVDW0Sn_ADDR(x, n) ((x) + 0x100U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_TAGVDW0Sn(n)      (*(__IO hw_fmc_tagvdw0sn_t *) HW_FMC_TAGVDW0Sn_ADDR(n))
-#define HW_FMC_TAGVDW0Sn_RD(n)   (HW_FMC_TAGVDW0Sn(n).U)
-#define HW_FMC_TAGVDW0Sn_WR(n, v) (HW_FMC_TAGVDW0Sn(n).U = (v))
-#define HW_FMC_TAGVDW0Sn_SET(n, v) (HW_FMC_TAGVDW0Sn_WR(n, HW_FMC_TAGVDW0Sn_RD(n) |  (v)))
-#define HW_FMC_TAGVDW0Sn_CLR(n, v) (HW_FMC_TAGVDW0Sn_WR(n, HW_FMC_TAGVDW0Sn_RD(n) & ~(v)))
-#define HW_FMC_TAGVDW0Sn_TOG(n, v) (HW_FMC_TAGVDW0Sn_WR(n, HW_FMC_TAGVDW0Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_TAGVDW0Sn(x, n)   (*(__IO hw_fmc_tagvdw0sn_t *) HW_FMC_TAGVDW0Sn_ADDR(x, n))
+#define HW_FMC_TAGVDW0Sn_RD(x, n) (HW_FMC_TAGVDW0Sn(x, n).U)
+#define HW_FMC_TAGVDW0Sn_WR(x, n, v) (HW_FMC_TAGVDW0Sn(x, n).U = (v))
+#define HW_FMC_TAGVDW0Sn_SET(x, n, v) (HW_FMC_TAGVDW0Sn_WR(x, n, HW_FMC_TAGVDW0Sn_RD(x, n) |  (v)))
+#define HW_FMC_TAGVDW0Sn_CLR(x, n, v) (HW_FMC_TAGVDW0Sn_WR(x, n, HW_FMC_TAGVDW0Sn_RD(x, n) & ~(v)))
+#define HW_FMC_TAGVDW0Sn_TOG(x, n, v) (HW_FMC_TAGVDW0Sn_WR(x, n, HW_FMC_TAGVDW0Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_TAGVDW0Sn bitfields
@@ -764,51 +670,43 @@ typedef union _hw_fmc_tagvdw0sn
 /*!
  * @name Register FMC_TAGVDW0Sn, field valid[0] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW0Sn_valid (0U)        //!< Bit position for FMC_TAGVDW0Sn_valid.
-#define BM_FMC_TAGVDW0Sn_valid (0x00000001U) //!< Bit mask for FMC_TAGVDW0Sn_valid.
-#define BS_FMC_TAGVDW0Sn_valid (1U)        //!< Bit field size in bits for FMC_TAGVDW0Sn_valid.
+/*@{*/
+#define BP_FMC_TAGVDW0Sn_valid (0U)        /*!< Bit position for FMC_TAGVDW0Sn_valid. */
+#define BM_FMC_TAGVDW0Sn_valid (0x00000001U) /*!< Bit mask for FMC_TAGVDW0Sn_valid. */
+#define BS_FMC_TAGVDW0Sn_valid (1U)        /*!< Bit field size in bits for FMC_TAGVDW0Sn_valid. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW0Sn_valid field.
-#define BR_FMC_TAGVDW0Sn_valid(n) (BITBAND_ACCESS32(HW_FMC_TAGVDW0Sn_ADDR(n), BP_FMC_TAGVDW0Sn_valid))
-#endif
+/*! @brief Read current value of the FMC_TAGVDW0Sn_valid field. */
+#define BR_FMC_TAGVDW0Sn_valid(x, n) (BITBAND_ACCESS32(HW_FMC_TAGVDW0Sn_ADDR(x, n), BP_FMC_TAGVDW0Sn_valid))
 
-//! @brief Format value for bitfield FMC_TAGVDW0Sn_valid.
-#define BF_FMC_TAGVDW0Sn_valid(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW0Sn_valid), uint32_t) & BM_FMC_TAGVDW0Sn_valid)
+/*! @brief Format value for bitfield FMC_TAGVDW0Sn_valid. */
+#define BF_FMC_TAGVDW0Sn_valid(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW0Sn_valid) & BM_FMC_TAGVDW0Sn_valid)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the valid field to a new value.
-#define BW_FMC_TAGVDW0Sn_valid(n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW0Sn_ADDR(n), BP_FMC_TAGVDW0Sn_valid) = (v))
-#endif
-//@}
+/*! @brief Set the valid field to a new value. */
+#define BW_FMC_TAGVDW0Sn_valid(x, n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW0Sn_ADDR(x, n), BP_FMC_TAGVDW0Sn_valid) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_TAGVDW0Sn, field tag[18:6] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW0Sn_tag (6U)          //!< Bit position for FMC_TAGVDW0Sn_tag.
-#define BM_FMC_TAGVDW0Sn_tag (0x0007FFC0U) //!< Bit mask for FMC_TAGVDW0Sn_tag.
-#define BS_FMC_TAGVDW0Sn_tag (13U)         //!< Bit field size in bits for FMC_TAGVDW0Sn_tag.
+/*@{*/
+#define BP_FMC_TAGVDW0Sn_tag (6U)          /*!< Bit position for FMC_TAGVDW0Sn_tag. */
+#define BM_FMC_TAGVDW0Sn_tag (0x0007FFC0U) /*!< Bit mask for FMC_TAGVDW0Sn_tag. */
+#define BS_FMC_TAGVDW0Sn_tag (13U)         /*!< Bit field size in bits for FMC_TAGVDW0Sn_tag. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW0Sn_tag field.
-#define BR_FMC_TAGVDW0Sn_tag(n) (HW_FMC_TAGVDW0Sn(n).B.tag)
-#endif
+/*! @brief Read current value of the FMC_TAGVDW0Sn_tag field. */
+#define BR_FMC_TAGVDW0Sn_tag(x, n) (HW_FMC_TAGVDW0Sn(x, n).B.tag)
 
-//! @brief Format value for bitfield FMC_TAGVDW0Sn_tag.
-#define BF_FMC_TAGVDW0Sn_tag(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW0Sn_tag), uint32_t) & BM_FMC_TAGVDW0Sn_tag)
+/*! @brief Format value for bitfield FMC_TAGVDW0Sn_tag. */
+#define BF_FMC_TAGVDW0Sn_tag(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW0Sn_tag) & BM_FMC_TAGVDW0Sn_tag)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the tag field to a new value.
-#define BW_FMC_TAGVDW0Sn_tag(n, v) (HW_FMC_TAGVDW0Sn_WR(n, (HW_FMC_TAGVDW0Sn_RD(n) & ~BM_FMC_TAGVDW0Sn_tag) | BF_FMC_TAGVDW0Sn_tag(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_FMC_TAGVDW1Sn - Cache Tag Storage
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the tag field to a new value. */
+#define BW_FMC_TAGVDW0Sn_tag(x, n, v) (HW_FMC_TAGVDW0Sn_WR(x, n, (HW_FMC_TAGVDW0Sn_RD(x, n) & ~BM_FMC_TAGVDW0Sn_tag) | BF_FMC_TAGVDW0Sn_tag(v)))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
+/*******************************************************************************
+ * HW_FMC_TAGVDW1Sn - Cache Tag Storage
+ ******************************************************************************/
+
 /*!
  * @brief HW_FMC_TAGVDW1Sn - Cache Tag Storage (RW)
  *
@@ -824,31 +722,28 @@ typedef union _hw_fmc_tagvdw1sn
     uint32_t U;
     struct _hw_fmc_tagvdw1sn_bitfields
     {
-        uint32_t valid : 1;            //!< [0] 1-bit valid for cache entry
-        uint32_t RESERVED0 : 5;        //!< [5:1]
-        uint32_t tag : 13;             //!< [18:6] 13-bit tag for cache entry
-        uint32_t RESERVED1 : 13;       //!< [31:19]
+        uint32_t valid : 1;            /*!< [0] 1-bit valid for cache entry */
+        uint32_t RESERVED0 : 5;        /*!< [5:1]  */
+        uint32_t tag : 13;             /*!< [18:6] 13-bit tag for cache entry */
+        uint32_t RESERVED1 : 13;       /*!< [31:19]  */
     } B;
 } hw_fmc_tagvdw1sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_TAGVDW1Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_TAGVDW1Sn_COUNT (2U)
 
-#define HW_FMC_TAGVDW1Sn_ADDR(n) (REGS_FMC_BASE + 0x120U + (0x4U * n))
+#define HW_FMC_TAGVDW1Sn_ADDR(x, n) ((x) + 0x120U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_TAGVDW1Sn(n)      (*(__IO hw_fmc_tagvdw1sn_t *) HW_FMC_TAGVDW1Sn_ADDR(n))
-#define HW_FMC_TAGVDW1Sn_RD(n)   (HW_FMC_TAGVDW1Sn(n).U)
-#define HW_FMC_TAGVDW1Sn_WR(n, v) (HW_FMC_TAGVDW1Sn(n).U = (v))
-#define HW_FMC_TAGVDW1Sn_SET(n, v) (HW_FMC_TAGVDW1Sn_WR(n, HW_FMC_TAGVDW1Sn_RD(n) |  (v)))
-#define HW_FMC_TAGVDW1Sn_CLR(n, v) (HW_FMC_TAGVDW1Sn_WR(n, HW_FMC_TAGVDW1Sn_RD(n) & ~(v)))
-#define HW_FMC_TAGVDW1Sn_TOG(n, v) (HW_FMC_TAGVDW1Sn_WR(n, HW_FMC_TAGVDW1Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_TAGVDW1Sn(x, n)   (*(__IO hw_fmc_tagvdw1sn_t *) HW_FMC_TAGVDW1Sn_ADDR(x, n))
+#define HW_FMC_TAGVDW1Sn_RD(x, n) (HW_FMC_TAGVDW1Sn(x, n).U)
+#define HW_FMC_TAGVDW1Sn_WR(x, n, v) (HW_FMC_TAGVDW1Sn(x, n).U = (v))
+#define HW_FMC_TAGVDW1Sn_SET(x, n, v) (HW_FMC_TAGVDW1Sn_WR(x, n, HW_FMC_TAGVDW1Sn_RD(x, n) |  (v)))
+#define HW_FMC_TAGVDW1Sn_CLR(x, n, v) (HW_FMC_TAGVDW1Sn_WR(x, n, HW_FMC_TAGVDW1Sn_RD(x, n) & ~(v)))
+#define HW_FMC_TAGVDW1Sn_TOG(x, n, v) (HW_FMC_TAGVDW1Sn_WR(x, n, HW_FMC_TAGVDW1Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_TAGVDW1Sn bitfields
@@ -857,51 +752,43 @@ typedef union _hw_fmc_tagvdw1sn
 /*!
  * @name Register FMC_TAGVDW1Sn, field valid[0] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW1Sn_valid (0U)        //!< Bit position for FMC_TAGVDW1Sn_valid.
-#define BM_FMC_TAGVDW1Sn_valid (0x00000001U) //!< Bit mask for FMC_TAGVDW1Sn_valid.
-#define BS_FMC_TAGVDW1Sn_valid (1U)        //!< Bit field size in bits for FMC_TAGVDW1Sn_valid.
+/*@{*/
+#define BP_FMC_TAGVDW1Sn_valid (0U)        /*!< Bit position for FMC_TAGVDW1Sn_valid. */
+#define BM_FMC_TAGVDW1Sn_valid (0x00000001U) /*!< Bit mask for FMC_TAGVDW1Sn_valid. */
+#define BS_FMC_TAGVDW1Sn_valid (1U)        /*!< Bit field size in bits for FMC_TAGVDW1Sn_valid. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW1Sn_valid field.
-#define BR_FMC_TAGVDW1Sn_valid(n) (BITBAND_ACCESS32(HW_FMC_TAGVDW1Sn_ADDR(n), BP_FMC_TAGVDW1Sn_valid))
-#endif
+/*! @brief Read current value of the FMC_TAGVDW1Sn_valid field. */
+#define BR_FMC_TAGVDW1Sn_valid(x, n) (BITBAND_ACCESS32(HW_FMC_TAGVDW1Sn_ADDR(x, n), BP_FMC_TAGVDW1Sn_valid))
 
-//! @brief Format value for bitfield FMC_TAGVDW1Sn_valid.
-#define BF_FMC_TAGVDW1Sn_valid(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW1Sn_valid), uint32_t) & BM_FMC_TAGVDW1Sn_valid)
+/*! @brief Format value for bitfield FMC_TAGVDW1Sn_valid. */
+#define BF_FMC_TAGVDW1Sn_valid(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW1Sn_valid) & BM_FMC_TAGVDW1Sn_valid)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the valid field to a new value.
-#define BW_FMC_TAGVDW1Sn_valid(n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW1Sn_ADDR(n), BP_FMC_TAGVDW1Sn_valid) = (v))
-#endif
-//@}
+/*! @brief Set the valid field to a new value. */
+#define BW_FMC_TAGVDW1Sn_valid(x, n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW1Sn_ADDR(x, n), BP_FMC_TAGVDW1Sn_valid) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_TAGVDW1Sn, field tag[18:6] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW1Sn_tag (6U)          //!< Bit position for FMC_TAGVDW1Sn_tag.
-#define BM_FMC_TAGVDW1Sn_tag (0x0007FFC0U) //!< Bit mask for FMC_TAGVDW1Sn_tag.
-#define BS_FMC_TAGVDW1Sn_tag (13U)         //!< Bit field size in bits for FMC_TAGVDW1Sn_tag.
+/*@{*/
+#define BP_FMC_TAGVDW1Sn_tag (6U)          /*!< Bit position for FMC_TAGVDW1Sn_tag. */
+#define BM_FMC_TAGVDW1Sn_tag (0x0007FFC0U) /*!< Bit mask for FMC_TAGVDW1Sn_tag. */
+#define BS_FMC_TAGVDW1Sn_tag (13U)         /*!< Bit field size in bits for FMC_TAGVDW1Sn_tag. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW1Sn_tag field.
-#define BR_FMC_TAGVDW1Sn_tag(n) (HW_FMC_TAGVDW1Sn(n).B.tag)
-#endif
+/*! @brief Read current value of the FMC_TAGVDW1Sn_tag field. */
+#define BR_FMC_TAGVDW1Sn_tag(x, n) (HW_FMC_TAGVDW1Sn(x, n).B.tag)
 
-//! @brief Format value for bitfield FMC_TAGVDW1Sn_tag.
-#define BF_FMC_TAGVDW1Sn_tag(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW1Sn_tag), uint32_t) & BM_FMC_TAGVDW1Sn_tag)
+/*! @brief Format value for bitfield FMC_TAGVDW1Sn_tag. */
+#define BF_FMC_TAGVDW1Sn_tag(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW1Sn_tag) & BM_FMC_TAGVDW1Sn_tag)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the tag field to a new value.
-#define BW_FMC_TAGVDW1Sn_tag(n, v) (HW_FMC_TAGVDW1Sn_WR(n, (HW_FMC_TAGVDW1Sn_RD(n) & ~BM_FMC_TAGVDW1Sn_tag) | BF_FMC_TAGVDW1Sn_tag(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_FMC_TAGVDW2Sn - Cache Tag Storage
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the tag field to a new value. */
+#define BW_FMC_TAGVDW1Sn_tag(x, n, v) (HW_FMC_TAGVDW1Sn_WR(x, n, (HW_FMC_TAGVDW1Sn_RD(x, n) & ~BM_FMC_TAGVDW1Sn_tag) | BF_FMC_TAGVDW1Sn_tag(v)))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
+/*******************************************************************************
+ * HW_FMC_TAGVDW2Sn - Cache Tag Storage
+ ******************************************************************************/
+
 /*!
  * @brief HW_FMC_TAGVDW2Sn - Cache Tag Storage (RW)
  *
@@ -917,31 +804,28 @@ typedef union _hw_fmc_tagvdw2sn
     uint32_t U;
     struct _hw_fmc_tagvdw2sn_bitfields
     {
-        uint32_t valid : 1;            //!< [0] 1-bit valid for cache entry
-        uint32_t RESERVED0 : 5;        //!< [5:1]
-        uint32_t tag : 13;             //!< [18:6] 13-bit tag for cache entry
-        uint32_t RESERVED1 : 13;       //!< [31:19]
+        uint32_t valid : 1;            /*!< [0] 1-bit valid for cache entry */
+        uint32_t RESERVED0 : 5;        /*!< [5:1]  */
+        uint32_t tag : 13;             /*!< [18:6] 13-bit tag for cache entry */
+        uint32_t RESERVED1 : 13;       /*!< [31:19]  */
     } B;
 } hw_fmc_tagvdw2sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_TAGVDW2Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_TAGVDW2Sn_COUNT (2U)
 
-#define HW_FMC_TAGVDW2Sn_ADDR(n) (REGS_FMC_BASE + 0x140U + (0x4U * n))
+#define HW_FMC_TAGVDW2Sn_ADDR(x, n) ((x) + 0x140U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_TAGVDW2Sn(n)      (*(__IO hw_fmc_tagvdw2sn_t *) HW_FMC_TAGVDW2Sn_ADDR(n))
-#define HW_FMC_TAGVDW2Sn_RD(n)   (HW_FMC_TAGVDW2Sn(n).U)
-#define HW_FMC_TAGVDW2Sn_WR(n, v) (HW_FMC_TAGVDW2Sn(n).U = (v))
-#define HW_FMC_TAGVDW2Sn_SET(n, v) (HW_FMC_TAGVDW2Sn_WR(n, HW_FMC_TAGVDW2Sn_RD(n) |  (v)))
-#define HW_FMC_TAGVDW2Sn_CLR(n, v) (HW_FMC_TAGVDW2Sn_WR(n, HW_FMC_TAGVDW2Sn_RD(n) & ~(v)))
-#define HW_FMC_TAGVDW2Sn_TOG(n, v) (HW_FMC_TAGVDW2Sn_WR(n, HW_FMC_TAGVDW2Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_TAGVDW2Sn(x, n)   (*(__IO hw_fmc_tagvdw2sn_t *) HW_FMC_TAGVDW2Sn_ADDR(x, n))
+#define HW_FMC_TAGVDW2Sn_RD(x, n) (HW_FMC_TAGVDW2Sn(x, n).U)
+#define HW_FMC_TAGVDW2Sn_WR(x, n, v) (HW_FMC_TAGVDW2Sn(x, n).U = (v))
+#define HW_FMC_TAGVDW2Sn_SET(x, n, v) (HW_FMC_TAGVDW2Sn_WR(x, n, HW_FMC_TAGVDW2Sn_RD(x, n) |  (v)))
+#define HW_FMC_TAGVDW2Sn_CLR(x, n, v) (HW_FMC_TAGVDW2Sn_WR(x, n, HW_FMC_TAGVDW2Sn_RD(x, n) & ~(v)))
+#define HW_FMC_TAGVDW2Sn_TOG(x, n, v) (HW_FMC_TAGVDW2Sn_WR(x, n, HW_FMC_TAGVDW2Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_TAGVDW2Sn bitfields
@@ -950,51 +834,43 @@ typedef union _hw_fmc_tagvdw2sn
 /*!
  * @name Register FMC_TAGVDW2Sn, field valid[0] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW2Sn_valid (0U)        //!< Bit position for FMC_TAGVDW2Sn_valid.
-#define BM_FMC_TAGVDW2Sn_valid (0x00000001U) //!< Bit mask for FMC_TAGVDW2Sn_valid.
-#define BS_FMC_TAGVDW2Sn_valid (1U)        //!< Bit field size in bits for FMC_TAGVDW2Sn_valid.
+/*@{*/
+#define BP_FMC_TAGVDW2Sn_valid (0U)        /*!< Bit position for FMC_TAGVDW2Sn_valid. */
+#define BM_FMC_TAGVDW2Sn_valid (0x00000001U) /*!< Bit mask for FMC_TAGVDW2Sn_valid. */
+#define BS_FMC_TAGVDW2Sn_valid (1U)        /*!< Bit field size in bits for FMC_TAGVDW2Sn_valid. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW2Sn_valid field.
-#define BR_FMC_TAGVDW2Sn_valid(n) (BITBAND_ACCESS32(HW_FMC_TAGVDW2Sn_ADDR(n), BP_FMC_TAGVDW2Sn_valid))
-#endif
+/*! @brief Read current value of the FMC_TAGVDW2Sn_valid field. */
+#define BR_FMC_TAGVDW2Sn_valid(x, n) (BITBAND_ACCESS32(HW_FMC_TAGVDW2Sn_ADDR(x, n), BP_FMC_TAGVDW2Sn_valid))
 
-//! @brief Format value for bitfield FMC_TAGVDW2Sn_valid.
-#define BF_FMC_TAGVDW2Sn_valid(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW2Sn_valid), uint32_t) & BM_FMC_TAGVDW2Sn_valid)
+/*! @brief Format value for bitfield FMC_TAGVDW2Sn_valid. */
+#define BF_FMC_TAGVDW2Sn_valid(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW2Sn_valid) & BM_FMC_TAGVDW2Sn_valid)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the valid field to a new value.
-#define BW_FMC_TAGVDW2Sn_valid(n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW2Sn_ADDR(n), BP_FMC_TAGVDW2Sn_valid) = (v))
-#endif
-//@}
+/*! @brief Set the valid field to a new value. */
+#define BW_FMC_TAGVDW2Sn_valid(x, n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW2Sn_ADDR(x, n), BP_FMC_TAGVDW2Sn_valid) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_TAGVDW2Sn, field tag[18:6] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW2Sn_tag (6U)          //!< Bit position for FMC_TAGVDW2Sn_tag.
-#define BM_FMC_TAGVDW2Sn_tag (0x0007FFC0U) //!< Bit mask for FMC_TAGVDW2Sn_tag.
-#define BS_FMC_TAGVDW2Sn_tag (13U)         //!< Bit field size in bits for FMC_TAGVDW2Sn_tag.
+/*@{*/
+#define BP_FMC_TAGVDW2Sn_tag (6U)          /*!< Bit position for FMC_TAGVDW2Sn_tag. */
+#define BM_FMC_TAGVDW2Sn_tag (0x0007FFC0U) /*!< Bit mask for FMC_TAGVDW2Sn_tag. */
+#define BS_FMC_TAGVDW2Sn_tag (13U)         /*!< Bit field size in bits for FMC_TAGVDW2Sn_tag. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW2Sn_tag field.
-#define BR_FMC_TAGVDW2Sn_tag(n) (HW_FMC_TAGVDW2Sn(n).B.tag)
-#endif
+/*! @brief Read current value of the FMC_TAGVDW2Sn_tag field. */
+#define BR_FMC_TAGVDW2Sn_tag(x, n) (HW_FMC_TAGVDW2Sn(x, n).B.tag)
 
-//! @brief Format value for bitfield FMC_TAGVDW2Sn_tag.
-#define BF_FMC_TAGVDW2Sn_tag(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW2Sn_tag), uint32_t) & BM_FMC_TAGVDW2Sn_tag)
+/*! @brief Format value for bitfield FMC_TAGVDW2Sn_tag. */
+#define BF_FMC_TAGVDW2Sn_tag(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW2Sn_tag) & BM_FMC_TAGVDW2Sn_tag)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the tag field to a new value.
-#define BW_FMC_TAGVDW2Sn_tag(n, v) (HW_FMC_TAGVDW2Sn_WR(n, (HW_FMC_TAGVDW2Sn_RD(n) & ~BM_FMC_TAGVDW2Sn_tag) | BF_FMC_TAGVDW2Sn_tag(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_FMC_TAGVDW3Sn - Cache Tag Storage
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the tag field to a new value. */
+#define BW_FMC_TAGVDW2Sn_tag(x, n, v) (HW_FMC_TAGVDW2Sn_WR(x, n, (HW_FMC_TAGVDW2Sn_RD(x, n) & ~BM_FMC_TAGVDW2Sn_tag) | BF_FMC_TAGVDW2Sn_tag(v)))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
+/*******************************************************************************
+ * HW_FMC_TAGVDW3Sn - Cache Tag Storage
+ ******************************************************************************/
+
 /*!
  * @brief HW_FMC_TAGVDW3Sn - Cache Tag Storage (RW)
  *
@@ -1010,31 +886,28 @@ typedef union _hw_fmc_tagvdw3sn
     uint32_t U;
     struct _hw_fmc_tagvdw3sn_bitfields
     {
-        uint32_t valid : 1;            //!< [0] 1-bit valid for cache entry
-        uint32_t RESERVED0 : 5;        //!< [5:1]
-        uint32_t tag : 13;             //!< [18:6] 13-bit tag for cache entry
-        uint32_t RESERVED1 : 13;       //!< [31:19]
+        uint32_t valid : 1;            /*!< [0] 1-bit valid for cache entry */
+        uint32_t RESERVED0 : 5;        /*!< [5:1]  */
+        uint32_t tag : 13;             /*!< [18:6] 13-bit tag for cache entry */
+        uint32_t RESERVED1 : 13;       /*!< [31:19]  */
     } B;
 } hw_fmc_tagvdw3sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_TAGVDW3Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_TAGVDW3Sn_COUNT (2U)
 
-#define HW_FMC_TAGVDW3Sn_ADDR(n) (REGS_FMC_BASE + 0x160U + (0x4U * n))
+#define HW_FMC_TAGVDW3Sn_ADDR(x, n) ((x) + 0x160U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_TAGVDW3Sn(n)      (*(__IO hw_fmc_tagvdw3sn_t *) HW_FMC_TAGVDW3Sn_ADDR(n))
-#define HW_FMC_TAGVDW3Sn_RD(n)   (HW_FMC_TAGVDW3Sn(n).U)
-#define HW_FMC_TAGVDW3Sn_WR(n, v) (HW_FMC_TAGVDW3Sn(n).U = (v))
-#define HW_FMC_TAGVDW3Sn_SET(n, v) (HW_FMC_TAGVDW3Sn_WR(n, HW_FMC_TAGVDW3Sn_RD(n) |  (v)))
-#define HW_FMC_TAGVDW3Sn_CLR(n, v) (HW_FMC_TAGVDW3Sn_WR(n, HW_FMC_TAGVDW3Sn_RD(n) & ~(v)))
-#define HW_FMC_TAGVDW3Sn_TOG(n, v) (HW_FMC_TAGVDW3Sn_WR(n, HW_FMC_TAGVDW3Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_TAGVDW3Sn(x, n)   (*(__IO hw_fmc_tagvdw3sn_t *) HW_FMC_TAGVDW3Sn_ADDR(x, n))
+#define HW_FMC_TAGVDW3Sn_RD(x, n) (HW_FMC_TAGVDW3Sn(x, n).U)
+#define HW_FMC_TAGVDW3Sn_WR(x, n, v) (HW_FMC_TAGVDW3Sn(x, n).U = (v))
+#define HW_FMC_TAGVDW3Sn_SET(x, n, v) (HW_FMC_TAGVDW3Sn_WR(x, n, HW_FMC_TAGVDW3Sn_RD(x, n) |  (v)))
+#define HW_FMC_TAGVDW3Sn_CLR(x, n, v) (HW_FMC_TAGVDW3Sn_WR(x, n, HW_FMC_TAGVDW3Sn_RD(x, n) & ~(v)))
+#define HW_FMC_TAGVDW3Sn_TOG(x, n, v) (HW_FMC_TAGVDW3Sn_WR(x, n, HW_FMC_TAGVDW3Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_TAGVDW3Sn bitfields
@@ -1043,52 +916,43 @@ typedef union _hw_fmc_tagvdw3sn
 /*!
  * @name Register FMC_TAGVDW3Sn, field valid[0] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW3Sn_valid (0U)        //!< Bit position for FMC_TAGVDW3Sn_valid.
-#define BM_FMC_TAGVDW3Sn_valid (0x00000001U) //!< Bit mask for FMC_TAGVDW3Sn_valid.
-#define BS_FMC_TAGVDW3Sn_valid (1U)        //!< Bit field size in bits for FMC_TAGVDW3Sn_valid.
+/*@{*/
+#define BP_FMC_TAGVDW3Sn_valid (0U)        /*!< Bit position for FMC_TAGVDW3Sn_valid. */
+#define BM_FMC_TAGVDW3Sn_valid (0x00000001U) /*!< Bit mask for FMC_TAGVDW3Sn_valid. */
+#define BS_FMC_TAGVDW3Sn_valid (1U)        /*!< Bit field size in bits for FMC_TAGVDW3Sn_valid. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW3Sn_valid field.
-#define BR_FMC_TAGVDW3Sn_valid(n) (BITBAND_ACCESS32(HW_FMC_TAGVDW3Sn_ADDR(n), BP_FMC_TAGVDW3Sn_valid))
-#endif
+/*! @brief Read current value of the FMC_TAGVDW3Sn_valid field. */
+#define BR_FMC_TAGVDW3Sn_valid(x, n) (BITBAND_ACCESS32(HW_FMC_TAGVDW3Sn_ADDR(x, n), BP_FMC_TAGVDW3Sn_valid))
 
-//! @brief Format value for bitfield FMC_TAGVDW3Sn_valid.
-#define BF_FMC_TAGVDW3Sn_valid(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW3Sn_valid), uint32_t) & BM_FMC_TAGVDW3Sn_valid)
+/*! @brief Format value for bitfield FMC_TAGVDW3Sn_valid. */
+#define BF_FMC_TAGVDW3Sn_valid(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW3Sn_valid) & BM_FMC_TAGVDW3Sn_valid)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the valid field to a new value.
-#define BW_FMC_TAGVDW3Sn_valid(n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW3Sn_ADDR(n), BP_FMC_TAGVDW3Sn_valid) = (v))
-#endif
-//@}
+/*! @brief Set the valid field to a new value. */
+#define BW_FMC_TAGVDW3Sn_valid(x, n, v) (BITBAND_ACCESS32(HW_FMC_TAGVDW3Sn_ADDR(x, n), BP_FMC_TAGVDW3Sn_valid) = (v))
+/*@}*/
 
 /*!
  * @name Register FMC_TAGVDW3Sn, field tag[18:6] (RW)
  */
-//@{
-#define BP_FMC_TAGVDW3Sn_tag (6U)          //!< Bit position for FMC_TAGVDW3Sn_tag.
-#define BM_FMC_TAGVDW3Sn_tag (0x0007FFC0U) //!< Bit mask for FMC_TAGVDW3Sn_tag.
-#define BS_FMC_TAGVDW3Sn_tag (13U)         //!< Bit field size in bits for FMC_TAGVDW3Sn_tag.
+/*@{*/
+#define BP_FMC_TAGVDW3Sn_tag (6U)          /*!< Bit position for FMC_TAGVDW3Sn_tag. */
+#define BM_FMC_TAGVDW3Sn_tag (0x0007FFC0U) /*!< Bit mask for FMC_TAGVDW3Sn_tag. */
+#define BS_FMC_TAGVDW3Sn_tag (13U)         /*!< Bit field size in bits for FMC_TAGVDW3Sn_tag. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_TAGVDW3Sn_tag field.
-#define BR_FMC_TAGVDW3Sn_tag(n) (HW_FMC_TAGVDW3Sn(n).B.tag)
-#endif
+/*! @brief Read current value of the FMC_TAGVDW3Sn_tag field. */
+#define BR_FMC_TAGVDW3Sn_tag(x, n) (HW_FMC_TAGVDW3Sn(x, n).B.tag)
 
-//! @brief Format value for bitfield FMC_TAGVDW3Sn_tag.
-#define BF_FMC_TAGVDW3Sn_tag(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_TAGVDW3Sn_tag), uint32_t) & BM_FMC_TAGVDW3Sn_tag)
+/*! @brief Format value for bitfield FMC_TAGVDW3Sn_tag. */
+#define BF_FMC_TAGVDW3Sn_tag(v) ((uint32_t)((uint32_t)(v) << BP_FMC_TAGVDW3Sn_tag) & BM_FMC_TAGVDW3Sn_tag)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the tag field to a new value.
-#define BW_FMC_TAGVDW3Sn_tag(n, v) (HW_FMC_TAGVDW3Sn_WR(n, (HW_FMC_TAGVDW3Sn_RD(n) & ~BM_FMC_TAGVDW3Sn_tag) | BF_FMC_TAGVDW3Sn_tag(v)))
-#endif
-//@}
+/*! @brief Set the tag field to a new value. */
+#define BW_FMC_TAGVDW3Sn_tag(x, n, v) (HW_FMC_TAGVDW3Sn_WR(x, n, (HW_FMC_TAGVDW3Sn_RD(x, n) & ~BM_FMC_TAGVDW3Sn_tag) | BF_FMC_TAGVDW3Sn_tag(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_DATAW0Sn - Cache Data Storage
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_DATAW0Sn - Cache Data Storage
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_DATAW0Sn - Cache Data Storage (RW)
  *
@@ -1104,28 +968,25 @@ typedef union _hw_fmc_dataw0sn
     uint32_t U;
     struct _hw_fmc_dataw0sn_bitfields
     {
-        uint32_t data : 32;            //!< [31:0] Bits [31:0] of data entry
+        uint32_t data : 32;            /*!< [31:0] Bits [31:0] of data entry */
     } B;
 } hw_fmc_dataw0sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_DATAW0Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_DATAW0Sn_COUNT (2U)
 
-#define HW_FMC_DATAW0Sn_ADDR(n)  (REGS_FMC_BASE + 0x204U + (0x8U * n))
+#define HW_FMC_DATAW0Sn_ADDR(x, n) ((x) + 0x204U + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_DATAW0Sn(n)       (*(__IO hw_fmc_dataw0sn_t *) HW_FMC_DATAW0Sn_ADDR(n))
-#define HW_FMC_DATAW0Sn_RD(n)    (HW_FMC_DATAW0Sn(n).U)
-#define HW_FMC_DATAW0Sn_WR(n, v) (HW_FMC_DATAW0Sn(n).U = (v))
-#define HW_FMC_DATAW0Sn_SET(n, v) (HW_FMC_DATAW0Sn_WR(n, HW_FMC_DATAW0Sn_RD(n) |  (v)))
-#define HW_FMC_DATAW0Sn_CLR(n, v) (HW_FMC_DATAW0Sn_WR(n, HW_FMC_DATAW0Sn_RD(n) & ~(v)))
-#define HW_FMC_DATAW0Sn_TOG(n, v) (HW_FMC_DATAW0Sn_WR(n, HW_FMC_DATAW0Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_DATAW0Sn(x, n)    (*(__IO hw_fmc_dataw0sn_t *) HW_FMC_DATAW0Sn_ADDR(x, n))
+#define HW_FMC_DATAW0Sn_RD(x, n) (HW_FMC_DATAW0Sn(x, n).U)
+#define HW_FMC_DATAW0Sn_WR(x, n, v) (HW_FMC_DATAW0Sn(x, n).U = (v))
+#define HW_FMC_DATAW0Sn_SET(x, n, v) (HW_FMC_DATAW0Sn_WR(x, n, HW_FMC_DATAW0Sn_RD(x, n) |  (v)))
+#define HW_FMC_DATAW0Sn_CLR(x, n, v) (HW_FMC_DATAW0Sn_WR(x, n, HW_FMC_DATAW0Sn_RD(x, n) & ~(v)))
+#define HW_FMC_DATAW0Sn_TOG(x, n, v) (HW_FMC_DATAW0Sn_WR(x, n, HW_FMC_DATAW0Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_DATAW0Sn bitfields
@@ -1134,30 +995,25 @@ typedef union _hw_fmc_dataw0sn
 /*!
  * @name Register FMC_DATAW0Sn, field data[31:0] (RW)
  */
-//@{
-#define BP_FMC_DATAW0Sn_data (0U)          //!< Bit position for FMC_DATAW0Sn_data.
-#define BM_FMC_DATAW0Sn_data (0xFFFFFFFFU) //!< Bit mask for FMC_DATAW0Sn_data.
-#define BS_FMC_DATAW0Sn_data (32U)         //!< Bit field size in bits for FMC_DATAW0Sn_data.
+/*@{*/
+#define BP_FMC_DATAW0Sn_data (0U)          /*!< Bit position for FMC_DATAW0Sn_data. */
+#define BM_FMC_DATAW0Sn_data (0xFFFFFFFFU) /*!< Bit mask for FMC_DATAW0Sn_data. */
+#define BS_FMC_DATAW0Sn_data (32U)         /*!< Bit field size in bits for FMC_DATAW0Sn_data. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_DATAW0Sn_data field.
-#define BR_FMC_DATAW0Sn_data(n) (HW_FMC_DATAW0Sn(n).B.data)
-#endif
+/*! @brief Read current value of the FMC_DATAW0Sn_data field. */
+#define BR_FMC_DATAW0Sn_data(x, n) (HW_FMC_DATAW0Sn(x, n).U)
 
-//! @brief Format value for bitfield FMC_DATAW0Sn_data.
-#define BF_FMC_DATAW0Sn_data(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_DATAW0Sn_data), uint32_t) & BM_FMC_DATAW0Sn_data)
+/*! @brief Format value for bitfield FMC_DATAW0Sn_data. */
+#define BF_FMC_DATAW0Sn_data(v) ((uint32_t)((uint32_t)(v) << BP_FMC_DATAW0Sn_data) & BM_FMC_DATAW0Sn_data)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the data field to a new value.
-#define BW_FMC_DATAW0Sn_data(n, v) (HW_FMC_DATAW0Sn_WR(n, (HW_FMC_DATAW0Sn_RD(n) & ~BM_FMC_DATAW0Sn_data) | BF_FMC_DATAW0Sn_data(v)))
-#endif
-//@}
+/*! @brief Set the data field to a new value. */
+#define BW_FMC_DATAW0Sn_data(x, n, v) (HW_FMC_DATAW0Sn_WR(x, n, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_DATAW1Sn - Cache Data Storage
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_DATAW1Sn - Cache Data Storage
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_DATAW1Sn - Cache Data Storage (RW)
  *
@@ -1173,28 +1029,25 @@ typedef union _hw_fmc_dataw1sn
     uint32_t U;
     struct _hw_fmc_dataw1sn_bitfields
     {
-        uint32_t data : 32;            //!< [31:0] Bits [31:0] of data entry
+        uint32_t data : 32;            /*!< [31:0] Bits [31:0] of data entry */
     } B;
 } hw_fmc_dataw1sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_DATAW1Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_DATAW1Sn_COUNT (2U)
 
-#define HW_FMC_DATAW1Sn_ADDR(n)  (REGS_FMC_BASE + 0x244U + (0x8U * n))
+#define HW_FMC_DATAW1Sn_ADDR(x, n) ((x) + 0x244U + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_DATAW1Sn(n)       (*(__IO hw_fmc_dataw1sn_t *) HW_FMC_DATAW1Sn_ADDR(n))
-#define HW_FMC_DATAW1Sn_RD(n)    (HW_FMC_DATAW1Sn(n).U)
-#define HW_FMC_DATAW1Sn_WR(n, v) (HW_FMC_DATAW1Sn(n).U = (v))
-#define HW_FMC_DATAW1Sn_SET(n, v) (HW_FMC_DATAW1Sn_WR(n, HW_FMC_DATAW1Sn_RD(n) |  (v)))
-#define HW_FMC_DATAW1Sn_CLR(n, v) (HW_FMC_DATAW1Sn_WR(n, HW_FMC_DATAW1Sn_RD(n) & ~(v)))
-#define HW_FMC_DATAW1Sn_TOG(n, v) (HW_FMC_DATAW1Sn_WR(n, HW_FMC_DATAW1Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_DATAW1Sn(x, n)    (*(__IO hw_fmc_dataw1sn_t *) HW_FMC_DATAW1Sn_ADDR(x, n))
+#define HW_FMC_DATAW1Sn_RD(x, n) (HW_FMC_DATAW1Sn(x, n).U)
+#define HW_FMC_DATAW1Sn_WR(x, n, v) (HW_FMC_DATAW1Sn(x, n).U = (v))
+#define HW_FMC_DATAW1Sn_SET(x, n, v) (HW_FMC_DATAW1Sn_WR(x, n, HW_FMC_DATAW1Sn_RD(x, n) |  (v)))
+#define HW_FMC_DATAW1Sn_CLR(x, n, v) (HW_FMC_DATAW1Sn_WR(x, n, HW_FMC_DATAW1Sn_RD(x, n) & ~(v)))
+#define HW_FMC_DATAW1Sn_TOG(x, n, v) (HW_FMC_DATAW1Sn_WR(x, n, HW_FMC_DATAW1Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_DATAW1Sn bitfields
@@ -1203,30 +1056,25 @@ typedef union _hw_fmc_dataw1sn
 /*!
  * @name Register FMC_DATAW1Sn, field data[31:0] (RW)
  */
-//@{
-#define BP_FMC_DATAW1Sn_data (0U)          //!< Bit position for FMC_DATAW1Sn_data.
-#define BM_FMC_DATAW1Sn_data (0xFFFFFFFFU) //!< Bit mask for FMC_DATAW1Sn_data.
-#define BS_FMC_DATAW1Sn_data (32U)         //!< Bit field size in bits for FMC_DATAW1Sn_data.
+/*@{*/
+#define BP_FMC_DATAW1Sn_data (0U)          /*!< Bit position for FMC_DATAW1Sn_data. */
+#define BM_FMC_DATAW1Sn_data (0xFFFFFFFFU) /*!< Bit mask for FMC_DATAW1Sn_data. */
+#define BS_FMC_DATAW1Sn_data (32U)         /*!< Bit field size in bits for FMC_DATAW1Sn_data. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_DATAW1Sn_data field.
-#define BR_FMC_DATAW1Sn_data(n) (HW_FMC_DATAW1Sn(n).B.data)
-#endif
+/*! @brief Read current value of the FMC_DATAW1Sn_data field. */
+#define BR_FMC_DATAW1Sn_data(x, n) (HW_FMC_DATAW1Sn(x, n).U)
 
-//! @brief Format value for bitfield FMC_DATAW1Sn_data.
-#define BF_FMC_DATAW1Sn_data(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_DATAW1Sn_data), uint32_t) & BM_FMC_DATAW1Sn_data)
+/*! @brief Format value for bitfield FMC_DATAW1Sn_data. */
+#define BF_FMC_DATAW1Sn_data(v) ((uint32_t)((uint32_t)(v) << BP_FMC_DATAW1Sn_data) & BM_FMC_DATAW1Sn_data)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the data field to a new value.
-#define BW_FMC_DATAW1Sn_data(n, v) (HW_FMC_DATAW1Sn_WR(n, (HW_FMC_DATAW1Sn_RD(n) & ~BM_FMC_DATAW1Sn_data) | BF_FMC_DATAW1Sn_data(v)))
-#endif
-//@}
+/*! @brief Set the data field to a new value. */
+#define BW_FMC_DATAW1Sn_data(x, n, v) (HW_FMC_DATAW1Sn_WR(x, n, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_DATAW2Sn - Cache Data Storage
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_DATAW2Sn - Cache Data Storage
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_DATAW2Sn - Cache Data Storage (RW)
  *
@@ -1242,28 +1090,25 @@ typedef union _hw_fmc_dataw2sn
     uint32_t U;
     struct _hw_fmc_dataw2sn_bitfields
     {
-        uint32_t data : 32;            //!< [31:0] Bits [31:0] of data entry
+        uint32_t data : 32;            /*!< [31:0] Bits [31:0] of data entry */
     } B;
 } hw_fmc_dataw2sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_DATAW2Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_DATAW2Sn_COUNT (2U)
 
-#define HW_FMC_DATAW2Sn_ADDR(n)  (REGS_FMC_BASE + 0x284U + (0x8U * n))
+#define HW_FMC_DATAW2Sn_ADDR(x, n) ((x) + 0x284U + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_DATAW2Sn(n)       (*(__IO hw_fmc_dataw2sn_t *) HW_FMC_DATAW2Sn_ADDR(n))
-#define HW_FMC_DATAW2Sn_RD(n)    (HW_FMC_DATAW2Sn(n).U)
-#define HW_FMC_DATAW2Sn_WR(n, v) (HW_FMC_DATAW2Sn(n).U = (v))
-#define HW_FMC_DATAW2Sn_SET(n, v) (HW_FMC_DATAW2Sn_WR(n, HW_FMC_DATAW2Sn_RD(n) |  (v)))
-#define HW_FMC_DATAW2Sn_CLR(n, v) (HW_FMC_DATAW2Sn_WR(n, HW_FMC_DATAW2Sn_RD(n) & ~(v)))
-#define HW_FMC_DATAW2Sn_TOG(n, v) (HW_FMC_DATAW2Sn_WR(n, HW_FMC_DATAW2Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_DATAW2Sn(x, n)    (*(__IO hw_fmc_dataw2sn_t *) HW_FMC_DATAW2Sn_ADDR(x, n))
+#define HW_FMC_DATAW2Sn_RD(x, n) (HW_FMC_DATAW2Sn(x, n).U)
+#define HW_FMC_DATAW2Sn_WR(x, n, v) (HW_FMC_DATAW2Sn(x, n).U = (v))
+#define HW_FMC_DATAW2Sn_SET(x, n, v) (HW_FMC_DATAW2Sn_WR(x, n, HW_FMC_DATAW2Sn_RD(x, n) |  (v)))
+#define HW_FMC_DATAW2Sn_CLR(x, n, v) (HW_FMC_DATAW2Sn_WR(x, n, HW_FMC_DATAW2Sn_RD(x, n) & ~(v)))
+#define HW_FMC_DATAW2Sn_TOG(x, n, v) (HW_FMC_DATAW2Sn_WR(x, n, HW_FMC_DATAW2Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_DATAW2Sn bitfields
@@ -1272,30 +1117,25 @@ typedef union _hw_fmc_dataw2sn
 /*!
  * @name Register FMC_DATAW2Sn, field data[31:0] (RW)
  */
-//@{
-#define BP_FMC_DATAW2Sn_data (0U)          //!< Bit position for FMC_DATAW2Sn_data.
-#define BM_FMC_DATAW2Sn_data (0xFFFFFFFFU) //!< Bit mask for FMC_DATAW2Sn_data.
-#define BS_FMC_DATAW2Sn_data (32U)         //!< Bit field size in bits for FMC_DATAW2Sn_data.
+/*@{*/
+#define BP_FMC_DATAW2Sn_data (0U)          /*!< Bit position for FMC_DATAW2Sn_data. */
+#define BM_FMC_DATAW2Sn_data (0xFFFFFFFFU) /*!< Bit mask for FMC_DATAW2Sn_data. */
+#define BS_FMC_DATAW2Sn_data (32U)         /*!< Bit field size in bits for FMC_DATAW2Sn_data. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_DATAW2Sn_data field.
-#define BR_FMC_DATAW2Sn_data(n) (HW_FMC_DATAW2Sn(n).B.data)
-#endif
+/*! @brief Read current value of the FMC_DATAW2Sn_data field. */
+#define BR_FMC_DATAW2Sn_data(x, n) (HW_FMC_DATAW2Sn(x, n).U)
 
-//! @brief Format value for bitfield FMC_DATAW2Sn_data.
-#define BF_FMC_DATAW2Sn_data(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_DATAW2Sn_data), uint32_t) & BM_FMC_DATAW2Sn_data)
+/*! @brief Format value for bitfield FMC_DATAW2Sn_data. */
+#define BF_FMC_DATAW2Sn_data(v) ((uint32_t)((uint32_t)(v) << BP_FMC_DATAW2Sn_data) & BM_FMC_DATAW2Sn_data)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the data field to a new value.
-#define BW_FMC_DATAW2Sn_data(n, v) (HW_FMC_DATAW2Sn_WR(n, (HW_FMC_DATAW2Sn_RD(n) & ~BM_FMC_DATAW2Sn_data) | BF_FMC_DATAW2Sn_data(v)))
-#endif
-//@}
+/*! @brief Set the data field to a new value. */
+#define BW_FMC_DATAW2Sn_data(x, n, v) (HW_FMC_DATAW2Sn_WR(x, n, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FMC_DATAW3Sn - Cache Data Storage
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FMC_DATAW3Sn - Cache Data Storage
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FMC_DATAW3Sn - Cache Data Storage (RW)
  *
@@ -1311,28 +1151,25 @@ typedef union _hw_fmc_dataw3sn
     uint32_t U;
     struct _hw_fmc_dataw3sn_bitfields
     {
-        uint32_t data : 32;            //!< [31:0] Bits [31:0] of data entry
+        uint32_t data : 32;            /*!< [31:0] Bits [31:0] of data entry */
     } B;
 } hw_fmc_dataw3sn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FMC_DATAW3Sn register
  */
-//@{
+/*@{*/
 #define HW_FMC_DATAW3Sn_COUNT (2U)
 
-#define HW_FMC_DATAW3Sn_ADDR(n)  (REGS_FMC_BASE + 0x2C4U + (0x8U * n))
+#define HW_FMC_DATAW3Sn_ADDR(x, n) ((x) + 0x2C4U + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FMC_DATAW3Sn(n)       (*(__IO hw_fmc_dataw3sn_t *) HW_FMC_DATAW3Sn_ADDR(n))
-#define HW_FMC_DATAW3Sn_RD(n)    (HW_FMC_DATAW3Sn(n).U)
-#define HW_FMC_DATAW3Sn_WR(n, v) (HW_FMC_DATAW3Sn(n).U = (v))
-#define HW_FMC_DATAW3Sn_SET(n, v) (HW_FMC_DATAW3Sn_WR(n, HW_FMC_DATAW3Sn_RD(n) |  (v)))
-#define HW_FMC_DATAW3Sn_CLR(n, v) (HW_FMC_DATAW3Sn_WR(n, HW_FMC_DATAW3Sn_RD(n) & ~(v)))
-#define HW_FMC_DATAW3Sn_TOG(n, v) (HW_FMC_DATAW3Sn_WR(n, HW_FMC_DATAW3Sn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_FMC_DATAW3Sn(x, n)    (*(__IO hw_fmc_dataw3sn_t *) HW_FMC_DATAW3Sn_ADDR(x, n))
+#define HW_FMC_DATAW3Sn_RD(x, n) (HW_FMC_DATAW3Sn(x, n).U)
+#define HW_FMC_DATAW3Sn_WR(x, n, v) (HW_FMC_DATAW3Sn(x, n).U = (v))
+#define HW_FMC_DATAW3Sn_SET(x, n, v) (HW_FMC_DATAW3Sn_WR(x, n, HW_FMC_DATAW3Sn_RD(x, n) |  (v)))
+#define HW_FMC_DATAW3Sn_CLR(x, n, v) (HW_FMC_DATAW3Sn_WR(x, n, HW_FMC_DATAW3Sn_RD(x, n) & ~(v)))
+#define HW_FMC_DATAW3Sn_TOG(x, n, v) (HW_FMC_DATAW3Sn_WR(x, n, HW_FMC_DATAW3Sn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FMC_DATAW3Sn bitfields
@@ -1341,83 +1178,69 @@ typedef union _hw_fmc_dataw3sn
 /*!
  * @name Register FMC_DATAW3Sn, field data[31:0] (RW)
  */
-//@{
-#define BP_FMC_DATAW3Sn_data (0U)          //!< Bit position for FMC_DATAW3Sn_data.
-#define BM_FMC_DATAW3Sn_data (0xFFFFFFFFU) //!< Bit mask for FMC_DATAW3Sn_data.
-#define BS_FMC_DATAW3Sn_data (32U)         //!< Bit field size in bits for FMC_DATAW3Sn_data.
+/*@{*/
+#define BP_FMC_DATAW3Sn_data (0U)          /*!< Bit position for FMC_DATAW3Sn_data. */
+#define BM_FMC_DATAW3Sn_data (0xFFFFFFFFU) /*!< Bit mask for FMC_DATAW3Sn_data. */
+#define BS_FMC_DATAW3Sn_data (32U)         /*!< Bit field size in bits for FMC_DATAW3Sn_data. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FMC_DATAW3Sn_data field.
-#define BR_FMC_DATAW3Sn_data(n) (HW_FMC_DATAW3Sn(n).B.data)
-#endif
+/*! @brief Read current value of the FMC_DATAW3Sn_data field. */
+#define BR_FMC_DATAW3Sn_data(x, n) (HW_FMC_DATAW3Sn(x, n).U)
 
-//! @brief Format value for bitfield FMC_DATAW3Sn_data.
-#define BF_FMC_DATAW3Sn_data(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_FMC_DATAW3Sn_data), uint32_t) & BM_FMC_DATAW3Sn_data)
+/*! @brief Format value for bitfield FMC_DATAW3Sn_data. */
+#define BF_FMC_DATAW3Sn_data(v) ((uint32_t)((uint32_t)(v) << BP_FMC_DATAW3Sn_data) & BM_FMC_DATAW3Sn_data)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the data field to a new value.
-#define BW_FMC_DATAW3Sn_data(n, v) (HW_FMC_DATAW3Sn_WR(n, (HW_FMC_DATAW3Sn_RD(n) & ~BM_FMC_DATAW3Sn_data) | BF_FMC_DATAW3Sn_data(v)))
-#endif
-//@}
+/*! @brief Set the data field to a new value. */
+#define BW_FMC_DATAW3Sn_data(x, n, v) (HW_FMC_DATAW3Sn_WR(x, n, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_fmc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_fmc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All FMC module registers.
  */
-// #ifndef __LANGUAGE_ASM__
-// #pragma pack(1)
-// typedef struct _hw_fmc
-// {
-//     __IO hw_fmc_pfapr_t PFAPR;             //!< [0x0] Flash Access Protection Register
-//     __IO hw_fmc_pfb0cr_t PFB0CR;           //!< [0x4] Flash Control Register
-//     uint8_t _reserved0[248];
-//     struct {
-//         __IO hw_fmc_tagvdw0sn_t TAGVDW0Sn[2]; //!< [0x100] Cache Tag Storage
-//         uint8_t _reserved0[24];
-//     } TAG_WAY;
-//     struct {
-//         __IO hw_fmc_tagvdw1sn_t TAGVDW1Sn[2]; //!< [0x120] Cache Tag Storage
-//         uint8_t _reserved0[24];
-//     } TAG_WAY;
-//     struct {
-//         __IO hw_fmc_tagvdw2sn_t TAGVDW2Sn[2]; //!< [0x140] Cache Tag Storage
-//         uint8_t _reserved0[24];
-//     } TAG_WAY;
-//     struct {
-//         __IO hw_fmc_tagvdw3sn_t TAGVDW3Sn[2]; //!< [0x160] Cache Tag Storage
-//         uint8_t _reserved0[24];
-//     } TAG_WAY;
-//     uint8_t _reserved1[132];
-//     struct {
-//         __IO hw_fmc_dataw0sn_t DATAW0Sn;   //!< [0x204] Cache Data Storage
-//         uint8_t _reserved0[4];
-//     } DATAW0S[2];
-//     uint8_t _reserved2[48];
-//     struct {
-//         __IO hw_fmc_dataw1sn_t DATAW1Sn;   //!< [0x244] Cache Data Storage
-//         uint8_t _reserved0[4];
-//     } DATAW1S[2];
-//     uint8_t _reserved3[48];
-//     struct {
-//         __IO hw_fmc_dataw2sn_t DATAW2Sn;   //!< [0x284] Cache Data Storage
-//         uint8_t _reserved0[4];
-//     } DATAW2S[2];
-//     uint8_t _reserved4[48];
-//     struct {
-//         __IO hw_fmc_dataw3sn_t DATAW3Sn;   //!< [0x2C4] Cache Data Storage
-//         uint8_t _reserved0[4];
-//     } DATAW3S[2];
-// } hw_fmc_t;
-// #pragma pack()
-// 
-// //! @brief Macro to access all FMC registers.
-// //! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-// //!     use the '&' operator, like <code>&HW_FMC</code>.
-// #define HW_FMC         (*(hw_fmc_t *) REGS_FMC_BASE)
-// #endif
+#pragma pack(1)
+typedef struct _hw_fmc
+{
+    __IO hw_fmc_pfapr_t PFAPR;             /*!< [0x0] Flash Access Protection Register */
+    __IO hw_fmc_pfb0cr_t PFB0CR;           /*!< [0x4] Flash Control Register */
+    uint8_t _reserved0[248];
+    __IO hw_fmc_tagvdw0sn_t TAGVDW0Sn[2];  /*!< [0x100] Cache Tag Storage */
+    uint8_t _reserved1[24];
+    __IO hw_fmc_tagvdw1sn_t TAGVDW1Sn[2];  /*!< [0x120] Cache Tag Storage */
+    uint8_t _reserved2[24];
+    __IO hw_fmc_tagvdw2sn_t TAGVDW2Sn[2];  /*!< [0x140] Cache Tag Storage */
+    uint8_t _reserved3[24];
+    __IO hw_fmc_tagvdw3sn_t TAGVDW3Sn[2];  /*!< [0x160] Cache Tag Storage */
+    uint8_t _reserved4[156];
+    struct {
+        __IO hw_fmc_dataw0sn_t DATAW0Sn;   /*!< [0x204] Cache Data Storage */
+        uint8_t _reserved0[4];
+    } DATAW0S[2];
+    uint8_t _reserved5[48];
+    struct {
+        __IO hw_fmc_dataw1sn_t DATAW1Sn;   /*!< [0x244] Cache Data Storage */
+        uint8_t _reserved0[4];
+    } DATAW1S[2];
+    uint8_t _reserved6[48];
+    struct {
+        __IO hw_fmc_dataw2sn_t DATAW2Sn;   /*!< [0x284] Cache Data Storage */
+        uint8_t _reserved0[4];
+    } DATAW2S[2];
+    uint8_t _reserved7[48];
+    struct {
+        __IO hw_fmc_dataw3sn_t DATAW3Sn;   /*!< [0x2C4] Cache Data Storage */
+        uint8_t _reserved0[4];
+    } DATAW3S[2];
+} hw_fmc_t;
+#pragma pack()
 
-#endif // __HW_FMC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+/*! @brief Macro to access all FMC registers. */
+/*! @param x FMC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_FMC(FMC_BASE)</code>. */
+#define HW_FMC(x)      (*(hw_fmc_t *)(x))
+
+#endif /* __HW_FMC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

@@ -21,7 +21,8 @@
 #ifndef __HW_ADC_REGISTERS_H__
 #define __HW_ADC_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL05Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL05Z4 ADC
@@ -50,33 +51,12 @@
  * - hw_adc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_ADC_BASE
-#define HW_ADC_INSTANCE_COUNT (1U) //!< Number of instances of the ADC module.
-#define HW_ADC0 (0U) //!< Instance number for ADC0.
-#define REGS_ADC0_BASE (0x4003B000U) //!< Base address for ADC0.
+#define HW_ADC_INSTANCE_COUNT (1U) /*!< Number of instances of the ADC module. */
 
-//! @brief Table of base addresses for ADC instances.
-static const uint32_t __g_regs_ADC_base_addresses[] = {
-        REGS_ADC0_BASE,
-    };
+/*******************************************************************************
+ * HW_ADC_SC1n - ADC Status and Control Registers 1
+ ******************************************************************************/
 
-//! @brief Get the base address of ADC by instance number.
-//! @param x ADC instance number, from 0 through 0.
-#define REGS_ADC_BASE(x) (__g_regs_ADC_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of ADC.
-#define REGS_ADC_INSTANCE(b) ((b) == REGS_ADC0_BASE ? HW_ADC0 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_ADC_SC1n - ADC Status and Control Registers 1
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_SC1n - ADC Status and Control Registers 1 (RW)
  *
@@ -105,32 +85,29 @@ typedef union _hw_adc_sc1n
     uint32_t U;
     struct _hw_adc_sc1n_bitfields
     {
-        uint32_t ADCH : 5;             //!< [4:0] Input channel select
-        uint32_t RESERVED0 : 1;        //!< [5]
-        uint32_t AIEN : 1;             //!< [6] Interrupt Enable
-        uint32_t COCO : 1;             //!< [7] Conversion Complete Flag
-        uint32_t RESERVED1 : 24;       //!< [31:8]
+        uint32_t ADCH : 5;             /*!< [4:0] Input channel select */
+        uint32_t RESERVED0 : 1;        /*!< [5]  */
+        uint32_t AIEN : 1;             /*!< [6] Interrupt Enable */
+        uint32_t COCO : 1;             /*!< [7] Conversion Complete Flag */
+        uint32_t RESERVED1 : 24;       /*!< [31:8]  */
     } B;
 } hw_adc_sc1n_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_SC1n register
  */
-//@{
+/*@{*/
 #define HW_ADC_SC1n_COUNT (2U)
 
-#define HW_ADC_SC1n_ADDR(x, n)   (REGS_ADC_BASE(x) + 0x0U + (0x4U * n))
+#define HW_ADC_SC1n_ADDR(x, n)   ((x) + 0x0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_SC1n(x, n)        (*(__IO hw_adc_sc1n_t *) HW_ADC_SC1n_ADDR(x, n))
 #define HW_ADC_SC1n_RD(x, n)     (HW_ADC_SC1n(x, n).U)
 #define HW_ADC_SC1n_WR(x, n, v)  (HW_ADC_SC1n(x, n).U = (v))
 #define HW_ADC_SC1n_SET(x, n, v) (BME_OR32(HW_ADC_SC1n_ADDR(x, n), (uint32_t)(v)))
 #define HW_ADC_SC1n_CLR(x, n, v) (BME_AND32(HW_ADC_SC1n_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_ADC_SC1n_TOG(x, n, v) (BME_XOR32(HW_ADC_SC1n_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_SC1n bitfields
@@ -187,24 +164,20 @@ typedef union _hw_adc_sc1n
  *     determined by SC2[REFSEL].
  * - 11111 - Module is disabled.
  */
-//@{
-#define BP_ADC_SC1n_ADCH     (0U)          //!< Bit position for ADC_SC1n_ADCH.
-#define BM_ADC_SC1n_ADCH     (0x0000001FU) //!< Bit mask for ADC_SC1n_ADCH.
-#define BS_ADC_SC1n_ADCH     (5U)          //!< Bit field size in bits for ADC_SC1n_ADCH.
+/*@{*/
+#define BP_ADC_SC1n_ADCH     (0U)          /*!< Bit position for ADC_SC1n_ADCH. */
+#define BM_ADC_SC1n_ADCH     (0x0000001FU) /*!< Bit mask for ADC_SC1n_ADCH. */
+#define BS_ADC_SC1n_ADCH     (5U)          /*!< Bit field size in bits for ADC_SC1n_ADCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC1n_ADCH field.
+/*! @brief Read current value of the ADC_SC1n_ADCH field. */
 #define BR_ADC_SC1n_ADCH(x, n) (BME_UBFX32(HW_ADC_SC1n_ADDR(x, n), BP_ADC_SC1n_ADCH, BS_ADC_SC1n_ADCH))
-#endif
 
-//! @brief Format value for bitfield ADC_SC1n_ADCH.
-#define BF_ADC_SC1n_ADCH(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC1n_ADCH), uint32_t) & BM_ADC_SC1n_ADCH)
+/*! @brief Format value for bitfield ADC_SC1n_ADCH. */
+#define BF_ADC_SC1n_ADCH(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC1n_ADCH) & BM_ADC_SC1n_ADCH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADCH field to a new value.
+/*! @brief Set the ADCH field to a new value. */
 #define BW_ADC_SC1n_ADCH(x, n, v) (BME_BFI32(HW_ADC_SC1n_ADDR(x, n), ((uint32_t)(v) << BP_ADC_SC1n_ADCH), BP_ADC_SC1n_ADCH, 5))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC1n, field AIEN[6] (RW)
@@ -216,24 +189,20 @@ typedef union _hw_adc_sc1n
  * - 0 - Conversion complete interrupt is disabled.
  * - 1 - Conversion complete interrupt is enabled.
  */
-//@{
-#define BP_ADC_SC1n_AIEN     (6U)          //!< Bit position for ADC_SC1n_AIEN.
-#define BM_ADC_SC1n_AIEN     (0x00000040U) //!< Bit mask for ADC_SC1n_AIEN.
-#define BS_ADC_SC1n_AIEN     (1U)          //!< Bit field size in bits for ADC_SC1n_AIEN.
+/*@{*/
+#define BP_ADC_SC1n_AIEN     (6U)          /*!< Bit position for ADC_SC1n_AIEN. */
+#define BM_ADC_SC1n_AIEN     (0x00000040U) /*!< Bit mask for ADC_SC1n_AIEN. */
+#define BS_ADC_SC1n_AIEN     (1U)          /*!< Bit field size in bits for ADC_SC1n_AIEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC1n_AIEN field.
+/*! @brief Read current value of the ADC_SC1n_AIEN field. */
 #define BR_ADC_SC1n_AIEN(x, n) (BME_UBFX32(HW_ADC_SC1n_ADDR(x, n), BP_ADC_SC1n_AIEN, BS_ADC_SC1n_AIEN))
-#endif
 
-//! @brief Format value for bitfield ADC_SC1n_AIEN.
-#define BF_ADC_SC1n_AIEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC1n_AIEN), uint32_t) & BM_ADC_SC1n_AIEN)
+/*! @brief Format value for bitfield ADC_SC1n_AIEN. */
+#define BF_ADC_SC1n_AIEN(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC1n_AIEN) & BM_ADC_SC1n_AIEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AIEN field to a new value.
+/*! @brief Set the AIEN field to a new value. */
 #define BW_ADC_SC1n_AIEN(x, n, v) (BME_BFI32(HW_ADC_SC1n_ADDR(x, n), ((uint32_t)(v) << BP_ADC_SC1n_AIEN), BP_ADC_SC1n_AIEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC1n, field COCO[7] (RO)
@@ -252,22 +221,19 @@ typedef union _hw_adc_sc1n
  * - 0 - Conversion is not completed.
  * - 1 - Conversion is completed.
  */
-//@{
-#define BP_ADC_SC1n_COCO     (7U)          //!< Bit position for ADC_SC1n_COCO.
-#define BM_ADC_SC1n_COCO     (0x00000080U) //!< Bit mask for ADC_SC1n_COCO.
-#define BS_ADC_SC1n_COCO     (1U)          //!< Bit field size in bits for ADC_SC1n_COCO.
+/*@{*/
+#define BP_ADC_SC1n_COCO     (7U)          /*!< Bit position for ADC_SC1n_COCO. */
+#define BM_ADC_SC1n_COCO     (0x00000080U) /*!< Bit mask for ADC_SC1n_COCO. */
+#define BS_ADC_SC1n_COCO     (1U)          /*!< Bit field size in bits for ADC_SC1n_COCO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC1n_COCO field.
+/*! @brief Read current value of the ADC_SC1n_COCO field. */
 #define BR_ADC_SC1n_COCO(x, n) (BME_UBFX32(HW_ADC_SC1n_ADDR(x, n), BP_ADC_SC1n_COCO, BS_ADC_SC1n_COCO))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CFG1 - ADC Configuration Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CFG1 - ADC Configuration Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CFG1 - ADC Configuration Register 1 (RW)
  *
@@ -281,31 +247,28 @@ typedef union _hw_adc_cfg1
     uint32_t U;
     struct _hw_adc_cfg1_bitfields
     {
-        uint32_t ADICLK : 2;           //!< [1:0] Input Clock Select
-        uint32_t MODE : 2;             //!< [3:2] Conversion mode selection
-        uint32_t ADLSMP : 1;           //!< [4] Sample time configuration
-        uint32_t ADIV : 2;             //!< [6:5] Clock Divide Select
-        uint32_t ADLPC : 1;            //!< [7] Low-Power Configuration
-        uint32_t RESERVED0 : 24;       //!< [31:8]
+        uint32_t ADICLK : 2;           /*!< [1:0] Input Clock Select */
+        uint32_t MODE : 2;             /*!< [3:2] Conversion mode selection */
+        uint32_t ADLSMP : 1;           /*!< [4] Sample time configuration */
+        uint32_t ADIV : 2;             /*!< [6:5] Clock Divide Select */
+        uint32_t ADLPC : 1;            /*!< [7] Low-Power Configuration */
+        uint32_t RESERVED0 : 24;       /*!< [31:8]  */
     } B;
 } hw_adc_cfg1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CFG1 register
  */
-//@{
-#define HW_ADC_CFG1_ADDR(x)      (REGS_ADC_BASE(x) + 0x8U)
+/*@{*/
+#define HW_ADC_CFG1_ADDR(x)      ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CFG1(x)           (*(__IO hw_adc_cfg1_t *) HW_ADC_CFG1_ADDR(x))
 #define HW_ADC_CFG1_RD(x)        (HW_ADC_CFG1(x).U)
 #define HW_ADC_CFG1_WR(x, v)     (HW_ADC_CFG1(x).U = (v))
 #define HW_ADC_CFG1_SET(x, v)    (BME_OR32(HW_ADC_CFG1_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CFG1_CLR(x, v)    (BME_AND32(HW_ADC_CFG1_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CFG1_TOG(x, v)    (BME_XOR32(HW_ADC_CFG1_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CFG1 bitfields
@@ -328,24 +291,20 @@ typedef union _hw_adc_cfg1
  * - 10 - Alternate clock (ALTCLK)
  * - 11 - Asynchronous clock (ADACK)
  */
-//@{
-#define BP_ADC_CFG1_ADICLK   (0U)          //!< Bit position for ADC_CFG1_ADICLK.
-#define BM_ADC_CFG1_ADICLK   (0x00000003U) //!< Bit mask for ADC_CFG1_ADICLK.
-#define BS_ADC_CFG1_ADICLK   (2U)          //!< Bit field size in bits for ADC_CFG1_ADICLK.
+/*@{*/
+#define BP_ADC_CFG1_ADICLK   (0U)          /*!< Bit position for ADC_CFG1_ADICLK. */
+#define BM_ADC_CFG1_ADICLK   (0x00000003U) /*!< Bit mask for ADC_CFG1_ADICLK. */
+#define BS_ADC_CFG1_ADICLK   (2U)          /*!< Bit field size in bits for ADC_CFG1_ADICLK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG1_ADICLK field.
+/*! @brief Read current value of the ADC_CFG1_ADICLK field. */
 #define BR_ADC_CFG1_ADICLK(x) (BME_UBFX32(HW_ADC_CFG1_ADDR(x), BP_ADC_CFG1_ADICLK, BS_ADC_CFG1_ADICLK))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG1_ADICLK.
-#define BF_ADC_CFG1_ADICLK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG1_ADICLK), uint32_t) & BM_ADC_CFG1_ADICLK)
+/*! @brief Format value for bitfield ADC_CFG1_ADICLK. */
+#define BF_ADC_CFG1_ADICLK(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG1_ADICLK) & BM_ADC_CFG1_ADICLK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADICLK field to a new value.
+/*! @brief Set the ADICLK field to a new value. */
 #define BW_ADC_CFG1_ADICLK(x, v) (BME_BFI32(HW_ADC_CFG1_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG1_ADICLK), BP_ADC_CFG1_ADICLK, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG1, field MODE[3:2] (RW)
@@ -358,24 +317,20 @@ typedef union _hw_adc_cfg1
  * - 10 - It is single-ended 10-bit conversion .
  * - 11 - Reserved. Do not set the bitfield to this value.
  */
-//@{
-#define BP_ADC_CFG1_MODE     (2U)          //!< Bit position for ADC_CFG1_MODE.
-#define BM_ADC_CFG1_MODE     (0x0000000CU) //!< Bit mask for ADC_CFG1_MODE.
-#define BS_ADC_CFG1_MODE     (2U)          //!< Bit field size in bits for ADC_CFG1_MODE.
+/*@{*/
+#define BP_ADC_CFG1_MODE     (2U)          /*!< Bit position for ADC_CFG1_MODE. */
+#define BM_ADC_CFG1_MODE     (0x0000000CU) /*!< Bit mask for ADC_CFG1_MODE. */
+#define BS_ADC_CFG1_MODE     (2U)          /*!< Bit field size in bits for ADC_CFG1_MODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG1_MODE field.
+/*! @brief Read current value of the ADC_CFG1_MODE field. */
 #define BR_ADC_CFG1_MODE(x)  (BME_UBFX32(HW_ADC_CFG1_ADDR(x), BP_ADC_CFG1_MODE, BS_ADC_CFG1_MODE))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG1_MODE.
-#define BF_ADC_CFG1_MODE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG1_MODE), uint32_t) & BM_ADC_CFG1_MODE)
+/*! @brief Format value for bitfield ADC_CFG1_MODE. */
+#define BF_ADC_CFG1_MODE(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CFG1_MODE) & BM_ADC_CFG1_MODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MODE field to a new value.
+/*! @brief Set the MODE field to a new value. */
 #define BW_ADC_CFG1_MODE(x, v) (BME_BFI32(HW_ADC_CFG1_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG1_MODE), BP_ADC_CFG1_MODE, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG1, field ADLSMP[4] (RW)
@@ -392,24 +347,20 @@ typedef union _hw_adc_cfg1
  * - 0 - Short sample time.
  * - 1 - Long sample time.
  */
-//@{
-#define BP_ADC_CFG1_ADLSMP   (4U)          //!< Bit position for ADC_CFG1_ADLSMP.
-#define BM_ADC_CFG1_ADLSMP   (0x00000010U) //!< Bit mask for ADC_CFG1_ADLSMP.
-#define BS_ADC_CFG1_ADLSMP   (1U)          //!< Bit field size in bits for ADC_CFG1_ADLSMP.
+/*@{*/
+#define BP_ADC_CFG1_ADLSMP   (4U)          /*!< Bit position for ADC_CFG1_ADLSMP. */
+#define BM_ADC_CFG1_ADLSMP   (0x00000010U) /*!< Bit mask for ADC_CFG1_ADLSMP. */
+#define BS_ADC_CFG1_ADLSMP   (1U)          /*!< Bit field size in bits for ADC_CFG1_ADLSMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG1_ADLSMP field.
+/*! @brief Read current value of the ADC_CFG1_ADLSMP field. */
 #define BR_ADC_CFG1_ADLSMP(x) (BME_UBFX32(HW_ADC_CFG1_ADDR(x), BP_ADC_CFG1_ADLSMP, BS_ADC_CFG1_ADLSMP))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG1_ADLSMP.
-#define BF_ADC_CFG1_ADLSMP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG1_ADLSMP), uint32_t) & BM_ADC_CFG1_ADLSMP)
+/*! @brief Format value for bitfield ADC_CFG1_ADLSMP. */
+#define BF_ADC_CFG1_ADLSMP(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG1_ADLSMP) & BM_ADC_CFG1_ADLSMP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADLSMP field to a new value.
+/*! @brief Set the ADLSMP field to a new value. */
 #define BW_ADC_CFG1_ADLSMP(x, v) (BME_BFI32(HW_ADC_CFG1_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG1_ADLSMP), BP_ADC_CFG1_ADLSMP, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG1, field ADIV[6:5] (RW)
@@ -423,24 +374,20 @@ typedef union _hw_adc_cfg1
  * - 10 - The divide ratio is 4 and the clock rate is (input clock)/4.
  * - 11 - The divide ratio is 8 and the clock rate is (input clock)/8.
  */
-//@{
-#define BP_ADC_CFG1_ADIV     (5U)          //!< Bit position for ADC_CFG1_ADIV.
-#define BM_ADC_CFG1_ADIV     (0x00000060U) //!< Bit mask for ADC_CFG1_ADIV.
-#define BS_ADC_CFG1_ADIV     (2U)          //!< Bit field size in bits for ADC_CFG1_ADIV.
+/*@{*/
+#define BP_ADC_CFG1_ADIV     (5U)          /*!< Bit position for ADC_CFG1_ADIV. */
+#define BM_ADC_CFG1_ADIV     (0x00000060U) /*!< Bit mask for ADC_CFG1_ADIV. */
+#define BS_ADC_CFG1_ADIV     (2U)          /*!< Bit field size in bits for ADC_CFG1_ADIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG1_ADIV field.
+/*! @brief Read current value of the ADC_CFG1_ADIV field. */
 #define BR_ADC_CFG1_ADIV(x)  (BME_UBFX32(HW_ADC_CFG1_ADDR(x), BP_ADC_CFG1_ADIV, BS_ADC_CFG1_ADIV))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG1_ADIV.
-#define BF_ADC_CFG1_ADIV(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG1_ADIV), uint32_t) & BM_ADC_CFG1_ADIV)
+/*! @brief Format value for bitfield ADC_CFG1_ADIV. */
+#define BF_ADC_CFG1_ADIV(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CFG1_ADIV) & BM_ADC_CFG1_ADIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADIV field to a new value.
+/*! @brief Set the ADIV field to a new value. */
 #define BW_ADC_CFG1_ADIV(x, v) (BME_BFI32(HW_ADC_CFG1_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG1_ADIV), BP_ADC_CFG1_ADIV, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG1, field ADLPC[7] (RW)
@@ -453,30 +400,25 @@ typedef union _hw_adc_cfg1
  * - 1 - Low-power configuration. The power is reduced at the expense of maximum
  *     clock speed.
  */
-//@{
-#define BP_ADC_CFG1_ADLPC    (7U)          //!< Bit position for ADC_CFG1_ADLPC.
-#define BM_ADC_CFG1_ADLPC    (0x00000080U) //!< Bit mask for ADC_CFG1_ADLPC.
-#define BS_ADC_CFG1_ADLPC    (1U)          //!< Bit field size in bits for ADC_CFG1_ADLPC.
+/*@{*/
+#define BP_ADC_CFG1_ADLPC    (7U)          /*!< Bit position for ADC_CFG1_ADLPC. */
+#define BM_ADC_CFG1_ADLPC    (0x00000080U) /*!< Bit mask for ADC_CFG1_ADLPC. */
+#define BS_ADC_CFG1_ADLPC    (1U)          /*!< Bit field size in bits for ADC_CFG1_ADLPC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG1_ADLPC field.
+/*! @brief Read current value of the ADC_CFG1_ADLPC field. */
 #define BR_ADC_CFG1_ADLPC(x) (BME_UBFX32(HW_ADC_CFG1_ADDR(x), BP_ADC_CFG1_ADLPC, BS_ADC_CFG1_ADLPC))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG1_ADLPC.
-#define BF_ADC_CFG1_ADLPC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG1_ADLPC), uint32_t) & BM_ADC_CFG1_ADLPC)
+/*! @brief Format value for bitfield ADC_CFG1_ADLPC. */
+#define BF_ADC_CFG1_ADLPC(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG1_ADLPC) & BM_ADC_CFG1_ADLPC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADLPC field to a new value.
+/*! @brief Set the ADLPC field to a new value. */
 #define BW_ADC_CFG1_ADLPC(x, v) (BME_BFI32(HW_ADC_CFG1_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG1_ADLPC), BP_ADC_CFG1_ADLPC, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CFG2 - ADC Configuration Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CFG2 - ADC Configuration Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CFG2 - ADC Configuration Register 2 (RW)
  *
@@ -491,30 +433,27 @@ typedef union _hw_adc_cfg2
     uint32_t U;
     struct _hw_adc_cfg2_bitfields
     {
-        uint32_t ADLSTS : 2;           //!< [1:0] Long Sample Time Select
-        uint32_t ADHSC : 1;            //!< [2] High-Speed Configuration
-        uint32_t ADACKEN : 1;          //!< [3] Asynchronous Clock Output Enable
-        uint32_t MUXSEL : 1;           //!< [4] ADC Mux Select
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t ADLSTS : 2;           /*!< [1:0] Long Sample Time Select */
+        uint32_t ADHSC : 1;            /*!< [2] High-Speed Configuration */
+        uint32_t ADACKEN : 1;          /*!< [3] Asynchronous Clock Output Enable */
+        uint32_t MUXSEL : 1;           /*!< [4] ADC Mux Select */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_adc_cfg2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CFG2 register
  */
-//@{
-#define HW_ADC_CFG2_ADDR(x)      (REGS_ADC_BASE(x) + 0xCU)
+/*@{*/
+#define HW_ADC_CFG2_ADDR(x)      ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CFG2(x)           (*(__IO hw_adc_cfg2_t *) HW_ADC_CFG2_ADDR(x))
 #define HW_ADC_CFG2_RD(x)        (HW_ADC_CFG2(x).U)
 #define HW_ADC_CFG2_WR(x, v)     (HW_ADC_CFG2(x).U = (v))
 #define HW_ADC_CFG2_SET(x, v)    (BME_OR32(HW_ADC_CFG2_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CFG2_CLR(x, v)    (BME_AND32(HW_ADC_CFG2_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CFG2_TOG(x, v)    (BME_XOR32(HW_ADC_CFG2_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CFG2 bitfields
@@ -536,24 +475,20 @@ typedef union _hw_adc_cfg2
  * - 10 - 6 extra ADCK cycles; 10 ADCK cycles total sample time.
  * - 11 - 2 extra ADCK cycles; 6 ADCK cycles total sample time.
  */
-//@{
-#define BP_ADC_CFG2_ADLSTS   (0U)          //!< Bit position for ADC_CFG2_ADLSTS.
-#define BM_ADC_CFG2_ADLSTS   (0x00000003U) //!< Bit mask for ADC_CFG2_ADLSTS.
-#define BS_ADC_CFG2_ADLSTS   (2U)          //!< Bit field size in bits for ADC_CFG2_ADLSTS.
+/*@{*/
+#define BP_ADC_CFG2_ADLSTS   (0U)          /*!< Bit position for ADC_CFG2_ADLSTS. */
+#define BM_ADC_CFG2_ADLSTS   (0x00000003U) /*!< Bit mask for ADC_CFG2_ADLSTS. */
+#define BS_ADC_CFG2_ADLSTS   (2U)          /*!< Bit field size in bits for ADC_CFG2_ADLSTS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG2_ADLSTS field.
+/*! @brief Read current value of the ADC_CFG2_ADLSTS field. */
 #define BR_ADC_CFG2_ADLSTS(x) (BME_UBFX32(HW_ADC_CFG2_ADDR(x), BP_ADC_CFG2_ADLSTS, BS_ADC_CFG2_ADLSTS))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG2_ADLSTS.
-#define BF_ADC_CFG2_ADLSTS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG2_ADLSTS), uint32_t) & BM_ADC_CFG2_ADLSTS)
+/*! @brief Format value for bitfield ADC_CFG2_ADLSTS. */
+#define BF_ADC_CFG2_ADLSTS(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG2_ADLSTS) & BM_ADC_CFG2_ADLSTS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADLSTS field to a new value.
+/*! @brief Set the ADLSTS field to a new value. */
 #define BW_ADC_CFG2_ADLSTS(x, v) (BME_BFI32(HW_ADC_CFG2_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG2_ADLSTS), BP_ADC_CFG2_ADLSTS, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG2, field ADHSC[2] (RW)
@@ -567,24 +502,20 @@ typedef union _hw_adc_cfg2
  * - 1 - High-speed conversion sequence selected with 2 additional ADCK cycles
  *     to total conversion time.
  */
-//@{
-#define BP_ADC_CFG2_ADHSC    (2U)          //!< Bit position for ADC_CFG2_ADHSC.
-#define BM_ADC_CFG2_ADHSC    (0x00000004U) //!< Bit mask for ADC_CFG2_ADHSC.
-#define BS_ADC_CFG2_ADHSC    (1U)          //!< Bit field size in bits for ADC_CFG2_ADHSC.
+/*@{*/
+#define BP_ADC_CFG2_ADHSC    (2U)          /*!< Bit position for ADC_CFG2_ADHSC. */
+#define BM_ADC_CFG2_ADHSC    (0x00000004U) /*!< Bit mask for ADC_CFG2_ADHSC. */
+#define BS_ADC_CFG2_ADHSC    (1U)          /*!< Bit field size in bits for ADC_CFG2_ADHSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG2_ADHSC field.
+/*! @brief Read current value of the ADC_CFG2_ADHSC field. */
 #define BR_ADC_CFG2_ADHSC(x) (BME_UBFX32(HW_ADC_CFG2_ADDR(x), BP_ADC_CFG2_ADHSC, BS_ADC_CFG2_ADHSC))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG2_ADHSC.
-#define BF_ADC_CFG2_ADHSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG2_ADHSC), uint32_t) & BM_ADC_CFG2_ADHSC)
+/*! @brief Format value for bitfield ADC_CFG2_ADHSC. */
+#define BF_ADC_CFG2_ADHSC(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG2_ADHSC) & BM_ADC_CFG2_ADHSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADHSC field to a new value.
+/*! @brief Set the ADHSC field to a new value. */
 #define BW_ADC_CFG2_ADHSC(x, v) (BME_BFI32(HW_ADC_CFG2_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG2_ADHSC), BP_ADC_CFG2_ADHSC, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG2, field ADACKEN[3] (RW)
@@ -603,24 +534,20 @@ typedef union _hw_adc_cfg2
  * - 1 - Asynchronous clock and clock output is enabled regardless of the state
  *     of the ADC.
  */
-//@{
-#define BP_ADC_CFG2_ADACKEN  (3U)          //!< Bit position for ADC_CFG2_ADACKEN.
-#define BM_ADC_CFG2_ADACKEN  (0x00000008U) //!< Bit mask for ADC_CFG2_ADACKEN.
-#define BS_ADC_CFG2_ADACKEN  (1U)          //!< Bit field size in bits for ADC_CFG2_ADACKEN.
+/*@{*/
+#define BP_ADC_CFG2_ADACKEN  (3U)          /*!< Bit position for ADC_CFG2_ADACKEN. */
+#define BM_ADC_CFG2_ADACKEN  (0x00000008U) /*!< Bit mask for ADC_CFG2_ADACKEN. */
+#define BS_ADC_CFG2_ADACKEN  (1U)          /*!< Bit field size in bits for ADC_CFG2_ADACKEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG2_ADACKEN field.
+/*! @brief Read current value of the ADC_CFG2_ADACKEN field. */
 #define BR_ADC_CFG2_ADACKEN(x) (BME_UBFX32(HW_ADC_CFG2_ADDR(x), BP_ADC_CFG2_ADACKEN, BS_ADC_CFG2_ADACKEN))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG2_ADACKEN.
-#define BF_ADC_CFG2_ADACKEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG2_ADACKEN), uint32_t) & BM_ADC_CFG2_ADACKEN)
+/*! @brief Format value for bitfield ADC_CFG2_ADACKEN. */
+#define BF_ADC_CFG2_ADACKEN(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG2_ADACKEN) & BM_ADC_CFG2_ADACKEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADACKEN field to a new value.
+/*! @brief Set the ADACKEN field to a new value. */
 #define BW_ADC_CFG2_ADACKEN(x, v) (BME_BFI32(HW_ADC_CFG2_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG2_ADACKEN), BP_ADC_CFG2_ADACKEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_CFG2, field MUXSEL[4] (RW)
@@ -631,30 +558,25 @@ typedef union _hw_adc_cfg2
  * - 0 - ADxxa channels are selected.
  * - 1 - ADxxb channels are selected.
  */
-//@{
-#define BP_ADC_CFG2_MUXSEL   (4U)          //!< Bit position for ADC_CFG2_MUXSEL.
-#define BM_ADC_CFG2_MUXSEL   (0x00000010U) //!< Bit mask for ADC_CFG2_MUXSEL.
-#define BS_ADC_CFG2_MUXSEL   (1U)          //!< Bit field size in bits for ADC_CFG2_MUXSEL.
+/*@{*/
+#define BP_ADC_CFG2_MUXSEL   (4U)          /*!< Bit position for ADC_CFG2_MUXSEL. */
+#define BM_ADC_CFG2_MUXSEL   (0x00000010U) /*!< Bit mask for ADC_CFG2_MUXSEL. */
+#define BS_ADC_CFG2_MUXSEL   (1U)          /*!< Bit field size in bits for ADC_CFG2_MUXSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CFG2_MUXSEL field.
+/*! @brief Read current value of the ADC_CFG2_MUXSEL field. */
 #define BR_ADC_CFG2_MUXSEL(x) (BME_UBFX32(HW_ADC_CFG2_ADDR(x), BP_ADC_CFG2_MUXSEL, BS_ADC_CFG2_MUXSEL))
-#endif
 
-//! @brief Format value for bitfield ADC_CFG2_MUXSEL.
-#define BF_ADC_CFG2_MUXSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CFG2_MUXSEL), uint32_t) & BM_ADC_CFG2_MUXSEL)
+/*! @brief Format value for bitfield ADC_CFG2_MUXSEL. */
+#define BF_ADC_CFG2_MUXSEL(v) ((uint32_t)((uint32_t)(v) << BP_ADC_CFG2_MUXSEL) & BM_ADC_CFG2_MUXSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MUXSEL field to a new value.
+/*! @brief Set the MUXSEL field to a new value. */
 #define BW_ADC_CFG2_MUXSEL(x, v) (BME_BFI32(HW_ADC_CFG2_ADDR(x), ((uint32_t)(v) << BP_ADC_CFG2_MUXSEL), BP_ADC_CFG2_MUXSEL, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_Rn - ADC Data Result Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_Rn - ADC Data Result Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_Rn - ADC Data Result Register (RO)
  *
@@ -678,25 +600,22 @@ typedef union _hw_adc_rn
     uint32_t U;
     struct _hw_adc_rn_bitfields
     {
-        uint32_t D : 16;               //!< [15:0] Data result
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t D : 16;               /*!< [15:0] Data result */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_adc_rn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_Rn register
  */
-//@{
+/*@{*/
 #define HW_ADC_Rn_COUNT (2U)
 
-#define HW_ADC_Rn_ADDR(x, n)     (REGS_ADC_BASE(x) + 0x10U + (0x4U * n))
+#define HW_ADC_Rn_ADDR(x, n)     ((x) + 0x10U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_Rn(x, n)          (*(__I hw_adc_rn_t *) HW_ADC_Rn_ADDR(x, n))
 #define HW_ADC_Rn_RD(x, n)       (HW_ADC_Rn(x, n).U)
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_Rn bitfields
@@ -705,22 +624,19 @@ typedef union _hw_adc_rn
 /*!
  * @name Register ADC_Rn, field D[15:0] (RO)
  */
-//@{
-#define BP_ADC_Rn_D          (0U)          //!< Bit position for ADC_Rn_D.
-#define BM_ADC_Rn_D          (0x0000FFFFU) //!< Bit mask for ADC_Rn_D.
-#define BS_ADC_Rn_D          (16U)         //!< Bit field size in bits for ADC_Rn_D.
+/*@{*/
+#define BP_ADC_Rn_D          (0U)          /*!< Bit position for ADC_Rn_D. */
+#define BM_ADC_Rn_D          (0x0000FFFFU) /*!< Bit mask for ADC_Rn_D. */
+#define BS_ADC_Rn_D          (16U)         /*!< Bit field size in bits for ADC_Rn_D. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_Rn_D field.
+/*! @brief Read current value of the ADC_Rn_D field. */
 #define BR_ADC_Rn_D(x, n)    (BME_UBFX32(HW_ADC_Rn_ADDR(x, n), BP_ADC_Rn_D, BS_ADC_Rn_D))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CV1 - Compare Value Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CV1 - Compare Value Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CV1 - Compare Value Registers (RW)
  *
@@ -740,27 +656,24 @@ typedef union _hw_adc_cv1
     uint32_t U;
     struct _hw_adc_cv1_bitfields
     {
-        uint32_t CV : 16;              //!< [15:0] Compare Value.
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t CV : 16;              /*!< [15:0] Compare Value. */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_adc_cv1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CV1 register
  */
-//@{
-#define HW_ADC_CV1_ADDR(x)       (REGS_ADC_BASE(x) + 0x18U)
+/*@{*/
+#define HW_ADC_CV1_ADDR(x)       ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CV1(x)            (*(__IO hw_adc_cv1_t *) HW_ADC_CV1_ADDR(x))
 #define HW_ADC_CV1_RD(x)         (HW_ADC_CV1(x).U)
 #define HW_ADC_CV1_WR(x, v)      (HW_ADC_CV1(x).U = (v))
 #define HW_ADC_CV1_SET(x, v)     (BME_OR32(HW_ADC_CV1_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CV1_CLR(x, v)     (BME_AND32(HW_ADC_CV1_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CV1_TOG(x, v)     (BME_XOR32(HW_ADC_CV1_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CV1 bitfields
@@ -769,30 +682,25 @@ typedef union _hw_adc_cv1
 /*!
  * @name Register ADC_CV1, field CV[15:0] (RW)
  */
-//@{
-#define BP_ADC_CV1_CV        (0U)          //!< Bit position for ADC_CV1_CV.
-#define BM_ADC_CV1_CV        (0x0000FFFFU) //!< Bit mask for ADC_CV1_CV.
-#define BS_ADC_CV1_CV        (16U)         //!< Bit field size in bits for ADC_CV1_CV.
+/*@{*/
+#define BP_ADC_CV1_CV        (0U)          /*!< Bit position for ADC_CV1_CV. */
+#define BM_ADC_CV1_CV        (0x0000FFFFU) /*!< Bit mask for ADC_CV1_CV. */
+#define BS_ADC_CV1_CV        (16U)         /*!< Bit field size in bits for ADC_CV1_CV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CV1_CV field.
+/*! @brief Read current value of the ADC_CV1_CV field. */
 #define BR_ADC_CV1_CV(x)     (BME_UBFX32(HW_ADC_CV1_ADDR(x), BP_ADC_CV1_CV, BS_ADC_CV1_CV))
-#endif
 
-//! @brief Format value for bitfield ADC_CV1_CV.
-#define BF_ADC_CV1_CV(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CV1_CV), uint32_t) & BM_ADC_CV1_CV)
+/*! @brief Format value for bitfield ADC_CV1_CV. */
+#define BF_ADC_CV1_CV(v)     ((uint32_t)((uint32_t)(v) << BP_ADC_CV1_CV) & BM_ADC_CV1_CV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CV field to a new value.
+/*! @brief Set the CV field to a new value. */
 #define BW_ADC_CV1_CV(x, v)  (BME_BFI32(HW_ADC_CV1_ADDR(x), ((uint32_t)(v) << BP_ADC_CV1_CV), BP_ADC_CV1_CV, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CV2 - Compare Value Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CV2 - Compare Value Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CV2 - Compare Value Registers (RW)
  *
@@ -812,27 +720,24 @@ typedef union _hw_adc_cv2
     uint32_t U;
     struct _hw_adc_cv2_bitfields
     {
-        uint32_t CV : 16;              //!< [15:0] Compare Value.
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t CV : 16;              /*!< [15:0] Compare Value. */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_adc_cv2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CV2 register
  */
-//@{
-#define HW_ADC_CV2_ADDR(x)       (REGS_ADC_BASE(x) + 0x1CU)
+/*@{*/
+#define HW_ADC_CV2_ADDR(x)       ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CV2(x)            (*(__IO hw_adc_cv2_t *) HW_ADC_CV2_ADDR(x))
 #define HW_ADC_CV2_RD(x)         (HW_ADC_CV2(x).U)
 #define HW_ADC_CV2_WR(x, v)      (HW_ADC_CV2(x).U = (v))
 #define HW_ADC_CV2_SET(x, v)     (BME_OR32(HW_ADC_CV2_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CV2_CLR(x, v)     (BME_AND32(HW_ADC_CV2_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CV2_TOG(x, v)     (BME_XOR32(HW_ADC_CV2_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CV2 bitfields
@@ -841,30 +746,25 @@ typedef union _hw_adc_cv2
 /*!
  * @name Register ADC_CV2, field CV[15:0] (RW)
  */
-//@{
-#define BP_ADC_CV2_CV        (0U)          //!< Bit position for ADC_CV2_CV.
-#define BM_ADC_CV2_CV        (0x0000FFFFU) //!< Bit mask for ADC_CV2_CV.
-#define BS_ADC_CV2_CV        (16U)         //!< Bit field size in bits for ADC_CV2_CV.
+/*@{*/
+#define BP_ADC_CV2_CV        (0U)          /*!< Bit position for ADC_CV2_CV. */
+#define BM_ADC_CV2_CV        (0x0000FFFFU) /*!< Bit mask for ADC_CV2_CV. */
+#define BS_ADC_CV2_CV        (16U)         /*!< Bit field size in bits for ADC_CV2_CV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CV2_CV field.
+/*! @brief Read current value of the ADC_CV2_CV field. */
 #define BR_ADC_CV2_CV(x)     (BME_UBFX32(HW_ADC_CV2_ADDR(x), BP_ADC_CV2_CV, BS_ADC_CV2_CV))
-#endif
 
-//! @brief Format value for bitfield ADC_CV2_CV.
-#define BF_ADC_CV2_CV(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CV2_CV), uint32_t) & BM_ADC_CV2_CV)
+/*! @brief Format value for bitfield ADC_CV2_CV. */
+#define BF_ADC_CV2_CV(v)     ((uint32_t)((uint32_t)(v) << BP_ADC_CV2_CV) & BM_ADC_CV2_CV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CV field to a new value.
+/*! @brief Set the CV field to a new value. */
 #define BW_ADC_CV2_CV(x, v)  (BME_BFI32(HW_ADC_CV2_ADDR(x), ((uint32_t)(v) << BP_ADC_CV2_CV), BP_ADC_CV2_CV, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_SC2 - Status and Control Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_SC2 - Status and Control Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_SC2 - Status and Control Register 2 (RW)
  *
@@ -879,33 +779,30 @@ typedef union _hw_adc_sc2
     uint32_t U;
     struct _hw_adc_sc2_bitfields
     {
-        uint32_t REFSEL : 2;           //!< [1:0] Voltage Reference Selection
-        uint32_t DMAEN : 1;            //!< [2] DMA Enable
-        uint32_t ACREN : 1;            //!< [3] Compare Function Range Enable
-        uint32_t ACFGT : 1;            //!< [4] Compare Function Greater Than Enable
-        uint32_t ACFE : 1;             //!< [5] Compare Function Enable
-        uint32_t ADTRG : 1;            //!< [6] Conversion Trigger Select
-        uint32_t ADACT : 1;            //!< [7] Conversion Active
-        uint32_t RESERVED0 : 24;       //!< [31:8]
+        uint32_t REFSEL : 2;           /*!< [1:0] Voltage Reference Selection */
+        uint32_t DMAEN : 1;            /*!< [2] DMA Enable */
+        uint32_t ACREN : 1;            /*!< [3] Compare Function Range Enable */
+        uint32_t ACFGT : 1;            /*!< [4] Compare Function Greater Than Enable */
+        uint32_t ACFE : 1;             /*!< [5] Compare Function Enable */
+        uint32_t ADTRG : 1;            /*!< [6] Conversion Trigger Select */
+        uint32_t ADACT : 1;            /*!< [7] Conversion Active */
+        uint32_t RESERVED0 : 24;       /*!< [31:8]  */
     } B;
 } hw_adc_sc2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_SC2 register
  */
-//@{
-#define HW_ADC_SC2_ADDR(x)       (REGS_ADC_BASE(x) + 0x20U)
+/*@{*/
+#define HW_ADC_SC2_ADDR(x)       ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_SC2(x)            (*(__IO hw_adc_sc2_t *) HW_ADC_SC2_ADDR(x))
 #define HW_ADC_SC2_RD(x)         (HW_ADC_SC2(x).U)
 #define HW_ADC_SC2_WR(x, v)      (HW_ADC_SC2(x).U = (v))
 #define HW_ADC_SC2_SET(x, v)     (BME_OR32(HW_ADC_SC2_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_SC2_CLR(x, v)     (BME_AND32(HW_ADC_SC2_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_SC2_TOG(x, v)     (BME_XOR32(HW_ADC_SC2_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_SC2 bitfields
@@ -926,24 +823,20 @@ typedef union _hw_adc_sc2
  * - 10 - Reserved
  * - 11 - Reserved
  */
-//@{
-#define BP_ADC_SC2_REFSEL    (0U)          //!< Bit position for ADC_SC2_REFSEL.
-#define BM_ADC_SC2_REFSEL    (0x00000003U) //!< Bit mask for ADC_SC2_REFSEL.
-#define BS_ADC_SC2_REFSEL    (2U)          //!< Bit field size in bits for ADC_SC2_REFSEL.
+/*@{*/
+#define BP_ADC_SC2_REFSEL    (0U)          /*!< Bit position for ADC_SC2_REFSEL. */
+#define BM_ADC_SC2_REFSEL    (0x00000003U) /*!< Bit mask for ADC_SC2_REFSEL. */
+#define BS_ADC_SC2_REFSEL    (2U)          /*!< Bit field size in bits for ADC_SC2_REFSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_REFSEL field.
+/*! @brief Read current value of the ADC_SC2_REFSEL field. */
 #define BR_ADC_SC2_REFSEL(x) (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_REFSEL, BS_ADC_SC2_REFSEL))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_REFSEL.
-#define BF_ADC_SC2_REFSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_REFSEL), uint32_t) & BM_ADC_SC2_REFSEL)
+/*! @brief Format value for bitfield ADC_SC2_REFSEL. */
+#define BF_ADC_SC2_REFSEL(v) ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_REFSEL) & BM_ADC_SC2_REFSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the REFSEL field to a new value.
+/*! @brief Set the REFSEL field to a new value. */
 #define BW_ADC_SC2_REFSEL(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_REFSEL), BP_ADC_SC2_REFSEL, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field DMAEN[2] (RW)
@@ -953,24 +846,20 @@ typedef union _hw_adc_sc2
  * - 1 - DMA is enabled and will assert the ADC DMA request during an ADC
  *     conversion complete event noted when any of the SC1n[COCO] flags is asserted.
  */
-//@{
-#define BP_ADC_SC2_DMAEN     (2U)          //!< Bit position for ADC_SC2_DMAEN.
-#define BM_ADC_SC2_DMAEN     (0x00000004U) //!< Bit mask for ADC_SC2_DMAEN.
-#define BS_ADC_SC2_DMAEN     (1U)          //!< Bit field size in bits for ADC_SC2_DMAEN.
+/*@{*/
+#define BP_ADC_SC2_DMAEN     (2U)          /*!< Bit position for ADC_SC2_DMAEN. */
+#define BM_ADC_SC2_DMAEN     (0x00000004U) /*!< Bit mask for ADC_SC2_DMAEN. */
+#define BS_ADC_SC2_DMAEN     (1U)          /*!< Bit field size in bits for ADC_SC2_DMAEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_DMAEN field.
+/*! @brief Read current value of the ADC_SC2_DMAEN field. */
 #define BR_ADC_SC2_DMAEN(x)  (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_DMAEN, BS_ADC_SC2_DMAEN))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_DMAEN.
-#define BF_ADC_SC2_DMAEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_DMAEN), uint32_t) & BM_ADC_SC2_DMAEN)
+/*! @brief Format value for bitfield ADC_SC2_DMAEN. */
+#define BF_ADC_SC2_DMAEN(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_DMAEN) & BM_ADC_SC2_DMAEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAEN field to a new value.
+/*! @brief Set the DMAEN field to a new value. */
 #define BW_ADC_SC2_DMAEN(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_DMAEN), BP_ADC_SC2_DMAEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field ACREN[3] (RW)
@@ -984,24 +873,20 @@ typedef union _hw_adc_sc2
  * - 0 - Range function disabled. Only CV1 is compared.
  * - 1 - Range function enabled. Both CV1 and CV2 are compared.
  */
-//@{
-#define BP_ADC_SC2_ACREN     (3U)          //!< Bit position for ADC_SC2_ACREN.
-#define BM_ADC_SC2_ACREN     (0x00000008U) //!< Bit mask for ADC_SC2_ACREN.
-#define BS_ADC_SC2_ACREN     (1U)          //!< Bit field size in bits for ADC_SC2_ACREN.
+/*@{*/
+#define BP_ADC_SC2_ACREN     (3U)          /*!< Bit position for ADC_SC2_ACREN. */
+#define BM_ADC_SC2_ACREN     (0x00000008U) /*!< Bit mask for ADC_SC2_ACREN. */
+#define BS_ADC_SC2_ACREN     (1U)          /*!< Bit field size in bits for ADC_SC2_ACREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_ACREN field.
+/*! @brief Read current value of the ADC_SC2_ACREN field. */
 #define BR_ADC_SC2_ACREN(x)  (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_ACREN, BS_ADC_SC2_ACREN))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_ACREN.
-#define BF_ADC_SC2_ACREN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_ACREN), uint32_t) & BM_ADC_SC2_ACREN)
+/*! @brief Format value for bitfield ADC_SC2_ACREN. */
+#define BF_ADC_SC2_ACREN(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_ACREN) & BM_ADC_SC2_ACREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACREN field to a new value.
+/*! @brief Set the ACREN field to a new value. */
 #define BW_ADC_SC2_ACREN(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_ACREN), BP_ADC_SC2_ACREN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field ACFGT[4] (RW)
@@ -1017,24 +902,20 @@ typedef union _hw_adc_sc2
  * - 1 - Configures greater than or equal to threshold, outside and inside
  *     ranges inclusive; functionality based on the values placed in CV1 and CV2.
  */
-//@{
-#define BP_ADC_SC2_ACFGT     (4U)          //!< Bit position for ADC_SC2_ACFGT.
-#define BM_ADC_SC2_ACFGT     (0x00000010U) //!< Bit mask for ADC_SC2_ACFGT.
-#define BS_ADC_SC2_ACFGT     (1U)          //!< Bit field size in bits for ADC_SC2_ACFGT.
+/*@{*/
+#define BP_ADC_SC2_ACFGT     (4U)          /*!< Bit position for ADC_SC2_ACFGT. */
+#define BM_ADC_SC2_ACFGT     (0x00000010U) /*!< Bit mask for ADC_SC2_ACFGT. */
+#define BS_ADC_SC2_ACFGT     (1U)          /*!< Bit field size in bits for ADC_SC2_ACFGT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_ACFGT field.
+/*! @brief Read current value of the ADC_SC2_ACFGT field. */
 #define BR_ADC_SC2_ACFGT(x)  (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_ACFGT, BS_ADC_SC2_ACFGT))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_ACFGT.
-#define BF_ADC_SC2_ACFGT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_ACFGT), uint32_t) & BM_ADC_SC2_ACFGT)
+/*! @brief Format value for bitfield ADC_SC2_ACFGT. */
+#define BF_ADC_SC2_ACFGT(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_ACFGT) & BM_ADC_SC2_ACFGT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACFGT field to a new value.
+/*! @brief Set the ACFGT field to a new value. */
 #define BW_ADC_SC2_ACFGT(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_ACFGT), BP_ADC_SC2_ACFGT, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field ACFE[5] (RW)
@@ -1045,24 +926,20 @@ typedef union _hw_adc_sc2
  * - 0 - Compare function disabled.
  * - 1 - Compare function enabled.
  */
-//@{
-#define BP_ADC_SC2_ACFE      (5U)          //!< Bit position for ADC_SC2_ACFE.
-#define BM_ADC_SC2_ACFE      (0x00000020U) //!< Bit mask for ADC_SC2_ACFE.
-#define BS_ADC_SC2_ACFE      (1U)          //!< Bit field size in bits for ADC_SC2_ACFE.
+/*@{*/
+#define BP_ADC_SC2_ACFE      (5U)          /*!< Bit position for ADC_SC2_ACFE. */
+#define BM_ADC_SC2_ACFE      (0x00000020U) /*!< Bit mask for ADC_SC2_ACFE. */
+#define BS_ADC_SC2_ACFE      (1U)          /*!< Bit field size in bits for ADC_SC2_ACFE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_ACFE field.
+/*! @brief Read current value of the ADC_SC2_ACFE field. */
 #define BR_ADC_SC2_ACFE(x)   (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_ACFE, BS_ADC_SC2_ACFE))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_ACFE.
-#define BF_ADC_SC2_ACFE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_ACFE), uint32_t) & BM_ADC_SC2_ACFE)
+/*! @brief Format value for bitfield ADC_SC2_ACFE. */
+#define BF_ADC_SC2_ACFE(v)   ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_ACFE) & BM_ADC_SC2_ACFE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACFE field to a new value.
+/*! @brief Set the ACFE field to a new value. */
 #define BW_ADC_SC2_ACFE(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_ACFE), BP_ADC_SC2_ACFE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field ADTRG[6] (RW)
@@ -1077,24 +954,20 @@ typedef union _hw_adc_sc2
  * - 0 - Software trigger selected.
  * - 1 - Hardware trigger selected.
  */
-//@{
-#define BP_ADC_SC2_ADTRG     (6U)          //!< Bit position for ADC_SC2_ADTRG.
-#define BM_ADC_SC2_ADTRG     (0x00000040U) //!< Bit mask for ADC_SC2_ADTRG.
-#define BS_ADC_SC2_ADTRG     (1U)          //!< Bit field size in bits for ADC_SC2_ADTRG.
+/*@{*/
+#define BP_ADC_SC2_ADTRG     (6U)          /*!< Bit position for ADC_SC2_ADTRG. */
+#define BM_ADC_SC2_ADTRG     (0x00000040U) /*!< Bit mask for ADC_SC2_ADTRG. */
+#define BS_ADC_SC2_ADTRG     (1U)          /*!< Bit field size in bits for ADC_SC2_ADTRG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_ADTRG field.
+/*! @brief Read current value of the ADC_SC2_ADTRG field. */
 #define BR_ADC_SC2_ADTRG(x)  (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_ADTRG, BS_ADC_SC2_ADTRG))
-#endif
 
-//! @brief Format value for bitfield ADC_SC2_ADTRG.
-#define BF_ADC_SC2_ADTRG(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC2_ADTRG), uint32_t) & BM_ADC_SC2_ADTRG)
+/*! @brief Format value for bitfield ADC_SC2_ADTRG. */
+#define BF_ADC_SC2_ADTRG(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_SC2_ADTRG) & BM_ADC_SC2_ADTRG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADTRG field to a new value.
+/*! @brief Set the ADTRG field to a new value. */
 #define BW_ADC_SC2_ADTRG(x, v) (BME_BFI32(HW_ADC_SC2_ADDR(x), ((uint32_t)(v) << BP_ADC_SC2_ADTRG), BP_ADC_SC2_ADTRG, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC2, field ADACT[7] (RO)
@@ -1107,22 +980,19 @@ typedef union _hw_adc_sc2
  * - 0 - Conversion not in progress.
  * - 1 - Conversion in progress.
  */
-//@{
-#define BP_ADC_SC2_ADACT     (7U)          //!< Bit position for ADC_SC2_ADACT.
-#define BM_ADC_SC2_ADACT     (0x00000080U) //!< Bit mask for ADC_SC2_ADACT.
-#define BS_ADC_SC2_ADACT     (1U)          //!< Bit field size in bits for ADC_SC2_ADACT.
+/*@{*/
+#define BP_ADC_SC2_ADACT     (7U)          /*!< Bit position for ADC_SC2_ADACT. */
+#define BM_ADC_SC2_ADACT     (0x00000080U) /*!< Bit mask for ADC_SC2_ADACT. */
+#define BS_ADC_SC2_ADACT     (1U)          /*!< Bit field size in bits for ADC_SC2_ADACT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC2_ADACT field.
+/*! @brief Read current value of the ADC_SC2_ADACT field. */
 #define BR_ADC_SC2_ADACT(x)  (BME_UBFX32(HW_ADC_SC2_ADDR(x), BP_ADC_SC2_ADACT, BS_ADC_SC2_ADACT))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_SC3 - Status and Control Register 3
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_SC3 - Status and Control Register 3
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_SC3 - Status and Control Register 3 (RW)
  *
@@ -1136,32 +1006,29 @@ typedef union _hw_adc_sc3
     uint32_t U;
     struct _hw_adc_sc3_bitfields
     {
-        uint32_t AVGS : 2;             //!< [1:0] Hardware Average Select
-        uint32_t AVGE : 1;             //!< [2] Hardware Average Enable
-        uint32_t ADCO : 1;             //!< [3] Continuous Conversion Enable
-        uint32_t RESERVED0 : 2;        //!< [5:4]
-        uint32_t CALF : 1;             //!< [6] Calibration Failed Flag
-        uint32_t CAL : 1;              //!< [7] Calibration
-        uint32_t RESERVED1 : 24;       //!< [31:8]
+        uint32_t AVGS : 2;             /*!< [1:0] Hardware Average Select */
+        uint32_t AVGE : 1;             /*!< [2] Hardware Average Enable */
+        uint32_t ADCO : 1;             /*!< [3] Continuous Conversion Enable */
+        uint32_t RESERVED0 : 2;        /*!< [5:4]  */
+        uint32_t CALF : 1;             /*!< [6] Calibration Failed Flag */
+        uint32_t CAL : 1;              /*!< [7] Calibration */
+        uint32_t RESERVED1 : 24;       /*!< [31:8]  */
     } B;
 } hw_adc_sc3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_SC3 register
  */
-//@{
-#define HW_ADC_SC3_ADDR(x)       (REGS_ADC_BASE(x) + 0x24U)
+/*@{*/
+#define HW_ADC_SC3_ADDR(x)       ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_SC3(x)            (*(__IO hw_adc_sc3_t *) HW_ADC_SC3_ADDR(x))
 #define HW_ADC_SC3_RD(x)         (HW_ADC_SC3(x).U)
 #define HW_ADC_SC3_WR(x, v)      (HW_ADC_SC3(x).U = (v))
 #define HW_ADC_SC3_SET(x, v)     (BME_OR32(HW_ADC_SC3_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_SC3_CLR(x, v)     (BME_AND32(HW_ADC_SC3_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_SC3_TOG(x, v)     (BME_XOR32(HW_ADC_SC3_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_SC3 bitfields
@@ -1179,24 +1046,20 @@ typedef union _hw_adc_sc3
  * - 10 - 16 samples averaged.
  * - 11 - 32 samples averaged.
  */
-//@{
-#define BP_ADC_SC3_AVGS      (0U)          //!< Bit position for ADC_SC3_AVGS.
-#define BM_ADC_SC3_AVGS      (0x00000003U) //!< Bit mask for ADC_SC3_AVGS.
-#define BS_ADC_SC3_AVGS      (2U)          //!< Bit field size in bits for ADC_SC3_AVGS.
+/*@{*/
+#define BP_ADC_SC3_AVGS      (0U)          /*!< Bit position for ADC_SC3_AVGS. */
+#define BM_ADC_SC3_AVGS      (0x00000003U) /*!< Bit mask for ADC_SC3_AVGS. */
+#define BS_ADC_SC3_AVGS      (2U)          /*!< Bit field size in bits for ADC_SC3_AVGS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC3_AVGS field.
+/*! @brief Read current value of the ADC_SC3_AVGS field. */
 #define BR_ADC_SC3_AVGS(x)   (BME_UBFX32(HW_ADC_SC3_ADDR(x), BP_ADC_SC3_AVGS, BS_ADC_SC3_AVGS))
-#endif
 
-//! @brief Format value for bitfield ADC_SC3_AVGS.
-#define BF_ADC_SC3_AVGS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC3_AVGS), uint32_t) & BM_ADC_SC3_AVGS)
+/*! @brief Format value for bitfield ADC_SC3_AVGS. */
+#define BF_ADC_SC3_AVGS(v)   ((uint32_t)((uint32_t)(v) << BP_ADC_SC3_AVGS) & BM_ADC_SC3_AVGS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVGS field to a new value.
+/*! @brief Set the AVGS field to a new value. */
 #define BW_ADC_SC3_AVGS(x, v) (BME_BFI32(HW_ADC_SC3_ADDR(x), ((uint32_t)(v) << BP_ADC_SC3_AVGS), BP_ADC_SC3_AVGS, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC3, field AVGE[2] (RW)
@@ -1207,24 +1070,20 @@ typedef union _hw_adc_sc3
  * - 0 - Hardware average function disabled.
  * - 1 - Hardware average function enabled.
  */
-//@{
-#define BP_ADC_SC3_AVGE      (2U)          //!< Bit position for ADC_SC3_AVGE.
-#define BM_ADC_SC3_AVGE      (0x00000004U) //!< Bit mask for ADC_SC3_AVGE.
-#define BS_ADC_SC3_AVGE      (1U)          //!< Bit field size in bits for ADC_SC3_AVGE.
+/*@{*/
+#define BP_ADC_SC3_AVGE      (2U)          /*!< Bit position for ADC_SC3_AVGE. */
+#define BM_ADC_SC3_AVGE      (0x00000004U) /*!< Bit mask for ADC_SC3_AVGE. */
+#define BS_ADC_SC3_AVGE      (1U)          /*!< Bit field size in bits for ADC_SC3_AVGE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC3_AVGE field.
+/*! @brief Read current value of the ADC_SC3_AVGE field. */
 #define BR_ADC_SC3_AVGE(x)   (BME_UBFX32(HW_ADC_SC3_ADDR(x), BP_ADC_SC3_AVGE, BS_ADC_SC3_AVGE))
-#endif
 
-//! @brief Format value for bitfield ADC_SC3_AVGE.
-#define BF_ADC_SC3_AVGE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC3_AVGE), uint32_t) & BM_ADC_SC3_AVGE)
+/*! @brief Format value for bitfield ADC_SC3_AVGE. */
+#define BF_ADC_SC3_AVGE(v)   ((uint32_t)((uint32_t)(v) << BP_ADC_SC3_AVGE) & BM_ADC_SC3_AVGE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVGE field to a new value.
+/*! @brief Set the AVGE field to a new value. */
 #define BW_ADC_SC3_AVGE(x, v) (BME_BFI32(HW_ADC_SC3_ADDR(x), ((uint32_t)(v) << BP_ADC_SC3_AVGE), BP_ADC_SC3_AVGE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC3, field ADCO[3] (RW)
@@ -1237,24 +1096,20 @@ typedef union _hw_adc_sc3
  * - 1 - Continuous conversions or sets of conversions if the hardware average
  *     function is enabled, that is, AVGE=1, after initiating a conversion.
  */
-//@{
-#define BP_ADC_SC3_ADCO      (3U)          //!< Bit position for ADC_SC3_ADCO.
-#define BM_ADC_SC3_ADCO      (0x00000008U) //!< Bit mask for ADC_SC3_ADCO.
-#define BS_ADC_SC3_ADCO      (1U)          //!< Bit field size in bits for ADC_SC3_ADCO.
+/*@{*/
+#define BP_ADC_SC3_ADCO      (3U)          /*!< Bit position for ADC_SC3_ADCO. */
+#define BM_ADC_SC3_ADCO      (0x00000008U) /*!< Bit mask for ADC_SC3_ADCO. */
+#define BS_ADC_SC3_ADCO      (1U)          /*!< Bit field size in bits for ADC_SC3_ADCO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC3_ADCO field.
+/*! @brief Read current value of the ADC_SC3_ADCO field. */
 #define BR_ADC_SC3_ADCO(x)   (BME_UBFX32(HW_ADC_SC3_ADDR(x), BP_ADC_SC3_ADCO, BS_ADC_SC3_ADCO))
-#endif
 
-//! @brief Format value for bitfield ADC_SC3_ADCO.
-#define BF_ADC_SC3_ADCO(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC3_ADCO), uint32_t) & BM_ADC_SC3_ADCO)
+/*! @brief Format value for bitfield ADC_SC3_ADCO. */
+#define BF_ADC_SC3_ADCO(v)   ((uint32_t)((uint32_t)(v) << BP_ADC_SC3_ADCO) & BM_ADC_SC3_ADCO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADCO field to a new value.
+/*! @brief Set the ADCO field to a new value. */
 #define BW_ADC_SC3_ADCO(x, v) (BME_BFI32(HW_ADC_SC3_ADDR(x), ((uint32_t)(v) << BP_ADC_SC3_ADCO), BP_ADC_SC3_ADCO, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC3, field CALF[6] (RO)
@@ -1267,16 +1122,14 @@ typedef union _hw_adc_sc3
  * - 0 - Calibration completed normally.
  * - 1 - Calibration failed. ADC accuracy specifications are not guaranteed.
  */
-//@{
-#define BP_ADC_SC3_CALF      (6U)          //!< Bit position for ADC_SC3_CALF.
-#define BM_ADC_SC3_CALF      (0x00000040U) //!< Bit mask for ADC_SC3_CALF.
-#define BS_ADC_SC3_CALF      (1U)          //!< Bit field size in bits for ADC_SC3_CALF.
+/*@{*/
+#define BP_ADC_SC3_CALF      (6U)          /*!< Bit position for ADC_SC3_CALF. */
+#define BM_ADC_SC3_CALF      (0x00000040U) /*!< Bit mask for ADC_SC3_CALF. */
+#define BS_ADC_SC3_CALF      (1U)          /*!< Bit field size in bits for ADC_SC3_CALF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC3_CALF field.
+/*! @brief Read current value of the ADC_SC3_CALF field. */
 #define BR_ADC_SC3_CALF(x)   (BME_UBFX32(HW_ADC_SC3_ADDR(x), BP_ADC_SC3_CALF, BS_ADC_SC3_CALF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register ADC_SC3, field CAL[7] (RW)
@@ -1288,30 +1141,25 @@ typedef union _hw_adc_sc3
  * ADC registers or the results will be invalid and CALF will set. Setting CAL
  * will abort any current conversion.
  */
-//@{
-#define BP_ADC_SC3_CAL       (7U)          //!< Bit position for ADC_SC3_CAL.
-#define BM_ADC_SC3_CAL       (0x00000080U) //!< Bit mask for ADC_SC3_CAL.
-#define BS_ADC_SC3_CAL       (1U)          //!< Bit field size in bits for ADC_SC3_CAL.
+/*@{*/
+#define BP_ADC_SC3_CAL       (7U)          /*!< Bit position for ADC_SC3_CAL. */
+#define BM_ADC_SC3_CAL       (0x00000080U) /*!< Bit mask for ADC_SC3_CAL. */
+#define BS_ADC_SC3_CAL       (1U)          /*!< Bit field size in bits for ADC_SC3_CAL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_SC3_CAL field.
+/*! @brief Read current value of the ADC_SC3_CAL field. */
 #define BR_ADC_SC3_CAL(x)    (BME_UBFX32(HW_ADC_SC3_ADDR(x), BP_ADC_SC3_CAL, BS_ADC_SC3_CAL))
-#endif
 
-//! @brief Format value for bitfield ADC_SC3_CAL.
-#define BF_ADC_SC3_CAL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_SC3_CAL), uint32_t) & BM_ADC_SC3_CAL)
+/*! @brief Format value for bitfield ADC_SC3_CAL. */
+#define BF_ADC_SC3_CAL(v)    ((uint32_t)((uint32_t)(v) << BP_ADC_SC3_CAL) & BM_ADC_SC3_CAL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CAL field to a new value.
+/*! @brief Set the CAL field to a new value. */
 #define BW_ADC_SC3_CAL(x, v) (BME_BFI32(HW_ADC_SC3_ADDR(x), ((uint32_t)(v) << BP_ADC_SC3_CAL), BP_ADC_SC3_CAL, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_OFS - ADC Offset Correction Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_OFS - ADC Offset Correction Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_OFS - ADC Offset Correction Register (RW)
  *
@@ -1329,27 +1177,24 @@ typedef union _hw_adc_ofs
     uint32_t U;
     struct _hw_adc_ofs_bitfields
     {
-        uint32_t OFS : 16;             //!< [15:0] Offset Error Correction Value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t OFS : 16;             /*!< [15:0] Offset Error Correction Value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_adc_ofs_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_OFS register
  */
-//@{
-#define HW_ADC_OFS_ADDR(x)       (REGS_ADC_BASE(x) + 0x28U)
+/*@{*/
+#define HW_ADC_OFS_ADDR(x)       ((x) + 0x28U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_OFS(x)            (*(__IO hw_adc_ofs_t *) HW_ADC_OFS_ADDR(x))
 #define HW_ADC_OFS_RD(x)         (HW_ADC_OFS(x).U)
 #define HW_ADC_OFS_WR(x, v)      (HW_ADC_OFS(x).U = (v))
 #define HW_ADC_OFS_SET(x, v)     (BME_OR32(HW_ADC_OFS_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_OFS_CLR(x, v)     (BME_AND32(HW_ADC_OFS_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_OFS_TOG(x, v)     (BME_XOR32(HW_ADC_OFS_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_OFS bitfields
@@ -1358,30 +1203,25 @@ typedef union _hw_adc_ofs
 /*!
  * @name Register ADC_OFS, field OFS[15:0] (RW)
  */
-//@{
-#define BP_ADC_OFS_OFS       (0U)          //!< Bit position for ADC_OFS_OFS.
-#define BM_ADC_OFS_OFS       (0x0000FFFFU) //!< Bit mask for ADC_OFS_OFS.
-#define BS_ADC_OFS_OFS       (16U)         //!< Bit field size in bits for ADC_OFS_OFS.
+/*@{*/
+#define BP_ADC_OFS_OFS       (0U)          /*!< Bit position for ADC_OFS_OFS. */
+#define BM_ADC_OFS_OFS       (0x0000FFFFU) /*!< Bit mask for ADC_OFS_OFS. */
+#define BS_ADC_OFS_OFS       (16U)         /*!< Bit field size in bits for ADC_OFS_OFS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_OFS_OFS field.
+/*! @brief Read current value of the ADC_OFS_OFS field. */
 #define BR_ADC_OFS_OFS(x)    (BME_UBFX32(HW_ADC_OFS_ADDR(x), BP_ADC_OFS_OFS, BS_ADC_OFS_OFS))
-#endif
 
-//! @brief Format value for bitfield ADC_OFS_OFS.
-#define BF_ADC_OFS_OFS(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_OFS_OFS), uint32_t) & BM_ADC_OFS_OFS)
+/*! @brief Format value for bitfield ADC_OFS_OFS. */
+#define BF_ADC_OFS_OFS(v)    ((uint32_t)((uint32_t)(v) << BP_ADC_OFS_OFS) & BM_ADC_OFS_OFS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OFS field to a new value.
+/*! @brief Set the OFS field to a new value. */
 #define BW_ADC_OFS_OFS(x, v) (BME_BFI32(HW_ADC_OFS_ADDR(x), ((uint32_t)(v) << BP_ADC_OFS_OFS), BP_ADC_OFS_OFS, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_PG - ADC Plus-Side Gain Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_PG - ADC Plus-Side Gain Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_PG - ADC Plus-Side Gain Register (RW)
  *
@@ -1399,27 +1239,24 @@ typedef union _hw_adc_pg
     uint32_t U;
     struct _hw_adc_pg_bitfields
     {
-        uint32_t PG : 16;              //!< [15:0] Plus-Side Gain
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t PG : 16;              /*!< [15:0] Plus-Side Gain */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_adc_pg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_PG register
  */
-//@{
-#define HW_ADC_PG_ADDR(x)        (REGS_ADC_BASE(x) + 0x2CU)
+/*@{*/
+#define HW_ADC_PG_ADDR(x)        ((x) + 0x2CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_PG(x)             (*(__IO hw_adc_pg_t *) HW_ADC_PG_ADDR(x))
 #define HW_ADC_PG_RD(x)          (HW_ADC_PG(x).U)
 #define HW_ADC_PG_WR(x, v)       (HW_ADC_PG(x).U = (v))
 #define HW_ADC_PG_SET(x, v)      (BME_OR32(HW_ADC_PG_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_PG_CLR(x, v)      (BME_AND32(HW_ADC_PG_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_PG_TOG(x, v)      (BME_XOR32(HW_ADC_PG_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_PG bitfields
@@ -1428,30 +1265,25 @@ typedef union _hw_adc_pg
 /*!
  * @name Register ADC_PG, field PG[15:0] (RW)
  */
-//@{
-#define BP_ADC_PG_PG         (0U)          //!< Bit position for ADC_PG_PG.
-#define BM_ADC_PG_PG         (0x0000FFFFU) //!< Bit mask for ADC_PG_PG.
-#define BS_ADC_PG_PG         (16U)         //!< Bit field size in bits for ADC_PG_PG.
+/*@{*/
+#define BP_ADC_PG_PG         (0U)          /*!< Bit position for ADC_PG_PG. */
+#define BM_ADC_PG_PG         (0x0000FFFFU) /*!< Bit mask for ADC_PG_PG. */
+#define BS_ADC_PG_PG         (16U)         /*!< Bit field size in bits for ADC_PG_PG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_PG_PG field.
+/*! @brief Read current value of the ADC_PG_PG field. */
 #define BR_ADC_PG_PG(x)      (BME_UBFX32(HW_ADC_PG_ADDR(x), BP_ADC_PG_PG, BS_ADC_PG_PG))
-#endif
 
-//! @brief Format value for bitfield ADC_PG_PG.
-#define BF_ADC_PG_PG(v)      (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_PG_PG), uint32_t) & BM_ADC_PG_PG)
+/*! @brief Format value for bitfield ADC_PG_PG. */
+#define BF_ADC_PG_PG(v)      ((uint32_t)((uint32_t)(v) << BP_ADC_PG_PG) & BM_ADC_PG_PG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PG field to a new value.
+/*! @brief Set the PG field to a new value. */
 #define BW_ADC_PG_PG(x, v)   (BME_BFI32(HW_ADC_PG_ADDR(x), ((uint32_t)(v) << BP_ADC_PG_PG), BP_ADC_PG_PG, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLPD - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLPD - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLPD - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1470,27 +1302,24 @@ typedef union _hw_adc_clpd
     uint32_t U;
     struct _hw_adc_clpd_bitfields
     {
-        uint32_t CLPD : 6;             //!< [5:0]
-        uint32_t RESERVED0 : 26;       //!< [31:6]
+        uint32_t CLPD : 6;             /*!< [5:0]  */
+        uint32_t RESERVED0 : 26;       /*!< [31:6]  */
     } B;
 } hw_adc_clpd_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLPD register
  */
-//@{
-#define HW_ADC_CLPD_ADDR(x)      (REGS_ADC_BASE(x) + 0x34U)
+/*@{*/
+#define HW_ADC_CLPD_ADDR(x)      ((x) + 0x34U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLPD(x)           (*(__IO hw_adc_clpd_t *) HW_ADC_CLPD_ADDR(x))
 #define HW_ADC_CLPD_RD(x)        (HW_ADC_CLPD(x).U)
 #define HW_ADC_CLPD_WR(x, v)     (HW_ADC_CLPD(x).U = (v))
 #define HW_ADC_CLPD_SET(x, v)    (BME_OR32(HW_ADC_CLPD_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLPD_CLR(x, v)    (BME_AND32(HW_ADC_CLPD_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLPD_TOG(x, v)    (BME_XOR32(HW_ADC_CLPD_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLPD bitfields
@@ -1501,30 +1330,25 @@ typedef union _hw_adc_clpd
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLPD_CLPD     (0U)          //!< Bit position for ADC_CLPD_CLPD.
-#define BM_ADC_CLPD_CLPD     (0x0000003FU) //!< Bit mask for ADC_CLPD_CLPD.
-#define BS_ADC_CLPD_CLPD     (6U)          //!< Bit field size in bits for ADC_CLPD_CLPD.
+/*@{*/
+#define BP_ADC_CLPD_CLPD     (0U)          /*!< Bit position for ADC_CLPD_CLPD. */
+#define BM_ADC_CLPD_CLPD     (0x0000003FU) /*!< Bit mask for ADC_CLPD_CLPD. */
+#define BS_ADC_CLPD_CLPD     (6U)          /*!< Bit field size in bits for ADC_CLPD_CLPD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLPD_CLPD field.
+/*! @brief Read current value of the ADC_CLPD_CLPD field. */
 #define BR_ADC_CLPD_CLPD(x)  (BME_UBFX32(HW_ADC_CLPD_ADDR(x), BP_ADC_CLPD_CLPD, BS_ADC_CLPD_CLPD))
-#endif
 
-//! @brief Format value for bitfield ADC_CLPD_CLPD.
-#define BF_ADC_CLPD_CLPD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLPD_CLPD), uint32_t) & BM_ADC_CLPD_CLPD)
+/*! @brief Format value for bitfield ADC_CLPD_CLPD. */
+#define BF_ADC_CLPD_CLPD(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLPD_CLPD) & BM_ADC_CLPD_CLPD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLPD field to a new value.
+/*! @brief Set the CLPD field to a new value. */
 #define BW_ADC_CLPD_CLPD(x, v) (BME_BFI32(HW_ADC_CLPD_ADDR(x), ((uint32_t)(v) << BP_ADC_CLPD_CLPD), BP_ADC_CLPD_CLPD, 6))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLPS - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLPS - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLPS - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1537,27 +1361,24 @@ typedef union _hw_adc_clps
     uint32_t U;
     struct _hw_adc_clps_bitfields
     {
-        uint32_t CLPS : 6;             //!< [5:0]
-        uint32_t RESERVED0 : 26;       //!< [31:6]
+        uint32_t CLPS : 6;             /*!< [5:0]  */
+        uint32_t RESERVED0 : 26;       /*!< [31:6]  */
     } B;
 } hw_adc_clps_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLPS register
  */
-//@{
-#define HW_ADC_CLPS_ADDR(x)      (REGS_ADC_BASE(x) + 0x38U)
+/*@{*/
+#define HW_ADC_CLPS_ADDR(x)      ((x) + 0x38U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLPS(x)           (*(__IO hw_adc_clps_t *) HW_ADC_CLPS_ADDR(x))
 #define HW_ADC_CLPS_RD(x)        (HW_ADC_CLPS(x).U)
 #define HW_ADC_CLPS_WR(x, v)     (HW_ADC_CLPS(x).U = (v))
 #define HW_ADC_CLPS_SET(x, v)    (BME_OR32(HW_ADC_CLPS_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLPS_CLR(x, v)    (BME_AND32(HW_ADC_CLPS_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLPS_TOG(x, v)    (BME_XOR32(HW_ADC_CLPS_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLPS bitfields
@@ -1568,30 +1389,25 @@ typedef union _hw_adc_clps
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLPS_CLPS     (0U)          //!< Bit position for ADC_CLPS_CLPS.
-#define BM_ADC_CLPS_CLPS     (0x0000003FU) //!< Bit mask for ADC_CLPS_CLPS.
-#define BS_ADC_CLPS_CLPS     (6U)          //!< Bit field size in bits for ADC_CLPS_CLPS.
+/*@{*/
+#define BP_ADC_CLPS_CLPS     (0U)          /*!< Bit position for ADC_CLPS_CLPS. */
+#define BM_ADC_CLPS_CLPS     (0x0000003FU) /*!< Bit mask for ADC_CLPS_CLPS. */
+#define BS_ADC_CLPS_CLPS     (6U)          /*!< Bit field size in bits for ADC_CLPS_CLPS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLPS_CLPS field.
+/*! @brief Read current value of the ADC_CLPS_CLPS field. */
 #define BR_ADC_CLPS_CLPS(x)  (BME_UBFX32(HW_ADC_CLPS_ADDR(x), BP_ADC_CLPS_CLPS, BS_ADC_CLPS_CLPS))
-#endif
 
-//! @brief Format value for bitfield ADC_CLPS_CLPS.
-#define BF_ADC_CLPS_CLPS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLPS_CLPS), uint32_t) & BM_ADC_CLPS_CLPS)
+/*! @brief Format value for bitfield ADC_CLPS_CLPS. */
+#define BF_ADC_CLPS_CLPS(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLPS_CLPS) & BM_ADC_CLPS_CLPS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLPS field to a new value.
+/*! @brief Set the CLPS field to a new value. */
 #define BW_ADC_CLPS_CLPS(x, v) (BME_BFI32(HW_ADC_CLPS_ADDR(x), ((uint32_t)(v) << BP_ADC_CLPS_CLPS), BP_ADC_CLPS_CLPS, 6))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLP4 - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLP4 - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLP4 - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1604,27 +1420,24 @@ typedef union _hw_adc_clp4
     uint32_t U;
     struct _hw_adc_clp4_bitfields
     {
-        uint32_t CLP4 : 10;            //!< [9:0]
-        uint32_t RESERVED0 : 22;       //!< [31:10]
+        uint32_t CLP4 : 10;            /*!< [9:0]  */
+        uint32_t RESERVED0 : 22;       /*!< [31:10]  */
     } B;
 } hw_adc_clp4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLP4 register
  */
-//@{
-#define HW_ADC_CLP4_ADDR(x)      (REGS_ADC_BASE(x) + 0x3CU)
+/*@{*/
+#define HW_ADC_CLP4_ADDR(x)      ((x) + 0x3CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLP4(x)           (*(__IO hw_adc_clp4_t *) HW_ADC_CLP4_ADDR(x))
 #define HW_ADC_CLP4_RD(x)        (HW_ADC_CLP4(x).U)
 #define HW_ADC_CLP4_WR(x, v)     (HW_ADC_CLP4(x).U = (v))
 #define HW_ADC_CLP4_SET(x, v)    (BME_OR32(HW_ADC_CLP4_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLP4_CLR(x, v)    (BME_AND32(HW_ADC_CLP4_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLP4_TOG(x, v)    (BME_XOR32(HW_ADC_CLP4_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLP4 bitfields
@@ -1635,30 +1448,25 @@ typedef union _hw_adc_clp4
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLP4_CLP4     (0U)          //!< Bit position for ADC_CLP4_CLP4.
-#define BM_ADC_CLP4_CLP4     (0x000003FFU) //!< Bit mask for ADC_CLP4_CLP4.
-#define BS_ADC_CLP4_CLP4     (10U)         //!< Bit field size in bits for ADC_CLP4_CLP4.
+/*@{*/
+#define BP_ADC_CLP4_CLP4     (0U)          /*!< Bit position for ADC_CLP4_CLP4. */
+#define BM_ADC_CLP4_CLP4     (0x000003FFU) /*!< Bit mask for ADC_CLP4_CLP4. */
+#define BS_ADC_CLP4_CLP4     (10U)         /*!< Bit field size in bits for ADC_CLP4_CLP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLP4_CLP4 field.
+/*! @brief Read current value of the ADC_CLP4_CLP4 field. */
 #define BR_ADC_CLP4_CLP4(x)  (BME_UBFX32(HW_ADC_CLP4_ADDR(x), BP_ADC_CLP4_CLP4, BS_ADC_CLP4_CLP4))
-#endif
 
-//! @brief Format value for bitfield ADC_CLP4_CLP4.
-#define BF_ADC_CLP4_CLP4(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLP4_CLP4), uint32_t) & BM_ADC_CLP4_CLP4)
+/*! @brief Format value for bitfield ADC_CLP4_CLP4. */
+#define BF_ADC_CLP4_CLP4(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLP4_CLP4) & BM_ADC_CLP4_CLP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLP4 field to a new value.
+/*! @brief Set the CLP4 field to a new value. */
 #define BW_ADC_CLP4_CLP4(x, v) (BME_BFI32(HW_ADC_CLP4_ADDR(x), ((uint32_t)(v) << BP_ADC_CLP4_CLP4), BP_ADC_CLP4_CLP4, 10))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLP3 - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLP3 - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLP3 - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1671,27 +1479,24 @@ typedef union _hw_adc_clp3
     uint32_t U;
     struct _hw_adc_clp3_bitfields
     {
-        uint32_t CLP3 : 9;             //!< [8:0]
-        uint32_t RESERVED0 : 23;       //!< [31:9]
+        uint32_t CLP3 : 9;             /*!< [8:0]  */
+        uint32_t RESERVED0 : 23;       /*!< [31:9]  */
     } B;
 } hw_adc_clp3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLP3 register
  */
-//@{
-#define HW_ADC_CLP3_ADDR(x)      (REGS_ADC_BASE(x) + 0x40U)
+/*@{*/
+#define HW_ADC_CLP3_ADDR(x)      ((x) + 0x40U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLP3(x)           (*(__IO hw_adc_clp3_t *) HW_ADC_CLP3_ADDR(x))
 #define HW_ADC_CLP3_RD(x)        (HW_ADC_CLP3(x).U)
 #define HW_ADC_CLP3_WR(x, v)     (HW_ADC_CLP3(x).U = (v))
 #define HW_ADC_CLP3_SET(x, v)    (BME_OR32(HW_ADC_CLP3_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLP3_CLR(x, v)    (BME_AND32(HW_ADC_CLP3_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLP3_TOG(x, v)    (BME_XOR32(HW_ADC_CLP3_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLP3 bitfields
@@ -1702,30 +1507,25 @@ typedef union _hw_adc_clp3
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLP3_CLP3     (0U)          //!< Bit position for ADC_CLP3_CLP3.
-#define BM_ADC_CLP3_CLP3     (0x000001FFU) //!< Bit mask for ADC_CLP3_CLP3.
-#define BS_ADC_CLP3_CLP3     (9U)          //!< Bit field size in bits for ADC_CLP3_CLP3.
+/*@{*/
+#define BP_ADC_CLP3_CLP3     (0U)          /*!< Bit position for ADC_CLP3_CLP3. */
+#define BM_ADC_CLP3_CLP3     (0x000001FFU) /*!< Bit mask for ADC_CLP3_CLP3. */
+#define BS_ADC_CLP3_CLP3     (9U)          /*!< Bit field size in bits for ADC_CLP3_CLP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLP3_CLP3 field.
+/*! @brief Read current value of the ADC_CLP3_CLP3 field. */
 #define BR_ADC_CLP3_CLP3(x)  (BME_UBFX32(HW_ADC_CLP3_ADDR(x), BP_ADC_CLP3_CLP3, BS_ADC_CLP3_CLP3))
-#endif
 
-//! @brief Format value for bitfield ADC_CLP3_CLP3.
-#define BF_ADC_CLP3_CLP3(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLP3_CLP3), uint32_t) & BM_ADC_CLP3_CLP3)
+/*! @brief Format value for bitfield ADC_CLP3_CLP3. */
+#define BF_ADC_CLP3_CLP3(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLP3_CLP3) & BM_ADC_CLP3_CLP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLP3 field to a new value.
+/*! @brief Set the CLP3 field to a new value. */
 #define BW_ADC_CLP3_CLP3(x, v) (BME_BFI32(HW_ADC_CLP3_ADDR(x), ((uint32_t)(v) << BP_ADC_CLP3_CLP3), BP_ADC_CLP3_CLP3, 9))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLP2 - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLP2 - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLP2 - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1738,27 +1538,24 @@ typedef union _hw_adc_clp2
     uint32_t U;
     struct _hw_adc_clp2_bitfields
     {
-        uint32_t CLP2 : 8;             //!< [7:0]
-        uint32_t RESERVED0 : 24;       //!< [31:8]
+        uint32_t CLP2 : 8;             /*!< [7:0]  */
+        uint32_t RESERVED0 : 24;       /*!< [31:8]  */
     } B;
 } hw_adc_clp2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLP2 register
  */
-//@{
-#define HW_ADC_CLP2_ADDR(x)      (REGS_ADC_BASE(x) + 0x44U)
+/*@{*/
+#define HW_ADC_CLP2_ADDR(x)      ((x) + 0x44U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLP2(x)           (*(__IO hw_adc_clp2_t *) HW_ADC_CLP2_ADDR(x))
 #define HW_ADC_CLP2_RD(x)        (HW_ADC_CLP2(x).U)
 #define HW_ADC_CLP2_WR(x, v)     (HW_ADC_CLP2(x).U = (v))
 #define HW_ADC_CLP2_SET(x, v)    (BME_OR32(HW_ADC_CLP2_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLP2_CLR(x, v)    (BME_AND32(HW_ADC_CLP2_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLP2_TOG(x, v)    (BME_XOR32(HW_ADC_CLP2_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLP2 bitfields
@@ -1769,30 +1566,25 @@ typedef union _hw_adc_clp2
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLP2_CLP2     (0U)          //!< Bit position for ADC_CLP2_CLP2.
-#define BM_ADC_CLP2_CLP2     (0x000000FFU) //!< Bit mask for ADC_CLP2_CLP2.
-#define BS_ADC_CLP2_CLP2     (8U)          //!< Bit field size in bits for ADC_CLP2_CLP2.
+/*@{*/
+#define BP_ADC_CLP2_CLP2     (0U)          /*!< Bit position for ADC_CLP2_CLP2. */
+#define BM_ADC_CLP2_CLP2     (0x000000FFU) /*!< Bit mask for ADC_CLP2_CLP2. */
+#define BS_ADC_CLP2_CLP2     (8U)          /*!< Bit field size in bits for ADC_CLP2_CLP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLP2_CLP2 field.
+/*! @brief Read current value of the ADC_CLP2_CLP2 field. */
 #define BR_ADC_CLP2_CLP2(x)  (BME_UBFX32(HW_ADC_CLP2_ADDR(x), BP_ADC_CLP2_CLP2, BS_ADC_CLP2_CLP2))
-#endif
 
-//! @brief Format value for bitfield ADC_CLP2_CLP2.
-#define BF_ADC_CLP2_CLP2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLP2_CLP2), uint32_t) & BM_ADC_CLP2_CLP2)
+/*! @brief Format value for bitfield ADC_CLP2_CLP2. */
+#define BF_ADC_CLP2_CLP2(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLP2_CLP2) & BM_ADC_CLP2_CLP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLP2 field to a new value.
+/*! @brief Set the CLP2 field to a new value. */
 #define BW_ADC_CLP2_CLP2(x, v) (BME_BFI32(HW_ADC_CLP2_ADDR(x), ((uint32_t)(v) << BP_ADC_CLP2_CLP2), BP_ADC_CLP2_CLP2, 8))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLP1 - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLP1 - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLP1 - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1805,27 +1597,24 @@ typedef union _hw_adc_clp1
     uint32_t U;
     struct _hw_adc_clp1_bitfields
     {
-        uint32_t CLP1 : 7;             //!< [6:0]
-        uint32_t RESERVED0 : 25;       //!< [31:7]
+        uint32_t CLP1 : 7;             /*!< [6:0]  */
+        uint32_t RESERVED0 : 25;       /*!< [31:7]  */
     } B;
 } hw_adc_clp1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLP1 register
  */
-//@{
-#define HW_ADC_CLP1_ADDR(x)      (REGS_ADC_BASE(x) + 0x48U)
+/*@{*/
+#define HW_ADC_CLP1_ADDR(x)      ((x) + 0x48U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLP1(x)           (*(__IO hw_adc_clp1_t *) HW_ADC_CLP1_ADDR(x))
 #define HW_ADC_CLP1_RD(x)        (HW_ADC_CLP1(x).U)
 #define HW_ADC_CLP1_WR(x, v)     (HW_ADC_CLP1(x).U = (v))
 #define HW_ADC_CLP1_SET(x, v)    (BME_OR32(HW_ADC_CLP1_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLP1_CLR(x, v)    (BME_AND32(HW_ADC_CLP1_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLP1_TOG(x, v)    (BME_XOR32(HW_ADC_CLP1_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLP1 bitfields
@@ -1836,30 +1625,25 @@ typedef union _hw_adc_clp1
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLP1_CLP1     (0U)          //!< Bit position for ADC_CLP1_CLP1.
-#define BM_ADC_CLP1_CLP1     (0x0000007FU) //!< Bit mask for ADC_CLP1_CLP1.
-#define BS_ADC_CLP1_CLP1     (7U)          //!< Bit field size in bits for ADC_CLP1_CLP1.
+/*@{*/
+#define BP_ADC_CLP1_CLP1     (0U)          /*!< Bit position for ADC_CLP1_CLP1. */
+#define BM_ADC_CLP1_CLP1     (0x0000007FU) /*!< Bit mask for ADC_CLP1_CLP1. */
+#define BS_ADC_CLP1_CLP1     (7U)          /*!< Bit field size in bits for ADC_CLP1_CLP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLP1_CLP1 field.
+/*! @brief Read current value of the ADC_CLP1_CLP1 field. */
 #define BR_ADC_CLP1_CLP1(x)  (BME_UBFX32(HW_ADC_CLP1_ADDR(x), BP_ADC_CLP1_CLP1, BS_ADC_CLP1_CLP1))
-#endif
 
-//! @brief Format value for bitfield ADC_CLP1_CLP1.
-#define BF_ADC_CLP1_CLP1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLP1_CLP1), uint32_t) & BM_ADC_CLP1_CLP1)
+/*! @brief Format value for bitfield ADC_CLP1_CLP1. */
+#define BF_ADC_CLP1_CLP1(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLP1_CLP1) & BM_ADC_CLP1_CLP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLP1 field to a new value.
+/*! @brief Set the CLP1 field to a new value. */
 #define BW_ADC_CLP1_CLP1(x, v) (BME_BFI32(HW_ADC_CLP1_ADDR(x), ((uint32_t)(v) << BP_ADC_CLP1_CLP1), BP_ADC_CLP1_CLP1, 7))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ADC_CLP0 - ADC Plus-Side General Calibration Value Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ADC_CLP0 - ADC Plus-Side General Calibration Value Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ADC_CLP0 - ADC Plus-Side General Calibration Value Register (RW)
  *
@@ -1872,27 +1656,24 @@ typedef union _hw_adc_clp0
     uint32_t U;
     struct _hw_adc_clp0_bitfields
     {
-        uint32_t CLP0 : 6;             //!< [5:0]
-        uint32_t RESERVED0 : 26;       //!< [31:6]
+        uint32_t CLP0 : 6;             /*!< [5:0]  */
+        uint32_t RESERVED0 : 26;       /*!< [31:6]  */
     } B;
 } hw_adc_clp0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ADC_CLP0 register
  */
-//@{
-#define HW_ADC_CLP0_ADDR(x)      (REGS_ADC_BASE(x) + 0x4CU)
+/*@{*/
+#define HW_ADC_CLP0_ADDR(x)      ((x) + 0x4CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_ADC_CLP0(x)           (*(__IO hw_adc_clp0_t *) HW_ADC_CLP0_ADDR(x))
 #define HW_ADC_CLP0_RD(x)        (HW_ADC_CLP0(x).U)
 #define HW_ADC_CLP0_WR(x, v)     (HW_ADC_CLP0(x).U = (v))
 #define HW_ADC_CLP0_SET(x, v)    (BME_OR32(HW_ADC_CLP0_ADDR(x), (uint32_t)(v)))
 #define HW_ADC_CLP0_CLR(x, v)    (BME_AND32(HW_ADC_CLP0_ADDR(x), (uint32_t)(~(v))))
 #define HW_ADC_CLP0_TOG(x, v)    (BME_XOR32(HW_ADC_CLP0_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual ADC_CLP0 bitfields
@@ -1903,63 +1684,57 @@ typedef union _hw_adc_clp0
  *
  * Calibration Value
  */
-//@{
-#define BP_ADC_CLP0_CLP0     (0U)          //!< Bit position for ADC_CLP0_CLP0.
-#define BM_ADC_CLP0_CLP0     (0x0000003FU) //!< Bit mask for ADC_CLP0_CLP0.
-#define BS_ADC_CLP0_CLP0     (6U)          //!< Bit field size in bits for ADC_CLP0_CLP0.
+/*@{*/
+#define BP_ADC_CLP0_CLP0     (0U)          /*!< Bit position for ADC_CLP0_CLP0. */
+#define BM_ADC_CLP0_CLP0     (0x0000003FU) /*!< Bit mask for ADC_CLP0_CLP0. */
+#define BS_ADC_CLP0_CLP0     (6U)          /*!< Bit field size in bits for ADC_CLP0_CLP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ADC_CLP0_CLP0 field.
+/*! @brief Read current value of the ADC_CLP0_CLP0 field. */
 #define BR_ADC_CLP0_CLP0(x)  (BME_UBFX32(HW_ADC_CLP0_ADDR(x), BP_ADC_CLP0_CLP0, BS_ADC_CLP0_CLP0))
-#endif
 
-//! @brief Format value for bitfield ADC_CLP0_CLP0.
-#define BF_ADC_CLP0_CLP0(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_ADC_CLP0_CLP0), uint32_t) & BM_ADC_CLP0_CLP0)
+/*! @brief Format value for bitfield ADC_CLP0_CLP0. */
+#define BF_ADC_CLP0_CLP0(v)  ((uint32_t)((uint32_t)(v) << BP_ADC_CLP0_CLP0) & BM_ADC_CLP0_CLP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLP0 field to a new value.
+/*! @brief Set the CLP0 field to a new value. */
 #define BW_ADC_CLP0_CLP0(x, v) (BME_BFI32(HW_ADC_CLP0_ADDR(x), ((uint32_t)(v) << BP_ADC_CLP0_CLP0), BP_ADC_CLP0_CLP0, 6))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_adc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_adc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All ADC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_adc
 {
-    __IO hw_adc_sc1n_t SC1n[2];            //!< [0x0] ADC Status and Control Registers 1
-    __IO hw_adc_cfg1_t CFG1;               //!< [0x8] ADC Configuration Register 1
-    __IO hw_adc_cfg2_t CFG2;               //!< [0xC] ADC Configuration Register 2
-    __I hw_adc_rn_t Rn[2];                 //!< [0x10] ADC Data Result Register
-    __IO hw_adc_cv1_t CV1;                 //!< [0x18] Compare Value Registers
-    __IO hw_adc_cv2_t CV2;                 //!< [0x1C] Compare Value Registers
-    __IO hw_adc_sc2_t SC2;                 //!< [0x20] Status and Control Register 2
-    __IO hw_adc_sc3_t SC3;                 //!< [0x24] Status and Control Register 3
-    __IO hw_adc_ofs_t OFS;                 //!< [0x28] ADC Offset Correction Register
-    __IO hw_adc_pg_t PG;                   //!< [0x2C] ADC Plus-Side Gain Register
+    __IO hw_adc_sc1n_t SC1n[2];            /*!< [0x0] ADC Status and Control Registers 1 */
+    __IO hw_adc_cfg1_t CFG1;               /*!< [0x8] ADC Configuration Register 1 */
+    __IO hw_adc_cfg2_t CFG2;               /*!< [0xC] ADC Configuration Register 2 */
+    __I hw_adc_rn_t Rn[2];                 /*!< [0x10] ADC Data Result Register */
+    __IO hw_adc_cv1_t CV1;                 /*!< [0x18] Compare Value Registers */
+    __IO hw_adc_cv2_t CV2;                 /*!< [0x1C] Compare Value Registers */
+    __IO hw_adc_sc2_t SC2;                 /*!< [0x20] Status and Control Register 2 */
+    __IO hw_adc_sc3_t SC3;                 /*!< [0x24] Status and Control Register 3 */
+    __IO hw_adc_ofs_t OFS;                 /*!< [0x28] ADC Offset Correction Register */
+    __IO hw_adc_pg_t PG;                   /*!< [0x2C] ADC Plus-Side Gain Register */
     uint8_t _reserved0[4];
-    __IO hw_adc_clpd_t CLPD;               //!< [0x34] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clps_t CLPS;               //!< [0x38] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clp4_t CLP4;               //!< [0x3C] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clp3_t CLP3;               //!< [0x40] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clp2_t CLP2;               //!< [0x44] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clp1_t CLP1;               //!< [0x48] ADC Plus-Side General Calibration Value Register
-    __IO hw_adc_clp0_t CLP0;               //!< [0x4C] ADC Plus-Side General Calibration Value Register
+    __IO hw_adc_clpd_t CLPD;               /*!< [0x34] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clps_t CLPS;               /*!< [0x38] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clp4_t CLP4;               /*!< [0x3C] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clp3_t CLP3;               /*!< [0x40] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clp2_t CLP2;               /*!< [0x44] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clp1_t CLP1;               /*!< [0x48] ADC Plus-Side General Calibration Value Register */
+    __IO hw_adc_clp0_t CLP0;               /*!< [0x4C] ADC Plus-Side General Calibration Value Register */
 } hw_adc_t;
 #pragma pack()
 
-//! @brief Macro to access all ADC registers.
-//! @param x ADC instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_ADC(0)</code>.
-#define HW_ADC(x)      (*(hw_adc_t *) REGS_ADC_BASE(x))
-#endif
+/*! @brief Macro to access all ADC registers. */
+/*! @param x ADC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_ADC(ADC0_BASE)</code>. */
+#define HW_ADC(x)      (*(hw_adc_t *)(x))
 
-#endif // __HW_ADC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_ADC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

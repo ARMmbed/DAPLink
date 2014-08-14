@@ -21,7 +21,8 @@
 #ifndef __HW_SPI_REGISTERS_H__
 #define __HW_SPI_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL46Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL46Z4 SPI
@@ -37,40 +38,20 @@
  * - HW_SPI_MH - SPI match register high
  * - HW_SPI_DL - SPI data register low
  * - HW_SPI_DH - SPI data register high
+ * - HW_SPI_CI - SPI clear interrupt register
+ * - HW_SPI_C3 - SPI control register 3
  *
  * - hw_spi_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_SPI_BASE
-#define HW_SPI_INSTANCE_COUNT (2U) //!< Number of instances of the SPI module.
-#define HW_SPI0 (0U) //!< Instance number for SPI0.
-#define HW_SPI1 (1U) //!< Instance number for SPI1.
-#define REGS_SPI0_BASE (0x40076000U) //!< Base address for SPI0.
-#define REGS_SPI1_BASE (0x40077000U) //!< Base address for SPI1.
+#define HW_SPI_INSTANCE_COUNT (2U) /*!< Number of instances of the SPI module. */
+#define HW_SPI0 (0U) /*!< Instance number for SPI0. */
+#define HW_SPI1 (1U) /*!< Instance number for SPI1. */
 
-//! @brief Table of base addresses for SPI instances.
-static const uint32_t __g_regs_SPI_base_addresses[] = {
-        REGS_SPI0_BASE,
-        REGS_SPI1_BASE,
-    };
+/*******************************************************************************
+ * HW_SPI_S - SPI status register
+ ******************************************************************************/
 
-//! @brief Get the base address of SPI by instance number.
-//! @param x SPI instance number, from 0 through 1.
-#define REGS_SPI_BASE(x) (__g_regs_SPI_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of SPI.
-#define REGS_SPI_INSTANCE(b) ((b) == REGS_SPI0_BASE ? HW_SPI0 : (b) == REGS_SPI1_BASE ? HW_SPI1 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_SPI_S - SPI status register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_S - SPI status register (RO)
  *
@@ -103,34 +84,128 @@ typedef union _hw_spi_s
     uint8_t U;
     struct _hw_spi_s_bitfields
     {
-        uint8_t RESERVED0 : 4;         //!< [3:0]
-        uint8_t MODF : 1;              //!< [4] Master mode fault flag
-        uint8_t SPTEF : 1;             //!< [5] SPI transmit buffer empty flag (when FIFO
-                                       //! is not supported or not enabled) or SPI transmit FIFO empty flag
-                                       //! (when FIFO is supported and enabled)
-        uint8_t SPMF : 1;              //!< [6] SPI match flag
-        uint8_t SPRF : 1;              //!< [7] SPI read buffer full flag (when FIFO is
-                                       //! not supported or not enabled) or SPI read FIFO FULL flag (when FIFO is
-                                       //! supported and enabled)
+        uint8_t RFIFOEF : 1;           /*!< [0] SPI read FIFO empty flag */
+        uint8_t TXFULLF : 1;           /*!< [1] Transmit FIFO full flag */
+        uint8_t TNEAREF : 1;           /*!< [2] Transmit FIFO nearly empty flag */
+        uint8_t RNFULLF : 1;           /*!< [3] Receive FIFO nearly full flag */
+        uint8_t MODF : 1;              /*!< [4] Master mode fault flag */
+        uint8_t SPTEF : 1;             /*!< [5] SPI transmit buffer empty flag (when FIFO
+                                        * is not supported or not enabled) or SPI transmit FIFO empty flag (when
+                                        * FIFO is supported and enabled) */
+        uint8_t SPMF : 1;              /*!< [6] SPI match flag */
+        uint8_t SPRF : 1;              /*!< [7] SPI read buffer full flag (when FIFO is
+                                        * not supported or not enabled) or SPI read FIFO FULL flag (when FIFO is
+                                        * supported and enabled) */
     } B;
 } hw_spi_s_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_S register
  */
-//@{
-#define HW_SPI_S_ADDR(x)         (REGS_SPI_BASE(x) + 0x0U)
+/*@{*/
+#define HW_SPI_S_ADDR(x)         ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_S(x)              (*(__I hw_spi_s_t *) HW_SPI_S_ADDR(x))
 #define HW_SPI_S_RD(x)           (HW_SPI_S(x).U)
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_S bitfields
  */
+
+/*!
+ * @name Register SPI_S, field RFIFOEF[0] (RO)
+ *
+ * This bit indicates the status of the read FIFO when FIFOMODE is enabled. If
+ * FIFOMODE is not enabled, ignore this bit. At an initial POR, the values of
+ * TNEAREF and RFIFOEF are 0. However, the status (S) register and both TX and RX
+ * FIFOs are reset due to a change of SPIMODE, FIFOMODE or SPE. If this type of
+ * reset occurs and FIFOMODE is 0, TNEAREF and RFIFOEF continue to reset to 0. If
+ * this type of reset occurs and FIFOMODE is 1, TNEAREF and RFIFOEF reset to 1.
+ *
+ * Values:
+ * - 0 - Read FIFO has data. Reads of the DH:DL registers in 16-bit mode or the
+ *     DL register in 8-bit mode will empty the read FIFO.
+ * - 1 - Read FIFO is empty.
+ */
+/*@{*/
+#define BP_SPI_S_RFIFOEF     (0U)          /*!< Bit position for SPI_S_RFIFOEF. */
+#define BM_SPI_S_RFIFOEF     (0x01U)       /*!< Bit mask for SPI_S_RFIFOEF. */
+#define BS_SPI_S_RFIFOEF     (1U)          /*!< Bit field size in bits for SPI_S_RFIFOEF. */
+
+/*! @brief Read current value of the SPI_S_RFIFOEF field. */
+#define BR_SPI_S_RFIFOEF(x)  (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_RFIFOEF, BS_SPI_S_RFIFOEF))
+/*@}*/
+
+/*!
+ * @name Register SPI_S, field TXFULLF[1] (RO)
+ *
+ * This bit indicates the status of the transmit FIFO when FIFOMODE is enabled.
+ * This flag is set when there are 8 bytes in the transmit FIFO. If FIFOMODE is
+ * not enabled, ignore this bit.
+ *
+ * Values:
+ * - 0 - Transmit FIFO has less than 8 bytes
+ * - 1 - Transmit FIFO has 8 bytes of data
+ */
+/*@{*/
+#define BP_SPI_S_TXFULLF     (1U)          /*!< Bit position for SPI_S_TXFULLF. */
+#define BM_SPI_S_TXFULLF     (0x02U)       /*!< Bit mask for SPI_S_TXFULLF. */
+#define BS_SPI_S_TXFULLF     (1U)          /*!< Bit field size in bits for SPI_S_TXFULLF. */
+
+/*! @brief Read current value of the SPI_S_TXFULLF field. */
+#define BR_SPI_S_TXFULLF(x)  (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_TXFULLF, BS_SPI_S_TXFULLF))
+/*@}*/
+
+/*!
+ * @name Register SPI_S, field TNEAREF[2] (RO)
+ *
+ * This flag is set when only one 16-bit word or two 8-bit bytes of data remain
+ * in the transmit FIFO, provided C3[5] is 0, or when only two 16-bit words or
+ * four 8-bit bytes of data remain in the transmit FIFO, provided C3[5] is 1. If
+ * FIFOMODE is not enabled, ignore this bit. At an initial POR, the values of
+ * TNEAREF and RFIFOEF are 0. However, the status (S) register and both TX and RX
+ * FIFOs are reset due to a change of SPIMODE, FIFOMODE or SPE. If this type of reset
+ * occurs and FIFOMODE is 0, TNEAREF and RFIFOEF continue to reset to 0. If this
+ * type of reset occurs and FIFOMODE is 1, TNEAREF and RFIFOEF reset to 1.
+ *
+ * Values:
+ * - 0 - Transmit FIFO has more than 16 bits (when C3[5] is 0) or more than 32
+ *     bits (when C3[5] is 1) remaining to transmit
+ * - 1 - Transmit FIFO has an amount of data equal to or less than 16 bits (when
+ *     C3[5] is 0) or 32 bits (when C3[5] is 1) remaining to transmit
+ */
+/*@{*/
+#define BP_SPI_S_TNEAREF     (2U)          /*!< Bit position for SPI_S_TNEAREF. */
+#define BM_SPI_S_TNEAREF     (0x04U)       /*!< Bit mask for SPI_S_TNEAREF. */
+#define BS_SPI_S_TNEAREF     (1U)          /*!< Bit field size in bits for SPI_S_TNEAREF. */
+
+/*! @brief Read current value of the SPI_S_TNEAREF field. */
+#define BR_SPI_S_TNEAREF(x)  (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_TNEAREF, BS_SPI_S_TNEAREF))
+/*@}*/
+
+/*!
+ * @name Register SPI_S, field RNFULLF[3] (RO)
+ *
+ * This flag is set when more than three 16-bit words or six 8-bit bytes of data
+ * remain in the receive FIFO, provided C3[4] is 0, or when more than two 16-bit
+ * words or four 8-bit bytes of data remain in the receive FIFO, provided C3[4]
+ * is 1. It has no function if FIFOMODE is not present or is 0.
+ *
+ * Values:
+ * - 0 - Receive FIFO has received less than 48 bits (when C3[4] is 0) or less
+ *     than 32 bits (when C3[4] is 1)
+ * - 1 - Receive FIFO has received data of an amount equal to or greater than 48
+ *     bits (when C3[4] is 0) or 32 bits (when C3[4] is 1)
+ */
+/*@{*/
+#define BP_SPI_S_RNFULLF     (3U)          /*!< Bit position for SPI_S_RNFULLF. */
+#define BM_SPI_S_RNFULLF     (0x08U)       /*!< Bit mask for SPI_S_RNFULLF. */
+#define BS_SPI_S_RNFULLF     (1U)          /*!< Bit field size in bits for SPI_S_RNFULLF. */
+
+/*! @brief Read current value of the SPI_S_RNFULLF field. */
+#define BR_SPI_S_RNFULLF(x)  (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_RNFULLF, BS_SPI_S_RNFULLF))
+/*@}*/
 
 /*!
  * @name Register SPI_S, field MODF[4] (RO)
@@ -145,16 +220,14 @@ typedef union _hw_spi_s
  * - 0 - No mode fault error
  * - 1 - Mode fault error detected
  */
-//@{
-#define BP_SPI_S_MODF        (4U)          //!< Bit position for SPI_S_MODF.
-#define BM_SPI_S_MODF        (0x10U)       //!< Bit mask for SPI_S_MODF.
-#define BS_SPI_S_MODF        (1U)          //!< Bit field size in bits for SPI_S_MODF.
+/*@{*/
+#define BP_SPI_S_MODF        (4U)          /*!< Bit position for SPI_S_MODF. */
+#define BM_SPI_S_MODF        (0x10U)       /*!< Bit mask for SPI_S_MODF. */
+#define BS_SPI_S_MODF        (1U)          /*!< Bit field size in bits for SPI_S_MODF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_S_MODF field.
+/*! @brief Read current value of the SPI_S_MODF field. */
 #define BR_SPI_S_MODF(x)     (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_MODF, BS_SPI_S_MODF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_S, field SPTEF[5] (RO)
@@ -198,16 +271,14 @@ typedef union _hw_spi_s
  * - 1 - SPI transmit buffer empty (when FIFOMODE is not present or is 0) or SPI
  *     FIFO empty (when FIFOMODE is 1)
  */
-//@{
-#define BP_SPI_S_SPTEF       (5U)          //!< Bit position for SPI_S_SPTEF.
-#define BM_SPI_S_SPTEF       (0x20U)       //!< Bit mask for SPI_S_SPTEF.
-#define BS_SPI_S_SPTEF       (1U)          //!< Bit field size in bits for SPI_S_SPTEF.
+/*@{*/
+#define BP_SPI_S_SPTEF       (5U)          /*!< Bit position for SPI_S_SPTEF. */
+#define BM_SPI_S_SPTEF       (0x20U)       /*!< Bit mask for SPI_S_SPTEF. */
+#define BS_SPI_S_SPTEF       (1U)          /*!< Bit field size in bits for SPI_S_SPTEF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_S_SPTEF field.
+/*! @brief Read current value of the SPI_S_SPTEF field. */
 #define BR_SPI_S_SPTEF(x)    (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_SPTEF, BS_SPI_S_SPTEF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_S, field SPMF[6] (RO)
@@ -222,16 +293,14 @@ typedef union _hw_spi_s
  * - 1 - Value in the receive data buffer matches the value in the MH:ML
  *     registers
  */
-//@{
-#define BP_SPI_S_SPMF        (6U)          //!< Bit position for SPI_S_SPMF.
-#define BM_SPI_S_SPMF        (0x40U)       //!< Bit mask for SPI_S_SPMF.
-#define BS_SPI_S_SPMF        (1U)          //!< Bit field size in bits for SPI_S_SPMF.
+/*@{*/
+#define BP_SPI_S_SPMF        (6U)          /*!< Bit position for SPI_S_SPMF. */
+#define BM_SPI_S_SPMF        (0x40U)       /*!< Bit mask for SPI_S_SPMF. */
+#define BS_SPI_S_SPMF        (1U)          /*!< Bit field size in bits for SPI_S_SPMF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_S_SPMF field.
+/*! @brief Read current value of the SPI_S_SPMF field. */
 #define BR_SPI_S_SPMF(x)     (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_SPMF, BS_SPI_S_SPMF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_S, field SPRF[7] (RO)
@@ -258,22 +327,19 @@ typedef union _hw_spi_s
  * - 1 - Data available in the receive data buffer (when FIFOMODE is not present
  *     or is 0) or Read FIFO is full (when FIFOMODE is 1)
  */
-//@{
-#define BP_SPI_S_SPRF        (7U)          //!< Bit position for SPI_S_SPRF.
-#define BM_SPI_S_SPRF        (0x80U)       //!< Bit mask for SPI_S_SPRF.
-#define BS_SPI_S_SPRF        (1U)          //!< Bit field size in bits for SPI_S_SPRF.
+/*@{*/
+#define BP_SPI_S_SPRF        (7U)          /*!< Bit position for SPI_S_SPRF. */
+#define BM_SPI_S_SPRF        (0x80U)       /*!< Bit mask for SPI_S_SPRF. */
+#define BS_SPI_S_SPRF        (1U)          /*!< Bit field size in bits for SPI_S_SPRF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_S_SPRF field.
+/*! @brief Read current value of the SPI_S_SPRF field. */
 #define BR_SPI_S_SPRF(x)     (BME_UBFX8(HW_SPI_S_ADDR(x), BP_SPI_S_SPRF, BS_SPI_S_SPRF))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_BR - SPI baud rate register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_BR - SPI baud rate register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_BR - SPI baud rate register (RW)
  *
@@ -287,28 +353,25 @@ typedef union _hw_spi_br
     uint8_t U;
     struct _hw_spi_br_bitfields
     {
-        uint8_t SPR : 4;               //!< [3:0] SPI baud rate divisor
-        uint8_t SPPR : 3;              //!< [6:4] SPI baud rate prescale divisor
-        uint8_t RESERVED0 : 1;         //!< [7]
+        uint8_t SPR : 4;               /*!< [3:0] SPI baud rate divisor */
+        uint8_t SPPR : 3;              /*!< [6:4] SPI baud rate prescale divisor */
+        uint8_t RESERVED0 : 1;         /*!< [7]  */
     } B;
 } hw_spi_br_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_BR register
  */
-//@{
-#define HW_SPI_BR_ADDR(x)        (REGS_SPI_BASE(x) + 0x1U)
+/*@{*/
+#define HW_SPI_BR_ADDR(x)        ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_BR(x)             (*(__IO hw_spi_br_t *) HW_SPI_BR_ADDR(x))
 #define HW_SPI_BR_RD(x)          (HW_SPI_BR(x).U)
 #define HW_SPI_BR_WR(x, v)       (HW_SPI_BR(x).U = (v))
 #define HW_SPI_BR_SET(x, v)      (BME_OR8(HW_SPI_BR_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_BR_CLR(x, v)      (BME_AND8(HW_SPI_BR_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_BR_TOG(x, v)      (BME_XOR8(HW_SPI_BR_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_BR bitfields
@@ -332,24 +395,20 @@ typedef union _hw_spi_br
  * - 0111 - Baud rate divisor is 256
  * - 1000 - Baud rate divisor is 512
  */
-//@{
-#define BP_SPI_BR_SPR        (0U)          //!< Bit position for SPI_BR_SPR.
-#define BM_SPI_BR_SPR        (0x0FU)       //!< Bit mask for SPI_BR_SPR.
-#define BS_SPI_BR_SPR        (4U)          //!< Bit field size in bits for SPI_BR_SPR.
+/*@{*/
+#define BP_SPI_BR_SPR        (0U)          /*!< Bit position for SPI_BR_SPR. */
+#define BM_SPI_BR_SPR        (0x0FU)       /*!< Bit mask for SPI_BR_SPR. */
+#define BS_SPI_BR_SPR        (4U)          /*!< Bit field size in bits for SPI_BR_SPR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_BR_SPR field.
+/*! @brief Read current value of the SPI_BR_SPR field. */
 #define BR_SPI_BR_SPR(x)     (BME_UBFX8(HW_SPI_BR_ADDR(x), BP_SPI_BR_SPR, BS_SPI_BR_SPR))
-#endif
 
-//! @brief Format value for bitfield SPI_BR_SPR.
-#define BF_SPI_BR_SPR(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_BR_SPR), uint8_t) & BM_SPI_BR_SPR)
+/*! @brief Format value for bitfield SPI_BR_SPR. */
+#define BF_SPI_BR_SPR(v)     ((uint8_t)((uint8_t)(v) << BP_SPI_BR_SPR) & BM_SPI_BR_SPR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPR field to a new value.
+/*! @brief Set the SPR field to a new value. */
 #define BW_SPI_BR_SPR(x, v)  (BME_BFI8(HW_SPI_BR_ADDR(x), ((uint8_t)(v) << BP_SPI_BR_SPR), BP_SPI_BR_SPR, 4))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_BR, field SPPR[6:4] (RW)
@@ -369,30 +428,25 @@ typedef union _hw_spi_br
  * - 110 - Baud rate prescaler divisor is 7
  * - 111 - Baud rate prescaler divisor is 8
  */
-//@{
-#define BP_SPI_BR_SPPR       (4U)          //!< Bit position for SPI_BR_SPPR.
-#define BM_SPI_BR_SPPR       (0x70U)       //!< Bit mask for SPI_BR_SPPR.
-#define BS_SPI_BR_SPPR       (3U)          //!< Bit field size in bits for SPI_BR_SPPR.
+/*@{*/
+#define BP_SPI_BR_SPPR       (4U)          /*!< Bit position for SPI_BR_SPPR. */
+#define BM_SPI_BR_SPPR       (0x70U)       /*!< Bit mask for SPI_BR_SPPR. */
+#define BS_SPI_BR_SPPR       (3U)          /*!< Bit field size in bits for SPI_BR_SPPR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_BR_SPPR field.
+/*! @brief Read current value of the SPI_BR_SPPR field. */
 #define BR_SPI_BR_SPPR(x)    (BME_UBFX8(HW_SPI_BR_ADDR(x), BP_SPI_BR_SPPR, BS_SPI_BR_SPPR))
-#endif
 
-//! @brief Format value for bitfield SPI_BR_SPPR.
-#define BF_SPI_BR_SPPR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_BR_SPPR), uint8_t) & BM_SPI_BR_SPPR)
+/*! @brief Format value for bitfield SPI_BR_SPPR. */
+#define BF_SPI_BR_SPPR(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_BR_SPPR) & BM_SPI_BR_SPPR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPPR field to a new value.
+/*! @brief Set the SPPR field to a new value. */
 #define BW_SPI_BR_SPPR(x, v) (BME_BFI8(HW_SPI_BR_ADDR(x), ((uint8_t)(v) << BP_SPI_BR_SPPR), BP_SPI_BR_SPPR, 3))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_C2 - SPI control register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_C2 - SPI control register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_C2 - SPI control register 2 (RW)
  *
@@ -406,33 +460,30 @@ typedef union _hw_spi_c2
     uint8_t U;
     struct _hw_spi_c2_bitfields
     {
-        uint8_t SPC0 : 1;              //!< [0] SPI pin control 0
-        uint8_t SPISWAI : 1;           //!< [1] SPI stop in wait mode
-        uint8_t RXDMAE : 1;            //!< [2] Receive DMA enable
-        uint8_t BIDIROE : 1;           //!< [3] Bidirectional mode output enable
-        uint8_t MODFEN : 1;            //!< [4] Master mode-fault function enable
-        uint8_t TXDMAE : 1;            //!< [5] Transmit DMA enable
-        uint8_t SPIMODE : 1;           //!< [6] SPI 8-bit or 16-bit mode
-        uint8_t SPMIE : 1;             //!< [7] SPI match interrupt enable
+        uint8_t SPC0 : 1;              /*!< [0] SPI pin control 0 */
+        uint8_t SPISWAI : 1;           /*!< [1] SPI stop in wait mode */
+        uint8_t RXDMAE : 1;            /*!< [2] Receive DMA enable */
+        uint8_t BIDIROE : 1;           /*!< [3] Bidirectional mode output enable */
+        uint8_t MODFEN : 1;            /*!< [4] Master mode-fault function enable */
+        uint8_t TXDMAE : 1;            /*!< [5] Transmit DMA enable */
+        uint8_t SPIMODE : 1;           /*!< [6] SPI 8-bit or 16-bit mode */
+        uint8_t SPMIE : 1;             /*!< [7] SPI match interrupt enable */
     } B;
 } hw_spi_c2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_C2 register
  */
-//@{
-#define HW_SPI_C2_ADDR(x)        (REGS_SPI_BASE(x) + 0x2U)
+/*@{*/
+#define HW_SPI_C2_ADDR(x)        ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_C2(x)             (*(__IO hw_spi_c2_t *) HW_SPI_C2_ADDR(x))
 #define HW_SPI_C2_RD(x)          (HW_SPI_C2(x).U)
 #define HW_SPI_C2_WR(x, v)       (HW_SPI_C2(x).U = (v))
 #define HW_SPI_C2_SET(x, v)      (BME_OR8(HW_SPI_C2_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_C2_CLR(x, v)      (BME_AND8(HW_SPI_C2_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_C2_TOG(x, v)      (BME_XOR8(HW_SPI_C2_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_C2 bitfields
@@ -453,24 +504,20 @@ typedef union _hw_spi_c2
  *     mode of operation: MISO is slave in when BIDIROE is 0 or slave I/O when
  *     BIDIROE is 1; MOSI is not used by SPI.
  */
-//@{
-#define BP_SPI_C2_SPC0       (0U)          //!< Bit position for SPI_C2_SPC0.
-#define BM_SPI_C2_SPC0       (0x01U)       //!< Bit mask for SPI_C2_SPC0.
-#define BS_SPI_C2_SPC0       (1U)          //!< Bit field size in bits for SPI_C2_SPC0.
+/*@{*/
+#define BP_SPI_C2_SPC0       (0U)          /*!< Bit position for SPI_C2_SPC0. */
+#define BM_SPI_C2_SPC0       (0x01U)       /*!< Bit mask for SPI_C2_SPC0. */
+#define BS_SPI_C2_SPC0       (1U)          /*!< Bit field size in bits for SPI_C2_SPC0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_SPC0 field.
+/*! @brief Read current value of the SPI_C2_SPC0 field. */
 #define BR_SPI_C2_SPC0(x)    (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_SPC0, BS_SPI_C2_SPC0))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_SPC0.
-#define BF_SPI_C2_SPC0(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_SPC0), uint8_t) & BM_SPI_C2_SPC0)
+/*! @brief Format value for bitfield SPI_C2_SPC0. */
+#define BF_SPI_C2_SPC0(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C2_SPC0) & BM_SPI_C2_SPC0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPC0 field to a new value.
+/*! @brief Set the SPC0 field to a new value. */
 #define BW_SPI_C2_SPC0(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_SPC0), BP_SPI_C2_SPC0, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field SPISWAI[1] (RW)
@@ -481,24 +528,20 @@ typedef union _hw_spi_c2
  * - 0 - SPI clocks continue to operate in wait mode
  * - 1 - SPI clocks stop when the MCU enters wait mode
  */
-//@{
-#define BP_SPI_C2_SPISWAI    (1U)          //!< Bit position for SPI_C2_SPISWAI.
-#define BM_SPI_C2_SPISWAI    (0x02U)       //!< Bit mask for SPI_C2_SPISWAI.
-#define BS_SPI_C2_SPISWAI    (1U)          //!< Bit field size in bits for SPI_C2_SPISWAI.
+/*@{*/
+#define BP_SPI_C2_SPISWAI    (1U)          /*!< Bit position for SPI_C2_SPISWAI. */
+#define BM_SPI_C2_SPISWAI    (0x02U)       /*!< Bit mask for SPI_C2_SPISWAI. */
+#define BS_SPI_C2_SPISWAI    (1U)          /*!< Bit field size in bits for SPI_C2_SPISWAI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_SPISWAI field.
+/*! @brief Read current value of the SPI_C2_SPISWAI field. */
 #define BR_SPI_C2_SPISWAI(x) (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_SPISWAI, BS_SPI_C2_SPISWAI))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_SPISWAI.
-#define BF_SPI_C2_SPISWAI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_SPISWAI), uint8_t) & BM_SPI_C2_SPISWAI)
+/*! @brief Format value for bitfield SPI_C2_SPISWAI. */
+#define BF_SPI_C2_SPISWAI(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C2_SPISWAI) & BM_SPI_C2_SPISWAI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPISWAI field to a new value.
+/*! @brief Set the SPISWAI field to a new value. */
 #define BW_SPI_C2_SPISWAI(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_SPISWAI), BP_SPI_C2_SPISWAI, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field RXDMAE[2] (RW)
@@ -511,24 +554,20 @@ typedef union _hw_spi_c2
  * - 0 - DMA request for receive is disabled and interrupt from SPRF is allowed
  * - 1 - DMA request for receive is enabled and interrupt from SPRF is disabled
  */
-//@{
-#define BP_SPI_C2_RXDMAE     (2U)          //!< Bit position for SPI_C2_RXDMAE.
-#define BM_SPI_C2_RXDMAE     (0x04U)       //!< Bit mask for SPI_C2_RXDMAE.
-#define BS_SPI_C2_RXDMAE     (1U)          //!< Bit field size in bits for SPI_C2_RXDMAE.
+/*@{*/
+#define BP_SPI_C2_RXDMAE     (2U)          /*!< Bit position for SPI_C2_RXDMAE. */
+#define BM_SPI_C2_RXDMAE     (0x04U)       /*!< Bit mask for SPI_C2_RXDMAE. */
+#define BS_SPI_C2_RXDMAE     (1U)          /*!< Bit field size in bits for SPI_C2_RXDMAE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_RXDMAE field.
+/*! @brief Read current value of the SPI_C2_RXDMAE field. */
 #define BR_SPI_C2_RXDMAE(x)  (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_RXDMAE, BS_SPI_C2_RXDMAE))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_RXDMAE.
-#define BF_SPI_C2_RXDMAE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_RXDMAE), uint8_t) & BM_SPI_C2_RXDMAE)
+/*! @brief Format value for bitfield SPI_C2_RXDMAE. */
+#define BF_SPI_C2_RXDMAE(v)  ((uint8_t)((uint8_t)(v) << BP_SPI_C2_RXDMAE) & BM_SPI_C2_RXDMAE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXDMAE field to a new value.
+/*! @brief Set the RXDMAE field to a new value. */
 #define BW_SPI_C2_RXDMAE(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_RXDMAE), BP_SPI_C2_RXDMAE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field BIDIROE[3] (RW)
@@ -544,24 +583,20 @@ typedef union _hw_spi_c2
  * - 0 - Output driver disabled so SPI data I/O pin acts as an input
  * - 1 - SPI I/O pin enabled as an output
  */
-//@{
-#define BP_SPI_C2_BIDIROE    (3U)          //!< Bit position for SPI_C2_BIDIROE.
-#define BM_SPI_C2_BIDIROE    (0x08U)       //!< Bit mask for SPI_C2_BIDIROE.
-#define BS_SPI_C2_BIDIROE    (1U)          //!< Bit field size in bits for SPI_C2_BIDIROE.
+/*@{*/
+#define BP_SPI_C2_BIDIROE    (3U)          /*!< Bit position for SPI_C2_BIDIROE. */
+#define BM_SPI_C2_BIDIROE    (0x08U)       /*!< Bit mask for SPI_C2_BIDIROE. */
+#define BS_SPI_C2_BIDIROE    (1U)          /*!< Bit field size in bits for SPI_C2_BIDIROE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_BIDIROE field.
+/*! @brief Read current value of the SPI_C2_BIDIROE field. */
 #define BR_SPI_C2_BIDIROE(x) (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_BIDIROE, BS_SPI_C2_BIDIROE))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_BIDIROE.
-#define BF_SPI_C2_BIDIROE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_BIDIROE), uint8_t) & BM_SPI_C2_BIDIROE)
+/*! @brief Format value for bitfield SPI_C2_BIDIROE. */
+#define BF_SPI_C2_BIDIROE(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C2_BIDIROE) & BM_SPI_C2_BIDIROE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BIDIROE field to a new value.
+/*! @brief Set the BIDIROE field to a new value. */
 #define BW_SPI_C2_BIDIROE(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_BIDIROE), BP_SPI_C2_BIDIROE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field MODFEN[4] (RW)
@@ -577,24 +612,20 @@ typedef union _hw_spi_c2
  * - 1 - Mode fault function enabled, master SS pin acts as the mode fault input
  *     or the slave select output
  */
-//@{
-#define BP_SPI_C2_MODFEN     (4U)          //!< Bit position for SPI_C2_MODFEN.
-#define BM_SPI_C2_MODFEN     (0x10U)       //!< Bit mask for SPI_C2_MODFEN.
-#define BS_SPI_C2_MODFEN     (1U)          //!< Bit field size in bits for SPI_C2_MODFEN.
+/*@{*/
+#define BP_SPI_C2_MODFEN     (4U)          /*!< Bit position for SPI_C2_MODFEN. */
+#define BM_SPI_C2_MODFEN     (0x10U)       /*!< Bit mask for SPI_C2_MODFEN. */
+#define BS_SPI_C2_MODFEN     (1U)          /*!< Bit field size in bits for SPI_C2_MODFEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_MODFEN field.
+/*! @brief Read current value of the SPI_C2_MODFEN field. */
 #define BR_SPI_C2_MODFEN(x)  (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_MODFEN, BS_SPI_C2_MODFEN))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_MODFEN.
-#define BF_SPI_C2_MODFEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_MODFEN), uint8_t) & BM_SPI_C2_MODFEN)
+/*! @brief Format value for bitfield SPI_C2_MODFEN. */
+#define BF_SPI_C2_MODFEN(v)  ((uint8_t)((uint8_t)(v) << BP_SPI_C2_MODFEN) & BM_SPI_C2_MODFEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MODFEN field to a new value.
+/*! @brief Set the MODFEN field to a new value. */
 #define BW_SPI_C2_MODFEN(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_MODFEN), BP_SPI_C2_MODFEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field TXDMAE[5] (RW)
@@ -607,24 +638,20 @@ typedef union _hw_spi_c2
  * - 0 - DMA request for transmit is disabled and interrupt from SPTEF is allowed
  * - 1 - DMA request for transmit is enabled and interrupt from SPTEF is disabled
  */
-//@{
-#define BP_SPI_C2_TXDMAE     (5U)          //!< Bit position for SPI_C2_TXDMAE.
-#define BM_SPI_C2_TXDMAE     (0x20U)       //!< Bit mask for SPI_C2_TXDMAE.
-#define BS_SPI_C2_TXDMAE     (1U)          //!< Bit field size in bits for SPI_C2_TXDMAE.
+/*@{*/
+#define BP_SPI_C2_TXDMAE     (5U)          /*!< Bit position for SPI_C2_TXDMAE. */
+#define BM_SPI_C2_TXDMAE     (0x20U)       /*!< Bit mask for SPI_C2_TXDMAE. */
+#define BS_SPI_C2_TXDMAE     (1U)          /*!< Bit field size in bits for SPI_C2_TXDMAE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_TXDMAE field.
+/*! @brief Read current value of the SPI_C2_TXDMAE field. */
 #define BR_SPI_C2_TXDMAE(x)  (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_TXDMAE, BS_SPI_C2_TXDMAE))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_TXDMAE.
-#define BF_SPI_C2_TXDMAE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_TXDMAE), uint8_t) & BM_SPI_C2_TXDMAE)
+/*! @brief Format value for bitfield SPI_C2_TXDMAE. */
+#define BF_SPI_C2_TXDMAE(v)  ((uint8_t)((uint8_t)(v) << BP_SPI_C2_TXDMAE) & BM_SPI_C2_TXDMAE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXDMAE field to a new value.
+/*! @brief Set the TXDMAE field to a new value. */
 #define BW_SPI_C2_TXDMAE(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_TXDMAE), BP_SPI_C2_TXDMAE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field SPIMODE[6] (RW)
@@ -639,24 +666,20 @@ typedef union _hw_spi_c2
  * - 0 - 8-bit SPI shift register, match register, and buffers
  * - 1 - 16-bit SPI shift register, match register, and buffers
  */
-//@{
-#define BP_SPI_C2_SPIMODE    (6U)          //!< Bit position for SPI_C2_SPIMODE.
-#define BM_SPI_C2_SPIMODE    (0x40U)       //!< Bit mask for SPI_C2_SPIMODE.
-#define BS_SPI_C2_SPIMODE    (1U)          //!< Bit field size in bits for SPI_C2_SPIMODE.
+/*@{*/
+#define BP_SPI_C2_SPIMODE    (6U)          /*!< Bit position for SPI_C2_SPIMODE. */
+#define BM_SPI_C2_SPIMODE    (0x40U)       /*!< Bit mask for SPI_C2_SPIMODE. */
+#define BS_SPI_C2_SPIMODE    (1U)          /*!< Bit field size in bits for SPI_C2_SPIMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_SPIMODE field.
+/*! @brief Read current value of the SPI_C2_SPIMODE field. */
 #define BR_SPI_C2_SPIMODE(x) (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_SPIMODE, BS_SPI_C2_SPIMODE))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_SPIMODE.
-#define BF_SPI_C2_SPIMODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_SPIMODE), uint8_t) & BM_SPI_C2_SPIMODE)
+/*! @brief Format value for bitfield SPI_C2_SPIMODE. */
+#define BF_SPI_C2_SPIMODE(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C2_SPIMODE) & BM_SPI_C2_SPIMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPIMODE field to a new value.
+/*! @brief Set the SPIMODE field to a new value. */
 #define BW_SPI_C2_SPIMODE(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_SPIMODE), BP_SPI_C2_SPIMODE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C2, field SPMIE[7] (RW)
@@ -668,30 +691,25 @@ typedef union _hw_spi_c2
  * - 0 - Interrupts from SPMF inhibited (use polling)
  * - 1 - When SPMF is 1, requests a hardware interrupt
  */
-//@{
-#define BP_SPI_C2_SPMIE      (7U)          //!< Bit position for SPI_C2_SPMIE.
-#define BM_SPI_C2_SPMIE      (0x80U)       //!< Bit mask for SPI_C2_SPMIE.
-#define BS_SPI_C2_SPMIE      (1U)          //!< Bit field size in bits for SPI_C2_SPMIE.
+/*@{*/
+#define BP_SPI_C2_SPMIE      (7U)          /*!< Bit position for SPI_C2_SPMIE. */
+#define BM_SPI_C2_SPMIE      (0x80U)       /*!< Bit mask for SPI_C2_SPMIE. */
+#define BS_SPI_C2_SPMIE      (1U)          /*!< Bit field size in bits for SPI_C2_SPMIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C2_SPMIE field.
+/*! @brief Read current value of the SPI_C2_SPMIE field. */
 #define BR_SPI_C2_SPMIE(x)   (BME_UBFX8(HW_SPI_C2_ADDR(x), BP_SPI_C2_SPMIE, BS_SPI_C2_SPMIE))
-#endif
 
-//! @brief Format value for bitfield SPI_C2_SPMIE.
-#define BF_SPI_C2_SPMIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C2_SPMIE), uint8_t) & BM_SPI_C2_SPMIE)
+/*! @brief Format value for bitfield SPI_C2_SPMIE. */
+#define BF_SPI_C2_SPMIE(v)   ((uint8_t)((uint8_t)(v) << BP_SPI_C2_SPMIE) & BM_SPI_C2_SPMIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPMIE field to a new value.
+/*! @brief Set the SPMIE field to a new value. */
 #define BW_SPI_C2_SPMIE(x, v) (BME_BFI8(HW_SPI_C2_ADDR(x), ((uint8_t)(v) << BP_SPI_C2_SPMIE), BP_SPI_C2_SPMIE, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_C1 - SPI control register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_C1 - SPI control register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_C1 - SPI control register 1 (RW)
  *
@@ -705,35 +723,32 @@ typedef union _hw_spi_c1
     uint8_t U;
     struct _hw_spi_c1_bitfields
     {
-        uint8_t LSBFE : 1;             //!< [0] LSB first (shifter direction)
-        uint8_t SSOE : 1;              //!< [1] Slave select output enable
-        uint8_t CPHA : 1;              //!< [2] Clock phase
-        uint8_t CPOL : 1;              //!< [3] Clock polarity
-        uint8_t MSTR : 1;              //!< [4] Master/slave mode select
-        uint8_t SPTIE : 1;             //!< [5] SPI transmit interrupt enable
-        uint8_t SPE : 1;               //!< [6] SPI system enable
-        uint8_t SPIE : 1;              //!< [7] SPI interrupt enable: for SPRF and MODF
-                                       //! (when FIFO is not supported or not enabled) or for read FIFO (when FIFO
-                                       //! is supported and enabled)
+        uint8_t LSBFE : 1;             /*!< [0] LSB first (shifter direction) */
+        uint8_t SSOE : 1;              /*!< [1] Slave select output enable */
+        uint8_t CPHA : 1;              /*!< [2] Clock phase */
+        uint8_t CPOL : 1;              /*!< [3] Clock polarity */
+        uint8_t MSTR : 1;              /*!< [4] Master/slave mode select */
+        uint8_t SPTIE : 1;             /*!< [5] SPI transmit interrupt enable */
+        uint8_t SPE : 1;               /*!< [6] SPI system enable */
+        uint8_t SPIE : 1;              /*!< [7] SPI interrupt enable: for SPRF and MODF
+                                        * (when FIFO is not supported or not enabled) or for read FIFO (when FIFO is
+                                        * supported and enabled) */
     } B;
 } hw_spi_c1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_C1 register
  */
-//@{
-#define HW_SPI_C1_ADDR(x)        (REGS_SPI_BASE(x) + 0x3U)
+/*@{*/
+#define HW_SPI_C1_ADDR(x)        ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_C1(x)             (*(__IO hw_spi_c1_t *) HW_SPI_C1_ADDR(x))
 #define HW_SPI_C1_RD(x)          (HW_SPI_C1(x).U)
 #define HW_SPI_C1_WR(x, v)       (HW_SPI_C1(x).U = (v))
 #define HW_SPI_C1_SET(x, v)      (BME_OR8(HW_SPI_C1_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_C1_CLR(x, v)      (BME_AND8(HW_SPI_C1_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_C1_TOG(x, v)      (BME_XOR8(HW_SPI_C1_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_C1 bitfields
@@ -750,24 +765,20 @@ typedef union _hw_spi_c1
  * - 0 - SPI serial data transfers start with most significant bit
  * - 1 - SPI serial data transfers start with least significant bit
  */
-//@{
-#define BP_SPI_C1_LSBFE      (0U)          //!< Bit position for SPI_C1_LSBFE.
-#define BM_SPI_C1_LSBFE      (0x01U)       //!< Bit mask for SPI_C1_LSBFE.
-#define BS_SPI_C1_LSBFE      (1U)          //!< Bit field size in bits for SPI_C1_LSBFE.
+/*@{*/
+#define BP_SPI_C1_LSBFE      (0U)          /*!< Bit position for SPI_C1_LSBFE. */
+#define BM_SPI_C1_LSBFE      (0x01U)       /*!< Bit mask for SPI_C1_LSBFE. */
+#define BS_SPI_C1_LSBFE      (1U)          /*!< Bit field size in bits for SPI_C1_LSBFE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_LSBFE field.
+/*! @brief Read current value of the SPI_C1_LSBFE field. */
 #define BR_SPI_C1_LSBFE(x)   (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_LSBFE, BS_SPI_C1_LSBFE))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_LSBFE.
-#define BF_SPI_C1_LSBFE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_LSBFE), uint8_t) & BM_SPI_C1_LSBFE)
+/*! @brief Format value for bitfield SPI_C1_LSBFE. */
+#define BF_SPI_C1_LSBFE(v)   ((uint8_t)((uint8_t)(v) << BP_SPI_C1_LSBFE) & BM_SPI_C1_LSBFE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LSBFE field to a new value.
+/*! @brief Set the LSBFE field to a new value. */
 #define BW_SPI_C1_LSBFE(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_LSBFE), BP_SPI_C1_LSBFE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field SSOE[1] (RW)
@@ -786,24 +797,20 @@ typedef union _hw_spi_c1
  *     MODFEN is 1: In master mode, SS pin function is automatic SS output. In
  *     slave mode: SS pin function is slave select input.
  */
-//@{
-#define BP_SPI_C1_SSOE       (1U)          //!< Bit position for SPI_C1_SSOE.
-#define BM_SPI_C1_SSOE       (0x02U)       //!< Bit mask for SPI_C1_SSOE.
-#define BS_SPI_C1_SSOE       (1U)          //!< Bit field size in bits for SPI_C1_SSOE.
+/*@{*/
+#define BP_SPI_C1_SSOE       (1U)          /*!< Bit position for SPI_C1_SSOE. */
+#define BM_SPI_C1_SSOE       (0x02U)       /*!< Bit mask for SPI_C1_SSOE. */
+#define BS_SPI_C1_SSOE       (1U)          /*!< Bit field size in bits for SPI_C1_SSOE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_SSOE field.
+/*! @brief Read current value of the SPI_C1_SSOE field. */
 #define BR_SPI_C1_SSOE(x)    (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_SSOE, BS_SPI_C1_SSOE))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_SSOE.
-#define BF_SPI_C1_SSOE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_SSOE), uint8_t) & BM_SPI_C1_SSOE)
+/*! @brief Format value for bitfield SPI_C1_SSOE. */
+#define BF_SPI_C1_SSOE(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C1_SSOE) & BM_SPI_C1_SSOE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSOE field to a new value.
+/*! @brief Set the SSOE field to a new value. */
 #define BW_SPI_C1_SSOE(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_SSOE), BP_SPI_C1_SSOE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field CPHA[2] (RW)
@@ -818,24 +825,20 @@ typedef union _hw_spi_c1
  * - 1 - First edge on SPSCK occurs at the start of the first cycle of a data
  *     transfer
  */
-//@{
-#define BP_SPI_C1_CPHA       (2U)          //!< Bit position for SPI_C1_CPHA.
-#define BM_SPI_C1_CPHA       (0x04U)       //!< Bit mask for SPI_C1_CPHA.
-#define BS_SPI_C1_CPHA       (1U)          //!< Bit field size in bits for SPI_C1_CPHA.
+/*@{*/
+#define BP_SPI_C1_CPHA       (2U)          /*!< Bit position for SPI_C1_CPHA. */
+#define BM_SPI_C1_CPHA       (0x04U)       /*!< Bit mask for SPI_C1_CPHA. */
+#define BS_SPI_C1_CPHA       (1U)          /*!< Bit field size in bits for SPI_C1_CPHA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_CPHA field.
+/*! @brief Read current value of the SPI_C1_CPHA field. */
 #define BR_SPI_C1_CPHA(x)    (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_CPHA, BS_SPI_C1_CPHA))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_CPHA.
-#define BF_SPI_C1_CPHA(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_CPHA), uint8_t) & BM_SPI_C1_CPHA)
+/*! @brief Format value for bitfield SPI_C1_CPHA. */
+#define BF_SPI_C1_CPHA(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C1_CPHA) & BM_SPI_C1_CPHA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CPHA field to a new value.
+/*! @brief Set the CPHA field to a new value. */
 #define BW_SPI_C1_CPHA(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_CPHA), BP_SPI_C1_CPHA, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field CPOL[3] (RW)
@@ -850,24 +853,20 @@ typedef union _hw_spi_c1
  * - 0 - Active-high SPI clock (idles low)
  * - 1 - Active-low SPI clock (idles high)
  */
-//@{
-#define BP_SPI_C1_CPOL       (3U)          //!< Bit position for SPI_C1_CPOL.
-#define BM_SPI_C1_CPOL       (0x08U)       //!< Bit mask for SPI_C1_CPOL.
-#define BS_SPI_C1_CPOL       (1U)          //!< Bit field size in bits for SPI_C1_CPOL.
+/*@{*/
+#define BP_SPI_C1_CPOL       (3U)          /*!< Bit position for SPI_C1_CPOL. */
+#define BM_SPI_C1_CPOL       (0x08U)       /*!< Bit mask for SPI_C1_CPOL. */
+#define BS_SPI_C1_CPOL       (1U)          /*!< Bit field size in bits for SPI_C1_CPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_CPOL field.
+/*! @brief Read current value of the SPI_C1_CPOL field. */
 #define BR_SPI_C1_CPOL(x)    (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_CPOL, BS_SPI_C1_CPOL))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_CPOL.
-#define BF_SPI_C1_CPOL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_CPOL), uint8_t) & BM_SPI_C1_CPOL)
+/*! @brief Format value for bitfield SPI_C1_CPOL. */
+#define BF_SPI_C1_CPOL(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C1_CPOL) & BM_SPI_C1_CPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CPOL field to a new value.
+/*! @brief Set the CPOL field to a new value. */
 #define BW_SPI_C1_CPOL(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_CPOL), BP_SPI_C1_CPOL, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field MSTR[4] (RW)
@@ -878,24 +877,20 @@ typedef union _hw_spi_c1
  * - 0 - SPI module configured as a slave SPI device
  * - 1 - SPI module configured as a master SPI device
  */
-//@{
-#define BP_SPI_C1_MSTR       (4U)          //!< Bit position for SPI_C1_MSTR.
-#define BM_SPI_C1_MSTR       (0x10U)       //!< Bit mask for SPI_C1_MSTR.
-#define BS_SPI_C1_MSTR       (1U)          //!< Bit field size in bits for SPI_C1_MSTR.
+/*@{*/
+#define BP_SPI_C1_MSTR       (4U)          /*!< Bit position for SPI_C1_MSTR. */
+#define BM_SPI_C1_MSTR       (0x10U)       /*!< Bit mask for SPI_C1_MSTR. */
+#define BS_SPI_C1_MSTR       (1U)          /*!< Bit field size in bits for SPI_C1_MSTR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_MSTR field.
+/*! @brief Read current value of the SPI_C1_MSTR field. */
 #define BR_SPI_C1_MSTR(x)    (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_MSTR, BS_SPI_C1_MSTR))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_MSTR.
-#define BF_SPI_C1_MSTR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_MSTR), uint8_t) & BM_SPI_C1_MSTR)
+/*! @brief Format value for bitfield SPI_C1_MSTR. */
+#define BF_SPI_C1_MSTR(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C1_MSTR) & BM_SPI_C1_MSTR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSTR field to a new value.
+/*! @brief Set the MSTR field to a new value. */
 #define BW_SPI_C1_MSTR(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_MSTR), BP_SPI_C1_MSTR, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field SPTIE[5] (RW)
@@ -911,24 +906,20 @@ typedef union _hw_spi_c1
  * - 0 - Interrupts from SPTEF inhibited (use polling)
  * - 1 - When SPTEF is 1, hardware interrupt requested
  */
-//@{
-#define BP_SPI_C1_SPTIE      (5U)          //!< Bit position for SPI_C1_SPTIE.
-#define BM_SPI_C1_SPTIE      (0x20U)       //!< Bit mask for SPI_C1_SPTIE.
-#define BS_SPI_C1_SPTIE      (1U)          //!< Bit field size in bits for SPI_C1_SPTIE.
+/*@{*/
+#define BP_SPI_C1_SPTIE      (5U)          /*!< Bit position for SPI_C1_SPTIE. */
+#define BM_SPI_C1_SPTIE      (0x20U)       /*!< Bit mask for SPI_C1_SPTIE. */
+#define BS_SPI_C1_SPTIE      (1U)          /*!< Bit field size in bits for SPI_C1_SPTIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_SPTIE field.
+/*! @brief Read current value of the SPI_C1_SPTIE field. */
 #define BR_SPI_C1_SPTIE(x)   (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_SPTIE, BS_SPI_C1_SPTIE))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_SPTIE.
-#define BF_SPI_C1_SPTIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_SPTIE), uint8_t) & BM_SPI_C1_SPTIE)
+/*! @brief Format value for bitfield SPI_C1_SPTIE. */
+#define BF_SPI_C1_SPTIE(v)   ((uint8_t)((uint8_t)(v) << BP_SPI_C1_SPTIE) & BM_SPI_C1_SPTIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPTIE field to a new value.
+/*! @brief Set the SPTIE field to a new value. */
 #define BW_SPI_C1_SPTIE(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_SPTIE), BP_SPI_C1_SPTIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field SPE[6] (RW)
@@ -941,24 +932,20 @@ typedef union _hw_spi_c1
  * - 0 - SPI system inactive
  * - 1 - SPI system enabled
  */
-//@{
-#define BP_SPI_C1_SPE        (6U)          //!< Bit position for SPI_C1_SPE.
-#define BM_SPI_C1_SPE        (0x40U)       //!< Bit mask for SPI_C1_SPE.
-#define BS_SPI_C1_SPE        (1U)          //!< Bit field size in bits for SPI_C1_SPE.
+/*@{*/
+#define BP_SPI_C1_SPE        (6U)          /*!< Bit position for SPI_C1_SPE. */
+#define BM_SPI_C1_SPE        (0x40U)       /*!< Bit mask for SPI_C1_SPE. */
+#define BS_SPI_C1_SPE        (1U)          /*!< Bit field size in bits for SPI_C1_SPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_SPE field.
+/*! @brief Read current value of the SPI_C1_SPE field. */
 #define BR_SPI_C1_SPE(x)     (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_SPE, BS_SPI_C1_SPE))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_SPE.
-#define BF_SPI_C1_SPE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_SPE), uint8_t) & BM_SPI_C1_SPE)
+/*! @brief Format value for bitfield SPI_C1_SPE. */
+#define BF_SPI_C1_SPE(v)     ((uint8_t)((uint8_t)(v) << BP_SPI_C1_SPE) & BM_SPI_C1_SPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPE field to a new value.
+/*! @brief Set the SPE field to a new value. */
 #define BW_SPI_C1_SPE(x, v)  (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_SPE), BP_SPI_C1_SPE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register SPI_C1, field SPIE[7] (RW)
@@ -977,30 +964,25 @@ typedef union _hw_spi_c1
  *     not present or is 0) or Read FIFO Full Interrupts are enabled (when
  *     FIFOMODE is 1)
  */
-//@{
-#define BP_SPI_C1_SPIE       (7U)          //!< Bit position for SPI_C1_SPIE.
-#define BM_SPI_C1_SPIE       (0x80U)       //!< Bit mask for SPI_C1_SPIE.
-#define BS_SPI_C1_SPIE       (1U)          //!< Bit field size in bits for SPI_C1_SPIE.
+/*@{*/
+#define BP_SPI_C1_SPIE       (7U)          /*!< Bit position for SPI_C1_SPIE. */
+#define BM_SPI_C1_SPIE       (0x80U)       /*!< Bit mask for SPI_C1_SPIE. */
+#define BS_SPI_C1_SPIE       (1U)          /*!< Bit field size in bits for SPI_C1_SPIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_C1_SPIE field.
+/*! @brief Read current value of the SPI_C1_SPIE field. */
 #define BR_SPI_C1_SPIE(x)    (BME_UBFX8(HW_SPI_C1_ADDR(x), BP_SPI_C1_SPIE, BS_SPI_C1_SPIE))
-#endif
 
-//! @brief Format value for bitfield SPI_C1_SPIE.
-#define BF_SPI_C1_SPIE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_C1_SPIE), uint8_t) & BM_SPI_C1_SPIE)
+/*! @brief Format value for bitfield SPI_C1_SPIE. */
+#define BF_SPI_C1_SPIE(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_C1_SPIE) & BM_SPI_C1_SPIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPIE field to a new value.
+/*! @brief Set the SPIE field to a new value. */
 #define BW_SPI_C1_SPIE(x, v) (BME_BFI8(HW_SPI_C1_ADDR(x), ((uint8_t)(v) << BP_SPI_C1_SPIE), BP_SPI_C1_SPIE, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_ML - SPI match register low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_ML - SPI match register low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_ML - SPI match register low (RW)
  *
@@ -1021,26 +1003,23 @@ typedef union _hw_spi_ml
     uint8_t U;
     struct _hw_spi_ml_bitfields
     {
-        uint8_t Bits : 8;              //!< [7:0] Hardware compare value (low byte)
+        uint8_t Bits : 8;              /*!< [7:0] Hardware compare value (low byte) */
     } B;
 } hw_spi_ml_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_ML register
  */
-//@{
-#define HW_SPI_ML_ADDR(x)        (REGS_SPI_BASE(x) + 0x4U)
+/*@{*/
+#define HW_SPI_ML_ADDR(x)        ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_ML(x)             (*(__IO hw_spi_ml_t *) HW_SPI_ML_ADDR(x))
 #define HW_SPI_ML_RD(x)          (HW_SPI_ML(x).U)
 #define HW_SPI_ML_WR(x, v)       (HW_SPI_ML(x).U = (v))
 #define HW_SPI_ML_SET(x, v)      (BME_OR8(HW_SPI_ML_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_ML_CLR(x, v)      (BME_AND8(HW_SPI_ML_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_ML_TOG(x, v)      (BME_XOR8(HW_SPI_ML_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_ML bitfields
@@ -1049,30 +1028,25 @@ typedef union _hw_spi_ml
 /*!
  * @name Register SPI_ML, field Bits[7:0] (RW)
  */
-//@{
-#define BP_SPI_ML_Bits       (0U)          //!< Bit position for SPI_ML_Bits.
-#define BM_SPI_ML_Bits       (0xFFU)       //!< Bit mask for SPI_ML_Bits.
-#define BS_SPI_ML_Bits       (8U)          //!< Bit field size in bits for SPI_ML_Bits.
+/*@{*/
+#define BP_SPI_ML_Bits       (0U)          /*!< Bit position for SPI_ML_Bits. */
+#define BM_SPI_ML_Bits       (0xFFU)       /*!< Bit mask for SPI_ML_Bits. */
+#define BS_SPI_ML_Bits       (8U)          /*!< Bit field size in bits for SPI_ML_Bits. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_ML_Bits field.
-#define BR_SPI_ML_Bits(x)    (BME_UBFX8(HW_SPI_ML_ADDR(x), BP_SPI_ML_Bits, BS_SPI_ML_Bits))
-#endif
+/*! @brief Read current value of the SPI_ML_Bits field. */
+#define BR_SPI_ML_Bits(x)    (HW_SPI_ML(x).U)
 
-//! @brief Format value for bitfield SPI_ML_Bits.
-#define BF_SPI_ML_Bits(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_ML_Bits), uint8_t) & BM_SPI_ML_Bits)
+/*! @brief Format value for bitfield SPI_ML_Bits. */
+#define BF_SPI_ML_Bits(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_ML_Bits) & BM_SPI_ML_Bits)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the Bits field to a new value.
-#define BW_SPI_ML_Bits(x, v) (BME_BFI8(HW_SPI_ML_ADDR(x), ((uint8_t)(v) << BP_SPI_ML_Bits), BP_SPI_ML_Bits, 8))
-#endif
-//@}
+/*! @brief Set the Bits field to a new value. */
+#define BW_SPI_ML_Bits(x, v) (HW_SPI_ML_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_MH - SPI match register high
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_MH - SPI match register high
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_MH - SPI match register high (RW)
  *
@@ -1085,26 +1059,23 @@ typedef union _hw_spi_mh
     uint8_t U;
     struct _hw_spi_mh_bitfields
     {
-        uint8_t Bits : 8;              //!< [7:0] Hardware compare value (high byte)
+        uint8_t Bits : 8;              /*!< [7:0] Hardware compare value (high byte) */
     } B;
 } hw_spi_mh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_MH register
  */
-//@{
-#define HW_SPI_MH_ADDR(x)        (REGS_SPI_BASE(x) + 0x5U)
+/*@{*/
+#define HW_SPI_MH_ADDR(x)        ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_MH(x)             (*(__IO hw_spi_mh_t *) HW_SPI_MH_ADDR(x))
 #define HW_SPI_MH_RD(x)          (HW_SPI_MH(x).U)
 #define HW_SPI_MH_WR(x, v)       (HW_SPI_MH(x).U = (v))
 #define HW_SPI_MH_SET(x, v)      (BME_OR8(HW_SPI_MH_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_MH_CLR(x, v)      (BME_AND8(HW_SPI_MH_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_MH_TOG(x, v)      (BME_XOR8(HW_SPI_MH_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_MH bitfields
@@ -1113,30 +1084,25 @@ typedef union _hw_spi_mh
 /*!
  * @name Register SPI_MH, field Bits[7:0] (RW)
  */
-//@{
-#define BP_SPI_MH_Bits       (0U)          //!< Bit position for SPI_MH_Bits.
-#define BM_SPI_MH_Bits       (0xFFU)       //!< Bit mask for SPI_MH_Bits.
-#define BS_SPI_MH_Bits       (8U)          //!< Bit field size in bits for SPI_MH_Bits.
+/*@{*/
+#define BP_SPI_MH_Bits       (0U)          /*!< Bit position for SPI_MH_Bits. */
+#define BM_SPI_MH_Bits       (0xFFU)       /*!< Bit mask for SPI_MH_Bits. */
+#define BS_SPI_MH_Bits       (8U)          /*!< Bit field size in bits for SPI_MH_Bits. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_MH_Bits field.
-#define BR_SPI_MH_Bits(x)    (BME_UBFX8(HW_SPI_MH_ADDR(x), BP_SPI_MH_Bits, BS_SPI_MH_Bits))
-#endif
+/*! @brief Read current value of the SPI_MH_Bits field. */
+#define BR_SPI_MH_Bits(x)    (HW_SPI_MH(x).U)
 
-//! @brief Format value for bitfield SPI_MH_Bits.
-#define BF_SPI_MH_Bits(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_MH_Bits), uint8_t) & BM_SPI_MH_Bits)
+/*! @brief Format value for bitfield SPI_MH_Bits. */
+#define BF_SPI_MH_Bits(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_MH_Bits) & BM_SPI_MH_Bits)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the Bits field to a new value.
-#define BW_SPI_MH_Bits(x, v) (BME_BFI8(HW_SPI_MH_ADDR(x), ((uint8_t)(v) << BP_SPI_MH_Bits), BP_SPI_MH_Bits, 8))
-#endif
-//@}
+/*! @brief Set the Bits field to a new value. */
+#define BW_SPI_MH_Bits(x, v) (HW_SPI_MH_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_DL - SPI data register low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_DL - SPI data register low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_DL - SPI data register low (RW)
  *
@@ -1173,26 +1139,23 @@ typedef union _hw_spi_dl
     uint8_t U;
     struct _hw_spi_dl_bitfields
     {
-        uint8_t Bits : 8;              //!< [7:0] Data (low byte)
+        uint8_t Bits : 8;              /*!< [7:0] Data (low byte) */
     } B;
 } hw_spi_dl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_DL register
  */
-//@{
-#define HW_SPI_DL_ADDR(x)        (REGS_SPI_BASE(x) + 0x6U)
+/*@{*/
+#define HW_SPI_DL_ADDR(x)        ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_DL(x)             (*(__IO hw_spi_dl_t *) HW_SPI_DL_ADDR(x))
 #define HW_SPI_DL_RD(x)          (HW_SPI_DL(x).U)
 #define HW_SPI_DL_WR(x, v)       (HW_SPI_DL(x).U = (v))
 #define HW_SPI_DL_SET(x, v)      (BME_OR8(HW_SPI_DL_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_DL_CLR(x, v)      (BME_AND8(HW_SPI_DL_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_DL_TOG(x, v)      (BME_XOR8(HW_SPI_DL_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_DL bitfields
@@ -1201,30 +1164,25 @@ typedef union _hw_spi_dl
 /*!
  * @name Register SPI_DL, field Bits[7:0] (RW)
  */
-//@{
-#define BP_SPI_DL_Bits       (0U)          //!< Bit position for SPI_DL_Bits.
-#define BM_SPI_DL_Bits       (0xFFU)       //!< Bit mask for SPI_DL_Bits.
-#define BS_SPI_DL_Bits       (8U)          //!< Bit field size in bits for SPI_DL_Bits.
+/*@{*/
+#define BP_SPI_DL_Bits       (0U)          /*!< Bit position for SPI_DL_Bits. */
+#define BM_SPI_DL_Bits       (0xFFU)       /*!< Bit mask for SPI_DL_Bits. */
+#define BS_SPI_DL_Bits       (8U)          /*!< Bit field size in bits for SPI_DL_Bits. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_DL_Bits field.
-#define BR_SPI_DL_Bits(x)    (BME_UBFX8(HW_SPI_DL_ADDR(x), BP_SPI_DL_Bits, BS_SPI_DL_Bits))
-#endif
+/*! @brief Read current value of the SPI_DL_Bits field. */
+#define BR_SPI_DL_Bits(x)    (HW_SPI_DL(x).U)
 
-//! @brief Format value for bitfield SPI_DL_Bits.
-#define BF_SPI_DL_Bits(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_DL_Bits), uint8_t) & BM_SPI_DL_Bits)
+/*! @brief Format value for bitfield SPI_DL_Bits. */
+#define BF_SPI_DL_Bits(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_DL_Bits) & BM_SPI_DL_Bits)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the Bits field to a new value.
-#define BW_SPI_DL_Bits(x, v) (BME_BFI8(HW_SPI_DL_ADDR(x), ((uint8_t)(v) << BP_SPI_DL_Bits), BP_SPI_DL_Bits, 8))
-#endif
-//@}
+/*! @brief Set the Bits field to a new value. */
+#define BW_SPI_DL_Bits(x, v) (HW_SPI_DL_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SPI_DH - SPI data register high
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_DH - SPI data register high
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SPI_DH - SPI data register high (RW)
  *
@@ -1237,26 +1195,23 @@ typedef union _hw_spi_dh
     uint8_t U;
     struct _hw_spi_dh_bitfields
     {
-        uint8_t Bits : 8;              //!< [7:0] Data (high byte)
+        uint8_t Bits : 8;              /*!< [7:0] Data (high byte) */
     } B;
 } hw_spi_dh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SPI_DH register
  */
-//@{
-#define HW_SPI_DH_ADDR(x)        (REGS_SPI_BASE(x) + 0x7U)
+/*@{*/
+#define HW_SPI_DH_ADDR(x)        ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_SPI_DH(x)             (*(__IO hw_spi_dh_t *) HW_SPI_DH_ADDR(x))
 #define HW_SPI_DH_RD(x)          (HW_SPI_DH(x).U)
 #define HW_SPI_DH_WR(x, v)       (HW_SPI_DH(x).U = (v))
 #define HW_SPI_DH_SET(x, v)      (BME_OR8(HW_SPI_DH_ADDR(x), (uint8_t)(v)))
 #define HW_SPI_DH_CLR(x, v)      (BME_AND8(HW_SPI_DH_ADDR(x), (uint8_t)(~(v))))
 #define HW_SPI_DH_TOG(x, v)      (BME_XOR8(HW_SPI_DH_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual SPI_DH bitfields
@@ -1265,53 +1220,467 @@ typedef union _hw_spi_dh
 /*!
  * @name Register SPI_DH, field Bits[7:0] (RW)
  */
-//@{
-#define BP_SPI_DH_Bits       (0U)          //!< Bit position for SPI_DH_Bits.
-#define BM_SPI_DH_Bits       (0xFFU)       //!< Bit mask for SPI_DH_Bits.
-#define BS_SPI_DH_Bits       (8U)          //!< Bit field size in bits for SPI_DH_Bits.
+/*@{*/
+#define BP_SPI_DH_Bits       (0U)          /*!< Bit position for SPI_DH_Bits. */
+#define BM_SPI_DH_Bits       (0xFFU)       /*!< Bit mask for SPI_DH_Bits. */
+#define BS_SPI_DH_Bits       (8U)          /*!< Bit field size in bits for SPI_DH_Bits. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SPI_DH_Bits field.
-#define BR_SPI_DH_Bits(x)    (BME_UBFX8(HW_SPI_DH_ADDR(x), BP_SPI_DH_Bits, BS_SPI_DH_Bits))
-#endif
+/*! @brief Read current value of the SPI_DH_Bits field. */
+#define BR_SPI_DH_Bits(x)    (HW_SPI_DH(x).U)
 
-//! @brief Format value for bitfield SPI_DH_Bits.
-#define BF_SPI_DH_Bits(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_SPI_DH_Bits), uint8_t) & BM_SPI_DH_Bits)
+/*! @brief Format value for bitfield SPI_DH_Bits. */
+#define BF_SPI_DH_Bits(v)    ((uint8_t)((uint8_t)(v) << BP_SPI_DH_Bits) & BM_SPI_DH_Bits)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the Bits field to a new value.
-#define BW_SPI_DH_Bits(x, v) (BME_BFI8(HW_SPI_DH_ADDR(x), ((uint8_t)(v) << BP_SPI_DH_Bits), BP_SPI_DH_Bits, 8))
-#endif
-//@}
+/*! @brief Set the Bits field to a new value. */
+#define BW_SPI_DH_Bits(x, v) (HW_SPI_DH_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_spi_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SPI_CI - SPI clear interrupt register
+ ******************************************************************************/
+
+/*!
+ * @brief HW_SPI_CI - SPI clear interrupt register (RW)
+ *
+ * Reset value: 0x00U
+ *
+ * This register applies only for an instance of the SPI module that supports
+ * the FIFO feature. The register has four bits dedicated to clearing the
+ * interrupts. Writing 1 to these bits clears the corresponding interrupts if the INTCLR
+ * bit in the C3 register is 1. Reading these bits always returns 0. This register
+ * also has two read-only bits to indicate the transmit FIFO and receive FIFO
+ * overrun conditions. When the receive FIFO is full and data is received, RXFOF is
+ * set. Similarily, when the transmit FIFO is full and a write to the data
+ * register occurs, TXFOF is set. These flags are cleared when the CI register is read
+ * while the flags are set. The register has two more read-only bits to indicate
+ * the error flags. These flags are set when, due to some spurious reason,
+ * entries in the FIFO total more than 64 bits of data. At this point, all the flags
+ * in the status register are reset, and entries in the FIFO are flushed with the
+ * corresponding error flags set. These flags are cleared when the CI register is
+ * read while the flags are set.
+ */
+typedef union _hw_spi_ci
+{
+    uint8_t U;
+    struct _hw_spi_ci_bitfields
+    {
+        uint8_t SPRFCI : 1;            /*!< [0] Receive FIFO full flag clear interrupt */
+        uint8_t SPTEFCI : 1;           /*!< [1] Transmit FIFO empty flag clear
+                                        * interrupt */
+        uint8_t RNFULLFCI : 1;         /*!< [2] Receive FIFO nearly full flag clear
+                                        * interrupt */
+        uint8_t TNEAREFCI : 1;         /*!< [3] Transmit FIFO nearly empty flag clear
+                                        * interrupt */
+        uint8_t RXFOF : 1;             /*!< [4] Receive FIFO overflow flag */
+        uint8_t TXFOF : 1;             /*!< [5] Transmit FIFO overflow flag */
+        uint8_t RXFERR : 1;            /*!< [6] Receive FIFO error flag */
+        uint8_t TXFERR : 1;            /*!< [7] Transmit FIFO error flag */
+    } B;
+} hw_spi_ci_t;
+
+/*!
+ * @name Constants and macros for entire SPI_CI register
+ */
+/*@{*/
+#define HW_SPI_CI_ADDR(x)        ((x) + 0xAU)
+
+#define HW_SPI_CI(x)             (*(__IO hw_spi_ci_t *) HW_SPI_CI_ADDR(x))
+#define HW_SPI_CI_RD(x)          (HW_SPI_CI(x).U)
+#define HW_SPI_CI_WR(x, v)       (HW_SPI_CI(x).U = (v))
+#define HW_SPI_CI_SET(x, v)      (BME_OR8(HW_SPI_CI_ADDR(x), (uint8_t)(v)))
+#define HW_SPI_CI_CLR(x, v)      (BME_AND8(HW_SPI_CI_ADDR(x), (uint8_t)(~(v))))
+#define HW_SPI_CI_TOG(x, v)      (BME_XOR8(HW_SPI_CI_ADDR(x), (uint8_t)(v)))
+/*@}*/
+
+/*
+ * Constants & macros for individual SPI_CI bitfields
+ */
+
+/*!
+ * @name Register SPI_CI, field SPRFCI[0] (WORZ)
+ *
+ * Writing 1 to this bit clears the SPRF interrupt provided that C3[3] is set.
+ */
+/*@{*/
+#define BP_SPI_CI_SPRFCI     (0U)          /*!< Bit position for SPI_CI_SPRFCI. */
+#define BM_SPI_CI_SPRFCI     (0x01U)       /*!< Bit mask for SPI_CI_SPRFCI. */
+#define BS_SPI_CI_SPRFCI     (1U)          /*!< Bit field size in bits for SPI_CI_SPRFCI. */
+
+/*! @brief Format value for bitfield SPI_CI_SPRFCI. */
+#define BF_SPI_CI_SPRFCI(v)  ((uint8_t)((uint8_t)(v) << BP_SPI_CI_SPRFCI) & BM_SPI_CI_SPRFCI)
+
+/*! @brief Set the SPRFCI field to a new value. */
+#define BW_SPI_CI_SPRFCI(x, v) (BME_BFI8(HW_SPI_CI_ADDR(x), ((uint8_t)(v) << BP_SPI_CI_SPRFCI), BP_SPI_CI_SPRFCI, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field SPTEFCI[1] (WORZ)
+ *
+ * Writing 1 to this bit clears the SPTEF interrupt provided that C3[3] is set.
+ */
+/*@{*/
+#define BP_SPI_CI_SPTEFCI    (1U)          /*!< Bit position for SPI_CI_SPTEFCI. */
+#define BM_SPI_CI_SPTEFCI    (0x02U)       /*!< Bit mask for SPI_CI_SPTEFCI. */
+#define BS_SPI_CI_SPTEFCI    (1U)          /*!< Bit field size in bits for SPI_CI_SPTEFCI. */
+
+/*! @brief Format value for bitfield SPI_CI_SPTEFCI. */
+#define BF_SPI_CI_SPTEFCI(v) ((uint8_t)((uint8_t)(v) << BP_SPI_CI_SPTEFCI) & BM_SPI_CI_SPTEFCI)
+
+/*! @brief Set the SPTEFCI field to a new value. */
+#define BW_SPI_CI_SPTEFCI(x, v) (BME_BFI8(HW_SPI_CI_ADDR(x), ((uint8_t)(v) << BP_SPI_CI_SPTEFCI), BP_SPI_CI_SPTEFCI, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field RNFULLFCI[2] (WORZ)
+ *
+ * Writing 1 to this bit clears the RNFULLF interrupt provided that C3[3] is set.
+ */
+/*@{*/
+#define BP_SPI_CI_RNFULLFCI  (2U)          /*!< Bit position for SPI_CI_RNFULLFCI. */
+#define BM_SPI_CI_RNFULLFCI  (0x04U)       /*!< Bit mask for SPI_CI_RNFULLFCI. */
+#define BS_SPI_CI_RNFULLFCI  (1U)          /*!< Bit field size in bits for SPI_CI_RNFULLFCI. */
+
+/*! @brief Format value for bitfield SPI_CI_RNFULLFCI. */
+#define BF_SPI_CI_RNFULLFCI(v) ((uint8_t)((uint8_t)(v) << BP_SPI_CI_RNFULLFCI) & BM_SPI_CI_RNFULLFCI)
+
+/*! @brief Set the RNFULLFCI field to a new value. */
+#define BW_SPI_CI_RNFULLFCI(x, v) (BME_BFI8(HW_SPI_CI_ADDR(x), ((uint8_t)(v) << BP_SPI_CI_RNFULLFCI), BP_SPI_CI_RNFULLFCI, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field TNEAREFCI[3] (WORZ)
+ *
+ * Writing 1 to this bit clears the TNEAREF interrupt provided that C3[3] is set.
+ */
+/*@{*/
+#define BP_SPI_CI_TNEAREFCI  (3U)          /*!< Bit position for SPI_CI_TNEAREFCI. */
+#define BM_SPI_CI_TNEAREFCI  (0x08U)       /*!< Bit mask for SPI_CI_TNEAREFCI. */
+#define BS_SPI_CI_TNEAREFCI  (1U)          /*!< Bit field size in bits for SPI_CI_TNEAREFCI. */
+
+/*! @brief Format value for bitfield SPI_CI_TNEAREFCI. */
+#define BF_SPI_CI_TNEAREFCI(v) ((uint8_t)((uint8_t)(v) << BP_SPI_CI_TNEAREFCI) & BM_SPI_CI_TNEAREFCI)
+
+/*! @brief Set the TNEAREFCI field to a new value. */
+#define BW_SPI_CI_TNEAREFCI(x, v) (BME_BFI8(HW_SPI_CI_ADDR(x), ((uint8_t)(v) << BP_SPI_CI_TNEAREFCI), BP_SPI_CI_TNEAREFCI, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field RXFOF[4] (RO)
+ *
+ * This flag indicates that a receive FIFO overflow condition has occurred.
+ *
+ * Values:
+ * - 0 - Receive FIFO overflow condition has not occurred
+ * - 1 - Receive FIFO overflow condition occurred
+ */
+/*@{*/
+#define BP_SPI_CI_RXFOF      (4U)          /*!< Bit position for SPI_CI_RXFOF. */
+#define BM_SPI_CI_RXFOF      (0x10U)       /*!< Bit mask for SPI_CI_RXFOF. */
+#define BS_SPI_CI_RXFOF      (1U)          /*!< Bit field size in bits for SPI_CI_RXFOF. */
+
+/*! @brief Read current value of the SPI_CI_RXFOF field. */
+#define BR_SPI_CI_RXFOF(x)   (BME_UBFX8(HW_SPI_CI_ADDR(x), BP_SPI_CI_RXFOF, BS_SPI_CI_RXFOF))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field TXFOF[5] (RO)
+ *
+ * This flag indicates that a transmit FIFO overflow condition has occurred.
+ *
+ * Values:
+ * - 0 - Transmit FIFO overflow condition has not occurred
+ * - 1 - Transmit FIFO overflow condition occurred
+ */
+/*@{*/
+#define BP_SPI_CI_TXFOF      (5U)          /*!< Bit position for SPI_CI_TXFOF. */
+#define BM_SPI_CI_TXFOF      (0x20U)       /*!< Bit mask for SPI_CI_TXFOF. */
+#define BS_SPI_CI_TXFOF      (1U)          /*!< Bit field size in bits for SPI_CI_TXFOF. */
+
+/*! @brief Read current value of the SPI_CI_TXFOF field. */
+#define BR_SPI_CI_TXFOF(x)   (BME_UBFX8(HW_SPI_CI_ADDR(x), BP_SPI_CI_TXFOF, BS_SPI_CI_TXFOF))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field RXFERR[6] (RO)
+ *
+ * This flag indicates that a receive FIFO error occurred because entries in the
+ * FIFO total more than 64 bits of data.
+ *
+ * Values:
+ * - 0 - No receive FIFO error occurred
+ * - 1 - A receive FIFO error occurred
+ */
+/*@{*/
+#define BP_SPI_CI_RXFERR     (6U)          /*!< Bit position for SPI_CI_RXFERR. */
+#define BM_SPI_CI_RXFERR     (0x40U)       /*!< Bit mask for SPI_CI_RXFERR. */
+#define BS_SPI_CI_RXFERR     (1U)          /*!< Bit field size in bits for SPI_CI_RXFERR. */
+
+/*! @brief Read current value of the SPI_CI_RXFERR field. */
+#define BR_SPI_CI_RXFERR(x)  (BME_UBFX8(HW_SPI_CI_ADDR(x), BP_SPI_CI_RXFERR, BS_SPI_CI_RXFERR))
+/*@}*/
+
+/*!
+ * @name Register SPI_CI, field TXFERR[7] (RO)
+ *
+ * This flag indicates that a transmit FIFO error occurred because entries in
+ * the FIFO total more than 64 bits of data.
+ *
+ * Values:
+ * - 0 - No transmit FIFO error occurred
+ * - 1 - A transmit FIFO error occurred
+ */
+/*@{*/
+#define BP_SPI_CI_TXFERR     (7U)          /*!< Bit position for SPI_CI_TXFERR. */
+#define BM_SPI_CI_TXFERR     (0x80U)       /*!< Bit mask for SPI_CI_TXFERR. */
+#define BS_SPI_CI_TXFERR     (1U)          /*!< Bit field size in bits for SPI_CI_TXFERR. */
+
+/*! @brief Read current value of the SPI_CI_TXFERR field. */
+#define BR_SPI_CI_TXFERR(x)  (BME_UBFX8(HW_SPI_CI_ADDR(x), BP_SPI_CI_TXFERR, BS_SPI_CI_TXFERR))
+/*@}*/
+
+/*******************************************************************************
+ * HW_SPI_C3 - SPI control register 3
+ ******************************************************************************/
+
+/*!
+ * @brief HW_SPI_C3 - SPI control register 3 (RW)
+ *
+ * Reset value: 0x00U
+ *
+ * This register introduces a 64-bit FIFO function on both transmit and receive
+ * buffers. It applies only for an instance of the SPI module that supports the
+ * FIFO feature. FIFO mode is enabled by setting the FIFOMODE bit to 1. A write to
+ * this register occurs only when it sets the FIFOMODE bit to 1. Using this FIFO
+ * feature allows the SPI to provide high speed transfers of large amounts of
+ * data without consuming large amounts of the CPU bandwidth. Enabling this FIFO
+ * function affects the behavior of some of the read/write buffer flags in the S
+ * register as follows: The SPRF of the S register is 1 when the receive FIFO is
+ * filled. As a result: If the RXDMAE bit in the C2 register is 1, SPRF generates a
+ * receive DMA request. If the RXDMAE bit in the C2 register is 0 and the SPIE
+ * bit in the C1 register is 1, SPRF interrupts the CPU. The SPTEF of the S
+ * register is 1 when the transmit FIFO is empty. As a result: If the TXDMAE bit in the
+ * C2 register is 1, SPTEF generates a transmit DMA request. If the TXDMAE bit
+ * in the C2 register is 0 and the SPTIE bit in the C1 register is 1, SPTEF
+ * interrupts the CPU. Two interrupt enable bits, TNEARIEN and RNFULLIEN, provide CPU
+ * interrupts based on the "watermark" feature of the TNEARF and RNFULLF flags of
+ * the S register.
+ */
+typedef union _hw_spi_c3
+{
+    uint8_t U;
+    struct _hw_spi_c3_bitfields
+    {
+        uint8_t FIFOMODE : 1;          /*!< [0] FIFO mode enable */
+        uint8_t RNFULLIEN : 1;         /*!< [1] Receive FIFO nearly full interrupt
+                                        * enable */
+        uint8_t TNEARIEN : 1;          /*!< [2] Transmit FIFO nearly empty interrupt
+                                        * enable */
+        uint8_t INTCLR : 1;            /*!< [3] Interrupt clearing mechanism select */
+        uint8_t RNFULLF_MARK : 1;      /*!< [4] Receive FIFO nearly full watermark
+                                        * */
+        uint8_t TNEAREF_MARK : 1;      /*!< [5] Transmit FIFO nearly empty
+                                        * watermark */
+        uint8_t RESERVED0 : 2;         /*!< [7:6]  */
+    } B;
+} hw_spi_c3_t;
+
+/*!
+ * @name Constants and macros for entire SPI_C3 register
+ */
+/*@{*/
+#define HW_SPI_C3_ADDR(x)        ((x) + 0xBU)
+
+#define HW_SPI_C3(x)             (*(__IO hw_spi_c3_t *) HW_SPI_C3_ADDR(x))
+#define HW_SPI_C3_RD(x)          (HW_SPI_C3(x).U)
+#define HW_SPI_C3_WR(x, v)       (HW_SPI_C3(x).U = (v))
+#define HW_SPI_C3_SET(x, v)      (BME_OR8(HW_SPI_C3_ADDR(x), (uint8_t)(v)))
+#define HW_SPI_C3_CLR(x, v)      (BME_AND8(HW_SPI_C3_ADDR(x), (uint8_t)(~(v))))
+#define HW_SPI_C3_TOG(x, v)      (BME_XOR8(HW_SPI_C3_ADDR(x), (uint8_t)(v)))
+/*@}*/
+
+/*
+ * Constants & macros for individual SPI_C3 bitfields
+ */
+
+/*!
+ * @name Register SPI_C3, field FIFOMODE[0] (RW)
+ *
+ * This bit enables the SPI to use a 64-bit FIFO (8 bytes or four 16-bit words)
+ * for both transmit and receive buffers.
+ *
+ * Values:
+ * - 0 - Buffer mode disabled
+ * - 1 - Data available in the receive data buffer
+ */
+/*@{*/
+#define BP_SPI_C3_FIFOMODE   (0U)          /*!< Bit position for SPI_C3_FIFOMODE. */
+#define BM_SPI_C3_FIFOMODE   (0x01U)       /*!< Bit mask for SPI_C3_FIFOMODE. */
+#define BS_SPI_C3_FIFOMODE   (1U)          /*!< Bit field size in bits for SPI_C3_FIFOMODE. */
+
+/*! @brief Read current value of the SPI_C3_FIFOMODE field. */
+#define BR_SPI_C3_FIFOMODE(x) (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_FIFOMODE, BS_SPI_C3_FIFOMODE))
+
+/*! @brief Format value for bitfield SPI_C3_FIFOMODE. */
+#define BF_SPI_C3_FIFOMODE(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C3_FIFOMODE) & BM_SPI_C3_FIFOMODE)
+
+/*! @brief Set the FIFOMODE field to a new value. */
+#define BW_SPI_C3_FIFOMODE(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_FIFOMODE), BP_SPI_C3_FIFOMODE, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_C3, field RNFULLIEN[1] (RW)
+ *
+ * Writing 1 to this bit enables the SPI to interrupt the CPU when the RNFULLF
+ * flag is set. This bit is ignored and has no function if the FIFOMODE bit is 0.
+ *
+ * Values:
+ * - 0 - No interrupt upon RNFULLF being set
+ * - 1 - Enable interrupts upon RNFULLF being set
+ */
+/*@{*/
+#define BP_SPI_C3_RNFULLIEN  (1U)          /*!< Bit position for SPI_C3_RNFULLIEN. */
+#define BM_SPI_C3_RNFULLIEN  (0x02U)       /*!< Bit mask for SPI_C3_RNFULLIEN. */
+#define BS_SPI_C3_RNFULLIEN  (1U)          /*!< Bit field size in bits for SPI_C3_RNFULLIEN. */
+
+/*! @brief Read current value of the SPI_C3_RNFULLIEN field. */
+#define BR_SPI_C3_RNFULLIEN(x) (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_RNFULLIEN, BS_SPI_C3_RNFULLIEN))
+
+/*! @brief Format value for bitfield SPI_C3_RNFULLIEN. */
+#define BF_SPI_C3_RNFULLIEN(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C3_RNFULLIEN) & BM_SPI_C3_RNFULLIEN)
+
+/*! @brief Set the RNFULLIEN field to a new value. */
+#define BW_SPI_C3_RNFULLIEN(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_RNFULLIEN), BP_SPI_C3_RNFULLIEN, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_C3, field TNEARIEN[2] (RW)
+ *
+ * Writing 1 to this bit enables the SPI to interrupt the CPU when the TNEAREF
+ * flag is set. This bit is ignored and has no function if the FIFOMODE bit is 0.
+ *
+ * Values:
+ * - 0 - No interrupt upon TNEAREF being set
+ * - 1 - Enable interrupts upon TNEAREF being set
+ */
+/*@{*/
+#define BP_SPI_C3_TNEARIEN   (2U)          /*!< Bit position for SPI_C3_TNEARIEN. */
+#define BM_SPI_C3_TNEARIEN   (0x04U)       /*!< Bit mask for SPI_C3_TNEARIEN. */
+#define BS_SPI_C3_TNEARIEN   (1U)          /*!< Bit field size in bits for SPI_C3_TNEARIEN. */
+
+/*! @brief Read current value of the SPI_C3_TNEARIEN field. */
+#define BR_SPI_C3_TNEARIEN(x) (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_TNEARIEN, BS_SPI_C3_TNEARIEN))
+
+/*! @brief Format value for bitfield SPI_C3_TNEARIEN. */
+#define BF_SPI_C3_TNEARIEN(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C3_TNEARIEN) & BM_SPI_C3_TNEARIEN)
+
+/*! @brief Set the TNEARIEN field to a new value. */
+#define BW_SPI_C3_TNEARIEN(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_TNEARIEN), BP_SPI_C3_TNEARIEN, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_C3, field INTCLR[3] (RW)
+ *
+ * This bit selects the mechanism by which the SPRF, SPTEF, TNEAREF, and RNFULLF
+ * interrupts are cleared.
+ *
+ * Values:
+ * - 0 - These interrupts are cleared when the corresponding flags are cleared
+ *     depending on the state of the FIFOs
+ * - 1 - These interrupts are cleared by writing the corresponding bits in the
+ *     CI register
+ */
+/*@{*/
+#define BP_SPI_C3_INTCLR     (3U)          /*!< Bit position for SPI_C3_INTCLR. */
+#define BM_SPI_C3_INTCLR     (0x08U)       /*!< Bit mask for SPI_C3_INTCLR. */
+#define BS_SPI_C3_INTCLR     (1U)          /*!< Bit field size in bits for SPI_C3_INTCLR. */
+
+/*! @brief Read current value of the SPI_C3_INTCLR field. */
+#define BR_SPI_C3_INTCLR(x)  (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_INTCLR, BS_SPI_C3_INTCLR))
+
+/*! @brief Format value for bitfield SPI_C3_INTCLR. */
+#define BF_SPI_C3_INTCLR(v)  ((uint8_t)((uint8_t)(v) << BP_SPI_C3_INTCLR) & BM_SPI_C3_INTCLR)
+
+/*! @brief Set the INTCLR field to a new value. */
+#define BW_SPI_C3_INTCLR(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_INTCLR), BP_SPI_C3_INTCLR, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_C3, field RNFULLF_MARK[4] (RW)
+ *
+ * This bit selects the mark after which the RNFULLF flag is asserted.
+ *
+ * Values:
+ * - 0 - RNFULLF is set when the receive FIFO has 48 bits or more
+ * - 1 - RNFULLF is set when the receive FIFO has 32 bits or more
+ */
+/*@{*/
+#define BP_SPI_C3_RNFULLF_MARK (4U)        /*!< Bit position for SPI_C3_RNFULLF_MARK. */
+#define BM_SPI_C3_RNFULLF_MARK (0x10U)     /*!< Bit mask for SPI_C3_RNFULLF_MARK. */
+#define BS_SPI_C3_RNFULLF_MARK (1U)        /*!< Bit field size in bits for SPI_C3_RNFULLF_MARK. */
+
+/*! @brief Read current value of the SPI_C3_RNFULLF_MARK field. */
+#define BR_SPI_C3_RNFULLF_MARK(x) (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_RNFULLF_MARK, BS_SPI_C3_RNFULLF_MARK))
+
+/*! @brief Format value for bitfield SPI_C3_RNFULLF_MARK. */
+#define BF_SPI_C3_RNFULLF_MARK(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C3_RNFULLF_MARK) & BM_SPI_C3_RNFULLF_MARK)
+
+/*! @brief Set the RNFULLF_MARK field to a new value. */
+#define BW_SPI_C3_RNFULLF_MARK(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_RNFULLF_MARK), BP_SPI_C3_RNFULLF_MARK, 1))
+/*@}*/
+
+/*!
+ * @name Register SPI_C3, field TNEAREF_MARK[5] (RW)
+ *
+ * This bit selects the mark after which the TNEAREF flag is asserted.
+ *
+ * Values:
+ * - 0 - TNEAREF is set when the transmit FIFO has 16 bits or less
+ * - 1 - TNEAREF is set when the transmit FIFO has 32 bits or less
+ */
+/*@{*/
+#define BP_SPI_C3_TNEAREF_MARK (5U)        /*!< Bit position for SPI_C3_TNEAREF_MARK. */
+#define BM_SPI_C3_TNEAREF_MARK (0x20U)     /*!< Bit mask for SPI_C3_TNEAREF_MARK. */
+#define BS_SPI_C3_TNEAREF_MARK (1U)        /*!< Bit field size in bits for SPI_C3_TNEAREF_MARK. */
+
+/*! @brief Read current value of the SPI_C3_TNEAREF_MARK field. */
+#define BR_SPI_C3_TNEAREF_MARK(x) (BME_UBFX8(HW_SPI_C3_ADDR(x), BP_SPI_C3_TNEAREF_MARK, BS_SPI_C3_TNEAREF_MARK))
+
+/*! @brief Format value for bitfield SPI_C3_TNEAREF_MARK. */
+#define BF_SPI_C3_TNEAREF_MARK(v) ((uint8_t)((uint8_t)(v) << BP_SPI_C3_TNEAREF_MARK) & BM_SPI_C3_TNEAREF_MARK)
+
+/*! @brief Set the TNEAREF_MARK field to a new value. */
+#define BW_SPI_C3_TNEAREF_MARK(x, v) (BME_BFI8(HW_SPI_C3_ADDR(x), ((uint8_t)(v) << BP_SPI_C3_TNEAREF_MARK), BP_SPI_C3_TNEAREF_MARK, 1))
+/*@}*/
+
+/*******************************************************************************
+ * hw_spi_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All SPI module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_spi
 {
-    __I hw_spi_s_t S;                      //!< [0x0] SPI status register
-    __IO hw_spi_br_t BR;                   //!< [0x1] SPI baud rate register
-    __IO hw_spi_c2_t C2;                   //!< [0x2] SPI control register 2
-    __IO hw_spi_c1_t C1;                   //!< [0x3] SPI control register 1
-    __IO hw_spi_ml_t ML;                   //!< [0x4] SPI match register low
-    __IO hw_spi_mh_t MH;                   //!< [0x5] SPI match register high
-    __IO hw_spi_dl_t DL;                   //!< [0x6] SPI data register low
-    __IO hw_spi_dh_t DH;                   //!< [0x7] SPI data register high
+    __I hw_spi_s_t S;                      /*!< [0x0] SPI status register */
+    __IO hw_spi_br_t BR;                   /*!< [0x1] SPI baud rate register */
+    __IO hw_spi_c2_t C2;                   /*!< [0x2] SPI control register 2 */
+    __IO hw_spi_c1_t C1;                   /*!< [0x3] SPI control register 1 */
+    __IO hw_spi_ml_t ML;                   /*!< [0x4] SPI match register low */
+    __IO hw_spi_mh_t MH;                   /*!< [0x5] SPI match register high */
+    __IO hw_spi_dl_t DL;                   /*!< [0x6] SPI data register low */
+    __IO hw_spi_dh_t DH;                   /*!< [0x7] SPI data register high */
+    uint8_t _reserved0[2];
+    __IO hw_spi_ci_t CI;                   /*!< [0xA] SPI clear interrupt register */
+    __IO hw_spi_c3_t C3;                   /*!< [0xB] SPI control register 3 */
 } hw_spi_t;
 #pragma pack()
 
-//! @brief Macro to access all SPI registers.
-//! @param x SPI instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_SPI(0)</code>.
-#define HW_SPI(x)      (*(hw_spi_t *) REGS_SPI_BASE(x))
-#endif
+/*! @brief Macro to access all SPI registers. */
+/*! @param x SPI module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_SPI(SPI0_BASE)</code>. */
+#define HW_SPI(x)      (*(hw_spi_t *)(x))
 
-#endif // __HW_SPI_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_SPI_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

@@ -21,7 +21,8 @@
 #ifndef __HW_AIPS_REGISTERS_H__
 #define __HW_AIPS_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 AIPS
@@ -50,36 +51,14 @@
  * - hw_aips_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_AIPS_BASE
-#define HW_AIPS_INSTANCE_COUNT (2U) //!< Number of instances of the AIPS module.
-#define HW_AIPS0 (0U) //!< Instance number for AIPS0.
-#define HW_AIPS1 (1U) //!< Instance number for AIPS1.
-#define REGS_AIPS0_BASE (0x40000000U) //!< Base address for AIPS0.
-#define REGS_AIPS1_BASE (0x40080000U) //!< Base address for AIPS1.
+#define HW_AIPS_INSTANCE_COUNT (2U) /*!< Number of instances of the AIPS module. */
+#define HW_AIPS0 (0U) /*!< Instance number for AIPS0. */
+#define HW_AIPS1 (1U) /*!< Instance number for AIPS1. */
 
-//! @brief Table of base addresses for AIPS instances.
-static const uint32_t __g_regs_AIPS_base_addresses[] = {
-        REGS_AIPS0_BASE,
-        REGS_AIPS1_BASE,
-    };
+/*******************************************************************************
+ * HW_AIPS_MPRA - Master Privilege Register A
+ ******************************************************************************/
 
-//! @brief Get the base address of AIPS by instance number.
-//! @param x AIPS instance number, from 0 through 1.
-#define REGS_AIPS_BASE(x) (__g_regs_AIPS_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of AIPS.
-#define REGS_AIPS_INSTANCE(b) ((b) == REGS_AIPS0_BASE ? HW_AIPS0 : (b) == REGS_AIPS1_BASE ? HW_AIPS1 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_MPRA - Master Privilege Register A
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_MPRA - Master Privilege Register A (RW)
  *
@@ -101,57 +80,54 @@ typedef union _hw_aips_mpra
     uint32_t U;
     struct _hw_aips_mpra_bitfields
     {
-        uint32_t MPL7 : 1;             //!< [0] Master privilege level
-        uint32_t MTW7 : 1;             //!< [1] Master trusted for writes
-        uint32_t MTR7 : 1;             //!< [2] Master trusted for read
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t MPL6 : 1;             //!< [4] Master privilege level
-        uint32_t MTW6 : 1;             //!< [5] Master trusted for writes
-        uint32_t MTR6 : 1;             //!< [6] Master trusted for read
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t MPL5 : 1;             //!< [8] Master privilege level
-        uint32_t MTW5 : 1;             //!< [9] Master trusted for writes
-        uint32_t MTR5 : 1;             //!< [10] Master trusted for read
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t MPL4 : 1;             //!< [12] Master privilege level
-        uint32_t MTW4 : 1;             //!< [13] Master trusted for writes
-        uint32_t MTR4 : 1;             //!< [14] Master trusted for read
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t MPL3 : 1;             //!< [16] Master privilege level
-        uint32_t MTW3 : 1;             //!< [17] Master trusted for writes
-        uint32_t MTR3 : 1;             //!< [18] Master trusted for read
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t MPL2 : 1;             //!< [20] Master privilege level
-        uint32_t MTW2 : 1;             //!< [21] Master trusted for writes
-        uint32_t MTR2 : 1;             //!< [22] Master trusted for read
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t MPL1 : 1;             //!< [24] Master privilege level
-        uint32_t MTW1 : 1;             //!< [25] Master trusted for writes
-        uint32_t MTR1 : 1;             //!< [26] Master trusted for read
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t MPL0 : 1;             //!< [28] Master privilege level
-        uint32_t MTW0 : 1;             //!< [29] Master trusted for writes
-        uint32_t MTR0 : 1;             //!< [30] Master trusted for read
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t MPL7 : 1;             /*!< [0] Master privilege level */
+        uint32_t MTW7 : 1;             /*!< [1] Master trusted for writes */
+        uint32_t MTR7 : 1;             /*!< [2] Master trusted for read */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t MPL6 : 1;             /*!< [4] Master privilege level */
+        uint32_t MTW6 : 1;             /*!< [5] Master trusted for writes */
+        uint32_t MTR6 : 1;             /*!< [6] Master trusted for read */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t MPL5 : 1;             /*!< [8] Master privilege level */
+        uint32_t MTW5 : 1;             /*!< [9] Master trusted for writes */
+        uint32_t MTR5 : 1;             /*!< [10] Master trusted for read */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t MPL4 : 1;             /*!< [12] Master privilege level */
+        uint32_t MTW4 : 1;             /*!< [13] Master trusted for writes */
+        uint32_t MTR4 : 1;             /*!< [14] Master trusted for read */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t MPL3 : 1;             /*!< [16] Master privilege level */
+        uint32_t MTW3 : 1;             /*!< [17] Master trusted for writes */
+        uint32_t MTR3 : 1;             /*!< [18] Master trusted for read */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t MPL2 : 1;             /*!< [20] Master privilege level */
+        uint32_t MTW2 : 1;             /*!< [21] Master trusted for writes */
+        uint32_t MTR2 : 1;             /*!< [22] Master trusted for read */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t MPL1 : 1;             /*!< [24] Master privilege level */
+        uint32_t MTW1 : 1;             /*!< [25] Master trusted for writes */
+        uint32_t MTR1 : 1;             /*!< [26] Master trusted for read */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t MPL0 : 1;             /*!< [28] Master privilege level */
+        uint32_t MTW0 : 1;             /*!< [29] Master trusted for writes */
+        uint32_t MTR0 : 1;             /*!< [30] Master trusted for read */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_mpra_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_MPRA register
  */
-//@{
-#define HW_AIPS_MPRA_ADDR(x)     (REGS_AIPS_BASE(x) + 0x0U)
+/*@{*/
+#define HW_AIPS_MPRA_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_MPRA(x)          (*(__IO hw_aips_mpra_t *) HW_AIPS_MPRA_ADDR(x))
 #define HW_AIPS_MPRA_RD(x)       (HW_AIPS_MPRA(x).U)
 #define HW_AIPS_MPRA_WR(x, v)    (HW_AIPS_MPRA(x).U = (v))
 #define HW_AIPS_MPRA_SET(x, v)   (HW_AIPS_MPRA_WR(x, HW_AIPS_MPRA_RD(x) |  (v)))
 #define HW_AIPS_MPRA_CLR(x, v)   (HW_AIPS_MPRA_WR(x, HW_AIPS_MPRA_RD(x) & ~(v)))
 #define HW_AIPS_MPRA_TOG(x, v)   (HW_AIPS_MPRA_WR(x, HW_AIPS_MPRA_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_MPRA bitfields
@@ -166,24 +142,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL7    (0U)          //!< Bit position for AIPS_MPRA_MPL7.
-#define BM_AIPS_MPRA_MPL7    (0x00000001U) //!< Bit mask for AIPS_MPRA_MPL7.
-#define BS_AIPS_MPRA_MPL7    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL7.
+/*@{*/
+#define BP_AIPS_MPRA_MPL7    (0U)          /*!< Bit position for AIPS_MPRA_MPL7. */
+#define BM_AIPS_MPRA_MPL7    (0x00000001U) /*!< Bit mask for AIPS_MPRA_MPL7. */
+#define BS_AIPS_MPRA_MPL7    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL7 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL7 field. */
 #define BR_AIPS_MPRA_MPL7(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL7))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL7.
-#define BF_AIPS_MPRA_MPL7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL7), uint32_t) & BM_AIPS_MPRA_MPL7)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL7. */
+#define BF_AIPS_MPRA_MPL7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL7) & BM_AIPS_MPRA_MPL7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL7 field to a new value.
+/*! @brief Set the MPL7 field to a new value. */
 #define BW_AIPS_MPRA_MPL7(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW7[1] (RW)
@@ -194,24 +166,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW7    (1U)          //!< Bit position for AIPS_MPRA_MTW7.
-#define BM_AIPS_MPRA_MTW7    (0x00000002U) //!< Bit mask for AIPS_MPRA_MTW7.
-#define BS_AIPS_MPRA_MTW7    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW7.
+/*@{*/
+#define BP_AIPS_MPRA_MTW7    (1U)          /*!< Bit position for AIPS_MPRA_MTW7. */
+#define BM_AIPS_MPRA_MTW7    (0x00000002U) /*!< Bit mask for AIPS_MPRA_MTW7. */
+#define BS_AIPS_MPRA_MTW7    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW7 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW7 field. */
 #define BR_AIPS_MPRA_MTW7(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW7))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW7.
-#define BF_AIPS_MPRA_MTW7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW7), uint32_t) & BM_AIPS_MPRA_MTW7)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW7. */
+#define BF_AIPS_MPRA_MTW7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW7) & BM_AIPS_MPRA_MTW7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW7 field to a new value.
+/*! @brief Set the MTW7 field to a new value. */
 #define BW_AIPS_MPRA_MTW7(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR7[2] (RW)
@@ -222,24 +190,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR7    (2U)          //!< Bit position for AIPS_MPRA_MTR7.
-#define BM_AIPS_MPRA_MTR7    (0x00000004U) //!< Bit mask for AIPS_MPRA_MTR7.
-#define BS_AIPS_MPRA_MTR7    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR7.
+/*@{*/
+#define BP_AIPS_MPRA_MTR7    (2U)          /*!< Bit position for AIPS_MPRA_MTR7. */
+#define BM_AIPS_MPRA_MTR7    (0x00000004U) /*!< Bit mask for AIPS_MPRA_MTR7. */
+#define BS_AIPS_MPRA_MTR7    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR7 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR7 field. */
 #define BR_AIPS_MPRA_MTR7(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR7))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR7.
-#define BF_AIPS_MPRA_MTR7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR7), uint32_t) & BM_AIPS_MPRA_MTR7)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR7. */
+#define BF_AIPS_MPRA_MTR7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR7) & BM_AIPS_MPRA_MTR7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR7 field to a new value.
+/*! @brief Set the MTR7 field to a new value. */
 #define BW_AIPS_MPRA_MTR7(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL6[4] (RW)
@@ -250,24 +214,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL6    (4U)          //!< Bit position for AIPS_MPRA_MPL6.
-#define BM_AIPS_MPRA_MPL6    (0x00000010U) //!< Bit mask for AIPS_MPRA_MPL6.
-#define BS_AIPS_MPRA_MPL6    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL6.
+/*@{*/
+#define BP_AIPS_MPRA_MPL6    (4U)          /*!< Bit position for AIPS_MPRA_MPL6. */
+#define BM_AIPS_MPRA_MPL6    (0x00000010U) /*!< Bit mask for AIPS_MPRA_MPL6. */
+#define BS_AIPS_MPRA_MPL6    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL6 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL6 field. */
 #define BR_AIPS_MPRA_MPL6(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL6))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL6.
-#define BF_AIPS_MPRA_MPL6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL6), uint32_t) & BM_AIPS_MPRA_MPL6)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL6. */
+#define BF_AIPS_MPRA_MPL6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL6) & BM_AIPS_MPRA_MPL6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL6 field to a new value.
+/*! @brief Set the MPL6 field to a new value. */
 #define BW_AIPS_MPRA_MPL6(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW6[5] (RW)
@@ -278,24 +238,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW6    (5U)          //!< Bit position for AIPS_MPRA_MTW6.
-#define BM_AIPS_MPRA_MTW6    (0x00000020U) //!< Bit mask for AIPS_MPRA_MTW6.
-#define BS_AIPS_MPRA_MTW6    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW6.
+/*@{*/
+#define BP_AIPS_MPRA_MTW6    (5U)          /*!< Bit position for AIPS_MPRA_MTW6. */
+#define BM_AIPS_MPRA_MTW6    (0x00000020U) /*!< Bit mask for AIPS_MPRA_MTW6. */
+#define BS_AIPS_MPRA_MTW6    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW6 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW6 field. */
 #define BR_AIPS_MPRA_MTW6(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW6))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW6.
-#define BF_AIPS_MPRA_MTW6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW6), uint32_t) & BM_AIPS_MPRA_MTW6)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW6. */
+#define BF_AIPS_MPRA_MTW6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW6) & BM_AIPS_MPRA_MTW6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW6 field to a new value.
+/*! @brief Set the MTW6 field to a new value. */
 #define BW_AIPS_MPRA_MTW6(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR6[6] (RW)
@@ -306,24 +262,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR6    (6U)          //!< Bit position for AIPS_MPRA_MTR6.
-#define BM_AIPS_MPRA_MTR6    (0x00000040U) //!< Bit mask for AIPS_MPRA_MTR6.
-#define BS_AIPS_MPRA_MTR6    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR6.
+/*@{*/
+#define BP_AIPS_MPRA_MTR6    (6U)          /*!< Bit position for AIPS_MPRA_MTR6. */
+#define BM_AIPS_MPRA_MTR6    (0x00000040U) /*!< Bit mask for AIPS_MPRA_MTR6. */
+#define BS_AIPS_MPRA_MTR6    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR6 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR6 field. */
 #define BR_AIPS_MPRA_MTR6(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR6))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR6.
-#define BF_AIPS_MPRA_MTR6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR6), uint32_t) & BM_AIPS_MPRA_MTR6)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR6. */
+#define BF_AIPS_MPRA_MTR6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR6) & BM_AIPS_MPRA_MTR6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR6 field to a new value.
+/*! @brief Set the MTR6 field to a new value. */
 #define BW_AIPS_MPRA_MTR6(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL5[8] (RW)
@@ -334,24 +286,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL5    (8U)          //!< Bit position for AIPS_MPRA_MPL5.
-#define BM_AIPS_MPRA_MPL5    (0x00000100U) //!< Bit mask for AIPS_MPRA_MPL5.
-#define BS_AIPS_MPRA_MPL5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL5.
+/*@{*/
+#define BP_AIPS_MPRA_MPL5    (8U)          /*!< Bit position for AIPS_MPRA_MPL5. */
+#define BM_AIPS_MPRA_MPL5    (0x00000100U) /*!< Bit mask for AIPS_MPRA_MPL5. */
+#define BS_AIPS_MPRA_MPL5    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL5 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL5 field. */
 #define BR_AIPS_MPRA_MPL5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL5))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL5.
-#define BF_AIPS_MPRA_MPL5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL5), uint32_t) & BM_AIPS_MPRA_MPL5)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL5. */
+#define BF_AIPS_MPRA_MPL5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL5) & BM_AIPS_MPRA_MPL5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL5 field to a new value.
+/*! @brief Set the MPL5 field to a new value. */
 #define BW_AIPS_MPRA_MPL5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW5[9] (RW)
@@ -362,24 +310,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW5    (9U)          //!< Bit position for AIPS_MPRA_MTW5.
-#define BM_AIPS_MPRA_MTW5    (0x00000200U) //!< Bit mask for AIPS_MPRA_MTW5.
-#define BS_AIPS_MPRA_MTW5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW5.
+/*@{*/
+#define BP_AIPS_MPRA_MTW5    (9U)          /*!< Bit position for AIPS_MPRA_MTW5. */
+#define BM_AIPS_MPRA_MTW5    (0x00000200U) /*!< Bit mask for AIPS_MPRA_MTW5. */
+#define BS_AIPS_MPRA_MTW5    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW5 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW5 field. */
 #define BR_AIPS_MPRA_MTW5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW5))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW5.
-#define BF_AIPS_MPRA_MTW5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW5), uint32_t) & BM_AIPS_MPRA_MTW5)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW5. */
+#define BF_AIPS_MPRA_MTW5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW5) & BM_AIPS_MPRA_MTW5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW5 field to a new value.
+/*! @brief Set the MTW5 field to a new value. */
 #define BW_AIPS_MPRA_MTW5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR5[10] (RW)
@@ -390,24 +334,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR5    (10U)         //!< Bit position for AIPS_MPRA_MTR5.
-#define BM_AIPS_MPRA_MTR5    (0x00000400U) //!< Bit mask for AIPS_MPRA_MTR5.
-#define BS_AIPS_MPRA_MTR5    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR5.
+/*@{*/
+#define BP_AIPS_MPRA_MTR5    (10U)         /*!< Bit position for AIPS_MPRA_MTR5. */
+#define BM_AIPS_MPRA_MTR5    (0x00000400U) /*!< Bit mask for AIPS_MPRA_MTR5. */
+#define BS_AIPS_MPRA_MTR5    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR5 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR5 field. */
 #define BR_AIPS_MPRA_MTR5(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR5))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR5.
-#define BF_AIPS_MPRA_MTR5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR5), uint32_t) & BM_AIPS_MPRA_MTR5)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR5. */
+#define BF_AIPS_MPRA_MTR5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR5) & BM_AIPS_MPRA_MTR5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR5 field to a new value.
+/*! @brief Set the MTR5 field to a new value. */
 #define BW_AIPS_MPRA_MTR5(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL4[12] (RW)
@@ -418,24 +358,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL4    (12U)         //!< Bit position for AIPS_MPRA_MPL4.
-#define BM_AIPS_MPRA_MPL4    (0x00001000U) //!< Bit mask for AIPS_MPRA_MPL4.
-#define BS_AIPS_MPRA_MPL4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL4.
+/*@{*/
+#define BP_AIPS_MPRA_MPL4    (12U)         /*!< Bit position for AIPS_MPRA_MPL4. */
+#define BM_AIPS_MPRA_MPL4    (0x00001000U) /*!< Bit mask for AIPS_MPRA_MPL4. */
+#define BS_AIPS_MPRA_MPL4    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL4 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL4 field. */
 #define BR_AIPS_MPRA_MPL4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL4))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL4.
-#define BF_AIPS_MPRA_MPL4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL4), uint32_t) & BM_AIPS_MPRA_MPL4)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL4. */
+#define BF_AIPS_MPRA_MPL4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL4) & BM_AIPS_MPRA_MPL4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL4 field to a new value.
+/*! @brief Set the MPL4 field to a new value. */
 #define BW_AIPS_MPRA_MPL4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW4[13] (RW)
@@ -446,24 +382,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW4    (13U)         //!< Bit position for AIPS_MPRA_MTW4.
-#define BM_AIPS_MPRA_MTW4    (0x00002000U) //!< Bit mask for AIPS_MPRA_MTW4.
-#define BS_AIPS_MPRA_MTW4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW4.
+/*@{*/
+#define BP_AIPS_MPRA_MTW4    (13U)         /*!< Bit position for AIPS_MPRA_MTW4. */
+#define BM_AIPS_MPRA_MTW4    (0x00002000U) /*!< Bit mask for AIPS_MPRA_MTW4. */
+#define BS_AIPS_MPRA_MTW4    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW4 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW4 field. */
 #define BR_AIPS_MPRA_MTW4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW4))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW4.
-#define BF_AIPS_MPRA_MTW4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW4), uint32_t) & BM_AIPS_MPRA_MTW4)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW4. */
+#define BF_AIPS_MPRA_MTW4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW4) & BM_AIPS_MPRA_MTW4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW4 field to a new value.
+/*! @brief Set the MTW4 field to a new value. */
 #define BW_AIPS_MPRA_MTW4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR4[14] (RW)
@@ -474,24 +406,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR4    (14U)         //!< Bit position for AIPS_MPRA_MTR4.
-#define BM_AIPS_MPRA_MTR4    (0x00004000U) //!< Bit mask for AIPS_MPRA_MTR4.
-#define BS_AIPS_MPRA_MTR4    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR4.
+/*@{*/
+#define BP_AIPS_MPRA_MTR4    (14U)         /*!< Bit position for AIPS_MPRA_MTR4. */
+#define BM_AIPS_MPRA_MTR4    (0x00004000U) /*!< Bit mask for AIPS_MPRA_MTR4. */
+#define BS_AIPS_MPRA_MTR4    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR4 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR4 field. */
 #define BR_AIPS_MPRA_MTR4(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR4))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR4.
-#define BF_AIPS_MPRA_MTR4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR4), uint32_t) & BM_AIPS_MPRA_MTR4)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR4. */
+#define BF_AIPS_MPRA_MTR4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR4) & BM_AIPS_MPRA_MTR4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR4 field to a new value.
+/*! @brief Set the MTR4 field to a new value. */
 #define BW_AIPS_MPRA_MTR4(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL3[16] (RW)
@@ -502,24 +430,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL3    (16U)         //!< Bit position for AIPS_MPRA_MPL3.
-#define BM_AIPS_MPRA_MPL3    (0x00010000U) //!< Bit mask for AIPS_MPRA_MPL3.
-#define BS_AIPS_MPRA_MPL3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL3.
+/*@{*/
+#define BP_AIPS_MPRA_MPL3    (16U)         /*!< Bit position for AIPS_MPRA_MPL3. */
+#define BM_AIPS_MPRA_MPL3    (0x00010000U) /*!< Bit mask for AIPS_MPRA_MPL3. */
+#define BS_AIPS_MPRA_MPL3    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL3 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL3 field. */
 #define BR_AIPS_MPRA_MPL3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL3))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL3.
-#define BF_AIPS_MPRA_MPL3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL3), uint32_t) & BM_AIPS_MPRA_MPL3)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL3. */
+#define BF_AIPS_MPRA_MPL3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL3) & BM_AIPS_MPRA_MPL3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL3 field to a new value.
+/*! @brief Set the MPL3 field to a new value. */
 #define BW_AIPS_MPRA_MPL3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW3[17] (RW)
@@ -530,24 +454,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW3    (17U)         //!< Bit position for AIPS_MPRA_MTW3.
-#define BM_AIPS_MPRA_MTW3    (0x00020000U) //!< Bit mask for AIPS_MPRA_MTW3.
-#define BS_AIPS_MPRA_MTW3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW3.
+/*@{*/
+#define BP_AIPS_MPRA_MTW3    (17U)         /*!< Bit position for AIPS_MPRA_MTW3. */
+#define BM_AIPS_MPRA_MTW3    (0x00020000U) /*!< Bit mask for AIPS_MPRA_MTW3. */
+#define BS_AIPS_MPRA_MTW3    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW3 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW3 field. */
 #define BR_AIPS_MPRA_MTW3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW3))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW3.
-#define BF_AIPS_MPRA_MTW3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW3), uint32_t) & BM_AIPS_MPRA_MTW3)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW3. */
+#define BF_AIPS_MPRA_MTW3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW3) & BM_AIPS_MPRA_MTW3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW3 field to a new value.
+/*! @brief Set the MTW3 field to a new value. */
 #define BW_AIPS_MPRA_MTW3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR3[18] (RW)
@@ -558,24 +478,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR3    (18U)         //!< Bit position for AIPS_MPRA_MTR3.
-#define BM_AIPS_MPRA_MTR3    (0x00040000U) //!< Bit mask for AIPS_MPRA_MTR3.
-#define BS_AIPS_MPRA_MTR3    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR3.
+/*@{*/
+#define BP_AIPS_MPRA_MTR3    (18U)         /*!< Bit position for AIPS_MPRA_MTR3. */
+#define BM_AIPS_MPRA_MTR3    (0x00040000U) /*!< Bit mask for AIPS_MPRA_MTR3. */
+#define BS_AIPS_MPRA_MTR3    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR3 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR3 field. */
 #define BR_AIPS_MPRA_MTR3(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR3))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR3.
-#define BF_AIPS_MPRA_MTR3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR3), uint32_t) & BM_AIPS_MPRA_MTR3)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR3. */
+#define BF_AIPS_MPRA_MTR3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR3) & BM_AIPS_MPRA_MTR3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR3 field to a new value.
+/*! @brief Set the MTR3 field to a new value. */
 #define BW_AIPS_MPRA_MTR3(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL2[20] (RW)
@@ -586,24 +502,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL2    (20U)         //!< Bit position for AIPS_MPRA_MPL2.
-#define BM_AIPS_MPRA_MPL2    (0x00100000U) //!< Bit mask for AIPS_MPRA_MPL2.
-#define BS_AIPS_MPRA_MPL2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL2.
+/*@{*/
+#define BP_AIPS_MPRA_MPL2    (20U)         /*!< Bit position for AIPS_MPRA_MPL2. */
+#define BM_AIPS_MPRA_MPL2    (0x00100000U) /*!< Bit mask for AIPS_MPRA_MPL2. */
+#define BS_AIPS_MPRA_MPL2    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL2 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL2 field. */
 #define BR_AIPS_MPRA_MPL2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL2))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL2.
-#define BF_AIPS_MPRA_MPL2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL2), uint32_t) & BM_AIPS_MPRA_MPL2)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL2. */
+#define BF_AIPS_MPRA_MPL2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL2) & BM_AIPS_MPRA_MPL2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL2 field to a new value.
+/*! @brief Set the MPL2 field to a new value. */
 #define BW_AIPS_MPRA_MPL2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW2[21] (RW)
@@ -614,24 +526,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW2    (21U)         //!< Bit position for AIPS_MPRA_MTW2.
-#define BM_AIPS_MPRA_MTW2    (0x00200000U) //!< Bit mask for AIPS_MPRA_MTW2.
-#define BS_AIPS_MPRA_MTW2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW2.
+/*@{*/
+#define BP_AIPS_MPRA_MTW2    (21U)         /*!< Bit position for AIPS_MPRA_MTW2. */
+#define BM_AIPS_MPRA_MTW2    (0x00200000U) /*!< Bit mask for AIPS_MPRA_MTW2. */
+#define BS_AIPS_MPRA_MTW2    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW2 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW2 field. */
 #define BR_AIPS_MPRA_MTW2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW2))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW2.
-#define BF_AIPS_MPRA_MTW2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW2), uint32_t) & BM_AIPS_MPRA_MTW2)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW2. */
+#define BF_AIPS_MPRA_MTW2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW2) & BM_AIPS_MPRA_MTW2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW2 field to a new value.
+/*! @brief Set the MTW2 field to a new value. */
 #define BW_AIPS_MPRA_MTW2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR2[22] (RW)
@@ -642,24 +550,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR2    (22U)         //!< Bit position for AIPS_MPRA_MTR2.
-#define BM_AIPS_MPRA_MTR2    (0x00400000U) //!< Bit mask for AIPS_MPRA_MTR2.
-#define BS_AIPS_MPRA_MTR2    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR2.
+/*@{*/
+#define BP_AIPS_MPRA_MTR2    (22U)         /*!< Bit position for AIPS_MPRA_MTR2. */
+#define BM_AIPS_MPRA_MTR2    (0x00400000U) /*!< Bit mask for AIPS_MPRA_MTR2. */
+#define BS_AIPS_MPRA_MTR2    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR2 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR2 field. */
 #define BR_AIPS_MPRA_MTR2(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR2))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR2.
-#define BF_AIPS_MPRA_MTR2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR2), uint32_t) & BM_AIPS_MPRA_MTR2)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR2. */
+#define BF_AIPS_MPRA_MTR2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR2) & BM_AIPS_MPRA_MTR2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR2 field to a new value.
+/*! @brief Set the MTR2 field to a new value. */
 #define BW_AIPS_MPRA_MTR2(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL1[24] (RW)
@@ -670,24 +574,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL1    (24U)         //!< Bit position for AIPS_MPRA_MPL1.
-#define BM_AIPS_MPRA_MPL1    (0x01000000U) //!< Bit mask for AIPS_MPRA_MPL1.
-#define BS_AIPS_MPRA_MPL1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL1.
+/*@{*/
+#define BP_AIPS_MPRA_MPL1    (24U)         /*!< Bit position for AIPS_MPRA_MPL1. */
+#define BM_AIPS_MPRA_MPL1    (0x01000000U) /*!< Bit mask for AIPS_MPRA_MPL1. */
+#define BS_AIPS_MPRA_MPL1    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL1 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL1 field. */
 #define BR_AIPS_MPRA_MPL1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL1))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL1.
-#define BF_AIPS_MPRA_MPL1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL1), uint32_t) & BM_AIPS_MPRA_MPL1)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL1. */
+#define BF_AIPS_MPRA_MPL1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL1) & BM_AIPS_MPRA_MPL1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL1 field to a new value.
+/*! @brief Set the MPL1 field to a new value. */
 #define BW_AIPS_MPRA_MPL1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW1[25] (RW)
@@ -698,24 +598,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW1    (25U)         //!< Bit position for AIPS_MPRA_MTW1.
-#define BM_AIPS_MPRA_MTW1    (0x02000000U) //!< Bit mask for AIPS_MPRA_MTW1.
-#define BS_AIPS_MPRA_MTW1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW1.
+/*@{*/
+#define BP_AIPS_MPRA_MTW1    (25U)         /*!< Bit position for AIPS_MPRA_MTW1. */
+#define BM_AIPS_MPRA_MTW1    (0x02000000U) /*!< Bit mask for AIPS_MPRA_MTW1. */
+#define BS_AIPS_MPRA_MTW1    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW1 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW1 field. */
 #define BR_AIPS_MPRA_MTW1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW1))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW1.
-#define BF_AIPS_MPRA_MTW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW1), uint32_t) & BM_AIPS_MPRA_MTW1)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW1. */
+#define BF_AIPS_MPRA_MTW1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW1) & BM_AIPS_MPRA_MTW1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW1 field to a new value.
+/*! @brief Set the MTW1 field to a new value. */
 #define BW_AIPS_MPRA_MTW1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR1[26] (RW)
@@ -726,24 +622,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR1    (26U)         //!< Bit position for AIPS_MPRA_MTR1.
-#define BM_AIPS_MPRA_MTR1    (0x04000000U) //!< Bit mask for AIPS_MPRA_MTR1.
-#define BS_AIPS_MPRA_MTR1    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR1.
+/*@{*/
+#define BP_AIPS_MPRA_MTR1    (26U)         /*!< Bit position for AIPS_MPRA_MTR1. */
+#define BM_AIPS_MPRA_MTR1    (0x04000000U) /*!< Bit mask for AIPS_MPRA_MTR1. */
+#define BS_AIPS_MPRA_MTR1    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR1 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR1 field. */
 #define BR_AIPS_MPRA_MTR1(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR1))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR1.
-#define BF_AIPS_MPRA_MTR1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR1), uint32_t) & BM_AIPS_MPRA_MTR1)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR1. */
+#define BF_AIPS_MPRA_MTR1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR1) & BM_AIPS_MPRA_MTR1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR1 field to a new value.
+/*! @brief Set the MTR1 field to a new value. */
 #define BW_AIPS_MPRA_MTR1(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MPL0[28] (RW)
@@ -754,24 +646,20 @@ typedef union _hw_aips_mpra
  * - 0 - Accesses from this master are forced to user-mode.
  * - 1 - Accesses from this master are not forced to user-mode.
  */
-//@{
-#define BP_AIPS_MPRA_MPL0    (28U)         //!< Bit position for AIPS_MPRA_MPL0.
-#define BM_AIPS_MPRA_MPL0    (0x10000000U) //!< Bit mask for AIPS_MPRA_MPL0.
-#define BS_AIPS_MPRA_MPL0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MPL0.
+/*@{*/
+#define BP_AIPS_MPRA_MPL0    (28U)         /*!< Bit position for AIPS_MPRA_MPL0. */
+#define BM_AIPS_MPRA_MPL0    (0x10000000U) /*!< Bit mask for AIPS_MPRA_MPL0. */
+#define BS_AIPS_MPRA_MPL0    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MPL0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MPL0 field.
+/*! @brief Read current value of the AIPS_MPRA_MPL0 field. */
 #define BR_AIPS_MPRA_MPL0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL0))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MPL0.
-#define BF_AIPS_MPRA_MPL0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MPL0), uint32_t) & BM_AIPS_MPRA_MPL0)
+/*! @brief Format value for bitfield AIPS_MPRA_MPL0. */
+#define BF_AIPS_MPRA_MPL0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MPL0) & BM_AIPS_MPRA_MPL0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MPL0 field to a new value.
+/*! @brief Set the MPL0 field to a new value. */
 #define BW_AIPS_MPRA_MPL0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MPL0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTW0[29] (RW)
@@ -782,24 +670,20 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for write accesses.
  * - 1 - This master is trusted for write accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTW0    (29U)         //!< Bit position for AIPS_MPRA_MTW0.
-#define BM_AIPS_MPRA_MTW0    (0x20000000U) //!< Bit mask for AIPS_MPRA_MTW0.
-#define BS_AIPS_MPRA_MTW0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTW0.
+/*@{*/
+#define BP_AIPS_MPRA_MTW0    (29U)         /*!< Bit position for AIPS_MPRA_MTW0. */
+#define BM_AIPS_MPRA_MTW0    (0x20000000U) /*!< Bit mask for AIPS_MPRA_MTW0. */
+#define BS_AIPS_MPRA_MTW0    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTW0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTW0 field.
+/*! @brief Read current value of the AIPS_MPRA_MTW0 field. */
 #define BR_AIPS_MPRA_MTW0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW0))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTW0.
-#define BF_AIPS_MPRA_MTW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTW0), uint32_t) & BM_AIPS_MPRA_MTW0)
+/*! @brief Format value for bitfield AIPS_MPRA_MTW0. */
+#define BF_AIPS_MPRA_MTW0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTW0) & BM_AIPS_MPRA_MTW0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTW0 field to a new value.
+/*! @brief Set the MTW0 field to a new value. */
 #define BW_AIPS_MPRA_MTW0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTW0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_MPRA, field MTR0[30] (RW)
@@ -810,30 +694,25 @@ typedef union _hw_aips_mpra
  * - 0 - This master is not trusted for read accesses.
  * - 1 - This master is trusted for read accesses.
  */
-//@{
-#define BP_AIPS_MPRA_MTR0    (30U)         //!< Bit position for AIPS_MPRA_MTR0.
-#define BM_AIPS_MPRA_MTR0    (0x40000000U) //!< Bit mask for AIPS_MPRA_MTR0.
-#define BS_AIPS_MPRA_MTR0    (1U)          //!< Bit field size in bits for AIPS_MPRA_MTR0.
+/*@{*/
+#define BP_AIPS_MPRA_MTR0    (30U)         /*!< Bit position for AIPS_MPRA_MTR0. */
+#define BM_AIPS_MPRA_MTR0    (0x40000000U) /*!< Bit mask for AIPS_MPRA_MTR0. */
+#define BS_AIPS_MPRA_MTR0    (1U)          /*!< Bit field size in bits for AIPS_MPRA_MTR0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_MPRA_MTR0 field.
+/*! @brief Read current value of the AIPS_MPRA_MTR0 field. */
 #define BR_AIPS_MPRA_MTR0(x) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR0))
-#endif
 
-//! @brief Format value for bitfield AIPS_MPRA_MTR0.
-#define BF_AIPS_MPRA_MTR0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_MPRA_MTR0), uint32_t) & BM_AIPS_MPRA_MTR0)
+/*! @brief Format value for bitfield AIPS_MPRA_MTR0. */
+#define BF_AIPS_MPRA_MTR0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_MPRA_MTR0) & BM_AIPS_MPRA_MTR0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MTR0 field to a new value.
+/*! @brief Set the MTR0 field to a new value. */
 #define BW_AIPS_MPRA_MTR0(x, v) (BITBAND_ACCESS32(HW_AIPS_MPRA_ADDR(x), BP_AIPS_MPRA_MTR0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRA - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRA - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRA - Peripheral Access Control Register (RW)
  *
@@ -869,57 +748,54 @@ typedef union _hw_aips_pacra
     uint32_t U;
     struct _hw_aips_pacra_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacra_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRA register
  */
-//@{
-#define HW_AIPS_PACRA_ADDR(x)    (REGS_AIPS_BASE(x) + 0x20U)
+/*@{*/
+#define HW_AIPS_PACRA_ADDR(x)    ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRA(x)         (*(__IO hw_aips_pacra_t *) HW_AIPS_PACRA_ADDR(x))
 #define HW_AIPS_PACRA_RD(x)      (HW_AIPS_PACRA(x).U)
 #define HW_AIPS_PACRA_WR(x, v)   (HW_AIPS_PACRA(x).U = (v))
 #define HW_AIPS_PACRA_SET(x, v)  (HW_AIPS_PACRA_WR(x, HW_AIPS_PACRA_RD(x) |  (v)))
 #define HW_AIPS_PACRA_CLR(x, v)  (HW_AIPS_PACRA_WR(x, HW_AIPS_PACRA_RD(x) & ~(v)))
 #define HW_AIPS_PACRA_TOG(x, v)  (HW_AIPS_PACRA_WR(x, HW_AIPS_PACRA_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRA bitfields
@@ -932,24 +808,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP7    (0U)          //!< Bit position for AIPS_PACRA_TP7.
-#define BM_AIPS_PACRA_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRA_TP7.
-#define BS_AIPS_PACRA_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP7.
+/*@{*/
+#define BP_AIPS_PACRA_TP7    (0U)          /*!< Bit position for AIPS_PACRA_TP7. */
+#define BM_AIPS_PACRA_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRA_TP7. */
+#define BS_AIPS_PACRA_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP7 field.
+/*! @brief Read current value of the AIPS_PACRA_TP7 field. */
 #define BR_AIPS_PACRA_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP7.
-#define BF_AIPS_PACRA_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP7), uint32_t) & BM_AIPS_PACRA_TP7)
+/*! @brief Format value for bitfield AIPS_PACRA_TP7. */
+#define BF_AIPS_PACRA_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP7) & BM_AIPS_PACRA_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRA_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP7[1] (RW)
@@ -958,24 +830,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP7    (1U)          //!< Bit position for AIPS_PACRA_WP7.
-#define BM_AIPS_PACRA_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRA_WP7.
-#define BS_AIPS_PACRA_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP7.
+/*@{*/
+#define BP_AIPS_PACRA_WP7    (1U)          /*!< Bit position for AIPS_PACRA_WP7. */
+#define BM_AIPS_PACRA_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRA_WP7. */
+#define BS_AIPS_PACRA_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP7 field.
+/*! @brief Read current value of the AIPS_PACRA_WP7 field. */
 #define BR_AIPS_PACRA_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP7.
-#define BF_AIPS_PACRA_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP7), uint32_t) & BM_AIPS_PACRA_WP7)
+/*! @brief Format value for bitfield AIPS_PACRA_WP7. */
+#define BF_AIPS_PACRA_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP7) & BM_AIPS_PACRA_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRA_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP7[2] (RW)
@@ -985,24 +853,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP7    (2U)          //!< Bit position for AIPS_PACRA_SP7.
-#define BM_AIPS_PACRA_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRA_SP7.
-#define BS_AIPS_PACRA_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP7.
+/*@{*/
+#define BP_AIPS_PACRA_SP7    (2U)          /*!< Bit position for AIPS_PACRA_SP7. */
+#define BM_AIPS_PACRA_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRA_SP7. */
+#define BS_AIPS_PACRA_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP7 field.
+/*! @brief Read current value of the AIPS_PACRA_SP7 field. */
 #define BR_AIPS_PACRA_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP7.
-#define BF_AIPS_PACRA_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP7), uint32_t) & BM_AIPS_PACRA_SP7)
+/*! @brief Format value for bitfield AIPS_PACRA_SP7. */
+#define BF_AIPS_PACRA_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP7) & BM_AIPS_PACRA_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRA_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP6[4] (RW)
@@ -1011,24 +875,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP6    (4U)          //!< Bit position for AIPS_PACRA_TP6.
-#define BM_AIPS_PACRA_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRA_TP6.
-#define BS_AIPS_PACRA_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP6.
+/*@{*/
+#define BP_AIPS_PACRA_TP6    (4U)          /*!< Bit position for AIPS_PACRA_TP6. */
+#define BM_AIPS_PACRA_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRA_TP6. */
+#define BS_AIPS_PACRA_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP6 field.
+/*! @brief Read current value of the AIPS_PACRA_TP6 field. */
 #define BR_AIPS_PACRA_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP6.
-#define BF_AIPS_PACRA_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP6), uint32_t) & BM_AIPS_PACRA_TP6)
+/*! @brief Format value for bitfield AIPS_PACRA_TP6. */
+#define BF_AIPS_PACRA_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP6) & BM_AIPS_PACRA_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRA_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP6[5] (RW)
@@ -1037,24 +897,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP6    (5U)          //!< Bit position for AIPS_PACRA_WP6.
-#define BM_AIPS_PACRA_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRA_WP6.
-#define BS_AIPS_PACRA_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP6.
+/*@{*/
+#define BP_AIPS_PACRA_WP6    (5U)          /*!< Bit position for AIPS_PACRA_WP6. */
+#define BM_AIPS_PACRA_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRA_WP6. */
+#define BS_AIPS_PACRA_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP6 field.
+/*! @brief Read current value of the AIPS_PACRA_WP6 field. */
 #define BR_AIPS_PACRA_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP6.
-#define BF_AIPS_PACRA_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP6), uint32_t) & BM_AIPS_PACRA_WP6)
+/*! @brief Format value for bitfield AIPS_PACRA_WP6. */
+#define BF_AIPS_PACRA_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP6) & BM_AIPS_PACRA_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRA_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP6[6] (RW)
@@ -1064,24 +920,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP6    (6U)          //!< Bit position for AIPS_PACRA_SP6.
-#define BM_AIPS_PACRA_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRA_SP6.
-#define BS_AIPS_PACRA_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP6.
+/*@{*/
+#define BP_AIPS_PACRA_SP6    (6U)          /*!< Bit position for AIPS_PACRA_SP6. */
+#define BM_AIPS_PACRA_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRA_SP6. */
+#define BS_AIPS_PACRA_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP6 field.
+/*! @brief Read current value of the AIPS_PACRA_SP6 field. */
 #define BR_AIPS_PACRA_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP6.
-#define BF_AIPS_PACRA_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP6), uint32_t) & BM_AIPS_PACRA_SP6)
+/*! @brief Format value for bitfield AIPS_PACRA_SP6. */
+#define BF_AIPS_PACRA_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP6) & BM_AIPS_PACRA_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRA_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP5[8] (RW)
@@ -1090,24 +942,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP5    (8U)          //!< Bit position for AIPS_PACRA_TP5.
-#define BM_AIPS_PACRA_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRA_TP5.
-#define BS_AIPS_PACRA_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP5.
+/*@{*/
+#define BP_AIPS_PACRA_TP5    (8U)          /*!< Bit position for AIPS_PACRA_TP5. */
+#define BM_AIPS_PACRA_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRA_TP5. */
+#define BS_AIPS_PACRA_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP5 field.
+/*! @brief Read current value of the AIPS_PACRA_TP5 field. */
 #define BR_AIPS_PACRA_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP5.
-#define BF_AIPS_PACRA_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP5), uint32_t) & BM_AIPS_PACRA_TP5)
+/*! @brief Format value for bitfield AIPS_PACRA_TP5. */
+#define BF_AIPS_PACRA_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP5) & BM_AIPS_PACRA_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRA_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP5[9] (RW)
@@ -1116,24 +964,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP5    (9U)          //!< Bit position for AIPS_PACRA_WP5.
-#define BM_AIPS_PACRA_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRA_WP5.
-#define BS_AIPS_PACRA_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP5.
+/*@{*/
+#define BP_AIPS_PACRA_WP5    (9U)          /*!< Bit position for AIPS_PACRA_WP5. */
+#define BM_AIPS_PACRA_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRA_WP5. */
+#define BS_AIPS_PACRA_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP5 field.
+/*! @brief Read current value of the AIPS_PACRA_WP5 field. */
 #define BR_AIPS_PACRA_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP5.
-#define BF_AIPS_PACRA_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP5), uint32_t) & BM_AIPS_PACRA_WP5)
+/*! @brief Format value for bitfield AIPS_PACRA_WP5. */
+#define BF_AIPS_PACRA_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP5) & BM_AIPS_PACRA_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRA_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP5[10] (RW)
@@ -1143,24 +987,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP5    (10U)         //!< Bit position for AIPS_PACRA_SP5.
-#define BM_AIPS_PACRA_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRA_SP5.
-#define BS_AIPS_PACRA_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP5.
+/*@{*/
+#define BP_AIPS_PACRA_SP5    (10U)         /*!< Bit position for AIPS_PACRA_SP5. */
+#define BM_AIPS_PACRA_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRA_SP5. */
+#define BS_AIPS_PACRA_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP5 field.
+/*! @brief Read current value of the AIPS_PACRA_SP5 field. */
 #define BR_AIPS_PACRA_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP5.
-#define BF_AIPS_PACRA_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP5), uint32_t) & BM_AIPS_PACRA_SP5)
+/*! @brief Format value for bitfield AIPS_PACRA_SP5. */
+#define BF_AIPS_PACRA_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP5) & BM_AIPS_PACRA_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRA_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP4[12] (RW)
@@ -1169,24 +1009,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP4    (12U)         //!< Bit position for AIPS_PACRA_TP4.
-#define BM_AIPS_PACRA_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRA_TP4.
-#define BS_AIPS_PACRA_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP4.
+/*@{*/
+#define BP_AIPS_PACRA_TP4    (12U)         /*!< Bit position for AIPS_PACRA_TP4. */
+#define BM_AIPS_PACRA_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRA_TP4. */
+#define BS_AIPS_PACRA_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP4 field.
+/*! @brief Read current value of the AIPS_PACRA_TP4 field. */
 #define BR_AIPS_PACRA_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP4.
-#define BF_AIPS_PACRA_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP4), uint32_t) & BM_AIPS_PACRA_TP4)
+/*! @brief Format value for bitfield AIPS_PACRA_TP4. */
+#define BF_AIPS_PACRA_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP4) & BM_AIPS_PACRA_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRA_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP4[13] (RW)
@@ -1195,24 +1031,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP4    (13U)         //!< Bit position for AIPS_PACRA_WP4.
-#define BM_AIPS_PACRA_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRA_WP4.
-#define BS_AIPS_PACRA_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP4.
+/*@{*/
+#define BP_AIPS_PACRA_WP4    (13U)         /*!< Bit position for AIPS_PACRA_WP4. */
+#define BM_AIPS_PACRA_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRA_WP4. */
+#define BS_AIPS_PACRA_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP4 field.
+/*! @brief Read current value of the AIPS_PACRA_WP4 field. */
 #define BR_AIPS_PACRA_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP4.
-#define BF_AIPS_PACRA_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP4), uint32_t) & BM_AIPS_PACRA_WP4)
+/*! @brief Format value for bitfield AIPS_PACRA_WP4. */
+#define BF_AIPS_PACRA_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP4) & BM_AIPS_PACRA_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRA_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP4[14] (RW)
@@ -1222,24 +1054,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP4    (14U)         //!< Bit position for AIPS_PACRA_SP4.
-#define BM_AIPS_PACRA_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRA_SP4.
-#define BS_AIPS_PACRA_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP4.
+/*@{*/
+#define BP_AIPS_PACRA_SP4    (14U)         /*!< Bit position for AIPS_PACRA_SP4. */
+#define BM_AIPS_PACRA_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRA_SP4. */
+#define BS_AIPS_PACRA_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP4 field.
+/*! @brief Read current value of the AIPS_PACRA_SP4 field. */
 #define BR_AIPS_PACRA_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP4.
-#define BF_AIPS_PACRA_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP4), uint32_t) & BM_AIPS_PACRA_SP4)
+/*! @brief Format value for bitfield AIPS_PACRA_SP4. */
+#define BF_AIPS_PACRA_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP4) & BM_AIPS_PACRA_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRA_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP3[16] (RW)
@@ -1248,24 +1076,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP3    (16U)         //!< Bit position for AIPS_PACRA_TP3.
-#define BM_AIPS_PACRA_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRA_TP3.
-#define BS_AIPS_PACRA_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP3.
+/*@{*/
+#define BP_AIPS_PACRA_TP3    (16U)         /*!< Bit position for AIPS_PACRA_TP3. */
+#define BM_AIPS_PACRA_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRA_TP3. */
+#define BS_AIPS_PACRA_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP3 field.
+/*! @brief Read current value of the AIPS_PACRA_TP3 field. */
 #define BR_AIPS_PACRA_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP3.
-#define BF_AIPS_PACRA_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP3), uint32_t) & BM_AIPS_PACRA_TP3)
+/*! @brief Format value for bitfield AIPS_PACRA_TP3. */
+#define BF_AIPS_PACRA_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP3) & BM_AIPS_PACRA_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRA_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP3[17] (RW)
@@ -1274,24 +1098,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP3    (17U)         //!< Bit position for AIPS_PACRA_WP3.
-#define BM_AIPS_PACRA_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRA_WP3.
-#define BS_AIPS_PACRA_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP3.
+/*@{*/
+#define BP_AIPS_PACRA_WP3    (17U)         /*!< Bit position for AIPS_PACRA_WP3. */
+#define BM_AIPS_PACRA_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRA_WP3. */
+#define BS_AIPS_PACRA_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP3 field.
+/*! @brief Read current value of the AIPS_PACRA_WP3 field. */
 #define BR_AIPS_PACRA_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP3.
-#define BF_AIPS_PACRA_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP3), uint32_t) & BM_AIPS_PACRA_WP3)
+/*! @brief Format value for bitfield AIPS_PACRA_WP3. */
+#define BF_AIPS_PACRA_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP3) & BM_AIPS_PACRA_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRA_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP3[18] (RW)
@@ -1301,24 +1121,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP3    (18U)         //!< Bit position for AIPS_PACRA_SP3.
-#define BM_AIPS_PACRA_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRA_SP3.
-#define BS_AIPS_PACRA_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP3.
+/*@{*/
+#define BP_AIPS_PACRA_SP3    (18U)         /*!< Bit position for AIPS_PACRA_SP3. */
+#define BM_AIPS_PACRA_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRA_SP3. */
+#define BS_AIPS_PACRA_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP3 field.
+/*! @brief Read current value of the AIPS_PACRA_SP3 field. */
 #define BR_AIPS_PACRA_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP3.
-#define BF_AIPS_PACRA_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP3), uint32_t) & BM_AIPS_PACRA_SP3)
+/*! @brief Format value for bitfield AIPS_PACRA_SP3. */
+#define BF_AIPS_PACRA_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP3) & BM_AIPS_PACRA_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRA_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP2[20] (RW)
@@ -1327,24 +1143,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP2    (20U)         //!< Bit position for AIPS_PACRA_TP2.
-#define BM_AIPS_PACRA_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRA_TP2.
-#define BS_AIPS_PACRA_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP2.
+/*@{*/
+#define BP_AIPS_PACRA_TP2    (20U)         /*!< Bit position for AIPS_PACRA_TP2. */
+#define BM_AIPS_PACRA_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRA_TP2. */
+#define BS_AIPS_PACRA_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP2 field.
+/*! @brief Read current value of the AIPS_PACRA_TP2 field. */
 #define BR_AIPS_PACRA_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP2.
-#define BF_AIPS_PACRA_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP2), uint32_t) & BM_AIPS_PACRA_TP2)
+/*! @brief Format value for bitfield AIPS_PACRA_TP2. */
+#define BF_AIPS_PACRA_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP2) & BM_AIPS_PACRA_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRA_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP2[21] (RW)
@@ -1353,24 +1165,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP2    (21U)         //!< Bit position for AIPS_PACRA_WP2.
-#define BM_AIPS_PACRA_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRA_WP2.
-#define BS_AIPS_PACRA_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP2.
+/*@{*/
+#define BP_AIPS_PACRA_WP2    (21U)         /*!< Bit position for AIPS_PACRA_WP2. */
+#define BM_AIPS_PACRA_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRA_WP2. */
+#define BS_AIPS_PACRA_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP2 field.
+/*! @brief Read current value of the AIPS_PACRA_WP2 field. */
 #define BR_AIPS_PACRA_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP2.
-#define BF_AIPS_PACRA_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP2), uint32_t) & BM_AIPS_PACRA_WP2)
+/*! @brief Format value for bitfield AIPS_PACRA_WP2. */
+#define BF_AIPS_PACRA_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP2) & BM_AIPS_PACRA_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRA_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP2[22] (RW)
@@ -1380,24 +1188,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP2    (22U)         //!< Bit position for AIPS_PACRA_SP2.
-#define BM_AIPS_PACRA_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRA_SP2.
-#define BS_AIPS_PACRA_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP2.
+/*@{*/
+#define BP_AIPS_PACRA_SP2    (22U)         /*!< Bit position for AIPS_PACRA_SP2. */
+#define BM_AIPS_PACRA_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRA_SP2. */
+#define BS_AIPS_PACRA_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP2 field.
+/*! @brief Read current value of the AIPS_PACRA_SP2 field. */
 #define BR_AIPS_PACRA_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP2.
-#define BF_AIPS_PACRA_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP2), uint32_t) & BM_AIPS_PACRA_SP2)
+/*! @brief Format value for bitfield AIPS_PACRA_SP2. */
+#define BF_AIPS_PACRA_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP2) & BM_AIPS_PACRA_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRA_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP1[24] (RW)
@@ -1406,24 +1210,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP1    (24U)         //!< Bit position for AIPS_PACRA_TP1.
-#define BM_AIPS_PACRA_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRA_TP1.
-#define BS_AIPS_PACRA_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP1.
+/*@{*/
+#define BP_AIPS_PACRA_TP1    (24U)         /*!< Bit position for AIPS_PACRA_TP1. */
+#define BM_AIPS_PACRA_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRA_TP1. */
+#define BS_AIPS_PACRA_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP1 field.
+/*! @brief Read current value of the AIPS_PACRA_TP1 field. */
 #define BR_AIPS_PACRA_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP1.
-#define BF_AIPS_PACRA_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP1), uint32_t) & BM_AIPS_PACRA_TP1)
+/*! @brief Format value for bitfield AIPS_PACRA_TP1. */
+#define BF_AIPS_PACRA_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP1) & BM_AIPS_PACRA_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRA_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP1[25] (RW)
@@ -1432,24 +1232,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP1    (25U)         //!< Bit position for AIPS_PACRA_WP1.
-#define BM_AIPS_PACRA_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRA_WP1.
-#define BS_AIPS_PACRA_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP1.
+/*@{*/
+#define BP_AIPS_PACRA_WP1    (25U)         /*!< Bit position for AIPS_PACRA_WP1. */
+#define BM_AIPS_PACRA_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRA_WP1. */
+#define BS_AIPS_PACRA_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP1 field.
+/*! @brief Read current value of the AIPS_PACRA_WP1 field. */
 #define BR_AIPS_PACRA_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP1.
-#define BF_AIPS_PACRA_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP1), uint32_t) & BM_AIPS_PACRA_WP1)
+/*! @brief Format value for bitfield AIPS_PACRA_WP1. */
+#define BF_AIPS_PACRA_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP1) & BM_AIPS_PACRA_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRA_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP1[26] (RW)
@@ -1459,24 +1255,20 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP1    (26U)         //!< Bit position for AIPS_PACRA_SP1.
-#define BM_AIPS_PACRA_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRA_SP1.
-#define BS_AIPS_PACRA_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP1.
+/*@{*/
+#define BP_AIPS_PACRA_SP1    (26U)         /*!< Bit position for AIPS_PACRA_SP1. */
+#define BM_AIPS_PACRA_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRA_SP1. */
+#define BS_AIPS_PACRA_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP1 field.
+/*! @brief Read current value of the AIPS_PACRA_SP1 field. */
 #define BR_AIPS_PACRA_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP1.
-#define BF_AIPS_PACRA_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP1), uint32_t) & BM_AIPS_PACRA_SP1)
+/*! @brief Format value for bitfield AIPS_PACRA_SP1. */
+#define BF_AIPS_PACRA_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP1) & BM_AIPS_PACRA_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRA_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field TP0[28] (RW)
@@ -1485,24 +1277,20 @@ typedef union _hw_aips_pacra
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRA_TP0    (28U)         //!< Bit position for AIPS_PACRA_TP0.
-#define BM_AIPS_PACRA_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRA_TP0.
-#define BS_AIPS_PACRA_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRA_TP0.
+/*@{*/
+#define BP_AIPS_PACRA_TP0    (28U)         /*!< Bit position for AIPS_PACRA_TP0. */
+#define BM_AIPS_PACRA_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRA_TP0. */
+#define BS_AIPS_PACRA_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRA_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_TP0 field.
+/*! @brief Read current value of the AIPS_PACRA_TP0 field. */
 #define BR_AIPS_PACRA_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_TP0.
-#define BF_AIPS_PACRA_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_TP0), uint32_t) & BM_AIPS_PACRA_TP0)
+/*! @brief Format value for bitfield AIPS_PACRA_TP0. */
+#define BF_AIPS_PACRA_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_TP0) & BM_AIPS_PACRA_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRA_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field WP0[29] (RW)
@@ -1511,24 +1299,20 @@ typedef union _hw_aips_pacra
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRA_WP0    (29U)         //!< Bit position for AIPS_PACRA_WP0.
-#define BM_AIPS_PACRA_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRA_WP0.
-#define BS_AIPS_PACRA_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRA_WP0.
+/*@{*/
+#define BP_AIPS_PACRA_WP0    (29U)         /*!< Bit position for AIPS_PACRA_WP0. */
+#define BM_AIPS_PACRA_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRA_WP0. */
+#define BS_AIPS_PACRA_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRA_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_WP0 field.
+/*! @brief Read current value of the AIPS_PACRA_WP0 field. */
 #define BR_AIPS_PACRA_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_WP0.
-#define BF_AIPS_PACRA_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_WP0), uint32_t) & BM_AIPS_PACRA_WP0)
+/*! @brief Format value for bitfield AIPS_PACRA_WP0. */
+#define BF_AIPS_PACRA_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_WP0) & BM_AIPS_PACRA_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRA_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRA, field SP0[30] (RW)
@@ -1538,30 +1322,25 @@ typedef union _hw_aips_pacra
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRA_SP0    (30U)         //!< Bit position for AIPS_PACRA_SP0.
-#define BM_AIPS_PACRA_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRA_SP0.
-#define BS_AIPS_PACRA_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRA_SP0.
+/*@{*/
+#define BP_AIPS_PACRA_SP0    (30U)         /*!< Bit position for AIPS_PACRA_SP0. */
+#define BM_AIPS_PACRA_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRA_SP0. */
+#define BS_AIPS_PACRA_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRA_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRA_SP0 field.
+/*! @brief Read current value of the AIPS_PACRA_SP0 field. */
 #define BR_AIPS_PACRA_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRA_SP0.
-#define BF_AIPS_PACRA_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRA_SP0), uint32_t) & BM_AIPS_PACRA_SP0)
+/*! @brief Format value for bitfield AIPS_PACRA_SP0. */
+#define BF_AIPS_PACRA_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRA_SP0) & BM_AIPS_PACRA_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRA_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRA_ADDR(x), BP_AIPS_PACRA_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRB - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRB - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRB - Peripheral Access Control Register (RW)
  *
@@ -1597,57 +1376,54 @@ typedef union _hw_aips_pacrb
     uint32_t U;
     struct _hw_aips_pacrb_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrb_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRB register
  */
-//@{
-#define HW_AIPS_PACRB_ADDR(x)    (REGS_AIPS_BASE(x) + 0x24U)
+/*@{*/
+#define HW_AIPS_PACRB_ADDR(x)    ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRB(x)         (*(__IO hw_aips_pacrb_t *) HW_AIPS_PACRB_ADDR(x))
 #define HW_AIPS_PACRB_RD(x)      (HW_AIPS_PACRB(x).U)
 #define HW_AIPS_PACRB_WR(x, v)   (HW_AIPS_PACRB(x).U = (v))
 #define HW_AIPS_PACRB_SET(x, v)  (HW_AIPS_PACRB_WR(x, HW_AIPS_PACRB_RD(x) |  (v)))
 #define HW_AIPS_PACRB_CLR(x, v)  (HW_AIPS_PACRB_WR(x, HW_AIPS_PACRB_RD(x) & ~(v)))
 #define HW_AIPS_PACRB_TOG(x, v)  (HW_AIPS_PACRB_WR(x, HW_AIPS_PACRB_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRB bitfields
@@ -1660,24 +1436,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP7    (0U)          //!< Bit position for AIPS_PACRB_TP7.
-#define BM_AIPS_PACRB_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRB_TP7.
-#define BS_AIPS_PACRB_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP7.
+/*@{*/
+#define BP_AIPS_PACRB_TP7    (0U)          /*!< Bit position for AIPS_PACRB_TP7. */
+#define BM_AIPS_PACRB_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRB_TP7. */
+#define BS_AIPS_PACRB_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP7 field.
+/*! @brief Read current value of the AIPS_PACRB_TP7 field. */
 #define BR_AIPS_PACRB_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP7.
-#define BF_AIPS_PACRB_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP7), uint32_t) & BM_AIPS_PACRB_TP7)
+/*! @brief Format value for bitfield AIPS_PACRB_TP7. */
+#define BF_AIPS_PACRB_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP7) & BM_AIPS_PACRB_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRB_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP7[1] (RW)
@@ -1686,24 +1458,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP7    (1U)          //!< Bit position for AIPS_PACRB_WP7.
-#define BM_AIPS_PACRB_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRB_WP7.
-#define BS_AIPS_PACRB_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP7.
+/*@{*/
+#define BP_AIPS_PACRB_WP7    (1U)          /*!< Bit position for AIPS_PACRB_WP7. */
+#define BM_AIPS_PACRB_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRB_WP7. */
+#define BS_AIPS_PACRB_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP7 field.
+/*! @brief Read current value of the AIPS_PACRB_WP7 field. */
 #define BR_AIPS_PACRB_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP7.
-#define BF_AIPS_PACRB_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP7), uint32_t) & BM_AIPS_PACRB_WP7)
+/*! @brief Format value for bitfield AIPS_PACRB_WP7. */
+#define BF_AIPS_PACRB_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP7) & BM_AIPS_PACRB_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRB_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP7[2] (RW)
@@ -1713,24 +1481,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP7    (2U)          //!< Bit position for AIPS_PACRB_SP7.
-#define BM_AIPS_PACRB_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRB_SP7.
-#define BS_AIPS_PACRB_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP7.
+/*@{*/
+#define BP_AIPS_PACRB_SP7    (2U)          /*!< Bit position for AIPS_PACRB_SP7. */
+#define BM_AIPS_PACRB_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRB_SP7. */
+#define BS_AIPS_PACRB_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP7 field.
+/*! @brief Read current value of the AIPS_PACRB_SP7 field. */
 #define BR_AIPS_PACRB_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP7.
-#define BF_AIPS_PACRB_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP7), uint32_t) & BM_AIPS_PACRB_SP7)
+/*! @brief Format value for bitfield AIPS_PACRB_SP7. */
+#define BF_AIPS_PACRB_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP7) & BM_AIPS_PACRB_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRB_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP6[4] (RW)
@@ -1739,24 +1503,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP6    (4U)          //!< Bit position for AIPS_PACRB_TP6.
-#define BM_AIPS_PACRB_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRB_TP6.
-#define BS_AIPS_PACRB_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP6.
+/*@{*/
+#define BP_AIPS_PACRB_TP6    (4U)          /*!< Bit position for AIPS_PACRB_TP6. */
+#define BM_AIPS_PACRB_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRB_TP6. */
+#define BS_AIPS_PACRB_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP6 field.
+/*! @brief Read current value of the AIPS_PACRB_TP6 field. */
 #define BR_AIPS_PACRB_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP6.
-#define BF_AIPS_PACRB_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP6), uint32_t) & BM_AIPS_PACRB_TP6)
+/*! @brief Format value for bitfield AIPS_PACRB_TP6. */
+#define BF_AIPS_PACRB_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP6) & BM_AIPS_PACRB_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRB_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP6[5] (RW)
@@ -1765,24 +1525,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP6    (5U)          //!< Bit position for AIPS_PACRB_WP6.
-#define BM_AIPS_PACRB_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRB_WP6.
-#define BS_AIPS_PACRB_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP6.
+/*@{*/
+#define BP_AIPS_PACRB_WP6    (5U)          /*!< Bit position for AIPS_PACRB_WP6. */
+#define BM_AIPS_PACRB_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRB_WP6. */
+#define BS_AIPS_PACRB_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP6 field.
+/*! @brief Read current value of the AIPS_PACRB_WP6 field. */
 #define BR_AIPS_PACRB_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP6.
-#define BF_AIPS_PACRB_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP6), uint32_t) & BM_AIPS_PACRB_WP6)
+/*! @brief Format value for bitfield AIPS_PACRB_WP6. */
+#define BF_AIPS_PACRB_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP6) & BM_AIPS_PACRB_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRB_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP6[6] (RW)
@@ -1792,24 +1548,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP6    (6U)          //!< Bit position for AIPS_PACRB_SP6.
-#define BM_AIPS_PACRB_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRB_SP6.
-#define BS_AIPS_PACRB_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP6.
+/*@{*/
+#define BP_AIPS_PACRB_SP6    (6U)          /*!< Bit position for AIPS_PACRB_SP6. */
+#define BM_AIPS_PACRB_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRB_SP6. */
+#define BS_AIPS_PACRB_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP6 field.
+/*! @brief Read current value of the AIPS_PACRB_SP6 field. */
 #define BR_AIPS_PACRB_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP6.
-#define BF_AIPS_PACRB_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP6), uint32_t) & BM_AIPS_PACRB_SP6)
+/*! @brief Format value for bitfield AIPS_PACRB_SP6. */
+#define BF_AIPS_PACRB_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP6) & BM_AIPS_PACRB_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRB_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP5[8] (RW)
@@ -1818,24 +1570,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP5    (8U)          //!< Bit position for AIPS_PACRB_TP5.
-#define BM_AIPS_PACRB_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRB_TP5.
-#define BS_AIPS_PACRB_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP5.
+/*@{*/
+#define BP_AIPS_PACRB_TP5    (8U)          /*!< Bit position for AIPS_PACRB_TP5. */
+#define BM_AIPS_PACRB_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRB_TP5. */
+#define BS_AIPS_PACRB_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP5 field.
+/*! @brief Read current value of the AIPS_PACRB_TP5 field. */
 #define BR_AIPS_PACRB_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP5.
-#define BF_AIPS_PACRB_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP5), uint32_t) & BM_AIPS_PACRB_TP5)
+/*! @brief Format value for bitfield AIPS_PACRB_TP5. */
+#define BF_AIPS_PACRB_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP5) & BM_AIPS_PACRB_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRB_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP5[9] (RW)
@@ -1844,24 +1592,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP5    (9U)          //!< Bit position for AIPS_PACRB_WP5.
-#define BM_AIPS_PACRB_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRB_WP5.
-#define BS_AIPS_PACRB_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP5.
+/*@{*/
+#define BP_AIPS_PACRB_WP5    (9U)          /*!< Bit position for AIPS_PACRB_WP5. */
+#define BM_AIPS_PACRB_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRB_WP5. */
+#define BS_AIPS_PACRB_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP5 field.
+/*! @brief Read current value of the AIPS_PACRB_WP5 field. */
 #define BR_AIPS_PACRB_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP5.
-#define BF_AIPS_PACRB_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP5), uint32_t) & BM_AIPS_PACRB_WP5)
+/*! @brief Format value for bitfield AIPS_PACRB_WP5. */
+#define BF_AIPS_PACRB_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP5) & BM_AIPS_PACRB_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRB_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP5[10] (RW)
@@ -1871,24 +1615,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP5    (10U)         //!< Bit position for AIPS_PACRB_SP5.
-#define BM_AIPS_PACRB_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRB_SP5.
-#define BS_AIPS_PACRB_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP5.
+/*@{*/
+#define BP_AIPS_PACRB_SP5    (10U)         /*!< Bit position for AIPS_PACRB_SP5. */
+#define BM_AIPS_PACRB_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRB_SP5. */
+#define BS_AIPS_PACRB_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP5 field.
+/*! @brief Read current value of the AIPS_PACRB_SP5 field. */
 #define BR_AIPS_PACRB_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP5.
-#define BF_AIPS_PACRB_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP5), uint32_t) & BM_AIPS_PACRB_SP5)
+/*! @brief Format value for bitfield AIPS_PACRB_SP5. */
+#define BF_AIPS_PACRB_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP5) & BM_AIPS_PACRB_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRB_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP4[12] (RW)
@@ -1897,24 +1637,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP4    (12U)         //!< Bit position for AIPS_PACRB_TP4.
-#define BM_AIPS_PACRB_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRB_TP4.
-#define BS_AIPS_PACRB_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP4.
+/*@{*/
+#define BP_AIPS_PACRB_TP4    (12U)         /*!< Bit position for AIPS_PACRB_TP4. */
+#define BM_AIPS_PACRB_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRB_TP4. */
+#define BS_AIPS_PACRB_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP4 field.
+/*! @brief Read current value of the AIPS_PACRB_TP4 field. */
 #define BR_AIPS_PACRB_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP4.
-#define BF_AIPS_PACRB_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP4), uint32_t) & BM_AIPS_PACRB_TP4)
+/*! @brief Format value for bitfield AIPS_PACRB_TP4. */
+#define BF_AIPS_PACRB_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP4) & BM_AIPS_PACRB_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRB_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP4[13] (RW)
@@ -1923,24 +1659,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP4    (13U)         //!< Bit position for AIPS_PACRB_WP4.
-#define BM_AIPS_PACRB_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRB_WP4.
-#define BS_AIPS_PACRB_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP4.
+/*@{*/
+#define BP_AIPS_PACRB_WP4    (13U)         /*!< Bit position for AIPS_PACRB_WP4. */
+#define BM_AIPS_PACRB_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRB_WP4. */
+#define BS_AIPS_PACRB_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP4 field.
+/*! @brief Read current value of the AIPS_PACRB_WP4 field. */
 #define BR_AIPS_PACRB_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP4.
-#define BF_AIPS_PACRB_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP4), uint32_t) & BM_AIPS_PACRB_WP4)
+/*! @brief Format value for bitfield AIPS_PACRB_WP4. */
+#define BF_AIPS_PACRB_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP4) & BM_AIPS_PACRB_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRB_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP4[14] (RW)
@@ -1950,24 +1682,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP4    (14U)         //!< Bit position for AIPS_PACRB_SP4.
-#define BM_AIPS_PACRB_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRB_SP4.
-#define BS_AIPS_PACRB_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP4.
+/*@{*/
+#define BP_AIPS_PACRB_SP4    (14U)         /*!< Bit position for AIPS_PACRB_SP4. */
+#define BM_AIPS_PACRB_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRB_SP4. */
+#define BS_AIPS_PACRB_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP4 field.
+/*! @brief Read current value of the AIPS_PACRB_SP4 field. */
 #define BR_AIPS_PACRB_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP4.
-#define BF_AIPS_PACRB_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP4), uint32_t) & BM_AIPS_PACRB_SP4)
+/*! @brief Format value for bitfield AIPS_PACRB_SP4. */
+#define BF_AIPS_PACRB_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP4) & BM_AIPS_PACRB_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRB_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP3[16] (RW)
@@ -1976,24 +1704,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP3    (16U)         //!< Bit position for AIPS_PACRB_TP3.
-#define BM_AIPS_PACRB_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRB_TP3.
-#define BS_AIPS_PACRB_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP3.
+/*@{*/
+#define BP_AIPS_PACRB_TP3    (16U)         /*!< Bit position for AIPS_PACRB_TP3. */
+#define BM_AIPS_PACRB_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRB_TP3. */
+#define BS_AIPS_PACRB_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP3 field.
+/*! @brief Read current value of the AIPS_PACRB_TP3 field. */
 #define BR_AIPS_PACRB_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP3.
-#define BF_AIPS_PACRB_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP3), uint32_t) & BM_AIPS_PACRB_TP3)
+/*! @brief Format value for bitfield AIPS_PACRB_TP3. */
+#define BF_AIPS_PACRB_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP3) & BM_AIPS_PACRB_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRB_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP3[17] (RW)
@@ -2002,24 +1726,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP3    (17U)         //!< Bit position for AIPS_PACRB_WP3.
-#define BM_AIPS_PACRB_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRB_WP3.
-#define BS_AIPS_PACRB_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP3.
+/*@{*/
+#define BP_AIPS_PACRB_WP3    (17U)         /*!< Bit position for AIPS_PACRB_WP3. */
+#define BM_AIPS_PACRB_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRB_WP3. */
+#define BS_AIPS_PACRB_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP3 field.
+/*! @brief Read current value of the AIPS_PACRB_WP3 field. */
 #define BR_AIPS_PACRB_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP3.
-#define BF_AIPS_PACRB_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP3), uint32_t) & BM_AIPS_PACRB_WP3)
+/*! @brief Format value for bitfield AIPS_PACRB_WP3. */
+#define BF_AIPS_PACRB_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP3) & BM_AIPS_PACRB_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRB_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP3[18] (RW)
@@ -2029,24 +1749,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP3    (18U)         //!< Bit position for AIPS_PACRB_SP3.
-#define BM_AIPS_PACRB_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRB_SP3.
-#define BS_AIPS_PACRB_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP3.
+/*@{*/
+#define BP_AIPS_PACRB_SP3    (18U)         /*!< Bit position for AIPS_PACRB_SP3. */
+#define BM_AIPS_PACRB_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRB_SP3. */
+#define BS_AIPS_PACRB_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP3 field.
+/*! @brief Read current value of the AIPS_PACRB_SP3 field. */
 #define BR_AIPS_PACRB_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP3.
-#define BF_AIPS_PACRB_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP3), uint32_t) & BM_AIPS_PACRB_SP3)
+/*! @brief Format value for bitfield AIPS_PACRB_SP3. */
+#define BF_AIPS_PACRB_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP3) & BM_AIPS_PACRB_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRB_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP2[20] (RW)
@@ -2055,24 +1771,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP2    (20U)         //!< Bit position for AIPS_PACRB_TP2.
-#define BM_AIPS_PACRB_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRB_TP2.
-#define BS_AIPS_PACRB_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP2.
+/*@{*/
+#define BP_AIPS_PACRB_TP2    (20U)         /*!< Bit position for AIPS_PACRB_TP2. */
+#define BM_AIPS_PACRB_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRB_TP2. */
+#define BS_AIPS_PACRB_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP2 field.
+/*! @brief Read current value of the AIPS_PACRB_TP2 field. */
 #define BR_AIPS_PACRB_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP2.
-#define BF_AIPS_PACRB_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP2), uint32_t) & BM_AIPS_PACRB_TP2)
+/*! @brief Format value for bitfield AIPS_PACRB_TP2. */
+#define BF_AIPS_PACRB_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP2) & BM_AIPS_PACRB_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRB_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP2[21] (RW)
@@ -2081,24 +1793,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP2    (21U)         //!< Bit position for AIPS_PACRB_WP2.
-#define BM_AIPS_PACRB_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRB_WP2.
-#define BS_AIPS_PACRB_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP2.
+/*@{*/
+#define BP_AIPS_PACRB_WP2    (21U)         /*!< Bit position for AIPS_PACRB_WP2. */
+#define BM_AIPS_PACRB_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRB_WP2. */
+#define BS_AIPS_PACRB_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP2 field.
+/*! @brief Read current value of the AIPS_PACRB_WP2 field. */
 #define BR_AIPS_PACRB_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP2.
-#define BF_AIPS_PACRB_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP2), uint32_t) & BM_AIPS_PACRB_WP2)
+/*! @brief Format value for bitfield AIPS_PACRB_WP2. */
+#define BF_AIPS_PACRB_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP2) & BM_AIPS_PACRB_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRB_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP2[22] (RW)
@@ -2108,24 +1816,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP2    (22U)         //!< Bit position for AIPS_PACRB_SP2.
-#define BM_AIPS_PACRB_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRB_SP2.
-#define BS_AIPS_PACRB_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP2.
+/*@{*/
+#define BP_AIPS_PACRB_SP2    (22U)         /*!< Bit position for AIPS_PACRB_SP2. */
+#define BM_AIPS_PACRB_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRB_SP2. */
+#define BS_AIPS_PACRB_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP2 field.
+/*! @brief Read current value of the AIPS_PACRB_SP2 field. */
 #define BR_AIPS_PACRB_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP2.
-#define BF_AIPS_PACRB_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP2), uint32_t) & BM_AIPS_PACRB_SP2)
+/*! @brief Format value for bitfield AIPS_PACRB_SP2. */
+#define BF_AIPS_PACRB_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP2) & BM_AIPS_PACRB_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRB_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP1[24] (RW)
@@ -2134,24 +1838,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP1    (24U)         //!< Bit position for AIPS_PACRB_TP1.
-#define BM_AIPS_PACRB_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRB_TP1.
-#define BS_AIPS_PACRB_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP1.
+/*@{*/
+#define BP_AIPS_PACRB_TP1    (24U)         /*!< Bit position for AIPS_PACRB_TP1. */
+#define BM_AIPS_PACRB_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRB_TP1. */
+#define BS_AIPS_PACRB_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP1 field.
+/*! @brief Read current value of the AIPS_PACRB_TP1 field. */
 #define BR_AIPS_PACRB_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP1.
-#define BF_AIPS_PACRB_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP1), uint32_t) & BM_AIPS_PACRB_TP1)
+/*! @brief Format value for bitfield AIPS_PACRB_TP1. */
+#define BF_AIPS_PACRB_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP1) & BM_AIPS_PACRB_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRB_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP1[25] (RW)
@@ -2160,24 +1860,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP1    (25U)         //!< Bit position for AIPS_PACRB_WP1.
-#define BM_AIPS_PACRB_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRB_WP1.
-#define BS_AIPS_PACRB_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP1.
+/*@{*/
+#define BP_AIPS_PACRB_WP1    (25U)         /*!< Bit position for AIPS_PACRB_WP1. */
+#define BM_AIPS_PACRB_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRB_WP1. */
+#define BS_AIPS_PACRB_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP1 field.
+/*! @brief Read current value of the AIPS_PACRB_WP1 field. */
 #define BR_AIPS_PACRB_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP1.
-#define BF_AIPS_PACRB_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP1), uint32_t) & BM_AIPS_PACRB_WP1)
+/*! @brief Format value for bitfield AIPS_PACRB_WP1. */
+#define BF_AIPS_PACRB_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP1) & BM_AIPS_PACRB_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRB_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP1[26] (RW)
@@ -2187,24 +1883,20 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP1    (26U)         //!< Bit position for AIPS_PACRB_SP1.
-#define BM_AIPS_PACRB_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRB_SP1.
-#define BS_AIPS_PACRB_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP1.
+/*@{*/
+#define BP_AIPS_PACRB_SP1    (26U)         /*!< Bit position for AIPS_PACRB_SP1. */
+#define BM_AIPS_PACRB_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRB_SP1. */
+#define BS_AIPS_PACRB_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP1 field.
+/*! @brief Read current value of the AIPS_PACRB_SP1 field. */
 #define BR_AIPS_PACRB_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP1.
-#define BF_AIPS_PACRB_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP1), uint32_t) & BM_AIPS_PACRB_SP1)
+/*! @brief Format value for bitfield AIPS_PACRB_SP1. */
+#define BF_AIPS_PACRB_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP1) & BM_AIPS_PACRB_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRB_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field TP0[28] (RW)
@@ -2213,24 +1905,20 @@ typedef union _hw_aips_pacrb
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRB_TP0    (28U)         //!< Bit position for AIPS_PACRB_TP0.
-#define BM_AIPS_PACRB_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRB_TP0.
-#define BS_AIPS_PACRB_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRB_TP0.
+/*@{*/
+#define BP_AIPS_PACRB_TP0    (28U)         /*!< Bit position for AIPS_PACRB_TP0. */
+#define BM_AIPS_PACRB_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRB_TP0. */
+#define BS_AIPS_PACRB_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRB_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_TP0 field.
+/*! @brief Read current value of the AIPS_PACRB_TP0 field. */
 #define BR_AIPS_PACRB_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_TP0.
-#define BF_AIPS_PACRB_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_TP0), uint32_t) & BM_AIPS_PACRB_TP0)
+/*! @brief Format value for bitfield AIPS_PACRB_TP0. */
+#define BF_AIPS_PACRB_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_TP0) & BM_AIPS_PACRB_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRB_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field WP0[29] (RW)
@@ -2239,24 +1927,20 @@ typedef union _hw_aips_pacrb
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRB_WP0    (29U)         //!< Bit position for AIPS_PACRB_WP0.
-#define BM_AIPS_PACRB_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRB_WP0.
-#define BS_AIPS_PACRB_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRB_WP0.
+/*@{*/
+#define BP_AIPS_PACRB_WP0    (29U)         /*!< Bit position for AIPS_PACRB_WP0. */
+#define BM_AIPS_PACRB_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRB_WP0. */
+#define BS_AIPS_PACRB_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRB_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_WP0 field.
+/*! @brief Read current value of the AIPS_PACRB_WP0 field. */
 #define BR_AIPS_PACRB_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_WP0.
-#define BF_AIPS_PACRB_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_WP0), uint32_t) & BM_AIPS_PACRB_WP0)
+/*! @brief Format value for bitfield AIPS_PACRB_WP0. */
+#define BF_AIPS_PACRB_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_WP0) & BM_AIPS_PACRB_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRB_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRB, field SP0[30] (RW)
@@ -2266,30 +1950,25 @@ typedef union _hw_aips_pacrb
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRB_SP0    (30U)         //!< Bit position for AIPS_PACRB_SP0.
-#define BM_AIPS_PACRB_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRB_SP0.
-#define BS_AIPS_PACRB_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRB_SP0.
+/*@{*/
+#define BP_AIPS_PACRB_SP0    (30U)         /*!< Bit position for AIPS_PACRB_SP0. */
+#define BM_AIPS_PACRB_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRB_SP0. */
+#define BS_AIPS_PACRB_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRB_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRB_SP0 field.
+/*! @brief Read current value of the AIPS_PACRB_SP0 field. */
 #define BR_AIPS_PACRB_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRB_SP0.
-#define BF_AIPS_PACRB_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRB_SP0), uint32_t) & BM_AIPS_PACRB_SP0)
+/*! @brief Format value for bitfield AIPS_PACRB_SP0. */
+#define BF_AIPS_PACRB_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRB_SP0) & BM_AIPS_PACRB_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRB_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRB_ADDR(x), BP_AIPS_PACRB_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRC - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRC - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRC - Peripheral Access Control Register (RW)
  *
@@ -2325,57 +2004,54 @@ typedef union _hw_aips_pacrc
     uint32_t U;
     struct _hw_aips_pacrc_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRC register
  */
-//@{
-#define HW_AIPS_PACRC_ADDR(x)    (REGS_AIPS_BASE(x) + 0x28U)
+/*@{*/
+#define HW_AIPS_PACRC_ADDR(x)    ((x) + 0x28U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRC(x)         (*(__IO hw_aips_pacrc_t *) HW_AIPS_PACRC_ADDR(x))
 #define HW_AIPS_PACRC_RD(x)      (HW_AIPS_PACRC(x).U)
 #define HW_AIPS_PACRC_WR(x, v)   (HW_AIPS_PACRC(x).U = (v))
 #define HW_AIPS_PACRC_SET(x, v)  (HW_AIPS_PACRC_WR(x, HW_AIPS_PACRC_RD(x) |  (v)))
 #define HW_AIPS_PACRC_CLR(x, v)  (HW_AIPS_PACRC_WR(x, HW_AIPS_PACRC_RD(x) & ~(v)))
 #define HW_AIPS_PACRC_TOG(x, v)  (HW_AIPS_PACRC_WR(x, HW_AIPS_PACRC_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRC bitfields
@@ -2388,24 +2064,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP7    (0U)          //!< Bit position for AIPS_PACRC_TP7.
-#define BM_AIPS_PACRC_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRC_TP7.
-#define BS_AIPS_PACRC_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP7.
+/*@{*/
+#define BP_AIPS_PACRC_TP7    (0U)          /*!< Bit position for AIPS_PACRC_TP7. */
+#define BM_AIPS_PACRC_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRC_TP7. */
+#define BS_AIPS_PACRC_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP7 field.
+/*! @brief Read current value of the AIPS_PACRC_TP7 field. */
 #define BR_AIPS_PACRC_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP7.
-#define BF_AIPS_PACRC_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP7), uint32_t) & BM_AIPS_PACRC_TP7)
+/*! @brief Format value for bitfield AIPS_PACRC_TP7. */
+#define BF_AIPS_PACRC_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP7) & BM_AIPS_PACRC_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRC_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP7[1] (RW)
@@ -2414,24 +2086,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP7    (1U)          //!< Bit position for AIPS_PACRC_WP7.
-#define BM_AIPS_PACRC_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRC_WP7.
-#define BS_AIPS_PACRC_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP7.
+/*@{*/
+#define BP_AIPS_PACRC_WP7    (1U)          /*!< Bit position for AIPS_PACRC_WP7. */
+#define BM_AIPS_PACRC_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRC_WP7. */
+#define BS_AIPS_PACRC_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP7 field.
+/*! @brief Read current value of the AIPS_PACRC_WP7 field. */
 #define BR_AIPS_PACRC_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP7.
-#define BF_AIPS_PACRC_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP7), uint32_t) & BM_AIPS_PACRC_WP7)
+/*! @brief Format value for bitfield AIPS_PACRC_WP7. */
+#define BF_AIPS_PACRC_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP7) & BM_AIPS_PACRC_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRC_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP7[2] (RW)
@@ -2441,24 +2109,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP7    (2U)          //!< Bit position for AIPS_PACRC_SP7.
-#define BM_AIPS_PACRC_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRC_SP7.
-#define BS_AIPS_PACRC_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP7.
+/*@{*/
+#define BP_AIPS_PACRC_SP7    (2U)          /*!< Bit position for AIPS_PACRC_SP7. */
+#define BM_AIPS_PACRC_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRC_SP7. */
+#define BS_AIPS_PACRC_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP7 field.
+/*! @brief Read current value of the AIPS_PACRC_SP7 field. */
 #define BR_AIPS_PACRC_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP7.
-#define BF_AIPS_PACRC_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP7), uint32_t) & BM_AIPS_PACRC_SP7)
+/*! @brief Format value for bitfield AIPS_PACRC_SP7. */
+#define BF_AIPS_PACRC_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP7) & BM_AIPS_PACRC_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRC_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP6[4] (RW)
@@ -2467,24 +2131,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP6    (4U)          //!< Bit position for AIPS_PACRC_TP6.
-#define BM_AIPS_PACRC_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRC_TP6.
-#define BS_AIPS_PACRC_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP6.
+/*@{*/
+#define BP_AIPS_PACRC_TP6    (4U)          /*!< Bit position for AIPS_PACRC_TP6. */
+#define BM_AIPS_PACRC_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRC_TP6. */
+#define BS_AIPS_PACRC_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP6 field.
+/*! @brief Read current value of the AIPS_PACRC_TP6 field. */
 #define BR_AIPS_PACRC_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP6.
-#define BF_AIPS_PACRC_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP6), uint32_t) & BM_AIPS_PACRC_TP6)
+/*! @brief Format value for bitfield AIPS_PACRC_TP6. */
+#define BF_AIPS_PACRC_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP6) & BM_AIPS_PACRC_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRC_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP6[5] (RW)
@@ -2493,24 +2153,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP6    (5U)          //!< Bit position for AIPS_PACRC_WP6.
-#define BM_AIPS_PACRC_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRC_WP6.
-#define BS_AIPS_PACRC_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP6.
+/*@{*/
+#define BP_AIPS_PACRC_WP6    (5U)          /*!< Bit position for AIPS_PACRC_WP6. */
+#define BM_AIPS_PACRC_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRC_WP6. */
+#define BS_AIPS_PACRC_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP6 field.
+/*! @brief Read current value of the AIPS_PACRC_WP6 field. */
 #define BR_AIPS_PACRC_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP6.
-#define BF_AIPS_PACRC_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP6), uint32_t) & BM_AIPS_PACRC_WP6)
+/*! @brief Format value for bitfield AIPS_PACRC_WP6. */
+#define BF_AIPS_PACRC_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP6) & BM_AIPS_PACRC_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRC_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP6[6] (RW)
@@ -2520,24 +2176,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP6    (6U)          //!< Bit position for AIPS_PACRC_SP6.
-#define BM_AIPS_PACRC_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRC_SP6.
-#define BS_AIPS_PACRC_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP6.
+/*@{*/
+#define BP_AIPS_PACRC_SP6    (6U)          /*!< Bit position for AIPS_PACRC_SP6. */
+#define BM_AIPS_PACRC_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRC_SP6. */
+#define BS_AIPS_PACRC_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP6 field.
+/*! @brief Read current value of the AIPS_PACRC_SP6 field. */
 #define BR_AIPS_PACRC_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP6.
-#define BF_AIPS_PACRC_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP6), uint32_t) & BM_AIPS_PACRC_SP6)
+/*! @brief Format value for bitfield AIPS_PACRC_SP6. */
+#define BF_AIPS_PACRC_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP6) & BM_AIPS_PACRC_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRC_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP5[8] (RW)
@@ -2546,24 +2198,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP5    (8U)          //!< Bit position for AIPS_PACRC_TP5.
-#define BM_AIPS_PACRC_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRC_TP5.
-#define BS_AIPS_PACRC_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP5.
+/*@{*/
+#define BP_AIPS_PACRC_TP5    (8U)          /*!< Bit position for AIPS_PACRC_TP5. */
+#define BM_AIPS_PACRC_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRC_TP5. */
+#define BS_AIPS_PACRC_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP5 field.
+/*! @brief Read current value of the AIPS_PACRC_TP5 field. */
 #define BR_AIPS_PACRC_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP5.
-#define BF_AIPS_PACRC_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP5), uint32_t) & BM_AIPS_PACRC_TP5)
+/*! @brief Format value for bitfield AIPS_PACRC_TP5. */
+#define BF_AIPS_PACRC_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP5) & BM_AIPS_PACRC_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRC_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP5[9] (RW)
@@ -2572,24 +2220,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP5    (9U)          //!< Bit position for AIPS_PACRC_WP5.
-#define BM_AIPS_PACRC_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRC_WP5.
-#define BS_AIPS_PACRC_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP5.
+/*@{*/
+#define BP_AIPS_PACRC_WP5    (9U)          /*!< Bit position for AIPS_PACRC_WP5. */
+#define BM_AIPS_PACRC_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRC_WP5. */
+#define BS_AIPS_PACRC_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP5 field.
+/*! @brief Read current value of the AIPS_PACRC_WP5 field. */
 #define BR_AIPS_PACRC_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP5.
-#define BF_AIPS_PACRC_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP5), uint32_t) & BM_AIPS_PACRC_WP5)
+/*! @brief Format value for bitfield AIPS_PACRC_WP5. */
+#define BF_AIPS_PACRC_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP5) & BM_AIPS_PACRC_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRC_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP5[10] (RW)
@@ -2599,24 +2243,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP5    (10U)         //!< Bit position for AIPS_PACRC_SP5.
-#define BM_AIPS_PACRC_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRC_SP5.
-#define BS_AIPS_PACRC_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP5.
+/*@{*/
+#define BP_AIPS_PACRC_SP5    (10U)         /*!< Bit position for AIPS_PACRC_SP5. */
+#define BM_AIPS_PACRC_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRC_SP5. */
+#define BS_AIPS_PACRC_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP5 field.
+/*! @brief Read current value of the AIPS_PACRC_SP5 field. */
 #define BR_AIPS_PACRC_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP5.
-#define BF_AIPS_PACRC_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP5), uint32_t) & BM_AIPS_PACRC_SP5)
+/*! @brief Format value for bitfield AIPS_PACRC_SP5. */
+#define BF_AIPS_PACRC_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP5) & BM_AIPS_PACRC_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRC_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP4[12] (RW)
@@ -2625,24 +2265,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP4    (12U)         //!< Bit position for AIPS_PACRC_TP4.
-#define BM_AIPS_PACRC_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRC_TP4.
-#define BS_AIPS_PACRC_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP4.
+/*@{*/
+#define BP_AIPS_PACRC_TP4    (12U)         /*!< Bit position for AIPS_PACRC_TP4. */
+#define BM_AIPS_PACRC_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRC_TP4. */
+#define BS_AIPS_PACRC_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP4 field.
+/*! @brief Read current value of the AIPS_PACRC_TP4 field. */
 #define BR_AIPS_PACRC_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP4.
-#define BF_AIPS_PACRC_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP4), uint32_t) & BM_AIPS_PACRC_TP4)
+/*! @brief Format value for bitfield AIPS_PACRC_TP4. */
+#define BF_AIPS_PACRC_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP4) & BM_AIPS_PACRC_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRC_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP4[13] (RW)
@@ -2651,24 +2287,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP4    (13U)         //!< Bit position for AIPS_PACRC_WP4.
-#define BM_AIPS_PACRC_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRC_WP4.
-#define BS_AIPS_PACRC_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP4.
+/*@{*/
+#define BP_AIPS_PACRC_WP4    (13U)         /*!< Bit position for AIPS_PACRC_WP4. */
+#define BM_AIPS_PACRC_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRC_WP4. */
+#define BS_AIPS_PACRC_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP4 field.
+/*! @brief Read current value of the AIPS_PACRC_WP4 field. */
 #define BR_AIPS_PACRC_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP4.
-#define BF_AIPS_PACRC_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP4), uint32_t) & BM_AIPS_PACRC_WP4)
+/*! @brief Format value for bitfield AIPS_PACRC_WP4. */
+#define BF_AIPS_PACRC_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP4) & BM_AIPS_PACRC_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRC_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP4[14] (RW)
@@ -2678,24 +2310,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP4    (14U)         //!< Bit position for AIPS_PACRC_SP4.
-#define BM_AIPS_PACRC_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRC_SP4.
-#define BS_AIPS_PACRC_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP4.
+/*@{*/
+#define BP_AIPS_PACRC_SP4    (14U)         /*!< Bit position for AIPS_PACRC_SP4. */
+#define BM_AIPS_PACRC_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRC_SP4. */
+#define BS_AIPS_PACRC_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP4 field.
+/*! @brief Read current value of the AIPS_PACRC_SP4 field. */
 #define BR_AIPS_PACRC_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP4.
-#define BF_AIPS_PACRC_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP4), uint32_t) & BM_AIPS_PACRC_SP4)
+/*! @brief Format value for bitfield AIPS_PACRC_SP4. */
+#define BF_AIPS_PACRC_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP4) & BM_AIPS_PACRC_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRC_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP3[16] (RW)
@@ -2704,24 +2332,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP3    (16U)         //!< Bit position for AIPS_PACRC_TP3.
-#define BM_AIPS_PACRC_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRC_TP3.
-#define BS_AIPS_PACRC_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP3.
+/*@{*/
+#define BP_AIPS_PACRC_TP3    (16U)         /*!< Bit position for AIPS_PACRC_TP3. */
+#define BM_AIPS_PACRC_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRC_TP3. */
+#define BS_AIPS_PACRC_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP3 field.
+/*! @brief Read current value of the AIPS_PACRC_TP3 field. */
 #define BR_AIPS_PACRC_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP3.
-#define BF_AIPS_PACRC_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP3), uint32_t) & BM_AIPS_PACRC_TP3)
+/*! @brief Format value for bitfield AIPS_PACRC_TP3. */
+#define BF_AIPS_PACRC_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP3) & BM_AIPS_PACRC_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRC_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP3[17] (RW)
@@ -2730,24 +2354,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP3    (17U)         //!< Bit position for AIPS_PACRC_WP3.
-#define BM_AIPS_PACRC_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRC_WP3.
-#define BS_AIPS_PACRC_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP3.
+/*@{*/
+#define BP_AIPS_PACRC_WP3    (17U)         /*!< Bit position for AIPS_PACRC_WP3. */
+#define BM_AIPS_PACRC_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRC_WP3. */
+#define BS_AIPS_PACRC_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP3 field.
+/*! @brief Read current value of the AIPS_PACRC_WP3 field. */
 #define BR_AIPS_PACRC_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP3.
-#define BF_AIPS_PACRC_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP3), uint32_t) & BM_AIPS_PACRC_WP3)
+/*! @brief Format value for bitfield AIPS_PACRC_WP3. */
+#define BF_AIPS_PACRC_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP3) & BM_AIPS_PACRC_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRC_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP3[18] (RW)
@@ -2757,24 +2377,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP3    (18U)         //!< Bit position for AIPS_PACRC_SP3.
-#define BM_AIPS_PACRC_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRC_SP3.
-#define BS_AIPS_PACRC_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP3.
+/*@{*/
+#define BP_AIPS_PACRC_SP3    (18U)         /*!< Bit position for AIPS_PACRC_SP3. */
+#define BM_AIPS_PACRC_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRC_SP3. */
+#define BS_AIPS_PACRC_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP3 field.
+/*! @brief Read current value of the AIPS_PACRC_SP3 field. */
 #define BR_AIPS_PACRC_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP3.
-#define BF_AIPS_PACRC_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP3), uint32_t) & BM_AIPS_PACRC_SP3)
+/*! @brief Format value for bitfield AIPS_PACRC_SP3. */
+#define BF_AIPS_PACRC_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP3) & BM_AIPS_PACRC_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRC_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP2[20] (RW)
@@ -2783,24 +2399,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP2    (20U)         //!< Bit position for AIPS_PACRC_TP2.
-#define BM_AIPS_PACRC_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRC_TP2.
-#define BS_AIPS_PACRC_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP2.
+/*@{*/
+#define BP_AIPS_PACRC_TP2    (20U)         /*!< Bit position for AIPS_PACRC_TP2. */
+#define BM_AIPS_PACRC_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRC_TP2. */
+#define BS_AIPS_PACRC_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP2 field.
+/*! @brief Read current value of the AIPS_PACRC_TP2 field. */
 #define BR_AIPS_PACRC_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP2.
-#define BF_AIPS_PACRC_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP2), uint32_t) & BM_AIPS_PACRC_TP2)
+/*! @brief Format value for bitfield AIPS_PACRC_TP2. */
+#define BF_AIPS_PACRC_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP2) & BM_AIPS_PACRC_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRC_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP2[21] (RW)
@@ -2809,24 +2421,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP2    (21U)         //!< Bit position for AIPS_PACRC_WP2.
-#define BM_AIPS_PACRC_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRC_WP2.
-#define BS_AIPS_PACRC_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP2.
+/*@{*/
+#define BP_AIPS_PACRC_WP2    (21U)         /*!< Bit position for AIPS_PACRC_WP2. */
+#define BM_AIPS_PACRC_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRC_WP2. */
+#define BS_AIPS_PACRC_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP2 field.
+/*! @brief Read current value of the AIPS_PACRC_WP2 field. */
 #define BR_AIPS_PACRC_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP2.
-#define BF_AIPS_PACRC_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP2), uint32_t) & BM_AIPS_PACRC_WP2)
+/*! @brief Format value for bitfield AIPS_PACRC_WP2. */
+#define BF_AIPS_PACRC_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP2) & BM_AIPS_PACRC_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRC_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP2[22] (RW)
@@ -2836,24 +2444,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP2    (22U)         //!< Bit position for AIPS_PACRC_SP2.
-#define BM_AIPS_PACRC_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRC_SP2.
-#define BS_AIPS_PACRC_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP2.
+/*@{*/
+#define BP_AIPS_PACRC_SP2    (22U)         /*!< Bit position for AIPS_PACRC_SP2. */
+#define BM_AIPS_PACRC_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRC_SP2. */
+#define BS_AIPS_PACRC_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP2 field.
+/*! @brief Read current value of the AIPS_PACRC_SP2 field. */
 #define BR_AIPS_PACRC_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP2.
-#define BF_AIPS_PACRC_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP2), uint32_t) & BM_AIPS_PACRC_SP2)
+/*! @brief Format value for bitfield AIPS_PACRC_SP2. */
+#define BF_AIPS_PACRC_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP2) & BM_AIPS_PACRC_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRC_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP1[24] (RW)
@@ -2862,24 +2466,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP1    (24U)         //!< Bit position for AIPS_PACRC_TP1.
-#define BM_AIPS_PACRC_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRC_TP1.
-#define BS_AIPS_PACRC_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP1.
+/*@{*/
+#define BP_AIPS_PACRC_TP1    (24U)         /*!< Bit position for AIPS_PACRC_TP1. */
+#define BM_AIPS_PACRC_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRC_TP1. */
+#define BS_AIPS_PACRC_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP1 field.
+/*! @brief Read current value of the AIPS_PACRC_TP1 field. */
 #define BR_AIPS_PACRC_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP1.
-#define BF_AIPS_PACRC_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP1), uint32_t) & BM_AIPS_PACRC_TP1)
+/*! @brief Format value for bitfield AIPS_PACRC_TP1. */
+#define BF_AIPS_PACRC_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP1) & BM_AIPS_PACRC_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRC_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP1[25] (RW)
@@ -2888,24 +2488,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP1    (25U)         //!< Bit position for AIPS_PACRC_WP1.
-#define BM_AIPS_PACRC_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRC_WP1.
-#define BS_AIPS_PACRC_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP1.
+/*@{*/
+#define BP_AIPS_PACRC_WP1    (25U)         /*!< Bit position for AIPS_PACRC_WP1. */
+#define BM_AIPS_PACRC_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRC_WP1. */
+#define BS_AIPS_PACRC_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP1 field.
+/*! @brief Read current value of the AIPS_PACRC_WP1 field. */
 #define BR_AIPS_PACRC_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP1.
-#define BF_AIPS_PACRC_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP1), uint32_t) & BM_AIPS_PACRC_WP1)
+/*! @brief Format value for bitfield AIPS_PACRC_WP1. */
+#define BF_AIPS_PACRC_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP1) & BM_AIPS_PACRC_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRC_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP1[26] (RW)
@@ -2915,24 +2511,20 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP1    (26U)         //!< Bit position for AIPS_PACRC_SP1.
-#define BM_AIPS_PACRC_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRC_SP1.
-#define BS_AIPS_PACRC_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP1.
+/*@{*/
+#define BP_AIPS_PACRC_SP1    (26U)         /*!< Bit position for AIPS_PACRC_SP1. */
+#define BM_AIPS_PACRC_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRC_SP1. */
+#define BS_AIPS_PACRC_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP1 field.
+/*! @brief Read current value of the AIPS_PACRC_SP1 field. */
 #define BR_AIPS_PACRC_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP1.
-#define BF_AIPS_PACRC_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP1), uint32_t) & BM_AIPS_PACRC_SP1)
+/*! @brief Format value for bitfield AIPS_PACRC_SP1. */
+#define BF_AIPS_PACRC_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP1) & BM_AIPS_PACRC_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRC_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field TP0[28] (RW)
@@ -2941,24 +2533,20 @@ typedef union _hw_aips_pacrc
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRC_TP0    (28U)         //!< Bit position for AIPS_PACRC_TP0.
-#define BM_AIPS_PACRC_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRC_TP0.
-#define BS_AIPS_PACRC_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRC_TP0.
+/*@{*/
+#define BP_AIPS_PACRC_TP0    (28U)         /*!< Bit position for AIPS_PACRC_TP0. */
+#define BM_AIPS_PACRC_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRC_TP0. */
+#define BS_AIPS_PACRC_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRC_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_TP0 field.
+/*! @brief Read current value of the AIPS_PACRC_TP0 field. */
 #define BR_AIPS_PACRC_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_TP0.
-#define BF_AIPS_PACRC_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_TP0), uint32_t) & BM_AIPS_PACRC_TP0)
+/*! @brief Format value for bitfield AIPS_PACRC_TP0. */
+#define BF_AIPS_PACRC_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_TP0) & BM_AIPS_PACRC_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRC_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field WP0[29] (RW)
@@ -2967,24 +2555,20 @@ typedef union _hw_aips_pacrc
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRC_WP0    (29U)         //!< Bit position for AIPS_PACRC_WP0.
-#define BM_AIPS_PACRC_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRC_WP0.
-#define BS_AIPS_PACRC_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRC_WP0.
+/*@{*/
+#define BP_AIPS_PACRC_WP0    (29U)         /*!< Bit position for AIPS_PACRC_WP0. */
+#define BM_AIPS_PACRC_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRC_WP0. */
+#define BS_AIPS_PACRC_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRC_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_WP0 field.
+/*! @brief Read current value of the AIPS_PACRC_WP0 field. */
 #define BR_AIPS_PACRC_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_WP0.
-#define BF_AIPS_PACRC_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_WP0), uint32_t) & BM_AIPS_PACRC_WP0)
+/*! @brief Format value for bitfield AIPS_PACRC_WP0. */
+#define BF_AIPS_PACRC_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_WP0) & BM_AIPS_PACRC_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRC_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRC, field SP0[30] (RW)
@@ -2994,30 +2578,25 @@ typedef union _hw_aips_pacrc
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRC_SP0    (30U)         //!< Bit position for AIPS_PACRC_SP0.
-#define BM_AIPS_PACRC_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRC_SP0.
-#define BS_AIPS_PACRC_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRC_SP0.
+/*@{*/
+#define BP_AIPS_PACRC_SP0    (30U)         /*!< Bit position for AIPS_PACRC_SP0. */
+#define BM_AIPS_PACRC_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRC_SP0. */
+#define BS_AIPS_PACRC_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRC_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRC_SP0 field.
+/*! @brief Read current value of the AIPS_PACRC_SP0 field. */
 #define BR_AIPS_PACRC_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRC_SP0.
-#define BF_AIPS_PACRC_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRC_SP0), uint32_t) & BM_AIPS_PACRC_SP0)
+/*! @brief Format value for bitfield AIPS_PACRC_SP0. */
+#define BF_AIPS_PACRC_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRC_SP0) & BM_AIPS_PACRC_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRC_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRC_ADDR(x), BP_AIPS_PACRC_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRD - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRD - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRD - Peripheral Access Control Register (RW)
  *
@@ -3053,57 +2632,54 @@ typedef union _hw_aips_pacrd
     uint32_t U;
     struct _hw_aips_pacrd_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrd_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRD register
  */
-//@{
-#define HW_AIPS_PACRD_ADDR(x)    (REGS_AIPS_BASE(x) + 0x2CU)
+/*@{*/
+#define HW_AIPS_PACRD_ADDR(x)    ((x) + 0x2CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRD(x)         (*(__IO hw_aips_pacrd_t *) HW_AIPS_PACRD_ADDR(x))
 #define HW_AIPS_PACRD_RD(x)      (HW_AIPS_PACRD(x).U)
 #define HW_AIPS_PACRD_WR(x, v)   (HW_AIPS_PACRD(x).U = (v))
 #define HW_AIPS_PACRD_SET(x, v)  (HW_AIPS_PACRD_WR(x, HW_AIPS_PACRD_RD(x) |  (v)))
 #define HW_AIPS_PACRD_CLR(x, v)  (HW_AIPS_PACRD_WR(x, HW_AIPS_PACRD_RD(x) & ~(v)))
 #define HW_AIPS_PACRD_TOG(x, v)  (HW_AIPS_PACRD_WR(x, HW_AIPS_PACRD_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRD bitfields
@@ -3116,24 +2692,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP7    (0U)          //!< Bit position for AIPS_PACRD_TP7.
-#define BM_AIPS_PACRD_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRD_TP7.
-#define BS_AIPS_PACRD_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP7.
+/*@{*/
+#define BP_AIPS_PACRD_TP7    (0U)          /*!< Bit position for AIPS_PACRD_TP7. */
+#define BM_AIPS_PACRD_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRD_TP7. */
+#define BS_AIPS_PACRD_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP7 field.
+/*! @brief Read current value of the AIPS_PACRD_TP7 field. */
 #define BR_AIPS_PACRD_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP7.
-#define BF_AIPS_PACRD_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP7), uint32_t) & BM_AIPS_PACRD_TP7)
+/*! @brief Format value for bitfield AIPS_PACRD_TP7. */
+#define BF_AIPS_PACRD_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP7) & BM_AIPS_PACRD_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRD_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP7[1] (RW)
@@ -3142,24 +2714,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP7    (1U)          //!< Bit position for AIPS_PACRD_WP7.
-#define BM_AIPS_PACRD_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRD_WP7.
-#define BS_AIPS_PACRD_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP7.
+/*@{*/
+#define BP_AIPS_PACRD_WP7    (1U)          /*!< Bit position for AIPS_PACRD_WP7. */
+#define BM_AIPS_PACRD_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRD_WP7. */
+#define BS_AIPS_PACRD_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP7 field.
+/*! @brief Read current value of the AIPS_PACRD_WP7 field. */
 #define BR_AIPS_PACRD_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP7.
-#define BF_AIPS_PACRD_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP7), uint32_t) & BM_AIPS_PACRD_WP7)
+/*! @brief Format value for bitfield AIPS_PACRD_WP7. */
+#define BF_AIPS_PACRD_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP7) & BM_AIPS_PACRD_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRD_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP7[2] (RW)
@@ -3169,24 +2737,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP7    (2U)          //!< Bit position for AIPS_PACRD_SP7.
-#define BM_AIPS_PACRD_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRD_SP7.
-#define BS_AIPS_PACRD_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP7.
+/*@{*/
+#define BP_AIPS_PACRD_SP7    (2U)          /*!< Bit position for AIPS_PACRD_SP7. */
+#define BM_AIPS_PACRD_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRD_SP7. */
+#define BS_AIPS_PACRD_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP7 field.
+/*! @brief Read current value of the AIPS_PACRD_SP7 field. */
 #define BR_AIPS_PACRD_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP7.
-#define BF_AIPS_PACRD_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP7), uint32_t) & BM_AIPS_PACRD_SP7)
+/*! @brief Format value for bitfield AIPS_PACRD_SP7. */
+#define BF_AIPS_PACRD_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP7) & BM_AIPS_PACRD_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRD_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP6[4] (RW)
@@ -3195,24 +2759,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP6    (4U)          //!< Bit position for AIPS_PACRD_TP6.
-#define BM_AIPS_PACRD_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRD_TP6.
-#define BS_AIPS_PACRD_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP6.
+/*@{*/
+#define BP_AIPS_PACRD_TP6    (4U)          /*!< Bit position for AIPS_PACRD_TP6. */
+#define BM_AIPS_PACRD_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRD_TP6. */
+#define BS_AIPS_PACRD_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP6 field.
+/*! @brief Read current value of the AIPS_PACRD_TP6 field. */
 #define BR_AIPS_PACRD_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP6.
-#define BF_AIPS_PACRD_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP6), uint32_t) & BM_AIPS_PACRD_TP6)
+/*! @brief Format value for bitfield AIPS_PACRD_TP6. */
+#define BF_AIPS_PACRD_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP6) & BM_AIPS_PACRD_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRD_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP6[5] (RW)
@@ -3221,24 +2781,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP6    (5U)          //!< Bit position for AIPS_PACRD_WP6.
-#define BM_AIPS_PACRD_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRD_WP6.
-#define BS_AIPS_PACRD_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP6.
+/*@{*/
+#define BP_AIPS_PACRD_WP6    (5U)          /*!< Bit position for AIPS_PACRD_WP6. */
+#define BM_AIPS_PACRD_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRD_WP6. */
+#define BS_AIPS_PACRD_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP6 field.
+/*! @brief Read current value of the AIPS_PACRD_WP6 field. */
 #define BR_AIPS_PACRD_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP6.
-#define BF_AIPS_PACRD_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP6), uint32_t) & BM_AIPS_PACRD_WP6)
+/*! @brief Format value for bitfield AIPS_PACRD_WP6. */
+#define BF_AIPS_PACRD_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP6) & BM_AIPS_PACRD_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRD_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP6[6] (RW)
@@ -3248,24 +2804,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP6    (6U)          //!< Bit position for AIPS_PACRD_SP6.
-#define BM_AIPS_PACRD_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRD_SP6.
-#define BS_AIPS_PACRD_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP6.
+/*@{*/
+#define BP_AIPS_PACRD_SP6    (6U)          /*!< Bit position for AIPS_PACRD_SP6. */
+#define BM_AIPS_PACRD_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRD_SP6. */
+#define BS_AIPS_PACRD_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP6 field.
+/*! @brief Read current value of the AIPS_PACRD_SP6 field. */
 #define BR_AIPS_PACRD_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP6.
-#define BF_AIPS_PACRD_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP6), uint32_t) & BM_AIPS_PACRD_SP6)
+/*! @brief Format value for bitfield AIPS_PACRD_SP6. */
+#define BF_AIPS_PACRD_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP6) & BM_AIPS_PACRD_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRD_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP5[8] (RW)
@@ -3274,24 +2826,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP5    (8U)          //!< Bit position for AIPS_PACRD_TP5.
-#define BM_AIPS_PACRD_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRD_TP5.
-#define BS_AIPS_PACRD_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP5.
+/*@{*/
+#define BP_AIPS_PACRD_TP5    (8U)          /*!< Bit position for AIPS_PACRD_TP5. */
+#define BM_AIPS_PACRD_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRD_TP5. */
+#define BS_AIPS_PACRD_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP5 field.
+/*! @brief Read current value of the AIPS_PACRD_TP5 field. */
 #define BR_AIPS_PACRD_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP5.
-#define BF_AIPS_PACRD_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP5), uint32_t) & BM_AIPS_PACRD_TP5)
+/*! @brief Format value for bitfield AIPS_PACRD_TP5. */
+#define BF_AIPS_PACRD_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP5) & BM_AIPS_PACRD_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRD_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP5[9] (RW)
@@ -3300,24 +2848,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP5    (9U)          //!< Bit position for AIPS_PACRD_WP5.
-#define BM_AIPS_PACRD_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRD_WP5.
-#define BS_AIPS_PACRD_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP5.
+/*@{*/
+#define BP_AIPS_PACRD_WP5    (9U)          /*!< Bit position for AIPS_PACRD_WP5. */
+#define BM_AIPS_PACRD_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRD_WP5. */
+#define BS_AIPS_PACRD_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP5 field.
+/*! @brief Read current value of the AIPS_PACRD_WP5 field. */
 #define BR_AIPS_PACRD_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP5.
-#define BF_AIPS_PACRD_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP5), uint32_t) & BM_AIPS_PACRD_WP5)
+/*! @brief Format value for bitfield AIPS_PACRD_WP5. */
+#define BF_AIPS_PACRD_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP5) & BM_AIPS_PACRD_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRD_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP5[10] (RW)
@@ -3327,24 +2871,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP5    (10U)         //!< Bit position for AIPS_PACRD_SP5.
-#define BM_AIPS_PACRD_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRD_SP5.
-#define BS_AIPS_PACRD_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP5.
+/*@{*/
+#define BP_AIPS_PACRD_SP5    (10U)         /*!< Bit position for AIPS_PACRD_SP5. */
+#define BM_AIPS_PACRD_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRD_SP5. */
+#define BS_AIPS_PACRD_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP5 field.
+/*! @brief Read current value of the AIPS_PACRD_SP5 field. */
 #define BR_AIPS_PACRD_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP5.
-#define BF_AIPS_PACRD_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP5), uint32_t) & BM_AIPS_PACRD_SP5)
+/*! @brief Format value for bitfield AIPS_PACRD_SP5. */
+#define BF_AIPS_PACRD_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP5) & BM_AIPS_PACRD_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRD_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP4[12] (RW)
@@ -3353,24 +2893,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP4    (12U)         //!< Bit position for AIPS_PACRD_TP4.
-#define BM_AIPS_PACRD_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRD_TP4.
-#define BS_AIPS_PACRD_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP4.
+/*@{*/
+#define BP_AIPS_PACRD_TP4    (12U)         /*!< Bit position for AIPS_PACRD_TP4. */
+#define BM_AIPS_PACRD_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRD_TP4. */
+#define BS_AIPS_PACRD_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP4 field.
+/*! @brief Read current value of the AIPS_PACRD_TP4 field. */
 #define BR_AIPS_PACRD_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP4.
-#define BF_AIPS_PACRD_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP4), uint32_t) & BM_AIPS_PACRD_TP4)
+/*! @brief Format value for bitfield AIPS_PACRD_TP4. */
+#define BF_AIPS_PACRD_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP4) & BM_AIPS_PACRD_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRD_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP4[13] (RW)
@@ -3379,24 +2915,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP4    (13U)         //!< Bit position for AIPS_PACRD_WP4.
-#define BM_AIPS_PACRD_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRD_WP4.
-#define BS_AIPS_PACRD_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP4.
+/*@{*/
+#define BP_AIPS_PACRD_WP4    (13U)         /*!< Bit position for AIPS_PACRD_WP4. */
+#define BM_AIPS_PACRD_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRD_WP4. */
+#define BS_AIPS_PACRD_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP4 field.
+/*! @brief Read current value of the AIPS_PACRD_WP4 field. */
 #define BR_AIPS_PACRD_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP4.
-#define BF_AIPS_PACRD_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP4), uint32_t) & BM_AIPS_PACRD_WP4)
+/*! @brief Format value for bitfield AIPS_PACRD_WP4. */
+#define BF_AIPS_PACRD_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP4) & BM_AIPS_PACRD_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRD_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP4[14] (RW)
@@ -3406,24 +2938,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP4    (14U)         //!< Bit position for AIPS_PACRD_SP4.
-#define BM_AIPS_PACRD_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRD_SP4.
-#define BS_AIPS_PACRD_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP4.
+/*@{*/
+#define BP_AIPS_PACRD_SP4    (14U)         /*!< Bit position for AIPS_PACRD_SP4. */
+#define BM_AIPS_PACRD_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRD_SP4. */
+#define BS_AIPS_PACRD_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP4 field.
+/*! @brief Read current value of the AIPS_PACRD_SP4 field. */
 #define BR_AIPS_PACRD_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP4.
-#define BF_AIPS_PACRD_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP4), uint32_t) & BM_AIPS_PACRD_SP4)
+/*! @brief Format value for bitfield AIPS_PACRD_SP4. */
+#define BF_AIPS_PACRD_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP4) & BM_AIPS_PACRD_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRD_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP3[16] (RW)
@@ -3432,24 +2960,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP3    (16U)         //!< Bit position for AIPS_PACRD_TP3.
-#define BM_AIPS_PACRD_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRD_TP3.
-#define BS_AIPS_PACRD_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP3.
+/*@{*/
+#define BP_AIPS_PACRD_TP3    (16U)         /*!< Bit position for AIPS_PACRD_TP3. */
+#define BM_AIPS_PACRD_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRD_TP3. */
+#define BS_AIPS_PACRD_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP3 field.
+/*! @brief Read current value of the AIPS_PACRD_TP3 field. */
 #define BR_AIPS_PACRD_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP3.
-#define BF_AIPS_PACRD_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP3), uint32_t) & BM_AIPS_PACRD_TP3)
+/*! @brief Format value for bitfield AIPS_PACRD_TP3. */
+#define BF_AIPS_PACRD_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP3) & BM_AIPS_PACRD_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRD_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP3[17] (RW)
@@ -3458,24 +2982,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP3    (17U)         //!< Bit position for AIPS_PACRD_WP3.
-#define BM_AIPS_PACRD_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRD_WP3.
-#define BS_AIPS_PACRD_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP3.
+/*@{*/
+#define BP_AIPS_PACRD_WP3    (17U)         /*!< Bit position for AIPS_PACRD_WP3. */
+#define BM_AIPS_PACRD_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRD_WP3. */
+#define BS_AIPS_PACRD_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP3 field.
+/*! @brief Read current value of the AIPS_PACRD_WP3 field. */
 #define BR_AIPS_PACRD_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP3.
-#define BF_AIPS_PACRD_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP3), uint32_t) & BM_AIPS_PACRD_WP3)
+/*! @brief Format value for bitfield AIPS_PACRD_WP3. */
+#define BF_AIPS_PACRD_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP3) & BM_AIPS_PACRD_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRD_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP3[18] (RW)
@@ -3485,24 +3005,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP3    (18U)         //!< Bit position for AIPS_PACRD_SP3.
-#define BM_AIPS_PACRD_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRD_SP3.
-#define BS_AIPS_PACRD_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP3.
+/*@{*/
+#define BP_AIPS_PACRD_SP3    (18U)         /*!< Bit position for AIPS_PACRD_SP3. */
+#define BM_AIPS_PACRD_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRD_SP3. */
+#define BS_AIPS_PACRD_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP3 field.
+/*! @brief Read current value of the AIPS_PACRD_SP3 field. */
 #define BR_AIPS_PACRD_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP3.
-#define BF_AIPS_PACRD_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP3), uint32_t) & BM_AIPS_PACRD_SP3)
+/*! @brief Format value for bitfield AIPS_PACRD_SP3. */
+#define BF_AIPS_PACRD_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP3) & BM_AIPS_PACRD_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRD_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP2[20] (RW)
@@ -3511,24 +3027,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP2    (20U)         //!< Bit position for AIPS_PACRD_TP2.
-#define BM_AIPS_PACRD_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRD_TP2.
-#define BS_AIPS_PACRD_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP2.
+/*@{*/
+#define BP_AIPS_PACRD_TP2    (20U)         /*!< Bit position for AIPS_PACRD_TP2. */
+#define BM_AIPS_PACRD_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRD_TP2. */
+#define BS_AIPS_PACRD_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP2 field.
+/*! @brief Read current value of the AIPS_PACRD_TP2 field. */
 #define BR_AIPS_PACRD_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP2.
-#define BF_AIPS_PACRD_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP2), uint32_t) & BM_AIPS_PACRD_TP2)
+/*! @brief Format value for bitfield AIPS_PACRD_TP2. */
+#define BF_AIPS_PACRD_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP2) & BM_AIPS_PACRD_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRD_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP2[21] (RW)
@@ -3537,24 +3049,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP2    (21U)         //!< Bit position for AIPS_PACRD_WP2.
-#define BM_AIPS_PACRD_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRD_WP2.
-#define BS_AIPS_PACRD_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP2.
+/*@{*/
+#define BP_AIPS_PACRD_WP2    (21U)         /*!< Bit position for AIPS_PACRD_WP2. */
+#define BM_AIPS_PACRD_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRD_WP2. */
+#define BS_AIPS_PACRD_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP2 field.
+/*! @brief Read current value of the AIPS_PACRD_WP2 field. */
 #define BR_AIPS_PACRD_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP2.
-#define BF_AIPS_PACRD_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP2), uint32_t) & BM_AIPS_PACRD_WP2)
+/*! @brief Format value for bitfield AIPS_PACRD_WP2. */
+#define BF_AIPS_PACRD_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP2) & BM_AIPS_PACRD_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRD_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP2[22] (RW)
@@ -3564,24 +3072,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP2    (22U)         //!< Bit position for AIPS_PACRD_SP2.
-#define BM_AIPS_PACRD_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRD_SP2.
-#define BS_AIPS_PACRD_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP2.
+/*@{*/
+#define BP_AIPS_PACRD_SP2    (22U)         /*!< Bit position for AIPS_PACRD_SP2. */
+#define BM_AIPS_PACRD_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRD_SP2. */
+#define BS_AIPS_PACRD_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP2 field.
+/*! @brief Read current value of the AIPS_PACRD_SP2 field. */
 #define BR_AIPS_PACRD_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP2.
-#define BF_AIPS_PACRD_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP2), uint32_t) & BM_AIPS_PACRD_SP2)
+/*! @brief Format value for bitfield AIPS_PACRD_SP2. */
+#define BF_AIPS_PACRD_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP2) & BM_AIPS_PACRD_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRD_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP1[24] (RW)
@@ -3590,24 +3094,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP1    (24U)         //!< Bit position for AIPS_PACRD_TP1.
-#define BM_AIPS_PACRD_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRD_TP1.
-#define BS_AIPS_PACRD_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP1.
+/*@{*/
+#define BP_AIPS_PACRD_TP1    (24U)         /*!< Bit position for AIPS_PACRD_TP1. */
+#define BM_AIPS_PACRD_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRD_TP1. */
+#define BS_AIPS_PACRD_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP1 field.
+/*! @brief Read current value of the AIPS_PACRD_TP1 field. */
 #define BR_AIPS_PACRD_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP1.
-#define BF_AIPS_PACRD_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP1), uint32_t) & BM_AIPS_PACRD_TP1)
+/*! @brief Format value for bitfield AIPS_PACRD_TP1. */
+#define BF_AIPS_PACRD_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP1) & BM_AIPS_PACRD_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRD_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP1[25] (RW)
@@ -3616,24 +3116,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP1    (25U)         //!< Bit position for AIPS_PACRD_WP1.
-#define BM_AIPS_PACRD_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRD_WP1.
-#define BS_AIPS_PACRD_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP1.
+/*@{*/
+#define BP_AIPS_PACRD_WP1    (25U)         /*!< Bit position for AIPS_PACRD_WP1. */
+#define BM_AIPS_PACRD_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRD_WP1. */
+#define BS_AIPS_PACRD_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP1 field.
+/*! @brief Read current value of the AIPS_PACRD_WP1 field. */
 #define BR_AIPS_PACRD_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP1.
-#define BF_AIPS_PACRD_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP1), uint32_t) & BM_AIPS_PACRD_WP1)
+/*! @brief Format value for bitfield AIPS_PACRD_WP1. */
+#define BF_AIPS_PACRD_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP1) & BM_AIPS_PACRD_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRD_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP1[26] (RW)
@@ -3643,24 +3139,20 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP1    (26U)         //!< Bit position for AIPS_PACRD_SP1.
-#define BM_AIPS_PACRD_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRD_SP1.
-#define BS_AIPS_PACRD_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP1.
+/*@{*/
+#define BP_AIPS_PACRD_SP1    (26U)         /*!< Bit position for AIPS_PACRD_SP1. */
+#define BM_AIPS_PACRD_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRD_SP1. */
+#define BS_AIPS_PACRD_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP1 field.
+/*! @brief Read current value of the AIPS_PACRD_SP1 field. */
 #define BR_AIPS_PACRD_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP1.
-#define BF_AIPS_PACRD_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP1), uint32_t) & BM_AIPS_PACRD_SP1)
+/*! @brief Format value for bitfield AIPS_PACRD_SP1. */
+#define BF_AIPS_PACRD_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP1) & BM_AIPS_PACRD_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRD_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field TP0[28] (RW)
@@ -3669,24 +3161,20 @@ typedef union _hw_aips_pacrd
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRD_TP0    (28U)         //!< Bit position for AIPS_PACRD_TP0.
-#define BM_AIPS_PACRD_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRD_TP0.
-#define BS_AIPS_PACRD_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRD_TP0.
+/*@{*/
+#define BP_AIPS_PACRD_TP0    (28U)         /*!< Bit position for AIPS_PACRD_TP0. */
+#define BM_AIPS_PACRD_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRD_TP0. */
+#define BS_AIPS_PACRD_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRD_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_TP0 field.
+/*! @brief Read current value of the AIPS_PACRD_TP0 field. */
 #define BR_AIPS_PACRD_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_TP0.
-#define BF_AIPS_PACRD_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_TP0), uint32_t) & BM_AIPS_PACRD_TP0)
+/*! @brief Format value for bitfield AIPS_PACRD_TP0. */
+#define BF_AIPS_PACRD_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_TP0) & BM_AIPS_PACRD_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRD_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field WP0[29] (RW)
@@ -3695,24 +3183,20 @@ typedef union _hw_aips_pacrd
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRD_WP0    (29U)         //!< Bit position for AIPS_PACRD_WP0.
-#define BM_AIPS_PACRD_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRD_WP0.
-#define BS_AIPS_PACRD_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRD_WP0.
+/*@{*/
+#define BP_AIPS_PACRD_WP0    (29U)         /*!< Bit position for AIPS_PACRD_WP0. */
+#define BM_AIPS_PACRD_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRD_WP0. */
+#define BS_AIPS_PACRD_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRD_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_WP0 field.
+/*! @brief Read current value of the AIPS_PACRD_WP0 field. */
 #define BR_AIPS_PACRD_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_WP0.
-#define BF_AIPS_PACRD_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_WP0), uint32_t) & BM_AIPS_PACRD_WP0)
+/*! @brief Format value for bitfield AIPS_PACRD_WP0. */
+#define BF_AIPS_PACRD_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_WP0) & BM_AIPS_PACRD_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRD_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRD, field SP0[30] (RW)
@@ -3722,30 +3206,25 @@ typedef union _hw_aips_pacrd
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRD_SP0    (30U)         //!< Bit position for AIPS_PACRD_SP0.
-#define BM_AIPS_PACRD_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRD_SP0.
-#define BS_AIPS_PACRD_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRD_SP0.
+/*@{*/
+#define BP_AIPS_PACRD_SP0    (30U)         /*!< Bit position for AIPS_PACRD_SP0. */
+#define BM_AIPS_PACRD_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRD_SP0. */
+#define BS_AIPS_PACRD_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRD_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRD_SP0 field.
+/*! @brief Read current value of the AIPS_PACRD_SP0 field. */
 #define BR_AIPS_PACRD_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRD_SP0.
-#define BF_AIPS_PACRD_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRD_SP0), uint32_t) & BM_AIPS_PACRD_SP0)
+/*! @brief Format value for bitfield AIPS_PACRD_SP0. */
+#define BF_AIPS_PACRD_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRD_SP0) & BM_AIPS_PACRD_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRD_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRD_ADDR(x), BP_AIPS_PACRD_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRE - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRE - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRE - Peripheral Access Control Register (RW)
  *
@@ -3764,57 +3243,54 @@ typedef union _hw_aips_pacre
     uint32_t U;
     struct _hw_aips_pacre_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacre_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRE register
  */
-//@{
-#define HW_AIPS_PACRE_ADDR(x)    (REGS_AIPS_BASE(x) + 0x40U)
+/*@{*/
+#define HW_AIPS_PACRE_ADDR(x)    ((x) + 0x40U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRE(x)         (*(__IO hw_aips_pacre_t *) HW_AIPS_PACRE_ADDR(x))
 #define HW_AIPS_PACRE_RD(x)      (HW_AIPS_PACRE(x).U)
 #define HW_AIPS_PACRE_WR(x, v)   (HW_AIPS_PACRE(x).U = (v))
 #define HW_AIPS_PACRE_SET(x, v)  (HW_AIPS_PACRE_WR(x, HW_AIPS_PACRE_RD(x) |  (v)))
 #define HW_AIPS_PACRE_CLR(x, v)  (HW_AIPS_PACRE_WR(x, HW_AIPS_PACRE_RD(x) & ~(v)))
 #define HW_AIPS_PACRE_TOG(x, v)  (HW_AIPS_PACRE_WR(x, HW_AIPS_PACRE_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRE bitfields
@@ -3827,24 +3303,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP7    (0U)          //!< Bit position for AIPS_PACRE_TP7.
-#define BM_AIPS_PACRE_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRE_TP7.
-#define BS_AIPS_PACRE_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP7.
+/*@{*/
+#define BP_AIPS_PACRE_TP7    (0U)          /*!< Bit position for AIPS_PACRE_TP7. */
+#define BM_AIPS_PACRE_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRE_TP7. */
+#define BS_AIPS_PACRE_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP7 field.
+/*! @brief Read current value of the AIPS_PACRE_TP7 field. */
 #define BR_AIPS_PACRE_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP7.
-#define BF_AIPS_PACRE_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP7), uint32_t) & BM_AIPS_PACRE_TP7)
+/*! @brief Format value for bitfield AIPS_PACRE_TP7. */
+#define BF_AIPS_PACRE_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP7) & BM_AIPS_PACRE_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRE_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP7[1] (RW)
@@ -3853,24 +3325,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP7    (1U)          //!< Bit position for AIPS_PACRE_WP7.
-#define BM_AIPS_PACRE_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRE_WP7.
-#define BS_AIPS_PACRE_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP7.
+/*@{*/
+#define BP_AIPS_PACRE_WP7    (1U)          /*!< Bit position for AIPS_PACRE_WP7. */
+#define BM_AIPS_PACRE_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRE_WP7. */
+#define BS_AIPS_PACRE_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP7 field.
+/*! @brief Read current value of the AIPS_PACRE_WP7 field. */
 #define BR_AIPS_PACRE_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP7.
-#define BF_AIPS_PACRE_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP7), uint32_t) & BM_AIPS_PACRE_WP7)
+/*! @brief Format value for bitfield AIPS_PACRE_WP7. */
+#define BF_AIPS_PACRE_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP7) & BM_AIPS_PACRE_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRE_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP7[2] (RW)
@@ -3880,24 +3348,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP7    (2U)          //!< Bit position for AIPS_PACRE_SP7.
-#define BM_AIPS_PACRE_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRE_SP7.
-#define BS_AIPS_PACRE_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP7.
+/*@{*/
+#define BP_AIPS_PACRE_SP7    (2U)          /*!< Bit position for AIPS_PACRE_SP7. */
+#define BM_AIPS_PACRE_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRE_SP7. */
+#define BS_AIPS_PACRE_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP7 field.
+/*! @brief Read current value of the AIPS_PACRE_SP7 field. */
 #define BR_AIPS_PACRE_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP7.
-#define BF_AIPS_PACRE_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP7), uint32_t) & BM_AIPS_PACRE_SP7)
+/*! @brief Format value for bitfield AIPS_PACRE_SP7. */
+#define BF_AIPS_PACRE_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP7) & BM_AIPS_PACRE_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRE_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP6[4] (RW)
@@ -3906,24 +3370,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP6    (4U)          //!< Bit position for AIPS_PACRE_TP6.
-#define BM_AIPS_PACRE_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRE_TP6.
-#define BS_AIPS_PACRE_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP6.
+/*@{*/
+#define BP_AIPS_PACRE_TP6    (4U)          /*!< Bit position for AIPS_PACRE_TP6. */
+#define BM_AIPS_PACRE_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRE_TP6. */
+#define BS_AIPS_PACRE_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP6 field.
+/*! @brief Read current value of the AIPS_PACRE_TP6 field. */
 #define BR_AIPS_PACRE_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP6.
-#define BF_AIPS_PACRE_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP6), uint32_t) & BM_AIPS_PACRE_TP6)
+/*! @brief Format value for bitfield AIPS_PACRE_TP6. */
+#define BF_AIPS_PACRE_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP6) & BM_AIPS_PACRE_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRE_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP6[5] (RW)
@@ -3932,24 +3392,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP6    (5U)          //!< Bit position for AIPS_PACRE_WP6.
-#define BM_AIPS_PACRE_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRE_WP6.
-#define BS_AIPS_PACRE_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP6.
+/*@{*/
+#define BP_AIPS_PACRE_WP6    (5U)          /*!< Bit position for AIPS_PACRE_WP6. */
+#define BM_AIPS_PACRE_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRE_WP6. */
+#define BS_AIPS_PACRE_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP6 field.
+/*! @brief Read current value of the AIPS_PACRE_WP6 field. */
 #define BR_AIPS_PACRE_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP6.
-#define BF_AIPS_PACRE_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP6), uint32_t) & BM_AIPS_PACRE_WP6)
+/*! @brief Format value for bitfield AIPS_PACRE_WP6. */
+#define BF_AIPS_PACRE_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP6) & BM_AIPS_PACRE_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRE_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP6[6] (RW)
@@ -3959,24 +3415,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP6    (6U)          //!< Bit position for AIPS_PACRE_SP6.
-#define BM_AIPS_PACRE_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRE_SP6.
-#define BS_AIPS_PACRE_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP6.
+/*@{*/
+#define BP_AIPS_PACRE_SP6    (6U)          /*!< Bit position for AIPS_PACRE_SP6. */
+#define BM_AIPS_PACRE_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRE_SP6. */
+#define BS_AIPS_PACRE_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP6 field.
+/*! @brief Read current value of the AIPS_PACRE_SP6 field. */
 #define BR_AIPS_PACRE_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP6.
-#define BF_AIPS_PACRE_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP6), uint32_t) & BM_AIPS_PACRE_SP6)
+/*! @brief Format value for bitfield AIPS_PACRE_SP6. */
+#define BF_AIPS_PACRE_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP6) & BM_AIPS_PACRE_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRE_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP5[8] (RW)
@@ -3985,24 +3437,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP5    (8U)          //!< Bit position for AIPS_PACRE_TP5.
-#define BM_AIPS_PACRE_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRE_TP5.
-#define BS_AIPS_PACRE_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP5.
+/*@{*/
+#define BP_AIPS_PACRE_TP5    (8U)          /*!< Bit position for AIPS_PACRE_TP5. */
+#define BM_AIPS_PACRE_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRE_TP5. */
+#define BS_AIPS_PACRE_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP5 field.
+/*! @brief Read current value of the AIPS_PACRE_TP5 field. */
 #define BR_AIPS_PACRE_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP5.
-#define BF_AIPS_PACRE_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP5), uint32_t) & BM_AIPS_PACRE_TP5)
+/*! @brief Format value for bitfield AIPS_PACRE_TP5. */
+#define BF_AIPS_PACRE_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP5) & BM_AIPS_PACRE_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRE_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP5[9] (RW)
@@ -4011,24 +3459,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP5    (9U)          //!< Bit position for AIPS_PACRE_WP5.
-#define BM_AIPS_PACRE_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRE_WP5.
-#define BS_AIPS_PACRE_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP5.
+/*@{*/
+#define BP_AIPS_PACRE_WP5    (9U)          /*!< Bit position for AIPS_PACRE_WP5. */
+#define BM_AIPS_PACRE_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRE_WP5. */
+#define BS_AIPS_PACRE_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP5 field.
+/*! @brief Read current value of the AIPS_PACRE_WP5 field. */
 #define BR_AIPS_PACRE_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP5.
-#define BF_AIPS_PACRE_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP5), uint32_t) & BM_AIPS_PACRE_WP5)
+/*! @brief Format value for bitfield AIPS_PACRE_WP5. */
+#define BF_AIPS_PACRE_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP5) & BM_AIPS_PACRE_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRE_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP5[10] (RW)
@@ -4038,24 +3482,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP5    (10U)         //!< Bit position for AIPS_PACRE_SP5.
-#define BM_AIPS_PACRE_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRE_SP5.
-#define BS_AIPS_PACRE_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP5.
+/*@{*/
+#define BP_AIPS_PACRE_SP5    (10U)         /*!< Bit position for AIPS_PACRE_SP5. */
+#define BM_AIPS_PACRE_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRE_SP5. */
+#define BS_AIPS_PACRE_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP5 field.
+/*! @brief Read current value of the AIPS_PACRE_SP5 field. */
 #define BR_AIPS_PACRE_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP5.
-#define BF_AIPS_PACRE_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP5), uint32_t) & BM_AIPS_PACRE_SP5)
+/*! @brief Format value for bitfield AIPS_PACRE_SP5. */
+#define BF_AIPS_PACRE_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP5) & BM_AIPS_PACRE_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRE_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP4[12] (RW)
@@ -4064,24 +3504,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP4    (12U)         //!< Bit position for AIPS_PACRE_TP4.
-#define BM_AIPS_PACRE_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRE_TP4.
-#define BS_AIPS_PACRE_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP4.
+/*@{*/
+#define BP_AIPS_PACRE_TP4    (12U)         /*!< Bit position for AIPS_PACRE_TP4. */
+#define BM_AIPS_PACRE_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRE_TP4. */
+#define BS_AIPS_PACRE_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP4 field.
+/*! @brief Read current value of the AIPS_PACRE_TP4 field. */
 #define BR_AIPS_PACRE_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP4.
-#define BF_AIPS_PACRE_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP4), uint32_t) & BM_AIPS_PACRE_TP4)
+/*! @brief Format value for bitfield AIPS_PACRE_TP4. */
+#define BF_AIPS_PACRE_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP4) & BM_AIPS_PACRE_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRE_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP4[13] (RW)
@@ -4090,24 +3526,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP4    (13U)         //!< Bit position for AIPS_PACRE_WP4.
-#define BM_AIPS_PACRE_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRE_WP4.
-#define BS_AIPS_PACRE_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP4.
+/*@{*/
+#define BP_AIPS_PACRE_WP4    (13U)         /*!< Bit position for AIPS_PACRE_WP4. */
+#define BM_AIPS_PACRE_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRE_WP4. */
+#define BS_AIPS_PACRE_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP4 field.
+/*! @brief Read current value of the AIPS_PACRE_WP4 field. */
 #define BR_AIPS_PACRE_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP4.
-#define BF_AIPS_PACRE_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP4), uint32_t) & BM_AIPS_PACRE_WP4)
+/*! @brief Format value for bitfield AIPS_PACRE_WP4. */
+#define BF_AIPS_PACRE_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP4) & BM_AIPS_PACRE_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRE_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP4[14] (RW)
@@ -4117,24 +3549,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP4    (14U)         //!< Bit position for AIPS_PACRE_SP4.
-#define BM_AIPS_PACRE_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRE_SP4.
-#define BS_AIPS_PACRE_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP4.
+/*@{*/
+#define BP_AIPS_PACRE_SP4    (14U)         /*!< Bit position for AIPS_PACRE_SP4. */
+#define BM_AIPS_PACRE_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRE_SP4. */
+#define BS_AIPS_PACRE_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP4 field.
+/*! @brief Read current value of the AIPS_PACRE_SP4 field. */
 #define BR_AIPS_PACRE_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP4.
-#define BF_AIPS_PACRE_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP4), uint32_t) & BM_AIPS_PACRE_SP4)
+/*! @brief Format value for bitfield AIPS_PACRE_SP4. */
+#define BF_AIPS_PACRE_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP4) & BM_AIPS_PACRE_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRE_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP3[16] (RW)
@@ -4143,24 +3571,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP3    (16U)         //!< Bit position for AIPS_PACRE_TP3.
-#define BM_AIPS_PACRE_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRE_TP3.
-#define BS_AIPS_PACRE_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP3.
+/*@{*/
+#define BP_AIPS_PACRE_TP3    (16U)         /*!< Bit position for AIPS_PACRE_TP3. */
+#define BM_AIPS_PACRE_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRE_TP3. */
+#define BS_AIPS_PACRE_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP3 field.
+/*! @brief Read current value of the AIPS_PACRE_TP3 field. */
 #define BR_AIPS_PACRE_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP3.
-#define BF_AIPS_PACRE_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP3), uint32_t) & BM_AIPS_PACRE_TP3)
+/*! @brief Format value for bitfield AIPS_PACRE_TP3. */
+#define BF_AIPS_PACRE_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP3) & BM_AIPS_PACRE_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRE_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP3[17] (RW)
@@ -4169,24 +3593,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP3    (17U)         //!< Bit position for AIPS_PACRE_WP3.
-#define BM_AIPS_PACRE_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRE_WP3.
-#define BS_AIPS_PACRE_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP3.
+/*@{*/
+#define BP_AIPS_PACRE_WP3    (17U)         /*!< Bit position for AIPS_PACRE_WP3. */
+#define BM_AIPS_PACRE_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRE_WP3. */
+#define BS_AIPS_PACRE_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP3 field.
+/*! @brief Read current value of the AIPS_PACRE_WP3 field. */
 #define BR_AIPS_PACRE_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP3.
-#define BF_AIPS_PACRE_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP3), uint32_t) & BM_AIPS_PACRE_WP3)
+/*! @brief Format value for bitfield AIPS_PACRE_WP3. */
+#define BF_AIPS_PACRE_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP3) & BM_AIPS_PACRE_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRE_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP3[18] (RW)
@@ -4196,24 +3616,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP3    (18U)         //!< Bit position for AIPS_PACRE_SP3.
-#define BM_AIPS_PACRE_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRE_SP3.
-#define BS_AIPS_PACRE_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP3.
+/*@{*/
+#define BP_AIPS_PACRE_SP3    (18U)         /*!< Bit position for AIPS_PACRE_SP3. */
+#define BM_AIPS_PACRE_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRE_SP3. */
+#define BS_AIPS_PACRE_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP3 field.
+/*! @brief Read current value of the AIPS_PACRE_SP3 field. */
 #define BR_AIPS_PACRE_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP3.
-#define BF_AIPS_PACRE_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP3), uint32_t) & BM_AIPS_PACRE_SP3)
+/*! @brief Format value for bitfield AIPS_PACRE_SP3. */
+#define BF_AIPS_PACRE_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP3) & BM_AIPS_PACRE_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRE_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP2[20] (RW)
@@ -4222,24 +3638,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP2    (20U)         //!< Bit position for AIPS_PACRE_TP2.
-#define BM_AIPS_PACRE_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRE_TP2.
-#define BS_AIPS_PACRE_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP2.
+/*@{*/
+#define BP_AIPS_PACRE_TP2    (20U)         /*!< Bit position for AIPS_PACRE_TP2. */
+#define BM_AIPS_PACRE_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRE_TP2. */
+#define BS_AIPS_PACRE_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP2 field.
+/*! @brief Read current value of the AIPS_PACRE_TP2 field. */
 #define BR_AIPS_PACRE_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP2.
-#define BF_AIPS_PACRE_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP2), uint32_t) & BM_AIPS_PACRE_TP2)
+/*! @brief Format value for bitfield AIPS_PACRE_TP2. */
+#define BF_AIPS_PACRE_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP2) & BM_AIPS_PACRE_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRE_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP2[21] (RW)
@@ -4248,24 +3660,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP2    (21U)         //!< Bit position for AIPS_PACRE_WP2.
-#define BM_AIPS_PACRE_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRE_WP2.
-#define BS_AIPS_PACRE_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP2.
+/*@{*/
+#define BP_AIPS_PACRE_WP2    (21U)         /*!< Bit position for AIPS_PACRE_WP2. */
+#define BM_AIPS_PACRE_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRE_WP2. */
+#define BS_AIPS_PACRE_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP2 field.
+/*! @brief Read current value of the AIPS_PACRE_WP2 field. */
 #define BR_AIPS_PACRE_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP2.
-#define BF_AIPS_PACRE_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP2), uint32_t) & BM_AIPS_PACRE_WP2)
+/*! @brief Format value for bitfield AIPS_PACRE_WP2. */
+#define BF_AIPS_PACRE_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP2) & BM_AIPS_PACRE_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRE_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP2[22] (RW)
@@ -4275,24 +3683,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP2    (22U)         //!< Bit position for AIPS_PACRE_SP2.
-#define BM_AIPS_PACRE_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRE_SP2.
-#define BS_AIPS_PACRE_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP2.
+/*@{*/
+#define BP_AIPS_PACRE_SP2    (22U)         /*!< Bit position for AIPS_PACRE_SP2. */
+#define BM_AIPS_PACRE_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRE_SP2. */
+#define BS_AIPS_PACRE_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP2 field.
+/*! @brief Read current value of the AIPS_PACRE_SP2 field. */
 #define BR_AIPS_PACRE_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP2.
-#define BF_AIPS_PACRE_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP2), uint32_t) & BM_AIPS_PACRE_SP2)
+/*! @brief Format value for bitfield AIPS_PACRE_SP2. */
+#define BF_AIPS_PACRE_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP2) & BM_AIPS_PACRE_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRE_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP1[24] (RW)
@@ -4301,24 +3705,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP1    (24U)         //!< Bit position for AIPS_PACRE_TP1.
-#define BM_AIPS_PACRE_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRE_TP1.
-#define BS_AIPS_PACRE_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP1.
+/*@{*/
+#define BP_AIPS_PACRE_TP1    (24U)         /*!< Bit position for AIPS_PACRE_TP1. */
+#define BM_AIPS_PACRE_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRE_TP1. */
+#define BS_AIPS_PACRE_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP1 field.
+/*! @brief Read current value of the AIPS_PACRE_TP1 field. */
 #define BR_AIPS_PACRE_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP1.
-#define BF_AIPS_PACRE_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP1), uint32_t) & BM_AIPS_PACRE_TP1)
+/*! @brief Format value for bitfield AIPS_PACRE_TP1. */
+#define BF_AIPS_PACRE_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP1) & BM_AIPS_PACRE_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRE_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP1[25] (RW)
@@ -4327,24 +3727,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP1    (25U)         //!< Bit position for AIPS_PACRE_WP1.
-#define BM_AIPS_PACRE_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRE_WP1.
-#define BS_AIPS_PACRE_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP1.
+/*@{*/
+#define BP_AIPS_PACRE_WP1    (25U)         /*!< Bit position for AIPS_PACRE_WP1. */
+#define BM_AIPS_PACRE_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRE_WP1. */
+#define BS_AIPS_PACRE_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP1 field.
+/*! @brief Read current value of the AIPS_PACRE_WP1 field. */
 #define BR_AIPS_PACRE_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP1.
-#define BF_AIPS_PACRE_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP1), uint32_t) & BM_AIPS_PACRE_WP1)
+/*! @brief Format value for bitfield AIPS_PACRE_WP1. */
+#define BF_AIPS_PACRE_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP1) & BM_AIPS_PACRE_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRE_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP1[26] (RW)
@@ -4354,24 +3750,20 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP1    (26U)         //!< Bit position for AIPS_PACRE_SP1.
-#define BM_AIPS_PACRE_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRE_SP1.
-#define BS_AIPS_PACRE_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP1.
+/*@{*/
+#define BP_AIPS_PACRE_SP1    (26U)         /*!< Bit position for AIPS_PACRE_SP1. */
+#define BM_AIPS_PACRE_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRE_SP1. */
+#define BS_AIPS_PACRE_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP1 field.
+/*! @brief Read current value of the AIPS_PACRE_SP1 field. */
 #define BR_AIPS_PACRE_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP1.
-#define BF_AIPS_PACRE_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP1), uint32_t) & BM_AIPS_PACRE_SP1)
+/*! @brief Format value for bitfield AIPS_PACRE_SP1. */
+#define BF_AIPS_PACRE_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP1) & BM_AIPS_PACRE_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRE_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field TP0[28] (RW)
@@ -4380,24 +3772,20 @@ typedef union _hw_aips_pacre
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRE_TP0    (28U)         //!< Bit position for AIPS_PACRE_TP0.
-#define BM_AIPS_PACRE_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRE_TP0.
-#define BS_AIPS_PACRE_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRE_TP0.
+/*@{*/
+#define BP_AIPS_PACRE_TP0    (28U)         /*!< Bit position for AIPS_PACRE_TP0. */
+#define BM_AIPS_PACRE_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRE_TP0. */
+#define BS_AIPS_PACRE_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRE_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_TP0 field.
+/*! @brief Read current value of the AIPS_PACRE_TP0 field. */
 #define BR_AIPS_PACRE_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_TP0.
-#define BF_AIPS_PACRE_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_TP0), uint32_t) & BM_AIPS_PACRE_TP0)
+/*! @brief Format value for bitfield AIPS_PACRE_TP0. */
+#define BF_AIPS_PACRE_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_TP0) & BM_AIPS_PACRE_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRE_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field WP0[29] (RW)
@@ -4406,24 +3794,20 @@ typedef union _hw_aips_pacre
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRE_WP0    (29U)         //!< Bit position for AIPS_PACRE_WP0.
-#define BM_AIPS_PACRE_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRE_WP0.
-#define BS_AIPS_PACRE_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRE_WP0.
+/*@{*/
+#define BP_AIPS_PACRE_WP0    (29U)         /*!< Bit position for AIPS_PACRE_WP0. */
+#define BM_AIPS_PACRE_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRE_WP0. */
+#define BS_AIPS_PACRE_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRE_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_WP0 field.
+/*! @brief Read current value of the AIPS_PACRE_WP0 field. */
 #define BR_AIPS_PACRE_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_WP0.
-#define BF_AIPS_PACRE_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_WP0), uint32_t) & BM_AIPS_PACRE_WP0)
+/*! @brief Format value for bitfield AIPS_PACRE_WP0. */
+#define BF_AIPS_PACRE_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_WP0) & BM_AIPS_PACRE_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRE_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRE, field SP0[30] (RW)
@@ -4433,30 +3817,25 @@ typedef union _hw_aips_pacre
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRE_SP0    (30U)         //!< Bit position for AIPS_PACRE_SP0.
-#define BM_AIPS_PACRE_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRE_SP0.
-#define BS_AIPS_PACRE_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRE_SP0.
+/*@{*/
+#define BP_AIPS_PACRE_SP0    (30U)         /*!< Bit position for AIPS_PACRE_SP0. */
+#define BM_AIPS_PACRE_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRE_SP0. */
+#define BS_AIPS_PACRE_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRE_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRE_SP0 field.
+/*! @brief Read current value of the AIPS_PACRE_SP0 field. */
 #define BR_AIPS_PACRE_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRE_SP0.
-#define BF_AIPS_PACRE_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRE_SP0), uint32_t) & BM_AIPS_PACRE_SP0)
+/*! @brief Format value for bitfield AIPS_PACRE_SP0. */
+#define BF_AIPS_PACRE_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRE_SP0) & BM_AIPS_PACRE_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRE_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRE_ADDR(x), BP_AIPS_PACRE_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRF - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRF - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRF - Peripheral Access Control Register (RW)
  *
@@ -4475,57 +3854,54 @@ typedef union _hw_aips_pacrf
     uint32_t U;
     struct _hw_aips_pacrf_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrf_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRF register
  */
-//@{
-#define HW_AIPS_PACRF_ADDR(x)    (REGS_AIPS_BASE(x) + 0x44U)
+/*@{*/
+#define HW_AIPS_PACRF_ADDR(x)    ((x) + 0x44U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRF(x)         (*(__IO hw_aips_pacrf_t *) HW_AIPS_PACRF_ADDR(x))
 #define HW_AIPS_PACRF_RD(x)      (HW_AIPS_PACRF(x).U)
 #define HW_AIPS_PACRF_WR(x, v)   (HW_AIPS_PACRF(x).U = (v))
 #define HW_AIPS_PACRF_SET(x, v)  (HW_AIPS_PACRF_WR(x, HW_AIPS_PACRF_RD(x) |  (v)))
 #define HW_AIPS_PACRF_CLR(x, v)  (HW_AIPS_PACRF_WR(x, HW_AIPS_PACRF_RD(x) & ~(v)))
 #define HW_AIPS_PACRF_TOG(x, v)  (HW_AIPS_PACRF_WR(x, HW_AIPS_PACRF_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRF bitfields
@@ -4538,24 +3914,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP7    (0U)          //!< Bit position for AIPS_PACRF_TP7.
-#define BM_AIPS_PACRF_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRF_TP7.
-#define BS_AIPS_PACRF_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP7.
+/*@{*/
+#define BP_AIPS_PACRF_TP7    (0U)          /*!< Bit position for AIPS_PACRF_TP7. */
+#define BM_AIPS_PACRF_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRF_TP7. */
+#define BS_AIPS_PACRF_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP7 field.
+/*! @brief Read current value of the AIPS_PACRF_TP7 field. */
 #define BR_AIPS_PACRF_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP7.
-#define BF_AIPS_PACRF_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP7), uint32_t) & BM_AIPS_PACRF_TP7)
+/*! @brief Format value for bitfield AIPS_PACRF_TP7. */
+#define BF_AIPS_PACRF_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP7) & BM_AIPS_PACRF_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRF_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP7[1] (RW)
@@ -4564,24 +3936,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP7    (1U)          //!< Bit position for AIPS_PACRF_WP7.
-#define BM_AIPS_PACRF_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRF_WP7.
-#define BS_AIPS_PACRF_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP7.
+/*@{*/
+#define BP_AIPS_PACRF_WP7    (1U)          /*!< Bit position for AIPS_PACRF_WP7. */
+#define BM_AIPS_PACRF_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRF_WP7. */
+#define BS_AIPS_PACRF_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP7 field.
+/*! @brief Read current value of the AIPS_PACRF_WP7 field. */
 #define BR_AIPS_PACRF_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP7.
-#define BF_AIPS_PACRF_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP7), uint32_t) & BM_AIPS_PACRF_WP7)
+/*! @brief Format value for bitfield AIPS_PACRF_WP7. */
+#define BF_AIPS_PACRF_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP7) & BM_AIPS_PACRF_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRF_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP7[2] (RW)
@@ -4591,24 +3959,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP7    (2U)          //!< Bit position for AIPS_PACRF_SP7.
-#define BM_AIPS_PACRF_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRF_SP7.
-#define BS_AIPS_PACRF_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP7.
+/*@{*/
+#define BP_AIPS_PACRF_SP7    (2U)          /*!< Bit position for AIPS_PACRF_SP7. */
+#define BM_AIPS_PACRF_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRF_SP7. */
+#define BS_AIPS_PACRF_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP7 field.
+/*! @brief Read current value of the AIPS_PACRF_SP7 field. */
 #define BR_AIPS_PACRF_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP7.
-#define BF_AIPS_PACRF_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP7), uint32_t) & BM_AIPS_PACRF_SP7)
+/*! @brief Format value for bitfield AIPS_PACRF_SP7. */
+#define BF_AIPS_PACRF_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP7) & BM_AIPS_PACRF_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRF_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP6[4] (RW)
@@ -4617,24 +3981,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP6    (4U)          //!< Bit position for AIPS_PACRF_TP6.
-#define BM_AIPS_PACRF_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRF_TP6.
-#define BS_AIPS_PACRF_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP6.
+/*@{*/
+#define BP_AIPS_PACRF_TP6    (4U)          /*!< Bit position for AIPS_PACRF_TP6. */
+#define BM_AIPS_PACRF_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRF_TP6. */
+#define BS_AIPS_PACRF_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP6 field.
+/*! @brief Read current value of the AIPS_PACRF_TP6 field. */
 #define BR_AIPS_PACRF_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP6.
-#define BF_AIPS_PACRF_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP6), uint32_t) & BM_AIPS_PACRF_TP6)
+/*! @brief Format value for bitfield AIPS_PACRF_TP6. */
+#define BF_AIPS_PACRF_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP6) & BM_AIPS_PACRF_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRF_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP6[5] (RW)
@@ -4643,24 +4003,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP6    (5U)          //!< Bit position for AIPS_PACRF_WP6.
-#define BM_AIPS_PACRF_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRF_WP6.
-#define BS_AIPS_PACRF_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP6.
+/*@{*/
+#define BP_AIPS_PACRF_WP6    (5U)          /*!< Bit position for AIPS_PACRF_WP6. */
+#define BM_AIPS_PACRF_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRF_WP6. */
+#define BS_AIPS_PACRF_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP6 field.
+/*! @brief Read current value of the AIPS_PACRF_WP6 field. */
 #define BR_AIPS_PACRF_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP6.
-#define BF_AIPS_PACRF_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP6), uint32_t) & BM_AIPS_PACRF_WP6)
+/*! @brief Format value for bitfield AIPS_PACRF_WP6. */
+#define BF_AIPS_PACRF_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP6) & BM_AIPS_PACRF_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRF_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP6[6] (RW)
@@ -4670,24 +4026,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP6    (6U)          //!< Bit position for AIPS_PACRF_SP6.
-#define BM_AIPS_PACRF_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRF_SP6.
-#define BS_AIPS_PACRF_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP6.
+/*@{*/
+#define BP_AIPS_PACRF_SP6    (6U)          /*!< Bit position for AIPS_PACRF_SP6. */
+#define BM_AIPS_PACRF_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRF_SP6. */
+#define BS_AIPS_PACRF_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP6 field.
+/*! @brief Read current value of the AIPS_PACRF_SP6 field. */
 #define BR_AIPS_PACRF_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP6.
-#define BF_AIPS_PACRF_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP6), uint32_t) & BM_AIPS_PACRF_SP6)
+/*! @brief Format value for bitfield AIPS_PACRF_SP6. */
+#define BF_AIPS_PACRF_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP6) & BM_AIPS_PACRF_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRF_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP5[8] (RW)
@@ -4696,24 +4048,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP5    (8U)          //!< Bit position for AIPS_PACRF_TP5.
-#define BM_AIPS_PACRF_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRF_TP5.
-#define BS_AIPS_PACRF_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP5.
+/*@{*/
+#define BP_AIPS_PACRF_TP5    (8U)          /*!< Bit position for AIPS_PACRF_TP5. */
+#define BM_AIPS_PACRF_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRF_TP5. */
+#define BS_AIPS_PACRF_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP5 field.
+/*! @brief Read current value of the AIPS_PACRF_TP5 field. */
 #define BR_AIPS_PACRF_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP5.
-#define BF_AIPS_PACRF_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP5), uint32_t) & BM_AIPS_PACRF_TP5)
+/*! @brief Format value for bitfield AIPS_PACRF_TP5. */
+#define BF_AIPS_PACRF_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP5) & BM_AIPS_PACRF_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRF_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP5[9] (RW)
@@ -4722,24 +4070,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP5    (9U)          //!< Bit position for AIPS_PACRF_WP5.
-#define BM_AIPS_PACRF_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRF_WP5.
-#define BS_AIPS_PACRF_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP5.
+/*@{*/
+#define BP_AIPS_PACRF_WP5    (9U)          /*!< Bit position for AIPS_PACRF_WP5. */
+#define BM_AIPS_PACRF_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRF_WP5. */
+#define BS_AIPS_PACRF_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP5 field.
+/*! @brief Read current value of the AIPS_PACRF_WP5 field. */
 #define BR_AIPS_PACRF_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP5.
-#define BF_AIPS_PACRF_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP5), uint32_t) & BM_AIPS_PACRF_WP5)
+/*! @brief Format value for bitfield AIPS_PACRF_WP5. */
+#define BF_AIPS_PACRF_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP5) & BM_AIPS_PACRF_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRF_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP5[10] (RW)
@@ -4749,24 +4093,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP5    (10U)         //!< Bit position for AIPS_PACRF_SP5.
-#define BM_AIPS_PACRF_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRF_SP5.
-#define BS_AIPS_PACRF_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP5.
+/*@{*/
+#define BP_AIPS_PACRF_SP5    (10U)         /*!< Bit position for AIPS_PACRF_SP5. */
+#define BM_AIPS_PACRF_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRF_SP5. */
+#define BS_AIPS_PACRF_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP5 field.
+/*! @brief Read current value of the AIPS_PACRF_SP5 field. */
 #define BR_AIPS_PACRF_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP5.
-#define BF_AIPS_PACRF_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP5), uint32_t) & BM_AIPS_PACRF_SP5)
+/*! @brief Format value for bitfield AIPS_PACRF_SP5. */
+#define BF_AIPS_PACRF_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP5) & BM_AIPS_PACRF_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRF_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP4[12] (RW)
@@ -4775,24 +4115,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP4    (12U)         //!< Bit position for AIPS_PACRF_TP4.
-#define BM_AIPS_PACRF_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRF_TP4.
-#define BS_AIPS_PACRF_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP4.
+/*@{*/
+#define BP_AIPS_PACRF_TP4    (12U)         /*!< Bit position for AIPS_PACRF_TP4. */
+#define BM_AIPS_PACRF_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRF_TP4. */
+#define BS_AIPS_PACRF_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP4 field.
+/*! @brief Read current value of the AIPS_PACRF_TP4 field. */
 #define BR_AIPS_PACRF_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP4.
-#define BF_AIPS_PACRF_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP4), uint32_t) & BM_AIPS_PACRF_TP4)
+/*! @brief Format value for bitfield AIPS_PACRF_TP4. */
+#define BF_AIPS_PACRF_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP4) & BM_AIPS_PACRF_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRF_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP4[13] (RW)
@@ -4801,24 +4137,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP4    (13U)         //!< Bit position for AIPS_PACRF_WP4.
-#define BM_AIPS_PACRF_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRF_WP4.
-#define BS_AIPS_PACRF_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP4.
+/*@{*/
+#define BP_AIPS_PACRF_WP4    (13U)         /*!< Bit position for AIPS_PACRF_WP4. */
+#define BM_AIPS_PACRF_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRF_WP4. */
+#define BS_AIPS_PACRF_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP4 field.
+/*! @brief Read current value of the AIPS_PACRF_WP4 field. */
 #define BR_AIPS_PACRF_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP4.
-#define BF_AIPS_PACRF_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP4), uint32_t) & BM_AIPS_PACRF_WP4)
+/*! @brief Format value for bitfield AIPS_PACRF_WP4. */
+#define BF_AIPS_PACRF_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP4) & BM_AIPS_PACRF_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRF_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP4[14] (RW)
@@ -4828,24 +4160,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP4    (14U)         //!< Bit position for AIPS_PACRF_SP4.
-#define BM_AIPS_PACRF_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRF_SP4.
-#define BS_AIPS_PACRF_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP4.
+/*@{*/
+#define BP_AIPS_PACRF_SP4    (14U)         /*!< Bit position for AIPS_PACRF_SP4. */
+#define BM_AIPS_PACRF_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRF_SP4. */
+#define BS_AIPS_PACRF_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP4 field.
+/*! @brief Read current value of the AIPS_PACRF_SP4 field. */
 #define BR_AIPS_PACRF_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP4.
-#define BF_AIPS_PACRF_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP4), uint32_t) & BM_AIPS_PACRF_SP4)
+/*! @brief Format value for bitfield AIPS_PACRF_SP4. */
+#define BF_AIPS_PACRF_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP4) & BM_AIPS_PACRF_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRF_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP3[16] (RW)
@@ -4854,24 +4182,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP3    (16U)         //!< Bit position for AIPS_PACRF_TP3.
-#define BM_AIPS_PACRF_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRF_TP3.
-#define BS_AIPS_PACRF_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP3.
+/*@{*/
+#define BP_AIPS_PACRF_TP3    (16U)         /*!< Bit position for AIPS_PACRF_TP3. */
+#define BM_AIPS_PACRF_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRF_TP3. */
+#define BS_AIPS_PACRF_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP3 field.
+/*! @brief Read current value of the AIPS_PACRF_TP3 field. */
 #define BR_AIPS_PACRF_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP3.
-#define BF_AIPS_PACRF_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP3), uint32_t) & BM_AIPS_PACRF_TP3)
+/*! @brief Format value for bitfield AIPS_PACRF_TP3. */
+#define BF_AIPS_PACRF_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP3) & BM_AIPS_PACRF_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRF_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP3[17] (RW)
@@ -4880,24 +4204,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP3    (17U)         //!< Bit position for AIPS_PACRF_WP3.
-#define BM_AIPS_PACRF_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRF_WP3.
-#define BS_AIPS_PACRF_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP3.
+/*@{*/
+#define BP_AIPS_PACRF_WP3    (17U)         /*!< Bit position for AIPS_PACRF_WP3. */
+#define BM_AIPS_PACRF_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRF_WP3. */
+#define BS_AIPS_PACRF_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP3 field.
+/*! @brief Read current value of the AIPS_PACRF_WP3 field. */
 #define BR_AIPS_PACRF_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP3.
-#define BF_AIPS_PACRF_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP3), uint32_t) & BM_AIPS_PACRF_WP3)
+/*! @brief Format value for bitfield AIPS_PACRF_WP3. */
+#define BF_AIPS_PACRF_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP3) & BM_AIPS_PACRF_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRF_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP3[18] (RW)
@@ -4907,24 +4227,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP3    (18U)         //!< Bit position for AIPS_PACRF_SP3.
-#define BM_AIPS_PACRF_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRF_SP3.
-#define BS_AIPS_PACRF_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP3.
+/*@{*/
+#define BP_AIPS_PACRF_SP3    (18U)         /*!< Bit position for AIPS_PACRF_SP3. */
+#define BM_AIPS_PACRF_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRF_SP3. */
+#define BS_AIPS_PACRF_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP3 field.
+/*! @brief Read current value of the AIPS_PACRF_SP3 field. */
 #define BR_AIPS_PACRF_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP3.
-#define BF_AIPS_PACRF_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP3), uint32_t) & BM_AIPS_PACRF_SP3)
+/*! @brief Format value for bitfield AIPS_PACRF_SP3. */
+#define BF_AIPS_PACRF_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP3) & BM_AIPS_PACRF_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRF_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP2[20] (RW)
@@ -4933,24 +4249,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP2    (20U)         //!< Bit position for AIPS_PACRF_TP2.
-#define BM_AIPS_PACRF_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRF_TP2.
-#define BS_AIPS_PACRF_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP2.
+/*@{*/
+#define BP_AIPS_PACRF_TP2    (20U)         /*!< Bit position for AIPS_PACRF_TP2. */
+#define BM_AIPS_PACRF_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRF_TP2. */
+#define BS_AIPS_PACRF_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP2 field.
+/*! @brief Read current value of the AIPS_PACRF_TP2 field. */
 #define BR_AIPS_PACRF_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP2.
-#define BF_AIPS_PACRF_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP2), uint32_t) & BM_AIPS_PACRF_TP2)
+/*! @brief Format value for bitfield AIPS_PACRF_TP2. */
+#define BF_AIPS_PACRF_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP2) & BM_AIPS_PACRF_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRF_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP2[21] (RW)
@@ -4959,24 +4271,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP2    (21U)         //!< Bit position for AIPS_PACRF_WP2.
-#define BM_AIPS_PACRF_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRF_WP2.
-#define BS_AIPS_PACRF_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP2.
+/*@{*/
+#define BP_AIPS_PACRF_WP2    (21U)         /*!< Bit position for AIPS_PACRF_WP2. */
+#define BM_AIPS_PACRF_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRF_WP2. */
+#define BS_AIPS_PACRF_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP2 field.
+/*! @brief Read current value of the AIPS_PACRF_WP2 field. */
 #define BR_AIPS_PACRF_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP2.
-#define BF_AIPS_PACRF_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP2), uint32_t) & BM_AIPS_PACRF_WP2)
+/*! @brief Format value for bitfield AIPS_PACRF_WP2. */
+#define BF_AIPS_PACRF_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP2) & BM_AIPS_PACRF_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRF_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP2[22] (RW)
@@ -4986,24 +4294,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP2    (22U)         //!< Bit position for AIPS_PACRF_SP2.
-#define BM_AIPS_PACRF_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRF_SP2.
-#define BS_AIPS_PACRF_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP2.
+/*@{*/
+#define BP_AIPS_PACRF_SP2    (22U)         /*!< Bit position for AIPS_PACRF_SP2. */
+#define BM_AIPS_PACRF_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRF_SP2. */
+#define BS_AIPS_PACRF_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP2 field.
+/*! @brief Read current value of the AIPS_PACRF_SP2 field. */
 #define BR_AIPS_PACRF_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP2.
-#define BF_AIPS_PACRF_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP2), uint32_t) & BM_AIPS_PACRF_SP2)
+/*! @brief Format value for bitfield AIPS_PACRF_SP2. */
+#define BF_AIPS_PACRF_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP2) & BM_AIPS_PACRF_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRF_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP1[24] (RW)
@@ -5012,24 +4316,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP1    (24U)         //!< Bit position for AIPS_PACRF_TP1.
-#define BM_AIPS_PACRF_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRF_TP1.
-#define BS_AIPS_PACRF_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP1.
+/*@{*/
+#define BP_AIPS_PACRF_TP1    (24U)         /*!< Bit position for AIPS_PACRF_TP1. */
+#define BM_AIPS_PACRF_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRF_TP1. */
+#define BS_AIPS_PACRF_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP1 field.
+/*! @brief Read current value of the AIPS_PACRF_TP1 field. */
 #define BR_AIPS_PACRF_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP1.
-#define BF_AIPS_PACRF_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP1), uint32_t) & BM_AIPS_PACRF_TP1)
+/*! @brief Format value for bitfield AIPS_PACRF_TP1. */
+#define BF_AIPS_PACRF_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP1) & BM_AIPS_PACRF_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRF_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP1[25] (RW)
@@ -5038,24 +4338,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP1    (25U)         //!< Bit position for AIPS_PACRF_WP1.
-#define BM_AIPS_PACRF_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRF_WP1.
-#define BS_AIPS_PACRF_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP1.
+/*@{*/
+#define BP_AIPS_PACRF_WP1    (25U)         /*!< Bit position for AIPS_PACRF_WP1. */
+#define BM_AIPS_PACRF_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRF_WP1. */
+#define BS_AIPS_PACRF_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP1 field.
+/*! @brief Read current value of the AIPS_PACRF_WP1 field. */
 #define BR_AIPS_PACRF_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP1.
-#define BF_AIPS_PACRF_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP1), uint32_t) & BM_AIPS_PACRF_WP1)
+/*! @brief Format value for bitfield AIPS_PACRF_WP1. */
+#define BF_AIPS_PACRF_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP1) & BM_AIPS_PACRF_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRF_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP1[26] (RW)
@@ -5065,24 +4361,20 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP1    (26U)         //!< Bit position for AIPS_PACRF_SP1.
-#define BM_AIPS_PACRF_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRF_SP1.
-#define BS_AIPS_PACRF_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP1.
+/*@{*/
+#define BP_AIPS_PACRF_SP1    (26U)         /*!< Bit position for AIPS_PACRF_SP1. */
+#define BM_AIPS_PACRF_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRF_SP1. */
+#define BS_AIPS_PACRF_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP1 field.
+/*! @brief Read current value of the AIPS_PACRF_SP1 field. */
 #define BR_AIPS_PACRF_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP1.
-#define BF_AIPS_PACRF_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP1), uint32_t) & BM_AIPS_PACRF_SP1)
+/*! @brief Format value for bitfield AIPS_PACRF_SP1. */
+#define BF_AIPS_PACRF_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP1) & BM_AIPS_PACRF_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRF_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field TP0[28] (RW)
@@ -5091,24 +4383,20 @@ typedef union _hw_aips_pacrf
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRF_TP0    (28U)         //!< Bit position for AIPS_PACRF_TP0.
-#define BM_AIPS_PACRF_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRF_TP0.
-#define BS_AIPS_PACRF_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRF_TP0.
+/*@{*/
+#define BP_AIPS_PACRF_TP0    (28U)         /*!< Bit position for AIPS_PACRF_TP0. */
+#define BM_AIPS_PACRF_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRF_TP0. */
+#define BS_AIPS_PACRF_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRF_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_TP0 field.
+/*! @brief Read current value of the AIPS_PACRF_TP0 field. */
 #define BR_AIPS_PACRF_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_TP0.
-#define BF_AIPS_PACRF_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_TP0), uint32_t) & BM_AIPS_PACRF_TP0)
+/*! @brief Format value for bitfield AIPS_PACRF_TP0. */
+#define BF_AIPS_PACRF_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_TP0) & BM_AIPS_PACRF_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRF_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field WP0[29] (RW)
@@ -5117,24 +4405,20 @@ typedef union _hw_aips_pacrf
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRF_WP0    (29U)         //!< Bit position for AIPS_PACRF_WP0.
-#define BM_AIPS_PACRF_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRF_WP0.
-#define BS_AIPS_PACRF_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRF_WP0.
+/*@{*/
+#define BP_AIPS_PACRF_WP0    (29U)         /*!< Bit position for AIPS_PACRF_WP0. */
+#define BM_AIPS_PACRF_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRF_WP0. */
+#define BS_AIPS_PACRF_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRF_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_WP0 field.
+/*! @brief Read current value of the AIPS_PACRF_WP0 field. */
 #define BR_AIPS_PACRF_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_WP0.
-#define BF_AIPS_PACRF_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_WP0), uint32_t) & BM_AIPS_PACRF_WP0)
+/*! @brief Format value for bitfield AIPS_PACRF_WP0. */
+#define BF_AIPS_PACRF_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_WP0) & BM_AIPS_PACRF_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRF_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRF, field SP0[30] (RW)
@@ -5144,30 +4428,25 @@ typedef union _hw_aips_pacrf
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRF_SP0    (30U)         //!< Bit position for AIPS_PACRF_SP0.
-#define BM_AIPS_PACRF_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRF_SP0.
-#define BS_AIPS_PACRF_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRF_SP0.
+/*@{*/
+#define BP_AIPS_PACRF_SP0    (30U)         /*!< Bit position for AIPS_PACRF_SP0. */
+#define BM_AIPS_PACRF_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRF_SP0. */
+#define BS_AIPS_PACRF_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRF_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRF_SP0 field.
+/*! @brief Read current value of the AIPS_PACRF_SP0 field. */
 #define BR_AIPS_PACRF_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRF_SP0.
-#define BF_AIPS_PACRF_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRF_SP0), uint32_t) & BM_AIPS_PACRF_SP0)
+/*! @brief Format value for bitfield AIPS_PACRF_SP0. */
+#define BF_AIPS_PACRF_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRF_SP0) & BM_AIPS_PACRF_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRF_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRF_ADDR(x), BP_AIPS_PACRF_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRG - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRG - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRG - Peripheral Access Control Register (RW)
  *
@@ -5186,57 +4465,54 @@ typedef union _hw_aips_pacrg
     uint32_t U;
     struct _hw_aips_pacrg_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRG register
  */
-//@{
-#define HW_AIPS_PACRG_ADDR(x)    (REGS_AIPS_BASE(x) + 0x48U)
+/*@{*/
+#define HW_AIPS_PACRG_ADDR(x)    ((x) + 0x48U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRG(x)         (*(__IO hw_aips_pacrg_t *) HW_AIPS_PACRG_ADDR(x))
 #define HW_AIPS_PACRG_RD(x)      (HW_AIPS_PACRG(x).U)
 #define HW_AIPS_PACRG_WR(x, v)   (HW_AIPS_PACRG(x).U = (v))
 #define HW_AIPS_PACRG_SET(x, v)  (HW_AIPS_PACRG_WR(x, HW_AIPS_PACRG_RD(x) |  (v)))
 #define HW_AIPS_PACRG_CLR(x, v)  (HW_AIPS_PACRG_WR(x, HW_AIPS_PACRG_RD(x) & ~(v)))
 #define HW_AIPS_PACRG_TOG(x, v)  (HW_AIPS_PACRG_WR(x, HW_AIPS_PACRG_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRG bitfields
@@ -5249,24 +4525,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP7    (0U)          //!< Bit position for AIPS_PACRG_TP7.
-#define BM_AIPS_PACRG_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRG_TP7.
-#define BS_AIPS_PACRG_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP7.
+/*@{*/
+#define BP_AIPS_PACRG_TP7    (0U)          /*!< Bit position for AIPS_PACRG_TP7. */
+#define BM_AIPS_PACRG_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRG_TP7. */
+#define BS_AIPS_PACRG_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP7 field.
+/*! @brief Read current value of the AIPS_PACRG_TP7 field. */
 #define BR_AIPS_PACRG_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP7.
-#define BF_AIPS_PACRG_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP7), uint32_t) & BM_AIPS_PACRG_TP7)
+/*! @brief Format value for bitfield AIPS_PACRG_TP7. */
+#define BF_AIPS_PACRG_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP7) & BM_AIPS_PACRG_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRG_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP7[1] (RW)
@@ -5275,24 +4547,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP7    (1U)          //!< Bit position for AIPS_PACRG_WP7.
-#define BM_AIPS_PACRG_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRG_WP7.
-#define BS_AIPS_PACRG_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP7.
+/*@{*/
+#define BP_AIPS_PACRG_WP7    (1U)          /*!< Bit position for AIPS_PACRG_WP7. */
+#define BM_AIPS_PACRG_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRG_WP7. */
+#define BS_AIPS_PACRG_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP7 field.
+/*! @brief Read current value of the AIPS_PACRG_WP7 field. */
 #define BR_AIPS_PACRG_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP7.
-#define BF_AIPS_PACRG_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP7), uint32_t) & BM_AIPS_PACRG_WP7)
+/*! @brief Format value for bitfield AIPS_PACRG_WP7. */
+#define BF_AIPS_PACRG_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP7) & BM_AIPS_PACRG_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRG_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP7[2] (RW)
@@ -5302,24 +4570,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP7    (2U)          //!< Bit position for AIPS_PACRG_SP7.
-#define BM_AIPS_PACRG_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRG_SP7.
-#define BS_AIPS_PACRG_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP7.
+/*@{*/
+#define BP_AIPS_PACRG_SP7    (2U)          /*!< Bit position for AIPS_PACRG_SP7. */
+#define BM_AIPS_PACRG_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRG_SP7. */
+#define BS_AIPS_PACRG_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP7 field.
+/*! @brief Read current value of the AIPS_PACRG_SP7 field. */
 #define BR_AIPS_PACRG_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP7.
-#define BF_AIPS_PACRG_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP7), uint32_t) & BM_AIPS_PACRG_SP7)
+/*! @brief Format value for bitfield AIPS_PACRG_SP7. */
+#define BF_AIPS_PACRG_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP7) & BM_AIPS_PACRG_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRG_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP6[4] (RW)
@@ -5328,24 +4592,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP6    (4U)          //!< Bit position for AIPS_PACRG_TP6.
-#define BM_AIPS_PACRG_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRG_TP6.
-#define BS_AIPS_PACRG_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP6.
+/*@{*/
+#define BP_AIPS_PACRG_TP6    (4U)          /*!< Bit position for AIPS_PACRG_TP6. */
+#define BM_AIPS_PACRG_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRG_TP6. */
+#define BS_AIPS_PACRG_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP6 field.
+/*! @brief Read current value of the AIPS_PACRG_TP6 field. */
 #define BR_AIPS_PACRG_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP6.
-#define BF_AIPS_PACRG_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP6), uint32_t) & BM_AIPS_PACRG_TP6)
+/*! @brief Format value for bitfield AIPS_PACRG_TP6. */
+#define BF_AIPS_PACRG_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP6) & BM_AIPS_PACRG_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRG_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP6[5] (RW)
@@ -5354,24 +4614,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP6    (5U)          //!< Bit position for AIPS_PACRG_WP6.
-#define BM_AIPS_PACRG_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRG_WP6.
-#define BS_AIPS_PACRG_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP6.
+/*@{*/
+#define BP_AIPS_PACRG_WP6    (5U)          /*!< Bit position for AIPS_PACRG_WP6. */
+#define BM_AIPS_PACRG_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRG_WP6. */
+#define BS_AIPS_PACRG_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP6 field.
+/*! @brief Read current value of the AIPS_PACRG_WP6 field. */
 #define BR_AIPS_PACRG_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP6.
-#define BF_AIPS_PACRG_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP6), uint32_t) & BM_AIPS_PACRG_WP6)
+/*! @brief Format value for bitfield AIPS_PACRG_WP6. */
+#define BF_AIPS_PACRG_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP6) & BM_AIPS_PACRG_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRG_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP6[6] (RW)
@@ -5381,24 +4637,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP6    (6U)          //!< Bit position for AIPS_PACRG_SP6.
-#define BM_AIPS_PACRG_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRG_SP6.
-#define BS_AIPS_PACRG_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP6.
+/*@{*/
+#define BP_AIPS_PACRG_SP6    (6U)          /*!< Bit position for AIPS_PACRG_SP6. */
+#define BM_AIPS_PACRG_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRG_SP6. */
+#define BS_AIPS_PACRG_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP6 field.
+/*! @brief Read current value of the AIPS_PACRG_SP6 field. */
 #define BR_AIPS_PACRG_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP6.
-#define BF_AIPS_PACRG_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP6), uint32_t) & BM_AIPS_PACRG_SP6)
+/*! @brief Format value for bitfield AIPS_PACRG_SP6. */
+#define BF_AIPS_PACRG_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP6) & BM_AIPS_PACRG_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRG_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP5[8] (RW)
@@ -5407,24 +4659,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP5    (8U)          //!< Bit position for AIPS_PACRG_TP5.
-#define BM_AIPS_PACRG_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRG_TP5.
-#define BS_AIPS_PACRG_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP5.
+/*@{*/
+#define BP_AIPS_PACRG_TP5    (8U)          /*!< Bit position for AIPS_PACRG_TP5. */
+#define BM_AIPS_PACRG_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRG_TP5. */
+#define BS_AIPS_PACRG_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP5 field.
+/*! @brief Read current value of the AIPS_PACRG_TP5 field. */
 #define BR_AIPS_PACRG_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP5.
-#define BF_AIPS_PACRG_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP5), uint32_t) & BM_AIPS_PACRG_TP5)
+/*! @brief Format value for bitfield AIPS_PACRG_TP5. */
+#define BF_AIPS_PACRG_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP5) & BM_AIPS_PACRG_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRG_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP5[9] (RW)
@@ -5433,24 +4681,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP5    (9U)          //!< Bit position for AIPS_PACRG_WP5.
-#define BM_AIPS_PACRG_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRG_WP5.
-#define BS_AIPS_PACRG_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP5.
+/*@{*/
+#define BP_AIPS_PACRG_WP5    (9U)          /*!< Bit position for AIPS_PACRG_WP5. */
+#define BM_AIPS_PACRG_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRG_WP5. */
+#define BS_AIPS_PACRG_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP5 field.
+/*! @brief Read current value of the AIPS_PACRG_WP5 field. */
 #define BR_AIPS_PACRG_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP5.
-#define BF_AIPS_PACRG_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP5), uint32_t) & BM_AIPS_PACRG_WP5)
+/*! @brief Format value for bitfield AIPS_PACRG_WP5. */
+#define BF_AIPS_PACRG_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP5) & BM_AIPS_PACRG_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRG_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP5[10] (RW)
@@ -5460,24 +4704,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP5    (10U)         //!< Bit position for AIPS_PACRG_SP5.
-#define BM_AIPS_PACRG_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRG_SP5.
-#define BS_AIPS_PACRG_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP5.
+/*@{*/
+#define BP_AIPS_PACRG_SP5    (10U)         /*!< Bit position for AIPS_PACRG_SP5. */
+#define BM_AIPS_PACRG_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRG_SP5. */
+#define BS_AIPS_PACRG_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP5 field.
+/*! @brief Read current value of the AIPS_PACRG_SP5 field. */
 #define BR_AIPS_PACRG_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP5.
-#define BF_AIPS_PACRG_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP5), uint32_t) & BM_AIPS_PACRG_SP5)
+/*! @brief Format value for bitfield AIPS_PACRG_SP5. */
+#define BF_AIPS_PACRG_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP5) & BM_AIPS_PACRG_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRG_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP4[12] (RW)
@@ -5486,24 +4726,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP4    (12U)         //!< Bit position for AIPS_PACRG_TP4.
-#define BM_AIPS_PACRG_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRG_TP4.
-#define BS_AIPS_PACRG_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP4.
+/*@{*/
+#define BP_AIPS_PACRG_TP4    (12U)         /*!< Bit position for AIPS_PACRG_TP4. */
+#define BM_AIPS_PACRG_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRG_TP4. */
+#define BS_AIPS_PACRG_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP4 field.
+/*! @brief Read current value of the AIPS_PACRG_TP4 field. */
 #define BR_AIPS_PACRG_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP4.
-#define BF_AIPS_PACRG_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP4), uint32_t) & BM_AIPS_PACRG_TP4)
+/*! @brief Format value for bitfield AIPS_PACRG_TP4. */
+#define BF_AIPS_PACRG_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP4) & BM_AIPS_PACRG_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRG_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP4[13] (RW)
@@ -5512,24 +4748,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP4    (13U)         //!< Bit position for AIPS_PACRG_WP4.
-#define BM_AIPS_PACRG_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRG_WP4.
-#define BS_AIPS_PACRG_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP4.
+/*@{*/
+#define BP_AIPS_PACRG_WP4    (13U)         /*!< Bit position for AIPS_PACRG_WP4. */
+#define BM_AIPS_PACRG_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRG_WP4. */
+#define BS_AIPS_PACRG_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP4 field.
+/*! @brief Read current value of the AIPS_PACRG_WP4 field. */
 #define BR_AIPS_PACRG_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP4.
-#define BF_AIPS_PACRG_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP4), uint32_t) & BM_AIPS_PACRG_WP4)
+/*! @brief Format value for bitfield AIPS_PACRG_WP4. */
+#define BF_AIPS_PACRG_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP4) & BM_AIPS_PACRG_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRG_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP4[14] (RW)
@@ -5539,24 +4771,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP4    (14U)         //!< Bit position for AIPS_PACRG_SP4.
-#define BM_AIPS_PACRG_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRG_SP4.
-#define BS_AIPS_PACRG_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP4.
+/*@{*/
+#define BP_AIPS_PACRG_SP4    (14U)         /*!< Bit position for AIPS_PACRG_SP4. */
+#define BM_AIPS_PACRG_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRG_SP4. */
+#define BS_AIPS_PACRG_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP4 field.
+/*! @brief Read current value of the AIPS_PACRG_SP4 field. */
 #define BR_AIPS_PACRG_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP4.
-#define BF_AIPS_PACRG_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP4), uint32_t) & BM_AIPS_PACRG_SP4)
+/*! @brief Format value for bitfield AIPS_PACRG_SP4. */
+#define BF_AIPS_PACRG_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP4) & BM_AIPS_PACRG_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRG_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP3[16] (RW)
@@ -5565,24 +4793,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP3    (16U)         //!< Bit position for AIPS_PACRG_TP3.
-#define BM_AIPS_PACRG_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRG_TP3.
-#define BS_AIPS_PACRG_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP3.
+/*@{*/
+#define BP_AIPS_PACRG_TP3    (16U)         /*!< Bit position for AIPS_PACRG_TP3. */
+#define BM_AIPS_PACRG_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRG_TP3. */
+#define BS_AIPS_PACRG_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP3 field.
+/*! @brief Read current value of the AIPS_PACRG_TP3 field. */
 #define BR_AIPS_PACRG_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP3.
-#define BF_AIPS_PACRG_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP3), uint32_t) & BM_AIPS_PACRG_TP3)
+/*! @brief Format value for bitfield AIPS_PACRG_TP3. */
+#define BF_AIPS_PACRG_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP3) & BM_AIPS_PACRG_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRG_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP3[17] (RW)
@@ -5591,24 +4815,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP3    (17U)         //!< Bit position for AIPS_PACRG_WP3.
-#define BM_AIPS_PACRG_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRG_WP3.
-#define BS_AIPS_PACRG_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP3.
+/*@{*/
+#define BP_AIPS_PACRG_WP3    (17U)         /*!< Bit position for AIPS_PACRG_WP3. */
+#define BM_AIPS_PACRG_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRG_WP3. */
+#define BS_AIPS_PACRG_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP3 field.
+/*! @brief Read current value of the AIPS_PACRG_WP3 field. */
 #define BR_AIPS_PACRG_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP3.
-#define BF_AIPS_PACRG_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP3), uint32_t) & BM_AIPS_PACRG_WP3)
+/*! @brief Format value for bitfield AIPS_PACRG_WP3. */
+#define BF_AIPS_PACRG_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP3) & BM_AIPS_PACRG_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRG_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP3[18] (RW)
@@ -5618,24 +4838,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP3    (18U)         //!< Bit position for AIPS_PACRG_SP3.
-#define BM_AIPS_PACRG_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRG_SP3.
-#define BS_AIPS_PACRG_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP3.
+/*@{*/
+#define BP_AIPS_PACRG_SP3    (18U)         /*!< Bit position for AIPS_PACRG_SP3. */
+#define BM_AIPS_PACRG_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRG_SP3. */
+#define BS_AIPS_PACRG_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP3 field.
+/*! @brief Read current value of the AIPS_PACRG_SP3 field. */
 #define BR_AIPS_PACRG_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP3.
-#define BF_AIPS_PACRG_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP3), uint32_t) & BM_AIPS_PACRG_SP3)
+/*! @brief Format value for bitfield AIPS_PACRG_SP3. */
+#define BF_AIPS_PACRG_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP3) & BM_AIPS_PACRG_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRG_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP2[20] (RW)
@@ -5644,24 +4860,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP2    (20U)         //!< Bit position for AIPS_PACRG_TP2.
-#define BM_AIPS_PACRG_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRG_TP2.
-#define BS_AIPS_PACRG_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP2.
+/*@{*/
+#define BP_AIPS_PACRG_TP2    (20U)         /*!< Bit position for AIPS_PACRG_TP2. */
+#define BM_AIPS_PACRG_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRG_TP2. */
+#define BS_AIPS_PACRG_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP2 field.
+/*! @brief Read current value of the AIPS_PACRG_TP2 field. */
 #define BR_AIPS_PACRG_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP2.
-#define BF_AIPS_PACRG_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP2), uint32_t) & BM_AIPS_PACRG_TP2)
+/*! @brief Format value for bitfield AIPS_PACRG_TP2. */
+#define BF_AIPS_PACRG_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP2) & BM_AIPS_PACRG_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRG_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP2[21] (RW)
@@ -5670,24 +4882,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP2    (21U)         //!< Bit position for AIPS_PACRG_WP2.
-#define BM_AIPS_PACRG_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRG_WP2.
-#define BS_AIPS_PACRG_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP2.
+/*@{*/
+#define BP_AIPS_PACRG_WP2    (21U)         /*!< Bit position for AIPS_PACRG_WP2. */
+#define BM_AIPS_PACRG_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRG_WP2. */
+#define BS_AIPS_PACRG_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP2 field.
+/*! @brief Read current value of the AIPS_PACRG_WP2 field. */
 #define BR_AIPS_PACRG_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP2.
-#define BF_AIPS_PACRG_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP2), uint32_t) & BM_AIPS_PACRG_WP2)
+/*! @brief Format value for bitfield AIPS_PACRG_WP2. */
+#define BF_AIPS_PACRG_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP2) & BM_AIPS_PACRG_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRG_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP2[22] (RW)
@@ -5697,24 +4905,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP2    (22U)         //!< Bit position for AIPS_PACRG_SP2.
-#define BM_AIPS_PACRG_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRG_SP2.
-#define BS_AIPS_PACRG_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP2.
+/*@{*/
+#define BP_AIPS_PACRG_SP2    (22U)         /*!< Bit position for AIPS_PACRG_SP2. */
+#define BM_AIPS_PACRG_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRG_SP2. */
+#define BS_AIPS_PACRG_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP2 field.
+/*! @brief Read current value of the AIPS_PACRG_SP2 field. */
 #define BR_AIPS_PACRG_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP2.
-#define BF_AIPS_PACRG_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP2), uint32_t) & BM_AIPS_PACRG_SP2)
+/*! @brief Format value for bitfield AIPS_PACRG_SP2. */
+#define BF_AIPS_PACRG_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP2) & BM_AIPS_PACRG_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRG_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP1[24] (RW)
@@ -5723,24 +4927,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP1    (24U)         //!< Bit position for AIPS_PACRG_TP1.
-#define BM_AIPS_PACRG_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRG_TP1.
-#define BS_AIPS_PACRG_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP1.
+/*@{*/
+#define BP_AIPS_PACRG_TP1    (24U)         /*!< Bit position for AIPS_PACRG_TP1. */
+#define BM_AIPS_PACRG_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRG_TP1. */
+#define BS_AIPS_PACRG_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP1 field.
+/*! @brief Read current value of the AIPS_PACRG_TP1 field. */
 #define BR_AIPS_PACRG_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP1.
-#define BF_AIPS_PACRG_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP1), uint32_t) & BM_AIPS_PACRG_TP1)
+/*! @brief Format value for bitfield AIPS_PACRG_TP1. */
+#define BF_AIPS_PACRG_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP1) & BM_AIPS_PACRG_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRG_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP1[25] (RW)
@@ -5749,24 +4949,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP1    (25U)         //!< Bit position for AIPS_PACRG_WP1.
-#define BM_AIPS_PACRG_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRG_WP1.
-#define BS_AIPS_PACRG_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP1.
+/*@{*/
+#define BP_AIPS_PACRG_WP1    (25U)         /*!< Bit position for AIPS_PACRG_WP1. */
+#define BM_AIPS_PACRG_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRG_WP1. */
+#define BS_AIPS_PACRG_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP1 field.
+/*! @brief Read current value of the AIPS_PACRG_WP1 field. */
 #define BR_AIPS_PACRG_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP1.
-#define BF_AIPS_PACRG_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP1), uint32_t) & BM_AIPS_PACRG_WP1)
+/*! @brief Format value for bitfield AIPS_PACRG_WP1. */
+#define BF_AIPS_PACRG_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP1) & BM_AIPS_PACRG_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRG_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP1[26] (RW)
@@ -5776,24 +4972,20 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP1    (26U)         //!< Bit position for AIPS_PACRG_SP1.
-#define BM_AIPS_PACRG_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRG_SP1.
-#define BS_AIPS_PACRG_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP1.
+/*@{*/
+#define BP_AIPS_PACRG_SP1    (26U)         /*!< Bit position for AIPS_PACRG_SP1. */
+#define BM_AIPS_PACRG_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRG_SP1. */
+#define BS_AIPS_PACRG_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP1 field.
+/*! @brief Read current value of the AIPS_PACRG_SP1 field. */
 #define BR_AIPS_PACRG_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP1.
-#define BF_AIPS_PACRG_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP1), uint32_t) & BM_AIPS_PACRG_SP1)
+/*! @brief Format value for bitfield AIPS_PACRG_SP1. */
+#define BF_AIPS_PACRG_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP1) & BM_AIPS_PACRG_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRG_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field TP0[28] (RW)
@@ -5802,24 +4994,20 @@ typedef union _hw_aips_pacrg
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRG_TP0    (28U)         //!< Bit position for AIPS_PACRG_TP0.
-#define BM_AIPS_PACRG_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRG_TP0.
-#define BS_AIPS_PACRG_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRG_TP0.
+/*@{*/
+#define BP_AIPS_PACRG_TP0    (28U)         /*!< Bit position for AIPS_PACRG_TP0. */
+#define BM_AIPS_PACRG_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRG_TP0. */
+#define BS_AIPS_PACRG_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRG_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_TP0 field.
+/*! @brief Read current value of the AIPS_PACRG_TP0 field. */
 #define BR_AIPS_PACRG_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_TP0.
-#define BF_AIPS_PACRG_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_TP0), uint32_t) & BM_AIPS_PACRG_TP0)
+/*! @brief Format value for bitfield AIPS_PACRG_TP0. */
+#define BF_AIPS_PACRG_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_TP0) & BM_AIPS_PACRG_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRG_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field WP0[29] (RW)
@@ -5828,24 +5016,20 @@ typedef union _hw_aips_pacrg
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRG_WP0    (29U)         //!< Bit position for AIPS_PACRG_WP0.
-#define BM_AIPS_PACRG_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRG_WP0.
-#define BS_AIPS_PACRG_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRG_WP0.
+/*@{*/
+#define BP_AIPS_PACRG_WP0    (29U)         /*!< Bit position for AIPS_PACRG_WP0. */
+#define BM_AIPS_PACRG_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRG_WP0. */
+#define BS_AIPS_PACRG_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRG_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_WP0 field.
+/*! @brief Read current value of the AIPS_PACRG_WP0 field. */
 #define BR_AIPS_PACRG_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_WP0.
-#define BF_AIPS_PACRG_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_WP0), uint32_t) & BM_AIPS_PACRG_WP0)
+/*! @brief Format value for bitfield AIPS_PACRG_WP0. */
+#define BF_AIPS_PACRG_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_WP0) & BM_AIPS_PACRG_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRG_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRG, field SP0[30] (RW)
@@ -5855,30 +5039,25 @@ typedef union _hw_aips_pacrg
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRG_SP0    (30U)         //!< Bit position for AIPS_PACRG_SP0.
-#define BM_AIPS_PACRG_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRG_SP0.
-#define BS_AIPS_PACRG_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRG_SP0.
+/*@{*/
+#define BP_AIPS_PACRG_SP0    (30U)         /*!< Bit position for AIPS_PACRG_SP0. */
+#define BM_AIPS_PACRG_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRG_SP0. */
+#define BS_AIPS_PACRG_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRG_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRG_SP0 field.
+/*! @brief Read current value of the AIPS_PACRG_SP0 field. */
 #define BR_AIPS_PACRG_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRG_SP0.
-#define BF_AIPS_PACRG_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRG_SP0), uint32_t) & BM_AIPS_PACRG_SP0)
+/*! @brief Format value for bitfield AIPS_PACRG_SP0. */
+#define BF_AIPS_PACRG_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRG_SP0) & BM_AIPS_PACRG_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRG_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRG_ADDR(x), BP_AIPS_PACRG_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRH - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRH - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRH - Peripheral Access Control Register (RW)
  *
@@ -5897,57 +5076,54 @@ typedef union _hw_aips_pacrh
     uint32_t U;
     struct _hw_aips_pacrh_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRH register
  */
-//@{
-#define HW_AIPS_PACRH_ADDR(x)    (REGS_AIPS_BASE(x) + 0x4CU)
+/*@{*/
+#define HW_AIPS_PACRH_ADDR(x)    ((x) + 0x4CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRH(x)         (*(__IO hw_aips_pacrh_t *) HW_AIPS_PACRH_ADDR(x))
 #define HW_AIPS_PACRH_RD(x)      (HW_AIPS_PACRH(x).U)
 #define HW_AIPS_PACRH_WR(x, v)   (HW_AIPS_PACRH(x).U = (v))
 #define HW_AIPS_PACRH_SET(x, v)  (HW_AIPS_PACRH_WR(x, HW_AIPS_PACRH_RD(x) |  (v)))
 #define HW_AIPS_PACRH_CLR(x, v)  (HW_AIPS_PACRH_WR(x, HW_AIPS_PACRH_RD(x) & ~(v)))
 #define HW_AIPS_PACRH_TOG(x, v)  (HW_AIPS_PACRH_WR(x, HW_AIPS_PACRH_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRH bitfields
@@ -5960,24 +5136,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP7    (0U)          //!< Bit position for AIPS_PACRH_TP7.
-#define BM_AIPS_PACRH_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRH_TP7.
-#define BS_AIPS_PACRH_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP7.
+/*@{*/
+#define BP_AIPS_PACRH_TP7    (0U)          /*!< Bit position for AIPS_PACRH_TP7. */
+#define BM_AIPS_PACRH_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRH_TP7. */
+#define BS_AIPS_PACRH_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP7 field.
+/*! @brief Read current value of the AIPS_PACRH_TP7 field. */
 #define BR_AIPS_PACRH_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP7.
-#define BF_AIPS_PACRH_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP7), uint32_t) & BM_AIPS_PACRH_TP7)
+/*! @brief Format value for bitfield AIPS_PACRH_TP7. */
+#define BF_AIPS_PACRH_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP7) & BM_AIPS_PACRH_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRH_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP7[1] (RW)
@@ -5986,24 +5158,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP7    (1U)          //!< Bit position for AIPS_PACRH_WP7.
-#define BM_AIPS_PACRH_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRH_WP7.
-#define BS_AIPS_PACRH_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP7.
+/*@{*/
+#define BP_AIPS_PACRH_WP7    (1U)          /*!< Bit position for AIPS_PACRH_WP7. */
+#define BM_AIPS_PACRH_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRH_WP7. */
+#define BS_AIPS_PACRH_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP7 field.
+/*! @brief Read current value of the AIPS_PACRH_WP7 field. */
 #define BR_AIPS_PACRH_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP7.
-#define BF_AIPS_PACRH_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP7), uint32_t) & BM_AIPS_PACRH_WP7)
+/*! @brief Format value for bitfield AIPS_PACRH_WP7. */
+#define BF_AIPS_PACRH_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP7) & BM_AIPS_PACRH_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRH_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP7[2] (RW)
@@ -6013,24 +5181,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP7    (2U)          //!< Bit position for AIPS_PACRH_SP7.
-#define BM_AIPS_PACRH_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRH_SP7.
-#define BS_AIPS_PACRH_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP7.
+/*@{*/
+#define BP_AIPS_PACRH_SP7    (2U)          /*!< Bit position for AIPS_PACRH_SP7. */
+#define BM_AIPS_PACRH_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRH_SP7. */
+#define BS_AIPS_PACRH_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP7 field.
+/*! @brief Read current value of the AIPS_PACRH_SP7 field. */
 #define BR_AIPS_PACRH_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP7.
-#define BF_AIPS_PACRH_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP7), uint32_t) & BM_AIPS_PACRH_SP7)
+/*! @brief Format value for bitfield AIPS_PACRH_SP7. */
+#define BF_AIPS_PACRH_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP7) & BM_AIPS_PACRH_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRH_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP6[4] (RW)
@@ -6039,24 +5203,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP6    (4U)          //!< Bit position for AIPS_PACRH_TP6.
-#define BM_AIPS_PACRH_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRH_TP6.
-#define BS_AIPS_PACRH_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP6.
+/*@{*/
+#define BP_AIPS_PACRH_TP6    (4U)          /*!< Bit position for AIPS_PACRH_TP6. */
+#define BM_AIPS_PACRH_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRH_TP6. */
+#define BS_AIPS_PACRH_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP6 field.
+/*! @brief Read current value of the AIPS_PACRH_TP6 field. */
 #define BR_AIPS_PACRH_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP6.
-#define BF_AIPS_PACRH_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP6), uint32_t) & BM_AIPS_PACRH_TP6)
+/*! @brief Format value for bitfield AIPS_PACRH_TP6. */
+#define BF_AIPS_PACRH_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP6) & BM_AIPS_PACRH_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRH_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP6[5] (RW)
@@ -6065,24 +5225,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP6    (5U)          //!< Bit position for AIPS_PACRH_WP6.
-#define BM_AIPS_PACRH_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRH_WP6.
-#define BS_AIPS_PACRH_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP6.
+/*@{*/
+#define BP_AIPS_PACRH_WP6    (5U)          /*!< Bit position for AIPS_PACRH_WP6. */
+#define BM_AIPS_PACRH_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRH_WP6. */
+#define BS_AIPS_PACRH_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP6 field.
+/*! @brief Read current value of the AIPS_PACRH_WP6 field. */
 #define BR_AIPS_PACRH_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP6.
-#define BF_AIPS_PACRH_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP6), uint32_t) & BM_AIPS_PACRH_WP6)
+/*! @brief Format value for bitfield AIPS_PACRH_WP6. */
+#define BF_AIPS_PACRH_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP6) & BM_AIPS_PACRH_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRH_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP6[6] (RW)
@@ -6092,24 +5248,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP6    (6U)          //!< Bit position for AIPS_PACRH_SP6.
-#define BM_AIPS_PACRH_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRH_SP6.
-#define BS_AIPS_PACRH_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP6.
+/*@{*/
+#define BP_AIPS_PACRH_SP6    (6U)          /*!< Bit position for AIPS_PACRH_SP6. */
+#define BM_AIPS_PACRH_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRH_SP6. */
+#define BS_AIPS_PACRH_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP6 field.
+/*! @brief Read current value of the AIPS_PACRH_SP6 field. */
 #define BR_AIPS_PACRH_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP6.
-#define BF_AIPS_PACRH_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP6), uint32_t) & BM_AIPS_PACRH_SP6)
+/*! @brief Format value for bitfield AIPS_PACRH_SP6. */
+#define BF_AIPS_PACRH_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP6) & BM_AIPS_PACRH_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRH_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP5[8] (RW)
@@ -6118,24 +5270,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP5    (8U)          //!< Bit position for AIPS_PACRH_TP5.
-#define BM_AIPS_PACRH_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRH_TP5.
-#define BS_AIPS_PACRH_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP5.
+/*@{*/
+#define BP_AIPS_PACRH_TP5    (8U)          /*!< Bit position for AIPS_PACRH_TP5. */
+#define BM_AIPS_PACRH_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRH_TP5. */
+#define BS_AIPS_PACRH_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP5 field.
+/*! @brief Read current value of the AIPS_PACRH_TP5 field. */
 #define BR_AIPS_PACRH_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP5.
-#define BF_AIPS_PACRH_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP5), uint32_t) & BM_AIPS_PACRH_TP5)
+/*! @brief Format value for bitfield AIPS_PACRH_TP5. */
+#define BF_AIPS_PACRH_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP5) & BM_AIPS_PACRH_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRH_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP5[9] (RW)
@@ -6144,24 +5292,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP5    (9U)          //!< Bit position for AIPS_PACRH_WP5.
-#define BM_AIPS_PACRH_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRH_WP5.
-#define BS_AIPS_PACRH_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP5.
+/*@{*/
+#define BP_AIPS_PACRH_WP5    (9U)          /*!< Bit position for AIPS_PACRH_WP5. */
+#define BM_AIPS_PACRH_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRH_WP5. */
+#define BS_AIPS_PACRH_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP5 field.
+/*! @brief Read current value of the AIPS_PACRH_WP5 field. */
 #define BR_AIPS_PACRH_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP5.
-#define BF_AIPS_PACRH_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP5), uint32_t) & BM_AIPS_PACRH_WP5)
+/*! @brief Format value for bitfield AIPS_PACRH_WP5. */
+#define BF_AIPS_PACRH_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP5) & BM_AIPS_PACRH_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRH_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP5[10] (RW)
@@ -6171,24 +5315,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP5    (10U)         //!< Bit position for AIPS_PACRH_SP5.
-#define BM_AIPS_PACRH_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRH_SP5.
-#define BS_AIPS_PACRH_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP5.
+/*@{*/
+#define BP_AIPS_PACRH_SP5    (10U)         /*!< Bit position for AIPS_PACRH_SP5. */
+#define BM_AIPS_PACRH_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRH_SP5. */
+#define BS_AIPS_PACRH_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP5 field.
+/*! @brief Read current value of the AIPS_PACRH_SP5 field. */
 #define BR_AIPS_PACRH_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP5.
-#define BF_AIPS_PACRH_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP5), uint32_t) & BM_AIPS_PACRH_SP5)
+/*! @brief Format value for bitfield AIPS_PACRH_SP5. */
+#define BF_AIPS_PACRH_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP5) & BM_AIPS_PACRH_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRH_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP4[12] (RW)
@@ -6197,24 +5337,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP4    (12U)         //!< Bit position for AIPS_PACRH_TP4.
-#define BM_AIPS_PACRH_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRH_TP4.
-#define BS_AIPS_PACRH_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP4.
+/*@{*/
+#define BP_AIPS_PACRH_TP4    (12U)         /*!< Bit position for AIPS_PACRH_TP4. */
+#define BM_AIPS_PACRH_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRH_TP4. */
+#define BS_AIPS_PACRH_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP4 field.
+/*! @brief Read current value of the AIPS_PACRH_TP4 field. */
 #define BR_AIPS_PACRH_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP4.
-#define BF_AIPS_PACRH_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP4), uint32_t) & BM_AIPS_PACRH_TP4)
+/*! @brief Format value for bitfield AIPS_PACRH_TP4. */
+#define BF_AIPS_PACRH_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP4) & BM_AIPS_PACRH_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRH_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP4[13] (RW)
@@ -6223,24 +5359,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP4    (13U)         //!< Bit position for AIPS_PACRH_WP4.
-#define BM_AIPS_PACRH_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRH_WP4.
-#define BS_AIPS_PACRH_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP4.
+/*@{*/
+#define BP_AIPS_PACRH_WP4    (13U)         /*!< Bit position for AIPS_PACRH_WP4. */
+#define BM_AIPS_PACRH_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRH_WP4. */
+#define BS_AIPS_PACRH_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP4 field.
+/*! @brief Read current value of the AIPS_PACRH_WP4 field. */
 #define BR_AIPS_PACRH_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP4.
-#define BF_AIPS_PACRH_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP4), uint32_t) & BM_AIPS_PACRH_WP4)
+/*! @brief Format value for bitfield AIPS_PACRH_WP4. */
+#define BF_AIPS_PACRH_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP4) & BM_AIPS_PACRH_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRH_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP4[14] (RW)
@@ -6250,24 +5382,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP4    (14U)         //!< Bit position for AIPS_PACRH_SP4.
-#define BM_AIPS_PACRH_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRH_SP4.
-#define BS_AIPS_PACRH_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP4.
+/*@{*/
+#define BP_AIPS_PACRH_SP4    (14U)         /*!< Bit position for AIPS_PACRH_SP4. */
+#define BM_AIPS_PACRH_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRH_SP4. */
+#define BS_AIPS_PACRH_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP4 field.
+/*! @brief Read current value of the AIPS_PACRH_SP4 field. */
 #define BR_AIPS_PACRH_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP4.
-#define BF_AIPS_PACRH_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP4), uint32_t) & BM_AIPS_PACRH_SP4)
+/*! @brief Format value for bitfield AIPS_PACRH_SP4. */
+#define BF_AIPS_PACRH_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP4) & BM_AIPS_PACRH_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRH_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP3[16] (RW)
@@ -6276,24 +5404,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP3    (16U)         //!< Bit position for AIPS_PACRH_TP3.
-#define BM_AIPS_PACRH_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRH_TP3.
-#define BS_AIPS_PACRH_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP3.
+/*@{*/
+#define BP_AIPS_PACRH_TP3    (16U)         /*!< Bit position for AIPS_PACRH_TP3. */
+#define BM_AIPS_PACRH_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRH_TP3. */
+#define BS_AIPS_PACRH_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP3 field.
+/*! @brief Read current value of the AIPS_PACRH_TP3 field. */
 #define BR_AIPS_PACRH_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP3.
-#define BF_AIPS_PACRH_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP3), uint32_t) & BM_AIPS_PACRH_TP3)
+/*! @brief Format value for bitfield AIPS_PACRH_TP3. */
+#define BF_AIPS_PACRH_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP3) & BM_AIPS_PACRH_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRH_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP3[17] (RW)
@@ -6302,24 +5426,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP3    (17U)         //!< Bit position for AIPS_PACRH_WP3.
-#define BM_AIPS_PACRH_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRH_WP3.
-#define BS_AIPS_PACRH_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP3.
+/*@{*/
+#define BP_AIPS_PACRH_WP3    (17U)         /*!< Bit position for AIPS_PACRH_WP3. */
+#define BM_AIPS_PACRH_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRH_WP3. */
+#define BS_AIPS_PACRH_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP3 field.
+/*! @brief Read current value of the AIPS_PACRH_WP3 field. */
 #define BR_AIPS_PACRH_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP3.
-#define BF_AIPS_PACRH_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP3), uint32_t) & BM_AIPS_PACRH_WP3)
+/*! @brief Format value for bitfield AIPS_PACRH_WP3. */
+#define BF_AIPS_PACRH_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP3) & BM_AIPS_PACRH_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRH_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP3[18] (RW)
@@ -6329,24 +5449,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP3    (18U)         //!< Bit position for AIPS_PACRH_SP3.
-#define BM_AIPS_PACRH_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRH_SP3.
-#define BS_AIPS_PACRH_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP3.
+/*@{*/
+#define BP_AIPS_PACRH_SP3    (18U)         /*!< Bit position for AIPS_PACRH_SP3. */
+#define BM_AIPS_PACRH_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRH_SP3. */
+#define BS_AIPS_PACRH_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP3 field.
+/*! @brief Read current value of the AIPS_PACRH_SP3 field. */
 #define BR_AIPS_PACRH_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP3.
-#define BF_AIPS_PACRH_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP3), uint32_t) & BM_AIPS_PACRH_SP3)
+/*! @brief Format value for bitfield AIPS_PACRH_SP3. */
+#define BF_AIPS_PACRH_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP3) & BM_AIPS_PACRH_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRH_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP2[20] (RW)
@@ -6355,24 +5471,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP2    (20U)         //!< Bit position for AIPS_PACRH_TP2.
-#define BM_AIPS_PACRH_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRH_TP2.
-#define BS_AIPS_PACRH_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP2.
+/*@{*/
+#define BP_AIPS_PACRH_TP2    (20U)         /*!< Bit position for AIPS_PACRH_TP2. */
+#define BM_AIPS_PACRH_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRH_TP2. */
+#define BS_AIPS_PACRH_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP2 field.
+/*! @brief Read current value of the AIPS_PACRH_TP2 field. */
 #define BR_AIPS_PACRH_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP2.
-#define BF_AIPS_PACRH_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP2), uint32_t) & BM_AIPS_PACRH_TP2)
+/*! @brief Format value for bitfield AIPS_PACRH_TP2. */
+#define BF_AIPS_PACRH_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP2) & BM_AIPS_PACRH_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRH_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP2[21] (RW)
@@ -6381,24 +5493,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP2    (21U)         //!< Bit position for AIPS_PACRH_WP2.
-#define BM_AIPS_PACRH_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRH_WP2.
-#define BS_AIPS_PACRH_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP2.
+/*@{*/
+#define BP_AIPS_PACRH_WP2    (21U)         /*!< Bit position for AIPS_PACRH_WP2. */
+#define BM_AIPS_PACRH_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRH_WP2. */
+#define BS_AIPS_PACRH_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP2 field.
+/*! @brief Read current value of the AIPS_PACRH_WP2 field. */
 #define BR_AIPS_PACRH_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP2.
-#define BF_AIPS_PACRH_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP2), uint32_t) & BM_AIPS_PACRH_WP2)
+/*! @brief Format value for bitfield AIPS_PACRH_WP2. */
+#define BF_AIPS_PACRH_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP2) & BM_AIPS_PACRH_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRH_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP2[22] (RW)
@@ -6408,24 +5516,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP2    (22U)         //!< Bit position for AIPS_PACRH_SP2.
-#define BM_AIPS_PACRH_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRH_SP2.
-#define BS_AIPS_PACRH_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP2.
+/*@{*/
+#define BP_AIPS_PACRH_SP2    (22U)         /*!< Bit position for AIPS_PACRH_SP2. */
+#define BM_AIPS_PACRH_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRH_SP2. */
+#define BS_AIPS_PACRH_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP2 field.
+/*! @brief Read current value of the AIPS_PACRH_SP2 field. */
 #define BR_AIPS_PACRH_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP2.
-#define BF_AIPS_PACRH_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP2), uint32_t) & BM_AIPS_PACRH_SP2)
+/*! @brief Format value for bitfield AIPS_PACRH_SP2. */
+#define BF_AIPS_PACRH_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP2) & BM_AIPS_PACRH_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRH_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP1[24] (RW)
@@ -6434,24 +5538,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP1    (24U)         //!< Bit position for AIPS_PACRH_TP1.
-#define BM_AIPS_PACRH_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRH_TP1.
-#define BS_AIPS_PACRH_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP1.
+/*@{*/
+#define BP_AIPS_PACRH_TP1    (24U)         /*!< Bit position for AIPS_PACRH_TP1. */
+#define BM_AIPS_PACRH_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRH_TP1. */
+#define BS_AIPS_PACRH_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP1 field.
+/*! @brief Read current value of the AIPS_PACRH_TP1 field. */
 #define BR_AIPS_PACRH_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP1.
-#define BF_AIPS_PACRH_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP1), uint32_t) & BM_AIPS_PACRH_TP1)
+/*! @brief Format value for bitfield AIPS_PACRH_TP1. */
+#define BF_AIPS_PACRH_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP1) & BM_AIPS_PACRH_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRH_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP1[25] (RW)
@@ -6460,24 +5560,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP1    (25U)         //!< Bit position for AIPS_PACRH_WP1.
-#define BM_AIPS_PACRH_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRH_WP1.
-#define BS_AIPS_PACRH_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP1.
+/*@{*/
+#define BP_AIPS_PACRH_WP1    (25U)         /*!< Bit position for AIPS_PACRH_WP1. */
+#define BM_AIPS_PACRH_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRH_WP1. */
+#define BS_AIPS_PACRH_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP1 field.
+/*! @brief Read current value of the AIPS_PACRH_WP1 field. */
 #define BR_AIPS_PACRH_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP1.
-#define BF_AIPS_PACRH_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP1), uint32_t) & BM_AIPS_PACRH_WP1)
+/*! @brief Format value for bitfield AIPS_PACRH_WP1. */
+#define BF_AIPS_PACRH_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP1) & BM_AIPS_PACRH_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRH_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP1[26] (RW)
@@ -6487,24 +5583,20 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP1    (26U)         //!< Bit position for AIPS_PACRH_SP1.
-#define BM_AIPS_PACRH_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRH_SP1.
-#define BS_AIPS_PACRH_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP1.
+/*@{*/
+#define BP_AIPS_PACRH_SP1    (26U)         /*!< Bit position for AIPS_PACRH_SP1. */
+#define BM_AIPS_PACRH_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRH_SP1. */
+#define BS_AIPS_PACRH_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP1 field.
+/*! @brief Read current value of the AIPS_PACRH_SP1 field. */
 #define BR_AIPS_PACRH_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP1.
-#define BF_AIPS_PACRH_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP1), uint32_t) & BM_AIPS_PACRH_SP1)
+/*! @brief Format value for bitfield AIPS_PACRH_SP1. */
+#define BF_AIPS_PACRH_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP1) & BM_AIPS_PACRH_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRH_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field TP0[28] (RW)
@@ -6513,24 +5605,20 @@ typedef union _hw_aips_pacrh
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRH_TP0    (28U)         //!< Bit position for AIPS_PACRH_TP0.
-#define BM_AIPS_PACRH_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRH_TP0.
-#define BS_AIPS_PACRH_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRH_TP0.
+/*@{*/
+#define BP_AIPS_PACRH_TP0    (28U)         /*!< Bit position for AIPS_PACRH_TP0. */
+#define BM_AIPS_PACRH_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRH_TP0. */
+#define BS_AIPS_PACRH_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRH_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_TP0 field.
+/*! @brief Read current value of the AIPS_PACRH_TP0 field. */
 #define BR_AIPS_PACRH_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_TP0.
-#define BF_AIPS_PACRH_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_TP0), uint32_t) & BM_AIPS_PACRH_TP0)
+/*! @brief Format value for bitfield AIPS_PACRH_TP0. */
+#define BF_AIPS_PACRH_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_TP0) & BM_AIPS_PACRH_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRH_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field WP0[29] (RW)
@@ -6539,24 +5627,20 @@ typedef union _hw_aips_pacrh
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRH_WP0    (29U)         //!< Bit position for AIPS_PACRH_WP0.
-#define BM_AIPS_PACRH_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRH_WP0.
-#define BS_AIPS_PACRH_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRH_WP0.
+/*@{*/
+#define BP_AIPS_PACRH_WP0    (29U)         /*!< Bit position for AIPS_PACRH_WP0. */
+#define BM_AIPS_PACRH_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRH_WP0. */
+#define BS_AIPS_PACRH_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRH_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_WP0 field.
+/*! @brief Read current value of the AIPS_PACRH_WP0 field. */
 #define BR_AIPS_PACRH_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_WP0.
-#define BF_AIPS_PACRH_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_WP0), uint32_t) & BM_AIPS_PACRH_WP0)
+/*! @brief Format value for bitfield AIPS_PACRH_WP0. */
+#define BF_AIPS_PACRH_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_WP0) & BM_AIPS_PACRH_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRH_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRH, field SP0[30] (RW)
@@ -6566,30 +5650,25 @@ typedef union _hw_aips_pacrh
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRH_SP0    (30U)         //!< Bit position for AIPS_PACRH_SP0.
-#define BM_AIPS_PACRH_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRH_SP0.
-#define BS_AIPS_PACRH_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRH_SP0.
+/*@{*/
+#define BP_AIPS_PACRH_SP0    (30U)         /*!< Bit position for AIPS_PACRH_SP0. */
+#define BM_AIPS_PACRH_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRH_SP0. */
+#define BS_AIPS_PACRH_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRH_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRH_SP0 field.
+/*! @brief Read current value of the AIPS_PACRH_SP0 field. */
 #define BR_AIPS_PACRH_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRH_SP0.
-#define BF_AIPS_PACRH_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRH_SP0), uint32_t) & BM_AIPS_PACRH_SP0)
+/*! @brief Format value for bitfield AIPS_PACRH_SP0. */
+#define BF_AIPS_PACRH_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRH_SP0) & BM_AIPS_PACRH_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRH_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRH_ADDR(x), BP_AIPS_PACRH_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRI - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRI - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRI - Peripheral Access Control Register (RW)
  *
@@ -6608,57 +5687,54 @@ typedef union _hw_aips_pacri
     uint32_t U;
     struct _hw_aips_pacri_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacri_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRI register
  */
-//@{
-#define HW_AIPS_PACRI_ADDR(x)    (REGS_AIPS_BASE(x) + 0x50U)
+/*@{*/
+#define HW_AIPS_PACRI_ADDR(x)    ((x) + 0x50U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRI(x)         (*(__IO hw_aips_pacri_t *) HW_AIPS_PACRI_ADDR(x))
 #define HW_AIPS_PACRI_RD(x)      (HW_AIPS_PACRI(x).U)
 #define HW_AIPS_PACRI_WR(x, v)   (HW_AIPS_PACRI(x).U = (v))
 #define HW_AIPS_PACRI_SET(x, v)  (HW_AIPS_PACRI_WR(x, HW_AIPS_PACRI_RD(x) |  (v)))
 #define HW_AIPS_PACRI_CLR(x, v)  (HW_AIPS_PACRI_WR(x, HW_AIPS_PACRI_RD(x) & ~(v)))
 #define HW_AIPS_PACRI_TOG(x, v)  (HW_AIPS_PACRI_WR(x, HW_AIPS_PACRI_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRI bitfields
@@ -6671,24 +5747,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP7    (0U)          //!< Bit position for AIPS_PACRI_TP7.
-#define BM_AIPS_PACRI_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRI_TP7.
-#define BS_AIPS_PACRI_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP7.
+/*@{*/
+#define BP_AIPS_PACRI_TP7    (0U)          /*!< Bit position for AIPS_PACRI_TP7. */
+#define BM_AIPS_PACRI_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRI_TP7. */
+#define BS_AIPS_PACRI_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP7 field.
+/*! @brief Read current value of the AIPS_PACRI_TP7 field. */
 #define BR_AIPS_PACRI_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP7.
-#define BF_AIPS_PACRI_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP7), uint32_t) & BM_AIPS_PACRI_TP7)
+/*! @brief Format value for bitfield AIPS_PACRI_TP7. */
+#define BF_AIPS_PACRI_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP7) & BM_AIPS_PACRI_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRI_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP7[1] (RW)
@@ -6697,24 +5769,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP7    (1U)          //!< Bit position for AIPS_PACRI_WP7.
-#define BM_AIPS_PACRI_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRI_WP7.
-#define BS_AIPS_PACRI_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP7.
+/*@{*/
+#define BP_AIPS_PACRI_WP7    (1U)          /*!< Bit position for AIPS_PACRI_WP7. */
+#define BM_AIPS_PACRI_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRI_WP7. */
+#define BS_AIPS_PACRI_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP7 field.
+/*! @brief Read current value of the AIPS_PACRI_WP7 field. */
 #define BR_AIPS_PACRI_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP7.
-#define BF_AIPS_PACRI_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP7), uint32_t) & BM_AIPS_PACRI_WP7)
+/*! @brief Format value for bitfield AIPS_PACRI_WP7. */
+#define BF_AIPS_PACRI_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP7) & BM_AIPS_PACRI_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRI_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP7[2] (RW)
@@ -6724,24 +5792,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP7    (2U)          //!< Bit position for AIPS_PACRI_SP7.
-#define BM_AIPS_PACRI_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRI_SP7.
-#define BS_AIPS_PACRI_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP7.
+/*@{*/
+#define BP_AIPS_PACRI_SP7    (2U)          /*!< Bit position for AIPS_PACRI_SP7. */
+#define BM_AIPS_PACRI_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRI_SP7. */
+#define BS_AIPS_PACRI_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP7 field.
+/*! @brief Read current value of the AIPS_PACRI_SP7 field. */
 #define BR_AIPS_PACRI_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP7.
-#define BF_AIPS_PACRI_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP7), uint32_t) & BM_AIPS_PACRI_SP7)
+/*! @brief Format value for bitfield AIPS_PACRI_SP7. */
+#define BF_AIPS_PACRI_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP7) & BM_AIPS_PACRI_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRI_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP6[4] (RW)
@@ -6750,24 +5814,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP6    (4U)          //!< Bit position for AIPS_PACRI_TP6.
-#define BM_AIPS_PACRI_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRI_TP6.
-#define BS_AIPS_PACRI_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP6.
+/*@{*/
+#define BP_AIPS_PACRI_TP6    (4U)          /*!< Bit position for AIPS_PACRI_TP6. */
+#define BM_AIPS_PACRI_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRI_TP6. */
+#define BS_AIPS_PACRI_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP6 field.
+/*! @brief Read current value of the AIPS_PACRI_TP6 field. */
 #define BR_AIPS_PACRI_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP6.
-#define BF_AIPS_PACRI_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP6), uint32_t) & BM_AIPS_PACRI_TP6)
+/*! @brief Format value for bitfield AIPS_PACRI_TP6. */
+#define BF_AIPS_PACRI_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP6) & BM_AIPS_PACRI_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRI_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP6[5] (RW)
@@ -6776,24 +5836,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP6    (5U)          //!< Bit position for AIPS_PACRI_WP6.
-#define BM_AIPS_PACRI_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRI_WP6.
-#define BS_AIPS_PACRI_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP6.
+/*@{*/
+#define BP_AIPS_PACRI_WP6    (5U)          /*!< Bit position for AIPS_PACRI_WP6. */
+#define BM_AIPS_PACRI_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRI_WP6. */
+#define BS_AIPS_PACRI_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP6 field.
+/*! @brief Read current value of the AIPS_PACRI_WP6 field. */
 #define BR_AIPS_PACRI_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP6.
-#define BF_AIPS_PACRI_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP6), uint32_t) & BM_AIPS_PACRI_WP6)
+/*! @brief Format value for bitfield AIPS_PACRI_WP6. */
+#define BF_AIPS_PACRI_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP6) & BM_AIPS_PACRI_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRI_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP6[6] (RW)
@@ -6803,24 +5859,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP6    (6U)          //!< Bit position for AIPS_PACRI_SP6.
-#define BM_AIPS_PACRI_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRI_SP6.
-#define BS_AIPS_PACRI_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP6.
+/*@{*/
+#define BP_AIPS_PACRI_SP6    (6U)          /*!< Bit position for AIPS_PACRI_SP6. */
+#define BM_AIPS_PACRI_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRI_SP6. */
+#define BS_AIPS_PACRI_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP6 field.
+/*! @brief Read current value of the AIPS_PACRI_SP6 field. */
 #define BR_AIPS_PACRI_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP6.
-#define BF_AIPS_PACRI_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP6), uint32_t) & BM_AIPS_PACRI_SP6)
+/*! @brief Format value for bitfield AIPS_PACRI_SP6. */
+#define BF_AIPS_PACRI_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP6) & BM_AIPS_PACRI_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRI_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP5[8] (RW)
@@ -6829,24 +5881,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP5    (8U)          //!< Bit position for AIPS_PACRI_TP5.
-#define BM_AIPS_PACRI_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRI_TP5.
-#define BS_AIPS_PACRI_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP5.
+/*@{*/
+#define BP_AIPS_PACRI_TP5    (8U)          /*!< Bit position for AIPS_PACRI_TP5. */
+#define BM_AIPS_PACRI_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRI_TP5. */
+#define BS_AIPS_PACRI_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP5 field.
+/*! @brief Read current value of the AIPS_PACRI_TP5 field. */
 #define BR_AIPS_PACRI_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP5.
-#define BF_AIPS_PACRI_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP5), uint32_t) & BM_AIPS_PACRI_TP5)
+/*! @brief Format value for bitfield AIPS_PACRI_TP5. */
+#define BF_AIPS_PACRI_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP5) & BM_AIPS_PACRI_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRI_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP5[9] (RW)
@@ -6855,24 +5903,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP5    (9U)          //!< Bit position for AIPS_PACRI_WP5.
-#define BM_AIPS_PACRI_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRI_WP5.
-#define BS_AIPS_PACRI_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP5.
+/*@{*/
+#define BP_AIPS_PACRI_WP5    (9U)          /*!< Bit position for AIPS_PACRI_WP5. */
+#define BM_AIPS_PACRI_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRI_WP5. */
+#define BS_AIPS_PACRI_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP5 field.
+/*! @brief Read current value of the AIPS_PACRI_WP5 field. */
 #define BR_AIPS_PACRI_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP5.
-#define BF_AIPS_PACRI_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP5), uint32_t) & BM_AIPS_PACRI_WP5)
+/*! @brief Format value for bitfield AIPS_PACRI_WP5. */
+#define BF_AIPS_PACRI_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP5) & BM_AIPS_PACRI_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRI_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP5[10] (RW)
@@ -6882,24 +5926,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP5    (10U)         //!< Bit position for AIPS_PACRI_SP5.
-#define BM_AIPS_PACRI_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRI_SP5.
-#define BS_AIPS_PACRI_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP5.
+/*@{*/
+#define BP_AIPS_PACRI_SP5    (10U)         /*!< Bit position for AIPS_PACRI_SP5. */
+#define BM_AIPS_PACRI_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRI_SP5. */
+#define BS_AIPS_PACRI_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP5 field.
+/*! @brief Read current value of the AIPS_PACRI_SP5 field. */
 #define BR_AIPS_PACRI_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP5.
-#define BF_AIPS_PACRI_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP5), uint32_t) & BM_AIPS_PACRI_SP5)
+/*! @brief Format value for bitfield AIPS_PACRI_SP5. */
+#define BF_AIPS_PACRI_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP5) & BM_AIPS_PACRI_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRI_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP4[12] (RW)
@@ -6908,24 +5948,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP4    (12U)         //!< Bit position for AIPS_PACRI_TP4.
-#define BM_AIPS_PACRI_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRI_TP4.
-#define BS_AIPS_PACRI_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP4.
+/*@{*/
+#define BP_AIPS_PACRI_TP4    (12U)         /*!< Bit position for AIPS_PACRI_TP4. */
+#define BM_AIPS_PACRI_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRI_TP4. */
+#define BS_AIPS_PACRI_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP4 field.
+/*! @brief Read current value of the AIPS_PACRI_TP4 field. */
 #define BR_AIPS_PACRI_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP4.
-#define BF_AIPS_PACRI_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP4), uint32_t) & BM_AIPS_PACRI_TP4)
+/*! @brief Format value for bitfield AIPS_PACRI_TP4. */
+#define BF_AIPS_PACRI_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP4) & BM_AIPS_PACRI_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRI_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP4[13] (RW)
@@ -6934,24 +5970,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP4    (13U)         //!< Bit position for AIPS_PACRI_WP4.
-#define BM_AIPS_PACRI_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRI_WP4.
-#define BS_AIPS_PACRI_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP4.
+/*@{*/
+#define BP_AIPS_PACRI_WP4    (13U)         /*!< Bit position for AIPS_PACRI_WP4. */
+#define BM_AIPS_PACRI_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRI_WP4. */
+#define BS_AIPS_PACRI_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP4 field.
+/*! @brief Read current value of the AIPS_PACRI_WP4 field. */
 #define BR_AIPS_PACRI_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP4.
-#define BF_AIPS_PACRI_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP4), uint32_t) & BM_AIPS_PACRI_WP4)
+/*! @brief Format value for bitfield AIPS_PACRI_WP4. */
+#define BF_AIPS_PACRI_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP4) & BM_AIPS_PACRI_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRI_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP4[14] (RW)
@@ -6961,24 +5993,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP4    (14U)         //!< Bit position for AIPS_PACRI_SP4.
-#define BM_AIPS_PACRI_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRI_SP4.
-#define BS_AIPS_PACRI_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP4.
+/*@{*/
+#define BP_AIPS_PACRI_SP4    (14U)         /*!< Bit position for AIPS_PACRI_SP4. */
+#define BM_AIPS_PACRI_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRI_SP4. */
+#define BS_AIPS_PACRI_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP4 field.
+/*! @brief Read current value of the AIPS_PACRI_SP4 field. */
 #define BR_AIPS_PACRI_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP4.
-#define BF_AIPS_PACRI_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP4), uint32_t) & BM_AIPS_PACRI_SP4)
+/*! @brief Format value for bitfield AIPS_PACRI_SP4. */
+#define BF_AIPS_PACRI_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP4) & BM_AIPS_PACRI_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRI_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP3[16] (RW)
@@ -6987,24 +6015,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP3    (16U)         //!< Bit position for AIPS_PACRI_TP3.
-#define BM_AIPS_PACRI_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRI_TP3.
-#define BS_AIPS_PACRI_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP3.
+/*@{*/
+#define BP_AIPS_PACRI_TP3    (16U)         /*!< Bit position for AIPS_PACRI_TP3. */
+#define BM_AIPS_PACRI_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRI_TP3. */
+#define BS_AIPS_PACRI_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP3 field.
+/*! @brief Read current value of the AIPS_PACRI_TP3 field. */
 #define BR_AIPS_PACRI_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP3.
-#define BF_AIPS_PACRI_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP3), uint32_t) & BM_AIPS_PACRI_TP3)
+/*! @brief Format value for bitfield AIPS_PACRI_TP3. */
+#define BF_AIPS_PACRI_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP3) & BM_AIPS_PACRI_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRI_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP3[17] (RW)
@@ -7013,24 +6037,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP3    (17U)         //!< Bit position for AIPS_PACRI_WP3.
-#define BM_AIPS_PACRI_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRI_WP3.
-#define BS_AIPS_PACRI_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP3.
+/*@{*/
+#define BP_AIPS_PACRI_WP3    (17U)         /*!< Bit position for AIPS_PACRI_WP3. */
+#define BM_AIPS_PACRI_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRI_WP3. */
+#define BS_AIPS_PACRI_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP3 field.
+/*! @brief Read current value of the AIPS_PACRI_WP3 field. */
 #define BR_AIPS_PACRI_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP3.
-#define BF_AIPS_PACRI_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP3), uint32_t) & BM_AIPS_PACRI_WP3)
+/*! @brief Format value for bitfield AIPS_PACRI_WP3. */
+#define BF_AIPS_PACRI_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP3) & BM_AIPS_PACRI_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRI_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP3[18] (RW)
@@ -7040,24 +6060,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP3    (18U)         //!< Bit position for AIPS_PACRI_SP3.
-#define BM_AIPS_PACRI_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRI_SP3.
-#define BS_AIPS_PACRI_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP3.
+/*@{*/
+#define BP_AIPS_PACRI_SP3    (18U)         /*!< Bit position for AIPS_PACRI_SP3. */
+#define BM_AIPS_PACRI_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRI_SP3. */
+#define BS_AIPS_PACRI_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP3 field.
+/*! @brief Read current value of the AIPS_PACRI_SP3 field. */
 #define BR_AIPS_PACRI_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP3.
-#define BF_AIPS_PACRI_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP3), uint32_t) & BM_AIPS_PACRI_SP3)
+/*! @brief Format value for bitfield AIPS_PACRI_SP3. */
+#define BF_AIPS_PACRI_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP3) & BM_AIPS_PACRI_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRI_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP2[20] (RW)
@@ -7066,24 +6082,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP2    (20U)         //!< Bit position for AIPS_PACRI_TP2.
-#define BM_AIPS_PACRI_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRI_TP2.
-#define BS_AIPS_PACRI_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP2.
+/*@{*/
+#define BP_AIPS_PACRI_TP2    (20U)         /*!< Bit position for AIPS_PACRI_TP2. */
+#define BM_AIPS_PACRI_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRI_TP2. */
+#define BS_AIPS_PACRI_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP2 field.
+/*! @brief Read current value of the AIPS_PACRI_TP2 field. */
 #define BR_AIPS_PACRI_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP2.
-#define BF_AIPS_PACRI_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP2), uint32_t) & BM_AIPS_PACRI_TP2)
+/*! @brief Format value for bitfield AIPS_PACRI_TP2. */
+#define BF_AIPS_PACRI_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP2) & BM_AIPS_PACRI_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRI_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP2[21] (RW)
@@ -7092,24 +6104,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP2    (21U)         //!< Bit position for AIPS_PACRI_WP2.
-#define BM_AIPS_PACRI_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRI_WP2.
-#define BS_AIPS_PACRI_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP2.
+/*@{*/
+#define BP_AIPS_PACRI_WP2    (21U)         /*!< Bit position for AIPS_PACRI_WP2. */
+#define BM_AIPS_PACRI_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRI_WP2. */
+#define BS_AIPS_PACRI_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP2 field.
+/*! @brief Read current value of the AIPS_PACRI_WP2 field. */
 #define BR_AIPS_PACRI_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP2.
-#define BF_AIPS_PACRI_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP2), uint32_t) & BM_AIPS_PACRI_WP2)
+/*! @brief Format value for bitfield AIPS_PACRI_WP2. */
+#define BF_AIPS_PACRI_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP2) & BM_AIPS_PACRI_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRI_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP2[22] (RW)
@@ -7119,24 +6127,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP2    (22U)         //!< Bit position for AIPS_PACRI_SP2.
-#define BM_AIPS_PACRI_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRI_SP2.
-#define BS_AIPS_PACRI_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP2.
+/*@{*/
+#define BP_AIPS_PACRI_SP2    (22U)         /*!< Bit position for AIPS_PACRI_SP2. */
+#define BM_AIPS_PACRI_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRI_SP2. */
+#define BS_AIPS_PACRI_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP2 field.
+/*! @brief Read current value of the AIPS_PACRI_SP2 field. */
 #define BR_AIPS_PACRI_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP2.
-#define BF_AIPS_PACRI_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP2), uint32_t) & BM_AIPS_PACRI_SP2)
+/*! @brief Format value for bitfield AIPS_PACRI_SP2. */
+#define BF_AIPS_PACRI_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP2) & BM_AIPS_PACRI_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRI_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP1[24] (RW)
@@ -7145,24 +6149,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP1    (24U)         //!< Bit position for AIPS_PACRI_TP1.
-#define BM_AIPS_PACRI_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRI_TP1.
-#define BS_AIPS_PACRI_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP1.
+/*@{*/
+#define BP_AIPS_PACRI_TP1    (24U)         /*!< Bit position for AIPS_PACRI_TP1. */
+#define BM_AIPS_PACRI_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRI_TP1. */
+#define BS_AIPS_PACRI_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP1 field.
+/*! @brief Read current value of the AIPS_PACRI_TP1 field. */
 #define BR_AIPS_PACRI_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP1.
-#define BF_AIPS_PACRI_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP1), uint32_t) & BM_AIPS_PACRI_TP1)
+/*! @brief Format value for bitfield AIPS_PACRI_TP1. */
+#define BF_AIPS_PACRI_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP1) & BM_AIPS_PACRI_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRI_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP1[25] (RW)
@@ -7171,24 +6171,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP1    (25U)         //!< Bit position for AIPS_PACRI_WP1.
-#define BM_AIPS_PACRI_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRI_WP1.
-#define BS_AIPS_PACRI_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP1.
+/*@{*/
+#define BP_AIPS_PACRI_WP1    (25U)         /*!< Bit position for AIPS_PACRI_WP1. */
+#define BM_AIPS_PACRI_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRI_WP1. */
+#define BS_AIPS_PACRI_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP1 field.
+/*! @brief Read current value of the AIPS_PACRI_WP1 field. */
 #define BR_AIPS_PACRI_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP1.
-#define BF_AIPS_PACRI_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP1), uint32_t) & BM_AIPS_PACRI_WP1)
+/*! @brief Format value for bitfield AIPS_PACRI_WP1. */
+#define BF_AIPS_PACRI_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP1) & BM_AIPS_PACRI_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRI_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP1[26] (RW)
@@ -7198,24 +6194,20 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP1    (26U)         //!< Bit position for AIPS_PACRI_SP1.
-#define BM_AIPS_PACRI_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRI_SP1.
-#define BS_AIPS_PACRI_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP1.
+/*@{*/
+#define BP_AIPS_PACRI_SP1    (26U)         /*!< Bit position for AIPS_PACRI_SP1. */
+#define BM_AIPS_PACRI_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRI_SP1. */
+#define BS_AIPS_PACRI_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP1 field.
+/*! @brief Read current value of the AIPS_PACRI_SP1 field. */
 #define BR_AIPS_PACRI_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP1.
-#define BF_AIPS_PACRI_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP1), uint32_t) & BM_AIPS_PACRI_SP1)
+/*! @brief Format value for bitfield AIPS_PACRI_SP1. */
+#define BF_AIPS_PACRI_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP1) & BM_AIPS_PACRI_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRI_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field TP0[28] (RW)
@@ -7224,24 +6216,20 @@ typedef union _hw_aips_pacri
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRI_TP0    (28U)         //!< Bit position for AIPS_PACRI_TP0.
-#define BM_AIPS_PACRI_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRI_TP0.
-#define BS_AIPS_PACRI_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRI_TP0.
+/*@{*/
+#define BP_AIPS_PACRI_TP0    (28U)         /*!< Bit position for AIPS_PACRI_TP0. */
+#define BM_AIPS_PACRI_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRI_TP0. */
+#define BS_AIPS_PACRI_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRI_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_TP0 field.
+/*! @brief Read current value of the AIPS_PACRI_TP0 field. */
 #define BR_AIPS_PACRI_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_TP0.
-#define BF_AIPS_PACRI_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_TP0), uint32_t) & BM_AIPS_PACRI_TP0)
+/*! @brief Format value for bitfield AIPS_PACRI_TP0. */
+#define BF_AIPS_PACRI_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_TP0) & BM_AIPS_PACRI_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRI_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field WP0[29] (RW)
@@ -7250,24 +6238,20 @@ typedef union _hw_aips_pacri
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRI_WP0    (29U)         //!< Bit position for AIPS_PACRI_WP0.
-#define BM_AIPS_PACRI_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRI_WP0.
-#define BS_AIPS_PACRI_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRI_WP0.
+/*@{*/
+#define BP_AIPS_PACRI_WP0    (29U)         /*!< Bit position for AIPS_PACRI_WP0. */
+#define BM_AIPS_PACRI_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRI_WP0. */
+#define BS_AIPS_PACRI_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRI_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_WP0 field.
+/*! @brief Read current value of the AIPS_PACRI_WP0 field. */
 #define BR_AIPS_PACRI_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_WP0.
-#define BF_AIPS_PACRI_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_WP0), uint32_t) & BM_AIPS_PACRI_WP0)
+/*! @brief Format value for bitfield AIPS_PACRI_WP0. */
+#define BF_AIPS_PACRI_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_WP0) & BM_AIPS_PACRI_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRI_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRI, field SP0[30] (RW)
@@ -7277,30 +6261,25 @@ typedef union _hw_aips_pacri
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRI_SP0    (30U)         //!< Bit position for AIPS_PACRI_SP0.
-#define BM_AIPS_PACRI_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRI_SP0.
-#define BS_AIPS_PACRI_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRI_SP0.
+/*@{*/
+#define BP_AIPS_PACRI_SP0    (30U)         /*!< Bit position for AIPS_PACRI_SP0. */
+#define BM_AIPS_PACRI_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRI_SP0. */
+#define BS_AIPS_PACRI_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRI_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRI_SP0 field.
+/*! @brief Read current value of the AIPS_PACRI_SP0 field. */
 #define BR_AIPS_PACRI_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRI_SP0.
-#define BF_AIPS_PACRI_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRI_SP0), uint32_t) & BM_AIPS_PACRI_SP0)
+/*! @brief Format value for bitfield AIPS_PACRI_SP0. */
+#define BF_AIPS_PACRI_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRI_SP0) & BM_AIPS_PACRI_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRI_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRI_ADDR(x), BP_AIPS_PACRI_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRJ - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRJ - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRJ - Peripheral Access Control Register (RW)
  *
@@ -7319,57 +6298,54 @@ typedef union _hw_aips_pacrj
     uint32_t U;
     struct _hw_aips_pacrj_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrj_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRJ register
  */
-//@{
-#define HW_AIPS_PACRJ_ADDR(x)    (REGS_AIPS_BASE(x) + 0x54U)
+/*@{*/
+#define HW_AIPS_PACRJ_ADDR(x)    ((x) + 0x54U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRJ(x)         (*(__IO hw_aips_pacrj_t *) HW_AIPS_PACRJ_ADDR(x))
 #define HW_AIPS_PACRJ_RD(x)      (HW_AIPS_PACRJ(x).U)
 #define HW_AIPS_PACRJ_WR(x, v)   (HW_AIPS_PACRJ(x).U = (v))
 #define HW_AIPS_PACRJ_SET(x, v)  (HW_AIPS_PACRJ_WR(x, HW_AIPS_PACRJ_RD(x) |  (v)))
 #define HW_AIPS_PACRJ_CLR(x, v)  (HW_AIPS_PACRJ_WR(x, HW_AIPS_PACRJ_RD(x) & ~(v)))
 #define HW_AIPS_PACRJ_TOG(x, v)  (HW_AIPS_PACRJ_WR(x, HW_AIPS_PACRJ_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRJ bitfields
@@ -7382,24 +6358,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP7    (0U)          //!< Bit position for AIPS_PACRJ_TP7.
-#define BM_AIPS_PACRJ_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRJ_TP7.
-#define BS_AIPS_PACRJ_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP7.
+/*@{*/
+#define BP_AIPS_PACRJ_TP7    (0U)          /*!< Bit position for AIPS_PACRJ_TP7. */
+#define BM_AIPS_PACRJ_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRJ_TP7. */
+#define BS_AIPS_PACRJ_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP7 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP7 field. */
 #define BR_AIPS_PACRJ_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP7.
-#define BF_AIPS_PACRJ_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP7), uint32_t) & BM_AIPS_PACRJ_TP7)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP7. */
+#define BF_AIPS_PACRJ_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP7) & BM_AIPS_PACRJ_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRJ_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP7[1] (RW)
@@ -7408,24 +6380,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP7    (1U)          //!< Bit position for AIPS_PACRJ_WP7.
-#define BM_AIPS_PACRJ_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRJ_WP7.
-#define BS_AIPS_PACRJ_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP7.
+/*@{*/
+#define BP_AIPS_PACRJ_WP7    (1U)          /*!< Bit position for AIPS_PACRJ_WP7. */
+#define BM_AIPS_PACRJ_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRJ_WP7. */
+#define BS_AIPS_PACRJ_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP7 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP7 field. */
 #define BR_AIPS_PACRJ_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP7.
-#define BF_AIPS_PACRJ_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP7), uint32_t) & BM_AIPS_PACRJ_WP7)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP7. */
+#define BF_AIPS_PACRJ_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP7) & BM_AIPS_PACRJ_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRJ_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP7[2] (RW)
@@ -7435,24 +6403,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP7    (2U)          //!< Bit position for AIPS_PACRJ_SP7.
-#define BM_AIPS_PACRJ_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRJ_SP7.
-#define BS_AIPS_PACRJ_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP7.
+/*@{*/
+#define BP_AIPS_PACRJ_SP7    (2U)          /*!< Bit position for AIPS_PACRJ_SP7. */
+#define BM_AIPS_PACRJ_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRJ_SP7. */
+#define BS_AIPS_PACRJ_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP7 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP7 field. */
 #define BR_AIPS_PACRJ_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP7.
-#define BF_AIPS_PACRJ_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP7), uint32_t) & BM_AIPS_PACRJ_SP7)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP7. */
+#define BF_AIPS_PACRJ_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP7) & BM_AIPS_PACRJ_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRJ_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP6[4] (RW)
@@ -7461,24 +6425,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP6    (4U)          //!< Bit position for AIPS_PACRJ_TP6.
-#define BM_AIPS_PACRJ_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRJ_TP6.
-#define BS_AIPS_PACRJ_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP6.
+/*@{*/
+#define BP_AIPS_PACRJ_TP6    (4U)          /*!< Bit position for AIPS_PACRJ_TP6. */
+#define BM_AIPS_PACRJ_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRJ_TP6. */
+#define BS_AIPS_PACRJ_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP6 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP6 field. */
 #define BR_AIPS_PACRJ_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP6.
-#define BF_AIPS_PACRJ_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP6), uint32_t) & BM_AIPS_PACRJ_TP6)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP6. */
+#define BF_AIPS_PACRJ_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP6) & BM_AIPS_PACRJ_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRJ_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP6[5] (RW)
@@ -7487,24 +6447,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP6    (5U)          //!< Bit position for AIPS_PACRJ_WP6.
-#define BM_AIPS_PACRJ_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRJ_WP6.
-#define BS_AIPS_PACRJ_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP6.
+/*@{*/
+#define BP_AIPS_PACRJ_WP6    (5U)          /*!< Bit position for AIPS_PACRJ_WP6. */
+#define BM_AIPS_PACRJ_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRJ_WP6. */
+#define BS_AIPS_PACRJ_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP6 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP6 field. */
 #define BR_AIPS_PACRJ_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP6.
-#define BF_AIPS_PACRJ_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP6), uint32_t) & BM_AIPS_PACRJ_WP6)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP6. */
+#define BF_AIPS_PACRJ_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP6) & BM_AIPS_PACRJ_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRJ_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP6[6] (RW)
@@ -7514,24 +6470,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP6    (6U)          //!< Bit position for AIPS_PACRJ_SP6.
-#define BM_AIPS_PACRJ_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRJ_SP6.
-#define BS_AIPS_PACRJ_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP6.
+/*@{*/
+#define BP_AIPS_PACRJ_SP6    (6U)          /*!< Bit position for AIPS_PACRJ_SP6. */
+#define BM_AIPS_PACRJ_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRJ_SP6. */
+#define BS_AIPS_PACRJ_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP6 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP6 field. */
 #define BR_AIPS_PACRJ_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP6.
-#define BF_AIPS_PACRJ_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP6), uint32_t) & BM_AIPS_PACRJ_SP6)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP6. */
+#define BF_AIPS_PACRJ_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP6) & BM_AIPS_PACRJ_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRJ_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP5[8] (RW)
@@ -7540,24 +6492,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP5    (8U)          //!< Bit position for AIPS_PACRJ_TP5.
-#define BM_AIPS_PACRJ_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRJ_TP5.
-#define BS_AIPS_PACRJ_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP5.
+/*@{*/
+#define BP_AIPS_PACRJ_TP5    (8U)          /*!< Bit position for AIPS_PACRJ_TP5. */
+#define BM_AIPS_PACRJ_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRJ_TP5. */
+#define BS_AIPS_PACRJ_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP5 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP5 field. */
 #define BR_AIPS_PACRJ_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP5.
-#define BF_AIPS_PACRJ_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP5), uint32_t) & BM_AIPS_PACRJ_TP5)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP5. */
+#define BF_AIPS_PACRJ_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP5) & BM_AIPS_PACRJ_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRJ_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP5[9] (RW)
@@ -7566,24 +6514,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP5    (9U)          //!< Bit position for AIPS_PACRJ_WP5.
-#define BM_AIPS_PACRJ_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRJ_WP5.
-#define BS_AIPS_PACRJ_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP5.
+/*@{*/
+#define BP_AIPS_PACRJ_WP5    (9U)          /*!< Bit position for AIPS_PACRJ_WP5. */
+#define BM_AIPS_PACRJ_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRJ_WP5. */
+#define BS_AIPS_PACRJ_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP5 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP5 field. */
 #define BR_AIPS_PACRJ_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP5.
-#define BF_AIPS_PACRJ_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP5), uint32_t) & BM_AIPS_PACRJ_WP5)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP5. */
+#define BF_AIPS_PACRJ_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP5) & BM_AIPS_PACRJ_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRJ_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP5[10] (RW)
@@ -7593,24 +6537,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP5    (10U)         //!< Bit position for AIPS_PACRJ_SP5.
-#define BM_AIPS_PACRJ_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRJ_SP5.
-#define BS_AIPS_PACRJ_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP5.
+/*@{*/
+#define BP_AIPS_PACRJ_SP5    (10U)         /*!< Bit position for AIPS_PACRJ_SP5. */
+#define BM_AIPS_PACRJ_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRJ_SP5. */
+#define BS_AIPS_PACRJ_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP5 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP5 field. */
 #define BR_AIPS_PACRJ_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP5.
-#define BF_AIPS_PACRJ_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP5), uint32_t) & BM_AIPS_PACRJ_SP5)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP5. */
+#define BF_AIPS_PACRJ_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP5) & BM_AIPS_PACRJ_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRJ_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP4[12] (RW)
@@ -7619,24 +6559,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP4    (12U)         //!< Bit position for AIPS_PACRJ_TP4.
-#define BM_AIPS_PACRJ_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRJ_TP4.
-#define BS_AIPS_PACRJ_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP4.
+/*@{*/
+#define BP_AIPS_PACRJ_TP4    (12U)         /*!< Bit position for AIPS_PACRJ_TP4. */
+#define BM_AIPS_PACRJ_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRJ_TP4. */
+#define BS_AIPS_PACRJ_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP4 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP4 field. */
 #define BR_AIPS_PACRJ_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP4.
-#define BF_AIPS_PACRJ_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP4), uint32_t) & BM_AIPS_PACRJ_TP4)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP4. */
+#define BF_AIPS_PACRJ_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP4) & BM_AIPS_PACRJ_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRJ_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP4[13] (RW)
@@ -7645,24 +6581,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP4    (13U)         //!< Bit position for AIPS_PACRJ_WP4.
-#define BM_AIPS_PACRJ_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRJ_WP4.
-#define BS_AIPS_PACRJ_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP4.
+/*@{*/
+#define BP_AIPS_PACRJ_WP4    (13U)         /*!< Bit position for AIPS_PACRJ_WP4. */
+#define BM_AIPS_PACRJ_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRJ_WP4. */
+#define BS_AIPS_PACRJ_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP4 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP4 field. */
 #define BR_AIPS_PACRJ_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP4.
-#define BF_AIPS_PACRJ_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP4), uint32_t) & BM_AIPS_PACRJ_WP4)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP4. */
+#define BF_AIPS_PACRJ_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP4) & BM_AIPS_PACRJ_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRJ_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP4[14] (RW)
@@ -7672,24 +6604,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP4    (14U)         //!< Bit position for AIPS_PACRJ_SP4.
-#define BM_AIPS_PACRJ_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRJ_SP4.
-#define BS_AIPS_PACRJ_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP4.
+/*@{*/
+#define BP_AIPS_PACRJ_SP4    (14U)         /*!< Bit position for AIPS_PACRJ_SP4. */
+#define BM_AIPS_PACRJ_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRJ_SP4. */
+#define BS_AIPS_PACRJ_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP4 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP4 field. */
 #define BR_AIPS_PACRJ_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP4.
-#define BF_AIPS_PACRJ_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP4), uint32_t) & BM_AIPS_PACRJ_SP4)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP4. */
+#define BF_AIPS_PACRJ_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP4) & BM_AIPS_PACRJ_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRJ_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP3[16] (RW)
@@ -7698,24 +6626,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP3    (16U)         //!< Bit position for AIPS_PACRJ_TP3.
-#define BM_AIPS_PACRJ_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRJ_TP3.
-#define BS_AIPS_PACRJ_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP3.
+/*@{*/
+#define BP_AIPS_PACRJ_TP3    (16U)         /*!< Bit position for AIPS_PACRJ_TP3. */
+#define BM_AIPS_PACRJ_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRJ_TP3. */
+#define BS_AIPS_PACRJ_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP3 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP3 field. */
 #define BR_AIPS_PACRJ_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP3.
-#define BF_AIPS_PACRJ_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP3), uint32_t) & BM_AIPS_PACRJ_TP3)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP3. */
+#define BF_AIPS_PACRJ_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP3) & BM_AIPS_PACRJ_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRJ_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP3[17] (RW)
@@ -7724,24 +6648,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP3    (17U)         //!< Bit position for AIPS_PACRJ_WP3.
-#define BM_AIPS_PACRJ_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRJ_WP3.
-#define BS_AIPS_PACRJ_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP3.
+/*@{*/
+#define BP_AIPS_PACRJ_WP3    (17U)         /*!< Bit position for AIPS_PACRJ_WP3. */
+#define BM_AIPS_PACRJ_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRJ_WP3. */
+#define BS_AIPS_PACRJ_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP3 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP3 field. */
 #define BR_AIPS_PACRJ_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP3.
-#define BF_AIPS_PACRJ_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP3), uint32_t) & BM_AIPS_PACRJ_WP3)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP3. */
+#define BF_AIPS_PACRJ_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP3) & BM_AIPS_PACRJ_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRJ_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP3[18] (RW)
@@ -7751,24 +6671,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP3    (18U)         //!< Bit position for AIPS_PACRJ_SP3.
-#define BM_AIPS_PACRJ_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRJ_SP3.
-#define BS_AIPS_PACRJ_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP3.
+/*@{*/
+#define BP_AIPS_PACRJ_SP3    (18U)         /*!< Bit position for AIPS_PACRJ_SP3. */
+#define BM_AIPS_PACRJ_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRJ_SP3. */
+#define BS_AIPS_PACRJ_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP3 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP3 field. */
 #define BR_AIPS_PACRJ_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP3.
-#define BF_AIPS_PACRJ_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP3), uint32_t) & BM_AIPS_PACRJ_SP3)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP3. */
+#define BF_AIPS_PACRJ_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP3) & BM_AIPS_PACRJ_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRJ_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP2[20] (RW)
@@ -7777,24 +6693,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP2    (20U)         //!< Bit position for AIPS_PACRJ_TP2.
-#define BM_AIPS_PACRJ_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRJ_TP2.
-#define BS_AIPS_PACRJ_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP2.
+/*@{*/
+#define BP_AIPS_PACRJ_TP2    (20U)         /*!< Bit position for AIPS_PACRJ_TP2. */
+#define BM_AIPS_PACRJ_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRJ_TP2. */
+#define BS_AIPS_PACRJ_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP2 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP2 field. */
 #define BR_AIPS_PACRJ_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP2.
-#define BF_AIPS_PACRJ_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP2), uint32_t) & BM_AIPS_PACRJ_TP2)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP2. */
+#define BF_AIPS_PACRJ_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP2) & BM_AIPS_PACRJ_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRJ_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP2[21] (RW)
@@ -7803,24 +6715,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP2    (21U)         //!< Bit position for AIPS_PACRJ_WP2.
-#define BM_AIPS_PACRJ_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRJ_WP2.
-#define BS_AIPS_PACRJ_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP2.
+/*@{*/
+#define BP_AIPS_PACRJ_WP2    (21U)         /*!< Bit position for AIPS_PACRJ_WP2. */
+#define BM_AIPS_PACRJ_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRJ_WP2. */
+#define BS_AIPS_PACRJ_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP2 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP2 field. */
 #define BR_AIPS_PACRJ_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP2.
-#define BF_AIPS_PACRJ_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP2), uint32_t) & BM_AIPS_PACRJ_WP2)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP2. */
+#define BF_AIPS_PACRJ_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP2) & BM_AIPS_PACRJ_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRJ_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP2[22] (RW)
@@ -7830,24 +6738,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP2    (22U)         //!< Bit position for AIPS_PACRJ_SP2.
-#define BM_AIPS_PACRJ_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRJ_SP2.
-#define BS_AIPS_PACRJ_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP2.
+/*@{*/
+#define BP_AIPS_PACRJ_SP2    (22U)         /*!< Bit position for AIPS_PACRJ_SP2. */
+#define BM_AIPS_PACRJ_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRJ_SP2. */
+#define BS_AIPS_PACRJ_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP2 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP2 field. */
 #define BR_AIPS_PACRJ_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP2.
-#define BF_AIPS_PACRJ_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP2), uint32_t) & BM_AIPS_PACRJ_SP2)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP2. */
+#define BF_AIPS_PACRJ_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP2) & BM_AIPS_PACRJ_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRJ_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP1[24] (RW)
@@ -7856,24 +6760,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP1    (24U)         //!< Bit position for AIPS_PACRJ_TP1.
-#define BM_AIPS_PACRJ_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRJ_TP1.
-#define BS_AIPS_PACRJ_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP1.
+/*@{*/
+#define BP_AIPS_PACRJ_TP1    (24U)         /*!< Bit position for AIPS_PACRJ_TP1. */
+#define BM_AIPS_PACRJ_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRJ_TP1. */
+#define BS_AIPS_PACRJ_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP1 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP1 field. */
 #define BR_AIPS_PACRJ_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP1.
-#define BF_AIPS_PACRJ_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP1), uint32_t) & BM_AIPS_PACRJ_TP1)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP1. */
+#define BF_AIPS_PACRJ_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP1) & BM_AIPS_PACRJ_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRJ_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP1[25] (RW)
@@ -7882,24 +6782,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP1    (25U)         //!< Bit position for AIPS_PACRJ_WP1.
-#define BM_AIPS_PACRJ_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRJ_WP1.
-#define BS_AIPS_PACRJ_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP1.
+/*@{*/
+#define BP_AIPS_PACRJ_WP1    (25U)         /*!< Bit position for AIPS_PACRJ_WP1. */
+#define BM_AIPS_PACRJ_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRJ_WP1. */
+#define BS_AIPS_PACRJ_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP1 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP1 field. */
 #define BR_AIPS_PACRJ_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP1.
-#define BF_AIPS_PACRJ_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP1), uint32_t) & BM_AIPS_PACRJ_WP1)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP1. */
+#define BF_AIPS_PACRJ_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP1) & BM_AIPS_PACRJ_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRJ_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP1[26] (RW)
@@ -7909,24 +6805,20 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP1    (26U)         //!< Bit position for AIPS_PACRJ_SP1.
-#define BM_AIPS_PACRJ_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRJ_SP1.
-#define BS_AIPS_PACRJ_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP1.
+/*@{*/
+#define BP_AIPS_PACRJ_SP1    (26U)         /*!< Bit position for AIPS_PACRJ_SP1. */
+#define BM_AIPS_PACRJ_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRJ_SP1. */
+#define BS_AIPS_PACRJ_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP1 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP1 field. */
 #define BR_AIPS_PACRJ_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP1.
-#define BF_AIPS_PACRJ_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP1), uint32_t) & BM_AIPS_PACRJ_SP1)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP1. */
+#define BF_AIPS_PACRJ_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP1) & BM_AIPS_PACRJ_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRJ_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field TP0[28] (RW)
@@ -7935,24 +6827,20 @@ typedef union _hw_aips_pacrj
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRJ_TP0    (28U)         //!< Bit position for AIPS_PACRJ_TP0.
-#define BM_AIPS_PACRJ_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRJ_TP0.
-#define BS_AIPS_PACRJ_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRJ_TP0.
+/*@{*/
+#define BP_AIPS_PACRJ_TP0    (28U)         /*!< Bit position for AIPS_PACRJ_TP0. */
+#define BM_AIPS_PACRJ_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRJ_TP0. */
+#define BS_AIPS_PACRJ_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_TP0 field.
+/*! @brief Read current value of the AIPS_PACRJ_TP0 field. */
 #define BR_AIPS_PACRJ_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_TP0.
-#define BF_AIPS_PACRJ_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_TP0), uint32_t) & BM_AIPS_PACRJ_TP0)
+/*! @brief Format value for bitfield AIPS_PACRJ_TP0. */
+#define BF_AIPS_PACRJ_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_TP0) & BM_AIPS_PACRJ_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRJ_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field WP0[29] (RW)
@@ -7961,24 +6849,20 @@ typedef union _hw_aips_pacrj
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRJ_WP0    (29U)         //!< Bit position for AIPS_PACRJ_WP0.
-#define BM_AIPS_PACRJ_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRJ_WP0.
-#define BS_AIPS_PACRJ_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRJ_WP0.
+/*@{*/
+#define BP_AIPS_PACRJ_WP0    (29U)         /*!< Bit position for AIPS_PACRJ_WP0. */
+#define BM_AIPS_PACRJ_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRJ_WP0. */
+#define BS_AIPS_PACRJ_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_WP0 field.
+/*! @brief Read current value of the AIPS_PACRJ_WP0 field. */
 #define BR_AIPS_PACRJ_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_WP0.
-#define BF_AIPS_PACRJ_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_WP0), uint32_t) & BM_AIPS_PACRJ_WP0)
+/*! @brief Format value for bitfield AIPS_PACRJ_WP0. */
+#define BF_AIPS_PACRJ_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_WP0) & BM_AIPS_PACRJ_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRJ_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRJ, field SP0[30] (RW)
@@ -7988,30 +6872,25 @@ typedef union _hw_aips_pacrj
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRJ_SP0    (30U)         //!< Bit position for AIPS_PACRJ_SP0.
-#define BM_AIPS_PACRJ_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRJ_SP0.
-#define BS_AIPS_PACRJ_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRJ_SP0.
+/*@{*/
+#define BP_AIPS_PACRJ_SP0    (30U)         /*!< Bit position for AIPS_PACRJ_SP0. */
+#define BM_AIPS_PACRJ_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRJ_SP0. */
+#define BS_AIPS_PACRJ_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRJ_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRJ_SP0 field.
+/*! @brief Read current value of the AIPS_PACRJ_SP0 field. */
 #define BR_AIPS_PACRJ_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRJ_SP0.
-#define BF_AIPS_PACRJ_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRJ_SP0), uint32_t) & BM_AIPS_PACRJ_SP0)
+/*! @brief Format value for bitfield AIPS_PACRJ_SP0. */
+#define BF_AIPS_PACRJ_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRJ_SP0) & BM_AIPS_PACRJ_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRJ_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRJ_ADDR(x), BP_AIPS_PACRJ_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRK - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRK - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRK - Peripheral Access Control Register (RW)
  *
@@ -8030,57 +6909,54 @@ typedef union _hw_aips_pacrk
     uint32_t U;
     struct _hw_aips_pacrk_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrk_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRK register
  */
-//@{
-#define HW_AIPS_PACRK_ADDR(x)    (REGS_AIPS_BASE(x) + 0x58U)
+/*@{*/
+#define HW_AIPS_PACRK_ADDR(x)    ((x) + 0x58U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRK(x)         (*(__IO hw_aips_pacrk_t *) HW_AIPS_PACRK_ADDR(x))
 #define HW_AIPS_PACRK_RD(x)      (HW_AIPS_PACRK(x).U)
 #define HW_AIPS_PACRK_WR(x, v)   (HW_AIPS_PACRK(x).U = (v))
 #define HW_AIPS_PACRK_SET(x, v)  (HW_AIPS_PACRK_WR(x, HW_AIPS_PACRK_RD(x) |  (v)))
 #define HW_AIPS_PACRK_CLR(x, v)  (HW_AIPS_PACRK_WR(x, HW_AIPS_PACRK_RD(x) & ~(v)))
 #define HW_AIPS_PACRK_TOG(x, v)  (HW_AIPS_PACRK_WR(x, HW_AIPS_PACRK_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRK bitfields
@@ -8093,24 +6969,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP7    (0U)          //!< Bit position for AIPS_PACRK_TP7.
-#define BM_AIPS_PACRK_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRK_TP7.
-#define BS_AIPS_PACRK_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP7.
+/*@{*/
+#define BP_AIPS_PACRK_TP7    (0U)          /*!< Bit position for AIPS_PACRK_TP7. */
+#define BM_AIPS_PACRK_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRK_TP7. */
+#define BS_AIPS_PACRK_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP7 field.
+/*! @brief Read current value of the AIPS_PACRK_TP7 field. */
 #define BR_AIPS_PACRK_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP7.
-#define BF_AIPS_PACRK_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP7), uint32_t) & BM_AIPS_PACRK_TP7)
+/*! @brief Format value for bitfield AIPS_PACRK_TP7. */
+#define BF_AIPS_PACRK_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP7) & BM_AIPS_PACRK_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRK_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP7[1] (RW)
@@ -8119,24 +6991,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP7    (1U)          //!< Bit position for AIPS_PACRK_WP7.
-#define BM_AIPS_PACRK_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRK_WP7.
-#define BS_AIPS_PACRK_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP7.
+/*@{*/
+#define BP_AIPS_PACRK_WP7    (1U)          /*!< Bit position for AIPS_PACRK_WP7. */
+#define BM_AIPS_PACRK_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRK_WP7. */
+#define BS_AIPS_PACRK_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP7 field.
+/*! @brief Read current value of the AIPS_PACRK_WP7 field. */
 #define BR_AIPS_PACRK_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP7.
-#define BF_AIPS_PACRK_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP7), uint32_t) & BM_AIPS_PACRK_WP7)
+/*! @brief Format value for bitfield AIPS_PACRK_WP7. */
+#define BF_AIPS_PACRK_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP7) & BM_AIPS_PACRK_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRK_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP7[2] (RW)
@@ -8146,24 +7014,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP7    (2U)          //!< Bit position for AIPS_PACRK_SP7.
-#define BM_AIPS_PACRK_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRK_SP7.
-#define BS_AIPS_PACRK_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP7.
+/*@{*/
+#define BP_AIPS_PACRK_SP7    (2U)          /*!< Bit position for AIPS_PACRK_SP7. */
+#define BM_AIPS_PACRK_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRK_SP7. */
+#define BS_AIPS_PACRK_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP7 field.
+/*! @brief Read current value of the AIPS_PACRK_SP7 field. */
 #define BR_AIPS_PACRK_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP7.
-#define BF_AIPS_PACRK_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP7), uint32_t) & BM_AIPS_PACRK_SP7)
+/*! @brief Format value for bitfield AIPS_PACRK_SP7. */
+#define BF_AIPS_PACRK_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP7) & BM_AIPS_PACRK_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRK_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP6[4] (RW)
@@ -8172,24 +7036,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP6    (4U)          //!< Bit position for AIPS_PACRK_TP6.
-#define BM_AIPS_PACRK_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRK_TP6.
-#define BS_AIPS_PACRK_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP6.
+/*@{*/
+#define BP_AIPS_PACRK_TP6    (4U)          /*!< Bit position for AIPS_PACRK_TP6. */
+#define BM_AIPS_PACRK_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRK_TP6. */
+#define BS_AIPS_PACRK_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP6 field.
+/*! @brief Read current value of the AIPS_PACRK_TP6 field. */
 #define BR_AIPS_PACRK_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP6.
-#define BF_AIPS_PACRK_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP6), uint32_t) & BM_AIPS_PACRK_TP6)
+/*! @brief Format value for bitfield AIPS_PACRK_TP6. */
+#define BF_AIPS_PACRK_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP6) & BM_AIPS_PACRK_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRK_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP6[5] (RW)
@@ -8198,24 +7058,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP6    (5U)          //!< Bit position for AIPS_PACRK_WP6.
-#define BM_AIPS_PACRK_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRK_WP6.
-#define BS_AIPS_PACRK_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP6.
+/*@{*/
+#define BP_AIPS_PACRK_WP6    (5U)          /*!< Bit position for AIPS_PACRK_WP6. */
+#define BM_AIPS_PACRK_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRK_WP6. */
+#define BS_AIPS_PACRK_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP6 field.
+/*! @brief Read current value of the AIPS_PACRK_WP6 field. */
 #define BR_AIPS_PACRK_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP6.
-#define BF_AIPS_PACRK_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP6), uint32_t) & BM_AIPS_PACRK_WP6)
+/*! @brief Format value for bitfield AIPS_PACRK_WP6. */
+#define BF_AIPS_PACRK_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP6) & BM_AIPS_PACRK_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRK_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP6[6] (RW)
@@ -8225,24 +7081,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP6    (6U)          //!< Bit position for AIPS_PACRK_SP6.
-#define BM_AIPS_PACRK_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRK_SP6.
-#define BS_AIPS_PACRK_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP6.
+/*@{*/
+#define BP_AIPS_PACRK_SP6    (6U)          /*!< Bit position for AIPS_PACRK_SP6. */
+#define BM_AIPS_PACRK_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRK_SP6. */
+#define BS_AIPS_PACRK_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP6 field.
+/*! @brief Read current value of the AIPS_PACRK_SP6 field. */
 #define BR_AIPS_PACRK_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP6.
-#define BF_AIPS_PACRK_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP6), uint32_t) & BM_AIPS_PACRK_SP6)
+/*! @brief Format value for bitfield AIPS_PACRK_SP6. */
+#define BF_AIPS_PACRK_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP6) & BM_AIPS_PACRK_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRK_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP5[8] (RW)
@@ -8251,24 +7103,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP5    (8U)          //!< Bit position for AIPS_PACRK_TP5.
-#define BM_AIPS_PACRK_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRK_TP5.
-#define BS_AIPS_PACRK_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP5.
+/*@{*/
+#define BP_AIPS_PACRK_TP5    (8U)          /*!< Bit position for AIPS_PACRK_TP5. */
+#define BM_AIPS_PACRK_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRK_TP5. */
+#define BS_AIPS_PACRK_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP5 field.
+/*! @brief Read current value of the AIPS_PACRK_TP5 field. */
 #define BR_AIPS_PACRK_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP5.
-#define BF_AIPS_PACRK_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP5), uint32_t) & BM_AIPS_PACRK_TP5)
+/*! @brief Format value for bitfield AIPS_PACRK_TP5. */
+#define BF_AIPS_PACRK_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP5) & BM_AIPS_PACRK_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRK_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP5[9] (RW)
@@ -8277,24 +7125,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP5    (9U)          //!< Bit position for AIPS_PACRK_WP5.
-#define BM_AIPS_PACRK_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRK_WP5.
-#define BS_AIPS_PACRK_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP5.
+/*@{*/
+#define BP_AIPS_PACRK_WP5    (9U)          /*!< Bit position for AIPS_PACRK_WP5. */
+#define BM_AIPS_PACRK_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRK_WP5. */
+#define BS_AIPS_PACRK_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP5 field.
+/*! @brief Read current value of the AIPS_PACRK_WP5 field. */
 #define BR_AIPS_PACRK_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP5.
-#define BF_AIPS_PACRK_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP5), uint32_t) & BM_AIPS_PACRK_WP5)
+/*! @brief Format value for bitfield AIPS_PACRK_WP5. */
+#define BF_AIPS_PACRK_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP5) & BM_AIPS_PACRK_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRK_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP5[10] (RW)
@@ -8304,24 +7148,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP5    (10U)         //!< Bit position for AIPS_PACRK_SP5.
-#define BM_AIPS_PACRK_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRK_SP5.
-#define BS_AIPS_PACRK_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP5.
+/*@{*/
+#define BP_AIPS_PACRK_SP5    (10U)         /*!< Bit position for AIPS_PACRK_SP5. */
+#define BM_AIPS_PACRK_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRK_SP5. */
+#define BS_AIPS_PACRK_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP5 field.
+/*! @brief Read current value of the AIPS_PACRK_SP5 field. */
 #define BR_AIPS_PACRK_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP5.
-#define BF_AIPS_PACRK_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP5), uint32_t) & BM_AIPS_PACRK_SP5)
+/*! @brief Format value for bitfield AIPS_PACRK_SP5. */
+#define BF_AIPS_PACRK_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP5) & BM_AIPS_PACRK_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRK_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP4[12] (RW)
@@ -8330,24 +7170,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP4    (12U)         //!< Bit position for AIPS_PACRK_TP4.
-#define BM_AIPS_PACRK_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRK_TP4.
-#define BS_AIPS_PACRK_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP4.
+/*@{*/
+#define BP_AIPS_PACRK_TP4    (12U)         /*!< Bit position for AIPS_PACRK_TP4. */
+#define BM_AIPS_PACRK_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRK_TP4. */
+#define BS_AIPS_PACRK_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP4 field.
+/*! @brief Read current value of the AIPS_PACRK_TP4 field. */
 #define BR_AIPS_PACRK_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP4.
-#define BF_AIPS_PACRK_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP4), uint32_t) & BM_AIPS_PACRK_TP4)
+/*! @brief Format value for bitfield AIPS_PACRK_TP4. */
+#define BF_AIPS_PACRK_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP4) & BM_AIPS_PACRK_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRK_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP4[13] (RW)
@@ -8356,24 +7192,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP4    (13U)         //!< Bit position for AIPS_PACRK_WP4.
-#define BM_AIPS_PACRK_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRK_WP4.
-#define BS_AIPS_PACRK_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP4.
+/*@{*/
+#define BP_AIPS_PACRK_WP4    (13U)         /*!< Bit position for AIPS_PACRK_WP4. */
+#define BM_AIPS_PACRK_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRK_WP4. */
+#define BS_AIPS_PACRK_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP4 field.
+/*! @brief Read current value of the AIPS_PACRK_WP4 field. */
 #define BR_AIPS_PACRK_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP4.
-#define BF_AIPS_PACRK_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP4), uint32_t) & BM_AIPS_PACRK_WP4)
+/*! @brief Format value for bitfield AIPS_PACRK_WP4. */
+#define BF_AIPS_PACRK_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP4) & BM_AIPS_PACRK_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRK_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP4[14] (RW)
@@ -8383,24 +7215,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP4    (14U)         //!< Bit position for AIPS_PACRK_SP4.
-#define BM_AIPS_PACRK_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRK_SP4.
-#define BS_AIPS_PACRK_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP4.
+/*@{*/
+#define BP_AIPS_PACRK_SP4    (14U)         /*!< Bit position for AIPS_PACRK_SP4. */
+#define BM_AIPS_PACRK_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRK_SP4. */
+#define BS_AIPS_PACRK_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP4 field.
+/*! @brief Read current value of the AIPS_PACRK_SP4 field. */
 #define BR_AIPS_PACRK_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP4.
-#define BF_AIPS_PACRK_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP4), uint32_t) & BM_AIPS_PACRK_SP4)
+/*! @brief Format value for bitfield AIPS_PACRK_SP4. */
+#define BF_AIPS_PACRK_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP4) & BM_AIPS_PACRK_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRK_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP3[16] (RW)
@@ -8409,24 +7237,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP3    (16U)         //!< Bit position for AIPS_PACRK_TP3.
-#define BM_AIPS_PACRK_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRK_TP3.
-#define BS_AIPS_PACRK_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP3.
+/*@{*/
+#define BP_AIPS_PACRK_TP3    (16U)         /*!< Bit position for AIPS_PACRK_TP3. */
+#define BM_AIPS_PACRK_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRK_TP3. */
+#define BS_AIPS_PACRK_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP3 field.
+/*! @brief Read current value of the AIPS_PACRK_TP3 field. */
 #define BR_AIPS_PACRK_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP3.
-#define BF_AIPS_PACRK_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP3), uint32_t) & BM_AIPS_PACRK_TP3)
+/*! @brief Format value for bitfield AIPS_PACRK_TP3. */
+#define BF_AIPS_PACRK_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP3) & BM_AIPS_PACRK_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRK_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP3[17] (RW)
@@ -8435,24 +7259,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP3    (17U)         //!< Bit position for AIPS_PACRK_WP3.
-#define BM_AIPS_PACRK_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRK_WP3.
-#define BS_AIPS_PACRK_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP3.
+/*@{*/
+#define BP_AIPS_PACRK_WP3    (17U)         /*!< Bit position for AIPS_PACRK_WP3. */
+#define BM_AIPS_PACRK_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRK_WP3. */
+#define BS_AIPS_PACRK_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP3 field.
+/*! @brief Read current value of the AIPS_PACRK_WP3 field. */
 #define BR_AIPS_PACRK_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP3.
-#define BF_AIPS_PACRK_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP3), uint32_t) & BM_AIPS_PACRK_WP3)
+/*! @brief Format value for bitfield AIPS_PACRK_WP3. */
+#define BF_AIPS_PACRK_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP3) & BM_AIPS_PACRK_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRK_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP3[18] (RW)
@@ -8462,24 +7282,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP3    (18U)         //!< Bit position for AIPS_PACRK_SP3.
-#define BM_AIPS_PACRK_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRK_SP3.
-#define BS_AIPS_PACRK_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP3.
+/*@{*/
+#define BP_AIPS_PACRK_SP3    (18U)         /*!< Bit position for AIPS_PACRK_SP3. */
+#define BM_AIPS_PACRK_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRK_SP3. */
+#define BS_AIPS_PACRK_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP3 field.
+/*! @brief Read current value of the AIPS_PACRK_SP3 field. */
 #define BR_AIPS_PACRK_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP3.
-#define BF_AIPS_PACRK_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP3), uint32_t) & BM_AIPS_PACRK_SP3)
+/*! @brief Format value for bitfield AIPS_PACRK_SP3. */
+#define BF_AIPS_PACRK_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP3) & BM_AIPS_PACRK_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRK_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP2[20] (RW)
@@ -8488,24 +7304,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP2    (20U)         //!< Bit position for AIPS_PACRK_TP2.
-#define BM_AIPS_PACRK_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRK_TP2.
-#define BS_AIPS_PACRK_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP2.
+/*@{*/
+#define BP_AIPS_PACRK_TP2    (20U)         /*!< Bit position for AIPS_PACRK_TP2. */
+#define BM_AIPS_PACRK_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRK_TP2. */
+#define BS_AIPS_PACRK_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP2 field.
+/*! @brief Read current value of the AIPS_PACRK_TP2 field. */
 #define BR_AIPS_PACRK_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP2.
-#define BF_AIPS_PACRK_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP2), uint32_t) & BM_AIPS_PACRK_TP2)
+/*! @brief Format value for bitfield AIPS_PACRK_TP2. */
+#define BF_AIPS_PACRK_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP2) & BM_AIPS_PACRK_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRK_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP2[21] (RW)
@@ -8514,24 +7326,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP2    (21U)         //!< Bit position for AIPS_PACRK_WP2.
-#define BM_AIPS_PACRK_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRK_WP2.
-#define BS_AIPS_PACRK_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP2.
+/*@{*/
+#define BP_AIPS_PACRK_WP2    (21U)         /*!< Bit position for AIPS_PACRK_WP2. */
+#define BM_AIPS_PACRK_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRK_WP2. */
+#define BS_AIPS_PACRK_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP2 field.
+/*! @brief Read current value of the AIPS_PACRK_WP2 field. */
 #define BR_AIPS_PACRK_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP2.
-#define BF_AIPS_PACRK_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP2), uint32_t) & BM_AIPS_PACRK_WP2)
+/*! @brief Format value for bitfield AIPS_PACRK_WP2. */
+#define BF_AIPS_PACRK_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP2) & BM_AIPS_PACRK_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRK_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP2[22] (RW)
@@ -8541,24 +7349,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP2    (22U)         //!< Bit position for AIPS_PACRK_SP2.
-#define BM_AIPS_PACRK_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRK_SP2.
-#define BS_AIPS_PACRK_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP2.
+/*@{*/
+#define BP_AIPS_PACRK_SP2    (22U)         /*!< Bit position for AIPS_PACRK_SP2. */
+#define BM_AIPS_PACRK_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRK_SP2. */
+#define BS_AIPS_PACRK_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP2 field.
+/*! @brief Read current value of the AIPS_PACRK_SP2 field. */
 #define BR_AIPS_PACRK_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP2.
-#define BF_AIPS_PACRK_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP2), uint32_t) & BM_AIPS_PACRK_SP2)
+/*! @brief Format value for bitfield AIPS_PACRK_SP2. */
+#define BF_AIPS_PACRK_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP2) & BM_AIPS_PACRK_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRK_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP1[24] (RW)
@@ -8567,24 +7371,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP1    (24U)         //!< Bit position for AIPS_PACRK_TP1.
-#define BM_AIPS_PACRK_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRK_TP1.
-#define BS_AIPS_PACRK_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP1.
+/*@{*/
+#define BP_AIPS_PACRK_TP1    (24U)         /*!< Bit position for AIPS_PACRK_TP1. */
+#define BM_AIPS_PACRK_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRK_TP1. */
+#define BS_AIPS_PACRK_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP1 field.
+/*! @brief Read current value of the AIPS_PACRK_TP1 field. */
 #define BR_AIPS_PACRK_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP1.
-#define BF_AIPS_PACRK_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP1), uint32_t) & BM_AIPS_PACRK_TP1)
+/*! @brief Format value for bitfield AIPS_PACRK_TP1. */
+#define BF_AIPS_PACRK_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP1) & BM_AIPS_PACRK_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRK_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP1[25] (RW)
@@ -8593,24 +7393,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP1    (25U)         //!< Bit position for AIPS_PACRK_WP1.
-#define BM_AIPS_PACRK_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRK_WP1.
-#define BS_AIPS_PACRK_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP1.
+/*@{*/
+#define BP_AIPS_PACRK_WP1    (25U)         /*!< Bit position for AIPS_PACRK_WP1. */
+#define BM_AIPS_PACRK_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRK_WP1. */
+#define BS_AIPS_PACRK_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP1 field.
+/*! @brief Read current value of the AIPS_PACRK_WP1 field. */
 #define BR_AIPS_PACRK_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP1.
-#define BF_AIPS_PACRK_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP1), uint32_t) & BM_AIPS_PACRK_WP1)
+/*! @brief Format value for bitfield AIPS_PACRK_WP1. */
+#define BF_AIPS_PACRK_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP1) & BM_AIPS_PACRK_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRK_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP1[26] (RW)
@@ -8620,24 +7416,20 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP1    (26U)         //!< Bit position for AIPS_PACRK_SP1.
-#define BM_AIPS_PACRK_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRK_SP1.
-#define BS_AIPS_PACRK_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP1.
+/*@{*/
+#define BP_AIPS_PACRK_SP1    (26U)         /*!< Bit position for AIPS_PACRK_SP1. */
+#define BM_AIPS_PACRK_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRK_SP1. */
+#define BS_AIPS_PACRK_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP1 field.
+/*! @brief Read current value of the AIPS_PACRK_SP1 field. */
 #define BR_AIPS_PACRK_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP1.
-#define BF_AIPS_PACRK_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP1), uint32_t) & BM_AIPS_PACRK_SP1)
+/*! @brief Format value for bitfield AIPS_PACRK_SP1. */
+#define BF_AIPS_PACRK_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP1) & BM_AIPS_PACRK_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRK_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field TP0[28] (RW)
@@ -8646,24 +7438,20 @@ typedef union _hw_aips_pacrk
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRK_TP0    (28U)         //!< Bit position for AIPS_PACRK_TP0.
-#define BM_AIPS_PACRK_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRK_TP0.
-#define BS_AIPS_PACRK_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRK_TP0.
+/*@{*/
+#define BP_AIPS_PACRK_TP0    (28U)         /*!< Bit position for AIPS_PACRK_TP0. */
+#define BM_AIPS_PACRK_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRK_TP0. */
+#define BS_AIPS_PACRK_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRK_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_TP0 field.
+/*! @brief Read current value of the AIPS_PACRK_TP0 field. */
 #define BR_AIPS_PACRK_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_TP0.
-#define BF_AIPS_PACRK_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_TP0), uint32_t) & BM_AIPS_PACRK_TP0)
+/*! @brief Format value for bitfield AIPS_PACRK_TP0. */
+#define BF_AIPS_PACRK_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_TP0) & BM_AIPS_PACRK_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRK_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field WP0[29] (RW)
@@ -8672,24 +7460,20 @@ typedef union _hw_aips_pacrk
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRK_WP0    (29U)         //!< Bit position for AIPS_PACRK_WP0.
-#define BM_AIPS_PACRK_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRK_WP0.
-#define BS_AIPS_PACRK_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRK_WP0.
+/*@{*/
+#define BP_AIPS_PACRK_WP0    (29U)         /*!< Bit position for AIPS_PACRK_WP0. */
+#define BM_AIPS_PACRK_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRK_WP0. */
+#define BS_AIPS_PACRK_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRK_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_WP0 field.
+/*! @brief Read current value of the AIPS_PACRK_WP0 field. */
 #define BR_AIPS_PACRK_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_WP0.
-#define BF_AIPS_PACRK_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_WP0), uint32_t) & BM_AIPS_PACRK_WP0)
+/*! @brief Format value for bitfield AIPS_PACRK_WP0. */
+#define BF_AIPS_PACRK_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_WP0) & BM_AIPS_PACRK_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRK_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRK, field SP0[30] (RW)
@@ -8699,30 +7483,25 @@ typedef union _hw_aips_pacrk
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRK_SP0    (30U)         //!< Bit position for AIPS_PACRK_SP0.
-#define BM_AIPS_PACRK_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRK_SP0.
-#define BS_AIPS_PACRK_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRK_SP0.
+/*@{*/
+#define BP_AIPS_PACRK_SP0    (30U)         /*!< Bit position for AIPS_PACRK_SP0. */
+#define BM_AIPS_PACRK_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRK_SP0. */
+#define BS_AIPS_PACRK_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRK_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRK_SP0 field.
+/*! @brief Read current value of the AIPS_PACRK_SP0 field. */
 #define BR_AIPS_PACRK_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRK_SP0.
-#define BF_AIPS_PACRK_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRK_SP0), uint32_t) & BM_AIPS_PACRK_SP0)
+/*! @brief Format value for bitfield AIPS_PACRK_SP0. */
+#define BF_AIPS_PACRK_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRK_SP0) & BM_AIPS_PACRK_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRK_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRK_ADDR(x), BP_AIPS_PACRK_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRL - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRL - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRL - Peripheral Access Control Register (RW)
  *
@@ -8741,57 +7520,54 @@ typedef union _hw_aips_pacrl
     uint32_t U;
     struct _hw_aips_pacrl_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRL register
  */
-//@{
-#define HW_AIPS_PACRL_ADDR(x)    (REGS_AIPS_BASE(x) + 0x5CU)
+/*@{*/
+#define HW_AIPS_PACRL_ADDR(x)    ((x) + 0x5CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRL(x)         (*(__IO hw_aips_pacrl_t *) HW_AIPS_PACRL_ADDR(x))
 #define HW_AIPS_PACRL_RD(x)      (HW_AIPS_PACRL(x).U)
 #define HW_AIPS_PACRL_WR(x, v)   (HW_AIPS_PACRL(x).U = (v))
 #define HW_AIPS_PACRL_SET(x, v)  (HW_AIPS_PACRL_WR(x, HW_AIPS_PACRL_RD(x) |  (v)))
 #define HW_AIPS_PACRL_CLR(x, v)  (HW_AIPS_PACRL_WR(x, HW_AIPS_PACRL_RD(x) & ~(v)))
 #define HW_AIPS_PACRL_TOG(x, v)  (HW_AIPS_PACRL_WR(x, HW_AIPS_PACRL_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRL bitfields
@@ -8804,24 +7580,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP7    (0U)          //!< Bit position for AIPS_PACRL_TP7.
-#define BM_AIPS_PACRL_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRL_TP7.
-#define BS_AIPS_PACRL_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP7.
+/*@{*/
+#define BP_AIPS_PACRL_TP7    (0U)          /*!< Bit position for AIPS_PACRL_TP7. */
+#define BM_AIPS_PACRL_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRL_TP7. */
+#define BS_AIPS_PACRL_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP7 field.
+/*! @brief Read current value of the AIPS_PACRL_TP7 field. */
 #define BR_AIPS_PACRL_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP7.
-#define BF_AIPS_PACRL_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP7), uint32_t) & BM_AIPS_PACRL_TP7)
+/*! @brief Format value for bitfield AIPS_PACRL_TP7. */
+#define BF_AIPS_PACRL_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP7) & BM_AIPS_PACRL_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRL_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP7[1] (RW)
@@ -8830,24 +7602,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP7    (1U)          //!< Bit position for AIPS_PACRL_WP7.
-#define BM_AIPS_PACRL_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRL_WP7.
-#define BS_AIPS_PACRL_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP7.
+/*@{*/
+#define BP_AIPS_PACRL_WP7    (1U)          /*!< Bit position for AIPS_PACRL_WP7. */
+#define BM_AIPS_PACRL_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRL_WP7. */
+#define BS_AIPS_PACRL_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP7 field.
+/*! @brief Read current value of the AIPS_PACRL_WP7 field. */
 #define BR_AIPS_PACRL_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP7.
-#define BF_AIPS_PACRL_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP7), uint32_t) & BM_AIPS_PACRL_WP7)
+/*! @brief Format value for bitfield AIPS_PACRL_WP7. */
+#define BF_AIPS_PACRL_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP7) & BM_AIPS_PACRL_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRL_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP7[2] (RW)
@@ -8857,24 +7625,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP7    (2U)          //!< Bit position for AIPS_PACRL_SP7.
-#define BM_AIPS_PACRL_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRL_SP7.
-#define BS_AIPS_PACRL_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP7.
+/*@{*/
+#define BP_AIPS_PACRL_SP7    (2U)          /*!< Bit position for AIPS_PACRL_SP7. */
+#define BM_AIPS_PACRL_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRL_SP7. */
+#define BS_AIPS_PACRL_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP7 field.
+/*! @brief Read current value of the AIPS_PACRL_SP7 field. */
 #define BR_AIPS_PACRL_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP7.
-#define BF_AIPS_PACRL_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP7), uint32_t) & BM_AIPS_PACRL_SP7)
+/*! @brief Format value for bitfield AIPS_PACRL_SP7. */
+#define BF_AIPS_PACRL_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP7) & BM_AIPS_PACRL_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRL_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP6[4] (RW)
@@ -8883,24 +7647,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP6    (4U)          //!< Bit position for AIPS_PACRL_TP6.
-#define BM_AIPS_PACRL_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRL_TP6.
-#define BS_AIPS_PACRL_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP6.
+/*@{*/
+#define BP_AIPS_PACRL_TP6    (4U)          /*!< Bit position for AIPS_PACRL_TP6. */
+#define BM_AIPS_PACRL_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRL_TP6. */
+#define BS_AIPS_PACRL_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP6 field.
+/*! @brief Read current value of the AIPS_PACRL_TP6 field. */
 #define BR_AIPS_PACRL_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP6.
-#define BF_AIPS_PACRL_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP6), uint32_t) & BM_AIPS_PACRL_TP6)
+/*! @brief Format value for bitfield AIPS_PACRL_TP6. */
+#define BF_AIPS_PACRL_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP6) & BM_AIPS_PACRL_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRL_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP6[5] (RW)
@@ -8909,24 +7669,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP6    (5U)          //!< Bit position for AIPS_PACRL_WP6.
-#define BM_AIPS_PACRL_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRL_WP6.
-#define BS_AIPS_PACRL_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP6.
+/*@{*/
+#define BP_AIPS_PACRL_WP6    (5U)          /*!< Bit position for AIPS_PACRL_WP6. */
+#define BM_AIPS_PACRL_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRL_WP6. */
+#define BS_AIPS_PACRL_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP6 field.
+/*! @brief Read current value of the AIPS_PACRL_WP6 field. */
 #define BR_AIPS_PACRL_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP6.
-#define BF_AIPS_PACRL_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP6), uint32_t) & BM_AIPS_PACRL_WP6)
+/*! @brief Format value for bitfield AIPS_PACRL_WP6. */
+#define BF_AIPS_PACRL_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP6) & BM_AIPS_PACRL_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRL_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP6[6] (RW)
@@ -8936,24 +7692,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP6    (6U)          //!< Bit position for AIPS_PACRL_SP6.
-#define BM_AIPS_PACRL_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRL_SP6.
-#define BS_AIPS_PACRL_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP6.
+/*@{*/
+#define BP_AIPS_PACRL_SP6    (6U)          /*!< Bit position for AIPS_PACRL_SP6. */
+#define BM_AIPS_PACRL_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRL_SP6. */
+#define BS_AIPS_PACRL_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP6 field.
+/*! @brief Read current value of the AIPS_PACRL_SP6 field. */
 #define BR_AIPS_PACRL_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP6.
-#define BF_AIPS_PACRL_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP6), uint32_t) & BM_AIPS_PACRL_SP6)
+/*! @brief Format value for bitfield AIPS_PACRL_SP6. */
+#define BF_AIPS_PACRL_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP6) & BM_AIPS_PACRL_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRL_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP5[8] (RW)
@@ -8962,24 +7714,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP5    (8U)          //!< Bit position for AIPS_PACRL_TP5.
-#define BM_AIPS_PACRL_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRL_TP5.
-#define BS_AIPS_PACRL_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP5.
+/*@{*/
+#define BP_AIPS_PACRL_TP5    (8U)          /*!< Bit position for AIPS_PACRL_TP5. */
+#define BM_AIPS_PACRL_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRL_TP5. */
+#define BS_AIPS_PACRL_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP5 field.
+/*! @brief Read current value of the AIPS_PACRL_TP5 field. */
 #define BR_AIPS_PACRL_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP5.
-#define BF_AIPS_PACRL_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP5), uint32_t) & BM_AIPS_PACRL_TP5)
+/*! @brief Format value for bitfield AIPS_PACRL_TP5. */
+#define BF_AIPS_PACRL_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP5) & BM_AIPS_PACRL_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRL_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP5[9] (RW)
@@ -8988,24 +7736,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP5    (9U)          //!< Bit position for AIPS_PACRL_WP5.
-#define BM_AIPS_PACRL_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRL_WP5.
-#define BS_AIPS_PACRL_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP5.
+/*@{*/
+#define BP_AIPS_PACRL_WP5    (9U)          /*!< Bit position for AIPS_PACRL_WP5. */
+#define BM_AIPS_PACRL_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRL_WP5. */
+#define BS_AIPS_PACRL_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP5 field.
+/*! @brief Read current value of the AIPS_PACRL_WP5 field. */
 #define BR_AIPS_PACRL_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP5.
-#define BF_AIPS_PACRL_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP5), uint32_t) & BM_AIPS_PACRL_WP5)
+/*! @brief Format value for bitfield AIPS_PACRL_WP5. */
+#define BF_AIPS_PACRL_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP5) & BM_AIPS_PACRL_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRL_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP5[10] (RW)
@@ -9015,24 +7759,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP5    (10U)         //!< Bit position for AIPS_PACRL_SP5.
-#define BM_AIPS_PACRL_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRL_SP5.
-#define BS_AIPS_PACRL_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP5.
+/*@{*/
+#define BP_AIPS_PACRL_SP5    (10U)         /*!< Bit position for AIPS_PACRL_SP5. */
+#define BM_AIPS_PACRL_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRL_SP5. */
+#define BS_AIPS_PACRL_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP5 field.
+/*! @brief Read current value of the AIPS_PACRL_SP5 field. */
 #define BR_AIPS_PACRL_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP5.
-#define BF_AIPS_PACRL_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP5), uint32_t) & BM_AIPS_PACRL_SP5)
+/*! @brief Format value for bitfield AIPS_PACRL_SP5. */
+#define BF_AIPS_PACRL_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP5) & BM_AIPS_PACRL_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRL_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP4[12] (RW)
@@ -9041,24 +7781,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP4    (12U)         //!< Bit position for AIPS_PACRL_TP4.
-#define BM_AIPS_PACRL_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRL_TP4.
-#define BS_AIPS_PACRL_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP4.
+/*@{*/
+#define BP_AIPS_PACRL_TP4    (12U)         /*!< Bit position for AIPS_PACRL_TP4. */
+#define BM_AIPS_PACRL_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRL_TP4. */
+#define BS_AIPS_PACRL_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP4 field.
+/*! @brief Read current value of the AIPS_PACRL_TP4 field. */
 #define BR_AIPS_PACRL_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP4.
-#define BF_AIPS_PACRL_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP4), uint32_t) & BM_AIPS_PACRL_TP4)
+/*! @brief Format value for bitfield AIPS_PACRL_TP4. */
+#define BF_AIPS_PACRL_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP4) & BM_AIPS_PACRL_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRL_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP4[13] (RW)
@@ -9067,24 +7803,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP4    (13U)         //!< Bit position for AIPS_PACRL_WP4.
-#define BM_AIPS_PACRL_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRL_WP4.
-#define BS_AIPS_PACRL_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP4.
+/*@{*/
+#define BP_AIPS_PACRL_WP4    (13U)         /*!< Bit position for AIPS_PACRL_WP4. */
+#define BM_AIPS_PACRL_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRL_WP4. */
+#define BS_AIPS_PACRL_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP4 field.
+/*! @brief Read current value of the AIPS_PACRL_WP4 field. */
 #define BR_AIPS_PACRL_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP4.
-#define BF_AIPS_PACRL_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP4), uint32_t) & BM_AIPS_PACRL_WP4)
+/*! @brief Format value for bitfield AIPS_PACRL_WP4. */
+#define BF_AIPS_PACRL_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP4) & BM_AIPS_PACRL_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRL_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP4[14] (RW)
@@ -9094,24 +7826,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP4    (14U)         //!< Bit position for AIPS_PACRL_SP4.
-#define BM_AIPS_PACRL_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRL_SP4.
-#define BS_AIPS_PACRL_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP4.
+/*@{*/
+#define BP_AIPS_PACRL_SP4    (14U)         /*!< Bit position for AIPS_PACRL_SP4. */
+#define BM_AIPS_PACRL_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRL_SP4. */
+#define BS_AIPS_PACRL_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP4 field.
+/*! @brief Read current value of the AIPS_PACRL_SP4 field. */
 #define BR_AIPS_PACRL_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP4.
-#define BF_AIPS_PACRL_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP4), uint32_t) & BM_AIPS_PACRL_SP4)
+/*! @brief Format value for bitfield AIPS_PACRL_SP4. */
+#define BF_AIPS_PACRL_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP4) & BM_AIPS_PACRL_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRL_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP3[16] (RW)
@@ -9120,24 +7848,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP3    (16U)         //!< Bit position for AIPS_PACRL_TP3.
-#define BM_AIPS_PACRL_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRL_TP3.
-#define BS_AIPS_PACRL_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP3.
+/*@{*/
+#define BP_AIPS_PACRL_TP3    (16U)         /*!< Bit position for AIPS_PACRL_TP3. */
+#define BM_AIPS_PACRL_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRL_TP3. */
+#define BS_AIPS_PACRL_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP3 field.
+/*! @brief Read current value of the AIPS_PACRL_TP3 field. */
 #define BR_AIPS_PACRL_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP3.
-#define BF_AIPS_PACRL_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP3), uint32_t) & BM_AIPS_PACRL_TP3)
+/*! @brief Format value for bitfield AIPS_PACRL_TP3. */
+#define BF_AIPS_PACRL_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP3) & BM_AIPS_PACRL_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRL_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP3[17] (RW)
@@ -9146,24 +7870,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP3    (17U)         //!< Bit position for AIPS_PACRL_WP3.
-#define BM_AIPS_PACRL_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRL_WP3.
-#define BS_AIPS_PACRL_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP3.
+/*@{*/
+#define BP_AIPS_PACRL_WP3    (17U)         /*!< Bit position for AIPS_PACRL_WP3. */
+#define BM_AIPS_PACRL_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRL_WP3. */
+#define BS_AIPS_PACRL_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP3 field.
+/*! @brief Read current value of the AIPS_PACRL_WP3 field. */
 #define BR_AIPS_PACRL_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP3.
-#define BF_AIPS_PACRL_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP3), uint32_t) & BM_AIPS_PACRL_WP3)
+/*! @brief Format value for bitfield AIPS_PACRL_WP3. */
+#define BF_AIPS_PACRL_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP3) & BM_AIPS_PACRL_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRL_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP3[18] (RW)
@@ -9173,24 +7893,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP3    (18U)         //!< Bit position for AIPS_PACRL_SP3.
-#define BM_AIPS_PACRL_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRL_SP3.
-#define BS_AIPS_PACRL_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP3.
+/*@{*/
+#define BP_AIPS_PACRL_SP3    (18U)         /*!< Bit position for AIPS_PACRL_SP3. */
+#define BM_AIPS_PACRL_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRL_SP3. */
+#define BS_AIPS_PACRL_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP3 field.
+/*! @brief Read current value of the AIPS_PACRL_SP3 field. */
 #define BR_AIPS_PACRL_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP3.
-#define BF_AIPS_PACRL_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP3), uint32_t) & BM_AIPS_PACRL_SP3)
+/*! @brief Format value for bitfield AIPS_PACRL_SP3. */
+#define BF_AIPS_PACRL_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP3) & BM_AIPS_PACRL_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRL_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP2[20] (RW)
@@ -9199,24 +7915,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP2    (20U)         //!< Bit position for AIPS_PACRL_TP2.
-#define BM_AIPS_PACRL_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRL_TP2.
-#define BS_AIPS_PACRL_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP2.
+/*@{*/
+#define BP_AIPS_PACRL_TP2    (20U)         /*!< Bit position for AIPS_PACRL_TP2. */
+#define BM_AIPS_PACRL_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRL_TP2. */
+#define BS_AIPS_PACRL_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP2 field.
+/*! @brief Read current value of the AIPS_PACRL_TP2 field. */
 #define BR_AIPS_PACRL_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP2.
-#define BF_AIPS_PACRL_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP2), uint32_t) & BM_AIPS_PACRL_TP2)
+/*! @brief Format value for bitfield AIPS_PACRL_TP2. */
+#define BF_AIPS_PACRL_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP2) & BM_AIPS_PACRL_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRL_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP2[21] (RW)
@@ -9225,24 +7937,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP2    (21U)         //!< Bit position for AIPS_PACRL_WP2.
-#define BM_AIPS_PACRL_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRL_WP2.
-#define BS_AIPS_PACRL_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP2.
+/*@{*/
+#define BP_AIPS_PACRL_WP2    (21U)         /*!< Bit position for AIPS_PACRL_WP2. */
+#define BM_AIPS_PACRL_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRL_WP2. */
+#define BS_AIPS_PACRL_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP2 field.
+/*! @brief Read current value of the AIPS_PACRL_WP2 field. */
 #define BR_AIPS_PACRL_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP2.
-#define BF_AIPS_PACRL_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP2), uint32_t) & BM_AIPS_PACRL_WP2)
+/*! @brief Format value for bitfield AIPS_PACRL_WP2. */
+#define BF_AIPS_PACRL_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP2) & BM_AIPS_PACRL_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRL_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP2[22] (RW)
@@ -9252,24 +7960,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP2    (22U)         //!< Bit position for AIPS_PACRL_SP2.
-#define BM_AIPS_PACRL_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRL_SP2.
-#define BS_AIPS_PACRL_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP2.
+/*@{*/
+#define BP_AIPS_PACRL_SP2    (22U)         /*!< Bit position for AIPS_PACRL_SP2. */
+#define BM_AIPS_PACRL_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRL_SP2. */
+#define BS_AIPS_PACRL_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP2 field.
+/*! @brief Read current value of the AIPS_PACRL_SP2 field. */
 #define BR_AIPS_PACRL_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP2.
-#define BF_AIPS_PACRL_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP2), uint32_t) & BM_AIPS_PACRL_SP2)
+/*! @brief Format value for bitfield AIPS_PACRL_SP2. */
+#define BF_AIPS_PACRL_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP2) & BM_AIPS_PACRL_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRL_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP1[24] (RW)
@@ -9278,24 +7982,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP1    (24U)         //!< Bit position for AIPS_PACRL_TP1.
-#define BM_AIPS_PACRL_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRL_TP1.
-#define BS_AIPS_PACRL_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP1.
+/*@{*/
+#define BP_AIPS_PACRL_TP1    (24U)         /*!< Bit position for AIPS_PACRL_TP1. */
+#define BM_AIPS_PACRL_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRL_TP1. */
+#define BS_AIPS_PACRL_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP1 field.
+/*! @brief Read current value of the AIPS_PACRL_TP1 field. */
 #define BR_AIPS_PACRL_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP1.
-#define BF_AIPS_PACRL_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP1), uint32_t) & BM_AIPS_PACRL_TP1)
+/*! @brief Format value for bitfield AIPS_PACRL_TP1. */
+#define BF_AIPS_PACRL_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP1) & BM_AIPS_PACRL_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRL_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP1[25] (RW)
@@ -9304,24 +8004,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP1    (25U)         //!< Bit position for AIPS_PACRL_WP1.
-#define BM_AIPS_PACRL_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRL_WP1.
-#define BS_AIPS_PACRL_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP1.
+/*@{*/
+#define BP_AIPS_PACRL_WP1    (25U)         /*!< Bit position for AIPS_PACRL_WP1. */
+#define BM_AIPS_PACRL_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRL_WP1. */
+#define BS_AIPS_PACRL_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP1 field.
+/*! @brief Read current value of the AIPS_PACRL_WP1 field. */
 #define BR_AIPS_PACRL_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP1.
-#define BF_AIPS_PACRL_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP1), uint32_t) & BM_AIPS_PACRL_WP1)
+/*! @brief Format value for bitfield AIPS_PACRL_WP1. */
+#define BF_AIPS_PACRL_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP1) & BM_AIPS_PACRL_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRL_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP1[26] (RW)
@@ -9331,24 +8027,20 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP1    (26U)         //!< Bit position for AIPS_PACRL_SP1.
-#define BM_AIPS_PACRL_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRL_SP1.
-#define BS_AIPS_PACRL_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP1.
+/*@{*/
+#define BP_AIPS_PACRL_SP1    (26U)         /*!< Bit position for AIPS_PACRL_SP1. */
+#define BM_AIPS_PACRL_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRL_SP1. */
+#define BS_AIPS_PACRL_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP1 field.
+/*! @brief Read current value of the AIPS_PACRL_SP1 field. */
 #define BR_AIPS_PACRL_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP1.
-#define BF_AIPS_PACRL_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP1), uint32_t) & BM_AIPS_PACRL_SP1)
+/*! @brief Format value for bitfield AIPS_PACRL_SP1. */
+#define BF_AIPS_PACRL_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP1) & BM_AIPS_PACRL_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRL_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field TP0[28] (RW)
@@ -9357,24 +8049,20 @@ typedef union _hw_aips_pacrl
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRL_TP0    (28U)         //!< Bit position for AIPS_PACRL_TP0.
-#define BM_AIPS_PACRL_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRL_TP0.
-#define BS_AIPS_PACRL_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRL_TP0.
+/*@{*/
+#define BP_AIPS_PACRL_TP0    (28U)         /*!< Bit position for AIPS_PACRL_TP0. */
+#define BM_AIPS_PACRL_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRL_TP0. */
+#define BS_AIPS_PACRL_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRL_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_TP0 field.
+/*! @brief Read current value of the AIPS_PACRL_TP0 field. */
 #define BR_AIPS_PACRL_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_TP0.
-#define BF_AIPS_PACRL_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_TP0), uint32_t) & BM_AIPS_PACRL_TP0)
+/*! @brief Format value for bitfield AIPS_PACRL_TP0. */
+#define BF_AIPS_PACRL_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_TP0) & BM_AIPS_PACRL_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRL_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field WP0[29] (RW)
@@ -9383,24 +8071,20 @@ typedef union _hw_aips_pacrl
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRL_WP0    (29U)         //!< Bit position for AIPS_PACRL_WP0.
-#define BM_AIPS_PACRL_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRL_WP0.
-#define BS_AIPS_PACRL_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRL_WP0.
+/*@{*/
+#define BP_AIPS_PACRL_WP0    (29U)         /*!< Bit position for AIPS_PACRL_WP0. */
+#define BM_AIPS_PACRL_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRL_WP0. */
+#define BS_AIPS_PACRL_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRL_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_WP0 field.
+/*! @brief Read current value of the AIPS_PACRL_WP0 field. */
 #define BR_AIPS_PACRL_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_WP0.
-#define BF_AIPS_PACRL_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_WP0), uint32_t) & BM_AIPS_PACRL_WP0)
+/*! @brief Format value for bitfield AIPS_PACRL_WP0. */
+#define BF_AIPS_PACRL_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_WP0) & BM_AIPS_PACRL_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRL_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRL, field SP0[30] (RW)
@@ -9410,30 +8094,25 @@ typedef union _hw_aips_pacrl
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRL_SP0    (30U)         //!< Bit position for AIPS_PACRL_SP0.
-#define BM_AIPS_PACRL_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRL_SP0.
-#define BS_AIPS_PACRL_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRL_SP0.
+/*@{*/
+#define BP_AIPS_PACRL_SP0    (30U)         /*!< Bit position for AIPS_PACRL_SP0. */
+#define BM_AIPS_PACRL_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRL_SP0. */
+#define BS_AIPS_PACRL_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRL_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRL_SP0 field.
+/*! @brief Read current value of the AIPS_PACRL_SP0 field. */
 #define BR_AIPS_PACRL_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRL_SP0.
-#define BF_AIPS_PACRL_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRL_SP0), uint32_t) & BM_AIPS_PACRL_SP0)
+/*! @brief Format value for bitfield AIPS_PACRL_SP0. */
+#define BF_AIPS_PACRL_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRL_SP0) & BM_AIPS_PACRL_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRL_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRL_ADDR(x), BP_AIPS_PACRL_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRM - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRM - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRM - Peripheral Access Control Register (RW)
  *
@@ -9452,57 +8131,54 @@ typedef union _hw_aips_pacrm
     uint32_t U;
     struct _hw_aips_pacrm_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrm_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRM register
  */
-//@{
-#define HW_AIPS_PACRM_ADDR(x)    (REGS_AIPS_BASE(x) + 0x60U)
+/*@{*/
+#define HW_AIPS_PACRM_ADDR(x)    ((x) + 0x60U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRM(x)         (*(__IO hw_aips_pacrm_t *) HW_AIPS_PACRM_ADDR(x))
 #define HW_AIPS_PACRM_RD(x)      (HW_AIPS_PACRM(x).U)
 #define HW_AIPS_PACRM_WR(x, v)   (HW_AIPS_PACRM(x).U = (v))
 #define HW_AIPS_PACRM_SET(x, v)  (HW_AIPS_PACRM_WR(x, HW_AIPS_PACRM_RD(x) |  (v)))
 #define HW_AIPS_PACRM_CLR(x, v)  (HW_AIPS_PACRM_WR(x, HW_AIPS_PACRM_RD(x) & ~(v)))
 #define HW_AIPS_PACRM_TOG(x, v)  (HW_AIPS_PACRM_WR(x, HW_AIPS_PACRM_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRM bitfields
@@ -9515,24 +8191,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP7    (0U)          //!< Bit position for AIPS_PACRM_TP7.
-#define BM_AIPS_PACRM_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRM_TP7.
-#define BS_AIPS_PACRM_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP7.
+/*@{*/
+#define BP_AIPS_PACRM_TP7    (0U)          /*!< Bit position for AIPS_PACRM_TP7. */
+#define BM_AIPS_PACRM_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRM_TP7. */
+#define BS_AIPS_PACRM_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP7 field.
+/*! @brief Read current value of the AIPS_PACRM_TP7 field. */
 #define BR_AIPS_PACRM_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP7.
-#define BF_AIPS_PACRM_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP7), uint32_t) & BM_AIPS_PACRM_TP7)
+/*! @brief Format value for bitfield AIPS_PACRM_TP7. */
+#define BF_AIPS_PACRM_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP7) & BM_AIPS_PACRM_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRM_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP7[1] (RW)
@@ -9541,24 +8213,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP7    (1U)          //!< Bit position for AIPS_PACRM_WP7.
-#define BM_AIPS_PACRM_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRM_WP7.
-#define BS_AIPS_PACRM_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP7.
+/*@{*/
+#define BP_AIPS_PACRM_WP7    (1U)          /*!< Bit position for AIPS_PACRM_WP7. */
+#define BM_AIPS_PACRM_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRM_WP7. */
+#define BS_AIPS_PACRM_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP7 field.
+/*! @brief Read current value of the AIPS_PACRM_WP7 field. */
 #define BR_AIPS_PACRM_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP7.
-#define BF_AIPS_PACRM_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP7), uint32_t) & BM_AIPS_PACRM_WP7)
+/*! @brief Format value for bitfield AIPS_PACRM_WP7. */
+#define BF_AIPS_PACRM_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP7) & BM_AIPS_PACRM_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRM_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP7[2] (RW)
@@ -9568,24 +8236,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP7    (2U)          //!< Bit position for AIPS_PACRM_SP7.
-#define BM_AIPS_PACRM_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRM_SP7.
-#define BS_AIPS_PACRM_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP7.
+/*@{*/
+#define BP_AIPS_PACRM_SP7    (2U)          /*!< Bit position for AIPS_PACRM_SP7. */
+#define BM_AIPS_PACRM_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRM_SP7. */
+#define BS_AIPS_PACRM_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP7 field.
+/*! @brief Read current value of the AIPS_PACRM_SP7 field. */
 #define BR_AIPS_PACRM_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP7.
-#define BF_AIPS_PACRM_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP7), uint32_t) & BM_AIPS_PACRM_SP7)
+/*! @brief Format value for bitfield AIPS_PACRM_SP7. */
+#define BF_AIPS_PACRM_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP7) & BM_AIPS_PACRM_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRM_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP6[4] (RW)
@@ -9594,24 +8258,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP6    (4U)          //!< Bit position for AIPS_PACRM_TP6.
-#define BM_AIPS_PACRM_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRM_TP6.
-#define BS_AIPS_PACRM_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP6.
+/*@{*/
+#define BP_AIPS_PACRM_TP6    (4U)          /*!< Bit position for AIPS_PACRM_TP6. */
+#define BM_AIPS_PACRM_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRM_TP6. */
+#define BS_AIPS_PACRM_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP6 field.
+/*! @brief Read current value of the AIPS_PACRM_TP6 field. */
 #define BR_AIPS_PACRM_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP6.
-#define BF_AIPS_PACRM_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP6), uint32_t) & BM_AIPS_PACRM_TP6)
+/*! @brief Format value for bitfield AIPS_PACRM_TP6. */
+#define BF_AIPS_PACRM_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP6) & BM_AIPS_PACRM_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRM_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP6[5] (RW)
@@ -9620,24 +8280,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP6    (5U)          //!< Bit position for AIPS_PACRM_WP6.
-#define BM_AIPS_PACRM_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRM_WP6.
-#define BS_AIPS_PACRM_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP6.
+/*@{*/
+#define BP_AIPS_PACRM_WP6    (5U)          /*!< Bit position for AIPS_PACRM_WP6. */
+#define BM_AIPS_PACRM_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRM_WP6. */
+#define BS_AIPS_PACRM_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP6 field.
+/*! @brief Read current value of the AIPS_PACRM_WP6 field. */
 #define BR_AIPS_PACRM_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP6.
-#define BF_AIPS_PACRM_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP6), uint32_t) & BM_AIPS_PACRM_WP6)
+/*! @brief Format value for bitfield AIPS_PACRM_WP6. */
+#define BF_AIPS_PACRM_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP6) & BM_AIPS_PACRM_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRM_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP6[6] (RW)
@@ -9647,24 +8303,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP6    (6U)          //!< Bit position for AIPS_PACRM_SP6.
-#define BM_AIPS_PACRM_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRM_SP6.
-#define BS_AIPS_PACRM_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP6.
+/*@{*/
+#define BP_AIPS_PACRM_SP6    (6U)          /*!< Bit position for AIPS_PACRM_SP6. */
+#define BM_AIPS_PACRM_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRM_SP6. */
+#define BS_AIPS_PACRM_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP6 field.
+/*! @brief Read current value of the AIPS_PACRM_SP6 field. */
 #define BR_AIPS_PACRM_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP6.
-#define BF_AIPS_PACRM_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP6), uint32_t) & BM_AIPS_PACRM_SP6)
+/*! @brief Format value for bitfield AIPS_PACRM_SP6. */
+#define BF_AIPS_PACRM_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP6) & BM_AIPS_PACRM_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRM_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP5[8] (RW)
@@ -9673,24 +8325,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP5    (8U)          //!< Bit position for AIPS_PACRM_TP5.
-#define BM_AIPS_PACRM_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRM_TP5.
-#define BS_AIPS_PACRM_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP5.
+/*@{*/
+#define BP_AIPS_PACRM_TP5    (8U)          /*!< Bit position for AIPS_PACRM_TP5. */
+#define BM_AIPS_PACRM_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRM_TP5. */
+#define BS_AIPS_PACRM_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP5 field.
+/*! @brief Read current value of the AIPS_PACRM_TP5 field. */
 #define BR_AIPS_PACRM_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP5.
-#define BF_AIPS_PACRM_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP5), uint32_t) & BM_AIPS_PACRM_TP5)
+/*! @brief Format value for bitfield AIPS_PACRM_TP5. */
+#define BF_AIPS_PACRM_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP5) & BM_AIPS_PACRM_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRM_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP5[9] (RW)
@@ -9699,24 +8347,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP5    (9U)          //!< Bit position for AIPS_PACRM_WP5.
-#define BM_AIPS_PACRM_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRM_WP5.
-#define BS_AIPS_PACRM_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP5.
+/*@{*/
+#define BP_AIPS_PACRM_WP5    (9U)          /*!< Bit position for AIPS_PACRM_WP5. */
+#define BM_AIPS_PACRM_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRM_WP5. */
+#define BS_AIPS_PACRM_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP5 field.
+/*! @brief Read current value of the AIPS_PACRM_WP5 field. */
 #define BR_AIPS_PACRM_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP5.
-#define BF_AIPS_PACRM_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP5), uint32_t) & BM_AIPS_PACRM_WP5)
+/*! @brief Format value for bitfield AIPS_PACRM_WP5. */
+#define BF_AIPS_PACRM_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP5) & BM_AIPS_PACRM_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRM_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP5[10] (RW)
@@ -9726,24 +8370,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP5    (10U)         //!< Bit position for AIPS_PACRM_SP5.
-#define BM_AIPS_PACRM_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRM_SP5.
-#define BS_AIPS_PACRM_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP5.
+/*@{*/
+#define BP_AIPS_PACRM_SP5    (10U)         /*!< Bit position for AIPS_PACRM_SP5. */
+#define BM_AIPS_PACRM_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRM_SP5. */
+#define BS_AIPS_PACRM_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP5 field.
+/*! @brief Read current value of the AIPS_PACRM_SP5 field. */
 #define BR_AIPS_PACRM_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP5.
-#define BF_AIPS_PACRM_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP5), uint32_t) & BM_AIPS_PACRM_SP5)
+/*! @brief Format value for bitfield AIPS_PACRM_SP5. */
+#define BF_AIPS_PACRM_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP5) & BM_AIPS_PACRM_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRM_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP4[12] (RW)
@@ -9752,24 +8392,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP4    (12U)         //!< Bit position for AIPS_PACRM_TP4.
-#define BM_AIPS_PACRM_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRM_TP4.
-#define BS_AIPS_PACRM_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP4.
+/*@{*/
+#define BP_AIPS_PACRM_TP4    (12U)         /*!< Bit position for AIPS_PACRM_TP4. */
+#define BM_AIPS_PACRM_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRM_TP4. */
+#define BS_AIPS_PACRM_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP4 field.
+/*! @brief Read current value of the AIPS_PACRM_TP4 field. */
 #define BR_AIPS_PACRM_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP4.
-#define BF_AIPS_PACRM_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP4), uint32_t) & BM_AIPS_PACRM_TP4)
+/*! @brief Format value for bitfield AIPS_PACRM_TP4. */
+#define BF_AIPS_PACRM_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP4) & BM_AIPS_PACRM_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRM_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP4[13] (RW)
@@ -9778,24 +8414,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP4    (13U)         //!< Bit position for AIPS_PACRM_WP4.
-#define BM_AIPS_PACRM_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRM_WP4.
-#define BS_AIPS_PACRM_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP4.
+/*@{*/
+#define BP_AIPS_PACRM_WP4    (13U)         /*!< Bit position for AIPS_PACRM_WP4. */
+#define BM_AIPS_PACRM_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRM_WP4. */
+#define BS_AIPS_PACRM_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP4 field.
+/*! @brief Read current value of the AIPS_PACRM_WP4 field. */
 #define BR_AIPS_PACRM_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP4.
-#define BF_AIPS_PACRM_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP4), uint32_t) & BM_AIPS_PACRM_WP4)
+/*! @brief Format value for bitfield AIPS_PACRM_WP4. */
+#define BF_AIPS_PACRM_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP4) & BM_AIPS_PACRM_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRM_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP4[14] (RW)
@@ -9805,24 +8437,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP4    (14U)         //!< Bit position for AIPS_PACRM_SP4.
-#define BM_AIPS_PACRM_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRM_SP4.
-#define BS_AIPS_PACRM_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP4.
+/*@{*/
+#define BP_AIPS_PACRM_SP4    (14U)         /*!< Bit position for AIPS_PACRM_SP4. */
+#define BM_AIPS_PACRM_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRM_SP4. */
+#define BS_AIPS_PACRM_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP4 field.
+/*! @brief Read current value of the AIPS_PACRM_SP4 field. */
 #define BR_AIPS_PACRM_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP4.
-#define BF_AIPS_PACRM_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP4), uint32_t) & BM_AIPS_PACRM_SP4)
+/*! @brief Format value for bitfield AIPS_PACRM_SP4. */
+#define BF_AIPS_PACRM_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP4) & BM_AIPS_PACRM_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRM_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP3[16] (RW)
@@ -9831,24 +8459,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP3    (16U)         //!< Bit position for AIPS_PACRM_TP3.
-#define BM_AIPS_PACRM_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRM_TP3.
-#define BS_AIPS_PACRM_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP3.
+/*@{*/
+#define BP_AIPS_PACRM_TP3    (16U)         /*!< Bit position for AIPS_PACRM_TP3. */
+#define BM_AIPS_PACRM_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRM_TP3. */
+#define BS_AIPS_PACRM_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP3 field.
+/*! @brief Read current value of the AIPS_PACRM_TP3 field. */
 #define BR_AIPS_PACRM_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP3.
-#define BF_AIPS_PACRM_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP3), uint32_t) & BM_AIPS_PACRM_TP3)
+/*! @brief Format value for bitfield AIPS_PACRM_TP3. */
+#define BF_AIPS_PACRM_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP3) & BM_AIPS_PACRM_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRM_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP3[17] (RW)
@@ -9857,24 +8481,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP3    (17U)         //!< Bit position for AIPS_PACRM_WP3.
-#define BM_AIPS_PACRM_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRM_WP3.
-#define BS_AIPS_PACRM_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP3.
+/*@{*/
+#define BP_AIPS_PACRM_WP3    (17U)         /*!< Bit position for AIPS_PACRM_WP3. */
+#define BM_AIPS_PACRM_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRM_WP3. */
+#define BS_AIPS_PACRM_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP3 field.
+/*! @brief Read current value of the AIPS_PACRM_WP3 field. */
 #define BR_AIPS_PACRM_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP3.
-#define BF_AIPS_PACRM_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP3), uint32_t) & BM_AIPS_PACRM_WP3)
+/*! @brief Format value for bitfield AIPS_PACRM_WP3. */
+#define BF_AIPS_PACRM_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP3) & BM_AIPS_PACRM_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRM_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP3[18] (RW)
@@ -9884,24 +8504,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP3    (18U)         //!< Bit position for AIPS_PACRM_SP3.
-#define BM_AIPS_PACRM_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRM_SP3.
-#define BS_AIPS_PACRM_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP3.
+/*@{*/
+#define BP_AIPS_PACRM_SP3    (18U)         /*!< Bit position for AIPS_PACRM_SP3. */
+#define BM_AIPS_PACRM_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRM_SP3. */
+#define BS_AIPS_PACRM_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP3 field.
+/*! @brief Read current value of the AIPS_PACRM_SP3 field. */
 #define BR_AIPS_PACRM_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP3.
-#define BF_AIPS_PACRM_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP3), uint32_t) & BM_AIPS_PACRM_SP3)
+/*! @brief Format value for bitfield AIPS_PACRM_SP3. */
+#define BF_AIPS_PACRM_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP3) & BM_AIPS_PACRM_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRM_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP2[20] (RW)
@@ -9910,24 +8526,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP2    (20U)         //!< Bit position for AIPS_PACRM_TP2.
-#define BM_AIPS_PACRM_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRM_TP2.
-#define BS_AIPS_PACRM_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP2.
+/*@{*/
+#define BP_AIPS_PACRM_TP2    (20U)         /*!< Bit position for AIPS_PACRM_TP2. */
+#define BM_AIPS_PACRM_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRM_TP2. */
+#define BS_AIPS_PACRM_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP2 field.
+/*! @brief Read current value of the AIPS_PACRM_TP2 field. */
 #define BR_AIPS_PACRM_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP2.
-#define BF_AIPS_PACRM_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP2), uint32_t) & BM_AIPS_PACRM_TP2)
+/*! @brief Format value for bitfield AIPS_PACRM_TP2. */
+#define BF_AIPS_PACRM_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP2) & BM_AIPS_PACRM_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRM_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP2[21] (RW)
@@ -9936,24 +8548,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP2    (21U)         //!< Bit position for AIPS_PACRM_WP2.
-#define BM_AIPS_PACRM_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRM_WP2.
-#define BS_AIPS_PACRM_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP2.
+/*@{*/
+#define BP_AIPS_PACRM_WP2    (21U)         /*!< Bit position for AIPS_PACRM_WP2. */
+#define BM_AIPS_PACRM_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRM_WP2. */
+#define BS_AIPS_PACRM_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP2 field.
+/*! @brief Read current value of the AIPS_PACRM_WP2 field. */
 #define BR_AIPS_PACRM_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP2.
-#define BF_AIPS_PACRM_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP2), uint32_t) & BM_AIPS_PACRM_WP2)
+/*! @brief Format value for bitfield AIPS_PACRM_WP2. */
+#define BF_AIPS_PACRM_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP2) & BM_AIPS_PACRM_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRM_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP2[22] (RW)
@@ -9963,24 +8571,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP2    (22U)         //!< Bit position for AIPS_PACRM_SP2.
-#define BM_AIPS_PACRM_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRM_SP2.
-#define BS_AIPS_PACRM_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP2.
+/*@{*/
+#define BP_AIPS_PACRM_SP2    (22U)         /*!< Bit position for AIPS_PACRM_SP2. */
+#define BM_AIPS_PACRM_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRM_SP2. */
+#define BS_AIPS_PACRM_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP2 field.
+/*! @brief Read current value of the AIPS_PACRM_SP2 field. */
 #define BR_AIPS_PACRM_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP2.
-#define BF_AIPS_PACRM_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP2), uint32_t) & BM_AIPS_PACRM_SP2)
+/*! @brief Format value for bitfield AIPS_PACRM_SP2. */
+#define BF_AIPS_PACRM_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP2) & BM_AIPS_PACRM_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRM_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP1[24] (RW)
@@ -9989,24 +8593,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP1    (24U)         //!< Bit position for AIPS_PACRM_TP1.
-#define BM_AIPS_PACRM_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRM_TP1.
-#define BS_AIPS_PACRM_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP1.
+/*@{*/
+#define BP_AIPS_PACRM_TP1    (24U)         /*!< Bit position for AIPS_PACRM_TP1. */
+#define BM_AIPS_PACRM_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRM_TP1. */
+#define BS_AIPS_PACRM_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP1 field.
+/*! @brief Read current value of the AIPS_PACRM_TP1 field. */
 #define BR_AIPS_PACRM_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP1.
-#define BF_AIPS_PACRM_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP1), uint32_t) & BM_AIPS_PACRM_TP1)
+/*! @brief Format value for bitfield AIPS_PACRM_TP1. */
+#define BF_AIPS_PACRM_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP1) & BM_AIPS_PACRM_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRM_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP1[25] (RW)
@@ -10015,24 +8615,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP1    (25U)         //!< Bit position for AIPS_PACRM_WP1.
-#define BM_AIPS_PACRM_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRM_WP1.
-#define BS_AIPS_PACRM_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP1.
+/*@{*/
+#define BP_AIPS_PACRM_WP1    (25U)         /*!< Bit position for AIPS_PACRM_WP1. */
+#define BM_AIPS_PACRM_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRM_WP1. */
+#define BS_AIPS_PACRM_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP1 field.
+/*! @brief Read current value of the AIPS_PACRM_WP1 field. */
 #define BR_AIPS_PACRM_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP1.
-#define BF_AIPS_PACRM_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP1), uint32_t) & BM_AIPS_PACRM_WP1)
+/*! @brief Format value for bitfield AIPS_PACRM_WP1. */
+#define BF_AIPS_PACRM_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP1) & BM_AIPS_PACRM_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRM_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP1[26] (RW)
@@ -10042,24 +8638,20 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP1    (26U)         //!< Bit position for AIPS_PACRM_SP1.
-#define BM_AIPS_PACRM_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRM_SP1.
-#define BS_AIPS_PACRM_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP1.
+/*@{*/
+#define BP_AIPS_PACRM_SP1    (26U)         /*!< Bit position for AIPS_PACRM_SP1. */
+#define BM_AIPS_PACRM_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRM_SP1. */
+#define BS_AIPS_PACRM_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP1 field.
+/*! @brief Read current value of the AIPS_PACRM_SP1 field. */
 #define BR_AIPS_PACRM_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP1.
-#define BF_AIPS_PACRM_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP1), uint32_t) & BM_AIPS_PACRM_SP1)
+/*! @brief Format value for bitfield AIPS_PACRM_SP1. */
+#define BF_AIPS_PACRM_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP1) & BM_AIPS_PACRM_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRM_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field TP0[28] (RW)
@@ -10068,24 +8660,20 @@ typedef union _hw_aips_pacrm
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRM_TP0    (28U)         //!< Bit position for AIPS_PACRM_TP0.
-#define BM_AIPS_PACRM_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRM_TP0.
-#define BS_AIPS_PACRM_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRM_TP0.
+/*@{*/
+#define BP_AIPS_PACRM_TP0    (28U)         /*!< Bit position for AIPS_PACRM_TP0. */
+#define BM_AIPS_PACRM_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRM_TP0. */
+#define BS_AIPS_PACRM_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRM_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_TP0 field.
+/*! @brief Read current value of the AIPS_PACRM_TP0 field. */
 #define BR_AIPS_PACRM_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_TP0.
-#define BF_AIPS_PACRM_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_TP0), uint32_t) & BM_AIPS_PACRM_TP0)
+/*! @brief Format value for bitfield AIPS_PACRM_TP0. */
+#define BF_AIPS_PACRM_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_TP0) & BM_AIPS_PACRM_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRM_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field WP0[29] (RW)
@@ -10094,24 +8682,20 @@ typedef union _hw_aips_pacrm
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRM_WP0    (29U)         //!< Bit position for AIPS_PACRM_WP0.
-#define BM_AIPS_PACRM_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRM_WP0.
-#define BS_AIPS_PACRM_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRM_WP0.
+/*@{*/
+#define BP_AIPS_PACRM_WP0    (29U)         /*!< Bit position for AIPS_PACRM_WP0. */
+#define BM_AIPS_PACRM_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRM_WP0. */
+#define BS_AIPS_PACRM_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRM_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_WP0 field.
+/*! @brief Read current value of the AIPS_PACRM_WP0 field. */
 #define BR_AIPS_PACRM_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_WP0.
-#define BF_AIPS_PACRM_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_WP0), uint32_t) & BM_AIPS_PACRM_WP0)
+/*! @brief Format value for bitfield AIPS_PACRM_WP0. */
+#define BF_AIPS_PACRM_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_WP0) & BM_AIPS_PACRM_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRM_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRM, field SP0[30] (RW)
@@ -10121,30 +8705,25 @@ typedef union _hw_aips_pacrm
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRM_SP0    (30U)         //!< Bit position for AIPS_PACRM_SP0.
-#define BM_AIPS_PACRM_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRM_SP0.
-#define BS_AIPS_PACRM_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRM_SP0.
+/*@{*/
+#define BP_AIPS_PACRM_SP0    (30U)         /*!< Bit position for AIPS_PACRM_SP0. */
+#define BM_AIPS_PACRM_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRM_SP0. */
+#define BS_AIPS_PACRM_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRM_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRM_SP0 field.
+/*! @brief Read current value of the AIPS_PACRM_SP0 field. */
 #define BR_AIPS_PACRM_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRM_SP0.
-#define BF_AIPS_PACRM_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRM_SP0), uint32_t) & BM_AIPS_PACRM_SP0)
+/*! @brief Format value for bitfield AIPS_PACRM_SP0. */
+#define BF_AIPS_PACRM_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRM_SP0) & BM_AIPS_PACRM_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRM_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRM_ADDR(x), BP_AIPS_PACRM_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRN - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRN - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRN - Peripheral Access Control Register (RW)
  *
@@ -10163,57 +8742,54 @@ typedef union _hw_aips_pacrn
     uint32_t U;
     struct _hw_aips_pacrn_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRN register
  */
-//@{
-#define HW_AIPS_PACRN_ADDR(x)    (REGS_AIPS_BASE(x) + 0x64U)
+/*@{*/
+#define HW_AIPS_PACRN_ADDR(x)    ((x) + 0x64U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRN(x)         (*(__IO hw_aips_pacrn_t *) HW_AIPS_PACRN_ADDR(x))
 #define HW_AIPS_PACRN_RD(x)      (HW_AIPS_PACRN(x).U)
 #define HW_AIPS_PACRN_WR(x, v)   (HW_AIPS_PACRN(x).U = (v))
 #define HW_AIPS_PACRN_SET(x, v)  (HW_AIPS_PACRN_WR(x, HW_AIPS_PACRN_RD(x) |  (v)))
 #define HW_AIPS_PACRN_CLR(x, v)  (HW_AIPS_PACRN_WR(x, HW_AIPS_PACRN_RD(x) & ~(v)))
 #define HW_AIPS_PACRN_TOG(x, v)  (HW_AIPS_PACRN_WR(x, HW_AIPS_PACRN_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRN bitfields
@@ -10226,24 +8802,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP7    (0U)          //!< Bit position for AIPS_PACRN_TP7.
-#define BM_AIPS_PACRN_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRN_TP7.
-#define BS_AIPS_PACRN_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP7.
+/*@{*/
+#define BP_AIPS_PACRN_TP7    (0U)          /*!< Bit position for AIPS_PACRN_TP7. */
+#define BM_AIPS_PACRN_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRN_TP7. */
+#define BS_AIPS_PACRN_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP7 field.
+/*! @brief Read current value of the AIPS_PACRN_TP7 field. */
 #define BR_AIPS_PACRN_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP7.
-#define BF_AIPS_PACRN_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP7), uint32_t) & BM_AIPS_PACRN_TP7)
+/*! @brief Format value for bitfield AIPS_PACRN_TP7. */
+#define BF_AIPS_PACRN_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP7) & BM_AIPS_PACRN_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRN_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP7[1] (RW)
@@ -10252,24 +8824,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP7    (1U)          //!< Bit position for AIPS_PACRN_WP7.
-#define BM_AIPS_PACRN_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRN_WP7.
-#define BS_AIPS_PACRN_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP7.
+/*@{*/
+#define BP_AIPS_PACRN_WP7    (1U)          /*!< Bit position for AIPS_PACRN_WP7. */
+#define BM_AIPS_PACRN_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRN_WP7. */
+#define BS_AIPS_PACRN_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP7 field.
+/*! @brief Read current value of the AIPS_PACRN_WP7 field. */
 #define BR_AIPS_PACRN_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP7.
-#define BF_AIPS_PACRN_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP7), uint32_t) & BM_AIPS_PACRN_WP7)
+/*! @brief Format value for bitfield AIPS_PACRN_WP7. */
+#define BF_AIPS_PACRN_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP7) & BM_AIPS_PACRN_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRN_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP7[2] (RW)
@@ -10279,24 +8847,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP7    (2U)          //!< Bit position for AIPS_PACRN_SP7.
-#define BM_AIPS_PACRN_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRN_SP7.
-#define BS_AIPS_PACRN_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP7.
+/*@{*/
+#define BP_AIPS_PACRN_SP7    (2U)          /*!< Bit position for AIPS_PACRN_SP7. */
+#define BM_AIPS_PACRN_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRN_SP7. */
+#define BS_AIPS_PACRN_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP7 field.
+/*! @brief Read current value of the AIPS_PACRN_SP7 field. */
 #define BR_AIPS_PACRN_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP7.
-#define BF_AIPS_PACRN_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP7), uint32_t) & BM_AIPS_PACRN_SP7)
+/*! @brief Format value for bitfield AIPS_PACRN_SP7. */
+#define BF_AIPS_PACRN_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP7) & BM_AIPS_PACRN_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRN_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP6[4] (RW)
@@ -10305,24 +8869,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP6    (4U)          //!< Bit position for AIPS_PACRN_TP6.
-#define BM_AIPS_PACRN_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRN_TP6.
-#define BS_AIPS_PACRN_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP6.
+/*@{*/
+#define BP_AIPS_PACRN_TP6    (4U)          /*!< Bit position for AIPS_PACRN_TP6. */
+#define BM_AIPS_PACRN_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRN_TP6. */
+#define BS_AIPS_PACRN_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP6 field.
+/*! @brief Read current value of the AIPS_PACRN_TP6 field. */
 #define BR_AIPS_PACRN_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP6.
-#define BF_AIPS_PACRN_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP6), uint32_t) & BM_AIPS_PACRN_TP6)
+/*! @brief Format value for bitfield AIPS_PACRN_TP6. */
+#define BF_AIPS_PACRN_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP6) & BM_AIPS_PACRN_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRN_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP6[5] (RW)
@@ -10331,24 +8891,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP6    (5U)          //!< Bit position for AIPS_PACRN_WP6.
-#define BM_AIPS_PACRN_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRN_WP6.
-#define BS_AIPS_PACRN_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP6.
+/*@{*/
+#define BP_AIPS_PACRN_WP6    (5U)          /*!< Bit position for AIPS_PACRN_WP6. */
+#define BM_AIPS_PACRN_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRN_WP6. */
+#define BS_AIPS_PACRN_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP6 field.
+/*! @brief Read current value of the AIPS_PACRN_WP6 field. */
 #define BR_AIPS_PACRN_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP6.
-#define BF_AIPS_PACRN_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP6), uint32_t) & BM_AIPS_PACRN_WP6)
+/*! @brief Format value for bitfield AIPS_PACRN_WP6. */
+#define BF_AIPS_PACRN_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP6) & BM_AIPS_PACRN_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRN_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP6[6] (RW)
@@ -10358,24 +8914,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP6    (6U)          //!< Bit position for AIPS_PACRN_SP6.
-#define BM_AIPS_PACRN_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRN_SP6.
-#define BS_AIPS_PACRN_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP6.
+/*@{*/
+#define BP_AIPS_PACRN_SP6    (6U)          /*!< Bit position for AIPS_PACRN_SP6. */
+#define BM_AIPS_PACRN_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRN_SP6. */
+#define BS_AIPS_PACRN_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP6 field.
+/*! @brief Read current value of the AIPS_PACRN_SP6 field. */
 #define BR_AIPS_PACRN_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP6.
-#define BF_AIPS_PACRN_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP6), uint32_t) & BM_AIPS_PACRN_SP6)
+/*! @brief Format value for bitfield AIPS_PACRN_SP6. */
+#define BF_AIPS_PACRN_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP6) & BM_AIPS_PACRN_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRN_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP5[8] (RW)
@@ -10384,24 +8936,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP5    (8U)          //!< Bit position for AIPS_PACRN_TP5.
-#define BM_AIPS_PACRN_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRN_TP5.
-#define BS_AIPS_PACRN_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP5.
+/*@{*/
+#define BP_AIPS_PACRN_TP5    (8U)          /*!< Bit position for AIPS_PACRN_TP5. */
+#define BM_AIPS_PACRN_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRN_TP5. */
+#define BS_AIPS_PACRN_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP5 field.
+/*! @brief Read current value of the AIPS_PACRN_TP5 field. */
 #define BR_AIPS_PACRN_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP5.
-#define BF_AIPS_PACRN_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP5), uint32_t) & BM_AIPS_PACRN_TP5)
+/*! @brief Format value for bitfield AIPS_PACRN_TP5. */
+#define BF_AIPS_PACRN_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP5) & BM_AIPS_PACRN_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRN_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP5[9] (RW)
@@ -10410,24 +8958,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP5    (9U)          //!< Bit position for AIPS_PACRN_WP5.
-#define BM_AIPS_PACRN_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRN_WP5.
-#define BS_AIPS_PACRN_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP5.
+/*@{*/
+#define BP_AIPS_PACRN_WP5    (9U)          /*!< Bit position for AIPS_PACRN_WP5. */
+#define BM_AIPS_PACRN_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRN_WP5. */
+#define BS_AIPS_PACRN_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP5 field.
+/*! @brief Read current value of the AIPS_PACRN_WP5 field. */
 #define BR_AIPS_PACRN_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP5.
-#define BF_AIPS_PACRN_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP5), uint32_t) & BM_AIPS_PACRN_WP5)
+/*! @brief Format value for bitfield AIPS_PACRN_WP5. */
+#define BF_AIPS_PACRN_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP5) & BM_AIPS_PACRN_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRN_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP5[10] (RW)
@@ -10437,24 +8981,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP5    (10U)         //!< Bit position for AIPS_PACRN_SP5.
-#define BM_AIPS_PACRN_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRN_SP5.
-#define BS_AIPS_PACRN_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP5.
+/*@{*/
+#define BP_AIPS_PACRN_SP5    (10U)         /*!< Bit position for AIPS_PACRN_SP5. */
+#define BM_AIPS_PACRN_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRN_SP5. */
+#define BS_AIPS_PACRN_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP5 field.
+/*! @brief Read current value of the AIPS_PACRN_SP5 field. */
 #define BR_AIPS_PACRN_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP5.
-#define BF_AIPS_PACRN_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP5), uint32_t) & BM_AIPS_PACRN_SP5)
+/*! @brief Format value for bitfield AIPS_PACRN_SP5. */
+#define BF_AIPS_PACRN_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP5) & BM_AIPS_PACRN_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRN_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP4[12] (RW)
@@ -10463,24 +9003,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP4    (12U)         //!< Bit position for AIPS_PACRN_TP4.
-#define BM_AIPS_PACRN_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRN_TP4.
-#define BS_AIPS_PACRN_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP4.
+/*@{*/
+#define BP_AIPS_PACRN_TP4    (12U)         /*!< Bit position for AIPS_PACRN_TP4. */
+#define BM_AIPS_PACRN_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRN_TP4. */
+#define BS_AIPS_PACRN_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP4 field.
+/*! @brief Read current value of the AIPS_PACRN_TP4 field. */
 #define BR_AIPS_PACRN_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP4.
-#define BF_AIPS_PACRN_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP4), uint32_t) & BM_AIPS_PACRN_TP4)
+/*! @brief Format value for bitfield AIPS_PACRN_TP4. */
+#define BF_AIPS_PACRN_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP4) & BM_AIPS_PACRN_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRN_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP4[13] (RW)
@@ -10489,24 +9025,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP4    (13U)         //!< Bit position for AIPS_PACRN_WP4.
-#define BM_AIPS_PACRN_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRN_WP4.
-#define BS_AIPS_PACRN_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP4.
+/*@{*/
+#define BP_AIPS_PACRN_WP4    (13U)         /*!< Bit position for AIPS_PACRN_WP4. */
+#define BM_AIPS_PACRN_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRN_WP4. */
+#define BS_AIPS_PACRN_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP4 field.
+/*! @brief Read current value of the AIPS_PACRN_WP4 field. */
 #define BR_AIPS_PACRN_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP4.
-#define BF_AIPS_PACRN_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP4), uint32_t) & BM_AIPS_PACRN_WP4)
+/*! @brief Format value for bitfield AIPS_PACRN_WP4. */
+#define BF_AIPS_PACRN_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP4) & BM_AIPS_PACRN_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRN_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP4[14] (RW)
@@ -10516,24 +9048,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP4    (14U)         //!< Bit position for AIPS_PACRN_SP4.
-#define BM_AIPS_PACRN_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRN_SP4.
-#define BS_AIPS_PACRN_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP4.
+/*@{*/
+#define BP_AIPS_PACRN_SP4    (14U)         /*!< Bit position for AIPS_PACRN_SP4. */
+#define BM_AIPS_PACRN_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRN_SP4. */
+#define BS_AIPS_PACRN_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP4 field.
+/*! @brief Read current value of the AIPS_PACRN_SP4 field. */
 #define BR_AIPS_PACRN_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP4.
-#define BF_AIPS_PACRN_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP4), uint32_t) & BM_AIPS_PACRN_SP4)
+/*! @brief Format value for bitfield AIPS_PACRN_SP4. */
+#define BF_AIPS_PACRN_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP4) & BM_AIPS_PACRN_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRN_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP3[16] (RW)
@@ -10542,24 +9070,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP3    (16U)         //!< Bit position for AIPS_PACRN_TP3.
-#define BM_AIPS_PACRN_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRN_TP3.
-#define BS_AIPS_PACRN_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP3.
+/*@{*/
+#define BP_AIPS_PACRN_TP3    (16U)         /*!< Bit position for AIPS_PACRN_TP3. */
+#define BM_AIPS_PACRN_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRN_TP3. */
+#define BS_AIPS_PACRN_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP3 field.
+/*! @brief Read current value of the AIPS_PACRN_TP3 field. */
 #define BR_AIPS_PACRN_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP3.
-#define BF_AIPS_PACRN_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP3), uint32_t) & BM_AIPS_PACRN_TP3)
+/*! @brief Format value for bitfield AIPS_PACRN_TP3. */
+#define BF_AIPS_PACRN_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP3) & BM_AIPS_PACRN_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRN_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP3[17] (RW)
@@ -10568,24 +9092,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP3    (17U)         //!< Bit position for AIPS_PACRN_WP3.
-#define BM_AIPS_PACRN_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRN_WP3.
-#define BS_AIPS_PACRN_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP3.
+/*@{*/
+#define BP_AIPS_PACRN_WP3    (17U)         /*!< Bit position for AIPS_PACRN_WP3. */
+#define BM_AIPS_PACRN_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRN_WP3. */
+#define BS_AIPS_PACRN_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP3 field.
+/*! @brief Read current value of the AIPS_PACRN_WP3 field. */
 #define BR_AIPS_PACRN_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP3.
-#define BF_AIPS_PACRN_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP3), uint32_t) & BM_AIPS_PACRN_WP3)
+/*! @brief Format value for bitfield AIPS_PACRN_WP3. */
+#define BF_AIPS_PACRN_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP3) & BM_AIPS_PACRN_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRN_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP3[18] (RW)
@@ -10595,24 +9115,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP3    (18U)         //!< Bit position for AIPS_PACRN_SP3.
-#define BM_AIPS_PACRN_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRN_SP3.
-#define BS_AIPS_PACRN_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP3.
+/*@{*/
+#define BP_AIPS_PACRN_SP3    (18U)         /*!< Bit position for AIPS_PACRN_SP3. */
+#define BM_AIPS_PACRN_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRN_SP3. */
+#define BS_AIPS_PACRN_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP3 field.
+/*! @brief Read current value of the AIPS_PACRN_SP3 field. */
 #define BR_AIPS_PACRN_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP3.
-#define BF_AIPS_PACRN_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP3), uint32_t) & BM_AIPS_PACRN_SP3)
+/*! @brief Format value for bitfield AIPS_PACRN_SP3. */
+#define BF_AIPS_PACRN_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP3) & BM_AIPS_PACRN_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRN_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP2[20] (RW)
@@ -10621,24 +9137,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP2    (20U)         //!< Bit position for AIPS_PACRN_TP2.
-#define BM_AIPS_PACRN_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRN_TP2.
-#define BS_AIPS_PACRN_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP2.
+/*@{*/
+#define BP_AIPS_PACRN_TP2    (20U)         /*!< Bit position for AIPS_PACRN_TP2. */
+#define BM_AIPS_PACRN_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRN_TP2. */
+#define BS_AIPS_PACRN_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP2 field.
+/*! @brief Read current value of the AIPS_PACRN_TP2 field. */
 #define BR_AIPS_PACRN_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP2.
-#define BF_AIPS_PACRN_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP2), uint32_t) & BM_AIPS_PACRN_TP2)
+/*! @brief Format value for bitfield AIPS_PACRN_TP2. */
+#define BF_AIPS_PACRN_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP2) & BM_AIPS_PACRN_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRN_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP2[21] (RW)
@@ -10647,24 +9159,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP2    (21U)         //!< Bit position for AIPS_PACRN_WP2.
-#define BM_AIPS_PACRN_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRN_WP2.
-#define BS_AIPS_PACRN_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP2.
+/*@{*/
+#define BP_AIPS_PACRN_WP2    (21U)         /*!< Bit position for AIPS_PACRN_WP2. */
+#define BM_AIPS_PACRN_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRN_WP2. */
+#define BS_AIPS_PACRN_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP2 field.
+/*! @brief Read current value of the AIPS_PACRN_WP2 field. */
 #define BR_AIPS_PACRN_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP2.
-#define BF_AIPS_PACRN_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP2), uint32_t) & BM_AIPS_PACRN_WP2)
+/*! @brief Format value for bitfield AIPS_PACRN_WP2. */
+#define BF_AIPS_PACRN_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP2) & BM_AIPS_PACRN_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRN_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP2[22] (RW)
@@ -10674,24 +9182,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP2    (22U)         //!< Bit position for AIPS_PACRN_SP2.
-#define BM_AIPS_PACRN_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRN_SP2.
-#define BS_AIPS_PACRN_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP2.
+/*@{*/
+#define BP_AIPS_PACRN_SP2    (22U)         /*!< Bit position for AIPS_PACRN_SP2. */
+#define BM_AIPS_PACRN_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRN_SP2. */
+#define BS_AIPS_PACRN_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP2 field.
+/*! @brief Read current value of the AIPS_PACRN_SP2 field. */
 #define BR_AIPS_PACRN_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP2.
-#define BF_AIPS_PACRN_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP2), uint32_t) & BM_AIPS_PACRN_SP2)
+/*! @brief Format value for bitfield AIPS_PACRN_SP2. */
+#define BF_AIPS_PACRN_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP2) & BM_AIPS_PACRN_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRN_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP1[24] (RW)
@@ -10700,24 +9204,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP1    (24U)         //!< Bit position for AIPS_PACRN_TP1.
-#define BM_AIPS_PACRN_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRN_TP1.
-#define BS_AIPS_PACRN_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP1.
+/*@{*/
+#define BP_AIPS_PACRN_TP1    (24U)         /*!< Bit position for AIPS_PACRN_TP1. */
+#define BM_AIPS_PACRN_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRN_TP1. */
+#define BS_AIPS_PACRN_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP1 field.
+/*! @brief Read current value of the AIPS_PACRN_TP1 field. */
 #define BR_AIPS_PACRN_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP1.
-#define BF_AIPS_PACRN_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP1), uint32_t) & BM_AIPS_PACRN_TP1)
+/*! @brief Format value for bitfield AIPS_PACRN_TP1. */
+#define BF_AIPS_PACRN_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP1) & BM_AIPS_PACRN_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRN_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP1[25] (RW)
@@ -10726,24 +9226,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP1    (25U)         //!< Bit position for AIPS_PACRN_WP1.
-#define BM_AIPS_PACRN_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRN_WP1.
-#define BS_AIPS_PACRN_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP1.
+/*@{*/
+#define BP_AIPS_PACRN_WP1    (25U)         /*!< Bit position for AIPS_PACRN_WP1. */
+#define BM_AIPS_PACRN_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRN_WP1. */
+#define BS_AIPS_PACRN_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP1 field.
+/*! @brief Read current value of the AIPS_PACRN_WP1 field. */
 #define BR_AIPS_PACRN_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP1.
-#define BF_AIPS_PACRN_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP1), uint32_t) & BM_AIPS_PACRN_WP1)
+/*! @brief Format value for bitfield AIPS_PACRN_WP1. */
+#define BF_AIPS_PACRN_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP1) & BM_AIPS_PACRN_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRN_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP1[26] (RW)
@@ -10753,24 +9249,20 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP1    (26U)         //!< Bit position for AIPS_PACRN_SP1.
-#define BM_AIPS_PACRN_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRN_SP1.
-#define BS_AIPS_PACRN_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP1.
+/*@{*/
+#define BP_AIPS_PACRN_SP1    (26U)         /*!< Bit position for AIPS_PACRN_SP1. */
+#define BM_AIPS_PACRN_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRN_SP1. */
+#define BS_AIPS_PACRN_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP1 field.
+/*! @brief Read current value of the AIPS_PACRN_SP1 field. */
 #define BR_AIPS_PACRN_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP1.
-#define BF_AIPS_PACRN_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP1), uint32_t) & BM_AIPS_PACRN_SP1)
+/*! @brief Format value for bitfield AIPS_PACRN_SP1. */
+#define BF_AIPS_PACRN_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP1) & BM_AIPS_PACRN_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRN_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field TP0[28] (RW)
@@ -10779,24 +9271,20 @@ typedef union _hw_aips_pacrn
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRN_TP0    (28U)         //!< Bit position for AIPS_PACRN_TP0.
-#define BM_AIPS_PACRN_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRN_TP0.
-#define BS_AIPS_PACRN_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRN_TP0.
+/*@{*/
+#define BP_AIPS_PACRN_TP0    (28U)         /*!< Bit position for AIPS_PACRN_TP0. */
+#define BM_AIPS_PACRN_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRN_TP0. */
+#define BS_AIPS_PACRN_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRN_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_TP0 field.
+/*! @brief Read current value of the AIPS_PACRN_TP0 field. */
 #define BR_AIPS_PACRN_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_TP0.
-#define BF_AIPS_PACRN_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_TP0), uint32_t) & BM_AIPS_PACRN_TP0)
+/*! @brief Format value for bitfield AIPS_PACRN_TP0. */
+#define BF_AIPS_PACRN_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_TP0) & BM_AIPS_PACRN_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRN_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field WP0[29] (RW)
@@ -10805,24 +9293,20 @@ typedef union _hw_aips_pacrn
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRN_WP0    (29U)         //!< Bit position for AIPS_PACRN_WP0.
-#define BM_AIPS_PACRN_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRN_WP0.
-#define BS_AIPS_PACRN_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRN_WP0.
+/*@{*/
+#define BP_AIPS_PACRN_WP0    (29U)         /*!< Bit position for AIPS_PACRN_WP0. */
+#define BM_AIPS_PACRN_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRN_WP0. */
+#define BS_AIPS_PACRN_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRN_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_WP0 field.
+/*! @brief Read current value of the AIPS_PACRN_WP0 field. */
 #define BR_AIPS_PACRN_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_WP0.
-#define BF_AIPS_PACRN_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_WP0), uint32_t) & BM_AIPS_PACRN_WP0)
+/*! @brief Format value for bitfield AIPS_PACRN_WP0. */
+#define BF_AIPS_PACRN_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_WP0) & BM_AIPS_PACRN_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRN_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRN, field SP0[30] (RW)
@@ -10832,30 +9316,25 @@ typedef union _hw_aips_pacrn
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRN_SP0    (30U)         //!< Bit position for AIPS_PACRN_SP0.
-#define BM_AIPS_PACRN_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRN_SP0.
-#define BS_AIPS_PACRN_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRN_SP0.
+/*@{*/
+#define BP_AIPS_PACRN_SP0    (30U)         /*!< Bit position for AIPS_PACRN_SP0. */
+#define BM_AIPS_PACRN_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRN_SP0. */
+#define BS_AIPS_PACRN_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRN_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRN_SP0 field.
+/*! @brief Read current value of the AIPS_PACRN_SP0 field. */
 #define BR_AIPS_PACRN_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRN_SP0.
-#define BF_AIPS_PACRN_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRN_SP0), uint32_t) & BM_AIPS_PACRN_SP0)
+/*! @brief Format value for bitfield AIPS_PACRN_SP0. */
+#define BF_AIPS_PACRN_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRN_SP0) & BM_AIPS_PACRN_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRN_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRN_ADDR(x), BP_AIPS_PACRN_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRO - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRO - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRO - Peripheral Access Control Register (RW)
  *
@@ -10874,57 +9353,54 @@ typedef union _hw_aips_pacro
     uint32_t U;
     struct _hw_aips_pacro_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacro_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRO register
  */
-//@{
-#define HW_AIPS_PACRO_ADDR(x)    (REGS_AIPS_BASE(x) + 0x68U)
+/*@{*/
+#define HW_AIPS_PACRO_ADDR(x)    ((x) + 0x68U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRO(x)         (*(__IO hw_aips_pacro_t *) HW_AIPS_PACRO_ADDR(x))
 #define HW_AIPS_PACRO_RD(x)      (HW_AIPS_PACRO(x).U)
 #define HW_AIPS_PACRO_WR(x, v)   (HW_AIPS_PACRO(x).U = (v))
 #define HW_AIPS_PACRO_SET(x, v)  (HW_AIPS_PACRO_WR(x, HW_AIPS_PACRO_RD(x) |  (v)))
 #define HW_AIPS_PACRO_CLR(x, v)  (HW_AIPS_PACRO_WR(x, HW_AIPS_PACRO_RD(x) & ~(v)))
 #define HW_AIPS_PACRO_TOG(x, v)  (HW_AIPS_PACRO_WR(x, HW_AIPS_PACRO_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRO bitfields
@@ -10937,24 +9413,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP7    (0U)          //!< Bit position for AIPS_PACRO_TP7.
-#define BM_AIPS_PACRO_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRO_TP7.
-#define BS_AIPS_PACRO_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP7.
+/*@{*/
+#define BP_AIPS_PACRO_TP7    (0U)          /*!< Bit position for AIPS_PACRO_TP7. */
+#define BM_AIPS_PACRO_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRO_TP7. */
+#define BS_AIPS_PACRO_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP7 field.
+/*! @brief Read current value of the AIPS_PACRO_TP7 field. */
 #define BR_AIPS_PACRO_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP7.
-#define BF_AIPS_PACRO_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP7), uint32_t) & BM_AIPS_PACRO_TP7)
+/*! @brief Format value for bitfield AIPS_PACRO_TP7. */
+#define BF_AIPS_PACRO_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP7) & BM_AIPS_PACRO_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRO_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP7[1] (RW)
@@ -10963,24 +9435,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP7    (1U)          //!< Bit position for AIPS_PACRO_WP7.
-#define BM_AIPS_PACRO_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRO_WP7.
-#define BS_AIPS_PACRO_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP7.
+/*@{*/
+#define BP_AIPS_PACRO_WP7    (1U)          /*!< Bit position for AIPS_PACRO_WP7. */
+#define BM_AIPS_PACRO_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRO_WP7. */
+#define BS_AIPS_PACRO_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP7 field.
+/*! @brief Read current value of the AIPS_PACRO_WP7 field. */
 #define BR_AIPS_PACRO_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP7.
-#define BF_AIPS_PACRO_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP7), uint32_t) & BM_AIPS_PACRO_WP7)
+/*! @brief Format value for bitfield AIPS_PACRO_WP7. */
+#define BF_AIPS_PACRO_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP7) & BM_AIPS_PACRO_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRO_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP7[2] (RW)
@@ -10990,24 +9458,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP7    (2U)          //!< Bit position for AIPS_PACRO_SP7.
-#define BM_AIPS_PACRO_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRO_SP7.
-#define BS_AIPS_PACRO_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP7.
+/*@{*/
+#define BP_AIPS_PACRO_SP7    (2U)          /*!< Bit position for AIPS_PACRO_SP7. */
+#define BM_AIPS_PACRO_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRO_SP7. */
+#define BS_AIPS_PACRO_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP7 field.
+/*! @brief Read current value of the AIPS_PACRO_SP7 field. */
 #define BR_AIPS_PACRO_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP7.
-#define BF_AIPS_PACRO_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP7), uint32_t) & BM_AIPS_PACRO_SP7)
+/*! @brief Format value for bitfield AIPS_PACRO_SP7. */
+#define BF_AIPS_PACRO_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP7) & BM_AIPS_PACRO_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRO_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP6[4] (RW)
@@ -11016,24 +9480,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP6    (4U)          //!< Bit position for AIPS_PACRO_TP6.
-#define BM_AIPS_PACRO_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRO_TP6.
-#define BS_AIPS_PACRO_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP6.
+/*@{*/
+#define BP_AIPS_PACRO_TP6    (4U)          /*!< Bit position for AIPS_PACRO_TP6. */
+#define BM_AIPS_PACRO_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRO_TP6. */
+#define BS_AIPS_PACRO_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP6 field.
+/*! @brief Read current value of the AIPS_PACRO_TP6 field. */
 #define BR_AIPS_PACRO_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP6.
-#define BF_AIPS_PACRO_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP6), uint32_t) & BM_AIPS_PACRO_TP6)
+/*! @brief Format value for bitfield AIPS_PACRO_TP6. */
+#define BF_AIPS_PACRO_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP6) & BM_AIPS_PACRO_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRO_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP6[5] (RW)
@@ -11042,24 +9502,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP6    (5U)          //!< Bit position for AIPS_PACRO_WP6.
-#define BM_AIPS_PACRO_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRO_WP6.
-#define BS_AIPS_PACRO_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP6.
+/*@{*/
+#define BP_AIPS_PACRO_WP6    (5U)          /*!< Bit position for AIPS_PACRO_WP6. */
+#define BM_AIPS_PACRO_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRO_WP6. */
+#define BS_AIPS_PACRO_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP6 field.
+/*! @brief Read current value of the AIPS_PACRO_WP6 field. */
 #define BR_AIPS_PACRO_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP6.
-#define BF_AIPS_PACRO_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP6), uint32_t) & BM_AIPS_PACRO_WP6)
+/*! @brief Format value for bitfield AIPS_PACRO_WP6. */
+#define BF_AIPS_PACRO_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP6) & BM_AIPS_PACRO_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRO_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP6[6] (RW)
@@ -11069,24 +9525,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP6    (6U)          //!< Bit position for AIPS_PACRO_SP6.
-#define BM_AIPS_PACRO_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRO_SP6.
-#define BS_AIPS_PACRO_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP6.
+/*@{*/
+#define BP_AIPS_PACRO_SP6    (6U)          /*!< Bit position for AIPS_PACRO_SP6. */
+#define BM_AIPS_PACRO_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRO_SP6. */
+#define BS_AIPS_PACRO_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP6 field.
+/*! @brief Read current value of the AIPS_PACRO_SP6 field. */
 #define BR_AIPS_PACRO_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP6.
-#define BF_AIPS_PACRO_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP6), uint32_t) & BM_AIPS_PACRO_SP6)
+/*! @brief Format value for bitfield AIPS_PACRO_SP6. */
+#define BF_AIPS_PACRO_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP6) & BM_AIPS_PACRO_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRO_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP5[8] (RW)
@@ -11095,24 +9547,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP5    (8U)          //!< Bit position for AIPS_PACRO_TP5.
-#define BM_AIPS_PACRO_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRO_TP5.
-#define BS_AIPS_PACRO_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP5.
+/*@{*/
+#define BP_AIPS_PACRO_TP5    (8U)          /*!< Bit position for AIPS_PACRO_TP5. */
+#define BM_AIPS_PACRO_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRO_TP5. */
+#define BS_AIPS_PACRO_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP5 field.
+/*! @brief Read current value of the AIPS_PACRO_TP5 field. */
 #define BR_AIPS_PACRO_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP5.
-#define BF_AIPS_PACRO_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP5), uint32_t) & BM_AIPS_PACRO_TP5)
+/*! @brief Format value for bitfield AIPS_PACRO_TP5. */
+#define BF_AIPS_PACRO_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP5) & BM_AIPS_PACRO_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRO_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP5[9] (RW)
@@ -11121,24 +9569,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP5    (9U)          //!< Bit position for AIPS_PACRO_WP5.
-#define BM_AIPS_PACRO_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRO_WP5.
-#define BS_AIPS_PACRO_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP5.
+/*@{*/
+#define BP_AIPS_PACRO_WP5    (9U)          /*!< Bit position for AIPS_PACRO_WP5. */
+#define BM_AIPS_PACRO_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRO_WP5. */
+#define BS_AIPS_PACRO_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP5 field.
+/*! @brief Read current value of the AIPS_PACRO_WP5 field. */
 #define BR_AIPS_PACRO_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP5.
-#define BF_AIPS_PACRO_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP5), uint32_t) & BM_AIPS_PACRO_WP5)
+/*! @brief Format value for bitfield AIPS_PACRO_WP5. */
+#define BF_AIPS_PACRO_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP5) & BM_AIPS_PACRO_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRO_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP5[10] (RW)
@@ -11148,24 +9592,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP5    (10U)         //!< Bit position for AIPS_PACRO_SP5.
-#define BM_AIPS_PACRO_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRO_SP5.
-#define BS_AIPS_PACRO_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP5.
+/*@{*/
+#define BP_AIPS_PACRO_SP5    (10U)         /*!< Bit position for AIPS_PACRO_SP5. */
+#define BM_AIPS_PACRO_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRO_SP5. */
+#define BS_AIPS_PACRO_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP5 field.
+/*! @brief Read current value of the AIPS_PACRO_SP5 field. */
 #define BR_AIPS_PACRO_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP5.
-#define BF_AIPS_PACRO_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP5), uint32_t) & BM_AIPS_PACRO_SP5)
+/*! @brief Format value for bitfield AIPS_PACRO_SP5. */
+#define BF_AIPS_PACRO_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP5) & BM_AIPS_PACRO_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRO_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP4[12] (RW)
@@ -11174,24 +9614,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP4    (12U)         //!< Bit position for AIPS_PACRO_TP4.
-#define BM_AIPS_PACRO_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRO_TP4.
-#define BS_AIPS_PACRO_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP4.
+/*@{*/
+#define BP_AIPS_PACRO_TP4    (12U)         /*!< Bit position for AIPS_PACRO_TP4. */
+#define BM_AIPS_PACRO_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRO_TP4. */
+#define BS_AIPS_PACRO_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP4 field.
+/*! @brief Read current value of the AIPS_PACRO_TP4 field. */
 #define BR_AIPS_PACRO_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP4.
-#define BF_AIPS_PACRO_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP4), uint32_t) & BM_AIPS_PACRO_TP4)
+/*! @brief Format value for bitfield AIPS_PACRO_TP4. */
+#define BF_AIPS_PACRO_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP4) & BM_AIPS_PACRO_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRO_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP4[13] (RW)
@@ -11200,24 +9636,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP4    (13U)         //!< Bit position for AIPS_PACRO_WP4.
-#define BM_AIPS_PACRO_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRO_WP4.
-#define BS_AIPS_PACRO_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP4.
+/*@{*/
+#define BP_AIPS_PACRO_WP4    (13U)         /*!< Bit position for AIPS_PACRO_WP4. */
+#define BM_AIPS_PACRO_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRO_WP4. */
+#define BS_AIPS_PACRO_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP4 field.
+/*! @brief Read current value of the AIPS_PACRO_WP4 field. */
 #define BR_AIPS_PACRO_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP4.
-#define BF_AIPS_PACRO_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP4), uint32_t) & BM_AIPS_PACRO_WP4)
+/*! @brief Format value for bitfield AIPS_PACRO_WP4. */
+#define BF_AIPS_PACRO_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP4) & BM_AIPS_PACRO_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRO_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP4[14] (RW)
@@ -11227,24 +9659,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP4    (14U)         //!< Bit position for AIPS_PACRO_SP4.
-#define BM_AIPS_PACRO_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRO_SP4.
-#define BS_AIPS_PACRO_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP4.
+/*@{*/
+#define BP_AIPS_PACRO_SP4    (14U)         /*!< Bit position for AIPS_PACRO_SP4. */
+#define BM_AIPS_PACRO_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRO_SP4. */
+#define BS_AIPS_PACRO_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP4 field.
+/*! @brief Read current value of the AIPS_PACRO_SP4 field. */
 #define BR_AIPS_PACRO_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP4.
-#define BF_AIPS_PACRO_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP4), uint32_t) & BM_AIPS_PACRO_SP4)
+/*! @brief Format value for bitfield AIPS_PACRO_SP4. */
+#define BF_AIPS_PACRO_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP4) & BM_AIPS_PACRO_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRO_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP3[16] (RW)
@@ -11253,24 +9681,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP3    (16U)         //!< Bit position for AIPS_PACRO_TP3.
-#define BM_AIPS_PACRO_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRO_TP3.
-#define BS_AIPS_PACRO_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP3.
+/*@{*/
+#define BP_AIPS_PACRO_TP3    (16U)         /*!< Bit position for AIPS_PACRO_TP3. */
+#define BM_AIPS_PACRO_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRO_TP3. */
+#define BS_AIPS_PACRO_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP3 field.
+/*! @brief Read current value of the AIPS_PACRO_TP3 field. */
 #define BR_AIPS_PACRO_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP3.
-#define BF_AIPS_PACRO_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP3), uint32_t) & BM_AIPS_PACRO_TP3)
+/*! @brief Format value for bitfield AIPS_PACRO_TP3. */
+#define BF_AIPS_PACRO_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP3) & BM_AIPS_PACRO_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRO_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP3[17] (RW)
@@ -11279,24 +9703,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP3    (17U)         //!< Bit position for AIPS_PACRO_WP3.
-#define BM_AIPS_PACRO_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRO_WP3.
-#define BS_AIPS_PACRO_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP3.
+/*@{*/
+#define BP_AIPS_PACRO_WP3    (17U)         /*!< Bit position for AIPS_PACRO_WP3. */
+#define BM_AIPS_PACRO_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRO_WP3. */
+#define BS_AIPS_PACRO_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP3 field.
+/*! @brief Read current value of the AIPS_PACRO_WP3 field. */
 #define BR_AIPS_PACRO_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP3.
-#define BF_AIPS_PACRO_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP3), uint32_t) & BM_AIPS_PACRO_WP3)
+/*! @brief Format value for bitfield AIPS_PACRO_WP3. */
+#define BF_AIPS_PACRO_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP3) & BM_AIPS_PACRO_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRO_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP3[18] (RW)
@@ -11306,24 +9726,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP3    (18U)         //!< Bit position for AIPS_PACRO_SP3.
-#define BM_AIPS_PACRO_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRO_SP3.
-#define BS_AIPS_PACRO_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP3.
+/*@{*/
+#define BP_AIPS_PACRO_SP3    (18U)         /*!< Bit position for AIPS_PACRO_SP3. */
+#define BM_AIPS_PACRO_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRO_SP3. */
+#define BS_AIPS_PACRO_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP3 field.
+/*! @brief Read current value of the AIPS_PACRO_SP3 field. */
 #define BR_AIPS_PACRO_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP3.
-#define BF_AIPS_PACRO_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP3), uint32_t) & BM_AIPS_PACRO_SP3)
+/*! @brief Format value for bitfield AIPS_PACRO_SP3. */
+#define BF_AIPS_PACRO_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP3) & BM_AIPS_PACRO_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRO_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP2[20] (RW)
@@ -11332,24 +9748,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP2    (20U)         //!< Bit position for AIPS_PACRO_TP2.
-#define BM_AIPS_PACRO_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRO_TP2.
-#define BS_AIPS_PACRO_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP2.
+/*@{*/
+#define BP_AIPS_PACRO_TP2    (20U)         /*!< Bit position for AIPS_PACRO_TP2. */
+#define BM_AIPS_PACRO_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRO_TP2. */
+#define BS_AIPS_PACRO_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP2 field.
+/*! @brief Read current value of the AIPS_PACRO_TP2 field. */
 #define BR_AIPS_PACRO_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP2.
-#define BF_AIPS_PACRO_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP2), uint32_t) & BM_AIPS_PACRO_TP2)
+/*! @brief Format value for bitfield AIPS_PACRO_TP2. */
+#define BF_AIPS_PACRO_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP2) & BM_AIPS_PACRO_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRO_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP2[21] (RW)
@@ -11358,24 +9770,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP2    (21U)         //!< Bit position for AIPS_PACRO_WP2.
-#define BM_AIPS_PACRO_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRO_WP2.
-#define BS_AIPS_PACRO_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP2.
+/*@{*/
+#define BP_AIPS_PACRO_WP2    (21U)         /*!< Bit position for AIPS_PACRO_WP2. */
+#define BM_AIPS_PACRO_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRO_WP2. */
+#define BS_AIPS_PACRO_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP2 field.
+/*! @brief Read current value of the AIPS_PACRO_WP2 field. */
 #define BR_AIPS_PACRO_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP2.
-#define BF_AIPS_PACRO_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP2), uint32_t) & BM_AIPS_PACRO_WP2)
+/*! @brief Format value for bitfield AIPS_PACRO_WP2. */
+#define BF_AIPS_PACRO_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP2) & BM_AIPS_PACRO_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRO_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP2[22] (RW)
@@ -11385,24 +9793,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP2    (22U)         //!< Bit position for AIPS_PACRO_SP2.
-#define BM_AIPS_PACRO_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRO_SP2.
-#define BS_AIPS_PACRO_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP2.
+/*@{*/
+#define BP_AIPS_PACRO_SP2    (22U)         /*!< Bit position for AIPS_PACRO_SP2. */
+#define BM_AIPS_PACRO_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRO_SP2. */
+#define BS_AIPS_PACRO_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP2 field.
+/*! @brief Read current value of the AIPS_PACRO_SP2 field. */
 #define BR_AIPS_PACRO_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP2.
-#define BF_AIPS_PACRO_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP2), uint32_t) & BM_AIPS_PACRO_SP2)
+/*! @brief Format value for bitfield AIPS_PACRO_SP2. */
+#define BF_AIPS_PACRO_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP2) & BM_AIPS_PACRO_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRO_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP1[24] (RW)
@@ -11411,24 +9815,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP1    (24U)         //!< Bit position for AIPS_PACRO_TP1.
-#define BM_AIPS_PACRO_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRO_TP1.
-#define BS_AIPS_PACRO_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP1.
+/*@{*/
+#define BP_AIPS_PACRO_TP1    (24U)         /*!< Bit position for AIPS_PACRO_TP1. */
+#define BM_AIPS_PACRO_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRO_TP1. */
+#define BS_AIPS_PACRO_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP1 field.
+/*! @brief Read current value of the AIPS_PACRO_TP1 field. */
 #define BR_AIPS_PACRO_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP1.
-#define BF_AIPS_PACRO_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP1), uint32_t) & BM_AIPS_PACRO_TP1)
+/*! @brief Format value for bitfield AIPS_PACRO_TP1. */
+#define BF_AIPS_PACRO_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP1) & BM_AIPS_PACRO_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRO_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP1[25] (RW)
@@ -11437,24 +9837,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP1    (25U)         //!< Bit position for AIPS_PACRO_WP1.
-#define BM_AIPS_PACRO_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRO_WP1.
-#define BS_AIPS_PACRO_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP1.
+/*@{*/
+#define BP_AIPS_PACRO_WP1    (25U)         /*!< Bit position for AIPS_PACRO_WP1. */
+#define BM_AIPS_PACRO_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRO_WP1. */
+#define BS_AIPS_PACRO_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP1 field.
+/*! @brief Read current value of the AIPS_PACRO_WP1 field. */
 #define BR_AIPS_PACRO_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP1.
-#define BF_AIPS_PACRO_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP1), uint32_t) & BM_AIPS_PACRO_WP1)
+/*! @brief Format value for bitfield AIPS_PACRO_WP1. */
+#define BF_AIPS_PACRO_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP1) & BM_AIPS_PACRO_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRO_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP1[26] (RW)
@@ -11464,24 +9860,20 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP1    (26U)         //!< Bit position for AIPS_PACRO_SP1.
-#define BM_AIPS_PACRO_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRO_SP1.
-#define BS_AIPS_PACRO_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP1.
+/*@{*/
+#define BP_AIPS_PACRO_SP1    (26U)         /*!< Bit position for AIPS_PACRO_SP1. */
+#define BM_AIPS_PACRO_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRO_SP1. */
+#define BS_AIPS_PACRO_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP1 field.
+/*! @brief Read current value of the AIPS_PACRO_SP1 field. */
 #define BR_AIPS_PACRO_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP1.
-#define BF_AIPS_PACRO_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP1), uint32_t) & BM_AIPS_PACRO_SP1)
+/*! @brief Format value for bitfield AIPS_PACRO_SP1. */
+#define BF_AIPS_PACRO_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP1) & BM_AIPS_PACRO_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRO_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field TP0[28] (RW)
@@ -11490,24 +9882,20 @@ typedef union _hw_aips_pacro
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRO_TP0    (28U)         //!< Bit position for AIPS_PACRO_TP0.
-#define BM_AIPS_PACRO_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRO_TP0.
-#define BS_AIPS_PACRO_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRO_TP0.
+/*@{*/
+#define BP_AIPS_PACRO_TP0    (28U)         /*!< Bit position for AIPS_PACRO_TP0. */
+#define BM_AIPS_PACRO_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRO_TP0. */
+#define BS_AIPS_PACRO_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRO_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_TP0 field.
+/*! @brief Read current value of the AIPS_PACRO_TP0 field. */
 #define BR_AIPS_PACRO_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_TP0.
-#define BF_AIPS_PACRO_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_TP0), uint32_t) & BM_AIPS_PACRO_TP0)
+/*! @brief Format value for bitfield AIPS_PACRO_TP0. */
+#define BF_AIPS_PACRO_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_TP0) & BM_AIPS_PACRO_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRO_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field WP0[29] (RW)
@@ -11516,24 +9904,20 @@ typedef union _hw_aips_pacro
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRO_WP0    (29U)         //!< Bit position for AIPS_PACRO_WP0.
-#define BM_AIPS_PACRO_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRO_WP0.
-#define BS_AIPS_PACRO_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRO_WP0.
+/*@{*/
+#define BP_AIPS_PACRO_WP0    (29U)         /*!< Bit position for AIPS_PACRO_WP0. */
+#define BM_AIPS_PACRO_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRO_WP0. */
+#define BS_AIPS_PACRO_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRO_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_WP0 field.
+/*! @brief Read current value of the AIPS_PACRO_WP0 field. */
 #define BR_AIPS_PACRO_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_WP0.
-#define BF_AIPS_PACRO_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_WP0), uint32_t) & BM_AIPS_PACRO_WP0)
+/*! @brief Format value for bitfield AIPS_PACRO_WP0. */
+#define BF_AIPS_PACRO_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_WP0) & BM_AIPS_PACRO_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRO_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRO, field SP0[30] (RW)
@@ -11543,30 +9927,25 @@ typedef union _hw_aips_pacro
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRO_SP0    (30U)         //!< Bit position for AIPS_PACRO_SP0.
-#define BM_AIPS_PACRO_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRO_SP0.
-#define BS_AIPS_PACRO_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRO_SP0.
+/*@{*/
+#define BP_AIPS_PACRO_SP0    (30U)         /*!< Bit position for AIPS_PACRO_SP0. */
+#define BM_AIPS_PACRO_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRO_SP0. */
+#define BS_AIPS_PACRO_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRO_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRO_SP0 field.
+/*! @brief Read current value of the AIPS_PACRO_SP0 field. */
 #define BR_AIPS_PACRO_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRO_SP0.
-#define BF_AIPS_PACRO_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRO_SP0), uint32_t) & BM_AIPS_PACRO_SP0)
+/*! @brief Format value for bitfield AIPS_PACRO_SP0. */
+#define BF_AIPS_PACRO_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRO_SP0) & BM_AIPS_PACRO_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRO_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRO_ADDR(x), BP_AIPS_PACRO_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AIPS_PACRP - Peripheral Access Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AIPS_PACRP - Peripheral Access Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AIPS_PACRP - Peripheral Access Control Register (RW)
  *
@@ -11585,57 +9964,54 @@ typedef union _hw_aips_pacrp
     uint32_t U;
     struct _hw_aips_pacrp_bitfields
     {
-        uint32_t TP7 : 1;              //!< [0] Trusted protect
-        uint32_t WP7 : 1;              //!< [1] Write protect
-        uint32_t SP7 : 1;              //!< [2] Supervisor protect
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t TP6 : 1;              //!< [4] Trusted protect
-        uint32_t WP6 : 1;              //!< [5] Write protect
-        uint32_t SP6 : 1;              //!< [6] Supervisor protect
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TP5 : 1;              //!< [8] Trusted protect
-        uint32_t WP5 : 1;              //!< [9] Write protect
-        uint32_t SP5 : 1;              //!< [10] Supervisor protect
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t TP4 : 1;              //!< [12] Trusted protect
-        uint32_t WP4 : 1;              //!< [13] Write protect
-        uint32_t SP4 : 1;              //!< [14] Supervisor protect
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t TP3 : 1;              //!< [16] Trusted protect
-        uint32_t WP3 : 1;              //!< [17] Write protect
-        uint32_t SP3 : 1;              //!< [18] Supervisor protect
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t TP2 : 1;              //!< [20] Trusted protect
-        uint32_t WP2 : 1;              //!< [21] Write protect
-        uint32_t SP2 : 1;              //!< [22] Supervisor protect
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t TP1 : 1;              //!< [24] Trusted protect
-        uint32_t WP1 : 1;              //!< [25] Write protect
-        uint32_t SP1 : 1;              //!< [26] Supervisor protect
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t TP0 : 1;              //!< [28] Trusted protect
-        uint32_t WP0 : 1;              //!< [29] Write protect
-        uint32_t SP0 : 1;              //!< [30] Supervisor protect
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t TP7 : 1;              /*!< [0] Trusted protect */
+        uint32_t WP7 : 1;              /*!< [1] Write protect */
+        uint32_t SP7 : 1;              /*!< [2] Supervisor protect */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t TP6 : 1;              /*!< [4] Trusted protect */
+        uint32_t WP6 : 1;              /*!< [5] Write protect */
+        uint32_t SP6 : 1;              /*!< [6] Supervisor protect */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TP5 : 1;              /*!< [8] Trusted protect */
+        uint32_t WP5 : 1;              /*!< [9] Write protect */
+        uint32_t SP5 : 1;              /*!< [10] Supervisor protect */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t TP4 : 1;              /*!< [12] Trusted protect */
+        uint32_t WP4 : 1;              /*!< [13] Write protect */
+        uint32_t SP4 : 1;              /*!< [14] Supervisor protect */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t TP3 : 1;              /*!< [16] Trusted protect */
+        uint32_t WP3 : 1;              /*!< [17] Write protect */
+        uint32_t SP3 : 1;              /*!< [18] Supervisor protect */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t TP2 : 1;              /*!< [20] Trusted protect */
+        uint32_t WP2 : 1;              /*!< [21] Write protect */
+        uint32_t SP2 : 1;              /*!< [22] Supervisor protect */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t TP1 : 1;              /*!< [24] Trusted protect */
+        uint32_t WP1 : 1;              /*!< [25] Write protect */
+        uint32_t SP1 : 1;              /*!< [26] Supervisor protect */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t TP0 : 1;              /*!< [28] Trusted protect */
+        uint32_t WP0 : 1;              /*!< [29] Write protect */
+        uint32_t SP0 : 1;              /*!< [30] Supervisor protect */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_aips_pacrp_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AIPS_PACRP register
  */
-//@{
-#define HW_AIPS_PACRP_ADDR(x)    (REGS_AIPS_BASE(x) + 0x6CU)
+/*@{*/
+#define HW_AIPS_PACRP_ADDR(x)    ((x) + 0x6CU)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_AIPS_PACRP(x)         (*(__IO hw_aips_pacrp_t *) HW_AIPS_PACRP_ADDR(x))
 #define HW_AIPS_PACRP_RD(x)      (HW_AIPS_PACRP(x).U)
 #define HW_AIPS_PACRP_WR(x, v)   (HW_AIPS_PACRP(x).U = (v))
 #define HW_AIPS_PACRP_SET(x, v)  (HW_AIPS_PACRP_WR(x, HW_AIPS_PACRP_RD(x) |  (v)))
 #define HW_AIPS_PACRP_CLR(x, v)  (HW_AIPS_PACRP_WR(x, HW_AIPS_PACRP_RD(x) & ~(v)))
 #define HW_AIPS_PACRP_TOG(x, v)  (HW_AIPS_PACRP_WR(x, HW_AIPS_PACRP_RD(x) ^  (v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual AIPS_PACRP bitfields
@@ -11648,24 +10024,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP7    (0U)          //!< Bit position for AIPS_PACRP_TP7.
-#define BM_AIPS_PACRP_TP7    (0x00000001U) //!< Bit mask for AIPS_PACRP_TP7.
-#define BS_AIPS_PACRP_TP7    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP7.
+/*@{*/
+#define BP_AIPS_PACRP_TP7    (0U)          /*!< Bit position for AIPS_PACRP_TP7. */
+#define BM_AIPS_PACRP_TP7    (0x00000001U) /*!< Bit mask for AIPS_PACRP_TP7. */
+#define BS_AIPS_PACRP_TP7    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP7 field.
+/*! @brief Read current value of the AIPS_PACRP_TP7 field. */
 #define BR_AIPS_PACRP_TP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP7.
-#define BF_AIPS_PACRP_TP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP7), uint32_t) & BM_AIPS_PACRP_TP7)
+/*! @brief Format value for bitfield AIPS_PACRP_TP7. */
+#define BF_AIPS_PACRP_TP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP7) & BM_AIPS_PACRP_TP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP7 field to a new value.
+/*! @brief Set the TP7 field to a new value. */
 #define BW_AIPS_PACRP_TP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP7[1] (RW)
@@ -11674,24 +10046,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP7    (1U)          //!< Bit position for AIPS_PACRP_WP7.
-#define BM_AIPS_PACRP_WP7    (0x00000002U) //!< Bit mask for AIPS_PACRP_WP7.
-#define BS_AIPS_PACRP_WP7    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP7.
+/*@{*/
+#define BP_AIPS_PACRP_WP7    (1U)          /*!< Bit position for AIPS_PACRP_WP7. */
+#define BM_AIPS_PACRP_WP7    (0x00000002U) /*!< Bit mask for AIPS_PACRP_WP7. */
+#define BS_AIPS_PACRP_WP7    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP7 field.
+/*! @brief Read current value of the AIPS_PACRP_WP7 field. */
 #define BR_AIPS_PACRP_WP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP7.
-#define BF_AIPS_PACRP_WP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP7), uint32_t) & BM_AIPS_PACRP_WP7)
+/*! @brief Format value for bitfield AIPS_PACRP_WP7. */
+#define BF_AIPS_PACRP_WP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP7) & BM_AIPS_PACRP_WP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP7 field to a new value.
+/*! @brief Set the WP7 field to a new value. */
 #define BW_AIPS_PACRP_WP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP7[2] (RW)
@@ -11701,24 +10069,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP7    (2U)          //!< Bit position for AIPS_PACRP_SP7.
-#define BM_AIPS_PACRP_SP7    (0x00000004U) //!< Bit mask for AIPS_PACRP_SP7.
-#define BS_AIPS_PACRP_SP7    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP7.
+/*@{*/
+#define BP_AIPS_PACRP_SP7    (2U)          /*!< Bit position for AIPS_PACRP_SP7. */
+#define BM_AIPS_PACRP_SP7    (0x00000004U) /*!< Bit mask for AIPS_PACRP_SP7. */
+#define BS_AIPS_PACRP_SP7    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP7 field.
+/*! @brief Read current value of the AIPS_PACRP_SP7 field. */
 #define BR_AIPS_PACRP_SP7(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP7))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP7.
-#define BF_AIPS_PACRP_SP7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP7), uint32_t) & BM_AIPS_PACRP_SP7)
+/*! @brief Format value for bitfield AIPS_PACRP_SP7. */
+#define BF_AIPS_PACRP_SP7(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP7) & BM_AIPS_PACRP_SP7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP7 field to a new value.
+/*! @brief Set the SP7 field to a new value. */
 #define BW_AIPS_PACRP_SP7(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP7) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP6[4] (RW)
@@ -11727,24 +10091,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP6    (4U)          //!< Bit position for AIPS_PACRP_TP6.
-#define BM_AIPS_PACRP_TP6    (0x00000010U) //!< Bit mask for AIPS_PACRP_TP6.
-#define BS_AIPS_PACRP_TP6    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP6.
+/*@{*/
+#define BP_AIPS_PACRP_TP6    (4U)          /*!< Bit position for AIPS_PACRP_TP6. */
+#define BM_AIPS_PACRP_TP6    (0x00000010U) /*!< Bit mask for AIPS_PACRP_TP6. */
+#define BS_AIPS_PACRP_TP6    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP6 field.
+/*! @brief Read current value of the AIPS_PACRP_TP6 field. */
 #define BR_AIPS_PACRP_TP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP6.
-#define BF_AIPS_PACRP_TP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP6), uint32_t) & BM_AIPS_PACRP_TP6)
+/*! @brief Format value for bitfield AIPS_PACRP_TP6. */
+#define BF_AIPS_PACRP_TP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP6) & BM_AIPS_PACRP_TP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP6 field to a new value.
+/*! @brief Set the TP6 field to a new value. */
 #define BW_AIPS_PACRP_TP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP6[5] (RW)
@@ -11753,24 +10113,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP6    (5U)          //!< Bit position for AIPS_PACRP_WP6.
-#define BM_AIPS_PACRP_WP6    (0x00000020U) //!< Bit mask for AIPS_PACRP_WP6.
-#define BS_AIPS_PACRP_WP6    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP6.
+/*@{*/
+#define BP_AIPS_PACRP_WP6    (5U)          /*!< Bit position for AIPS_PACRP_WP6. */
+#define BM_AIPS_PACRP_WP6    (0x00000020U) /*!< Bit mask for AIPS_PACRP_WP6. */
+#define BS_AIPS_PACRP_WP6    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP6 field.
+/*! @brief Read current value of the AIPS_PACRP_WP6 field. */
 #define BR_AIPS_PACRP_WP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP6.
-#define BF_AIPS_PACRP_WP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP6), uint32_t) & BM_AIPS_PACRP_WP6)
+/*! @brief Format value for bitfield AIPS_PACRP_WP6. */
+#define BF_AIPS_PACRP_WP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP6) & BM_AIPS_PACRP_WP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP6 field to a new value.
+/*! @brief Set the WP6 field to a new value. */
 #define BW_AIPS_PACRP_WP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP6[6] (RW)
@@ -11780,24 +10136,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP6    (6U)          //!< Bit position for AIPS_PACRP_SP6.
-#define BM_AIPS_PACRP_SP6    (0x00000040U) //!< Bit mask for AIPS_PACRP_SP6.
-#define BS_AIPS_PACRP_SP6    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP6.
+/*@{*/
+#define BP_AIPS_PACRP_SP6    (6U)          /*!< Bit position for AIPS_PACRP_SP6. */
+#define BM_AIPS_PACRP_SP6    (0x00000040U) /*!< Bit mask for AIPS_PACRP_SP6. */
+#define BS_AIPS_PACRP_SP6    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP6 field.
+/*! @brief Read current value of the AIPS_PACRP_SP6 field. */
 #define BR_AIPS_PACRP_SP6(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP6))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP6.
-#define BF_AIPS_PACRP_SP6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP6), uint32_t) & BM_AIPS_PACRP_SP6)
+/*! @brief Format value for bitfield AIPS_PACRP_SP6. */
+#define BF_AIPS_PACRP_SP6(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP6) & BM_AIPS_PACRP_SP6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP6 field to a new value.
+/*! @brief Set the SP6 field to a new value. */
 #define BW_AIPS_PACRP_SP6(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP6) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP5[8] (RW)
@@ -11806,24 +10158,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP5    (8U)          //!< Bit position for AIPS_PACRP_TP5.
-#define BM_AIPS_PACRP_TP5    (0x00000100U) //!< Bit mask for AIPS_PACRP_TP5.
-#define BS_AIPS_PACRP_TP5    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP5.
+/*@{*/
+#define BP_AIPS_PACRP_TP5    (8U)          /*!< Bit position for AIPS_PACRP_TP5. */
+#define BM_AIPS_PACRP_TP5    (0x00000100U) /*!< Bit mask for AIPS_PACRP_TP5. */
+#define BS_AIPS_PACRP_TP5    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP5 field.
+/*! @brief Read current value of the AIPS_PACRP_TP5 field. */
 #define BR_AIPS_PACRP_TP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP5.
-#define BF_AIPS_PACRP_TP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP5), uint32_t) & BM_AIPS_PACRP_TP5)
+/*! @brief Format value for bitfield AIPS_PACRP_TP5. */
+#define BF_AIPS_PACRP_TP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP5) & BM_AIPS_PACRP_TP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP5 field to a new value.
+/*! @brief Set the TP5 field to a new value. */
 #define BW_AIPS_PACRP_TP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP5[9] (RW)
@@ -11832,24 +10180,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP5    (9U)          //!< Bit position for AIPS_PACRP_WP5.
-#define BM_AIPS_PACRP_WP5    (0x00000200U) //!< Bit mask for AIPS_PACRP_WP5.
-#define BS_AIPS_PACRP_WP5    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP5.
+/*@{*/
+#define BP_AIPS_PACRP_WP5    (9U)          /*!< Bit position for AIPS_PACRP_WP5. */
+#define BM_AIPS_PACRP_WP5    (0x00000200U) /*!< Bit mask for AIPS_PACRP_WP5. */
+#define BS_AIPS_PACRP_WP5    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP5 field.
+/*! @brief Read current value of the AIPS_PACRP_WP5 field. */
 #define BR_AIPS_PACRP_WP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP5.
-#define BF_AIPS_PACRP_WP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP5), uint32_t) & BM_AIPS_PACRP_WP5)
+/*! @brief Format value for bitfield AIPS_PACRP_WP5. */
+#define BF_AIPS_PACRP_WP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP5) & BM_AIPS_PACRP_WP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP5 field to a new value.
+/*! @brief Set the WP5 field to a new value. */
 #define BW_AIPS_PACRP_WP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP5[10] (RW)
@@ -11859,24 +10203,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP5    (10U)         //!< Bit position for AIPS_PACRP_SP5.
-#define BM_AIPS_PACRP_SP5    (0x00000400U) //!< Bit mask for AIPS_PACRP_SP5.
-#define BS_AIPS_PACRP_SP5    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP5.
+/*@{*/
+#define BP_AIPS_PACRP_SP5    (10U)         /*!< Bit position for AIPS_PACRP_SP5. */
+#define BM_AIPS_PACRP_SP5    (0x00000400U) /*!< Bit mask for AIPS_PACRP_SP5. */
+#define BS_AIPS_PACRP_SP5    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP5 field.
+/*! @brief Read current value of the AIPS_PACRP_SP5 field. */
 #define BR_AIPS_PACRP_SP5(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP5))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP5.
-#define BF_AIPS_PACRP_SP5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP5), uint32_t) & BM_AIPS_PACRP_SP5)
+/*! @brief Format value for bitfield AIPS_PACRP_SP5. */
+#define BF_AIPS_PACRP_SP5(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP5) & BM_AIPS_PACRP_SP5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP5 field to a new value.
+/*! @brief Set the SP5 field to a new value. */
 #define BW_AIPS_PACRP_SP5(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP5) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP4[12] (RW)
@@ -11885,24 +10225,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP4    (12U)         //!< Bit position for AIPS_PACRP_TP4.
-#define BM_AIPS_PACRP_TP4    (0x00001000U) //!< Bit mask for AIPS_PACRP_TP4.
-#define BS_AIPS_PACRP_TP4    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP4.
+/*@{*/
+#define BP_AIPS_PACRP_TP4    (12U)         /*!< Bit position for AIPS_PACRP_TP4. */
+#define BM_AIPS_PACRP_TP4    (0x00001000U) /*!< Bit mask for AIPS_PACRP_TP4. */
+#define BS_AIPS_PACRP_TP4    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP4 field.
+/*! @brief Read current value of the AIPS_PACRP_TP4 field. */
 #define BR_AIPS_PACRP_TP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP4.
-#define BF_AIPS_PACRP_TP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP4), uint32_t) & BM_AIPS_PACRP_TP4)
+/*! @brief Format value for bitfield AIPS_PACRP_TP4. */
+#define BF_AIPS_PACRP_TP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP4) & BM_AIPS_PACRP_TP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP4 field to a new value.
+/*! @brief Set the TP4 field to a new value. */
 #define BW_AIPS_PACRP_TP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP4[13] (RW)
@@ -11911,24 +10247,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP4    (13U)         //!< Bit position for AIPS_PACRP_WP4.
-#define BM_AIPS_PACRP_WP4    (0x00002000U) //!< Bit mask for AIPS_PACRP_WP4.
-#define BS_AIPS_PACRP_WP4    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP4.
+/*@{*/
+#define BP_AIPS_PACRP_WP4    (13U)         /*!< Bit position for AIPS_PACRP_WP4. */
+#define BM_AIPS_PACRP_WP4    (0x00002000U) /*!< Bit mask for AIPS_PACRP_WP4. */
+#define BS_AIPS_PACRP_WP4    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP4 field.
+/*! @brief Read current value of the AIPS_PACRP_WP4 field. */
 #define BR_AIPS_PACRP_WP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP4.
-#define BF_AIPS_PACRP_WP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP4), uint32_t) & BM_AIPS_PACRP_WP4)
+/*! @brief Format value for bitfield AIPS_PACRP_WP4. */
+#define BF_AIPS_PACRP_WP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP4) & BM_AIPS_PACRP_WP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP4 field to a new value.
+/*! @brief Set the WP4 field to a new value. */
 #define BW_AIPS_PACRP_WP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP4[14] (RW)
@@ -11938,24 +10270,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP4    (14U)         //!< Bit position for AIPS_PACRP_SP4.
-#define BM_AIPS_PACRP_SP4    (0x00004000U) //!< Bit mask for AIPS_PACRP_SP4.
-#define BS_AIPS_PACRP_SP4    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP4.
+/*@{*/
+#define BP_AIPS_PACRP_SP4    (14U)         /*!< Bit position for AIPS_PACRP_SP4. */
+#define BM_AIPS_PACRP_SP4    (0x00004000U) /*!< Bit mask for AIPS_PACRP_SP4. */
+#define BS_AIPS_PACRP_SP4    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP4 field.
+/*! @brief Read current value of the AIPS_PACRP_SP4 field. */
 #define BR_AIPS_PACRP_SP4(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP4))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP4.
-#define BF_AIPS_PACRP_SP4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP4), uint32_t) & BM_AIPS_PACRP_SP4)
+/*! @brief Format value for bitfield AIPS_PACRP_SP4. */
+#define BF_AIPS_PACRP_SP4(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP4) & BM_AIPS_PACRP_SP4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP4 field to a new value.
+/*! @brief Set the SP4 field to a new value. */
 #define BW_AIPS_PACRP_SP4(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP4) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP3[16] (RW)
@@ -11964,24 +10292,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP3    (16U)         //!< Bit position for AIPS_PACRP_TP3.
-#define BM_AIPS_PACRP_TP3    (0x00010000U) //!< Bit mask for AIPS_PACRP_TP3.
-#define BS_AIPS_PACRP_TP3    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP3.
+/*@{*/
+#define BP_AIPS_PACRP_TP3    (16U)         /*!< Bit position for AIPS_PACRP_TP3. */
+#define BM_AIPS_PACRP_TP3    (0x00010000U) /*!< Bit mask for AIPS_PACRP_TP3. */
+#define BS_AIPS_PACRP_TP3    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP3 field.
+/*! @brief Read current value of the AIPS_PACRP_TP3 field. */
 #define BR_AIPS_PACRP_TP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP3.
-#define BF_AIPS_PACRP_TP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP3), uint32_t) & BM_AIPS_PACRP_TP3)
+/*! @brief Format value for bitfield AIPS_PACRP_TP3. */
+#define BF_AIPS_PACRP_TP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP3) & BM_AIPS_PACRP_TP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP3 field to a new value.
+/*! @brief Set the TP3 field to a new value. */
 #define BW_AIPS_PACRP_TP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP3[17] (RW)
@@ -11990,24 +10314,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP3    (17U)         //!< Bit position for AIPS_PACRP_WP3.
-#define BM_AIPS_PACRP_WP3    (0x00020000U) //!< Bit mask for AIPS_PACRP_WP3.
-#define BS_AIPS_PACRP_WP3    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP3.
+/*@{*/
+#define BP_AIPS_PACRP_WP3    (17U)         /*!< Bit position for AIPS_PACRP_WP3. */
+#define BM_AIPS_PACRP_WP3    (0x00020000U) /*!< Bit mask for AIPS_PACRP_WP3. */
+#define BS_AIPS_PACRP_WP3    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP3 field.
+/*! @brief Read current value of the AIPS_PACRP_WP3 field. */
 #define BR_AIPS_PACRP_WP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP3.
-#define BF_AIPS_PACRP_WP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP3), uint32_t) & BM_AIPS_PACRP_WP3)
+/*! @brief Format value for bitfield AIPS_PACRP_WP3. */
+#define BF_AIPS_PACRP_WP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP3) & BM_AIPS_PACRP_WP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP3 field to a new value.
+/*! @brief Set the WP3 field to a new value. */
 #define BW_AIPS_PACRP_WP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP3[18] (RW)
@@ -12017,24 +10337,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP3    (18U)         //!< Bit position for AIPS_PACRP_SP3.
-#define BM_AIPS_PACRP_SP3    (0x00040000U) //!< Bit mask for AIPS_PACRP_SP3.
-#define BS_AIPS_PACRP_SP3    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP3.
+/*@{*/
+#define BP_AIPS_PACRP_SP3    (18U)         /*!< Bit position for AIPS_PACRP_SP3. */
+#define BM_AIPS_PACRP_SP3    (0x00040000U) /*!< Bit mask for AIPS_PACRP_SP3. */
+#define BS_AIPS_PACRP_SP3    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP3 field.
+/*! @brief Read current value of the AIPS_PACRP_SP3 field. */
 #define BR_AIPS_PACRP_SP3(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP3))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP3.
-#define BF_AIPS_PACRP_SP3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP3), uint32_t) & BM_AIPS_PACRP_SP3)
+/*! @brief Format value for bitfield AIPS_PACRP_SP3. */
+#define BF_AIPS_PACRP_SP3(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP3) & BM_AIPS_PACRP_SP3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP3 field to a new value.
+/*! @brief Set the SP3 field to a new value. */
 #define BW_AIPS_PACRP_SP3(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP3) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP2[20] (RW)
@@ -12043,24 +10359,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP2    (20U)         //!< Bit position for AIPS_PACRP_TP2.
-#define BM_AIPS_PACRP_TP2    (0x00100000U) //!< Bit mask for AIPS_PACRP_TP2.
-#define BS_AIPS_PACRP_TP2    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP2.
+/*@{*/
+#define BP_AIPS_PACRP_TP2    (20U)         /*!< Bit position for AIPS_PACRP_TP2. */
+#define BM_AIPS_PACRP_TP2    (0x00100000U) /*!< Bit mask for AIPS_PACRP_TP2. */
+#define BS_AIPS_PACRP_TP2    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP2 field.
+/*! @brief Read current value of the AIPS_PACRP_TP2 field. */
 #define BR_AIPS_PACRP_TP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP2.
-#define BF_AIPS_PACRP_TP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP2), uint32_t) & BM_AIPS_PACRP_TP2)
+/*! @brief Format value for bitfield AIPS_PACRP_TP2. */
+#define BF_AIPS_PACRP_TP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP2) & BM_AIPS_PACRP_TP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP2 field to a new value.
+/*! @brief Set the TP2 field to a new value. */
 #define BW_AIPS_PACRP_TP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP2[21] (RW)
@@ -12069,24 +10381,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP2    (21U)         //!< Bit position for AIPS_PACRP_WP2.
-#define BM_AIPS_PACRP_WP2    (0x00200000U) //!< Bit mask for AIPS_PACRP_WP2.
-#define BS_AIPS_PACRP_WP2    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP2.
+/*@{*/
+#define BP_AIPS_PACRP_WP2    (21U)         /*!< Bit position for AIPS_PACRP_WP2. */
+#define BM_AIPS_PACRP_WP2    (0x00200000U) /*!< Bit mask for AIPS_PACRP_WP2. */
+#define BS_AIPS_PACRP_WP2    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP2 field.
+/*! @brief Read current value of the AIPS_PACRP_WP2 field. */
 #define BR_AIPS_PACRP_WP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP2.
-#define BF_AIPS_PACRP_WP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP2), uint32_t) & BM_AIPS_PACRP_WP2)
+/*! @brief Format value for bitfield AIPS_PACRP_WP2. */
+#define BF_AIPS_PACRP_WP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP2) & BM_AIPS_PACRP_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
+/*! @brief Set the WP2 field to a new value. */
 #define BW_AIPS_PACRP_WP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP2[22] (RW)
@@ -12096,24 +10404,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP2    (22U)         //!< Bit position for AIPS_PACRP_SP2.
-#define BM_AIPS_PACRP_SP2    (0x00400000U) //!< Bit mask for AIPS_PACRP_SP2.
-#define BS_AIPS_PACRP_SP2    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP2.
+/*@{*/
+#define BP_AIPS_PACRP_SP2    (22U)         /*!< Bit position for AIPS_PACRP_SP2. */
+#define BM_AIPS_PACRP_SP2    (0x00400000U) /*!< Bit mask for AIPS_PACRP_SP2. */
+#define BS_AIPS_PACRP_SP2    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP2 field.
+/*! @brief Read current value of the AIPS_PACRP_SP2 field. */
 #define BR_AIPS_PACRP_SP2(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP2))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP2.
-#define BF_AIPS_PACRP_SP2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP2), uint32_t) & BM_AIPS_PACRP_SP2)
+/*! @brief Format value for bitfield AIPS_PACRP_SP2. */
+#define BF_AIPS_PACRP_SP2(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP2) & BM_AIPS_PACRP_SP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP2 field to a new value.
+/*! @brief Set the SP2 field to a new value. */
 #define BW_AIPS_PACRP_SP2(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP2) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP1[24] (RW)
@@ -12122,24 +10426,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP1    (24U)         //!< Bit position for AIPS_PACRP_TP1.
-#define BM_AIPS_PACRP_TP1    (0x01000000U) //!< Bit mask for AIPS_PACRP_TP1.
-#define BS_AIPS_PACRP_TP1    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP1.
+/*@{*/
+#define BP_AIPS_PACRP_TP1    (24U)         /*!< Bit position for AIPS_PACRP_TP1. */
+#define BM_AIPS_PACRP_TP1    (0x01000000U) /*!< Bit mask for AIPS_PACRP_TP1. */
+#define BS_AIPS_PACRP_TP1    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP1 field.
+/*! @brief Read current value of the AIPS_PACRP_TP1 field. */
 #define BR_AIPS_PACRP_TP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP1.
-#define BF_AIPS_PACRP_TP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP1), uint32_t) & BM_AIPS_PACRP_TP1)
+/*! @brief Format value for bitfield AIPS_PACRP_TP1. */
+#define BF_AIPS_PACRP_TP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP1) & BM_AIPS_PACRP_TP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP1 field to a new value.
+/*! @brief Set the TP1 field to a new value. */
 #define BW_AIPS_PACRP_TP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP1[25] (RW)
@@ -12148,24 +10448,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP1    (25U)         //!< Bit position for AIPS_PACRP_WP1.
-#define BM_AIPS_PACRP_WP1    (0x02000000U) //!< Bit mask for AIPS_PACRP_WP1.
-#define BS_AIPS_PACRP_WP1    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP1.
+/*@{*/
+#define BP_AIPS_PACRP_WP1    (25U)         /*!< Bit position for AIPS_PACRP_WP1. */
+#define BM_AIPS_PACRP_WP1    (0x02000000U) /*!< Bit mask for AIPS_PACRP_WP1. */
+#define BS_AIPS_PACRP_WP1    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP1 field.
+/*! @brief Read current value of the AIPS_PACRP_WP1 field. */
 #define BR_AIPS_PACRP_WP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP1.
-#define BF_AIPS_PACRP_WP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP1), uint32_t) & BM_AIPS_PACRP_WP1)
+/*! @brief Format value for bitfield AIPS_PACRP_WP1. */
+#define BF_AIPS_PACRP_WP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP1) & BM_AIPS_PACRP_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
+/*! @brief Set the WP1 field to a new value. */
 #define BW_AIPS_PACRP_WP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP1[26] (RW)
@@ -12175,24 +10471,20 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP1    (26U)         //!< Bit position for AIPS_PACRP_SP1.
-#define BM_AIPS_PACRP_SP1    (0x04000000U) //!< Bit mask for AIPS_PACRP_SP1.
-#define BS_AIPS_PACRP_SP1    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP1.
+/*@{*/
+#define BP_AIPS_PACRP_SP1    (26U)         /*!< Bit position for AIPS_PACRP_SP1. */
+#define BM_AIPS_PACRP_SP1    (0x04000000U) /*!< Bit mask for AIPS_PACRP_SP1. */
+#define BS_AIPS_PACRP_SP1    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP1 field.
+/*! @brief Read current value of the AIPS_PACRP_SP1 field. */
 #define BR_AIPS_PACRP_SP1(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP1))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP1.
-#define BF_AIPS_PACRP_SP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP1), uint32_t) & BM_AIPS_PACRP_SP1)
+/*! @brief Format value for bitfield AIPS_PACRP_SP1. */
+#define BF_AIPS_PACRP_SP1(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP1) & BM_AIPS_PACRP_SP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP1 field to a new value.
+/*! @brief Set the SP1 field to a new value. */
 #define BW_AIPS_PACRP_SP1(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP1) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field TP0[28] (RW)
@@ -12201,24 +10493,20 @@ typedef union _hw_aips_pacrp
  * - 0 - Accesses from an untrusted master are allowed.
  * - 1 - Accesses from an untrusted master are not allowed.
  */
-//@{
-#define BP_AIPS_PACRP_TP0    (28U)         //!< Bit position for AIPS_PACRP_TP0.
-#define BM_AIPS_PACRP_TP0    (0x10000000U) //!< Bit mask for AIPS_PACRP_TP0.
-#define BS_AIPS_PACRP_TP0    (1U)          //!< Bit field size in bits for AIPS_PACRP_TP0.
+/*@{*/
+#define BP_AIPS_PACRP_TP0    (28U)         /*!< Bit position for AIPS_PACRP_TP0. */
+#define BM_AIPS_PACRP_TP0    (0x10000000U) /*!< Bit mask for AIPS_PACRP_TP0. */
+#define BS_AIPS_PACRP_TP0    (1U)          /*!< Bit field size in bits for AIPS_PACRP_TP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_TP0 field.
+/*! @brief Read current value of the AIPS_PACRP_TP0 field. */
 #define BR_AIPS_PACRP_TP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_TP0.
-#define BF_AIPS_PACRP_TP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_TP0), uint32_t) & BM_AIPS_PACRP_TP0)
+/*! @brief Format value for bitfield AIPS_PACRP_TP0. */
+#define BF_AIPS_PACRP_TP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_TP0) & BM_AIPS_PACRP_TP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TP0 field to a new value.
+/*! @brief Set the TP0 field to a new value. */
 #define BW_AIPS_PACRP_TP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_TP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field WP0[29] (RW)
@@ -12227,24 +10515,20 @@ typedef union _hw_aips_pacrp
  * - 0 - This peripheral allows write accesses.
  * - 1 - This peripheral is write protected.
  */
-//@{
-#define BP_AIPS_PACRP_WP0    (29U)         //!< Bit position for AIPS_PACRP_WP0.
-#define BM_AIPS_PACRP_WP0    (0x20000000U) //!< Bit mask for AIPS_PACRP_WP0.
-#define BS_AIPS_PACRP_WP0    (1U)          //!< Bit field size in bits for AIPS_PACRP_WP0.
+/*@{*/
+#define BP_AIPS_PACRP_WP0    (29U)         /*!< Bit position for AIPS_PACRP_WP0. */
+#define BM_AIPS_PACRP_WP0    (0x20000000U) /*!< Bit mask for AIPS_PACRP_WP0. */
+#define BS_AIPS_PACRP_WP0    (1U)          /*!< Bit field size in bits for AIPS_PACRP_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_WP0 field.
+/*! @brief Read current value of the AIPS_PACRP_WP0 field. */
 #define BR_AIPS_PACRP_WP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_WP0.
-#define BF_AIPS_PACRP_WP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_WP0), uint32_t) & BM_AIPS_PACRP_WP0)
+/*! @brief Format value for bitfield AIPS_PACRP_WP0. */
+#define BF_AIPS_PACRP_WP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_WP0) & BM_AIPS_PACRP_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
+/*! @brief Set the WP0 field to a new value. */
 #define BW_AIPS_PACRP_WP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_WP0) = (v))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register AIPS_PACRP, field SP0[30] (RW)
@@ -12254,64 +10538,58 @@ typedef union _hw_aips_pacrp
  *     accesses.
  * - 1 - This peripheral requires supervisor privilege level for accesses.
  */
-//@{
-#define BP_AIPS_PACRP_SP0    (30U)         //!< Bit position for AIPS_PACRP_SP0.
-#define BM_AIPS_PACRP_SP0    (0x40000000U) //!< Bit mask for AIPS_PACRP_SP0.
-#define BS_AIPS_PACRP_SP0    (1U)          //!< Bit field size in bits for AIPS_PACRP_SP0.
+/*@{*/
+#define BP_AIPS_PACRP_SP0    (30U)         /*!< Bit position for AIPS_PACRP_SP0. */
+#define BM_AIPS_PACRP_SP0    (0x40000000U) /*!< Bit mask for AIPS_PACRP_SP0. */
+#define BS_AIPS_PACRP_SP0    (1U)          /*!< Bit field size in bits for AIPS_PACRP_SP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AIPS_PACRP_SP0 field.
+/*! @brief Read current value of the AIPS_PACRP_SP0 field. */
 #define BR_AIPS_PACRP_SP0(x) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP0))
-#endif
 
-//! @brief Format value for bitfield AIPS_PACRP_SP0.
-#define BF_AIPS_PACRP_SP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AIPS_PACRP_SP0), uint32_t) & BM_AIPS_PACRP_SP0)
+/*! @brief Format value for bitfield AIPS_PACRP_SP0. */
+#define BF_AIPS_PACRP_SP0(v) ((uint32_t)((uint32_t)(v) << BP_AIPS_PACRP_SP0) & BM_AIPS_PACRP_SP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SP0 field to a new value.
+/*! @brief Set the SP0 field to a new value. */
 #define BW_AIPS_PACRP_SP0(x, v) (BITBAND_ACCESS32(HW_AIPS_PACRP_ADDR(x), BP_AIPS_PACRP_SP0) = (v))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_aips_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_aips_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All AIPS module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_aips
 {
-    __IO hw_aips_mpra_t MPRA;              //!< [0x0] Master Privilege Register A
+    __IO hw_aips_mpra_t MPRA;              /*!< [0x0] Master Privilege Register A */
     uint8_t _reserved0[28];
-    __IO hw_aips_pacra_t PACRA;            //!< [0x20] Peripheral Access Control Register
-    __IO hw_aips_pacrb_t PACRB;            //!< [0x24] Peripheral Access Control Register
-    __IO hw_aips_pacrc_t PACRC;            //!< [0x28] Peripheral Access Control Register
-    __IO hw_aips_pacrd_t PACRD;            //!< [0x2C] Peripheral Access Control Register
+    __IO hw_aips_pacra_t PACRA;            /*!< [0x20] Peripheral Access Control Register */
+    __IO hw_aips_pacrb_t PACRB;            /*!< [0x24] Peripheral Access Control Register */
+    __IO hw_aips_pacrc_t PACRC;            /*!< [0x28] Peripheral Access Control Register */
+    __IO hw_aips_pacrd_t PACRD;            /*!< [0x2C] Peripheral Access Control Register */
     uint8_t _reserved1[16];
-    __IO hw_aips_pacre_t PACRE;            //!< [0x40] Peripheral Access Control Register
-    __IO hw_aips_pacrf_t PACRF;            //!< [0x44] Peripheral Access Control Register
-    __IO hw_aips_pacrg_t PACRG;            //!< [0x48] Peripheral Access Control Register
-    __IO hw_aips_pacrh_t PACRH;            //!< [0x4C] Peripheral Access Control Register
-    __IO hw_aips_pacri_t PACRI;            //!< [0x50] Peripheral Access Control Register
-    __IO hw_aips_pacrj_t PACRJ;            //!< [0x54] Peripheral Access Control Register
-    __IO hw_aips_pacrk_t PACRK;            //!< [0x58] Peripheral Access Control Register
-    __IO hw_aips_pacrl_t PACRL;            //!< [0x5C] Peripheral Access Control Register
-    __IO hw_aips_pacrm_t PACRM;            //!< [0x60] Peripheral Access Control Register
-    __IO hw_aips_pacrn_t PACRN;            //!< [0x64] Peripheral Access Control Register
-    __IO hw_aips_pacro_t PACRO;            //!< [0x68] Peripheral Access Control Register
-    __IO hw_aips_pacrp_t PACRP;            //!< [0x6C] Peripheral Access Control Register
+    __IO hw_aips_pacre_t PACRE;            /*!< [0x40] Peripheral Access Control Register */
+    __IO hw_aips_pacrf_t PACRF;            /*!< [0x44] Peripheral Access Control Register */
+    __IO hw_aips_pacrg_t PACRG;            /*!< [0x48] Peripheral Access Control Register */
+    __IO hw_aips_pacrh_t PACRH;            /*!< [0x4C] Peripheral Access Control Register */
+    __IO hw_aips_pacri_t PACRI;            /*!< [0x50] Peripheral Access Control Register */
+    __IO hw_aips_pacrj_t PACRJ;            /*!< [0x54] Peripheral Access Control Register */
+    __IO hw_aips_pacrk_t PACRK;            /*!< [0x58] Peripheral Access Control Register */
+    __IO hw_aips_pacrl_t PACRL;            /*!< [0x5C] Peripheral Access Control Register */
+    __IO hw_aips_pacrm_t PACRM;            /*!< [0x60] Peripheral Access Control Register */
+    __IO hw_aips_pacrn_t PACRN;            /*!< [0x64] Peripheral Access Control Register */
+    __IO hw_aips_pacro_t PACRO;            /*!< [0x68] Peripheral Access Control Register */
+    __IO hw_aips_pacrp_t PACRP;            /*!< [0x6C] Peripheral Access Control Register */
 } hw_aips_t;
 #pragma pack()
 
-//! @brief Macro to access all AIPS registers.
-//! @param x AIPS instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_AIPS(0)</code>.
-#define HW_AIPS(x)     (*(hw_aips_t *) REGS_AIPS_BASE(x))
-#endif
+/*! @brief Macro to access all AIPS registers. */
+/*! @param x AIPS module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_AIPS(AIPS0_BASE)</code>. */
+#define HW_AIPS(x)     (*(hw_aips_t *)(x))
 
-#endif // __HW_AIPS_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_AIPS_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

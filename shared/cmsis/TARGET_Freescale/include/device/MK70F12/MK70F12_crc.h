@@ -21,7 +21,8 @@
 #ifndef __HW_CRC_REGISTERS_H__
 #define __HW_CRC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 CRC
@@ -49,19 +50,12 @@
  * - hw_crc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_CRC_BASE
-#define HW_CRC_INSTANCE_COUNT (1U) //!< Number of instances of the CRC module.
-#define REGS_CRC_BASE (0x40032000U) //!< Base address for CRC.
-#endif
-//@}
+#define HW_CRC_INSTANCE_COUNT (1U) /*!< Number of instances of the CRC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCL - CRC_CRCL register.
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CRC_CRCL - CRC_CRCL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCL - CRC_CRCL register. (RW)
  *
@@ -72,27 +66,24 @@ typedef union _hw_crc_crcl
     uint16_t U;
     struct _hw_crc_crcl_bitfields
     {
-        uint16_t CRCL : 16;            //!< [15:0] CRCL stores the lower 16 bits of the
-                                       //! 16/32 bit CRC
+        uint16_t CRCL : 16;            /*!< [15:0] CRCL stores the lower 16 bits of the
+                                        * 16/32 bit CRC */
     } B;
 } hw_crc_crcl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCL register
  */
-//@{
-#define HW_CRC_CRCL_ADDR         (REGS_CRC_BASE + 0x0U)
+/*@{*/
+#define HW_CRC_CRCL_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCL              (*(__IO hw_crc_crcl_t *) HW_CRC_CRCL_ADDR)
-#define HW_CRC_CRCL_RD()         (HW_CRC_CRCL.U)
-#define HW_CRC_CRCL_WR(v)        (HW_CRC_CRCL.U = (v))
-#define HW_CRC_CRCL_SET(v)       (HW_CRC_CRCL_WR(HW_CRC_CRCL_RD() |  (v)))
-#define HW_CRC_CRCL_CLR(v)       (HW_CRC_CRCL_WR(HW_CRC_CRCL_RD() & ~(v)))
-#define HW_CRC_CRCL_TOG(v)       (HW_CRC_CRCL_WR(HW_CRC_CRCL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCL(x)           (*(__IO hw_crc_crcl_t *) HW_CRC_CRCL_ADDR(x))
+#define HW_CRC_CRCL_RD(x)        (HW_CRC_CRCL(x).U)
+#define HW_CRC_CRCL_WR(x, v)     (HW_CRC_CRCL(x).U = (v))
+#define HW_CRC_CRCL_SET(x, v)    (HW_CRC_CRCL_WR(x, HW_CRC_CRCL_RD(x) |  (v)))
+#define HW_CRC_CRCL_CLR(x, v)    (HW_CRC_CRCL_WR(x, HW_CRC_CRCL_RD(x) & ~(v)))
+#define HW_CRC_CRCL_TOG(x, v)    (HW_CRC_CRCL_WR(x, HW_CRC_CRCL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCL bitfields
@@ -101,29 +92,24 @@ typedef union _hw_crc_crcl
 /*!
  * @name Register CRC_CRCL, field CRCL[15:0] (RW)
  */
-//@{
-#define BP_CRC_CRCL_CRCL     (0U)          //!< Bit position for CRC_CRCL_CRCL.
-#define BM_CRC_CRCL_CRCL     (0xFFFFU)     //!< Bit mask for CRC_CRCL_CRCL.
-#define BS_CRC_CRCL_CRCL     (16U)         //!< Bit field size in bits for CRC_CRCL_CRCL.
+/*@{*/
+#define BP_CRC_CRCL_CRCL     (0U)          /*!< Bit position for CRC_CRCL_CRCL. */
+#define BM_CRC_CRCL_CRCL     (0xFFFFU)     /*!< Bit mask for CRC_CRCL_CRCL. */
+#define BS_CRC_CRCL_CRCL     (16U)         /*!< Bit field size in bits for CRC_CRCL_CRCL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCL_CRCL field.
-#define BR_CRC_CRCL_CRCL     (HW_CRC_CRCL.B.CRCL)
-#endif
+/*! @brief Read current value of the CRC_CRCL_CRCL field. */
+#define BR_CRC_CRCL_CRCL(x)  (HW_CRC_CRCL(x).U)
 
-//! @brief Format value for bitfield CRC_CRCL_CRCL.
-#define BF_CRC_CRCL_CRCL(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint16_t) << BP_CRC_CRCL_CRCL), uint16_t) & BM_CRC_CRCL_CRCL)
+/*! @brief Format value for bitfield CRC_CRCL_CRCL. */
+#define BF_CRC_CRCL_CRCL(v)  ((uint16_t)((uint16_t)(v) << BP_CRC_CRCL_CRCL) & BM_CRC_CRCL_CRCL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCL field to a new value.
-#define BW_CRC_CRCL_CRCL(v)  (HW_CRC_CRCL_WR((HW_CRC_CRCL_RD() & ~BM_CRC_CRCL_CRCL) | BF_CRC_CRCL_CRCL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCH - CRC_CRCH register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCL field to a new value. */
+#define BW_CRC_CRCL_CRCL(x, v) (HW_CRC_CRCL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRCH - CRC_CRCH register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCH - CRC_CRCH register. (RW)
  *
@@ -134,27 +120,24 @@ typedef union _hw_crc_crch
     uint16_t U;
     struct _hw_crc_crch_bitfields
     {
-        uint16_t CRCH : 16;            //!< [15:0] CRCH stores the high 16 bits of the
-                                       //! 16/32 bit CRC
+        uint16_t CRCH : 16;            /*!< [15:0] CRCH stores the high 16 bits of the
+                                        * 16/32 bit CRC */
     } B;
 } hw_crc_crch_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCH register
  */
-//@{
-#define HW_CRC_CRCH_ADDR         (REGS_CRC_BASE + 0x2U)
+/*@{*/
+#define HW_CRC_CRCH_ADDR(x)      ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCH              (*(__IO hw_crc_crch_t *) HW_CRC_CRCH_ADDR)
-#define HW_CRC_CRCH_RD()         (HW_CRC_CRCH.U)
-#define HW_CRC_CRCH_WR(v)        (HW_CRC_CRCH.U = (v))
-#define HW_CRC_CRCH_SET(v)       (HW_CRC_CRCH_WR(HW_CRC_CRCH_RD() |  (v)))
-#define HW_CRC_CRCH_CLR(v)       (HW_CRC_CRCH_WR(HW_CRC_CRCH_RD() & ~(v)))
-#define HW_CRC_CRCH_TOG(v)       (HW_CRC_CRCH_WR(HW_CRC_CRCH_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCH(x)           (*(__IO hw_crc_crch_t *) HW_CRC_CRCH_ADDR(x))
+#define HW_CRC_CRCH_RD(x)        (HW_CRC_CRCH(x).U)
+#define HW_CRC_CRCH_WR(x, v)     (HW_CRC_CRCH(x).U = (v))
+#define HW_CRC_CRCH_SET(x, v)    (HW_CRC_CRCH_WR(x, HW_CRC_CRCH_RD(x) |  (v)))
+#define HW_CRC_CRCH_CLR(x, v)    (HW_CRC_CRCH_WR(x, HW_CRC_CRCH_RD(x) & ~(v)))
+#define HW_CRC_CRCH_TOG(x, v)    (HW_CRC_CRCH_WR(x, HW_CRC_CRCH_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCH bitfields
@@ -163,29 +146,24 @@ typedef union _hw_crc_crch
 /*!
  * @name Register CRC_CRCH, field CRCH[15:0] (RW)
  */
-//@{
-#define BP_CRC_CRCH_CRCH     (0U)          //!< Bit position for CRC_CRCH_CRCH.
-#define BM_CRC_CRCH_CRCH     (0xFFFFU)     //!< Bit mask for CRC_CRCH_CRCH.
-#define BS_CRC_CRCH_CRCH     (16U)         //!< Bit field size in bits for CRC_CRCH_CRCH.
+/*@{*/
+#define BP_CRC_CRCH_CRCH     (0U)          /*!< Bit position for CRC_CRCH_CRCH. */
+#define BM_CRC_CRCH_CRCH     (0xFFFFU)     /*!< Bit mask for CRC_CRCH_CRCH. */
+#define BS_CRC_CRCH_CRCH     (16U)         /*!< Bit field size in bits for CRC_CRCH_CRCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCH_CRCH field.
-#define BR_CRC_CRCH_CRCH     (HW_CRC_CRCH.B.CRCH)
-#endif
+/*! @brief Read current value of the CRC_CRCH_CRCH field. */
+#define BR_CRC_CRCH_CRCH(x)  (HW_CRC_CRCH(x).U)
 
-//! @brief Format value for bitfield CRC_CRCH_CRCH.
-#define BF_CRC_CRCH_CRCH(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint16_t) << BP_CRC_CRCH_CRCH), uint16_t) & BM_CRC_CRCH_CRCH)
+/*! @brief Format value for bitfield CRC_CRCH_CRCH. */
+#define BF_CRC_CRCH_CRCH(v)  ((uint16_t)((uint16_t)(v) << BP_CRC_CRCH_CRCH) & BM_CRC_CRCH_CRCH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCH field to a new value.
-#define BW_CRC_CRCH_CRCH(v)  (HW_CRC_CRCH_WR((HW_CRC_CRCH_RD() & ~BM_CRC_CRCH_CRCH) | BF_CRC_CRCH_CRCH(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCLL - CRC_CRCLL register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCH field to a new value. */
+#define BW_CRC_CRCH_CRCH(x, v) (HW_CRC_CRCH_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRCLL - CRC_CRCLL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCLL - CRC_CRCLL register. (RW)
  *
@@ -196,27 +174,24 @@ typedef union _hw_crc_crcll
     uint8_t U;
     struct _hw_crc_crcll_bitfields
     {
-        uint8_t CRCLL : 8;             //!< [7:0] CRCLL stores the first 8 bits of the 32
-                                       //! bit CRC
+        uint8_t CRCLL : 8;             /*!< [7:0] CRCLL stores the first 8 bits of the 32
+                                        * bit CRC */
     } B;
 } hw_crc_crcll_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCLL register
  */
-//@{
-#define HW_CRC_CRCLL_ADDR        (REGS_CRC_BASE + 0x0U)
+/*@{*/
+#define HW_CRC_CRCLL_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCLL             (*(__IO hw_crc_crcll_t *) HW_CRC_CRCLL_ADDR)
-#define HW_CRC_CRCLL_RD()        (HW_CRC_CRCLL.U)
-#define HW_CRC_CRCLL_WR(v)       (HW_CRC_CRCLL.U = (v))
-#define HW_CRC_CRCLL_SET(v)      (HW_CRC_CRCLL_WR(HW_CRC_CRCLL_RD() |  (v)))
-#define HW_CRC_CRCLL_CLR(v)      (HW_CRC_CRCLL_WR(HW_CRC_CRCLL_RD() & ~(v)))
-#define HW_CRC_CRCLL_TOG(v)      (HW_CRC_CRCLL_WR(HW_CRC_CRCLL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCLL(x)          (*(__IO hw_crc_crcll_t *) HW_CRC_CRCLL_ADDR(x))
+#define HW_CRC_CRCLL_RD(x)       (HW_CRC_CRCLL(x).U)
+#define HW_CRC_CRCLL_WR(x, v)    (HW_CRC_CRCLL(x).U = (v))
+#define HW_CRC_CRCLL_SET(x, v)   (HW_CRC_CRCLL_WR(x, HW_CRC_CRCLL_RD(x) |  (v)))
+#define HW_CRC_CRCLL_CLR(x, v)   (HW_CRC_CRCLL_WR(x, HW_CRC_CRCLL_RD(x) & ~(v)))
+#define HW_CRC_CRCLL_TOG(x, v)   (HW_CRC_CRCLL_WR(x, HW_CRC_CRCLL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCLL bitfields
@@ -225,29 +200,24 @@ typedef union _hw_crc_crcll
 /*!
  * @name Register CRC_CRCLL, field CRCLL[7:0] (RW)
  */
-//@{
-#define BP_CRC_CRCLL_CRCLL   (0U)          //!< Bit position for CRC_CRCLL_CRCLL.
-#define BM_CRC_CRCLL_CRCLL   (0xFFU)       //!< Bit mask for CRC_CRCLL_CRCLL.
-#define BS_CRC_CRCLL_CRCLL   (8U)          //!< Bit field size in bits for CRC_CRCLL_CRCLL.
+/*@{*/
+#define BP_CRC_CRCLL_CRCLL   (0U)          /*!< Bit position for CRC_CRCLL_CRCLL. */
+#define BM_CRC_CRCLL_CRCLL   (0xFFU)       /*!< Bit mask for CRC_CRCLL_CRCLL. */
+#define BS_CRC_CRCLL_CRCLL   (8U)          /*!< Bit field size in bits for CRC_CRCLL_CRCLL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCLL_CRCLL field.
-#define BR_CRC_CRCLL_CRCLL   (HW_CRC_CRCLL.B.CRCLL)
-#endif
+/*! @brief Read current value of the CRC_CRCLL_CRCLL field. */
+#define BR_CRC_CRCLL_CRCLL(x) (HW_CRC_CRCLL(x).U)
 
-//! @brief Format value for bitfield CRC_CRCLL_CRCLL.
-#define BF_CRC_CRCLL_CRCLL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CRCLL_CRCLL), uint8_t) & BM_CRC_CRCLL_CRCLL)
+/*! @brief Format value for bitfield CRC_CRCLL_CRCLL. */
+#define BF_CRC_CRCLL_CRCLL(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CRCLL_CRCLL) & BM_CRC_CRCLL_CRCLL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCLL field to a new value.
-#define BW_CRC_CRCLL_CRCLL(v) (HW_CRC_CRCLL_WR((HW_CRC_CRCLL_RD() & ~BM_CRC_CRCLL_CRCLL) | BF_CRC_CRCLL_CRCLL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCLU - CRC_CRCLU register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCLL field to a new value. */
+#define BW_CRC_CRCLL_CRCLL(x, v) (HW_CRC_CRCLL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRCLU - CRC_CRCLU register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCLU - CRC_CRCLU register. (RW)
  *
@@ -258,27 +228,24 @@ typedef union _hw_crc_crclu
     uint8_t U;
     struct _hw_crc_crclu_bitfields
     {
-        uint8_t CRCLU : 8;             //!< [7:0] CRCLL stores the second 8 bits of the
-                                       //! 32 bit CRC
+        uint8_t CRCLU : 8;             /*!< [7:0] CRCLL stores the second 8 bits of the
+                                        * 32 bit CRC */
     } B;
 } hw_crc_crclu_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCLU register
  */
-//@{
-#define HW_CRC_CRCLU_ADDR        (REGS_CRC_BASE + 0x1U)
+/*@{*/
+#define HW_CRC_CRCLU_ADDR(x)     ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCLU             (*(__IO hw_crc_crclu_t *) HW_CRC_CRCLU_ADDR)
-#define HW_CRC_CRCLU_RD()        (HW_CRC_CRCLU.U)
-#define HW_CRC_CRCLU_WR(v)       (HW_CRC_CRCLU.U = (v))
-#define HW_CRC_CRCLU_SET(v)      (HW_CRC_CRCLU_WR(HW_CRC_CRCLU_RD() |  (v)))
-#define HW_CRC_CRCLU_CLR(v)      (HW_CRC_CRCLU_WR(HW_CRC_CRCLU_RD() & ~(v)))
-#define HW_CRC_CRCLU_TOG(v)      (HW_CRC_CRCLU_WR(HW_CRC_CRCLU_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCLU(x)          (*(__IO hw_crc_crclu_t *) HW_CRC_CRCLU_ADDR(x))
+#define HW_CRC_CRCLU_RD(x)       (HW_CRC_CRCLU(x).U)
+#define HW_CRC_CRCLU_WR(x, v)    (HW_CRC_CRCLU(x).U = (v))
+#define HW_CRC_CRCLU_SET(x, v)   (HW_CRC_CRCLU_WR(x, HW_CRC_CRCLU_RD(x) |  (v)))
+#define HW_CRC_CRCLU_CLR(x, v)   (HW_CRC_CRCLU_WR(x, HW_CRC_CRCLU_RD(x) & ~(v)))
+#define HW_CRC_CRCLU_TOG(x, v)   (HW_CRC_CRCLU_WR(x, HW_CRC_CRCLU_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCLU bitfields
@@ -287,29 +254,24 @@ typedef union _hw_crc_crclu
 /*!
  * @name Register CRC_CRCLU, field CRCLU[7:0] (RW)
  */
-//@{
-#define BP_CRC_CRCLU_CRCLU   (0U)          //!< Bit position for CRC_CRCLU_CRCLU.
-#define BM_CRC_CRCLU_CRCLU   (0xFFU)       //!< Bit mask for CRC_CRCLU_CRCLU.
-#define BS_CRC_CRCLU_CRCLU   (8U)          //!< Bit field size in bits for CRC_CRCLU_CRCLU.
+/*@{*/
+#define BP_CRC_CRCLU_CRCLU   (0U)          /*!< Bit position for CRC_CRCLU_CRCLU. */
+#define BM_CRC_CRCLU_CRCLU   (0xFFU)       /*!< Bit mask for CRC_CRCLU_CRCLU. */
+#define BS_CRC_CRCLU_CRCLU   (8U)          /*!< Bit field size in bits for CRC_CRCLU_CRCLU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCLU_CRCLU field.
-#define BR_CRC_CRCLU_CRCLU   (HW_CRC_CRCLU.B.CRCLU)
-#endif
+/*! @brief Read current value of the CRC_CRCLU_CRCLU field. */
+#define BR_CRC_CRCLU_CRCLU(x) (HW_CRC_CRCLU(x).U)
 
-//! @brief Format value for bitfield CRC_CRCLU_CRCLU.
-#define BF_CRC_CRCLU_CRCLU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CRCLU_CRCLU), uint8_t) & BM_CRC_CRCLU_CRCLU)
+/*! @brief Format value for bitfield CRC_CRCLU_CRCLU. */
+#define BF_CRC_CRCLU_CRCLU(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CRCLU_CRCLU) & BM_CRC_CRCLU_CRCLU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCLU field to a new value.
-#define BW_CRC_CRCLU_CRCLU(v) (HW_CRC_CRCLU_WR((HW_CRC_CRCLU_RD() & ~BM_CRC_CRCLU_CRCLU) | BF_CRC_CRCLU_CRCLU(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCHL - CRC_CRCHL register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCLU field to a new value. */
+#define BW_CRC_CRCLU_CRCLU(x, v) (HW_CRC_CRCLU_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRCHL - CRC_CRCHL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCHL - CRC_CRCHL register. (RW)
  *
@@ -320,27 +282,24 @@ typedef union _hw_crc_crchl
     uint8_t U;
     struct _hw_crc_crchl_bitfields
     {
-        uint8_t CRCHL : 8;             //!< [7:0] CRCHL stores the third 8 bits of the 32
-                                       //! bit CRC
+        uint8_t CRCHL : 8;             /*!< [7:0] CRCHL stores the third 8 bits of the 32
+                                        * bit CRC */
     } B;
 } hw_crc_crchl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCHL register
  */
-//@{
-#define HW_CRC_CRCHL_ADDR        (REGS_CRC_BASE + 0x2U)
+/*@{*/
+#define HW_CRC_CRCHL_ADDR(x)     ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCHL             (*(__IO hw_crc_crchl_t *) HW_CRC_CRCHL_ADDR)
-#define HW_CRC_CRCHL_RD()        (HW_CRC_CRCHL.U)
-#define HW_CRC_CRCHL_WR(v)       (HW_CRC_CRCHL.U = (v))
-#define HW_CRC_CRCHL_SET(v)      (HW_CRC_CRCHL_WR(HW_CRC_CRCHL_RD() |  (v)))
-#define HW_CRC_CRCHL_CLR(v)      (HW_CRC_CRCHL_WR(HW_CRC_CRCHL_RD() & ~(v)))
-#define HW_CRC_CRCHL_TOG(v)      (HW_CRC_CRCHL_WR(HW_CRC_CRCHL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCHL(x)          (*(__IO hw_crc_crchl_t *) HW_CRC_CRCHL_ADDR(x))
+#define HW_CRC_CRCHL_RD(x)       (HW_CRC_CRCHL(x).U)
+#define HW_CRC_CRCHL_WR(x, v)    (HW_CRC_CRCHL(x).U = (v))
+#define HW_CRC_CRCHL_SET(x, v)   (HW_CRC_CRCHL_WR(x, HW_CRC_CRCHL_RD(x) |  (v)))
+#define HW_CRC_CRCHL_CLR(x, v)   (HW_CRC_CRCHL_WR(x, HW_CRC_CRCHL_RD(x) & ~(v)))
+#define HW_CRC_CRCHL_TOG(x, v)   (HW_CRC_CRCHL_WR(x, HW_CRC_CRCHL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCHL bitfields
@@ -349,29 +308,24 @@ typedef union _hw_crc_crchl
 /*!
  * @name Register CRC_CRCHL, field CRCHL[7:0] (RW)
  */
-//@{
-#define BP_CRC_CRCHL_CRCHL   (0U)          //!< Bit position for CRC_CRCHL_CRCHL.
-#define BM_CRC_CRCHL_CRCHL   (0xFFU)       //!< Bit mask for CRC_CRCHL_CRCHL.
-#define BS_CRC_CRCHL_CRCHL   (8U)          //!< Bit field size in bits for CRC_CRCHL_CRCHL.
+/*@{*/
+#define BP_CRC_CRCHL_CRCHL   (0U)          /*!< Bit position for CRC_CRCHL_CRCHL. */
+#define BM_CRC_CRCHL_CRCHL   (0xFFU)       /*!< Bit mask for CRC_CRCHL_CRCHL. */
+#define BS_CRC_CRCHL_CRCHL   (8U)          /*!< Bit field size in bits for CRC_CRCHL_CRCHL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCHL_CRCHL field.
-#define BR_CRC_CRCHL_CRCHL   (HW_CRC_CRCHL.B.CRCHL)
-#endif
+/*! @brief Read current value of the CRC_CRCHL_CRCHL field. */
+#define BR_CRC_CRCHL_CRCHL(x) (HW_CRC_CRCHL(x).U)
 
-//! @brief Format value for bitfield CRC_CRCHL_CRCHL.
-#define BF_CRC_CRCHL_CRCHL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CRCHL_CRCHL), uint8_t) & BM_CRC_CRCHL_CRCHL)
+/*! @brief Format value for bitfield CRC_CRCHL_CRCHL. */
+#define BF_CRC_CRCHL_CRCHL(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CRCHL_CRCHL) & BM_CRC_CRCHL_CRCHL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCHL field to a new value.
-#define BW_CRC_CRCHL_CRCHL(v) (HW_CRC_CRCHL_WR((HW_CRC_CRCHL_RD() & ~BM_CRC_CRCHL_CRCHL) | BF_CRC_CRCHL_CRCHL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRCHU - CRC_CRCHU register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCHL field to a new value. */
+#define BW_CRC_CRCHL_CRCHL(x, v) (HW_CRC_CRCHL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRCHU - CRC_CRCHU register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRCHU - CRC_CRCHU register. (RW)
  *
@@ -382,27 +336,24 @@ typedef union _hw_crc_crchu
     uint8_t U;
     struct _hw_crc_crchu_bitfields
     {
-        uint8_t CRCHU : 8;             //!< [7:0] CRCHU stores the fourth 8 bits of the
-                                       //! 32 bit CRC
+        uint8_t CRCHU : 8;             /*!< [7:0] CRCHU stores the fourth 8 bits of the
+                                        * 32 bit CRC */
     } B;
 } hw_crc_crchu_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRCHU register
  */
-//@{
-#define HW_CRC_CRCHU_ADDR        (REGS_CRC_BASE + 0x3U)
+/*@{*/
+#define HW_CRC_CRCHU_ADDR(x)     ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRCHU             (*(__IO hw_crc_crchu_t *) HW_CRC_CRCHU_ADDR)
-#define HW_CRC_CRCHU_RD()        (HW_CRC_CRCHU.U)
-#define HW_CRC_CRCHU_WR(v)       (HW_CRC_CRCHU.U = (v))
-#define HW_CRC_CRCHU_SET(v)      (HW_CRC_CRCHU_WR(HW_CRC_CRCHU_RD() |  (v)))
-#define HW_CRC_CRCHU_CLR(v)      (HW_CRC_CRCHU_WR(HW_CRC_CRCHU_RD() & ~(v)))
-#define HW_CRC_CRCHU_TOG(v)      (HW_CRC_CRCHU_WR(HW_CRC_CRCHU_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRCHU(x)          (*(__IO hw_crc_crchu_t *) HW_CRC_CRCHU_ADDR(x))
+#define HW_CRC_CRCHU_RD(x)       (HW_CRC_CRCHU(x).U)
+#define HW_CRC_CRCHU_WR(x, v)    (HW_CRC_CRCHU(x).U = (v))
+#define HW_CRC_CRCHU_SET(x, v)   (HW_CRC_CRCHU_WR(x, HW_CRC_CRCHU_RD(x) |  (v)))
+#define HW_CRC_CRCHU_CLR(x, v)   (HW_CRC_CRCHU_WR(x, HW_CRC_CRCHU_RD(x) & ~(v)))
+#define HW_CRC_CRCHU_TOG(x, v)   (HW_CRC_CRCHU_WR(x, HW_CRC_CRCHU_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRCHU bitfields
@@ -411,29 +362,24 @@ typedef union _hw_crc_crchu
 /*!
  * @name Register CRC_CRCHU, field CRCHU[7:0] (RW)
  */
-//@{
-#define BP_CRC_CRCHU_CRCHU   (0U)          //!< Bit position for CRC_CRCHU_CRCHU.
-#define BM_CRC_CRCHU_CRCHU   (0xFFU)       //!< Bit mask for CRC_CRCHU_CRCHU.
-#define BS_CRC_CRCHU_CRCHU   (8U)          //!< Bit field size in bits for CRC_CRCHU_CRCHU.
+/*@{*/
+#define BP_CRC_CRCHU_CRCHU   (0U)          /*!< Bit position for CRC_CRCHU_CRCHU. */
+#define BM_CRC_CRCHU_CRCHU   (0xFFU)       /*!< Bit mask for CRC_CRCHU_CRCHU. */
+#define BS_CRC_CRCHU_CRCHU   (8U)          /*!< Bit field size in bits for CRC_CRCHU_CRCHU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRCHU_CRCHU field.
-#define BR_CRC_CRCHU_CRCHU   (HW_CRC_CRCHU.B.CRCHU)
-#endif
+/*! @brief Read current value of the CRC_CRCHU_CRCHU field. */
+#define BR_CRC_CRCHU_CRCHU(x) (HW_CRC_CRCHU(x).U)
 
-//! @brief Format value for bitfield CRC_CRCHU_CRCHU.
-#define BF_CRC_CRCHU_CRCHU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CRCHU_CRCHU), uint8_t) & BM_CRC_CRCHU_CRCHU)
+/*! @brief Format value for bitfield CRC_CRCHU_CRCHU. */
+#define BF_CRC_CRCHU_CRCHU(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CRCHU_CRCHU) & BM_CRC_CRCHU_CRCHU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRCHU field to a new value.
-#define BW_CRC_CRCHU_CRCHU(v) (HW_CRC_CRCHU_WR((HW_CRC_CRCHU_RD() & ~BM_CRC_CRCHU_CRCHU) | BF_CRC_CRCHU_CRCHU(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CRC - CRC Data Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the CRCHU field to a new value. */
+#define BW_CRC_CRCHU_CRCHU(x, v) (HW_CRC_CRCHU_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CRC - CRC Data Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CRC - CRC Data Register (RW)
  *
@@ -458,29 +404,26 @@ typedef union _hw_crc_crc
     uint32_t U;
     struct _hw_crc_crc_bitfields
     {
-        uint32_t LL : 8;               //!< [7:0] CRC Low Lower Byte
-        uint32_t LU : 8;               //!< [15:8] CRC Low Upper Byte
-        uint32_t HL : 8;               //!< [23:16] CRC High Lower Byte
-        uint32_t HU : 8;               //!< [31:24] CRC High Upper Byte
+        uint32_t LL : 8;               /*!< [7:0] CRC Low Lower Byte */
+        uint32_t LU : 8;               /*!< [15:8] CRC Low Upper Byte */
+        uint32_t HL : 8;               /*!< [23:16] CRC High Lower Byte */
+        uint32_t HU : 8;               /*!< [31:24] CRC High Upper Byte */
     } B;
 } hw_crc_crc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CRC register
  */
-//@{
-#define HW_CRC_CRC_ADDR          (REGS_CRC_BASE + 0x0U)
+/*@{*/
+#define HW_CRC_CRC_ADDR(x)       ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CRC               (*(__IO hw_crc_crc_t *) HW_CRC_CRC_ADDR)
-#define HW_CRC_CRC_RD()          (HW_CRC_CRC.U)
-#define HW_CRC_CRC_WR(v)         (HW_CRC_CRC.U = (v))
-#define HW_CRC_CRC_SET(v)        (HW_CRC_CRC_WR(HW_CRC_CRC_RD() |  (v)))
-#define HW_CRC_CRC_CLR(v)        (HW_CRC_CRC_WR(HW_CRC_CRC_RD() & ~(v)))
-#define HW_CRC_CRC_TOG(v)        (HW_CRC_CRC_WR(HW_CRC_CRC_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CRC(x)            (*(__IO hw_crc_crc_t *) HW_CRC_CRC_ADDR(x))
+#define HW_CRC_CRC_RD(x)         (HW_CRC_CRC(x).U)
+#define HW_CRC_CRC_WR(x, v)      (HW_CRC_CRC(x).U = (v))
+#define HW_CRC_CRC_SET(x, v)     (HW_CRC_CRC_WR(x, HW_CRC_CRC_RD(x) |  (v)))
+#define HW_CRC_CRC_CLR(x, v)     (HW_CRC_CRC_WR(x, HW_CRC_CRC_RD(x) & ~(v)))
+#define HW_CRC_CRC_TOG(x, v)     (HW_CRC_CRC_WR(x, HW_CRC_CRC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CRC bitfields
@@ -493,24 +436,20 @@ typedef union _hw_crc_crc
  * seed value. When the CTRL[WAS] bit is 0, data written to this field is used for
  * CRC checksum generation.
  */
-//@{
-#define BP_CRC_CRC_LL        (0U)          //!< Bit position for CRC_CRC_LL.
-#define BM_CRC_CRC_LL        (0x000000FFU) //!< Bit mask for CRC_CRC_LL.
-#define BS_CRC_CRC_LL        (8U)          //!< Bit field size in bits for CRC_CRC_LL.
+/*@{*/
+#define BP_CRC_CRC_LL        (0U)          /*!< Bit position for CRC_CRC_LL. */
+#define BM_CRC_CRC_LL        (0x000000FFU) /*!< Bit mask for CRC_CRC_LL. */
+#define BS_CRC_CRC_LL        (8U)          /*!< Bit field size in bits for CRC_CRC_LL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRC_LL field.
-#define BR_CRC_CRC_LL        (HW_CRC_CRC.B.LL)
-#endif
+/*! @brief Read current value of the CRC_CRC_LL field. */
+#define BR_CRC_CRC_LL(x)     (HW_CRC_CRC(x).B.LL)
 
-//! @brief Format value for bitfield CRC_CRC_LL.
-#define BF_CRC_CRC_LL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CRC_LL), uint32_t) & BM_CRC_CRC_LL)
+/*! @brief Format value for bitfield CRC_CRC_LL. */
+#define BF_CRC_CRC_LL(v)     ((uint32_t)((uint32_t)(v) << BP_CRC_CRC_LL) & BM_CRC_CRC_LL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LL field to a new value.
-#define BW_CRC_CRC_LL(v)     (HW_CRC_CRC_WR((HW_CRC_CRC_RD() & ~BM_CRC_CRC_LL) | BF_CRC_CRC_LL(v)))
-#endif
-//@}
+/*! @brief Set the LL field to a new value. */
+#define BW_CRC_CRC_LL(x, v)  (HW_CRC_CRC_WR(x, (HW_CRC_CRC_RD(x) & ~BM_CRC_CRC_LL) | BF_CRC_CRC_LL(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_CRC, field LU[15:8] (RW)
@@ -519,24 +458,20 @@ typedef union _hw_crc_crc
  * seed value. When the CTRL[WAS] bit is 0, data written to this field is used for
  * CRC checksum generation.
  */
-//@{
-#define BP_CRC_CRC_LU        (8U)          //!< Bit position for CRC_CRC_LU.
-#define BM_CRC_CRC_LU        (0x0000FF00U) //!< Bit mask for CRC_CRC_LU.
-#define BS_CRC_CRC_LU        (8U)          //!< Bit field size in bits for CRC_CRC_LU.
+/*@{*/
+#define BP_CRC_CRC_LU        (8U)          /*!< Bit position for CRC_CRC_LU. */
+#define BM_CRC_CRC_LU        (0x0000FF00U) /*!< Bit mask for CRC_CRC_LU. */
+#define BS_CRC_CRC_LU        (8U)          /*!< Bit field size in bits for CRC_CRC_LU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRC_LU field.
-#define BR_CRC_CRC_LU        (HW_CRC_CRC.B.LU)
-#endif
+/*! @brief Read current value of the CRC_CRC_LU field. */
+#define BR_CRC_CRC_LU(x)     (HW_CRC_CRC(x).B.LU)
 
-//! @brief Format value for bitfield CRC_CRC_LU.
-#define BF_CRC_CRC_LU(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CRC_LU), uint32_t) & BM_CRC_CRC_LU)
+/*! @brief Format value for bitfield CRC_CRC_LU. */
+#define BF_CRC_CRC_LU(v)     ((uint32_t)((uint32_t)(v) << BP_CRC_CRC_LU) & BM_CRC_CRC_LU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LU field to a new value.
-#define BW_CRC_CRC_LU(v)     (HW_CRC_CRC_WR((HW_CRC_CRC_RD() & ~BM_CRC_CRC_LU) | BF_CRC_CRC_LU(v)))
-#endif
-//@}
+/*! @brief Set the LU field to a new value. */
+#define BW_CRC_CRC_LU(x, v)  (HW_CRC_CRC_WR(x, (HW_CRC_CRC_RD(x) & ~BM_CRC_CRC_LU) | BF_CRC_CRC_LU(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_CRC, field HL[23:16] (RW)
@@ -547,24 +482,20 @@ typedef union _hw_crc_crc
  * When the CTRL[WAS] bit is 0, data written to this field is used for CRC checksum
  * generation in both 16-bit and 32-bit CRC modes.
  */
-//@{
-#define BP_CRC_CRC_HL        (16U)         //!< Bit position for CRC_CRC_HL.
-#define BM_CRC_CRC_HL        (0x00FF0000U) //!< Bit mask for CRC_CRC_HL.
-#define BS_CRC_CRC_HL        (8U)          //!< Bit field size in bits for CRC_CRC_HL.
+/*@{*/
+#define BP_CRC_CRC_HL        (16U)         /*!< Bit position for CRC_CRC_HL. */
+#define BM_CRC_CRC_HL        (0x00FF0000U) /*!< Bit mask for CRC_CRC_HL. */
+#define BS_CRC_CRC_HL        (8U)          /*!< Bit field size in bits for CRC_CRC_HL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRC_HL field.
-#define BR_CRC_CRC_HL        (HW_CRC_CRC.B.HL)
-#endif
+/*! @brief Read current value of the CRC_CRC_HL field. */
+#define BR_CRC_CRC_HL(x)     (HW_CRC_CRC(x).B.HL)
 
-//! @brief Format value for bitfield CRC_CRC_HL.
-#define BF_CRC_CRC_HL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CRC_HL), uint32_t) & BM_CRC_CRC_HL)
+/*! @brief Format value for bitfield CRC_CRC_HL. */
+#define BF_CRC_CRC_HL(v)     ((uint32_t)((uint32_t)(v) << BP_CRC_CRC_HL) & BM_CRC_CRC_HL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HL field to a new value.
-#define BW_CRC_CRC_HL(v)     (HW_CRC_CRC_WR((HW_CRC_CRC_RD() & ~BM_CRC_CRC_HL) | BF_CRC_CRC_HL(v)))
-#endif
-//@}
+/*! @brief Set the HL field to a new value. */
+#define BW_CRC_CRC_HL(x, v)  (HW_CRC_CRC_WR(x, (HW_CRC_CRC_RD(x) & ~BM_CRC_CRC_HL) | BF_CRC_CRC_HL(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_CRC, field HU[31:24] (RW)
@@ -575,30 +506,25 @@ typedef union _hw_crc_crc
  * When the CTRL[WAS] bit is 0, data written to this field is used for CRC checksum
  * generation in both 16-bit and 32-bit CRC modes.
  */
-//@{
-#define BP_CRC_CRC_HU        (24U)         //!< Bit position for CRC_CRC_HU.
-#define BM_CRC_CRC_HU        (0xFF000000U) //!< Bit mask for CRC_CRC_HU.
-#define BS_CRC_CRC_HU        (8U)          //!< Bit field size in bits for CRC_CRC_HU.
+/*@{*/
+#define BP_CRC_CRC_HU        (24U)         /*!< Bit position for CRC_CRC_HU. */
+#define BM_CRC_CRC_HU        (0xFF000000U) /*!< Bit mask for CRC_CRC_HU. */
+#define BS_CRC_CRC_HU        (8U)          /*!< Bit field size in bits for CRC_CRC_HU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CRC_HU field.
-#define BR_CRC_CRC_HU        (HW_CRC_CRC.B.HU)
-#endif
+/*! @brief Read current value of the CRC_CRC_HU field. */
+#define BR_CRC_CRC_HU(x)     (HW_CRC_CRC(x).B.HU)
 
-//! @brief Format value for bitfield CRC_CRC_HU.
-#define BF_CRC_CRC_HU(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CRC_HU), uint32_t) & BM_CRC_CRC_HU)
+/*! @brief Format value for bitfield CRC_CRC_HU. */
+#define BF_CRC_CRC_HU(v)     ((uint32_t)((uint32_t)(v) << BP_CRC_CRC_HU) & BM_CRC_CRC_HU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HU field to a new value.
-#define BW_CRC_CRC_HU(v)     (HW_CRC_CRC_WR((HW_CRC_CRC_RD() & ~BM_CRC_CRC_HU) | BF_CRC_CRC_HU(v)))
-#endif
-//@}
+/*! @brief Set the HU field to a new value. */
+#define BW_CRC_CRC_HU(x, v)  (HW_CRC_CRC_WR(x, (HW_CRC_CRC_RD(x) & ~BM_CRC_CRC_HU) | BF_CRC_CRC_HU(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLY - CRC Polynomial Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CRC_GPOLY - CRC Polynomial Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLY - CRC Polynomial Register (RW)
  *
@@ -615,27 +541,24 @@ typedef union _hw_crc_gpoly
     uint32_t U;
     struct _hw_crc_gpoly_bitfields
     {
-        uint32_t LOW : 16;             //!< [15:0] Low polynominal half-word
-        uint32_t HIGH : 16;            //!< [31:16] High polynominal half-word
+        uint32_t LOW : 16;             /*!< [15:0] Low polynominal half-word */
+        uint32_t HIGH : 16;            /*!< [31:16] High polynominal half-word */
     } B;
 } hw_crc_gpoly_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLY register
  */
-//@{
-#define HW_CRC_GPOLY_ADDR        (REGS_CRC_BASE + 0x4U)
+/*@{*/
+#define HW_CRC_GPOLY_ADDR(x)     ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLY             (*(__IO hw_crc_gpoly_t *) HW_CRC_GPOLY_ADDR)
-#define HW_CRC_GPOLY_RD()        (HW_CRC_GPOLY.U)
-#define HW_CRC_GPOLY_WR(v)       (HW_CRC_GPOLY.U = (v))
-#define HW_CRC_GPOLY_SET(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() |  (v)))
-#define HW_CRC_GPOLY_CLR(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() & ~(v)))
-#define HW_CRC_GPOLY_TOG(v)      (HW_CRC_GPOLY_WR(HW_CRC_GPOLY_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLY(x)          (*(__IO hw_crc_gpoly_t *) HW_CRC_GPOLY_ADDR(x))
+#define HW_CRC_GPOLY_RD(x)       (HW_CRC_GPOLY(x).U)
+#define HW_CRC_GPOLY_WR(x, v)    (HW_CRC_GPOLY(x).U = (v))
+#define HW_CRC_GPOLY_SET(x, v)   (HW_CRC_GPOLY_WR(x, HW_CRC_GPOLY_RD(x) |  (v)))
+#define HW_CRC_GPOLY_CLR(x, v)   (HW_CRC_GPOLY_WR(x, HW_CRC_GPOLY_RD(x) & ~(v)))
+#define HW_CRC_GPOLY_TOG(x, v)   (HW_CRC_GPOLY_WR(x, HW_CRC_GPOLY_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLY bitfields
@@ -646,24 +569,20 @@ typedef union _hw_crc_gpoly
  *
  * This field is writable and readable in both 32-bit and 16-bit CRC modes.
  */
-//@{
-#define BP_CRC_GPOLY_LOW     (0U)          //!< Bit position for CRC_GPOLY_LOW.
-#define BM_CRC_GPOLY_LOW     (0x0000FFFFU) //!< Bit mask for CRC_GPOLY_LOW.
-#define BS_CRC_GPOLY_LOW     (16U)         //!< Bit field size in bits for CRC_GPOLY_LOW.
+/*@{*/
+#define BP_CRC_GPOLY_LOW     (0U)          /*!< Bit position for CRC_GPOLY_LOW. */
+#define BM_CRC_GPOLY_LOW     (0x0000FFFFU) /*!< Bit mask for CRC_GPOLY_LOW. */
+#define BS_CRC_GPOLY_LOW     (16U)         /*!< Bit field size in bits for CRC_GPOLY_LOW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLY_LOW field.
-#define BR_CRC_GPOLY_LOW     (HW_CRC_GPOLY.B.LOW)
-#endif
+/*! @brief Read current value of the CRC_GPOLY_LOW field. */
+#define BR_CRC_GPOLY_LOW(x)  (HW_CRC_GPOLY(x).B.LOW)
 
-//! @brief Format value for bitfield CRC_GPOLY_LOW.
-#define BF_CRC_GPOLY_LOW(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_GPOLY_LOW), uint32_t) & BM_CRC_GPOLY_LOW)
+/*! @brief Format value for bitfield CRC_GPOLY_LOW. */
+#define BF_CRC_GPOLY_LOW(v)  ((uint32_t)((uint32_t)(v) << BP_CRC_GPOLY_LOW) & BM_CRC_GPOLY_LOW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LOW field to a new value.
-#define BW_CRC_GPOLY_LOW(v)  (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD() & ~BM_CRC_GPOLY_LOW) | BF_CRC_GPOLY_LOW(v)))
-#endif
-//@}
+/*! @brief Set the LOW field to a new value. */
+#define BW_CRC_GPOLY_LOW(x, v) (HW_CRC_GPOLY_WR(x, (HW_CRC_GPOLY_RD(x) & ~BM_CRC_GPOLY_LOW) | BF_CRC_GPOLY_LOW(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_GPOLY, field HIGH[31:16] (RW)
@@ -671,29 +590,24 @@ typedef union _hw_crc_gpoly
  * This field is writable and readable in 32-bit CRC mode (the CTRL[TCRC] bit is
  * 1). This field is not writable in 16-bit CRC mode (the CTRL[TCRC] bit is 0).
  */
-//@{
-#define BP_CRC_GPOLY_HIGH    (16U)         //!< Bit position for CRC_GPOLY_HIGH.
-#define BM_CRC_GPOLY_HIGH    (0xFFFF0000U) //!< Bit mask for CRC_GPOLY_HIGH.
-#define BS_CRC_GPOLY_HIGH    (16U)         //!< Bit field size in bits for CRC_GPOLY_HIGH.
+/*@{*/
+#define BP_CRC_GPOLY_HIGH    (16U)         /*!< Bit position for CRC_GPOLY_HIGH. */
+#define BM_CRC_GPOLY_HIGH    (0xFFFF0000U) /*!< Bit mask for CRC_GPOLY_HIGH. */
+#define BS_CRC_GPOLY_HIGH    (16U)         /*!< Bit field size in bits for CRC_GPOLY_HIGH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLY_HIGH field.
-#define BR_CRC_GPOLY_HIGH    (HW_CRC_GPOLY.B.HIGH)
-#endif
+/*! @brief Read current value of the CRC_GPOLY_HIGH field. */
+#define BR_CRC_GPOLY_HIGH(x) (HW_CRC_GPOLY(x).B.HIGH)
 
-//! @brief Format value for bitfield CRC_GPOLY_HIGH.
-#define BF_CRC_GPOLY_HIGH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_GPOLY_HIGH), uint32_t) & BM_CRC_GPOLY_HIGH)
+/*! @brief Format value for bitfield CRC_GPOLY_HIGH. */
+#define BF_CRC_GPOLY_HIGH(v) ((uint32_t)((uint32_t)(v) << BP_CRC_GPOLY_HIGH) & BM_CRC_GPOLY_HIGH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HIGH field to a new value.
-#define BW_CRC_GPOLY_HIGH(v) (HW_CRC_GPOLY_WR((HW_CRC_GPOLY_RD() & ~BM_CRC_GPOLY_HIGH) | BF_CRC_GPOLY_HIGH(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYL - CRC_GPOLYL register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the HIGH field to a new value. */
+#define BW_CRC_GPOLY_HIGH(x, v) (HW_CRC_GPOLY_WR(x, (HW_CRC_GPOLY_RD(x) & ~BM_CRC_GPOLY_HIGH) | BF_CRC_GPOLY_HIGH(v)))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYL - CRC_GPOLYL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYL - CRC_GPOLYL register. (RW)
  *
@@ -704,27 +618,24 @@ typedef union _hw_crc_gpolyl
     uint16_t U;
     struct _hw_crc_gpolyl_bitfields
     {
-        uint16_t GPOLYL : 16;          //!< [15:0] POLYL stores the lower 16 bits of
-                                       //! the 16/32 bit CRC polynomial value
+        uint16_t GPOLYL : 16;          /*!< [15:0] POLYL stores the lower 16 bits of
+                                        * the 16/32 bit CRC polynomial value */
     } B;
 } hw_crc_gpolyl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYL register
  */
-//@{
-#define HW_CRC_GPOLYL_ADDR       (REGS_CRC_BASE + 0x4U)
+/*@{*/
+#define HW_CRC_GPOLYL_ADDR(x)    ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYL            (*(__IO hw_crc_gpolyl_t *) HW_CRC_GPOLYL_ADDR)
-#define HW_CRC_GPOLYL_RD()       (HW_CRC_GPOLYL.U)
-#define HW_CRC_GPOLYL_WR(v)      (HW_CRC_GPOLYL.U = (v))
-#define HW_CRC_GPOLYL_SET(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() |  (v)))
-#define HW_CRC_GPOLYL_CLR(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() & ~(v)))
-#define HW_CRC_GPOLYL_TOG(v)     (HW_CRC_GPOLYL_WR(HW_CRC_GPOLYL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYL(x)         (*(__IO hw_crc_gpolyl_t *) HW_CRC_GPOLYL_ADDR(x))
+#define HW_CRC_GPOLYL_RD(x)      (HW_CRC_GPOLYL(x).U)
+#define HW_CRC_GPOLYL_WR(x, v)   (HW_CRC_GPOLYL(x).U = (v))
+#define HW_CRC_GPOLYL_SET(x, v)  (HW_CRC_GPOLYL_WR(x, HW_CRC_GPOLYL_RD(x) |  (v)))
+#define HW_CRC_GPOLYL_CLR(x, v)  (HW_CRC_GPOLYL_WR(x, HW_CRC_GPOLYL_RD(x) & ~(v)))
+#define HW_CRC_GPOLYL_TOG(x, v)  (HW_CRC_GPOLYL_WR(x, HW_CRC_GPOLYL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYL bitfields
@@ -733,29 +644,24 @@ typedef union _hw_crc_gpolyl
 /*!
  * @name Register CRC_GPOLYL, field GPOLYL[15:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYL_GPOLYL (0U)          //!< Bit position for CRC_GPOLYL_GPOLYL.
-#define BM_CRC_GPOLYL_GPOLYL (0xFFFFU)     //!< Bit mask for CRC_GPOLYL_GPOLYL.
-#define BS_CRC_GPOLYL_GPOLYL (16U)         //!< Bit field size in bits for CRC_GPOLYL_GPOLYL.
+/*@{*/
+#define BP_CRC_GPOLYL_GPOLYL (0U)          /*!< Bit position for CRC_GPOLYL_GPOLYL. */
+#define BM_CRC_GPOLYL_GPOLYL (0xFFFFU)     /*!< Bit mask for CRC_GPOLYL_GPOLYL. */
+#define BS_CRC_GPOLYL_GPOLYL (16U)         /*!< Bit field size in bits for CRC_GPOLYL_GPOLYL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYL_GPOLYL field.
-#define BR_CRC_GPOLYL_GPOLYL (HW_CRC_GPOLYL.B.GPOLYL)
-#endif
+/*! @brief Read current value of the CRC_GPOLYL_GPOLYL field. */
+#define BR_CRC_GPOLYL_GPOLYL(x) (HW_CRC_GPOLYL(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYL_GPOLYL.
-#define BF_CRC_GPOLYL_GPOLYL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint16_t) << BP_CRC_GPOLYL_GPOLYL), uint16_t) & BM_CRC_GPOLYL_GPOLYL)
+/*! @brief Format value for bitfield CRC_GPOLYL_GPOLYL. */
+#define BF_CRC_GPOLYL_GPOLYL(v) ((uint16_t)((uint16_t)(v) << BP_CRC_GPOLYL_GPOLYL) & BM_CRC_GPOLYL_GPOLYL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYL field to a new value.
-#define BW_CRC_GPOLYL_GPOLYL(v) (HW_CRC_GPOLYL_WR((HW_CRC_GPOLYL_RD() & ~BM_CRC_GPOLYL_GPOLYL) | BF_CRC_GPOLYL_GPOLYL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYH - CRC_GPOLYH register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the GPOLYL field to a new value. */
+#define BW_CRC_GPOLYL_GPOLYL(x, v) (HW_CRC_GPOLYL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYH - CRC_GPOLYH register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYH - CRC_GPOLYH register. (RW)
  *
@@ -766,27 +672,24 @@ typedef union _hw_crc_gpolyh
     uint16_t U;
     struct _hw_crc_gpolyh_bitfields
     {
-        uint16_t GPOLYH : 16;          //!< [15:0] POLYH stores the high 16 bits of
-                                       //! the 16/32 bit CRC polynomial value
+        uint16_t GPOLYH : 16;          /*!< [15:0] POLYH stores the high 16 bits of
+                                        * the 16/32 bit CRC polynomial value */
     } B;
 } hw_crc_gpolyh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYH register
  */
-//@{
-#define HW_CRC_GPOLYH_ADDR       (REGS_CRC_BASE + 0x6U)
+/*@{*/
+#define HW_CRC_GPOLYH_ADDR(x)    ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYH            (*(__IO hw_crc_gpolyh_t *) HW_CRC_GPOLYH_ADDR)
-#define HW_CRC_GPOLYH_RD()       (HW_CRC_GPOLYH.U)
-#define HW_CRC_GPOLYH_WR(v)      (HW_CRC_GPOLYH.U = (v))
-#define HW_CRC_GPOLYH_SET(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() |  (v)))
-#define HW_CRC_GPOLYH_CLR(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() & ~(v)))
-#define HW_CRC_GPOLYH_TOG(v)     (HW_CRC_GPOLYH_WR(HW_CRC_GPOLYH_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYH(x)         (*(__IO hw_crc_gpolyh_t *) HW_CRC_GPOLYH_ADDR(x))
+#define HW_CRC_GPOLYH_RD(x)      (HW_CRC_GPOLYH(x).U)
+#define HW_CRC_GPOLYH_WR(x, v)   (HW_CRC_GPOLYH(x).U = (v))
+#define HW_CRC_GPOLYH_SET(x, v)  (HW_CRC_GPOLYH_WR(x, HW_CRC_GPOLYH_RD(x) |  (v)))
+#define HW_CRC_GPOLYH_CLR(x, v)  (HW_CRC_GPOLYH_WR(x, HW_CRC_GPOLYH_RD(x) & ~(v)))
+#define HW_CRC_GPOLYH_TOG(x, v)  (HW_CRC_GPOLYH_WR(x, HW_CRC_GPOLYH_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYH bitfields
@@ -795,29 +698,24 @@ typedef union _hw_crc_gpolyh
 /*!
  * @name Register CRC_GPOLYH, field GPOLYH[15:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYH_GPOLYH (0U)          //!< Bit position for CRC_GPOLYH_GPOLYH.
-#define BM_CRC_GPOLYH_GPOLYH (0xFFFFU)     //!< Bit mask for CRC_GPOLYH_GPOLYH.
-#define BS_CRC_GPOLYH_GPOLYH (16U)         //!< Bit field size in bits for CRC_GPOLYH_GPOLYH.
+/*@{*/
+#define BP_CRC_GPOLYH_GPOLYH (0U)          /*!< Bit position for CRC_GPOLYH_GPOLYH. */
+#define BM_CRC_GPOLYH_GPOLYH (0xFFFFU)     /*!< Bit mask for CRC_GPOLYH_GPOLYH. */
+#define BS_CRC_GPOLYH_GPOLYH (16U)         /*!< Bit field size in bits for CRC_GPOLYH_GPOLYH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYH_GPOLYH field.
-#define BR_CRC_GPOLYH_GPOLYH (HW_CRC_GPOLYH.B.GPOLYH)
-#endif
+/*! @brief Read current value of the CRC_GPOLYH_GPOLYH field. */
+#define BR_CRC_GPOLYH_GPOLYH(x) (HW_CRC_GPOLYH(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYH_GPOLYH.
-#define BF_CRC_GPOLYH_GPOLYH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint16_t) << BP_CRC_GPOLYH_GPOLYH), uint16_t) & BM_CRC_GPOLYH_GPOLYH)
+/*! @brief Format value for bitfield CRC_GPOLYH_GPOLYH. */
+#define BF_CRC_GPOLYH_GPOLYH(v) ((uint16_t)((uint16_t)(v) << BP_CRC_GPOLYH_GPOLYH) & BM_CRC_GPOLYH_GPOLYH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYH field to a new value.
-#define BW_CRC_GPOLYH_GPOLYH(v) (HW_CRC_GPOLYH_WR((HW_CRC_GPOLYH_RD() & ~BM_CRC_GPOLYH_GPOLYH) | BF_CRC_GPOLYH_GPOLYH(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYLL - CRC_GPOLYLL register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the GPOLYH field to a new value. */
+#define BW_CRC_GPOLYH_GPOLYH(x, v) (HW_CRC_GPOLYH_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYLL - CRC_GPOLYLL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYLL - CRC_GPOLYLL register. (RW)
  *
@@ -828,27 +726,24 @@ typedef union _hw_crc_gpolyll
     uint8_t U;
     struct _hw_crc_gpolyll_bitfields
     {
-        uint8_t GPOLYLL : 8;           //!< [7:0] POLYLL stores the first 8 bits of the
-                                       //! 32 bit CRC
+        uint8_t GPOLYLL : 8;           /*!< [7:0] POLYLL stores the first 8 bits of the
+                                        * 32 bit CRC */
     } B;
 } hw_crc_gpolyll_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYLL register
  */
-//@{
-#define HW_CRC_GPOLYLL_ADDR      (REGS_CRC_BASE + 0x4U)
+/*@{*/
+#define HW_CRC_GPOLYLL_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYLL           (*(__IO hw_crc_gpolyll_t *) HW_CRC_GPOLYLL_ADDR)
-#define HW_CRC_GPOLYLL_RD()      (HW_CRC_GPOLYLL.U)
-#define HW_CRC_GPOLYLL_WR(v)     (HW_CRC_GPOLYLL.U = (v))
-#define HW_CRC_GPOLYLL_SET(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() |  (v)))
-#define HW_CRC_GPOLYLL_CLR(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() & ~(v)))
-#define HW_CRC_GPOLYLL_TOG(v)    (HW_CRC_GPOLYLL_WR(HW_CRC_GPOLYLL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYLL(x)        (*(__IO hw_crc_gpolyll_t *) HW_CRC_GPOLYLL_ADDR(x))
+#define HW_CRC_GPOLYLL_RD(x)     (HW_CRC_GPOLYLL(x).U)
+#define HW_CRC_GPOLYLL_WR(x, v)  (HW_CRC_GPOLYLL(x).U = (v))
+#define HW_CRC_GPOLYLL_SET(x, v) (HW_CRC_GPOLYLL_WR(x, HW_CRC_GPOLYLL_RD(x) |  (v)))
+#define HW_CRC_GPOLYLL_CLR(x, v) (HW_CRC_GPOLYLL_WR(x, HW_CRC_GPOLYLL_RD(x) & ~(v)))
+#define HW_CRC_GPOLYLL_TOG(x, v) (HW_CRC_GPOLYLL_WR(x, HW_CRC_GPOLYLL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYLL bitfields
@@ -857,29 +752,24 @@ typedef union _hw_crc_gpolyll
 /*!
  * @name Register CRC_GPOLYLL, field GPOLYLL[7:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYLL_GPOLYLL (0U)        //!< Bit position for CRC_GPOLYLL_GPOLYLL.
-#define BM_CRC_GPOLYLL_GPOLYLL (0xFFU)     //!< Bit mask for CRC_GPOLYLL_GPOLYLL.
-#define BS_CRC_GPOLYLL_GPOLYLL (8U)        //!< Bit field size in bits for CRC_GPOLYLL_GPOLYLL.
+/*@{*/
+#define BP_CRC_GPOLYLL_GPOLYLL (0U)        /*!< Bit position for CRC_GPOLYLL_GPOLYLL. */
+#define BM_CRC_GPOLYLL_GPOLYLL (0xFFU)     /*!< Bit mask for CRC_GPOLYLL_GPOLYLL. */
+#define BS_CRC_GPOLYLL_GPOLYLL (8U)        /*!< Bit field size in bits for CRC_GPOLYLL_GPOLYLL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYLL_GPOLYLL field.
-#define BR_CRC_GPOLYLL_GPOLYLL (HW_CRC_GPOLYLL.B.GPOLYLL)
-#endif
+/*! @brief Read current value of the CRC_GPOLYLL_GPOLYLL field. */
+#define BR_CRC_GPOLYLL_GPOLYLL(x) (HW_CRC_GPOLYLL(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYLL_GPOLYLL.
-#define BF_CRC_GPOLYLL_GPOLYLL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_GPOLYLL_GPOLYLL), uint8_t) & BM_CRC_GPOLYLL_GPOLYLL)
+/*! @brief Format value for bitfield CRC_GPOLYLL_GPOLYLL. */
+#define BF_CRC_GPOLYLL_GPOLYLL(v) ((uint8_t)((uint8_t)(v) << BP_CRC_GPOLYLL_GPOLYLL) & BM_CRC_GPOLYLL_GPOLYLL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYLL field to a new value.
-#define BW_CRC_GPOLYLL_GPOLYLL(v) (HW_CRC_GPOLYLL_WR((HW_CRC_GPOLYLL_RD() & ~BM_CRC_GPOLYLL_GPOLYLL) | BF_CRC_GPOLYLL_GPOLYLL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYLU - CRC_GPOLYLU register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the GPOLYLL field to a new value. */
+#define BW_CRC_GPOLYLL_GPOLYLL(x, v) (HW_CRC_GPOLYLL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYLU - CRC_GPOLYLU register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYLU - CRC_GPOLYLU register. (RW)
  *
@@ -890,27 +780,24 @@ typedef union _hw_crc_gpolylu
     uint8_t U;
     struct _hw_crc_gpolylu_bitfields
     {
-        uint8_t GPOLYLU : 8;           //!< [7:0] POLYLL stores the second 8 bits of
-                                       //! the 32 bit CRC
+        uint8_t GPOLYLU : 8;           /*!< [7:0] POLYLL stores the second 8 bits of
+                                        * the 32 bit CRC */
     } B;
 } hw_crc_gpolylu_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYLU register
  */
-//@{
-#define HW_CRC_GPOLYLU_ADDR      (REGS_CRC_BASE + 0x5U)
+/*@{*/
+#define HW_CRC_GPOLYLU_ADDR(x)   ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYLU           (*(__IO hw_crc_gpolylu_t *) HW_CRC_GPOLYLU_ADDR)
-#define HW_CRC_GPOLYLU_RD()      (HW_CRC_GPOLYLU.U)
-#define HW_CRC_GPOLYLU_WR(v)     (HW_CRC_GPOLYLU.U = (v))
-#define HW_CRC_GPOLYLU_SET(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() |  (v)))
-#define HW_CRC_GPOLYLU_CLR(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() & ~(v)))
-#define HW_CRC_GPOLYLU_TOG(v)    (HW_CRC_GPOLYLU_WR(HW_CRC_GPOLYLU_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYLU(x)        (*(__IO hw_crc_gpolylu_t *) HW_CRC_GPOLYLU_ADDR(x))
+#define HW_CRC_GPOLYLU_RD(x)     (HW_CRC_GPOLYLU(x).U)
+#define HW_CRC_GPOLYLU_WR(x, v)  (HW_CRC_GPOLYLU(x).U = (v))
+#define HW_CRC_GPOLYLU_SET(x, v) (HW_CRC_GPOLYLU_WR(x, HW_CRC_GPOLYLU_RD(x) |  (v)))
+#define HW_CRC_GPOLYLU_CLR(x, v) (HW_CRC_GPOLYLU_WR(x, HW_CRC_GPOLYLU_RD(x) & ~(v)))
+#define HW_CRC_GPOLYLU_TOG(x, v) (HW_CRC_GPOLYLU_WR(x, HW_CRC_GPOLYLU_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYLU bitfields
@@ -919,29 +806,24 @@ typedef union _hw_crc_gpolylu
 /*!
  * @name Register CRC_GPOLYLU, field GPOLYLU[7:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYLU_GPOLYLU (0U)        //!< Bit position for CRC_GPOLYLU_GPOLYLU.
-#define BM_CRC_GPOLYLU_GPOLYLU (0xFFU)     //!< Bit mask for CRC_GPOLYLU_GPOLYLU.
-#define BS_CRC_GPOLYLU_GPOLYLU (8U)        //!< Bit field size in bits for CRC_GPOLYLU_GPOLYLU.
+/*@{*/
+#define BP_CRC_GPOLYLU_GPOLYLU (0U)        /*!< Bit position for CRC_GPOLYLU_GPOLYLU. */
+#define BM_CRC_GPOLYLU_GPOLYLU (0xFFU)     /*!< Bit mask for CRC_GPOLYLU_GPOLYLU. */
+#define BS_CRC_GPOLYLU_GPOLYLU (8U)        /*!< Bit field size in bits for CRC_GPOLYLU_GPOLYLU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYLU_GPOLYLU field.
-#define BR_CRC_GPOLYLU_GPOLYLU (HW_CRC_GPOLYLU.B.GPOLYLU)
-#endif
+/*! @brief Read current value of the CRC_GPOLYLU_GPOLYLU field. */
+#define BR_CRC_GPOLYLU_GPOLYLU(x) (HW_CRC_GPOLYLU(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYLU_GPOLYLU.
-#define BF_CRC_GPOLYLU_GPOLYLU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_GPOLYLU_GPOLYLU), uint8_t) & BM_CRC_GPOLYLU_GPOLYLU)
+/*! @brief Format value for bitfield CRC_GPOLYLU_GPOLYLU. */
+#define BF_CRC_GPOLYLU_GPOLYLU(v) ((uint8_t)((uint8_t)(v) << BP_CRC_GPOLYLU_GPOLYLU) & BM_CRC_GPOLYLU_GPOLYLU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYLU field to a new value.
-#define BW_CRC_GPOLYLU_GPOLYLU(v) (HW_CRC_GPOLYLU_WR((HW_CRC_GPOLYLU_RD() & ~BM_CRC_GPOLYLU_GPOLYLU) | BF_CRC_GPOLYLU_GPOLYLU(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYHL - CRC_GPOLYHL register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the GPOLYLU field to a new value. */
+#define BW_CRC_GPOLYLU_GPOLYLU(x, v) (HW_CRC_GPOLYLU_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYHL - CRC_GPOLYHL register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYHL - CRC_GPOLYHL register. (RW)
  *
@@ -952,27 +834,24 @@ typedef union _hw_crc_gpolyhl
     uint8_t U;
     struct _hw_crc_gpolyhl_bitfields
     {
-        uint8_t GPOLYHL : 8;           //!< [7:0] POLYHL stores the third 8 bits of the
-                                       //! 32 bit CRC
+        uint8_t GPOLYHL : 8;           /*!< [7:0] POLYHL stores the third 8 bits of the
+                                        * 32 bit CRC */
     } B;
 } hw_crc_gpolyhl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYHL register
  */
-//@{
-#define HW_CRC_GPOLYHL_ADDR      (REGS_CRC_BASE + 0x6U)
+/*@{*/
+#define HW_CRC_GPOLYHL_ADDR(x)   ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYHL           (*(__IO hw_crc_gpolyhl_t *) HW_CRC_GPOLYHL_ADDR)
-#define HW_CRC_GPOLYHL_RD()      (HW_CRC_GPOLYHL.U)
-#define HW_CRC_GPOLYHL_WR(v)     (HW_CRC_GPOLYHL.U = (v))
-#define HW_CRC_GPOLYHL_SET(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() |  (v)))
-#define HW_CRC_GPOLYHL_CLR(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() & ~(v)))
-#define HW_CRC_GPOLYHL_TOG(v)    (HW_CRC_GPOLYHL_WR(HW_CRC_GPOLYHL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYHL(x)        (*(__IO hw_crc_gpolyhl_t *) HW_CRC_GPOLYHL_ADDR(x))
+#define HW_CRC_GPOLYHL_RD(x)     (HW_CRC_GPOLYHL(x).U)
+#define HW_CRC_GPOLYHL_WR(x, v)  (HW_CRC_GPOLYHL(x).U = (v))
+#define HW_CRC_GPOLYHL_SET(x, v) (HW_CRC_GPOLYHL_WR(x, HW_CRC_GPOLYHL_RD(x) |  (v)))
+#define HW_CRC_GPOLYHL_CLR(x, v) (HW_CRC_GPOLYHL_WR(x, HW_CRC_GPOLYHL_RD(x) & ~(v)))
+#define HW_CRC_GPOLYHL_TOG(x, v) (HW_CRC_GPOLYHL_WR(x, HW_CRC_GPOLYHL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYHL bitfields
@@ -981,29 +860,24 @@ typedef union _hw_crc_gpolyhl
 /*!
  * @name Register CRC_GPOLYHL, field GPOLYHL[7:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYHL_GPOLYHL (0U)        //!< Bit position for CRC_GPOLYHL_GPOLYHL.
-#define BM_CRC_GPOLYHL_GPOLYHL (0xFFU)     //!< Bit mask for CRC_GPOLYHL_GPOLYHL.
-#define BS_CRC_GPOLYHL_GPOLYHL (8U)        //!< Bit field size in bits for CRC_GPOLYHL_GPOLYHL.
+/*@{*/
+#define BP_CRC_GPOLYHL_GPOLYHL (0U)        /*!< Bit position for CRC_GPOLYHL_GPOLYHL. */
+#define BM_CRC_GPOLYHL_GPOLYHL (0xFFU)     /*!< Bit mask for CRC_GPOLYHL_GPOLYHL. */
+#define BS_CRC_GPOLYHL_GPOLYHL (8U)        /*!< Bit field size in bits for CRC_GPOLYHL_GPOLYHL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYHL_GPOLYHL field.
-#define BR_CRC_GPOLYHL_GPOLYHL (HW_CRC_GPOLYHL.B.GPOLYHL)
-#endif
+/*! @brief Read current value of the CRC_GPOLYHL_GPOLYHL field. */
+#define BR_CRC_GPOLYHL_GPOLYHL(x) (HW_CRC_GPOLYHL(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYHL_GPOLYHL.
-#define BF_CRC_GPOLYHL_GPOLYHL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_GPOLYHL_GPOLYHL), uint8_t) & BM_CRC_GPOLYHL_GPOLYHL)
+/*! @brief Format value for bitfield CRC_GPOLYHL_GPOLYHL. */
+#define BF_CRC_GPOLYHL_GPOLYHL(v) ((uint8_t)((uint8_t)(v) << BP_CRC_GPOLYHL_GPOLYHL) & BM_CRC_GPOLYHL_GPOLYHL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYHL field to a new value.
-#define BW_CRC_GPOLYHL_GPOLYHL(v) (HW_CRC_GPOLYHL_WR((HW_CRC_GPOLYHL_RD() & ~BM_CRC_GPOLYHL_GPOLYHL) | BF_CRC_GPOLYHL_GPOLYHL(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_GPOLYHU - CRC_GPOLYHU register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the GPOLYHL field to a new value. */
+#define BW_CRC_GPOLYHL_GPOLYHL(x, v) (HW_CRC_GPOLYHL_WR(x, v))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_GPOLYHU - CRC_GPOLYHU register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_GPOLYHU - CRC_GPOLYHU register. (RW)
  *
@@ -1014,27 +888,24 @@ typedef union _hw_crc_gpolyhu
     uint8_t U;
     struct _hw_crc_gpolyhu_bitfields
     {
-        uint8_t GPOLYHU : 8;           //!< [7:0] POLYHU stores the fourth 8 bits of
-                                       //! the 32 bit CRC
+        uint8_t GPOLYHU : 8;           /*!< [7:0] POLYHU stores the fourth 8 bits of
+                                        * the 32 bit CRC */
     } B;
 } hw_crc_gpolyhu_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_GPOLYHU register
  */
-//@{
-#define HW_CRC_GPOLYHU_ADDR      (REGS_CRC_BASE + 0x7U)
+/*@{*/
+#define HW_CRC_GPOLYHU_ADDR(x)   ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_GPOLYHU           (*(__IO hw_crc_gpolyhu_t *) HW_CRC_GPOLYHU_ADDR)
-#define HW_CRC_GPOLYHU_RD()      (HW_CRC_GPOLYHU.U)
-#define HW_CRC_GPOLYHU_WR(v)     (HW_CRC_GPOLYHU.U = (v))
-#define HW_CRC_GPOLYHU_SET(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() |  (v)))
-#define HW_CRC_GPOLYHU_CLR(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() & ~(v)))
-#define HW_CRC_GPOLYHU_TOG(v)    (HW_CRC_GPOLYHU_WR(HW_CRC_GPOLYHU_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_GPOLYHU(x)        (*(__IO hw_crc_gpolyhu_t *) HW_CRC_GPOLYHU_ADDR(x))
+#define HW_CRC_GPOLYHU_RD(x)     (HW_CRC_GPOLYHU(x).U)
+#define HW_CRC_GPOLYHU_WR(x, v)  (HW_CRC_GPOLYHU(x).U = (v))
+#define HW_CRC_GPOLYHU_SET(x, v) (HW_CRC_GPOLYHU_WR(x, HW_CRC_GPOLYHU_RD(x) |  (v)))
+#define HW_CRC_GPOLYHU_CLR(x, v) (HW_CRC_GPOLYHU_WR(x, HW_CRC_GPOLYHU_RD(x) & ~(v)))
+#define HW_CRC_GPOLYHU_TOG(x, v) (HW_CRC_GPOLYHU_WR(x, HW_CRC_GPOLYHU_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_GPOLYHU bitfields
@@ -1043,30 +914,25 @@ typedef union _hw_crc_gpolyhu
 /*!
  * @name Register CRC_GPOLYHU, field GPOLYHU[7:0] (RW)
  */
-//@{
-#define BP_CRC_GPOLYHU_GPOLYHU (0U)        //!< Bit position for CRC_GPOLYHU_GPOLYHU.
-#define BM_CRC_GPOLYHU_GPOLYHU (0xFFU)     //!< Bit mask for CRC_GPOLYHU_GPOLYHU.
-#define BS_CRC_GPOLYHU_GPOLYHU (8U)        //!< Bit field size in bits for CRC_GPOLYHU_GPOLYHU.
+/*@{*/
+#define BP_CRC_GPOLYHU_GPOLYHU (0U)        /*!< Bit position for CRC_GPOLYHU_GPOLYHU. */
+#define BM_CRC_GPOLYHU_GPOLYHU (0xFFU)     /*!< Bit mask for CRC_GPOLYHU_GPOLYHU. */
+#define BS_CRC_GPOLYHU_GPOLYHU (8U)        /*!< Bit field size in bits for CRC_GPOLYHU_GPOLYHU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_GPOLYHU_GPOLYHU field.
-#define BR_CRC_GPOLYHU_GPOLYHU (HW_CRC_GPOLYHU.B.GPOLYHU)
-#endif
+/*! @brief Read current value of the CRC_GPOLYHU_GPOLYHU field. */
+#define BR_CRC_GPOLYHU_GPOLYHU(x) (HW_CRC_GPOLYHU(x).U)
 
-//! @brief Format value for bitfield CRC_GPOLYHU_GPOLYHU.
-#define BF_CRC_GPOLYHU_GPOLYHU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_GPOLYHU_GPOLYHU), uint8_t) & BM_CRC_GPOLYHU_GPOLYHU)
+/*! @brief Format value for bitfield CRC_GPOLYHU_GPOLYHU. */
+#define BF_CRC_GPOLYHU_GPOLYHU(v) ((uint8_t)((uint8_t)(v) << BP_CRC_GPOLYHU_GPOLYHU) & BM_CRC_GPOLYHU_GPOLYHU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPOLYHU field to a new value.
-#define BW_CRC_GPOLYHU_GPOLYHU(v) (HW_CRC_GPOLYHU_WR((HW_CRC_GPOLYHU_RD() & ~BM_CRC_GPOLYHU_GPOLYHU) | BF_CRC_GPOLYHU_GPOLYHU(v)))
-#endif
-//@}
+/*! @brief Set the GPOLYHU field to a new value. */
+#define BW_CRC_GPOLYHU_GPOLYHU(x, v) (HW_CRC_GPOLYHU_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CTRL - CRC Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CRC_CTRL - CRC Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CTRL - CRC Control Register (RW)
  *
@@ -1082,32 +948,29 @@ typedef union _hw_crc_ctrl
     uint32_t U;
     struct _hw_crc_ctrl_bitfields
     {
-        uint32_t RESERVED0 : 24;       //!< [23:0]
-        uint32_t TCRC : 1;             //!< [24]
-        uint32_t WAS : 1;              //!< [25] Write CRC data register as seed
-        uint32_t FXOR : 1;             //!< [26] Complement Read of CRC data register
-        uint32_t RESERVED1 : 1;        //!< [27]
-        uint32_t TOTR : 2;             //!< [29:28] Type of Transpose for Read
-        uint32_t TOT : 2;              //!< [31:30] Type of Transpose for Writes
+        uint32_t RESERVED0 : 24;       /*!< [23:0]  */
+        uint32_t TCRC : 1;             /*!< [24]  */
+        uint32_t WAS : 1;              /*!< [25] Write CRC data register as seed */
+        uint32_t FXOR : 1;             /*!< [26] Complement Read of CRC data register */
+        uint32_t RESERVED1 : 1;        /*!< [27]  */
+        uint32_t TOTR : 2;             /*!< [29:28] Type of Transpose for Read */
+        uint32_t TOT : 2;              /*!< [31:30] Type of Transpose for Writes */
     } B;
 } hw_crc_ctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CTRL register
  */
-//@{
-#define HW_CRC_CTRL_ADDR         (REGS_CRC_BASE + 0x8U)
+/*@{*/
+#define HW_CRC_CTRL_ADDR(x)      ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CTRL              (*(__IO hw_crc_ctrl_t *) HW_CRC_CTRL_ADDR)
-#define HW_CRC_CTRL_RD()         (HW_CRC_CTRL.U)
-#define HW_CRC_CTRL_WR(v)        (HW_CRC_CTRL.U = (v))
-#define HW_CRC_CTRL_SET(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() |  (v)))
-#define HW_CRC_CTRL_CLR(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() & ~(v)))
-#define HW_CRC_CTRL_TOG(v)       (HW_CRC_CTRL_WR(HW_CRC_CTRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CTRL(x)           (*(__IO hw_crc_ctrl_t *) HW_CRC_CTRL_ADDR(x))
+#define HW_CRC_CTRL_RD(x)        (HW_CRC_CTRL(x).U)
+#define HW_CRC_CTRL_WR(x, v)     (HW_CRC_CTRL(x).U = (v))
+#define HW_CRC_CTRL_SET(x, v)    (HW_CRC_CTRL_WR(x, HW_CRC_CTRL_RD(x) |  (v)))
+#define HW_CRC_CTRL_CLR(x, v)    (HW_CRC_CTRL_WR(x, HW_CRC_CTRL_RD(x) & ~(v)))
+#define HW_CRC_CTRL_TOG(x, v)    (HW_CRC_CTRL_WR(x, HW_CRC_CTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CTRL bitfields
@@ -1122,24 +985,20 @@ typedef union _hw_crc_ctrl
  * - 0 - 16-bit CRC protocol.
  * - 1 - 32-bit CRC protocol.
  */
-//@{
-#define BP_CRC_CTRL_TCRC     (24U)         //!< Bit position for CRC_CTRL_TCRC.
-#define BM_CRC_CTRL_TCRC     (0x01000000U) //!< Bit mask for CRC_CTRL_TCRC.
-#define BS_CRC_CTRL_TCRC     (1U)          //!< Bit field size in bits for CRC_CTRL_TCRC.
+/*@{*/
+#define BP_CRC_CTRL_TCRC     (24U)         /*!< Bit position for CRC_CTRL_TCRC. */
+#define BM_CRC_CTRL_TCRC     (0x01000000U) /*!< Bit mask for CRC_CTRL_TCRC. */
+#define BS_CRC_CTRL_TCRC     (1U)          /*!< Bit field size in bits for CRC_CTRL_TCRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRL_TCRC field.
-#define BR_CRC_CTRL_TCRC     (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_TCRC))
-#endif
+/*! @brief Read current value of the CRC_CTRL_TCRC field. */
+#define BR_CRC_CTRL_TCRC(x)  (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_TCRC))
 
-//! @brief Format value for bitfield CRC_CTRL_TCRC.
-#define BF_CRC_CTRL_TCRC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CTRL_TCRC), uint32_t) & BM_CRC_CTRL_TCRC)
+/*! @brief Format value for bitfield CRC_CTRL_TCRC. */
+#define BF_CRC_CTRL_TCRC(v)  ((uint32_t)((uint32_t)(v) << BP_CRC_CTRL_TCRC) & BM_CRC_CTRL_TCRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCRC field to a new value.
-#define BW_CRC_CTRL_TCRC(v)  (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_TCRC) = (v))
-#endif
-//@}
+/*! @brief Set the TCRC field to a new value. */
+#define BW_CRC_CTRL_TCRC(x, v) (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_TCRC) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRL, field WAS[25] (RW)
@@ -1152,24 +1011,20 @@ typedef union _hw_crc_ctrl
  * - 0 - Writes to the CRC data register are data values.
  * - 1 - Writes to the CRC data register are seed values.
  */
-//@{
-#define BP_CRC_CTRL_WAS      (25U)         //!< Bit position for CRC_CTRL_WAS.
-#define BM_CRC_CTRL_WAS      (0x02000000U) //!< Bit mask for CRC_CTRL_WAS.
-#define BS_CRC_CTRL_WAS      (1U)          //!< Bit field size in bits for CRC_CTRL_WAS.
+/*@{*/
+#define BP_CRC_CTRL_WAS      (25U)         /*!< Bit position for CRC_CTRL_WAS. */
+#define BM_CRC_CTRL_WAS      (0x02000000U) /*!< Bit mask for CRC_CTRL_WAS. */
+#define BS_CRC_CTRL_WAS      (1U)          /*!< Bit field size in bits for CRC_CTRL_WAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRL_WAS field.
-#define BR_CRC_CTRL_WAS      (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_WAS))
-#endif
+/*! @brief Read current value of the CRC_CTRL_WAS field. */
+#define BR_CRC_CTRL_WAS(x)   (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_WAS))
 
-//! @brief Format value for bitfield CRC_CTRL_WAS.
-#define BF_CRC_CTRL_WAS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CTRL_WAS), uint32_t) & BM_CRC_CTRL_WAS)
+/*! @brief Format value for bitfield CRC_CTRL_WAS. */
+#define BF_CRC_CTRL_WAS(v)   ((uint32_t)((uint32_t)(v) << BP_CRC_CTRL_WAS) & BM_CRC_CTRL_WAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WAS field to a new value.
-#define BW_CRC_CTRL_WAS(v)   (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_WAS) = (v))
-#endif
-//@}
+/*! @brief Set the WAS field to a new value. */
+#define BW_CRC_CTRL_WAS(x, v) (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_WAS) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRL, field FXOR[26] (RW)
@@ -1181,24 +1036,20 @@ typedef union _hw_crc_ctrl
  * - 0 - No XOR on reading.
  * - 1 - Invert or complement the read value of the CRC data register.
  */
-//@{
-#define BP_CRC_CTRL_FXOR     (26U)         //!< Bit position for CRC_CTRL_FXOR.
-#define BM_CRC_CTRL_FXOR     (0x04000000U) //!< Bit mask for CRC_CTRL_FXOR.
-#define BS_CRC_CTRL_FXOR     (1U)          //!< Bit field size in bits for CRC_CTRL_FXOR.
+/*@{*/
+#define BP_CRC_CTRL_FXOR     (26U)         /*!< Bit position for CRC_CTRL_FXOR. */
+#define BM_CRC_CTRL_FXOR     (0x04000000U) /*!< Bit mask for CRC_CTRL_FXOR. */
+#define BS_CRC_CTRL_FXOR     (1U)          /*!< Bit field size in bits for CRC_CTRL_FXOR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRL_FXOR field.
-#define BR_CRC_CTRL_FXOR     (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_FXOR))
-#endif
+/*! @brief Read current value of the CRC_CTRL_FXOR field. */
+#define BR_CRC_CTRL_FXOR(x)  (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_FXOR))
 
-//! @brief Format value for bitfield CRC_CTRL_FXOR.
-#define BF_CRC_CTRL_FXOR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CTRL_FXOR), uint32_t) & BM_CRC_CTRL_FXOR)
+/*! @brief Format value for bitfield CRC_CTRL_FXOR. */
+#define BF_CRC_CTRL_FXOR(v)  ((uint32_t)((uint32_t)(v) << BP_CRC_CTRL_FXOR) & BM_CRC_CTRL_FXOR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FXOR field to a new value.
-#define BW_CRC_CTRL_FXOR(v)  (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR, BP_CRC_CTRL_FXOR) = (v))
-#endif
-//@}
+/*! @brief Set the FXOR field to a new value. */
+#define BW_CRC_CTRL_FXOR(x, v) (BITBAND_ACCESS32(HW_CRC_CTRL_ADDR(x), BP_CRC_CTRL_FXOR) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRL, field TOTR[29:28] (RW)
@@ -1213,24 +1064,20 @@ typedef union _hw_crc_ctrl
  * - 10 - Both bits in bytes and bytes are transposed.
  * - 11 - Only bytes are transposed; no bits in a byte are transposed.
  */
-//@{
-#define BP_CRC_CTRL_TOTR     (28U)         //!< Bit position for CRC_CTRL_TOTR.
-#define BM_CRC_CTRL_TOTR     (0x30000000U) //!< Bit mask for CRC_CTRL_TOTR.
-#define BS_CRC_CTRL_TOTR     (2U)          //!< Bit field size in bits for CRC_CTRL_TOTR.
+/*@{*/
+#define BP_CRC_CTRL_TOTR     (28U)         /*!< Bit position for CRC_CTRL_TOTR. */
+#define BM_CRC_CTRL_TOTR     (0x30000000U) /*!< Bit mask for CRC_CTRL_TOTR. */
+#define BS_CRC_CTRL_TOTR     (2U)          /*!< Bit field size in bits for CRC_CTRL_TOTR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRL_TOTR field.
-#define BR_CRC_CTRL_TOTR     (HW_CRC_CTRL.B.TOTR)
-#endif
+/*! @brief Read current value of the CRC_CTRL_TOTR field. */
+#define BR_CRC_CTRL_TOTR(x)  (HW_CRC_CTRL(x).B.TOTR)
 
-//! @brief Format value for bitfield CRC_CTRL_TOTR.
-#define BF_CRC_CTRL_TOTR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CTRL_TOTR), uint32_t) & BM_CRC_CTRL_TOTR)
+/*! @brief Format value for bitfield CRC_CTRL_TOTR. */
+#define BF_CRC_CTRL_TOTR(v)  ((uint32_t)((uint32_t)(v) << BP_CRC_CTRL_TOTR) & BM_CRC_CTRL_TOTR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOTR field to a new value.
-#define BW_CRC_CTRL_TOTR(v)  (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD() & ~BM_CRC_CTRL_TOTR) | BF_CRC_CTRL_TOTR(v)))
-#endif
-//@}
+/*! @brief Set the TOTR field to a new value. */
+#define BW_CRC_CTRL_TOTR(x, v) (HW_CRC_CTRL_WR(x, (HW_CRC_CTRL_RD(x) & ~BM_CRC_CTRL_TOTR) | BF_CRC_CTRL_TOTR(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRL, field TOT[31:30] (RW)
@@ -1245,29 +1092,24 @@ typedef union _hw_crc_ctrl
  * - 10 - Both bits in bytes and bytes are transposed.
  * - 11 - Only bytes are transposed; no bits in a byte are transposed.
  */
-//@{
-#define BP_CRC_CTRL_TOT      (30U)         //!< Bit position for CRC_CTRL_TOT.
-#define BM_CRC_CTRL_TOT      (0xC0000000U) //!< Bit mask for CRC_CTRL_TOT.
-#define BS_CRC_CTRL_TOT      (2U)          //!< Bit field size in bits for CRC_CTRL_TOT.
+/*@{*/
+#define BP_CRC_CTRL_TOT      (30U)         /*!< Bit position for CRC_CTRL_TOT. */
+#define BM_CRC_CTRL_TOT      (0xC0000000U) /*!< Bit mask for CRC_CTRL_TOT. */
+#define BS_CRC_CTRL_TOT      (2U)          /*!< Bit field size in bits for CRC_CTRL_TOT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRL_TOT field.
-#define BR_CRC_CTRL_TOT      (HW_CRC_CTRL.B.TOT)
-#endif
+/*! @brief Read current value of the CRC_CTRL_TOT field. */
+#define BR_CRC_CTRL_TOT(x)   (HW_CRC_CTRL(x).B.TOT)
 
-//! @brief Format value for bitfield CRC_CTRL_TOT.
-#define BF_CRC_CTRL_TOT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_CRC_CTRL_TOT), uint32_t) & BM_CRC_CTRL_TOT)
+/*! @brief Format value for bitfield CRC_CTRL_TOT. */
+#define BF_CRC_CTRL_TOT(v)   ((uint32_t)((uint32_t)(v) << BP_CRC_CTRL_TOT) & BM_CRC_CTRL_TOT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOT field to a new value.
-#define BW_CRC_CTRL_TOT(v)   (HW_CRC_CTRL_WR((HW_CRC_CTRL_RD() & ~BM_CRC_CTRL_TOT) | BF_CRC_CTRL_TOT(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_CRC_CTRLHU - CRC_CTRLHU register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the TOT field to a new value. */
+#define BW_CRC_CTRL_TOT(x, v) (HW_CRC_CTRL_WR(x, (HW_CRC_CTRL_RD(x) & ~BM_CRC_CTRL_TOT) | BF_CRC_CTRL_TOT(v)))
+/*@}*/
+/*******************************************************************************
+ * HW_CRC_CTRLHU - CRC_CTRLHU register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CRC_CTRLHU - CRC_CTRLHU register. (RW)
  *
@@ -1278,31 +1120,28 @@ typedef union _hw_crc_ctrlhu
     uint8_t U;
     struct _hw_crc_ctrlhu_bitfields
     {
-        uint8_t TCRC : 1;              //!< [0]
-        uint8_t WAS : 1;               //!< [1]
-        uint8_t FXOR : 1;              //!< [2]
-        uint8_t RESERVED0 : 1;         //!< [3]
-        uint8_t TOTR : 2;              //!< [5:4]
-        uint8_t TOT : 2;               //!< [7:6]
+        uint8_t TCRC : 1;              /*!< [0]  */
+        uint8_t WAS : 1;               /*!< [1]  */
+        uint8_t FXOR : 1;              /*!< [2]  */
+        uint8_t RESERVED0 : 1;         /*!< [3]  */
+        uint8_t TOTR : 2;              /*!< [5:4]  */
+        uint8_t TOT : 2;               /*!< [7:6]  */
     } B;
 } hw_crc_ctrlhu_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CRC_CTRLHU register
  */
-//@{
-#define HW_CRC_CTRLHU_ADDR       (REGS_CRC_BASE + 0xBU)
+/*@{*/
+#define HW_CRC_CTRLHU_ADDR(x)    ((x) + 0xBU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CRC_CTRLHU            (*(__IO hw_crc_ctrlhu_t *) HW_CRC_CTRLHU_ADDR)
-#define HW_CRC_CTRLHU_RD()       (HW_CRC_CTRLHU.U)
-#define HW_CRC_CTRLHU_WR(v)      (HW_CRC_CTRLHU.U = (v))
-#define HW_CRC_CTRLHU_SET(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() |  (v)))
-#define HW_CRC_CTRLHU_CLR(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() & ~(v)))
-#define HW_CRC_CTRLHU_TOG(v)     (HW_CRC_CTRLHU_WR(HW_CRC_CTRLHU_RD() ^  (v)))
-#endif
-//@}
+#define HW_CRC_CTRLHU(x)         (*(__IO hw_crc_ctrlhu_t *) HW_CRC_CTRLHU_ADDR(x))
+#define HW_CRC_CTRLHU_RD(x)      (HW_CRC_CTRLHU(x).U)
+#define HW_CRC_CTRLHU_WR(x, v)   (HW_CRC_CTRLHU(x).U = (v))
+#define HW_CRC_CTRLHU_SET(x, v)  (HW_CRC_CTRLHU_WR(x, HW_CRC_CTRLHU_RD(x) |  (v)))
+#define HW_CRC_CTRLHU_CLR(x, v)  (HW_CRC_CTRLHU_WR(x, HW_CRC_CTRLHU_RD(x) & ~(v)))
+#define HW_CRC_CTRLHU_TOG(x, v)  (HW_CRC_CTRLHU_WR(x, HW_CRC_CTRLHU_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CRC_CTRLHU bitfields
@@ -1315,24 +1154,20 @@ typedef union _hw_crc_ctrlhu
  * - 0 - 16-bit CRC protocol.
  * - 1 - 32-bit CRC protocol.
  */
-//@{
-#define BP_CRC_CTRLHU_TCRC   (0U)          //!< Bit position for CRC_CTRLHU_TCRC.
-#define BM_CRC_CTRLHU_TCRC   (0x01U)       //!< Bit mask for CRC_CTRLHU_TCRC.
-#define BS_CRC_CTRLHU_TCRC   (1U)          //!< Bit field size in bits for CRC_CTRLHU_TCRC.
+/*@{*/
+#define BP_CRC_CTRLHU_TCRC   (0U)          /*!< Bit position for CRC_CTRLHU_TCRC. */
+#define BM_CRC_CTRLHU_TCRC   (0x01U)       /*!< Bit mask for CRC_CTRLHU_TCRC. */
+#define BS_CRC_CTRLHU_TCRC   (1U)          /*!< Bit field size in bits for CRC_CTRLHU_TCRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRLHU_TCRC field.
-#define BR_CRC_CTRLHU_TCRC   (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_TCRC))
-#endif
+/*! @brief Read current value of the CRC_CTRLHU_TCRC field. */
+#define BR_CRC_CTRLHU_TCRC(x) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_TCRC))
 
-//! @brief Format value for bitfield CRC_CTRLHU_TCRC.
-#define BF_CRC_CTRLHU_TCRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CTRLHU_TCRC), uint8_t) & BM_CRC_CTRLHU_TCRC)
+/*! @brief Format value for bitfield CRC_CTRLHU_TCRC. */
+#define BF_CRC_CTRLHU_TCRC(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CTRLHU_TCRC) & BM_CRC_CTRLHU_TCRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCRC field to a new value.
-#define BW_CRC_CTRLHU_TCRC(v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_TCRC) = (v))
-#endif
-//@}
+/*! @brief Set the TCRC field to a new value. */
+#define BW_CRC_CTRLHU_TCRC(x, v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_TCRC) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRLHU, field WAS[1] (RW)
@@ -1341,24 +1176,20 @@ typedef union _hw_crc_ctrlhu
  * - 0 - Writes to CRC data register are data values.
  * - 1 - Writes to CRC data reguster are seed values.
  */
-//@{
-#define BP_CRC_CTRLHU_WAS    (1U)          //!< Bit position for CRC_CTRLHU_WAS.
-#define BM_CRC_CTRLHU_WAS    (0x02U)       //!< Bit mask for CRC_CTRLHU_WAS.
-#define BS_CRC_CTRLHU_WAS    (1U)          //!< Bit field size in bits for CRC_CTRLHU_WAS.
+/*@{*/
+#define BP_CRC_CTRLHU_WAS    (1U)          /*!< Bit position for CRC_CTRLHU_WAS. */
+#define BM_CRC_CTRLHU_WAS    (0x02U)       /*!< Bit mask for CRC_CTRLHU_WAS. */
+#define BS_CRC_CTRLHU_WAS    (1U)          /*!< Bit field size in bits for CRC_CTRLHU_WAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRLHU_WAS field.
-#define BR_CRC_CTRLHU_WAS    (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_WAS))
-#endif
+/*! @brief Read current value of the CRC_CTRLHU_WAS field. */
+#define BR_CRC_CTRLHU_WAS(x) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_WAS))
 
-//! @brief Format value for bitfield CRC_CTRLHU_WAS.
-#define BF_CRC_CTRLHU_WAS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CTRLHU_WAS), uint8_t) & BM_CRC_CTRLHU_WAS)
+/*! @brief Format value for bitfield CRC_CTRLHU_WAS. */
+#define BF_CRC_CTRLHU_WAS(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CTRLHU_WAS) & BM_CRC_CTRLHU_WAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WAS field to a new value.
-#define BW_CRC_CTRLHU_WAS(v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_WAS) = (v))
-#endif
-//@}
+/*! @brief Set the WAS field to a new value. */
+#define BW_CRC_CTRLHU_WAS(x, v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_WAS) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRLHU, field FXOR[2] (RW)
@@ -1367,24 +1198,20 @@ typedef union _hw_crc_ctrlhu
  * - 0 - No XOR on reading.
  * - 1 - Invert or complement the read value of CRC data register.
  */
-//@{
-#define BP_CRC_CTRLHU_FXOR   (2U)          //!< Bit position for CRC_CTRLHU_FXOR.
-#define BM_CRC_CTRLHU_FXOR   (0x04U)       //!< Bit mask for CRC_CTRLHU_FXOR.
-#define BS_CRC_CTRLHU_FXOR   (1U)          //!< Bit field size in bits for CRC_CTRLHU_FXOR.
+/*@{*/
+#define BP_CRC_CTRLHU_FXOR   (2U)          /*!< Bit position for CRC_CTRLHU_FXOR. */
+#define BM_CRC_CTRLHU_FXOR   (0x04U)       /*!< Bit mask for CRC_CTRLHU_FXOR. */
+#define BS_CRC_CTRLHU_FXOR   (1U)          /*!< Bit field size in bits for CRC_CTRLHU_FXOR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRLHU_FXOR field.
-#define BR_CRC_CTRLHU_FXOR   (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_FXOR))
-#endif
+/*! @brief Read current value of the CRC_CTRLHU_FXOR field. */
+#define BR_CRC_CTRLHU_FXOR(x) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_FXOR))
 
-//! @brief Format value for bitfield CRC_CTRLHU_FXOR.
-#define BF_CRC_CTRLHU_FXOR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CTRLHU_FXOR), uint8_t) & BM_CRC_CTRLHU_FXOR)
+/*! @brief Format value for bitfield CRC_CTRLHU_FXOR. */
+#define BF_CRC_CTRLHU_FXOR(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CTRLHU_FXOR) & BM_CRC_CTRLHU_FXOR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FXOR field to a new value.
-#define BW_CRC_CTRLHU_FXOR(v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR, BP_CRC_CTRLHU_FXOR) = (v))
-#endif
-//@}
+/*! @brief Set the FXOR field to a new value. */
+#define BW_CRC_CTRLHU_FXOR(x, v) (BITBAND_ACCESS8(HW_CRC_CTRLHU_ADDR(x), BP_CRC_CTRLHU_FXOR) = (v))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRLHU, field TOTR[5:4] (RW)
@@ -1395,24 +1222,20 @@ typedef union _hw_crc_ctrlhu
  * - 10 - Both bits in bytes and bytes are transposed.
  * - 11 - Only bytes are transposed; no bits in a byte are transposed.
  */
-//@{
-#define BP_CRC_CTRLHU_TOTR   (4U)          //!< Bit position for CRC_CTRLHU_TOTR.
-#define BM_CRC_CTRLHU_TOTR   (0x30U)       //!< Bit mask for CRC_CTRLHU_TOTR.
-#define BS_CRC_CTRLHU_TOTR   (2U)          //!< Bit field size in bits for CRC_CTRLHU_TOTR.
+/*@{*/
+#define BP_CRC_CTRLHU_TOTR   (4U)          /*!< Bit position for CRC_CTRLHU_TOTR. */
+#define BM_CRC_CTRLHU_TOTR   (0x30U)       /*!< Bit mask for CRC_CTRLHU_TOTR. */
+#define BS_CRC_CTRLHU_TOTR   (2U)          /*!< Bit field size in bits for CRC_CTRLHU_TOTR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRLHU_TOTR field.
-#define BR_CRC_CTRLHU_TOTR   (HW_CRC_CTRLHU.B.TOTR)
-#endif
+/*! @brief Read current value of the CRC_CTRLHU_TOTR field. */
+#define BR_CRC_CTRLHU_TOTR(x) (HW_CRC_CTRLHU(x).B.TOTR)
 
-//! @brief Format value for bitfield CRC_CTRLHU_TOTR.
-#define BF_CRC_CTRLHU_TOTR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CTRLHU_TOTR), uint8_t) & BM_CRC_CTRLHU_TOTR)
+/*! @brief Format value for bitfield CRC_CTRLHU_TOTR. */
+#define BF_CRC_CTRLHU_TOTR(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CTRLHU_TOTR) & BM_CRC_CTRLHU_TOTR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOTR field to a new value.
-#define BW_CRC_CTRLHU_TOTR(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD() & ~BM_CRC_CTRLHU_TOTR) | BF_CRC_CTRLHU_TOTR(v)))
-#endif
-//@}
+/*! @brief Set the TOTR field to a new value. */
+#define BW_CRC_CTRLHU_TOTR(x, v) (HW_CRC_CTRLHU_WR(x, (HW_CRC_CTRLHU_RD(x) & ~BM_CRC_CTRLHU_TOTR) | BF_CRC_CTRLHU_TOTR(v)))
+/*@}*/
 
 /*!
  * @name Register CRC_CTRLHU, field TOT[7:6] (RW)
@@ -1423,77 +1246,106 @@ typedef union _hw_crc_ctrlhu
  * - 10 - Both bits in bytes and bytes are transposed.
  * - 11 - Only bytes are transposed; no bits in a byte are transposed.
  */
-//@{
-#define BP_CRC_CTRLHU_TOT    (6U)          //!< Bit position for CRC_CTRLHU_TOT.
-#define BM_CRC_CTRLHU_TOT    (0xC0U)       //!< Bit mask for CRC_CTRLHU_TOT.
-#define BS_CRC_CTRLHU_TOT    (2U)          //!< Bit field size in bits for CRC_CTRLHU_TOT.
+/*@{*/
+#define BP_CRC_CTRLHU_TOT    (6U)          /*!< Bit position for CRC_CTRLHU_TOT. */
+#define BM_CRC_CTRLHU_TOT    (0xC0U)       /*!< Bit mask for CRC_CTRLHU_TOT. */
+#define BS_CRC_CTRLHU_TOT    (2U)          /*!< Bit field size in bits for CRC_CTRLHU_TOT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CRC_CTRLHU_TOT field.
-#define BR_CRC_CTRLHU_TOT    (HW_CRC_CTRLHU.B.TOT)
+/*! @brief Read current value of the CRC_CTRLHU_TOT field. */
+#define BR_CRC_CTRLHU_TOT(x) (HW_CRC_CTRLHU(x).B.TOT)
+
+/*! @brief Format value for bitfield CRC_CTRLHU_TOT. */
+#define BF_CRC_CTRLHU_TOT(v) ((uint8_t)((uint8_t)(v) << BP_CRC_CTRLHU_TOT) & BM_CRC_CTRLHU_TOT)
+
+/*! @brief Set the TOT field to a new value. */
+#define BW_CRC_CTRLHU_TOT(x, v) (HW_CRC_CTRLHU_WR(x, (HW_CRC_CTRLHU_RD(x) & ~BM_CRC_CTRLHU_TOT) | BF_CRC_CTRLHU_TOT(v)))
+/*@}*/
+
+/*
+** Start of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma push
+  #pragma anon_unions
+#elif defined(__CWCC__)
+  #pragma push
+  #pragma cpp_extensions on
+#elif defined(__GNUC__)
+  /* anonymous unions are enabled by default */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=extended
+#else
+  #error Not supported compiler type
 #endif
 
-//! @brief Format value for bitfield CRC_CTRLHU_TOT.
-#define BF_CRC_CTRLHU_TOT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CRC_CTRLHU_TOT), uint8_t) & BM_CRC_CTRLHU_TOT)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOT field to a new value.
-#define BW_CRC_CTRLHU_TOT(v) (HW_CRC_CTRLHU_WR((HW_CRC_CTRLHU_RD() & ~BM_CRC_CTRLHU_TOT) | BF_CRC_CTRLHU_TOT(v)))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// hw_crc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_crc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All CRC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_crc
 {
     union {
         struct {
-            __IO hw_crc_crcl_t CRCL;       //!< [0x0] CRC_CRCL register.
-            __IO hw_crc_crch_t CRCH;       //!< [0x2] CRC_CRCH register.
+            __IO hw_crc_crcl_t CRCL;       /*!< [0x0] CRC_CRCL register. */
+            __IO hw_crc_crch_t CRCH;       /*!< [0x2] CRC_CRCH register. */
         } ACCESS16BIT;
         struct {
-            __IO hw_crc_crcll_t CRCLL;     //!< [0x0] CRC_CRCLL register.
-            __IO hw_crc_crclu_t CRCLU;     //!< [0x1] CRC_CRCLU register.
-            __IO hw_crc_crchl_t CRCHL;     //!< [0x2] CRC_CRCHL register.
-            __IO hw_crc_crchu_t CRCHU;     //!< [0x3] CRC_CRCHU register.
+            __IO hw_crc_crcll_t CRCLL;     /*!< [0x0] CRC_CRCLL register. */
+            __IO hw_crc_crclu_t CRCLU;     /*!< [0x1] CRC_CRCLU register. */
+            __IO hw_crc_crchl_t CRCHL;     /*!< [0x2] CRC_CRCHL register. */
+            __IO hw_crc_crchu_t CRCHU;     /*!< [0x3] CRC_CRCHU register. */
         } ACCESS8BIT;
-        __IO hw_crc_crc_t CRC;             //!< [0x0] CRC Data Register
+        __IO hw_crc_crc_t CRC;             /*!< [0x0] CRC Data Register */
     };
     union {
-        __IO hw_crc_gpoly_t GPOLY;         //!< [0x4] CRC Polynomial Register
+        __IO hw_crc_gpoly_t GPOLY;         /*!< [0x4] CRC Polynomial Register */
         struct {
-            __IO hw_crc_gpolyl_t GPOLYL;   //!< [0x4] CRC_GPOLYL register.
-            __IO hw_crc_gpolyh_t GPOLYH;   //!< [0x6] CRC_GPOLYH register.
+            __IO hw_crc_gpolyl_t GPOLYL;   /*!< [0x4] CRC_GPOLYL register. */
+            __IO hw_crc_gpolyh_t GPOLYH;   /*!< [0x6] CRC_GPOLYH register. */
         } GPOLY_ACCESS16BIT;
         struct {
-            __IO hw_crc_gpolyll_t GPOLYLL; //!< [0x4] CRC_GPOLYLL register.
-            __IO hw_crc_gpolylu_t GPOLYLU; //!< [0x5] CRC_GPOLYLU register.
-            __IO hw_crc_gpolyhl_t GPOLYHL; //!< [0x6] CRC_GPOLYHL register.
-            __IO hw_crc_gpolyhu_t GPOLYHU; //!< [0x7] CRC_GPOLYHU register.
+            __IO hw_crc_gpolyll_t GPOLYLL; /*!< [0x4] CRC_GPOLYLL register. */
+            __IO hw_crc_gpolylu_t GPOLYLU; /*!< [0x5] CRC_GPOLYLU register. */
+            __IO hw_crc_gpolyhl_t GPOLYHL; /*!< [0x6] CRC_GPOLYHL register. */
+            __IO hw_crc_gpolyhu_t GPOLYHU; /*!< [0x7] CRC_GPOLYHU register. */
         } GPOLY_ACCESS8BIT;
     };
     union {
-        __IO hw_crc_ctrl_t CTRL;           //!< [0x8] CRC Control Register
+        __IO hw_crc_ctrl_t CTRL;           /*!< [0x8] CRC Control Register */
         struct {
             uint8_t _reserved0[3];
-            __IO hw_crc_ctrlhu_t CTRLHU;   //!< [0xB] CRC_CTRLHU register.
+            __IO hw_crc_ctrlhu_t CTRLHU;   /*!< [0xB] CRC_CTRLHU register. */
         } CTRL_ACCESS8BIT;
     };
 } hw_crc_t;
 #pragma pack()
 
-//! @brief Macro to access all CRC registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_CRC</code>.
-#define HW_CRC         (*(hw_crc_t *) REGS_CRC_BASE)
+/*! @brief Macro to access all CRC registers. */
+/*! @param x CRC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_CRC(CRC_BASE)</code>. */
+#define HW_CRC(x)      (*(hw_crc_t *)(x))
+
+/*
+** End of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma pop
+#elif defined(__CWCC__)
+  #pragma pop
+#elif defined(__GNUC__)
+  /* leave anonymous unions enabled */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=default
+#else
+  #error Not supported compiler type
 #endif
 
-#endif // __HW_CRC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_CRC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

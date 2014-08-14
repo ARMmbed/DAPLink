@@ -21,7 +21,8 @@
 #ifndef __HW_MTBDWT_REGISTERS_H__
 #define __HW_MTBDWT_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL05Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL05Z4 MTBDWT
@@ -39,32 +40,25 @@
  * - HW_MTBDWT_TBCTRL - MTB_DWT Trace Buffer Control Register
  * - HW_MTBDWT_DEVICECFG - Device Configuration Register
  * - HW_MTBDWT_DEVICETYPID - Device Type Identifier Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
- * - HW_MTBDWT_PERIPHIDn - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID4 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID5 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID6 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID7 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID0 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID1 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID2 - Peripheral ID Register
+ * - HW_MTBDWT_PERIPHID3 - Peripheral ID Register
  * - HW_MTBDWT_COMPIDn - Component ID Register
  *
  * - hw_mtbdwt_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_MTBDWT_BASE
-#define HW_MTBDWT_INSTANCE_COUNT (1U) //!< Number of instances of the MTBDWT module.
-#define REGS_MTBDWT_BASE (0xF0001000U) //!< Base address for MTBDWT.
-#endif
-//@}
+#define HW_MTBDWT_INSTANCE_COUNT (1U) /*!< Number of instances of the MTBDWT module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_CTRL - MTB DWT Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_CTRL - MTB DWT Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_CTRL - MTB DWT Control Register (RO)
  *
@@ -78,23 +72,20 @@ typedef union _hw_mtbdwt_ctrl
     uint32_t U;
     struct _hw_mtbdwt_ctrl_bitfields
     {
-        uint32_t DWTCFGCTRL : 28;      //!< [27:0] DWT configuration controls
-        uint32_t NUMCMP : 4;           //!< [31:28] Number of comparators
+        uint32_t DWTCFGCTRL : 28;      /*!< [27:0] DWT configuration controls */
+        uint32_t NUMCMP : 4;           /*!< [31:28] Number of comparators */
     } B;
 } hw_mtbdwt_ctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_CTRL register
  */
-//@{
-#define HW_MTBDWT_CTRL_ADDR      (REGS_MTBDWT_BASE + 0x0U)
+/*@{*/
+#define HW_MTBDWT_CTRL_ADDR(x)   ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_CTRL           (*(__I hw_mtbdwt_ctrl_t *) HW_MTBDWT_CTRL_ADDR)
-#define HW_MTBDWT_CTRL_RD()      (HW_MTBDWT_CTRL.U)
-#endif
-//@}
+#define HW_MTBDWT_CTRL(x)        (*(__I hw_mtbdwt_ctrl_t *) HW_MTBDWT_CTRL_ADDR(x))
+#define HW_MTBDWT_CTRL_RD(x)     (HW_MTBDWT_CTRL(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_CTRL bitfields
@@ -121,38 +112,33 @@ typedef union _hw_mtbdwt_ctrl
  * MTBDWT_CTRL[4:1] = POSTPRESET = 0, cycle counter is not supported MTBDWT_CTRL[0] =
  * CYCCNTENA = 0, cycle counter is not supported
  */
-//@{
-#define BP_MTBDWT_CTRL_DWTCFGCTRL (0U)     //!< Bit position for MTBDWT_CTRL_DWTCFGCTRL.
-#define BM_MTBDWT_CTRL_DWTCFGCTRL (0x0FFFFFFFU) //!< Bit mask for MTBDWT_CTRL_DWTCFGCTRL.
-#define BS_MTBDWT_CTRL_DWTCFGCTRL (28U)    //!< Bit field size in bits for MTBDWT_CTRL_DWTCFGCTRL.
+/*@{*/
+#define BP_MTBDWT_CTRL_DWTCFGCTRL (0U)     /*!< Bit position for MTBDWT_CTRL_DWTCFGCTRL. */
+#define BM_MTBDWT_CTRL_DWTCFGCTRL (0x0FFFFFFFU) /*!< Bit mask for MTBDWT_CTRL_DWTCFGCTRL. */
+#define BS_MTBDWT_CTRL_DWTCFGCTRL (28U)    /*!< Bit field size in bits for MTBDWT_CTRL_DWTCFGCTRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_CTRL_DWTCFGCTRL field.
-#define BR_MTBDWT_CTRL_DWTCFGCTRL (BME_UBFX32(HW_MTBDWT_CTRL_ADDR, BP_MTBDWT_CTRL_DWTCFGCTRL, BS_MTBDWT_CTRL_DWTCFGCTRL))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_CTRL_DWTCFGCTRL field. */
+#define BR_MTBDWT_CTRL_DWTCFGCTRL(x) (HW_MTBDWT_CTRL(x).B.DWTCFGCTRL)
+/*@}*/
 
 /*!
  * @name Register MTBDWT_CTRL, field NUMCMP[31:28] (RO)
  *
  * The MTB_DWT implements two comparators.
  */
-//@{
-#define BP_MTBDWT_CTRL_NUMCMP (28U)        //!< Bit position for MTBDWT_CTRL_NUMCMP.
-#define BM_MTBDWT_CTRL_NUMCMP (0xF0000000U) //!< Bit mask for MTBDWT_CTRL_NUMCMP.
-#define BS_MTBDWT_CTRL_NUMCMP (4U)         //!< Bit field size in bits for MTBDWT_CTRL_NUMCMP.
+/*@{*/
+#define BP_MTBDWT_CTRL_NUMCMP (28U)        /*!< Bit position for MTBDWT_CTRL_NUMCMP. */
+#define BM_MTBDWT_CTRL_NUMCMP (0xF0000000U) /*!< Bit mask for MTBDWT_CTRL_NUMCMP. */
+#define BS_MTBDWT_CTRL_NUMCMP (4U)         /*!< Bit field size in bits for MTBDWT_CTRL_NUMCMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_CTRL_NUMCMP field.
-#define BR_MTBDWT_CTRL_NUMCMP (BME_UBFX32(HW_MTBDWT_CTRL_ADDR, BP_MTBDWT_CTRL_NUMCMP, BS_MTBDWT_CTRL_NUMCMP))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_CTRL_NUMCMP field. */
+#define BR_MTBDWT_CTRL_NUMCMP(x) (HW_MTBDWT_CTRL(x).B.NUMCMP)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_COMP0 - MTB_DWT Comparator Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_COMP0 - MTB_DWT Comparator Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_COMP0 - MTB_DWT Comparator Register (RW)
  *
@@ -165,26 +151,23 @@ typedef union _hw_mtbdwt_comp0
     uint32_t U;
     struct _hw_mtbdwt_comp0_bitfields
     {
-        uint32_t COMP : 32;            //!< [31:0] Reference value for comparison
+        uint32_t COMP : 32;            /*!< [31:0] Reference value for comparison */
     } B;
 } hw_mtbdwt_comp0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_COMP0 register
  */
-//@{
-#define HW_MTBDWT_COMP0_ADDR     (REGS_MTBDWT_BASE + 0x20U)
+/*@{*/
+#define HW_MTBDWT_COMP0_ADDR(x)  ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_COMP0          (*(__IO hw_mtbdwt_comp0_t *) HW_MTBDWT_COMP0_ADDR)
-#define HW_MTBDWT_COMP0_RD()     (HW_MTBDWT_COMP0.U)
-#define HW_MTBDWT_COMP0_WR(v)    (HW_MTBDWT_COMP0.U = (v))
-#define HW_MTBDWT_COMP0_SET(v)   (BME_OR32(HW_MTBDWT_COMP0_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_COMP0_CLR(v)   (BME_AND32(HW_MTBDWT_COMP0_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_COMP0_TOG(v)   (BME_XOR32(HW_MTBDWT_COMP0_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_COMP0(x)       (*(__IO hw_mtbdwt_comp0_t *) HW_MTBDWT_COMP0_ADDR(x))
+#define HW_MTBDWT_COMP0_RD(x)    (HW_MTBDWT_COMP0(x).U)
+#define HW_MTBDWT_COMP0_WR(x, v) (HW_MTBDWT_COMP0(x).U = (v))
+#define HW_MTBDWT_COMP0_SET(x, v) (HW_MTBDWT_COMP0_WR(x, HW_MTBDWT_COMP0_RD(x) |  (v)))
+#define HW_MTBDWT_COMP0_CLR(x, v) (HW_MTBDWT_COMP0_WR(x, HW_MTBDWT_COMP0_RD(x) & ~(v)))
+#define HW_MTBDWT_COMP0_TOG(x, v) (HW_MTBDWT_COMP0_WR(x, HW_MTBDWT_COMP0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_COMP0 bitfields
@@ -199,30 +182,25 @@ typedef union _hw_mtbdwt_comp0
  * then COMP[31:24] = COMP[23:16] = COMP[15:8] = COMP[7:0] = "x". Likewise, if the
  * data is a halfword-size "y" value, then COMP[31:16] = COMP[15:0] = "y".
  */
-//@{
-#define BP_MTBDWT_COMP0_COMP (0U)          //!< Bit position for MTBDWT_COMP0_COMP.
-#define BM_MTBDWT_COMP0_COMP (0xFFFFFFFFU) //!< Bit mask for MTBDWT_COMP0_COMP.
-#define BS_MTBDWT_COMP0_COMP (32U)         //!< Bit field size in bits for MTBDWT_COMP0_COMP.
+/*@{*/
+#define BP_MTBDWT_COMP0_COMP (0U)          /*!< Bit position for MTBDWT_COMP0_COMP. */
+#define BM_MTBDWT_COMP0_COMP (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_COMP0_COMP. */
+#define BS_MTBDWT_COMP0_COMP (32U)         /*!< Bit field size in bits for MTBDWT_COMP0_COMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_COMP0_COMP field.
-#define BR_MTBDWT_COMP0_COMP (BME_UBFX32(HW_MTBDWT_COMP0_ADDR, BP_MTBDWT_COMP0_COMP, BS_MTBDWT_COMP0_COMP))
-#endif
+/*! @brief Read current value of the MTBDWT_COMP0_COMP field. */
+#define BR_MTBDWT_COMP0_COMP(x) (HW_MTBDWT_COMP0(x).U)
 
-//! @brief Format value for bitfield MTBDWT_COMP0_COMP.
-#define BF_MTBDWT_COMP0_COMP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_COMP0_COMP), uint32_t) & BM_MTBDWT_COMP0_COMP)
+/*! @brief Format value for bitfield MTBDWT_COMP0_COMP. */
+#define BF_MTBDWT_COMP0_COMP(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_COMP0_COMP) & BM_MTBDWT_COMP0_COMP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COMP field to a new value.
-#define BW_MTBDWT_COMP0_COMP(v) (BME_BFI32(HW_MTBDWT_COMP0_ADDR, ((uint32_t)(v) << BP_MTBDWT_COMP0_COMP), BP_MTBDWT_COMP0_COMP, 32))
-#endif
-//@}
+/*! @brief Set the COMP field to a new value. */
+#define BW_MTBDWT_COMP0_COMP(x, v) (HW_MTBDWT_COMP0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_MASK0 - MTB_DWT Comparator Mask Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_MASK0 - MTB_DWT Comparator Mask Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_MASK0 - MTB_DWT Comparator Mask Register (RW)
  *
@@ -237,27 +215,24 @@ typedef union _hw_mtbdwt_mask0
     uint32_t U;
     struct _hw_mtbdwt_mask0_bitfields
     {
-        uint32_t MASK : 5;             //!< [4:0] MASK
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t MASK : 5;             /*!< [4:0] MASK */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_mtbdwt_mask0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_MASK0 register
  */
-//@{
-#define HW_MTBDWT_MASK0_ADDR     (REGS_MTBDWT_BASE + 0x24U)
+/*@{*/
+#define HW_MTBDWT_MASK0_ADDR(x)  ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_MASK0          (*(__IO hw_mtbdwt_mask0_t *) HW_MTBDWT_MASK0_ADDR)
-#define HW_MTBDWT_MASK0_RD()     (HW_MTBDWT_MASK0.U)
-#define HW_MTBDWT_MASK0_WR(v)    (HW_MTBDWT_MASK0.U = (v))
-#define HW_MTBDWT_MASK0_SET(v)   (BME_OR32(HW_MTBDWT_MASK0_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_MASK0_CLR(v)   (BME_AND32(HW_MTBDWT_MASK0_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_MASK0_TOG(v)   (BME_XOR32(HW_MTBDWT_MASK0_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_MASK0(x)       (*(__IO hw_mtbdwt_mask0_t *) HW_MTBDWT_MASK0_ADDR(x))
+#define HW_MTBDWT_MASK0_RD(x)    (HW_MTBDWT_MASK0(x).U)
+#define HW_MTBDWT_MASK0_WR(x, v) (HW_MTBDWT_MASK0(x).U = (v))
+#define HW_MTBDWT_MASK0_SET(x, v) (HW_MTBDWT_MASK0_WR(x, HW_MTBDWT_MASK0_RD(x) |  (v)))
+#define HW_MTBDWT_MASK0_CLR(x, v) (HW_MTBDWT_MASK0_WR(x, HW_MTBDWT_MASK0_RD(x) & ~(v)))
+#define HW_MTBDWT_MASK0_TOG(x, v) (HW_MTBDWT_MASK0_WR(x, HW_MTBDWT_MASK0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_MASK0 bitfields
@@ -278,30 +253,25 @@ typedef union _hw_mtbdwt_mask0
  * MTBDWT hardware to 24. If MTBDWT_COMP0 is used as a data value comparator, then
  * MTBDWT_MASK0 should be programmed to zero.
  */
-//@{
-#define BP_MTBDWT_MASK0_MASK (0U)          //!< Bit position for MTBDWT_MASK0_MASK.
-#define BM_MTBDWT_MASK0_MASK (0x0000001FU) //!< Bit mask for MTBDWT_MASK0_MASK.
-#define BS_MTBDWT_MASK0_MASK (5U)          //!< Bit field size in bits for MTBDWT_MASK0_MASK.
+/*@{*/
+#define BP_MTBDWT_MASK0_MASK (0U)          /*!< Bit position for MTBDWT_MASK0_MASK. */
+#define BM_MTBDWT_MASK0_MASK (0x0000001FU) /*!< Bit mask for MTBDWT_MASK0_MASK. */
+#define BS_MTBDWT_MASK0_MASK (5U)          /*!< Bit field size in bits for MTBDWT_MASK0_MASK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_MASK0_MASK field.
-#define BR_MTBDWT_MASK0_MASK (BME_UBFX32(HW_MTBDWT_MASK0_ADDR, BP_MTBDWT_MASK0_MASK, BS_MTBDWT_MASK0_MASK))
-#endif
+/*! @brief Read current value of the MTBDWT_MASK0_MASK field. */
+#define BR_MTBDWT_MASK0_MASK(x) (HW_MTBDWT_MASK0(x).B.MASK)
 
-//! @brief Format value for bitfield MTBDWT_MASK0_MASK.
-#define BF_MTBDWT_MASK0_MASK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_MASK0_MASK), uint32_t) & BM_MTBDWT_MASK0_MASK)
+/*! @brief Format value for bitfield MTBDWT_MASK0_MASK. */
+#define BF_MTBDWT_MASK0_MASK(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_MASK0_MASK) & BM_MTBDWT_MASK0_MASK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MASK field to a new value.
-#define BW_MTBDWT_MASK0_MASK(v) (BME_BFI32(HW_MTBDWT_MASK0_ADDR, ((uint32_t)(v) << BP_MTBDWT_MASK0_MASK), BP_MTBDWT_MASK0_MASK, 5))
-#endif
-//@}
+/*! @brief Set the MASK field to a new value. */
+#define BW_MTBDWT_MASK0_MASK(x, v) (HW_MTBDWT_MASK0_WR(x, (HW_MTBDWT_MASK0_RD(x) & ~BM_MTBDWT_MASK0_MASK) | BF_MTBDWT_MASK0_MASK(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_FCT0 - MTB_DWT Comparator Function Register 0
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_FCT0 - MTB_DWT Comparator Function Register 0
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_FCT0 - MTB_DWT Comparator Function Register 0 (RW)
  *
@@ -314,34 +284,31 @@ typedef union _hw_mtbdwt_fct0
     uint32_t U;
     struct _hw_mtbdwt_fct0_bitfields
     {
-        uint32_t FUNCTION : 4;         //!< [3:0] Function
-        uint32_t RESERVED0 : 4;        //!< [7:4]
-        uint32_t DATAVMATCH : 1;       //!< [8] Data Value Match
-        uint32_t RESERVED1 : 1;        //!< [9]
-        uint32_t DATAVSIZE : 2;        //!< [11:10] Data Value Size
-        uint32_t DATAVADDR0 : 4;       //!< [15:12] Data Value Address 0
-        uint32_t RESERVED2 : 8;        //!< [23:16]
-        uint32_t MATCHED : 1;          //!< [24] Comparator match
-        uint32_t RESERVED3 : 7;        //!< [31:25]
+        uint32_t FUNCTION : 4;         /*!< [3:0] Function */
+        uint32_t RESERVED0 : 4;        /*!< [7:4]  */
+        uint32_t DATAVMATCH : 1;       /*!< [8] Data Value Match */
+        uint32_t RESERVED1 : 1;        /*!< [9]  */
+        uint32_t DATAVSIZE : 2;        /*!< [11:10] Data Value Size */
+        uint32_t DATAVADDR0 : 4;       /*!< [15:12] Data Value Address 0 */
+        uint32_t RESERVED2 : 8;        /*!< [23:16]  */
+        uint32_t MATCHED : 1;          /*!< [24] Comparator match */
+        uint32_t RESERVED3 : 7;        /*!< [31:25]  */
     } B;
 } hw_mtbdwt_fct0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_FCT0 register
  */
-//@{
-#define HW_MTBDWT_FCT0_ADDR      (REGS_MTBDWT_BASE + 0x28U)
+/*@{*/
+#define HW_MTBDWT_FCT0_ADDR(x)   ((x) + 0x28U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_FCT0           (*(__IO hw_mtbdwt_fct0_t *) HW_MTBDWT_FCT0_ADDR)
-#define HW_MTBDWT_FCT0_RD()      (HW_MTBDWT_FCT0.U)
-#define HW_MTBDWT_FCT0_WR(v)     (HW_MTBDWT_FCT0.U = (v))
-#define HW_MTBDWT_FCT0_SET(v)    (BME_OR32(HW_MTBDWT_FCT0_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_FCT0_CLR(v)    (BME_AND32(HW_MTBDWT_FCT0_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_FCT0_TOG(v)    (BME_XOR32(HW_MTBDWT_FCT0_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_FCT0(x)        (*(__IO hw_mtbdwt_fct0_t *) HW_MTBDWT_FCT0_ADDR(x))
+#define HW_MTBDWT_FCT0_RD(x)     (HW_MTBDWT_FCT0(x).U)
+#define HW_MTBDWT_FCT0_WR(x, v)  (HW_MTBDWT_FCT0(x).U = (v))
+#define HW_MTBDWT_FCT0_SET(x, v) (HW_MTBDWT_FCT0_WR(x, HW_MTBDWT_FCT0_RD(x) |  (v)))
+#define HW_MTBDWT_FCT0_CLR(x, v) (HW_MTBDWT_FCT0_WR(x, HW_MTBDWT_FCT0_RD(x) & ~(v)))
+#define HW_MTBDWT_FCT0_TOG(x, v) (HW_MTBDWT_FCT0_WR(x, HW_MTBDWT_FCT0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_FCT0 bitfields
@@ -362,24 +329,20 @@ typedef union _hw_mtbdwt_fct0
  * - 0110 - Data operand write.
  * - 0111 - Data operand (read + write).
  */
-//@{
-#define BP_MTBDWT_FCT0_FUNCTION (0U)       //!< Bit position for MTBDWT_FCT0_FUNCTION.
-#define BM_MTBDWT_FCT0_FUNCTION (0x0000000FU) //!< Bit mask for MTBDWT_FCT0_FUNCTION.
-#define BS_MTBDWT_FCT0_FUNCTION (4U)       //!< Bit field size in bits for MTBDWT_FCT0_FUNCTION.
+/*@{*/
+#define BP_MTBDWT_FCT0_FUNCTION (0U)       /*!< Bit position for MTBDWT_FCT0_FUNCTION. */
+#define BM_MTBDWT_FCT0_FUNCTION (0x0000000FU) /*!< Bit mask for MTBDWT_FCT0_FUNCTION. */
+#define BS_MTBDWT_FCT0_FUNCTION (4U)       /*!< Bit field size in bits for MTBDWT_FCT0_FUNCTION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT0_FUNCTION field.
-#define BR_MTBDWT_FCT0_FUNCTION (BME_UBFX32(HW_MTBDWT_FCT0_ADDR, BP_MTBDWT_FCT0_FUNCTION, BS_MTBDWT_FCT0_FUNCTION))
-#endif
+/*! @brief Read current value of the MTBDWT_FCT0_FUNCTION field. */
+#define BR_MTBDWT_FCT0_FUNCTION(x) (HW_MTBDWT_FCT0(x).B.FUNCTION)
 
-//! @brief Format value for bitfield MTBDWT_FCT0_FUNCTION.
-#define BF_MTBDWT_FCT0_FUNCTION(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_FCT0_FUNCTION), uint32_t) & BM_MTBDWT_FCT0_FUNCTION)
+/*! @brief Format value for bitfield MTBDWT_FCT0_FUNCTION. */
+#define BF_MTBDWT_FCT0_FUNCTION(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_FCT0_FUNCTION) & BM_MTBDWT_FCT0_FUNCTION)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FUNCTION field to a new value.
-#define BW_MTBDWT_FCT0_FUNCTION(v) (BME_BFI32(HW_MTBDWT_FCT0_ADDR, ((uint32_t)(v) << BP_MTBDWT_FCT0_FUNCTION), BP_MTBDWT_FCT0_FUNCTION, 4))
-#endif
-//@}
+/*! @brief Set the FUNCTION field to a new value. */
+#define BW_MTBDWT_FCT0_FUNCTION(x, v) (HW_MTBDWT_FCT0_WR(x, (HW_MTBDWT_FCT0_RD(x) & ~BM_MTBDWT_FCT0_FUNCTION) | BF_MTBDWT_FCT0_FUNCTION(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_FCT0, field DATAVMATCH[8] (RW)
@@ -392,24 +355,20 @@ typedef union _hw_mtbdwt_fct0
  * - 0 - Perform address comparison.
  * - 1 - Perform data value comparison.
  */
-//@{
-#define BP_MTBDWT_FCT0_DATAVMATCH (8U)     //!< Bit position for MTBDWT_FCT0_DATAVMATCH.
-#define BM_MTBDWT_FCT0_DATAVMATCH (0x00000100U) //!< Bit mask for MTBDWT_FCT0_DATAVMATCH.
-#define BS_MTBDWT_FCT0_DATAVMATCH (1U)     //!< Bit field size in bits for MTBDWT_FCT0_DATAVMATCH.
+/*@{*/
+#define BP_MTBDWT_FCT0_DATAVMATCH (8U)     /*!< Bit position for MTBDWT_FCT0_DATAVMATCH. */
+#define BM_MTBDWT_FCT0_DATAVMATCH (0x00000100U) /*!< Bit mask for MTBDWT_FCT0_DATAVMATCH. */
+#define BS_MTBDWT_FCT0_DATAVMATCH (1U)     /*!< Bit field size in bits for MTBDWT_FCT0_DATAVMATCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT0_DATAVMATCH field.
-#define BR_MTBDWT_FCT0_DATAVMATCH (BME_UBFX32(HW_MTBDWT_FCT0_ADDR, BP_MTBDWT_FCT0_DATAVMATCH, BS_MTBDWT_FCT0_DATAVMATCH))
-#endif
+/*! @brief Read current value of the MTBDWT_FCT0_DATAVMATCH field. */
+#define BR_MTBDWT_FCT0_DATAVMATCH(x) (HW_MTBDWT_FCT0(x).B.DATAVMATCH)
 
-//! @brief Format value for bitfield MTBDWT_FCT0_DATAVMATCH.
-#define BF_MTBDWT_FCT0_DATAVMATCH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_FCT0_DATAVMATCH), uint32_t) & BM_MTBDWT_FCT0_DATAVMATCH)
+/*! @brief Format value for bitfield MTBDWT_FCT0_DATAVMATCH. */
+#define BF_MTBDWT_FCT0_DATAVMATCH(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVMATCH) & BM_MTBDWT_FCT0_DATAVMATCH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DATAVMATCH field to a new value.
-#define BW_MTBDWT_FCT0_DATAVMATCH(v) (BME_BFI32(HW_MTBDWT_FCT0_ADDR, ((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVMATCH), BP_MTBDWT_FCT0_DATAVMATCH, 1))
-#endif
-//@}
+/*! @brief Set the DATAVMATCH field to a new value. */
+#define BW_MTBDWT_FCT0_DATAVMATCH(x, v) (HW_MTBDWT_FCT0_WR(x, (HW_MTBDWT_FCT0_RD(x) & ~BM_MTBDWT_FCT0_DATAVMATCH) | BF_MTBDWT_FCT0_DATAVMATCH(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_FCT0, field DATAVSIZE[11:10] (RW)
@@ -424,24 +383,20 @@ typedef union _hw_mtbdwt_fct0
  * - 11 - Reserved. Any attempts to use this value results in UNPREDICTABLE
  *     behavior.
  */
-//@{
-#define BP_MTBDWT_FCT0_DATAVSIZE (10U)     //!< Bit position for MTBDWT_FCT0_DATAVSIZE.
-#define BM_MTBDWT_FCT0_DATAVSIZE (0x00000C00U) //!< Bit mask for MTBDWT_FCT0_DATAVSIZE.
-#define BS_MTBDWT_FCT0_DATAVSIZE (2U)      //!< Bit field size in bits for MTBDWT_FCT0_DATAVSIZE.
+/*@{*/
+#define BP_MTBDWT_FCT0_DATAVSIZE (10U)     /*!< Bit position for MTBDWT_FCT0_DATAVSIZE. */
+#define BM_MTBDWT_FCT0_DATAVSIZE (0x00000C00U) /*!< Bit mask for MTBDWT_FCT0_DATAVSIZE. */
+#define BS_MTBDWT_FCT0_DATAVSIZE (2U)      /*!< Bit field size in bits for MTBDWT_FCT0_DATAVSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT0_DATAVSIZE field.
-#define BR_MTBDWT_FCT0_DATAVSIZE (BME_UBFX32(HW_MTBDWT_FCT0_ADDR, BP_MTBDWT_FCT0_DATAVSIZE, BS_MTBDWT_FCT0_DATAVSIZE))
-#endif
+/*! @brief Read current value of the MTBDWT_FCT0_DATAVSIZE field. */
+#define BR_MTBDWT_FCT0_DATAVSIZE(x) (HW_MTBDWT_FCT0(x).B.DATAVSIZE)
 
-//! @brief Format value for bitfield MTBDWT_FCT0_DATAVSIZE.
-#define BF_MTBDWT_FCT0_DATAVSIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_FCT0_DATAVSIZE), uint32_t) & BM_MTBDWT_FCT0_DATAVSIZE)
+/*! @brief Format value for bitfield MTBDWT_FCT0_DATAVSIZE. */
+#define BF_MTBDWT_FCT0_DATAVSIZE(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVSIZE) & BM_MTBDWT_FCT0_DATAVSIZE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DATAVSIZE field to a new value.
-#define BW_MTBDWT_FCT0_DATAVSIZE(v) (BME_BFI32(HW_MTBDWT_FCT0_ADDR, ((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVSIZE), BP_MTBDWT_FCT0_DATAVSIZE, 2))
-#endif
-//@}
+/*! @brief Set the DATAVSIZE field to a new value. */
+#define BW_MTBDWT_FCT0_DATAVSIZE(x, v) (HW_MTBDWT_FCT0_WR(x, (HW_MTBDWT_FCT0_RD(x) & ~BM_MTBDWT_FCT0_DATAVSIZE) | BF_MTBDWT_FCT0_DATAVSIZE(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_FCT0, field DATAVADDR0[15:12] (RW)
@@ -452,24 +407,20 @@ typedef union _hw_mtbdwt_fct0
  * used as a data watchpoint and MTBDWT_COMP1 as an address watchpoint,
  * DATAVADDR0 must be set.
  */
-//@{
-#define BP_MTBDWT_FCT0_DATAVADDR0 (12U)    //!< Bit position for MTBDWT_FCT0_DATAVADDR0.
-#define BM_MTBDWT_FCT0_DATAVADDR0 (0x0000F000U) //!< Bit mask for MTBDWT_FCT0_DATAVADDR0.
-#define BS_MTBDWT_FCT0_DATAVADDR0 (4U)     //!< Bit field size in bits for MTBDWT_FCT0_DATAVADDR0.
+/*@{*/
+#define BP_MTBDWT_FCT0_DATAVADDR0 (12U)    /*!< Bit position for MTBDWT_FCT0_DATAVADDR0. */
+#define BM_MTBDWT_FCT0_DATAVADDR0 (0x0000F000U) /*!< Bit mask for MTBDWT_FCT0_DATAVADDR0. */
+#define BS_MTBDWT_FCT0_DATAVADDR0 (4U)     /*!< Bit field size in bits for MTBDWT_FCT0_DATAVADDR0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT0_DATAVADDR0 field.
-#define BR_MTBDWT_FCT0_DATAVADDR0 (BME_UBFX32(HW_MTBDWT_FCT0_ADDR, BP_MTBDWT_FCT0_DATAVADDR0, BS_MTBDWT_FCT0_DATAVADDR0))
-#endif
+/*! @brief Read current value of the MTBDWT_FCT0_DATAVADDR0 field. */
+#define BR_MTBDWT_FCT0_DATAVADDR0(x) (HW_MTBDWT_FCT0(x).B.DATAVADDR0)
 
-//! @brief Format value for bitfield MTBDWT_FCT0_DATAVADDR0.
-#define BF_MTBDWT_FCT0_DATAVADDR0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_FCT0_DATAVADDR0), uint32_t) & BM_MTBDWT_FCT0_DATAVADDR0)
+/*! @brief Format value for bitfield MTBDWT_FCT0_DATAVADDR0. */
+#define BF_MTBDWT_FCT0_DATAVADDR0(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVADDR0) & BM_MTBDWT_FCT0_DATAVADDR0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DATAVADDR0 field to a new value.
-#define BW_MTBDWT_FCT0_DATAVADDR0(v) (BME_BFI32(HW_MTBDWT_FCT0_ADDR, ((uint32_t)(v) << BP_MTBDWT_FCT0_DATAVADDR0), BP_MTBDWT_FCT0_DATAVADDR0, 4))
-#endif
-//@}
+/*! @brief Set the DATAVADDR0 field to a new value. */
+#define BW_MTBDWT_FCT0_DATAVADDR0(x, v) (HW_MTBDWT_FCT0_WR(x, (HW_MTBDWT_FCT0_RD(x) & ~BM_MTBDWT_FCT0_DATAVADDR0) | BF_MTBDWT_FCT0_DATAVADDR0(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_FCT0, field MATCHED[24] (RO)
@@ -482,22 +433,19 @@ typedef union _hw_mtbdwt_fct0
  * - 0 - No match.
  * - 1 - Match occurred.
  */
-//@{
-#define BP_MTBDWT_FCT0_MATCHED (24U)       //!< Bit position for MTBDWT_FCT0_MATCHED.
-#define BM_MTBDWT_FCT0_MATCHED (0x01000000U) //!< Bit mask for MTBDWT_FCT0_MATCHED.
-#define BS_MTBDWT_FCT0_MATCHED (1U)        //!< Bit field size in bits for MTBDWT_FCT0_MATCHED.
+/*@{*/
+#define BP_MTBDWT_FCT0_MATCHED (24U)       /*!< Bit position for MTBDWT_FCT0_MATCHED. */
+#define BM_MTBDWT_FCT0_MATCHED (0x01000000U) /*!< Bit mask for MTBDWT_FCT0_MATCHED. */
+#define BS_MTBDWT_FCT0_MATCHED (1U)        /*!< Bit field size in bits for MTBDWT_FCT0_MATCHED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT0_MATCHED field.
-#define BR_MTBDWT_FCT0_MATCHED (BME_UBFX32(HW_MTBDWT_FCT0_ADDR, BP_MTBDWT_FCT0_MATCHED, BS_MTBDWT_FCT0_MATCHED))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_FCT0_MATCHED field. */
+#define BR_MTBDWT_FCT0_MATCHED(x) (HW_MTBDWT_FCT0(x).B.MATCHED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_COMP1 - MTB_DWT Comparator Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_COMP1 - MTB_DWT Comparator Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_COMP1 - MTB_DWT Comparator Register (RW)
  *
@@ -510,26 +458,23 @@ typedef union _hw_mtbdwt_comp1
     uint32_t U;
     struct _hw_mtbdwt_comp1_bitfields
     {
-        uint32_t COMP : 32;            //!< [31:0] Reference value for comparison
+        uint32_t COMP : 32;            /*!< [31:0] Reference value for comparison */
     } B;
 } hw_mtbdwt_comp1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_COMP1 register
  */
-//@{
-#define HW_MTBDWT_COMP1_ADDR     (REGS_MTBDWT_BASE + 0x30U)
+/*@{*/
+#define HW_MTBDWT_COMP1_ADDR(x)  ((x) + 0x30U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_COMP1          (*(__IO hw_mtbdwt_comp1_t *) HW_MTBDWT_COMP1_ADDR)
-#define HW_MTBDWT_COMP1_RD()     (HW_MTBDWT_COMP1.U)
-#define HW_MTBDWT_COMP1_WR(v)    (HW_MTBDWT_COMP1.U = (v))
-#define HW_MTBDWT_COMP1_SET(v)   (BME_OR32(HW_MTBDWT_COMP1_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_COMP1_CLR(v)   (BME_AND32(HW_MTBDWT_COMP1_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_COMP1_TOG(v)   (BME_XOR32(HW_MTBDWT_COMP1_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_COMP1(x)       (*(__IO hw_mtbdwt_comp1_t *) HW_MTBDWT_COMP1_ADDR(x))
+#define HW_MTBDWT_COMP1_RD(x)    (HW_MTBDWT_COMP1(x).U)
+#define HW_MTBDWT_COMP1_WR(x, v) (HW_MTBDWT_COMP1(x).U = (v))
+#define HW_MTBDWT_COMP1_SET(x, v) (HW_MTBDWT_COMP1_WR(x, HW_MTBDWT_COMP1_RD(x) |  (v)))
+#define HW_MTBDWT_COMP1_CLR(x, v) (HW_MTBDWT_COMP1_WR(x, HW_MTBDWT_COMP1_RD(x) & ~(v)))
+#define HW_MTBDWT_COMP1_TOG(x, v) (HW_MTBDWT_COMP1_WR(x, HW_MTBDWT_COMP1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_COMP1 bitfields
@@ -544,30 +489,25 @@ typedef union _hw_mtbdwt_comp1
  * then COMP[31:24] = COMP[23:16] = COMP[15:8] = COMP[7:0] = "x". Likewise, if the
  * data is a halfword-size "y" value, then COMP[31:16] = COMP[15:0] = "y".
  */
-//@{
-#define BP_MTBDWT_COMP1_COMP (0U)          //!< Bit position for MTBDWT_COMP1_COMP.
-#define BM_MTBDWT_COMP1_COMP (0xFFFFFFFFU) //!< Bit mask for MTBDWT_COMP1_COMP.
-#define BS_MTBDWT_COMP1_COMP (32U)         //!< Bit field size in bits for MTBDWT_COMP1_COMP.
+/*@{*/
+#define BP_MTBDWT_COMP1_COMP (0U)          /*!< Bit position for MTBDWT_COMP1_COMP. */
+#define BM_MTBDWT_COMP1_COMP (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_COMP1_COMP. */
+#define BS_MTBDWT_COMP1_COMP (32U)         /*!< Bit field size in bits for MTBDWT_COMP1_COMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_COMP1_COMP field.
-#define BR_MTBDWT_COMP1_COMP (BME_UBFX32(HW_MTBDWT_COMP1_ADDR, BP_MTBDWT_COMP1_COMP, BS_MTBDWT_COMP1_COMP))
-#endif
+/*! @brief Read current value of the MTBDWT_COMP1_COMP field. */
+#define BR_MTBDWT_COMP1_COMP(x) (HW_MTBDWT_COMP1(x).U)
 
-//! @brief Format value for bitfield MTBDWT_COMP1_COMP.
-#define BF_MTBDWT_COMP1_COMP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_COMP1_COMP), uint32_t) & BM_MTBDWT_COMP1_COMP)
+/*! @brief Format value for bitfield MTBDWT_COMP1_COMP. */
+#define BF_MTBDWT_COMP1_COMP(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_COMP1_COMP) & BM_MTBDWT_COMP1_COMP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COMP field to a new value.
-#define BW_MTBDWT_COMP1_COMP(v) (BME_BFI32(HW_MTBDWT_COMP1_ADDR, ((uint32_t)(v) << BP_MTBDWT_COMP1_COMP), BP_MTBDWT_COMP1_COMP, 32))
-#endif
-//@}
+/*! @brief Set the COMP field to a new value. */
+#define BW_MTBDWT_COMP1_COMP(x, v) (HW_MTBDWT_COMP1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_MASK1 - MTB_DWT Comparator Mask Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_MASK1 - MTB_DWT Comparator Mask Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_MASK1 - MTB_DWT Comparator Mask Register (RW)
  *
@@ -582,27 +522,24 @@ typedef union _hw_mtbdwt_mask1
     uint32_t U;
     struct _hw_mtbdwt_mask1_bitfields
     {
-        uint32_t MASK : 5;             //!< [4:0] MASK
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t MASK : 5;             /*!< [4:0] MASK */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_mtbdwt_mask1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_MASK1 register
  */
-//@{
-#define HW_MTBDWT_MASK1_ADDR     (REGS_MTBDWT_BASE + 0x34U)
+/*@{*/
+#define HW_MTBDWT_MASK1_ADDR(x)  ((x) + 0x34U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_MASK1          (*(__IO hw_mtbdwt_mask1_t *) HW_MTBDWT_MASK1_ADDR)
-#define HW_MTBDWT_MASK1_RD()     (HW_MTBDWT_MASK1.U)
-#define HW_MTBDWT_MASK1_WR(v)    (HW_MTBDWT_MASK1.U = (v))
-#define HW_MTBDWT_MASK1_SET(v)   (BME_OR32(HW_MTBDWT_MASK1_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_MASK1_CLR(v)   (BME_AND32(HW_MTBDWT_MASK1_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_MASK1_TOG(v)   (BME_XOR32(HW_MTBDWT_MASK1_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_MASK1(x)       (*(__IO hw_mtbdwt_mask1_t *) HW_MTBDWT_MASK1_ADDR(x))
+#define HW_MTBDWT_MASK1_RD(x)    (HW_MTBDWT_MASK1(x).U)
+#define HW_MTBDWT_MASK1_WR(x, v) (HW_MTBDWT_MASK1(x).U = (v))
+#define HW_MTBDWT_MASK1_SET(x, v) (HW_MTBDWT_MASK1_WR(x, HW_MTBDWT_MASK1_RD(x) |  (v)))
+#define HW_MTBDWT_MASK1_CLR(x, v) (HW_MTBDWT_MASK1_WR(x, HW_MTBDWT_MASK1_RD(x) & ~(v)))
+#define HW_MTBDWT_MASK1_TOG(x, v) (HW_MTBDWT_MASK1_WR(x, HW_MTBDWT_MASK1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_MASK1 bitfields
@@ -623,30 +560,25 @@ typedef union _hw_mtbdwt_mask1
  * MTBDWT hardware to 24. If MTBDWT_COMP0 is used as a data value comparator, then
  * MTBDWT_MASK0 should be programmed to zero.
  */
-//@{
-#define BP_MTBDWT_MASK1_MASK (0U)          //!< Bit position for MTBDWT_MASK1_MASK.
-#define BM_MTBDWT_MASK1_MASK (0x0000001FU) //!< Bit mask for MTBDWT_MASK1_MASK.
-#define BS_MTBDWT_MASK1_MASK (5U)          //!< Bit field size in bits for MTBDWT_MASK1_MASK.
+/*@{*/
+#define BP_MTBDWT_MASK1_MASK (0U)          /*!< Bit position for MTBDWT_MASK1_MASK. */
+#define BM_MTBDWT_MASK1_MASK (0x0000001FU) /*!< Bit mask for MTBDWT_MASK1_MASK. */
+#define BS_MTBDWT_MASK1_MASK (5U)          /*!< Bit field size in bits for MTBDWT_MASK1_MASK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_MASK1_MASK field.
-#define BR_MTBDWT_MASK1_MASK (BME_UBFX32(HW_MTBDWT_MASK1_ADDR, BP_MTBDWT_MASK1_MASK, BS_MTBDWT_MASK1_MASK))
-#endif
+/*! @brief Read current value of the MTBDWT_MASK1_MASK field. */
+#define BR_MTBDWT_MASK1_MASK(x) (HW_MTBDWT_MASK1(x).B.MASK)
 
-//! @brief Format value for bitfield MTBDWT_MASK1_MASK.
-#define BF_MTBDWT_MASK1_MASK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_MASK1_MASK), uint32_t) & BM_MTBDWT_MASK1_MASK)
+/*! @brief Format value for bitfield MTBDWT_MASK1_MASK. */
+#define BF_MTBDWT_MASK1_MASK(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_MASK1_MASK) & BM_MTBDWT_MASK1_MASK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MASK field to a new value.
-#define BW_MTBDWT_MASK1_MASK(v) (BME_BFI32(HW_MTBDWT_MASK1_ADDR, ((uint32_t)(v) << BP_MTBDWT_MASK1_MASK), BP_MTBDWT_MASK1_MASK, 5))
-#endif
-//@}
+/*! @brief Set the MASK field to a new value. */
+#define BW_MTBDWT_MASK1_MASK(x, v) (HW_MTBDWT_MASK1_WR(x, (HW_MTBDWT_MASK1_RD(x) & ~BM_MTBDWT_MASK1_MASK) | BF_MTBDWT_MASK1_MASK(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_FCT1 - MTB_DWT Comparator Function Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_FCT1 - MTB_DWT Comparator Function Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_FCT1 - MTB_DWT Comparator Function Register 1 (RW)
  *
@@ -661,29 +593,26 @@ typedef union _hw_mtbdwt_fct1
     uint32_t U;
     struct _hw_mtbdwt_fct1_bitfields
     {
-        uint32_t FUNCTION : 4;         //!< [3:0] Function
-        uint32_t RESERVED0 : 20;       //!< [23:4]
-        uint32_t MATCHED : 1;          //!< [24] Comparator match
-        uint32_t RESERVED1 : 7;        //!< [31:25]
+        uint32_t FUNCTION : 4;         /*!< [3:0] Function */
+        uint32_t RESERVED0 : 20;       /*!< [23:4]  */
+        uint32_t MATCHED : 1;          /*!< [24] Comparator match */
+        uint32_t RESERVED1 : 7;        /*!< [31:25]  */
     } B;
 } hw_mtbdwt_fct1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_FCT1 register
  */
-//@{
-#define HW_MTBDWT_FCT1_ADDR      (REGS_MTBDWT_BASE + 0x38U)
+/*@{*/
+#define HW_MTBDWT_FCT1_ADDR(x)   ((x) + 0x38U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_FCT1           (*(__IO hw_mtbdwt_fct1_t *) HW_MTBDWT_FCT1_ADDR)
-#define HW_MTBDWT_FCT1_RD()      (HW_MTBDWT_FCT1.U)
-#define HW_MTBDWT_FCT1_WR(v)     (HW_MTBDWT_FCT1.U = (v))
-#define HW_MTBDWT_FCT1_SET(v)    (BME_OR32(HW_MTBDWT_FCT1_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_FCT1_CLR(v)    (BME_AND32(HW_MTBDWT_FCT1_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_FCT1_TOG(v)    (BME_XOR32(HW_MTBDWT_FCT1_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_FCT1(x)        (*(__IO hw_mtbdwt_fct1_t *) HW_MTBDWT_FCT1_ADDR(x))
+#define HW_MTBDWT_FCT1_RD(x)     (HW_MTBDWT_FCT1(x).U)
+#define HW_MTBDWT_FCT1_WR(x, v)  (HW_MTBDWT_FCT1(x).U = (v))
+#define HW_MTBDWT_FCT1_SET(x, v) (HW_MTBDWT_FCT1_WR(x, HW_MTBDWT_FCT1_RD(x) |  (v)))
+#define HW_MTBDWT_FCT1_CLR(x, v) (HW_MTBDWT_FCT1_WR(x, HW_MTBDWT_FCT1_RD(x) & ~(v)))
+#define HW_MTBDWT_FCT1_TOG(x, v) (HW_MTBDWT_FCT1_WR(x, HW_MTBDWT_FCT1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_FCT1 bitfields
@@ -704,24 +633,20 @@ typedef union _hw_mtbdwt_fct1
  * - 0110 - Data operand write.
  * - 0111 - Data operand (read + write).
  */
-//@{
-#define BP_MTBDWT_FCT1_FUNCTION (0U)       //!< Bit position for MTBDWT_FCT1_FUNCTION.
-#define BM_MTBDWT_FCT1_FUNCTION (0x0000000FU) //!< Bit mask for MTBDWT_FCT1_FUNCTION.
-#define BS_MTBDWT_FCT1_FUNCTION (4U)       //!< Bit field size in bits for MTBDWT_FCT1_FUNCTION.
+/*@{*/
+#define BP_MTBDWT_FCT1_FUNCTION (0U)       /*!< Bit position for MTBDWT_FCT1_FUNCTION. */
+#define BM_MTBDWT_FCT1_FUNCTION (0x0000000FU) /*!< Bit mask for MTBDWT_FCT1_FUNCTION. */
+#define BS_MTBDWT_FCT1_FUNCTION (4U)       /*!< Bit field size in bits for MTBDWT_FCT1_FUNCTION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT1_FUNCTION field.
-#define BR_MTBDWT_FCT1_FUNCTION (BME_UBFX32(HW_MTBDWT_FCT1_ADDR, BP_MTBDWT_FCT1_FUNCTION, BS_MTBDWT_FCT1_FUNCTION))
-#endif
+/*! @brief Read current value of the MTBDWT_FCT1_FUNCTION field. */
+#define BR_MTBDWT_FCT1_FUNCTION(x) (HW_MTBDWT_FCT1(x).B.FUNCTION)
 
-//! @brief Format value for bitfield MTBDWT_FCT1_FUNCTION.
-#define BF_MTBDWT_FCT1_FUNCTION(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_FCT1_FUNCTION), uint32_t) & BM_MTBDWT_FCT1_FUNCTION)
+/*! @brief Format value for bitfield MTBDWT_FCT1_FUNCTION. */
+#define BF_MTBDWT_FCT1_FUNCTION(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_FCT1_FUNCTION) & BM_MTBDWT_FCT1_FUNCTION)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FUNCTION field to a new value.
-#define BW_MTBDWT_FCT1_FUNCTION(v) (BME_BFI32(HW_MTBDWT_FCT1_ADDR, ((uint32_t)(v) << BP_MTBDWT_FCT1_FUNCTION), BP_MTBDWT_FCT1_FUNCTION, 4))
-#endif
-//@}
+/*! @brief Set the FUNCTION field to a new value. */
+#define BW_MTBDWT_FCT1_FUNCTION(x, v) (HW_MTBDWT_FCT1_WR(x, (HW_MTBDWT_FCT1_RD(x) & ~BM_MTBDWT_FCT1_FUNCTION) | BF_MTBDWT_FCT1_FUNCTION(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_FCT1, field MATCHED[24] (RO)
@@ -734,22 +659,19 @@ typedef union _hw_mtbdwt_fct1
  * - 0 - No match.
  * - 1 - Match occurred.
  */
-//@{
-#define BP_MTBDWT_FCT1_MATCHED (24U)       //!< Bit position for MTBDWT_FCT1_MATCHED.
-#define BM_MTBDWT_FCT1_MATCHED (0x01000000U) //!< Bit mask for MTBDWT_FCT1_MATCHED.
-#define BS_MTBDWT_FCT1_MATCHED (1U)        //!< Bit field size in bits for MTBDWT_FCT1_MATCHED.
+/*@{*/
+#define BP_MTBDWT_FCT1_MATCHED (24U)       /*!< Bit position for MTBDWT_FCT1_MATCHED. */
+#define BM_MTBDWT_FCT1_MATCHED (0x01000000U) /*!< Bit mask for MTBDWT_FCT1_MATCHED. */
+#define BS_MTBDWT_FCT1_MATCHED (1U)        /*!< Bit field size in bits for MTBDWT_FCT1_MATCHED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_FCT1_MATCHED field.
-#define BR_MTBDWT_FCT1_MATCHED (BME_UBFX32(HW_MTBDWT_FCT1_ADDR, BP_MTBDWT_FCT1_MATCHED, BS_MTBDWT_FCT1_MATCHED))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_FCT1_MATCHED field. */
+#define BR_MTBDWT_FCT1_MATCHED(x) (HW_MTBDWT_FCT1(x).B.MATCHED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_TBCTRL - MTB_DWT Trace Buffer Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_TBCTRL - MTB_DWT Trace Buffer Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_TBCTRL - MTB_DWT Trace Buffer Control Register (RW)
  *
@@ -768,29 +690,26 @@ typedef union _hw_mtbdwt_tbctrl
     uint32_t U;
     struct _hw_mtbdwt_tbctrl_bitfields
     {
-        uint32_t ACOMP0 : 1;           //!< [0] Action based on Comparator 0 match
-        uint32_t ACOMP1 : 1;           //!< [1] Action based on Comparator 1 match
-        uint32_t RESERVED0 : 26;       //!< [27:2]
-        uint32_t NUMCOMP : 4;          //!< [31:28] Number of Comparators
+        uint32_t ACOMP0 : 1;           /*!< [0] Action based on Comparator 0 match */
+        uint32_t ACOMP1 : 1;           /*!< [1] Action based on Comparator 1 match */
+        uint32_t RESERVED0 : 26;       /*!< [27:2]  */
+        uint32_t NUMCOMP : 4;          /*!< [31:28] Number of Comparators */
     } B;
 } hw_mtbdwt_tbctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_TBCTRL register
  */
-//@{
-#define HW_MTBDWT_TBCTRL_ADDR    (REGS_MTBDWT_BASE + 0x200U)
+/*@{*/
+#define HW_MTBDWT_TBCTRL_ADDR(x) ((x) + 0x200U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_TBCTRL         (*(__IO hw_mtbdwt_tbctrl_t *) HW_MTBDWT_TBCTRL_ADDR)
-#define HW_MTBDWT_TBCTRL_RD()    (HW_MTBDWT_TBCTRL.U)
-#define HW_MTBDWT_TBCTRL_WR(v)   (HW_MTBDWT_TBCTRL.U = (v))
-#define HW_MTBDWT_TBCTRL_SET(v)  (BME_OR32(HW_MTBDWT_TBCTRL_ADDR, (uint32_t)(v)))
-#define HW_MTBDWT_TBCTRL_CLR(v)  (BME_AND32(HW_MTBDWT_TBCTRL_ADDR, (uint32_t)(~(v))))
-#define HW_MTBDWT_TBCTRL_TOG(v)  (BME_XOR32(HW_MTBDWT_TBCTRL_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTBDWT_TBCTRL(x)      (*(__IO hw_mtbdwt_tbctrl_t *) HW_MTBDWT_TBCTRL_ADDR(x))
+#define HW_MTBDWT_TBCTRL_RD(x)   (HW_MTBDWT_TBCTRL(x).U)
+#define HW_MTBDWT_TBCTRL_WR(x, v) (HW_MTBDWT_TBCTRL(x).U = (v))
+#define HW_MTBDWT_TBCTRL_SET(x, v) (HW_MTBDWT_TBCTRL_WR(x, HW_MTBDWT_TBCTRL_RD(x) |  (v)))
+#define HW_MTBDWT_TBCTRL_CLR(x, v) (HW_MTBDWT_TBCTRL_WR(x, HW_MTBDWT_TBCTRL_RD(x) & ~(v)))
+#define HW_MTBDWT_TBCTRL_TOG(x, v) (HW_MTBDWT_TBCTRL_WR(x, HW_MTBDWT_TBCTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_TBCTRL bitfields
@@ -811,24 +730,20 @@ typedef union _hw_mtbdwt_tbctrl
  * - 0 - Trigger TSTOP based on the assertion of MTBDWT_FCT0[MATCHED].
  * - 1 - Trigger TSTART based on the assertion of MTBDWT_FCT0[MATCHED].
  */
-//@{
-#define BP_MTBDWT_TBCTRL_ACOMP0 (0U)       //!< Bit position for MTBDWT_TBCTRL_ACOMP0.
-#define BM_MTBDWT_TBCTRL_ACOMP0 (0x00000001U) //!< Bit mask for MTBDWT_TBCTRL_ACOMP0.
-#define BS_MTBDWT_TBCTRL_ACOMP0 (1U)       //!< Bit field size in bits for MTBDWT_TBCTRL_ACOMP0.
+/*@{*/
+#define BP_MTBDWT_TBCTRL_ACOMP0 (0U)       /*!< Bit position for MTBDWT_TBCTRL_ACOMP0. */
+#define BM_MTBDWT_TBCTRL_ACOMP0 (0x00000001U) /*!< Bit mask for MTBDWT_TBCTRL_ACOMP0. */
+#define BS_MTBDWT_TBCTRL_ACOMP0 (1U)       /*!< Bit field size in bits for MTBDWT_TBCTRL_ACOMP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_TBCTRL_ACOMP0 field.
-#define BR_MTBDWT_TBCTRL_ACOMP0 (BME_UBFX32(HW_MTBDWT_TBCTRL_ADDR, BP_MTBDWT_TBCTRL_ACOMP0, BS_MTBDWT_TBCTRL_ACOMP0))
-#endif
+/*! @brief Read current value of the MTBDWT_TBCTRL_ACOMP0 field. */
+#define BR_MTBDWT_TBCTRL_ACOMP0(x) (HW_MTBDWT_TBCTRL(x).B.ACOMP0)
 
-//! @brief Format value for bitfield MTBDWT_TBCTRL_ACOMP0.
-#define BF_MTBDWT_TBCTRL_ACOMP0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_TBCTRL_ACOMP0), uint32_t) & BM_MTBDWT_TBCTRL_ACOMP0)
+/*! @brief Format value for bitfield MTBDWT_TBCTRL_ACOMP0. */
+#define BF_MTBDWT_TBCTRL_ACOMP0(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_TBCTRL_ACOMP0) & BM_MTBDWT_TBCTRL_ACOMP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACOMP0 field to a new value.
-#define BW_MTBDWT_TBCTRL_ACOMP0(v) (BME_BFI32(HW_MTBDWT_TBCTRL_ADDR, ((uint32_t)(v) << BP_MTBDWT_TBCTRL_ACOMP0), BP_MTBDWT_TBCTRL_ACOMP0, 1))
-#endif
-//@}
+/*! @brief Set the ACOMP0 field to a new value. */
+#define BW_MTBDWT_TBCTRL_ACOMP0(x, v) (HW_MTBDWT_TBCTRL_WR(x, (HW_MTBDWT_TBCTRL_RD(x) & ~BM_MTBDWT_TBCTRL_ACOMP0) | BF_MTBDWT_TBCTRL_ACOMP0(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_TBCTRL, field ACOMP1[1] (RW)
@@ -840,24 +755,20 @@ typedef union _hw_mtbdwt_tbctrl
  * - 0 - Trigger TSTOP based on the assertion of MTBDWT_FCT1[MATCHED].
  * - 1 - Trigger TSTART based on the assertion of MTBDWT_FCT1[MATCHED].
  */
-//@{
-#define BP_MTBDWT_TBCTRL_ACOMP1 (1U)       //!< Bit position for MTBDWT_TBCTRL_ACOMP1.
-#define BM_MTBDWT_TBCTRL_ACOMP1 (0x00000002U) //!< Bit mask for MTBDWT_TBCTRL_ACOMP1.
-#define BS_MTBDWT_TBCTRL_ACOMP1 (1U)       //!< Bit field size in bits for MTBDWT_TBCTRL_ACOMP1.
+/*@{*/
+#define BP_MTBDWT_TBCTRL_ACOMP1 (1U)       /*!< Bit position for MTBDWT_TBCTRL_ACOMP1. */
+#define BM_MTBDWT_TBCTRL_ACOMP1 (0x00000002U) /*!< Bit mask for MTBDWT_TBCTRL_ACOMP1. */
+#define BS_MTBDWT_TBCTRL_ACOMP1 (1U)       /*!< Bit field size in bits for MTBDWT_TBCTRL_ACOMP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_TBCTRL_ACOMP1 field.
-#define BR_MTBDWT_TBCTRL_ACOMP1 (BME_UBFX32(HW_MTBDWT_TBCTRL_ADDR, BP_MTBDWT_TBCTRL_ACOMP1, BS_MTBDWT_TBCTRL_ACOMP1))
-#endif
+/*! @brief Read current value of the MTBDWT_TBCTRL_ACOMP1 field. */
+#define BR_MTBDWT_TBCTRL_ACOMP1(x) (HW_MTBDWT_TBCTRL(x).B.ACOMP1)
 
-//! @brief Format value for bitfield MTBDWT_TBCTRL_ACOMP1.
-#define BF_MTBDWT_TBCTRL_ACOMP1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTBDWT_TBCTRL_ACOMP1), uint32_t) & BM_MTBDWT_TBCTRL_ACOMP1)
+/*! @brief Format value for bitfield MTBDWT_TBCTRL_ACOMP1. */
+#define BF_MTBDWT_TBCTRL_ACOMP1(v) ((uint32_t)((uint32_t)(v) << BP_MTBDWT_TBCTRL_ACOMP1) & BM_MTBDWT_TBCTRL_ACOMP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACOMP1 field to a new value.
-#define BW_MTBDWT_TBCTRL_ACOMP1(v) (BME_BFI32(HW_MTBDWT_TBCTRL_ADDR, ((uint32_t)(v) << BP_MTBDWT_TBCTRL_ACOMP1), BP_MTBDWT_TBCTRL_ACOMP1, 1))
-#endif
-//@}
+/*! @brief Set the ACOMP1 field to a new value. */
+#define BW_MTBDWT_TBCTRL_ACOMP1(x, v) (HW_MTBDWT_TBCTRL_WR(x, (HW_MTBDWT_TBCTRL_RD(x) & ~BM_MTBDWT_TBCTRL_ACOMP1) | BF_MTBDWT_TBCTRL_ACOMP1(v)))
+/*@}*/
 
 /*!
  * @name Register MTBDWT_TBCTRL, field NUMCOMP[31:28] (RO)
@@ -865,22 +776,19 @@ typedef union _hw_mtbdwt_tbctrl
  * This read-only field specifies the number of comparators in the MTB_DWT. This
  * implementation includes two registers.
  */
-//@{
-#define BP_MTBDWT_TBCTRL_NUMCOMP (28U)     //!< Bit position for MTBDWT_TBCTRL_NUMCOMP.
-#define BM_MTBDWT_TBCTRL_NUMCOMP (0xF0000000U) //!< Bit mask for MTBDWT_TBCTRL_NUMCOMP.
-#define BS_MTBDWT_TBCTRL_NUMCOMP (4U)      //!< Bit field size in bits for MTBDWT_TBCTRL_NUMCOMP.
+/*@{*/
+#define BP_MTBDWT_TBCTRL_NUMCOMP (28U)     /*!< Bit position for MTBDWT_TBCTRL_NUMCOMP. */
+#define BM_MTBDWT_TBCTRL_NUMCOMP (0xF0000000U) /*!< Bit mask for MTBDWT_TBCTRL_NUMCOMP. */
+#define BS_MTBDWT_TBCTRL_NUMCOMP (4U)      /*!< Bit field size in bits for MTBDWT_TBCTRL_NUMCOMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_TBCTRL_NUMCOMP field.
-#define BR_MTBDWT_TBCTRL_NUMCOMP (BME_UBFX32(HW_MTBDWT_TBCTRL_ADDR, BP_MTBDWT_TBCTRL_NUMCOMP, BS_MTBDWT_TBCTRL_NUMCOMP))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_TBCTRL_NUMCOMP field. */
+#define BR_MTBDWT_TBCTRL_NUMCOMP(x) (HW_MTBDWT_TBCTRL(x).B.NUMCOMP)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_DEVICECFG - Device Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_DEVICECFG - Device Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_DEVICECFG - Device Configuration Register (RO)
  *
@@ -894,22 +802,19 @@ typedef union _hw_mtbdwt_devicecfg
     uint32_t U;
     struct _hw_mtbdwt_devicecfg_bitfields
     {
-        uint32_t DEVICECFG : 32;       //!< [31:0]
+        uint32_t DEVICECFG : 32;       /*!< [31:0]  */
     } B;
 } hw_mtbdwt_devicecfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_DEVICECFG register
  */
-//@{
-#define HW_MTBDWT_DEVICECFG_ADDR (REGS_MTBDWT_BASE + 0xFC8U)
+/*@{*/
+#define HW_MTBDWT_DEVICECFG_ADDR(x) ((x) + 0xFC8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_DEVICECFG      (*(__I hw_mtbdwt_devicecfg_t *) HW_MTBDWT_DEVICECFG_ADDR)
-#define HW_MTBDWT_DEVICECFG_RD() (HW_MTBDWT_DEVICECFG.U)
-#endif
-//@}
+#define HW_MTBDWT_DEVICECFG(x)   (*(__I hw_mtbdwt_devicecfg_t *) HW_MTBDWT_DEVICECFG_ADDR(x))
+#define HW_MTBDWT_DEVICECFG_RD(x) (HW_MTBDWT_DEVICECFG(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_DEVICECFG bitfields
@@ -920,22 +825,19 @@ typedef union _hw_mtbdwt_devicecfg
  *
  * Hardwired to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_DEVICECFG_DEVICECFG (0U) //!< Bit position for MTBDWT_DEVICECFG_DEVICECFG.
-#define BM_MTBDWT_DEVICECFG_DEVICECFG (0xFFFFFFFFU) //!< Bit mask for MTBDWT_DEVICECFG_DEVICECFG.
-#define BS_MTBDWT_DEVICECFG_DEVICECFG (32U) //!< Bit field size in bits for MTBDWT_DEVICECFG_DEVICECFG.
+/*@{*/
+#define BP_MTBDWT_DEVICECFG_DEVICECFG (0U) /*!< Bit position for MTBDWT_DEVICECFG_DEVICECFG. */
+#define BM_MTBDWT_DEVICECFG_DEVICECFG (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_DEVICECFG_DEVICECFG. */
+#define BS_MTBDWT_DEVICECFG_DEVICECFG (32U) /*!< Bit field size in bits for MTBDWT_DEVICECFG_DEVICECFG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_DEVICECFG_DEVICECFG field.
-#define BR_MTBDWT_DEVICECFG_DEVICECFG (BME_UBFX32(HW_MTBDWT_DEVICECFG_ADDR, BP_MTBDWT_DEVICECFG_DEVICECFG, BS_MTBDWT_DEVICECFG_DEVICECFG))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_DEVICECFG_DEVICECFG field. */
+#define BR_MTBDWT_DEVICECFG_DEVICECFG(x) (HW_MTBDWT_DEVICECFG(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_DEVICETYPID - Device Type Identifier Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_DEVICETYPID - Device Type Identifier Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_DEVICETYPID - Device Type Identifier Register (RO)
  *
@@ -949,22 +851,19 @@ typedef union _hw_mtbdwt_devicetypid
     uint32_t U;
     struct _hw_mtbdwt_devicetypid_bitfields
     {
-        uint32_t DEVICETYPID : 32;     //!< [31:0]
+        uint32_t DEVICETYPID : 32;     /*!< [31:0]  */
     } B;
 } hw_mtbdwt_devicetypid_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_DEVICETYPID register
  */
-//@{
-#define HW_MTBDWT_DEVICETYPID_ADDR (REGS_MTBDWT_BASE + 0xFCCU)
+/*@{*/
+#define HW_MTBDWT_DEVICETYPID_ADDR(x) ((x) + 0xFCCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_DEVICETYPID    (*(__I hw_mtbdwt_devicetypid_t *) HW_MTBDWT_DEVICETYPID_ADDR)
-#define HW_MTBDWT_DEVICETYPID_RD() (HW_MTBDWT_DEVICETYPID.U)
-#endif
-//@}
+#define HW_MTBDWT_DEVICETYPID(x) (*(__I hw_mtbdwt_devicetypid_t *) HW_MTBDWT_DEVICETYPID_ADDR(x))
+#define HW_MTBDWT_DEVICETYPID_RD(x) (HW_MTBDWT_DEVICETYPID(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_DEVICETYPID bitfields
@@ -975,22 +874,19 @@ typedef union _hw_mtbdwt_devicetypid
  *
  * Hardwired to 0x0000_0004.
  */
-//@{
-#define BP_MTBDWT_DEVICETYPID_DEVICETYPID (0U) //!< Bit position for MTBDWT_DEVICETYPID_DEVICETYPID.
-#define BM_MTBDWT_DEVICETYPID_DEVICETYPID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_DEVICETYPID_DEVICETYPID.
-#define BS_MTBDWT_DEVICETYPID_DEVICETYPID (32U) //!< Bit field size in bits for MTBDWT_DEVICETYPID_DEVICETYPID.
+/*@{*/
+#define BP_MTBDWT_DEVICETYPID_DEVICETYPID (0U) /*!< Bit position for MTBDWT_DEVICETYPID_DEVICETYPID. */
+#define BM_MTBDWT_DEVICETYPID_DEVICETYPID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_DEVICETYPID_DEVICETYPID. */
+#define BS_MTBDWT_DEVICETYPID_DEVICETYPID (32U) /*!< Bit field size in bits for MTBDWT_DEVICETYPID_DEVICETYPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_DEVICETYPID_DEVICETYPID field.
-#define BR_MTBDWT_DEVICETYPID_DEVICETYPID (BME_UBFX32(HW_MTBDWT_DEVICETYPID_ADDR, BP_MTBDWT_DEVICETYPID_DEVICETYPID, BS_MTBDWT_DEVICETYPID_DEVICETYPID))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_DEVICETYPID_DEVICETYPID field. */
+#define BR_MTBDWT_DEVICETYPID_DEVICETYPID(x) (HW_MTBDWT_DEVICETYPID(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID4 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID4 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID4 - Peripheral ID Register (RO)
  *
@@ -1004,22 +900,19 @@ typedef union _hw_mtbdwt_periphid4
     uint32_t U;
     struct _hw_mtbdwt_periphid4_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID4 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID4_ADDR (REGS_MTBDWT_BASE + 0xFD0U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID4_ADDR(x) ((x) + 0xFD0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID4      (*(__I hw_mtbdwt_periphid4_t *) HW_MTBDWT_PERIPHID4_ADDR)
-#define HW_MTBDWT_PERIPHID4_RD() (HW_MTBDWT_PERIPHID4.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID4(x)   (*(__I hw_mtbdwt_periphid4_t *) HW_MTBDWT_PERIPHID4_ADDR(x))
+#define HW_MTBDWT_PERIPHID4_RD(x) (HW_MTBDWT_PERIPHID4(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID4 bitfields
@@ -1031,21 +924,18 @@ typedef union _hw_mtbdwt_periphid4
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID4_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID4_PERIPHID.
-#define BM_MTBDWT_PERIPHID4_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID4_PERIPHID.
-#define BS_MTBDWT_PERIPHID4_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID4_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID4_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID4_PERIPHID. */
+#define BM_MTBDWT_PERIPHID4_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID4_PERIPHID. */
+#define BS_MTBDWT_PERIPHID4_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID4_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID4_PERIPHID field.
-#define BR_MTBDWT_PERIPHID4_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID4_ADDR, BP_MTBDWT_PERIPHID4_PERIPHID, BS_MTBDWT_PERIPHID4_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID5 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID4_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID4_PERIPHID(x) (HW_MTBDWT_PERIPHID4(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID5 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID5 - Peripheral ID Register (RO)
  *
@@ -1059,22 +949,19 @@ typedef union _hw_mtbdwt_periphid5
     uint32_t U;
     struct _hw_mtbdwt_periphid5_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID5 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID5_ADDR (REGS_MTBDWT_BASE + 0xFD4U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID5_ADDR(x) ((x) + 0xFD4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID5      (*(__I hw_mtbdwt_periphid5_t *) HW_MTBDWT_PERIPHID5_ADDR)
-#define HW_MTBDWT_PERIPHID5_RD() (HW_MTBDWT_PERIPHID5.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID5(x)   (*(__I hw_mtbdwt_periphid5_t *) HW_MTBDWT_PERIPHID5_ADDR(x))
+#define HW_MTBDWT_PERIPHID5_RD(x) (HW_MTBDWT_PERIPHID5(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID5 bitfields
@@ -1086,21 +973,18 @@ typedef union _hw_mtbdwt_periphid5
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID5_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID5_PERIPHID.
-#define BM_MTBDWT_PERIPHID5_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID5_PERIPHID.
-#define BS_MTBDWT_PERIPHID5_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID5_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID5_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID5_PERIPHID. */
+#define BM_MTBDWT_PERIPHID5_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID5_PERIPHID. */
+#define BS_MTBDWT_PERIPHID5_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID5_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID5_PERIPHID field.
-#define BR_MTBDWT_PERIPHID5_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID5_ADDR, BP_MTBDWT_PERIPHID5_PERIPHID, BS_MTBDWT_PERIPHID5_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID6 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID5_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID5_PERIPHID(x) (HW_MTBDWT_PERIPHID5(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID6 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID6 - Peripheral ID Register (RO)
  *
@@ -1114,22 +998,19 @@ typedef union _hw_mtbdwt_periphid6
     uint32_t U;
     struct _hw_mtbdwt_periphid6_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID6 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID6_ADDR (REGS_MTBDWT_BASE + 0xFD8U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID6_ADDR(x) ((x) + 0xFD8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID6      (*(__I hw_mtbdwt_periphid6_t *) HW_MTBDWT_PERIPHID6_ADDR)
-#define HW_MTBDWT_PERIPHID6_RD() (HW_MTBDWT_PERIPHID6.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID6(x)   (*(__I hw_mtbdwt_periphid6_t *) HW_MTBDWT_PERIPHID6_ADDR(x))
+#define HW_MTBDWT_PERIPHID6_RD(x) (HW_MTBDWT_PERIPHID6(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID6 bitfields
@@ -1141,21 +1022,18 @@ typedef union _hw_mtbdwt_periphid6
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID6_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID6_PERIPHID.
-#define BM_MTBDWT_PERIPHID6_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID6_PERIPHID.
-#define BS_MTBDWT_PERIPHID6_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID6_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID6_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID6_PERIPHID. */
+#define BM_MTBDWT_PERIPHID6_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID6_PERIPHID. */
+#define BS_MTBDWT_PERIPHID6_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID6_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID6_PERIPHID field.
-#define BR_MTBDWT_PERIPHID6_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID6_ADDR, BP_MTBDWT_PERIPHID6_PERIPHID, BS_MTBDWT_PERIPHID6_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID7 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID6_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID6_PERIPHID(x) (HW_MTBDWT_PERIPHID6(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID7 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID7 - Peripheral ID Register (RO)
  *
@@ -1169,22 +1047,19 @@ typedef union _hw_mtbdwt_periphid7
     uint32_t U;
     struct _hw_mtbdwt_periphid7_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID7 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID7_ADDR (REGS_MTBDWT_BASE + 0xFDCU)
+/*@{*/
+#define HW_MTBDWT_PERIPHID7_ADDR(x) ((x) + 0xFDCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID7      (*(__I hw_mtbdwt_periphid7_t *) HW_MTBDWT_PERIPHID7_ADDR)
-#define HW_MTBDWT_PERIPHID7_RD() (HW_MTBDWT_PERIPHID7.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID7(x)   (*(__I hw_mtbdwt_periphid7_t *) HW_MTBDWT_PERIPHID7_ADDR(x))
+#define HW_MTBDWT_PERIPHID7_RD(x) (HW_MTBDWT_PERIPHID7(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID7 bitfields
@@ -1196,21 +1071,18 @@ typedef union _hw_mtbdwt_periphid7
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID7_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID7_PERIPHID.
-#define BM_MTBDWT_PERIPHID7_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID7_PERIPHID.
-#define BS_MTBDWT_PERIPHID7_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID7_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID7_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID7_PERIPHID. */
+#define BM_MTBDWT_PERIPHID7_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID7_PERIPHID. */
+#define BS_MTBDWT_PERIPHID7_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID7_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID7_PERIPHID field.
-#define BR_MTBDWT_PERIPHID7_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID7_ADDR, BP_MTBDWT_PERIPHID7_PERIPHID, BS_MTBDWT_PERIPHID7_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID0 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID7_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID7_PERIPHID(x) (HW_MTBDWT_PERIPHID7(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID0 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID0 - Peripheral ID Register (RO)
  *
@@ -1224,22 +1096,19 @@ typedef union _hw_mtbdwt_periphid0
     uint32_t U;
     struct _hw_mtbdwt_periphid0_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID0 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID0_ADDR (REGS_MTBDWT_BASE + 0xFE0U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID0_ADDR(x) ((x) + 0xFE0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID0      (*(__I hw_mtbdwt_periphid0_t *) HW_MTBDWT_PERIPHID0_ADDR)
-#define HW_MTBDWT_PERIPHID0_RD() (HW_MTBDWT_PERIPHID0.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID0(x)   (*(__I hw_mtbdwt_periphid0_t *) HW_MTBDWT_PERIPHID0_ADDR(x))
+#define HW_MTBDWT_PERIPHID0_RD(x) (HW_MTBDWT_PERIPHID0(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID0 bitfields
@@ -1251,21 +1120,18 @@ typedef union _hw_mtbdwt_periphid0
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID0_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID0_PERIPHID.
-#define BM_MTBDWT_PERIPHID0_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID0_PERIPHID.
-#define BS_MTBDWT_PERIPHID0_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID0_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID0_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID0_PERIPHID. */
+#define BM_MTBDWT_PERIPHID0_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID0_PERIPHID. */
+#define BS_MTBDWT_PERIPHID0_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID0_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID0_PERIPHID field.
-#define BR_MTBDWT_PERIPHID0_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID0_ADDR, BP_MTBDWT_PERIPHID0_PERIPHID, BS_MTBDWT_PERIPHID0_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID1 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID0_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID0_PERIPHID(x) (HW_MTBDWT_PERIPHID0(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID1 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID1 - Peripheral ID Register (RO)
  *
@@ -1279,22 +1145,19 @@ typedef union _hw_mtbdwt_periphid1
     uint32_t U;
     struct _hw_mtbdwt_periphid1_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID1 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID1_ADDR (REGS_MTBDWT_BASE + 0xFE4U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID1_ADDR(x) ((x) + 0xFE4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID1      (*(__I hw_mtbdwt_periphid1_t *) HW_MTBDWT_PERIPHID1_ADDR)
-#define HW_MTBDWT_PERIPHID1_RD() (HW_MTBDWT_PERIPHID1.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID1(x)   (*(__I hw_mtbdwt_periphid1_t *) HW_MTBDWT_PERIPHID1_ADDR(x))
+#define HW_MTBDWT_PERIPHID1_RD(x) (HW_MTBDWT_PERIPHID1(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID1 bitfields
@@ -1306,21 +1169,18 @@ typedef union _hw_mtbdwt_periphid1
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID1_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID1_PERIPHID.
-#define BM_MTBDWT_PERIPHID1_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID1_PERIPHID.
-#define BS_MTBDWT_PERIPHID1_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID1_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID1_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID1_PERIPHID. */
+#define BM_MTBDWT_PERIPHID1_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID1_PERIPHID. */
+#define BS_MTBDWT_PERIPHID1_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID1_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID1_PERIPHID field.
-#define BR_MTBDWT_PERIPHID1_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID1_ADDR, BP_MTBDWT_PERIPHID1_PERIPHID, BS_MTBDWT_PERIPHID1_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID2 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID1_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID1_PERIPHID(x) (HW_MTBDWT_PERIPHID1(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID2 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID2 - Peripheral ID Register (RO)
  *
@@ -1334,22 +1194,19 @@ typedef union _hw_mtbdwt_periphid2
     uint32_t U;
     struct _hw_mtbdwt_periphid2_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID2 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID2_ADDR (REGS_MTBDWT_BASE + 0xFE8U)
+/*@{*/
+#define HW_MTBDWT_PERIPHID2_ADDR(x) ((x) + 0xFE8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID2      (*(__I hw_mtbdwt_periphid2_t *) HW_MTBDWT_PERIPHID2_ADDR)
-#define HW_MTBDWT_PERIPHID2_RD() (HW_MTBDWT_PERIPHID2.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID2(x)   (*(__I hw_mtbdwt_periphid2_t *) HW_MTBDWT_PERIPHID2_ADDR(x))
+#define HW_MTBDWT_PERIPHID2_RD(x) (HW_MTBDWT_PERIPHID2(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID2 bitfields
@@ -1361,21 +1218,18 @@ typedef union _hw_mtbdwt_periphid2
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID2_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID2_PERIPHID.
-#define BM_MTBDWT_PERIPHID2_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID2_PERIPHID.
-#define BS_MTBDWT_PERIPHID2_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID2_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID2_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID2_PERIPHID. */
+#define BM_MTBDWT_PERIPHID2_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID2_PERIPHID. */
+#define BS_MTBDWT_PERIPHID2_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID2_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID2_PERIPHID field.
-#define BR_MTBDWT_PERIPHID2_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID2_ADDR, BP_MTBDWT_PERIPHID2_PERIPHID, BS_MTBDWT_PERIPHID2_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_PERIPHID3 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTBDWT_PERIPHID2_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID2_PERIPHID(x) (HW_MTBDWT_PERIPHID2(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTBDWT_PERIPHID3 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_PERIPHID3 - Peripheral ID Register (RO)
  *
@@ -1389,22 +1243,19 @@ typedef union _hw_mtbdwt_periphid3
     uint32_t U;
     struct _hw_mtbdwt_periphid3_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtbdwt_periphid3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_PERIPHID3 register
  */
-//@{
-#define HW_MTBDWT_PERIPHID3_ADDR (REGS_MTBDWT_BASE + 0xFECU)
+/*@{*/
+#define HW_MTBDWT_PERIPHID3_ADDR(x) ((x) + 0xFECU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_PERIPHID3      (*(__I hw_mtbdwt_periphid3_t *) HW_MTBDWT_PERIPHID3_ADDR)
-#define HW_MTBDWT_PERIPHID3_RD() (HW_MTBDWT_PERIPHID3.U)
-#endif
-//@}
+#define HW_MTBDWT_PERIPHID3(x)   (*(__I hw_mtbdwt_periphid3_t *) HW_MTBDWT_PERIPHID3_ADDR(x))
+#define HW_MTBDWT_PERIPHID3_RD(x) (HW_MTBDWT_PERIPHID3(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_PERIPHID3 bitfields
@@ -1416,22 +1267,19 @@ typedef union _hw_mtbdwt_periphid3
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_MTBDWT_PERIPHID3_PERIPHID (0U)  //!< Bit position for MTBDWT_PERIPHID3_PERIPHID.
-#define BM_MTBDWT_PERIPHID3_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_PERIPHID3_PERIPHID.
-#define BS_MTBDWT_PERIPHID3_PERIPHID (32U) //!< Bit field size in bits for MTBDWT_PERIPHID3_PERIPHID.
+/*@{*/
+#define BP_MTBDWT_PERIPHID3_PERIPHID (0U)  /*!< Bit position for MTBDWT_PERIPHID3_PERIPHID. */
+#define BM_MTBDWT_PERIPHID3_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_PERIPHID3_PERIPHID. */
+#define BS_MTBDWT_PERIPHID3_PERIPHID (32U) /*!< Bit field size in bits for MTBDWT_PERIPHID3_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_PERIPHID3_PERIPHID field.
-#define BR_MTBDWT_PERIPHID3_PERIPHID (BME_UBFX32(HW_MTBDWT_PERIPHID3_ADDR, BP_MTBDWT_PERIPHID3_PERIPHID, BS_MTBDWT_PERIPHID3_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_PERIPHID3_PERIPHID field. */
+#define BR_MTBDWT_PERIPHID3_PERIPHID(x) (HW_MTBDWT_PERIPHID3(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTBDWT_COMPIDn - Component ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTBDWT_COMPIDn - Component ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTBDWT_COMPIDn - Component ID Register (RO)
  *
@@ -1445,24 +1293,21 @@ typedef union _hw_mtbdwt_compidn
     uint32_t U;
     struct _hw_mtbdwt_compidn_bitfields
     {
-        uint32_t COMPID : 32;          //!< [31:0] Component ID
+        uint32_t COMPID : 32;          /*!< [31:0] Component ID */
     } B;
 } hw_mtbdwt_compidn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTBDWT_COMPIDn register
  */
-//@{
+/*@{*/
 #define HW_MTBDWT_COMPIDn_COUNT (4U)
 
-#define HW_MTBDWT_COMPIDn_ADDR(n) (REGS_MTBDWT_BASE + 0xFF0U + (0x4U * n))
+#define HW_MTBDWT_COMPIDn_ADDR(x, n) ((x) + 0xFF0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTBDWT_COMPIDn(n)     (*(__I hw_mtbdwt_compidn_t *) HW_MTBDWT_COMPIDn_ADDR(n))
-#define HW_MTBDWT_COMPIDn_RD(n)  (HW_MTBDWT_COMPIDn(n).U)
-#endif
-//@}
+#define HW_MTBDWT_COMPIDn(x, n)  (*(__I hw_mtbdwt_compidn_t *) HW_MTBDWT_COMPIDn_ADDR(x, n))
+#define HW_MTBDWT_COMPIDn_RD(x, n) (HW_MTBDWT_COMPIDn(x, n).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTBDWT_COMPIDn bitfields
@@ -1474,59 +1319,56 @@ typedef union _hw_mtbdwt_compidn
  * Component ID0 is hardwired to 0x0000_000D; ID1 to 0x0000_0090; ID2 to
  * 0x0000_0005; ID3 to 0x0000_00B1.
  */
-//@{
-#define BP_MTBDWT_COMPIDn_COMPID (0U)      //!< Bit position for MTBDWT_COMPIDn_COMPID.
-#define BM_MTBDWT_COMPIDn_COMPID (0xFFFFFFFFU) //!< Bit mask for MTBDWT_COMPIDn_COMPID.
-#define BS_MTBDWT_COMPIDn_COMPID (32U)     //!< Bit field size in bits for MTBDWT_COMPIDn_COMPID.
+/*@{*/
+#define BP_MTBDWT_COMPIDn_COMPID (0U)      /*!< Bit position for MTBDWT_COMPIDn_COMPID. */
+#define BM_MTBDWT_COMPIDn_COMPID (0xFFFFFFFFU) /*!< Bit mask for MTBDWT_COMPIDn_COMPID. */
+#define BS_MTBDWT_COMPIDn_COMPID (32U)     /*!< Bit field size in bits for MTBDWT_COMPIDn_COMPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTBDWT_COMPIDn_COMPID field.
-#define BR_MTBDWT_COMPIDn_COMPID(n) (BME_UBFX32(HW_MTBDWT_COMPIDn_ADDR(n), BP_MTBDWT_COMPIDn_COMPID, BS_MTBDWT_COMPIDn_COMPID))
-#endif
-//@}
+/*! @brief Read current value of the MTBDWT_COMPIDn_COMPID field. */
+#define BR_MTBDWT_COMPIDn_COMPID(x, n) (HW_MTBDWT_COMPIDn(x, n).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_mtbdwt_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_mtbdwt_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All MTBDWT module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_mtbdwt
 {
-    __I hw_mtbdwt_ctrl_t CTRL;             //!< [0x0] MTB DWT Control Register
+    __I hw_mtbdwt_ctrl_t CTRL;             /*!< [0x0] MTB DWT Control Register */
     uint8_t _reserved0[28];
-    __IO hw_mtbdwt_comp0_t COMP0;          //!< [0x20] MTB_DWT Comparator Register
-    __IO hw_mtbdwt_mask0_t MASK0;          //!< [0x24] MTB_DWT Comparator Mask Register
-    __IO hw_mtbdwt_fct0_t FCT0;            //!< [0x28] MTB_DWT Comparator Function Register 0
+    __IO hw_mtbdwt_comp0_t COMP0;          /*!< [0x20] MTB_DWT Comparator Register */
+    __IO hw_mtbdwt_mask0_t MASK0;          /*!< [0x24] MTB_DWT Comparator Mask Register */
+    __IO hw_mtbdwt_fct0_t FCT0;            /*!< [0x28] MTB_DWT Comparator Function Register 0 */
     uint8_t _reserved1[4];
-    __IO hw_mtbdwt_comp1_t COMP1;          //!< [0x30] MTB_DWT Comparator Register
-    __IO hw_mtbdwt_mask1_t MASK1;          //!< [0x34] MTB_DWT Comparator Mask Register
-    __IO hw_mtbdwt_fct1_t FCT1;            //!< [0x38] MTB_DWT Comparator Function Register 1
+    __IO hw_mtbdwt_comp1_t COMP1;          /*!< [0x30] MTB_DWT Comparator Register */
+    __IO hw_mtbdwt_mask1_t MASK1;          /*!< [0x34] MTB_DWT Comparator Mask Register */
+    __IO hw_mtbdwt_fct1_t FCT1;            /*!< [0x38] MTB_DWT Comparator Function Register 1 */
     uint8_t _reserved2[452];
-    __IO hw_mtbdwt_tbctrl_t TBCTRL;        //!< [0x200] MTB_DWT Trace Buffer Control Register
+    __IO hw_mtbdwt_tbctrl_t TBCTRL;        /*!< [0x200] MTB_DWT Trace Buffer Control Register */
     uint8_t _reserved3[3524];
-    __I hw_mtbdwt_devicecfg_t DEVICECFG;   //!< [0xFC8] Device Configuration Register
-    __I hw_mtbdwt_devicetypid_t DEVICETYPID; //!< [0xFCC] Device Type Identifier Register
-    __I hw_mtbdwt_periphid4_t PERIPHID4;   //!< [0xFD0] Peripheral ID Register
-    __I hw_mtbdwt_periphid5_t PERIPHID5;   //!< [0xFD4] Peripheral ID Register
-    __I hw_mtbdwt_periphid6_t PERIPHID6;   //!< [0xFD8] Peripheral ID Register
-    __I hw_mtbdwt_periphid7_t PERIPHID7;   //!< [0xFDC] Peripheral ID Register
-    __I hw_mtbdwt_periphid0_t PERIPHID0;   //!< [0xFE0] Peripheral ID Register
-    __I hw_mtbdwt_periphid1_t PERIPHID1;   //!< [0xFE4] Peripheral ID Register
-    __I hw_mtbdwt_periphid2_t PERIPHID2;   //!< [0xFE8] Peripheral ID Register
-    __I hw_mtbdwt_periphid3_t PERIPHID3;   //!< [0xFEC] Peripheral ID Register
-    __I hw_mtbdwt_compidn_t COMPIDn[4];    //!< [0xFF0] Component ID Register
+    __I hw_mtbdwt_devicecfg_t DEVICECFG;   /*!< [0xFC8] Device Configuration Register */
+    __I hw_mtbdwt_devicetypid_t DEVICETYPID; /*!< [0xFCC] Device Type Identifier Register */
+    __I hw_mtbdwt_periphid4_t PERIPHID4;   /*!< [0xFD0] Peripheral ID Register */
+    __I hw_mtbdwt_periphid5_t PERIPHID5;   /*!< [0xFD4] Peripheral ID Register */
+    __I hw_mtbdwt_periphid6_t PERIPHID6;   /*!< [0xFD8] Peripheral ID Register */
+    __I hw_mtbdwt_periphid7_t PERIPHID7;   /*!< [0xFDC] Peripheral ID Register */
+    __I hw_mtbdwt_periphid0_t PERIPHID0;   /*!< [0xFE0] Peripheral ID Register */
+    __I hw_mtbdwt_periphid1_t PERIPHID1;   /*!< [0xFE4] Peripheral ID Register */
+    __I hw_mtbdwt_periphid2_t PERIPHID2;   /*!< [0xFE8] Peripheral ID Register */
+    __I hw_mtbdwt_periphid3_t PERIPHID3;   /*!< [0xFEC] Peripheral ID Register */
+    __I hw_mtbdwt_compidn_t COMPIDn[4];    /*!< [0xFF0] Component ID Register */
 } hw_mtbdwt_t;
 #pragma pack()
 
-//! @brief Macro to access all MTBDWT registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_MTBDWT</code>.
-#define HW_MTBDWT      (*(hw_mtbdwt_t *) REGS_MTBDWT_BASE)
-#endif
+/*! @brief Macro to access all MTBDWT registers. */
+/*! @param x MTBDWT module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_MTBDWT(MTBDWT_BASE)</code>. */
+#define HW_MTBDWT(x)   (*(hw_mtbdwt_t *)(x))
 
-#endif // __HW_MTBDWT_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_MTBDWT_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

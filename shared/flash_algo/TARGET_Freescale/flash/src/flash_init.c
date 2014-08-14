@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2013-2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,14 +31,24 @@
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
 #include "device/fsl_device_registers.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
 #include "flash_densities.h"
+#include "fsl_flash_features.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////////////////////////
+enum
+{
+    kFlashAccessSegmentBase = 256UL,
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Variables
 ////////////////////////////////////////////////////////////////////////////////
 
-volatile uint32_t * const kFCCOBx =
+volatile uint32_t * const restrict kFCCOBx =
 #if FSL_FEATURE_FLASH_IS_FTFA
     (volatile uint32_t *)&FTFA->FCCOB3;
 #elif FSL_FEATURE_FLASH_IS_FTFE
@@ -63,7 +73,7 @@ status_t flash_init(flash_driver_t * driver)
     }
 
     // calculate the flash density from SIM_FCFG1.PFSIZE
-    uint32_t flashDensity = kFlashDensities[HW_SIM_FCFG1.B.PFSIZE] << 12;
+    uint32_t flashDensity = kFlashDensities[HW_SIM_FCFG1(SIM_BASE).B.PFSIZE] << 12;
     if (flashDensity == 0)
     {
         return kStatus_FlashSizeError;
@@ -75,6 +85,16 @@ status_t flash_init(flash_driver_t * driver)
     driver->PFlashBlockCount = FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT;
     driver->PFlashSectorSize = FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE;
 
+#if FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
+    driver->PFlashAccessSegmentSize =  kFlashAccessSegmentBase << FTFx->FACSS;
+    driver->PFlashAccessSegmentCount = FTFx->FACSN;
+#else
+    driver->PFlashAccessSegmentSize =  0;
+    driver->PFlashAccessSegmentCount = 0;
+#endif // FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
+
+    driver->PFlashCallback = NULL;
+
     // copy flash_run_command() to RAM
 #if BL_TARGET_FLASH
     copy_flash_run_command();
@@ -83,17 +103,32 @@ status_t flash_init(flash_driver_t * driver)
     return kStatus_Success;
 }
 
-// See SSD_FTFx_Common.h for documentation of this function.
-status_t flash_check_range(flash_driver_t * driver, uint32_t start, uint32_t lengthInBytes)
+// See flash.h for documentation of this function.
+status_t flash_register_callback(flash_driver_t * driver, flash_callback_t callback)
 {
     if (driver == NULL)
     {
         return kStatus_InvalidArgument;
     }
 
-    // Verify the start and length are write-unit-size aligned.
-    if ((start & (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE - 1))
-        || (lengthInBytes & (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE - 1)))
+    driver->PFlashCallback = callback;
+
+    return kStatus_Success;
+}
+
+
+
+// See SSD_FTFx_Common.h for documentation of this function.
+status_t flash_check_range(flash_driver_t * driver, uint32_t start, uint32_t lengthInBytes, uint32_t alignmentBaseline)
+{
+    if (driver == NULL)
+    {
+        return kStatus_InvalidArgument;
+    }
+
+    // Verify the start and length are alignmentBaseline aligned.
+    if ((start & (alignmentBaseline - 1))
+        || (lengthInBytes & (alignmentBaseline - 1)))
     {
         return kStatus_FlashAlignmentError;
     }
@@ -108,6 +143,56 @@ status_t flash_check_range(flash_driver_t * driver, uint32_t start, uint32_t len
     return kStatus_Success;
 }
 
+// See SSD_FTFx_Common.h for documentation of this function.
+status_t flash_check_user_key(uint32_t key)
+{
+    // Validate the user key
+    if (key != kFlashEraseKey)
+    {
+        return kStatus_FlashEraseKeyError;
+    }
+
+    return kStatus_Success;
+}
+
+// See SSD_FTFx_Common.h for documentation of this function.
+status_t flash_check_access_ifr_range(flash_driver_t * driver, uint32_t index, uint32_t lengthInBytes)
+{
+    if (driver == NULL)
+    {
+        return kStatus_InvalidArgument;
+    }
+
+#if ! FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
+    if (index > FLASH_PROGRAM_ONCE_MAX_ID_4BYTES || lengthInBytes != FLASH_PROGRAM_ONCE_UNIT_4BYTES)
+    {
+        return kStatus_InvalidArgument;
+    }
+#else
+    if (index <= FLASH_PROGRAM_ONCE_MAX_ID_4BYTES)
+    {
+        if (lengthInBytes != FLASH_PROGRAM_ONCE_UNIT_4BYTES)
+        {
+            return kStatus_InvalidArgument;
+        }
+    }
+    else if (index <= FLASH_PROGRAM_ONCE_MAX_ID_8BYTES)
+    {
+        if (lengthInBytes != FLASH_PROGRAM_ONCE_UNIT_8BYTES)
+        {
+            return kStatus_InvalidArgument;
+        }
+    }
+    else
+    {
+        return kStatus_InvalidArgument;
+    }
+
+#endif  // FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
+
+    return kStatus_Success;
+
+}
 ////////////////////////////////////////////////////////////////////////////////
 // EOF
 ////////////////////////////////////////////////////////////////////////////////

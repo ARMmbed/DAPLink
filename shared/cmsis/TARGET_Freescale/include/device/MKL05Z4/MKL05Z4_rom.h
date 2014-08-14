@@ -21,7 +21,8 @@
 #ifndef __HW_ROM_REGISTERS_H__
 #define __HW_ROM_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL05Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL05Z4 ROM
@@ -45,19 +46,12 @@
  * - hw_rom_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_ROM_BASE
-#define HW_ROM_INSTANCE_COUNT (1U) //!< Number of instances of the ROM module.
-#define REGS_ROM_BASE (0xF0002000U) //!< Base address for ROM.
-#endif
-//@}
+#define HW_ROM_INSTANCE_COUNT (1U) /*!< Number of instances of the ROM module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_ENTRYn - Entry
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_ENTRYn - Entry
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_ENTRYn - Entry (RO)
  *
@@ -75,24 +69,21 @@ typedef union _hw_rom_entryn
     uint32_t U;
     struct _hw_rom_entryn_bitfields
     {
-        uint32_t ENTRY : 32;           //!< [31:0] ENTRY
+        uint32_t ENTRY : 32;           /*!< [31:0] ENTRY */
     } B;
 } hw_rom_entryn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_ENTRYn register
  */
-//@{
+/*@{*/
 #define HW_ROM_ENTRYn_COUNT (3U)
 
-#define HW_ROM_ENTRYn_ADDR(n)    (REGS_ROM_BASE + 0x0U + (0x4U * n))
+#define HW_ROM_ENTRYn_ADDR(x, n) ((x) + 0x0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_ENTRYn(n)         (*(__I hw_rom_entryn_t *) HW_ROM_ENTRYn_ADDR(n))
-#define HW_ROM_ENTRYn_RD(n)      (HW_ROM_ENTRYn(n).U)
-#endif
-//@}
+#define HW_ROM_ENTRYn(x, n)      (*(__I hw_rom_entryn_t *) HW_ROM_ENTRYn_ADDR(x, n))
+#define HW_ROM_ENTRYn_RD(x, n)   (HW_ROM_ENTRYn(x, n).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_ENTRYn bitfields
@@ -104,22 +95,19 @@ typedef union _hw_rom_entryn
  * Entry 0 (MTB) is hardwired to 0xFFFF_E003; Entry 1 (MTBDWT) to 0xFFFF_F003;
  * Entry 2 (CM0+ ROM Table) to 0xF00F_D003.
  */
-//@{
-#define BP_ROM_ENTRYn_ENTRY  (0U)          //!< Bit position for ROM_ENTRYn_ENTRY.
-#define BM_ROM_ENTRYn_ENTRY  (0xFFFFFFFFU) //!< Bit mask for ROM_ENTRYn_ENTRY.
-#define BS_ROM_ENTRYn_ENTRY  (32U)         //!< Bit field size in bits for ROM_ENTRYn_ENTRY.
+/*@{*/
+#define BP_ROM_ENTRYn_ENTRY  (0U)          /*!< Bit position for ROM_ENTRYn_ENTRY. */
+#define BM_ROM_ENTRYn_ENTRY  (0xFFFFFFFFU) /*!< Bit mask for ROM_ENTRYn_ENTRY. */
+#define BS_ROM_ENTRYn_ENTRY  (32U)         /*!< Bit field size in bits for ROM_ENTRYn_ENTRY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_ENTRYn_ENTRY field.
-#define BR_ROM_ENTRYn_ENTRY(n) (BME_UBFX32(HW_ROM_ENTRYn_ADDR(n), BP_ROM_ENTRYn_ENTRY, BS_ROM_ENTRYn_ENTRY))
-#endif
-//@}
+/*! @brief Read current value of the ROM_ENTRYn_ENTRY field. */
+#define BR_ROM_ENTRYn_ENTRY(x, n) (HW_ROM_ENTRYn(x, n).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_TABLEMARK - End of Table Marker Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_TABLEMARK - End of Table Marker Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_TABLEMARK - End of Table Marker Register (RO)
  *
@@ -133,22 +121,19 @@ typedef union _hw_rom_tablemark
     uint32_t U;
     struct _hw_rom_tablemark_bitfields
     {
-        uint32_t MARK : 32;            //!< [31:0]
+        uint32_t MARK : 32;            /*!< [31:0]  */
     } B;
 } hw_rom_tablemark_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_TABLEMARK register
  */
-//@{
-#define HW_ROM_TABLEMARK_ADDR    (REGS_ROM_BASE + 0xCU)
+/*@{*/
+#define HW_ROM_TABLEMARK_ADDR(x) ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_TABLEMARK         (*(__I hw_rom_tablemark_t *) HW_ROM_TABLEMARK_ADDR)
-#define HW_ROM_TABLEMARK_RD()    (HW_ROM_TABLEMARK.U)
-#endif
-//@}
+#define HW_ROM_TABLEMARK(x)      (*(__I hw_rom_tablemark_t *) HW_ROM_TABLEMARK_ADDR(x))
+#define HW_ROM_TABLEMARK_RD(x)   (HW_ROM_TABLEMARK(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_TABLEMARK bitfields
@@ -159,22 +144,19 @@ typedef union _hw_rom_tablemark
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_ROM_TABLEMARK_MARK (0U)         //!< Bit position for ROM_TABLEMARK_MARK.
-#define BM_ROM_TABLEMARK_MARK (0xFFFFFFFFU) //!< Bit mask for ROM_TABLEMARK_MARK.
-#define BS_ROM_TABLEMARK_MARK (32U)        //!< Bit field size in bits for ROM_TABLEMARK_MARK.
+/*@{*/
+#define BP_ROM_TABLEMARK_MARK (0U)         /*!< Bit position for ROM_TABLEMARK_MARK. */
+#define BM_ROM_TABLEMARK_MARK (0xFFFFFFFFU) /*!< Bit mask for ROM_TABLEMARK_MARK. */
+#define BS_ROM_TABLEMARK_MARK (32U)        /*!< Bit field size in bits for ROM_TABLEMARK_MARK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_TABLEMARK_MARK field.
-#define BR_ROM_TABLEMARK_MARK (BME_UBFX32(HW_ROM_TABLEMARK_ADDR, BP_ROM_TABLEMARK_MARK, BS_ROM_TABLEMARK_MARK))
-#endif
-//@}
+/*! @brief Read current value of the ROM_TABLEMARK_MARK field. */
+#define BR_ROM_TABLEMARK_MARK(x) (HW_ROM_TABLEMARK(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_SYSACCESS - System Access Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_SYSACCESS - System Access Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_SYSACCESS - System Access Register (RO)
  *
@@ -188,22 +170,19 @@ typedef union _hw_rom_sysaccess
     uint32_t U;
     struct _hw_rom_sysaccess_bitfields
     {
-        uint32_t SYSACCESS : 32;       //!< [31:0]
+        uint32_t SYSACCESS : 32;       /*!< [31:0]  */
     } B;
 } hw_rom_sysaccess_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_SYSACCESS register
  */
-//@{
-#define HW_ROM_SYSACCESS_ADDR    (REGS_ROM_BASE + 0xFCCU)
+/*@{*/
+#define HW_ROM_SYSACCESS_ADDR(x) ((x) + 0xFCCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_SYSACCESS         (*(__I hw_rom_sysaccess_t *) HW_ROM_SYSACCESS_ADDR)
-#define HW_ROM_SYSACCESS_RD()    (HW_ROM_SYSACCESS.U)
-#endif
-//@}
+#define HW_ROM_SYSACCESS(x)      (*(__I hw_rom_sysaccess_t *) HW_ROM_SYSACCESS_ADDR(x))
+#define HW_ROM_SYSACCESS_RD(x)   (HW_ROM_SYSACCESS(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_SYSACCESS bitfields
@@ -214,22 +193,19 @@ typedef union _hw_rom_sysaccess
  *
  * Hardwired to 0x0000_0001
  */
-//@{
-#define BP_ROM_SYSACCESS_SYSACCESS (0U)    //!< Bit position for ROM_SYSACCESS_SYSACCESS.
-#define BM_ROM_SYSACCESS_SYSACCESS (0xFFFFFFFFU) //!< Bit mask for ROM_SYSACCESS_SYSACCESS.
-#define BS_ROM_SYSACCESS_SYSACCESS (32U)   //!< Bit field size in bits for ROM_SYSACCESS_SYSACCESS.
+/*@{*/
+#define BP_ROM_SYSACCESS_SYSACCESS (0U)    /*!< Bit position for ROM_SYSACCESS_SYSACCESS. */
+#define BM_ROM_SYSACCESS_SYSACCESS (0xFFFFFFFFU) /*!< Bit mask for ROM_SYSACCESS_SYSACCESS. */
+#define BS_ROM_SYSACCESS_SYSACCESS (32U)   /*!< Bit field size in bits for ROM_SYSACCESS_SYSACCESS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_SYSACCESS_SYSACCESS field.
-#define BR_ROM_SYSACCESS_SYSACCESS (BME_UBFX32(HW_ROM_SYSACCESS_ADDR, BP_ROM_SYSACCESS_SYSACCESS, BS_ROM_SYSACCESS_SYSACCESS))
-#endif
-//@}
+/*! @brief Read current value of the ROM_SYSACCESS_SYSACCESS field. */
+#define BR_ROM_SYSACCESS_SYSACCESS(x) (HW_ROM_SYSACCESS(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID4 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID4 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID4 - Peripheral ID Register (RO)
  *
@@ -243,22 +219,19 @@ typedef union _hw_rom_periphid4
     uint32_t U;
     struct _hw_rom_periphid4_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID4 register
  */
-//@{
-#define HW_ROM_PERIPHID4_ADDR    (REGS_ROM_BASE + 0xFD0U)
+/*@{*/
+#define HW_ROM_PERIPHID4_ADDR(x) ((x) + 0xFD0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID4         (*(__I hw_rom_periphid4_t *) HW_ROM_PERIPHID4_ADDR)
-#define HW_ROM_PERIPHID4_RD()    (HW_ROM_PERIPHID4.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID4(x)      (*(__I hw_rom_periphid4_t *) HW_ROM_PERIPHID4_ADDR(x))
+#define HW_ROM_PERIPHID4_RD(x)   (HW_ROM_PERIPHID4(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID4 bitfields
@@ -270,22 +243,19 @@ typedef union _hw_rom_periphid4
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID4_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID4_PERIPHID.
-#define BM_ROM_PERIPHID4_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID4_PERIPHID.
-#define BS_ROM_PERIPHID4_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID4_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID4_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID4_PERIPHID. */
+#define BM_ROM_PERIPHID4_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID4_PERIPHID. */
+#define BS_ROM_PERIPHID4_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID4_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID4_PERIPHID field.
-#define BR_ROM_PERIPHID4_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID4_ADDR, BP_ROM_PERIPHID4_PERIPHID, BS_ROM_PERIPHID4_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID4_PERIPHID field. */
+#define BR_ROM_PERIPHID4_PERIPHID(x) (HW_ROM_PERIPHID4(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID5 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID5 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID5 - Peripheral ID Register (RO)
  *
@@ -299,22 +269,19 @@ typedef union _hw_rom_periphid5
     uint32_t U;
     struct _hw_rom_periphid5_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID5 register
  */
-//@{
-#define HW_ROM_PERIPHID5_ADDR    (REGS_ROM_BASE + 0xFD4U)
+/*@{*/
+#define HW_ROM_PERIPHID5_ADDR(x) ((x) + 0xFD4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID5         (*(__I hw_rom_periphid5_t *) HW_ROM_PERIPHID5_ADDR)
-#define HW_ROM_PERIPHID5_RD()    (HW_ROM_PERIPHID5.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID5(x)      (*(__I hw_rom_periphid5_t *) HW_ROM_PERIPHID5_ADDR(x))
+#define HW_ROM_PERIPHID5_RD(x)   (HW_ROM_PERIPHID5(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID5 bitfields
@@ -326,22 +293,19 @@ typedef union _hw_rom_periphid5
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID5_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID5_PERIPHID.
-#define BM_ROM_PERIPHID5_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID5_PERIPHID.
-#define BS_ROM_PERIPHID5_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID5_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID5_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID5_PERIPHID. */
+#define BM_ROM_PERIPHID5_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID5_PERIPHID. */
+#define BS_ROM_PERIPHID5_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID5_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID5_PERIPHID field.
-#define BR_ROM_PERIPHID5_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID5_ADDR, BP_ROM_PERIPHID5_PERIPHID, BS_ROM_PERIPHID5_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID5_PERIPHID field. */
+#define BR_ROM_PERIPHID5_PERIPHID(x) (HW_ROM_PERIPHID5(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID6 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID6 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID6 - Peripheral ID Register (RO)
  *
@@ -355,22 +319,19 @@ typedef union _hw_rom_periphid6
     uint32_t U;
     struct _hw_rom_periphid6_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID6 register
  */
-//@{
-#define HW_ROM_PERIPHID6_ADDR    (REGS_ROM_BASE + 0xFD8U)
+/*@{*/
+#define HW_ROM_PERIPHID6_ADDR(x) ((x) + 0xFD8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID6         (*(__I hw_rom_periphid6_t *) HW_ROM_PERIPHID6_ADDR)
-#define HW_ROM_PERIPHID6_RD()    (HW_ROM_PERIPHID6.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID6(x)      (*(__I hw_rom_periphid6_t *) HW_ROM_PERIPHID6_ADDR(x))
+#define HW_ROM_PERIPHID6_RD(x)   (HW_ROM_PERIPHID6(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID6 bitfields
@@ -382,22 +343,19 @@ typedef union _hw_rom_periphid6
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID6_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID6_PERIPHID.
-#define BM_ROM_PERIPHID6_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID6_PERIPHID.
-#define BS_ROM_PERIPHID6_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID6_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID6_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID6_PERIPHID. */
+#define BM_ROM_PERIPHID6_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID6_PERIPHID. */
+#define BS_ROM_PERIPHID6_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID6_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID6_PERIPHID field.
-#define BR_ROM_PERIPHID6_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID6_ADDR, BP_ROM_PERIPHID6_PERIPHID, BS_ROM_PERIPHID6_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID6_PERIPHID field. */
+#define BR_ROM_PERIPHID6_PERIPHID(x) (HW_ROM_PERIPHID6(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID7 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID7 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID7 - Peripheral ID Register (RO)
  *
@@ -411,22 +369,19 @@ typedef union _hw_rom_periphid7
     uint32_t U;
     struct _hw_rom_periphid7_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID7 register
  */
-//@{
-#define HW_ROM_PERIPHID7_ADDR    (REGS_ROM_BASE + 0xFDCU)
+/*@{*/
+#define HW_ROM_PERIPHID7_ADDR(x) ((x) + 0xFDCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID7         (*(__I hw_rom_periphid7_t *) HW_ROM_PERIPHID7_ADDR)
-#define HW_ROM_PERIPHID7_RD()    (HW_ROM_PERIPHID7.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID7(x)      (*(__I hw_rom_periphid7_t *) HW_ROM_PERIPHID7_ADDR(x))
+#define HW_ROM_PERIPHID7_RD(x)   (HW_ROM_PERIPHID7(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID7 bitfields
@@ -438,22 +393,19 @@ typedef union _hw_rom_periphid7
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID7_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID7_PERIPHID.
-#define BM_ROM_PERIPHID7_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID7_PERIPHID.
-#define BS_ROM_PERIPHID7_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID7_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID7_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID7_PERIPHID. */
+#define BM_ROM_PERIPHID7_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID7_PERIPHID. */
+#define BS_ROM_PERIPHID7_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID7_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID7_PERIPHID field.
-#define BR_ROM_PERIPHID7_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID7_ADDR, BP_ROM_PERIPHID7_PERIPHID, BS_ROM_PERIPHID7_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID7_PERIPHID field. */
+#define BR_ROM_PERIPHID7_PERIPHID(x) (HW_ROM_PERIPHID7(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID0 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID0 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID0 - Peripheral ID Register (RO)
  *
@@ -467,22 +419,19 @@ typedef union _hw_rom_periphid0
     uint32_t U;
     struct _hw_rom_periphid0_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID0 register
  */
-//@{
-#define HW_ROM_PERIPHID0_ADDR    (REGS_ROM_BASE + 0xFE0U)
+/*@{*/
+#define HW_ROM_PERIPHID0_ADDR(x) ((x) + 0xFE0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID0         (*(__I hw_rom_periphid0_t *) HW_ROM_PERIPHID0_ADDR)
-#define HW_ROM_PERIPHID0_RD()    (HW_ROM_PERIPHID0.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID0(x)      (*(__I hw_rom_periphid0_t *) HW_ROM_PERIPHID0_ADDR(x))
+#define HW_ROM_PERIPHID0_RD(x)   (HW_ROM_PERIPHID0(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID0 bitfields
@@ -494,22 +443,19 @@ typedef union _hw_rom_periphid0
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID0_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID0_PERIPHID.
-#define BM_ROM_PERIPHID0_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID0_PERIPHID.
-#define BS_ROM_PERIPHID0_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID0_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID0_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID0_PERIPHID. */
+#define BM_ROM_PERIPHID0_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID0_PERIPHID. */
+#define BS_ROM_PERIPHID0_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID0_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID0_PERIPHID field.
-#define BR_ROM_PERIPHID0_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID0_ADDR, BP_ROM_PERIPHID0_PERIPHID, BS_ROM_PERIPHID0_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID0_PERIPHID field. */
+#define BR_ROM_PERIPHID0_PERIPHID(x) (HW_ROM_PERIPHID0(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID1 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID1 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID1 - Peripheral ID Register (RO)
  *
@@ -523,22 +469,19 @@ typedef union _hw_rom_periphid1
     uint32_t U;
     struct _hw_rom_periphid1_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID1 register
  */
-//@{
-#define HW_ROM_PERIPHID1_ADDR    (REGS_ROM_BASE + 0xFE4U)
+/*@{*/
+#define HW_ROM_PERIPHID1_ADDR(x) ((x) + 0xFE4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID1         (*(__I hw_rom_periphid1_t *) HW_ROM_PERIPHID1_ADDR)
-#define HW_ROM_PERIPHID1_RD()    (HW_ROM_PERIPHID1.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID1(x)      (*(__I hw_rom_periphid1_t *) HW_ROM_PERIPHID1_ADDR(x))
+#define HW_ROM_PERIPHID1_RD(x)   (HW_ROM_PERIPHID1(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID1 bitfields
@@ -550,22 +493,19 @@ typedef union _hw_rom_periphid1
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID1_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID1_PERIPHID.
-#define BM_ROM_PERIPHID1_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID1_PERIPHID.
-#define BS_ROM_PERIPHID1_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID1_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID1_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID1_PERIPHID. */
+#define BM_ROM_PERIPHID1_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID1_PERIPHID. */
+#define BS_ROM_PERIPHID1_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID1_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID1_PERIPHID field.
-#define BR_ROM_PERIPHID1_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID1_ADDR, BP_ROM_PERIPHID1_PERIPHID, BS_ROM_PERIPHID1_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID1_PERIPHID field. */
+#define BR_ROM_PERIPHID1_PERIPHID(x) (HW_ROM_PERIPHID1(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID2 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID2 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID2 - Peripheral ID Register (RO)
  *
@@ -579,22 +519,19 @@ typedef union _hw_rom_periphid2
     uint32_t U;
     struct _hw_rom_periphid2_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID2 register
  */
-//@{
-#define HW_ROM_PERIPHID2_ADDR    (REGS_ROM_BASE + 0xFE8U)
+/*@{*/
+#define HW_ROM_PERIPHID2_ADDR(x) ((x) + 0xFE8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID2         (*(__I hw_rom_periphid2_t *) HW_ROM_PERIPHID2_ADDR)
-#define HW_ROM_PERIPHID2_RD()    (HW_ROM_PERIPHID2.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID2(x)      (*(__I hw_rom_periphid2_t *) HW_ROM_PERIPHID2_ADDR(x))
+#define HW_ROM_PERIPHID2_RD(x)   (HW_ROM_PERIPHID2(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID2 bitfields
@@ -606,22 +543,19 @@ typedef union _hw_rom_periphid2
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID2_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID2_PERIPHID.
-#define BM_ROM_PERIPHID2_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID2_PERIPHID.
-#define BS_ROM_PERIPHID2_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID2_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID2_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID2_PERIPHID. */
+#define BM_ROM_PERIPHID2_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID2_PERIPHID. */
+#define BS_ROM_PERIPHID2_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID2_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID2_PERIPHID field.
-#define BR_ROM_PERIPHID2_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID2_ADDR, BP_ROM_PERIPHID2_PERIPHID, BS_ROM_PERIPHID2_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID2_PERIPHID field. */
+#define BR_ROM_PERIPHID2_PERIPHID(x) (HW_ROM_PERIPHID2(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_PERIPHID3 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_PERIPHID3 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_PERIPHID3 - Peripheral ID Register (RO)
  *
@@ -635,22 +569,19 @@ typedef union _hw_rom_periphid3
     uint32_t U;
     struct _hw_rom_periphid3_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_rom_periphid3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_PERIPHID3 register
  */
-//@{
-#define HW_ROM_PERIPHID3_ADDR    (REGS_ROM_BASE + 0xFECU)
+/*@{*/
+#define HW_ROM_PERIPHID3_ADDR(x) ((x) + 0xFECU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_PERIPHID3         (*(__I hw_rom_periphid3_t *) HW_ROM_PERIPHID3_ADDR)
-#define HW_ROM_PERIPHID3_RD()    (HW_ROM_PERIPHID3.U)
-#endif
-//@}
+#define HW_ROM_PERIPHID3(x)      (*(__I hw_rom_periphid3_t *) HW_ROM_PERIPHID3_ADDR(x))
+#define HW_ROM_PERIPHID3_RD(x)   (HW_ROM_PERIPHID3(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_PERIPHID3 bitfields
@@ -662,22 +593,19 @@ typedef union _hw_rom_periphid3
  * Peripheral ID1 is hardwired to 0x0000_00E0; ID2 to 0x0000_0008; and all the
  * others to 0x0000_0000.
  */
-//@{
-#define BP_ROM_PERIPHID3_PERIPHID (0U)     //!< Bit position for ROM_PERIPHID3_PERIPHID.
-#define BM_ROM_PERIPHID3_PERIPHID (0xFFFFFFFFU) //!< Bit mask for ROM_PERIPHID3_PERIPHID.
-#define BS_ROM_PERIPHID3_PERIPHID (32U)    //!< Bit field size in bits for ROM_PERIPHID3_PERIPHID.
+/*@{*/
+#define BP_ROM_PERIPHID3_PERIPHID (0U)     /*!< Bit position for ROM_PERIPHID3_PERIPHID. */
+#define BM_ROM_PERIPHID3_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for ROM_PERIPHID3_PERIPHID. */
+#define BS_ROM_PERIPHID3_PERIPHID (32U)    /*!< Bit field size in bits for ROM_PERIPHID3_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_PERIPHID3_PERIPHID field.
-#define BR_ROM_PERIPHID3_PERIPHID (BME_UBFX32(HW_ROM_PERIPHID3_ADDR, BP_ROM_PERIPHID3_PERIPHID, BS_ROM_PERIPHID3_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_PERIPHID3_PERIPHID field. */
+#define BR_ROM_PERIPHID3_PERIPHID(x) (HW_ROM_PERIPHID3(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_ROM_COMPIDn - Component ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_ROM_COMPIDn - Component ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_ROM_COMPIDn - Component ID Register (RO)
  *
@@ -691,24 +619,21 @@ typedef union _hw_rom_compidn
     uint32_t U;
     struct _hw_rom_compidn_bitfields
     {
-        uint32_t COMPID : 32;          //!< [31:0] Component ID
+        uint32_t COMPID : 32;          /*!< [31:0] Component ID */
     } B;
 } hw_rom_compidn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire ROM_COMPIDn register
  */
-//@{
+/*@{*/
 #define HW_ROM_COMPIDn_COUNT (4U)
 
-#define HW_ROM_COMPIDn_ADDR(n)   (REGS_ROM_BASE + 0xFF0U + (0x4U * n))
+#define HW_ROM_COMPIDn_ADDR(x, n) ((x) + 0xFF0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_ROM_COMPIDn(n)        (*(__I hw_rom_compidn_t *) HW_ROM_COMPIDn_ADDR(n))
-#define HW_ROM_COMPIDn_RD(n)     (HW_ROM_COMPIDn(n).U)
-#endif
-//@}
+#define HW_ROM_COMPIDn(x, n)     (*(__I hw_rom_compidn_t *) HW_ROM_COMPIDn_ADDR(x, n))
+#define HW_ROM_COMPIDn_RD(x, n)  (HW_ROM_COMPIDn(x, n).U)
+/*@}*/
 
 /*
  * Constants & macros for individual ROM_COMPIDn bitfields
@@ -720,49 +645,46 @@ typedef union _hw_rom_compidn
  * Component ID0 is hardwired to 0x0000_000D; ID1 to 0x0000_0010; ID2 to
  * 0x0000_0005; ID3 to 0x0000_00B1.
  */
-//@{
-#define BP_ROM_COMPIDn_COMPID (0U)         //!< Bit position for ROM_COMPIDn_COMPID.
-#define BM_ROM_COMPIDn_COMPID (0xFFFFFFFFU) //!< Bit mask for ROM_COMPIDn_COMPID.
-#define BS_ROM_COMPIDn_COMPID (32U)        //!< Bit field size in bits for ROM_COMPIDn_COMPID.
+/*@{*/
+#define BP_ROM_COMPIDn_COMPID (0U)         /*!< Bit position for ROM_COMPIDn_COMPID. */
+#define BM_ROM_COMPIDn_COMPID (0xFFFFFFFFU) /*!< Bit mask for ROM_COMPIDn_COMPID. */
+#define BS_ROM_COMPIDn_COMPID (32U)        /*!< Bit field size in bits for ROM_COMPIDn_COMPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the ROM_COMPIDn_COMPID field.
-#define BR_ROM_COMPIDn_COMPID(n) (BME_UBFX32(HW_ROM_COMPIDn_ADDR(n), BP_ROM_COMPIDn_COMPID, BS_ROM_COMPIDn_COMPID))
-#endif
-//@}
+/*! @brief Read current value of the ROM_COMPIDn_COMPID field. */
+#define BR_ROM_COMPIDn_COMPID(x, n) (HW_ROM_COMPIDn(x, n).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_rom_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_rom_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All ROM module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_rom
 {
-    __I hw_rom_entryn_t ENTRYn[3];         //!< [0x0] Entry
-    __I hw_rom_tablemark_t TABLEMARK;      //!< [0xC] End of Table Marker Register
+    __I hw_rom_entryn_t ENTRYn[3];         /*!< [0x0] Entry */
+    __I hw_rom_tablemark_t TABLEMARK;      /*!< [0xC] End of Table Marker Register */
     uint8_t _reserved0[4028];
-    __I hw_rom_sysaccess_t SYSACCESS;      //!< [0xFCC] System Access Register
-    __I hw_rom_periphid4_t PERIPHID4;      //!< [0xFD0] Peripheral ID Register
-    __I hw_rom_periphid5_t PERIPHID5;      //!< [0xFD4] Peripheral ID Register
-    __I hw_rom_periphid6_t PERIPHID6;      //!< [0xFD8] Peripheral ID Register
-    __I hw_rom_periphid7_t PERIPHID7;      //!< [0xFDC] Peripheral ID Register
-    __I hw_rom_periphid0_t PERIPHID0;      //!< [0xFE0] Peripheral ID Register
-    __I hw_rom_periphid1_t PERIPHID1;      //!< [0xFE4] Peripheral ID Register
-    __I hw_rom_periphid2_t PERIPHID2;      //!< [0xFE8] Peripheral ID Register
-    __I hw_rom_periphid3_t PERIPHID3;      //!< [0xFEC] Peripheral ID Register
-    __I hw_rom_compidn_t COMPIDn[4];       //!< [0xFF0] Component ID Register
+    __I hw_rom_sysaccess_t SYSACCESS;      /*!< [0xFCC] System Access Register */
+    __I hw_rom_periphid4_t PERIPHID4;      /*!< [0xFD0] Peripheral ID Register */
+    __I hw_rom_periphid5_t PERIPHID5;      /*!< [0xFD4] Peripheral ID Register */
+    __I hw_rom_periphid6_t PERIPHID6;      /*!< [0xFD8] Peripheral ID Register */
+    __I hw_rom_periphid7_t PERIPHID7;      /*!< [0xFDC] Peripheral ID Register */
+    __I hw_rom_periphid0_t PERIPHID0;      /*!< [0xFE0] Peripheral ID Register */
+    __I hw_rom_periphid1_t PERIPHID1;      /*!< [0xFE4] Peripheral ID Register */
+    __I hw_rom_periphid2_t PERIPHID2;      /*!< [0xFE8] Peripheral ID Register */
+    __I hw_rom_periphid3_t PERIPHID3;      /*!< [0xFEC] Peripheral ID Register */
+    __I hw_rom_compidn_t COMPIDn[4];       /*!< [0xFF0] Component ID Register */
 } hw_rom_t;
 #pragma pack()
 
-//! @brief Macro to access all ROM registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_ROM</code>.
-#define HW_ROM         (*(hw_rom_t *) REGS_ROM_BASE)
-#endif
+/*! @brief Macro to access all ROM registers. */
+/*! @param x ROM module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_ROM(ROM_BASE)</code>. */
+#define HW_ROM(x)      (*(hw_rom_t *)(x))
 
-#endif // __HW_ROM_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_ROM_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

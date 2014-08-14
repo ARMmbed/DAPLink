@@ -21,7 +21,8 @@
 #ifndef __HW_USBHS_REGISTERS_H__
 #define __HW_USBHS_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 USBHS
@@ -69,27 +70,20 @@
  * - HW_USBHS_EPSR - Endpoint Status Register
  * - HW_USBHS_EPCOMPLETE - Endpoint Complete Register
  * - HW_USBHS_EPCR0 - Endpoint Control Register 0
- * - HW_USBHS_EPCRn - Endpoint Control Register n
- * - HW_USBHS_EPCRn - Endpoint Control Register n
- * - HW_USBHS_EPCRn - Endpoint Control Register n
+ * - HW_USBHS_EPCR1 - Endpoint Control Register n
+ * - HW_USBHS_EPCR2 - Endpoint Control Register n
+ * - HW_USBHS_EPCR3 - Endpoint Control Register n
  * - HW_USBHS_USBGENCTRL - USB General Control Register
  *
  * - hw_usbhs_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_USBHS_BASE
-#define HW_USBHS_INSTANCE_COUNT (1U) //!< Number of instances of the USBHS module.
-#define REGS_USBHS_BASE (0x40034000U) //!< Base address for USBHS.
-#endif
-//@}
+#define HW_USBHS_INSTANCE_COUNT (1U) /*!< Number of instances of the USBHS module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_ID - Identification Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_ID - Identification Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_ID - Identification Register (RO)
  *
@@ -103,29 +97,26 @@ typedef union _hw_usbhs_id
     uint32_t U;
     struct _hw_usbhs_id_bitfields
     {
-        uint32_t ID : 6;               //!< [5:0] Configuration number
-        uint32_t RESERVED0 : 2;        //!< [7:6] Reserved
-        uint32_t NID : 6;              //!< [13:8]
-        uint32_t RESERVED1 : 2;        //!< [15:14] Reserved
-        uint32_t TAG : 5;              //!< [20:16] Tag
-        uint32_t REVISION : 4;         //!< [24:21] Revision
-        uint32_t VERSION : 4;          //!< [28:25] Version
-        uint32_t VERSIONID : 3;        //!< [31:29] Version ID
+        uint32_t ID : 6;               /*!< [5:0] Configuration number */
+        uint32_t RESERVED0 : 2;        /*!< [7:6] Reserved */
+        uint32_t NID : 6;              /*!< [13:8]  */
+        uint32_t RESERVED1 : 2;        /*!< [15:14] Reserved */
+        uint32_t TAG : 5;              /*!< [20:16] Tag */
+        uint32_t REVISION : 4;         /*!< [24:21] Revision */
+        uint32_t VERSION : 4;          /*!< [28:25] Version */
+        uint32_t VERSIONID : 3;        /*!< [31:29] Version ID */
     } B;
 } hw_usbhs_id_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_ID register
  */
-//@{
-#define HW_USBHS_ID_ADDR         (REGS_USBHS_BASE + 0x0U)
+/*@{*/
+#define HW_USBHS_ID_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_ID              (*(__I hw_usbhs_id_t *) HW_USBHS_ID_ADDR)
-#define HW_USBHS_ID_RD()         (HW_USBHS_ID.U)
-#endif
-//@}
+#define HW_USBHS_ID(x)           (*(__I hw_usbhs_id_t *) HW_USBHS_ID_ADDR(x))
+#define HW_USBHS_ID_RD(x)        (HW_USBHS_ID(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_ID bitfields
@@ -136,102 +127,89 @@ typedef union _hw_usbhs_id
  *
  * This number is set to 0x05.
  */
-//@{
-#define BP_USBHS_ID_ID       (0U)          //!< Bit position for USBHS_ID_ID.
-#define BM_USBHS_ID_ID       (0x0000003FU) //!< Bit mask for USBHS_ID_ID.
-#define BS_USBHS_ID_ID       (6U)          //!< Bit field size in bits for USBHS_ID_ID.
+/*@{*/
+#define BP_USBHS_ID_ID       (0U)          /*!< Bit position for USBHS_ID_ID. */
+#define BM_USBHS_ID_ID       (0x0000003FU) /*!< Bit mask for USBHS_ID_ID. */
+#define BS_USBHS_ID_ID       (6U)          /*!< Bit field size in bits for USBHS_ID_ID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_ID field.
-#define BR_USBHS_ID_ID       (HW_USBHS_ID.B.ID)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_ID field. */
+#define BR_USBHS_ID_ID(x)    (HW_USBHS_ID(x).B.ID)
+/*@}*/
 
 /*!
  * @name Register USBHS_ID, field NID[13:8] (RO)
  *
  * Ones complement version of ID.
  */
-//@{
-#define BP_USBHS_ID_NID      (8U)          //!< Bit position for USBHS_ID_NID.
-#define BM_USBHS_ID_NID      (0x00003F00U) //!< Bit mask for USBHS_ID_NID.
-#define BS_USBHS_ID_NID      (6U)          //!< Bit field size in bits for USBHS_ID_NID.
+/*@{*/
+#define BP_USBHS_ID_NID      (8U)          /*!< Bit position for USBHS_ID_NID. */
+#define BM_USBHS_ID_NID      (0x00003F00U) /*!< Bit mask for USBHS_ID_NID. */
+#define BS_USBHS_ID_NID      (6U)          /*!< Bit field size in bits for USBHS_ID_NID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_NID field.
-#define BR_USBHS_ID_NID      (HW_USBHS_ID.B.NID)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_NID field. */
+#define BR_USBHS_ID_NID(x)   (HW_USBHS_ID(x).B.NID)
+/*@}*/
 
 /*!
  * @name Register USBHS_ID, field TAG[20:16] (RO)
  *
  * Tag of the module.
  */
-//@{
-#define BP_USBHS_ID_TAG      (16U)         //!< Bit position for USBHS_ID_TAG.
-#define BM_USBHS_ID_TAG      (0x001F0000U) //!< Bit mask for USBHS_ID_TAG.
-#define BS_USBHS_ID_TAG      (5U)          //!< Bit field size in bits for USBHS_ID_TAG.
+/*@{*/
+#define BP_USBHS_ID_TAG      (16U)         /*!< Bit position for USBHS_ID_TAG. */
+#define BM_USBHS_ID_TAG      (0x001F0000U) /*!< Bit mask for USBHS_ID_TAG. */
+#define BS_USBHS_ID_TAG      (5U)          /*!< Bit field size in bits for USBHS_ID_TAG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_TAG field.
-#define BR_USBHS_ID_TAG      (HW_USBHS_ID.B.TAG)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_TAG field. */
+#define BR_USBHS_ID_TAG(x)   (HW_USBHS_ID(x).B.TAG)
+/*@}*/
 
 /*!
  * @name Register USBHS_ID, field REVISION[24:21] (RO)
  *
  * Revision number of the module.
  */
-//@{
-#define BP_USBHS_ID_REVISION (21U)         //!< Bit position for USBHS_ID_REVISION.
-#define BM_USBHS_ID_REVISION (0x01E00000U) //!< Bit mask for USBHS_ID_REVISION.
-#define BS_USBHS_ID_REVISION (4U)          //!< Bit field size in bits for USBHS_ID_REVISION.
+/*@{*/
+#define BP_USBHS_ID_REVISION (21U)         /*!< Bit position for USBHS_ID_REVISION. */
+#define BM_USBHS_ID_REVISION (0x01E00000U) /*!< Bit mask for USBHS_ID_REVISION. */
+#define BS_USBHS_ID_REVISION (4U)          /*!< Bit field size in bits for USBHS_ID_REVISION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_REVISION field.
-#define BR_USBHS_ID_REVISION (HW_USBHS_ID.B.REVISION)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_REVISION field. */
+#define BR_USBHS_ID_REVISION(x) (HW_USBHS_ID(x).B.REVISION)
+/*@}*/
 
 /*!
  * @name Register USBHS_ID, field VERSION[28:25] (RO)
  *
  * Version of the module.
  */
-//@{
-#define BP_USBHS_ID_VERSION  (25U)         //!< Bit position for USBHS_ID_VERSION.
-#define BM_USBHS_ID_VERSION  (0x1E000000U) //!< Bit mask for USBHS_ID_VERSION.
-#define BS_USBHS_ID_VERSION  (4U)          //!< Bit field size in bits for USBHS_ID_VERSION.
+/*@{*/
+#define BP_USBHS_ID_VERSION  (25U)         /*!< Bit position for USBHS_ID_VERSION. */
+#define BM_USBHS_ID_VERSION  (0x1E000000U) /*!< Bit mask for USBHS_ID_VERSION. */
+#define BS_USBHS_ID_VERSION  (4U)          /*!< Bit field size in bits for USBHS_ID_VERSION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_VERSION field.
-#define BR_USBHS_ID_VERSION  (HW_USBHS_ID.B.VERSION)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_VERSION field. */
+#define BR_USBHS_ID_VERSION(x) (HW_USBHS_ID(x).B.VERSION)
+/*@}*/
 
 /*!
  * @name Register USBHS_ID, field VERSIONID[31:29] (RO)
  *
  * Internal version counter.
  */
-//@{
-#define BP_USBHS_ID_VERSIONID (29U)        //!< Bit position for USBHS_ID_VERSIONID.
-#define BM_USBHS_ID_VERSIONID (0xE0000000U) //!< Bit mask for USBHS_ID_VERSIONID.
-#define BS_USBHS_ID_VERSIONID (3U)         //!< Bit field size in bits for USBHS_ID_VERSIONID.
+/*@{*/
+#define BP_USBHS_ID_VERSIONID (29U)        /*!< Bit position for USBHS_ID_VERSIONID. */
+#define BM_USBHS_ID_VERSIONID (0xE0000000U) /*!< Bit mask for USBHS_ID_VERSIONID. */
+#define BS_USBHS_ID_VERSIONID (3U)         /*!< Bit field size in bits for USBHS_ID_VERSIONID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ID_VERSIONID field.
-#define BR_USBHS_ID_VERSIONID (HW_USBHS_ID.B.VERSIONID)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ID_VERSIONID field. */
+#define BR_USBHS_ID_VERSIONID(x) (HW_USBHS_ID(x).B.VERSIONID)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HWGENERAL - General Hardware Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HWGENERAL - General Hardware Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HWGENERAL - General Hardware Parameters Register (RO)
  *
@@ -245,25 +223,22 @@ typedef union _hw_usbhs_hwgeneral
     uint32_t U;
     struct _hw_usbhs_hwgeneral_bitfields
     {
-        uint32_t RESERVED0 : 6;        //!< [5:0] Reserved
-        uint32_t PHYM : 3;             //!< [8:6] PHY Mode
-        uint32_t SM : 2;               //!< [10:9] Serial mode
-        uint32_t RESERVED1 : 21;       //!< [31:11] Reserved
+        uint32_t RESERVED0 : 6;        /*!< [5:0] Reserved */
+        uint32_t PHYM : 3;             /*!< [8:6] PHY Mode */
+        uint32_t SM : 2;               /*!< [10:9] Serial mode */
+        uint32_t RESERVED1 : 21;       /*!< [31:11] Reserved */
     } B;
 } hw_usbhs_hwgeneral_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HWGENERAL register
  */
-//@{
-#define HW_USBHS_HWGENERAL_ADDR  (REGS_USBHS_BASE + 0x4U)
+/*@{*/
+#define HW_USBHS_HWGENERAL_ADDR(x) ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HWGENERAL       (*(__I hw_usbhs_hwgeneral_t *) HW_USBHS_HWGENERAL_ADDR)
-#define HW_USBHS_HWGENERAL_RD()  (HW_USBHS_HWGENERAL.U)
-#endif
-//@}
+#define HW_USBHS_HWGENERAL(x)    (*(__I hw_usbhs_hwgeneral_t *) HW_USBHS_HWGENERAL_ADDR(x))
+#define HW_USBHS_HWGENERAL_RD(x) (HW_USBHS_HWGENERAL(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HWGENERAL bitfields
@@ -274,16 +249,14 @@ typedef union _hw_usbhs_hwgeneral
  *
  * Indicates USB transceiver interface used. Always reads 010. 010 ULPI only
  */
-//@{
-#define BP_USBHS_HWGENERAL_PHYM (6U)       //!< Bit position for USBHS_HWGENERAL_PHYM.
-#define BM_USBHS_HWGENERAL_PHYM (0x000001C0U) //!< Bit mask for USBHS_HWGENERAL_PHYM.
-#define BS_USBHS_HWGENERAL_PHYM (3U)       //!< Bit field size in bits for USBHS_HWGENERAL_PHYM.
+/*@{*/
+#define BP_USBHS_HWGENERAL_PHYM (6U)       /*!< Bit position for USBHS_HWGENERAL_PHYM. */
+#define BM_USBHS_HWGENERAL_PHYM (0x000001C0U) /*!< Bit mask for USBHS_HWGENERAL_PHYM. */
+#define BS_USBHS_HWGENERAL_PHYM (3U)       /*!< Bit field size in bits for USBHS_HWGENERAL_PHYM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWGENERAL_PHYM field.
-#define BR_USBHS_HWGENERAL_PHYM (HW_USBHS_HWGENERAL.B.PHYM)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWGENERAL_PHYM field. */
+#define BR_USBHS_HWGENERAL_PHYM(x) (HW_USBHS_HWGENERAL(x).B.PHYM)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWGENERAL, field SM[10:9] (RO)
@@ -291,22 +264,19 @@ typedef union _hw_usbhs_hwgeneral
  * Indicates presence of serial interface. Always 00. 00 Serial engine not
  * present
  */
-//@{
-#define BP_USBHS_HWGENERAL_SM (9U)         //!< Bit position for USBHS_HWGENERAL_SM.
-#define BM_USBHS_HWGENERAL_SM (0x00000600U) //!< Bit mask for USBHS_HWGENERAL_SM.
-#define BS_USBHS_HWGENERAL_SM (2U)         //!< Bit field size in bits for USBHS_HWGENERAL_SM.
+/*@{*/
+#define BP_USBHS_HWGENERAL_SM (9U)         /*!< Bit position for USBHS_HWGENERAL_SM. */
+#define BM_USBHS_HWGENERAL_SM (0x00000600U) /*!< Bit mask for USBHS_HWGENERAL_SM. */
+#define BS_USBHS_HWGENERAL_SM (2U)         /*!< Bit field size in bits for USBHS_HWGENERAL_SM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWGENERAL_SM field.
-#define BR_USBHS_HWGENERAL_SM (HW_USBHS_HWGENERAL.B.SM)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWGENERAL_SM field. */
+#define BR_USBHS_HWGENERAL_SM(x) (HW_USBHS_HWGENERAL(x).B.SM)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HWHOST - Host Hardware Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HWHOST - Host Hardware Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HWHOST - Host Hardware Parameters Register (RO)
  *
@@ -320,27 +290,24 @@ typedef union _hw_usbhs_hwhost
     uint32_t U;
     struct _hw_usbhs_hwhost_bitfields
     {
-        uint32_t HC : 1;               //!< [0] Host Capable
-        uint32_t NPORT : 3;            //!< [3:1] Number of Ports
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t TTASY : 8;            //!< [23:16] Transaction translator contexts.
-        uint32_t TTPER : 8;            //!< [31:24] Transaction translator periodic
-                                       //! contexts.
+        uint32_t HC : 1;               /*!< [0] Host Capable */
+        uint32_t NPORT : 3;            /*!< [3:1] Number of Ports */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t TTASY : 8;            /*!< [23:16] Transaction translator contexts. */
+        uint32_t TTPER : 8;            /*!< [31:24] Transaction translator periodic
+                                        * contexts. */
     } B;
 } hw_usbhs_hwhost_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HWHOST register
  */
-//@{
-#define HW_USBHS_HWHOST_ADDR     (REGS_USBHS_BASE + 0x8U)
+/*@{*/
+#define HW_USBHS_HWHOST_ADDR(x)  ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HWHOST          (*(__I hw_usbhs_hwhost_t *) HW_USBHS_HWHOST_ADDR)
-#define HW_USBHS_HWHOST_RD()     (HW_USBHS_HWHOST.U)
-#endif
-//@}
+#define HW_USBHS_HWHOST(x)       (*(__I hw_usbhs_hwhost_t *) HW_USBHS_HWHOST_ADDR(x))
+#define HW_USBHS_HWHOST_RD(x)    (HW_USBHS_HWHOST(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HWHOST bitfields
@@ -351,16 +318,14 @@ typedef union _hw_usbhs_hwhost
  *
  * Always reads as 0b1, indicating the module is host capable.
  */
-//@{
-#define BP_USBHS_HWHOST_HC   (0U)          //!< Bit position for USBHS_HWHOST_HC.
-#define BM_USBHS_HWHOST_HC   (0x00000001U) //!< Bit mask for USBHS_HWHOST_HC.
-#define BS_USBHS_HWHOST_HC   (1U)          //!< Bit field size in bits for USBHS_HWHOST_HC.
+/*@{*/
+#define BP_USBHS_HWHOST_HC   (0U)          /*!< Bit position for USBHS_HWHOST_HC. */
+#define BM_USBHS_HWHOST_HC   (0x00000001U) /*!< Bit mask for USBHS_HWHOST_HC. */
+#define BS_USBHS_HWHOST_HC   (1U)          /*!< Bit field size in bits for USBHS_HWHOST_HC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWHOST_HC field.
-#define BR_USBHS_HWHOST_HC   (BITBAND_ACCESS32(HW_USBHS_HWHOST_ADDR, BP_USBHS_HWHOST_HC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWHOST_HC field. */
+#define BR_USBHS_HWHOST_HC(x) (BITBAND_ACCESS32(HW_USBHS_HWHOST_ADDR(x), BP_USBHS_HWHOST_HC))
+/*@}*/
 
 /*!
  * @name Register USBHS_HWHOST, field NPORT[3:1] (RO)
@@ -368,32 +333,28 @@ typedef union _hw_usbhs_hwhost
  * Always 0, indicating the number of ports available (NPORT + 1) for this host
  * implementation.
  */
-//@{
-#define BP_USBHS_HWHOST_NPORT (1U)         //!< Bit position for USBHS_HWHOST_NPORT.
-#define BM_USBHS_HWHOST_NPORT (0x0000000EU) //!< Bit mask for USBHS_HWHOST_NPORT.
-#define BS_USBHS_HWHOST_NPORT (3U)         //!< Bit field size in bits for USBHS_HWHOST_NPORT.
+/*@{*/
+#define BP_USBHS_HWHOST_NPORT (1U)         /*!< Bit position for USBHS_HWHOST_NPORT. */
+#define BM_USBHS_HWHOST_NPORT (0x0000000EU) /*!< Bit mask for USBHS_HWHOST_NPORT. */
+#define BS_USBHS_HWHOST_NPORT (3U)         /*!< Bit field size in bits for USBHS_HWHOST_NPORT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWHOST_NPORT field.
-#define BR_USBHS_HWHOST_NPORT (HW_USBHS_HWHOST.B.NPORT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWHOST_NPORT field. */
+#define BR_USBHS_HWHOST_NPORT(x) (HW_USBHS_HWHOST(x).B.NPORT)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWHOST, field TTASY[23:16] (RO)
  *
  * The number of transaction translator contexts. Always reads as 0x02.
  */
-//@{
-#define BP_USBHS_HWHOST_TTASY (16U)        //!< Bit position for USBHS_HWHOST_TTASY.
-#define BM_USBHS_HWHOST_TTASY (0x00FF0000U) //!< Bit mask for USBHS_HWHOST_TTASY.
-#define BS_USBHS_HWHOST_TTASY (8U)         //!< Bit field size in bits for USBHS_HWHOST_TTASY.
+/*@{*/
+#define BP_USBHS_HWHOST_TTASY (16U)        /*!< Bit position for USBHS_HWHOST_TTASY. */
+#define BM_USBHS_HWHOST_TTASY (0x00FF0000U) /*!< Bit mask for USBHS_HWHOST_TTASY. */
+#define BS_USBHS_HWHOST_TTASY (8U)         /*!< Bit field size in bits for USBHS_HWHOST_TTASY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWHOST_TTASY field.
-#define BR_USBHS_HWHOST_TTASY (HW_USBHS_HWHOST.B.TTASY)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWHOST_TTASY field. */
+#define BR_USBHS_HWHOST_TTASY(x) (HW_USBHS_HWHOST(x).B.TTASY)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWHOST, field TTPER[31:24] (RO)
@@ -401,22 +362,19 @@ typedef union _hw_usbhs_hwhost
  * The number of supported transaction translator periodic contexts. Always
  * reads as 0x10 (16 contexts supported).
  */
-//@{
-#define BP_USBHS_HWHOST_TTPER (24U)        //!< Bit position for USBHS_HWHOST_TTPER.
-#define BM_USBHS_HWHOST_TTPER (0xFF000000U) //!< Bit mask for USBHS_HWHOST_TTPER.
-#define BS_USBHS_HWHOST_TTPER (8U)         //!< Bit field size in bits for USBHS_HWHOST_TTPER.
+/*@{*/
+#define BP_USBHS_HWHOST_TTPER (24U)        /*!< Bit position for USBHS_HWHOST_TTPER. */
+#define BM_USBHS_HWHOST_TTPER (0xFF000000U) /*!< Bit mask for USBHS_HWHOST_TTPER. */
+#define BS_USBHS_HWHOST_TTPER (8U)         /*!< Bit field size in bits for USBHS_HWHOST_TTPER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWHOST_TTPER field.
-#define BR_USBHS_HWHOST_TTPER (HW_USBHS_HWHOST.B.TTPER)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWHOST_TTPER field. */
+#define BR_USBHS_HWHOST_TTPER(x) (HW_USBHS_HWHOST(x).B.TTPER)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HWDEVICE - Device Hardware Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HWDEVICE - Device Hardware Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HWDEVICE - Device Hardware Parameters Register (RO)
  *
@@ -430,24 +388,21 @@ typedef union _hw_usbhs_hwdevice
     uint32_t U;
     struct _hw_usbhs_hwdevice_bitfields
     {
-        uint32_t DC : 1;               //!< [0] Device Capable
-        uint32_t DEVEP : 5;            //!< [5:1] Device endpoints.
-        uint32_t RESERVED0 : 26;       //!< [31:6] Reserved
+        uint32_t DC : 1;               /*!< [0] Device Capable */
+        uint32_t DEVEP : 5;            /*!< [5:1] Device endpoints. */
+        uint32_t RESERVED0 : 26;       /*!< [31:6] Reserved */
     } B;
 } hw_usbhs_hwdevice_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HWDEVICE register
  */
-//@{
-#define HW_USBHS_HWDEVICE_ADDR   (REGS_USBHS_BASE + 0xCU)
+/*@{*/
+#define HW_USBHS_HWDEVICE_ADDR(x) ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HWDEVICE        (*(__I hw_usbhs_hwdevice_t *) HW_USBHS_HWDEVICE_ADDR)
-#define HW_USBHS_HWDEVICE_RD()   (HW_USBHS_HWDEVICE.U)
-#endif
-//@}
+#define HW_USBHS_HWDEVICE(x)     (*(__I hw_usbhs_hwdevice_t *) HW_USBHS_HWDEVICE_ADDR(x))
+#define HW_USBHS_HWDEVICE_RD(x)  (HW_USBHS_HWDEVICE(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HWDEVICE bitfields
@@ -458,38 +413,33 @@ typedef union _hw_usbhs_hwdevice
  *
  * Always reads as 0b1, indicating the USBHS module is device capable.
  */
-//@{
-#define BP_USBHS_HWDEVICE_DC (0U)          //!< Bit position for USBHS_HWDEVICE_DC.
-#define BM_USBHS_HWDEVICE_DC (0x00000001U) //!< Bit mask for USBHS_HWDEVICE_DC.
-#define BS_USBHS_HWDEVICE_DC (1U)          //!< Bit field size in bits for USBHS_HWDEVICE_DC.
+/*@{*/
+#define BP_USBHS_HWDEVICE_DC (0U)          /*!< Bit position for USBHS_HWDEVICE_DC. */
+#define BM_USBHS_HWDEVICE_DC (0x00000001U) /*!< Bit mask for USBHS_HWDEVICE_DC. */
+#define BS_USBHS_HWDEVICE_DC (1U)          /*!< Bit field size in bits for USBHS_HWDEVICE_DC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWDEVICE_DC field.
-#define BR_USBHS_HWDEVICE_DC (BITBAND_ACCESS32(HW_USBHS_HWDEVICE_ADDR, BP_USBHS_HWDEVICE_DC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWDEVICE_DC field. */
+#define BR_USBHS_HWDEVICE_DC(x) (BITBAND_ACCESS32(HW_USBHS_HWDEVICE_ADDR(x), BP_USBHS_HWDEVICE_DC))
+/*@}*/
 
 /*!
  * @name Register USBHS_HWDEVICE, field DEVEP[5:1] (RO)
  *
  * The number of supported endpoints. Always reads as 0b00100.
  */
-//@{
-#define BP_USBHS_HWDEVICE_DEVEP (1U)       //!< Bit position for USBHS_HWDEVICE_DEVEP.
-#define BM_USBHS_HWDEVICE_DEVEP (0x0000003EU) //!< Bit mask for USBHS_HWDEVICE_DEVEP.
-#define BS_USBHS_HWDEVICE_DEVEP (5U)       //!< Bit field size in bits for USBHS_HWDEVICE_DEVEP.
+/*@{*/
+#define BP_USBHS_HWDEVICE_DEVEP (1U)       /*!< Bit position for USBHS_HWDEVICE_DEVEP. */
+#define BM_USBHS_HWDEVICE_DEVEP (0x0000003EU) /*!< Bit mask for USBHS_HWDEVICE_DEVEP. */
+#define BS_USBHS_HWDEVICE_DEVEP (5U)       /*!< Bit field size in bits for USBHS_HWDEVICE_DEVEP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWDEVICE_DEVEP field.
-#define BR_USBHS_HWDEVICE_DEVEP (HW_USBHS_HWDEVICE.B.DEVEP)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWDEVICE_DEVEP field. */
+#define BR_USBHS_HWDEVICE_DEVEP(x) (HW_USBHS_HWDEVICE(x).B.DEVEP)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HWTXBUF - Transmit Buffer Hardware Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HWTXBUF - Transmit Buffer Hardware Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HWTXBUF - Transmit Buffer Hardware Parameters Register (RO)
  *
@@ -503,26 +453,23 @@ typedef union _hw_usbhs_hwtxbuf
     uint32_t U;
     struct _hw_usbhs_hwtxbuf_bitfields
     {
-        uint32_t TXBURST : 8;          //!< [7:0] Transmit Burst.
-        uint32_t TXADD : 8;            //!< [15:8] Transmit Address.
-        uint32_t TXCHANADD : 8;        //!< [23:16] Transmit Channel Address
-        uint32_t RESERVED0 : 7;        //!< [30:24] Reserved
-        uint32_t TXLC : 1;             //!< [31] Transmit local Context Registers
+        uint32_t TXBURST : 8;          /*!< [7:0] Transmit Burst. */
+        uint32_t TXADD : 8;            /*!< [15:8] Transmit Address. */
+        uint32_t TXCHANADD : 8;        /*!< [23:16] Transmit Channel Address */
+        uint32_t RESERVED0 : 7;        /*!< [30:24] Reserved */
+        uint32_t TXLC : 1;             /*!< [31] Transmit local Context Registers */
     } B;
 } hw_usbhs_hwtxbuf_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HWTXBUF register
  */
-//@{
-#define HW_USBHS_HWTXBUF_ADDR    (REGS_USBHS_BASE + 0x10U)
+/*@{*/
+#define HW_USBHS_HWTXBUF_ADDR(x) ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HWTXBUF         (*(__I hw_usbhs_hwtxbuf_t *) HW_USBHS_HWTXBUF_ADDR)
-#define HW_USBHS_HWTXBUF_RD()    (HW_USBHS_HWTXBUF.U)
-#endif
-//@}
+#define HW_USBHS_HWTXBUF(x)      (*(__I hw_usbhs_hwtxbuf_t *) HW_USBHS_HWTXBUF_ADDR(x))
+#define HW_USBHS_HWTXBUF_RD(x)   (HW_USBHS_HWTXBUF(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HWTXBUF bitfields
@@ -534,32 +481,28 @@ typedef union _hw_usbhs_hwtxbuf
  * Indicates the number of data beats in a burst for transmit DMA data
  * transfers. Always 0x8.
  */
-//@{
-#define BP_USBHS_HWTXBUF_TXBURST (0U)      //!< Bit position for USBHS_HWTXBUF_TXBURST.
-#define BM_USBHS_HWTXBUF_TXBURST (0x000000FFU) //!< Bit mask for USBHS_HWTXBUF_TXBURST.
-#define BS_USBHS_HWTXBUF_TXBURST (8U)      //!< Bit field size in bits for USBHS_HWTXBUF_TXBURST.
+/*@{*/
+#define BP_USBHS_HWTXBUF_TXBURST (0U)      /*!< Bit position for USBHS_HWTXBUF_TXBURST. */
+#define BM_USBHS_HWTXBUF_TXBURST (0x000000FFU) /*!< Bit mask for USBHS_HWTXBUF_TXBURST. */
+#define BS_USBHS_HWTXBUF_TXBURST (8U)      /*!< Bit field size in bits for USBHS_HWTXBUF_TXBURST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWTXBUF_TXBURST field.
-#define BR_USBHS_HWTXBUF_TXBURST (HW_USBHS_HWTXBUF.B.TXBURST)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWTXBUF_TXBURST field. */
+#define BR_USBHS_HWTXBUF_TXBURST(x) (HW_USBHS_HWTXBUF(x).B.TXBURST)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWTXBUF, field TXADD[15:8] (RO)
  *
  * The number of address bits for the entire TX buffer. Always 0x9.
  */
-//@{
-#define BP_USBHS_HWTXBUF_TXADD (8U)        //!< Bit position for USBHS_HWTXBUF_TXADD.
-#define BM_USBHS_HWTXBUF_TXADD (0x0000FF00U) //!< Bit mask for USBHS_HWTXBUF_TXADD.
-#define BS_USBHS_HWTXBUF_TXADD (8U)        //!< Bit field size in bits for USBHS_HWTXBUF_TXADD.
+/*@{*/
+#define BP_USBHS_HWTXBUF_TXADD (8U)        /*!< Bit position for USBHS_HWTXBUF_TXADD. */
+#define BM_USBHS_HWTXBUF_TXADD (0x0000FF00U) /*!< Bit mask for USBHS_HWTXBUF_TXADD. */
+#define BS_USBHS_HWTXBUF_TXADD (8U)        /*!< Bit field size in bits for USBHS_HWTXBUF_TXADD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWTXBUF_TXADD field.
-#define BR_USBHS_HWTXBUF_TXADD (HW_USBHS_HWTXBUF.B.TXADD)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWTXBUF_TXADD field. */
+#define BR_USBHS_HWTXBUF_TXADD(x) (HW_USBHS_HWTXBUF(x).B.TXADD)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWTXBUF, field TXCHANADD[23:16] (RO)
@@ -567,16 +510,14 @@ typedef union _hw_usbhs_hwtxbuf
  * The number of address bits required to address one channel's worth of TX
  * data. Always 0x7.
  */
-//@{
-#define BP_USBHS_HWTXBUF_TXCHANADD (16U)   //!< Bit position for USBHS_HWTXBUF_TXCHANADD.
-#define BM_USBHS_HWTXBUF_TXCHANADD (0x00FF0000U) //!< Bit mask for USBHS_HWTXBUF_TXCHANADD.
-#define BS_USBHS_HWTXBUF_TXCHANADD (8U)    //!< Bit field size in bits for USBHS_HWTXBUF_TXCHANADD.
+/*@{*/
+#define BP_USBHS_HWTXBUF_TXCHANADD (16U)   /*!< Bit position for USBHS_HWTXBUF_TXCHANADD. */
+#define BM_USBHS_HWTXBUF_TXCHANADD (0x00FF0000U) /*!< Bit mask for USBHS_HWTXBUF_TXCHANADD. */
+#define BS_USBHS_HWTXBUF_TXCHANADD (8U)    /*!< Bit field size in bits for USBHS_HWTXBUF_TXCHANADD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWTXBUF_TXCHANADD field.
-#define BR_USBHS_HWTXBUF_TXCHANADD (HW_USBHS_HWTXBUF.B.TXCHANADD)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWTXBUF_TXCHANADD field. */
+#define BR_USBHS_HWTXBUF_TXCHANADD(x) (HW_USBHS_HWTXBUF(x).B.TXCHANADD)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWTXBUF, field TXLC[31] (RO)
@@ -587,22 +528,19 @@ typedef union _hw_usbhs_hwtxbuf
  * - 0 - Store device transmit contexts in the TX FIFO
  * - 1 - Store device transmit contexts in a register file
  */
-//@{
-#define BP_USBHS_HWTXBUF_TXLC (31U)        //!< Bit position for USBHS_HWTXBUF_TXLC.
-#define BM_USBHS_HWTXBUF_TXLC (0x80000000U) //!< Bit mask for USBHS_HWTXBUF_TXLC.
-#define BS_USBHS_HWTXBUF_TXLC (1U)         //!< Bit field size in bits for USBHS_HWTXBUF_TXLC.
+/*@{*/
+#define BP_USBHS_HWTXBUF_TXLC (31U)        /*!< Bit position for USBHS_HWTXBUF_TXLC. */
+#define BM_USBHS_HWTXBUF_TXLC (0x80000000U) /*!< Bit mask for USBHS_HWTXBUF_TXLC. */
+#define BS_USBHS_HWTXBUF_TXLC (1U)         /*!< Bit field size in bits for USBHS_HWTXBUF_TXLC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWTXBUF_TXLC field.
-#define BR_USBHS_HWTXBUF_TXLC (BITBAND_ACCESS32(HW_USBHS_HWTXBUF_ADDR, BP_USBHS_HWTXBUF_TXLC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWTXBUF_TXLC field. */
+#define BR_USBHS_HWTXBUF_TXLC(x) (BITBAND_ACCESS32(HW_USBHS_HWTXBUF_ADDR(x), BP_USBHS_HWTXBUF_TXLC))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HWRXBUF - Receive Buffer Hardware Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HWRXBUF - Receive Buffer Hardware Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HWRXBUF - Receive Buffer Hardware Parameters Register (RO)
  *
@@ -616,24 +554,21 @@ typedef union _hw_usbhs_hwrxbuf
     uint32_t U;
     struct _hw_usbhs_hwrxbuf_bitfields
     {
-        uint32_t RXBURST : 8;          //!< [7:0] Receive Burst.
-        uint32_t RXADD : 8;            //!< [15:8] Receive Address.
-        uint32_t RESERVED0 : 16;       //!< [31:16] Reserved
+        uint32_t RXBURST : 8;          /*!< [7:0] Receive Burst. */
+        uint32_t RXADD : 8;            /*!< [15:8] Receive Address. */
+        uint32_t RESERVED0 : 16;       /*!< [31:16] Reserved */
     } B;
 } hw_usbhs_hwrxbuf_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HWRXBUF register
  */
-//@{
-#define HW_USBHS_HWRXBUF_ADDR    (REGS_USBHS_BASE + 0x14U)
+/*@{*/
+#define HW_USBHS_HWRXBUF_ADDR(x) ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HWRXBUF         (*(__I hw_usbhs_hwrxbuf_t *) HW_USBHS_HWRXBUF_ADDR)
-#define HW_USBHS_HWRXBUF_RD()    (HW_USBHS_HWRXBUF.U)
-#endif
-//@}
+#define HW_USBHS_HWRXBUF(x)      (*(__I hw_usbhs_hwrxbuf_t *) HW_USBHS_HWRXBUF_ADDR(x))
+#define HW_USBHS_HWRXBUF_RD(x)   (HW_USBHS_HWRXBUF(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HWRXBUF bitfields
@@ -645,38 +580,33 @@ typedef union _hw_usbhs_hwrxbuf
  * Indicates the number of data beats in a burst for receive DMA data transfers.
  * Always reads as 0x08.
  */
-//@{
-#define BP_USBHS_HWRXBUF_RXBURST (0U)      //!< Bit position for USBHS_HWRXBUF_RXBURST.
-#define BM_USBHS_HWRXBUF_RXBURST (0x000000FFU) //!< Bit mask for USBHS_HWRXBUF_RXBURST.
-#define BS_USBHS_HWRXBUF_RXBURST (8U)      //!< Bit field size in bits for USBHS_HWRXBUF_RXBURST.
+/*@{*/
+#define BP_USBHS_HWRXBUF_RXBURST (0U)      /*!< Bit position for USBHS_HWRXBUF_RXBURST. */
+#define BM_USBHS_HWRXBUF_RXBURST (0x000000FFU) /*!< Bit mask for USBHS_HWRXBUF_RXBURST. */
+#define BS_USBHS_HWRXBUF_RXBURST (8U)      /*!< Bit field size in bits for USBHS_HWRXBUF_RXBURST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWRXBUF_RXBURST field.
-#define BR_USBHS_HWRXBUF_RXBURST (HW_USBHS_HWRXBUF.B.RXBURST)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWRXBUF_RXBURST field. */
+#define BR_USBHS_HWRXBUF_RXBURST(x) (HW_USBHS_HWRXBUF(x).B.RXBURST)
+/*@}*/
 
 /*!
  * @name Register USBHS_HWRXBUF, field RXADD[15:8] (RO)
  *
  * The number of address bits for the entire RX buffer. Always reads as 0x08.
  */
-//@{
-#define BP_USBHS_HWRXBUF_RXADD (8U)        //!< Bit position for USBHS_HWRXBUF_RXADD.
-#define BM_USBHS_HWRXBUF_RXADD (0x0000FF00U) //!< Bit mask for USBHS_HWRXBUF_RXADD.
-#define BS_USBHS_HWRXBUF_RXADD (8U)        //!< Bit field size in bits for USBHS_HWRXBUF_RXADD.
+/*@{*/
+#define BP_USBHS_HWRXBUF_RXADD (8U)        /*!< Bit position for USBHS_HWRXBUF_RXADD. */
+#define BM_USBHS_HWRXBUF_RXADD (0x0000FF00U) /*!< Bit mask for USBHS_HWRXBUF_RXADD. */
+#define BS_USBHS_HWRXBUF_RXADD (8U)        /*!< Bit field size in bits for USBHS_HWRXBUF_RXADD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HWRXBUF_RXADD field.
-#define BR_USBHS_HWRXBUF_RXADD (HW_USBHS_HWRXBUF.B.RXADD)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HWRXBUF_RXADD field. */
+#define BR_USBHS_HWRXBUF_RXADD(x) (HW_USBHS_HWRXBUF(x).B.RXADD)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_GPTIMER0LD - General Purpose Timer n Load Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_GPTIMER0LD - General Purpose Timer n Load Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_GPTIMER0LD - General Purpose Timer n Load Register (RW)
  *
@@ -689,27 +619,24 @@ typedef union _hw_usbhs_gptimer0ld
     uint32_t U;
     struct _hw_usbhs_gptimer0ld_bitfields
     {
-        uint32_t GPTLD : 24;           //!< [23:0]
-        uint32_t RESERVED0 : 8;        //!< [31:24] Reserved
+        uint32_t GPTLD : 24;           /*!< [23:0]  */
+        uint32_t RESERVED0 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_gptimer0ld_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_GPTIMER0LD register
  */
-//@{
-#define HW_USBHS_GPTIMER0LD_ADDR (REGS_USBHS_BASE + 0x80U)
+/*@{*/
+#define HW_USBHS_GPTIMER0LD_ADDR(x) ((x) + 0x80U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_GPTIMER0LD      (*(__IO hw_usbhs_gptimer0ld_t *) HW_USBHS_GPTIMER0LD_ADDR)
-#define HW_USBHS_GPTIMER0LD_RD() (HW_USBHS_GPTIMER0LD.U)
-#define HW_USBHS_GPTIMER0LD_WR(v) (HW_USBHS_GPTIMER0LD.U = (v))
-#define HW_USBHS_GPTIMER0LD_SET(v) (HW_USBHS_GPTIMER0LD_WR(HW_USBHS_GPTIMER0LD_RD() |  (v)))
-#define HW_USBHS_GPTIMER0LD_CLR(v) (HW_USBHS_GPTIMER0LD_WR(HW_USBHS_GPTIMER0LD_RD() & ~(v)))
-#define HW_USBHS_GPTIMER0LD_TOG(v) (HW_USBHS_GPTIMER0LD_WR(HW_USBHS_GPTIMER0LD_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_GPTIMER0LD(x)   (*(__IO hw_usbhs_gptimer0ld_t *) HW_USBHS_GPTIMER0LD_ADDR(x))
+#define HW_USBHS_GPTIMER0LD_RD(x) (HW_USBHS_GPTIMER0LD(x).U)
+#define HW_USBHS_GPTIMER0LD_WR(x, v) (HW_USBHS_GPTIMER0LD(x).U = (v))
+#define HW_USBHS_GPTIMER0LD_SET(x, v) (HW_USBHS_GPTIMER0LD_WR(x, HW_USBHS_GPTIMER0LD_RD(x) |  (v)))
+#define HW_USBHS_GPTIMER0LD_CLR(x, v) (HW_USBHS_GPTIMER0LD_WR(x, HW_USBHS_GPTIMER0LD_RD(x) & ~(v)))
+#define HW_USBHS_GPTIMER0LD_TOG(x, v) (HW_USBHS_GPTIMER0LD_WR(x, HW_USBHS_GPTIMER0LD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_GPTIMER0LD bitfields
@@ -718,30 +645,25 @@ typedef union _hw_usbhs_gptimer0ld
 /*!
  * @name Register USBHS_GPTIMER0LD, field GPTLD[23:0] (RW)
  */
-//@{
-#define BP_USBHS_GPTIMER0LD_GPTLD (0U)     //!< Bit position for USBHS_GPTIMER0LD_GPTLD.
-#define BM_USBHS_GPTIMER0LD_GPTLD (0x00FFFFFFU) //!< Bit mask for USBHS_GPTIMER0LD_GPTLD.
-#define BS_USBHS_GPTIMER0LD_GPTLD (24U)    //!< Bit field size in bits for USBHS_GPTIMER0LD_GPTLD.
+/*@{*/
+#define BP_USBHS_GPTIMER0LD_GPTLD (0U)     /*!< Bit position for USBHS_GPTIMER0LD_GPTLD. */
+#define BM_USBHS_GPTIMER0LD_GPTLD (0x00FFFFFFU) /*!< Bit mask for USBHS_GPTIMER0LD_GPTLD. */
+#define BS_USBHS_GPTIMER0LD_GPTLD (24U)    /*!< Bit field size in bits for USBHS_GPTIMER0LD_GPTLD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER0LD_GPTLD field.
-#define BR_USBHS_GPTIMER0LD_GPTLD (HW_USBHS_GPTIMER0LD.B.GPTLD)
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER0LD_GPTLD field. */
+#define BR_USBHS_GPTIMER0LD_GPTLD(x) (HW_USBHS_GPTIMER0LD(x).B.GPTLD)
 
-//! @brief Format value for bitfield USBHS_GPTIMER0LD_GPTLD.
-#define BF_USBHS_GPTIMER0LD_GPTLD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER0LD_GPTLD), uint32_t) & BM_USBHS_GPTIMER0LD_GPTLD)
+/*! @brief Format value for bitfield USBHS_GPTIMER0LD_GPTLD. */
+#define BF_USBHS_GPTIMER0LD_GPTLD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER0LD_GPTLD) & BM_USBHS_GPTIMER0LD_GPTLD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPTLD field to a new value.
-#define BW_USBHS_GPTIMER0LD_GPTLD(v) (HW_USBHS_GPTIMER0LD_WR((HW_USBHS_GPTIMER0LD_RD() & ~BM_USBHS_GPTIMER0LD_GPTLD) | BF_USBHS_GPTIMER0LD_GPTLD(v)))
-#endif
-//@}
+/*! @brief Set the GPTLD field to a new value. */
+#define BW_USBHS_GPTIMER0LD_GPTLD(x, v) (HW_USBHS_GPTIMER0LD_WR(x, (HW_USBHS_GPTIMER0LD_RD(x) & ~BM_USBHS_GPTIMER0LD_GPTLD) | BF_USBHS_GPTIMER0LD_GPTLD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_GPTIMER0CTL - General Purpose Timer n Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_GPTIMER0CTL - General Purpose Timer n Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_GPTIMER0CTL - General Purpose Timer n Control Register (RW)
  *
@@ -755,30 +677,27 @@ typedef union _hw_usbhs_gptimer0ctl
     uint32_t U;
     struct _hw_usbhs_gptimer0ctl_bitfields
     {
-        uint32_t GPTCNT : 24;          //!< [23:0] Timer Count
-        uint32_t MODE : 1;             //!< [24] Timer Mode
-        uint32_t RESERVED0 : 5;        //!< [29:25] Reserved
-        uint32_t RST : 1;              //!< [30] Timer Reset
-        uint32_t RUN : 1;              //!< [31] Timer Run
+        uint32_t GPTCNT : 24;          /*!< [23:0] Timer Count */
+        uint32_t MODE : 1;             /*!< [24] Timer Mode */
+        uint32_t RESERVED0 : 5;        /*!< [29:25] Reserved */
+        uint32_t RST : 1;              /*!< [30] Timer Reset */
+        uint32_t RUN : 1;              /*!< [31] Timer Run */
     } B;
 } hw_usbhs_gptimer0ctl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_GPTIMER0CTL register
  */
-//@{
-#define HW_USBHS_GPTIMER0CTL_ADDR (REGS_USBHS_BASE + 0x84U)
+/*@{*/
+#define HW_USBHS_GPTIMER0CTL_ADDR(x) ((x) + 0x84U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_GPTIMER0CTL     (*(__IO hw_usbhs_gptimer0ctl_t *) HW_USBHS_GPTIMER0CTL_ADDR)
-#define HW_USBHS_GPTIMER0CTL_RD() (HW_USBHS_GPTIMER0CTL.U)
-#define HW_USBHS_GPTIMER0CTL_WR(v) (HW_USBHS_GPTIMER0CTL.U = (v))
-#define HW_USBHS_GPTIMER0CTL_SET(v) (HW_USBHS_GPTIMER0CTL_WR(HW_USBHS_GPTIMER0CTL_RD() |  (v)))
-#define HW_USBHS_GPTIMER0CTL_CLR(v) (HW_USBHS_GPTIMER0CTL_WR(HW_USBHS_GPTIMER0CTL_RD() & ~(v)))
-#define HW_USBHS_GPTIMER0CTL_TOG(v) (HW_USBHS_GPTIMER0CTL_WR(HW_USBHS_GPTIMER0CTL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_GPTIMER0CTL(x)  (*(__IO hw_usbhs_gptimer0ctl_t *) HW_USBHS_GPTIMER0CTL_ADDR(x))
+#define HW_USBHS_GPTIMER0CTL_RD(x) (HW_USBHS_GPTIMER0CTL(x).U)
+#define HW_USBHS_GPTIMER0CTL_WR(x, v) (HW_USBHS_GPTIMER0CTL(x).U = (v))
+#define HW_USBHS_GPTIMER0CTL_SET(x, v) (HW_USBHS_GPTIMER0CTL_WR(x, HW_USBHS_GPTIMER0CTL_RD(x) |  (v)))
+#define HW_USBHS_GPTIMER0CTL_CLR(x, v) (HW_USBHS_GPTIMER0CTL_WR(x, HW_USBHS_GPTIMER0CTL_RD(x) & ~(v)))
+#define HW_USBHS_GPTIMER0CTL_TOG(x, v) (HW_USBHS_GPTIMER0CTL_WR(x, HW_USBHS_GPTIMER0CTL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_GPTIMER0CTL bitfields
@@ -787,16 +706,14 @@ typedef union _hw_usbhs_gptimer0ctl
 /*!
  * @name Register USBHS_GPTIMER0CTL, field GPTCNT[23:0] (RO)
  */
-//@{
-#define BP_USBHS_GPTIMER0CTL_GPTCNT (0U)   //!< Bit position for USBHS_GPTIMER0CTL_GPTCNT.
-#define BM_USBHS_GPTIMER0CTL_GPTCNT (0x00FFFFFFU) //!< Bit mask for USBHS_GPTIMER0CTL_GPTCNT.
-#define BS_USBHS_GPTIMER0CTL_GPTCNT (24U)  //!< Bit field size in bits for USBHS_GPTIMER0CTL_GPTCNT.
+/*@{*/
+#define BP_USBHS_GPTIMER0CTL_GPTCNT (0U)   /*!< Bit position for USBHS_GPTIMER0CTL_GPTCNT. */
+#define BM_USBHS_GPTIMER0CTL_GPTCNT (0x00FFFFFFU) /*!< Bit mask for USBHS_GPTIMER0CTL_GPTCNT. */
+#define BS_USBHS_GPTIMER0CTL_GPTCNT (24U)  /*!< Bit field size in bits for USBHS_GPTIMER0CTL_GPTCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER0CTL_GPTCNT field.
-#define BR_USBHS_GPTIMER0CTL_GPTCNT (HW_USBHS_GPTIMER0CTL.B.GPTCNT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_GPTIMER0CTL_GPTCNT field. */
+#define BR_USBHS_GPTIMER0CTL_GPTCNT(x) (HW_USBHS_GPTIMER0CTL(x).B.GPTCNT)
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER0CTL, field MODE[24] (RW)
@@ -805,24 +722,20 @@ typedef union _hw_usbhs_gptimer0ctl
  * - 0 - One shot
  * - 1 - Repeat
  */
-//@{
-#define BP_USBHS_GPTIMER0CTL_MODE (24U)    //!< Bit position for USBHS_GPTIMER0CTL_MODE.
-#define BM_USBHS_GPTIMER0CTL_MODE (0x01000000U) //!< Bit mask for USBHS_GPTIMER0CTL_MODE.
-#define BS_USBHS_GPTIMER0CTL_MODE (1U)     //!< Bit field size in bits for USBHS_GPTIMER0CTL_MODE.
+/*@{*/
+#define BP_USBHS_GPTIMER0CTL_MODE (24U)    /*!< Bit position for USBHS_GPTIMER0CTL_MODE. */
+#define BM_USBHS_GPTIMER0CTL_MODE (0x01000000U) /*!< Bit mask for USBHS_GPTIMER0CTL_MODE. */
+#define BS_USBHS_GPTIMER0CTL_MODE (1U)     /*!< Bit field size in bits for USBHS_GPTIMER0CTL_MODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER0CTL_MODE field.
-#define BR_USBHS_GPTIMER0CTL_MODE (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_MODE))
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER0CTL_MODE field. */
+#define BR_USBHS_GPTIMER0CTL_MODE(x) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR(x), BP_USBHS_GPTIMER0CTL_MODE))
 
-//! @brief Format value for bitfield USBHS_GPTIMER0CTL_MODE.
-#define BF_USBHS_GPTIMER0CTL_MODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER0CTL_MODE), uint32_t) & BM_USBHS_GPTIMER0CTL_MODE)
+/*! @brief Format value for bitfield USBHS_GPTIMER0CTL_MODE. */
+#define BF_USBHS_GPTIMER0CTL_MODE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER0CTL_MODE) & BM_USBHS_GPTIMER0CTL_MODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MODE field to a new value.
-#define BW_USBHS_GPTIMER0CTL_MODE(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_MODE) = (v))
-#endif
-//@}
+/*! @brief Set the MODE field to a new value. */
+#define BW_USBHS_GPTIMER0CTL_MODE(x, v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR(x), BP_USBHS_GPTIMER0CTL_MODE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER0CTL, field RST[30] (WO)
@@ -831,24 +744,14 @@ typedef union _hw_usbhs_gptimer0ctl
  * - 0 - No action
  * - 1 - Load counter value
  */
-//@{
-#define BP_USBHS_GPTIMER0CTL_RST (30U)     //!< Bit position for USBHS_GPTIMER0CTL_RST.
-#define BM_USBHS_GPTIMER0CTL_RST (0x40000000U) //!< Bit mask for USBHS_GPTIMER0CTL_RST.
-#define BS_USBHS_GPTIMER0CTL_RST (1U)      //!< Bit field size in bits for USBHS_GPTIMER0CTL_RST.
+/*@{*/
+#define BP_USBHS_GPTIMER0CTL_RST (30U)     /*!< Bit position for USBHS_GPTIMER0CTL_RST. */
+#define BM_USBHS_GPTIMER0CTL_RST (0x40000000U) /*!< Bit mask for USBHS_GPTIMER0CTL_RST. */
+#define BS_USBHS_GPTIMER0CTL_RST (1U)      /*!< Bit field size in bits for USBHS_GPTIMER0CTL_RST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER0CTL_RST field.
-#define BR_USBHS_GPTIMER0CTL_RST (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_RST))
-#endif
-
-//! @brief Format value for bitfield USBHS_GPTIMER0CTL_RST.
-#define BF_USBHS_GPTIMER0CTL_RST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER0CTL_RST), uint32_t) & BM_USBHS_GPTIMER0CTL_RST)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RST field to a new value.
-#define BW_USBHS_GPTIMER0CTL_RST(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_RST) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_GPTIMER0CTL_RST. */
+#define BF_USBHS_GPTIMER0CTL_RST(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER0CTL_RST) & BM_USBHS_GPTIMER0CTL_RST)
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER0CTL, field RUN[31] (RW)
@@ -857,30 +760,25 @@ typedef union _hw_usbhs_gptimer0ctl
  * - 0 - Timer stop
  * - 1 - Timer run
  */
-//@{
-#define BP_USBHS_GPTIMER0CTL_RUN (31U)     //!< Bit position for USBHS_GPTIMER0CTL_RUN.
-#define BM_USBHS_GPTIMER0CTL_RUN (0x80000000U) //!< Bit mask for USBHS_GPTIMER0CTL_RUN.
-#define BS_USBHS_GPTIMER0CTL_RUN (1U)      //!< Bit field size in bits for USBHS_GPTIMER0CTL_RUN.
+/*@{*/
+#define BP_USBHS_GPTIMER0CTL_RUN (31U)     /*!< Bit position for USBHS_GPTIMER0CTL_RUN. */
+#define BM_USBHS_GPTIMER0CTL_RUN (0x80000000U) /*!< Bit mask for USBHS_GPTIMER0CTL_RUN. */
+#define BS_USBHS_GPTIMER0CTL_RUN (1U)      /*!< Bit field size in bits for USBHS_GPTIMER0CTL_RUN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER0CTL_RUN field.
-#define BR_USBHS_GPTIMER0CTL_RUN (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_RUN))
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER0CTL_RUN field. */
+#define BR_USBHS_GPTIMER0CTL_RUN(x) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR(x), BP_USBHS_GPTIMER0CTL_RUN))
 
-//! @brief Format value for bitfield USBHS_GPTIMER0CTL_RUN.
-#define BF_USBHS_GPTIMER0CTL_RUN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER0CTL_RUN), uint32_t) & BM_USBHS_GPTIMER0CTL_RUN)
+/*! @brief Format value for bitfield USBHS_GPTIMER0CTL_RUN. */
+#define BF_USBHS_GPTIMER0CTL_RUN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER0CTL_RUN) & BM_USBHS_GPTIMER0CTL_RUN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RUN field to a new value.
-#define BW_USBHS_GPTIMER0CTL_RUN(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR, BP_USBHS_GPTIMER0CTL_RUN) = (v))
-#endif
-//@}
+/*! @brief Set the RUN field to a new value. */
+#define BW_USBHS_GPTIMER0CTL_RUN(x, v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER0CTL_ADDR(x), BP_USBHS_GPTIMER0CTL_RUN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_GPTIMER1LD - General Purpose Timer n Load Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_GPTIMER1LD - General Purpose Timer n Load Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_GPTIMER1LD - General Purpose Timer n Load Register (RW)
  *
@@ -893,27 +791,24 @@ typedef union _hw_usbhs_gptimer1ld
     uint32_t U;
     struct _hw_usbhs_gptimer1ld_bitfields
     {
-        uint32_t GPTLD : 24;           //!< [23:0]
-        uint32_t RESERVED0 : 8;        //!< [31:24] Reserved
+        uint32_t GPTLD : 24;           /*!< [23:0]  */
+        uint32_t RESERVED0 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_gptimer1ld_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_GPTIMER1LD register
  */
-//@{
-#define HW_USBHS_GPTIMER1LD_ADDR (REGS_USBHS_BASE + 0x88U)
+/*@{*/
+#define HW_USBHS_GPTIMER1LD_ADDR(x) ((x) + 0x88U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_GPTIMER1LD      (*(__IO hw_usbhs_gptimer1ld_t *) HW_USBHS_GPTIMER1LD_ADDR)
-#define HW_USBHS_GPTIMER1LD_RD() (HW_USBHS_GPTIMER1LD.U)
-#define HW_USBHS_GPTIMER1LD_WR(v) (HW_USBHS_GPTIMER1LD.U = (v))
-#define HW_USBHS_GPTIMER1LD_SET(v) (HW_USBHS_GPTIMER1LD_WR(HW_USBHS_GPTIMER1LD_RD() |  (v)))
-#define HW_USBHS_GPTIMER1LD_CLR(v) (HW_USBHS_GPTIMER1LD_WR(HW_USBHS_GPTIMER1LD_RD() & ~(v)))
-#define HW_USBHS_GPTIMER1LD_TOG(v) (HW_USBHS_GPTIMER1LD_WR(HW_USBHS_GPTIMER1LD_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_GPTIMER1LD(x)   (*(__IO hw_usbhs_gptimer1ld_t *) HW_USBHS_GPTIMER1LD_ADDR(x))
+#define HW_USBHS_GPTIMER1LD_RD(x) (HW_USBHS_GPTIMER1LD(x).U)
+#define HW_USBHS_GPTIMER1LD_WR(x, v) (HW_USBHS_GPTIMER1LD(x).U = (v))
+#define HW_USBHS_GPTIMER1LD_SET(x, v) (HW_USBHS_GPTIMER1LD_WR(x, HW_USBHS_GPTIMER1LD_RD(x) |  (v)))
+#define HW_USBHS_GPTIMER1LD_CLR(x, v) (HW_USBHS_GPTIMER1LD_WR(x, HW_USBHS_GPTIMER1LD_RD(x) & ~(v)))
+#define HW_USBHS_GPTIMER1LD_TOG(x, v) (HW_USBHS_GPTIMER1LD_WR(x, HW_USBHS_GPTIMER1LD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_GPTIMER1LD bitfields
@@ -922,30 +817,25 @@ typedef union _hw_usbhs_gptimer1ld
 /*!
  * @name Register USBHS_GPTIMER1LD, field GPTLD[23:0] (RW)
  */
-//@{
-#define BP_USBHS_GPTIMER1LD_GPTLD (0U)     //!< Bit position for USBHS_GPTIMER1LD_GPTLD.
-#define BM_USBHS_GPTIMER1LD_GPTLD (0x00FFFFFFU) //!< Bit mask for USBHS_GPTIMER1LD_GPTLD.
-#define BS_USBHS_GPTIMER1LD_GPTLD (24U)    //!< Bit field size in bits for USBHS_GPTIMER1LD_GPTLD.
+/*@{*/
+#define BP_USBHS_GPTIMER1LD_GPTLD (0U)     /*!< Bit position for USBHS_GPTIMER1LD_GPTLD. */
+#define BM_USBHS_GPTIMER1LD_GPTLD (0x00FFFFFFU) /*!< Bit mask for USBHS_GPTIMER1LD_GPTLD. */
+#define BS_USBHS_GPTIMER1LD_GPTLD (24U)    /*!< Bit field size in bits for USBHS_GPTIMER1LD_GPTLD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER1LD_GPTLD field.
-#define BR_USBHS_GPTIMER1LD_GPTLD (HW_USBHS_GPTIMER1LD.B.GPTLD)
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER1LD_GPTLD field. */
+#define BR_USBHS_GPTIMER1LD_GPTLD(x) (HW_USBHS_GPTIMER1LD(x).B.GPTLD)
 
-//! @brief Format value for bitfield USBHS_GPTIMER1LD_GPTLD.
-#define BF_USBHS_GPTIMER1LD_GPTLD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER1LD_GPTLD), uint32_t) & BM_USBHS_GPTIMER1LD_GPTLD)
+/*! @brief Format value for bitfield USBHS_GPTIMER1LD_GPTLD. */
+#define BF_USBHS_GPTIMER1LD_GPTLD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER1LD_GPTLD) & BM_USBHS_GPTIMER1LD_GPTLD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GPTLD field to a new value.
-#define BW_USBHS_GPTIMER1LD_GPTLD(v) (HW_USBHS_GPTIMER1LD_WR((HW_USBHS_GPTIMER1LD_RD() & ~BM_USBHS_GPTIMER1LD_GPTLD) | BF_USBHS_GPTIMER1LD_GPTLD(v)))
-#endif
-//@}
+/*! @brief Set the GPTLD field to a new value. */
+#define BW_USBHS_GPTIMER1LD_GPTLD(x, v) (HW_USBHS_GPTIMER1LD_WR(x, (HW_USBHS_GPTIMER1LD_RD(x) & ~BM_USBHS_GPTIMER1LD_GPTLD) | BF_USBHS_GPTIMER1LD_GPTLD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_GPTIMER1CTL - General Purpose Timer n Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_GPTIMER1CTL - General Purpose Timer n Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_GPTIMER1CTL - General Purpose Timer n Control Register (RW)
  *
@@ -959,30 +849,27 @@ typedef union _hw_usbhs_gptimer1ctl
     uint32_t U;
     struct _hw_usbhs_gptimer1ctl_bitfields
     {
-        uint32_t GPTCNT : 24;          //!< [23:0] Timer Count
-        uint32_t MODE : 1;             //!< [24] Timer Mode
-        uint32_t RESERVED0 : 5;        //!< [29:25] Reserved
-        uint32_t RST : 1;              //!< [30] Timer Reset
-        uint32_t RUN : 1;              //!< [31] Timer Run
+        uint32_t GPTCNT : 24;          /*!< [23:0] Timer Count */
+        uint32_t MODE : 1;             /*!< [24] Timer Mode */
+        uint32_t RESERVED0 : 5;        /*!< [29:25] Reserved */
+        uint32_t RST : 1;              /*!< [30] Timer Reset */
+        uint32_t RUN : 1;              /*!< [31] Timer Run */
     } B;
 } hw_usbhs_gptimer1ctl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_GPTIMER1CTL register
  */
-//@{
-#define HW_USBHS_GPTIMER1CTL_ADDR (REGS_USBHS_BASE + 0x8CU)
+/*@{*/
+#define HW_USBHS_GPTIMER1CTL_ADDR(x) ((x) + 0x8CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_GPTIMER1CTL     (*(__IO hw_usbhs_gptimer1ctl_t *) HW_USBHS_GPTIMER1CTL_ADDR)
-#define HW_USBHS_GPTIMER1CTL_RD() (HW_USBHS_GPTIMER1CTL.U)
-#define HW_USBHS_GPTIMER1CTL_WR(v) (HW_USBHS_GPTIMER1CTL.U = (v))
-#define HW_USBHS_GPTIMER1CTL_SET(v) (HW_USBHS_GPTIMER1CTL_WR(HW_USBHS_GPTIMER1CTL_RD() |  (v)))
-#define HW_USBHS_GPTIMER1CTL_CLR(v) (HW_USBHS_GPTIMER1CTL_WR(HW_USBHS_GPTIMER1CTL_RD() & ~(v)))
-#define HW_USBHS_GPTIMER1CTL_TOG(v) (HW_USBHS_GPTIMER1CTL_WR(HW_USBHS_GPTIMER1CTL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_GPTIMER1CTL(x)  (*(__IO hw_usbhs_gptimer1ctl_t *) HW_USBHS_GPTIMER1CTL_ADDR(x))
+#define HW_USBHS_GPTIMER1CTL_RD(x) (HW_USBHS_GPTIMER1CTL(x).U)
+#define HW_USBHS_GPTIMER1CTL_WR(x, v) (HW_USBHS_GPTIMER1CTL(x).U = (v))
+#define HW_USBHS_GPTIMER1CTL_SET(x, v) (HW_USBHS_GPTIMER1CTL_WR(x, HW_USBHS_GPTIMER1CTL_RD(x) |  (v)))
+#define HW_USBHS_GPTIMER1CTL_CLR(x, v) (HW_USBHS_GPTIMER1CTL_WR(x, HW_USBHS_GPTIMER1CTL_RD(x) & ~(v)))
+#define HW_USBHS_GPTIMER1CTL_TOG(x, v) (HW_USBHS_GPTIMER1CTL_WR(x, HW_USBHS_GPTIMER1CTL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_GPTIMER1CTL bitfields
@@ -991,16 +878,14 @@ typedef union _hw_usbhs_gptimer1ctl
 /*!
  * @name Register USBHS_GPTIMER1CTL, field GPTCNT[23:0] (RO)
  */
-//@{
-#define BP_USBHS_GPTIMER1CTL_GPTCNT (0U)   //!< Bit position for USBHS_GPTIMER1CTL_GPTCNT.
-#define BM_USBHS_GPTIMER1CTL_GPTCNT (0x00FFFFFFU) //!< Bit mask for USBHS_GPTIMER1CTL_GPTCNT.
-#define BS_USBHS_GPTIMER1CTL_GPTCNT (24U)  //!< Bit field size in bits for USBHS_GPTIMER1CTL_GPTCNT.
+/*@{*/
+#define BP_USBHS_GPTIMER1CTL_GPTCNT (0U)   /*!< Bit position for USBHS_GPTIMER1CTL_GPTCNT. */
+#define BM_USBHS_GPTIMER1CTL_GPTCNT (0x00FFFFFFU) /*!< Bit mask for USBHS_GPTIMER1CTL_GPTCNT. */
+#define BS_USBHS_GPTIMER1CTL_GPTCNT (24U)  /*!< Bit field size in bits for USBHS_GPTIMER1CTL_GPTCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER1CTL_GPTCNT field.
-#define BR_USBHS_GPTIMER1CTL_GPTCNT (HW_USBHS_GPTIMER1CTL.B.GPTCNT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_GPTIMER1CTL_GPTCNT field. */
+#define BR_USBHS_GPTIMER1CTL_GPTCNT(x) (HW_USBHS_GPTIMER1CTL(x).B.GPTCNT)
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER1CTL, field MODE[24] (RW)
@@ -1009,24 +894,20 @@ typedef union _hw_usbhs_gptimer1ctl
  * - 0 - One shot
  * - 1 - Repeat
  */
-//@{
-#define BP_USBHS_GPTIMER1CTL_MODE (24U)    //!< Bit position for USBHS_GPTIMER1CTL_MODE.
-#define BM_USBHS_GPTIMER1CTL_MODE (0x01000000U) //!< Bit mask for USBHS_GPTIMER1CTL_MODE.
-#define BS_USBHS_GPTIMER1CTL_MODE (1U)     //!< Bit field size in bits for USBHS_GPTIMER1CTL_MODE.
+/*@{*/
+#define BP_USBHS_GPTIMER1CTL_MODE (24U)    /*!< Bit position for USBHS_GPTIMER1CTL_MODE. */
+#define BM_USBHS_GPTIMER1CTL_MODE (0x01000000U) /*!< Bit mask for USBHS_GPTIMER1CTL_MODE. */
+#define BS_USBHS_GPTIMER1CTL_MODE (1U)     /*!< Bit field size in bits for USBHS_GPTIMER1CTL_MODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER1CTL_MODE field.
-#define BR_USBHS_GPTIMER1CTL_MODE (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_MODE))
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER1CTL_MODE field. */
+#define BR_USBHS_GPTIMER1CTL_MODE(x) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR(x), BP_USBHS_GPTIMER1CTL_MODE))
 
-//! @brief Format value for bitfield USBHS_GPTIMER1CTL_MODE.
-#define BF_USBHS_GPTIMER1CTL_MODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER1CTL_MODE), uint32_t) & BM_USBHS_GPTIMER1CTL_MODE)
+/*! @brief Format value for bitfield USBHS_GPTIMER1CTL_MODE. */
+#define BF_USBHS_GPTIMER1CTL_MODE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER1CTL_MODE) & BM_USBHS_GPTIMER1CTL_MODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MODE field to a new value.
-#define BW_USBHS_GPTIMER1CTL_MODE(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_MODE) = (v))
-#endif
-//@}
+/*! @brief Set the MODE field to a new value. */
+#define BW_USBHS_GPTIMER1CTL_MODE(x, v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR(x), BP_USBHS_GPTIMER1CTL_MODE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER1CTL, field RST[30] (WO)
@@ -1035,24 +916,14 @@ typedef union _hw_usbhs_gptimer1ctl
  * - 0 - No action
  * - 1 - Load counter value
  */
-//@{
-#define BP_USBHS_GPTIMER1CTL_RST (30U)     //!< Bit position for USBHS_GPTIMER1CTL_RST.
-#define BM_USBHS_GPTIMER1CTL_RST (0x40000000U) //!< Bit mask for USBHS_GPTIMER1CTL_RST.
-#define BS_USBHS_GPTIMER1CTL_RST (1U)      //!< Bit field size in bits for USBHS_GPTIMER1CTL_RST.
+/*@{*/
+#define BP_USBHS_GPTIMER1CTL_RST (30U)     /*!< Bit position for USBHS_GPTIMER1CTL_RST. */
+#define BM_USBHS_GPTIMER1CTL_RST (0x40000000U) /*!< Bit mask for USBHS_GPTIMER1CTL_RST. */
+#define BS_USBHS_GPTIMER1CTL_RST (1U)      /*!< Bit field size in bits for USBHS_GPTIMER1CTL_RST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER1CTL_RST field.
-#define BR_USBHS_GPTIMER1CTL_RST (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_RST))
-#endif
-
-//! @brief Format value for bitfield USBHS_GPTIMER1CTL_RST.
-#define BF_USBHS_GPTIMER1CTL_RST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER1CTL_RST), uint32_t) & BM_USBHS_GPTIMER1CTL_RST)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RST field to a new value.
-#define BW_USBHS_GPTIMER1CTL_RST(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_RST) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_GPTIMER1CTL_RST. */
+#define BF_USBHS_GPTIMER1CTL_RST(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER1CTL_RST) & BM_USBHS_GPTIMER1CTL_RST)
+/*@}*/
 
 /*!
  * @name Register USBHS_GPTIMER1CTL, field RUN[31] (RW)
@@ -1061,30 +932,25 @@ typedef union _hw_usbhs_gptimer1ctl
  * - 0 - Timer stop
  * - 1 - Timer run
  */
-//@{
-#define BP_USBHS_GPTIMER1CTL_RUN (31U)     //!< Bit position for USBHS_GPTIMER1CTL_RUN.
-#define BM_USBHS_GPTIMER1CTL_RUN (0x80000000U) //!< Bit mask for USBHS_GPTIMER1CTL_RUN.
-#define BS_USBHS_GPTIMER1CTL_RUN (1U)      //!< Bit field size in bits for USBHS_GPTIMER1CTL_RUN.
+/*@{*/
+#define BP_USBHS_GPTIMER1CTL_RUN (31U)     /*!< Bit position for USBHS_GPTIMER1CTL_RUN. */
+#define BM_USBHS_GPTIMER1CTL_RUN (0x80000000U) /*!< Bit mask for USBHS_GPTIMER1CTL_RUN. */
+#define BS_USBHS_GPTIMER1CTL_RUN (1U)      /*!< Bit field size in bits for USBHS_GPTIMER1CTL_RUN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_GPTIMER1CTL_RUN field.
-#define BR_USBHS_GPTIMER1CTL_RUN (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_RUN))
-#endif
+/*! @brief Read current value of the USBHS_GPTIMER1CTL_RUN field. */
+#define BR_USBHS_GPTIMER1CTL_RUN(x) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR(x), BP_USBHS_GPTIMER1CTL_RUN))
 
-//! @brief Format value for bitfield USBHS_GPTIMER1CTL_RUN.
-#define BF_USBHS_GPTIMER1CTL_RUN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_GPTIMER1CTL_RUN), uint32_t) & BM_USBHS_GPTIMER1CTL_RUN)
+/*! @brief Format value for bitfield USBHS_GPTIMER1CTL_RUN. */
+#define BF_USBHS_GPTIMER1CTL_RUN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_GPTIMER1CTL_RUN) & BM_USBHS_GPTIMER1CTL_RUN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RUN field to a new value.
-#define BW_USBHS_GPTIMER1CTL_RUN(v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR, BP_USBHS_GPTIMER1CTL_RUN) = (v))
-#endif
-//@}
+/*! @brief Set the RUN field to a new value. */
+#define BW_USBHS_GPTIMER1CTL_RUN(x, v) (BITBAND_ACCESS32(HW_USBHS_GPTIMER1CTL_ADDR(x), BP_USBHS_GPTIMER1CTL_RUN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USB_SBUSCFG - System Bus Interface Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USB_SBUSCFG - System Bus Interface Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USB_SBUSCFG - System Bus Interface Configuration Register (RW)
  *
@@ -1098,27 +964,24 @@ typedef union _hw_usbhs_usb_sbuscfg
     uint32_t U;
     struct _hw_usbhs_usb_sbuscfg_bitfields
     {
-        uint32_t BURSTMODE : 3;        //!< [2:0] Burst mode
-        uint32_t RESERVED0 : 29;       //!< [31:3] Reserved
+        uint32_t BURSTMODE : 3;        /*!< [2:0] Burst mode */
+        uint32_t RESERVED0 : 29;       /*!< [31:3] Reserved */
     } B;
 } hw_usbhs_usb_sbuscfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USB_SBUSCFG register
  */
-//@{
-#define HW_USBHS_USB_SBUSCFG_ADDR (REGS_USBHS_BASE + 0x90U)
+/*@{*/
+#define HW_USBHS_USB_SBUSCFG_ADDR(x) ((x) + 0x90U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USB_SBUSCFG     (*(__IO hw_usbhs_usb_sbuscfg_t *) HW_USBHS_USB_SBUSCFG_ADDR)
-#define HW_USBHS_USB_SBUSCFG_RD() (HW_USBHS_USB_SBUSCFG.U)
-#define HW_USBHS_USB_SBUSCFG_WR(v) (HW_USBHS_USB_SBUSCFG.U = (v))
-#define HW_USBHS_USB_SBUSCFG_SET(v) (HW_USBHS_USB_SBUSCFG_WR(HW_USBHS_USB_SBUSCFG_RD() |  (v)))
-#define HW_USBHS_USB_SBUSCFG_CLR(v) (HW_USBHS_USB_SBUSCFG_WR(HW_USBHS_USB_SBUSCFG_RD() & ~(v)))
-#define HW_USBHS_USB_SBUSCFG_TOG(v) (HW_USBHS_USB_SBUSCFG_WR(HW_USBHS_USB_SBUSCFG_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USB_SBUSCFG(x)  (*(__IO hw_usbhs_usb_sbuscfg_t *) HW_USBHS_USB_SBUSCFG_ADDR(x))
+#define HW_USBHS_USB_SBUSCFG_RD(x) (HW_USBHS_USB_SBUSCFG(x).U)
+#define HW_USBHS_USB_SBUSCFG_WR(x, v) (HW_USBHS_USB_SBUSCFG(x).U = (v))
+#define HW_USBHS_USB_SBUSCFG_SET(x, v) (HW_USBHS_USB_SBUSCFG_WR(x, HW_USBHS_USB_SBUSCFG_RD(x) |  (v)))
+#define HW_USBHS_USB_SBUSCFG_CLR(x, v) (HW_USBHS_USB_SBUSCFG_WR(x, HW_USBHS_USB_SBUSCFG_RD(x) & ~(v)))
+#define HW_USBHS_USB_SBUSCFG_TOG(x, v) (HW_USBHS_USB_SBUSCFG_WR(x, HW_USBHS_USB_SBUSCFG_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USB_SBUSCFG bitfields
@@ -1166,30 +1029,25 @@ typedef union _hw_usbhs_usb_sbuscfg
  * - 111 - INCR16, non-multiple transfers of INCR16 is decomposed into smaller
  *     unspecified length bursts.
  */
-//@{
-#define BP_USBHS_USB_SBUSCFG_BURSTMODE (0U) //!< Bit position for USBHS_USB_SBUSCFG_BURSTMODE.
-#define BM_USBHS_USB_SBUSCFG_BURSTMODE (0x00000007U) //!< Bit mask for USBHS_USB_SBUSCFG_BURSTMODE.
-#define BS_USBHS_USB_SBUSCFG_BURSTMODE (3U) //!< Bit field size in bits for USBHS_USB_SBUSCFG_BURSTMODE.
+/*@{*/
+#define BP_USBHS_USB_SBUSCFG_BURSTMODE (0U) /*!< Bit position for USBHS_USB_SBUSCFG_BURSTMODE. */
+#define BM_USBHS_USB_SBUSCFG_BURSTMODE (0x00000007U) /*!< Bit mask for USBHS_USB_SBUSCFG_BURSTMODE. */
+#define BS_USBHS_USB_SBUSCFG_BURSTMODE (3U) /*!< Bit field size in bits for USBHS_USB_SBUSCFG_BURSTMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USB_SBUSCFG_BURSTMODE field.
-#define BR_USBHS_USB_SBUSCFG_BURSTMODE (HW_USBHS_USB_SBUSCFG.B.BURSTMODE)
-#endif
+/*! @brief Read current value of the USBHS_USB_SBUSCFG_BURSTMODE field. */
+#define BR_USBHS_USB_SBUSCFG_BURSTMODE(x) (HW_USBHS_USB_SBUSCFG(x).B.BURSTMODE)
 
-//! @brief Format value for bitfield USBHS_USB_SBUSCFG_BURSTMODE.
-#define BF_USBHS_USB_SBUSCFG_BURSTMODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USB_SBUSCFG_BURSTMODE), uint32_t) & BM_USBHS_USB_SBUSCFG_BURSTMODE)
+/*! @brief Format value for bitfield USBHS_USB_SBUSCFG_BURSTMODE. */
+#define BF_USBHS_USB_SBUSCFG_BURSTMODE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USB_SBUSCFG_BURSTMODE) & BM_USBHS_USB_SBUSCFG_BURSTMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BURSTMODE field to a new value.
-#define BW_USBHS_USB_SBUSCFG_BURSTMODE(v) (HW_USBHS_USB_SBUSCFG_WR((HW_USBHS_USB_SBUSCFG_RD() & ~BM_USBHS_USB_SBUSCFG_BURSTMODE) | BF_USBHS_USB_SBUSCFG_BURSTMODE(v)))
-#endif
-//@}
+/*! @brief Set the BURSTMODE field to a new value. */
+#define BW_USBHS_USB_SBUSCFG_BURSTMODE(x, v) (HW_USBHS_USB_SBUSCFG_WR(x, (HW_USBHS_USB_SBUSCFG_RD(x) & ~BM_USBHS_USB_SBUSCFG_BURSTMODE) | BF_USBHS_USB_SBUSCFG_BURSTMODE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HCIVERSION - Host Controller Interface Version and Capability Registers Length Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HCIVERSION - Host Controller Interface Version and Capability Registers Length Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HCIVERSION - Host Controller Interface Version and Capability Registers Length Register (RO)
  *
@@ -1207,24 +1065,21 @@ typedef union _hw_usbhs_hciversion
     uint32_t U;
     struct _hw_usbhs_hciversion_bitfields
     {
-        uint32_t CAPLENGTH : 8;        //!< [7:0] Capability registers length
-        uint32_t RESERVED0 : 8;        //!< [15:8] Reserved
-        uint32_t HCIVERSION : 16;      //!< [31:16] EHCI revision number
+        uint32_t CAPLENGTH : 8;        /*!< [7:0] Capability registers length */
+        uint32_t RESERVED0 : 8;        /*!< [15:8] Reserved */
+        uint32_t HCIVERSION : 16;      /*!< [31:16] EHCI revision number */
     } B;
 } hw_usbhs_hciversion_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HCIVERSION register
  */
-//@{
-#define HW_USBHS_HCIVERSION_ADDR (REGS_USBHS_BASE + 0x100U)
+/*@{*/
+#define HW_USBHS_HCIVERSION_ADDR(x) ((x) + 0x100U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HCIVERSION      (*(__I hw_usbhs_hciversion_t *) HW_USBHS_HCIVERSION_ADDR)
-#define HW_USBHS_HCIVERSION_RD() (HW_USBHS_HCIVERSION.U)
-#endif
-//@}
+#define HW_USBHS_HCIVERSION(x)   (*(__I hw_usbhs_hciversion_t *) HW_USBHS_HCIVERSION_ADDR(x))
+#define HW_USBHS_HCIVERSION_RD(x) (HW_USBHS_HCIVERSION(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HCIVERSION bitfields
@@ -1235,38 +1090,33 @@ typedef union _hw_usbhs_hciversion
  *
  * Always reads as 0x40.
  */
-//@{
-#define BP_USBHS_HCIVERSION_CAPLENGTH (0U) //!< Bit position for USBHS_HCIVERSION_CAPLENGTH.
-#define BM_USBHS_HCIVERSION_CAPLENGTH (0x000000FFU) //!< Bit mask for USBHS_HCIVERSION_CAPLENGTH.
-#define BS_USBHS_HCIVERSION_CAPLENGTH (8U) //!< Bit field size in bits for USBHS_HCIVERSION_CAPLENGTH.
+/*@{*/
+#define BP_USBHS_HCIVERSION_CAPLENGTH (0U) /*!< Bit position for USBHS_HCIVERSION_CAPLENGTH. */
+#define BM_USBHS_HCIVERSION_CAPLENGTH (0x000000FFU) /*!< Bit mask for USBHS_HCIVERSION_CAPLENGTH. */
+#define BS_USBHS_HCIVERSION_CAPLENGTH (8U) /*!< Bit field size in bits for USBHS_HCIVERSION_CAPLENGTH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCIVERSION_CAPLENGTH field.
-#define BR_USBHS_HCIVERSION_CAPLENGTH (HW_USBHS_HCIVERSION.B.CAPLENGTH)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCIVERSION_CAPLENGTH field. */
+#define BR_USBHS_HCIVERSION_CAPLENGTH(x) (HW_USBHS_HCIVERSION(x).B.CAPLENGTH)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCIVERSION, field HCIVERSION[31:16] (RO)
  *
  * Value is reads as 0x0100, indicating version 1.0.
  */
-//@{
-#define BP_USBHS_HCIVERSION_HCIVERSION (16U) //!< Bit position for USBHS_HCIVERSION_HCIVERSION.
-#define BM_USBHS_HCIVERSION_HCIVERSION (0xFFFF0000U) //!< Bit mask for USBHS_HCIVERSION_HCIVERSION.
-#define BS_USBHS_HCIVERSION_HCIVERSION (16U) //!< Bit field size in bits for USBHS_HCIVERSION_HCIVERSION.
+/*@{*/
+#define BP_USBHS_HCIVERSION_HCIVERSION (16U) /*!< Bit position for USBHS_HCIVERSION_HCIVERSION. */
+#define BM_USBHS_HCIVERSION_HCIVERSION (0xFFFF0000U) /*!< Bit mask for USBHS_HCIVERSION_HCIVERSION. */
+#define BS_USBHS_HCIVERSION_HCIVERSION (16U) /*!< Bit field size in bits for USBHS_HCIVERSION_HCIVERSION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCIVERSION_HCIVERSION field.
-#define BR_USBHS_HCIVERSION_HCIVERSION (HW_USBHS_HCIVERSION.B.HCIVERSION)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCIVERSION_HCIVERSION field. */
+#define BR_USBHS_HCIVERSION_HCIVERSION(x) (HW_USBHS_HCIVERSION(x).B.HCIVERSION)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HCSPARAMS - Host Controller Structural Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HCSPARAMS - Host Controller Structural Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HCSPARAMS - Host Controller Structural Parameters Register (RO)
  *
@@ -1280,31 +1130,28 @@ typedef union _hw_usbhs_hcsparams
     uint32_t U;
     struct _hw_usbhs_hcsparams_bitfields
     {
-        uint32_t N_PORTS : 4;          //!< [3:0] Number of Ports
-        uint32_t PPC : 1;              //!< [4] Power Port Control
-        uint32_t RESERVED0 : 3;        //!< [7:5] Reserved
-        uint32_t N_PCC : 4;            //!< [11:8] Number Ports per CC
-        uint32_t N_CC : 4;             //!< [15:12] Number of Companion Controllers
-        uint32_t PI : 1;               //!< [16] Port Indicators
-        uint32_t RESERVED1 : 3;        //!< [19:17] Reserved
-        uint32_t N_PTT : 4;            //!< [23:20] Ports per Transaction Translator
-        uint32_t N_TT : 4;             //!< [27:24] Number of Transaction Translators.
-        uint32_t RESERVED2 : 4;        //!< [31:28] Reserved
+        uint32_t N_PORTS : 4;          /*!< [3:0] Number of Ports */
+        uint32_t PPC : 1;              /*!< [4] Power Port Control */
+        uint32_t RESERVED0 : 3;        /*!< [7:5] Reserved */
+        uint32_t N_PCC : 4;            /*!< [11:8] Number Ports per CC */
+        uint32_t N_CC : 4;             /*!< [15:12] Number of Companion Controllers */
+        uint32_t PI : 1;               /*!< [16] Port Indicators */
+        uint32_t RESERVED1 : 3;        /*!< [19:17] Reserved */
+        uint32_t N_PTT : 4;            /*!< [23:20] Ports per Transaction Translator */
+        uint32_t N_TT : 4;             /*!< [27:24] Number of Transaction Translators. */
+        uint32_t RESERVED2 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_usbhs_hcsparams_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HCSPARAMS register
  */
-//@{
-#define HW_USBHS_HCSPARAMS_ADDR  (REGS_USBHS_BASE + 0x104U)
+/*@{*/
+#define HW_USBHS_HCSPARAMS_ADDR(x) ((x) + 0x104U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HCSPARAMS       (*(__I hw_usbhs_hcsparams_t *) HW_USBHS_HCSPARAMS_ADDR)
-#define HW_USBHS_HCSPARAMS_RD()  (HW_USBHS_HCSPARAMS.U)
-#endif
-//@}
+#define HW_USBHS_HCSPARAMS(x)    (*(__I hw_usbhs_hcsparams_t *) HW_USBHS_HCSPARAMS_ADDR(x))
+#define HW_USBHS_HCSPARAMS_RD(x) (HW_USBHS_HCSPARAMS(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HCSPARAMS bitfields
@@ -1317,16 +1164,14 @@ typedef union _hw_usbhs_hcsparams
  * applications. Field value determines how many addressable port registers in the
  * operational register. Always reads as 0x1.
  */
-//@{
-#define BP_USBHS_HCSPARAMS_N_PORTS (0U)    //!< Bit position for USBHS_HCSPARAMS_N_PORTS.
-#define BM_USBHS_HCSPARAMS_N_PORTS (0x0000000FU) //!< Bit mask for USBHS_HCSPARAMS_N_PORTS.
-#define BS_USBHS_HCSPARAMS_N_PORTS (4U)    //!< Bit field size in bits for USBHS_HCSPARAMS_N_PORTS.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_N_PORTS (0U)    /*!< Bit position for USBHS_HCSPARAMS_N_PORTS. */
+#define BM_USBHS_HCSPARAMS_N_PORTS (0x0000000FU) /*!< Bit mask for USBHS_HCSPARAMS_N_PORTS. */
+#define BS_USBHS_HCSPARAMS_N_PORTS (4U)    /*!< Bit field size in bits for USBHS_HCSPARAMS_N_PORTS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_N_PORTS field.
-#define BR_USBHS_HCSPARAMS_N_PORTS (HW_USBHS_HCSPARAMS.B.N_PORTS)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_N_PORTS field. */
+#define BR_USBHS_HCSPARAMS_N_PORTS(x) (HW_USBHS_HCSPARAMS(x).B.N_PORTS)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field PPC[4] (RO)
@@ -1337,16 +1182,14 @@ typedef union _hw_usbhs_hcsparams
  * Values:
  * - 1 - Ports have power port switches
  */
-//@{
-#define BP_USBHS_HCSPARAMS_PPC (4U)        //!< Bit position for USBHS_HCSPARAMS_PPC.
-#define BM_USBHS_HCSPARAMS_PPC (0x00000010U) //!< Bit mask for USBHS_HCSPARAMS_PPC.
-#define BS_USBHS_HCSPARAMS_PPC (1U)        //!< Bit field size in bits for USBHS_HCSPARAMS_PPC.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_PPC (4U)        /*!< Bit position for USBHS_HCSPARAMS_PPC. */
+#define BM_USBHS_HCSPARAMS_PPC (0x00000010U) /*!< Bit mask for USBHS_HCSPARAMS_PPC. */
+#define BS_USBHS_HCSPARAMS_PPC (1U)        /*!< Bit field size in bits for USBHS_HCSPARAMS_PPC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_PPC field.
-#define BR_USBHS_HCSPARAMS_PPC (BITBAND_ACCESS32(HW_USBHS_HCSPARAMS_ADDR, BP_USBHS_HCSPARAMS_PPC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_PPC field. */
+#define BR_USBHS_HCSPARAMS_PPC(x) (BITBAND_ACCESS32(HW_USBHS_HCSPARAMS_ADDR(x), BP_USBHS_HCSPARAMS_PPC))
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field N_PCC[11:8] (RO)
@@ -1354,16 +1197,14 @@ typedef union _hw_usbhs_hcsparams
  * Indicates number of ports supported per internal companion controller. This
  * field reads as 0x0 because no companion controllers are present.
  */
-//@{
-#define BP_USBHS_HCSPARAMS_N_PCC (8U)      //!< Bit position for USBHS_HCSPARAMS_N_PCC.
-#define BM_USBHS_HCSPARAMS_N_PCC (0x00000F00U) //!< Bit mask for USBHS_HCSPARAMS_N_PCC.
-#define BS_USBHS_HCSPARAMS_N_PCC (4U)      //!< Bit field size in bits for USBHS_HCSPARAMS_N_PCC.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_N_PCC (8U)      /*!< Bit position for USBHS_HCSPARAMS_N_PCC. */
+#define BM_USBHS_HCSPARAMS_N_PCC (0x00000F00U) /*!< Bit mask for USBHS_HCSPARAMS_N_PCC. */
+#define BS_USBHS_HCSPARAMS_N_PCC (4U)      /*!< Bit field size in bits for USBHS_HCSPARAMS_N_PCC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_N_PCC field.
-#define BR_USBHS_HCSPARAMS_N_PCC (HW_USBHS_HCSPARAMS.B.N_PCC)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_N_PCC field. */
+#define BR_USBHS_HCSPARAMS_N_PCC(x) (HW_USBHS_HCSPARAMS(x).B.N_PCC)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field N_CC[15:12] (RO)
@@ -1371,16 +1212,14 @@ typedef union _hw_usbhs_hcsparams
  * Indicates number of companion controllers associated with USBHS controller.
  * Always cleared.
  */
-//@{
-#define BP_USBHS_HCSPARAMS_N_CC (12U)      //!< Bit position for USBHS_HCSPARAMS_N_CC.
-#define BM_USBHS_HCSPARAMS_N_CC (0x0000F000U) //!< Bit mask for USBHS_HCSPARAMS_N_CC.
-#define BS_USBHS_HCSPARAMS_N_CC (4U)       //!< Bit field size in bits for USBHS_HCSPARAMS_N_CC.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_N_CC (12U)      /*!< Bit position for USBHS_HCSPARAMS_N_CC. */
+#define BM_USBHS_HCSPARAMS_N_CC (0x0000F000U) /*!< Bit mask for USBHS_HCSPARAMS_N_CC. */
+#define BS_USBHS_HCSPARAMS_N_CC (4U)       /*!< Bit field size in bits for USBHS_HCSPARAMS_N_CC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_N_CC field.
-#define BR_USBHS_HCSPARAMS_N_CC (HW_USBHS_HCSPARAMS.B.N_CC)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_N_CC field. */
+#define BR_USBHS_HCSPARAMS_N_CC(x) (HW_USBHS_HCSPARAMS(x).B.N_CC)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field PI[16] (RO)
@@ -1392,16 +1231,14 @@ typedef union _hw_usbhs_hcsparams
  * - 1 - The port status and control registers include a R/W field for
  *     controlling the state of the port indicator
  */
-//@{
-#define BP_USBHS_HCSPARAMS_PI (16U)        //!< Bit position for USBHS_HCSPARAMS_PI.
-#define BM_USBHS_HCSPARAMS_PI (0x00010000U) //!< Bit mask for USBHS_HCSPARAMS_PI.
-#define BS_USBHS_HCSPARAMS_PI (1U)         //!< Bit field size in bits for USBHS_HCSPARAMS_PI.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_PI (16U)        /*!< Bit position for USBHS_HCSPARAMS_PI. */
+#define BM_USBHS_HCSPARAMS_PI (0x00010000U) /*!< Bit mask for USBHS_HCSPARAMS_PI. */
+#define BS_USBHS_HCSPARAMS_PI (1U)         /*!< Bit field size in bits for USBHS_HCSPARAMS_PI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_PI field.
-#define BR_USBHS_HCSPARAMS_PI (BITBAND_ACCESS32(HW_USBHS_HCSPARAMS_ADDR, BP_USBHS_HCSPARAMS_PI))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_PI field. */
+#define BR_USBHS_HCSPARAMS_PI(x) (BITBAND_ACCESS32(HW_USBHS_HCSPARAMS_ADDR(x), BP_USBHS_HCSPARAMS_PI))
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field N_PTT[23:20] (RO)
@@ -1409,16 +1246,14 @@ typedef union _hw_usbhs_hcsparams
  * Non-EHCI field. Indicates number of ports assigned to each transaction
  * translator within host controller.
  */
-//@{
-#define BP_USBHS_HCSPARAMS_N_PTT (20U)     //!< Bit position for USBHS_HCSPARAMS_N_PTT.
-#define BM_USBHS_HCSPARAMS_N_PTT (0x00F00000U) //!< Bit mask for USBHS_HCSPARAMS_N_PTT.
-#define BS_USBHS_HCSPARAMS_N_PTT (4U)      //!< Bit field size in bits for USBHS_HCSPARAMS_N_PTT.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_N_PTT (20U)     /*!< Bit position for USBHS_HCSPARAMS_N_PTT. */
+#define BM_USBHS_HCSPARAMS_N_PTT (0x00F00000U) /*!< Bit mask for USBHS_HCSPARAMS_N_PTT. */
+#define BS_USBHS_HCSPARAMS_N_PTT (4U)      /*!< Bit field size in bits for USBHS_HCSPARAMS_N_PTT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_N_PTT field.
-#define BR_USBHS_HCSPARAMS_N_PTT (HW_USBHS_HCSPARAMS.B.N_PTT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_N_PTT field. */
+#define BR_USBHS_HCSPARAMS_N_PTT(x) (HW_USBHS_HCSPARAMS(x).B.N_PTT)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCSPARAMS, field N_TT[27:24] (RO)
@@ -1428,22 +1263,19 @@ typedef union _hw_usbhs_hcsparams
  * Transaction Translator Function," for more information on embedded
  * transaction translators.
  */
-//@{
-#define BP_USBHS_HCSPARAMS_N_TT (24U)      //!< Bit position for USBHS_HCSPARAMS_N_TT.
-#define BM_USBHS_HCSPARAMS_N_TT (0x0F000000U) //!< Bit mask for USBHS_HCSPARAMS_N_TT.
-#define BS_USBHS_HCSPARAMS_N_TT (4U)       //!< Bit field size in bits for USBHS_HCSPARAMS_N_TT.
+/*@{*/
+#define BP_USBHS_HCSPARAMS_N_TT (24U)      /*!< Bit position for USBHS_HCSPARAMS_N_TT. */
+#define BM_USBHS_HCSPARAMS_N_TT (0x0F000000U) /*!< Bit mask for USBHS_HCSPARAMS_N_TT. */
+#define BS_USBHS_HCSPARAMS_N_TT (4U)       /*!< Bit field size in bits for USBHS_HCSPARAMS_N_TT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCSPARAMS_N_TT field.
-#define BR_USBHS_HCSPARAMS_N_TT (HW_USBHS_HCSPARAMS.B.N_TT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCSPARAMS_N_TT field. */
+#define BR_USBHS_HCSPARAMS_N_TT(x) (HW_USBHS_HCSPARAMS(x).B.N_TT)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_HCCPARAMS - Host Controller Capability Parameters Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_HCCPARAMS - Host Controller Capability Parameters Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_HCCPARAMS - Host Controller Capability Parameters Register (RO)
  *
@@ -1457,28 +1289,25 @@ typedef union _hw_usbhs_hccparams
     uint32_t U;
     struct _hw_usbhs_hccparams_bitfields
     {
-        uint32_t ADC : 1;              //!< [0] 64-bit addressing capability.
-        uint32_t PFL : 1;              //!< [1] Programmable Frame List flag
-        uint32_t ASP : 1;              //!< [2] Asynchronous Schedule Park capability
-        uint32_t RESERVED0 : 1;        //!< [3] Reserved
-        uint32_t IST : 4;              //!< [7:4] Isochronous Scheduling Threshold
-        uint32_t EECP : 8;             //!< [15:8] EHCI Extended Capabilities Pointer
-        uint32_t RESERVED1 : 16;       //!< [31:16] Reserved
+        uint32_t ADC : 1;              /*!< [0] 64-bit addressing capability. */
+        uint32_t PFL : 1;              /*!< [1] Programmable Frame List flag */
+        uint32_t ASP : 1;              /*!< [2] Asynchronous Schedule Park capability */
+        uint32_t RESERVED0 : 1;        /*!< [3] Reserved */
+        uint32_t IST : 4;              /*!< [7:4] Isochronous Scheduling Threshold */
+        uint32_t EECP : 8;             /*!< [15:8] EHCI Extended Capabilities Pointer */
+        uint32_t RESERVED1 : 16;       /*!< [31:16] Reserved */
     } B;
 } hw_usbhs_hccparams_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_HCCPARAMS register
  */
-//@{
-#define HW_USBHS_HCCPARAMS_ADDR  (REGS_USBHS_BASE + 0x108U)
+/*@{*/
+#define HW_USBHS_HCCPARAMS_ADDR(x) ((x) + 0x108U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_HCCPARAMS       (*(__I hw_usbhs_hccparams_t *) HW_USBHS_HCCPARAMS_ADDR)
-#define HW_USBHS_HCCPARAMS_RD()  (HW_USBHS_HCCPARAMS.U)
-#endif
-//@}
+#define HW_USBHS_HCCPARAMS(x)    (*(__I hw_usbhs_hccparams_t *) HW_USBHS_HCCPARAMS_ADDR(x))
+#define HW_USBHS_HCCPARAMS_RD(x) (HW_USBHS_HCCPARAMS(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_HCCPARAMS bitfields
@@ -1490,16 +1319,14 @@ typedef union _hw_usbhs_hccparams
  * This bit always reads as 0b0, indicating 64-bit addressing is not supported.
  * 0 Data structures use 32-bit address memory pointers
  */
-//@{
-#define BP_USBHS_HCCPARAMS_ADC (0U)        //!< Bit position for USBHS_HCCPARAMS_ADC.
-#define BM_USBHS_HCCPARAMS_ADC (0x00000001U) //!< Bit mask for USBHS_HCCPARAMS_ADC.
-#define BS_USBHS_HCCPARAMS_ADC (1U)        //!< Bit field size in bits for USBHS_HCCPARAMS_ADC.
+/*@{*/
+#define BP_USBHS_HCCPARAMS_ADC (0U)        /*!< Bit position for USBHS_HCCPARAMS_ADC. */
+#define BM_USBHS_HCCPARAMS_ADC (0x00000001U) /*!< Bit mask for USBHS_HCCPARAMS_ADC. */
+#define BS_USBHS_HCCPARAMS_ADC (1U)        /*!< Bit field size in bits for USBHS_HCCPARAMS_ADC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCCPARAMS_ADC field.
-#define BR_USBHS_HCCPARAMS_ADC (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR, BP_USBHS_HCCPARAMS_ADC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCCPARAMS_ADC field. */
+#define BR_USBHS_HCCPARAMS_ADC(x) (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR(x), BP_USBHS_HCCPARAMS_ADC))
+/*@}*/
 
 /*!
  * @name Register USBHS_HCCPARAMS, field PFL[1] (RO)
@@ -1510,16 +1337,14 @@ typedef union _hw_usbhs_hccparams
  * be aligned on a 4K-page boundary. This requirement ensures that the frame list
  * is always physically contiguous.
  */
-//@{
-#define BP_USBHS_HCCPARAMS_PFL (1U)        //!< Bit position for USBHS_HCCPARAMS_PFL.
-#define BM_USBHS_HCCPARAMS_PFL (0x00000002U) //!< Bit mask for USBHS_HCCPARAMS_PFL.
-#define BS_USBHS_HCCPARAMS_PFL (1U)        //!< Bit field size in bits for USBHS_HCCPARAMS_PFL.
+/*@{*/
+#define BP_USBHS_HCCPARAMS_PFL (1U)        /*!< Bit position for USBHS_HCCPARAMS_PFL. */
+#define BM_USBHS_HCCPARAMS_PFL (0x00000002U) /*!< Bit mask for USBHS_HCCPARAMS_PFL. */
+#define BS_USBHS_HCCPARAMS_PFL (1U)        /*!< Bit field size in bits for USBHS_HCCPARAMS_PFL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCCPARAMS_PFL field.
-#define BR_USBHS_HCCPARAMS_PFL (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR, BP_USBHS_HCCPARAMS_PFL))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCCPARAMS_PFL field. */
+#define BR_USBHS_HCCPARAMS_PFL(x) (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR(x), BP_USBHS_HCCPARAMS_PFL))
+/*@}*/
 
 /*!
  * @name Register USBHS_HCCPARAMS, field ASP[2] (RO)
@@ -1534,16 +1359,14 @@ typedef union _hw_usbhs_hccparams
  * - 0 - Park not supported.
  * - 1 - Park supported.
  */
-//@{
-#define BP_USBHS_HCCPARAMS_ASP (2U)        //!< Bit position for USBHS_HCCPARAMS_ASP.
-#define BM_USBHS_HCCPARAMS_ASP (0x00000004U) //!< Bit mask for USBHS_HCCPARAMS_ASP.
-#define BS_USBHS_HCCPARAMS_ASP (1U)        //!< Bit field size in bits for USBHS_HCCPARAMS_ASP.
+/*@{*/
+#define BP_USBHS_HCCPARAMS_ASP (2U)        /*!< Bit position for USBHS_HCCPARAMS_ASP. */
+#define BM_USBHS_HCCPARAMS_ASP (0x00000004U) /*!< Bit mask for USBHS_HCCPARAMS_ASP. */
+#define BS_USBHS_HCCPARAMS_ASP (1U)        /*!< Bit field size in bits for USBHS_HCCPARAMS_ASP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCCPARAMS_ASP field.
-#define BR_USBHS_HCCPARAMS_ASP (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR, BP_USBHS_HCCPARAMS_ASP))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCCPARAMS_ASP field. */
+#define BR_USBHS_HCCPARAMS_ASP(x) (BITBAND_ACCESS32(HW_USBHS_HCCPARAMS_ADDR(x), BP_USBHS_HCCPARAMS_ASP))
+/*@}*/
 
 /*!
  * @name Register USBHS_HCCPARAMS, field IST[7:4] (RO)
@@ -1557,16 +1380,14 @@ typedef union _hw_usbhs_hccparams
  *     microframes a host controller can hold a set of isochronous data structures
  *     (one or more) before flushing the state
  */
-//@{
-#define BP_USBHS_HCCPARAMS_IST (4U)        //!< Bit position for USBHS_HCCPARAMS_IST.
-#define BM_USBHS_HCCPARAMS_IST (0x000000F0U) //!< Bit mask for USBHS_HCCPARAMS_IST.
-#define BS_USBHS_HCCPARAMS_IST (4U)        //!< Bit field size in bits for USBHS_HCCPARAMS_IST.
+/*@{*/
+#define BP_USBHS_HCCPARAMS_IST (4U)        /*!< Bit position for USBHS_HCCPARAMS_IST. */
+#define BM_USBHS_HCCPARAMS_IST (0x000000F0U) /*!< Bit mask for USBHS_HCCPARAMS_IST. */
+#define BS_USBHS_HCCPARAMS_IST (4U)        /*!< Bit field size in bits for USBHS_HCCPARAMS_IST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCCPARAMS_IST field.
-#define BR_USBHS_HCCPARAMS_IST (HW_USBHS_HCCPARAMS.B.IST)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCCPARAMS_IST field. */
+#define BR_USBHS_HCCPARAMS_IST(x) (HW_USBHS_HCCPARAMS(x).B.IST)
+/*@}*/
 
 /*!
  * @name Register USBHS_HCCPARAMS, field EECP[15:8] (RO)
@@ -1577,22 +1398,19 @@ typedef union _hw_usbhs_hccparams
  * Values:
  * - 0 - No extended capabilities are implemented
  */
-//@{
-#define BP_USBHS_HCCPARAMS_EECP (8U)       //!< Bit position for USBHS_HCCPARAMS_EECP.
-#define BM_USBHS_HCCPARAMS_EECP (0x0000FF00U) //!< Bit mask for USBHS_HCCPARAMS_EECP.
-#define BS_USBHS_HCCPARAMS_EECP (8U)       //!< Bit field size in bits for USBHS_HCCPARAMS_EECP.
+/*@{*/
+#define BP_USBHS_HCCPARAMS_EECP (8U)       /*!< Bit position for USBHS_HCCPARAMS_EECP. */
+#define BM_USBHS_HCCPARAMS_EECP (0x0000FF00U) /*!< Bit mask for USBHS_HCCPARAMS_EECP. */
+#define BS_USBHS_HCCPARAMS_EECP (8U)       /*!< Bit field size in bits for USBHS_HCCPARAMS_EECP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_HCCPARAMS_EECP field.
-#define BR_USBHS_HCCPARAMS_EECP (HW_USBHS_HCCPARAMS.B.EECP)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_HCCPARAMS_EECP field. */
+#define BR_USBHS_HCCPARAMS_EECP(x) (HW_USBHS_HCCPARAMS(x).B.EECP)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_DCIVERSION - Device Controller Interface Version
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_DCIVERSION - Device Controller Interface Version
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_DCIVERSION - Device Controller Interface Version (RO)
  *
@@ -1608,22 +1426,19 @@ typedef union _hw_usbhs_dciversion
     uint16_t U;
     struct _hw_usbhs_dciversion_bitfields
     {
-        uint16_t DCIVERSION : 16;      //!< [15:0]
+        uint16_t DCIVERSION : 16;      /*!< [15:0]  */
     } B;
 } hw_usbhs_dciversion_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_DCIVERSION register
  */
-//@{
-#define HW_USBHS_DCIVERSION_ADDR (REGS_USBHS_BASE + 0x122U)
+/*@{*/
+#define HW_USBHS_DCIVERSION_ADDR(x) ((x) + 0x122U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_DCIVERSION      (*(__I hw_usbhs_dciversion_t *) HW_USBHS_DCIVERSION_ADDR)
-#define HW_USBHS_DCIVERSION_RD() (HW_USBHS_DCIVERSION.U)
-#endif
-//@}
+#define HW_USBHS_DCIVERSION(x)   (*(__I hw_usbhs_dciversion_t *) HW_USBHS_DCIVERSION_ADDR(x))
+#define HW_USBHS_DCIVERSION_RD(x) (HW_USBHS_DCIVERSION(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_DCIVERSION bitfields
@@ -1634,22 +1449,19 @@ typedef union _hw_usbhs_dciversion
  *
  * Device interface revision number.
  */
-//@{
-#define BP_USBHS_DCIVERSION_DCIVERSION (0U) //!< Bit position for USBHS_DCIVERSION_DCIVERSION.
-#define BM_USBHS_DCIVERSION_DCIVERSION (0xFFFFU) //!< Bit mask for USBHS_DCIVERSION_DCIVERSION.
-#define BS_USBHS_DCIVERSION_DCIVERSION (16U) //!< Bit field size in bits for USBHS_DCIVERSION_DCIVERSION.
+/*@{*/
+#define BP_USBHS_DCIVERSION_DCIVERSION (0U) /*!< Bit position for USBHS_DCIVERSION_DCIVERSION. */
+#define BM_USBHS_DCIVERSION_DCIVERSION (0xFFFFU) /*!< Bit mask for USBHS_DCIVERSION_DCIVERSION. */
+#define BS_USBHS_DCIVERSION_DCIVERSION (16U) /*!< Bit field size in bits for USBHS_DCIVERSION_DCIVERSION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DCIVERSION_DCIVERSION field.
-#define BR_USBHS_DCIVERSION_DCIVERSION (HW_USBHS_DCIVERSION.B.DCIVERSION)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_DCIVERSION_DCIVERSION field. */
+#define BR_USBHS_DCIVERSION_DCIVERSION(x) (HW_USBHS_DCIVERSION(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_DCCPARAMS - Device Controller Capability Parameters
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_DCCPARAMS - Device Controller Capability Parameters
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_DCCPARAMS - Device Controller Capability Parameters (RO)
  *
@@ -1663,26 +1475,23 @@ typedef union _hw_usbhs_dccparams
     uint32_t U;
     struct _hw_usbhs_dccparams_bitfields
     {
-        uint32_t DEN : 5;              //!< [4:0] Device Endpoint Number
-        uint32_t RESERVED0 : 2;        //!< [6:5] Reserved
-        uint32_t DC : 1;               //!< [7] Device Capable
-        uint32_t HC : 1;               //!< [8] Host Capable
-        uint32_t RESERVED1 : 23;       //!< [31:9] Reserved
+        uint32_t DEN : 5;              /*!< [4:0] Device Endpoint Number */
+        uint32_t RESERVED0 : 2;        /*!< [6:5] Reserved */
+        uint32_t DC : 1;               /*!< [7] Device Capable */
+        uint32_t HC : 1;               /*!< [8] Host Capable */
+        uint32_t RESERVED1 : 23;       /*!< [31:9] Reserved */
     } B;
 } hw_usbhs_dccparams_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_DCCPARAMS register
  */
-//@{
-#define HW_USBHS_DCCPARAMS_ADDR  (REGS_USBHS_BASE + 0x124U)
+/*@{*/
+#define HW_USBHS_DCCPARAMS_ADDR(x) ((x) + 0x124U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_DCCPARAMS       (*(__I hw_usbhs_dccparams_t *) HW_USBHS_DCCPARAMS_ADDR)
-#define HW_USBHS_DCCPARAMS_RD()  (HW_USBHS_DCCPARAMS.U)
-#endif
-//@}
+#define HW_USBHS_DCCPARAMS(x)    (*(__I hw_usbhs_dccparams_t *) HW_USBHS_DCCPARAMS_ADDR(x))
+#define HW_USBHS_DCCPARAMS_RD(x) (HW_USBHS_DCCPARAMS(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_DCCPARAMS bitfields
@@ -1694,32 +1503,28 @@ typedef union _hw_usbhs_dccparams
  * This field indicates the number of endpoints built into the device
  * controller. Always reads as 0b0100.
  */
-//@{
-#define BP_USBHS_DCCPARAMS_DEN (0U)        //!< Bit position for USBHS_DCCPARAMS_DEN.
-#define BM_USBHS_DCCPARAMS_DEN (0x0000001FU) //!< Bit mask for USBHS_DCCPARAMS_DEN.
-#define BS_USBHS_DCCPARAMS_DEN (5U)        //!< Bit field size in bits for USBHS_DCCPARAMS_DEN.
+/*@{*/
+#define BP_USBHS_DCCPARAMS_DEN (0U)        /*!< Bit position for USBHS_DCCPARAMS_DEN. */
+#define BM_USBHS_DCCPARAMS_DEN (0x0000001FU) /*!< Bit mask for USBHS_DCCPARAMS_DEN. */
+#define BS_USBHS_DCCPARAMS_DEN (5U)        /*!< Bit field size in bits for USBHS_DCCPARAMS_DEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DCCPARAMS_DEN field.
-#define BR_USBHS_DCCPARAMS_DEN (HW_USBHS_DCCPARAMS.B.DEN)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_DCCPARAMS_DEN field. */
+#define BR_USBHS_DCCPARAMS_DEN(x) (HW_USBHS_DCCPARAMS(x).B.DEN)
+/*@}*/
 
 /*!
  * @name Register USBHS_DCCPARAMS, field DC[7] (RO)
  *
  * Indicates the USBHS controller can operate as an USB 2.0 device. Always set.
  */
-//@{
-#define BP_USBHS_DCCPARAMS_DC (7U)         //!< Bit position for USBHS_DCCPARAMS_DC.
-#define BM_USBHS_DCCPARAMS_DC (0x00000080U) //!< Bit mask for USBHS_DCCPARAMS_DC.
-#define BS_USBHS_DCCPARAMS_DC (1U)         //!< Bit field size in bits for USBHS_DCCPARAMS_DC.
+/*@{*/
+#define BP_USBHS_DCCPARAMS_DC (7U)         /*!< Bit position for USBHS_DCCPARAMS_DC. */
+#define BM_USBHS_DCCPARAMS_DC (0x00000080U) /*!< Bit mask for USBHS_DCCPARAMS_DC. */
+#define BS_USBHS_DCCPARAMS_DC (1U)         /*!< Bit field size in bits for USBHS_DCCPARAMS_DC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DCCPARAMS_DC field.
-#define BR_USBHS_DCCPARAMS_DC (BITBAND_ACCESS32(HW_USBHS_DCCPARAMS_ADDR, BP_USBHS_DCCPARAMS_DC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_DCCPARAMS_DC field. */
+#define BR_USBHS_DCCPARAMS_DC(x) (BITBAND_ACCESS32(HW_USBHS_DCCPARAMS_ADDR(x), BP_USBHS_DCCPARAMS_DC))
+/*@}*/
 
 /*!
  * @name Register USBHS_DCCPARAMS, field HC[8] (RO)
@@ -1727,22 +1532,19 @@ typedef union _hw_usbhs_dccparams
  * Indicates the USBHS controller can operate as an EHCI compatible USB 2.0
  * host. Always reads as 0b1.
  */
-//@{
-#define BP_USBHS_DCCPARAMS_HC (8U)         //!< Bit position for USBHS_DCCPARAMS_HC.
-#define BM_USBHS_DCCPARAMS_HC (0x00000100U) //!< Bit mask for USBHS_DCCPARAMS_HC.
-#define BS_USBHS_DCCPARAMS_HC (1U)         //!< Bit field size in bits for USBHS_DCCPARAMS_HC.
+/*@{*/
+#define BP_USBHS_DCCPARAMS_HC (8U)         /*!< Bit position for USBHS_DCCPARAMS_HC. */
+#define BM_USBHS_DCCPARAMS_HC (0x00000100U) /*!< Bit mask for USBHS_DCCPARAMS_HC. */
+#define BS_USBHS_DCCPARAMS_HC (1U)         /*!< Bit field size in bits for USBHS_DCCPARAMS_HC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DCCPARAMS_HC field.
-#define BR_USBHS_DCCPARAMS_HC (BITBAND_ACCESS32(HW_USBHS_DCCPARAMS_ADDR, BP_USBHS_DCCPARAMS_HC))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_DCCPARAMS_HC field. */
+#define BR_USBHS_DCCPARAMS_HC(x) (BITBAND_ACCESS32(HW_USBHS_DCCPARAMS_ADDR(x), BP_USBHS_DCCPARAMS_HC))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USBCMD - USB Command Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USBCMD - USB Command Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USBCMD - USB Command Register (RW)
  *
@@ -1755,41 +1557,38 @@ typedef union _hw_usbhs_usbcmd
     uint32_t U;
     struct _hw_usbhs_usbcmd_bitfields
     {
-        uint32_t RS : 1;               //!< [0] Run/Stop
-        uint32_t RST : 1;              //!< [1] Controller Reset
-        uint32_t FS : 2;               //!< [3:2] Frame list Size
-        uint32_t PSE : 1;              //!< [4] Periodic Schedule Enable
-        uint32_t ASE : 1;              //!< [5] Asynchronous Schedule Enable
-        uint32_t IAA : 1;              //!< [6] Interrupt on Async Advance doorbell
-        uint32_t RESERVED0 : 1;        //!< [7] Reserved
-        uint32_t ASP : 2;              //!< [9:8] Asynchronous Schedule Park mode count
-        uint32_t RESERVED1 : 1;        //!< [10] Reserved
-        uint32_t ASPE : 1;             //!< [11] Asynchronous Schedule Park mode Enable
-        uint32_t RESERVED2 : 1;        //!< [12] Reserved
-        uint32_t SUTW : 1;             //!< [13] Setup TripWire
-        uint32_t ATDTW : 1;            //!< [14] Add dTD TripWire
-        uint32_t FS2 : 1;              //!< [15] Frame list Size 2
-        uint32_t ITC : 8;              //!< [23:16] Interrupt Threshold Control
-        uint32_t RESERVED3 : 8;        //!< [31:24] Reserved
+        uint32_t RS : 1;               /*!< [0] Run/Stop */
+        uint32_t RST : 1;              /*!< [1] Controller Reset */
+        uint32_t FS : 2;               /*!< [3:2] Frame list Size */
+        uint32_t PSE : 1;              /*!< [4] Periodic Schedule Enable */
+        uint32_t ASE : 1;              /*!< [5] Asynchronous Schedule Enable */
+        uint32_t IAA : 1;              /*!< [6] Interrupt on Async Advance doorbell */
+        uint32_t RESERVED0 : 1;        /*!< [7] Reserved */
+        uint32_t ASP : 2;              /*!< [9:8] Asynchronous Schedule Park mode count */
+        uint32_t RESERVED1 : 1;        /*!< [10] Reserved */
+        uint32_t ASPE : 1;             /*!< [11] Asynchronous Schedule Park mode Enable */
+        uint32_t RESERVED2 : 1;        /*!< [12] Reserved */
+        uint32_t SUTW : 1;             /*!< [13] Setup TripWire */
+        uint32_t ATDTW : 1;            /*!< [14] Add dTD TripWire */
+        uint32_t FS2 : 1;              /*!< [15] Frame list Size 2 */
+        uint32_t ITC : 8;              /*!< [23:16] Interrupt Threshold Control */
+        uint32_t RESERVED3 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_usbcmd_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USBCMD register
  */
-//@{
-#define HW_USBHS_USBCMD_ADDR     (REGS_USBHS_BASE + 0x140U)
+/*@{*/
+#define HW_USBHS_USBCMD_ADDR(x)  ((x) + 0x140U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USBCMD          (*(__IO hw_usbhs_usbcmd_t *) HW_USBHS_USBCMD_ADDR)
-#define HW_USBHS_USBCMD_RD()     (HW_USBHS_USBCMD.U)
-#define HW_USBHS_USBCMD_WR(v)    (HW_USBHS_USBCMD.U = (v))
-#define HW_USBHS_USBCMD_SET(v)   (HW_USBHS_USBCMD_WR(HW_USBHS_USBCMD_RD() |  (v)))
-#define HW_USBHS_USBCMD_CLR(v)   (HW_USBHS_USBCMD_WR(HW_USBHS_USBCMD_RD() & ~(v)))
-#define HW_USBHS_USBCMD_TOG(v)   (HW_USBHS_USBCMD_WR(HW_USBHS_USBCMD_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USBCMD(x)       (*(__IO hw_usbhs_usbcmd_t *) HW_USBHS_USBCMD_ADDR(x))
+#define HW_USBHS_USBCMD_RD(x)    (HW_USBHS_USBCMD(x).U)
+#define HW_USBHS_USBCMD_WR(x, v) (HW_USBHS_USBCMD(x).U = (v))
+#define HW_USBHS_USBCMD_SET(x, v) (HW_USBHS_USBCMD_WR(x, HW_USBHS_USBCMD_RD(x) |  (v)))
+#define HW_USBHS_USBCMD_CLR(x, v) (HW_USBHS_USBCMD_WR(x, HW_USBHS_USBCMD_RD(x) & ~(v)))
+#define HW_USBHS_USBCMD_TOG(x, v) (HW_USBHS_USBCMD_WR(x, HW_USBHS_USBCMD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USBCMD bitfields
@@ -1810,24 +1609,20 @@ typedef union _hw_usbhs_usbcmd
  * must use this bit to prevent an attach event before the USBHS controller has
  * properly initialized. Clearing this bit causes a detach event.
  */
-//@{
-#define BP_USBHS_USBCMD_RS   (0U)          //!< Bit position for USBHS_USBCMD_RS.
-#define BM_USBHS_USBCMD_RS   (0x00000001U) //!< Bit mask for USBHS_USBCMD_RS.
-#define BS_USBHS_USBCMD_RS   (1U)          //!< Bit field size in bits for USBHS_USBCMD_RS.
+/*@{*/
+#define BP_USBHS_USBCMD_RS   (0U)          /*!< Bit position for USBHS_USBCMD_RS. */
+#define BM_USBHS_USBCMD_RS   (0x00000001U) /*!< Bit mask for USBHS_USBCMD_RS. */
+#define BS_USBHS_USBCMD_RS   (1U)          /*!< Bit field size in bits for USBHS_USBCMD_RS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_RS field.
-#define BR_USBHS_USBCMD_RS   (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_RS))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_RS field. */
+#define BR_USBHS_USBCMD_RS(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_RS))
 
-//! @brief Format value for bitfield USBHS_USBCMD_RS.
-#define BF_USBHS_USBCMD_RS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_RS), uint32_t) & BM_USBHS_USBCMD_RS)
+/*! @brief Format value for bitfield USBHS_USBCMD_RS. */
+#define BF_USBHS_USBCMD_RS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_RS) & BM_USBHS_USBCMD_RS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RS field to a new value.
-#define BW_USBHS_USBCMD_RS(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_RS) = (v))
-#endif
-//@}
+/*! @brief Set the RS field to a new value. */
+#define BW_USBHS_USBCMD_RS(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_RS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field RST[1] (RW)
@@ -1847,24 +1642,20 @@ typedef union _hw_usbhs_usbcmd
  * initiating a device controller reset, all primed endpoints must be flushed
  * and the USBCMD[RS] bit must be cleared.
  */
-//@{
-#define BP_USBHS_USBCMD_RST  (1U)          //!< Bit position for USBHS_USBCMD_RST.
-#define BM_USBHS_USBCMD_RST  (0x00000002U) //!< Bit mask for USBHS_USBCMD_RST.
-#define BS_USBHS_USBCMD_RST  (1U)          //!< Bit field size in bits for USBHS_USBCMD_RST.
+/*@{*/
+#define BP_USBHS_USBCMD_RST  (1U)          /*!< Bit position for USBHS_USBCMD_RST. */
+#define BM_USBHS_USBCMD_RST  (0x00000002U) /*!< Bit mask for USBHS_USBCMD_RST. */
+#define BS_USBHS_USBCMD_RST  (1U)          /*!< Bit field size in bits for USBHS_USBCMD_RST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_RST field.
-#define BR_USBHS_USBCMD_RST  (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_RST))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_RST field. */
+#define BR_USBHS_USBCMD_RST(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_RST))
 
-//! @brief Format value for bitfield USBHS_USBCMD_RST.
-#define BF_USBHS_USBCMD_RST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_RST), uint32_t) & BM_USBHS_USBCMD_RST)
+/*! @brief Format value for bitfield USBHS_USBCMD_RST. */
+#define BF_USBHS_USBCMD_RST(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_RST) & BM_USBHS_USBCMD_RST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RST field to a new value.
-#define BW_USBHS_USBCMD_RST(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_RST) = (v))
-#endif
-//@}
+/*! @brief Set the RST field to a new value. */
+#define BW_USBHS_USBCMD_RST(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_RST) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field FS[3:2] (RW)
@@ -1884,24 +1675,20 @@ typedef union _hw_usbhs_usbcmd
  * - 11 - When FS2 = 0, the size is 128 elements (512 bytes). When FS2 = 1, the
  *     size is 8 elements (32 bytes).
  */
-//@{
-#define BP_USBHS_USBCMD_FS   (2U)          //!< Bit position for USBHS_USBCMD_FS.
-#define BM_USBHS_USBCMD_FS   (0x0000000CU) //!< Bit mask for USBHS_USBCMD_FS.
-#define BS_USBHS_USBCMD_FS   (2U)          //!< Bit field size in bits for USBHS_USBCMD_FS.
+/*@{*/
+#define BP_USBHS_USBCMD_FS   (2U)          /*!< Bit position for USBHS_USBCMD_FS. */
+#define BM_USBHS_USBCMD_FS   (0x0000000CU) /*!< Bit mask for USBHS_USBCMD_FS. */
+#define BS_USBHS_USBCMD_FS   (2U)          /*!< Bit field size in bits for USBHS_USBCMD_FS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_FS field.
-#define BR_USBHS_USBCMD_FS   (HW_USBHS_USBCMD.B.FS)
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_FS field. */
+#define BR_USBHS_USBCMD_FS(x) (HW_USBHS_USBCMD(x).B.FS)
 
-//! @brief Format value for bitfield USBHS_USBCMD_FS.
-#define BF_USBHS_USBCMD_FS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_FS), uint32_t) & BM_USBHS_USBCMD_FS)
+/*! @brief Format value for bitfield USBHS_USBCMD_FS. */
+#define BF_USBHS_USBCMD_FS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_FS) & BM_USBHS_USBCMD_FS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FS field to a new value.
-#define BW_USBHS_USBCMD_FS(v) (HW_USBHS_USBCMD_WR((HW_USBHS_USBCMD_RD() & ~BM_USBHS_USBCMD_FS) | BF_USBHS_USBCMD_FS(v)))
-#endif
-//@}
+/*! @brief Set the FS field to a new value. */
+#define BW_USBHS_USBCMD_FS(x, v) (HW_USBHS_USBCMD_WR(x, (HW_USBHS_USBCMD_RD(x) & ~BM_USBHS_USBCMD_FS) | BF_USBHS_USBCMD_FS(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field PSE[4] (RW)
@@ -1913,24 +1700,20 @@ typedef union _hw_usbhs_usbcmd
  * - 0 - Do not process periodic schedule.
  * - 1 - Use the PERIODICLISTBASE register to access the periodic schedule.
  */
-//@{
-#define BP_USBHS_USBCMD_PSE  (4U)          //!< Bit position for USBHS_USBCMD_PSE.
-#define BM_USBHS_USBCMD_PSE  (0x00000010U) //!< Bit mask for USBHS_USBCMD_PSE.
-#define BS_USBHS_USBCMD_PSE  (1U)          //!< Bit field size in bits for USBHS_USBCMD_PSE.
+/*@{*/
+#define BP_USBHS_USBCMD_PSE  (4U)          /*!< Bit position for USBHS_USBCMD_PSE. */
+#define BM_USBHS_USBCMD_PSE  (0x00000010U) /*!< Bit mask for USBHS_USBCMD_PSE. */
+#define BS_USBHS_USBCMD_PSE  (1U)          /*!< Bit field size in bits for USBHS_USBCMD_PSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_PSE field.
-#define BR_USBHS_USBCMD_PSE  (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_PSE))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_PSE field. */
+#define BR_USBHS_USBCMD_PSE(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_PSE))
 
-//! @brief Format value for bitfield USBHS_USBCMD_PSE.
-#define BF_USBHS_USBCMD_PSE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_PSE), uint32_t) & BM_USBHS_USBCMD_PSE)
+/*! @brief Format value for bitfield USBHS_USBCMD_PSE. */
+#define BF_USBHS_USBCMD_PSE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_PSE) & BM_USBHS_USBCMD_PSE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PSE field to a new value.
-#define BW_USBHS_USBCMD_PSE(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_PSE) = (v))
-#endif
-//@}
+/*! @brief Set the PSE field to a new value. */
+#define BW_USBHS_USBCMD_PSE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_PSE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field ASE[5] (RW)
@@ -1942,24 +1725,20 @@ typedef union _hw_usbhs_usbcmd
  * - 0 - Do not process asynchronous schedule.
  * - 1 - Use the ASYNCLISTADDR register to access asynchronous schedule.
  */
-//@{
-#define BP_USBHS_USBCMD_ASE  (5U)          //!< Bit position for USBHS_USBCMD_ASE.
-#define BM_USBHS_USBCMD_ASE  (0x00000020U) //!< Bit mask for USBHS_USBCMD_ASE.
-#define BS_USBHS_USBCMD_ASE  (1U)          //!< Bit field size in bits for USBHS_USBCMD_ASE.
+/*@{*/
+#define BP_USBHS_USBCMD_ASE  (5U)          /*!< Bit position for USBHS_USBCMD_ASE. */
+#define BM_USBHS_USBCMD_ASE  (0x00000020U) /*!< Bit mask for USBHS_USBCMD_ASE. */
+#define BS_USBHS_USBCMD_ASE  (1U)          /*!< Bit field size in bits for USBHS_USBCMD_ASE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_ASE field.
-#define BR_USBHS_USBCMD_ASE  (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ASE))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_ASE field. */
+#define BR_USBHS_USBCMD_ASE(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ASE))
 
-//! @brief Format value for bitfield USBHS_USBCMD_ASE.
-#define BF_USBHS_USBCMD_ASE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_ASE), uint32_t) & BM_USBHS_USBCMD_ASE)
+/*! @brief Format value for bitfield USBHS_USBCMD_ASE. */
+#define BF_USBHS_USBCMD_ASE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_ASE) & BM_USBHS_USBCMD_ASE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASE field to a new value.
-#define BW_USBHS_USBCMD_ASE(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ASE) = (v))
-#endif
-//@}
+/*! @brief Set the ASE field to a new value. */
+#define BW_USBHS_USBCMD_ASE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ASE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field IAA[6] (RW)
@@ -1974,24 +1753,20 @@ typedef union _hw_usbhs_usbcmd
  * so yields undefined results. This bit used only in host mode. Writing a 1 to
  * this bit when the USBHS module is in device mode has undefined results.
  */
-//@{
-#define BP_USBHS_USBCMD_IAA  (6U)          //!< Bit position for USBHS_USBCMD_IAA.
-#define BM_USBHS_USBCMD_IAA  (0x00000040U) //!< Bit mask for USBHS_USBCMD_IAA.
-#define BS_USBHS_USBCMD_IAA  (1U)          //!< Bit field size in bits for USBHS_USBCMD_IAA.
+/*@{*/
+#define BP_USBHS_USBCMD_IAA  (6U)          /*!< Bit position for USBHS_USBCMD_IAA. */
+#define BM_USBHS_USBCMD_IAA  (0x00000040U) /*!< Bit mask for USBHS_USBCMD_IAA. */
+#define BS_USBHS_USBCMD_IAA  (1U)          /*!< Bit field size in bits for USBHS_USBCMD_IAA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_IAA field.
-#define BR_USBHS_USBCMD_IAA  (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_IAA))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_IAA field. */
+#define BR_USBHS_USBCMD_IAA(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_IAA))
 
-//! @brief Format value for bitfield USBHS_USBCMD_IAA.
-#define BF_USBHS_USBCMD_IAA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_IAA), uint32_t) & BM_USBHS_USBCMD_IAA)
+/*! @brief Format value for bitfield USBHS_USBCMD_IAA. */
+#define BF_USBHS_USBCMD_IAA(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_IAA) & BM_USBHS_USBCMD_IAA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IAA field to a new value.
-#define BW_USBHS_USBCMD_IAA(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_IAA) = (v))
-#endif
-//@}
+/*! @brief Set the IAA field to a new value. */
+#define BW_USBHS_USBCMD_IAA(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_IAA) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field ASP[9:8] (RW)
@@ -2002,24 +1777,20 @@ typedef union _hw_usbhs_usbcmd
  * Software must not write a zero to this field when ASPE is set as this results in
  * undefined behavior.
  */
-//@{
-#define BP_USBHS_USBCMD_ASP  (8U)          //!< Bit position for USBHS_USBCMD_ASP.
-#define BM_USBHS_USBCMD_ASP  (0x00000300U) //!< Bit mask for USBHS_USBCMD_ASP.
-#define BS_USBHS_USBCMD_ASP  (2U)          //!< Bit field size in bits for USBHS_USBCMD_ASP.
+/*@{*/
+#define BP_USBHS_USBCMD_ASP  (8U)          /*!< Bit position for USBHS_USBCMD_ASP. */
+#define BM_USBHS_USBCMD_ASP  (0x00000300U) /*!< Bit mask for USBHS_USBCMD_ASP. */
+#define BS_USBHS_USBCMD_ASP  (2U)          /*!< Bit field size in bits for USBHS_USBCMD_ASP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_ASP field.
-#define BR_USBHS_USBCMD_ASP  (HW_USBHS_USBCMD.B.ASP)
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_ASP field. */
+#define BR_USBHS_USBCMD_ASP(x) (HW_USBHS_USBCMD(x).B.ASP)
 
-//! @brief Format value for bitfield USBHS_USBCMD_ASP.
-#define BF_USBHS_USBCMD_ASP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_ASP), uint32_t) & BM_USBHS_USBCMD_ASP)
+/*! @brief Format value for bitfield USBHS_USBCMD_ASP. */
+#define BF_USBHS_USBCMD_ASP(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_ASP) & BM_USBHS_USBCMD_ASP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASP field to a new value.
-#define BW_USBHS_USBCMD_ASP(v) (HW_USBHS_USBCMD_WR((HW_USBHS_USBCMD_RD() & ~BM_USBHS_USBCMD_ASP) | BF_USBHS_USBCMD_ASP(v)))
-#endif
-//@}
+/*! @brief Set the ASP field to a new value. */
+#define BW_USBHS_USBCMD_ASP(x, v) (HW_USBHS_USBCMD_WR(x, (HW_USBHS_USBCMD_RD(x) & ~BM_USBHS_USBCMD_ASP) | BF_USBHS_USBCMD_ASP(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field ASPE[11] (RW)
@@ -2030,24 +1801,20 @@ typedef union _hw_usbhs_usbcmd
  * - 0 - Park mode disabled
  * - 1 - Park mode enabled
  */
-//@{
-#define BP_USBHS_USBCMD_ASPE (11U)         //!< Bit position for USBHS_USBCMD_ASPE.
-#define BM_USBHS_USBCMD_ASPE (0x00000800U) //!< Bit mask for USBHS_USBCMD_ASPE.
-#define BS_USBHS_USBCMD_ASPE (1U)          //!< Bit field size in bits for USBHS_USBCMD_ASPE.
+/*@{*/
+#define BP_USBHS_USBCMD_ASPE (11U)         /*!< Bit position for USBHS_USBCMD_ASPE. */
+#define BM_USBHS_USBCMD_ASPE (0x00000800U) /*!< Bit mask for USBHS_USBCMD_ASPE. */
+#define BS_USBHS_USBCMD_ASPE (1U)          /*!< Bit field size in bits for USBHS_USBCMD_ASPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_ASPE field.
-#define BR_USBHS_USBCMD_ASPE (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ASPE))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_ASPE field. */
+#define BR_USBHS_USBCMD_ASPE(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ASPE))
 
-//! @brief Format value for bitfield USBHS_USBCMD_ASPE.
-#define BF_USBHS_USBCMD_ASPE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_ASPE), uint32_t) & BM_USBHS_USBCMD_ASPE)
+/*! @brief Format value for bitfield USBHS_USBCMD_ASPE. */
+#define BF_USBHS_USBCMD_ASPE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_ASPE) & BM_USBHS_USBCMD_ASPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASPE field to a new value.
-#define BW_USBHS_USBCMD_ASPE(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ASPE) = (v))
-#endif
-//@}
+/*! @brief Set the ASPE field to a new value. */
+#define BW_USBHS_USBCMD_ASPE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ASPE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field SUTW[13] (RW)
@@ -2060,24 +1827,20 @@ typedef union _hw_usbhs_usbcmd
  * by hardware when a hazard exists. More information appears in section "Control
  * Endpoint Operation."
  */
-//@{
-#define BP_USBHS_USBCMD_SUTW (13U)         //!< Bit position for USBHS_USBCMD_SUTW.
-#define BM_USBHS_USBCMD_SUTW (0x00002000U) //!< Bit mask for USBHS_USBCMD_SUTW.
-#define BS_USBHS_USBCMD_SUTW (1U)          //!< Bit field size in bits for USBHS_USBCMD_SUTW.
+/*@{*/
+#define BP_USBHS_USBCMD_SUTW (13U)         /*!< Bit position for USBHS_USBCMD_SUTW. */
+#define BM_USBHS_USBCMD_SUTW (0x00002000U) /*!< Bit mask for USBHS_USBCMD_SUTW. */
+#define BS_USBHS_USBCMD_SUTW (1U)          /*!< Bit field size in bits for USBHS_USBCMD_SUTW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_SUTW field.
-#define BR_USBHS_USBCMD_SUTW (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_SUTW))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_SUTW field. */
+#define BR_USBHS_USBCMD_SUTW(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_SUTW))
 
-//! @brief Format value for bitfield USBHS_USBCMD_SUTW.
-#define BF_USBHS_USBCMD_SUTW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_SUTW), uint32_t) & BM_USBHS_USBCMD_SUTW)
+/*! @brief Format value for bitfield USBHS_USBCMD_SUTW. */
+#define BF_USBHS_USBCMD_SUTW(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_SUTW) & BM_USBHS_USBCMD_SUTW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SUTW field to a new value.
-#define BW_USBHS_USBCMD_SUTW(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_SUTW) = (v))
-#endif
-//@}
+/*! @brief Set the SUTW field to a new value. */
+#define BW_USBHS_USBCMD_SUTW(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_SUTW) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field ATDTW[14] (RW)
@@ -2088,48 +1851,40 @@ typedef union _hw_usbhs_usbcmd
  * where adding a dTD to a primed endpoint may go unrecognized. More information
  * appears in section "Executing a Transfer Descriptor."
  */
-//@{
-#define BP_USBHS_USBCMD_ATDTW (14U)        //!< Bit position for USBHS_USBCMD_ATDTW.
-#define BM_USBHS_USBCMD_ATDTW (0x00004000U) //!< Bit mask for USBHS_USBCMD_ATDTW.
-#define BS_USBHS_USBCMD_ATDTW (1U)         //!< Bit field size in bits for USBHS_USBCMD_ATDTW.
+/*@{*/
+#define BP_USBHS_USBCMD_ATDTW (14U)        /*!< Bit position for USBHS_USBCMD_ATDTW. */
+#define BM_USBHS_USBCMD_ATDTW (0x00004000U) /*!< Bit mask for USBHS_USBCMD_ATDTW. */
+#define BS_USBHS_USBCMD_ATDTW (1U)         /*!< Bit field size in bits for USBHS_USBCMD_ATDTW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_ATDTW field.
-#define BR_USBHS_USBCMD_ATDTW (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ATDTW))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_ATDTW field. */
+#define BR_USBHS_USBCMD_ATDTW(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ATDTW))
 
-//! @brief Format value for bitfield USBHS_USBCMD_ATDTW.
-#define BF_USBHS_USBCMD_ATDTW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_ATDTW), uint32_t) & BM_USBHS_USBCMD_ATDTW)
+/*! @brief Format value for bitfield USBHS_USBCMD_ATDTW. */
+#define BF_USBHS_USBCMD_ATDTW(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_ATDTW) & BM_USBHS_USBCMD_ATDTW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ATDTW field to a new value.
-#define BW_USBHS_USBCMD_ATDTW(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_ATDTW) = (v))
-#endif
-//@}
+/*! @brief Set the ATDTW field to a new value. */
+#define BW_USBHS_USBCMD_ATDTW(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_ATDTW) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field FS2[15] (RW)
  *
  * See the FS bit description below. This is a non-EHCI bit.
  */
-//@{
-#define BP_USBHS_USBCMD_FS2  (15U)         //!< Bit position for USBHS_USBCMD_FS2.
-#define BM_USBHS_USBCMD_FS2  (0x00008000U) //!< Bit mask for USBHS_USBCMD_FS2.
-#define BS_USBHS_USBCMD_FS2  (1U)          //!< Bit field size in bits for USBHS_USBCMD_FS2.
+/*@{*/
+#define BP_USBHS_USBCMD_FS2  (15U)         /*!< Bit position for USBHS_USBCMD_FS2. */
+#define BM_USBHS_USBCMD_FS2  (0x00008000U) /*!< Bit mask for USBHS_USBCMD_FS2. */
+#define BS_USBHS_USBCMD_FS2  (1U)          /*!< Bit field size in bits for USBHS_USBCMD_FS2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_FS2 field.
-#define BR_USBHS_USBCMD_FS2  (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_FS2))
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_FS2 field. */
+#define BR_USBHS_USBCMD_FS2(x) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_FS2))
 
-//! @brief Format value for bitfield USBHS_USBCMD_FS2.
-#define BF_USBHS_USBCMD_FS2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_FS2), uint32_t) & BM_USBHS_USBCMD_FS2)
+/*! @brief Format value for bitfield USBHS_USBCMD_FS2. */
+#define BF_USBHS_USBCMD_FS2(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_FS2) & BM_USBHS_USBCMD_FS2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FS2 field to a new value.
-#define BW_USBHS_USBCMD_FS2(v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR, BP_USBHS_USBCMD_FS2) = (v))
-#endif
-//@}
+/*! @brief Set the FS2 field to a new value. */
+#define BW_USBHS_USBCMD_FS2(x, v) (BITBAND_ACCESS32(HW_USBHS_USBCMD_ADDR(x), BP_USBHS_USBCMD_FS2) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBCMD, field ITC[23:16] (RW)
@@ -2148,30 +1903,25 @@ typedef union _hw_usbhs_usbcmd
  * - 100000 - 32 microframes
  * - 1000000 - 64 microframes
  */
-//@{
-#define BP_USBHS_USBCMD_ITC  (16U)         //!< Bit position for USBHS_USBCMD_ITC.
-#define BM_USBHS_USBCMD_ITC  (0x00FF0000U) //!< Bit mask for USBHS_USBCMD_ITC.
-#define BS_USBHS_USBCMD_ITC  (8U)          //!< Bit field size in bits for USBHS_USBCMD_ITC.
+/*@{*/
+#define BP_USBHS_USBCMD_ITC  (16U)         /*!< Bit position for USBHS_USBCMD_ITC. */
+#define BM_USBHS_USBCMD_ITC  (0x00FF0000U) /*!< Bit mask for USBHS_USBCMD_ITC. */
+#define BS_USBHS_USBCMD_ITC  (8U)          /*!< Bit field size in bits for USBHS_USBCMD_ITC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBCMD_ITC field.
-#define BR_USBHS_USBCMD_ITC  (HW_USBHS_USBCMD.B.ITC)
-#endif
+/*! @brief Read current value of the USBHS_USBCMD_ITC field. */
+#define BR_USBHS_USBCMD_ITC(x) (HW_USBHS_USBCMD(x).B.ITC)
 
-//! @brief Format value for bitfield USBHS_USBCMD_ITC.
-#define BF_USBHS_USBCMD_ITC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBCMD_ITC), uint32_t) & BM_USBHS_USBCMD_ITC)
+/*! @brief Format value for bitfield USBHS_USBCMD_ITC. */
+#define BF_USBHS_USBCMD_ITC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBCMD_ITC) & BM_USBHS_USBCMD_ITC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ITC field to a new value.
-#define BW_USBHS_USBCMD_ITC(v) (HW_USBHS_USBCMD_WR((HW_USBHS_USBCMD_RD() & ~BM_USBHS_USBCMD_ITC) | BF_USBHS_USBCMD_ITC(v)))
-#endif
-//@}
+/*! @brief Set the ITC field to a new value. */
+#define BW_USBHS_USBCMD_ITC(x, v) (HW_USBHS_USBCMD_WR(x, (HW_USBHS_USBCMD_RD(x) & ~BM_USBHS_USBCMD_ITC) | BF_USBHS_USBCMD_ITC(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USBSTS - USB Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USBSTS - USB Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USBSTS - USB Status Register (RW)
  *
@@ -2187,49 +1937,46 @@ typedef union _hw_usbhs_usbsts
     uint32_t U;
     struct _hw_usbhs_usbsts_bitfields
     {
-        uint32_t UI : 1;               //!< [0] USB Interrupt (USBINT)
-        uint32_t UEI : 1;              //!< [1] USB Error Interrupt
-        uint32_t PCI : 1;              //!< [2] Port Change detect
-        uint32_t FRI : 1;              //!< [3] Frame-list Rollover
-        uint32_t SEI : 1;              //!< [4] System Error
-        uint32_t AAI : 1;              //!< [5] Interrupt on Async Advance
-        uint32_t URI : 1;              //!< [6] USB Reset received
-        uint32_t SRI : 1;              //!< [7] SOF Received
-        uint32_t SLI : 1;              //!< [8] Device-controller suspend
-        uint32_t RESERVED0 : 1;        //!< [9] Reserved
-        uint32_t ULPII : 1;            //!< [10] ULPI Interrupt
-        uint32_t RESERVED1 : 1;        //!< [11] Reserved
-        uint32_t HCH : 1;              //!< [12] Host Controller Halted
-        uint32_t RCL : 1;              //!< [13] Reclamation
-        uint32_t PS : 1;               //!< [14] Periodic schedule Status
-        uint32_t AS : 1;               //!< [15] Asynchronous schedule Status
-        uint32_t NAKI : 1;             //!< [16] NAK Interrupt
-        uint32_t RESERVED2 : 1;        //!< [17] Reserved
-        uint32_t UAI : 1;              //!< [18] USB host Asynchronous Interrupt
-        uint32_t UPI : 1;              //!< [19] USB host Periodic Interrupt
-        uint32_t RESERVED3 : 4;        //!< [23:20] Reserved
-        uint32_t TI0 : 1;              //!< [24] General purpose Timer 0 Interrupt
-        uint32_t TI1 : 1;              //!< [25] General purpose Timer 1 Interrupt
-        uint32_t RESERVED4 : 6;        //!< [31:26] Reserved
+        uint32_t UI : 1;               /*!< [0] USB Interrupt (USBINT) */
+        uint32_t UEI : 1;              /*!< [1] USB Error Interrupt */
+        uint32_t PCI : 1;              /*!< [2] Port Change detect */
+        uint32_t FRI : 1;              /*!< [3] Frame-list Rollover */
+        uint32_t SEI : 1;              /*!< [4] System Error */
+        uint32_t AAI : 1;              /*!< [5] Interrupt on Async Advance */
+        uint32_t URI : 1;              /*!< [6] USB Reset received */
+        uint32_t SRI : 1;              /*!< [7] SOF Received */
+        uint32_t SLI : 1;              /*!< [8] Device-controller suspend */
+        uint32_t RESERVED0 : 1;        /*!< [9] Reserved */
+        uint32_t ULPII : 1;            /*!< [10] ULPI Interrupt */
+        uint32_t RESERVED1 : 1;        /*!< [11] Reserved */
+        uint32_t HCH : 1;              /*!< [12] Host Controller Halted */
+        uint32_t RCL : 1;              /*!< [13] Reclamation */
+        uint32_t PS : 1;               /*!< [14] Periodic schedule Status */
+        uint32_t AS : 1;               /*!< [15] Asynchronous schedule Status */
+        uint32_t NAKI : 1;             /*!< [16] NAK Interrupt */
+        uint32_t RESERVED2 : 1;        /*!< [17] Reserved */
+        uint32_t UAI : 1;              /*!< [18] USB host Asynchronous Interrupt */
+        uint32_t UPI : 1;              /*!< [19] USB host Periodic Interrupt */
+        uint32_t RESERVED3 : 4;        /*!< [23:20] Reserved */
+        uint32_t TI0 : 1;              /*!< [24] General purpose Timer 0 Interrupt */
+        uint32_t TI1 : 1;              /*!< [25] General purpose Timer 1 Interrupt */
+        uint32_t RESERVED4 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_usbhs_usbsts_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USBSTS register
  */
-//@{
-#define HW_USBHS_USBSTS_ADDR     (REGS_USBHS_BASE + 0x144U)
+/*@{*/
+#define HW_USBHS_USBSTS_ADDR(x)  ((x) + 0x144U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USBSTS          (*(__IO hw_usbhs_usbsts_t *) HW_USBHS_USBSTS_ADDR)
-#define HW_USBHS_USBSTS_RD()     (HW_USBHS_USBSTS.U)
-#define HW_USBHS_USBSTS_WR(v)    (HW_USBHS_USBSTS.U = (v))
-#define HW_USBHS_USBSTS_SET(v)   (HW_USBHS_USBSTS_WR(HW_USBHS_USBSTS_RD() |  (v)))
-#define HW_USBHS_USBSTS_CLR(v)   (HW_USBHS_USBSTS_WR(HW_USBHS_USBSTS_RD() & ~(v)))
-#define HW_USBHS_USBSTS_TOG(v)   (HW_USBHS_USBSTS_WR(HW_USBHS_USBSTS_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USBSTS(x)       (*(__IO hw_usbhs_usbsts_t *) HW_USBHS_USBSTS_ADDR(x))
+#define HW_USBHS_USBSTS_RD(x)    (HW_USBHS_USBSTS(x).U)
+#define HW_USBHS_USBSTS_WR(x, v) (HW_USBHS_USBSTS(x).U = (v))
+#define HW_USBHS_USBSTS_SET(x, v) (HW_USBHS_USBSTS_WR(x, HW_USBHS_USBSTS_RD(x) |  (v)))
+#define HW_USBHS_USBSTS_CLR(x, v) (HW_USBHS_USBSTS_WR(x, HW_USBHS_USBSTS_RD(x) & ~(v)))
+#define HW_USBHS_USBSTS_TOG(x, v) (HW_USBHS_USBSTS_WR(x, HW_USBHS_USBSTS_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USBSTS bitfields
@@ -2244,24 +1991,20 @@ typedef union _hw_usbhs_usbsts
  * short packet is when the actual number of bytes received was less than the
  * expected number of bytes.
  */
-//@{
-#define BP_USBHS_USBSTS_UI   (0U)          //!< Bit position for USBHS_USBSTS_UI.
-#define BM_USBHS_USBSTS_UI   (0x00000001U) //!< Bit mask for USBHS_USBSTS_UI.
-#define BS_USBHS_USBSTS_UI   (1U)          //!< Bit field size in bits for USBHS_USBSTS_UI.
+/*@{*/
+#define BP_USBHS_USBSTS_UI   (0U)          /*!< Bit position for USBHS_USBSTS_UI. */
+#define BM_USBHS_USBSTS_UI   (0x00000001U) /*!< Bit mask for USBHS_USBSTS_UI. */
+#define BS_USBHS_USBSTS_UI   (1U)          /*!< Bit field size in bits for USBHS_USBSTS_UI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_UI field.
-#define BR_USBHS_USBSTS_UI   (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_UI field. */
+#define BR_USBHS_USBSTS_UI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_UI.
-#define BF_USBHS_USBSTS_UI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_UI), uint32_t) & BM_USBHS_USBSTS_UI)
+/*! @brief Format value for bitfield USBHS_USBSTS_UI. */
+#define BF_USBHS_USBSTS_UI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_UI) & BM_USBHS_USBSTS_UI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UI field to a new value.
-#define BW_USBHS_USBSTS_UI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UI) = (v))
-#endif
-//@}
+/*! @brief Set the UI field to a new value. */
+#define BW_USBHS_USBSTS_UI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field UEI[1] (W1C)
@@ -2277,24 +2020,20 @@ typedef union _hw_usbhs_usbsts
  * - 0 - No error
  * - 1 - Error detected
  */
-//@{
-#define BP_USBHS_USBSTS_UEI  (1U)          //!< Bit position for USBHS_USBSTS_UEI.
-#define BM_USBHS_USBSTS_UEI  (0x00000002U) //!< Bit mask for USBHS_USBSTS_UEI.
-#define BS_USBHS_USBSTS_UEI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_UEI.
+/*@{*/
+#define BP_USBHS_USBSTS_UEI  (1U)          /*!< Bit position for USBHS_USBSTS_UEI. */
+#define BM_USBHS_USBSTS_UEI  (0x00000002U) /*!< Bit mask for USBHS_USBSTS_UEI. */
+#define BS_USBHS_USBSTS_UEI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_UEI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_UEI field.
-#define BR_USBHS_USBSTS_UEI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UEI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_UEI field. */
+#define BR_USBHS_USBSTS_UEI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UEI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_UEI.
-#define BF_USBHS_USBSTS_UEI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_UEI), uint32_t) & BM_USBHS_USBSTS_UEI)
+/*! @brief Format value for bitfield USBHS_USBSTS_UEI. */
+#define BF_USBHS_USBSTS_UEI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_UEI) & BM_USBHS_USBSTS_UEI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UEI field to a new value.
-#define BW_USBHS_USBSTS_UEI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UEI) = (v))
-#endif
-//@}
+/*! @brief Set the UEI field to a new value. */
+#define BW_USBHS_USBSTS_UEI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UEI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field PCI[2] (W1C)
@@ -2308,24 +2047,20 @@ typedef union _hw_usbhs_usbsts
  * events, the notification mechanisms are URI and SLI bits respectively. The
  * device controller detects resume signaling only.
  */
-//@{
-#define BP_USBHS_USBSTS_PCI  (2U)          //!< Bit position for USBHS_USBSTS_PCI.
-#define BM_USBHS_USBSTS_PCI  (0x00000004U) //!< Bit mask for USBHS_USBSTS_PCI.
-#define BS_USBHS_USBSTS_PCI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_PCI.
+/*@{*/
+#define BP_USBHS_USBSTS_PCI  (2U)          /*!< Bit position for USBHS_USBSTS_PCI. */
+#define BM_USBHS_USBSTS_PCI  (0x00000004U) /*!< Bit mask for USBHS_USBSTS_PCI. */
+#define BS_USBHS_USBSTS_PCI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_PCI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_PCI field.
-#define BR_USBHS_USBSTS_PCI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_PCI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_PCI field. */
+#define BR_USBHS_USBSTS_PCI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_PCI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_PCI.
-#define BF_USBHS_USBSTS_PCI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_PCI), uint32_t) & BM_USBHS_USBSTS_PCI)
+/*! @brief Format value for bitfield USBHS_USBSTS_PCI. */
+#define BF_USBHS_USBSTS_PCI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_PCI) & BM_USBHS_USBSTS_PCI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PCI field to a new value.
-#define BW_USBHS_USBSTS_PCI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_PCI) = (v))
-#endif
-//@}
+/*! @brief Set the PCI field to a new value. */
+#define BW_USBHS_USBSTS_PCI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_PCI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field FRI[3] (W1C)
@@ -2337,24 +2072,20 @@ typedef union _hw_usbhs_usbsts
  * FRINDEX[13] toggles. Similarly, if the size is 512, the controller sets this bit each
  * time FRINDEX[12] toggles. Used only in the host mode.
  */
-//@{
-#define BP_USBHS_USBSTS_FRI  (3U)          //!< Bit position for USBHS_USBSTS_FRI.
-#define BM_USBHS_USBSTS_FRI  (0x00000008U) //!< Bit mask for USBHS_USBSTS_FRI.
-#define BS_USBHS_USBSTS_FRI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_FRI.
+/*@{*/
+#define BP_USBHS_USBSTS_FRI  (3U)          /*!< Bit position for USBHS_USBSTS_FRI. */
+#define BM_USBHS_USBSTS_FRI  (0x00000008U) /*!< Bit mask for USBHS_USBSTS_FRI. */
+#define BS_USBHS_USBSTS_FRI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_FRI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_FRI field.
-#define BR_USBHS_USBSTS_FRI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_FRI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_FRI field. */
+#define BR_USBHS_USBSTS_FRI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_FRI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_FRI.
-#define BF_USBHS_USBSTS_FRI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_FRI), uint32_t) & BM_USBHS_USBSTS_FRI)
+/*! @brief Format value for bitfield USBHS_USBSTS_FRI. */
+#define BF_USBHS_USBSTS_FRI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_FRI) & BM_USBHS_USBSTS_FRI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRI field to a new value.
-#define BW_USBHS_USBSTS_FRI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_FRI) = (v))
-#endif
-//@}
+/*! @brief Set the FRI field to a new value. */
+#define BW_USBHS_USBSTS_FRI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_FRI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field SEI[4] (W1C)
@@ -2370,24 +2101,20 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Normal operation
  * - 1 - Error
  */
-//@{
-#define BP_USBHS_USBSTS_SEI  (4U)          //!< Bit position for USBHS_USBSTS_SEI.
-#define BM_USBHS_USBSTS_SEI  (0x00000010U) //!< Bit mask for USBHS_USBSTS_SEI.
-#define BS_USBHS_USBSTS_SEI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_SEI.
+/*@{*/
+#define BP_USBHS_USBSTS_SEI  (4U)          /*!< Bit position for USBHS_USBSTS_SEI. */
+#define BM_USBHS_USBSTS_SEI  (0x00000010U) /*!< Bit mask for USBHS_USBSTS_SEI. */
+#define BS_USBHS_USBSTS_SEI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_SEI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_SEI field.
-#define BR_USBHS_USBSTS_SEI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SEI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_SEI field. */
+#define BR_USBHS_USBSTS_SEI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SEI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_SEI.
-#define BF_USBHS_USBSTS_SEI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_SEI), uint32_t) & BM_USBHS_USBSTS_SEI)
+/*! @brief Format value for bitfield USBHS_USBSTS_SEI. */
+#define BF_USBHS_USBSTS_SEI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_SEI) & BM_USBHS_USBSTS_SEI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SEI field to a new value.
-#define BW_USBHS_USBSTS_SEI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SEI) = (v))
-#endif
-//@}
+/*! @brief Set the SEI field to a new value. */
+#define BW_USBHS_USBSTS_SEI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SEI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field AAI[5] (W1C)
@@ -2401,24 +2128,20 @@ typedef union _hw_usbhs_usbsts
  * - 0 - No async advance interrupt
  * - 1 - Async advance interrupt
  */
-//@{
-#define BP_USBHS_USBSTS_AAI  (5U)          //!< Bit position for USBHS_USBSTS_AAI.
-#define BM_USBHS_USBSTS_AAI  (0x00000020U) //!< Bit mask for USBHS_USBSTS_AAI.
-#define BS_USBHS_USBSTS_AAI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_AAI.
+/*@{*/
+#define BP_USBHS_USBSTS_AAI  (5U)          /*!< Bit position for USBHS_USBSTS_AAI. */
+#define BM_USBHS_USBSTS_AAI  (0x00000020U) /*!< Bit mask for USBHS_USBSTS_AAI. */
+#define BS_USBHS_USBSTS_AAI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_AAI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_AAI field.
-#define BR_USBHS_USBSTS_AAI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_AAI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_AAI field. */
+#define BR_USBHS_USBSTS_AAI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_AAI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_AAI.
-#define BF_USBHS_USBSTS_AAI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_AAI), uint32_t) & BM_USBHS_USBSTS_AAI)
+/*! @brief Format value for bitfield USBHS_USBSTS_AAI. */
+#define BF_USBHS_USBSTS_AAI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_AAI) & BM_USBHS_USBSTS_AAI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AAI field to a new value.
-#define BW_USBHS_USBSTS_AAI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_AAI) = (v))
-#endif
-//@}
+/*! @brief Set the AAI field to a new value. */
+#define BW_USBHS_USBSTS_AAI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_AAI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field URI[6] (W1C)
@@ -2431,24 +2154,20 @@ typedef union _hw_usbhs_usbsts
  * - 0 - No reset received
  * - 1 - Reset received
  */
-//@{
-#define BP_USBHS_USBSTS_URI  (6U)          //!< Bit position for USBHS_USBSTS_URI.
-#define BM_USBHS_USBSTS_URI  (0x00000040U) //!< Bit mask for USBHS_USBSTS_URI.
-#define BS_USBHS_USBSTS_URI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_URI.
+/*@{*/
+#define BP_USBHS_USBSTS_URI  (6U)          /*!< Bit position for USBHS_USBSTS_URI. */
+#define BM_USBHS_USBSTS_URI  (0x00000040U) /*!< Bit mask for USBHS_USBSTS_URI. */
+#define BS_USBHS_USBSTS_URI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_URI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_URI field.
-#define BR_USBHS_USBSTS_URI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_URI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_URI field. */
+#define BR_USBHS_USBSTS_URI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_URI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_URI.
-#define BF_USBHS_USBSTS_URI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_URI), uint32_t) & BM_USBHS_USBSTS_URI)
+/*! @brief Format value for bitfield USBHS_USBSTS_URI. */
+#define BF_USBHS_USBSTS_URI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_URI) & BM_USBHS_USBSTS_URI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the URI field to a new value.
-#define BW_USBHS_USBSTS_URI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_URI) = (v))
-#endif
-//@}
+/*! @brief Set the URI field to a new value. */
+#define BW_USBHS_USBSTS_URI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_URI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field SRI[7] (W1C)
@@ -2464,24 +2183,20 @@ typedef union _hw_usbhs_usbsts
  * initialized to FS before connect, this bit is set at an interval of 1 ms
  * during the prelude to the connect and chirp.
  */
-//@{
-#define BP_USBHS_USBSTS_SRI  (7U)          //!< Bit position for USBHS_USBSTS_SRI.
-#define BM_USBHS_USBSTS_SRI  (0x00000080U) //!< Bit mask for USBHS_USBSTS_SRI.
-#define BS_USBHS_USBSTS_SRI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_SRI.
+/*@{*/
+#define BP_USBHS_USBSTS_SRI  (7U)          /*!< Bit position for USBHS_USBSTS_SRI. */
+#define BM_USBHS_USBSTS_SRI  (0x00000080U) /*!< Bit mask for USBHS_USBSTS_SRI. */
+#define BS_USBHS_USBSTS_SRI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_SRI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_SRI field.
-#define BR_USBHS_USBSTS_SRI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SRI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_SRI field. */
+#define BR_USBHS_USBSTS_SRI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SRI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_SRI.
-#define BF_USBHS_USBSTS_SRI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_SRI), uint32_t) & BM_USBHS_USBSTS_SRI)
+/*! @brief Format value for bitfield USBHS_USBSTS_SRI. */
+#define BF_USBHS_USBSTS_SRI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_SRI) & BM_USBHS_USBSTS_SRI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SRI field to a new value.
-#define BW_USBHS_USBSTS_SRI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SRI) = (v))
-#endif
-//@}
+/*! @brief Set the SRI field to a new value. */
+#define BW_USBHS_USBSTS_SRI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SRI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field SLI[8] (W1C)
@@ -2494,40 +2209,34 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Active
  * - 1 - Suspended
  */
-//@{
-#define BP_USBHS_USBSTS_SLI  (8U)          //!< Bit position for USBHS_USBSTS_SLI.
-#define BM_USBHS_USBSTS_SLI  (0x00000100U) //!< Bit mask for USBHS_USBSTS_SLI.
-#define BS_USBHS_USBSTS_SLI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_SLI.
+/*@{*/
+#define BP_USBHS_USBSTS_SLI  (8U)          /*!< Bit position for USBHS_USBSTS_SLI. */
+#define BM_USBHS_USBSTS_SLI  (0x00000100U) /*!< Bit mask for USBHS_USBSTS_SLI. */
+#define BS_USBHS_USBSTS_SLI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_SLI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_SLI field.
-#define BR_USBHS_USBSTS_SLI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SLI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_SLI field. */
+#define BR_USBHS_USBSTS_SLI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SLI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_SLI.
-#define BF_USBHS_USBSTS_SLI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_SLI), uint32_t) & BM_USBHS_USBSTS_SLI)
+/*! @brief Format value for bitfield USBHS_USBSTS_SLI. */
+#define BF_USBHS_USBSTS_SLI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_SLI) & BM_USBHS_USBSTS_SLI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SLI field to a new value.
-#define BW_USBHS_USBSTS_SLI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_SLI) = (v))
-#endif
-//@}
+/*! @brief Set the SLI field to a new value. */
+#define BW_USBHS_USBSTS_SLI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_SLI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field ULPII[10] (RO)
  *
  * Set by event completion.
  */
-//@{
-#define BP_USBHS_USBSTS_ULPII (10U)        //!< Bit position for USBHS_USBSTS_ULPII.
-#define BM_USBHS_USBSTS_ULPII (0x00000400U) //!< Bit mask for USBHS_USBSTS_ULPII.
-#define BS_USBHS_USBSTS_ULPII (1U)         //!< Bit field size in bits for USBHS_USBSTS_ULPII.
+/*@{*/
+#define BP_USBHS_USBSTS_ULPII (10U)        /*!< Bit position for USBHS_USBSTS_ULPII. */
+#define BM_USBHS_USBSTS_ULPII (0x00000400U) /*!< Bit mask for USBHS_USBSTS_ULPII. */
+#define BS_USBHS_USBSTS_ULPII (1U)         /*!< Bit field size in bits for USBHS_USBSTS_ULPII. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_ULPII field.
-#define BR_USBHS_USBSTS_ULPII (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_ULPII))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_ULPII field. */
+#define BR_USBHS_USBSTS_ULPII(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_ULPII))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field HCH[12] (RO)
@@ -2541,16 +2250,14 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Running
  * - 1 - Halted
  */
-//@{
-#define BP_USBHS_USBSTS_HCH  (12U)         //!< Bit position for USBHS_USBSTS_HCH.
-#define BM_USBHS_USBSTS_HCH  (0x00001000U) //!< Bit mask for USBHS_USBSTS_HCH.
-#define BS_USBHS_USBSTS_HCH  (1U)          //!< Bit field size in bits for USBHS_USBSTS_HCH.
+/*@{*/
+#define BP_USBHS_USBSTS_HCH  (12U)         /*!< Bit position for USBHS_USBSTS_HCH. */
+#define BM_USBHS_USBSTS_HCH  (0x00001000U) /*!< Bit mask for USBHS_USBSTS_HCH. */
+#define BS_USBHS_USBSTS_HCH  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_HCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_HCH field.
-#define BR_USBHS_USBSTS_HCH  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_HCH))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_HCH field. */
+#define BR_USBHS_USBSTS_HCH(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_HCH))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field RCL[13] (RO)
@@ -2561,16 +2268,14 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Non-empty asynchronous schedule
  * - 1 - Empty asynchronous schedule
  */
-//@{
-#define BP_USBHS_USBSTS_RCL  (13U)         //!< Bit position for USBHS_USBSTS_RCL.
-#define BM_USBHS_USBSTS_RCL  (0x00002000U) //!< Bit mask for USBHS_USBSTS_RCL.
-#define BS_USBHS_USBSTS_RCL  (1U)          //!< Bit field size in bits for USBHS_USBSTS_RCL.
+/*@{*/
+#define BP_USBHS_USBSTS_RCL  (13U)         /*!< Bit position for USBHS_USBSTS_RCL. */
+#define BM_USBHS_USBSTS_RCL  (0x00002000U) /*!< Bit mask for USBHS_USBSTS_RCL. */
+#define BS_USBHS_USBSTS_RCL  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_RCL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_RCL field.
-#define BR_USBHS_USBSTS_RCL  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_RCL))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_RCL field. */
+#define BR_USBHS_USBSTS_RCL(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_RCL))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field PS[14] (RO)
@@ -2584,16 +2289,14 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBSTS_PS   (14U)         //!< Bit position for USBHS_USBSTS_PS.
-#define BM_USBHS_USBSTS_PS   (0x00004000U) //!< Bit mask for USBHS_USBSTS_PS.
-#define BS_USBHS_USBSTS_PS   (1U)          //!< Bit field size in bits for USBHS_USBSTS_PS.
+/*@{*/
+#define BP_USBHS_USBSTS_PS   (14U)         /*!< Bit position for USBHS_USBSTS_PS. */
+#define BM_USBHS_USBSTS_PS   (0x00004000U) /*!< Bit mask for USBHS_USBSTS_PS. */
+#define BS_USBHS_USBSTS_PS   (1U)          /*!< Bit field size in bits for USBHS_USBSTS_PS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_PS field.
-#define BR_USBHS_USBSTS_PS   (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_PS))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_PS field. */
+#define BR_USBHS_USBSTS_PS(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_PS))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field AS[15] (RO)
@@ -2608,16 +2311,14 @@ typedef union _hw_usbhs_usbsts
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBSTS_AS   (15U)         //!< Bit position for USBHS_USBSTS_AS.
-#define BM_USBHS_USBSTS_AS   (0x00008000U) //!< Bit mask for USBHS_USBSTS_AS.
-#define BS_USBHS_USBSTS_AS   (1U)          //!< Bit field size in bits for USBHS_USBSTS_AS.
+/*@{*/
+#define BP_USBHS_USBSTS_AS   (15U)         /*!< Bit position for USBHS_USBSTS_AS. */
+#define BM_USBHS_USBSTS_AS   (0x00008000U) /*!< Bit mask for USBHS_USBSTS_AS. */
+#define BS_USBHS_USBSTS_AS   (1U)          /*!< Bit field size in bits for USBHS_USBSTS_AS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_AS field.
-#define BR_USBHS_USBSTS_AS   (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_AS))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_AS field. */
+#define BR_USBHS_USBSTS_AS(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_AS))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field NAKI[16] (RO)
@@ -2627,16 +2328,14 @@ typedef union _hw_usbhs_usbsts
  * automatically clears this bit when all the enabled TX/RX endpoint NAK bits are
  * cleared.
  */
-//@{
-#define BP_USBHS_USBSTS_NAKI (16U)         //!< Bit position for USBHS_USBSTS_NAKI.
-#define BM_USBHS_USBSTS_NAKI (0x00010000U) //!< Bit mask for USBHS_USBSTS_NAKI.
-#define BS_USBHS_USBSTS_NAKI (1U)          //!< Bit field size in bits for USBHS_USBSTS_NAKI.
+/*@{*/
+#define BP_USBHS_USBSTS_NAKI (16U)         /*!< Bit position for USBHS_USBSTS_NAKI. */
+#define BM_USBHS_USBSTS_NAKI (0x00010000U) /*!< Bit mask for USBHS_USBSTS_NAKI. */
+#define BS_USBHS_USBSTS_NAKI (1U)          /*!< Bit field size in bits for USBHS_USBSTS_NAKI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_NAKI field.
-#define BR_USBHS_USBSTS_NAKI (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_NAKI))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_USBSTS_NAKI field. */
+#define BR_USBHS_USBSTS_NAKI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_NAKI))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field UAI[18] (RW)
@@ -2649,24 +2348,20 @@ typedef union _hw_usbhs_usbsts
  * bytes received was less than the expected number of bytes. This bit is not used
  * by the device controller and is always zero.
  */
-//@{
-#define BP_USBHS_USBSTS_UAI  (18U)         //!< Bit position for USBHS_USBSTS_UAI.
-#define BM_USBHS_USBSTS_UAI  (0x00040000U) //!< Bit mask for USBHS_USBSTS_UAI.
-#define BS_USBHS_USBSTS_UAI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_UAI.
+/*@{*/
+#define BP_USBHS_USBSTS_UAI  (18U)         /*!< Bit position for USBHS_USBSTS_UAI. */
+#define BM_USBHS_USBSTS_UAI  (0x00040000U) /*!< Bit mask for USBHS_USBSTS_UAI. */
+#define BS_USBHS_USBSTS_UAI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_UAI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_UAI field.
-#define BR_USBHS_USBSTS_UAI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UAI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_UAI field. */
+#define BR_USBHS_USBSTS_UAI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UAI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_UAI.
-#define BF_USBHS_USBSTS_UAI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_UAI), uint32_t) & BM_USBHS_USBSTS_UAI)
+/*! @brief Format value for bitfield USBHS_USBSTS_UAI. */
+#define BF_USBHS_USBSTS_UAI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_UAI) & BM_USBHS_USBSTS_UAI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UAI field to a new value.
-#define BW_USBHS_USBSTS_UAI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UAI) = (v))
-#endif
-//@}
+/*! @brief Set the UAI field to a new value. */
+#define BW_USBHS_USBSTS_UAI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UAI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field UPI[19] (RW)
@@ -2679,24 +2374,20 @@ typedef union _hw_usbhs_usbsts
  * received was less than the expected number of bytes. This bit is not used by the
  * device controller and is always zero.
  */
-//@{
-#define BP_USBHS_USBSTS_UPI  (19U)         //!< Bit position for USBHS_USBSTS_UPI.
-#define BM_USBHS_USBSTS_UPI  (0x00080000U) //!< Bit mask for USBHS_USBSTS_UPI.
-#define BS_USBHS_USBSTS_UPI  (1U)          //!< Bit field size in bits for USBHS_USBSTS_UPI.
+/*@{*/
+#define BP_USBHS_USBSTS_UPI  (19U)         /*!< Bit position for USBHS_USBSTS_UPI. */
+#define BM_USBHS_USBSTS_UPI  (0x00080000U) /*!< Bit mask for USBHS_USBSTS_UPI. */
+#define BS_USBHS_USBSTS_UPI  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_UPI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_UPI field.
-#define BR_USBHS_USBSTS_UPI  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UPI))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_UPI field. */
+#define BR_USBHS_USBSTS_UPI(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UPI))
 
-//! @brief Format value for bitfield USBHS_USBSTS_UPI.
-#define BF_USBHS_USBSTS_UPI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_UPI), uint32_t) & BM_USBHS_USBSTS_UPI)
+/*! @brief Format value for bitfield USBHS_USBSTS_UPI. */
+#define BF_USBHS_USBSTS_UPI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_UPI) & BM_USBHS_USBSTS_UPI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UPI field to a new value.
-#define BW_USBHS_USBSTS_UPI(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_UPI) = (v))
-#endif
-//@}
+/*! @brief Set the UPI field to a new value. */
+#define BW_USBHS_USBSTS_UPI(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_UPI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field TI0[24] (W1C)
@@ -2708,24 +2399,20 @@ typedef union _hw_usbhs_usbsts
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_USBHS_USBSTS_TI0  (24U)         //!< Bit position for USBHS_USBSTS_TI0.
-#define BM_USBHS_USBSTS_TI0  (0x01000000U) //!< Bit mask for USBHS_USBSTS_TI0.
-#define BS_USBHS_USBSTS_TI0  (1U)          //!< Bit field size in bits for USBHS_USBSTS_TI0.
+/*@{*/
+#define BP_USBHS_USBSTS_TI0  (24U)         /*!< Bit position for USBHS_USBSTS_TI0. */
+#define BM_USBHS_USBSTS_TI0  (0x01000000U) /*!< Bit mask for USBHS_USBSTS_TI0. */
+#define BS_USBHS_USBSTS_TI0  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_TI0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_TI0 field.
-#define BR_USBHS_USBSTS_TI0  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_TI0))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_TI0 field. */
+#define BR_USBHS_USBSTS_TI0(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_TI0))
 
-//! @brief Format value for bitfield USBHS_USBSTS_TI0.
-#define BF_USBHS_USBSTS_TI0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_TI0), uint32_t) & BM_USBHS_USBSTS_TI0)
+/*! @brief Format value for bitfield USBHS_USBSTS_TI0. */
+#define BF_USBHS_USBSTS_TI0(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_TI0) & BM_USBHS_USBSTS_TI0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TI0 field to a new value.
-#define BW_USBHS_USBSTS_TI0(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_TI0) = (v))
-#endif
-//@}
+/*! @brief Set the TI0 field to a new value. */
+#define BW_USBHS_USBSTS_TI0(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_TI0) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBSTS, field TI1[25] (W1C)
@@ -2737,30 +2424,25 @@ typedef union _hw_usbhs_usbsts
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_USBHS_USBSTS_TI1  (25U)         //!< Bit position for USBHS_USBSTS_TI1.
-#define BM_USBHS_USBSTS_TI1  (0x02000000U) //!< Bit mask for USBHS_USBSTS_TI1.
-#define BS_USBHS_USBSTS_TI1  (1U)          //!< Bit field size in bits for USBHS_USBSTS_TI1.
+/*@{*/
+#define BP_USBHS_USBSTS_TI1  (25U)         /*!< Bit position for USBHS_USBSTS_TI1. */
+#define BM_USBHS_USBSTS_TI1  (0x02000000U) /*!< Bit mask for USBHS_USBSTS_TI1. */
+#define BS_USBHS_USBSTS_TI1  (1U)          /*!< Bit field size in bits for USBHS_USBSTS_TI1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBSTS_TI1 field.
-#define BR_USBHS_USBSTS_TI1  (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_TI1))
-#endif
+/*! @brief Read current value of the USBHS_USBSTS_TI1 field. */
+#define BR_USBHS_USBSTS_TI1(x) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_TI1))
 
-//! @brief Format value for bitfield USBHS_USBSTS_TI1.
-#define BF_USBHS_USBSTS_TI1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBSTS_TI1), uint32_t) & BM_USBHS_USBSTS_TI1)
+/*! @brief Format value for bitfield USBHS_USBSTS_TI1. */
+#define BF_USBHS_USBSTS_TI1(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBSTS_TI1) & BM_USBHS_USBSTS_TI1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TI1 field to a new value.
-#define BW_USBHS_USBSTS_TI1(v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR, BP_USBHS_USBSTS_TI1) = (v))
-#endif
-//@}
+/*! @brief Set the TI1 field to a new value. */
+#define BW_USBHS_USBSTS_TI1(x, v) (BITBAND_ACCESS32(HW_USBHS_USBSTS_ADDR(x), BP_USBHS_USBSTS_TI1) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USBINTR - USB Interrupt Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USBINTR - USB Interrupt Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USBINTR - USB Interrupt Enable Register (RW)
  *
@@ -2776,45 +2458,44 @@ typedef union _hw_usbhs_usbintr
     uint32_t U;
     struct _hw_usbhs_usbintr_bitfields
     {
-        uint32_t UE : 1;               //!< [0] USB interrupt Enable
-        uint32_t UEE : 1;              //!< [1] USB Error interrupt Enable
-        uint32_t PCE : 1;              //!< [2] Port Change detect Enable
-        uint32_t FRE : 1;              //!< [3] Frame list Rollover Enable
-        uint32_t SEE : 1;              //!< [4] System Error Enable
-        uint32_t AAE : 1;              //!< [5] Interrupt on Async advance Enable
-        uint32_t URE : 1;              //!< [6] USB-Reset Enable
-        uint32_t SRE : 1;              //!< [7] SOF-Received Enable
-        uint32_t SLE : 1;              //!< [8] Sleep (DC suspend) Enable
-        uint32_t RESERVED0 : 1;        //!< [9] Reserved
-        uint32_t ULPIE : 1;            //!< [10] ULPI Enable
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t NAKE : 1;             //!< [16] NAK Interrupt Enable
-        uint32_t RESERVED2 : 1;        //!< [17] Reserved
-        uint32_t UAIE : 1;             //!< [18] USB host Asynchronous Interrupt Enable
-        uint32_t UPIE : 1;             //!< [19] USB host Periodic Interrupt Enable
-        uint32_t RESERVED3 : 4;        //!< [23:20] Reserved
-        uint32_t TIE0 : 1;             //!< [24] General purpose Timer 0 Interrupt Enable
-        uint32_t TIE1 : 1;             //!< [25] General purpose Timer 1 Interrupt Enable
-        uint32_t RESERVED4 : 6;        //!< [31:26] Reserved
+        uint32_t UE : 1;               /*!< [0] USB interrupt Enable */
+        uint32_t UEE : 1;              /*!< [1] USB Error interrupt Enable */
+        uint32_t PCE : 1;              /*!< [2] Port Change detect Enable */
+        uint32_t FRE : 1;              /*!< [3] Frame list Rollover Enable */
+        uint32_t SEE : 1;              /*!< [4] System Error Enable */
+        uint32_t AAE : 1;              /*!< [5] Interrupt on Async advance Enable */
+        uint32_t URE : 1;              /*!< [6] USB-Reset Enable */
+        uint32_t SRE : 1;              /*!< [7] SOF-Received Enable */
+        uint32_t SLE : 1;              /*!< [8] Sleep (DC suspend) Enable */
+        uint32_t RESERVED0 : 1;        /*!< [9] Reserved */
+        uint32_t ULPIE : 1;            /*!< [10] ULPI Enable */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t NAKE : 1;             /*!< [16] NAK Interrupt Enable */
+        uint32_t RESERVED2 : 1;        /*!< [17] Reserved */
+        uint32_t UAIE : 1;             /*!< [18] USB host Asynchronous Interrupt Enable */
+        uint32_t UPIE : 1;             /*!< [19] USB host Periodic Interrupt Enable */
+        uint32_t RESERVED3 : 4;        /*!< [23:20] Reserved */
+        uint32_t TIE0 : 1;             /*!< [24] General purpose Timer 0 Interrupt Enable
+                                        * */
+        uint32_t TIE1 : 1;             /*!< [25] General purpose Timer 1 Interrupt Enable
+                                        * */
+        uint32_t RESERVED4 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_usbhs_usbintr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USBINTR register
  */
-//@{
-#define HW_USBHS_USBINTR_ADDR    (REGS_USBHS_BASE + 0x148U)
+/*@{*/
+#define HW_USBHS_USBINTR_ADDR(x) ((x) + 0x148U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USBINTR         (*(__IO hw_usbhs_usbintr_t *) HW_USBHS_USBINTR_ADDR)
-#define HW_USBHS_USBINTR_RD()    (HW_USBHS_USBINTR.U)
-#define HW_USBHS_USBINTR_WR(v)   (HW_USBHS_USBINTR.U = (v))
-#define HW_USBHS_USBINTR_SET(v)  (HW_USBHS_USBINTR_WR(HW_USBHS_USBINTR_RD() |  (v)))
-#define HW_USBHS_USBINTR_CLR(v)  (HW_USBHS_USBINTR_WR(HW_USBHS_USBINTR_RD() & ~(v)))
-#define HW_USBHS_USBINTR_TOG(v)  (HW_USBHS_USBINTR_WR(HW_USBHS_USBINTR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USBINTR(x)      (*(__IO hw_usbhs_usbintr_t *) HW_USBHS_USBINTR_ADDR(x))
+#define HW_USBHS_USBINTR_RD(x)   (HW_USBHS_USBINTR(x).U)
+#define HW_USBHS_USBINTR_WR(x, v) (HW_USBHS_USBINTR(x).U = (v))
+#define HW_USBHS_USBINTR_SET(x, v) (HW_USBHS_USBINTR_WR(x, HW_USBHS_USBINTR_RD(x) |  (v)))
+#define HW_USBHS_USBINTR_CLR(x, v) (HW_USBHS_USBINTR_WR(x, HW_USBHS_USBINTR_RD(x) & ~(v)))
+#define HW_USBHS_USBINTR_TOG(x, v) (HW_USBHS_USBINTR_WR(x, HW_USBHS_USBINTR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USBINTR bitfields
@@ -2831,24 +2512,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_UE  (0U)          //!< Bit position for USBHS_USBINTR_UE.
-#define BM_USBHS_USBINTR_UE  (0x00000001U) //!< Bit mask for USBHS_USBINTR_UE.
-#define BS_USBHS_USBINTR_UE  (1U)          //!< Bit field size in bits for USBHS_USBINTR_UE.
+/*@{*/
+#define BP_USBHS_USBINTR_UE  (0U)          /*!< Bit position for USBHS_USBINTR_UE. */
+#define BM_USBHS_USBINTR_UE  (0x00000001U) /*!< Bit mask for USBHS_USBINTR_UE. */
+#define BS_USBHS_USBINTR_UE  (1U)          /*!< Bit field size in bits for USBHS_USBINTR_UE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_UE field.
-#define BR_USBHS_USBINTR_UE  (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_UE field. */
+#define BR_USBHS_USBINTR_UE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_UE.
-#define BF_USBHS_USBINTR_UE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_UE), uint32_t) & BM_USBHS_USBINTR_UE)
+/*! @brief Format value for bitfield USBHS_USBINTR_UE. */
+#define BF_USBHS_USBINTR_UE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_UE) & BM_USBHS_USBINTR_UE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UE field to a new value.
-#define BW_USBHS_USBINTR_UE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UE) = (v))
-#endif
-//@}
+/*! @brief Set the UE field to a new value. */
+#define BW_USBHS_USBINTR_UE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field UEE[1] (RW)
@@ -2861,24 +2538,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_UEE (1U)          //!< Bit position for USBHS_USBINTR_UEE.
-#define BM_USBHS_USBINTR_UEE (0x00000002U) //!< Bit mask for USBHS_USBINTR_UEE.
-#define BS_USBHS_USBINTR_UEE (1U)          //!< Bit field size in bits for USBHS_USBINTR_UEE.
+/*@{*/
+#define BP_USBHS_USBINTR_UEE (1U)          /*!< Bit position for USBHS_USBINTR_UEE. */
+#define BM_USBHS_USBINTR_UEE (0x00000002U) /*!< Bit mask for USBHS_USBINTR_UEE. */
+#define BS_USBHS_USBINTR_UEE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_UEE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_UEE field.
-#define BR_USBHS_USBINTR_UEE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UEE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_UEE field. */
+#define BR_USBHS_USBINTR_UEE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UEE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_UEE.
-#define BF_USBHS_USBINTR_UEE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_UEE), uint32_t) & BM_USBHS_USBINTR_UEE)
+/*! @brief Format value for bitfield USBHS_USBINTR_UEE. */
+#define BF_USBHS_USBINTR_UEE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_UEE) & BM_USBHS_USBINTR_UEE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UEE field to a new value.
-#define BW_USBHS_USBINTR_UEE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UEE) = (v))
-#endif
-//@}
+/*! @brief Set the UEE field to a new value. */
+#define BW_USBHS_USBINTR_UEE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UEE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field PCE[2] (RW)
@@ -2890,24 +2563,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_PCE (2U)          //!< Bit position for USBHS_USBINTR_PCE.
-#define BM_USBHS_USBINTR_PCE (0x00000004U) //!< Bit mask for USBHS_USBINTR_PCE.
-#define BS_USBHS_USBINTR_PCE (1U)          //!< Bit field size in bits for USBHS_USBINTR_PCE.
+/*@{*/
+#define BP_USBHS_USBINTR_PCE (2U)          /*!< Bit position for USBHS_USBINTR_PCE. */
+#define BM_USBHS_USBINTR_PCE (0x00000004U) /*!< Bit mask for USBHS_USBINTR_PCE. */
+#define BS_USBHS_USBINTR_PCE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_PCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_PCE field.
-#define BR_USBHS_USBINTR_PCE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_PCE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_PCE field. */
+#define BR_USBHS_USBINTR_PCE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_PCE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_PCE.
-#define BF_USBHS_USBINTR_PCE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_PCE), uint32_t) & BM_USBHS_USBINTR_PCE)
+/*! @brief Format value for bitfield USBHS_USBINTR_PCE. */
+#define BF_USBHS_USBINTR_PCE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_PCE) & BM_USBHS_USBINTR_PCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PCE field to a new value.
-#define BW_USBHS_USBINTR_PCE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_PCE) = (v))
-#endif
-//@}
+/*! @brief Set the PCE field to a new value. */
+#define BW_USBHS_USBINTR_PCE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_PCE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field FRE[3] (RW)
@@ -2920,24 +2589,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_FRE (3U)          //!< Bit position for USBHS_USBINTR_FRE.
-#define BM_USBHS_USBINTR_FRE (0x00000008U) //!< Bit mask for USBHS_USBINTR_FRE.
-#define BS_USBHS_USBINTR_FRE (1U)          //!< Bit field size in bits for USBHS_USBINTR_FRE.
+/*@{*/
+#define BP_USBHS_USBINTR_FRE (3U)          /*!< Bit position for USBHS_USBINTR_FRE. */
+#define BM_USBHS_USBINTR_FRE (0x00000008U) /*!< Bit mask for USBHS_USBINTR_FRE. */
+#define BS_USBHS_USBINTR_FRE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_FRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_FRE field.
-#define BR_USBHS_USBINTR_FRE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_FRE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_FRE field. */
+#define BR_USBHS_USBINTR_FRE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_FRE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_FRE.
-#define BF_USBHS_USBINTR_FRE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_FRE), uint32_t) & BM_USBHS_USBINTR_FRE)
+/*! @brief Format value for bitfield USBHS_USBINTR_FRE. */
+#define BF_USBHS_USBINTR_FRE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_FRE) & BM_USBHS_USBINTR_FRE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRE field to a new value.
-#define BW_USBHS_USBINTR_FRE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_FRE) = (v))
-#endif
-//@}
+/*! @brief Set the FRE field to a new value. */
+#define BW_USBHS_USBINTR_FRE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_FRE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field SEE[4] (RW)
@@ -2949,24 +2614,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_SEE (4U)          //!< Bit position for USBHS_USBINTR_SEE.
-#define BM_USBHS_USBINTR_SEE (0x00000010U) //!< Bit mask for USBHS_USBINTR_SEE.
-#define BS_USBHS_USBINTR_SEE (1U)          //!< Bit field size in bits for USBHS_USBINTR_SEE.
+/*@{*/
+#define BP_USBHS_USBINTR_SEE (4U)          /*!< Bit position for USBHS_USBINTR_SEE. */
+#define BM_USBHS_USBINTR_SEE (0x00000010U) /*!< Bit mask for USBHS_USBINTR_SEE. */
+#define BS_USBHS_USBINTR_SEE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_SEE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_SEE field.
-#define BR_USBHS_USBINTR_SEE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SEE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_SEE field. */
+#define BR_USBHS_USBINTR_SEE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SEE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_SEE.
-#define BF_USBHS_USBINTR_SEE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_SEE), uint32_t) & BM_USBHS_USBINTR_SEE)
+/*! @brief Format value for bitfield USBHS_USBINTR_SEE. */
+#define BF_USBHS_USBINTR_SEE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_SEE) & BM_USBHS_USBINTR_SEE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SEE field to a new value.
-#define BW_USBHS_USBINTR_SEE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SEE) = (v))
-#endif
-//@}
+/*! @brief Set the SEE field to a new value. */
+#define BW_USBHS_USBINTR_SEE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SEE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field AAE[5] (RW)
@@ -2979,24 +2640,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_AAE (5U)          //!< Bit position for USBHS_USBINTR_AAE.
-#define BM_USBHS_USBINTR_AAE (0x00000020U) //!< Bit mask for USBHS_USBINTR_AAE.
-#define BS_USBHS_USBINTR_AAE (1U)          //!< Bit field size in bits for USBHS_USBINTR_AAE.
+/*@{*/
+#define BP_USBHS_USBINTR_AAE (5U)          /*!< Bit position for USBHS_USBINTR_AAE. */
+#define BM_USBHS_USBINTR_AAE (0x00000020U) /*!< Bit mask for USBHS_USBINTR_AAE. */
+#define BS_USBHS_USBINTR_AAE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_AAE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_AAE field.
-#define BR_USBHS_USBINTR_AAE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_AAE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_AAE field. */
+#define BR_USBHS_USBINTR_AAE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_AAE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_AAE.
-#define BF_USBHS_USBINTR_AAE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_AAE), uint32_t) & BM_USBHS_USBINTR_AAE)
+/*! @brief Format value for bitfield USBHS_USBINTR_AAE. */
+#define BF_USBHS_USBINTR_AAE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_AAE) & BM_USBHS_USBINTR_AAE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AAE field to a new value.
-#define BW_USBHS_USBINTR_AAE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_AAE) = (v))
-#endif
-//@}
+/*! @brief Set the AAE field to a new value. */
+#define BW_USBHS_USBINTR_AAE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_AAE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field URE[6] (RW)
@@ -3009,24 +2666,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_URE (6U)          //!< Bit position for USBHS_USBINTR_URE.
-#define BM_USBHS_USBINTR_URE (0x00000040U) //!< Bit mask for USBHS_USBINTR_URE.
-#define BS_USBHS_USBINTR_URE (1U)          //!< Bit field size in bits for USBHS_USBINTR_URE.
+/*@{*/
+#define BP_USBHS_USBINTR_URE (6U)          /*!< Bit position for USBHS_USBINTR_URE. */
+#define BM_USBHS_USBINTR_URE (0x00000040U) /*!< Bit mask for USBHS_USBINTR_URE. */
+#define BS_USBHS_USBINTR_URE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_URE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_URE field.
-#define BR_USBHS_USBINTR_URE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_URE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_URE field. */
+#define BR_USBHS_USBINTR_URE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_URE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_URE.
-#define BF_USBHS_USBINTR_URE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_URE), uint32_t) & BM_USBHS_USBINTR_URE)
+/*! @brief Format value for bitfield USBHS_USBINTR_URE. */
+#define BF_USBHS_USBINTR_URE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_URE) & BM_USBHS_USBINTR_URE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the URE field to a new value.
-#define BW_USBHS_USBINTR_URE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_URE) = (v))
-#endif
-//@}
+/*! @brief Set the URE field to a new value. */
+#define BW_USBHS_USBINTR_URE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_URE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field SRE[7] (RW)
@@ -3039,24 +2692,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_SRE (7U)          //!< Bit position for USBHS_USBINTR_SRE.
-#define BM_USBHS_USBINTR_SRE (0x00000080U) //!< Bit mask for USBHS_USBINTR_SRE.
-#define BS_USBHS_USBINTR_SRE (1U)          //!< Bit field size in bits for USBHS_USBINTR_SRE.
+/*@{*/
+#define BP_USBHS_USBINTR_SRE (7U)          /*!< Bit position for USBHS_USBINTR_SRE. */
+#define BM_USBHS_USBINTR_SRE (0x00000080U) /*!< Bit mask for USBHS_USBINTR_SRE. */
+#define BS_USBHS_USBINTR_SRE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_SRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_SRE field.
-#define BR_USBHS_USBINTR_SRE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SRE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_SRE field. */
+#define BR_USBHS_USBINTR_SRE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SRE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_SRE.
-#define BF_USBHS_USBINTR_SRE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_SRE), uint32_t) & BM_USBHS_USBINTR_SRE)
+/*! @brief Format value for bitfield USBHS_USBINTR_SRE. */
+#define BF_USBHS_USBINTR_SRE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_SRE) & BM_USBHS_USBINTR_SRE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SRE field to a new value.
-#define BW_USBHS_USBINTR_SRE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SRE) = (v))
-#endif
-//@}
+/*! @brief Set the SRE field to a new value. */
+#define BW_USBHS_USBINTR_SRE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SRE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field SLE[8] (RW)
@@ -3069,24 +2718,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_SLE (8U)          //!< Bit position for USBHS_USBINTR_SLE.
-#define BM_USBHS_USBINTR_SLE (0x00000100U) //!< Bit mask for USBHS_USBINTR_SLE.
-#define BS_USBHS_USBINTR_SLE (1U)          //!< Bit field size in bits for USBHS_USBINTR_SLE.
+/*@{*/
+#define BP_USBHS_USBINTR_SLE (8U)          /*!< Bit position for USBHS_USBINTR_SLE. */
+#define BM_USBHS_USBINTR_SLE (0x00000100U) /*!< Bit mask for USBHS_USBINTR_SLE. */
+#define BS_USBHS_USBINTR_SLE (1U)          /*!< Bit field size in bits for USBHS_USBINTR_SLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_SLE field.
-#define BR_USBHS_USBINTR_SLE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SLE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_SLE field. */
+#define BR_USBHS_USBINTR_SLE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SLE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_SLE.
-#define BF_USBHS_USBINTR_SLE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_SLE), uint32_t) & BM_USBHS_USBINTR_SLE)
+/*! @brief Format value for bitfield USBHS_USBINTR_SLE. */
+#define BF_USBHS_USBINTR_SLE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_SLE) & BM_USBHS_USBINTR_SLE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SLE field to a new value.
-#define BW_USBHS_USBINTR_SLE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_SLE) = (v))
-#endif
-//@}
+/*! @brief Set the SLE field to a new value. */
+#define BW_USBHS_USBINTR_SLE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_SLE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field ULPIE[10] (RW)
@@ -3094,24 +2739,20 @@ typedef union _hw_usbhs_usbintr
  * When this bit and USBSTS[ULPII] are set, controller issues an interrupt. The
  * interrupt is acknowledged by writing a 1 to USBSTS[ULPII].
  */
-//@{
-#define BP_USBHS_USBINTR_ULPIE (10U)       //!< Bit position for USBHS_USBINTR_ULPIE.
-#define BM_USBHS_USBINTR_ULPIE (0x00000400U) //!< Bit mask for USBHS_USBINTR_ULPIE.
-#define BS_USBHS_USBINTR_ULPIE (1U)        //!< Bit field size in bits for USBHS_USBINTR_ULPIE.
+/*@{*/
+#define BP_USBHS_USBINTR_ULPIE (10U)       /*!< Bit position for USBHS_USBINTR_ULPIE. */
+#define BM_USBHS_USBINTR_ULPIE (0x00000400U) /*!< Bit mask for USBHS_USBINTR_ULPIE. */
+#define BS_USBHS_USBINTR_ULPIE (1U)        /*!< Bit field size in bits for USBHS_USBINTR_ULPIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_ULPIE field.
-#define BR_USBHS_USBINTR_ULPIE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_ULPIE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_ULPIE field. */
+#define BR_USBHS_USBINTR_ULPIE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_ULPIE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_ULPIE.
-#define BF_USBHS_USBINTR_ULPIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_ULPIE), uint32_t) & BM_USBHS_USBINTR_ULPIE)
+/*! @brief Format value for bitfield USBHS_USBINTR_ULPIE. */
+#define BF_USBHS_USBINTR_ULPIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_ULPIE) & BM_USBHS_USBINTR_ULPIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPIE field to a new value.
-#define BW_USBHS_USBINTR_ULPIE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_ULPIE) = (v))
-#endif
-//@}
+/*! @brief Set the ULPIE field to a new value. */
+#define BW_USBHS_USBINTR_ULPIE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_ULPIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field NAKE[16] (RW)
@@ -3122,24 +2763,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_NAKE (16U)        //!< Bit position for USBHS_USBINTR_NAKE.
-#define BM_USBHS_USBINTR_NAKE (0x00010000U) //!< Bit mask for USBHS_USBINTR_NAKE.
-#define BS_USBHS_USBINTR_NAKE (1U)         //!< Bit field size in bits for USBHS_USBINTR_NAKE.
+/*@{*/
+#define BP_USBHS_USBINTR_NAKE (16U)        /*!< Bit position for USBHS_USBINTR_NAKE. */
+#define BM_USBHS_USBINTR_NAKE (0x00010000U) /*!< Bit mask for USBHS_USBINTR_NAKE. */
+#define BS_USBHS_USBINTR_NAKE (1U)         /*!< Bit field size in bits for USBHS_USBINTR_NAKE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_NAKE field.
-#define BR_USBHS_USBINTR_NAKE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_NAKE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_NAKE field. */
+#define BR_USBHS_USBINTR_NAKE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_NAKE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_NAKE.
-#define BF_USBHS_USBINTR_NAKE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_NAKE), uint32_t) & BM_USBHS_USBINTR_NAKE)
+/*! @brief Format value for bitfield USBHS_USBINTR_NAKE. */
+#define BF_USBHS_USBINTR_NAKE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_NAKE) & BM_USBHS_USBINTR_NAKE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NAKE field to a new value.
-#define BW_USBHS_USBINTR_NAKE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_NAKE) = (v))
-#endif
-//@}
+/*! @brief Set the NAKE field to a new value. */
+#define BW_USBHS_USBINTR_NAKE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_NAKE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field UAIE[18] (RW)
@@ -3148,24 +2785,20 @@ typedef union _hw_usbhs_usbintr
  * an interrupt at the next interrupt threshold. The interrupt is acknowledged by
  * clearing USBHSTASYNCINT.
  */
-//@{
-#define BP_USBHS_USBINTR_UAIE (18U)        //!< Bit position for USBHS_USBINTR_UAIE.
-#define BM_USBHS_USBINTR_UAIE (0x00040000U) //!< Bit mask for USBHS_USBINTR_UAIE.
-#define BS_USBHS_USBINTR_UAIE (1U)         //!< Bit field size in bits for USBHS_USBINTR_UAIE.
+/*@{*/
+#define BP_USBHS_USBINTR_UAIE (18U)        /*!< Bit position for USBHS_USBINTR_UAIE. */
+#define BM_USBHS_USBINTR_UAIE (0x00040000U) /*!< Bit mask for USBHS_USBINTR_UAIE. */
+#define BS_USBHS_USBINTR_UAIE (1U)         /*!< Bit field size in bits for USBHS_USBINTR_UAIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_UAIE field.
-#define BR_USBHS_USBINTR_UAIE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UAIE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_UAIE field. */
+#define BR_USBHS_USBINTR_UAIE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UAIE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_UAIE.
-#define BF_USBHS_USBINTR_UAIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_UAIE), uint32_t) & BM_USBHS_USBINTR_UAIE)
+/*! @brief Format value for bitfield USBHS_USBINTR_UAIE. */
+#define BF_USBHS_USBINTR_UAIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_UAIE) & BM_USBHS_USBINTR_UAIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UAIE field to a new value.
-#define BW_USBHS_USBINTR_UAIE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UAIE) = (v))
-#endif
-//@}
+/*! @brief Set the UAIE field to a new value. */
+#define BW_USBHS_USBINTR_UAIE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UAIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field UPIE[19] (RW)
@@ -3174,24 +2807,20 @@ typedef union _hw_usbhs_usbintr
  * interrupt at the next interrupt threshold. The interrupt is acknowledged by
  * clearing USBHSTPERINT.
  */
-//@{
-#define BP_USBHS_USBINTR_UPIE (19U)        //!< Bit position for USBHS_USBINTR_UPIE.
-#define BM_USBHS_USBINTR_UPIE (0x00080000U) //!< Bit mask for USBHS_USBINTR_UPIE.
-#define BS_USBHS_USBINTR_UPIE (1U)         //!< Bit field size in bits for USBHS_USBINTR_UPIE.
+/*@{*/
+#define BP_USBHS_USBINTR_UPIE (19U)        /*!< Bit position for USBHS_USBINTR_UPIE. */
+#define BM_USBHS_USBINTR_UPIE (0x00080000U) /*!< Bit mask for USBHS_USBINTR_UPIE. */
+#define BS_USBHS_USBINTR_UPIE (1U)         /*!< Bit field size in bits for USBHS_USBINTR_UPIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_UPIE field.
-#define BR_USBHS_USBINTR_UPIE (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UPIE))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_UPIE field. */
+#define BR_USBHS_USBINTR_UPIE(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UPIE))
 
-//! @brief Format value for bitfield USBHS_USBINTR_UPIE.
-#define BF_USBHS_USBINTR_UPIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_UPIE), uint32_t) & BM_USBHS_USBINTR_UPIE)
+/*! @brief Format value for bitfield USBHS_USBINTR_UPIE. */
+#define BF_USBHS_USBINTR_UPIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_UPIE) & BM_USBHS_USBINTR_UPIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UPIE field to a new value.
-#define BW_USBHS_USBINTR_UPIE(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_UPIE) = (v))
-#endif
-//@}
+/*! @brief Set the UPIE field to a new value. */
+#define BW_USBHS_USBINTR_UPIE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_UPIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field TIE0[24] (RW)
@@ -3203,24 +2832,20 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_TIE0 (24U)        //!< Bit position for USBHS_USBINTR_TIE0.
-#define BM_USBHS_USBINTR_TIE0 (0x01000000U) //!< Bit mask for USBHS_USBINTR_TIE0.
-#define BS_USBHS_USBINTR_TIE0 (1U)         //!< Bit field size in bits for USBHS_USBINTR_TIE0.
+/*@{*/
+#define BP_USBHS_USBINTR_TIE0 (24U)        /*!< Bit position for USBHS_USBINTR_TIE0. */
+#define BM_USBHS_USBINTR_TIE0 (0x01000000U) /*!< Bit mask for USBHS_USBINTR_TIE0. */
+#define BS_USBHS_USBINTR_TIE0 (1U)         /*!< Bit field size in bits for USBHS_USBINTR_TIE0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_TIE0 field.
-#define BR_USBHS_USBINTR_TIE0 (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_TIE0))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_TIE0 field. */
+#define BR_USBHS_USBINTR_TIE0(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_TIE0))
 
-//! @brief Format value for bitfield USBHS_USBINTR_TIE0.
-#define BF_USBHS_USBINTR_TIE0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_TIE0), uint32_t) & BM_USBHS_USBINTR_TIE0)
+/*! @brief Format value for bitfield USBHS_USBINTR_TIE0. */
+#define BF_USBHS_USBINTR_TIE0(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_TIE0) & BM_USBHS_USBINTR_TIE0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIE0 field to a new value.
-#define BW_USBHS_USBINTR_TIE0(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_TIE0) = (v))
-#endif
-//@}
+/*! @brief Set the TIE0 field to a new value. */
+#define BW_USBHS_USBINTR_TIE0(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_TIE0) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBINTR, field TIE1[25] (RW)
@@ -3232,30 +2857,25 @@ typedef union _hw_usbhs_usbintr
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBINTR_TIE1 (25U)        //!< Bit position for USBHS_USBINTR_TIE1.
-#define BM_USBHS_USBINTR_TIE1 (0x02000000U) //!< Bit mask for USBHS_USBINTR_TIE1.
-#define BS_USBHS_USBINTR_TIE1 (1U)         //!< Bit field size in bits for USBHS_USBINTR_TIE1.
+/*@{*/
+#define BP_USBHS_USBINTR_TIE1 (25U)        /*!< Bit position for USBHS_USBINTR_TIE1. */
+#define BM_USBHS_USBINTR_TIE1 (0x02000000U) /*!< Bit mask for USBHS_USBINTR_TIE1. */
+#define BS_USBHS_USBINTR_TIE1 (1U)         /*!< Bit field size in bits for USBHS_USBINTR_TIE1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBINTR_TIE1 field.
-#define BR_USBHS_USBINTR_TIE1 (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_TIE1))
-#endif
+/*! @brief Read current value of the USBHS_USBINTR_TIE1 field. */
+#define BR_USBHS_USBINTR_TIE1(x) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_TIE1))
 
-//! @brief Format value for bitfield USBHS_USBINTR_TIE1.
-#define BF_USBHS_USBINTR_TIE1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBINTR_TIE1), uint32_t) & BM_USBHS_USBINTR_TIE1)
+/*! @brief Format value for bitfield USBHS_USBINTR_TIE1. */
+#define BF_USBHS_USBINTR_TIE1(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBINTR_TIE1) & BM_USBHS_USBINTR_TIE1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIE1 field to a new value.
-#define BW_USBHS_USBINTR_TIE1(v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR, BP_USBHS_USBINTR_TIE1) = (v))
-#endif
-//@}
+/*! @brief Set the TIE1 field to a new value. */
+#define BW_USBHS_USBINTR_TIE1(x, v) (BITBAND_ACCESS32(HW_USBHS_USBINTR_ADDR(x), BP_USBHS_USBINTR_TIE1) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_FRINDEX - Frame Index Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_FRINDEX - Frame Index Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_FRINDEX - Frame Index Register (RW)
  *
@@ -3283,27 +2903,24 @@ typedef union _hw_usbhs_frindex
     uint32_t U;
     struct _hw_usbhs_frindex_bitfields
     {
-        uint32_t FRINDEX : 14;         //!< [13:0] Frame Index
-        uint32_t Reerved : 18;         //!< [31:14] Reserved
+        uint32_t FRINDEX : 14;         /*!< [13:0] Frame Index */
+        uint32_t Reerved : 18;         /*!< [31:14] Reserved */
     } B;
 } hw_usbhs_frindex_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_FRINDEX register
  */
-//@{
-#define HW_USBHS_FRINDEX_ADDR    (REGS_USBHS_BASE + 0x14CU)
+/*@{*/
+#define HW_USBHS_FRINDEX_ADDR(x) ((x) + 0x14CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_FRINDEX         (*(__IO hw_usbhs_frindex_t *) HW_USBHS_FRINDEX_ADDR)
-#define HW_USBHS_FRINDEX_RD()    (HW_USBHS_FRINDEX.U)
-#define HW_USBHS_FRINDEX_WR(v)   (HW_USBHS_FRINDEX.U = (v))
-#define HW_USBHS_FRINDEX_SET(v)  (HW_USBHS_FRINDEX_WR(HW_USBHS_FRINDEX_RD() |  (v)))
-#define HW_USBHS_FRINDEX_CLR(v)  (HW_USBHS_FRINDEX_WR(HW_USBHS_FRINDEX_RD() & ~(v)))
-#define HW_USBHS_FRINDEX_TOG(v)  (HW_USBHS_FRINDEX_WR(HW_USBHS_FRINDEX_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_FRINDEX(x)      (*(__IO hw_usbhs_frindex_t *) HW_USBHS_FRINDEX_ADDR(x))
+#define HW_USBHS_FRINDEX_RD(x)   (HW_USBHS_FRINDEX(x).U)
+#define HW_USBHS_FRINDEX_WR(x, v) (HW_USBHS_FRINDEX(x).U = (v))
+#define HW_USBHS_FRINDEX_SET(x, v) (HW_USBHS_FRINDEX_WR(x, HW_USBHS_FRINDEX_RD(x) |  (v)))
+#define HW_USBHS_FRINDEX_CLR(x, v) (HW_USBHS_FRINDEX_WR(x, HW_USBHS_FRINDEX_RD(x) & ~(v)))
+#define HW_USBHS_FRINDEX_TOG(x, v) (HW_USBHS_FRINDEX_WR(x, HW_USBHS_FRINDEX_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_FRINDEX bitfields
@@ -3324,46 +2941,39 @@ typedef union _hw_usbhs_frindex
  * elements (512 bytes) 9 100 64 elements (256 bytes) 8 101 32 elements (128 bytes) 7
  * 110 16 elements (64 bytes) 6 111 8 elements (32 bytes) 5
  */
-//@{
-#define BP_USBHS_FRINDEX_FRINDEX (0U)      //!< Bit position for USBHS_FRINDEX_FRINDEX.
-#define BM_USBHS_FRINDEX_FRINDEX (0x00003FFFU) //!< Bit mask for USBHS_FRINDEX_FRINDEX.
-#define BS_USBHS_FRINDEX_FRINDEX (14U)     //!< Bit field size in bits for USBHS_FRINDEX_FRINDEX.
+/*@{*/
+#define BP_USBHS_FRINDEX_FRINDEX (0U)      /*!< Bit position for USBHS_FRINDEX_FRINDEX. */
+#define BM_USBHS_FRINDEX_FRINDEX (0x00003FFFU) /*!< Bit mask for USBHS_FRINDEX_FRINDEX. */
+#define BS_USBHS_FRINDEX_FRINDEX (14U)     /*!< Bit field size in bits for USBHS_FRINDEX_FRINDEX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_FRINDEX_FRINDEX field.
-#define BR_USBHS_FRINDEX_FRINDEX (HW_USBHS_FRINDEX.B.FRINDEX)
-#endif
+/*! @brief Read current value of the USBHS_FRINDEX_FRINDEX field. */
+#define BR_USBHS_FRINDEX_FRINDEX(x) (HW_USBHS_FRINDEX(x).B.FRINDEX)
 
-//! @brief Format value for bitfield USBHS_FRINDEX_FRINDEX.
-#define BF_USBHS_FRINDEX_FRINDEX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_FRINDEX_FRINDEX), uint32_t) & BM_USBHS_FRINDEX_FRINDEX)
+/*! @brief Format value for bitfield USBHS_FRINDEX_FRINDEX. */
+#define BF_USBHS_FRINDEX_FRINDEX(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_FRINDEX_FRINDEX) & BM_USBHS_FRINDEX_FRINDEX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRINDEX field to a new value.
-#define BW_USBHS_FRINDEX_FRINDEX(v) (HW_USBHS_FRINDEX_WR((HW_USBHS_FRINDEX_RD() & ~BM_USBHS_FRINDEX_FRINDEX) | BF_USBHS_FRINDEX_FRINDEX(v)))
-#endif
-//@}
+/*! @brief Set the FRINDEX field to a new value. */
+#define BW_USBHS_FRINDEX_FRINDEX(x, v) (HW_USBHS_FRINDEX_WR(x, (HW_USBHS_FRINDEX_RD(x) & ~BM_USBHS_FRINDEX_FRINDEX) | BF_USBHS_FRINDEX_FRINDEX(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_FRINDEX, field Reerved[31:14] (ROZ)
  *
  * Must be cleared.
  */
-//@{
-#define BP_USBHS_FRINDEX_Reerved (14U)     //!< Bit position for USBHS_FRINDEX_Reerved.
-#define BM_USBHS_FRINDEX_Reerved (0xFFFFC000U) //!< Bit mask for USBHS_FRINDEX_Reerved.
-#define BS_USBHS_FRINDEX_Reerved (18U)     //!< Bit field size in bits for USBHS_FRINDEX_Reerved.
+/*@{*/
+#define BP_USBHS_FRINDEX_Reerved (14U)     /*!< Bit position for USBHS_FRINDEX_Reerved. */
+#define BM_USBHS_FRINDEX_Reerved (0xFFFFC000U) /*!< Bit mask for USBHS_FRINDEX_Reerved. */
+#define BS_USBHS_FRINDEX_Reerved (18U)     /*!< Bit field size in bits for USBHS_FRINDEX_Reerved. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_FRINDEX_Reerved field.
-#define BR_USBHS_FRINDEX_Reerved (HW_USBHS_FRINDEX.B.Reerved)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_FRINDEX_Reerved field. */
+#define BR_USBHS_FRINDEX_Reerved(x) (HW_USBHS_FRINDEX(x).B.Reerved)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_DEVICEADDR - Device Address Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_DEVICEADDR - Device Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_DEVICEADDR - Device Address Register (RW)
  *
@@ -3383,28 +2993,25 @@ typedef union _hw_usbhs_deviceaddr
     uint32_t U;
     struct _hw_usbhs_deviceaddr_bitfields
     {
-        uint32_t RESERVED0 : 24;       //!< [23:0] Reserved
-        uint32_t USBADRA : 1;          //!< [24] Device Address Advance
-        uint32_t USBADR : 7;           //!< [31:25] Device Address
+        uint32_t RESERVED0 : 24;       /*!< [23:0] Reserved */
+        uint32_t USBADRA : 1;          /*!< [24] Device Address Advance */
+        uint32_t USBADR : 7;           /*!< [31:25] Device Address */
     } B;
 } hw_usbhs_deviceaddr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_DEVICEADDR register
  */
-//@{
-#define HW_USBHS_DEVICEADDR_ADDR (REGS_USBHS_BASE + 0x154U)
+/*@{*/
+#define HW_USBHS_DEVICEADDR_ADDR(x) ((x) + 0x154U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_DEVICEADDR      (*(__IO hw_usbhs_deviceaddr_t *) HW_USBHS_DEVICEADDR_ADDR)
-#define HW_USBHS_DEVICEADDR_RD() (HW_USBHS_DEVICEADDR.U)
-#define HW_USBHS_DEVICEADDR_WR(v) (HW_USBHS_DEVICEADDR.U = (v))
-#define HW_USBHS_DEVICEADDR_SET(v) (HW_USBHS_DEVICEADDR_WR(HW_USBHS_DEVICEADDR_RD() |  (v)))
-#define HW_USBHS_DEVICEADDR_CLR(v) (HW_USBHS_DEVICEADDR_WR(HW_USBHS_DEVICEADDR_RD() & ~(v)))
-#define HW_USBHS_DEVICEADDR_TOG(v) (HW_USBHS_DEVICEADDR_WR(HW_USBHS_DEVICEADDR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_DEVICEADDR(x)   (*(__IO hw_usbhs_deviceaddr_t *) HW_USBHS_DEVICEADDR_ADDR(x))
+#define HW_USBHS_DEVICEADDR_RD(x) (HW_USBHS_DEVICEADDR(x).U)
+#define HW_USBHS_DEVICEADDR_WR(x, v) (HW_USBHS_DEVICEADDR(x).U = (v))
+#define HW_USBHS_DEVICEADDR_SET(x, v) (HW_USBHS_DEVICEADDR_WR(x, HW_USBHS_DEVICEADDR_RD(x) |  (v)))
+#define HW_USBHS_DEVICEADDR_CLR(x, v) (HW_USBHS_DEVICEADDR_WR(x, HW_USBHS_DEVICEADDR_RD(x) & ~(v)))
+#define HW_USBHS_DEVICEADDR_TOG(x, v) (HW_USBHS_DEVICEADDR_WR(x, HW_USBHS_DEVICEADDR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_DEVICEADDR bitfields
@@ -3431,53 +3038,44 @@ typedef union _hw_usbhs_deviceaddr
  *     register. After an IN occurs on endpoint 0 and is ACKed, USBADR is loaded from
  *     the holding register.
  */
-//@{
-#define BP_USBHS_DEVICEADDR_USBADRA (24U)  //!< Bit position for USBHS_DEVICEADDR_USBADRA.
-#define BM_USBHS_DEVICEADDR_USBADRA (0x01000000U) //!< Bit mask for USBHS_DEVICEADDR_USBADRA.
-#define BS_USBHS_DEVICEADDR_USBADRA (1U)   //!< Bit field size in bits for USBHS_DEVICEADDR_USBADRA.
+/*@{*/
+#define BP_USBHS_DEVICEADDR_USBADRA (24U)  /*!< Bit position for USBHS_DEVICEADDR_USBADRA. */
+#define BM_USBHS_DEVICEADDR_USBADRA (0x01000000U) /*!< Bit mask for USBHS_DEVICEADDR_USBADRA. */
+#define BS_USBHS_DEVICEADDR_USBADRA (1U)   /*!< Bit field size in bits for USBHS_DEVICEADDR_USBADRA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DEVICEADDR_USBADRA field.
-#define BR_USBHS_DEVICEADDR_USBADRA (BITBAND_ACCESS32(HW_USBHS_DEVICEADDR_ADDR, BP_USBHS_DEVICEADDR_USBADRA))
-#endif
+/*! @brief Read current value of the USBHS_DEVICEADDR_USBADRA field. */
+#define BR_USBHS_DEVICEADDR_USBADRA(x) (BITBAND_ACCESS32(HW_USBHS_DEVICEADDR_ADDR(x), BP_USBHS_DEVICEADDR_USBADRA))
 
-//! @brief Format value for bitfield USBHS_DEVICEADDR_USBADRA.
-#define BF_USBHS_DEVICEADDR_USBADRA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_DEVICEADDR_USBADRA), uint32_t) & BM_USBHS_DEVICEADDR_USBADRA)
+/*! @brief Format value for bitfield USBHS_DEVICEADDR_USBADRA. */
+#define BF_USBHS_DEVICEADDR_USBADRA(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_DEVICEADDR_USBADRA) & BM_USBHS_DEVICEADDR_USBADRA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBADRA field to a new value.
-#define BW_USBHS_DEVICEADDR_USBADRA(v) (BITBAND_ACCESS32(HW_USBHS_DEVICEADDR_ADDR, BP_USBHS_DEVICEADDR_USBADRA) = (v))
-#endif
-//@}
+/*! @brief Set the USBADRA field to a new value. */
+#define BW_USBHS_DEVICEADDR_USBADRA(x, v) (BITBAND_ACCESS32(HW_USBHS_DEVICEADDR_ADDR(x), BP_USBHS_DEVICEADDR_USBADRA) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_DEVICEADDR, field USBADR[31:25] (RW)
  *
  * This field corresponds to the USB device address.
  */
-//@{
-#define BP_USBHS_DEVICEADDR_USBADR (25U)   //!< Bit position for USBHS_DEVICEADDR_USBADR.
-#define BM_USBHS_DEVICEADDR_USBADR (0xFE000000U) //!< Bit mask for USBHS_DEVICEADDR_USBADR.
-#define BS_USBHS_DEVICEADDR_USBADR (7U)    //!< Bit field size in bits for USBHS_DEVICEADDR_USBADR.
+/*@{*/
+#define BP_USBHS_DEVICEADDR_USBADR (25U)   /*!< Bit position for USBHS_DEVICEADDR_USBADR. */
+#define BM_USBHS_DEVICEADDR_USBADR (0xFE000000U) /*!< Bit mask for USBHS_DEVICEADDR_USBADR. */
+#define BS_USBHS_DEVICEADDR_USBADR (7U)    /*!< Bit field size in bits for USBHS_DEVICEADDR_USBADR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_DEVICEADDR_USBADR field.
-#define BR_USBHS_DEVICEADDR_USBADR (HW_USBHS_DEVICEADDR.B.USBADR)
-#endif
+/*! @brief Read current value of the USBHS_DEVICEADDR_USBADR field. */
+#define BR_USBHS_DEVICEADDR_USBADR(x) (HW_USBHS_DEVICEADDR(x).B.USBADR)
 
-//! @brief Format value for bitfield USBHS_DEVICEADDR_USBADR.
-#define BF_USBHS_DEVICEADDR_USBADR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_DEVICEADDR_USBADR), uint32_t) & BM_USBHS_DEVICEADDR_USBADR)
+/*! @brief Format value for bitfield USBHS_DEVICEADDR_USBADR. */
+#define BF_USBHS_DEVICEADDR_USBADR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_DEVICEADDR_USBADR) & BM_USBHS_DEVICEADDR_USBADR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBADR field to a new value.
-#define BW_USBHS_DEVICEADDR_USBADR(v) (HW_USBHS_DEVICEADDR_WR((HW_USBHS_DEVICEADDR_RD() & ~BM_USBHS_DEVICEADDR_USBADR) | BF_USBHS_DEVICEADDR_USBADR(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_PERIODICLISTBASE - Periodic Frame List Base Address Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the USBADR field to a new value. */
+#define BW_USBHS_DEVICEADDR_USBADR(x, v) (HW_USBHS_DEVICEADDR_WR(x, (HW_USBHS_DEVICEADDR_RD(x) & ~BM_USBHS_DEVICEADDR_USBADR) | BF_USBHS_DEVICEADDR_USBADR(v)))
+/*@}*/
+/*******************************************************************************
+ * HW_USBHS_PERIODICLISTBASE - Periodic Frame List Base Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_PERIODICLISTBASE - Periodic Frame List Base Address Register (RW)
  *
@@ -3498,27 +3096,24 @@ typedef union _hw_usbhs_periodiclistbase
     uint32_t U;
     struct _hw_usbhs_periodiclistbase_bitfields
     {
-        uint32_t RESERVED0 : 12;       //!< [11:0] Reserved
-        uint32_t PERBASE : 20;         //!< [31:12] Base address
+        uint32_t RESERVED0 : 12;       /*!< [11:0] Reserved */
+        uint32_t PERBASE : 20;         /*!< [31:12] Base address */
     } B;
 } hw_usbhs_periodiclistbase_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_PERIODICLISTBASE register
  */
-//@{
-#define HW_USBHS_PERIODICLISTBASE_ADDR (REGS_USBHS_BASE + 0x154U)
+/*@{*/
+#define HW_USBHS_PERIODICLISTBASE_ADDR(x) ((x) + 0x154U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_PERIODICLISTBASE (*(__IO hw_usbhs_periodiclistbase_t *) HW_USBHS_PERIODICLISTBASE_ADDR)
-#define HW_USBHS_PERIODICLISTBASE_RD() (HW_USBHS_PERIODICLISTBASE.U)
-#define HW_USBHS_PERIODICLISTBASE_WR(v) (HW_USBHS_PERIODICLISTBASE.U = (v))
-#define HW_USBHS_PERIODICLISTBASE_SET(v) (HW_USBHS_PERIODICLISTBASE_WR(HW_USBHS_PERIODICLISTBASE_RD() |  (v)))
-#define HW_USBHS_PERIODICLISTBASE_CLR(v) (HW_USBHS_PERIODICLISTBASE_WR(HW_USBHS_PERIODICLISTBASE_RD() & ~(v)))
-#define HW_USBHS_PERIODICLISTBASE_TOG(v) (HW_USBHS_PERIODICLISTBASE_WR(HW_USBHS_PERIODICLISTBASE_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_PERIODICLISTBASE(x) (*(__IO hw_usbhs_periodiclistbase_t *) HW_USBHS_PERIODICLISTBASE_ADDR(x))
+#define HW_USBHS_PERIODICLISTBASE_RD(x) (HW_USBHS_PERIODICLISTBASE(x).U)
+#define HW_USBHS_PERIODICLISTBASE_WR(x, v) (HW_USBHS_PERIODICLISTBASE(x).U = (v))
+#define HW_USBHS_PERIODICLISTBASE_SET(x, v) (HW_USBHS_PERIODICLISTBASE_WR(x, HW_USBHS_PERIODICLISTBASE_RD(x) |  (v)))
+#define HW_USBHS_PERIODICLISTBASE_CLR(x, v) (HW_USBHS_PERIODICLISTBASE_WR(x, HW_USBHS_PERIODICLISTBASE_RD(x) & ~(v)))
+#define HW_USBHS_PERIODICLISTBASE_TOG(x, v) (HW_USBHS_PERIODICLISTBASE_WR(x, HW_USBHS_PERIODICLISTBASE_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_PERIODICLISTBASE bitfields
@@ -3530,30 +3125,25 @@ typedef union _hw_usbhs_periodiclistbase
  * These bits correspond to memory address signal [31:12]. Used only in the host
  * mode.
  */
-//@{
-#define BP_USBHS_PERIODICLISTBASE_PERBASE (12U) //!< Bit position for USBHS_PERIODICLISTBASE_PERBASE.
-#define BM_USBHS_PERIODICLISTBASE_PERBASE (0xFFFFF000U) //!< Bit mask for USBHS_PERIODICLISTBASE_PERBASE.
-#define BS_USBHS_PERIODICLISTBASE_PERBASE (20U) //!< Bit field size in bits for USBHS_PERIODICLISTBASE_PERBASE.
+/*@{*/
+#define BP_USBHS_PERIODICLISTBASE_PERBASE (12U) /*!< Bit position for USBHS_PERIODICLISTBASE_PERBASE. */
+#define BM_USBHS_PERIODICLISTBASE_PERBASE (0xFFFFF000U) /*!< Bit mask for USBHS_PERIODICLISTBASE_PERBASE. */
+#define BS_USBHS_PERIODICLISTBASE_PERBASE (20U) /*!< Bit field size in bits for USBHS_PERIODICLISTBASE_PERBASE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PERIODICLISTBASE_PERBASE field.
-#define BR_USBHS_PERIODICLISTBASE_PERBASE (HW_USBHS_PERIODICLISTBASE.B.PERBASE)
-#endif
+/*! @brief Read current value of the USBHS_PERIODICLISTBASE_PERBASE field. */
+#define BR_USBHS_PERIODICLISTBASE_PERBASE(x) (HW_USBHS_PERIODICLISTBASE(x).B.PERBASE)
 
-//! @brief Format value for bitfield USBHS_PERIODICLISTBASE_PERBASE.
-#define BF_USBHS_PERIODICLISTBASE_PERBASE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PERIODICLISTBASE_PERBASE), uint32_t) & BM_USBHS_PERIODICLISTBASE_PERBASE)
+/*! @brief Format value for bitfield USBHS_PERIODICLISTBASE_PERBASE. */
+#define BF_USBHS_PERIODICLISTBASE_PERBASE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PERIODICLISTBASE_PERBASE) & BM_USBHS_PERIODICLISTBASE_PERBASE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PERBASE field to a new value.
-#define BW_USBHS_PERIODICLISTBASE_PERBASE(v) (HW_USBHS_PERIODICLISTBASE_WR((HW_USBHS_PERIODICLISTBASE_RD() & ~BM_USBHS_PERIODICLISTBASE_PERBASE) | BF_USBHS_PERIODICLISTBASE_PERBASE(v)))
-#endif
-//@}
+/*! @brief Set the PERBASE field to a new value. */
+#define BW_USBHS_PERIODICLISTBASE_PERBASE(x, v) (HW_USBHS_PERIODICLISTBASE_WR(x, (HW_USBHS_PERIODICLISTBASE_RD(x) & ~BM_USBHS_PERIODICLISTBASE_PERBASE) | BF_USBHS_PERIODICLISTBASE_PERBASE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_ASYNCLISTADDR - Current Asynchronous List Address Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_ASYNCLISTADDR - Current Asynchronous List Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_ASYNCLISTADDR - Current Asynchronous List Address Register (RW)
  *
@@ -3570,27 +3160,24 @@ typedef union _hw_usbhs_asynclistaddr
     uint32_t U;
     struct _hw_usbhs_asynclistaddr_bitfields
     {
-        uint32_t RESERVED0 : 5;        //!< [4:0] Reserved
-        uint32_t ASYBASE : 27;         //!< [31:5] Link pointer low (LPL)
+        uint32_t RESERVED0 : 5;        /*!< [4:0] Reserved */
+        uint32_t ASYBASE : 27;         /*!< [31:5] Link pointer low (LPL) */
     } B;
 } hw_usbhs_asynclistaddr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_ASYNCLISTADDR register
  */
-//@{
-#define HW_USBHS_ASYNCLISTADDR_ADDR (REGS_USBHS_BASE + 0x158U)
+/*@{*/
+#define HW_USBHS_ASYNCLISTADDR_ADDR(x) ((x) + 0x158U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_ASYNCLISTADDR   (*(__IO hw_usbhs_asynclistaddr_t *) HW_USBHS_ASYNCLISTADDR_ADDR)
-#define HW_USBHS_ASYNCLISTADDR_RD() (HW_USBHS_ASYNCLISTADDR.U)
-#define HW_USBHS_ASYNCLISTADDR_WR(v) (HW_USBHS_ASYNCLISTADDR.U = (v))
-#define HW_USBHS_ASYNCLISTADDR_SET(v) (HW_USBHS_ASYNCLISTADDR_WR(HW_USBHS_ASYNCLISTADDR_RD() |  (v)))
-#define HW_USBHS_ASYNCLISTADDR_CLR(v) (HW_USBHS_ASYNCLISTADDR_WR(HW_USBHS_ASYNCLISTADDR_RD() & ~(v)))
-#define HW_USBHS_ASYNCLISTADDR_TOG(v) (HW_USBHS_ASYNCLISTADDR_WR(HW_USBHS_ASYNCLISTADDR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_ASYNCLISTADDR(x) (*(__IO hw_usbhs_asynclistaddr_t *) HW_USBHS_ASYNCLISTADDR_ADDR(x))
+#define HW_USBHS_ASYNCLISTADDR_RD(x) (HW_USBHS_ASYNCLISTADDR(x).U)
+#define HW_USBHS_ASYNCLISTADDR_WR(x, v) (HW_USBHS_ASYNCLISTADDR(x).U = (v))
+#define HW_USBHS_ASYNCLISTADDR_SET(x, v) (HW_USBHS_ASYNCLISTADDR_WR(x, HW_USBHS_ASYNCLISTADDR_RD(x) |  (v)))
+#define HW_USBHS_ASYNCLISTADDR_CLR(x, v) (HW_USBHS_ASYNCLISTADDR_WR(x, HW_USBHS_ASYNCLISTADDR_RD(x) & ~(v)))
+#define HW_USBHS_ASYNCLISTADDR_TOG(x, v) (HW_USBHS_ASYNCLISTADDR_WR(x, HW_USBHS_ASYNCLISTADDR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_ASYNCLISTADDR bitfields
@@ -3602,29 +3189,24 @@ typedef union _hw_usbhs_asynclistaddr
  * These bits correspond to memory address signal [31:5]. This field may only
  * reference a queue head (QH). Used only in host mode.
  */
-//@{
-#define BP_USBHS_ASYNCLISTADDR_ASYBASE (5U) //!< Bit position for USBHS_ASYNCLISTADDR_ASYBASE.
-#define BM_USBHS_ASYNCLISTADDR_ASYBASE (0xFFFFFFE0U) //!< Bit mask for USBHS_ASYNCLISTADDR_ASYBASE.
-#define BS_USBHS_ASYNCLISTADDR_ASYBASE (27U) //!< Bit field size in bits for USBHS_ASYNCLISTADDR_ASYBASE.
+/*@{*/
+#define BP_USBHS_ASYNCLISTADDR_ASYBASE (5U) /*!< Bit position for USBHS_ASYNCLISTADDR_ASYBASE. */
+#define BM_USBHS_ASYNCLISTADDR_ASYBASE (0xFFFFFFE0U) /*!< Bit mask for USBHS_ASYNCLISTADDR_ASYBASE. */
+#define BS_USBHS_ASYNCLISTADDR_ASYBASE (27U) /*!< Bit field size in bits for USBHS_ASYNCLISTADDR_ASYBASE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ASYNCLISTADDR_ASYBASE field.
-#define BR_USBHS_ASYNCLISTADDR_ASYBASE (HW_USBHS_ASYNCLISTADDR.B.ASYBASE)
-#endif
+/*! @brief Read current value of the USBHS_ASYNCLISTADDR_ASYBASE field. */
+#define BR_USBHS_ASYNCLISTADDR_ASYBASE(x) (HW_USBHS_ASYNCLISTADDR(x).B.ASYBASE)
 
-//! @brief Format value for bitfield USBHS_ASYNCLISTADDR_ASYBASE.
-#define BF_USBHS_ASYNCLISTADDR_ASYBASE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ASYNCLISTADDR_ASYBASE), uint32_t) & BM_USBHS_ASYNCLISTADDR_ASYBASE)
+/*! @brief Format value for bitfield USBHS_ASYNCLISTADDR_ASYBASE. */
+#define BF_USBHS_ASYNCLISTADDR_ASYBASE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ASYNCLISTADDR_ASYBASE) & BM_USBHS_ASYNCLISTADDR_ASYBASE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASYBASE field to a new value.
-#define BW_USBHS_ASYNCLISTADDR_ASYBASE(v) (HW_USBHS_ASYNCLISTADDR_WR((HW_USBHS_ASYNCLISTADDR_RD() & ~BM_USBHS_ASYNCLISTADDR_ASYBASE) | BF_USBHS_ASYNCLISTADDR_ASYBASE(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPLISTADDR - Endpoint List Address Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the ASYBASE field to a new value. */
+#define BW_USBHS_ASYNCLISTADDR_ASYBASE(x, v) (HW_USBHS_ASYNCLISTADDR_WR(x, (HW_USBHS_ASYNCLISTADDR_RD(x) & ~BM_USBHS_ASYNCLISTADDR_ASYBASE) | BF_USBHS_ASYNCLISTADDR_ASYBASE(v)))
+/*@}*/
+/*******************************************************************************
+ * HW_USBHS_EPLISTADDR - Endpoint List Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPLISTADDR - Endpoint List Address Register (RW)
  *
@@ -3645,27 +3227,24 @@ typedef union _hw_usbhs_eplistaddr
     uint32_t U;
     struct _hw_usbhs_eplistaddr_bitfields
     {
-        uint32_t RESERVED0 : 11;       //!< [10:0] Reserved
-        uint32_t EPBASE : 21;          //!< [31:11] Endpoint list address
+        uint32_t RESERVED0 : 11;       /*!< [10:0] Reserved */
+        uint32_t EPBASE : 21;          /*!< [31:11] Endpoint list address */
     } B;
 } hw_usbhs_eplistaddr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPLISTADDR register
  */
-//@{
-#define HW_USBHS_EPLISTADDR_ADDR (REGS_USBHS_BASE + 0x158U)
+/*@{*/
+#define HW_USBHS_EPLISTADDR_ADDR(x) ((x) + 0x158U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPLISTADDR      (*(__IO hw_usbhs_eplistaddr_t *) HW_USBHS_EPLISTADDR_ADDR)
-#define HW_USBHS_EPLISTADDR_RD() (HW_USBHS_EPLISTADDR.U)
-#define HW_USBHS_EPLISTADDR_WR(v) (HW_USBHS_EPLISTADDR.U = (v))
-#define HW_USBHS_EPLISTADDR_SET(v) (HW_USBHS_EPLISTADDR_WR(HW_USBHS_EPLISTADDR_RD() |  (v)))
-#define HW_USBHS_EPLISTADDR_CLR(v) (HW_USBHS_EPLISTADDR_WR(HW_USBHS_EPLISTADDR_RD() & ~(v)))
-#define HW_USBHS_EPLISTADDR_TOG(v) (HW_USBHS_EPLISTADDR_WR(HW_USBHS_EPLISTADDR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPLISTADDR(x)   (*(__IO hw_usbhs_eplistaddr_t *) HW_USBHS_EPLISTADDR_ADDR(x))
+#define HW_USBHS_EPLISTADDR_RD(x) (HW_USBHS_EPLISTADDR(x).U)
+#define HW_USBHS_EPLISTADDR_WR(x, v) (HW_USBHS_EPLISTADDR(x).U = (v))
+#define HW_USBHS_EPLISTADDR_SET(x, v) (HW_USBHS_EPLISTADDR_WR(x, HW_USBHS_EPLISTADDR_RD(x) |  (v)))
+#define HW_USBHS_EPLISTADDR_CLR(x, v) (HW_USBHS_EPLISTADDR_WR(x, HW_USBHS_EPLISTADDR_RD(x) & ~(v)))
+#define HW_USBHS_EPLISTADDR_TOG(x, v) (HW_USBHS_EPLISTADDR_WR(x, HW_USBHS_EPLISTADDR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPLISTADDR bitfields
@@ -3678,30 +3257,25 @@ typedef union _hw_usbhs_eplistaddr
  * queue heads (i.e. one queue head per endpoint and direction). Address of the top
  * of the endpoint list.
  */
-//@{
-#define BP_USBHS_EPLISTADDR_EPBASE (11U)   //!< Bit position for USBHS_EPLISTADDR_EPBASE.
-#define BM_USBHS_EPLISTADDR_EPBASE (0xFFFFF800U) //!< Bit mask for USBHS_EPLISTADDR_EPBASE.
-#define BS_USBHS_EPLISTADDR_EPBASE (21U)   //!< Bit field size in bits for USBHS_EPLISTADDR_EPBASE.
+/*@{*/
+#define BP_USBHS_EPLISTADDR_EPBASE (11U)   /*!< Bit position for USBHS_EPLISTADDR_EPBASE. */
+#define BM_USBHS_EPLISTADDR_EPBASE (0xFFFFF800U) /*!< Bit mask for USBHS_EPLISTADDR_EPBASE. */
+#define BS_USBHS_EPLISTADDR_EPBASE (21U)   /*!< Bit field size in bits for USBHS_EPLISTADDR_EPBASE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPLISTADDR_EPBASE field.
-#define BR_USBHS_EPLISTADDR_EPBASE (HW_USBHS_EPLISTADDR.B.EPBASE)
-#endif
+/*! @brief Read current value of the USBHS_EPLISTADDR_EPBASE field. */
+#define BR_USBHS_EPLISTADDR_EPBASE(x) (HW_USBHS_EPLISTADDR(x).B.EPBASE)
 
-//! @brief Format value for bitfield USBHS_EPLISTADDR_EPBASE.
-#define BF_USBHS_EPLISTADDR_EPBASE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPLISTADDR_EPBASE), uint32_t) & BM_USBHS_EPLISTADDR_EPBASE)
+/*! @brief Format value for bitfield USBHS_EPLISTADDR_EPBASE. */
+#define BF_USBHS_EPLISTADDR_EPBASE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPLISTADDR_EPBASE) & BM_USBHS_EPLISTADDR_EPBASE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPBASE field to a new value.
-#define BW_USBHS_EPLISTADDR_EPBASE(v) (HW_USBHS_EPLISTADDR_WR((HW_USBHS_EPLISTADDR_RD() & ~BM_USBHS_EPLISTADDR_EPBASE) | BF_USBHS_EPLISTADDR_EPBASE(v)))
-#endif
-//@}
+/*! @brief Set the EPBASE field to a new value. */
+#define BW_USBHS_EPLISTADDR_EPBASE(x, v) (HW_USBHS_EPLISTADDR_WR(x, (HW_USBHS_EPLISTADDR_RD(x) & ~BM_USBHS_EPLISTADDR_EPBASE) | BF_USBHS_EPLISTADDR_EPBASE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_TTCTRL - Host TT Asynchronous Buffer Control
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_TTCTRL - Host TT Asynchronous Buffer Control
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_TTCTRL - Host TT Asynchronous Buffer Control (RO)
  *
@@ -3712,24 +3286,21 @@ typedef union _hw_usbhs_ttctrl
     uint32_t U;
     struct _hw_usbhs_ttctrl_bitfields
     {
-        uint32_t RESERVED0 : 24;       //!< [23:0] Reserved
-        uint32_t TTHA : 7;             //!< [30:24] TT Hub Address
-        uint32_t Reerved : 1;          //!< [31] Reserved
+        uint32_t RESERVED0 : 24;       /*!< [23:0] Reserved */
+        uint32_t TTHA : 7;             /*!< [30:24] TT Hub Address */
+        uint32_t Reerved : 1;          /*!< [31] Reserved */
     } B;
 } hw_usbhs_ttctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_TTCTRL register
  */
-//@{
-#define HW_USBHS_TTCTRL_ADDR     (REGS_USBHS_BASE + 0x15CU)
+/*@{*/
+#define HW_USBHS_TTCTRL_ADDR(x)  ((x) + 0x15CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_TTCTRL          (*(__I hw_usbhs_ttctrl_t *) HW_USBHS_TTCTRL_ADDR)
-#define HW_USBHS_TTCTRL_RD()     (HW_USBHS_TTCTRL.U)
-#endif
-//@}
+#define HW_USBHS_TTCTRL(x)       (*(__I hw_usbhs_ttctrl_t *) HW_USBHS_TTCTRL_ADDR(x))
+#define HW_USBHS_TTCTRL_RD(x)    (HW_USBHS_TTCTRL(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_TTCTRL bitfields
@@ -3744,38 +3315,33 @@ typedef union _hw_usbhs_ttctrl
  * then the packet is broadcast on the high speed ports destined for a downstream
  * HS hub with the address in the QH or siTD.
  */
-//@{
-#define BP_USBHS_TTCTRL_TTHA (24U)         //!< Bit position for USBHS_TTCTRL_TTHA.
-#define BM_USBHS_TTCTRL_TTHA (0x7F000000U) //!< Bit mask for USBHS_TTCTRL_TTHA.
-#define BS_USBHS_TTCTRL_TTHA (7U)          //!< Bit field size in bits for USBHS_TTCTRL_TTHA.
+/*@{*/
+#define BP_USBHS_TTCTRL_TTHA (24U)         /*!< Bit position for USBHS_TTCTRL_TTHA. */
+#define BM_USBHS_TTCTRL_TTHA (0x7F000000U) /*!< Bit mask for USBHS_TTCTRL_TTHA. */
+#define BS_USBHS_TTCTRL_TTHA (7U)          /*!< Bit field size in bits for USBHS_TTCTRL_TTHA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_TTCTRL_TTHA field.
-#define BR_USBHS_TTCTRL_TTHA (HW_USBHS_TTCTRL.B.TTHA)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_TTCTRL_TTHA field. */
+#define BR_USBHS_TTCTRL_TTHA(x) (HW_USBHS_TTCTRL(x).B.TTHA)
+/*@}*/
 
 /*!
  * @name Register USBHS_TTCTRL, field Reerved[31] (ROZ)
  *
  * Must ne cleared.
  */
-//@{
-#define BP_USBHS_TTCTRL_Reerved (31U)      //!< Bit position for USBHS_TTCTRL_Reerved.
-#define BM_USBHS_TTCTRL_Reerved (0x80000000U) //!< Bit mask for USBHS_TTCTRL_Reerved.
-#define BS_USBHS_TTCTRL_Reerved (1U)       //!< Bit field size in bits for USBHS_TTCTRL_Reerved.
+/*@{*/
+#define BP_USBHS_TTCTRL_Reerved (31U)      /*!< Bit position for USBHS_TTCTRL_Reerved. */
+#define BM_USBHS_TTCTRL_Reerved (0x80000000U) /*!< Bit mask for USBHS_TTCTRL_Reerved. */
+#define BS_USBHS_TTCTRL_Reerved (1U)       /*!< Bit field size in bits for USBHS_TTCTRL_Reerved. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_TTCTRL_Reerved field.
-#define BR_USBHS_TTCTRL_Reerved (BITBAND_ACCESS32(HW_USBHS_TTCTRL_ADDR, BP_USBHS_TTCTRL_Reerved))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_TTCTRL_Reerved field. */
+#define BR_USBHS_TTCTRL_Reerved(x) (BITBAND_ACCESS32(HW_USBHS_TTCTRL_ADDR(x), BP_USBHS_TTCTRL_Reerved))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_BURSTSIZE - Master Interface Data Burst Size Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_BURSTSIZE - Master Interface Data Burst Size Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_BURSTSIZE - Master Interface Data Burst Size Register (RW)
  *
@@ -3790,28 +3356,25 @@ typedef union _hw_usbhs_burstsize
     uint32_t U;
     struct _hw_usbhs_burstsize_bitfields
     {
-        uint32_t RXPBURST : 8;         //!< [7:0] Programable RX Burst length
-        uint32_t TXPBURST : 8;         //!< [15:8] Programable TX Burst length
-        uint32_t RESERVED0 : 16;       //!< [31:16] Reserved
+        uint32_t RXPBURST : 8;         /*!< [7:0] Programable RX Burst length */
+        uint32_t TXPBURST : 8;         /*!< [15:8] Programable TX Burst length */
+        uint32_t RESERVED0 : 16;       /*!< [31:16] Reserved */
     } B;
 } hw_usbhs_burstsize_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_BURSTSIZE register
  */
-//@{
-#define HW_USBHS_BURSTSIZE_ADDR  (REGS_USBHS_BASE + 0x160U)
+/*@{*/
+#define HW_USBHS_BURSTSIZE_ADDR(x) ((x) + 0x160U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_BURSTSIZE       (*(__IO hw_usbhs_burstsize_t *) HW_USBHS_BURSTSIZE_ADDR)
-#define HW_USBHS_BURSTSIZE_RD()  (HW_USBHS_BURSTSIZE.U)
-#define HW_USBHS_BURSTSIZE_WR(v) (HW_USBHS_BURSTSIZE.U = (v))
-#define HW_USBHS_BURSTSIZE_SET(v) (HW_USBHS_BURSTSIZE_WR(HW_USBHS_BURSTSIZE_RD() |  (v)))
-#define HW_USBHS_BURSTSIZE_CLR(v) (HW_USBHS_BURSTSIZE_WR(HW_USBHS_BURSTSIZE_RD() & ~(v)))
-#define HW_USBHS_BURSTSIZE_TOG(v) (HW_USBHS_BURSTSIZE_WR(HW_USBHS_BURSTSIZE_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_BURSTSIZE(x)    (*(__IO hw_usbhs_burstsize_t *) HW_USBHS_BURSTSIZE_ADDR(x))
+#define HW_USBHS_BURSTSIZE_RD(x) (HW_USBHS_BURSTSIZE(x).U)
+#define HW_USBHS_BURSTSIZE_WR(x, v) (HW_USBHS_BURSTSIZE(x).U = (v))
+#define HW_USBHS_BURSTSIZE_SET(x, v) (HW_USBHS_BURSTSIZE_WR(x, HW_USBHS_BURSTSIZE_RD(x) |  (v)))
+#define HW_USBHS_BURSTSIZE_CLR(x, v) (HW_USBHS_BURSTSIZE_WR(x, HW_USBHS_BURSTSIZE_RD(x) & ~(v)))
+#define HW_USBHS_BURSTSIZE_TOG(x, v) (HW_USBHS_BURSTSIZE_WR(x, HW_USBHS_BURSTSIZE_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_BURSTSIZE bitfields
@@ -3825,24 +3388,20 @@ typedef union _hw_usbhs_burstsize
  * 16. If the BURSTSIZE field of register SBUSCFG is non-zero, the RXPBURST
  * field returns the value of the INCRx length.
  */
-//@{
-#define BP_USBHS_BURSTSIZE_RXPBURST (0U)   //!< Bit position for USBHS_BURSTSIZE_RXPBURST.
-#define BM_USBHS_BURSTSIZE_RXPBURST (0x000000FFU) //!< Bit mask for USBHS_BURSTSIZE_RXPBURST.
-#define BS_USBHS_BURSTSIZE_RXPBURST (8U)   //!< Bit field size in bits for USBHS_BURSTSIZE_RXPBURST.
+/*@{*/
+#define BP_USBHS_BURSTSIZE_RXPBURST (0U)   /*!< Bit position for USBHS_BURSTSIZE_RXPBURST. */
+#define BM_USBHS_BURSTSIZE_RXPBURST (0x000000FFU) /*!< Bit mask for USBHS_BURSTSIZE_RXPBURST. */
+#define BS_USBHS_BURSTSIZE_RXPBURST (8U)   /*!< Bit field size in bits for USBHS_BURSTSIZE_RXPBURST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_BURSTSIZE_RXPBURST field.
-#define BR_USBHS_BURSTSIZE_RXPBURST (HW_USBHS_BURSTSIZE.B.RXPBURST)
-#endif
+/*! @brief Read current value of the USBHS_BURSTSIZE_RXPBURST field. */
+#define BR_USBHS_BURSTSIZE_RXPBURST(x) (HW_USBHS_BURSTSIZE(x).B.RXPBURST)
 
-//! @brief Format value for bitfield USBHS_BURSTSIZE_RXPBURST.
-#define BF_USBHS_BURSTSIZE_RXPBURST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_BURSTSIZE_RXPBURST), uint32_t) & BM_USBHS_BURSTSIZE_RXPBURST)
+/*! @brief Format value for bitfield USBHS_BURSTSIZE_RXPBURST. */
+#define BF_USBHS_BURSTSIZE_RXPBURST(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_BURSTSIZE_RXPBURST) & BM_USBHS_BURSTSIZE_RXPBURST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXPBURST field to a new value.
-#define BW_USBHS_BURSTSIZE_RXPBURST(v) (HW_USBHS_BURSTSIZE_WR((HW_USBHS_BURSTSIZE_RD() & ~BM_USBHS_BURSTSIZE_RXPBURST) | BF_USBHS_BURSTSIZE_RXPBURST(v)))
-#endif
-//@}
+/*! @brief Set the RXPBURST field to a new value. */
+#define BW_USBHS_BURSTSIZE_RXPBURST(x, v) (HW_USBHS_BURSTSIZE_WR(x, (HW_USBHS_BURSTSIZE_RD(x) & ~BM_USBHS_BURSTSIZE_RXPBURST) | BF_USBHS_BURSTSIZE_RXPBURST(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_BURSTSIZE, field TXPBURST[15:8] (RW)
@@ -3852,30 +3411,25 @@ typedef union _hw_usbhs_burstsize
  * BURSTSIZE field of register SBUSCFG is non-zero, the TXPBURST field returns the
  * value of the INCRx length.
  */
-//@{
-#define BP_USBHS_BURSTSIZE_TXPBURST (8U)   //!< Bit position for USBHS_BURSTSIZE_TXPBURST.
-#define BM_USBHS_BURSTSIZE_TXPBURST (0x0000FF00U) //!< Bit mask for USBHS_BURSTSIZE_TXPBURST.
-#define BS_USBHS_BURSTSIZE_TXPBURST (8U)   //!< Bit field size in bits for USBHS_BURSTSIZE_TXPBURST.
+/*@{*/
+#define BP_USBHS_BURSTSIZE_TXPBURST (8U)   /*!< Bit position for USBHS_BURSTSIZE_TXPBURST. */
+#define BM_USBHS_BURSTSIZE_TXPBURST (0x0000FF00U) /*!< Bit mask for USBHS_BURSTSIZE_TXPBURST. */
+#define BS_USBHS_BURSTSIZE_TXPBURST (8U)   /*!< Bit field size in bits for USBHS_BURSTSIZE_TXPBURST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_BURSTSIZE_TXPBURST field.
-#define BR_USBHS_BURSTSIZE_TXPBURST (HW_USBHS_BURSTSIZE.B.TXPBURST)
-#endif
+/*! @brief Read current value of the USBHS_BURSTSIZE_TXPBURST field. */
+#define BR_USBHS_BURSTSIZE_TXPBURST(x) (HW_USBHS_BURSTSIZE(x).B.TXPBURST)
 
-//! @brief Format value for bitfield USBHS_BURSTSIZE_TXPBURST.
-#define BF_USBHS_BURSTSIZE_TXPBURST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_BURSTSIZE_TXPBURST), uint32_t) & BM_USBHS_BURSTSIZE_TXPBURST)
+/*! @brief Format value for bitfield USBHS_BURSTSIZE_TXPBURST. */
+#define BF_USBHS_BURSTSIZE_TXPBURST(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_BURSTSIZE_TXPBURST) & BM_USBHS_BURSTSIZE_TXPBURST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXPBURST field to a new value.
-#define BW_USBHS_BURSTSIZE_TXPBURST(v) (HW_USBHS_BURSTSIZE_WR((HW_USBHS_BURSTSIZE_RD() & ~BM_USBHS_BURSTSIZE_TXPBURST) | BF_USBHS_BURSTSIZE_TXPBURST(v)))
-#endif
-//@}
+/*! @brief Set the TXPBURST field to a new value. */
+#define BW_USBHS_BURSTSIZE_TXPBURST(x, v) (HW_USBHS_BURSTSIZE_WR(x, (HW_USBHS_BURSTSIZE_RD(x) & ~BM_USBHS_BURSTSIZE_TXPBURST) | BF_USBHS_BURSTSIZE_TXPBURST(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_TXFILLTUNING - Transmit FIFO Tuning Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_TXFILLTUNING - Transmit FIFO Tuning Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_TXFILLTUNING - Transmit FIFO Tuning Control Register (RW)
  *
@@ -3907,31 +3461,28 @@ typedef union _hw_usbhs_txfilltuning
     uint32_t U;
     struct _hw_usbhs_txfilltuning_bitfields
     {
-        uint32_t TXSCHOH : 7;          //!< [6:0] Scheduler Overhead
-        uint32_t RESERVED0 : 1;        //!< [7] Reserved
-        uint32_t TXSCHHEALTH : 5;      //!< [12:8] Scheduler Health counter
-        uint32_t RESERVED1 : 3;        //!< [15:13] Reserved
-        uint32_t TXFIFOTHRES : 6;      //!< [21:16] FIFO burst Threshold
-        uint32_t RESERVED2 : 10;       //!< [31:22] Reserved
+        uint32_t TXSCHOH : 7;          /*!< [6:0] Scheduler Overhead */
+        uint32_t RESERVED0 : 1;        /*!< [7] Reserved */
+        uint32_t TXSCHHEALTH : 5;      /*!< [12:8] Scheduler Health counter */
+        uint32_t RESERVED1 : 3;        /*!< [15:13] Reserved */
+        uint32_t TXFIFOTHRES : 6;      /*!< [21:16] FIFO burst Threshold */
+        uint32_t RESERVED2 : 10;       /*!< [31:22] Reserved */
     } B;
 } hw_usbhs_txfilltuning_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_TXFILLTUNING register
  */
-//@{
-#define HW_USBHS_TXFILLTUNING_ADDR (REGS_USBHS_BASE + 0x164U)
+/*@{*/
+#define HW_USBHS_TXFILLTUNING_ADDR(x) ((x) + 0x164U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_TXFILLTUNING    (*(__IO hw_usbhs_txfilltuning_t *) HW_USBHS_TXFILLTUNING_ADDR)
-#define HW_USBHS_TXFILLTUNING_RD() (HW_USBHS_TXFILLTUNING.U)
-#define HW_USBHS_TXFILLTUNING_WR(v) (HW_USBHS_TXFILLTUNING.U = (v))
-#define HW_USBHS_TXFILLTUNING_SET(v) (HW_USBHS_TXFILLTUNING_WR(HW_USBHS_TXFILLTUNING_RD() |  (v)))
-#define HW_USBHS_TXFILLTUNING_CLR(v) (HW_USBHS_TXFILLTUNING_WR(HW_USBHS_TXFILLTUNING_RD() & ~(v)))
-#define HW_USBHS_TXFILLTUNING_TOG(v) (HW_USBHS_TXFILLTUNING_WR(HW_USBHS_TXFILLTUNING_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_TXFILLTUNING(x) (*(__IO hw_usbhs_txfilltuning_t *) HW_USBHS_TXFILLTUNING_ADDR(x))
+#define HW_USBHS_TXFILLTUNING_RD(x) (HW_USBHS_TXFILLTUNING(x).U)
+#define HW_USBHS_TXFILLTUNING_WR(x, v) (HW_USBHS_TXFILLTUNING(x).U = (v))
+#define HW_USBHS_TXFILLTUNING_SET(x, v) (HW_USBHS_TXFILLTUNING_WR(x, HW_USBHS_TXFILLTUNING_RD(x) |  (v)))
+#define HW_USBHS_TXFILLTUNING_CLR(x, v) (HW_USBHS_TXFILLTUNING_WR(x, HW_USBHS_TXFILLTUNING_RD(x) & ~(v)))
+#define HW_USBHS_TXFILLTUNING_TOG(x, v) (HW_USBHS_TXFILLTUNING_WR(x, HW_USBHS_TXFILLTUNING_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_TXFILLTUNING bitfields
@@ -3958,24 +3509,20 @@ typedef union _hw_usbhs_txfilltuning
  * via the USBMODE register, treat TXFIFOTHRES as the maximum value for purposes
  * of the TXSCHOH calculation.
  */
-//@{
-#define BP_USBHS_TXFILLTUNING_TXSCHOH (0U) //!< Bit position for USBHS_TXFILLTUNING_TXSCHOH.
-#define BM_USBHS_TXFILLTUNING_TXSCHOH (0x0000007FU) //!< Bit mask for USBHS_TXFILLTUNING_TXSCHOH.
-#define BS_USBHS_TXFILLTUNING_TXSCHOH (7U) //!< Bit field size in bits for USBHS_TXFILLTUNING_TXSCHOH.
+/*@{*/
+#define BP_USBHS_TXFILLTUNING_TXSCHOH (0U) /*!< Bit position for USBHS_TXFILLTUNING_TXSCHOH. */
+#define BM_USBHS_TXFILLTUNING_TXSCHOH (0x0000007FU) /*!< Bit mask for USBHS_TXFILLTUNING_TXSCHOH. */
+#define BS_USBHS_TXFILLTUNING_TXSCHOH (7U) /*!< Bit field size in bits for USBHS_TXFILLTUNING_TXSCHOH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_TXFILLTUNING_TXSCHOH field.
-#define BR_USBHS_TXFILLTUNING_TXSCHOH (HW_USBHS_TXFILLTUNING.B.TXSCHOH)
-#endif
+/*! @brief Read current value of the USBHS_TXFILLTUNING_TXSCHOH field. */
+#define BR_USBHS_TXFILLTUNING_TXSCHOH(x) (HW_USBHS_TXFILLTUNING(x).B.TXSCHOH)
 
-//! @brief Format value for bitfield USBHS_TXFILLTUNING_TXSCHOH.
-#define BF_USBHS_TXFILLTUNING_TXSCHOH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_TXFILLTUNING_TXSCHOH), uint32_t) & BM_USBHS_TXFILLTUNING_TXSCHOH)
+/*! @brief Format value for bitfield USBHS_TXFILLTUNING_TXSCHOH. */
+#define BF_USBHS_TXFILLTUNING_TXSCHOH(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_TXFILLTUNING_TXSCHOH) & BM_USBHS_TXFILLTUNING_TXSCHOH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXSCHOH field to a new value.
-#define BW_USBHS_TXFILLTUNING_TXSCHOH(v) (HW_USBHS_TXFILLTUNING_WR((HW_USBHS_TXFILLTUNING_RD() & ~BM_USBHS_TXFILLTUNING_TXSCHOH) | BF_USBHS_TXFILLTUNING_TXSCHOH(v)))
-#endif
-//@}
+/*! @brief Set the TXSCHOH field to a new value. */
+#define BW_USBHS_TXFILLTUNING_TXSCHOH(x, v) (HW_USBHS_TXFILLTUNING_WR(x, (HW_USBHS_TXFILLTUNING_RD(x) & ~BM_USBHS_TXFILLTUNING_TXSCHOH) | BF_USBHS_TXFILLTUNING_TXSCHOH(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_TXFILLTUNING, field TXSCHHEALTH[12:8] (RW)
@@ -3987,24 +3534,20 @@ typedef union _hw_usbhs_txfilltuning
  * this register clears the counter and this counter stops counting after reaching
  * the maximum of 31.
  */
-//@{
-#define BP_USBHS_TXFILLTUNING_TXSCHHEALTH (8U) //!< Bit position for USBHS_TXFILLTUNING_TXSCHHEALTH.
-#define BM_USBHS_TXFILLTUNING_TXSCHHEALTH (0x00001F00U) //!< Bit mask for USBHS_TXFILLTUNING_TXSCHHEALTH.
-#define BS_USBHS_TXFILLTUNING_TXSCHHEALTH (5U) //!< Bit field size in bits for USBHS_TXFILLTUNING_TXSCHHEALTH.
+/*@{*/
+#define BP_USBHS_TXFILLTUNING_TXSCHHEALTH (8U) /*!< Bit position for USBHS_TXFILLTUNING_TXSCHHEALTH. */
+#define BM_USBHS_TXFILLTUNING_TXSCHHEALTH (0x00001F00U) /*!< Bit mask for USBHS_TXFILLTUNING_TXSCHHEALTH. */
+#define BS_USBHS_TXFILLTUNING_TXSCHHEALTH (5U) /*!< Bit field size in bits for USBHS_TXFILLTUNING_TXSCHHEALTH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_TXFILLTUNING_TXSCHHEALTH field.
-#define BR_USBHS_TXFILLTUNING_TXSCHHEALTH (HW_USBHS_TXFILLTUNING.B.TXSCHHEALTH)
-#endif
+/*! @brief Read current value of the USBHS_TXFILLTUNING_TXSCHHEALTH field. */
+#define BR_USBHS_TXFILLTUNING_TXSCHHEALTH(x) (HW_USBHS_TXFILLTUNING(x).B.TXSCHHEALTH)
 
-//! @brief Format value for bitfield USBHS_TXFILLTUNING_TXSCHHEALTH.
-#define BF_USBHS_TXFILLTUNING_TXSCHHEALTH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_TXFILLTUNING_TXSCHHEALTH), uint32_t) & BM_USBHS_TXFILLTUNING_TXSCHHEALTH)
+/*! @brief Format value for bitfield USBHS_TXFILLTUNING_TXSCHHEALTH. */
+#define BF_USBHS_TXFILLTUNING_TXSCHHEALTH(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_TXFILLTUNING_TXSCHHEALTH) & BM_USBHS_TXFILLTUNING_TXSCHHEALTH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXSCHHEALTH field to a new value.
-#define BW_USBHS_TXFILLTUNING_TXSCHHEALTH(v) (HW_USBHS_TXFILLTUNING_WR((HW_USBHS_TXFILLTUNING_RD() & ~BM_USBHS_TXFILLTUNING_TXSCHHEALTH) | BF_USBHS_TXFILLTUNING_TXSCHHEALTH(v)))
-#endif
-//@}
+/*! @brief Set the TXSCHHEALTH field to a new value. */
+#define BW_USBHS_TXFILLTUNING_TXSCHHEALTH(x, v) (HW_USBHS_TXFILLTUNING_WR(x, (HW_USBHS_TXFILLTUNING_RD(x) & ~BM_USBHS_TXFILLTUNING_TXSCHHEALTH) | BF_USBHS_TXFILLTUNING_TXSCHHEALTH(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_TXFILLTUNING, field TXFIFOTHRES[21:16] (RW)
@@ -4019,30 +3562,25 @@ typedef union _hw_usbhs_txfilltuning
  * bit is set, the host controller behaves as if TXFIFOTHRES is set to its
  * maximum value.
  */
-//@{
-#define BP_USBHS_TXFILLTUNING_TXFIFOTHRES (16U) //!< Bit position for USBHS_TXFILLTUNING_TXFIFOTHRES.
-#define BM_USBHS_TXFILLTUNING_TXFIFOTHRES (0x003F0000U) //!< Bit mask for USBHS_TXFILLTUNING_TXFIFOTHRES.
-#define BS_USBHS_TXFILLTUNING_TXFIFOTHRES (6U) //!< Bit field size in bits for USBHS_TXFILLTUNING_TXFIFOTHRES.
+/*@{*/
+#define BP_USBHS_TXFILLTUNING_TXFIFOTHRES (16U) /*!< Bit position for USBHS_TXFILLTUNING_TXFIFOTHRES. */
+#define BM_USBHS_TXFILLTUNING_TXFIFOTHRES (0x003F0000U) /*!< Bit mask for USBHS_TXFILLTUNING_TXFIFOTHRES. */
+#define BS_USBHS_TXFILLTUNING_TXFIFOTHRES (6U) /*!< Bit field size in bits for USBHS_TXFILLTUNING_TXFIFOTHRES. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_TXFILLTUNING_TXFIFOTHRES field.
-#define BR_USBHS_TXFILLTUNING_TXFIFOTHRES (HW_USBHS_TXFILLTUNING.B.TXFIFOTHRES)
-#endif
+/*! @brief Read current value of the USBHS_TXFILLTUNING_TXFIFOTHRES field. */
+#define BR_USBHS_TXFILLTUNING_TXFIFOTHRES(x) (HW_USBHS_TXFILLTUNING(x).B.TXFIFOTHRES)
 
-//! @brief Format value for bitfield USBHS_TXFILLTUNING_TXFIFOTHRES.
-#define BF_USBHS_TXFILLTUNING_TXFIFOTHRES(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_TXFILLTUNING_TXFIFOTHRES), uint32_t) & BM_USBHS_TXFILLTUNING_TXFIFOTHRES)
+/*! @brief Format value for bitfield USBHS_TXFILLTUNING_TXFIFOTHRES. */
+#define BF_USBHS_TXFILLTUNING_TXFIFOTHRES(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_TXFILLTUNING_TXFIFOTHRES) & BM_USBHS_TXFILLTUNING_TXFIFOTHRES)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXFIFOTHRES field to a new value.
-#define BW_USBHS_TXFILLTUNING_TXFIFOTHRES(v) (HW_USBHS_TXFILLTUNING_WR((HW_USBHS_TXFILLTUNING_RD() & ~BM_USBHS_TXFILLTUNING_TXFIFOTHRES) | BF_USBHS_TXFILLTUNING_TXFIFOTHRES(v)))
-#endif
-//@}
+/*! @brief Set the TXFIFOTHRES field to a new value. */
+#define BW_USBHS_TXFILLTUNING_TXFIFOTHRES(x, v) (HW_USBHS_TXFILLTUNING_WR(x, (HW_USBHS_TXFILLTUNING_RD(x) & ~BM_USBHS_TXFILLTUNING_TXFIFOTHRES) | BF_USBHS_TXFILLTUNING_TXFIFOTHRES(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_ULPI_VIEWPORT - ULPI Register Access
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_ULPI_VIEWPORT - ULPI Register Access
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_ULPI_VIEWPORT - ULPI Register Access (RW)
  *
@@ -4082,34 +3620,31 @@ typedef union _hw_usbhs_ulpi_viewport
     uint32_t U;
     struct _hw_usbhs_ulpi_viewport_bitfields
     {
-        uint32_t ULPI_DATWR : 8;       //!< [7:0] ULPI Data Write
-        uint32_t ULPI_DATRD : 8;       //!< [15:8] ULPI Data Read
-        uint32_t ULPI_ADDR : 8;        //!< [23:16] ULPI data Address
-        uint32_t ULPI_PORT : 3;        //!< [26:24] ULPI Port number
-        uint32_t ULPI_SS : 1;          //!< [27] ULPI Sync State
-        uint32_t RESERVED0 : 1;        //!< [28] Reserved
-        uint32_t ULPI_RW : 1;          //!< [29] ULPI Read/Write
-        uint32_t ULPI_RUN : 1;         //!< [30] ULPI Run
-        uint32_t ULPI_WU : 1;          //!< [31] ULPI Wake-Up
+        uint32_t ULPI_DATWR : 8;       /*!< [7:0] ULPI Data Write */
+        uint32_t ULPI_DATRD : 8;       /*!< [15:8] ULPI Data Read */
+        uint32_t ULPI_ADDR : 8;        /*!< [23:16] ULPI data Address */
+        uint32_t ULPI_PORT : 3;        /*!< [26:24] ULPI Port number */
+        uint32_t ULPI_SS : 1;          /*!< [27] ULPI Sync State */
+        uint32_t RESERVED0 : 1;        /*!< [28] Reserved */
+        uint32_t ULPI_RW : 1;          /*!< [29] ULPI Read/Write */
+        uint32_t ULPI_RUN : 1;         /*!< [30] ULPI Run */
+        uint32_t ULPI_WU : 1;          /*!< [31] ULPI Wake-Up */
     } B;
 } hw_usbhs_ulpi_viewport_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_ULPI_VIEWPORT register
  */
-//@{
-#define HW_USBHS_ULPI_VIEWPORT_ADDR (REGS_USBHS_BASE + 0x170U)
+/*@{*/
+#define HW_USBHS_ULPI_VIEWPORT_ADDR(x) ((x) + 0x170U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_ULPI_VIEWPORT   (*(__IO hw_usbhs_ulpi_viewport_t *) HW_USBHS_ULPI_VIEWPORT_ADDR)
-#define HW_USBHS_ULPI_VIEWPORT_RD() (HW_USBHS_ULPI_VIEWPORT.U)
-#define HW_USBHS_ULPI_VIEWPORT_WR(v) (HW_USBHS_ULPI_VIEWPORT.U = (v))
-#define HW_USBHS_ULPI_VIEWPORT_SET(v) (HW_USBHS_ULPI_VIEWPORT_WR(HW_USBHS_ULPI_VIEWPORT_RD() |  (v)))
-#define HW_USBHS_ULPI_VIEWPORT_CLR(v) (HW_USBHS_ULPI_VIEWPORT_WR(HW_USBHS_ULPI_VIEWPORT_RD() & ~(v)))
-#define HW_USBHS_ULPI_VIEWPORT_TOG(v) (HW_USBHS_ULPI_VIEWPORT_WR(HW_USBHS_ULPI_VIEWPORT_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_ULPI_VIEWPORT(x) (*(__IO hw_usbhs_ulpi_viewport_t *) HW_USBHS_ULPI_VIEWPORT_ADDR(x))
+#define HW_USBHS_ULPI_VIEWPORT_RD(x) (HW_USBHS_ULPI_VIEWPORT(x).U)
+#define HW_USBHS_ULPI_VIEWPORT_WR(x, v) (HW_USBHS_ULPI_VIEWPORT(x).U = (v))
+#define HW_USBHS_ULPI_VIEWPORT_SET(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, HW_USBHS_ULPI_VIEWPORT_RD(x) |  (v)))
+#define HW_USBHS_ULPI_VIEWPORT_CLR(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, HW_USBHS_ULPI_VIEWPORT_RD(x) & ~(v)))
+#define HW_USBHS_ULPI_VIEWPORT_TOG(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, HW_USBHS_ULPI_VIEWPORT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_ULPI_VIEWPORT bitfields
@@ -4121,40 +3656,34 @@ typedef union _hw_usbhs_ulpi_viewport
  * When a write operation is commanded, the data to be sent is written to this
  * field.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_DATWR (0U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_DATWR.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR (0x000000FFU) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_DATWR.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_DATWR (8U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_DATWR.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_DATWR (0U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_DATWR. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR (0x000000FFU) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_DATWR. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_DATWR (8U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_DATWR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_DATWR field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_DATWR (HW_USBHS_ULPI_VIEWPORT.B.ULPI_DATWR)
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_DATWR field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_DATWR(x) (HW_USBHS_ULPI_VIEWPORT(x).B.ULPI_DATWR)
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_DATWR.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_DATWR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_DATWR), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_DATWR. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_DATWR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_DATWR) & BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_DATWR field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_DATWR(v) (HW_USBHS_ULPI_VIEWPORT_WR((HW_USBHS_ULPI_VIEWPORT_RD() & ~BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR) | BF_USBHS_ULPI_VIEWPORT_ULPI_DATWR(v)))
-#endif
-//@}
+/*! @brief Set the ULPI_DATWR field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_DATWR(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, (HW_USBHS_ULPI_VIEWPORT_RD(x) & ~BM_USBHS_ULPI_VIEWPORT_ULPI_DATWR) | BF_USBHS_ULPI_VIEWPORT_ULPI_DATWR(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_DATRD[15:8] (RO)
  *
  * After a read operation completes, the result is placed in this field.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_DATRD (8U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_DATRD.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_DATRD (0x0000FF00U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_DATRD.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_DATRD (8U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_DATRD.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_DATRD (8U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_DATRD. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_DATRD (0x0000FF00U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_DATRD. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_DATRD (8U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_DATRD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_DATRD field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_DATRD (HW_USBHS_ULPI_VIEWPORT.B.ULPI_DATRD)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_DATRD field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_DATRD(x) (HW_USBHS_ULPI_VIEWPORT(x).B.ULPI_DATRD)
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_ADDR[23:16] (RW)
@@ -4162,24 +3691,20 @@ typedef union _hw_usbhs_ulpi_viewport
  * When a read or write operation is commanded, the address of the operation is
  * written to this field.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_ADDR (16U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_ADDR.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR (0x00FF0000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_ADDR.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_ADDR (8U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_ADDR.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_ADDR (16U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_ADDR. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR (0x00FF0000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_ADDR. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_ADDR (8U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_ADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_ADDR field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_ADDR (HW_USBHS_ULPI_VIEWPORT.B.ULPI_ADDR)
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_ADDR field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_ADDR(x) (HW_USBHS_ULPI_VIEWPORT(x).B.ULPI_ADDR)
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_ADDR.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_ADDR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_ADDR), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_ADDR. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_ADDR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_ADDR) & BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_ADDR field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_ADDR(v) (HW_USBHS_ULPI_VIEWPORT_WR((HW_USBHS_ULPI_VIEWPORT_RD() & ~BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR) | BF_USBHS_ULPI_VIEWPORT_ULPI_ADDR(v)))
-#endif
-//@}
+/*! @brief Set the ULPI_ADDR field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_ADDR(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, (HW_USBHS_ULPI_VIEWPORT_RD(x) & ~BM_USBHS_ULPI_VIEWPORT_ULPI_ADDR) | BF_USBHS_ULPI_VIEWPORT_ULPI_ADDR(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_PORT[26:24] (RW)
@@ -4187,24 +3712,20 @@ typedef union _hw_usbhs_ulpi_viewport
  * For wake-up or read/write operations this value selects the port number to
  * which the ULPI PHY is attached. Valid values are 0 and 1.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_PORT (24U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_PORT.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_PORT (0x07000000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_PORT.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_PORT (3U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_PORT.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_PORT (24U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_PORT. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_PORT (0x07000000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_PORT. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_PORT (3U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_PORT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_PORT field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_PORT (HW_USBHS_ULPI_VIEWPORT.B.ULPI_PORT)
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_PORT field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_PORT(x) (HW_USBHS_ULPI_VIEWPORT(x).B.ULPI_PORT)
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_PORT.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_PORT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_PORT), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_PORT)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_PORT. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_PORT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_PORT) & BM_USBHS_ULPI_VIEWPORT_ULPI_PORT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_PORT field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_PORT(v) (HW_USBHS_ULPI_VIEWPORT_WR((HW_USBHS_ULPI_VIEWPORT_RD() & ~BM_USBHS_ULPI_VIEWPORT_ULPI_PORT) | BF_USBHS_ULPI_VIEWPORT_ULPI_PORT(v)))
-#endif
-//@}
+/*! @brief Set the ULPI_PORT field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_PORT(x, v) (HW_USBHS_ULPI_VIEWPORT_WR(x, (HW_USBHS_ULPI_VIEWPORT_RD(x) & ~BM_USBHS_ULPI_VIEWPORT_ULPI_PORT) | BF_USBHS_ULPI_VIEWPORT_ULPI_PORT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_SS[27] (RW)
@@ -4217,24 +3738,20 @@ typedef union _hw_usbhs_ulpi_viewport
  * - 0 - Any other state (that is, carkit, serial, low power)
  * - 1 - Normal sync state
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_SS (27U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_SS.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_SS (0x08000000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_SS.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_SS (1U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_SS.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_SS (27U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_SS. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_SS (0x08000000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_SS. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_SS (1U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_SS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_SS field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_SS (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_SS))
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_SS field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_SS(x) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_SS))
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_SS.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_SS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_SS), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_SS)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_SS. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_SS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_SS) & BM_USBHS_ULPI_VIEWPORT_ULPI_SS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_SS field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_SS(v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_SS) = (v))
-#endif
-//@}
+/*! @brief Set the ULPI_SS field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_SS(x, v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_SS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_RW[29] (RW)
@@ -4245,24 +3762,20 @@ typedef union _hw_usbhs_ulpi_viewport
  * - 0 - Read
  * - 1 - Write
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_RW (29U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_RW.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_RW (0x20000000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_RW.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_RW (1U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_RW.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_RW (29U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_RW. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_RW (0x20000000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_RW. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_RW (1U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_RW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_RW field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_RW (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_RW))
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_RW field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_RW(x) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_RW))
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_RW.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_RW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_RW), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_RW)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_RW. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_RW(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_RW) & BM_USBHS_ULPI_VIEWPORT_ULPI_RW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_RW field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_RW(v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_RW) = (v))
-#endif
-//@}
+/*! @brief Set the ULPI_RW field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_RW(x, v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_RW) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_RUN[30] (RW)
@@ -4272,24 +3785,20 @@ typedef union _hw_usbhs_ulpi_viewport
  * cleared by software. The driver must never execute a wake-up and a read/write
  * operation at the same time.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_RUN (30U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_RUN.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_RUN (0x40000000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_RUN.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_RUN (1U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_RUN.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_RUN (30U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_RUN. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_RUN (0x40000000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_RUN. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_RUN (1U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_RUN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_RUN field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_RUN (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_RUN))
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_RUN field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_RUN(x) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_RUN))
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_RUN.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_RUN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_RUN), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_RUN)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_RUN. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_RUN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_RUN) & BM_USBHS_ULPI_VIEWPORT_ULPI_RUN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_RUN field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_RUN(v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_RUN) = (v))
-#endif
-//@}
+/*! @brief Set the ULPI_RUN field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_RUN(x, v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_RUN) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_ULPI_VIEWPORT, field ULPI_WU[31] (RW)
@@ -4299,30 +3808,25 @@ typedef union _hw_usbhs_ulpi_viewport
  * software. The driver must never execute a wake-up and a read/write operation
  * at the same time.
  */
-//@{
-#define BP_USBHS_ULPI_VIEWPORT_ULPI_WU (31U) //!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_WU.
-#define BM_USBHS_ULPI_VIEWPORT_ULPI_WU (0x80000000U) //!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_WU.
-#define BS_USBHS_ULPI_VIEWPORT_ULPI_WU (1U) //!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_WU.
+/*@{*/
+#define BP_USBHS_ULPI_VIEWPORT_ULPI_WU (31U) /*!< Bit position for USBHS_ULPI_VIEWPORT_ULPI_WU. */
+#define BM_USBHS_ULPI_VIEWPORT_ULPI_WU (0x80000000U) /*!< Bit mask for USBHS_ULPI_VIEWPORT_ULPI_WU. */
+#define BS_USBHS_ULPI_VIEWPORT_ULPI_WU (1U) /*!< Bit field size in bits for USBHS_ULPI_VIEWPORT_ULPI_WU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_WU field.
-#define BR_USBHS_ULPI_VIEWPORT_ULPI_WU (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_WU))
-#endif
+/*! @brief Read current value of the USBHS_ULPI_VIEWPORT_ULPI_WU field. */
+#define BR_USBHS_ULPI_VIEWPORT_ULPI_WU(x) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_WU))
 
-//! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_WU.
-#define BF_USBHS_ULPI_VIEWPORT_ULPI_WU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ULPI_VIEWPORT_ULPI_WU), uint32_t) & BM_USBHS_ULPI_VIEWPORT_ULPI_WU)
+/*! @brief Format value for bitfield USBHS_ULPI_VIEWPORT_ULPI_WU. */
+#define BF_USBHS_ULPI_VIEWPORT_ULPI_WU(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ULPI_VIEWPORT_ULPI_WU) & BM_USBHS_ULPI_VIEWPORT_ULPI_WU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ULPI_WU field to a new value.
-#define BW_USBHS_ULPI_VIEWPORT_ULPI_WU(v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR, BP_USBHS_ULPI_VIEWPORT_ULPI_WU) = (v))
-#endif
-//@}
+/*! @brief Set the ULPI_WU field to a new value. */
+#define BW_USBHS_ULPI_VIEWPORT_ULPI_WU(x, v) (BITBAND_ACCESS32(HW_USBHS_ULPI_VIEWPORT_ADDR(x), BP_USBHS_ULPI_VIEWPORT_ULPI_WU) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_ENDPTNAK - Endpoint NAK Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_ENDPTNAK - Endpoint NAK Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_ENDPTNAK - Endpoint NAK Register (RW)
  *
@@ -4333,29 +3837,26 @@ typedef union _hw_usbhs_endptnak
     uint32_t U;
     struct _hw_usbhs_endptnak_bitfields
     {
-        uint32_t EPRN : 4;             //!< [3:0] RX Endpoint NAK
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t EPTN : 4;             //!< [19:16] TX Endpoint NAK
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t EPRN : 4;             /*!< [3:0] RX Endpoint NAK */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t EPTN : 4;             /*!< [19:16] TX Endpoint NAK */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_endptnak_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_ENDPTNAK register
  */
-//@{
-#define HW_USBHS_ENDPTNAK_ADDR   (REGS_USBHS_BASE + 0x178U)
+/*@{*/
+#define HW_USBHS_ENDPTNAK_ADDR(x) ((x) + 0x178U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_ENDPTNAK        (*(__IO hw_usbhs_endptnak_t *) HW_USBHS_ENDPTNAK_ADDR)
-#define HW_USBHS_ENDPTNAK_RD()   (HW_USBHS_ENDPTNAK.U)
-#define HW_USBHS_ENDPTNAK_WR(v)  (HW_USBHS_ENDPTNAK.U = (v))
-#define HW_USBHS_ENDPTNAK_SET(v) (HW_USBHS_ENDPTNAK_WR(HW_USBHS_ENDPTNAK_RD() |  (v)))
-#define HW_USBHS_ENDPTNAK_CLR(v) (HW_USBHS_ENDPTNAK_WR(HW_USBHS_ENDPTNAK_RD() & ~(v)))
-#define HW_USBHS_ENDPTNAK_TOG(v) (HW_USBHS_ENDPTNAK_WR(HW_USBHS_ENDPTNAK_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_ENDPTNAK(x)     (*(__IO hw_usbhs_endptnak_t *) HW_USBHS_ENDPTNAK_ADDR(x))
+#define HW_USBHS_ENDPTNAK_RD(x)  (HW_USBHS_ENDPTNAK(x).U)
+#define HW_USBHS_ENDPTNAK_WR(x, v) (HW_USBHS_ENDPTNAK(x).U = (v))
+#define HW_USBHS_ENDPTNAK_SET(x, v) (HW_USBHS_ENDPTNAK_WR(x, HW_USBHS_ENDPTNAK_RD(x) |  (v)))
+#define HW_USBHS_ENDPTNAK_CLR(x, v) (HW_USBHS_ENDPTNAK_WR(x, HW_USBHS_ENDPTNAK_RD(x) & ~(v)))
+#define HW_USBHS_ENDPTNAK_TOG(x, v) (HW_USBHS_ENDPTNAK_WR(x, HW_USBHS_ENDPTNAK_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_ENDPTNAK bitfields
@@ -4369,24 +3870,20 @@ typedef union _hw_usbhs_endptnak
  * endpoint. EPRN[3]-Endpoint #3 EPRN[2]-Endpoint #2 EPRN[1]-Endpoint #1
  * EPRN[0]-Endpoint #0
  */
-//@{
-#define BP_USBHS_ENDPTNAK_EPRN (0U)        //!< Bit position for USBHS_ENDPTNAK_EPRN.
-#define BM_USBHS_ENDPTNAK_EPRN (0x0000000FU) //!< Bit mask for USBHS_ENDPTNAK_EPRN.
-#define BS_USBHS_ENDPTNAK_EPRN (4U)        //!< Bit field size in bits for USBHS_ENDPTNAK_EPRN.
+/*@{*/
+#define BP_USBHS_ENDPTNAK_EPRN (0U)        /*!< Bit position for USBHS_ENDPTNAK_EPRN. */
+#define BM_USBHS_ENDPTNAK_EPRN (0x0000000FU) /*!< Bit mask for USBHS_ENDPTNAK_EPRN. */
+#define BS_USBHS_ENDPTNAK_EPRN (4U)        /*!< Bit field size in bits for USBHS_ENDPTNAK_EPRN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ENDPTNAK_EPRN field.
-#define BR_USBHS_ENDPTNAK_EPRN (HW_USBHS_ENDPTNAK.B.EPRN)
-#endif
+/*! @brief Read current value of the USBHS_ENDPTNAK_EPRN field. */
+#define BR_USBHS_ENDPTNAK_EPRN(x) (HW_USBHS_ENDPTNAK(x).B.EPRN)
 
-//! @brief Format value for bitfield USBHS_ENDPTNAK_EPRN.
-#define BF_USBHS_ENDPTNAK_EPRN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ENDPTNAK_EPRN), uint32_t) & BM_USBHS_ENDPTNAK_EPRN)
+/*! @brief Format value for bitfield USBHS_ENDPTNAK_EPRN. */
+#define BF_USBHS_ENDPTNAK_EPRN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ENDPTNAK_EPRN) & BM_USBHS_ENDPTNAK_EPRN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPRN field to a new value.
-#define BW_USBHS_ENDPTNAK_EPRN(v) (HW_USBHS_ENDPTNAK_WR((HW_USBHS_ENDPTNAK_RD() & ~BM_USBHS_ENDPTNAK_EPRN) | BF_USBHS_ENDPTNAK_EPRN(v)))
-#endif
-//@}
+/*! @brief Set the EPRN field to a new value. */
+#define BW_USBHS_ENDPTNAK_EPRN(x, v) (HW_USBHS_ENDPTNAK_WR(x, (HW_USBHS_ENDPTNAK_RD(x) & ~BM_USBHS_ENDPTNAK_EPRN) | BF_USBHS_ENDPTNAK_EPRN(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_ENDPTNAK, field EPTN[19:16] (W1C)
@@ -4395,30 +3892,25 @@ typedef union _hw_usbhs_endptnak
  * sends a NAK handshake on a received IN token for the corresponding endpoint.
  * EPTN[3]-Endpoint #3 EPTN[2]-Endpoint #2 EPTN[1]-Endpoint #1 EPTN[0]-Endpoint #0
  */
-//@{
-#define BP_USBHS_ENDPTNAK_EPTN (16U)       //!< Bit position for USBHS_ENDPTNAK_EPTN.
-#define BM_USBHS_ENDPTNAK_EPTN (0x000F0000U) //!< Bit mask for USBHS_ENDPTNAK_EPTN.
-#define BS_USBHS_ENDPTNAK_EPTN (4U)        //!< Bit field size in bits for USBHS_ENDPTNAK_EPTN.
+/*@{*/
+#define BP_USBHS_ENDPTNAK_EPTN (16U)       /*!< Bit position for USBHS_ENDPTNAK_EPTN. */
+#define BM_USBHS_ENDPTNAK_EPTN (0x000F0000U) /*!< Bit mask for USBHS_ENDPTNAK_EPTN. */
+#define BS_USBHS_ENDPTNAK_EPTN (4U)        /*!< Bit field size in bits for USBHS_ENDPTNAK_EPTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ENDPTNAK_EPTN field.
-#define BR_USBHS_ENDPTNAK_EPTN (HW_USBHS_ENDPTNAK.B.EPTN)
-#endif
+/*! @brief Read current value of the USBHS_ENDPTNAK_EPTN field. */
+#define BR_USBHS_ENDPTNAK_EPTN(x) (HW_USBHS_ENDPTNAK(x).B.EPTN)
 
-//! @brief Format value for bitfield USBHS_ENDPTNAK_EPTN.
-#define BF_USBHS_ENDPTNAK_EPTN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ENDPTNAK_EPTN), uint32_t) & BM_USBHS_ENDPTNAK_EPTN)
+/*! @brief Format value for bitfield USBHS_ENDPTNAK_EPTN. */
+#define BF_USBHS_ENDPTNAK_EPTN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ENDPTNAK_EPTN) & BM_USBHS_ENDPTNAK_EPTN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPTN field to a new value.
-#define BW_USBHS_ENDPTNAK_EPTN(v) (HW_USBHS_ENDPTNAK_WR((HW_USBHS_ENDPTNAK_RD() & ~BM_USBHS_ENDPTNAK_EPTN) | BF_USBHS_ENDPTNAK_EPTN(v)))
-#endif
-//@}
+/*! @brief Set the EPTN field to a new value. */
+#define BW_USBHS_ENDPTNAK_EPTN(x, v) (HW_USBHS_ENDPTNAK_WR(x, (HW_USBHS_ENDPTNAK_RD(x) & ~BM_USBHS_ENDPTNAK_EPTN) | BF_USBHS_ENDPTNAK_EPTN(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_ENDPTNAKEN - Endpoint NAK Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_ENDPTNAKEN - Endpoint NAK Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_ENDPTNAKEN - Endpoint NAK Enable Register (RW)
  *
@@ -4429,29 +3921,26 @@ typedef union _hw_usbhs_endptnaken
     uint32_t U;
     struct _hw_usbhs_endptnaken_bitfields
     {
-        uint32_t EPRNE : 4;            //!< [3:0] RX Endpoint NAK
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t EPTNE : 4;            //!< [19:16] TX Endpoint NAK
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t EPRNE : 4;            /*!< [3:0] RX Endpoint NAK */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t EPTNE : 4;            /*!< [19:16] TX Endpoint NAK */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_endptnaken_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_ENDPTNAKEN register
  */
-//@{
-#define HW_USBHS_ENDPTNAKEN_ADDR (REGS_USBHS_BASE + 0x17CU)
+/*@{*/
+#define HW_USBHS_ENDPTNAKEN_ADDR(x) ((x) + 0x17CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_ENDPTNAKEN      (*(__IO hw_usbhs_endptnaken_t *) HW_USBHS_ENDPTNAKEN_ADDR)
-#define HW_USBHS_ENDPTNAKEN_RD() (HW_USBHS_ENDPTNAKEN.U)
-#define HW_USBHS_ENDPTNAKEN_WR(v) (HW_USBHS_ENDPTNAKEN.U = (v))
-#define HW_USBHS_ENDPTNAKEN_SET(v) (HW_USBHS_ENDPTNAKEN_WR(HW_USBHS_ENDPTNAKEN_RD() |  (v)))
-#define HW_USBHS_ENDPTNAKEN_CLR(v) (HW_USBHS_ENDPTNAKEN_WR(HW_USBHS_ENDPTNAKEN_RD() & ~(v)))
-#define HW_USBHS_ENDPTNAKEN_TOG(v) (HW_USBHS_ENDPTNAKEN_WR(HW_USBHS_ENDPTNAKEN_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_ENDPTNAKEN(x)   (*(__IO hw_usbhs_endptnaken_t *) HW_USBHS_ENDPTNAKEN_ADDR(x))
+#define HW_USBHS_ENDPTNAKEN_RD(x) (HW_USBHS_ENDPTNAKEN(x).U)
+#define HW_USBHS_ENDPTNAKEN_WR(x, v) (HW_USBHS_ENDPTNAKEN(x).U = (v))
+#define HW_USBHS_ENDPTNAKEN_SET(x, v) (HW_USBHS_ENDPTNAKEN_WR(x, HW_USBHS_ENDPTNAKEN_RD(x) |  (v)))
+#define HW_USBHS_ENDPTNAKEN_CLR(x, v) (HW_USBHS_ENDPTNAKEN_WR(x, HW_USBHS_ENDPTNAKEN_RD(x) & ~(v)))
+#define HW_USBHS_ENDPTNAKEN_TOG(x, v) (HW_USBHS_ENDPTNAKEN_WR(x, HW_USBHS_ENDPTNAKEN_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_ENDPTNAKEN bitfields
@@ -4465,24 +3954,20 @@ typedef union _hw_usbhs_endptnaken
  * bit is set. EPRNE[3]-Endpoint #3 EPRNE[2]-Endpoint #2 EPRNE[1]-Endpoint #1
  * EPRNE[0]-Endpoint #0
  */
-//@{
-#define BP_USBHS_ENDPTNAKEN_EPRNE (0U)     //!< Bit position for USBHS_ENDPTNAKEN_EPRNE.
-#define BM_USBHS_ENDPTNAKEN_EPRNE (0x0000000FU) //!< Bit mask for USBHS_ENDPTNAKEN_EPRNE.
-#define BS_USBHS_ENDPTNAKEN_EPRNE (4U)     //!< Bit field size in bits for USBHS_ENDPTNAKEN_EPRNE.
+/*@{*/
+#define BP_USBHS_ENDPTNAKEN_EPRNE (0U)     /*!< Bit position for USBHS_ENDPTNAKEN_EPRNE. */
+#define BM_USBHS_ENDPTNAKEN_EPRNE (0x0000000FU) /*!< Bit mask for USBHS_ENDPTNAKEN_EPRNE. */
+#define BS_USBHS_ENDPTNAKEN_EPRNE (4U)     /*!< Bit field size in bits for USBHS_ENDPTNAKEN_EPRNE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ENDPTNAKEN_EPRNE field.
-#define BR_USBHS_ENDPTNAKEN_EPRNE (HW_USBHS_ENDPTNAKEN.B.EPRNE)
-#endif
+/*! @brief Read current value of the USBHS_ENDPTNAKEN_EPRNE field. */
+#define BR_USBHS_ENDPTNAKEN_EPRNE(x) (HW_USBHS_ENDPTNAKEN(x).B.EPRNE)
 
-//! @brief Format value for bitfield USBHS_ENDPTNAKEN_EPRNE.
-#define BF_USBHS_ENDPTNAKEN_EPRNE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ENDPTNAKEN_EPRNE), uint32_t) & BM_USBHS_ENDPTNAKEN_EPRNE)
+/*! @brief Format value for bitfield USBHS_ENDPTNAKEN_EPRNE. */
+#define BF_USBHS_ENDPTNAKEN_EPRNE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ENDPTNAKEN_EPRNE) & BM_USBHS_ENDPTNAKEN_EPRNE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPRNE field to a new value.
-#define BW_USBHS_ENDPTNAKEN_EPRNE(v) (HW_USBHS_ENDPTNAKEN_WR((HW_USBHS_ENDPTNAKEN_RD() & ~BM_USBHS_ENDPTNAKEN_EPRNE) | BF_USBHS_ENDPTNAKEN_EPRNE(v)))
-#endif
-//@}
+/*! @brief Set the EPRNE field to a new value. */
+#define BW_USBHS_ENDPTNAKEN_EPRNE(x, v) (HW_USBHS_ENDPTNAKEN_WR(x, (HW_USBHS_ENDPTNAKEN_RD(x) & ~BM_USBHS_ENDPTNAKEN_EPRNE) | BF_USBHS_ENDPTNAKEN_EPRNE(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_ENDPTNAKEN, field EPTNE[19:16] (W1C)
@@ -4492,30 +3977,25 @@ typedef union _hw_usbhs_endptnaken
  * bit is set. EPTNE[3]-Endpoint #3 EPTNE[2]-Endpoint #2 EPTNE[1]-Endpoint #1
  * EPTNE[0]-Endpoint #0
  */
-//@{
-#define BP_USBHS_ENDPTNAKEN_EPTNE (16U)    //!< Bit position for USBHS_ENDPTNAKEN_EPTNE.
-#define BM_USBHS_ENDPTNAKEN_EPTNE (0x000F0000U) //!< Bit mask for USBHS_ENDPTNAKEN_EPTNE.
-#define BS_USBHS_ENDPTNAKEN_EPTNE (4U)     //!< Bit field size in bits for USBHS_ENDPTNAKEN_EPTNE.
+/*@{*/
+#define BP_USBHS_ENDPTNAKEN_EPTNE (16U)    /*!< Bit position for USBHS_ENDPTNAKEN_EPTNE. */
+#define BM_USBHS_ENDPTNAKEN_EPTNE (0x000F0000U) /*!< Bit mask for USBHS_ENDPTNAKEN_EPTNE. */
+#define BS_USBHS_ENDPTNAKEN_EPTNE (4U)     /*!< Bit field size in bits for USBHS_ENDPTNAKEN_EPTNE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_ENDPTNAKEN_EPTNE field.
-#define BR_USBHS_ENDPTNAKEN_EPTNE (HW_USBHS_ENDPTNAKEN.B.EPTNE)
-#endif
+/*! @brief Read current value of the USBHS_ENDPTNAKEN_EPTNE field. */
+#define BR_USBHS_ENDPTNAKEN_EPTNE(x) (HW_USBHS_ENDPTNAKEN(x).B.EPTNE)
 
-//! @brief Format value for bitfield USBHS_ENDPTNAKEN_EPTNE.
-#define BF_USBHS_ENDPTNAKEN_EPTNE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_ENDPTNAKEN_EPTNE), uint32_t) & BM_USBHS_ENDPTNAKEN_EPTNE)
+/*! @brief Format value for bitfield USBHS_ENDPTNAKEN_EPTNE. */
+#define BF_USBHS_ENDPTNAKEN_EPTNE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_ENDPTNAKEN_EPTNE) & BM_USBHS_ENDPTNAKEN_EPTNE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPTNE field to a new value.
-#define BW_USBHS_ENDPTNAKEN_EPTNE(v) (HW_USBHS_ENDPTNAKEN_WR((HW_USBHS_ENDPTNAKEN_RD() & ~BM_USBHS_ENDPTNAKEN_EPTNE) | BF_USBHS_ENDPTNAKEN_EPTNE(v)))
-#endif
-//@}
+/*! @brief Set the EPTNE field to a new value. */
+#define BW_USBHS_ENDPTNAKEN_EPTNE(x, v) (HW_USBHS_ENDPTNAKEN_WR(x, (HW_USBHS_ENDPTNAKEN_RD(x) & ~BM_USBHS_ENDPTNAKEN_EPTNE) | BF_USBHS_ENDPTNAKEN_EPTNE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_CONFIGFLAG - Configure Flag Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_CONFIGFLAG - Configure Flag Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_CONFIGFLAG - Configure Flag Register (RO)
  *
@@ -4530,32 +4010,28 @@ typedef union _hw_usbhs_configflag
     uint32_t U;
     struct _hw_usbhs_configflag_bitfields
     {
-        uint32_t RESERVED0 : 32;       //!< [31:0] Reserved
+        uint32_t RESERVED0 : 32;       /*!< [31:0] Reserved */
     } B;
 } hw_usbhs_configflag_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_CONFIGFLAG register
  */
-//@{
-#define HW_USBHS_CONFIGFLAG_ADDR (REGS_USBHS_BASE + 0x180U)
+/*@{*/
+#define HW_USBHS_CONFIGFLAG_ADDR(x) ((x) + 0x180U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_CONFIGFLAG      (*(__I hw_usbhs_configflag_t *) HW_USBHS_CONFIGFLAG_ADDR)
-#define HW_USBHS_CONFIGFLAG_RD() (HW_USBHS_CONFIGFLAG.U)
-#endif
-//@}
+#define HW_USBHS_CONFIGFLAG(x)   (*(__I hw_usbhs_configflag_t *) HW_USBHS_CONFIGFLAG_ADDR(x))
+#define HW_USBHS_CONFIGFLAG_RD(x) (HW_USBHS_CONFIGFLAG(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_CONFIGFLAG bitfields
  */
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_PORTSC1 - Port Status and Control Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_PORTSC1 - Port Status and Control Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_PORTSC1 - Port Status and Control Registers (RW)
  *
@@ -4576,49 +4052,46 @@ typedef union _hw_usbhs_portsc1
     uint32_t U;
     struct _hw_usbhs_portsc1_bitfields
     {
-        uint32_t CCS : 1;              //!< [0] Current Connect Status
-        uint32_t CSC : 1;              //!< [1] Connect Change Status
-        uint32_t PE : 1;               //!< [2] Port Enabled/disabled
-        uint32_t PEC : 1;              //!< [3] Port Enable/disable Change
-        uint32_t OCA : 1;              //!< [4] Over-current active
-        uint32_t OCC : 1;              //!< [5] Over-Current Change
-        uint32_t FPR : 1;              //!< [6] Force Port Resume
-        uint32_t SUSP : 1;             //!< [7] Suspend
-        uint32_t PR : 1;               //!< [8] Port Reset
-        uint32_t HSP : 1;              //!< [9] High Speed Port.
-        uint32_t LS : 2;               //!< [11:10] Line Status
-        uint32_t PP : 1;               //!< [12] Port Power
-        uint32_t PO : 1;               //!< [13] Port Owner
-        uint32_t PIC : 2;              //!< [15:14] Port Indicator Control
-        uint32_t PTCb : 4;             //!< [19:16] Port Test Control
-        uint32_t WKCN : 1;             //!< [20] Wake on Connect enable
-        uint32_t WKDS : 1;             //!< [21] Wake on Disconnect enable
-        uint32_t WKOC : 1;             //!< [22] Wake on Over-Current enable
-        uint32_t PHCD : 1;             //!< [23] PHY low power suspend
-        uint32_t PFSC : 1;             //!< [24] Port force Full-Speed Connect
-        uint32_t RESERVED0 : 1;        //!< [25] Reserved
-        uint32_t PSPD : 2;             //!< [27:26] Port Speed
-        uint32_t RESERVED1 : 2;        //!< [29:28] Reserved
-        uint32_t PTS : 2;              //!< [31:30] Port Transceiver Select
+        uint32_t CCS : 1;              /*!< [0] Current Connect Status */
+        uint32_t CSC : 1;              /*!< [1] Connect Change Status */
+        uint32_t PE : 1;               /*!< [2] Port Enabled/disabled */
+        uint32_t PEC : 1;              /*!< [3] Port Enable/disable Change */
+        uint32_t OCA : 1;              /*!< [4] Over-current active */
+        uint32_t OCC : 1;              /*!< [5] Over-Current Change */
+        uint32_t FPR : 1;              /*!< [6] Force Port Resume */
+        uint32_t SUSP : 1;             /*!< [7] Suspend */
+        uint32_t PR : 1;               /*!< [8] Port Reset */
+        uint32_t HSP : 1;              /*!< [9] High Speed Port. */
+        uint32_t LS : 2;               /*!< [11:10] Line Status */
+        uint32_t PP : 1;               /*!< [12] Port Power */
+        uint32_t PO : 1;               /*!< [13] Port Owner */
+        uint32_t PIC : 2;              /*!< [15:14] Port Indicator Control */
+        uint32_t PTCb : 4;             /*!< [19:16] Port Test Control */
+        uint32_t WKCN : 1;             /*!< [20] Wake on Connect enable */
+        uint32_t WKDS : 1;             /*!< [21] Wake on Disconnect enable */
+        uint32_t WKOC : 1;             /*!< [22] Wake on Over-Current enable */
+        uint32_t PHCD : 1;             /*!< [23] PHY low power suspend */
+        uint32_t PFSC : 1;             /*!< [24] Port force Full-Speed Connect */
+        uint32_t RESERVED0 : 1;        /*!< [25] Reserved */
+        uint32_t PSPD : 2;             /*!< [27:26] Port Speed */
+        uint32_t RESERVED1 : 2;        /*!< [29:28] Reserved */
+        uint32_t PTS : 2;              /*!< [31:30] Port Transceiver Select */
     } B;
 } hw_usbhs_portsc1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_PORTSC1 register
  */
-//@{
-#define HW_USBHS_PORTSC1_ADDR    (REGS_USBHS_BASE + 0x184U)
+/*@{*/
+#define HW_USBHS_PORTSC1_ADDR(x) ((x) + 0x184U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_PORTSC1         (*(__IO hw_usbhs_portsc1_t *) HW_USBHS_PORTSC1_ADDR)
-#define HW_USBHS_PORTSC1_RD()    (HW_USBHS_PORTSC1.U)
-#define HW_USBHS_PORTSC1_WR(v)   (HW_USBHS_PORTSC1.U = (v))
-#define HW_USBHS_PORTSC1_SET(v)  (HW_USBHS_PORTSC1_WR(HW_USBHS_PORTSC1_RD() |  (v)))
-#define HW_USBHS_PORTSC1_CLR(v)  (HW_USBHS_PORTSC1_WR(HW_USBHS_PORTSC1_RD() & ~(v)))
-#define HW_USBHS_PORTSC1_TOG(v)  (HW_USBHS_PORTSC1_WR(HW_USBHS_PORTSC1_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_PORTSC1(x)      (*(__IO hw_usbhs_portsc1_t *) HW_USBHS_PORTSC1_ADDR(x))
+#define HW_USBHS_PORTSC1_RD(x)   (HW_USBHS_PORTSC1(x).U)
+#define HW_USBHS_PORTSC1_WR(x, v) (HW_USBHS_PORTSC1(x).U = (v))
+#define HW_USBHS_PORTSC1_SET(x, v) (HW_USBHS_PORTSC1_WR(x, HW_USBHS_PORTSC1_RD(x) |  (v)))
+#define HW_USBHS_PORTSC1_CLR(x, v) (HW_USBHS_PORTSC1_WR(x, HW_USBHS_PORTSC1_RD(x) & ~(v)))
+#define HW_USBHS_PORTSC1_TOG(x, v) (HW_USBHS_PORTSC1_WR(x, HW_USBHS_PORTSC1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_PORTSC1 bitfields
@@ -4637,16 +4110,14 @@ typedef union _hw_usbhs_portsc1
  * - 0 - No device present (host mode) or attached (device mode)
  * - 1 - Device is present (host mode) or attached (device mode)
  */
-//@{
-#define BP_USBHS_PORTSC1_CCS (0U)          //!< Bit position for USBHS_PORTSC1_CCS.
-#define BM_USBHS_PORTSC1_CCS (0x00000001U) //!< Bit mask for USBHS_PORTSC1_CCS.
-#define BS_USBHS_PORTSC1_CCS (1U)          //!< Bit field size in bits for USBHS_PORTSC1_CCS.
+/*@{*/
+#define BP_USBHS_PORTSC1_CCS (0U)          /*!< Bit position for USBHS_PORTSC1_CCS. */
+#define BM_USBHS_PORTSC1_CCS (0x00000001U) /*!< Bit mask for USBHS_PORTSC1_CCS. */
+#define BS_USBHS_PORTSC1_CCS (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_CCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_CCS field.
-#define BR_USBHS_PORTSC1_CCS (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_CCS))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_PORTSC1_CCS field. */
+#define BR_USBHS_PORTSC1_CCS(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_CCS))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field CSC[1] (W1C)
@@ -4664,24 +4135,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - No change
  * - 1 - Connect status has changed
  */
-//@{
-#define BP_USBHS_PORTSC1_CSC (1U)          //!< Bit position for USBHS_PORTSC1_CSC.
-#define BM_USBHS_PORTSC1_CSC (0x00000002U) //!< Bit mask for USBHS_PORTSC1_CSC.
-#define BS_USBHS_PORTSC1_CSC (1U)          //!< Bit field size in bits for USBHS_PORTSC1_CSC.
+/*@{*/
+#define BP_USBHS_PORTSC1_CSC (1U)          /*!< Bit position for USBHS_PORTSC1_CSC. */
+#define BM_USBHS_PORTSC1_CSC (0x00000002U) /*!< Bit mask for USBHS_PORTSC1_CSC. */
+#define BS_USBHS_PORTSC1_CSC (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_CSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_CSC field.
-#define BR_USBHS_PORTSC1_CSC (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_CSC))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_CSC field. */
+#define BR_USBHS_PORTSC1_CSC(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_CSC))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_CSC.
-#define BF_USBHS_PORTSC1_CSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_CSC), uint32_t) & BM_USBHS_PORTSC1_CSC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_CSC. */
+#define BF_USBHS_PORTSC1_CSC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_CSC) & BM_USBHS_PORTSC1_CSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CSC field to a new value.
-#define BW_USBHS_PORTSC1_CSC(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_CSC) = (v))
-#endif
-//@}
+/*! @brief Set the CSC field to a new value. */
+#define BW_USBHS_PORTSC1_CSC(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_CSC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PE[2] (RW)
@@ -4695,24 +4162,20 @@ typedef union _hw_usbhs_portsc1
  * blocked except for reset. This field is cleared if the PP bit is cleared in
  * host mode. Device mode: The device port is always enabled. (This bit is set).
  */
-//@{
-#define BP_USBHS_PORTSC1_PE  (2U)          //!< Bit position for USBHS_PORTSC1_PE.
-#define BM_USBHS_PORTSC1_PE  (0x00000004U) //!< Bit mask for USBHS_PORTSC1_PE.
-#define BS_USBHS_PORTSC1_PE  (1U)          //!< Bit field size in bits for USBHS_PORTSC1_PE.
+/*@{*/
+#define BP_USBHS_PORTSC1_PE  (2U)          /*!< Bit position for USBHS_PORTSC1_PE. */
+#define BM_USBHS_PORTSC1_PE  (0x00000004U) /*!< Bit mask for USBHS_PORTSC1_PE. */
+#define BS_USBHS_PORTSC1_PE  (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_PE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PE field.
-#define BR_USBHS_PORTSC1_PE  (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PE))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PE field. */
+#define BR_USBHS_PORTSC1_PE(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PE))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PE.
-#define BF_USBHS_PORTSC1_PE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PE), uint32_t) & BM_USBHS_PORTSC1_PE)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PE. */
+#define BF_USBHS_PORTSC1_PE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PE) & BM_USBHS_PORTSC1_PE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PE field to a new value.
-#define BW_USBHS_PORTSC1_PE(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PE) = (v))
-#endif
-//@}
+/*! @brief Set the PE field to a new value. */
+#define BW_USBHS_PORTSC1_PE(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PEC[3] (W1C)
@@ -4727,24 +4190,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - No change
  * - 1 - Port disabled
  */
-//@{
-#define BP_USBHS_PORTSC1_PEC (3U)          //!< Bit position for USBHS_PORTSC1_PEC.
-#define BM_USBHS_PORTSC1_PEC (0x00000008U) //!< Bit mask for USBHS_PORTSC1_PEC.
-#define BS_USBHS_PORTSC1_PEC (1U)          //!< Bit field size in bits for USBHS_PORTSC1_PEC.
+/*@{*/
+#define BP_USBHS_PORTSC1_PEC (3U)          /*!< Bit position for USBHS_PORTSC1_PEC. */
+#define BM_USBHS_PORTSC1_PEC (0x00000008U) /*!< Bit mask for USBHS_PORTSC1_PEC. */
+#define BS_USBHS_PORTSC1_PEC (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_PEC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PEC field.
-#define BR_USBHS_PORTSC1_PEC (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PEC))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PEC field. */
+#define BR_USBHS_PORTSC1_PEC(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PEC))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PEC.
-#define BF_USBHS_PORTSC1_PEC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PEC), uint32_t) & BM_USBHS_PORTSC1_PEC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PEC. */
+#define BF_USBHS_PORTSC1_PEC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PEC) & BM_USBHS_PORTSC1_PEC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEC field to a new value.
-#define BW_USBHS_PORTSC1_PEC(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PEC) = (v))
-#endif
-//@}
+/*! @brief Set the PEC field to a new value. */
+#define BW_USBHS_PORTSC1_PEC(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PEC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field OCA[4] (RO)
@@ -4758,16 +4217,14 @@ typedef union _hw_usbhs_portsc1
  * - 0 - Port not in over-current condition
  * - 1 - Port currently in over-current condition
  */
-//@{
-#define BP_USBHS_PORTSC1_OCA (4U)          //!< Bit position for USBHS_PORTSC1_OCA.
-#define BM_USBHS_PORTSC1_OCA (0x00000010U) //!< Bit mask for USBHS_PORTSC1_OCA.
-#define BS_USBHS_PORTSC1_OCA (1U)          //!< Bit field size in bits for USBHS_PORTSC1_OCA.
+/*@{*/
+#define BP_USBHS_PORTSC1_OCA (4U)          /*!< Bit position for USBHS_PORTSC1_OCA. */
+#define BM_USBHS_PORTSC1_OCA (0x00000010U) /*!< Bit mask for USBHS_PORTSC1_OCA. */
+#define BS_USBHS_PORTSC1_OCA (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_OCA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_OCA field.
-#define BR_USBHS_PORTSC1_OCA (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_OCA))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_PORTSC1_OCA field. */
+#define BR_USBHS_PORTSC1_OCA(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_OCA))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field OCC[5] (W1C)
@@ -4781,24 +4238,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - No over-current
  * - 1 - Over-current detect
  */
-//@{
-#define BP_USBHS_PORTSC1_OCC (5U)          //!< Bit position for USBHS_PORTSC1_OCC.
-#define BM_USBHS_PORTSC1_OCC (0x00000020U) //!< Bit mask for USBHS_PORTSC1_OCC.
-#define BS_USBHS_PORTSC1_OCC (1U)          //!< Bit field size in bits for USBHS_PORTSC1_OCC.
+/*@{*/
+#define BP_USBHS_PORTSC1_OCC (5U)          /*!< Bit position for USBHS_PORTSC1_OCC. */
+#define BM_USBHS_PORTSC1_OCC (0x00000020U) /*!< Bit mask for USBHS_PORTSC1_OCC. */
+#define BS_USBHS_PORTSC1_OCC (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_OCC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_OCC field.
-#define BR_USBHS_PORTSC1_OCC (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_OCC))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_OCC field. */
+#define BR_USBHS_PORTSC1_OCC(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_OCC))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_OCC.
-#define BF_USBHS_PORTSC1_OCC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_OCC), uint32_t) & BM_USBHS_PORTSC1_OCC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_OCC. */
+#define BF_USBHS_PORTSC1_OCC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_OCC) & BM_USBHS_PORTSC1_OCC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OCC field to a new value.
-#define BW_USBHS_PORTSC1_OCC(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_OCC) = (v))
-#endif
-//@}
+/*! @brief Set the OCC field to a new value. */
+#define BW_USBHS_PORTSC1_OCC(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_OCC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field FPR[6] (RW)
@@ -4826,24 +4279,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - No resume (K-state) detected/driven on port
  * - 1 - Resume detected/driven on port
  */
-//@{
-#define BP_USBHS_PORTSC1_FPR (6U)          //!< Bit position for USBHS_PORTSC1_FPR.
-#define BM_USBHS_PORTSC1_FPR (0x00000040U) //!< Bit mask for USBHS_PORTSC1_FPR.
-#define BS_USBHS_PORTSC1_FPR (1U)          //!< Bit field size in bits for USBHS_PORTSC1_FPR.
+/*@{*/
+#define BP_USBHS_PORTSC1_FPR (6U)          /*!< Bit position for USBHS_PORTSC1_FPR. */
+#define BM_USBHS_PORTSC1_FPR (0x00000040U) /*!< Bit mask for USBHS_PORTSC1_FPR. */
+#define BS_USBHS_PORTSC1_FPR (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_FPR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_FPR field.
-#define BR_USBHS_PORTSC1_FPR (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_FPR))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_FPR field. */
+#define BR_USBHS_PORTSC1_FPR(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_FPR))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_FPR.
-#define BF_USBHS_PORTSC1_FPR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_FPR), uint32_t) & BM_USBHS_PORTSC1_FPR)
+/*! @brief Format value for bitfield USBHS_PORTSC1_FPR. */
+#define BF_USBHS_PORTSC1_FPR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_FPR) & BM_USBHS_PORTSC1_FPR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FPR field to a new value.
-#define BW_USBHS_PORTSC1_FPR(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_FPR) = (v))
-#endif
-//@}
+/*! @brief Set the FPR field to a new value. */
+#define BW_USBHS_PORTSC1_FPR(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_FPR) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field SUSP[7] (RW)
@@ -4865,24 +4314,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - Port not in suspend state
  * - 1 - Port in suspend state
  */
-//@{
-#define BP_USBHS_PORTSC1_SUSP (7U)         //!< Bit position for USBHS_PORTSC1_SUSP.
-#define BM_USBHS_PORTSC1_SUSP (0x00000080U) //!< Bit mask for USBHS_PORTSC1_SUSP.
-#define BS_USBHS_PORTSC1_SUSP (1U)         //!< Bit field size in bits for USBHS_PORTSC1_SUSP.
+/*@{*/
+#define BP_USBHS_PORTSC1_SUSP (7U)         /*!< Bit position for USBHS_PORTSC1_SUSP. */
+#define BM_USBHS_PORTSC1_SUSP (0x00000080U) /*!< Bit mask for USBHS_PORTSC1_SUSP. */
+#define BS_USBHS_PORTSC1_SUSP (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_SUSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_SUSP field.
-#define BR_USBHS_PORTSC1_SUSP (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_SUSP))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_SUSP field. */
+#define BR_USBHS_PORTSC1_SUSP(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_SUSP))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_SUSP.
-#define BF_USBHS_PORTSC1_SUSP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_SUSP), uint32_t) & BM_USBHS_PORTSC1_SUSP)
+/*! @brief Format value for bitfield USBHS_PORTSC1_SUSP. */
+#define BF_USBHS_PORTSC1_SUSP(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_SUSP) & BM_USBHS_PORTSC1_SUSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SUSP field to a new value.
-#define BW_USBHS_PORTSC1_SUSP(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_SUSP) = (v))
-#endif
-//@}
+/*! @brief Set the SUSP field to a new value. */
+#define BW_USBHS_PORTSC1_SUSP(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_SUSP) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PR[8] (RW)
@@ -4899,24 +4344,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - Port is not in reset
  * - 1 - Port is in reset
  */
-//@{
-#define BP_USBHS_PORTSC1_PR  (8U)          //!< Bit position for USBHS_PORTSC1_PR.
-#define BM_USBHS_PORTSC1_PR  (0x00000100U) //!< Bit mask for USBHS_PORTSC1_PR.
-#define BS_USBHS_PORTSC1_PR  (1U)          //!< Bit field size in bits for USBHS_PORTSC1_PR.
+/*@{*/
+#define BP_USBHS_PORTSC1_PR  (8U)          /*!< Bit position for USBHS_PORTSC1_PR. */
+#define BM_USBHS_PORTSC1_PR  (0x00000100U) /*!< Bit mask for USBHS_PORTSC1_PR. */
+#define BS_USBHS_PORTSC1_PR  (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_PR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PR field.
-#define BR_USBHS_PORTSC1_PR  (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PR))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PR field. */
+#define BR_USBHS_PORTSC1_PR(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PR))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PR.
-#define BF_USBHS_PORTSC1_PR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PR), uint32_t) & BM_USBHS_PORTSC1_PR)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PR. */
+#define BF_USBHS_PORTSC1_PR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PR) & BM_USBHS_PORTSC1_PR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PR field to a new value.
-#define BW_USBHS_PORTSC1_PR(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PR) = (v))
-#endif
-//@}
+/*! @brief Set the PR field to a new value. */
+#define BW_USBHS_PORTSC1_PR(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PR) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field HSP[9] (RO)
@@ -4928,16 +4369,14 @@ typedef union _hw_usbhs_portsc1
  * - 0 - FS or LS
  * - 1 - HS
  */
-//@{
-#define BP_USBHS_PORTSC1_HSP (9U)          //!< Bit position for USBHS_PORTSC1_HSP.
-#define BM_USBHS_PORTSC1_HSP (0x00000200U) //!< Bit mask for USBHS_PORTSC1_HSP.
-#define BS_USBHS_PORTSC1_HSP (1U)          //!< Bit field size in bits for USBHS_PORTSC1_HSP.
+/*@{*/
+#define BP_USBHS_PORTSC1_HSP (9U)          /*!< Bit position for USBHS_PORTSC1_HSP. */
+#define BM_USBHS_PORTSC1_HSP (0x00000200U) /*!< Bit mask for USBHS_PORTSC1_HSP. */
+#define BS_USBHS_PORTSC1_HSP (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_HSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_HSP field.
-#define BR_USBHS_PORTSC1_HSP (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_HSP))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_PORTSC1_HSP field. */
+#define BR_USBHS_PORTSC1_HSP(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_HSP))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field LS[11:10] (RO)
@@ -4953,16 +4392,14 @@ typedef union _hw_usbhs_portsc1
  * - 10 - K-state
  * - 11 - Undefined
  */
-//@{
-#define BP_USBHS_PORTSC1_LS  (10U)         //!< Bit position for USBHS_PORTSC1_LS.
-#define BM_USBHS_PORTSC1_LS  (0x00000C00U) //!< Bit mask for USBHS_PORTSC1_LS.
-#define BS_USBHS_PORTSC1_LS  (2U)          //!< Bit field size in bits for USBHS_PORTSC1_LS.
+/*@{*/
+#define BP_USBHS_PORTSC1_LS  (10U)         /*!< Bit position for USBHS_PORTSC1_LS. */
+#define BM_USBHS_PORTSC1_LS  (0x00000C00U) /*!< Bit mask for USBHS_PORTSC1_LS. */
+#define BS_USBHS_PORTSC1_LS  (2U)          /*!< Bit field size in bits for USBHS_PORTSC1_LS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_LS field.
-#define BR_USBHS_PORTSC1_LS  (HW_USBHS_PORTSC1.B.LS)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_PORTSC1_LS field. */
+#define BR_USBHS_PORTSC1_LS(x) (HW_USBHS_PORTSC1(x).B.LS)
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PP[12] (RW)
@@ -4973,72 +4410,60 @@ typedef union _hw_usbhs_portsc1
  * condition is detected on a powered port, the host controller driver from a 1to a 0
  * (removing power from the port) transitions the PP bit in each affected port.
  */
-//@{
-#define BP_USBHS_PORTSC1_PP  (12U)         //!< Bit position for USBHS_PORTSC1_PP.
-#define BM_USBHS_PORTSC1_PP  (0x00001000U) //!< Bit mask for USBHS_PORTSC1_PP.
-#define BS_USBHS_PORTSC1_PP  (1U)          //!< Bit field size in bits for USBHS_PORTSC1_PP.
+/*@{*/
+#define BP_USBHS_PORTSC1_PP  (12U)         /*!< Bit position for USBHS_PORTSC1_PP. */
+#define BM_USBHS_PORTSC1_PP  (0x00001000U) /*!< Bit mask for USBHS_PORTSC1_PP. */
+#define BS_USBHS_PORTSC1_PP  (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_PP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PP field.
-#define BR_USBHS_PORTSC1_PP  (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PP))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PP field. */
+#define BR_USBHS_PORTSC1_PP(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PP))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PP.
-#define BF_USBHS_PORTSC1_PP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PP), uint32_t) & BM_USBHS_PORTSC1_PP)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PP. */
+#define BF_USBHS_PORTSC1_PP(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PP) & BM_USBHS_PORTSC1_PP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PP field to a new value.
-#define BW_USBHS_PORTSC1_PP(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PP) = (v))
-#endif
-//@}
+/*! @brief Set the PP field to a new value. */
+#define BW_USBHS_PORTSC1_PP(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PP) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PO[13] (RW)
  *
  * Port owner handoff is not implemented in this device.
  */
-//@{
-#define BP_USBHS_PORTSC1_PO  (13U)         //!< Bit position for USBHS_PORTSC1_PO.
-#define BM_USBHS_PORTSC1_PO  (0x00002000U) //!< Bit mask for USBHS_PORTSC1_PO.
-#define BS_USBHS_PORTSC1_PO  (1U)          //!< Bit field size in bits for USBHS_PORTSC1_PO.
+/*@{*/
+#define BP_USBHS_PORTSC1_PO  (13U)         /*!< Bit position for USBHS_PORTSC1_PO. */
+#define BM_USBHS_PORTSC1_PO  (0x00002000U) /*!< Bit mask for USBHS_PORTSC1_PO. */
+#define BS_USBHS_PORTSC1_PO  (1U)          /*!< Bit field size in bits for USBHS_PORTSC1_PO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PO field.
-#define BR_USBHS_PORTSC1_PO  (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PO))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PO field. */
+#define BR_USBHS_PORTSC1_PO(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PO))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PO.
-#define BF_USBHS_PORTSC1_PO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PO), uint32_t) & BM_USBHS_PORTSC1_PO)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PO. */
+#define BF_USBHS_PORTSC1_PO(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PO) & BM_USBHS_PORTSC1_PO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PO field to a new value.
-#define BW_USBHS_PORTSC1_PO(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PO) = (v))
-#endif
-//@}
+/*! @brief Set the PO field to a new value. */
+#define BW_USBHS_PORTSC1_PO(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PO) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PIC[15:14] (RW)
  *
  * Not supported on this module.
  */
-//@{
-#define BP_USBHS_PORTSC1_PIC (14U)         //!< Bit position for USBHS_PORTSC1_PIC.
-#define BM_USBHS_PORTSC1_PIC (0x0000C000U) //!< Bit mask for USBHS_PORTSC1_PIC.
-#define BS_USBHS_PORTSC1_PIC (2U)          //!< Bit field size in bits for USBHS_PORTSC1_PIC.
+/*@{*/
+#define BP_USBHS_PORTSC1_PIC (14U)         /*!< Bit position for USBHS_PORTSC1_PIC. */
+#define BM_USBHS_PORTSC1_PIC (0x0000C000U) /*!< Bit mask for USBHS_PORTSC1_PIC. */
+#define BS_USBHS_PORTSC1_PIC (2U)          /*!< Bit field size in bits for USBHS_PORTSC1_PIC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PIC field.
-#define BR_USBHS_PORTSC1_PIC (HW_USBHS_PORTSC1.B.PIC)
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PIC field. */
+#define BR_USBHS_PORTSC1_PIC(x) (HW_USBHS_PORTSC1(x).B.PIC)
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PIC.
-#define BF_USBHS_PORTSC1_PIC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PIC), uint32_t) & BM_USBHS_PORTSC1_PIC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PIC. */
+#define BF_USBHS_PORTSC1_PIC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PIC) & BM_USBHS_PORTSC1_PIC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PIC field to a new value.
-#define BW_USBHS_PORTSC1_PIC(v) (HW_USBHS_PORTSC1_WR((HW_USBHS_PORTSC1_RD() & ~BM_USBHS_PORTSC1_PIC) | BF_USBHS_PORTSC1_PIC(v)))
-#endif
-//@}
+/*! @brief Set the PIC field to a new value. */
+#define BW_USBHS_PORTSC1_PIC(x, v) (HW_USBHS_PORTSC1_WR(x, (HW_USBHS_PORTSC1_RD(x) & ~BM_USBHS_PORTSC1_PIC) | BF_USBHS_PORTSC1_PIC(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PTC[19:16] (RW)
@@ -5061,24 +4486,20 @@ typedef union _hw_usbhs_portsc1
  * - 0110 - FORCE_ENABLE_FS
  * - 0111 - FORCE_ENABLE_LS
  */
-//@{
-#define BP_USBHS_PORTSC1_PTC (16U)         //!< Bit position for USBHS_PORTSC1_PTC.
-#define BM_USBHS_PORTSC1_PTC (0x000F0000U) //!< Bit mask for USBHS_PORTSC1_PTC.
-#define BS_USBHS_PORTSC1_PTC (4U)          //!< Bit field size in bits for USBHS_PORTSC1_PTC.
+/*@{*/
+#define BP_USBHS_PORTSC1_PTC (16U)         /*!< Bit position for USBHS_PORTSC1_PTC. */
+#define BM_USBHS_PORTSC1_PTC (0x000F0000U) /*!< Bit mask for USBHS_PORTSC1_PTC. */
+#define BS_USBHS_PORTSC1_PTC (4U)          /*!< Bit field size in bits for USBHS_PORTSC1_PTC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PTC field.
-#define BR_USBHS_PORTSC1_PTC (HW_USBHS_PORTSC1.B.PTC)
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PTC field. */
+#define BR_USBHS_PORTSC1_PTC(x) (HW_USBHS_PORTSC1(x).B.PTC)
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PTC.
-#define BF_USBHS_PORTSC1_PTC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PTC), uint32_t) & BM_USBHS_PORTSC1_PTC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PTC. */
+#define BF_USBHS_PORTSC1_PTC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PTC) & BM_USBHS_PORTSC1_PTC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PTC field to a new value.
-#define BW_USBHS_PORTSC1_PTC(v) (HW_USBHS_PORTSC1_WR((HW_USBHS_PORTSC1_RD() & ~BM_USBHS_PORTSC1_PTC) | BF_USBHS_PORTSC1_PTC(v)))
-#endif
-//@}
+/*! @brief Set the PTC field to a new value. */
+#define BW_USBHS_PORTSC1_PTC(x, v) (HW_USBHS_PORTSC1_WR(x, (HW_USBHS_PORTSC1_RD(x) & ~BM_USBHS_PORTSC1_PTC) | BF_USBHS_PORTSC1_PTC(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field WKCN[20] (RW)
@@ -5087,24 +4508,20 @@ typedef union _hw_usbhs_portsc1
  * field is 0 if the PP bit is cleared or the module is in device mode. In host
  * mode, this can work with an external power control circuit.
  */
-//@{
-#define BP_USBHS_PORTSC1_WKCN (20U)        //!< Bit position for USBHS_PORTSC1_WKCN.
-#define BM_USBHS_PORTSC1_WKCN (0x00100000U) //!< Bit mask for USBHS_PORTSC1_WKCN.
-#define BS_USBHS_PORTSC1_WKCN (1U)         //!< Bit field size in bits for USBHS_PORTSC1_WKCN.
+/*@{*/
+#define BP_USBHS_PORTSC1_WKCN (20U)        /*!< Bit position for USBHS_PORTSC1_WKCN. */
+#define BM_USBHS_PORTSC1_WKCN (0x00100000U) /*!< Bit mask for USBHS_PORTSC1_WKCN. */
+#define BS_USBHS_PORTSC1_WKCN (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_WKCN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_WKCN field.
-#define BR_USBHS_PORTSC1_WKCN (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKCN))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_WKCN field. */
+#define BR_USBHS_PORTSC1_WKCN(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKCN))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_WKCN.
-#define BF_USBHS_PORTSC1_WKCN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_WKCN), uint32_t) & BM_USBHS_PORTSC1_WKCN)
+/*! @brief Format value for bitfield USBHS_PORTSC1_WKCN. */
+#define BF_USBHS_PORTSC1_WKCN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_WKCN) & BM_USBHS_PORTSC1_WKCN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WKCN field to a new value.
-#define BW_USBHS_PORTSC1_WKCN(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKCN) = (v))
-#endif
-//@}
+/*! @brief Set the WKCN field to a new value. */
+#define BW_USBHS_PORTSC1_WKCN(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKCN) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field WKDS[21] (RW)
@@ -5113,24 +4530,20 @@ typedef union _hw_usbhs_portsc1
  * This field is 0 if the PP bit is cleared or the module is in device mode. In host
  * mode, this bit can work with an external power control circuit.
  */
-//@{
-#define BP_USBHS_PORTSC1_WKDS (21U)        //!< Bit position for USBHS_PORTSC1_WKDS.
-#define BM_USBHS_PORTSC1_WKDS (0x00200000U) //!< Bit mask for USBHS_PORTSC1_WKDS.
-#define BS_USBHS_PORTSC1_WKDS (1U)         //!< Bit field size in bits for USBHS_PORTSC1_WKDS.
+/*@{*/
+#define BP_USBHS_PORTSC1_WKDS (21U)        /*!< Bit position for USBHS_PORTSC1_WKDS. */
+#define BM_USBHS_PORTSC1_WKDS (0x00200000U) /*!< Bit mask for USBHS_PORTSC1_WKDS. */
+#define BS_USBHS_PORTSC1_WKDS (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_WKDS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_WKDS field.
-#define BR_USBHS_PORTSC1_WKDS (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKDS))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_WKDS field. */
+#define BR_USBHS_PORTSC1_WKDS(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKDS))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_WKDS.
-#define BF_USBHS_PORTSC1_WKDS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_WKDS), uint32_t) & BM_USBHS_PORTSC1_WKDS)
+/*! @brief Format value for bitfield USBHS_PORTSC1_WKDS. */
+#define BF_USBHS_PORTSC1_WKDS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_WKDS) & BM_USBHS_PORTSC1_WKDS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WKDS field to a new value.
-#define BW_USBHS_PORTSC1_WKDS(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKDS) = (v))
-#endif
-//@}
+/*! @brief Set the WKDS field to a new value. */
+#define BW_USBHS_PORTSC1_WKDS(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKDS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field WKOC[22] (RW)
@@ -5139,24 +4552,20 @@ typedef union _hw_usbhs_portsc1
  * events. This field is 0 if the PP bit is cleared. In host mode, this bit can work
  * with an external power control circuit.
  */
-//@{
-#define BP_USBHS_PORTSC1_WKOC (22U)        //!< Bit position for USBHS_PORTSC1_WKOC.
-#define BM_USBHS_PORTSC1_WKOC (0x00400000U) //!< Bit mask for USBHS_PORTSC1_WKOC.
-#define BS_USBHS_PORTSC1_WKOC (1U)         //!< Bit field size in bits for USBHS_PORTSC1_WKOC.
+/*@{*/
+#define BP_USBHS_PORTSC1_WKOC (22U)        /*!< Bit position for USBHS_PORTSC1_WKOC. */
+#define BM_USBHS_PORTSC1_WKOC (0x00400000U) /*!< Bit mask for USBHS_PORTSC1_WKOC. */
+#define BS_USBHS_PORTSC1_WKOC (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_WKOC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_WKOC field.
-#define BR_USBHS_PORTSC1_WKOC (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKOC))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_WKOC field. */
+#define BR_USBHS_PORTSC1_WKOC(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKOC))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_WKOC.
-#define BF_USBHS_PORTSC1_WKOC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_WKOC), uint32_t) & BM_USBHS_PORTSC1_WKOC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_WKOC. */
+#define BF_USBHS_PORTSC1_WKOC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_WKOC) & BM_USBHS_PORTSC1_WKOC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WKOC field to a new value.
-#define BW_USBHS_PORTSC1_WKOC(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_WKOC) = (v))
-#endif
-//@}
+/*! @brief Set the WKOC field to a new value. */
+#define BW_USBHS_PORTSC1_WKOC(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_WKOC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PHCD[23] (RW)
@@ -5170,24 +4579,20 @@ typedef union _hw_usbhs_portsc1
  * when the resume signaling is detected or when forcing port resumes. Reading this
  * bit indicates the status of the PHY.
  */
-//@{
-#define BP_USBHS_PORTSC1_PHCD (23U)        //!< Bit position for USBHS_PORTSC1_PHCD.
-#define BM_USBHS_PORTSC1_PHCD (0x00800000U) //!< Bit mask for USBHS_PORTSC1_PHCD.
-#define BS_USBHS_PORTSC1_PHCD (1U)         //!< Bit field size in bits for USBHS_PORTSC1_PHCD.
+/*@{*/
+#define BP_USBHS_PORTSC1_PHCD (23U)        /*!< Bit position for USBHS_PORTSC1_PHCD. */
+#define BM_USBHS_PORTSC1_PHCD (0x00800000U) /*!< Bit mask for USBHS_PORTSC1_PHCD. */
+#define BS_USBHS_PORTSC1_PHCD (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_PHCD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PHCD field.
-#define BR_USBHS_PORTSC1_PHCD (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PHCD))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PHCD field. */
+#define BR_USBHS_PORTSC1_PHCD(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PHCD))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PHCD.
-#define BF_USBHS_PORTSC1_PHCD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PHCD), uint32_t) & BM_USBHS_PORTSC1_PHCD)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PHCD. */
+#define BF_USBHS_PORTSC1_PHCD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PHCD) & BM_USBHS_PORTSC1_PHCD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHCD field to a new value.
-#define BW_USBHS_PORTSC1_PHCD(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PHCD) = (v))
-#endif
-//@}
+/*! @brief Set the PHCD field to a new value. */
+#define BW_USBHS_PORTSC1_PHCD(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PHCD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PFSC[24] (RW)
@@ -5200,24 +4605,20 @@ typedef union _hw_usbhs_portsc1
  * - 0 - Allow the port to identify itself as high speed
  * - 1 - Force the port to only connect at full speed
  */
-//@{
-#define BP_USBHS_PORTSC1_PFSC (24U)        //!< Bit position for USBHS_PORTSC1_PFSC.
-#define BM_USBHS_PORTSC1_PFSC (0x01000000U) //!< Bit mask for USBHS_PORTSC1_PFSC.
-#define BS_USBHS_PORTSC1_PFSC (1U)         //!< Bit field size in bits for USBHS_PORTSC1_PFSC.
+/*@{*/
+#define BP_USBHS_PORTSC1_PFSC (24U)        /*!< Bit position for USBHS_PORTSC1_PFSC. */
+#define BM_USBHS_PORTSC1_PFSC (0x01000000U) /*!< Bit mask for USBHS_PORTSC1_PFSC. */
+#define BS_USBHS_PORTSC1_PFSC (1U)         /*!< Bit field size in bits for USBHS_PORTSC1_PFSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PFSC field.
-#define BR_USBHS_PORTSC1_PFSC (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PFSC))
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PFSC field. */
+#define BR_USBHS_PORTSC1_PFSC(x) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PFSC))
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PFSC.
-#define BF_USBHS_PORTSC1_PFSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PFSC), uint32_t) & BM_USBHS_PORTSC1_PFSC)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PFSC. */
+#define BF_USBHS_PORTSC1_PFSC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PFSC) & BM_USBHS_PORTSC1_PFSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PFSC field to a new value.
-#define BW_USBHS_PORTSC1_PFSC(v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR, BP_USBHS_PORTSC1_PFSC) = (v))
-#endif
-//@}
+/*! @brief Set the PFSC field to a new value. */
+#define BW_USBHS_PORTSC1_PFSC(x, v) (BITBAND_ACCESS32(HW_USBHS_PORTSC1_ADDR(x), BP_USBHS_PORTSC1_PFSC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PSPD[27:26] (RO)
@@ -5231,16 +4632,14 @@ typedef union _hw_usbhs_portsc1
  * - 10 - High speed
  * - 11 - Undefined
  */
-//@{
-#define BP_USBHS_PORTSC1_PSPD (26U)        //!< Bit position for USBHS_PORTSC1_PSPD.
-#define BM_USBHS_PORTSC1_PSPD (0x0C000000U) //!< Bit mask for USBHS_PORTSC1_PSPD.
-#define BS_USBHS_PORTSC1_PSPD (2U)         //!< Bit field size in bits for USBHS_PORTSC1_PSPD.
+/*@{*/
+#define BP_USBHS_PORTSC1_PSPD (26U)        /*!< Bit position for USBHS_PORTSC1_PSPD. */
+#define BM_USBHS_PORTSC1_PSPD (0x0C000000U) /*!< Bit mask for USBHS_PORTSC1_PSPD. */
+#define BS_USBHS_PORTSC1_PSPD (2U)         /*!< Bit field size in bits for USBHS_PORTSC1_PSPD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PSPD field.
-#define BR_USBHS_PORTSC1_PSPD (HW_USBHS_PORTSC1.B.PSPD)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_PORTSC1_PSPD field. */
+#define BR_USBHS_PORTSC1_PSPD(x) (HW_USBHS_PORTSC1(x).B.PSPD)
+/*@}*/
 
 /*!
  * @name Register USBHS_PORTSC1, field PTS[31:30] (RW)
@@ -5249,30 +4648,25 @@ typedef union _hw_usbhs_portsc1
  * interface All other values are reserved. This field is not defined in the EHCI
  * specification.
  */
-//@{
-#define BP_USBHS_PORTSC1_PTS (30U)         //!< Bit position for USBHS_PORTSC1_PTS.
-#define BM_USBHS_PORTSC1_PTS (0xC0000000U) //!< Bit mask for USBHS_PORTSC1_PTS.
-#define BS_USBHS_PORTSC1_PTS (2U)          //!< Bit field size in bits for USBHS_PORTSC1_PTS.
+/*@{*/
+#define BP_USBHS_PORTSC1_PTS (30U)         /*!< Bit position for USBHS_PORTSC1_PTS. */
+#define BM_USBHS_PORTSC1_PTS (0xC0000000U) /*!< Bit mask for USBHS_PORTSC1_PTS. */
+#define BS_USBHS_PORTSC1_PTS (2U)          /*!< Bit field size in bits for USBHS_PORTSC1_PTS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_PORTSC1_PTS field.
-#define BR_USBHS_PORTSC1_PTS (HW_USBHS_PORTSC1.B.PTS)
-#endif
+/*! @brief Read current value of the USBHS_PORTSC1_PTS field. */
+#define BR_USBHS_PORTSC1_PTS(x) (HW_USBHS_PORTSC1(x).B.PTS)
 
-//! @brief Format value for bitfield USBHS_PORTSC1_PTS.
-#define BF_USBHS_PORTSC1_PTS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_PORTSC1_PTS), uint32_t) & BM_USBHS_PORTSC1_PTS)
+/*! @brief Format value for bitfield USBHS_PORTSC1_PTS. */
+#define BF_USBHS_PORTSC1_PTS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_PORTSC1_PTS) & BM_USBHS_PORTSC1_PTS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PTS field to a new value.
-#define BW_USBHS_PORTSC1_PTS(v) (HW_USBHS_PORTSC1_WR((HW_USBHS_PORTSC1_RD() & ~BM_USBHS_PORTSC1_PTS) | BF_USBHS_PORTSC1_PTS(v)))
-#endif
-//@}
+/*! @brief Set the PTS field to a new value. */
+#define BW_USBHS_PORTSC1_PTS(x, v) (HW_USBHS_PORTSC1_WR(x, (HW_USBHS_PORTSC1_RD(x) & ~BM_USBHS_PORTSC1_PTS) | BF_USBHS_PORTSC1_PTS(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_OTGSC - On-the-Go Status and Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_OTGSC - On-the-Go Status and Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_OTGSC - On-the-Go Status and Control Register (RW)
  *
@@ -5291,57 +4685,55 @@ typedef union _hw_usbhs_otgsc
     uint32_t U;
     struct _hw_usbhs_otgsc_bitfields
     {
-        uint32_t VD : 1;               //!< [0] VBUS Discharge
-        uint32_t VC : 1;               //!< [1] VBUS Charge
-        uint32_t HAAR : 1;             //!< [2] Hardware Assist Auto-Reset
-        uint32_t OT : 1;               //!< [3] OTG Termination
-        uint32_t DP : 1;               //!< [4] Data Pulsing
-        uint32_t IDPU : 1;             //!< [5] ID Pull-Up
-        uint32_t RESERVED0 : 1;        //!< [6] Reserved
-        uint32_t HABA : 1;             //!< [7] Hardware Assist B-Disconnect to A-connect
-        uint32_t ID : 1;               //!< [8] USB ID
-        uint32_t AVV : 1;              //!< [9] A VBus Valid
-        uint32_t ASV : 1;              //!< [10] A Session Valid
-        uint32_t BSV : 1;              //!< [11] B Session Valid
-        uint32_t BSE : 1;              //!< [12] B Session End
-        uint32_t MST : 1;              //!< [13] 1 Milli-Second timer Toggle
-        uint32_t DPS : 1;              //!< [14] Data bus Pulsing Status
-        uint32_t RESERVED1 : 1;        //!< [15] Reserved
-        uint32_t IDIS : 1;             //!< [16] USB ID Interrupt Status
-        uint32_t AVVIS : 1;            //!< [17] A VBUS Valid Interrupt Status
-        uint32_t ASVIS : 1;            //!< [18] A Session Valid Interrupt Status
-        uint32_t BSVIS : 1;            //!< [19] B Session Valid Interrupt Status
-        uint32_t BSEIS : 1;            //!< [20] B Session End Interrupt Status
-        uint32_t MSS : 1;              //!< [21] 1 Milli-Second timer interrupt Status
-        uint32_t DPIS : 1;             //!< [22] Data Pulse interrupt Status
-        uint32_t RESERVED2 : 1;        //!< [23] Reserved
-        uint32_t IDIE : 1;             //!< [24] USB ID Interrupt Enable
-        uint32_t AVVIE : 1;            //!< [25] A VBUS Valid Interrupt Enable
-        uint32_t ASVIE : 1;            //!< [26] A Session Valid Interrupt Enable
-        uint32_t BSVIE : 1;            //!< [27] B Session Valid Interrupt Enable
-        uint32_t BSEIE : 1;            //!< [28] B Session End Interrupt Enable
-        uint32_t MSE : 1;              //!< [29] 1 Milli-Second timer interrupt Enable
-        uint32_t DPIE : 1;             //!< [30] Data Pulse Interrupt Enable
-        uint32_t RESERVED3 : 1;        //!< [31] Reserved
+        uint32_t VD : 1;               /*!< [0] VBUS Discharge */
+        uint32_t VC : 1;               /*!< [1] VBUS Charge */
+        uint32_t HAAR : 1;             /*!< [2] Hardware Assist Auto-Reset */
+        uint32_t OT : 1;               /*!< [3] OTG Termination */
+        uint32_t DP : 1;               /*!< [4] Data Pulsing */
+        uint32_t IDPU : 1;             /*!< [5] ID Pull-Up */
+        uint32_t RESERVED0 : 1;        /*!< [6] Reserved */
+        uint32_t HABA : 1;             /*!< [7] Hardware Assist B-Disconnect to A-connect
+                                        * */
+        uint32_t ID : 1;               /*!< [8] USB ID */
+        uint32_t AVV : 1;              /*!< [9] A VBus Valid */
+        uint32_t ASV : 1;              /*!< [10] A Session Valid */
+        uint32_t BSV : 1;              /*!< [11] B Session Valid */
+        uint32_t BSE : 1;              /*!< [12] B Session End */
+        uint32_t MST : 1;              /*!< [13] 1 Milli-Second timer Toggle */
+        uint32_t DPS : 1;              /*!< [14] Data bus Pulsing Status */
+        uint32_t RESERVED1 : 1;        /*!< [15] Reserved */
+        uint32_t IDIS : 1;             /*!< [16] USB ID Interrupt Status */
+        uint32_t AVVIS : 1;            /*!< [17] A VBUS Valid Interrupt Status */
+        uint32_t ASVIS : 1;            /*!< [18] A Session Valid Interrupt Status */
+        uint32_t BSVIS : 1;            /*!< [19] B Session Valid Interrupt Status */
+        uint32_t BSEIS : 1;            /*!< [20] B Session End Interrupt Status */
+        uint32_t MSS : 1;              /*!< [21] 1 Milli-Second timer interrupt Status */
+        uint32_t DPIS : 1;             /*!< [22] Data Pulse interrupt Status */
+        uint32_t RESERVED2 : 1;        /*!< [23] Reserved */
+        uint32_t IDIE : 1;             /*!< [24] USB ID Interrupt Enable */
+        uint32_t AVVIE : 1;            /*!< [25] A VBUS Valid Interrupt Enable */
+        uint32_t ASVIE : 1;            /*!< [26] A Session Valid Interrupt Enable */
+        uint32_t BSVIE : 1;            /*!< [27] B Session Valid Interrupt Enable */
+        uint32_t BSEIE : 1;            /*!< [28] B Session End Interrupt Enable */
+        uint32_t MSE : 1;              /*!< [29] 1 Milli-Second timer interrupt Enable */
+        uint32_t DPIE : 1;             /*!< [30] Data Pulse Interrupt Enable */
+        uint32_t RESERVED3 : 1;        /*!< [31] Reserved */
     } B;
 } hw_usbhs_otgsc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_OTGSC register
  */
-//@{
-#define HW_USBHS_OTGSC_ADDR      (REGS_USBHS_BASE + 0x1A4U)
+/*@{*/
+#define HW_USBHS_OTGSC_ADDR(x)   ((x) + 0x1A4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_OTGSC           (*(__IO hw_usbhs_otgsc_t *) HW_USBHS_OTGSC_ADDR)
-#define HW_USBHS_OTGSC_RD()      (HW_USBHS_OTGSC.U)
-#define HW_USBHS_OTGSC_WR(v)     (HW_USBHS_OTGSC.U = (v))
-#define HW_USBHS_OTGSC_SET(v)    (HW_USBHS_OTGSC_WR(HW_USBHS_OTGSC_RD() |  (v)))
-#define HW_USBHS_OTGSC_CLR(v)    (HW_USBHS_OTGSC_WR(HW_USBHS_OTGSC_RD() & ~(v)))
-#define HW_USBHS_OTGSC_TOG(v)    (HW_USBHS_OTGSC_WR(HW_USBHS_OTGSC_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_OTGSC(x)        (*(__IO hw_usbhs_otgsc_t *) HW_USBHS_OTGSC_ADDR(x))
+#define HW_USBHS_OTGSC_RD(x)     (HW_USBHS_OTGSC(x).U)
+#define HW_USBHS_OTGSC_WR(x, v)  (HW_USBHS_OTGSC(x).U = (v))
+#define HW_USBHS_OTGSC_SET(x, v) (HW_USBHS_OTGSC_WR(x, HW_USBHS_OTGSC_RD(x) |  (v)))
+#define HW_USBHS_OTGSC_CLR(x, v) (HW_USBHS_OTGSC_WR(x, HW_USBHS_OTGSC_RD(x) & ~(v)))
+#define HW_USBHS_OTGSC_TOG(x, v) (HW_USBHS_OTGSC_WR(x, HW_USBHS_OTGSC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_OTGSC bitfields
@@ -5352,24 +4744,20 @@ typedef union _hw_usbhs_otgsc
  *
  * Setting this bit causes VBUS to discharge through a resistor.
  */
-//@{
-#define BP_USBHS_OTGSC_VD    (0U)          //!< Bit position for USBHS_OTGSC_VD.
-#define BM_USBHS_OTGSC_VD    (0x00000001U) //!< Bit mask for USBHS_OTGSC_VD.
-#define BS_USBHS_OTGSC_VD    (1U)          //!< Bit field size in bits for USBHS_OTGSC_VD.
+/*@{*/
+#define BP_USBHS_OTGSC_VD    (0U)          /*!< Bit position for USBHS_OTGSC_VD. */
+#define BM_USBHS_OTGSC_VD    (0x00000001U) /*!< Bit mask for USBHS_OTGSC_VD. */
+#define BS_USBHS_OTGSC_VD    (1U)          /*!< Bit field size in bits for USBHS_OTGSC_VD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_VD field.
-#define BR_USBHS_OTGSC_VD    (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_VD))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_VD field. */
+#define BR_USBHS_OTGSC_VD(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_VD))
 
-//! @brief Format value for bitfield USBHS_OTGSC_VD.
-#define BF_USBHS_OTGSC_VD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_VD), uint32_t) & BM_USBHS_OTGSC_VD)
+/*! @brief Format value for bitfield USBHS_OTGSC_VD. */
+#define BF_USBHS_OTGSC_VD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_VD) & BM_USBHS_OTGSC_VD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VD field to a new value.
-#define BW_USBHS_OTGSC_VD(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_VD) = (v))
-#endif
-//@}
+/*! @brief Set the VD field to a new value. */
+#define BW_USBHS_OTGSC_VD(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_VD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field VC[1] (RW)
@@ -5377,24 +4765,20 @@ typedef union _hw_usbhs_otgsc
  * Setting this bit causes the VBUS line to charge. This is used for VBus
  * pulsing during SRP.
  */
-//@{
-#define BP_USBHS_OTGSC_VC    (1U)          //!< Bit position for USBHS_OTGSC_VC.
-#define BM_USBHS_OTGSC_VC    (0x00000002U) //!< Bit mask for USBHS_OTGSC_VC.
-#define BS_USBHS_OTGSC_VC    (1U)          //!< Bit field size in bits for USBHS_OTGSC_VC.
+/*@{*/
+#define BP_USBHS_OTGSC_VC    (1U)          /*!< Bit position for USBHS_OTGSC_VC. */
+#define BM_USBHS_OTGSC_VC    (0x00000002U) /*!< Bit mask for USBHS_OTGSC_VC. */
+#define BS_USBHS_OTGSC_VC    (1U)          /*!< Bit field size in bits for USBHS_OTGSC_VC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_VC field.
-#define BR_USBHS_OTGSC_VC    (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_VC))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_VC field. */
+#define BR_USBHS_OTGSC_VC(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_VC))
 
-//! @brief Format value for bitfield USBHS_OTGSC_VC.
-#define BF_USBHS_OTGSC_VC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_VC), uint32_t) & BM_USBHS_OTGSC_VC)
+/*! @brief Format value for bitfield USBHS_OTGSC_VC. */
+#define BF_USBHS_OTGSC_VC(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_VC) & BM_USBHS_OTGSC_VC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VC field to a new value.
-#define BW_USBHS_OTGSC_VC(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_VC) = (v))
-#endif
-//@}
+/*! @brief Set the VC field to a new value. */
+#define BW_USBHS_OTGSC_VC(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_VC) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field HAAR[2] (RW)
@@ -5403,24 +4787,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disabled.
  * - 1 - Enable automatic reset after connect on host port.
  */
-//@{
-#define BP_USBHS_OTGSC_HAAR  (2U)          //!< Bit position for USBHS_OTGSC_HAAR.
-#define BM_USBHS_OTGSC_HAAR  (0x00000004U) //!< Bit mask for USBHS_OTGSC_HAAR.
-#define BS_USBHS_OTGSC_HAAR  (1U)          //!< Bit field size in bits for USBHS_OTGSC_HAAR.
+/*@{*/
+#define BP_USBHS_OTGSC_HAAR  (2U)          /*!< Bit position for USBHS_OTGSC_HAAR. */
+#define BM_USBHS_OTGSC_HAAR  (0x00000004U) /*!< Bit mask for USBHS_OTGSC_HAAR. */
+#define BS_USBHS_OTGSC_HAAR  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_HAAR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_HAAR field.
-#define BR_USBHS_OTGSC_HAAR  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_HAAR))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_HAAR field. */
+#define BR_USBHS_OTGSC_HAAR(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_HAAR))
 
-//! @brief Format value for bitfield USBHS_OTGSC_HAAR.
-#define BF_USBHS_OTGSC_HAAR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_HAAR), uint32_t) & BM_USBHS_OTGSC_HAAR)
+/*! @brief Format value for bitfield USBHS_OTGSC_HAAR. */
+#define BF_USBHS_OTGSC_HAAR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_HAAR) & BM_USBHS_OTGSC_HAAR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HAAR field to a new value.
-#define BW_USBHS_OTGSC_HAAR(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_HAAR) = (v))
-#endif
-//@}
+/*! @brief Set the HAAR field to a new value. */
+#define BW_USBHS_OTGSC_HAAR(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_HAAR) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field OT[3] (RW)
@@ -5431,24 +4811,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable pull-down on DM
  * - 1 - Enable pull-down on DM
  */
-//@{
-#define BP_USBHS_OTGSC_OT    (3U)          //!< Bit position for USBHS_OTGSC_OT.
-#define BM_USBHS_OTGSC_OT    (0x00000008U) //!< Bit mask for USBHS_OTGSC_OT.
-#define BS_USBHS_OTGSC_OT    (1U)          //!< Bit field size in bits for USBHS_OTGSC_OT.
+/*@{*/
+#define BP_USBHS_OTGSC_OT    (3U)          /*!< Bit position for USBHS_OTGSC_OT. */
+#define BM_USBHS_OTGSC_OT    (0x00000008U) /*!< Bit mask for USBHS_OTGSC_OT. */
+#define BS_USBHS_OTGSC_OT    (1U)          /*!< Bit field size in bits for USBHS_OTGSC_OT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_OT field.
-#define BR_USBHS_OTGSC_OT    (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_OT))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_OT field. */
+#define BR_USBHS_OTGSC_OT(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_OT))
 
-//! @brief Format value for bitfield USBHS_OTGSC_OT.
-#define BF_USBHS_OTGSC_OT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_OT), uint32_t) & BM_USBHS_OTGSC_OT)
+/*! @brief Format value for bitfield USBHS_OTGSC_OT. */
+#define BF_USBHS_OTGSC_OT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_OT) & BM_USBHS_OTGSC_OT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OT field to a new value.
-#define BW_USBHS_OTGSC_OT(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_OT) = (v))
-#endif
-//@}
+/*! @brief Set the OT field to a new value. */
+#define BW_USBHS_OTGSC_OT(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_OT) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field DP[4] (RW)
@@ -5457,24 +4833,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - The pull-up on DP is not asserted
  * - 1 - The pull-up on DP is asserted for data pulsing during SRP
  */
-//@{
-#define BP_USBHS_OTGSC_DP    (4U)          //!< Bit position for USBHS_OTGSC_DP.
-#define BM_USBHS_OTGSC_DP    (0x00000010U) //!< Bit mask for USBHS_OTGSC_DP.
-#define BS_USBHS_OTGSC_DP    (1U)          //!< Bit field size in bits for USBHS_OTGSC_DP.
+/*@{*/
+#define BP_USBHS_OTGSC_DP    (4U)          /*!< Bit position for USBHS_OTGSC_DP. */
+#define BM_USBHS_OTGSC_DP    (0x00000010U) /*!< Bit mask for USBHS_OTGSC_DP. */
+#define BS_USBHS_OTGSC_DP    (1U)          /*!< Bit field size in bits for USBHS_OTGSC_DP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_DP field.
-#define BR_USBHS_OTGSC_DP    (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DP))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_DP field. */
+#define BR_USBHS_OTGSC_DP(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DP))
 
-//! @brief Format value for bitfield USBHS_OTGSC_DP.
-#define BF_USBHS_OTGSC_DP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_DP), uint32_t) & BM_USBHS_OTGSC_DP)
+/*! @brief Format value for bitfield USBHS_OTGSC_DP. */
+#define BF_USBHS_OTGSC_DP(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_DP) & BM_USBHS_OTGSC_DP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DP field to a new value.
-#define BW_USBHS_OTGSC_DP(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DP) = (v))
-#endif
-//@}
+/*! @brief Set the DP field to a new value. */
+#define BW_USBHS_OTGSC_DP(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DP) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field IDPU[5] (RW)
@@ -5485,24 +4857,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable pull-up. ID input not sampled.
  * - 1 - Enable pull-up
  */
-//@{
-#define BP_USBHS_OTGSC_IDPU  (5U)          //!< Bit position for USBHS_OTGSC_IDPU.
-#define BM_USBHS_OTGSC_IDPU  (0x00000020U) //!< Bit mask for USBHS_OTGSC_IDPU.
-#define BS_USBHS_OTGSC_IDPU  (1U)          //!< Bit field size in bits for USBHS_OTGSC_IDPU.
+/*@{*/
+#define BP_USBHS_OTGSC_IDPU  (5U)          /*!< Bit position for USBHS_OTGSC_IDPU. */
+#define BM_USBHS_OTGSC_IDPU  (0x00000020U) /*!< Bit mask for USBHS_OTGSC_IDPU. */
+#define BS_USBHS_OTGSC_IDPU  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_IDPU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_IDPU field.
-#define BR_USBHS_OTGSC_IDPU  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDPU))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_IDPU field. */
+#define BR_USBHS_OTGSC_IDPU(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDPU))
 
-//! @brief Format value for bitfield USBHS_OTGSC_IDPU.
-#define BF_USBHS_OTGSC_IDPU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_IDPU), uint32_t) & BM_USBHS_OTGSC_IDPU)
+/*! @brief Format value for bitfield USBHS_OTGSC_IDPU. */
+#define BF_USBHS_OTGSC_IDPU(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_IDPU) & BM_USBHS_OTGSC_IDPU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDPU field to a new value.
-#define BW_USBHS_OTGSC_IDPU(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDPU) = (v))
-#endif
-//@}
+/*! @brief Set the IDPU field to a new value. */
+#define BW_USBHS_OTGSC_IDPU(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDPU) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field HABA[7] (RW)
@@ -5511,24 +4879,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disabled.
  * - 1 - Enable automatic B-disconnect to A-connect sequence.
  */
-//@{
-#define BP_USBHS_OTGSC_HABA  (7U)          //!< Bit position for USBHS_OTGSC_HABA.
-#define BM_USBHS_OTGSC_HABA  (0x00000080U) //!< Bit mask for USBHS_OTGSC_HABA.
-#define BS_USBHS_OTGSC_HABA  (1U)          //!< Bit field size in bits for USBHS_OTGSC_HABA.
+/*@{*/
+#define BP_USBHS_OTGSC_HABA  (7U)          /*!< Bit position for USBHS_OTGSC_HABA. */
+#define BM_USBHS_OTGSC_HABA  (0x00000080U) /*!< Bit mask for USBHS_OTGSC_HABA. */
+#define BS_USBHS_OTGSC_HABA  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_HABA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_HABA field.
-#define BR_USBHS_OTGSC_HABA  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_HABA))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_HABA field. */
+#define BR_USBHS_OTGSC_HABA(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_HABA))
 
-//! @brief Format value for bitfield USBHS_OTGSC_HABA.
-#define BF_USBHS_OTGSC_HABA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_HABA), uint32_t) & BM_USBHS_OTGSC_HABA)
+/*! @brief Format value for bitfield USBHS_OTGSC_HABA. */
+#define BF_USBHS_OTGSC_HABA(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_HABA) & BM_USBHS_OTGSC_HABA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HABA field to a new value.
-#define BW_USBHS_OTGSC_HABA(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_HABA) = (v))
-#endif
-//@}
+/*! @brief Set the HABA field to a new value. */
+#define BW_USBHS_OTGSC_HABA(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_HABA) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field ID[8] (RO)
@@ -5537,16 +4901,14 @@ typedef union _hw_usbhs_otgsc
  * - 0 - A device
  * - 1 - B device
  */
-//@{
-#define BP_USBHS_OTGSC_ID    (8U)          //!< Bit position for USBHS_OTGSC_ID.
-#define BM_USBHS_OTGSC_ID    (0x00000100U) //!< Bit mask for USBHS_OTGSC_ID.
-#define BS_USBHS_OTGSC_ID    (1U)          //!< Bit field size in bits for USBHS_OTGSC_ID.
+/*@{*/
+#define BP_USBHS_OTGSC_ID    (8U)          /*!< Bit position for USBHS_OTGSC_ID. */
+#define BM_USBHS_OTGSC_ID    (0x00000100U) /*!< Bit mask for USBHS_OTGSC_ID. */
+#define BS_USBHS_OTGSC_ID    (1U)          /*!< Bit field size in bits for USBHS_OTGSC_ID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_ID field.
-#define BR_USBHS_OTGSC_ID    (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ID))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_ID field. */
+#define BR_USBHS_OTGSC_ID(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ID))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field AVV[9] (RO)
@@ -5555,16 +4917,14 @@ typedef union _hw_usbhs_otgsc
  * - 0 - VBus is below A VBus valid threshold
  * - 1 - VBus is above A VBus valid threshold
  */
-//@{
-#define BP_USBHS_OTGSC_AVV   (9U)          //!< Bit position for USBHS_OTGSC_AVV.
-#define BM_USBHS_OTGSC_AVV   (0x00000200U) //!< Bit mask for USBHS_OTGSC_AVV.
-#define BS_USBHS_OTGSC_AVV   (1U)          //!< Bit field size in bits for USBHS_OTGSC_AVV.
+/*@{*/
+#define BP_USBHS_OTGSC_AVV   (9U)          /*!< Bit position for USBHS_OTGSC_AVV. */
+#define BM_USBHS_OTGSC_AVV   (0x00000200U) /*!< Bit mask for USBHS_OTGSC_AVV. */
+#define BS_USBHS_OTGSC_AVV   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_AVV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_AVV field.
-#define BR_USBHS_OTGSC_AVV   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_AVV))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_AVV field. */
+#define BR_USBHS_OTGSC_AVV(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_AVV))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field ASV[10] (RO)
@@ -5573,16 +4933,14 @@ typedef union _hw_usbhs_otgsc
  * - 0 - VBus is below A session valid threshold
  * - 1 - VBus is above A session valid threshold
  */
-//@{
-#define BP_USBHS_OTGSC_ASV   (10U)         //!< Bit position for USBHS_OTGSC_ASV.
-#define BM_USBHS_OTGSC_ASV   (0x00000400U) //!< Bit mask for USBHS_OTGSC_ASV.
-#define BS_USBHS_OTGSC_ASV   (1U)          //!< Bit field size in bits for USBHS_OTGSC_ASV.
+/*@{*/
+#define BP_USBHS_OTGSC_ASV   (10U)         /*!< Bit position for USBHS_OTGSC_ASV. */
+#define BM_USBHS_OTGSC_ASV   (0x00000400U) /*!< Bit mask for USBHS_OTGSC_ASV. */
+#define BS_USBHS_OTGSC_ASV   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_ASV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_ASV field.
-#define BR_USBHS_OTGSC_ASV   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ASV))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_ASV field. */
+#define BR_USBHS_OTGSC_ASV(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ASV))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSV[11] (RO)
@@ -5591,16 +4949,14 @@ typedef union _hw_usbhs_otgsc
  * - 0 - VBus is below B session valid threshold
  * - 1 - VBus is above B session valid threshold
  */
-//@{
-#define BP_USBHS_OTGSC_BSV   (11U)         //!< Bit position for USBHS_OTGSC_BSV.
-#define BM_USBHS_OTGSC_BSV   (0x00000800U) //!< Bit mask for USBHS_OTGSC_BSV.
-#define BS_USBHS_OTGSC_BSV   (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSV.
+/*@{*/
+#define BP_USBHS_OTGSC_BSV   (11U)         /*!< Bit position for USBHS_OTGSC_BSV. */
+#define BM_USBHS_OTGSC_BSV   (0x00000800U) /*!< Bit mask for USBHS_OTGSC_BSV. */
+#define BS_USBHS_OTGSC_BSV   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSV field.
-#define BR_USBHS_OTGSC_BSV   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSV))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_BSV field. */
+#define BR_USBHS_OTGSC_BSV(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSV))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSE[12] (RO)
@@ -5609,32 +4965,28 @@ typedef union _hw_usbhs_otgsc
  * - 0 - VBus is above B session end threshold
  * - 1 - VBus is below B session end threshold
  */
-//@{
-#define BP_USBHS_OTGSC_BSE   (12U)         //!< Bit position for USBHS_OTGSC_BSE.
-#define BM_USBHS_OTGSC_BSE   (0x00001000U) //!< Bit mask for USBHS_OTGSC_BSE.
-#define BS_USBHS_OTGSC_BSE   (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSE.
+/*@{*/
+#define BP_USBHS_OTGSC_BSE   (12U)         /*!< Bit position for USBHS_OTGSC_BSE. */
+#define BM_USBHS_OTGSC_BSE   (0x00001000U) /*!< Bit mask for USBHS_OTGSC_BSE. */
+#define BS_USBHS_OTGSC_BSE   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSE field.
-#define BR_USBHS_OTGSC_BSE   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSE))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_BSE field. */
+#define BR_USBHS_OTGSC_BSE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSE))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field MST[13] (RO)
  *
  * This bit toggles once per millisecond.
  */
-//@{
-#define BP_USBHS_OTGSC_MST   (13U)         //!< Bit position for USBHS_OTGSC_MST.
-#define BM_USBHS_OTGSC_MST   (0x00002000U) //!< Bit mask for USBHS_OTGSC_MST.
-#define BS_USBHS_OTGSC_MST   (1U)          //!< Bit field size in bits for USBHS_OTGSC_MST.
+/*@{*/
+#define BP_USBHS_OTGSC_MST   (13U)         /*!< Bit position for USBHS_OTGSC_MST. */
+#define BM_USBHS_OTGSC_MST   (0x00002000U) /*!< Bit mask for USBHS_OTGSC_MST. */
+#define BS_USBHS_OTGSC_MST   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_MST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_MST field.
-#define BR_USBHS_OTGSC_MST   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_MST))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_MST field. */
+#define BR_USBHS_OTGSC_MST(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_MST))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field DPS[14] (RO)
@@ -5643,16 +4995,14 @@ typedef union _hw_usbhs_otgsc
  * - 0 - No pulsing on port
  * - 1 - Pulsing detected on port
  */
-//@{
-#define BP_USBHS_OTGSC_DPS   (14U)         //!< Bit position for USBHS_OTGSC_DPS.
-#define BM_USBHS_OTGSC_DPS   (0x00004000U) //!< Bit mask for USBHS_OTGSC_DPS.
-#define BS_USBHS_OTGSC_DPS   (1U)          //!< Bit field size in bits for USBHS_OTGSC_DPS.
+/*@{*/
+#define BP_USBHS_OTGSC_DPS   (14U)         /*!< Bit position for USBHS_OTGSC_DPS. */
+#define BM_USBHS_OTGSC_DPS   (0x00004000U) /*!< Bit mask for USBHS_OTGSC_DPS. */
+#define BS_USBHS_OTGSC_DPS   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_DPS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_DPS field.
-#define BR_USBHS_OTGSC_DPS   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DPS))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_OTGSC_DPS field. */
+#define BR_USBHS_OTGSC_DPS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DPS))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field IDIS[16] (W1C)
@@ -5660,24 +5010,20 @@ typedef union _hw_usbhs_otgsc
  * Indicates when a change on the ID input is detected. Software must write a 1
  * to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_IDIS  (16U)         //!< Bit position for USBHS_OTGSC_IDIS.
-#define BM_USBHS_OTGSC_IDIS  (0x00010000U) //!< Bit mask for USBHS_OTGSC_IDIS.
-#define BS_USBHS_OTGSC_IDIS  (1U)          //!< Bit field size in bits for USBHS_OTGSC_IDIS.
+/*@{*/
+#define BP_USBHS_OTGSC_IDIS  (16U)         /*!< Bit position for USBHS_OTGSC_IDIS. */
+#define BM_USBHS_OTGSC_IDIS  (0x00010000U) /*!< Bit mask for USBHS_OTGSC_IDIS. */
+#define BS_USBHS_OTGSC_IDIS  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_IDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_IDIS field.
-#define BR_USBHS_OTGSC_IDIS  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_IDIS field. */
+#define BR_USBHS_OTGSC_IDIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_IDIS.
-#define BF_USBHS_OTGSC_IDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_IDIS), uint32_t) & BM_USBHS_OTGSC_IDIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_IDIS. */
+#define BF_USBHS_OTGSC_IDIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_IDIS) & BM_USBHS_OTGSC_IDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDIS field to a new value.
-#define BW_USBHS_OTGSC_IDIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDIS) = (v))
-#endif
-//@}
+/*! @brief Set the IDIS field to a new value. */
+#define BW_USBHS_OTGSC_IDIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field AVVIS[17] (W1C)
@@ -5685,24 +5031,20 @@ typedef union _hw_usbhs_otgsc
  * Indicates when VBUS rises above or falls below the VBUS valid threshold (4.4
  * VDC) on an A device. Software must write a 1 to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_AVVIS (17U)         //!< Bit position for USBHS_OTGSC_AVVIS.
-#define BM_USBHS_OTGSC_AVVIS (0x00020000U) //!< Bit mask for USBHS_OTGSC_AVVIS.
-#define BS_USBHS_OTGSC_AVVIS (1U)          //!< Bit field size in bits for USBHS_OTGSC_AVVIS.
+/*@{*/
+#define BP_USBHS_OTGSC_AVVIS (17U)         /*!< Bit position for USBHS_OTGSC_AVVIS. */
+#define BM_USBHS_OTGSC_AVVIS (0x00020000U) /*!< Bit mask for USBHS_OTGSC_AVVIS. */
+#define BS_USBHS_OTGSC_AVVIS (1U)          /*!< Bit field size in bits for USBHS_OTGSC_AVVIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_AVVIS field.
-#define BR_USBHS_OTGSC_AVVIS (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_AVVIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_AVVIS field. */
+#define BR_USBHS_OTGSC_AVVIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_AVVIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_AVVIS.
-#define BF_USBHS_OTGSC_AVVIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_AVVIS), uint32_t) & BM_USBHS_OTGSC_AVVIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_AVVIS. */
+#define BF_USBHS_OTGSC_AVVIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_AVVIS) & BM_USBHS_OTGSC_AVVIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVVIS field to a new value.
-#define BW_USBHS_OTGSC_AVVIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_AVVIS) = (v))
-#endif
-//@}
+/*! @brief Set the AVVIS field to a new value. */
+#define BW_USBHS_OTGSC_AVVIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_AVVIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field ASVIS[18] (W1C)
@@ -5710,24 +5052,20 @@ typedef union _hw_usbhs_otgsc
  * Indicates when VBUS rises above or falls below the A session valid threshold
  * (0.8 VDC). Software must write a 1 to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_ASVIS (18U)         //!< Bit position for USBHS_OTGSC_ASVIS.
-#define BM_USBHS_OTGSC_ASVIS (0x00040000U) //!< Bit mask for USBHS_OTGSC_ASVIS.
-#define BS_USBHS_OTGSC_ASVIS (1U)          //!< Bit field size in bits for USBHS_OTGSC_ASVIS.
+/*@{*/
+#define BP_USBHS_OTGSC_ASVIS (18U)         /*!< Bit position for USBHS_OTGSC_ASVIS. */
+#define BM_USBHS_OTGSC_ASVIS (0x00040000U) /*!< Bit mask for USBHS_OTGSC_ASVIS. */
+#define BS_USBHS_OTGSC_ASVIS (1U)          /*!< Bit field size in bits for USBHS_OTGSC_ASVIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_ASVIS field.
-#define BR_USBHS_OTGSC_ASVIS (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ASVIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_ASVIS field. */
+#define BR_USBHS_OTGSC_ASVIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ASVIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_ASVIS.
-#define BF_USBHS_OTGSC_ASVIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_ASVIS), uint32_t) & BM_USBHS_OTGSC_ASVIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_ASVIS. */
+#define BF_USBHS_OTGSC_ASVIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_ASVIS) & BM_USBHS_OTGSC_ASVIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASVIS field to a new value.
-#define BW_USBHS_OTGSC_ASVIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ASVIS) = (v))
-#endif
-//@}
+/*! @brief Set the ASVIS field to a new value. */
+#define BW_USBHS_OTGSC_ASVIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ASVIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSVIS[19] (W1C)
@@ -5735,24 +5073,20 @@ typedef union _hw_usbhs_otgsc
  * Indicates when VBUS rises above or falls below the B session valid threshold
  * (0.8 VDC). Software must write a 1 to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_BSVIS (19U)         //!< Bit position for USBHS_OTGSC_BSVIS.
-#define BM_USBHS_OTGSC_BSVIS (0x00080000U) //!< Bit mask for USBHS_OTGSC_BSVIS.
-#define BS_USBHS_OTGSC_BSVIS (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSVIS.
+/*@{*/
+#define BP_USBHS_OTGSC_BSVIS (19U)         /*!< Bit position for USBHS_OTGSC_BSVIS. */
+#define BM_USBHS_OTGSC_BSVIS (0x00080000U) /*!< Bit mask for USBHS_OTGSC_BSVIS. */
+#define BS_USBHS_OTGSC_BSVIS (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSVIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSVIS field.
-#define BR_USBHS_OTGSC_BSVIS (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSVIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_BSVIS field. */
+#define BR_USBHS_OTGSC_BSVIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSVIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_BSVIS.
-#define BF_USBHS_OTGSC_BSVIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_BSVIS), uint32_t) & BM_USBHS_OTGSC_BSVIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_BSVIS. */
+#define BF_USBHS_OTGSC_BSVIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_BSVIS) & BM_USBHS_OTGSC_BSVIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSVIS field to a new value.
-#define BW_USBHS_OTGSC_BSVIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSVIS) = (v))
-#endif
-//@}
+/*! @brief Set the BSVIS field to a new value. */
+#define BW_USBHS_OTGSC_BSVIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSVIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSEIS[20] (W1C)
@@ -5760,24 +5094,20 @@ typedef union _hw_usbhs_otgsc
  * Indicates when VBUS falls below the B session end threshold. Software must
  * write a 1 to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_BSEIS (20U)         //!< Bit position for USBHS_OTGSC_BSEIS.
-#define BM_USBHS_OTGSC_BSEIS (0x00100000U) //!< Bit mask for USBHS_OTGSC_BSEIS.
-#define BS_USBHS_OTGSC_BSEIS (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSEIS.
+/*@{*/
+#define BP_USBHS_OTGSC_BSEIS (20U)         /*!< Bit position for USBHS_OTGSC_BSEIS. */
+#define BM_USBHS_OTGSC_BSEIS (0x00100000U) /*!< Bit mask for USBHS_OTGSC_BSEIS. */
+#define BS_USBHS_OTGSC_BSEIS (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSEIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSEIS field.
-#define BR_USBHS_OTGSC_BSEIS (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSEIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_BSEIS field. */
+#define BR_USBHS_OTGSC_BSEIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSEIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_BSEIS.
-#define BF_USBHS_OTGSC_BSEIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_BSEIS), uint32_t) & BM_USBHS_OTGSC_BSEIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_BSEIS. */
+#define BF_USBHS_OTGSC_BSEIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_BSEIS) & BM_USBHS_OTGSC_BSEIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSEIS field to a new value.
-#define BW_USBHS_OTGSC_BSEIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSEIS) = (v))
-#endif
-//@}
+/*! @brief Set the BSEIS field to a new value. */
+#define BW_USBHS_OTGSC_BSEIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSEIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field MSS[21] (W1C)
@@ -5785,24 +5115,20 @@ typedef union _hw_usbhs_otgsc
  * This bit is set once every millisecond. Software must write a 1 to clear this
  * bit.
  */
-//@{
-#define BP_USBHS_OTGSC_MSS   (21U)         //!< Bit position for USBHS_OTGSC_MSS.
-#define BM_USBHS_OTGSC_MSS   (0x00200000U) //!< Bit mask for USBHS_OTGSC_MSS.
-#define BS_USBHS_OTGSC_MSS   (1U)          //!< Bit field size in bits for USBHS_OTGSC_MSS.
+/*@{*/
+#define BP_USBHS_OTGSC_MSS   (21U)         /*!< Bit position for USBHS_OTGSC_MSS. */
+#define BM_USBHS_OTGSC_MSS   (0x00200000U) /*!< Bit mask for USBHS_OTGSC_MSS. */
+#define BS_USBHS_OTGSC_MSS   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_MSS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_MSS field.
-#define BR_USBHS_OTGSC_MSS   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_MSS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_MSS field. */
+#define BR_USBHS_OTGSC_MSS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_MSS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_MSS.
-#define BF_USBHS_OTGSC_MSS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_MSS), uint32_t) & BM_USBHS_OTGSC_MSS)
+/*! @brief Format value for bitfield USBHS_OTGSC_MSS. */
+#define BF_USBHS_OTGSC_MSS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_MSS) & BM_USBHS_OTGSC_MSS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSS field to a new value.
-#define BW_USBHS_OTGSC_MSS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_MSS) = (v))
-#endif
-//@}
+/*! @brief Set the MSS field to a new value. */
+#define BW_USBHS_OTGSC_MSS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_MSS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field DPIS[22] (W1C)
@@ -5811,24 +5137,20 @@ typedef union _hw_usbhs_otgsc
  * detected when USBMODE[CM] equals 11 and PORTSC0[PP] is cleared. Software must
  * write a 1 to clear this bit.
  */
-//@{
-#define BP_USBHS_OTGSC_DPIS  (22U)         //!< Bit position for USBHS_OTGSC_DPIS.
-#define BM_USBHS_OTGSC_DPIS  (0x00400000U) //!< Bit mask for USBHS_OTGSC_DPIS.
-#define BS_USBHS_OTGSC_DPIS  (1U)          //!< Bit field size in bits for USBHS_OTGSC_DPIS.
+/*@{*/
+#define BP_USBHS_OTGSC_DPIS  (22U)         /*!< Bit position for USBHS_OTGSC_DPIS. */
+#define BM_USBHS_OTGSC_DPIS  (0x00400000U) /*!< Bit mask for USBHS_OTGSC_DPIS. */
+#define BS_USBHS_OTGSC_DPIS  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_DPIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_DPIS field.
-#define BR_USBHS_OTGSC_DPIS  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DPIS))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_DPIS field. */
+#define BR_USBHS_OTGSC_DPIS(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DPIS))
 
-//! @brief Format value for bitfield USBHS_OTGSC_DPIS.
-#define BF_USBHS_OTGSC_DPIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_DPIS), uint32_t) & BM_USBHS_OTGSC_DPIS)
+/*! @brief Format value for bitfield USBHS_OTGSC_DPIS. */
+#define BF_USBHS_OTGSC_DPIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_DPIS) & BM_USBHS_OTGSC_DPIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPIS field to a new value.
-#define BW_USBHS_OTGSC_DPIS(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DPIS) = (v))
-#endif
-//@}
+/*! @brief Set the DPIS field to a new value. */
+#define BW_USBHS_OTGSC_DPIS(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DPIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field IDIE[24] (RW)
@@ -5837,24 +5159,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_IDIE  (24U)         //!< Bit position for USBHS_OTGSC_IDIE.
-#define BM_USBHS_OTGSC_IDIE  (0x01000000U) //!< Bit mask for USBHS_OTGSC_IDIE.
-#define BS_USBHS_OTGSC_IDIE  (1U)          //!< Bit field size in bits for USBHS_OTGSC_IDIE.
+/*@{*/
+#define BP_USBHS_OTGSC_IDIE  (24U)         /*!< Bit position for USBHS_OTGSC_IDIE. */
+#define BM_USBHS_OTGSC_IDIE  (0x01000000U) /*!< Bit mask for USBHS_OTGSC_IDIE. */
+#define BS_USBHS_OTGSC_IDIE  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_IDIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_IDIE field.
-#define BR_USBHS_OTGSC_IDIE  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_IDIE field. */
+#define BR_USBHS_OTGSC_IDIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_IDIE.
-#define BF_USBHS_OTGSC_IDIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_IDIE), uint32_t) & BM_USBHS_OTGSC_IDIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_IDIE. */
+#define BF_USBHS_OTGSC_IDIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_IDIE) & BM_USBHS_OTGSC_IDIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDIE field to a new value.
-#define BW_USBHS_OTGSC_IDIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_IDIE) = (v))
-#endif
-//@}
+/*! @brief Set the IDIE field to a new value. */
+#define BW_USBHS_OTGSC_IDIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_IDIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field AVVIE[25] (RW)
@@ -5863,24 +5181,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_AVVIE (25U)         //!< Bit position for USBHS_OTGSC_AVVIE.
-#define BM_USBHS_OTGSC_AVVIE (0x02000000U) //!< Bit mask for USBHS_OTGSC_AVVIE.
-#define BS_USBHS_OTGSC_AVVIE (1U)          //!< Bit field size in bits for USBHS_OTGSC_AVVIE.
+/*@{*/
+#define BP_USBHS_OTGSC_AVVIE (25U)         /*!< Bit position for USBHS_OTGSC_AVVIE. */
+#define BM_USBHS_OTGSC_AVVIE (0x02000000U) /*!< Bit mask for USBHS_OTGSC_AVVIE. */
+#define BS_USBHS_OTGSC_AVVIE (1U)          /*!< Bit field size in bits for USBHS_OTGSC_AVVIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_AVVIE field.
-#define BR_USBHS_OTGSC_AVVIE (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_AVVIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_AVVIE field. */
+#define BR_USBHS_OTGSC_AVVIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_AVVIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_AVVIE.
-#define BF_USBHS_OTGSC_AVVIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_AVVIE), uint32_t) & BM_USBHS_OTGSC_AVVIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_AVVIE. */
+#define BF_USBHS_OTGSC_AVVIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_AVVIE) & BM_USBHS_OTGSC_AVVIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVVIE field to a new value.
-#define BW_USBHS_OTGSC_AVVIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_AVVIE) = (v))
-#endif
-//@}
+/*! @brief Set the AVVIE field to a new value. */
+#define BW_USBHS_OTGSC_AVVIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_AVVIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field ASVIE[26] (RW)
@@ -5889,24 +5203,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_ASVIE (26U)         //!< Bit position for USBHS_OTGSC_ASVIE.
-#define BM_USBHS_OTGSC_ASVIE (0x04000000U) //!< Bit mask for USBHS_OTGSC_ASVIE.
-#define BS_USBHS_OTGSC_ASVIE (1U)          //!< Bit field size in bits for USBHS_OTGSC_ASVIE.
+/*@{*/
+#define BP_USBHS_OTGSC_ASVIE (26U)         /*!< Bit position for USBHS_OTGSC_ASVIE. */
+#define BM_USBHS_OTGSC_ASVIE (0x04000000U) /*!< Bit mask for USBHS_OTGSC_ASVIE. */
+#define BS_USBHS_OTGSC_ASVIE (1U)          /*!< Bit field size in bits for USBHS_OTGSC_ASVIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_ASVIE field.
-#define BR_USBHS_OTGSC_ASVIE (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ASVIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_ASVIE field. */
+#define BR_USBHS_OTGSC_ASVIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ASVIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_ASVIE.
-#define BF_USBHS_OTGSC_ASVIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_ASVIE), uint32_t) & BM_USBHS_OTGSC_ASVIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_ASVIE. */
+#define BF_USBHS_OTGSC_ASVIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_ASVIE) & BM_USBHS_OTGSC_ASVIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ASVIE field to a new value.
-#define BW_USBHS_OTGSC_ASVIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_ASVIE) = (v))
-#endif
-//@}
+/*! @brief Set the ASVIE field to a new value. */
+#define BW_USBHS_OTGSC_ASVIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_ASVIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSVIE[27] (RW)
@@ -5915,24 +5225,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_BSVIE (27U)         //!< Bit position for USBHS_OTGSC_BSVIE.
-#define BM_USBHS_OTGSC_BSVIE (0x08000000U) //!< Bit mask for USBHS_OTGSC_BSVIE.
-#define BS_USBHS_OTGSC_BSVIE (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSVIE.
+/*@{*/
+#define BP_USBHS_OTGSC_BSVIE (27U)         /*!< Bit position for USBHS_OTGSC_BSVIE. */
+#define BM_USBHS_OTGSC_BSVIE (0x08000000U) /*!< Bit mask for USBHS_OTGSC_BSVIE. */
+#define BS_USBHS_OTGSC_BSVIE (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSVIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSVIE field.
-#define BR_USBHS_OTGSC_BSVIE (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSVIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_BSVIE field. */
+#define BR_USBHS_OTGSC_BSVIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSVIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_BSVIE.
-#define BF_USBHS_OTGSC_BSVIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_BSVIE), uint32_t) & BM_USBHS_OTGSC_BSVIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_BSVIE. */
+#define BF_USBHS_OTGSC_BSVIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_BSVIE) & BM_USBHS_OTGSC_BSVIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSVIE field to a new value.
-#define BW_USBHS_OTGSC_BSVIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSVIE) = (v))
-#endif
-//@}
+/*! @brief Set the BSVIE field to a new value. */
+#define BW_USBHS_OTGSC_BSVIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSVIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field BSEIE[28] (RW)
@@ -5941,24 +5247,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_BSEIE (28U)         //!< Bit position for USBHS_OTGSC_BSEIE.
-#define BM_USBHS_OTGSC_BSEIE (0x10000000U) //!< Bit mask for USBHS_OTGSC_BSEIE.
-#define BS_USBHS_OTGSC_BSEIE (1U)          //!< Bit field size in bits for USBHS_OTGSC_BSEIE.
+/*@{*/
+#define BP_USBHS_OTGSC_BSEIE (28U)         /*!< Bit position for USBHS_OTGSC_BSEIE. */
+#define BM_USBHS_OTGSC_BSEIE (0x10000000U) /*!< Bit mask for USBHS_OTGSC_BSEIE. */
+#define BS_USBHS_OTGSC_BSEIE (1U)          /*!< Bit field size in bits for USBHS_OTGSC_BSEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_BSEIE field.
-#define BR_USBHS_OTGSC_BSEIE (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSEIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_BSEIE field. */
+#define BR_USBHS_OTGSC_BSEIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSEIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_BSEIE.
-#define BF_USBHS_OTGSC_BSEIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_BSEIE), uint32_t) & BM_USBHS_OTGSC_BSEIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_BSEIE. */
+#define BF_USBHS_OTGSC_BSEIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_BSEIE) & BM_USBHS_OTGSC_BSEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSEIE field to a new value.
-#define BW_USBHS_OTGSC_BSEIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_BSEIE) = (v))
-#endif
-//@}
+/*! @brief Set the BSEIE field to a new value. */
+#define BW_USBHS_OTGSC_BSEIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_BSEIE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field MSE[29] (RW)
@@ -5967,24 +5269,20 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_MSE   (29U)         //!< Bit position for USBHS_OTGSC_MSE.
-#define BM_USBHS_OTGSC_MSE   (0x20000000U) //!< Bit mask for USBHS_OTGSC_MSE.
-#define BS_USBHS_OTGSC_MSE   (1U)          //!< Bit field size in bits for USBHS_OTGSC_MSE.
+/*@{*/
+#define BP_USBHS_OTGSC_MSE   (29U)         /*!< Bit position for USBHS_OTGSC_MSE. */
+#define BM_USBHS_OTGSC_MSE   (0x20000000U) /*!< Bit mask for USBHS_OTGSC_MSE. */
+#define BS_USBHS_OTGSC_MSE   (1U)          /*!< Bit field size in bits for USBHS_OTGSC_MSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_MSE field.
-#define BR_USBHS_OTGSC_MSE   (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_MSE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_MSE field. */
+#define BR_USBHS_OTGSC_MSE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_MSE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_MSE.
-#define BF_USBHS_OTGSC_MSE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_MSE), uint32_t) & BM_USBHS_OTGSC_MSE)
+/*! @brief Format value for bitfield USBHS_OTGSC_MSE. */
+#define BF_USBHS_OTGSC_MSE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_MSE) & BM_USBHS_OTGSC_MSE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSE field to a new value.
-#define BW_USBHS_OTGSC_MSE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_MSE) = (v))
-#endif
-//@}
+/*! @brief Set the MSE field to a new value. */
+#define BW_USBHS_OTGSC_MSE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_MSE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_OTGSC, field DPIE[30] (RW)
@@ -5993,30 +5291,25 @@ typedef union _hw_usbhs_otgsc
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_OTGSC_DPIE  (30U)         //!< Bit position for USBHS_OTGSC_DPIE.
-#define BM_USBHS_OTGSC_DPIE  (0x40000000U) //!< Bit mask for USBHS_OTGSC_DPIE.
-#define BS_USBHS_OTGSC_DPIE  (1U)          //!< Bit field size in bits for USBHS_OTGSC_DPIE.
+/*@{*/
+#define BP_USBHS_OTGSC_DPIE  (30U)         /*!< Bit position for USBHS_OTGSC_DPIE. */
+#define BM_USBHS_OTGSC_DPIE  (0x40000000U) /*!< Bit mask for USBHS_OTGSC_DPIE. */
+#define BS_USBHS_OTGSC_DPIE  (1U)          /*!< Bit field size in bits for USBHS_OTGSC_DPIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_OTGSC_DPIE field.
-#define BR_USBHS_OTGSC_DPIE  (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DPIE))
-#endif
+/*! @brief Read current value of the USBHS_OTGSC_DPIE field. */
+#define BR_USBHS_OTGSC_DPIE(x) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DPIE))
 
-//! @brief Format value for bitfield USBHS_OTGSC_DPIE.
-#define BF_USBHS_OTGSC_DPIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_OTGSC_DPIE), uint32_t) & BM_USBHS_OTGSC_DPIE)
+/*! @brief Format value for bitfield USBHS_OTGSC_DPIE. */
+#define BF_USBHS_OTGSC_DPIE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_OTGSC_DPIE) & BM_USBHS_OTGSC_DPIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPIE field to a new value.
-#define BW_USBHS_OTGSC_DPIE(v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR, BP_USBHS_OTGSC_DPIE) = (v))
-#endif
-//@}
+/*! @brief Set the DPIE field to a new value. */
+#define BW_USBHS_OTGSC_DPIE(x, v) (BITBAND_ACCESS32(HW_USBHS_OTGSC_ADDR(x), BP_USBHS_OTGSC_DPIE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USBMODE - USB Mode Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USBMODE - USB Mode Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USBMODE - USB Mode Register (RW)
  *
@@ -6030,32 +5323,29 @@ typedef union _hw_usbhs_usbmode
     uint32_t U;
     struct _hw_usbhs_usbmode_bitfields
     {
-        uint32_t CM : 2;               //!< [1:0] Controller Mode
-        uint32_t ES : 1;               //!< [2] Endian Select
-        uint32_t SLOM : 1;             //!< [3] Setup Lock-Out Mode
-        uint32_t SDIS : 1;             //!< [4] Stream DISable
-        uint32_t RESERVED0 : 7;        //!< [11:5] Reserved
-        uint32_t TXHSD : 3;            //!< [14:12] Tx to Tx HS Delay
-        uint32_t RESERVED1 : 17;       //!< [31:15] Reserved
+        uint32_t CM : 2;               /*!< [1:0] Controller Mode */
+        uint32_t ES : 1;               /*!< [2] Endian Select */
+        uint32_t SLOM : 1;             /*!< [3] Setup Lock-Out Mode */
+        uint32_t SDIS : 1;             /*!< [4] Stream DISable */
+        uint32_t RESERVED0 : 7;        /*!< [11:5] Reserved */
+        uint32_t TXHSD : 3;            /*!< [14:12] Tx to Tx HS Delay */
+        uint32_t RESERVED1 : 17;       /*!< [31:15] Reserved */
     } B;
 } hw_usbhs_usbmode_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USBMODE register
  */
-//@{
-#define HW_USBHS_USBMODE_ADDR    (REGS_USBHS_BASE + 0x1A8U)
+/*@{*/
+#define HW_USBHS_USBMODE_ADDR(x) ((x) + 0x1A8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USBMODE         (*(__IO hw_usbhs_usbmode_t *) HW_USBHS_USBMODE_ADDR)
-#define HW_USBHS_USBMODE_RD()    (HW_USBHS_USBMODE.U)
-#define HW_USBHS_USBMODE_WR(v)   (HW_USBHS_USBMODE.U = (v))
-#define HW_USBHS_USBMODE_SET(v)  (HW_USBHS_USBMODE_WR(HW_USBHS_USBMODE_RD() |  (v)))
-#define HW_USBHS_USBMODE_CLR(v)  (HW_USBHS_USBMODE_WR(HW_USBHS_USBMODE_RD() & ~(v)))
-#define HW_USBHS_USBMODE_TOG(v)  (HW_USBHS_USBMODE_WR(HW_USBHS_USBMODE_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USBMODE(x)      (*(__IO hw_usbhs_usbmode_t *) HW_USBHS_USBMODE_ADDR(x))
+#define HW_USBHS_USBMODE_RD(x)   (HW_USBHS_USBMODE(x).U)
+#define HW_USBHS_USBMODE_WR(x, v) (HW_USBHS_USBMODE(x).U = (v))
+#define HW_USBHS_USBMODE_SET(x, v) (HW_USBHS_USBMODE_WR(x, HW_USBHS_USBMODE_RD(x) |  (v)))
+#define HW_USBHS_USBMODE_CLR(x, v) (HW_USBHS_USBMODE_WR(x, HW_USBHS_USBMODE_RD(x) & ~(v)))
+#define HW_USBHS_USBMODE_TOG(x, v) (HW_USBHS_USBMODE_WR(x, HW_USBHS_USBMODE_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USBMODE bitfields
@@ -6075,24 +5365,20 @@ typedef union _hw_usbhs_usbmode
  * - 10 - Device controller
  * - 11 - Host controller
  */
-//@{
-#define BP_USBHS_USBMODE_CM  (0U)          //!< Bit position for USBHS_USBMODE_CM.
-#define BM_USBHS_USBMODE_CM  (0x00000003U) //!< Bit mask for USBHS_USBMODE_CM.
-#define BS_USBHS_USBMODE_CM  (2U)          //!< Bit field size in bits for USBHS_USBMODE_CM.
+/*@{*/
+#define BP_USBHS_USBMODE_CM  (0U)          /*!< Bit position for USBHS_USBMODE_CM. */
+#define BM_USBHS_USBMODE_CM  (0x00000003U) /*!< Bit mask for USBHS_USBMODE_CM. */
+#define BS_USBHS_USBMODE_CM  (2U)          /*!< Bit field size in bits for USBHS_USBMODE_CM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBMODE_CM field.
-#define BR_USBHS_USBMODE_CM  (HW_USBHS_USBMODE.B.CM)
-#endif
+/*! @brief Read current value of the USBHS_USBMODE_CM field. */
+#define BR_USBHS_USBMODE_CM(x) (HW_USBHS_USBMODE(x).B.CM)
 
-//! @brief Format value for bitfield USBHS_USBMODE_CM.
-#define BF_USBHS_USBMODE_CM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBMODE_CM), uint32_t) & BM_USBHS_USBMODE_CM)
+/*! @brief Format value for bitfield USBHS_USBMODE_CM. */
+#define BF_USBHS_USBMODE_CM(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBMODE_CM) & BM_USBHS_USBMODE_CM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CM field to a new value.
-#define BW_USBHS_USBMODE_CM(v) (HW_USBHS_USBMODE_WR((HW_USBHS_USBMODE_RD() & ~BM_USBHS_USBMODE_CM) | BF_USBHS_USBMODE_CM(v)))
-#endif
-//@}
+/*! @brief Set the CM field to a new value. */
+#define BW_USBHS_USBMODE_CM(x, v) (HW_USBHS_USBMODE_WR(x, (HW_USBHS_USBMODE_RD(x) & ~BM_USBHS_USBMODE_CM) | BF_USBHS_USBMODE_CM(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBMODE, field ES[2] (RW)
@@ -6108,24 +5394,20 @@ typedef union _hw_usbhs_usbmode
  * - 1 - Big endian. First byte referenced in most significant byte of 32-bit
  *     word.
  */
-//@{
-#define BP_USBHS_USBMODE_ES  (2U)          //!< Bit position for USBHS_USBMODE_ES.
-#define BM_USBHS_USBMODE_ES  (0x00000004U) //!< Bit mask for USBHS_USBMODE_ES.
-#define BS_USBHS_USBMODE_ES  (1U)          //!< Bit field size in bits for USBHS_USBMODE_ES.
+/*@{*/
+#define BP_USBHS_USBMODE_ES  (2U)          /*!< Bit position for USBHS_USBMODE_ES. */
+#define BM_USBHS_USBMODE_ES  (0x00000004U) /*!< Bit mask for USBHS_USBMODE_ES. */
+#define BS_USBHS_USBMODE_ES  (1U)          /*!< Bit field size in bits for USBHS_USBMODE_ES. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBMODE_ES field.
-#define BR_USBHS_USBMODE_ES  (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_ES))
-#endif
+/*! @brief Read current value of the USBHS_USBMODE_ES field. */
+#define BR_USBHS_USBMODE_ES(x) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_ES))
 
-//! @brief Format value for bitfield USBHS_USBMODE_ES.
-#define BF_USBHS_USBMODE_ES(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBMODE_ES), uint32_t) & BM_USBHS_USBMODE_ES)
+/*! @brief Format value for bitfield USBHS_USBMODE_ES. */
+#define BF_USBHS_USBMODE_ES(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBMODE_ES) & BM_USBHS_USBMODE_ES)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ES field to a new value.
-#define BW_USBHS_USBMODE_ES(v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_ES) = (v))
-#endif
-//@}
+/*! @brief Set the ES field to a new value. */
+#define BW_USBHS_USBMODE_ES(x, v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_ES) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBMODE, field SLOM[3] (RW)
@@ -6133,24 +5415,20 @@ typedef union _hw_usbhs_usbmode
  * For the module in device mode, this bit controls behavior of the setup lock
  * mechanism. See section "Control Endpoint Operation."
  */
-//@{
-#define BP_USBHS_USBMODE_SLOM (3U)         //!< Bit position for USBHS_USBMODE_SLOM.
-#define BM_USBHS_USBMODE_SLOM (0x00000008U) //!< Bit mask for USBHS_USBMODE_SLOM.
-#define BS_USBHS_USBMODE_SLOM (1U)         //!< Bit field size in bits for USBHS_USBMODE_SLOM.
+/*@{*/
+#define BP_USBHS_USBMODE_SLOM (3U)         /*!< Bit position for USBHS_USBMODE_SLOM. */
+#define BM_USBHS_USBMODE_SLOM (0x00000008U) /*!< Bit mask for USBHS_USBMODE_SLOM. */
+#define BS_USBHS_USBMODE_SLOM (1U)         /*!< Bit field size in bits for USBHS_USBMODE_SLOM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBMODE_SLOM field.
-#define BR_USBHS_USBMODE_SLOM (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_SLOM))
-#endif
+/*! @brief Read current value of the USBHS_USBMODE_SLOM field. */
+#define BR_USBHS_USBMODE_SLOM(x) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_SLOM))
 
-//! @brief Format value for bitfield USBHS_USBMODE_SLOM.
-#define BF_USBHS_USBMODE_SLOM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBMODE_SLOM), uint32_t) & BM_USBHS_USBMODE_SLOM)
+/*! @brief Format value for bitfield USBHS_USBMODE_SLOM. */
+#define BF_USBHS_USBMODE_SLOM(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBMODE_SLOM) & BM_USBHS_USBMODE_SLOM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SLOM field to a new value.
-#define BW_USBHS_USBMODE_SLOM(v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_SLOM) = (v))
-#endif
-//@}
+/*! @brief Set the SLOM field to a new value. */
+#define BW_USBHS_USBMODE_SLOM(x, v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_SLOM) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBMODE, field SDIS[4] (RW)
@@ -6176,24 +5454,20 @@ typedef union _hw_usbhs_usbmode
  * - 0 - Inactive
  * - 1 - Active
  */
-//@{
-#define BP_USBHS_USBMODE_SDIS (4U)         //!< Bit position for USBHS_USBMODE_SDIS.
-#define BM_USBHS_USBMODE_SDIS (0x00000010U) //!< Bit mask for USBHS_USBMODE_SDIS.
-#define BS_USBHS_USBMODE_SDIS (1U)         //!< Bit field size in bits for USBHS_USBMODE_SDIS.
+/*@{*/
+#define BP_USBHS_USBMODE_SDIS (4U)         /*!< Bit position for USBHS_USBMODE_SDIS. */
+#define BM_USBHS_USBMODE_SDIS (0x00000010U) /*!< Bit mask for USBHS_USBMODE_SDIS. */
+#define BS_USBHS_USBMODE_SDIS (1U)         /*!< Bit field size in bits for USBHS_USBMODE_SDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBMODE_SDIS field.
-#define BR_USBHS_USBMODE_SDIS (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_SDIS))
-#endif
+/*! @brief Read current value of the USBHS_USBMODE_SDIS field. */
+#define BR_USBHS_USBMODE_SDIS(x) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_SDIS))
 
-//! @brief Format value for bitfield USBHS_USBMODE_SDIS.
-#define BF_USBHS_USBMODE_SDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBMODE_SDIS), uint32_t) & BM_USBHS_USBMODE_SDIS)
+/*! @brief Format value for bitfield USBHS_USBMODE_SDIS. */
+#define BF_USBHS_USBMODE_SDIS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBMODE_SDIS) & BM_USBHS_USBMODE_SDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SDIS field to a new value.
-#define BW_USBHS_USBMODE_SDIS(v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR, BP_USBHS_USBMODE_SDIS) = (v))
-#endif
-//@}
+/*! @brief Set the SDIS field to a new value. */
+#define BW_USBHS_USBMODE_SDIS(x, v) (BITBAND_ACCESS32(HW_USBHS_USBMODE_ADDR(x), BP_USBHS_USBMODE_SDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBMODE, field TXHSD[14:12] (RW)
@@ -6216,30 +5490,25 @@ typedef union _hw_usbhs_usbmode
  * - 110 - 16
  * - 111 - 17
  */
-//@{
-#define BP_USBHS_USBMODE_TXHSD (12U)       //!< Bit position for USBHS_USBMODE_TXHSD.
-#define BM_USBHS_USBMODE_TXHSD (0x00007000U) //!< Bit mask for USBHS_USBMODE_TXHSD.
-#define BS_USBHS_USBMODE_TXHSD (3U)        //!< Bit field size in bits for USBHS_USBMODE_TXHSD.
+/*@{*/
+#define BP_USBHS_USBMODE_TXHSD (12U)       /*!< Bit position for USBHS_USBMODE_TXHSD. */
+#define BM_USBHS_USBMODE_TXHSD (0x00007000U) /*!< Bit mask for USBHS_USBMODE_TXHSD. */
+#define BS_USBHS_USBMODE_TXHSD (3U)        /*!< Bit field size in bits for USBHS_USBMODE_TXHSD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBMODE_TXHSD field.
-#define BR_USBHS_USBMODE_TXHSD (HW_USBHS_USBMODE.B.TXHSD)
-#endif
+/*! @brief Read current value of the USBHS_USBMODE_TXHSD field. */
+#define BR_USBHS_USBMODE_TXHSD(x) (HW_USBHS_USBMODE(x).B.TXHSD)
 
-//! @brief Format value for bitfield USBHS_USBMODE_TXHSD.
-#define BF_USBHS_USBMODE_TXHSD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBMODE_TXHSD), uint32_t) & BM_USBHS_USBMODE_TXHSD)
+/*! @brief Format value for bitfield USBHS_USBMODE_TXHSD. */
+#define BF_USBHS_USBMODE_TXHSD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBMODE_TXHSD) & BM_USBHS_USBMODE_TXHSD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXHSD field to a new value.
-#define BW_USBHS_USBMODE_TXHSD(v) (HW_USBHS_USBMODE_WR((HW_USBHS_USBMODE_RD() & ~BM_USBHS_USBMODE_TXHSD) | BF_USBHS_USBMODE_TXHSD(v)))
-#endif
-//@}
+/*! @brief Set the TXHSD field to a new value. */
+#define BW_USBHS_USBMODE_TXHSD(x, v) (HW_USBHS_USBMODE_WR(x, (HW_USBHS_USBMODE_RD(x) & ~BM_USBHS_USBMODE_TXHSD) | BF_USBHS_USBMODE_TXHSD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPSETUPSR - Endpoint Setup Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPSETUPSR - Endpoint Setup Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPSETUPSR - Endpoint Setup Status Register (RW)
  *
@@ -6253,27 +5522,24 @@ typedef union _hw_usbhs_epsetupsr
     uint32_t U;
     struct _hw_usbhs_epsetupsr_bitfields
     {
-        uint32_t EPSETUPSTAT : 4;      //!< [3:0] Setup Endpoint Status
-        uint32_t RESERVED0 : 28;       //!< [31:4] Reserved
+        uint32_t EPSETUPSTAT : 4;      /*!< [3:0] Setup Endpoint Status */
+        uint32_t RESERVED0 : 28;       /*!< [31:4] Reserved */
     } B;
 } hw_usbhs_epsetupsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPSETUPSR register
  */
-//@{
-#define HW_USBHS_EPSETUPSR_ADDR  (REGS_USBHS_BASE + 0x1ACU)
+/*@{*/
+#define HW_USBHS_EPSETUPSR_ADDR(x) ((x) + 0x1ACU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPSETUPSR       (*(__IO hw_usbhs_epsetupsr_t *) HW_USBHS_EPSETUPSR_ADDR)
-#define HW_USBHS_EPSETUPSR_RD()  (HW_USBHS_EPSETUPSR.U)
-#define HW_USBHS_EPSETUPSR_WR(v) (HW_USBHS_EPSETUPSR.U = (v))
-#define HW_USBHS_EPSETUPSR_SET(v) (HW_USBHS_EPSETUPSR_WR(HW_USBHS_EPSETUPSR_RD() |  (v)))
-#define HW_USBHS_EPSETUPSR_CLR(v) (HW_USBHS_EPSETUPSR_WR(HW_USBHS_EPSETUPSR_RD() & ~(v)))
-#define HW_USBHS_EPSETUPSR_TOG(v) (HW_USBHS_EPSETUPSR_WR(HW_USBHS_EPSETUPSR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPSETUPSR(x)    (*(__IO hw_usbhs_epsetupsr_t *) HW_USBHS_EPSETUPSR_ADDR(x))
+#define HW_USBHS_EPSETUPSR_RD(x) (HW_USBHS_EPSETUPSR(x).U)
+#define HW_USBHS_EPSETUPSR_WR(x, v) (HW_USBHS_EPSETUPSR(x).U = (v))
+#define HW_USBHS_EPSETUPSR_SET(x, v) (HW_USBHS_EPSETUPSR_WR(x, HW_USBHS_EPSETUPSR_RD(x) |  (v)))
+#define HW_USBHS_EPSETUPSR_CLR(x, v) (HW_USBHS_EPSETUPSR_WR(x, HW_USBHS_EPSETUPSR_RD(x) & ~(v)))
+#define HW_USBHS_EPSETUPSR_TOG(x, v) (HW_USBHS_EPSETUPSR_WR(x, HW_USBHS_EPSETUPSR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPSETUPSR bitfields
@@ -6289,30 +5555,25 @@ typedef union _hw_usbhs_epsetupsr
  * order of operations and total response time, is crucial to limit bus time outs
  * while the setup lockout mechanism engages.
  */
-//@{
-#define BP_USBHS_EPSETUPSR_EPSETUPSTAT (0U) //!< Bit position for USBHS_EPSETUPSR_EPSETUPSTAT.
-#define BM_USBHS_EPSETUPSR_EPSETUPSTAT (0x0000000FU) //!< Bit mask for USBHS_EPSETUPSR_EPSETUPSTAT.
-#define BS_USBHS_EPSETUPSR_EPSETUPSTAT (4U) //!< Bit field size in bits for USBHS_EPSETUPSR_EPSETUPSTAT.
+/*@{*/
+#define BP_USBHS_EPSETUPSR_EPSETUPSTAT (0U) /*!< Bit position for USBHS_EPSETUPSR_EPSETUPSTAT. */
+#define BM_USBHS_EPSETUPSR_EPSETUPSTAT (0x0000000FU) /*!< Bit mask for USBHS_EPSETUPSR_EPSETUPSTAT. */
+#define BS_USBHS_EPSETUPSR_EPSETUPSTAT (4U) /*!< Bit field size in bits for USBHS_EPSETUPSR_EPSETUPSTAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPSETUPSR_EPSETUPSTAT field.
-#define BR_USBHS_EPSETUPSR_EPSETUPSTAT (HW_USBHS_EPSETUPSR.B.EPSETUPSTAT)
-#endif
+/*! @brief Read current value of the USBHS_EPSETUPSR_EPSETUPSTAT field. */
+#define BR_USBHS_EPSETUPSR_EPSETUPSTAT(x) (HW_USBHS_EPSETUPSR(x).B.EPSETUPSTAT)
 
-//! @brief Format value for bitfield USBHS_EPSETUPSR_EPSETUPSTAT.
-#define BF_USBHS_EPSETUPSR_EPSETUPSTAT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPSETUPSR_EPSETUPSTAT), uint32_t) & BM_USBHS_EPSETUPSR_EPSETUPSTAT)
+/*! @brief Format value for bitfield USBHS_EPSETUPSR_EPSETUPSTAT. */
+#define BF_USBHS_EPSETUPSR_EPSETUPSTAT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPSETUPSR_EPSETUPSTAT) & BM_USBHS_EPSETUPSR_EPSETUPSTAT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPSETUPSTAT field to a new value.
-#define BW_USBHS_EPSETUPSR_EPSETUPSTAT(v) (HW_USBHS_EPSETUPSR_WR((HW_USBHS_EPSETUPSR_RD() & ~BM_USBHS_EPSETUPSR_EPSETUPSTAT) | BF_USBHS_EPSETUPSR_EPSETUPSTAT(v)))
-#endif
-//@}
+/*! @brief Set the EPSETUPSTAT field to a new value. */
+#define BW_USBHS_EPSETUPSR_EPSETUPSTAT(x, v) (HW_USBHS_EPSETUPSR_WR(x, (HW_USBHS_EPSETUPSR_RD(x) & ~BM_USBHS_EPSETUPSR_EPSETUPSTAT) | BF_USBHS_EPSETUPSR_EPSETUPSTAT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPPRIME - Endpoint Initialization Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPPRIME - Endpoint Initialization Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPPRIME - Endpoint Initialization Register (RW)
  *
@@ -6326,29 +5587,26 @@ typedef union _hw_usbhs_epprime
     uint32_t U;
     struct _hw_usbhs_epprime_bitfields
     {
-        uint32_t PERB : 4;             //!< [3:0] Prime Endpoint Receive Buffer
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t PETB : 4;             //!< [19:16] Prime Endpoint tTansmit Buffer
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t PERB : 4;             /*!< [3:0] Prime Endpoint Receive Buffer */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t PETB : 4;             /*!< [19:16] Prime Endpoint tTansmit Buffer */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_epprime_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPPRIME register
  */
-//@{
-#define HW_USBHS_EPPRIME_ADDR    (REGS_USBHS_BASE + 0x1B0U)
+/*@{*/
+#define HW_USBHS_EPPRIME_ADDR(x) ((x) + 0x1B0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPPRIME         (*(__IO hw_usbhs_epprime_t *) HW_USBHS_EPPRIME_ADDR)
-#define HW_USBHS_EPPRIME_RD()    (HW_USBHS_EPPRIME.U)
-#define HW_USBHS_EPPRIME_WR(v)   (HW_USBHS_EPPRIME.U = (v))
-#define HW_USBHS_EPPRIME_SET(v)  (HW_USBHS_EPPRIME_WR(HW_USBHS_EPPRIME_RD() |  (v)))
-#define HW_USBHS_EPPRIME_CLR(v)  (HW_USBHS_EPPRIME_WR(HW_USBHS_EPPRIME_RD() & ~(v)))
-#define HW_USBHS_EPPRIME_TOG(v)  (HW_USBHS_EPPRIME_WR(HW_USBHS_EPPRIME_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPPRIME(x)      (*(__IO hw_usbhs_epprime_t *) HW_USBHS_EPPRIME_ADDR(x))
+#define HW_USBHS_EPPRIME_RD(x)   (HW_USBHS_EPPRIME(x).U)
+#define HW_USBHS_EPPRIME_WR(x, v) (HW_USBHS_EPPRIME(x).U = (v))
+#define HW_USBHS_EPPRIME_SET(x, v) (HW_USBHS_EPPRIME_WR(x, HW_USBHS_EPPRIME_RD(x) |  (v)))
+#define HW_USBHS_EPPRIME_CLR(x, v) (HW_USBHS_EPPRIME_WR(x, HW_USBHS_EPPRIME_RD(x) & ~(v)))
+#define HW_USBHS_EPPRIME_TOG(x, v) (HW_USBHS_EPPRIME_WR(x, HW_USBHS_EPPRIME_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPPRIME bitfields
@@ -6366,24 +5624,20 @@ typedef union _hw_usbhs_epprime
  * are momentarily set by hardware during hardware re-priming operations when a
  * dTD retires, and the dQH updates.
  */
-//@{
-#define BP_USBHS_EPPRIME_PERB (0U)         //!< Bit position for USBHS_EPPRIME_PERB.
-#define BM_USBHS_EPPRIME_PERB (0x0000000FU) //!< Bit mask for USBHS_EPPRIME_PERB.
-#define BS_USBHS_EPPRIME_PERB (4U)         //!< Bit field size in bits for USBHS_EPPRIME_PERB.
+/*@{*/
+#define BP_USBHS_EPPRIME_PERB (0U)         /*!< Bit position for USBHS_EPPRIME_PERB. */
+#define BM_USBHS_EPPRIME_PERB (0x0000000FU) /*!< Bit mask for USBHS_EPPRIME_PERB. */
+#define BS_USBHS_EPPRIME_PERB (4U)         /*!< Bit field size in bits for USBHS_EPPRIME_PERB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPPRIME_PERB field.
-#define BR_USBHS_EPPRIME_PERB (HW_USBHS_EPPRIME.B.PERB)
-#endif
+/*! @brief Read current value of the USBHS_EPPRIME_PERB field. */
+#define BR_USBHS_EPPRIME_PERB(x) (HW_USBHS_EPPRIME(x).B.PERB)
 
-//! @brief Format value for bitfield USBHS_EPPRIME_PERB.
-#define BF_USBHS_EPPRIME_PERB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPPRIME_PERB), uint32_t) & BM_USBHS_EPPRIME_PERB)
+/*! @brief Format value for bitfield USBHS_EPPRIME_PERB. */
+#define BF_USBHS_EPPRIME_PERB(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPPRIME_PERB) & BM_USBHS_EPPRIME_PERB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PERB field to a new value.
-#define BW_USBHS_EPPRIME_PERB(v) (HW_USBHS_EPPRIME_WR((HW_USBHS_EPPRIME_RD() & ~BM_USBHS_EPPRIME_PERB) | BF_USBHS_EPPRIME_PERB(v)))
-#endif
-//@}
+/*! @brief Set the PERB field to a new value. */
+#define BW_USBHS_EPPRIME_PERB(x, v) (HW_USBHS_EPPRIME_WR(x, (HW_USBHS_EPPRIME_RD(x) & ~BM_USBHS_EPPRIME_PERB) | BF_USBHS_EPPRIME_PERB(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPPRIME, field PETB[19:16] (RW)
@@ -6397,30 +5651,25 @@ typedef union _hw_usbhs_epprime
  * These bits are momentarily set by hardware during hardware re-priming
  * operations when a dTD retires, and the dQH updates.
  */
-//@{
-#define BP_USBHS_EPPRIME_PETB (16U)        //!< Bit position for USBHS_EPPRIME_PETB.
-#define BM_USBHS_EPPRIME_PETB (0x000F0000U) //!< Bit mask for USBHS_EPPRIME_PETB.
-#define BS_USBHS_EPPRIME_PETB (4U)         //!< Bit field size in bits for USBHS_EPPRIME_PETB.
+/*@{*/
+#define BP_USBHS_EPPRIME_PETB (16U)        /*!< Bit position for USBHS_EPPRIME_PETB. */
+#define BM_USBHS_EPPRIME_PETB (0x000F0000U) /*!< Bit mask for USBHS_EPPRIME_PETB. */
+#define BS_USBHS_EPPRIME_PETB (4U)         /*!< Bit field size in bits for USBHS_EPPRIME_PETB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPPRIME_PETB field.
-#define BR_USBHS_EPPRIME_PETB (HW_USBHS_EPPRIME.B.PETB)
-#endif
+/*! @brief Read current value of the USBHS_EPPRIME_PETB field. */
+#define BR_USBHS_EPPRIME_PETB(x) (HW_USBHS_EPPRIME(x).B.PETB)
 
-//! @brief Format value for bitfield USBHS_EPPRIME_PETB.
-#define BF_USBHS_EPPRIME_PETB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPPRIME_PETB), uint32_t) & BM_USBHS_EPPRIME_PETB)
+/*! @brief Format value for bitfield USBHS_EPPRIME_PETB. */
+#define BF_USBHS_EPPRIME_PETB(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPPRIME_PETB) & BM_USBHS_EPPRIME_PETB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PETB field to a new value.
-#define BW_USBHS_EPPRIME_PETB(v) (HW_USBHS_EPPRIME_WR((HW_USBHS_EPPRIME_RD() & ~BM_USBHS_EPPRIME_PETB) | BF_USBHS_EPPRIME_PETB(v)))
-#endif
-//@}
+/*! @brief Set the PETB field to a new value. */
+#define BW_USBHS_EPPRIME_PETB(x, v) (HW_USBHS_EPPRIME_WR(x, (HW_USBHS_EPPRIME_RD(x) & ~BM_USBHS_EPPRIME_PETB) | BF_USBHS_EPPRIME_PETB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPFLUSH - Endpoint Flush Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPFLUSH - Endpoint Flush Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPFLUSH - Endpoint Flush Register (RW)
  *
@@ -6434,29 +5683,26 @@ typedef union _hw_usbhs_epflush
     uint32_t U;
     struct _hw_usbhs_epflush_bitfields
     {
-        uint32_t FERB : 4;             //!< [3:0] Flush Endpoint Receive Buffer
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t FETB : 4;             //!< [19:16] Flush Endpoint Transmit Buffer
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t FERB : 4;             /*!< [3:0] Flush Endpoint Receive Buffer */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t FETB : 4;             /*!< [19:16] Flush Endpoint Transmit Buffer */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_epflush_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPFLUSH register
  */
-//@{
-#define HW_USBHS_EPFLUSH_ADDR    (REGS_USBHS_BASE + 0x1B4U)
+/*@{*/
+#define HW_USBHS_EPFLUSH_ADDR(x) ((x) + 0x1B4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPFLUSH         (*(__IO hw_usbhs_epflush_t *) HW_USBHS_EPFLUSH_ADDR)
-#define HW_USBHS_EPFLUSH_RD()    (HW_USBHS_EPFLUSH.U)
-#define HW_USBHS_EPFLUSH_WR(v)   (HW_USBHS_EPFLUSH.U = (v))
-#define HW_USBHS_EPFLUSH_SET(v)  (HW_USBHS_EPFLUSH_WR(HW_USBHS_EPFLUSH_RD() |  (v)))
-#define HW_USBHS_EPFLUSH_CLR(v)  (HW_USBHS_EPFLUSH_WR(HW_USBHS_EPFLUSH_RD() & ~(v)))
-#define HW_USBHS_EPFLUSH_TOG(v)  (HW_USBHS_EPFLUSH_WR(HW_USBHS_EPFLUSH_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPFLUSH(x)      (*(__IO hw_usbhs_epflush_t *) HW_USBHS_EPFLUSH_ADDR(x))
+#define HW_USBHS_EPFLUSH_RD(x)   (HW_USBHS_EPFLUSH(x).U)
+#define HW_USBHS_EPFLUSH_WR(x, v) (HW_USBHS_EPFLUSH(x).U = (v))
+#define HW_USBHS_EPFLUSH_SET(x, v) (HW_USBHS_EPFLUSH_WR(x, HW_USBHS_EPFLUSH_RD(x) |  (v)))
+#define HW_USBHS_EPFLUSH_CLR(x, v) (HW_USBHS_EPFLUSH_WR(x, HW_USBHS_EPFLUSH_RD(x) & ~(v)))
+#define HW_USBHS_EPFLUSH_TOG(x, v) (HW_USBHS_EPFLUSH_WR(x, HW_USBHS_EPFLUSH_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPFLUSH bitfields
@@ -6470,24 +5716,20 @@ typedef union _hw_usbhs_epflush
  * transfer continues until completion. Hardware clears this register after the
  * endpoint flush operation is successful. FERB[3] corresponds to endpoint 3.
  */
-//@{
-#define BP_USBHS_EPFLUSH_FERB (0U)         //!< Bit position for USBHS_EPFLUSH_FERB.
-#define BM_USBHS_EPFLUSH_FERB (0x0000000FU) //!< Bit mask for USBHS_EPFLUSH_FERB.
-#define BS_USBHS_EPFLUSH_FERB (4U)         //!< Bit field size in bits for USBHS_EPFLUSH_FERB.
+/*@{*/
+#define BP_USBHS_EPFLUSH_FERB (0U)         /*!< Bit position for USBHS_EPFLUSH_FERB. */
+#define BM_USBHS_EPFLUSH_FERB (0x0000000FU) /*!< Bit mask for USBHS_EPFLUSH_FERB. */
+#define BS_USBHS_EPFLUSH_FERB (4U)         /*!< Bit field size in bits for USBHS_EPFLUSH_FERB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPFLUSH_FERB field.
-#define BR_USBHS_EPFLUSH_FERB (HW_USBHS_EPFLUSH.B.FERB)
-#endif
+/*! @brief Read current value of the USBHS_EPFLUSH_FERB field. */
+#define BR_USBHS_EPFLUSH_FERB(x) (HW_USBHS_EPFLUSH(x).B.FERB)
 
-//! @brief Format value for bitfield USBHS_EPFLUSH_FERB.
-#define BF_USBHS_EPFLUSH_FERB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPFLUSH_FERB), uint32_t) & BM_USBHS_EPFLUSH_FERB)
+/*! @brief Format value for bitfield USBHS_EPFLUSH_FERB. */
+#define BF_USBHS_EPFLUSH_FERB(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPFLUSH_FERB) & BM_USBHS_EPFLUSH_FERB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FERB field to a new value.
-#define BW_USBHS_EPFLUSH_FERB(v) (HW_USBHS_EPFLUSH_WR((HW_USBHS_EPFLUSH_RD() & ~BM_USBHS_EPFLUSH_FERB) | BF_USBHS_EPFLUSH_FERB(v)))
-#endif
-//@}
+/*! @brief Set the FERB field to a new value. */
+#define BW_USBHS_EPFLUSH_FERB(x, v) (HW_USBHS_EPFLUSH_WR(x, (HW_USBHS_EPFLUSH_RD(x) & ~BM_USBHS_EPFLUSH_FERB) | BF_USBHS_EPFLUSH_FERB(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPFLUSH, field FETB[19:16] (RW)
@@ -6497,30 +5739,25 @@ typedef union _hw_usbhs_epflush
  * transfer continues until completion. Hardware clears this register after the
  * endpoint flush operation is successful.
  */
-//@{
-#define BP_USBHS_EPFLUSH_FETB (16U)        //!< Bit position for USBHS_EPFLUSH_FETB.
-#define BM_USBHS_EPFLUSH_FETB (0x000F0000U) //!< Bit mask for USBHS_EPFLUSH_FETB.
-#define BS_USBHS_EPFLUSH_FETB (4U)         //!< Bit field size in bits for USBHS_EPFLUSH_FETB.
+/*@{*/
+#define BP_USBHS_EPFLUSH_FETB (16U)        /*!< Bit position for USBHS_EPFLUSH_FETB. */
+#define BM_USBHS_EPFLUSH_FETB (0x000F0000U) /*!< Bit mask for USBHS_EPFLUSH_FETB. */
+#define BS_USBHS_EPFLUSH_FETB (4U)         /*!< Bit field size in bits for USBHS_EPFLUSH_FETB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPFLUSH_FETB field.
-#define BR_USBHS_EPFLUSH_FETB (HW_USBHS_EPFLUSH.B.FETB)
-#endif
+/*! @brief Read current value of the USBHS_EPFLUSH_FETB field. */
+#define BR_USBHS_EPFLUSH_FETB(x) (HW_USBHS_EPFLUSH(x).B.FETB)
 
-//! @brief Format value for bitfield USBHS_EPFLUSH_FETB.
-#define BF_USBHS_EPFLUSH_FETB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPFLUSH_FETB), uint32_t) & BM_USBHS_EPFLUSH_FETB)
+/*! @brief Format value for bitfield USBHS_EPFLUSH_FETB. */
+#define BF_USBHS_EPFLUSH_FETB(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPFLUSH_FETB) & BM_USBHS_EPFLUSH_FETB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FETB field to a new value.
-#define BW_USBHS_EPFLUSH_FETB(v) (HW_USBHS_EPFLUSH_WR((HW_USBHS_EPFLUSH_RD() & ~BM_USBHS_EPFLUSH_FETB) | BF_USBHS_EPFLUSH_FETB(v)))
-#endif
-//@}
+/*! @brief Set the FETB field to a new value. */
+#define BW_USBHS_EPFLUSH_FETB(x, v) (HW_USBHS_EPFLUSH_WR(x, (HW_USBHS_EPFLUSH_RD(x) & ~BM_USBHS_EPFLUSH_FETB) | BF_USBHS_EPFLUSH_FETB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPSR - Endpoint Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPSR - Endpoint Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPSR - Endpoint Status Register (RO)
  *
@@ -6534,25 +5771,22 @@ typedef union _hw_usbhs_epsr
     uint32_t U;
     struct _hw_usbhs_epsr_bitfields
     {
-        uint32_t ERBR : 4;             //!< [3:0] Endpoint Receive Buffer Ready
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t ETBR : 4;             //!< [19:16] Endpoint Transmit Buffer Ready
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t ERBR : 4;             /*!< [3:0] Endpoint Receive Buffer Ready */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t ETBR : 4;             /*!< [19:16] Endpoint Transmit Buffer Ready */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_epsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPSR register
  */
-//@{
-#define HW_USBHS_EPSR_ADDR       (REGS_USBHS_BASE + 0x1B8U)
+/*@{*/
+#define HW_USBHS_EPSR_ADDR(x)    ((x) + 0x1B8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPSR            (*(__I hw_usbhs_epsr_t *) HW_USBHS_EPSR_ADDR)
-#define HW_USBHS_EPSR_RD()       (HW_USBHS_EPSR.U)
-#endif
-//@}
+#define HW_USBHS_EPSR(x)         (*(__I hw_usbhs_epsr_t *) HW_USBHS_EPSR_ADDR(x))
+#define HW_USBHS_EPSR_RD(x)      (HW_USBHS_EPSR(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPSR bitfields
@@ -6571,16 +5805,14 @@ typedef union _hw_usbhs_epsr
  * these bits during hardware endpoint re-priming operations when a dTD is
  * retired, and the dQH is updated.
  */
-//@{
-#define BP_USBHS_EPSR_ERBR   (0U)          //!< Bit position for USBHS_EPSR_ERBR.
-#define BM_USBHS_EPSR_ERBR   (0x0000000FU) //!< Bit mask for USBHS_EPSR_ERBR.
-#define BS_USBHS_EPSR_ERBR   (4U)          //!< Bit field size in bits for USBHS_EPSR_ERBR.
+/*@{*/
+#define BP_USBHS_EPSR_ERBR   (0U)          /*!< Bit position for USBHS_EPSR_ERBR. */
+#define BM_USBHS_EPSR_ERBR   (0x0000000FU) /*!< Bit mask for USBHS_EPSR_ERBR. */
+#define BS_USBHS_EPSR_ERBR   (4U)          /*!< Bit field size in bits for USBHS_EPSR_ERBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPSR_ERBR field.
-#define BR_USBHS_EPSR_ERBR   (HW_USBHS_EPSR.B.ERBR)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPSR_ERBR field. */
+#define BR_USBHS_EPSR_ERBR(x) (HW_USBHS_EPSR(x).B.ERBR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPSR, field ETBR[19:16] (RO)
@@ -6595,22 +5827,19 @@ typedef union _hw_usbhs_epsr
  * these bits during hardware endpoint re-priming operations when a dTD is
  * retired, and the dQH is updated.
  */
-//@{
-#define BP_USBHS_EPSR_ETBR   (16U)         //!< Bit position for USBHS_EPSR_ETBR.
-#define BM_USBHS_EPSR_ETBR   (0x000F0000U) //!< Bit mask for USBHS_EPSR_ETBR.
-#define BS_USBHS_EPSR_ETBR   (4U)          //!< Bit field size in bits for USBHS_EPSR_ETBR.
+/*@{*/
+#define BP_USBHS_EPSR_ETBR   (16U)         /*!< Bit position for USBHS_EPSR_ETBR. */
+#define BM_USBHS_EPSR_ETBR   (0x000F0000U) /*!< Bit mask for USBHS_EPSR_ETBR. */
+#define BS_USBHS_EPSR_ETBR   (4U)          /*!< Bit field size in bits for USBHS_EPSR_ETBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPSR_ETBR field.
-#define BR_USBHS_EPSR_ETBR   (HW_USBHS_EPSR.B.ETBR)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPSR_ETBR field. */
+#define BR_USBHS_EPSR_ETBR(x) (HW_USBHS_EPSR(x).B.ETBR)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPCOMPLETE - Endpoint Complete Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPCOMPLETE - Endpoint Complete Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPCOMPLETE - Endpoint Complete Register (RW)
  *
@@ -6624,29 +5853,26 @@ typedef union _hw_usbhs_epcomplete
     uint32_t U;
     struct _hw_usbhs_epcomplete_bitfields
     {
-        uint32_t ERCE : 4;             //!< [3:0] Endpoint Receive Complete Event
-        uint32_t RESERVED0 : 12;       //!< [15:4] Reserved
-        uint32_t ETCE : 4;             //!< [19:16] Endpoint Transmit Complete Event
-        uint32_t RESERVED1 : 12;       //!< [31:20] Reserved
+        uint32_t ERCE : 4;             /*!< [3:0] Endpoint Receive Complete Event */
+        uint32_t RESERVED0 : 12;       /*!< [15:4] Reserved */
+        uint32_t ETCE : 4;             /*!< [19:16] Endpoint Transmit Complete Event */
+        uint32_t RESERVED1 : 12;       /*!< [31:20] Reserved */
     } B;
 } hw_usbhs_epcomplete_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPCOMPLETE register
  */
-//@{
-#define HW_USBHS_EPCOMPLETE_ADDR (REGS_USBHS_BASE + 0x1BCU)
+/*@{*/
+#define HW_USBHS_EPCOMPLETE_ADDR(x) ((x) + 0x1BCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPCOMPLETE      (*(__IO hw_usbhs_epcomplete_t *) HW_USBHS_EPCOMPLETE_ADDR)
-#define HW_USBHS_EPCOMPLETE_RD() (HW_USBHS_EPCOMPLETE.U)
-#define HW_USBHS_EPCOMPLETE_WR(v) (HW_USBHS_EPCOMPLETE.U = (v))
-#define HW_USBHS_EPCOMPLETE_SET(v) (HW_USBHS_EPCOMPLETE_WR(HW_USBHS_EPCOMPLETE_RD() |  (v)))
-#define HW_USBHS_EPCOMPLETE_CLR(v) (HW_USBHS_EPCOMPLETE_WR(HW_USBHS_EPCOMPLETE_RD() & ~(v)))
-#define HW_USBHS_EPCOMPLETE_TOG(v) (HW_USBHS_EPCOMPLETE_WR(HW_USBHS_EPCOMPLETE_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPCOMPLETE(x)   (*(__IO hw_usbhs_epcomplete_t *) HW_USBHS_EPCOMPLETE_ADDR(x))
+#define HW_USBHS_EPCOMPLETE_RD(x) (HW_USBHS_EPCOMPLETE(x).U)
+#define HW_USBHS_EPCOMPLETE_WR(x, v) (HW_USBHS_EPCOMPLETE(x).U = (v))
+#define HW_USBHS_EPCOMPLETE_SET(x, v) (HW_USBHS_EPCOMPLETE_WR(x, HW_USBHS_EPCOMPLETE_RD(x) |  (v)))
+#define HW_USBHS_EPCOMPLETE_CLR(x, v) (HW_USBHS_EPCOMPLETE_WR(x, HW_USBHS_EPCOMPLETE_RD(x) & ~(v)))
+#define HW_USBHS_EPCOMPLETE_TOG(x, v) (HW_USBHS_EPCOMPLETE_WR(x, HW_USBHS_EPCOMPLETE_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPCOMPLETE bitfields
@@ -6661,24 +5887,20 @@ typedef union _hw_usbhs_epcomplete
  * simultaneously with the USBINT. Writing a 1 clears the corresponding bit in this
  * register. ERCE[3] corresponds to endpoint 3.
  */
-//@{
-#define BP_USBHS_EPCOMPLETE_ERCE (0U)      //!< Bit position for USBHS_EPCOMPLETE_ERCE.
-#define BM_USBHS_EPCOMPLETE_ERCE (0x0000000FU) //!< Bit mask for USBHS_EPCOMPLETE_ERCE.
-#define BS_USBHS_EPCOMPLETE_ERCE (4U)      //!< Bit field size in bits for USBHS_EPCOMPLETE_ERCE.
+/*@{*/
+#define BP_USBHS_EPCOMPLETE_ERCE (0U)      /*!< Bit position for USBHS_EPCOMPLETE_ERCE. */
+#define BM_USBHS_EPCOMPLETE_ERCE (0x0000000FU) /*!< Bit mask for USBHS_EPCOMPLETE_ERCE. */
+#define BS_USBHS_EPCOMPLETE_ERCE (4U)      /*!< Bit field size in bits for USBHS_EPCOMPLETE_ERCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCOMPLETE_ERCE field.
-#define BR_USBHS_EPCOMPLETE_ERCE (HW_USBHS_EPCOMPLETE.B.ERCE)
-#endif
+/*! @brief Read current value of the USBHS_EPCOMPLETE_ERCE field. */
+#define BR_USBHS_EPCOMPLETE_ERCE(x) (HW_USBHS_EPCOMPLETE(x).B.ERCE)
 
-//! @brief Format value for bitfield USBHS_EPCOMPLETE_ERCE.
-#define BF_USBHS_EPCOMPLETE_ERCE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCOMPLETE_ERCE), uint32_t) & BM_USBHS_EPCOMPLETE_ERCE)
+/*! @brief Format value for bitfield USBHS_EPCOMPLETE_ERCE. */
+#define BF_USBHS_EPCOMPLETE_ERCE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCOMPLETE_ERCE) & BM_USBHS_EPCOMPLETE_ERCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERCE field to a new value.
-#define BW_USBHS_EPCOMPLETE_ERCE(v) (HW_USBHS_EPCOMPLETE_WR((HW_USBHS_EPCOMPLETE_RD() & ~BM_USBHS_EPCOMPLETE_ERCE) | BF_USBHS_EPCOMPLETE_ERCE(v)))
-#endif
-//@}
+/*! @brief Set the ERCE field to a new value. */
+#define BW_USBHS_EPCOMPLETE_ERCE(x, v) (HW_USBHS_EPCOMPLETE_WR(x, (HW_USBHS_EPCOMPLETE_RD(x) & ~BM_USBHS_EPCOMPLETE_ERCE) | BF_USBHS_EPCOMPLETE_ERCE(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCOMPLETE, field ETCE[19:16] (W1C)
@@ -6689,30 +5911,25 @@ typedef union _hw_usbhs_epcomplete
  * simultaneously with the USBINT. Writing a 1 clears the corresponding bit in this
  * register. ETCE[3] (bit 19) corresponds to endpoint 3.
  */
-//@{
-#define BP_USBHS_EPCOMPLETE_ETCE (16U)     //!< Bit position for USBHS_EPCOMPLETE_ETCE.
-#define BM_USBHS_EPCOMPLETE_ETCE (0x000F0000U) //!< Bit mask for USBHS_EPCOMPLETE_ETCE.
-#define BS_USBHS_EPCOMPLETE_ETCE (4U)      //!< Bit field size in bits for USBHS_EPCOMPLETE_ETCE.
+/*@{*/
+#define BP_USBHS_EPCOMPLETE_ETCE (16U)     /*!< Bit position for USBHS_EPCOMPLETE_ETCE. */
+#define BM_USBHS_EPCOMPLETE_ETCE (0x000F0000U) /*!< Bit mask for USBHS_EPCOMPLETE_ETCE. */
+#define BS_USBHS_EPCOMPLETE_ETCE (4U)      /*!< Bit field size in bits for USBHS_EPCOMPLETE_ETCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCOMPLETE_ETCE field.
-#define BR_USBHS_EPCOMPLETE_ETCE (HW_USBHS_EPCOMPLETE.B.ETCE)
-#endif
+/*! @brief Read current value of the USBHS_EPCOMPLETE_ETCE field. */
+#define BR_USBHS_EPCOMPLETE_ETCE(x) (HW_USBHS_EPCOMPLETE(x).B.ETCE)
 
-//! @brief Format value for bitfield USBHS_EPCOMPLETE_ETCE.
-#define BF_USBHS_EPCOMPLETE_ETCE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCOMPLETE_ETCE), uint32_t) & BM_USBHS_EPCOMPLETE_ETCE)
+/*! @brief Format value for bitfield USBHS_EPCOMPLETE_ETCE. */
+#define BF_USBHS_EPCOMPLETE_ETCE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCOMPLETE_ETCE) & BM_USBHS_EPCOMPLETE_ETCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ETCE field to a new value.
-#define BW_USBHS_EPCOMPLETE_ETCE(v) (HW_USBHS_EPCOMPLETE_WR((HW_USBHS_EPCOMPLETE_RD() & ~BM_USBHS_EPCOMPLETE_ETCE) | BF_USBHS_EPCOMPLETE_ETCE(v)))
-#endif
-//@}
+/*! @brief Set the ETCE field to a new value. */
+#define BW_USBHS_EPCOMPLETE_ETCE(x, v) (HW_USBHS_EPCOMPLETE_WR(x, (HW_USBHS_EPCOMPLETE_RD(x) & ~BM_USBHS_EPCOMPLETE_ETCE) | BF_USBHS_EPCOMPLETE_ETCE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPCR0 - Endpoint Control Register 0
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPCR0 - Endpoint Control Register 0
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPCR0 - Endpoint Control Register 0 (RW)
  *
@@ -6726,39 +5943,36 @@ typedef union _hw_usbhs_epcr0
     uint32_t U;
     struct _hw_usbhs_epcr0_bitfields
     {
-        uint32_t RXS : 1;              //!< [0] RX endpoint Stall
-        uint32_t RESERVED0 : 1;        //!< [1] Reserved
-        uint32_t RXT : 2;              //!< [3:2] RX endpoint Type
-        uint32_t RESERVED1 : 3;        //!< [6:4] Reserved
-        uint32_t RXE : 1;              //!< [7] RX endpoint Enable
-        uint32_t RESERVED2 : 8;        //!< [15:8] Reserved
-        uint32_t TXS : 1;              //!< [16] TX Endpoint Stall
-        uint32_t RESERVED3 : 1;        //!< [17] Reserved
-        uint32_t TXT : 2;              //!< [19:18] TX Endpoint Type
-        uint32_t RESERVED4 : 3;        //!< [22:20] Reserved
-        uint32_t TXE : 1;              //!< [23] TX Endpoint Enable
-        uint32_t RESERVED5 : 8;        //!< [31:24] This register is not defined in
-                                       //! the EHCI specification. Every device implements endpoint 0 as a
-                                       //! control endpoint.
+        uint32_t RXS : 1;              /*!< [0] RX endpoint Stall */
+        uint32_t RESERVED0 : 1;        /*!< [1] Reserved */
+        uint32_t RXT : 2;              /*!< [3:2] RX endpoint Type */
+        uint32_t RESERVED1 : 3;        /*!< [6:4] Reserved */
+        uint32_t RXE : 1;              /*!< [7] RX endpoint Enable */
+        uint32_t RESERVED2 : 8;        /*!< [15:8] Reserved */
+        uint32_t TXS : 1;              /*!< [16] TX Endpoint Stall */
+        uint32_t RESERVED3 : 1;        /*!< [17] Reserved */
+        uint32_t TXT : 2;              /*!< [19:18] TX Endpoint Type */
+        uint32_t RESERVED4 : 3;        /*!< [22:20] Reserved */
+        uint32_t TXE : 1;              /*!< [23] TX Endpoint Enable */
+        uint32_t RESERVED5 : 8;        /*!< [31:24] This register is not defined in
+                                        * the EHCI specification. Every device implements endpoint 0 as a control
+                                        * endpoint. */
     } B;
 } hw_usbhs_epcr0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPCR0 register
  */
-//@{
-#define HW_USBHS_EPCR0_ADDR      (REGS_USBHS_BASE + 0x1C0U)
+/*@{*/
+#define HW_USBHS_EPCR0_ADDR(x)   ((x) + 0x1C0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPCR0           (*(__IO hw_usbhs_epcr0_t *) HW_USBHS_EPCR0_ADDR)
-#define HW_USBHS_EPCR0_RD()      (HW_USBHS_EPCR0.U)
-#define HW_USBHS_EPCR0_WR(v)     (HW_USBHS_EPCR0.U = (v))
-#define HW_USBHS_EPCR0_SET(v)    (HW_USBHS_EPCR0_WR(HW_USBHS_EPCR0_RD() |  (v)))
-#define HW_USBHS_EPCR0_CLR(v)    (HW_USBHS_EPCR0_WR(HW_USBHS_EPCR0_RD() & ~(v)))
-#define HW_USBHS_EPCR0_TOG(v)    (HW_USBHS_EPCR0_WR(HW_USBHS_EPCR0_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPCR0(x)        (*(__IO hw_usbhs_epcr0_t *) HW_USBHS_EPCR0_ADDR(x))
+#define HW_USBHS_EPCR0_RD(x)     (HW_USBHS_EPCR0(x).U)
+#define HW_USBHS_EPCR0_WR(x, v)  (HW_USBHS_EPCR0(x).U = (v))
+#define HW_USBHS_EPCR0_SET(x, v) (HW_USBHS_EPCR0_WR(x, HW_USBHS_EPCR0_RD(x) |  (v)))
+#define HW_USBHS_EPCR0_CLR(x, v) (HW_USBHS_EPCR0_WR(x, HW_USBHS_EPCR0_RD(x) & ~(v)))
+#define HW_USBHS_EPCR0_TOG(x, v) (HW_USBHS_EPCR0_WR(x, HW_USBHS_EPCR0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPCR0 bitfields
@@ -6775,24 +5989,20 @@ typedef union _hw_usbhs_epcr0
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR0_RXS   (0U)          //!< Bit position for USBHS_EPCR0_RXS.
-#define BM_USBHS_EPCR0_RXS   (0x00000001U) //!< Bit mask for USBHS_EPCR0_RXS.
-#define BS_USBHS_EPCR0_RXS   (1U)          //!< Bit field size in bits for USBHS_EPCR0_RXS.
+/*@{*/
+#define BP_USBHS_EPCR0_RXS   (0U)          /*!< Bit position for USBHS_EPCR0_RXS. */
+#define BM_USBHS_EPCR0_RXS   (0x00000001U) /*!< Bit mask for USBHS_EPCR0_RXS. */
+#define BS_USBHS_EPCR0_RXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR0_RXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_RXS field.
-#define BR_USBHS_EPCR0_RXS   (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_RXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR0_RXS field. */
+#define BR_USBHS_EPCR0_RXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_RXS))
 
-//! @brief Format value for bitfield USBHS_EPCR0_RXS.
-#define BF_USBHS_EPCR0_RXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR0_RXS), uint32_t) & BM_USBHS_EPCR0_RXS)
+/*! @brief Format value for bitfield USBHS_EPCR0_RXS. */
+#define BF_USBHS_EPCR0_RXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR0_RXS) & BM_USBHS_EPCR0_RXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXS field to a new value.
-#define BW_USBHS_EPCR0_RXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_RXS) = (v))
-#endif
-//@}
+/*! @brief Set the RXS field to a new value. */
+#define BW_USBHS_EPCR0_RXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_RXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR0, field RXT[3:2] (RO)
@@ -6802,16 +6012,14 @@ typedef union _hw_usbhs_epcr0
  * Values:
  * - 00 - Control
  */
-//@{
-#define BP_USBHS_EPCR0_RXT   (2U)          //!< Bit position for USBHS_EPCR0_RXT.
-#define BM_USBHS_EPCR0_RXT   (0x0000000CU) //!< Bit mask for USBHS_EPCR0_RXT.
-#define BS_USBHS_EPCR0_RXT   (2U)          //!< Bit field size in bits for USBHS_EPCR0_RXT.
+/*@{*/
+#define BP_USBHS_EPCR0_RXT   (2U)          /*!< Bit position for USBHS_EPCR0_RXT. */
+#define BM_USBHS_EPCR0_RXT   (0x0000000CU) /*!< Bit mask for USBHS_EPCR0_RXT. */
+#define BS_USBHS_EPCR0_RXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR0_RXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_RXT field.
-#define BR_USBHS_EPCR0_RXT   (HW_USBHS_EPCR0.B.RXT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPCR0_RXT field. */
+#define BR_USBHS_EPCR0_RXT(x) (HW_USBHS_EPCR0(x).B.RXT)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR0, field RXE[7] (RO)
@@ -6821,16 +6029,14 @@ typedef union _hw_usbhs_epcr0
  * Values:
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR0_RXE   (7U)          //!< Bit position for USBHS_EPCR0_RXE.
-#define BM_USBHS_EPCR0_RXE   (0x00000080U) //!< Bit mask for USBHS_EPCR0_RXE.
-#define BS_USBHS_EPCR0_RXE   (1U)          //!< Bit field size in bits for USBHS_EPCR0_RXE.
+/*@{*/
+#define BP_USBHS_EPCR0_RXE   (7U)          /*!< Bit position for USBHS_EPCR0_RXE. */
+#define BM_USBHS_EPCR0_RXE   (0x00000080U) /*!< Bit mask for USBHS_EPCR0_RXE. */
+#define BS_USBHS_EPCR0_RXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR0_RXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_RXE field.
-#define BR_USBHS_EPCR0_RXE   (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_RXE))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPCR0_RXE field. */
+#define BR_USBHS_EPCR0_RXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_RXE))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR0, field TXS[16] (RW)
@@ -6843,24 +6049,20 @@ typedef union _hw_usbhs_epcr0
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR0_TXS   (16U)         //!< Bit position for USBHS_EPCR0_TXS.
-#define BM_USBHS_EPCR0_TXS   (0x00010000U) //!< Bit mask for USBHS_EPCR0_TXS.
-#define BS_USBHS_EPCR0_TXS   (1U)          //!< Bit field size in bits for USBHS_EPCR0_TXS.
+/*@{*/
+#define BP_USBHS_EPCR0_TXS   (16U)         /*!< Bit position for USBHS_EPCR0_TXS. */
+#define BM_USBHS_EPCR0_TXS   (0x00010000U) /*!< Bit mask for USBHS_EPCR0_TXS. */
+#define BS_USBHS_EPCR0_TXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR0_TXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_TXS field.
-#define BR_USBHS_EPCR0_TXS   (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_TXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR0_TXS field. */
+#define BR_USBHS_EPCR0_TXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_TXS))
 
-//! @brief Format value for bitfield USBHS_EPCR0_TXS.
-#define BF_USBHS_EPCR0_TXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR0_TXS), uint32_t) & BM_USBHS_EPCR0_TXS)
+/*! @brief Format value for bitfield USBHS_EPCR0_TXS. */
+#define BF_USBHS_EPCR0_TXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR0_TXS) & BM_USBHS_EPCR0_TXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXS field to a new value.
-#define BW_USBHS_EPCR0_TXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_TXS) = (v))
-#endif
-//@}
+/*! @brief Set the TXS field to a new value. */
+#define BW_USBHS_EPCR0_TXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_TXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR0, field TXT[19:18] (RO)
@@ -6870,16 +6072,14 @@ typedef union _hw_usbhs_epcr0
  * Values:
  * - 00 - Control
  */
-//@{
-#define BP_USBHS_EPCR0_TXT   (18U)         //!< Bit position for USBHS_EPCR0_TXT.
-#define BM_USBHS_EPCR0_TXT   (0x000C0000U) //!< Bit mask for USBHS_EPCR0_TXT.
-#define BS_USBHS_EPCR0_TXT   (2U)          //!< Bit field size in bits for USBHS_EPCR0_TXT.
+/*@{*/
+#define BP_USBHS_EPCR0_TXT   (18U)         /*!< Bit position for USBHS_EPCR0_TXT. */
+#define BM_USBHS_EPCR0_TXT   (0x000C0000U) /*!< Bit mask for USBHS_EPCR0_TXT. */
+#define BS_USBHS_EPCR0_TXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR0_TXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_TXT field.
-#define BR_USBHS_EPCR0_TXT   (HW_USBHS_EPCR0.B.TXT)
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPCR0_TXT field. */
+#define BR_USBHS_EPCR0_TXT(x) (HW_USBHS_EPCR0(x).B.TXT)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR0, field TXE[23] (RO)
@@ -6889,22 +6089,19 @@ typedef union _hw_usbhs_epcr0
  * Values:
  * - 1 - Enable
  */
-//@{
-#define BP_USBHS_EPCR0_TXE   (23U)         //!< Bit position for USBHS_EPCR0_TXE.
-#define BM_USBHS_EPCR0_TXE   (0x00800000U) //!< Bit mask for USBHS_EPCR0_TXE.
-#define BS_USBHS_EPCR0_TXE   (1U)          //!< Bit field size in bits for USBHS_EPCR0_TXE.
+/*@{*/
+#define BP_USBHS_EPCR0_TXE   (23U)         /*!< Bit position for USBHS_EPCR0_TXE. */
+#define BM_USBHS_EPCR0_TXE   (0x00800000U) /*!< Bit mask for USBHS_EPCR0_TXE. */
+#define BS_USBHS_EPCR0_TXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR0_TXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR0_TXE field.
-#define BR_USBHS_EPCR0_TXE   (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR, BP_USBHS_EPCR0_TXE))
-#endif
-//@}
+/*! @brief Read current value of the USBHS_EPCR0_TXE field. */
+#define BR_USBHS_EPCR0_TXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR0_ADDR(x), BP_USBHS_EPCR0_TXE))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPCR1 - Endpoint Control Register n
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_EPCR1 - Endpoint Control Register n
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_EPCR1 - Endpoint Control Register n (RW)
  *
@@ -6918,41 +6115,38 @@ typedef union _hw_usbhs_epcr1
     uint32_t U;
     struct _hw_usbhs_epcr1_bitfields
     {
-        uint32_t RXS : 1;              //!< [0] RX endpoint Stall
-        uint32_t RXD : 1;              //!< [1] RX endpoint Data sink
-        uint32_t RXT : 2;              //!< [3:2] RX endpoint Type
-        uint32_t RESERVED0 : 1;        //!< [4] Reserved
-        uint32_t RXI : 1;              //!< [5] RX data toggle Inhibit
-        uint32_t RXR : 1;              //!< [6] RX data toggle Reset
-        uint32_t RXE : 1;              //!< [7] RX endpoint Enable
-        uint32_t RESERVED1 : 8;        //!< [15:8] Reserved
-        uint32_t TXS : 1;              //!< [16] TX endpoint Stall
-        uint32_t TXD : 1;              //!< [17] TX endpoint Data source
-        uint32_t TXT : 2;              //!< [19:18] TX endpoint Type
-        uint32_t RESERVED2 : 1;        //!< [20] Reserved
-        uint32_t TXI : 1;              //!< [21] TX data toggle Inhibit
-        uint32_t TXR : 1;              //!< [22] TX data toggle Reset
-        uint32_t TXE : 1;              //!< [23] TX endpoint Enable
-        uint32_t RESERVED3 : 8;        //!< [31:24] Reserved
+        uint32_t RXS : 1;              /*!< [0] RX endpoint Stall */
+        uint32_t RXD : 1;              /*!< [1] RX endpoint Data sink */
+        uint32_t RXT : 2;              /*!< [3:2] RX endpoint Type */
+        uint32_t RESERVED0 : 1;        /*!< [4] Reserved */
+        uint32_t RXI : 1;              /*!< [5] RX data toggle Inhibit */
+        uint32_t RXR : 1;              /*!< [6] RX data toggle Reset */
+        uint32_t RXE : 1;              /*!< [7] RX endpoint Enable */
+        uint32_t RESERVED1 : 8;        /*!< [15:8] Reserved */
+        uint32_t TXS : 1;              /*!< [16] TX endpoint Stall */
+        uint32_t TXD : 1;              /*!< [17] TX endpoint Data source */
+        uint32_t TXT : 2;              /*!< [19:18] TX endpoint Type */
+        uint32_t RESERVED2 : 1;        /*!< [20] Reserved */
+        uint32_t TXI : 1;              /*!< [21] TX data toggle Inhibit */
+        uint32_t TXR : 1;              /*!< [22] TX data toggle Reset */
+        uint32_t TXE : 1;              /*!< [23] TX endpoint Enable */
+        uint32_t RESERVED3 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_epcr1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPCR1 register
  */
-//@{
-#define HW_USBHS_EPCR1_ADDR      (REGS_USBHS_BASE + 0x1C4U)
+/*@{*/
+#define HW_USBHS_EPCR1_ADDR(x)   ((x) + 0x1C4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPCR1           (*(__IO hw_usbhs_epcr1_t *) HW_USBHS_EPCR1_ADDR)
-#define HW_USBHS_EPCR1_RD()      (HW_USBHS_EPCR1.U)
-#define HW_USBHS_EPCR1_WR(v)     (HW_USBHS_EPCR1.U = (v))
-#define HW_USBHS_EPCR1_SET(v)    (HW_USBHS_EPCR1_WR(HW_USBHS_EPCR1_RD() |  (v)))
-#define HW_USBHS_EPCR1_CLR(v)    (HW_USBHS_EPCR1_WR(HW_USBHS_EPCR1_RD() & ~(v)))
-#define HW_USBHS_EPCR1_TOG(v)    (HW_USBHS_EPCR1_WR(HW_USBHS_EPCR1_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPCR1(x)        (*(__IO hw_usbhs_epcr1_t *) HW_USBHS_EPCR1_ADDR(x))
+#define HW_USBHS_EPCR1_RD(x)     (HW_USBHS_EPCR1(x).U)
+#define HW_USBHS_EPCR1_WR(x, v)  (HW_USBHS_EPCR1(x).U = (v))
+#define HW_USBHS_EPCR1_SET(x, v) (HW_USBHS_EPCR1_WR(x, HW_USBHS_EPCR1_RD(x) |  (v)))
+#define HW_USBHS_EPCR1_CLR(x, v) (HW_USBHS_EPCR1_WR(x, HW_USBHS_EPCR1_RD(x) & ~(v)))
+#define HW_USBHS_EPCR1_TOG(x, v) (HW_USBHS_EPCR1_WR(x, HW_USBHS_EPCR1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPCR1 bitfields
@@ -6965,46 +6159,38 @@ typedef union _hw_usbhs_epcr1
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR1_RXS   (0U)          //!< Bit position for USBHS_EPCR1_RXS.
-#define BM_USBHS_EPCR1_RXS   (0x00000001U) //!< Bit mask for USBHS_EPCR1_RXS.
-#define BS_USBHS_EPCR1_RXS   (1U)          //!< Bit field size in bits for USBHS_EPCR1_RXS.
+/*@{*/
+#define BP_USBHS_EPCR1_RXS   (0U)          /*!< Bit position for USBHS_EPCR1_RXS. */
+#define BM_USBHS_EPCR1_RXS   (0x00000001U) /*!< Bit mask for USBHS_EPCR1_RXS. */
+#define BS_USBHS_EPCR1_RXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_RXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXS field.
-#define BR_USBHS_EPCR1_RXS   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_RXS field. */
+#define BR_USBHS_EPCR1_RXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXS))
 
-//! @brief Format value for bitfield USBHS_EPCR1_RXS.
-#define BF_USBHS_EPCR1_RXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXS), uint32_t) & BM_USBHS_EPCR1_RXS)
+/*! @brief Format value for bitfield USBHS_EPCR1_RXS. */
+#define BF_USBHS_EPCR1_RXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXS) & BM_USBHS_EPCR1_RXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXS field to a new value.
-#define BW_USBHS_EPCR1_RXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXS) = (v))
-#endif
-//@}
+/*! @brief Set the RXS field to a new value. */
+#define BW_USBHS_EPCR1_RXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field RXD[1] (RW)
  */
-//@{
-#define BP_USBHS_EPCR1_RXD   (1U)          //!< Bit position for USBHS_EPCR1_RXD.
-#define BM_USBHS_EPCR1_RXD   (0x00000002U) //!< Bit mask for USBHS_EPCR1_RXD.
-#define BS_USBHS_EPCR1_RXD   (1U)          //!< Bit field size in bits for USBHS_EPCR1_RXD.
+/*@{*/
+#define BP_USBHS_EPCR1_RXD   (1U)          /*!< Bit position for USBHS_EPCR1_RXD. */
+#define BM_USBHS_EPCR1_RXD   (0x00000002U) /*!< Bit mask for USBHS_EPCR1_RXD. */
+#define BS_USBHS_EPCR1_RXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_RXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXD field.
-#define BR_USBHS_EPCR1_RXD   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_RXD field. */
+#define BR_USBHS_EPCR1_RXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXD))
 
-//! @brief Format value for bitfield USBHS_EPCR1_RXD.
-#define BF_USBHS_EPCR1_RXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXD), uint32_t) & BM_USBHS_EPCR1_RXD)
+/*! @brief Format value for bitfield USBHS_EPCR1_RXD. */
+#define BF_USBHS_EPCR1_RXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXD) & BM_USBHS_EPCR1_RXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXD field to a new value.
-#define BW_USBHS_EPCR1_RXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXD) = (v))
-#endif
-//@}
+/*! @brief Set the RXD field to a new value. */
+#define BW_USBHS_EPCR1_RXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field RXT[3:2] (RW)
@@ -7015,24 +6201,20 @@ typedef union _hw_usbhs_epcr1
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR1_RXT   (2U)          //!< Bit position for USBHS_EPCR1_RXT.
-#define BM_USBHS_EPCR1_RXT   (0x0000000CU) //!< Bit mask for USBHS_EPCR1_RXT.
-#define BS_USBHS_EPCR1_RXT   (2U)          //!< Bit field size in bits for USBHS_EPCR1_RXT.
+/*@{*/
+#define BP_USBHS_EPCR1_RXT   (2U)          /*!< Bit position for USBHS_EPCR1_RXT. */
+#define BM_USBHS_EPCR1_RXT   (0x0000000CU) /*!< Bit mask for USBHS_EPCR1_RXT. */
+#define BS_USBHS_EPCR1_RXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR1_RXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXT field.
-#define BR_USBHS_EPCR1_RXT   (HW_USBHS_EPCR1.B.RXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_RXT field. */
+#define BR_USBHS_EPCR1_RXT(x) (HW_USBHS_EPCR1(x).B.RXT)
 
-//! @brief Format value for bitfield USBHS_EPCR1_RXT.
-#define BF_USBHS_EPCR1_RXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXT), uint32_t) & BM_USBHS_EPCR1_RXT)
+/*! @brief Format value for bitfield USBHS_EPCR1_RXT. */
+#define BF_USBHS_EPCR1_RXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXT) & BM_USBHS_EPCR1_RXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXT field to a new value.
-#define BW_USBHS_EPCR1_RXT(v) (HW_USBHS_EPCR1_WR((HW_USBHS_EPCR1_RD() & ~BM_USBHS_EPCR1_RXT) | BF_USBHS_EPCR1_RXT(v)))
-#endif
-//@}
+/*! @brief Set the RXT field to a new value. */
+#define BW_USBHS_EPCR1_RXT(x, v) (HW_USBHS_EPCR1_WR(x, (HW_USBHS_EPCR1_RD(x) & ~BM_USBHS_EPCR1_RXT) | BF_USBHS_EPCR1_RXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field RXI[5] (RW)
@@ -7041,46 +6223,32 @@ typedef union _hw_usbhs_epcr1
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR1_RXI   (5U)          //!< Bit position for USBHS_EPCR1_RXI.
-#define BM_USBHS_EPCR1_RXI   (0x00000020U) //!< Bit mask for USBHS_EPCR1_RXI.
-#define BS_USBHS_EPCR1_RXI   (1U)          //!< Bit field size in bits for USBHS_EPCR1_RXI.
+/*@{*/
+#define BP_USBHS_EPCR1_RXI   (5U)          /*!< Bit position for USBHS_EPCR1_RXI. */
+#define BM_USBHS_EPCR1_RXI   (0x00000020U) /*!< Bit mask for USBHS_EPCR1_RXI. */
+#define BS_USBHS_EPCR1_RXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_RXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXI field.
-#define BR_USBHS_EPCR1_RXI   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_RXI field. */
+#define BR_USBHS_EPCR1_RXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXI))
 
-//! @brief Format value for bitfield USBHS_EPCR1_RXI.
-#define BF_USBHS_EPCR1_RXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXI), uint32_t) & BM_USBHS_EPCR1_RXI)
+/*! @brief Format value for bitfield USBHS_EPCR1_RXI. */
+#define BF_USBHS_EPCR1_RXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXI) & BM_USBHS_EPCR1_RXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXI field to a new value.
-#define BW_USBHS_EPCR1_RXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXI) = (v))
-#endif
-//@}
+/*! @brief Set the RXI field to a new value. */
+#define BW_USBHS_EPCR1_RXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field RXR[6] (WO)
  */
-//@{
-#define BP_USBHS_EPCR1_RXR   (6U)          //!< Bit position for USBHS_EPCR1_RXR.
-#define BM_USBHS_EPCR1_RXR   (0x00000040U) //!< Bit mask for USBHS_EPCR1_RXR.
-#define BS_USBHS_EPCR1_RXR   (1U)          //!< Bit field size in bits for USBHS_EPCR1_RXR.
+/*@{*/
+#define BP_USBHS_EPCR1_RXR   (6U)          /*!< Bit position for USBHS_EPCR1_RXR. */
+#define BM_USBHS_EPCR1_RXR   (0x00000040U) /*!< Bit mask for USBHS_EPCR1_RXR. */
+#define BS_USBHS_EPCR1_RXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_RXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXR field.
-#define BR_USBHS_EPCR1_RXR   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR1_RXR.
-#define BF_USBHS_EPCR1_RXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXR), uint32_t) & BM_USBHS_EPCR1_RXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXR field to a new value.
-#define BW_USBHS_EPCR1_RXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR1_RXR. */
+#define BF_USBHS_EPCR1_RXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXR) & BM_USBHS_EPCR1_RXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field RXE[7] (RW)
@@ -7089,24 +6257,20 @@ typedef union _hw_usbhs_epcr1
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR1_RXE   (7U)          //!< Bit position for USBHS_EPCR1_RXE.
-#define BM_USBHS_EPCR1_RXE   (0x00000080U) //!< Bit mask for USBHS_EPCR1_RXE.
-#define BS_USBHS_EPCR1_RXE   (1U)          //!< Bit field size in bits for USBHS_EPCR1_RXE.
+/*@{*/
+#define BP_USBHS_EPCR1_RXE   (7U)          /*!< Bit position for USBHS_EPCR1_RXE. */
+#define BM_USBHS_EPCR1_RXE   (0x00000080U) /*!< Bit mask for USBHS_EPCR1_RXE. */
+#define BS_USBHS_EPCR1_RXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_RXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_RXE field.
-#define BR_USBHS_EPCR1_RXE   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_RXE field. */
+#define BR_USBHS_EPCR1_RXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXE))
 
-//! @brief Format value for bitfield USBHS_EPCR1_RXE.
-#define BF_USBHS_EPCR1_RXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_RXE), uint32_t) & BM_USBHS_EPCR1_RXE)
+/*! @brief Format value for bitfield USBHS_EPCR1_RXE. */
+#define BF_USBHS_EPCR1_RXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_RXE) & BM_USBHS_EPCR1_RXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXE field to a new value.
-#define BW_USBHS_EPCR1_RXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_RXE) = (v))
-#endif
-//@}
+/*! @brief Set the RXE field to a new value. */
+#define BW_USBHS_EPCR1_RXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_RXE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXS[16] (RW)
@@ -7115,46 +6279,38 @@ typedef union _hw_usbhs_epcr1
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR1_TXS   (16U)         //!< Bit position for USBHS_EPCR1_TXS.
-#define BM_USBHS_EPCR1_TXS   (0x00010000U) //!< Bit mask for USBHS_EPCR1_TXS.
-#define BS_USBHS_EPCR1_TXS   (1U)          //!< Bit field size in bits for USBHS_EPCR1_TXS.
+/*@{*/
+#define BP_USBHS_EPCR1_TXS   (16U)         /*!< Bit position for USBHS_EPCR1_TXS. */
+#define BM_USBHS_EPCR1_TXS   (0x00010000U) /*!< Bit mask for USBHS_EPCR1_TXS. */
+#define BS_USBHS_EPCR1_TXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_TXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXS field.
-#define BR_USBHS_EPCR1_TXS   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_TXS field. */
+#define BR_USBHS_EPCR1_TXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXS))
 
-//! @brief Format value for bitfield USBHS_EPCR1_TXS.
-#define BF_USBHS_EPCR1_TXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXS), uint32_t) & BM_USBHS_EPCR1_TXS)
+/*! @brief Format value for bitfield USBHS_EPCR1_TXS. */
+#define BF_USBHS_EPCR1_TXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXS) & BM_USBHS_EPCR1_TXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXS field to a new value.
-#define BW_USBHS_EPCR1_TXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXS) = (v))
-#endif
-//@}
+/*! @brief Set the TXS field to a new value. */
+#define BW_USBHS_EPCR1_TXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXD[17] (RW)
  */
-//@{
-#define BP_USBHS_EPCR1_TXD   (17U)         //!< Bit position for USBHS_EPCR1_TXD.
-#define BM_USBHS_EPCR1_TXD   (0x00020000U) //!< Bit mask for USBHS_EPCR1_TXD.
-#define BS_USBHS_EPCR1_TXD   (1U)          //!< Bit field size in bits for USBHS_EPCR1_TXD.
+/*@{*/
+#define BP_USBHS_EPCR1_TXD   (17U)         /*!< Bit position for USBHS_EPCR1_TXD. */
+#define BM_USBHS_EPCR1_TXD   (0x00020000U) /*!< Bit mask for USBHS_EPCR1_TXD. */
+#define BS_USBHS_EPCR1_TXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_TXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXD field.
-#define BR_USBHS_EPCR1_TXD   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_TXD field. */
+#define BR_USBHS_EPCR1_TXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXD))
 
-//! @brief Format value for bitfield USBHS_EPCR1_TXD.
-#define BF_USBHS_EPCR1_TXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXD), uint32_t) & BM_USBHS_EPCR1_TXD)
+/*! @brief Format value for bitfield USBHS_EPCR1_TXD. */
+#define BF_USBHS_EPCR1_TXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXD) & BM_USBHS_EPCR1_TXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXD field to a new value.
-#define BW_USBHS_EPCR1_TXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXD) = (v))
-#endif
-//@}
+/*! @brief Set the TXD field to a new value. */
+#define BW_USBHS_EPCR1_TXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXT[19:18] (RW)
@@ -7165,24 +6321,20 @@ typedef union _hw_usbhs_epcr1
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR1_TXT   (18U)         //!< Bit position for USBHS_EPCR1_TXT.
-#define BM_USBHS_EPCR1_TXT   (0x000C0000U) //!< Bit mask for USBHS_EPCR1_TXT.
-#define BS_USBHS_EPCR1_TXT   (2U)          //!< Bit field size in bits for USBHS_EPCR1_TXT.
+/*@{*/
+#define BP_USBHS_EPCR1_TXT   (18U)         /*!< Bit position for USBHS_EPCR1_TXT. */
+#define BM_USBHS_EPCR1_TXT   (0x000C0000U) /*!< Bit mask for USBHS_EPCR1_TXT. */
+#define BS_USBHS_EPCR1_TXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR1_TXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXT field.
-#define BR_USBHS_EPCR1_TXT   (HW_USBHS_EPCR1.B.TXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_TXT field. */
+#define BR_USBHS_EPCR1_TXT(x) (HW_USBHS_EPCR1(x).B.TXT)
 
-//! @brief Format value for bitfield USBHS_EPCR1_TXT.
-#define BF_USBHS_EPCR1_TXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXT), uint32_t) & BM_USBHS_EPCR1_TXT)
+/*! @brief Format value for bitfield USBHS_EPCR1_TXT. */
+#define BF_USBHS_EPCR1_TXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXT) & BM_USBHS_EPCR1_TXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXT field to a new value.
-#define BW_USBHS_EPCR1_TXT(v) (HW_USBHS_EPCR1_WR((HW_USBHS_EPCR1_RD() & ~BM_USBHS_EPCR1_TXT) | BF_USBHS_EPCR1_TXT(v)))
-#endif
-//@}
+/*! @brief Set the TXT field to a new value. */
+#define BW_USBHS_EPCR1_TXT(x, v) (HW_USBHS_EPCR1_WR(x, (HW_USBHS_EPCR1_RD(x) & ~BM_USBHS_EPCR1_TXT) | BF_USBHS_EPCR1_TXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXI[21] (RW)
@@ -7191,46 +6343,32 @@ typedef union _hw_usbhs_epcr1
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR1_TXI   (21U)         //!< Bit position for USBHS_EPCR1_TXI.
-#define BM_USBHS_EPCR1_TXI   (0x00200000U) //!< Bit mask for USBHS_EPCR1_TXI.
-#define BS_USBHS_EPCR1_TXI   (1U)          //!< Bit field size in bits for USBHS_EPCR1_TXI.
+/*@{*/
+#define BP_USBHS_EPCR1_TXI   (21U)         /*!< Bit position for USBHS_EPCR1_TXI. */
+#define BM_USBHS_EPCR1_TXI   (0x00200000U) /*!< Bit mask for USBHS_EPCR1_TXI. */
+#define BS_USBHS_EPCR1_TXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_TXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXI field.
-#define BR_USBHS_EPCR1_TXI   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_TXI field. */
+#define BR_USBHS_EPCR1_TXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXI))
 
-//! @brief Format value for bitfield USBHS_EPCR1_TXI.
-#define BF_USBHS_EPCR1_TXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXI), uint32_t) & BM_USBHS_EPCR1_TXI)
+/*! @brief Format value for bitfield USBHS_EPCR1_TXI. */
+#define BF_USBHS_EPCR1_TXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXI) & BM_USBHS_EPCR1_TXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXI field to a new value.
-#define BW_USBHS_EPCR1_TXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXI) = (v))
-#endif
-//@}
+/*! @brief Set the TXI field to a new value. */
+#define BW_USBHS_EPCR1_TXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXR[22] (WO)
  */
-//@{
-#define BP_USBHS_EPCR1_TXR   (22U)         //!< Bit position for USBHS_EPCR1_TXR.
-#define BM_USBHS_EPCR1_TXR   (0x00400000U) //!< Bit mask for USBHS_EPCR1_TXR.
-#define BS_USBHS_EPCR1_TXR   (1U)          //!< Bit field size in bits for USBHS_EPCR1_TXR.
+/*@{*/
+#define BP_USBHS_EPCR1_TXR   (22U)         /*!< Bit position for USBHS_EPCR1_TXR. */
+#define BM_USBHS_EPCR1_TXR   (0x00400000U) /*!< Bit mask for USBHS_EPCR1_TXR. */
+#define BS_USBHS_EPCR1_TXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_TXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXR field.
-#define BR_USBHS_EPCR1_TXR   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR1_TXR.
-#define BF_USBHS_EPCR1_TXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXR), uint32_t) & BM_USBHS_EPCR1_TXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXR field to a new value.
-#define BW_USBHS_EPCR1_TXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR1_TXR. */
+#define BF_USBHS_EPCR1_TXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXR) & BM_USBHS_EPCR1_TXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR1, field TXE[23] (RW)
@@ -7239,29 +6377,25 @@ typedef union _hw_usbhs_epcr1
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR1_TXE   (23U)         //!< Bit position for USBHS_EPCR1_TXE.
-#define BM_USBHS_EPCR1_TXE   (0x00800000U) //!< Bit mask for USBHS_EPCR1_TXE.
-#define BS_USBHS_EPCR1_TXE   (1U)          //!< Bit field size in bits for USBHS_EPCR1_TXE.
+/*@{*/
+#define BP_USBHS_EPCR1_TXE   (23U)         /*!< Bit position for USBHS_EPCR1_TXE. */
+#define BM_USBHS_EPCR1_TXE   (0x00800000U) /*!< Bit mask for USBHS_EPCR1_TXE. */
+#define BS_USBHS_EPCR1_TXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR1_TXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR1_TXE field.
-#define BR_USBHS_EPCR1_TXE   (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR1_TXE field. */
+#define BR_USBHS_EPCR1_TXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXE))
 
-//! @brief Format value for bitfield USBHS_EPCR1_TXE.
-#define BF_USBHS_EPCR1_TXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR1_TXE), uint32_t) & BM_USBHS_EPCR1_TXE)
+/*! @brief Format value for bitfield USBHS_EPCR1_TXE. */
+#define BF_USBHS_EPCR1_TXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR1_TXE) & BM_USBHS_EPCR1_TXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXE field to a new value.
-#define BW_USBHS_EPCR1_TXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR, BP_USBHS_EPCR1_TXE) = (v))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPCR2 - Endpoint Control Register n
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the TXE field to a new value. */
+#define BW_USBHS_EPCR1_TXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR1_ADDR(x), BP_USBHS_EPCR1_TXE) = (v))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
+/*******************************************************************************
+ * HW_USBHS_EPCR2 - Endpoint Control Register n
+ ******************************************************************************/
+
 /*!
  * @brief HW_USBHS_EPCR2 - Endpoint Control Register n (RW)
  *
@@ -7275,41 +6409,38 @@ typedef union _hw_usbhs_epcr2
     uint32_t U;
     struct _hw_usbhs_epcr2_bitfields
     {
-        uint32_t RXS : 1;              //!< [0] RX endpoint Stall
-        uint32_t RXD : 1;              //!< [1] RX endpoint Data sink
-        uint32_t RXT : 2;              //!< [3:2] RX endpoint Type
-        uint32_t RESERVED0 : 1;        //!< [4] Reserved
-        uint32_t RXI : 1;              //!< [5] RX data toggle Inhibit
-        uint32_t RXR : 1;              //!< [6] RX data toggle Reset
-        uint32_t RXE : 1;              //!< [7] RX endpoint Enable
-        uint32_t RESERVED1 : 8;        //!< [15:8] Reserved
-        uint32_t TXS : 1;              //!< [16] TX endpoint Stall
-        uint32_t TXD : 1;              //!< [17] TX endpoint Data source
-        uint32_t TXT : 2;              //!< [19:18] TX endpoint Type
-        uint32_t RESERVED2 : 1;        //!< [20] Reserved
-        uint32_t TXI : 1;              //!< [21] TX data toggle Inhibit
-        uint32_t TXR : 1;              //!< [22] TX data toggle Reset
-        uint32_t TXE : 1;              //!< [23] TX endpoint Enable
-        uint32_t RESERVED3 : 8;        //!< [31:24] Reserved
+        uint32_t RXS : 1;              /*!< [0] RX endpoint Stall */
+        uint32_t RXD : 1;              /*!< [1] RX endpoint Data sink */
+        uint32_t RXT : 2;              /*!< [3:2] RX endpoint Type */
+        uint32_t RESERVED0 : 1;        /*!< [4] Reserved */
+        uint32_t RXI : 1;              /*!< [5] RX data toggle Inhibit */
+        uint32_t RXR : 1;              /*!< [6] RX data toggle Reset */
+        uint32_t RXE : 1;              /*!< [7] RX endpoint Enable */
+        uint32_t RESERVED1 : 8;        /*!< [15:8] Reserved */
+        uint32_t TXS : 1;              /*!< [16] TX endpoint Stall */
+        uint32_t TXD : 1;              /*!< [17] TX endpoint Data source */
+        uint32_t TXT : 2;              /*!< [19:18] TX endpoint Type */
+        uint32_t RESERVED2 : 1;        /*!< [20] Reserved */
+        uint32_t TXI : 1;              /*!< [21] TX data toggle Inhibit */
+        uint32_t TXR : 1;              /*!< [22] TX data toggle Reset */
+        uint32_t TXE : 1;              /*!< [23] TX endpoint Enable */
+        uint32_t RESERVED3 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_epcr2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPCR2 register
  */
-//@{
-#define HW_USBHS_EPCR2_ADDR      (REGS_USBHS_BASE + 0x1C8U)
+/*@{*/
+#define HW_USBHS_EPCR2_ADDR(x)   ((x) + 0x1C8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPCR2           (*(__IO hw_usbhs_epcr2_t *) HW_USBHS_EPCR2_ADDR)
-#define HW_USBHS_EPCR2_RD()      (HW_USBHS_EPCR2.U)
-#define HW_USBHS_EPCR2_WR(v)     (HW_USBHS_EPCR2.U = (v))
-#define HW_USBHS_EPCR2_SET(v)    (HW_USBHS_EPCR2_WR(HW_USBHS_EPCR2_RD() |  (v)))
-#define HW_USBHS_EPCR2_CLR(v)    (HW_USBHS_EPCR2_WR(HW_USBHS_EPCR2_RD() & ~(v)))
-#define HW_USBHS_EPCR2_TOG(v)    (HW_USBHS_EPCR2_WR(HW_USBHS_EPCR2_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPCR2(x)        (*(__IO hw_usbhs_epcr2_t *) HW_USBHS_EPCR2_ADDR(x))
+#define HW_USBHS_EPCR2_RD(x)     (HW_USBHS_EPCR2(x).U)
+#define HW_USBHS_EPCR2_WR(x, v)  (HW_USBHS_EPCR2(x).U = (v))
+#define HW_USBHS_EPCR2_SET(x, v) (HW_USBHS_EPCR2_WR(x, HW_USBHS_EPCR2_RD(x) |  (v)))
+#define HW_USBHS_EPCR2_CLR(x, v) (HW_USBHS_EPCR2_WR(x, HW_USBHS_EPCR2_RD(x) & ~(v)))
+#define HW_USBHS_EPCR2_TOG(x, v) (HW_USBHS_EPCR2_WR(x, HW_USBHS_EPCR2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPCR2 bitfields
@@ -7322,46 +6453,38 @@ typedef union _hw_usbhs_epcr2
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR2_RXS   (0U)          //!< Bit position for USBHS_EPCR2_RXS.
-#define BM_USBHS_EPCR2_RXS   (0x00000001U) //!< Bit mask for USBHS_EPCR2_RXS.
-#define BS_USBHS_EPCR2_RXS   (1U)          //!< Bit field size in bits for USBHS_EPCR2_RXS.
+/*@{*/
+#define BP_USBHS_EPCR2_RXS   (0U)          /*!< Bit position for USBHS_EPCR2_RXS. */
+#define BM_USBHS_EPCR2_RXS   (0x00000001U) /*!< Bit mask for USBHS_EPCR2_RXS. */
+#define BS_USBHS_EPCR2_RXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_RXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXS field.
-#define BR_USBHS_EPCR2_RXS   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_RXS field. */
+#define BR_USBHS_EPCR2_RXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXS))
 
-//! @brief Format value for bitfield USBHS_EPCR2_RXS.
-#define BF_USBHS_EPCR2_RXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXS), uint32_t) & BM_USBHS_EPCR2_RXS)
+/*! @brief Format value for bitfield USBHS_EPCR2_RXS. */
+#define BF_USBHS_EPCR2_RXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXS) & BM_USBHS_EPCR2_RXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXS field to a new value.
-#define BW_USBHS_EPCR2_RXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXS) = (v))
-#endif
-//@}
+/*! @brief Set the RXS field to a new value. */
+#define BW_USBHS_EPCR2_RXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field RXD[1] (RW)
  */
-//@{
-#define BP_USBHS_EPCR2_RXD   (1U)          //!< Bit position for USBHS_EPCR2_RXD.
-#define BM_USBHS_EPCR2_RXD   (0x00000002U) //!< Bit mask for USBHS_EPCR2_RXD.
-#define BS_USBHS_EPCR2_RXD   (1U)          //!< Bit field size in bits for USBHS_EPCR2_RXD.
+/*@{*/
+#define BP_USBHS_EPCR2_RXD   (1U)          /*!< Bit position for USBHS_EPCR2_RXD. */
+#define BM_USBHS_EPCR2_RXD   (0x00000002U) /*!< Bit mask for USBHS_EPCR2_RXD. */
+#define BS_USBHS_EPCR2_RXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_RXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXD field.
-#define BR_USBHS_EPCR2_RXD   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_RXD field. */
+#define BR_USBHS_EPCR2_RXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXD))
 
-//! @brief Format value for bitfield USBHS_EPCR2_RXD.
-#define BF_USBHS_EPCR2_RXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXD), uint32_t) & BM_USBHS_EPCR2_RXD)
+/*! @brief Format value for bitfield USBHS_EPCR2_RXD. */
+#define BF_USBHS_EPCR2_RXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXD) & BM_USBHS_EPCR2_RXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXD field to a new value.
-#define BW_USBHS_EPCR2_RXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXD) = (v))
-#endif
-//@}
+/*! @brief Set the RXD field to a new value. */
+#define BW_USBHS_EPCR2_RXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field RXT[3:2] (RW)
@@ -7372,24 +6495,20 @@ typedef union _hw_usbhs_epcr2
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR2_RXT   (2U)          //!< Bit position for USBHS_EPCR2_RXT.
-#define BM_USBHS_EPCR2_RXT   (0x0000000CU) //!< Bit mask for USBHS_EPCR2_RXT.
-#define BS_USBHS_EPCR2_RXT   (2U)          //!< Bit field size in bits for USBHS_EPCR2_RXT.
+/*@{*/
+#define BP_USBHS_EPCR2_RXT   (2U)          /*!< Bit position for USBHS_EPCR2_RXT. */
+#define BM_USBHS_EPCR2_RXT   (0x0000000CU) /*!< Bit mask for USBHS_EPCR2_RXT. */
+#define BS_USBHS_EPCR2_RXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR2_RXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXT field.
-#define BR_USBHS_EPCR2_RXT   (HW_USBHS_EPCR2.B.RXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_RXT field. */
+#define BR_USBHS_EPCR2_RXT(x) (HW_USBHS_EPCR2(x).B.RXT)
 
-//! @brief Format value for bitfield USBHS_EPCR2_RXT.
-#define BF_USBHS_EPCR2_RXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXT), uint32_t) & BM_USBHS_EPCR2_RXT)
+/*! @brief Format value for bitfield USBHS_EPCR2_RXT. */
+#define BF_USBHS_EPCR2_RXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXT) & BM_USBHS_EPCR2_RXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXT field to a new value.
-#define BW_USBHS_EPCR2_RXT(v) (HW_USBHS_EPCR2_WR((HW_USBHS_EPCR2_RD() & ~BM_USBHS_EPCR2_RXT) | BF_USBHS_EPCR2_RXT(v)))
-#endif
-//@}
+/*! @brief Set the RXT field to a new value. */
+#define BW_USBHS_EPCR2_RXT(x, v) (HW_USBHS_EPCR2_WR(x, (HW_USBHS_EPCR2_RD(x) & ~BM_USBHS_EPCR2_RXT) | BF_USBHS_EPCR2_RXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field RXI[5] (RW)
@@ -7398,46 +6517,32 @@ typedef union _hw_usbhs_epcr2
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR2_RXI   (5U)          //!< Bit position for USBHS_EPCR2_RXI.
-#define BM_USBHS_EPCR2_RXI   (0x00000020U) //!< Bit mask for USBHS_EPCR2_RXI.
-#define BS_USBHS_EPCR2_RXI   (1U)          //!< Bit field size in bits for USBHS_EPCR2_RXI.
+/*@{*/
+#define BP_USBHS_EPCR2_RXI   (5U)          /*!< Bit position for USBHS_EPCR2_RXI. */
+#define BM_USBHS_EPCR2_RXI   (0x00000020U) /*!< Bit mask for USBHS_EPCR2_RXI. */
+#define BS_USBHS_EPCR2_RXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_RXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXI field.
-#define BR_USBHS_EPCR2_RXI   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_RXI field. */
+#define BR_USBHS_EPCR2_RXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXI))
 
-//! @brief Format value for bitfield USBHS_EPCR2_RXI.
-#define BF_USBHS_EPCR2_RXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXI), uint32_t) & BM_USBHS_EPCR2_RXI)
+/*! @brief Format value for bitfield USBHS_EPCR2_RXI. */
+#define BF_USBHS_EPCR2_RXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXI) & BM_USBHS_EPCR2_RXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXI field to a new value.
-#define BW_USBHS_EPCR2_RXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXI) = (v))
-#endif
-//@}
+/*! @brief Set the RXI field to a new value. */
+#define BW_USBHS_EPCR2_RXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field RXR[6] (WO)
  */
-//@{
-#define BP_USBHS_EPCR2_RXR   (6U)          //!< Bit position for USBHS_EPCR2_RXR.
-#define BM_USBHS_EPCR2_RXR   (0x00000040U) //!< Bit mask for USBHS_EPCR2_RXR.
-#define BS_USBHS_EPCR2_RXR   (1U)          //!< Bit field size in bits for USBHS_EPCR2_RXR.
+/*@{*/
+#define BP_USBHS_EPCR2_RXR   (6U)          /*!< Bit position for USBHS_EPCR2_RXR. */
+#define BM_USBHS_EPCR2_RXR   (0x00000040U) /*!< Bit mask for USBHS_EPCR2_RXR. */
+#define BS_USBHS_EPCR2_RXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_RXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXR field.
-#define BR_USBHS_EPCR2_RXR   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR2_RXR.
-#define BF_USBHS_EPCR2_RXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXR), uint32_t) & BM_USBHS_EPCR2_RXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXR field to a new value.
-#define BW_USBHS_EPCR2_RXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR2_RXR. */
+#define BF_USBHS_EPCR2_RXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXR) & BM_USBHS_EPCR2_RXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field RXE[7] (RW)
@@ -7446,24 +6551,20 @@ typedef union _hw_usbhs_epcr2
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR2_RXE   (7U)          //!< Bit position for USBHS_EPCR2_RXE.
-#define BM_USBHS_EPCR2_RXE   (0x00000080U) //!< Bit mask for USBHS_EPCR2_RXE.
-#define BS_USBHS_EPCR2_RXE   (1U)          //!< Bit field size in bits for USBHS_EPCR2_RXE.
+/*@{*/
+#define BP_USBHS_EPCR2_RXE   (7U)          /*!< Bit position for USBHS_EPCR2_RXE. */
+#define BM_USBHS_EPCR2_RXE   (0x00000080U) /*!< Bit mask for USBHS_EPCR2_RXE. */
+#define BS_USBHS_EPCR2_RXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_RXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_RXE field.
-#define BR_USBHS_EPCR2_RXE   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_RXE field. */
+#define BR_USBHS_EPCR2_RXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXE))
 
-//! @brief Format value for bitfield USBHS_EPCR2_RXE.
-#define BF_USBHS_EPCR2_RXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_RXE), uint32_t) & BM_USBHS_EPCR2_RXE)
+/*! @brief Format value for bitfield USBHS_EPCR2_RXE. */
+#define BF_USBHS_EPCR2_RXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_RXE) & BM_USBHS_EPCR2_RXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXE field to a new value.
-#define BW_USBHS_EPCR2_RXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_RXE) = (v))
-#endif
-//@}
+/*! @brief Set the RXE field to a new value. */
+#define BW_USBHS_EPCR2_RXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_RXE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXS[16] (RW)
@@ -7472,46 +6573,38 @@ typedef union _hw_usbhs_epcr2
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR2_TXS   (16U)         //!< Bit position for USBHS_EPCR2_TXS.
-#define BM_USBHS_EPCR2_TXS   (0x00010000U) //!< Bit mask for USBHS_EPCR2_TXS.
-#define BS_USBHS_EPCR2_TXS   (1U)          //!< Bit field size in bits for USBHS_EPCR2_TXS.
+/*@{*/
+#define BP_USBHS_EPCR2_TXS   (16U)         /*!< Bit position for USBHS_EPCR2_TXS. */
+#define BM_USBHS_EPCR2_TXS   (0x00010000U) /*!< Bit mask for USBHS_EPCR2_TXS. */
+#define BS_USBHS_EPCR2_TXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_TXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXS field.
-#define BR_USBHS_EPCR2_TXS   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_TXS field. */
+#define BR_USBHS_EPCR2_TXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXS))
 
-//! @brief Format value for bitfield USBHS_EPCR2_TXS.
-#define BF_USBHS_EPCR2_TXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXS), uint32_t) & BM_USBHS_EPCR2_TXS)
+/*! @brief Format value for bitfield USBHS_EPCR2_TXS. */
+#define BF_USBHS_EPCR2_TXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXS) & BM_USBHS_EPCR2_TXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXS field to a new value.
-#define BW_USBHS_EPCR2_TXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXS) = (v))
-#endif
-//@}
+/*! @brief Set the TXS field to a new value. */
+#define BW_USBHS_EPCR2_TXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXD[17] (RW)
  */
-//@{
-#define BP_USBHS_EPCR2_TXD   (17U)         //!< Bit position for USBHS_EPCR2_TXD.
-#define BM_USBHS_EPCR2_TXD   (0x00020000U) //!< Bit mask for USBHS_EPCR2_TXD.
-#define BS_USBHS_EPCR2_TXD   (1U)          //!< Bit field size in bits for USBHS_EPCR2_TXD.
+/*@{*/
+#define BP_USBHS_EPCR2_TXD   (17U)         /*!< Bit position for USBHS_EPCR2_TXD. */
+#define BM_USBHS_EPCR2_TXD   (0x00020000U) /*!< Bit mask for USBHS_EPCR2_TXD. */
+#define BS_USBHS_EPCR2_TXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_TXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXD field.
-#define BR_USBHS_EPCR2_TXD   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_TXD field. */
+#define BR_USBHS_EPCR2_TXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXD))
 
-//! @brief Format value for bitfield USBHS_EPCR2_TXD.
-#define BF_USBHS_EPCR2_TXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXD), uint32_t) & BM_USBHS_EPCR2_TXD)
+/*! @brief Format value for bitfield USBHS_EPCR2_TXD. */
+#define BF_USBHS_EPCR2_TXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXD) & BM_USBHS_EPCR2_TXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXD field to a new value.
-#define BW_USBHS_EPCR2_TXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXD) = (v))
-#endif
-//@}
+/*! @brief Set the TXD field to a new value. */
+#define BW_USBHS_EPCR2_TXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXT[19:18] (RW)
@@ -7522,24 +6615,20 @@ typedef union _hw_usbhs_epcr2
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR2_TXT   (18U)         //!< Bit position for USBHS_EPCR2_TXT.
-#define BM_USBHS_EPCR2_TXT   (0x000C0000U) //!< Bit mask for USBHS_EPCR2_TXT.
-#define BS_USBHS_EPCR2_TXT   (2U)          //!< Bit field size in bits for USBHS_EPCR2_TXT.
+/*@{*/
+#define BP_USBHS_EPCR2_TXT   (18U)         /*!< Bit position for USBHS_EPCR2_TXT. */
+#define BM_USBHS_EPCR2_TXT   (0x000C0000U) /*!< Bit mask for USBHS_EPCR2_TXT. */
+#define BS_USBHS_EPCR2_TXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR2_TXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXT field.
-#define BR_USBHS_EPCR2_TXT   (HW_USBHS_EPCR2.B.TXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_TXT field. */
+#define BR_USBHS_EPCR2_TXT(x) (HW_USBHS_EPCR2(x).B.TXT)
 
-//! @brief Format value for bitfield USBHS_EPCR2_TXT.
-#define BF_USBHS_EPCR2_TXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXT), uint32_t) & BM_USBHS_EPCR2_TXT)
+/*! @brief Format value for bitfield USBHS_EPCR2_TXT. */
+#define BF_USBHS_EPCR2_TXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXT) & BM_USBHS_EPCR2_TXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXT field to a new value.
-#define BW_USBHS_EPCR2_TXT(v) (HW_USBHS_EPCR2_WR((HW_USBHS_EPCR2_RD() & ~BM_USBHS_EPCR2_TXT) | BF_USBHS_EPCR2_TXT(v)))
-#endif
-//@}
+/*! @brief Set the TXT field to a new value. */
+#define BW_USBHS_EPCR2_TXT(x, v) (HW_USBHS_EPCR2_WR(x, (HW_USBHS_EPCR2_RD(x) & ~BM_USBHS_EPCR2_TXT) | BF_USBHS_EPCR2_TXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXI[21] (RW)
@@ -7548,46 +6637,32 @@ typedef union _hw_usbhs_epcr2
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR2_TXI   (21U)         //!< Bit position for USBHS_EPCR2_TXI.
-#define BM_USBHS_EPCR2_TXI   (0x00200000U) //!< Bit mask for USBHS_EPCR2_TXI.
-#define BS_USBHS_EPCR2_TXI   (1U)          //!< Bit field size in bits for USBHS_EPCR2_TXI.
+/*@{*/
+#define BP_USBHS_EPCR2_TXI   (21U)         /*!< Bit position for USBHS_EPCR2_TXI. */
+#define BM_USBHS_EPCR2_TXI   (0x00200000U) /*!< Bit mask for USBHS_EPCR2_TXI. */
+#define BS_USBHS_EPCR2_TXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_TXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXI field.
-#define BR_USBHS_EPCR2_TXI   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_TXI field. */
+#define BR_USBHS_EPCR2_TXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXI))
 
-//! @brief Format value for bitfield USBHS_EPCR2_TXI.
-#define BF_USBHS_EPCR2_TXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXI), uint32_t) & BM_USBHS_EPCR2_TXI)
+/*! @brief Format value for bitfield USBHS_EPCR2_TXI. */
+#define BF_USBHS_EPCR2_TXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXI) & BM_USBHS_EPCR2_TXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXI field to a new value.
-#define BW_USBHS_EPCR2_TXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXI) = (v))
-#endif
-//@}
+/*! @brief Set the TXI field to a new value. */
+#define BW_USBHS_EPCR2_TXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXR[22] (WO)
  */
-//@{
-#define BP_USBHS_EPCR2_TXR   (22U)         //!< Bit position for USBHS_EPCR2_TXR.
-#define BM_USBHS_EPCR2_TXR   (0x00400000U) //!< Bit mask for USBHS_EPCR2_TXR.
-#define BS_USBHS_EPCR2_TXR   (1U)          //!< Bit field size in bits for USBHS_EPCR2_TXR.
+/*@{*/
+#define BP_USBHS_EPCR2_TXR   (22U)         /*!< Bit position for USBHS_EPCR2_TXR. */
+#define BM_USBHS_EPCR2_TXR   (0x00400000U) /*!< Bit mask for USBHS_EPCR2_TXR. */
+#define BS_USBHS_EPCR2_TXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_TXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXR field.
-#define BR_USBHS_EPCR2_TXR   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR2_TXR.
-#define BF_USBHS_EPCR2_TXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXR), uint32_t) & BM_USBHS_EPCR2_TXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXR field to a new value.
-#define BW_USBHS_EPCR2_TXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR2_TXR. */
+#define BF_USBHS_EPCR2_TXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXR) & BM_USBHS_EPCR2_TXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR2, field TXE[23] (RW)
@@ -7596,29 +6671,25 @@ typedef union _hw_usbhs_epcr2
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR2_TXE   (23U)         //!< Bit position for USBHS_EPCR2_TXE.
-#define BM_USBHS_EPCR2_TXE   (0x00800000U) //!< Bit mask for USBHS_EPCR2_TXE.
-#define BS_USBHS_EPCR2_TXE   (1U)          //!< Bit field size in bits for USBHS_EPCR2_TXE.
+/*@{*/
+#define BP_USBHS_EPCR2_TXE   (23U)         /*!< Bit position for USBHS_EPCR2_TXE. */
+#define BM_USBHS_EPCR2_TXE   (0x00800000U) /*!< Bit mask for USBHS_EPCR2_TXE. */
+#define BS_USBHS_EPCR2_TXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR2_TXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR2_TXE field.
-#define BR_USBHS_EPCR2_TXE   (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR2_TXE field. */
+#define BR_USBHS_EPCR2_TXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXE))
 
-//! @brief Format value for bitfield USBHS_EPCR2_TXE.
-#define BF_USBHS_EPCR2_TXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR2_TXE), uint32_t) & BM_USBHS_EPCR2_TXE)
+/*! @brief Format value for bitfield USBHS_EPCR2_TXE. */
+#define BF_USBHS_EPCR2_TXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR2_TXE) & BM_USBHS_EPCR2_TXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXE field to a new value.
-#define BW_USBHS_EPCR2_TXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR, BP_USBHS_EPCR2_TXE) = (v))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_EPCR3 - Endpoint Control Register n
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the TXE field to a new value. */
+#define BW_USBHS_EPCR2_TXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR2_ADDR(x), BP_USBHS_EPCR2_TXE) = (v))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
+/*******************************************************************************
+ * HW_USBHS_EPCR3 - Endpoint Control Register n
+ ******************************************************************************/
+
 /*!
  * @brief HW_USBHS_EPCR3 - Endpoint Control Register n (RW)
  *
@@ -7632,41 +6703,38 @@ typedef union _hw_usbhs_epcr3
     uint32_t U;
     struct _hw_usbhs_epcr3_bitfields
     {
-        uint32_t RXS : 1;              //!< [0] RX endpoint Stall
-        uint32_t RXD : 1;              //!< [1] RX endpoint Data sink
-        uint32_t RXT : 2;              //!< [3:2] RX endpoint Type
-        uint32_t RESERVED0 : 1;        //!< [4] Reserved
-        uint32_t RXI : 1;              //!< [5] RX data toggle Inhibit
-        uint32_t RXR : 1;              //!< [6] RX data toggle Reset
-        uint32_t RXE : 1;              //!< [7] RX endpoint Enable
-        uint32_t RESERVED1 : 8;        //!< [15:8] Reserved
-        uint32_t TXS : 1;              //!< [16] TX endpoint Stall
-        uint32_t TXD : 1;              //!< [17] TX endpoint Data source
-        uint32_t TXT : 2;              //!< [19:18] TX endpoint Type
-        uint32_t RESERVED2 : 1;        //!< [20] Reserved
-        uint32_t TXI : 1;              //!< [21] TX data toggle Inhibit
-        uint32_t TXR : 1;              //!< [22] TX data toggle Reset
-        uint32_t TXE : 1;              //!< [23] TX endpoint Enable
-        uint32_t RESERVED3 : 8;        //!< [31:24] Reserved
+        uint32_t RXS : 1;              /*!< [0] RX endpoint Stall */
+        uint32_t RXD : 1;              /*!< [1] RX endpoint Data sink */
+        uint32_t RXT : 2;              /*!< [3:2] RX endpoint Type */
+        uint32_t RESERVED0 : 1;        /*!< [4] Reserved */
+        uint32_t RXI : 1;              /*!< [5] RX data toggle Inhibit */
+        uint32_t RXR : 1;              /*!< [6] RX data toggle Reset */
+        uint32_t RXE : 1;              /*!< [7] RX endpoint Enable */
+        uint32_t RESERVED1 : 8;        /*!< [15:8] Reserved */
+        uint32_t TXS : 1;              /*!< [16] TX endpoint Stall */
+        uint32_t TXD : 1;              /*!< [17] TX endpoint Data source */
+        uint32_t TXT : 2;              /*!< [19:18] TX endpoint Type */
+        uint32_t RESERVED2 : 1;        /*!< [20] Reserved */
+        uint32_t TXI : 1;              /*!< [21] TX data toggle Inhibit */
+        uint32_t TXR : 1;              /*!< [22] TX data toggle Reset */
+        uint32_t TXE : 1;              /*!< [23] TX endpoint Enable */
+        uint32_t RESERVED3 : 8;        /*!< [31:24] Reserved */
     } B;
 } hw_usbhs_epcr3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_EPCR3 register
  */
-//@{
-#define HW_USBHS_EPCR3_ADDR      (REGS_USBHS_BASE + 0x1CCU)
+/*@{*/
+#define HW_USBHS_EPCR3_ADDR(x)   ((x) + 0x1CCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_EPCR3           (*(__IO hw_usbhs_epcr3_t *) HW_USBHS_EPCR3_ADDR)
-#define HW_USBHS_EPCR3_RD()      (HW_USBHS_EPCR3.U)
-#define HW_USBHS_EPCR3_WR(v)     (HW_USBHS_EPCR3.U = (v))
-#define HW_USBHS_EPCR3_SET(v)    (HW_USBHS_EPCR3_WR(HW_USBHS_EPCR3_RD() |  (v)))
-#define HW_USBHS_EPCR3_CLR(v)    (HW_USBHS_EPCR3_WR(HW_USBHS_EPCR3_RD() & ~(v)))
-#define HW_USBHS_EPCR3_TOG(v)    (HW_USBHS_EPCR3_WR(HW_USBHS_EPCR3_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_EPCR3(x)        (*(__IO hw_usbhs_epcr3_t *) HW_USBHS_EPCR3_ADDR(x))
+#define HW_USBHS_EPCR3_RD(x)     (HW_USBHS_EPCR3(x).U)
+#define HW_USBHS_EPCR3_WR(x, v)  (HW_USBHS_EPCR3(x).U = (v))
+#define HW_USBHS_EPCR3_SET(x, v) (HW_USBHS_EPCR3_WR(x, HW_USBHS_EPCR3_RD(x) |  (v)))
+#define HW_USBHS_EPCR3_CLR(x, v) (HW_USBHS_EPCR3_WR(x, HW_USBHS_EPCR3_RD(x) & ~(v)))
+#define HW_USBHS_EPCR3_TOG(x, v) (HW_USBHS_EPCR3_WR(x, HW_USBHS_EPCR3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_EPCR3 bitfields
@@ -7679,46 +6747,38 @@ typedef union _hw_usbhs_epcr3
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR3_RXS   (0U)          //!< Bit position for USBHS_EPCR3_RXS.
-#define BM_USBHS_EPCR3_RXS   (0x00000001U) //!< Bit mask for USBHS_EPCR3_RXS.
-#define BS_USBHS_EPCR3_RXS   (1U)          //!< Bit field size in bits for USBHS_EPCR3_RXS.
+/*@{*/
+#define BP_USBHS_EPCR3_RXS   (0U)          /*!< Bit position for USBHS_EPCR3_RXS. */
+#define BM_USBHS_EPCR3_RXS   (0x00000001U) /*!< Bit mask for USBHS_EPCR3_RXS. */
+#define BS_USBHS_EPCR3_RXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_RXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXS field.
-#define BR_USBHS_EPCR3_RXS   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_RXS field. */
+#define BR_USBHS_EPCR3_RXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXS))
 
-//! @brief Format value for bitfield USBHS_EPCR3_RXS.
-#define BF_USBHS_EPCR3_RXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXS), uint32_t) & BM_USBHS_EPCR3_RXS)
+/*! @brief Format value for bitfield USBHS_EPCR3_RXS. */
+#define BF_USBHS_EPCR3_RXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXS) & BM_USBHS_EPCR3_RXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXS field to a new value.
-#define BW_USBHS_EPCR3_RXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXS) = (v))
-#endif
-//@}
+/*! @brief Set the RXS field to a new value. */
+#define BW_USBHS_EPCR3_RXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field RXD[1] (RW)
  */
-//@{
-#define BP_USBHS_EPCR3_RXD   (1U)          //!< Bit position for USBHS_EPCR3_RXD.
-#define BM_USBHS_EPCR3_RXD   (0x00000002U) //!< Bit mask for USBHS_EPCR3_RXD.
-#define BS_USBHS_EPCR3_RXD   (1U)          //!< Bit field size in bits for USBHS_EPCR3_RXD.
+/*@{*/
+#define BP_USBHS_EPCR3_RXD   (1U)          /*!< Bit position for USBHS_EPCR3_RXD. */
+#define BM_USBHS_EPCR3_RXD   (0x00000002U) /*!< Bit mask for USBHS_EPCR3_RXD. */
+#define BS_USBHS_EPCR3_RXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_RXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXD field.
-#define BR_USBHS_EPCR3_RXD   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_RXD field. */
+#define BR_USBHS_EPCR3_RXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXD))
 
-//! @brief Format value for bitfield USBHS_EPCR3_RXD.
-#define BF_USBHS_EPCR3_RXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXD), uint32_t) & BM_USBHS_EPCR3_RXD)
+/*! @brief Format value for bitfield USBHS_EPCR3_RXD. */
+#define BF_USBHS_EPCR3_RXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXD) & BM_USBHS_EPCR3_RXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXD field to a new value.
-#define BW_USBHS_EPCR3_RXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXD) = (v))
-#endif
-//@}
+/*! @brief Set the RXD field to a new value. */
+#define BW_USBHS_EPCR3_RXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field RXT[3:2] (RW)
@@ -7729,24 +6789,20 @@ typedef union _hw_usbhs_epcr3
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR3_RXT   (2U)          //!< Bit position for USBHS_EPCR3_RXT.
-#define BM_USBHS_EPCR3_RXT   (0x0000000CU) //!< Bit mask for USBHS_EPCR3_RXT.
-#define BS_USBHS_EPCR3_RXT   (2U)          //!< Bit field size in bits for USBHS_EPCR3_RXT.
+/*@{*/
+#define BP_USBHS_EPCR3_RXT   (2U)          /*!< Bit position for USBHS_EPCR3_RXT. */
+#define BM_USBHS_EPCR3_RXT   (0x0000000CU) /*!< Bit mask for USBHS_EPCR3_RXT. */
+#define BS_USBHS_EPCR3_RXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR3_RXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXT field.
-#define BR_USBHS_EPCR3_RXT   (HW_USBHS_EPCR3.B.RXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_RXT field. */
+#define BR_USBHS_EPCR3_RXT(x) (HW_USBHS_EPCR3(x).B.RXT)
 
-//! @brief Format value for bitfield USBHS_EPCR3_RXT.
-#define BF_USBHS_EPCR3_RXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXT), uint32_t) & BM_USBHS_EPCR3_RXT)
+/*! @brief Format value for bitfield USBHS_EPCR3_RXT. */
+#define BF_USBHS_EPCR3_RXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXT) & BM_USBHS_EPCR3_RXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXT field to a new value.
-#define BW_USBHS_EPCR3_RXT(v) (HW_USBHS_EPCR3_WR((HW_USBHS_EPCR3_RD() & ~BM_USBHS_EPCR3_RXT) | BF_USBHS_EPCR3_RXT(v)))
-#endif
-//@}
+/*! @brief Set the RXT field to a new value. */
+#define BW_USBHS_EPCR3_RXT(x, v) (HW_USBHS_EPCR3_WR(x, (HW_USBHS_EPCR3_RD(x) & ~BM_USBHS_EPCR3_RXT) | BF_USBHS_EPCR3_RXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field RXI[5] (RW)
@@ -7755,46 +6811,32 @@ typedef union _hw_usbhs_epcr3
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR3_RXI   (5U)          //!< Bit position for USBHS_EPCR3_RXI.
-#define BM_USBHS_EPCR3_RXI   (0x00000020U) //!< Bit mask for USBHS_EPCR3_RXI.
-#define BS_USBHS_EPCR3_RXI   (1U)          //!< Bit field size in bits for USBHS_EPCR3_RXI.
+/*@{*/
+#define BP_USBHS_EPCR3_RXI   (5U)          /*!< Bit position for USBHS_EPCR3_RXI. */
+#define BM_USBHS_EPCR3_RXI   (0x00000020U) /*!< Bit mask for USBHS_EPCR3_RXI. */
+#define BS_USBHS_EPCR3_RXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_RXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXI field.
-#define BR_USBHS_EPCR3_RXI   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_RXI field. */
+#define BR_USBHS_EPCR3_RXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXI))
 
-//! @brief Format value for bitfield USBHS_EPCR3_RXI.
-#define BF_USBHS_EPCR3_RXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXI), uint32_t) & BM_USBHS_EPCR3_RXI)
+/*! @brief Format value for bitfield USBHS_EPCR3_RXI. */
+#define BF_USBHS_EPCR3_RXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXI) & BM_USBHS_EPCR3_RXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXI field to a new value.
-#define BW_USBHS_EPCR3_RXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXI) = (v))
-#endif
-//@}
+/*! @brief Set the RXI field to a new value. */
+#define BW_USBHS_EPCR3_RXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field RXR[6] (WO)
  */
-//@{
-#define BP_USBHS_EPCR3_RXR   (6U)          //!< Bit position for USBHS_EPCR3_RXR.
-#define BM_USBHS_EPCR3_RXR   (0x00000040U) //!< Bit mask for USBHS_EPCR3_RXR.
-#define BS_USBHS_EPCR3_RXR   (1U)          //!< Bit field size in bits for USBHS_EPCR3_RXR.
+/*@{*/
+#define BP_USBHS_EPCR3_RXR   (6U)          /*!< Bit position for USBHS_EPCR3_RXR. */
+#define BM_USBHS_EPCR3_RXR   (0x00000040U) /*!< Bit mask for USBHS_EPCR3_RXR. */
+#define BS_USBHS_EPCR3_RXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_RXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXR field.
-#define BR_USBHS_EPCR3_RXR   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR3_RXR.
-#define BF_USBHS_EPCR3_RXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXR), uint32_t) & BM_USBHS_EPCR3_RXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXR field to a new value.
-#define BW_USBHS_EPCR3_RXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR3_RXR. */
+#define BF_USBHS_EPCR3_RXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXR) & BM_USBHS_EPCR3_RXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field RXE[7] (RW)
@@ -7803,24 +6845,20 @@ typedef union _hw_usbhs_epcr3
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR3_RXE   (7U)          //!< Bit position for USBHS_EPCR3_RXE.
-#define BM_USBHS_EPCR3_RXE   (0x00000080U) //!< Bit mask for USBHS_EPCR3_RXE.
-#define BS_USBHS_EPCR3_RXE   (1U)          //!< Bit field size in bits for USBHS_EPCR3_RXE.
+/*@{*/
+#define BP_USBHS_EPCR3_RXE   (7U)          /*!< Bit position for USBHS_EPCR3_RXE. */
+#define BM_USBHS_EPCR3_RXE   (0x00000080U) /*!< Bit mask for USBHS_EPCR3_RXE. */
+#define BS_USBHS_EPCR3_RXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_RXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_RXE field.
-#define BR_USBHS_EPCR3_RXE   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_RXE field. */
+#define BR_USBHS_EPCR3_RXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXE))
 
-//! @brief Format value for bitfield USBHS_EPCR3_RXE.
-#define BF_USBHS_EPCR3_RXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_RXE), uint32_t) & BM_USBHS_EPCR3_RXE)
+/*! @brief Format value for bitfield USBHS_EPCR3_RXE. */
+#define BF_USBHS_EPCR3_RXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_RXE) & BM_USBHS_EPCR3_RXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXE field to a new value.
-#define BW_USBHS_EPCR3_RXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_RXE) = (v))
-#endif
-//@}
+/*! @brief Set the RXE field to a new value. */
+#define BW_USBHS_EPCR3_RXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_RXE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXS[16] (RW)
@@ -7829,46 +6867,38 @@ typedef union _hw_usbhs_epcr3
  * - 0 - Endpoint OK
  * - 1 - Endpoint stalled
  */
-//@{
-#define BP_USBHS_EPCR3_TXS   (16U)         //!< Bit position for USBHS_EPCR3_TXS.
-#define BM_USBHS_EPCR3_TXS   (0x00010000U) //!< Bit mask for USBHS_EPCR3_TXS.
-#define BS_USBHS_EPCR3_TXS   (1U)          //!< Bit field size in bits for USBHS_EPCR3_TXS.
+/*@{*/
+#define BP_USBHS_EPCR3_TXS   (16U)         /*!< Bit position for USBHS_EPCR3_TXS. */
+#define BM_USBHS_EPCR3_TXS   (0x00010000U) /*!< Bit mask for USBHS_EPCR3_TXS. */
+#define BS_USBHS_EPCR3_TXS   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_TXS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXS field.
-#define BR_USBHS_EPCR3_TXS   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXS))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_TXS field. */
+#define BR_USBHS_EPCR3_TXS(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXS))
 
-//! @brief Format value for bitfield USBHS_EPCR3_TXS.
-#define BF_USBHS_EPCR3_TXS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXS), uint32_t) & BM_USBHS_EPCR3_TXS)
+/*! @brief Format value for bitfield USBHS_EPCR3_TXS. */
+#define BF_USBHS_EPCR3_TXS(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXS) & BM_USBHS_EPCR3_TXS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXS field to a new value.
-#define BW_USBHS_EPCR3_TXS(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXS) = (v))
-#endif
-//@}
+/*! @brief Set the TXS field to a new value. */
+#define BW_USBHS_EPCR3_TXS(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXS) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXD[17] (RW)
  */
-//@{
-#define BP_USBHS_EPCR3_TXD   (17U)         //!< Bit position for USBHS_EPCR3_TXD.
-#define BM_USBHS_EPCR3_TXD   (0x00020000U) //!< Bit mask for USBHS_EPCR3_TXD.
-#define BS_USBHS_EPCR3_TXD   (1U)          //!< Bit field size in bits for USBHS_EPCR3_TXD.
+/*@{*/
+#define BP_USBHS_EPCR3_TXD   (17U)         /*!< Bit position for USBHS_EPCR3_TXD. */
+#define BM_USBHS_EPCR3_TXD   (0x00020000U) /*!< Bit mask for USBHS_EPCR3_TXD. */
+#define BS_USBHS_EPCR3_TXD   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_TXD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXD field.
-#define BR_USBHS_EPCR3_TXD   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXD))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_TXD field. */
+#define BR_USBHS_EPCR3_TXD(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXD))
 
-//! @brief Format value for bitfield USBHS_EPCR3_TXD.
-#define BF_USBHS_EPCR3_TXD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXD), uint32_t) & BM_USBHS_EPCR3_TXD)
+/*! @brief Format value for bitfield USBHS_EPCR3_TXD. */
+#define BF_USBHS_EPCR3_TXD(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXD) & BM_USBHS_EPCR3_TXD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXD field to a new value.
-#define BW_USBHS_EPCR3_TXD(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXD) = (v))
-#endif
-//@}
+/*! @brief Set the TXD field to a new value. */
+#define BW_USBHS_EPCR3_TXD(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXD) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXT[19:18] (RW)
@@ -7879,24 +6909,20 @@ typedef union _hw_usbhs_epcr3
  * - 10 - Bulk
  * - 11 - Interrupt
  */
-//@{
-#define BP_USBHS_EPCR3_TXT   (18U)         //!< Bit position for USBHS_EPCR3_TXT.
-#define BM_USBHS_EPCR3_TXT   (0x000C0000U) //!< Bit mask for USBHS_EPCR3_TXT.
-#define BS_USBHS_EPCR3_TXT   (2U)          //!< Bit field size in bits for USBHS_EPCR3_TXT.
+/*@{*/
+#define BP_USBHS_EPCR3_TXT   (18U)         /*!< Bit position for USBHS_EPCR3_TXT. */
+#define BM_USBHS_EPCR3_TXT   (0x000C0000U) /*!< Bit mask for USBHS_EPCR3_TXT. */
+#define BS_USBHS_EPCR3_TXT   (2U)          /*!< Bit field size in bits for USBHS_EPCR3_TXT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXT field.
-#define BR_USBHS_EPCR3_TXT   (HW_USBHS_EPCR3.B.TXT)
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_TXT field. */
+#define BR_USBHS_EPCR3_TXT(x) (HW_USBHS_EPCR3(x).B.TXT)
 
-//! @brief Format value for bitfield USBHS_EPCR3_TXT.
-#define BF_USBHS_EPCR3_TXT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXT), uint32_t) & BM_USBHS_EPCR3_TXT)
+/*! @brief Format value for bitfield USBHS_EPCR3_TXT. */
+#define BF_USBHS_EPCR3_TXT(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXT) & BM_USBHS_EPCR3_TXT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXT field to a new value.
-#define BW_USBHS_EPCR3_TXT(v) (HW_USBHS_EPCR3_WR((HW_USBHS_EPCR3_RD() & ~BM_USBHS_EPCR3_TXT) | BF_USBHS_EPCR3_TXT(v)))
-#endif
-//@}
+/*! @brief Set the TXT field to a new value. */
+#define BW_USBHS_EPCR3_TXT(x, v) (HW_USBHS_EPCR3_WR(x, (HW_USBHS_EPCR3_RD(x) & ~BM_USBHS_EPCR3_TXT) | BF_USBHS_EPCR3_TXT(v)))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXI[21] (RW)
@@ -7905,46 +6931,32 @@ typedef union _hw_usbhs_epcr3
  * - 0 - PID sequencing enabled
  * - 1 - PID sequencing disabled
  */
-//@{
-#define BP_USBHS_EPCR3_TXI   (21U)         //!< Bit position for USBHS_EPCR3_TXI.
-#define BM_USBHS_EPCR3_TXI   (0x00200000U) //!< Bit mask for USBHS_EPCR3_TXI.
-#define BS_USBHS_EPCR3_TXI   (1U)          //!< Bit field size in bits for USBHS_EPCR3_TXI.
+/*@{*/
+#define BP_USBHS_EPCR3_TXI   (21U)         /*!< Bit position for USBHS_EPCR3_TXI. */
+#define BM_USBHS_EPCR3_TXI   (0x00200000U) /*!< Bit mask for USBHS_EPCR3_TXI. */
+#define BS_USBHS_EPCR3_TXI   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_TXI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXI field.
-#define BR_USBHS_EPCR3_TXI   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXI))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_TXI field. */
+#define BR_USBHS_EPCR3_TXI(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXI))
 
-//! @brief Format value for bitfield USBHS_EPCR3_TXI.
-#define BF_USBHS_EPCR3_TXI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXI), uint32_t) & BM_USBHS_EPCR3_TXI)
+/*! @brief Format value for bitfield USBHS_EPCR3_TXI. */
+#define BF_USBHS_EPCR3_TXI(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXI) & BM_USBHS_EPCR3_TXI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXI field to a new value.
-#define BW_USBHS_EPCR3_TXI(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXI) = (v))
-#endif
-//@}
+/*! @brief Set the TXI field to a new value. */
+#define BW_USBHS_EPCR3_TXI(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXI) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXR[22] (WO)
  */
-//@{
-#define BP_USBHS_EPCR3_TXR   (22U)         //!< Bit position for USBHS_EPCR3_TXR.
-#define BM_USBHS_EPCR3_TXR   (0x00400000U) //!< Bit mask for USBHS_EPCR3_TXR.
-#define BS_USBHS_EPCR3_TXR   (1U)          //!< Bit field size in bits for USBHS_EPCR3_TXR.
+/*@{*/
+#define BP_USBHS_EPCR3_TXR   (22U)         /*!< Bit position for USBHS_EPCR3_TXR. */
+#define BM_USBHS_EPCR3_TXR   (0x00400000U) /*!< Bit mask for USBHS_EPCR3_TXR. */
+#define BS_USBHS_EPCR3_TXR   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_TXR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXR field.
-#define BR_USBHS_EPCR3_TXR   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXR))
-#endif
-
-//! @brief Format value for bitfield USBHS_EPCR3_TXR.
-#define BF_USBHS_EPCR3_TXR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXR), uint32_t) & BM_USBHS_EPCR3_TXR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXR field to a new value.
-#define BW_USBHS_EPCR3_TXR(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXR) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield USBHS_EPCR3_TXR. */
+#define BF_USBHS_EPCR3_TXR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXR) & BM_USBHS_EPCR3_TXR)
+/*@}*/
 
 /*!
  * @name Register USBHS_EPCR3, field TXE[23] (RW)
@@ -7953,30 +6965,25 @@ typedef union _hw_usbhs_epcr3
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_EPCR3_TXE   (23U)         //!< Bit position for USBHS_EPCR3_TXE.
-#define BM_USBHS_EPCR3_TXE   (0x00800000U) //!< Bit mask for USBHS_EPCR3_TXE.
-#define BS_USBHS_EPCR3_TXE   (1U)          //!< Bit field size in bits for USBHS_EPCR3_TXE.
+/*@{*/
+#define BP_USBHS_EPCR3_TXE   (23U)         /*!< Bit position for USBHS_EPCR3_TXE. */
+#define BM_USBHS_EPCR3_TXE   (0x00800000U) /*!< Bit mask for USBHS_EPCR3_TXE. */
+#define BS_USBHS_EPCR3_TXE   (1U)          /*!< Bit field size in bits for USBHS_EPCR3_TXE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_EPCR3_TXE field.
-#define BR_USBHS_EPCR3_TXE   (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXE))
-#endif
+/*! @brief Read current value of the USBHS_EPCR3_TXE field. */
+#define BR_USBHS_EPCR3_TXE(x) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXE))
 
-//! @brief Format value for bitfield USBHS_EPCR3_TXE.
-#define BF_USBHS_EPCR3_TXE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_EPCR3_TXE), uint32_t) & BM_USBHS_EPCR3_TXE)
+/*! @brief Format value for bitfield USBHS_EPCR3_TXE. */
+#define BF_USBHS_EPCR3_TXE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_EPCR3_TXE) & BM_USBHS_EPCR3_TXE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXE field to a new value.
-#define BW_USBHS_EPCR3_TXE(v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR, BP_USBHS_EPCR3_TXE) = (v))
-#endif
-//@}
+/*! @brief Set the TXE field to a new value. */
+#define BW_USBHS_EPCR3_TXE(x, v) (BITBAND_ACCESS32(HW_USBHS_EPCR3_ADDR(x), BP_USBHS_EPCR3_TXE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USBHS_USBGENCTRL - USB General Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USBHS_USBGENCTRL - USB General Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USBHS_USBGENCTRL - USB General Control Register (RW)
  *
@@ -7989,30 +6996,27 @@ typedef union _hw_usbhs_usbgenctrl
     uint32_t U;
     struct _hw_usbhs_usbgenctrl_bitfields
     {
-        uint32_t WU_IE : 1;            //!< [0] Wakeup Interrupt Enable
-        uint32_t WU_ULPI_EN : 1;       //!< [1] Wakeup on ULPI Interrupt Event
-        uint32_t RESERVED0 : 3;        //!< [4:2] Reserved
-        uint32_t WU_INT_CLR : 1;       //!< [5] Wakeup Interrupt Clear
-        uint32_t RESERVED1 : 26;       //!< [31:6] Reserved
+        uint32_t WU_IE : 1;            /*!< [0] Wakeup Interrupt Enable */
+        uint32_t WU_ULPI_EN : 1;       /*!< [1] Wakeup on ULPI Interrupt Event */
+        uint32_t RESERVED0 : 3;        /*!< [4:2] Reserved */
+        uint32_t WU_INT_CLR : 1;       /*!< [5] Wakeup Interrupt Clear */
+        uint32_t RESERVED1 : 26;       /*!< [31:6] Reserved */
     } B;
 } hw_usbhs_usbgenctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USBHS_USBGENCTRL register
  */
-//@{
-#define HW_USBHS_USBGENCTRL_ADDR (REGS_USBHS_BASE + 0x200U)
+/*@{*/
+#define HW_USBHS_USBGENCTRL_ADDR(x) ((x) + 0x200U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USBHS_USBGENCTRL      (*(__IO hw_usbhs_usbgenctrl_t *) HW_USBHS_USBGENCTRL_ADDR)
-#define HW_USBHS_USBGENCTRL_RD() (HW_USBHS_USBGENCTRL.U)
-#define HW_USBHS_USBGENCTRL_WR(v) (HW_USBHS_USBGENCTRL.U = (v))
-#define HW_USBHS_USBGENCTRL_SET(v) (HW_USBHS_USBGENCTRL_WR(HW_USBHS_USBGENCTRL_RD() |  (v)))
-#define HW_USBHS_USBGENCTRL_CLR(v) (HW_USBHS_USBGENCTRL_WR(HW_USBHS_USBGENCTRL_RD() & ~(v)))
-#define HW_USBHS_USBGENCTRL_TOG(v) (HW_USBHS_USBGENCTRL_WR(HW_USBHS_USBGENCTRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USBHS_USBGENCTRL(x)   (*(__IO hw_usbhs_usbgenctrl_t *) HW_USBHS_USBGENCTRL_ADDR(x))
+#define HW_USBHS_USBGENCTRL_RD(x) (HW_USBHS_USBGENCTRL(x).U)
+#define HW_USBHS_USBGENCTRL_WR(x, v) (HW_USBHS_USBGENCTRL(x).U = (v))
+#define HW_USBHS_USBGENCTRL_SET(x, v) (HW_USBHS_USBGENCTRL_WR(x, HW_USBHS_USBGENCTRL_RD(x) |  (v)))
+#define HW_USBHS_USBGENCTRL_CLR(x, v) (HW_USBHS_USBGENCTRL_WR(x, HW_USBHS_USBGENCTRL_RD(x) & ~(v)))
+#define HW_USBHS_USBGENCTRL_TOG(x, v) (HW_USBHS_USBGENCTRL_WR(x, HW_USBHS_USBGENCTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USBHS_USBGENCTRL bitfields
@@ -8027,24 +7031,20 @@ typedef union _hw_usbhs_usbgenctrl
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBGENCTRL_WU_IE (0U)     //!< Bit position for USBHS_USBGENCTRL_WU_IE.
-#define BM_USBHS_USBGENCTRL_WU_IE (0x00000001U) //!< Bit mask for USBHS_USBGENCTRL_WU_IE.
-#define BS_USBHS_USBGENCTRL_WU_IE (1U)     //!< Bit field size in bits for USBHS_USBGENCTRL_WU_IE.
+/*@{*/
+#define BP_USBHS_USBGENCTRL_WU_IE (0U)     /*!< Bit position for USBHS_USBGENCTRL_WU_IE. */
+#define BM_USBHS_USBGENCTRL_WU_IE (0x00000001U) /*!< Bit mask for USBHS_USBGENCTRL_WU_IE. */
+#define BS_USBHS_USBGENCTRL_WU_IE (1U)     /*!< Bit field size in bits for USBHS_USBGENCTRL_WU_IE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBGENCTRL_WU_IE field.
-#define BR_USBHS_USBGENCTRL_WU_IE (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_IE))
-#endif
+/*! @brief Read current value of the USBHS_USBGENCTRL_WU_IE field. */
+#define BR_USBHS_USBGENCTRL_WU_IE(x) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_IE))
 
-//! @brief Format value for bitfield USBHS_USBGENCTRL_WU_IE.
-#define BF_USBHS_USBGENCTRL_WU_IE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBGENCTRL_WU_IE), uint32_t) & BM_USBHS_USBGENCTRL_WU_IE)
+/*! @brief Format value for bitfield USBHS_USBGENCTRL_WU_IE. */
+#define BF_USBHS_USBGENCTRL_WU_IE(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBGENCTRL_WU_IE) & BM_USBHS_USBGENCTRL_WU_IE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WU_IE field to a new value.
-#define BW_USBHS_USBGENCTRL_WU_IE(v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_IE) = (v))
-#endif
-//@}
+/*! @brief Set the WU_IE field to a new value. */
+#define BW_USBHS_USBGENCTRL_WU_IE(x, v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_IE) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBGENCTRL, field WU_ULPI_EN[1] (RW)
@@ -8055,24 +7055,20 @@ typedef union _hw_usbhs_usbgenctrl
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_USBHS_USBGENCTRL_WU_ULPI_EN (1U) //!< Bit position for USBHS_USBGENCTRL_WU_ULPI_EN.
-#define BM_USBHS_USBGENCTRL_WU_ULPI_EN (0x00000002U) //!< Bit mask for USBHS_USBGENCTRL_WU_ULPI_EN.
-#define BS_USBHS_USBGENCTRL_WU_ULPI_EN (1U) //!< Bit field size in bits for USBHS_USBGENCTRL_WU_ULPI_EN.
+/*@{*/
+#define BP_USBHS_USBGENCTRL_WU_ULPI_EN (1U) /*!< Bit position for USBHS_USBGENCTRL_WU_ULPI_EN. */
+#define BM_USBHS_USBGENCTRL_WU_ULPI_EN (0x00000002U) /*!< Bit mask for USBHS_USBGENCTRL_WU_ULPI_EN. */
+#define BS_USBHS_USBGENCTRL_WU_ULPI_EN (1U) /*!< Bit field size in bits for USBHS_USBGENCTRL_WU_ULPI_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBGENCTRL_WU_ULPI_EN field.
-#define BR_USBHS_USBGENCTRL_WU_ULPI_EN (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_ULPI_EN))
-#endif
+/*! @brief Read current value of the USBHS_USBGENCTRL_WU_ULPI_EN field. */
+#define BR_USBHS_USBGENCTRL_WU_ULPI_EN(x) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_ULPI_EN))
 
-//! @brief Format value for bitfield USBHS_USBGENCTRL_WU_ULPI_EN.
-#define BF_USBHS_USBGENCTRL_WU_ULPI_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBGENCTRL_WU_ULPI_EN), uint32_t) & BM_USBHS_USBGENCTRL_WU_ULPI_EN)
+/*! @brief Format value for bitfield USBHS_USBGENCTRL_WU_ULPI_EN. */
+#define BF_USBHS_USBGENCTRL_WU_ULPI_EN(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBGENCTRL_WU_ULPI_EN) & BM_USBHS_USBGENCTRL_WU_ULPI_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WU_ULPI_EN field to a new value.
-#define BW_USBHS_USBGENCTRL_WU_ULPI_EN(v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_ULPI_EN) = (v))
-#endif
-//@}
+/*! @brief Set the WU_ULPI_EN field to a new value. */
+#define BW_USBHS_USBGENCTRL_WU_ULPI_EN(x, v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_ULPI_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register USBHS_USBGENCTRL, field WU_INT_CLR[5] (RW)
@@ -8081,101 +7077,130 @@ typedef union _hw_usbhs_usbgenctrl
  * - 0 - Default, no action.
  * - 1 - Clear the wake-up interrupt.
  */
-//@{
-#define BP_USBHS_USBGENCTRL_WU_INT_CLR (5U) //!< Bit position for USBHS_USBGENCTRL_WU_INT_CLR.
-#define BM_USBHS_USBGENCTRL_WU_INT_CLR (0x00000020U) //!< Bit mask for USBHS_USBGENCTRL_WU_INT_CLR.
-#define BS_USBHS_USBGENCTRL_WU_INT_CLR (1U) //!< Bit field size in bits for USBHS_USBGENCTRL_WU_INT_CLR.
+/*@{*/
+#define BP_USBHS_USBGENCTRL_WU_INT_CLR (5U) /*!< Bit position for USBHS_USBGENCTRL_WU_INT_CLR. */
+#define BM_USBHS_USBGENCTRL_WU_INT_CLR (0x00000020U) /*!< Bit mask for USBHS_USBGENCTRL_WU_INT_CLR. */
+#define BS_USBHS_USBGENCTRL_WU_INT_CLR (1U) /*!< Bit field size in bits for USBHS_USBGENCTRL_WU_INT_CLR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USBHS_USBGENCTRL_WU_INT_CLR field.
-#define BR_USBHS_USBGENCTRL_WU_INT_CLR (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_INT_CLR))
+/*! @brief Read current value of the USBHS_USBGENCTRL_WU_INT_CLR field. */
+#define BR_USBHS_USBGENCTRL_WU_INT_CLR(x) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_INT_CLR))
+
+/*! @brief Format value for bitfield USBHS_USBGENCTRL_WU_INT_CLR. */
+#define BF_USBHS_USBGENCTRL_WU_INT_CLR(v) ((uint32_t)((uint32_t)(v) << BP_USBHS_USBGENCTRL_WU_INT_CLR) & BM_USBHS_USBGENCTRL_WU_INT_CLR)
+
+/*! @brief Set the WU_INT_CLR field to a new value. */
+#define BW_USBHS_USBGENCTRL_WU_INT_CLR(x, v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR(x), BP_USBHS_USBGENCTRL_WU_INT_CLR) = (v))
+/*@}*/
+
+/*
+** Start of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma push
+  #pragma anon_unions
+#elif defined(__CWCC__)
+  #pragma push
+  #pragma cpp_extensions on
+#elif defined(__GNUC__)
+  /* anonymous unions are enabled by default */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=extended
+#else
+  #error Not supported compiler type
 #endif
 
-//! @brief Format value for bitfield USBHS_USBGENCTRL_WU_INT_CLR.
-#define BF_USBHS_USBGENCTRL_WU_INT_CLR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_USBHS_USBGENCTRL_WU_INT_CLR), uint32_t) & BM_USBHS_USBGENCTRL_WU_INT_CLR)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WU_INT_CLR field to a new value.
-#define BW_USBHS_USBGENCTRL_WU_INT_CLR(v) (BITBAND_ACCESS32(HW_USBHS_USBGENCTRL_ADDR, BP_USBHS_USBGENCTRL_WU_INT_CLR) = (v))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// hw_usbhs_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_usbhs_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All USBHS module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_usbhs
 {
-    __I hw_usbhs_id_t ID;                  //!< [0x0] Identification Register
-    __I hw_usbhs_hwgeneral_t HWGENERAL;    //!< [0x4] General Hardware Parameters Register
-    __I hw_usbhs_hwhost_t HWHOST;          //!< [0x8] Host Hardware Parameters Register
-    __I hw_usbhs_hwdevice_t HWDEVICE;      //!< [0xC] Device Hardware Parameters Register
-    __I hw_usbhs_hwtxbuf_t HWTXBUF;        //!< [0x10] Transmit Buffer Hardware Parameters Register
-    __I hw_usbhs_hwrxbuf_t HWRXBUF;        //!< [0x14] Receive Buffer Hardware Parameters Register
+    __I hw_usbhs_id_t ID;                  /*!< [0x0] Identification Register */
+    __I hw_usbhs_hwgeneral_t HWGENERAL;    /*!< [0x4] General Hardware Parameters Register */
+    __I hw_usbhs_hwhost_t HWHOST;          /*!< [0x8] Host Hardware Parameters Register */
+    __I hw_usbhs_hwdevice_t HWDEVICE;      /*!< [0xC] Device Hardware Parameters Register */
+    __I hw_usbhs_hwtxbuf_t HWTXBUF;        /*!< [0x10] Transmit Buffer Hardware Parameters Register */
+    __I hw_usbhs_hwrxbuf_t HWRXBUF;        /*!< [0x14] Receive Buffer Hardware Parameters Register */
     uint8_t _reserved0[104];
-    __IO hw_usbhs_gptimer0ld_t GPTIMER0LD; //!< [0x80] General Purpose Timer n Load Register
-    __IO hw_usbhs_gptimer0ctl_t GPTIMER0CTL; //!< [0x84] General Purpose Timer n Control Register
-    __IO hw_usbhs_gptimer1ld_t GPTIMER1LD; //!< [0x88] General Purpose Timer n Load Register
-    __IO hw_usbhs_gptimer1ctl_t GPTIMER1CTL; //!< [0x8C] General Purpose Timer n Control Register
-    __IO hw_usbhs_usb_sbuscfg_t USB_SBUSCFG; //!< [0x90] System Bus Interface Configuration Register
+    __IO hw_usbhs_gptimer0ld_t GPTIMER0LD; /*!< [0x80] General Purpose Timer n Load Register */
+    __IO hw_usbhs_gptimer0ctl_t GPTIMER0CTL; /*!< [0x84] General Purpose Timer n Control Register */
+    __IO hw_usbhs_gptimer1ld_t GPTIMER1LD; /*!< [0x88] General Purpose Timer n Load Register */
+    __IO hw_usbhs_gptimer1ctl_t GPTIMER1CTL; /*!< [0x8C] General Purpose Timer n Control Register */
+    __IO hw_usbhs_usb_sbuscfg_t USB_SBUSCFG; /*!< [0x90] System Bus Interface Configuration Register */
     uint8_t _reserved1[108];
-    __I hw_usbhs_hciversion_t HCIVERSION;  //!< [0x100] Host Controller Interface Version and Capability Registers Length Register
-    __I hw_usbhs_hcsparams_t HCSPARAMS;    //!< [0x104] Host Controller Structural Parameters Register
-    __I hw_usbhs_hccparams_t HCCPARAMS;    //!< [0x108] Host Controller Capability Parameters Register
+    __I hw_usbhs_hciversion_t HCIVERSION;  /*!< [0x100] Host Controller Interface Version and Capability Registers Length Register */
+    __I hw_usbhs_hcsparams_t HCSPARAMS;    /*!< [0x104] Host Controller Structural Parameters Register */
+    __I hw_usbhs_hccparams_t HCCPARAMS;    /*!< [0x108] Host Controller Capability Parameters Register */
     uint8_t _reserved2[22];
-    __I hw_usbhs_dciversion_t DCIVERSION;  //!< [0x122] Device Controller Interface Version
-    __I hw_usbhs_dccparams_t DCCPARAMS;    //!< [0x124] Device Controller Capability Parameters
+    __I hw_usbhs_dciversion_t DCIVERSION;  /*!< [0x122] Device Controller Interface Version */
+    __I hw_usbhs_dccparams_t DCCPARAMS;    /*!< [0x124] Device Controller Capability Parameters */
     uint8_t _reserved3[24];
-    __IO hw_usbhs_usbcmd_t USBCMD;         //!< [0x140] USB Command Register
-    __IO hw_usbhs_usbsts_t USBSTS;         //!< [0x144] USB Status Register
-    __IO hw_usbhs_usbintr_t USBINTR;       //!< [0x148] USB Interrupt Enable Register
-    __IO hw_usbhs_frindex_t FRINDEX;       //!< [0x14C] Frame Index Register
+    __IO hw_usbhs_usbcmd_t USBCMD;         /*!< [0x140] USB Command Register */
+    __IO hw_usbhs_usbsts_t USBSTS;         /*!< [0x144] USB Status Register */
+    __IO hw_usbhs_usbintr_t USBINTR;       /*!< [0x148] USB Interrupt Enable Register */
+    __IO hw_usbhs_frindex_t FRINDEX;       /*!< [0x14C] Frame Index Register */
     uint8_t _reserved4[4];
     union {
-        __IO hw_usbhs_deviceaddr_t DEVICEADDR; //!< [0x154] Device Address Register
-        __IO hw_usbhs_periodiclistbase_t PERIODICLISTBASE; //!< [0x154] Periodic Frame List Base Address Register
+        __IO hw_usbhs_deviceaddr_t DEVICEADDR; /*!< [0x154] Device Address Register */
+        __IO hw_usbhs_periodiclistbase_t PERIODICLISTBASE; /*!< [0x154] Periodic Frame List Base Address Register */
     };
     union {
-        __IO hw_usbhs_asynclistaddr_t ASYNCLISTADDR; //!< [0x158] Current Asynchronous List Address Register
-        __IO hw_usbhs_eplistaddr_t EPLISTADDR; //!< [0x158] Endpoint List Address Register
+        __IO hw_usbhs_asynclistaddr_t ASYNCLISTADDR; /*!< [0x158] Current Asynchronous List Address Register */
+        __IO hw_usbhs_eplistaddr_t EPLISTADDR; /*!< [0x158] Endpoint List Address Register */
     };
-    __I hw_usbhs_ttctrl_t TTCTRL;          //!< [0x15C] Host TT Asynchronous Buffer Control
-    __IO hw_usbhs_burstsize_t BURSTSIZE;   //!< [0x160] Master Interface Data Burst Size Register
-    __IO hw_usbhs_txfilltuning_t TXFILLTUNING; //!< [0x164] Transmit FIFO Tuning Control Register
+    __I hw_usbhs_ttctrl_t TTCTRL;          /*!< [0x15C] Host TT Asynchronous Buffer Control */
+    __IO hw_usbhs_burstsize_t BURSTSIZE;   /*!< [0x160] Master Interface Data Burst Size Register */
+    __IO hw_usbhs_txfilltuning_t TXFILLTUNING; /*!< [0x164] Transmit FIFO Tuning Control Register */
     uint8_t _reserved5[8];
-    __IO hw_usbhs_ulpi_viewport_t ULPI_VIEWPORT; //!< [0x170] ULPI Register Access
+    __IO hw_usbhs_ulpi_viewport_t ULPI_VIEWPORT; /*!< [0x170] ULPI Register Access */
     uint8_t _reserved6[4];
-    __IO hw_usbhs_endptnak_t ENDPTNAK;     //!< [0x178] Endpoint NAK Register
-    __IO hw_usbhs_endptnaken_t ENDPTNAKEN; //!< [0x17C] Endpoint NAK Enable Register
-    __I hw_usbhs_configflag_t CONFIGFLAG;  //!< [0x180] Configure Flag Register
-    __IO hw_usbhs_portsc1_t PORTSC1;       //!< [0x184] Port Status and Control Registers
+    __IO hw_usbhs_endptnak_t ENDPTNAK;     /*!< [0x178] Endpoint NAK Register */
+    __IO hw_usbhs_endptnaken_t ENDPTNAKEN; /*!< [0x17C] Endpoint NAK Enable Register */
+    __I hw_usbhs_configflag_t CONFIGFLAG;  /*!< [0x180] Configure Flag Register */
+    __IO hw_usbhs_portsc1_t PORTSC1;       /*!< [0x184] Port Status and Control Registers */
     uint8_t _reserved7[28];
-    __IO hw_usbhs_otgsc_t OTGSC;           //!< [0x1A4] On-the-Go Status and Control Register
-    __IO hw_usbhs_usbmode_t USBMODE;       //!< [0x1A8] USB Mode Register
-    __IO hw_usbhs_epsetupsr_t EPSETUPSR;   //!< [0x1AC] Endpoint Setup Status Register
-    __IO hw_usbhs_epprime_t EPPRIME;       //!< [0x1B0] Endpoint Initialization Register
-    __IO hw_usbhs_epflush_t EPFLUSH;       //!< [0x1B4] Endpoint Flush Register
-    __I hw_usbhs_epsr_t EPSR;              //!< [0x1B8] Endpoint Status Register
-    __IO hw_usbhs_epcomplete_t EPCOMPLETE; //!< [0x1BC] Endpoint Complete Register
-    __IO hw_usbhs_epcr0_t EPCR0;           //!< [0x1C0] Endpoint Control Register 0
-    __IO hw_usbhs_epcr1_t EPCR1;           //!< [0x1C4] Endpoint Control Register n
-    __IO hw_usbhs_epcr2_t EPCR2;           //!< [0x1C8] Endpoint Control Register n
-    __IO hw_usbhs_epcr3_t EPCR3;           //!< [0x1CC] Endpoint Control Register n
+    __IO hw_usbhs_otgsc_t OTGSC;           /*!< [0x1A4] On-the-Go Status and Control Register */
+    __IO hw_usbhs_usbmode_t USBMODE;       /*!< [0x1A8] USB Mode Register */
+    __IO hw_usbhs_epsetupsr_t EPSETUPSR;   /*!< [0x1AC] Endpoint Setup Status Register */
+    __IO hw_usbhs_epprime_t EPPRIME;       /*!< [0x1B0] Endpoint Initialization Register */
+    __IO hw_usbhs_epflush_t EPFLUSH;       /*!< [0x1B4] Endpoint Flush Register */
+    __I hw_usbhs_epsr_t EPSR;              /*!< [0x1B8] Endpoint Status Register */
+    __IO hw_usbhs_epcomplete_t EPCOMPLETE; /*!< [0x1BC] Endpoint Complete Register */
+    __IO hw_usbhs_epcr0_t EPCR0;           /*!< [0x1C0] Endpoint Control Register 0 */
+    __IO hw_usbhs_epcr1_t EPCR1;           /*!< [0x1C4] Endpoint Control Register n */
+    __IO hw_usbhs_epcr2_t EPCR2;           /*!< [0x1C8] Endpoint Control Register n */
+    __IO hw_usbhs_epcr3_t EPCR3;           /*!< [0x1CC] Endpoint Control Register n */
     uint8_t _reserved8[48];
-    __IO hw_usbhs_usbgenctrl_t USBGENCTRL; //!< [0x200] USB General Control Register
+    __IO hw_usbhs_usbgenctrl_t USBGENCTRL; /*!< [0x200] USB General Control Register */
 } hw_usbhs_t;
 #pragma pack()
 
-//! @brief Macro to access all USBHS registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_USBHS</code>.
-#define HW_USBHS       (*(hw_usbhs_t *) REGS_USBHS_BASE)
+/*! @brief Macro to access all USBHS registers. */
+/*! @param x USBHS module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_USBHS(USBHS_BASE)</code>. */
+#define HW_USBHS(x)    (*(hw_usbhs_t *)(x))
+
+/*
+** End of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma pop
+#elif defined(__CWCC__)
+  #pragma pop
+#elif defined(__GNUC__)
+  /* leave anonymous unions enabled */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=default
+#else
+  #error Not supported compiler type
 #endif
 
-#endif // __HW_USBHS_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_USBHS_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

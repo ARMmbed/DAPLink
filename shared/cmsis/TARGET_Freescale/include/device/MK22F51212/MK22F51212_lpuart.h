@@ -21,7 +21,8 @@
 #ifndef __HW_LPUART_REGISTERS_H__
 #define __HW_LPUART_REGISTERS_H__
 
-#include "regs.h"
+#include "MK22F51212.h"
+#include "fsl_bitband.h"
 
 /*
  * MK22F51212 LPUART
@@ -39,19 +40,12 @@
  * - hw_lpuart_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_LPUART_BASE
-#define HW_LPUART_INSTANCE_COUNT (1U) //!< Number of instances of the LPUART module.
-#define REGS_LPUART_BASE (0x4002A000U) //!< Base address for LPUART0.
-#endif
-//@}
+#define HW_LPUART_INSTANCE_COUNT (1U) /*!< Number of instances of the LPUART module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_BAUD - LPUART Baud Rate Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_BAUD - LPUART Baud Rate Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_BAUD - LPUART Baud Rate Register (RW)
  *
@@ -62,40 +56,38 @@ typedef union _hw_lpuart_baud
     uint32_t U;
     struct _hw_lpuart_baud_bitfields
     {
-        uint32_t SBR : 13;             //!< [12:0] Baud Rate Modulo Divisor.
-        uint32_t SBNS : 1;             //!< [13] Stop Bit Number Select
-        uint32_t RXEDGIE : 1;          //!< [14] RX Input Active Edge Interrupt Enable
-        uint32_t LBKDIE : 1;           //!< [15] LIN Break Detect Interrupt Enable
-        uint32_t RESYNCDIS : 1;        //!< [16] Resynchronization Disable
-        uint32_t BOTHEDGE : 1;         //!< [17] Both Edge Sampling
-        uint32_t MATCFG : 2;           //!< [19:18] Match Configuration
-        uint32_t RESERVED0 : 1;        //!< [20]
-        uint32_t RDMAE : 1;            //!< [21] Receiver Full DMA Enable
-        uint32_t RESERVED1 : 1;        //!< [22]
-        uint32_t TDMAE : 1;            //!< [23] Transmitter DMA Enable
-        uint32_t OSR : 5;              //!< [28:24] Over Sampling Ratio
-        uint32_t M10 : 1;              //!< [29] 10-bit Mode select
-        uint32_t MAEN2 : 1;            //!< [30] Match Address Mode Enable 2
-        uint32_t MAEN1 : 1;            //!< [31] Match Address Mode Enable 1
+        uint32_t SBR : 13;             /*!< [12:0] Baud Rate Modulo Divisor. */
+        uint32_t SBNS : 1;             /*!< [13] Stop Bit Number Select */
+        uint32_t RXEDGIE : 1;          /*!< [14] RX Input Active Edge Interrupt Enable
+                                        * */
+        uint32_t LBKDIE : 1;           /*!< [15] LIN Break Detect Interrupt Enable */
+        uint32_t RESYNCDIS : 1;        /*!< [16] Resynchronization Disable */
+        uint32_t BOTHEDGE : 1;         /*!< [17] Both Edge Sampling */
+        uint32_t MATCFG : 2;           /*!< [19:18] Match Configuration */
+        uint32_t RESERVED0 : 1;        /*!< [20]  */
+        uint32_t RDMAE : 1;            /*!< [21] Receiver Full DMA Enable */
+        uint32_t RESERVED1 : 1;        /*!< [22]  */
+        uint32_t TDMAE : 1;            /*!< [23] Transmitter DMA Enable */
+        uint32_t OSR : 5;              /*!< [28:24] Over Sampling Ratio */
+        uint32_t M10 : 1;              /*!< [29] 10-bit Mode select */
+        uint32_t MAEN2 : 1;            /*!< [30] Match Address Mode Enable 2 */
+        uint32_t MAEN1 : 1;            /*!< [31] Match Address Mode Enable 1 */
     } B;
 } hw_lpuart_baud_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_BAUD register
  */
-//@{
-#define HW_LPUART_BAUD_ADDR      (REGS_LPUART_BASE + 0x0U)
+/*@{*/
+#define HW_LPUART_BAUD_ADDR(x)   ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_BAUD           (*(__IO hw_lpuart_baud_t *) HW_LPUART_BAUD_ADDR)
-#define HW_LPUART_BAUD_RD()      (HW_LPUART_BAUD.U)
-#define HW_LPUART_BAUD_WR(v)     (HW_LPUART_BAUD.U = (v))
-#define HW_LPUART_BAUD_SET(v)    (HW_LPUART_BAUD_WR(HW_LPUART_BAUD_RD() |  (v)))
-#define HW_LPUART_BAUD_CLR(v)    (HW_LPUART_BAUD_WR(HW_LPUART_BAUD_RD() & ~(v)))
-#define HW_LPUART_BAUD_TOG(v)    (HW_LPUART_BAUD_WR(HW_LPUART_BAUD_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_BAUD(x)        (*(__IO hw_lpuart_baud_t *) HW_LPUART_BAUD_ADDR(x))
+#define HW_LPUART_BAUD_RD(x)     (HW_LPUART_BAUD(x).U)
+#define HW_LPUART_BAUD_WR(x, v)  (HW_LPUART_BAUD(x).U = (v))
+#define HW_LPUART_BAUD_SET(x, v) (HW_LPUART_BAUD_WR(x, HW_LPUART_BAUD_RD(x) |  (v)))
+#define HW_LPUART_BAUD_CLR(x, v) (HW_LPUART_BAUD_WR(x, HW_LPUART_BAUD_RD(x) & ~(v)))
+#define HW_LPUART_BAUD_TOG(x, v) (HW_LPUART_BAUD_WR(x, HW_LPUART_BAUD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_BAUD bitfields
@@ -110,24 +102,20 @@ typedef union _hw_lpuart_baud
  * transmitter and receiver are both disabled (LPUART_CTRL[RE] and LPUART_CTRL[TE] are
  * both 0).
  */
-//@{
-#define BP_LPUART_BAUD_SBR   (0U)          //!< Bit position for LPUART_BAUD_SBR.
-#define BM_LPUART_BAUD_SBR   (0x00001FFFU) //!< Bit mask for LPUART_BAUD_SBR.
-#define BS_LPUART_BAUD_SBR   (13U)         //!< Bit field size in bits for LPUART_BAUD_SBR.
+/*@{*/
+#define BP_LPUART_BAUD_SBR   (0U)          /*!< Bit position for LPUART_BAUD_SBR. */
+#define BM_LPUART_BAUD_SBR   (0x00001FFFU) /*!< Bit mask for LPUART_BAUD_SBR. */
+#define BS_LPUART_BAUD_SBR   (13U)         /*!< Bit field size in bits for LPUART_BAUD_SBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_SBR field.
-#define BR_LPUART_BAUD_SBR   (HW_LPUART_BAUD.B.SBR)
-#endif
+/*! @brief Read current value of the LPUART_BAUD_SBR field. */
+#define BR_LPUART_BAUD_SBR(x) (HW_LPUART_BAUD(x).B.SBR)
 
-//! @brief Format value for bitfield LPUART_BAUD_SBR.
-#define BF_LPUART_BAUD_SBR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_SBR), uint32_t) & BM_LPUART_BAUD_SBR)
+/*! @brief Format value for bitfield LPUART_BAUD_SBR. */
+#define BF_LPUART_BAUD_SBR(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_SBR) & BM_LPUART_BAUD_SBR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBR field to a new value.
-#define BW_LPUART_BAUD_SBR(v) (HW_LPUART_BAUD_WR((HW_LPUART_BAUD_RD() & ~BM_LPUART_BAUD_SBR) | BF_LPUART_BAUD_SBR(v)))
-#endif
-//@}
+/*! @brief Set the SBR field to a new value. */
+#define BW_LPUART_BAUD_SBR(x, v) (HW_LPUART_BAUD_WR(x, (HW_LPUART_BAUD_RD(x) & ~BM_LPUART_BAUD_SBR) | BF_LPUART_BAUD_SBR(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field SBNS[13] (RW)
@@ -139,24 +127,20 @@ typedef union _hw_lpuart_baud
  * - 0 - One stop bit.
  * - 1 - Two stop bits.
  */
-//@{
-#define BP_LPUART_BAUD_SBNS  (13U)         //!< Bit position for LPUART_BAUD_SBNS.
-#define BM_LPUART_BAUD_SBNS  (0x00002000U) //!< Bit mask for LPUART_BAUD_SBNS.
-#define BS_LPUART_BAUD_SBNS  (1U)          //!< Bit field size in bits for LPUART_BAUD_SBNS.
+/*@{*/
+#define BP_LPUART_BAUD_SBNS  (13U)         /*!< Bit position for LPUART_BAUD_SBNS. */
+#define BM_LPUART_BAUD_SBNS  (0x00002000U) /*!< Bit mask for LPUART_BAUD_SBNS. */
+#define BS_LPUART_BAUD_SBNS  (1U)          /*!< Bit field size in bits for LPUART_BAUD_SBNS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_SBNS field.
-#define BR_LPUART_BAUD_SBNS  (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_SBNS))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_SBNS field. */
+#define BR_LPUART_BAUD_SBNS(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_SBNS))
 
-//! @brief Format value for bitfield LPUART_BAUD_SBNS.
-#define BF_LPUART_BAUD_SBNS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_SBNS), uint32_t) & BM_LPUART_BAUD_SBNS)
+/*! @brief Format value for bitfield LPUART_BAUD_SBNS. */
+#define BF_LPUART_BAUD_SBNS(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_SBNS) & BM_LPUART_BAUD_SBNS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBNS field to a new value.
-#define BW_LPUART_BAUD_SBNS(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_SBNS) = (v))
-#endif
-//@}
+/*! @brief Set the SBNS field to a new value. */
+#define BW_LPUART_BAUD_SBNS(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_SBNS) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field RXEDGIE[14] (RW)
@@ -169,24 +153,20 @@ typedef union _hw_lpuart_baud
  * - 0 - Hardware interrupts from LPUART_STAT[RXEDGIF] disabled (use polling).
  * - 1 - Hardware interrupt requested when LPUART_STAT[RXEDGIF] flag is 1.
  */
-//@{
-#define BP_LPUART_BAUD_RXEDGIE (14U)       //!< Bit position for LPUART_BAUD_RXEDGIE.
-#define BM_LPUART_BAUD_RXEDGIE (0x00004000U) //!< Bit mask for LPUART_BAUD_RXEDGIE.
-#define BS_LPUART_BAUD_RXEDGIE (1U)        //!< Bit field size in bits for LPUART_BAUD_RXEDGIE.
+/*@{*/
+#define BP_LPUART_BAUD_RXEDGIE (14U)       /*!< Bit position for LPUART_BAUD_RXEDGIE. */
+#define BM_LPUART_BAUD_RXEDGIE (0x00004000U) /*!< Bit mask for LPUART_BAUD_RXEDGIE. */
+#define BS_LPUART_BAUD_RXEDGIE (1U)        /*!< Bit field size in bits for LPUART_BAUD_RXEDGIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_RXEDGIE field.
-#define BR_LPUART_BAUD_RXEDGIE (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RXEDGIE))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_RXEDGIE field. */
+#define BR_LPUART_BAUD_RXEDGIE(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RXEDGIE))
 
-//! @brief Format value for bitfield LPUART_BAUD_RXEDGIE.
-#define BF_LPUART_BAUD_RXEDGIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_RXEDGIE), uint32_t) & BM_LPUART_BAUD_RXEDGIE)
+/*! @brief Format value for bitfield LPUART_BAUD_RXEDGIE. */
+#define BF_LPUART_BAUD_RXEDGIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_RXEDGIE) & BM_LPUART_BAUD_RXEDGIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXEDGIE field to a new value.
-#define BW_LPUART_BAUD_RXEDGIE(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RXEDGIE) = (v))
-#endif
-//@}
+/*! @brief Set the RXEDGIE field to a new value. */
+#define BW_LPUART_BAUD_RXEDGIE(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RXEDGIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field LBKDIE[15] (RW)
@@ -198,24 +178,20 @@ typedef union _hw_lpuart_baud
  * - 0 - Hardware interrupts from LPUART_STAT[LBKDIF] disabled (use polling).
  * - 1 - Hardware interrupt requested when LPUART_STAT[LBKDIF] flag is 1.
  */
-//@{
-#define BP_LPUART_BAUD_LBKDIE (15U)        //!< Bit position for LPUART_BAUD_LBKDIE.
-#define BM_LPUART_BAUD_LBKDIE (0x00008000U) //!< Bit mask for LPUART_BAUD_LBKDIE.
-#define BS_LPUART_BAUD_LBKDIE (1U)         //!< Bit field size in bits for LPUART_BAUD_LBKDIE.
+/*@{*/
+#define BP_LPUART_BAUD_LBKDIE (15U)        /*!< Bit position for LPUART_BAUD_LBKDIE. */
+#define BM_LPUART_BAUD_LBKDIE (0x00008000U) /*!< Bit mask for LPUART_BAUD_LBKDIE. */
+#define BS_LPUART_BAUD_LBKDIE (1U)         /*!< Bit field size in bits for LPUART_BAUD_LBKDIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_LBKDIE field.
-#define BR_LPUART_BAUD_LBKDIE (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_LBKDIE))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_LBKDIE field. */
+#define BR_LPUART_BAUD_LBKDIE(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_LBKDIE))
 
-//! @brief Format value for bitfield LPUART_BAUD_LBKDIE.
-#define BF_LPUART_BAUD_LBKDIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_LBKDIE), uint32_t) & BM_LPUART_BAUD_LBKDIE)
+/*! @brief Format value for bitfield LPUART_BAUD_LBKDIE. */
+#define BF_LPUART_BAUD_LBKDIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_LBKDIE) & BM_LPUART_BAUD_LBKDIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDIE field to a new value.
-#define BW_LPUART_BAUD_LBKDIE(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_LBKDIE) = (v))
-#endif
-//@}
+/*! @brief Set the LBKDIE field to a new value. */
+#define BW_LPUART_BAUD_LBKDIE(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_LBKDIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field RESYNCDIS[16] (RW)
@@ -228,24 +204,20 @@ typedef union _hw_lpuart_baud
  * - 0 - Resynchronization during received data word is supported
  * - 1 - Resynchronization during received data word is disabled
  */
-//@{
-#define BP_LPUART_BAUD_RESYNCDIS (16U)     //!< Bit position for LPUART_BAUD_RESYNCDIS.
-#define BM_LPUART_BAUD_RESYNCDIS (0x00010000U) //!< Bit mask for LPUART_BAUD_RESYNCDIS.
-#define BS_LPUART_BAUD_RESYNCDIS (1U)      //!< Bit field size in bits for LPUART_BAUD_RESYNCDIS.
+/*@{*/
+#define BP_LPUART_BAUD_RESYNCDIS (16U)     /*!< Bit position for LPUART_BAUD_RESYNCDIS. */
+#define BM_LPUART_BAUD_RESYNCDIS (0x00010000U) /*!< Bit mask for LPUART_BAUD_RESYNCDIS. */
+#define BS_LPUART_BAUD_RESYNCDIS (1U)      /*!< Bit field size in bits for LPUART_BAUD_RESYNCDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_RESYNCDIS field.
-#define BR_LPUART_BAUD_RESYNCDIS (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RESYNCDIS))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_RESYNCDIS field. */
+#define BR_LPUART_BAUD_RESYNCDIS(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RESYNCDIS))
 
-//! @brief Format value for bitfield LPUART_BAUD_RESYNCDIS.
-#define BF_LPUART_BAUD_RESYNCDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_RESYNCDIS), uint32_t) & BM_LPUART_BAUD_RESYNCDIS)
+/*! @brief Format value for bitfield LPUART_BAUD_RESYNCDIS. */
+#define BF_LPUART_BAUD_RESYNCDIS(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_RESYNCDIS) & BM_LPUART_BAUD_RESYNCDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESYNCDIS field to a new value.
-#define BW_LPUART_BAUD_RESYNCDIS(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RESYNCDIS) = (v))
-#endif
-//@}
+/*! @brief Set the RESYNCDIS field to a new value. */
+#define BW_LPUART_BAUD_RESYNCDIS(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RESYNCDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field BOTHEDGE[17] (RW)
@@ -262,24 +234,20 @@ typedef union _hw_lpuart_baud
  * - 1 - Receiver samples input data using the rising and falling edge of the
  *     baud rate clock.
  */
-//@{
-#define BP_LPUART_BAUD_BOTHEDGE (17U)      //!< Bit position for LPUART_BAUD_BOTHEDGE.
-#define BM_LPUART_BAUD_BOTHEDGE (0x00020000U) //!< Bit mask for LPUART_BAUD_BOTHEDGE.
-#define BS_LPUART_BAUD_BOTHEDGE (1U)       //!< Bit field size in bits for LPUART_BAUD_BOTHEDGE.
+/*@{*/
+#define BP_LPUART_BAUD_BOTHEDGE (17U)      /*!< Bit position for LPUART_BAUD_BOTHEDGE. */
+#define BM_LPUART_BAUD_BOTHEDGE (0x00020000U) /*!< Bit mask for LPUART_BAUD_BOTHEDGE. */
+#define BS_LPUART_BAUD_BOTHEDGE (1U)       /*!< Bit field size in bits for LPUART_BAUD_BOTHEDGE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_BOTHEDGE field.
-#define BR_LPUART_BAUD_BOTHEDGE (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_BOTHEDGE))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_BOTHEDGE field. */
+#define BR_LPUART_BAUD_BOTHEDGE(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_BOTHEDGE))
 
-//! @brief Format value for bitfield LPUART_BAUD_BOTHEDGE.
-#define BF_LPUART_BAUD_BOTHEDGE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_BOTHEDGE), uint32_t) & BM_LPUART_BAUD_BOTHEDGE)
+/*! @brief Format value for bitfield LPUART_BAUD_BOTHEDGE. */
+#define BF_LPUART_BAUD_BOTHEDGE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_BOTHEDGE) & BM_LPUART_BAUD_BOTHEDGE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BOTHEDGE field to a new value.
-#define BW_LPUART_BAUD_BOTHEDGE(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_BOTHEDGE) = (v))
-#endif
-//@}
+/*! @brief Set the BOTHEDGE field to a new value. */
+#define BW_LPUART_BAUD_BOTHEDGE(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_BOTHEDGE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field MATCFG[19:18] (RW)
@@ -292,24 +260,20 @@ typedef union _hw_lpuart_baud
  * - 10 - Match On and Match Off
  * - 11 - Enables RWU on Data Match and Match On/Off for transmitter CTS input
  */
-//@{
-#define BP_LPUART_BAUD_MATCFG (18U)        //!< Bit position for LPUART_BAUD_MATCFG.
-#define BM_LPUART_BAUD_MATCFG (0x000C0000U) //!< Bit mask for LPUART_BAUD_MATCFG.
-#define BS_LPUART_BAUD_MATCFG (2U)         //!< Bit field size in bits for LPUART_BAUD_MATCFG.
+/*@{*/
+#define BP_LPUART_BAUD_MATCFG (18U)        /*!< Bit position for LPUART_BAUD_MATCFG. */
+#define BM_LPUART_BAUD_MATCFG (0x000C0000U) /*!< Bit mask for LPUART_BAUD_MATCFG. */
+#define BS_LPUART_BAUD_MATCFG (2U)         /*!< Bit field size in bits for LPUART_BAUD_MATCFG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_MATCFG field.
-#define BR_LPUART_BAUD_MATCFG (HW_LPUART_BAUD.B.MATCFG)
-#endif
+/*! @brief Read current value of the LPUART_BAUD_MATCFG field. */
+#define BR_LPUART_BAUD_MATCFG(x) (HW_LPUART_BAUD(x).B.MATCFG)
 
-//! @brief Format value for bitfield LPUART_BAUD_MATCFG.
-#define BF_LPUART_BAUD_MATCFG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_MATCFG), uint32_t) & BM_LPUART_BAUD_MATCFG)
+/*! @brief Format value for bitfield LPUART_BAUD_MATCFG. */
+#define BF_LPUART_BAUD_MATCFG(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_MATCFG) & BM_LPUART_BAUD_MATCFG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MATCFG field to a new value.
-#define BW_LPUART_BAUD_MATCFG(v) (HW_LPUART_BAUD_WR((HW_LPUART_BAUD_RD() & ~BM_LPUART_BAUD_MATCFG) | BF_LPUART_BAUD_MATCFG(v)))
-#endif
-//@}
+/*! @brief Set the MATCFG field to a new value. */
+#define BW_LPUART_BAUD_MATCFG(x, v) (HW_LPUART_BAUD_WR(x, (HW_LPUART_BAUD_RD(x) & ~BM_LPUART_BAUD_MATCFG) | BF_LPUART_BAUD_MATCFG(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field RDMAE[21] (RW)
@@ -321,24 +285,20 @@ typedef union _hw_lpuart_baud
  * - 0 - DMA request disabled.
  * - 1 - DMA request enabled.
  */
-//@{
-#define BP_LPUART_BAUD_RDMAE (21U)         //!< Bit position for LPUART_BAUD_RDMAE.
-#define BM_LPUART_BAUD_RDMAE (0x00200000U) //!< Bit mask for LPUART_BAUD_RDMAE.
-#define BS_LPUART_BAUD_RDMAE (1U)          //!< Bit field size in bits for LPUART_BAUD_RDMAE.
+/*@{*/
+#define BP_LPUART_BAUD_RDMAE (21U)         /*!< Bit position for LPUART_BAUD_RDMAE. */
+#define BM_LPUART_BAUD_RDMAE (0x00200000U) /*!< Bit mask for LPUART_BAUD_RDMAE. */
+#define BS_LPUART_BAUD_RDMAE (1U)          /*!< Bit field size in bits for LPUART_BAUD_RDMAE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_RDMAE field.
-#define BR_LPUART_BAUD_RDMAE (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RDMAE))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_RDMAE field. */
+#define BR_LPUART_BAUD_RDMAE(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RDMAE))
 
-//! @brief Format value for bitfield LPUART_BAUD_RDMAE.
-#define BF_LPUART_BAUD_RDMAE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_RDMAE), uint32_t) & BM_LPUART_BAUD_RDMAE)
+/*! @brief Format value for bitfield LPUART_BAUD_RDMAE. */
+#define BF_LPUART_BAUD_RDMAE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_RDMAE) & BM_LPUART_BAUD_RDMAE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDMAE field to a new value.
-#define BW_LPUART_BAUD_RDMAE(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_RDMAE) = (v))
-#endif
-//@}
+/*! @brief Set the RDMAE field to a new value. */
+#define BW_LPUART_BAUD_RDMAE(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_RDMAE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field TDMAE[23] (RW)
@@ -350,24 +310,20 @@ typedef union _hw_lpuart_baud
  * - 0 - DMA request disabled.
  * - 1 - DMA request enabled.
  */
-//@{
-#define BP_LPUART_BAUD_TDMAE (23U)         //!< Bit position for LPUART_BAUD_TDMAE.
-#define BM_LPUART_BAUD_TDMAE (0x00800000U) //!< Bit mask for LPUART_BAUD_TDMAE.
-#define BS_LPUART_BAUD_TDMAE (1U)          //!< Bit field size in bits for LPUART_BAUD_TDMAE.
+/*@{*/
+#define BP_LPUART_BAUD_TDMAE (23U)         /*!< Bit position for LPUART_BAUD_TDMAE. */
+#define BM_LPUART_BAUD_TDMAE (0x00800000U) /*!< Bit mask for LPUART_BAUD_TDMAE. */
+#define BS_LPUART_BAUD_TDMAE (1U)          /*!< Bit field size in bits for LPUART_BAUD_TDMAE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_TDMAE field.
-#define BR_LPUART_BAUD_TDMAE (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_TDMAE))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_TDMAE field. */
+#define BR_LPUART_BAUD_TDMAE(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_TDMAE))
 
-//! @brief Format value for bitfield LPUART_BAUD_TDMAE.
-#define BF_LPUART_BAUD_TDMAE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_TDMAE), uint32_t) & BM_LPUART_BAUD_TDMAE)
+/*! @brief Format value for bitfield LPUART_BAUD_TDMAE. */
+#define BF_LPUART_BAUD_TDMAE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_TDMAE) & BM_LPUART_BAUD_TDMAE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDMAE field to a new value.
-#define BW_LPUART_BAUD_TDMAE(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_TDMAE) = (v))
-#endif
-//@}
+/*! @brief Set the TDMAE field to a new value. */
+#define BW_LPUART_BAUD_TDMAE(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_TDMAE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field OSR[28:24] (RW)
@@ -377,24 +333,20 @@ typedef union _hw_lpuart_baud
  * oversampling ratio of 16 (01111). This field should only be changed when the
  * transmitter and receiver are both disabled.
  */
-//@{
-#define BP_LPUART_BAUD_OSR   (24U)         //!< Bit position for LPUART_BAUD_OSR.
-#define BM_LPUART_BAUD_OSR   (0x1F000000U) //!< Bit mask for LPUART_BAUD_OSR.
-#define BS_LPUART_BAUD_OSR   (5U)          //!< Bit field size in bits for LPUART_BAUD_OSR.
+/*@{*/
+#define BP_LPUART_BAUD_OSR   (24U)         /*!< Bit position for LPUART_BAUD_OSR. */
+#define BM_LPUART_BAUD_OSR   (0x1F000000U) /*!< Bit mask for LPUART_BAUD_OSR. */
+#define BS_LPUART_BAUD_OSR   (5U)          /*!< Bit field size in bits for LPUART_BAUD_OSR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_OSR field.
-#define BR_LPUART_BAUD_OSR   (HW_LPUART_BAUD.B.OSR)
-#endif
+/*! @brief Read current value of the LPUART_BAUD_OSR field. */
+#define BR_LPUART_BAUD_OSR(x) (HW_LPUART_BAUD(x).B.OSR)
 
-//! @brief Format value for bitfield LPUART_BAUD_OSR.
-#define BF_LPUART_BAUD_OSR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_OSR), uint32_t) & BM_LPUART_BAUD_OSR)
+/*! @brief Format value for bitfield LPUART_BAUD_OSR. */
+#define BF_LPUART_BAUD_OSR(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_OSR) & BM_LPUART_BAUD_OSR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OSR field to a new value.
-#define BW_LPUART_BAUD_OSR(v) (HW_LPUART_BAUD_WR((HW_LPUART_BAUD_RD() & ~BM_LPUART_BAUD_OSR) | BF_LPUART_BAUD_OSR(v)))
-#endif
-//@}
+/*! @brief Set the OSR field to a new value. */
+#define BW_LPUART_BAUD_OSR(x, v) (HW_LPUART_BAUD_WR(x, (HW_LPUART_BAUD_RD(x) & ~BM_LPUART_BAUD_OSR) | BF_LPUART_BAUD_OSR(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field M10[29] (RW)
@@ -406,24 +358,20 @@ typedef union _hw_lpuart_baud
  * - 0 - Receiver and transmitter use 8-bit or 9-bit data characters.
  * - 1 - Receiver and transmitter use 10-bit data characters.
  */
-//@{
-#define BP_LPUART_BAUD_M10   (29U)         //!< Bit position for LPUART_BAUD_M10.
-#define BM_LPUART_BAUD_M10   (0x20000000U) //!< Bit mask for LPUART_BAUD_M10.
-#define BS_LPUART_BAUD_M10   (1U)          //!< Bit field size in bits for LPUART_BAUD_M10.
+/*@{*/
+#define BP_LPUART_BAUD_M10   (29U)         /*!< Bit position for LPUART_BAUD_M10. */
+#define BM_LPUART_BAUD_M10   (0x20000000U) /*!< Bit mask for LPUART_BAUD_M10. */
+#define BS_LPUART_BAUD_M10   (1U)          /*!< Bit field size in bits for LPUART_BAUD_M10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_M10 field.
-#define BR_LPUART_BAUD_M10   (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_M10))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_M10 field. */
+#define BR_LPUART_BAUD_M10(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_M10))
 
-//! @brief Format value for bitfield LPUART_BAUD_M10.
-#define BF_LPUART_BAUD_M10(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_M10), uint32_t) & BM_LPUART_BAUD_M10)
+/*! @brief Format value for bitfield LPUART_BAUD_M10. */
+#define BF_LPUART_BAUD_M10(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_M10) & BM_LPUART_BAUD_M10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M10 field to a new value.
-#define BW_LPUART_BAUD_M10(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_M10) = (v))
-#endif
-//@}
+/*! @brief Set the M10 field to a new value. */
+#define BW_LPUART_BAUD_M10(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_M10) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field MAEN2[30] (RW)
@@ -432,24 +380,20 @@ typedef union _hw_lpuart_baud
  * - 0 - Normal operation.
  * - 1 - Enables automatic address matching or data matching mode for MATCH[MA2].
  */
-//@{
-#define BP_LPUART_BAUD_MAEN2 (30U)         //!< Bit position for LPUART_BAUD_MAEN2.
-#define BM_LPUART_BAUD_MAEN2 (0x40000000U) //!< Bit mask for LPUART_BAUD_MAEN2.
-#define BS_LPUART_BAUD_MAEN2 (1U)          //!< Bit field size in bits for LPUART_BAUD_MAEN2.
+/*@{*/
+#define BP_LPUART_BAUD_MAEN2 (30U)         /*!< Bit position for LPUART_BAUD_MAEN2. */
+#define BM_LPUART_BAUD_MAEN2 (0x40000000U) /*!< Bit mask for LPUART_BAUD_MAEN2. */
+#define BS_LPUART_BAUD_MAEN2 (1U)          /*!< Bit field size in bits for LPUART_BAUD_MAEN2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_MAEN2 field.
-#define BR_LPUART_BAUD_MAEN2 (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_MAEN2))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_MAEN2 field. */
+#define BR_LPUART_BAUD_MAEN2(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_MAEN2))
 
-//! @brief Format value for bitfield LPUART_BAUD_MAEN2.
-#define BF_LPUART_BAUD_MAEN2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_MAEN2), uint32_t) & BM_LPUART_BAUD_MAEN2)
+/*! @brief Format value for bitfield LPUART_BAUD_MAEN2. */
+#define BF_LPUART_BAUD_MAEN2(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_MAEN2) & BM_LPUART_BAUD_MAEN2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MAEN2 field to a new value.
-#define BW_LPUART_BAUD_MAEN2(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_MAEN2) = (v))
-#endif
-//@}
+/*! @brief Set the MAEN2 field to a new value. */
+#define BW_LPUART_BAUD_MAEN2(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_MAEN2) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_BAUD, field MAEN1[31] (RW)
@@ -458,30 +402,25 @@ typedef union _hw_lpuart_baud
  * - 0 - Normal operation.
  * - 1 - Enables automatic address matching or data matching mode for MATCH[MA1].
  */
-//@{
-#define BP_LPUART_BAUD_MAEN1 (31U)         //!< Bit position for LPUART_BAUD_MAEN1.
-#define BM_LPUART_BAUD_MAEN1 (0x80000000U) //!< Bit mask for LPUART_BAUD_MAEN1.
-#define BS_LPUART_BAUD_MAEN1 (1U)          //!< Bit field size in bits for LPUART_BAUD_MAEN1.
+/*@{*/
+#define BP_LPUART_BAUD_MAEN1 (31U)         /*!< Bit position for LPUART_BAUD_MAEN1. */
+#define BM_LPUART_BAUD_MAEN1 (0x80000000U) /*!< Bit mask for LPUART_BAUD_MAEN1. */
+#define BS_LPUART_BAUD_MAEN1 (1U)          /*!< Bit field size in bits for LPUART_BAUD_MAEN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_BAUD_MAEN1 field.
-#define BR_LPUART_BAUD_MAEN1 (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_MAEN1))
-#endif
+/*! @brief Read current value of the LPUART_BAUD_MAEN1 field. */
+#define BR_LPUART_BAUD_MAEN1(x) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_MAEN1))
 
-//! @brief Format value for bitfield LPUART_BAUD_MAEN1.
-#define BF_LPUART_BAUD_MAEN1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_BAUD_MAEN1), uint32_t) & BM_LPUART_BAUD_MAEN1)
+/*! @brief Format value for bitfield LPUART_BAUD_MAEN1. */
+#define BF_LPUART_BAUD_MAEN1(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_BAUD_MAEN1) & BM_LPUART_BAUD_MAEN1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MAEN1 field to a new value.
-#define BW_LPUART_BAUD_MAEN1(v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR, BP_LPUART_BAUD_MAEN1) = (v))
-#endif
-//@}
+/*! @brief Set the MAEN1 field to a new value. */
+#define BW_LPUART_BAUD_MAEN1(x, v) (BITBAND_ACCESS32(HW_LPUART_BAUD_ADDR(x), BP_LPUART_BAUD_MAEN1) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_STAT - LPUART Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_STAT - LPUART Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_STAT - LPUART Status Register (RW)
  *
@@ -492,45 +431,42 @@ typedef union _hw_lpuart_stat
     uint32_t U;
     struct _hw_lpuart_stat_bitfields
     {
-        uint32_t RESERVED0 : 14;       //!< [13:0]
-        uint32_t MA2F : 1;             //!< [14] Match 2 Flag
-        uint32_t MA1F : 1;             //!< [15] Match 1 Flag
-        uint32_t PF : 1;               //!< [16] Parity Error Flag
-        uint32_t FE : 1;               //!< [17] Framing Error Flag
-        uint32_t NF : 1;               //!< [18] Noise Flag
-        uint32_t OR : 1;               //!< [19] Receiver Overrun Flag
-        uint32_t IDLE : 1;             //!< [20] Idle Line Flag
-        uint32_t RDRF : 1;             //!< [21] Receive Data Register Full Flag
-        uint32_t TC : 1;               //!< [22] Transmission Complete Flag
-        uint32_t TDRE : 1;             //!< [23] Transmit Data Register Empty Flag
-        uint32_t RAF : 1;              //!< [24] Receiver Active Flag
-        uint32_t LBKDE : 1;            //!< [25] LIN Break Detection Enable
-        uint32_t BRK13 : 1;            //!< [26] Break Character Generation Length
-        uint32_t RWUID : 1;            //!< [27] Receive Wake Up Idle Detect
-        uint32_t RXINV : 1;            //!< [28] Receive Data Inversion
-        uint32_t MSBF : 1;             //!< [29] MSB First
-        uint32_t RXEDGIF : 1;          //!< [30] LPUART_RX Pin Active Edge Interrupt
-                                       //! Flag
-        uint32_t LBKDIF : 1;           //!< [31] LIN Break Detect Interrupt Flag
+        uint32_t RESERVED0 : 14;       /*!< [13:0]  */
+        uint32_t MA2F : 1;             /*!< [14] Match 2 Flag */
+        uint32_t MA1F : 1;             /*!< [15] Match 1 Flag */
+        uint32_t PF : 1;               /*!< [16] Parity Error Flag */
+        uint32_t FE : 1;               /*!< [17] Framing Error Flag */
+        uint32_t NF : 1;               /*!< [18] Noise Flag */
+        uint32_t OR : 1;               /*!< [19] Receiver Overrun Flag */
+        uint32_t IDLE : 1;             /*!< [20] Idle Line Flag */
+        uint32_t RDRF : 1;             /*!< [21] Receive Data Register Full Flag */
+        uint32_t TC : 1;               /*!< [22] Transmission Complete Flag */
+        uint32_t TDRE : 1;             /*!< [23] Transmit Data Register Empty Flag */
+        uint32_t RAF : 1;              /*!< [24] Receiver Active Flag */
+        uint32_t LBKDE : 1;            /*!< [25] LIN Break Detection Enable */
+        uint32_t BRK13 : 1;            /*!< [26] Break Character Generation Length */
+        uint32_t RWUID : 1;            /*!< [27] Receive Wake Up Idle Detect */
+        uint32_t RXINV : 1;            /*!< [28] Receive Data Inversion */
+        uint32_t MSBF : 1;             /*!< [29] MSB First */
+        uint32_t RXEDGIF : 1;          /*!< [30] LPUART_RX Pin Active Edge Interrupt
+                                        * Flag */
+        uint32_t LBKDIF : 1;           /*!< [31] LIN Break Detect Interrupt Flag */
     } B;
 } hw_lpuart_stat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_STAT register
  */
-//@{
-#define HW_LPUART_STAT_ADDR      (REGS_LPUART_BASE + 0x4U)
+/*@{*/
+#define HW_LPUART_STAT_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_STAT           (*(__IO hw_lpuart_stat_t *) HW_LPUART_STAT_ADDR)
-#define HW_LPUART_STAT_RD()      (HW_LPUART_STAT.U)
-#define HW_LPUART_STAT_WR(v)     (HW_LPUART_STAT.U = (v))
-#define HW_LPUART_STAT_SET(v)    (HW_LPUART_STAT_WR(HW_LPUART_STAT_RD() |  (v)))
-#define HW_LPUART_STAT_CLR(v)    (HW_LPUART_STAT_WR(HW_LPUART_STAT_RD() & ~(v)))
-#define HW_LPUART_STAT_TOG(v)    (HW_LPUART_STAT_WR(HW_LPUART_STAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_STAT(x)        (*(__IO hw_lpuart_stat_t *) HW_LPUART_STAT_ADDR(x))
+#define HW_LPUART_STAT_RD(x)     (HW_LPUART_STAT(x).U)
+#define HW_LPUART_STAT_WR(x, v)  (HW_LPUART_STAT(x).U = (v))
+#define HW_LPUART_STAT_SET(x, v) (HW_LPUART_STAT_WR(x, HW_LPUART_STAT_RD(x) |  (v)))
+#define HW_LPUART_STAT_CLR(x, v) (HW_LPUART_STAT_WR(x, HW_LPUART_STAT_RD(x) & ~(v)))
+#define HW_LPUART_STAT_TOG(x, v) (HW_LPUART_STAT_WR(x, HW_LPUART_STAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_STAT bitfields
@@ -546,24 +482,20 @@ typedef union _hw_lpuart_stat
  * - 0 - Received data is not equal to MA2
  * - 1 - Received data is equal to MA2
  */
-//@{
-#define BP_LPUART_STAT_MA2F  (14U)         //!< Bit position for LPUART_STAT_MA2F.
-#define BM_LPUART_STAT_MA2F  (0x00004000U) //!< Bit mask for LPUART_STAT_MA2F.
-#define BS_LPUART_STAT_MA2F  (1U)          //!< Bit field size in bits for LPUART_STAT_MA2F.
+/*@{*/
+#define BP_LPUART_STAT_MA2F  (14U)         /*!< Bit position for LPUART_STAT_MA2F. */
+#define BM_LPUART_STAT_MA2F  (0x00004000U) /*!< Bit mask for LPUART_STAT_MA2F. */
+#define BS_LPUART_STAT_MA2F  (1U)          /*!< Bit field size in bits for LPUART_STAT_MA2F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_MA2F field.
-#define BR_LPUART_STAT_MA2F  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MA2F))
-#endif
+/*! @brief Read current value of the LPUART_STAT_MA2F field. */
+#define BR_LPUART_STAT_MA2F(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MA2F))
 
-//! @brief Format value for bitfield LPUART_STAT_MA2F.
-#define BF_LPUART_STAT_MA2F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_MA2F), uint32_t) & BM_LPUART_STAT_MA2F)
+/*! @brief Format value for bitfield LPUART_STAT_MA2F. */
+#define BF_LPUART_STAT_MA2F(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_MA2F) & BM_LPUART_STAT_MA2F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA2F field to a new value.
-#define BW_LPUART_STAT_MA2F(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MA2F) = (v))
-#endif
-//@}
+/*! @brief Set the MA2F field to a new value. */
+#define BW_LPUART_STAT_MA2F(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MA2F) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field MA1F[15] (W1C)
@@ -575,24 +507,20 @@ typedef union _hw_lpuart_stat
  * - 0 - Received data is not equal to MA1
  * - 1 - Received data is equal to MA1
  */
-//@{
-#define BP_LPUART_STAT_MA1F  (15U)         //!< Bit position for LPUART_STAT_MA1F.
-#define BM_LPUART_STAT_MA1F  (0x00008000U) //!< Bit mask for LPUART_STAT_MA1F.
-#define BS_LPUART_STAT_MA1F  (1U)          //!< Bit field size in bits for LPUART_STAT_MA1F.
+/*@{*/
+#define BP_LPUART_STAT_MA1F  (15U)         /*!< Bit position for LPUART_STAT_MA1F. */
+#define BM_LPUART_STAT_MA1F  (0x00008000U) /*!< Bit mask for LPUART_STAT_MA1F. */
+#define BS_LPUART_STAT_MA1F  (1U)          /*!< Bit field size in bits for LPUART_STAT_MA1F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_MA1F field.
-#define BR_LPUART_STAT_MA1F  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MA1F))
-#endif
+/*! @brief Read current value of the LPUART_STAT_MA1F field. */
+#define BR_LPUART_STAT_MA1F(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MA1F))
 
-//! @brief Format value for bitfield LPUART_STAT_MA1F.
-#define BF_LPUART_STAT_MA1F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_MA1F), uint32_t) & BM_LPUART_STAT_MA1F)
+/*! @brief Format value for bitfield LPUART_STAT_MA1F. */
+#define BF_LPUART_STAT_MA1F(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_MA1F) & BM_LPUART_STAT_MA1F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA1F field to a new value.
-#define BW_LPUART_STAT_MA1F(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MA1F) = (v))
-#endif
-//@}
+/*! @brief Set the MA1F field to a new value. */
+#define BW_LPUART_STAT_MA1F(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MA1F) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field PF[16] (W1C)
@@ -606,24 +534,20 @@ typedef union _hw_lpuart_stat
  * - 0 - No parity error.
  * - 1 - Parity error.
  */
-//@{
-#define BP_LPUART_STAT_PF    (16U)         //!< Bit position for LPUART_STAT_PF.
-#define BM_LPUART_STAT_PF    (0x00010000U) //!< Bit mask for LPUART_STAT_PF.
-#define BS_LPUART_STAT_PF    (1U)          //!< Bit field size in bits for LPUART_STAT_PF.
+/*@{*/
+#define BP_LPUART_STAT_PF    (16U)         /*!< Bit position for LPUART_STAT_PF. */
+#define BM_LPUART_STAT_PF    (0x00010000U) /*!< Bit mask for LPUART_STAT_PF. */
+#define BS_LPUART_STAT_PF    (1U)          /*!< Bit field size in bits for LPUART_STAT_PF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_PF field.
-#define BR_LPUART_STAT_PF    (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_PF))
-#endif
+/*! @brief Read current value of the LPUART_STAT_PF field. */
+#define BR_LPUART_STAT_PF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_PF))
 
-//! @brief Format value for bitfield LPUART_STAT_PF.
-#define BF_LPUART_STAT_PF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_PF), uint32_t) & BM_LPUART_STAT_PF)
+/*! @brief Format value for bitfield LPUART_STAT_PF. */
+#define BF_LPUART_STAT_PF(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_PF) & BM_LPUART_STAT_PF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PF field to a new value.
-#define BW_LPUART_STAT_PF(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_PF) = (v))
-#endif
-//@}
+/*! @brief Set the PF field to a new value. */
+#define BW_LPUART_STAT_PF(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_PF) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field FE[17] (W1C)
@@ -637,24 +561,20 @@ typedef union _hw_lpuart_stat
  *     correct.
  * - 1 - Framing error.
  */
-//@{
-#define BP_LPUART_STAT_FE    (17U)         //!< Bit position for LPUART_STAT_FE.
-#define BM_LPUART_STAT_FE    (0x00020000U) //!< Bit mask for LPUART_STAT_FE.
-#define BS_LPUART_STAT_FE    (1U)          //!< Bit field size in bits for LPUART_STAT_FE.
+/*@{*/
+#define BP_LPUART_STAT_FE    (17U)         /*!< Bit position for LPUART_STAT_FE. */
+#define BM_LPUART_STAT_FE    (0x00020000U) /*!< Bit mask for LPUART_STAT_FE. */
+#define BS_LPUART_STAT_FE    (1U)          /*!< Bit field size in bits for LPUART_STAT_FE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_FE field.
-#define BR_LPUART_STAT_FE    (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_FE))
-#endif
+/*! @brief Read current value of the LPUART_STAT_FE field. */
+#define BR_LPUART_STAT_FE(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_FE))
 
-//! @brief Format value for bitfield LPUART_STAT_FE.
-#define BF_LPUART_STAT_FE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_FE), uint32_t) & BM_LPUART_STAT_FE)
+/*! @brief Format value for bitfield LPUART_STAT_FE. */
+#define BF_LPUART_STAT_FE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_FE) & BM_LPUART_STAT_FE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FE field to a new value.
-#define BW_LPUART_STAT_FE(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_FE) = (v))
-#endif
-//@}
+/*! @brief Set the FE field to a new value. */
+#define BW_LPUART_STAT_FE(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_FE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field NF[18] (W1C)
@@ -670,24 +590,20 @@ typedef union _hw_lpuart_stat
  * - 0 - No noise detected.
  * - 1 - Noise detected in the received character in LPUART_DATA.
  */
-//@{
-#define BP_LPUART_STAT_NF    (18U)         //!< Bit position for LPUART_STAT_NF.
-#define BM_LPUART_STAT_NF    (0x00040000U) //!< Bit mask for LPUART_STAT_NF.
-#define BS_LPUART_STAT_NF    (1U)          //!< Bit field size in bits for LPUART_STAT_NF.
+/*@{*/
+#define BP_LPUART_STAT_NF    (18U)         /*!< Bit position for LPUART_STAT_NF. */
+#define BM_LPUART_STAT_NF    (0x00040000U) /*!< Bit mask for LPUART_STAT_NF. */
+#define BS_LPUART_STAT_NF    (1U)          /*!< Bit field size in bits for LPUART_STAT_NF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_NF field.
-#define BR_LPUART_STAT_NF    (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_NF))
-#endif
+/*! @brief Read current value of the LPUART_STAT_NF field. */
+#define BR_LPUART_STAT_NF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_NF))
 
-//! @brief Format value for bitfield LPUART_STAT_NF.
-#define BF_LPUART_STAT_NF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_NF), uint32_t) & BM_LPUART_STAT_NF)
+/*! @brief Format value for bitfield LPUART_STAT_NF. */
+#define BF_LPUART_STAT_NF(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_NF) & BM_LPUART_STAT_NF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NF field to a new value.
-#define BW_LPUART_STAT_NF(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_NF) = (v))
-#endif
-//@}
+/*! @brief Set the NF field to a new value. */
+#define BW_LPUART_STAT_NF(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_NF) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field OR[19] (W1C)
@@ -706,24 +622,20 @@ typedef union _hw_lpuart_stat
  * - 0 - No overrun.
  * - 1 - Receive overrun (new LPUART data lost).
  */
-//@{
-#define BP_LPUART_STAT_OR    (19U)         //!< Bit position for LPUART_STAT_OR.
-#define BM_LPUART_STAT_OR    (0x00080000U) //!< Bit mask for LPUART_STAT_OR.
-#define BS_LPUART_STAT_OR    (1U)          //!< Bit field size in bits for LPUART_STAT_OR.
+/*@{*/
+#define BP_LPUART_STAT_OR    (19U)         /*!< Bit position for LPUART_STAT_OR. */
+#define BM_LPUART_STAT_OR    (0x00080000U) /*!< Bit mask for LPUART_STAT_OR. */
+#define BS_LPUART_STAT_OR    (1U)          /*!< Bit field size in bits for LPUART_STAT_OR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_OR field.
-#define BR_LPUART_STAT_OR    (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_OR))
-#endif
+/*! @brief Read current value of the LPUART_STAT_OR field. */
+#define BR_LPUART_STAT_OR(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_OR))
 
-//! @brief Format value for bitfield LPUART_STAT_OR.
-#define BF_LPUART_STAT_OR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_OR), uint32_t) & BM_LPUART_STAT_OR)
+/*! @brief Format value for bitfield LPUART_STAT_OR. */
+#define BF_LPUART_STAT_OR(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_OR) & BM_LPUART_STAT_OR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OR field to a new value.
-#define BW_LPUART_STAT_OR(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_OR) = (v))
-#endif
-//@}
+/*! @brief Set the OR field to a new value. */
+#define BW_LPUART_STAT_OR(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_OR) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field IDLE[20] (W1C)
@@ -746,24 +658,20 @@ typedef union _hw_lpuart_stat
  * - 0 - No idle line detected.
  * - 1 - Idle line was detected.
  */
-//@{
-#define BP_LPUART_STAT_IDLE  (20U)         //!< Bit position for LPUART_STAT_IDLE.
-#define BM_LPUART_STAT_IDLE  (0x00100000U) //!< Bit mask for LPUART_STAT_IDLE.
-#define BS_LPUART_STAT_IDLE  (1U)          //!< Bit field size in bits for LPUART_STAT_IDLE.
+/*@{*/
+#define BP_LPUART_STAT_IDLE  (20U)         /*!< Bit position for LPUART_STAT_IDLE. */
+#define BM_LPUART_STAT_IDLE  (0x00100000U) /*!< Bit mask for LPUART_STAT_IDLE. */
+#define BS_LPUART_STAT_IDLE  (1U)          /*!< Bit field size in bits for LPUART_STAT_IDLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_IDLE field.
-#define BR_LPUART_STAT_IDLE  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_IDLE))
-#endif
+/*! @brief Read current value of the LPUART_STAT_IDLE field. */
+#define BR_LPUART_STAT_IDLE(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_IDLE))
 
-//! @brief Format value for bitfield LPUART_STAT_IDLE.
-#define BF_LPUART_STAT_IDLE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_IDLE), uint32_t) & BM_LPUART_STAT_IDLE)
+/*! @brief Format value for bitfield LPUART_STAT_IDLE. */
+#define BF_LPUART_STAT_IDLE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_IDLE) & BM_LPUART_STAT_IDLE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDLE field to a new value.
-#define BW_LPUART_STAT_IDLE(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_IDLE) = (v))
-#endif
-//@}
+/*! @brief Set the IDLE field to a new value. */
+#define BW_LPUART_STAT_IDLE(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_IDLE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field RDRF[21] (RO)
@@ -778,16 +686,14 @@ typedef union _hw_lpuart_stat
  * - 0 - Receive data buffer empty.
  * - 1 - Receive data buffer full.
  */
-//@{
-#define BP_LPUART_STAT_RDRF  (21U)         //!< Bit position for LPUART_STAT_RDRF.
-#define BM_LPUART_STAT_RDRF  (0x00200000U) //!< Bit mask for LPUART_STAT_RDRF.
-#define BS_LPUART_STAT_RDRF  (1U)          //!< Bit field size in bits for LPUART_STAT_RDRF.
+/*@{*/
+#define BP_LPUART_STAT_RDRF  (21U)         /*!< Bit position for LPUART_STAT_RDRF. */
+#define BM_LPUART_STAT_RDRF  (0x00200000U) /*!< Bit mask for LPUART_STAT_RDRF. */
+#define BS_LPUART_STAT_RDRF  (1U)          /*!< Bit field size in bits for LPUART_STAT_RDRF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_RDRF field.
-#define BR_LPUART_STAT_RDRF  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RDRF))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_STAT_RDRF field. */
+#define BR_LPUART_STAT_RDRF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RDRF))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field TC[22] (RO)
@@ -804,16 +710,14 @@ typedef union _hw_lpuart_stat
  * - 0 - Transmitter active (sending data, a preamble, or a break).
  * - 1 - Transmitter idle (transmission activity complete).
  */
-//@{
-#define BP_LPUART_STAT_TC    (22U)         //!< Bit position for LPUART_STAT_TC.
-#define BM_LPUART_STAT_TC    (0x00400000U) //!< Bit mask for LPUART_STAT_TC.
-#define BS_LPUART_STAT_TC    (1U)          //!< Bit field size in bits for LPUART_STAT_TC.
+/*@{*/
+#define BP_LPUART_STAT_TC    (22U)         /*!< Bit position for LPUART_STAT_TC. */
+#define BM_LPUART_STAT_TC    (0x00400000U) /*!< Bit mask for LPUART_STAT_TC. */
+#define BS_LPUART_STAT_TC    (1U)          /*!< Bit field size in bits for LPUART_STAT_TC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_TC field.
-#define BR_LPUART_STAT_TC    (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_TC))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_STAT_TC field. */
+#define BR_LPUART_STAT_TC(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_TC))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field TDRE[23] (RO)
@@ -827,16 +731,14 @@ typedef union _hw_lpuart_stat
  * - 0 - Transmit data buffer full.
  * - 1 - Transmit data buffer empty.
  */
-//@{
-#define BP_LPUART_STAT_TDRE  (23U)         //!< Bit position for LPUART_STAT_TDRE.
-#define BM_LPUART_STAT_TDRE  (0x00800000U) //!< Bit mask for LPUART_STAT_TDRE.
-#define BS_LPUART_STAT_TDRE  (1U)          //!< Bit field size in bits for LPUART_STAT_TDRE.
+/*@{*/
+#define BP_LPUART_STAT_TDRE  (23U)         /*!< Bit position for LPUART_STAT_TDRE. */
+#define BM_LPUART_STAT_TDRE  (0x00800000U) /*!< Bit mask for LPUART_STAT_TDRE. */
+#define BS_LPUART_STAT_TDRE  (1U)          /*!< Bit field size in bits for LPUART_STAT_TDRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_TDRE field.
-#define BR_LPUART_STAT_TDRE  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_TDRE))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_STAT_TDRE field. */
+#define BR_LPUART_STAT_TDRE(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_TDRE))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field RAF[24] (RO)
@@ -848,16 +750,14 @@ typedef union _hw_lpuart_stat
  * - 0 - LPUART receiver idle waiting for a start bit.
  * - 1 - LPUART receiver active (LPUART_RX input not idle).
  */
-//@{
-#define BP_LPUART_STAT_RAF   (24U)         //!< Bit position for LPUART_STAT_RAF.
-#define BM_LPUART_STAT_RAF   (0x01000000U) //!< Bit mask for LPUART_STAT_RAF.
-#define BS_LPUART_STAT_RAF   (1U)          //!< Bit field size in bits for LPUART_STAT_RAF.
+/*@{*/
+#define BP_LPUART_STAT_RAF   (24U)         /*!< Bit position for LPUART_STAT_RAF. */
+#define BM_LPUART_STAT_RAF   (0x01000000U) /*!< Bit mask for LPUART_STAT_RAF. */
+#define BS_LPUART_STAT_RAF   (1U)          /*!< Bit field size in bits for LPUART_STAT_RAF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_RAF field.
-#define BR_LPUART_STAT_RAF   (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RAF))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_STAT_RAF field. */
+#define BR_LPUART_STAT_RAF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RAF))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field LBKDE[25] (RW)
@@ -873,24 +773,20 @@ typedef union _hw_lpuart_stat
  *     0) or 12 (if M = 1, SBNS = 0 or M = 0, SBNS = 1) or 14 (if M = 1, SBNS =
  *     1 or M10 = 1, SNBS = 0) or 15 (if M10 = 1, SNBS = 1).
  */
-//@{
-#define BP_LPUART_STAT_LBKDE (25U)         //!< Bit position for LPUART_STAT_LBKDE.
-#define BM_LPUART_STAT_LBKDE (0x02000000U) //!< Bit mask for LPUART_STAT_LBKDE.
-#define BS_LPUART_STAT_LBKDE (1U)          //!< Bit field size in bits for LPUART_STAT_LBKDE.
+/*@{*/
+#define BP_LPUART_STAT_LBKDE (25U)         /*!< Bit position for LPUART_STAT_LBKDE. */
+#define BM_LPUART_STAT_LBKDE (0x02000000U) /*!< Bit mask for LPUART_STAT_LBKDE. */
+#define BS_LPUART_STAT_LBKDE (1U)          /*!< Bit field size in bits for LPUART_STAT_LBKDE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_LBKDE field.
-#define BR_LPUART_STAT_LBKDE (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_LBKDE))
-#endif
+/*! @brief Read current value of the LPUART_STAT_LBKDE field. */
+#define BR_LPUART_STAT_LBKDE(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_LBKDE))
 
-//! @brief Format value for bitfield LPUART_STAT_LBKDE.
-#define BF_LPUART_STAT_LBKDE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_LBKDE), uint32_t) & BM_LPUART_STAT_LBKDE)
+/*! @brief Format value for bitfield LPUART_STAT_LBKDE. */
+#define BF_LPUART_STAT_LBKDE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_LBKDE) & BM_LPUART_STAT_LBKDE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDE field to a new value.
-#define BW_LPUART_STAT_LBKDE(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_LBKDE) = (v))
-#endif
-//@}
+/*! @brief Set the LBKDE field to a new value. */
+#define BW_LPUART_STAT_LBKDE(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_LBKDE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field BRK13[26] (RW)
@@ -907,24 +803,20 @@ typedef union _hw_lpuart_stat
  *     SBNS = 0) or 14 (if M = 1, SBNS = 0 or M = 0, SBNS = 1) or 15 (if M = 1,
  *     SBNS = 1 or M10 = 1, SNBS = 0) or 16 (if M10 = 1, SNBS = 1).
  */
-//@{
-#define BP_LPUART_STAT_BRK13 (26U)         //!< Bit position for LPUART_STAT_BRK13.
-#define BM_LPUART_STAT_BRK13 (0x04000000U) //!< Bit mask for LPUART_STAT_BRK13.
-#define BS_LPUART_STAT_BRK13 (1U)          //!< Bit field size in bits for LPUART_STAT_BRK13.
+/*@{*/
+#define BP_LPUART_STAT_BRK13 (26U)         /*!< Bit position for LPUART_STAT_BRK13. */
+#define BM_LPUART_STAT_BRK13 (0x04000000U) /*!< Bit mask for LPUART_STAT_BRK13. */
+#define BS_LPUART_STAT_BRK13 (1U)          /*!< Bit field size in bits for LPUART_STAT_BRK13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_BRK13 field.
-#define BR_LPUART_STAT_BRK13 (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_BRK13))
-#endif
+/*! @brief Read current value of the LPUART_STAT_BRK13 field. */
+#define BR_LPUART_STAT_BRK13(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_BRK13))
 
-//! @brief Format value for bitfield LPUART_STAT_BRK13.
-#define BF_LPUART_STAT_BRK13(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_BRK13), uint32_t) & BM_LPUART_STAT_BRK13)
+/*! @brief Format value for bitfield LPUART_STAT_BRK13. */
+#define BF_LPUART_STAT_BRK13(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_BRK13) & BM_LPUART_STAT_BRK13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BRK13 field to a new value.
-#define BW_LPUART_STAT_BRK13(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_BRK13) = (v))
-#endif
-//@}
+/*! @brief Set the BRK13 field to a new value. */
+#define BW_LPUART_STAT_BRK13(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_BRK13) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field RWUID[27] (RW)
@@ -942,24 +834,20 @@ typedef union _hw_lpuart_stat
  *     detection of an idle character. During address match wakeup, the IDLE bit does
  *     get set when an address does not match.
  */
-//@{
-#define BP_LPUART_STAT_RWUID (27U)         //!< Bit position for LPUART_STAT_RWUID.
-#define BM_LPUART_STAT_RWUID (0x08000000U) //!< Bit mask for LPUART_STAT_RWUID.
-#define BS_LPUART_STAT_RWUID (1U)          //!< Bit field size in bits for LPUART_STAT_RWUID.
+/*@{*/
+#define BP_LPUART_STAT_RWUID (27U)         /*!< Bit position for LPUART_STAT_RWUID. */
+#define BM_LPUART_STAT_RWUID (0x08000000U) /*!< Bit mask for LPUART_STAT_RWUID. */
+#define BS_LPUART_STAT_RWUID (1U)          /*!< Bit field size in bits for LPUART_STAT_RWUID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_RWUID field.
-#define BR_LPUART_STAT_RWUID (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RWUID))
-#endif
+/*! @brief Read current value of the LPUART_STAT_RWUID field. */
+#define BR_LPUART_STAT_RWUID(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RWUID))
 
-//! @brief Format value for bitfield LPUART_STAT_RWUID.
-#define BF_LPUART_STAT_RWUID(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_RWUID), uint32_t) & BM_LPUART_STAT_RWUID)
+/*! @brief Format value for bitfield LPUART_STAT_RWUID. */
+#define BF_LPUART_STAT_RWUID(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_RWUID) & BM_LPUART_STAT_RWUID)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RWUID field to a new value.
-#define BW_LPUART_STAT_RWUID(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RWUID) = (v))
-#endif
-//@}
+/*! @brief Set the RWUID field to a new value. */
+#define BW_LPUART_STAT_RWUID(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RWUID) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field RXINV[28] (RW)
@@ -972,24 +860,20 @@ typedef union _hw_lpuart_stat
  * - 0 - Receive data not inverted.
  * - 1 - Receive data inverted.
  */
-//@{
-#define BP_LPUART_STAT_RXINV (28U)         //!< Bit position for LPUART_STAT_RXINV.
-#define BM_LPUART_STAT_RXINV (0x10000000U) //!< Bit mask for LPUART_STAT_RXINV.
-#define BS_LPUART_STAT_RXINV (1U)          //!< Bit field size in bits for LPUART_STAT_RXINV.
+/*@{*/
+#define BP_LPUART_STAT_RXINV (28U)         /*!< Bit position for LPUART_STAT_RXINV. */
+#define BM_LPUART_STAT_RXINV (0x10000000U) /*!< Bit mask for LPUART_STAT_RXINV. */
+#define BS_LPUART_STAT_RXINV (1U)          /*!< Bit field size in bits for LPUART_STAT_RXINV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_RXINV field.
-#define BR_LPUART_STAT_RXINV (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RXINV))
-#endif
+/*! @brief Read current value of the LPUART_STAT_RXINV field. */
+#define BR_LPUART_STAT_RXINV(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RXINV))
 
-//! @brief Format value for bitfield LPUART_STAT_RXINV.
-#define BF_LPUART_STAT_RXINV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_RXINV), uint32_t) & BM_LPUART_STAT_RXINV)
+/*! @brief Format value for bitfield LPUART_STAT_RXINV. */
+#define BF_LPUART_STAT_RXINV(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_RXINV) & BM_LPUART_STAT_RXINV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXINV field to a new value.
-#define BW_LPUART_STAT_RXINV(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RXINV) = (v))
-#endif
-//@}
+/*! @brief Set the RXINV field to a new value. */
+#define BW_LPUART_STAT_RXINV(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RXINV) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field MSBF[29] (RW)
@@ -1009,24 +893,20 @@ typedef union _hw_lpuart_stat
  *     as bit9, bit8, bit7 or bit6 depending on the setting of CTRL[M] and
  *     CTRL[PE].
  */
-//@{
-#define BP_LPUART_STAT_MSBF  (29U)         //!< Bit position for LPUART_STAT_MSBF.
-#define BM_LPUART_STAT_MSBF  (0x20000000U) //!< Bit mask for LPUART_STAT_MSBF.
-#define BS_LPUART_STAT_MSBF  (1U)          //!< Bit field size in bits for LPUART_STAT_MSBF.
+/*@{*/
+#define BP_LPUART_STAT_MSBF  (29U)         /*!< Bit position for LPUART_STAT_MSBF. */
+#define BM_LPUART_STAT_MSBF  (0x20000000U) /*!< Bit mask for LPUART_STAT_MSBF. */
+#define BS_LPUART_STAT_MSBF  (1U)          /*!< Bit field size in bits for LPUART_STAT_MSBF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_MSBF field.
-#define BR_LPUART_STAT_MSBF  (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MSBF))
-#endif
+/*! @brief Read current value of the LPUART_STAT_MSBF field. */
+#define BR_LPUART_STAT_MSBF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MSBF))
 
-//! @brief Format value for bitfield LPUART_STAT_MSBF.
-#define BF_LPUART_STAT_MSBF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_MSBF), uint32_t) & BM_LPUART_STAT_MSBF)
+/*! @brief Format value for bitfield LPUART_STAT_MSBF. */
+#define BF_LPUART_STAT_MSBF(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_MSBF) & BM_LPUART_STAT_MSBF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSBF field to a new value.
-#define BW_LPUART_STAT_MSBF(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_MSBF) = (v))
-#endif
-//@}
+/*! @brief Set the MSBF field to a new value. */
+#define BW_LPUART_STAT_MSBF(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_MSBF) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field RXEDGIF[30] (W1C)
@@ -1038,24 +918,20 @@ typedef union _hw_lpuart_stat
  * - 0 - No active edge on the receive pin has occurred.
  * - 1 - An active edge on the receive pin has occurred.
  */
-//@{
-#define BP_LPUART_STAT_RXEDGIF (30U)       //!< Bit position for LPUART_STAT_RXEDGIF.
-#define BM_LPUART_STAT_RXEDGIF (0x40000000U) //!< Bit mask for LPUART_STAT_RXEDGIF.
-#define BS_LPUART_STAT_RXEDGIF (1U)        //!< Bit field size in bits for LPUART_STAT_RXEDGIF.
+/*@{*/
+#define BP_LPUART_STAT_RXEDGIF (30U)       /*!< Bit position for LPUART_STAT_RXEDGIF. */
+#define BM_LPUART_STAT_RXEDGIF (0x40000000U) /*!< Bit mask for LPUART_STAT_RXEDGIF. */
+#define BS_LPUART_STAT_RXEDGIF (1U)        /*!< Bit field size in bits for LPUART_STAT_RXEDGIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_RXEDGIF field.
-#define BR_LPUART_STAT_RXEDGIF (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RXEDGIF))
-#endif
+/*! @brief Read current value of the LPUART_STAT_RXEDGIF field. */
+#define BR_LPUART_STAT_RXEDGIF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RXEDGIF))
 
-//! @brief Format value for bitfield LPUART_STAT_RXEDGIF.
-#define BF_LPUART_STAT_RXEDGIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_RXEDGIF), uint32_t) & BM_LPUART_STAT_RXEDGIF)
+/*! @brief Format value for bitfield LPUART_STAT_RXEDGIF. */
+#define BF_LPUART_STAT_RXEDGIF(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_RXEDGIF) & BM_LPUART_STAT_RXEDGIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXEDGIF field to a new value.
-#define BW_LPUART_STAT_RXEDGIF(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_RXEDGIF) = (v))
-#endif
-//@}
+/*! @brief Set the RXEDGIF field to a new value. */
+#define BW_LPUART_STAT_RXEDGIF(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_RXEDGIF) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_STAT, field LBKDIF[31] (W1C)
@@ -1067,30 +943,25 @@ typedef union _hw_lpuart_stat
  * - 0 - No LIN break character has been detected.
  * - 1 - LIN break character has been detected.
  */
-//@{
-#define BP_LPUART_STAT_LBKDIF (31U)        //!< Bit position for LPUART_STAT_LBKDIF.
-#define BM_LPUART_STAT_LBKDIF (0x80000000U) //!< Bit mask for LPUART_STAT_LBKDIF.
-#define BS_LPUART_STAT_LBKDIF (1U)         //!< Bit field size in bits for LPUART_STAT_LBKDIF.
+/*@{*/
+#define BP_LPUART_STAT_LBKDIF (31U)        /*!< Bit position for LPUART_STAT_LBKDIF. */
+#define BM_LPUART_STAT_LBKDIF (0x80000000U) /*!< Bit mask for LPUART_STAT_LBKDIF. */
+#define BS_LPUART_STAT_LBKDIF (1U)         /*!< Bit field size in bits for LPUART_STAT_LBKDIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_STAT_LBKDIF field.
-#define BR_LPUART_STAT_LBKDIF (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_LBKDIF))
-#endif
+/*! @brief Read current value of the LPUART_STAT_LBKDIF field. */
+#define BR_LPUART_STAT_LBKDIF(x) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_LBKDIF))
 
-//! @brief Format value for bitfield LPUART_STAT_LBKDIF.
-#define BF_LPUART_STAT_LBKDIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_STAT_LBKDIF), uint32_t) & BM_LPUART_STAT_LBKDIF)
+/*! @brief Format value for bitfield LPUART_STAT_LBKDIF. */
+#define BF_LPUART_STAT_LBKDIF(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_STAT_LBKDIF) & BM_LPUART_STAT_LBKDIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDIF field to a new value.
-#define BW_LPUART_STAT_LBKDIF(v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR, BP_LPUART_STAT_LBKDIF) = (v))
-#endif
-//@}
+/*! @brief Set the LBKDIF field to a new value. */
+#define BW_LPUART_STAT_LBKDIF(x, v) (BITBAND_ACCESS32(HW_LPUART_STAT_ADDR(x), BP_LPUART_STAT_LBKDIF) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_CTRL - LPUART Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_CTRL - LPUART Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_CTRL - LPUART Control Register (RW)
  *
@@ -1105,55 +976,52 @@ typedef union _hw_lpuart_ctrl
     uint32_t U;
     struct _hw_lpuart_ctrl_bitfields
     {
-        uint32_t PT : 1;               //!< [0] Parity Type
-        uint32_t PE : 1;               //!< [1] Parity Enable
-        uint32_t ILT : 1;              //!< [2] Idle Line Type Select
-        uint32_t WAKE : 1;             //!< [3] Receiver Wakeup Method Select
-        uint32_t M : 1;                //!< [4] 9-Bit or 8-Bit Mode Select
-        uint32_t RSRC : 1;             //!< [5] Receiver Source Select
-        uint32_t DOZEEN : 1;           //!< [6] Doze Enable
-        uint32_t LOOPS : 1;            //!< [7] Loop Mode Select
-        uint32_t IDLECFG : 3;          //!< [10:8] Idle Configuration
-        uint32_t RESERVED0 : 3;        //!< [13:11]
-        uint32_t MA2IE : 1;            //!< [14] Match 2 Interrupt Enable
-        uint32_t MA1IE : 1;            //!< [15] Match 1 Interrupt Enable
-        uint32_t SBK : 1;              //!< [16] Send Break
-        uint32_t RWU : 1;              //!< [17] Receiver Wakeup Control
-        uint32_t RE : 1;               //!< [18] Receiver Enable
-        uint32_t TE : 1;               //!< [19] Transmitter Enable
-        uint32_t ILIE : 1;             //!< [20] Idle Line Interrupt Enable
-        uint32_t RIE : 1;              //!< [21] Receiver Interrupt Enable
-        uint32_t TCIE : 1;             //!< [22] Transmission Complete Interrupt Enable
-                                       //! for
-        uint32_t TIE : 1;              //!< [23] Transmit Interrupt Enable
-        uint32_t PEIE : 1;             //!< [24] Parity Error Interrupt Enable
-        uint32_t FEIE : 1;             //!< [25] Framing Error Interrupt Enable
-        uint32_t NEIE : 1;             //!< [26] Noise Error Interrupt Enable
-        uint32_t ORIE : 1;             //!< [27] Overrun Interrupt Enable
-        uint32_t TXINV : 1;            //!< [28] Transmit Data Inversion
-        uint32_t TXDIR : 1;            //!< [29] LPUART_TX Pin Direction in Single-Wire
-                                       //! Mode
-        uint32_t R9T8 : 1;             //!< [30] Receive Bit 9 / Transmit Bit 8
-        uint32_t R8T9 : 1;             //!< [31] Receive Bit 8 / Transmit Bit 9
+        uint32_t PT : 1;               /*!< [0] Parity Type */
+        uint32_t PE : 1;               /*!< [1] Parity Enable */
+        uint32_t ILT : 1;              /*!< [2] Idle Line Type Select */
+        uint32_t WAKE : 1;             /*!< [3] Receiver Wakeup Method Select */
+        uint32_t M : 1;                /*!< [4] 9-Bit or 8-Bit Mode Select */
+        uint32_t RSRC : 1;             /*!< [5] Receiver Source Select */
+        uint32_t DOZEEN : 1;           /*!< [6] Doze Enable */
+        uint32_t LOOPS : 1;            /*!< [7] Loop Mode Select */
+        uint32_t IDLECFG : 3;          /*!< [10:8] Idle Configuration */
+        uint32_t RESERVED0 : 3;        /*!< [13:11]  */
+        uint32_t MA2IE : 1;            /*!< [14] Match 2 Interrupt Enable */
+        uint32_t MA1IE : 1;            /*!< [15] Match 1 Interrupt Enable */
+        uint32_t SBK : 1;              /*!< [16] Send Break */
+        uint32_t RWU : 1;              /*!< [17] Receiver Wakeup Control */
+        uint32_t RE : 1;               /*!< [18] Receiver Enable */
+        uint32_t TE : 1;               /*!< [19] Transmitter Enable */
+        uint32_t ILIE : 1;             /*!< [20] Idle Line Interrupt Enable */
+        uint32_t RIE : 1;              /*!< [21] Receiver Interrupt Enable */
+        uint32_t TCIE : 1;             /*!< [22] Transmission Complete Interrupt Enable
+                                        * for */
+        uint32_t TIE : 1;              /*!< [23] Transmit Interrupt Enable */
+        uint32_t PEIE : 1;             /*!< [24] Parity Error Interrupt Enable */
+        uint32_t FEIE : 1;             /*!< [25] Framing Error Interrupt Enable */
+        uint32_t NEIE : 1;             /*!< [26] Noise Error Interrupt Enable */
+        uint32_t ORIE : 1;             /*!< [27] Overrun Interrupt Enable */
+        uint32_t TXINV : 1;            /*!< [28] Transmit Data Inversion */
+        uint32_t TXDIR : 1;            /*!< [29] LPUART_TX Pin Direction in Single-Wire
+                                        * Mode */
+        uint32_t R9T8 : 1;             /*!< [30] Receive Bit 9 / Transmit Bit 8 */
+        uint32_t R8T9 : 1;             /*!< [31] Receive Bit 8 / Transmit Bit 9 */
     } B;
 } hw_lpuart_ctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_CTRL register
  */
-//@{
-#define HW_LPUART_CTRL_ADDR      (REGS_LPUART_BASE + 0x8U)
+/*@{*/
+#define HW_LPUART_CTRL_ADDR(x)   ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_CTRL           (*(__IO hw_lpuart_ctrl_t *) HW_LPUART_CTRL_ADDR)
-#define HW_LPUART_CTRL_RD()      (HW_LPUART_CTRL.U)
-#define HW_LPUART_CTRL_WR(v)     (HW_LPUART_CTRL.U = (v))
-#define HW_LPUART_CTRL_SET(v)    (HW_LPUART_CTRL_WR(HW_LPUART_CTRL_RD() |  (v)))
-#define HW_LPUART_CTRL_CLR(v)    (HW_LPUART_CTRL_WR(HW_LPUART_CTRL_RD() & ~(v)))
-#define HW_LPUART_CTRL_TOG(v)    (HW_LPUART_CTRL_WR(HW_LPUART_CTRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_CTRL(x)        (*(__IO hw_lpuart_ctrl_t *) HW_LPUART_CTRL_ADDR(x))
+#define HW_LPUART_CTRL_RD(x)     (HW_LPUART_CTRL(x).U)
+#define HW_LPUART_CTRL_WR(x, v)  (HW_LPUART_CTRL(x).U = (v))
+#define HW_LPUART_CTRL_SET(x, v) (HW_LPUART_CTRL_WR(x, HW_LPUART_CTRL_RD(x) |  (v)))
+#define HW_LPUART_CTRL_CLR(x, v) (HW_LPUART_CTRL_WR(x, HW_LPUART_CTRL_RD(x) & ~(v)))
+#define HW_LPUART_CTRL_TOG(x, v) (HW_LPUART_CTRL_WR(x, HW_LPUART_CTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_CTRL bitfields
@@ -1171,24 +1039,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Even parity.
  * - 1 - Odd parity.
  */
-//@{
-#define BP_LPUART_CTRL_PT    (0U)          //!< Bit position for LPUART_CTRL_PT.
-#define BM_LPUART_CTRL_PT    (0x00000001U) //!< Bit mask for LPUART_CTRL_PT.
-#define BS_LPUART_CTRL_PT    (1U)          //!< Bit field size in bits for LPUART_CTRL_PT.
+/*@{*/
+#define BP_LPUART_CTRL_PT    (0U)          /*!< Bit position for LPUART_CTRL_PT. */
+#define BM_LPUART_CTRL_PT    (0x00000001U) /*!< Bit mask for LPUART_CTRL_PT. */
+#define BS_LPUART_CTRL_PT    (1U)          /*!< Bit field size in bits for LPUART_CTRL_PT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_PT field.
-#define BR_LPUART_CTRL_PT    (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PT))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_PT field. */
+#define BR_LPUART_CTRL_PT(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PT))
 
-//! @brief Format value for bitfield LPUART_CTRL_PT.
-#define BF_LPUART_CTRL_PT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_PT), uint32_t) & BM_LPUART_CTRL_PT)
+/*! @brief Format value for bitfield LPUART_CTRL_PT. */
+#define BF_LPUART_CTRL_PT(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_PT) & BM_LPUART_CTRL_PT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PT field to a new value.
-#define BW_LPUART_CTRL_PT(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PT) = (v))
-#endif
-//@}
+/*! @brief Set the PT field to a new value. */
+#define BW_LPUART_CTRL_PT(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PT) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field PE[1] (RW)
@@ -1200,24 +1064,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - No hardware parity generation or checking.
  * - 1 - Parity enabled.
  */
-//@{
-#define BP_LPUART_CTRL_PE    (1U)          //!< Bit position for LPUART_CTRL_PE.
-#define BM_LPUART_CTRL_PE    (0x00000002U) //!< Bit mask for LPUART_CTRL_PE.
-#define BS_LPUART_CTRL_PE    (1U)          //!< Bit field size in bits for LPUART_CTRL_PE.
+/*@{*/
+#define BP_LPUART_CTRL_PE    (1U)          /*!< Bit position for LPUART_CTRL_PE. */
+#define BM_LPUART_CTRL_PE    (0x00000002U) /*!< Bit mask for LPUART_CTRL_PE. */
+#define BS_LPUART_CTRL_PE    (1U)          /*!< Bit field size in bits for LPUART_CTRL_PE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_PE field.
-#define BR_LPUART_CTRL_PE    (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_PE field. */
+#define BR_LPUART_CTRL_PE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PE))
 
-//! @brief Format value for bitfield LPUART_CTRL_PE.
-#define BF_LPUART_CTRL_PE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_PE), uint32_t) & BM_LPUART_CTRL_PE)
+/*! @brief Format value for bitfield LPUART_CTRL_PE. */
+#define BF_LPUART_CTRL_PE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_PE) & BM_LPUART_CTRL_PE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PE field to a new value.
-#define BW_LPUART_CTRL_PE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PE) = (v))
-#endif
-//@}
+/*! @brief Set the PE field to a new value. */
+#define BW_LPUART_CTRL_PE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field ILT[2] (RW)
@@ -1235,24 +1095,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Idle character bit count starts after start bit.
  * - 1 - Idle character bit count starts after stop bit.
  */
-//@{
-#define BP_LPUART_CTRL_ILT   (2U)          //!< Bit position for LPUART_CTRL_ILT.
-#define BM_LPUART_CTRL_ILT   (0x00000004U) //!< Bit mask for LPUART_CTRL_ILT.
-#define BS_LPUART_CTRL_ILT   (1U)          //!< Bit field size in bits for LPUART_CTRL_ILT.
+/*@{*/
+#define BP_LPUART_CTRL_ILT   (2U)          /*!< Bit position for LPUART_CTRL_ILT. */
+#define BM_LPUART_CTRL_ILT   (0x00000004U) /*!< Bit mask for LPUART_CTRL_ILT. */
+#define BS_LPUART_CTRL_ILT   (1U)          /*!< Bit field size in bits for LPUART_CTRL_ILT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_ILT field.
-#define BR_LPUART_CTRL_ILT   (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ILT))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_ILT field. */
+#define BR_LPUART_CTRL_ILT(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ILT))
 
-//! @brief Format value for bitfield LPUART_CTRL_ILT.
-#define BF_LPUART_CTRL_ILT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_ILT), uint32_t) & BM_LPUART_CTRL_ILT)
+/*! @brief Format value for bitfield LPUART_CTRL_ILT. */
+#define BF_LPUART_CTRL_ILT(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_ILT) & BM_LPUART_CTRL_ILT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ILT field to a new value.
-#define BW_LPUART_CTRL_ILT(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ILT) = (v))
-#endif
-//@}
+/*! @brief Set the ILT field to a new value. */
+#define BW_LPUART_CTRL_ILT(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ILT) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field WAKE[3] (RW)
@@ -1265,24 +1121,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Configures RWU for idle-line wakeup.
  * - 1 - Configures RWU with address-mark wakeup.
  */
-//@{
-#define BP_LPUART_CTRL_WAKE  (3U)          //!< Bit position for LPUART_CTRL_WAKE.
-#define BM_LPUART_CTRL_WAKE  (0x00000008U) //!< Bit mask for LPUART_CTRL_WAKE.
-#define BS_LPUART_CTRL_WAKE  (1U)          //!< Bit field size in bits for LPUART_CTRL_WAKE.
+/*@{*/
+#define BP_LPUART_CTRL_WAKE  (3U)          /*!< Bit position for LPUART_CTRL_WAKE. */
+#define BM_LPUART_CTRL_WAKE  (0x00000008U) /*!< Bit mask for LPUART_CTRL_WAKE. */
+#define BS_LPUART_CTRL_WAKE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_WAKE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_WAKE field.
-#define BR_LPUART_CTRL_WAKE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_WAKE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_WAKE field. */
+#define BR_LPUART_CTRL_WAKE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_WAKE))
 
-//! @brief Format value for bitfield LPUART_CTRL_WAKE.
-#define BF_LPUART_CTRL_WAKE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_WAKE), uint32_t) & BM_LPUART_CTRL_WAKE)
+/*! @brief Format value for bitfield LPUART_CTRL_WAKE. */
+#define BF_LPUART_CTRL_WAKE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_WAKE) & BM_LPUART_CTRL_WAKE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WAKE field to a new value.
-#define BW_LPUART_CTRL_WAKE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_WAKE) = (v))
-#endif
-//@}
+/*! @brief Set the WAKE field to a new value. */
+#define BW_LPUART_CTRL_WAKE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_WAKE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field M[4] (RW)
@@ -1291,24 +1143,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Receiver and transmitter use 8-bit data characters.
  * - 1 - Receiver and transmitter use 9-bit data characters.
  */
-//@{
-#define BP_LPUART_CTRL_M     (4U)          //!< Bit position for LPUART_CTRL_M.
-#define BM_LPUART_CTRL_M     (0x00000010U) //!< Bit mask for LPUART_CTRL_M.
-#define BS_LPUART_CTRL_M     (1U)          //!< Bit field size in bits for LPUART_CTRL_M.
+/*@{*/
+#define BP_LPUART_CTRL_M     (4U)          /*!< Bit position for LPUART_CTRL_M. */
+#define BM_LPUART_CTRL_M     (0x00000010U) /*!< Bit mask for LPUART_CTRL_M. */
+#define BS_LPUART_CTRL_M     (1U)          /*!< Bit field size in bits for LPUART_CTRL_M. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_M field.
-#define BR_LPUART_CTRL_M     (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_M))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_M field. */
+#define BR_LPUART_CTRL_M(x)  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_M))
 
-//! @brief Format value for bitfield LPUART_CTRL_M.
-#define BF_LPUART_CTRL_M(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_M), uint32_t) & BM_LPUART_CTRL_M)
+/*! @brief Format value for bitfield LPUART_CTRL_M. */
+#define BF_LPUART_CTRL_M(v)  ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_M) & BM_LPUART_CTRL_M)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M field to a new value.
-#define BW_LPUART_CTRL_M(v)  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_M) = (v))
-#endif
-//@}
+/*! @brief Set the M field to a new value. */
+#define BW_LPUART_CTRL_M(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_M) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field RSRC[5] (RW)
@@ -1323,24 +1171,20 @@ typedef union _hw_lpuart_ctrl
  * - 1 - Single-wire LPUART mode where the LPUART_TX pin is connected to the
  *     transmitter output and receiver input.
  */
-//@{
-#define BP_LPUART_CTRL_RSRC  (5U)          //!< Bit position for LPUART_CTRL_RSRC.
-#define BM_LPUART_CTRL_RSRC  (0x00000020U) //!< Bit mask for LPUART_CTRL_RSRC.
-#define BS_LPUART_CTRL_RSRC  (1U)          //!< Bit field size in bits for LPUART_CTRL_RSRC.
+/*@{*/
+#define BP_LPUART_CTRL_RSRC  (5U)          /*!< Bit position for LPUART_CTRL_RSRC. */
+#define BM_LPUART_CTRL_RSRC  (0x00000020U) /*!< Bit mask for LPUART_CTRL_RSRC. */
+#define BS_LPUART_CTRL_RSRC  (1U)          /*!< Bit field size in bits for LPUART_CTRL_RSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_RSRC field.
-#define BR_LPUART_CTRL_RSRC  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RSRC))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_RSRC field. */
+#define BR_LPUART_CTRL_RSRC(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RSRC))
 
-//! @brief Format value for bitfield LPUART_CTRL_RSRC.
-#define BF_LPUART_CTRL_RSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_RSRC), uint32_t) & BM_LPUART_CTRL_RSRC)
+/*! @brief Format value for bitfield LPUART_CTRL_RSRC. */
+#define BF_LPUART_CTRL_RSRC(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_RSRC) & BM_LPUART_CTRL_RSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RSRC field to a new value.
-#define BW_LPUART_CTRL_RSRC(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RSRC) = (v))
-#endif
-//@}
+/*! @brief Set the RSRC field to a new value. */
+#define BW_LPUART_CTRL_RSRC(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RSRC) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field DOZEEN[6] (RW)
@@ -1349,24 +1193,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - LPUART is enabled in Doze mode.
  * - 1 - LPUART is disabled in Doze mode.
  */
-//@{
-#define BP_LPUART_CTRL_DOZEEN (6U)         //!< Bit position for LPUART_CTRL_DOZEEN.
-#define BM_LPUART_CTRL_DOZEEN (0x00000040U) //!< Bit mask for LPUART_CTRL_DOZEEN.
-#define BS_LPUART_CTRL_DOZEEN (1U)         //!< Bit field size in bits for LPUART_CTRL_DOZEEN.
+/*@{*/
+#define BP_LPUART_CTRL_DOZEEN (6U)         /*!< Bit position for LPUART_CTRL_DOZEEN. */
+#define BM_LPUART_CTRL_DOZEEN (0x00000040U) /*!< Bit mask for LPUART_CTRL_DOZEEN. */
+#define BS_LPUART_CTRL_DOZEEN (1U)         /*!< Bit field size in bits for LPUART_CTRL_DOZEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_DOZEEN field.
-#define BR_LPUART_CTRL_DOZEEN (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_DOZEEN))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_DOZEEN field. */
+#define BR_LPUART_CTRL_DOZEEN(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_DOZEEN))
 
-//! @brief Format value for bitfield LPUART_CTRL_DOZEEN.
-#define BF_LPUART_CTRL_DOZEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_DOZEEN), uint32_t) & BM_LPUART_CTRL_DOZEEN)
+/*! @brief Format value for bitfield LPUART_CTRL_DOZEEN. */
+#define BF_LPUART_CTRL_DOZEEN(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_DOZEEN) & BM_LPUART_CTRL_DOZEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DOZEEN field to a new value.
-#define BW_LPUART_CTRL_DOZEEN(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_DOZEEN) = (v))
-#endif
-//@}
+/*! @brief Set the DOZEEN field to a new value. */
+#define BW_LPUART_CTRL_DOZEEN(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_DOZEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field LOOPS[7] (RW)
@@ -1380,24 +1220,20 @@ typedef union _hw_lpuart_ctrl
  * - 1 - Loop mode or single-wire mode where transmitter outputs are internally
  *     connected to receiver input (see RSRC bit).
  */
-//@{
-#define BP_LPUART_CTRL_LOOPS (7U)          //!< Bit position for LPUART_CTRL_LOOPS.
-#define BM_LPUART_CTRL_LOOPS (0x00000080U) //!< Bit mask for LPUART_CTRL_LOOPS.
-#define BS_LPUART_CTRL_LOOPS (1U)          //!< Bit field size in bits for LPUART_CTRL_LOOPS.
+/*@{*/
+#define BP_LPUART_CTRL_LOOPS (7U)          /*!< Bit position for LPUART_CTRL_LOOPS. */
+#define BM_LPUART_CTRL_LOOPS (0x00000080U) /*!< Bit mask for LPUART_CTRL_LOOPS. */
+#define BS_LPUART_CTRL_LOOPS (1U)          /*!< Bit field size in bits for LPUART_CTRL_LOOPS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_LOOPS field.
-#define BR_LPUART_CTRL_LOOPS (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_LOOPS))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_LOOPS field. */
+#define BR_LPUART_CTRL_LOOPS(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_LOOPS))
 
-//! @brief Format value for bitfield LPUART_CTRL_LOOPS.
-#define BF_LPUART_CTRL_LOOPS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_LOOPS), uint32_t) & BM_LPUART_CTRL_LOOPS)
+/*! @brief Format value for bitfield LPUART_CTRL_LOOPS. */
+#define BF_LPUART_CTRL_LOOPS(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_LOOPS) & BM_LPUART_CTRL_LOOPS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LOOPS field to a new value.
-#define BW_LPUART_CTRL_LOOPS(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_LOOPS) = (v))
-#endif
-//@}
+/*! @brief Set the LOOPS field to a new value. */
+#define BW_LPUART_CTRL_LOOPS(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_LOOPS) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field IDLECFG[10:8] (RW)
@@ -1415,24 +1251,20 @@ typedef union _hw_lpuart_ctrl
  * - 110 - 64 idle characters
  * - 111 - 128 idle characters
  */
-//@{
-#define BP_LPUART_CTRL_IDLECFG (8U)        //!< Bit position for LPUART_CTRL_IDLECFG.
-#define BM_LPUART_CTRL_IDLECFG (0x00000700U) //!< Bit mask for LPUART_CTRL_IDLECFG.
-#define BS_LPUART_CTRL_IDLECFG (3U)        //!< Bit field size in bits for LPUART_CTRL_IDLECFG.
+/*@{*/
+#define BP_LPUART_CTRL_IDLECFG (8U)        /*!< Bit position for LPUART_CTRL_IDLECFG. */
+#define BM_LPUART_CTRL_IDLECFG (0x00000700U) /*!< Bit mask for LPUART_CTRL_IDLECFG. */
+#define BS_LPUART_CTRL_IDLECFG (3U)        /*!< Bit field size in bits for LPUART_CTRL_IDLECFG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_IDLECFG field.
-#define BR_LPUART_CTRL_IDLECFG (HW_LPUART_CTRL.B.IDLECFG)
-#endif
+/*! @brief Read current value of the LPUART_CTRL_IDLECFG field. */
+#define BR_LPUART_CTRL_IDLECFG(x) (HW_LPUART_CTRL(x).B.IDLECFG)
 
-//! @brief Format value for bitfield LPUART_CTRL_IDLECFG.
-#define BF_LPUART_CTRL_IDLECFG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_IDLECFG), uint32_t) & BM_LPUART_CTRL_IDLECFG)
+/*! @brief Format value for bitfield LPUART_CTRL_IDLECFG. */
+#define BF_LPUART_CTRL_IDLECFG(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_IDLECFG) & BM_LPUART_CTRL_IDLECFG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDLECFG field to a new value.
-#define BW_LPUART_CTRL_IDLECFG(v) (HW_LPUART_CTRL_WR((HW_LPUART_CTRL_RD() & ~BM_LPUART_CTRL_IDLECFG) | BF_LPUART_CTRL_IDLECFG(v)))
-#endif
-//@}
+/*! @brief Set the IDLECFG field to a new value. */
+#define BW_LPUART_CTRL_IDLECFG(x, v) (HW_LPUART_CTRL_WR(x, (HW_LPUART_CTRL_RD(x) & ~BM_LPUART_CTRL_IDLECFG) | BF_LPUART_CTRL_IDLECFG(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field MA2IE[14] (RW)
@@ -1441,24 +1273,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - MA2F interrupt disabled
  * - 1 - MA2F interrupt enabled
  */
-//@{
-#define BP_LPUART_CTRL_MA2IE (14U)         //!< Bit position for LPUART_CTRL_MA2IE.
-#define BM_LPUART_CTRL_MA2IE (0x00004000U) //!< Bit mask for LPUART_CTRL_MA2IE.
-#define BS_LPUART_CTRL_MA2IE (1U)          //!< Bit field size in bits for LPUART_CTRL_MA2IE.
+/*@{*/
+#define BP_LPUART_CTRL_MA2IE (14U)         /*!< Bit position for LPUART_CTRL_MA2IE. */
+#define BM_LPUART_CTRL_MA2IE (0x00004000U) /*!< Bit mask for LPUART_CTRL_MA2IE. */
+#define BS_LPUART_CTRL_MA2IE (1U)          /*!< Bit field size in bits for LPUART_CTRL_MA2IE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_MA2IE field.
-#define BR_LPUART_CTRL_MA2IE (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_MA2IE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_MA2IE field. */
+#define BR_LPUART_CTRL_MA2IE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_MA2IE))
 
-//! @brief Format value for bitfield LPUART_CTRL_MA2IE.
-#define BF_LPUART_CTRL_MA2IE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_MA2IE), uint32_t) & BM_LPUART_CTRL_MA2IE)
+/*! @brief Format value for bitfield LPUART_CTRL_MA2IE. */
+#define BF_LPUART_CTRL_MA2IE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_MA2IE) & BM_LPUART_CTRL_MA2IE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA2IE field to a new value.
-#define BW_LPUART_CTRL_MA2IE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_MA2IE) = (v))
-#endif
-//@}
+/*! @brief Set the MA2IE field to a new value. */
+#define BW_LPUART_CTRL_MA2IE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_MA2IE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field MA1IE[15] (RW)
@@ -1467,24 +1295,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - MA1F interrupt disabled
  * - 1 - MA1F interrupt enabled
  */
-//@{
-#define BP_LPUART_CTRL_MA1IE (15U)         //!< Bit position for LPUART_CTRL_MA1IE.
-#define BM_LPUART_CTRL_MA1IE (0x00008000U) //!< Bit mask for LPUART_CTRL_MA1IE.
-#define BS_LPUART_CTRL_MA1IE (1U)          //!< Bit field size in bits for LPUART_CTRL_MA1IE.
+/*@{*/
+#define BP_LPUART_CTRL_MA1IE (15U)         /*!< Bit position for LPUART_CTRL_MA1IE. */
+#define BM_LPUART_CTRL_MA1IE (0x00008000U) /*!< Bit mask for LPUART_CTRL_MA1IE. */
+#define BS_LPUART_CTRL_MA1IE (1U)          /*!< Bit field size in bits for LPUART_CTRL_MA1IE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_MA1IE field.
-#define BR_LPUART_CTRL_MA1IE (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_MA1IE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_MA1IE field. */
+#define BR_LPUART_CTRL_MA1IE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_MA1IE))
 
-//! @brief Format value for bitfield LPUART_CTRL_MA1IE.
-#define BF_LPUART_CTRL_MA1IE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_MA1IE), uint32_t) & BM_LPUART_CTRL_MA1IE)
+/*! @brief Format value for bitfield LPUART_CTRL_MA1IE. */
+#define BF_LPUART_CTRL_MA1IE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_MA1IE) & BM_LPUART_CTRL_MA1IE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA1IE field to a new value.
-#define BW_LPUART_CTRL_MA1IE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_MA1IE) = (v))
-#endif
-//@}
+/*! @brief Set the MA1IE field to a new value. */
+#define BW_LPUART_CTRL_MA1IE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_MA1IE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field SBK[16] (RW)
@@ -1500,24 +1324,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Normal transmitter operation.
  * - 1 - Queue break character(s) to be sent.
  */
-//@{
-#define BP_LPUART_CTRL_SBK   (16U)         //!< Bit position for LPUART_CTRL_SBK.
-#define BM_LPUART_CTRL_SBK   (0x00010000U) //!< Bit mask for LPUART_CTRL_SBK.
-#define BS_LPUART_CTRL_SBK   (1U)          //!< Bit field size in bits for LPUART_CTRL_SBK.
+/*@{*/
+#define BP_LPUART_CTRL_SBK   (16U)         /*!< Bit position for LPUART_CTRL_SBK. */
+#define BM_LPUART_CTRL_SBK   (0x00010000U) /*!< Bit mask for LPUART_CTRL_SBK. */
+#define BS_LPUART_CTRL_SBK   (1U)          /*!< Bit field size in bits for LPUART_CTRL_SBK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_SBK field.
-#define BR_LPUART_CTRL_SBK   (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_SBK))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_SBK field. */
+#define BR_LPUART_CTRL_SBK(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_SBK))
 
-//! @brief Format value for bitfield LPUART_CTRL_SBK.
-#define BF_LPUART_CTRL_SBK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_SBK), uint32_t) & BM_LPUART_CTRL_SBK)
+/*! @brief Format value for bitfield LPUART_CTRL_SBK. */
+#define BF_LPUART_CTRL_SBK(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_SBK) & BM_LPUART_CTRL_SBK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBK field to a new value.
-#define BW_LPUART_CTRL_SBK(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_SBK) = (v))
-#endif
-//@}
+/*! @brief Set the SBK field to a new value. */
+#define BW_LPUART_CTRL_SBK(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_SBK) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field RWU[17] (RW)
@@ -1536,24 +1356,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Normal receiver operation.
  * - 1 - LPUART receiver in standby waiting for wakeup condition.
  */
-//@{
-#define BP_LPUART_CTRL_RWU   (17U)         //!< Bit position for LPUART_CTRL_RWU.
-#define BM_LPUART_CTRL_RWU   (0x00020000U) //!< Bit mask for LPUART_CTRL_RWU.
-#define BS_LPUART_CTRL_RWU   (1U)          //!< Bit field size in bits for LPUART_CTRL_RWU.
+/*@{*/
+#define BP_LPUART_CTRL_RWU   (17U)         /*!< Bit position for LPUART_CTRL_RWU. */
+#define BM_LPUART_CTRL_RWU   (0x00020000U) /*!< Bit mask for LPUART_CTRL_RWU. */
+#define BS_LPUART_CTRL_RWU   (1U)          /*!< Bit field size in bits for LPUART_CTRL_RWU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_RWU field.
-#define BR_LPUART_CTRL_RWU   (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RWU))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_RWU field. */
+#define BR_LPUART_CTRL_RWU(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RWU))
 
-//! @brief Format value for bitfield LPUART_CTRL_RWU.
-#define BF_LPUART_CTRL_RWU(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_RWU), uint32_t) & BM_LPUART_CTRL_RWU)
+/*! @brief Format value for bitfield LPUART_CTRL_RWU. */
+#define BF_LPUART_CTRL_RWU(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_RWU) & BM_LPUART_CTRL_RWU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RWU field to a new value.
-#define BW_LPUART_CTRL_RWU(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RWU) = (v))
-#endif
-//@}
+/*! @brief Set the RWU field to a new value. */
+#define BW_LPUART_CTRL_RWU(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RWU) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field RE[18] (RW)
@@ -1565,24 +1381,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Receiver disabled.
  * - 1 - Receiver enabled.
  */
-//@{
-#define BP_LPUART_CTRL_RE    (18U)         //!< Bit position for LPUART_CTRL_RE.
-#define BM_LPUART_CTRL_RE    (0x00040000U) //!< Bit mask for LPUART_CTRL_RE.
-#define BS_LPUART_CTRL_RE    (1U)          //!< Bit field size in bits for LPUART_CTRL_RE.
+/*@{*/
+#define BP_LPUART_CTRL_RE    (18U)         /*!< Bit position for LPUART_CTRL_RE. */
+#define BM_LPUART_CTRL_RE    (0x00040000U) /*!< Bit mask for LPUART_CTRL_RE. */
+#define BS_LPUART_CTRL_RE    (1U)          /*!< Bit field size in bits for LPUART_CTRL_RE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_RE field.
-#define BR_LPUART_CTRL_RE    (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_RE field. */
+#define BR_LPUART_CTRL_RE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RE))
 
-//! @brief Format value for bitfield LPUART_CTRL_RE.
-#define BF_LPUART_CTRL_RE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_RE), uint32_t) & BM_LPUART_CTRL_RE)
+/*! @brief Format value for bitfield LPUART_CTRL_RE. */
+#define BF_LPUART_CTRL_RE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_RE) & BM_LPUART_CTRL_RE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RE field to a new value.
-#define BW_LPUART_CTRL_RE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RE) = (v))
-#endif
-//@}
+/*! @brief Set the RE field to a new value. */
+#define BW_LPUART_CTRL_RE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field TE[19] (RW)
@@ -1596,24 +1408,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Transmitter disabled.
  * - 1 - Transmitter enabled.
  */
-//@{
-#define BP_LPUART_CTRL_TE    (19U)         //!< Bit position for LPUART_CTRL_TE.
-#define BM_LPUART_CTRL_TE    (0x00080000U) //!< Bit mask for LPUART_CTRL_TE.
-#define BS_LPUART_CTRL_TE    (1U)          //!< Bit field size in bits for LPUART_CTRL_TE.
+/*@{*/
+#define BP_LPUART_CTRL_TE    (19U)         /*!< Bit position for LPUART_CTRL_TE. */
+#define BM_LPUART_CTRL_TE    (0x00080000U) /*!< Bit mask for LPUART_CTRL_TE. */
+#define BS_LPUART_CTRL_TE    (1U)          /*!< Bit field size in bits for LPUART_CTRL_TE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_TE field.
-#define BR_LPUART_CTRL_TE    (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_TE field. */
+#define BR_LPUART_CTRL_TE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TE))
 
-//! @brief Format value for bitfield LPUART_CTRL_TE.
-#define BF_LPUART_CTRL_TE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_TE), uint32_t) & BM_LPUART_CTRL_TE)
+/*! @brief Format value for bitfield LPUART_CTRL_TE. */
+#define BF_LPUART_CTRL_TE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_TE) & BM_LPUART_CTRL_TE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TE field to a new value.
-#define BW_LPUART_CTRL_TE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TE) = (v))
-#endif
-//@}
+/*! @brief Set the TE field to a new value. */
+#define BW_LPUART_CTRL_TE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field ILIE[20] (RW)
@@ -1624,24 +1432,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Hardware interrupts from IDLE disabled; use polling.
  * - 1 - Hardware interrupt requested when IDLE flag is 1.
  */
-//@{
-#define BP_LPUART_CTRL_ILIE  (20U)         //!< Bit position for LPUART_CTRL_ILIE.
-#define BM_LPUART_CTRL_ILIE  (0x00100000U) //!< Bit mask for LPUART_CTRL_ILIE.
-#define BS_LPUART_CTRL_ILIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_ILIE.
+/*@{*/
+#define BP_LPUART_CTRL_ILIE  (20U)         /*!< Bit position for LPUART_CTRL_ILIE. */
+#define BM_LPUART_CTRL_ILIE  (0x00100000U) /*!< Bit mask for LPUART_CTRL_ILIE. */
+#define BS_LPUART_CTRL_ILIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_ILIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_ILIE field.
-#define BR_LPUART_CTRL_ILIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ILIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_ILIE field. */
+#define BR_LPUART_CTRL_ILIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ILIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_ILIE.
-#define BF_LPUART_CTRL_ILIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_ILIE), uint32_t) & BM_LPUART_CTRL_ILIE)
+/*! @brief Format value for bitfield LPUART_CTRL_ILIE. */
+#define BF_LPUART_CTRL_ILIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_ILIE) & BM_LPUART_CTRL_ILIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ILIE field to a new value.
-#define BW_LPUART_CTRL_ILIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ILIE) = (v))
-#endif
-//@}
+/*! @brief Set the ILIE field to a new value. */
+#define BW_LPUART_CTRL_ILIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ILIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field RIE[21] (RW)
@@ -1652,24 +1456,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Hardware interrupts from RDRF disabled; use polling.
  * - 1 - Hardware interrupt requested when RDRF flag is 1.
  */
-//@{
-#define BP_LPUART_CTRL_RIE   (21U)         //!< Bit position for LPUART_CTRL_RIE.
-#define BM_LPUART_CTRL_RIE   (0x00200000U) //!< Bit mask for LPUART_CTRL_RIE.
-#define BS_LPUART_CTRL_RIE   (1U)          //!< Bit field size in bits for LPUART_CTRL_RIE.
+/*@{*/
+#define BP_LPUART_CTRL_RIE   (21U)         /*!< Bit position for LPUART_CTRL_RIE. */
+#define BM_LPUART_CTRL_RIE   (0x00200000U) /*!< Bit mask for LPUART_CTRL_RIE. */
+#define BS_LPUART_CTRL_RIE   (1U)          /*!< Bit field size in bits for LPUART_CTRL_RIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_RIE field.
-#define BR_LPUART_CTRL_RIE   (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_RIE field. */
+#define BR_LPUART_CTRL_RIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_RIE.
-#define BF_LPUART_CTRL_RIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_RIE), uint32_t) & BM_LPUART_CTRL_RIE)
+/*! @brief Format value for bitfield LPUART_CTRL_RIE. */
+#define BF_LPUART_CTRL_RIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_RIE) & BM_LPUART_CTRL_RIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RIE field to a new value.
-#define BW_LPUART_CTRL_RIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_RIE) = (v))
-#endif
-//@}
+/*! @brief Set the RIE field to a new value. */
+#define BW_LPUART_CTRL_RIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_RIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field TCIE[22] (RW)
@@ -1681,24 +1481,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Hardware interrupts from TC disabled; use polling.
  * - 1 - Hardware interrupt requested when TC flag is 1.
  */
-//@{
-#define BP_LPUART_CTRL_TCIE  (22U)         //!< Bit position for LPUART_CTRL_TCIE.
-#define BM_LPUART_CTRL_TCIE  (0x00400000U) //!< Bit mask for LPUART_CTRL_TCIE.
-#define BS_LPUART_CTRL_TCIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_TCIE.
+/*@{*/
+#define BP_LPUART_CTRL_TCIE  (22U)         /*!< Bit position for LPUART_CTRL_TCIE. */
+#define BM_LPUART_CTRL_TCIE  (0x00400000U) /*!< Bit mask for LPUART_CTRL_TCIE. */
+#define BS_LPUART_CTRL_TCIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_TCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_TCIE field.
-#define BR_LPUART_CTRL_TCIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TCIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_TCIE field. */
+#define BR_LPUART_CTRL_TCIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TCIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_TCIE.
-#define BF_LPUART_CTRL_TCIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_TCIE), uint32_t) & BM_LPUART_CTRL_TCIE)
+/*! @brief Format value for bitfield LPUART_CTRL_TCIE. */
+#define BF_LPUART_CTRL_TCIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_TCIE) & BM_LPUART_CTRL_TCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCIE field to a new value.
-#define BW_LPUART_CTRL_TCIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TCIE) = (v))
-#endif
-//@}
+/*! @brief Set the TCIE field to a new value. */
+#define BW_LPUART_CTRL_TCIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TCIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field TIE[23] (RW)
@@ -1709,24 +1505,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Hardware interrupts from TDRE disabled; use polling.
  * - 1 - Hardware interrupt requested when TDRE flag is 1.
  */
-//@{
-#define BP_LPUART_CTRL_TIE   (23U)         //!< Bit position for LPUART_CTRL_TIE.
-#define BM_LPUART_CTRL_TIE   (0x00800000U) //!< Bit mask for LPUART_CTRL_TIE.
-#define BS_LPUART_CTRL_TIE   (1U)          //!< Bit field size in bits for LPUART_CTRL_TIE.
+/*@{*/
+#define BP_LPUART_CTRL_TIE   (23U)         /*!< Bit position for LPUART_CTRL_TIE. */
+#define BM_LPUART_CTRL_TIE   (0x00800000U) /*!< Bit mask for LPUART_CTRL_TIE. */
+#define BS_LPUART_CTRL_TIE   (1U)          /*!< Bit field size in bits for LPUART_CTRL_TIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_TIE field.
-#define BR_LPUART_CTRL_TIE   (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_TIE field. */
+#define BR_LPUART_CTRL_TIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_TIE.
-#define BF_LPUART_CTRL_TIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_TIE), uint32_t) & BM_LPUART_CTRL_TIE)
+/*! @brief Format value for bitfield LPUART_CTRL_TIE. */
+#define BF_LPUART_CTRL_TIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_TIE) & BM_LPUART_CTRL_TIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIE field to a new value.
-#define BW_LPUART_CTRL_TIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TIE) = (v))
-#endif
-//@}
+/*! @brief Set the TIE field to a new value. */
+#define BW_LPUART_CTRL_TIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field PEIE[24] (RW)
@@ -1738,24 +1530,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - PF interrupts disabled; use polling).
  * - 1 - Hardware interrupt requested when PF is set.
  */
-//@{
-#define BP_LPUART_CTRL_PEIE  (24U)         //!< Bit position for LPUART_CTRL_PEIE.
-#define BM_LPUART_CTRL_PEIE  (0x01000000U) //!< Bit mask for LPUART_CTRL_PEIE.
-#define BS_LPUART_CTRL_PEIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_PEIE.
+/*@{*/
+#define BP_LPUART_CTRL_PEIE  (24U)         /*!< Bit position for LPUART_CTRL_PEIE. */
+#define BM_LPUART_CTRL_PEIE  (0x01000000U) /*!< Bit mask for LPUART_CTRL_PEIE. */
+#define BS_LPUART_CTRL_PEIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_PEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_PEIE field.
-#define BR_LPUART_CTRL_PEIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PEIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_PEIE field. */
+#define BR_LPUART_CTRL_PEIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PEIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_PEIE.
-#define BF_LPUART_CTRL_PEIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_PEIE), uint32_t) & BM_LPUART_CTRL_PEIE)
+/*! @brief Format value for bitfield LPUART_CTRL_PEIE. */
+#define BF_LPUART_CTRL_PEIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_PEIE) & BM_LPUART_CTRL_PEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEIE field to a new value.
-#define BW_LPUART_CTRL_PEIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_PEIE) = (v))
-#endif
-//@}
+/*! @brief Set the PEIE field to a new value. */
+#define BW_LPUART_CTRL_PEIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_PEIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field FEIE[25] (RW)
@@ -1767,24 +1555,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - FE interrupts disabled; use polling.
  * - 1 - Hardware interrupt requested when FE is set.
  */
-//@{
-#define BP_LPUART_CTRL_FEIE  (25U)         //!< Bit position for LPUART_CTRL_FEIE.
-#define BM_LPUART_CTRL_FEIE  (0x02000000U) //!< Bit mask for LPUART_CTRL_FEIE.
-#define BS_LPUART_CTRL_FEIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_FEIE.
+/*@{*/
+#define BP_LPUART_CTRL_FEIE  (25U)         /*!< Bit position for LPUART_CTRL_FEIE. */
+#define BM_LPUART_CTRL_FEIE  (0x02000000U) /*!< Bit mask for LPUART_CTRL_FEIE. */
+#define BS_LPUART_CTRL_FEIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_FEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_FEIE field.
-#define BR_LPUART_CTRL_FEIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_FEIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_FEIE field. */
+#define BR_LPUART_CTRL_FEIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_FEIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_FEIE.
-#define BF_LPUART_CTRL_FEIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_FEIE), uint32_t) & BM_LPUART_CTRL_FEIE)
+/*! @brief Format value for bitfield LPUART_CTRL_FEIE. */
+#define BF_LPUART_CTRL_FEIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_FEIE) & BM_LPUART_CTRL_FEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FEIE field to a new value.
-#define BW_LPUART_CTRL_FEIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_FEIE) = (v))
-#endif
-//@}
+/*! @brief Set the FEIE field to a new value. */
+#define BW_LPUART_CTRL_FEIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_FEIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field NEIE[26] (RW)
@@ -1795,24 +1579,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - NF interrupts disabled; use polling.
  * - 1 - Hardware interrupt requested when NF is set.
  */
-//@{
-#define BP_LPUART_CTRL_NEIE  (26U)         //!< Bit position for LPUART_CTRL_NEIE.
-#define BM_LPUART_CTRL_NEIE  (0x04000000U) //!< Bit mask for LPUART_CTRL_NEIE.
-#define BS_LPUART_CTRL_NEIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_NEIE.
+/*@{*/
+#define BP_LPUART_CTRL_NEIE  (26U)         /*!< Bit position for LPUART_CTRL_NEIE. */
+#define BM_LPUART_CTRL_NEIE  (0x04000000U) /*!< Bit mask for LPUART_CTRL_NEIE. */
+#define BS_LPUART_CTRL_NEIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_NEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_NEIE field.
-#define BR_LPUART_CTRL_NEIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_NEIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_NEIE field. */
+#define BR_LPUART_CTRL_NEIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_NEIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_NEIE.
-#define BF_LPUART_CTRL_NEIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_NEIE), uint32_t) & BM_LPUART_CTRL_NEIE)
+/*! @brief Format value for bitfield LPUART_CTRL_NEIE. */
+#define BF_LPUART_CTRL_NEIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_NEIE) & BM_LPUART_CTRL_NEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NEIE field to a new value.
-#define BW_LPUART_CTRL_NEIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_NEIE) = (v))
-#endif
-//@}
+/*! @brief Set the NEIE field to a new value. */
+#define BW_LPUART_CTRL_NEIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_NEIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field ORIE[27] (RW)
@@ -1824,24 +1604,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - OR interrupts disabled; use polling.
  * - 1 - Hardware interrupt requested when OR is set.
  */
-//@{
-#define BP_LPUART_CTRL_ORIE  (27U)         //!< Bit position for LPUART_CTRL_ORIE.
-#define BM_LPUART_CTRL_ORIE  (0x08000000U) //!< Bit mask for LPUART_CTRL_ORIE.
-#define BS_LPUART_CTRL_ORIE  (1U)          //!< Bit field size in bits for LPUART_CTRL_ORIE.
+/*@{*/
+#define BP_LPUART_CTRL_ORIE  (27U)         /*!< Bit position for LPUART_CTRL_ORIE. */
+#define BM_LPUART_CTRL_ORIE  (0x08000000U) /*!< Bit mask for LPUART_CTRL_ORIE. */
+#define BS_LPUART_CTRL_ORIE  (1U)          /*!< Bit field size in bits for LPUART_CTRL_ORIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_ORIE field.
-#define BR_LPUART_CTRL_ORIE  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ORIE))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_ORIE field. */
+#define BR_LPUART_CTRL_ORIE(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ORIE))
 
-//! @brief Format value for bitfield LPUART_CTRL_ORIE.
-#define BF_LPUART_CTRL_ORIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_ORIE), uint32_t) & BM_LPUART_CTRL_ORIE)
+/*! @brief Format value for bitfield LPUART_CTRL_ORIE. */
+#define BF_LPUART_CTRL_ORIE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_ORIE) & BM_LPUART_CTRL_ORIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ORIE field to a new value.
-#define BW_LPUART_CTRL_ORIE(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_ORIE) = (v))
-#endif
-//@}
+/*! @brief Set the ORIE field to a new value. */
+#define BW_LPUART_CTRL_ORIE(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_ORIE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field TXINV[28] (RW)
@@ -1854,24 +1630,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - Transmit data not inverted.
  * - 1 - Transmit data inverted.
  */
-//@{
-#define BP_LPUART_CTRL_TXINV (28U)         //!< Bit position for LPUART_CTRL_TXINV.
-#define BM_LPUART_CTRL_TXINV (0x10000000U) //!< Bit mask for LPUART_CTRL_TXINV.
-#define BS_LPUART_CTRL_TXINV (1U)          //!< Bit field size in bits for LPUART_CTRL_TXINV.
+/*@{*/
+#define BP_LPUART_CTRL_TXINV (28U)         /*!< Bit position for LPUART_CTRL_TXINV. */
+#define BM_LPUART_CTRL_TXINV (0x10000000U) /*!< Bit mask for LPUART_CTRL_TXINV. */
+#define BS_LPUART_CTRL_TXINV (1U)          /*!< Bit field size in bits for LPUART_CTRL_TXINV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_TXINV field.
-#define BR_LPUART_CTRL_TXINV (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TXINV))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_TXINV field. */
+#define BR_LPUART_CTRL_TXINV(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TXINV))
 
-//! @brief Format value for bitfield LPUART_CTRL_TXINV.
-#define BF_LPUART_CTRL_TXINV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_TXINV), uint32_t) & BM_LPUART_CTRL_TXINV)
+/*! @brief Format value for bitfield LPUART_CTRL_TXINV. */
+#define BF_LPUART_CTRL_TXINV(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_TXINV) & BM_LPUART_CTRL_TXINV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXINV field to a new value.
-#define BW_LPUART_CTRL_TXINV(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TXINV) = (v))
-#endif
-//@}
+/*! @brief Set the TXINV field to a new value. */
+#define BW_LPUART_CTRL_TXINV(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TXINV) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field TXDIR[29] (RW)
@@ -1885,24 +1657,20 @@ typedef union _hw_lpuart_ctrl
  * - 0 - LPUART_TX pin is an input in single-wire mode.
  * - 1 - LPUART_TX pin is an output in single-wire mode.
  */
-//@{
-#define BP_LPUART_CTRL_TXDIR (29U)         //!< Bit position for LPUART_CTRL_TXDIR.
-#define BM_LPUART_CTRL_TXDIR (0x20000000U) //!< Bit mask for LPUART_CTRL_TXDIR.
-#define BS_LPUART_CTRL_TXDIR (1U)          //!< Bit field size in bits for LPUART_CTRL_TXDIR.
+/*@{*/
+#define BP_LPUART_CTRL_TXDIR (29U)         /*!< Bit position for LPUART_CTRL_TXDIR. */
+#define BM_LPUART_CTRL_TXDIR (0x20000000U) /*!< Bit mask for LPUART_CTRL_TXDIR. */
+#define BS_LPUART_CTRL_TXDIR (1U)          /*!< Bit field size in bits for LPUART_CTRL_TXDIR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_TXDIR field.
-#define BR_LPUART_CTRL_TXDIR (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TXDIR))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_TXDIR field. */
+#define BR_LPUART_CTRL_TXDIR(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TXDIR))
 
-//! @brief Format value for bitfield LPUART_CTRL_TXDIR.
-#define BF_LPUART_CTRL_TXDIR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_TXDIR), uint32_t) & BM_LPUART_CTRL_TXDIR)
+/*! @brief Format value for bitfield LPUART_CTRL_TXDIR. */
+#define BF_LPUART_CTRL_TXDIR(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_TXDIR) & BM_LPUART_CTRL_TXDIR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXDIR field to a new value.
-#define BW_LPUART_CTRL_TXDIR(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_TXDIR) = (v))
-#endif
-//@}
+/*! @brief Set the TXDIR field to a new value. */
+#define BW_LPUART_CTRL_TXDIR(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_TXDIR) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field R9T8[30] (RW)
@@ -1915,24 +1683,20 @@ typedef union _hw_lpuart_ctrl
  * it is used to generate address mark or parity, they it need not be written each
  * time LPUART_DATA is written.
  */
-//@{
-#define BP_LPUART_CTRL_R9T8  (30U)         //!< Bit position for LPUART_CTRL_R9T8.
-#define BM_LPUART_CTRL_R9T8  (0x40000000U) //!< Bit mask for LPUART_CTRL_R9T8.
-#define BS_LPUART_CTRL_R9T8  (1U)          //!< Bit field size in bits for LPUART_CTRL_R9T8.
+/*@{*/
+#define BP_LPUART_CTRL_R9T8  (30U)         /*!< Bit position for LPUART_CTRL_R9T8. */
+#define BM_LPUART_CTRL_R9T8  (0x40000000U) /*!< Bit mask for LPUART_CTRL_R9T8. */
+#define BS_LPUART_CTRL_R9T8  (1U)          /*!< Bit field size in bits for LPUART_CTRL_R9T8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_R9T8 field.
-#define BR_LPUART_CTRL_R9T8  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_R9T8))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_R9T8 field. */
+#define BR_LPUART_CTRL_R9T8(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_R9T8))
 
-//! @brief Format value for bitfield LPUART_CTRL_R9T8.
-#define BF_LPUART_CTRL_R9T8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_R9T8), uint32_t) & BM_LPUART_CTRL_R9T8)
+/*! @brief Format value for bitfield LPUART_CTRL_R9T8. */
+#define BF_LPUART_CTRL_R9T8(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_R9T8) & BM_LPUART_CTRL_R9T8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R9T8 field to a new value.
-#define BW_LPUART_CTRL_R9T8(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_R9T8) = (v))
-#endif
-//@}
+/*! @brief Set the R9T8 field to a new value. */
+#define BW_LPUART_CTRL_R9T8(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_R9T8) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_CTRL, field R8T9[31] (RW)
@@ -1945,30 +1709,25 @@ typedef union _hw_lpuart_ctrl
  * it is used to generate address mark or parity, they it need not be written
  * each time LPUART_DATA is written.
  */
-//@{
-#define BP_LPUART_CTRL_R8T9  (31U)         //!< Bit position for LPUART_CTRL_R8T9.
-#define BM_LPUART_CTRL_R8T9  (0x80000000U) //!< Bit mask for LPUART_CTRL_R8T9.
-#define BS_LPUART_CTRL_R8T9  (1U)          //!< Bit field size in bits for LPUART_CTRL_R8T9.
+/*@{*/
+#define BP_LPUART_CTRL_R8T9  (31U)         /*!< Bit position for LPUART_CTRL_R8T9. */
+#define BM_LPUART_CTRL_R8T9  (0x80000000U) /*!< Bit mask for LPUART_CTRL_R8T9. */
+#define BS_LPUART_CTRL_R8T9  (1U)          /*!< Bit field size in bits for LPUART_CTRL_R8T9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_CTRL_R8T9 field.
-#define BR_LPUART_CTRL_R8T9  (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_R8T9))
-#endif
+/*! @brief Read current value of the LPUART_CTRL_R8T9 field. */
+#define BR_LPUART_CTRL_R8T9(x) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_R8T9))
 
-//! @brief Format value for bitfield LPUART_CTRL_R8T9.
-#define BF_LPUART_CTRL_R8T9(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_CTRL_R8T9), uint32_t) & BM_LPUART_CTRL_R8T9)
+/*! @brief Format value for bitfield LPUART_CTRL_R8T9. */
+#define BF_LPUART_CTRL_R8T9(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_CTRL_R8T9) & BM_LPUART_CTRL_R8T9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R8T9 field to a new value.
-#define BW_LPUART_CTRL_R8T9(v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR, BP_LPUART_CTRL_R8T9) = (v))
-#endif
-//@}
+/*! @brief Set the R8T9 field to a new value. */
+#define BW_LPUART_CTRL_R8T9(x, v) (BITBAND_ACCESS32(HW_LPUART_CTRL_ADDR(x), BP_LPUART_CTRL_R8T9) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_DATA - LPUART Data Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_DATA - LPUART Data Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_DATA - LPUART Data Register (RW)
  *
@@ -1984,43 +1743,40 @@ typedef union _hw_lpuart_data
     uint32_t U;
     struct _hw_lpuart_data_bitfields
     {
-        uint32_t R0T0 : 1;             //!< [0]
-        uint32_t R1T1 : 1;             //!< [1]
-        uint32_t R2T2 : 1;             //!< [2]
-        uint32_t R3T3 : 1;             //!< [3]
-        uint32_t R4T4 : 1;             //!< [4]
-        uint32_t R5T5 : 1;             //!< [5]
-        uint32_t R6T6 : 1;             //!< [6]
-        uint32_t R7T7 : 1;             //!< [7]
-        uint32_t R8T8 : 1;             //!< [8]
-        uint32_t R9T9 : 1;             //!< [9]
-        uint32_t RESERVED0 : 1;        //!< [10]
-        uint32_t IDLINE : 1;           //!< [11] Idle Line
-        uint32_t RXEMPT : 1;           //!< [12] Receive Buffer Empty
-        uint32_t FRETSC : 1;           //!< [13] Frame Error / Transmit Special
-                                       //! Character
-        uint32_t PARITYE : 1;          //!< [14]
-        uint32_t NOISY : 1;            //!< [15]
-        uint32_t RESERVED1 : 16;       //!< [31:16]
+        uint32_t R0T0 : 1;             /*!< [0]  */
+        uint32_t R1T1 : 1;             /*!< [1]  */
+        uint32_t R2T2 : 1;             /*!< [2]  */
+        uint32_t R3T3 : 1;             /*!< [3]  */
+        uint32_t R4T4 : 1;             /*!< [4]  */
+        uint32_t R5T5 : 1;             /*!< [5]  */
+        uint32_t R6T6 : 1;             /*!< [6]  */
+        uint32_t R7T7 : 1;             /*!< [7]  */
+        uint32_t R8T8 : 1;             /*!< [8]  */
+        uint32_t R9T9 : 1;             /*!< [9]  */
+        uint32_t RESERVED0 : 1;        /*!< [10]  */
+        uint32_t IDLINE : 1;           /*!< [11] Idle Line */
+        uint32_t RXEMPT : 1;           /*!< [12] Receive Buffer Empty */
+        uint32_t FRETSC : 1;           /*!< [13] Frame Error / Transmit Special
+                                        * Character */
+        uint32_t PARITYE : 1;          /*!< [14]  */
+        uint32_t NOISY : 1;            /*!< [15]  */
+        uint32_t RESERVED1 : 16;       /*!< [31:16]  */
     } B;
 } hw_lpuart_data_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_DATA register
  */
-//@{
-#define HW_LPUART_DATA_ADDR      (REGS_LPUART_BASE + 0xCU)
+/*@{*/
+#define HW_LPUART_DATA_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_DATA           (*(__IO hw_lpuart_data_t *) HW_LPUART_DATA_ADDR)
-#define HW_LPUART_DATA_RD()      (HW_LPUART_DATA.U)
-#define HW_LPUART_DATA_WR(v)     (HW_LPUART_DATA.U = (v))
-#define HW_LPUART_DATA_SET(v)    (HW_LPUART_DATA_WR(HW_LPUART_DATA_RD() |  (v)))
-#define HW_LPUART_DATA_CLR(v)    (HW_LPUART_DATA_WR(HW_LPUART_DATA_RD() & ~(v)))
-#define HW_LPUART_DATA_TOG(v)    (HW_LPUART_DATA_WR(HW_LPUART_DATA_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_DATA(x)        (*(__IO hw_lpuart_data_t *) HW_LPUART_DATA_ADDR(x))
+#define HW_LPUART_DATA_RD(x)     (HW_LPUART_DATA(x).U)
+#define HW_LPUART_DATA_WR(x, v)  (HW_LPUART_DATA(x).U = (v))
+#define HW_LPUART_DATA_SET(x, v) (HW_LPUART_DATA_WR(x, HW_LPUART_DATA_RD(x) |  (v)))
+#define HW_LPUART_DATA_CLR(x, v) (HW_LPUART_DATA_WR(x, HW_LPUART_DATA_RD(x) & ~(v)))
+#define HW_LPUART_DATA_TOG(x, v) (HW_LPUART_DATA_WR(x, HW_LPUART_DATA_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_DATA bitfields
@@ -2031,240 +1787,200 @@ typedef union _hw_lpuart_data
  *
  * Read receive data buffer 0 or write transmit data buffer 0.
  */
-//@{
-#define BP_LPUART_DATA_R0T0  (0U)          //!< Bit position for LPUART_DATA_R0T0.
-#define BM_LPUART_DATA_R0T0  (0x00000001U) //!< Bit mask for LPUART_DATA_R0T0.
-#define BS_LPUART_DATA_R0T0  (1U)          //!< Bit field size in bits for LPUART_DATA_R0T0.
+/*@{*/
+#define BP_LPUART_DATA_R0T0  (0U)          /*!< Bit position for LPUART_DATA_R0T0. */
+#define BM_LPUART_DATA_R0T0  (0x00000001U) /*!< Bit mask for LPUART_DATA_R0T0. */
+#define BS_LPUART_DATA_R0T0  (1U)          /*!< Bit field size in bits for LPUART_DATA_R0T0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R0T0 field.
-#define BR_LPUART_DATA_R0T0  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R0T0))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R0T0 field. */
+#define BR_LPUART_DATA_R0T0(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R0T0))
 
-//! @brief Format value for bitfield LPUART_DATA_R0T0.
-#define BF_LPUART_DATA_R0T0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R0T0), uint32_t) & BM_LPUART_DATA_R0T0)
+/*! @brief Format value for bitfield LPUART_DATA_R0T0. */
+#define BF_LPUART_DATA_R0T0(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R0T0) & BM_LPUART_DATA_R0T0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R0T0 field to a new value.
-#define BW_LPUART_DATA_R0T0(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R0T0) = (v))
-#endif
-//@}
+/*! @brief Set the R0T0 field to a new value. */
+#define BW_LPUART_DATA_R0T0(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R0T0) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R1T1[1] (RW)
  *
  * Read receive data buffer 1 or write transmit data buffer 1.
  */
-//@{
-#define BP_LPUART_DATA_R1T1  (1U)          //!< Bit position for LPUART_DATA_R1T1.
-#define BM_LPUART_DATA_R1T1  (0x00000002U) //!< Bit mask for LPUART_DATA_R1T1.
-#define BS_LPUART_DATA_R1T1  (1U)          //!< Bit field size in bits for LPUART_DATA_R1T1.
+/*@{*/
+#define BP_LPUART_DATA_R1T1  (1U)          /*!< Bit position for LPUART_DATA_R1T1. */
+#define BM_LPUART_DATA_R1T1  (0x00000002U) /*!< Bit mask for LPUART_DATA_R1T1. */
+#define BS_LPUART_DATA_R1T1  (1U)          /*!< Bit field size in bits for LPUART_DATA_R1T1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R1T1 field.
-#define BR_LPUART_DATA_R1T1  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R1T1))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R1T1 field. */
+#define BR_LPUART_DATA_R1T1(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R1T1))
 
-//! @brief Format value for bitfield LPUART_DATA_R1T1.
-#define BF_LPUART_DATA_R1T1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R1T1), uint32_t) & BM_LPUART_DATA_R1T1)
+/*! @brief Format value for bitfield LPUART_DATA_R1T1. */
+#define BF_LPUART_DATA_R1T1(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R1T1) & BM_LPUART_DATA_R1T1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R1T1 field to a new value.
-#define BW_LPUART_DATA_R1T1(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R1T1) = (v))
-#endif
-//@}
+/*! @brief Set the R1T1 field to a new value. */
+#define BW_LPUART_DATA_R1T1(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R1T1) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R2T2[2] (RW)
  *
  * Read receive data buffer 2 or write transmit data buffer 2.
  */
-//@{
-#define BP_LPUART_DATA_R2T2  (2U)          //!< Bit position for LPUART_DATA_R2T2.
-#define BM_LPUART_DATA_R2T2  (0x00000004U) //!< Bit mask for LPUART_DATA_R2T2.
-#define BS_LPUART_DATA_R2T2  (1U)          //!< Bit field size in bits for LPUART_DATA_R2T2.
+/*@{*/
+#define BP_LPUART_DATA_R2T2  (2U)          /*!< Bit position for LPUART_DATA_R2T2. */
+#define BM_LPUART_DATA_R2T2  (0x00000004U) /*!< Bit mask for LPUART_DATA_R2T2. */
+#define BS_LPUART_DATA_R2T2  (1U)          /*!< Bit field size in bits for LPUART_DATA_R2T2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R2T2 field.
-#define BR_LPUART_DATA_R2T2  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R2T2))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R2T2 field. */
+#define BR_LPUART_DATA_R2T2(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R2T2))
 
-//! @brief Format value for bitfield LPUART_DATA_R2T2.
-#define BF_LPUART_DATA_R2T2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R2T2), uint32_t) & BM_LPUART_DATA_R2T2)
+/*! @brief Format value for bitfield LPUART_DATA_R2T2. */
+#define BF_LPUART_DATA_R2T2(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R2T2) & BM_LPUART_DATA_R2T2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2T2 field to a new value.
-#define BW_LPUART_DATA_R2T2(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R2T2) = (v))
-#endif
-//@}
+/*! @brief Set the R2T2 field to a new value. */
+#define BW_LPUART_DATA_R2T2(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R2T2) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R3T3[3] (RW)
  *
  * Read receive data buffer 3 or write transmit data buffer 3.
  */
-//@{
-#define BP_LPUART_DATA_R3T3  (3U)          //!< Bit position for LPUART_DATA_R3T3.
-#define BM_LPUART_DATA_R3T3  (0x00000008U) //!< Bit mask for LPUART_DATA_R3T3.
-#define BS_LPUART_DATA_R3T3  (1U)          //!< Bit field size in bits for LPUART_DATA_R3T3.
+/*@{*/
+#define BP_LPUART_DATA_R3T3  (3U)          /*!< Bit position for LPUART_DATA_R3T3. */
+#define BM_LPUART_DATA_R3T3  (0x00000008U) /*!< Bit mask for LPUART_DATA_R3T3. */
+#define BS_LPUART_DATA_R3T3  (1U)          /*!< Bit field size in bits for LPUART_DATA_R3T3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R3T3 field.
-#define BR_LPUART_DATA_R3T3  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R3T3))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R3T3 field. */
+#define BR_LPUART_DATA_R3T3(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R3T3))
 
-//! @brief Format value for bitfield LPUART_DATA_R3T3.
-#define BF_LPUART_DATA_R3T3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R3T3), uint32_t) & BM_LPUART_DATA_R3T3)
+/*! @brief Format value for bitfield LPUART_DATA_R3T3. */
+#define BF_LPUART_DATA_R3T3(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R3T3) & BM_LPUART_DATA_R3T3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R3T3 field to a new value.
-#define BW_LPUART_DATA_R3T3(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R3T3) = (v))
-#endif
-//@}
+/*! @brief Set the R3T3 field to a new value. */
+#define BW_LPUART_DATA_R3T3(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R3T3) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R4T4[4] (RW)
  *
  * Read receive data buffer 4 or write transmit data buffer 4.
  */
-//@{
-#define BP_LPUART_DATA_R4T4  (4U)          //!< Bit position for LPUART_DATA_R4T4.
-#define BM_LPUART_DATA_R4T4  (0x00000010U) //!< Bit mask for LPUART_DATA_R4T4.
-#define BS_LPUART_DATA_R4T4  (1U)          //!< Bit field size in bits for LPUART_DATA_R4T4.
+/*@{*/
+#define BP_LPUART_DATA_R4T4  (4U)          /*!< Bit position for LPUART_DATA_R4T4. */
+#define BM_LPUART_DATA_R4T4  (0x00000010U) /*!< Bit mask for LPUART_DATA_R4T4. */
+#define BS_LPUART_DATA_R4T4  (1U)          /*!< Bit field size in bits for LPUART_DATA_R4T4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R4T4 field.
-#define BR_LPUART_DATA_R4T4  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R4T4))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R4T4 field. */
+#define BR_LPUART_DATA_R4T4(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R4T4))
 
-//! @brief Format value for bitfield LPUART_DATA_R4T4.
-#define BF_LPUART_DATA_R4T4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R4T4), uint32_t) & BM_LPUART_DATA_R4T4)
+/*! @brief Format value for bitfield LPUART_DATA_R4T4. */
+#define BF_LPUART_DATA_R4T4(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R4T4) & BM_LPUART_DATA_R4T4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R4T4 field to a new value.
-#define BW_LPUART_DATA_R4T4(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R4T4) = (v))
-#endif
-//@}
+/*! @brief Set the R4T4 field to a new value. */
+#define BW_LPUART_DATA_R4T4(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R4T4) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R5T5[5] (RW)
  *
  * Read receive data buffer 5 or write transmit data buffer 5.
  */
-//@{
-#define BP_LPUART_DATA_R5T5  (5U)          //!< Bit position for LPUART_DATA_R5T5.
-#define BM_LPUART_DATA_R5T5  (0x00000020U) //!< Bit mask for LPUART_DATA_R5T5.
-#define BS_LPUART_DATA_R5T5  (1U)          //!< Bit field size in bits for LPUART_DATA_R5T5.
+/*@{*/
+#define BP_LPUART_DATA_R5T5  (5U)          /*!< Bit position for LPUART_DATA_R5T5. */
+#define BM_LPUART_DATA_R5T5  (0x00000020U) /*!< Bit mask for LPUART_DATA_R5T5. */
+#define BS_LPUART_DATA_R5T5  (1U)          /*!< Bit field size in bits for LPUART_DATA_R5T5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R5T5 field.
-#define BR_LPUART_DATA_R5T5  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R5T5))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R5T5 field. */
+#define BR_LPUART_DATA_R5T5(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R5T5))
 
-//! @brief Format value for bitfield LPUART_DATA_R5T5.
-#define BF_LPUART_DATA_R5T5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R5T5), uint32_t) & BM_LPUART_DATA_R5T5)
+/*! @brief Format value for bitfield LPUART_DATA_R5T5. */
+#define BF_LPUART_DATA_R5T5(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R5T5) & BM_LPUART_DATA_R5T5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R5T5 field to a new value.
-#define BW_LPUART_DATA_R5T5(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R5T5) = (v))
-#endif
-//@}
+/*! @brief Set the R5T5 field to a new value. */
+#define BW_LPUART_DATA_R5T5(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R5T5) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R6T6[6] (RW)
  *
  * Read receive data buffer 6 or write transmit data buffer 6.
  */
-//@{
-#define BP_LPUART_DATA_R6T6  (6U)          //!< Bit position for LPUART_DATA_R6T6.
-#define BM_LPUART_DATA_R6T6  (0x00000040U) //!< Bit mask for LPUART_DATA_R6T6.
-#define BS_LPUART_DATA_R6T6  (1U)          //!< Bit field size in bits for LPUART_DATA_R6T6.
+/*@{*/
+#define BP_LPUART_DATA_R6T6  (6U)          /*!< Bit position for LPUART_DATA_R6T6. */
+#define BM_LPUART_DATA_R6T6  (0x00000040U) /*!< Bit mask for LPUART_DATA_R6T6. */
+#define BS_LPUART_DATA_R6T6  (1U)          /*!< Bit field size in bits for LPUART_DATA_R6T6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R6T6 field.
-#define BR_LPUART_DATA_R6T6  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R6T6))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R6T6 field. */
+#define BR_LPUART_DATA_R6T6(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R6T6))
 
-//! @brief Format value for bitfield LPUART_DATA_R6T6.
-#define BF_LPUART_DATA_R6T6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R6T6), uint32_t) & BM_LPUART_DATA_R6T6)
+/*! @brief Format value for bitfield LPUART_DATA_R6T6. */
+#define BF_LPUART_DATA_R6T6(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R6T6) & BM_LPUART_DATA_R6T6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R6T6 field to a new value.
-#define BW_LPUART_DATA_R6T6(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R6T6) = (v))
-#endif
-//@}
+/*! @brief Set the R6T6 field to a new value. */
+#define BW_LPUART_DATA_R6T6(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R6T6) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R7T7[7] (RW)
  *
  * Read receive data buffer 7 or write transmit data buffer 7.
  */
-//@{
-#define BP_LPUART_DATA_R7T7  (7U)          //!< Bit position for LPUART_DATA_R7T7.
-#define BM_LPUART_DATA_R7T7  (0x00000080U) //!< Bit mask for LPUART_DATA_R7T7.
-#define BS_LPUART_DATA_R7T7  (1U)          //!< Bit field size in bits for LPUART_DATA_R7T7.
+/*@{*/
+#define BP_LPUART_DATA_R7T7  (7U)          /*!< Bit position for LPUART_DATA_R7T7. */
+#define BM_LPUART_DATA_R7T7  (0x00000080U) /*!< Bit mask for LPUART_DATA_R7T7. */
+#define BS_LPUART_DATA_R7T7  (1U)          /*!< Bit field size in bits for LPUART_DATA_R7T7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R7T7 field.
-#define BR_LPUART_DATA_R7T7  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R7T7))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R7T7 field. */
+#define BR_LPUART_DATA_R7T7(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R7T7))
 
-//! @brief Format value for bitfield LPUART_DATA_R7T7.
-#define BF_LPUART_DATA_R7T7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R7T7), uint32_t) & BM_LPUART_DATA_R7T7)
+/*! @brief Format value for bitfield LPUART_DATA_R7T7. */
+#define BF_LPUART_DATA_R7T7(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R7T7) & BM_LPUART_DATA_R7T7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R7T7 field to a new value.
-#define BW_LPUART_DATA_R7T7(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R7T7) = (v))
-#endif
-//@}
+/*! @brief Set the R7T7 field to a new value. */
+#define BW_LPUART_DATA_R7T7(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R7T7) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R8T8[8] (RW)
  *
  * Read receive data buffer 8 or write transmit data buffer 8.
  */
-//@{
-#define BP_LPUART_DATA_R8T8  (8U)          //!< Bit position for LPUART_DATA_R8T8.
-#define BM_LPUART_DATA_R8T8  (0x00000100U) //!< Bit mask for LPUART_DATA_R8T8.
-#define BS_LPUART_DATA_R8T8  (1U)          //!< Bit field size in bits for LPUART_DATA_R8T8.
+/*@{*/
+#define BP_LPUART_DATA_R8T8  (8U)          /*!< Bit position for LPUART_DATA_R8T8. */
+#define BM_LPUART_DATA_R8T8  (0x00000100U) /*!< Bit mask for LPUART_DATA_R8T8. */
+#define BS_LPUART_DATA_R8T8  (1U)          /*!< Bit field size in bits for LPUART_DATA_R8T8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R8T8 field.
-#define BR_LPUART_DATA_R8T8  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R8T8))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R8T8 field. */
+#define BR_LPUART_DATA_R8T8(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R8T8))
 
-//! @brief Format value for bitfield LPUART_DATA_R8T8.
-#define BF_LPUART_DATA_R8T8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R8T8), uint32_t) & BM_LPUART_DATA_R8T8)
+/*! @brief Format value for bitfield LPUART_DATA_R8T8. */
+#define BF_LPUART_DATA_R8T8(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R8T8) & BM_LPUART_DATA_R8T8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R8T8 field to a new value.
-#define BW_LPUART_DATA_R8T8(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R8T8) = (v))
-#endif
-//@}
+/*! @brief Set the R8T8 field to a new value. */
+#define BW_LPUART_DATA_R8T8(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R8T8) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field R9T9[9] (RW)
  *
  * Read receive data buffer 9 or write transmit data buffer 9.
  */
-//@{
-#define BP_LPUART_DATA_R9T9  (9U)          //!< Bit position for LPUART_DATA_R9T9.
-#define BM_LPUART_DATA_R9T9  (0x00000200U) //!< Bit mask for LPUART_DATA_R9T9.
-#define BS_LPUART_DATA_R9T9  (1U)          //!< Bit field size in bits for LPUART_DATA_R9T9.
+/*@{*/
+#define BP_LPUART_DATA_R9T9  (9U)          /*!< Bit position for LPUART_DATA_R9T9. */
+#define BM_LPUART_DATA_R9T9  (0x00000200U) /*!< Bit mask for LPUART_DATA_R9T9. */
+#define BS_LPUART_DATA_R9T9  (1U)          /*!< Bit field size in bits for LPUART_DATA_R9T9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_R9T9 field.
-#define BR_LPUART_DATA_R9T9  (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R9T9))
-#endif
+/*! @brief Read current value of the LPUART_DATA_R9T9 field. */
+#define BR_LPUART_DATA_R9T9(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R9T9))
 
-//! @brief Format value for bitfield LPUART_DATA_R9T9.
-#define BF_LPUART_DATA_R9T9(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_R9T9), uint32_t) & BM_LPUART_DATA_R9T9)
+/*! @brief Format value for bitfield LPUART_DATA_R9T9. */
+#define BF_LPUART_DATA_R9T9(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_R9T9) & BM_LPUART_DATA_R9T9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R9T9 field to a new value.
-#define BW_LPUART_DATA_R9T9(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_R9T9) = (v))
-#endif
-//@}
+/*! @brief Set the R9T9 field to a new value. */
+#define BW_LPUART_DATA_R9T9(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_R9T9) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field IDLINE[11] (RO)
@@ -2277,16 +1993,14 @@ typedef union _hw_lpuart_data
  * - 0 - Receiver was not idle before receiving this character.
  * - 1 - Receiver was idle before receiving this character.
  */
-//@{
-#define BP_LPUART_DATA_IDLINE (11U)        //!< Bit position for LPUART_DATA_IDLINE.
-#define BM_LPUART_DATA_IDLINE (0x00000800U) //!< Bit mask for LPUART_DATA_IDLINE.
-#define BS_LPUART_DATA_IDLINE (1U)         //!< Bit field size in bits for LPUART_DATA_IDLINE.
+/*@{*/
+#define BP_LPUART_DATA_IDLINE (11U)        /*!< Bit position for LPUART_DATA_IDLINE. */
+#define BM_LPUART_DATA_IDLINE (0x00000800U) /*!< Bit mask for LPUART_DATA_IDLINE. */
+#define BS_LPUART_DATA_IDLINE (1U)         /*!< Bit field size in bits for LPUART_DATA_IDLINE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_IDLINE field.
-#define BR_LPUART_DATA_IDLINE (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_IDLINE))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_DATA_IDLINE field. */
+#define BR_LPUART_DATA_IDLINE(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_IDLINE))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field RXEMPT[12] (RO)
@@ -2298,16 +2012,14 @@ typedef union _hw_lpuart_data
  * - 0 - Receive buffer contains valid data.
  * - 1 - Receive buffer is empty, data returned on read is not valid.
  */
-//@{
-#define BP_LPUART_DATA_RXEMPT (12U)        //!< Bit position for LPUART_DATA_RXEMPT.
-#define BM_LPUART_DATA_RXEMPT (0x00001000U) //!< Bit mask for LPUART_DATA_RXEMPT.
-#define BS_LPUART_DATA_RXEMPT (1U)         //!< Bit field size in bits for LPUART_DATA_RXEMPT.
+/*@{*/
+#define BP_LPUART_DATA_RXEMPT (12U)        /*!< Bit position for LPUART_DATA_RXEMPT. */
+#define BM_LPUART_DATA_RXEMPT (0x00001000U) /*!< Bit mask for LPUART_DATA_RXEMPT. */
+#define BS_LPUART_DATA_RXEMPT (1U)         /*!< Bit field size in bits for LPUART_DATA_RXEMPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_RXEMPT field.
-#define BR_LPUART_DATA_RXEMPT (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_RXEMPT))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_DATA_RXEMPT field. */
+#define BR_LPUART_DATA_RXEMPT(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_RXEMPT))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field FRETSC[13] (RW)
@@ -2324,24 +2036,20 @@ typedef union _hw_lpuart_data
  * - 1 - The dataword was received with a frame error, transmit an idle or break
  *     character on transmit.
  */
-//@{
-#define BP_LPUART_DATA_FRETSC (13U)        //!< Bit position for LPUART_DATA_FRETSC.
-#define BM_LPUART_DATA_FRETSC (0x00002000U) //!< Bit mask for LPUART_DATA_FRETSC.
-#define BS_LPUART_DATA_FRETSC (1U)         //!< Bit field size in bits for LPUART_DATA_FRETSC.
+/*@{*/
+#define BP_LPUART_DATA_FRETSC (13U)        /*!< Bit position for LPUART_DATA_FRETSC. */
+#define BM_LPUART_DATA_FRETSC (0x00002000U) /*!< Bit mask for LPUART_DATA_FRETSC. */
+#define BS_LPUART_DATA_FRETSC (1U)         /*!< Bit field size in bits for LPUART_DATA_FRETSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_FRETSC field.
-#define BR_LPUART_DATA_FRETSC (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_FRETSC))
-#endif
+/*! @brief Read current value of the LPUART_DATA_FRETSC field. */
+#define BR_LPUART_DATA_FRETSC(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_FRETSC))
 
-//! @brief Format value for bitfield LPUART_DATA_FRETSC.
-#define BF_LPUART_DATA_FRETSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_DATA_FRETSC), uint32_t) & BM_LPUART_DATA_FRETSC)
+/*! @brief Format value for bitfield LPUART_DATA_FRETSC. */
+#define BF_LPUART_DATA_FRETSC(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_DATA_FRETSC) & BM_LPUART_DATA_FRETSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRETSC field to a new value.
-#define BW_LPUART_DATA_FRETSC(v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_FRETSC) = (v))
-#endif
-//@}
+/*! @brief Set the FRETSC field to a new value. */
+#define BW_LPUART_DATA_FRETSC(x, v) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_FRETSC) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field PARITYE[14] (RO)
@@ -2353,16 +2061,14 @@ typedef union _hw_lpuart_data
  * - 0 - The dataword was received without a parity error.
  * - 1 - The dataword was received with a parity error.
  */
-//@{
-#define BP_LPUART_DATA_PARITYE (14U)       //!< Bit position for LPUART_DATA_PARITYE.
-#define BM_LPUART_DATA_PARITYE (0x00004000U) //!< Bit mask for LPUART_DATA_PARITYE.
-#define BS_LPUART_DATA_PARITYE (1U)        //!< Bit field size in bits for LPUART_DATA_PARITYE.
+/*@{*/
+#define BP_LPUART_DATA_PARITYE (14U)       /*!< Bit position for LPUART_DATA_PARITYE. */
+#define BM_LPUART_DATA_PARITYE (0x00004000U) /*!< Bit mask for LPUART_DATA_PARITYE. */
+#define BS_LPUART_DATA_PARITYE (1U)        /*!< Bit field size in bits for LPUART_DATA_PARITYE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_PARITYE field.
-#define BR_LPUART_DATA_PARITYE (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_PARITYE))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_DATA_PARITYE field. */
+#define BR_LPUART_DATA_PARITYE(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_PARITYE))
+/*@}*/
 
 /*!
  * @name Register LPUART_DATA, field NOISY[15] (RO)
@@ -2374,22 +2080,19 @@ typedef union _hw_lpuart_data
  * - 0 - The dataword was received without noise.
  * - 1 - The data was received with noise.
  */
-//@{
-#define BP_LPUART_DATA_NOISY (15U)         //!< Bit position for LPUART_DATA_NOISY.
-#define BM_LPUART_DATA_NOISY (0x00008000U) //!< Bit mask for LPUART_DATA_NOISY.
-#define BS_LPUART_DATA_NOISY (1U)          //!< Bit field size in bits for LPUART_DATA_NOISY.
+/*@{*/
+#define BP_LPUART_DATA_NOISY (15U)         /*!< Bit position for LPUART_DATA_NOISY. */
+#define BM_LPUART_DATA_NOISY (0x00008000U) /*!< Bit mask for LPUART_DATA_NOISY. */
+#define BS_LPUART_DATA_NOISY (1U)          /*!< Bit field size in bits for LPUART_DATA_NOISY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_DATA_NOISY field.
-#define BR_LPUART_DATA_NOISY (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR, BP_LPUART_DATA_NOISY))
-#endif
-//@}
+/*! @brief Read current value of the LPUART_DATA_NOISY field. */
+#define BR_LPUART_DATA_NOISY(x) (BITBAND_ACCESS32(HW_LPUART_DATA_ADDR(x), BP_LPUART_DATA_NOISY))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_MATCH - LPUART Match Address Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_MATCH - LPUART Match Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_MATCH - LPUART Match Address Register (RW)
  *
@@ -2400,29 +2103,26 @@ typedef union _hw_lpuart_match
     uint32_t U;
     struct _hw_lpuart_match_bitfields
     {
-        uint32_t MA1 : 10;             //!< [9:0] Match Address 1
-        uint32_t RESERVED0 : 6;        //!< [15:10]
-        uint32_t MA2 : 10;             //!< [25:16] Match Address 2
-        uint32_t RESERVED1 : 6;        //!< [31:26]
+        uint32_t MA1 : 10;             /*!< [9:0] Match Address 1 */
+        uint32_t RESERVED0 : 6;        /*!< [15:10]  */
+        uint32_t MA2 : 10;             /*!< [25:16] Match Address 2 */
+        uint32_t RESERVED1 : 6;        /*!< [31:26]  */
     } B;
 } hw_lpuart_match_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_MATCH register
  */
-//@{
-#define HW_LPUART_MATCH_ADDR     (REGS_LPUART_BASE + 0x10U)
+/*@{*/
+#define HW_LPUART_MATCH_ADDR(x)  ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_MATCH          (*(__IO hw_lpuart_match_t *) HW_LPUART_MATCH_ADDR)
-#define HW_LPUART_MATCH_RD()     (HW_LPUART_MATCH.U)
-#define HW_LPUART_MATCH_WR(v)    (HW_LPUART_MATCH.U = (v))
-#define HW_LPUART_MATCH_SET(v)   (HW_LPUART_MATCH_WR(HW_LPUART_MATCH_RD() |  (v)))
-#define HW_LPUART_MATCH_CLR(v)   (HW_LPUART_MATCH_WR(HW_LPUART_MATCH_RD() & ~(v)))
-#define HW_LPUART_MATCH_TOG(v)   (HW_LPUART_MATCH_WR(HW_LPUART_MATCH_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_MATCH(x)       (*(__IO hw_lpuart_match_t *) HW_LPUART_MATCH_ADDR(x))
+#define HW_LPUART_MATCH_RD(x)    (HW_LPUART_MATCH(x).U)
+#define HW_LPUART_MATCH_WR(x, v) (HW_LPUART_MATCH(x).U = (v))
+#define HW_LPUART_MATCH_SET(x, v) (HW_LPUART_MATCH_WR(x, HW_LPUART_MATCH_RD(x) |  (v)))
+#define HW_LPUART_MATCH_CLR(x, v) (HW_LPUART_MATCH_WR(x, HW_LPUART_MATCH_RD(x) & ~(v)))
+#define HW_LPUART_MATCH_TOG(x, v) (HW_LPUART_MATCH_WR(x, HW_LPUART_MATCH_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_MATCH bitfields
@@ -2437,24 +2137,20 @@ typedef union _hw_lpuart_match
  * fails, the following data is discarded. Software should only write a MA register
  * when the associated BAUD[MAEN] bit is clear.
  */
-//@{
-#define BP_LPUART_MATCH_MA1  (0U)          //!< Bit position for LPUART_MATCH_MA1.
-#define BM_LPUART_MATCH_MA1  (0x000003FFU) //!< Bit mask for LPUART_MATCH_MA1.
-#define BS_LPUART_MATCH_MA1  (10U)         //!< Bit field size in bits for LPUART_MATCH_MA1.
+/*@{*/
+#define BP_LPUART_MATCH_MA1  (0U)          /*!< Bit position for LPUART_MATCH_MA1. */
+#define BM_LPUART_MATCH_MA1  (0x000003FFU) /*!< Bit mask for LPUART_MATCH_MA1. */
+#define BS_LPUART_MATCH_MA1  (10U)         /*!< Bit field size in bits for LPUART_MATCH_MA1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MATCH_MA1 field.
-#define BR_LPUART_MATCH_MA1  (HW_LPUART_MATCH.B.MA1)
-#endif
+/*! @brief Read current value of the LPUART_MATCH_MA1 field. */
+#define BR_LPUART_MATCH_MA1(x) (HW_LPUART_MATCH(x).B.MA1)
 
-//! @brief Format value for bitfield LPUART_MATCH_MA1.
-#define BF_LPUART_MATCH_MA1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MATCH_MA1), uint32_t) & BM_LPUART_MATCH_MA1)
+/*! @brief Format value for bitfield LPUART_MATCH_MA1. */
+#define BF_LPUART_MATCH_MA1(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MATCH_MA1) & BM_LPUART_MATCH_MA1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA1 field to a new value.
-#define BW_LPUART_MATCH_MA1(v) (HW_LPUART_MATCH_WR((HW_LPUART_MATCH_RD() & ~BM_LPUART_MATCH_MA1) | BF_LPUART_MATCH_MA1(v)))
-#endif
-//@}
+/*! @brief Set the MA1 field to a new value. */
+#define BW_LPUART_MATCH_MA1(x, v) (HW_LPUART_MATCH_WR(x, (HW_LPUART_MATCH_RD(x) & ~BM_LPUART_MATCH_MA1) | BF_LPUART_MATCH_MA1(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_MATCH, field MA2[25:16] (RW)
@@ -2465,30 +2161,25 @@ typedef union _hw_lpuart_match
  * fails, the following data is discarded. Software should only write a MA register
  * when the associated BAUD[MAEN] bit is clear.
  */
-//@{
-#define BP_LPUART_MATCH_MA2  (16U)         //!< Bit position for LPUART_MATCH_MA2.
-#define BM_LPUART_MATCH_MA2  (0x03FF0000U) //!< Bit mask for LPUART_MATCH_MA2.
-#define BS_LPUART_MATCH_MA2  (10U)         //!< Bit field size in bits for LPUART_MATCH_MA2.
+/*@{*/
+#define BP_LPUART_MATCH_MA2  (16U)         /*!< Bit position for LPUART_MATCH_MA2. */
+#define BM_LPUART_MATCH_MA2  (0x03FF0000U) /*!< Bit mask for LPUART_MATCH_MA2. */
+#define BS_LPUART_MATCH_MA2  (10U)         /*!< Bit field size in bits for LPUART_MATCH_MA2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MATCH_MA2 field.
-#define BR_LPUART_MATCH_MA2  (HW_LPUART_MATCH.B.MA2)
-#endif
+/*! @brief Read current value of the LPUART_MATCH_MA2 field. */
+#define BR_LPUART_MATCH_MA2(x) (HW_LPUART_MATCH(x).B.MA2)
 
-//! @brief Format value for bitfield LPUART_MATCH_MA2.
-#define BF_LPUART_MATCH_MA2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MATCH_MA2), uint32_t) & BM_LPUART_MATCH_MA2)
+/*! @brief Format value for bitfield LPUART_MATCH_MA2. */
+#define BF_LPUART_MATCH_MA2(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MATCH_MA2) & BM_LPUART_MATCH_MA2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MA2 field to a new value.
-#define BW_LPUART_MATCH_MA2(v) (HW_LPUART_MATCH_WR((HW_LPUART_MATCH_RD() & ~BM_LPUART_MATCH_MA2) | BF_LPUART_MATCH_MA2(v)))
-#endif
-//@}
+/*! @brief Set the MA2 field to a new value. */
+#define BW_LPUART_MATCH_MA2(x, v) (HW_LPUART_MATCH_WR(x, (HW_LPUART_MATCH_RD(x) & ~BM_LPUART_MATCH_MA2) | BF_LPUART_MATCH_MA2(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPUART_MODIR - LPUART Modem IrDA Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPUART_MODIR - LPUART Modem IrDA Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPUART_MODIR - LPUART Modem IrDA Register (RW)
  *
@@ -2501,35 +2192,33 @@ typedef union _hw_lpuart_modir
     uint32_t U;
     struct _hw_lpuart_modir_bitfields
     {
-        uint32_t TXCTSE : 1;           //!< [0] Transmitter clear-to-send enable
-        uint32_t TXRTSE : 1;           //!< [1] Transmitter request-to-send enable
-        uint32_t TXRTSPOL : 1;         //!< [2] Transmitter request-to-send polarity
-        uint32_t RXRTSE : 1;           //!< [3] Receiver request-to-send enable
-        uint32_t TXCTSC : 1;           //!< [4] Transmit CTS Configuration
-        uint32_t TXCTSSRC : 1;         //!< [5] Transmit CTS Source
-        uint32_t RESERVED0 : 10;       //!< [15:6]
-        uint32_t TNP : 2;              //!< [17:16] Transmitter narrow pulse
-        uint32_t IREN : 1;             //!< [18] Infrared enable
-        uint32_t RESERVED1 : 13;       //!< [31:19]
+        uint32_t TXCTSE : 1;           /*!< [0] Transmitter clear-to-send enable */
+        uint32_t TXRTSE : 1;           /*!< [1] Transmitter request-to-send enable */
+        uint32_t TXRTSPOL : 1;         /*!< [2] Transmitter request-to-send polarity
+                                        * */
+        uint32_t RXRTSE : 1;           /*!< [3] Receiver request-to-send enable */
+        uint32_t TXCTSC : 1;           /*!< [4] Transmit CTS Configuration */
+        uint32_t TXCTSSRC : 1;         /*!< [5] Transmit CTS Source */
+        uint32_t RESERVED0 : 10;       /*!< [15:6]  */
+        uint32_t TNP : 2;              /*!< [17:16] Transmitter narrow pulse */
+        uint32_t IREN : 1;             /*!< [18] Infrared enable */
+        uint32_t RESERVED1 : 13;       /*!< [31:19]  */
     } B;
 } hw_lpuart_modir_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPUART_MODIR register
  */
-//@{
-#define HW_LPUART_MODIR_ADDR     (REGS_LPUART_BASE + 0x14U)
+/*@{*/
+#define HW_LPUART_MODIR_ADDR(x)  ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPUART_MODIR          (*(__IO hw_lpuart_modir_t *) HW_LPUART_MODIR_ADDR)
-#define HW_LPUART_MODIR_RD()     (HW_LPUART_MODIR.U)
-#define HW_LPUART_MODIR_WR(v)    (HW_LPUART_MODIR.U = (v))
-#define HW_LPUART_MODIR_SET(v)   (HW_LPUART_MODIR_WR(HW_LPUART_MODIR_RD() |  (v)))
-#define HW_LPUART_MODIR_CLR(v)   (HW_LPUART_MODIR_WR(HW_LPUART_MODIR_RD() & ~(v)))
-#define HW_LPUART_MODIR_TOG(v)   (HW_LPUART_MODIR_WR(HW_LPUART_MODIR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LPUART_MODIR(x)       (*(__IO hw_lpuart_modir_t *) HW_LPUART_MODIR_ADDR(x))
+#define HW_LPUART_MODIR_RD(x)    (HW_LPUART_MODIR(x).U)
+#define HW_LPUART_MODIR_WR(x, v) (HW_LPUART_MODIR(x).U = (v))
+#define HW_LPUART_MODIR_SET(x, v) (HW_LPUART_MODIR_WR(x, HW_LPUART_MODIR_RD(x) |  (v)))
+#define HW_LPUART_MODIR_CLR(x, v) (HW_LPUART_MODIR_WR(x, HW_LPUART_MODIR_RD(x) & ~(v)))
+#define HW_LPUART_MODIR_TOG(x, v) (HW_LPUART_MODIR_WR(x, HW_LPUART_MODIR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPUART_MODIR bitfields
@@ -2549,24 +2238,20 @@ typedef union _hw_lpuart_modir
  *     state and transmission is delayed until CTS is asserted. Changes in CTS as a
  *     character is being sent do not affect its transmission.
  */
-//@{
-#define BP_LPUART_MODIR_TXCTSE (0U)        //!< Bit position for LPUART_MODIR_TXCTSE.
-#define BM_LPUART_MODIR_TXCTSE (0x00000001U) //!< Bit mask for LPUART_MODIR_TXCTSE.
-#define BS_LPUART_MODIR_TXCTSE (1U)        //!< Bit field size in bits for LPUART_MODIR_TXCTSE.
+/*@{*/
+#define BP_LPUART_MODIR_TXCTSE (0U)        /*!< Bit position for LPUART_MODIR_TXCTSE. */
+#define BM_LPUART_MODIR_TXCTSE (0x00000001U) /*!< Bit mask for LPUART_MODIR_TXCTSE. */
+#define BS_LPUART_MODIR_TXCTSE (1U)        /*!< Bit field size in bits for LPUART_MODIR_TXCTSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TXCTSE field.
-#define BR_LPUART_MODIR_TXCTSE (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSE))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TXCTSE field. */
+#define BR_LPUART_MODIR_TXCTSE(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSE))
 
-//! @brief Format value for bitfield LPUART_MODIR_TXCTSE.
-#define BF_LPUART_MODIR_TXCTSE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TXCTSE), uint32_t) & BM_LPUART_MODIR_TXCTSE)
+/*! @brief Format value for bitfield LPUART_MODIR_TXCTSE. */
+#define BF_LPUART_MODIR_TXCTSE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TXCTSE) & BM_LPUART_MODIR_TXCTSE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXCTSE field to a new value.
-#define BW_LPUART_MODIR_TXCTSE(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSE) = (v))
-#endif
-//@}
+/*! @brief Set the TXCTSE field to a new value. */
+#define BW_LPUART_MODIR_TXCTSE(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field TXRTSE[1] (RW)
@@ -2580,24 +2265,20 @@ typedef union _hw_lpuart_modir
  *     one bit time after all characters in the transmitter data buffer and shift
  *     register are completely sent, including the last stop bit.
  */
-//@{
-#define BP_LPUART_MODIR_TXRTSE (1U)        //!< Bit position for LPUART_MODIR_TXRTSE.
-#define BM_LPUART_MODIR_TXRTSE (0x00000002U) //!< Bit mask for LPUART_MODIR_TXRTSE.
-#define BS_LPUART_MODIR_TXRTSE (1U)        //!< Bit field size in bits for LPUART_MODIR_TXRTSE.
+/*@{*/
+#define BP_LPUART_MODIR_TXRTSE (1U)        /*!< Bit position for LPUART_MODIR_TXRTSE. */
+#define BM_LPUART_MODIR_TXRTSE (0x00000002U) /*!< Bit mask for LPUART_MODIR_TXRTSE. */
+#define BS_LPUART_MODIR_TXRTSE (1U)        /*!< Bit field size in bits for LPUART_MODIR_TXRTSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TXRTSE field.
-#define BR_LPUART_MODIR_TXRTSE (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXRTSE))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TXRTSE field. */
+#define BR_LPUART_MODIR_TXRTSE(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXRTSE))
 
-//! @brief Format value for bitfield LPUART_MODIR_TXRTSE.
-#define BF_LPUART_MODIR_TXRTSE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TXRTSE), uint32_t) & BM_LPUART_MODIR_TXRTSE)
+/*! @brief Format value for bitfield LPUART_MODIR_TXRTSE. */
+#define BF_LPUART_MODIR_TXRTSE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TXRTSE) & BM_LPUART_MODIR_TXRTSE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXRTSE field to a new value.
-#define BW_LPUART_MODIR_TXRTSE(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXRTSE) = (v))
-#endif
-//@}
+/*! @brief Set the TXRTSE field to a new value. */
+#define BW_LPUART_MODIR_TXRTSE(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXRTSE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field TXRTSPOL[2] (RW)
@@ -2610,24 +2291,20 @@ typedef union _hw_lpuart_modir
  * - 0 - Transmitter RTS is active low.
  * - 1 - Transmitter RTS is active high.
  */
-//@{
-#define BP_LPUART_MODIR_TXRTSPOL (2U)      //!< Bit position for LPUART_MODIR_TXRTSPOL.
-#define BM_LPUART_MODIR_TXRTSPOL (0x00000004U) //!< Bit mask for LPUART_MODIR_TXRTSPOL.
-#define BS_LPUART_MODIR_TXRTSPOL (1U)      //!< Bit field size in bits for LPUART_MODIR_TXRTSPOL.
+/*@{*/
+#define BP_LPUART_MODIR_TXRTSPOL (2U)      /*!< Bit position for LPUART_MODIR_TXRTSPOL. */
+#define BM_LPUART_MODIR_TXRTSPOL (0x00000004U) /*!< Bit mask for LPUART_MODIR_TXRTSPOL. */
+#define BS_LPUART_MODIR_TXRTSPOL (1U)      /*!< Bit field size in bits for LPUART_MODIR_TXRTSPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TXRTSPOL field.
-#define BR_LPUART_MODIR_TXRTSPOL (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXRTSPOL))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TXRTSPOL field. */
+#define BR_LPUART_MODIR_TXRTSPOL(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXRTSPOL))
 
-//! @brief Format value for bitfield LPUART_MODIR_TXRTSPOL.
-#define BF_LPUART_MODIR_TXRTSPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TXRTSPOL), uint32_t) & BM_LPUART_MODIR_TXRTSPOL)
+/*! @brief Format value for bitfield LPUART_MODIR_TXRTSPOL. */
+#define BF_LPUART_MODIR_TXRTSPOL(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TXRTSPOL) & BM_LPUART_MODIR_TXRTSPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXRTSPOL field to a new value.
-#define BW_LPUART_MODIR_TXRTSPOL(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXRTSPOL) = (v))
-#endif
-//@}
+/*! @brief Set the TXRTSPOL field to a new value. */
+#define BW_LPUART_MODIR_TXRTSPOL(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXRTSPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field RXRTSE[3] (RW)
@@ -2643,24 +2320,20 @@ typedef union _hw_lpuart_modir
  *     detected a start bit that would cause the receiver data register to become
  *     full.
  */
-//@{
-#define BP_LPUART_MODIR_RXRTSE (3U)        //!< Bit position for LPUART_MODIR_RXRTSE.
-#define BM_LPUART_MODIR_RXRTSE (0x00000008U) //!< Bit mask for LPUART_MODIR_RXRTSE.
-#define BS_LPUART_MODIR_RXRTSE (1U)        //!< Bit field size in bits for LPUART_MODIR_RXRTSE.
+/*@{*/
+#define BP_LPUART_MODIR_RXRTSE (3U)        /*!< Bit position for LPUART_MODIR_RXRTSE. */
+#define BM_LPUART_MODIR_RXRTSE (0x00000008U) /*!< Bit mask for LPUART_MODIR_RXRTSE. */
+#define BS_LPUART_MODIR_RXRTSE (1U)        /*!< Bit field size in bits for LPUART_MODIR_RXRTSE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_RXRTSE field.
-#define BR_LPUART_MODIR_RXRTSE (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_RXRTSE))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_RXRTSE field. */
+#define BR_LPUART_MODIR_RXRTSE(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_RXRTSE))
 
-//! @brief Format value for bitfield LPUART_MODIR_RXRTSE.
-#define BF_LPUART_MODIR_RXRTSE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_RXRTSE), uint32_t) & BM_LPUART_MODIR_RXRTSE)
+/*! @brief Format value for bitfield LPUART_MODIR_RXRTSE. */
+#define BF_LPUART_MODIR_RXRTSE(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_RXRTSE) & BM_LPUART_MODIR_RXRTSE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXRTSE field to a new value.
-#define BW_LPUART_MODIR_RXRTSE(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_RXRTSE) = (v))
-#endif
-//@}
+/*! @brief Set the RXRTSE field to a new value. */
+#define BW_LPUART_MODIR_RXRTSE(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_RXRTSE) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field TXCTSC[4] (RW)
@@ -2672,24 +2345,20 @@ typedef union _hw_lpuart_modir
  * - 0 - CTS input is sampled at the start of each character.
  * - 1 - CTS input is sampled when the transmitter is idle.
  */
-//@{
-#define BP_LPUART_MODIR_TXCTSC (4U)        //!< Bit position for LPUART_MODIR_TXCTSC.
-#define BM_LPUART_MODIR_TXCTSC (0x00000010U) //!< Bit mask for LPUART_MODIR_TXCTSC.
-#define BS_LPUART_MODIR_TXCTSC (1U)        //!< Bit field size in bits for LPUART_MODIR_TXCTSC.
+/*@{*/
+#define BP_LPUART_MODIR_TXCTSC (4U)        /*!< Bit position for LPUART_MODIR_TXCTSC. */
+#define BM_LPUART_MODIR_TXCTSC (0x00000010U) /*!< Bit mask for LPUART_MODIR_TXCTSC. */
+#define BS_LPUART_MODIR_TXCTSC (1U)        /*!< Bit field size in bits for LPUART_MODIR_TXCTSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TXCTSC field.
-#define BR_LPUART_MODIR_TXCTSC (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSC))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TXCTSC field. */
+#define BR_LPUART_MODIR_TXCTSC(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSC))
 
-//! @brief Format value for bitfield LPUART_MODIR_TXCTSC.
-#define BF_LPUART_MODIR_TXCTSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TXCTSC), uint32_t) & BM_LPUART_MODIR_TXCTSC)
+/*! @brief Format value for bitfield LPUART_MODIR_TXCTSC. */
+#define BF_LPUART_MODIR_TXCTSC(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TXCTSC) & BM_LPUART_MODIR_TXCTSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXCTSC field to a new value.
-#define BW_LPUART_MODIR_TXCTSC(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSC) = (v))
-#endif
-//@}
+/*! @brief Set the TXCTSC field to a new value. */
+#define BW_LPUART_MODIR_TXCTSC(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSC) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field TXCTSSRC[5] (RW)
@@ -2700,24 +2369,20 @@ typedef union _hw_lpuart_modir
  * - 0 - CTS input is the LPUART_CTS pin.
  * - 1 - CTS input is the inverted Receiver Match result.
  */
-//@{
-#define BP_LPUART_MODIR_TXCTSSRC (5U)      //!< Bit position for LPUART_MODIR_TXCTSSRC.
-#define BM_LPUART_MODIR_TXCTSSRC (0x00000020U) //!< Bit mask for LPUART_MODIR_TXCTSSRC.
-#define BS_LPUART_MODIR_TXCTSSRC (1U)      //!< Bit field size in bits for LPUART_MODIR_TXCTSSRC.
+/*@{*/
+#define BP_LPUART_MODIR_TXCTSSRC (5U)      /*!< Bit position for LPUART_MODIR_TXCTSSRC. */
+#define BM_LPUART_MODIR_TXCTSSRC (0x00000020U) /*!< Bit mask for LPUART_MODIR_TXCTSSRC. */
+#define BS_LPUART_MODIR_TXCTSSRC (1U)      /*!< Bit field size in bits for LPUART_MODIR_TXCTSSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TXCTSSRC field.
-#define BR_LPUART_MODIR_TXCTSSRC (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSSRC))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TXCTSSRC field. */
+#define BR_LPUART_MODIR_TXCTSSRC(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSSRC))
 
-//! @brief Format value for bitfield LPUART_MODIR_TXCTSSRC.
-#define BF_LPUART_MODIR_TXCTSSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TXCTSSRC), uint32_t) & BM_LPUART_MODIR_TXCTSSRC)
+/*! @brief Format value for bitfield LPUART_MODIR_TXCTSSRC. */
+#define BF_LPUART_MODIR_TXCTSSRC(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TXCTSSRC) & BM_LPUART_MODIR_TXCTSSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXCTSSRC field to a new value.
-#define BW_LPUART_MODIR_TXCTSSRC(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_TXCTSSRC) = (v))
-#endif
-//@}
+/*! @brief Set the TXCTSSRC field to a new value. */
+#define BW_LPUART_MODIR_TXCTSSRC(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_TXCTSSRC) = (v))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field TNP[17:16] (RW)
@@ -2731,24 +2396,20 @@ typedef union _hw_lpuart_modir
  * - 10 - 3/OSR.
  * - 11 - 4/OSR.
  */
-//@{
-#define BP_LPUART_MODIR_TNP  (16U)         //!< Bit position for LPUART_MODIR_TNP.
-#define BM_LPUART_MODIR_TNP  (0x00030000U) //!< Bit mask for LPUART_MODIR_TNP.
-#define BS_LPUART_MODIR_TNP  (2U)          //!< Bit field size in bits for LPUART_MODIR_TNP.
+/*@{*/
+#define BP_LPUART_MODIR_TNP  (16U)         /*!< Bit position for LPUART_MODIR_TNP. */
+#define BM_LPUART_MODIR_TNP  (0x00030000U) /*!< Bit mask for LPUART_MODIR_TNP. */
+#define BS_LPUART_MODIR_TNP  (2U)          /*!< Bit field size in bits for LPUART_MODIR_TNP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_TNP field.
-#define BR_LPUART_MODIR_TNP  (HW_LPUART_MODIR.B.TNP)
-#endif
+/*! @brief Read current value of the LPUART_MODIR_TNP field. */
+#define BR_LPUART_MODIR_TNP(x) (HW_LPUART_MODIR(x).B.TNP)
 
-//! @brief Format value for bitfield LPUART_MODIR_TNP.
-#define BF_LPUART_MODIR_TNP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_TNP), uint32_t) & BM_LPUART_MODIR_TNP)
+/*! @brief Format value for bitfield LPUART_MODIR_TNP. */
+#define BF_LPUART_MODIR_TNP(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_TNP) & BM_LPUART_MODIR_TNP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TNP field to a new value.
-#define BW_LPUART_MODIR_TNP(v) (HW_LPUART_MODIR_WR((HW_LPUART_MODIR_RD() & ~BM_LPUART_MODIR_TNP) | BF_LPUART_MODIR_TNP(v)))
-#endif
-//@}
+/*! @brief Set the TNP field to a new value. */
+#define BW_LPUART_MODIR_TNP(x, v) (HW_LPUART_MODIR_WR(x, (HW_LPUART_MODIR_RD(x) & ~BM_LPUART_MODIR_TNP) | BF_LPUART_MODIR_TNP(v)))
+/*@}*/
 
 /*!
  * @name Register LPUART_MODIR, field IREN[18] (RW)
@@ -2759,50 +2420,45 @@ typedef union _hw_lpuart_modir
  * - 0 - IR disabled.
  * - 1 - IR enabled.
  */
-//@{
-#define BP_LPUART_MODIR_IREN (18U)         //!< Bit position for LPUART_MODIR_IREN.
-#define BM_LPUART_MODIR_IREN (0x00040000U) //!< Bit mask for LPUART_MODIR_IREN.
-#define BS_LPUART_MODIR_IREN (1U)          //!< Bit field size in bits for LPUART_MODIR_IREN.
+/*@{*/
+#define BP_LPUART_MODIR_IREN (18U)         /*!< Bit position for LPUART_MODIR_IREN. */
+#define BM_LPUART_MODIR_IREN (0x00040000U) /*!< Bit mask for LPUART_MODIR_IREN. */
+#define BS_LPUART_MODIR_IREN (1U)          /*!< Bit field size in bits for LPUART_MODIR_IREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPUART_MODIR_IREN field.
-#define BR_LPUART_MODIR_IREN (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_IREN))
-#endif
+/*! @brief Read current value of the LPUART_MODIR_IREN field. */
+#define BR_LPUART_MODIR_IREN(x) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_IREN))
 
-//! @brief Format value for bitfield LPUART_MODIR_IREN.
-#define BF_LPUART_MODIR_IREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPUART_MODIR_IREN), uint32_t) & BM_LPUART_MODIR_IREN)
+/*! @brief Format value for bitfield LPUART_MODIR_IREN. */
+#define BF_LPUART_MODIR_IREN(v) ((uint32_t)((uint32_t)(v) << BP_LPUART_MODIR_IREN) & BM_LPUART_MODIR_IREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IREN field to a new value.
-#define BW_LPUART_MODIR_IREN(v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR, BP_LPUART_MODIR_IREN) = (v))
-#endif
-//@}
+/*! @brief Set the IREN field to a new value. */
+#define BW_LPUART_MODIR_IREN(x, v) (BITBAND_ACCESS32(HW_LPUART_MODIR_ADDR(x), BP_LPUART_MODIR_IREN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_lpuart_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_lpuart_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All LPUART module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_lpuart
 {
-    __IO hw_lpuart_baud_t BAUD;            //!< [0x0] LPUART Baud Rate Register
-    __IO hw_lpuart_stat_t STAT;            //!< [0x4] LPUART Status Register
-    __IO hw_lpuart_ctrl_t CTRL;            //!< [0x8] LPUART Control Register
-    __IO hw_lpuart_data_t DATA;            //!< [0xC] LPUART Data Register
-    __IO hw_lpuart_match_t MATCH;          //!< [0x10] LPUART Match Address Register
-    __IO hw_lpuart_modir_t MODIR;          //!< [0x14] LPUART Modem IrDA Register
+    __IO hw_lpuart_baud_t BAUD;            /*!< [0x0] LPUART Baud Rate Register */
+    __IO hw_lpuart_stat_t STAT;            /*!< [0x4] LPUART Status Register */
+    __IO hw_lpuart_ctrl_t CTRL;            /*!< [0x8] LPUART Control Register */
+    __IO hw_lpuart_data_t DATA;            /*!< [0xC] LPUART Data Register */
+    __IO hw_lpuart_match_t MATCH;          /*!< [0x10] LPUART Match Address Register */
+    __IO hw_lpuart_modir_t MODIR;          /*!< [0x14] LPUART Modem IrDA Register */
 } hw_lpuart_t;
 #pragma pack()
 
-//! @brief Macro to access all LPUART registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_LPUART</code>.
-#define HW_LPUART      (*(hw_lpuart_t *) REGS_LPUART_BASE)
-#endif
+/*! @brief Macro to access all LPUART registers. */
+/*! @param x LPUART module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_LPUART(LPUART0_BASE)</code>. */
+#define HW_LPUART(x)   (*(hw_lpuart_t *)(x))
 
-#endif // __HW_LPUART_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_LPUART_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

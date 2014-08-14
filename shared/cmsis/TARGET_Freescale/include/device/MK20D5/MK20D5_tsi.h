@@ -21,7 +21,8 @@
 #ifndef __HW_TSI_REGISTERS_H__
 #define __HW_TSI_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 TSI
@@ -46,19 +47,12 @@
  * - hw_tsi_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_TSI_BASE
-#define HW_TSI_INSTANCE_COUNT (1U) //!< Number of instances of the TSI module.
-#define REGS_TSI_BASE (0x40045000U) //!< Base address for TSI0.
-#endif
-//@}
+#define HW_TSI_INSTANCE_COUNT (1U) /*!< Number of instances of the TSI module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_GENCS - General Control and Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_GENCS - General Control and Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_GENCS - General Control and Status Register (RW)
  *
@@ -69,50 +63,49 @@ typedef union _hw_tsi_gencs
     uint32_t U;
     struct _hw_tsi_gencs_bitfields
     {
-        uint32_t STPE : 1;             //!< [0]
-        uint32_t STM : 1;              //!< [1] Scan Trigger Mode. This bit-field can only
-                                       //! be changed if the TSI module is disabled (TSIEN bit = 0).
-        uint32_t RESERVED0 : 2;        //!< [3:2]
-        uint32_t ESOR : 1;             //!< [4] End-of-Scan or Out-of-Range Interrupt
-                                       //! select
-        uint32_t ERIE : 1;             //!< [5] Error Interrupt Enable
-        uint32_t TSIIE : 1;            //!< [6] Touch Sensing Input Interrupt Module
-                                       //! Enable
-        uint32_t TSIEN : 1;            //!< [7] Touch Sensing Input Module Enable
-        uint32_t SWTS : 1;             //!< [8] Software Trigger Start
-        uint32_t SCNIP : 1;            //!< [9] Scan In Progress status
-        uint32_t RESERVED1 : 2;        //!< [11:10]
-        uint32_t OVRF : 1;             //!< [12] Overrun error Flag. This flag is set
-                                       //! when a scan trigger occurs while a scan is still in progress. Write "1",
-                                       //! when this flag is set, to clear it..
-        uint32_t EXTERF : 1;           //!< [13] External Electrode error occurred
-        uint32_t OUTRGF : 1;           //!< [14] Out of Range Flag.
-        uint32_t EOSF : 1;             //!< [15] End of Scan Flag.
-        uint32_t PS : 3;               //!< [18:16] Electrode Oscillator prescaler. .
-        uint32_t NSCN : 5;             //!< [23:19] Number of Consecutive Scans per
-                                       //! Electrode electrode.
-        uint32_t LPSCNITV : 4;         //!< [27:24] TSI Low Power Mode Scan Interval.
-        uint32_t LPCLKS : 1;           //!< [28] Low Power Mode Clock Source Selection.
-        uint32_t RESERVED2 : 3;        //!< [31:29]
+        uint32_t STPE : 1;             /*!< [0]  */
+        uint32_t STM : 1;              /*!< [1] Scan Trigger Mode. This bit-field can only
+                                        * be changed if the TSI module is disabled (TSIEN bit = 0). */
+        uint32_t RESERVED0 : 2;        /*!< [3:2]  */
+        uint32_t ESOR : 1;             /*!< [4] End-of-Scan or Out-of-Range Interrupt
+                                        * select */
+        uint32_t ERIE : 1;             /*!< [5] Error Interrupt Enable */
+        uint32_t TSIIE : 1;            /*!< [6] Touch Sensing Input Interrupt Module
+                                        * Enable */
+        uint32_t TSIEN : 1;            /*!< [7] Touch Sensing Input Module Enable */
+        uint32_t SWTS : 1;             /*!< [8] Software Trigger Start */
+        uint32_t SCNIP : 1;            /*!< [9] Scan In Progress status */
+        uint32_t RESERVED1 : 2;        /*!< [11:10]  */
+        uint32_t OVRF : 1;             /*!< [12] Overrun error Flag. This flag is set
+                                        * when a scan trigger occurs while a scan is still in progress. Write "1",
+                                        * when this flag is set, to clear it.. */
+        uint32_t EXTERF : 1;           /*!< [13] External Electrode error occurred */
+        uint32_t OUTRGF : 1;           /*!< [14] Out of Range Flag. */
+        uint32_t EOSF : 1;             /*!< [15] End of Scan Flag. */
+        uint32_t PS : 3;               /*!< [18:16] Electrode Oscillator prescaler. . */
+        uint32_t NSCN : 5;             /*!< [23:19] Number of Consecutive Scans per
+                                        * Electrode electrode. */
+        uint32_t LPSCNITV : 4;         /*!< [27:24] TSI Low Power Mode Scan Interval.
+                                        * */
+        uint32_t LPCLKS : 1;           /*!< [28] Low Power Mode Clock Source Selection.
+                                        * */
+        uint32_t RESERVED2 : 3;        /*!< [31:29]  */
     } B;
 } hw_tsi_gencs_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_GENCS register
  */
-//@{
-#define HW_TSI_GENCS_ADDR        (REGS_TSI_BASE + 0x0U)
+/*@{*/
+#define HW_TSI_GENCS_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_GENCS             (*(__IO hw_tsi_gencs_t *) HW_TSI_GENCS_ADDR)
-#define HW_TSI_GENCS_RD()        (HW_TSI_GENCS.U)
-#define HW_TSI_GENCS_WR(v)       (HW_TSI_GENCS.U = (v))
-#define HW_TSI_GENCS_SET(v)      (HW_TSI_GENCS_WR(HW_TSI_GENCS_RD() |  (v)))
-#define HW_TSI_GENCS_CLR(v)      (HW_TSI_GENCS_WR(HW_TSI_GENCS_RD() & ~(v)))
-#define HW_TSI_GENCS_TOG(v)      (HW_TSI_GENCS_WR(HW_TSI_GENCS_RD() ^  (v)))
-#endif
-//@}
+#define HW_TSI_GENCS(x)          (*(__IO hw_tsi_gencs_t *) HW_TSI_GENCS_ADDR(x))
+#define HW_TSI_GENCS_RD(x)       (HW_TSI_GENCS(x).U)
+#define HW_TSI_GENCS_WR(x, v)    (HW_TSI_GENCS(x).U = (v))
+#define HW_TSI_GENCS_SET(x, v)   (HW_TSI_GENCS_WR(x, HW_TSI_GENCS_RD(x) |  (v)))
+#define HW_TSI_GENCS_CLR(x, v)   (HW_TSI_GENCS_WR(x, HW_TSI_GENCS_RD(x) & ~(v)))
+#define HW_TSI_GENCS_TOG(x, v)   (HW_TSI_GENCS_WR(x, HW_TSI_GENCS_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_GENCS bitfields
@@ -127,24 +120,20 @@ typedef union _hw_tsi_gencs
  * - 0 - Disable TSI when MCU goes into low power modes.
  * - 1 - Allows TSI to continue running in all low power modes.
  */
-//@{
-#define BP_TSI_GENCS_STPE    (0U)          //!< Bit position for TSI_GENCS_STPE.
-#define BM_TSI_GENCS_STPE    (0x00000001U) //!< Bit mask for TSI_GENCS_STPE.
-#define BS_TSI_GENCS_STPE    (1U)          //!< Bit field size in bits for TSI_GENCS_STPE.
+/*@{*/
+#define BP_TSI_GENCS_STPE    (0U)          /*!< Bit position for TSI_GENCS_STPE. */
+#define BM_TSI_GENCS_STPE    (0x00000001U) /*!< Bit mask for TSI_GENCS_STPE. */
+#define BS_TSI_GENCS_STPE    (1U)          /*!< Bit field size in bits for TSI_GENCS_STPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_STPE field.
-#define BR_TSI_GENCS_STPE    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_STPE))
-#endif
+/*! @brief Read current value of the TSI_GENCS_STPE field. */
+#define BR_TSI_GENCS_STPE(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_STPE))
 
-//! @brief Format value for bitfield TSI_GENCS_STPE.
-#define BF_TSI_GENCS_STPE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_STPE), uint32_t) & BM_TSI_GENCS_STPE)
+/*! @brief Format value for bitfield TSI_GENCS_STPE. */
+#define BF_TSI_GENCS_STPE(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_STPE) & BM_TSI_GENCS_STPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the STPE field to a new value.
-#define BW_TSI_GENCS_STPE(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_STPE) = (v))
-#endif
-//@}
+/*! @brief Set the STPE field to a new value. */
+#define BW_TSI_GENCS_STPE(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_STPE) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field STM[1] (RW)
@@ -153,24 +142,20 @@ typedef union _hw_tsi_gencs
  * - 0 - Software trigger scan.
  * - 1 - Periodical Scan.
  */
-//@{
-#define BP_TSI_GENCS_STM     (1U)          //!< Bit position for TSI_GENCS_STM.
-#define BM_TSI_GENCS_STM     (0x00000002U) //!< Bit mask for TSI_GENCS_STM.
-#define BS_TSI_GENCS_STM     (1U)          //!< Bit field size in bits for TSI_GENCS_STM.
+/*@{*/
+#define BP_TSI_GENCS_STM     (1U)          /*!< Bit position for TSI_GENCS_STM. */
+#define BM_TSI_GENCS_STM     (0x00000002U) /*!< Bit mask for TSI_GENCS_STM. */
+#define BS_TSI_GENCS_STM     (1U)          /*!< Bit field size in bits for TSI_GENCS_STM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_STM field.
-#define BR_TSI_GENCS_STM     (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_STM))
-#endif
+/*! @brief Read current value of the TSI_GENCS_STM field. */
+#define BR_TSI_GENCS_STM(x)  (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_STM))
 
-//! @brief Format value for bitfield TSI_GENCS_STM.
-#define BF_TSI_GENCS_STM(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_STM), uint32_t) & BM_TSI_GENCS_STM)
+/*! @brief Format value for bitfield TSI_GENCS_STM. */
+#define BF_TSI_GENCS_STM(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_STM) & BM_TSI_GENCS_STM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the STM field to a new value.
-#define BW_TSI_GENCS_STM(v)  (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_STM) = (v))
-#endif
-//@}
+/*! @brief Set the STM field to a new value. */
+#define BW_TSI_GENCS_STM(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_STM) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field ESOR[4] (RW)
@@ -179,24 +164,20 @@ typedef union _hw_tsi_gencs
  * - 0 - Out-of-Range interrupt is allowed.
  * - 1 - End-of-Scan interrupt is allowed.
  */
-//@{
-#define BP_TSI_GENCS_ESOR    (4U)          //!< Bit position for TSI_GENCS_ESOR.
-#define BM_TSI_GENCS_ESOR    (0x00000010U) //!< Bit mask for TSI_GENCS_ESOR.
-#define BS_TSI_GENCS_ESOR    (1U)          //!< Bit field size in bits for TSI_GENCS_ESOR.
+/*@{*/
+#define BP_TSI_GENCS_ESOR    (4U)          /*!< Bit position for TSI_GENCS_ESOR. */
+#define BM_TSI_GENCS_ESOR    (0x00000010U) /*!< Bit mask for TSI_GENCS_ESOR. */
+#define BS_TSI_GENCS_ESOR    (1U)          /*!< Bit field size in bits for TSI_GENCS_ESOR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_ESOR field.
-#define BR_TSI_GENCS_ESOR    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_ESOR))
-#endif
+/*! @brief Read current value of the TSI_GENCS_ESOR field. */
+#define BR_TSI_GENCS_ESOR(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_ESOR))
 
-//! @brief Format value for bitfield TSI_GENCS_ESOR.
-#define BF_TSI_GENCS_ESOR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_ESOR), uint32_t) & BM_TSI_GENCS_ESOR)
+/*! @brief Format value for bitfield TSI_GENCS_ESOR. */
+#define BF_TSI_GENCS_ESOR(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_ESOR) & BM_TSI_GENCS_ESOR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ESOR field to a new value.
-#define BW_TSI_GENCS_ESOR(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_ESOR) = (v))
-#endif
-//@}
+/*! @brief Set the ESOR field to a new value. */
+#define BW_TSI_GENCS_ESOR(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_ESOR) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field ERIE[5] (RW)
@@ -207,24 +188,20 @@ typedef union _hw_tsi_gencs
  * - 0 - Interrupt disabled for error.
  * - 1 - Interrupt enabled for error.
  */
-//@{
-#define BP_TSI_GENCS_ERIE    (5U)          //!< Bit position for TSI_GENCS_ERIE.
-#define BM_TSI_GENCS_ERIE    (0x00000020U) //!< Bit mask for TSI_GENCS_ERIE.
-#define BS_TSI_GENCS_ERIE    (1U)          //!< Bit field size in bits for TSI_GENCS_ERIE.
+/*@{*/
+#define BP_TSI_GENCS_ERIE    (5U)          /*!< Bit position for TSI_GENCS_ERIE. */
+#define BM_TSI_GENCS_ERIE    (0x00000020U) /*!< Bit mask for TSI_GENCS_ERIE. */
+#define BS_TSI_GENCS_ERIE    (1U)          /*!< Bit field size in bits for TSI_GENCS_ERIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_ERIE field.
-#define BR_TSI_GENCS_ERIE    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_ERIE))
-#endif
+/*! @brief Read current value of the TSI_GENCS_ERIE field. */
+#define BR_TSI_GENCS_ERIE(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_ERIE))
 
-//! @brief Format value for bitfield TSI_GENCS_ERIE.
-#define BF_TSI_GENCS_ERIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_ERIE), uint32_t) & BM_TSI_GENCS_ERIE)
+/*! @brief Format value for bitfield TSI_GENCS_ERIE. */
+#define BF_TSI_GENCS_ERIE(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_ERIE) & BM_TSI_GENCS_ERIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERIE field to a new value.
-#define BW_TSI_GENCS_ERIE(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_ERIE) = (v))
-#endif
-//@}
+/*! @brief Set the ERIE field to a new value. */
+#define BW_TSI_GENCS_ERIE(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_ERIE) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field TSIIE[6] (RW)
@@ -233,24 +210,20 @@ typedef union _hw_tsi_gencs
  * - 0 - Interrupt from TSI is disabled
  * - 1 - Interrupt from TSI is enabled
  */
-//@{
-#define BP_TSI_GENCS_TSIIE   (6U)          //!< Bit position for TSI_GENCS_TSIIE.
-#define BM_TSI_GENCS_TSIIE   (0x00000040U) //!< Bit mask for TSI_GENCS_TSIIE.
-#define BS_TSI_GENCS_TSIIE   (1U)          //!< Bit field size in bits for TSI_GENCS_TSIIE.
+/*@{*/
+#define BP_TSI_GENCS_TSIIE   (6U)          /*!< Bit position for TSI_GENCS_TSIIE. */
+#define BM_TSI_GENCS_TSIIE   (0x00000040U) /*!< Bit mask for TSI_GENCS_TSIIE. */
+#define BS_TSI_GENCS_TSIIE   (1U)          /*!< Bit field size in bits for TSI_GENCS_TSIIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_TSIIE field.
-#define BR_TSI_GENCS_TSIIE   (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_TSIIE))
-#endif
+/*! @brief Read current value of the TSI_GENCS_TSIIE field. */
+#define BR_TSI_GENCS_TSIIE(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_TSIIE))
 
-//! @brief Format value for bitfield TSI_GENCS_TSIIE.
-#define BF_TSI_GENCS_TSIIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_TSIIE), uint32_t) & BM_TSI_GENCS_TSIIE)
+/*! @brief Format value for bitfield TSI_GENCS_TSIIE. */
+#define BF_TSI_GENCS_TSIIE(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_TSIIE) & BM_TSI_GENCS_TSIIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSIIE field to a new value.
-#define BW_TSI_GENCS_TSIIE(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_TSIIE) = (v))
-#endif
-//@}
+/*! @brief Set the TSIIE field to a new value. */
+#define BW_TSI_GENCS_TSIIE(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_TSIIE) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field TSIEN[7] (RW)
@@ -259,24 +232,20 @@ typedef union _hw_tsi_gencs
  * - 0 - TSI module is disabled
  * - 1 - TSI module is enabled
  */
-//@{
-#define BP_TSI_GENCS_TSIEN   (7U)          //!< Bit position for TSI_GENCS_TSIEN.
-#define BM_TSI_GENCS_TSIEN   (0x00000080U) //!< Bit mask for TSI_GENCS_TSIEN.
-#define BS_TSI_GENCS_TSIEN   (1U)          //!< Bit field size in bits for TSI_GENCS_TSIEN.
+/*@{*/
+#define BP_TSI_GENCS_TSIEN   (7U)          /*!< Bit position for TSI_GENCS_TSIEN. */
+#define BM_TSI_GENCS_TSIEN   (0x00000080U) /*!< Bit mask for TSI_GENCS_TSIEN. */
+#define BS_TSI_GENCS_TSIEN   (1U)          /*!< Bit field size in bits for TSI_GENCS_TSIEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_TSIEN field.
-#define BR_TSI_GENCS_TSIEN   (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_TSIEN))
-#endif
+/*! @brief Read current value of the TSI_GENCS_TSIEN field. */
+#define BR_TSI_GENCS_TSIEN(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_TSIEN))
 
-//! @brief Format value for bitfield TSI_GENCS_TSIEN.
-#define BF_TSI_GENCS_TSIEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_TSIEN), uint32_t) & BM_TSI_GENCS_TSIEN)
+/*! @brief Format value for bitfield TSI_GENCS_TSIEN. */
+#define BF_TSI_GENCS_TSIEN(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_TSIEN) & BM_TSI_GENCS_TSIEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSIEN field to a new value.
-#define BW_TSI_GENCS_TSIEN(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_TSIEN) = (v))
-#endif
-//@}
+/*! @brief Set the TSIEN field to a new value. */
+#define BW_TSI_GENCS_TSIEN(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_TSIEN) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field SWTS[8] (WO)
@@ -284,24 +253,14 @@ typedef union _hw_tsi_gencs
  * Write a "1" to this bit will start a scan sequence and write a "0" to this
  * bit has no effect.
  */
-//@{
-#define BP_TSI_GENCS_SWTS    (8U)          //!< Bit position for TSI_GENCS_SWTS.
-#define BM_TSI_GENCS_SWTS    (0x00000100U) //!< Bit mask for TSI_GENCS_SWTS.
-#define BS_TSI_GENCS_SWTS    (1U)          //!< Bit field size in bits for TSI_GENCS_SWTS.
+/*@{*/
+#define BP_TSI_GENCS_SWTS    (8U)          /*!< Bit position for TSI_GENCS_SWTS. */
+#define BM_TSI_GENCS_SWTS    (0x00000100U) /*!< Bit mask for TSI_GENCS_SWTS. */
+#define BS_TSI_GENCS_SWTS    (1U)          /*!< Bit field size in bits for TSI_GENCS_SWTS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_SWTS field.
-#define BR_TSI_GENCS_SWTS    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_SWTS))
-#endif
-
-//! @brief Format value for bitfield TSI_GENCS_SWTS.
-#define BF_TSI_GENCS_SWTS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_SWTS), uint32_t) & BM_TSI_GENCS_SWTS)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SWTS field to a new value.
-#define BW_TSI_GENCS_SWTS(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_SWTS) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield TSI_GENCS_SWTS. */
+#define BF_TSI_GENCS_SWTS(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_SWTS) & BM_TSI_GENCS_SWTS)
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field SCNIP[9] (RO)
@@ -309,16 +268,14 @@ typedef union _hw_tsi_gencs
  * "1" indicates a scanning process is in progress,this bit is read-only and
  * changes automatically by the TSI model.
  */
-//@{
-#define BP_TSI_GENCS_SCNIP   (9U)          //!< Bit position for TSI_GENCS_SCNIP.
-#define BM_TSI_GENCS_SCNIP   (0x00000200U) //!< Bit mask for TSI_GENCS_SCNIP.
-#define BS_TSI_GENCS_SCNIP   (1U)          //!< Bit field size in bits for TSI_GENCS_SCNIP.
+/*@{*/
+#define BP_TSI_GENCS_SCNIP   (9U)          /*!< Bit position for TSI_GENCS_SCNIP. */
+#define BM_TSI_GENCS_SCNIP   (0x00000200U) /*!< Bit mask for TSI_GENCS_SCNIP. */
+#define BS_TSI_GENCS_SCNIP   (1U)          /*!< Bit field size in bits for TSI_GENCS_SCNIP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_SCNIP field.
-#define BR_TSI_GENCS_SCNIP   (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_SCNIP))
-#endif
-//@}
+/*! @brief Read current value of the TSI_GENCS_SCNIP field. */
+#define BR_TSI_GENCS_SCNIP(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_SCNIP))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field OVRF[12] (RW)
@@ -327,24 +284,20 @@ typedef union _hw_tsi_gencs
  * - 0 - No over run.
  * - 1 - Over Run occurred.
  */
-//@{
-#define BP_TSI_GENCS_OVRF    (12U)         //!< Bit position for TSI_GENCS_OVRF.
-#define BM_TSI_GENCS_OVRF    (0x00001000U) //!< Bit mask for TSI_GENCS_OVRF.
-#define BS_TSI_GENCS_OVRF    (1U)          //!< Bit field size in bits for TSI_GENCS_OVRF.
+/*@{*/
+#define BP_TSI_GENCS_OVRF    (12U)         /*!< Bit position for TSI_GENCS_OVRF. */
+#define BM_TSI_GENCS_OVRF    (0x00001000U) /*!< Bit mask for TSI_GENCS_OVRF. */
+#define BS_TSI_GENCS_OVRF    (1U)          /*!< Bit field size in bits for TSI_GENCS_OVRF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_OVRF field.
-#define BR_TSI_GENCS_OVRF    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_OVRF))
-#endif
+/*! @brief Read current value of the TSI_GENCS_OVRF field. */
+#define BR_TSI_GENCS_OVRF(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_OVRF))
 
-//! @brief Format value for bitfield TSI_GENCS_OVRF.
-#define BF_TSI_GENCS_OVRF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_OVRF), uint32_t) & BM_TSI_GENCS_OVRF)
+/*! @brief Format value for bitfield TSI_GENCS_OVRF. */
+#define BF_TSI_GENCS_OVRF(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_OVRF) & BM_TSI_GENCS_OVRF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OVRF field to a new value.
-#define BW_TSI_GENCS_OVRF(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_OVRF) = (v))
-#endif
-//@}
+/*! @brief Set the OVRF field to a new value. */
+#define BW_TSI_GENCS_OVRF(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_OVRF) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field EXTERF[13] (RW)
@@ -356,24 +309,20 @@ typedef union _hw_tsi_gencs
  * - 0 - No fault happend on TSI electrodes
  * - 1 - Short to VDD or VSS was detected on one or more electrodes.
  */
-//@{
-#define BP_TSI_GENCS_EXTERF  (13U)         //!< Bit position for TSI_GENCS_EXTERF.
-#define BM_TSI_GENCS_EXTERF  (0x00002000U) //!< Bit mask for TSI_GENCS_EXTERF.
-#define BS_TSI_GENCS_EXTERF  (1U)          //!< Bit field size in bits for TSI_GENCS_EXTERF.
+/*@{*/
+#define BP_TSI_GENCS_EXTERF  (13U)         /*!< Bit position for TSI_GENCS_EXTERF. */
+#define BM_TSI_GENCS_EXTERF  (0x00002000U) /*!< Bit mask for TSI_GENCS_EXTERF. */
+#define BS_TSI_GENCS_EXTERF  (1U)          /*!< Bit field size in bits for TSI_GENCS_EXTERF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_EXTERF field.
-#define BR_TSI_GENCS_EXTERF  (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_EXTERF))
-#endif
+/*! @brief Read current value of the TSI_GENCS_EXTERF field. */
+#define BR_TSI_GENCS_EXTERF(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_EXTERF))
 
-//! @brief Format value for bitfield TSI_GENCS_EXTERF.
-#define BF_TSI_GENCS_EXTERF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_EXTERF), uint32_t) & BM_TSI_GENCS_EXTERF)
+/*! @brief Format value for bitfield TSI_GENCS_EXTERF. */
+#define BF_TSI_GENCS_EXTERF(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_EXTERF) & BM_TSI_GENCS_EXTERF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EXTERF field to a new value.
-#define BW_TSI_GENCS_EXTERF(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_EXTERF) = (v))
-#endif
-//@}
+/*! @brief Set the EXTERF field to a new value. */
+#define BW_TSI_GENCS_EXTERF(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_EXTERF) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field OUTRGF[14] (RW)
@@ -383,24 +332,20 @@ typedef union _hw_tsi_gencs
  * set when the TSI is in low power mode. It can be read once the CPU wakes up.
  * Write "1" , when this flag is set, to clear it..
  */
-//@{
-#define BP_TSI_GENCS_OUTRGF  (14U)         //!< Bit position for TSI_GENCS_OUTRGF.
-#define BM_TSI_GENCS_OUTRGF  (0x00004000U) //!< Bit mask for TSI_GENCS_OUTRGF.
-#define BS_TSI_GENCS_OUTRGF  (1U)          //!< Bit field size in bits for TSI_GENCS_OUTRGF.
+/*@{*/
+#define BP_TSI_GENCS_OUTRGF  (14U)         /*!< Bit position for TSI_GENCS_OUTRGF. */
+#define BM_TSI_GENCS_OUTRGF  (0x00004000U) /*!< Bit mask for TSI_GENCS_OUTRGF. */
+#define BS_TSI_GENCS_OUTRGF  (1U)          /*!< Bit field size in bits for TSI_GENCS_OUTRGF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_OUTRGF field.
-#define BR_TSI_GENCS_OUTRGF  (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_OUTRGF))
-#endif
+/*! @brief Read current value of the TSI_GENCS_OUTRGF field. */
+#define BR_TSI_GENCS_OUTRGF(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_OUTRGF))
 
-//! @brief Format value for bitfield TSI_GENCS_OUTRGF.
-#define BF_TSI_GENCS_OUTRGF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_OUTRGF), uint32_t) & BM_TSI_GENCS_OUTRGF)
+/*! @brief Format value for bitfield TSI_GENCS_OUTRGF. */
+#define BF_TSI_GENCS_OUTRGF(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_OUTRGF) & BM_TSI_GENCS_OUTRGF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OUTRGF field to a new value.
-#define BW_TSI_GENCS_OUTRGF(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_OUTRGF) = (v))
-#endif
-//@}
+/*! @brief Set the OUTRGF field to a new value. */
+#define BW_TSI_GENCS_OUTRGF(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_OUTRGF) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field EOSF[15] (RW)
@@ -408,24 +353,20 @@ typedef union _hw_tsi_gencs
  * This flag is set when all active electrodes are scanned is ended after a scan
  * trigger. Write "1" , when this flag is set, to clear it..
  */
-//@{
-#define BP_TSI_GENCS_EOSF    (15U)         //!< Bit position for TSI_GENCS_EOSF.
-#define BM_TSI_GENCS_EOSF    (0x00008000U) //!< Bit mask for TSI_GENCS_EOSF.
-#define BS_TSI_GENCS_EOSF    (1U)          //!< Bit field size in bits for TSI_GENCS_EOSF.
+/*@{*/
+#define BP_TSI_GENCS_EOSF    (15U)         /*!< Bit position for TSI_GENCS_EOSF. */
+#define BM_TSI_GENCS_EOSF    (0x00008000U) /*!< Bit mask for TSI_GENCS_EOSF. */
+#define BS_TSI_GENCS_EOSF    (1U)          /*!< Bit field size in bits for TSI_GENCS_EOSF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_EOSF field.
-#define BR_TSI_GENCS_EOSF    (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_EOSF))
-#endif
+/*! @brief Read current value of the TSI_GENCS_EOSF field. */
+#define BR_TSI_GENCS_EOSF(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_EOSF))
 
-//! @brief Format value for bitfield TSI_GENCS_EOSF.
-#define BF_TSI_GENCS_EOSF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_EOSF), uint32_t) & BM_TSI_GENCS_EOSF)
+/*! @brief Format value for bitfield TSI_GENCS_EOSF. */
+#define BF_TSI_GENCS_EOSF(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_EOSF) & BM_TSI_GENCS_EOSF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EOSF field to a new value.
-#define BW_TSI_GENCS_EOSF(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_EOSF) = (v))
-#endif
-//@}
+/*! @brief Set the EOSF field to a new value. */
+#define BW_TSI_GENCS_EOSF(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_EOSF) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field PS[18:16] (RW)
@@ -443,24 +384,20 @@ typedef union _hw_tsi_gencs
  * - 110 - Electrode Oscillator Frequency divided by 64
  * - 111 - Electrode Oscillator Frequency divided by 128
  */
-//@{
-#define BP_TSI_GENCS_PS      (16U)         //!< Bit position for TSI_GENCS_PS.
-#define BM_TSI_GENCS_PS      (0x00070000U) //!< Bit mask for TSI_GENCS_PS.
-#define BS_TSI_GENCS_PS      (3U)          //!< Bit field size in bits for TSI_GENCS_PS.
+/*@{*/
+#define BP_TSI_GENCS_PS      (16U)         /*!< Bit position for TSI_GENCS_PS. */
+#define BM_TSI_GENCS_PS      (0x00070000U) /*!< Bit mask for TSI_GENCS_PS. */
+#define BS_TSI_GENCS_PS      (3U)          /*!< Bit field size in bits for TSI_GENCS_PS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_PS field.
-#define BR_TSI_GENCS_PS      (HW_TSI_GENCS.B.PS)
-#endif
+/*! @brief Read current value of the TSI_GENCS_PS field. */
+#define BR_TSI_GENCS_PS(x)   (HW_TSI_GENCS(x).B.PS)
 
-//! @brief Format value for bitfield TSI_GENCS_PS.
-#define BF_TSI_GENCS_PS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_PS), uint32_t) & BM_TSI_GENCS_PS)
+/*! @brief Format value for bitfield TSI_GENCS_PS. */
+#define BF_TSI_GENCS_PS(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_PS) & BM_TSI_GENCS_PS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PS field to a new value.
-#define BW_TSI_GENCS_PS(v)   (HW_TSI_GENCS_WR((HW_TSI_GENCS_RD() & ~BM_TSI_GENCS_PS) | BF_TSI_GENCS_PS(v)))
-#endif
-//@}
+/*! @brief Set the PS field to a new value. */
+#define BW_TSI_GENCS_PS(x, v) (HW_TSI_GENCS_WR(x, (HW_TSI_GENCS_RD(x) & ~BM_TSI_GENCS_PS) | BF_TSI_GENCS_PS(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field NSCN[23:19] (RW)
@@ -502,24 +439,20 @@ typedef union _hw_tsi_gencs
  * - 11110 - 31 times per electrode
  * - 11111 - 32 times per electrode
  */
-//@{
-#define BP_TSI_GENCS_NSCN    (19U)         //!< Bit position for TSI_GENCS_NSCN.
-#define BM_TSI_GENCS_NSCN    (0x00F80000U) //!< Bit mask for TSI_GENCS_NSCN.
-#define BS_TSI_GENCS_NSCN    (5U)          //!< Bit field size in bits for TSI_GENCS_NSCN.
+/*@{*/
+#define BP_TSI_GENCS_NSCN    (19U)         /*!< Bit position for TSI_GENCS_NSCN. */
+#define BM_TSI_GENCS_NSCN    (0x00F80000U) /*!< Bit mask for TSI_GENCS_NSCN. */
+#define BS_TSI_GENCS_NSCN    (5U)          /*!< Bit field size in bits for TSI_GENCS_NSCN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_NSCN field.
-#define BR_TSI_GENCS_NSCN    (HW_TSI_GENCS.B.NSCN)
-#endif
+/*! @brief Read current value of the TSI_GENCS_NSCN field. */
+#define BR_TSI_GENCS_NSCN(x) (HW_TSI_GENCS(x).B.NSCN)
 
-//! @brief Format value for bitfield TSI_GENCS_NSCN.
-#define BF_TSI_GENCS_NSCN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_NSCN), uint32_t) & BM_TSI_GENCS_NSCN)
+/*! @brief Format value for bitfield TSI_GENCS_NSCN. */
+#define BF_TSI_GENCS_NSCN(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_NSCN) & BM_TSI_GENCS_NSCN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NSCN field to a new value.
-#define BW_TSI_GENCS_NSCN(v) (HW_TSI_GENCS_WR((HW_TSI_GENCS_RD() & ~BM_TSI_GENCS_NSCN) | BF_TSI_GENCS_NSCN(v)))
-#endif
-//@}
+/*! @brief Set the NSCN field to a new value. */
+#define BW_TSI_GENCS_NSCN(x, v) (HW_TSI_GENCS_WR(x, (HW_TSI_GENCS_RD(x) & ~BM_TSI_GENCS_NSCN) | BF_TSI_GENCS_NSCN(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field LPSCNITV[27:24] (RW)
@@ -545,24 +478,20 @@ typedef union _hw_tsi_gencs
  * - 1110 - 400 ms scan interval
  * - 1111 - 500 ms scan interval
  */
-//@{
-#define BP_TSI_GENCS_LPSCNITV (24U)        //!< Bit position for TSI_GENCS_LPSCNITV.
-#define BM_TSI_GENCS_LPSCNITV (0x0F000000U) //!< Bit mask for TSI_GENCS_LPSCNITV.
-#define BS_TSI_GENCS_LPSCNITV (4U)         //!< Bit field size in bits for TSI_GENCS_LPSCNITV.
+/*@{*/
+#define BP_TSI_GENCS_LPSCNITV (24U)        /*!< Bit position for TSI_GENCS_LPSCNITV. */
+#define BM_TSI_GENCS_LPSCNITV (0x0F000000U) /*!< Bit mask for TSI_GENCS_LPSCNITV. */
+#define BS_TSI_GENCS_LPSCNITV (4U)         /*!< Bit field size in bits for TSI_GENCS_LPSCNITV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_LPSCNITV field.
-#define BR_TSI_GENCS_LPSCNITV (HW_TSI_GENCS.B.LPSCNITV)
-#endif
+/*! @brief Read current value of the TSI_GENCS_LPSCNITV field. */
+#define BR_TSI_GENCS_LPSCNITV(x) (HW_TSI_GENCS(x).B.LPSCNITV)
 
-//! @brief Format value for bitfield TSI_GENCS_LPSCNITV.
-#define BF_TSI_GENCS_LPSCNITV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_LPSCNITV), uint32_t) & BM_TSI_GENCS_LPSCNITV)
+/*! @brief Format value for bitfield TSI_GENCS_LPSCNITV. */
+#define BF_TSI_GENCS_LPSCNITV(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_LPSCNITV) & BM_TSI_GENCS_LPSCNITV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPSCNITV field to a new value.
-#define BW_TSI_GENCS_LPSCNITV(v) (HW_TSI_GENCS_WR((HW_TSI_GENCS_RD() & ~BM_TSI_GENCS_LPSCNITV) | BF_TSI_GENCS_LPSCNITV(v)))
-#endif
-//@}
+/*! @brief Set the LPSCNITV field to a new value. */
+#define BW_TSI_GENCS_LPSCNITV(x, v) (HW_TSI_GENCS_WR(x, (HW_TSI_GENCS_RD(x) & ~BM_TSI_GENCS_LPSCNITV) | BF_TSI_GENCS_LPSCNITV(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_GENCS, field LPCLKS[28] (RW)
@@ -574,30 +503,25 @@ typedef union _hw_tsi_gencs
  * - 0 - LPOCLK is selected to determine the scan period in low power mode
  * - 1 - VLPOSCCLK is selected to determine the scan period in low power mode
  */
-//@{
-#define BP_TSI_GENCS_LPCLKS  (28U)         //!< Bit position for TSI_GENCS_LPCLKS.
-#define BM_TSI_GENCS_LPCLKS  (0x10000000U) //!< Bit mask for TSI_GENCS_LPCLKS.
-#define BS_TSI_GENCS_LPCLKS  (1U)          //!< Bit field size in bits for TSI_GENCS_LPCLKS.
+/*@{*/
+#define BP_TSI_GENCS_LPCLKS  (28U)         /*!< Bit position for TSI_GENCS_LPCLKS. */
+#define BM_TSI_GENCS_LPCLKS  (0x10000000U) /*!< Bit mask for TSI_GENCS_LPCLKS. */
+#define BS_TSI_GENCS_LPCLKS  (1U)          /*!< Bit field size in bits for TSI_GENCS_LPCLKS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_GENCS_LPCLKS field.
-#define BR_TSI_GENCS_LPCLKS  (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_LPCLKS))
-#endif
+/*! @brief Read current value of the TSI_GENCS_LPCLKS field. */
+#define BR_TSI_GENCS_LPCLKS(x) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_LPCLKS))
 
-//! @brief Format value for bitfield TSI_GENCS_LPCLKS.
-#define BF_TSI_GENCS_LPCLKS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_GENCS_LPCLKS), uint32_t) & BM_TSI_GENCS_LPCLKS)
+/*! @brief Format value for bitfield TSI_GENCS_LPCLKS. */
+#define BF_TSI_GENCS_LPCLKS(v) ((uint32_t)((uint32_t)(v) << BP_TSI_GENCS_LPCLKS) & BM_TSI_GENCS_LPCLKS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPCLKS field to a new value.
-#define BW_TSI_GENCS_LPCLKS(v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR, BP_TSI_GENCS_LPCLKS) = (v))
-#endif
-//@}
+/*! @brief Set the LPCLKS field to a new value. */
+#define BW_TSI_GENCS_LPCLKS(x, v) (BITBAND_ACCESS32(HW_TSI_GENCS_ADDR(x), BP_TSI_GENCS_LPCLKS) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_SCANC - SCAN Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_SCANC - SCAN Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_SCANC - SCAN Control Register (RW)
  *
@@ -608,33 +532,31 @@ typedef union _hw_tsi_scanc
     uint32_t U;
     struct _hw_tsi_scanc_bitfields
     {
-        uint32_t AMPSC : 3;            //!< [2:0] Active Mode Prescaler
-        uint32_t AMCLKS : 2;           //!< [4:3] Active Mode Clock Source
-        uint32_t RESERVED0 : 3;        //!< [7:5]
-        uint32_t SMOD : 8;             //!< [15:8] Scan Module
-        uint32_t EXTCHRG : 4;          //!< [19:16] External OSC Charge Current select
-        uint32_t RESERVED1 : 4;        //!< [23:20]
-        uint32_t REFCHRG : 4;          //!< [27:24] Ref OSC Charge Current select
-        uint32_t RESERVED2 : 4;        //!< [31:28]
+        uint32_t AMPSC : 3;            /*!< [2:0] Active Mode Prescaler */
+        uint32_t AMCLKS : 2;           /*!< [4:3] Active Mode Clock Source */
+        uint32_t RESERVED0 : 3;        /*!< [7:5]  */
+        uint32_t SMOD : 8;             /*!< [15:8] Scan Module */
+        uint32_t EXTCHRG : 4;          /*!< [19:16] External OSC Charge Current select
+                                        * */
+        uint32_t RESERVED1 : 4;        /*!< [23:20]  */
+        uint32_t REFCHRG : 4;          /*!< [27:24] Ref OSC Charge Current select */
+        uint32_t RESERVED2 : 4;        /*!< [31:28]  */
     } B;
 } hw_tsi_scanc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_SCANC register
  */
-//@{
-#define HW_TSI_SCANC_ADDR        (REGS_TSI_BASE + 0x4U)
+/*@{*/
+#define HW_TSI_SCANC_ADDR(x)     ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_SCANC             (*(__IO hw_tsi_scanc_t *) HW_TSI_SCANC_ADDR)
-#define HW_TSI_SCANC_RD()        (HW_TSI_SCANC.U)
-#define HW_TSI_SCANC_WR(v)       (HW_TSI_SCANC.U = (v))
-#define HW_TSI_SCANC_SET(v)      (HW_TSI_SCANC_WR(HW_TSI_SCANC_RD() |  (v)))
-#define HW_TSI_SCANC_CLR(v)      (HW_TSI_SCANC_WR(HW_TSI_SCANC_RD() & ~(v)))
-#define HW_TSI_SCANC_TOG(v)      (HW_TSI_SCANC_WR(HW_TSI_SCANC_RD() ^  (v)))
-#endif
-//@}
+#define HW_TSI_SCANC(x)          (*(__IO hw_tsi_scanc_t *) HW_TSI_SCANC_ADDR(x))
+#define HW_TSI_SCANC_RD(x)       (HW_TSI_SCANC(x).U)
+#define HW_TSI_SCANC_WR(x, v)    (HW_TSI_SCANC(x).U = (v))
+#define HW_TSI_SCANC_SET(x, v)   (HW_TSI_SCANC_WR(x, HW_TSI_SCANC_RD(x) |  (v)))
+#define HW_TSI_SCANC_CLR(x, v)   (HW_TSI_SCANC_WR(x, HW_TSI_SCANC_RD(x) & ~(v)))
+#define HW_TSI_SCANC_TOG(x, v)   (HW_TSI_SCANC_WR(x, HW_TSI_SCANC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_SCANC bitfields
@@ -653,24 +575,20 @@ typedef union _hw_tsi_scanc
  * - 110 - Input Clock Source divided by 64.
  * - 111 - Input Clock Source divided by 128.
  */
-//@{
-#define BP_TSI_SCANC_AMPSC   (0U)          //!< Bit position for TSI_SCANC_AMPSC.
-#define BM_TSI_SCANC_AMPSC   (0x00000007U) //!< Bit mask for TSI_SCANC_AMPSC.
-#define BS_TSI_SCANC_AMPSC   (3U)          //!< Bit field size in bits for TSI_SCANC_AMPSC.
+/*@{*/
+#define BP_TSI_SCANC_AMPSC   (0U)          /*!< Bit position for TSI_SCANC_AMPSC. */
+#define BM_TSI_SCANC_AMPSC   (0x00000007U) /*!< Bit mask for TSI_SCANC_AMPSC. */
+#define BS_TSI_SCANC_AMPSC   (3U)          /*!< Bit field size in bits for TSI_SCANC_AMPSC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_SCANC_AMPSC field.
-#define BR_TSI_SCANC_AMPSC   (HW_TSI_SCANC.B.AMPSC)
-#endif
+/*! @brief Read current value of the TSI_SCANC_AMPSC field. */
+#define BR_TSI_SCANC_AMPSC(x) (HW_TSI_SCANC(x).B.AMPSC)
 
-//! @brief Format value for bitfield TSI_SCANC_AMPSC.
-#define BF_TSI_SCANC_AMPSC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_SCANC_AMPSC), uint32_t) & BM_TSI_SCANC_AMPSC)
+/*! @brief Format value for bitfield TSI_SCANC_AMPSC. */
+#define BF_TSI_SCANC_AMPSC(v) ((uint32_t)((uint32_t)(v) << BP_TSI_SCANC_AMPSC) & BM_TSI_SCANC_AMPSC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AMPSC field to a new value.
-#define BW_TSI_SCANC_AMPSC(v) (HW_TSI_SCANC_WR((HW_TSI_SCANC_RD() & ~BM_TSI_SCANC_AMPSC) | BF_TSI_SCANC_AMPSC(v)))
-#endif
-//@}
+/*! @brief Set the AMPSC field to a new value. */
+#define BW_TSI_SCANC_AMPSC(x, v) (HW_TSI_SCANC_WR(x, (HW_TSI_SCANC_RD(x) & ~BM_TSI_SCANC_AMPSC) | BF_TSI_SCANC_AMPSC(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_SCANC, field AMCLKS[4:3] (RW)
@@ -681,24 +599,20 @@ typedef union _hw_tsi_scanc
  * - 10 - OSCERCLK.
  * - 11 - Not valid.
  */
-//@{
-#define BP_TSI_SCANC_AMCLKS  (3U)          //!< Bit position for TSI_SCANC_AMCLKS.
-#define BM_TSI_SCANC_AMCLKS  (0x00000018U) //!< Bit mask for TSI_SCANC_AMCLKS.
-#define BS_TSI_SCANC_AMCLKS  (2U)          //!< Bit field size in bits for TSI_SCANC_AMCLKS.
+/*@{*/
+#define BP_TSI_SCANC_AMCLKS  (3U)          /*!< Bit position for TSI_SCANC_AMCLKS. */
+#define BM_TSI_SCANC_AMCLKS  (0x00000018U) /*!< Bit mask for TSI_SCANC_AMCLKS. */
+#define BS_TSI_SCANC_AMCLKS  (2U)          /*!< Bit field size in bits for TSI_SCANC_AMCLKS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_SCANC_AMCLKS field.
-#define BR_TSI_SCANC_AMCLKS  (HW_TSI_SCANC.B.AMCLKS)
-#endif
+/*! @brief Read current value of the TSI_SCANC_AMCLKS field. */
+#define BR_TSI_SCANC_AMCLKS(x) (HW_TSI_SCANC(x).B.AMCLKS)
 
-//! @brief Format value for bitfield TSI_SCANC_AMCLKS.
-#define BF_TSI_SCANC_AMCLKS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_SCANC_AMCLKS), uint32_t) & BM_TSI_SCANC_AMCLKS)
+/*! @brief Format value for bitfield TSI_SCANC_AMCLKS. */
+#define BF_TSI_SCANC_AMCLKS(v) ((uint32_t)((uint32_t)(v) << BP_TSI_SCANC_AMCLKS) & BM_TSI_SCANC_AMCLKS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AMCLKS field to a new value.
-#define BW_TSI_SCANC_AMCLKS(v) (HW_TSI_SCANC_WR((HW_TSI_SCANC_RD() & ~BM_TSI_SCANC_AMCLKS) | BF_TSI_SCANC_AMCLKS(v)))
-#endif
-//@}
+/*! @brief Set the AMCLKS field to a new value. */
+#define BW_TSI_SCANC_AMCLKS(x, v) (HW_TSI_SCANC_WR(x, (HW_TSI_SCANC_RD(x) & ~BM_TSI_SCANC_AMCLKS) | BF_TSI_SCANC_AMCLKS(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_SCANC, field SMOD[15:8] (RW)
@@ -706,24 +620,20 @@ typedef union _hw_tsi_scanc
  * Values:
  * - 00000000 - Continue Scan.
  */
-//@{
-#define BP_TSI_SCANC_SMOD    (8U)          //!< Bit position for TSI_SCANC_SMOD.
-#define BM_TSI_SCANC_SMOD    (0x0000FF00U) //!< Bit mask for TSI_SCANC_SMOD.
-#define BS_TSI_SCANC_SMOD    (8U)          //!< Bit field size in bits for TSI_SCANC_SMOD.
+/*@{*/
+#define BP_TSI_SCANC_SMOD    (8U)          /*!< Bit position for TSI_SCANC_SMOD. */
+#define BM_TSI_SCANC_SMOD    (0x0000FF00U) /*!< Bit mask for TSI_SCANC_SMOD. */
+#define BS_TSI_SCANC_SMOD    (8U)          /*!< Bit field size in bits for TSI_SCANC_SMOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_SCANC_SMOD field.
-#define BR_TSI_SCANC_SMOD    (HW_TSI_SCANC.B.SMOD)
-#endif
+/*! @brief Read current value of the TSI_SCANC_SMOD field. */
+#define BR_TSI_SCANC_SMOD(x) (HW_TSI_SCANC(x).B.SMOD)
 
-//! @brief Format value for bitfield TSI_SCANC_SMOD.
-#define BF_TSI_SCANC_SMOD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_SCANC_SMOD), uint32_t) & BM_TSI_SCANC_SMOD)
+/*! @brief Format value for bitfield TSI_SCANC_SMOD. */
+#define BF_TSI_SCANC_SMOD(v) ((uint32_t)((uint32_t)(v) << BP_TSI_SCANC_SMOD) & BM_TSI_SCANC_SMOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SMOD field to a new value.
-#define BW_TSI_SCANC_SMOD(v) (HW_TSI_SCANC_WR((HW_TSI_SCANC_RD() & ~BM_TSI_SCANC_SMOD) | BF_TSI_SCANC_SMOD(v)))
-#endif
-//@}
+/*! @brief Set the SMOD field to a new value. */
+#define BW_TSI_SCANC_SMOD(x, v) (HW_TSI_SCANC_WR(x, (HW_TSI_SCANC_RD(x) & ~BM_TSI_SCANC_SMOD) | BF_TSI_SCANC_SMOD(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_SCANC, field EXTCHRG[19:16] (RW)
@@ -746,24 +656,20 @@ typedef union _hw_tsi_scanc
  * - 1110 - 30 uA charge current.
  * - 1111 - 32 uA charge current.
  */
-//@{
-#define BP_TSI_SCANC_EXTCHRG (16U)         //!< Bit position for TSI_SCANC_EXTCHRG.
-#define BM_TSI_SCANC_EXTCHRG (0x000F0000U) //!< Bit mask for TSI_SCANC_EXTCHRG.
-#define BS_TSI_SCANC_EXTCHRG (4U)          //!< Bit field size in bits for TSI_SCANC_EXTCHRG.
+/*@{*/
+#define BP_TSI_SCANC_EXTCHRG (16U)         /*!< Bit position for TSI_SCANC_EXTCHRG. */
+#define BM_TSI_SCANC_EXTCHRG (0x000F0000U) /*!< Bit mask for TSI_SCANC_EXTCHRG. */
+#define BS_TSI_SCANC_EXTCHRG (4U)          /*!< Bit field size in bits for TSI_SCANC_EXTCHRG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_SCANC_EXTCHRG field.
-#define BR_TSI_SCANC_EXTCHRG (HW_TSI_SCANC.B.EXTCHRG)
-#endif
+/*! @brief Read current value of the TSI_SCANC_EXTCHRG field. */
+#define BR_TSI_SCANC_EXTCHRG(x) (HW_TSI_SCANC(x).B.EXTCHRG)
 
-//! @brief Format value for bitfield TSI_SCANC_EXTCHRG.
-#define BF_TSI_SCANC_EXTCHRG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_SCANC_EXTCHRG), uint32_t) & BM_TSI_SCANC_EXTCHRG)
+/*! @brief Format value for bitfield TSI_SCANC_EXTCHRG. */
+#define BF_TSI_SCANC_EXTCHRG(v) ((uint32_t)((uint32_t)(v) << BP_TSI_SCANC_EXTCHRG) & BM_TSI_SCANC_EXTCHRG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EXTCHRG field to a new value.
-#define BW_TSI_SCANC_EXTCHRG(v) (HW_TSI_SCANC_WR((HW_TSI_SCANC_RD() & ~BM_TSI_SCANC_EXTCHRG) | BF_TSI_SCANC_EXTCHRG(v)))
-#endif
-//@}
+/*! @brief Set the EXTCHRG field to a new value. */
+#define BW_TSI_SCANC_EXTCHRG(x, v) (HW_TSI_SCANC_WR(x, (HW_TSI_SCANC_RD(x) & ~BM_TSI_SCANC_EXTCHRG) | BF_TSI_SCANC_EXTCHRG(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_SCANC, field REFCHRG[27:24] (RW)
@@ -786,30 +692,25 @@ typedef union _hw_tsi_scanc
  * - 1110 - 30 uA charge current.
  * - 1111 - 32 uA charge current.
  */
-//@{
-#define BP_TSI_SCANC_REFCHRG (24U)         //!< Bit position for TSI_SCANC_REFCHRG.
-#define BM_TSI_SCANC_REFCHRG (0x0F000000U) //!< Bit mask for TSI_SCANC_REFCHRG.
-#define BS_TSI_SCANC_REFCHRG (4U)          //!< Bit field size in bits for TSI_SCANC_REFCHRG.
+/*@{*/
+#define BP_TSI_SCANC_REFCHRG (24U)         /*!< Bit position for TSI_SCANC_REFCHRG. */
+#define BM_TSI_SCANC_REFCHRG (0x0F000000U) /*!< Bit mask for TSI_SCANC_REFCHRG. */
+#define BS_TSI_SCANC_REFCHRG (4U)          /*!< Bit field size in bits for TSI_SCANC_REFCHRG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_SCANC_REFCHRG field.
-#define BR_TSI_SCANC_REFCHRG (HW_TSI_SCANC.B.REFCHRG)
-#endif
+/*! @brief Read current value of the TSI_SCANC_REFCHRG field. */
+#define BR_TSI_SCANC_REFCHRG(x) (HW_TSI_SCANC(x).B.REFCHRG)
 
-//! @brief Format value for bitfield TSI_SCANC_REFCHRG.
-#define BF_TSI_SCANC_REFCHRG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_SCANC_REFCHRG), uint32_t) & BM_TSI_SCANC_REFCHRG)
+/*! @brief Format value for bitfield TSI_SCANC_REFCHRG. */
+#define BF_TSI_SCANC_REFCHRG(v) ((uint32_t)((uint32_t)(v) << BP_TSI_SCANC_REFCHRG) & BM_TSI_SCANC_REFCHRG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the REFCHRG field to a new value.
-#define BW_TSI_SCANC_REFCHRG(v) (HW_TSI_SCANC_WR((HW_TSI_SCANC_RD() & ~BM_TSI_SCANC_REFCHRG) | BF_TSI_SCANC_REFCHRG(v)))
-#endif
-//@}
+/*! @brief Set the REFCHRG field to a new value. */
+#define BW_TSI_SCANC_REFCHRG(x, v) (HW_TSI_SCANC_WR(x, (HW_TSI_SCANC_RD(x) & ~BM_TSI_SCANC_REFCHRG) | BF_TSI_SCANC_REFCHRG(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_PEN - Pin Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_PEN - Pin Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_PEN - Pin Enable Register (RW)
  *
@@ -822,49 +723,56 @@ typedef union _hw_tsi_pen
     uint32_t U;
     struct _hw_tsi_pen_bitfields
     {
-        uint32_t PEN0 : 1;             //!< [0] Touch Sensing Input Pin Enable Register 0
-        uint32_t PEN1 : 1;             //!< [1] Touch Sensing Input Pin Enable Register 1
-        uint32_t PEN2 : 1;             //!< [2] Touch Sensing Input Pin Enable Register 2
-        uint32_t PEN3 : 1;             //!< [3] Touch Sensing Input Pin Enable Register 3
-        uint32_t PEN4 : 1;             //!< [4] Touch Sensing Input Pin Enable Register 4
-        uint32_t PEN5 : 1;             //!< [5] Touch Sensing Input Pin Enable Register 5
-        uint32_t PEN6 : 1;             //!< [6] Touch Sensing Input Pin Enable Register 6
-        uint32_t PEN7 : 1;             //!< [7] Touch Sensing Input Pin Enable Register 7
-        uint32_t PEN8 : 1;             //!< [8] Touch Sensing Input Pin Enable Register 8
-        uint32_t PEN9 : 1;             //!< [9] Touch Sensing Input Pin Enable Register 9
-        uint32_t PEN10 : 1;            //!< [10] Touch Sensing Input Pin Enable Register
-                                       //! 10
-        uint32_t PEN11 : 1;            //!< [11] Touch Sensing Input Pin Enable Register
-                                       //! 11
-        uint32_t PEN12 : 1;            //!< [12] Touch Sensing Input Pin Enable Register
-                                       //! 12
-        uint32_t PEN13 : 1;            //!< [13] Touch Sensing Input Pin Enable Register
-                                       //! 13
-        uint32_t PEN14 : 1;            //!< [14] Touch Sensing Input Pin Enable Register
-                                       //! 14
-        uint32_t PEN15 : 1;            //!< [15] Touch Sensing Input Pin Enable Register
-                                       //! 15
-        uint32_t LPSP : 4;             //!< [19:16] Low Power Scan Pin
-        uint32_t RESERVED0 : 12;       //!< [31:20]
+        uint32_t PEN0 : 1;             /*!< [0] Touch Sensing Input Pin Enable Register 0
+                                        * */
+        uint32_t PEN1 : 1;             /*!< [1] Touch Sensing Input Pin Enable Register 1
+                                        * */
+        uint32_t PEN2 : 1;             /*!< [2] Touch Sensing Input Pin Enable Register 2
+                                        * */
+        uint32_t PEN3 : 1;             /*!< [3] Touch Sensing Input Pin Enable Register 3
+                                        * */
+        uint32_t PEN4 : 1;             /*!< [4] Touch Sensing Input Pin Enable Register 4
+                                        * */
+        uint32_t PEN5 : 1;             /*!< [5] Touch Sensing Input Pin Enable Register 5
+                                        * */
+        uint32_t PEN6 : 1;             /*!< [6] Touch Sensing Input Pin Enable Register 6
+                                        * */
+        uint32_t PEN7 : 1;             /*!< [7] Touch Sensing Input Pin Enable Register 7
+                                        * */
+        uint32_t PEN8 : 1;             /*!< [8] Touch Sensing Input Pin Enable Register 8
+                                        * */
+        uint32_t PEN9 : 1;             /*!< [9] Touch Sensing Input Pin Enable Register 9
+                                        * */
+        uint32_t PEN10 : 1;            /*!< [10] Touch Sensing Input Pin Enable Register
+                                        * 10 */
+        uint32_t PEN11 : 1;            /*!< [11] Touch Sensing Input Pin Enable Register
+                                        * 11 */
+        uint32_t PEN12 : 1;            /*!< [12] Touch Sensing Input Pin Enable Register
+                                        * 12 */
+        uint32_t PEN13 : 1;            /*!< [13] Touch Sensing Input Pin Enable Register
+                                        * 13 */
+        uint32_t PEN14 : 1;            /*!< [14] Touch Sensing Input Pin Enable Register
+                                        * 14 */
+        uint32_t PEN15 : 1;            /*!< [15] Touch Sensing Input Pin Enable Register
+                                        * 15 */
+        uint32_t LPSP : 4;             /*!< [19:16] Low Power Scan Pin */
+        uint32_t RESERVED0 : 12;       /*!< [31:20]  */
     } B;
 } hw_tsi_pen_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_PEN register
  */
-//@{
-#define HW_TSI_PEN_ADDR          (REGS_TSI_BASE + 0x8U)
+/*@{*/
+#define HW_TSI_PEN_ADDR(x)       ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_PEN               (*(__IO hw_tsi_pen_t *) HW_TSI_PEN_ADDR)
-#define HW_TSI_PEN_RD()          (HW_TSI_PEN.U)
-#define HW_TSI_PEN_WR(v)         (HW_TSI_PEN.U = (v))
-#define HW_TSI_PEN_SET(v)        (HW_TSI_PEN_WR(HW_TSI_PEN_RD() |  (v)))
-#define HW_TSI_PEN_CLR(v)        (HW_TSI_PEN_WR(HW_TSI_PEN_RD() & ~(v)))
-#define HW_TSI_PEN_TOG(v)        (HW_TSI_PEN_WR(HW_TSI_PEN_RD() ^  (v)))
-#endif
-//@}
+#define HW_TSI_PEN(x)            (*(__IO hw_tsi_pen_t *) HW_TSI_PEN_ADDR(x))
+#define HW_TSI_PEN_RD(x)         (HW_TSI_PEN(x).U)
+#define HW_TSI_PEN_WR(x, v)      (HW_TSI_PEN(x).U = (v))
+#define HW_TSI_PEN_SET(x, v)     (HW_TSI_PEN_WR(x, HW_TSI_PEN_RD(x) |  (v)))
+#define HW_TSI_PEN_CLR(x, v)     (HW_TSI_PEN_WR(x, HW_TSI_PEN_RD(x) & ~(v)))
+#define HW_TSI_PEN_TOG(x, v)     (HW_TSI_PEN_WR(x, HW_TSI_PEN_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_PEN bitfields
@@ -877,24 +785,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN0      (0U)          //!< Bit position for TSI_PEN_PEN0.
-#define BM_TSI_PEN_PEN0      (0x00000001U) //!< Bit mask for TSI_PEN_PEN0.
-#define BS_TSI_PEN_PEN0      (1U)          //!< Bit field size in bits for TSI_PEN_PEN0.
+/*@{*/
+#define BP_TSI_PEN_PEN0      (0U)          /*!< Bit position for TSI_PEN_PEN0. */
+#define BM_TSI_PEN_PEN0      (0x00000001U) /*!< Bit mask for TSI_PEN_PEN0. */
+#define BS_TSI_PEN_PEN0      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN0 field.
-#define BR_TSI_PEN_PEN0      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN0))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN0 field. */
+#define BR_TSI_PEN_PEN0(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN0))
 
-//! @brief Format value for bitfield TSI_PEN_PEN0.
-#define BF_TSI_PEN_PEN0(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN0), uint32_t) & BM_TSI_PEN_PEN0)
+/*! @brief Format value for bitfield TSI_PEN_PEN0. */
+#define BF_TSI_PEN_PEN0(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN0) & BM_TSI_PEN_PEN0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN0 field to a new value.
-#define BW_TSI_PEN_PEN0(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN0) = (v))
-#endif
-//@}
+/*! @brief Set the PEN0 field to a new value. */
+#define BW_TSI_PEN_PEN0(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN0) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN1[1] (RW)
@@ -903,24 +807,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN1      (1U)          //!< Bit position for TSI_PEN_PEN1.
-#define BM_TSI_PEN_PEN1      (0x00000002U) //!< Bit mask for TSI_PEN_PEN1.
-#define BS_TSI_PEN_PEN1      (1U)          //!< Bit field size in bits for TSI_PEN_PEN1.
+/*@{*/
+#define BP_TSI_PEN_PEN1      (1U)          /*!< Bit position for TSI_PEN_PEN1. */
+#define BM_TSI_PEN_PEN1      (0x00000002U) /*!< Bit mask for TSI_PEN_PEN1. */
+#define BS_TSI_PEN_PEN1      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN1 field.
-#define BR_TSI_PEN_PEN1      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN1))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN1 field. */
+#define BR_TSI_PEN_PEN1(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN1))
 
-//! @brief Format value for bitfield TSI_PEN_PEN1.
-#define BF_TSI_PEN_PEN1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN1), uint32_t) & BM_TSI_PEN_PEN1)
+/*! @brief Format value for bitfield TSI_PEN_PEN1. */
+#define BF_TSI_PEN_PEN1(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN1) & BM_TSI_PEN_PEN1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN1 field to a new value.
-#define BW_TSI_PEN_PEN1(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN1) = (v))
-#endif
-//@}
+/*! @brief Set the PEN1 field to a new value. */
+#define BW_TSI_PEN_PEN1(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN1) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN2[2] (RW)
@@ -929,24 +829,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN2      (2U)          //!< Bit position for TSI_PEN_PEN2.
-#define BM_TSI_PEN_PEN2      (0x00000004U) //!< Bit mask for TSI_PEN_PEN2.
-#define BS_TSI_PEN_PEN2      (1U)          //!< Bit field size in bits for TSI_PEN_PEN2.
+/*@{*/
+#define BP_TSI_PEN_PEN2      (2U)          /*!< Bit position for TSI_PEN_PEN2. */
+#define BM_TSI_PEN_PEN2      (0x00000004U) /*!< Bit mask for TSI_PEN_PEN2. */
+#define BS_TSI_PEN_PEN2      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN2 field.
-#define BR_TSI_PEN_PEN2      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN2))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN2 field. */
+#define BR_TSI_PEN_PEN2(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN2))
 
-//! @brief Format value for bitfield TSI_PEN_PEN2.
-#define BF_TSI_PEN_PEN2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN2), uint32_t) & BM_TSI_PEN_PEN2)
+/*! @brief Format value for bitfield TSI_PEN_PEN2. */
+#define BF_TSI_PEN_PEN2(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN2) & BM_TSI_PEN_PEN2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN2 field to a new value.
-#define BW_TSI_PEN_PEN2(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN2) = (v))
-#endif
-//@}
+/*! @brief Set the PEN2 field to a new value. */
+#define BW_TSI_PEN_PEN2(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN2) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN3[3] (RW)
@@ -955,24 +851,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN3      (3U)          //!< Bit position for TSI_PEN_PEN3.
-#define BM_TSI_PEN_PEN3      (0x00000008U) //!< Bit mask for TSI_PEN_PEN3.
-#define BS_TSI_PEN_PEN3      (1U)          //!< Bit field size in bits for TSI_PEN_PEN3.
+/*@{*/
+#define BP_TSI_PEN_PEN3      (3U)          /*!< Bit position for TSI_PEN_PEN3. */
+#define BM_TSI_PEN_PEN3      (0x00000008U) /*!< Bit mask for TSI_PEN_PEN3. */
+#define BS_TSI_PEN_PEN3      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN3 field.
-#define BR_TSI_PEN_PEN3      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN3))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN3 field. */
+#define BR_TSI_PEN_PEN3(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN3))
 
-//! @brief Format value for bitfield TSI_PEN_PEN3.
-#define BF_TSI_PEN_PEN3(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN3), uint32_t) & BM_TSI_PEN_PEN3)
+/*! @brief Format value for bitfield TSI_PEN_PEN3. */
+#define BF_TSI_PEN_PEN3(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN3) & BM_TSI_PEN_PEN3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN3 field to a new value.
-#define BW_TSI_PEN_PEN3(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN3) = (v))
-#endif
-//@}
+/*! @brief Set the PEN3 field to a new value. */
+#define BW_TSI_PEN_PEN3(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN3) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN4[4] (RW)
@@ -981,24 +873,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN4      (4U)          //!< Bit position for TSI_PEN_PEN4.
-#define BM_TSI_PEN_PEN4      (0x00000010U) //!< Bit mask for TSI_PEN_PEN4.
-#define BS_TSI_PEN_PEN4      (1U)          //!< Bit field size in bits for TSI_PEN_PEN4.
+/*@{*/
+#define BP_TSI_PEN_PEN4      (4U)          /*!< Bit position for TSI_PEN_PEN4. */
+#define BM_TSI_PEN_PEN4      (0x00000010U) /*!< Bit mask for TSI_PEN_PEN4. */
+#define BS_TSI_PEN_PEN4      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN4 field.
-#define BR_TSI_PEN_PEN4      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN4))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN4 field. */
+#define BR_TSI_PEN_PEN4(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN4))
 
-//! @brief Format value for bitfield TSI_PEN_PEN4.
-#define BF_TSI_PEN_PEN4(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN4), uint32_t) & BM_TSI_PEN_PEN4)
+/*! @brief Format value for bitfield TSI_PEN_PEN4. */
+#define BF_TSI_PEN_PEN4(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN4) & BM_TSI_PEN_PEN4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN4 field to a new value.
-#define BW_TSI_PEN_PEN4(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN4) = (v))
-#endif
-//@}
+/*! @brief Set the PEN4 field to a new value. */
+#define BW_TSI_PEN_PEN4(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN4) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN5[5] (RW)
@@ -1007,24 +895,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN5      (5U)          //!< Bit position for TSI_PEN_PEN5.
-#define BM_TSI_PEN_PEN5      (0x00000020U) //!< Bit mask for TSI_PEN_PEN5.
-#define BS_TSI_PEN_PEN5      (1U)          //!< Bit field size in bits for TSI_PEN_PEN5.
+/*@{*/
+#define BP_TSI_PEN_PEN5      (5U)          /*!< Bit position for TSI_PEN_PEN5. */
+#define BM_TSI_PEN_PEN5      (0x00000020U) /*!< Bit mask for TSI_PEN_PEN5. */
+#define BS_TSI_PEN_PEN5      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN5 field.
-#define BR_TSI_PEN_PEN5      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN5))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN5 field. */
+#define BR_TSI_PEN_PEN5(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN5))
 
-//! @brief Format value for bitfield TSI_PEN_PEN5.
-#define BF_TSI_PEN_PEN5(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN5), uint32_t) & BM_TSI_PEN_PEN5)
+/*! @brief Format value for bitfield TSI_PEN_PEN5. */
+#define BF_TSI_PEN_PEN5(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN5) & BM_TSI_PEN_PEN5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN5 field to a new value.
-#define BW_TSI_PEN_PEN5(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN5) = (v))
-#endif
-//@}
+/*! @brief Set the PEN5 field to a new value. */
+#define BW_TSI_PEN_PEN5(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN5) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN6[6] (RW)
@@ -1033,24 +917,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN6      (6U)          //!< Bit position for TSI_PEN_PEN6.
-#define BM_TSI_PEN_PEN6      (0x00000040U) //!< Bit mask for TSI_PEN_PEN6.
-#define BS_TSI_PEN_PEN6      (1U)          //!< Bit field size in bits for TSI_PEN_PEN6.
+/*@{*/
+#define BP_TSI_PEN_PEN6      (6U)          /*!< Bit position for TSI_PEN_PEN6. */
+#define BM_TSI_PEN_PEN6      (0x00000040U) /*!< Bit mask for TSI_PEN_PEN6. */
+#define BS_TSI_PEN_PEN6      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN6 field.
-#define BR_TSI_PEN_PEN6      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN6))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN6 field. */
+#define BR_TSI_PEN_PEN6(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN6))
 
-//! @brief Format value for bitfield TSI_PEN_PEN6.
-#define BF_TSI_PEN_PEN6(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN6), uint32_t) & BM_TSI_PEN_PEN6)
+/*! @brief Format value for bitfield TSI_PEN_PEN6. */
+#define BF_TSI_PEN_PEN6(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN6) & BM_TSI_PEN_PEN6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN6 field to a new value.
-#define BW_TSI_PEN_PEN6(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN6) = (v))
-#endif
-//@}
+/*! @brief Set the PEN6 field to a new value. */
+#define BW_TSI_PEN_PEN6(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN6) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN7[7] (RW)
@@ -1059,24 +939,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN7      (7U)          //!< Bit position for TSI_PEN_PEN7.
-#define BM_TSI_PEN_PEN7      (0x00000080U) //!< Bit mask for TSI_PEN_PEN7.
-#define BS_TSI_PEN_PEN7      (1U)          //!< Bit field size in bits for TSI_PEN_PEN7.
+/*@{*/
+#define BP_TSI_PEN_PEN7      (7U)          /*!< Bit position for TSI_PEN_PEN7. */
+#define BM_TSI_PEN_PEN7      (0x00000080U) /*!< Bit mask for TSI_PEN_PEN7. */
+#define BS_TSI_PEN_PEN7      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN7 field.
-#define BR_TSI_PEN_PEN7      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN7))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN7 field. */
+#define BR_TSI_PEN_PEN7(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN7))
 
-//! @brief Format value for bitfield TSI_PEN_PEN7.
-#define BF_TSI_PEN_PEN7(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN7), uint32_t) & BM_TSI_PEN_PEN7)
+/*! @brief Format value for bitfield TSI_PEN_PEN7. */
+#define BF_TSI_PEN_PEN7(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN7) & BM_TSI_PEN_PEN7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN7 field to a new value.
-#define BW_TSI_PEN_PEN7(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN7) = (v))
-#endif
-//@}
+/*! @brief Set the PEN7 field to a new value. */
+#define BW_TSI_PEN_PEN7(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN7) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN8[8] (RW)
@@ -1085,24 +961,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN8      (8U)          //!< Bit position for TSI_PEN_PEN8.
-#define BM_TSI_PEN_PEN8      (0x00000100U) //!< Bit mask for TSI_PEN_PEN8.
-#define BS_TSI_PEN_PEN8      (1U)          //!< Bit field size in bits for TSI_PEN_PEN8.
+/*@{*/
+#define BP_TSI_PEN_PEN8      (8U)          /*!< Bit position for TSI_PEN_PEN8. */
+#define BM_TSI_PEN_PEN8      (0x00000100U) /*!< Bit mask for TSI_PEN_PEN8. */
+#define BS_TSI_PEN_PEN8      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN8 field.
-#define BR_TSI_PEN_PEN8      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN8))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN8 field. */
+#define BR_TSI_PEN_PEN8(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN8))
 
-//! @brief Format value for bitfield TSI_PEN_PEN8.
-#define BF_TSI_PEN_PEN8(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN8), uint32_t) & BM_TSI_PEN_PEN8)
+/*! @brief Format value for bitfield TSI_PEN_PEN8. */
+#define BF_TSI_PEN_PEN8(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN8) & BM_TSI_PEN_PEN8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN8 field to a new value.
-#define BW_TSI_PEN_PEN8(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN8) = (v))
-#endif
-//@}
+/*! @brief Set the PEN8 field to a new value. */
+#define BW_TSI_PEN_PEN8(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN8) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN9[9] (RW)
@@ -1111,24 +983,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN9      (9U)          //!< Bit position for TSI_PEN_PEN9.
-#define BM_TSI_PEN_PEN9      (0x00000200U) //!< Bit mask for TSI_PEN_PEN9.
-#define BS_TSI_PEN_PEN9      (1U)          //!< Bit field size in bits for TSI_PEN_PEN9.
+/*@{*/
+#define BP_TSI_PEN_PEN9      (9U)          /*!< Bit position for TSI_PEN_PEN9. */
+#define BM_TSI_PEN_PEN9      (0x00000200U) /*!< Bit mask for TSI_PEN_PEN9. */
+#define BS_TSI_PEN_PEN9      (1U)          /*!< Bit field size in bits for TSI_PEN_PEN9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN9 field.
-#define BR_TSI_PEN_PEN9      (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN9))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN9 field. */
+#define BR_TSI_PEN_PEN9(x)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN9))
 
-//! @brief Format value for bitfield TSI_PEN_PEN9.
-#define BF_TSI_PEN_PEN9(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN9), uint32_t) & BM_TSI_PEN_PEN9)
+/*! @brief Format value for bitfield TSI_PEN_PEN9. */
+#define BF_TSI_PEN_PEN9(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN9) & BM_TSI_PEN_PEN9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN9 field to a new value.
-#define BW_TSI_PEN_PEN9(v)   (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN9) = (v))
-#endif
-//@}
+/*! @brief Set the PEN9 field to a new value. */
+#define BW_TSI_PEN_PEN9(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN9) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN10[10] (RW)
@@ -1137,24 +1005,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN10     (10U)         //!< Bit position for TSI_PEN_PEN10.
-#define BM_TSI_PEN_PEN10     (0x00000400U) //!< Bit mask for TSI_PEN_PEN10.
-#define BS_TSI_PEN_PEN10     (1U)          //!< Bit field size in bits for TSI_PEN_PEN10.
+/*@{*/
+#define BP_TSI_PEN_PEN10     (10U)         /*!< Bit position for TSI_PEN_PEN10. */
+#define BM_TSI_PEN_PEN10     (0x00000400U) /*!< Bit mask for TSI_PEN_PEN10. */
+#define BS_TSI_PEN_PEN10     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN10 field.
-#define BR_TSI_PEN_PEN10     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN10))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN10 field. */
+#define BR_TSI_PEN_PEN10(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN10))
 
-//! @brief Format value for bitfield TSI_PEN_PEN10.
-#define BF_TSI_PEN_PEN10(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN10), uint32_t) & BM_TSI_PEN_PEN10)
+/*! @brief Format value for bitfield TSI_PEN_PEN10. */
+#define BF_TSI_PEN_PEN10(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN10) & BM_TSI_PEN_PEN10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN10 field to a new value.
-#define BW_TSI_PEN_PEN10(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN10) = (v))
-#endif
-//@}
+/*! @brief Set the PEN10 field to a new value. */
+#define BW_TSI_PEN_PEN10(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN10) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN11[11] (RW)
@@ -1163,24 +1027,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN11     (11U)         //!< Bit position for TSI_PEN_PEN11.
-#define BM_TSI_PEN_PEN11     (0x00000800U) //!< Bit mask for TSI_PEN_PEN11.
-#define BS_TSI_PEN_PEN11     (1U)          //!< Bit field size in bits for TSI_PEN_PEN11.
+/*@{*/
+#define BP_TSI_PEN_PEN11     (11U)         /*!< Bit position for TSI_PEN_PEN11. */
+#define BM_TSI_PEN_PEN11     (0x00000800U) /*!< Bit mask for TSI_PEN_PEN11. */
+#define BS_TSI_PEN_PEN11     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN11. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN11 field.
-#define BR_TSI_PEN_PEN11     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN11))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN11 field. */
+#define BR_TSI_PEN_PEN11(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN11))
 
-//! @brief Format value for bitfield TSI_PEN_PEN11.
-#define BF_TSI_PEN_PEN11(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN11), uint32_t) & BM_TSI_PEN_PEN11)
+/*! @brief Format value for bitfield TSI_PEN_PEN11. */
+#define BF_TSI_PEN_PEN11(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN11) & BM_TSI_PEN_PEN11)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN11 field to a new value.
-#define BW_TSI_PEN_PEN11(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN11) = (v))
-#endif
-//@}
+/*! @brief Set the PEN11 field to a new value. */
+#define BW_TSI_PEN_PEN11(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN11) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN12[12] (RW)
@@ -1189,24 +1049,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN12     (12U)         //!< Bit position for TSI_PEN_PEN12.
-#define BM_TSI_PEN_PEN12     (0x00001000U) //!< Bit mask for TSI_PEN_PEN12.
-#define BS_TSI_PEN_PEN12     (1U)          //!< Bit field size in bits for TSI_PEN_PEN12.
+/*@{*/
+#define BP_TSI_PEN_PEN12     (12U)         /*!< Bit position for TSI_PEN_PEN12. */
+#define BM_TSI_PEN_PEN12     (0x00001000U) /*!< Bit mask for TSI_PEN_PEN12. */
+#define BS_TSI_PEN_PEN12     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN12. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN12 field.
-#define BR_TSI_PEN_PEN12     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN12))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN12 field. */
+#define BR_TSI_PEN_PEN12(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN12))
 
-//! @brief Format value for bitfield TSI_PEN_PEN12.
-#define BF_TSI_PEN_PEN12(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN12), uint32_t) & BM_TSI_PEN_PEN12)
+/*! @brief Format value for bitfield TSI_PEN_PEN12. */
+#define BF_TSI_PEN_PEN12(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN12) & BM_TSI_PEN_PEN12)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN12 field to a new value.
-#define BW_TSI_PEN_PEN12(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN12) = (v))
-#endif
-//@}
+/*! @brief Set the PEN12 field to a new value. */
+#define BW_TSI_PEN_PEN12(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN12) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN13[13] (RW)
@@ -1215,24 +1071,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN13     (13U)         //!< Bit position for TSI_PEN_PEN13.
-#define BM_TSI_PEN_PEN13     (0x00002000U) //!< Bit mask for TSI_PEN_PEN13.
-#define BS_TSI_PEN_PEN13     (1U)          //!< Bit field size in bits for TSI_PEN_PEN13.
+/*@{*/
+#define BP_TSI_PEN_PEN13     (13U)         /*!< Bit position for TSI_PEN_PEN13. */
+#define BM_TSI_PEN_PEN13     (0x00002000U) /*!< Bit mask for TSI_PEN_PEN13. */
+#define BS_TSI_PEN_PEN13     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN13 field.
-#define BR_TSI_PEN_PEN13     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN13))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN13 field. */
+#define BR_TSI_PEN_PEN13(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN13))
 
-//! @brief Format value for bitfield TSI_PEN_PEN13.
-#define BF_TSI_PEN_PEN13(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN13), uint32_t) & BM_TSI_PEN_PEN13)
+/*! @brief Format value for bitfield TSI_PEN_PEN13. */
+#define BF_TSI_PEN_PEN13(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN13) & BM_TSI_PEN_PEN13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN13 field to a new value.
-#define BW_TSI_PEN_PEN13(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN13) = (v))
-#endif
-//@}
+/*! @brief Set the PEN13 field to a new value. */
+#define BW_TSI_PEN_PEN13(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN13) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN14[14] (RW)
@@ -1241,24 +1093,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN14     (14U)         //!< Bit position for TSI_PEN_PEN14.
-#define BM_TSI_PEN_PEN14     (0x00004000U) //!< Bit mask for TSI_PEN_PEN14.
-#define BS_TSI_PEN_PEN14     (1U)          //!< Bit field size in bits for TSI_PEN_PEN14.
+/*@{*/
+#define BP_TSI_PEN_PEN14     (14U)         /*!< Bit position for TSI_PEN_PEN14. */
+#define BM_TSI_PEN_PEN14     (0x00004000U) /*!< Bit mask for TSI_PEN_PEN14. */
+#define BS_TSI_PEN_PEN14     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN14. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN14 field.
-#define BR_TSI_PEN_PEN14     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN14))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN14 field. */
+#define BR_TSI_PEN_PEN14(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN14))
 
-//! @brief Format value for bitfield TSI_PEN_PEN14.
-#define BF_TSI_PEN_PEN14(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN14), uint32_t) & BM_TSI_PEN_PEN14)
+/*! @brief Format value for bitfield TSI_PEN_PEN14. */
+#define BF_TSI_PEN_PEN14(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN14) & BM_TSI_PEN_PEN14)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN14 field to a new value.
-#define BW_TSI_PEN_PEN14(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN14) = (v))
-#endif
-//@}
+/*! @brief Set the PEN14 field to a new value. */
+#define BW_TSI_PEN_PEN14(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN14) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field PEN15[15] (RW)
@@ -1267,24 +1115,20 @@ typedef union _hw_tsi_pen
  * - 0 - The corresponding pin is not used by TSI.
  * - 1 - The corresponding pin is used by TSI.
  */
-//@{
-#define BP_TSI_PEN_PEN15     (15U)         //!< Bit position for TSI_PEN_PEN15.
-#define BM_TSI_PEN_PEN15     (0x00008000U) //!< Bit mask for TSI_PEN_PEN15.
-#define BS_TSI_PEN_PEN15     (1U)          //!< Bit field size in bits for TSI_PEN_PEN15.
+/*@{*/
+#define BP_TSI_PEN_PEN15     (15U)         /*!< Bit position for TSI_PEN_PEN15. */
+#define BM_TSI_PEN_PEN15     (0x00008000U) /*!< Bit mask for TSI_PEN_PEN15. */
+#define BS_TSI_PEN_PEN15     (1U)          /*!< Bit field size in bits for TSI_PEN_PEN15. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_PEN15 field.
-#define BR_TSI_PEN_PEN15     (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN15))
-#endif
+/*! @brief Read current value of the TSI_PEN_PEN15 field. */
+#define BR_TSI_PEN_PEN15(x)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN15))
 
-//! @brief Format value for bitfield TSI_PEN_PEN15.
-#define BF_TSI_PEN_PEN15(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_PEN15), uint32_t) & BM_TSI_PEN_PEN15)
+/*! @brief Format value for bitfield TSI_PEN_PEN15. */
+#define BF_TSI_PEN_PEN15(v)  ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_PEN15) & BM_TSI_PEN_PEN15)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEN15 field to a new value.
-#define BW_TSI_PEN_PEN15(v)  (BITBAND_ACCESS32(HW_TSI_PEN_ADDR, BP_TSI_PEN_PEN15) = (v))
-#endif
-//@}
+/*! @brief Set the PEN15 field to a new value. */
+#define BW_TSI_PEN_PEN15(x, v) (BITBAND_ACCESS32(HW_TSI_PEN_ADDR(x), BP_TSI_PEN_PEN15) = (v))
+/*@}*/
 
 /*!
  * @name Register TSI_PEN, field LPSP[19:16] (RW)
@@ -1307,30 +1151,25 @@ typedef union _hw_tsi_pen
  * - 1110 - TSI_IN[14] is active in low power mode.
  * - 1111 - TSI_IN[15] is active in low power mode.
  */
-//@{
-#define BP_TSI_PEN_LPSP      (16U)         //!< Bit position for TSI_PEN_LPSP.
-#define BM_TSI_PEN_LPSP      (0x000F0000U) //!< Bit mask for TSI_PEN_LPSP.
-#define BS_TSI_PEN_LPSP      (4U)          //!< Bit field size in bits for TSI_PEN_LPSP.
+/*@{*/
+#define BP_TSI_PEN_LPSP      (16U)         /*!< Bit position for TSI_PEN_LPSP. */
+#define BM_TSI_PEN_LPSP      (0x000F0000U) /*!< Bit mask for TSI_PEN_LPSP. */
+#define BS_TSI_PEN_LPSP      (4U)          /*!< Bit field size in bits for TSI_PEN_LPSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_PEN_LPSP field.
-#define BR_TSI_PEN_LPSP      (HW_TSI_PEN.B.LPSP)
-#endif
+/*! @brief Read current value of the TSI_PEN_LPSP field. */
+#define BR_TSI_PEN_LPSP(x)   (HW_TSI_PEN(x).B.LPSP)
 
-//! @brief Format value for bitfield TSI_PEN_LPSP.
-#define BF_TSI_PEN_LPSP(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_PEN_LPSP), uint32_t) & BM_TSI_PEN_LPSP)
+/*! @brief Format value for bitfield TSI_PEN_LPSP. */
+#define BF_TSI_PEN_LPSP(v)   ((uint32_t)((uint32_t)(v) << BP_TSI_PEN_LPSP) & BM_TSI_PEN_LPSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPSP field to a new value.
-#define BW_TSI_PEN_LPSP(v)   (HW_TSI_PEN_WR((HW_TSI_PEN_RD() & ~BM_TSI_PEN_LPSP) | BF_TSI_PEN_LPSP(v)))
-#endif
-//@}
+/*! @brief Set the LPSP field to a new value. */
+#define BW_TSI_PEN_LPSP(x, v) (HW_TSI_PEN_WR(x, (HW_TSI_PEN_RD(x) & ~BM_TSI_PEN_LPSP) | BF_TSI_PEN_LPSP(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_WUCNTR - Wake-Up Channel Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_WUCNTR - Wake-Up Channel Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_WUCNTR - Wake-Up Channel Counter Register (RO)
  *
@@ -1341,24 +1180,21 @@ typedef union _hw_tsi_wucntr
     uint32_t U;
     struct _hw_tsi_wucntr_bitfields
     {
-        uint32_t WUCNT : 16;           //!< [15:0] TouchSensing wake-up Channel 16bit
-                                       //! counter value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t WUCNT : 16;           /*!< [15:0] TouchSensing wake-up Channel 16bit
+                                        * counter value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_tsi_wucntr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_WUCNTR register
  */
-//@{
-#define HW_TSI_WUCNTR_ADDR       (REGS_TSI_BASE + 0xCU)
+/*@{*/
+#define HW_TSI_WUCNTR_ADDR(x)    ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_WUCNTR            (*(__I hw_tsi_wucntr_t *) HW_TSI_WUCNTR_ADDR)
-#define HW_TSI_WUCNTR_RD()       (HW_TSI_WUCNTR.U)
-#endif
-//@}
+#define HW_TSI_WUCNTR(x)         (*(__I hw_tsi_wucntr_t *) HW_TSI_WUCNTR_ADDR(x))
+#define HW_TSI_WUCNTR_RD(x)      (HW_TSI_WUCNTR(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_WUCNTR bitfields
@@ -1367,22 +1203,19 @@ typedef union _hw_tsi_wucntr
 /*!
  * @name Register TSI_WUCNTR, field WUCNT[15:0] (RO)
  */
-//@{
-#define BP_TSI_WUCNTR_WUCNT  (0U)          //!< Bit position for TSI_WUCNTR_WUCNT.
-#define BM_TSI_WUCNTR_WUCNT  (0x0000FFFFU) //!< Bit mask for TSI_WUCNTR_WUCNT.
-#define BS_TSI_WUCNTR_WUCNT  (16U)         //!< Bit field size in bits for TSI_WUCNTR_WUCNT.
+/*@{*/
+#define BP_TSI_WUCNTR_WUCNT  (0U)          /*!< Bit position for TSI_WUCNTR_WUCNT. */
+#define BM_TSI_WUCNTR_WUCNT  (0x0000FFFFU) /*!< Bit mask for TSI_WUCNTR_WUCNT. */
+#define BS_TSI_WUCNTR_WUCNT  (16U)         /*!< Bit field size in bits for TSI_WUCNTR_WUCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_WUCNTR_WUCNT field.
-#define BR_TSI_WUCNTR_WUCNT  (HW_TSI_WUCNTR.B.WUCNT)
-#endif
-//@}
+/*! @brief Read current value of the TSI_WUCNTR_WUCNT field. */
+#define BR_TSI_WUCNTR_WUCNT(x) (HW_TSI_WUCNTR(x).B.WUCNT)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR1 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR1 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR1 - Counter Register (RO)
  *
@@ -1393,25 +1226,22 @@ typedef union _hw_tsi_cntr1
     uint32_t U;
     struct _hw_tsi_cntr1_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR1 register
  */
-//@{
-#define HW_TSI_CNTR1_ADDR        (REGS_TSI_BASE + 0x100U)
+/*@{*/
+#define HW_TSI_CNTR1_ADDR(x)     ((x) + 0x100U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR1             (*(__I hw_tsi_cntr1_t *) HW_TSI_CNTR1_ADDR)
-#define HW_TSI_CNTR1_RD()        (HW_TSI_CNTR1.U)
-#endif
-//@}
+#define HW_TSI_CNTR1(x)          (*(__I hw_tsi_cntr1_t *) HW_TSI_CNTR1_ADDR(x))
+#define HW_TSI_CNTR1_RD(x)       (HW_TSI_CNTR1(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR1 bitfields
@@ -1420,36 +1250,31 @@ typedef union _hw_tsi_cntr1
 /*!
  * @name Register TSI_CNTR1, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR1_CTN1    (0U)          //!< Bit position for TSI_CNTR1_CTN1.
-#define BM_TSI_CNTR1_CTN1    (0x0000FFFFU) //!< Bit mask for TSI_CNTR1_CTN1.
-#define BS_TSI_CNTR1_CTN1    (16U)         //!< Bit field size in bits for TSI_CNTR1_CTN1.
+/*@{*/
+#define BP_TSI_CNTR1_CTN1    (0U)          /*!< Bit position for TSI_CNTR1_CTN1. */
+#define BM_TSI_CNTR1_CTN1    (0x0000FFFFU) /*!< Bit mask for TSI_CNTR1_CTN1. */
+#define BS_TSI_CNTR1_CTN1    (16U)         /*!< Bit field size in bits for TSI_CNTR1_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR1_CTN1 field.
-#define BR_TSI_CNTR1_CTN1    (HW_TSI_CNTR1.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR1_CTN1 field. */
+#define BR_TSI_CNTR1_CTN1(x) (HW_TSI_CNTR1(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR1, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR1_CTN     (16U)         //!< Bit position for TSI_CNTR1_CTN.
-#define BM_TSI_CNTR1_CTN     (0xFFFF0000U) //!< Bit mask for TSI_CNTR1_CTN.
-#define BS_TSI_CNTR1_CTN     (16U)         //!< Bit field size in bits for TSI_CNTR1_CTN.
+/*@{*/
+#define BP_TSI_CNTR1_CTN     (16U)         /*!< Bit position for TSI_CNTR1_CTN. */
+#define BM_TSI_CNTR1_CTN     (0xFFFF0000U) /*!< Bit mask for TSI_CNTR1_CTN. */
+#define BS_TSI_CNTR1_CTN     (16U)         /*!< Bit field size in bits for TSI_CNTR1_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR1_CTN field.
-#define BR_TSI_CNTR1_CTN     (HW_TSI_CNTR1.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR1_CTN field. */
+#define BR_TSI_CNTR1_CTN(x)  (HW_TSI_CNTR1(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR3 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR3 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR3 - Counter Register (RO)
  *
@@ -1460,25 +1285,22 @@ typedef union _hw_tsi_cntr3
     uint32_t U;
     struct _hw_tsi_cntr3_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR3 register
  */
-//@{
-#define HW_TSI_CNTR3_ADDR        (REGS_TSI_BASE + 0x104U)
+/*@{*/
+#define HW_TSI_CNTR3_ADDR(x)     ((x) + 0x104U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR3             (*(__I hw_tsi_cntr3_t *) HW_TSI_CNTR3_ADDR)
-#define HW_TSI_CNTR3_RD()        (HW_TSI_CNTR3.U)
-#endif
-//@}
+#define HW_TSI_CNTR3(x)          (*(__I hw_tsi_cntr3_t *) HW_TSI_CNTR3_ADDR(x))
+#define HW_TSI_CNTR3_RD(x)       (HW_TSI_CNTR3(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR3 bitfields
@@ -1487,36 +1309,31 @@ typedef union _hw_tsi_cntr3
 /*!
  * @name Register TSI_CNTR3, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR3_CTN1    (0U)          //!< Bit position for TSI_CNTR3_CTN1.
-#define BM_TSI_CNTR3_CTN1    (0x0000FFFFU) //!< Bit mask for TSI_CNTR3_CTN1.
-#define BS_TSI_CNTR3_CTN1    (16U)         //!< Bit field size in bits for TSI_CNTR3_CTN1.
+/*@{*/
+#define BP_TSI_CNTR3_CTN1    (0U)          /*!< Bit position for TSI_CNTR3_CTN1. */
+#define BM_TSI_CNTR3_CTN1    (0x0000FFFFU) /*!< Bit mask for TSI_CNTR3_CTN1. */
+#define BS_TSI_CNTR3_CTN1    (16U)         /*!< Bit field size in bits for TSI_CNTR3_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR3_CTN1 field.
-#define BR_TSI_CNTR3_CTN1    (HW_TSI_CNTR3.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR3_CTN1 field. */
+#define BR_TSI_CNTR3_CTN1(x) (HW_TSI_CNTR3(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR3, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR3_CTN     (16U)         //!< Bit position for TSI_CNTR3_CTN.
-#define BM_TSI_CNTR3_CTN     (0xFFFF0000U) //!< Bit mask for TSI_CNTR3_CTN.
-#define BS_TSI_CNTR3_CTN     (16U)         //!< Bit field size in bits for TSI_CNTR3_CTN.
+/*@{*/
+#define BP_TSI_CNTR3_CTN     (16U)         /*!< Bit position for TSI_CNTR3_CTN. */
+#define BM_TSI_CNTR3_CTN     (0xFFFF0000U) /*!< Bit mask for TSI_CNTR3_CTN. */
+#define BS_TSI_CNTR3_CTN     (16U)         /*!< Bit field size in bits for TSI_CNTR3_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR3_CTN field.
-#define BR_TSI_CNTR3_CTN     (HW_TSI_CNTR3.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR3_CTN field. */
+#define BR_TSI_CNTR3_CTN(x)  (HW_TSI_CNTR3(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR5 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR5 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR5 - Counter Register (RO)
  *
@@ -1527,25 +1344,22 @@ typedef union _hw_tsi_cntr5
     uint32_t U;
     struct _hw_tsi_cntr5_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR5 register
  */
-//@{
-#define HW_TSI_CNTR5_ADDR        (REGS_TSI_BASE + 0x108U)
+/*@{*/
+#define HW_TSI_CNTR5_ADDR(x)     ((x) + 0x108U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR5             (*(__I hw_tsi_cntr5_t *) HW_TSI_CNTR5_ADDR)
-#define HW_TSI_CNTR5_RD()        (HW_TSI_CNTR5.U)
-#endif
-//@}
+#define HW_TSI_CNTR5(x)          (*(__I hw_tsi_cntr5_t *) HW_TSI_CNTR5_ADDR(x))
+#define HW_TSI_CNTR5_RD(x)       (HW_TSI_CNTR5(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR5 bitfields
@@ -1554,36 +1368,31 @@ typedef union _hw_tsi_cntr5
 /*!
  * @name Register TSI_CNTR5, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR5_CTN1    (0U)          //!< Bit position for TSI_CNTR5_CTN1.
-#define BM_TSI_CNTR5_CTN1    (0x0000FFFFU) //!< Bit mask for TSI_CNTR5_CTN1.
-#define BS_TSI_CNTR5_CTN1    (16U)         //!< Bit field size in bits for TSI_CNTR5_CTN1.
+/*@{*/
+#define BP_TSI_CNTR5_CTN1    (0U)          /*!< Bit position for TSI_CNTR5_CTN1. */
+#define BM_TSI_CNTR5_CTN1    (0x0000FFFFU) /*!< Bit mask for TSI_CNTR5_CTN1. */
+#define BS_TSI_CNTR5_CTN1    (16U)         /*!< Bit field size in bits for TSI_CNTR5_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR5_CTN1 field.
-#define BR_TSI_CNTR5_CTN1    (HW_TSI_CNTR5.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR5_CTN1 field. */
+#define BR_TSI_CNTR5_CTN1(x) (HW_TSI_CNTR5(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR5, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR5_CTN     (16U)         //!< Bit position for TSI_CNTR5_CTN.
-#define BM_TSI_CNTR5_CTN     (0xFFFF0000U) //!< Bit mask for TSI_CNTR5_CTN.
-#define BS_TSI_CNTR5_CTN     (16U)         //!< Bit field size in bits for TSI_CNTR5_CTN.
+/*@{*/
+#define BP_TSI_CNTR5_CTN     (16U)         /*!< Bit position for TSI_CNTR5_CTN. */
+#define BM_TSI_CNTR5_CTN     (0xFFFF0000U) /*!< Bit mask for TSI_CNTR5_CTN. */
+#define BS_TSI_CNTR5_CTN     (16U)         /*!< Bit field size in bits for TSI_CNTR5_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR5_CTN field.
-#define BR_TSI_CNTR5_CTN     (HW_TSI_CNTR5.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR5_CTN field. */
+#define BR_TSI_CNTR5_CTN(x)  (HW_TSI_CNTR5(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR7 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR7 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR7 - Counter Register (RO)
  *
@@ -1594,25 +1403,22 @@ typedef union _hw_tsi_cntr7
     uint32_t U;
     struct _hw_tsi_cntr7_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR7 register
  */
-//@{
-#define HW_TSI_CNTR7_ADDR        (REGS_TSI_BASE + 0x10CU)
+/*@{*/
+#define HW_TSI_CNTR7_ADDR(x)     ((x) + 0x10CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR7             (*(__I hw_tsi_cntr7_t *) HW_TSI_CNTR7_ADDR)
-#define HW_TSI_CNTR7_RD()        (HW_TSI_CNTR7.U)
-#endif
-//@}
+#define HW_TSI_CNTR7(x)          (*(__I hw_tsi_cntr7_t *) HW_TSI_CNTR7_ADDR(x))
+#define HW_TSI_CNTR7_RD(x)       (HW_TSI_CNTR7(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR7 bitfields
@@ -1621,36 +1427,31 @@ typedef union _hw_tsi_cntr7
 /*!
  * @name Register TSI_CNTR7, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR7_CTN1    (0U)          //!< Bit position for TSI_CNTR7_CTN1.
-#define BM_TSI_CNTR7_CTN1    (0x0000FFFFU) //!< Bit mask for TSI_CNTR7_CTN1.
-#define BS_TSI_CNTR7_CTN1    (16U)         //!< Bit field size in bits for TSI_CNTR7_CTN1.
+/*@{*/
+#define BP_TSI_CNTR7_CTN1    (0U)          /*!< Bit position for TSI_CNTR7_CTN1. */
+#define BM_TSI_CNTR7_CTN1    (0x0000FFFFU) /*!< Bit mask for TSI_CNTR7_CTN1. */
+#define BS_TSI_CNTR7_CTN1    (16U)         /*!< Bit field size in bits for TSI_CNTR7_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR7_CTN1 field.
-#define BR_TSI_CNTR7_CTN1    (HW_TSI_CNTR7.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR7_CTN1 field. */
+#define BR_TSI_CNTR7_CTN1(x) (HW_TSI_CNTR7(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR7, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR7_CTN     (16U)         //!< Bit position for TSI_CNTR7_CTN.
-#define BM_TSI_CNTR7_CTN     (0xFFFF0000U) //!< Bit mask for TSI_CNTR7_CTN.
-#define BS_TSI_CNTR7_CTN     (16U)         //!< Bit field size in bits for TSI_CNTR7_CTN.
+/*@{*/
+#define BP_TSI_CNTR7_CTN     (16U)         /*!< Bit position for TSI_CNTR7_CTN. */
+#define BM_TSI_CNTR7_CTN     (0xFFFF0000U) /*!< Bit mask for TSI_CNTR7_CTN. */
+#define BS_TSI_CNTR7_CTN     (16U)         /*!< Bit field size in bits for TSI_CNTR7_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR7_CTN field.
-#define BR_TSI_CNTR7_CTN     (HW_TSI_CNTR7.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR7_CTN field. */
+#define BR_TSI_CNTR7_CTN(x)  (HW_TSI_CNTR7(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR9 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR9 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR9 - Counter Register (RO)
  *
@@ -1661,25 +1462,22 @@ typedef union _hw_tsi_cntr9
     uint32_t U;
     struct _hw_tsi_cntr9_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr9_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR9 register
  */
-//@{
-#define HW_TSI_CNTR9_ADDR        (REGS_TSI_BASE + 0x110U)
+/*@{*/
+#define HW_TSI_CNTR9_ADDR(x)     ((x) + 0x110U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR9             (*(__I hw_tsi_cntr9_t *) HW_TSI_CNTR9_ADDR)
-#define HW_TSI_CNTR9_RD()        (HW_TSI_CNTR9.U)
-#endif
-//@}
+#define HW_TSI_CNTR9(x)          (*(__I hw_tsi_cntr9_t *) HW_TSI_CNTR9_ADDR(x))
+#define HW_TSI_CNTR9_RD(x)       (HW_TSI_CNTR9(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR9 bitfields
@@ -1688,36 +1486,31 @@ typedef union _hw_tsi_cntr9
 /*!
  * @name Register TSI_CNTR9, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR9_CTN1    (0U)          //!< Bit position for TSI_CNTR9_CTN1.
-#define BM_TSI_CNTR9_CTN1    (0x0000FFFFU) //!< Bit mask for TSI_CNTR9_CTN1.
-#define BS_TSI_CNTR9_CTN1    (16U)         //!< Bit field size in bits for TSI_CNTR9_CTN1.
+/*@{*/
+#define BP_TSI_CNTR9_CTN1    (0U)          /*!< Bit position for TSI_CNTR9_CTN1. */
+#define BM_TSI_CNTR9_CTN1    (0x0000FFFFU) /*!< Bit mask for TSI_CNTR9_CTN1. */
+#define BS_TSI_CNTR9_CTN1    (16U)         /*!< Bit field size in bits for TSI_CNTR9_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR9_CTN1 field.
-#define BR_TSI_CNTR9_CTN1    (HW_TSI_CNTR9.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR9_CTN1 field. */
+#define BR_TSI_CNTR9_CTN1(x) (HW_TSI_CNTR9(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR9, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR9_CTN     (16U)         //!< Bit position for TSI_CNTR9_CTN.
-#define BM_TSI_CNTR9_CTN     (0xFFFF0000U) //!< Bit mask for TSI_CNTR9_CTN.
-#define BS_TSI_CNTR9_CTN     (16U)         //!< Bit field size in bits for TSI_CNTR9_CTN.
+/*@{*/
+#define BP_TSI_CNTR9_CTN     (16U)         /*!< Bit position for TSI_CNTR9_CTN. */
+#define BM_TSI_CNTR9_CTN     (0xFFFF0000U) /*!< Bit mask for TSI_CNTR9_CTN. */
+#define BS_TSI_CNTR9_CTN     (16U)         /*!< Bit field size in bits for TSI_CNTR9_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR9_CTN field.
-#define BR_TSI_CNTR9_CTN     (HW_TSI_CNTR9.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR9_CTN field. */
+#define BR_TSI_CNTR9_CTN(x)  (HW_TSI_CNTR9(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR11 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR11 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR11 - Counter Register (RO)
  *
@@ -1728,25 +1521,22 @@ typedef union _hw_tsi_cntr11
     uint32_t U;
     struct _hw_tsi_cntr11_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr11_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR11 register
  */
-//@{
-#define HW_TSI_CNTR11_ADDR       (REGS_TSI_BASE + 0x114U)
+/*@{*/
+#define HW_TSI_CNTR11_ADDR(x)    ((x) + 0x114U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR11            (*(__I hw_tsi_cntr11_t *) HW_TSI_CNTR11_ADDR)
-#define HW_TSI_CNTR11_RD()       (HW_TSI_CNTR11.U)
-#endif
-//@}
+#define HW_TSI_CNTR11(x)         (*(__I hw_tsi_cntr11_t *) HW_TSI_CNTR11_ADDR(x))
+#define HW_TSI_CNTR11_RD(x)      (HW_TSI_CNTR11(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR11 bitfields
@@ -1755,36 +1545,31 @@ typedef union _hw_tsi_cntr11
 /*!
  * @name Register TSI_CNTR11, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR11_CTN1   (0U)          //!< Bit position for TSI_CNTR11_CTN1.
-#define BM_TSI_CNTR11_CTN1   (0x0000FFFFU) //!< Bit mask for TSI_CNTR11_CTN1.
-#define BS_TSI_CNTR11_CTN1   (16U)         //!< Bit field size in bits for TSI_CNTR11_CTN1.
+/*@{*/
+#define BP_TSI_CNTR11_CTN1   (0U)          /*!< Bit position for TSI_CNTR11_CTN1. */
+#define BM_TSI_CNTR11_CTN1   (0x0000FFFFU) /*!< Bit mask for TSI_CNTR11_CTN1. */
+#define BS_TSI_CNTR11_CTN1   (16U)         /*!< Bit field size in bits for TSI_CNTR11_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR11_CTN1 field.
-#define BR_TSI_CNTR11_CTN1   (HW_TSI_CNTR11.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR11_CTN1 field. */
+#define BR_TSI_CNTR11_CTN1(x) (HW_TSI_CNTR11(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR11, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR11_CTN    (16U)         //!< Bit position for TSI_CNTR11_CTN.
-#define BM_TSI_CNTR11_CTN    (0xFFFF0000U) //!< Bit mask for TSI_CNTR11_CTN.
-#define BS_TSI_CNTR11_CTN    (16U)         //!< Bit field size in bits for TSI_CNTR11_CTN.
+/*@{*/
+#define BP_TSI_CNTR11_CTN    (16U)         /*!< Bit position for TSI_CNTR11_CTN. */
+#define BM_TSI_CNTR11_CTN    (0xFFFF0000U) /*!< Bit mask for TSI_CNTR11_CTN. */
+#define BS_TSI_CNTR11_CTN    (16U)         /*!< Bit field size in bits for TSI_CNTR11_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR11_CTN field.
-#define BR_TSI_CNTR11_CTN    (HW_TSI_CNTR11.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR11_CTN field. */
+#define BR_TSI_CNTR11_CTN(x) (HW_TSI_CNTR11(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR13 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR13 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR13 - Counter Register (RO)
  *
@@ -1795,25 +1580,22 @@ typedef union _hw_tsi_cntr13
     uint32_t U;
     struct _hw_tsi_cntr13_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr13_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR13 register
  */
-//@{
-#define HW_TSI_CNTR13_ADDR       (REGS_TSI_BASE + 0x118U)
+/*@{*/
+#define HW_TSI_CNTR13_ADDR(x)    ((x) + 0x118U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR13            (*(__I hw_tsi_cntr13_t *) HW_TSI_CNTR13_ADDR)
-#define HW_TSI_CNTR13_RD()       (HW_TSI_CNTR13.U)
-#endif
-//@}
+#define HW_TSI_CNTR13(x)         (*(__I hw_tsi_cntr13_t *) HW_TSI_CNTR13_ADDR(x))
+#define HW_TSI_CNTR13_RD(x)      (HW_TSI_CNTR13(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR13 bitfields
@@ -1822,36 +1604,31 @@ typedef union _hw_tsi_cntr13
 /*!
  * @name Register TSI_CNTR13, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR13_CTN1   (0U)          //!< Bit position for TSI_CNTR13_CTN1.
-#define BM_TSI_CNTR13_CTN1   (0x0000FFFFU) //!< Bit mask for TSI_CNTR13_CTN1.
-#define BS_TSI_CNTR13_CTN1   (16U)         //!< Bit field size in bits for TSI_CNTR13_CTN1.
+/*@{*/
+#define BP_TSI_CNTR13_CTN1   (0U)          /*!< Bit position for TSI_CNTR13_CTN1. */
+#define BM_TSI_CNTR13_CTN1   (0x0000FFFFU) /*!< Bit mask for TSI_CNTR13_CTN1. */
+#define BS_TSI_CNTR13_CTN1   (16U)         /*!< Bit field size in bits for TSI_CNTR13_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR13_CTN1 field.
-#define BR_TSI_CNTR13_CTN1   (HW_TSI_CNTR13.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR13_CTN1 field. */
+#define BR_TSI_CNTR13_CTN1(x) (HW_TSI_CNTR13(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR13, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR13_CTN    (16U)         //!< Bit position for TSI_CNTR13_CTN.
-#define BM_TSI_CNTR13_CTN    (0xFFFF0000U) //!< Bit mask for TSI_CNTR13_CTN.
-#define BS_TSI_CNTR13_CTN    (16U)         //!< Bit field size in bits for TSI_CNTR13_CTN.
+/*@{*/
+#define BP_TSI_CNTR13_CTN    (16U)         /*!< Bit position for TSI_CNTR13_CTN. */
+#define BM_TSI_CNTR13_CTN    (0xFFFF0000U) /*!< Bit mask for TSI_CNTR13_CTN. */
+#define BS_TSI_CNTR13_CTN    (16U)         /*!< Bit field size in bits for TSI_CNTR13_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR13_CTN field.
-#define BR_TSI_CNTR13_CTN    (HW_TSI_CNTR13.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR13_CTN field. */
+#define BR_TSI_CNTR13_CTN(x) (HW_TSI_CNTR13(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_CNTR15 - Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_CNTR15 - Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_CNTR15 - Counter Register (RO)
  *
@@ -1862,25 +1639,22 @@ typedef union _hw_tsi_cntr15
     uint32_t U;
     struct _hw_tsi_cntr15_bitfields
     {
-        uint32_t CTN1 : 16;            //!< [15:0] TouchSensing Channel n-1 16-bit
-                                       //! counter value
-        uint32_t CTN : 16;             //!< [31:16] TouchSensing Channel n 16-bit counter
-                                       //! value
+        uint32_t CTN1 : 16;            /*!< [15:0] TouchSensing Channel n-1 16-bit
+                                        * counter value */
+        uint32_t CTN : 16;             /*!< [31:16] TouchSensing Channel n 16-bit counter
+                                        * value */
     } B;
 } hw_tsi_cntr15_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_CNTR15 register
  */
-//@{
-#define HW_TSI_CNTR15_ADDR       (REGS_TSI_BASE + 0x11CU)
+/*@{*/
+#define HW_TSI_CNTR15_ADDR(x)    ((x) + 0x11CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_CNTR15            (*(__I hw_tsi_cntr15_t *) HW_TSI_CNTR15_ADDR)
-#define HW_TSI_CNTR15_RD()       (HW_TSI_CNTR15.U)
-#endif
-//@}
+#define HW_TSI_CNTR15(x)         (*(__I hw_tsi_cntr15_t *) HW_TSI_CNTR15_ADDR(x))
+#define HW_TSI_CNTR15_RD(x)      (HW_TSI_CNTR15(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_CNTR15 bitfields
@@ -1889,36 +1663,31 @@ typedef union _hw_tsi_cntr15
 /*!
  * @name Register TSI_CNTR15, field CTN1[15:0] (RO)
  */
-//@{
-#define BP_TSI_CNTR15_CTN1   (0U)          //!< Bit position for TSI_CNTR15_CTN1.
-#define BM_TSI_CNTR15_CTN1   (0x0000FFFFU) //!< Bit mask for TSI_CNTR15_CTN1.
-#define BS_TSI_CNTR15_CTN1   (16U)         //!< Bit field size in bits for TSI_CNTR15_CTN1.
+/*@{*/
+#define BP_TSI_CNTR15_CTN1   (0U)          /*!< Bit position for TSI_CNTR15_CTN1. */
+#define BM_TSI_CNTR15_CTN1   (0x0000FFFFU) /*!< Bit mask for TSI_CNTR15_CTN1. */
+#define BS_TSI_CNTR15_CTN1   (16U)         /*!< Bit field size in bits for TSI_CNTR15_CTN1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR15_CTN1 field.
-#define BR_TSI_CNTR15_CTN1   (HW_TSI_CNTR15.B.CTN1)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR15_CTN1 field. */
+#define BR_TSI_CNTR15_CTN1(x) (HW_TSI_CNTR15(x).B.CTN1)
+/*@}*/
 
 /*!
  * @name Register TSI_CNTR15, field CTN[31:16] (RO)
  */
-//@{
-#define BP_TSI_CNTR15_CTN    (16U)         //!< Bit position for TSI_CNTR15_CTN.
-#define BM_TSI_CNTR15_CTN    (0xFFFF0000U) //!< Bit mask for TSI_CNTR15_CTN.
-#define BS_TSI_CNTR15_CTN    (16U)         //!< Bit field size in bits for TSI_CNTR15_CTN.
+/*@{*/
+#define BP_TSI_CNTR15_CTN    (16U)         /*!< Bit position for TSI_CNTR15_CTN. */
+#define BM_TSI_CNTR15_CTN    (0xFFFF0000U) /*!< Bit mask for TSI_CNTR15_CTN. */
+#define BS_TSI_CNTR15_CTN    (16U)         /*!< Bit field size in bits for TSI_CNTR15_CTN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_CNTR15_CTN field.
-#define BR_TSI_CNTR15_CTN    (HW_TSI_CNTR15.B.CTN)
-#endif
-//@}
+/*! @brief Read current value of the TSI_CNTR15_CTN field. */
+#define BR_TSI_CNTR15_CTN(x) (HW_TSI_CNTR15(x).B.CTN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TSI_THRESHOLD - Low Power Channel Threshold Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TSI_THRESHOLD - Low Power Channel Threshold Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TSI_THRESHOLD - Low Power Channel Threshold Register (RW)
  *
@@ -1929,29 +1698,26 @@ typedef union _hw_tsi_threshold
     uint32_t U;
     struct _hw_tsi_threshold_bitfields
     {
-        uint32_t HTHH : 16;            //!< [15:0] Touch Sensing Channel High Threshold
-                                       //! value
-        uint32_t LTHH : 16;            //!< [31:16] Touch Sensing Channel Low Threshold
-                                       //! value
+        uint32_t HTHH : 16;            /*!< [15:0] Touch Sensing Channel High Threshold
+                                        * value */
+        uint32_t LTHH : 16;            /*!< [31:16] Touch Sensing Channel Low Threshold
+                                        * value */
     } B;
 } hw_tsi_threshold_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TSI_THRESHOLD register
  */
-//@{
-#define HW_TSI_THRESHOLD_ADDR    (REGS_TSI_BASE + 0x120U)
+/*@{*/
+#define HW_TSI_THRESHOLD_ADDR(x) ((x) + 0x120U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_TSI_THRESHOLD         (*(__IO hw_tsi_threshold_t *) HW_TSI_THRESHOLD_ADDR)
-#define HW_TSI_THRESHOLD_RD()    (HW_TSI_THRESHOLD.U)
-#define HW_TSI_THRESHOLD_WR(v)   (HW_TSI_THRESHOLD.U = (v))
-#define HW_TSI_THRESHOLD_SET(v)  (HW_TSI_THRESHOLD_WR(HW_TSI_THRESHOLD_RD() |  (v)))
-#define HW_TSI_THRESHOLD_CLR(v)  (HW_TSI_THRESHOLD_WR(HW_TSI_THRESHOLD_RD() & ~(v)))
-#define HW_TSI_THRESHOLD_TOG(v)  (HW_TSI_THRESHOLD_WR(HW_TSI_THRESHOLD_RD() ^  (v)))
-#endif
-//@}
+#define HW_TSI_THRESHOLD(x)      (*(__IO hw_tsi_threshold_t *) HW_TSI_THRESHOLD_ADDR(x))
+#define HW_TSI_THRESHOLD_RD(x)   (HW_TSI_THRESHOLD(x).U)
+#define HW_TSI_THRESHOLD_WR(x, v) (HW_TSI_THRESHOLD(x).U = (v))
+#define HW_TSI_THRESHOLD_SET(x, v) (HW_TSI_THRESHOLD_WR(x, HW_TSI_THRESHOLD_RD(x) |  (v)))
+#define HW_TSI_THRESHOLD_CLR(x, v) (HW_TSI_THRESHOLD_WR(x, HW_TSI_THRESHOLD_RD(x) & ~(v)))
+#define HW_TSI_THRESHOLD_TOG(x, v) (HW_TSI_THRESHOLD_WR(x, HW_TSI_THRESHOLD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual TSI_THRESHOLD bitfields
@@ -1960,80 +1726,71 @@ typedef union _hw_tsi_threshold
 /*!
  * @name Register TSI_THRESHOLD, field HTHH[15:0] (RW)
  */
-//@{
-#define BP_TSI_THRESHOLD_HTHH (0U)         //!< Bit position for TSI_THRESHOLD_HTHH.
-#define BM_TSI_THRESHOLD_HTHH (0x0000FFFFU) //!< Bit mask for TSI_THRESHOLD_HTHH.
-#define BS_TSI_THRESHOLD_HTHH (16U)        //!< Bit field size in bits for TSI_THRESHOLD_HTHH.
+/*@{*/
+#define BP_TSI_THRESHOLD_HTHH (0U)         /*!< Bit position for TSI_THRESHOLD_HTHH. */
+#define BM_TSI_THRESHOLD_HTHH (0x0000FFFFU) /*!< Bit mask for TSI_THRESHOLD_HTHH. */
+#define BS_TSI_THRESHOLD_HTHH (16U)        /*!< Bit field size in bits for TSI_THRESHOLD_HTHH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_THRESHOLD_HTHH field.
-#define BR_TSI_THRESHOLD_HTHH (HW_TSI_THRESHOLD.B.HTHH)
-#endif
+/*! @brief Read current value of the TSI_THRESHOLD_HTHH field. */
+#define BR_TSI_THRESHOLD_HTHH(x) (HW_TSI_THRESHOLD(x).B.HTHH)
 
-//! @brief Format value for bitfield TSI_THRESHOLD_HTHH.
-#define BF_TSI_THRESHOLD_HTHH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_THRESHOLD_HTHH), uint32_t) & BM_TSI_THRESHOLD_HTHH)
+/*! @brief Format value for bitfield TSI_THRESHOLD_HTHH. */
+#define BF_TSI_THRESHOLD_HTHH(v) ((uint32_t)((uint32_t)(v) << BP_TSI_THRESHOLD_HTHH) & BM_TSI_THRESHOLD_HTHH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HTHH field to a new value.
-#define BW_TSI_THRESHOLD_HTHH(v) (HW_TSI_THRESHOLD_WR((HW_TSI_THRESHOLD_RD() & ~BM_TSI_THRESHOLD_HTHH) | BF_TSI_THRESHOLD_HTHH(v)))
-#endif
-//@}
+/*! @brief Set the HTHH field to a new value. */
+#define BW_TSI_THRESHOLD_HTHH(x, v) (HW_TSI_THRESHOLD_WR(x, (HW_TSI_THRESHOLD_RD(x) & ~BM_TSI_THRESHOLD_HTHH) | BF_TSI_THRESHOLD_HTHH(v)))
+/*@}*/
 
 /*!
  * @name Register TSI_THRESHOLD, field LTHH[31:16] (RW)
  */
-//@{
-#define BP_TSI_THRESHOLD_LTHH (16U)        //!< Bit position for TSI_THRESHOLD_LTHH.
-#define BM_TSI_THRESHOLD_LTHH (0xFFFF0000U) //!< Bit mask for TSI_THRESHOLD_LTHH.
-#define BS_TSI_THRESHOLD_LTHH (16U)        //!< Bit field size in bits for TSI_THRESHOLD_LTHH.
+/*@{*/
+#define BP_TSI_THRESHOLD_LTHH (16U)        /*!< Bit position for TSI_THRESHOLD_LTHH. */
+#define BM_TSI_THRESHOLD_LTHH (0xFFFF0000U) /*!< Bit mask for TSI_THRESHOLD_LTHH. */
+#define BS_TSI_THRESHOLD_LTHH (16U)        /*!< Bit field size in bits for TSI_THRESHOLD_LTHH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TSI_THRESHOLD_LTHH field.
-#define BR_TSI_THRESHOLD_LTHH (HW_TSI_THRESHOLD.B.LTHH)
-#endif
+/*! @brief Read current value of the TSI_THRESHOLD_LTHH field. */
+#define BR_TSI_THRESHOLD_LTHH(x) (HW_TSI_THRESHOLD(x).B.LTHH)
 
-//! @brief Format value for bitfield TSI_THRESHOLD_LTHH.
-#define BF_TSI_THRESHOLD_LTHH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TSI_THRESHOLD_LTHH), uint32_t) & BM_TSI_THRESHOLD_LTHH)
+/*! @brief Format value for bitfield TSI_THRESHOLD_LTHH. */
+#define BF_TSI_THRESHOLD_LTHH(v) ((uint32_t)((uint32_t)(v) << BP_TSI_THRESHOLD_LTHH) & BM_TSI_THRESHOLD_LTHH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LTHH field to a new value.
-#define BW_TSI_THRESHOLD_LTHH(v) (HW_TSI_THRESHOLD_WR((HW_TSI_THRESHOLD_RD() & ~BM_TSI_THRESHOLD_LTHH) | BF_TSI_THRESHOLD_LTHH(v)))
-#endif
-//@}
+/*! @brief Set the LTHH field to a new value. */
+#define BW_TSI_THRESHOLD_LTHH(x, v) (HW_TSI_THRESHOLD_WR(x, (HW_TSI_THRESHOLD_RD(x) & ~BM_TSI_THRESHOLD_LTHH) | BF_TSI_THRESHOLD_LTHH(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_tsi_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_tsi_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All TSI module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_tsi
 {
-    __IO hw_tsi_gencs_t GENCS;             //!< [0x0] General Control and Status Register
-    __IO hw_tsi_scanc_t SCANC;             //!< [0x4] SCAN Control Register
-    __IO hw_tsi_pen_t PEN;                 //!< [0x8] Pin Enable Register
-    __I hw_tsi_wucntr_t WUCNTR;            //!< [0xC] Wake-Up Channel Counter Register
+    __IO hw_tsi_gencs_t GENCS;             /*!< [0x0] General Control and Status Register */
+    __IO hw_tsi_scanc_t SCANC;             /*!< [0x4] SCAN Control Register */
+    __IO hw_tsi_pen_t PEN;                 /*!< [0x8] Pin Enable Register */
+    __I hw_tsi_wucntr_t WUCNTR;            /*!< [0xC] Wake-Up Channel Counter Register */
     uint8_t _reserved0[240];
-    __I hw_tsi_cntr1_t CNTR1;              //!< [0x100] Counter Register
-    __I hw_tsi_cntr3_t CNTR3;              //!< [0x104] Counter Register
-    __I hw_tsi_cntr5_t CNTR5;              //!< [0x108] Counter Register
-    __I hw_tsi_cntr7_t CNTR7;              //!< [0x10C] Counter Register
-    __I hw_tsi_cntr9_t CNTR9;              //!< [0x110] Counter Register
-    __I hw_tsi_cntr11_t CNTR11;            //!< [0x114] Counter Register
-    __I hw_tsi_cntr13_t CNTR13;            //!< [0x118] Counter Register
-    __I hw_tsi_cntr15_t CNTR15;            //!< [0x11C] Counter Register
-    __IO hw_tsi_threshold_t THRESHOLD;     //!< [0x120] Low Power Channel Threshold Register
+    __I hw_tsi_cntr1_t CNTR1;              /*!< [0x100] Counter Register */
+    __I hw_tsi_cntr3_t CNTR3;              /*!< [0x104] Counter Register */
+    __I hw_tsi_cntr5_t CNTR5;              /*!< [0x108] Counter Register */
+    __I hw_tsi_cntr7_t CNTR7;              /*!< [0x10C] Counter Register */
+    __I hw_tsi_cntr9_t CNTR9;              /*!< [0x110] Counter Register */
+    __I hw_tsi_cntr11_t CNTR11;            /*!< [0x114] Counter Register */
+    __I hw_tsi_cntr13_t CNTR13;            /*!< [0x118] Counter Register */
+    __I hw_tsi_cntr15_t CNTR15;            /*!< [0x11C] Counter Register */
+    __IO hw_tsi_threshold_t THRESHOLD;     /*!< [0x120] Low Power Channel Threshold Register */
 } hw_tsi_t;
 #pragma pack()
 
-//! @brief Macro to access all TSI registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_TSI</code>.
-#define HW_TSI         (*(hw_tsi_t *) REGS_TSI_BASE)
-#endif
+/*! @brief Macro to access all TSI registers. */
+/*! @param x TSI module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_TSI(TSI0_BASE)</code>. */
+#define HW_TSI(x)      (*(hw_tsi_t *)(x))
 
-#endif // __HW_TSI_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_TSI_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */
