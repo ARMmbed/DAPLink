@@ -742,7 +742,7 @@ void USBD_MSC_ATAPassThrough (void) {
 }
 
 /*
- *  USB Device MSC ATA Pass-Through Callback
+ *  USB Device MSC Service Action (16-Byte) Callback
  *    Parameters:      None
  *    Return Value:    None
  */
@@ -877,6 +877,9 @@ fail:
         case SCSI_SYNC_CACHE16:
           USBD_MSC_SynchronizeCache();
           break;
+        case SCSI_REPORT_ID_INFO:
+          USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+          goto fail;
         default:
           goto fail;
       }

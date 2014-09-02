@@ -70,8 +70,10 @@ void usbd_init (void) {
  *    Parameters:      con:   Connect/Disconnect
  *    Return Value:    None
  */
+
 void usbd_connect (BOOL con) {
-    USBD_Connect (con);
+
+  USBD_Connect (con);
 }
 
 
@@ -307,8 +309,8 @@ __inline BOOL USBD_ReqGetDescriptor (void) {
           len = USB_DEVICE_DESC_SIZE;
           break;
         case USB_DEVICE_QUALIFIER_DESCRIPTOR_TYPE:
-          if ((!usbd_hs_enable) && (USBD_HighSpeed == __TRUE)) {
-            return (__FALSE);  /* High speed request but high-speed not enabled */
+          if (!usbd_hs_enable) {
+            return (__FALSE);  /* High speed not enabled */
           }
           if (USBD_HighSpeed == __FALSE) {
             USBD_EP0Data.pData = (U8 *)USBD_DeviceQualifier;
@@ -338,8 +340,8 @@ __inline BOOL USBD_ReqGetDescriptor (void) {
           len = ((USB_CONFIGURATION_DESCRIPTOR *)pD)->wTotalLength;
           break;
         case USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE:
-          if ((!usbd_hs_enable) && (USBD_HighSpeed == __TRUE)) {
-            return (__FALSE);  /* High speed request but high-speed not enabled */
+          if (!usbd_hs_enable) {
+            return (__FALSE);  /* High speed not enabled */
           }
           if (USBD_HighSpeed == __FALSE) {
             pD = (U8 *)USBD_OtherSpeedConfigDescriptor;

@@ -15,12 +15,14 @@
  */
 #ifndef VERSION_H
 #define VERSION_H
-
 #include <stdint.h>
 
-#define FW_BUILD "0200"
+// built for bootloader 1xxx
+//#define FW_BUILD "1203"
+// build for bootloader 0xxx
+#define FW_BUILD "0203"
 
-uint8_t update_html_file        (void);
+uint8_t update_html_file          (void);
 uint8_t * get_uid_string          (void);
 uint8_t   get_len_string_interface(void);
 uint8_t * get_uid_string_interface(void);

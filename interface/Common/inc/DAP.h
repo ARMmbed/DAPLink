@@ -20,7 +20,7 @@
 
 // DAP Command IDs
 #define ID_DAP_Info                     0x00
-#define ID_DAP_LED                      0x01
+#define ID_DAP_HostStatus               0x01
 #define ID_DAP_Connect                  0x02
 #define ID_DAP_Disconnect               0x03
 #define ID_DAP_TransferConfigure        0x04
@@ -89,9 +89,9 @@
 #define DAP_ID_PACKET_COUNT             0xFE
 #define DAP_ID_PACKET_SIZE              0xFF
 
-// DAP LEDs
-#define DAP_LED_DEBUGGER_CONNECTED      0
-#define DAP_LED_TARGET_RUNNING          1
+// DAP Host Status
+#define DAP_DEBUGGER_CONNECTED          0
+#define DAP_TARGET_RUNNING              1
 
 // DAP Port
 #define DAP_PORT_AUTODETECT             0       // Autodetect Port
@@ -199,18 +199,30 @@ extern uint32_t DAP_ProcessCommand (uint8_t *request, uint8_t *response);
 extern void     DAP_Setup (void);
 
 // Configurable delay for clock generation
+#ifndef DELAY_SLOW_CYCLES
 #define DELAY_SLOW_CYCLES       3       // Number of cycles for one iteration
+#endif
 static __forceinline void PIN_DELAY_SLOW (uint32_t delay) {
-  volatile int32_t count;
+  int32_t count;
 
   count = delay;
   while (--count);
 }
 
 // Fixed delay for fast clock generation
-#define DELAY_FAST_CYCLES       0       // Number of cycles
+#ifndef DELAY_FAST_CYCLES
+#define DELAY_FAST_CYCLES       0       // Number of cycles: 0..3
+#endif
 static __forceinline void PIN_DELAY_FAST (void) {
-//__nop();
+#if (DELAY_FAST_CYCLES >= 1)
+  __nop();
+#endif
+#if (DELAY_FAST_CYCLES >= 2)
+  __nop();
+#endif
+#if (DELAY_FAST_CYCLES >= 3)
+  __nop();
+#endif
 }
 
 

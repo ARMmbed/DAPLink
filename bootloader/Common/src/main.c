@@ -19,16 +19,14 @@
 #include <stdint.h>
 
 #include "tasks.h"
-#include "flash.h"
+#include "flash_hal.h"
 #include "main.h"
 #include "gpio.h"
 #include "version.h"
 #include "vector_table.h"
 
-#include "LPC11Uxx.h"
-
 // Reference to our main task
-OS_TID mainTask;
+OS_TID mainTask, ledTask;
 
 #define INITIAL_SP      (*(uint32_t *)(START_APP_ADDRESS))
 #define RESET_HANDLER   (*(uint32_t *)(START_APP_ADDRESS + 4))
@@ -62,48 +60,42 @@ __task void led_task(void) {
 
 __task void main_task(void) {
     BOOL led_state = __FALSE;
-    uint8_t flags, time_blink_led = 1;
-    mainTask=os_tsk_self();
-
-
-    os_tsk_create(led_task, LED_TASK_PRIORITY);
+    uint8_t flags, time_blink_led;
+    
+	mainTask=os_tsk_self();
+	ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
 
     update_html_file();
 
     usbd_init();
-    
-    while (1) {
-        usbd_connect(__TRUE);
+    usbd_connect(__TRUE);
 
-        os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
+    os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
 
-        os_dly_wait(200);
+    os_dly_wait(200);
 
-        usbd_connect(__FALSE);
+    usbd_connect(__FALSE);
 
-        // Find out what event happened
-        flags = os_evt_get();
-        
-        if (flags & TRANSFER_FINISHED_SUCCESS) {
-                NVIC_SystemReset();
-        } else {
-            int i;
-            for (i = 0; i < 3; i++) {
-                gpio_set_msd_led(led_state);
-                led_state = !led_state;
-                os_dly_wait(time_blink_led);
-            }
-        }
+    // Find out what event happened
+    flags = os_evt_get();
+	
+    time_blink_led = (flags & TRANSFER_FINISHED_SUCCESS) ? 10 : 50;
+	// if we blink here, dont do it in a thread
+	os_tsk_delete(ledTask);
+	
+    while(1) {
+        gpio_set_msd_led(led_state);
+        led_state = !led_state;
+        os_dly_wait(time_blink_led);
     }
 }
 
 // Main Program
-int main (void) {
-
+int main (void)
+{	
     gpio_init();
 
-    if (!gpio_get_pin_loader_state()) 
-        {
+    if (!gpio_get_pin_loader_state()) {
         os_sys_init(main_task);
     }
 

@@ -25,4 +25,7 @@ typedef struct {
 
 extern BOARD board;
 
+// Init function called in main() before the main task is started
+void board_init(void);
+
 #endif

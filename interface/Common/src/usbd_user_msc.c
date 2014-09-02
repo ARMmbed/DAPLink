@@ -30,18 +30,38 @@
 
 #if defined(DBG_LPC1768)
 #   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_KL02Z)
+#   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL05Z)
 #   define WANTED_SIZE_IN_KB                        (32)
 #elif defined(DBG_KL25Z)
+#   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_KL26Z)
 #   define WANTED_SIZE_IN_KB                        (128)
 #elif defined(DBG_KL46Z)
 #   define WANTED_SIZE_IN_KB                        (256)
 #elif defined(DBG_K20D50M)
 #   define WANTED_SIZE_IN_KB                        (128)
+#elif defined(DBG_K22F)
+#   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_K64F)
+#   define WANTED_SIZE_IN_KB                        (1024)
 #elif defined(DBG_LPC812)
 #   define WANTED_SIZE_IN_KB                        (16)
 #elif defined(DBG_LPC1114)
 #   define WANTED_SIZE_IN_KB                        (32)
+#elif defined(DBG_LPC4330)
+#   if defined(BOARD_BAMBINO_210E)
+#       define WANTED_SIZE_IN_KB                    (8192)
+#   else
+#       define WANTED_SIZE_IN_KB                    (4096)
+#   endif
+#elif defined(DBG_LPC1549)
+#   define WANTED_SIZE_IN_KB                        (512)
+#elif defined(DBG_LPC11U68)
+#   define WANTED_SIZE_IN_KB                        (256)
+#elif defined(DBG_LPC4337)
+#   define WANTED_SIZE_IN_KB                        (1024)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
@@ -527,18 +547,35 @@ void failSWD() {
 
 extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
-static void initDisconnect(uint8_t success) {
-    drag_success = success;
-#if 1       // reset and run target
-    if (success) {
-        swd_set_target_state(RESET_RUN);
-    }
+#ifdef BOARD_UBLOX_C027
+#include "read_uid.h"
 #endif
+
+static void initDisconnect(uint8_t success) {
+#if defined(BOARD_UBLOX_C027)
+    int autorst = (good_file == 2) && success;
+    int autocrp = (good_file == 3) && success;
+    if (autocrp)
+    {
+        // first we need to discoonect the usb stack 
+        usbd_connect(0);
+        
+        enter_isp();
+    }
+#else
+    int autorst = 0;
+#endif
+    drag_success = success;
+    if (autorst)
+        swd_set_target_state(RESET_RUN);
     main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
+    if (!autorst)
+    {
         // event to disconnect the usb
         main_usb_disconnect_event();
+    }
     semihost_enable();
 }
 
@@ -727,6 +764,12 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
             found = 1;
             idx = i; // this is the file we want
             good_file = 1;
+#if defined(BOARD_UBLOX_C027)
+            if (0 == memcmp((const char*)pDirEnts[i].filename, "~AUTORST", 8))
+                good_file = 2;
+            else if (0 == memcmp((const char*)pDirEnts[i].filename, "~AUTOCRP", 8))
+                good_file = 3;
+#endif
             flash_addr_offset = offset;
             break;
         }

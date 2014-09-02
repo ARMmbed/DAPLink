@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef NO_SEMIHOST
+#ifdef SEMIHOST
 
 #include <RTL.h>
 #include <string.h>
@@ -223,7 +223,7 @@ void semihost_disable(void) {
     return;
 }
 
-#else /* #ifndef NO_SEMIHOST */
+#else /* #ifndef SEMIHOST */
 void semihost_init(void) { }
 void semihost_enable(void) { }
 void semihost_disable(void){ }

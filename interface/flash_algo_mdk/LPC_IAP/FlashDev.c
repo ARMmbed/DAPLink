@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "../FlashOS.H"        // FlashOS Structures
 
 #ifdef MBED
 #ifdef LPC1700_512
@@ -69,6 +69,64 @@ struct FlashDevice const FlashDevice  =  {
 
 // Specify Size and Address of Sectors
    0x000400, 0x000000,         // Sector Size  1kB (4 Sectors)
+   SECTOR_END
+};
+#endif
+#ifdef LPC1549_256
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "LPC1549 IAP 256kB Flash",  // Device Name
+   ONCHIP,                     // Device Type
+   0x02000000,                 // Device Start Address
+   0x00040000,                 // Device Size (256kB)
+   256,                        // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   300,                        // Program Page Timeout 300 mSec
+   3000,                       // Erase Sector Timeout 3000 mSec
+
+// Specify Size and Address of Sectors
+   0x001000, 0x000000,         // Sector Size  4kB (64 Sectors)
+   SECTOR_END
+};
+#endif
+#ifdef LPC11U68_256
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "LPC11U68 IAP 256kB Flash", // Device Name
+   ONCHIP,                     // Device Type
+   0x10000000,                 // Device Start Address
+   0x00040000,                 // Device Size (256kB)
+   256,                        // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   300,                        // Program Page Timeout 300 mSec
+   3000,                       // Erase Sector Timeout 3000 mSec
+
+// Specify Size and Address of Sectors
+   0x001000, 0x000000,         // Sector Size  4kB (24 Sectors)
+   0x008000, 0x018000,         // Sector Size 32kB ( 5 Sectors)
+   SECTOR_END
+};
+#endif
+#ifdef LPC4337_1024
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "LPC4337 IAP 1024kB Flash", // Device Name
+   ONCHIP,                     // Device Type
+   0x10000000,                 // Device Start Address
+   0x00100000,                 // Device Size (1024kB)
+   256,                        // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   300,                        // Program Page Timeout 300 mSec
+   3000,                       // Erase Sector Timeout 3000 mSec
+
+// Specify Size and Address of Sectors
+   0x00002000, 0x1A000000,     // Sector Size  8kB (8 Sectors)
+   0x00010000, 0x1A010000,     // Sector Size 64kB (7 Sectors)
+   0x00002000, 0x1B000000,     // Sector Size  8kB (8 Sectors)
+   0x00010000, 0x1B010000,     // Sector Size 64kB (7 Sectors)
    SECTOR_END
 };
 #endif
