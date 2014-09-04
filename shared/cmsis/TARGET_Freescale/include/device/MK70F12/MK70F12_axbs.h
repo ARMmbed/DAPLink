@@ -21,7 +21,8 @@
 #ifndef __HW_AXBS_REGISTERS_H__
 #define __HW_AXBS_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 AXBS
@@ -43,19 +44,12 @@
  * - hw_axbs_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_AXBS_BASE
-#define HW_AXBS_INSTANCE_COUNT (1U) //!< Number of instances of the AXBS module.
-#define REGS_AXBS_BASE (0x40004000U) //!< Base address for AXBS.
-#endif
-//@}
+#define HW_AXBS_INSTANCE_COUNT (1U) /*!< Number of instances of the AXBS module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_PRSn - Priority Registers Slave
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_PRSn - Priority Registers Slave
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_PRSn - Priority Registers Slave (RW)
  *
@@ -80,51 +74,48 @@ typedef union _hw_axbs_prsn
     uint32_t U;
     struct _hw_axbs_prsn_bitfields
     {
-        uint32_t M0 : 3;               //!< [2:0] Master 0 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t M1 : 3;               //!< [6:4] Master 1 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t M2 : 3;               //!< [10:8] Master 2 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED2 : 1;        //!< [11]
-        uint32_t M3 : 3;               //!< [14:12] Master 3 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED3 : 1;        //!< [15]
-        uint32_t M4 : 3;               //!< [18:16] Master 4 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED4 : 1;        //!< [19]
-        uint32_t M5 : 3;               //!< [22:20] Master 5 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED5 : 1;        //!< [23]
-        uint32_t M6 : 3;               //!< [26:24] Master 6 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED6 : 1;        //!< [27]
-        uint32_t M7 : 3;               //!< [30:28] Master 7 Priority. Sets the arbitration
-                                       //! priority for this port on the associated slave port.
-        uint32_t RESERVED7 : 1;        //!< [31]
+        uint32_t M0 : 3;               /*!< [2:0] Master 0 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t M1 : 3;               /*!< [6:4] Master 1 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t M2 : 3;               /*!< [10:8] Master 2 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED2 : 1;        /*!< [11]  */
+        uint32_t M3 : 3;               /*!< [14:12] Master 3 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED3 : 1;        /*!< [15]  */
+        uint32_t M4 : 3;               /*!< [18:16] Master 4 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED4 : 1;        /*!< [19]  */
+        uint32_t M5 : 3;               /*!< [22:20] Master 5 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED5 : 1;        /*!< [23]  */
+        uint32_t M6 : 3;               /*!< [26:24] Master 6 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED6 : 1;        /*!< [27]  */
+        uint32_t M7 : 3;               /*!< [30:28] Master 7 Priority. Sets the arbitration
+                                        * priority for this port on the associated slave port. */
+        uint32_t RESERVED7 : 1;        /*!< [31]  */
     } B;
 } hw_axbs_prsn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_PRSn register
  */
-//@{
+/*@{*/
 #define HW_AXBS_PRSn_COUNT (5U)
 
-#define HW_AXBS_PRSn_ADDR(n)     (REGS_AXBS_BASE + 0x0U + (0x100U * n))
+#define HW_AXBS_PRSn_ADDR(x, n)  ((x) + 0x0U + (0x100U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_PRSn(n)          (*(__IO hw_axbs_prsn_t *) HW_AXBS_PRSn_ADDR(n))
-#define HW_AXBS_PRSn_RD(n)       (HW_AXBS_PRSn(n).U)
-#define HW_AXBS_PRSn_WR(n, v)    (HW_AXBS_PRSn(n).U = (v))
-#define HW_AXBS_PRSn_SET(n, v)   (HW_AXBS_PRSn_WR(n, HW_AXBS_PRSn_RD(n) |  (v)))
-#define HW_AXBS_PRSn_CLR(n, v)   (HW_AXBS_PRSn_WR(n, HW_AXBS_PRSn_RD(n) & ~(v)))
-#define HW_AXBS_PRSn_TOG(n, v)   (HW_AXBS_PRSn_WR(n, HW_AXBS_PRSn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_AXBS_PRSn(x, n)       (*(__IO hw_axbs_prsn_t *) HW_AXBS_PRSn_ADDR(x, n))
+#define HW_AXBS_PRSn_RD(x, n)    (HW_AXBS_PRSn(x, n).U)
+#define HW_AXBS_PRSn_WR(x, n, v) (HW_AXBS_PRSn(x, n).U = (v))
+#define HW_AXBS_PRSn_SET(x, n, v) (HW_AXBS_PRSn_WR(x, n, HW_AXBS_PRSn_RD(x, n) |  (v)))
+#define HW_AXBS_PRSn_CLR(x, n, v) (HW_AXBS_PRSn_WR(x, n, HW_AXBS_PRSn_RD(x, n) & ~(v)))
+#define HW_AXBS_PRSn_TOG(x, n, v) (HW_AXBS_PRSn_WR(x, n, HW_AXBS_PRSn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_PRSn bitfields
@@ -145,24 +136,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M0      (0U)          //!< Bit position for AXBS_PRSn_M0.
-#define BM_AXBS_PRSn_M0      (0x00000007U) //!< Bit mask for AXBS_PRSn_M0.
-#define BS_AXBS_PRSn_M0      (3U)          //!< Bit field size in bits for AXBS_PRSn_M0.
+/*@{*/
+#define BP_AXBS_PRSn_M0      (0U)          /*!< Bit position for AXBS_PRSn_M0. */
+#define BM_AXBS_PRSn_M0      (0x00000007U) /*!< Bit mask for AXBS_PRSn_M0. */
+#define BS_AXBS_PRSn_M0      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M0 field.
-#define BR_AXBS_PRSn_M0(n)   (HW_AXBS_PRSn(n).B.M0)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M0 field. */
+#define BR_AXBS_PRSn_M0(x, n) (HW_AXBS_PRSn(x, n).B.M0)
 
-//! @brief Format value for bitfield AXBS_PRSn_M0.
-#define BF_AXBS_PRSn_M0(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M0), uint32_t) & BM_AXBS_PRSn_M0)
+/*! @brief Format value for bitfield AXBS_PRSn_M0. */
+#define BF_AXBS_PRSn_M0(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M0) & BM_AXBS_PRSn_M0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M0 field to a new value.
-#define BW_AXBS_PRSn_M0(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M0) | BF_AXBS_PRSn_M0(v)))
-#endif
-//@}
+/*! @brief Set the M0 field to a new value. */
+#define BW_AXBS_PRSn_M0(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M0) | BF_AXBS_PRSn_M0(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M1[6:4] (RW)
@@ -179,24 +166,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M1      (4U)          //!< Bit position for AXBS_PRSn_M1.
-#define BM_AXBS_PRSn_M1      (0x00000070U) //!< Bit mask for AXBS_PRSn_M1.
-#define BS_AXBS_PRSn_M1      (3U)          //!< Bit field size in bits for AXBS_PRSn_M1.
+/*@{*/
+#define BP_AXBS_PRSn_M1      (4U)          /*!< Bit position for AXBS_PRSn_M1. */
+#define BM_AXBS_PRSn_M1      (0x00000070U) /*!< Bit mask for AXBS_PRSn_M1. */
+#define BS_AXBS_PRSn_M1      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M1 field.
-#define BR_AXBS_PRSn_M1(n)   (HW_AXBS_PRSn(n).B.M1)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M1 field. */
+#define BR_AXBS_PRSn_M1(x, n) (HW_AXBS_PRSn(x, n).B.M1)
 
-//! @brief Format value for bitfield AXBS_PRSn_M1.
-#define BF_AXBS_PRSn_M1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M1), uint32_t) & BM_AXBS_PRSn_M1)
+/*! @brief Format value for bitfield AXBS_PRSn_M1. */
+#define BF_AXBS_PRSn_M1(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M1) & BM_AXBS_PRSn_M1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M1 field to a new value.
-#define BW_AXBS_PRSn_M1(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M1) | BF_AXBS_PRSn_M1(v)))
-#endif
-//@}
+/*! @brief Set the M1 field to a new value. */
+#define BW_AXBS_PRSn_M1(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M1) | BF_AXBS_PRSn_M1(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M2[10:8] (RW)
@@ -213,24 +196,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M2      (8U)          //!< Bit position for AXBS_PRSn_M2.
-#define BM_AXBS_PRSn_M2      (0x00000700U) //!< Bit mask for AXBS_PRSn_M2.
-#define BS_AXBS_PRSn_M2      (3U)          //!< Bit field size in bits for AXBS_PRSn_M2.
+/*@{*/
+#define BP_AXBS_PRSn_M2      (8U)          /*!< Bit position for AXBS_PRSn_M2. */
+#define BM_AXBS_PRSn_M2      (0x00000700U) /*!< Bit mask for AXBS_PRSn_M2. */
+#define BS_AXBS_PRSn_M2      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M2 field.
-#define BR_AXBS_PRSn_M2(n)   (HW_AXBS_PRSn(n).B.M2)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M2 field. */
+#define BR_AXBS_PRSn_M2(x, n) (HW_AXBS_PRSn(x, n).B.M2)
 
-//! @brief Format value for bitfield AXBS_PRSn_M2.
-#define BF_AXBS_PRSn_M2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M2), uint32_t) & BM_AXBS_PRSn_M2)
+/*! @brief Format value for bitfield AXBS_PRSn_M2. */
+#define BF_AXBS_PRSn_M2(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M2) & BM_AXBS_PRSn_M2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M2 field to a new value.
-#define BW_AXBS_PRSn_M2(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M2) | BF_AXBS_PRSn_M2(v)))
-#endif
-//@}
+/*! @brief Set the M2 field to a new value. */
+#define BW_AXBS_PRSn_M2(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M2) | BF_AXBS_PRSn_M2(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M3[14:12] (RW)
@@ -247,24 +226,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M3      (12U)         //!< Bit position for AXBS_PRSn_M3.
-#define BM_AXBS_PRSn_M3      (0x00007000U) //!< Bit mask for AXBS_PRSn_M3.
-#define BS_AXBS_PRSn_M3      (3U)          //!< Bit field size in bits for AXBS_PRSn_M3.
+/*@{*/
+#define BP_AXBS_PRSn_M3      (12U)         /*!< Bit position for AXBS_PRSn_M3. */
+#define BM_AXBS_PRSn_M3      (0x00007000U) /*!< Bit mask for AXBS_PRSn_M3. */
+#define BS_AXBS_PRSn_M3      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M3 field.
-#define BR_AXBS_PRSn_M3(n)   (HW_AXBS_PRSn(n).B.M3)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M3 field. */
+#define BR_AXBS_PRSn_M3(x, n) (HW_AXBS_PRSn(x, n).B.M3)
 
-//! @brief Format value for bitfield AXBS_PRSn_M3.
-#define BF_AXBS_PRSn_M3(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M3), uint32_t) & BM_AXBS_PRSn_M3)
+/*! @brief Format value for bitfield AXBS_PRSn_M3. */
+#define BF_AXBS_PRSn_M3(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M3) & BM_AXBS_PRSn_M3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M3 field to a new value.
-#define BW_AXBS_PRSn_M3(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M3) | BF_AXBS_PRSn_M3(v)))
-#endif
-//@}
+/*! @brief Set the M3 field to a new value. */
+#define BW_AXBS_PRSn_M3(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M3) | BF_AXBS_PRSn_M3(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M4[18:16] (RW)
@@ -281,24 +256,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M4      (16U)         //!< Bit position for AXBS_PRSn_M4.
-#define BM_AXBS_PRSn_M4      (0x00070000U) //!< Bit mask for AXBS_PRSn_M4.
-#define BS_AXBS_PRSn_M4      (3U)          //!< Bit field size in bits for AXBS_PRSn_M4.
+/*@{*/
+#define BP_AXBS_PRSn_M4      (16U)         /*!< Bit position for AXBS_PRSn_M4. */
+#define BM_AXBS_PRSn_M4      (0x00070000U) /*!< Bit mask for AXBS_PRSn_M4. */
+#define BS_AXBS_PRSn_M4      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M4 field.
-#define BR_AXBS_PRSn_M4(n)   (HW_AXBS_PRSn(n).B.M4)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M4 field. */
+#define BR_AXBS_PRSn_M4(x, n) (HW_AXBS_PRSn(x, n).B.M4)
 
-//! @brief Format value for bitfield AXBS_PRSn_M4.
-#define BF_AXBS_PRSn_M4(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M4), uint32_t) & BM_AXBS_PRSn_M4)
+/*! @brief Format value for bitfield AXBS_PRSn_M4. */
+#define BF_AXBS_PRSn_M4(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M4) & BM_AXBS_PRSn_M4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M4 field to a new value.
-#define BW_AXBS_PRSn_M4(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M4) | BF_AXBS_PRSn_M4(v)))
-#endif
-//@}
+/*! @brief Set the M4 field to a new value. */
+#define BW_AXBS_PRSn_M4(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M4) | BF_AXBS_PRSn_M4(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M5[22:20] (RW)
@@ -315,24 +286,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M5      (20U)         //!< Bit position for AXBS_PRSn_M5.
-#define BM_AXBS_PRSn_M5      (0x00700000U) //!< Bit mask for AXBS_PRSn_M5.
-#define BS_AXBS_PRSn_M5      (3U)          //!< Bit field size in bits for AXBS_PRSn_M5.
+/*@{*/
+#define BP_AXBS_PRSn_M5      (20U)         /*!< Bit position for AXBS_PRSn_M5. */
+#define BM_AXBS_PRSn_M5      (0x00700000U) /*!< Bit mask for AXBS_PRSn_M5. */
+#define BS_AXBS_PRSn_M5      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M5 field.
-#define BR_AXBS_PRSn_M5(n)   (HW_AXBS_PRSn(n).B.M5)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M5 field. */
+#define BR_AXBS_PRSn_M5(x, n) (HW_AXBS_PRSn(x, n).B.M5)
 
-//! @brief Format value for bitfield AXBS_PRSn_M5.
-#define BF_AXBS_PRSn_M5(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M5), uint32_t) & BM_AXBS_PRSn_M5)
+/*! @brief Format value for bitfield AXBS_PRSn_M5. */
+#define BF_AXBS_PRSn_M5(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M5) & BM_AXBS_PRSn_M5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M5 field to a new value.
-#define BW_AXBS_PRSn_M5(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M5) | BF_AXBS_PRSn_M5(v)))
-#endif
-//@}
+/*! @brief Set the M5 field to a new value. */
+#define BW_AXBS_PRSn_M5(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M5) | BF_AXBS_PRSn_M5(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M6[26:24] (RW)
@@ -349,24 +316,20 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M6      (24U)         //!< Bit position for AXBS_PRSn_M6.
-#define BM_AXBS_PRSn_M6      (0x07000000U) //!< Bit mask for AXBS_PRSn_M6.
-#define BS_AXBS_PRSn_M6      (3U)          //!< Bit field size in bits for AXBS_PRSn_M6.
+/*@{*/
+#define BP_AXBS_PRSn_M6      (24U)         /*!< Bit position for AXBS_PRSn_M6. */
+#define BM_AXBS_PRSn_M6      (0x07000000U) /*!< Bit mask for AXBS_PRSn_M6. */
+#define BS_AXBS_PRSn_M6      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M6 field.
-#define BR_AXBS_PRSn_M6(n)   (HW_AXBS_PRSn(n).B.M6)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M6 field. */
+#define BR_AXBS_PRSn_M6(x, n) (HW_AXBS_PRSn(x, n).B.M6)
 
-//! @brief Format value for bitfield AXBS_PRSn_M6.
-#define BF_AXBS_PRSn_M6(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M6), uint32_t) & BM_AXBS_PRSn_M6)
+/*! @brief Format value for bitfield AXBS_PRSn_M6. */
+#define BF_AXBS_PRSn_M6(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M6) & BM_AXBS_PRSn_M6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M6 field to a new value.
-#define BW_AXBS_PRSn_M6(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M6) | BF_AXBS_PRSn_M6(v)))
-#endif
-//@}
+/*! @brief Set the M6 field to a new value. */
+#define BW_AXBS_PRSn_M6(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M6) | BF_AXBS_PRSn_M6(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_PRSn, field M7[30:28] (RW)
@@ -383,29 +346,24 @@ typedef union _hw_axbs_prsn
  * - 111 - This master has level 8, or lowest, priority when accessing the slave
  *     port.
  */
-//@{
-#define BP_AXBS_PRSn_M7      (28U)         //!< Bit position for AXBS_PRSn_M7.
-#define BM_AXBS_PRSn_M7      (0x70000000U) //!< Bit mask for AXBS_PRSn_M7.
-#define BS_AXBS_PRSn_M7      (3U)          //!< Bit field size in bits for AXBS_PRSn_M7.
+/*@{*/
+#define BP_AXBS_PRSn_M7      (28U)         /*!< Bit position for AXBS_PRSn_M7. */
+#define BM_AXBS_PRSn_M7      (0x70000000U) /*!< Bit mask for AXBS_PRSn_M7. */
+#define BS_AXBS_PRSn_M7      (3U)          /*!< Bit field size in bits for AXBS_PRSn_M7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_PRSn_M7 field.
-#define BR_AXBS_PRSn_M7(n)   (HW_AXBS_PRSn(n).B.M7)
-#endif
+/*! @brief Read current value of the AXBS_PRSn_M7 field. */
+#define BR_AXBS_PRSn_M7(x, n) (HW_AXBS_PRSn(x, n).B.M7)
 
-//! @brief Format value for bitfield AXBS_PRSn_M7.
-#define BF_AXBS_PRSn_M7(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_PRSn_M7), uint32_t) & BM_AXBS_PRSn_M7)
+/*! @brief Format value for bitfield AXBS_PRSn_M7. */
+#define BF_AXBS_PRSn_M7(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_PRSn_M7) & BM_AXBS_PRSn_M7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M7 field to a new value.
-#define BW_AXBS_PRSn_M7(n, v) (HW_AXBS_PRSn_WR(n, (HW_AXBS_PRSn_RD(n) & ~BM_AXBS_PRSn_M7) | BF_AXBS_PRSn_M7(v)))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_CRSn - Control Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the M7 field to a new value. */
+#define BW_AXBS_PRSn_M7(x, n, v) (HW_AXBS_PRSn_WR(x, n, (HW_AXBS_PRSn_RD(x, n) & ~BM_AXBS_PRSn_M7) | BF_AXBS_PRSn_M7(v)))
+/*@}*/
+/*******************************************************************************
+ * HW_AXBS_CRSn - Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_CRSn - Control Register (RW)
  *
@@ -420,35 +378,32 @@ typedef union _hw_axbs_crsn
     uint32_t U;
     struct _hw_axbs_crsn_bitfields
     {
-        uint32_t PARK : 3;             //!< [2:0] Park
-        uint32_t RESERVED0 : 1;        //!< [3]
-        uint32_t PCTL : 2;             //!< [5:4] Parking Control
-        uint32_t RESERVED1 : 2;        //!< [7:6]
-        uint32_t ARB : 2;              //!< [9:8] Arbitration Mode
-        uint32_t RESERVED2 : 20;       //!< [29:10]
-        uint32_t HLP : 1;              //!< [30] Halt Low Priority
-        uint32_t RO : 1;               //!< [31] Read Only
+        uint32_t PARK : 3;             /*!< [2:0] Park */
+        uint32_t RESERVED0 : 1;        /*!< [3]  */
+        uint32_t PCTL : 2;             /*!< [5:4] Parking Control */
+        uint32_t RESERVED1 : 2;        /*!< [7:6]  */
+        uint32_t ARB : 2;              /*!< [9:8] Arbitration Mode */
+        uint32_t RESERVED2 : 20;       /*!< [29:10]  */
+        uint32_t HLP : 1;              /*!< [30] Halt Low Priority */
+        uint32_t RO : 1;               /*!< [31] Read Only */
     } B;
 } hw_axbs_crsn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_CRSn register
  */
-//@{
+/*@{*/
 #define HW_AXBS_CRSn_COUNT (5U)
 
-#define HW_AXBS_CRSn_ADDR(n)     (REGS_AXBS_BASE + 0x10U + (0x100U * n))
+#define HW_AXBS_CRSn_ADDR(x, n)  ((x) + 0x10U + (0x100U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_CRSn(n)          (*(__IO hw_axbs_crsn_t *) HW_AXBS_CRSn_ADDR(n))
-#define HW_AXBS_CRSn_RD(n)       (HW_AXBS_CRSn(n).U)
-#define HW_AXBS_CRSn_WR(n, v)    (HW_AXBS_CRSn(n).U = (v))
-#define HW_AXBS_CRSn_SET(n, v)   (HW_AXBS_CRSn_WR(n, HW_AXBS_CRSn_RD(n) |  (v)))
-#define HW_AXBS_CRSn_CLR(n, v)   (HW_AXBS_CRSn_WR(n, HW_AXBS_CRSn_RD(n) & ~(v)))
-#define HW_AXBS_CRSn_TOG(n, v)   (HW_AXBS_CRSn_WR(n, HW_AXBS_CRSn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_AXBS_CRSn(x, n)       (*(__IO hw_axbs_crsn_t *) HW_AXBS_CRSn_ADDR(x, n))
+#define HW_AXBS_CRSn_RD(x, n)    (HW_AXBS_CRSn(x, n).U)
+#define HW_AXBS_CRSn_WR(x, n, v) (HW_AXBS_CRSn(x, n).U = (v))
+#define HW_AXBS_CRSn_SET(x, n, v) (HW_AXBS_CRSn_WR(x, n, HW_AXBS_CRSn_RD(x, n) |  (v)))
+#define HW_AXBS_CRSn_CLR(x, n, v) (HW_AXBS_CRSn_WR(x, n, HW_AXBS_CRSn_RD(x, n) & ~(v)))
+#define HW_AXBS_CRSn_TOG(x, n, v) (HW_AXBS_CRSn_WR(x, n, HW_AXBS_CRSn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_CRSn bitfields
@@ -467,24 +422,20 @@ typedef union _hw_axbs_crsn
  * - 110 - Park on master port M6
  * - 111 - Park on master port M7
  */
-//@{
-#define BP_AXBS_CRSn_PARK    (0U)          //!< Bit position for AXBS_CRSn_PARK.
-#define BM_AXBS_CRSn_PARK    (0x00000007U) //!< Bit mask for AXBS_CRSn_PARK.
-#define BS_AXBS_CRSn_PARK    (3U)          //!< Bit field size in bits for AXBS_CRSn_PARK.
+/*@{*/
+#define BP_AXBS_CRSn_PARK    (0U)          /*!< Bit position for AXBS_CRSn_PARK. */
+#define BM_AXBS_CRSn_PARK    (0x00000007U) /*!< Bit mask for AXBS_CRSn_PARK. */
+#define BS_AXBS_CRSn_PARK    (3U)          /*!< Bit field size in bits for AXBS_CRSn_PARK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_CRSn_PARK field.
-#define BR_AXBS_CRSn_PARK(n) (HW_AXBS_CRSn(n).B.PARK)
-#endif
+/*! @brief Read current value of the AXBS_CRSn_PARK field. */
+#define BR_AXBS_CRSn_PARK(x, n) (HW_AXBS_CRSn(x, n).B.PARK)
 
-//! @brief Format value for bitfield AXBS_CRSn_PARK.
-#define BF_AXBS_CRSn_PARK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_CRSn_PARK), uint32_t) & BM_AXBS_CRSn_PARK)
+/*! @brief Format value for bitfield AXBS_CRSn_PARK. */
+#define BF_AXBS_CRSn_PARK(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_CRSn_PARK) & BM_AXBS_CRSn_PARK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PARK field to a new value.
-#define BW_AXBS_CRSn_PARK(n, v) (HW_AXBS_CRSn_WR(n, (HW_AXBS_CRSn_RD(n) & ~BM_AXBS_CRSn_PARK) | BF_AXBS_CRSn_PARK(v)))
-#endif
-//@}
+/*! @brief Set the PARK field to a new value. */
+#define BW_AXBS_CRSn_PARK(x, n, v) (HW_AXBS_CRSn_WR(x, n, (HW_AXBS_CRSn_RD(x, n) & ~BM_AXBS_CRSn_PARK) | BF_AXBS_CRSn_PARK(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_CRSn, field PCTL[5:4] (RW)
@@ -498,24 +449,20 @@ typedef union _hw_axbs_crsn
  *     master and the arbiter drives all outputs to a constant safe state
  * - 11 - Reserved
  */
-//@{
-#define BP_AXBS_CRSn_PCTL    (4U)          //!< Bit position for AXBS_CRSn_PCTL.
-#define BM_AXBS_CRSn_PCTL    (0x00000030U) //!< Bit mask for AXBS_CRSn_PCTL.
-#define BS_AXBS_CRSn_PCTL    (2U)          //!< Bit field size in bits for AXBS_CRSn_PCTL.
+/*@{*/
+#define BP_AXBS_CRSn_PCTL    (4U)          /*!< Bit position for AXBS_CRSn_PCTL. */
+#define BM_AXBS_CRSn_PCTL    (0x00000030U) /*!< Bit mask for AXBS_CRSn_PCTL. */
+#define BS_AXBS_CRSn_PCTL    (2U)          /*!< Bit field size in bits for AXBS_CRSn_PCTL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_CRSn_PCTL field.
-#define BR_AXBS_CRSn_PCTL(n) (HW_AXBS_CRSn(n).B.PCTL)
-#endif
+/*! @brief Read current value of the AXBS_CRSn_PCTL field. */
+#define BR_AXBS_CRSn_PCTL(x, n) (HW_AXBS_CRSn(x, n).B.PCTL)
 
-//! @brief Format value for bitfield AXBS_CRSn_PCTL.
-#define BF_AXBS_CRSn_PCTL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_CRSn_PCTL), uint32_t) & BM_AXBS_CRSn_PCTL)
+/*! @brief Format value for bitfield AXBS_CRSn_PCTL. */
+#define BF_AXBS_CRSn_PCTL(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_CRSn_PCTL) & BM_AXBS_CRSn_PCTL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PCTL field to a new value.
-#define BW_AXBS_CRSn_PCTL(n, v) (HW_AXBS_CRSn_WR(n, (HW_AXBS_CRSn_RD(n) & ~BM_AXBS_CRSn_PCTL) | BF_AXBS_CRSn_PCTL(v)))
-#endif
-//@}
+/*! @brief Set the PCTL field to a new value. */
+#define BW_AXBS_CRSn_PCTL(x, n, v) (HW_AXBS_CRSn_WR(x, n, (HW_AXBS_CRSn_RD(x, n) & ~BM_AXBS_CRSn_PCTL) | BF_AXBS_CRSn_PCTL(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_CRSn, field ARB[9:8] (RW)
@@ -526,24 +473,20 @@ typedef union _hw_axbs_crsn
  * - 10 - Reserved
  * - 11 - Reserved
  */
-//@{
-#define BP_AXBS_CRSn_ARB     (8U)          //!< Bit position for AXBS_CRSn_ARB.
-#define BM_AXBS_CRSn_ARB     (0x00000300U) //!< Bit mask for AXBS_CRSn_ARB.
-#define BS_AXBS_CRSn_ARB     (2U)          //!< Bit field size in bits for AXBS_CRSn_ARB.
+/*@{*/
+#define BP_AXBS_CRSn_ARB     (8U)          /*!< Bit position for AXBS_CRSn_ARB. */
+#define BM_AXBS_CRSn_ARB     (0x00000300U) /*!< Bit mask for AXBS_CRSn_ARB. */
+#define BS_AXBS_CRSn_ARB     (2U)          /*!< Bit field size in bits for AXBS_CRSn_ARB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_CRSn_ARB field.
-#define BR_AXBS_CRSn_ARB(n)  (HW_AXBS_CRSn(n).B.ARB)
-#endif
+/*! @brief Read current value of the AXBS_CRSn_ARB field. */
+#define BR_AXBS_CRSn_ARB(x, n) (HW_AXBS_CRSn(x, n).B.ARB)
 
-//! @brief Format value for bitfield AXBS_CRSn_ARB.
-#define BF_AXBS_CRSn_ARB(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_CRSn_ARB), uint32_t) & BM_AXBS_CRSn_ARB)
+/*! @brief Format value for bitfield AXBS_CRSn_ARB. */
+#define BF_AXBS_CRSn_ARB(v)  ((uint32_t)((uint32_t)(v) << BP_AXBS_CRSn_ARB) & BM_AXBS_CRSn_ARB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ARB field to a new value.
-#define BW_AXBS_CRSn_ARB(n, v) (HW_AXBS_CRSn_WR(n, (HW_AXBS_CRSn_RD(n) & ~BM_AXBS_CRSn_ARB) | BF_AXBS_CRSn_ARB(v)))
-#endif
-//@}
+/*! @brief Set the ARB field to a new value. */
+#define BW_AXBS_CRSn_ARB(x, n, v) (HW_AXBS_CRSn_WR(x, n, (HW_AXBS_CRSn_RD(x, n) & ~BM_AXBS_CRSn_ARB) | BF_AXBS_CRSn_ARB(v)))
+/*@}*/
 
 /*!
  * @name Register AXBS_CRSn, field HLP[30] (RW)
@@ -554,24 +497,20 @@ typedef union _hw_axbs_crsn
  * - 1 - The low power mode request has the lowest initial priority for
  *     arbitration on this slave port
  */
-//@{
-#define BP_AXBS_CRSn_HLP     (30U)         //!< Bit position for AXBS_CRSn_HLP.
-#define BM_AXBS_CRSn_HLP     (0x40000000U) //!< Bit mask for AXBS_CRSn_HLP.
-#define BS_AXBS_CRSn_HLP     (1U)          //!< Bit field size in bits for AXBS_CRSn_HLP.
+/*@{*/
+#define BP_AXBS_CRSn_HLP     (30U)         /*!< Bit position for AXBS_CRSn_HLP. */
+#define BM_AXBS_CRSn_HLP     (0x40000000U) /*!< Bit mask for AXBS_CRSn_HLP. */
+#define BS_AXBS_CRSn_HLP     (1U)          /*!< Bit field size in bits for AXBS_CRSn_HLP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_CRSn_HLP field.
-#define BR_AXBS_CRSn_HLP(n)  (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(n), BP_AXBS_CRSn_HLP))
-#endif
+/*! @brief Read current value of the AXBS_CRSn_HLP field. */
+#define BR_AXBS_CRSn_HLP(x, n) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(x, n), BP_AXBS_CRSn_HLP))
 
-//! @brief Format value for bitfield AXBS_CRSn_HLP.
-#define BF_AXBS_CRSn_HLP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_CRSn_HLP), uint32_t) & BM_AXBS_CRSn_HLP)
+/*! @brief Format value for bitfield AXBS_CRSn_HLP. */
+#define BF_AXBS_CRSn_HLP(v)  ((uint32_t)((uint32_t)(v) << BP_AXBS_CRSn_HLP) & BM_AXBS_CRSn_HLP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HLP field to a new value.
-#define BW_AXBS_CRSn_HLP(n, v) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(n), BP_AXBS_CRSn_HLP) = (v))
-#endif
-//@}
+/*! @brief Set the HLP field to a new value. */
+#define BW_AXBS_CRSn_HLP(x, n, v) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(x, n), BP_AXBS_CRSn_HLP) = (v))
+/*@}*/
 
 /*!
  * @name Register AXBS_CRSn, field RO[31] (RW)
@@ -582,30 +521,25 @@ typedef union _hw_axbs_crsn
  *     Attempted writes have no effect on the registers and result in a bus error
  *     response.
  */
-//@{
-#define BP_AXBS_CRSn_RO      (31U)         //!< Bit position for AXBS_CRSn_RO.
-#define BM_AXBS_CRSn_RO      (0x80000000U) //!< Bit mask for AXBS_CRSn_RO.
-#define BS_AXBS_CRSn_RO      (1U)          //!< Bit field size in bits for AXBS_CRSn_RO.
+/*@{*/
+#define BP_AXBS_CRSn_RO      (31U)         /*!< Bit position for AXBS_CRSn_RO. */
+#define BM_AXBS_CRSn_RO      (0x80000000U) /*!< Bit mask for AXBS_CRSn_RO. */
+#define BS_AXBS_CRSn_RO      (1U)          /*!< Bit field size in bits for AXBS_CRSn_RO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_CRSn_RO field.
-#define BR_AXBS_CRSn_RO(n)   (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(n), BP_AXBS_CRSn_RO))
-#endif
+/*! @brief Read current value of the AXBS_CRSn_RO field. */
+#define BR_AXBS_CRSn_RO(x, n) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(x, n), BP_AXBS_CRSn_RO))
 
-//! @brief Format value for bitfield AXBS_CRSn_RO.
-#define BF_AXBS_CRSn_RO(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_CRSn_RO), uint32_t) & BM_AXBS_CRSn_RO)
+/*! @brief Format value for bitfield AXBS_CRSn_RO. */
+#define BF_AXBS_CRSn_RO(v)   ((uint32_t)((uint32_t)(v) << BP_AXBS_CRSn_RO) & BM_AXBS_CRSn_RO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RO field to a new value.
-#define BW_AXBS_CRSn_RO(n, v) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(n), BP_AXBS_CRSn_RO) = (v))
-#endif
-//@}
+/*! @brief Set the RO field to a new value. */
+#define BW_AXBS_CRSn_RO(x, n, v) (BITBAND_ACCESS32(HW_AXBS_CRSn_ADDR(x, n), BP_AXBS_CRSn_RO) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR0 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR0 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR0 - Master General Purpose Control Register (RW)
  *
@@ -621,27 +555,24 @@ typedef union _hw_axbs_mgpcr0
     uint32_t U;
     struct _hw_axbs_mgpcr0_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR0 register
  */
-//@{
-#define HW_AXBS_MGPCR0_ADDR      (REGS_AXBS_BASE + 0x800U)
+/*@{*/
+#define HW_AXBS_MGPCR0_ADDR(x)   ((x) + 0x800U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR0           (*(__IO hw_axbs_mgpcr0_t *) HW_AXBS_MGPCR0_ADDR)
-#define HW_AXBS_MGPCR0_RD()      (HW_AXBS_MGPCR0.U)
-#define HW_AXBS_MGPCR0_WR(v)     (HW_AXBS_MGPCR0.U = (v))
-#define HW_AXBS_MGPCR0_SET(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() |  (v)))
-#define HW_AXBS_MGPCR0_CLR(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() & ~(v)))
-#define HW_AXBS_MGPCR0_TOG(v)    (HW_AXBS_MGPCR0_WR(HW_AXBS_MGPCR0_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR0(x)        (*(__IO hw_axbs_mgpcr0_t *) HW_AXBS_MGPCR0_ADDR(x))
+#define HW_AXBS_MGPCR0_RD(x)     (HW_AXBS_MGPCR0(x).U)
+#define HW_AXBS_MGPCR0_WR(x, v)  (HW_AXBS_MGPCR0(x).U = (v))
+#define HW_AXBS_MGPCR0_SET(x, v) (HW_AXBS_MGPCR0_WR(x, HW_AXBS_MGPCR0_RD(x) |  (v)))
+#define HW_AXBS_MGPCR0_CLR(x, v) (HW_AXBS_MGPCR0_WR(x, HW_AXBS_MGPCR0_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR0_TOG(x, v) (HW_AXBS_MGPCR0_WR(x, HW_AXBS_MGPCR0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR0 bitfields
@@ -660,30 +591,25 @@ typedef union _hw_axbs_mgpcr0
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR0_AULB  (0U)          //!< Bit position for AXBS_MGPCR0_AULB.
-#define BM_AXBS_MGPCR0_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR0_AULB.
-#define BS_AXBS_MGPCR0_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR0_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR0_AULB  (0U)          /*!< Bit position for AXBS_MGPCR0_AULB. */
+#define BM_AXBS_MGPCR0_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR0_AULB. */
+#define BS_AXBS_MGPCR0_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR0_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR0_AULB field.
-#define BR_AXBS_MGPCR0_AULB  (HW_AXBS_MGPCR0.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR0_AULB field. */
+#define BR_AXBS_MGPCR0_AULB(x) (HW_AXBS_MGPCR0(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR0_AULB.
-#define BF_AXBS_MGPCR0_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR0_AULB), uint32_t) & BM_AXBS_MGPCR0_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR0_AULB. */
+#define BF_AXBS_MGPCR0_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR0_AULB) & BM_AXBS_MGPCR0_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR0_AULB(v) (HW_AXBS_MGPCR0_WR((HW_AXBS_MGPCR0_RD() & ~BM_AXBS_MGPCR0_AULB) | BF_AXBS_MGPCR0_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR0_AULB(x, v) (HW_AXBS_MGPCR0_WR(x, (HW_AXBS_MGPCR0_RD(x) & ~BM_AXBS_MGPCR0_AULB) | BF_AXBS_MGPCR0_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR1 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR1 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR1 - Master General Purpose Control Register (RW)
  *
@@ -699,27 +625,24 @@ typedef union _hw_axbs_mgpcr1
     uint32_t U;
     struct _hw_axbs_mgpcr1_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR1 register
  */
-//@{
-#define HW_AXBS_MGPCR1_ADDR      (REGS_AXBS_BASE + 0x900U)
+/*@{*/
+#define HW_AXBS_MGPCR1_ADDR(x)   ((x) + 0x900U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR1           (*(__IO hw_axbs_mgpcr1_t *) HW_AXBS_MGPCR1_ADDR)
-#define HW_AXBS_MGPCR1_RD()      (HW_AXBS_MGPCR1.U)
-#define HW_AXBS_MGPCR1_WR(v)     (HW_AXBS_MGPCR1.U = (v))
-#define HW_AXBS_MGPCR1_SET(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() |  (v)))
-#define HW_AXBS_MGPCR1_CLR(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() & ~(v)))
-#define HW_AXBS_MGPCR1_TOG(v)    (HW_AXBS_MGPCR1_WR(HW_AXBS_MGPCR1_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR1(x)        (*(__IO hw_axbs_mgpcr1_t *) HW_AXBS_MGPCR1_ADDR(x))
+#define HW_AXBS_MGPCR1_RD(x)     (HW_AXBS_MGPCR1(x).U)
+#define HW_AXBS_MGPCR1_WR(x, v)  (HW_AXBS_MGPCR1(x).U = (v))
+#define HW_AXBS_MGPCR1_SET(x, v) (HW_AXBS_MGPCR1_WR(x, HW_AXBS_MGPCR1_RD(x) |  (v)))
+#define HW_AXBS_MGPCR1_CLR(x, v) (HW_AXBS_MGPCR1_WR(x, HW_AXBS_MGPCR1_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR1_TOG(x, v) (HW_AXBS_MGPCR1_WR(x, HW_AXBS_MGPCR1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR1 bitfields
@@ -738,30 +661,25 @@ typedef union _hw_axbs_mgpcr1
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR1_AULB  (0U)          //!< Bit position for AXBS_MGPCR1_AULB.
-#define BM_AXBS_MGPCR1_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR1_AULB.
-#define BS_AXBS_MGPCR1_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR1_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR1_AULB  (0U)          /*!< Bit position for AXBS_MGPCR1_AULB. */
+#define BM_AXBS_MGPCR1_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR1_AULB. */
+#define BS_AXBS_MGPCR1_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR1_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR1_AULB field.
-#define BR_AXBS_MGPCR1_AULB  (HW_AXBS_MGPCR1.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR1_AULB field. */
+#define BR_AXBS_MGPCR1_AULB(x) (HW_AXBS_MGPCR1(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR1_AULB.
-#define BF_AXBS_MGPCR1_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR1_AULB), uint32_t) & BM_AXBS_MGPCR1_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR1_AULB. */
+#define BF_AXBS_MGPCR1_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR1_AULB) & BM_AXBS_MGPCR1_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR1_AULB(v) (HW_AXBS_MGPCR1_WR((HW_AXBS_MGPCR1_RD() & ~BM_AXBS_MGPCR1_AULB) | BF_AXBS_MGPCR1_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR1_AULB(x, v) (HW_AXBS_MGPCR1_WR(x, (HW_AXBS_MGPCR1_RD(x) & ~BM_AXBS_MGPCR1_AULB) | BF_AXBS_MGPCR1_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR2 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR2 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR2 - Master General Purpose Control Register (RW)
  *
@@ -777,27 +695,24 @@ typedef union _hw_axbs_mgpcr2
     uint32_t U;
     struct _hw_axbs_mgpcr2_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR2 register
  */
-//@{
-#define HW_AXBS_MGPCR2_ADDR      (REGS_AXBS_BASE + 0xA00U)
+/*@{*/
+#define HW_AXBS_MGPCR2_ADDR(x)   ((x) + 0xA00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR2           (*(__IO hw_axbs_mgpcr2_t *) HW_AXBS_MGPCR2_ADDR)
-#define HW_AXBS_MGPCR2_RD()      (HW_AXBS_MGPCR2.U)
-#define HW_AXBS_MGPCR2_WR(v)     (HW_AXBS_MGPCR2.U = (v))
-#define HW_AXBS_MGPCR2_SET(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() |  (v)))
-#define HW_AXBS_MGPCR2_CLR(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() & ~(v)))
-#define HW_AXBS_MGPCR2_TOG(v)    (HW_AXBS_MGPCR2_WR(HW_AXBS_MGPCR2_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR2(x)        (*(__IO hw_axbs_mgpcr2_t *) HW_AXBS_MGPCR2_ADDR(x))
+#define HW_AXBS_MGPCR2_RD(x)     (HW_AXBS_MGPCR2(x).U)
+#define HW_AXBS_MGPCR2_WR(x, v)  (HW_AXBS_MGPCR2(x).U = (v))
+#define HW_AXBS_MGPCR2_SET(x, v) (HW_AXBS_MGPCR2_WR(x, HW_AXBS_MGPCR2_RD(x) |  (v)))
+#define HW_AXBS_MGPCR2_CLR(x, v) (HW_AXBS_MGPCR2_WR(x, HW_AXBS_MGPCR2_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR2_TOG(x, v) (HW_AXBS_MGPCR2_WR(x, HW_AXBS_MGPCR2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR2 bitfields
@@ -816,30 +731,25 @@ typedef union _hw_axbs_mgpcr2
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR2_AULB  (0U)          //!< Bit position for AXBS_MGPCR2_AULB.
-#define BM_AXBS_MGPCR2_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR2_AULB.
-#define BS_AXBS_MGPCR2_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR2_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR2_AULB  (0U)          /*!< Bit position for AXBS_MGPCR2_AULB. */
+#define BM_AXBS_MGPCR2_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR2_AULB. */
+#define BS_AXBS_MGPCR2_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR2_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR2_AULB field.
-#define BR_AXBS_MGPCR2_AULB  (HW_AXBS_MGPCR2.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR2_AULB field. */
+#define BR_AXBS_MGPCR2_AULB(x) (HW_AXBS_MGPCR2(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR2_AULB.
-#define BF_AXBS_MGPCR2_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR2_AULB), uint32_t) & BM_AXBS_MGPCR2_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR2_AULB. */
+#define BF_AXBS_MGPCR2_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR2_AULB) & BM_AXBS_MGPCR2_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR2_AULB(v) (HW_AXBS_MGPCR2_WR((HW_AXBS_MGPCR2_RD() & ~BM_AXBS_MGPCR2_AULB) | BF_AXBS_MGPCR2_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR2_AULB(x, v) (HW_AXBS_MGPCR2_WR(x, (HW_AXBS_MGPCR2_RD(x) & ~BM_AXBS_MGPCR2_AULB) | BF_AXBS_MGPCR2_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR3 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR3 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR3 - Master General Purpose Control Register (RW)
  *
@@ -855,27 +765,24 @@ typedef union _hw_axbs_mgpcr3
     uint32_t U;
     struct _hw_axbs_mgpcr3_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR3 register
  */
-//@{
-#define HW_AXBS_MGPCR3_ADDR      (REGS_AXBS_BASE + 0xB00U)
+/*@{*/
+#define HW_AXBS_MGPCR3_ADDR(x)   ((x) + 0xB00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR3           (*(__IO hw_axbs_mgpcr3_t *) HW_AXBS_MGPCR3_ADDR)
-#define HW_AXBS_MGPCR3_RD()      (HW_AXBS_MGPCR3.U)
-#define HW_AXBS_MGPCR3_WR(v)     (HW_AXBS_MGPCR3.U = (v))
-#define HW_AXBS_MGPCR3_SET(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() |  (v)))
-#define HW_AXBS_MGPCR3_CLR(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() & ~(v)))
-#define HW_AXBS_MGPCR3_TOG(v)    (HW_AXBS_MGPCR3_WR(HW_AXBS_MGPCR3_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR3(x)        (*(__IO hw_axbs_mgpcr3_t *) HW_AXBS_MGPCR3_ADDR(x))
+#define HW_AXBS_MGPCR3_RD(x)     (HW_AXBS_MGPCR3(x).U)
+#define HW_AXBS_MGPCR3_WR(x, v)  (HW_AXBS_MGPCR3(x).U = (v))
+#define HW_AXBS_MGPCR3_SET(x, v) (HW_AXBS_MGPCR3_WR(x, HW_AXBS_MGPCR3_RD(x) |  (v)))
+#define HW_AXBS_MGPCR3_CLR(x, v) (HW_AXBS_MGPCR3_WR(x, HW_AXBS_MGPCR3_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR3_TOG(x, v) (HW_AXBS_MGPCR3_WR(x, HW_AXBS_MGPCR3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR3 bitfields
@@ -894,30 +801,25 @@ typedef union _hw_axbs_mgpcr3
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR3_AULB  (0U)          //!< Bit position for AXBS_MGPCR3_AULB.
-#define BM_AXBS_MGPCR3_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR3_AULB.
-#define BS_AXBS_MGPCR3_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR3_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR3_AULB  (0U)          /*!< Bit position for AXBS_MGPCR3_AULB. */
+#define BM_AXBS_MGPCR3_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR3_AULB. */
+#define BS_AXBS_MGPCR3_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR3_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR3_AULB field.
-#define BR_AXBS_MGPCR3_AULB  (HW_AXBS_MGPCR3.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR3_AULB field. */
+#define BR_AXBS_MGPCR3_AULB(x) (HW_AXBS_MGPCR3(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR3_AULB.
-#define BF_AXBS_MGPCR3_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR3_AULB), uint32_t) & BM_AXBS_MGPCR3_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR3_AULB. */
+#define BF_AXBS_MGPCR3_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR3_AULB) & BM_AXBS_MGPCR3_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR3_AULB(v) (HW_AXBS_MGPCR3_WR((HW_AXBS_MGPCR3_RD() & ~BM_AXBS_MGPCR3_AULB) | BF_AXBS_MGPCR3_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR3_AULB(x, v) (HW_AXBS_MGPCR3_WR(x, (HW_AXBS_MGPCR3_RD(x) & ~BM_AXBS_MGPCR3_AULB) | BF_AXBS_MGPCR3_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR4 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR4 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR4 - Master General Purpose Control Register (RW)
  *
@@ -933,27 +835,24 @@ typedef union _hw_axbs_mgpcr4
     uint32_t U;
     struct _hw_axbs_mgpcr4_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR4 register
  */
-//@{
-#define HW_AXBS_MGPCR4_ADDR      (REGS_AXBS_BASE + 0xC00U)
+/*@{*/
+#define HW_AXBS_MGPCR4_ADDR(x)   ((x) + 0xC00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR4           (*(__IO hw_axbs_mgpcr4_t *) HW_AXBS_MGPCR4_ADDR)
-#define HW_AXBS_MGPCR4_RD()      (HW_AXBS_MGPCR4.U)
-#define HW_AXBS_MGPCR4_WR(v)     (HW_AXBS_MGPCR4.U = (v))
-#define HW_AXBS_MGPCR4_SET(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() |  (v)))
-#define HW_AXBS_MGPCR4_CLR(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() & ~(v)))
-#define HW_AXBS_MGPCR4_TOG(v)    (HW_AXBS_MGPCR4_WR(HW_AXBS_MGPCR4_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR4(x)        (*(__IO hw_axbs_mgpcr4_t *) HW_AXBS_MGPCR4_ADDR(x))
+#define HW_AXBS_MGPCR4_RD(x)     (HW_AXBS_MGPCR4(x).U)
+#define HW_AXBS_MGPCR4_WR(x, v)  (HW_AXBS_MGPCR4(x).U = (v))
+#define HW_AXBS_MGPCR4_SET(x, v) (HW_AXBS_MGPCR4_WR(x, HW_AXBS_MGPCR4_RD(x) |  (v)))
+#define HW_AXBS_MGPCR4_CLR(x, v) (HW_AXBS_MGPCR4_WR(x, HW_AXBS_MGPCR4_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR4_TOG(x, v) (HW_AXBS_MGPCR4_WR(x, HW_AXBS_MGPCR4_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR4 bitfields
@@ -972,30 +871,25 @@ typedef union _hw_axbs_mgpcr4
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR4_AULB  (0U)          //!< Bit position for AXBS_MGPCR4_AULB.
-#define BM_AXBS_MGPCR4_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR4_AULB.
-#define BS_AXBS_MGPCR4_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR4_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR4_AULB  (0U)          /*!< Bit position for AXBS_MGPCR4_AULB. */
+#define BM_AXBS_MGPCR4_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR4_AULB. */
+#define BS_AXBS_MGPCR4_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR4_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR4_AULB field.
-#define BR_AXBS_MGPCR4_AULB  (HW_AXBS_MGPCR4.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR4_AULB field. */
+#define BR_AXBS_MGPCR4_AULB(x) (HW_AXBS_MGPCR4(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR4_AULB.
-#define BF_AXBS_MGPCR4_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR4_AULB), uint32_t) & BM_AXBS_MGPCR4_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR4_AULB. */
+#define BF_AXBS_MGPCR4_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR4_AULB) & BM_AXBS_MGPCR4_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR4_AULB(v) (HW_AXBS_MGPCR4_WR((HW_AXBS_MGPCR4_RD() & ~BM_AXBS_MGPCR4_AULB) | BF_AXBS_MGPCR4_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR4_AULB(x, v) (HW_AXBS_MGPCR4_WR(x, (HW_AXBS_MGPCR4_RD(x) & ~BM_AXBS_MGPCR4_AULB) | BF_AXBS_MGPCR4_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR5 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR5 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR5 - Master General Purpose Control Register (RW)
  *
@@ -1011,27 +905,24 @@ typedef union _hw_axbs_mgpcr5
     uint32_t U;
     struct _hw_axbs_mgpcr5_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR5 register
  */
-//@{
-#define HW_AXBS_MGPCR5_ADDR      (REGS_AXBS_BASE + 0xD00U)
+/*@{*/
+#define HW_AXBS_MGPCR5_ADDR(x)   ((x) + 0xD00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR5           (*(__IO hw_axbs_mgpcr5_t *) HW_AXBS_MGPCR5_ADDR)
-#define HW_AXBS_MGPCR5_RD()      (HW_AXBS_MGPCR5.U)
-#define HW_AXBS_MGPCR5_WR(v)     (HW_AXBS_MGPCR5.U = (v))
-#define HW_AXBS_MGPCR5_SET(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() |  (v)))
-#define HW_AXBS_MGPCR5_CLR(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() & ~(v)))
-#define HW_AXBS_MGPCR5_TOG(v)    (HW_AXBS_MGPCR5_WR(HW_AXBS_MGPCR5_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR5(x)        (*(__IO hw_axbs_mgpcr5_t *) HW_AXBS_MGPCR5_ADDR(x))
+#define HW_AXBS_MGPCR5_RD(x)     (HW_AXBS_MGPCR5(x).U)
+#define HW_AXBS_MGPCR5_WR(x, v)  (HW_AXBS_MGPCR5(x).U = (v))
+#define HW_AXBS_MGPCR5_SET(x, v) (HW_AXBS_MGPCR5_WR(x, HW_AXBS_MGPCR5_RD(x) |  (v)))
+#define HW_AXBS_MGPCR5_CLR(x, v) (HW_AXBS_MGPCR5_WR(x, HW_AXBS_MGPCR5_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR5_TOG(x, v) (HW_AXBS_MGPCR5_WR(x, HW_AXBS_MGPCR5_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR5 bitfields
@@ -1050,30 +941,25 @@ typedef union _hw_axbs_mgpcr5
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR5_AULB  (0U)          //!< Bit position for AXBS_MGPCR5_AULB.
-#define BM_AXBS_MGPCR5_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR5_AULB.
-#define BS_AXBS_MGPCR5_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR5_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR5_AULB  (0U)          /*!< Bit position for AXBS_MGPCR5_AULB. */
+#define BM_AXBS_MGPCR5_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR5_AULB. */
+#define BS_AXBS_MGPCR5_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR5_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR5_AULB field.
-#define BR_AXBS_MGPCR5_AULB  (HW_AXBS_MGPCR5.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR5_AULB field. */
+#define BR_AXBS_MGPCR5_AULB(x) (HW_AXBS_MGPCR5(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR5_AULB.
-#define BF_AXBS_MGPCR5_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR5_AULB), uint32_t) & BM_AXBS_MGPCR5_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR5_AULB. */
+#define BF_AXBS_MGPCR5_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR5_AULB) & BM_AXBS_MGPCR5_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR5_AULB(v) (HW_AXBS_MGPCR5_WR((HW_AXBS_MGPCR5_RD() & ~BM_AXBS_MGPCR5_AULB) | BF_AXBS_MGPCR5_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR5_AULB(x, v) (HW_AXBS_MGPCR5_WR(x, (HW_AXBS_MGPCR5_RD(x) & ~BM_AXBS_MGPCR5_AULB) | BF_AXBS_MGPCR5_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR6 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR6 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR6 - Master General Purpose Control Register (RW)
  *
@@ -1089,27 +975,24 @@ typedef union _hw_axbs_mgpcr6
     uint32_t U;
     struct _hw_axbs_mgpcr6_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR6 register
  */
-//@{
-#define HW_AXBS_MGPCR6_ADDR      (REGS_AXBS_BASE + 0xE00U)
+/*@{*/
+#define HW_AXBS_MGPCR6_ADDR(x)   ((x) + 0xE00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR6           (*(__IO hw_axbs_mgpcr6_t *) HW_AXBS_MGPCR6_ADDR)
-#define HW_AXBS_MGPCR6_RD()      (HW_AXBS_MGPCR6.U)
-#define HW_AXBS_MGPCR6_WR(v)     (HW_AXBS_MGPCR6.U = (v))
-#define HW_AXBS_MGPCR6_SET(v)    (HW_AXBS_MGPCR6_WR(HW_AXBS_MGPCR6_RD() |  (v)))
-#define HW_AXBS_MGPCR6_CLR(v)    (HW_AXBS_MGPCR6_WR(HW_AXBS_MGPCR6_RD() & ~(v)))
-#define HW_AXBS_MGPCR6_TOG(v)    (HW_AXBS_MGPCR6_WR(HW_AXBS_MGPCR6_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR6(x)        (*(__IO hw_axbs_mgpcr6_t *) HW_AXBS_MGPCR6_ADDR(x))
+#define HW_AXBS_MGPCR6_RD(x)     (HW_AXBS_MGPCR6(x).U)
+#define HW_AXBS_MGPCR6_WR(x, v)  (HW_AXBS_MGPCR6(x).U = (v))
+#define HW_AXBS_MGPCR6_SET(x, v) (HW_AXBS_MGPCR6_WR(x, HW_AXBS_MGPCR6_RD(x) |  (v)))
+#define HW_AXBS_MGPCR6_CLR(x, v) (HW_AXBS_MGPCR6_WR(x, HW_AXBS_MGPCR6_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR6_TOG(x, v) (HW_AXBS_MGPCR6_WR(x, HW_AXBS_MGPCR6_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR6 bitfields
@@ -1128,30 +1011,25 @@ typedef union _hw_axbs_mgpcr6
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR6_AULB  (0U)          //!< Bit position for AXBS_MGPCR6_AULB.
-#define BM_AXBS_MGPCR6_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR6_AULB.
-#define BS_AXBS_MGPCR6_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR6_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR6_AULB  (0U)          /*!< Bit position for AXBS_MGPCR6_AULB. */
+#define BM_AXBS_MGPCR6_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR6_AULB. */
+#define BS_AXBS_MGPCR6_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR6_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR6_AULB field.
-#define BR_AXBS_MGPCR6_AULB  (HW_AXBS_MGPCR6.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR6_AULB field. */
+#define BR_AXBS_MGPCR6_AULB(x) (HW_AXBS_MGPCR6(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR6_AULB.
-#define BF_AXBS_MGPCR6_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR6_AULB), uint32_t) & BM_AXBS_MGPCR6_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR6_AULB. */
+#define BF_AXBS_MGPCR6_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR6_AULB) & BM_AXBS_MGPCR6_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR6_AULB(v) (HW_AXBS_MGPCR6_WR((HW_AXBS_MGPCR6_RD() & ~BM_AXBS_MGPCR6_AULB) | BF_AXBS_MGPCR6_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR6_AULB(x, v) (HW_AXBS_MGPCR6_WR(x, (HW_AXBS_MGPCR6_RD(x) & ~BM_AXBS_MGPCR6_AULB) | BF_AXBS_MGPCR6_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_AXBS_MGPCR7 - Master General Purpose Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_AXBS_MGPCR7 - Master General Purpose Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_AXBS_MGPCR7 - Master General Purpose Control Register (RW)
  *
@@ -1167,27 +1045,24 @@ typedef union _hw_axbs_mgpcr7
     uint32_t U;
     struct _hw_axbs_mgpcr7_bitfields
     {
-        uint32_t AULB : 3;             //!< [2:0] Arbitrates On Undefined Length Bursts
-        uint32_t RESERVED0 : 29;       //!< [31:3]
+        uint32_t AULB : 3;             /*!< [2:0] Arbitrates On Undefined Length Bursts */
+        uint32_t RESERVED0 : 29;       /*!< [31:3]  */
     } B;
 } hw_axbs_mgpcr7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire AXBS_MGPCR7 register
  */
-//@{
-#define HW_AXBS_MGPCR7_ADDR      (REGS_AXBS_BASE + 0xF00U)
+/*@{*/
+#define HW_AXBS_MGPCR7_ADDR(x)   ((x) + 0xF00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_AXBS_MGPCR7           (*(__IO hw_axbs_mgpcr7_t *) HW_AXBS_MGPCR7_ADDR)
-#define HW_AXBS_MGPCR7_RD()      (HW_AXBS_MGPCR7.U)
-#define HW_AXBS_MGPCR7_WR(v)     (HW_AXBS_MGPCR7.U = (v))
-#define HW_AXBS_MGPCR7_SET(v)    (HW_AXBS_MGPCR7_WR(HW_AXBS_MGPCR7_RD() |  (v)))
-#define HW_AXBS_MGPCR7_CLR(v)    (HW_AXBS_MGPCR7_WR(HW_AXBS_MGPCR7_RD() & ~(v)))
-#define HW_AXBS_MGPCR7_TOG(v)    (HW_AXBS_MGPCR7_WR(HW_AXBS_MGPCR7_RD() ^  (v)))
-#endif
-//@}
+#define HW_AXBS_MGPCR7(x)        (*(__IO hw_axbs_mgpcr7_t *) HW_AXBS_MGPCR7_ADDR(x))
+#define HW_AXBS_MGPCR7_RD(x)     (HW_AXBS_MGPCR7(x).U)
+#define HW_AXBS_MGPCR7_WR(x, v)  (HW_AXBS_MGPCR7(x).U = (v))
+#define HW_AXBS_MGPCR7_SET(x, v) (HW_AXBS_MGPCR7_WR(x, HW_AXBS_MGPCR7_RD(x) |  (v)))
+#define HW_AXBS_MGPCR7_CLR(x, v) (HW_AXBS_MGPCR7_WR(x, HW_AXBS_MGPCR7_RD(x) & ~(v)))
+#define HW_AXBS_MGPCR7_TOG(x, v) (HW_AXBS_MGPCR7_WR(x, HW_AXBS_MGPCR7_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual AXBS_MGPCR7 bitfields
@@ -1206,66 +1081,61 @@ typedef union _hw_axbs_mgpcr7
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_AXBS_MGPCR7_AULB  (0U)          //!< Bit position for AXBS_MGPCR7_AULB.
-#define BM_AXBS_MGPCR7_AULB  (0x00000007U) //!< Bit mask for AXBS_MGPCR7_AULB.
-#define BS_AXBS_MGPCR7_AULB  (3U)          //!< Bit field size in bits for AXBS_MGPCR7_AULB.
+/*@{*/
+#define BP_AXBS_MGPCR7_AULB  (0U)          /*!< Bit position for AXBS_MGPCR7_AULB. */
+#define BM_AXBS_MGPCR7_AULB  (0x00000007U) /*!< Bit mask for AXBS_MGPCR7_AULB. */
+#define BS_AXBS_MGPCR7_AULB  (3U)          /*!< Bit field size in bits for AXBS_MGPCR7_AULB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the AXBS_MGPCR7_AULB field.
-#define BR_AXBS_MGPCR7_AULB  (HW_AXBS_MGPCR7.B.AULB)
-#endif
+/*! @brief Read current value of the AXBS_MGPCR7_AULB field. */
+#define BR_AXBS_MGPCR7_AULB(x) (HW_AXBS_MGPCR7(x).B.AULB)
 
-//! @brief Format value for bitfield AXBS_MGPCR7_AULB.
-#define BF_AXBS_MGPCR7_AULB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_AXBS_MGPCR7_AULB), uint32_t) & BM_AXBS_MGPCR7_AULB)
+/*! @brief Format value for bitfield AXBS_MGPCR7_AULB. */
+#define BF_AXBS_MGPCR7_AULB(v) ((uint32_t)((uint32_t)(v) << BP_AXBS_MGPCR7_AULB) & BM_AXBS_MGPCR7_AULB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AULB field to a new value.
-#define BW_AXBS_MGPCR7_AULB(v) (HW_AXBS_MGPCR7_WR((HW_AXBS_MGPCR7_RD() & ~BM_AXBS_MGPCR7_AULB) | BF_AXBS_MGPCR7_AULB(v)))
-#endif
-//@}
+/*! @brief Set the AULB field to a new value. */
+#define BW_AXBS_MGPCR7_AULB(x, v) (HW_AXBS_MGPCR7_WR(x, (HW_AXBS_MGPCR7_RD(x) & ~BM_AXBS_MGPCR7_AULB) | BF_AXBS_MGPCR7_AULB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_axbs_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_axbs_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All AXBS module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_axbs
 {
     struct {
-        __IO hw_axbs_prsn_t PRSn;          //!< [0x0] Priority Registers Slave
+        __IO hw_axbs_prsn_t PRSn;          /*!< [0x0] Priority Registers Slave */
         uint8_t _reserved0[12];
-        __IO hw_axbs_crsn_t CRSn;          //!< [0x10] Control Register
+        __IO hw_axbs_crsn_t CRSn;          /*!< [0x10] Control Register */
         uint8_t _reserved1[236];
     } SLAVE[5];
     uint8_t _reserved0[768];
-    __IO hw_axbs_mgpcr0_t MGPCR0;          //!< [0x800] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr0_t MGPCR0;          /*!< [0x800] Master General Purpose Control Register */
     uint8_t _reserved1[252];
-    __IO hw_axbs_mgpcr1_t MGPCR1;          //!< [0x900] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr1_t MGPCR1;          /*!< [0x900] Master General Purpose Control Register */
     uint8_t _reserved2[252];
-    __IO hw_axbs_mgpcr2_t MGPCR2;          //!< [0xA00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr2_t MGPCR2;          /*!< [0xA00] Master General Purpose Control Register */
     uint8_t _reserved3[252];
-    __IO hw_axbs_mgpcr3_t MGPCR3;          //!< [0xB00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr3_t MGPCR3;          /*!< [0xB00] Master General Purpose Control Register */
     uint8_t _reserved4[252];
-    __IO hw_axbs_mgpcr4_t MGPCR4;          //!< [0xC00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr4_t MGPCR4;          /*!< [0xC00] Master General Purpose Control Register */
     uint8_t _reserved5[252];
-    __IO hw_axbs_mgpcr5_t MGPCR5;          //!< [0xD00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr5_t MGPCR5;          /*!< [0xD00] Master General Purpose Control Register */
     uint8_t _reserved6[252];
-    __IO hw_axbs_mgpcr6_t MGPCR6;          //!< [0xE00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr6_t MGPCR6;          /*!< [0xE00] Master General Purpose Control Register */
     uint8_t _reserved7[252];
-    __IO hw_axbs_mgpcr7_t MGPCR7;          //!< [0xF00] Master General Purpose Control Register
+    __IO hw_axbs_mgpcr7_t MGPCR7;          /*!< [0xF00] Master General Purpose Control Register */
 } hw_axbs_t;
 #pragma pack()
 
-//! @brief Macro to access all AXBS registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_AXBS</code>.
-#define HW_AXBS        (*(hw_axbs_t *) REGS_AXBS_BASE)
-#endif
+/*! @brief Macro to access all AXBS registers. */
+/*! @param x AXBS module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_AXBS(AXBS_BASE)</code>. */
+#define HW_AXBS(x)     (*(hw_axbs_t *)(x))
 
-#endif // __HW_AXBS_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_AXBS_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

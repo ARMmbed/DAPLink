@@ -1775,6 +1775,99 @@
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1110 (0xFFFF)
     /* @brief Emulated eeprom size code 1111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1111 (0xFFFF)
+#elif defined(CPU_MK24FN256VDC12)
+    /* @brief Is of type FTFA. */
+    #define FSL_FEATURE_FLASH_IS_FTFA (1)
+    /* @brief Is of type FTFE. */
+    #define FSL_FEATURE_FLASH_IS_FTFE (0)
+    /* @brief Is of type FTFL. */
+    #define FSL_FEATURE_FLASH_IS_FTFL (0)
+    /* @brief Has flags indicating the status of the FlexRAM (register bits FCNFG[EEERDY], FCNFG[RAMRDY] and FCNFG[PFLSH]). */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM_FLAGS (0)
+    /* @brief Has program flash swapping status flag (register bit FCNFG[SWAP]). */
+    #define FSL_FEATURE_FLASH_HAS_PFLASH_SWAPPING_STATUS_FLAG (0)
+    /* @brief Has EEPROM region protection (register FEPROT). */
+    #define FSL_FEATURE_FLASH_HAS_EEROM_REGION_PROTECTION (0)
+    /* @brief Has data flash region protection (register FDPROT). */
+    #define FSL_FEATURE_FLASH_HAS_DATA_FLASH_REGION_PROTECTION (0)
+    /* @brief Has flash access control (registers XACCHn, SACCHn, where n is a number, FACSS and FACSN). */
+    #define FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL (0)
+    /* @brief Has flash cache control in FMC module. */
+    #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (1)
+    /* @brief Has flash cache control in MCM module. */
+    #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (0)
+    /* @brief Number of P-Flash blocks. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
+    /* @brief P-Flash block size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SIZE (262144)
+    /* @brief P-Flash block sector size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE (4096)
+    /* @brief P-Flash block write unit size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE (4)
+    /* @brief P-Flash block swap feature. */
+    #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (0)
+    /* @brief Has FlexNVM memory. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+    /* @brief Number of FlexNVM blocks. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
+    /* @brief FlexNVM block size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SIZE (0)
+    /* @brief FlexNVM block sector size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SECTOR_SIZE (0)
+    /* @brief FlexNVM block write unit size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (0)
+    /* @brief FlexNVM block start address. (Valid only if FlexNVM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
+    /* @brief Has FlexRAM memory. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (0)
+    /* @brief FlexRAM block size. */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (0)
+    /* @brief FlexRAM block start address. (Valid only if FlexRAM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x00000000)      
+     /* @brief Has 0x00 Read 1s Block command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (0)
+    /* @brief Has 0x01 Read 1s Section command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_SECTION_CMD (1)
+    /* @brief Has 0x02 Program Check command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_CHECK_CMD (1)
+    /* @brief Has 0x03 Read Resource command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_RESOURCE_CMD (1)
+    /* @brief Has 0x06 Program Longword command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_LONGWORD_CMD (1)
+    /* @brief Has 0x07 Program Phrase command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PHRASE_CMD (0)
+    /* @brief Has 0x08 Erase Flash Block command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_BLOCK_CMD (0)
+    /* @brief Has 0x09 Erase Flash Sector command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_SECTOR_CMD (1)
+    /* @brief Has 0x0B Program Section command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD (0)
+    /* @brief Has 0x40 Read 1s All Blocks command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_ALL_BLOCKS_CMD (1)
+    /* @brief Has 0x41 Read Once command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_ONCE_CMD (1)
+    /* @brief Has 0x43 Program Once command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_ONCE_CMD (1)
+    /* @brief Has 0x44 Erase All Blocks command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_CMD (1)
+    /* @brief Has 0x45 Verify Backdoor Access Key command. */
+    #define FSL_FEATURE_FLASH_HAS_VERIFY_BACKDOOR_ACCESS_KEY_CMD (1)     
+    /* @brief Has 0x46 Swap Control command. */
+    #define FSL_FEATURE_FLASH_HAS_SWAP_CONTROL_CMD (0)
+    /* @brief Has 0x80 Program Partition command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PARTITION_CMD (0)
+    /* @brief Has 0x81 Set FlexRAM Function command. */
+    #define FSL_FEATURE_FLASH_HAS_SET_FLEXRAM_FUNCTION_CMD (0)     
+    /* @brief P-Flash Erase/Read 1st all block command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Erase sector command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTOR_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Rrogram/Verify section command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Read resource command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_RESOURCE_CMD_ADDRESS_ALIGMENT (4)
+    /* @brief P-Flash Program check command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT (4)     
 #elif defined(CPU_MK24FN1M0VDC12) || defined(CPU_MK24FN1M0VLQ12) || defined(CPU_MK63FN1M0VLQ12) || defined(CPU_MK63FN1M0VMD12)
     /* @brief Is of type FTFA. */
     #define FSL_FEATURE_FLASH_IS_FTFA (0)

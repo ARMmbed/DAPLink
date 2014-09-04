@@ -21,7 +21,8 @@
 #ifndef __HW_NFC_REGISTERS_H__
 #define __HW_NFC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 NFC
@@ -48,19 +49,12 @@
  * - hw_nfc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_NFC_BASE
-#define HW_NFC_INSTANCE_COUNT (1U) //!< Number of instances of the NFC module.
-#define REGS_NFC_BASE (0x400A8000U) //!< Base address for NFC.
-#endif
-//@}
+#define HW_NFC_INSTANCE_COUNT (1U) /*!< Number of instances of the NFC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_CMD1 - Flash command 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_CMD1 - Flash command 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_CMD1 - Flash command 1 (RW)
  *
@@ -71,30 +65,27 @@ typedef union _hw_nfc_cmd1
     uint32_t U;
     struct _hw_nfc_cmd1_bitfields
     {
-        uint32_t RESERVED0 : 16;       //!< [15:0]
-        uint32_t BYTE3 : 8;            //!< [23:16] Third command byte that may be sent
-                                       //! to the flash device
-        uint32_t BYTE2 : 8;            //!< [31:24] Second command byte that may be sent
-                                       //! to the flash device
+        uint32_t RESERVED0 : 16;       /*!< [15:0]  */
+        uint32_t BYTE3 : 8;            /*!< [23:16] Third command byte that may be sent
+                                        * to the flash device */
+        uint32_t BYTE2 : 8;            /*!< [31:24] Second command byte that may be sent
+                                        * to the flash device */
     } B;
 } hw_nfc_cmd1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_CMD1 register
  */
-//@{
-#define HW_NFC_CMD1_ADDR         (REGS_NFC_BASE + 0x3F00U)
+/*@{*/
+#define HW_NFC_CMD1_ADDR(x)      ((x) + 0x3F00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_CMD1              (*(__IO hw_nfc_cmd1_t *) HW_NFC_CMD1_ADDR)
-#define HW_NFC_CMD1_RD()         (HW_NFC_CMD1.U)
-#define HW_NFC_CMD1_WR(v)        (HW_NFC_CMD1.U = (v))
-#define HW_NFC_CMD1_SET(v)       (HW_NFC_CMD1_WR(HW_NFC_CMD1_RD() |  (v)))
-#define HW_NFC_CMD1_CLR(v)       (HW_NFC_CMD1_WR(HW_NFC_CMD1_RD() & ~(v)))
-#define HW_NFC_CMD1_TOG(v)       (HW_NFC_CMD1_WR(HW_NFC_CMD1_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_CMD1(x)           (*(__IO hw_nfc_cmd1_t *) HW_NFC_CMD1_ADDR(x))
+#define HW_NFC_CMD1_RD(x)        (HW_NFC_CMD1(x).U)
+#define HW_NFC_CMD1_WR(x, v)     (HW_NFC_CMD1(x).U = (v))
+#define HW_NFC_CMD1_SET(x, v)    (HW_NFC_CMD1_WR(x, HW_NFC_CMD1_RD(x) |  (v)))
+#define HW_NFC_CMD1_CLR(x, v)    (HW_NFC_CMD1_WR(x, HW_NFC_CMD1_RD(x) & ~(v)))
+#define HW_NFC_CMD1_TOG(x, v)    (HW_NFC_CMD1_WR(x, HW_NFC_CMD1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_CMD1 bitfields
@@ -103,52 +94,43 @@ typedef union _hw_nfc_cmd1
 /*!
  * @name Register NFC_CMD1, field BYTE3[23:16] (RW)
  */
-//@{
-#define BP_NFC_CMD1_BYTE3    (16U)         //!< Bit position for NFC_CMD1_BYTE3.
-#define BM_NFC_CMD1_BYTE3    (0x00FF0000U) //!< Bit mask for NFC_CMD1_BYTE3.
-#define BS_NFC_CMD1_BYTE3    (8U)          //!< Bit field size in bits for NFC_CMD1_BYTE3.
+/*@{*/
+#define BP_NFC_CMD1_BYTE3    (16U)         /*!< Bit position for NFC_CMD1_BYTE3. */
+#define BM_NFC_CMD1_BYTE3    (0x00FF0000U) /*!< Bit mask for NFC_CMD1_BYTE3. */
+#define BS_NFC_CMD1_BYTE3    (8U)          /*!< Bit field size in bits for NFC_CMD1_BYTE3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD1_BYTE3 field.
-#define BR_NFC_CMD1_BYTE3    (HW_NFC_CMD1.B.BYTE3)
-#endif
+/*! @brief Read current value of the NFC_CMD1_BYTE3 field. */
+#define BR_NFC_CMD1_BYTE3(x) (HW_NFC_CMD1(x).B.BYTE3)
 
-//! @brief Format value for bitfield NFC_CMD1_BYTE3.
-#define BF_NFC_CMD1_BYTE3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD1_BYTE3), uint32_t) & BM_NFC_CMD1_BYTE3)
+/*! @brief Format value for bitfield NFC_CMD1_BYTE3. */
+#define BF_NFC_CMD1_BYTE3(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CMD1_BYTE3) & BM_NFC_CMD1_BYTE3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE3 field to a new value.
-#define BW_NFC_CMD1_BYTE3(v) (HW_NFC_CMD1_WR((HW_NFC_CMD1_RD() & ~BM_NFC_CMD1_BYTE3) | BF_NFC_CMD1_BYTE3(v)))
-#endif
-//@}
+/*! @brief Set the BYTE3 field to a new value. */
+#define BW_NFC_CMD1_BYTE3(x, v) (HW_NFC_CMD1_WR(x, (HW_NFC_CMD1_RD(x) & ~BM_NFC_CMD1_BYTE3) | BF_NFC_CMD1_BYTE3(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CMD1, field BYTE2[31:24] (RW)
  */
-//@{
-#define BP_NFC_CMD1_BYTE2    (24U)         //!< Bit position for NFC_CMD1_BYTE2.
-#define BM_NFC_CMD1_BYTE2    (0xFF000000U) //!< Bit mask for NFC_CMD1_BYTE2.
-#define BS_NFC_CMD1_BYTE2    (8U)          //!< Bit field size in bits for NFC_CMD1_BYTE2.
+/*@{*/
+#define BP_NFC_CMD1_BYTE2    (24U)         /*!< Bit position for NFC_CMD1_BYTE2. */
+#define BM_NFC_CMD1_BYTE2    (0xFF000000U) /*!< Bit mask for NFC_CMD1_BYTE2. */
+#define BS_NFC_CMD1_BYTE2    (8U)          /*!< Bit field size in bits for NFC_CMD1_BYTE2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD1_BYTE2 field.
-#define BR_NFC_CMD1_BYTE2    (HW_NFC_CMD1.B.BYTE2)
-#endif
+/*! @brief Read current value of the NFC_CMD1_BYTE2 field. */
+#define BR_NFC_CMD1_BYTE2(x) (HW_NFC_CMD1(x).B.BYTE2)
 
-//! @brief Format value for bitfield NFC_CMD1_BYTE2.
-#define BF_NFC_CMD1_BYTE2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD1_BYTE2), uint32_t) & BM_NFC_CMD1_BYTE2)
+/*! @brief Format value for bitfield NFC_CMD1_BYTE2. */
+#define BF_NFC_CMD1_BYTE2(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CMD1_BYTE2) & BM_NFC_CMD1_BYTE2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE2 field to a new value.
-#define BW_NFC_CMD1_BYTE2(v) (HW_NFC_CMD1_WR((HW_NFC_CMD1_RD() & ~BM_NFC_CMD1_BYTE2) | BF_NFC_CMD1_BYTE2(v)))
-#endif
-//@}
+/*! @brief Set the BYTE2 field to a new value. */
+#define BW_NFC_CMD1_BYTE2(x, v) (HW_NFC_CMD1_WR(x, (HW_NFC_CMD1_RD(x) & ~BM_NFC_CMD1_BYTE2) | BF_NFC_CMD1_BYTE2(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_CMD2 - Flash command 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_CMD2 - Flash command 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_CMD2 - Flash command 2 (RW)
  *
@@ -159,32 +141,30 @@ typedef union _hw_nfc_cmd2
     uint32_t U;
     struct _hw_nfc_cmd2_bitfields
     {
-        uint32_t BUSY_START : 1;       //!< [0] Busy indicator and start command
-        uint32_t BUFNO : 2;            //!< [2:1] Internal buffer number used for this
-                                       //! command
-        uint32_t RESERVED0 : 5;        //!< [7:3]
-        uint32_t CODE : 16;            //!< [23:8] User-defined flash operation sequencer
-        uint32_t BYTE1 : 8;            //!< [31:24] First command byte that may be sent
-                                       //! to the flash device
+        uint32_t BUSY_START : 1;       /*!< [0] Busy indicator and start command */
+        uint32_t BUFNO : 2;            /*!< [2:1] Internal buffer number used for this
+                                        * command */
+        uint32_t RESERVED0 : 5;        /*!< [7:3]  */
+        uint32_t CODE : 16;            /*!< [23:8] User-defined flash operation
+                                        * sequencer */
+        uint32_t BYTE1 : 8;            /*!< [31:24] First command byte that may be sent
+                                        * to the flash device */
     } B;
 } hw_nfc_cmd2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_CMD2 register
  */
-//@{
-#define HW_NFC_CMD2_ADDR         (REGS_NFC_BASE + 0x3F04U)
+/*@{*/
+#define HW_NFC_CMD2_ADDR(x)      ((x) + 0x3F04U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_CMD2              (*(__IO hw_nfc_cmd2_t *) HW_NFC_CMD2_ADDR)
-#define HW_NFC_CMD2_RD()         (HW_NFC_CMD2.U)
-#define HW_NFC_CMD2_WR(v)        (HW_NFC_CMD2.U = (v))
-#define HW_NFC_CMD2_SET(v)       (HW_NFC_CMD2_WR(HW_NFC_CMD2_RD() |  (v)))
-#define HW_NFC_CMD2_CLR(v)       (HW_NFC_CMD2_WR(HW_NFC_CMD2_RD() & ~(v)))
-#define HW_NFC_CMD2_TOG(v)       (HW_NFC_CMD2_WR(HW_NFC_CMD2_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_CMD2(x)           (*(__IO hw_nfc_cmd2_t *) HW_NFC_CMD2_ADDR(x))
+#define HW_NFC_CMD2_RD(x)        (HW_NFC_CMD2(x).U)
+#define HW_NFC_CMD2_WR(x, v)     (HW_NFC_CMD2(x).U = (v))
+#define HW_NFC_CMD2_SET(x, v)    (HW_NFC_CMD2_WR(x, HW_NFC_CMD2_RD(x) |  (v)))
+#define HW_NFC_CMD2_CLR(x, v)    (HW_NFC_CMD2_WR(x, HW_NFC_CMD2_RD(x) & ~(v)))
+#define HW_NFC_CMD2_TOG(x, v)    (HW_NFC_CMD2_WR(x, HW_NFC_CMD2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_CMD2 bitfields
@@ -202,46 +182,38 @@ typedef union _hw_nfc_cmd2
  * - 1 - During reads, command execution is busy. During writes, start command
  *     execution.
  */
-//@{
-#define BP_NFC_CMD2_BUSY_START (0U)        //!< Bit position for NFC_CMD2_BUSY_START.
-#define BM_NFC_CMD2_BUSY_START (0x00000001U) //!< Bit mask for NFC_CMD2_BUSY_START.
-#define BS_NFC_CMD2_BUSY_START (1U)        //!< Bit field size in bits for NFC_CMD2_BUSY_START.
+/*@{*/
+#define BP_NFC_CMD2_BUSY_START (0U)        /*!< Bit position for NFC_CMD2_BUSY_START. */
+#define BM_NFC_CMD2_BUSY_START (0x00000001U) /*!< Bit mask for NFC_CMD2_BUSY_START. */
+#define BS_NFC_CMD2_BUSY_START (1U)        /*!< Bit field size in bits for NFC_CMD2_BUSY_START. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD2_BUSY_START field.
-#define BR_NFC_CMD2_BUSY_START (BITBAND_ACCESS32(HW_NFC_CMD2_ADDR, BP_NFC_CMD2_BUSY_START))
-#endif
+/*! @brief Read current value of the NFC_CMD2_BUSY_START field. */
+#define BR_NFC_CMD2_BUSY_START(x) (BITBAND_ACCESS32(HW_NFC_CMD2_ADDR(x), BP_NFC_CMD2_BUSY_START))
 
-//! @brief Format value for bitfield NFC_CMD2_BUSY_START.
-#define BF_NFC_CMD2_BUSY_START(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD2_BUSY_START), uint32_t) & BM_NFC_CMD2_BUSY_START)
+/*! @brief Format value for bitfield NFC_CMD2_BUSY_START. */
+#define BF_NFC_CMD2_BUSY_START(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CMD2_BUSY_START) & BM_NFC_CMD2_BUSY_START)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BUSY_START field to a new value.
-#define BW_NFC_CMD2_BUSY_START(v) (BITBAND_ACCESS32(HW_NFC_CMD2_ADDR, BP_NFC_CMD2_BUSY_START) = (v))
-#endif
-//@}
+/*! @brief Set the BUSY_START field to a new value. */
+#define BW_NFC_CMD2_BUSY_START(x, v) (BITBAND_ACCESS32(HW_NFC_CMD2_ADDR(x), BP_NFC_CMD2_BUSY_START) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CMD2, field BUFNO[2:1] (RW)
  */
-//@{
-#define BP_NFC_CMD2_BUFNO    (1U)          //!< Bit position for NFC_CMD2_BUFNO.
-#define BM_NFC_CMD2_BUFNO    (0x00000006U) //!< Bit mask for NFC_CMD2_BUFNO.
-#define BS_NFC_CMD2_BUFNO    (2U)          //!< Bit field size in bits for NFC_CMD2_BUFNO.
+/*@{*/
+#define BP_NFC_CMD2_BUFNO    (1U)          /*!< Bit position for NFC_CMD2_BUFNO. */
+#define BM_NFC_CMD2_BUFNO    (0x00000006U) /*!< Bit mask for NFC_CMD2_BUFNO. */
+#define BS_NFC_CMD2_BUFNO    (2U)          /*!< Bit field size in bits for NFC_CMD2_BUFNO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD2_BUFNO field.
-#define BR_NFC_CMD2_BUFNO    (HW_NFC_CMD2.B.BUFNO)
-#endif
+/*! @brief Read current value of the NFC_CMD2_BUFNO field. */
+#define BR_NFC_CMD2_BUFNO(x) (HW_NFC_CMD2(x).B.BUFNO)
 
-//! @brief Format value for bitfield NFC_CMD2_BUFNO.
-#define BF_NFC_CMD2_BUFNO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD2_BUFNO), uint32_t) & BM_NFC_CMD2_BUFNO)
+/*! @brief Format value for bitfield NFC_CMD2_BUFNO. */
+#define BF_NFC_CMD2_BUFNO(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CMD2_BUFNO) & BM_NFC_CMD2_BUFNO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BUFNO field to a new value.
-#define BW_NFC_CMD2_BUFNO(v) (HW_NFC_CMD2_WR((HW_NFC_CMD2_RD() & ~BM_NFC_CMD2_BUFNO) | BF_NFC_CMD2_BUFNO(v)))
-#endif
-//@}
+/*! @brief Set the BUFNO field to a new value. */
+#define BW_NFC_CMD2_BUFNO(x, v) (HW_NFC_CMD2_WR(x, (HW_NFC_CMD2_RD(x) & ~BM_NFC_CMD2_BUFNO) | BF_NFC_CMD2_BUFNO(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CMD2, field CODE[23:8] (RW)
@@ -250,52 +222,43 @@ typedef union _hw_nfc_cmd2
  * action is executed after writing 1 to START. The following are some configuration
  * examples (other sequences are possible):
  */
-//@{
-#define BP_NFC_CMD2_CODE     (8U)          //!< Bit position for NFC_CMD2_CODE.
-#define BM_NFC_CMD2_CODE     (0x00FFFF00U) //!< Bit mask for NFC_CMD2_CODE.
-#define BS_NFC_CMD2_CODE     (16U)         //!< Bit field size in bits for NFC_CMD2_CODE.
+/*@{*/
+#define BP_NFC_CMD2_CODE     (8U)          /*!< Bit position for NFC_CMD2_CODE. */
+#define BM_NFC_CMD2_CODE     (0x00FFFF00U) /*!< Bit mask for NFC_CMD2_CODE. */
+#define BS_NFC_CMD2_CODE     (16U)         /*!< Bit field size in bits for NFC_CMD2_CODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD2_CODE field.
-#define BR_NFC_CMD2_CODE     (HW_NFC_CMD2.B.CODE)
-#endif
+/*! @brief Read current value of the NFC_CMD2_CODE field. */
+#define BR_NFC_CMD2_CODE(x)  (HW_NFC_CMD2(x).B.CODE)
 
-//! @brief Format value for bitfield NFC_CMD2_CODE.
-#define BF_NFC_CMD2_CODE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD2_CODE), uint32_t) & BM_NFC_CMD2_CODE)
+/*! @brief Format value for bitfield NFC_CMD2_CODE. */
+#define BF_NFC_CMD2_CODE(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_CMD2_CODE) & BM_NFC_CMD2_CODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CODE field to a new value.
-#define BW_NFC_CMD2_CODE(v)  (HW_NFC_CMD2_WR((HW_NFC_CMD2_RD() & ~BM_NFC_CMD2_CODE) | BF_NFC_CMD2_CODE(v)))
-#endif
-//@}
+/*! @brief Set the CODE field to a new value. */
+#define BW_NFC_CMD2_CODE(x, v) (HW_NFC_CMD2_WR(x, (HW_NFC_CMD2_RD(x) & ~BM_NFC_CMD2_CODE) | BF_NFC_CMD2_CODE(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CMD2, field BYTE1[31:24] (RW)
  */
-//@{
-#define BP_NFC_CMD2_BYTE1    (24U)         //!< Bit position for NFC_CMD2_BYTE1.
-#define BM_NFC_CMD2_BYTE1    (0xFF000000U) //!< Bit mask for NFC_CMD2_BYTE1.
-#define BS_NFC_CMD2_BYTE1    (8U)          //!< Bit field size in bits for NFC_CMD2_BYTE1.
+/*@{*/
+#define BP_NFC_CMD2_BYTE1    (24U)         /*!< Bit position for NFC_CMD2_BYTE1. */
+#define BM_NFC_CMD2_BYTE1    (0xFF000000U) /*!< Bit mask for NFC_CMD2_BYTE1. */
+#define BS_NFC_CMD2_BYTE1    (8U)          /*!< Bit field size in bits for NFC_CMD2_BYTE1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CMD2_BYTE1 field.
-#define BR_NFC_CMD2_BYTE1    (HW_NFC_CMD2.B.BYTE1)
-#endif
+/*! @brief Read current value of the NFC_CMD2_BYTE1 field. */
+#define BR_NFC_CMD2_BYTE1(x) (HW_NFC_CMD2(x).B.BYTE1)
 
-//! @brief Format value for bitfield NFC_CMD2_BYTE1.
-#define BF_NFC_CMD2_BYTE1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CMD2_BYTE1), uint32_t) & BM_NFC_CMD2_BYTE1)
+/*! @brief Format value for bitfield NFC_CMD2_BYTE1. */
+#define BF_NFC_CMD2_BYTE1(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CMD2_BYTE1) & BM_NFC_CMD2_BYTE1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE1 field to a new value.
-#define BW_NFC_CMD2_BYTE1(v) (HW_NFC_CMD2_WR((HW_NFC_CMD2_RD() & ~BM_NFC_CMD2_BYTE1) | BF_NFC_CMD2_BYTE1(v)))
-#endif
-//@}
+/*! @brief Set the BYTE1 field to a new value. */
+#define BW_NFC_CMD2_BYTE1(x, v) (HW_NFC_CMD2_WR(x, (HW_NFC_CMD2_RD(x) & ~BM_NFC_CMD2_BYTE1) | BF_NFC_CMD2_BYTE1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_CAR - Column address
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_CAR - Column address
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_CAR - Column address (RW)
  *
@@ -306,28 +269,25 @@ typedef union _hw_nfc_car
     uint32_t U;
     struct _hw_nfc_car_bitfields
     {
-        uint32_t BYTE1 : 8;            //!< [7:0] First byte of column address
-        uint32_t BYTE2 : 8;            //!< [15:8] Second byte of column address
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t BYTE1 : 8;            /*!< [7:0] First byte of column address */
+        uint32_t BYTE2 : 8;            /*!< [15:8] Second byte of column address */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_nfc_car_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_CAR register
  */
-//@{
-#define HW_NFC_CAR_ADDR          (REGS_NFC_BASE + 0x3F08U)
+/*@{*/
+#define HW_NFC_CAR_ADDR(x)       ((x) + 0x3F08U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_CAR               (*(__IO hw_nfc_car_t *) HW_NFC_CAR_ADDR)
-#define HW_NFC_CAR_RD()          (HW_NFC_CAR.U)
-#define HW_NFC_CAR_WR(v)         (HW_NFC_CAR.U = (v))
-#define HW_NFC_CAR_SET(v)        (HW_NFC_CAR_WR(HW_NFC_CAR_RD() |  (v)))
-#define HW_NFC_CAR_CLR(v)        (HW_NFC_CAR_WR(HW_NFC_CAR_RD() & ~(v)))
-#define HW_NFC_CAR_TOG(v)        (HW_NFC_CAR_WR(HW_NFC_CAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_CAR(x)            (*(__IO hw_nfc_car_t *) HW_NFC_CAR_ADDR(x))
+#define HW_NFC_CAR_RD(x)         (HW_NFC_CAR(x).U)
+#define HW_NFC_CAR_WR(x, v)      (HW_NFC_CAR(x).U = (v))
+#define HW_NFC_CAR_SET(x, v)     (HW_NFC_CAR_WR(x, HW_NFC_CAR_RD(x) |  (v)))
+#define HW_NFC_CAR_CLR(x, v)     (HW_NFC_CAR_WR(x, HW_NFC_CAR_RD(x) & ~(v)))
+#define HW_NFC_CAR_TOG(x, v)     (HW_NFC_CAR_WR(x, HW_NFC_CAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_CAR bitfields
@@ -336,52 +296,43 @@ typedef union _hw_nfc_car
 /*!
  * @name Register NFC_CAR, field BYTE1[7:0] (RW)
  */
-//@{
-#define BP_NFC_CAR_BYTE1     (0U)          //!< Bit position for NFC_CAR_BYTE1.
-#define BM_NFC_CAR_BYTE1     (0x000000FFU) //!< Bit mask for NFC_CAR_BYTE1.
-#define BS_NFC_CAR_BYTE1     (8U)          //!< Bit field size in bits for NFC_CAR_BYTE1.
+/*@{*/
+#define BP_NFC_CAR_BYTE1     (0U)          /*!< Bit position for NFC_CAR_BYTE1. */
+#define BM_NFC_CAR_BYTE1     (0x000000FFU) /*!< Bit mask for NFC_CAR_BYTE1. */
+#define BS_NFC_CAR_BYTE1     (8U)          /*!< Bit field size in bits for NFC_CAR_BYTE1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CAR_BYTE1 field.
-#define BR_NFC_CAR_BYTE1     (HW_NFC_CAR.B.BYTE1)
-#endif
+/*! @brief Read current value of the NFC_CAR_BYTE1 field. */
+#define BR_NFC_CAR_BYTE1(x)  (HW_NFC_CAR(x).B.BYTE1)
 
-//! @brief Format value for bitfield NFC_CAR_BYTE1.
-#define BF_NFC_CAR_BYTE1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CAR_BYTE1), uint32_t) & BM_NFC_CAR_BYTE1)
+/*! @brief Format value for bitfield NFC_CAR_BYTE1. */
+#define BF_NFC_CAR_BYTE1(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_CAR_BYTE1) & BM_NFC_CAR_BYTE1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE1 field to a new value.
-#define BW_NFC_CAR_BYTE1(v)  (HW_NFC_CAR_WR((HW_NFC_CAR_RD() & ~BM_NFC_CAR_BYTE1) | BF_NFC_CAR_BYTE1(v)))
-#endif
-//@}
+/*! @brief Set the BYTE1 field to a new value. */
+#define BW_NFC_CAR_BYTE1(x, v) (HW_NFC_CAR_WR(x, (HW_NFC_CAR_RD(x) & ~BM_NFC_CAR_BYTE1) | BF_NFC_CAR_BYTE1(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CAR, field BYTE2[15:8] (RW)
  */
-//@{
-#define BP_NFC_CAR_BYTE2     (8U)          //!< Bit position for NFC_CAR_BYTE2.
-#define BM_NFC_CAR_BYTE2     (0x0000FF00U) //!< Bit mask for NFC_CAR_BYTE2.
-#define BS_NFC_CAR_BYTE2     (8U)          //!< Bit field size in bits for NFC_CAR_BYTE2.
+/*@{*/
+#define BP_NFC_CAR_BYTE2     (8U)          /*!< Bit position for NFC_CAR_BYTE2. */
+#define BM_NFC_CAR_BYTE2     (0x0000FF00U) /*!< Bit mask for NFC_CAR_BYTE2. */
+#define BS_NFC_CAR_BYTE2     (8U)          /*!< Bit field size in bits for NFC_CAR_BYTE2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CAR_BYTE2 field.
-#define BR_NFC_CAR_BYTE2     (HW_NFC_CAR.B.BYTE2)
-#endif
+/*! @brief Read current value of the NFC_CAR_BYTE2 field. */
+#define BR_NFC_CAR_BYTE2(x)  (HW_NFC_CAR(x).B.BYTE2)
 
-//! @brief Format value for bitfield NFC_CAR_BYTE2.
-#define BF_NFC_CAR_BYTE2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CAR_BYTE2), uint32_t) & BM_NFC_CAR_BYTE2)
+/*! @brief Format value for bitfield NFC_CAR_BYTE2. */
+#define BF_NFC_CAR_BYTE2(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_CAR_BYTE2) & BM_NFC_CAR_BYTE2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE2 field to a new value.
-#define BW_NFC_CAR_BYTE2(v)  (HW_NFC_CAR_WR((HW_NFC_CAR_RD() & ~BM_NFC_CAR_BYTE2) | BF_NFC_CAR_BYTE2(v)))
-#endif
-//@}
+/*! @brief Set the BYTE2 field to a new value. */
+#define BW_NFC_CAR_BYTE2(x, v) (HW_NFC_CAR_WR(x, (HW_NFC_CAR_RD(x) & ~BM_NFC_CAR_BYTE2) | BF_NFC_CAR_BYTE2(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_RAR - Row address
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_RAR - Row address
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_RAR - Row address (RW)
  *
@@ -392,34 +343,31 @@ typedef union _hw_nfc_rar
     uint32_t U;
     struct _hw_nfc_rar_bitfields
     {
-        uint32_t BYTE1 : 8;            //!< [7:0] First byte of row address
-        uint32_t BYTE2 : 8;            //!< [15:8] Second byte of row address
-        uint32_t BYTE3 : 8;            //!< [23:16] Third byte of row address
-        uint32_t RB0 : 1;              //!< [24] Ready/busy 0 enable
-        uint32_t RB1 : 1;              //!< [25] Ready/busy 1 enable
-        uint32_t RESERVED0 : 2;        //!< [27:26]
-        uint32_t CS0 : 1;              //!< [28] Chip select 0 enable
-        uint32_t CS1 : 1;              //!< [29] Chip select 1 enable
-        uint32_t RESERVED1 : 2;        //!< [31:30]
+        uint32_t BYTE1 : 8;            /*!< [7:0] First byte of row address */
+        uint32_t BYTE2 : 8;            /*!< [15:8] Second byte of row address */
+        uint32_t BYTE3 : 8;            /*!< [23:16] Third byte of row address */
+        uint32_t RB0 : 1;              /*!< [24] Ready/busy 0 enable */
+        uint32_t RB1 : 1;              /*!< [25] Ready/busy 1 enable */
+        uint32_t RESERVED0 : 2;        /*!< [27:26]  */
+        uint32_t CS0 : 1;              /*!< [28] Chip select 0 enable */
+        uint32_t CS1 : 1;              /*!< [29] Chip select 1 enable */
+        uint32_t RESERVED1 : 2;        /*!< [31:30]  */
     } B;
 } hw_nfc_rar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_RAR register
  */
-//@{
-#define HW_NFC_RAR_ADDR          (REGS_NFC_BASE + 0x3F0CU)
+/*@{*/
+#define HW_NFC_RAR_ADDR(x)       ((x) + 0x3F0CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_RAR               (*(__IO hw_nfc_rar_t *) HW_NFC_RAR_ADDR)
-#define HW_NFC_RAR_RD()          (HW_NFC_RAR.U)
-#define HW_NFC_RAR_WR(v)         (HW_NFC_RAR.U = (v))
-#define HW_NFC_RAR_SET(v)        (HW_NFC_RAR_WR(HW_NFC_RAR_RD() |  (v)))
-#define HW_NFC_RAR_CLR(v)        (HW_NFC_RAR_WR(HW_NFC_RAR_RD() & ~(v)))
-#define HW_NFC_RAR_TOG(v)        (HW_NFC_RAR_WR(HW_NFC_RAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_RAR(x)            (*(__IO hw_nfc_rar_t *) HW_NFC_RAR_ADDR(x))
+#define HW_NFC_RAR_RD(x)         (HW_NFC_RAR(x).U)
+#define HW_NFC_RAR_WR(x, v)      (HW_NFC_RAR(x).U = (v))
+#define HW_NFC_RAR_SET(x, v)     (HW_NFC_RAR_WR(x, HW_NFC_RAR_RD(x) |  (v)))
+#define HW_NFC_RAR_CLR(x, v)     (HW_NFC_RAR_WR(x, HW_NFC_RAR_RD(x) & ~(v)))
+#define HW_NFC_RAR_TOG(x, v)     (HW_NFC_RAR_WR(x, HW_NFC_RAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_RAR bitfields
@@ -428,68 +376,56 @@ typedef union _hw_nfc_rar
 /*!
  * @name Register NFC_RAR, field BYTE1[7:0] (RW)
  */
-//@{
-#define BP_NFC_RAR_BYTE1     (0U)          //!< Bit position for NFC_RAR_BYTE1.
-#define BM_NFC_RAR_BYTE1     (0x000000FFU) //!< Bit mask for NFC_RAR_BYTE1.
-#define BS_NFC_RAR_BYTE1     (8U)          //!< Bit field size in bits for NFC_RAR_BYTE1.
+/*@{*/
+#define BP_NFC_RAR_BYTE1     (0U)          /*!< Bit position for NFC_RAR_BYTE1. */
+#define BM_NFC_RAR_BYTE1     (0x000000FFU) /*!< Bit mask for NFC_RAR_BYTE1. */
+#define BS_NFC_RAR_BYTE1     (8U)          /*!< Bit field size in bits for NFC_RAR_BYTE1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_BYTE1 field.
-#define BR_NFC_RAR_BYTE1     (HW_NFC_RAR.B.BYTE1)
-#endif
+/*! @brief Read current value of the NFC_RAR_BYTE1 field. */
+#define BR_NFC_RAR_BYTE1(x)  (HW_NFC_RAR(x).B.BYTE1)
 
-//! @brief Format value for bitfield NFC_RAR_BYTE1.
-#define BF_NFC_RAR_BYTE1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_BYTE1), uint32_t) & BM_NFC_RAR_BYTE1)
+/*! @brief Format value for bitfield NFC_RAR_BYTE1. */
+#define BF_NFC_RAR_BYTE1(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_BYTE1) & BM_NFC_RAR_BYTE1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE1 field to a new value.
-#define BW_NFC_RAR_BYTE1(v)  (HW_NFC_RAR_WR((HW_NFC_RAR_RD() & ~BM_NFC_RAR_BYTE1) | BF_NFC_RAR_BYTE1(v)))
-#endif
-//@}
+/*! @brief Set the BYTE1 field to a new value. */
+#define BW_NFC_RAR_BYTE1(x, v) (HW_NFC_RAR_WR(x, (HW_NFC_RAR_RD(x) & ~BM_NFC_RAR_BYTE1) | BF_NFC_RAR_BYTE1(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field BYTE2[15:8] (RW)
  */
-//@{
-#define BP_NFC_RAR_BYTE2     (8U)          //!< Bit position for NFC_RAR_BYTE2.
-#define BM_NFC_RAR_BYTE2     (0x0000FF00U) //!< Bit mask for NFC_RAR_BYTE2.
-#define BS_NFC_RAR_BYTE2     (8U)          //!< Bit field size in bits for NFC_RAR_BYTE2.
+/*@{*/
+#define BP_NFC_RAR_BYTE2     (8U)          /*!< Bit position for NFC_RAR_BYTE2. */
+#define BM_NFC_RAR_BYTE2     (0x0000FF00U) /*!< Bit mask for NFC_RAR_BYTE2. */
+#define BS_NFC_RAR_BYTE2     (8U)          /*!< Bit field size in bits for NFC_RAR_BYTE2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_BYTE2 field.
-#define BR_NFC_RAR_BYTE2     (HW_NFC_RAR.B.BYTE2)
-#endif
+/*! @brief Read current value of the NFC_RAR_BYTE2 field. */
+#define BR_NFC_RAR_BYTE2(x)  (HW_NFC_RAR(x).B.BYTE2)
 
-//! @brief Format value for bitfield NFC_RAR_BYTE2.
-#define BF_NFC_RAR_BYTE2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_BYTE2), uint32_t) & BM_NFC_RAR_BYTE2)
+/*! @brief Format value for bitfield NFC_RAR_BYTE2. */
+#define BF_NFC_RAR_BYTE2(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_BYTE2) & BM_NFC_RAR_BYTE2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE2 field to a new value.
-#define BW_NFC_RAR_BYTE2(v)  (HW_NFC_RAR_WR((HW_NFC_RAR_RD() & ~BM_NFC_RAR_BYTE2) | BF_NFC_RAR_BYTE2(v)))
-#endif
-//@}
+/*! @brief Set the BYTE2 field to a new value. */
+#define BW_NFC_RAR_BYTE2(x, v) (HW_NFC_RAR_WR(x, (HW_NFC_RAR_RD(x) & ~BM_NFC_RAR_BYTE2) | BF_NFC_RAR_BYTE2(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field BYTE3[23:16] (RW)
  */
-//@{
-#define BP_NFC_RAR_BYTE3     (16U)         //!< Bit position for NFC_RAR_BYTE3.
-#define BM_NFC_RAR_BYTE3     (0x00FF0000U) //!< Bit mask for NFC_RAR_BYTE3.
-#define BS_NFC_RAR_BYTE3     (8U)          //!< Bit field size in bits for NFC_RAR_BYTE3.
+/*@{*/
+#define BP_NFC_RAR_BYTE3     (16U)         /*!< Bit position for NFC_RAR_BYTE3. */
+#define BM_NFC_RAR_BYTE3     (0x00FF0000U) /*!< Bit mask for NFC_RAR_BYTE3. */
+#define BS_NFC_RAR_BYTE3     (8U)          /*!< Bit field size in bits for NFC_RAR_BYTE3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_BYTE3 field.
-#define BR_NFC_RAR_BYTE3     (HW_NFC_RAR.B.BYTE3)
-#endif
+/*! @brief Read current value of the NFC_RAR_BYTE3 field. */
+#define BR_NFC_RAR_BYTE3(x)  (HW_NFC_RAR(x).B.BYTE3)
 
-//! @brief Format value for bitfield NFC_RAR_BYTE3.
-#define BF_NFC_RAR_BYTE3(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_BYTE3), uint32_t) & BM_NFC_RAR_BYTE3)
+/*! @brief Format value for bitfield NFC_RAR_BYTE3. */
+#define BF_NFC_RAR_BYTE3(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_BYTE3) & BM_NFC_RAR_BYTE3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BYTE3 field to a new value.
-#define BW_NFC_RAR_BYTE3(v)  (HW_NFC_RAR_WR((HW_NFC_RAR_RD() & ~BM_NFC_RAR_BYTE3) | BF_NFC_RAR_BYTE3(v)))
-#endif
-//@}
+/*! @brief Set the BYTE3 field to a new value. */
+#define BW_NFC_RAR_BYTE3(x, v) (HW_NFC_RAR_WR(x, (HW_NFC_RAR_RD(x) & ~BM_NFC_RAR_BYTE3) | BF_NFC_RAR_BYTE3(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field RB0[24] (RW)
@@ -503,24 +439,20 @@ typedef union _hw_nfc_rar
  * - 0 - NFC_R/ B 0 is disabled
  * - 1 - NFC_R/ B 0 is enabled
  */
-//@{
-#define BP_NFC_RAR_RB0       (24U)         //!< Bit position for NFC_RAR_RB0.
-#define BM_NFC_RAR_RB0       (0x01000000U) //!< Bit mask for NFC_RAR_RB0.
-#define BS_NFC_RAR_RB0       (1U)          //!< Bit field size in bits for NFC_RAR_RB0.
+/*@{*/
+#define BP_NFC_RAR_RB0       (24U)         /*!< Bit position for NFC_RAR_RB0. */
+#define BM_NFC_RAR_RB0       (0x01000000U) /*!< Bit mask for NFC_RAR_RB0. */
+#define BS_NFC_RAR_RB0       (1U)          /*!< Bit field size in bits for NFC_RAR_RB0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_RB0 field.
-#define BR_NFC_RAR_RB0       (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_RB0))
-#endif
+/*! @brief Read current value of the NFC_RAR_RB0 field. */
+#define BR_NFC_RAR_RB0(x)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_RB0))
 
-//! @brief Format value for bitfield NFC_RAR_RB0.
-#define BF_NFC_RAR_RB0(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_RB0), uint32_t) & BM_NFC_RAR_RB0)
+/*! @brief Format value for bitfield NFC_RAR_RB0. */
+#define BF_NFC_RAR_RB0(v)    ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_RB0) & BM_NFC_RAR_RB0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RB0 field to a new value.
-#define BW_NFC_RAR_RB0(v)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_RB0) = (v))
-#endif
-//@}
+/*! @brief Set the RB0 field to a new value. */
+#define BW_NFC_RAR_RB0(x, v) (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_RB0) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field RB1[25] (RW)
@@ -534,24 +466,20 @@ typedef union _hw_nfc_rar
  * - 0 - NFC_R/ B 1 is disabled
  * - 1 - NFC_R/ B 1 is enabled
  */
-//@{
-#define BP_NFC_RAR_RB1       (25U)         //!< Bit position for NFC_RAR_RB1.
-#define BM_NFC_RAR_RB1       (0x02000000U) //!< Bit mask for NFC_RAR_RB1.
-#define BS_NFC_RAR_RB1       (1U)          //!< Bit field size in bits for NFC_RAR_RB1.
+/*@{*/
+#define BP_NFC_RAR_RB1       (25U)         /*!< Bit position for NFC_RAR_RB1. */
+#define BM_NFC_RAR_RB1       (0x02000000U) /*!< Bit mask for NFC_RAR_RB1. */
+#define BS_NFC_RAR_RB1       (1U)          /*!< Bit field size in bits for NFC_RAR_RB1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_RB1 field.
-#define BR_NFC_RAR_RB1       (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_RB1))
-#endif
+/*! @brief Read current value of the NFC_RAR_RB1 field. */
+#define BR_NFC_RAR_RB1(x)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_RB1))
 
-//! @brief Format value for bitfield NFC_RAR_RB1.
-#define BF_NFC_RAR_RB1(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_RB1), uint32_t) & BM_NFC_RAR_RB1)
+/*! @brief Format value for bitfield NFC_RAR_RB1. */
+#define BF_NFC_RAR_RB1(v)    ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_RB1) & BM_NFC_RAR_RB1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RB1 field to a new value.
-#define BW_NFC_RAR_RB1(v)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_RB1) = (v))
-#endif
-//@}
+/*! @brief Set the RB1 field to a new value. */
+#define BW_NFC_RAR_RB1(x, v) (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_RB1) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field CS0[28] (RW)
@@ -560,24 +488,20 @@ typedef union _hw_nfc_rar
  * - 0 - NFC_CE0 is disabled
  * - 1 - NFC_CE0 is enabled
  */
-//@{
-#define BP_NFC_RAR_CS0       (28U)         //!< Bit position for NFC_RAR_CS0.
-#define BM_NFC_RAR_CS0       (0x10000000U) //!< Bit mask for NFC_RAR_CS0.
-#define BS_NFC_RAR_CS0       (1U)          //!< Bit field size in bits for NFC_RAR_CS0.
+/*@{*/
+#define BP_NFC_RAR_CS0       (28U)         /*!< Bit position for NFC_RAR_CS0. */
+#define BM_NFC_RAR_CS0       (0x10000000U) /*!< Bit mask for NFC_RAR_CS0. */
+#define BS_NFC_RAR_CS0       (1U)          /*!< Bit field size in bits for NFC_RAR_CS0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_CS0 field.
-#define BR_NFC_RAR_CS0       (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_CS0))
-#endif
+/*! @brief Read current value of the NFC_RAR_CS0 field. */
+#define BR_NFC_RAR_CS0(x)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_CS0))
 
-//! @brief Format value for bitfield NFC_RAR_CS0.
-#define BF_NFC_RAR_CS0(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_CS0), uint32_t) & BM_NFC_RAR_CS0)
+/*! @brief Format value for bitfield NFC_RAR_CS0. */
+#define BF_NFC_RAR_CS0(v)    ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_CS0) & BM_NFC_RAR_CS0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS0 field to a new value.
-#define BW_NFC_RAR_CS0(v)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_CS0) = (v))
-#endif
-//@}
+/*! @brief Set the CS0 field to a new value. */
+#define BW_NFC_RAR_CS0(x, v) (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_CS0) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_RAR, field CS1[29] (RW)
@@ -586,30 +510,25 @@ typedef union _hw_nfc_rar
  * - 0 - NFC_CE1 is disabled
  * - 1 - NFC_CE1 is enabled
  */
-//@{
-#define BP_NFC_RAR_CS1       (29U)         //!< Bit position for NFC_RAR_CS1.
-#define BM_NFC_RAR_CS1       (0x20000000U) //!< Bit mask for NFC_RAR_CS1.
-#define BS_NFC_RAR_CS1       (1U)          //!< Bit field size in bits for NFC_RAR_CS1.
+/*@{*/
+#define BP_NFC_RAR_CS1       (29U)         /*!< Bit position for NFC_RAR_CS1. */
+#define BM_NFC_RAR_CS1       (0x20000000U) /*!< Bit mask for NFC_RAR_CS1. */
+#define BS_NFC_RAR_CS1       (1U)          /*!< Bit field size in bits for NFC_RAR_CS1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAR_CS1 field.
-#define BR_NFC_RAR_CS1       (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_CS1))
-#endif
+/*! @brief Read current value of the NFC_RAR_CS1 field. */
+#define BR_NFC_RAR_CS1(x)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_CS1))
 
-//! @brief Format value for bitfield NFC_RAR_CS1.
-#define BF_NFC_RAR_CS1(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAR_CS1), uint32_t) & BM_NFC_RAR_CS1)
+/*! @brief Format value for bitfield NFC_RAR_CS1. */
+#define BF_NFC_RAR_CS1(v)    ((uint32_t)((uint32_t)(v) << BP_NFC_RAR_CS1) & BM_NFC_RAR_CS1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS1 field to a new value.
-#define BW_NFC_RAR_CS1(v)    (BITBAND_ACCESS32(HW_NFC_RAR_ADDR, BP_NFC_RAR_CS1) = (v))
-#endif
-//@}
+/*! @brief Set the CS1 field to a new value. */
+#define BW_NFC_RAR_CS1(x, v) (BITBAND_ACCESS32(HW_NFC_RAR_ADDR(x), BP_NFC_RAR_CS1) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_RPT - Flash command repeat
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_RPT - Flash command repeat
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_RPT - Flash command repeat (RW)
  *
@@ -620,27 +539,24 @@ typedef union _hw_nfc_rpt
     uint32_t U;
     struct _hw_nfc_rpt_bitfields
     {
-        uint32_t COUNT : 16;           //!< [15:0] 16-bit repeat count
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t COUNT : 16;           /*!< [15:0] 16-bit repeat count */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_nfc_rpt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_RPT register
  */
-//@{
-#define HW_NFC_RPT_ADDR          (REGS_NFC_BASE + 0x3F10U)
+/*@{*/
+#define HW_NFC_RPT_ADDR(x)       ((x) + 0x3F10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_RPT               (*(__IO hw_nfc_rpt_t *) HW_NFC_RPT_ADDR)
-#define HW_NFC_RPT_RD()          (HW_NFC_RPT.U)
-#define HW_NFC_RPT_WR(v)         (HW_NFC_RPT.U = (v))
-#define HW_NFC_RPT_SET(v)        (HW_NFC_RPT_WR(HW_NFC_RPT_RD() |  (v)))
-#define HW_NFC_RPT_CLR(v)        (HW_NFC_RPT_WR(HW_NFC_RPT_RD() & ~(v)))
-#define HW_NFC_RPT_TOG(v)        (HW_NFC_RPT_WR(HW_NFC_RPT_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_RPT(x)            (*(__IO hw_nfc_rpt_t *) HW_NFC_RPT_ADDR(x))
+#define HW_NFC_RPT_RD(x)         (HW_NFC_RPT(x).U)
+#define HW_NFC_RPT_WR(x, v)      (HW_NFC_RPT(x).U = (v))
+#define HW_NFC_RPT_SET(x, v)     (HW_NFC_RPT_WR(x, HW_NFC_RPT_RD(x) |  (v)))
+#define HW_NFC_RPT_CLR(x, v)     (HW_NFC_RPT_WR(x, HW_NFC_RPT_RD(x) & ~(v)))
+#define HW_NFC_RPT_TOG(x, v)     (HW_NFC_RPT_WR(x, HW_NFC_RPT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_RPT bitfields
@@ -652,30 +568,25 @@ typedef union _hw_nfc_rpt
  * Determines how many times NFC_CMD2[CODE] is executed. If 0 or 1, the flash
  * command is executed once.
  */
-//@{
-#define BP_NFC_RPT_COUNT     (0U)          //!< Bit position for NFC_RPT_COUNT.
-#define BM_NFC_RPT_COUNT     (0x0000FFFFU) //!< Bit mask for NFC_RPT_COUNT.
-#define BS_NFC_RPT_COUNT     (16U)         //!< Bit field size in bits for NFC_RPT_COUNT.
+/*@{*/
+#define BP_NFC_RPT_COUNT     (0U)          /*!< Bit position for NFC_RPT_COUNT. */
+#define BM_NFC_RPT_COUNT     (0x0000FFFFU) /*!< Bit mask for NFC_RPT_COUNT. */
+#define BS_NFC_RPT_COUNT     (16U)         /*!< Bit field size in bits for NFC_RPT_COUNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RPT_COUNT field.
-#define BR_NFC_RPT_COUNT     (HW_NFC_RPT.B.COUNT)
-#endif
+/*! @brief Read current value of the NFC_RPT_COUNT field. */
+#define BR_NFC_RPT_COUNT(x)  (HW_NFC_RPT(x).B.COUNT)
 
-//! @brief Format value for bitfield NFC_RPT_COUNT.
-#define BF_NFC_RPT_COUNT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RPT_COUNT), uint32_t) & BM_NFC_RPT_COUNT)
+/*! @brief Format value for bitfield NFC_RPT_COUNT. */
+#define BF_NFC_RPT_COUNT(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_RPT_COUNT) & BM_NFC_RPT_COUNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COUNT field to a new value.
-#define BW_NFC_RPT_COUNT(v)  (HW_NFC_RPT_WR((HW_NFC_RPT_RD() & ~BM_NFC_RPT_COUNT) | BF_NFC_RPT_COUNT(v)))
-#endif
-//@}
+/*! @brief Set the COUNT field to a new value. */
+#define BW_NFC_RPT_COUNT(x, v) (HW_NFC_RPT_WR(x, (HW_NFC_RPT_RD(x) & ~BM_NFC_RPT_COUNT) | BF_NFC_RPT_COUNT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_RAI - Row address increment
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_RAI - Row address increment
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_RAI - Row address increment (RW)
  *
@@ -690,32 +601,29 @@ typedef union _hw_nfc_rai
     uint32_t U;
     struct _hw_nfc_rai_bitfields
     {
-        uint32_t INC1 : 8;             //!< [7:0] Increment for the first byte of row
-                                       //! address
-        uint32_t INC2 : 8;             //!< [15:8] Increment for the second byte of row
-                                       //! address
-        uint32_t INC3 : 8;             //!< [23:16] Increment for the third byte of row
-                                       //! address
-        uint32_t RESERVED0 : 8;        //!< [31:24]
+        uint32_t INC1 : 8;             /*!< [7:0] Increment for the first byte of row
+                                        * address */
+        uint32_t INC2 : 8;             /*!< [15:8] Increment for the second byte of row
+                                        * address */
+        uint32_t INC3 : 8;             /*!< [23:16] Increment for the third byte of row
+                                        * address */
+        uint32_t RESERVED0 : 8;        /*!< [31:24]  */
     } B;
 } hw_nfc_rai_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_RAI register
  */
-//@{
-#define HW_NFC_RAI_ADDR          (REGS_NFC_BASE + 0x3F14U)
+/*@{*/
+#define HW_NFC_RAI_ADDR(x)       ((x) + 0x3F14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_RAI               (*(__IO hw_nfc_rai_t *) HW_NFC_RAI_ADDR)
-#define HW_NFC_RAI_RD()          (HW_NFC_RAI.U)
-#define HW_NFC_RAI_WR(v)         (HW_NFC_RAI.U = (v))
-#define HW_NFC_RAI_SET(v)        (HW_NFC_RAI_WR(HW_NFC_RAI_RD() |  (v)))
-#define HW_NFC_RAI_CLR(v)        (HW_NFC_RAI_WR(HW_NFC_RAI_RD() & ~(v)))
-#define HW_NFC_RAI_TOG(v)        (HW_NFC_RAI_WR(HW_NFC_RAI_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_RAI(x)            (*(__IO hw_nfc_rai_t *) HW_NFC_RAI_ADDR(x))
+#define HW_NFC_RAI_RD(x)         (HW_NFC_RAI(x).U)
+#define HW_NFC_RAI_WR(x, v)      (HW_NFC_RAI(x).U = (v))
+#define HW_NFC_RAI_SET(x, v)     (HW_NFC_RAI_WR(x, HW_NFC_RAI_RD(x) |  (v)))
+#define HW_NFC_RAI_CLR(x, v)     (HW_NFC_RAI_WR(x, HW_NFC_RAI_RD(x) & ~(v)))
+#define HW_NFC_RAI_TOG(x, v)     (HW_NFC_RAI_WR(x, HW_NFC_RAI_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_RAI bitfields
@@ -724,74 +632,61 @@ typedef union _hw_nfc_rai
 /*!
  * @name Register NFC_RAI, field INC1[7:0] (RW)
  */
-//@{
-#define BP_NFC_RAI_INC1      (0U)          //!< Bit position for NFC_RAI_INC1.
-#define BM_NFC_RAI_INC1      (0x000000FFU) //!< Bit mask for NFC_RAI_INC1.
-#define BS_NFC_RAI_INC1      (8U)          //!< Bit field size in bits for NFC_RAI_INC1.
+/*@{*/
+#define BP_NFC_RAI_INC1      (0U)          /*!< Bit position for NFC_RAI_INC1. */
+#define BM_NFC_RAI_INC1      (0x000000FFU) /*!< Bit mask for NFC_RAI_INC1. */
+#define BS_NFC_RAI_INC1      (8U)          /*!< Bit field size in bits for NFC_RAI_INC1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAI_INC1 field.
-#define BR_NFC_RAI_INC1      (HW_NFC_RAI.B.INC1)
-#endif
+/*! @brief Read current value of the NFC_RAI_INC1 field. */
+#define BR_NFC_RAI_INC1(x)   (HW_NFC_RAI(x).B.INC1)
 
-//! @brief Format value for bitfield NFC_RAI_INC1.
-#define BF_NFC_RAI_INC1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAI_INC1), uint32_t) & BM_NFC_RAI_INC1)
+/*! @brief Format value for bitfield NFC_RAI_INC1. */
+#define BF_NFC_RAI_INC1(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_RAI_INC1) & BM_NFC_RAI_INC1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INC1 field to a new value.
-#define BW_NFC_RAI_INC1(v)   (HW_NFC_RAI_WR((HW_NFC_RAI_RD() & ~BM_NFC_RAI_INC1) | BF_NFC_RAI_INC1(v)))
-#endif
-//@}
+/*! @brief Set the INC1 field to a new value. */
+#define BW_NFC_RAI_INC1(x, v) (HW_NFC_RAI_WR(x, (HW_NFC_RAI_RD(x) & ~BM_NFC_RAI_INC1) | BF_NFC_RAI_INC1(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_RAI, field INC2[15:8] (RW)
  */
-//@{
-#define BP_NFC_RAI_INC2      (8U)          //!< Bit position for NFC_RAI_INC2.
-#define BM_NFC_RAI_INC2      (0x0000FF00U) //!< Bit mask for NFC_RAI_INC2.
-#define BS_NFC_RAI_INC2      (8U)          //!< Bit field size in bits for NFC_RAI_INC2.
+/*@{*/
+#define BP_NFC_RAI_INC2      (8U)          /*!< Bit position for NFC_RAI_INC2. */
+#define BM_NFC_RAI_INC2      (0x0000FF00U) /*!< Bit mask for NFC_RAI_INC2. */
+#define BS_NFC_RAI_INC2      (8U)          /*!< Bit field size in bits for NFC_RAI_INC2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAI_INC2 field.
-#define BR_NFC_RAI_INC2      (HW_NFC_RAI.B.INC2)
-#endif
+/*! @brief Read current value of the NFC_RAI_INC2 field. */
+#define BR_NFC_RAI_INC2(x)   (HW_NFC_RAI(x).B.INC2)
 
-//! @brief Format value for bitfield NFC_RAI_INC2.
-#define BF_NFC_RAI_INC2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAI_INC2), uint32_t) & BM_NFC_RAI_INC2)
+/*! @brief Format value for bitfield NFC_RAI_INC2. */
+#define BF_NFC_RAI_INC2(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_RAI_INC2) & BM_NFC_RAI_INC2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INC2 field to a new value.
-#define BW_NFC_RAI_INC2(v)   (HW_NFC_RAI_WR((HW_NFC_RAI_RD() & ~BM_NFC_RAI_INC2) | BF_NFC_RAI_INC2(v)))
-#endif
-//@}
+/*! @brief Set the INC2 field to a new value. */
+#define BW_NFC_RAI_INC2(x, v) (HW_NFC_RAI_WR(x, (HW_NFC_RAI_RD(x) & ~BM_NFC_RAI_INC2) | BF_NFC_RAI_INC2(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_RAI, field INC3[23:16] (RW)
  */
-//@{
-#define BP_NFC_RAI_INC3      (16U)         //!< Bit position for NFC_RAI_INC3.
-#define BM_NFC_RAI_INC3      (0x00FF0000U) //!< Bit mask for NFC_RAI_INC3.
-#define BS_NFC_RAI_INC3      (8U)          //!< Bit field size in bits for NFC_RAI_INC3.
+/*@{*/
+#define BP_NFC_RAI_INC3      (16U)         /*!< Bit position for NFC_RAI_INC3. */
+#define BM_NFC_RAI_INC3      (0x00FF0000U) /*!< Bit mask for NFC_RAI_INC3. */
+#define BS_NFC_RAI_INC3      (8U)          /*!< Bit field size in bits for NFC_RAI_INC3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_RAI_INC3 field.
-#define BR_NFC_RAI_INC3      (HW_NFC_RAI.B.INC3)
-#endif
+/*! @brief Read current value of the NFC_RAI_INC3 field. */
+#define BR_NFC_RAI_INC3(x)   (HW_NFC_RAI(x).B.INC3)
 
-//! @brief Format value for bitfield NFC_RAI_INC3.
-#define BF_NFC_RAI_INC3(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_RAI_INC3), uint32_t) & BM_NFC_RAI_INC3)
+/*! @brief Format value for bitfield NFC_RAI_INC3. */
+#define BF_NFC_RAI_INC3(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_RAI_INC3) & BM_NFC_RAI_INC3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INC3 field to a new value.
-#define BW_NFC_RAI_INC3(v)   (HW_NFC_RAI_WR((HW_NFC_RAI_RD() & ~BM_NFC_RAI_INC3) | BF_NFC_RAI_INC3(v)))
-#endif
-//@}
+/*! @brief Set the INC3 field to a new value. */
+#define BW_NFC_RAI_INC3(x, v) (HW_NFC_RAI_WR(x, (HW_NFC_RAI_RD(x) & ~BM_NFC_RAI_INC3) | BF_NFC_RAI_INC3(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_SR1 - Flash status 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_SR1 - Flash status 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_SR1 - Flash status 1 (RO)
  *
@@ -802,25 +697,26 @@ typedef union _hw_nfc_sr1
     uint32_t U;
     struct _hw_nfc_sr1_bitfields
     {
-        uint32_t ID4 : 8;              //!< [7:0] Fourth byte returned by read ID command
-        uint32_t ID3 : 8;              //!< [15:8] Third byte returned by read ID command
-        uint32_t ID2 : 8;              //!< [23:16] Second byte returned by read ID command
-        uint32_t ID1 : 8;              //!< [31:24] First byte returned by read ID command
+        uint32_t ID4 : 8;              /*!< [7:0] Fourth byte returned by read ID command
+                                        * */
+        uint32_t ID3 : 8;              /*!< [15:8] Third byte returned by read ID command
+                                        * */
+        uint32_t ID2 : 8;              /*!< [23:16] Second byte returned by read ID
+                                        * command */
+        uint32_t ID1 : 8;              /*!< [31:24] First byte returned by read ID command
+                                        * */
     } B;
 } hw_nfc_sr1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_SR1 register
  */
-//@{
-#define HW_NFC_SR1_ADDR          (REGS_NFC_BASE + 0x3F18U)
+/*@{*/
+#define HW_NFC_SR1_ADDR(x)       ((x) + 0x3F18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_SR1               (*(__I hw_nfc_sr1_t *) HW_NFC_SR1_ADDR)
-#define HW_NFC_SR1_RD()          (HW_NFC_SR1.U)
-#endif
-//@}
+#define HW_NFC_SR1(x)            (*(__I hw_nfc_sr1_t *) HW_NFC_SR1_ADDR(x))
+#define HW_NFC_SR1_RD(x)         (HW_NFC_SR1(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_SR1 bitfields
@@ -829,64 +725,55 @@ typedef union _hw_nfc_sr1
 /*!
  * @name Register NFC_SR1, field ID4[7:0] (RO)
  */
-//@{
-#define BP_NFC_SR1_ID4       (0U)          //!< Bit position for NFC_SR1_ID4.
-#define BM_NFC_SR1_ID4       (0x000000FFU) //!< Bit mask for NFC_SR1_ID4.
-#define BS_NFC_SR1_ID4       (8U)          //!< Bit field size in bits for NFC_SR1_ID4.
+/*@{*/
+#define BP_NFC_SR1_ID4       (0U)          /*!< Bit position for NFC_SR1_ID4. */
+#define BM_NFC_SR1_ID4       (0x000000FFU) /*!< Bit mask for NFC_SR1_ID4. */
+#define BS_NFC_SR1_ID4       (8U)          /*!< Bit field size in bits for NFC_SR1_ID4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR1_ID4 field.
-#define BR_NFC_SR1_ID4       (HW_NFC_SR1.B.ID4)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR1_ID4 field. */
+#define BR_NFC_SR1_ID4(x)    (HW_NFC_SR1(x).B.ID4)
+/*@}*/
 
 /*!
  * @name Register NFC_SR1, field ID3[15:8] (RO)
  */
-//@{
-#define BP_NFC_SR1_ID3       (8U)          //!< Bit position for NFC_SR1_ID3.
-#define BM_NFC_SR1_ID3       (0x0000FF00U) //!< Bit mask for NFC_SR1_ID3.
-#define BS_NFC_SR1_ID3       (8U)          //!< Bit field size in bits for NFC_SR1_ID3.
+/*@{*/
+#define BP_NFC_SR1_ID3       (8U)          /*!< Bit position for NFC_SR1_ID3. */
+#define BM_NFC_SR1_ID3       (0x0000FF00U) /*!< Bit mask for NFC_SR1_ID3. */
+#define BS_NFC_SR1_ID3       (8U)          /*!< Bit field size in bits for NFC_SR1_ID3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR1_ID3 field.
-#define BR_NFC_SR1_ID3       (HW_NFC_SR1.B.ID3)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR1_ID3 field. */
+#define BR_NFC_SR1_ID3(x)    (HW_NFC_SR1(x).B.ID3)
+/*@}*/
 
 /*!
  * @name Register NFC_SR1, field ID2[23:16] (RO)
  */
-//@{
-#define BP_NFC_SR1_ID2       (16U)         //!< Bit position for NFC_SR1_ID2.
-#define BM_NFC_SR1_ID2       (0x00FF0000U) //!< Bit mask for NFC_SR1_ID2.
-#define BS_NFC_SR1_ID2       (8U)          //!< Bit field size in bits for NFC_SR1_ID2.
+/*@{*/
+#define BP_NFC_SR1_ID2       (16U)         /*!< Bit position for NFC_SR1_ID2. */
+#define BM_NFC_SR1_ID2       (0x00FF0000U) /*!< Bit mask for NFC_SR1_ID2. */
+#define BS_NFC_SR1_ID2       (8U)          /*!< Bit field size in bits for NFC_SR1_ID2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR1_ID2 field.
-#define BR_NFC_SR1_ID2       (HW_NFC_SR1.B.ID2)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR1_ID2 field. */
+#define BR_NFC_SR1_ID2(x)    (HW_NFC_SR1(x).B.ID2)
+/*@}*/
 
 /*!
  * @name Register NFC_SR1, field ID1[31:24] (RO)
  */
-//@{
-#define BP_NFC_SR1_ID1       (24U)         //!< Bit position for NFC_SR1_ID1.
-#define BM_NFC_SR1_ID1       (0xFF000000U) //!< Bit mask for NFC_SR1_ID1.
-#define BS_NFC_SR1_ID1       (8U)          //!< Bit field size in bits for NFC_SR1_ID1.
+/*@{*/
+#define BP_NFC_SR1_ID1       (24U)         /*!< Bit position for NFC_SR1_ID1. */
+#define BM_NFC_SR1_ID1       (0xFF000000U) /*!< Bit mask for NFC_SR1_ID1. */
+#define BS_NFC_SR1_ID1       (8U)          /*!< Bit field size in bits for NFC_SR1_ID1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR1_ID1 field.
-#define BR_NFC_SR1_ID1       (HW_NFC_SR1.B.ID1)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR1_ID1 field. */
+#define BR_NFC_SR1_ID1(x)    (HW_NFC_SR1(x).B.ID1)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_SR2 - Flash status 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_SR2 - Flash status 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_SR2 - Flash status 2 (RO)
  *
@@ -897,24 +784,23 @@ typedef union _hw_nfc_sr2
     uint32_t U;
     struct _hw_nfc_sr2_bitfields
     {
-        uint32_t STATUS1 : 8;          //!< [7:0] Byte returned by read status command
-        uint32_t RESERVED0 : 16;       //!< [23:8]
-        uint32_t ID5 : 8;              //!< [31:24] Fifth byte returned by read ID command
+        uint32_t STATUS1 : 8;          /*!< [7:0] Byte returned by read status command
+                                        * */
+        uint32_t RESERVED0 : 16;       /*!< [23:8]  */
+        uint32_t ID5 : 8;              /*!< [31:24] Fifth byte returned by read ID command
+                                        * */
     } B;
 } hw_nfc_sr2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_SR2 register
  */
-//@{
-#define HW_NFC_SR2_ADDR          (REGS_NFC_BASE + 0x3F1CU)
+/*@{*/
+#define HW_NFC_SR2_ADDR(x)       ((x) + 0x3F1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_SR2               (*(__I hw_nfc_sr2_t *) HW_NFC_SR2_ADDR)
-#define HW_NFC_SR2_RD()          (HW_NFC_SR2.U)
-#endif
-//@}
+#define HW_NFC_SR2(x)            (*(__I hw_nfc_sr2_t *) HW_NFC_SR2_ADDR(x))
+#define HW_NFC_SR2_RD(x)         (HW_NFC_SR2(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_SR2 bitfields
@@ -923,36 +809,31 @@ typedef union _hw_nfc_sr2
 /*!
  * @name Register NFC_SR2, field STATUS1[7:0] (RO)
  */
-//@{
-#define BP_NFC_SR2_STATUS1   (0U)          //!< Bit position for NFC_SR2_STATUS1.
-#define BM_NFC_SR2_STATUS1   (0x000000FFU) //!< Bit mask for NFC_SR2_STATUS1.
-#define BS_NFC_SR2_STATUS1   (8U)          //!< Bit field size in bits for NFC_SR2_STATUS1.
+/*@{*/
+#define BP_NFC_SR2_STATUS1   (0U)          /*!< Bit position for NFC_SR2_STATUS1. */
+#define BM_NFC_SR2_STATUS1   (0x000000FFU) /*!< Bit mask for NFC_SR2_STATUS1. */
+#define BS_NFC_SR2_STATUS1   (8U)          /*!< Bit field size in bits for NFC_SR2_STATUS1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR2_STATUS1 field.
-#define BR_NFC_SR2_STATUS1   (HW_NFC_SR2.B.STATUS1)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR2_STATUS1 field. */
+#define BR_NFC_SR2_STATUS1(x) (HW_NFC_SR2(x).B.STATUS1)
+/*@}*/
 
 /*!
  * @name Register NFC_SR2, field ID5[31:24] (RO)
  */
-//@{
-#define BP_NFC_SR2_ID5       (24U)         //!< Bit position for NFC_SR2_ID5.
-#define BM_NFC_SR2_ID5       (0xFF000000U) //!< Bit mask for NFC_SR2_ID5.
-#define BS_NFC_SR2_ID5       (8U)          //!< Bit field size in bits for NFC_SR2_ID5.
+/*@{*/
+#define BP_NFC_SR2_ID5       (24U)         /*!< Bit position for NFC_SR2_ID5. */
+#define BM_NFC_SR2_ID5       (0xFF000000U) /*!< Bit mask for NFC_SR2_ID5. */
+#define BS_NFC_SR2_ID5       (8U)          /*!< Bit field size in bits for NFC_SR2_ID5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SR2_ID5 field.
-#define BR_NFC_SR2_ID5       (HW_NFC_SR2.B.ID5)
-#endif
-//@}
+/*! @brief Read current value of the NFC_SR2_ID5 field. */
+#define BR_NFC_SR2_ID5(x)    (HW_NFC_SR2(x).B.ID5)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_DMA1 - DMA channel 1 address
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_DMA1 - DMA channel 1 address
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_DMA1 - DMA channel 1 address (RW)
  *
@@ -963,27 +844,24 @@ typedef union _hw_nfc_dma1
     uint32_t U;
     struct _hw_nfc_dma1_bitfields
     {
-        uint32_t ADDRESS : 32;         //!< [31:0] DMA channel 1 address. DMA channel
-                                       //! 1 address, it is 8-byte aligned.
+        uint32_t ADDRESS : 32;         /*!< [31:0] DMA channel 1 address. DMA channel
+                                        * 1 address, it is 8-byte aligned. */
     } B;
 } hw_nfc_dma1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_DMA1 register
  */
-//@{
-#define HW_NFC_DMA1_ADDR         (REGS_NFC_BASE + 0x3F20U)
+/*@{*/
+#define HW_NFC_DMA1_ADDR(x)      ((x) + 0x3F20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_DMA1              (*(__IO hw_nfc_dma1_t *) HW_NFC_DMA1_ADDR)
-#define HW_NFC_DMA1_RD()         (HW_NFC_DMA1.U)
-#define HW_NFC_DMA1_WR(v)        (HW_NFC_DMA1.U = (v))
-#define HW_NFC_DMA1_SET(v)       (HW_NFC_DMA1_WR(HW_NFC_DMA1_RD() |  (v)))
-#define HW_NFC_DMA1_CLR(v)       (HW_NFC_DMA1_WR(HW_NFC_DMA1_RD() & ~(v)))
-#define HW_NFC_DMA1_TOG(v)       (HW_NFC_DMA1_WR(HW_NFC_DMA1_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_DMA1(x)           (*(__IO hw_nfc_dma1_t *) HW_NFC_DMA1_ADDR(x))
+#define HW_NFC_DMA1_RD(x)        (HW_NFC_DMA1(x).U)
+#define HW_NFC_DMA1_WR(x, v)     (HW_NFC_DMA1(x).U = (v))
+#define HW_NFC_DMA1_SET(x, v)    (HW_NFC_DMA1_WR(x, HW_NFC_DMA1_RD(x) |  (v)))
+#define HW_NFC_DMA1_CLR(x, v)    (HW_NFC_DMA1_WR(x, HW_NFC_DMA1_RD(x) & ~(v)))
+#define HW_NFC_DMA1_TOG(x, v)    (HW_NFC_DMA1_WR(x, HW_NFC_DMA1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_DMA1 bitfields
@@ -992,30 +870,25 @@ typedef union _hw_nfc_dma1
 /*!
  * @name Register NFC_DMA1, field ADDRESS[31:0] (RW)
  */
-//@{
-#define BP_NFC_DMA1_ADDRESS  (0U)          //!< Bit position for NFC_DMA1_ADDRESS.
-#define BM_NFC_DMA1_ADDRESS  (0xFFFFFFFFU) //!< Bit mask for NFC_DMA1_ADDRESS.
-#define BS_NFC_DMA1_ADDRESS  (32U)         //!< Bit field size in bits for NFC_DMA1_ADDRESS.
+/*@{*/
+#define BP_NFC_DMA1_ADDRESS  (0U)          /*!< Bit position for NFC_DMA1_ADDRESS. */
+#define BM_NFC_DMA1_ADDRESS  (0xFFFFFFFFU) /*!< Bit mask for NFC_DMA1_ADDRESS. */
+#define BS_NFC_DMA1_ADDRESS  (32U)         /*!< Bit field size in bits for NFC_DMA1_ADDRESS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMA1_ADDRESS field.
-#define BR_NFC_DMA1_ADDRESS  (HW_NFC_DMA1.B.ADDRESS)
-#endif
+/*! @brief Read current value of the NFC_DMA1_ADDRESS field. */
+#define BR_NFC_DMA1_ADDRESS(x) (HW_NFC_DMA1(x).U)
 
-//! @brief Format value for bitfield NFC_DMA1_ADDRESS.
-#define BF_NFC_DMA1_ADDRESS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMA1_ADDRESS), uint32_t) & BM_NFC_DMA1_ADDRESS)
+/*! @brief Format value for bitfield NFC_DMA1_ADDRESS. */
+#define BF_NFC_DMA1_ADDRESS(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMA1_ADDRESS) & BM_NFC_DMA1_ADDRESS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDRESS field to a new value.
-#define BW_NFC_DMA1_ADDRESS(v) (HW_NFC_DMA1_WR((HW_NFC_DMA1_RD() & ~BM_NFC_DMA1_ADDRESS) | BF_NFC_DMA1_ADDRESS(v)))
-#endif
-//@}
+/*! @brief Set the ADDRESS field to a new value. */
+#define BW_NFC_DMA1_ADDRESS(x, v) (HW_NFC_DMA1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_DMACFG - DMA configuration
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_DMACFG - DMA configuration
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_DMACFG - DMA configuration (RW)
  *
@@ -1026,35 +899,32 @@ typedef union _hw_nfc_dmacfg
     uint32_t U;
     struct _hw_nfc_dmacfg_bitfields
     {
-        uint32_t ACT2 : 1;             //!< [0] DMA channel 2 status
-        uint32_t ACT1 : 1;             //!< [1] DMA channel 1 status
-        uint32_t RESERVED0 : 7;        //!< [8:2]
-        uint32_t OFFSET2 : 4;          //!< [12:9] 256-byte offset for DMA channel 2.
-                                       //! DMA channel 2 transfer starts at this offset count x 256 bytes. For
-                                       //! example, if OFFSET2 = 0x2, DMA channel 2 transfer starts at 0x200.
-        uint32_t COUNT2 : 7;           //!< [19:13] Number of bytes to be transferred
-                                       //! by DMA channel 2. It should be multiple of 8 bytes.
-        uint32_t COUNT1 : 12;          //!< [31:20] Number of bytes to be transferred
-                                       //! by DMA channel 1. It should be multiple of 8 bytes.
+        uint32_t ACT2 : 1;             /*!< [0] DMA channel 2 status */
+        uint32_t ACT1 : 1;             /*!< [1] DMA channel 1 status */
+        uint32_t RESERVED0 : 7;        /*!< [8:2]  */
+        uint32_t OFFSET2 : 4;          /*!< [12:9] 256-byte offset for DMA channel 2.
+                                        * DMA channel 2 transfer starts at this offset count x 256 bytes. For
+                                        * example, if OFFSET2 = 0x2, DMA channel 2 transfer starts at 0x200. */
+        uint32_t COUNT2 : 7;           /*!< [19:13] Number of bytes to be transferred
+                                        * by DMA channel 2. It should be multiple of 8 bytes. */
+        uint32_t COUNT1 : 12;          /*!< [31:20] Number of bytes to be transferred
+                                        * by DMA channel 1. It should be multiple of 8 bytes. */
     } B;
 } hw_nfc_dmacfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_DMACFG register
  */
-//@{
-#define HW_NFC_DMACFG_ADDR       (REGS_NFC_BASE + 0x3F24U)
+/*@{*/
+#define HW_NFC_DMACFG_ADDR(x)    ((x) + 0x3F24U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_DMACFG            (*(__IO hw_nfc_dmacfg_t *) HW_NFC_DMACFG_ADDR)
-#define HW_NFC_DMACFG_RD()       (HW_NFC_DMACFG.U)
-#define HW_NFC_DMACFG_WR(v)      (HW_NFC_DMACFG.U = (v))
-#define HW_NFC_DMACFG_SET(v)     (HW_NFC_DMACFG_WR(HW_NFC_DMACFG_RD() |  (v)))
-#define HW_NFC_DMACFG_CLR(v)     (HW_NFC_DMACFG_WR(HW_NFC_DMACFG_RD() & ~(v)))
-#define HW_NFC_DMACFG_TOG(v)     (HW_NFC_DMACFG_WR(HW_NFC_DMACFG_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_DMACFG(x)         (*(__IO hw_nfc_dmacfg_t *) HW_NFC_DMACFG_ADDR(x))
+#define HW_NFC_DMACFG_RD(x)      (HW_NFC_DMACFG(x).U)
+#define HW_NFC_DMACFG_WR(x, v)   (HW_NFC_DMACFG(x).U = (v))
+#define HW_NFC_DMACFG_SET(x, v)  (HW_NFC_DMACFG_WR(x, HW_NFC_DMACFG_RD(x) |  (v)))
+#define HW_NFC_DMACFG_CLR(x, v)  (HW_NFC_DMACFG_WR(x, HW_NFC_DMACFG_RD(x) & ~(v)))
+#define HW_NFC_DMACFG_TOG(x, v)  (HW_NFC_DMACFG_WR(x, HW_NFC_DMACFG_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_DMACFG bitfields
@@ -1067,24 +937,20 @@ typedef union _hw_nfc_dmacfg
  * - 0 - Inactive
  * - 1 - Active, and transfers to memory when triggered
  */
-//@{
-#define BP_NFC_DMACFG_ACT2   (0U)          //!< Bit position for NFC_DMACFG_ACT2.
-#define BM_NFC_DMACFG_ACT2   (0x00000001U) //!< Bit mask for NFC_DMACFG_ACT2.
-#define BS_NFC_DMACFG_ACT2   (1U)          //!< Bit field size in bits for NFC_DMACFG_ACT2.
+/*@{*/
+#define BP_NFC_DMACFG_ACT2   (0U)          /*!< Bit position for NFC_DMACFG_ACT2. */
+#define BM_NFC_DMACFG_ACT2   (0x00000001U) /*!< Bit mask for NFC_DMACFG_ACT2. */
+#define BS_NFC_DMACFG_ACT2   (1U)          /*!< Bit field size in bits for NFC_DMACFG_ACT2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMACFG_ACT2 field.
-#define BR_NFC_DMACFG_ACT2   (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR, BP_NFC_DMACFG_ACT2))
-#endif
+/*! @brief Read current value of the NFC_DMACFG_ACT2 field. */
+#define BR_NFC_DMACFG_ACT2(x) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR(x), BP_NFC_DMACFG_ACT2))
 
-//! @brief Format value for bitfield NFC_DMACFG_ACT2.
-#define BF_NFC_DMACFG_ACT2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMACFG_ACT2), uint32_t) & BM_NFC_DMACFG_ACT2)
+/*! @brief Format value for bitfield NFC_DMACFG_ACT2. */
+#define BF_NFC_DMACFG_ACT2(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMACFG_ACT2) & BM_NFC_DMACFG_ACT2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACT2 field to a new value.
-#define BW_NFC_DMACFG_ACT2(v) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR, BP_NFC_DMACFG_ACT2) = (v))
-#endif
-//@}
+/*! @brief Set the ACT2 field to a new value. */
+#define BW_NFC_DMACFG_ACT2(x, v) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR(x), BP_NFC_DMACFG_ACT2) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_DMACFG, field ACT1[1] (RW)
@@ -1093,96 +959,79 @@ typedef union _hw_nfc_dmacfg
  * - 0 - Inactive
  * - 1 - Active, and transfers to memory when triggered
  */
-//@{
-#define BP_NFC_DMACFG_ACT1   (1U)          //!< Bit position for NFC_DMACFG_ACT1.
-#define BM_NFC_DMACFG_ACT1   (0x00000002U) //!< Bit mask for NFC_DMACFG_ACT1.
-#define BS_NFC_DMACFG_ACT1   (1U)          //!< Bit field size in bits for NFC_DMACFG_ACT1.
+/*@{*/
+#define BP_NFC_DMACFG_ACT1   (1U)          /*!< Bit position for NFC_DMACFG_ACT1. */
+#define BM_NFC_DMACFG_ACT1   (0x00000002U) /*!< Bit mask for NFC_DMACFG_ACT1. */
+#define BS_NFC_DMACFG_ACT1   (1U)          /*!< Bit field size in bits for NFC_DMACFG_ACT1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMACFG_ACT1 field.
-#define BR_NFC_DMACFG_ACT1   (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR, BP_NFC_DMACFG_ACT1))
-#endif
+/*! @brief Read current value of the NFC_DMACFG_ACT1 field. */
+#define BR_NFC_DMACFG_ACT1(x) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR(x), BP_NFC_DMACFG_ACT1))
 
-//! @brief Format value for bitfield NFC_DMACFG_ACT1.
-#define BF_NFC_DMACFG_ACT1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMACFG_ACT1), uint32_t) & BM_NFC_DMACFG_ACT1)
+/*! @brief Format value for bitfield NFC_DMACFG_ACT1. */
+#define BF_NFC_DMACFG_ACT1(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMACFG_ACT1) & BM_NFC_DMACFG_ACT1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACT1 field to a new value.
-#define BW_NFC_DMACFG_ACT1(v) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR, BP_NFC_DMACFG_ACT1) = (v))
-#endif
-//@}
+/*! @brief Set the ACT1 field to a new value. */
+#define BW_NFC_DMACFG_ACT1(x, v) (BITBAND_ACCESS32(HW_NFC_DMACFG_ADDR(x), BP_NFC_DMACFG_ACT1) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_DMACFG, field OFFSET2[12:9] (RW)
  */
-//@{
-#define BP_NFC_DMACFG_OFFSET2 (9U)         //!< Bit position for NFC_DMACFG_OFFSET2.
-#define BM_NFC_DMACFG_OFFSET2 (0x00001E00U) //!< Bit mask for NFC_DMACFG_OFFSET2.
-#define BS_NFC_DMACFG_OFFSET2 (4U)         //!< Bit field size in bits for NFC_DMACFG_OFFSET2.
+/*@{*/
+#define BP_NFC_DMACFG_OFFSET2 (9U)         /*!< Bit position for NFC_DMACFG_OFFSET2. */
+#define BM_NFC_DMACFG_OFFSET2 (0x00001E00U) /*!< Bit mask for NFC_DMACFG_OFFSET2. */
+#define BS_NFC_DMACFG_OFFSET2 (4U)         /*!< Bit field size in bits for NFC_DMACFG_OFFSET2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMACFG_OFFSET2 field.
-#define BR_NFC_DMACFG_OFFSET2 (HW_NFC_DMACFG.B.OFFSET2)
-#endif
+/*! @brief Read current value of the NFC_DMACFG_OFFSET2 field. */
+#define BR_NFC_DMACFG_OFFSET2(x) (HW_NFC_DMACFG(x).B.OFFSET2)
 
-//! @brief Format value for bitfield NFC_DMACFG_OFFSET2.
-#define BF_NFC_DMACFG_OFFSET2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMACFG_OFFSET2), uint32_t) & BM_NFC_DMACFG_OFFSET2)
+/*! @brief Format value for bitfield NFC_DMACFG_OFFSET2. */
+#define BF_NFC_DMACFG_OFFSET2(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMACFG_OFFSET2) & BM_NFC_DMACFG_OFFSET2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OFFSET2 field to a new value.
-#define BW_NFC_DMACFG_OFFSET2(v) (HW_NFC_DMACFG_WR((HW_NFC_DMACFG_RD() & ~BM_NFC_DMACFG_OFFSET2) | BF_NFC_DMACFG_OFFSET2(v)))
-#endif
-//@}
+/*! @brief Set the OFFSET2 field to a new value. */
+#define BW_NFC_DMACFG_OFFSET2(x, v) (HW_NFC_DMACFG_WR(x, (HW_NFC_DMACFG_RD(x) & ~BM_NFC_DMACFG_OFFSET2) | BF_NFC_DMACFG_OFFSET2(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_DMACFG, field COUNT2[19:13] (RW)
  */
-//@{
-#define BP_NFC_DMACFG_COUNT2 (13U)         //!< Bit position for NFC_DMACFG_COUNT2.
-#define BM_NFC_DMACFG_COUNT2 (0x000FE000U) //!< Bit mask for NFC_DMACFG_COUNT2.
-#define BS_NFC_DMACFG_COUNT2 (7U)          //!< Bit field size in bits for NFC_DMACFG_COUNT2.
+/*@{*/
+#define BP_NFC_DMACFG_COUNT2 (13U)         /*!< Bit position for NFC_DMACFG_COUNT2. */
+#define BM_NFC_DMACFG_COUNT2 (0x000FE000U) /*!< Bit mask for NFC_DMACFG_COUNT2. */
+#define BS_NFC_DMACFG_COUNT2 (7U)          /*!< Bit field size in bits for NFC_DMACFG_COUNT2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMACFG_COUNT2 field.
-#define BR_NFC_DMACFG_COUNT2 (HW_NFC_DMACFG.B.COUNT2)
-#endif
+/*! @brief Read current value of the NFC_DMACFG_COUNT2 field. */
+#define BR_NFC_DMACFG_COUNT2(x) (HW_NFC_DMACFG(x).B.COUNT2)
 
-//! @brief Format value for bitfield NFC_DMACFG_COUNT2.
-#define BF_NFC_DMACFG_COUNT2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMACFG_COUNT2), uint32_t) & BM_NFC_DMACFG_COUNT2)
+/*! @brief Format value for bitfield NFC_DMACFG_COUNT2. */
+#define BF_NFC_DMACFG_COUNT2(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMACFG_COUNT2) & BM_NFC_DMACFG_COUNT2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COUNT2 field to a new value.
-#define BW_NFC_DMACFG_COUNT2(v) (HW_NFC_DMACFG_WR((HW_NFC_DMACFG_RD() & ~BM_NFC_DMACFG_COUNT2) | BF_NFC_DMACFG_COUNT2(v)))
-#endif
-//@}
+/*! @brief Set the COUNT2 field to a new value. */
+#define BW_NFC_DMACFG_COUNT2(x, v) (HW_NFC_DMACFG_WR(x, (HW_NFC_DMACFG_RD(x) & ~BM_NFC_DMACFG_COUNT2) | BF_NFC_DMACFG_COUNT2(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_DMACFG, field COUNT1[31:20] (RW)
  */
-//@{
-#define BP_NFC_DMACFG_COUNT1 (20U)         //!< Bit position for NFC_DMACFG_COUNT1.
-#define BM_NFC_DMACFG_COUNT1 (0xFFF00000U) //!< Bit mask for NFC_DMACFG_COUNT1.
-#define BS_NFC_DMACFG_COUNT1 (12U)         //!< Bit field size in bits for NFC_DMACFG_COUNT1.
+/*@{*/
+#define BP_NFC_DMACFG_COUNT1 (20U)         /*!< Bit position for NFC_DMACFG_COUNT1. */
+#define BM_NFC_DMACFG_COUNT1 (0xFFF00000U) /*!< Bit mask for NFC_DMACFG_COUNT1. */
+#define BS_NFC_DMACFG_COUNT1 (12U)         /*!< Bit field size in bits for NFC_DMACFG_COUNT1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMACFG_COUNT1 field.
-#define BR_NFC_DMACFG_COUNT1 (HW_NFC_DMACFG.B.COUNT1)
-#endif
+/*! @brief Read current value of the NFC_DMACFG_COUNT1 field. */
+#define BR_NFC_DMACFG_COUNT1(x) (HW_NFC_DMACFG(x).B.COUNT1)
 
-//! @brief Format value for bitfield NFC_DMACFG_COUNT1.
-#define BF_NFC_DMACFG_COUNT1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMACFG_COUNT1), uint32_t) & BM_NFC_DMACFG_COUNT1)
+/*! @brief Format value for bitfield NFC_DMACFG_COUNT1. */
+#define BF_NFC_DMACFG_COUNT1(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMACFG_COUNT1) & BM_NFC_DMACFG_COUNT1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COUNT1 field to a new value.
-#define BW_NFC_DMACFG_COUNT1(v) (HW_NFC_DMACFG_WR((HW_NFC_DMACFG_RD() & ~BM_NFC_DMACFG_COUNT1) | BF_NFC_DMACFG_COUNT1(v)))
-#endif
-//@}
+/*! @brief Set the COUNT1 field to a new value. */
+#define BW_NFC_DMACFG_COUNT1(x, v) (HW_NFC_DMACFG_WR(x, (HW_NFC_DMACFG_RD(x) & ~BM_NFC_DMACFG_COUNT1) | BF_NFC_DMACFG_COUNT1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_SWAP - Cach swap
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_SWAP - Cach swap
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_SWAP - Cach swap (RW)
  *
@@ -1205,30 +1054,27 @@ typedef union _hw_nfc_swap
     uint32_t U;
     struct _hw_nfc_swap_bitfields
     {
-        uint32_t RESERVED0 : 1;        //!< [0]
-        uint32_t ADDR2 : 11;           //!< [11:1] Upper swap address
-        uint32_t RESERVED1 : 5;        //!< [16:12]
-        uint32_t ADDR1 : 11;           //!< [27:17] Lower swap address
-        uint32_t RESERVED2 : 4;        //!< [31:28]
+        uint32_t RESERVED0 : 1;        /*!< [0]  */
+        uint32_t ADDR2 : 11;           /*!< [11:1] Upper swap address */
+        uint32_t RESERVED1 : 5;        /*!< [16:12]  */
+        uint32_t ADDR1 : 11;           /*!< [27:17] Lower swap address */
+        uint32_t RESERVED2 : 4;        /*!< [31:28]  */
     } B;
 } hw_nfc_swap_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_SWAP register
  */
-//@{
-#define HW_NFC_SWAP_ADDR         (REGS_NFC_BASE + 0x3F28U)
+/*@{*/
+#define HW_NFC_SWAP_ADDR(x)      ((x) + 0x3F28U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_SWAP              (*(__IO hw_nfc_swap_t *) HW_NFC_SWAP_ADDR)
-#define HW_NFC_SWAP_RD()         (HW_NFC_SWAP.U)
-#define HW_NFC_SWAP_WR(v)        (HW_NFC_SWAP.U = (v))
-#define HW_NFC_SWAP_SET(v)       (HW_NFC_SWAP_WR(HW_NFC_SWAP_RD() |  (v)))
-#define HW_NFC_SWAP_CLR(v)       (HW_NFC_SWAP_WR(HW_NFC_SWAP_RD() & ~(v)))
-#define HW_NFC_SWAP_TOG(v)       (HW_NFC_SWAP_WR(HW_NFC_SWAP_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_SWAP(x)           (*(__IO hw_nfc_swap_t *) HW_NFC_SWAP_ADDR(x))
+#define HW_NFC_SWAP_RD(x)        (HW_NFC_SWAP(x).U)
+#define HW_NFC_SWAP_WR(x, v)     (HW_NFC_SWAP(x).U = (v))
+#define HW_NFC_SWAP_SET(x, v)    (HW_NFC_SWAP_WR(x, HW_NFC_SWAP_RD(x) |  (v)))
+#define HW_NFC_SWAP_CLR(x, v)    (HW_NFC_SWAP_WR(x, HW_NFC_SWAP_RD(x) & ~(v)))
+#define HW_NFC_SWAP_TOG(x, v)    (HW_NFC_SWAP_WR(x, HW_NFC_SWAP_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_SWAP bitfields
@@ -1237,52 +1083,43 @@ typedef union _hw_nfc_swap
 /*!
  * @name Register NFC_SWAP, field ADDR2[11:1] (RW)
  */
-//@{
-#define BP_NFC_SWAP_ADDR2    (1U)          //!< Bit position for NFC_SWAP_ADDR2.
-#define BM_NFC_SWAP_ADDR2    (0x00000FFEU) //!< Bit mask for NFC_SWAP_ADDR2.
-#define BS_NFC_SWAP_ADDR2    (11U)         //!< Bit field size in bits for NFC_SWAP_ADDR2.
+/*@{*/
+#define BP_NFC_SWAP_ADDR2    (1U)          /*!< Bit position for NFC_SWAP_ADDR2. */
+#define BM_NFC_SWAP_ADDR2    (0x00000FFEU) /*!< Bit mask for NFC_SWAP_ADDR2. */
+#define BS_NFC_SWAP_ADDR2    (11U)         /*!< Bit field size in bits for NFC_SWAP_ADDR2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SWAP_ADDR2 field.
-#define BR_NFC_SWAP_ADDR2    (HW_NFC_SWAP.B.ADDR2)
-#endif
+/*! @brief Read current value of the NFC_SWAP_ADDR2 field. */
+#define BR_NFC_SWAP_ADDR2(x) (HW_NFC_SWAP(x).B.ADDR2)
 
-//! @brief Format value for bitfield NFC_SWAP_ADDR2.
-#define BF_NFC_SWAP_ADDR2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_SWAP_ADDR2), uint32_t) & BM_NFC_SWAP_ADDR2)
+/*! @brief Format value for bitfield NFC_SWAP_ADDR2. */
+#define BF_NFC_SWAP_ADDR2(v) ((uint32_t)((uint32_t)(v) << BP_NFC_SWAP_ADDR2) & BM_NFC_SWAP_ADDR2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDR2 field to a new value.
-#define BW_NFC_SWAP_ADDR2(v) (HW_NFC_SWAP_WR((HW_NFC_SWAP_RD() & ~BM_NFC_SWAP_ADDR2) | BF_NFC_SWAP_ADDR2(v)))
-#endif
-//@}
+/*! @brief Set the ADDR2 field to a new value. */
+#define BW_NFC_SWAP_ADDR2(x, v) (HW_NFC_SWAP_WR(x, (HW_NFC_SWAP_RD(x) & ~BM_NFC_SWAP_ADDR2) | BF_NFC_SWAP_ADDR2(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_SWAP, field ADDR1[27:17] (RW)
  */
-//@{
-#define BP_NFC_SWAP_ADDR1    (17U)         //!< Bit position for NFC_SWAP_ADDR1.
-#define BM_NFC_SWAP_ADDR1    (0x0FFE0000U) //!< Bit mask for NFC_SWAP_ADDR1.
-#define BS_NFC_SWAP_ADDR1    (11U)         //!< Bit field size in bits for NFC_SWAP_ADDR1.
+/*@{*/
+#define BP_NFC_SWAP_ADDR1    (17U)         /*!< Bit position for NFC_SWAP_ADDR1. */
+#define BM_NFC_SWAP_ADDR1    (0x0FFE0000U) /*!< Bit mask for NFC_SWAP_ADDR1. */
+#define BS_NFC_SWAP_ADDR1    (11U)         /*!< Bit field size in bits for NFC_SWAP_ADDR1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SWAP_ADDR1 field.
-#define BR_NFC_SWAP_ADDR1    (HW_NFC_SWAP.B.ADDR1)
-#endif
+/*! @brief Read current value of the NFC_SWAP_ADDR1 field. */
+#define BR_NFC_SWAP_ADDR1(x) (HW_NFC_SWAP(x).B.ADDR1)
 
-//! @brief Format value for bitfield NFC_SWAP_ADDR1.
-#define BF_NFC_SWAP_ADDR1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_SWAP_ADDR1), uint32_t) & BM_NFC_SWAP_ADDR1)
+/*! @brief Format value for bitfield NFC_SWAP_ADDR1. */
+#define BF_NFC_SWAP_ADDR1(v) ((uint32_t)((uint32_t)(v) << BP_NFC_SWAP_ADDR1) & BM_NFC_SWAP_ADDR1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDR1 field to a new value.
-#define BW_NFC_SWAP_ADDR1(v) (HW_NFC_SWAP_WR((HW_NFC_SWAP_RD() & ~BM_NFC_SWAP_ADDR1) | BF_NFC_SWAP_ADDR1(v)))
-#endif
-//@}
+/*! @brief Set the ADDR1 field to a new value. */
+#define BW_NFC_SWAP_ADDR1(x, v) (HW_NFC_SWAP_WR(x, (HW_NFC_SWAP_RD(x) & ~BM_NFC_SWAP_ADDR1) | BF_NFC_SWAP_ADDR1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_SECSZ - Sector size
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_SECSZ - Sector size
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_SECSZ - Sector size (RW)
  *
@@ -1293,28 +1130,25 @@ typedef union _hw_nfc_secsz
     uint32_t U;
     struct _hw_nfc_secsz_bitfields
     {
-        uint32_t SIZE : 13;            //!< [12:0] Size in bytes of one elementary
-                                       //! transfer unit
-        uint32_t RESERVED0 : 19;       //!< [31:13]
+        uint32_t SIZE : 13;            /*!< [12:0] Size in bytes of one elementary
+                                        * transfer unit */
+        uint32_t RESERVED0 : 19;       /*!< [31:13]  */
     } B;
 } hw_nfc_secsz_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_SECSZ register
  */
-//@{
-#define HW_NFC_SECSZ_ADDR        (REGS_NFC_BASE + 0x3F2CU)
+/*@{*/
+#define HW_NFC_SECSZ_ADDR(x)     ((x) + 0x3F2CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_SECSZ             (*(__IO hw_nfc_secsz_t *) HW_NFC_SECSZ_ADDR)
-#define HW_NFC_SECSZ_RD()        (HW_NFC_SECSZ.U)
-#define HW_NFC_SECSZ_WR(v)       (HW_NFC_SECSZ.U = (v))
-#define HW_NFC_SECSZ_SET(v)      (HW_NFC_SECSZ_WR(HW_NFC_SECSZ_RD() |  (v)))
-#define HW_NFC_SECSZ_CLR(v)      (HW_NFC_SECSZ_WR(HW_NFC_SECSZ_RD() & ~(v)))
-#define HW_NFC_SECSZ_TOG(v)      (HW_NFC_SECSZ_WR(HW_NFC_SECSZ_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_SECSZ(x)          (*(__IO hw_nfc_secsz_t *) HW_NFC_SECSZ_ADDR(x))
+#define HW_NFC_SECSZ_RD(x)       (HW_NFC_SECSZ(x).U)
+#define HW_NFC_SECSZ_WR(x, v)    (HW_NFC_SECSZ(x).U = (v))
+#define HW_NFC_SECSZ_SET(x, v)   (HW_NFC_SECSZ_WR(x, HW_NFC_SECSZ_RD(x) |  (v)))
+#define HW_NFC_SECSZ_CLR(x, v)   (HW_NFC_SECSZ_WR(x, HW_NFC_SECSZ_RD(x) & ~(v)))
+#define HW_NFC_SECSZ_TOG(x, v)   (HW_NFC_SECSZ_WR(x, HW_NFC_SECSZ_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_SECSZ bitfields
@@ -1336,30 +1170,25 @@ typedef union _hw_nfc_secsz
  * data is written or read. When programming NAND memory using the ECC feature,
  * ensure that SIZE is equal to the default value (data + ECC bytes).
  */
-//@{
-#define BP_NFC_SECSZ_SIZE    (0U)          //!< Bit position for NFC_SECSZ_SIZE.
-#define BM_NFC_SECSZ_SIZE    (0x00001FFFU) //!< Bit mask for NFC_SECSZ_SIZE.
-#define BS_NFC_SECSZ_SIZE    (13U)         //!< Bit field size in bits for NFC_SECSZ_SIZE.
+/*@{*/
+#define BP_NFC_SECSZ_SIZE    (0U)          /*!< Bit position for NFC_SECSZ_SIZE. */
+#define BM_NFC_SECSZ_SIZE    (0x00001FFFU) /*!< Bit mask for NFC_SECSZ_SIZE. */
+#define BS_NFC_SECSZ_SIZE    (13U)         /*!< Bit field size in bits for NFC_SECSZ_SIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_SECSZ_SIZE field.
-#define BR_NFC_SECSZ_SIZE    (HW_NFC_SECSZ.B.SIZE)
-#endif
+/*! @brief Read current value of the NFC_SECSZ_SIZE field. */
+#define BR_NFC_SECSZ_SIZE(x) (HW_NFC_SECSZ(x).B.SIZE)
 
-//! @brief Format value for bitfield NFC_SECSZ_SIZE.
-#define BF_NFC_SECSZ_SIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_SECSZ_SIZE), uint32_t) & BM_NFC_SECSZ_SIZE)
+/*! @brief Format value for bitfield NFC_SECSZ_SIZE. */
+#define BF_NFC_SECSZ_SIZE(v) ((uint32_t)((uint32_t)(v) << BP_NFC_SECSZ_SIZE) & BM_NFC_SECSZ_SIZE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SIZE field to a new value.
-#define BW_NFC_SECSZ_SIZE(v) (HW_NFC_SECSZ_WR((HW_NFC_SECSZ_RD() & ~BM_NFC_SECSZ_SIZE) | BF_NFC_SECSZ_SIZE(v)))
-#endif
-//@}
+/*! @brief Set the SIZE field to a new value. */
+#define BW_NFC_SECSZ_SIZE(x, v) (HW_NFC_SECSZ_WR(x, (HW_NFC_SECSZ_RD(x) & ~BM_NFC_SECSZ_SIZE) | BF_NFC_SECSZ_SIZE(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_CFG - Flash configuration
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_CFG - Flash configuration
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_CFG - Flash configuration (RW)
  *
@@ -1370,42 +1199,39 @@ typedef union _hw_nfc_cfg
     uint32_t U;
     struct _hw_nfc_cfg_bitfields
     {
-        uint32_t PAGECNT : 4;          //!< [3:0] Number of virtual pages (in one
-                                       //! physical flash page) to be programmed or read, etc.
-        uint32_t AIBN : 1;             //!< [4]
-        uint32_t AIAD : 1;             //!< [5]
-        uint32_t RESERVED0 : 1;        //!< [6]
-        uint32_t BITWIDTH : 1;         //!< [7]
-        uint32_t TIMEOUT : 5;          //!< [12:8]
-        uint32_t IDCNT : 3;            //!< [15:13] Number of bytes that are read for
-                                       //! the read id command.
-        uint32_t FAST : 1;             //!< [16] See the "Fast Flash Configuration for
-                                       //! EDO" section for more details.
-        uint32_t ECCMODE : 3;          //!< [19:17]
-        uint32_t DMAREQ : 1;           //!< [20]
-        uint32_t ECCSRAM : 1;          //!< [21]
-        uint32_t ECCAD : 9;            //!< [30:22] Byte address in SRAM where ECC
-                                       //! status is written.
-        uint32_t STOPWERR : 1;         //!< [31]
+        uint32_t PAGECNT : 4;          /*!< [3:0] Number of virtual pages (in one
+                                        * physical flash page) to be programmed or read, etc. */
+        uint32_t AIBN : 1;             /*!< [4]  */
+        uint32_t AIAD : 1;             /*!< [5]  */
+        uint32_t RESERVED0 : 1;        /*!< [6]  */
+        uint32_t BITWIDTH : 1;         /*!< [7]  */
+        uint32_t TIMEOUT : 5;          /*!< [12:8]  */
+        uint32_t IDCNT : 3;            /*!< [15:13] Number of bytes that are read for
+                                        * the read id command. */
+        uint32_t FAST : 1;             /*!< [16] See the "Fast Flash Configuration for
+                                        * EDO" section for more details. */
+        uint32_t ECCMODE : 3;          /*!< [19:17]  */
+        uint32_t DMAREQ : 1;           /*!< [20]  */
+        uint32_t ECCSRAM : 1;          /*!< [21]  */
+        uint32_t ECCAD : 9;            /*!< [30:22] Byte address in SRAM where ECC
+                                        * status is written. */
+        uint32_t STOPWERR : 1;         /*!< [31]  */
     } B;
 } hw_nfc_cfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_CFG register
  */
-//@{
-#define HW_NFC_CFG_ADDR          (REGS_NFC_BASE + 0x3F30U)
+/*@{*/
+#define HW_NFC_CFG_ADDR(x)       ((x) + 0x3F30U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_CFG               (*(__IO hw_nfc_cfg_t *) HW_NFC_CFG_ADDR)
-#define HW_NFC_CFG_RD()          (HW_NFC_CFG.U)
-#define HW_NFC_CFG_WR(v)         (HW_NFC_CFG.U = (v))
-#define HW_NFC_CFG_SET(v)        (HW_NFC_CFG_WR(HW_NFC_CFG_RD() |  (v)))
-#define HW_NFC_CFG_CLR(v)        (HW_NFC_CFG_WR(HW_NFC_CFG_RD() & ~(v)))
-#define HW_NFC_CFG_TOG(v)        (HW_NFC_CFG_WR(HW_NFC_CFG_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_CFG(x)            (*(__IO hw_nfc_cfg_t *) HW_NFC_CFG_ADDR(x))
+#define HW_NFC_CFG_RD(x)         (HW_NFC_CFG(x).U)
+#define HW_NFC_CFG_WR(x, v)      (HW_NFC_CFG(x).U = (v))
+#define HW_NFC_CFG_SET(x, v)     (HW_NFC_CFG_WR(x, HW_NFC_CFG_RD(x) |  (v)))
+#define HW_NFC_CFG_CLR(x, v)     (HW_NFC_CFG_WR(x, HW_NFC_CFG_RD(x) & ~(v)))
+#define HW_NFC_CFG_TOG(x, v)     (HW_NFC_CFG_WR(x, HW_NFC_CFG_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_CFG bitfields
@@ -1414,24 +1240,20 @@ typedef union _hw_nfc_cfg
 /*!
  * @name Register NFC_CFG, field PAGECNT[3:0] (RW)
  */
-//@{
-#define BP_NFC_CFG_PAGECNT   (0U)          //!< Bit position for NFC_CFG_PAGECNT.
-#define BM_NFC_CFG_PAGECNT   (0x0000000FU) //!< Bit mask for NFC_CFG_PAGECNT.
-#define BS_NFC_CFG_PAGECNT   (4U)          //!< Bit field size in bits for NFC_CFG_PAGECNT.
+/*@{*/
+#define BP_NFC_CFG_PAGECNT   (0U)          /*!< Bit position for NFC_CFG_PAGECNT. */
+#define BM_NFC_CFG_PAGECNT   (0x0000000FU) /*!< Bit mask for NFC_CFG_PAGECNT. */
+#define BS_NFC_CFG_PAGECNT   (4U)          /*!< Bit field size in bits for NFC_CFG_PAGECNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_PAGECNT field.
-#define BR_NFC_CFG_PAGECNT   (HW_NFC_CFG.B.PAGECNT)
-#endif
+/*! @brief Read current value of the NFC_CFG_PAGECNT field. */
+#define BR_NFC_CFG_PAGECNT(x) (HW_NFC_CFG(x).B.PAGECNT)
 
-//! @brief Format value for bitfield NFC_CFG_PAGECNT.
-#define BF_NFC_CFG_PAGECNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_PAGECNT), uint32_t) & BM_NFC_CFG_PAGECNT)
+/*! @brief Format value for bitfield NFC_CFG_PAGECNT. */
+#define BF_NFC_CFG_PAGECNT(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_PAGECNT) & BM_NFC_CFG_PAGECNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PAGECNT field to a new value.
-#define BW_NFC_CFG_PAGECNT(v) (HW_NFC_CFG_WR((HW_NFC_CFG_RD() & ~BM_NFC_CFG_PAGECNT) | BF_NFC_CFG_PAGECNT(v)))
-#endif
-//@}
+/*! @brief Set the PAGECNT field to a new value. */
+#define BW_NFC_CFG_PAGECNT(x, v) (HW_NFC_CFG_WR(x, (HW_NFC_CFG_RD(x) & ~BM_NFC_CFG_PAGECNT) | BF_NFC_CFG_PAGECNT(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field AIBN[4] (RW)
@@ -1440,24 +1262,20 @@ typedef union _hw_nfc_cfg
  * - 0 - Do not auto-increment buffer number
  * - 1 - Auto-increment buffer number
  */
-//@{
-#define BP_NFC_CFG_AIBN      (4U)          //!< Bit position for NFC_CFG_AIBN.
-#define BM_NFC_CFG_AIBN      (0x00000010U) //!< Bit mask for NFC_CFG_AIBN.
-#define BS_NFC_CFG_AIBN      (1U)          //!< Bit field size in bits for NFC_CFG_AIBN.
+/*@{*/
+#define BP_NFC_CFG_AIBN      (4U)          /*!< Bit position for NFC_CFG_AIBN. */
+#define BM_NFC_CFG_AIBN      (0x00000010U) /*!< Bit mask for NFC_CFG_AIBN. */
+#define BS_NFC_CFG_AIBN      (1U)          /*!< Bit field size in bits for NFC_CFG_AIBN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_AIBN field.
-#define BR_NFC_CFG_AIBN      (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_AIBN))
-#endif
+/*! @brief Read current value of the NFC_CFG_AIBN field. */
+#define BR_NFC_CFG_AIBN(x)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_AIBN))
 
-//! @brief Format value for bitfield NFC_CFG_AIBN.
-#define BF_NFC_CFG_AIBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_AIBN), uint32_t) & BM_NFC_CFG_AIBN)
+/*! @brief Format value for bitfield NFC_CFG_AIBN. */
+#define BF_NFC_CFG_AIBN(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_AIBN) & BM_NFC_CFG_AIBN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AIBN field to a new value.
-#define BW_NFC_CFG_AIBN(v)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_AIBN) = (v))
-#endif
-//@}
+/*! @brief Set the AIBN field to a new value. */
+#define BW_NFC_CFG_AIBN(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_AIBN) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field AIAD[5] (RW)
@@ -1466,24 +1284,20 @@ typedef union _hw_nfc_cfg
  * - 0 - Do not auto-increment flash row address
  * - 1 - Auto-increment flash row address
  */
-//@{
-#define BP_NFC_CFG_AIAD      (5U)          //!< Bit position for NFC_CFG_AIAD.
-#define BM_NFC_CFG_AIAD      (0x00000020U) //!< Bit mask for NFC_CFG_AIAD.
-#define BS_NFC_CFG_AIAD      (1U)          //!< Bit field size in bits for NFC_CFG_AIAD.
+/*@{*/
+#define BP_NFC_CFG_AIAD      (5U)          /*!< Bit position for NFC_CFG_AIAD. */
+#define BM_NFC_CFG_AIAD      (0x00000020U) /*!< Bit mask for NFC_CFG_AIAD. */
+#define BS_NFC_CFG_AIAD      (1U)          /*!< Bit field size in bits for NFC_CFG_AIAD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_AIAD field.
-#define BR_NFC_CFG_AIAD      (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_AIAD))
-#endif
+/*! @brief Read current value of the NFC_CFG_AIAD field. */
+#define BR_NFC_CFG_AIAD(x)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_AIAD))
 
-//! @brief Format value for bitfield NFC_CFG_AIAD.
-#define BF_NFC_CFG_AIAD(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_AIAD), uint32_t) & BM_NFC_CFG_AIAD)
+/*! @brief Format value for bitfield NFC_CFG_AIAD. */
+#define BF_NFC_CFG_AIAD(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_AIAD) & BM_NFC_CFG_AIAD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AIAD field to a new value.
-#define BW_NFC_CFG_AIAD(v)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_AIAD) = (v))
-#endif
-//@}
+/*! @brief Set the AIAD field to a new value. */
+#define BW_NFC_CFG_AIAD(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_AIAD) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field BITWIDTH[7] (RW)
@@ -1492,24 +1306,20 @@ typedef union _hw_nfc_cfg
  * - 0 - 8-bit wide flash mode
  * - 1 - 16-bit wide flash mode
  */
-//@{
-#define BP_NFC_CFG_BITWIDTH  (7U)          //!< Bit position for NFC_CFG_BITWIDTH.
-#define BM_NFC_CFG_BITWIDTH  (0x00000080U) //!< Bit mask for NFC_CFG_BITWIDTH.
-#define BS_NFC_CFG_BITWIDTH  (1U)          //!< Bit field size in bits for NFC_CFG_BITWIDTH.
+/*@{*/
+#define BP_NFC_CFG_BITWIDTH  (7U)          /*!< Bit position for NFC_CFG_BITWIDTH. */
+#define BM_NFC_CFG_BITWIDTH  (0x00000080U) /*!< Bit mask for NFC_CFG_BITWIDTH. */
+#define BS_NFC_CFG_BITWIDTH  (1U)          /*!< Bit field size in bits for NFC_CFG_BITWIDTH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_BITWIDTH field.
-#define BR_NFC_CFG_BITWIDTH  (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_BITWIDTH))
-#endif
+/*! @brief Read current value of the NFC_CFG_BITWIDTH field. */
+#define BR_NFC_CFG_BITWIDTH(x) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_BITWIDTH))
 
-//! @brief Format value for bitfield NFC_CFG_BITWIDTH.
-#define BF_NFC_CFG_BITWIDTH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_BITWIDTH), uint32_t) & BM_NFC_CFG_BITWIDTH)
+/*! @brief Format value for bitfield NFC_CFG_BITWIDTH. */
+#define BF_NFC_CFG_BITWIDTH(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_BITWIDTH) & BM_NFC_CFG_BITWIDTH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BITWIDTH field to a new value.
-#define BW_NFC_CFG_BITWIDTH(v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_BITWIDTH) = (v))
-#endif
-//@}
+/*! @brief Set the BITWIDTH field to a new value. */
+#define BW_NFC_CFG_BITWIDTH(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_BITWIDTH) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field TIMEOUT[12:8] (RW)
@@ -1525,46 +1335,38 @@ typedef union _hw_nfc_cfg
  * to read the valid status or ID. t WB exists in page program/read, block erase,
  * etc. Refer to the NAND flash datasheet for details of t WB and t WHR .
  */
-//@{
-#define BP_NFC_CFG_TIMEOUT   (8U)          //!< Bit position for NFC_CFG_TIMEOUT.
-#define BM_NFC_CFG_TIMEOUT   (0x00001F00U) //!< Bit mask for NFC_CFG_TIMEOUT.
-#define BS_NFC_CFG_TIMEOUT   (5U)          //!< Bit field size in bits for NFC_CFG_TIMEOUT.
+/*@{*/
+#define BP_NFC_CFG_TIMEOUT   (8U)          /*!< Bit position for NFC_CFG_TIMEOUT. */
+#define BM_NFC_CFG_TIMEOUT   (0x00001F00U) /*!< Bit mask for NFC_CFG_TIMEOUT. */
+#define BS_NFC_CFG_TIMEOUT   (5U)          /*!< Bit field size in bits for NFC_CFG_TIMEOUT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_TIMEOUT field.
-#define BR_NFC_CFG_TIMEOUT   (HW_NFC_CFG.B.TIMEOUT)
-#endif
+/*! @brief Read current value of the NFC_CFG_TIMEOUT field. */
+#define BR_NFC_CFG_TIMEOUT(x) (HW_NFC_CFG(x).B.TIMEOUT)
 
-//! @brief Format value for bitfield NFC_CFG_TIMEOUT.
-#define BF_NFC_CFG_TIMEOUT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_TIMEOUT), uint32_t) & BM_NFC_CFG_TIMEOUT)
+/*! @brief Format value for bitfield NFC_CFG_TIMEOUT. */
+#define BF_NFC_CFG_TIMEOUT(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_TIMEOUT) & BM_NFC_CFG_TIMEOUT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIMEOUT field to a new value.
-#define BW_NFC_CFG_TIMEOUT(v) (HW_NFC_CFG_WR((HW_NFC_CFG_RD() & ~BM_NFC_CFG_TIMEOUT) | BF_NFC_CFG_TIMEOUT(v)))
-#endif
-//@}
+/*! @brief Set the TIMEOUT field to a new value. */
+#define BW_NFC_CFG_TIMEOUT(x, v) (HW_NFC_CFG_WR(x, (HW_NFC_CFG_RD(x) & ~BM_NFC_CFG_TIMEOUT) | BF_NFC_CFG_TIMEOUT(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field IDCNT[15:13] (RW)
  */
-//@{
-#define BP_NFC_CFG_IDCNT     (13U)         //!< Bit position for NFC_CFG_IDCNT.
-#define BM_NFC_CFG_IDCNT     (0x0000E000U) //!< Bit mask for NFC_CFG_IDCNT.
-#define BS_NFC_CFG_IDCNT     (3U)          //!< Bit field size in bits for NFC_CFG_IDCNT.
+/*@{*/
+#define BP_NFC_CFG_IDCNT     (13U)         /*!< Bit position for NFC_CFG_IDCNT. */
+#define BM_NFC_CFG_IDCNT     (0x0000E000U) /*!< Bit mask for NFC_CFG_IDCNT. */
+#define BS_NFC_CFG_IDCNT     (3U)          /*!< Bit field size in bits for NFC_CFG_IDCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_IDCNT field.
-#define BR_NFC_CFG_IDCNT     (HW_NFC_CFG.B.IDCNT)
-#endif
+/*! @brief Read current value of the NFC_CFG_IDCNT field. */
+#define BR_NFC_CFG_IDCNT(x)  (HW_NFC_CFG(x).B.IDCNT)
 
-//! @brief Format value for bitfield NFC_CFG_IDCNT.
-#define BF_NFC_CFG_IDCNT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_IDCNT), uint32_t) & BM_NFC_CFG_IDCNT)
+/*! @brief Format value for bitfield NFC_CFG_IDCNT. */
+#define BF_NFC_CFG_IDCNT(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_IDCNT) & BM_NFC_CFG_IDCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDCNT field to a new value.
-#define BW_NFC_CFG_IDCNT(v)  (HW_NFC_CFG_WR((HW_NFC_CFG_RD() & ~BM_NFC_CFG_IDCNT) | BF_NFC_CFG_IDCNT(v)))
-#endif
-//@}
+/*! @brief Set the IDCNT field to a new value. */
+#define BW_NFC_CFG_IDCNT(x, v) (HW_NFC_CFG_WR(x, (HW_NFC_CFG_RD(x) & ~BM_NFC_CFG_IDCNT) | BF_NFC_CFG_IDCNT(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field FAST[16] (RW)
@@ -1574,24 +1376,20 @@ typedef union _hw_nfc_cfg
  * - 1 - Fast flash timing. Clock in read data a half clock later than rising
  *     edge of read strobe
  */
-//@{
-#define BP_NFC_CFG_FAST      (16U)         //!< Bit position for NFC_CFG_FAST.
-#define BM_NFC_CFG_FAST      (0x00010000U) //!< Bit mask for NFC_CFG_FAST.
-#define BS_NFC_CFG_FAST      (1U)          //!< Bit field size in bits for NFC_CFG_FAST.
+/*@{*/
+#define BP_NFC_CFG_FAST      (16U)         /*!< Bit position for NFC_CFG_FAST. */
+#define BM_NFC_CFG_FAST      (0x00010000U) /*!< Bit mask for NFC_CFG_FAST. */
+#define BS_NFC_CFG_FAST      (1U)          /*!< Bit field size in bits for NFC_CFG_FAST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_FAST field.
-#define BR_NFC_CFG_FAST      (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_FAST))
-#endif
+/*! @brief Read current value of the NFC_CFG_FAST field. */
+#define BR_NFC_CFG_FAST(x)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_FAST))
 
-//! @brief Format value for bitfield NFC_CFG_FAST.
-#define BF_NFC_CFG_FAST(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_FAST), uint32_t) & BM_NFC_CFG_FAST)
+/*! @brief Format value for bitfield NFC_CFG_FAST. */
+#define BF_NFC_CFG_FAST(v)   ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_FAST) & BM_NFC_CFG_FAST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FAST field to a new value.
-#define BW_NFC_CFG_FAST(v)   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_FAST) = (v))
-#endif
-//@}
+/*! @brief Set the FAST field to a new value. */
+#define BW_NFC_CFG_FAST(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_FAST) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field ECCMODE[19:17] (RW)
@@ -1606,24 +1404,20 @@ typedef union _hw_nfc_cfg
  * - 110 - 24-error correction (45 ECC bytes)
  * - 111 - 32-error correction (60 ECC bytes)
  */
-//@{
-#define BP_NFC_CFG_ECCMODE   (17U)         //!< Bit position for NFC_CFG_ECCMODE.
-#define BM_NFC_CFG_ECCMODE   (0x000E0000U) //!< Bit mask for NFC_CFG_ECCMODE.
-#define BS_NFC_CFG_ECCMODE   (3U)          //!< Bit field size in bits for NFC_CFG_ECCMODE.
+/*@{*/
+#define BP_NFC_CFG_ECCMODE   (17U)         /*!< Bit position for NFC_CFG_ECCMODE. */
+#define BM_NFC_CFG_ECCMODE   (0x000E0000U) /*!< Bit mask for NFC_CFG_ECCMODE. */
+#define BS_NFC_CFG_ECCMODE   (3U)          /*!< Bit field size in bits for NFC_CFG_ECCMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_ECCMODE field.
-#define BR_NFC_CFG_ECCMODE   (HW_NFC_CFG.B.ECCMODE)
-#endif
+/*! @brief Read current value of the NFC_CFG_ECCMODE field. */
+#define BR_NFC_CFG_ECCMODE(x) (HW_NFC_CFG(x).B.ECCMODE)
 
-//! @brief Format value for bitfield NFC_CFG_ECCMODE.
-#define BF_NFC_CFG_ECCMODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_ECCMODE), uint32_t) & BM_NFC_CFG_ECCMODE)
+/*! @brief Format value for bitfield NFC_CFG_ECCMODE. */
+#define BF_NFC_CFG_ECCMODE(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_ECCMODE) & BM_NFC_CFG_ECCMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ECCMODE field to a new value.
-#define BW_NFC_CFG_ECCMODE(v) (HW_NFC_CFG_WR((HW_NFC_CFG_RD() & ~BM_NFC_CFG_ECCMODE) | BF_NFC_CFG_ECCMODE(v)))
-#endif
-//@}
+/*! @brief Set the ECCMODE field to a new value. */
+#define BW_NFC_CFG_ECCMODE(x, v) (HW_NFC_CFG_WR(x, (HW_NFC_CFG_RD(x) & ~BM_NFC_CFG_ECCMODE) | BF_NFC_CFG_ECCMODE(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field DMAREQ[20] (RW)
@@ -1632,24 +1426,20 @@ typedef union _hw_nfc_cfg
  * - 0 - Do not transfer sector after ECC done
  * - 1 - After ECC done, transfer sector using DMA
  */
-//@{
-#define BP_NFC_CFG_DMAREQ    (20U)         //!< Bit position for NFC_CFG_DMAREQ.
-#define BM_NFC_CFG_DMAREQ    (0x00100000U) //!< Bit mask for NFC_CFG_DMAREQ.
-#define BS_NFC_CFG_DMAREQ    (1U)          //!< Bit field size in bits for NFC_CFG_DMAREQ.
+/*@{*/
+#define BP_NFC_CFG_DMAREQ    (20U)         /*!< Bit position for NFC_CFG_DMAREQ. */
+#define BM_NFC_CFG_DMAREQ    (0x00100000U) /*!< Bit mask for NFC_CFG_DMAREQ. */
+#define BS_NFC_CFG_DMAREQ    (1U)          /*!< Bit field size in bits for NFC_CFG_DMAREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_DMAREQ field.
-#define BR_NFC_CFG_DMAREQ    (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_DMAREQ))
-#endif
+/*! @brief Read current value of the NFC_CFG_DMAREQ field. */
+#define BR_NFC_CFG_DMAREQ(x) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_DMAREQ))
 
-//! @brief Format value for bitfield NFC_CFG_DMAREQ.
-#define BF_NFC_CFG_DMAREQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_DMAREQ), uint32_t) & BM_NFC_CFG_DMAREQ)
+/*! @brief Format value for bitfield NFC_CFG_DMAREQ. */
+#define BF_NFC_CFG_DMAREQ(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_DMAREQ) & BM_NFC_CFG_DMAREQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAREQ field to a new value.
-#define BW_NFC_CFG_DMAREQ(v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_DMAREQ) = (v))
-#endif
-//@}
+/*! @brief Set the DMAREQ field to a new value. */
+#define BW_NFC_CFG_DMAREQ(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_DMAREQ) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field ECCSRAM[21] (RW)
@@ -1658,46 +1448,38 @@ typedef union _hw_nfc_cfg
  * - 0 - Do not write ECC status to SRAM
  * - 1 - Write ECC status to SRAM
  */
-//@{
-#define BP_NFC_CFG_ECCSRAM   (21U)         //!< Bit position for NFC_CFG_ECCSRAM.
-#define BM_NFC_CFG_ECCSRAM   (0x00200000U) //!< Bit mask for NFC_CFG_ECCSRAM.
-#define BS_NFC_CFG_ECCSRAM   (1U)          //!< Bit field size in bits for NFC_CFG_ECCSRAM.
+/*@{*/
+#define BP_NFC_CFG_ECCSRAM   (21U)         /*!< Bit position for NFC_CFG_ECCSRAM. */
+#define BM_NFC_CFG_ECCSRAM   (0x00200000U) /*!< Bit mask for NFC_CFG_ECCSRAM. */
+#define BS_NFC_CFG_ECCSRAM   (1U)          /*!< Bit field size in bits for NFC_CFG_ECCSRAM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_ECCSRAM field.
-#define BR_NFC_CFG_ECCSRAM   (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_ECCSRAM))
-#endif
+/*! @brief Read current value of the NFC_CFG_ECCSRAM field. */
+#define BR_NFC_CFG_ECCSRAM(x) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_ECCSRAM))
 
-//! @brief Format value for bitfield NFC_CFG_ECCSRAM.
-#define BF_NFC_CFG_ECCSRAM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_ECCSRAM), uint32_t) & BM_NFC_CFG_ECCSRAM)
+/*! @brief Format value for bitfield NFC_CFG_ECCSRAM. */
+#define BF_NFC_CFG_ECCSRAM(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_ECCSRAM) & BM_NFC_CFG_ECCSRAM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ECCSRAM field to a new value.
-#define BW_NFC_CFG_ECCSRAM(v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_ECCSRAM) = (v))
-#endif
-//@}
+/*! @brief Set the ECCSRAM field to a new value. */
+#define BW_NFC_CFG_ECCSRAM(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_ECCSRAM) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field ECCAD[30:22] (RW)
  */
-//@{
-#define BP_NFC_CFG_ECCAD     (22U)         //!< Bit position for NFC_CFG_ECCAD.
-#define BM_NFC_CFG_ECCAD     (0x7FC00000U) //!< Bit mask for NFC_CFG_ECCAD.
-#define BS_NFC_CFG_ECCAD     (9U)          //!< Bit field size in bits for NFC_CFG_ECCAD.
+/*@{*/
+#define BP_NFC_CFG_ECCAD     (22U)         /*!< Bit position for NFC_CFG_ECCAD. */
+#define BM_NFC_CFG_ECCAD     (0x7FC00000U) /*!< Bit mask for NFC_CFG_ECCAD. */
+#define BS_NFC_CFG_ECCAD     (9U)          /*!< Bit field size in bits for NFC_CFG_ECCAD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_ECCAD field.
-#define BR_NFC_CFG_ECCAD     (HW_NFC_CFG.B.ECCAD)
-#endif
+/*! @brief Read current value of the NFC_CFG_ECCAD field. */
+#define BR_NFC_CFG_ECCAD(x)  (HW_NFC_CFG(x).B.ECCAD)
 
-//! @brief Format value for bitfield NFC_CFG_ECCAD.
-#define BF_NFC_CFG_ECCAD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_ECCAD), uint32_t) & BM_NFC_CFG_ECCAD)
+/*! @brief Format value for bitfield NFC_CFG_ECCAD. */
+#define BF_NFC_CFG_ECCAD(v)  ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_ECCAD) & BM_NFC_CFG_ECCAD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ECCAD field to a new value.
-#define BW_NFC_CFG_ECCAD(v)  (HW_NFC_CFG_WR((HW_NFC_CFG_RD() & ~BM_NFC_CFG_ECCAD) | BF_NFC_CFG_ECCAD(v)))
-#endif
-//@}
+/*! @brief Set the ECCAD field to a new value. */
+#define BW_NFC_CFG_ECCAD(x, v) (HW_NFC_CFG_WR(x, (HW_NFC_CFG_RD(x) & ~BM_NFC_CFG_ECCAD) | BF_NFC_CFG_ECCAD(v)))
+/*@}*/
 
 /*!
  * @name Register NFC_CFG, field STOPWERR[31] (RW)
@@ -1706,30 +1488,25 @@ typedef union _hw_nfc_cfg
  * - 0 - No stop on write error
  * - 1 - Auto-sequencer stops on a write error
  */
-//@{
-#define BP_NFC_CFG_STOPWERR  (31U)         //!< Bit position for NFC_CFG_STOPWERR.
-#define BM_NFC_CFG_STOPWERR  (0x80000000U) //!< Bit mask for NFC_CFG_STOPWERR.
-#define BS_NFC_CFG_STOPWERR  (1U)          //!< Bit field size in bits for NFC_CFG_STOPWERR.
+/*@{*/
+#define BP_NFC_CFG_STOPWERR  (31U)         /*!< Bit position for NFC_CFG_STOPWERR. */
+#define BM_NFC_CFG_STOPWERR  (0x80000000U) /*!< Bit mask for NFC_CFG_STOPWERR. */
+#define BS_NFC_CFG_STOPWERR  (1U)          /*!< Bit field size in bits for NFC_CFG_STOPWERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_CFG_STOPWERR field.
-#define BR_NFC_CFG_STOPWERR  (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_STOPWERR))
-#endif
+/*! @brief Read current value of the NFC_CFG_STOPWERR field. */
+#define BR_NFC_CFG_STOPWERR(x) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_STOPWERR))
 
-//! @brief Format value for bitfield NFC_CFG_STOPWERR.
-#define BF_NFC_CFG_STOPWERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_CFG_STOPWERR), uint32_t) & BM_NFC_CFG_STOPWERR)
+/*! @brief Format value for bitfield NFC_CFG_STOPWERR. */
+#define BF_NFC_CFG_STOPWERR(v) ((uint32_t)((uint32_t)(v) << BP_NFC_CFG_STOPWERR) & BM_NFC_CFG_STOPWERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the STOPWERR field to a new value.
-#define BW_NFC_CFG_STOPWERR(v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR, BP_NFC_CFG_STOPWERR) = (v))
-#endif
-//@}
+/*! @brief Set the STOPWERR field to a new value. */
+#define BW_NFC_CFG_STOPWERR(x, v) (BITBAND_ACCESS32(HW_NFC_CFG_ADDR(x), BP_NFC_CFG_STOPWERR) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_DMA2 - DMA channel 2 address
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_DMA2 - DMA channel 2 address
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_DMA2 - DMA channel 2 address (RW)
  *
@@ -1740,27 +1517,24 @@ typedef union _hw_nfc_dma2
     uint32_t U;
     struct _hw_nfc_dma2_bitfields
     {
-        uint32_t ADDRESS : 32;         //!< [31:0] DMA channel 2 address. DMA channel
-                                       //! 2 address, it is 8-byte aligned.
+        uint32_t ADDRESS : 32;         /*!< [31:0] DMA channel 2 address. DMA channel
+                                        * 2 address, it is 8-byte aligned. */
     } B;
 } hw_nfc_dma2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_DMA2 register
  */
-//@{
-#define HW_NFC_DMA2_ADDR         (REGS_NFC_BASE + 0x3F34U)
+/*@{*/
+#define HW_NFC_DMA2_ADDR(x)      ((x) + 0x3F34U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_DMA2              (*(__IO hw_nfc_dma2_t *) HW_NFC_DMA2_ADDR)
-#define HW_NFC_DMA2_RD()         (HW_NFC_DMA2.U)
-#define HW_NFC_DMA2_WR(v)        (HW_NFC_DMA2.U = (v))
-#define HW_NFC_DMA2_SET(v)       (HW_NFC_DMA2_WR(HW_NFC_DMA2_RD() |  (v)))
-#define HW_NFC_DMA2_CLR(v)       (HW_NFC_DMA2_WR(HW_NFC_DMA2_RD() & ~(v)))
-#define HW_NFC_DMA2_TOG(v)       (HW_NFC_DMA2_WR(HW_NFC_DMA2_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_DMA2(x)           (*(__IO hw_nfc_dma2_t *) HW_NFC_DMA2_ADDR(x))
+#define HW_NFC_DMA2_RD(x)        (HW_NFC_DMA2(x).U)
+#define HW_NFC_DMA2_WR(x, v)     (HW_NFC_DMA2(x).U = (v))
+#define HW_NFC_DMA2_SET(x, v)    (HW_NFC_DMA2_WR(x, HW_NFC_DMA2_RD(x) |  (v)))
+#define HW_NFC_DMA2_CLR(x, v)    (HW_NFC_DMA2_WR(x, HW_NFC_DMA2_RD(x) & ~(v)))
+#define HW_NFC_DMA2_TOG(x, v)    (HW_NFC_DMA2_WR(x, HW_NFC_DMA2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_DMA2 bitfields
@@ -1769,30 +1543,25 @@ typedef union _hw_nfc_dma2
 /*!
  * @name Register NFC_DMA2, field ADDRESS[31:0] (RW)
  */
-//@{
-#define BP_NFC_DMA2_ADDRESS  (0U)          //!< Bit position for NFC_DMA2_ADDRESS.
-#define BM_NFC_DMA2_ADDRESS  (0xFFFFFFFFU) //!< Bit mask for NFC_DMA2_ADDRESS.
-#define BS_NFC_DMA2_ADDRESS  (32U)         //!< Bit field size in bits for NFC_DMA2_ADDRESS.
+/*@{*/
+#define BP_NFC_DMA2_ADDRESS  (0U)          /*!< Bit position for NFC_DMA2_ADDRESS. */
+#define BM_NFC_DMA2_ADDRESS  (0xFFFFFFFFU) /*!< Bit mask for NFC_DMA2_ADDRESS. */
+#define BS_NFC_DMA2_ADDRESS  (32U)         /*!< Bit field size in bits for NFC_DMA2_ADDRESS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_DMA2_ADDRESS field.
-#define BR_NFC_DMA2_ADDRESS  (HW_NFC_DMA2.B.ADDRESS)
-#endif
+/*! @brief Read current value of the NFC_DMA2_ADDRESS field. */
+#define BR_NFC_DMA2_ADDRESS(x) (HW_NFC_DMA2(x).U)
 
-//! @brief Format value for bitfield NFC_DMA2_ADDRESS.
-#define BF_NFC_DMA2_ADDRESS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_DMA2_ADDRESS), uint32_t) & BM_NFC_DMA2_ADDRESS)
+/*! @brief Format value for bitfield NFC_DMA2_ADDRESS. */
+#define BF_NFC_DMA2_ADDRESS(v) ((uint32_t)((uint32_t)(v) << BP_NFC_DMA2_ADDRESS) & BM_NFC_DMA2_ADDRESS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDRESS field to a new value.
-#define BW_NFC_DMA2_ADDRESS(v) (HW_NFC_DMA2_WR((HW_NFC_DMA2_RD() & ~BM_NFC_DMA2_ADDRESS) | BF_NFC_DMA2_ADDRESS(v)))
-#endif
-//@}
+/*! @brief Set the ADDRESS field to a new value. */
+#define BW_NFC_DMA2_ADDRESS(x, v) (HW_NFC_DMA2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_NFC_ISR - Interrupt status
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_NFC_ISR - Interrupt status
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_NFC_ISR - Interrupt status (RW)
  *
@@ -1803,44 +1572,41 @@ typedef union _hw_nfc_isr
     uint32_t U;
     struct _hw_nfc_isr_bitfields
     {
-        uint32_t DMABN : 2;            //!< [1:0] DMA buffer number
-        uint32_t ECCBN : 2;            //!< [3:2] ECC buffer number
-        uint32_t RESBN : 2;            //!< [5:4] Residue buffer number
-        uint32_t RESERVED0 : 11;       //!< [16:6]
-        uint32_t IDLECLR : 1;          //!< [17]
-        uint32_t DONECLR : 1;          //!< [18]
-        uint32_t WERRCLR : 1;          //!< [19]
-        uint32_t IDLEEN : 1;           //!< [20]
-        uint32_t DONEEN : 1;           //!< [21]
-        uint32_t WERREN : 1;           //!< [22]
-        uint32_t DMABUSY : 1;          //!< [23] DMA engine busy
-        uint32_t ECCBUSY : 1;          //!< [24] ECC engine busy
-        uint32_t RESBUSY : 1;          //!< [25] Residue engine busy
-        uint32_t CMDBUSY : 1;          //!< [26] Command busy
-        uint32_t WERRNS : 1;           //!< [27] Write error status
-        uint32_t RESERVED1 : 1;        //!< [28]
-        uint32_t IDLE : 1;             //!< [29] Command idle interrupt
-        uint32_t DONE : 1;             //!< [30] Done interrupt
-        uint32_t WERR : 1;             //!< [31] Write error interrupt
+        uint32_t DMABN : 2;            /*!< [1:0] DMA buffer number */
+        uint32_t ECCBN : 2;            /*!< [3:2] ECC buffer number */
+        uint32_t RESBN : 2;            /*!< [5:4] Residue buffer number */
+        uint32_t RESERVED0 : 11;       /*!< [16:6]  */
+        uint32_t IDLECLR : 1;          /*!< [17]  */
+        uint32_t DONECLR : 1;          /*!< [18]  */
+        uint32_t WERRCLR : 1;          /*!< [19]  */
+        uint32_t IDLEEN : 1;           /*!< [20]  */
+        uint32_t DONEEN : 1;           /*!< [21]  */
+        uint32_t WERREN : 1;           /*!< [22]  */
+        uint32_t DMABUSY : 1;          /*!< [23] DMA engine busy */
+        uint32_t ECCBUSY : 1;          /*!< [24] ECC engine busy */
+        uint32_t RESBUSY : 1;          /*!< [25] Residue engine busy */
+        uint32_t CMDBUSY : 1;          /*!< [26] Command busy */
+        uint32_t WERRNS : 1;           /*!< [27] Write error status */
+        uint32_t RESERVED1 : 1;        /*!< [28]  */
+        uint32_t IDLE : 1;             /*!< [29] Command idle interrupt */
+        uint32_t DONE : 1;             /*!< [30] Done interrupt */
+        uint32_t WERR : 1;             /*!< [31] Write error interrupt */
     } B;
 } hw_nfc_isr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire NFC_ISR register
  */
-//@{
-#define HW_NFC_ISR_ADDR          (REGS_NFC_BASE + 0x3F38U)
+/*@{*/
+#define HW_NFC_ISR_ADDR(x)       ((x) + 0x3F38U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_NFC_ISR               (*(__IO hw_nfc_isr_t *) HW_NFC_ISR_ADDR)
-#define HW_NFC_ISR_RD()          (HW_NFC_ISR.U)
-#define HW_NFC_ISR_WR(v)         (HW_NFC_ISR.U = (v))
-#define HW_NFC_ISR_SET(v)        (HW_NFC_ISR_WR(HW_NFC_ISR_RD() |  (v)))
-#define HW_NFC_ISR_CLR(v)        (HW_NFC_ISR_WR(HW_NFC_ISR_RD() & ~(v)))
-#define HW_NFC_ISR_TOG(v)        (HW_NFC_ISR_WR(HW_NFC_ISR_RD() ^  (v)))
-#endif
-//@}
+#define HW_NFC_ISR(x)            (*(__IO hw_nfc_isr_t *) HW_NFC_ISR_ADDR(x))
+#define HW_NFC_ISR_RD(x)         (HW_NFC_ISR(x).U)
+#define HW_NFC_ISR_WR(x, v)      (HW_NFC_ISR(x).U = (v))
+#define HW_NFC_ISR_SET(x, v)     (HW_NFC_ISR_WR(x, HW_NFC_ISR_RD(x) |  (v)))
+#define HW_NFC_ISR_CLR(x, v)     (HW_NFC_ISR_WR(x, HW_NFC_ISR_RD(x) & ~(v)))
+#define HW_NFC_ISR_TOG(x, v)     (HW_NFC_ISR_WR(x, HW_NFC_ISR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual NFC_ISR bitfields
@@ -1851,256 +1617,218 @@ typedef union _hw_nfc_isr
  *
  * Buffer number corresponding with the current DMA task.
  */
-//@{
-#define BP_NFC_ISR_DMABN     (0U)          //!< Bit position for NFC_ISR_DMABN.
-#define BM_NFC_ISR_DMABN     (0x00000003U) //!< Bit mask for NFC_ISR_DMABN.
-#define BS_NFC_ISR_DMABN     (2U)          //!< Bit field size in bits for NFC_ISR_DMABN.
+/*@{*/
+#define BP_NFC_ISR_DMABN     (0U)          /*!< Bit position for NFC_ISR_DMABN. */
+#define BM_NFC_ISR_DMABN     (0x00000003U) /*!< Bit mask for NFC_ISR_DMABN. */
+#define BS_NFC_ISR_DMABN     (2U)          /*!< Bit field size in bits for NFC_ISR_DMABN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_DMABN field.
-#define BR_NFC_ISR_DMABN     (HW_NFC_ISR.B.DMABN)
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_DMABN field. */
+#define BR_NFC_ISR_DMABN(x)  (HW_NFC_ISR(x).B.DMABN)
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field ECCBN[3:2] (RO)
  *
  * Buffer number corresponding with the current ECC task.
  */
-//@{
-#define BP_NFC_ISR_ECCBN     (2U)          //!< Bit position for NFC_ISR_ECCBN.
-#define BM_NFC_ISR_ECCBN     (0x0000000CU) //!< Bit mask for NFC_ISR_ECCBN.
-#define BS_NFC_ISR_ECCBN     (2U)          //!< Bit field size in bits for NFC_ISR_ECCBN.
+/*@{*/
+#define BP_NFC_ISR_ECCBN     (2U)          /*!< Bit position for NFC_ISR_ECCBN. */
+#define BM_NFC_ISR_ECCBN     (0x0000000CU) /*!< Bit mask for NFC_ISR_ECCBN. */
+#define BS_NFC_ISR_ECCBN     (2U)          /*!< Bit field size in bits for NFC_ISR_ECCBN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_ECCBN field.
-#define BR_NFC_ISR_ECCBN     (HW_NFC_ISR.B.ECCBN)
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_ECCBN field. */
+#define BR_NFC_ISR_ECCBN(x)  (HW_NFC_ISR(x).B.ECCBN)
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field RESBN[5:4] (RO)
  *
  * Buffer number corresponding with the current residue block task.
  */
-//@{
-#define BP_NFC_ISR_RESBN     (4U)          //!< Bit position for NFC_ISR_RESBN.
-#define BM_NFC_ISR_RESBN     (0x00000030U) //!< Bit mask for NFC_ISR_RESBN.
-#define BS_NFC_ISR_RESBN     (2U)          //!< Bit field size in bits for NFC_ISR_RESBN.
+/*@{*/
+#define BP_NFC_ISR_RESBN     (4U)          /*!< Bit position for NFC_ISR_RESBN. */
+#define BM_NFC_ISR_RESBN     (0x00000030U) /*!< Bit mask for NFC_ISR_RESBN. */
+#define BS_NFC_ISR_RESBN     (2U)          /*!< Bit field size in bits for NFC_ISR_RESBN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_RESBN field.
-#define BR_NFC_ISR_RESBN     (HW_NFC_ISR.B.RESBN)
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_RESBN field. */
+#define BR_NFC_ISR_RESBN(x)  (HW_NFC_ISR(x).B.RESBN)
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field IDLECLR[17] (W1C)
  *
  * Clear bit for NFC_ISR[IDLE]. Writing 1 to this bit clears NFC_ISR[IDLE].
  */
-//@{
-#define BP_NFC_ISR_IDLECLR   (17U)         //!< Bit position for NFC_ISR_IDLECLR.
-#define BM_NFC_ISR_IDLECLR   (0x00020000U) //!< Bit mask for NFC_ISR_IDLECLR.
-#define BS_NFC_ISR_IDLECLR   (1U)          //!< Bit field size in bits for NFC_ISR_IDLECLR.
+/*@{*/
+#define BP_NFC_ISR_IDLECLR   (17U)         /*!< Bit position for NFC_ISR_IDLECLR. */
+#define BM_NFC_ISR_IDLECLR   (0x00020000U) /*!< Bit mask for NFC_ISR_IDLECLR. */
+#define BS_NFC_ISR_IDLECLR   (1U)          /*!< Bit field size in bits for NFC_ISR_IDLECLR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_IDLECLR field.
-#define BR_NFC_ISR_IDLECLR   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_IDLECLR))
-#endif
+/*! @brief Read current value of the NFC_ISR_IDLECLR field. */
+#define BR_NFC_ISR_IDLECLR(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_IDLECLR))
 
-//! @brief Format value for bitfield NFC_ISR_IDLECLR.
-#define BF_NFC_ISR_IDLECLR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_IDLECLR), uint32_t) & BM_NFC_ISR_IDLECLR)
+/*! @brief Format value for bitfield NFC_ISR_IDLECLR. */
+#define BF_NFC_ISR_IDLECLR(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_IDLECLR) & BM_NFC_ISR_IDLECLR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDLECLR field to a new value.
-#define BW_NFC_ISR_IDLECLR(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_IDLECLR) = (v))
-#endif
-//@}
+/*! @brief Set the IDLECLR field to a new value. */
+#define BW_NFC_ISR_IDLECLR(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_IDLECLR) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field DONECLR[18] (W1C)
  *
  * Clear bit for NFC_ISR[DONE]. Writing 1 to this bit clears NFC_ISR[DONE].
  */
-//@{
-#define BP_NFC_ISR_DONECLR   (18U)         //!< Bit position for NFC_ISR_DONECLR.
-#define BM_NFC_ISR_DONECLR   (0x00040000U) //!< Bit mask for NFC_ISR_DONECLR.
-#define BS_NFC_ISR_DONECLR   (1U)          //!< Bit field size in bits for NFC_ISR_DONECLR.
+/*@{*/
+#define BP_NFC_ISR_DONECLR   (18U)         /*!< Bit position for NFC_ISR_DONECLR. */
+#define BM_NFC_ISR_DONECLR   (0x00040000U) /*!< Bit mask for NFC_ISR_DONECLR. */
+#define BS_NFC_ISR_DONECLR   (1U)          /*!< Bit field size in bits for NFC_ISR_DONECLR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_DONECLR field.
-#define BR_NFC_ISR_DONECLR   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DONECLR))
-#endif
+/*! @brief Read current value of the NFC_ISR_DONECLR field. */
+#define BR_NFC_ISR_DONECLR(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DONECLR))
 
-//! @brief Format value for bitfield NFC_ISR_DONECLR.
-#define BF_NFC_ISR_DONECLR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_DONECLR), uint32_t) & BM_NFC_ISR_DONECLR)
+/*! @brief Format value for bitfield NFC_ISR_DONECLR. */
+#define BF_NFC_ISR_DONECLR(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_DONECLR) & BM_NFC_ISR_DONECLR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONECLR field to a new value.
-#define BW_NFC_ISR_DONECLR(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DONECLR) = (v))
-#endif
-//@}
+/*! @brief Set the DONECLR field to a new value. */
+#define BW_NFC_ISR_DONECLR(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DONECLR) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field WERRCLR[19] (W1C)
  *
  * Clear bit for NFC_ISR[WERR]. Writing 1 to this bit clears NFC_ISR[WERR].
  */
-//@{
-#define BP_NFC_ISR_WERRCLR   (19U)         //!< Bit position for NFC_ISR_WERRCLR.
-#define BM_NFC_ISR_WERRCLR   (0x00080000U) //!< Bit mask for NFC_ISR_WERRCLR.
-#define BS_NFC_ISR_WERRCLR   (1U)          //!< Bit field size in bits for NFC_ISR_WERRCLR.
+/*@{*/
+#define BP_NFC_ISR_WERRCLR   (19U)         /*!< Bit position for NFC_ISR_WERRCLR. */
+#define BM_NFC_ISR_WERRCLR   (0x00080000U) /*!< Bit mask for NFC_ISR_WERRCLR. */
+#define BS_NFC_ISR_WERRCLR   (1U)          /*!< Bit field size in bits for NFC_ISR_WERRCLR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_WERRCLR field.
-#define BR_NFC_ISR_WERRCLR   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERRCLR))
-#endif
+/*! @brief Read current value of the NFC_ISR_WERRCLR field. */
+#define BR_NFC_ISR_WERRCLR(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERRCLR))
 
-//! @brief Format value for bitfield NFC_ISR_WERRCLR.
-#define BF_NFC_ISR_WERRCLR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_WERRCLR), uint32_t) & BM_NFC_ISR_WERRCLR)
+/*! @brief Format value for bitfield NFC_ISR_WERRCLR. */
+#define BF_NFC_ISR_WERRCLR(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_WERRCLR) & BM_NFC_ISR_WERRCLR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WERRCLR field to a new value.
-#define BW_NFC_ISR_WERRCLR(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERRCLR) = (v))
-#endif
-//@}
+/*! @brief Set the WERRCLR field to a new value. */
+#define BW_NFC_ISR_WERRCLR(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERRCLR) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field IDLEEN[20] (RW)
  *
  * Enable bit for NFC_ISR[IDLE]
  */
-//@{
-#define BP_NFC_ISR_IDLEEN    (20U)         //!< Bit position for NFC_ISR_IDLEEN.
-#define BM_NFC_ISR_IDLEEN    (0x00100000U) //!< Bit mask for NFC_ISR_IDLEEN.
-#define BS_NFC_ISR_IDLEEN    (1U)          //!< Bit field size in bits for NFC_ISR_IDLEEN.
+/*@{*/
+#define BP_NFC_ISR_IDLEEN    (20U)         /*!< Bit position for NFC_ISR_IDLEEN. */
+#define BM_NFC_ISR_IDLEEN    (0x00100000U) /*!< Bit mask for NFC_ISR_IDLEEN. */
+#define BS_NFC_ISR_IDLEEN    (1U)          /*!< Bit field size in bits for NFC_ISR_IDLEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_IDLEEN field.
-#define BR_NFC_ISR_IDLEEN    (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_IDLEEN))
-#endif
+/*! @brief Read current value of the NFC_ISR_IDLEEN field. */
+#define BR_NFC_ISR_IDLEEN(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_IDLEEN))
 
-//! @brief Format value for bitfield NFC_ISR_IDLEEN.
-#define BF_NFC_ISR_IDLEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_IDLEEN), uint32_t) & BM_NFC_ISR_IDLEEN)
+/*! @brief Format value for bitfield NFC_ISR_IDLEEN. */
+#define BF_NFC_ISR_IDLEEN(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_IDLEEN) & BM_NFC_ISR_IDLEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDLEEN field to a new value.
-#define BW_NFC_ISR_IDLEEN(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_IDLEEN) = (v))
-#endif
-//@}
+/*! @brief Set the IDLEEN field to a new value. */
+#define BW_NFC_ISR_IDLEEN(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_IDLEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field DONEEN[21] (RW)
  *
  * Enable bit for NFC_ISR[DONE]
  */
-//@{
-#define BP_NFC_ISR_DONEEN    (21U)         //!< Bit position for NFC_ISR_DONEEN.
-#define BM_NFC_ISR_DONEEN    (0x00200000U) //!< Bit mask for NFC_ISR_DONEEN.
-#define BS_NFC_ISR_DONEEN    (1U)          //!< Bit field size in bits for NFC_ISR_DONEEN.
+/*@{*/
+#define BP_NFC_ISR_DONEEN    (21U)         /*!< Bit position for NFC_ISR_DONEEN. */
+#define BM_NFC_ISR_DONEEN    (0x00200000U) /*!< Bit mask for NFC_ISR_DONEEN. */
+#define BS_NFC_ISR_DONEEN    (1U)          /*!< Bit field size in bits for NFC_ISR_DONEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_DONEEN field.
-#define BR_NFC_ISR_DONEEN    (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DONEEN))
-#endif
+/*! @brief Read current value of the NFC_ISR_DONEEN field. */
+#define BR_NFC_ISR_DONEEN(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DONEEN))
 
-//! @brief Format value for bitfield NFC_ISR_DONEEN.
-#define BF_NFC_ISR_DONEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_DONEEN), uint32_t) & BM_NFC_ISR_DONEEN)
+/*! @brief Format value for bitfield NFC_ISR_DONEEN. */
+#define BF_NFC_ISR_DONEEN(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_DONEEN) & BM_NFC_ISR_DONEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONEEN field to a new value.
-#define BW_NFC_ISR_DONEEN(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DONEEN) = (v))
-#endif
-//@}
+/*! @brief Set the DONEEN field to a new value. */
+#define BW_NFC_ISR_DONEEN(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DONEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field WERREN[22] (RW)
  *
  * Enable bit for NFC_ISR[WERR]
  */
-//@{
-#define BP_NFC_ISR_WERREN    (22U)         //!< Bit position for NFC_ISR_WERREN.
-#define BM_NFC_ISR_WERREN    (0x00400000U) //!< Bit mask for NFC_ISR_WERREN.
-#define BS_NFC_ISR_WERREN    (1U)          //!< Bit field size in bits for NFC_ISR_WERREN.
+/*@{*/
+#define BP_NFC_ISR_WERREN    (22U)         /*!< Bit position for NFC_ISR_WERREN. */
+#define BM_NFC_ISR_WERREN    (0x00400000U) /*!< Bit mask for NFC_ISR_WERREN. */
+#define BS_NFC_ISR_WERREN    (1U)          /*!< Bit field size in bits for NFC_ISR_WERREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_WERREN field.
-#define BR_NFC_ISR_WERREN    (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERREN))
-#endif
+/*! @brief Read current value of the NFC_ISR_WERREN field. */
+#define BR_NFC_ISR_WERREN(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERREN))
 
-//! @brief Format value for bitfield NFC_ISR_WERREN.
-#define BF_NFC_ISR_WERREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_NFC_ISR_WERREN), uint32_t) & BM_NFC_ISR_WERREN)
+/*! @brief Format value for bitfield NFC_ISR_WERREN. */
+#define BF_NFC_ISR_WERREN(v) ((uint32_t)((uint32_t)(v) << BP_NFC_ISR_WERREN) & BM_NFC_ISR_WERREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WERREN field to a new value.
-#define BW_NFC_ISR_WERREN(v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERREN) = (v))
-#endif
-//@}
+/*! @brief Set the WERREN field to a new value. */
+#define BW_NFC_ISR_WERREN(x, v) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERREN) = (v))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field DMABUSY[23] (RO)
  *
  * Set if DMA engine busy, cleared otherwise.
  */
-//@{
-#define BP_NFC_ISR_DMABUSY   (23U)         //!< Bit position for NFC_ISR_DMABUSY.
-#define BM_NFC_ISR_DMABUSY   (0x00800000U) //!< Bit mask for NFC_ISR_DMABUSY.
-#define BS_NFC_ISR_DMABUSY   (1U)          //!< Bit field size in bits for NFC_ISR_DMABUSY.
+/*@{*/
+#define BP_NFC_ISR_DMABUSY   (23U)         /*!< Bit position for NFC_ISR_DMABUSY. */
+#define BM_NFC_ISR_DMABUSY   (0x00800000U) /*!< Bit mask for NFC_ISR_DMABUSY. */
+#define BS_NFC_ISR_DMABUSY   (1U)          /*!< Bit field size in bits for NFC_ISR_DMABUSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_DMABUSY field.
-#define BR_NFC_ISR_DMABUSY   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DMABUSY))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_DMABUSY field. */
+#define BR_NFC_ISR_DMABUSY(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DMABUSY))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field ECCBUSY[24] (RO)
  *
  * Set if ECC engine busy, cleared otherwise.
  */
-//@{
-#define BP_NFC_ISR_ECCBUSY   (24U)         //!< Bit position for NFC_ISR_ECCBUSY.
-#define BM_NFC_ISR_ECCBUSY   (0x01000000U) //!< Bit mask for NFC_ISR_ECCBUSY.
-#define BS_NFC_ISR_ECCBUSY   (1U)          //!< Bit field size in bits for NFC_ISR_ECCBUSY.
+/*@{*/
+#define BP_NFC_ISR_ECCBUSY   (24U)         /*!< Bit position for NFC_ISR_ECCBUSY. */
+#define BM_NFC_ISR_ECCBUSY   (0x01000000U) /*!< Bit mask for NFC_ISR_ECCBUSY. */
+#define BS_NFC_ISR_ECCBUSY   (1U)          /*!< Bit field size in bits for NFC_ISR_ECCBUSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_ECCBUSY field.
-#define BR_NFC_ISR_ECCBUSY   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_ECCBUSY))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_ECCBUSY field. */
+#define BR_NFC_ISR_ECCBUSY(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_ECCBUSY))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field RESBUSY[25] (RO)
  *
  * Set if residue engine busy, cleared otherwise.
  */
-//@{
-#define BP_NFC_ISR_RESBUSY   (25U)         //!< Bit position for NFC_ISR_RESBUSY.
-#define BM_NFC_ISR_RESBUSY   (0x02000000U) //!< Bit mask for NFC_ISR_RESBUSY.
-#define BS_NFC_ISR_RESBUSY   (1U)          //!< Bit field size in bits for NFC_ISR_RESBUSY.
+/*@{*/
+#define BP_NFC_ISR_RESBUSY   (25U)         /*!< Bit position for NFC_ISR_RESBUSY. */
+#define BM_NFC_ISR_RESBUSY   (0x02000000U) /*!< Bit mask for NFC_ISR_RESBUSY. */
+#define BS_NFC_ISR_RESBUSY   (1U)          /*!< Bit field size in bits for NFC_ISR_RESBUSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_RESBUSY field.
-#define BR_NFC_ISR_RESBUSY   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_RESBUSY))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_RESBUSY field. */
+#define BR_NFC_ISR_RESBUSY(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_RESBUSY))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field CMDBUSY[26] (RO)
  *
  * Set it command execution busy, cleared otherwise.
  */
-//@{
-#define BP_NFC_ISR_CMDBUSY   (26U)         //!< Bit position for NFC_ISR_CMDBUSY.
-#define BM_NFC_ISR_CMDBUSY   (0x04000000U) //!< Bit mask for NFC_ISR_CMDBUSY.
-#define BS_NFC_ISR_CMDBUSY   (1U)          //!< Bit field size in bits for NFC_ISR_CMDBUSY.
+/*@{*/
+#define BP_NFC_ISR_CMDBUSY   (26U)         /*!< Bit position for NFC_ISR_CMDBUSY. */
+#define BM_NFC_ISR_CMDBUSY   (0x04000000U) /*!< Bit mask for NFC_ISR_CMDBUSY. */
+#define BS_NFC_ISR_CMDBUSY   (1U)          /*!< Bit field size in bits for NFC_ISR_CMDBUSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_CMDBUSY field.
-#define BR_NFC_ISR_CMDBUSY   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_CMDBUSY))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_CMDBUSY field. */
+#define BR_NFC_ISR_CMDBUSY(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_CMDBUSY))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field WERRNS[27] (RO)
@@ -2108,48 +1836,42 @@ typedef union _hw_nfc_isr
  * Set if an error condition was detected during the last flash read status
  * command. Non-sticky bit.
  */
-//@{
-#define BP_NFC_ISR_WERRNS    (27U)         //!< Bit position for NFC_ISR_WERRNS.
-#define BM_NFC_ISR_WERRNS    (0x08000000U) //!< Bit mask for NFC_ISR_WERRNS.
-#define BS_NFC_ISR_WERRNS    (1U)          //!< Bit field size in bits for NFC_ISR_WERRNS.
+/*@{*/
+#define BP_NFC_ISR_WERRNS    (27U)         /*!< Bit position for NFC_ISR_WERRNS. */
+#define BM_NFC_ISR_WERRNS    (0x08000000U) /*!< Bit mask for NFC_ISR_WERRNS. */
+#define BS_NFC_ISR_WERRNS    (1U)          /*!< Bit field size in bits for NFC_ISR_WERRNS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_WERRNS field.
-#define BR_NFC_ISR_WERRNS    (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERRNS))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_WERRNS field. */
+#define BR_NFC_ISR_WERRNS(x) (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERRNS))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field IDLE[29] (RO)
  *
  * Set if command done, and residue engine, ECC engine and DMA engine are idle.
  */
-//@{
-#define BP_NFC_ISR_IDLE      (29U)         //!< Bit position for NFC_ISR_IDLE.
-#define BM_NFC_ISR_IDLE      (0x20000000U) //!< Bit mask for NFC_ISR_IDLE.
-#define BS_NFC_ISR_IDLE      (1U)          //!< Bit field size in bits for NFC_ISR_IDLE.
+/*@{*/
+#define BP_NFC_ISR_IDLE      (29U)         /*!< Bit position for NFC_ISR_IDLE. */
+#define BM_NFC_ISR_IDLE      (0x20000000U) /*!< Bit mask for NFC_ISR_IDLE. */
+#define BS_NFC_ISR_IDLE      (1U)          /*!< Bit field size in bits for NFC_ISR_IDLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_IDLE field.
-#define BR_NFC_ISR_IDLE      (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_IDLE))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_IDLE field. */
+#define BR_NFC_ISR_IDLE(x)   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_IDLE))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field DONE[30] (RO)
  *
  * Set if command processing is done.
  */
-//@{
-#define BP_NFC_ISR_DONE      (30U)         //!< Bit position for NFC_ISR_DONE.
-#define BM_NFC_ISR_DONE      (0x40000000U) //!< Bit mask for NFC_ISR_DONE.
-#define BS_NFC_ISR_DONE      (1U)          //!< Bit field size in bits for NFC_ISR_DONE.
+/*@{*/
+#define BP_NFC_ISR_DONE      (30U)         /*!< Bit position for NFC_ISR_DONE. */
+#define BM_NFC_ISR_DONE      (0x40000000U) /*!< Bit mask for NFC_ISR_DONE. */
+#define BS_NFC_ISR_DONE      (1U)          /*!< Bit field size in bits for NFC_ISR_DONE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_DONE field.
-#define BR_NFC_ISR_DONE      (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_DONE))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_DONE field. */
+#define BR_NFC_ISR_DONE(x)   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_DONE))
+/*@}*/
 
 /*!
  * @name Register NFC_ISR, field WERR[31] (RO)
@@ -2157,52 +1879,49 @@ typedef union _hw_nfc_isr
  * Set if an error condition is detected during a flash read status command.
  * Sticky bit.
  */
-//@{
-#define BP_NFC_ISR_WERR      (31U)         //!< Bit position for NFC_ISR_WERR.
-#define BM_NFC_ISR_WERR      (0x80000000U) //!< Bit mask for NFC_ISR_WERR.
-#define BS_NFC_ISR_WERR      (1U)          //!< Bit field size in bits for NFC_ISR_WERR.
+/*@{*/
+#define BP_NFC_ISR_WERR      (31U)         /*!< Bit position for NFC_ISR_WERR. */
+#define BM_NFC_ISR_WERR      (0x80000000U) /*!< Bit mask for NFC_ISR_WERR. */
+#define BS_NFC_ISR_WERR      (1U)          /*!< Bit field size in bits for NFC_ISR_WERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the NFC_ISR_WERR field.
-#define BR_NFC_ISR_WERR      (BITBAND_ACCESS32(HW_NFC_ISR_ADDR, BP_NFC_ISR_WERR))
-#endif
-//@}
+/*! @brief Read current value of the NFC_ISR_WERR field. */
+#define BR_NFC_ISR_WERR(x)   (BITBAND_ACCESS32(HW_NFC_ISR_ADDR(x), BP_NFC_ISR_WERR))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_nfc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_nfc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All NFC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_nfc
 {
     uint8_t _reserved0[16128];
-    __IO hw_nfc_cmd1_t CMD1;               //!< [0x3F00] Flash command 1
-    __IO hw_nfc_cmd2_t CMD2;               //!< [0x3F04] Flash command 2
-    __IO hw_nfc_car_t CAR;                 //!< [0x3F08] Column address
-    __IO hw_nfc_rar_t RAR;                 //!< [0x3F0C] Row address
-    __IO hw_nfc_rpt_t RPT;                 //!< [0x3F10] Flash command repeat
-    __IO hw_nfc_rai_t RAI;                 //!< [0x3F14] Row address increment
-    __I hw_nfc_sr1_t SR1;                  //!< [0x3F18] Flash status 1
-    __I hw_nfc_sr2_t SR2;                  //!< [0x3F1C] Flash status 2
-    __IO hw_nfc_dma1_t DMA1;               //!< [0x3F20] DMA channel 1 address
-    __IO hw_nfc_dmacfg_t DMACFG;           //!< [0x3F24] DMA configuration
-    __IO hw_nfc_swap_t SWAP;               //!< [0x3F28] Cach swap
-    __IO hw_nfc_secsz_t SECSZ;             //!< [0x3F2C] Sector size
-    __IO hw_nfc_cfg_t CFG;                 //!< [0x3F30] Flash configuration
-    __IO hw_nfc_dma2_t DMA2;               //!< [0x3F34] DMA channel 2 address
-    __IO hw_nfc_isr_t ISR;                 //!< [0x3F38] Interrupt status
+    __IO hw_nfc_cmd1_t CMD1;               /*!< [0x3F00] Flash command 1 */
+    __IO hw_nfc_cmd2_t CMD2;               /*!< [0x3F04] Flash command 2 */
+    __IO hw_nfc_car_t CAR;                 /*!< [0x3F08] Column address */
+    __IO hw_nfc_rar_t RAR;                 /*!< [0x3F0C] Row address */
+    __IO hw_nfc_rpt_t RPT;                 /*!< [0x3F10] Flash command repeat */
+    __IO hw_nfc_rai_t RAI;                 /*!< [0x3F14] Row address increment */
+    __I hw_nfc_sr1_t SR1;                  /*!< [0x3F18] Flash status 1 */
+    __I hw_nfc_sr2_t SR2;                  /*!< [0x3F1C] Flash status 2 */
+    __IO hw_nfc_dma1_t DMA1;               /*!< [0x3F20] DMA channel 1 address */
+    __IO hw_nfc_dmacfg_t DMACFG;           /*!< [0x3F24] DMA configuration */
+    __IO hw_nfc_swap_t SWAP;               /*!< [0x3F28] Cach swap */
+    __IO hw_nfc_secsz_t SECSZ;             /*!< [0x3F2C] Sector size */
+    __IO hw_nfc_cfg_t CFG;                 /*!< [0x3F30] Flash configuration */
+    __IO hw_nfc_dma2_t DMA2;               /*!< [0x3F34] DMA channel 2 address */
+    __IO hw_nfc_isr_t ISR;                 /*!< [0x3F38] Interrupt status */
 } hw_nfc_t;
 #pragma pack()
 
-//! @brief Macro to access all NFC registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_NFC</code>.
-#define HW_NFC         (*(hw_nfc_t *) REGS_NFC_BASE)
-#endif
+/*! @brief Macro to access all NFC registers. */
+/*! @param x NFC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_NFC(NFC_BASE)</code>. */
+#define HW_NFC(x)      (*(hw_nfc_t *)(x))
 
-#endif // __HW_NFC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_NFC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

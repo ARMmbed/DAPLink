@@ -21,7 +21,8 @@
 #ifndef __HW_FTFL_REGISTERS_H__
 #define __HW_FTFL_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 FTFL
@@ -55,19 +56,12 @@
  * - hw_ftfl_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_FTFL_BASE
-#define HW_FTFL_INSTANCE_COUNT (1U) //!< Number of instances of the FTFL module.
-#define REGS_FTFL_BASE (0x40020000U) //!< Base address for FTFL.
-#endif
-//@}
+#define HW_FTFL_INSTANCE_COUNT (1U) /*!< Number of instances of the FTFL module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FSTAT - Flash Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FSTAT - Flash Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FSTAT - Flash Status Register (RW)
  *
@@ -85,32 +79,29 @@ typedef union _hw_ftfl_fstat
     uint8_t U;
     struct _hw_ftfl_fstat_bitfields
     {
-        uint8_t MGSTAT0 : 1;           //!< [0] Memory Controller Command Completion
-                                       //! Status Flag
-        uint8_t RESERVED0 : 3;         //!< [3:1]
-        uint8_t FPVIOL : 1;            //!< [4] Flash Protection Violation Flag
-        uint8_t ACCERR : 1;            //!< [5] Flash Access Error Flag
-        uint8_t RDCOLERR : 1;          //!< [6] FTFL Read Collision Error Flag
-        uint8_t CCIF : 1;              //!< [7] Command Complete Interrupt Flag
+        uint8_t MGSTAT0 : 1;           /*!< [0] Memory Controller Command Completion
+                                        * Status Flag */
+        uint8_t RESERVED0 : 3;         /*!< [3:1]  */
+        uint8_t FPVIOL : 1;            /*!< [4] Flash Protection Violation Flag */
+        uint8_t ACCERR : 1;            /*!< [5] Flash Access Error Flag */
+        uint8_t RDCOLERR : 1;          /*!< [6] FTFL Read Collision Error Flag */
+        uint8_t CCIF : 1;              /*!< [7] Command Complete Interrupt Flag */
     } B;
 } hw_ftfl_fstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FSTAT register
  */
-//@{
-#define HW_FTFL_FSTAT_ADDR       (REGS_FTFL_BASE + 0x0U)
+/*@{*/
+#define HW_FTFL_FSTAT_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FSTAT            (*(__IO hw_ftfl_fstat_t *) HW_FTFL_FSTAT_ADDR)
-#define HW_FTFL_FSTAT_RD()       (HW_FTFL_FSTAT.U)
-#define HW_FTFL_FSTAT_WR(v)      (HW_FTFL_FSTAT.U = (v))
-#define HW_FTFL_FSTAT_SET(v)     (HW_FTFL_FSTAT_WR(HW_FTFL_FSTAT_RD() |  (v)))
-#define HW_FTFL_FSTAT_CLR(v)     (HW_FTFL_FSTAT_WR(HW_FTFL_FSTAT_RD() & ~(v)))
-#define HW_FTFL_FSTAT_TOG(v)     (HW_FTFL_FSTAT_WR(HW_FTFL_FSTAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FSTAT(x)         (*(__IO hw_ftfl_fstat_t *) HW_FTFL_FSTAT_ADDR(x))
+#define HW_FTFL_FSTAT_RD(x)      (HW_FTFL_FSTAT(x).U)
+#define HW_FTFL_FSTAT_WR(x, v)   (HW_FTFL_FSTAT(x).U = (v))
+#define HW_FTFL_FSTAT_SET(x, v)  (HW_FTFL_FSTAT_WR(x, HW_FTFL_FSTAT_RD(x) |  (v)))
+#define HW_FTFL_FSTAT_CLR(x, v)  (HW_FTFL_FSTAT_WR(x, HW_FTFL_FSTAT_RD(x) & ~(v)))
+#define HW_FTFL_FSTAT_TOG(x, v)  (HW_FTFL_FSTAT_WR(x, HW_FTFL_FSTAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FSTAT bitfields
@@ -127,16 +118,14 @@ typedef union _hw_ftfl_fstat
  * been launched. At some point during the execution of "command-N+1," the previous
  * result is discarded and any previous error is cleared.
  */
-//@{
-#define BP_FTFL_FSTAT_MGSTAT0 (0U)         //!< Bit position for FTFL_FSTAT_MGSTAT0.
-#define BM_FTFL_FSTAT_MGSTAT0 (0x01U)      //!< Bit mask for FTFL_FSTAT_MGSTAT0.
-#define BS_FTFL_FSTAT_MGSTAT0 (1U)         //!< Bit field size in bits for FTFL_FSTAT_MGSTAT0.
+/*@{*/
+#define BP_FTFL_FSTAT_MGSTAT0 (0U)         /*!< Bit position for FTFL_FSTAT_MGSTAT0. */
+#define BM_FTFL_FSTAT_MGSTAT0 (0x01U)      /*!< Bit mask for FTFL_FSTAT_MGSTAT0. */
+#define BS_FTFL_FSTAT_MGSTAT0 (1U)         /*!< Bit field size in bits for FTFL_FSTAT_MGSTAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSTAT_MGSTAT0 field.
-#define BR_FTFL_FSTAT_MGSTAT0 (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_MGSTAT0))
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FSTAT_MGSTAT0 field. */
+#define BR_FTFL_FSTAT_MGSTAT0(x) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_MGSTAT0))
+/*@}*/
 
 /*!
  * @name Register FTFL_FSTAT, field FPVIOL[4] (W1C)
@@ -152,24 +141,20 @@ typedef union _hw_ftfl_fstat
  * - 0 - No protection violation detected
  * - 1 - Protection violation detected
  */
-//@{
-#define BP_FTFL_FSTAT_FPVIOL (4U)          //!< Bit position for FTFL_FSTAT_FPVIOL.
-#define BM_FTFL_FSTAT_FPVIOL (0x10U)       //!< Bit mask for FTFL_FSTAT_FPVIOL.
-#define BS_FTFL_FSTAT_FPVIOL (1U)          //!< Bit field size in bits for FTFL_FSTAT_FPVIOL.
+/*@{*/
+#define BP_FTFL_FSTAT_FPVIOL (4U)          /*!< Bit position for FTFL_FSTAT_FPVIOL. */
+#define BM_FTFL_FSTAT_FPVIOL (0x10U)       /*!< Bit mask for FTFL_FSTAT_FPVIOL. */
+#define BS_FTFL_FSTAT_FPVIOL (1U)          /*!< Bit field size in bits for FTFL_FSTAT_FPVIOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSTAT_FPVIOL field.
-#define BR_FTFL_FSTAT_FPVIOL (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_FPVIOL))
-#endif
+/*! @brief Read current value of the FTFL_FSTAT_FPVIOL field. */
+#define BR_FTFL_FSTAT_FPVIOL(x) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_FPVIOL))
 
-//! @brief Format value for bitfield FTFL_FSTAT_FPVIOL.
-#define BF_FTFL_FSTAT_FPVIOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FSTAT_FPVIOL), uint8_t) & BM_FTFL_FSTAT_FPVIOL)
+/*! @brief Format value for bitfield FTFL_FSTAT_FPVIOL. */
+#define BF_FTFL_FSTAT_FPVIOL(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FSTAT_FPVIOL) & BM_FTFL_FSTAT_FPVIOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FPVIOL field to a new value.
-#define BW_FTFL_FSTAT_FPVIOL(v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_FPVIOL) = (v))
-#endif
-//@}
+/*! @brief Set the FPVIOL field to a new value. */
+#define BW_FTFL_FSTAT_FPVIOL(x, v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_FPVIOL) = (v))
+/*@}*/
 
 /*!
  * @name Register FTFL_FSTAT, field ACCERR[5] (W1C)
@@ -184,24 +169,20 @@ typedef union _hw_ftfl_fstat
  * - 0 - No access error detected
  * - 1 - Access error detected
  */
-//@{
-#define BP_FTFL_FSTAT_ACCERR (5U)          //!< Bit position for FTFL_FSTAT_ACCERR.
-#define BM_FTFL_FSTAT_ACCERR (0x20U)       //!< Bit mask for FTFL_FSTAT_ACCERR.
-#define BS_FTFL_FSTAT_ACCERR (1U)          //!< Bit field size in bits for FTFL_FSTAT_ACCERR.
+/*@{*/
+#define BP_FTFL_FSTAT_ACCERR (5U)          /*!< Bit position for FTFL_FSTAT_ACCERR. */
+#define BM_FTFL_FSTAT_ACCERR (0x20U)       /*!< Bit mask for FTFL_FSTAT_ACCERR. */
+#define BS_FTFL_FSTAT_ACCERR (1U)          /*!< Bit field size in bits for FTFL_FSTAT_ACCERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSTAT_ACCERR field.
-#define BR_FTFL_FSTAT_ACCERR (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_ACCERR))
-#endif
+/*! @brief Read current value of the FTFL_FSTAT_ACCERR field. */
+#define BR_FTFL_FSTAT_ACCERR(x) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_ACCERR))
 
-//! @brief Format value for bitfield FTFL_FSTAT_ACCERR.
-#define BF_FTFL_FSTAT_ACCERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FSTAT_ACCERR), uint8_t) & BM_FTFL_FSTAT_ACCERR)
+/*! @brief Format value for bitfield FTFL_FSTAT_ACCERR. */
+#define BF_FTFL_FSTAT_ACCERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FSTAT_ACCERR) & BM_FTFL_FSTAT_ACCERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACCERR field to a new value.
-#define BW_FTFL_FSTAT_ACCERR(v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_ACCERR) = (v))
-#endif
-//@}
+/*! @brief Set the ACCERR field to a new value. */
+#define BW_FTFL_FSTAT_ACCERR(x, v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_ACCERR) = (v))
+/*@}*/
 
 /*!
  * @name Register FTFL_FSTAT, field RDCOLERR[6] (W1C)
@@ -216,24 +197,20 @@ typedef union _hw_ftfl_fstat
  * - 0 - No collision error detected
  * - 1 - Collision error detected
  */
-//@{
-#define BP_FTFL_FSTAT_RDCOLERR (6U)        //!< Bit position for FTFL_FSTAT_RDCOLERR.
-#define BM_FTFL_FSTAT_RDCOLERR (0x40U)     //!< Bit mask for FTFL_FSTAT_RDCOLERR.
-#define BS_FTFL_FSTAT_RDCOLERR (1U)        //!< Bit field size in bits for FTFL_FSTAT_RDCOLERR.
+/*@{*/
+#define BP_FTFL_FSTAT_RDCOLERR (6U)        /*!< Bit position for FTFL_FSTAT_RDCOLERR. */
+#define BM_FTFL_FSTAT_RDCOLERR (0x40U)     /*!< Bit mask for FTFL_FSTAT_RDCOLERR. */
+#define BS_FTFL_FSTAT_RDCOLERR (1U)        /*!< Bit field size in bits for FTFL_FSTAT_RDCOLERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSTAT_RDCOLERR field.
-#define BR_FTFL_FSTAT_RDCOLERR (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_RDCOLERR))
-#endif
+/*! @brief Read current value of the FTFL_FSTAT_RDCOLERR field. */
+#define BR_FTFL_FSTAT_RDCOLERR(x) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_RDCOLERR))
 
-//! @brief Format value for bitfield FTFL_FSTAT_RDCOLERR.
-#define BF_FTFL_FSTAT_RDCOLERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FSTAT_RDCOLERR), uint8_t) & BM_FTFL_FSTAT_RDCOLERR)
+/*! @brief Format value for bitfield FTFL_FSTAT_RDCOLERR. */
+#define BF_FTFL_FSTAT_RDCOLERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FSTAT_RDCOLERR) & BM_FTFL_FSTAT_RDCOLERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLERR field to a new value.
-#define BW_FTFL_FSTAT_RDCOLERR(v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_RDCOLERR) = (v))
-#endif
-//@}
+/*! @brief Set the RDCOLERR field to a new value. */
+#define BW_FTFL_FSTAT_RDCOLERR(x, v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_RDCOLERR) = (v))
+/*@}*/
 
 /*!
  * @name Register FTFL_FSTAT, field CCIF[7] (W1C)
@@ -252,30 +229,25 @@ typedef union _hw_ftfl_fstat
  * - 0 - FTFL command or EEPROM file system operation in progress
  * - 1 - FTFL command or EEPROM file system operation has completed
  */
-//@{
-#define BP_FTFL_FSTAT_CCIF   (7U)          //!< Bit position for FTFL_FSTAT_CCIF.
-#define BM_FTFL_FSTAT_CCIF   (0x80U)       //!< Bit mask for FTFL_FSTAT_CCIF.
-#define BS_FTFL_FSTAT_CCIF   (1U)          //!< Bit field size in bits for FTFL_FSTAT_CCIF.
+/*@{*/
+#define BP_FTFL_FSTAT_CCIF   (7U)          /*!< Bit position for FTFL_FSTAT_CCIF. */
+#define BM_FTFL_FSTAT_CCIF   (0x80U)       /*!< Bit mask for FTFL_FSTAT_CCIF. */
+#define BS_FTFL_FSTAT_CCIF   (1U)          /*!< Bit field size in bits for FTFL_FSTAT_CCIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSTAT_CCIF field.
-#define BR_FTFL_FSTAT_CCIF   (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_CCIF))
-#endif
+/*! @brief Read current value of the FTFL_FSTAT_CCIF field. */
+#define BR_FTFL_FSTAT_CCIF(x) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_CCIF))
 
-//! @brief Format value for bitfield FTFL_FSTAT_CCIF.
-#define BF_FTFL_FSTAT_CCIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FSTAT_CCIF), uint8_t) & BM_FTFL_FSTAT_CCIF)
+/*! @brief Format value for bitfield FTFL_FSTAT_CCIF. */
+#define BF_FTFL_FSTAT_CCIF(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FSTAT_CCIF) & BM_FTFL_FSTAT_CCIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIF field to a new value.
-#define BW_FTFL_FSTAT_CCIF(v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR, BP_FTFL_FSTAT_CCIF) = (v))
-#endif
-//@}
+/*! @brief Set the CCIF field to a new value. */
+#define BW_FTFL_FSTAT_CCIF(x, v) (BITBAND_ACCESS8(HW_FTFL_FSTAT_ADDR(x), BP_FTFL_FSTAT_CCIF) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCNFG - Flash Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCNFG - Flash Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCNFG - Flash Configuration Register (RW)
  *
@@ -292,33 +264,31 @@ typedef union _hw_ftfl_fcnfg
     uint8_t U;
     struct _hw_ftfl_fcnfg_bitfields
     {
-        uint8_t EEERDY : 1;            //!< [0]
-        uint8_t RAMRDY : 1;            //!< [1] RAM Ready
-        uint8_t PFLSH : 1;             //!< [2] FTFL configuration
-        uint8_t RESERVED0 : 1;         //!< [3]
-        uint8_t ERSSUSP : 1;           //!< [4] Erase Suspend
-        uint8_t ERSAREQ : 1;           //!< [5] Erase All Request
-        uint8_t RDCOLLIE : 1;          //!< [6] Read Collision Error Interrupt Enable
-        uint8_t CCIE : 1;              //!< [7] Command Complete Interrupt Enable
+        uint8_t EEERDY : 1;            /*!< [0]  */
+        uint8_t RAMRDY : 1;            /*!< [1] RAM Ready */
+        uint8_t PFLSH : 1;             /*!< [2] FTFL configuration */
+        uint8_t RESERVED0 : 1;         /*!< [3]  */
+        uint8_t ERSSUSP : 1;           /*!< [4] Erase Suspend */
+        uint8_t ERSAREQ : 1;           /*!< [5] Erase All Request */
+        uint8_t RDCOLLIE : 1;          /*!< [6] Read Collision Error Interrupt Enable
+                                        * */
+        uint8_t CCIE : 1;              /*!< [7] Command Complete Interrupt Enable */
     } B;
 } hw_ftfl_fcnfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCNFG register
  */
-//@{
-#define HW_FTFL_FCNFG_ADDR       (REGS_FTFL_BASE + 0x1U)
+/*@{*/
+#define HW_FTFL_FCNFG_ADDR(x)    ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCNFG            (*(__IO hw_ftfl_fcnfg_t *) HW_FTFL_FCNFG_ADDR)
-#define HW_FTFL_FCNFG_RD()       (HW_FTFL_FCNFG.U)
-#define HW_FTFL_FCNFG_WR(v)      (HW_FTFL_FCNFG.U = (v))
-#define HW_FTFL_FCNFG_SET(v)     (HW_FTFL_FCNFG_WR(HW_FTFL_FCNFG_RD() |  (v)))
-#define HW_FTFL_FCNFG_CLR(v)     (HW_FTFL_FCNFG_WR(HW_FTFL_FCNFG_RD() & ~(v)))
-#define HW_FTFL_FCNFG_TOG(v)     (HW_FTFL_FCNFG_WR(HW_FTFL_FCNFG_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCNFG(x)         (*(__IO hw_ftfl_fcnfg_t *) HW_FTFL_FCNFG_ADDR(x))
+#define HW_FTFL_FCNFG_RD(x)      (HW_FTFL_FCNFG(x).U)
+#define HW_FTFL_FCNFG_WR(x, v)   (HW_FTFL_FCNFG(x).U = (v))
+#define HW_FTFL_FCNFG_SET(x, v)  (HW_FTFL_FCNFG_WR(x, HW_FTFL_FCNFG_RD(x) |  (v)))
+#define HW_FTFL_FCNFG_CLR(x, v)  (HW_FTFL_FCNFG_WR(x, HW_FTFL_FCNFG_RD(x) & ~(v)))
+#define HW_FTFL_FCNFG_TOG(x, v)  (HW_FTFL_FCNFG_WR(x, HW_FTFL_FCNFG_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCNFG bitfields
@@ -337,16 +307,14 @@ typedef union _hw_ftfl_fcnfg
  *     to the FlexRAM clear EEERDY and launch an EEPROM operation to store the
  *     written data in the FlexRAM and EEPROM backup.
  */
-//@{
-#define BP_FTFL_FCNFG_EEERDY (0U)          //!< Bit position for FTFL_FCNFG_EEERDY.
-#define BM_FTFL_FCNFG_EEERDY (0x01U)       //!< Bit mask for FTFL_FCNFG_EEERDY.
-#define BS_FTFL_FCNFG_EEERDY (1U)          //!< Bit field size in bits for FTFL_FCNFG_EEERDY.
+/*@{*/
+#define BP_FTFL_FCNFG_EEERDY (0U)          /*!< Bit position for FTFL_FCNFG_EEERDY. */
+#define BM_FTFL_FCNFG_EEERDY (0x01U)       /*!< Bit mask for FTFL_FCNFG_EEERDY. */
+#define BS_FTFL_FCNFG_EEERDY (1U)          /*!< Bit field size in bits for FTFL_FCNFG_EEERDY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_EEERDY field.
-#define BR_FTFL_FCNFG_EEERDY (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_EEERDY))
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FCNFG_EEERDY field. */
+#define BR_FTFL_FCNFG_EEERDY(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_EEERDY))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field RAMRDY[1] (RO)
@@ -365,16 +333,14 @@ typedef union _hw_ftfl_fcnfg
  * - 1 - FlexRAM is available as traditional RAM only; writes to the FlexRAM do
  *     not trigger EEPROM operations.
  */
-//@{
-#define BP_FTFL_FCNFG_RAMRDY (1U)          //!< Bit position for FTFL_FCNFG_RAMRDY.
-#define BM_FTFL_FCNFG_RAMRDY (0x02U)       //!< Bit mask for FTFL_FCNFG_RAMRDY.
-#define BS_FTFL_FCNFG_RAMRDY (1U)          //!< Bit field size in bits for FTFL_FCNFG_RAMRDY.
+/*@{*/
+#define BP_FTFL_FCNFG_RAMRDY (1U)          /*!< Bit position for FTFL_FCNFG_RAMRDY. */
+#define BM_FTFL_FCNFG_RAMRDY (0x02U)       /*!< Bit mask for FTFL_FCNFG_RAMRDY. */
+#define BS_FTFL_FCNFG_RAMRDY (1U)          /*!< Bit field size in bits for FTFL_FCNFG_RAMRDY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_RAMRDY field.
-#define BR_FTFL_FCNFG_RAMRDY (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_RAMRDY))
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FCNFG_RAMRDY field. */
+#define BR_FTFL_FCNFG_RAMRDY(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_RAMRDY))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field PFLSH[2] (RO)
@@ -383,16 +349,14 @@ typedef union _hw_ftfl_fcnfg
  * - 0 - FTFL configured for FlexMemory that supports data flash and/or EEPROM
  * - 1 - Reserved
  */
-//@{
-#define BP_FTFL_FCNFG_PFLSH  (2U)          //!< Bit position for FTFL_FCNFG_PFLSH.
-#define BM_FTFL_FCNFG_PFLSH  (0x04U)       //!< Bit mask for FTFL_FCNFG_PFLSH.
-#define BS_FTFL_FCNFG_PFLSH  (1U)          //!< Bit field size in bits for FTFL_FCNFG_PFLSH.
+/*@{*/
+#define BP_FTFL_FCNFG_PFLSH  (2U)          /*!< Bit position for FTFL_FCNFG_PFLSH. */
+#define BM_FTFL_FCNFG_PFLSH  (0x04U)       /*!< Bit mask for FTFL_FCNFG_PFLSH. */
+#define BS_FTFL_FCNFG_PFLSH  (1U)          /*!< Bit field size in bits for FTFL_FCNFG_PFLSH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_PFLSH field.
-#define BR_FTFL_FCNFG_PFLSH  (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_PFLSH))
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FCNFG_PFLSH field. */
+#define BR_FTFL_FCNFG_PFLSH(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_PFLSH))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field ERSSUSP[4] (RW)
@@ -404,24 +368,20 @@ typedef union _hw_ftfl_fcnfg
  * - 0 - No suspend requested
  * - 1 - Suspend the current Erase Flash Sector command execution.
  */
-//@{
-#define BP_FTFL_FCNFG_ERSSUSP (4U)         //!< Bit position for FTFL_FCNFG_ERSSUSP.
-#define BM_FTFL_FCNFG_ERSSUSP (0x10U)      //!< Bit mask for FTFL_FCNFG_ERSSUSP.
-#define BS_FTFL_FCNFG_ERSSUSP (1U)         //!< Bit field size in bits for FTFL_FCNFG_ERSSUSP.
+/*@{*/
+#define BP_FTFL_FCNFG_ERSSUSP (4U)         /*!< Bit position for FTFL_FCNFG_ERSSUSP. */
+#define BM_FTFL_FCNFG_ERSSUSP (0x10U)      /*!< Bit mask for FTFL_FCNFG_ERSSUSP. */
+#define BS_FTFL_FCNFG_ERSSUSP (1U)         /*!< Bit field size in bits for FTFL_FCNFG_ERSSUSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_ERSSUSP field.
-#define BR_FTFL_FCNFG_ERSSUSP (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_ERSSUSP))
-#endif
+/*! @brief Read current value of the FTFL_FCNFG_ERSSUSP field. */
+#define BR_FTFL_FCNFG_ERSSUSP(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_ERSSUSP))
 
-//! @brief Format value for bitfield FTFL_FCNFG_ERSSUSP.
-#define BF_FTFL_FCNFG_ERSSUSP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCNFG_ERSSUSP), uint8_t) & BM_FTFL_FCNFG_ERSSUSP)
+/*! @brief Format value for bitfield FTFL_FCNFG_ERSSUSP. */
+#define BF_FTFL_FCNFG_ERSSUSP(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCNFG_ERSSUSP) & BM_FTFL_FCNFG_ERSSUSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERSSUSP field to a new value.
-#define BW_FTFL_FCNFG_ERSSUSP(v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_ERSSUSP) = (v))
-#endif
-//@}
+/*! @brief Set the ERSSUSP field to a new value. */
+#define BW_FTFL_FCNFG_ERSSUSP(x, v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_ERSSUSP) = (v))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field ERSAREQ[5] (RO)
@@ -440,16 +400,14 @@ typedef union _hw_ftfl_fcnfg
  *     state, and release MCU security by setting the FSEC[SEC] field to the
  *     unsecure state.
  */
-//@{
-#define BP_FTFL_FCNFG_ERSAREQ (5U)         //!< Bit position for FTFL_FCNFG_ERSAREQ.
-#define BM_FTFL_FCNFG_ERSAREQ (0x20U)      //!< Bit mask for FTFL_FCNFG_ERSAREQ.
-#define BS_FTFL_FCNFG_ERSAREQ (1U)         //!< Bit field size in bits for FTFL_FCNFG_ERSAREQ.
+/*@{*/
+#define BP_FTFL_FCNFG_ERSAREQ (5U)         /*!< Bit position for FTFL_FCNFG_ERSAREQ. */
+#define BM_FTFL_FCNFG_ERSAREQ (0x20U)      /*!< Bit mask for FTFL_FCNFG_ERSAREQ. */
+#define BS_FTFL_FCNFG_ERSAREQ (1U)         /*!< Bit field size in bits for FTFL_FCNFG_ERSAREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_ERSAREQ field.
-#define BR_FTFL_FCNFG_ERSAREQ (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_ERSAREQ))
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FCNFG_ERSAREQ field. */
+#define BR_FTFL_FCNFG_ERSAREQ(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_ERSAREQ))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field RDCOLLIE[6] (RW)
@@ -463,24 +421,20 @@ typedef union _hw_ftfl_fcnfg
  *     generated whenever an FTFL read collision error is detected (see the description
  *     of FSTAT[RDCOLERR]).
  */
-//@{
-#define BP_FTFL_FCNFG_RDCOLLIE (6U)        //!< Bit position for FTFL_FCNFG_RDCOLLIE.
-#define BM_FTFL_FCNFG_RDCOLLIE (0x40U)     //!< Bit mask for FTFL_FCNFG_RDCOLLIE.
-#define BS_FTFL_FCNFG_RDCOLLIE (1U)        //!< Bit field size in bits for FTFL_FCNFG_RDCOLLIE.
+/*@{*/
+#define BP_FTFL_FCNFG_RDCOLLIE (6U)        /*!< Bit position for FTFL_FCNFG_RDCOLLIE. */
+#define BM_FTFL_FCNFG_RDCOLLIE (0x40U)     /*!< Bit mask for FTFL_FCNFG_RDCOLLIE. */
+#define BS_FTFL_FCNFG_RDCOLLIE (1U)        /*!< Bit field size in bits for FTFL_FCNFG_RDCOLLIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_RDCOLLIE field.
-#define BR_FTFL_FCNFG_RDCOLLIE (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_RDCOLLIE))
-#endif
+/*! @brief Read current value of the FTFL_FCNFG_RDCOLLIE field. */
+#define BR_FTFL_FCNFG_RDCOLLIE(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_RDCOLLIE))
 
-//! @brief Format value for bitfield FTFL_FCNFG_RDCOLLIE.
-#define BF_FTFL_FCNFG_RDCOLLIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCNFG_RDCOLLIE), uint8_t) & BM_FTFL_FCNFG_RDCOLLIE)
+/*! @brief Format value for bitfield FTFL_FCNFG_RDCOLLIE. */
+#define BF_FTFL_FCNFG_RDCOLLIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCNFG_RDCOLLIE) & BM_FTFL_FCNFG_RDCOLLIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLLIE field to a new value.
-#define BW_FTFL_FCNFG_RDCOLLIE(v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_RDCOLLIE) = (v))
-#endif
-//@}
+/*! @brief Set the RDCOLLIE field to a new value. */
+#define BW_FTFL_FCNFG_RDCOLLIE(x, v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_RDCOLLIE) = (v))
+/*@}*/
 
 /*!
  * @name Register FTFL_FCNFG, field CCIE[7] (RW)
@@ -492,30 +446,25 @@ typedef union _hw_ftfl_fcnfg
  * - 1 - Command complete interrupt enabled. An interrupt request is generated
  *     whenever the FSTAT[CCIF] flag is set.
  */
-//@{
-#define BP_FTFL_FCNFG_CCIE   (7U)          //!< Bit position for FTFL_FCNFG_CCIE.
-#define BM_FTFL_FCNFG_CCIE   (0x80U)       //!< Bit mask for FTFL_FCNFG_CCIE.
-#define BS_FTFL_FCNFG_CCIE   (1U)          //!< Bit field size in bits for FTFL_FCNFG_CCIE.
+/*@{*/
+#define BP_FTFL_FCNFG_CCIE   (7U)          /*!< Bit position for FTFL_FCNFG_CCIE. */
+#define BM_FTFL_FCNFG_CCIE   (0x80U)       /*!< Bit mask for FTFL_FCNFG_CCIE. */
+#define BS_FTFL_FCNFG_CCIE   (1U)          /*!< Bit field size in bits for FTFL_FCNFG_CCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCNFG_CCIE field.
-#define BR_FTFL_FCNFG_CCIE   (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_CCIE))
-#endif
+/*! @brief Read current value of the FTFL_FCNFG_CCIE field. */
+#define BR_FTFL_FCNFG_CCIE(x) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_CCIE))
 
-//! @brief Format value for bitfield FTFL_FCNFG_CCIE.
-#define BF_FTFL_FCNFG_CCIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCNFG_CCIE), uint8_t) & BM_FTFL_FCNFG_CCIE)
+/*! @brief Format value for bitfield FTFL_FCNFG_CCIE. */
+#define BF_FTFL_FCNFG_CCIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCNFG_CCIE) & BM_FTFL_FCNFG_CCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIE field to a new value.
-#define BW_FTFL_FCNFG_CCIE(v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR, BP_FTFL_FCNFG_CCIE) = (v))
-#endif
-//@}
+/*! @brief Set the CCIE field to a new value. */
+#define BW_FTFL_FCNFG_CCIE(x, v) (BITBAND_ACCESS8(HW_FTFL_FCNFG_ADDR(x), BP_FTFL_FCNFG_CCIE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FSEC - Flash Security Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FSEC - Flash Security Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FSEC - Flash Security Register (RO)
  *
@@ -532,25 +481,23 @@ typedef union _hw_ftfl_fsec
     uint8_t U;
     struct _hw_ftfl_fsec_bitfields
     {
-        uint8_t SEC : 2;               //!< [1:0] Flash Security
-        uint8_t FSLACC : 2;            //!< [3:2] Freescale Failure Analysis Access Code
-        uint8_t MEEN : 2;              //!< [5:4] Mass Erase Enable Bits
-        uint8_t KEYEN : 2;             //!< [7:6] Backdoor Key Security Enable
+        uint8_t SEC : 2;               /*!< [1:0] Flash Security */
+        uint8_t FSLACC : 2;            /*!< [3:2] Freescale Failure Analysis Access Code
+                                        * */
+        uint8_t MEEN : 2;              /*!< [5:4] Mass Erase Enable Bits */
+        uint8_t KEYEN : 2;             /*!< [7:6] Backdoor Key Security Enable */
     } B;
 } hw_ftfl_fsec_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FSEC register
  */
-//@{
-#define HW_FTFL_FSEC_ADDR        (REGS_FTFL_BASE + 0x2U)
+/*@{*/
+#define HW_FTFL_FSEC_ADDR(x)     ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FSEC             (*(__I hw_ftfl_fsec_t *) HW_FTFL_FSEC_ADDR)
-#define HW_FTFL_FSEC_RD()        (HW_FTFL_FSEC.U)
-#endif
-//@}
+#define HW_FTFL_FSEC(x)          (*(__I hw_ftfl_fsec_t *) HW_FTFL_FSEC_ADDR(x))
+#define HW_FTFL_FSEC_RD(x)       (HW_FTFL_FSEC(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FSEC bitfields
@@ -571,16 +518,14 @@ typedef union _hw_ftfl_fsec
  *     the FTFL is unsecure.)
  * - 11 - MCU security status is secure
  */
-//@{
-#define BP_FTFL_FSEC_SEC     (0U)          //!< Bit position for FTFL_FSEC_SEC.
-#define BM_FTFL_FSEC_SEC     (0x03U)       //!< Bit mask for FTFL_FSEC_SEC.
-#define BS_FTFL_FSEC_SEC     (2U)          //!< Bit field size in bits for FTFL_FSEC_SEC.
+/*@{*/
+#define BP_FTFL_FSEC_SEC     (0U)          /*!< Bit position for FTFL_FSEC_SEC. */
+#define BM_FTFL_FSEC_SEC     (0x03U)       /*!< Bit mask for FTFL_FSEC_SEC. */
+#define BS_FTFL_FSEC_SEC     (2U)          /*!< Bit field size in bits for FTFL_FSEC_SEC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSEC_SEC field.
-#define BR_FTFL_FSEC_SEC     (HW_FTFL_FSEC.B.SEC)
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FSEC_SEC field. */
+#define BR_FTFL_FSEC_SEC(x)  (HW_FTFL_FSEC(x).B.SEC)
+/*@}*/
 
 /*!
  * @name Register FTFL_FSEC, field FSLACC[3:2] (RO)
@@ -601,16 +546,14 @@ typedef union _hw_ftfl_fsec
  * - 10 - Freescale factory access denied
  * - 11 - Freescale factory access granted
  */
-//@{
-#define BP_FTFL_FSEC_FSLACC  (2U)          //!< Bit position for FTFL_FSEC_FSLACC.
-#define BM_FTFL_FSEC_FSLACC  (0x0CU)       //!< Bit mask for FTFL_FSEC_FSLACC.
-#define BS_FTFL_FSEC_FSLACC  (2U)          //!< Bit field size in bits for FTFL_FSEC_FSLACC.
+/*@{*/
+#define BP_FTFL_FSEC_FSLACC  (2U)          /*!< Bit position for FTFL_FSEC_FSLACC. */
+#define BM_FTFL_FSEC_FSLACC  (0x0CU)       /*!< Bit mask for FTFL_FSEC_FSLACC. */
+#define BS_FTFL_FSEC_FSLACC  (2U)          /*!< Bit field size in bits for FTFL_FSEC_FSLACC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSEC_FSLACC field.
-#define BR_FTFL_FSEC_FSLACC  (HW_FTFL_FSEC.B.FSLACC)
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FSEC_FSLACC field. */
+#define BR_FTFL_FSEC_FSLACC(x) (HW_FTFL_FSEC(x).B.FSLACC)
+/*@}*/
 
 /*!
  * @name Register FTFL_FSEC, field MEEN[5:4] (RO)
@@ -626,16 +569,14 @@ typedef union _hw_ftfl_fsec
  * - 10 - Mass erase is disabled
  * - 11 - Mass erase is enabled
  */
-//@{
-#define BP_FTFL_FSEC_MEEN    (4U)          //!< Bit position for FTFL_FSEC_MEEN.
-#define BM_FTFL_FSEC_MEEN    (0x30U)       //!< Bit mask for FTFL_FSEC_MEEN.
-#define BS_FTFL_FSEC_MEEN    (2U)          //!< Bit field size in bits for FTFL_FSEC_MEEN.
+/*@{*/
+#define BP_FTFL_FSEC_MEEN    (4U)          /*!< Bit position for FTFL_FSEC_MEEN. */
+#define BM_FTFL_FSEC_MEEN    (0x30U)       /*!< Bit mask for FTFL_FSEC_MEEN. */
+#define BS_FTFL_FSEC_MEEN    (2U)          /*!< Bit field size in bits for FTFL_FSEC_MEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSEC_MEEN field.
-#define BR_FTFL_FSEC_MEEN    (HW_FTFL_FSEC.B.MEEN)
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FSEC_MEEN field. */
+#define BR_FTFL_FSEC_MEEN(x) (HW_FTFL_FSEC(x).B.MEEN)
+/*@}*/
 
 /*!
  * @name Register FTFL_FSEC, field KEYEN[7:6] (RO)
@@ -649,22 +590,19 @@ typedef union _hw_ftfl_fsec
  * - 10 - Backdoor key access enabled
  * - 11 - Backdoor key access disabled
  */
-//@{
-#define BP_FTFL_FSEC_KEYEN   (6U)          //!< Bit position for FTFL_FSEC_KEYEN.
-#define BM_FTFL_FSEC_KEYEN   (0xC0U)       //!< Bit mask for FTFL_FSEC_KEYEN.
-#define BS_FTFL_FSEC_KEYEN   (2U)          //!< Bit field size in bits for FTFL_FSEC_KEYEN.
+/*@{*/
+#define BP_FTFL_FSEC_KEYEN   (6U)          /*!< Bit position for FTFL_FSEC_KEYEN. */
+#define BM_FTFL_FSEC_KEYEN   (0xC0U)       /*!< Bit mask for FTFL_FSEC_KEYEN. */
+#define BS_FTFL_FSEC_KEYEN   (2U)          /*!< Bit field size in bits for FTFL_FSEC_KEYEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FSEC_KEYEN field.
-#define BR_FTFL_FSEC_KEYEN   (HW_FTFL_FSEC.B.KEYEN)
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FSEC_KEYEN field. */
+#define BR_FTFL_FSEC_KEYEN(x) (HW_FTFL_FSEC(x).B.KEYEN)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FOPT - Flash Option Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FOPT - Flash Option Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FOPT - Flash Option Register (RO)
  *
@@ -683,22 +621,19 @@ typedef union _hw_ftfl_fopt
     uint8_t U;
     struct _hw_ftfl_fopt_bitfields
     {
-        uint8_t OPT : 8;               //!< [7:0] Nonvolatile Option
+        uint8_t OPT : 8;               /*!< [7:0] Nonvolatile Option */
     } B;
 } hw_ftfl_fopt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FOPT register
  */
-//@{
-#define HW_FTFL_FOPT_ADDR        (REGS_FTFL_BASE + 0x3U)
+/*@{*/
+#define HW_FTFL_FOPT_ADDR(x)     ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FOPT             (*(__I hw_ftfl_fopt_t *) HW_FTFL_FOPT_ADDR)
-#define HW_FTFL_FOPT_RD()        (HW_FTFL_FOPT.U)
-#endif
-//@}
+#define HW_FTFL_FOPT(x)          (*(__I hw_ftfl_fopt_t *) HW_FTFL_FOPT_ADDR(x))
+#define HW_FTFL_FOPT_RD(x)       (HW_FTFL_FOPT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FOPT bitfields
@@ -710,22 +645,19 @@ typedef union _hw_ftfl_fopt
  * These bits are loaded from flash to this register at reset. Refer to the
  * device's Chip Configuration details for the definition and use of these bits.
  */
-//@{
-#define BP_FTFL_FOPT_OPT     (0U)          //!< Bit position for FTFL_FOPT_OPT.
-#define BM_FTFL_FOPT_OPT     (0xFFU)       //!< Bit mask for FTFL_FOPT_OPT.
-#define BS_FTFL_FOPT_OPT     (8U)          //!< Bit field size in bits for FTFL_FOPT_OPT.
+/*@{*/
+#define BP_FTFL_FOPT_OPT     (0U)          /*!< Bit position for FTFL_FOPT_OPT. */
+#define BM_FTFL_FOPT_OPT     (0xFFU)       /*!< Bit mask for FTFL_FOPT_OPT. */
+#define BS_FTFL_FOPT_OPT     (8U)          /*!< Bit field size in bits for FTFL_FOPT_OPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FOPT_OPT field.
-#define BR_FTFL_FOPT_OPT     (HW_FTFL_FOPT.B.OPT)
-#endif
-//@}
+/*! @brief Read current value of the FTFL_FOPT_OPT field. */
+#define BR_FTFL_FOPT_OPT(x)  (HW_FTFL_FOPT(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB3 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB3 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB3 - Flash Common Command Object Registers (RW)
  *
@@ -740,26 +672,23 @@ typedef union _hw_ftfl_fccob3
     uint8_t U;
     struct _hw_ftfl_fccob3_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB3 register
  */
-//@{
-#define HW_FTFL_FCCOB3_ADDR      (REGS_FTFL_BASE + 0x4U)
+/*@{*/
+#define HW_FTFL_FCCOB3_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB3           (*(__IO hw_ftfl_fccob3_t *) HW_FTFL_FCCOB3_ADDR)
-#define HW_FTFL_FCCOB3_RD()      (HW_FTFL_FCCOB3.U)
-#define HW_FTFL_FCCOB3_WR(v)     (HW_FTFL_FCCOB3.U = (v))
-#define HW_FTFL_FCCOB3_SET(v)    (HW_FTFL_FCCOB3_WR(HW_FTFL_FCCOB3_RD() |  (v)))
-#define HW_FTFL_FCCOB3_CLR(v)    (HW_FTFL_FCCOB3_WR(HW_FTFL_FCCOB3_RD() & ~(v)))
-#define HW_FTFL_FCCOB3_TOG(v)    (HW_FTFL_FCCOB3_WR(HW_FTFL_FCCOB3_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB3(x)        (*(__IO hw_ftfl_fccob3_t *) HW_FTFL_FCCOB3_ADDR(x))
+#define HW_FTFL_FCCOB3_RD(x)     (HW_FTFL_FCCOB3(x).U)
+#define HW_FTFL_FCCOB3_WR(x, v)  (HW_FTFL_FCCOB3(x).U = (v))
+#define HW_FTFL_FCCOB3_SET(x, v) (HW_FTFL_FCCOB3_WR(x, HW_FTFL_FCCOB3_RD(x) |  (v)))
+#define HW_FTFL_FCCOB3_CLR(x, v) (HW_FTFL_FCCOB3_WR(x, HW_FTFL_FCCOB3_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB3_TOG(x, v) (HW_FTFL_FCCOB3_WR(x, HW_FTFL_FCCOB3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB3 bitfields
@@ -768,30 +697,25 @@ typedef union _hw_ftfl_fccob3
 /*!
  * @name Register FTFL_FCCOB3, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB3_CCOBn (0U)          //!< Bit position for FTFL_FCCOB3_CCOBn.
-#define BM_FTFL_FCCOB3_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB3_CCOBn.
-#define BS_FTFL_FCCOB3_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB3_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB3_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB3_CCOBn. */
+#define BM_FTFL_FCCOB3_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB3_CCOBn. */
+#define BS_FTFL_FCCOB3_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB3_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB3_CCOBn field.
-#define BR_FTFL_FCCOB3_CCOBn (HW_FTFL_FCCOB3.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB3_CCOBn field. */
+#define BR_FTFL_FCCOB3_CCOBn(x) (HW_FTFL_FCCOB3(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB3_CCOBn.
-#define BF_FTFL_FCCOB3_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB3_CCOBn), uint8_t) & BM_FTFL_FCCOB3_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB3_CCOBn. */
+#define BF_FTFL_FCCOB3_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB3_CCOBn) & BM_FTFL_FCCOB3_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB3_CCOBn(v) (HW_FTFL_FCCOB3_WR((HW_FTFL_FCCOB3_RD() & ~BM_FTFL_FCCOB3_CCOBn) | BF_FTFL_FCCOB3_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB3_CCOBn(x, v) (HW_FTFL_FCCOB3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB2 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB2 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB2 - Flash Common Command Object Registers (RW)
  *
@@ -806,26 +730,23 @@ typedef union _hw_ftfl_fccob2
     uint8_t U;
     struct _hw_ftfl_fccob2_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB2 register
  */
-//@{
-#define HW_FTFL_FCCOB2_ADDR      (REGS_FTFL_BASE + 0x5U)
+/*@{*/
+#define HW_FTFL_FCCOB2_ADDR(x)   ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB2           (*(__IO hw_ftfl_fccob2_t *) HW_FTFL_FCCOB2_ADDR)
-#define HW_FTFL_FCCOB2_RD()      (HW_FTFL_FCCOB2.U)
-#define HW_FTFL_FCCOB2_WR(v)     (HW_FTFL_FCCOB2.U = (v))
-#define HW_FTFL_FCCOB2_SET(v)    (HW_FTFL_FCCOB2_WR(HW_FTFL_FCCOB2_RD() |  (v)))
-#define HW_FTFL_FCCOB2_CLR(v)    (HW_FTFL_FCCOB2_WR(HW_FTFL_FCCOB2_RD() & ~(v)))
-#define HW_FTFL_FCCOB2_TOG(v)    (HW_FTFL_FCCOB2_WR(HW_FTFL_FCCOB2_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB2(x)        (*(__IO hw_ftfl_fccob2_t *) HW_FTFL_FCCOB2_ADDR(x))
+#define HW_FTFL_FCCOB2_RD(x)     (HW_FTFL_FCCOB2(x).U)
+#define HW_FTFL_FCCOB2_WR(x, v)  (HW_FTFL_FCCOB2(x).U = (v))
+#define HW_FTFL_FCCOB2_SET(x, v) (HW_FTFL_FCCOB2_WR(x, HW_FTFL_FCCOB2_RD(x) |  (v)))
+#define HW_FTFL_FCCOB2_CLR(x, v) (HW_FTFL_FCCOB2_WR(x, HW_FTFL_FCCOB2_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB2_TOG(x, v) (HW_FTFL_FCCOB2_WR(x, HW_FTFL_FCCOB2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB2 bitfields
@@ -834,30 +755,25 @@ typedef union _hw_ftfl_fccob2
 /*!
  * @name Register FTFL_FCCOB2, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB2_CCOBn (0U)          //!< Bit position for FTFL_FCCOB2_CCOBn.
-#define BM_FTFL_FCCOB2_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB2_CCOBn.
-#define BS_FTFL_FCCOB2_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB2_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB2_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB2_CCOBn. */
+#define BM_FTFL_FCCOB2_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB2_CCOBn. */
+#define BS_FTFL_FCCOB2_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB2_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB2_CCOBn field.
-#define BR_FTFL_FCCOB2_CCOBn (HW_FTFL_FCCOB2.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB2_CCOBn field. */
+#define BR_FTFL_FCCOB2_CCOBn(x) (HW_FTFL_FCCOB2(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB2_CCOBn.
-#define BF_FTFL_FCCOB2_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB2_CCOBn), uint8_t) & BM_FTFL_FCCOB2_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB2_CCOBn. */
+#define BF_FTFL_FCCOB2_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB2_CCOBn) & BM_FTFL_FCCOB2_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB2_CCOBn(v) (HW_FTFL_FCCOB2_WR((HW_FTFL_FCCOB2_RD() & ~BM_FTFL_FCCOB2_CCOBn) | BF_FTFL_FCCOB2_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB2_CCOBn(x, v) (HW_FTFL_FCCOB2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB1 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB1 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB1 - Flash Common Command Object Registers (RW)
  *
@@ -872,26 +788,23 @@ typedef union _hw_ftfl_fccob1
     uint8_t U;
     struct _hw_ftfl_fccob1_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB1 register
  */
-//@{
-#define HW_FTFL_FCCOB1_ADDR      (REGS_FTFL_BASE + 0x6U)
+/*@{*/
+#define HW_FTFL_FCCOB1_ADDR(x)   ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB1           (*(__IO hw_ftfl_fccob1_t *) HW_FTFL_FCCOB1_ADDR)
-#define HW_FTFL_FCCOB1_RD()      (HW_FTFL_FCCOB1.U)
-#define HW_FTFL_FCCOB1_WR(v)     (HW_FTFL_FCCOB1.U = (v))
-#define HW_FTFL_FCCOB1_SET(v)    (HW_FTFL_FCCOB1_WR(HW_FTFL_FCCOB1_RD() |  (v)))
-#define HW_FTFL_FCCOB1_CLR(v)    (HW_FTFL_FCCOB1_WR(HW_FTFL_FCCOB1_RD() & ~(v)))
-#define HW_FTFL_FCCOB1_TOG(v)    (HW_FTFL_FCCOB1_WR(HW_FTFL_FCCOB1_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB1(x)        (*(__IO hw_ftfl_fccob1_t *) HW_FTFL_FCCOB1_ADDR(x))
+#define HW_FTFL_FCCOB1_RD(x)     (HW_FTFL_FCCOB1(x).U)
+#define HW_FTFL_FCCOB1_WR(x, v)  (HW_FTFL_FCCOB1(x).U = (v))
+#define HW_FTFL_FCCOB1_SET(x, v) (HW_FTFL_FCCOB1_WR(x, HW_FTFL_FCCOB1_RD(x) |  (v)))
+#define HW_FTFL_FCCOB1_CLR(x, v) (HW_FTFL_FCCOB1_WR(x, HW_FTFL_FCCOB1_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB1_TOG(x, v) (HW_FTFL_FCCOB1_WR(x, HW_FTFL_FCCOB1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB1 bitfields
@@ -900,30 +813,25 @@ typedef union _hw_ftfl_fccob1
 /*!
  * @name Register FTFL_FCCOB1, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB1_CCOBn (0U)          //!< Bit position for FTFL_FCCOB1_CCOBn.
-#define BM_FTFL_FCCOB1_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB1_CCOBn.
-#define BS_FTFL_FCCOB1_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB1_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB1_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB1_CCOBn. */
+#define BM_FTFL_FCCOB1_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB1_CCOBn. */
+#define BS_FTFL_FCCOB1_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB1_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB1_CCOBn field.
-#define BR_FTFL_FCCOB1_CCOBn (HW_FTFL_FCCOB1.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB1_CCOBn field. */
+#define BR_FTFL_FCCOB1_CCOBn(x) (HW_FTFL_FCCOB1(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB1_CCOBn.
-#define BF_FTFL_FCCOB1_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB1_CCOBn), uint8_t) & BM_FTFL_FCCOB1_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB1_CCOBn. */
+#define BF_FTFL_FCCOB1_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB1_CCOBn) & BM_FTFL_FCCOB1_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB1_CCOBn(v) (HW_FTFL_FCCOB1_WR((HW_FTFL_FCCOB1_RD() & ~BM_FTFL_FCCOB1_CCOBn) | BF_FTFL_FCCOB1_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB1_CCOBn(x, v) (HW_FTFL_FCCOB1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB0 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB0 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB0 - Flash Common Command Object Registers (RW)
  *
@@ -938,26 +846,23 @@ typedef union _hw_ftfl_fccob0
     uint8_t U;
     struct _hw_ftfl_fccob0_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB0 register
  */
-//@{
-#define HW_FTFL_FCCOB0_ADDR      (REGS_FTFL_BASE + 0x7U)
+/*@{*/
+#define HW_FTFL_FCCOB0_ADDR(x)   ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB0           (*(__IO hw_ftfl_fccob0_t *) HW_FTFL_FCCOB0_ADDR)
-#define HW_FTFL_FCCOB0_RD()      (HW_FTFL_FCCOB0.U)
-#define HW_FTFL_FCCOB0_WR(v)     (HW_FTFL_FCCOB0.U = (v))
-#define HW_FTFL_FCCOB0_SET(v)    (HW_FTFL_FCCOB0_WR(HW_FTFL_FCCOB0_RD() |  (v)))
-#define HW_FTFL_FCCOB0_CLR(v)    (HW_FTFL_FCCOB0_WR(HW_FTFL_FCCOB0_RD() & ~(v)))
-#define HW_FTFL_FCCOB0_TOG(v)    (HW_FTFL_FCCOB0_WR(HW_FTFL_FCCOB0_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB0(x)        (*(__IO hw_ftfl_fccob0_t *) HW_FTFL_FCCOB0_ADDR(x))
+#define HW_FTFL_FCCOB0_RD(x)     (HW_FTFL_FCCOB0(x).U)
+#define HW_FTFL_FCCOB0_WR(x, v)  (HW_FTFL_FCCOB0(x).U = (v))
+#define HW_FTFL_FCCOB0_SET(x, v) (HW_FTFL_FCCOB0_WR(x, HW_FTFL_FCCOB0_RD(x) |  (v)))
+#define HW_FTFL_FCCOB0_CLR(x, v) (HW_FTFL_FCCOB0_WR(x, HW_FTFL_FCCOB0_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB0_TOG(x, v) (HW_FTFL_FCCOB0_WR(x, HW_FTFL_FCCOB0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB0 bitfields
@@ -966,30 +871,25 @@ typedef union _hw_ftfl_fccob0
 /*!
  * @name Register FTFL_FCCOB0, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB0_CCOBn (0U)          //!< Bit position for FTFL_FCCOB0_CCOBn.
-#define BM_FTFL_FCCOB0_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB0_CCOBn.
-#define BS_FTFL_FCCOB0_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB0_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB0_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB0_CCOBn. */
+#define BM_FTFL_FCCOB0_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB0_CCOBn. */
+#define BS_FTFL_FCCOB0_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB0_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB0_CCOBn field.
-#define BR_FTFL_FCCOB0_CCOBn (HW_FTFL_FCCOB0.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB0_CCOBn field. */
+#define BR_FTFL_FCCOB0_CCOBn(x) (HW_FTFL_FCCOB0(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB0_CCOBn.
-#define BF_FTFL_FCCOB0_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB0_CCOBn), uint8_t) & BM_FTFL_FCCOB0_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB0_CCOBn. */
+#define BF_FTFL_FCCOB0_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB0_CCOBn) & BM_FTFL_FCCOB0_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB0_CCOBn(v) (HW_FTFL_FCCOB0_WR((HW_FTFL_FCCOB0_RD() & ~BM_FTFL_FCCOB0_CCOBn) | BF_FTFL_FCCOB0_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB0_CCOBn(x, v) (HW_FTFL_FCCOB0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB7 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB7 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB7 - Flash Common Command Object Registers (RW)
  *
@@ -1004,26 +904,23 @@ typedef union _hw_ftfl_fccob7
     uint8_t U;
     struct _hw_ftfl_fccob7_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB7 register
  */
-//@{
-#define HW_FTFL_FCCOB7_ADDR      (REGS_FTFL_BASE + 0x8U)
+/*@{*/
+#define HW_FTFL_FCCOB7_ADDR(x)   ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB7           (*(__IO hw_ftfl_fccob7_t *) HW_FTFL_FCCOB7_ADDR)
-#define HW_FTFL_FCCOB7_RD()      (HW_FTFL_FCCOB7.U)
-#define HW_FTFL_FCCOB7_WR(v)     (HW_FTFL_FCCOB7.U = (v))
-#define HW_FTFL_FCCOB7_SET(v)    (HW_FTFL_FCCOB7_WR(HW_FTFL_FCCOB7_RD() |  (v)))
-#define HW_FTFL_FCCOB7_CLR(v)    (HW_FTFL_FCCOB7_WR(HW_FTFL_FCCOB7_RD() & ~(v)))
-#define HW_FTFL_FCCOB7_TOG(v)    (HW_FTFL_FCCOB7_WR(HW_FTFL_FCCOB7_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB7(x)        (*(__IO hw_ftfl_fccob7_t *) HW_FTFL_FCCOB7_ADDR(x))
+#define HW_FTFL_FCCOB7_RD(x)     (HW_FTFL_FCCOB7(x).U)
+#define HW_FTFL_FCCOB7_WR(x, v)  (HW_FTFL_FCCOB7(x).U = (v))
+#define HW_FTFL_FCCOB7_SET(x, v) (HW_FTFL_FCCOB7_WR(x, HW_FTFL_FCCOB7_RD(x) |  (v)))
+#define HW_FTFL_FCCOB7_CLR(x, v) (HW_FTFL_FCCOB7_WR(x, HW_FTFL_FCCOB7_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB7_TOG(x, v) (HW_FTFL_FCCOB7_WR(x, HW_FTFL_FCCOB7_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB7 bitfields
@@ -1032,30 +929,25 @@ typedef union _hw_ftfl_fccob7
 /*!
  * @name Register FTFL_FCCOB7, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB7_CCOBn (0U)          //!< Bit position for FTFL_FCCOB7_CCOBn.
-#define BM_FTFL_FCCOB7_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB7_CCOBn.
-#define BS_FTFL_FCCOB7_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB7_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB7_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB7_CCOBn. */
+#define BM_FTFL_FCCOB7_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB7_CCOBn. */
+#define BS_FTFL_FCCOB7_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB7_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB7_CCOBn field.
-#define BR_FTFL_FCCOB7_CCOBn (HW_FTFL_FCCOB7.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB7_CCOBn field. */
+#define BR_FTFL_FCCOB7_CCOBn(x) (HW_FTFL_FCCOB7(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB7_CCOBn.
-#define BF_FTFL_FCCOB7_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB7_CCOBn), uint8_t) & BM_FTFL_FCCOB7_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB7_CCOBn. */
+#define BF_FTFL_FCCOB7_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB7_CCOBn) & BM_FTFL_FCCOB7_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB7_CCOBn(v) (HW_FTFL_FCCOB7_WR((HW_FTFL_FCCOB7_RD() & ~BM_FTFL_FCCOB7_CCOBn) | BF_FTFL_FCCOB7_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB7_CCOBn(x, v) (HW_FTFL_FCCOB7_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB6 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB6 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB6 - Flash Common Command Object Registers (RW)
  *
@@ -1070,26 +962,23 @@ typedef union _hw_ftfl_fccob6
     uint8_t U;
     struct _hw_ftfl_fccob6_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB6 register
  */
-//@{
-#define HW_FTFL_FCCOB6_ADDR      (REGS_FTFL_BASE + 0x9U)
+/*@{*/
+#define HW_FTFL_FCCOB6_ADDR(x)   ((x) + 0x9U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB6           (*(__IO hw_ftfl_fccob6_t *) HW_FTFL_FCCOB6_ADDR)
-#define HW_FTFL_FCCOB6_RD()      (HW_FTFL_FCCOB6.U)
-#define HW_FTFL_FCCOB6_WR(v)     (HW_FTFL_FCCOB6.U = (v))
-#define HW_FTFL_FCCOB6_SET(v)    (HW_FTFL_FCCOB6_WR(HW_FTFL_FCCOB6_RD() |  (v)))
-#define HW_FTFL_FCCOB6_CLR(v)    (HW_FTFL_FCCOB6_WR(HW_FTFL_FCCOB6_RD() & ~(v)))
-#define HW_FTFL_FCCOB6_TOG(v)    (HW_FTFL_FCCOB6_WR(HW_FTFL_FCCOB6_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB6(x)        (*(__IO hw_ftfl_fccob6_t *) HW_FTFL_FCCOB6_ADDR(x))
+#define HW_FTFL_FCCOB6_RD(x)     (HW_FTFL_FCCOB6(x).U)
+#define HW_FTFL_FCCOB6_WR(x, v)  (HW_FTFL_FCCOB6(x).U = (v))
+#define HW_FTFL_FCCOB6_SET(x, v) (HW_FTFL_FCCOB6_WR(x, HW_FTFL_FCCOB6_RD(x) |  (v)))
+#define HW_FTFL_FCCOB6_CLR(x, v) (HW_FTFL_FCCOB6_WR(x, HW_FTFL_FCCOB6_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB6_TOG(x, v) (HW_FTFL_FCCOB6_WR(x, HW_FTFL_FCCOB6_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB6 bitfields
@@ -1098,30 +987,25 @@ typedef union _hw_ftfl_fccob6
 /*!
  * @name Register FTFL_FCCOB6, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB6_CCOBn (0U)          //!< Bit position for FTFL_FCCOB6_CCOBn.
-#define BM_FTFL_FCCOB6_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB6_CCOBn.
-#define BS_FTFL_FCCOB6_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB6_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB6_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB6_CCOBn. */
+#define BM_FTFL_FCCOB6_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB6_CCOBn. */
+#define BS_FTFL_FCCOB6_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB6_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB6_CCOBn field.
-#define BR_FTFL_FCCOB6_CCOBn (HW_FTFL_FCCOB6.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB6_CCOBn field. */
+#define BR_FTFL_FCCOB6_CCOBn(x) (HW_FTFL_FCCOB6(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB6_CCOBn.
-#define BF_FTFL_FCCOB6_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB6_CCOBn), uint8_t) & BM_FTFL_FCCOB6_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB6_CCOBn. */
+#define BF_FTFL_FCCOB6_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB6_CCOBn) & BM_FTFL_FCCOB6_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB6_CCOBn(v) (HW_FTFL_FCCOB6_WR((HW_FTFL_FCCOB6_RD() & ~BM_FTFL_FCCOB6_CCOBn) | BF_FTFL_FCCOB6_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB6_CCOBn(x, v) (HW_FTFL_FCCOB6_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB5 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB5 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB5 - Flash Common Command Object Registers (RW)
  *
@@ -1136,26 +1020,23 @@ typedef union _hw_ftfl_fccob5
     uint8_t U;
     struct _hw_ftfl_fccob5_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB5 register
  */
-//@{
-#define HW_FTFL_FCCOB5_ADDR      (REGS_FTFL_BASE + 0xAU)
+/*@{*/
+#define HW_FTFL_FCCOB5_ADDR(x)   ((x) + 0xAU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB5           (*(__IO hw_ftfl_fccob5_t *) HW_FTFL_FCCOB5_ADDR)
-#define HW_FTFL_FCCOB5_RD()      (HW_FTFL_FCCOB5.U)
-#define HW_FTFL_FCCOB5_WR(v)     (HW_FTFL_FCCOB5.U = (v))
-#define HW_FTFL_FCCOB5_SET(v)    (HW_FTFL_FCCOB5_WR(HW_FTFL_FCCOB5_RD() |  (v)))
-#define HW_FTFL_FCCOB5_CLR(v)    (HW_FTFL_FCCOB5_WR(HW_FTFL_FCCOB5_RD() & ~(v)))
-#define HW_FTFL_FCCOB5_TOG(v)    (HW_FTFL_FCCOB5_WR(HW_FTFL_FCCOB5_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB5(x)        (*(__IO hw_ftfl_fccob5_t *) HW_FTFL_FCCOB5_ADDR(x))
+#define HW_FTFL_FCCOB5_RD(x)     (HW_FTFL_FCCOB5(x).U)
+#define HW_FTFL_FCCOB5_WR(x, v)  (HW_FTFL_FCCOB5(x).U = (v))
+#define HW_FTFL_FCCOB5_SET(x, v) (HW_FTFL_FCCOB5_WR(x, HW_FTFL_FCCOB5_RD(x) |  (v)))
+#define HW_FTFL_FCCOB5_CLR(x, v) (HW_FTFL_FCCOB5_WR(x, HW_FTFL_FCCOB5_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB5_TOG(x, v) (HW_FTFL_FCCOB5_WR(x, HW_FTFL_FCCOB5_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB5 bitfields
@@ -1164,30 +1045,25 @@ typedef union _hw_ftfl_fccob5
 /*!
  * @name Register FTFL_FCCOB5, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB5_CCOBn (0U)          //!< Bit position for FTFL_FCCOB5_CCOBn.
-#define BM_FTFL_FCCOB5_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB5_CCOBn.
-#define BS_FTFL_FCCOB5_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB5_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB5_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB5_CCOBn. */
+#define BM_FTFL_FCCOB5_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB5_CCOBn. */
+#define BS_FTFL_FCCOB5_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB5_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB5_CCOBn field.
-#define BR_FTFL_FCCOB5_CCOBn (HW_FTFL_FCCOB5.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB5_CCOBn field. */
+#define BR_FTFL_FCCOB5_CCOBn(x) (HW_FTFL_FCCOB5(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB5_CCOBn.
-#define BF_FTFL_FCCOB5_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB5_CCOBn), uint8_t) & BM_FTFL_FCCOB5_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB5_CCOBn. */
+#define BF_FTFL_FCCOB5_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB5_CCOBn) & BM_FTFL_FCCOB5_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB5_CCOBn(v) (HW_FTFL_FCCOB5_WR((HW_FTFL_FCCOB5_RD() & ~BM_FTFL_FCCOB5_CCOBn) | BF_FTFL_FCCOB5_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB5_CCOBn(x, v) (HW_FTFL_FCCOB5_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB4 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB4 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB4 - Flash Common Command Object Registers (RW)
  *
@@ -1202,26 +1078,23 @@ typedef union _hw_ftfl_fccob4
     uint8_t U;
     struct _hw_ftfl_fccob4_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB4 register
  */
-//@{
-#define HW_FTFL_FCCOB4_ADDR      (REGS_FTFL_BASE + 0xBU)
+/*@{*/
+#define HW_FTFL_FCCOB4_ADDR(x)   ((x) + 0xBU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB4           (*(__IO hw_ftfl_fccob4_t *) HW_FTFL_FCCOB4_ADDR)
-#define HW_FTFL_FCCOB4_RD()      (HW_FTFL_FCCOB4.U)
-#define HW_FTFL_FCCOB4_WR(v)     (HW_FTFL_FCCOB4.U = (v))
-#define HW_FTFL_FCCOB4_SET(v)    (HW_FTFL_FCCOB4_WR(HW_FTFL_FCCOB4_RD() |  (v)))
-#define HW_FTFL_FCCOB4_CLR(v)    (HW_FTFL_FCCOB4_WR(HW_FTFL_FCCOB4_RD() & ~(v)))
-#define HW_FTFL_FCCOB4_TOG(v)    (HW_FTFL_FCCOB4_WR(HW_FTFL_FCCOB4_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB4(x)        (*(__IO hw_ftfl_fccob4_t *) HW_FTFL_FCCOB4_ADDR(x))
+#define HW_FTFL_FCCOB4_RD(x)     (HW_FTFL_FCCOB4(x).U)
+#define HW_FTFL_FCCOB4_WR(x, v)  (HW_FTFL_FCCOB4(x).U = (v))
+#define HW_FTFL_FCCOB4_SET(x, v) (HW_FTFL_FCCOB4_WR(x, HW_FTFL_FCCOB4_RD(x) |  (v)))
+#define HW_FTFL_FCCOB4_CLR(x, v) (HW_FTFL_FCCOB4_WR(x, HW_FTFL_FCCOB4_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB4_TOG(x, v) (HW_FTFL_FCCOB4_WR(x, HW_FTFL_FCCOB4_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB4 bitfields
@@ -1230,30 +1103,25 @@ typedef union _hw_ftfl_fccob4
 /*!
  * @name Register FTFL_FCCOB4, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB4_CCOBn (0U)          //!< Bit position for FTFL_FCCOB4_CCOBn.
-#define BM_FTFL_FCCOB4_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB4_CCOBn.
-#define BS_FTFL_FCCOB4_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB4_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB4_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB4_CCOBn. */
+#define BM_FTFL_FCCOB4_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB4_CCOBn. */
+#define BS_FTFL_FCCOB4_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB4_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB4_CCOBn field.
-#define BR_FTFL_FCCOB4_CCOBn (HW_FTFL_FCCOB4.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB4_CCOBn field. */
+#define BR_FTFL_FCCOB4_CCOBn(x) (HW_FTFL_FCCOB4(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB4_CCOBn.
-#define BF_FTFL_FCCOB4_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB4_CCOBn), uint8_t) & BM_FTFL_FCCOB4_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB4_CCOBn. */
+#define BF_FTFL_FCCOB4_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB4_CCOBn) & BM_FTFL_FCCOB4_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB4_CCOBn(v) (HW_FTFL_FCCOB4_WR((HW_FTFL_FCCOB4_RD() & ~BM_FTFL_FCCOB4_CCOBn) | BF_FTFL_FCCOB4_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB4_CCOBn(x, v) (HW_FTFL_FCCOB4_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOBB - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOBB - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOBB - Flash Common Command Object Registers (RW)
  *
@@ -1268,26 +1136,23 @@ typedef union _hw_ftfl_fccobb
     uint8_t U;
     struct _hw_ftfl_fccobb_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccobb_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOBB register
  */
-//@{
-#define HW_FTFL_FCCOBB_ADDR      (REGS_FTFL_BASE + 0xCU)
+/*@{*/
+#define HW_FTFL_FCCOBB_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOBB           (*(__IO hw_ftfl_fccobb_t *) HW_FTFL_FCCOBB_ADDR)
-#define HW_FTFL_FCCOBB_RD()      (HW_FTFL_FCCOBB.U)
-#define HW_FTFL_FCCOBB_WR(v)     (HW_FTFL_FCCOBB.U = (v))
-#define HW_FTFL_FCCOBB_SET(v)    (HW_FTFL_FCCOBB_WR(HW_FTFL_FCCOBB_RD() |  (v)))
-#define HW_FTFL_FCCOBB_CLR(v)    (HW_FTFL_FCCOBB_WR(HW_FTFL_FCCOBB_RD() & ~(v)))
-#define HW_FTFL_FCCOBB_TOG(v)    (HW_FTFL_FCCOBB_WR(HW_FTFL_FCCOBB_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOBB(x)        (*(__IO hw_ftfl_fccobb_t *) HW_FTFL_FCCOBB_ADDR(x))
+#define HW_FTFL_FCCOBB_RD(x)     (HW_FTFL_FCCOBB(x).U)
+#define HW_FTFL_FCCOBB_WR(x, v)  (HW_FTFL_FCCOBB(x).U = (v))
+#define HW_FTFL_FCCOBB_SET(x, v) (HW_FTFL_FCCOBB_WR(x, HW_FTFL_FCCOBB_RD(x) |  (v)))
+#define HW_FTFL_FCCOBB_CLR(x, v) (HW_FTFL_FCCOBB_WR(x, HW_FTFL_FCCOBB_RD(x) & ~(v)))
+#define HW_FTFL_FCCOBB_TOG(x, v) (HW_FTFL_FCCOBB_WR(x, HW_FTFL_FCCOBB_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOBB bitfields
@@ -1296,30 +1161,25 @@ typedef union _hw_ftfl_fccobb
 /*!
  * @name Register FTFL_FCCOBB, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOBB_CCOBn (0U)          //!< Bit position for FTFL_FCCOBB_CCOBn.
-#define BM_FTFL_FCCOBB_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOBB_CCOBn.
-#define BS_FTFL_FCCOBB_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOBB_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOBB_CCOBn (0U)          /*!< Bit position for FTFL_FCCOBB_CCOBn. */
+#define BM_FTFL_FCCOBB_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOBB_CCOBn. */
+#define BS_FTFL_FCCOBB_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOBB_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOBB_CCOBn field.
-#define BR_FTFL_FCCOBB_CCOBn (HW_FTFL_FCCOBB.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOBB_CCOBn field. */
+#define BR_FTFL_FCCOBB_CCOBn(x) (HW_FTFL_FCCOBB(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOBB_CCOBn.
-#define BF_FTFL_FCCOBB_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOBB_CCOBn), uint8_t) & BM_FTFL_FCCOBB_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOBB_CCOBn. */
+#define BF_FTFL_FCCOBB_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOBB_CCOBn) & BM_FTFL_FCCOBB_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOBB_CCOBn(v) (HW_FTFL_FCCOBB_WR((HW_FTFL_FCCOBB_RD() & ~BM_FTFL_FCCOBB_CCOBn) | BF_FTFL_FCCOBB_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOBB_CCOBn(x, v) (HW_FTFL_FCCOBB_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOBA - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOBA - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOBA - Flash Common Command Object Registers (RW)
  *
@@ -1334,26 +1194,23 @@ typedef union _hw_ftfl_fccoba
     uint8_t U;
     struct _hw_ftfl_fccoba_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccoba_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOBA register
  */
-//@{
-#define HW_FTFL_FCCOBA_ADDR      (REGS_FTFL_BASE + 0xDU)
+/*@{*/
+#define HW_FTFL_FCCOBA_ADDR(x)   ((x) + 0xDU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOBA           (*(__IO hw_ftfl_fccoba_t *) HW_FTFL_FCCOBA_ADDR)
-#define HW_FTFL_FCCOBA_RD()      (HW_FTFL_FCCOBA.U)
-#define HW_FTFL_FCCOBA_WR(v)     (HW_FTFL_FCCOBA.U = (v))
-#define HW_FTFL_FCCOBA_SET(v)    (HW_FTFL_FCCOBA_WR(HW_FTFL_FCCOBA_RD() |  (v)))
-#define HW_FTFL_FCCOBA_CLR(v)    (HW_FTFL_FCCOBA_WR(HW_FTFL_FCCOBA_RD() & ~(v)))
-#define HW_FTFL_FCCOBA_TOG(v)    (HW_FTFL_FCCOBA_WR(HW_FTFL_FCCOBA_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOBA(x)        (*(__IO hw_ftfl_fccoba_t *) HW_FTFL_FCCOBA_ADDR(x))
+#define HW_FTFL_FCCOBA_RD(x)     (HW_FTFL_FCCOBA(x).U)
+#define HW_FTFL_FCCOBA_WR(x, v)  (HW_FTFL_FCCOBA(x).U = (v))
+#define HW_FTFL_FCCOBA_SET(x, v) (HW_FTFL_FCCOBA_WR(x, HW_FTFL_FCCOBA_RD(x) |  (v)))
+#define HW_FTFL_FCCOBA_CLR(x, v) (HW_FTFL_FCCOBA_WR(x, HW_FTFL_FCCOBA_RD(x) & ~(v)))
+#define HW_FTFL_FCCOBA_TOG(x, v) (HW_FTFL_FCCOBA_WR(x, HW_FTFL_FCCOBA_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOBA bitfields
@@ -1362,30 +1219,25 @@ typedef union _hw_ftfl_fccoba
 /*!
  * @name Register FTFL_FCCOBA, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOBA_CCOBn (0U)          //!< Bit position for FTFL_FCCOBA_CCOBn.
-#define BM_FTFL_FCCOBA_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOBA_CCOBn.
-#define BS_FTFL_FCCOBA_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOBA_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOBA_CCOBn (0U)          /*!< Bit position for FTFL_FCCOBA_CCOBn. */
+#define BM_FTFL_FCCOBA_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOBA_CCOBn. */
+#define BS_FTFL_FCCOBA_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOBA_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOBA_CCOBn field.
-#define BR_FTFL_FCCOBA_CCOBn (HW_FTFL_FCCOBA.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOBA_CCOBn field. */
+#define BR_FTFL_FCCOBA_CCOBn(x) (HW_FTFL_FCCOBA(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOBA_CCOBn.
-#define BF_FTFL_FCCOBA_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOBA_CCOBn), uint8_t) & BM_FTFL_FCCOBA_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOBA_CCOBn. */
+#define BF_FTFL_FCCOBA_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOBA_CCOBn) & BM_FTFL_FCCOBA_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOBA_CCOBn(v) (HW_FTFL_FCCOBA_WR((HW_FTFL_FCCOBA_RD() & ~BM_FTFL_FCCOBA_CCOBn) | BF_FTFL_FCCOBA_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOBA_CCOBn(x, v) (HW_FTFL_FCCOBA_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB9 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB9 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB9 - Flash Common Command Object Registers (RW)
  *
@@ -1400,26 +1252,23 @@ typedef union _hw_ftfl_fccob9
     uint8_t U;
     struct _hw_ftfl_fccob9_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob9_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB9 register
  */
-//@{
-#define HW_FTFL_FCCOB9_ADDR      (REGS_FTFL_BASE + 0xEU)
+/*@{*/
+#define HW_FTFL_FCCOB9_ADDR(x)   ((x) + 0xEU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB9           (*(__IO hw_ftfl_fccob9_t *) HW_FTFL_FCCOB9_ADDR)
-#define HW_FTFL_FCCOB9_RD()      (HW_FTFL_FCCOB9.U)
-#define HW_FTFL_FCCOB9_WR(v)     (HW_FTFL_FCCOB9.U = (v))
-#define HW_FTFL_FCCOB9_SET(v)    (HW_FTFL_FCCOB9_WR(HW_FTFL_FCCOB9_RD() |  (v)))
-#define HW_FTFL_FCCOB9_CLR(v)    (HW_FTFL_FCCOB9_WR(HW_FTFL_FCCOB9_RD() & ~(v)))
-#define HW_FTFL_FCCOB9_TOG(v)    (HW_FTFL_FCCOB9_WR(HW_FTFL_FCCOB9_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB9(x)        (*(__IO hw_ftfl_fccob9_t *) HW_FTFL_FCCOB9_ADDR(x))
+#define HW_FTFL_FCCOB9_RD(x)     (HW_FTFL_FCCOB9(x).U)
+#define HW_FTFL_FCCOB9_WR(x, v)  (HW_FTFL_FCCOB9(x).U = (v))
+#define HW_FTFL_FCCOB9_SET(x, v) (HW_FTFL_FCCOB9_WR(x, HW_FTFL_FCCOB9_RD(x) |  (v)))
+#define HW_FTFL_FCCOB9_CLR(x, v) (HW_FTFL_FCCOB9_WR(x, HW_FTFL_FCCOB9_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB9_TOG(x, v) (HW_FTFL_FCCOB9_WR(x, HW_FTFL_FCCOB9_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB9 bitfields
@@ -1428,30 +1277,25 @@ typedef union _hw_ftfl_fccob9
 /*!
  * @name Register FTFL_FCCOB9, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB9_CCOBn (0U)          //!< Bit position for FTFL_FCCOB9_CCOBn.
-#define BM_FTFL_FCCOB9_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB9_CCOBn.
-#define BS_FTFL_FCCOB9_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB9_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB9_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB9_CCOBn. */
+#define BM_FTFL_FCCOB9_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB9_CCOBn. */
+#define BS_FTFL_FCCOB9_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB9_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB9_CCOBn field.
-#define BR_FTFL_FCCOB9_CCOBn (HW_FTFL_FCCOB9.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB9_CCOBn field. */
+#define BR_FTFL_FCCOB9_CCOBn(x) (HW_FTFL_FCCOB9(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB9_CCOBn.
-#define BF_FTFL_FCCOB9_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB9_CCOBn), uint8_t) & BM_FTFL_FCCOB9_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB9_CCOBn. */
+#define BF_FTFL_FCCOB9_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB9_CCOBn) & BM_FTFL_FCCOB9_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB9_CCOBn(v) (HW_FTFL_FCCOB9_WR((HW_FTFL_FCCOB9_RD() & ~BM_FTFL_FCCOB9_CCOBn) | BF_FTFL_FCCOB9_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB9_CCOBn(x, v) (HW_FTFL_FCCOB9_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FCCOB8 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FCCOB8 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FCCOB8 - Flash Common Command Object Registers (RW)
  *
@@ -1466,26 +1310,23 @@ typedef union _hw_ftfl_fccob8
     uint8_t U;
     struct _hw_ftfl_fccob8_bitfields
     {
-        uint8_t CCOBn : 8;             //!< [7:0]
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfl_fccob8_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FCCOB8 register
  */
-//@{
-#define HW_FTFL_FCCOB8_ADDR      (REGS_FTFL_BASE + 0xFU)
+/*@{*/
+#define HW_FTFL_FCCOB8_ADDR(x)   ((x) + 0xFU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FCCOB8           (*(__IO hw_ftfl_fccob8_t *) HW_FTFL_FCCOB8_ADDR)
-#define HW_FTFL_FCCOB8_RD()      (HW_FTFL_FCCOB8.U)
-#define HW_FTFL_FCCOB8_WR(v)     (HW_FTFL_FCCOB8.U = (v))
-#define HW_FTFL_FCCOB8_SET(v)    (HW_FTFL_FCCOB8_WR(HW_FTFL_FCCOB8_RD() |  (v)))
-#define HW_FTFL_FCCOB8_CLR(v)    (HW_FTFL_FCCOB8_WR(HW_FTFL_FCCOB8_RD() & ~(v)))
-#define HW_FTFL_FCCOB8_TOG(v)    (HW_FTFL_FCCOB8_WR(HW_FTFL_FCCOB8_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FCCOB8(x)        (*(__IO hw_ftfl_fccob8_t *) HW_FTFL_FCCOB8_ADDR(x))
+#define HW_FTFL_FCCOB8_RD(x)     (HW_FTFL_FCCOB8(x).U)
+#define HW_FTFL_FCCOB8_WR(x, v)  (HW_FTFL_FCCOB8(x).U = (v))
+#define HW_FTFL_FCCOB8_SET(x, v) (HW_FTFL_FCCOB8_WR(x, HW_FTFL_FCCOB8_RD(x) |  (v)))
+#define HW_FTFL_FCCOB8_CLR(x, v) (HW_FTFL_FCCOB8_WR(x, HW_FTFL_FCCOB8_RD(x) & ~(v)))
+#define HW_FTFL_FCCOB8_TOG(x, v) (HW_FTFL_FCCOB8_WR(x, HW_FTFL_FCCOB8_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FCCOB8 bitfields
@@ -1494,30 +1335,25 @@ typedef union _hw_ftfl_fccob8
 /*!
  * @name Register FTFL_FCCOB8, field CCOBn[7:0] (RW)
  */
-//@{
-#define BP_FTFL_FCCOB8_CCOBn (0U)          //!< Bit position for FTFL_FCCOB8_CCOBn.
-#define BM_FTFL_FCCOB8_CCOBn (0xFFU)       //!< Bit mask for FTFL_FCCOB8_CCOBn.
-#define BS_FTFL_FCCOB8_CCOBn (8U)          //!< Bit field size in bits for FTFL_FCCOB8_CCOBn.
+/*@{*/
+#define BP_FTFL_FCCOB8_CCOBn (0U)          /*!< Bit position for FTFL_FCCOB8_CCOBn. */
+#define BM_FTFL_FCCOB8_CCOBn (0xFFU)       /*!< Bit mask for FTFL_FCCOB8_CCOBn. */
+#define BS_FTFL_FCCOB8_CCOBn (8U)          /*!< Bit field size in bits for FTFL_FCCOB8_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FCCOB8_CCOBn field.
-#define BR_FTFL_FCCOB8_CCOBn (HW_FTFL_FCCOB8.B.CCOBn)
-#endif
+/*! @brief Read current value of the FTFL_FCCOB8_CCOBn field. */
+#define BR_FTFL_FCCOB8_CCOBn(x) (HW_FTFL_FCCOB8(x).U)
 
-//! @brief Format value for bitfield FTFL_FCCOB8_CCOBn.
-#define BF_FTFL_FCCOB8_CCOBn(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FCCOB8_CCOBn), uint8_t) & BM_FTFL_FCCOB8_CCOBn)
+/*! @brief Format value for bitfield FTFL_FCCOB8_CCOBn. */
+#define BF_FTFL_FCCOB8_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FCCOB8_CCOBn) & BM_FTFL_FCCOB8_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBn field to a new value.
-#define BW_FTFL_FCCOB8_CCOBn(v) (HW_FTFL_FCCOB8_WR((HW_FTFL_FCCOB8_RD() & ~BM_FTFL_FCCOB8_CCOBn) | BF_FTFL_FCCOB8_CCOBn(v)))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFL_FCCOB8_CCOBn(x, v) (HW_FTFL_FCCOB8_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FPROT3 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FPROT3 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FPROT3 - Program Flash Protection Registers (RW)
  *
@@ -1544,26 +1380,23 @@ typedef union _hw_ftfl_fprot3
     uint8_t U;
     struct _hw_ftfl_fprot3_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfl_fprot3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FPROT3 register
  */
-//@{
-#define HW_FTFL_FPROT3_ADDR      (REGS_FTFL_BASE + 0x10U)
+/*@{*/
+#define HW_FTFL_FPROT3_ADDR(x)   ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FPROT3           (*(__IO hw_ftfl_fprot3_t *) HW_FTFL_FPROT3_ADDR)
-#define HW_FTFL_FPROT3_RD()      (HW_FTFL_FPROT3.U)
-#define HW_FTFL_FPROT3_WR(v)     (HW_FTFL_FPROT3.U = (v))
-#define HW_FTFL_FPROT3_SET(v)    (HW_FTFL_FPROT3_WR(HW_FTFL_FPROT3_RD() |  (v)))
-#define HW_FTFL_FPROT3_CLR(v)    (HW_FTFL_FPROT3_WR(HW_FTFL_FPROT3_RD() & ~(v)))
-#define HW_FTFL_FPROT3_TOG(v)    (HW_FTFL_FPROT3_WR(HW_FTFL_FPROT3_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FPROT3(x)        (*(__IO hw_ftfl_fprot3_t *) HW_FTFL_FPROT3_ADDR(x))
+#define HW_FTFL_FPROT3_RD(x)     (HW_FTFL_FPROT3(x).U)
+#define HW_FTFL_FPROT3_WR(x, v)  (HW_FTFL_FPROT3(x).U = (v))
+#define HW_FTFL_FPROT3_SET(x, v) (HW_FTFL_FPROT3_WR(x, HW_FTFL_FPROT3_RD(x) |  (v)))
+#define HW_FTFL_FPROT3_CLR(x, v) (HW_FTFL_FPROT3_WR(x, HW_FTFL_FPROT3_RD(x) & ~(v)))
+#define HW_FTFL_FPROT3_TOG(x, v) (HW_FTFL_FPROT3_WR(x, HW_FTFL_FPROT3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FPROT3 bitfields
@@ -1576,30 +1409,25 @@ typedef union _hw_ftfl_fprot3
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFL_FPROT3_PROT  (0U)          //!< Bit position for FTFL_FPROT3_PROT.
-#define BM_FTFL_FPROT3_PROT  (0xFFU)       //!< Bit mask for FTFL_FPROT3_PROT.
-#define BS_FTFL_FPROT3_PROT  (8U)          //!< Bit field size in bits for FTFL_FPROT3_PROT.
+/*@{*/
+#define BP_FTFL_FPROT3_PROT  (0U)          /*!< Bit position for FTFL_FPROT3_PROT. */
+#define BM_FTFL_FPROT3_PROT  (0xFFU)       /*!< Bit mask for FTFL_FPROT3_PROT. */
+#define BS_FTFL_FPROT3_PROT  (8U)          /*!< Bit field size in bits for FTFL_FPROT3_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FPROT3_PROT field.
-#define BR_FTFL_FPROT3_PROT  (HW_FTFL_FPROT3.B.PROT)
-#endif
+/*! @brief Read current value of the FTFL_FPROT3_PROT field. */
+#define BR_FTFL_FPROT3_PROT(x) (HW_FTFL_FPROT3(x).U)
 
-//! @brief Format value for bitfield FTFL_FPROT3_PROT.
-#define BF_FTFL_FPROT3_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FPROT3_PROT), uint8_t) & BM_FTFL_FPROT3_PROT)
+/*! @brief Format value for bitfield FTFL_FPROT3_PROT. */
+#define BF_FTFL_FPROT3_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FPROT3_PROT) & BM_FTFL_FPROT3_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFL_FPROT3_PROT(v) (HW_FTFL_FPROT3_WR((HW_FTFL_FPROT3_RD() & ~BM_FTFL_FPROT3_PROT) | BF_FTFL_FPROT3_PROT(v)))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFL_FPROT3_PROT(x, v) (HW_FTFL_FPROT3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FPROT2 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FPROT2 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FPROT2 - Program Flash Protection Registers (RW)
  *
@@ -1626,26 +1454,23 @@ typedef union _hw_ftfl_fprot2
     uint8_t U;
     struct _hw_ftfl_fprot2_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfl_fprot2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FPROT2 register
  */
-//@{
-#define HW_FTFL_FPROT2_ADDR      (REGS_FTFL_BASE + 0x11U)
+/*@{*/
+#define HW_FTFL_FPROT2_ADDR(x)   ((x) + 0x11U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FPROT2           (*(__IO hw_ftfl_fprot2_t *) HW_FTFL_FPROT2_ADDR)
-#define HW_FTFL_FPROT2_RD()      (HW_FTFL_FPROT2.U)
-#define HW_FTFL_FPROT2_WR(v)     (HW_FTFL_FPROT2.U = (v))
-#define HW_FTFL_FPROT2_SET(v)    (HW_FTFL_FPROT2_WR(HW_FTFL_FPROT2_RD() |  (v)))
-#define HW_FTFL_FPROT2_CLR(v)    (HW_FTFL_FPROT2_WR(HW_FTFL_FPROT2_RD() & ~(v)))
-#define HW_FTFL_FPROT2_TOG(v)    (HW_FTFL_FPROT2_WR(HW_FTFL_FPROT2_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FPROT2(x)        (*(__IO hw_ftfl_fprot2_t *) HW_FTFL_FPROT2_ADDR(x))
+#define HW_FTFL_FPROT2_RD(x)     (HW_FTFL_FPROT2(x).U)
+#define HW_FTFL_FPROT2_WR(x, v)  (HW_FTFL_FPROT2(x).U = (v))
+#define HW_FTFL_FPROT2_SET(x, v) (HW_FTFL_FPROT2_WR(x, HW_FTFL_FPROT2_RD(x) |  (v)))
+#define HW_FTFL_FPROT2_CLR(x, v) (HW_FTFL_FPROT2_WR(x, HW_FTFL_FPROT2_RD(x) & ~(v)))
+#define HW_FTFL_FPROT2_TOG(x, v) (HW_FTFL_FPROT2_WR(x, HW_FTFL_FPROT2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FPROT2 bitfields
@@ -1658,30 +1483,25 @@ typedef union _hw_ftfl_fprot2
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFL_FPROT2_PROT  (0U)          //!< Bit position for FTFL_FPROT2_PROT.
-#define BM_FTFL_FPROT2_PROT  (0xFFU)       //!< Bit mask for FTFL_FPROT2_PROT.
-#define BS_FTFL_FPROT2_PROT  (8U)          //!< Bit field size in bits for FTFL_FPROT2_PROT.
+/*@{*/
+#define BP_FTFL_FPROT2_PROT  (0U)          /*!< Bit position for FTFL_FPROT2_PROT. */
+#define BM_FTFL_FPROT2_PROT  (0xFFU)       /*!< Bit mask for FTFL_FPROT2_PROT. */
+#define BS_FTFL_FPROT2_PROT  (8U)          /*!< Bit field size in bits for FTFL_FPROT2_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FPROT2_PROT field.
-#define BR_FTFL_FPROT2_PROT  (HW_FTFL_FPROT2.B.PROT)
-#endif
+/*! @brief Read current value of the FTFL_FPROT2_PROT field. */
+#define BR_FTFL_FPROT2_PROT(x) (HW_FTFL_FPROT2(x).U)
 
-//! @brief Format value for bitfield FTFL_FPROT2_PROT.
-#define BF_FTFL_FPROT2_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FPROT2_PROT), uint8_t) & BM_FTFL_FPROT2_PROT)
+/*! @brief Format value for bitfield FTFL_FPROT2_PROT. */
+#define BF_FTFL_FPROT2_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FPROT2_PROT) & BM_FTFL_FPROT2_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFL_FPROT2_PROT(v) (HW_FTFL_FPROT2_WR((HW_FTFL_FPROT2_RD() & ~BM_FTFL_FPROT2_PROT) | BF_FTFL_FPROT2_PROT(v)))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFL_FPROT2_PROT(x, v) (HW_FTFL_FPROT2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FPROT1 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FPROT1 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FPROT1 - Program Flash Protection Registers (RW)
  *
@@ -1708,26 +1528,23 @@ typedef union _hw_ftfl_fprot1
     uint8_t U;
     struct _hw_ftfl_fprot1_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfl_fprot1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FPROT1 register
  */
-//@{
-#define HW_FTFL_FPROT1_ADDR      (REGS_FTFL_BASE + 0x12U)
+/*@{*/
+#define HW_FTFL_FPROT1_ADDR(x)   ((x) + 0x12U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FPROT1           (*(__IO hw_ftfl_fprot1_t *) HW_FTFL_FPROT1_ADDR)
-#define HW_FTFL_FPROT1_RD()      (HW_FTFL_FPROT1.U)
-#define HW_FTFL_FPROT1_WR(v)     (HW_FTFL_FPROT1.U = (v))
-#define HW_FTFL_FPROT1_SET(v)    (HW_FTFL_FPROT1_WR(HW_FTFL_FPROT1_RD() |  (v)))
-#define HW_FTFL_FPROT1_CLR(v)    (HW_FTFL_FPROT1_WR(HW_FTFL_FPROT1_RD() & ~(v)))
-#define HW_FTFL_FPROT1_TOG(v)    (HW_FTFL_FPROT1_WR(HW_FTFL_FPROT1_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FPROT1(x)        (*(__IO hw_ftfl_fprot1_t *) HW_FTFL_FPROT1_ADDR(x))
+#define HW_FTFL_FPROT1_RD(x)     (HW_FTFL_FPROT1(x).U)
+#define HW_FTFL_FPROT1_WR(x, v)  (HW_FTFL_FPROT1(x).U = (v))
+#define HW_FTFL_FPROT1_SET(x, v) (HW_FTFL_FPROT1_WR(x, HW_FTFL_FPROT1_RD(x) |  (v)))
+#define HW_FTFL_FPROT1_CLR(x, v) (HW_FTFL_FPROT1_WR(x, HW_FTFL_FPROT1_RD(x) & ~(v)))
+#define HW_FTFL_FPROT1_TOG(x, v) (HW_FTFL_FPROT1_WR(x, HW_FTFL_FPROT1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FPROT1 bitfields
@@ -1740,30 +1557,25 @@ typedef union _hw_ftfl_fprot1
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFL_FPROT1_PROT  (0U)          //!< Bit position for FTFL_FPROT1_PROT.
-#define BM_FTFL_FPROT1_PROT  (0xFFU)       //!< Bit mask for FTFL_FPROT1_PROT.
-#define BS_FTFL_FPROT1_PROT  (8U)          //!< Bit field size in bits for FTFL_FPROT1_PROT.
+/*@{*/
+#define BP_FTFL_FPROT1_PROT  (0U)          /*!< Bit position for FTFL_FPROT1_PROT. */
+#define BM_FTFL_FPROT1_PROT  (0xFFU)       /*!< Bit mask for FTFL_FPROT1_PROT. */
+#define BS_FTFL_FPROT1_PROT  (8U)          /*!< Bit field size in bits for FTFL_FPROT1_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FPROT1_PROT field.
-#define BR_FTFL_FPROT1_PROT  (HW_FTFL_FPROT1.B.PROT)
-#endif
+/*! @brief Read current value of the FTFL_FPROT1_PROT field. */
+#define BR_FTFL_FPROT1_PROT(x) (HW_FTFL_FPROT1(x).U)
 
-//! @brief Format value for bitfield FTFL_FPROT1_PROT.
-#define BF_FTFL_FPROT1_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FPROT1_PROT), uint8_t) & BM_FTFL_FPROT1_PROT)
+/*! @brief Format value for bitfield FTFL_FPROT1_PROT. */
+#define BF_FTFL_FPROT1_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FPROT1_PROT) & BM_FTFL_FPROT1_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFL_FPROT1_PROT(v) (HW_FTFL_FPROT1_WR((HW_FTFL_FPROT1_RD() & ~BM_FTFL_FPROT1_PROT) | BF_FTFL_FPROT1_PROT(v)))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFL_FPROT1_PROT(x, v) (HW_FTFL_FPROT1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FPROT0 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FPROT0 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FPROT0 - Program Flash Protection Registers (RW)
  *
@@ -1790,26 +1602,23 @@ typedef union _hw_ftfl_fprot0
     uint8_t U;
     struct _hw_ftfl_fprot0_bitfields
     {
-        uint8_t PROT : 8;              //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfl_fprot0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FPROT0 register
  */
-//@{
-#define HW_FTFL_FPROT0_ADDR      (REGS_FTFL_BASE + 0x13U)
+/*@{*/
+#define HW_FTFL_FPROT0_ADDR(x)   ((x) + 0x13U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FPROT0           (*(__IO hw_ftfl_fprot0_t *) HW_FTFL_FPROT0_ADDR)
-#define HW_FTFL_FPROT0_RD()      (HW_FTFL_FPROT0.U)
-#define HW_FTFL_FPROT0_WR(v)     (HW_FTFL_FPROT0.U = (v))
-#define HW_FTFL_FPROT0_SET(v)    (HW_FTFL_FPROT0_WR(HW_FTFL_FPROT0_RD() |  (v)))
-#define HW_FTFL_FPROT0_CLR(v)    (HW_FTFL_FPROT0_WR(HW_FTFL_FPROT0_RD() & ~(v)))
-#define HW_FTFL_FPROT0_TOG(v)    (HW_FTFL_FPROT0_WR(HW_FTFL_FPROT0_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FPROT0(x)        (*(__IO hw_ftfl_fprot0_t *) HW_FTFL_FPROT0_ADDR(x))
+#define HW_FTFL_FPROT0_RD(x)     (HW_FTFL_FPROT0(x).U)
+#define HW_FTFL_FPROT0_WR(x, v)  (HW_FTFL_FPROT0(x).U = (v))
+#define HW_FTFL_FPROT0_SET(x, v) (HW_FTFL_FPROT0_WR(x, HW_FTFL_FPROT0_RD(x) |  (v)))
+#define HW_FTFL_FPROT0_CLR(x, v) (HW_FTFL_FPROT0_WR(x, HW_FTFL_FPROT0_RD(x) & ~(v)))
+#define HW_FTFL_FPROT0_TOG(x, v) (HW_FTFL_FPROT0_WR(x, HW_FTFL_FPROT0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FPROT0 bitfields
@@ -1822,30 +1631,25 @@ typedef union _hw_ftfl_fprot0
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFL_FPROT0_PROT  (0U)          //!< Bit position for FTFL_FPROT0_PROT.
-#define BM_FTFL_FPROT0_PROT  (0xFFU)       //!< Bit mask for FTFL_FPROT0_PROT.
-#define BS_FTFL_FPROT0_PROT  (8U)          //!< Bit field size in bits for FTFL_FPROT0_PROT.
+/*@{*/
+#define BP_FTFL_FPROT0_PROT  (0U)          /*!< Bit position for FTFL_FPROT0_PROT. */
+#define BM_FTFL_FPROT0_PROT  (0xFFU)       /*!< Bit mask for FTFL_FPROT0_PROT. */
+#define BS_FTFL_FPROT0_PROT  (8U)          /*!< Bit field size in bits for FTFL_FPROT0_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FPROT0_PROT field.
-#define BR_FTFL_FPROT0_PROT  (HW_FTFL_FPROT0.B.PROT)
-#endif
+/*! @brief Read current value of the FTFL_FPROT0_PROT field. */
+#define BR_FTFL_FPROT0_PROT(x) (HW_FTFL_FPROT0(x).U)
 
-//! @brief Format value for bitfield FTFL_FPROT0_PROT.
-#define BF_FTFL_FPROT0_PROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FPROT0_PROT), uint8_t) & BM_FTFL_FPROT0_PROT)
+/*! @brief Format value for bitfield FTFL_FPROT0_PROT. */
+#define BF_FTFL_FPROT0_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FPROT0_PROT) & BM_FTFL_FPROT0_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFL_FPROT0_PROT(v) (HW_FTFL_FPROT0_WR((HW_FTFL_FPROT0_RD() & ~BM_FTFL_FPROT0_PROT) | BF_FTFL_FPROT0_PROT(v)))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFL_FPROT0_PROT(x, v) (HW_FTFL_FPROT0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FEPROT - EEPROM Protection Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FEPROT - EEPROM Protection Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FEPROT - EEPROM Protection Register (RW)
  *
@@ -1861,26 +1665,23 @@ typedef union _hw_ftfl_feprot
     uint8_t U;
     struct _hw_ftfl_feprot_bitfields
     {
-        uint8_t EPROT : 8;             //!< [7:0] EEPROM Region Protect
+        uint8_t EPROT : 8;             /*!< [7:0] EEPROM Region Protect */
     } B;
 } hw_ftfl_feprot_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FEPROT register
  */
-//@{
-#define HW_FTFL_FEPROT_ADDR      (REGS_FTFL_BASE + 0x16U)
+/*@{*/
+#define HW_FTFL_FEPROT_ADDR(x)   ((x) + 0x16U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FEPROT           (*(__IO hw_ftfl_feprot_t *) HW_FTFL_FEPROT_ADDR)
-#define HW_FTFL_FEPROT_RD()      (HW_FTFL_FEPROT.U)
-#define HW_FTFL_FEPROT_WR(v)     (HW_FTFL_FEPROT.U = (v))
-#define HW_FTFL_FEPROT_SET(v)    (HW_FTFL_FEPROT_WR(HW_FTFL_FEPROT_RD() |  (v)))
-#define HW_FTFL_FEPROT_CLR(v)    (HW_FTFL_FEPROT_WR(HW_FTFL_FEPROT_RD() & ~(v)))
-#define HW_FTFL_FEPROT_TOG(v)    (HW_FTFL_FEPROT_WR(HW_FTFL_FEPROT_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FEPROT(x)        (*(__IO hw_ftfl_feprot_t *) HW_FTFL_FEPROT_ADDR(x))
+#define HW_FTFL_FEPROT_RD(x)     (HW_FTFL_FEPROT(x).U)
+#define HW_FTFL_FEPROT_WR(x, v)  (HW_FTFL_FEPROT(x).U = (v))
+#define HW_FTFL_FEPROT_SET(x, v) (HW_FTFL_FEPROT_WR(x, HW_FTFL_FEPROT_RD(x) |  (v)))
+#define HW_FTFL_FEPROT_CLR(x, v) (HW_FTFL_FEPROT_WR(x, HW_FTFL_FEPROT_RD(x) & ~(v)))
+#define HW_FTFL_FEPROT_TOG(x, v) (HW_FTFL_FEPROT_WR(x, HW_FTFL_FEPROT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FEPROT bitfields
@@ -1917,30 +1718,25 @@ typedef union _hw_ftfl_feprot
  * - 0 - EEPROM region is protected
  * - 1 - EEPROM region is not protected
  */
-//@{
-#define BP_FTFL_FEPROT_EPROT (0U)          //!< Bit position for FTFL_FEPROT_EPROT.
-#define BM_FTFL_FEPROT_EPROT (0xFFU)       //!< Bit mask for FTFL_FEPROT_EPROT.
-#define BS_FTFL_FEPROT_EPROT (8U)          //!< Bit field size in bits for FTFL_FEPROT_EPROT.
+/*@{*/
+#define BP_FTFL_FEPROT_EPROT (0U)          /*!< Bit position for FTFL_FEPROT_EPROT. */
+#define BM_FTFL_FEPROT_EPROT (0xFFU)       /*!< Bit mask for FTFL_FEPROT_EPROT. */
+#define BS_FTFL_FEPROT_EPROT (8U)          /*!< Bit field size in bits for FTFL_FEPROT_EPROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FEPROT_EPROT field.
-#define BR_FTFL_FEPROT_EPROT (HW_FTFL_FEPROT.B.EPROT)
-#endif
+/*! @brief Read current value of the FTFL_FEPROT_EPROT field. */
+#define BR_FTFL_FEPROT_EPROT(x) (HW_FTFL_FEPROT(x).U)
 
-//! @brief Format value for bitfield FTFL_FEPROT_EPROT.
-#define BF_FTFL_FEPROT_EPROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FEPROT_EPROT), uint8_t) & BM_FTFL_FEPROT_EPROT)
+/*! @brief Format value for bitfield FTFL_FEPROT_EPROT. */
+#define BF_FTFL_FEPROT_EPROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FEPROT_EPROT) & BM_FTFL_FEPROT_EPROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPROT field to a new value.
-#define BW_FTFL_FEPROT_EPROT(v) (HW_FTFL_FEPROT_WR((HW_FTFL_FEPROT_RD() & ~BM_FTFL_FEPROT_EPROT) | BF_FTFL_FEPROT_EPROT(v)))
-#endif
-//@}
+/*! @brief Set the EPROT field to a new value. */
+#define BW_FTFL_FEPROT_EPROT(x, v) (HW_FTFL_FEPROT_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFL_FDPROT - Data Flash Protection Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFL_FDPROT - Data Flash Protection Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFL_FDPROT - Data Flash Protection Register (RW)
  *
@@ -1957,26 +1753,23 @@ typedef union _hw_ftfl_fdprot
     uint8_t U;
     struct _hw_ftfl_fdprot_bitfields
     {
-        uint8_t DPROT : 8;             //!< [7:0] Data Flash Region Protect
+        uint8_t DPROT : 8;             /*!< [7:0] Data Flash Region Protect */
     } B;
 } hw_ftfl_fdprot_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFL_FDPROT register
  */
-//@{
-#define HW_FTFL_FDPROT_ADDR      (REGS_FTFL_BASE + 0x17U)
+/*@{*/
+#define HW_FTFL_FDPROT_ADDR(x)   ((x) + 0x17U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFL_FDPROT           (*(__IO hw_ftfl_fdprot_t *) HW_FTFL_FDPROT_ADDR)
-#define HW_FTFL_FDPROT_RD()      (HW_FTFL_FDPROT.U)
-#define HW_FTFL_FDPROT_WR(v)     (HW_FTFL_FDPROT.U = (v))
-#define HW_FTFL_FDPROT_SET(v)    (HW_FTFL_FDPROT_WR(HW_FTFL_FDPROT_RD() |  (v)))
-#define HW_FTFL_FDPROT_CLR(v)    (HW_FTFL_FDPROT_WR(HW_FTFL_FDPROT_RD() & ~(v)))
-#define HW_FTFL_FDPROT_TOG(v)    (HW_FTFL_FDPROT_WR(HW_FTFL_FDPROT_RD() ^  (v)))
-#endif
-//@}
+#define HW_FTFL_FDPROT(x)        (*(__IO hw_ftfl_fdprot_t *) HW_FTFL_FDPROT_ADDR(x))
+#define HW_FTFL_FDPROT_RD(x)     (HW_FTFL_FDPROT(x).U)
+#define HW_FTFL_FDPROT_WR(x, v)  (HW_FTFL_FDPROT(x).U = (v))
+#define HW_FTFL_FDPROT_SET(x, v) (HW_FTFL_FDPROT_WR(x, HW_FTFL_FDPROT_RD(x) |  (v)))
+#define HW_FTFL_FDPROT_CLR(x, v) (HW_FTFL_FDPROT_WR(x, HW_FTFL_FDPROT_RD(x) & ~(v)))
+#define HW_FTFL_FDPROT_TOG(x, v) (HW_FTFL_FDPROT_WR(x, HW_FTFL_FDPROT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual FTFL_FDPROT bitfields
@@ -2016,67 +1809,62 @@ typedef union _hw_ftfl_fdprot
  * - 0 - Data Flash region is protected
  * - 1 - Data Flash region is not protected
  */
-//@{
-#define BP_FTFL_FDPROT_DPROT (0U)          //!< Bit position for FTFL_FDPROT_DPROT.
-#define BM_FTFL_FDPROT_DPROT (0xFFU)       //!< Bit mask for FTFL_FDPROT_DPROT.
-#define BS_FTFL_FDPROT_DPROT (8U)          //!< Bit field size in bits for FTFL_FDPROT_DPROT.
+/*@{*/
+#define BP_FTFL_FDPROT_DPROT (0U)          /*!< Bit position for FTFL_FDPROT_DPROT. */
+#define BM_FTFL_FDPROT_DPROT (0xFFU)       /*!< Bit mask for FTFL_FDPROT_DPROT. */
+#define BS_FTFL_FDPROT_DPROT (8U)          /*!< Bit field size in bits for FTFL_FDPROT_DPROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFL_FDPROT_DPROT field.
-#define BR_FTFL_FDPROT_DPROT (HW_FTFL_FDPROT.B.DPROT)
-#endif
+/*! @brief Read current value of the FTFL_FDPROT_DPROT field. */
+#define BR_FTFL_FDPROT_DPROT(x) (HW_FTFL_FDPROT(x).U)
 
-//! @brief Format value for bitfield FTFL_FDPROT_DPROT.
-#define BF_FTFL_FDPROT_DPROT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFL_FDPROT_DPROT), uint8_t) & BM_FTFL_FDPROT_DPROT)
+/*! @brief Format value for bitfield FTFL_FDPROT_DPROT. */
+#define BF_FTFL_FDPROT_DPROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFL_FDPROT_DPROT) & BM_FTFL_FDPROT_DPROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPROT field to a new value.
-#define BW_FTFL_FDPROT_DPROT(v) (HW_FTFL_FDPROT_WR((HW_FTFL_FDPROT_RD() & ~BM_FTFL_FDPROT_DPROT) | BF_FTFL_FDPROT_DPROT(v)))
-#endif
-//@}
+/*! @brief Set the DPROT field to a new value. */
+#define BW_FTFL_FDPROT_DPROT(x, v) (HW_FTFL_FDPROT_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_ftfl_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_ftfl_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All FTFL module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_ftfl
 {
-    __IO hw_ftfl_fstat_t FSTAT;            //!< [0x0] Flash Status Register
-    __IO hw_ftfl_fcnfg_t FCNFG;            //!< [0x1] Flash Configuration Register
-    __I hw_ftfl_fsec_t FSEC;               //!< [0x2] Flash Security Register
-    __I hw_ftfl_fopt_t FOPT;               //!< [0x3] Flash Option Register
-    __IO hw_ftfl_fccob3_t FCCOB3;          //!< [0x4] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob2_t FCCOB2;          //!< [0x5] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob1_t FCCOB1;          //!< [0x6] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob0_t FCCOB0;          //!< [0x7] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob7_t FCCOB7;          //!< [0x8] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob6_t FCCOB6;          //!< [0x9] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob5_t FCCOB5;          //!< [0xA] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob4_t FCCOB4;          //!< [0xB] Flash Common Command Object Registers
-    __IO hw_ftfl_fccobb_t FCCOBB;          //!< [0xC] Flash Common Command Object Registers
-    __IO hw_ftfl_fccoba_t FCCOBA;          //!< [0xD] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob9_t FCCOB9;          //!< [0xE] Flash Common Command Object Registers
-    __IO hw_ftfl_fccob8_t FCCOB8;          //!< [0xF] Flash Common Command Object Registers
-    __IO hw_ftfl_fprot3_t FPROT3;          //!< [0x10] Program Flash Protection Registers
-    __IO hw_ftfl_fprot2_t FPROT2;          //!< [0x11] Program Flash Protection Registers
-    __IO hw_ftfl_fprot1_t FPROT1;          //!< [0x12] Program Flash Protection Registers
-    __IO hw_ftfl_fprot0_t FPROT0;          //!< [0x13] Program Flash Protection Registers
+    __IO hw_ftfl_fstat_t FSTAT;            /*!< [0x0] Flash Status Register */
+    __IO hw_ftfl_fcnfg_t FCNFG;            /*!< [0x1] Flash Configuration Register */
+    __I hw_ftfl_fsec_t FSEC;               /*!< [0x2] Flash Security Register */
+    __I hw_ftfl_fopt_t FOPT;               /*!< [0x3] Flash Option Register */
+    __IO hw_ftfl_fccob3_t FCCOB3;          /*!< [0x4] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob2_t FCCOB2;          /*!< [0x5] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob1_t FCCOB1;          /*!< [0x6] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob0_t FCCOB0;          /*!< [0x7] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob7_t FCCOB7;          /*!< [0x8] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob6_t FCCOB6;          /*!< [0x9] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob5_t FCCOB5;          /*!< [0xA] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob4_t FCCOB4;          /*!< [0xB] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccobb_t FCCOBB;          /*!< [0xC] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccoba_t FCCOBA;          /*!< [0xD] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob9_t FCCOB9;          /*!< [0xE] Flash Common Command Object Registers */
+    __IO hw_ftfl_fccob8_t FCCOB8;          /*!< [0xF] Flash Common Command Object Registers */
+    __IO hw_ftfl_fprot3_t FPROT3;          /*!< [0x10] Program Flash Protection Registers */
+    __IO hw_ftfl_fprot2_t FPROT2;          /*!< [0x11] Program Flash Protection Registers */
+    __IO hw_ftfl_fprot1_t FPROT1;          /*!< [0x12] Program Flash Protection Registers */
+    __IO hw_ftfl_fprot0_t FPROT0;          /*!< [0x13] Program Flash Protection Registers */
     uint8_t _reserved0[2];
-    __IO hw_ftfl_feprot_t FEPROT;          //!< [0x16] EEPROM Protection Register
-    __IO hw_ftfl_fdprot_t FDPROT;          //!< [0x17] Data Flash Protection Register
+    __IO hw_ftfl_feprot_t FEPROT;          /*!< [0x16] EEPROM Protection Register */
+    __IO hw_ftfl_fdprot_t FDPROT;          /*!< [0x17] Data Flash Protection Register */
 } hw_ftfl_t;
 #pragma pack()
 
-//! @brief Macro to access all FTFL registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_FTFL</code>.
-#define HW_FTFL        (*(hw_ftfl_t *) REGS_FTFL_BASE)
-#endif
+/*! @brief Macro to access all FTFL registers. */
+/*! @param x FTFL module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_FTFL(FTFL_BASE)</code>. */
+#define HW_FTFL(x)     (*(hw_ftfl_t *)(x))
 
-#endif // __HW_FTFL_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_FTFL_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

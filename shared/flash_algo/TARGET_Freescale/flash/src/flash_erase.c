@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2013-2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,17 +30,25 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
 // See flash.h for documentation of this function.
-status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInBytes)
+status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInBytes, uint32_t key)
 {
+    // Validate the user key
+    status_t returnCode = flash_check_user_key(key);
+    if (returnCode)
+    {
+        return returnCode;
+    }
+
     // Check the supplied address range.
-    status_t returnCode = flash_check_range(driver, start, lengthInBytes);
+    returnCode = flash_check_range(driver, start, lengthInBytes, FSL_FEATURE_FLASH_PFLASH_SECTOR_CMD_ADDRESS_ALIGMENT);
     if (returnCode)
     {
         return returnCode;
@@ -54,10 +62,10 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
 
     // re-calculate the endAddress and align it to the start of the next sector
     // which will be used in the comparison below
-    if (endAddress % FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE)
+    if (endAddress % driver->PFlashSectorSize)
     {
-        numberOfSectors = endAddress / FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE + 1;
-        endAddress = numberOfSectors * FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE - 1;
+        numberOfSectors = endAddress / driver->PFlashSectorSize + 1;
+        endAddress = numberOfSectors * driver->PFlashSectorSize - 1;
     }
 
     // the start address will increment to the next sector address
@@ -66,10 +74,16 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
     {
         // preparing passing parameter to erase a flash block
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(0, FTFx_ERASE_SECTOR);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_ERASE_SECTOR);
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();
+
+        // calling flash callback function if it is available
+        if (driver->PFlashCallback)
+        {
+            driver->PFlashCallback();
+        }
 
         // checking the success of command execution
         if (kStatus_Success != returnCode)
@@ -79,7 +93,7 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
         else
         {
             // Increment to the next sector
-            start += FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE;
+            start += driver->PFlashSectorSize;
         }
     }
 

@@ -21,7 +21,8 @@
 #ifndef __HW_LPTMR_REGISTERS_H__
 #define __HW_LPTMR_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL25Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL25Z4 LPTMR
@@ -37,19 +38,12 @@
  * - hw_lptmr_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_LPTMR_BASE
-#define HW_LPTMR_INSTANCE_COUNT (1U) //!< Number of instances of the LPTMR module.
-#define REGS_LPTMR_BASE (0x40040000U) //!< Base address for LPTMR0.
-#endif
-//@}
+#define HW_LPTMR_INSTANCE_COUNT (1U) /*!< Number of instances of the LPTMR module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_LPTMR_CSR - Low Power Timer Control Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPTMR_CSR - Low Power Timer Control Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPTMR_CSR - Low Power Timer Control Status Register (RW)
  *
@@ -60,33 +54,30 @@ typedef union _hw_lptmr_csr
     uint32_t U;
     struct _hw_lptmr_csr_bitfields
     {
-        uint32_t TEN : 1;              //!< [0] Timer Enable
-        uint32_t TMS : 1;              //!< [1] Timer Mode Select
-        uint32_t TFC : 1;              //!< [2] Timer Free-Running Counter
-        uint32_t TPP : 1;              //!< [3] Timer Pin Polarity
-        uint32_t TPS : 2;              //!< [5:4] Timer Pin Select
-        uint32_t TIE : 1;              //!< [6] Timer Interrupt Enable
-        uint32_t TCF : 1;              //!< [7] Timer Compare Flag
-        uint32_t RESERVED0 : 24;       //!< [31:8]
+        uint32_t TEN : 1;              /*!< [0] Timer Enable */
+        uint32_t TMS : 1;              /*!< [1] Timer Mode Select */
+        uint32_t TFC : 1;              /*!< [2] Timer Free-Running Counter */
+        uint32_t TPP : 1;              /*!< [3] Timer Pin Polarity */
+        uint32_t TPS : 2;              /*!< [5:4] Timer Pin Select */
+        uint32_t TIE : 1;              /*!< [6] Timer Interrupt Enable */
+        uint32_t TCF : 1;              /*!< [7] Timer Compare Flag */
+        uint32_t RESERVED0 : 24;       /*!< [31:8]  */
     } B;
 } hw_lptmr_csr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPTMR_CSR register
  */
-//@{
-#define HW_LPTMR_CSR_ADDR        (REGS_LPTMR_BASE + 0x0U)
+/*@{*/
+#define HW_LPTMR_CSR_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPTMR_CSR             (*(__IO hw_lptmr_csr_t *) HW_LPTMR_CSR_ADDR)
-#define HW_LPTMR_CSR_RD()        (HW_LPTMR_CSR.U)
-#define HW_LPTMR_CSR_WR(v)       (HW_LPTMR_CSR.U = (v))
-#define HW_LPTMR_CSR_SET(v)      (BME_OR32(HW_LPTMR_CSR_ADDR, (uint32_t)(v)))
-#define HW_LPTMR_CSR_CLR(v)      (BME_AND32(HW_LPTMR_CSR_ADDR, (uint32_t)(~(v))))
-#define HW_LPTMR_CSR_TOG(v)      (BME_XOR32(HW_LPTMR_CSR_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_LPTMR_CSR(x)          (*(__IO hw_lptmr_csr_t *) HW_LPTMR_CSR_ADDR(x))
+#define HW_LPTMR_CSR_RD(x)       (HW_LPTMR_CSR(x).U)
+#define HW_LPTMR_CSR_WR(x, v)    (HW_LPTMR_CSR(x).U = (v))
+#define HW_LPTMR_CSR_SET(x, v)   (BME_OR32(HW_LPTMR_CSR_ADDR(x), (uint32_t)(v)))
+#define HW_LPTMR_CSR_CLR(x, v)   (BME_AND32(HW_LPTMR_CSR_ADDR(x), (uint32_t)(~(v))))
+#define HW_LPTMR_CSR_TOG(x, v)   (BME_XOR32(HW_LPTMR_CSR_ADDR(x), (uint32_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPTMR_CSR bitfields
@@ -103,24 +94,20 @@ typedef union _hw_lptmr_csr
  * - 0 - LPTMR is disabled and internal logic is reset.
  * - 1 - LPTMR is enabled.
  */
-//@{
-#define BP_LPTMR_CSR_TEN     (0U)          //!< Bit position for LPTMR_CSR_TEN.
-#define BM_LPTMR_CSR_TEN     (0x00000001U) //!< Bit mask for LPTMR_CSR_TEN.
-#define BS_LPTMR_CSR_TEN     (1U)          //!< Bit field size in bits for LPTMR_CSR_TEN.
+/*@{*/
+#define BP_LPTMR_CSR_TEN     (0U)          /*!< Bit position for LPTMR_CSR_TEN. */
+#define BM_LPTMR_CSR_TEN     (0x00000001U) /*!< Bit mask for LPTMR_CSR_TEN. */
+#define BS_LPTMR_CSR_TEN     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TEN field.
-#define BR_LPTMR_CSR_TEN     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TEN, BS_LPTMR_CSR_TEN))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TEN field. */
+#define BR_LPTMR_CSR_TEN(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TEN, BS_LPTMR_CSR_TEN))
 
-//! @brief Format value for bitfield LPTMR_CSR_TEN.
-#define BF_LPTMR_CSR_TEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TEN), uint32_t) & BM_LPTMR_CSR_TEN)
+/*! @brief Format value for bitfield LPTMR_CSR_TEN. */
+#define BF_LPTMR_CSR_TEN(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TEN) & BM_LPTMR_CSR_TEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TEN field to a new value.
-#define BW_LPTMR_CSR_TEN(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TEN), BP_LPTMR_CSR_TEN, 1))
-#endif
-//@}
+/*! @brief Set the TEN field to a new value. */
+#define BW_LPTMR_CSR_TEN(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TEN), BP_LPTMR_CSR_TEN, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TMS[1] (RW)
@@ -132,24 +119,20 @@ typedef union _hw_lptmr_csr
  * - 0 - Time Counter mode.
  * - 1 - Pulse Counter mode.
  */
-//@{
-#define BP_LPTMR_CSR_TMS     (1U)          //!< Bit position for LPTMR_CSR_TMS.
-#define BM_LPTMR_CSR_TMS     (0x00000002U) //!< Bit mask for LPTMR_CSR_TMS.
-#define BS_LPTMR_CSR_TMS     (1U)          //!< Bit field size in bits for LPTMR_CSR_TMS.
+/*@{*/
+#define BP_LPTMR_CSR_TMS     (1U)          /*!< Bit position for LPTMR_CSR_TMS. */
+#define BM_LPTMR_CSR_TMS     (0x00000002U) /*!< Bit mask for LPTMR_CSR_TMS. */
+#define BS_LPTMR_CSR_TMS     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TMS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TMS field.
-#define BR_LPTMR_CSR_TMS     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TMS, BS_LPTMR_CSR_TMS))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TMS field. */
+#define BR_LPTMR_CSR_TMS(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TMS, BS_LPTMR_CSR_TMS))
 
-//! @brief Format value for bitfield LPTMR_CSR_TMS.
-#define BF_LPTMR_CSR_TMS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TMS), uint32_t) & BM_LPTMR_CSR_TMS)
+/*! @brief Format value for bitfield LPTMR_CSR_TMS. */
+#define BF_LPTMR_CSR_TMS(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TMS) & BM_LPTMR_CSR_TMS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TMS field to a new value.
-#define BW_LPTMR_CSR_TMS(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TMS), BP_LPTMR_CSR_TMS, 1))
-#endif
-//@}
+/*! @brief Set the TMS field to a new value. */
+#define BW_LPTMR_CSR_TMS(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TMS), BP_LPTMR_CSR_TMS, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TFC[2] (RW)
@@ -162,24 +145,20 @@ typedef union _hw_lptmr_csr
  * - 0 - CNR is reset whenever TCF is set.
  * - 1 - CNR is reset on overflow.
  */
-//@{
-#define BP_LPTMR_CSR_TFC     (2U)          //!< Bit position for LPTMR_CSR_TFC.
-#define BM_LPTMR_CSR_TFC     (0x00000004U) //!< Bit mask for LPTMR_CSR_TFC.
-#define BS_LPTMR_CSR_TFC     (1U)          //!< Bit field size in bits for LPTMR_CSR_TFC.
+/*@{*/
+#define BP_LPTMR_CSR_TFC     (2U)          /*!< Bit position for LPTMR_CSR_TFC. */
+#define BM_LPTMR_CSR_TFC     (0x00000004U) /*!< Bit mask for LPTMR_CSR_TFC. */
+#define BS_LPTMR_CSR_TFC     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TFC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TFC field.
-#define BR_LPTMR_CSR_TFC     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TFC, BS_LPTMR_CSR_TFC))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TFC field. */
+#define BR_LPTMR_CSR_TFC(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TFC, BS_LPTMR_CSR_TFC))
 
-//! @brief Format value for bitfield LPTMR_CSR_TFC.
-#define BF_LPTMR_CSR_TFC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TFC), uint32_t) & BM_LPTMR_CSR_TFC)
+/*! @brief Format value for bitfield LPTMR_CSR_TFC. */
+#define BF_LPTMR_CSR_TFC(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TFC) & BM_LPTMR_CSR_TFC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TFC field to a new value.
-#define BW_LPTMR_CSR_TFC(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TFC), BP_LPTMR_CSR_TFC, 1))
-#endif
-//@}
+/*! @brief Set the TFC field to a new value. */
+#define BW_LPTMR_CSR_TFC(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TFC), BP_LPTMR_CSR_TFC, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TPP[3] (RW)
@@ -193,24 +172,20 @@ typedef union _hw_lptmr_csr
  * - 1 - Pulse Counter input source is active-low, and the CNR will increment on
  *     the falling-edge.
  */
-//@{
-#define BP_LPTMR_CSR_TPP     (3U)          //!< Bit position for LPTMR_CSR_TPP.
-#define BM_LPTMR_CSR_TPP     (0x00000008U) //!< Bit mask for LPTMR_CSR_TPP.
-#define BS_LPTMR_CSR_TPP     (1U)          //!< Bit field size in bits for LPTMR_CSR_TPP.
+/*@{*/
+#define BP_LPTMR_CSR_TPP     (3U)          /*!< Bit position for LPTMR_CSR_TPP. */
+#define BM_LPTMR_CSR_TPP     (0x00000008U) /*!< Bit mask for LPTMR_CSR_TPP. */
+#define BS_LPTMR_CSR_TPP     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TPP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TPP field.
-#define BR_LPTMR_CSR_TPP     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TPP, BS_LPTMR_CSR_TPP))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TPP field. */
+#define BR_LPTMR_CSR_TPP(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TPP, BS_LPTMR_CSR_TPP))
 
-//! @brief Format value for bitfield LPTMR_CSR_TPP.
-#define BF_LPTMR_CSR_TPP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TPP), uint32_t) & BM_LPTMR_CSR_TPP)
+/*! @brief Format value for bitfield LPTMR_CSR_TPP. */
+#define BF_LPTMR_CSR_TPP(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TPP) & BM_LPTMR_CSR_TPP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPP field to a new value.
-#define BW_LPTMR_CSR_TPP(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TPP), BP_LPTMR_CSR_TPP, 1))
-#endif
-//@}
+/*! @brief Set the TPP field to a new value. */
+#define BW_LPTMR_CSR_TPP(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TPP), BP_LPTMR_CSR_TPP, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TPS[5:4] (RW)
@@ -226,24 +201,20 @@ typedef union _hw_lptmr_csr
  * - 10 - Pulse counter input 2 is selected.
  * - 11 - Pulse counter input 3 is selected.
  */
-//@{
-#define BP_LPTMR_CSR_TPS     (4U)          //!< Bit position for LPTMR_CSR_TPS.
-#define BM_LPTMR_CSR_TPS     (0x00000030U) //!< Bit mask for LPTMR_CSR_TPS.
-#define BS_LPTMR_CSR_TPS     (2U)          //!< Bit field size in bits for LPTMR_CSR_TPS.
+/*@{*/
+#define BP_LPTMR_CSR_TPS     (4U)          /*!< Bit position for LPTMR_CSR_TPS. */
+#define BM_LPTMR_CSR_TPS     (0x00000030U) /*!< Bit mask for LPTMR_CSR_TPS. */
+#define BS_LPTMR_CSR_TPS     (2U)          /*!< Bit field size in bits for LPTMR_CSR_TPS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TPS field.
-#define BR_LPTMR_CSR_TPS     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TPS, BS_LPTMR_CSR_TPS))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TPS field. */
+#define BR_LPTMR_CSR_TPS(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TPS, BS_LPTMR_CSR_TPS))
 
-//! @brief Format value for bitfield LPTMR_CSR_TPS.
-#define BF_LPTMR_CSR_TPS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TPS), uint32_t) & BM_LPTMR_CSR_TPS)
+/*! @brief Format value for bitfield LPTMR_CSR_TPS. */
+#define BF_LPTMR_CSR_TPS(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TPS) & BM_LPTMR_CSR_TPS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPS field to a new value.
-#define BW_LPTMR_CSR_TPS(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TPS), BP_LPTMR_CSR_TPS, 2))
-#endif
-//@}
+/*! @brief Set the TPS field to a new value. */
+#define BW_LPTMR_CSR_TPS(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TPS), BP_LPTMR_CSR_TPS, 2))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TIE[6] (RW)
@@ -254,24 +225,20 @@ typedef union _hw_lptmr_csr
  * - 0 - Timer interrupt disabled.
  * - 1 - Timer interrupt enabled.
  */
-//@{
-#define BP_LPTMR_CSR_TIE     (6U)          //!< Bit position for LPTMR_CSR_TIE.
-#define BM_LPTMR_CSR_TIE     (0x00000040U) //!< Bit mask for LPTMR_CSR_TIE.
-#define BS_LPTMR_CSR_TIE     (1U)          //!< Bit field size in bits for LPTMR_CSR_TIE.
+/*@{*/
+#define BP_LPTMR_CSR_TIE     (6U)          /*!< Bit position for LPTMR_CSR_TIE. */
+#define BM_LPTMR_CSR_TIE     (0x00000040U) /*!< Bit mask for LPTMR_CSR_TIE. */
+#define BS_LPTMR_CSR_TIE     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TIE field.
-#define BR_LPTMR_CSR_TIE     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TIE, BS_LPTMR_CSR_TIE))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TIE field. */
+#define BR_LPTMR_CSR_TIE(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TIE, BS_LPTMR_CSR_TIE))
 
-//! @brief Format value for bitfield LPTMR_CSR_TIE.
-#define BF_LPTMR_CSR_TIE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TIE), uint32_t) & BM_LPTMR_CSR_TIE)
+/*! @brief Format value for bitfield LPTMR_CSR_TIE. */
+#define BF_LPTMR_CSR_TIE(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TIE) & BM_LPTMR_CSR_TIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIE field to a new value.
-#define BW_LPTMR_CSR_TIE(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TIE), BP_LPTMR_CSR_TIE, 1))
-#endif
-//@}
+/*! @brief Set the TIE field to a new value. */
+#define BW_LPTMR_CSR_TIE(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TIE), BP_LPTMR_CSR_TIE, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_CSR, field TCF[7] (W1C)
@@ -283,30 +250,25 @@ typedef union _hw_lptmr_csr
  * - 0 - The value of CNR is not equal to CMR and increments.
  * - 1 - The value of CNR is equal to CMR and increments.
  */
-//@{
-#define BP_LPTMR_CSR_TCF     (7U)          //!< Bit position for LPTMR_CSR_TCF.
-#define BM_LPTMR_CSR_TCF     (0x00000080U) //!< Bit mask for LPTMR_CSR_TCF.
-#define BS_LPTMR_CSR_TCF     (1U)          //!< Bit field size in bits for LPTMR_CSR_TCF.
+/*@{*/
+#define BP_LPTMR_CSR_TCF     (7U)          /*!< Bit position for LPTMR_CSR_TCF. */
+#define BM_LPTMR_CSR_TCF     (0x00000080U) /*!< Bit mask for LPTMR_CSR_TCF. */
+#define BS_LPTMR_CSR_TCF     (1U)          /*!< Bit field size in bits for LPTMR_CSR_TCF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CSR_TCF field.
-#define BR_LPTMR_CSR_TCF     (BME_UBFX32(HW_LPTMR_CSR_ADDR, BP_LPTMR_CSR_TCF, BS_LPTMR_CSR_TCF))
-#endif
+/*! @brief Read current value of the LPTMR_CSR_TCF field. */
+#define BR_LPTMR_CSR_TCF(x)  (BME_UBFX32(HW_LPTMR_CSR_ADDR(x), BP_LPTMR_CSR_TCF, BS_LPTMR_CSR_TCF))
 
-//! @brief Format value for bitfield LPTMR_CSR_TCF.
-#define BF_LPTMR_CSR_TCF(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CSR_TCF), uint32_t) & BM_LPTMR_CSR_TCF)
+/*! @brief Format value for bitfield LPTMR_CSR_TCF. */
+#define BF_LPTMR_CSR_TCF(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_CSR_TCF) & BM_LPTMR_CSR_TCF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCF field to a new value.
-#define BW_LPTMR_CSR_TCF(v)  (BME_BFI32(HW_LPTMR_CSR_ADDR, ((uint32_t)(v) << BP_LPTMR_CSR_TCF), BP_LPTMR_CSR_TCF, 1))
-#endif
-//@}
+/*! @brief Set the TCF field to a new value. */
+#define BW_LPTMR_CSR_TCF(x, v) (BME_BFI32(HW_LPTMR_CSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CSR_TCF), BP_LPTMR_CSR_TCF, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPTMR_PSR - Low Power Timer Prescale Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPTMR_PSR - Low Power Timer Prescale Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPTMR_PSR - Low Power Timer Prescale Register (RW)
  *
@@ -317,29 +279,26 @@ typedef union _hw_lptmr_psr
     uint32_t U;
     struct _hw_lptmr_psr_bitfields
     {
-        uint32_t PCS : 2;              //!< [1:0] Prescaler Clock Select
-        uint32_t PBYP : 1;             //!< [2] Prescaler Bypass
-        uint32_t PRESCALE : 4;         //!< [6:3] Prescale Value
-        uint32_t RESERVED0 : 25;       //!< [31:7]
+        uint32_t PCS : 2;              /*!< [1:0] Prescaler Clock Select */
+        uint32_t PBYP : 1;             /*!< [2] Prescaler Bypass */
+        uint32_t PRESCALE : 4;         /*!< [6:3] Prescale Value */
+        uint32_t RESERVED0 : 25;       /*!< [31:7]  */
     } B;
 } hw_lptmr_psr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPTMR_PSR register
  */
-//@{
-#define HW_LPTMR_PSR_ADDR        (REGS_LPTMR_BASE + 0x4U)
+/*@{*/
+#define HW_LPTMR_PSR_ADDR(x)     ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPTMR_PSR             (*(__IO hw_lptmr_psr_t *) HW_LPTMR_PSR_ADDR)
-#define HW_LPTMR_PSR_RD()        (HW_LPTMR_PSR.U)
-#define HW_LPTMR_PSR_WR(v)       (HW_LPTMR_PSR.U = (v))
-#define HW_LPTMR_PSR_SET(v)      (BME_OR32(HW_LPTMR_PSR_ADDR, (uint32_t)(v)))
-#define HW_LPTMR_PSR_CLR(v)      (BME_AND32(HW_LPTMR_PSR_ADDR, (uint32_t)(~(v))))
-#define HW_LPTMR_PSR_TOG(v)      (BME_XOR32(HW_LPTMR_PSR_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_LPTMR_PSR(x)          (*(__IO hw_lptmr_psr_t *) HW_LPTMR_PSR_ADDR(x))
+#define HW_LPTMR_PSR_RD(x)       (HW_LPTMR_PSR(x).U)
+#define HW_LPTMR_PSR_WR(x, v)    (HW_LPTMR_PSR(x).U = (v))
+#define HW_LPTMR_PSR_SET(x, v)   (BME_OR32(HW_LPTMR_PSR_ADDR(x), (uint32_t)(v)))
+#define HW_LPTMR_PSR_CLR(x, v)   (BME_AND32(HW_LPTMR_PSR_ADDR(x), (uint32_t)(~(v))))
+#define HW_LPTMR_PSR_TOG(x, v)   (BME_XOR32(HW_LPTMR_PSR_ADDR(x), (uint32_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPTMR_PSR bitfields
@@ -359,24 +318,20 @@ typedef union _hw_lptmr_psr
  * - 10 - Prescaler/glitch filter clock 2 selected.
  * - 11 - Prescaler/glitch filter clock 3 selected.
  */
-//@{
-#define BP_LPTMR_PSR_PCS     (0U)          //!< Bit position for LPTMR_PSR_PCS.
-#define BM_LPTMR_PSR_PCS     (0x00000003U) //!< Bit mask for LPTMR_PSR_PCS.
-#define BS_LPTMR_PSR_PCS     (2U)          //!< Bit field size in bits for LPTMR_PSR_PCS.
+/*@{*/
+#define BP_LPTMR_PSR_PCS     (0U)          /*!< Bit position for LPTMR_PSR_PCS. */
+#define BM_LPTMR_PSR_PCS     (0x00000003U) /*!< Bit mask for LPTMR_PSR_PCS. */
+#define BS_LPTMR_PSR_PCS     (2U)          /*!< Bit field size in bits for LPTMR_PSR_PCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_PSR_PCS field.
-#define BR_LPTMR_PSR_PCS     (BME_UBFX32(HW_LPTMR_PSR_ADDR, BP_LPTMR_PSR_PCS, BS_LPTMR_PSR_PCS))
-#endif
+/*! @brief Read current value of the LPTMR_PSR_PCS field. */
+#define BR_LPTMR_PSR_PCS(x)  (BME_UBFX32(HW_LPTMR_PSR_ADDR(x), BP_LPTMR_PSR_PCS, BS_LPTMR_PSR_PCS))
 
-//! @brief Format value for bitfield LPTMR_PSR_PCS.
-#define BF_LPTMR_PSR_PCS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_PSR_PCS), uint32_t) & BM_LPTMR_PSR_PCS)
+/*! @brief Format value for bitfield LPTMR_PSR_PCS. */
+#define BF_LPTMR_PSR_PCS(v)  ((uint32_t)((uint32_t)(v) << BP_LPTMR_PSR_PCS) & BM_LPTMR_PSR_PCS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PCS field to a new value.
-#define BW_LPTMR_PSR_PCS(v)  (BME_BFI32(HW_LPTMR_PSR_ADDR, ((uint32_t)(v) << BP_LPTMR_PSR_PCS), BP_LPTMR_PSR_PCS, 2))
-#endif
-//@}
+/*! @brief Set the PCS field to a new value. */
+#define BW_LPTMR_PSR_PCS(x, v) (BME_BFI32(HW_LPTMR_PSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_PSR_PCS), BP_LPTMR_PSR_PCS, 2))
+/*@}*/
 
 /*!
  * @name Register LPTMR_PSR, field PBYP[2] (RW)
@@ -390,24 +345,20 @@ typedef union _hw_lptmr_psr
  * - 0 - Prescaler/glitch filter is enabled.
  * - 1 - Prescaler/glitch filter is bypassed.
  */
-//@{
-#define BP_LPTMR_PSR_PBYP    (2U)          //!< Bit position for LPTMR_PSR_PBYP.
-#define BM_LPTMR_PSR_PBYP    (0x00000004U) //!< Bit mask for LPTMR_PSR_PBYP.
-#define BS_LPTMR_PSR_PBYP    (1U)          //!< Bit field size in bits for LPTMR_PSR_PBYP.
+/*@{*/
+#define BP_LPTMR_PSR_PBYP    (2U)          /*!< Bit position for LPTMR_PSR_PBYP. */
+#define BM_LPTMR_PSR_PBYP    (0x00000004U) /*!< Bit mask for LPTMR_PSR_PBYP. */
+#define BS_LPTMR_PSR_PBYP    (1U)          /*!< Bit field size in bits for LPTMR_PSR_PBYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_PSR_PBYP field.
-#define BR_LPTMR_PSR_PBYP    (BME_UBFX32(HW_LPTMR_PSR_ADDR, BP_LPTMR_PSR_PBYP, BS_LPTMR_PSR_PBYP))
-#endif
+/*! @brief Read current value of the LPTMR_PSR_PBYP field. */
+#define BR_LPTMR_PSR_PBYP(x) (BME_UBFX32(HW_LPTMR_PSR_ADDR(x), BP_LPTMR_PSR_PBYP, BS_LPTMR_PSR_PBYP))
 
-//! @brief Format value for bitfield LPTMR_PSR_PBYP.
-#define BF_LPTMR_PSR_PBYP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_PSR_PBYP), uint32_t) & BM_LPTMR_PSR_PBYP)
+/*! @brief Format value for bitfield LPTMR_PSR_PBYP. */
+#define BF_LPTMR_PSR_PBYP(v) ((uint32_t)((uint32_t)(v) << BP_LPTMR_PSR_PBYP) & BM_LPTMR_PSR_PBYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PBYP field to a new value.
-#define BW_LPTMR_PSR_PBYP(v) (BME_BFI32(HW_LPTMR_PSR_ADDR, ((uint32_t)(v) << BP_LPTMR_PSR_PBYP), BP_LPTMR_PSR_PBYP, 1))
-#endif
-//@}
+/*! @brief Set the PBYP field to a new value. */
+#define BW_LPTMR_PSR_PBYP(x, v) (BME_BFI32(HW_LPTMR_PSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_PSR_PBYP), BP_LPTMR_PSR_PBYP, 1))
+/*@}*/
 
 /*!
  * @name Register LPTMR_PSR, field PRESCALE[6:3] (RW)
@@ -450,30 +401,25 @@ typedef union _hw_lptmr_psr
  * - 1111 - Prescaler divides the prescaler clock by 65,536; glitch filter
  *     recognizes change on input pin after 32,768 rising clock edges.
  */
-//@{
-#define BP_LPTMR_PSR_PRESCALE (3U)         //!< Bit position for LPTMR_PSR_PRESCALE.
-#define BM_LPTMR_PSR_PRESCALE (0x00000078U) //!< Bit mask for LPTMR_PSR_PRESCALE.
-#define BS_LPTMR_PSR_PRESCALE (4U)         //!< Bit field size in bits for LPTMR_PSR_PRESCALE.
+/*@{*/
+#define BP_LPTMR_PSR_PRESCALE (3U)         /*!< Bit position for LPTMR_PSR_PRESCALE. */
+#define BM_LPTMR_PSR_PRESCALE (0x00000078U) /*!< Bit mask for LPTMR_PSR_PRESCALE. */
+#define BS_LPTMR_PSR_PRESCALE (4U)         /*!< Bit field size in bits for LPTMR_PSR_PRESCALE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_PSR_PRESCALE field.
-#define BR_LPTMR_PSR_PRESCALE (BME_UBFX32(HW_LPTMR_PSR_ADDR, BP_LPTMR_PSR_PRESCALE, BS_LPTMR_PSR_PRESCALE))
-#endif
+/*! @brief Read current value of the LPTMR_PSR_PRESCALE field. */
+#define BR_LPTMR_PSR_PRESCALE(x) (BME_UBFX32(HW_LPTMR_PSR_ADDR(x), BP_LPTMR_PSR_PRESCALE, BS_LPTMR_PSR_PRESCALE))
 
-//! @brief Format value for bitfield LPTMR_PSR_PRESCALE.
-#define BF_LPTMR_PSR_PRESCALE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_PSR_PRESCALE), uint32_t) & BM_LPTMR_PSR_PRESCALE)
+/*! @brief Format value for bitfield LPTMR_PSR_PRESCALE. */
+#define BF_LPTMR_PSR_PRESCALE(v) ((uint32_t)((uint32_t)(v) << BP_LPTMR_PSR_PRESCALE) & BM_LPTMR_PSR_PRESCALE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PRESCALE field to a new value.
-#define BW_LPTMR_PSR_PRESCALE(v) (BME_BFI32(HW_LPTMR_PSR_ADDR, ((uint32_t)(v) << BP_LPTMR_PSR_PRESCALE), BP_LPTMR_PSR_PRESCALE, 4))
-#endif
-//@}
+/*! @brief Set the PRESCALE field to a new value. */
+#define BW_LPTMR_PSR_PRESCALE(x, v) (BME_BFI32(HW_LPTMR_PSR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_PSR_PRESCALE), BP_LPTMR_PSR_PRESCALE, 4))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPTMR_CMR - Low Power Timer Compare Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPTMR_CMR - Low Power Timer Compare Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPTMR_CMR - Low Power Timer Compare Register (RW)
  *
@@ -484,27 +430,24 @@ typedef union _hw_lptmr_cmr
     uint32_t U;
     struct _hw_lptmr_cmr_bitfields
     {
-        uint32_t COMPARE : 16;         //!< [15:0] Compare Value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t COMPARE : 16;         /*!< [15:0] Compare Value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_lptmr_cmr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPTMR_CMR register
  */
-//@{
-#define HW_LPTMR_CMR_ADDR        (REGS_LPTMR_BASE + 0x8U)
+/*@{*/
+#define HW_LPTMR_CMR_ADDR(x)     ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPTMR_CMR             (*(__IO hw_lptmr_cmr_t *) HW_LPTMR_CMR_ADDR)
-#define HW_LPTMR_CMR_RD()        (HW_LPTMR_CMR.U)
-#define HW_LPTMR_CMR_WR(v)       (HW_LPTMR_CMR.U = (v))
-#define HW_LPTMR_CMR_SET(v)      (BME_OR32(HW_LPTMR_CMR_ADDR, (uint32_t)(v)))
-#define HW_LPTMR_CMR_CLR(v)      (BME_AND32(HW_LPTMR_CMR_ADDR, (uint32_t)(~(v))))
-#define HW_LPTMR_CMR_TOG(v)      (BME_XOR32(HW_LPTMR_CMR_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_LPTMR_CMR(x)          (*(__IO hw_lptmr_cmr_t *) HW_LPTMR_CMR_ADDR(x))
+#define HW_LPTMR_CMR_RD(x)       (HW_LPTMR_CMR(x).U)
+#define HW_LPTMR_CMR_WR(x, v)    (HW_LPTMR_CMR(x).U = (v))
+#define HW_LPTMR_CMR_SET(x, v)   (BME_OR32(HW_LPTMR_CMR_ADDR(x), (uint32_t)(v)))
+#define HW_LPTMR_CMR_CLR(x, v)   (BME_AND32(HW_LPTMR_CMR_ADDR(x), (uint32_t)(~(v))))
+#define HW_LPTMR_CMR_TOG(x, v)   (BME_XOR32(HW_LPTMR_CMR_ADDR(x), (uint32_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPTMR_CMR bitfields
@@ -519,30 +462,25 @@ typedef union _hw_lptmr_cmr
  * the LPTMR is disabled. If the LPTMR is enabled, the CMR must be altered only
  * when TCF is set.
  */
-//@{
-#define BP_LPTMR_CMR_COMPARE (0U)          //!< Bit position for LPTMR_CMR_COMPARE.
-#define BM_LPTMR_CMR_COMPARE (0x0000FFFFU) //!< Bit mask for LPTMR_CMR_COMPARE.
-#define BS_LPTMR_CMR_COMPARE (16U)         //!< Bit field size in bits for LPTMR_CMR_COMPARE.
+/*@{*/
+#define BP_LPTMR_CMR_COMPARE (0U)          /*!< Bit position for LPTMR_CMR_COMPARE. */
+#define BM_LPTMR_CMR_COMPARE (0x0000FFFFU) /*!< Bit mask for LPTMR_CMR_COMPARE. */
+#define BS_LPTMR_CMR_COMPARE (16U)         /*!< Bit field size in bits for LPTMR_CMR_COMPARE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CMR_COMPARE field.
-#define BR_LPTMR_CMR_COMPARE (BME_UBFX32(HW_LPTMR_CMR_ADDR, BP_LPTMR_CMR_COMPARE, BS_LPTMR_CMR_COMPARE))
-#endif
+/*! @brief Read current value of the LPTMR_CMR_COMPARE field. */
+#define BR_LPTMR_CMR_COMPARE(x) (BME_UBFX32(HW_LPTMR_CMR_ADDR(x), BP_LPTMR_CMR_COMPARE, BS_LPTMR_CMR_COMPARE))
 
-//! @brief Format value for bitfield LPTMR_CMR_COMPARE.
-#define BF_LPTMR_CMR_COMPARE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CMR_COMPARE), uint32_t) & BM_LPTMR_CMR_COMPARE)
+/*! @brief Format value for bitfield LPTMR_CMR_COMPARE. */
+#define BF_LPTMR_CMR_COMPARE(v) ((uint32_t)((uint32_t)(v) << BP_LPTMR_CMR_COMPARE) & BM_LPTMR_CMR_COMPARE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COMPARE field to a new value.
-#define BW_LPTMR_CMR_COMPARE(v) (BME_BFI32(HW_LPTMR_CMR_ADDR, ((uint32_t)(v) << BP_LPTMR_CMR_COMPARE), BP_LPTMR_CMR_COMPARE, 16))
-#endif
-//@}
+/*! @brief Set the COMPARE field to a new value. */
+#define BW_LPTMR_CMR_COMPARE(x, v) (BME_BFI32(HW_LPTMR_CMR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CMR_COMPARE), BP_LPTMR_CMR_COMPARE, 16))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LPTMR_CNR - Low Power Timer Counter Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LPTMR_CNR - Low Power Timer Counter Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LPTMR_CNR - Low Power Timer Counter Register (RW)
  *
@@ -553,27 +491,24 @@ typedef union _hw_lptmr_cnr
     uint32_t U;
     struct _hw_lptmr_cnr_bitfields
     {
-        uint32_t COUNTER : 16;         //!< [15:0] Counter Value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t COUNTER : 16;         /*!< [15:0] Counter Value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_lptmr_cnr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LPTMR_CNR register
  */
-//@{
-#define HW_LPTMR_CNR_ADDR        (REGS_LPTMR_BASE + 0xCU)
+/*@{*/
+#define HW_LPTMR_CNR_ADDR(x)     ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LPTMR_CNR             (*(__IO hw_lptmr_cnr_t *) HW_LPTMR_CNR_ADDR)
-#define HW_LPTMR_CNR_RD()        (HW_LPTMR_CNR.U)
-#define HW_LPTMR_CNR_WR(v)       (HW_LPTMR_CNR.U = (v))
-#define HW_LPTMR_CNR_SET(v)      (BME_OR32(HW_LPTMR_CNR_ADDR, (uint32_t)(v)))
-#define HW_LPTMR_CNR_CLR(v)      (BME_AND32(HW_LPTMR_CNR_ADDR, (uint32_t)(~(v))))
-#define HW_LPTMR_CNR_TOG(v)      (BME_XOR32(HW_LPTMR_CNR_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_LPTMR_CNR(x)          (*(__IO hw_lptmr_cnr_t *) HW_LPTMR_CNR_ADDR(x))
+#define HW_LPTMR_CNR_RD(x)       (HW_LPTMR_CNR(x).U)
+#define HW_LPTMR_CNR_WR(x, v)    (HW_LPTMR_CNR(x).U = (v))
+#define HW_LPTMR_CNR_SET(x, v)   (BME_OR32(HW_LPTMR_CNR_ADDR(x), (uint32_t)(v)))
+#define HW_LPTMR_CNR_CLR(x, v)   (BME_AND32(HW_LPTMR_CNR_ADDR(x), (uint32_t)(~(v))))
+#define HW_LPTMR_CNR_TOG(x, v)   (BME_XOR32(HW_LPTMR_CNR_ADDR(x), (uint32_t)(v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LPTMR_CNR bitfields
@@ -582,48 +517,43 @@ typedef union _hw_lptmr_cnr
 /*!
  * @name Register LPTMR_CNR, field COUNTER[15:0] (RW)
  */
-//@{
-#define BP_LPTMR_CNR_COUNTER (0U)          //!< Bit position for LPTMR_CNR_COUNTER.
-#define BM_LPTMR_CNR_COUNTER (0x0000FFFFU) //!< Bit mask for LPTMR_CNR_COUNTER.
-#define BS_LPTMR_CNR_COUNTER (16U)         //!< Bit field size in bits for LPTMR_CNR_COUNTER.
+/*@{*/
+#define BP_LPTMR_CNR_COUNTER (0U)          /*!< Bit position for LPTMR_CNR_COUNTER. */
+#define BM_LPTMR_CNR_COUNTER (0x0000FFFFU) /*!< Bit mask for LPTMR_CNR_COUNTER. */
+#define BS_LPTMR_CNR_COUNTER (16U)         /*!< Bit field size in bits for LPTMR_CNR_COUNTER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LPTMR_CNR_COUNTER field.
-#define BR_LPTMR_CNR_COUNTER (BME_UBFX32(HW_LPTMR_CNR_ADDR, BP_LPTMR_CNR_COUNTER, BS_LPTMR_CNR_COUNTER))
-#endif
+/*! @brief Read current value of the LPTMR_CNR_COUNTER field. */
+#define BR_LPTMR_CNR_COUNTER(x) (BME_UBFX32(HW_LPTMR_CNR_ADDR(x), BP_LPTMR_CNR_COUNTER, BS_LPTMR_CNR_COUNTER))
 
-//! @brief Format value for bitfield LPTMR_CNR_COUNTER.
-#define BF_LPTMR_CNR_COUNTER(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LPTMR_CNR_COUNTER), uint32_t) & BM_LPTMR_CNR_COUNTER)
+/*! @brief Format value for bitfield LPTMR_CNR_COUNTER. */
+#define BF_LPTMR_CNR_COUNTER(v) ((uint32_t)((uint32_t)(v) << BP_LPTMR_CNR_COUNTER) & BM_LPTMR_CNR_COUNTER)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COUNTER field to a new value.
-#define BW_LPTMR_CNR_COUNTER(v) (BME_BFI32(HW_LPTMR_CNR_ADDR, ((uint32_t)(v) << BP_LPTMR_CNR_COUNTER), BP_LPTMR_CNR_COUNTER, 16))
-#endif
-//@}
+/*! @brief Set the COUNTER field to a new value. */
+#define BW_LPTMR_CNR_COUNTER(x, v) (BME_BFI32(HW_LPTMR_CNR_ADDR(x), ((uint32_t)(v) << BP_LPTMR_CNR_COUNTER), BP_LPTMR_CNR_COUNTER, 16))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_lptmr_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_lptmr_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All LPTMR module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_lptmr
 {
-    __IO hw_lptmr_csr_t CSR;               //!< [0x0] Low Power Timer Control Status Register
-    __IO hw_lptmr_psr_t PSR;               //!< [0x4] Low Power Timer Prescale Register
-    __IO hw_lptmr_cmr_t CMR;               //!< [0x8] Low Power Timer Compare Register
-    __IO hw_lptmr_cnr_t CNR;               //!< [0xC] Low Power Timer Counter Register
+    __IO hw_lptmr_csr_t CSR;               /*!< [0x0] Low Power Timer Control Status Register */
+    __IO hw_lptmr_psr_t PSR;               /*!< [0x4] Low Power Timer Prescale Register */
+    __IO hw_lptmr_cmr_t CMR;               /*!< [0x8] Low Power Timer Compare Register */
+    __IO hw_lptmr_cnr_t CNR;               /*!< [0xC] Low Power Timer Counter Register */
 } hw_lptmr_t;
 #pragma pack()
 
-//! @brief Macro to access all LPTMR registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_LPTMR</code>.
-#define HW_LPTMR       (*(hw_lptmr_t *) REGS_LPTMR_BASE)
-#endif
+/*! @brief Macro to access all LPTMR registers. */
+/*! @param x LPTMR module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_LPTMR(LPTMR0_BASE)</code>. */
+#define HW_LPTMR(x)    (*(hw_lptmr_t *)(x))
 
-#endif // __HW_LPTMR_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_LPTMR_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

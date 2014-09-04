@@ -30,15 +30,23 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
 // See flash.h for documentation of this function.
-status_t flash_erase_all_unsecure(flash_driver_t * driver)
+status_t flash_erase_all_unsecure(flash_driver_t * driver, uint32_t key)
 {
+    // Validate the user key
+    status_t returnCode = flash_check_user_key(key);
+    if (returnCode)
+    {
+        return returnCode;
+    }
+
     if (driver == NULL)
     {
         return kStatus_InvalidArgument;
@@ -46,7 +54,7 @@ status_t flash_erase_all_unsecure(flash_driver_t * driver)
 
     // Prepare passing parameter to erase all flash blocks (unsecure).
     // 1st element for the FCCOB register.
-    HW_FTFx_FCCOBx_WR(0, FTFx_ERASE_ALL_BLOCK_UNSECURE);
+    HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_ERASE_ALL_BLOCK_UNSECURE);
 
     // Call flash command sequence function to execute the command.
     return flash_command_sequence();

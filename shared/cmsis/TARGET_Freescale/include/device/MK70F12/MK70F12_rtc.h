@@ -21,7 +21,8 @@
 #ifndef __HW_RTC_REGISTERS_H__
 #define __HW_RTC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 RTC
@@ -47,19 +48,12 @@
  * - hw_rtc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_RTC_BASE
-#define HW_RTC_INSTANCE_COUNT (1U) //!< Number of instances of the RTC module.
-#define REGS_RTC_BASE (0x4003D000U) //!< Base address for RTC.
-#endif
-//@}
+#define HW_RTC_INSTANCE_COUNT (1U) /*!< Number of instances of the RTC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_TSR - RTC Time Seconds Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_TSR - RTC Time Seconds Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_TSR - RTC Time Seconds Register (RW)
  *
@@ -70,26 +64,23 @@ typedef union _hw_rtc_tsr
     uint32_t U;
     struct _hw_rtc_tsr_bitfields
     {
-        uint32_t TSR : 32;             //!< [31:0] Time Seconds Register
+        uint32_t TSR : 32;             /*!< [31:0] Time Seconds Register */
     } B;
 } hw_rtc_tsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_TSR register
  */
-//@{
-#define HW_RTC_TSR_ADDR          (REGS_RTC_BASE + 0x0U)
+/*@{*/
+#define HW_RTC_TSR_ADDR(x)       ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_TSR               (*(__IO hw_rtc_tsr_t *) HW_RTC_TSR_ADDR)
-#define HW_RTC_TSR_RD()          (HW_RTC_TSR.U)
-#define HW_RTC_TSR_WR(v)         (HW_RTC_TSR.U = (v))
-#define HW_RTC_TSR_SET(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() |  (v)))
-#define HW_RTC_TSR_CLR(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() & ~(v)))
-#define HW_RTC_TSR_TOG(v)        (HW_RTC_TSR_WR(HW_RTC_TSR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_TSR(x)            (*(__IO hw_rtc_tsr_t *) HW_RTC_TSR_ADDR(x))
+#define HW_RTC_TSR_RD(x)         (HW_RTC_TSR(x).U)
+#define HW_RTC_TSR_WR(x, v)      (HW_RTC_TSR(x).U = (v))
+#define HW_RTC_TSR_SET(x, v)     (HW_RTC_TSR_WR(x, HW_RTC_TSR_RD(x) |  (v)))
+#define HW_RTC_TSR_CLR(x, v)     (HW_RTC_TSR_WR(x, HW_RTC_TSR_RD(x) & ~(v)))
+#define HW_RTC_TSR_TOG(x, v)     (HW_RTC_TSR_WR(x, HW_RTC_TSR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_TSR bitfields
@@ -106,30 +97,25 @@ typedef union _hw_rtc_tsr
  * zero is supported, but not recommended since TSR will read as zero when
  * SR[TIF] or SR[TOF] are set (indicating the time is invalid).
  */
-//@{
-#define BP_RTC_TSR_TSR       (0U)          //!< Bit position for RTC_TSR_TSR.
-#define BM_RTC_TSR_TSR       (0xFFFFFFFFU) //!< Bit mask for RTC_TSR_TSR.
-#define BS_RTC_TSR_TSR       (32U)         //!< Bit field size in bits for RTC_TSR_TSR.
+/*@{*/
+#define BP_RTC_TSR_TSR       (0U)          /*!< Bit position for RTC_TSR_TSR. */
+#define BM_RTC_TSR_TSR       (0xFFFFFFFFU) /*!< Bit mask for RTC_TSR_TSR. */
+#define BS_RTC_TSR_TSR       (32U)         /*!< Bit field size in bits for RTC_TSR_TSR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TSR_TSR field.
-#define BR_RTC_TSR_TSR       (HW_RTC_TSR.B.TSR)
-#endif
+/*! @brief Read current value of the RTC_TSR_TSR field. */
+#define BR_RTC_TSR_TSR(x)    (HW_RTC_TSR(x).U)
 
-//! @brief Format value for bitfield RTC_TSR_TSR.
-#define BF_RTC_TSR_TSR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_TSR_TSR), uint32_t) & BM_RTC_TSR_TSR)
+/*! @brief Format value for bitfield RTC_TSR_TSR. */
+#define BF_RTC_TSR_TSR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_TSR_TSR) & BM_RTC_TSR_TSR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSR field to a new value.
-#define BW_RTC_TSR_TSR(v)    (HW_RTC_TSR_WR((HW_RTC_TSR_RD() & ~BM_RTC_TSR_TSR) | BF_RTC_TSR_TSR(v)))
-#endif
-//@}
+/*! @brief Set the TSR field to a new value. */
+#define BW_RTC_TSR_TSR(x, v) (HW_RTC_TSR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_TPR - RTC Time Prescaler Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_TPR - RTC Time Prescaler Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_TPR - RTC Time Prescaler Register (RW)
  *
@@ -140,27 +126,24 @@ typedef union _hw_rtc_tpr
     uint32_t U;
     struct _hw_rtc_tpr_bitfields
     {
-        uint32_t TPR : 16;             //!< [15:0] Time Prescaler Register
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t TPR : 16;             /*!< [15:0] Time Prescaler Register */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_rtc_tpr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_TPR register
  */
-//@{
-#define HW_RTC_TPR_ADDR          (REGS_RTC_BASE + 0x4U)
+/*@{*/
+#define HW_RTC_TPR_ADDR(x)       ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_TPR               (*(__IO hw_rtc_tpr_t *) HW_RTC_TPR_ADDR)
-#define HW_RTC_TPR_RD()          (HW_RTC_TPR.U)
-#define HW_RTC_TPR_WR(v)         (HW_RTC_TPR.U = (v))
-#define HW_RTC_TPR_SET(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() |  (v)))
-#define HW_RTC_TPR_CLR(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() & ~(v)))
-#define HW_RTC_TPR_TOG(v)        (HW_RTC_TPR_WR(HW_RTC_TPR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_TPR(x)            (*(__IO hw_rtc_tpr_t *) HW_RTC_TPR_ADDR(x))
+#define HW_RTC_TPR_RD(x)         (HW_RTC_TPR(x).U)
+#define HW_RTC_TPR_WR(x, v)      (HW_RTC_TPR(x).U = (v))
+#define HW_RTC_TPR_SET(x, v)     (HW_RTC_TPR_WR(x, HW_RTC_TPR_RD(x) |  (v)))
+#define HW_RTC_TPR_CLR(x, v)     (HW_RTC_TPR_WR(x, HW_RTC_TPR_RD(x) & ~(v)))
+#define HW_RTC_TPR_TOG(x, v)     (HW_RTC_TPR_WR(x, HW_RTC_TPR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_TPR bitfields
@@ -175,30 +158,25 @@ typedef union _hw_rtc_tpr
  * written. The TSR[TSR] increments when bit 14 of the TPR transitions from a logic one
  * to a logic zero.
  */
-//@{
-#define BP_RTC_TPR_TPR       (0U)          //!< Bit position for RTC_TPR_TPR.
-#define BM_RTC_TPR_TPR       (0x0000FFFFU) //!< Bit mask for RTC_TPR_TPR.
-#define BS_RTC_TPR_TPR       (16U)         //!< Bit field size in bits for RTC_TPR_TPR.
+/*@{*/
+#define BP_RTC_TPR_TPR       (0U)          /*!< Bit position for RTC_TPR_TPR. */
+#define BM_RTC_TPR_TPR       (0x0000FFFFU) /*!< Bit mask for RTC_TPR_TPR. */
+#define BS_RTC_TPR_TPR       (16U)         /*!< Bit field size in bits for RTC_TPR_TPR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TPR_TPR field.
-#define BR_RTC_TPR_TPR       (HW_RTC_TPR.B.TPR)
-#endif
+/*! @brief Read current value of the RTC_TPR_TPR field. */
+#define BR_RTC_TPR_TPR(x)    (HW_RTC_TPR(x).B.TPR)
 
-//! @brief Format value for bitfield RTC_TPR_TPR.
-#define BF_RTC_TPR_TPR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_TPR_TPR), uint32_t) & BM_RTC_TPR_TPR)
+/*! @brief Format value for bitfield RTC_TPR_TPR. */
+#define BF_RTC_TPR_TPR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_TPR_TPR) & BM_RTC_TPR_TPR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPR field to a new value.
-#define BW_RTC_TPR_TPR(v)    (HW_RTC_TPR_WR((HW_RTC_TPR_RD() & ~BM_RTC_TPR_TPR) | BF_RTC_TPR_TPR(v)))
-#endif
-//@}
+/*! @brief Set the TPR field to a new value. */
+#define BW_RTC_TPR_TPR(x, v) (HW_RTC_TPR_WR(x, (HW_RTC_TPR_RD(x) & ~BM_RTC_TPR_TPR) | BF_RTC_TPR_TPR(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_TAR - RTC Time Alarm Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_TAR - RTC Time Alarm Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_TAR - RTC Time Alarm Register (RW)
  *
@@ -209,26 +187,23 @@ typedef union _hw_rtc_tar
     uint32_t U;
     struct _hw_rtc_tar_bitfields
     {
-        uint32_t TAR : 32;             //!< [31:0] Time Alarm Register
+        uint32_t TAR : 32;             /*!< [31:0] Time Alarm Register */
     } B;
 } hw_rtc_tar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_TAR register
  */
-//@{
-#define HW_RTC_TAR_ADDR          (REGS_RTC_BASE + 0x8U)
+/*@{*/
+#define HW_RTC_TAR_ADDR(x)       ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_TAR               (*(__IO hw_rtc_tar_t *) HW_RTC_TAR_ADDR)
-#define HW_RTC_TAR_RD()          (HW_RTC_TAR.U)
-#define HW_RTC_TAR_WR(v)         (HW_RTC_TAR.U = (v))
-#define HW_RTC_TAR_SET(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() |  (v)))
-#define HW_RTC_TAR_CLR(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() & ~(v)))
-#define HW_RTC_TAR_TOG(v)        (HW_RTC_TAR_WR(HW_RTC_TAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_TAR(x)            (*(__IO hw_rtc_tar_t *) HW_RTC_TAR_ADDR(x))
+#define HW_RTC_TAR_RD(x)         (HW_RTC_TAR(x).U)
+#define HW_RTC_TAR_WR(x, v)      (HW_RTC_TAR(x).U = (v))
+#define HW_RTC_TAR_SET(x, v)     (HW_RTC_TAR_WR(x, HW_RTC_TAR_RD(x) |  (v)))
+#define HW_RTC_TAR_CLR(x, v)     (HW_RTC_TAR_WR(x, HW_RTC_TAR_RD(x) & ~(v)))
+#define HW_RTC_TAR_TOG(x, v)     (HW_RTC_TAR_WR(x, HW_RTC_TAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_TAR bitfields
@@ -241,30 +216,25 @@ typedef union _hw_rtc_tar
  * equals the TSR[TSR] and the TSR[TSR] increments. Writing to the TAR clears the
  * SR[TAF].
  */
-//@{
-#define BP_RTC_TAR_TAR       (0U)          //!< Bit position for RTC_TAR_TAR.
-#define BM_RTC_TAR_TAR       (0xFFFFFFFFU) //!< Bit mask for RTC_TAR_TAR.
-#define BS_RTC_TAR_TAR       (32U)         //!< Bit field size in bits for RTC_TAR_TAR.
+/*@{*/
+#define BP_RTC_TAR_TAR       (0U)          /*!< Bit position for RTC_TAR_TAR. */
+#define BM_RTC_TAR_TAR       (0xFFFFFFFFU) /*!< Bit mask for RTC_TAR_TAR. */
+#define BS_RTC_TAR_TAR       (32U)         /*!< Bit field size in bits for RTC_TAR_TAR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TAR_TAR field.
-#define BR_RTC_TAR_TAR       (HW_RTC_TAR.B.TAR)
-#endif
+/*! @brief Read current value of the RTC_TAR_TAR field. */
+#define BR_RTC_TAR_TAR(x)    (HW_RTC_TAR(x).U)
 
-//! @brief Format value for bitfield RTC_TAR_TAR.
-#define BF_RTC_TAR_TAR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_TAR_TAR), uint32_t) & BM_RTC_TAR_TAR)
+/*! @brief Format value for bitfield RTC_TAR_TAR. */
+#define BF_RTC_TAR_TAR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_TAR_TAR) & BM_RTC_TAR_TAR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TAR field to a new value.
-#define BW_RTC_TAR_TAR(v)    (HW_RTC_TAR_WR((HW_RTC_TAR_RD() & ~BM_RTC_TAR_TAR) | BF_RTC_TAR_TAR(v)))
-#endif
-//@}
+/*! @brief Set the TAR field to a new value. */
+#define BW_RTC_TAR_TAR(x, v) (HW_RTC_TAR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_TCR - RTC Time Compensation Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_TCR - RTC Time Compensation Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_TCR - RTC Time Compensation Register (RW)
  *
@@ -275,29 +245,26 @@ typedef union _hw_rtc_tcr
     uint32_t U;
     struct _hw_rtc_tcr_bitfields
     {
-        uint32_t TCR : 8;              //!< [7:0] Time Compensation Register
-        uint32_t CIR : 8;              //!< [15:8] Compensation Interval Register
-        uint32_t TCV : 8;              //!< [23:16] Time Compensation Value
-        uint32_t CIC : 8;              //!< [31:24] Compensation Interval Counter
+        uint32_t TCR : 8;              /*!< [7:0] Time Compensation Register */
+        uint32_t CIR : 8;              /*!< [15:8] Compensation Interval Register */
+        uint32_t TCV : 8;              /*!< [23:16] Time Compensation Value */
+        uint32_t CIC : 8;              /*!< [31:24] Compensation Interval Counter */
     } B;
 } hw_rtc_tcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_TCR register
  */
-//@{
-#define HW_RTC_TCR_ADDR          (REGS_RTC_BASE + 0xCU)
+/*@{*/
+#define HW_RTC_TCR_ADDR(x)       ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_TCR               (*(__IO hw_rtc_tcr_t *) HW_RTC_TCR_ADDR)
-#define HW_RTC_TCR_RD()          (HW_RTC_TCR.U)
-#define HW_RTC_TCR_WR(v)         (HW_RTC_TCR.U = (v))
-#define HW_RTC_TCR_SET(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() |  (v)))
-#define HW_RTC_TCR_CLR(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() & ~(v)))
-#define HW_RTC_TCR_TOG(v)        (HW_RTC_TCR_WR(HW_RTC_TCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_TCR(x)            (*(__IO hw_rtc_tcr_t *) HW_RTC_TCR_ADDR(x))
+#define HW_RTC_TCR_RD(x)         (HW_RTC_TCR(x).U)
+#define HW_RTC_TCR_WR(x, v)      (HW_RTC_TCR(x).U = (v))
+#define HW_RTC_TCR_SET(x, v)     (HW_RTC_TCR_WR(x, HW_RTC_TCR_RD(x) |  (v)))
+#define HW_RTC_TCR_CLR(x, v)     (HW_RTC_TCR_WR(x, HW_RTC_TCR_RD(x) & ~(v)))
+#define HW_RTC_TCR_TOG(x, v)     (HW_RTC_TCR_WR(x, HW_RTC_TCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_TCR bitfields
@@ -317,24 +284,20 @@ typedef union _hw_rtc_tcr
  * - 1 - Time prescaler register overflows every 32767 clock cycles.
  * - 1111111 - Time prescaler register overflows every 32641 clock cycles.
  */
-//@{
-#define BP_RTC_TCR_TCR       (0U)          //!< Bit position for RTC_TCR_TCR.
-#define BM_RTC_TCR_TCR       (0x000000FFU) //!< Bit mask for RTC_TCR_TCR.
-#define BS_RTC_TCR_TCR       (8U)          //!< Bit field size in bits for RTC_TCR_TCR.
+/*@{*/
+#define BP_RTC_TCR_TCR       (0U)          /*!< Bit position for RTC_TCR_TCR. */
+#define BM_RTC_TCR_TCR       (0x000000FFU) /*!< Bit mask for RTC_TCR_TCR. */
+#define BS_RTC_TCR_TCR       (8U)          /*!< Bit field size in bits for RTC_TCR_TCR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TCR_TCR field.
-#define BR_RTC_TCR_TCR       (HW_RTC_TCR.B.TCR)
-#endif
+/*! @brief Read current value of the RTC_TCR_TCR field. */
+#define BR_RTC_TCR_TCR(x)    (HW_RTC_TCR(x).B.TCR)
 
-//! @brief Format value for bitfield RTC_TCR_TCR.
-#define BF_RTC_TCR_TCR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_TCR_TCR), uint32_t) & BM_RTC_TCR_TCR)
+/*! @brief Format value for bitfield RTC_TCR_TCR. */
+#define BF_RTC_TCR_TCR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_TCR_TCR) & BM_RTC_TCR_TCR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCR field to a new value.
-#define BW_RTC_TCR_TCR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD() & ~BM_RTC_TCR_TCR) | BF_RTC_TCR_TCR(v)))
-#endif
-//@}
+/*! @brief Set the TCR field to a new value. */
+#define BW_RTC_TCR_TCR(x, v) (HW_RTC_TCR_WR(x, (HW_RTC_TCR_RD(x) & ~BM_RTC_TCR_TCR) | BF_RTC_TCR_TCR(v)))
+/*@}*/
 
 /*!
  * @name Register RTC_TCR, field CIR[15:8] (RW)
@@ -346,24 +309,20 @@ typedef union _hw_rtc_tcr
  * register is double buffered and writes do not take affect until the end of the
  * current compensation interval.
  */
-//@{
-#define BP_RTC_TCR_CIR       (8U)          //!< Bit position for RTC_TCR_CIR.
-#define BM_RTC_TCR_CIR       (0x0000FF00U) //!< Bit mask for RTC_TCR_CIR.
-#define BS_RTC_TCR_CIR       (8U)          //!< Bit field size in bits for RTC_TCR_CIR.
+/*@{*/
+#define BP_RTC_TCR_CIR       (8U)          /*!< Bit position for RTC_TCR_CIR. */
+#define BM_RTC_TCR_CIR       (0x0000FF00U) /*!< Bit mask for RTC_TCR_CIR. */
+#define BS_RTC_TCR_CIR       (8U)          /*!< Bit field size in bits for RTC_TCR_CIR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TCR_CIR field.
-#define BR_RTC_TCR_CIR       (HW_RTC_TCR.B.CIR)
-#endif
+/*! @brief Read current value of the RTC_TCR_CIR field. */
+#define BR_RTC_TCR_CIR(x)    (HW_RTC_TCR(x).B.CIR)
 
-//! @brief Format value for bitfield RTC_TCR_CIR.
-#define BF_RTC_TCR_CIR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_TCR_CIR), uint32_t) & BM_RTC_TCR_CIR)
+/*! @brief Format value for bitfield RTC_TCR_CIR. */
+#define BF_RTC_TCR_CIR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_TCR_CIR) & BM_RTC_TCR_CIR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CIR field to a new value.
-#define BW_RTC_TCR_CIR(v)    (HW_RTC_TCR_WR((HW_RTC_TCR_RD() & ~BM_RTC_TCR_CIR) | BF_RTC_TCR_CIR(v)))
-#endif
-//@}
+/*! @brief Set the CIR field to a new value. */
+#define BW_RTC_TCR_CIR(x, v) (HW_RTC_TCR_WR(x, (HW_RTC_TCR_RD(x) & ~BM_RTC_TCR_CIR) | BF_RTC_TCR_CIR(v)))
+/*@}*/
 
 /*!
  * @name Register RTC_TCR, field TCV[23:16] (RO)
@@ -373,16 +332,14 @@ typedef union _hw_rtc_tcr
  * If the CIC does not equal zero then it is loaded with zero (compensation is
  * not enabled for that second increment).
  */
-//@{
-#define BP_RTC_TCR_TCV       (16U)         //!< Bit position for RTC_TCR_TCV.
-#define BM_RTC_TCR_TCV       (0x00FF0000U) //!< Bit mask for RTC_TCR_TCV.
-#define BS_RTC_TCR_TCV       (8U)          //!< Bit field size in bits for RTC_TCR_TCV.
+/*@{*/
+#define BP_RTC_TCR_TCV       (16U)         /*!< Bit position for RTC_TCR_TCV. */
+#define BM_RTC_TCR_TCV       (0x00FF0000U) /*!< Bit mask for RTC_TCR_TCV. */
+#define BS_RTC_TCR_TCV       (8U)          /*!< Bit field size in bits for RTC_TCR_TCV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TCR_TCV field.
-#define BR_RTC_TCR_TCV       (HW_RTC_TCR.B.TCV)
-#endif
-//@}
+/*! @brief Read current value of the RTC_TCR_TCV field. */
+#define BR_RTC_TCR_TCV(x)    (HW_RTC_TCR(x).B.TCV)
+/*@}*/
 
 /*!
  * @name Register RTC_TCR, field CIC[31:24] (RO)
@@ -391,22 +348,19 @@ typedef union _hw_rtc_tcr
  * interval counter equals zero then it is loaded with the contents of the CIR. If the
  * CIC does not equal zero then it is decremented once a second.
  */
-//@{
-#define BP_RTC_TCR_CIC       (24U)         //!< Bit position for RTC_TCR_CIC.
-#define BM_RTC_TCR_CIC       (0xFF000000U) //!< Bit mask for RTC_TCR_CIC.
-#define BS_RTC_TCR_CIC       (8U)          //!< Bit field size in bits for RTC_TCR_CIC.
+/*@{*/
+#define BP_RTC_TCR_CIC       (24U)         /*!< Bit position for RTC_TCR_CIC. */
+#define BM_RTC_TCR_CIC       (0xFF000000U) /*!< Bit mask for RTC_TCR_CIC. */
+#define BS_RTC_TCR_CIC       (8U)          /*!< Bit field size in bits for RTC_TCR_CIC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TCR_CIC field.
-#define BR_RTC_TCR_CIC       (HW_RTC_TCR.B.CIC)
-#endif
-//@}
+/*! @brief Read current value of the RTC_TCR_CIC field. */
+#define BR_RTC_TCR_CIC(x)    (HW_RTC_TCR(x).B.CIC)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_CR - RTC Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_CR - RTC Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_CR - RTC Control Register (RW)
  *
@@ -417,37 +371,34 @@ typedef union _hw_rtc_cr
     uint32_t U;
     struct _hw_rtc_cr_bitfields
     {
-        uint32_t SWR : 1;              //!< [0] Software Reset
-        uint32_t WPE : 1;              //!< [1] Wakeup Pin Enable
-        uint32_t SUP : 1;              //!< [2] Supervisor Access
-        uint32_t UM : 1;               //!< [3] Update Mode
-        uint32_t RESERVED0 : 4;        //!< [7:4]
-        uint32_t OSCE : 1;             //!< [8] Oscillator Enable
-        uint32_t CLKO : 1;             //!< [9] Clock Output
-        uint32_t SC16P : 1;            //!< [10] Oscillator 16pF load configure
-        uint32_t SC8P : 1;             //!< [11] Oscillator 8pF load configure
-        uint32_t SC4P : 1;             //!< [12] Oscillator 4pF load configure
-        uint32_t SC2P : 1;             //!< [13] Oscillator 2pF load configure
-        uint32_t RESERVED1 : 18;       //!< [31:14]
+        uint32_t SWR : 1;              /*!< [0] Software Reset */
+        uint32_t WPE : 1;              /*!< [1] Wakeup Pin Enable */
+        uint32_t SUP : 1;              /*!< [2] Supervisor Access */
+        uint32_t UM : 1;               /*!< [3] Update Mode */
+        uint32_t RESERVED0 : 4;        /*!< [7:4]  */
+        uint32_t OSCE : 1;             /*!< [8] Oscillator Enable */
+        uint32_t CLKO : 1;             /*!< [9] Clock Output */
+        uint32_t SC16P : 1;            /*!< [10] Oscillator 16pF load configure */
+        uint32_t SC8P : 1;             /*!< [11] Oscillator 8pF load configure */
+        uint32_t SC4P : 1;             /*!< [12] Oscillator 4pF load configure */
+        uint32_t SC2P : 1;             /*!< [13] Oscillator 2pF load configure */
+        uint32_t RESERVED1 : 18;       /*!< [31:14]  */
     } B;
 } hw_rtc_cr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_CR register
  */
-//@{
-#define HW_RTC_CR_ADDR           (REGS_RTC_BASE + 0x10U)
+/*@{*/
+#define HW_RTC_CR_ADDR(x)        ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_CR                (*(__IO hw_rtc_cr_t *) HW_RTC_CR_ADDR)
-#define HW_RTC_CR_RD()           (HW_RTC_CR.U)
-#define HW_RTC_CR_WR(v)          (HW_RTC_CR.U = (v))
-#define HW_RTC_CR_SET(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() |  (v)))
-#define HW_RTC_CR_CLR(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() & ~(v)))
-#define HW_RTC_CR_TOG(v)         (HW_RTC_CR_WR(HW_RTC_CR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_CR(x)             (*(__IO hw_rtc_cr_t *) HW_RTC_CR_ADDR(x))
+#define HW_RTC_CR_RD(x)          (HW_RTC_CR(x).U)
+#define HW_RTC_CR_WR(x, v)       (HW_RTC_CR(x).U = (v))
+#define HW_RTC_CR_SET(x, v)      (HW_RTC_CR_WR(x, HW_RTC_CR_RD(x) |  (v)))
+#define HW_RTC_CR_CLR(x, v)      (HW_RTC_CR_WR(x, HW_RTC_CR_RD(x) & ~(v)))
+#define HW_RTC_CR_TOG(x, v)      (HW_RTC_CR_WR(x, HW_RTC_CR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_CR bitfields
@@ -462,24 +413,20 @@ typedef union _hw_rtc_cr
  *     RTC_RAR registers. The SWR bit is cleared after VBAT POR and by software
  *     explicitly clearing it.
  */
-//@{
-#define BP_RTC_CR_SWR        (0U)          //!< Bit position for RTC_CR_SWR.
-#define BM_RTC_CR_SWR        (0x00000001U) //!< Bit mask for RTC_CR_SWR.
-#define BS_RTC_CR_SWR        (1U)          //!< Bit field size in bits for RTC_CR_SWR.
+/*@{*/
+#define BP_RTC_CR_SWR        (0U)          /*!< Bit position for RTC_CR_SWR. */
+#define BM_RTC_CR_SWR        (0x00000001U) /*!< Bit mask for RTC_CR_SWR. */
+#define BS_RTC_CR_SWR        (1U)          /*!< Bit field size in bits for RTC_CR_SWR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SWR field.
-#define BR_RTC_CR_SWR        (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SWR))
-#endif
+/*! @brief Read current value of the RTC_CR_SWR field. */
+#define BR_RTC_CR_SWR(x)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SWR))
 
-//! @brief Format value for bitfield RTC_CR_SWR.
-#define BF_RTC_CR_SWR(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SWR), uint32_t) & BM_RTC_CR_SWR)
+/*! @brief Format value for bitfield RTC_CR_SWR. */
+#define BF_RTC_CR_SWR(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SWR) & BM_RTC_CR_SWR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SWR field to a new value.
-#define BW_RTC_CR_SWR(v)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SWR) = (v))
-#endif
-//@}
+/*! @brief Set the SWR field to a new value. */
+#define BW_RTC_CR_SWR(x, v)  (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SWR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field WPE[1] (RW)
@@ -491,24 +438,20 @@ typedef union _hw_rtc_cr
  * - 1 - Wakeup pin is enabled and wakeup pin asserts if the RTC interrupt
  *     asserts and the chip is powered down.
  */
-//@{
-#define BP_RTC_CR_WPE        (1U)          //!< Bit position for RTC_CR_WPE.
-#define BM_RTC_CR_WPE        (0x00000002U) //!< Bit mask for RTC_CR_WPE.
-#define BS_RTC_CR_WPE        (1U)          //!< Bit field size in bits for RTC_CR_WPE.
+/*@{*/
+#define BP_RTC_CR_WPE        (1U)          /*!< Bit position for RTC_CR_WPE. */
+#define BM_RTC_CR_WPE        (0x00000002U) /*!< Bit mask for RTC_CR_WPE. */
+#define BS_RTC_CR_WPE        (1U)          /*!< Bit field size in bits for RTC_CR_WPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_WPE field.
-#define BR_RTC_CR_WPE        (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_WPE))
-#endif
+/*! @brief Read current value of the RTC_CR_WPE field. */
+#define BR_RTC_CR_WPE(x)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_WPE))
 
-//! @brief Format value for bitfield RTC_CR_WPE.
-#define BF_RTC_CR_WPE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_WPE), uint32_t) & BM_RTC_CR_WPE)
+/*! @brief Format value for bitfield RTC_CR_WPE. */
+#define BF_RTC_CR_WPE(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_CR_WPE) & BM_RTC_CR_WPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WPE field to a new value.
-#define BW_RTC_CR_WPE(v)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_WPE) = (v))
-#endif
-//@}
+/*! @brief Set the WPE field to a new value. */
+#define BW_RTC_CR_WPE(x, v)  (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_WPE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field SUP[2] (RW)
@@ -521,24 +464,20 @@ typedef union _hw_rtc_cr
  *     error.
  * - 1 - Non-supervisor mode write accesses are supported.
  */
-//@{
-#define BP_RTC_CR_SUP        (2U)          //!< Bit position for RTC_CR_SUP.
-#define BM_RTC_CR_SUP        (0x00000004U) //!< Bit mask for RTC_CR_SUP.
-#define BS_RTC_CR_SUP        (1U)          //!< Bit field size in bits for RTC_CR_SUP.
+/*@{*/
+#define BP_RTC_CR_SUP        (2U)          /*!< Bit position for RTC_CR_SUP. */
+#define BM_RTC_CR_SUP        (0x00000004U) /*!< Bit mask for RTC_CR_SUP. */
+#define BS_RTC_CR_SUP        (1U)          /*!< Bit field size in bits for RTC_CR_SUP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SUP field.
-#define BR_RTC_CR_SUP        (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SUP))
-#endif
+/*! @brief Read current value of the RTC_CR_SUP field. */
+#define BR_RTC_CR_SUP(x)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SUP))
 
-//! @brief Format value for bitfield RTC_CR_SUP.
-#define BF_RTC_CR_SUP(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SUP), uint32_t) & BM_RTC_CR_SUP)
+/*! @brief Format value for bitfield RTC_CR_SUP. */
+#define BF_RTC_CR_SUP(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SUP) & BM_RTC_CR_SUP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SUP field to a new value.
-#define BW_RTC_CR_SUP(v)     (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SUP) = (v))
-#endif
-//@}
+/*! @brief Set the SUP field to a new value. */
+#define BW_RTC_CR_SUP(x, v)  (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SUP) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field UM[3] (RW)
@@ -555,24 +494,20 @@ typedef union _hw_rtc_cr
  * - 0 - Registers cannot be written when locked.
  * - 1 - Registers can be written when locked under limited conditions.
  */
-//@{
-#define BP_RTC_CR_UM         (3U)          //!< Bit position for RTC_CR_UM.
-#define BM_RTC_CR_UM         (0x00000008U) //!< Bit mask for RTC_CR_UM.
-#define BS_RTC_CR_UM         (1U)          //!< Bit field size in bits for RTC_CR_UM.
+/*@{*/
+#define BP_RTC_CR_UM         (3U)          /*!< Bit position for RTC_CR_UM. */
+#define BM_RTC_CR_UM         (0x00000008U) /*!< Bit mask for RTC_CR_UM. */
+#define BS_RTC_CR_UM         (1U)          /*!< Bit field size in bits for RTC_CR_UM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_UM field.
-#define BR_RTC_CR_UM         (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_UM))
-#endif
+/*! @brief Read current value of the RTC_CR_UM field. */
+#define BR_RTC_CR_UM(x)      (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_UM))
 
-//! @brief Format value for bitfield RTC_CR_UM.
-#define BF_RTC_CR_UM(v)      (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_UM), uint32_t) & BM_RTC_CR_UM)
+/*! @brief Format value for bitfield RTC_CR_UM. */
+#define BF_RTC_CR_UM(v)      ((uint32_t)((uint32_t)(v) << BP_RTC_CR_UM) & BM_RTC_CR_UM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UM field to a new value.
-#define BW_RTC_CR_UM(v)      (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_UM) = (v))
-#endif
-//@}
+/*! @brief Set the UM field to a new value. */
+#define BW_RTC_CR_UM(x, v)   (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_UM) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field OSCE[8] (RW)
@@ -583,24 +518,20 @@ typedef union _hw_rtc_cr
  *     oscillator startup time before enabling the time counter to allow the 32.768
  *     kHz clock time to stabilize.
  */
-//@{
-#define BP_RTC_CR_OSCE       (8U)          //!< Bit position for RTC_CR_OSCE.
-#define BM_RTC_CR_OSCE       (0x00000100U) //!< Bit mask for RTC_CR_OSCE.
-#define BS_RTC_CR_OSCE       (1U)          //!< Bit field size in bits for RTC_CR_OSCE.
+/*@{*/
+#define BP_RTC_CR_OSCE       (8U)          /*!< Bit position for RTC_CR_OSCE. */
+#define BM_RTC_CR_OSCE       (0x00000100U) /*!< Bit mask for RTC_CR_OSCE. */
+#define BS_RTC_CR_OSCE       (1U)          /*!< Bit field size in bits for RTC_CR_OSCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_OSCE field.
-#define BR_RTC_CR_OSCE       (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_OSCE))
-#endif
+/*! @brief Read current value of the RTC_CR_OSCE field. */
+#define BR_RTC_CR_OSCE(x)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_OSCE))
 
-//! @brief Format value for bitfield RTC_CR_OSCE.
-#define BF_RTC_CR_OSCE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_OSCE), uint32_t) & BM_RTC_CR_OSCE)
+/*! @brief Format value for bitfield RTC_CR_OSCE. */
+#define BF_RTC_CR_OSCE(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_CR_OSCE) & BM_RTC_CR_OSCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OSCE field to a new value.
-#define BW_RTC_CR_OSCE(v)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_OSCE) = (v))
-#endif
-//@}
+/*! @brief Set the OSCE field to a new value. */
+#define BW_RTC_CR_OSCE(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_OSCE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field CLKO[9] (RW)
@@ -609,24 +540,20 @@ typedef union _hw_rtc_cr
  * - 0 - The 32kHz clock is output to other peripherals
  * - 1 - The 32kHz clock is not output to other peripherals
  */
-//@{
-#define BP_RTC_CR_CLKO       (9U)          //!< Bit position for RTC_CR_CLKO.
-#define BM_RTC_CR_CLKO       (0x00000200U) //!< Bit mask for RTC_CR_CLKO.
-#define BS_RTC_CR_CLKO       (1U)          //!< Bit field size in bits for RTC_CR_CLKO.
+/*@{*/
+#define BP_RTC_CR_CLKO       (9U)          /*!< Bit position for RTC_CR_CLKO. */
+#define BM_RTC_CR_CLKO       (0x00000200U) /*!< Bit mask for RTC_CR_CLKO. */
+#define BS_RTC_CR_CLKO       (1U)          /*!< Bit field size in bits for RTC_CR_CLKO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_CLKO field.
-#define BR_RTC_CR_CLKO       (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_CLKO))
-#endif
+/*! @brief Read current value of the RTC_CR_CLKO field. */
+#define BR_RTC_CR_CLKO(x)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_CLKO))
 
-//! @brief Format value for bitfield RTC_CR_CLKO.
-#define BF_RTC_CR_CLKO(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_CLKO), uint32_t) & BM_RTC_CR_CLKO)
+/*! @brief Format value for bitfield RTC_CR_CLKO. */
+#define BF_RTC_CR_CLKO(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_CR_CLKO) & BM_RTC_CR_CLKO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKO field to a new value.
-#define BW_RTC_CR_CLKO(v)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_CLKO) = (v))
-#endif
-//@}
+/*! @brief Set the CLKO field to a new value. */
+#define BW_RTC_CR_CLKO(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_CLKO) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field SC16P[10] (RW)
@@ -635,24 +562,20 @@ typedef union _hw_rtc_cr
  * - 0 - Disable the load.
  * - 1 - Enable the additional load.
  */
-//@{
-#define BP_RTC_CR_SC16P      (10U)         //!< Bit position for RTC_CR_SC16P.
-#define BM_RTC_CR_SC16P      (0x00000400U) //!< Bit mask for RTC_CR_SC16P.
-#define BS_RTC_CR_SC16P      (1U)          //!< Bit field size in bits for RTC_CR_SC16P.
+/*@{*/
+#define BP_RTC_CR_SC16P      (10U)         /*!< Bit position for RTC_CR_SC16P. */
+#define BM_RTC_CR_SC16P      (0x00000400U) /*!< Bit mask for RTC_CR_SC16P. */
+#define BS_RTC_CR_SC16P      (1U)          /*!< Bit field size in bits for RTC_CR_SC16P. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SC16P field.
-#define BR_RTC_CR_SC16P      (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC16P))
-#endif
+/*! @brief Read current value of the RTC_CR_SC16P field. */
+#define BR_RTC_CR_SC16P(x)   (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC16P))
 
-//! @brief Format value for bitfield RTC_CR_SC16P.
-#define BF_RTC_CR_SC16P(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SC16P), uint32_t) & BM_RTC_CR_SC16P)
+/*! @brief Format value for bitfield RTC_CR_SC16P. */
+#define BF_RTC_CR_SC16P(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SC16P) & BM_RTC_CR_SC16P)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SC16P field to a new value.
-#define BW_RTC_CR_SC16P(v)   (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC16P) = (v))
-#endif
-//@}
+/*! @brief Set the SC16P field to a new value. */
+#define BW_RTC_CR_SC16P(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC16P) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field SC8P[11] (RW)
@@ -661,24 +584,20 @@ typedef union _hw_rtc_cr
  * - 0 - Disable the load.
  * - 1 - Enable the additional load.
  */
-//@{
-#define BP_RTC_CR_SC8P       (11U)         //!< Bit position for RTC_CR_SC8P.
-#define BM_RTC_CR_SC8P       (0x00000800U) //!< Bit mask for RTC_CR_SC8P.
-#define BS_RTC_CR_SC8P       (1U)          //!< Bit field size in bits for RTC_CR_SC8P.
+/*@{*/
+#define BP_RTC_CR_SC8P       (11U)         /*!< Bit position for RTC_CR_SC8P. */
+#define BM_RTC_CR_SC8P       (0x00000800U) /*!< Bit mask for RTC_CR_SC8P. */
+#define BS_RTC_CR_SC8P       (1U)          /*!< Bit field size in bits for RTC_CR_SC8P. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SC8P field.
-#define BR_RTC_CR_SC8P       (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC8P))
-#endif
+/*! @brief Read current value of the RTC_CR_SC8P field. */
+#define BR_RTC_CR_SC8P(x)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC8P))
 
-//! @brief Format value for bitfield RTC_CR_SC8P.
-#define BF_RTC_CR_SC8P(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SC8P), uint32_t) & BM_RTC_CR_SC8P)
+/*! @brief Format value for bitfield RTC_CR_SC8P. */
+#define BF_RTC_CR_SC8P(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SC8P) & BM_RTC_CR_SC8P)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SC8P field to a new value.
-#define BW_RTC_CR_SC8P(v)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC8P) = (v))
-#endif
-//@}
+/*! @brief Set the SC8P field to a new value. */
+#define BW_RTC_CR_SC8P(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC8P) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field SC4P[12] (RW)
@@ -687,24 +606,20 @@ typedef union _hw_rtc_cr
  * - 0 - Disable the load.
  * - 1 - Enable the additional load.
  */
-//@{
-#define BP_RTC_CR_SC4P       (12U)         //!< Bit position for RTC_CR_SC4P.
-#define BM_RTC_CR_SC4P       (0x00001000U) //!< Bit mask for RTC_CR_SC4P.
-#define BS_RTC_CR_SC4P       (1U)          //!< Bit field size in bits for RTC_CR_SC4P.
+/*@{*/
+#define BP_RTC_CR_SC4P       (12U)         /*!< Bit position for RTC_CR_SC4P. */
+#define BM_RTC_CR_SC4P       (0x00001000U) /*!< Bit mask for RTC_CR_SC4P. */
+#define BS_RTC_CR_SC4P       (1U)          /*!< Bit field size in bits for RTC_CR_SC4P. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SC4P field.
-#define BR_RTC_CR_SC4P       (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC4P))
-#endif
+/*! @brief Read current value of the RTC_CR_SC4P field. */
+#define BR_RTC_CR_SC4P(x)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC4P))
 
-//! @brief Format value for bitfield RTC_CR_SC4P.
-#define BF_RTC_CR_SC4P(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SC4P), uint32_t) & BM_RTC_CR_SC4P)
+/*! @brief Format value for bitfield RTC_CR_SC4P. */
+#define BF_RTC_CR_SC4P(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SC4P) & BM_RTC_CR_SC4P)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SC4P field to a new value.
-#define BW_RTC_CR_SC4P(v)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC4P) = (v))
-#endif
-//@}
+/*! @brief Set the SC4P field to a new value. */
+#define BW_RTC_CR_SC4P(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC4P) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_CR, field SC2P[13] (RW)
@@ -713,30 +628,25 @@ typedef union _hw_rtc_cr
  * - 0 - Disable the load.
  * - 1 - Enable the additional load.
  */
-//@{
-#define BP_RTC_CR_SC2P       (13U)         //!< Bit position for RTC_CR_SC2P.
-#define BM_RTC_CR_SC2P       (0x00002000U) //!< Bit mask for RTC_CR_SC2P.
-#define BS_RTC_CR_SC2P       (1U)          //!< Bit field size in bits for RTC_CR_SC2P.
+/*@{*/
+#define BP_RTC_CR_SC2P       (13U)         /*!< Bit position for RTC_CR_SC2P. */
+#define BM_RTC_CR_SC2P       (0x00002000U) /*!< Bit mask for RTC_CR_SC2P. */
+#define BS_RTC_CR_SC2P       (1U)          /*!< Bit field size in bits for RTC_CR_SC2P. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_CR_SC2P field.
-#define BR_RTC_CR_SC2P       (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC2P))
-#endif
+/*! @brief Read current value of the RTC_CR_SC2P field. */
+#define BR_RTC_CR_SC2P(x)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC2P))
 
-//! @brief Format value for bitfield RTC_CR_SC2P.
-#define BF_RTC_CR_SC2P(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_CR_SC2P), uint32_t) & BM_RTC_CR_SC2P)
+/*! @brief Format value for bitfield RTC_CR_SC2P. */
+#define BF_RTC_CR_SC2P(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_CR_SC2P) & BM_RTC_CR_SC2P)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SC2P field to a new value.
-#define BW_RTC_CR_SC2P(v)    (BITBAND_ACCESS32(HW_RTC_CR_ADDR, BP_RTC_CR_SC2P) = (v))
-#endif
-//@}
+/*! @brief Set the SC2P field to a new value. */
+#define BW_RTC_CR_SC2P(x, v) (BITBAND_ACCESS32(HW_RTC_CR_ADDR(x), BP_RTC_CR_SC2P) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_SR - RTC Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_SR - RTC Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_SR - RTC Status Register (RW)
  *
@@ -747,31 +657,28 @@ typedef union _hw_rtc_sr
     uint32_t U;
     struct _hw_rtc_sr_bitfields
     {
-        uint32_t TIF : 1;              //!< [0] Time Invalid Flag
-        uint32_t TOF : 1;              //!< [1] Time Overflow Flag
-        uint32_t TAF : 1;              //!< [2] Time Alarm Flag
-        uint32_t MOF : 1;              //!< [3] Monotonic Overflow Flag
-        uint32_t TCE : 1;              //!< [4] Time Counter Enable
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t TIF : 1;              /*!< [0] Time Invalid Flag */
+        uint32_t TOF : 1;              /*!< [1] Time Overflow Flag */
+        uint32_t TAF : 1;              /*!< [2] Time Alarm Flag */
+        uint32_t MOF : 1;              /*!< [3] Monotonic Overflow Flag */
+        uint32_t TCE : 1;              /*!< [4] Time Counter Enable */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_rtc_sr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_SR register
  */
-//@{
-#define HW_RTC_SR_ADDR           (REGS_RTC_BASE + 0x14U)
+/*@{*/
+#define HW_RTC_SR_ADDR(x)        ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_SR                (*(__IO hw_rtc_sr_t *) HW_RTC_SR_ADDR)
-#define HW_RTC_SR_RD()           (HW_RTC_SR.U)
-#define HW_RTC_SR_WR(v)          (HW_RTC_SR.U = (v))
-#define HW_RTC_SR_SET(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() |  (v)))
-#define HW_RTC_SR_CLR(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() & ~(v)))
-#define HW_RTC_SR_TOG(v)         (HW_RTC_SR_WR(HW_RTC_SR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_SR(x)             (*(__IO hw_rtc_sr_t *) HW_RTC_SR_ADDR(x))
+#define HW_RTC_SR_RD(x)          (HW_RTC_SR(x).U)
+#define HW_RTC_SR_WR(x, v)       (HW_RTC_SR(x).U = (v))
+#define HW_RTC_SR_SET(x, v)      (HW_RTC_SR_WR(x, HW_RTC_SR_RD(x) |  (v)))
+#define HW_RTC_SR_CLR(x, v)      (HW_RTC_SR_WR(x, HW_RTC_SR_RD(x) & ~(v)))
+#define HW_RTC_SR_TOG(x, v)      (HW_RTC_SR_WR(x, HW_RTC_SR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_SR bitfields
@@ -792,16 +699,14 @@ typedef union _hw_rtc_sr
  * - 0 - Time is valid.
  * - 1 - Time is invalid and time counter is read as zero.
  */
-//@{
-#define BP_RTC_SR_TIF        (0U)          //!< Bit position for RTC_SR_TIF.
-#define BM_RTC_SR_TIF        (0x00000001U) //!< Bit mask for RTC_SR_TIF.
-#define BS_RTC_SR_TIF        (1U)          //!< Bit field size in bits for RTC_SR_TIF.
+/*@{*/
+#define BP_RTC_SR_TIF        (0U)          /*!< Bit position for RTC_SR_TIF. */
+#define BM_RTC_SR_TIF        (0x00000001U) /*!< Bit mask for RTC_SR_TIF. */
+#define BS_RTC_SR_TIF        (1U)          /*!< Bit field size in bits for RTC_SR_TIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_SR_TIF field.
-#define BR_RTC_SR_TIF        (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_TIF))
-#endif
-//@}
+/*! @brief Read current value of the RTC_SR_TIF field. */
+#define BR_RTC_SR_TIF(x)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_TIF))
+/*@}*/
 
 /*!
  * @name Register RTC_SR, field TOF[1] (RO)
@@ -814,16 +719,14 @@ typedef union _hw_rtc_sr
  * - 0 - Time overflow has not occurred.
  * - 1 - Time overflow has occurred and time counter is read as zero.
  */
-//@{
-#define BP_RTC_SR_TOF        (1U)          //!< Bit position for RTC_SR_TOF.
-#define BM_RTC_SR_TOF        (0x00000002U) //!< Bit mask for RTC_SR_TOF.
-#define BS_RTC_SR_TOF        (1U)          //!< Bit field size in bits for RTC_SR_TOF.
+/*@{*/
+#define BP_RTC_SR_TOF        (1U)          /*!< Bit position for RTC_SR_TOF. */
+#define BM_RTC_SR_TOF        (0x00000002U) /*!< Bit mask for RTC_SR_TOF. */
+#define BS_RTC_SR_TOF        (1U)          /*!< Bit field size in bits for RTC_SR_TOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_SR_TOF field.
-#define BR_RTC_SR_TOF        (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_TOF))
-#endif
-//@}
+/*! @brief Read current value of the RTC_SR_TOF field. */
+#define BR_RTC_SR_TOF(x)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_TOF))
+/*@}*/
 
 /*!
  * @name Register RTC_SR, field TAF[2] (RO)
@@ -835,16 +738,14 @@ typedef union _hw_rtc_sr
  * - 0 - Time alarm has not occurred.
  * - 1 - Time alarm has occurred.
  */
-//@{
-#define BP_RTC_SR_TAF        (2U)          //!< Bit position for RTC_SR_TAF.
-#define BM_RTC_SR_TAF        (0x00000004U) //!< Bit mask for RTC_SR_TAF.
-#define BS_RTC_SR_TAF        (1U)          //!< Bit field size in bits for RTC_SR_TAF.
+/*@{*/
+#define BP_RTC_SR_TAF        (2U)          /*!< Bit position for RTC_SR_TAF. */
+#define BM_RTC_SR_TAF        (0x00000004U) /*!< Bit mask for RTC_SR_TAF. */
+#define BS_RTC_SR_TAF        (1U)          /*!< Bit field size in bits for RTC_SR_TAF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_SR_TAF field.
-#define BR_RTC_SR_TAF        (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_TAF))
-#endif
-//@}
+/*! @brief Read current value of the RTC_SR_TAF field. */
+#define BR_RTC_SR_TAF(x)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_TAF))
+/*@}*/
 
 /*!
  * @name Register RTC_SR, field MOF[3] (RO)
@@ -859,16 +760,14 @@ typedef union _hw_rtc_sr
  * - 1 - Monotonic counter overflow has occurred and monotonic counter is read
  *     as zero.
  */
-//@{
-#define BP_RTC_SR_MOF        (3U)          //!< Bit position for RTC_SR_MOF.
-#define BM_RTC_SR_MOF        (0x00000008U) //!< Bit mask for RTC_SR_MOF.
-#define BS_RTC_SR_MOF        (1U)          //!< Bit field size in bits for RTC_SR_MOF.
+/*@{*/
+#define BP_RTC_SR_MOF        (3U)          /*!< Bit position for RTC_SR_MOF. */
+#define BM_RTC_SR_MOF        (0x00000008U) /*!< Bit mask for RTC_SR_MOF. */
+#define BS_RTC_SR_MOF        (1U)          /*!< Bit field size in bits for RTC_SR_MOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_SR_MOF field.
-#define BR_RTC_SR_MOF        (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_MOF))
-#endif
-//@}
+/*! @brief Read current value of the RTC_SR_MOF field. */
+#define BR_RTC_SR_MOF(x)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_MOF))
+/*@}*/
 
 /*!
  * @name Register RTC_SR, field TCE[4] (RW)
@@ -881,30 +780,25 @@ typedef union _hw_rtc_sr
  * - 0 - Time counter is disabled.
  * - 1 - Time counter is enabled.
  */
-//@{
-#define BP_RTC_SR_TCE        (4U)          //!< Bit position for RTC_SR_TCE.
-#define BM_RTC_SR_TCE        (0x00000010U) //!< Bit mask for RTC_SR_TCE.
-#define BS_RTC_SR_TCE        (1U)          //!< Bit field size in bits for RTC_SR_TCE.
+/*@{*/
+#define BP_RTC_SR_TCE        (4U)          /*!< Bit position for RTC_SR_TCE. */
+#define BM_RTC_SR_TCE        (0x00000010U) /*!< Bit mask for RTC_SR_TCE. */
+#define BS_RTC_SR_TCE        (1U)          /*!< Bit field size in bits for RTC_SR_TCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_SR_TCE field.
-#define BR_RTC_SR_TCE        (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_TCE))
-#endif
+/*! @brief Read current value of the RTC_SR_TCE field. */
+#define BR_RTC_SR_TCE(x)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_TCE))
 
-//! @brief Format value for bitfield RTC_SR_TCE.
-#define BF_RTC_SR_TCE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_SR_TCE), uint32_t) & BM_RTC_SR_TCE)
+/*! @brief Format value for bitfield RTC_SR_TCE. */
+#define BF_RTC_SR_TCE(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_SR_TCE) & BM_RTC_SR_TCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCE field to a new value.
-#define BW_RTC_SR_TCE(v)     (BITBAND_ACCESS32(HW_RTC_SR_ADDR, BP_RTC_SR_TCE) = (v))
-#endif
-//@}
+/*! @brief Set the TCE field to a new value. */
+#define BW_RTC_SR_TCE(x, v)  (BITBAND_ACCESS32(HW_RTC_SR_ADDR(x), BP_RTC_SR_TCE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_LR - RTC Lock Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_LR - RTC Lock Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_LR - RTC Lock Register (RW)
  *
@@ -915,36 +809,33 @@ typedef union _hw_rtc_lr
     uint32_t U;
     struct _hw_rtc_lr_bitfields
     {
-        uint32_t RESERVED0 : 3;        //!< [2:0]
-        uint32_t TCL : 1;              //!< [3] Time Compensation Lock
-        uint32_t CRL : 1;              //!< [4] Control Register Lock
-        uint32_t SRL : 1;              //!< [5] Status Register Lock
-        uint32_t LRL : 1;              //!< [6] Lock Register Lock
-        uint32_t RESERVED1 : 1;        //!< [7]
-        uint32_t TTSL : 1;             //!< [8] Tamper Time Seconds Lock
-        uint32_t MEL : 1;              //!< [9] Monotonic Enable Lock
-        uint32_t MCLL : 1;             //!< [10] Monotonic Counter Low Lock
-        uint32_t MCHL : 1;             //!< [11] Monotonic Counter High Lock
-        uint32_t RESERVED2 : 20;       //!< [31:12]
+        uint32_t RESERVED0 : 3;        /*!< [2:0]  */
+        uint32_t TCL : 1;              /*!< [3] Time Compensation Lock */
+        uint32_t CRL : 1;              /*!< [4] Control Register Lock */
+        uint32_t SRL : 1;              /*!< [5] Status Register Lock */
+        uint32_t LRL : 1;              /*!< [6] Lock Register Lock */
+        uint32_t RESERVED1 : 1;        /*!< [7]  */
+        uint32_t TTSL : 1;             /*!< [8] Tamper Time Seconds Lock */
+        uint32_t MEL : 1;              /*!< [9] Monotonic Enable Lock */
+        uint32_t MCLL : 1;             /*!< [10] Monotonic Counter Low Lock */
+        uint32_t MCHL : 1;             /*!< [11] Monotonic Counter High Lock */
+        uint32_t RESERVED2 : 20;       /*!< [31:12]  */
     } B;
 } hw_rtc_lr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_LR register
  */
-//@{
-#define HW_RTC_LR_ADDR           (REGS_RTC_BASE + 0x18U)
+/*@{*/
+#define HW_RTC_LR_ADDR(x)        ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_LR                (*(__IO hw_rtc_lr_t *) HW_RTC_LR_ADDR)
-#define HW_RTC_LR_RD()           (HW_RTC_LR.U)
-#define HW_RTC_LR_WR(v)          (HW_RTC_LR.U = (v))
-#define HW_RTC_LR_SET(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() |  (v)))
-#define HW_RTC_LR_CLR(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() & ~(v)))
-#define HW_RTC_LR_TOG(v)         (HW_RTC_LR_WR(HW_RTC_LR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_LR(x)             (*(__IO hw_rtc_lr_t *) HW_RTC_LR_ADDR(x))
+#define HW_RTC_LR_RD(x)          (HW_RTC_LR(x).U)
+#define HW_RTC_LR_WR(x, v)       (HW_RTC_LR(x).U = (v))
+#define HW_RTC_LR_SET(x, v)      (HW_RTC_LR_WR(x, HW_RTC_LR_RD(x) |  (v)))
+#define HW_RTC_LR_CLR(x, v)      (HW_RTC_LR_WR(x, HW_RTC_LR_RD(x) & ~(v)))
+#define HW_RTC_LR_TOG(x, v)      (HW_RTC_LR_WR(x, HW_RTC_LR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_LR bitfields
@@ -959,24 +850,20 @@ typedef union _hw_rtc_lr
  * - 0 - Time compensation register is locked and writes are ignored.
  * - 1 - Time compensation register is not locked and writes complete as normal.
  */
-//@{
-#define BP_RTC_LR_TCL        (3U)          //!< Bit position for RTC_LR_TCL.
-#define BM_RTC_LR_TCL        (0x00000008U) //!< Bit mask for RTC_LR_TCL.
-#define BS_RTC_LR_TCL        (1U)          //!< Bit field size in bits for RTC_LR_TCL.
+/*@{*/
+#define BP_RTC_LR_TCL        (3U)          /*!< Bit position for RTC_LR_TCL. */
+#define BM_RTC_LR_TCL        (0x00000008U) /*!< Bit mask for RTC_LR_TCL. */
+#define BS_RTC_LR_TCL        (1U)          /*!< Bit field size in bits for RTC_LR_TCL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_TCL field.
-#define BR_RTC_LR_TCL        (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_TCL))
-#endif
+/*! @brief Read current value of the RTC_LR_TCL field. */
+#define BR_RTC_LR_TCL(x)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_TCL))
 
-//! @brief Format value for bitfield RTC_LR_TCL.
-#define BF_RTC_LR_TCL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_TCL), uint32_t) & BM_RTC_LR_TCL)
+/*! @brief Format value for bitfield RTC_LR_TCL. */
+#define BF_RTC_LR_TCL(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_LR_TCL) & BM_RTC_LR_TCL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCL field to a new value.
-#define BW_RTC_LR_TCL(v)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_TCL) = (v))
-#endif
-//@}
+/*! @brief Set the TCL field to a new value. */
+#define BW_RTC_LR_TCL(x, v)  (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_TCL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field CRL[4] (RW)
@@ -987,24 +874,20 @@ typedef union _hw_rtc_lr
  * - 0 - Control register is locked and writes are ignored.
  * - 1 - Control register is not locked and writes complete as normal.
  */
-//@{
-#define BP_RTC_LR_CRL        (4U)          //!< Bit position for RTC_LR_CRL.
-#define BM_RTC_LR_CRL        (0x00000010U) //!< Bit mask for RTC_LR_CRL.
-#define BS_RTC_LR_CRL        (1U)          //!< Bit field size in bits for RTC_LR_CRL.
+/*@{*/
+#define BP_RTC_LR_CRL        (4U)          /*!< Bit position for RTC_LR_CRL. */
+#define BM_RTC_LR_CRL        (0x00000010U) /*!< Bit mask for RTC_LR_CRL. */
+#define BS_RTC_LR_CRL        (1U)          /*!< Bit field size in bits for RTC_LR_CRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_CRL field.
-#define BR_RTC_LR_CRL        (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_CRL))
-#endif
+/*! @brief Read current value of the RTC_LR_CRL field. */
+#define BR_RTC_LR_CRL(x)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_CRL))
 
-//! @brief Format value for bitfield RTC_LR_CRL.
-#define BF_RTC_LR_CRL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_CRL), uint32_t) & BM_RTC_LR_CRL)
+/*! @brief Format value for bitfield RTC_LR_CRL. */
+#define BF_RTC_LR_CRL(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_LR_CRL) & BM_RTC_LR_CRL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRL field to a new value.
-#define BW_RTC_LR_CRL(v)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_CRL) = (v))
-#endif
-//@}
+/*! @brief Set the CRL field to a new value. */
+#define BW_RTC_LR_CRL(x, v)  (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_CRL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field SRL[5] (RW)
@@ -1015,24 +898,20 @@ typedef union _hw_rtc_lr
  * - 0 - Status register is locked and writes are ignored.
  * - 1 - Status register is not locked and writes complete as normal.
  */
-//@{
-#define BP_RTC_LR_SRL        (5U)          //!< Bit position for RTC_LR_SRL.
-#define BM_RTC_LR_SRL        (0x00000020U) //!< Bit mask for RTC_LR_SRL.
-#define BS_RTC_LR_SRL        (1U)          //!< Bit field size in bits for RTC_LR_SRL.
+/*@{*/
+#define BP_RTC_LR_SRL        (5U)          /*!< Bit position for RTC_LR_SRL. */
+#define BM_RTC_LR_SRL        (0x00000020U) /*!< Bit mask for RTC_LR_SRL. */
+#define BS_RTC_LR_SRL        (1U)          /*!< Bit field size in bits for RTC_LR_SRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_SRL field.
-#define BR_RTC_LR_SRL        (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_SRL))
-#endif
+/*! @brief Read current value of the RTC_LR_SRL field. */
+#define BR_RTC_LR_SRL(x)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_SRL))
 
-//! @brief Format value for bitfield RTC_LR_SRL.
-#define BF_RTC_LR_SRL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_SRL), uint32_t) & BM_RTC_LR_SRL)
+/*! @brief Format value for bitfield RTC_LR_SRL. */
+#define BF_RTC_LR_SRL(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_LR_SRL) & BM_RTC_LR_SRL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SRL field to a new value.
-#define BW_RTC_LR_SRL(v)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_SRL) = (v))
-#endif
-//@}
+/*! @brief Set the SRL field to a new value. */
+#define BW_RTC_LR_SRL(x, v)  (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_SRL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field LRL[6] (RW)
@@ -1043,24 +922,20 @@ typedef union _hw_rtc_lr
  * - 0 - Lock register is locked and writes are ignored.
  * - 1 - Lock register is not locked and writes complete as normal.
  */
-//@{
-#define BP_RTC_LR_LRL        (6U)          //!< Bit position for RTC_LR_LRL.
-#define BM_RTC_LR_LRL        (0x00000040U) //!< Bit mask for RTC_LR_LRL.
-#define BS_RTC_LR_LRL        (1U)          //!< Bit field size in bits for RTC_LR_LRL.
+/*@{*/
+#define BP_RTC_LR_LRL        (6U)          /*!< Bit position for RTC_LR_LRL. */
+#define BM_RTC_LR_LRL        (0x00000040U) /*!< Bit mask for RTC_LR_LRL. */
+#define BS_RTC_LR_LRL        (1U)          /*!< Bit field size in bits for RTC_LR_LRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_LRL field.
-#define BR_RTC_LR_LRL        (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_LRL))
-#endif
+/*! @brief Read current value of the RTC_LR_LRL field. */
+#define BR_RTC_LR_LRL(x)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_LRL))
 
-//! @brief Format value for bitfield RTC_LR_LRL.
-#define BF_RTC_LR_LRL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_LRL), uint32_t) & BM_RTC_LR_LRL)
+/*! @brief Format value for bitfield RTC_LR_LRL. */
+#define BF_RTC_LR_LRL(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_LR_LRL) & BM_RTC_LR_LRL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LRL field to a new value.
-#define BW_RTC_LR_LRL(v)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_LRL) = (v))
-#endif
-//@}
+/*! @brief Set the LRL field to a new value. */
+#define BW_RTC_LR_LRL(x, v)  (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_LRL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field TTSL[8] (RW)
@@ -1072,24 +947,20 @@ typedef union _hw_rtc_lr
  * - 1 - Tamper time seconds register is not locked and writes complete as
  *     normal.
  */
-//@{
-#define BP_RTC_LR_TTSL       (8U)          //!< Bit position for RTC_LR_TTSL.
-#define BM_RTC_LR_TTSL       (0x00000100U) //!< Bit mask for RTC_LR_TTSL.
-#define BS_RTC_LR_TTSL       (1U)          //!< Bit field size in bits for RTC_LR_TTSL.
+/*@{*/
+#define BP_RTC_LR_TTSL       (8U)          /*!< Bit position for RTC_LR_TTSL. */
+#define BM_RTC_LR_TTSL       (0x00000100U) /*!< Bit mask for RTC_LR_TTSL. */
+#define BS_RTC_LR_TTSL       (1U)          /*!< Bit field size in bits for RTC_LR_TTSL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_TTSL field.
-#define BR_RTC_LR_TTSL       (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_TTSL))
-#endif
+/*! @brief Read current value of the RTC_LR_TTSL field. */
+#define BR_RTC_LR_TTSL(x)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_TTSL))
 
-//! @brief Format value for bitfield RTC_LR_TTSL.
-#define BF_RTC_LR_TTSL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_TTSL), uint32_t) & BM_RTC_LR_TTSL)
+/*! @brief Format value for bitfield RTC_LR_TTSL. */
+#define BF_RTC_LR_TTSL(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_LR_TTSL) & BM_RTC_LR_TTSL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TTSL field to a new value.
-#define BW_RTC_LR_TTSL(v)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_TTSL) = (v))
-#endif
-//@}
+/*! @brief Set the TTSL field to a new value. */
+#define BW_RTC_LR_TTSL(x, v) (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_TTSL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field MEL[9] (RW)
@@ -1100,24 +971,20 @@ typedef union _hw_rtc_lr
  * - 0 - Monotonic enable register is locked and writes are ignored.
  * - 1 - Monotonic enable register is not locked and writes complete as normal.
  */
-//@{
-#define BP_RTC_LR_MEL        (9U)          //!< Bit position for RTC_LR_MEL.
-#define BM_RTC_LR_MEL        (0x00000200U) //!< Bit mask for RTC_LR_MEL.
-#define BS_RTC_LR_MEL        (1U)          //!< Bit field size in bits for RTC_LR_MEL.
+/*@{*/
+#define BP_RTC_LR_MEL        (9U)          /*!< Bit position for RTC_LR_MEL. */
+#define BM_RTC_LR_MEL        (0x00000200U) /*!< Bit mask for RTC_LR_MEL. */
+#define BS_RTC_LR_MEL        (1U)          /*!< Bit field size in bits for RTC_LR_MEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_MEL field.
-#define BR_RTC_LR_MEL        (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MEL))
-#endif
+/*! @brief Read current value of the RTC_LR_MEL field. */
+#define BR_RTC_LR_MEL(x)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MEL))
 
-//! @brief Format value for bitfield RTC_LR_MEL.
-#define BF_RTC_LR_MEL(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_MEL), uint32_t) & BM_RTC_LR_MEL)
+/*! @brief Format value for bitfield RTC_LR_MEL. */
+#define BF_RTC_LR_MEL(v)     ((uint32_t)((uint32_t)(v) << BP_RTC_LR_MEL) & BM_RTC_LR_MEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MEL field to a new value.
-#define BW_RTC_LR_MEL(v)     (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MEL) = (v))
-#endif
-//@}
+/*! @brief Set the MEL field to a new value. */
+#define BW_RTC_LR_MEL(x, v)  (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MEL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field MCLL[10] (RW)
@@ -1129,24 +996,20 @@ typedef union _hw_rtc_lr
  * - 1 - Monotonic counter low register is not locked and writes complete as
  *     normal.
  */
-//@{
-#define BP_RTC_LR_MCLL       (10U)         //!< Bit position for RTC_LR_MCLL.
-#define BM_RTC_LR_MCLL       (0x00000400U) //!< Bit mask for RTC_LR_MCLL.
-#define BS_RTC_LR_MCLL       (1U)          //!< Bit field size in bits for RTC_LR_MCLL.
+/*@{*/
+#define BP_RTC_LR_MCLL       (10U)         /*!< Bit position for RTC_LR_MCLL. */
+#define BM_RTC_LR_MCLL       (0x00000400U) /*!< Bit mask for RTC_LR_MCLL. */
+#define BS_RTC_LR_MCLL       (1U)          /*!< Bit field size in bits for RTC_LR_MCLL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_MCLL field.
-#define BR_RTC_LR_MCLL       (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MCLL))
-#endif
+/*! @brief Read current value of the RTC_LR_MCLL field. */
+#define BR_RTC_LR_MCLL(x)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MCLL))
 
-//! @brief Format value for bitfield RTC_LR_MCLL.
-#define BF_RTC_LR_MCLL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_MCLL), uint32_t) & BM_RTC_LR_MCLL)
+/*! @brief Format value for bitfield RTC_LR_MCLL. */
+#define BF_RTC_LR_MCLL(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_LR_MCLL) & BM_RTC_LR_MCLL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCLL field to a new value.
-#define BW_RTC_LR_MCLL(v)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MCLL) = (v))
-#endif
-//@}
+/*! @brief Set the MCLL field to a new value. */
+#define BW_RTC_LR_MCLL(x, v) (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MCLL) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_LR, field MCHL[11] (RW)
@@ -1158,30 +1021,25 @@ typedef union _hw_rtc_lr
  * - 1 - Monotonic counter high register is not locked and writes complete as
  *     normal.
  */
-//@{
-#define BP_RTC_LR_MCHL       (11U)         //!< Bit position for RTC_LR_MCHL.
-#define BM_RTC_LR_MCHL       (0x00000800U) //!< Bit mask for RTC_LR_MCHL.
-#define BS_RTC_LR_MCHL       (1U)          //!< Bit field size in bits for RTC_LR_MCHL.
+/*@{*/
+#define BP_RTC_LR_MCHL       (11U)         /*!< Bit position for RTC_LR_MCHL. */
+#define BM_RTC_LR_MCHL       (0x00000800U) /*!< Bit mask for RTC_LR_MCHL. */
+#define BS_RTC_LR_MCHL       (1U)          /*!< Bit field size in bits for RTC_LR_MCHL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_LR_MCHL field.
-#define BR_RTC_LR_MCHL       (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MCHL))
-#endif
+/*! @brief Read current value of the RTC_LR_MCHL field. */
+#define BR_RTC_LR_MCHL(x)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MCHL))
 
-//! @brief Format value for bitfield RTC_LR_MCHL.
-#define BF_RTC_LR_MCHL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_LR_MCHL), uint32_t) & BM_RTC_LR_MCHL)
+/*! @brief Format value for bitfield RTC_LR_MCHL. */
+#define BF_RTC_LR_MCHL(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_LR_MCHL) & BM_RTC_LR_MCHL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCHL field to a new value.
-#define BW_RTC_LR_MCHL(v)    (BITBAND_ACCESS32(HW_RTC_LR_ADDR, BP_RTC_LR_MCHL) = (v))
-#endif
-//@}
+/*! @brief Set the MCHL field to a new value. */
+#define BW_RTC_LR_MCHL(x, v) (BITBAND_ACCESS32(HW_RTC_LR_ADDR(x), BP_RTC_LR_MCHL) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_IER - RTC Interrupt Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_IER - RTC Interrupt Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_IER - RTC Interrupt Enable Register (RW)
  *
@@ -1192,31 +1050,28 @@ typedef union _hw_rtc_ier
     uint32_t U;
     struct _hw_rtc_ier_bitfields
     {
-        uint32_t TIIE : 1;             //!< [0] Time Invalid Interrupt Enable
-        uint32_t TOIE : 1;             //!< [1] Time Overflow Interrupt Enable
-        uint32_t TAIE : 1;             //!< [2] Time Alarm Interrupt Enable
-        uint32_t MOIE : 1;             //!< [3] Monotonic Overflow Interrupt Enable
-        uint32_t TSIE : 1;             //!< [4] Time Seconds Interrupt Enable
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t TIIE : 1;             /*!< [0] Time Invalid Interrupt Enable */
+        uint32_t TOIE : 1;             /*!< [1] Time Overflow Interrupt Enable */
+        uint32_t TAIE : 1;             /*!< [2] Time Alarm Interrupt Enable */
+        uint32_t MOIE : 1;             /*!< [3] Monotonic Overflow Interrupt Enable */
+        uint32_t TSIE : 1;             /*!< [4] Time Seconds Interrupt Enable */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_rtc_ier_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_IER register
  */
-//@{
-#define HW_RTC_IER_ADDR          (REGS_RTC_BASE + 0x1CU)
+/*@{*/
+#define HW_RTC_IER_ADDR(x)       ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_IER               (*(__IO hw_rtc_ier_t *) HW_RTC_IER_ADDR)
-#define HW_RTC_IER_RD()          (HW_RTC_IER.U)
-#define HW_RTC_IER_WR(v)         (HW_RTC_IER.U = (v))
-#define HW_RTC_IER_SET(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() |  (v)))
-#define HW_RTC_IER_CLR(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() & ~(v)))
-#define HW_RTC_IER_TOG(v)        (HW_RTC_IER_WR(HW_RTC_IER_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_IER(x)            (*(__IO hw_rtc_ier_t *) HW_RTC_IER_ADDR(x))
+#define HW_RTC_IER_RD(x)         (HW_RTC_IER(x).U)
+#define HW_RTC_IER_WR(x, v)      (HW_RTC_IER(x).U = (v))
+#define HW_RTC_IER_SET(x, v)     (HW_RTC_IER_WR(x, HW_RTC_IER_RD(x) |  (v)))
+#define HW_RTC_IER_CLR(x, v)     (HW_RTC_IER_WR(x, HW_RTC_IER_RD(x) & ~(v)))
+#define HW_RTC_IER_TOG(x, v)     (HW_RTC_IER_WR(x, HW_RTC_IER_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_IER bitfields
@@ -1229,24 +1084,20 @@ typedef union _hw_rtc_ier
  * - 0 - Time invalid flag does not generate an interrupt.
  * - 1 - Time invalid flag does generate an interrupt.
  */
-//@{
-#define BP_RTC_IER_TIIE      (0U)          //!< Bit position for RTC_IER_TIIE.
-#define BM_RTC_IER_TIIE      (0x00000001U) //!< Bit mask for RTC_IER_TIIE.
-#define BS_RTC_IER_TIIE      (1U)          //!< Bit field size in bits for RTC_IER_TIIE.
+/*@{*/
+#define BP_RTC_IER_TIIE      (0U)          /*!< Bit position for RTC_IER_TIIE. */
+#define BM_RTC_IER_TIIE      (0x00000001U) /*!< Bit mask for RTC_IER_TIIE. */
+#define BS_RTC_IER_TIIE      (1U)          /*!< Bit field size in bits for RTC_IER_TIIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_IER_TIIE field.
-#define BR_RTC_IER_TIIE      (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TIIE))
-#endif
+/*! @brief Read current value of the RTC_IER_TIIE field. */
+#define BR_RTC_IER_TIIE(x)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TIIE))
 
-//! @brief Format value for bitfield RTC_IER_TIIE.
-#define BF_RTC_IER_TIIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_IER_TIIE), uint32_t) & BM_RTC_IER_TIIE)
+/*! @brief Format value for bitfield RTC_IER_TIIE. */
+#define BF_RTC_IER_TIIE(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_IER_TIIE) & BM_RTC_IER_TIIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIIE field to a new value.
-#define BW_RTC_IER_TIIE(v)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TIIE) = (v))
-#endif
-//@}
+/*! @brief Set the TIIE field to a new value. */
+#define BW_RTC_IER_TIIE(x, v) (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TIIE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_IER, field TOIE[1] (RW)
@@ -1255,24 +1106,20 @@ typedef union _hw_rtc_ier
  * - 0 - Time overflow flag does not generate an interrupt.
  * - 1 - Time overflow flag does generate an interrupt.
  */
-//@{
-#define BP_RTC_IER_TOIE      (1U)          //!< Bit position for RTC_IER_TOIE.
-#define BM_RTC_IER_TOIE      (0x00000002U) //!< Bit mask for RTC_IER_TOIE.
-#define BS_RTC_IER_TOIE      (1U)          //!< Bit field size in bits for RTC_IER_TOIE.
+/*@{*/
+#define BP_RTC_IER_TOIE      (1U)          /*!< Bit position for RTC_IER_TOIE. */
+#define BM_RTC_IER_TOIE      (0x00000002U) /*!< Bit mask for RTC_IER_TOIE. */
+#define BS_RTC_IER_TOIE      (1U)          /*!< Bit field size in bits for RTC_IER_TOIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_IER_TOIE field.
-#define BR_RTC_IER_TOIE      (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TOIE))
-#endif
+/*! @brief Read current value of the RTC_IER_TOIE field. */
+#define BR_RTC_IER_TOIE(x)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TOIE))
 
-//! @brief Format value for bitfield RTC_IER_TOIE.
-#define BF_RTC_IER_TOIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_IER_TOIE), uint32_t) & BM_RTC_IER_TOIE)
+/*! @brief Format value for bitfield RTC_IER_TOIE. */
+#define BF_RTC_IER_TOIE(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_IER_TOIE) & BM_RTC_IER_TOIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOIE field to a new value.
-#define BW_RTC_IER_TOIE(v)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TOIE) = (v))
-#endif
-//@}
+/*! @brief Set the TOIE field to a new value. */
+#define BW_RTC_IER_TOIE(x, v) (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TOIE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_IER, field TAIE[2] (RW)
@@ -1281,24 +1128,20 @@ typedef union _hw_rtc_ier
  * - 0 - Time alarm flag does not generate an interrupt.
  * - 1 - Time alarm flag does generate an interrupt.
  */
-//@{
-#define BP_RTC_IER_TAIE      (2U)          //!< Bit position for RTC_IER_TAIE.
-#define BM_RTC_IER_TAIE      (0x00000004U) //!< Bit mask for RTC_IER_TAIE.
-#define BS_RTC_IER_TAIE      (1U)          //!< Bit field size in bits for RTC_IER_TAIE.
+/*@{*/
+#define BP_RTC_IER_TAIE      (2U)          /*!< Bit position for RTC_IER_TAIE. */
+#define BM_RTC_IER_TAIE      (0x00000004U) /*!< Bit mask for RTC_IER_TAIE. */
+#define BS_RTC_IER_TAIE      (1U)          /*!< Bit field size in bits for RTC_IER_TAIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_IER_TAIE field.
-#define BR_RTC_IER_TAIE      (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TAIE))
-#endif
+/*! @brief Read current value of the RTC_IER_TAIE field. */
+#define BR_RTC_IER_TAIE(x)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TAIE))
 
-//! @brief Format value for bitfield RTC_IER_TAIE.
-#define BF_RTC_IER_TAIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_IER_TAIE), uint32_t) & BM_RTC_IER_TAIE)
+/*! @brief Format value for bitfield RTC_IER_TAIE. */
+#define BF_RTC_IER_TAIE(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_IER_TAIE) & BM_RTC_IER_TAIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TAIE field to a new value.
-#define BW_RTC_IER_TAIE(v)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TAIE) = (v))
-#endif
-//@}
+/*! @brief Set the TAIE field to a new value. */
+#define BW_RTC_IER_TAIE(x, v) (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TAIE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_IER, field MOIE[3] (RW)
@@ -1307,24 +1150,20 @@ typedef union _hw_rtc_ier
  * - 0 - Monotonic overflow flag does not generate an interrupt.
  * - 1 - Monotonic overflow flag does generate an interrupt.
  */
-//@{
-#define BP_RTC_IER_MOIE      (3U)          //!< Bit position for RTC_IER_MOIE.
-#define BM_RTC_IER_MOIE      (0x00000008U) //!< Bit mask for RTC_IER_MOIE.
-#define BS_RTC_IER_MOIE      (1U)          //!< Bit field size in bits for RTC_IER_MOIE.
+/*@{*/
+#define BP_RTC_IER_MOIE      (3U)          /*!< Bit position for RTC_IER_MOIE. */
+#define BM_RTC_IER_MOIE      (0x00000008U) /*!< Bit mask for RTC_IER_MOIE. */
+#define BS_RTC_IER_MOIE      (1U)          /*!< Bit field size in bits for RTC_IER_MOIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_IER_MOIE field.
-#define BR_RTC_IER_MOIE      (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_MOIE))
-#endif
+/*! @brief Read current value of the RTC_IER_MOIE field. */
+#define BR_RTC_IER_MOIE(x)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_MOIE))
 
-//! @brief Format value for bitfield RTC_IER_MOIE.
-#define BF_RTC_IER_MOIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_IER_MOIE), uint32_t) & BM_RTC_IER_MOIE)
+/*! @brief Format value for bitfield RTC_IER_MOIE. */
+#define BF_RTC_IER_MOIE(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_IER_MOIE) & BM_RTC_IER_MOIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MOIE field to a new value.
-#define BW_RTC_IER_MOIE(v)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_MOIE) = (v))
-#endif
-//@}
+/*! @brief Set the MOIE field to a new value. */
+#define BW_RTC_IER_MOIE(x, v) (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_MOIE) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_IER, field TSIE[4] (RW)
@@ -1337,30 +1176,25 @@ typedef union _hw_rtc_ier
  * - 0 - Seconds interrupt is disabled.
  * - 1 - Seconds interrupt is enabled.
  */
-//@{
-#define BP_RTC_IER_TSIE      (4U)          //!< Bit position for RTC_IER_TSIE.
-#define BM_RTC_IER_TSIE      (0x00000010U) //!< Bit mask for RTC_IER_TSIE.
-#define BS_RTC_IER_TSIE      (1U)          //!< Bit field size in bits for RTC_IER_TSIE.
+/*@{*/
+#define BP_RTC_IER_TSIE      (4U)          /*!< Bit position for RTC_IER_TSIE. */
+#define BM_RTC_IER_TSIE      (0x00000010U) /*!< Bit mask for RTC_IER_TSIE. */
+#define BS_RTC_IER_TSIE      (1U)          /*!< Bit field size in bits for RTC_IER_TSIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_IER_TSIE field.
-#define BR_RTC_IER_TSIE      (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TSIE))
-#endif
+/*! @brief Read current value of the RTC_IER_TSIE field. */
+#define BR_RTC_IER_TSIE(x)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TSIE))
 
-//! @brief Format value for bitfield RTC_IER_TSIE.
-#define BF_RTC_IER_TSIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_IER_TSIE), uint32_t) & BM_RTC_IER_TSIE)
+/*! @brief Format value for bitfield RTC_IER_TSIE. */
+#define BF_RTC_IER_TSIE(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_IER_TSIE) & BM_RTC_IER_TSIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSIE field to a new value.
-#define BW_RTC_IER_TSIE(v)   (BITBAND_ACCESS32(HW_RTC_IER_ADDR, BP_RTC_IER_TSIE) = (v))
-#endif
-//@}
+/*! @brief Set the TSIE field to a new value. */
+#define BW_RTC_IER_TSIE(x, v) (BITBAND_ACCESS32(HW_RTC_IER_ADDR(x), BP_RTC_IER_TSIE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_TTSR - RTC Tamper Time Seconds Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_TTSR - RTC Tamper Time Seconds Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_TTSR - RTC Tamper Time Seconds Register (RO)
  *
@@ -1371,22 +1205,19 @@ typedef union _hw_rtc_ttsr
     uint32_t U;
     struct _hw_rtc_ttsr_bitfields
     {
-        uint32_t TTS : 32;             //!< [31:0] Tamper Time Seconds
+        uint32_t TTS : 32;             /*!< [31:0] Tamper Time Seconds */
     } B;
 } hw_rtc_ttsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_TTSR register
  */
-//@{
-#define HW_RTC_TTSR_ADDR         (REGS_RTC_BASE + 0x20U)
+/*@{*/
+#define HW_RTC_TTSR_ADDR(x)      ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_TTSR              (*(__I hw_rtc_ttsr_t *) HW_RTC_TTSR_ADDR)
-#define HW_RTC_TTSR_RD()         (HW_RTC_TTSR.U)
-#endif
-//@}
+#define HW_RTC_TTSR(x)           (*(__I hw_rtc_ttsr_t *) HW_RTC_TTSR_ADDR(x))
+#define HW_RTC_TTSR_RD(x)        (HW_RTC_TTSR(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_TTSR bitfields
@@ -1401,22 +1232,19 @@ typedef union _hw_rtc_ttsr
  * zero. Writing the tamper time seconds register with any value will set the time
  * invalid flag.
  */
-//@{
-#define BP_RTC_TTSR_TTS      (0U)          //!< Bit position for RTC_TTSR_TTS.
-#define BM_RTC_TTSR_TTS      (0xFFFFFFFFU) //!< Bit mask for RTC_TTSR_TTS.
-#define BS_RTC_TTSR_TTS      (32U)         //!< Bit field size in bits for RTC_TTSR_TTS.
+/*@{*/
+#define BP_RTC_TTSR_TTS      (0U)          /*!< Bit position for RTC_TTSR_TTS. */
+#define BM_RTC_TTSR_TTS      (0xFFFFFFFFU) /*!< Bit mask for RTC_TTSR_TTS. */
+#define BS_RTC_TTSR_TTS      (32U)         /*!< Bit field size in bits for RTC_TTSR_TTS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_TTSR_TTS field.
-#define BR_RTC_TTSR_TTS      (HW_RTC_TTSR.B.TTS)
-#endif
-//@}
+/*! @brief Read current value of the RTC_TTSR_TTS field. */
+#define BR_RTC_TTSR_TTS(x)   (HW_RTC_TTSR(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_MER - RTC Monotonic Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_MER - RTC Monotonic Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_MER - RTC Monotonic Enable Register (RW)
  *
@@ -1427,28 +1255,25 @@ typedef union _hw_rtc_mer
     uint32_t U;
     struct _hw_rtc_mer_bitfields
     {
-        uint32_t RESERVED0 : 4;        //!< [3:0]
-        uint32_t MCE : 1;              //!< [4] Monotonic Counter Enable
-        uint32_t RESERVED1 : 27;       //!< [31:5]
+        uint32_t RESERVED0 : 4;        /*!< [3:0]  */
+        uint32_t MCE : 1;              /*!< [4] Monotonic Counter Enable */
+        uint32_t RESERVED1 : 27;       /*!< [31:5]  */
     } B;
 } hw_rtc_mer_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_MER register
  */
-//@{
-#define HW_RTC_MER_ADDR          (REGS_RTC_BASE + 0x24U)
+/*@{*/
+#define HW_RTC_MER_ADDR(x)       ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_MER               (*(__IO hw_rtc_mer_t *) HW_RTC_MER_ADDR)
-#define HW_RTC_MER_RD()          (HW_RTC_MER.U)
-#define HW_RTC_MER_WR(v)         (HW_RTC_MER.U = (v))
-#define HW_RTC_MER_SET(v)        (HW_RTC_MER_WR(HW_RTC_MER_RD() |  (v)))
-#define HW_RTC_MER_CLR(v)        (HW_RTC_MER_WR(HW_RTC_MER_RD() & ~(v)))
-#define HW_RTC_MER_TOG(v)        (HW_RTC_MER_WR(HW_RTC_MER_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_MER(x)            (*(__IO hw_rtc_mer_t *) HW_RTC_MER_ADDR(x))
+#define HW_RTC_MER_RD(x)         (HW_RTC_MER(x).U)
+#define HW_RTC_MER_WR(x, v)      (HW_RTC_MER(x).U = (v))
+#define HW_RTC_MER_SET(x, v)     (HW_RTC_MER_WR(x, HW_RTC_MER_RD(x) |  (v)))
+#define HW_RTC_MER_CLR(x, v)     (HW_RTC_MER_WR(x, HW_RTC_MER_RD(x) & ~(v)))
+#define HW_RTC_MER_TOG(x, v)     (HW_RTC_MER_WR(x, HW_RTC_MER_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_MER bitfields
@@ -1461,30 +1286,25 @@ typedef union _hw_rtc_mer
  * - 0 - Writes to the monotonic counter load the counter with the value written.
  * - 1 - Writes to the monotonic counter increment the counter.
  */
-//@{
-#define BP_RTC_MER_MCE       (4U)          //!< Bit position for RTC_MER_MCE.
-#define BM_RTC_MER_MCE       (0x00000010U) //!< Bit mask for RTC_MER_MCE.
-#define BS_RTC_MER_MCE       (1U)          //!< Bit field size in bits for RTC_MER_MCE.
+/*@{*/
+#define BP_RTC_MER_MCE       (4U)          /*!< Bit position for RTC_MER_MCE. */
+#define BM_RTC_MER_MCE       (0x00000010U) /*!< Bit mask for RTC_MER_MCE. */
+#define BS_RTC_MER_MCE       (1U)          /*!< Bit field size in bits for RTC_MER_MCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_MER_MCE field.
-#define BR_RTC_MER_MCE       (BITBAND_ACCESS32(HW_RTC_MER_ADDR, BP_RTC_MER_MCE))
-#endif
+/*! @brief Read current value of the RTC_MER_MCE field. */
+#define BR_RTC_MER_MCE(x)    (BITBAND_ACCESS32(HW_RTC_MER_ADDR(x), BP_RTC_MER_MCE))
 
-//! @brief Format value for bitfield RTC_MER_MCE.
-#define BF_RTC_MER_MCE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_MER_MCE), uint32_t) & BM_RTC_MER_MCE)
+/*! @brief Format value for bitfield RTC_MER_MCE. */
+#define BF_RTC_MER_MCE(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_MER_MCE) & BM_RTC_MER_MCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCE field to a new value.
-#define BW_RTC_MER_MCE(v)    (BITBAND_ACCESS32(HW_RTC_MER_ADDR, BP_RTC_MER_MCE) = (v))
-#endif
-//@}
+/*! @brief Set the MCE field to a new value. */
+#define BW_RTC_MER_MCE(x, v) (BITBAND_ACCESS32(HW_RTC_MER_ADDR(x), BP_RTC_MER_MCE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_MCLR - RTC Monotonic Counter Low Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_MCLR - RTC Monotonic Counter Low Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_MCLR - RTC Monotonic Counter Low Register (RW)
  *
@@ -1495,26 +1315,23 @@ typedef union _hw_rtc_mclr
     uint32_t U;
     struct _hw_rtc_mclr_bitfields
     {
-        uint32_t MCL : 32;             //!< [31:0] Monotonic Counter Low
+        uint32_t MCL : 32;             /*!< [31:0] Monotonic Counter Low */
     } B;
 } hw_rtc_mclr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_MCLR register
  */
-//@{
-#define HW_RTC_MCLR_ADDR         (REGS_RTC_BASE + 0x28U)
+/*@{*/
+#define HW_RTC_MCLR_ADDR(x)      ((x) + 0x28U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_MCLR              (*(__IO hw_rtc_mclr_t *) HW_RTC_MCLR_ADDR)
-#define HW_RTC_MCLR_RD()         (HW_RTC_MCLR.U)
-#define HW_RTC_MCLR_WR(v)        (HW_RTC_MCLR.U = (v))
-#define HW_RTC_MCLR_SET(v)       (HW_RTC_MCLR_WR(HW_RTC_MCLR_RD() |  (v)))
-#define HW_RTC_MCLR_CLR(v)       (HW_RTC_MCLR_WR(HW_RTC_MCLR_RD() & ~(v)))
-#define HW_RTC_MCLR_TOG(v)       (HW_RTC_MCLR_WR(HW_RTC_MCLR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_MCLR(x)           (*(__IO hw_rtc_mclr_t *) HW_RTC_MCLR_ADDR(x))
+#define HW_RTC_MCLR_RD(x)        (HW_RTC_MCLR(x).U)
+#define HW_RTC_MCLR_WR(x, v)     (HW_RTC_MCLR(x).U = (v))
+#define HW_RTC_MCLR_SET(x, v)    (HW_RTC_MCLR_WR(x, HW_RTC_MCLR_RD(x) |  (v)))
+#define HW_RTC_MCLR_CLR(x, v)    (HW_RTC_MCLR_WR(x, HW_RTC_MCLR_RD(x) & ~(v)))
+#define HW_RTC_MCLR_TOG(x, v)    (HW_RTC_MCLR_WR(x, HW_RTC_MCLR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_MCLR bitfields
@@ -1529,30 +1346,25 @@ typedef union _hw_rtc_mclr
  * write to this register will cause it to increment. A write to monotonic
  * counter low that causes it to overflow will also increment monotonic counter high.
  */
-//@{
-#define BP_RTC_MCLR_MCL      (0U)          //!< Bit position for RTC_MCLR_MCL.
-#define BM_RTC_MCLR_MCL      (0xFFFFFFFFU) //!< Bit mask for RTC_MCLR_MCL.
-#define BS_RTC_MCLR_MCL      (32U)         //!< Bit field size in bits for RTC_MCLR_MCL.
+/*@{*/
+#define BP_RTC_MCLR_MCL      (0U)          /*!< Bit position for RTC_MCLR_MCL. */
+#define BM_RTC_MCLR_MCL      (0xFFFFFFFFU) /*!< Bit mask for RTC_MCLR_MCL. */
+#define BS_RTC_MCLR_MCL      (32U)         /*!< Bit field size in bits for RTC_MCLR_MCL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_MCLR_MCL field.
-#define BR_RTC_MCLR_MCL      (HW_RTC_MCLR.B.MCL)
-#endif
+/*! @brief Read current value of the RTC_MCLR_MCL field. */
+#define BR_RTC_MCLR_MCL(x)   (HW_RTC_MCLR(x).U)
 
-//! @brief Format value for bitfield RTC_MCLR_MCL.
-#define BF_RTC_MCLR_MCL(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_MCLR_MCL), uint32_t) & BM_RTC_MCLR_MCL)
+/*! @brief Format value for bitfield RTC_MCLR_MCL. */
+#define BF_RTC_MCLR_MCL(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_MCLR_MCL) & BM_RTC_MCLR_MCL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCL field to a new value.
-#define BW_RTC_MCLR_MCL(v)   (HW_RTC_MCLR_WR((HW_RTC_MCLR_RD() & ~BM_RTC_MCLR_MCL) | BF_RTC_MCLR_MCL(v)))
-#endif
-//@}
+/*! @brief Set the MCL field to a new value. */
+#define BW_RTC_MCLR_MCL(x, v) (HW_RTC_MCLR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_MCHR - RTC Monotonic Counter High Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_MCHR - RTC Monotonic Counter High Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_MCHR - RTC Monotonic Counter High Register (RW)
  *
@@ -1563,26 +1375,23 @@ typedef union _hw_rtc_mchr
     uint32_t U;
     struct _hw_rtc_mchr_bitfields
     {
-        uint32_t MCH : 32;             //!< [31:0] Monotonic Counter High
+        uint32_t MCH : 32;             /*!< [31:0] Monotonic Counter High */
     } B;
 } hw_rtc_mchr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_MCHR register
  */
-//@{
-#define HW_RTC_MCHR_ADDR         (REGS_RTC_BASE + 0x2CU)
+/*@{*/
+#define HW_RTC_MCHR_ADDR(x)      ((x) + 0x2CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_MCHR              (*(__IO hw_rtc_mchr_t *) HW_RTC_MCHR_ADDR)
-#define HW_RTC_MCHR_RD()         (HW_RTC_MCHR.U)
-#define HW_RTC_MCHR_WR(v)        (HW_RTC_MCHR.U = (v))
-#define HW_RTC_MCHR_SET(v)       (HW_RTC_MCHR_WR(HW_RTC_MCHR_RD() |  (v)))
-#define HW_RTC_MCHR_CLR(v)       (HW_RTC_MCHR_WR(HW_RTC_MCHR_RD() & ~(v)))
-#define HW_RTC_MCHR_TOG(v)       (HW_RTC_MCHR_WR(HW_RTC_MCHR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_MCHR(x)           (*(__IO hw_rtc_mchr_t *) HW_RTC_MCHR_ADDR(x))
+#define HW_RTC_MCHR_RD(x)        (HW_RTC_MCHR(x).U)
+#define HW_RTC_MCHR_WR(x, v)     (HW_RTC_MCHR(x).U = (v))
+#define HW_RTC_MCHR_SET(x, v)    (HW_RTC_MCHR_WR(x, HW_RTC_MCHR_RD(x) |  (v)))
+#define HW_RTC_MCHR_CLR(x, v)    (HW_RTC_MCHR_WR(x, HW_RTC_MCHR_RD(x) & ~(v)))
+#define HW_RTC_MCHR_TOG(x, v)    (HW_RTC_MCHR_WR(x, HW_RTC_MCHR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_MCHR bitfields
@@ -1597,30 +1406,25 @@ typedef union _hw_rtc_mchr
  * write to this register will cause it to increment. A write to monotonic
  * counter low that causes it to overflow will also increment monotonic counter high.
  */
-//@{
-#define BP_RTC_MCHR_MCH      (0U)          //!< Bit position for RTC_MCHR_MCH.
-#define BM_RTC_MCHR_MCH      (0xFFFFFFFFU) //!< Bit mask for RTC_MCHR_MCH.
-#define BS_RTC_MCHR_MCH      (32U)         //!< Bit field size in bits for RTC_MCHR_MCH.
+/*@{*/
+#define BP_RTC_MCHR_MCH      (0U)          /*!< Bit position for RTC_MCHR_MCH. */
+#define BM_RTC_MCHR_MCH      (0xFFFFFFFFU) /*!< Bit mask for RTC_MCHR_MCH. */
+#define BS_RTC_MCHR_MCH      (32U)         /*!< Bit field size in bits for RTC_MCHR_MCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_MCHR_MCH field.
-#define BR_RTC_MCHR_MCH      (HW_RTC_MCHR.B.MCH)
-#endif
+/*! @brief Read current value of the RTC_MCHR_MCH field. */
+#define BR_RTC_MCHR_MCH(x)   (HW_RTC_MCHR(x).U)
 
-//! @brief Format value for bitfield RTC_MCHR_MCH.
-#define BF_RTC_MCHR_MCH(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_MCHR_MCH), uint32_t) & BM_RTC_MCHR_MCH)
+/*! @brief Format value for bitfield RTC_MCHR_MCH. */
+#define BF_RTC_MCHR_MCH(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_MCHR_MCH) & BM_RTC_MCHR_MCH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCH field to a new value.
-#define BW_RTC_MCHR_MCH(v)   (HW_RTC_MCHR_WR((HW_RTC_MCHR_RD() & ~BM_RTC_MCHR_MCH) | BF_RTC_MCHR_MCH(v)))
-#endif
-//@}
+/*! @brief Set the MCH field to a new value. */
+#define BW_RTC_MCHR_MCH(x, v) (HW_RTC_MCHR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_WAR - RTC Write Access Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_WAR - RTC Write Access Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_WAR - RTC Write Access Register (RW)
  *
@@ -1631,38 +1435,35 @@ typedef union _hw_rtc_war
     uint32_t U;
     struct _hw_rtc_war_bitfields
     {
-        uint32_t TSRW : 1;             //!< [0] Time Seconds Register Write
-        uint32_t TPRW : 1;             //!< [1] Time Prescaler Register Write
-        uint32_t TARW : 1;             //!< [2] Time Alarm Register Write
-        uint32_t TCRW : 1;             //!< [3] Time Compensation Register Write
-        uint32_t CRW : 1;              //!< [4] Control Register Write
-        uint32_t SRW : 1;              //!< [5] Status Register Write
-        uint32_t LRW : 1;              //!< [6] Lock Register Write
-        uint32_t IERW : 1;             //!< [7] Interrupt Enable Register Write
-        uint32_t TTSW : 1;             //!< [8] Tamper Time Seconds Write
-        uint32_t MERW : 1;             //!< [9] Monotonic Enable Register Write
-        uint32_t MCLW : 1;             //!< [10] Monotonic Counter Low Write
-        uint32_t MCHW : 1;             //!< [11] Monotonic Counter High Write
-        uint32_t RESERVED0 : 20;       //!< [31:12]
+        uint32_t TSRW : 1;             /*!< [0] Time Seconds Register Write */
+        uint32_t TPRW : 1;             /*!< [1] Time Prescaler Register Write */
+        uint32_t TARW : 1;             /*!< [2] Time Alarm Register Write */
+        uint32_t TCRW : 1;             /*!< [3] Time Compensation Register Write */
+        uint32_t CRW : 1;              /*!< [4] Control Register Write */
+        uint32_t SRW : 1;              /*!< [5] Status Register Write */
+        uint32_t LRW : 1;              /*!< [6] Lock Register Write */
+        uint32_t IERW : 1;             /*!< [7] Interrupt Enable Register Write */
+        uint32_t TTSW : 1;             /*!< [8] Tamper Time Seconds Write */
+        uint32_t MERW : 1;             /*!< [9] Monotonic Enable Register Write */
+        uint32_t MCLW : 1;             /*!< [10] Monotonic Counter Low Write */
+        uint32_t MCHW : 1;             /*!< [11] Monotonic Counter High Write */
+        uint32_t RESERVED0 : 20;       /*!< [31:12]  */
     } B;
 } hw_rtc_war_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_WAR register
  */
-//@{
-#define HW_RTC_WAR_ADDR          (REGS_RTC_BASE + 0x800U)
+/*@{*/
+#define HW_RTC_WAR_ADDR(x)       ((x) + 0x800U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_WAR               (*(__IO hw_rtc_war_t *) HW_RTC_WAR_ADDR)
-#define HW_RTC_WAR_RD()          (HW_RTC_WAR.U)
-#define HW_RTC_WAR_WR(v)         (HW_RTC_WAR.U = (v))
-#define HW_RTC_WAR_SET(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() |  (v)))
-#define HW_RTC_WAR_CLR(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() & ~(v)))
-#define HW_RTC_WAR_TOG(v)        (HW_RTC_WAR_WR(HW_RTC_WAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_WAR(x)            (*(__IO hw_rtc_war_t *) HW_RTC_WAR_ADDR(x))
+#define HW_RTC_WAR_RD(x)         (HW_RTC_WAR(x).U)
+#define HW_RTC_WAR_WR(x, v)      (HW_RTC_WAR(x).U = (v))
+#define HW_RTC_WAR_SET(x, v)     (HW_RTC_WAR_WR(x, HW_RTC_WAR_RD(x) |  (v)))
+#define HW_RTC_WAR_CLR(x, v)     (HW_RTC_WAR_WR(x, HW_RTC_WAR_RD(x) & ~(v)))
+#define HW_RTC_WAR_TOG(x, v)     (HW_RTC_WAR_WR(x, HW_RTC_WAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_WAR bitfields
@@ -1678,24 +1479,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the time seconds register are ignored.
  * - 1 - Writes to the time seconds register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_TSRW      (0U)          //!< Bit position for RTC_WAR_TSRW.
-#define BM_RTC_WAR_TSRW      (0x00000001U) //!< Bit mask for RTC_WAR_TSRW.
-#define BS_RTC_WAR_TSRW      (1U)          //!< Bit field size in bits for RTC_WAR_TSRW.
+/*@{*/
+#define BP_RTC_WAR_TSRW      (0U)          /*!< Bit position for RTC_WAR_TSRW. */
+#define BM_RTC_WAR_TSRW      (0x00000001U) /*!< Bit mask for RTC_WAR_TSRW. */
+#define BS_RTC_WAR_TSRW      (1U)          /*!< Bit field size in bits for RTC_WAR_TSRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_TSRW field.
-#define BR_RTC_WAR_TSRW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TSRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_TSRW field. */
+#define BR_RTC_WAR_TSRW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TSRW))
 
-//! @brief Format value for bitfield RTC_WAR_TSRW.
-#define BF_RTC_WAR_TSRW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_TSRW), uint32_t) & BM_RTC_WAR_TSRW)
+/*! @brief Format value for bitfield RTC_WAR_TSRW. */
+#define BF_RTC_WAR_TSRW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_TSRW) & BM_RTC_WAR_TSRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSRW field to a new value.
-#define BW_RTC_WAR_TSRW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TSRW) = (v))
-#endif
-//@}
+/*! @brief Set the TSRW field to a new value. */
+#define BW_RTC_WAR_TSRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TSRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field TPRW[1] (RW)
@@ -1707,24 +1504,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the time prescaler register are ignored.
  * - 1 - Writes to the time prescaler register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_TPRW      (1U)          //!< Bit position for RTC_WAR_TPRW.
-#define BM_RTC_WAR_TPRW      (0x00000002U) //!< Bit mask for RTC_WAR_TPRW.
-#define BS_RTC_WAR_TPRW      (1U)          //!< Bit field size in bits for RTC_WAR_TPRW.
+/*@{*/
+#define BP_RTC_WAR_TPRW      (1U)          /*!< Bit position for RTC_WAR_TPRW. */
+#define BM_RTC_WAR_TPRW      (0x00000002U) /*!< Bit mask for RTC_WAR_TPRW. */
+#define BS_RTC_WAR_TPRW      (1U)          /*!< Bit field size in bits for RTC_WAR_TPRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_TPRW field.
-#define BR_RTC_WAR_TPRW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TPRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_TPRW field. */
+#define BR_RTC_WAR_TPRW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TPRW))
 
-//! @brief Format value for bitfield RTC_WAR_TPRW.
-#define BF_RTC_WAR_TPRW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_TPRW), uint32_t) & BM_RTC_WAR_TPRW)
+/*! @brief Format value for bitfield RTC_WAR_TPRW. */
+#define BF_RTC_WAR_TPRW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_TPRW) & BM_RTC_WAR_TPRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPRW field to a new value.
-#define BW_RTC_WAR_TPRW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TPRW) = (v))
-#endif
-//@}
+/*! @brief Set the TPRW field to a new value. */
+#define BW_RTC_WAR_TPRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TPRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field TARW[2] (RW)
@@ -1736,24 +1529,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the time alarm register are ignored.
  * - 1 - Writes to the time alarm register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_TARW      (2U)          //!< Bit position for RTC_WAR_TARW.
-#define BM_RTC_WAR_TARW      (0x00000004U) //!< Bit mask for RTC_WAR_TARW.
-#define BS_RTC_WAR_TARW      (1U)          //!< Bit field size in bits for RTC_WAR_TARW.
+/*@{*/
+#define BP_RTC_WAR_TARW      (2U)          /*!< Bit position for RTC_WAR_TARW. */
+#define BM_RTC_WAR_TARW      (0x00000004U) /*!< Bit mask for RTC_WAR_TARW. */
+#define BS_RTC_WAR_TARW      (1U)          /*!< Bit field size in bits for RTC_WAR_TARW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_TARW field.
-#define BR_RTC_WAR_TARW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TARW))
-#endif
+/*! @brief Read current value of the RTC_WAR_TARW field. */
+#define BR_RTC_WAR_TARW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TARW))
 
-//! @brief Format value for bitfield RTC_WAR_TARW.
-#define BF_RTC_WAR_TARW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_TARW), uint32_t) & BM_RTC_WAR_TARW)
+/*! @brief Format value for bitfield RTC_WAR_TARW. */
+#define BF_RTC_WAR_TARW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_TARW) & BM_RTC_WAR_TARW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TARW field to a new value.
-#define BW_RTC_WAR_TARW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TARW) = (v))
-#endif
-//@}
+/*! @brief Set the TARW field to a new value. */
+#define BW_RTC_WAR_TARW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TARW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field TCRW[3] (RW)
@@ -1765,24 +1554,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the time compensation register are ignored.
  * - 1 - Writes to the time compensation register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_TCRW      (3U)          //!< Bit position for RTC_WAR_TCRW.
-#define BM_RTC_WAR_TCRW      (0x00000008U) //!< Bit mask for RTC_WAR_TCRW.
-#define BS_RTC_WAR_TCRW      (1U)          //!< Bit field size in bits for RTC_WAR_TCRW.
+/*@{*/
+#define BP_RTC_WAR_TCRW      (3U)          /*!< Bit position for RTC_WAR_TCRW. */
+#define BM_RTC_WAR_TCRW      (0x00000008U) /*!< Bit mask for RTC_WAR_TCRW. */
+#define BS_RTC_WAR_TCRW      (1U)          /*!< Bit field size in bits for RTC_WAR_TCRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_TCRW field.
-#define BR_RTC_WAR_TCRW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TCRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_TCRW field. */
+#define BR_RTC_WAR_TCRW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TCRW))
 
-//! @brief Format value for bitfield RTC_WAR_TCRW.
-#define BF_RTC_WAR_TCRW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_TCRW), uint32_t) & BM_RTC_WAR_TCRW)
+/*! @brief Format value for bitfield RTC_WAR_TCRW. */
+#define BF_RTC_WAR_TCRW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_TCRW) & BM_RTC_WAR_TCRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCRW field to a new value.
-#define BW_RTC_WAR_TCRW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TCRW) = (v))
-#endif
-//@}
+/*! @brief Set the TCRW field to a new value. */
+#define BW_RTC_WAR_TCRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TCRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field CRW[4] (RW)
@@ -1794,24 +1579,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the control register are ignored.
  * - 1 - Writes to the control register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_CRW       (4U)          //!< Bit position for RTC_WAR_CRW.
-#define BM_RTC_WAR_CRW       (0x00000010U) //!< Bit mask for RTC_WAR_CRW.
-#define BS_RTC_WAR_CRW       (1U)          //!< Bit field size in bits for RTC_WAR_CRW.
+/*@{*/
+#define BP_RTC_WAR_CRW       (4U)          /*!< Bit position for RTC_WAR_CRW. */
+#define BM_RTC_WAR_CRW       (0x00000010U) /*!< Bit mask for RTC_WAR_CRW. */
+#define BS_RTC_WAR_CRW       (1U)          /*!< Bit field size in bits for RTC_WAR_CRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_CRW field.
-#define BR_RTC_WAR_CRW       (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_CRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_CRW field. */
+#define BR_RTC_WAR_CRW(x)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_CRW))
 
-//! @brief Format value for bitfield RTC_WAR_CRW.
-#define BF_RTC_WAR_CRW(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_CRW), uint32_t) & BM_RTC_WAR_CRW)
+/*! @brief Format value for bitfield RTC_WAR_CRW. */
+#define BF_RTC_WAR_CRW(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_CRW) & BM_RTC_WAR_CRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRW field to a new value.
-#define BW_RTC_WAR_CRW(v)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_CRW) = (v))
-#endif
-//@}
+/*! @brief Set the CRW field to a new value. */
+#define BW_RTC_WAR_CRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_CRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field SRW[5] (RW)
@@ -1823,24 +1604,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the status register are ignored.
  * - 1 - Writes to the status register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_SRW       (5U)          //!< Bit position for RTC_WAR_SRW.
-#define BM_RTC_WAR_SRW       (0x00000020U) //!< Bit mask for RTC_WAR_SRW.
-#define BS_RTC_WAR_SRW       (1U)          //!< Bit field size in bits for RTC_WAR_SRW.
+/*@{*/
+#define BP_RTC_WAR_SRW       (5U)          /*!< Bit position for RTC_WAR_SRW. */
+#define BM_RTC_WAR_SRW       (0x00000020U) /*!< Bit mask for RTC_WAR_SRW. */
+#define BS_RTC_WAR_SRW       (1U)          /*!< Bit field size in bits for RTC_WAR_SRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_SRW field.
-#define BR_RTC_WAR_SRW       (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_SRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_SRW field. */
+#define BR_RTC_WAR_SRW(x)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_SRW))
 
-//! @brief Format value for bitfield RTC_WAR_SRW.
-#define BF_RTC_WAR_SRW(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_SRW), uint32_t) & BM_RTC_WAR_SRW)
+/*! @brief Format value for bitfield RTC_WAR_SRW. */
+#define BF_RTC_WAR_SRW(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_SRW) & BM_RTC_WAR_SRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SRW field to a new value.
-#define BW_RTC_WAR_SRW(v)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_SRW) = (v))
-#endif
-//@}
+/*! @brief Set the SRW field to a new value. */
+#define BW_RTC_WAR_SRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_SRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field LRW[6] (RW)
@@ -1852,24 +1629,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the lock register are ignored.
  * - 1 - Writes to the lock register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_LRW       (6U)          //!< Bit position for RTC_WAR_LRW.
-#define BM_RTC_WAR_LRW       (0x00000040U) //!< Bit mask for RTC_WAR_LRW.
-#define BS_RTC_WAR_LRW       (1U)          //!< Bit field size in bits for RTC_WAR_LRW.
+/*@{*/
+#define BP_RTC_WAR_LRW       (6U)          /*!< Bit position for RTC_WAR_LRW. */
+#define BM_RTC_WAR_LRW       (0x00000040U) /*!< Bit mask for RTC_WAR_LRW. */
+#define BS_RTC_WAR_LRW       (1U)          /*!< Bit field size in bits for RTC_WAR_LRW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_LRW field.
-#define BR_RTC_WAR_LRW       (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_LRW))
-#endif
+/*! @brief Read current value of the RTC_WAR_LRW field. */
+#define BR_RTC_WAR_LRW(x)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_LRW))
 
-//! @brief Format value for bitfield RTC_WAR_LRW.
-#define BF_RTC_WAR_LRW(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_LRW), uint32_t) & BM_RTC_WAR_LRW)
+/*! @brief Format value for bitfield RTC_WAR_LRW. */
+#define BF_RTC_WAR_LRW(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_LRW) & BM_RTC_WAR_LRW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LRW field to a new value.
-#define BW_RTC_WAR_LRW(v)    (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_LRW) = (v))
-#endif
-//@}
+/*! @brief Set the LRW field to a new value. */
+#define BW_RTC_WAR_LRW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_LRW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field IERW[7] (RW)
@@ -1881,24 +1654,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the interupt enable register are ignored.
  * - 1 - Writes to the interrupt enable register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_IERW      (7U)          //!< Bit position for RTC_WAR_IERW.
-#define BM_RTC_WAR_IERW      (0x00000080U) //!< Bit mask for RTC_WAR_IERW.
-#define BS_RTC_WAR_IERW      (1U)          //!< Bit field size in bits for RTC_WAR_IERW.
+/*@{*/
+#define BP_RTC_WAR_IERW      (7U)          /*!< Bit position for RTC_WAR_IERW. */
+#define BM_RTC_WAR_IERW      (0x00000080U) /*!< Bit mask for RTC_WAR_IERW. */
+#define BS_RTC_WAR_IERW      (1U)          /*!< Bit field size in bits for RTC_WAR_IERW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_IERW field.
-#define BR_RTC_WAR_IERW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_IERW))
-#endif
+/*! @brief Read current value of the RTC_WAR_IERW field. */
+#define BR_RTC_WAR_IERW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_IERW))
 
-//! @brief Format value for bitfield RTC_WAR_IERW.
-#define BF_RTC_WAR_IERW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_IERW), uint32_t) & BM_RTC_WAR_IERW)
+/*! @brief Format value for bitfield RTC_WAR_IERW. */
+#define BF_RTC_WAR_IERW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_IERW) & BM_RTC_WAR_IERW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IERW field to a new value.
-#define BW_RTC_WAR_IERW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_IERW) = (v))
-#endif
-//@}
+/*! @brief Set the IERW field to a new value. */
+#define BW_RTC_WAR_IERW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_IERW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field TTSW[8] (RW)
@@ -1910,24 +1679,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the tamper time seconds register are ignored.
  * - 1 - Writes to the tamper time seconds register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_TTSW      (8U)          //!< Bit position for RTC_WAR_TTSW.
-#define BM_RTC_WAR_TTSW      (0x00000100U) //!< Bit mask for RTC_WAR_TTSW.
-#define BS_RTC_WAR_TTSW      (1U)          //!< Bit field size in bits for RTC_WAR_TTSW.
+/*@{*/
+#define BP_RTC_WAR_TTSW      (8U)          /*!< Bit position for RTC_WAR_TTSW. */
+#define BM_RTC_WAR_TTSW      (0x00000100U) /*!< Bit mask for RTC_WAR_TTSW. */
+#define BS_RTC_WAR_TTSW      (1U)          /*!< Bit field size in bits for RTC_WAR_TTSW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_TTSW field.
-#define BR_RTC_WAR_TTSW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TTSW))
-#endif
+/*! @brief Read current value of the RTC_WAR_TTSW field. */
+#define BR_RTC_WAR_TTSW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TTSW))
 
-//! @brief Format value for bitfield RTC_WAR_TTSW.
-#define BF_RTC_WAR_TTSW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_TTSW), uint32_t) & BM_RTC_WAR_TTSW)
+/*! @brief Format value for bitfield RTC_WAR_TTSW. */
+#define BF_RTC_WAR_TTSW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_TTSW) & BM_RTC_WAR_TTSW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TTSW field to a new value.
-#define BW_RTC_WAR_TTSW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_TTSW) = (v))
-#endif
-//@}
+/*! @brief Set the TTSW field to a new value. */
+#define BW_RTC_WAR_TTSW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_TTSW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field MERW[9] (RW)
@@ -1939,24 +1704,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the monotonic enable register are ignored.
  * - 1 - Writes to the monotonic enable register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_MERW      (9U)          //!< Bit position for RTC_WAR_MERW.
-#define BM_RTC_WAR_MERW      (0x00000200U) //!< Bit mask for RTC_WAR_MERW.
-#define BS_RTC_WAR_MERW      (1U)          //!< Bit field size in bits for RTC_WAR_MERW.
+/*@{*/
+#define BP_RTC_WAR_MERW      (9U)          /*!< Bit position for RTC_WAR_MERW. */
+#define BM_RTC_WAR_MERW      (0x00000200U) /*!< Bit mask for RTC_WAR_MERW. */
+#define BS_RTC_WAR_MERW      (1U)          /*!< Bit field size in bits for RTC_WAR_MERW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_MERW field.
-#define BR_RTC_WAR_MERW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MERW))
-#endif
+/*! @brief Read current value of the RTC_WAR_MERW field. */
+#define BR_RTC_WAR_MERW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MERW))
 
-//! @brief Format value for bitfield RTC_WAR_MERW.
-#define BF_RTC_WAR_MERW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_MERW), uint32_t) & BM_RTC_WAR_MERW)
+/*! @brief Format value for bitfield RTC_WAR_MERW. */
+#define BF_RTC_WAR_MERW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_MERW) & BM_RTC_WAR_MERW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MERW field to a new value.
-#define BW_RTC_WAR_MERW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MERW) = (v))
-#endif
-//@}
+/*! @brief Set the MERW field to a new value. */
+#define BW_RTC_WAR_MERW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MERW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field MCLW[10] (RW)
@@ -1968,24 +1729,20 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the monotonic counter low register are ignored.
  * - 1 - Writes to the monotonic counter low register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_MCLW      (10U)         //!< Bit position for RTC_WAR_MCLW.
-#define BM_RTC_WAR_MCLW      (0x00000400U) //!< Bit mask for RTC_WAR_MCLW.
-#define BS_RTC_WAR_MCLW      (1U)          //!< Bit field size in bits for RTC_WAR_MCLW.
+/*@{*/
+#define BP_RTC_WAR_MCLW      (10U)         /*!< Bit position for RTC_WAR_MCLW. */
+#define BM_RTC_WAR_MCLW      (0x00000400U) /*!< Bit mask for RTC_WAR_MCLW. */
+#define BS_RTC_WAR_MCLW      (1U)          /*!< Bit field size in bits for RTC_WAR_MCLW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_MCLW field.
-#define BR_RTC_WAR_MCLW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MCLW))
-#endif
+/*! @brief Read current value of the RTC_WAR_MCLW field. */
+#define BR_RTC_WAR_MCLW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MCLW))
 
-//! @brief Format value for bitfield RTC_WAR_MCLW.
-#define BF_RTC_WAR_MCLW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_MCLW), uint32_t) & BM_RTC_WAR_MCLW)
+/*! @brief Format value for bitfield RTC_WAR_MCLW. */
+#define BF_RTC_WAR_MCLW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_MCLW) & BM_RTC_WAR_MCLW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCLW field to a new value.
-#define BW_RTC_WAR_MCLW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MCLW) = (v))
-#endif
-//@}
+/*! @brief Set the MCLW field to a new value. */
+#define BW_RTC_WAR_MCLW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MCLW) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_WAR, field MCHW[11] (RW)
@@ -1997,30 +1754,25 @@ typedef union _hw_rtc_war
  * - 0 - Writes to the monotonic counter high register are ignored.
  * - 1 - Writes to the monotonic counter high register complete as normal.
  */
-//@{
-#define BP_RTC_WAR_MCHW      (11U)         //!< Bit position for RTC_WAR_MCHW.
-#define BM_RTC_WAR_MCHW      (0x00000800U) //!< Bit mask for RTC_WAR_MCHW.
-#define BS_RTC_WAR_MCHW      (1U)          //!< Bit field size in bits for RTC_WAR_MCHW.
+/*@{*/
+#define BP_RTC_WAR_MCHW      (11U)         /*!< Bit position for RTC_WAR_MCHW. */
+#define BM_RTC_WAR_MCHW      (0x00000800U) /*!< Bit mask for RTC_WAR_MCHW. */
+#define BS_RTC_WAR_MCHW      (1U)          /*!< Bit field size in bits for RTC_WAR_MCHW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_WAR_MCHW field.
-#define BR_RTC_WAR_MCHW      (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MCHW))
-#endif
+/*! @brief Read current value of the RTC_WAR_MCHW field. */
+#define BR_RTC_WAR_MCHW(x)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MCHW))
 
-//! @brief Format value for bitfield RTC_WAR_MCHW.
-#define BF_RTC_WAR_MCHW(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_WAR_MCHW), uint32_t) & BM_RTC_WAR_MCHW)
+/*! @brief Format value for bitfield RTC_WAR_MCHW. */
+#define BF_RTC_WAR_MCHW(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_WAR_MCHW) & BM_RTC_WAR_MCHW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCHW field to a new value.
-#define BW_RTC_WAR_MCHW(v)   (BITBAND_ACCESS32(HW_RTC_WAR_ADDR, BP_RTC_WAR_MCHW) = (v))
-#endif
-//@}
+/*! @brief Set the MCHW field to a new value. */
+#define BW_RTC_WAR_MCHW(x, v) (BITBAND_ACCESS32(HW_RTC_WAR_ADDR(x), BP_RTC_WAR_MCHW) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_RTC_RAR - RTC Read Access Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_RTC_RAR - RTC Read Access Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_RTC_RAR - RTC Read Access Register (RW)
  *
@@ -2031,38 +1783,35 @@ typedef union _hw_rtc_rar
     uint32_t U;
     struct _hw_rtc_rar_bitfields
     {
-        uint32_t TSRR : 1;             //!< [0] Time Seconds Register Read
-        uint32_t TPRR : 1;             //!< [1] Time Prescaler Register Read
-        uint32_t TARR : 1;             //!< [2] Time Alarm Register Read
-        uint32_t TCRR : 1;             //!< [3] Time Compensation Register Read
-        uint32_t CRR : 1;              //!< [4] Control Register Read
-        uint32_t SRR : 1;              //!< [5] Status Register Read
-        uint32_t LRR : 1;              //!< [6] Lock Register Read
-        uint32_t IERR : 1;             //!< [7] Interrupt Enable Register Read
-        uint32_t TTSR : 1;             //!< [8] Tamper Time Seconds Read
-        uint32_t MERR : 1;             //!< [9] Monotonic Enable Register Read
-        uint32_t MCLR : 1;             //!< [10] Monotonic Counter Low Read
-        uint32_t MCHR : 1;             //!< [11] Monotonic Counter High Read
-        uint32_t RESERVED0 : 20;       //!< [31:12]
+        uint32_t TSRR : 1;             /*!< [0] Time Seconds Register Read */
+        uint32_t TPRR : 1;             /*!< [1] Time Prescaler Register Read */
+        uint32_t TARR : 1;             /*!< [2] Time Alarm Register Read */
+        uint32_t TCRR : 1;             /*!< [3] Time Compensation Register Read */
+        uint32_t CRR : 1;              /*!< [4] Control Register Read */
+        uint32_t SRR : 1;              /*!< [5] Status Register Read */
+        uint32_t LRR : 1;              /*!< [6] Lock Register Read */
+        uint32_t IERR : 1;             /*!< [7] Interrupt Enable Register Read */
+        uint32_t TTSR : 1;             /*!< [8] Tamper Time Seconds Read */
+        uint32_t MERR : 1;             /*!< [9] Monotonic Enable Register Read */
+        uint32_t MCLR : 1;             /*!< [10] Monotonic Counter Low Read */
+        uint32_t MCHR : 1;             /*!< [11] Monotonic Counter High Read */
+        uint32_t RESERVED0 : 20;       /*!< [31:12]  */
     } B;
 } hw_rtc_rar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire RTC_RAR register
  */
-//@{
-#define HW_RTC_RAR_ADDR          (REGS_RTC_BASE + 0x804U)
+/*@{*/
+#define HW_RTC_RAR_ADDR(x)       ((x) + 0x804U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_RTC_RAR               (*(__IO hw_rtc_rar_t *) HW_RTC_RAR_ADDR)
-#define HW_RTC_RAR_RD()          (HW_RTC_RAR.U)
-#define HW_RTC_RAR_WR(v)         (HW_RTC_RAR.U = (v))
-#define HW_RTC_RAR_SET(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() |  (v)))
-#define HW_RTC_RAR_CLR(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() & ~(v)))
-#define HW_RTC_RAR_TOG(v)        (HW_RTC_RAR_WR(HW_RTC_RAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_RTC_RAR(x)            (*(__IO hw_rtc_rar_t *) HW_RTC_RAR_ADDR(x))
+#define HW_RTC_RAR_RD(x)         (HW_RTC_RAR(x).U)
+#define HW_RTC_RAR_WR(x, v)      (HW_RTC_RAR(x).U = (v))
+#define HW_RTC_RAR_SET(x, v)     (HW_RTC_RAR_WR(x, HW_RTC_RAR_RD(x) |  (v)))
+#define HW_RTC_RAR_CLR(x, v)     (HW_RTC_RAR_WR(x, HW_RTC_RAR_RD(x) & ~(v)))
+#define HW_RTC_RAR_TOG(x, v)     (HW_RTC_RAR_WR(x, HW_RTC_RAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual RTC_RAR bitfields
@@ -2078,24 +1827,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the time seconds register are ignored.
  * - 1 - Reads to the time seconds register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_TSRR      (0U)          //!< Bit position for RTC_RAR_TSRR.
-#define BM_RTC_RAR_TSRR      (0x00000001U) //!< Bit mask for RTC_RAR_TSRR.
-#define BS_RTC_RAR_TSRR      (1U)          //!< Bit field size in bits for RTC_RAR_TSRR.
+/*@{*/
+#define BP_RTC_RAR_TSRR      (0U)          /*!< Bit position for RTC_RAR_TSRR. */
+#define BM_RTC_RAR_TSRR      (0x00000001U) /*!< Bit mask for RTC_RAR_TSRR. */
+#define BS_RTC_RAR_TSRR      (1U)          /*!< Bit field size in bits for RTC_RAR_TSRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_TSRR field.
-#define BR_RTC_RAR_TSRR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TSRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_TSRR field. */
+#define BR_RTC_RAR_TSRR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TSRR))
 
-//! @brief Format value for bitfield RTC_RAR_TSRR.
-#define BF_RTC_RAR_TSRR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_TSRR), uint32_t) & BM_RTC_RAR_TSRR)
+/*! @brief Format value for bitfield RTC_RAR_TSRR. */
+#define BF_RTC_RAR_TSRR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_TSRR) & BM_RTC_RAR_TSRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSRR field to a new value.
-#define BW_RTC_RAR_TSRR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TSRR) = (v))
-#endif
-//@}
+/*! @brief Set the TSRR field to a new value. */
+#define BW_RTC_RAR_TSRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TSRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field TPRR[1] (RW)
@@ -2107,24 +1852,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the time prescaler register are ignored.
  * - 1 - Reads to the time prescaler register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_TPRR      (1U)          //!< Bit position for RTC_RAR_TPRR.
-#define BM_RTC_RAR_TPRR      (0x00000002U) //!< Bit mask for RTC_RAR_TPRR.
-#define BS_RTC_RAR_TPRR      (1U)          //!< Bit field size in bits for RTC_RAR_TPRR.
+/*@{*/
+#define BP_RTC_RAR_TPRR      (1U)          /*!< Bit position for RTC_RAR_TPRR. */
+#define BM_RTC_RAR_TPRR      (0x00000002U) /*!< Bit mask for RTC_RAR_TPRR. */
+#define BS_RTC_RAR_TPRR      (1U)          /*!< Bit field size in bits for RTC_RAR_TPRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_TPRR field.
-#define BR_RTC_RAR_TPRR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TPRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_TPRR field. */
+#define BR_RTC_RAR_TPRR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TPRR))
 
-//! @brief Format value for bitfield RTC_RAR_TPRR.
-#define BF_RTC_RAR_TPRR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_TPRR), uint32_t) & BM_RTC_RAR_TPRR)
+/*! @brief Format value for bitfield RTC_RAR_TPRR. */
+#define BF_RTC_RAR_TPRR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_TPRR) & BM_RTC_RAR_TPRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPRR field to a new value.
-#define BW_RTC_RAR_TPRR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TPRR) = (v))
-#endif
-//@}
+/*! @brief Set the TPRR field to a new value. */
+#define BW_RTC_RAR_TPRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TPRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field TARR[2] (RW)
@@ -2136,24 +1877,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the time alarm register are ignored.
  * - 1 - Reads to the time alarm register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_TARR      (2U)          //!< Bit position for RTC_RAR_TARR.
-#define BM_RTC_RAR_TARR      (0x00000004U) //!< Bit mask for RTC_RAR_TARR.
-#define BS_RTC_RAR_TARR      (1U)          //!< Bit field size in bits for RTC_RAR_TARR.
+/*@{*/
+#define BP_RTC_RAR_TARR      (2U)          /*!< Bit position for RTC_RAR_TARR. */
+#define BM_RTC_RAR_TARR      (0x00000004U) /*!< Bit mask for RTC_RAR_TARR. */
+#define BS_RTC_RAR_TARR      (1U)          /*!< Bit field size in bits for RTC_RAR_TARR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_TARR field.
-#define BR_RTC_RAR_TARR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TARR))
-#endif
+/*! @brief Read current value of the RTC_RAR_TARR field. */
+#define BR_RTC_RAR_TARR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TARR))
 
-//! @brief Format value for bitfield RTC_RAR_TARR.
-#define BF_RTC_RAR_TARR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_TARR), uint32_t) & BM_RTC_RAR_TARR)
+/*! @brief Format value for bitfield RTC_RAR_TARR. */
+#define BF_RTC_RAR_TARR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_TARR) & BM_RTC_RAR_TARR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TARR field to a new value.
-#define BW_RTC_RAR_TARR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TARR) = (v))
-#endif
-//@}
+/*! @brief Set the TARR field to a new value. */
+#define BW_RTC_RAR_TARR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TARR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field TCRR[3] (RW)
@@ -2165,24 +1902,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the time compensation register are ignored.
  * - 1 - Reads to the time compensation register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_TCRR      (3U)          //!< Bit position for RTC_RAR_TCRR.
-#define BM_RTC_RAR_TCRR      (0x00000008U) //!< Bit mask for RTC_RAR_TCRR.
-#define BS_RTC_RAR_TCRR      (1U)          //!< Bit field size in bits for RTC_RAR_TCRR.
+/*@{*/
+#define BP_RTC_RAR_TCRR      (3U)          /*!< Bit position for RTC_RAR_TCRR. */
+#define BM_RTC_RAR_TCRR      (0x00000008U) /*!< Bit mask for RTC_RAR_TCRR. */
+#define BS_RTC_RAR_TCRR      (1U)          /*!< Bit field size in bits for RTC_RAR_TCRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_TCRR field.
-#define BR_RTC_RAR_TCRR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TCRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_TCRR field. */
+#define BR_RTC_RAR_TCRR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TCRR))
 
-//! @brief Format value for bitfield RTC_RAR_TCRR.
-#define BF_RTC_RAR_TCRR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_TCRR), uint32_t) & BM_RTC_RAR_TCRR)
+/*! @brief Format value for bitfield RTC_RAR_TCRR. */
+#define BF_RTC_RAR_TCRR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_TCRR) & BM_RTC_RAR_TCRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCRR field to a new value.
-#define BW_RTC_RAR_TCRR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TCRR) = (v))
-#endif
-//@}
+/*! @brief Set the TCRR field to a new value. */
+#define BW_RTC_RAR_TCRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TCRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field CRR[4] (RW)
@@ -2194,24 +1927,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the control register are ignored.
  * - 1 - Reads to the control register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_CRR       (4U)          //!< Bit position for RTC_RAR_CRR.
-#define BM_RTC_RAR_CRR       (0x00000010U) //!< Bit mask for RTC_RAR_CRR.
-#define BS_RTC_RAR_CRR       (1U)          //!< Bit field size in bits for RTC_RAR_CRR.
+/*@{*/
+#define BP_RTC_RAR_CRR       (4U)          /*!< Bit position for RTC_RAR_CRR. */
+#define BM_RTC_RAR_CRR       (0x00000010U) /*!< Bit mask for RTC_RAR_CRR. */
+#define BS_RTC_RAR_CRR       (1U)          /*!< Bit field size in bits for RTC_RAR_CRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_CRR field.
-#define BR_RTC_RAR_CRR       (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_CRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_CRR field. */
+#define BR_RTC_RAR_CRR(x)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_CRR))
 
-//! @brief Format value for bitfield RTC_RAR_CRR.
-#define BF_RTC_RAR_CRR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_CRR), uint32_t) & BM_RTC_RAR_CRR)
+/*! @brief Format value for bitfield RTC_RAR_CRR. */
+#define BF_RTC_RAR_CRR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_CRR) & BM_RTC_RAR_CRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRR field to a new value.
-#define BW_RTC_RAR_CRR(v)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_CRR) = (v))
-#endif
-//@}
+/*! @brief Set the CRR field to a new value. */
+#define BW_RTC_RAR_CRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_CRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field SRR[5] (RW)
@@ -2223,24 +1952,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the status register are ignored.
  * - 1 - Reads to the status register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_SRR       (5U)          //!< Bit position for RTC_RAR_SRR.
-#define BM_RTC_RAR_SRR       (0x00000020U) //!< Bit mask for RTC_RAR_SRR.
-#define BS_RTC_RAR_SRR       (1U)          //!< Bit field size in bits for RTC_RAR_SRR.
+/*@{*/
+#define BP_RTC_RAR_SRR       (5U)          /*!< Bit position for RTC_RAR_SRR. */
+#define BM_RTC_RAR_SRR       (0x00000020U) /*!< Bit mask for RTC_RAR_SRR. */
+#define BS_RTC_RAR_SRR       (1U)          /*!< Bit field size in bits for RTC_RAR_SRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_SRR field.
-#define BR_RTC_RAR_SRR       (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_SRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_SRR field. */
+#define BR_RTC_RAR_SRR(x)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_SRR))
 
-//! @brief Format value for bitfield RTC_RAR_SRR.
-#define BF_RTC_RAR_SRR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_SRR), uint32_t) & BM_RTC_RAR_SRR)
+/*! @brief Format value for bitfield RTC_RAR_SRR. */
+#define BF_RTC_RAR_SRR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_SRR) & BM_RTC_RAR_SRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SRR field to a new value.
-#define BW_RTC_RAR_SRR(v)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_SRR) = (v))
-#endif
-//@}
+/*! @brief Set the SRR field to a new value. */
+#define BW_RTC_RAR_SRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_SRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field LRR[6] (RW)
@@ -2252,24 +1977,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the lock register are ignored.
  * - 1 - Reads to the lock register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_LRR       (6U)          //!< Bit position for RTC_RAR_LRR.
-#define BM_RTC_RAR_LRR       (0x00000040U) //!< Bit mask for RTC_RAR_LRR.
-#define BS_RTC_RAR_LRR       (1U)          //!< Bit field size in bits for RTC_RAR_LRR.
+/*@{*/
+#define BP_RTC_RAR_LRR       (6U)          /*!< Bit position for RTC_RAR_LRR. */
+#define BM_RTC_RAR_LRR       (0x00000040U) /*!< Bit mask for RTC_RAR_LRR. */
+#define BS_RTC_RAR_LRR       (1U)          /*!< Bit field size in bits for RTC_RAR_LRR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_LRR field.
-#define BR_RTC_RAR_LRR       (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_LRR))
-#endif
+/*! @brief Read current value of the RTC_RAR_LRR field. */
+#define BR_RTC_RAR_LRR(x)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_LRR))
 
-//! @brief Format value for bitfield RTC_RAR_LRR.
-#define BF_RTC_RAR_LRR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_LRR), uint32_t) & BM_RTC_RAR_LRR)
+/*! @brief Format value for bitfield RTC_RAR_LRR. */
+#define BF_RTC_RAR_LRR(v)    ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_LRR) & BM_RTC_RAR_LRR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LRR field to a new value.
-#define BW_RTC_RAR_LRR(v)    (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_LRR) = (v))
-#endif
-//@}
+/*! @brief Set the LRR field to a new value. */
+#define BW_RTC_RAR_LRR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_LRR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field IERR[7] (RW)
@@ -2281,24 +2002,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the interrupt enable register are ignored.
  * - 1 - Reads to the interrupt enable register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_IERR      (7U)          //!< Bit position for RTC_RAR_IERR.
-#define BM_RTC_RAR_IERR      (0x00000080U) //!< Bit mask for RTC_RAR_IERR.
-#define BS_RTC_RAR_IERR      (1U)          //!< Bit field size in bits for RTC_RAR_IERR.
+/*@{*/
+#define BP_RTC_RAR_IERR      (7U)          /*!< Bit position for RTC_RAR_IERR. */
+#define BM_RTC_RAR_IERR      (0x00000080U) /*!< Bit mask for RTC_RAR_IERR. */
+#define BS_RTC_RAR_IERR      (1U)          /*!< Bit field size in bits for RTC_RAR_IERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_IERR field.
-#define BR_RTC_RAR_IERR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_IERR))
-#endif
+/*! @brief Read current value of the RTC_RAR_IERR field. */
+#define BR_RTC_RAR_IERR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_IERR))
 
-//! @brief Format value for bitfield RTC_RAR_IERR.
-#define BF_RTC_RAR_IERR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_IERR), uint32_t) & BM_RTC_RAR_IERR)
+/*! @brief Format value for bitfield RTC_RAR_IERR. */
+#define BF_RTC_RAR_IERR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_IERR) & BM_RTC_RAR_IERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IERR field to a new value.
-#define BW_RTC_RAR_IERR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_IERR) = (v))
-#endif
-//@}
+/*! @brief Set the IERR field to a new value. */
+#define BW_RTC_RAR_IERR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_IERR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field TTSR[8] (RW)
@@ -2310,24 +2027,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the tamper time seconds register are ignored.
  * - 1 - Reads to the tamper time seconds register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_TTSR      (8U)          //!< Bit position for RTC_RAR_TTSR.
-#define BM_RTC_RAR_TTSR      (0x00000100U) //!< Bit mask for RTC_RAR_TTSR.
-#define BS_RTC_RAR_TTSR      (1U)          //!< Bit field size in bits for RTC_RAR_TTSR.
+/*@{*/
+#define BP_RTC_RAR_TTSR      (8U)          /*!< Bit position for RTC_RAR_TTSR. */
+#define BM_RTC_RAR_TTSR      (0x00000100U) /*!< Bit mask for RTC_RAR_TTSR. */
+#define BS_RTC_RAR_TTSR      (1U)          /*!< Bit field size in bits for RTC_RAR_TTSR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_TTSR field.
-#define BR_RTC_RAR_TTSR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TTSR))
-#endif
+/*! @brief Read current value of the RTC_RAR_TTSR field. */
+#define BR_RTC_RAR_TTSR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TTSR))
 
-//! @brief Format value for bitfield RTC_RAR_TTSR.
-#define BF_RTC_RAR_TTSR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_TTSR), uint32_t) & BM_RTC_RAR_TTSR)
+/*! @brief Format value for bitfield RTC_RAR_TTSR. */
+#define BF_RTC_RAR_TTSR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_TTSR) & BM_RTC_RAR_TTSR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TTSR field to a new value.
-#define BW_RTC_RAR_TTSR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_TTSR) = (v))
-#endif
-//@}
+/*! @brief Set the TTSR field to a new value. */
+#define BW_RTC_RAR_TTSR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_TTSR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field MERR[9] (RW)
@@ -2339,24 +2052,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the monotonic enable register are ignored.
  * - 1 - Reads to the monotonic enable register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_MERR      (9U)          //!< Bit position for RTC_RAR_MERR.
-#define BM_RTC_RAR_MERR      (0x00000200U) //!< Bit mask for RTC_RAR_MERR.
-#define BS_RTC_RAR_MERR      (1U)          //!< Bit field size in bits for RTC_RAR_MERR.
+/*@{*/
+#define BP_RTC_RAR_MERR      (9U)          /*!< Bit position for RTC_RAR_MERR. */
+#define BM_RTC_RAR_MERR      (0x00000200U) /*!< Bit mask for RTC_RAR_MERR. */
+#define BS_RTC_RAR_MERR      (1U)          /*!< Bit field size in bits for RTC_RAR_MERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_MERR field.
-#define BR_RTC_RAR_MERR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MERR))
-#endif
+/*! @brief Read current value of the RTC_RAR_MERR field. */
+#define BR_RTC_RAR_MERR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MERR))
 
-//! @brief Format value for bitfield RTC_RAR_MERR.
-#define BF_RTC_RAR_MERR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_MERR), uint32_t) & BM_RTC_RAR_MERR)
+/*! @brief Format value for bitfield RTC_RAR_MERR. */
+#define BF_RTC_RAR_MERR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_MERR) & BM_RTC_RAR_MERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MERR field to a new value.
-#define BW_RTC_RAR_MERR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MERR) = (v))
-#endif
-//@}
+/*! @brief Set the MERR field to a new value. */
+#define BW_RTC_RAR_MERR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MERR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field MCLR[10] (RW)
@@ -2368,24 +2077,20 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the monotonic counter low register are ignored.
  * - 1 - Reads to the monotonic counter low register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_MCLR      (10U)         //!< Bit position for RTC_RAR_MCLR.
-#define BM_RTC_RAR_MCLR      (0x00000400U) //!< Bit mask for RTC_RAR_MCLR.
-#define BS_RTC_RAR_MCLR      (1U)          //!< Bit field size in bits for RTC_RAR_MCLR.
+/*@{*/
+#define BP_RTC_RAR_MCLR      (10U)         /*!< Bit position for RTC_RAR_MCLR. */
+#define BM_RTC_RAR_MCLR      (0x00000400U) /*!< Bit mask for RTC_RAR_MCLR. */
+#define BS_RTC_RAR_MCLR      (1U)          /*!< Bit field size in bits for RTC_RAR_MCLR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_MCLR field.
-#define BR_RTC_RAR_MCLR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MCLR))
-#endif
+/*! @brief Read current value of the RTC_RAR_MCLR field. */
+#define BR_RTC_RAR_MCLR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MCLR))
 
-//! @brief Format value for bitfield RTC_RAR_MCLR.
-#define BF_RTC_RAR_MCLR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_MCLR), uint32_t) & BM_RTC_RAR_MCLR)
+/*! @brief Format value for bitfield RTC_RAR_MCLR. */
+#define BF_RTC_RAR_MCLR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_MCLR) & BM_RTC_RAR_MCLR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCLR field to a new value.
-#define BW_RTC_RAR_MCLR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MCLR) = (v))
-#endif
-//@}
+/*! @brief Set the MCLR field to a new value. */
+#define BW_RTC_RAR_MCLR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MCLR) = (v))
+/*@}*/
 
 /*!
  * @name Register RTC_RAR, field MCHR[11] (RW)
@@ -2397,59 +2102,54 @@ typedef union _hw_rtc_rar
  * - 0 - Reads to the monotonic counter high register are ignored.
  * - 1 - Reads to the monotonic counter high register complete as normal.
  */
-//@{
-#define BP_RTC_RAR_MCHR      (11U)         //!< Bit position for RTC_RAR_MCHR.
-#define BM_RTC_RAR_MCHR      (0x00000800U) //!< Bit mask for RTC_RAR_MCHR.
-#define BS_RTC_RAR_MCHR      (1U)          //!< Bit field size in bits for RTC_RAR_MCHR.
+/*@{*/
+#define BP_RTC_RAR_MCHR      (11U)         /*!< Bit position for RTC_RAR_MCHR. */
+#define BM_RTC_RAR_MCHR      (0x00000800U) /*!< Bit mask for RTC_RAR_MCHR. */
+#define BS_RTC_RAR_MCHR      (1U)          /*!< Bit field size in bits for RTC_RAR_MCHR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the RTC_RAR_MCHR field.
-#define BR_RTC_RAR_MCHR      (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MCHR))
-#endif
+/*! @brief Read current value of the RTC_RAR_MCHR field. */
+#define BR_RTC_RAR_MCHR(x)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MCHR))
 
-//! @brief Format value for bitfield RTC_RAR_MCHR.
-#define BF_RTC_RAR_MCHR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_RTC_RAR_MCHR), uint32_t) & BM_RTC_RAR_MCHR)
+/*! @brief Format value for bitfield RTC_RAR_MCHR. */
+#define BF_RTC_RAR_MCHR(v)   ((uint32_t)((uint32_t)(v) << BP_RTC_RAR_MCHR) & BM_RTC_RAR_MCHR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCHR field to a new value.
-#define BW_RTC_RAR_MCHR(v)   (BITBAND_ACCESS32(HW_RTC_RAR_ADDR, BP_RTC_RAR_MCHR) = (v))
-#endif
-//@}
+/*! @brief Set the MCHR field to a new value. */
+#define BW_RTC_RAR_MCHR(x, v) (BITBAND_ACCESS32(HW_RTC_RAR_ADDR(x), BP_RTC_RAR_MCHR) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_rtc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_rtc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All RTC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_rtc
 {
-    __IO hw_rtc_tsr_t TSR;                 //!< [0x0] RTC Time Seconds Register
-    __IO hw_rtc_tpr_t TPR;                 //!< [0x4] RTC Time Prescaler Register
-    __IO hw_rtc_tar_t TAR;                 //!< [0x8] RTC Time Alarm Register
-    __IO hw_rtc_tcr_t TCR;                 //!< [0xC] RTC Time Compensation Register
-    __IO hw_rtc_cr_t CR;                   //!< [0x10] RTC Control Register
-    __IO hw_rtc_sr_t SR;                   //!< [0x14] RTC Status Register
-    __IO hw_rtc_lr_t LR;                   //!< [0x18] RTC Lock Register
-    __IO hw_rtc_ier_t IER;                 //!< [0x1C] RTC Interrupt Enable Register
-    __I hw_rtc_ttsr_t TTSR;                //!< [0x20] RTC Tamper Time Seconds Register
-    __IO hw_rtc_mer_t MER;                 //!< [0x24] RTC Monotonic Enable Register
-    __IO hw_rtc_mclr_t MCLR;               //!< [0x28] RTC Monotonic Counter Low Register
-    __IO hw_rtc_mchr_t MCHR;               //!< [0x2C] RTC Monotonic Counter High Register
+    __IO hw_rtc_tsr_t TSR;                 /*!< [0x0] RTC Time Seconds Register */
+    __IO hw_rtc_tpr_t TPR;                 /*!< [0x4] RTC Time Prescaler Register */
+    __IO hw_rtc_tar_t TAR;                 /*!< [0x8] RTC Time Alarm Register */
+    __IO hw_rtc_tcr_t TCR;                 /*!< [0xC] RTC Time Compensation Register */
+    __IO hw_rtc_cr_t CR;                   /*!< [0x10] RTC Control Register */
+    __IO hw_rtc_sr_t SR;                   /*!< [0x14] RTC Status Register */
+    __IO hw_rtc_lr_t LR;                   /*!< [0x18] RTC Lock Register */
+    __IO hw_rtc_ier_t IER;                 /*!< [0x1C] RTC Interrupt Enable Register */
+    __I hw_rtc_ttsr_t TTSR;                /*!< [0x20] RTC Tamper Time Seconds Register */
+    __IO hw_rtc_mer_t MER;                 /*!< [0x24] RTC Monotonic Enable Register */
+    __IO hw_rtc_mclr_t MCLR;               /*!< [0x28] RTC Monotonic Counter Low Register */
+    __IO hw_rtc_mchr_t MCHR;               /*!< [0x2C] RTC Monotonic Counter High Register */
     uint8_t _reserved0[2000];
-    __IO hw_rtc_war_t WAR;                 //!< [0x800] RTC Write Access Register
-    __IO hw_rtc_rar_t RAR;                 //!< [0x804] RTC Read Access Register
+    __IO hw_rtc_war_t WAR;                 /*!< [0x800] RTC Write Access Register */
+    __IO hw_rtc_rar_t RAR;                 /*!< [0x804] RTC Read Access Register */
 } hw_rtc_t;
 #pragma pack()
 
-//! @brief Macro to access all RTC registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_RTC</code>.
-#define HW_RTC         (*(hw_rtc_t *) REGS_RTC_BASE)
-#endif
+/*! @brief Macro to access all RTC registers. */
+/*! @param x RTC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_RTC(RTC_BASE)</code>. */
+#define HW_RTC(x)      (*(hw_rtc_t *)(x))
 
-#endif // __HW_RTC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_RTC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

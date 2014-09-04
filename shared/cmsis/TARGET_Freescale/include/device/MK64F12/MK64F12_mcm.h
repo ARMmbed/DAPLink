@@ -21,7 +21,8 @@
 #ifndef __HW_MCM_REGISTERS_H__
 #define __HW_MCM_REGISTERS_H__
 
-#include "regs.h"
+#include "MK64F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK64F12 MCM
@@ -31,8 +32,8 @@
  * Registers defined in this header file:
  * - HW_MCM_PLASC - Crossbar Switch (AXBS) Slave Configuration
  * - HW_MCM_PLAMC - Crossbar Switch (AXBS) Master Configuration
- * - HW_MCM_PLACR - Crossbar Switch (AXBS) Control Register
- * - HW_MCM_ISR - Interrupt Status Register
+ * - HW_MCM_CR - Control Register
+ * - HW_MCM_ISCR - Interrupt Status Register
  * - HW_MCM_ETBCC - ETB Counter Control register
  * - HW_MCM_ETBRL - ETB Reload register
  * - HW_MCM_ETBCNT - ETB Counter Value register
@@ -41,19 +42,12 @@
  * - hw_mcm_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_MCM_BASE
-#define HW_MCM_INSTANCE_COUNT (1U) //!< Number of instances of the MCM module.
-#define REGS_MCM_BASE (0xE0080000U) //!< Base address for MCM.
-#endif
-//@}
+#define HW_MCM_INSTANCE_COUNT (1U) /*!< Number of instances of the MCM module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_PLASC - Crossbar Switch (AXBS) Slave Configuration
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_PLASC - Crossbar Switch (AXBS) Slave Configuration
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_PLASC - Crossbar Switch (AXBS) Slave Configuration (RO)
  *
@@ -67,25 +61,22 @@ typedef union _hw_mcm_plasc
     uint16_t U;
     struct _hw_mcm_plasc_bitfields
     {
-        uint16_t ASC : 8;              //!< [7:0] Each bit in the ASC field indicates
-                                       //! whether there is a corresponding connection to the crossbar switch's slave
-                                       //! input port.
-        uint16_t RESERVED0 : 8;        //!< [15:8]
+        uint16_t ASC : 8;              /*!< [7:0] Each bit in the ASC field indicates
+                                        * whether there is a corresponding connection to the crossbar switch's slave
+                                        * input port. */
+        uint16_t RESERVED0 : 8;        /*!< [15:8]  */
     } B;
 } hw_mcm_plasc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_PLASC register
  */
-//@{
-#define HW_MCM_PLASC_ADDR        (REGS_MCM_BASE + 0x8U)
+/*@{*/
+#define HW_MCM_PLASC_ADDR(x)     ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_PLASC             (*(__I hw_mcm_plasc_t *) HW_MCM_PLASC_ADDR)
-#define HW_MCM_PLASC_RD()        (HW_MCM_PLASC.U)
-#endif
-//@}
+#define HW_MCM_PLASC(x)          (*(__I hw_mcm_plasc_t *) HW_MCM_PLASC_ADDR(x))
+#define HW_MCM_PLASC_RD(x)       (HW_MCM_PLASC(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_PLASC bitfields
@@ -98,22 +89,19 @@ typedef union _hw_mcm_plasc
  * - 0 - A bus slave connection to AXBS input port n is absent
  * - 1 - A bus slave connection to AXBS input port n is present
  */
-//@{
-#define BP_MCM_PLASC_ASC     (0U)          //!< Bit position for MCM_PLASC_ASC.
-#define BM_MCM_PLASC_ASC     (0x00FFU)     //!< Bit mask for MCM_PLASC_ASC.
-#define BS_MCM_PLASC_ASC     (8U)          //!< Bit field size in bits for MCM_PLASC_ASC.
+/*@{*/
+#define BP_MCM_PLASC_ASC     (0U)          /*!< Bit position for MCM_PLASC_ASC. */
+#define BM_MCM_PLASC_ASC     (0x00FFU)     /*!< Bit mask for MCM_PLASC_ASC. */
+#define BS_MCM_PLASC_ASC     (8U)          /*!< Bit field size in bits for MCM_PLASC_ASC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_PLASC_ASC field.
-#define BR_MCM_PLASC_ASC     (HW_MCM_PLASC.B.ASC)
-#endif
-//@}
+/*! @brief Read current value of the MCM_PLASC_ASC field. */
+#define BR_MCM_PLASC_ASC(x)  (HW_MCM_PLASC(x).B.ASC)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_PLAMC - Crossbar Switch (AXBS) Master Configuration
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_PLAMC - Crossbar Switch (AXBS) Master Configuration
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_PLAMC - Crossbar Switch (AXBS) Master Configuration (RO)
  *
@@ -127,24 +115,21 @@ typedef union _hw_mcm_plamc
     uint16_t U;
     struct _hw_mcm_plamc_bitfields
     {
-        uint16_t AMC : 8;              //!< [7:0] Each bit in the AMC field indicates
-                                       //! whether there is a corresponding connection to the AXBS master input port.
-        uint16_t RESERVED0 : 8;        //!< [15:8]
+        uint16_t AMC : 8;              /*!< [7:0] Each bit in the AMC field indicates
+                                        * whether there is a corresponding connection to the AXBS master input port. */
+        uint16_t RESERVED0 : 8;        /*!< [15:8]  */
     } B;
 } hw_mcm_plamc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_PLAMC register
  */
-//@{
-#define HW_MCM_PLAMC_ADDR        (REGS_MCM_BASE + 0xAU)
+/*@{*/
+#define HW_MCM_PLAMC_ADDR(x)     ((x) + 0xAU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_PLAMC             (*(__I hw_mcm_plamc_t *) HW_MCM_PLAMC_ADDR)
-#define HW_MCM_PLAMC_RD()        (HW_MCM_PLAMC.U)
-#endif
-//@}
+#define HW_MCM_PLAMC(x)          (*(__I hw_mcm_plamc_t *) HW_MCM_PLAMC_ADDR(x))
+#define HW_MCM_PLAMC_RD(x)       (HW_MCM_PLAMC(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_PLAMC bitfields
@@ -157,136 +142,212 @@ typedef union _hw_mcm_plamc
  * - 0 - A bus master connection to AXBS input port n is absent
  * - 1 - A bus master connection to AXBS input port n is present
  */
-//@{
-#define BP_MCM_PLAMC_AMC     (0U)          //!< Bit position for MCM_PLAMC_AMC.
-#define BM_MCM_PLAMC_AMC     (0x00FFU)     //!< Bit mask for MCM_PLAMC_AMC.
-#define BS_MCM_PLAMC_AMC     (8U)          //!< Bit field size in bits for MCM_PLAMC_AMC.
+/*@{*/
+#define BP_MCM_PLAMC_AMC     (0U)          /*!< Bit position for MCM_PLAMC_AMC. */
+#define BM_MCM_PLAMC_AMC     (0x00FFU)     /*!< Bit mask for MCM_PLAMC_AMC. */
+#define BS_MCM_PLAMC_AMC     (8U)          /*!< Bit field size in bits for MCM_PLAMC_AMC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_PLAMC_AMC field.
-#define BR_MCM_PLAMC_AMC     (HW_MCM_PLAMC.B.AMC)
-#endif
-//@}
+/*! @brief Read current value of the MCM_PLAMC_AMC field. */
+#define BR_MCM_PLAMC_AMC(x)  (HW_MCM_PLAMC(x).B.AMC)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_PLACR - Crossbar Switch (AXBS) Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_CR - Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_MCM_PLACR - Crossbar Switch (AXBS) Control Register (RO)
+ * @brief HW_MCM_CR - Control Register (RW)
  *
  * Reset value: 0x00000000U
  *
- * The PLACR register selects the arbitration policy for the crossbar masters.
+ * CR defines the arbitration and protection schemes for the two system RAM
+ * arrays.
  */
-typedef union _hw_mcm_placr
+typedef union _hw_mcm_cr
 {
     uint32_t U;
-    struct _hw_mcm_placr_bitfields
+    struct _hw_mcm_cr_bitfields
     {
-        uint32_t RESERVED0 : 9;        //!< [8:0]
-        uint32_t ARB : 1;              //!< [9] Arbitration select
-        uint32_t RESERVED1 : 22;       //!< [31:10]
+        uint32_t RESERVED0 : 24;       /*!< [23:0]  */
+        uint32_t SRAMUAP : 2;          /*!< [25:24] SRAM_U arbitration priority */
+        uint32_t SRAMUWP : 1;          /*!< [26] SRAM_U write protect */
+        uint32_t RESERVED1 : 1;        /*!< [27]  */
+        uint32_t SRAMLAP : 2;          /*!< [29:28] SRAM_L arbitration priority */
+        uint32_t SRAMLWP : 1;          /*!< [30] SRAM_L Write Protect */
+        uint32_t RESERVED2 : 1;        /*!< [31]  */
     } B;
-} hw_mcm_placr_t;
-#endif
+} hw_mcm_cr_t;
 
 /*!
- * @name Constants and macros for entire MCM_PLACR register
+ * @name Constants and macros for entire MCM_CR register
  */
-//@{
-#define HW_MCM_PLACR_ADDR        (REGS_MCM_BASE + 0xCU)
+/*@{*/
+#define HW_MCM_CR_ADDR(x)        ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_PLACR             (*(__I hw_mcm_placr_t *) HW_MCM_PLACR_ADDR)
-#define HW_MCM_PLACR_RD()        (HW_MCM_PLACR.U)
-#endif
-//@}
+#define HW_MCM_CR(x)             (*(__IO hw_mcm_cr_t *) HW_MCM_CR_ADDR(x))
+#define HW_MCM_CR_RD(x)          (HW_MCM_CR(x).U)
+#define HW_MCM_CR_WR(x, v)       (HW_MCM_CR(x).U = (v))
+#define HW_MCM_CR_SET(x, v)      (HW_MCM_CR_WR(x, HW_MCM_CR_RD(x) |  (v)))
+#define HW_MCM_CR_CLR(x, v)      (HW_MCM_CR_WR(x, HW_MCM_CR_RD(x) & ~(v)))
+#define HW_MCM_CR_TOG(x, v)      (HW_MCM_CR_WR(x, HW_MCM_CR_RD(x) ^  (v)))
+/*@}*/
 
 /*
- * Constants & macros for individual MCM_PLACR bitfields
+ * Constants & macros for individual MCM_CR bitfields
  */
 
 /*!
- * @name Register MCM_PLACR, field ARB[9] (RO)
+ * @name Register MCM_CR, field SRAMUAP[25:24] (RW)
+ *
+ * Defines the arbitration scheme and priority for the processor and SRAM
+ * backdoor accesses to the SRAM_U array.
  *
  * Values:
- * - 0 - Fixed-priority arbitration for the crossbar masters
- * - 1 - Round-robin arbitration for the crossbar masters
+ * - 00 - Round robin
+ * - 01 - Special round robin (favors SRAM backoor accesses over the processor)
+ * - 10 - Fixed priority. Processor has highest, backdoor has lowest
+ * - 11 - Fixed priority. Backdoor has highest, processor has lowest
  */
-//@{
-#define BP_MCM_PLACR_ARB     (9U)          //!< Bit position for MCM_PLACR_ARB.
-#define BM_MCM_PLACR_ARB     (0x00000200U) //!< Bit mask for MCM_PLACR_ARB.
-#define BS_MCM_PLACR_ARB     (1U)          //!< Bit field size in bits for MCM_PLACR_ARB.
+/*@{*/
+#define BP_MCM_CR_SRAMUAP    (24U)         /*!< Bit position for MCM_CR_SRAMUAP. */
+#define BM_MCM_CR_SRAMUAP    (0x03000000U) /*!< Bit mask for MCM_CR_SRAMUAP. */
+#define BS_MCM_CR_SRAMUAP    (2U)          /*!< Bit field size in bits for MCM_CR_SRAMUAP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_PLACR_ARB field.
-#define BR_MCM_PLACR_ARB     (BITBAND_ACCESS32(HW_MCM_PLACR_ADDR, BP_MCM_PLACR_ARB))
-#endif
-//@}
+/*! @brief Read current value of the MCM_CR_SRAMUAP field. */
+#define BR_MCM_CR_SRAMUAP(x) (HW_MCM_CR(x).B.SRAMUAP)
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_ISR - Interrupt Status Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Format value for bitfield MCM_CR_SRAMUAP. */
+#define BF_MCM_CR_SRAMUAP(v) ((uint32_t)((uint32_t)(v) << BP_MCM_CR_SRAMUAP) & BM_MCM_CR_SRAMUAP)
 
-#ifndef __LANGUAGE_ASM__
+/*! @brief Set the SRAMUAP field to a new value. */
+#define BW_MCM_CR_SRAMUAP(x, v) (HW_MCM_CR_WR(x, (HW_MCM_CR_RD(x) & ~BM_MCM_CR_SRAMUAP) | BF_MCM_CR_SRAMUAP(v)))
+/*@}*/
+
 /*!
- * @brief HW_MCM_ISR - Interrupt Status Register (RW)
+ * @name Register MCM_CR, field SRAMUWP[26] (RW)
+ *
+ * When this bit is set, writes to SRAM_U array generates a bus error.
+ */
+/*@{*/
+#define BP_MCM_CR_SRAMUWP    (26U)         /*!< Bit position for MCM_CR_SRAMUWP. */
+#define BM_MCM_CR_SRAMUWP    (0x04000000U) /*!< Bit mask for MCM_CR_SRAMUWP. */
+#define BS_MCM_CR_SRAMUWP    (1U)          /*!< Bit field size in bits for MCM_CR_SRAMUWP. */
+
+/*! @brief Read current value of the MCM_CR_SRAMUWP field. */
+#define BR_MCM_CR_SRAMUWP(x) (BITBAND_ACCESS32(HW_MCM_CR_ADDR(x), BP_MCM_CR_SRAMUWP))
+
+/*! @brief Format value for bitfield MCM_CR_SRAMUWP. */
+#define BF_MCM_CR_SRAMUWP(v) ((uint32_t)((uint32_t)(v) << BP_MCM_CR_SRAMUWP) & BM_MCM_CR_SRAMUWP)
+
+/*! @brief Set the SRAMUWP field to a new value. */
+#define BW_MCM_CR_SRAMUWP(x, v) (BITBAND_ACCESS32(HW_MCM_CR_ADDR(x), BP_MCM_CR_SRAMUWP) = (v))
+/*@}*/
+
+/*!
+ * @name Register MCM_CR, field SRAMLAP[29:28] (RW)
+ *
+ * Defines the arbitration scheme and priority for the processor and SRAM
+ * backdoor accesses to the SRAM_L array.
+ *
+ * Values:
+ * - 00 - Round robin
+ * - 01 - Special round robin (favors SRAM backoor accesses over the processor)
+ * - 10 - Fixed priority. Processor has highest, backdoor has lowest
+ * - 11 - Fixed priority. Backdoor has highest, processor has lowest
+ */
+/*@{*/
+#define BP_MCM_CR_SRAMLAP    (28U)         /*!< Bit position for MCM_CR_SRAMLAP. */
+#define BM_MCM_CR_SRAMLAP    (0x30000000U) /*!< Bit mask for MCM_CR_SRAMLAP. */
+#define BS_MCM_CR_SRAMLAP    (2U)          /*!< Bit field size in bits for MCM_CR_SRAMLAP. */
+
+/*! @brief Read current value of the MCM_CR_SRAMLAP field. */
+#define BR_MCM_CR_SRAMLAP(x) (HW_MCM_CR(x).B.SRAMLAP)
+
+/*! @brief Format value for bitfield MCM_CR_SRAMLAP. */
+#define BF_MCM_CR_SRAMLAP(v) ((uint32_t)((uint32_t)(v) << BP_MCM_CR_SRAMLAP) & BM_MCM_CR_SRAMLAP)
+
+/*! @brief Set the SRAMLAP field to a new value. */
+#define BW_MCM_CR_SRAMLAP(x, v) (HW_MCM_CR_WR(x, (HW_MCM_CR_RD(x) & ~BM_MCM_CR_SRAMLAP) | BF_MCM_CR_SRAMLAP(v)))
+/*@}*/
+
+/*!
+ * @name Register MCM_CR, field SRAMLWP[30] (RW)
+ *
+ * When this bit is set, writes to SRAM_L array generates a bus error.
+ */
+/*@{*/
+#define BP_MCM_CR_SRAMLWP    (30U)         /*!< Bit position for MCM_CR_SRAMLWP. */
+#define BM_MCM_CR_SRAMLWP    (0x40000000U) /*!< Bit mask for MCM_CR_SRAMLWP. */
+#define BS_MCM_CR_SRAMLWP    (1U)          /*!< Bit field size in bits for MCM_CR_SRAMLWP. */
+
+/*! @brief Read current value of the MCM_CR_SRAMLWP field. */
+#define BR_MCM_CR_SRAMLWP(x) (BITBAND_ACCESS32(HW_MCM_CR_ADDR(x), BP_MCM_CR_SRAMLWP))
+
+/*! @brief Format value for bitfield MCM_CR_SRAMLWP. */
+#define BF_MCM_CR_SRAMLWP(v) ((uint32_t)((uint32_t)(v) << BP_MCM_CR_SRAMLWP) & BM_MCM_CR_SRAMLWP)
+
+/*! @brief Set the SRAMLWP field to a new value. */
+#define BW_MCM_CR_SRAMLWP(x, v) (BITBAND_ACCESS32(HW_MCM_CR_ADDR(x), BP_MCM_CR_SRAMLWP) = (v))
+/*@}*/
+
+/*******************************************************************************
+ * HW_MCM_ISCR - Interrupt Status Register
+ ******************************************************************************/
+
+/*!
+ * @brief HW_MCM_ISCR - Interrupt Status Register (RW)
  *
  * Reset value: 0x00000000U
  */
-typedef union _hw_mcm_isr
+typedef union _hw_mcm_iscr
 {
     uint32_t U;
-    struct _hw_mcm_isr_bitfields
+    struct _hw_mcm_iscr_bitfields
     {
-        uint32_t RESERVED0 : 1;        //!< [0]
-        uint32_t IRQ : 1;              //!< [1] Normal Interrupt Pending
-        uint32_t NMI : 1;              //!< [2] Non-maskable Interrupt Pending
-        uint32_t DHREQ : 1;            //!< [3] Debug Halt Request Indicator
-        uint32_t RESERVED1 : 4;        //!< [7:4]
-        uint32_t FIOC : 1;             //!< [8] FPU invalid operation interrupt status
-        uint32_t FDZC : 1;             //!< [9] FPU divide-by-zero interrupt status
-        uint32_t FOFC : 1;             //!< [10] FPU overflow interrupt status
-        uint32_t FUFC : 1;             //!< [11] FPU underflow interrupt status
-        uint32_t FIXC : 1;             //!< [12] FPU inexact interrupt status
-        uint32_t RESERVED2 : 2;        //!< [14:13]
-        uint32_t FIDC : 1;             //!< [15] FPU input denormal interrupt status
-        uint32_t RESERVED3 : 8;        //!< [23:16]
-        uint32_t FIOCE : 1;            //!< [24] FPU invalid operation interrupt enable
-        uint32_t FDZCE : 1;            //!< [25] FPU divide-by-zero interrupt enable
-        uint32_t FOFCE : 1;            //!< [26] FPU overflow interrupt enable
-        uint32_t FUFCE : 1;            //!< [27] FPU underflow interrupt enable
-        uint32_t FIXCE : 1;            //!< [28] FPU inexact interrupt enable
-        uint32_t RESERVED4 : 2;        //!< [30:29]
-        uint32_t FIDCE : 1;            //!< [31] FPU input denormal interrupt enable
+        uint32_t RESERVED0 : 1;        /*!< [0]  */
+        uint32_t IRQ : 1;              /*!< [1] Normal Interrupt Pending */
+        uint32_t NMI : 1;              /*!< [2] Non-maskable Interrupt Pending */
+        uint32_t DHREQ : 1;            /*!< [3] Debug Halt Request Indicator */
+        uint32_t RESERVED1 : 4;        /*!< [7:4]  */
+        uint32_t FIOC : 1;             /*!< [8] FPU invalid operation interrupt status */
+        uint32_t FDZC : 1;             /*!< [9] FPU divide-by-zero interrupt status */
+        uint32_t FOFC : 1;             /*!< [10] FPU overflow interrupt status */
+        uint32_t FUFC : 1;             /*!< [11] FPU underflow interrupt status */
+        uint32_t FIXC : 1;             /*!< [12] FPU inexact interrupt status */
+        uint32_t RESERVED2 : 2;        /*!< [14:13]  */
+        uint32_t FIDC : 1;             /*!< [15] FPU input denormal interrupt status */
+        uint32_t RESERVED3 : 8;        /*!< [23:16]  */
+        uint32_t FIOCE : 1;            /*!< [24] FPU invalid operation interrupt enable
+                                        * */
+        uint32_t FDZCE : 1;            /*!< [25] FPU divide-by-zero interrupt enable */
+        uint32_t FOFCE : 1;            /*!< [26] FPU overflow interrupt enable */
+        uint32_t FUFCE : 1;            /*!< [27] FPU underflow interrupt enable */
+        uint32_t FIXCE : 1;            /*!< [28] FPU inexact interrupt enable */
+        uint32_t RESERVED4 : 2;        /*!< [30:29]  */
+        uint32_t FIDCE : 1;            /*!< [31] FPU input denormal interrupt enable */
     } B;
-} hw_mcm_isr_t;
-#endif
+} hw_mcm_iscr_t;
 
 /*!
- * @name Constants and macros for entire MCM_ISR register
+ * @name Constants and macros for entire MCM_ISCR register
  */
-//@{
-#define HW_MCM_ISR_ADDR          (REGS_MCM_BASE + 0x10U)
+/*@{*/
+#define HW_MCM_ISCR_ADDR(x)      ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_ISR               (*(__IO hw_mcm_isr_t *) HW_MCM_ISR_ADDR)
-#define HW_MCM_ISR_RD()          (HW_MCM_ISR.U)
-#define HW_MCM_ISR_WR(v)         (HW_MCM_ISR.U = (v))
-#define HW_MCM_ISR_SET(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() |  (v)))
-#define HW_MCM_ISR_CLR(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() & ~(v)))
-#define HW_MCM_ISR_TOG(v)        (HW_MCM_ISR_WR(HW_MCM_ISR_RD() ^  (v)))
-#endif
-//@}
+#define HW_MCM_ISCR(x)           (*(__IO hw_mcm_iscr_t *) HW_MCM_ISCR_ADDR(x))
+#define HW_MCM_ISCR_RD(x)        (HW_MCM_ISCR(x).U)
+#define HW_MCM_ISCR_WR(x, v)     (HW_MCM_ISCR(x).U = (v))
+#define HW_MCM_ISCR_SET(x, v)    (HW_MCM_ISCR_WR(x, HW_MCM_ISCR_RD(x) |  (v)))
+#define HW_MCM_ISCR_CLR(x, v)    (HW_MCM_ISCR_WR(x, HW_MCM_ISCR_RD(x) & ~(v)))
+#define HW_MCM_ISCR_TOG(x, v)    (HW_MCM_ISCR_WR(x, HW_MCM_ISCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
- * Constants & macros for individual MCM_ISR bitfields
+ * Constants & macros for individual MCM_ISCR bitfields
  */
 
 /*!
- * @name Register MCM_ISR, field IRQ[1] (W1C)
+ * @name Register MCM_ISCR, field IRQ[1] (W1C)
  *
  * If ETBCC[RSPT] is set to 01b, this bit is set when the ETB counter expires.
  *
@@ -294,27 +355,23 @@ typedef union _hw_mcm_isr
  * - 0 - No pending interrupt
  * - 1 - Due to the ETB counter expiring, a normal interrupt is pending
  */
-//@{
-#define BP_MCM_ISR_IRQ       (1U)          //!< Bit position for MCM_ISR_IRQ.
-#define BM_MCM_ISR_IRQ       (0x00000002U) //!< Bit mask for MCM_ISR_IRQ.
-#define BS_MCM_ISR_IRQ       (1U)          //!< Bit field size in bits for MCM_ISR_IRQ.
+/*@{*/
+#define BP_MCM_ISCR_IRQ      (1U)          /*!< Bit position for MCM_ISCR_IRQ. */
+#define BM_MCM_ISCR_IRQ      (0x00000002U) /*!< Bit mask for MCM_ISCR_IRQ. */
+#define BS_MCM_ISCR_IRQ      (1U)          /*!< Bit field size in bits for MCM_ISCR_IRQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_IRQ field.
-#define BR_MCM_ISR_IRQ       (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_IRQ))
-#endif
+/*! @brief Read current value of the MCM_ISCR_IRQ field. */
+#define BR_MCM_ISCR_IRQ(x)   (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_IRQ))
 
-//! @brief Format value for bitfield MCM_ISR_IRQ.
-#define BF_MCM_ISR_IRQ(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_IRQ), uint32_t) & BM_MCM_ISR_IRQ)
+/*! @brief Format value for bitfield MCM_ISCR_IRQ. */
+#define BF_MCM_ISCR_IRQ(v)   ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_IRQ) & BM_MCM_ISCR_IRQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IRQ field to a new value.
-#define BW_MCM_ISR_IRQ(v)    (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_IRQ) = (v))
-#endif
-//@}
+/*! @brief Set the IRQ field to a new value. */
+#define BW_MCM_ISCR_IRQ(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_IRQ) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field NMI[2] (W1C)
+ * @name Register MCM_ISCR, field NMI[2] (W1C)
  *
  * If ETBCC[RSPT] is set to 10b, this bit is set when the ETB counter expires.
  *
@@ -322,27 +379,23 @@ typedef union _hw_mcm_isr
  * - 0 - No pending NMI
  * - 1 - Due to the ETB counter expiring, an NMI is pending
  */
-//@{
-#define BP_MCM_ISR_NMI       (2U)          //!< Bit position for MCM_ISR_NMI.
-#define BM_MCM_ISR_NMI       (0x00000004U) //!< Bit mask for MCM_ISR_NMI.
-#define BS_MCM_ISR_NMI       (1U)          //!< Bit field size in bits for MCM_ISR_NMI.
+/*@{*/
+#define BP_MCM_ISCR_NMI      (2U)          /*!< Bit position for MCM_ISCR_NMI. */
+#define BM_MCM_ISCR_NMI      (0x00000004U) /*!< Bit mask for MCM_ISCR_NMI. */
+#define BS_MCM_ISCR_NMI      (1U)          /*!< Bit field size in bits for MCM_ISCR_NMI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_NMI field.
-#define BR_MCM_ISR_NMI       (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_NMI))
-#endif
+/*! @brief Read current value of the MCM_ISCR_NMI field. */
+#define BR_MCM_ISCR_NMI(x)   (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_NMI))
 
-//! @brief Format value for bitfield MCM_ISR_NMI.
-#define BF_MCM_ISR_NMI(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_NMI), uint32_t) & BM_MCM_ISR_NMI)
+/*! @brief Format value for bitfield MCM_ISCR_NMI. */
+#define BF_MCM_ISCR_NMI(v)   ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_NMI) & BM_MCM_ISCR_NMI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NMI field to a new value.
-#define BW_MCM_ISR_NMI(v)    (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_NMI) = (v))
-#endif
-//@}
+/*! @brief Set the NMI field to a new value. */
+#define BW_MCM_ISCR_NMI(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_NMI) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field DHREQ[3] (RO)
+ * @name Register MCM_ISCR, field DHREQ[3] (RO)
  *
  * Indicates that a debug halt request is initiated due to a ETB counter
  * expiration, ETBCC[2:0] = 3b111 & ETBCV[10:0] = 11h0. This bit is cleared when the
@@ -352,19 +405,17 @@ typedef union _hw_mcm_isr
  * - 0 - No debug halt request
  * - 1 - Debug halt request initiated
  */
-//@{
-#define BP_MCM_ISR_DHREQ     (3U)          //!< Bit position for MCM_ISR_DHREQ.
-#define BM_MCM_ISR_DHREQ     (0x00000008U) //!< Bit mask for MCM_ISR_DHREQ.
-#define BS_MCM_ISR_DHREQ     (1U)          //!< Bit field size in bits for MCM_ISR_DHREQ.
+/*@{*/
+#define BP_MCM_ISCR_DHREQ    (3U)          /*!< Bit position for MCM_ISCR_DHREQ. */
+#define BM_MCM_ISCR_DHREQ    (0x00000008U) /*!< Bit mask for MCM_ISCR_DHREQ. */
+#define BS_MCM_ISCR_DHREQ    (1U)          /*!< Bit field size in bits for MCM_ISCR_DHREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_DHREQ field.
-#define BR_MCM_ISR_DHREQ     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_DHREQ))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_DHREQ field. */
+#define BR_MCM_ISCR_DHREQ(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_DHREQ))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIOC[8] (RO)
+ * @name Register MCM_ISCR, field FIOC[8] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[IOC] bit and signals an
  * illegal operation has been detected in the processor's FPU. Once set, this bit
@@ -374,19 +425,17 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FIOC      (8U)          //!< Bit position for MCM_ISR_FIOC.
-#define BM_MCM_ISR_FIOC      (0x00000100U) //!< Bit mask for MCM_ISR_FIOC.
-#define BS_MCM_ISR_FIOC      (1U)          //!< Bit field size in bits for MCM_ISR_FIOC.
+/*@{*/
+#define BP_MCM_ISCR_FIOC     (8U)          /*!< Bit position for MCM_ISCR_FIOC. */
+#define BM_MCM_ISCR_FIOC     (0x00000100U) /*!< Bit mask for MCM_ISCR_FIOC. */
+#define BS_MCM_ISCR_FIOC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FIOC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIOC field.
-#define BR_MCM_ISR_FIOC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIOC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FIOC field. */
+#define BR_MCM_ISCR_FIOC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIOC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FDZC[9] (RO)
+ * @name Register MCM_ISCR, field FDZC[9] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[DZC] bit and signals a
  * divide by zero has been detected in the processor's FPU. Once set, this bit remains
@@ -396,19 +445,17 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FDZC      (9U)          //!< Bit position for MCM_ISR_FDZC.
-#define BM_MCM_ISR_FDZC      (0x00000200U) //!< Bit mask for MCM_ISR_FDZC.
-#define BS_MCM_ISR_FDZC      (1U)          //!< Bit field size in bits for MCM_ISR_FDZC.
+/*@{*/
+#define BP_MCM_ISCR_FDZC     (9U)          /*!< Bit position for MCM_ISCR_FDZC. */
+#define BM_MCM_ISCR_FDZC     (0x00000200U) /*!< Bit mask for MCM_ISCR_FDZC. */
+#define BS_MCM_ISCR_FDZC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FDZC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FDZC field.
-#define BR_MCM_ISR_FDZC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FDZC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FDZC field. */
+#define BR_MCM_ISCR_FDZC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FDZC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FOFC[10] (RO)
+ * @name Register MCM_ISCR, field FOFC[10] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[OFC] bit and signals an
  * overflow has been detected in the processor's FPU. Once set, this bit remains set
@@ -418,19 +465,17 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FOFC      (10U)         //!< Bit position for MCM_ISR_FOFC.
-#define BM_MCM_ISR_FOFC      (0x00000400U) //!< Bit mask for MCM_ISR_FOFC.
-#define BS_MCM_ISR_FOFC      (1U)          //!< Bit field size in bits for MCM_ISR_FOFC.
+/*@{*/
+#define BP_MCM_ISCR_FOFC     (10U)         /*!< Bit position for MCM_ISCR_FOFC. */
+#define BM_MCM_ISCR_FOFC     (0x00000400U) /*!< Bit mask for MCM_ISCR_FOFC. */
+#define BS_MCM_ISCR_FOFC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FOFC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FOFC field.
-#define BR_MCM_ISR_FOFC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FOFC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FOFC field. */
+#define BR_MCM_ISCR_FOFC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FOFC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FUFC[11] (RO)
+ * @name Register MCM_ISCR, field FUFC[11] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[UFC] bit and signals an
  * underflow has been detected in the processor's FPU. Once set, this bit remains set
@@ -440,19 +485,17 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FUFC      (11U)         //!< Bit position for MCM_ISR_FUFC.
-#define BM_MCM_ISR_FUFC      (0x00000800U) //!< Bit mask for MCM_ISR_FUFC.
-#define BS_MCM_ISR_FUFC      (1U)          //!< Bit field size in bits for MCM_ISR_FUFC.
+/*@{*/
+#define BP_MCM_ISCR_FUFC     (11U)         /*!< Bit position for MCM_ISCR_FUFC. */
+#define BM_MCM_ISCR_FUFC     (0x00000800U) /*!< Bit mask for MCM_ISCR_FUFC. */
+#define BS_MCM_ISCR_FUFC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FUFC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FUFC field.
-#define BR_MCM_ISR_FUFC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FUFC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FUFC field. */
+#define BR_MCM_ISCR_FUFC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FUFC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIXC[12] (RO)
+ * @name Register MCM_ISCR, field FIXC[12] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[IXC] bit and signals an
  * inexact number has been detected in the processor's FPU. Once set, this bit
@@ -462,19 +505,17 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FIXC      (12U)         //!< Bit position for MCM_ISR_FIXC.
-#define BM_MCM_ISR_FIXC      (0x00001000U) //!< Bit mask for MCM_ISR_FIXC.
-#define BS_MCM_ISR_FIXC      (1U)          //!< Bit field size in bits for MCM_ISR_FIXC.
+/*@{*/
+#define BP_MCM_ISCR_FIXC     (12U)         /*!< Bit position for MCM_ISCR_FIXC. */
+#define BM_MCM_ISCR_FIXC     (0x00001000U) /*!< Bit mask for MCM_ISCR_FIXC. */
+#define BS_MCM_ISCR_FIXC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FIXC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIXC field.
-#define BR_MCM_ISR_FIXC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIXC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FIXC field. */
+#define BR_MCM_ISCR_FIXC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIXC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIDC[15] (RO)
+ * @name Register MCM_ISCR, field FIDC[15] (RO)
  *
  * This read-only bit is a copy of the core's FPSCR[IDC] bit and signals input
  * denormalized number has been detected in the processor's FPU. Once set, this
@@ -484,178 +525,151 @@ typedef union _hw_mcm_isr
  * - 0 - No interrupt
  * - 1 - Interrupt occurred
  */
-//@{
-#define BP_MCM_ISR_FIDC      (15U)         //!< Bit position for MCM_ISR_FIDC.
-#define BM_MCM_ISR_FIDC      (0x00008000U) //!< Bit mask for MCM_ISR_FIDC.
-#define BS_MCM_ISR_FIDC      (1U)          //!< Bit field size in bits for MCM_ISR_FIDC.
+/*@{*/
+#define BP_MCM_ISCR_FIDC     (15U)         /*!< Bit position for MCM_ISCR_FIDC. */
+#define BM_MCM_ISCR_FIDC     (0x00008000U) /*!< Bit mask for MCM_ISCR_FIDC. */
+#define BS_MCM_ISCR_FIDC     (1U)          /*!< Bit field size in bits for MCM_ISCR_FIDC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIDC field.
-#define BR_MCM_ISR_FIDC      (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIDC))
-#endif
-//@}
+/*! @brief Read current value of the MCM_ISCR_FIDC field. */
+#define BR_MCM_ISCR_FIDC(x)  (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIDC))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIOCE[24] (RW)
+ * @name Register MCM_ISCR, field FIOCE[24] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FIOCE     (24U)         //!< Bit position for MCM_ISR_FIOCE.
-#define BM_MCM_ISR_FIOCE     (0x01000000U) //!< Bit mask for MCM_ISR_FIOCE.
-#define BS_MCM_ISR_FIOCE     (1U)          //!< Bit field size in bits for MCM_ISR_FIOCE.
+/*@{*/
+#define BP_MCM_ISCR_FIOCE    (24U)         /*!< Bit position for MCM_ISCR_FIOCE. */
+#define BM_MCM_ISCR_FIOCE    (0x01000000U) /*!< Bit mask for MCM_ISCR_FIOCE. */
+#define BS_MCM_ISCR_FIOCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FIOCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIOCE field.
-#define BR_MCM_ISR_FIOCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIOCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FIOCE field. */
+#define BR_MCM_ISCR_FIOCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIOCE))
 
-//! @brief Format value for bitfield MCM_ISR_FIOCE.
-#define BF_MCM_ISR_FIOCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FIOCE), uint32_t) & BM_MCM_ISR_FIOCE)
+/*! @brief Format value for bitfield MCM_ISCR_FIOCE. */
+#define BF_MCM_ISCR_FIOCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FIOCE) & BM_MCM_ISCR_FIOCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FIOCE field to a new value.
-#define BW_MCM_ISR_FIOCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIOCE) = (v))
-#endif
-//@}
+/*! @brief Set the FIOCE field to a new value. */
+#define BW_MCM_ISCR_FIOCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIOCE) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FDZCE[25] (RW)
+ * @name Register MCM_ISCR, field FDZCE[25] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FDZCE     (25U)         //!< Bit position for MCM_ISR_FDZCE.
-#define BM_MCM_ISR_FDZCE     (0x02000000U) //!< Bit mask for MCM_ISR_FDZCE.
-#define BS_MCM_ISR_FDZCE     (1U)          //!< Bit field size in bits for MCM_ISR_FDZCE.
+/*@{*/
+#define BP_MCM_ISCR_FDZCE    (25U)         /*!< Bit position for MCM_ISCR_FDZCE. */
+#define BM_MCM_ISCR_FDZCE    (0x02000000U) /*!< Bit mask for MCM_ISCR_FDZCE. */
+#define BS_MCM_ISCR_FDZCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FDZCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FDZCE field.
-#define BR_MCM_ISR_FDZCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FDZCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FDZCE field. */
+#define BR_MCM_ISCR_FDZCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FDZCE))
 
-//! @brief Format value for bitfield MCM_ISR_FDZCE.
-#define BF_MCM_ISR_FDZCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FDZCE), uint32_t) & BM_MCM_ISR_FDZCE)
+/*! @brief Format value for bitfield MCM_ISCR_FDZCE. */
+#define BF_MCM_ISCR_FDZCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FDZCE) & BM_MCM_ISCR_FDZCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FDZCE field to a new value.
-#define BW_MCM_ISR_FDZCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FDZCE) = (v))
-#endif
-//@}
+/*! @brief Set the FDZCE field to a new value. */
+#define BW_MCM_ISCR_FDZCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FDZCE) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FOFCE[26] (RW)
+ * @name Register MCM_ISCR, field FOFCE[26] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FOFCE     (26U)         //!< Bit position for MCM_ISR_FOFCE.
-#define BM_MCM_ISR_FOFCE     (0x04000000U) //!< Bit mask for MCM_ISR_FOFCE.
-#define BS_MCM_ISR_FOFCE     (1U)          //!< Bit field size in bits for MCM_ISR_FOFCE.
+/*@{*/
+#define BP_MCM_ISCR_FOFCE    (26U)         /*!< Bit position for MCM_ISCR_FOFCE. */
+#define BM_MCM_ISCR_FOFCE    (0x04000000U) /*!< Bit mask for MCM_ISCR_FOFCE. */
+#define BS_MCM_ISCR_FOFCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FOFCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FOFCE field.
-#define BR_MCM_ISR_FOFCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FOFCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FOFCE field. */
+#define BR_MCM_ISCR_FOFCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FOFCE))
 
-//! @brief Format value for bitfield MCM_ISR_FOFCE.
-#define BF_MCM_ISR_FOFCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FOFCE), uint32_t) & BM_MCM_ISR_FOFCE)
+/*! @brief Format value for bitfield MCM_ISCR_FOFCE. */
+#define BF_MCM_ISCR_FOFCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FOFCE) & BM_MCM_ISCR_FOFCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FOFCE field to a new value.
-#define BW_MCM_ISR_FOFCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FOFCE) = (v))
-#endif
-//@}
+/*! @brief Set the FOFCE field to a new value. */
+#define BW_MCM_ISCR_FOFCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FOFCE) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FUFCE[27] (RW)
+ * @name Register MCM_ISCR, field FUFCE[27] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FUFCE     (27U)         //!< Bit position for MCM_ISR_FUFCE.
-#define BM_MCM_ISR_FUFCE     (0x08000000U) //!< Bit mask for MCM_ISR_FUFCE.
-#define BS_MCM_ISR_FUFCE     (1U)          //!< Bit field size in bits for MCM_ISR_FUFCE.
+/*@{*/
+#define BP_MCM_ISCR_FUFCE    (27U)         /*!< Bit position for MCM_ISCR_FUFCE. */
+#define BM_MCM_ISCR_FUFCE    (0x08000000U) /*!< Bit mask for MCM_ISCR_FUFCE. */
+#define BS_MCM_ISCR_FUFCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FUFCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FUFCE field.
-#define BR_MCM_ISR_FUFCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FUFCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FUFCE field. */
+#define BR_MCM_ISCR_FUFCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FUFCE))
 
-//! @brief Format value for bitfield MCM_ISR_FUFCE.
-#define BF_MCM_ISR_FUFCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FUFCE), uint32_t) & BM_MCM_ISR_FUFCE)
+/*! @brief Format value for bitfield MCM_ISCR_FUFCE. */
+#define BF_MCM_ISCR_FUFCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FUFCE) & BM_MCM_ISCR_FUFCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FUFCE field to a new value.
-#define BW_MCM_ISR_FUFCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FUFCE) = (v))
-#endif
-//@}
+/*! @brief Set the FUFCE field to a new value. */
+#define BW_MCM_ISCR_FUFCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FUFCE) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIXCE[28] (RW)
+ * @name Register MCM_ISCR, field FIXCE[28] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FIXCE     (28U)         //!< Bit position for MCM_ISR_FIXCE.
-#define BM_MCM_ISR_FIXCE     (0x10000000U) //!< Bit mask for MCM_ISR_FIXCE.
-#define BS_MCM_ISR_FIXCE     (1U)          //!< Bit field size in bits for MCM_ISR_FIXCE.
+/*@{*/
+#define BP_MCM_ISCR_FIXCE    (28U)         /*!< Bit position for MCM_ISCR_FIXCE. */
+#define BM_MCM_ISCR_FIXCE    (0x10000000U) /*!< Bit mask for MCM_ISCR_FIXCE. */
+#define BS_MCM_ISCR_FIXCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FIXCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIXCE field.
-#define BR_MCM_ISR_FIXCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIXCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FIXCE field. */
+#define BR_MCM_ISCR_FIXCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIXCE))
 
-//! @brief Format value for bitfield MCM_ISR_FIXCE.
-#define BF_MCM_ISR_FIXCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FIXCE), uint32_t) & BM_MCM_ISR_FIXCE)
+/*! @brief Format value for bitfield MCM_ISCR_FIXCE. */
+#define BF_MCM_ISCR_FIXCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FIXCE) & BM_MCM_ISCR_FIXCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FIXCE field to a new value.
-#define BW_MCM_ISR_FIXCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIXCE) = (v))
-#endif
-//@}
+/*! @brief Set the FIXCE field to a new value. */
+#define BW_MCM_ISCR_FIXCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIXCE) = (v))
+/*@}*/
 
 /*!
- * @name Register MCM_ISR, field FIDCE[31] (RW)
+ * @name Register MCM_ISCR, field FIDCE[31] (RW)
  *
  * Values:
  * - 0 - Disable interrupt
  * - 1 - Enable interrupt
  */
-//@{
-#define BP_MCM_ISR_FIDCE     (31U)         //!< Bit position for MCM_ISR_FIDCE.
-#define BM_MCM_ISR_FIDCE     (0x80000000U) //!< Bit mask for MCM_ISR_FIDCE.
-#define BS_MCM_ISR_FIDCE     (1U)          //!< Bit field size in bits for MCM_ISR_FIDCE.
+/*@{*/
+#define BP_MCM_ISCR_FIDCE    (31U)         /*!< Bit position for MCM_ISCR_FIDCE. */
+#define BM_MCM_ISCR_FIDCE    (0x80000000U) /*!< Bit mask for MCM_ISCR_FIDCE. */
+#define BS_MCM_ISCR_FIDCE    (1U)          /*!< Bit field size in bits for MCM_ISCR_FIDCE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ISR_FIDCE field.
-#define BR_MCM_ISR_FIDCE     (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIDCE))
-#endif
+/*! @brief Read current value of the MCM_ISCR_FIDCE field. */
+#define BR_MCM_ISCR_FIDCE(x) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIDCE))
 
-//! @brief Format value for bitfield MCM_ISR_FIDCE.
-#define BF_MCM_ISR_FIDCE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ISR_FIDCE), uint32_t) & BM_MCM_ISR_FIDCE)
+/*! @brief Format value for bitfield MCM_ISCR_FIDCE. */
+#define BF_MCM_ISCR_FIDCE(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ISCR_FIDCE) & BM_MCM_ISCR_FIDCE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FIDCE field to a new value.
-#define BW_MCM_ISR_FIDCE(v)  (BITBAND_ACCESS32(HW_MCM_ISR_ADDR, BP_MCM_ISR_FIDCE) = (v))
-#endif
-//@}
+/*! @brief Set the FIDCE field to a new value. */
+#define BW_MCM_ISCR_FIDCE(x, v) (BITBAND_ACCESS32(HW_MCM_ISCR_ADDR(x), BP_MCM_ISCR_FIDCE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_ETBCC - ETB Counter Control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_ETBCC - ETB Counter Control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_ETBCC - ETB Counter Control register (RW)
  *
@@ -666,31 +680,28 @@ typedef union _hw_mcm_etbcc
     uint32_t U;
     struct _hw_mcm_etbcc_bitfields
     {
-        uint32_t CNTEN : 1;            //!< [0] Counter Enable
-        uint32_t RSPT : 2;             //!< [2:1] Response Type
-        uint32_t RLRQ : 1;             //!< [3] Reload Request
-        uint32_t ETDIS : 1;            //!< [4] ETM-To-TPIU Disable
-        uint32_t ITDIS : 1;            //!< [5] ITM-To-TPIU Disable
-        uint32_t RESERVED0 : 26;       //!< [31:6]
+        uint32_t CNTEN : 1;            /*!< [0] Counter Enable */
+        uint32_t RSPT : 2;             /*!< [2:1] Response Type */
+        uint32_t RLRQ : 1;             /*!< [3] Reload Request */
+        uint32_t ETDIS : 1;            /*!< [4] ETM-To-TPIU Disable */
+        uint32_t ITDIS : 1;            /*!< [5] ITM-To-TPIU Disable */
+        uint32_t RESERVED0 : 26;       /*!< [31:6]  */
     } B;
 } hw_mcm_etbcc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_ETBCC register
  */
-//@{
-#define HW_MCM_ETBCC_ADDR        (REGS_MCM_BASE + 0x14U)
+/*@{*/
+#define HW_MCM_ETBCC_ADDR(x)     ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_ETBCC             (*(__IO hw_mcm_etbcc_t *) HW_MCM_ETBCC_ADDR)
-#define HW_MCM_ETBCC_RD()        (HW_MCM_ETBCC.U)
-#define HW_MCM_ETBCC_WR(v)       (HW_MCM_ETBCC.U = (v))
-#define HW_MCM_ETBCC_SET(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() |  (v)))
-#define HW_MCM_ETBCC_CLR(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() & ~(v)))
-#define HW_MCM_ETBCC_TOG(v)      (HW_MCM_ETBCC_WR(HW_MCM_ETBCC_RD() ^  (v)))
-#endif
-//@}
+#define HW_MCM_ETBCC(x)          (*(__IO hw_mcm_etbcc_t *) HW_MCM_ETBCC_ADDR(x))
+#define HW_MCM_ETBCC_RD(x)       (HW_MCM_ETBCC(x).U)
+#define HW_MCM_ETBCC_WR(x, v)    (HW_MCM_ETBCC(x).U = (v))
+#define HW_MCM_ETBCC_SET(x, v)   (HW_MCM_ETBCC_WR(x, HW_MCM_ETBCC_RD(x) |  (v)))
+#define HW_MCM_ETBCC_CLR(x, v)   (HW_MCM_ETBCC_WR(x, HW_MCM_ETBCC_RD(x) & ~(v)))
+#define HW_MCM_ETBCC_TOG(x, v)   (HW_MCM_ETBCC_WR(x, HW_MCM_ETBCC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_ETBCC bitfields
@@ -705,24 +716,20 @@ typedef union _hw_mcm_etbcc
  * - 0 - ETB counter disabled
  * - 1 - ETB counter enabled
  */
-//@{
-#define BP_MCM_ETBCC_CNTEN   (0U)          //!< Bit position for MCM_ETBCC_CNTEN.
-#define BM_MCM_ETBCC_CNTEN   (0x00000001U) //!< Bit mask for MCM_ETBCC_CNTEN.
-#define BS_MCM_ETBCC_CNTEN   (1U)          //!< Bit field size in bits for MCM_ETBCC_CNTEN.
+/*@{*/
+#define BP_MCM_ETBCC_CNTEN   (0U)          /*!< Bit position for MCM_ETBCC_CNTEN. */
+#define BM_MCM_ETBCC_CNTEN   (0x00000001U) /*!< Bit mask for MCM_ETBCC_CNTEN. */
+#define BS_MCM_ETBCC_CNTEN   (1U)          /*!< Bit field size in bits for MCM_ETBCC_CNTEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCC_CNTEN field.
-#define BR_MCM_ETBCC_CNTEN   (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_CNTEN))
-#endif
+/*! @brief Read current value of the MCM_ETBCC_CNTEN field. */
+#define BR_MCM_ETBCC_CNTEN(x) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_CNTEN))
 
-//! @brief Format value for bitfield MCM_ETBCC_CNTEN.
-#define BF_MCM_ETBCC_CNTEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBCC_CNTEN), uint32_t) & BM_MCM_ETBCC_CNTEN)
+/*! @brief Format value for bitfield MCM_ETBCC_CNTEN. */
+#define BF_MCM_ETBCC_CNTEN(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBCC_CNTEN) & BM_MCM_ETBCC_CNTEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CNTEN field to a new value.
-#define BW_MCM_ETBCC_CNTEN(v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_CNTEN) = (v))
-#endif
-//@}
+/*! @brief Set the CNTEN field to a new value. */
+#define BW_MCM_ETBCC_CNTEN(x, v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_CNTEN) = (v))
+/*@}*/
 
 /*!
  * @name Register MCM_ETBCC, field RSPT[2:1] (RW)
@@ -733,24 +740,20 @@ typedef union _hw_mcm_etbcc
  * - 10 - Generate an NMI when the ETB count expires
  * - 11 - Generate a debug halt when the ETB count expires
  */
-//@{
-#define BP_MCM_ETBCC_RSPT    (1U)          //!< Bit position for MCM_ETBCC_RSPT.
-#define BM_MCM_ETBCC_RSPT    (0x00000006U) //!< Bit mask for MCM_ETBCC_RSPT.
-#define BS_MCM_ETBCC_RSPT    (2U)          //!< Bit field size in bits for MCM_ETBCC_RSPT.
+/*@{*/
+#define BP_MCM_ETBCC_RSPT    (1U)          /*!< Bit position for MCM_ETBCC_RSPT. */
+#define BM_MCM_ETBCC_RSPT    (0x00000006U) /*!< Bit mask for MCM_ETBCC_RSPT. */
+#define BS_MCM_ETBCC_RSPT    (2U)          /*!< Bit field size in bits for MCM_ETBCC_RSPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCC_RSPT field.
-#define BR_MCM_ETBCC_RSPT    (HW_MCM_ETBCC.B.RSPT)
-#endif
+/*! @brief Read current value of the MCM_ETBCC_RSPT field. */
+#define BR_MCM_ETBCC_RSPT(x) (HW_MCM_ETBCC(x).B.RSPT)
 
-//! @brief Format value for bitfield MCM_ETBCC_RSPT.
-#define BF_MCM_ETBCC_RSPT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBCC_RSPT), uint32_t) & BM_MCM_ETBCC_RSPT)
+/*! @brief Format value for bitfield MCM_ETBCC_RSPT. */
+#define BF_MCM_ETBCC_RSPT(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBCC_RSPT) & BM_MCM_ETBCC_RSPT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RSPT field to a new value.
-#define BW_MCM_ETBCC_RSPT(v) (HW_MCM_ETBCC_WR((HW_MCM_ETBCC_RD() & ~BM_MCM_ETBCC_RSPT) | BF_MCM_ETBCC_RSPT(v)))
-#endif
-//@}
+/*! @brief Set the RSPT field to a new value. */
+#define BW_MCM_ETBCC_RSPT(x, v) (HW_MCM_ETBCC_WR(x, (HW_MCM_ETBCC_RD(x) & ~BM_MCM_ETBCC_RSPT) | BF_MCM_ETBCC_RSPT(v)))
+/*@}*/
 
 /*!
  * @name Register MCM_ETBCC, field RLRQ[3] (RW)
@@ -765,24 +768,20 @@ typedef union _hw_mcm_etbcc
  * - 0 - No effect
  * - 1 - Clears pending debug halt, NMI, or IRQ interrupt requests
  */
-//@{
-#define BP_MCM_ETBCC_RLRQ    (3U)          //!< Bit position for MCM_ETBCC_RLRQ.
-#define BM_MCM_ETBCC_RLRQ    (0x00000008U) //!< Bit mask for MCM_ETBCC_RLRQ.
-#define BS_MCM_ETBCC_RLRQ    (1U)          //!< Bit field size in bits for MCM_ETBCC_RLRQ.
+/*@{*/
+#define BP_MCM_ETBCC_RLRQ    (3U)          /*!< Bit position for MCM_ETBCC_RLRQ. */
+#define BM_MCM_ETBCC_RLRQ    (0x00000008U) /*!< Bit mask for MCM_ETBCC_RLRQ. */
+#define BS_MCM_ETBCC_RLRQ    (1U)          /*!< Bit field size in bits for MCM_ETBCC_RLRQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCC_RLRQ field.
-#define BR_MCM_ETBCC_RLRQ    (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_RLRQ))
-#endif
+/*! @brief Read current value of the MCM_ETBCC_RLRQ field. */
+#define BR_MCM_ETBCC_RLRQ(x) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_RLRQ))
 
-//! @brief Format value for bitfield MCM_ETBCC_RLRQ.
-#define BF_MCM_ETBCC_RLRQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBCC_RLRQ), uint32_t) & BM_MCM_ETBCC_RLRQ)
+/*! @brief Format value for bitfield MCM_ETBCC_RLRQ. */
+#define BF_MCM_ETBCC_RLRQ(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBCC_RLRQ) & BM_MCM_ETBCC_RLRQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RLRQ field to a new value.
-#define BW_MCM_ETBCC_RLRQ(v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_RLRQ) = (v))
-#endif
-//@}
+/*! @brief Set the RLRQ field to a new value. */
+#define BW_MCM_ETBCC_RLRQ(x, v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_RLRQ) = (v))
+/*@}*/
 
 /*!
  * @name Register MCM_ETBCC, field ETDIS[4] (RW)
@@ -793,24 +792,20 @@ typedef union _hw_mcm_etbcc
  * - 0 - ETM-to-TPIU trace path enabled
  * - 1 - ETM-to-TPIU trace path disabled
  */
-//@{
-#define BP_MCM_ETBCC_ETDIS   (4U)          //!< Bit position for MCM_ETBCC_ETDIS.
-#define BM_MCM_ETBCC_ETDIS   (0x00000010U) //!< Bit mask for MCM_ETBCC_ETDIS.
-#define BS_MCM_ETBCC_ETDIS   (1U)          //!< Bit field size in bits for MCM_ETBCC_ETDIS.
+/*@{*/
+#define BP_MCM_ETBCC_ETDIS   (4U)          /*!< Bit position for MCM_ETBCC_ETDIS. */
+#define BM_MCM_ETBCC_ETDIS   (0x00000010U) /*!< Bit mask for MCM_ETBCC_ETDIS. */
+#define BS_MCM_ETBCC_ETDIS   (1U)          /*!< Bit field size in bits for MCM_ETBCC_ETDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCC_ETDIS field.
-#define BR_MCM_ETBCC_ETDIS   (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_ETDIS))
-#endif
+/*! @brief Read current value of the MCM_ETBCC_ETDIS field. */
+#define BR_MCM_ETBCC_ETDIS(x) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_ETDIS))
 
-//! @brief Format value for bitfield MCM_ETBCC_ETDIS.
-#define BF_MCM_ETBCC_ETDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBCC_ETDIS), uint32_t) & BM_MCM_ETBCC_ETDIS)
+/*! @brief Format value for bitfield MCM_ETBCC_ETDIS. */
+#define BF_MCM_ETBCC_ETDIS(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBCC_ETDIS) & BM_MCM_ETBCC_ETDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ETDIS field to a new value.
-#define BW_MCM_ETBCC_ETDIS(v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_ETDIS) = (v))
-#endif
-//@}
+/*! @brief Set the ETDIS field to a new value. */
+#define BW_MCM_ETBCC_ETDIS(x, v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_ETDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register MCM_ETBCC, field ITDIS[5] (RW)
@@ -821,30 +816,25 @@ typedef union _hw_mcm_etbcc
  * - 0 - ITM-to-TPIU trace path enabled
  * - 1 - ITM-to-TPIU trace path disabled
  */
-//@{
-#define BP_MCM_ETBCC_ITDIS   (5U)          //!< Bit position for MCM_ETBCC_ITDIS.
-#define BM_MCM_ETBCC_ITDIS   (0x00000020U) //!< Bit mask for MCM_ETBCC_ITDIS.
-#define BS_MCM_ETBCC_ITDIS   (1U)          //!< Bit field size in bits for MCM_ETBCC_ITDIS.
+/*@{*/
+#define BP_MCM_ETBCC_ITDIS   (5U)          /*!< Bit position for MCM_ETBCC_ITDIS. */
+#define BM_MCM_ETBCC_ITDIS   (0x00000020U) /*!< Bit mask for MCM_ETBCC_ITDIS. */
+#define BS_MCM_ETBCC_ITDIS   (1U)          /*!< Bit field size in bits for MCM_ETBCC_ITDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCC_ITDIS field.
-#define BR_MCM_ETBCC_ITDIS   (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_ITDIS))
-#endif
+/*! @brief Read current value of the MCM_ETBCC_ITDIS field. */
+#define BR_MCM_ETBCC_ITDIS(x) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_ITDIS))
 
-//! @brief Format value for bitfield MCM_ETBCC_ITDIS.
-#define BF_MCM_ETBCC_ITDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBCC_ITDIS), uint32_t) & BM_MCM_ETBCC_ITDIS)
+/*! @brief Format value for bitfield MCM_ETBCC_ITDIS. */
+#define BF_MCM_ETBCC_ITDIS(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBCC_ITDIS) & BM_MCM_ETBCC_ITDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ITDIS field to a new value.
-#define BW_MCM_ETBCC_ITDIS(v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR, BP_MCM_ETBCC_ITDIS) = (v))
-#endif
-//@}
+/*! @brief Set the ITDIS field to a new value. */
+#define BW_MCM_ETBCC_ITDIS(x, v) (BITBAND_ACCESS32(HW_MCM_ETBCC_ADDR(x), BP_MCM_ETBCC_ITDIS) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_ETBRL - ETB Reload register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_ETBRL - ETB Reload register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_ETBRL - ETB Reload register (RW)
  *
@@ -855,27 +845,24 @@ typedef union _hw_mcm_etbrl
     uint32_t U;
     struct _hw_mcm_etbrl_bitfields
     {
-        uint32_t RELOAD : 11;          //!< [10:0] Byte Count Reload Value
-        uint32_t RESERVED0 : 21;       //!< [31:11]
+        uint32_t RELOAD : 11;          /*!< [10:0] Byte Count Reload Value */
+        uint32_t RESERVED0 : 21;       /*!< [31:11]  */
     } B;
 } hw_mcm_etbrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_ETBRL register
  */
-//@{
-#define HW_MCM_ETBRL_ADDR        (REGS_MCM_BASE + 0x18U)
+/*@{*/
+#define HW_MCM_ETBRL_ADDR(x)     ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_ETBRL             (*(__IO hw_mcm_etbrl_t *) HW_MCM_ETBRL_ADDR)
-#define HW_MCM_ETBRL_RD()        (HW_MCM_ETBRL.U)
-#define HW_MCM_ETBRL_WR(v)       (HW_MCM_ETBRL.U = (v))
-#define HW_MCM_ETBRL_SET(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() |  (v)))
-#define HW_MCM_ETBRL_CLR(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() & ~(v)))
-#define HW_MCM_ETBRL_TOG(v)      (HW_MCM_ETBRL_WR(HW_MCM_ETBRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_MCM_ETBRL(x)          (*(__IO hw_mcm_etbrl_t *) HW_MCM_ETBRL_ADDR(x))
+#define HW_MCM_ETBRL_RD(x)       (HW_MCM_ETBRL(x).U)
+#define HW_MCM_ETBRL_WR(x, v)    (HW_MCM_ETBRL(x).U = (v))
+#define HW_MCM_ETBRL_SET(x, v)   (HW_MCM_ETBRL_WR(x, HW_MCM_ETBRL_RD(x) |  (v)))
+#define HW_MCM_ETBRL_CLR(x, v)   (HW_MCM_ETBRL_WR(x, HW_MCM_ETBRL_RD(x) & ~(v)))
+#define HW_MCM_ETBRL_TOG(x, v)   (HW_MCM_ETBRL_WR(x, HW_MCM_ETBRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_ETBRL bitfields
@@ -887,30 +874,25 @@ typedef union _hw_mcm_etbrl
  * Indicates the 0-mod-4 value the counter reloads to. Writing a non-0-mod-4
  * value to this field results in a bus error.
  */
-//@{
-#define BP_MCM_ETBRL_RELOAD  (0U)          //!< Bit position for MCM_ETBRL_RELOAD.
-#define BM_MCM_ETBRL_RELOAD  (0x000007FFU) //!< Bit mask for MCM_ETBRL_RELOAD.
-#define BS_MCM_ETBRL_RELOAD  (11U)         //!< Bit field size in bits for MCM_ETBRL_RELOAD.
+/*@{*/
+#define BP_MCM_ETBRL_RELOAD  (0U)          /*!< Bit position for MCM_ETBRL_RELOAD. */
+#define BM_MCM_ETBRL_RELOAD  (0x000007FFU) /*!< Bit mask for MCM_ETBRL_RELOAD. */
+#define BS_MCM_ETBRL_RELOAD  (11U)         /*!< Bit field size in bits for MCM_ETBRL_RELOAD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBRL_RELOAD field.
-#define BR_MCM_ETBRL_RELOAD  (HW_MCM_ETBRL.B.RELOAD)
-#endif
+/*! @brief Read current value of the MCM_ETBRL_RELOAD field. */
+#define BR_MCM_ETBRL_RELOAD(x) (HW_MCM_ETBRL(x).B.RELOAD)
 
-//! @brief Format value for bitfield MCM_ETBRL_RELOAD.
-#define BF_MCM_ETBRL_RELOAD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_ETBRL_RELOAD), uint32_t) & BM_MCM_ETBRL_RELOAD)
+/*! @brief Format value for bitfield MCM_ETBRL_RELOAD. */
+#define BF_MCM_ETBRL_RELOAD(v) ((uint32_t)((uint32_t)(v) << BP_MCM_ETBRL_RELOAD) & BM_MCM_ETBRL_RELOAD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RELOAD field to a new value.
-#define BW_MCM_ETBRL_RELOAD(v) (HW_MCM_ETBRL_WR((HW_MCM_ETBRL_RD() & ~BM_MCM_ETBRL_RELOAD) | BF_MCM_ETBRL_RELOAD(v)))
-#endif
-//@}
+/*! @brief Set the RELOAD field to a new value. */
+#define BW_MCM_ETBRL_RELOAD(x, v) (HW_MCM_ETBRL_WR(x, (HW_MCM_ETBRL_RD(x) & ~BM_MCM_ETBRL_RELOAD) | BF_MCM_ETBRL_RELOAD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_ETBCNT - ETB Counter Value register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_ETBCNT - ETB Counter Value register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_ETBCNT - ETB Counter Value register (RO)
  *
@@ -921,23 +903,20 @@ typedef union _hw_mcm_etbcnt
     uint32_t U;
     struct _hw_mcm_etbcnt_bitfields
     {
-        uint32_t COUNTER : 11;         //!< [10:0] Byte Count Counter Value
-        uint32_t RESERVED0 : 21;       //!< [31:11]
+        uint32_t COUNTER : 11;         /*!< [10:0] Byte Count Counter Value */
+        uint32_t RESERVED0 : 21;       /*!< [31:11]  */
     } B;
 } hw_mcm_etbcnt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_ETBCNT register
  */
-//@{
-#define HW_MCM_ETBCNT_ADDR       (REGS_MCM_BASE + 0x1CU)
+/*@{*/
+#define HW_MCM_ETBCNT_ADDR(x)    ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_ETBCNT            (*(__I hw_mcm_etbcnt_t *) HW_MCM_ETBCNT_ADDR)
-#define HW_MCM_ETBCNT_RD()       (HW_MCM_ETBCNT.U)
-#endif
-//@}
+#define HW_MCM_ETBCNT(x)         (*(__I hw_mcm_etbcnt_t *) HW_MCM_ETBCNT_ADDR(x))
+#define HW_MCM_ETBCNT_RD(x)      (HW_MCM_ETBCNT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_ETBCNT bitfields
@@ -948,22 +927,19 @@ typedef union _hw_mcm_etbcnt
  *
  * Indicates the current 0-mod-4 value of the counter.
  */
-//@{
-#define BP_MCM_ETBCNT_COUNTER (0U)         //!< Bit position for MCM_ETBCNT_COUNTER.
-#define BM_MCM_ETBCNT_COUNTER (0x000007FFU) //!< Bit mask for MCM_ETBCNT_COUNTER.
-#define BS_MCM_ETBCNT_COUNTER (11U)        //!< Bit field size in bits for MCM_ETBCNT_COUNTER.
+/*@{*/
+#define BP_MCM_ETBCNT_COUNTER (0U)         /*!< Bit position for MCM_ETBCNT_COUNTER. */
+#define BM_MCM_ETBCNT_COUNTER (0x000007FFU) /*!< Bit mask for MCM_ETBCNT_COUNTER. */
+#define BS_MCM_ETBCNT_COUNTER (11U)        /*!< Bit field size in bits for MCM_ETBCNT_COUNTER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_ETBCNT_COUNTER field.
-#define BR_MCM_ETBCNT_COUNTER (HW_MCM_ETBCNT.B.COUNTER)
-#endif
-//@}
+/*! @brief Read current value of the MCM_ETBCNT_COUNTER field. */
+#define BR_MCM_ETBCNT_COUNTER(x) (HW_MCM_ETBCNT(x).B.COUNTER)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MCM_PID - Process ID register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MCM_PID - Process ID register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MCM_PID - Process ID register (RW)
  *
@@ -979,27 +955,24 @@ typedef union _hw_mcm_pid
     uint32_t U;
     struct _hw_mcm_pid_bitfields
     {
-        uint32_t PID : 8;              //!< [7:0] M0_PID And M1_PID For MPU
-        uint32_t RESERVED0 : 24;       //!< [31:8]
+        uint32_t PID : 8;              /*!< [7:0] M0_PID And M1_PID For MPU */
+        uint32_t RESERVED0 : 24;       /*!< [31:8]  */
     } B;
 } hw_mcm_pid_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MCM_PID register
  */
-//@{
-#define HW_MCM_PID_ADDR          (REGS_MCM_BASE + 0x30U)
+/*@{*/
+#define HW_MCM_PID_ADDR(x)       ((x) + 0x30U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MCM_PID               (*(__IO hw_mcm_pid_t *) HW_MCM_PID_ADDR)
-#define HW_MCM_PID_RD()          (HW_MCM_PID.U)
-#define HW_MCM_PID_WR(v)         (HW_MCM_PID.U = (v))
-#define HW_MCM_PID_SET(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() |  (v)))
-#define HW_MCM_PID_CLR(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() & ~(v)))
-#define HW_MCM_PID_TOG(v)        (HW_MCM_PID_WR(HW_MCM_PID_RD() ^  (v)))
-#endif
-//@}
+#define HW_MCM_PID(x)            (*(__IO hw_mcm_pid_t *) HW_MCM_PID_ADDR(x))
+#define HW_MCM_PID_RD(x)         (HW_MCM_PID(x).U)
+#define HW_MCM_PID_WR(x, v)      (HW_MCM_PID(x).U = (v))
+#define HW_MCM_PID_SET(x, v)     (HW_MCM_PID_WR(x, HW_MCM_PID_RD(x) |  (v)))
+#define HW_MCM_PID_CLR(x, v)     (HW_MCM_PID_WR(x, HW_MCM_PID_RD(x) & ~(v)))
+#define HW_MCM_PID_TOG(x, v)     (HW_MCM_PID_WR(x, HW_MCM_PID_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MCM_PID bitfields
@@ -1010,54 +983,49 @@ typedef union _hw_mcm_pid
  *
  * Drives the M0_PID and M1_PID values in the MPU.
  */
-//@{
-#define BP_MCM_PID_PID       (0U)          //!< Bit position for MCM_PID_PID.
-#define BM_MCM_PID_PID       (0x000000FFU) //!< Bit mask for MCM_PID_PID.
-#define BS_MCM_PID_PID       (8U)          //!< Bit field size in bits for MCM_PID_PID.
+/*@{*/
+#define BP_MCM_PID_PID       (0U)          /*!< Bit position for MCM_PID_PID. */
+#define BM_MCM_PID_PID       (0x000000FFU) /*!< Bit mask for MCM_PID_PID. */
+#define BS_MCM_PID_PID       (8U)          /*!< Bit field size in bits for MCM_PID_PID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MCM_PID_PID field.
-#define BR_MCM_PID_PID       (HW_MCM_PID.B.PID)
-#endif
+/*! @brief Read current value of the MCM_PID_PID field. */
+#define BR_MCM_PID_PID(x)    (HW_MCM_PID(x).B.PID)
 
-//! @brief Format value for bitfield MCM_PID_PID.
-#define BF_MCM_PID_PID(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MCM_PID_PID), uint32_t) & BM_MCM_PID_PID)
+/*! @brief Format value for bitfield MCM_PID_PID. */
+#define BF_MCM_PID_PID(v)    ((uint32_t)((uint32_t)(v) << BP_MCM_PID_PID) & BM_MCM_PID_PID)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PID field to a new value.
-#define BW_MCM_PID_PID(v)    (HW_MCM_PID_WR((HW_MCM_PID_RD() & ~BM_MCM_PID_PID) | BF_MCM_PID_PID(v)))
-#endif
-//@}
+/*! @brief Set the PID field to a new value. */
+#define BW_MCM_PID_PID(x, v) (HW_MCM_PID_WR(x, (HW_MCM_PID_RD(x) & ~BM_MCM_PID_PID) | BF_MCM_PID_PID(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_mcm_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_mcm_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All MCM module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_mcm
 {
     uint8_t _reserved0[8];
-    __I hw_mcm_plasc_t PLASC;              //!< [0x8] Crossbar Switch (AXBS) Slave Configuration
-    __I hw_mcm_plamc_t PLAMC;              //!< [0xA] Crossbar Switch (AXBS) Master Configuration
-    __I hw_mcm_placr_t PLACR;              //!< [0xC] Crossbar Switch (AXBS) Control Register
-    __IO hw_mcm_isr_t ISR;                 //!< [0x10] Interrupt Status Register
-    __IO hw_mcm_etbcc_t ETBCC;             //!< [0x14] ETB Counter Control register
-    __IO hw_mcm_etbrl_t ETBRL;             //!< [0x18] ETB Reload register
-    __I hw_mcm_etbcnt_t ETBCNT;            //!< [0x1C] ETB Counter Value register
+    __I hw_mcm_plasc_t PLASC;              /*!< [0x8] Crossbar Switch (AXBS) Slave Configuration */
+    __I hw_mcm_plamc_t PLAMC;              /*!< [0xA] Crossbar Switch (AXBS) Master Configuration */
+    __IO hw_mcm_cr_t CR;                   /*!< [0xC] Control Register */
+    __IO hw_mcm_iscr_t ISCR;               /*!< [0x10] Interrupt Status Register */
+    __IO hw_mcm_etbcc_t ETBCC;             /*!< [0x14] ETB Counter Control register */
+    __IO hw_mcm_etbrl_t ETBRL;             /*!< [0x18] ETB Reload register */
+    __I hw_mcm_etbcnt_t ETBCNT;            /*!< [0x1C] ETB Counter Value register */
     uint8_t _reserved1[16];
-    __IO hw_mcm_pid_t PID;                 //!< [0x30] Process ID register
+    __IO hw_mcm_pid_t PID;                 /*!< [0x30] Process ID register */
 } hw_mcm_t;
 #pragma pack()
 
-//! @brief Macro to access all MCM registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_MCM</code>.
-#define HW_MCM         (*(hw_mcm_t *) REGS_MCM_BASE)
-#endif
+/*! @brief Macro to access all MCM registers. */
+/*! @param x MCM module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_MCM(MCM_BASE)</code>. */
+#define HW_MCM(x)      (*(hw_mcm_t *)(x))
 
-#endif // __HW_MCM_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_MCM_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

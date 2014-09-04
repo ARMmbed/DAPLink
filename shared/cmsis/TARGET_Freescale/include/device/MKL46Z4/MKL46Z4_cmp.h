@@ -21,7 +21,8 @@
 #ifndef __HW_CMP_REGISTERS_H__
 #define __HW_CMP_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL46Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL46Z4 CMP
@@ -39,33 +40,12 @@
  * - hw_cmp_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_CMP_BASE
-#define HW_CMP_INSTANCE_COUNT (1U) //!< Number of instances of the CMP module.
-#define HW_CMP0 (0U) //!< Instance number for CMP0.
-#define REGS_CMP0_BASE (0x40073000U) //!< Base address for CMP0.
+#define HW_CMP_INSTANCE_COUNT (1U) /*!< Number of instances of the CMP module. */
 
-//! @brief Table of base addresses for CMP instances.
-static const uint32_t __g_regs_CMP_base_addresses[] = {
-        REGS_CMP0_BASE,
-    };
+/*******************************************************************************
+ * HW_CMP_CR0 - CMP Control Register 0
+ ******************************************************************************/
 
-//! @brief Get the base address of CMP by instance number.
-//! @param x CMP instance number, from 0 through 0.
-#define REGS_CMP_BASE(x) (__g_regs_CMP_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of CMP.
-#define REGS_CMP_INSTANCE(b) ((b) == REGS_CMP0_BASE ? HW_CMP0 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_CMP_CR0 - CMP Control Register 0
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_CR0 - CMP Control Register 0 (RW)
  *
@@ -76,30 +56,27 @@ typedef union _hw_cmp_cr0
     uint8_t U;
     struct _hw_cmp_cr0_bitfields
     {
-        uint8_t HYSTCTR : 2;           //!< [1:0] Comparator hard block hysteresis
-                                       //! control
-        uint8_t RESERVED0 : 2;         //!< [3:2]
-        uint8_t FILTER_CNT : 3;        //!< [6:4] Filter Sample Count
-        uint8_t RESERVED1 : 1;         //!< [7]
+        uint8_t HYSTCTR : 2;           /*!< [1:0] Comparator hard block hysteresis
+                                        * control */
+        uint8_t RESERVED0 : 2;         /*!< [3:2]  */
+        uint8_t FILTER_CNT : 3;        /*!< [6:4] Filter Sample Count */
+        uint8_t RESERVED1 : 1;         /*!< [7]  */
     } B;
 } hw_cmp_cr0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_CR0 register
  */
-//@{
-#define HW_CMP_CR0_ADDR(x)       (REGS_CMP_BASE(x) + 0x0U)
+/*@{*/
+#define HW_CMP_CR0_ADDR(x)       ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_CR0(x)            (*(__IO hw_cmp_cr0_t *) HW_CMP_CR0_ADDR(x))
 #define HW_CMP_CR0_RD(x)         (HW_CMP_CR0(x).U)
 #define HW_CMP_CR0_WR(x, v)      (HW_CMP_CR0(x).U = (v))
 #define HW_CMP_CR0_SET(x, v)     (BME_OR8(HW_CMP_CR0_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_CR0_CLR(x, v)     (BME_AND8(HW_CMP_CR0_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_CR0_TOG(x, v)     (BME_XOR8(HW_CMP_CR0_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_CR0 bitfields
@@ -118,24 +95,20 @@ typedef union _hw_cmp_cr0
  * - 10 - Level 2
  * - 11 - Level 3
  */
-//@{
-#define BP_CMP_CR0_HYSTCTR   (0U)          //!< Bit position for CMP_CR0_HYSTCTR.
-#define BM_CMP_CR0_HYSTCTR   (0x03U)       //!< Bit mask for CMP_CR0_HYSTCTR.
-#define BS_CMP_CR0_HYSTCTR   (2U)          //!< Bit field size in bits for CMP_CR0_HYSTCTR.
+/*@{*/
+#define BP_CMP_CR0_HYSTCTR   (0U)          /*!< Bit position for CMP_CR0_HYSTCTR. */
+#define BM_CMP_CR0_HYSTCTR   (0x03U)       /*!< Bit mask for CMP_CR0_HYSTCTR. */
+#define BS_CMP_CR0_HYSTCTR   (2U)          /*!< Bit field size in bits for CMP_CR0_HYSTCTR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR0_HYSTCTR field.
+/*! @brief Read current value of the CMP_CR0_HYSTCTR field. */
 #define BR_CMP_CR0_HYSTCTR(x) (BME_UBFX8(HW_CMP_CR0_ADDR(x), BP_CMP_CR0_HYSTCTR, BS_CMP_CR0_HYSTCTR))
-#endif
 
-//! @brief Format value for bitfield CMP_CR0_HYSTCTR.
-#define BF_CMP_CR0_HYSTCTR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR0_HYSTCTR), uint8_t) & BM_CMP_CR0_HYSTCTR)
+/*! @brief Format value for bitfield CMP_CR0_HYSTCTR. */
+#define BF_CMP_CR0_HYSTCTR(v) ((uint8_t)((uint8_t)(v) << BP_CMP_CR0_HYSTCTR) & BM_CMP_CR0_HYSTCTR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HYSTCTR field to a new value.
+/*! @brief Set the HYSTCTR field to a new value. */
 #define BW_CMP_CR0_HYSTCTR(x, v) (BME_BFI8(HW_CMP_CR0_ADDR(x), ((uint8_t)(v) << BP_CMP_CR0_HYSTCTR), BP_CMP_CR0_HYSTCTR, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR0, field FILTER_CNT[6:4] (RW)
@@ -155,30 +128,25 @@ typedef union _hw_cmp_cr0
  * - 110 - 6 consecutive samples must agree.
  * - 111 - 7 consecutive samples must agree.
  */
-//@{
-#define BP_CMP_CR0_FILTER_CNT (4U)         //!< Bit position for CMP_CR0_FILTER_CNT.
-#define BM_CMP_CR0_FILTER_CNT (0x70U)      //!< Bit mask for CMP_CR0_FILTER_CNT.
-#define BS_CMP_CR0_FILTER_CNT (3U)         //!< Bit field size in bits for CMP_CR0_FILTER_CNT.
+/*@{*/
+#define BP_CMP_CR0_FILTER_CNT (4U)         /*!< Bit position for CMP_CR0_FILTER_CNT. */
+#define BM_CMP_CR0_FILTER_CNT (0x70U)      /*!< Bit mask for CMP_CR0_FILTER_CNT. */
+#define BS_CMP_CR0_FILTER_CNT (3U)         /*!< Bit field size in bits for CMP_CR0_FILTER_CNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR0_FILTER_CNT field.
+/*! @brief Read current value of the CMP_CR0_FILTER_CNT field. */
 #define BR_CMP_CR0_FILTER_CNT(x) (BME_UBFX8(HW_CMP_CR0_ADDR(x), BP_CMP_CR0_FILTER_CNT, BS_CMP_CR0_FILTER_CNT))
-#endif
 
-//! @brief Format value for bitfield CMP_CR0_FILTER_CNT.
-#define BF_CMP_CR0_FILTER_CNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR0_FILTER_CNT), uint8_t) & BM_CMP_CR0_FILTER_CNT)
+/*! @brief Format value for bitfield CMP_CR0_FILTER_CNT. */
+#define BF_CMP_CR0_FILTER_CNT(v) ((uint8_t)((uint8_t)(v) << BP_CMP_CR0_FILTER_CNT) & BM_CMP_CR0_FILTER_CNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILTER_CNT field to a new value.
+/*! @brief Set the FILTER_CNT field to a new value. */
 #define BW_CMP_CR0_FILTER_CNT(x, v) (BME_BFI8(HW_CMP_CR0_ADDR(x), ((uint8_t)(v) << BP_CMP_CR0_FILTER_CNT), BP_CMP_CR0_FILTER_CNT, 3))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMP_CR1 - CMP Control Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMP_CR1 - CMP Control Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_CR1 - CMP Control Register 1 (RW)
  *
@@ -189,33 +157,30 @@ typedef union _hw_cmp_cr1
     uint8_t U;
     struct _hw_cmp_cr1_bitfields
     {
-        uint8_t EN : 1;                //!< [0] Comparator Module Enable
-        uint8_t OPE : 1;               //!< [1] Comparator Output Pin Enable
-        uint8_t COS : 1;               //!< [2] Comparator Output Select
-        uint8_t INV : 1;               //!< [3] Comparator INVERT
-        uint8_t PMODE : 1;             //!< [4] Power Mode Select
-        uint8_t TRIGM : 1;             //!< [5] Trigger Mode Enable
-        uint8_t WE : 1;                //!< [6] Windowing Enable
-        uint8_t SE : 1;                //!< [7] Sample Enable
+        uint8_t EN : 1;                /*!< [0] Comparator Module Enable */
+        uint8_t OPE : 1;               /*!< [1] Comparator Output Pin Enable */
+        uint8_t COS : 1;               /*!< [2] Comparator Output Select */
+        uint8_t INV : 1;               /*!< [3] Comparator INVERT */
+        uint8_t PMODE : 1;             /*!< [4] Power Mode Select */
+        uint8_t TRIGM : 1;             /*!< [5] Trigger Mode Enable */
+        uint8_t WE : 1;                /*!< [6] Windowing Enable */
+        uint8_t SE : 1;                /*!< [7] Sample Enable */
     } B;
 } hw_cmp_cr1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_CR1 register
  */
-//@{
-#define HW_CMP_CR1_ADDR(x)       (REGS_CMP_BASE(x) + 0x1U)
+/*@{*/
+#define HW_CMP_CR1_ADDR(x)       ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_CR1(x)            (*(__IO hw_cmp_cr1_t *) HW_CMP_CR1_ADDR(x))
 #define HW_CMP_CR1_RD(x)         (HW_CMP_CR1(x).U)
 #define HW_CMP_CR1_WR(x, v)      (HW_CMP_CR1(x).U = (v))
 #define HW_CMP_CR1_SET(x, v)     (BME_OR8(HW_CMP_CR1_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_CR1_CLR(x, v)     (BME_AND8(HW_CMP_CR1_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_CR1_TOG(x, v)     (BME_XOR8(HW_CMP_CR1_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_CR1 bitfields
@@ -233,24 +198,20 @@ typedef union _hw_cmp_cr1
  * - 0 - Analog Comparator is disabled.
  * - 1 - Analog Comparator is enabled.
  */
-//@{
-#define BP_CMP_CR1_EN        (0U)          //!< Bit position for CMP_CR1_EN.
-#define BM_CMP_CR1_EN        (0x01U)       //!< Bit mask for CMP_CR1_EN.
-#define BS_CMP_CR1_EN        (1U)          //!< Bit field size in bits for CMP_CR1_EN.
+/*@{*/
+#define BP_CMP_CR1_EN        (0U)          /*!< Bit position for CMP_CR1_EN. */
+#define BM_CMP_CR1_EN        (0x01U)       /*!< Bit mask for CMP_CR1_EN. */
+#define BS_CMP_CR1_EN        (1U)          /*!< Bit field size in bits for CMP_CR1_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_EN field.
+/*! @brief Read current value of the CMP_CR1_EN field. */
 #define BR_CMP_CR1_EN(x)     (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_EN, BS_CMP_CR1_EN))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_EN.
-#define BF_CMP_CR1_EN(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_EN), uint8_t) & BM_CMP_CR1_EN)
+/*! @brief Format value for bitfield CMP_CR1_EN. */
+#define BF_CMP_CR1_EN(v)     ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_EN) & BM_CMP_CR1_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EN field to a new value.
+/*! @brief Set the EN field to a new value. */
 #define BW_CMP_CR1_EN(x, v)  (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_EN), BP_CMP_CR1_EN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field OPE[1] (RW)
@@ -263,24 +224,20 @@ typedef union _hw_cmp_cr1
  *     comparator owns the pin. If the comparator does not own the field, this bit has no
  *     effect.
  */
-//@{
-#define BP_CMP_CR1_OPE       (1U)          //!< Bit position for CMP_CR1_OPE.
-#define BM_CMP_CR1_OPE       (0x02U)       //!< Bit mask for CMP_CR1_OPE.
-#define BS_CMP_CR1_OPE       (1U)          //!< Bit field size in bits for CMP_CR1_OPE.
+/*@{*/
+#define BP_CMP_CR1_OPE       (1U)          /*!< Bit position for CMP_CR1_OPE. */
+#define BM_CMP_CR1_OPE       (0x02U)       /*!< Bit mask for CMP_CR1_OPE. */
+#define BS_CMP_CR1_OPE       (1U)          /*!< Bit field size in bits for CMP_CR1_OPE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_OPE field.
+/*! @brief Read current value of the CMP_CR1_OPE field. */
 #define BR_CMP_CR1_OPE(x)    (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_OPE, BS_CMP_CR1_OPE))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_OPE.
-#define BF_CMP_CR1_OPE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_OPE), uint8_t) & BM_CMP_CR1_OPE)
+/*! @brief Format value for bitfield CMP_CR1_OPE. */
+#define BF_CMP_CR1_OPE(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_OPE) & BM_CMP_CR1_OPE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OPE field to a new value.
+/*! @brief Set the OPE field to a new value. */
 #define BW_CMP_CR1_OPE(x, v) (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_OPE), BP_CMP_CR1_OPE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field COS[2] (RW)
@@ -289,24 +246,20 @@ typedef union _hw_cmp_cr1
  * - 0 - Set the filtered comparator output (CMPO) to equal COUT.
  * - 1 - Set the unfiltered comparator output (CMPO) to equal COUTA.
  */
-//@{
-#define BP_CMP_CR1_COS       (2U)          //!< Bit position for CMP_CR1_COS.
-#define BM_CMP_CR1_COS       (0x04U)       //!< Bit mask for CMP_CR1_COS.
-#define BS_CMP_CR1_COS       (1U)          //!< Bit field size in bits for CMP_CR1_COS.
+/*@{*/
+#define BP_CMP_CR1_COS       (2U)          /*!< Bit position for CMP_CR1_COS. */
+#define BM_CMP_CR1_COS       (0x04U)       /*!< Bit mask for CMP_CR1_COS. */
+#define BS_CMP_CR1_COS       (1U)          /*!< Bit field size in bits for CMP_CR1_COS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_COS field.
+/*! @brief Read current value of the CMP_CR1_COS field. */
 #define BR_CMP_CR1_COS(x)    (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_COS, BS_CMP_CR1_COS))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_COS.
-#define BF_CMP_CR1_COS(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_COS), uint8_t) & BM_CMP_CR1_COS)
+/*! @brief Format value for bitfield CMP_CR1_COS. */
+#define BF_CMP_CR1_COS(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_COS) & BM_CMP_CR1_COS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COS field to a new value.
+/*! @brief Set the COS field to a new value. */
 #define BW_CMP_CR1_COS(x, v) (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_COS), BP_CMP_CR1_COS, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field INV[3] (RW)
@@ -319,24 +272,20 @@ typedef union _hw_cmp_cr1
  * - 0 - Does not invert the comparator output.
  * - 1 - Inverts the comparator output.
  */
-//@{
-#define BP_CMP_CR1_INV       (3U)          //!< Bit position for CMP_CR1_INV.
-#define BM_CMP_CR1_INV       (0x08U)       //!< Bit mask for CMP_CR1_INV.
-#define BS_CMP_CR1_INV       (1U)          //!< Bit field size in bits for CMP_CR1_INV.
+/*@{*/
+#define BP_CMP_CR1_INV       (3U)          /*!< Bit position for CMP_CR1_INV. */
+#define BM_CMP_CR1_INV       (0x08U)       /*!< Bit mask for CMP_CR1_INV. */
+#define BS_CMP_CR1_INV       (1U)          /*!< Bit field size in bits for CMP_CR1_INV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_INV field.
+/*! @brief Read current value of the CMP_CR1_INV field. */
 #define BR_CMP_CR1_INV(x)    (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_INV, BS_CMP_CR1_INV))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_INV.
-#define BF_CMP_CR1_INV(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_INV), uint8_t) & BM_CMP_CR1_INV)
+/*! @brief Format value for bitfield CMP_CR1_INV. */
+#define BF_CMP_CR1_INV(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_INV) & BM_CMP_CR1_INV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INV field to a new value.
+/*! @brief Set the INV field to a new value. */
 #define BW_CMP_CR1_INV(x, v) (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_INV), BP_CMP_CR1_INV, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field PMODE[4] (RW)
@@ -349,24 +298,20 @@ typedef union _hw_cmp_cr1
  * - 1 - High-Speed (HS) Comparison mode selected. In this mode, CMP has faster
  *     output propagation delay and higher current consumption.
  */
-//@{
-#define BP_CMP_CR1_PMODE     (4U)          //!< Bit position for CMP_CR1_PMODE.
-#define BM_CMP_CR1_PMODE     (0x10U)       //!< Bit mask for CMP_CR1_PMODE.
-#define BS_CMP_CR1_PMODE     (1U)          //!< Bit field size in bits for CMP_CR1_PMODE.
+/*@{*/
+#define BP_CMP_CR1_PMODE     (4U)          /*!< Bit position for CMP_CR1_PMODE. */
+#define BM_CMP_CR1_PMODE     (0x10U)       /*!< Bit mask for CMP_CR1_PMODE. */
+#define BS_CMP_CR1_PMODE     (1U)          /*!< Bit field size in bits for CMP_CR1_PMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_PMODE field.
+/*! @brief Read current value of the CMP_CR1_PMODE field. */
 #define BR_CMP_CR1_PMODE(x)  (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_PMODE, BS_CMP_CR1_PMODE))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_PMODE.
-#define BF_CMP_CR1_PMODE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_PMODE), uint8_t) & BM_CMP_CR1_PMODE)
+/*! @brief Format value for bitfield CMP_CR1_PMODE. */
+#define BF_CMP_CR1_PMODE(v)  ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_PMODE) & BM_CMP_CR1_PMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PMODE field to a new value.
+/*! @brief Set the PMODE field to a new value. */
 #define BW_CMP_CR1_PMODE(x, v) (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_PMODE), BP_CMP_CR1_PMODE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field TRIGM[5] (RW)
@@ -383,24 +328,20 @@ typedef union _hw_cmp_cr1
  * - 0 - Trigger mode is disabled.
  * - 1 - Trigger mode is enabled.
  */
-//@{
-#define BP_CMP_CR1_TRIGM     (5U)          //!< Bit position for CMP_CR1_TRIGM.
-#define BM_CMP_CR1_TRIGM     (0x20U)       //!< Bit mask for CMP_CR1_TRIGM.
-#define BS_CMP_CR1_TRIGM     (1U)          //!< Bit field size in bits for CMP_CR1_TRIGM.
+/*@{*/
+#define BP_CMP_CR1_TRIGM     (5U)          /*!< Bit position for CMP_CR1_TRIGM. */
+#define BM_CMP_CR1_TRIGM     (0x20U)       /*!< Bit mask for CMP_CR1_TRIGM. */
+#define BS_CMP_CR1_TRIGM     (1U)          /*!< Bit field size in bits for CMP_CR1_TRIGM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_TRIGM field.
+/*! @brief Read current value of the CMP_CR1_TRIGM field. */
 #define BR_CMP_CR1_TRIGM(x)  (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_TRIGM, BS_CMP_CR1_TRIGM))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_TRIGM.
-#define BF_CMP_CR1_TRIGM(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_TRIGM), uint8_t) & BM_CMP_CR1_TRIGM)
+/*! @brief Format value for bitfield CMP_CR1_TRIGM. */
+#define BF_CMP_CR1_TRIGM(v)  ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_TRIGM) & BM_CMP_CR1_TRIGM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRIGM field to a new value.
+/*! @brief Set the TRIGM field to a new value. */
 #define BW_CMP_CR1_TRIGM(x, v) (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_TRIGM), BP_CMP_CR1_TRIGM, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field WE[6] (RW)
@@ -412,24 +353,20 @@ typedef union _hw_cmp_cr1
  * - 0 - Windowing mode is not selected.
  * - 1 - Windowing mode is selected.
  */
-//@{
-#define BP_CMP_CR1_WE        (6U)          //!< Bit position for CMP_CR1_WE.
-#define BM_CMP_CR1_WE        (0x40U)       //!< Bit mask for CMP_CR1_WE.
-#define BS_CMP_CR1_WE        (1U)          //!< Bit field size in bits for CMP_CR1_WE.
+/*@{*/
+#define BP_CMP_CR1_WE        (6U)          /*!< Bit position for CMP_CR1_WE. */
+#define BM_CMP_CR1_WE        (0x40U)       /*!< Bit mask for CMP_CR1_WE. */
+#define BS_CMP_CR1_WE        (1U)          /*!< Bit field size in bits for CMP_CR1_WE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_WE field.
+/*! @brief Read current value of the CMP_CR1_WE field. */
 #define BR_CMP_CR1_WE(x)     (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_WE, BS_CMP_CR1_WE))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_WE.
-#define BF_CMP_CR1_WE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_WE), uint8_t) & BM_CMP_CR1_WE)
+/*! @brief Format value for bitfield CMP_CR1_WE. */
+#define BF_CMP_CR1_WE(v)     ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_WE) & BM_CMP_CR1_WE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WE field to a new value.
+/*! @brief Set the WE field to a new value. */
 #define BW_CMP_CR1_WE(x, v)  (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_WE), BP_CMP_CR1_WE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_CR1, field SE[7] (RW)
@@ -441,30 +378,25 @@ typedef union _hw_cmp_cr1
  * - 0 - Sampling mode is not selected.
  * - 1 - Sampling mode is selected.
  */
-//@{
-#define BP_CMP_CR1_SE        (7U)          //!< Bit position for CMP_CR1_SE.
-#define BM_CMP_CR1_SE        (0x80U)       //!< Bit mask for CMP_CR1_SE.
-#define BS_CMP_CR1_SE        (1U)          //!< Bit field size in bits for CMP_CR1_SE.
+/*@{*/
+#define BP_CMP_CR1_SE        (7U)          /*!< Bit position for CMP_CR1_SE. */
+#define BM_CMP_CR1_SE        (0x80U)       /*!< Bit mask for CMP_CR1_SE. */
+#define BS_CMP_CR1_SE        (1U)          /*!< Bit field size in bits for CMP_CR1_SE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_CR1_SE field.
+/*! @brief Read current value of the CMP_CR1_SE field. */
 #define BR_CMP_CR1_SE(x)     (BME_UBFX8(HW_CMP_CR1_ADDR(x), BP_CMP_CR1_SE, BS_CMP_CR1_SE))
-#endif
 
-//! @brief Format value for bitfield CMP_CR1_SE.
-#define BF_CMP_CR1_SE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_CR1_SE), uint8_t) & BM_CMP_CR1_SE)
+/*! @brief Format value for bitfield CMP_CR1_SE. */
+#define BF_CMP_CR1_SE(v)     ((uint8_t)((uint8_t)(v) << BP_CMP_CR1_SE) & BM_CMP_CR1_SE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SE field to a new value.
+/*! @brief Set the SE field to a new value. */
 #define BW_CMP_CR1_SE(x, v)  (BME_BFI8(HW_CMP_CR1_ADDR(x), ((uint8_t)(v) << BP_CMP_CR1_SE), BP_CMP_CR1_SE, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMP_FPR - CMP Filter Period Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMP_FPR - CMP Filter Period Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_FPR - CMP Filter Period Register (RW)
  *
@@ -475,26 +407,23 @@ typedef union _hw_cmp_fpr
     uint8_t U;
     struct _hw_cmp_fpr_bitfields
     {
-        uint8_t FILT_PER : 8;          //!< [7:0] Filter Sample Period
+        uint8_t FILT_PER : 8;          /*!< [7:0] Filter Sample Period */
     } B;
 } hw_cmp_fpr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_FPR register
  */
-//@{
-#define HW_CMP_FPR_ADDR(x)       (REGS_CMP_BASE(x) + 0x2U)
+/*@{*/
+#define HW_CMP_FPR_ADDR(x)       ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_FPR(x)            (*(__IO hw_cmp_fpr_t *) HW_CMP_FPR_ADDR(x))
 #define HW_CMP_FPR_RD(x)         (HW_CMP_FPR(x).U)
 #define HW_CMP_FPR_WR(x, v)      (HW_CMP_FPR(x).U = (v))
 #define HW_CMP_FPR_SET(x, v)     (BME_OR8(HW_CMP_FPR_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_FPR_CLR(x, v)     (BME_AND8(HW_CMP_FPR_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_FPR_TOG(x, v)     (BME_XOR8(HW_CMP_FPR_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_FPR bitfields
@@ -509,30 +438,25 @@ typedef union _hw_cmp_fpr
  * has no effect when CR1[SE]=1. In that case, the external SAMPLE signal is
  * used to determine the sampling period.
  */
-//@{
-#define BP_CMP_FPR_FILT_PER  (0U)          //!< Bit position for CMP_FPR_FILT_PER.
-#define BM_CMP_FPR_FILT_PER  (0xFFU)       //!< Bit mask for CMP_FPR_FILT_PER.
-#define BS_CMP_FPR_FILT_PER  (8U)          //!< Bit field size in bits for CMP_FPR_FILT_PER.
+/*@{*/
+#define BP_CMP_FPR_FILT_PER  (0U)          /*!< Bit position for CMP_FPR_FILT_PER. */
+#define BM_CMP_FPR_FILT_PER  (0xFFU)       /*!< Bit mask for CMP_FPR_FILT_PER. */
+#define BS_CMP_FPR_FILT_PER  (8U)          /*!< Bit field size in bits for CMP_FPR_FILT_PER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_FPR_FILT_PER field.
-#define BR_CMP_FPR_FILT_PER(x) (BME_UBFX8(HW_CMP_FPR_ADDR(x), BP_CMP_FPR_FILT_PER, BS_CMP_FPR_FILT_PER))
-#endif
+/*! @brief Read current value of the CMP_FPR_FILT_PER field. */
+#define BR_CMP_FPR_FILT_PER(x) (HW_CMP_FPR(x).U)
 
-//! @brief Format value for bitfield CMP_FPR_FILT_PER.
-#define BF_CMP_FPR_FILT_PER(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_FPR_FILT_PER), uint8_t) & BM_CMP_FPR_FILT_PER)
+/*! @brief Format value for bitfield CMP_FPR_FILT_PER. */
+#define BF_CMP_FPR_FILT_PER(v) ((uint8_t)((uint8_t)(v) << BP_CMP_FPR_FILT_PER) & BM_CMP_FPR_FILT_PER)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FILT_PER field to a new value.
-#define BW_CMP_FPR_FILT_PER(x, v) (BME_BFI8(HW_CMP_FPR_ADDR(x), ((uint8_t)(v) << BP_CMP_FPR_FILT_PER), BP_CMP_FPR_FILT_PER, 8))
-#endif
-//@}
+/*! @brief Set the FILT_PER field to a new value. */
+#define BW_CMP_FPR_FILT_PER(x, v) (HW_CMP_FPR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMP_SCR - CMP Status and Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMP_SCR - CMP Status and Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_SCR - CMP Status and Control Register (RW)
  *
@@ -543,33 +467,30 @@ typedef union _hw_cmp_scr
     uint8_t U;
     struct _hw_cmp_scr_bitfields
     {
-        uint8_t COUT : 1;              //!< [0] Analog Comparator Output
-        uint8_t CFF : 1;               //!< [1] Analog Comparator Flag Falling
-        uint8_t CFR : 1;               //!< [2] Analog Comparator Flag Rising
-        uint8_t IEF : 1;               //!< [3] Comparator Interrupt Enable Falling
-        uint8_t IER : 1;               //!< [4] Comparator Interrupt Enable Rising
-        uint8_t RESERVED0 : 1;         //!< [5]
-        uint8_t DMAEN : 1;             //!< [6] DMA Enable Control
-        uint8_t RESERVED1 : 1;         //!< [7]
+        uint8_t COUT : 1;              /*!< [0] Analog Comparator Output */
+        uint8_t CFF : 1;               /*!< [1] Analog Comparator Flag Falling */
+        uint8_t CFR : 1;               /*!< [2] Analog Comparator Flag Rising */
+        uint8_t IEF : 1;               /*!< [3] Comparator Interrupt Enable Falling */
+        uint8_t IER : 1;               /*!< [4] Comparator Interrupt Enable Rising */
+        uint8_t RESERVED0 : 1;         /*!< [5]  */
+        uint8_t DMAEN : 1;             /*!< [6] DMA Enable Control */
+        uint8_t RESERVED1 : 1;         /*!< [7]  */
     } B;
 } hw_cmp_scr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_SCR register
  */
-//@{
-#define HW_CMP_SCR_ADDR(x)       (REGS_CMP_BASE(x) + 0x3U)
+/*@{*/
+#define HW_CMP_SCR_ADDR(x)       ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_SCR(x)            (*(__IO hw_cmp_scr_t *) HW_CMP_SCR_ADDR(x))
 #define HW_CMP_SCR_RD(x)         (HW_CMP_SCR(x).U)
 #define HW_CMP_SCR_WR(x, v)      (HW_CMP_SCR(x).U = (v))
 #define HW_CMP_SCR_SET(x, v)     (BME_OR8(HW_CMP_SCR_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_SCR_CLR(x, v)     (BME_AND8(HW_CMP_SCR_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_SCR_TOG(x, v)     (BME_XOR8(HW_CMP_SCR_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_SCR bitfields
@@ -582,16 +503,14 @@ typedef union _hw_cmp_scr
  * field is reset to 0 and will read as CR1[INV] when the Analog Comparator module
  * is disabled, that is, when CR1[EN] = 0. Writes to this field are ignored.
  */
-//@{
-#define BP_CMP_SCR_COUT      (0U)          //!< Bit position for CMP_SCR_COUT.
-#define BM_CMP_SCR_COUT      (0x01U)       //!< Bit mask for CMP_SCR_COUT.
-#define BS_CMP_SCR_COUT      (1U)          //!< Bit field size in bits for CMP_SCR_COUT.
+/*@{*/
+#define BP_CMP_SCR_COUT      (0U)          /*!< Bit position for CMP_SCR_COUT. */
+#define BM_CMP_SCR_COUT      (0x01U)       /*!< Bit mask for CMP_SCR_COUT. */
+#define BS_CMP_SCR_COUT      (1U)          /*!< Bit field size in bits for CMP_SCR_COUT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_COUT field.
+/*! @brief Read current value of the CMP_SCR_COUT field. */
 #define BR_CMP_SCR_COUT(x)   (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_COUT, BS_CMP_SCR_COUT))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_SCR, field CFF[1] (W1C)
@@ -603,24 +522,20 @@ typedef union _hw_cmp_scr
  * - 0 - Falling-edge on COUT has not been detected.
  * - 1 - Falling-edge on COUT has occurred.
  */
-//@{
-#define BP_CMP_SCR_CFF       (1U)          //!< Bit position for CMP_SCR_CFF.
-#define BM_CMP_SCR_CFF       (0x02U)       //!< Bit mask for CMP_SCR_CFF.
-#define BS_CMP_SCR_CFF       (1U)          //!< Bit field size in bits for CMP_SCR_CFF.
+/*@{*/
+#define BP_CMP_SCR_CFF       (1U)          /*!< Bit position for CMP_SCR_CFF. */
+#define BM_CMP_SCR_CFF       (0x02U)       /*!< Bit mask for CMP_SCR_CFF. */
+#define BS_CMP_SCR_CFF       (1U)          /*!< Bit field size in bits for CMP_SCR_CFF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_CFF field.
+/*! @brief Read current value of the CMP_SCR_CFF field. */
 #define BR_CMP_SCR_CFF(x)    (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_CFF, BS_CMP_SCR_CFF))
-#endif
 
-//! @brief Format value for bitfield CMP_SCR_CFF.
-#define BF_CMP_SCR_CFF(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_SCR_CFF), uint8_t) & BM_CMP_SCR_CFF)
+/*! @brief Format value for bitfield CMP_SCR_CFF. */
+#define BF_CMP_SCR_CFF(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_SCR_CFF) & BM_CMP_SCR_CFF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CFF field to a new value.
+/*! @brief Set the CFF field to a new value. */
 #define BW_CMP_SCR_CFF(x, v) (BME_BFI8(HW_CMP_SCR_ADDR(x), ((uint8_t)(v) << BP_CMP_SCR_CFF), BP_CMP_SCR_CFF, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_SCR, field CFR[2] (W1C)
@@ -632,24 +547,20 @@ typedef union _hw_cmp_scr
  * - 0 - Rising-edge on COUT has not been detected.
  * - 1 - Rising-edge on COUT has occurred.
  */
-//@{
-#define BP_CMP_SCR_CFR       (2U)          //!< Bit position for CMP_SCR_CFR.
-#define BM_CMP_SCR_CFR       (0x04U)       //!< Bit mask for CMP_SCR_CFR.
-#define BS_CMP_SCR_CFR       (1U)          //!< Bit field size in bits for CMP_SCR_CFR.
+/*@{*/
+#define BP_CMP_SCR_CFR       (2U)          /*!< Bit position for CMP_SCR_CFR. */
+#define BM_CMP_SCR_CFR       (0x04U)       /*!< Bit mask for CMP_SCR_CFR. */
+#define BS_CMP_SCR_CFR       (1U)          /*!< Bit field size in bits for CMP_SCR_CFR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_CFR field.
+/*! @brief Read current value of the CMP_SCR_CFR field. */
 #define BR_CMP_SCR_CFR(x)    (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_CFR, BS_CMP_SCR_CFR))
-#endif
 
-//! @brief Format value for bitfield CMP_SCR_CFR.
-#define BF_CMP_SCR_CFR(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_SCR_CFR), uint8_t) & BM_CMP_SCR_CFR)
+/*! @brief Format value for bitfield CMP_SCR_CFR. */
+#define BF_CMP_SCR_CFR(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_SCR_CFR) & BM_CMP_SCR_CFR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CFR field to a new value.
+/*! @brief Set the CFR field to a new value. */
 #define BW_CMP_SCR_CFR(x, v) (BME_BFI8(HW_CMP_SCR_ADDR(x), ((uint8_t)(v) << BP_CMP_SCR_CFR), BP_CMP_SCR_CFR, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_SCR, field IEF[3] (RW)
@@ -661,24 +572,20 @@ typedef union _hw_cmp_scr
  * - 0 - Interrupt is disabled.
  * - 1 - Interrupt is enabled.
  */
-//@{
-#define BP_CMP_SCR_IEF       (3U)          //!< Bit position for CMP_SCR_IEF.
-#define BM_CMP_SCR_IEF       (0x08U)       //!< Bit mask for CMP_SCR_IEF.
-#define BS_CMP_SCR_IEF       (1U)          //!< Bit field size in bits for CMP_SCR_IEF.
+/*@{*/
+#define BP_CMP_SCR_IEF       (3U)          /*!< Bit position for CMP_SCR_IEF. */
+#define BM_CMP_SCR_IEF       (0x08U)       /*!< Bit mask for CMP_SCR_IEF. */
+#define BS_CMP_SCR_IEF       (1U)          /*!< Bit field size in bits for CMP_SCR_IEF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_IEF field.
+/*! @brief Read current value of the CMP_SCR_IEF field. */
 #define BR_CMP_SCR_IEF(x)    (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_IEF, BS_CMP_SCR_IEF))
-#endif
 
-//! @brief Format value for bitfield CMP_SCR_IEF.
-#define BF_CMP_SCR_IEF(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_SCR_IEF), uint8_t) & BM_CMP_SCR_IEF)
+/*! @brief Format value for bitfield CMP_SCR_IEF. */
+#define BF_CMP_SCR_IEF(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_SCR_IEF) & BM_CMP_SCR_IEF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IEF field to a new value.
+/*! @brief Set the IEF field to a new value. */
 #define BW_CMP_SCR_IEF(x, v) (BME_BFI8(HW_CMP_SCR_ADDR(x), ((uint8_t)(v) << BP_CMP_SCR_IEF), BP_CMP_SCR_IEF, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_SCR, field IER[4] (RW)
@@ -690,24 +597,20 @@ typedef union _hw_cmp_scr
  * - 0 - Interrupt is disabled.
  * - 1 - Interrupt is enabled.
  */
-//@{
-#define BP_CMP_SCR_IER       (4U)          //!< Bit position for CMP_SCR_IER.
-#define BM_CMP_SCR_IER       (0x10U)       //!< Bit mask for CMP_SCR_IER.
-#define BS_CMP_SCR_IER       (1U)          //!< Bit field size in bits for CMP_SCR_IER.
+/*@{*/
+#define BP_CMP_SCR_IER       (4U)          /*!< Bit position for CMP_SCR_IER. */
+#define BM_CMP_SCR_IER       (0x10U)       /*!< Bit mask for CMP_SCR_IER. */
+#define BS_CMP_SCR_IER       (1U)          /*!< Bit field size in bits for CMP_SCR_IER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_IER field.
+/*! @brief Read current value of the CMP_SCR_IER field. */
 #define BR_CMP_SCR_IER(x)    (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_IER, BS_CMP_SCR_IER))
-#endif
 
-//! @brief Format value for bitfield CMP_SCR_IER.
-#define BF_CMP_SCR_IER(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_SCR_IER), uint8_t) & BM_CMP_SCR_IER)
+/*! @brief Format value for bitfield CMP_SCR_IER. */
+#define BF_CMP_SCR_IER(v)    ((uint8_t)((uint8_t)(v) << BP_CMP_SCR_IER) & BM_CMP_SCR_IER)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IER field to a new value.
+/*! @brief Set the IER field to a new value. */
 #define BW_CMP_SCR_IER(x, v) (BME_BFI8(HW_CMP_SCR_ADDR(x), ((uint8_t)(v) << BP_CMP_SCR_IER), BP_CMP_SCR_IER, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_SCR, field DMAEN[6] (RW)
@@ -719,30 +622,25 @@ typedef union _hw_cmp_scr
  * - 0 - DMA is disabled.
  * - 1 - DMA is enabled.
  */
-//@{
-#define BP_CMP_SCR_DMAEN     (6U)          //!< Bit position for CMP_SCR_DMAEN.
-#define BM_CMP_SCR_DMAEN     (0x40U)       //!< Bit mask for CMP_SCR_DMAEN.
-#define BS_CMP_SCR_DMAEN     (1U)          //!< Bit field size in bits for CMP_SCR_DMAEN.
+/*@{*/
+#define BP_CMP_SCR_DMAEN     (6U)          /*!< Bit position for CMP_SCR_DMAEN. */
+#define BM_CMP_SCR_DMAEN     (0x40U)       /*!< Bit mask for CMP_SCR_DMAEN. */
+#define BS_CMP_SCR_DMAEN     (1U)          /*!< Bit field size in bits for CMP_SCR_DMAEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_SCR_DMAEN field.
+/*! @brief Read current value of the CMP_SCR_DMAEN field. */
 #define BR_CMP_SCR_DMAEN(x)  (BME_UBFX8(HW_CMP_SCR_ADDR(x), BP_CMP_SCR_DMAEN, BS_CMP_SCR_DMAEN))
-#endif
 
-//! @brief Format value for bitfield CMP_SCR_DMAEN.
-#define BF_CMP_SCR_DMAEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_SCR_DMAEN), uint8_t) & BM_CMP_SCR_DMAEN)
+/*! @brief Format value for bitfield CMP_SCR_DMAEN. */
+#define BF_CMP_SCR_DMAEN(v)  ((uint8_t)((uint8_t)(v) << BP_CMP_SCR_DMAEN) & BM_CMP_SCR_DMAEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAEN field to a new value.
+/*! @brief Set the DMAEN field to a new value. */
 #define BW_CMP_SCR_DMAEN(x, v) (BME_BFI8(HW_CMP_SCR_ADDR(x), ((uint8_t)(v) << BP_CMP_SCR_DMAEN), BP_CMP_SCR_DMAEN, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMP_DACCR - DAC Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMP_DACCR - DAC Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_DACCR - DAC Control Register (RW)
  *
@@ -753,28 +651,25 @@ typedef union _hw_cmp_daccr
     uint8_t U;
     struct _hw_cmp_daccr_bitfields
     {
-        uint8_t VOSEL : 6;             //!< [5:0] DAC Output Voltage Select
-        uint8_t VRSEL : 1;             //!< [6] Supply Voltage Reference Source Select
-        uint8_t DACEN : 1;             //!< [7] DAC Enable
+        uint8_t VOSEL : 6;             /*!< [5:0] DAC Output Voltage Select */
+        uint8_t VRSEL : 1;             /*!< [6] Supply Voltage Reference Source Select */
+        uint8_t DACEN : 1;             /*!< [7] DAC Enable */
     } B;
 } hw_cmp_daccr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_DACCR register
  */
-//@{
-#define HW_CMP_DACCR_ADDR(x)     (REGS_CMP_BASE(x) + 0x4U)
+/*@{*/
+#define HW_CMP_DACCR_ADDR(x)     ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_DACCR(x)          (*(__IO hw_cmp_daccr_t *) HW_CMP_DACCR_ADDR(x))
 #define HW_CMP_DACCR_RD(x)       (HW_CMP_DACCR(x).U)
 #define HW_CMP_DACCR_WR(x, v)    (HW_CMP_DACCR(x).U = (v))
 #define HW_CMP_DACCR_SET(x, v)   (BME_OR8(HW_CMP_DACCR_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_DACCR_CLR(x, v)   (BME_AND8(HW_CMP_DACCR_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_DACCR_TOG(x, v)   (BME_XOR8(HW_CMP_DACCR_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_DACCR bitfields
@@ -786,24 +681,20 @@ typedef union _hw_cmp_daccr
  * Selects an output voltage from one of 64 distinct levels. DACO = (V in /64) *
  * (VOSEL[5:0] + 1) , so the DACO range is from V in /64 to V in .
  */
-//@{
-#define BP_CMP_DACCR_VOSEL   (0U)          //!< Bit position for CMP_DACCR_VOSEL.
-#define BM_CMP_DACCR_VOSEL   (0x3FU)       //!< Bit mask for CMP_DACCR_VOSEL.
-#define BS_CMP_DACCR_VOSEL   (6U)          //!< Bit field size in bits for CMP_DACCR_VOSEL.
+/*@{*/
+#define BP_CMP_DACCR_VOSEL   (0U)          /*!< Bit position for CMP_DACCR_VOSEL. */
+#define BM_CMP_DACCR_VOSEL   (0x3FU)       /*!< Bit mask for CMP_DACCR_VOSEL. */
+#define BS_CMP_DACCR_VOSEL   (6U)          /*!< Bit field size in bits for CMP_DACCR_VOSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_DACCR_VOSEL field.
+/*! @brief Read current value of the CMP_DACCR_VOSEL field. */
 #define BR_CMP_DACCR_VOSEL(x) (BME_UBFX8(HW_CMP_DACCR_ADDR(x), BP_CMP_DACCR_VOSEL, BS_CMP_DACCR_VOSEL))
-#endif
 
-//! @brief Format value for bitfield CMP_DACCR_VOSEL.
-#define BF_CMP_DACCR_VOSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_DACCR_VOSEL), uint8_t) & BM_CMP_DACCR_VOSEL)
+/*! @brief Format value for bitfield CMP_DACCR_VOSEL. */
+#define BF_CMP_DACCR_VOSEL(v) ((uint8_t)((uint8_t)(v) << BP_CMP_DACCR_VOSEL) & BM_CMP_DACCR_VOSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VOSEL field to a new value.
+/*! @brief Set the VOSEL field to a new value. */
 #define BW_CMP_DACCR_VOSEL(x, v) (BME_BFI8(HW_CMP_DACCR_ADDR(x), ((uint8_t)(v) << BP_CMP_DACCR_VOSEL), BP_CMP_DACCR_VOSEL, 6))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_DACCR, field VRSEL[6] (RW)
@@ -812,24 +703,20 @@ typedef union _hw_cmp_daccr
  * - 0 - V is selected as resistor ladder network supply reference V. in1 in
  * - 1 - V is selected as resistor ladder network supply reference V. in2 in
  */
-//@{
-#define BP_CMP_DACCR_VRSEL   (6U)          //!< Bit position for CMP_DACCR_VRSEL.
-#define BM_CMP_DACCR_VRSEL   (0x40U)       //!< Bit mask for CMP_DACCR_VRSEL.
-#define BS_CMP_DACCR_VRSEL   (1U)          //!< Bit field size in bits for CMP_DACCR_VRSEL.
+/*@{*/
+#define BP_CMP_DACCR_VRSEL   (6U)          /*!< Bit position for CMP_DACCR_VRSEL. */
+#define BM_CMP_DACCR_VRSEL   (0x40U)       /*!< Bit mask for CMP_DACCR_VRSEL. */
+#define BS_CMP_DACCR_VRSEL   (1U)          /*!< Bit field size in bits for CMP_DACCR_VRSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_DACCR_VRSEL field.
+/*! @brief Read current value of the CMP_DACCR_VRSEL field. */
 #define BR_CMP_DACCR_VRSEL(x) (BME_UBFX8(HW_CMP_DACCR_ADDR(x), BP_CMP_DACCR_VRSEL, BS_CMP_DACCR_VRSEL))
-#endif
 
-//! @brief Format value for bitfield CMP_DACCR_VRSEL.
-#define BF_CMP_DACCR_VRSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_DACCR_VRSEL), uint8_t) & BM_CMP_DACCR_VRSEL)
+/*! @brief Format value for bitfield CMP_DACCR_VRSEL. */
+#define BF_CMP_DACCR_VRSEL(v) ((uint8_t)((uint8_t)(v) << BP_CMP_DACCR_VRSEL) & BM_CMP_DACCR_VRSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VRSEL field to a new value.
+/*! @brief Set the VRSEL field to a new value. */
 #define BW_CMP_DACCR_VRSEL(x, v) (BME_BFI8(HW_CMP_DACCR_ADDR(x), ((uint8_t)(v) << BP_CMP_DACCR_VRSEL), BP_CMP_DACCR_VRSEL, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_DACCR, field DACEN[7] (RW)
@@ -841,30 +728,25 @@ typedef union _hw_cmp_daccr
  * - 0 - DAC is disabled.
  * - 1 - DAC is enabled.
  */
-//@{
-#define BP_CMP_DACCR_DACEN   (7U)          //!< Bit position for CMP_DACCR_DACEN.
-#define BM_CMP_DACCR_DACEN   (0x80U)       //!< Bit mask for CMP_DACCR_DACEN.
-#define BS_CMP_DACCR_DACEN   (1U)          //!< Bit field size in bits for CMP_DACCR_DACEN.
+/*@{*/
+#define BP_CMP_DACCR_DACEN   (7U)          /*!< Bit position for CMP_DACCR_DACEN. */
+#define BM_CMP_DACCR_DACEN   (0x80U)       /*!< Bit mask for CMP_DACCR_DACEN. */
+#define BS_CMP_DACCR_DACEN   (1U)          /*!< Bit field size in bits for CMP_DACCR_DACEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_DACCR_DACEN field.
+/*! @brief Read current value of the CMP_DACCR_DACEN field. */
 #define BR_CMP_DACCR_DACEN(x) (BME_UBFX8(HW_CMP_DACCR_ADDR(x), BP_CMP_DACCR_DACEN, BS_CMP_DACCR_DACEN))
-#endif
 
-//! @brief Format value for bitfield CMP_DACCR_DACEN.
-#define BF_CMP_DACCR_DACEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_DACCR_DACEN), uint8_t) & BM_CMP_DACCR_DACEN)
+/*! @brief Format value for bitfield CMP_DACCR_DACEN. */
+#define BF_CMP_DACCR_DACEN(v) ((uint8_t)((uint8_t)(v) << BP_CMP_DACCR_DACEN) & BM_CMP_DACCR_DACEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DACEN field to a new value.
+/*! @brief Set the DACEN field to a new value. */
 #define BW_CMP_DACCR_DACEN(x, v) (BME_BFI8(HW_CMP_DACCR_ADDR(x), ((uint8_t)(v) << BP_CMP_DACCR_DACEN), BP_CMP_DACCR_DACEN, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMP_MUXCR - MUX Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMP_MUXCR - MUX Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMP_MUXCR - MUX Control Register (RW)
  *
@@ -875,29 +757,26 @@ typedef union _hw_cmp_muxcr
     uint8_t U;
     struct _hw_cmp_muxcr_bitfields
     {
-        uint8_t MSEL : 3;              //!< [2:0] Minus Input Mux Control
-        uint8_t PSEL : 3;              //!< [5:3] Plus Input Mux Control
-        uint8_t RESERVED0 : 1;         //!< [6]
-        uint8_t PSTM : 1;              //!< [7] Pass Through Mode Enable
+        uint8_t MSEL : 3;              /*!< [2:0] Minus Input Mux Control */
+        uint8_t PSEL : 3;              /*!< [5:3] Plus Input Mux Control */
+        uint8_t RESERVED0 : 1;         /*!< [6]  */
+        uint8_t PSTM : 1;              /*!< [7] Pass Through Mode Enable */
     } B;
 } hw_cmp_muxcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMP_MUXCR register
  */
-//@{
-#define HW_CMP_MUXCR_ADDR(x)     (REGS_CMP_BASE(x) + 0x5U)
+/*@{*/
+#define HW_CMP_MUXCR_ADDR(x)     ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_CMP_MUXCR(x)          (*(__IO hw_cmp_muxcr_t *) HW_CMP_MUXCR_ADDR(x))
 #define HW_CMP_MUXCR_RD(x)       (HW_CMP_MUXCR(x).U)
 #define HW_CMP_MUXCR_WR(x, v)    (HW_CMP_MUXCR(x).U = (v))
 #define HW_CMP_MUXCR_SET(x, v)   (BME_OR8(HW_CMP_MUXCR_ADDR(x), (uint8_t)(v)))
 #define HW_CMP_MUXCR_CLR(x, v)   (BME_AND8(HW_CMP_MUXCR_ADDR(x), (uint8_t)(~(v))))
 #define HW_CMP_MUXCR_TOG(x, v)   (BME_XOR8(HW_CMP_MUXCR_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual CMP_MUXCR bitfields
@@ -921,24 +800,20 @@ typedef union _hw_cmp_muxcr
  * - 110 - IN6
  * - 111 - IN7
  */
-//@{
-#define BP_CMP_MUXCR_MSEL    (0U)          //!< Bit position for CMP_MUXCR_MSEL.
-#define BM_CMP_MUXCR_MSEL    (0x07U)       //!< Bit mask for CMP_MUXCR_MSEL.
-#define BS_CMP_MUXCR_MSEL    (3U)          //!< Bit field size in bits for CMP_MUXCR_MSEL.
+/*@{*/
+#define BP_CMP_MUXCR_MSEL    (0U)          /*!< Bit position for CMP_MUXCR_MSEL. */
+#define BM_CMP_MUXCR_MSEL    (0x07U)       /*!< Bit mask for CMP_MUXCR_MSEL. */
+#define BS_CMP_MUXCR_MSEL    (3U)          /*!< Bit field size in bits for CMP_MUXCR_MSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_MUXCR_MSEL field.
+/*! @brief Read current value of the CMP_MUXCR_MSEL field. */
 #define BR_CMP_MUXCR_MSEL(x) (BME_UBFX8(HW_CMP_MUXCR_ADDR(x), BP_CMP_MUXCR_MSEL, BS_CMP_MUXCR_MSEL))
-#endif
 
-//! @brief Format value for bitfield CMP_MUXCR_MSEL.
-#define BF_CMP_MUXCR_MSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_MUXCR_MSEL), uint8_t) & BM_CMP_MUXCR_MSEL)
+/*! @brief Format value for bitfield CMP_MUXCR_MSEL. */
+#define BF_CMP_MUXCR_MSEL(v) ((uint8_t)((uint8_t)(v) << BP_CMP_MUXCR_MSEL) & BM_CMP_MUXCR_MSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSEL field to a new value.
+/*! @brief Set the MSEL field to a new value. */
 #define BW_CMP_MUXCR_MSEL(x, v) (BME_BFI8(HW_CMP_MUXCR_ADDR(x), ((uint8_t)(v) << BP_CMP_MUXCR_MSEL), BP_CMP_MUXCR_MSEL, 3))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_MUXCR, field PSEL[5:3] (RW)
@@ -958,24 +833,20 @@ typedef union _hw_cmp_muxcr
  * - 110 - IN6
  * - 111 - IN7
  */
-//@{
-#define BP_CMP_MUXCR_PSEL    (3U)          //!< Bit position for CMP_MUXCR_PSEL.
-#define BM_CMP_MUXCR_PSEL    (0x38U)       //!< Bit mask for CMP_MUXCR_PSEL.
-#define BS_CMP_MUXCR_PSEL    (3U)          //!< Bit field size in bits for CMP_MUXCR_PSEL.
+/*@{*/
+#define BP_CMP_MUXCR_PSEL    (3U)          /*!< Bit position for CMP_MUXCR_PSEL. */
+#define BM_CMP_MUXCR_PSEL    (0x38U)       /*!< Bit mask for CMP_MUXCR_PSEL. */
+#define BS_CMP_MUXCR_PSEL    (3U)          /*!< Bit field size in bits for CMP_MUXCR_PSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_MUXCR_PSEL field.
+/*! @brief Read current value of the CMP_MUXCR_PSEL field. */
 #define BR_CMP_MUXCR_PSEL(x) (BME_UBFX8(HW_CMP_MUXCR_ADDR(x), BP_CMP_MUXCR_PSEL, BS_CMP_MUXCR_PSEL))
-#endif
 
-//! @brief Format value for bitfield CMP_MUXCR_PSEL.
-#define BF_CMP_MUXCR_PSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_MUXCR_PSEL), uint8_t) & BM_CMP_MUXCR_PSEL)
+/*! @brief Format value for bitfield CMP_MUXCR_PSEL. */
+#define BF_CMP_MUXCR_PSEL(v) ((uint8_t)((uint8_t)(v) << BP_CMP_MUXCR_PSEL) & BM_CMP_MUXCR_PSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PSEL field to a new value.
+/*! @brief Set the PSEL field to a new value. */
 #define BW_CMP_MUXCR_PSEL(x, v) (BME_BFI8(HW_CMP_MUXCR_ADDR(x), ((uint8_t)(v) << BP_CMP_MUXCR_PSEL), BP_CMP_MUXCR_PSEL, 3))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register CMP_MUXCR, field PSTM[7] (RW)
@@ -988,51 +859,45 @@ typedef union _hw_cmp_muxcr
  * - 0 - Pass Through Mode is disabled.
  * - 1 - Pass Through Mode is enabled.
  */
-//@{
-#define BP_CMP_MUXCR_PSTM    (7U)          //!< Bit position for CMP_MUXCR_PSTM.
-#define BM_CMP_MUXCR_PSTM    (0x80U)       //!< Bit mask for CMP_MUXCR_PSTM.
-#define BS_CMP_MUXCR_PSTM    (1U)          //!< Bit field size in bits for CMP_MUXCR_PSTM.
+/*@{*/
+#define BP_CMP_MUXCR_PSTM    (7U)          /*!< Bit position for CMP_MUXCR_PSTM. */
+#define BM_CMP_MUXCR_PSTM    (0x80U)       /*!< Bit mask for CMP_MUXCR_PSTM. */
+#define BS_CMP_MUXCR_PSTM    (1U)          /*!< Bit field size in bits for CMP_MUXCR_PSTM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMP_MUXCR_PSTM field.
+/*! @brief Read current value of the CMP_MUXCR_PSTM field. */
 #define BR_CMP_MUXCR_PSTM(x) (BME_UBFX8(HW_CMP_MUXCR_ADDR(x), BP_CMP_MUXCR_PSTM, BS_CMP_MUXCR_PSTM))
-#endif
 
-//! @brief Format value for bitfield CMP_MUXCR_PSTM.
-#define BF_CMP_MUXCR_PSTM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMP_MUXCR_PSTM), uint8_t) & BM_CMP_MUXCR_PSTM)
+/*! @brief Format value for bitfield CMP_MUXCR_PSTM. */
+#define BF_CMP_MUXCR_PSTM(v) ((uint8_t)((uint8_t)(v) << BP_CMP_MUXCR_PSTM) & BM_CMP_MUXCR_PSTM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PSTM field to a new value.
+/*! @brief Set the PSTM field to a new value. */
 #define BW_CMP_MUXCR_PSTM(x, v) (BME_BFI8(HW_CMP_MUXCR_ADDR(x), ((uint8_t)(v) << BP_CMP_MUXCR_PSTM), BP_CMP_MUXCR_PSTM, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_cmp_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_cmp_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All CMP module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_cmp
 {
-    __IO hw_cmp_cr0_t CR0;                 //!< [0x0] CMP Control Register 0
-    __IO hw_cmp_cr1_t CR1;                 //!< [0x1] CMP Control Register 1
-    __IO hw_cmp_fpr_t FPR;                 //!< [0x2] CMP Filter Period Register
-    __IO hw_cmp_scr_t SCR;                 //!< [0x3] CMP Status and Control Register
-    __IO hw_cmp_daccr_t DACCR;             //!< [0x4] DAC Control Register
-    __IO hw_cmp_muxcr_t MUXCR;             //!< [0x5] MUX Control Register
+    __IO hw_cmp_cr0_t CR0;                 /*!< [0x0] CMP Control Register 0 */
+    __IO hw_cmp_cr1_t CR1;                 /*!< [0x1] CMP Control Register 1 */
+    __IO hw_cmp_fpr_t FPR;                 /*!< [0x2] CMP Filter Period Register */
+    __IO hw_cmp_scr_t SCR;                 /*!< [0x3] CMP Status and Control Register */
+    __IO hw_cmp_daccr_t DACCR;             /*!< [0x4] DAC Control Register */
+    __IO hw_cmp_muxcr_t MUXCR;             /*!< [0x5] MUX Control Register */
 } hw_cmp_t;
 #pragma pack()
 
-//! @brief Macro to access all CMP registers.
-//! @param x CMP instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_CMP(0)</code>.
-#define HW_CMP(x)      (*(hw_cmp_t *) REGS_CMP_BASE(x))
-#endif
+/*! @brief Macro to access all CMP registers. */
+/*! @param x CMP module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_CMP(CMP0_BASE)</code>. */
+#define HW_CMP(x)      (*(hw_cmp_t *)(x))
 
-#endif // __HW_CMP_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_CMP_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

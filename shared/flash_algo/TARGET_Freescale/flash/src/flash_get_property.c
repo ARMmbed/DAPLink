@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2013-2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,7 +30,9 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -66,6 +68,22 @@ status_t flash_get_property(flash_driver_t * driver, flash_property_t whichPrope
         case kFlashProperty_FlashBlockBaseAddr:
            *value = driver->PFlashBlockBase;
            break;
+
+        case kFlashProperty_FlashFacSupport:
+#if defined (FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL)
+            *value = FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL;
+#else
+            *value = 0;
+#endif // FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
+            break;
+
+        case kFlashProperty_FlashAccessSegmentSize:
+            *value = driver->PFlashAccessSegmentSize;
+            break;
+
+        case kFlashProperty_FlashAccessSegmentCount:
+            *value = driver->PFlashAccessSegmentCount;
+            break;
 
         default:  // catch inputs that are not recognized
             return kStatus_FlashUnknownProperty;
