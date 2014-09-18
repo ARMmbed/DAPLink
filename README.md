@@ -26,7 +26,5 @@ Images are in '/img/team/'
 
 View this jekyll theme in action [here](https://y7kim.github.io/agency-jekyll-theme)
 
-This theme for Jekyll was inspired by Jerome Lachaud's Freelancer theme for Jekyll.
-
 =========
 For more details, read [documentation](http://jekyllrb.com/)
