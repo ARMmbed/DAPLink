@@ -1,8 +1,11 @@
 ---
+title: Round Icons
+subtitle: Graphic Design
 layout: default
 modal-id: 6
 date: 2014-07-15
-img: roundicons-free.png
+img: roundicons.png
+thumbnail: roundicons-thumbnail.png
 alt: image-alt
 project-date: April 2014
 client: Start Bootstrap
