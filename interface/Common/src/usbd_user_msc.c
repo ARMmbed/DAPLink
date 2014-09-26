@@ -563,7 +563,7 @@ static void initDisconnect(uint8_t success) {
         enter_isp();
     }
 #else
-    int autorst = 0;
+    int autorst = 1;
 #endif
     drag_success = success;
     if (autorst)
@@ -571,11 +571,9 @@ static void initDisconnect(uint8_t success) {
     main_blink_msd_led(0);
     init(1);
     isr_evt_set(MSC_TIMEOUT_STOP_EVENT, msc_valid_file_timeout_task_id);
-    if (!autorst)
-    {
-        // event to disconnect the usb
-        main_usb_disconnect_event();
-    }
+
+    // event to disconnect the usb
+    main_usb_disconnect_event();
     semihost_enable();
 }
 
