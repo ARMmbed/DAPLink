@@ -624,20 +624,20 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks) {
     }
     
     // find the location of the data that is being requested by the host
-    // fs[i].length 0 is a dummy end sector
+    // fs[i].length = 0 is a dummy end sector
     // fs_read_info.sect is a pointer to the sector we need data from
     while((fs[i].length != 0) && (fs_read_info.sect == 0)) {
         // accumulate the length of the sectors
         fs_expand_sector_offset += fs[i].length;
-        // the data is in this sector
+        // true if the data is in this sector
         if (req_block_offset < fs_expand_sector_offset) {
             fs_read_info.sect = fs[i].sect;
-            // can have more than one block in a sector - normalize the block number
+            // can have more than one block in a sector - normalize the block number to the sector in a cluster
             sector_offset = fs[i].length - (fs_expand_sector_offset - (block * USBD_MSC_BlockSize));
         }
         i++;
     }
-    // now send the data
+    // now send the data and if the request is larget than our actual filesystem pad with 0
     if (fs_read_info.sect != 0) {
         memcpy(buf, &fs_read_info.sect[sector_offset], num_of_blocks * USBD_MSC_BlockSize);
     }
@@ -646,11 +646,15 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks) {
     }
 }
 
+extern uint8_t send_uID;
 void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
-    int i=0;
-    if (USBD_MSC_MediaReady) {
+    if (!USBD_MSC_MediaReady) {
+        return;
+    }
     //memcpy(&Memory[block * USBD_MSC_BlockSize], buf, num_of_blocks * USBD_MSC_BlockSize);
-        i = i;
+    // log the fs
+    if(!send_uID) {
+        USBD_CDC_ACM_DataSend(buf, 512);
     }
 }
 

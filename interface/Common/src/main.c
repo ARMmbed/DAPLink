@@ -92,7 +92,7 @@ static LED_STATE dap_led_state = LED_FLASH;
 static LED_STATE cdc_led_state = LED_FLASH;
 static LED_STATE msd_led_state = LED_FLASH;
 
-static uint8_t send_uID = 0;
+/*static*/ uint8_t send_uID = 0;
 
 #ifdef USE_USB_EJECT_INSERT
     typedef enum {
