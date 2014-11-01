@@ -29,7 +29,6 @@
 #include "usb_buf.h"
 
 extern uint32_t usb_buffer[];
-//extern USB_CONNECT usb_state;
 
 __packed typedef struct {
     uint8_t boot_sector[11];
@@ -39,16 +38,14 @@ __packed typedef struct {
     uint16_t reserved_logical_sectors;
     uint8_t  num_fats;
     uint16_t max_root_dir_entries;
-    uint16_t total_logical_sectors;            /* If num is too large for 16 bits, set to 0 and use big_sectors_on_drive */
+    uint16_t total_logical_sectors;
     uint8_t  media_descriptor;
-    uint16_t logical_sectors_per_fat;          /* Need 3 sectors/FAT for every 1024 clusters */
-
+    uint16_t logical_sectors_per_fat;
     /* DOS 3.31 BPB - Bios Parameter Block, 12 bytes */
     uint16_t physical_sectors_per_track;
     uint16_t heads;
     uint32_t hidden_sectors;
-    uint32_t big_sectors_on_drive;             /* Use if total_logical_sectors=0, needed for large number of sectors */
-
+    uint32_t big_sectors_on_drive;
     /* Extended BIOS Parameter Block, 26 bytes */
     uint8_t  physical_drive_number;
     uint8_t  not_used;
@@ -56,65 +53,41 @@ __packed typedef struct {
     uint32_t volume_id;
     char     volume_label[11];
     char     file_system_type[8];
-
     /* bootstrap data in bytes 62-509 */
     uint8_t  bootstrap[448];
-
     /* Mandatory value at bytes 510-511, must be 0xaa55 */
     uint16_t signature;
 } mbr_t;
 
-__packed typedef struct FatDirectoryEntry {
-    uint8_t filename[11];
-    uint8_t attributes;
-    uint8_t reserved;
-    uint8_t creation_time_ms;
-    uint16_t creation_time;
-    uint16_t creation_date;
-    uint16_t accessed_date;
-    uint16_t first_cluster_high_16;
-    uint16_t modification_time;
-    uint16_t modification_date;
-    uint16_t first_cluster_low_16;
-    uint32_t filesize;
-} FatDirectoryEntry_t;
-
-typedef struct sector {
-    const uint8_t * sect;
-    unsigned int length;
-} SECTOR;
-
-#define MEDIA_DESCRIPTOR        (0xF0)
-
 static const mbr_t mbr = {
-    .boot_sector = {
+    /*uint8_t[11]*/.boot_sector = {
         0xEB,0x3C, // x86 Jump
         0x90,      // NOP
         'M','S','D','0','S','5','.','0' // OEM Name in text (8 chars max)
     },
-    .bytes_per_sector         = 512,
-    .sectors_per_cluster      = 16,
-    .reserved_logical_sectors = 1,
-    
-    .num_fats                 = 1, // 2 recommended
-    .max_root_dir_entries     = 0x20,
-    .total_logical_sectors    = 0xffff,//0x0020, //sizeof drive//((MBR_NUM_NEEDED_SECTORS > 32768) ? 0 : MBR_NUM_NEEDED_SECTORS),
-    .media_descriptor         = 0xF0,
-    .logical_sectors_per_fat  = 2,
-    .physical_sectors_per_track = 1,
-    .heads = 1,
-    .hidden_sectors = 0,
-     
-    .big_sectors_on_drive = 0, //((MBR_NUM_NEEDED_SECTORS > 32768) ? MBR_NUM_NEEDED_SECTORS : 0),
-    .physical_drive_number = 0,
-    .not_used = 0,
-    .boot_record_signature = 0x29,
-    .volume_id = 0x27021974,
-    .volume_label = {'M','B','E','D','D','A','P','L','I','N','K'},
-    .file_system_type = {'F','A','T','1','2',' ',' ',' '},
+    /*uint16_t*/.bytes_per_sector           = 0x0200,       // 512 bytes per sector
+    /*uint8_t */.sectors_per_cluster        = 0x10,         // 8k cluser
+    /*uint16_t*/.reserved_logical_sectors   = 0x0001,       // mbr is 1 sector
+    /*uint8_t */.num_fats                   = 0x02,         // 2 FATs
+    /*uint16_t*/.max_root_dir_entries       = 0x0010,       // 16 FAT12 dir entries (max)
+    /*uint16_t*/.total_logical_sectors      = 0x1f50,       // sector size * # of sectors = drive size
+    /*uint8_t */.media_descriptor           = 0xf8,         // fixed disc
+    /*uint16_t*/.logical_sectors_per_fat    = 0x0002,       // FAT is 1k
+    /*uint16_t*/.physical_sectors_per_track = 0x0001,       // flat
+    /*uint16_t*/.heads                      = 0x0001,       // flat
+    /*uint32_t*/.hidden_sectors             = 0x00000000,   // before mbt, 0
+    /*uint32_t*/.big_sectors_on_drive       = 0x00000000,   // not using large clusters
+    /*uint8_t */.physical_drive_number      = 0x00,
+    /*uint8_t */.not_used                   = 0x00,
+    /*uint8_t */.boot_record_signature      = 0x29,         // signature is present
+    /*uint32_t*/.volume_id                  = 0x27021974,   // serial number
+    // needs to match the root dir label
+    /*char[11]*/.volume_label               = {'D','A','P','L','I','N','K',' ','D','N','D'},
+    // unused by msft - just a label (FAT, FAT12, FAT16)
+    /*char[8] */.file_system_type           = {'F','A','T','1','2',' ',' ',' '},
 
     /* Executable boot code that starts the operating system */
-    .bootstrap = {
+    /*uint8_t[448]*/.bootstrap = {
         0x33,0xC9,0x8E,0xD1,0xBC,0xF0,0x7B,0x8E,0xD9,0xB8,0x00,0x20,0x8E,0xC0,0xFC,0xBD,
         0x00,0x7C,0x38,0x4E,0x24,0x7D,0x24,0x8B,0xC1,0x99,0xE8,0x3C,0x01,0x72,0x1C,0x83,
         0xEB,0x3A,0x66,0xA1,0x1C,0x7C,0x26,0x66,0x3B,0x07,0x26,0x8A,0x57,0xFC,0x75,0x06,
@@ -144,7 +117,7 @@ static const mbr_t mbr = {
         0x73,0x20,0x61,0x6E,0x79,0x20,0x6B,0x65,0x79,0x20,0x74,0x6F,0x20,0x72,0x65,0x73,
         0x74,0x61,0x72,0x74,0x0D,0x0A,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xAC,0xCB,0xD8
     },
-    .signature = 0xAA55,
+    /*uint16_t*/.signature = 0xAA55,
 };
 
 
@@ -154,7 +127,7 @@ typedef struct file_allocation_table {
 
 static const file_allocation_table_t fat1 = {
     .f = {
-        0xF0, 0xFF, 
+        0xF8, 0xFF, 
         0xFF, 0xFF,
         0xFF, 0xFF,
         0xFF, 0xFF,
@@ -164,6 +137,26 @@ static const file_allocation_table_t fat1 = {
         0xFF, 0x0F,
     }
 };
+
+__packed typedef struct FatDirectoryEntry {
+    uint8_t filename[11];
+    uint8_t attributes;
+    uint8_t reserved;
+    uint8_t creation_time_ms;
+    uint16_t creation_time;
+    uint16_t creation_date;
+    uint16_t accessed_date;
+    uint16_t first_cluster_high_16;
+    uint16_t modification_time;
+    uint16_t modification_date;
+    uint16_t first_cluster_low_16;
+    uint32_t filesize;
+} FatDirectoryEntry_t;
+
+typedef struct sector {
+    const uint8_t * sect;
+    unsigned int length;
+} SECTOR;
 
 static const uint8_t file1_contents[512] = "This is the file contents";
 
@@ -209,7 +202,7 @@ typedef struct root_dir {
 
 root_dir_t dir = {
     .dir = {
-    /*uint8_t[11] */ .filename = "MBED       ",
+    /*uint8_t[11] */ .filename = "DAPLINK DND",
     /*uint8_t */ .attributes = 0x28,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -276,7 +269,7 @@ const fs_items_t fs[] = {
     // fs setup
     {(uint8_t *)&mbr, sizeof(mbr)},
     {(uint8_t *)&fat1, sizeof(fat1)},
-    //{(uint8_t *)&fat1, sizeof(fat1)},
+    {(uint8_t *)&fat1, sizeof(fat1)},
     
     // root dir
     {(uint8_t *)&dir, sizeof(dir)},
@@ -369,6 +362,11 @@ static const char *known_extensions[] = {
     0,
 };
 
+typedef enum extension {
+    UNKNOWN = -1,
+    BIN,
+} extension_t;
+
 static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
@@ -391,13 +389,15 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
     if (!USBD_MSC_MediaReady) {
         return;
     }
-#if defined(DEBUG_MSC_FILE_TRANSFER)
-            char block_msg[32] = {0};
-            sprintf(block_msg, "block: 0x%08X\r\n", block);
-            USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
-            os_dly_wait(5);
-#endif    
-    // reset parsing when the mbr is sent
+    
+//    #if defined(DEBUG_MSC_FILE_TRANSFER)
+//    char block_msg[32] = {0};
+//    sprintf(block_msg, "block: 0x%08X\r\n", block);
+//    USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
+//    os_dly_wait(5);
+//    #endif
+    
+    // reset parsing when the mbr is received
     if (block == 0) {
         start_block = -1;
         amt_written = 0;
@@ -406,30 +406,36 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
     
     // start looking for the new file and if we know how to parse it
     for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
-        memcpy(&tmp_file, &buf[i * sizeof(tmp_file)], sizeof(tmp_file));
-        // ToDO: do a better lookup here for all known extensions
+        memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
+        // ToDO: get the extension from the parser
         if (extension_is_known(tmp_file)) {
             start_block = tmp_file.first_cluster_low_16;
             amt_to_write = tmp_file.filesize;
-#if defined(DEBUG_MSC_FILE_TRANSFER)
+
+            #if defined(DEBUG_MSC_FILE_TRANSFER)
             char msg[32] = {0};
-            sprintf(msg, "start sector 0x%08X 0x%08X\r\n", 
+            sprintf(msg, "start sector 0x%08X 0x%08X\r\n",
                 tmp_file.first_cluster_high_16,
                 tmp_file.first_cluster_low_16);
             USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
             os_dly_wait(5);
-#endif
+            #endif
         }
     }
     
-    // now we are receiving file data for a known file type (ToDO: dont like the 12 need to test different OS's)
-    if (block >= (start_block * 12) && amt_written < amt_to_write) {
+    // now we are receiving file data for a known file type
+    // start of data decoded by block being at 0x10 so >> 1 and -2 from
+    //  the starting block since FAT data will always be at sector + 2
+    // amt_written and amt_to write track what we've received and how large
+    //  the file is that we expect
+    if ((block >> 1) >= (start_block - 2) && amt_written < amt_to_write) {
         amt_written += USBD_MSC_BlockSize;
-// compare parsed file across the CDC link
-#if defined(DEBUG_MSC_FILE_TRANSFER)
-//        USBD_CDC_ACM_DataSend(buf, USBD_MSC_BlockSize);
-//        os_dly_wait(50);
-#endif        
+        
+        // compare parsed file across the CDC link
+        #if defined(DEBUG_MSC_FILE_TRANSFER)
+        USBD_CDC_ACM_DataSend(buf, USBD_MSC_BlockSize);
+        os_dly_wait(25);
+        #endif
     }
 }
 
