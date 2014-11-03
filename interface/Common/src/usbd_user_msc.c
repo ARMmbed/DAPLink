@@ -28,119 +28,24 @@
 #include "swd_host.h"
 #include "usb_buf.h"
 
-#if defined(DBG_LPC1768)
-#   define WANTED_SIZE_IN_KB                        (512)
-#elif defined(DBG_KL02Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_KL05Z)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_K24F256)
-#   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_KL25Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL26Z)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_KL46Z)
-#   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_K20D50M)
-#   define WANTED_SIZE_IN_KB                        (128)
-#elif defined(DBG_K22F)
-#   define WANTED_SIZE_IN_KB                        (512)
-#elif defined(DBG_K64F)
-#   define WANTED_SIZE_IN_KB                        (1024)
-#elif defined(DBG_LPC812)
-#   define WANTED_SIZE_IN_KB                        (16)
-#elif defined(DBG_LPC1114)
-#   define WANTED_SIZE_IN_KB                        (32)
-#elif defined(DBG_LPC4330)
-#   if defined(BOARD_BAMBINO_210E)
-#       define WANTED_SIZE_IN_KB                    (8192)
-#   else
-#       define WANTED_SIZE_IN_KB                    (4096)
-#   endif
-#elif defined(DBG_LPC1549)
-#   define WANTED_SIZE_IN_KB                        (512)
-#elif defined(DBG_LPC11U68)
-#   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_LPC4337)
-#   define WANTED_SIZE_IN_KB                        (1024)
-#endif
-
-//------------------------------------------------------------------- CONSTANTS
-#define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16 + 8)*1024)
-#define WANTED_SECTORS_PER_CLUSTER  (8)
-
-#define FLASH_PROGRAM_PAGE_SIZE         (512)
-#define MBR_BYTES_PER_SECTOR            (512)
-
-//--------------------------------------------------------------------- DERIVED
-
-#define MBR_NUM_NEEDED_SECTORS  (WANTED_SIZE_IN_BYTES / MBR_BYTES_PER_SECTOR)
-#define MBR_NUM_NEEDED_CLUSTERS (MBR_NUM_NEEDED_SECTORS / WANTED_SECTORS_PER_CLUSTER)
-
-/* Need 3 sectors/FAT for every 1024 clusters */
-#define MBR_SECTORS_PER_FAT     (3*((MBR_NUM_NEEDED_CLUSTERS + 1023)/1024))
-
-/* Macro to help fill the two FAT tables with the empty sectors without
-   adding a lot of test #ifs inside the sectors[] declaration below */
-#if (MBR_SECTORS_PER_FAT == 1)
-#   define EMPTY_FAT_SECTORS
-#elif (MBR_SECTORS_PER_FAT == 2)
-#   define EMPTY_FAT_SECTORS  {fat2,0},
-#elif (MBR_SECTORS_PER_FAT == 3)
-#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},
-#elif (MBR_SECTORS_PER_FAT == 6)
-#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
-#elif (MBR_SECTORS_PER_FAT == 9)
-#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
-#elif (MBR_SECTORS_PER_FAT == 12)
-#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
-#else
-#   error "Unsupported number of sectors per FAT table"
-#endif
-
-#define DIRENTS_PER_SECTOR  (MBR_BYTES_PER_SECTOR / sizeof(FatDirectoryEntry_t))
-
-#define SECTORS_ROOT_IDX        (1 + mbr.num_fats*MBR_SECTORS_PER_FAT)
-#define SECTORS_FIRST_FILE_IDX  (SECTORS_ROOT_IDX + 2)
-#define SECTORS_SYSTEM_VOLUME_INFORMATION (SECTORS_FIRST_FILE_IDX  + WANTED_SECTORS_PER_CLUSTER)
-#define SECTORS_INDEXER_VOLUME_GUID       (SECTORS_SYSTEM_VOLUME_INFORMATION + WANTED_SECTORS_PER_CLUSTER)
-#define SECTORS_MBED_HTML_IDX   (SECTORS_INDEXER_VOLUME_GUID + WANTED_SECTORS_PER_CLUSTER)
-#define SECTORS_ERROR_FILE_IDX  (SECTORS_MBED_HTML_IDX + WANTED_SECTORS_PER_CLUSTER)
-
-//---------------------------------------------------------------- VERIFICATION
-
-/* Sanity check */
-#if (MBR_NUM_NEEDED_CLUSTERS > 4084)
-  /* Limited by 12 bit cluster addresses, i.e. 2^12 but only 0x002..0xff5 can be used */
-#   error Too many needed clusters, increase WANTED_SECTORS_PER_CLUSTER
-#endif
-
-#if ((WANTED_SECTORS_PER_CLUSTER * MBR_BYTES_PER_SECTOR) > 32768)
-#   error Cluster size too large, must be <= 32KB
-#endif
-
-//-------------------------------------------------------------------- TYPEDEFS
+extern uint32_t usb_buffer[];
 
 __packed typedef struct {
     uint8_t boot_sector[11];
-
-    /* DOS 2.0 BPB - Bios Parameter Block, 13 bytes */
+    /* DOS 2.0 BPB - Bios Parameter Block, 11 bytes */
     uint16_t bytes_per_sector;
     uint8_t  sectors_per_cluster;
     uint16_t reserved_logical_sectors;
     uint8_t  num_fats;
     uint16_t max_root_dir_entries;
-    uint16_t total_logical_sectors;            /* If num is too large for 16 bits, set to 0 and use big_sectors_on_drive */
+    uint16_t total_logical_sectors;
     uint8_t  media_descriptor;
-    uint16_t logical_sectors_per_fat;          /* Need 3 sectors/FAT for every 1024 clusters */
-
+    uint16_t logical_sectors_per_fat;
     /* DOS 3.31 BPB - Bios Parameter Block, 12 bytes */
     uint16_t physical_sectors_per_track;
     uint16_t heads;
     uint32_t hidden_sectors;
-    uint32_t big_sectors_on_drive;             /* Use if total_logical_sectors=0, needed for large number of sectors */
-
+    uint32_t big_sectors_on_drive;
     /* Extended BIOS Parameter Block, 26 bytes */
     uint8_t  physical_drive_number;
     uint8_t  not_used;
@@ -148,87 +53,41 @@ __packed typedef struct {
     uint32_t volume_id;
     char     volume_label[11];
     char     file_system_type[8];
-
     /* bootstrap data in bytes 62-509 */
     uint8_t  bootstrap[448];
-
     /* Mandatory value at bytes 510-511, must be 0xaa55 */
     uint16_t signature;
 } mbr_t;
 
-typedef enum {
-    BIN_FILE,
-    PAR_FILE,
-    DOW_FILE,
-    CRD_FILE,
-    SPI_FILE,
-    UNSUP_FILE, /* Valid extension, but not supported */
-    SKIP_FILE,  /* Unknown extension, typically Long File Name entries */
-} FILE_TYPE;
-
-typedef struct {
-    FILE_TYPE type;
-    char extension[3];
-    uint32_t flash_offset;
-} FILE_TYPE_MAPPING;
-
-__packed typedef struct FatDirectoryEntry {
-    uint8_t filename[11];
-    uint8_t attributes;
-    uint8_t reserved;
-    uint8_t creation_time_ms;
-    uint16_t creation_time;
-    uint16_t creation_date;
-    uint16_t accessed_date;
-    uint16_t first_cluster_high_16;
-    uint16_t modification_time;
-    uint16_t modification_date;
-    uint16_t first_cluster_low_16;
-    uint32_t filesize;
-} FatDirectoryEntry_t;
-
-//------------------------------------------------------------------------- END
-
-extern uint32_t usb_buffer[];
-
-extern USB_CONNECT usb_state;
-
-typedef struct sector {
-    const uint8_t * sect;
-    unsigned int length;
-} SECTOR;
-
-#define MEDIA_DESCRIPTOR        (0xF0)
-
 static const mbr_t mbr = {
-    .boot_sector = {
+    /*uint8_t[11]*/.boot_sector = {
         0xEB,0x3C, // x86 Jump
         0x90,      // NOP
-        'M','S','D','0','S','5','.','0' // OEM Name in text (8 chars max)
+        'M','S','D','0','S','2','.','1' // OEM Name in text (8 chars max)
     },
-    .bytes_per_sector         = 512,
-    .sectors_per_cluster      = 16,
-    .reserved_logical_sectors = 1,
-    
-    .num_fats                 = 1, // 2 recommended
-    .max_root_dir_entries     = 0x10,
-    .total_logical_sectors    = 0xffff,//0x0020, //sizeof drive//((MBR_NUM_NEEDED_SECTORS > 32768) ? 0 : MBR_NUM_NEEDED_SECTORS),
-    .media_descriptor         = 0xF0,
-    .logical_sectors_per_fat  = 2,
-    .physical_sectors_per_track = 1,
-    .heads = 1,
-    .hidden_sectors = 0,
-     
-    .big_sectors_on_drive = 0, //((MBR_NUM_NEEDED_SECTORS > 32768) ? MBR_NUM_NEEDED_SECTORS : 0),
-    .physical_drive_number = 0,
-    .not_used = 0,
-    .boot_record_signature = 0x29,
-    .volume_id = 0x27021974,
-    .volume_label = {'M','B','E','D','D','A','P','L','I','N','K'},
-    .file_system_type = {'F','A','T','1','2',' ',' ',' '},
+    /*uint16_t*/.bytes_per_sector           = 0x0200,       // 512 bytes per sector
+    /*uint8_t */.sectors_per_cluster        = 0x10,         // 8k cluser
+    /*uint16_t*/.reserved_logical_sectors   = 0x0001,       // mbr is 1 sector
+    /*uint8_t */.num_fats                   = 0x02,         // 2 FATs
+    /*uint16_t*/.max_root_dir_entries       = 0x0010,       // 16 FAT12 dir entries (max)
+    /*uint16_t*/.total_logical_sectors      = 0x1f50,       // sector size * # of sectors = drive size
+    /*uint8_t */.media_descriptor           = 0xf0,         // fixed disc = F8, removable = F0
+    /*uint16_t*/.logical_sectors_per_fat    = 0x0002,       // FAT is 1k
+    /*uint16_t*/.physical_sectors_per_track = 0x0001,       // flat
+    /*uint16_t*/.heads                      = 0x0001,       // flat
+    /*uint32_t*/.hidden_sectors             = 0x00000000,   // before mbt, 0
+    /*uint32_t*/.big_sectors_on_drive       = 0x00000000,   // not using large clusters
+    /*uint8_t */.physical_drive_number      = 0x00,
+    /*uint8_t */.not_used                   = 0x00,
+    /*uint8_t */.boot_record_signature      = 0x29,         // signature is present
+    /*uint32_t*/.volume_id                  = 0x27021974,   // serial number
+    // needs to match the root dir label
+    /*char[11]*/.volume_label               = {'D','A','P','L','I','N','K',' ','D','N','D'},
+    // unused by msft - just a label (FAT, FAT12, FAT16)
+    /*char[8] */.file_system_type           = {'F','A','T','1','2',' ',' ',' '},
 
     /* Executable boot code that starts the operating system */
-    .bootstrap = {
+    /*uint8_t[448]*/.bootstrap = {
         0x33,0xC9,0x8E,0xD1,0xBC,0xF0,0x7B,0x8E,0xD9,0xB8,0x00,0x20,0x8E,0xC0,0xFC,0xBD,
         0x00,0x7C,0x38,0x4E,0x24,0x7D,0x24,0x8B,0xC1,0x99,0xE8,0x3C,0x01,0x72,0x1C,0x83,
         0xEB,0x3A,0x66,0xA1,0x1C,0x7C,0x26,0x66,0x3B,0x07,0x26,0x8A,0x57,0xFC,0x75,0x06,
@@ -258,7 +117,7 @@ static const mbr_t mbr = {
         0x73,0x20,0x61,0x6E,0x79,0x20,0x6B,0x65,0x79,0x20,0x74,0x6F,0x20,0x72,0x65,0x73,
         0x74,0x61,0x72,0x74,0x0D,0x0A,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xAC,0xCB,0xD8
     },
-    .signature = 0xAA55,
+    /*uint16_t*/.signature = 0xAA55,
 };
 
 
@@ -279,20 +138,25 @@ static const file_allocation_table_t fat1 = {
     }
 };
 
-//static const FatDirectoryEntry_t drive = {
-//    /*uint8_t[11] */ .filename = "MBED       ",
-//    /*uint8_t */ .attributes = 0x28,
-//    /*uint8_t */ .reserved = 0x00,
-//    /*uint8_t */ .creation_time_ms = 0x00,
-//    /*uint16_t*/ .creation_time = 0x0000,
-//    /*uint16_t*/ .creation_date = 0x0000,
-//    /*uint16_t*/ .accessed_date = 0x0000,
-//    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
-//    /*uint16_t*/ .modification_time = 0x8E41,
-//    /*uint16_t*/ .modification_date = 0x32bb,
-//    /*uint16_t*/ .first_cluster_low_16 = 0x0000,
-//    /*uint32_t*/ .filesize = 0x00000000,
-//};
+__packed typedef struct FatDirectoryEntry {
+    uint8_t filename[11];
+    uint8_t attributes;
+    uint8_t reserved;
+    uint8_t creation_time_ms;
+    uint16_t creation_time;
+    uint16_t creation_date;
+    uint16_t accessed_date;
+    uint16_t first_cluster_high_16;
+    uint16_t modification_time;
+    uint16_t modification_date;
+    uint16_t first_cluster_low_16;
+    uint32_t filesize;
+} FatDirectoryEntry_t;
+
+typedef struct sector {
+    const uint8_t * sect;
+    unsigned int length;
+} SECTOR;
 
 static const uint8_t file1_contents[512] = "This is the file contents";
 
@@ -316,6 +180,347 @@ static const unsigned char WebSide[512] = {
 "<body></body>\r\n"
 "</html>\r\n"
 "\r\n"};
+
+typedef struct root_dir {
+    FatDirectoryEntry_t dir;
+    FatDirectoryEntry_t f1;
+    FatDirectoryEntry_t f2;
+    FatDirectoryEntry_t f3;
+    FatDirectoryEntry_t f4;
+    FatDirectoryEntry_t f5;
+    FatDirectoryEntry_t f6;
+    FatDirectoryEntry_t f7;
+    FatDirectoryEntry_t f8;
+    FatDirectoryEntry_t f9;
+    FatDirectoryEntry_t f10;
+    FatDirectoryEntry_t f11;
+    FatDirectoryEntry_t f12;
+    FatDirectoryEntry_t f13;
+    FatDirectoryEntry_t f14;
+    FatDirectoryEntry_t f15;
+} root_dir_t;
+
+root_dir_t dir = {
+    .dir = {
+    /*uint8_t[11] */ .filename = "DAPLINK    ",
+    /*uint8_t */ .attributes = 0x28,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0000,
+    /*uint16_t*/ .accessed_date = 0x0000,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x8E41,
+    /*uint16_t*/ .modification_date = 0x32bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0000,
+    /*uint32_t*/ .filesize = 0x00000000
+    },
+    .f1 = {
+    /*uint8_t[11] */ .filename = "ABOUT   TXT",
+    /*uint8_t */ .attributes = 0x01,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0021,
+    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x83dc,
+    /*uint16_t*/ .modification_date = 0x32bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0002,
+    /*uint32_t*/ .filesize = sizeof(file1_contents)
+    },
+    .f2  = {
+    /*uint8_t[11] */ .filename = "MBED    HTM",
+    /*uint8_t */ .attributes = 0x01,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0021,
+    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x83dc,
+    /*uint16_t*/ .modification_date = 0x32bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0003,
+    /*uint32_t*/ .filesize = sizeof(WebSide)
+    },
+    // .fseventsd (LFN + normal entry)
+    .f3  = {0x41, 0x2E, 0x00, 0x66, 0x00, 0x73, 0x00, 0x65, 0x00, 0x76, 0x00, 0x0F, 0x00, 0xDA, 0x65, 0x00,
+            0x6E, 0x00, 0x74, 0x00, 0x73, 0x00, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
+    },
+    .f4  = {0x46, 0x53, 0x45, 0x56, 0x45, 0x4E, 0x7E, 0x31, 0x20, 0x20, 0x20, 0x12, 0x00, 0x47, 0x7D, 0x75,
+            0x8E, 0x41, 0x8E, 0x41, 0x00, 0x00, 0x7D, 0x75, 0x8E, 0x41, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+    },
+    .f5  = {0},
+    .f6  = {0},
+    .f7  = {0},
+    .f8  = {0},
+    .f9  = {0},
+    .f10 = {0},
+    .f11 = {0},
+    .f12 = {0},
+    .f13 = {0},
+    .f14 = {0},
+    .f15 = {0},
+};
+
+typedef struct fs_items {
+    uint8_t *sect;
+    uint32_t length;
+} fs_items_t;
+
+const uint8_t blank_reigon[512] = {0};
+
+const fs_items_t fs[] = {
+    // fs setup
+    {(uint8_t *)&mbr, sizeof(mbr)},
+    {(uint8_t *)&fat1, sizeof(fat1)},
+    {(uint8_t *)&fat1, sizeof(fat1)},
+    
+    // root dir
+    {(uint8_t *)&dir, sizeof(dir)},
+    
+    //file contents
+    {(uint8_t *)&file1_contents, sizeof(file1_contents)},
+    
+    //empty area (16*512 is start of data reigion need to pad between files - 1
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    
+    {(uint8_t *)&WebSide, sizeof(WebSide)},
+    
+    // end of fs data
+    {(uint8_t *)0, 0},
+};
+
+
+U8 Memory[2048];                       /* MSC Memory in RAM                  */
+U8 BlockBuf[512];
+
+void virtual_fs_init(void)
+{
+    // ToDO: config fs specific things here that cant be done at compile time
+    dir.f1.filesize = strlen((const char *)file1_contents);
+    dir.f2.filesize = strlen((const char *)WebSide);
+}
+
+void usbd_msc_init () {    
+    
+    virtual_fs_init();
+    
+    USBD_MSC_MemorySize = mbr.bytes_per_sector * mbr.total_logical_sectors;
+    USBD_MSC_BlockSize  = mbr.bytes_per_sector;
+    USBD_MSC_BlockGroup = 1;
+    USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
+    USBD_MSC_BlockBuf   = BlockBuf;
+
+    USBD_MSC_MediaReady = __TRUE;
+}
+
+void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks) {
+    fs_items_t fs_read_info = {0,0};
+    uint32_t req_block_offset = block * USBD_MSC_BlockSize;
+    uint32_t fs_expand_sector_offset = 0;
+    uint32_t sector_offset = 0;
+    uint8_t i = 0;
+    
+    // dont proceed if we're not ready
+    if (!USBD_MSC_MediaReady) {
+        return;
+    }
+    
+    // find the location of the data that is being requested by the host
+    // fs[i].length 0 is a dummy end sector
+    // fs_read_info.sect is a pointer to the sector we need data from
+    while((fs[i].length != 0) && (fs_read_info.sect == 0)) {
+        // accumulate the length of the sectors
+        fs_expand_sector_offset += fs[i].length;
+        // the data is in this sector
+        if (req_block_offset < fs_expand_sector_offset) {
+            fs_read_info.sect = fs[i].sect;
+            // can have more than one block in a sector - normalize the block number
+            sector_offset = fs[i].length - (fs_expand_sector_offset - (block * USBD_MSC_BlockSize));
+        }
+        i++;
+    }
+    // now send the data
+    if (fs_read_info.sect != 0) {
+        memcpy(buf, &fs_read_info.sect[sector_offset], num_of_blocks * USBD_MSC_BlockSize);
+    }
+    else {
+        memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
+    }
+}
+
+#define DEBUG_MSC_FILE_TRANSFER
+#include "stdio.h"
+
+// known extension types
+static const char *known_extensions[] = {
+    "BIN",
+    "bin",
+    0,
+};
+
+typedef enum extension {
+    UNKNOWN = -1,
+    BIN,
+} extension_t;
+
+static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
+{
+    uint32_t i = 0;
+    while (known_extensions[i] != 0) {
+        if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
+            // we may see the entry with a false filesize. Validate both or keep looking
+            return (dir_entry.filesize) ? dir_entry.filesize : 0;
+        }
+        i++;
+    }
+    return 0;
+}
+
+void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {    
+    FatDirectoryEntry_t tmp_file = {0};
+    uint32_t i = 0;
+    static int32_t start_block = -1;
+    static uint32_t amt_written = 0, amt_to_write = 0;
+    
+    if (!USBD_MSC_MediaReady) {
+        return;
+    }
+    
+    #if defined(DEBUG_MSC_FILE_TRANSFER)
+    char block_msg[32] = {0};
+    sprintf(block_msg, "block: 0x%08X\r\n", block);
+    USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
+    os_dly_wait(1);
+    #endif
+    
+//    if (block > 0 && block < 3) {
+//        uint32_t offset = (block % 2) ? 512 : 0;
+//        uint8_t *fat_loc = fs[1].sect + offset;
+//        memcpy(fat_loc, buf, USBD_MSC_BlockSize);
+//    }
+//    else if (block > 2 && block < 5) {
+//        uint32_t offset = (block % 2) ? 512 : 0;
+//        uint8_t *fat_loc = fs[2].sect + offset;
+//        memcpy(fat_loc, buf, USBD_MSC_BlockSize);
+//    }
+    
+    // reset parsing when the mbr is received - making an assumption that 
+    //  once the root dir is sent the file data precedes any updates to the 
+    //  mbr or fat
+    if (block == 0) {
+        start_block = -1;
+        amt_written = 0;
+        amt_to_write = 0;
+    }
+    
+    char msg3[32] = {0};
+    if (block < 3) {
+        if (0 != memcmp(&fs[block], buf, USBD_MSC_BlockSize)) {
+            sprintf(msg3, "Block cmp failed: %d\r\n", block);
+            USBD_CDC_ACM_DataSend((uint8_t *)msg3, strlen(msg3));
+        }
+    }
+    
+    // should be the root dir - testing linux write data file before root dir
+    #if defined(DEBUG_MSC_FILE_TRANSFER)
+    char msg4[32] = {0};
+    if (block == 5) {
+        for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
+            memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
+            sprintf(msg4, "%s - %d - %d\r\n", tmp_file.filename, tmp_file.filesize, tmp_file.first_cluster_low_16);
+            USBD_CDC_ACM_DataSend((uint8_t *)&msg4, strlen(msg4));
+            os_dly_wait(1);
+        }
+    }
+    #endif
+    
+    // start looking for the new file and if we know how to parse it
+    for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
+        memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
+        // ToDO: get the extension from the parser
+        if (extension_is_known(tmp_file)) {
+            start_block = tmp_file.first_cluster_low_16;
+            amt_to_write = tmp_file.filesize;
+
+//            #if defined(DEBUG_MSC_FILE_TRANSFER)
+//            char msg[32] = {0};
+//            sprintf(msg, "start sector 0x%08X 0x%08X\r\n",
+//                tmp_file.first_cluster_high_16,
+//                tmp_file.first_cluster_low_16);
+//            USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
+//            os_dly_wait(1);
+//            #endif
+        }
+    }
+    
+    // now we are receiving file data for a known file type
+    // start of data decoded by block being at 0x10 so >> 1 and -2 from
+    //  the starting block since FAT data will always be at sector + 2
+    // amt_written and amt_to write track what we've received and how large
+    //  the file is that we expect
+    if ((block >> 1) >= (start_block - 2) && amt_written < amt_to_write) {
+        amt_written += USBD_MSC_BlockSize;
+        
+        // compare parsed file across the CDC link
+//        #if defined(DEBUG_MSC_FILE_TRANSFER)
+//        USBD_CDC_ACM_DataSend(buf, USBD_MSC_BlockSize);
+//        os_dly_wait(10);
+//        #endif
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//static const FatDirectoryEntry_t drive = {
+//    /*uint8_t[11] */ .filename = "MBED       ",
+//    /*uint8_t */ .attributes = 0x28,
+//    /*uint8_t */ .reserved = 0x00,
+//    /*uint8_t */ .creation_time_ms = 0x00,
+//    /*uint16_t*/ .creation_time = 0x0000,
+//    /*uint16_t*/ .creation_date = 0x0000,
+//    /*uint16_t*/ .accessed_date = 0x0000,
+//    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+//    /*uint16_t*/ .modification_time = 0x8E41,
+//    /*uint16_t*/ .modification_date = 0x32bb,
+//    /*uint16_t*/ .first_cluster_low_16 = 0x0000,
+//    /*uint32_t*/ .filesize = 0x00000000,
+//};
+
 
 //static const FatDirectoryEntry_t file1 = {
 //    /*uint8_t[11] */ .filename = "ABOUT   TXT",
@@ -474,189 +679,116 @@ static const unsigned char WebSide[512] = {
 //        
 //} file_system_t;
 
-typedef struct root_dir {
-    FatDirectoryEntry_t dir;
-    FatDirectoryEntry_t f1;
-    FatDirectoryEntry_t f2;
-    FatDirectoryEntry_t f3;
-    FatDirectoryEntry_t f4;
-    FatDirectoryEntry_t f5;
-    FatDirectoryEntry_t f6;
-    FatDirectoryEntry_t f7;
-    FatDirectoryEntry_t f8;
-    FatDirectoryEntry_t f9;
-    FatDirectoryEntry_t f10;
-    FatDirectoryEntry_t f11;
-    FatDirectoryEntry_t f12;
-    FatDirectoryEntry_t f13;
-    FatDirectoryEntry_t f14;
-    FatDirectoryEntry_t f15;
-} root_dir_t;
+//#if defined(DBG_LPC1768)
+//#   define WANTED_SIZE_IN_KB                        (512)
+//#elif defined(DBG_KL02Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_KL05Z)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_K24F256)
+//#   define WANTED_SIZE_IN_KB                        (256)
+//#elif defined(DBG_KL25Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL26Z)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_KL46Z)
+//#   define WANTED_SIZE_IN_KB                        (256)
+//#elif defined(DBG_K20D50M)
+//#   define WANTED_SIZE_IN_KB                        (128)
+//#elif defined(DBG_K22F)
+//#   define WANTED_SIZE_IN_KB                        (512)
+//#elif defined(DBG_K64F)
+//#   define WANTED_SIZE_IN_KB                        (1024)
+//#elif defined(DBG_LPC812)
+//#   define WANTED_SIZE_IN_KB                        (16)
+//#elif defined(DBG_LPC1114)
+//#   define WANTED_SIZE_IN_KB                        (32)
+//#elif defined(DBG_LPC4330)
+//#   if defined(BOARD_BAMBINO_210E)
+//#       define WANTED_SIZE_IN_KB                    (8192)
+//#   else
+//#       define WANTED_SIZE_IN_KB                    (4096)
+//#   endif
+//#elif defined(DBG_LPC1549)
+//#   define WANTED_SIZE_IN_KB                        (512)
+//#elif defined(DBG_LPC11U68)
+//#   define WANTED_SIZE_IN_KB                        (256)
+//#elif defined(DBG_LPC4337)
+//#   define WANTED_SIZE_IN_KB                        (1024)
+//#endif
 
-root_dir_t dir = {
-    .dir = {
-    /*uint8_t[11] */ .filename = "MBED       ",
-    /*uint8_t */ .attributes = 0x28,
-    /*uint8_t */ .reserved = 0x00,
-    /*uint8_t */ .creation_time_ms = 0x00,
-    /*uint16_t*/ .creation_time = 0x0000,
-    /*uint16_t*/ .creation_date = 0x0000,
-    /*uint16_t*/ .accessed_date = 0x0000,
-    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
-    /*uint16_t*/ .modification_time = 0x8E41,
-    /*uint16_t*/ .modification_date = 0x32bb,
-    /*uint16_t*/ .first_cluster_low_16 = 0x0000,
-    /*uint32_t*/ .filesize = 0x00000000
-    },
-    .f1 = {
-    /*uint8_t[11] */ .filename = "ABOUT   TXT",
-    /*uint8_t */ .attributes = 0x01,
-    /*uint8_t */ .reserved = 0x00,
-    /*uint8_t */ .creation_time_ms = 0x00,
-    /*uint16_t*/ .creation_time = 0x0000,
-    /*uint16_t*/ .creation_date = 0x0021,
-    /*uint16_t*/ .accessed_date = 0xbb32,
-    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
-    /*uint16_t*/ .modification_time = 0x83dc,
-    /*uint16_t*/ .modification_date = 0x32bb,
-    /*uint16_t*/ .first_cluster_low_16 = 0x0002,
-    /*uint32_t*/ .filesize = sizeof(file1_contents)
-    },
-    .f2  = {
-    /*uint8_t[11] */ .filename = "MBED    HTM",
-    /*uint8_t */ .attributes = 0x01,
-    /*uint8_t */ .reserved = 0x00,
-    /*uint8_t */ .creation_time_ms = 0x00,
-    /*uint16_t*/ .creation_time = 0x0000,
-    /*uint16_t*/ .creation_date = 0x0021,
-    /*uint16_t*/ .accessed_date = 0xbb32,
-    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
-    /*uint16_t*/ .modification_time = 0x83dc,
-    /*uint16_t*/ .modification_date = 0x32bb,
-    /*uint16_t*/ .first_cluster_low_16 = 0x0003,
-    /*uint32_t*/ .filesize = sizeof(WebSide)
-    },
-    .f3  = {0},
-    .f4  = {0},
-    .f5  = {0},
-    .f6  = {0},
-    .f7  = {0},
-    .f8  = {0},
-    .f9  = {0},
-    .f10 = {0},
-    .f11 = {0},
-    .f12 = {0},
-    .f13 = {0},
-    .f14 = {0},
-    .f15 = {0},
-};
+////------------------------------------------------------------------- CONSTANTS
+//#define WANTED_SIZE_IN_BYTES        ((WANTED_SIZE_IN_KB + 16 + 8)*1024)
+//#define WANTED_SECTORS_PER_CLUSTER  (8)
 
-typedef struct fs_items {
-    uint8_t *sect;
-    uint32_t length;
-} fs_items_t;
+//#define FLASH_PROGRAM_PAGE_SIZE         (512)
+//#define MBR_BYTES_PER_SECTOR            (512)
 
-const uint8_t blank_reigon[512] = {0};
+////--------------------------------------------------------------------- DERIVED
 
-const fs_items_t fs[] = {
-    // fs setup
-    {(uint8_t *)&mbr, sizeof(mbr)},
-    {(uint8_t *)&fat1, sizeof(fat1)},
-    //{(uint8_t *)&fat1, sizeof(fat1)},
-    
-    // root dir
-    {(uint8_t *)&dir, sizeof(dir)},
-    
-    //file contents
-    {(uint8_t *)&file1_contents, sizeof(file1_contents)},
-    
-    //empty area (16*512 is start of data reigion need to pad between files - 1
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)}, {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    
-    {(uint8_t *)&WebSide, sizeof(WebSide)},
-    
-    // end of fs data
-    {(uint8_t *)0, 0},
-};
+//#define MBR_NUM_NEEDED_SECTORS  (WANTED_SIZE_IN_BYTES / MBR_BYTES_PER_SECTOR)
+//#define MBR_NUM_NEEDED_CLUSTERS (MBR_NUM_NEEDED_SECTORS / WANTED_SECTORS_PER_CLUSTER)
+
+///* Need 3 sectors/FAT for every 1024 clusters */
+//#define MBR_SECTORS_PER_FAT     (3*((MBR_NUM_NEEDED_CLUSTERS + 1023)/1024))
+
+///* Macro to help fill the two FAT tables with the empty sectors without
+//   adding a lot of test #ifs inside the sectors[] declaration below */
+//#if (MBR_SECTORS_PER_FAT == 1)
+//#   define EMPTY_FAT_SECTORS
+//#elif (MBR_SECTORS_PER_FAT == 2)
+//#   define EMPTY_FAT_SECTORS  {fat2,0},
+//#elif (MBR_SECTORS_PER_FAT == 3)
+//#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},
+//#elif (MBR_SECTORS_PER_FAT == 6)
+//#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
+//#elif (MBR_SECTORS_PER_FAT == 9)
+//#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
+//#elif (MBR_SECTORS_PER_FAT == 12)
+//#   define EMPTY_FAT_SECTORS  {fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},{fat2,0},
+//#else
+//#   error "Unsupported number of sectors per FAT table"
+//#endif
+
+//#define DIRENTS_PER_SECTOR  (MBR_BYTES_PER_SECTOR / sizeof(FatDirectoryEntry_t))
+
+//#define SECTORS_ROOT_IDX        (1 + mbr.num_fats*MBR_SECTORS_PER_FAT)
+//#define SECTORS_FIRST_FILE_IDX  (SECTORS_ROOT_IDX + 2)
+//#define SECTORS_SYSTEM_VOLUME_INFORMATION (SECTORS_FIRST_FILE_IDX  + WANTED_SECTORS_PER_CLUSTER)
+//#define SECTORS_INDEXER_VOLUME_GUID       (SECTORS_SYSTEM_VOLUME_INFORMATION + WANTED_SECTORS_PER_CLUSTER)
+//#define SECTORS_MBED_HTML_IDX   (SECTORS_INDEXER_VOLUME_GUID + WANTED_SECTORS_PER_CLUSTER)
+//#define SECTORS_ERROR_FILE_IDX  (SECTORS_MBED_HTML_IDX + WANTED_SECTORS_PER_CLUSTER)
+
+////---------------------------------------------------------------- VERIFICATION
+
+///* Sanity check */
+//#if (MBR_NUM_NEEDED_CLUSTERS > 4084)
+//  /* Limited by 12 bit cluster addresses, i.e. 2^12 but only 0x002..0xff5 can be used */
+//#   error Too many needed clusters, increase WANTED_SECTORS_PER_CLUSTER
+//#endif
+
+//#if ((WANTED_SECTORS_PER_CLUSTER * MBR_BYTES_PER_SECTOR) > 32768)
+//#   error Cluster size too large, must be <= 32KB
+//#endif
+
+////-------------------------------------------------------------------- TYPEDEFS
 
 
-U8 Memory[2048];                       /* MSC Memory in RAM                  */
-U8 BlockBuf[512];
+//typedef enum {
+//    BIN_FILE,
+//    PAR_FILE,
+//    DOW_FILE,
+//    CRD_FILE,
+//    SPI_FILE,
+//    UNSUP_FILE, /* Valid extension, but not supported */
+//    SKIP_FILE,  /* Unknown extension, typically Long File Name entries */
+//} FILE_TYPE;
 
-void virtual_fs_init(void)
-{
-    dir.f1.filesize = strlen((const char *)file1_contents);
-    dir.f2.filesize = strlen((const char *)WebSide);
-}
-
-void usbd_msc_init () {    
-    
-    virtual_fs_init();
-    
-    USBD_MSC_MemorySize = 8192*512;
-    USBD_MSC_BlockSize  = 512;
-    USBD_MSC_BlockGroup = 1;
-    USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
-    USBD_MSC_BlockBuf   = BlockBuf;
-
-    USBD_MSC_MediaReady = __TRUE;
-}
-
-//file_system_t fs;
-
-void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks) {
-    fs_items_t fs_read_info = {0,0};
-    uint32_t req_block_offset = block * USBD_MSC_BlockSize;
-    uint32_t fs_expand_sector_offset = 0;
-    uint32_t sector_offset = 0;
-    uint8_t i = 0;
-    
-    // dont proceed if we're not ready
-    if (!USBD_MSC_MediaReady) {
-        return;
-    }
-    
-    // find the location of the data that is being requested by the host
-    // fs[i].length = 0 is a dummy end sector
-    // fs_read_info.sect is a pointer to the sector we need data from
-    while((fs[i].length != 0) && (fs_read_info.sect == 0)) {
-        // accumulate the length of the sectors
-        fs_expand_sector_offset += fs[i].length;
-        // true if the data is in this sector
-        if (req_block_offset < fs_expand_sector_offset) {
-            fs_read_info.sect = fs[i].sect;
-            // can have more than one block in a sector - normalize the block number to the sector in a cluster
-            sector_offset = fs[i].length - (fs_expand_sector_offset - (block * USBD_MSC_BlockSize));
-        }
-        i++;
-    }
-    // now send the data and if the request is larget than our actual filesystem pad with 0
-    if (fs_read_info.sect != 0) {
-        memcpy(buf, &fs_read_info.sect[sector_offset], num_of_blocks * USBD_MSC_BlockSize);
-    }
-    else {
-        memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
-    }
-}
-
-extern uint8_t send_uID;
-void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
-    if (!USBD_MSC_MediaReady) {
-        return;
-    }
-    //memcpy(&Memory[block * USBD_MSC_BlockSize], buf, num_of_blocks * USBD_MSC_BlockSize);
-    // log the fs
-    if(!send_uID) {
-        USBD_CDC_ACM_DataSend(buf, 512);
-    }
-}
+//typedef struct {
+//    FILE_TYPE type;
+//    char extension[3];
+//    uint32_t flash_offset;
+//} FILE_TYPE_MAPPING;
 
     
 //typedef struct file {
@@ -693,13 +825,13 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
 //static uint8_t reason = 0;
 //static uint32_t flash_addr_offset = 0;
 
-#define SWD_ERROR               0
-#define BAD_EXTENSION_FILE      1
-#define NOT_CONSECUTIVE_SECTORS 2
-#define SWD_PORT_IN_USE         3
-#define RESERVED_BITS           4
-#define BAD_START_SECTOR        5
-#define TIMEOUT                 6
+//#define SWD_ERROR               0
+//#define BAD_EXTENSION_FILE      1
+//#define NOT_CONSECUTIVE_SECTORS 2
+//#define SWD_PORT_IN_USE         3
+//#define RESERVED_BITS           4
+//#define BAD_START_SECTOR        5
+//#define TIMEOUT                 6
 
 //static uint8_t * reason_array[] = {
 //    "SWD ERROR",
@@ -711,13 +843,13 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
 //    "TIMEOUT",
 //};
 
-#define MSC_TIMEOUT_SPLIT_FILES_EVENT   (0x1000)
-#define MSC_TIMEOUT_START_EVENT         (0x2000)
-#define MSC_TIMEOUT_STOP_EVENT          (0x4000)
-#define MSC_TIMEOUT_RESTART_EVENT       (0x8000)
+//#define MSC_TIMEOUT_SPLIT_FILES_EVENT   (0x1000)
+//#define MSC_TIMEOUT_START_EVENT         (0x2000)
+//#define MSC_TIMEOUT_STOP_EVENT          (0x4000)
+//#define MSC_TIMEOUT_RESTART_EVENT       (0x8000)
 
-// 30 s timeout
-#define TIMEOUT_S 3000
+//// 30 s timeout
+//#define TIMEOUT_S 3000
 
 //static U64 msc_task_stack[MSC_TASK_STACK/8];
 
@@ -815,11 +947,11 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
 //    initDisconnect(0);
 //}
 
-extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
+//extern DAP_Data_t DAP_Data;  // DAP_Data.debug_port
 
-#ifdef BOARD_UBLOX_C027
-#include "read_uid.h"
-#endif
+//#ifdef BOARD_UBLOX_C027
+//#include "read_uid.h"
+//#endif
 
 //static void initDisconnect(uint8_t success) {
 //#if defined(BOARD_UBLOX_C027)
