@@ -69,19 +69,19 @@ static mbr_t mbr = {
         'M','S','D','0','S','5','.','0' // OEM Name in text (8 chars max)
     },
     /*uint16_t*/.bytes_per_sector           = 0x0200,       // 512 bytes per sector
-    /*uint8_t */.sectors_per_cluster        = 0x10,         // 8k cluser
+    /*uint8_t */.sectors_per_cluster        = 0x08,         // 4k cluser
     /*uint16_t*/.reserved_logical_sectors   = 0x0001,       // mbr is 1 sector
     /*uint8_t */.num_fats                   = 0x02,         // 2 FATs
     /*uint16_t*/.max_root_dir_entries       = 0x0010,       // 16 dir entries (max)
     /*uint16_t*/.total_logical_sectors      = 0x1f50,       // sector size * # of sectors = drive size
     /*uint8_t */.media_descriptor           = 0xf8,         // fixed disc = F8, removable = F0
-    /*uint16_t*/.logical_sectors_per_fat    = 0x0001,       // FAT is 1k
+    /*uint16_t*/.logical_sectors_per_fat    = 0x0001,       // FAT is 1k - ToDO:need to edit this
     /*uint16_t*/.physical_sectors_per_track = 0x0001,       // flat
     /*uint16_t*/.heads                      = 0x0001,       // flat
     /*uint32_t*/.hidden_sectors             = 0x00000000,   // before mbt, 0
-    /*uint32_t*/.big_sectors_on_drive       = 0x00000000,   // not using large clusters
+    /*uint32_t*/.big_sectors_on_drive       = 0x00000000,   // 4k sector. not using large clusters
     /*uint8_t */.physical_drive_number      = 0x00,
-    /*uint8_t */.not_used                   = 0x00,
+    /*uint8_t */.not_used                   = 0x00,         // Current head. Linux tries to set this to 0x1
     /*uint8_t */.boot_record_signature      = 0x29,         // signature is present
     /*uint32_t*/.volume_id                  = 0x27021974,   // serial number
     // needs to match the root dir label
@@ -362,7 +362,7 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks) {
         // the data is in this sector
         if (req_block_offset < fs_expand_sector_offset) {
             fs_read_info.sect = fs[i].sect;
-            // can have more than one block in a sector - normalize the block number
+            // can take more than one block for a sector entry - normalize the block number for a given entry
             sector_offset = fs[i].length - (fs_expand_sector_offset - (block * USBD_MSC_BlockSize));
         }
         i++;
@@ -406,6 +406,15 @@ static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
     return 0;
 }
 
+#define DBG_PRINT_BLOCK
+static inline void print_block(uint32_t block)
+{
+    char block_msg[32] = {0};
+    sprintf(block_msg, "block: 0x%08X\r\n", block);
+    USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
+    os_dly_wait(1);
+}
+
 void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {    
     FatDirectoryEntry_t tmp_file = {0};
     uint32_t i = 0;
@@ -416,24 +425,10 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {
         return;
     }
     
-    #if defined(DEBUG_MSC_FILE_TRANSFER)
-    char block_msg[32] = {0};
-    sprintf(block_msg, "block: 0x%08X\r\n", block);
-    USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
-    os_dly_wait(1);
-    #endif
-    
-//    if (block > 0 && block < 3) {
-//        uint32_t offset = (block % 2) ? 512 : 0;
-//        uint8_t *fat_loc = fs[1].sect + offset;
-//        memcpy(fat_loc, buf, USBD_MSC_BlockSize);
-//    }
-//    else if (block > 2 && block < 5) {
-//        uint32_t offset = (block % 2) ? 512 : 0;
-//        uint8_t *fat_loc = fs[2].sect + offset;
-//        memcpy(fat_loc, buf, USBD_MSC_BlockSize);
-//    }
-    
+#if defined(DBG_PRINT_BLOCK)
+    print_block(block);
+#endif    
+       
     // allow writting the mbr and fat
     if (block < 4) {
         memcpy(fs[block].sect, buf, USBD_MSC_BlockSize);
