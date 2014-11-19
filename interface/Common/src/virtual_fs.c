@@ -5,7 +5,7 @@
 mbr_t mbr = {
     /*uint8_t[11]*/.boot_sector = {
         0xEB,0x3C, 0x90,
-        'M','S','D','0','S','5','.','0' // OEM Name in text (8 chars max)
+        'M','S','D','0','S','4','.','1' // OEM Name in text (8 chars max)
     },
     /*uint16_t*/.bytes_per_sector           = 0x0200,       // 512 bytes per sector
     /*uint8_t */.sectors_per_cluster        = 0x08,         // 4k cluser
@@ -26,7 +26,7 @@ mbr_t mbr = {
     // needs to match the root dir label
     /*char[11]*/.volume_label               = {'D','A','P','L','I','N','K',' ','D','N','D'},
     // unused by msft - just a label (FAT, FAT12, FAT16)
-    /*char[8] */.file_system_type           = {'F','A','T','1','6',' ',' ',' '},
+    /*char[8] */.file_system_type           = {'F','A','T','1','2',' ',' ',' '},
 
     /* Executable boot code that starts the operating system */
     /*uint8_t[448]*/.bootstrap = {

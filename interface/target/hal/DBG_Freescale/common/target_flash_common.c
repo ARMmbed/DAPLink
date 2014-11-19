@@ -19,6 +19,26 @@
 
 #include "target_flash.inc"
 
+#include "string.h"
+
+uint8_t validate_bin_nvic(uint8_t *buf)
+{
+    // test for known required NVIC entries
+    //  0 is stack pointer (RAM address)
+    //  1 is Reset vector  (FLASH address)
+    uint32_t nvic_sp = 0;
+    uint32_t nvic_rv = 0;
+    memcpy(&nvic_sp, buf, sizeof(nvic_sp));
+    memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
+    if (nvic_sp == 0x10008000) {
+        if(nvic_rv > 0x100 && nvic_rv < 0x10000) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 uint8_t target_flash_init(uint32_t clk) {
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {

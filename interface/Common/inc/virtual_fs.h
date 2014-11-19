@@ -3,7 +3,7 @@
 #define VIRTUAL_FS_H
 
 // these are done at runtime and will be part of the config struct
-#define WANTED_SIZE_IN_BYTES 1024*16384
+#define WANTED_SIZE_IN_BYTES ((1024*1024)+1024*24)
 #define WANTED_SECTORS_PER_CLUSTER  (8) //mbr.sectors_per_cluster
 #define MBR_BYTES_PER_SECTOR 512
 #define NUM_NEEDED_SECTORS  (WANTED_SIZE_IN_BYTES / MBR_BYTES_PER_SECTOR)   //flashsize + mbr + fat*2 + root dir / mbr.bytes_per_sector

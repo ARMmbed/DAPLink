@@ -125,7 +125,7 @@ static inline void print_block(uint32_t block)
     os_dly_wait(1);
 }
 
-#define DBG_COMPARE_BLOCK
+//#define DBG_COMPARE_BLOCK
 static inline void compare_block(uint32_t block, uint8_t *buf)
 {
     int32_t result = 0;
@@ -156,6 +156,15 @@ static inline void log_root_dir(FatDirectoryEntry_t dir)
     os_dly_wait(1);
 }
 
+static inline void print(char *log)
+{
+    // should be the root dir - testing linux write data file before root dir
+    char msg[64] = {0};
+    sprintf(msg, "%s\r\n", log);
+    USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
+    os_dly_wait(1);
+}
+
 //#define DBG_FILE_DATA
 static inline void cdc_write_file_data(uint8_t *buf)
 {
@@ -163,12 +172,20 @@ static inline void cdc_write_file_data(uint8_t *buf)
     os_dly_wait(10);
 }
 
+static struct {
+    uint32_t  start_block;
+    uint32_t amt_to_write;
+    uint32_t amt_written;
+    uint32_t last_block_written;
+    uint8_t fragmented_transfer;
+    uint8_t transfer_started;
+    extension_t file_type;
+} file_transfer_state = {0,0,0,0,0,0,UNKNOWN};
+
 void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
 {
     FatDirectoryEntry_t tmp_file = {0};
     uint32_t i = 0;
-    static int32_t start_block = -1;
-    static uint32_t amt_written = 0, amt_to_write = 0;
     
     if (!USBD_MSC_MediaReady) {
         return;
@@ -182,45 +199,100 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
     compare_block(block, buf);
 #endif
       
-    // reset parsing when the mbr is received - making an assumption that 
-    //  once the root dir is sent the file data precedes any updates to the 
-    //  mbr or fat
-    if (block < 2 || block == 13) {
-        start_block = -1;
-        amt_written = 0;
-        amt_to_write = 0;
-        // allow writting to mbr - Linux likes this but causes windows to want to format...
-        memcpy(fs[block].sect, buf, USBD_MSC_BlockSize);
+    // this is the key for starting a file write - we dont care what file types are sent
+    //  just look for something unique (NVIC table, hex, srec, etc)
+    if (1 == validate_bin_nvic(buf) && file_transfer_state.transfer_started == 0) {
+        // prepare the target device
+//        if (0 == target_flash_init(/*tgt clk*/50000000)) {
+//            // we failed here INIT
+//        }
+//        if (0 == target_flash_program_page((file_transfer_state.start_block - block), buf, USBD_MSC_BlockSize)) {
+//            // we failed here ERASE, WRITE
+//        }
+        print("FLASH INIT");
+        print("FLASH WRITE");
+        // binary file transfer - reset parsing
+        file_transfer_state.start_block = block;
+        file_transfer_state.amt_to_write = 0xffffffff;
+        file_transfer_state.amt_written = USBD_MSC_BlockSize;
+        file_transfer_state.last_block_written = block;
+        file_transfer_state.fragmented_transfer = 0;
+        file_transfer_state.transfer_started = 1;
+        file_transfer_state.file_type = BIN;
+        // we have done all that can be done with a block here.
+        //  skip the rest of the logic
+        return;
     }
     
-    if (block == 25) {
-        // start looking for the new file and if we know how to parse it
+    // if the root dir comes we should look at it and parse for info that can end a transfer
+    if (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) {
+        // start looking for a known file and some info about it
         for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
-#if defined(DBG_ROOT_DIR)
-    log_root_dir(tmp_file);
-#endif
-            // ToDO: get the extension from the parser
-            // windows or dos programming where root dir comes before file data
+            #if defined(DBG_ROOT_DIR)
+                log_root_dir(tmp_file);
+            #endif
+            // ToDO: get the extension from the parser for verification
             if (extension_is_known(tmp_file)) {
-                start_block = tmp_file.first_cluster_low_16;
-                amt_to_write = tmp_file.filesize;
+                // sometimes a 0 files size is written while a transfer is in progress. This isnt cool
+                file_transfer_state.amt_to_write = (tmp_file.filesize > 0) ? tmp_file.filesize : 0xffffffff;
             }
         }
     }
+    
+    // see if a complete transfer occured by knowing it started and comparing filesize expectations
+    if ((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && 
+        (file_transfer_state.transfer_started == 1 )){
+        // do the disconnect - maybe write some programming stats to the file
+        print("FLASH END");
+        // we know the contents have been reveived. Time to eject
+        file_transfer_state.transfer_started = 0; //move this elsewhere
+        return;
+    }
+
+    // otherwise - writting data to media is a begin state has been detected
+    if (file_transfer_state.transfer_started == 1) {
+        if (block >= file_transfer_state.start_block) {
+            // check for contiguous transfer
+            if (block != (file_transfer_state.last_block_written+1)) {
+                // this is non-contigous transfer. need to wait for then next proper block
+                print("BLOCK OUT OF ORDER");
+            }
+            else {
+                // or write to media
+                print("FLASH WRITE");
+    //            if (0 == target_flash_program_page((file_transfer_state.start_block - block), buf, USBD_MSC_BlockSize)) {
+    //                // we failed here ERASE, WRITE
+    //            }
+                // and do the housekeeping
+                file_transfer_state.amt_written += USBD_MSC_BlockSize;
+                file_transfer_state.last_block_written = block;
+            }
+        }
+    }
+    
+    
+    
+//    if (block < 2 || block == 13) {
+//        start_block = -1;
+//        amt_written = 0;
+//        amt_to_write = 0;
+//        // allow writting to mbr - Linux likes this but causes windows to want to format...
+//        memcpy(fs[b].sect, buf, USBD_MSC_BlockSize);
+//    }
     
     // now we are receiving file data for a known file type
     // start of data decoded by block being at 0x10 so >> 1 and -2 from
     //  the starting block since FAT data will always be at sector + 2
     // amt_written and amt_to write track what we've received and how large
     //  the file is that we expect
-    if ((block >> 1) >= (start_block - 2) && amt_written < amt_to_write) {
-        amt_written += USBD_MSC_BlockSize;
-        // compare parsed file across the CDC link
-#if defined(DBG_FILE_DATA)
-    cdc_write_file_data(buf);
-#endif
-    }
+//    if ((block >> 1) >= (start_block - 2) && amt_written < amt_to_write) {
+//        amt_written += USBD_MSC_BlockSize;
+//        // compare parsed file across the CDC link
+//#if defined(DBG_FILE_DATA)
+//    cdc_write_file_data(buf);
+//#endif
+//    }
 }
 
 
