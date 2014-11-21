@@ -37,6 +37,8 @@
 #include "read_uid.h"
 #endif
 
+#define USE_USB_EJECT_INSERT
+
 #if defined(BOARD_LPC1549) || defined(BOARD_LPC11U68) || defined(BOARD_LPC4337)
     #define USE_USB_EJECT_INSERT
 #endif

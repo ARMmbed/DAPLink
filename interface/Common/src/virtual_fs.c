@@ -62,7 +62,7 @@ mbr_t mbr = {
     /*uint16_t*/.signature = 0xAA55,
 };
 
-static file_allocation_table_t fat1 = {
+static const file_allocation_table_t fat = {
     .f = {
         0xF8, 0xFF, 
         0xFF, 0xFF,
@@ -140,23 +140,10 @@ root_dir_t dir = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
     /*uint32_t*/ .filesize = sizeof(WebSide)
     },
-//    // .f3 - .f5 is hidden stuff from windows 8.1 - 10
-//    .f3  = {
-//        0x42,0x20,0x00,0x49,0x00,0x6E,0x00,0x66,0x00,0x6F,0x00,0x0F,0x00,0x72,0x72,0x00,
-//        0x6D,0x00,0x61,0x00,0x74,0x00,0x69,0x00,0x6F,0x00,0x00,0x00,0x6E,0x00,0x00,0x00,
-//    },
-//    .f4  = {
-//        0x01,0x53,0x00,0x79,0x00,0x73,0x00,0x74,0x00,0x65,0x00,0x0F,0x00,0x72,0x6D,0x00,
-//        0x20,0x00,0x56,0x00,0x6F,0x00,0x6C,0x00,0x75,0x00,0x00,0x00,0x6D,0x00,0x65,0x00,
-//    },
-//    .f5  = {
-//        0x53,0x59,0x53,0x54,0x45,0x4D,0x7E,0x31,0x20,0x20,0x20,0x16,0x00,0x47,0x92,0x91,
-//        0x63,0x45,0x63,0x45,0x00,0x00,0x93,0x91,0x63,0x45,0x04,0x00,0x00,0x00,0x00,0x00,
-//    },
-.f3  = {0},
-.f4  = {0},
-.f5  = {0},    
-.f6  = {0},
+    .f3  = {0},
+    .f4  = {0},
+    .f5  = {0},    
+    .f6  = {0},
     .f7  = {0},
     .f8  = {0},
     .f9  = {0},
@@ -170,11 +157,11 @@ root_dir_t dir = {
 
 const uint8_t blank_reigon[512] = {0};
 
-fs_items_t fs[] = {
+fs_entry_t fs[] = {
     // fs setup
     {(uint8_t *)&mbr,  sizeof(mbr)},
-    {(uint8_t *)&fat1, sizeof(fat1)*SECTORS_PER_FAT},
-    {(uint8_t *)&fat1, sizeof(fat1)*SECTORS_PER_FAT},
+    {(uint8_t *)&fat, sizeof(fat)*SECTORS_PER_FAT},
+    {(uint8_t *)&fat, sizeof(fat)*SECTORS_PER_FAT},
     
     // root dir
     {(uint8_t *)&dir, sizeof(dir)},
@@ -191,11 +178,12 @@ fs_items_t fs[] = {
 
 void virtual_fs_init(void)
 {
+    // ToDO: config fs specific things here that cant be done at compile time (without macros)
     mbr.logical_sectors_per_fat = SECTORS_PER_FAT;
     mbr.total_logical_sectors = NUM_NEEDED_SECTORS;
-    // ToDO: config fs specific things here that cant be done at compile time
+    // patch root direcotry entries
     dir.f1.filesize = strlen((const char *)file1_contents);
     dir.f2.filesize = strlen((const char *)WebSide);
-    // fs entry patching
+    // patch fs entries
     fs[5].length = sizeof(WebSide)*(mbr.sectors_per_cluster - 1);
 }

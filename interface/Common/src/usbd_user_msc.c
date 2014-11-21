@@ -18,18 +18,15 @@
 #include <string.h>
 
 #include "target_flash.h"
-#include "target_reset.h"
-#include "DAP_config.h"
-#include "dap.h"
 #include "main.h"
 #include "tasks.h"
+#include "target_reset.h"
 #include "semihost.h"
 #include "version.h"
 #include "swd_host.h"
 #include "usb_buf.h"
 #include "virtual_fs.h"
-
-extern uint32_t usb_buffer[];
+#include "daplink_debug.h"
 
 void usbd_msc_init ()
 {    
@@ -47,10 +44,10 @@ void usbd_msc_init ()
 
 void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
 {
-    fs_items_t fs_read_info = {0,0};
-    uint32_t req_block_offset = block * USBD_MSC_BlockSize;
-    uint32_t max_size_current_fs_entry = 0;
-    uint32_t sector_offset = 0;
+    fs_entry_t fs_read = {0,0};
+    uint32_t max_known_fs_entry_addr = 0;
+    uint32_t req_sector_offset = 0;
+    uint32_t req_addr = block * USBD_MSC_BlockSize;
     uint8_t i = 0, real_data_present = 1;
     
     // dont proceed if we're not ready
@@ -58,36 +55,36 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
         return;
     }
     
-    // find the location of the data that is being requested by the host
-    //  convert block * block size into an index of the flat file system
-    // fs[i].length 0 is a dummy end sector (break below loop)
-    // fs_read_info.sect is a pointer to the sector we need data from (break below loop)
-    while((fs[i].length != 0) && (fs_read_info.sect == 0)) {
-        // accumulate the length of the sectors
-        max_size_current_fs_entry += fs[i].length;
-        // the data is in this entry. See if we know it or need to send 0's
-        if (req_block_offset < max_size_current_fs_entry) {
-            fs_read_info.sect = fs[i].sect;
-            // can take more than one block for a sector entry - normalize the block number for a given entry
-            sector_offset = fs[i].length - (max_size_current_fs_entry - (block * USBD_MSC_BlockSize));
-            // determine if the inflated size is greater than the real size. If so pad with 0
-            if(sector_offset >= sizeof(fs[i].sect)) {
+    // indicate msc activity
+    main_blink_msd_led(0);
+    
+    // A block is requested from the host. We dont have a flat file system image on disc
+    //  rather just the required bits (mbr, fat, root dir, file data). The fs structure 
+    //  how these parts look without requiring them all to exist
+    while((fs[i].length != 0) && (fs_read.sect == 0)) {
+        // accumulate the length of the fs.sect(s) we have examined so far
+        max_known_fs_entry_addr += fs[i].length;
+        // determine if we have real system data or need to pad the transfer with 0
+        if (req_addr < max_known_fs_entry_addr) {
+            // we know this is where the data request is, store it for later transmission
+            fs_read.sect = fs[i].sect;
+            // sector can be larger than a block. Normalize the block number into the fs entry
+            req_sector_offset = fs[i].length - (max_known_fs_entry_addr - req_addr);
+            // determine if the inflated size is greater than the real size.
+            if(req_sector_offset >= sizeof(fs[i].sect)) {
                 real_data_present = 0;
             }
         }
         i++;
     }
     // now send the data if a known sector and valid data in memory - otherwise send 0's
-    if (fs_read_info.sect != 0 && real_data_present == 1) {
-        memcpy(buf, &fs_read_info.sect[sector_offset], num_of_blocks * USBD_MSC_BlockSize);
+    if (fs_read.sect != 0 && real_data_present == 1) {
+        memcpy(buf, &fs_read.sect[req_sector_offset], num_of_blocks * USBD_MSC_BlockSize);
     }
     else {
         memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
     }
 }
-
-#define DEBUG_MSC_FILE_TRANSFER
-#include "stdio.h"
 
 // known extension types
 // CRD - chrome
@@ -117,10 +114,12 @@ static uint32_t first_byte_valid(uint8_t c)
 static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
+    // we may see the following. Validate all or keep looking
+    //  entry with invalid or reserved first byte
+    //  entry with a false filesize.
     while (known_extensions[i] != 0) {
         if(1 == first_byte_valid(dir_entry.filename[0])) {
             if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
-                // we may see the entry with a false filesize. Validate both or keep looking
                 return (dir_entry.filesize) ? dir_entry.filesize : 0;
             }
         }
@@ -129,102 +128,33 @@ static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
     return 0;
 }
 
-#define DBG_PRINT_BLOCK
-static inline void print_block(uint32_t block)
-{
-    char block_msg[32] = {0};
-    sprintf(block_msg, "block: %d\r\n", block);
-    USBD_CDC_ACM_DataSend((uint8_t *)&block_msg, strlen(block_msg));
-    os_dly_wait(1);
-}
-
-//#define DBG_COMPARE_BLOCK
-static inline void compare_block(uint32_t block, uint8_t *buf)
-{
-    int32_t result = 0;
-    char msg[32] = {0};
-    // only RAM elements are mbr, fat1 and fat2 which is a copy of fat1
-    if ((block == (mbr.logical_sectors_per_fat+1)) ||
-        (block == 1)  ||
-        (block == 0)) {
-        result = memcmp(fs[block].sect, buf, USBD_MSC_BlockSize);
-        if (0 != result) {
-            sprintf(msg, "Block compare failed: %d %d\r\n", block, result);
-            USBD_CDC_ACM_DataSend((uint8_t *)msg, strlen(msg));
-        }
-        else {
-            sprintf(msg, "Block compare passed: %d\r\n", block);
-            USBD_CDC_ACM_DataSend((uint8_t *)msg, strlen(msg));
-        }
-    }
-}
-
-#define DBG_ROOT_DIR
-static inline void log_root_dir(FatDirectoryEntry_t dir)
-{
-    // should be the root dir - testing linux write data file before root dir
-    char msg[128] = {0};
-    sprintf(msg, "name:%.11s\tattributes:%8d\tsize:%8d\tstart:%8d\tcreated:%8d\tmodified:%8d\taccessed:%8d\r\n"
-        , dir.filename, dir.attributes, dir.filesize, dir.first_cluster_low_16, dir.creation_time_ms, dir.modification_time, dir.accessed_date);
-    USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
-    os_dly_wait(1);
-}
-
-static inline void print(char *log)
-{
-    // should be the root dir - testing linux write data file before root dir
-    char msg[64] = {0};
-    sprintf(msg, "%s\r\n", log);
-    USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
-    os_dly_wait(1);
-}
-
-//#define DBG_FILE_DATA
-static inline void cdc_write_file_data(uint8_t *buf)
-{
-    USBD_CDC_ACM_DataSend(buf, USBD_MSC_BlockSize);
-    os_dly_wait(10);
-}
-
-static struct {
-    uint32_t  start_block;
-    uint32_t amt_to_write;
-    uint32_t amt_written;
-    uint32_t last_block_written;
-    uint8_t fragmented_transfer;
-    uint8_t transfer_started;
-    extension_t file_type;
-} file_transfer_state = {0,0,0,0,0,0,UNKNOWN};
-
 void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
 {
     FatDirectoryEntry_t tmp_file = {0};
     uint32_t i = 0;
+    static struct {
+        uint32_t start_block;
+        uint32_t amt_to_write;
+        uint32_t amt_written;
+        uint32_t last_block_written;
+        uint8_t  fragmented_transfer;
+        uint8_t  transfer_started;
+        extension_t file_type;
+    } file_transfer_state = {0,0,0,0,0,0,UNKNOWN};
     
     if (!USBD_MSC_MediaReady) {
         return;
     }
     
-#if defined(DBG_PRINT_BLOCK)
-    print_block(block);
-#endif
-    
-#if defined(DBG_COMPARE_BLOCK)
-    compare_block(block, buf);
-#endif
+    debug_msg("block: %d\r\n", block);
+    // indicate msd activity
+    main_blink_msd_led(0);
       
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc)
     if (1 == validate_bin_nvic(buf) && file_transfer_state.transfer_started == 0) {
-        // prepare the target device
-//        if (0 == target_flash_init(/*tgt clk*/50000000)) {
-//            // we failed here INIT
-//        }
-//        if (0 == target_flash_program_page((file_transfer_state.start_block - block), buf, USBD_MSC_BlockSize)) {
-//            // we failed here ERASE, WRITE
-//        }
-        print("FLASH INIT");
-        print("FLASH WRITE");
+        debug_msg("%s", "FLASH INIT\r\n");
+        
         // binary file transfer - reset parsing
         file_transfer_state.start_block = block;
         file_transfer_state.amt_to_write = 0xffffffff;
@@ -233,23 +163,56 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         file_transfer_state.fragmented_transfer = 0;
         file_transfer_state.transfer_started = 1;
         file_transfer_state.file_type = BIN;
-        // we have done all that can be done with a block here.
-        //  skip the rest of the logic
+        
+        // prepare the target device
+        if (0 == target_flash_init(/*tgt clk*/50000000)) {
+            // we failed here INIT
+            main_usb_disconnect_event();
+        }
+        // writing in 2 places less than ideal but manageable
+        debug_msg("%s", "FLASH WRITE\r\n");
+        //debug_data(buf, USBD_MSC_BlockSize);
+        if (0 == target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize)) {
+            // we failed here ERASE, WRITE
+            main_usb_disconnect_event();
+        }
         return;
     }
-    
     // if the root dir comes we should look at it and parse for info that can end a transfer
-    if (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) {
+    else if (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) {
         // start looking for a known file and some info about it
         for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
-            #if defined(DBG_ROOT_DIR)
-                log_root_dir(tmp_file);
-            #endif
+            debug_msg("na:%.11s\tatrb:%8d\tsz:%8d\tst:%8d\tcr:%8d\tmod:%8d\taccd:%8d\r\n"
+                , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
+                , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
             // ToDO: get the extension from the parser for verification
             if (extension_is_known(tmp_file)) {
                 // sometimes a 0 files size is written while a transfer is in progress. This isnt cool
                 file_transfer_state.amt_to_write = (tmp_file.filesize > 0) ? tmp_file.filesize : 0xffffffff;
+            }
+        }
+    }
+
+    // write data to media
+    if ((block >= file_transfer_state.start_block) && 
+        (file_transfer_state.transfer_started == 1)) {
+        if (block >= file_transfer_state.start_block) {
+            // check for contiguous transfer
+            if (block != (file_transfer_state.last_block_written+1)) {
+                // this is non-contigous transfer. need to wait for then next proper block
+                debug_msg("%s", "BLOCK OUT OF ORDER\r\n");
+            }
+            else {
+                debug_msg("%s", "FLASH WRITE\r\n");
+                //debug_data(buf, USBD_MSC_BlockSize);
+                if (0 == target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize)) {
+                    // we failed here ERASE, WRITE
+                    main_usb_disconnect_event();
+                }
+                // and do the housekeeping
+                file_transfer_state.amt_written += USBD_MSC_BlockSize;
+                file_transfer_state.last_block_written = block;
             }
         }
     }
@@ -258,55 +221,11 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
     if ((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && 
         (file_transfer_state.transfer_started == 1 )){
         // do the disconnect - maybe write some programming stats to the file
-        print("FLASH END");
+        debug_msg("%s", "FLASH END\r\n");
         // we know the contents have been reveived. Time to eject
-        file_transfer_state.transfer_started = 0; //move this elsewhere
-        return;
+        file_transfer_state.transfer_started = 0;
+        main_usb_disconnect_event();
     }
-
-    // otherwise - writting data to media is a begin state has been detected
-    if (file_transfer_state.transfer_started == 1) {
-        if (block >= file_transfer_state.start_block) {
-            // check for contiguous transfer
-            if (block != (file_transfer_state.last_block_written+1)) {
-                // this is non-contigous transfer. need to wait for then next proper block
-                print("BLOCK OUT OF ORDER");
-            }
-            else {
-                // or write to media
-                print("FLASH WRITE");
-    //            if (0 == target_flash_program_page((file_transfer_state.start_block - block), buf, USBD_MSC_BlockSize)) {
-    //                // we failed here ERASE, WRITE
-    //            }
-                // and do the housekeeping
-                file_transfer_state.amt_written += USBD_MSC_BlockSize;
-                file_transfer_state.last_block_written = block;
-            }
-        }
-    }
-    
-    
-    
-//    if (block < 2 || block == 13) {
-//        start_block = -1;
-//        amt_written = 0;
-//        amt_to_write = 0;
-//        // allow writting to mbr - Linux likes this but causes windows to want to format...
-//        memcpy(fs[b].sect, buf, USBD_MSC_BlockSize);
-//    }
-    
-    // now we are receiving file data for a known file type
-    // start of data decoded by block being at 0x10 so >> 1 and -2 from
-    //  the starting block since FAT data will always be at sector + 2
-    // amt_written and amt_to write track what we've received and how large
-    //  the file is that we expect
-//    if ((block >> 1) >= (start_block - 2) && amt_written < amt_to_write) {
-//        amt_written += USBD_MSC_BlockSize;
-//        // compare parsed file across the CDC link
-//#if defined(DBG_FILE_DATA)
-//    cdc_write_file_data(buf);
-//#endif
-//    }
 }
 
 

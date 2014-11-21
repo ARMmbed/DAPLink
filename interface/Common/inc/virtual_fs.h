@@ -53,7 +53,7 @@ __packed typedef struct {
 extern mbr_t mbr;
 
 typedef struct file_allocation_table {
-    uint8_t f[512];
+    const uint8_t f[512];
 } file_allocation_table_t;
 
 __packed typedef union FatDirectoryEntry {
@@ -93,12 +93,12 @@ typedef struct root_dir {
     FatDirectoryEntry_t f15;
 } root_dir_t;
 
-typedef struct fs_items {
+typedef struct fs_entry {
     uint8_t *sect;
     uint32_t length;
-} fs_items_t;
+} fs_entry_t;
 
-extern fs_items_t fs[];
+extern fs_entry_t fs[];
 
 void virtual_fs_init(void);
 
