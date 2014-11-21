@@ -103,13 +103,26 @@ typedef enum extension {
     BIN,
 } extension_t;
 
+static uint32_t first_byte_valid(uint8_t c)
+{
+    const char *valid_char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    do {
+        if(c == *valid_char) {
+            return 1;
+        }
+    } while (*(valid_char++) != '\0');
+    return 0;
+}        
+
 static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
     while (known_extensions[i] != 0) {
-        if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
-            // we may see the entry with a false filesize. Validate both or keep looking
-            return (dir_entry.filesize) ? dir_entry.filesize : 0;
+        if(1 == first_byte_valid(dir_entry.filename[0])) {
+            if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
+                // we may see the entry with a false filesize. Validate both or keep looking
+                return (dir_entry.filesize) ? dir_entry.filesize : 0;
+            }
         }
         i++;
     }
@@ -150,8 +163,9 @@ static inline void compare_block(uint32_t block, uint8_t *buf)
 static inline void log_root_dir(FatDirectoryEntry_t dir)
 {
     // should be the root dir - testing linux write data file before root dir
-    char msg[64] = {0};
-    sprintf(msg, "name:%s\t - size:%d\t - start:%d\r\n", dir.filename, dir.filesize, dir.first_cluster_low_16);
+    char msg[128] = {0};
+    sprintf(msg, "name:%.11s\tattributes:%8d\tsize:%8d\tstart:%8d\tcreated:%8d\tmodified:%8d\taccessed:%8d\r\n"
+        , dir.filename, dir.attributes, dir.filesize, dir.first_cluster_low_16, dir.creation_time_ms, dir.modification_time, dir.accessed_date);
     USBD_CDC_ACM_DataSend((uint8_t *)&msg, strlen(msg));
     os_dly_wait(1);
 }
