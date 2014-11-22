@@ -9,7 +9,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef __cplusplus
  extern "C" {
