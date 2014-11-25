@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
-#include <rl_usb.h>
-#include <string.h>
 
-#include "target_flash.h"
+#include "RTL.h"
+#include "rl_usb.h"
+#include "string.h"
+
 #include "main.h"
-#include "tasks.h"
 #include "target_reset.h"
-#include "semihost.h"
-#include "version.h"
-#include "swd_host.h"
 #include "usb_buf.h"
 #include "virtual_fs.h"
 #include "daplink_debug.h"
@@ -96,7 +92,7 @@ static const char *known_extensions[] = {
 };
 
 typedef enum extension {
-    UNKNOWN = -1,
+    UNKNOWN = 0,
     BIN,
 } extension_t;
 
@@ -111,7 +107,7 @@ static uint32_t first_byte_valid(uint8_t c)
     return 0;
 }        
 
-static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
+static extension_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
     // we may see the following. Validate all or keep looking
@@ -120,12 +116,12 @@ static uint32_t extension_is_known(const FatDirectoryEntry_t dir_entry)
     while (known_extensions[i] != 0) {
         if(1 == first_byte_valid(dir_entry.filename[0])) {
             if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
-                return (dir_entry.filesize) ? dir_entry.filesize : 0;
+                return (dir_entry.filesize) ? BIN : UNKNOWN;
             }
         }
         i++;
     }
-    return 0;
+    return UNKNOWN;
 }
 
 void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
@@ -137,10 +133,9 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         uint32_t amt_to_write;
         uint32_t amt_written;
         uint32_t last_block_written;
-        uint8_t  fragmented_transfer;
-        uint8_t  transfer_started;
+        uint32_t transfer_started;
         extension_t file_type;
-    } file_transfer_state = {0,0,0,0,0,0,UNKNOWN};
+    } file_transfer_state = {0,0,0,0,0,UNKNOWN};
     
     if (!USBD_MSC_MediaReady) {
         return;
@@ -160,7 +155,6 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         file_transfer_state.amt_to_write = 0xffffffff;
         file_transfer_state.amt_written = USBD_MSC_BlockSize;
         file_transfer_state.last_block_written = block;
-        file_transfer_state.fragmented_transfer = 0;
         file_transfer_state.transfer_started = 1;
         file_transfer_state.file_type = BIN;
         
@@ -188,7 +182,7 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
                 , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
                 , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
             // ToDO: get the extension from the parser for verification
-            if (extension_is_known(tmp_file)) {
+            if (wanted_dir_entry(tmp_file)) {
                 // sometimes a 0 files size is written while a transfer is in progress. This isnt cool
                 file_transfer_state.amt_to_write = (tmp_file.filesize > 0) ? tmp_file.filesize : 0xffffffff;
             }

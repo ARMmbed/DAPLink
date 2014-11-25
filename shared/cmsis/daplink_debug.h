@@ -9,7 +9,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef __cplusplus
  extern "C" {
@@ -19,8 +19,8 @@
 static inline uint32_t daplink_debug_print(const char* format, ...)
 {
     char buf[128] = {0};
-    int r = 0;
-    __va_list arg;
+    int32_t r = 0, s = 0;
+    va_list arg;
     
     va_start(arg, format);
     r = vsprintf(buf, format, arg);
@@ -28,15 +28,17 @@ static inline uint32_t daplink_debug_print(const char* format, ...)
         return 0;
     }
     va_end(arg);
-    USBD_CDC_ACM_DataSend((uint8_t *)&buf, strlen(buf));
+    s = USBD_CDC_ACM_DataSend((uint8_t *)&buf, strlen(buf));
     os_dly_wait(1);
-    return r;
+    
+    return (r == s) ? (uint32_t)r : 0;
 }
 
-static inline void daplink_debug(uint8_t *buf, uint32_t size)
+static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
 {
-    USBD_CDC_ACM_DataSend((uint8_t *)&buf, size);
+    int32_t s = USBD_CDC_ACM_DataSend((uint8_t *)&buf, size);
     os_dly_wait(5);
+    return (uint32_t)s;
 }
 
 #else
