@@ -104,7 +104,7 @@ static LED_STATE msd_led_state = LED_FLASH;
     } EJECT_INSERT_MODE;
 
     // Delay of ~0.5 second using 90ms ticks
-    #define EJECT_INSERT_DELAY_500MS  (5)
+    #define EJECT_INSERT_DELAY_500MS  (11)
 
     // Variables to handle media eject/insert after a successful drag-n-drop
     extern BOOL USBD_MSC_MediaReadyEx;

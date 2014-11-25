@@ -43,6 +43,8 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     return 0;
 }
 
+#define WRITE_TO_TARGET
+#if defined (WRITE_TO_TARGET)
 
 uint8_t target_flash_init(uint32_t clk)
 {
@@ -151,5 +153,34 @@ uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
 
     return 1;
 }
+
+#else
+
+uint8_t target_flash_init(uint32_t clk)
+{
+    return 1;
+}
+
+uint8_t target_flash_erase_sector(unsigned int sector)
+{
+    return 1;
+}
+
+uint8_t target_flash_erase_chip(void)
+{
+    return 1;
+}
+
+uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data)
+{
+    return 1;
+}
+
+uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
+{
+    return 1;
+}
+
+#endif
 
 

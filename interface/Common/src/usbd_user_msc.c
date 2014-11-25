@@ -179,7 +179,8 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         return;
     }
     // if the root dir comes we should look at it and parse for info that can end a transfer
-    else if (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) {
+    else if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
+             (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 2))) {
         // start looking for a known file and some info about it
         for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));

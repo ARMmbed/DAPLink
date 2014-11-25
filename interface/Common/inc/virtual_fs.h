@@ -74,6 +74,8 @@ __packed typedef union FatDirectoryEntry {
     };
 } FatDirectoryEntry_t;
 
+// to save memory the root dir is only 1 block (512 bytes)
+//  but 2 actually exist on disc (32 entries)
 typedef struct root_dir {
     FatDirectoryEntry_t dir;
     FatDirectoryEntry_t f1;

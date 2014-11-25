@@ -11,7 +11,7 @@ mbr_t mbr = {
     /*uint8_t */.sectors_per_cluster        = 0x08,         // 4k cluser
     /*uint16_t*/.reserved_logical_sectors   = 0x0001,       // mbr is 1 sector
     /*uint8_t */.num_fats                   = 0x02,         // 2 FATs
-    /*uint16_t*/.max_root_dir_entries       = 0x0010,       // 16 dir entries (max)
+    /*uint16_t*/.max_root_dir_entries       = 0x0020,       // 16 dir entries (max)
     /*uint16_t*/.total_logical_sectors      = 0x1f50,       // sector size * # of sectors = drive size
     /*uint8_t */.media_descriptor           = 0xf8,         // fixed disc = F8, removable = F0
     /*uint16_t*/.logical_sectors_per_fat    = 0x0001,       // FAT is 1k - ToDO:need to edit this
@@ -97,7 +97,7 @@ static const unsigned char WebSide[512] = {
 "</html>\r\n"
 "\r\n"};
 
-root_dir_t dir = {
+root_dir_t dir1 = {
     .dir = {
     /*uint8_t[11] */ .filename = "DAPLINK    ",
     /*uint8_t */ .attributes = 0x28,
@@ -152,7 +152,26 @@ root_dir_t dir = {
     .f12 = {0},
     .f13 = {0},
     .f14 = {0},
-    .f15 = {0},
+    .f15 = {0}
+};
+
+const root_dir_t dir2 = {
+    .dir = {0},
+    .f1  = {0},
+    .f2  = {0},
+    .f3  = {0},
+    .f4  = {0},
+    .f5  = {0},    
+    .f6  = {0},
+    .f7  = {0},
+    .f8  = {0},
+    .f9  = {0},
+    .f10 = {0},
+    .f11 = {0},
+    .f12 = {0},
+    .f13 = {0},
+    .f14 = {0},
+    .f15 = {0}
 };
 
 const uint8_t blank_reigon[512] = {0};
@@ -164,7 +183,8 @@ fs_entry_t fs[] = {
     {(uint8_t *)&fat, sizeof(fat)*SECTORS_PER_FAT},
     
     // root dir
-    {(uint8_t *)&dir, sizeof(dir)},
+    {(uint8_t *)&dir1, sizeof(dir1)},
+    {(uint8_t *)&dir2, sizeof(dir2)},
     
     //start of file contents
     {(uint8_t *)&file1_contents, sizeof(file1_contents)},
@@ -182,8 +202,8 @@ void virtual_fs_init(void)
     mbr.logical_sectors_per_fat = SECTORS_PER_FAT;
     mbr.total_logical_sectors = NUM_NEEDED_SECTORS;
     // patch root direcotry entries
-    dir.f1.filesize = strlen((const char *)file1_contents);
-    dir.f2.filesize = strlen((const char *)WebSide);
+    dir1.f1.filesize = strlen((const char *)file1_contents);
+    dir1.f2.filesize = strlen((const char *)WebSide);
     // patch fs entries
     fs[5].length = sizeof(WebSide)*(mbr.sectors_per_cluster - 1);
 }
