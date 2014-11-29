@@ -24,6 +24,8 @@
 #include "virtual_fs.h"
 #include "daplink_debug.h"
 
+#include "version.h"
+
 void usbd_msc_init ()
 {    
     // config the mbr and FAT - FAT may be const later
@@ -80,11 +82,17 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
     else {
         memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
     }
+    // tmp way to send the known dynamic files. Need to calculate the location
+    if (block == 17) {
+        update_html_file();
+    }
 }
 
 // known extension types
 // CRD - chrome
 // PAR - IE
+// Extensions dont matter much if you're looking for specific file data
+//  other than size parsing but hex and srec have specific EOF records
 static const char *known_extensions[] = {
     "BIN",
     "bin",
@@ -159,7 +167,7 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         file_transfer_state.file_type = BIN;
         
         // prepare the target device
-        if (0 == target_flash_init(/*tgt clk*/50000000)) {
+        if (0 == target_flash_init()) {
             // we failed here INIT
             main_usb_disconnect_event();
         }
@@ -213,14 +221,17 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
     }
     
     // see if a complete transfer occured by knowing it started and comparing filesize expectations
-    if ((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && 
-        (file_transfer_state.transfer_started == 1 )){
+    if ((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && (file_transfer_state.transfer_started == 1 )){
         // do the disconnect - maybe write some programming stats to the file
         debug_msg("%s", "FLASH END\r\n");
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
         main_usb_disconnect_event();
     }
+    
+    // There is one more known state where the root dir is updated with the amount of data transfered but not the whole file transfer was complete
+    //  To handle this we need a state to kick off a timer for a fixed amount of time where we can receive more continous secotrs and assume
+    //  they are valid file data. This is only the case for bin files since the only known end is the filesize from the root dir entry.
 }
 
 

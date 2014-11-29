@@ -23,8 +23,16 @@
 
 #include "string.h"
 
-//#define SP_VAL 0x10008000
-#define SP_VAL 0x20003000
+#define MIN_FLASH_ADDRESS 0x00000
+#define MAX_FLASH_ADDRESS 0x10000
+
+#define MIN_RAM_ADDRESS 0x1FFF0000
+#define MAX_RAM_ADDRESS 0x20030000
+
+static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
+{
+    return ((test < min) || (test > max)) ? 0 : 1;
+}
 
 uint8_t validate_bin_nvic(uint8_t *buf)
 {
@@ -33,20 +41,24 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     //  1 is Reset vector  (FLASH address)
     uint32_t nvic_sp = 0;
     uint32_t nvic_rv = 0;
+    // test the initial SP value
     memcpy(&nvic_sp, buf, sizeof(nvic_sp));
-    memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
-    if (nvic_sp == SP_VAL) {
-        if(nvic_rv > 0x100 && nvic_rv < 0x10000) {
-            return 1;
-        }
+    if (0 == test_range(nvic_sp, MIN_RAM_ADDRESS, MAX_RAM_ADDRESS)) {
+        return 0;
     }
-    return 0;
+    // test the initial reset vector
+    memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
+    if (0 == test_range(nvic_rv, MIN_FLASH_ADDRESS, MAX_FLASH_ADDRESS)) {
+        return 0;
+    }
+    
+    return 1;
 }
 
 #define WRITE_TO_TARGET
 #if defined (WRITE_TO_TARGET)
 
-uint8_t target_flash_init(uint32_t clk)
+uint8_t target_flash_init(void)
 {
     PORT_SWD_SETUP();
     target_set_state(RESET_PROGRAM);
