@@ -20,6 +20,7 @@
 
 #include "main.h"
 #include "target_reset.h"
+#include "target_flash.h"
 #include "usb_buf.h"
 #include "virtual_fs.h"
 #include "daplink_debug.h"
