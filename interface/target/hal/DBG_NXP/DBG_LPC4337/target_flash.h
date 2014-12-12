@@ -20,11 +20,45 @@
 #include "swd_host.h"
 #include <stdint.h>
 
+#include "string.h"
+
 #define FLASH_SECTOR_SIZE           (1024)  /* 1024 is assuming that this value is in number of uint32_t's */
 
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x1000)
 
-static uint8_t target_flash_init(uint32_t clk);
+#define MIN_FLASH_ADDRESS 0x00000
+#define MAX_FLASH_ADDRESS 0x10000
+
+#define MIN_RAM_ADDRESS 0x20000000
+#define MAX_RAM_ADDRESS 0x20030000
+
+static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
+{
+    return ((test < min) || (test > max)) ? 0 : 1;
+}
+
+static uint8_t validate_bin_nvic(uint8_t *buf)
+{
+    // test for known required NVIC entries
+    //  0 is stack pointer (RAM address)
+    //  1 is Reset vector  (FLASH address)
+    uint32_t nvic_sp = 0;
+    uint32_t nvic_rv = 0;
+    // test the initial SP value
+    memcpy(&nvic_sp, buf, sizeof(nvic_sp));
+    if (0 == test_range(nvic_sp, MIN_RAM_ADDRESS, MAX_RAM_ADDRESS)) {
+        return 0;
+    }
+    // test the initial reset vector
+    memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
+    if (0 == test_range(nvic_rv, MIN_FLASH_ADDRESS, MAX_FLASH_ADDRESS)) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+static uint8_t target_flash_init(void /*uint32_t clk*/);
 static uint8_t target_flash_uninit(void);
 static uint8_t target_flash_erase_chip(void);
 static uint8_t target_flash_erase_sector(uint32_t adr);
@@ -105,7 +139,7 @@ static const TARGET_FLASH flash = {
     512          // ram_to_flash_bytes_to_be_written
 };
 
-static uint8_t target_flash_init(uint32_t clk) {
+static uint8_t target_flash_init(void /*uint32_t clk*/) {
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
         return 0;
