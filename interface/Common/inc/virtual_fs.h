@@ -12,6 +12,7 @@
 #define SECTORS_PER_FAT     (3*((NUM_NEEDED_CLUSTERS + 1023)/1024))
 
 #include "stdint.h"
+#include "target_flash_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +43,7 @@ __packed typedef struct {
     char     file_system_type[8];
     /* bootstrap data in bytes 62-509 */
     uint8_t  bootstrap[448];
+// These entries in place of bootstrap code are the *nix partitions
 //    uint8_t  partition_one[16];
 //    uint8_t  partition_two[16];
 //    uint8_t  partition_three[16];
@@ -74,8 +76,9 @@ __packed typedef union FatDirectoryEntry {
     };
 } FatDirectoryEntry_t;
 
-// to save memory the root dir is only 1 block (512 bytes)
-//  but 2 actually exist on disc (32 entries)
+// to save RAM all files must be in the first root dir entry (512 bytes)
+//  but 2 actually exist on disc (32 entries) to accomodate hidden OS files
+//  and folders
 typedef struct root_dir {
     FatDirectoryEntry_t dir;
     FatDirectoryEntry_t f1;
@@ -102,6 +105,7 @@ typedef struct fs_entry {
 
 extern fs_entry_t fs[];
 
+void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);
 
 #ifdef __cplusplus

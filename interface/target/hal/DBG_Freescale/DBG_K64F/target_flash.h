@@ -16,12 +16,7 @@
 #ifndef TARGET_FLASH_H
 #define TARGET_FLASH_H
 
-#include "target_flash_common.h"
-
-
 #define FLASH_SECTOR_SIZE                  (4096)
-
-#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x400)
-
+#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
 #endif

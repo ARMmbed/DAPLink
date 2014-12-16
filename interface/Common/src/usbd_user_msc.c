@@ -20,18 +20,18 @@
 
 #include "main.h"
 #include "target_reset.h"
-#include "target_flash.h"
+#include "target_flash_common.h"
 #include "usb_buf.h"
 #include "virtual_fs.h"
 #include "daplink_debug.h"
 
 #include "version.h"
 
-void usbd_msc_init ()
+void usbd_msc_init(void)
 {    
     // config the mbr and FAT - FAT may be const later
     virtual_fs_init();
-    
+
     USBD_MSC_MemorySize = mbr.bytes_per_sector * mbr.total_logical_sectors;
     USBD_MSC_BlockSize  = mbr.bytes_per_sector;
     USBD_MSC_BlockGroup = 1;
@@ -41,7 +41,7 @@ void usbd_msc_init ()
     USBD_MSC_MediaReady = __TRUE;
 }
 
-void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
+void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
 {
     fs_entry_t fs_read = {0,0};
     uint32_t max_known_fs_entry_addr = 0;
@@ -59,7 +59,7 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
     
     // A block is requested from the host. We dont have a flat file system image on disc
     //  rather just the required bits (mbr, fat, root dir, file data). The fs structure 
-    //  how these parts look without requiring them all to exist
+    //  knows how these parts look without requiring them all to exist linearly in memory
     while((fs[i].length != 0) && (fs_read.sect == 0)) {
         // accumulate the length of the fs.sect(s) we have examined so far
         max_known_fs_entry_addr += fs[i].length;
@@ -83,9 +83,12 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
     else {
         memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
     }
-    // tmp way to send the known dynamic files. Need to calculate the location
-    if (block == 17) {
-        update_html_file();
+    
+    // Some files require funtime content. If one generate and overwrite the the read sequence
+    //  buffer with the newer data (only works for files < 512 bytes and known location on fs)
+    if (block == (mbr.reserved_logical_sectors + (mbr.logical_sectors_per_fat*mbr.num_fats) 
+        + ((mbr.max_root_dir_entries*sizeof(FatDirectoryEntry_t)/mbr.bytes_per_sector)))) {
+        update_html_file(buf, (num_of_blocks * USBD_MSC_BlockSize));
     }
 }
 
@@ -97,12 +100,15 @@ void usbd_msc_read_sect (U32 block, U8 *buf, U32 num_of_blocks)
 static const char *known_extensions[] = {
     "BIN",
     "bin",
+    "HEX",
+    "hex",
     0,
 };
 
 typedef enum extension {
     UNKNOWN = 0,
     BIN,
+    HEX,
 } extension_t;
 
 static uint32_t first_byte_valid(uint8_t c)
@@ -116,7 +122,7 @@ static uint32_t first_byte_valid(uint8_t c)
     return 0;
 }        
 
-static extension_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
+static uint32_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
     // we may see the following. Validate all or keep looking
@@ -125,17 +131,28 @@ static extension_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
     while (known_extensions[i] != 0) {
         if(1 == first_byte_valid(dir_entry.filename[0])) {
             if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
-                return (dir_entry.filesize) ? BIN : UNKNOWN;
+                return (dir_entry.filesize) ? 1 : 0;
             }
         }
         i++;
     }
+    return 0;
+}
+
+static extension_t identify_start_sequence(uint8_t *buf)
+{
+    if (1 == validate_bin_nvic(buf)) {
+        return BIN;
+    }
+    // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
     return UNKNOWN;
 }
 
-void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
+void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
 {
     FatDirectoryEntry_t tmp_file = {0};
+    extension_t start_type_identified = UNKNOWN;
+    target_flash_status_t status = TARGET_OK;
     uint32_t i = 0;
     static struct {
         uint32_t start_block;
@@ -155,31 +172,37 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
     main_blink_msd_led(0);
       
     // this is the key for starting a file write - we dont care what file types are sent
-    //  just look for something unique (NVIC table, hex, srec, etc)
-    if (1 == validate_bin_nvic(buf) && file_transfer_state.transfer_started == 0) {
-        debug_msg("%s", "FLASH INIT\r\n");
-        
-        // binary file transfer - reset parsing
-        file_transfer_state.start_block = block;
-        file_transfer_state.amt_to_write = 0xffffffff;
-        file_transfer_state.amt_written = USBD_MSC_BlockSize;
-        file_transfer_state.last_block_written = block;
-        file_transfer_state.transfer_started = 1;
-        file_transfer_state.file_type = BIN;
-        
-        // prepare the target device
-        if (0 == target_flash_init()) {
-            // we failed here INIT
-            main_usb_disconnect_event();
+    //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated
+    if (0 == file_transfer_state.transfer_started) {
+        // look for file types we can program
+        start_type_identified = identify_start_sequence(buf);
+        if (start_type_identified != UNKNOWN) {
+            debug_msg("%s", "FLASH INIT\r\n");
+            
+            // binary file transfer - reset parsing
+            file_transfer_state.start_block = block;
+            file_transfer_state.amt_to_write = 0xffffffff;
+            file_transfer_state.amt_written = USBD_MSC_BlockSize;
+            file_transfer_state.last_block_written = block;
+            file_transfer_state.transfer_started = 1;
+            file_transfer_state.file_type = start_type_identified;
+            
+            // prepare the target device
+            status = target_flash_init();
+            if (status != TARGET_OK) {
+                configure_fail_txt(status);
+                main_usb_disconnect_event();
+            }
+            // writing in 2 places less than ideal but manageable
+            debug_msg("%s", "FLASH WRITE\r\n");
+            //debug_data(buf, USBD_MSC_BlockSize);
+            status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize);
+            if (status != TARGET_OK) {
+                configure_fail_txt(status);
+                main_usb_disconnect_event();
+            }
+            return;
         }
-        // writing in 2 places less than ideal but manageable
-        debug_msg("%s", "FLASH WRITE\r\n");
-        //debug_data(buf, USBD_MSC_BlockSize);
-        if (0 == target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize)) {
-            // we failed here ERASE, WRITE
-            main_usb_disconnect_event();
-        }
-        return;
     }
     // if the root dir comes we should look at it and parse for info that can end a transfer
     else if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
@@ -190,10 +213,9 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
             debug_msg("na:%.11s\tatrb:%8d\tsz:%8d\tst:%8d\tcr:%8d\tmod:%8d\taccd:%8d\r\n"
                 , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
                 , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
-            // ToDO: get the extension from the parser for verification
-            if (wanted_dir_entry(tmp_file)) {
-                // sometimes a 0 files size is written while a transfer is in progress. This isnt cool
-                file_transfer_state.amt_to_write = (tmp_file.filesize > 0) ? tmp_file.filesize : 0xffffffff;
+            // test for a known dir entry file type and also that the filesize is greater than 0
+            if (1 == wanted_dir_entry(tmp_file)) {
+                file_transfer_state.amt_to_write = tmp_file.filesize;
             }
         }
     }
@@ -210,8 +232,9 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
             else {
                 debug_msg("%s", "FLASH WRITE\r\n");
                 //debug_data(buf, USBD_MSC_BlockSize);
-                if (0 == target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize)) {
-                    // we failed here ERASE, WRITE
+                status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize);
+                if (status != TARGET_OK) {
+                    configure_fail_txt(status);
                     main_usb_disconnect_event();
                 }
                 // and do the housekeeping
@@ -227,6 +250,7 @@ void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks)
         debug_msg("%s", "FLASH END\r\n");
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
+        configure_fail_txt(status);
         main_usb_disconnect_event();
     }
     

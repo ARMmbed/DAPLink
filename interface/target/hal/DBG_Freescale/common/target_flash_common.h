@@ -17,22 +17,49 @@
 #define TARGET_FLASH_COMMON_H
 
 #include "target_struct.h"
+#include "target_flash.h"
 #include "swd_host.h"
 #include <stdint.h>
 
 //! @brief Details about the flash algorithm.
 extern const TARGET_FLASH flash;
 
+typedef enum target_flash_status {
+    TARGET_OK = 0,
+    TARGET_FAIL_RESET,
+    TARGET_FAIL_ALGO_DL,
+    TARGET_FAIL_ALGO_DATA_SEQ,
+    TARGET_FAIL_INIT,
+    TARGET_FAIL_SECURITY_BITS,
+    TARGET_FAIL_UNLOCK,
+    TARGET_FAIL_ERASE_SECTOR,
+    TARGET_FAIL_ERASE_ALL,
+    TARGET_FAIL_WRITE
+}target_flash_status_t;
+
+static const char *fail_txt_contents[] = {
+    "",
+    "The interface firmware *FAILED* to reset/halt the target MCU\r\n",
+    "The interface firmware *FAILED* to download the flash programming algorithms to the target MCU\r\n",
+    "The interface firmware *FAILED* to download the flash data contents to be programmed\r\n",
+    "The interface firmware *FAILED* to initialize the target MCU\r\n",
+    "The interface firmware *ABORTED* programming. Image is trying to set security bits\r\n",
+    "The interface firmware *FAILED* to unlock the target for programming\r\n",
+    "Flash algorithm erase sector command *FAILURE*\r\n",
+    "Flash algorithm erase all command *FAILURE*\r\n",
+    "Flash algorithm write command *FAILURE*\r\n",
+};
+
 //! @brief Verify that security will not be enabled.
-uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data);
+target_flash_status_t check_security_bits(uint32_t flashAddr, uint8_t *data);
 
 //! @name Flash programming operations
 //@{
-uint8_t target_flash_init(void);
-uint8_t target_flash_uninit(void);
-uint8_t target_flash_erase_chip(void);
-uint8_t target_flash_erase_sector(uint32_t adr);
-uint8_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
+target_flash_status_t target_flash_init(void);
+target_flash_status_t target_flash_uninit(void);
+target_flash_status_t target_flash_erase_chip(void);
+target_flash_status_t target_flash_erase_sector(uint32_t adr);
+target_flash_status_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 //@}
 
 #endif // TARGET_FLASH_COMMON_H

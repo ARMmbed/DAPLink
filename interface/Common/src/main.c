@@ -29,6 +29,10 @@
 #include "tasks.h"
 
 #include "target_reset.h"
+
+// testing fail messages
+#include "virtual_fs.h"
+
 #include "swd_host.h"
 #include "version.h"
 #ifdef BOARD_UBLOX_C027
@@ -312,6 +316,11 @@ __task void main_task(void) {
     // Setup reset button
     gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
     button_activated = 1;
+    
+    // Update HTML version information file
+    init_auth_config();
+    // testing fail messages
+    //configure_fail_txt(TARGET_FAIL_ALGO_DL);
 
     // USB
     usbd_connect(0);
@@ -319,9 +328,6 @@ __task void main_task(void) {
     usb_busy_count = 0;
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
-
-    // Update HTML version information file
-    update_html_file();
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
@@ -469,7 +475,7 @@ __task void main_task(void) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
                         // Update HTML file
-                        update_html_file();
+                        //update_html_file();
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }
