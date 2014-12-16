@@ -18,8 +18,50 @@
 #include "target_flash.h"
 
 #include "target_flash.inc"
+#include "target_reset.h"
+#include "DAP_config.h"
 
-uint8_t target_flash_init(uint32_t clk) {
+#include "string.h"
+
+#define MIN_FLASH_ADDRESS 0x00000
+#define MAX_FLASH_ADDRESS 0x10000
+
+#define MIN_RAM_ADDRESS 0x1FFF0000
+#define MAX_RAM_ADDRESS 0x20030000
+
+static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
+{
+    return ((test < min) || (test > max)) ? 0 : 1;
+}
+
+uint8_t validate_bin_nvic(uint8_t *buf)
+{
+    // test for known required NVIC entries
+    //  0 is stack pointer (RAM address)
+    //  1 is Reset vector  (FLASH address)
+    uint32_t nvic_sp = 0;
+    uint32_t nvic_rv = 0;
+    // test the initial SP value
+    memcpy(&nvic_sp, buf, sizeof(nvic_sp));
+    if (0 == test_range(nvic_sp, MIN_RAM_ADDRESS, MAX_RAM_ADDRESS)) {
+        return 0;
+    }
+    // test the initial reset vector
+    memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
+    if (0 == test_range(nvic_rv, MIN_FLASH_ADDRESS, MAX_FLASH_ADDRESS)) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+#define WRITE_TO_TARGET
+#if defined (WRITE_TO_TARGET)
+
+uint8_t target_flash_init(void)
+{
+    PORT_SWD_SETUP();
+    target_set_state(RESET_PROGRAM);
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
         return 0;
@@ -32,7 +74,8 @@ uint8_t target_flash_init(uint32_t clk) {
     return 1;
 }
 
-uint8_t target_flash_erase_sector(unsigned int sector) {
+uint8_t target_flash_erase_sector(unsigned int sector)
+{
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector * FLASH_SECTOR_SIZE, 0, 0, 0)) {
         return 0;
     }
@@ -40,7 +83,8 @@ uint8_t target_flash_erase_sector(unsigned int sector) {
     return 1;
 }
 
-uint8_t target_flash_erase_chip(void) {
+uint8_t target_flash_erase_chip(void)
+{
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
         return 0;
     }
@@ -69,8 +113,8 @@ uint8_t target_flash_erase_chip(void) {
 // - FSEC=0xfe
 //
 // FOPT can be set to any value.
-uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data) {
-    
+uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data)
+{
     if (flashAddr == 0x400) {
         // make sure we can unsecure the device or dont program at all
         if ((data[0xc] & 0x30) == 0x20) {
@@ -88,6 +132,12 @@ uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data) {
 uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
 {
     uint32_t bytes_written = 0;
+    // we need to erase a sector
+    if (addr % FLASH_SECTOR_SIZE == 0) {
+        if (0 == target_flash_erase_sector(addr / FLASH_SECTOR_SIZE)) {
+            return 0;   // need to add what this unique id for this (each flash algo failure)
+        }
+    }
 
     // call a target dependent function to check if
     // we don't want to write specific bits (flash security bits, ...)
@@ -115,5 +165,34 @@ uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
 
     return 1;
 }
+
+#else
+
+uint8_t target_flash_init(uint32_t clk)
+{
+    return 1;
+}
+
+uint8_t target_flash_erase_sector(unsigned int sector)
+{
+    return 1;
+}
+
+uint8_t target_flash_erase_chip(void)
+{
+    return 1;
+}
+
+uint8_t check_security_bits(uint32_t flashAddr, uint8_t *data)
+{
+    return 1;
+}
+
+uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
+{
+    return 1;
+}
+
+#endif
 
 

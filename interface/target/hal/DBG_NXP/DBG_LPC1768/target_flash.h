@@ -24,11 +24,11 @@
 
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x1000)
 
-static uint8_t target_flash_init(uint32_t clk);
-static uint8_t target_flash_uninit(void);
-static uint8_t target_flash_erase_chip(void);
-static uint8_t target_flash_erase_sector(uint32_t adr);
-static uint8_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
+uint8_t target_flash_init(void /*uint32_t clk*/);
+uint8_t target_flash_uninit(void);
+uint8_t target_flash_erase_chip(void);
+uint8_t target_flash_erase_sector(uint32_t adr);
+uint8_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 
 static const uint32_t LPC1768_FLM[] = {
     0xe00abe00, 0x062d780d, 0x24084068, 0xd3000040, 0x1e644058, 0x1c49d1fa, 0x2a001e52, 0x4770d1f2,
@@ -63,60 +63,5 @@ static const TARGET_FLASH flash = {
 
     512          // ram_to_flash_bytes_to_be_written
 };
-
-static uint8_t target_flash_init(uint32_t clk) {
-    // Download flash programming algorithm to target and initialise.
-    if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
-        return 0;
-    }
-
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
-        return 0;
-    }
-
-    return 1;
-}
-
-static uint8_t target_flash_erase_sector(unsigned int sector) {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*0x400, 0, 0, 0)) {
-        return 0;
-    }
-
-    return 1;
-}
-
-static uint8_t target_flash_erase_chip(void) {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
-        return 0;
-    }
-
-    return 1;
-}
-
-static uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
-{
-    uint32_t bytes_written = 0;
-
-    // Program a page in target flash.
-    if (!swd_write_memory(flash.program_buffer, buf, size)) {
-        return 0;
-    }
-
-    while(bytes_written < size) {
-        if (!swd_flash_syscall_exec(&flash.sys_call_param,
-                                    flash.program_page,
-                                    addr,
-                                    flash.ram_to_flash_bytes_to_be_written,
-                                    flash.program_buffer + bytes_written, 0)) {
-            return 0;
-        }
-
-        bytes_written += flash.ram_to_flash_bytes_to_be_written;
-        addr += flash.ram_to_flash_bytes_to_be_written;
-    }
-
-    return 1;
-}
-
 
 #endif
