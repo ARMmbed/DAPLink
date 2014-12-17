@@ -65,3 +65,6 @@ tags
 *.tag
 html
 debug.txt
+
+#Misc
+.DS_Store
