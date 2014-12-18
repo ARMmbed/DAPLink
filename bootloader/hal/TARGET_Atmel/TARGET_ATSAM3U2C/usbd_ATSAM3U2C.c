@@ -14,7 +14,7 @@
 #include <sam3u.h>
 
 #define __NO_USB_LIB_C
-#include "usb_hs_config.c"
+#include "usb_config.c"
 
 #define UDPHS_EPTFIFO_BASE (0x20180000) /* (UDPHS_EPTFIFO) Base Address       */
 
