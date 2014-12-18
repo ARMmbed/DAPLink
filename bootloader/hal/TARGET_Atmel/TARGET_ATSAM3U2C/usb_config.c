@@ -23,7 +23,7 @@
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
-#define USBD_HS_ENABLE              0
+#define USBD_HS_ENABLE              1
 
 //   <h> Device Settings
 //     <i> These settings affect Device Descriptor
@@ -42,7 +42,7 @@
 //       <i> Device release number in binary-coded decimal (bcdDevice)
 //   </h>
 #define USBD_POWER                  0
-#define USBD_MAX_PACKET0            8
+#define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
 #define USBD_DEVDESC_IDPRODUCT      0x0204
 #define USBD_DEVDESC_BCDDEVICE      0x0100
@@ -166,10 +166,10 @@
 //       </h>
 //     </e>
 #define USBD_MSC_ENABLE             1
-#define USBD_MSC_EP_BULKIN          2
+#define USBD_MSC_EP_BULKIN          1
 #define USBD_MSC_EP_BULKOUT         2
 #define USBD_MSC_WMAXPACKETSIZE     64
-#define USBD_MSC_HS_ENABLE          0
+#define USBD_MSC_HS_ENABLE          1
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"

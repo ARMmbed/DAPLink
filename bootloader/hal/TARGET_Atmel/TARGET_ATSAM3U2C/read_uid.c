@@ -23,9 +23,12 @@ void read_unique_id(uint32_t * id) {
     while ((EFC0->EEFC_FSR & EEFC_FSR_FRDY) == EEFC_FSR_FRDY);
 
     id[0] = *(uint32_t *)0x80000;
-    id[1] = *(uint32_t *)0x80004;
-    id[2] = *(uint32_t *)0x80008;
-    id[3] = *(uint32_t *)0x8000C;
+    // patch until uuid is properly implemented for all targets
+    //  causes problems in common file version.c
+    //  https://github.com/mbedmicro/CMSIS-DAP/commit/be926417b8502eee31d2ef0be6fd37f027f58924#diff-7
+    //id[1] = *(uint32_t *)0x80004;
+    //id[2] = *(uint32_t *)0x80008;
+    //id[3] = *(uint32_t *)0x8000C;
 
     EFC0->EEFC_FCR = 0x5A00000F;
     /*Monitor FRDY*/

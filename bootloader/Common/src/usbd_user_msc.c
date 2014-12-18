@@ -22,15 +22,14 @@
 #include "version.h"
 
 #if defined(TARGET_LPC11U35)
-#include <LPC11Uxx.h>
+  #include <LPC11Uxx.h>
+  #define WANTED_SIZE_IN_KB     (64)
 #elif defined(TARGET_MK20DX)
-#include <MK20D5.h>
-#endif
-
-#if defined(TARGET_LPC11U35)	
-#   define WANTED_SIZE_IN_KB  		(64)
-#elif defined(TARGET_MK20DX)
-#   define WANTED_SIZE_IN_KB        (128)
+  #include <MK20D5.h>
+  #define WANTED_SIZE_IN_KB     (128)
+#elif defined(TARGET_ATSAM3U2C)
+  #include <sam3u.h>
+  #define WANTED_SIZE_IN_KB     (128)
 #endif
 
 //------------------------------------------------------------------- CONSTANTS
@@ -463,6 +462,8 @@ static void disable_usb_irq(void){
     NVIC_DisableIRQ(USB_IRQn);
 #elif defined(TARGET_MK20DX)
     NVIC_DisableIRQ(USB0_IRQn);
+#elif defined(TARGET_ATSAM3U2C)
+    NVIC_DisableIRQ(UDPHS_IRQn);
 #endif
 }
 
@@ -471,6 +472,8 @@ static void enable_usb_irq(void){
     NVIC_EnableIRQ(USB_IRQn);
 #elif defined(TARGET_MK20DX)
     NVIC_EnableIRQ(USB0_IRQn);
+#elif defined(TARGET_ATSAM3U2C)
+    NVIC_EnableIRQ(UDPHS_IRQn);
 #endif
 }
 

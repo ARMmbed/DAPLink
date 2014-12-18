@@ -141,7 +141,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -443,7 +443,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_msc.c</FileName>

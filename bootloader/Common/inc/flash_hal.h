@@ -21,12 +21,16 @@
 #define START_APP_ADDRESS (0x5000)
 
 #if defined(TARGET_LPC11U35)
-#define SECTOR_SIZE       (0x1000)
-#define NB_SECTOR         (15)
+  #define SECTOR_SIZE       (0x1000)
+  #define NB_SECTOR         (16)
 
 #elif defined(TARGET_MK20DX)
-#define SECTOR_SIZE       (0x400)
-#define NB_SECTOR         (128)
+  #define SECTOR_SIZE       (0x400)
+  #define NB_SECTOR         (128)
+
+#elif defined(TARGET_ATSAM3U2C)
+  #define SECTOR_SIZE       (0x1000)
+  #define NB_SECTOR         (32)
 #endif
 
 #define END_FLASH         (NB_SECTOR*SECTOR_SIZE)

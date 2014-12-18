@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 
-#define FW_BUILD "0201"
+#define FW_BUILD "0202"
 
 uint8_t  update_html_file(void);
 uint8_t  get_len_string_interface(void);
