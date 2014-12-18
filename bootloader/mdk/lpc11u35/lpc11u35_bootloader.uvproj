@@ -443,7 +443,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_msc.c</FileName>

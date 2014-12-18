@@ -37,6 +37,13 @@ BOOTLOADER_PROJECTS = [
             'targets' : [
                             'lpc11u35_bootloader'
                         ]
+        },
+        {
+            'target' : 'ATSAM3U2C',
+            'path' : r'bootloader\mdk\atsam3u2c\atsam3u2c_bootloader.uvproj',
+            'targets' : [
+                            'ATSAM3U2C_bootloader'
+                        ]
         }
     ]
 
