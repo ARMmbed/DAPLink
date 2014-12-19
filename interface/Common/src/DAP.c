@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <string.h>
+#include "string.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "semihost.h"

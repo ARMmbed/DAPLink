@@ -28,12 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <assert.h>
+#include "assert.h"
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
 #include "device/fsl_device_registers.h"
 #include "fsl_platform_status.h"
-#include <string.h>
+#include "string.h"
 
 #if BL_TARGET_FLASH
 

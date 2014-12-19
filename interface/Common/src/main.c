@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 #include "rl_usb.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdint.h>
+#include "string.h"
+#include "stdio.h"
+#include "stdint.h"
 
 #include "main.h"
 #include "board.h"
@@ -36,7 +36,7 @@
 #include "swd_host.h"
 #include "version.h"
 #ifdef BOARD_UBLOX_C027
-#include <LPC11Uxx.h>
+#include "LPC11Uxx.h"
 #include "DAP_config.h"
 #include "read_uid.h"
 #endif

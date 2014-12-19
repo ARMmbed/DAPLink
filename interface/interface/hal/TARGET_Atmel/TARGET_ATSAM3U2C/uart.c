@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sam3u.h>
+#include "sam3u.h"
 #include "uart.h"
-#include <string.h>
-#include <rl_usb.h>
+#include "string.h"
 
 /*********************************************************************
 *

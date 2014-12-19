@@ -18,7 +18,7 @@
 
 #include "target_struct.h"
 #include "swd_host.h"
-#include <stdint.h>
+#include "stdint.h"
 
 #include "string.h"
 

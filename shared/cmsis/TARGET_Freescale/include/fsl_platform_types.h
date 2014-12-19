@@ -30,11 +30,11 @@
 #ifndef __PLATFORM_TYPES_H__
 #define __PLATFORM_TYPES_H__
 
-#include <stdio.h>
-#include <stdint.h>
+#include "stdio.h"
+#include "stdint.h"
 
 #if !defined(WIN32)
-#include <stdbool.h>
+#include "stdbool.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

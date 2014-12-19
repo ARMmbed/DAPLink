@@ -30,7 +30,7 @@ Provides definitions about:
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
 
-#include <MK20D5.H>                             // Debug Unit Cortex-M Processor Header File
+#include "MK20D5.h"                             // Debug Unit Cortex-M Processor Header File
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.

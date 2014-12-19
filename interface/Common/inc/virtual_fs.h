@@ -12,7 +12,8 @@
 #define SECTORS_PER_FAT     (3*((NUM_NEEDED_CLUSTERS + 1023)/1024))
 
 #include "stdint.h"
-#include "target_flash_common.h"
+//#include "target_flash_common.h"
+#include "target_flash.h"
 
 #ifdef __cplusplus
 extern "C" {

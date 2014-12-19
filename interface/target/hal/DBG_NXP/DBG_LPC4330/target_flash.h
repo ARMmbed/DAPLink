@@ -18,7 +18,7 @@
 
 #include "target_struct.h"
 #include "swd_host.h"
-#include <stdint.h>
+#include "stdint.h"
 
 // SPIFI flash sectors on current devices are 4K to 64K. Use a smaller sector
 // size for portability and to fit within the max LPC11U35 USB buffer (2K)

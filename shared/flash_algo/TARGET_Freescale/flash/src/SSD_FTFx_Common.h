@@ -33,7 +33,7 @@
 
 #include "flash/flash.h"
 #include "fsl_flash_features.h"
-#include <stdint.h>
+#include "stdint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Definitions

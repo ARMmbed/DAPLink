@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <LPC43xx.h>
+#include "LPC43xx.h"
 #include "uart.h"
 #include "lpc43xx_cgu.h"
 #include "lpc43xx_scu.h"

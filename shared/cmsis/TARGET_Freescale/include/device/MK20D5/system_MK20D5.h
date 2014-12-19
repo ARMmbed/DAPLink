@@ -82,7 +82,7 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define DISABLE_WDOG    1
 

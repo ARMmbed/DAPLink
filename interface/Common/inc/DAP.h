@@ -145,8 +145,8 @@
 #define JTAG_SEQUENCE_TDO               0x80    // TDO capture
 
 
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
 // DAP Data structure
 typedef struct {

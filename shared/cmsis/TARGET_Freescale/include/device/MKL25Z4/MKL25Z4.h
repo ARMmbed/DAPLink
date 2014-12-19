@@ -96,7 +96,7 @@
 #endif /* (defined(MCU_ACTIVE)) */
 #define MCU_ACTIVE
 
-#include <stdint.h>
+#include "stdint.h"
 
 /** Memory map major version (memory maps with equal major version number are
  * compatible) */

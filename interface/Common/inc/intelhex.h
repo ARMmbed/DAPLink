@@ -1,7 +1,7 @@
 #ifndef INTELHEX_H
 #define INTELHEX_H
 
-#include <stdint.h>
+#include "stdint.h"
 typedef unsigned int BOOL;
 #define __TRUE          1
 #define __FALSE         0

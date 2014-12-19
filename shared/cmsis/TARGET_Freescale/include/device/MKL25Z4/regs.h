@@ -17,8 +17,8 @@
 #ifndef _REGS_H
 #define _REGS_H  1
 
-#include <stdint.h>
-#include <stdlib.h>
+#include "stdint.h"
+#include "stdlib.h"
 
 //
 // define base address of the register block only if it is not already
@@ -27,7 +27,7 @@
 // physical location
 //
 
-#include <stdint.h>
+#include "stdint.h"
 
 #ifndef REGS_BASE
 #define REGS_BASE 0x00000000

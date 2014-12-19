@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include <RTL.h>
-#include <rl_usb.h>
-#include <usb.h>
-#include <LPC43xx.H>
+#include "RTL.h"
+#include "rl_usb.h"
+#include "usb.h"
+#include "LPC43xx.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"

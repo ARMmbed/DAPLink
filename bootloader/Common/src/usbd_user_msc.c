@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
-#include <rl_usb.h>
-#include <string.h>
+#include "RTL.h"
+#include "rl_usb.h"
+#include "string.h"
 #include "flash_hal.h"
 #include "main.h"
 #include "tasks.h"
 #include "version.h"
 
 #if defined(TARGET_LPC11U35)
-  #include <LPC11Uxx.h>
+  #include "LPC11Uxx.h"
   #define WANTED_SIZE_IN_KB     (64)
 #elif defined(TARGET_MK20DX)
-  #include <MK20D5.h>
+  #include "MK20D5.h"
   #define WANTED_SIZE_IN_KB     (128)
 #elif defined(TARGET_ATSAM3U2C)
-  #include <sam3u.h>
+  #include "sam3u.h"
   #define WANTED_SIZE_IN_KB     (128)
 #endif
 

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <LPC43xx.h>
-#include <RTL.h>
+#include "LPC43xx.h"
+#include "RTL.h"
 #include "lpc43xx_scu.h"
 
 #include "gpio.h"

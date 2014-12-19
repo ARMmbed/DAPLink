@@ -16,7 +16,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 void main_transfer_finished(uint8_t success);
 

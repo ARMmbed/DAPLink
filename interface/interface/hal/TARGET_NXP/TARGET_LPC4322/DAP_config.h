@@ -32,7 +32,7 @@ Provides definitions about:
 
 #include "LPC43xx.h"                            // Debug Unit Cortex-M Processor Header File
 #include "lpc43xx_scu.h"
-#include <RTL.h>
+#include "RTL.h"
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.

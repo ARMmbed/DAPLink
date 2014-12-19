@@ -30,7 +30,7 @@
 #ifndef __PLATFORM_STATUS_H__
 #define __PLATFORM_STATUS_H__
 
-#include <stdint.h>
+#include "stdint.h"
 
 //! @addtogroup platform_status
 //! @{

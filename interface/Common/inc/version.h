@@ -15,7 +15,7 @@
  */
 #ifndef VERSION_H
 #define VERSION_H
-#include <stdint.h>
+#include "stdint.h"
 
 // built for bootloader 1xxx
 //#define FW_BUILD "1203"

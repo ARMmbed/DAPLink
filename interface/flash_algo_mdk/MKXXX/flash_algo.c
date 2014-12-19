@@ -16,7 +16,7 @@
 
 #include "../FlashOS.H"        // FlashOS Structures
 #include "flash/flash.h"
-#include <string.h>
+#include "string.h"
 
 // Storage for flash driver.
 flash_driver_t g_flash;

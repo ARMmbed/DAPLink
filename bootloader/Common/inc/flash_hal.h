@@ -16,7 +16,7 @@
 #ifndef FLASH_H
 #define FLASH_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define START_APP_ADDRESS (0x5000)
 

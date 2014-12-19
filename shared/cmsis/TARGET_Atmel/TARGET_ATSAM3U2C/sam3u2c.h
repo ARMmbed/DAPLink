@@ -44,7 +44,7 @@
 #endif 
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#include <stdint.h>
+#include "stdint.h"
 #ifndef __cplusplus
 typedef volatile const uint32_t RoReg; /**< Read only 32-bit register (volatile const unsigned int) */
 #else
@@ -214,7 +214,7 @@ void WDT_Handler        ( void );
  * \brief CMSIS includes
  */
 
-#include <core_cm3.h>
+#include "core_cm3.h"
 #if !defined DONT_USE_CMSIS_INIT
 #include "system_sam3u.h"
 #endif /* DONT_USE_CMSIS_INIT */

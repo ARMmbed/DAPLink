@@ -17,8 +17,8 @@
 #ifndef _FSL_BITBAND_H
 #define _FSL_BITBAND_H  1
 
-#include <stdint.h>
-#include <stdlib.h>
+#include "stdint.h"
+#include "stdlib.h"
 
 /**
  * @brief Macro to access a single bit of a 32-bit peripheral register (bit band region

@@ -17,7 +17,7 @@
 #define USB_BUF_H
 
 
-#include <stdint.h>
+#include "stdint.h"
 
 // I think this was > 512 becuse of lack of clairity
 #define USB_MSC_BUF_SIZE (512*2)

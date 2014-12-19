@@ -16,7 +16,7 @@
 #ifndef TARGET_H
 #define TARGET_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 typedef struct {
     uint32_t breakpoint;

@@ -35,8 +35,8 @@
 #include "fsl_platform_status.h"
 #include "src/fsl_flash_features.h"
 #include "device/fsl_device_registers.h"
-#include <stdint.h>
-#include <stdbool.h>
+#include "stdint.h"
+#include "stdbool.h"
 
 //! @addtogroup flash
 //! @{

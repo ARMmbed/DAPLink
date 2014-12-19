@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdint.h>
+#include "stdint.h"
 #include "flash_densities.h"
 
 ////////////////////////////////////////////////////////////////////////////////

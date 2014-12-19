@@ -16,7 +16,7 @@
 #ifndef USB_BUF_H
 #define USB_BUF_H
 
-#include <stdint.h>
+#include "stdint.h"
 #include "target_flash.h"
 
 uint32_t usb_buffer[512/4];

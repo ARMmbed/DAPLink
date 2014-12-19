@@ -1,5 +1,5 @@
 #include "intelhex.h"
-#include <stdio.h>
+#include "stdio.h"
 
 #define INVALID_HEX_CHAR (0xff)     /* Indicates a character not in the sets 0-9 or A-F */
 #define NON_DATA_RECORD_SIZE (5)    /* Total size of RECLEN (1), LOAD OFFSET (2), RECTYP (1) and CHKSUM (1) fields. */

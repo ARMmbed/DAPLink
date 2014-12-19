@@ -30,7 +30,7 @@
 
 #if !defined(_FLASH_FEATURES_H_)
 #define _FLASH_FEATURES_H_
-#include <stdint.h>
+#include "stdint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Definitions

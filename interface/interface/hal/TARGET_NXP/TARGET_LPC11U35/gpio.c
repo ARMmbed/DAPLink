@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <LPC11Uxx.h>
-#include <RTL.h>
+#include "LPC11Uxx.h"
+#include "RTL.h"
 
 #include "gpio.h"
 

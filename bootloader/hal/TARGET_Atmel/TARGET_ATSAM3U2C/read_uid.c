@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include "read_uid.h"
-#include <sam3u.h>
+#include "sam3u.h"
 
 void read_unique_id(uint32_t * id) {
     EFC0->EEFC_FMR |= (1UL << 16);

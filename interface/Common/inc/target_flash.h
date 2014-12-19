@@ -17,9 +17,8 @@
 #define TARGET_FLASH_COMMON_H
 
 #include "target_struct.h"
-#include "target_flash.h"
 #include "swd_host.h"
-#include <stdint.h>
+#include "stdint.h"
 
 //! @brief Details about the flash algorithm.
 extern const TARGET_FLASH flash;

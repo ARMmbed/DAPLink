@@ -17,11 +17,11 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
-#include <sam3u.h>
-#include <stdint.h>
-#include <RTL.h>
-#include <debug_cm.h>
-#include <swd_host.h>
+#include "sam3u.h"
+#include "stdint.h"
+#include "RTL.h"
+#include "debug_cm.h"
+#include "swd_host.h"
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include "read_uid.h"
-#include <sam3u.h>
+#include "sam3u.h"
 
 static uint32_t unique_id[4];
 void read_unique_id(uint32_t * id) {

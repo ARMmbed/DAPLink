@@ -17,7 +17,7 @@
 #ifndef SPIFI_ROM_API_H
 #define SPIFI_ROM_API_H
 
-#include <stdint.h>
+#include "stdint.h"
 /* define the symbol TESTING in the environment	if test output desired */
 
 /* maintain LONGEST_PROT >= the length (in bytes) of the largest

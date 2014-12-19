@@ -14,9 +14,9 @@
  * limitations under the License.
  */
  
-#include <sam3u.h>
-#include <RTL.h>
-#include <debug_cm.h>
+#include "sam3u.h"
+#include "RTL.h"
+#include "debug_cm.h"
 #include "target_reset.h"
 #include "swd_host.h"
 #include "gpio.h"

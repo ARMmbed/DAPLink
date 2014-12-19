@@ -49,7 +49,7 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
+#include "stdint.h"
 
 /**
  * @brief System clock frequency (core clock)
