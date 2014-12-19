@@ -1270,7 +1270,7 @@ const U8 USBD_DeviceDescriptor[] = {
   USB_DEVICE_DESC_SIZE,                 /* bLength */
   USB_DEVICE_DESCRIPTOR_TYPE,           /* bDescriptorType */
 #if ((USBD_HS_ENABLE) || (USBD_MULTI_IF))
-  WBVAL(0x0110), /* 2.00 */             /* bcdUSB */
+  WBVAL(0x0200), /* 2.00 */             /* bcdUSB */
 #else
   WBVAL(0x0110), /* 1.10 */             /* bcdUSB */
 #endif
