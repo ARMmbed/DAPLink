@@ -463,7 +463,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -685,9 +685,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1315,7 +1315,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -1537,9 +1537,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2167,7 +2167,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -2389,9 +2389,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3019,7 +3019,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -3241,9 +3241,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3871,7 +3871,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -4093,9 +4093,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4723,7 +4723,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -4945,9 +4945,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5575,7 +5575,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -5797,9 +5797,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6427,7 +6427,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -6649,9 +6649,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7279,7 +7279,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -7501,9 +7501,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8131,7 +8131,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -8353,9 +8353,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8983,7 +8983,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -9205,9 +9205,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9835,7 +9835,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -10057,9 +10057,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10687,7 +10687,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -10909,9 +10909,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -11539,7 +11539,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -11761,9 +11761,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -12391,7 +12391,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -12613,9 +12613,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -12924,7 +12924,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -13243,7 +13243,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -13465,9 +13465,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -14095,7 +14095,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -14317,9 +14317,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -14625,10 +14625,10 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>0</UsePdscDebugDescription>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -14642,7 +14642,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -14947,7 +14947,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -15169,9 +15169,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -15480,7 +15480,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -15799,7 +15799,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -16021,9 +16021,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -16651,7 +16651,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -16873,9 +16873,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -17503,7 +17503,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -17725,9 +17725,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -18355,7 +18355,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -18577,9 +18577,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -19207,7 +19207,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -19429,9 +19429,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -20059,7 +20059,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -20281,9 +20281,9 @@
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -20911,7 +20911,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -21133,9 +21133,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -21800,7 +21800,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -22022,9 +22022,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -22689,7 +22689,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -22911,9 +22911,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>target_flash_common.c</FileName>
+              <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash_common.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>

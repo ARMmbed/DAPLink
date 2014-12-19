@@ -468,7 +468,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC4322\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -751,6 +751,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1383,7 +1388,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC4322\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -1666,6 +1671,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2298,7 +2308,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC4322\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -2581,6 +2591,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3213,7 +3228,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC4322\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -3496,6 +3511,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4128,7 +4148,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC4322\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -4411,6 +4431,11 @@
               <FileName>target_reset_LPC4337.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC4337\target_reset_LPC4337.c</FilePath>
+            </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>

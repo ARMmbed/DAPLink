@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
+#ifndef TARGET_CONFIG_H
+#define TARGET_CONFIG_H
 
-#include "target_flash_common.h"
-
-
-#define FLASH_SECTOR_SIZE                  (1024)
-
-#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x400)
-
+#define FLASH_SECTOR_SIZE                  (4096)
+#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
 #endif

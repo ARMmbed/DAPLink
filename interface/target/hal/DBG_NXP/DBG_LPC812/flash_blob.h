@@ -20,16 +20,6 @@
 #include "swd_host.h"
 #include "stdint.h"
 
-#define FLASH_SECTOR_SIZE           (1024)
-
-#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x400)
-
-uint8_t target_flash_init(void /*uint32_t clk*/);
-uint8_t target_flash_uninit(void);
-uint8_t target_flash_erase_chip(void);
-uint8_t target_flash_erase_sector(uint32_t adr);
-uint8_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
-
 static const uint32_t LPC812_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
 

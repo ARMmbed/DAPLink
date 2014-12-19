@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RTL.h"
+#include <RTL.h>
 
 #include "target_flash.h"
 #include "target_reset.h"
@@ -49,7 +49,7 @@
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
 // Otherwise a hardware reset is the default. This will not affect
 // DAP operations as they are controlled by the remote debugger.
-#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E)
+#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(BOARD_NRF51822AA)
 #define CONF_SYSRESETREQ
 #elif defined(BOARD_LPC4337)
 #define CONF_VECTRESET
@@ -658,7 +658,6 @@ uint8_t swd_semihost_restart(uint32_t r0) {
 
 uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
     DEBUG_STATE state;
-
     // Call flash algorithm function on target and wait for result.
     state.xpsr     = 0x01000000;          // xPSR: T = 1, ISR = 0
     state.r[0]     = arg1;                   // R0: Argument 1
@@ -855,11 +854,16 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             }
 
             // Reset again
+            #if defined(DBG_NRF51822AA)
+            //SysReset
+            swd_write_word(NVIC_AIRCR, VECTKEY | SYSRESETREQ);
+            #else                        
             swd_set_target_reset(1);
             os_dly_wait(1);
 
             swd_set_target_reset(0);
             os_dly_wait(1);
+            #endif
             break;
 
         case RESET_PROGRAM:
@@ -913,7 +917,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
                 return 0;
             }
 
-	        // Perform a soft reset
+            // Perform a soft reset
             if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
                 return 0;
             }
@@ -932,6 +936,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             }
 
             break;
+
 
         case NO_DEBUG:
             if (!swd_write_word(DBG_HCSR, DBGKEY)) {

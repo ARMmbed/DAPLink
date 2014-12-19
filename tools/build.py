@@ -261,7 +261,8 @@ class Builder(object):
 
                 if status != UV4Project.SUCCESS and status != UV4Project.WARNINGS:
                     print("* Error building target %s of %s" % (targetName, projectName))
-                    raise BuildError
+                    # Just build everything for right now
+                    #raise BuildError
 
 
 if __name__ == "__main__":

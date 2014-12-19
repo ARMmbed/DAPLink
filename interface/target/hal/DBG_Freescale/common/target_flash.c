@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "target_flash_common.h"
+#include "target_config.h"
 #include "target_flash.h"
 
 #include "target_flash.inc"

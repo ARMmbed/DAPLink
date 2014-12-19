@@ -203,7 +203,13 @@ void main_disable_debug_event(void) {
     return;
 }
 
-#define SIZE_DATA (64)
+#if defined(TARGET_ATSAM3U2C)
+  #define SIZE_DATA (64)//(256)
+#else
+  #define SIZE_DATA (64)
+
+#endif
+
 os_mbx_declare(serial_mailbox, 20);
 
 __task void serial_process() {
@@ -335,6 +341,11 @@ __task void main_task(void) {
 #ifndef BOARD_UBLOX_C027
     // Target running
     //target_set_state(RESET_RUN_WITH_DEBUG);
+#endif
+
+#ifdef BOARD_NRF51822AA
+    // Target running
+    target_set_state(RESET_RUN);
 #endif
 
     // start semihost task

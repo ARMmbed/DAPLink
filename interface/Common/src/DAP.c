@@ -36,14 +36,19 @@
 #error "Maximum Packet Count is 255"
 #endif
 
+ // Clock Macros
 
-// Clock Macros
-
-#define MAX_SWJ_CLOCK(delay_cycles) \
-  (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
-
-#define CLOCK_DELAY(swj_clock) \
- ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#if defined(TARGET_ATSAM3U2C) //maybe DBG_NRF51822AA, check with nordic TODO
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 14))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK / (swj_clock * 14)) - IO_PORT_WRITE_CYCLES)
+#else
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#endif
 
 
          DAP_Data_t DAP_Data;           // DAP Data

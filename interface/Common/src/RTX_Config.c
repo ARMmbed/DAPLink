@@ -29,9 +29,9 @@
 //   <i> Default: 6
 #ifndef OS_TASKCNT
     #ifdef SEMIHOST
-        #define OS_TASKCNT    13
+        #define OS_TASKCNT    15//13
     #else
-        #define OS_TASKCNT    12
+        #define OS_TASKCNT    14//12
     #endif
 #endif
 
@@ -47,7 +47,11 @@
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
- #define OS_STKSIZE     80  // was 110
+  #if defined(TARGET_ATSAM3U2C)
+    #define OS_STKSIZE     80
+  #else
+    #define OS_STKSIZE     80//110
+  #endif
 #endif
 
 // <q>Check for the stack overflow

@@ -1,12 +1,29 @@
-
+/* CMSIS-DAP Interface Firmware
+ * Copyright (c) 2009-2013 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+#include "RTL.h"
+#include "debug_cm.h"
+#include "target_reset.h"
+#include "swd_host.h"
+#include "gpio.h"
 #include "target_flash.h"
+#include "target_config.h"
+#include "flash_blob.h"
+
 #include "string.h"
-
-#define MIN_FLASH_ADDRESS 0x00000
-#define MAX_FLASH_ADDRESS 0x10000
-
-#define MIN_RAM_ADDRESS 0x20000000
-#define MAX_RAM_ADDRESS 0x20030000
 
 static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
@@ -34,42 +51,42 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     return 1;
 }
 
-uint8_t target_flash_init(void /*uint32_t clk*/) {
+target_flash_status_t target_flash_init(void /*uint32_t clk*/) {
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
-        return 0;
+        return TARGET_FAIL_ALGO_DL;
     }
 
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
-        return 0;
+        return TARGET_FAIL_INIT;
     }
 
-    return 1;
+    return TARGET_OK;
 }
 
-uint8_t target_flash_erase_sector(unsigned int sector) {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*0x1000, 0, 0, 0)) {
-        return 0;
+target_flash_status_t target_flash_erase_sector(unsigned int sector) {
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*0x400, 0, 0, 0)) {
+        return TARGET_FAIL_ERASE_SECTOR;
     }
 
-    return 1;
+    return TARGET_OK;
 }
 
-uint8_t target_flash_erase_chip(void) {
+target_flash_status_t target_flash_erase_chip(void) {
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
-        return 0;
+        return TARGET_FAIL_ERASE_ALL;
     }
 
-    return 1;
+    return TARGET_OK;
 }
 
-uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
+target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
 {
     uint32_t bytes_written = 0;
 
     // Program a page in target flash.
     if (!swd_write_memory(flash.program_buffer, buf, size)) {
-        return 0;
+        return TARGET_FAIL_ALGO_DATA_SEQ;
     }
 
     while(bytes_written < size) {
@@ -78,12 +95,12 @@ uint8_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
                                     addr,
                                     flash.ram_to_flash_bytes_to_be_written,
                                     flash.program_buffer + bytes_written, 0)) {
-            return 0;
+            return TARGET_FAIL_WRITE;
         }
 
         bytes_written += flash.ram_to_flash_bytes_to_be_written;
         addr += flash.ram_to_flash_bytes_to_be_written;
     }
 
-    return 1;
+    return TARGET_OK;
 }

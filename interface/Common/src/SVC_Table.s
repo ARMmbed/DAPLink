@@ -23,6 +23,7 @@ SVC_Count       DCD     SVC_Cnt
 ; Import user SVC functions here.
                 IMPORT  __SVC_1
                 IMPORT  __SVC_2[WEAK]
+                IMPORT  __SVC_3[WEAK]
 
                 EXPORT  SVC_Table
 SVC_Table

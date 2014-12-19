@@ -463,7 +463,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -639,7 +639,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -862,7 +862,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -963,7 +963,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1469,7 +1469,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -1645,7 +1645,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1868,7 +1868,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1969,7 +1969,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -2475,7 +2475,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -2694,7 +2694,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -2960,7 +2960,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -3018,7 +3018,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3481,7 +3481,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -3700,7 +3700,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -3966,7 +3966,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -4024,7 +4024,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4487,7 +4487,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -4706,7 +4706,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -4929,7 +4929,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4987,7 +4987,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -5493,7 +5493,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -5712,7 +5712,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -5935,7 +5935,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5993,7 +5993,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -6499,7 +6499,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -6718,7 +6718,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC812\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -6941,7 +6941,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1768\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6999,7 +6999,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC1114\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
