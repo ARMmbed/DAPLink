@@ -24,5 +24,7 @@ void board_init(void)
 
 void HardFault_Handler(void)
 {
-    //NVIC_SystemReset();
+    int i = 0;
+    i = i;
+    NVIC_SystemReset();
 }

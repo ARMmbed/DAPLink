@@ -86,8 +86,8 @@ Provides definitions about:
 #define TARGET_DEVICE_FIXED     0               ///< Target Device: 1 = known, 0 = unknown;
 
 #if TARGET_DEVICE_FIXED
-#define TARGET_DEVICE_VENDOR    "NordicSemi"              ///< String indicating the Silicon Vendor
-#define TARGET_DEVICE_NAME      "nRF51822AA"              ///< String indicating the Target Device
+#define TARGET_DEVICE_VENDOR    ""              ///< String indicating the Silicon Vendor
+#define TARGET_DEVICE_NAME      ""              ///< String indicating the Target Device
 #endif
 
 ///@}
@@ -161,7 +161,7 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 static __inline void PORT_SWD_SETUP (void) {
   PMC->PMC_PCER0 = (1 << 10);  // Enable clock for PIOA 
   PIOA->PIO_MDDR = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
-  //PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable  
+  PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable  
   PIOA->PIO_SODR = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == HIGH
   PIOA->PIO_OER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == output
   PIOA->PIO_PER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == GPIO control
@@ -172,8 +172,8 @@ Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
 static __inline void PORT_OFF (void) {
-  //PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable
-  //PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+  PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable
+  PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
   PIOA->PIO_ODR = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == input
   PIOA->PIO_PER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == GPIO control
 }
@@ -318,6 +318,8 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 0: issue a device hardware reset.
            - 1: release device hardware reset.
 */
+// TODO - sw specific implementation should be created
+#if defined (TARGET_NRF51822AA)
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
 	
  /**There is no reset pin on the nRF51822, so we need to use a reset routine:
@@ -346,7 +348,15 @@ static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
         os_dly_wait(1);
 	}
 }
-
+#else
+static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+    if (bit & 1) {
+        PIOA->PIO_SODR = PIN_nRESET;
+	} else {
+        PIOA->PIO_CODR = PIN_nRESET;
+	}	
+}
+#endif
 ///@}
 
 

@@ -98,6 +98,10 @@
 #define BOARD_ID        "1070"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_MBED_GATEWAY)
+#define BOARD_ID        "5020"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #endif
 
 #if !defined(BOARD_SECRET) || !defined(BOARD_ID)
