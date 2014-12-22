@@ -23,6 +23,7 @@
 #include "target_flash.h"
 #include "target_config.h"
 #include "flash_blob.h"
+#include "DAP_config.h"
 
 #include "string.h"
 
@@ -57,8 +58,15 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     return 1;
 }
 
+#define WRITE 1
 
+#if WRITE
 target_flash_status_t target_flash_init(void) {
+    
+    PORT_SWD_SETUP();
+    if (!target_set_state(RESET_PROGRAM)) {
+        return TARGET_FAIL_RESET;
+    }
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
         return TARGET_FAIL_ALGO_DL;
@@ -115,4 +123,25 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
 
     return TARGET_OK;
 }
+#else
+target_flash_status_t target_flash_init(void)
+{
+    return TARGET_OK;
+}
+
+target_flash_status_t target_flash_erase_sector(unsigned int sector)
+{
+    return TARGET_OK;
+}
+
+target_flash_status_t target_flash_erase_chip(void)
+{
+    return TARGET_OK;
+}
+
+target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
+{
+    return TARGET_OK;
+}
+#endif
 

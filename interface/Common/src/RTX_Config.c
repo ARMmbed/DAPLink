@@ -48,7 +48,7 @@
 //   <i> Default: 200
 #ifndef OS_STKSIZE
   #if defined(TARGET_ATSAM3U2C)
-    #define OS_STKSIZE     80
+    #define OS_STKSIZE     160//80//250
   #else
     #define OS_STKSIZE     80//110
   #endif

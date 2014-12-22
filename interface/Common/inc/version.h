@@ -21,7 +21,7 @@
 //#define FW_BUILD "1203"
 // build for bootloader 0xxx
 #ifdef TARGET_ATSAM3U2C
-#define FW_BUILD "0217"
+#define FW_BUILD "0219"
 #else 
 #define FW_BUILD "0203"
 #endif
