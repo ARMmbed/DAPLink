@@ -41,7 +41,7 @@ void usbd_msc_init(void)
     USBD_MSC_MediaReady = __TRUE;
 }
 
-void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
+void usbd_msc_read_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
 {
     fs_entry_t fs_read = {0,0};
     uint32_t max_known_fs_entry_addr = 0;
@@ -92,26 +92,7 @@ void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
     }
 }
 
-// known extension types
-// CRD - chrome
-// PAR - IE
-// Extensions dont matter much if you're looking for specific file data
-//  other than size parsing but hex and srec have specific EOF records
-static const char *known_extensions[] = {
-    "BIN",
-    "bin",
-    "HEX",
-    "hex",
-    0,
-};
-
-typedef enum extension {
-    UNKNOWN = 0,
-    BIN,
-    HEX,
-} extension_t;
-
-static uint32_t first_byte_valid(uint8_t c)
+static uint32_t filename_valid(uint8_t c)
 {
     const char *valid_char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     do {
@@ -129,7 +110,7 @@ static uint32_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
     //  entry with invalid or reserved first byte
     //  entry with a false filesize.
     while (known_extensions[i] != 0) {
-        if(1 == first_byte_valid(dir_entry.filename[0])) {
+        if(1 == filename_valid(dir_entry.filename[0])) {
             if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
                 return (dir_entry.filesize) ? 1 : 0;
             }
@@ -148,7 +129,7 @@ static extension_t identify_start_sequence(uint8_t *buf)
     return UNKNOWN;
 }
 
-void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
+void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
 {
     FatDirectoryEntry_t tmp_file = {0};
     extension_t start_type_identified = UNKNOWN;
@@ -188,7 +169,7 @@ void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
             file_transfer_state.file_type = start_type_identified;
             
             // prepare the target device
-            status = target_flash_init();
+            status = target_flash_init(file_transfer_state.file_type);
             if (status != TARGET_OK) {
                 file_transfer_state.transfer_started = 0;
                 configure_fail_txt(status);

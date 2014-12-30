@@ -57,7 +57,7 @@ uint8_t validate_bin_nvic(uint8_t *buf)
 #define WRITE_TO_TARGET
 #if defined (WRITE_TO_TARGET)
 
-target_flash_status_t target_flash_init(void)
+target_flash_status_t target_flash_init(extension_t ext)
 {
     PORT_SWD_SETUP();
     if (!target_set_state(RESET_PROGRAM)) {

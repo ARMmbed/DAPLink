@@ -2,6 +2,8 @@
 #ifndef VIRTUAL_FS_H
 #define VIRTUAL_FS_H
 
+#include "firmware_config.h"
+
 // these are done at runtime and will be part of the config struct
 #define WANTED_SIZE_IN_BYTES ((1024*1024)+1024*24)
 #define WANTED_SECTORS_PER_CLUSTER  (8) //mbr.sectors_per_cluster
@@ -12,6 +14,7 @@
 #define SECTORS_PER_FAT     (3*((NUM_NEEDED_CLUSTERS + 1023)/1024))
 
 #include "stdint.h"
+#include "target_config.h"
 //#include "target_flash_common.h"
 #include "target_flash.h"
 
@@ -104,7 +107,14 @@ typedef struct fs_entry {
     uint32_t length;
 } fs_entry_t;
 
+typedef enum extension {
+    UNKNOWN = 0,
+    BIN,
+    HEX,
+} extension_t;
+
 extern fs_entry_t fs[];
+extern const char *known_extensions[];
 
 void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);

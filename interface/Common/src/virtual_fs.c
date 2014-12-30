@@ -3,8 +3,10 @@
 #include "string.h"
 #include "version.h"
 #include "version_git.h"
-#include "mbed_htm.h"
+//#include "mbed_htm.h"
 
+// mbr is in RAM so the members can be updated at runtime to change drive capacity based
+//  on target MCU that is attached
 mbr_t mbr = {
     /*uint8_t[11]*/.boot_sector = {
         0xEB,0x3C, 0x90,
@@ -65,6 +67,8 @@ mbr_t mbr = {
     /*uint16_t*/.signature = 0xAA55,
 };
 
+// FAT is only valid for files on disc that are part of this file. Not writeable during
+//  MSC transfer operations
 static const file_allocation_table_t fat = {
     .f = {
         0xF8, 0xFF, 
@@ -77,23 +81,35 @@ static const file_allocation_table_t fat = {
     }
 };
 
-#if GIT_LOCAL_MODS == 1
-    #warning "Building with local modifications."
-    #define GIT_LOCAL_MODS_STR "Yes"
+// Tool for release awareness and tracking
+#if (GIT_LOCAL_MODS == 1)
+  #warning "Building with local modifications."
+  #define GIT_LOCAL_MODS_STR "Yes"
 #else
-    #define GIT_LOCAL_MODS_STR "No"
+  #define GIT_LOCAL_MODS_STR "No"
 #endif
 
-static const uint8_t version_file[512] = 
+static const uint8_t mbed_redirect_file[512] =
+    "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
+    "<html>\r\n"
+    "<head>\r\n"
+    "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+    "<title>mbed Website Shortcut</title>\r\n"
+    "</head>\r\n"
+    "<body></body>\r\n"
+    "</html>\r\n"
+    "\r\n";
+
+static const uint8_t version_file[512] =
     "Version: " FW_BUILD "\r\n"
     "Build:   " __DATE__ " " __TIME__ "\r\n"
     "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
     "Git Local mods: " GIT_LOCAL_MODS_STR "\r\n";
 
-static const uint8_t fail_file[512] = 
+static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
 
-FatDirectoryEntry_t const fail_txt_dir_entry = {
+static FatDirectoryEntry_t const fail_txt_dir_entry = {
 /*uint8_t[11] */ .filename = "FAIL    TXT",
 /*uint8_t */ .attributes = 0x01,
 /*uint8_t */ .reserved = 0x00,
@@ -108,7 +124,7 @@ FatDirectoryEntry_t const fail_txt_dir_entry = {
 /*uint32_t*/ .filesize = sizeof(fail_file)
 };
 
-FatDirectoryEntry_t const empty_dir_entry = {
+static FatDirectoryEntry_t const empty_dir_entry = {
 /*uint8_t[11] */ .filename = {0},
 /*uint8_t */ .attributes = 0x00,
 /*uint8_t */ .reserved = 0x00,
@@ -124,7 +140,9 @@ FatDirectoryEntry_t const empty_dir_entry = {
 };
 
 
-root_dir_t dir1 = {
+// Root directory in RAM to allow run-time modifications to contents. All files on disc must 
+//  be accounted for in dir1
+static root_dir_t dir1 = {
     .dir = {
     /*uint8_t[11] */ .filename = "MBED       ",
     /*uint8_t */ .attributes = 0x28,
@@ -182,7 +200,8 @@ root_dir_t dir1 = {
     .f15 = {0}
 };
 
-const root_dir_t dir2 = {
+// dir2 is for hidden file and folder compatibility during OS writes (extended entry compatibility)
+static const root_dir_t dir2 = {
     .dir = {0},
     .f1  = {0},
     .f2  = {0},
@@ -201,8 +220,11 @@ const root_dir_t dir2 = {
     .f15 = {0}
 };
 
-const uint8_t blank_reigon[512] = {0};
+// dummy blank reigon used to padd the space between files
+static const uint8_t blank_reigon[512] = {0};
 
+// this is the composite file system. It's looked at by ready operations to determine what to send
+//  when the host OS requests data
 fs_entry_t fs[] = {
     // fs setup
     {(uint8_t *)&mbr, sizeof(mbr)},
@@ -227,6 +249,22 @@ fs_entry_t fs[] = {
     {(uint8_t *)0, 0},
 };
 
+// known extension types
+// CRD - chrome
+// PAR - IE
+// Extensions dont matter much if you're looking for specific file data
+//  other than size parsing but hex and srec have specific EOF records
+const char *known_extensions[] = {
+    "BIN",
+    "bin",
+    "HEX",
+    "hex",
+    0,
+};
+
+// when a fail condition occurs we need to update the data stored on disc and also
+//  the directory entry. fs[] entry and dir entry need to be looked at and may need
+//  modification if/when more files are added to the file-system
 void configure_fail_txt(target_flash_status_t reason)
 {
     // set the dir entry to a file or empty it
@@ -237,6 +275,7 @@ void configure_fail_txt(target_flash_status_t reason)
     fs[9].sect = (uint8_t *)fail_txt_contents[reason];
 }
 
+// Update known entries and mbr data when the program boots
 void virtual_fs_init(void)
 {
     // ToDO: config fs specific things here that cant be done at compile time (without macros)
