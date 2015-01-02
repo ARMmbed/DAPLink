@@ -694,6 +694,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
             </File>
+            <File>
+              <FileName>nrf51822_mkit_app_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\nrf51822_mkit_app_config.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -987,14 +992,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\</OutputDirectory>
+          <OutputDirectory>.\Obj\nrf51822mkit_0x5000\</OutputDirectory>
           <OutputName>ATSAM3U2C_nRF51822AA_if_mbed_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\</ListingPath>
+          <ListingPath>.\Lst\nrf51822mkit_0x5000\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -1636,6 +1641,54 @@
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>nrf51822_mkit_app_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\nrf51822_mkit_app_config.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--gnu; --c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -2580,6 +2633,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
             </File>
+            <File>
+              <FileName>nrf51822_mkit_app_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\nrf51822_mkit_app_config.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3522,6 +3580,11 @@
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>nrf51822_mkit_app_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\nrf51822_mkit_app_config.c</FilePath>
             </File>
           </Files>
         </Group>

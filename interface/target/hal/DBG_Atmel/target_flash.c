@@ -58,10 +58,27 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     return 1;
 }
 
+uint8_t validate_hexfile(uint8_t *buf)
+{
+    // look here for known hex records
+    // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
+    if (buf[0] == ':') {
+        if ((buf[8] == '0') ||
+            (buf[8] == '2') ||
+            (buf[8] == '3') ||
+            (buf[8] == '4') ||
+            (buf[8] == '5'))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 #define WRITE 1
 
 #if WRITE
-target_flash_status_t target_flash_init(void) {
+target_flash_status_t target_flash_init(extension_t ext) {
     
     PORT_SWD_SETUP();
     if (!target_set_state(RESET_PROGRAM)) {
@@ -80,7 +97,7 @@ target_flash_status_t target_flash_init(void) {
 }
 
 target_flash_status_t target_flash_erase_sector(unsigned int sector) {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*FLASH_SECTOR_SIZE, 0, 0, 0)) {
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
         return TARGET_FAIL_ERASE_SECTOR;
     }
 
@@ -97,7 +114,7 @@ target_flash_status_t target_flash_erase_chip(void) {
     }
     
     target_set_state(RESET_PROGRAM);
-    target_flash_init();    
+    //target_flash_init();    
     
     return TARGET_OK;
 }

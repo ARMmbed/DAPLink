@@ -121,7 +121,9 @@ static extension_t identify_start_sequence(uint8_t *buf)
     if (1 == validate_bin_nvic(buf)) {
         return BIN;
     }
-    // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
+    else if (1 == validate_hexfile(buf)) {
+        return HEX;
+    }
     return UNKNOWN;
 }
 

@@ -279,13 +279,13 @@ void configure_fail_txt(target_flash_status_t reason)
 // Update known entries and mbr data when the program boots
 void virtual_fs_init(void)
 {
-    // 32KB is mbr, FATs, root dir, ect...
-//    uint32_t wanted_size_in_bytes   = (target_device.flash_end - target_device.flash_start) + KB(32);
+    // 64KB is mbr, FATs, root dir, ect...
+//    uint32_t wanted_size_in_bytes   = (target_device.disc_size + KB(64);
 //    uint32_t number_sectors_needed  = (wanted_size_in_bytes / mbr.bytes_per_sector);
 //    uint32_t number_clusters_needed = (number_sectors_needed / mbr.sectors_per_cluster);
 //    uint32_t fat_sector_size =        (((number_clusters_needed / 1023) / 1024) * 3);
     // number of sectors = (media size in bytes) / bytes per sector
-    mbr.total_logical_sectors = (((target_device.flash_end - target_device.flash_start) + KB(32)) / mbr.bytes_per_sector);
+    mbr.total_logical_sectors = ((target_device.disc_size + KB(64)) / mbr.bytes_per_sector);
     // number of cluster = ((number of sectors) / sectors per cluster)
     // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));

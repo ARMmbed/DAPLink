@@ -73,6 +73,7 @@ target_flash_status_t check_security_bits(uint32_t flashAddr, uint8_t *data);
 //! @name Flash programming operations
 //@{
 uint8_t validate_bin_nvic(uint8_t *buf);
+uint8_t validate_hexfile(uint8_t *buf);
 target_flash_status_t target_flash_init(extension_t ext);
 target_flash_status_t target_flash_uninit(void);
 target_flash_status_t target_flash_erase_chip(void);
