@@ -1,9 +1,23 @@
-
+/* CMSIS-DAP Interface Firmware
+ * Copyright (c) 2009-2013 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
 #include "virtual_fs.h"
 #include "string.h"
 #include "version.h"
 #include "version_git.h"
-//#include "mbed_htm.h"
 
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
@@ -100,7 +114,7 @@ static const uint8_t mbed_redirect_file[512] =
     "</html>\r\n"
     "\r\n";
 
-static const uint8_t version_file[512] =
+static const uint8_t details_file[512] =
     "Version: " FW_BUILD "\r\n"
     "Build:   " __DATE__ " " __TIME__ "\r\n"
     "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
@@ -172,7 +186,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = sizeof(mbed_redirect_file)
     },
     .f2 = {
-    /*uint8_t[11] */ .filename = "VERSION TXT",
+    /*uint8_t[11] */ .filename = "DETAILS TXT",
     /*uint8_t */ .attributes = 0x01,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -183,7 +197,7 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .modification_time = 0x83dc,
     /*uint16_t*/ .modification_date = 0x30bb,
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
-    /*uint32_t*/ .filesize = sizeof(version_file)
+    /*uint32_t*/ .filesize = sizeof(details_file)
     },
     .f3  = {0},
     .f4  = {0},
@@ -225,11 +239,11 @@ static const uint8_t blank_reigon[512] = {0};
 
 // this is the composite file system. It's looked at by ready operations to determine what to send
 //  when the host OS requests data
-fs_entry_t fs[] = {
+virtual_media_t fs[] = {
     // fs setup
     {(uint8_t *)&mbr, sizeof(mbr)},
-    {(uint8_t *)&fat, sizeof(fat)*SECTORS_PER_FAT},
-    {(uint8_t *)&fat, sizeof(fat)*SECTORS_PER_FAT},
+    {(uint8_t *)&fat, sizeof(fat)},
+    {(uint8_t *)&fat, sizeof(fat)},
     
     // root dir
     {(uint8_t *)&dir1, sizeof(dir1)},
@@ -239,7 +253,7 @@ fs_entry_t fs[] = {
     {(uint8_t *)&mbed_redirect_file, sizeof(mbed_redirect_file)},    
     //empty area between every file (8*512 is start of data reigion need to pad between files - 1
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
-    {(uint8_t *)&version_file, sizeof(version_file)},
+    {(uint8_t *)&details_file, sizeof(details_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     {(uint8_t *)&fail_file,    sizeof(fail_file)},
     
@@ -247,19 +261,6 @@ fs_entry_t fs[] = {
     
     // end of fs data
     {(uint8_t *)0, 0},
-};
-
-// known extension types
-// CRD - chrome
-// PAR - IE
-// Extensions dont matter much if you're looking for specific file data
-//  other than size parsing but hex and srec have specific EOF records
-const char *known_extensions[] = {
-    "BIN",
-    "bin",
-    "HEX",
-    "hex",
-    0,
 };
 
 // when a fail condition occurs we need to update the data stored on disc and also
@@ -278,13 +279,22 @@ void configure_fail_txt(target_flash_status_t reason)
 // Update known entries and mbr data when the program boots
 void virtual_fs_init(void)
 {
-    // ToDO: config fs specific things here that cant be done at compile time (without macros)
-    mbr.logical_sectors_per_fat = SECTORS_PER_FAT;
-    mbr.total_logical_sectors = NUM_NEEDED_SECTORS;
+    // 32KB is mbr, FATs, root dir, ect...
+//    uint32_t wanted_size_in_bytes   = (target_device.flash_end - target_device.flash_start) + KB(32);
+//    uint32_t number_sectors_needed  = (wanted_size_in_bytes / mbr.bytes_per_sector);
+//    uint32_t number_clusters_needed = (number_sectors_needed / mbr.sectors_per_cluster);
+//    uint32_t fat_sector_size =        (((number_clusters_needed / 1023) / 1024) * 3);
+    // number of sectors = (media size in bytes) / bytes per sector
+    mbr.total_logical_sectors = (((target_device.flash_end - target_device.flash_start) + KB(32)) / mbr.bytes_per_sector);
+    // number of cluster = ((number of sectors) / sectors per cluster)
+    // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
+    mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
     // patch root direcotry entries
     //dir1.f1.filesize = strlen((const char *)mbed_redirect_file);
-    dir1.f2.filesize = strlen((const char *)version_file);
-    // patch fs entries blank regions
+    dir1.f2.filesize = strlen((const char *)details_file);
+    // patch fs entries (fat sizes and all blank regions)
+    fs[1].length = sizeof(fat) * mbr.logical_sectors_per_fat;
+    fs[2].length = fs[1].length;
     fs[6].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
     fs[8].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
 }

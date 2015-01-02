@@ -17,19 +17,15 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "string.h"
-
 #include "main.h"
-#include "target_reset.h"
-#include "target_flash.h"
 #include "usb_buf.h"
 #include "virtual_fs.h"
 #include "daplink_debug.h"
-
 #include "version.h"
 
 void usbd_msc_init(void)
 {    
-    // config the mbr and FAT - FAT may be const later
+    // Setup the filesystem based on target parameters
     virtual_fs_init();
 
     USBD_MSC_MemorySize = mbr.bytes_per_sector * mbr.total_logical_sectors;
@@ -43,7 +39,7 @@ void usbd_msc_init(void)
 
 void usbd_msc_read_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
 {
-    fs_entry_t fs_read = {0,0};
+    virtual_media_t fs_read = {0,0};
     uint32_t max_known_fs_entry_addr = 0;
     uint32_t req_sector_offset = 0;
     uint32_t req_addr = block * USBD_MSC_BlockSize;

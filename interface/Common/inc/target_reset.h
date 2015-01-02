@@ -21,6 +21,5 @@
 void target_before_init_debug(void);
 uint8_t target_unlock_sequence(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
-uint8_t validate_bin_nvic(uint8_t *buf);
 
 #endif

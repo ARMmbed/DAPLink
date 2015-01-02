@@ -15,18 +15,15 @@
  */
 #ifndef VERSION_H
 #define VERSION_H
+
 #include "stdint.h"
 
 // built for bootloader 1xxx
 //#define FW_BUILD "1203"
 // build for bootloader 0xxx
-#ifdef TARGET_ATSAM3U2C
-#define FW_BUILD "0219"
-#else 
-#define FW_BUILD "0203"
-#endif
+#define FW_BUILD "0220"
 
-uint8_t update_html_file          (uint8_t * buf, uint32_t bufsize);
+uint8_t   update_html_file        (uint8_t * buf, uint32_t bufsize);
 uint8_t * get_uid_string          (void);
 uint8_t   get_len_string_interface(void);
 uint8_t * get_uid_string_interface(void);

@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-#include "firmware_config.h"
+#include "target_config.h"
 
 // frdm-k64f target information
-fw_cfg_t const app = {
+const target_cfg_t target_device = {
     .board_id   = "0240",
     .secret     = "xxxxxxxx",
-    .sector_size    = 1024,
+    .sector_size    = 4096,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (MB(1)/1024),
+    .sector_cnt     = (MB(1)/4096),
     .flash_start    = 0,
     .flash_end      = MB(1),
-    .ram_start      = 0x1FFFE000,
-    .ram_end        = 0x20002000
+    .ram_start      = 0x1FFF0000,
+    .ram_end        = 0x20030000
 };

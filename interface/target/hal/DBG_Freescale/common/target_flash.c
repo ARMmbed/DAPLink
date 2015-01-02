@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
 #include "target_flash.h"
-
+#include "target_config.h"
+#include "swd_host.h"
 #include "target_flash.inc"
 #include "target_reset.h"
 #include "DAP_config.h"
-
 #include "string.h"
-
-#define MIN_FLASH_ADDRESS   0x00000000
-#define MAX_FLASH_ADDRESS   0x00100000
-#define MIN_RAM_ADDRESS     0x1FFF0000
-#define MAX_RAM_ADDRESS     0x20030000
 
 static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
@@ -42,20 +36,17 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     uint32_t nvic_rv = 0;
     // test the initial SP value
     memcpy(&nvic_sp, buf, sizeof(nvic_sp));
-    if (0 == test_range(nvic_sp, MIN_RAM_ADDRESS, MAX_RAM_ADDRESS)) {
+    if (0 == test_range(nvic_sp, target_device.ram_start, target_device.ram_end)) {
         return 0;
     }
     // test the initial reset vector
     memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
-    if (0 == test_range(nvic_rv, MIN_FLASH_ADDRESS, MAX_FLASH_ADDRESS)) {
+    if (0 == test_range(nvic_rv, target_device.flash_start, target_device.flash_end)) {
         return 0;
     }
     
     return 1;
 }
-
-#define WRITE_TO_TARGET
-#if defined (WRITE_TO_TARGET)
 
 target_flash_status_t target_flash_init(extension_t ext)
 {
@@ -78,7 +69,7 @@ target_flash_status_t target_flash_init(extension_t ext)
 
 target_flash_status_t target_flash_erase_sector(unsigned int sector)
 {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector * FLASH_SECTOR_SIZE, 0, 0, 0)) {
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector * target_device.sector_size, 0, 0, 0)) {
         return TARGET_FAIL_ERASE_SECTOR;
     }
 
@@ -136,8 +127,8 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
     uint32_t bytes_written = 0;
     target_flash_status_t status = TARGET_OK;
     // we need to erase a sector
-    if (addr % FLASH_SECTOR_SIZE == 0) {
-        status = target_flash_erase_sector(addr / FLASH_SECTOR_SIZE);
+    if (addr % target_device.sector_size == 0) {
+        status = target_flash_erase_sector(addr / target_device.sector_size);
         if (status != TARGET_OK) {
             return status;
         }
@@ -170,34 +161,3 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
 
     return TARGET_OK;
 }
-
-#else
-
-target_flash_status_t target_flash_init(uint32_t clk)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_erase_sector(unsigned int sector)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_erase_chip(void)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t check_security_bits(uint32_t flashAddr, uint8_t *data)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
-{
-    return TARGET_OK;
-}
-
-#endif
-
-

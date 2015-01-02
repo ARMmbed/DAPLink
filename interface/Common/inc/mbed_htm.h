@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #ifndef MBED_HTM_H
-#define MBED_HTM
+#define MBED_HTM_H
 
 static const unsigned char mbed_redirect_file[512] = {
 "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"

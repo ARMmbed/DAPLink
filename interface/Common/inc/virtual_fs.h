@@ -1,28 +1,30 @@
-
+/* CMSIS-DAP Interface Firmware
+ * Copyright (c) 2009-2013 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
 #ifndef VIRTUAL_FS_H
 #define VIRTUAL_FS_H
 
-#include "firmware_config.h"
-
-// these are done at runtime and will be part of the config struct
-#define WANTED_SIZE_IN_BYTES ((1024*1024)+1024*24)
-#define WANTED_SECTORS_PER_CLUSTER  (8) //mbr.sectors_per_cluster
-#define MBR_BYTES_PER_SECTOR 512
-#define NUM_NEEDED_SECTORS  (WANTED_SIZE_IN_BYTES / MBR_BYTES_PER_SECTOR)   //flashsize + mbr + fat*2 + root dir / mbr.bytes_per_sector
-#define NUM_NEEDED_CLUSTERS (NUM_NEEDED_SECTORS / WANTED_SECTORS_PER_CLUSTER)
-///* Need 3 sectors/FAT for every 1024 clusters */
-#define SECTORS_PER_FAT     (3*((NUM_NEEDED_CLUSTERS + 1023)/1024))
-
-#include "stdint.h"
 #include "target_config.h"
-//#include "target_flash_common.h"
 #include "target_flash.h"
 
 #ifdef __cplusplus
-extern "C" {
+  extern "C" {
 #endif
 
-__packed typedef struct {
+typedef struct {
     uint8_t boot_sector[11];
     /* DOS 2.0 BPB - Bios Parameter Block, 11 bytes */
     uint16_t bytes_per_sector;
@@ -47,24 +49,25 @@ __packed typedef struct {
     char     file_system_type[8];
     /* bootstrap data in bytes 62-509 */
     uint8_t  bootstrap[448];
-// These entries in place of bootstrap code are the *nix partitions
-//    uint8_t  partition_one[16];
-//    uint8_t  partition_two[16];
-//    uint8_t  partition_three[16];
-//    uint8_t  partition_four[16];
+    /* These entries in place of bootstrap code are the *nix partitions */
+    //uint8_t  partition_one[16];
+    //uint8_t  partition_two[16];
+    //uint8_t  partition_three[16];
+    //uint8_t  partition_four[16];
     /* Mandatory value at bytes 510-511, must be 0xaa55 */
     uint16_t signature;
-} mbr_t;
+} __attribute__((packed)) mbr_t;
 
+// cannot exceed 512 conseutive bytes or media read logic fails
 extern mbr_t mbr;
 
 typedef struct file_allocation_table {
-    const uint8_t f[512];
+    uint8_t f[512];
 } file_allocation_table_t;
 
-__packed typedef union FatDirectoryEntry {
+typedef union FatDirectoryEntry {
     uint8_t data[32];
-    __packed struct {
+    struct {
         uint8_t filename[11];
         uint8_t attributes;
         uint8_t reserved;
@@ -77,12 +80,12 @@ __packed typedef union FatDirectoryEntry {
         uint16_t modification_date;
         uint16_t first_cluster_low_16;
         uint32_t filesize;
-    };
-} FatDirectoryEntry_t;
+    } __attribute__((packed)) ;
+} __attribute__((packed)) FatDirectoryEntry_t;
 
 // to save RAM all files must be in the first root dir entry (512 bytes)
-//  but 2 actually exist on disc (32 entries) to accomodate hidden OS files
-//  and folders
+//  but 2 actually exist on disc (32 entries) to accomodate hidden OS files,
+//  folders and metadata 
 typedef struct root_dir {
     FatDirectoryEntry_t dir;
     FatDirectoryEntry_t f1;
@@ -102,19 +105,12 @@ typedef struct root_dir {
     FatDirectoryEntry_t f15;
 } root_dir_t;
 
-typedef struct fs_entry {
+typedef struct virtual_media {
     uint8_t *sect;
     uint32_t length;
-} fs_entry_t;
+} virtual_media_t;
 
-typedef enum extension {
-    UNKNOWN = 0,
-    BIN,
-    HEX,
-} extension_t;
-
-extern fs_entry_t fs[];
-extern const char *known_extensions[];
+extern virtual_media_t fs[];
 
 void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);

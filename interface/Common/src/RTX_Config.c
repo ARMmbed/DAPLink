@@ -50,7 +50,7 @@
   #if defined(TARGET_ATSAM3U2C)
     #define OS_STKSIZE     160//80//250
   #else
-    #define OS_STKSIZE     80//110
+    #define OS_STKSIZE     120
   #endif
 #endif
 
