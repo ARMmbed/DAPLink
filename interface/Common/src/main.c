@@ -211,9 +211,8 @@ void main_disable_debug_event(void) {
 #endif
 
 os_mbx_declare(serial_mailbox, 20);
-
+static uint8_t data[SIZE_DATA];
 __task void serial_process() {
-    uint8_t data[SIZE_DATA];
     int32_t len_data = 0;
     void *msg;
 

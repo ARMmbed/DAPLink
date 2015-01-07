@@ -48,6 +48,11 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     return 1;
 }
 
+uint8_t validate_hexfile(uint8_t *buf)
+{
+    return 0;
+}
+
 target_flash_status_t target_flash_init(extension_t ext)
 {
     PORT_SWD_SETUP();

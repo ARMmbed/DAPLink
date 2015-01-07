@@ -22,6 +22,8 @@
   extern "C" {
 #endif
 
+//ToDo: move all into .c and extern access. causing duplicate entries in memory
+      
 typedef enum extension {
     UNKNOWN = 0,
     BIN,
@@ -33,7 +35,7 @@ typedef enum extension {
 // PAR - IE
 // Extensions dont matter much if you're looking for specific file data
 //  other than size parsing but hex and srec have specific EOF records
-static const char *known_extensions[] = {
+static const char *const known_extensions[] = {
     "BIN",
     "bin",
     "HEX",
@@ -54,7 +56,7 @@ typedef enum target_flash_status {
     TARGET_FAIL_WRITE
 }target_flash_status_t;
 
-static const char *fail_txt_contents[] = {
+static const char *const fail_txt_contents[] = {
     "",
     "The interface firmware FAILED to reset/halt the target MCU\r\n",
     "The interface firmware FAILED to download the flash programming algorithms to the target MCU\r\n",
