@@ -29,9 +29,9 @@
 #define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
 #define SEMIHOST_TASK_PRIORITY      (2)
 
-#define TIMER_TASK_30_STACK (80)
-#define DAP_TASK_STACK      (180)
-#define SERIAL_TASK_STACK   (140)
-#define MAIN_TASK_STACK     (80)
+#define TIMER_TASK_30_STACK (100)
+#define DAP_TASK_STACK      (200)
+#define SERIAL_TASK_STACK   (200)
+#define MAIN_TASK_STACK     (200)
 
 #endif
