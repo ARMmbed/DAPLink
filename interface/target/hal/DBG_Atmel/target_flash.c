@@ -27,11 +27,6 @@
 
 #include "string.h"
 
-#define MIN_FLASH_ADDRESS   0x00400000
-#define MAX_FLASH_ADDRESS   0x00500000
-#define MIN_RAM_ADDRESS     0x20000000
-#define MAX_RAM_ADDRESS     0x20020000
-
 static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
     return ((test < min) || (test > max)) ? 0 : 1;
@@ -46,12 +41,12 @@ uint8_t validate_bin_nvic(uint8_t *buf)
     uint32_t nvic_rv = 0;
     // test the initial SP value
     memcpy(&nvic_sp, buf, sizeof(nvic_sp));
-    if (0 == test_range(nvic_sp, MIN_RAM_ADDRESS, MAX_RAM_ADDRESS)) {
+    if (0 == test_range(nvic_sp, target_device.ram_start, target_device.ram_end)) {
         return 0;
     }
     // test the initial reset vector
     memcpy(&nvic_rv, buf+4, sizeof(nvic_rv));
-    if (0 == test_range(nvic_rv, MIN_FLASH_ADDRESS, MAX_FLASH_ADDRESS)) {
+    if (0 == test_range(nvic_rv, target_device.flash_start, target_device.flash_end)) {
         return 0;
     }
     
@@ -75,26 +70,25 @@ uint8_t validate_hexfile(uint8_t *buf)
     return 0;
 }
 
-#define WRITE 1
-
-#if WRITE
-target_flash_status_t target_flash_init(extension_t ext) {
-    
+target_flash_status_t target_flash_init(extension_t ext)
+{
     PORT_SWD_SETUP();
     if (!target_set_state(RESET_PROGRAM)) {
         return TARGET_FAIL_RESET;
     }
+    
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
         return TARGET_FAIL_ALGO_DL;
     }
 
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, target_device.flash_start, 0 /* clk value is not used */, 0, 0)) {
         return TARGET_FAIL_INIT;
     }
 
     return TARGET_OK;
 }
+
 
 target_flash_status_t target_flash_erase_sector(unsigned int sector) {
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
@@ -122,43 +116,35 @@ target_flash_status_t target_flash_erase_chip(void) {
 target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
 {
     uint32_t bytes_written = 0;
-	  // Program a page in target flash.
+    target_flash_status_t status = TARGET_OK;
+    addr += target_device.flash_start;
+    
+    // we need to erase a sector
+    if (addr % target_device.sector_size == 0) {
+        status = target_flash_erase_sector(addr / target_device.sector_size);
+        if (status != TARGET_OK) {
+            return status;
+        }
+    }
+
+    // Program a page in target RAM to be programmed.
     if (!swd_write_memory(flash.program_buffer, buf, size)) {
         return TARGET_FAIL_ALGO_DATA_SEQ;
     }
+
     while(bytes_written < size) {
         if (!swd_flash_syscall_exec(&flash.sys_call_param,
                                     flash.program_page,
-                                    addr,                                     // arg1
-                                    flash.ram_to_flash_bytes_to_be_written,   // arg2
-                                    flash.program_buffer + bytes_written, 0)) { // arg3, arg4
+                                    addr,
+                                    flash.ram_to_flash_bytes_to_be_written,
+                                    flash.program_buffer + bytes_written, 0)) {
             return TARGET_FAIL_WRITE;
         }
+
         bytes_written += flash.ram_to_flash_bytes_to_be_written;
         addr += flash.ram_to_flash_bytes_to_be_written;
     }
 
     return TARGET_OK;
 }
-#else
-target_flash_status_t target_flash_init(void)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_erase_sector(unsigned int sector)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_erase_chip(void)
-{
-    return TARGET_OK;
-}
-
-target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, uint32_t size)
-{
-    return TARGET_OK;
-}
-#endif
 
