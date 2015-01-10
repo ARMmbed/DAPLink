@@ -520,7 +520,8 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
         return 0;
     }
 
-    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
+    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
+    //if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
         return 0;
     }
 

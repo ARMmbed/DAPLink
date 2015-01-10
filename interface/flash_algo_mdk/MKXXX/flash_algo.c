@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include "../FlashOS.H"        // FlashOS Structures
 #include "flash/flash.h"
 #include "string.h"
 
