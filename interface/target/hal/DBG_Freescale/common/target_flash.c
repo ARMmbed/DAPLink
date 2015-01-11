@@ -55,7 +55,8 @@ uint8_t validate_hexfile(uint8_t *buf)
 
 target_flash_status_t target_flash_init(extension_t ext)
 {
-    PORT_SWD_SETUP();
+    swd_init();
+    
     if (!target_set_state(RESET_PROGRAM)) {
         return TARGET_FAIL_RESET;
     }
