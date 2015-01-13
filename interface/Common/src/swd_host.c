@@ -128,15 +128,15 @@ uint8_t swd_write_dp(uint8_t adr, uint32_t val) {
     uint8_t data[4];
     uint8_t ack;
 
-//    switch(adr) {
-//        case DP_SELECT:
-//            if (dap_state.select == val)
-//                return 1;
-//            dap_state.select = val;
-//            break;
-//        default:
-//            break;
-//    }
+    switch(adr) {
+        case DP_SELECT:
+            if (dap_state.select == val)
+                return 1;
+            dap_state.select = val;
+            break;
+        default:
+            break;
+    }
 
     req = SWD_REG_DP | SWD_REG_W | SWD_REG_ADR(adr);
     int2array(data, val, 4);
@@ -180,15 +180,15 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
         return 0;
     }
 
-//    switch(adr) {
-//        case AP_CSW:
-//            if (dap_state.csw == val)
-//                return 1;
-//            dap_state.csw = val;
-//            break;
-//        default:
-//            break;
-//    }
+    switch(adr) {
+        case AP_CSW:
+            if (dap_state.csw == val)
+                return 1;
+            dap_state.csw = val;
+            break;
+        default:
+            break;
+    }
 
     req = SWD_REG_AP | SWD_REG_W | SWD_REG_ADR(adr);
     int2array(data, val, 4);
@@ -447,8 +447,8 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
 // Write unaligned data to target memory.
 // size is in bytes.
+uint8_t verify[636] = {0};
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
-// WORKING BUT VERY SLOW. LOGIC PROBLEM BELOW...
 //    uint32_t end = address + size;
 //    uint8_t data_read;
 //    while (address <= end) {
@@ -470,10 +470,17 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 //    return 1;
 //}
 
-    uint32_t n;
+    uint32_t n = 0, i = 0;
+    uint8_t check8;
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {
+            return 0;
+        }
+        if (!swd_read_byte(address, &check8)) {
+            return 0;
+        }
+        if (check8 != *data) {
             return 0;
         }
         address++;
@@ -490,6 +497,14 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
     if (!swd_write_block(address, data, n)) {
         return 0;
     }
+    if (!swd_read_block(address, verify, n)) {
+        return 0;
+    }
+    do {
+        if (verify[i] != data[i]) {
+            return 0;
+        }
+    } while ((i++) < n);
 
     address += n;
     data += n;
@@ -498,6 +513,12 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
     // Write remaining bytes
     while (size > 0) {
         if (!swd_write_byte(address, *data)) {
+            return 0;
+        }
+        if (!swd_read_byte(address, &check8)) {
+            return 0;
+        }
+        if (check8 != *data) {
             return 0;
         }
         address++;
