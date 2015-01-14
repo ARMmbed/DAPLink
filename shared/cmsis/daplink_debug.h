@@ -30,6 +30,7 @@
  extern "C" {
 #endif
 
+#define MSC_DEBUG
 #if defined (MSC_DEBUG)
 static inline uint32_t daplink_debug_print(const char* format, ...)
 {
