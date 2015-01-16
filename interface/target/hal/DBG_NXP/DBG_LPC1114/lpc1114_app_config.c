@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef USB_BUF_H
-#define USB_BUF_H
 
-#include "absacc.h"
-#include "stdint.h"
+#include "target_config.h"
 
-uint32_t usb_buffer[512/4];
+// LPC1114 target information
+const target_cfg_t target_device = {
+    .board_id   = "1114",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 4096, //1024,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
+    .sector_cnt     = (kB(32)/4096), //(kB(32)/1024),
+    .flash_start    = 0,
+    .flash_end      = kB(32),
+    .ram_start      = 0x10000000,
+    .ram_end        = 0x10002000,
+    .disc_size      = kB(32)
+};
 
-#if defined(TARGET_LPC11U35) && (FLASH_SECTOR_SIZE > 2048)
-  // SRAM block on LPC11U35 is limited to 2KB
-  #error "USB buffer too large for this platform"
-#endif
-
-#endif

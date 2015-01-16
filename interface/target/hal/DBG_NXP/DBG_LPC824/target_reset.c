@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef USB_BUF_H
-#define USB_BUF_H
+#include "target_reset.h"
+#include "swd_host.h"
 
-#include "absacc.h"
-#include "stdint.h"
+void target_before_init_debug(void) {
+	return;
+}
 
-uint32_t usb_buffer[512/4];
+uint8_t target_unlock_sequence(void) {
+    return 1;
+}
 
-#if defined(TARGET_LPC11U35) && (FLASH_SECTOR_SIZE > 2048)
-  // SRAM block on LPC11U35 is limited to 2KB
-  #error "USB buffer too large for this platform"
-#endif
-
-#endif
+uint8_t target_set_state(TARGET_RESET_STATE state) {
+    return swd_set_target_state(state);
+}

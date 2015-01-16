@@ -49,6 +49,8 @@
 #ifndef OS_STKSIZE
   #if defined(TARGET_ATSAM3U2C)
     #define OS_STKSIZE     160//80//250
+  #elif defined(TARGET_LPC11U35)
+    #define OS_STKSIZE     110
   #else
     #define OS_STKSIZE     140
   #endif
