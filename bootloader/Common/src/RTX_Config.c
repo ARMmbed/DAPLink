@@ -36,7 +36,7 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     5
+ #define OS_PRIVCNT     0
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
@@ -51,7 +51,7 @@
 // <i> Include the stack checking code for a stack overflow.
 // <i> Note that additional code reduces the Kernel performance.
 #ifndef OS_STKCHECK
- #define OS_STKCHECK    0
+ #define OS_STKCHECK    1
 #endif
 
 // <q>Run in privileged mode

@@ -319,8 +319,7 @@ __task void main_task(void) {
     swd_init();
 
     // Setup reset button
-    //gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
-    // was in gpio interrupt
+    gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
     button_activated = 1;
     
     // Update HTML version information file
@@ -431,8 +430,7 @@ __task void main_task(void) {
 
         if (flags & FLAGS_MAIN_90MS) {
             if (!button_activated) {
-                //gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
-                // was in irq gpio.c
+                gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
                 button_activated = 1;
             }
 

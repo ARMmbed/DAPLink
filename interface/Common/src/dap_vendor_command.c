@@ -18,8 +18,7 @@
 #include "string.h"
 
 #include "rl_usb.h"
-#include "mbed_htm.h"
-//#include "version.h"
+#include "version.h"
 #include "DAP_config.h"
 #include "uart.h"
 #include "DAP.h"

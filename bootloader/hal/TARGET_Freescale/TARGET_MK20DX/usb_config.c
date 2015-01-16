@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
 /*------------------------------------------------------------------------------
  *      USB Device Configuration
  *----------------------------------------------------------------------------*/
- 
-//-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
-//
+
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
@@ -51,7 +48,7 @@
 #define USBD_POWER                  0
 #define USBD_MAX_PACKET0            8
 #define USBD_DEVDESC_IDVENDOR       0x0D28
-#define USBD_DEVDESC_IDPRODUCT      0x0000
+#define USBD_DEVDESC_IDPRODUCT      0x0204
 #define USBD_DEVDESC_BCDDEVICE      0x0100
 
 //   <h> Configuration Settings
@@ -83,7 +80,7 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"MBED"
-#define USBD_STRDESC_PROD           L"MBED BOOTLOADER"
+#define USBD_STRDESC_PROD           L"MBED CMSIS-DAP"
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -181,7 +178,8 @@
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "BOOTLOADER "
+                                    "microntroller   " \
+                                    "1.0 "
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
@@ -412,7 +410,7 @@
 #define USBD_ADC_CIF_NUM           (0)
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
-#define USBD_MSC_IF_NUM            (USBD_ADC_ENABLE*2+0)
+#define USBD_MSC_IF_NUM       (USBD_ADC_ENABLE*2+0)
 #define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+1)
 #define USBD_CDC_ACM_DIF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2)
 #define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)

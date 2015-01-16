@@ -18,8 +18,6 @@
 #include "string.h"
 #include "usb_for_lib.h"
 
-#include <string.h>
-
 BOOL        USBD_MSC_MediaReady   = __FALSE;
 BOOL        USBD_MSC_ReadOnly     = __FALSE;
 U32         USBD_MSC_MemorySize;

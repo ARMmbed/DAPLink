@@ -44,14 +44,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\k20dx128_bootloader\</OutputDirectory>
+          <OutputDirectory>.\Obj\</OutputDirectory>
           <OutputName>k20dx128_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\k20dx128_bootloader\</ListingPath>
+          <ListingPath>.\Lst\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -74,9 +74,9 @@
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>1</RunUserProg1>
+            <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf --bin -o "$L@L.bin" "#L"</UserProg1Name>
+            <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -221,7 +221,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>1</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -242,7 +242,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>1</Im2Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -345,7 +345,7 @@
           <Cads>
             <interw>1</interw>
             <Optim>3</Optim>
-            <oTime>1</oTime>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
             <Strict>0</Strict>
@@ -421,52 +421,32 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
-              <FileName>board.c</FileName>
+              <FileName>flash_svc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\board.c</FilePath>
+              <FilePath>..\..\Common\src\flash_svc.c</FilePath>
             </File>
             <File>
-              <FileName>mbed_htm.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\mbed_htm.c</FilePath>
+              <FilePath>..\..\Common\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>validate_user_application.c</FileName>
+              <FileName>RTX_Config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\validate_user_application.c</FilePath>
+              <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
             </File>
-            <File>
-              <FileName>usbd_user_msc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Shared\Common\src\usbd_user_msc.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_fs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\common\src\virtual_fs.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>BootloaderCommon</GroupName>
-          <Files>
             <File>
               <FileName>SVC_Table.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\Common\src\SVC_Table.s</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
-              <FileName>RTX_Config.c</FileName>
+              <FileName>usbd_user_msc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
               <FileOption>
@@ -521,33 +501,28 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Device</GroupName>
+          <GroupName>HAL</GroupName>
           <Files>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\flash_erase_read_write.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\gpio.c</FilePath>
             </File>
             <File>
               <FileName>read_uid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\read_uid.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\read_uid.c</FilePath>
             </File>
             <File>
               <FileName>usbd_MK20D5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usbd_MK20D5.c</FilePath>
             </File>
             <File>
               <FileName>vector_table.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\vector_table.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\vector_table.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>ProgramFlash</GroupName>
-          <Files>
             <File>
               <FileName>flash_hal.c</FileName>
               <FileType>1</FileType>
@@ -684,62 +659,62 @@
             <File>
               <FileName>HAL_CM3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\HAL_CM3.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\HAL_CM3.c</FilePath>
             </File>
             <File>
               <FileName>rt_Event.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Event.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Event.c</FilePath>
             </File>
             <File>
               <FileName>rt_List.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_List.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_List.c</FilePath>
             </File>
             <File>
               <FileName>rt_Mailbox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Mailbox.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Mailbox.c</FilePath>
             </File>
             <File>
               <FileName>rt_MemBox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_MemBox.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_MemBox.c</FilePath>
             </File>
             <File>
               <FileName>rt_Mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Mutex.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Mutex.c</FilePath>
             </File>
             <File>
               <FileName>rt_Robin.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Robin.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Robin.c</FilePath>
             </File>
             <File>
               <FileName>rt_Semaphore.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Semaphore.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Semaphore.c</FilePath>
             </File>
             <File>
               <FileName>rt_System.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_System.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_System.c</FilePath>
             </File>
             <File>
               <FileName>rt_Task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Task.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Task.c</FilePath>
             </File>
             <File>
               <FileName>rt_Time.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Time.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Time.c</FilePath>
             </File>
             <File>
               <FileName>rt_Timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\shared\rtos\src\rt_Timer.c</FilePath>
+              <FilePath>..\..\..\shared\rtos\rt_Timer.c</FilePath>
             </File>
           </Files>
         </Group>

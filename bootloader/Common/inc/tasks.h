@@ -13,26 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TASK_H
-#define TASK_H
+/* RTL no timeout value */
+#define NO_TIMEOUT  (0xffff)
 
-/*!< LOWEST_PRIORITY for RTOS tasks 0 is lowest and reserved for idle task */
-#define LOWEST_PRIORITY         (1)
-/*!< HIGHEST_PRIORITY for RTOS tasks 254 and 255 is reserved for RTX */
-#define HIGHEST_PRIORITY        (254)
+/* Task configuration (Priority, stacks etc.) */
+#define LOWEST_PRIORITY             (1)     /* Priority 0 is reserved for the RTX idle task */
+#define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
 
-/*!< MAIN_TASK_PRIORITY task priority that runs the main flag check and state machine */
-#define MAIN_TASK_PRIORITY      (10)
-/*!< TIMER_TASK_30_PRIORITY task priority that sets 30ms and 90ms flags */
-#define TIMER_TASK_30_PRIORITY  (11)
-/*!< MSC_TASK_PRIORITY task priority for the USB MSC task */
-#define MSC_TASK_PRIORITY       (5)
+/* main.c */
+#define MSC_TASK_PRIORITY               (5)
+#define FLASH_PROGRAMMING_TASK_PRIORITY (10)
+#define LED_TASK_PRIORITY (15)
 
-/*!< TIMER_TASK_STACK size in bytes for the task stack */
-#define TIMER_TASK_STACK        (70)
-/*!< MSC_TASK_STACK size in bytes for the task stack */
-#define MSC_TASK_STACK          (200)
-/*!< MAIN_TASK_STACK size in bytes for the task stack */
-#define MAIN_TASK_STACK         (200)
-
-#endif
+#define MSC_TASK_STACK (200)
