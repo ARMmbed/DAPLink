@@ -38,11 +38,11 @@
 
  // Clock Macros
 
-#if defined(TARGET_ATSAM3U2C) //maybe DBG_NRF51822AA, check with nordic TODO
+#if defined(TARGET_ATSAM3U2C)
   #define MAX_SWJ_CLOCK(delay_cycles) \
     (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
   #define CLOCK_DELAY(swj_clock) \
-    ((CPU_CLOCK / (swj_clock * 20/*14*/)) - IO_PORT_WRITE_CYCLES)
+    ((CPU_CLOCK / (swj_clock * /*20*/14)) - IO_PORT_WRITE_CYCLES)
 #else
   #define MAX_SWJ_CLOCK(delay_cycles) \
     (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))

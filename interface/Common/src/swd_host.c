@@ -94,7 +94,7 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t * data) {
     for (i = 0; i < MAX_SWD_RETRY; i++) {
         ack = SWD_Transfer(req, data);
         // if ack != WAIT
-        if (ack != 0x02) {
+        if (ack != DAP_TRANSFER_WAIT) {
             return ack;
         }
     }
@@ -504,7 +504,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (verify[i] != data[i]) {
             return 0;
         }
-    } while ((i++) < n);
+    } while ((++i) < n);
 
     address += n;
     data += n;

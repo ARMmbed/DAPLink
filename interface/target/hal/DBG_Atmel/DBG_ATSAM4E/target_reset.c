@@ -120,17 +120,17 @@ uint8_t target_unlock_sequence(void) {
 }
 
 uint8_t target_set_state(TARGET_RESET_STATE state) {
-//	uint32_t  count=0;
-//	//Check for 5 Second emergency erase routine
-//	while(!((PIOA->PIO_PDSR >> 25) &1)){
-//        os_dly_wait(1);
-//        count++;
-//        gpio_set_dap_led((count>>4)&1);//Blink every 160ms
-//        if(count>500){            
-//            nrf_Emergency_Erase();
-//            return swd_set_target_state(state);
-//        }
-//    }
-//    gpio_set_dap_led(1);
+	uint32_t  count=0;
+	//Check for 5 Second emergency erase routine
+	while(!((PIOA->PIO_PDSR >> 25) &1)){
+        os_dly_wait(1);
+        count++;
+        gpio_set_dap_led((count>>4)&1);//Blink every 160ms
+        if(count>500){            
+            nrf_Emergency_Erase();
+            return swd_set_target_state(state);
+        }
+    }
+    gpio_set_dap_led(1);
     return swd_set_target_state(state);
 }
