@@ -16,7 +16,8 @@
  
 #include "board.h"
 
-BOARD board = {
-    BOARD_ID,      // board id
-    BOARD_SECRET,  // board secret
-};
+#include "stdint.h"
+
+void read_unique_id(uint32_t * id);
+
+#endif

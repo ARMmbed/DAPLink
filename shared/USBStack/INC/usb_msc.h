@@ -101,6 +101,6 @@ typedef __packed struct _MSC_CSW {
 #define SCSI_SERVICE_ACTION_IN16        0x9E
 #define SCSI_SERVICE_ACTION_OUT12       0xA9
 #define SCSI_SERVICE_ACTION_OUT16       0x9F
-
+#define SCSI_REPORT_ID_INFO             0xA3
 
 #endif  /* __USB_MSC_H__ */

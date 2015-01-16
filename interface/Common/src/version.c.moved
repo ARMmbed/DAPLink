@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <string.h>
+#include "string.h"
 
 #include "main.h"
 #include "version.h"
@@ -21,13 +21,10 @@
 #include "mbed_htm.h"
 #include "read_uid.h"
 
-extern uint8_t usb_buffer[];
-
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
 
 static uint32_t unique_id;
-static uint8_t already_unique_id = 0;
 static uint32_t auth;
 uint8_t string_auth[25 + 4];
 uint8_t string_auth_descriptor[2+25*2];
@@ -204,7 +201,15 @@ static uint8_t get_html_character(HTMLCTX *h) {
     return c;
 }
 
-uint8_t update_html_file(void) {
+void init_auth_config(void)
+{
+    read_unique_id(&unique_id);
+    compute_auth();
+    setup_string_id_auth();
+    setup_string_descriptor();
+}
+
+uint8_t update_html_file(uint8_t *buf, uint32_t bufsize) {
     // Update a file containing the version information for this firmware
     // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
 
@@ -213,23 +218,15 @@ uint8_t update_html_file(void) {
 
     uint32_t i = 0;
 
-    if (already_unique_id == 0) {
-        read_unique_id(&unique_id);
-        compute_auth();
-        setup_string_id_auth();
-        setup_string_descriptor();
-        already_unique_id = 1;
-    }
-
     // Write file
-    init_html(&html, (uint8_t *)WebSide);
+    init_html(&html, (uint8_t *)mbed_redirect_file);
 
     do {
         c=get_html_character(&html);
         if (c != '\0') {
-            usb_buffer[i++] = c;
+            buf[i++] = c;
         }
     } while (c != '\0');
-    memset(usb_buffer+i, ' ', 512 - i);
+    memset(buf+i, ' ', bufsize - i);
     return 1;  // Success
 }

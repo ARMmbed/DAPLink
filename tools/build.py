@@ -2,13 +2,13 @@
 
 # CMSIS-DAP Interface Firmware
 # Copyright (c) 2009-2014 ARM Limited
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,13 @@ BOOTLOADER_PROJECTS = [
             'targets' : [
                             'lpc11u35_bootloader'
                         ]
+        },
+        {
+            'target' : 'ATSAM3U2C',
+            'path' : r'bootloader\mdk\atsam3u2c\atsam3u2c_bootloader.uvproj',
+            'targets' : [
+                            'ATSAM3U2C_bootloader'
+                        ]
         }
     ]
 
@@ -63,6 +70,9 @@ INTERFACE_PROJECTS = [
                             'k20dx128_k64f_if',
                             'k20dx128_k64f_openSDA_bootloader_if',
                             'k20dx128_k64f_mbed_bootloader_if',
+                            'k20dx128_k22f_if',
+                            'k20dx128_k22f_openSDA_bootloader_if',
+                            'k20dx128_k22f_mbed_bootloader_if',
                             'k20dx128_kl02z_if',
                             'k20dx128_kl02z_openSDA_bootloader_if',
                             'k20dx128_kl02z_mbed_bootloader_if',
@@ -76,13 +86,24 @@ INTERFACE_PROJECTS = [
             'path' : r'interface\mdk\lpc11u35\lpc11u35_interface.uvproj',
             'targets' : [
                             'lpc11u35_lpc812_if',
-                            'lpc11u35_lpc812_mbed_bootloader_if',
+                            'lpc11u35_lpc812_mbed_bootloader',
                             'lpc11u35_lpc1768_if',
                             'lpc11u35_lpc1768_mbed_bootloader',
-                            'lpc11u35_ublox_if',
+                            'lpc11u35_ublox_lpc1768_if',
                             'lpc11u35_lpc1114_if',
-                            'lpc11u35_lpc1114_mbed_bootloader_if',
-                            #'lpc11u35_lpc810_if'
+                            'lpc11u35_lpc1114_mbed_bootloader',
+                            #'lpc11u35_lpc810_if' # fails build
+                         ],
+        },
+        {
+            'target' : 'lpc4322',
+            'path' : r'interface\mdk\lpc4322\lpc4322_interface.uvproj',
+            'targets' : [
+                            'lpc4322_lpc1549_if',
+                            'lpc4322_lpc1549_dbg_sram',
+                            'lpc4322_lpc11U68_if',
+                            'lpc4322_lpc11U68_dbg_sram',
+                            'lpc4322_lpc4337_if',
                          ],
         }
     ]
@@ -92,35 +113,14 @@ FLASH_ALGO_PROJECTS = [
             'target' : 'MKXXX',
             'path' : r'interface\flash_algo_mdk\MKXXX\MKXX.uvproj',
             'targets' : [
-                            'MKP128',
-                            'MKP256',
-                            'MKP256_50MHZ',
-                            'MKP512',
-                            'MKP512_50MHZ',
-                            'MKP512X',
-                            'MKP1024',
-                            'MKP128_50MHZ',
-                            'MKP128_48MHZ',
-                            'MKP64',
-                            'MKP64_50MHZ',
-                            'MKP64_48MHZ',
-                            'MKP32_50MHZ',
-                            'MKP32_48MHZ',
-                            'MKP16_48MHZ',
-                            'MKP8_48MHZ',
-                            'MKD32',
-                            'MKD32_50MHZ',
-                            'MKD32_72MHZ',
-                            'MKD64_50MHZ',
-                            'MKD128',
-                            'MKD256',
-                            'MKD512',
-                            'MKPIFR',
-                            'MKPIFR_48MHZ',
-                            'MKPIFR_50MHZ',
-                            'MKPIFR_120MHZ',
-                            'MKDIFR',
-                            'MKDIFR_50MHZ'
+                            'MK20DX128_Pflash',
+                            'MK64FN1M0_Pflash',
+                            'MKL02Z32_Pflash',
+                            'MKL05Z32_Pflash',
+                            'MKL25Z128_Pflash',
+                            'MKL26Z128_Pflash',
+                            'MKL46Z256_Pflash',
+                            'MK22F51212_Pflash'
                         ]
         },
         {
@@ -133,8 +133,20 @@ FLASH_ALGO_PROJECTS = [
                             'LPC1700_IAP_64',
                             'LPC1700_IAP_32',
                             'LPC1700_IAP_512_MBED_60MHz',
-                            'LPC11xx_IAP_32',
-                            'LPC8xx_IAP_4'
+                            #'LPC11xx_IAP_32',
+                            'LPC8xx_IAP_4',
+                            'LPC1549_IAP_256',
+                            'LPC11U68_IAP_256',
+                            'LPC4337_IAP_1024'
+                        ]
+        },
+        {
+            'target' : 'LPC_SPIFI',
+            'path' : r'interface\flash_algo_mdk\LPC_SPIFI\LPC_SPIFI.uvproj',
+            'targets' : [
+                            'LPC1800_SPIFI_8M_4K',
+                            'LPC1800_SPIFI_4M_4K',
+                            'LPC1800_SPIFI_4M_64K',
                         ]
         }
     ]
@@ -146,7 +158,7 @@ class BuildError(Exception): pass
 # @brief Class to build uVision projects.
 class UV4Project(object):
     # Status codes from building a project.
-    
+
     ## No warnings or errors.
     SUCCESS = 0
     ## Warnings only.
@@ -157,14 +169,14 @@ class UV4Project(object):
     INVALID_TARGET = 3
     ## The project file does not exit.
     INVALID_PROJECT = 15
-    
+
     ##
     # @brief Constructor.
     # @param self
     # @param project Path to the project file.
     def __init__(self, project):
         self.project = project
-    
+
     ##
     # @brief Build a target of the project.
     #
@@ -178,12 +190,12 @@ class UV4Project(object):
     # @return The integer status code from the uVision build.
     def build(self, target=None, logFile=None):
         # Build list of arguments to UV4.
-        argList = [settings.UV4, '-b', self.project]
+        argList = [settings.UV4, '-j0', '-b', self.project]
         if target:
             argList += ['-t', target]
         if logFile:
             argList += ['-o', logFile]
-        
+
         # Run UV4 command.
         return subprocess.call(argList)
 
@@ -192,7 +204,7 @@ class UV4Project(object):
 class Builder(object):
     def __init__(self):
         self.rootPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
+
     def _read_options(self):
         # Build arg parser.
         parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -208,13 +220,13 @@ class Builder(object):
     def run(self):
         # Read command line arguments.
         self.args = self._read_options()
-        
+
         # Build all projects if no type was specified.
         if (not self.args.bootloader) and (not self.args.interface) and (not self.args.flash):
             self.args.bootloader = True
             self.args.interface = True
             self.args.flash = True
-        
+
         try:
             if self.args.bootloader:
                 self._build_project_list(BOOTLOADER_PROJECTS)
@@ -226,31 +238,32 @@ class Builder(object):
             return 1
         else:
             return 0
-    
+
     def _build_project_list(self, projects):
         for targetDict in projects:
             # Skip this target if it shouldn't be built.
-            if self.args.target and (not targetDict['target'].startswith(self.args.target.lower())):
+            if self.args.target and (not targetDict['target'].lower().startswith(self.args.target.lower())):
                 continue
-            
+
             # Construct project path and name.
             projectPath = os.path.join(self.rootPath, targetDict['path'])
             projectName = os.path.basename(projectPath)
-            
+
             # Create the project file object.
             project = UV4Project(projectPath)
-            
+
             # Build all targets listed for this project.
             for targetName in targetDict['targets']:
                 print("Building target %s of %s..." % (targetName, projectName))
-                
+
                 status = project.build(targetName, self.args.log)
                 print("Status = %d" % status)
-                
+
                 if status != UV4Project.SUCCESS and status != UV4Project.WARNINGS:
                     print("* Error building target %s of %s" % (targetName, projectName))
-                    raise BuildError
-        
+                    # Just build everything for right now
+                    #raise BuildError
+
 
 if __name__ == "__main__":
     exit(Builder().run())

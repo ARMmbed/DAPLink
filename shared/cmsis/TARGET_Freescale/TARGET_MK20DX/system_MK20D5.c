@@ -39,7 +39,7 @@
  * (PLL) that is part of the microcontroller device.
  */
 
-#include <stdint.h>
+#include "stdint.h"
 #include "MK20D5.h"
 
 #define DISABLE_WDOG    1

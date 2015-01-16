@@ -13,25 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include <stdio.h>
+#include "flash_hal.h"
 
-#define ITM_Port8(n)    (*((volatile unsigned char *)(0xE0000000+4*n)))
-#define ITM_Port16(n)   (*((volatile unsigned short*)(0xE0000000+4*n)))
-#define ITM_Port32(n)   (*((volatile unsigned long *)(0xE0000000+4*n)))
-#define DEMCR           (*((volatile unsigned long *)(0xE000EDFC)))
-#define TRCENA          (0x01000000)
- 
-struct __FILE { int handle; /* Add whatever needed */ };
-FILE __stdout;
-FILE __stdin;
+int __SVC_2 (uint32_t addr) {
+    return flash_hal_erase_sector(addr);
+}
 
-int fputc(int ch, FILE *f) 
-{
-    if (DEMCR & TRCENA)
-    {
-        while (ITM_Port32(0) == 0);
-        ITM_Port8(0) = ch;
-    }
-    return(ch);
+int __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf) {
+    return flash_hal_program_page(adr, sz, buf);
 }

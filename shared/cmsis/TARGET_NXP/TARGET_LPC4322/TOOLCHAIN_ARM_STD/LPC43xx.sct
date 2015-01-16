@@ -1,0 +1,15 @@
+
+LR_IROM1 0x1A000000 0x80000  {    ; load region size_region (256k)
+
+  ER_IROM1 0x1A000000 0x80000  {  ; load address = execution address
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+  }
+  
+  RW_IRAM1 0x10000000 0x12000  {
+   .ANY (+RW +ZI)
+  }
+  
+}
+

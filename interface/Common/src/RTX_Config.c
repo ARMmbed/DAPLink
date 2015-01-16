@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -28,10 +28,10 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #if defined(NO_SEMIHOST)
-        #define OS_TASKCNT    12
+    #ifdef SEMIHOST
+        #define OS_TASKCNT    15//13
     #else
-        #define OS_TASKCNT    13
+        #define OS_TASKCNT    14//12
     #endif
 #endif
 
@@ -40,14 +40,18 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     5
+ #define OS_PRIVCNT     4
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
- #define OS_STKSIZE     110
+  #if defined(TARGET_ATSAM3U2C)
+    #define OS_STKSIZE     160//80//250
+  #else
+    #define OS_STKSIZE     140
+  #endif
 #endif
 
 // <q>Check for the stack overflow
@@ -55,7 +59,7 @@
 // <i> Include the stack checking code for a stack overflow.
 // <i> Note that additional code reduces the Kernel performance.
 #ifndef OS_STKCHECK
- #define OS_STKCHECK    0
+ #define OS_STKCHECK    1
 #endif
 
 // <q>Run in privileged mode
@@ -73,9 +77,13 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-    #if defined(TARGET_LPC11U35) || defined(TARGET_MK20D5)
-        #define OS_CLOCK       48000000
-    #endif
+  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20D5)
+    #define OS_CLOCK    48000000
+  #elif defined(TARGET_ATSAM3U2C)
+    #define OS_CLOCK    96000000
+  #elif defined(TARGET_LPC4322)
+    #define OS_CLOCK    204000000
+  #endif
 #endif
 
 //   <o>Timer tick value [us] <1-1000000>
@@ -183,7 +191,7 @@ void os_error (U32 err_code) {
  *      RTX Configuration Functions
  *---------------------------------------------------------------------------*/
 
-#include <RTX_lib.c>
+#include "RTX_lib.c"
 
 /*----------------------------------------------------------------------------
  * end of file

@@ -13,10 +13,10 @@ PRG 0 PI               ; Programming Functions
   }
 }
 
-DSCR +0                ; Device Description
-{
-  DevDscr +0
-  {
-    FlashDev.o
-  }
-}
+;DSCR +0                ; Device Description
+;{
+;  DevDscr +0
+;  {
+;    FlashDev.o
+;  }
+;}

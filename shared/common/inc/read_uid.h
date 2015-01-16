@@ -17,7 +17,7 @@
 #ifndef READ_UID_H
 #define READ_UID_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 /**
  Get a unique ID from the MCU. This is a 32-bit xor value created from the devices

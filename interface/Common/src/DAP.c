@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <string.h>
+#include "string.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "semihost.h"
@@ -36,14 +36,19 @@
 #error "Maximum Packet Count is 255"
 #endif
 
+ // Clock Macros
 
-// Clock Macros
-
-#define MAX_SWJ_CLOCK(delay_cycles) \
-  (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
-
-#define CLOCK_DELAY(swj_clock) \
- ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#if defined(TARGET_ATSAM3U2C) //maybe DBG_NRF51822AA, check with nordic TODO
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK / (swj_clock * 20/*14*/)) - IO_PORT_WRITE_CYCLES)
+#else
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#endif
 
 
          DAP_Data_t DAP_Data;           // DAP Data
@@ -100,13 +105,13 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
     case DAP_ID_DEVICE_VENDOR:
 #if TARGET_DEVICE_FIXED
       memcpy(info, TargetDeviceVendor, sizeof(TargetDeviceVendor));
-      length = sizeof(DAP_Target_Device);
+      length = sizeof(TargetDeviceVendor);
 #endif
       break;
     case DAP_ID_DEVICE_NAME:
 #if TARGET_DEVICE_FIXED
       memcpy(info, TargetDeviceName, sizeof(TargetDeviceName));
-      length = sizeof(DAP_Target_Device);
+      length = sizeof(TargetDeviceName);
 #endif
       break;
     case DAP_ID_CAPABILITIES:
@@ -179,17 +184,17 @@ static uint32_t DAP_Delay(uint8_t *request, uint8_t *response) {
 }
 
 
-// Process LED command and prepare response
+// Process Host Status command and prepare response
 //   request:  pointer to request data
 //   response: pointer to response data
 //   return:   number of bytes in response
-static uint32_t DAP_LED(uint8_t *request, uint8_t *response) {
+static uint32_t DAP_HostStatus(uint8_t *request, uint8_t *response) {
 
   switch (*request) {
-    case DAP_LED_DEBUGGER_CONNECTED:
+    case DAP_DEBUGGER_CONNECTED:
       LED_CONNECTED_OUT((*(request+1) & 1));
       break;
-    case DAP_LED_TARGET_RUNNING:
+    case DAP_TARGET_RUNNING:
       LED_RUNNING_OUT((*(request+1) & 1));
       break;
     default:
@@ -1208,8 +1213,8 @@ uint32_t DAP_ProcessCommand(uint8_t *request, uint8_t *response) {
       num = DAP_Info(*request, response+1);
       *response = num;
       return (2 + num);
-    case ID_DAP_LED:
-      num = DAP_LED(request, response);
+    case ID_DAP_HostStatus:
+      num = DAP_HostStatus(request, response);
       break;
     case ID_DAP_Connect:
       num = DAP_Connect(request, response);
@@ -1342,20 +1347,21 @@ uint32_t DAP_ProcessCommand(uint8_t *request, uint8_t *response) {
 
 // Setup DAP
 void DAP_Setup(void) {
-    // Default settings (only non-zero values)
-    DAP_Data.debug_port  = DAP_PORT_DISABLED;
-    //DAP_Data.fast_clock  = 0;
-    DAP_Data.clock_delay = CLOCK_DELAY(DAP_DEFAULT_SWJ_CLOCK);
-    //DAP_Data.transfer.idle_cycles = 0;
-    DAP_Data.transfer.retry_count = 100;
-    //DAP_Data.transfer.match_retry = 0;
-    //DAP_Data.transfer.match_mask  = 0x000000;
+
+  // Default settings (only non-zero values)
+//DAP_Data.debug_port  = 0;
+//DAP_Data.fast_clock  = 0;
+  DAP_Data.clock_delay = CLOCK_DELAY(DAP_DEFAULT_SWJ_CLOCK);
+//DAP_Data.transfer.idle_cycles = 0;
+  DAP_Data.transfer.retry_count = 100;
+//DAP_Data.transfer.match_retry = 0;
+//DAP_Data.transfer.match_mask  = 0x000000;
 #if (DAP_SWD != 0)
-    DAP_Data.swd_conf.turnaround  = 1;
-    //DAP_Data.swd_conf.data_phase  = 0;
+  DAP_Data.swd_conf.turnaround  = 1;
+//DAP_Data.swd_conf.data_phase  = 0;
 #endif
 #if (DAP_JTAG != 0)
-    //DAP_Data.jtag_dev.count = 0;
+//DAP_Data.jtag_dev.count = 0;
 #endif
 
   DAP_SETUP();  // Device specific setup

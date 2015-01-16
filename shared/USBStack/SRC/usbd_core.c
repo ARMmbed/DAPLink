@@ -15,9 +15,9 @@
  */
 #include "RTL.h"
 #include "rl_usb.h"
-#include <string.h>
+#include "string.h"
 #include "usb_for_lib.h"
-#include "mbed_htm.h"
+#include "version.h"
 
 U16               USBD_DeviceStatus;
 U8                USBD_DeviceAddress;
@@ -55,8 +55,11 @@ __RL_USBD_VER   EQU     0x470
  */
 
 void usbd_init (void) {
+#if defined(TARGET_ATSAM3U2C)  
+  USBD_HighSpeed     = __TRUE;
+#elif defined(TARGET_LPC11U35) || defined(TARGET_MK20DX)
   USBD_HighSpeed     = __FALSE;
-
+#endif
   usbd_class_init();
   USBD_RTX_TaskInit();
 
@@ -70,8 +73,10 @@ void usbd_init (void) {
  *    Parameters:      con:   Connect/Disconnect
  *    Return Value:    None
  */
+
 void usbd_connect (BOOL con) {
-    USBD_Connect (con);
+
+  USBD_Connect (con);
 }
 
 
@@ -183,7 +188,7 @@ void USBD_StatusOutStage (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqGetStatus (void) {
+__inline BOOL USBD_ReqGetStatus (void) {
   U32 n, m;
 
   switch (USBD_SetupPacket.bmRequestType.Recipient) {
@@ -221,7 +226,7 @@ static inline BOOL USBD_ReqGetStatus (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqSetClrFeature (U32 sc) {
+__inline BOOL USBD_ReqSetClrFeature (U32 sc) {
   U32 n, m;
 
   switch (USBD_SetupPacket.bmRequestType.Recipient) {
@@ -276,7 +281,7 @@ static inline BOOL USBD_ReqSetClrFeature (U32 sc) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqSetAddress (void) {
+__inline BOOL USBD_ReqSetAddress (void) {
 
   switch (USBD_SetupPacket.bmRequestType.Recipient) {
     case REQUEST_TO_DEVICE:
@@ -295,7 +300,7 @@ static inline BOOL USBD_ReqSetAddress (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqGetDescriptor (void) {
+__inline BOOL USBD_ReqGetDescriptor (void) {
   U8  *pD;
   U32  len, n;
 
@@ -307,8 +312,8 @@ static inline BOOL USBD_ReqGetDescriptor (void) {
           len = USB_DEVICE_DESC_SIZE;
           break;
         case USB_DEVICE_QUALIFIER_DESCRIPTOR_TYPE:
-          if ((!usbd_hs_enable) && (USBD_HighSpeed == __TRUE)) {
-            return (__FALSE);  /* High speed request but high-speed not enabled */
+          if (!usbd_hs_enable) {
+            return (__FALSE);  /* High speed not enabled */
           }
           if (USBD_HighSpeed == __FALSE) {
             USBD_EP0Data.pData = (U8 *)USBD_DeviceQualifier;
@@ -338,8 +343,8 @@ static inline BOOL USBD_ReqGetDescriptor (void) {
           len = ((USB_CONFIGURATION_DESCRIPTOR *)pD)->wTotalLength;
           break;
         case USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE:
-          if ((!usbd_hs_enable) && (USBD_HighSpeed == __TRUE)) {
-            return (__FALSE);  /* High speed request but high-speed not enabled */
+          if (!usbd_hs_enable) {
+            return (__FALSE);  /* High speed not enabled */
           }
           if (USBD_HighSpeed == __FALSE) {
             pD = (U8 *)USBD_OtherSpeedConfigDescriptor;
@@ -362,8 +367,8 @@ static inline BOOL USBD_ReqGetDescriptor (void) {
 
             // added by sam to send unique id string descriptor
           if (USBD_SetupPacket.wValueL == 3) {
-              USBD_EP0Data.pData = get_uid_string();
-              len = get_uid_string_len();
+              USBD_EP0Data.pData = get_uid_string_interface();
+              len = get_len_string_interface();
               break;
           }
 
@@ -405,7 +410,7 @@ static inline BOOL USBD_ReqGetDescriptor (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqGetConfiguration (void) {
+__inline BOOL USBD_ReqGetConfiguration (void) {
 
   switch (USBD_SetupPacket.bmRequestType.Recipient) {
     case REQUEST_TO_DEVICE:
@@ -424,7 +429,7 @@ static inline BOOL USBD_ReqGetConfiguration (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqSetConfiguration (void) {
+__inline BOOL USBD_ReqSetConfiguration (void) {
   USB_CONFIGURATION_DESCRIPTOR *pD;
   U32                           alt = 0;
   U32                           n, m;
@@ -522,7 +527,7 @@ static inline BOOL USBD_ReqSetConfiguration (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqGetInterface (void) {
+__inline BOOL USBD_ReqGetInterface (void) {
 
   switch (USBD_SetupPacket.bmRequestType.Recipient) {
     case REQUEST_TO_INTERFACE:
@@ -545,7 +550,7 @@ static inline BOOL USBD_ReqGetInterface (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-static inline BOOL USBD_ReqSetInterface (void) {
+__inline BOOL USBD_ReqSetInterface (void) {
   USB_COMMON_DESCRIPTOR *pD;
   U32                    ifn = 0, alt = 0, old = 0, msk = 0;
   U32                    n, m;

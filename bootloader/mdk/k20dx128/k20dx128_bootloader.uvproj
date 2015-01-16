@@ -66,9 +66,9 @@
             <nStopU2X>0</nStopU2X>
           </BeforeCompile>
           <BeforeMake>
-            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>python ..\..\..\tools\pre_build_script.py</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -128,6 +128,7 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -139,9 +140,11 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -353,11 +356,13 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
+            <uC99>0</uC99>
+            <useXO>0</useXO>
             <VariousControls>
-              <MiscControls>--c99</MiscControls>
-              <Define>BOOTLOADER, K20DX128, __RTX, MKP128_50MHZ</Define>
+              <MiscControls>--diag_suppress=2532</MiscControls>
+              <Define>__RTX, TARGET_MK20DX, CPU_MK20DX128VFM5</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos\src;..\..\..\shared\rtos\inc;..\..\..\shared\USBStack\src;..\..\..\shared\USBStack\inc;..\..\..\shared\common\inc;..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\include;..\..\Common\src;..\..\Common\inc;..\..\hal\freescale\TARGET_MK20DX\inc</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\..\shared\cmsis\TARGET_Freescale\include;..\..\..\shared\flash_algo\TARGET_Freescale</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -369,6 +374,7 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -385,6 +391,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
+            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX\TOOLCHAIN_ARM_STD\MK20D5.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -456,17 +463,60 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\main.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>RTX_Config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\RTX_Config.c</FilePath>
+              <FilePath>..\..\Common\src\usbd_user_msc.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
-              <FileName>usb_config.c</FileName>
+              <FileName>version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\Common\src\version.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -475,11 +525,6 @@
           <Files>
             <File>
               <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\shared\freescale\TARGET_MK20DX\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>flash_erase_read_write.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\hal\freescale\TARGET_MK20DX\src\flash_erase_read_write.c</FilePath>
             </File>
@@ -504,29 +549,117 @@
           <GroupName>ProgramFlash</GroupName>
           <Files>
             <File>
-              <FileName>FlashCommandSequence.c</FileName>
+              <FileName>flash_hal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashCommandSequence.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashEraseSector.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashEraseSector.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashInit.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashInit.c</FilePath>
-            </File>
-            <File>
-              <FileName>FlashProgramLongword.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\flash_algorithms\MKXXX\C90TFS\drvsrc\source\FlashProgramLongword.c</FilePath>
+              <FilePath>..\..\hal\TARGET_Freescale\TARGET_MK20DX\flash_hal.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--gnu --c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>USBStack</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>0</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath>..\USBStack\INC</IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
           <Files>
             <File>
               <FileName>usbd_core.c</FileName>
@@ -607,6 +740,141 @@
               <FileName>rt_Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\shared\rtos\src\rt_Timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls>--gnu --c99</MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>SSD_FTFx_Common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\SSD_FTFx_Common.h</FilePath>
+            </File>
+            <File>
+              <FileName>fsl_flash_features.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\fsl_flash_features.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_features.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_features.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_densities.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_densities.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_command_sequence.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_command_sequence.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_densities_k_series.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_densities_k_series.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_erase.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_erase_all.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_erase_all.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_program.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_program.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_erase.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_erase.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_erase_all.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_erase_all.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash_verify_program.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\shared\flash_algo\TARGET_Freescale\flash\src\flash_verify_program.c</FilePath>
             </File>
           </Files>
         </Group>

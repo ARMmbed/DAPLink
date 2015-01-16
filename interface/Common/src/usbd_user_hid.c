@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <string.h>
-#include <RTL.h>
-#include <rl_usb.h>
-#include <usb.h>
+#include "string.h"
+#include "RTL.h"
+#include "rl_usb.h"
+#include "usb.h"
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 #include "DAP_config.h"

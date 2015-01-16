@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 #include "MK20D5.h"
-#include "device_cfg.h"
+#include "vector_table.h"
+#include "flash_hal.h"
 
 #define NVIC_NUM_VECTORS (16 + 46)            // CORE + MCU Peripherals
 #define NVIC_RAM_VECTOR_ADDRESS (0x1FFFE000)  // Vectors positioned at start of RAM

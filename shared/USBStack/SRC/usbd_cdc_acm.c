@@ -15,7 +15,7 @@
  */
 #include "RTL.h"
 #include "rl_usb.h"
-#include <string.h>
+#include "string.h"
 #include "usb_for_lib.h"
 
 
@@ -260,7 +260,7 @@ int32_t USBD_CDC_ACM_DataSend (const uint8_t *buf, int32_t len) {
   len_before_wrap = 0;                  /* Circular buffer size before wrap   */
 
   if ((ptr_data_to_send>=ptr_data_sent) &&   /* If wrap is possible to happen */
-     ((ptr_data_to_send + len) > (USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz))) {
+     ((ptr_data_to_send + len) >= (USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz))) {
                                         /* If data wraps around end of buffer */
     len_before_wrap   = USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz - ptr_data_to_send;
     memcpy (ptr_data_to_send, buf_loc, len_before_wrap);/* Copy data till end */
@@ -525,7 +525,7 @@ static void USBD_CDC_ACM_EP_BULKOUT_HandleData () {
  */
 
 static void USBD_CDC_ACM_EP_BULKIN_HandleData (void) {
-  int32_t len_to_send;
+  int32_t len_to_send, len_sent;
 
   if (!data_send_active)                /* If sending is not active           */
     return;
@@ -540,13 +540,10 @@ static void USBD_CDC_ACM_EP_BULKIN_HandleData (void) {
   }
 
   /* Check if data needs to be sent                                           */
-  if (len_to_send    ||                 /* If there is data available do be
+  if (len_to_send) {                    /* If there is data available do be
                                            sent                               */
-      data_send_zlp)  {                 /* or if ZLP should be sent           */
-
-    if (((ptr_data_sent>ptr_data_to_send)|| /* If data before end of buf avail*/
-         (len_to_send==usbd_cdc_acm_sendbuf_sz)) &&   /* or if buffer is full */
-        ((ptr_data_sent + len_to_send) > (USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz))) {
+    if ((ptr_data_sent>=ptr_data_to_send) &&/* If data before end of buf avail*/
+        ((ptr_data_sent + len_to_send) >= (USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz))) {
                                         /* and if available data wraps around
                                            the end of the send buffer         */
                                         /* Correct bytes to send to data
@@ -560,24 +557,29 @@ static void USBD_CDC_ACM_EP_BULKIN_HandleData (void) {
                                         /* Correct to send maximum pckt size  */
       len_to_send = usbd_cdc_acm_maxpacketsize1[USBD_HighSpeed];
     }
+  } else if (data_send_zlp) {           /* or if ZLP should be sent           */
+    len_to_send = 0;
+  }
+
+  data_send_zlp = 0;
+
                                         /* Send data                          */
-    USBD_WriteEP(usbd_cdc_acm_ep_bulkin | 0x80, ptr_data_sent, len_to_send);
-    
-    ptr_data_sent    += len_to_send;    /* Correct position of sent pointer   */
-    data_to_send_rd  += len_to_send;    /* Correct num of bytes left to send  */
-    if (ptr_data_sent == USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz)
+  len_sent = USBD_WriteEP(usbd_cdc_acm_ep_bulkin | 0x80, ptr_data_sent, len_to_send);
+
+  ptr_data_sent    += len_sent;         /* Correct position of sent pointer   */
+  data_to_send_rd  += len_sent;         /* Correct num of bytes left to send  */
+  if (ptr_data_sent == USBD_CDC_ACM_SendBuf + usbd_cdc_acm_sendbuf_sz)
                                         /* If pointer to sent data wraps      */
-      ptr_data_sent = USBD_CDC_ACM_SendBuf; /* Correct it to beginning of send
+    ptr_data_sent = USBD_CDC_ACM_SendBuf; /* Correct it to beginning of send
                                            buffer                             */
-    if ((data_to_send_wr == data_to_send_rd) &&   /* If there are no more
+  if ((data_to_send_wr == data_to_send_rd) &&   /* If there are no more
                                            bytes available to be sent         */
-        (len_to_send == usbd_cdc_acm_maxpacketsize1[USBD_HighSpeed])) {
+      (len_sent == usbd_cdc_acm_maxpacketsize1[USBD_HighSpeed])) {
                                         /* If last packet size was same as
                                            maximum packet size                */
-      data_send_zlp = 1;                /* ZLP packet should be sent          */
-    } else {
-      data_send_zlp = 0;                /* No ZLP packet should be sent       */
-    }
+    data_send_zlp = 1;                  /* ZLP packet should be sent          */
+  } else {
+    data_send_zlp = 0;                  /* No ZLP packet should be sent       */
   }
 }
 
@@ -628,7 +630,7 @@ void USBD_CDC_ACM_EP_BULKIN_Event (uint32_t event) {
     ) {
     return;
   }
-  
+
   data_send_access = 1;                 /* Block access to send data          */
   USBD_CDC_ACM_EP_BULKIN_HandleData (); /* Handle data to send                */
   data_send_access = 0;                 /* Allow access to send data          */

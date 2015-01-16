@@ -13,8 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-// common to all bootloader implementations
+#include "RTL.h"
+#include "rl_usb.h"
+
+#include "stdint.h"
+
+#include "tasks.h"
+#include "flash_hal.h"
 #include "main.h"
 #include "gpio.h"
 #include "tasks.h"

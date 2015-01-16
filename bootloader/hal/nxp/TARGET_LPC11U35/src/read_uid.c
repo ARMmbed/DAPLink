@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "LPC11Uxx.h"
+#include "MK20D5.h"
 #include "read_uid.h"
 
 void read_unique_id(uint32_t * id) {

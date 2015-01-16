@@ -16,7 +16,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 /**
  @enum USB_BUSY

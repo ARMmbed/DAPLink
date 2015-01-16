@@ -15,7 +15,7 @@
  */
 #include "board.h"
 
-/* Each board should have a unique ID and secret. For information 
+/* Each board should have a unique ID and secret. For information
  *	about obtaining a secret contact support@mbed.org
  */
 #if defined (BOARD_FRDM_KL25Z) || defined (BOARD_TWR_KL25Z48M)
@@ -34,6 +34,10 @@
 #define BOARD_ID        "0230"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_FRDM_K22F)
+#define BOARD_ID        "0231"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #elif defined (BOARD_FRDM_K64F)
 #define BOARD_ID        "0240"
 #define BOARD_SECRET    "xxxxxxxx"
@@ -48,6 +52,10 @@
 
 #elif defined (BOARD_FRDM_KE02Z)
 #define BOARD_ID        "0270"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_TWR_K24F)
+#define BOARD_ID        "0280"
 #define BOARD_SECRET    "xxxxxxxx"
 
 #elif defined (BOARD_LPC812_MAX)
@@ -66,6 +74,34 @@
 #define BOARD_ID        "1114"
 #define BOARD_SECRET    "xxxxxxxx"
 
+#elif defined (BOARD_BAMBINO_210)
+#define BOARD_ID        "1600"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_BAMBINO_210E)
+#define BOARD_ID        "1605"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_LPC1549)
+#define BOARD_ID        "1549"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_LPC11U68)
+#define BOARD_ID        "1168"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_LPC4337)
+#define BOARD_ID        "1062"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_NRF51822AA)
+#define BOARD_ID        "1070"
+#define BOARD_SECRET    "xxxxxxxx"
+
+#elif defined (BOARD_MBED_GATEWAY)
+#define BOARD_ID        "5020"
+#define BOARD_SECRET    "xxxxxxxx"
+
 #endif
 
 #if !defined(BOARD_SECRET) || !defined(BOARD_ID)
@@ -78,3 +114,6 @@ BOARD board = {
     BOARD_SECRET   // board secret
 };
 
+/* Weak declaration of the board_init function for boards that don't use it */
+__weak void board_init(void) {
+}

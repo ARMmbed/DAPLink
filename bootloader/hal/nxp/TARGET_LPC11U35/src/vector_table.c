@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "LPC11Uxx.h"
 #include "vector_table.h"
-#include "device_cfg.h"
+#include "flash_hal.h"
 
 // Target specific defines
 #define NVIC_NUM_VECTORS            // CORE + MCU Peripherals

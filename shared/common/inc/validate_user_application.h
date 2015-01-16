@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-#ifndef VALIDATE_USER_APPLICATION_H
-#define VALIDATE_USER_APPLICATION_H
+#include "stdint.h"
 
-#include <stdint.h>
+#define FW_BUILD "0202"
 
 /**
  Validate the memory locations in the common part of ARM NVIC table

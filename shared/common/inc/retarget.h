@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef RETARGET_H
-#define RETARGET_H
+#include "stdint.h"
 
 #include <stdio.h>
 
@@ -24,5 +23,8 @@
 #else
 #define dbg_message(x, ...)
 #endif
+
+// Init function called in main() before the main task is started
+void board_init(void);
 
 #endif
