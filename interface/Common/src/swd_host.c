@@ -34,8 +34,8 @@
 // SWD register access
 #define SWD_REG_AP        (1)
 #define SWD_REG_DP        (0)
-#define SWD_REG_R        (1<<1)
-#define SWD_REG_W        (0<<1)
+#define SWD_REG_R         (1<<1)
+#define SWD_REG_W         (0<<1)
 #define SWD_REG_ADR(a)    (a & 0x0c)
 
 #define DCRDR 0xE000EDF8
@@ -94,7 +94,7 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t * data) {
     for (i = 0; i < MAX_SWD_RETRY; i++) {
         ack = SWD_Transfer(req, data);
         // if ack != WAIT
-        if (ack != 0x02) {
+        if (ack != DAP_TRANSFER_WAIT) {
             return ack;
         }
     }
@@ -198,7 +198,7 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
     }
 
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
-    ack = swd_transfer_retry(req, NULL);
+    ack = swd_transfer_retry(req, 0);
 
     return (ack == 0x01);
 }
@@ -216,6 +216,7 @@ static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size) {
 
     size_in_words = size/4;
 
+    // CSW register
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -446,38 +447,78 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
 // Write unaligned data to target memory.
 // size is in bytes.
+uint8_t verify[636] = {0};
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
-    uint32_t n;
+//    uint32_t end = address + size;
+//    uint8_t data_read;
+//    while (address <= end) {
+//        if (!swd_write_byte(address, *data)) {
+//            return 0;
+//        }
+//        
+//        if (!swd_read_byte(address, &data_read)) {
+//            return 0;
+//        }
+//        
+//        if (*data != data_read) {
+//            return 0;
+//        }
+//        
+//        address++;
+//        data++;
+//    }
+//    return 1;
+//}
+
+    uint32_t n = 0, i = 0;
+    uint8_t check8;
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {
+            return 0;
+        }
+        if (!swd_read_byte(address, &check8)) {
+            return 0;
+        }
+        if (check8 != *data) {
             return 0;
         }
         address++;
         data++;
         size--;
     }
-
     // Write word aligned blocks
-    while (size > 3) {
-        // Limit to auto increment page size
-        n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
-        if (size < n) {
-            n = size & 0xFFFFFFFC; // Only count complete words remaining
-        }
-
-        if (!swd_write_block(address, data, n)) {
+    // Limit to auto increment page size
+    //n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+    //if (size < n) {
+    //    n = size & 0xFFFFFFFC; // Only count complete words remaining
+    //}
+    n = size & 0xfffffffc;
+    if (!swd_write_block(address, data, n)) {
+        return 0;
+    }
+    if (!swd_read_block(address, verify, n)) {
+        return 0;
+    }
+    do {
+        if (verify[i] != data[i]) {
             return 0;
         }
+    } while ((++i) < n);
 
-        address += n;
-        data += n;
-        size -= n;
-    }
+    address += n;
+    data += n;
+    size -= n;
 
     // Write remaining bytes
     while (size > 0) {
         if (!swd_write_byte(address, *data)) {
+            return 0;
+        }
+        if (!swd_read_byte(address, &check8)) {
+            return 0;
+        }
+        if (check8 != *data) {
             return 0;
         }
         address++;
@@ -657,9 +698,8 @@ uint8_t swd_semihost_restart(uint32_t r0) {
 }
 
 uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
-    DEBUG_STATE state;
+    DEBUG_STATE state = {{0},0};
     // Call flash algorithm function on target and wait for result.
-    state.xpsr     = 0x01000000;          // xPSR: T = 1, ISR = 0
     state.r[0]     = arg1;                   // R0: Argument 1
     state.r[1]     = arg2;                   // R1: Argument 2
     state.r[2]     = arg3;                   // R2: Argument 3
@@ -668,8 +708,9 @@ uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry
     state.r[9]     = sysCallParam->static_base;    // SB: Static Base
 
     state.r[13]    = sysCallParam->stack_pointer;  // SP: Stack Pointer
-    state.r[14]    = sysCallParam->breakpoint;       // LR: Exit Point
-    state.r[15]    = entry;                           // PC: Entry Point
+    state.r[14]    = sysCallParam->breakpoint;     // LR: Exit Point
+    state.r[15]    = entry;                        // PC: Entry Point
+    state.xpsr     = 0x01000000;          // xPSR: T = 1, ISR = 0
 
     if (!swd_write_debug_state(&state)) {
         return 0;

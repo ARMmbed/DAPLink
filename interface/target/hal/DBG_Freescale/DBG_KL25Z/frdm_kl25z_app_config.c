@@ -16,18 +16,18 @@
 
 #include "target_config.h"
 
-// nrf51822-mkit target information
+// frdm-k64f target information
 const target_cfg_t target_device = {
-    .board_id   = "1070",
+    .board_id   = "0200",
     .secret     = "xxxxxxxx",
     .sector_size    = 1024,
-    // Assume memory is regions are same size (smallest). Flash algo should ignore requests
+    // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (kB(256)/1024),
+    .sector_cnt     = (kB(128)/1024),
     .flash_start    = 0,
-    .flash_end      = kB(256),
-    .ram_start      = 0x20000000,
+    .flash_end      = kB(128),
+    .ram_start      = 0x1FFF0000,
     .ram_end        = 0x20004000,
-    .disc_size      = MB(8)
+    .disc_size      = kB(128)
 };

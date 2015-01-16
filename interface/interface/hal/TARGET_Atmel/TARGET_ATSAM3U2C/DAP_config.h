@@ -319,7 +319,7 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 1: release device hardware reset.
 */
 // TODO - sw specific implementation should be created
-#if defined (TARGET_NRF51822AA)
+#if defined (DBG_NRF51822AA)
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
 	
  /**There is no reset pin on the nRF51822, so we need to use a reset routine:
