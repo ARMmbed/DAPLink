@@ -447,7 +447,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
 // Write unaligned data to target memory.
 // size is in bytes.
-uint8_t verify[636] = {0};
+//uint8_t verify[636] = {0};
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 //    uint32_t end = address + size;
 //    uint8_t data_read;
@@ -477,12 +477,12 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_write_byte(address, *data)) {
             return 0;
         }
-        if (!swd_read_byte(address, &check8)) {
-            return 0;
-        }
-        if (check8 != *data) {
-            return 0;
-        }
+//        if (!swd_read_byte(address, &check8)) {
+//            return 0;
+//        }
+//        if (check8 != *data) {
+//            return 0;
+//        }
         address++;
         data++;
         size--;
@@ -497,14 +497,14 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
     if (!swd_write_block(address, data, n)) {
         return 0;
     }
-    if (!swd_read_block(address, verify, n)) {
-        return 0;
-    }
-    do {
-        if (verify[i] != data[i]) {
-            return 0;
-        }
-    } while ((++i) < n);
+//    if (!swd_read_block(address, verify, n)) {
+//        return 0;
+//    }
+//    do {
+//        if (verify[i] != data[i]) {
+//            return 0;
+//        }
+//    } while ((++i) < n);
 
     address += n;
     data += n;
@@ -515,12 +515,12 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_write_byte(address, *data)) {
             return 0;
         }
-        if (!swd_read_byte(address, &check8)) {
-            return 0;
-        }
-        if (check8 != *data) {
-            return 0;
-        }
+//        if (!swd_read_byte(address, &check8)) {
+//            return 0;
+//        }
+//        if (check8 != *data) {
+//            return 0;
+//        }
         address++;
         data++;
         size--;

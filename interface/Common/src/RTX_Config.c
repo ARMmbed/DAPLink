@@ -183,7 +183,8 @@ void os_error (U32 err_code) {
   /* 'err_code' holds the runtime error code (defined in RTL.H).         */
 
   /* HERE: include optional code to be executed on runtime error. */
-  for (;;);
+  for (;;)
+    err_code = err_code;
 }
 
 
