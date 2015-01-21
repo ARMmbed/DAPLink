@@ -177,7 +177,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             // writing in 2 places less than ideal but manageable
             debug_msg("%s", "FLASH WRITE\r\n");
             //debug_data(buf, USBD_MSC_BlockSize);
-            status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize);
+            status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
             if (status != TARGET_OK) {
                 file_transfer_state.transfer_started = 0;
                 configure_fail_txt(status);
@@ -215,7 +215,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             else {
                 debug_msg("%s", "FLASH WRITE\r\n");
                 //debug_data(buf, USBD_MSC_BlockSize);
-                status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize);
+                status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
                 if (status != TARGET_OK) {
                     file_transfer_state.transfer_started = 0;
                     configure_fail_txt(status);
@@ -241,6 +241,6 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     }
     
     // There is one more known state where the root dir is updated with the amount of data transfered but not the whole file transfer was complete
-    //  To handle this we need a state to kick off a timer for a fixed amount of time where we can receive more continous secotrs and assume
+    //  To handle this we need a state to kick off a timer for a fixed amount of time where we can receive more continous sectors and assume
     //  they are valid file data. This is only the case for bin files since the only known end is the filesize from the root dir entry.
 }

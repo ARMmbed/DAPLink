@@ -35,7 +35,7 @@ union __attribute__((packed)) hex_line_t {
  *   @param c is the hex value in char format
  *   @return the value of the hex
  */
-static uint8_t atoh(char c)
+static uint8_t ctoh(char c)
 {
     return (c & 0x10) ? /*0-9*/ c & 0xf : /*A-F, a-f*/ (c & 0xf) + 9;
 }
@@ -61,7 +61,7 @@ void reset_hex_parser(void)
 // still need to test need to complete a few states (using codepad.org)
 uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
 {
-    static hex_line_t line;
+    static hex_line_t line, shadow_line;
     static uint8_t low_nibble = 0, idx = 0, record_processed = 0;
     static uint32_t base_address = 0;
     static uint8_t unload_unaligned_record = 0;
@@ -72,9 +72,16 @@ uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
     // reset the amount of data that is being return'd
     *size = 0;
     
-    // we had an exit state when the data was unaligned. Need to pop this before decoding anthing else
+    // we had an exit state when the data was unaligned. Need to pop in the buffer
+    //  before decoding anthing else since it was already decoded
     if (unload_unaligned_record) {
         unload_unaligned_record = 0;
+        // move from line buffer back to input buffer
+        memcpy((uint8_t *)input_buf, (uint8_t *)shadow_line.data, shadow_line.byte_count);
+        input_buf += shadow_line.byte_count;
+        size += shadow_line.byte_count;
+        // this stores the last known start address of decoded data
+        *address = base_address + shadow_line.address + shadow_line.byte_count;
     }
     
     while (buf != end) {
@@ -89,8 +96,10 @@ uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
                         case DATA_RECORD:
                             // verify this is a continous block of memory or need to exit and dump
                             if ((base_address + line.address) > (*address + line.byte_count)) {
-                                *address = *address - *size; // figure the start address before returning
-                                // need to unload this decoded data somewhere too
+                                // figure the start address before returning
+                                *address = *address - *size;
+                                // need to unload this decoded data somewhere til next call
+                                memcpy(line.buf, shadow_line.buf, sizeof(hex_line_t));
                                 unload_unaligned_record = 1;
                                 return HEX_PARSE_UNALIGNED;
                             }
@@ -99,7 +108,7 @@ uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
                             memcpy((uint8_t *)input_buf, (uint8_t *)line.data, line.byte_count);
                             input_buf += line.byte_count;
                             size += line.byte_count;
-                            // this stores the last know address of decoded data
+                            // this stores the last known start address of decoded data
                             *address = base_address + line.address + line.byte_count;
                             break;
                         
@@ -132,12 +141,12 @@ uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
             // decoding lines
             default:
                 if (low_nibble) {
-                    line.buf[idx] |= atoh(*buf) & 0xf;
+                    line.buf[idx] |= ctoh(*buf) & 0xf;
                     idx++;
                 }
                 else {
                     if (idx < sizeof(hex_line_t)) {
-                        line.buf[idx] = atoh(*buf) << 4;
+                        line.buf[idx] = ctoh(*buf) << 4;
                     }
                 }
                 low_nibble = !low_nibble;
@@ -147,7 +156,7 @@ uint32_t parse_hex_blob(uint8_t *buf, uint32_t *address, uint32_t *size)
     }
     
     memset(input_buf, 0xff, (input_buf_size - *size));
-    *address = *address - *size; // figure the start address before returning
+    *address = *address - *size; // figure the start address for the buffer before returning
     return HEX_PARSE_OK;
 }
 
