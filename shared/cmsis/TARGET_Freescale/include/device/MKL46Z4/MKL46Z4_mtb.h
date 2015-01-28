@@ -21,7 +21,8 @@
 #ifndef __HW_MTB_REGISTERS_H__
 #define __HW_MTB_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL46Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL46Z4 MTB
@@ -42,32 +43,25 @@
  * - HW_MTB_DEVICEARCH - Device Architecture Register
  * - HW_MTB_DEVICECFG - Device Configuration Register
  * - HW_MTB_DEVICETYPID - Device Type Identifier Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
- * - HW_MTB_PERIPHIDn - Peripheral ID Register
+ * - HW_MTB_PERIPHID4 - Peripheral ID Register
+ * - HW_MTB_PERIPHID5 - Peripheral ID Register
+ * - HW_MTB_PERIPHID6 - Peripheral ID Register
+ * - HW_MTB_PERIPHID7 - Peripheral ID Register
+ * - HW_MTB_PERIPHID0 - Peripheral ID Register
+ * - HW_MTB_PERIPHID1 - Peripheral ID Register
+ * - HW_MTB_PERIPHID2 - Peripheral ID Register
+ * - HW_MTB_PERIPHID3 - Peripheral ID Register
  * - HW_MTB_COMPIDn - Component ID Register
  *
  * - hw_mtb_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_MTB_BASE
-#define HW_MTB_INSTANCE_COUNT (1U) //!< Number of instances of the MTB module.
-#define REGS_MTB_BASE (0xF0000000U) //!< Base address for MTB.
-#endif
-//@}
+#define HW_MTB_INSTANCE_COUNT (1U) /*!< Number of instances of the MTB module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_POSITION - MTB Position Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_POSITION - MTB Position Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_POSITION - MTB Position Register (RW)
  *
@@ -101,28 +95,26 @@ typedef union _hw_mtb_position
     uint32_t U;
     struct _hw_mtb_position_bitfields
     {
-        uint32_t RESERVED0 : 2;        //!< [1:0]
-        uint32_t WRAP : 1;             //!< [2]
-        uint32_t POINTER : 29;         //!< [31:3] Trace Packet Address Pointer[28:0]
+        uint32_t RESERVED0 : 2;        /*!< [1:0]  */
+        uint32_t WRAP : 1;             /*!< [2]  */
+        uint32_t POINTER : 29;         /*!< [31:3] Trace Packet Address Pointer[28:0]
+                                        * */
     } B;
 } hw_mtb_position_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_POSITION register
  */
-//@{
-#define HW_MTB_POSITION_ADDR     (REGS_MTB_BASE + 0x0U)
+/*@{*/
+#define HW_MTB_POSITION_ADDR(x)  ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_POSITION          (*(__IO hw_mtb_position_t *) HW_MTB_POSITION_ADDR)
-#define HW_MTB_POSITION_RD()     (HW_MTB_POSITION.U)
-#define HW_MTB_POSITION_WR(v)    (HW_MTB_POSITION.U = (v))
-#define HW_MTB_POSITION_SET(v)   (BME_OR32(HW_MTB_POSITION_ADDR, (uint32_t)(v)))
-#define HW_MTB_POSITION_CLR(v)   (BME_AND32(HW_MTB_POSITION_ADDR, (uint32_t)(~(v))))
-#define HW_MTB_POSITION_TOG(v)   (BME_XOR32(HW_MTB_POSITION_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTB_POSITION(x)       (*(__IO hw_mtb_position_t *) HW_MTB_POSITION_ADDR(x))
+#define HW_MTB_POSITION_RD(x)    (HW_MTB_POSITION(x).U)
+#define HW_MTB_POSITION_WR(x, v) (HW_MTB_POSITION(x).U = (v))
+#define HW_MTB_POSITION_SET(x, v) (HW_MTB_POSITION_WR(x, HW_MTB_POSITION_RD(x) |  (v)))
+#define HW_MTB_POSITION_CLR(x, v) (HW_MTB_POSITION_WR(x, HW_MTB_POSITION_RD(x) & ~(v)))
+#define HW_MTB_POSITION_TOG(x, v) (HW_MTB_POSITION_WR(x, HW_MTB_POSITION_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_POSITION bitfields
@@ -136,24 +128,20 @@ typedef union _hw_mtb_position
  * agent might use the WRAP bit to determine whether the trace information above
  * and below the pointer address is valid.
  */
-//@{
-#define BP_MTB_POSITION_WRAP (2U)          //!< Bit position for MTB_POSITION_WRAP.
-#define BM_MTB_POSITION_WRAP (0x00000004U) //!< Bit mask for MTB_POSITION_WRAP.
-#define BS_MTB_POSITION_WRAP (1U)          //!< Bit field size in bits for MTB_POSITION_WRAP.
+/*@{*/
+#define BP_MTB_POSITION_WRAP (2U)          /*!< Bit position for MTB_POSITION_WRAP. */
+#define BM_MTB_POSITION_WRAP (0x00000004U) /*!< Bit mask for MTB_POSITION_WRAP. */
+#define BS_MTB_POSITION_WRAP (1U)          /*!< Bit field size in bits for MTB_POSITION_WRAP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_POSITION_WRAP field.
-#define BR_MTB_POSITION_WRAP (BME_UBFX32(HW_MTB_POSITION_ADDR, BP_MTB_POSITION_WRAP, BS_MTB_POSITION_WRAP))
-#endif
+/*! @brief Read current value of the MTB_POSITION_WRAP field. */
+#define BR_MTB_POSITION_WRAP(x) (HW_MTB_POSITION(x).B.WRAP)
 
-//! @brief Format value for bitfield MTB_POSITION_WRAP.
-#define BF_MTB_POSITION_WRAP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_POSITION_WRAP), uint32_t) & BM_MTB_POSITION_WRAP)
+/*! @brief Format value for bitfield MTB_POSITION_WRAP. */
+#define BF_MTB_POSITION_WRAP(v) ((uint32_t)((uint32_t)(v) << BP_MTB_POSITION_WRAP) & BM_MTB_POSITION_WRAP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRAP field to a new value.
-#define BW_MTB_POSITION_WRAP(v) (BME_BFI32(HW_MTB_POSITION_ADDR, ((uint32_t)(v) << BP_MTB_POSITION_WRAP), BP_MTB_POSITION_WRAP, 1))
-#endif
-//@}
+/*! @brief Set the WRAP field to a new value. */
+#define BW_MTB_POSITION_WRAP(x, v) (HW_MTB_POSITION_WR(x, (HW_MTB_POSITION_RD(x) & ~BM_MTB_POSITION_WRAP) | BF_MTB_POSITION_WRAP(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_POSITION, field POINTER[31:3] (RW)
@@ -174,30 +162,25 @@ typedef union _hw_mtb_position
  * POSITION[POINTER[28:12]] are RAZ/WI. Therefore, the active bits in this field are
  * POSITION[14:3] == POSITION[POINTER[11:0]].
  */
-//@{
-#define BP_MTB_POSITION_POINTER (3U)       //!< Bit position for MTB_POSITION_POINTER.
-#define BM_MTB_POSITION_POINTER (0xFFFFFFF8U) //!< Bit mask for MTB_POSITION_POINTER.
-#define BS_MTB_POSITION_POINTER (29U)      //!< Bit field size in bits for MTB_POSITION_POINTER.
+/*@{*/
+#define BP_MTB_POSITION_POINTER (3U)       /*!< Bit position for MTB_POSITION_POINTER. */
+#define BM_MTB_POSITION_POINTER (0xFFFFFFF8U) /*!< Bit mask for MTB_POSITION_POINTER. */
+#define BS_MTB_POSITION_POINTER (29U)      /*!< Bit field size in bits for MTB_POSITION_POINTER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_POSITION_POINTER field.
-#define BR_MTB_POSITION_POINTER (BME_UBFX32(HW_MTB_POSITION_ADDR, BP_MTB_POSITION_POINTER, BS_MTB_POSITION_POINTER))
-#endif
+/*! @brief Read current value of the MTB_POSITION_POINTER field. */
+#define BR_MTB_POSITION_POINTER(x) (HW_MTB_POSITION(x).B.POINTER)
 
-//! @brief Format value for bitfield MTB_POSITION_POINTER.
-#define BF_MTB_POSITION_POINTER(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_POSITION_POINTER), uint32_t) & BM_MTB_POSITION_POINTER)
+/*! @brief Format value for bitfield MTB_POSITION_POINTER. */
+#define BF_MTB_POSITION_POINTER(v) ((uint32_t)((uint32_t)(v) << BP_MTB_POSITION_POINTER) & BM_MTB_POSITION_POINTER)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the POINTER field to a new value.
-#define BW_MTB_POSITION_POINTER(v) (BME_BFI32(HW_MTB_POSITION_ADDR, ((uint32_t)(v) << BP_MTB_POSITION_POINTER), BP_MTB_POSITION_POINTER, 29))
-#endif
-//@}
+/*! @brief Set the POINTER field to a new value. */
+#define BW_MTB_POSITION_POINTER(x, v) (HW_MTB_POSITION_WR(x, (HW_MTB_POSITION_RD(x) & ~BM_MTB_POSITION_POINTER) | BF_MTB_POSITION_POINTER(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_MASTER - MTB Master Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_MASTER - MTB Master Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_MASTER - MTB Master Register (RW)
  *
@@ -219,34 +202,31 @@ typedef union _hw_mtb_master
     uint32_t U;
     struct _hw_mtb_master_bitfields
     {
-        uint32_t MASK : 5;             //!< [4:0] Mask
-        uint32_t TSTARTEN : 1;         //!< [5] Trace start input enable
-        uint32_t TSTOPEN : 1;          //!< [6] Trace stop input enable
-        uint32_t SFRWPRIV : 1;         //!< [7] Special Function Register Write
-                                       //! Privilege bit
-        uint32_t RAMPRIV : 1;          //!< [8] RAM privilege bit
-        uint32_t HALTREQ : 1;          //!< [9] Halt request bit
-        uint32_t RESERVED0 : 21;       //!< [30:10]
-        uint32_t EN : 1;               //!< [31] Main trace enable bit
+        uint32_t MASK : 5;             /*!< [4:0] Mask */
+        uint32_t TSTARTEN : 1;         /*!< [5] Trace start input enable */
+        uint32_t TSTOPEN : 1;          /*!< [6] Trace stop input enable */
+        uint32_t SFRWPRIV : 1;         /*!< [7] Special Function Register Write
+                                        * Privilege bit */
+        uint32_t RAMPRIV : 1;          /*!< [8] RAM privilege bit */
+        uint32_t HALTREQ : 1;          /*!< [9] Halt request bit */
+        uint32_t RESERVED0 : 21;       /*!< [30:10]  */
+        uint32_t EN : 1;               /*!< [31] Main trace enable bit */
     } B;
 } hw_mtb_master_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_MASTER register
  */
-//@{
-#define HW_MTB_MASTER_ADDR       (REGS_MTB_BASE + 0x4U)
+/*@{*/
+#define HW_MTB_MASTER_ADDR(x)    ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_MASTER            (*(__IO hw_mtb_master_t *) HW_MTB_MASTER_ADDR)
-#define HW_MTB_MASTER_RD()       (HW_MTB_MASTER.U)
-#define HW_MTB_MASTER_WR(v)      (HW_MTB_MASTER.U = (v))
-#define HW_MTB_MASTER_SET(v)     (BME_OR32(HW_MTB_MASTER_ADDR, (uint32_t)(v)))
-#define HW_MTB_MASTER_CLR(v)     (BME_AND32(HW_MTB_MASTER_ADDR, (uint32_t)(~(v))))
-#define HW_MTB_MASTER_TOG(v)     (BME_XOR32(HW_MTB_MASTER_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTB_MASTER(x)         (*(__IO hw_mtb_master_t *) HW_MTB_MASTER_ADDR(x))
+#define HW_MTB_MASTER_RD(x)      (HW_MTB_MASTER(x).U)
+#define HW_MTB_MASTER_WR(x, v)   (HW_MTB_MASTER(x).U = (v))
+#define HW_MTB_MASTER_SET(x, v)  (HW_MTB_MASTER_WR(x, HW_MTB_MASTER_RD(x) |  (v)))
+#define HW_MTB_MASTER_CLR(x, v)  (HW_MTB_MASTER_WR(x, HW_MTB_MASTER_RD(x) & ~(v)))
+#define HW_MTB_MASTER_TOG(x, v)  (HW_MTB_MASTER_WR(x, HW_MTB_MASTER_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_MASTER bitfields
@@ -267,24 +247,20 @@ typedef union _hw_mtb_master
  * size are RAM_Size/4 or RAM_Size/2. Values greater than the maximum have the same
  * effect as the maximum.
  */
-//@{
-#define BP_MTB_MASTER_MASK   (0U)          //!< Bit position for MTB_MASTER_MASK.
-#define BM_MTB_MASTER_MASK   (0x0000001FU) //!< Bit mask for MTB_MASTER_MASK.
-#define BS_MTB_MASTER_MASK   (5U)          //!< Bit field size in bits for MTB_MASTER_MASK.
+/*@{*/
+#define BP_MTB_MASTER_MASK   (0U)          /*!< Bit position for MTB_MASTER_MASK. */
+#define BM_MTB_MASTER_MASK   (0x0000001FU) /*!< Bit mask for MTB_MASTER_MASK. */
+#define BS_MTB_MASTER_MASK   (5U)          /*!< Bit field size in bits for MTB_MASTER_MASK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_MASK field.
-#define BR_MTB_MASTER_MASK   (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_MASK, BS_MTB_MASTER_MASK))
-#endif
+/*! @brief Read current value of the MTB_MASTER_MASK field. */
+#define BR_MTB_MASTER_MASK(x) (HW_MTB_MASTER(x).B.MASK)
 
-//! @brief Format value for bitfield MTB_MASTER_MASK.
-#define BF_MTB_MASTER_MASK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_MASK), uint32_t) & BM_MTB_MASTER_MASK)
+/*! @brief Format value for bitfield MTB_MASTER_MASK. */
+#define BF_MTB_MASTER_MASK(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_MASK) & BM_MTB_MASTER_MASK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MASK field to a new value.
-#define BW_MTB_MASTER_MASK(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_MASK), BP_MTB_MASTER_MASK, 5))
-#endif
-//@}
+/*! @brief Set the MASK field to a new value. */
+#define BW_MTB_MASTER_MASK(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_MASK) | BF_MTB_MASTER_MASK(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field TSTARTEN[5] (RW)
@@ -292,24 +268,20 @@ typedef union _hw_mtb_master
  * If this bit is 1 and the TSTART signal is HIGH, then the EN bit is set to 1.
  * Tracing continues until a stop condition occurs.
  */
-//@{
-#define BP_MTB_MASTER_TSTARTEN (5U)        //!< Bit position for MTB_MASTER_TSTARTEN.
-#define BM_MTB_MASTER_TSTARTEN (0x00000020U) //!< Bit mask for MTB_MASTER_TSTARTEN.
-#define BS_MTB_MASTER_TSTARTEN (1U)        //!< Bit field size in bits for MTB_MASTER_TSTARTEN.
+/*@{*/
+#define BP_MTB_MASTER_TSTARTEN (5U)        /*!< Bit position for MTB_MASTER_TSTARTEN. */
+#define BM_MTB_MASTER_TSTARTEN (0x00000020U) /*!< Bit mask for MTB_MASTER_TSTARTEN. */
+#define BS_MTB_MASTER_TSTARTEN (1U)        /*!< Bit field size in bits for MTB_MASTER_TSTARTEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_TSTARTEN field.
-#define BR_MTB_MASTER_TSTARTEN (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_TSTARTEN, BS_MTB_MASTER_TSTARTEN))
-#endif
+/*! @brief Read current value of the MTB_MASTER_TSTARTEN field. */
+#define BR_MTB_MASTER_TSTARTEN(x) (HW_MTB_MASTER(x).B.TSTARTEN)
 
-//! @brief Format value for bitfield MTB_MASTER_TSTARTEN.
-#define BF_MTB_MASTER_TSTARTEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_TSTARTEN), uint32_t) & BM_MTB_MASTER_TSTARTEN)
+/*! @brief Format value for bitfield MTB_MASTER_TSTARTEN. */
+#define BF_MTB_MASTER_TSTARTEN(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_TSTARTEN) & BM_MTB_MASTER_TSTARTEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSTARTEN field to a new value.
-#define BW_MTB_MASTER_TSTARTEN(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_TSTARTEN), BP_MTB_MASTER_TSTARTEN, 1))
-#endif
-//@}
+/*! @brief Set the TSTARTEN field to a new value. */
+#define BW_MTB_MASTER_TSTARTEN(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_TSTARTEN) | BF_MTB_MASTER_TSTARTEN(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field TSTOPEN[6] (RW)
@@ -318,24 +290,20 @@ typedef union _hw_mtb_master
  * If a trace packet is being written to memory, the write is completed before
  * tracing is stopped.
  */
-//@{
-#define BP_MTB_MASTER_TSTOPEN (6U)         //!< Bit position for MTB_MASTER_TSTOPEN.
-#define BM_MTB_MASTER_TSTOPEN (0x00000040U) //!< Bit mask for MTB_MASTER_TSTOPEN.
-#define BS_MTB_MASTER_TSTOPEN (1U)         //!< Bit field size in bits for MTB_MASTER_TSTOPEN.
+/*@{*/
+#define BP_MTB_MASTER_TSTOPEN (6U)         /*!< Bit position for MTB_MASTER_TSTOPEN. */
+#define BM_MTB_MASTER_TSTOPEN (0x00000040U) /*!< Bit mask for MTB_MASTER_TSTOPEN. */
+#define BS_MTB_MASTER_TSTOPEN (1U)         /*!< Bit field size in bits for MTB_MASTER_TSTOPEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_TSTOPEN field.
-#define BR_MTB_MASTER_TSTOPEN (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_TSTOPEN, BS_MTB_MASTER_TSTOPEN))
-#endif
+/*! @brief Read current value of the MTB_MASTER_TSTOPEN field. */
+#define BR_MTB_MASTER_TSTOPEN(x) (HW_MTB_MASTER(x).B.TSTOPEN)
 
-//! @brief Format value for bitfield MTB_MASTER_TSTOPEN.
-#define BF_MTB_MASTER_TSTOPEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_TSTOPEN), uint32_t) & BM_MTB_MASTER_TSTOPEN)
+/*! @brief Format value for bitfield MTB_MASTER_TSTOPEN. */
+#define BF_MTB_MASTER_TSTOPEN(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_TSTOPEN) & BM_MTB_MASTER_TSTOPEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSTOPEN field to a new value.
-#define BW_MTB_MASTER_TSTOPEN(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_TSTOPEN), BP_MTB_MASTER_TSTOPEN, 1))
-#endif
-//@}
+/*! @brief Set the TSTOPEN field to a new value. */
+#define BW_MTB_MASTER_TSTOPEN(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_TSTOPEN) | BF_MTB_MASTER_TSTOPEN(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field SFRWPRIV[7] (RW)
@@ -347,24 +315,20 @@ typedef union _hw_mtb_master
  * privileged. Note MTB_RAM SFR read access are not controlled by this bit and are
  * always permitted.
  */
-//@{
-#define BP_MTB_MASTER_SFRWPRIV (7U)        //!< Bit position for MTB_MASTER_SFRWPRIV.
-#define BM_MTB_MASTER_SFRWPRIV (0x00000080U) //!< Bit mask for MTB_MASTER_SFRWPRIV.
-#define BS_MTB_MASTER_SFRWPRIV (1U)        //!< Bit field size in bits for MTB_MASTER_SFRWPRIV.
+/*@{*/
+#define BP_MTB_MASTER_SFRWPRIV (7U)        /*!< Bit position for MTB_MASTER_SFRWPRIV. */
+#define BM_MTB_MASTER_SFRWPRIV (0x00000080U) /*!< Bit mask for MTB_MASTER_SFRWPRIV. */
+#define BS_MTB_MASTER_SFRWPRIV (1U)        /*!< Bit field size in bits for MTB_MASTER_SFRWPRIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_SFRWPRIV field.
-#define BR_MTB_MASTER_SFRWPRIV (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_SFRWPRIV, BS_MTB_MASTER_SFRWPRIV))
-#endif
+/*! @brief Read current value of the MTB_MASTER_SFRWPRIV field. */
+#define BR_MTB_MASTER_SFRWPRIV(x) (HW_MTB_MASTER(x).B.SFRWPRIV)
 
-//! @brief Format value for bitfield MTB_MASTER_SFRWPRIV.
-#define BF_MTB_MASTER_SFRWPRIV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_SFRWPRIV), uint32_t) & BM_MTB_MASTER_SFRWPRIV)
+/*! @brief Format value for bitfield MTB_MASTER_SFRWPRIV. */
+#define BF_MTB_MASTER_SFRWPRIV(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_SFRWPRIV) & BM_MTB_MASTER_SFRWPRIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SFRWPRIV field to a new value.
-#define BW_MTB_MASTER_SFRWPRIV(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_SFRWPRIV), BP_MTB_MASTER_SFRWPRIV, 1))
-#endif
-//@}
+/*! @brief Set the SFRWPRIV field to a new value. */
+#define BW_MTB_MASTER_SFRWPRIV(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_SFRWPRIV) | BF_MTB_MASTER_SFRWPRIV(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field RAMPRIV[8] (RW)
@@ -374,24 +338,20 @@ typedef union _hw_mtb_master
  * accesses to the RAM are permitted and user accesses are RAZ/WI. The HPROT[1]
  * signal determines if an access is a user or privileged mode reference.
  */
-//@{
-#define BP_MTB_MASTER_RAMPRIV (8U)         //!< Bit position for MTB_MASTER_RAMPRIV.
-#define BM_MTB_MASTER_RAMPRIV (0x00000100U) //!< Bit mask for MTB_MASTER_RAMPRIV.
-#define BS_MTB_MASTER_RAMPRIV (1U)         //!< Bit field size in bits for MTB_MASTER_RAMPRIV.
+/*@{*/
+#define BP_MTB_MASTER_RAMPRIV (8U)         /*!< Bit position for MTB_MASTER_RAMPRIV. */
+#define BM_MTB_MASTER_RAMPRIV (0x00000100U) /*!< Bit mask for MTB_MASTER_RAMPRIV. */
+#define BS_MTB_MASTER_RAMPRIV (1U)         /*!< Bit field size in bits for MTB_MASTER_RAMPRIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_RAMPRIV field.
-#define BR_MTB_MASTER_RAMPRIV (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_RAMPRIV, BS_MTB_MASTER_RAMPRIV))
-#endif
+/*! @brief Read current value of the MTB_MASTER_RAMPRIV field. */
+#define BR_MTB_MASTER_RAMPRIV(x) (HW_MTB_MASTER(x).B.RAMPRIV)
 
-//! @brief Format value for bitfield MTB_MASTER_RAMPRIV.
-#define BF_MTB_MASTER_RAMPRIV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_RAMPRIV), uint32_t) & BM_MTB_MASTER_RAMPRIV)
+/*! @brief Format value for bitfield MTB_MASTER_RAMPRIV. */
+#define BF_MTB_MASTER_RAMPRIV(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_RAMPRIV) & BM_MTB_MASTER_RAMPRIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RAMPRIV field to a new value.
-#define BW_MTB_MASTER_RAMPRIV(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_RAMPRIV), BP_MTB_MASTER_RAMPRIV, 1))
-#endif
-//@}
+/*! @brief Set the RAMPRIV field to a new value. */
+#define BW_MTB_MASTER_RAMPRIV(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_RAMPRIV) | BF_MTB_MASTER_RAMPRIV(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field HALTREQ[9] (RW)
@@ -401,24 +361,20 @@ typedef union _hw_mtb_master
  * enable, one of the debug authentication interface signals) is also HIGH. The
  * HALTREQ bit can be automatically set to 1 using the MTB_FLOW[WATERMARK] field.
  */
-//@{
-#define BP_MTB_MASTER_HALTREQ (9U)         //!< Bit position for MTB_MASTER_HALTREQ.
-#define BM_MTB_MASTER_HALTREQ (0x00000200U) //!< Bit mask for MTB_MASTER_HALTREQ.
-#define BS_MTB_MASTER_HALTREQ (1U)         //!< Bit field size in bits for MTB_MASTER_HALTREQ.
+/*@{*/
+#define BP_MTB_MASTER_HALTREQ (9U)         /*!< Bit position for MTB_MASTER_HALTREQ. */
+#define BM_MTB_MASTER_HALTREQ (0x00000200U) /*!< Bit mask for MTB_MASTER_HALTREQ. */
+#define BS_MTB_MASTER_HALTREQ (1U)         /*!< Bit field size in bits for MTB_MASTER_HALTREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_HALTREQ field.
-#define BR_MTB_MASTER_HALTREQ (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_HALTREQ, BS_MTB_MASTER_HALTREQ))
-#endif
+/*! @brief Read current value of the MTB_MASTER_HALTREQ field. */
+#define BR_MTB_MASTER_HALTREQ(x) (HW_MTB_MASTER(x).B.HALTREQ)
 
-//! @brief Format value for bitfield MTB_MASTER_HALTREQ.
-#define BF_MTB_MASTER_HALTREQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_HALTREQ), uint32_t) & BM_MTB_MASTER_HALTREQ)
+/*! @brief Format value for bitfield MTB_MASTER_HALTREQ. */
+#define BF_MTB_MASTER_HALTREQ(v) ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_HALTREQ) & BM_MTB_MASTER_HALTREQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HALTREQ field to a new value.
-#define BW_MTB_MASTER_HALTREQ(v) (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_HALTREQ), BP_MTB_MASTER_HALTREQ, 1))
-#endif
-//@}
+/*! @brief Set the HALTREQ field to a new value. */
+#define BW_MTB_MASTER_HALTREQ(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_HALTREQ) | BF_MTB_MASTER_HALTREQ(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_MASTER, field EN[31] (RW)
@@ -434,30 +390,25 @@ typedef union _hw_mtb_master
  * the TSTART input is HIGH. In this case, tracing can only be restarted if the
  * MTB_FLOW[WATERMARK] or MTB_POSITION[POINTER] value is changed by software.
  */
-//@{
-#define BP_MTB_MASTER_EN     (31U)         //!< Bit position for MTB_MASTER_EN.
-#define BM_MTB_MASTER_EN     (0x80000000U) //!< Bit mask for MTB_MASTER_EN.
-#define BS_MTB_MASTER_EN     (1U)          //!< Bit field size in bits for MTB_MASTER_EN.
+/*@{*/
+#define BP_MTB_MASTER_EN     (31U)         /*!< Bit position for MTB_MASTER_EN. */
+#define BM_MTB_MASTER_EN     (0x80000000U) /*!< Bit mask for MTB_MASTER_EN. */
+#define BS_MTB_MASTER_EN     (1U)          /*!< Bit field size in bits for MTB_MASTER_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MASTER_EN field.
-#define BR_MTB_MASTER_EN     (BME_UBFX32(HW_MTB_MASTER_ADDR, BP_MTB_MASTER_EN, BS_MTB_MASTER_EN))
-#endif
+/*! @brief Read current value of the MTB_MASTER_EN field. */
+#define BR_MTB_MASTER_EN(x)  (HW_MTB_MASTER(x).B.EN)
 
-//! @brief Format value for bitfield MTB_MASTER_EN.
-#define BF_MTB_MASTER_EN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_MASTER_EN), uint32_t) & BM_MTB_MASTER_EN)
+/*! @brief Format value for bitfield MTB_MASTER_EN. */
+#define BF_MTB_MASTER_EN(v)  ((uint32_t)((uint32_t)(v) << BP_MTB_MASTER_EN) & BM_MTB_MASTER_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EN field to a new value.
-#define BW_MTB_MASTER_EN(v)  (BME_BFI32(HW_MTB_MASTER_ADDR, ((uint32_t)(v) << BP_MTB_MASTER_EN), BP_MTB_MASTER_EN, 1))
-#endif
-//@}
+/*! @brief Set the EN field to a new value. */
+#define BW_MTB_MASTER_EN(x, v) (HW_MTB_MASTER_WR(x, (HW_MTB_MASTER_RD(x) & ~BM_MTB_MASTER_EN) | BF_MTB_MASTER_EN(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_FLOW - MTB Flow Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_FLOW - MTB Flow Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_FLOW - MTB Flow Register (RW)
  *
@@ -481,29 +432,26 @@ typedef union _hw_mtb_flow
     uint32_t U;
     struct _hw_mtb_flow_bitfields
     {
-        uint32_t AUTOSTOP : 1;         //!< [0]
-        uint32_t AUTOHALT : 1;         //!< [1]
-        uint32_t RESERVED0 : 1;        //!< [2]
-        uint32_t WATERMARK : 29;       //!< [31:3] WATERMARK[28:0]
+        uint32_t AUTOSTOP : 1;         /*!< [0]  */
+        uint32_t AUTOHALT : 1;         /*!< [1]  */
+        uint32_t RESERVED0 : 1;        /*!< [2]  */
+        uint32_t WATERMARK : 29;       /*!< [31:3] WATERMARK[28:0] */
     } B;
 } hw_mtb_flow_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_FLOW register
  */
-//@{
-#define HW_MTB_FLOW_ADDR         (REGS_MTB_BASE + 0x8U)
+/*@{*/
+#define HW_MTB_FLOW_ADDR(x)      ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_FLOW              (*(__IO hw_mtb_flow_t *) HW_MTB_FLOW_ADDR)
-#define HW_MTB_FLOW_RD()         (HW_MTB_FLOW.U)
-#define HW_MTB_FLOW_WR(v)        (HW_MTB_FLOW.U = (v))
-#define HW_MTB_FLOW_SET(v)       (BME_OR32(HW_MTB_FLOW_ADDR, (uint32_t)(v)))
-#define HW_MTB_FLOW_CLR(v)       (BME_AND32(HW_MTB_FLOW_ADDR, (uint32_t)(~(v))))
-#define HW_MTB_FLOW_TOG(v)       (BME_XOR32(HW_MTB_FLOW_ADDR, (uint32_t)(v)))
-#endif
-//@}
+#define HW_MTB_FLOW(x)           (*(__IO hw_mtb_flow_t *) HW_MTB_FLOW_ADDR(x))
+#define HW_MTB_FLOW_RD(x)        (HW_MTB_FLOW(x).U)
+#define HW_MTB_FLOW_WR(x, v)     (HW_MTB_FLOW(x).U = (v))
+#define HW_MTB_FLOW_SET(x, v)    (HW_MTB_FLOW_WR(x, HW_MTB_FLOW_RD(x) |  (v)))
+#define HW_MTB_FLOW_CLR(x, v)    (HW_MTB_FLOW_WR(x, HW_MTB_FLOW_RD(x) & ~(v)))
+#define HW_MTB_FLOW_TOG(x, v)    (HW_MTB_FLOW_WR(x, HW_MTB_FLOW_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_FLOW bitfields
@@ -515,24 +463,20 @@ typedef union _hw_mtb_flow
  * If this bit is 1 and WATERMARK is equal to MTB_POSITION[POINTER], then the
  * MTB_MASTER[EN] bit is automatically set to 0. This stops tracing.
  */
-//@{
-#define BP_MTB_FLOW_AUTOSTOP (0U)          //!< Bit position for MTB_FLOW_AUTOSTOP.
-#define BM_MTB_FLOW_AUTOSTOP (0x00000001U) //!< Bit mask for MTB_FLOW_AUTOSTOP.
-#define BS_MTB_FLOW_AUTOSTOP (1U)          //!< Bit field size in bits for MTB_FLOW_AUTOSTOP.
+/*@{*/
+#define BP_MTB_FLOW_AUTOSTOP (0U)          /*!< Bit position for MTB_FLOW_AUTOSTOP. */
+#define BM_MTB_FLOW_AUTOSTOP (0x00000001U) /*!< Bit mask for MTB_FLOW_AUTOSTOP. */
+#define BS_MTB_FLOW_AUTOSTOP (1U)          /*!< Bit field size in bits for MTB_FLOW_AUTOSTOP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_FLOW_AUTOSTOP field.
-#define BR_MTB_FLOW_AUTOSTOP (BME_UBFX32(HW_MTB_FLOW_ADDR, BP_MTB_FLOW_AUTOSTOP, BS_MTB_FLOW_AUTOSTOP))
-#endif
+/*! @brief Read current value of the MTB_FLOW_AUTOSTOP field. */
+#define BR_MTB_FLOW_AUTOSTOP(x) (HW_MTB_FLOW(x).B.AUTOSTOP)
 
-//! @brief Format value for bitfield MTB_FLOW_AUTOSTOP.
-#define BF_MTB_FLOW_AUTOSTOP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_FLOW_AUTOSTOP), uint32_t) & BM_MTB_FLOW_AUTOSTOP)
+/*! @brief Format value for bitfield MTB_FLOW_AUTOSTOP. */
+#define BF_MTB_FLOW_AUTOSTOP(v) ((uint32_t)((uint32_t)(v) << BP_MTB_FLOW_AUTOSTOP) & BM_MTB_FLOW_AUTOSTOP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AUTOSTOP field to a new value.
-#define BW_MTB_FLOW_AUTOSTOP(v) (BME_BFI32(HW_MTB_FLOW_ADDR, ((uint32_t)(v) << BP_MTB_FLOW_AUTOSTOP), BP_MTB_FLOW_AUTOSTOP, 1))
-#endif
-//@}
+/*! @brief Set the AUTOSTOP field to a new value. */
+#define BW_MTB_FLOW_AUTOSTOP(x, v) (HW_MTB_FLOW_WR(x, (HW_MTB_FLOW_RD(x) & ~BM_MTB_FLOW_AUTOSTOP) | BF_MTB_FLOW_AUTOSTOP(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_FLOW, field AUTOHALT[1] (RW)
@@ -542,24 +486,20 @@ typedef union _hw_mtb_flow
  * the MTB asserts this halt request to the Cortex-M0+ processor by asserting the
  * EDBGRQ signal.
  */
-//@{
-#define BP_MTB_FLOW_AUTOHALT (1U)          //!< Bit position for MTB_FLOW_AUTOHALT.
-#define BM_MTB_FLOW_AUTOHALT (0x00000002U) //!< Bit mask for MTB_FLOW_AUTOHALT.
-#define BS_MTB_FLOW_AUTOHALT (1U)          //!< Bit field size in bits for MTB_FLOW_AUTOHALT.
+/*@{*/
+#define BP_MTB_FLOW_AUTOHALT (1U)          /*!< Bit position for MTB_FLOW_AUTOHALT. */
+#define BM_MTB_FLOW_AUTOHALT (0x00000002U) /*!< Bit mask for MTB_FLOW_AUTOHALT. */
+#define BS_MTB_FLOW_AUTOHALT (1U)          /*!< Bit field size in bits for MTB_FLOW_AUTOHALT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_FLOW_AUTOHALT field.
-#define BR_MTB_FLOW_AUTOHALT (BME_UBFX32(HW_MTB_FLOW_ADDR, BP_MTB_FLOW_AUTOHALT, BS_MTB_FLOW_AUTOHALT))
-#endif
+/*! @brief Read current value of the MTB_FLOW_AUTOHALT field. */
+#define BR_MTB_FLOW_AUTOHALT(x) (HW_MTB_FLOW(x).B.AUTOHALT)
 
-//! @brief Format value for bitfield MTB_FLOW_AUTOHALT.
-#define BF_MTB_FLOW_AUTOHALT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_FLOW_AUTOHALT), uint32_t) & BM_MTB_FLOW_AUTOHALT)
+/*! @brief Format value for bitfield MTB_FLOW_AUTOHALT. */
+#define BF_MTB_FLOW_AUTOHALT(v) ((uint32_t)((uint32_t)(v) << BP_MTB_FLOW_AUTOHALT) & BM_MTB_FLOW_AUTOHALT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AUTOHALT field to a new value.
-#define BW_MTB_FLOW_AUTOHALT(v) (BME_BFI32(HW_MTB_FLOW_ADDR, ((uint32_t)(v) << BP_MTB_FLOW_AUTOHALT), BP_MTB_FLOW_AUTOHALT, 1))
-#endif
-//@}
+/*! @brief Set the AUTOHALT field to a new value. */
+#define BW_MTB_FLOW_AUTOHALT(x, v) (HW_MTB_FLOW_WR(x, (HW_MTB_FLOW_RD(x) & ~BM_MTB_FLOW_AUTOHALT) | BF_MTB_FLOW_AUTOHALT(v)))
+/*@}*/
 
 /*!
  * @name Register MTB_FLOW, field WATERMARK[31:3] (RW)
@@ -568,30 +508,25 @@ typedef union _hw_mtb_flow
  * MTB_POSITION[POINTER] field. When the MTB_POSITION[POINTER] matches the WATERMARK field value,
  * actions defined by the AUTOHALT and AUTOSTOP bits are performed.
  */
-//@{
-#define BP_MTB_FLOW_WATERMARK (3U)         //!< Bit position for MTB_FLOW_WATERMARK.
-#define BM_MTB_FLOW_WATERMARK (0xFFFFFFF8U) //!< Bit mask for MTB_FLOW_WATERMARK.
-#define BS_MTB_FLOW_WATERMARK (29U)        //!< Bit field size in bits for MTB_FLOW_WATERMARK.
+/*@{*/
+#define BP_MTB_FLOW_WATERMARK (3U)         /*!< Bit position for MTB_FLOW_WATERMARK. */
+#define BM_MTB_FLOW_WATERMARK (0xFFFFFFF8U) /*!< Bit mask for MTB_FLOW_WATERMARK. */
+#define BS_MTB_FLOW_WATERMARK (29U)        /*!< Bit field size in bits for MTB_FLOW_WATERMARK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_FLOW_WATERMARK field.
-#define BR_MTB_FLOW_WATERMARK (BME_UBFX32(HW_MTB_FLOW_ADDR, BP_MTB_FLOW_WATERMARK, BS_MTB_FLOW_WATERMARK))
-#endif
+/*! @brief Read current value of the MTB_FLOW_WATERMARK field. */
+#define BR_MTB_FLOW_WATERMARK(x) (HW_MTB_FLOW(x).B.WATERMARK)
 
-//! @brief Format value for bitfield MTB_FLOW_WATERMARK.
-#define BF_MTB_FLOW_WATERMARK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_MTB_FLOW_WATERMARK), uint32_t) & BM_MTB_FLOW_WATERMARK)
+/*! @brief Format value for bitfield MTB_FLOW_WATERMARK. */
+#define BF_MTB_FLOW_WATERMARK(v) ((uint32_t)((uint32_t)(v) << BP_MTB_FLOW_WATERMARK) & BM_MTB_FLOW_WATERMARK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WATERMARK field to a new value.
-#define BW_MTB_FLOW_WATERMARK(v) (BME_BFI32(HW_MTB_FLOW_ADDR, ((uint32_t)(v) << BP_MTB_FLOW_WATERMARK), BP_MTB_FLOW_WATERMARK, 29))
-#endif
-//@}
+/*! @brief Set the WATERMARK field to a new value. */
+#define BW_MTB_FLOW_WATERMARK(x, v) (HW_MTB_FLOW_WR(x, (HW_MTB_FLOW_RD(x) & ~BM_MTB_FLOW_WATERMARK) | BF_MTB_FLOW_WATERMARK(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_BASE - MTB Base Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_BASE - MTB Base Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_BASE - MTB Base Register (RO)
  *
@@ -608,22 +543,19 @@ typedef union _hw_mtb_base
     uint32_t U;
     struct _hw_mtb_base_bitfields
     {
-        uint32_t BASEADDR : 32;        //!< [31:0]
+        uint32_t BASEADDR : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_base_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_BASE register
  */
-//@{
-#define HW_MTB_BASE_ADDR         (REGS_MTB_BASE + 0xCU)
+/*@{*/
+#define HW_MTB_BASE_ADDR(x)      ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_BASE              (*(__I hw_mtb_base_t *) HW_MTB_BASE_ADDR)
-#define HW_MTB_BASE_RD()         (HW_MTB_BASE.U)
-#endif
-//@}
+#define HW_MTB_BASE(x)           (*(__I hw_mtb_base_t *) HW_MTB_BASE_ADDR(x))
+#define HW_MTB_BASE_RD(x)        (HW_MTB_BASE(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_BASE bitfields
@@ -636,22 +568,19 @@ typedef union _hw_mtb_base
  * - (RAM_Size/4). For example, if the total RAM capacity is 16 KB, this field
  * is 0x1FFF_F000.
  */
-//@{
-#define BP_MTB_BASE_BASEADDR (0U)          //!< Bit position for MTB_BASE_BASEADDR.
-#define BM_MTB_BASE_BASEADDR (0xFFFFFFFFU) //!< Bit mask for MTB_BASE_BASEADDR.
-#define BS_MTB_BASE_BASEADDR (32U)         //!< Bit field size in bits for MTB_BASE_BASEADDR.
+/*@{*/
+#define BP_MTB_BASE_BASEADDR (0U)          /*!< Bit position for MTB_BASE_BASEADDR. */
+#define BM_MTB_BASE_BASEADDR (0xFFFFFFFFU) /*!< Bit mask for MTB_BASE_BASEADDR. */
+#define BS_MTB_BASE_BASEADDR (32U)         /*!< Bit field size in bits for MTB_BASE_BASEADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_BASE_BASEADDR field.
-#define BR_MTB_BASE_BASEADDR (BME_UBFX32(HW_MTB_BASE_ADDR, BP_MTB_BASE_BASEADDR, BS_MTB_BASE_BASEADDR))
-#endif
-//@}
+/*! @brief Read current value of the MTB_BASE_BASEADDR field. */
+#define BR_MTB_BASE_BASEADDR(x) (HW_MTB_BASE(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_MODECTRL - Integration Mode Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_MODECTRL - Integration Mode Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_MODECTRL - Integration Mode Control Register (RO)
  *
@@ -666,22 +595,19 @@ typedef union _hw_mtb_modectrl
     uint32_t U;
     struct _hw_mtb_modectrl_bitfields
     {
-        uint32_t MODECTRL : 32;        //!< [31:0]
+        uint32_t MODECTRL : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_modectrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_MODECTRL register
  */
-//@{
-#define HW_MTB_MODECTRL_ADDR     (REGS_MTB_BASE + 0xF00U)
+/*@{*/
+#define HW_MTB_MODECTRL_ADDR(x)  ((x) + 0xF00U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_MODECTRL          (*(__I hw_mtb_modectrl_t *) HW_MTB_MODECTRL_ADDR)
-#define HW_MTB_MODECTRL_RD()     (HW_MTB_MODECTRL.U)
-#endif
-//@}
+#define HW_MTB_MODECTRL(x)       (*(__I hw_mtb_modectrl_t *) HW_MTB_MODECTRL_ADDR(x))
+#define HW_MTB_MODECTRL_RD(x)    (HW_MTB_MODECTRL(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_MODECTRL bitfields
@@ -692,22 +618,19 @@ typedef union _hw_mtb_modectrl
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_MTB_MODECTRL_MODECTRL (0U)      //!< Bit position for MTB_MODECTRL_MODECTRL.
-#define BM_MTB_MODECTRL_MODECTRL (0xFFFFFFFFU) //!< Bit mask for MTB_MODECTRL_MODECTRL.
-#define BS_MTB_MODECTRL_MODECTRL (32U)     //!< Bit field size in bits for MTB_MODECTRL_MODECTRL.
+/*@{*/
+#define BP_MTB_MODECTRL_MODECTRL (0U)      /*!< Bit position for MTB_MODECTRL_MODECTRL. */
+#define BM_MTB_MODECTRL_MODECTRL (0xFFFFFFFFU) /*!< Bit mask for MTB_MODECTRL_MODECTRL. */
+#define BS_MTB_MODECTRL_MODECTRL (32U)     /*!< Bit field size in bits for MTB_MODECTRL_MODECTRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_MODECTRL_MODECTRL field.
-#define BR_MTB_MODECTRL_MODECTRL (BME_UBFX32(HW_MTB_MODECTRL_ADDR, BP_MTB_MODECTRL_MODECTRL, BS_MTB_MODECTRL_MODECTRL))
-#endif
-//@}
+/*! @brief Read current value of the MTB_MODECTRL_MODECTRL field. */
+#define BR_MTB_MODECTRL_MODECTRL(x) (HW_MTB_MODECTRL(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_TAGSET - Claim TAG Set Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_TAGSET - Claim TAG Set Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_TAGSET - Claim TAG Set Register (RO)
  *
@@ -722,22 +645,19 @@ typedef union _hw_mtb_tagset
     uint32_t U;
     struct _hw_mtb_tagset_bitfields
     {
-        uint32_t TAGSET : 32;          //!< [31:0]
+        uint32_t TAGSET : 32;          /*!< [31:0]  */
     } B;
 } hw_mtb_tagset_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_TAGSET register
  */
-//@{
-#define HW_MTB_TAGSET_ADDR       (REGS_MTB_BASE + 0xFA0U)
+/*@{*/
+#define HW_MTB_TAGSET_ADDR(x)    ((x) + 0xFA0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_TAGSET            (*(__I hw_mtb_tagset_t *) HW_MTB_TAGSET_ADDR)
-#define HW_MTB_TAGSET_RD()       (HW_MTB_TAGSET.U)
-#endif
-//@}
+#define HW_MTB_TAGSET(x)         (*(__I hw_mtb_tagset_t *) HW_MTB_TAGSET_ADDR(x))
+#define HW_MTB_TAGSET_RD(x)      (HW_MTB_TAGSET(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_TAGSET bitfields
@@ -748,22 +668,19 @@ typedef union _hw_mtb_tagset
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_MTB_TAGSET_TAGSET (0U)          //!< Bit position for MTB_TAGSET_TAGSET.
-#define BM_MTB_TAGSET_TAGSET (0xFFFFFFFFU) //!< Bit mask for MTB_TAGSET_TAGSET.
-#define BS_MTB_TAGSET_TAGSET (32U)         //!< Bit field size in bits for MTB_TAGSET_TAGSET.
+/*@{*/
+#define BP_MTB_TAGSET_TAGSET (0U)          /*!< Bit position for MTB_TAGSET_TAGSET. */
+#define BM_MTB_TAGSET_TAGSET (0xFFFFFFFFU) /*!< Bit mask for MTB_TAGSET_TAGSET. */
+#define BS_MTB_TAGSET_TAGSET (32U)         /*!< Bit field size in bits for MTB_TAGSET_TAGSET. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_TAGSET_TAGSET field.
-#define BR_MTB_TAGSET_TAGSET (BME_UBFX32(HW_MTB_TAGSET_ADDR, BP_MTB_TAGSET_TAGSET, BS_MTB_TAGSET_TAGSET))
-#endif
-//@}
+/*! @brief Read current value of the MTB_TAGSET_TAGSET field. */
+#define BR_MTB_TAGSET_TAGSET(x) (HW_MTB_TAGSET(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_TAGCLEAR - Claim TAG Clear Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_TAGCLEAR - Claim TAG Clear Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_TAGCLEAR - Claim TAG Clear Register (RO)
  *
@@ -779,22 +696,19 @@ typedef union _hw_mtb_tagclear
     uint32_t U;
     struct _hw_mtb_tagclear_bitfields
     {
-        uint32_t TAGCLEAR : 32;        //!< [31:0]
+        uint32_t TAGCLEAR : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_tagclear_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_TAGCLEAR register
  */
-//@{
-#define HW_MTB_TAGCLEAR_ADDR     (REGS_MTB_BASE + 0xFA4U)
+/*@{*/
+#define HW_MTB_TAGCLEAR_ADDR(x)  ((x) + 0xFA4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_TAGCLEAR          (*(__I hw_mtb_tagclear_t *) HW_MTB_TAGCLEAR_ADDR)
-#define HW_MTB_TAGCLEAR_RD()     (HW_MTB_TAGCLEAR.U)
-#endif
-//@}
+#define HW_MTB_TAGCLEAR(x)       (*(__I hw_mtb_tagclear_t *) HW_MTB_TAGCLEAR_ADDR(x))
+#define HW_MTB_TAGCLEAR_RD(x)    (HW_MTB_TAGCLEAR(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_TAGCLEAR bitfields
@@ -805,22 +719,19 @@ typedef union _hw_mtb_tagclear
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_MTB_TAGCLEAR_TAGCLEAR (0U)      //!< Bit position for MTB_TAGCLEAR_TAGCLEAR.
-#define BM_MTB_TAGCLEAR_TAGCLEAR (0xFFFFFFFFU) //!< Bit mask for MTB_TAGCLEAR_TAGCLEAR.
-#define BS_MTB_TAGCLEAR_TAGCLEAR (32U)     //!< Bit field size in bits for MTB_TAGCLEAR_TAGCLEAR.
+/*@{*/
+#define BP_MTB_TAGCLEAR_TAGCLEAR (0U)      /*!< Bit position for MTB_TAGCLEAR_TAGCLEAR. */
+#define BM_MTB_TAGCLEAR_TAGCLEAR (0xFFFFFFFFU) /*!< Bit mask for MTB_TAGCLEAR_TAGCLEAR. */
+#define BS_MTB_TAGCLEAR_TAGCLEAR (32U)     /*!< Bit field size in bits for MTB_TAGCLEAR_TAGCLEAR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_TAGCLEAR_TAGCLEAR field.
-#define BR_MTB_TAGCLEAR_TAGCLEAR (BME_UBFX32(HW_MTB_TAGCLEAR_ADDR, BP_MTB_TAGCLEAR_TAGCLEAR, BS_MTB_TAGCLEAR_TAGCLEAR))
-#endif
-//@}
+/*! @brief Read current value of the MTB_TAGCLEAR_TAGCLEAR field. */
+#define BR_MTB_TAGCLEAR_TAGCLEAR(x) (HW_MTB_TAGCLEAR(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_LOCKACCESS - Lock Access Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_LOCKACCESS - Lock Access Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_LOCKACCESS - Lock Access Register (RO)
  *
@@ -835,22 +746,19 @@ typedef union _hw_mtb_lockaccess
     uint32_t U;
     struct _hw_mtb_lockaccess_bitfields
     {
-        uint32_t LOCKACCESS : 32;      //!< [31:0]
+        uint32_t LOCKACCESS : 32;      /*!< [31:0]  */
     } B;
 } hw_mtb_lockaccess_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_LOCKACCESS register
  */
-//@{
-#define HW_MTB_LOCKACCESS_ADDR   (REGS_MTB_BASE + 0xFB0U)
+/*@{*/
+#define HW_MTB_LOCKACCESS_ADDR(x) ((x) + 0xFB0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_LOCKACCESS        (*(__I hw_mtb_lockaccess_t *) HW_MTB_LOCKACCESS_ADDR)
-#define HW_MTB_LOCKACCESS_RD()   (HW_MTB_LOCKACCESS.U)
-#endif
-//@}
+#define HW_MTB_LOCKACCESS(x)     (*(__I hw_mtb_lockaccess_t *) HW_MTB_LOCKACCESS_ADDR(x))
+#define HW_MTB_LOCKACCESS_RD(x)  (HW_MTB_LOCKACCESS(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_LOCKACCESS bitfields
@@ -861,22 +769,19 @@ typedef union _hw_mtb_lockaccess
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_MTB_LOCKACCESS_LOCKACCESS (0U)  //!< Bit position for MTB_LOCKACCESS_LOCKACCESS.
-#define BM_MTB_LOCKACCESS_LOCKACCESS (0xFFFFFFFFU) //!< Bit mask for MTB_LOCKACCESS_LOCKACCESS.
-#define BS_MTB_LOCKACCESS_LOCKACCESS (32U) //!< Bit field size in bits for MTB_LOCKACCESS_LOCKACCESS.
+/*@{*/
+#define BP_MTB_LOCKACCESS_LOCKACCESS (0U)  /*!< Bit position for MTB_LOCKACCESS_LOCKACCESS. */
+#define BM_MTB_LOCKACCESS_LOCKACCESS (0xFFFFFFFFU) /*!< Bit mask for MTB_LOCKACCESS_LOCKACCESS. */
+#define BS_MTB_LOCKACCESS_LOCKACCESS (32U) /*!< Bit field size in bits for MTB_LOCKACCESS_LOCKACCESS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_LOCKACCESS_LOCKACCESS field.
-#define BR_MTB_LOCKACCESS_LOCKACCESS (BME_UBFX32(HW_MTB_LOCKACCESS_ADDR, BP_MTB_LOCKACCESS_LOCKACCESS, BS_MTB_LOCKACCESS_LOCKACCESS))
-#endif
-//@}
+/*! @brief Read current value of the MTB_LOCKACCESS_LOCKACCESS field. */
+#define BR_MTB_LOCKACCESS_LOCKACCESS(x) (HW_MTB_LOCKACCESS(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_LOCKSTAT - Lock Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_LOCKSTAT - Lock Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_LOCKSTAT - Lock Status Register (RO)
  *
@@ -892,22 +797,19 @@ typedef union _hw_mtb_lockstat
     uint32_t U;
     struct _hw_mtb_lockstat_bitfields
     {
-        uint32_t LOCKSTAT : 32;        //!< [31:0]
+        uint32_t LOCKSTAT : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_lockstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_LOCKSTAT register
  */
-//@{
-#define HW_MTB_LOCKSTAT_ADDR     (REGS_MTB_BASE + 0xFB4U)
+/*@{*/
+#define HW_MTB_LOCKSTAT_ADDR(x)  ((x) + 0xFB4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_LOCKSTAT          (*(__I hw_mtb_lockstat_t *) HW_MTB_LOCKSTAT_ADDR)
-#define HW_MTB_LOCKSTAT_RD()     (HW_MTB_LOCKSTAT.U)
-#endif
-//@}
+#define HW_MTB_LOCKSTAT(x)       (*(__I hw_mtb_lockstat_t *) HW_MTB_LOCKSTAT_ADDR(x))
+#define HW_MTB_LOCKSTAT_RD(x)    (HW_MTB_LOCKSTAT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_LOCKSTAT bitfields
@@ -918,22 +820,19 @@ typedef union _hw_mtb_lockstat
  *
  * Hardwired to 0x0000_0000
  */
-//@{
-#define BP_MTB_LOCKSTAT_LOCKSTAT (0U)      //!< Bit position for MTB_LOCKSTAT_LOCKSTAT.
-#define BM_MTB_LOCKSTAT_LOCKSTAT (0xFFFFFFFFU) //!< Bit mask for MTB_LOCKSTAT_LOCKSTAT.
-#define BS_MTB_LOCKSTAT_LOCKSTAT (32U)     //!< Bit field size in bits for MTB_LOCKSTAT_LOCKSTAT.
+/*@{*/
+#define BP_MTB_LOCKSTAT_LOCKSTAT (0U)      /*!< Bit position for MTB_LOCKSTAT_LOCKSTAT. */
+#define BM_MTB_LOCKSTAT_LOCKSTAT (0xFFFFFFFFU) /*!< Bit mask for MTB_LOCKSTAT_LOCKSTAT. */
+#define BS_MTB_LOCKSTAT_LOCKSTAT (32U)     /*!< Bit field size in bits for MTB_LOCKSTAT_LOCKSTAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_LOCKSTAT_LOCKSTAT field.
-#define BR_MTB_LOCKSTAT_LOCKSTAT (BME_UBFX32(HW_MTB_LOCKSTAT_ADDR, BP_MTB_LOCKSTAT_LOCKSTAT, BS_MTB_LOCKSTAT_LOCKSTAT))
-#endif
-//@}
+/*! @brief Read current value of the MTB_LOCKSTAT_LOCKSTAT field. */
+#define BR_MTB_LOCKSTAT_LOCKSTAT(x) (HW_MTB_LOCKSTAT(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_AUTHSTAT - Authentication Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_AUTHSTAT - Authentication Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_AUTHSTAT - Authentication Status Register (RO)
  *
@@ -953,26 +852,23 @@ typedef union _hw_mtb_authstat
     uint32_t U;
     struct _hw_mtb_authstat_bitfields
     {
-        uint32_t BIT0 : 1;             //!< [0]
-        uint32_t BIT1 : 1;             //!< [1]
-        uint32_t BIT2 : 1;             //!< [2]
-        uint32_t BIT3 : 1;             //!< [3]
-        uint32_t RESERVED0 : 28;       //!< [31:4]
+        uint32_t BIT0 : 1;             /*!< [0]  */
+        uint32_t BIT1 : 1;             /*!< [1]  */
+        uint32_t BIT2 : 1;             /*!< [2]  */
+        uint32_t BIT3 : 1;             /*!< [3]  */
+        uint32_t RESERVED0 : 28;       /*!< [31:4]  */
     } B;
 } hw_mtb_authstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_AUTHSTAT register
  */
-//@{
-#define HW_MTB_AUTHSTAT_ADDR     (REGS_MTB_BASE + 0xFB8U)
+/*@{*/
+#define HW_MTB_AUTHSTAT_ADDR(x)  ((x) + 0xFB8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_AUTHSTAT          (*(__I hw_mtb_authstat_t *) HW_MTB_AUTHSTAT_ADDR)
-#define HW_MTB_AUTHSTAT_RD()     (HW_MTB_AUTHSTAT.U)
-#endif
-//@}
+#define HW_MTB_AUTHSTAT(x)       (*(__I hw_mtb_authstat_t *) HW_MTB_AUTHSTAT_ADDR(x))
+#define HW_MTB_AUTHSTAT_RD(x)    (HW_MTB_AUTHSTAT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_AUTHSTAT bitfields
@@ -983,70 +879,61 @@ typedef union _hw_mtb_authstat
  *
  * Connected to DBGEN.
  */
-//@{
-#define BP_MTB_AUTHSTAT_BIT0 (0U)          //!< Bit position for MTB_AUTHSTAT_BIT0.
-#define BM_MTB_AUTHSTAT_BIT0 (0x00000001U) //!< Bit mask for MTB_AUTHSTAT_BIT0.
-#define BS_MTB_AUTHSTAT_BIT0 (1U)          //!< Bit field size in bits for MTB_AUTHSTAT_BIT0.
+/*@{*/
+#define BP_MTB_AUTHSTAT_BIT0 (0U)          /*!< Bit position for MTB_AUTHSTAT_BIT0. */
+#define BM_MTB_AUTHSTAT_BIT0 (0x00000001U) /*!< Bit mask for MTB_AUTHSTAT_BIT0. */
+#define BS_MTB_AUTHSTAT_BIT0 (1U)          /*!< Bit field size in bits for MTB_AUTHSTAT_BIT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_AUTHSTAT_BIT0 field.
-#define BR_MTB_AUTHSTAT_BIT0 (BME_UBFX32(HW_MTB_AUTHSTAT_ADDR, BP_MTB_AUTHSTAT_BIT0, BS_MTB_AUTHSTAT_BIT0))
-#endif
-//@}
+/*! @brief Read current value of the MTB_AUTHSTAT_BIT0 field. */
+#define BR_MTB_AUTHSTAT_BIT0(x) (HW_MTB_AUTHSTAT(x).B.BIT0)
+/*@}*/
 
 /*!
  * @name Register MTB_AUTHSTAT, field BIT1[1] (ROO)
  *
  * Hardwired to 1.
  */
-//@{
-#define BP_MTB_AUTHSTAT_BIT1 (1U)          //!< Bit position for MTB_AUTHSTAT_BIT1.
-#define BM_MTB_AUTHSTAT_BIT1 (0x00000002U) //!< Bit mask for MTB_AUTHSTAT_BIT1.
-#define BS_MTB_AUTHSTAT_BIT1 (1U)          //!< Bit field size in bits for MTB_AUTHSTAT_BIT1.
+/*@{*/
+#define BP_MTB_AUTHSTAT_BIT1 (1U)          /*!< Bit position for MTB_AUTHSTAT_BIT1. */
+#define BM_MTB_AUTHSTAT_BIT1 (0x00000002U) /*!< Bit mask for MTB_AUTHSTAT_BIT1. */
+#define BS_MTB_AUTHSTAT_BIT1 (1U)          /*!< Bit field size in bits for MTB_AUTHSTAT_BIT1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_AUTHSTAT_BIT1 field.
-#define BR_MTB_AUTHSTAT_BIT1 (BME_UBFX32(HW_MTB_AUTHSTAT_ADDR, BP_MTB_AUTHSTAT_BIT1, BS_MTB_AUTHSTAT_BIT1))
-#endif
-//@}
+/*! @brief Read current value of the MTB_AUTHSTAT_BIT1 field. */
+#define BR_MTB_AUTHSTAT_BIT1(x) (HW_MTB_AUTHSTAT(x).B.BIT1)
+/*@}*/
 
 /*!
  * @name Register MTB_AUTHSTAT, field BIT2[2] (RO)
  *
  * Connected to NIDEN or DBGEN signal.
  */
-//@{
-#define BP_MTB_AUTHSTAT_BIT2 (2U)          //!< Bit position for MTB_AUTHSTAT_BIT2.
-#define BM_MTB_AUTHSTAT_BIT2 (0x00000004U) //!< Bit mask for MTB_AUTHSTAT_BIT2.
-#define BS_MTB_AUTHSTAT_BIT2 (1U)          //!< Bit field size in bits for MTB_AUTHSTAT_BIT2.
+/*@{*/
+#define BP_MTB_AUTHSTAT_BIT2 (2U)          /*!< Bit position for MTB_AUTHSTAT_BIT2. */
+#define BM_MTB_AUTHSTAT_BIT2 (0x00000004U) /*!< Bit mask for MTB_AUTHSTAT_BIT2. */
+#define BS_MTB_AUTHSTAT_BIT2 (1U)          /*!< Bit field size in bits for MTB_AUTHSTAT_BIT2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_AUTHSTAT_BIT2 field.
-#define BR_MTB_AUTHSTAT_BIT2 (BME_UBFX32(HW_MTB_AUTHSTAT_ADDR, BP_MTB_AUTHSTAT_BIT2, BS_MTB_AUTHSTAT_BIT2))
-#endif
-//@}
+/*! @brief Read current value of the MTB_AUTHSTAT_BIT2 field. */
+#define BR_MTB_AUTHSTAT_BIT2(x) (HW_MTB_AUTHSTAT(x).B.BIT2)
+/*@}*/
 
 /*!
  * @name Register MTB_AUTHSTAT, field BIT3[3] (ROO)
  *
  * Hardwired to 1.
  */
-//@{
-#define BP_MTB_AUTHSTAT_BIT3 (3U)          //!< Bit position for MTB_AUTHSTAT_BIT3.
-#define BM_MTB_AUTHSTAT_BIT3 (0x00000008U) //!< Bit mask for MTB_AUTHSTAT_BIT3.
-#define BS_MTB_AUTHSTAT_BIT3 (1U)          //!< Bit field size in bits for MTB_AUTHSTAT_BIT3.
+/*@{*/
+#define BP_MTB_AUTHSTAT_BIT3 (3U)          /*!< Bit position for MTB_AUTHSTAT_BIT3. */
+#define BM_MTB_AUTHSTAT_BIT3 (0x00000008U) /*!< Bit mask for MTB_AUTHSTAT_BIT3. */
+#define BS_MTB_AUTHSTAT_BIT3 (1U)          /*!< Bit field size in bits for MTB_AUTHSTAT_BIT3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_AUTHSTAT_BIT3 field.
-#define BR_MTB_AUTHSTAT_BIT3 (BME_UBFX32(HW_MTB_AUTHSTAT_ADDR, BP_MTB_AUTHSTAT_BIT3, BS_MTB_AUTHSTAT_BIT3))
-#endif
-//@}
+/*! @brief Read current value of the MTB_AUTHSTAT_BIT3 field. */
+#define BR_MTB_AUTHSTAT_BIT3(x) (HW_MTB_AUTHSTAT(x).B.BIT3)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_DEVICEARCH - Device Architecture Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_DEVICEARCH - Device Architecture Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_DEVICEARCH - Device Architecture Register (RO)
  *
@@ -1060,22 +947,19 @@ typedef union _hw_mtb_devicearch
     uint32_t U;
     struct _hw_mtb_devicearch_bitfields
     {
-        uint32_t DEVICEARCH : 32;      //!< [31:0]
+        uint32_t DEVICEARCH : 32;      /*!< [31:0]  */
     } B;
 } hw_mtb_devicearch_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_DEVICEARCH register
  */
-//@{
-#define HW_MTB_DEVICEARCH_ADDR   (REGS_MTB_BASE + 0xFBCU)
+/*@{*/
+#define HW_MTB_DEVICEARCH_ADDR(x) ((x) + 0xFBCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_DEVICEARCH        (*(__I hw_mtb_devicearch_t *) HW_MTB_DEVICEARCH_ADDR)
-#define HW_MTB_DEVICEARCH_RD()   (HW_MTB_DEVICEARCH.U)
-#endif
-//@}
+#define HW_MTB_DEVICEARCH(x)     (*(__I hw_mtb_devicearch_t *) HW_MTB_DEVICEARCH_ADDR(x))
+#define HW_MTB_DEVICEARCH_RD(x)  (HW_MTB_DEVICEARCH(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_DEVICEARCH bitfields
@@ -1086,22 +970,19 @@ typedef union _hw_mtb_devicearch
  *
  * Hardwired to 0x4770_0A31.
  */
-//@{
-#define BP_MTB_DEVICEARCH_DEVICEARCH (0U)  //!< Bit position for MTB_DEVICEARCH_DEVICEARCH.
-#define BM_MTB_DEVICEARCH_DEVICEARCH (0xFFFFFFFFU) //!< Bit mask for MTB_DEVICEARCH_DEVICEARCH.
-#define BS_MTB_DEVICEARCH_DEVICEARCH (32U) //!< Bit field size in bits for MTB_DEVICEARCH_DEVICEARCH.
+/*@{*/
+#define BP_MTB_DEVICEARCH_DEVICEARCH (0U)  /*!< Bit position for MTB_DEVICEARCH_DEVICEARCH. */
+#define BM_MTB_DEVICEARCH_DEVICEARCH (0xFFFFFFFFU) /*!< Bit mask for MTB_DEVICEARCH_DEVICEARCH. */
+#define BS_MTB_DEVICEARCH_DEVICEARCH (32U) /*!< Bit field size in bits for MTB_DEVICEARCH_DEVICEARCH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_DEVICEARCH_DEVICEARCH field.
-#define BR_MTB_DEVICEARCH_DEVICEARCH (BME_UBFX32(HW_MTB_DEVICEARCH_ADDR, BP_MTB_DEVICEARCH_DEVICEARCH, BS_MTB_DEVICEARCH_DEVICEARCH))
-#endif
-//@}
+/*! @brief Read current value of the MTB_DEVICEARCH_DEVICEARCH field. */
+#define BR_MTB_DEVICEARCH_DEVICEARCH(x) (HW_MTB_DEVICEARCH(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_DEVICECFG - Device Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_DEVICECFG - Device Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_DEVICECFG - Device Configuration Register (RO)
  *
@@ -1115,22 +996,19 @@ typedef union _hw_mtb_devicecfg
     uint32_t U;
     struct _hw_mtb_devicecfg_bitfields
     {
-        uint32_t DEVICECFG : 32;       //!< [31:0]
+        uint32_t DEVICECFG : 32;       /*!< [31:0]  */
     } B;
 } hw_mtb_devicecfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_DEVICECFG register
  */
-//@{
-#define HW_MTB_DEVICECFG_ADDR    (REGS_MTB_BASE + 0xFC8U)
+/*@{*/
+#define HW_MTB_DEVICECFG_ADDR(x) ((x) + 0xFC8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_DEVICECFG         (*(__I hw_mtb_devicecfg_t *) HW_MTB_DEVICECFG_ADDR)
-#define HW_MTB_DEVICECFG_RD()    (HW_MTB_DEVICECFG.U)
-#endif
-//@}
+#define HW_MTB_DEVICECFG(x)      (*(__I hw_mtb_devicecfg_t *) HW_MTB_DEVICECFG_ADDR(x))
+#define HW_MTB_DEVICECFG_RD(x)   (HW_MTB_DEVICECFG(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_DEVICECFG bitfields
@@ -1141,22 +1019,19 @@ typedef union _hw_mtb_devicecfg
  *
  * Hardwired to 0x0000_0000.
  */
-//@{
-#define BP_MTB_DEVICECFG_DEVICECFG (0U)    //!< Bit position for MTB_DEVICECFG_DEVICECFG.
-#define BM_MTB_DEVICECFG_DEVICECFG (0xFFFFFFFFU) //!< Bit mask for MTB_DEVICECFG_DEVICECFG.
-#define BS_MTB_DEVICECFG_DEVICECFG (32U)   //!< Bit field size in bits for MTB_DEVICECFG_DEVICECFG.
+/*@{*/
+#define BP_MTB_DEVICECFG_DEVICECFG (0U)    /*!< Bit position for MTB_DEVICECFG_DEVICECFG. */
+#define BM_MTB_DEVICECFG_DEVICECFG (0xFFFFFFFFU) /*!< Bit mask for MTB_DEVICECFG_DEVICECFG. */
+#define BS_MTB_DEVICECFG_DEVICECFG (32U)   /*!< Bit field size in bits for MTB_DEVICECFG_DEVICECFG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_DEVICECFG_DEVICECFG field.
-#define BR_MTB_DEVICECFG_DEVICECFG (BME_UBFX32(HW_MTB_DEVICECFG_ADDR, BP_MTB_DEVICECFG_DEVICECFG, BS_MTB_DEVICECFG_DEVICECFG))
-#endif
-//@}
+/*! @brief Read current value of the MTB_DEVICECFG_DEVICECFG field. */
+#define BR_MTB_DEVICECFG_DEVICECFG(x) (HW_MTB_DEVICECFG(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_DEVICETYPID - Device Type Identifier Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_DEVICETYPID - Device Type Identifier Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_DEVICETYPID - Device Type Identifier Register (RO)
  *
@@ -1170,22 +1045,19 @@ typedef union _hw_mtb_devicetypid
     uint32_t U;
     struct _hw_mtb_devicetypid_bitfields
     {
-        uint32_t DEVICETYPID : 32;     //!< [31:0]
+        uint32_t DEVICETYPID : 32;     /*!< [31:0]  */
     } B;
 } hw_mtb_devicetypid_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_DEVICETYPID register
  */
-//@{
-#define HW_MTB_DEVICETYPID_ADDR  (REGS_MTB_BASE + 0xFCCU)
+/*@{*/
+#define HW_MTB_DEVICETYPID_ADDR(x) ((x) + 0xFCCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_DEVICETYPID       (*(__I hw_mtb_devicetypid_t *) HW_MTB_DEVICETYPID_ADDR)
-#define HW_MTB_DEVICETYPID_RD()  (HW_MTB_DEVICETYPID.U)
-#endif
-//@}
+#define HW_MTB_DEVICETYPID(x)    (*(__I hw_mtb_devicetypid_t *) HW_MTB_DEVICETYPID_ADDR(x))
+#define HW_MTB_DEVICETYPID_RD(x) (HW_MTB_DEVICETYPID(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_DEVICETYPID bitfields
@@ -1196,22 +1068,19 @@ typedef union _hw_mtb_devicetypid
  *
  * Hardwired to 0x0000_0031.
  */
-//@{
-#define BP_MTB_DEVICETYPID_DEVICETYPID (0U) //!< Bit position for MTB_DEVICETYPID_DEVICETYPID.
-#define BM_MTB_DEVICETYPID_DEVICETYPID (0xFFFFFFFFU) //!< Bit mask for MTB_DEVICETYPID_DEVICETYPID.
-#define BS_MTB_DEVICETYPID_DEVICETYPID (32U) //!< Bit field size in bits for MTB_DEVICETYPID_DEVICETYPID.
+/*@{*/
+#define BP_MTB_DEVICETYPID_DEVICETYPID (0U) /*!< Bit position for MTB_DEVICETYPID_DEVICETYPID. */
+#define BM_MTB_DEVICETYPID_DEVICETYPID (0xFFFFFFFFU) /*!< Bit mask for MTB_DEVICETYPID_DEVICETYPID. */
+#define BS_MTB_DEVICETYPID_DEVICETYPID (32U) /*!< Bit field size in bits for MTB_DEVICETYPID_DEVICETYPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_DEVICETYPID_DEVICETYPID field.
-#define BR_MTB_DEVICETYPID_DEVICETYPID (BME_UBFX32(HW_MTB_DEVICETYPID_ADDR, BP_MTB_DEVICETYPID_DEVICETYPID, BS_MTB_DEVICETYPID_DEVICETYPID))
-#endif
-//@}
+/*! @brief Read current value of the MTB_DEVICETYPID_DEVICETYPID field. */
+#define BR_MTB_DEVICETYPID_DEVICETYPID(x) (HW_MTB_DEVICETYPID(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID4 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_PERIPHID4 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID4 - Peripheral ID Register (RO)
  *
@@ -1225,22 +1094,19 @@ typedef union _hw_mtb_periphid4
     uint32_t U;
     struct _hw_mtb_periphid4_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID4 register
  */
-//@{
-#define HW_MTB_PERIPHID4_ADDR    (REGS_MTB_BASE + 0xFD0U)
+/*@{*/
+#define HW_MTB_PERIPHID4_ADDR(x) ((x) + 0xFD0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID4         (*(__I hw_mtb_periphid4_t *) HW_MTB_PERIPHID4_ADDR)
-#define HW_MTB_PERIPHID4_RD()    (HW_MTB_PERIPHID4.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID4(x)      (*(__I hw_mtb_periphid4_t *) HW_MTB_PERIPHID4_ADDR(x))
+#define HW_MTB_PERIPHID4_RD(x)   (HW_MTB_PERIPHID4(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID4 bitfields
@@ -1252,21 +1118,18 @@ typedef union _hw_mtb_periphid4
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID4_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID4_PERIPHID.
-#define BM_MTB_PERIPHID4_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID4_PERIPHID.
-#define BS_MTB_PERIPHID4_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID4_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID4_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID4_PERIPHID. */
+#define BM_MTB_PERIPHID4_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID4_PERIPHID. */
+#define BS_MTB_PERIPHID4_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID4_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID4_PERIPHID field.
-#define BR_MTB_PERIPHID4_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID4_ADDR, BP_MTB_PERIPHID4_PERIPHID, BS_MTB_PERIPHID4_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID5 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID4_PERIPHID field. */
+#define BR_MTB_PERIPHID4_PERIPHID(x) (HW_MTB_PERIPHID4(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID5 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID5 - Peripheral ID Register (RO)
  *
@@ -1280,22 +1143,19 @@ typedef union _hw_mtb_periphid5
     uint32_t U;
     struct _hw_mtb_periphid5_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID5 register
  */
-//@{
-#define HW_MTB_PERIPHID5_ADDR    (REGS_MTB_BASE + 0xFD4U)
+/*@{*/
+#define HW_MTB_PERIPHID5_ADDR(x) ((x) + 0xFD4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID5         (*(__I hw_mtb_periphid5_t *) HW_MTB_PERIPHID5_ADDR)
-#define HW_MTB_PERIPHID5_RD()    (HW_MTB_PERIPHID5.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID5(x)      (*(__I hw_mtb_periphid5_t *) HW_MTB_PERIPHID5_ADDR(x))
+#define HW_MTB_PERIPHID5_RD(x)   (HW_MTB_PERIPHID5(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID5 bitfields
@@ -1307,21 +1167,18 @@ typedef union _hw_mtb_periphid5
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID5_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID5_PERIPHID.
-#define BM_MTB_PERIPHID5_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID5_PERIPHID.
-#define BS_MTB_PERIPHID5_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID5_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID5_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID5_PERIPHID. */
+#define BM_MTB_PERIPHID5_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID5_PERIPHID. */
+#define BS_MTB_PERIPHID5_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID5_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID5_PERIPHID field.
-#define BR_MTB_PERIPHID5_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID5_ADDR, BP_MTB_PERIPHID5_PERIPHID, BS_MTB_PERIPHID5_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID6 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID5_PERIPHID field. */
+#define BR_MTB_PERIPHID5_PERIPHID(x) (HW_MTB_PERIPHID5(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID6 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID6 - Peripheral ID Register (RO)
  *
@@ -1335,22 +1192,19 @@ typedef union _hw_mtb_periphid6
     uint32_t U;
     struct _hw_mtb_periphid6_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID6 register
  */
-//@{
-#define HW_MTB_PERIPHID6_ADDR    (REGS_MTB_BASE + 0xFD8U)
+/*@{*/
+#define HW_MTB_PERIPHID6_ADDR(x) ((x) + 0xFD8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID6         (*(__I hw_mtb_periphid6_t *) HW_MTB_PERIPHID6_ADDR)
-#define HW_MTB_PERIPHID6_RD()    (HW_MTB_PERIPHID6.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID6(x)      (*(__I hw_mtb_periphid6_t *) HW_MTB_PERIPHID6_ADDR(x))
+#define HW_MTB_PERIPHID6_RD(x)   (HW_MTB_PERIPHID6(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID6 bitfields
@@ -1362,21 +1216,18 @@ typedef union _hw_mtb_periphid6
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID6_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID6_PERIPHID.
-#define BM_MTB_PERIPHID6_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID6_PERIPHID.
-#define BS_MTB_PERIPHID6_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID6_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID6_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID6_PERIPHID. */
+#define BM_MTB_PERIPHID6_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID6_PERIPHID. */
+#define BS_MTB_PERIPHID6_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID6_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID6_PERIPHID field.
-#define BR_MTB_PERIPHID6_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID6_ADDR, BP_MTB_PERIPHID6_PERIPHID, BS_MTB_PERIPHID6_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID7 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID6_PERIPHID field. */
+#define BR_MTB_PERIPHID6_PERIPHID(x) (HW_MTB_PERIPHID6(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID7 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID7 - Peripheral ID Register (RO)
  *
@@ -1390,22 +1241,19 @@ typedef union _hw_mtb_periphid7
     uint32_t U;
     struct _hw_mtb_periphid7_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID7 register
  */
-//@{
-#define HW_MTB_PERIPHID7_ADDR    (REGS_MTB_BASE + 0xFDCU)
+/*@{*/
+#define HW_MTB_PERIPHID7_ADDR(x) ((x) + 0xFDCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID7         (*(__I hw_mtb_periphid7_t *) HW_MTB_PERIPHID7_ADDR)
-#define HW_MTB_PERIPHID7_RD()    (HW_MTB_PERIPHID7.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID7(x)      (*(__I hw_mtb_periphid7_t *) HW_MTB_PERIPHID7_ADDR(x))
+#define HW_MTB_PERIPHID7_RD(x)   (HW_MTB_PERIPHID7(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID7 bitfields
@@ -1417,21 +1265,18 @@ typedef union _hw_mtb_periphid7
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID7_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID7_PERIPHID.
-#define BM_MTB_PERIPHID7_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID7_PERIPHID.
-#define BS_MTB_PERIPHID7_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID7_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID7_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID7_PERIPHID. */
+#define BM_MTB_PERIPHID7_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID7_PERIPHID. */
+#define BS_MTB_PERIPHID7_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID7_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID7_PERIPHID field.
-#define BR_MTB_PERIPHID7_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID7_ADDR, BP_MTB_PERIPHID7_PERIPHID, BS_MTB_PERIPHID7_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID0 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID7_PERIPHID field. */
+#define BR_MTB_PERIPHID7_PERIPHID(x) (HW_MTB_PERIPHID7(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID0 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID0 - Peripheral ID Register (RO)
  *
@@ -1445,22 +1290,19 @@ typedef union _hw_mtb_periphid0
     uint32_t U;
     struct _hw_mtb_periphid0_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID0 register
  */
-//@{
-#define HW_MTB_PERIPHID0_ADDR    (REGS_MTB_BASE + 0xFE0U)
+/*@{*/
+#define HW_MTB_PERIPHID0_ADDR(x) ((x) + 0xFE0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID0         (*(__I hw_mtb_periphid0_t *) HW_MTB_PERIPHID0_ADDR)
-#define HW_MTB_PERIPHID0_RD()    (HW_MTB_PERIPHID0.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID0(x)      (*(__I hw_mtb_periphid0_t *) HW_MTB_PERIPHID0_ADDR(x))
+#define HW_MTB_PERIPHID0_RD(x)   (HW_MTB_PERIPHID0(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID0 bitfields
@@ -1472,21 +1314,18 @@ typedef union _hw_mtb_periphid0
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID0_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID0_PERIPHID.
-#define BM_MTB_PERIPHID0_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID0_PERIPHID.
-#define BS_MTB_PERIPHID0_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID0_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID0_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID0_PERIPHID. */
+#define BM_MTB_PERIPHID0_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID0_PERIPHID. */
+#define BS_MTB_PERIPHID0_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID0_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID0_PERIPHID field.
-#define BR_MTB_PERIPHID0_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID0_ADDR, BP_MTB_PERIPHID0_PERIPHID, BS_MTB_PERIPHID0_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID1 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID0_PERIPHID field. */
+#define BR_MTB_PERIPHID0_PERIPHID(x) (HW_MTB_PERIPHID0(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID1 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID1 - Peripheral ID Register (RO)
  *
@@ -1500,22 +1339,19 @@ typedef union _hw_mtb_periphid1
     uint32_t U;
     struct _hw_mtb_periphid1_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID1 register
  */
-//@{
-#define HW_MTB_PERIPHID1_ADDR    (REGS_MTB_BASE + 0xFE4U)
+/*@{*/
+#define HW_MTB_PERIPHID1_ADDR(x) ((x) + 0xFE4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID1         (*(__I hw_mtb_periphid1_t *) HW_MTB_PERIPHID1_ADDR)
-#define HW_MTB_PERIPHID1_RD()    (HW_MTB_PERIPHID1.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID1(x)      (*(__I hw_mtb_periphid1_t *) HW_MTB_PERIPHID1_ADDR(x))
+#define HW_MTB_PERIPHID1_RD(x)   (HW_MTB_PERIPHID1(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID1 bitfields
@@ -1527,21 +1363,18 @@ typedef union _hw_mtb_periphid1
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID1_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID1_PERIPHID.
-#define BM_MTB_PERIPHID1_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID1_PERIPHID.
-#define BS_MTB_PERIPHID1_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID1_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID1_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID1_PERIPHID. */
+#define BM_MTB_PERIPHID1_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID1_PERIPHID. */
+#define BS_MTB_PERIPHID1_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID1_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID1_PERIPHID field.
-#define BR_MTB_PERIPHID1_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID1_ADDR, BP_MTB_PERIPHID1_PERIPHID, BS_MTB_PERIPHID1_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID2 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID1_PERIPHID field. */
+#define BR_MTB_PERIPHID1_PERIPHID(x) (HW_MTB_PERIPHID1(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID2 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID2 - Peripheral ID Register (RO)
  *
@@ -1555,22 +1388,19 @@ typedef union _hw_mtb_periphid2
     uint32_t U;
     struct _hw_mtb_periphid2_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID2 register
  */
-//@{
-#define HW_MTB_PERIPHID2_ADDR    (REGS_MTB_BASE + 0xFE8U)
+/*@{*/
+#define HW_MTB_PERIPHID2_ADDR(x) ((x) + 0xFE8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID2         (*(__I hw_mtb_periphid2_t *) HW_MTB_PERIPHID2_ADDR)
-#define HW_MTB_PERIPHID2_RD()    (HW_MTB_PERIPHID2.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID2(x)      (*(__I hw_mtb_periphid2_t *) HW_MTB_PERIPHID2_ADDR(x))
+#define HW_MTB_PERIPHID2_RD(x)   (HW_MTB_PERIPHID2(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID2 bitfields
@@ -1582,21 +1412,18 @@ typedef union _hw_mtb_periphid2
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID2_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID2_PERIPHID.
-#define BM_MTB_PERIPHID2_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID2_PERIPHID.
-#define BS_MTB_PERIPHID2_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID2_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID2_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID2_PERIPHID. */
+#define BM_MTB_PERIPHID2_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID2_PERIPHID. */
+#define BS_MTB_PERIPHID2_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID2_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID2_PERIPHID field.
-#define BR_MTB_PERIPHID2_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID2_ADDR, BP_MTB_PERIPHID2_PERIPHID, BS_MTB_PERIPHID2_PERIPHID))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_MTB_PERIPHID3 - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Read current value of the MTB_PERIPHID2_PERIPHID field. */
+#define BR_MTB_PERIPHID2_PERIPHID(x) (HW_MTB_PERIPHID2(x).U)
+/*@}*/
+/*******************************************************************************
+ * HW_MTB_PERIPHID3 - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_PERIPHID3 - Peripheral ID Register (RO)
  *
@@ -1610,22 +1437,19 @@ typedef union _hw_mtb_periphid3
     uint32_t U;
     struct _hw_mtb_periphid3_bitfields
     {
-        uint32_t PERIPHID : 32;        //!< [31:0]
+        uint32_t PERIPHID : 32;        /*!< [31:0]  */
     } B;
 } hw_mtb_periphid3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_PERIPHID3 register
  */
-//@{
-#define HW_MTB_PERIPHID3_ADDR    (REGS_MTB_BASE + 0xFECU)
+/*@{*/
+#define HW_MTB_PERIPHID3_ADDR(x) ((x) + 0xFECU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_PERIPHID3         (*(__I hw_mtb_periphid3_t *) HW_MTB_PERIPHID3_ADDR)
-#define HW_MTB_PERIPHID3_RD()    (HW_MTB_PERIPHID3.U)
-#endif
-//@}
+#define HW_MTB_PERIPHID3(x)      (*(__I hw_mtb_periphid3_t *) HW_MTB_PERIPHID3_ADDR(x))
+#define HW_MTB_PERIPHID3_RD(x)   (HW_MTB_PERIPHID3(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_PERIPHID3 bitfields
@@ -1637,22 +1461,19 @@ typedef union _hw_mtb_periphid3
  * Peripheral ID4 is hardwired to 0x0000_0004; ID0 to 0x0000_0032; ID1 to
  * 0x0000_00B9; ID2 to 0x0000_000B; and all the others to 0x0000_0000.
  */
-//@{
-#define BP_MTB_PERIPHID3_PERIPHID (0U)     //!< Bit position for MTB_PERIPHID3_PERIPHID.
-#define BM_MTB_PERIPHID3_PERIPHID (0xFFFFFFFFU) //!< Bit mask for MTB_PERIPHID3_PERIPHID.
-#define BS_MTB_PERIPHID3_PERIPHID (32U)    //!< Bit field size in bits for MTB_PERIPHID3_PERIPHID.
+/*@{*/
+#define BP_MTB_PERIPHID3_PERIPHID (0U)     /*!< Bit position for MTB_PERIPHID3_PERIPHID. */
+#define BM_MTB_PERIPHID3_PERIPHID (0xFFFFFFFFU) /*!< Bit mask for MTB_PERIPHID3_PERIPHID. */
+#define BS_MTB_PERIPHID3_PERIPHID (32U)    /*!< Bit field size in bits for MTB_PERIPHID3_PERIPHID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_PERIPHID3_PERIPHID field.
-#define BR_MTB_PERIPHID3_PERIPHID (BME_UBFX32(HW_MTB_PERIPHID3_ADDR, BP_MTB_PERIPHID3_PERIPHID, BS_MTB_PERIPHID3_PERIPHID))
-#endif
-//@}
+/*! @brief Read current value of the MTB_PERIPHID3_PERIPHID field. */
+#define BR_MTB_PERIPHID3_PERIPHID(x) (HW_MTB_PERIPHID3(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_MTB_COMPIDn - Component ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_MTB_COMPIDn - Component ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_MTB_COMPIDn - Component ID Register (RO)
  *
@@ -1666,24 +1487,21 @@ typedef union _hw_mtb_compidn
     uint32_t U;
     struct _hw_mtb_compidn_bitfields
     {
-        uint32_t COMPID : 32;          //!< [31:0] Component ID
+        uint32_t COMPID : 32;          /*!< [31:0] Component ID */
     } B;
 } hw_mtb_compidn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire MTB_COMPIDn register
  */
-//@{
+/*@{*/
 #define HW_MTB_COMPIDn_COUNT (4U)
 
-#define HW_MTB_COMPIDn_ADDR(n)   (REGS_MTB_BASE + 0xFF0U + (0x4U * n))
+#define HW_MTB_COMPIDn_ADDR(x, n) ((x) + 0xFF0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_MTB_COMPIDn(n)        (*(__I hw_mtb_compidn_t *) HW_MTB_COMPIDn_ADDR(n))
-#define HW_MTB_COMPIDn_RD(n)     (HW_MTB_COMPIDn(n).U)
-#endif
-//@}
+#define HW_MTB_COMPIDn(x, n)     (*(__I hw_mtb_compidn_t *) HW_MTB_COMPIDn_ADDR(x, n))
+#define HW_MTB_COMPIDn_RD(x, n)  (HW_MTB_COMPIDn(x, n).U)
+/*@}*/
 
 /*
  * Constants & macros for individual MTB_COMPIDn bitfields
@@ -1695,62 +1513,59 @@ typedef union _hw_mtb_compidn
  * Component ID0 is hardwired to 0x0000_000D; ID1 to 0x0000_0090; ID2 to
  * 0x0000_0005; ID3 to 0x0000_00B1.
  */
-//@{
-#define BP_MTB_COMPIDn_COMPID (0U)         //!< Bit position for MTB_COMPIDn_COMPID.
-#define BM_MTB_COMPIDn_COMPID (0xFFFFFFFFU) //!< Bit mask for MTB_COMPIDn_COMPID.
-#define BS_MTB_COMPIDn_COMPID (32U)        //!< Bit field size in bits for MTB_COMPIDn_COMPID.
+/*@{*/
+#define BP_MTB_COMPIDn_COMPID (0U)         /*!< Bit position for MTB_COMPIDn_COMPID. */
+#define BM_MTB_COMPIDn_COMPID (0xFFFFFFFFU) /*!< Bit mask for MTB_COMPIDn_COMPID. */
+#define BS_MTB_COMPIDn_COMPID (32U)        /*!< Bit field size in bits for MTB_COMPIDn_COMPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the MTB_COMPIDn_COMPID field.
-#define BR_MTB_COMPIDn_COMPID(n) (BME_UBFX32(HW_MTB_COMPIDn_ADDR(n), BP_MTB_COMPIDn_COMPID, BS_MTB_COMPIDn_COMPID))
-#endif
-//@}
+/*! @brief Read current value of the MTB_COMPIDn_COMPID field. */
+#define BR_MTB_COMPIDn_COMPID(x, n) (HW_MTB_COMPIDn(x, n).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_mtb_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_mtb_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All MTB module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_mtb
 {
-    __IO hw_mtb_position_t POSITION;       //!< [0x0] MTB Position Register
-    __IO hw_mtb_master_t MASTER;           //!< [0x4] MTB Master Register
-    __IO hw_mtb_flow_t FLOW;               //!< [0x8] MTB Flow Register
-    __I hw_mtb_base_t BASE;                //!< [0xC] MTB Base Register
+    __IO hw_mtb_position_t POSITION;       /*!< [0x0] MTB Position Register */
+    __IO hw_mtb_master_t MASTER;           /*!< [0x4] MTB Master Register */
+    __IO hw_mtb_flow_t FLOW;               /*!< [0x8] MTB Flow Register */
+    __I hw_mtb_base_t BASE;                /*!< [0xC] MTB Base Register */
     uint8_t _reserved0[3824];
-    __I hw_mtb_modectrl_t MODECTRL;        //!< [0xF00] Integration Mode Control Register
+    __I hw_mtb_modectrl_t MODECTRL;        /*!< [0xF00] Integration Mode Control Register */
     uint8_t _reserved1[156];
-    __I hw_mtb_tagset_t TAGSET;            //!< [0xFA0] Claim TAG Set Register
-    __I hw_mtb_tagclear_t TAGCLEAR;        //!< [0xFA4] Claim TAG Clear Register
+    __I hw_mtb_tagset_t TAGSET;            /*!< [0xFA0] Claim TAG Set Register */
+    __I hw_mtb_tagclear_t TAGCLEAR;        /*!< [0xFA4] Claim TAG Clear Register */
     uint8_t _reserved2[8];
-    __I hw_mtb_lockaccess_t LOCKACCESS;    //!< [0xFB0] Lock Access Register
-    __I hw_mtb_lockstat_t LOCKSTAT;        //!< [0xFB4] Lock Status Register
-    __I hw_mtb_authstat_t AUTHSTAT;        //!< [0xFB8] Authentication Status Register
-    __I hw_mtb_devicearch_t DEVICEARCH;    //!< [0xFBC] Device Architecture Register
+    __I hw_mtb_lockaccess_t LOCKACCESS;    /*!< [0xFB0] Lock Access Register */
+    __I hw_mtb_lockstat_t LOCKSTAT;        /*!< [0xFB4] Lock Status Register */
+    __I hw_mtb_authstat_t AUTHSTAT;        /*!< [0xFB8] Authentication Status Register */
+    __I hw_mtb_devicearch_t DEVICEARCH;    /*!< [0xFBC] Device Architecture Register */
     uint8_t _reserved3[8];
-    __I hw_mtb_devicecfg_t DEVICECFG;      //!< [0xFC8] Device Configuration Register
-    __I hw_mtb_devicetypid_t DEVICETYPID;  //!< [0xFCC] Device Type Identifier Register
-    __I hw_mtb_periphid4_t PERIPHID4;      //!< [0xFD0] Peripheral ID Register
-    __I hw_mtb_periphid5_t PERIPHID5;      //!< [0xFD4] Peripheral ID Register
-    __I hw_mtb_periphid6_t PERIPHID6;      //!< [0xFD8] Peripheral ID Register
-    __I hw_mtb_periphid7_t PERIPHID7;      //!< [0xFDC] Peripheral ID Register
-    __I hw_mtb_periphid0_t PERIPHID0;      //!< [0xFE0] Peripheral ID Register
-    __I hw_mtb_periphid1_t PERIPHID1;      //!< [0xFE4] Peripheral ID Register
-    __I hw_mtb_periphid2_t PERIPHID2;      //!< [0xFE8] Peripheral ID Register
-    __I hw_mtb_periphid3_t PERIPHID3;      //!< [0xFEC] Peripheral ID Register
-    __I hw_mtb_compidn_t COMPIDn[4];       //!< [0xFF0] Component ID Register
+    __I hw_mtb_devicecfg_t DEVICECFG;      /*!< [0xFC8] Device Configuration Register */
+    __I hw_mtb_devicetypid_t DEVICETYPID;  /*!< [0xFCC] Device Type Identifier Register */
+    __I hw_mtb_periphid4_t PERIPHID4;      /*!< [0xFD0] Peripheral ID Register */
+    __I hw_mtb_periphid5_t PERIPHID5;      /*!< [0xFD4] Peripheral ID Register */
+    __I hw_mtb_periphid6_t PERIPHID6;      /*!< [0xFD8] Peripheral ID Register */
+    __I hw_mtb_periphid7_t PERIPHID7;      /*!< [0xFDC] Peripheral ID Register */
+    __I hw_mtb_periphid0_t PERIPHID0;      /*!< [0xFE0] Peripheral ID Register */
+    __I hw_mtb_periphid1_t PERIPHID1;      /*!< [0xFE4] Peripheral ID Register */
+    __I hw_mtb_periphid2_t PERIPHID2;      /*!< [0xFE8] Peripheral ID Register */
+    __I hw_mtb_periphid3_t PERIPHID3;      /*!< [0xFEC] Peripheral ID Register */
+    __I hw_mtb_compidn_t COMPIDn[4];       /*!< [0xFF0] Component ID Register */
 } hw_mtb_t;
 #pragma pack()
 
-//! @brief Macro to access all MTB registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_MTB</code>.
-#define HW_MTB         (*(hw_mtb_t *) REGS_MTB_BASE)
-#endif
+/*! @brief Macro to access all MTB registers. */
+/*! @param x MTB module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_MTB(MTB_BASE)</code>. */
+#define HW_MTB(x)      (*(hw_mtb_t *)(x))
 
-#endif // __HW_MTB_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_MTB_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

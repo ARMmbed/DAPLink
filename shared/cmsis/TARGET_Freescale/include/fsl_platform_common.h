@@ -30,10 +30,10 @@
 #ifndef __PLATFORM_COMMON_H__
 #define __PLATFORM_COMMON_H__
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include "stdio.h"
+#include "stdarg.h"
+#include "stdint.h"
+#include "stdbool.h"
 #include "fsl_platform_status.h"
 
 ////////////////////////////////////////////////////////////////////////////////

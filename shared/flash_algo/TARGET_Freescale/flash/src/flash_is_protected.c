@@ -30,7 +30,8 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 #include "device/fsl_device_registers.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +63,7 @@ status_t flash_is_protected(flash_driver_t * driver, uint32_t start, uint32_t le
                                                   // the end of flash for loop-check purposes below
 
     // Check the supplied address range.
-    status_t returnCode = flash_check_range(driver, start, lengthInBytes);
+    status_t returnCode = flash_check_range(driver, start, lengthInBytes, FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE);
     if (returnCode)
     {
         return returnCode;

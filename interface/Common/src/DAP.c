@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <string.h>
+#include "string.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "semihost.h"
@@ -36,14 +36,19 @@
 #error "Maximum Packet Count is 255"
 #endif
 
+ // Clock Macros
 
-// Clock Macros
-
-#define MAX_SWJ_CLOCK(delay_cycles) \
-  (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
-
-#define CLOCK_DELAY(swj_clock) \
- ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#if defined(TARGET_ATSAM3U2C)
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK / (swj_clock * /*20*/14)) - IO_PORT_WRITE_CYCLES)
+#else
+  #define MAX_SWJ_CLOCK(delay_cycles) \
+    (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
+  #define CLOCK_DELAY(swj_clock) \
+    ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
+#endif
 
 
          DAP_Data_t DAP_Data;           // DAP Data

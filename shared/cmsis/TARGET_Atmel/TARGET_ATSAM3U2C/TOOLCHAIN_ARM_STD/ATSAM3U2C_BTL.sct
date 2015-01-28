@@ -1,0 +1,17 @@
+
+LR_IROM1 0x00080000 0x5000  {    ; load region size_region
+
+  ER_IROM1 0x00080000 0x5000  {  ; load address = execution address
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+  }
+  
+  RW_IRAM1 0x20000200 0x3E00  {
+    flash_hal.o (+RO)
+	read_uid.o (+RO)
+   .ANY (+RW +ZI)
+  }
+  
+}
+

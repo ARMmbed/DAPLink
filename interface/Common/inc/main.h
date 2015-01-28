@@ -16,7 +16,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 typedef enum {
     USB_IDLE,

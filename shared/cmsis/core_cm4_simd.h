@@ -668,12 +668,12 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SMMLA (int32_t op1
 
 #elif defined ( __ICCARM__ ) /*------------------ ICC Compiler -------------------*/
 /* IAR iccarm specific functions */
-#include <cmsis_iar.h>
+#include "cmsis_iar.h"
 
 
 #elif defined ( __TMS470__ ) /*---------------- TI CCS Compiler ------------------*/
 /* TI CCS specific functions */
-#include <cmsis_ccs.h>
+#include "cmsis_ccs.h"
 
 
 #elif defined ( __TASKING__ ) /*------------------ TASKING Compiler --------------*/
@@ -683,7 +683,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SMMLA (int32_t op1
 
 #elif defined ( __CSMC__ ) /*------------------ COSMIC Compiler -------------------*/
 /* Cosmic specific functions */
-#include <cmsis_csm.h>
+#include "cmsis_csm.h"
 
 #endif
 

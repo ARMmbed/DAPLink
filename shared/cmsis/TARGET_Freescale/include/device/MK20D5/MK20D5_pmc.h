@@ -21,7 +21,8 @@
 #ifndef __HW_PMC_REGISTERS_H__
 #define __HW_PMC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 PMC
@@ -36,19 +37,12 @@
  * - hw_pmc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_PMC_BASE
-#define HW_PMC_INSTANCE_COUNT (1U) //!< Number of instances of the PMC module.
-#define REGS_PMC_BASE (0x4007D000U) //!< Base address for PMC.
-#endif
-//@}
+#define HW_PMC_INSTANCE_COUNT (1U) /*!< Number of instances of the PMC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_PMC_LVDSC1 - Low Voltage Detect Status and Control 1 Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_PMC_LVDSC1 - Low Voltage Detect Status and Control 1 Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_PMC_LVDSC1 - Low Voltage Detect Status and Control 1 Register (RW)
  *
@@ -71,31 +65,28 @@ typedef union _hw_pmc_lvdsc1
     uint8_t U;
     struct _hw_pmc_lvdsc1_bitfields
     {
-        uint8_t LVDV : 2;              //!< [1:0] Low-Voltage Detect Voltage Select
-        uint8_t RESERVED0 : 2;         //!< [3:2]
-        uint8_t LVDRE : 1;             //!< [4] Low-Voltage Detect Reset Enable
-        uint8_t LVDIE : 1;             //!< [5] Low-Voltage Detect Interrupt Enable
-        uint8_t LVDACK : 1;            //!< [6] Low-Voltage Detect Acknowledge
-        uint8_t LVDF : 1;              //!< [7] Low-Voltage Detect Flag
+        uint8_t LVDV : 2;              /*!< [1:0] Low-Voltage Detect Voltage Select */
+        uint8_t RESERVED0 : 2;         /*!< [3:2]  */
+        uint8_t LVDRE : 1;             /*!< [4] Low-Voltage Detect Reset Enable */
+        uint8_t LVDIE : 1;             /*!< [5] Low-Voltage Detect Interrupt Enable */
+        uint8_t LVDACK : 1;            /*!< [6] Low-Voltage Detect Acknowledge */
+        uint8_t LVDF : 1;              /*!< [7] Low-Voltage Detect Flag */
     } B;
 } hw_pmc_lvdsc1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire PMC_LVDSC1 register
  */
-//@{
-#define HW_PMC_LVDSC1_ADDR       (REGS_PMC_BASE + 0x0U)
+/*@{*/
+#define HW_PMC_LVDSC1_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_PMC_LVDSC1            (*(__IO hw_pmc_lvdsc1_t *) HW_PMC_LVDSC1_ADDR)
-#define HW_PMC_LVDSC1_RD()       (HW_PMC_LVDSC1.U)
-#define HW_PMC_LVDSC1_WR(v)      (HW_PMC_LVDSC1.U = (v))
-#define HW_PMC_LVDSC1_SET(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() |  (v)))
-#define HW_PMC_LVDSC1_CLR(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() & ~(v)))
-#define HW_PMC_LVDSC1_TOG(v)     (HW_PMC_LVDSC1_WR(HW_PMC_LVDSC1_RD() ^  (v)))
-#endif
-//@}
+#define HW_PMC_LVDSC1(x)         (*(__IO hw_pmc_lvdsc1_t *) HW_PMC_LVDSC1_ADDR(x))
+#define HW_PMC_LVDSC1_RD(x)      (HW_PMC_LVDSC1(x).U)
+#define HW_PMC_LVDSC1_WR(x, v)   (HW_PMC_LVDSC1(x).U = (v))
+#define HW_PMC_LVDSC1_SET(x, v)  (HW_PMC_LVDSC1_WR(x, HW_PMC_LVDSC1_RD(x) |  (v)))
+#define HW_PMC_LVDSC1_CLR(x, v)  (HW_PMC_LVDSC1_WR(x, HW_PMC_LVDSC1_RD(x) & ~(v)))
+#define HW_PMC_LVDSC1_TOG(x, v)  (HW_PMC_LVDSC1_WR(x, HW_PMC_LVDSC1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual PMC_LVDSC1 bitfields
@@ -112,24 +103,20 @@ typedef union _hw_pmc_lvdsc1
  * - 10 - Reserved
  * - 11 - Reserved
  */
-//@{
-#define BP_PMC_LVDSC1_LVDV   (0U)          //!< Bit position for PMC_LVDSC1_LVDV.
-#define BM_PMC_LVDSC1_LVDV   (0x03U)       //!< Bit mask for PMC_LVDSC1_LVDV.
-#define BS_PMC_LVDSC1_LVDV   (2U)          //!< Bit field size in bits for PMC_LVDSC1_LVDV.
+/*@{*/
+#define BP_PMC_LVDSC1_LVDV   (0U)          /*!< Bit position for PMC_LVDSC1_LVDV. */
+#define BM_PMC_LVDSC1_LVDV   (0x03U)       /*!< Bit mask for PMC_LVDSC1_LVDV. */
+#define BS_PMC_LVDSC1_LVDV   (2U)          /*!< Bit field size in bits for PMC_LVDSC1_LVDV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC1_LVDV field.
-#define BR_PMC_LVDSC1_LVDV   (HW_PMC_LVDSC1.B.LVDV)
-#endif
+/*! @brief Read current value of the PMC_LVDSC1_LVDV field. */
+#define BR_PMC_LVDSC1_LVDV(x) (HW_PMC_LVDSC1(x).B.LVDV)
 
-//! @brief Format value for bitfield PMC_LVDSC1_LVDV.
-#define BF_PMC_LVDSC1_LVDV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC1_LVDV), uint8_t) & BM_PMC_LVDSC1_LVDV)
+/*! @brief Format value for bitfield PMC_LVDSC1_LVDV. */
+#define BF_PMC_LVDSC1_LVDV(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC1_LVDV) & BM_PMC_LVDSC1_LVDV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVDV field to a new value.
-#define BW_PMC_LVDSC1_LVDV(v) (HW_PMC_LVDSC1_WR((HW_PMC_LVDSC1_RD() & ~BM_PMC_LVDSC1_LVDV) | BF_PMC_LVDSC1_LVDV(v)))
-#endif
-//@}
+/*! @brief Set the LVDV field to a new value. */
+#define BW_PMC_LVDSC1_LVDV(x, v) (HW_PMC_LVDSC1_WR(x, (HW_PMC_LVDSC1_RD(x) & ~BM_PMC_LVDSC1_LVDV) | BF_PMC_LVDSC1_LVDV(v)))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC1, field LVDRE[4] (RW)
@@ -141,24 +128,20 @@ typedef union _hw_pmc_lvdsc1
  * - 0 - LVDF does not generate hardware resets
  * - 1 - Force an MCU reset when LVDF = 1
  */
-//@{
-#define BP_PMC_LVDSC1_LVDRE  (4U)          //!< Bit position for PMC_LVDSC1_LVDRE.
-#define BM_PMC_LVDSC1_LVDRE  (0x10U)       //!< Bit mask for PMC_LVDSC1_LVDRE.
-#define BS_PMC_LVDSC1_LVDRE  (1U)          //!< Bit field size in bits for PMC_LVDSC1_LVDRE.
+/*@{*/
+#define BP_PMC_LVDSC1_LVDRE  (4U)          /*!< Bit position for PMC_LVDSC1_LVDRE. */
+#define BM_PMC_LVDSC1_LVDRE  (0x10U)       /*!< Bit mask for PMC_LVDSC1_LVDRE. */
+#define BS_PMC_LVDSC1_LVDRE  (1U)          /*!< Bit field size in bits for PMC_LVDSC1_LVDRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC1_LVDRE field.
-#define BR_PMC_LVDSC1_LVDRE  (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDRE))
-#endif
+/*! @brief Read current value of the PMC_LVDSC1_LVDRE field. */
+#define BR_PMC_LVDSC1_LVDRE(x) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDRE))
 
-//! @brief Format value for bitfield PMC_LVDSC1_LVDRE.
-#define BF_PMC_LVDSC1_LVDRE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC1_LVDRE), uint8_t) & BM_PMC_LVDSC1_LVDRE)
+/*! @brief Format value for bitfield PMC_LVDSC1_LVDRE. */
+#define BF_PMC_LVDSC1_LVDRE(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC1_LVDRE) & BM_PMC_LVDSC1_LVDRE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVDRE field to a new value.
-#define BW_PMC_LVDSC1_LVDRE(v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDRE) = (v))
-#endif
-//@}
+/*! @brief Set the LVDRE field to a new value. */
+#define BW_PMC_LVDSC1_LVDRE(x, v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDRE) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC1, field LVDIE[5] (RW)
@@ -169,24 +152,20 @@ typedef union _hw_pmc_lvdsc1
  * - 0 - Hardware interrupt disabled (use polling)
  * - 1 - Request a hardware interrupt when LVDF = 1.
  */
-//@{
-#define BP_PMC_LVDSC1_LVDIE  (5U)          //!< Bit position for PMC_LVDSC1_LVDIE.
-#define BM_PMC_LVDSC1_LVDIE  (0x20U)       //!< Bit mask for PMC_LVDSC1_LVDIE.
-#define BS_PMC_LVDSC1_LVDIE  (1U)          //!< Bit field size in bits for PMC_LVDSC1_LVDIE.
+/*@{*/
+#define BP_PMC_LVDSC1_LVDIE  (5U)          /*!< Bit position for PMC_LVDSC1_LVDIE. */
+#define BM_PMC_LVDSC1_LVDIE  (0x20U)       /*!< Bit mask for PMC_LVDSC1_LVDIE. */
+#define BS_PMC_LVDSC1_LVDIE  (1U)          /*!< Bit field size in bits for PMC_LVDSC1_LVDIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC1_LVDIE field.
-#define BR_PMC_LVDSC1_LVDIE  (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDIE))
-#endif
+/*! @brief Read current value of the PMC_LVDSC1_LVDIE field. */
+#define BR_PMC_LVDSC1_LVDIE(x) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDIE))
 
-//! @brief Format value for bitfield PMC_LVDSC1_LVDIE.
-#define BF_PMC_LVDSC1_LVDIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC1_LVDIE), uint8_t) & BM_PMC_LVDSC1_LVDIE)
+/*! @brief Format value for bitfield PMC_LVDSC1_LVDIE. */
+#define BF_PMC_LVDSC1_LVDIE(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC1_LVDIE) & BM_PMC_LVDSC1_LVDIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVDIE field to a new value.
-#define BW_PMC_LVDSC1_LVDIE(v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDIE) = (v))
-#endif
-//@}
+/*! @brief Set the LVDIE field to a new value. */
+#define BW_PMC_LVDSC1_LVDIE(x, v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDIE) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC1, field LVDACK[6] (WORZ)
@@ -194,24 +173,17 @@ typedef union _hw_pmc_lvdsc1
  * This write-only bit is used to acknowledge low voltage detection errors
  * (write 1 to clear LVDF). Reads always return 0.
  */
-//@{
-#define BP_PMC_LVDSC1_LVDACK (6U)          //!< Bit position for PMC_LVDSC1_LVDACK.
-#define BM_PMC_LVDSC1_LVDACK (0x40U)       //!< Bit mask for PMC_LVDSC1_LVDACK.
-#define BS_PMC_LVDSC1_LVDACK (1U)          //!< Bit field size in bits for PMC_LVDSC1_LVDACK.
+/*@{*/
+#define BP_PMC_LVDSC1_LVDACK (6U)          /*!< Bit position for PMC_LVDSC1_LVDACK. */
+#define BM_PMC_LVDSC1_LVDACK (0x40U)       /*!< Bit mask for PMC_LVDSC1_LVDACK. */
+#define BS_PMC_LVDSC1_LVDACK (1U)          /*!< Bit field size in bits for PMC_LVDSC1_LVDACK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC1_LVDACK field.
-#define BR_PMC_LVDSC1_LVDACK (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDACK))
-#endif
+/*! @brief Format value for bitfield PMC_LVDSC1_LVDACK. */
+#define BF_PMC_LVDSC1_LVDACK(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC1_LVDACK) & BM_PMC_LVDSC1_LVDACK)
 
-//! @brief Format value for bitfield PMC_LVDSC1_LVDACK.
-#define BF_PMC_LVDSC1_LVDACK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC1_LVDACK), uint8_t) & BM_PMC_LVDSC1_LVDACK)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVDACK field to a new value.
-#define BW_PMC_LVDSC1_LVDACK(v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDACK) = (v))
-#endif
-//@}
+/*! @brief Set the LVDACK field to a new value. */
+#define BW_PMC_LVDSC1_LVDACK(x, v) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDACK) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC1, field LVDF[7] (RO)
@@ -222,22 +194,19 @@ typedef union _hw_pmc_lvdsc1
  * - 0 - Low-voltage event not detected
  * - 1 - Low-voltage event detected
  */
-//@{
-#define BP_PMC_LVDSC1_LVDF   (7U)          //!< Bit position for PMC_LVDSC1_LVDF.
-#define BM_PMC_LVDSC1_LVDF   (0x80U)       //!< Bit mask for PMC_LVDSC1_LVDF.
-#define BS_PMC_LVDSC1_LVDF   (1U)          //!< Bit field size in bits for PMC_LVDSC1_LVDF.
+/*@{*/
+#define BP_PMC_LVDSC1_LVDF   (7U)          /*!< Bit position for PMC_LVDSC1_LVDF. */
+#define BM_PMC_LVDSC1_LVDF   (0x80U)       /*!< Bit mask for PMC_LVDSC1_LVDF. */
+#define BS_PMC_LVDSC1_LVDF   (1U)          /*!< Bit field size in bits for PMC_LVDSC1_LVDF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC1_LVDF field.
-#define BR_PMC_LVDSC1_LVDF   (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR, BP_PMC_LVDSC1_LVDF))
-#endif
-//@}
+/*! @brief Read current value of the PMC_LVDSC1_LVDF field. */
+#define BR_PMC_LVDSC1_LVDF(x) (BITBAND_ACCESS8(HW_PMC_LVDSC1_ADDR(x), BP_PMC_LVDSC1_LVDF))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_PMC_LVDSC2 - Low Voltage Detect Status and Control 2 Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_PMC_LVDSC2 - Low Voltage Detect Status and Control 2 Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_PMC_LVDSC2 - Low Voltage Detect Status and Control 2 Register (RW)
  *
@@ -256,30 +225,27 @@ typedef union _hw_pmc_lvdsc2
     uint8_t U;
     struct _hw_pmc_lvdsc2_bitfields
     {
-        uint8_t LVWV : 2;              //!< [1:0] Low-Voltage Warning Voltage Select
-        uint8_t RESERVED0 : 3;         //!< [4:2]
-        uint8_t LVWIE : 1;             //!< [5] Low-Voltage Warning Interrupt Enable
-        uint8_t LVWACK : 1;            //!< [6] Low-Voltage Warning Acknowledge
-        uint8_t LVWF : 1;              //!< [7] Low-Voltage Warning Flag
+        uint8_t LVWV : 2;              /*!< [1:0] Low-Voltage Warning Voltage Select */
+        uint8_t RESERVED0 : 3;         /*!< [4:2]  */
+        uint8_t LVWIE : 1;             /*!< [5] Low-Voltage Warning Interrupt Enable */
+        uint8_t LVWACK : 1;            /*!< [6] Low-Voltage Warning Acknowledge */
+        uint8_t LVWF : 1;              /*!< [7] Low-Voltage Warning Flag */
     } B;
 } hw_pmc_lvdsc2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire PMC_LVDSC2 register
  */
-//@{
-#define HW_PMC_LVDSC2_ADDR       (REGS_PMC_BASE + 0x1U)
+/*@{*/
+#define HW_PMC_LVDSC2_ADDR(x)    ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_PMC_LVDSC2            (*(__IO hw_pmc_lvdsc2_t *) HW_PMC_LVDSC2_ADDR)
-#define HW_PMC_LVDSC2_RD()       (HW_PMC_LVDSC2.U)
-#define HW_PMC_LVDSC2_WR(v)      (HW_PMC_LVDSC2.U = (v))
-#define HW_PMC_LVDSC2_SET(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() |  (v)))
-#define HW_PMC_LVDSC2_CLR(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() & ~(v)))
-#define HW_PMC_LVDSC2_TOG(v)     (HW_PMC_LVDSC2_WR(HW_PMC_LVDSC2_RD() ^  (v)))
-#endif
-//@}
+#define HW_PMC_LVDSC2(x)         (*(__IO hw_pmc_lvdsc2_t *) HW_PMC_LVDSC2_ADDR(x))
+#define HW_PMC_LVDSC2_RD(x)      (HW_PMC_LVDSC2(x).U)
+#define HW_PMC_LVDSC2_WR(x, v)   (HW_PMC_LVDSC2(x).U = (v))
+#define HW_PMC_LVDSC2_SET(x, v)  (HW_PMC_LVDSC2_WR(x, HW_PMC_LVDSC2_RD(x) |  (v)))
+#define HW_PMC_LVDSC2_CLR(x, v)  (HW_PMC_LVDSC2_WR(x, HW_PMC_LVDSC2_RD(x) & ~(v)))
+#define HW_PMC_LVDSC2_TOG(x, v)  (HW_PMC_LVDSC2_WR(x, HW_PMC_LVDSC2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual PMC_LVDSC2 bitfields
@@ -297,24 +263,20 @@ typedef union _hw_pmc_lvdsc2
  * - 10 - Mid 2 trip point selected (V LVW = V LVW3 )
  * - 11 - High trip point selected (V LVW = V LVW4 )
  */
-//@{
-#define BP_PMC_LVDSC2_LVWV   (0U)          //!< Bit position for PMC_LVDSC2_LVWV.
-#define BM_PMC_LVDSC2_LVWV   (0x03U)       //!< Bit mask for PMC_LVDSC2_LVWV.
-#define BS_PMC_LVDSC2_LVWV   (2U)          //!< Bit field size in bits for PMC_LVDSC2_LVWV.
+/*@{*/
+#define BP_PMC_LVDSC2_LVWV   (0U)          /*!< Bit position for PMC_LVDSC2_LVWV. */
+#define BM_PMC_LVDSC2_LVWV   (0x03U)       /*!< Bit mask for PMC_LVDSC2_LVWV. */
+#define BS_PMC_LVDSC2_LVWV   (2U)          /*!< Bit field size in bits for PMC_LVDSC2_LVWV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC2_LVWV field.
-#define BR_PMC_LVDSC2_LVWV   (HW_PMC_LVDSC2.B.LVWV)
-#endif
+/*! @brief Read current value of the PMC_LVDSC2_LVWV field. */
+#define BR_PMC_LVDSC2_LVWV(x) (HW_PMC_LVDSC2(x).B.LVWV)
 
-//! @brief Format value for bitfield PMC_LVDSC2_LVWV.
-#define BF_PMC_LVDSC2_LVWV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC2_LVWV), uint8_t) & BM_PMC_LVDSC2_LVWV)
+/*! @brief Format value for bitfield PMC_LVDSC2_LVWV. */
+#define BF_PMC_LVDSC2_LVWV(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC2_LVWV) & BM_PMC_LVDSC2_LVWV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVWV field to a new value.
-#define BW_PMC_LVDSC2_LVWV(v) (HW_PMC_LVDSC2_WR((HW_PMC_LVDSC2_RD() & ~BM_PMC_LVDSC2_LVWV) | BF_PMC_LVDSC2_LVWV(v)))
-#endif
-//@}
+/*! @brief Set the LVWV field to a new value. */
+#define BW_PMC_LVDSC2_LVWV(x, v) (HW_PMC_LVDSC2_WR(x, (HW_PMC_LVDSC2_RD(x) & ~BM_PMC_LVDSC2_LVWV) | BF_PMC_LVDSC2_LVWV(v)))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC2, field LVWIE[5] (RW)
@@ -325,24 +287,20 @@ typedef union _hw_pmc_lvdsc2
  * - 0 - Hardware interrupt disabled (use polling)
  * - 1 - Request a hardware interrupt when LVWF = 1.
  */
-//@{
-#define BP_PMC_LVDSC2_LVWIE  (5U)          //!< Bit position for PMC_LVDSC2_LVWIE.
-#define BM_PMC_LVDSC2_LVWIE  (0x20U)       //!< Bit mask for PMC_LVDSC2_LVWIE.
-#define BS_PMC_LVDSC2_LVWIE  (1U)          //!< Bit field size in bits for PMC_LVDSC2_LVWIE.
+/*@{*/
+#define BP_PMC_LVDSC2_LVWIE  (5U)          /*!< Bit position for PMC_LVDSC2_LVWIE. */
+#define BM_PMC_LVDSC2_LVWIE  (0x20U)       /*!< Bit mask for PMC_LVDSC2_LVWIE. */
+#define BS_PMC_LVDSC2_LVWIE  (1U)          /*!< Bit field size in bits for PMC_LVDSC2_LVWIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC2_LVWIE field.
-#define BR_PMC_LVDSC2_LVWIE  (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR, BP_PMC_LVDSC2_LVWIE))
-#endif
+/*! @brief Read current value of the PMC_LVDSC2_LVWIE field. */
+#define BR_PMC_LVDSC2_LVWIE(x) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR(x), BP_PMC_LVDSC2_LVWIE))
 
-//! @brief Format value for bitfield PMC_LVDSC2_LVWIE.
-#define BF_PMC_LVDSC2_LVWIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC2_LVWIE), uint8_t) & BM_PMC_LVDSC2_LVWIE)
+/*! @brief Format value for bitfield PMC_LVDSC2_LVWIE. */
+#define BF_PMC_LVDSC2_LVWIE(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC2_LVWIE) & BM_PMC_LVDSC2_LVWIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVWIE field to a new value.
-#define BW_PMC_LVDSC2_LVWIE(v) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR, BP_PMC_LVDSC2_LVWIE) = (v))
-#endif
-//@}
+/*! @brief Set the LVWIE field to a new value. */
+#define BW_PMC_LVDSC2_LVWIE(x, v) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR(x), BP_PMC_LVDSC2_LVWIE) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC2, field LVWACK[6] (WORZ)
@@ -350,24 +308,17 @@ typedef union _hw_pmc_lvdsc2
  * This write-only bit is used to acknowledge low voltage warning errors (write
  * 1 to clear LVWF). Reads always return 0.
  */
-//@{
-#define BP_PMC_LVDSC2_LVWACK (6U)          //!< Bit position for PMC_LVDSC2_LVWACK.
-#define BM_PMC_LVDSC2_LVWACK (0x40U)       //!< Bit mask for PMC_LVDSC2_LVWACK.
-#define BS_PMC_LVDSC2_LVWACK (1U)          //!< Bit field size in bits for PMC_LVDSC2_LVWACK.
+/*@{*/
+#define BP_PMC_LVDSC2_LVWACK (6U)          /*!< Bit position for PMC_LVDSC2_LVWACK. */
+#define BM_PMC_LVDSC2_LVWACK (0x40U)       /*!< Bit mask for PMC_LVDSC2_LVWACK. */
+#define BS_PMC_LVDSC2_LVWACK (1U)          /*!< Bit field size in bits for PMC_LVDSC2_LVWACK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC2_LVWACK field.
-#define BR_PMC_LVDSC2_LVWACK (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR, BP_PMC_LVDSC2_LVWACK))
-#endif
+/*! @brief Format value for bitfield PMC_LVDSC2_LVWACK. */
+#define BF_PMC_LVDSC2_LVWACK(v) ((uint8_t)((uint8_t)(v) << BP_PMC_LVDSC2_LVWACK) & BM_PMC_LVDSC2_LVWACK)
 
-//! @brief Format value for bitfield PMC_LVDSC2_LVWACK.
-#define BF_PMC_LVDSC2_LVWACK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_LVDSC2_LVWACK), uint8_t) & BM_PMC_LVDSC2_LVWACK)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LVWACK field to a new value.
-#define BW_PMC_LVDSC2_LVWACK(v) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR, BP_PMC_LVDSC2_LVWACK) = (v))
-#endif
-//@}
+/*! @brief Set the LVWACK field to a new value. */
+#define BW_PMC_LVDSC2_LVWACK(x, v) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR(x), BP_PMC_LVDSC2_LVWACK) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_LVDSC2, field LVWF[7] (RO)
@@ -380,22 +331,19 @@ typedef union _hw_pmc_lvdsc2
  * - 0 - Low-voltage warning event not detected
  * - 1 - Low-voltage warning event detected
  */
-//@{
-#define BP_PMC_LVDSC2_LVWF   (7U)          //!< Bit position for PMC_LVDSC2_LVWF.
-#define BM_PMC_LVDSC2_LVWF   (0x80U)       //!< Bit mask for PMC_LVDSC2_LVWF.
-#define BS_PMC_LVDSC2_LVWF   (1U)          //!< Bit field size in bits for PMC_LVDSC2_LVWF.
+/*@{*/
+#define BP_PMC_LVDSC2_LVWF   (7U)          /*!< Bit position for PMC_LVDSC2_LVWF. */
+#define BM_PMC_LVDSC2_LVWF   (0x80U)       /*!< Bit mask for PMC_LVDSC2_LVWF. */
+#define BS_PMC_LVDSC2_LVWF   (1U)          /*!< Bit field size in bits for PMC_LVDSC2_LVWF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_LVDSC2_LVWF field.
-#define BR_PMC_LVDSC2_LVWF   (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR, BP_PMC_LVDSC2_LVWF))
-#endif
-//@}
+/*! @brief Read current value of the PMC_LVDSC2_LVWF field. */
+#define BR_PMC_LVDSC2_LVWF(x) (BITBAND_ACCESS8(HW_PMC_LVDSC2_ADDR(x), BP_PMC_LVDSC2_LVWF))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_PMC_REGSC - Regulator Status and Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_PMC_REGSC - Regulator Status and Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_PMC_REGSC - Regulator Status and Control Register (RW)
  *
@@ -414,30 +362,27 @@ typedef union _hw_pmc_regsc
     uint8_t U;
     struct _hw_pmc_regsc_bitfields
     {
-        uint8_t BGBE : 1;              //!< [0] Bandgap Buffer Enable
-        uint8_t RESERVED0 : 1;         //!< [1]
-        uint8_t REGONS : 1;            //!< [2] Regulator in Run Regulation Status
-        uint8_t ACKISO : 1;            //!< [3] Acknowledge Isolation
-        uint8_t RESERVED1 : 4;         //!< [7:4]
+        uint8_t BGBE : 1;              /*!< [0] Bandgap Buffer Enable */
+        uint8_t RESERVED0 : 1;         /*!< [1]  */
+        uint8_t REGONS : 1;            /*!< [2] Regulator in Run Regulation Status */
+        uint8_t ACKISO : 1;            /*!< [3] Acknowledge Isolation */
+        uint8_t RESERVED1 : 4;         /*!< [7:4]  */
     } B;
 } hw_pmc_regsc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire PMC_REGSC register
  */
-//@{
-#define HW_PMC_REGSC_ADDR        (REGS_PMC_BASE + 0x2U)
+/*@{*/
+#define HW_PMC_REGSC_ADDR(x)     ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_PMC_REGSC             (*(__IO hw_pmc_regsc_t *) HW_PMC_REGSC_ADDR)
-#define HW_PMC_REGSC_RD()        (HW_PMC_REGSC.U)
-#define HW_PMC_REGSC_WR(v)       (HW_PMC_REGSC.U = (v))
-#define HW_PMC_REGSC_SET(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() |  (v)))
-#define HW_PMC_REGSC_CLR(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() & ~(v)))
-#define HW_PMC_REGSC_TOG(v)      (HW_PMC_REGSC_WR(HW_PMC_REGSC_RD() ^  (v)))
-#endif
-//@}
+#define HW_PMC_REGSC(x)          (*(__IO hw_pmc_regsc_t *) HW_PMC_REGSC_ADDR(x))
+#define HW_PMC_REGSC_RD(x)       (HW_PMC_REGSC(x).U)
+#define HW_PMC_REGSC_WR(x, v)    (HW_PMC_REGSC(x).U = (v))
+#define HW_PMC_REGSC_SET(x, v)   (HW_PMC_REGSC_WR(x, HW_PMC_REGSC_RD(x) |  (v)))
+#define HW_PMC_REGSC_CLR(x, v)   (HW_PMC_REGSC_WR(x, HW_PMC_REGSC_RD(x) & ~(v)))
+#define HW_PMC_REGSC_TOG(x, v)   (HW_PMC_REGSC_WR(x, HW_PMC_REGSC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual PMC_REGSC bitfields
@@ -452,24 +397,20 @@ typedef union _hw_pmc_regsc
  * - 0 - Bandgap buffer not enabled
  * - 1 - Bandgap buffer enabled
  */
-//@{
-#define BP_PMC_REGSC_BGBE    (0U)          //!< Bit position for PMC_REGSC_BGBE.
-#define BM_PMC_REGSC_BGBE    (0x01U)       //!< Bit mask for PMC_REGSC_BGBE.
-#define BS_PMC_REGSC_BGBE    (1U)          //!< Bit field size in bits for PMC_REGSC_BGBE.
+/*@{*/
+#define BP_PMC_REGSC_BGBE    (0U)          /*!< Bit position for PMC_REGSC_BGBE. */
+#define BM_PMC_REGSC_BGBE    (0x01U)       /*!< Bit mask for PMC_REGSC_BGBE. */
+#define BS_PMC_REGSC_BGBE    (1U)          /*!< Bit field size in bits for PMC_REGSC_BGBE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_REGSC_BGBE field.
-#define BR_PMC_REGSC_BGBE    (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR, BP_PMC_REGSC_BGBE))
-#endif
+/*! @brief Read current value of the PMC_REGSC_BGBE field. */
+#define BR_PMC_REGSC_BGBE(x) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR(x), BP_PMC_REGSC_BGBE))
 
-//! @brief Format value for bitfield PMC_REGSC_BGBE.
-#define BF_PMC_REGSC_BGBE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_REGSC_BGBE), uint8_t) & BM_PMC_REGSC_BGBE)
+/*! @brief Format value for bitfield PMC_REGSC_BGBE. */
+#define BF_PMC_REGSC_BGBE(v) ((uint8_t)((uint8_t)(v) << BP_PMC_REGSC_BGBE) & BM_PMC_REGSC_BGBE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BGBE field to a new value.
-#define BW_PMC_REGSC_BGBE(v) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR, BP_PMC_REGSC_BGBE) = (v))
-#endif
-//@}
+/*! @brief Set the BGBE field to a new value. */
+#define BW_PMC_REGSC_BGBE(x, v) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR(x), BP_PMC_REGSC_BGBE) = (v))
+/*@}*/
 
 /*!
  * @name Register PMC_REGSC, field REGONS[2] (RO)
@@ -481,16 +422,14 @@ typedef union _hw_pmc_regsc
  * - 0 - Regulator is in stop regulation or in transition to/from it
  * - 1 - Regulator is in run regulation
  */
-//@{
-#define BP_PMC_REGSC_REGONS  (2U)          //!< Bit position for PMC_REGSC_REGONS.
-#define BM_PMC_REGSC_REGONS  (0x04U)       //!< Bit mask for PMC_REGSC_REGONS.
-#define BS_PMC_REGSC_REGONS  (1U)          //!< Bit field size in bits for PMC_REGSC_REGONS.
+/*@{*/
+#define BP_PMC_REGSC_REGONS  (2U)          /*!< Bit position for PMC_REGSC_REGONS. */
+#define BM_PMC_REGSC_REGONS  (0x04U)       /*!< Bit mask for PMC_REGSC_REGONS. */
+#define BS_PMC_REGSC_REGONS  (1U)          /*!< Bit field size in bits for PMC_REGSC_REGONS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_REGSC_REGONS field.
-#define BR_PMC_REGSC_REGONS  (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR, BP_PMC_REGSC_REGONS))
-#endif
-//@}
+/*! @brief Read current value of the PMC_REGSC_REGONS field. */
+#define BR_PMC_REGSC_REGONS(x) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR(x), BP_PMC_REGSC_REGONS))
+/*@}*/
 
 /*!
  * @name Register PMC_REGSC, field ACKISO[3] (W1C)
@@ -507,47 +446,42 @@ typedef union _hw_pmc_regsc
  * - 0 - Peripherals and I/O pads are in normal run state
  * - 1 - Certain peripherals and I/O pads are in an isolated and latched state
  */
-//@{
-#define BP_PMC_REGSC_ACKISO  (3U)          //!< Bit position for PMC_REGSC_ACKISO.
-#define BM_PMC_REGSC_ACKISO  (0x08U)       //!< Bit mask for PMC_REGSC_ACKISO.
-#define BS_PMC_REGSC_ACKISO  (1U)          //!< Bit field size in bits for PMC_REGSC_ACKISO.
+/*@{*/
+#define BP_PMC_REGSC_ACKISO  (3U)          /*!< Bit position for PMC_REGSC_ACKISO. */
+#define BM_PMC_REGSC_ACKISO  (0x08U)       /*!< Bit mask for PMC_REGSC_ACKISO. */
+#define BS_PMC_REGSC_ACKISO  (1U)          /*!< Bit field size in bits for PMC_REGSC_ACKISO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the PMC_REGSC_ACKISO field.
-#define BR_PMC_REGSC_ACKISO  (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR, BP_PMC_REGSC_ACKISO))
-#endif
+/*! @brief Read current value of the PMC_REGSC_ACKISO field. */
+#define BR_PMC_REGSC_ACKISO(x) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR(x), BP_PMC_REGSC_ACKISO))
 
-//! @brief Format value for bitfield PMC_REGSC_ACKISO.
-#define BF_PMC_REGSC_ACKISO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_PMC_REGSC_ACKISO), uint8_t) & BM_PMC_REGSC_ACKISO)
+/*! @brief Format value for bitfield PMC_REGSC_ACKISO. */
+#define BF_PMC_REGSC_ACKISO(v) ((uint8_t)((uint8_t)(v) << BP_PMC_REGSC_ACKISO) & BM_PMC_REGSC_ACKISO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACKISO field to a new value.
-#define BW_PMC_REGSC_ACKISO(v) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR, BP_PMC_REGSC_ACKISO) = (v))
-#endif
-//@}
+/*! @brief Set the ACKISO field to a new value. */
+#define BW_PMC_REGSC_ACKISO(x, v) (BITBAND_ACCESS8(HW_PMC_REGSC_ADDR(x), BP_PMC_REGSC_ACKISO) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_pmc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_pmc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All PMC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_pmc
 {
-    __IO hw_pmc_lvdsc1_t LVDSC1;           //!< [0x0] Low Voltage Detect Status and Control 1 Register
-    __IO hw_pmc_lvdsc2_t LVDSC2;           //!< [0x1] Low Voltage Detect Status and Control 2 Register
-    __IO hw_pmc_regsc_t REGSC;             //!< [0x2] Regulator Status and Control Register
+    __IO hw_pmc_lvdsc1_t LVDSC1;           /*!< [0x0] Low Voltage Detect Status and Control 1 Register */
+    __IO hw_pmc_lvdsc2_t LVDSC2;           /*!< [0x1] Low Voltage Detect Status and Control 2 Register */
+    __IO hw_pmc_regsc_t REGSC;             /*!< [0x2] Regulator Status and Control Register */
 } hw_pmc_t;
 #pragma pack()
 
-//! @brief Macro to access all PMC registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_PMC</code>.
-#define HW_PMC         (*(hw_pmc_t *) REGS_PMC_BASE)
-#endif
+/*! @brief Macro to access all PMC registers. */
+/*! @param x PMC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_PMC(PMC_BASE)</code>. */
+#define HW_PMC(x)      (*(hw_pmc_t *)(x))
 
-#endif // __HW_PMC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_PMC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

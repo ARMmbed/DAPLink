@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -28,7 +28,7 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #define OS_TASKCNT    6
+    #define OS_TASKCNT    8
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -69,11 +69,11 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-#if defined(TARGET_LPC11U35)
- #define OS_CLOCK       48000000
-#elif defined(TARGET_MK20DX)
- #define OS_CLOCK       48000000
-#endif
+  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20DX)
+    #define OS_CLOCK       48000000
+  #elif defined(TARGET_ATSAM3U2C)
+    #define OS_CLOCK       96000000
+  #endif
 #endif
 
 //   <o>Timer tick value [us] <1-1000000>
@@ -181,7 +181,7 @@ void os_error (U32 err_code) {
  *      RTX Configuration Functions
  *---------------------------------------------------------------------------*/
 
-#include <RTX_lib.c>
+#include "RTX_lib.c"
 
 /*----------------------------------------------------------------------------
  * end of file

@@ -30,7 +30,8 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 #include "device/fsl_device_registers.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,15 +61,15 @@ status_t flash_security_bypass(flash_driver_t * driver, const uint8_t * backdoor
     if (0x02 != (registerValue & 0x03))
     {
         // preparing passing parameter to erase a flash block
-        HW_FTFx_FCCOBx_WR(0, FTFx_SECURITY_BY_PASS);
-        HW_FTFx_FCCOBx_WR(4, backdoorKey[0]);
-        HW_FTFx_FCCOBx_WR(5, backdoorKey[1]);
-        HW_FTFx_FCCOBx_WR(6, backdoorKey[2]);
-        HW_FTFx_FCCOBx_WR(7, backdoorKey[3]);
-        HW_FTFx_FCCOBx_WR(8, backdoorKey[4]);
-        HW_FTFx_FCCOBx_WR(9, backdoorKey[5]);
-        HW_FTFx_FCCOBx_WR(A, backdoorKey[6]);
-        HW_FTFx_FCCOBx_WR(B, backdoorKey[7]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_SECURITY_BY_PASS);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 4, backdoorKey[0]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 5, backdoorKey[1]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 6, backdoorKey[2]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 7, backdoorKey[3]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 8, backdoorKey[4]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, 9, backdoorKey[5]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, A, backdoorKey[6]);
+        HW_FTFx_FCCOBx_WR(FTFx_BASE, B, backdoorKey[7]);
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();

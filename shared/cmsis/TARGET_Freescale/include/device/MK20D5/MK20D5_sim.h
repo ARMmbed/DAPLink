@@ -21,7 +21,8 @@
 #ifndef __HW_SIM_REGISTERS_H__
 #define __HW_SIM_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 SIM
@@ -52,19 +53,12 @@
  * - hw_sim_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_SIM_BASE
-#define HW_SIM_INSTANCE_COUNT (1U) //!< Number of instances of the SIM module.
-#define REGS_SIM_BASE (0x40047000U) //!< Base address for SIM.
-#endif
-//@}
+#define HW_SIM_INSTANCE_COUNT (1U) /*!< Number of instances of the SIM module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT1 - System Options Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT1 - System Options Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT1 - System Options Register 1 (RW)
  *
@@ -77,35 +71,32 @@ typedef union _hw_sim_sopt1
     uint32_t U;
     struct _hw_sim_sopt1_bitfields
     {
-        uint32_t RESERVED0 : 12;       //!< [11:0]
-        uint32_t RAMSIZE : 4;          //!< [15:12] RAM size
-        uint32_t RESERVED1 : 2;        //!< [17:16]
-        uint32_t OSC32KSEL : 2;        //!< [19:18] 32K oscillator clock select
-        uint32_t RESERVED2 : 9;        //!< [28:20]
-        uint32_t USBVSTBY : 1;         //!< [29] USB voltage regulator in standby
-                                       //! mode during VLPR and VLPW modes
-        uint32_t USBSSTBY : 1;         //!< [30] USB voltage regulator in standby
-                                       //! mode during Stop, VLPS, LLS and VLLS modes.
-        uint32_t USBREGEN : 1;         //!< [31] USB voltage regulator enable
+        uint32_t RESERVED0 : 12;       /*!< [11:0]  */
+        uint32_t RAMSIZE : 4;          /*!< [15:12] RAM size */
+        uint32_t RESERVED1 : 2;        /*!< [17:16]  */
+        uint32_t OSC32KSEL : 2;        /*!< [19:18] 32K oscillator clock select */
+        uint32_t RESERVED2 : 9;        /*!< [28:20]  */
+        uint32_t USBVSTBY : 1;         /*!< [29] USB voltage regulator in standby
+                                        * mode during VLPR and VLPW modes */
+        uint32_t USBSSTBY : 1;         /*!< [30] USB voltage regulator in standby
+                                        * mode during Stop, VLPS, LLS and VLLS modes. */
+        uint32_t USBREGEN : 1;         /*!< [31] USB voltage regulator enable */
     } B;
 } hw_sim_sopt1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT1 register
  */
-//@{
-#define HW_SIM_SOPT1_ADDR        (REGS_SIM_BASE + 0x0U)
+/*@{*/
+#define HW_SIM_SOPT1_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT1             (*(__IO hw_sim_sopt1_t *) HW_SIM_SOPT1_ADDR)
-#define HW_SIM_SOPT1_RD()        (HW_SIM_SOPT1.U)
-#define HW_SIM_SOPT1_WR(v)       (HW_SIM_SOPT1.U = (v))
-#define HW_SIM_SOPT1_SET(v)      (HW_SIM_SOPT1_WR(HW_SIM_SOPT1_RD() |  (v)))
-#define HW_SIM_SOPT1_CLR(v)      (HW_SIM_SOPT1_WR(HW_SIM_SOPT1_RD() & ~(v)))
-#define HW_SIM_SOPT1_TOG(v)      (HW_SIM_SOPT1_WR(HW_SIM_SOPT1_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT1(x)          (*(__IO hw_sim_sopt1_t *) HW_SIM_SOPT1_ADDR(x))
+#define HW_SIM_SOPT1_RD(x)       (HW_SIM_SOPT1(x).U)
+#define HW_SIM_SOPT1_WR(x, v)    (HW_SIM_SOPT1(x).U = (v))
+#define HW_SIM_SOPT1_SET(x, v)   (HW_SIM_SOPT1_WR(x, HW_SIM_SOPT1_RD(x) |  (v)))
+#define HW_SIM_SOPT1_CLR(x, v)   (HW_SIM_SOPT1_WR(x, HW_SIM_SOPT1_RD(x) & ~(v)))
+#define HW_SIM_SOPT1_TOG(x, v)   (HW_SIM_SOPT1_WR(x, HW_SIM_SOPT1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT1 bitfields
@@ -134,16 +125,14 @@ typedef union _hw_sim_sopt1
  * - 1110 - Undefined
  * - 1111 - Undefined
  */
-//@{
-#define BP_SIM_SOPT1_RAMSIZE (12U)         //!< Bit position for SIM_SOPT1_RAMSIZE.
-#define BM_SIM_SOPT1_RAMSIZE (0x0000F000U) //!< Bit mask for SIM_SOPT1_RAMSIZE.
-#define BS_SIM_SOPT1_RAMSIZE (4U)          //!< Bit field size in bits for SIM_SOPT1_RAMSIZE.
+/*@{*/
+#define BP_SIM_SOPT1_RAMSIZE (12U)         /*!< Bit position for SIM_SOPT1_RAMSIZE. */
+#define BM_SIM_SOPT1_RAMSIZE (0x0000F000U) /*!< Bit mask for SIM_SOPT1_RAMSIZE. */
+#define BS_SIM_SOPT1_RAMSIZE (4U)          /*!< Bit field size in bits for SIM_SOPT1_RAMSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1_RAMSIZE field.
-#define BR_SIM_SOPT1_RAMSIZE (HW_SIM_SOPT1.B.RAMSIZE)
-#endif
-//@}
+/*! @brief Read current value of the SIM_SOPT1_RAMSIZE field. */
+#define BR_SIM_SOPT1_RAMSIZE(x) (HW_SIM_SOPT1(x).B.RAMSIZE)
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1, field OSC32KSEL[19:18] (RW)
@@ -157,24 +146,20 @@ typedef union _hw_sim_sopt1
  * - 10 - RTC 32.768kHz oscillator
  * - 11 - LPO 1 kHz
  */
-//@{
-#define BP_SIM_SOPT1_OSC32KSEL (18U)       //!< Bit position for SIM_SOPT1_OSC32KSEL.
-#define BM_SIM_SOPT1_OSC32KSEL (0x000C0000U) //!< Bit mask for SIM_SOPT1_OSC32KSEL.
-#define BS_SIM_SOPT1_OSC32KSEL (2U)        //!< Bit field size in bits for SIM_SOPT1_OSC32KSEL.
+/*@{*/
+#define BP_SIM_SOPT1_OSC32KSEL (18U)       /*!< Bit position for SIM_SOPT1_OSC32KSEL. */
+#define BM_SIM_SOPT1_OSC32KSEL (0x000C0000U) /*!< Bit mask for SIM_SOPT1_OSC32KSEL. */
+#define BS_SIM_SOPT1_OSC32KSEL (2U)        /*!< Bit field size in bits for SIM_SOPT1_OSC32KSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1_OSC32KSEL field.
-#define BR_SIM_SOPT1_OSC32KSEL (HW_SIM_SOPT1.B.OSC32KSEL)
-#endif
+/*! @brief Read current value of the SIM_SOPT1_OSC32KSEL field. */
+#define BR_SIM_SOPT1_OSC32KSEL(x) (HW_SIM_SOPT1(x).B.OSC32KSEL)
 
-//! @brief Format value for bitfield SIM_SOPT1_OSC32KSEL.
-#define BF_SIM_SOPT1_OSC32KSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1_OSC32KSEL), uint32_t) & BM_SIM_SOPT1_OSC32KSEL)
+/*! @brief Format value for bitfield SIM_SOPT1_OSC32KSEL. */
+#define BF_SIM_SOPT1_OSC32KSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1_OSC32KSEL) & BM_SIM_SOPT1_OSC32KSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OSC32KSEL field to a new value.
-#define BW_SIM_SOPT1_OSC32KSEL(v) (HW_SIM_SOPT1_WR((HW_SIM_SOPT1_RD() & ~BM_SIM_SOPT1_OSC32KSEL) | BF_SIM_SOPT1_OSC32KSEL(v)))
-#endif
-//@}
+/*! @brief Set the OSC32KSEL field to a new value. */
+#define BW_SIM_SOPT1_OSC32KSEL(x, v) (HW_SIM_SOPT1_WR(x, (HW_SIM_SOPT1_RD(x) & ~BM_SIM_SOPT1_OSC32KSEL) | BF_SIM_SOPT1_OSC32KSEL(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1, field USBVSTBY[29] (RW)
@@ -186,24 +171,20 @@ typedef union _hw_sim_sopt1
  * - 0 - USB voltage regulator not in standby during VLPR and VLPW modes.
  * - 1 - USB voltage regulator in standby during VLPR and VLPW modes.
  */
-//@{
-#define BP_SIM_SOPT1_USBVSTBY (29U)        //!< Bit position for SIM_SOPT1_USBVSTBY.
-#define BM_SIM_SOPT1_USBVSTBY (0x20000000U) //!< Bit mask for SIM_SOPT1_USBVSTBY.
-#define BS_SIM_SOPT1_USBVSTBY (1U)         //!< Bit field size in bits for SIM_SOPT1_USBVSTBY.
+/*@{*/
+#define BP_SIM_SOPT1_USBVSTBY (29U)        /*!< Bit position for SIM_SOPT1_USBVSTBY. */
+#define BM_SIM_SOPT1_USBVSTBY (0x20000000U) /*!< Bit mask for SIM_SOPT1_USBVSTBY. */
+#define BS_SIM_SOPT1_USBVSTBY (1U)         /*!< Bit field size in bits for SIM_SOPT1_USBVSTBY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1_USBVSTBY field.
-#define BR_SIM_SOPT1_USBVSTBY (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBVSTBY))
-#endif
+/*! @brief Read current value of the SIM_SOPT1_USBVSTBY field. */
+#define BR_SIM_SOPT1_USBVSTBY(x) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBVSTBY))
 
-//! @brief Format value for bitfield SIM_SOPT1_USBVSTBY.
-#define BF_SIM_SOPT1_USBVSTBY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1_USBVSTBY), uint32_t) & BM_SIM_SOPT1_USBVSTBY)
+/*! @brief Format value for bitfield SIM_SOPT1_USBVSTBY. */
+#define BF_SIM_SOPT1_USBVSTBY(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1_USBVSTBY) & BM_SIM_SOPT1_USBVSTBY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBVSTBY field to a new value.
-#define BW_SIM_SOPT1_USBVSTBY(v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBVSTBY) = (v))
-#endif
-//@}
+/*! @brief Set the USBVSTBY field to a new value. */
+#define BW_SIM_SOPT1_USBVSTBY(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBVSTBY) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1, field USBSSTBY[30] (RW)
@@ -216,24 +197,20 @@ typedef union _hw_sim_sopt1
  *     modes.
  * - 1 - USB voltage regulator in standby during Stop, VLPS, LLS and VLLS modes.
  */
-//@{
-#define BP_SIM_SOPT1_USBSSTBY (30U)        //!< Bit position for SIM_SOPT1_USBSSTBY.
-#define BM_SIM_SOPT1_USBSSTBY (0x40000000U) //!< Bit mask for SIM_SOPT1_USBSSTBY.
-#define BS_SIM_SOPT1_USBSSTBY (1U)         //!< Bit field size in bits for SIM_SOPT1_USBSSTBY.
+/*@{*/
+#define BP_SIM_SOPT1_USBSSTBY (30U)        /*!< Bit position for SIM_SOPT1_USBSSTBY. */
+#define BM_SIM_SOPT1_USBSSTBY (0x40000000U) /*!< Bit mask for SIM_SOPT1_USBSSTBY. */
+#define BS_SIM_SOPT1_USBSSTBY (1U)         /*!< Bit field size in bits for SIM_SOPT1_USBSSTBY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1_USBSSTBY field.
-#define BR_SIM_SOPT1_USBSSTBY (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBSSTBY))
-#endif
+/*! @brief Read current value of the SIM_SOPT1_USBSSTBY field. */
+#define BR_SIM_SOPT1_USBSSTBY(x) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBSSTBY))
 
-//! @brief Format value for bitfield SIM_SOPT1_USBSSTBY.
-#define BF_SIM_SOPT1_USBSSTBY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1_USBSSTBY), uint32_t) & BM_SIM_SOPT1_USBSSTBY)
+/*! @brief Format value for bitfield SIM_SOPT1_USBSSTBY. */
+#define BF_SIM_SOPT1_USBSSTBY(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1_USBSSTBY) & BM_SIM_SOPT1_USBSSTBY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBSSTBY field to a new value.
-#define BW_SIM_SOPT1_USBSSTBY(v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBSSTBY) = (v))
-#endif
-//@}
+/*! @brief Set the USBSSTBY field to a new value. */
+#define BW_SIM_SOPT1_USBSSTBY(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBSSTBY) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1, field USBREGEN[31] (RW)
@@ -244,30 +221,25 @@ typedef union _hw_sim_sopt1
  * - 0 - USB voltage regulator is disabled.
  * - 1 - USB voltage regulator is enabled.
  */
-//@{
-#define BP_SIM_SOPT1_USBREGEN (31U)        //!< Bit position for SIM_SOPT1_USBREGEN.
-#define BM_SIM_SOPT1_USBREGEN (0x80000000U) //!< Bit mask for SIM_SOPT1_USBREGEN.
-#define BS_SIM_SOPT1_USBREGEN (1U)         //!< Bit field size in bits for SIM_SOPT1_USBREGEN.
+/*@{*/
+#define BP_SIM_SOPT1_USBREGEN (31U)        /*!< Bit position for SIM_SOPT1_USBREGEN. */
+#define BM_SIM_SOPT1_USBREGEN (0x80000000U) /*!< Bit mask for SIM_SOPT1_USBREGEN. */
+#define BS_SIM_SOPT1_USBREGEN (1U)         /*!< Bit field size in bits for SIM_SOPT1_USBREGEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1_USBREGEN field.
-#define BR_SIM_SOPT1_USBREGEN (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBREGEN))
-#endif
+/*! @brief Read current value of the SIM_SOPT1_USBREGEN field. */
+#define BR_SIM_SOPT1_USBREGEN(x) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBREGEN))
 
-//! @brief Format value for bitfield SIM_SOPT1_USBREGEN.
-#define BF_SIM_SOPT1_USBREGEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1_USBREGEN), uint32_t) & BM_SIM_SOPT1_USBREGEN)
+/*! @brief Format value for bitfield SIM_SOPT1_USBREGEN. */
+#define BF_SIM_SOPT1_USBREGEN(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1_USBREGEN) & BM_SIM_SOPT1_USBREGEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBREGEN field to a new value.
-#define BW_SIM_SOPT1_USBREGEN(v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR, BP_SIM_SOPT1_USBREGEN) = (v))
-#endif
-//@}
+/*! @brief Set the USBREGEN field to a new value. */
+#define BW_SIM_SOPT1_USBREGEN(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1_ADDR(x), BP_SIM_SOPT1_USBREGEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT1CFG - SOPT1 Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT1CFG - SOPT1 Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT1CFG - SOPT1 Configuration Register (RW)
  *
@@ -280,32 +252,30 @@ typedef union _hw_sim_sopt1cfg
     uint32_t U;
     struct _hw_sim_sopt1cfg_bitfields
     {
-        uint32_t RESERVED0 : 24;       //!< [23:0]
-        uint32_t URWE : 1;             //!< [24] USB voltage regulator enable write enable
-        uint32_t UVSWE : 1;            //!< [25] USB voltage regulator VLP standby write
-                                       //! enable
-        uint32_t USSWE : 1;            //!< [26] USB voltage regulator stop standby
-                                       //! write enable
-        uint32_t RESERVED1 : 5;        //!< [31:27]
+        uint32_t RESERVED0 : 24;       /*!< [23:0]  */
+        uint32_t URWE : 1;             /*!< [24] USB voltage regulator enable write
+                                        * enable */
+        uint32_t UVSWE : 1;            /*!< [25] USB voltage regulator VLP standby write
+                                        * enable */
+        uint32_t USSWE : 1;            /*!< [26] USB voltage regulator stop standby
+                                        * write enable */
+        uint32_t RESERVED1 : 5;        /*!< [31:27]  */
     } B;
 } hw_sim_sopt1cfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT1CFG register
  */
-//@{
-#define HW_SIM_SOPT1CFG_ADDR     (REGS_SIM_BASE + 0x4U)
+/*@{*/
+#define HW_SIM_SOPT1CFG_ADDR(x)  ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT1CFG          (*(__IO hw_sim_sopt1cfg_t *) HW_SIM_SOPT1CFG_ADDR)
-#define HW_SIM_SOPT1CFG_RD()     (HW_SIM_SOPT1CFG.U)
-#define HW_SIM_SOPT1CFG_WR(v)    (HW_SIM_SOPT1CFG.U = (v))
-#define HW_SIM_SOPT1CFG_SET(v)   (HW_SIM_SOPT1CFG_WR(HW_SIM_SOPT1CFG_RD() |  (v)))
-#define HW_SIM_SOPT1CFG_CLR(v)   (HW_SIM_SOPT1CFG_WR(HW_SIM_SOPT1CFG_RD() & ~(v)))
-#define HW_SIM_SOPT1CFG_TOG(v)   (HW_SIM_SOPT1CFG_WR(HW_SIM_SOPT1CFG_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT1CFG(x)       (*(__IO hw_sim_sopt1cfg_t *) HW_SIM_SOPT1CFG_ADDR(x))
+#define HW_SIM_SOPT1CFG_RD(x)    (HW_SIM_SOPT1CFG(x).U)
+#define HW_SIM_SOPT1CFG_WR(x, v) (HW_SIM_SOPT1CFG(x).U = (v))
+#define HW_SIM_SOPT1CFG_SET(x, v) (HW_SIM_SOPT1CFG_WR(x, HW_SIM_SOPT1CFG_RD(x) |  (v)))
+#define HW_SIM_SOPT1CFG_CLR(x, v) (HW_SIM_SOPT1CFG_WR(x, HW_SIM_SOPT1CFG_RD(x) & ~(v)))
+#define HW_SIM_SOPT1CFG_TOG(x, v) (HW_SIM_SOPT1CFG_WR(x, HW_SIM_SOPT1CFG_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT1CFG bitfields
@@ -321,24 +291,20 @@ typedef union _hw_sim_sopt1cfg
  * - 0 - SOPT1 USBREGEN cannot be written.
  * - 1 - SOPT1 USBREGEN can be written.
  */
-//@{
-#define BP_SIM_SOPT1CFG_URWE (24U)         //!< Bit position for SIM_SOPT1CFG_URWE.
-#define BM_SIM_SOPT1CFG_URWE (0x01000000U) //!< Bit mask for SIM_SOPT1CFG_URWE.
-#define BS_SIM_SOPT1CFG_URWE (1U)          //!< Bit field size in bits for SIM_SOPT1CFG_URWE.
+/*@{*/
+#define BP_SIM_SOPT1CFG_URWE (24U)         /*!< Bit position for SIM_SOPT1CFG_URWE. */
+#define BM_SIM_SOPT1CFG_URWE (0x01000000U) /*!< Bit mask for SIM_SOPT1CFG_URWE. */
+#define BS_SIM_SOPT1CFG_URWE (1U)          /*!< Bit field size in bits for SIM_SOPT1CFG_URWE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1CFG_URWE field.
-#define BR_SIM_SOPT1CFG_URWE (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_URWE))
-#endif
+/*! @brief Read current value of the SIM_SOPT1CFG_URWE field. */
+#define BR_SIM_SOPT1CFG_URWE(x) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_URWE))
 
-//! @brief Format value for bitfield SIM_SOPT1CFG_URWE.
-#define BF_SIM_SOPT1CFG_URWE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1CFG_URWE), uint32_t) & BM_SIM_SOPT1CFG_URWE)
+/*! @brief Format value for bitfield SIM_SOPT1CFG_URWE. */
+#define BF_SIM_SOPT1CFG_URWE(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1CFG_URWE) & BM_SIM_SOPT1CFG_URWE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the URWE field to a new value.
-#define BW_SIM_SOPT1CFG_URWE(v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_URWE) = (v))
-#endif
-//@}
+/*! @brief Set the URWE field to a new value. */
+#define BW_SIM_SOPT1CFG_URWE(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_URWE) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1CFG, field UVSWE[25] (RW)
@@ -350,24 +316,20 @@ typedef union _hw_sim_sopt1cfg
  * - 0 - SOPT1 USBVSTB cannot be written.
  * - 1 - SOPT1 USBVSTB can be written.
  */
-//@{
-#define BP_SIM_SOPT1CFG_UVSWE (25U)        //!< Bit position for SIM_SOPT1CFG_UVSWE.
-#define BM_SIM_SOPT1CFG_UVSWE (0x02000000U) //!< Bit mask for SIM_SOPT1CFG_UVSWE.
-#define BS_SIM_SOPT1CFG_UVSWE (1U)         //!< Bit field size in bits for SIM_SOPT1CFG_UVSWE.
+/*@{*/
+#define BP_SIM_SOPT1CFG_UVSWE (25U)        /*!< Bit position for SIM_SOPT1CFG_UVSWE. */
+#define BM_SIM_SOPT1CFG_UVSWE (0x02000000U) /*!< Bit mask for SIM_SOPT1CFG_UVSWE. */
+#define BS_SIM_SOPT1CFG_UVSWE (1U)         /*!< Bit field size in bits for SIM_SOPT1CFG_UVSWE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1CFG_UVSWE field.
-#define BR_SIM_SOPT1CFG_UVSWE (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_UVSWE))
-#endif
+/*! @brief Read current value of the SIM_SOPT1CFG_UVSWE field. */
+#define BR_SIM_SOPT1CFG_UVSWE(x) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_UVSWE))
 
-//! @brief Format value for bitfield SIM_SOPT1CFG_UVSWE.
-#define BF_SIM_SOPT1CFG_UVSWE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1CFG_UVSWE), uint32_t) & BM_SIM_SOPT1CFG_UVSWE)
+/*! @brief Format value for bitfield SIM_SOPT1CFG_UVSWE. */
+#define BF_SIM_SOPT1CFG_UVSWE(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1CFG_UVSWE) & BM_SIM_SOPT1CFG_UVSWE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UVSWE field to a new value.
-#define BW_SIM_SOPT1CFG_UVSWE(v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_UVSWE) = (v))
-#endif
-//@}
+/*! @brief Set the UVSWE field to a new value. */
+#define BW_SIM_SOPT1CFG_UVSWE(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_UVSWE) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT1CFG, field USSWE[26] (RW)
@@ -379,30 +341,25 @@ typedef union _hw_sim_sopt1cfg
  * - 0 - SOPT1 USBSSTB cannot be written.
  * - 1 - SOPT1 USBSSTB can be written.
  */
-//@{
-#define BP_SIM_SOPT1CFG_USSWE (26U)        //!< Bit position for SIM_SOPT1CFG_USSWE.
-#define BM_SIM_SOPT1CFG_USSWE (0x04000000U) //!< Bit mask for SIM_SOPT1CFG_USSWE.
-#define BS_SIM_SOPT1CFG_USSWE (1U)         //!< Bit field size in bits for SIM_SOPT1CFG_USSWE.
+/*@{*/
+#define BP_SIM_SOPT1CFG_USSWE (26U)        /*!< Bit position for SIM_SOPT1CFG_USSWE. */
+#define BM_SIM_SOPT1CFG_USSWE (0x04000000U) /*!< Bit mask for SIM_SOPT1CFG_USSWE. */
+#define BS_SIM_SOPT1CFG_USSWE (1U)         /*!< Bit field size in bits for SIM_SOPT1CFG_USSWE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT1CFG_USSWE field.
-#define BR_SIM_SOPT1CFG_USSWE (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_USSWE))
-#endif
+/*! @brief Read current value of the SIM_SOPT1CFG_USSWE field. */
+#define BR_SIM_SOPT1CFG_USSWE(x) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_USSWE))
 
-//! @brief Format value for bitfield SIM_SOPT1CFG_USSWE.
-#define BF_SIM_SOPT1CFG_USSWE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT1CFG_USSWE), uint32_t) & BM_SIM_SOPT1CFG_USSWE)
+/*! @brief Format value for bitfield SIM_SOPT1CFG_USSWE. */
+#define BF_SIM_SOPT1CFG_USSWE(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT1CFG_USSWE) & BM_SIM_SOPT1CFG_USSWE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USSWE field to a new value.
-#define BW_SIM_SOPT1CFG_USSWE(v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR, BP_SIM_SOPT1CFG_USSWE) = (v))
-#endif
-//@}
+/*! @brief Set the USSWE field to a new value. */
+#define BW_SIM_SOPT1CFG_USSWE(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT1CFG_ADDR(x), BP_SIM_SOPT1CFG_USSWE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT2 - System Options Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT2 - System Options Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT2 - System Options Register 2 (RW)
  *
@@ -417,36 +374,33 @@ typedef union _hw_sim_sopt2
     uint32_t U;
     struct _hw_sim_sopt2_bitfields
     {
-        uint32_t RESERVED0 : 4;        //!< [3:0]
-        uint32_t RTCCLKOUTSEL : 1;     //!< [4] RTC clock out select
-        uint32_t CLKOUTSEL : 3;        //!< [7:5] CLKOUT select
-        uint32_t RESERVED1 : 3;        //!< [10:8]
-        uint32_t PTD7PAD : 1;          //!< [11] PTD7 pad drive strength
-        uint32_t TRACECLKSEL : 1;      //!< [12] Debug trace clock select
-        uint32_t RESERVED2 : 3;        //!< [15:13]
-        uint32_t PLLFLLSEL : 1;        //!< [16] PLL/FLL clock select
-        uint32_t RESERVED3 : 1;        //!< [17]
-        uint32_t USBSRC : 1;           //!< [18] USB clock source select
-        uint32_t RESERVED4 : 13;       //!< [31:19]
+        uint32_t RESERVED0 : 4;        /*!< [3:0]  */
+        uint32_t RTCCLKOUTSEL : 1;     /*!< [4] RTC clock out select */
+        uint32_t CLKOUTSEL : 3;        /*!< [7:5] CLKOUT select */
+        uint32_t RESERVED1 : 3;        /*!< [10:8]  */
+        uint32_t PTD7PAD : 1;          /*!< [11] PTD7 pad drive strength */
+        uint32_t TRACECLKSEL : 1;      /*!< [12] Debug trace clock select */
+        uint32_t RESERVED2 : 3;        /*!< [15:13]  */
+        uint32_t PLLFLLSEL : 1;        /*!< [16] PLL/FLL clock select */
+        uint32_t RESERVED3 : 1;        /*!< [17]  */
+        uint32_t USBSRC : 1;           /*!< [18] USB clock source select */
+        uint32_t RESERVED4 : 13;       /*!< [31:19]  */
     } B;
 } hw_sim_sopt2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT2 register
  */
-//@{
-#define HW_SIM_SOPT2_ADDR        (REGS_SIM_BASE + 0x1004U)
+/*@{*/
+#define HW_SIM_SOPT2_ADDR(x)     ((x) + 0x1004U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT2             (*(__IO hw_sim_sopt2_t *) HW_SIM_SOPT2_ADDR)
-#define HW_SIM_SOPT2_RD()        (HW_SIM_SOPT2.U)
-#define HW_SIM_SOPT2_WR(v)       (HW_SIM_SOPT2.U = (v))
-#define HW_SIM_SOPT2_SET(v)      (HW_SIM_SOPT2_WR(HW_SIM_SOPT2_RD() |  (v)))
-#define HW_SIM_SOPT2_CLR(v)      (HW_SIM_SOPT2_WR(HW_SIM_SOPT2_RD() & ~(v)))
-#define HW_SIM_SOPT2_TOG(v)      (HW_SIM_SOPT2_WR(HW_SIM_SOPT2_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT2(x)          (*(__IO hw_sim_sopt2_t *) HW_SIM_SOPT2_ADDR(x))
+#define HW_SIM_SOPT2_RD(x)       (HW_SIM_SOPT2(x).U)
+#define HW_SIM_SOPT2_WR(x, v)    (HW_SIM_SOPT2(x).U = (v))
+#define HW_SIM_SOPT2_SET(x, v)   (HW_SIM_SOPT2_WR(x, HW_SIM_SOPT2_RD(x) |  (v)))
+#define HW_SIM_SOPT2_CLR(x, v)   (HW_SIM_SOPT2_WR(x, HW_SIM_SOPT2_RD(x) & ~(v)))
+#define HW_SIM_SOPT2_TOG(x, v)   (HW_SIM_SOPT2_WR(x, HW_SIM_SOPT2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT2 bitfields
@@ -462,24 +416,20 @@ typedef union _hw_sim_sopt2
  * - 0 - RTC 1 Hz clock is output on the RTC_CLKOUT pin.
  * - 1 - RTC 32.768kHz clock is output on the RTC_CLKOUT pin.
  */
-//@{
-#define BP_SIM_SOPT2_RTCCLKOUTSEL (4U)     //!< Bit position for SIM_SOPT2_RTCCLKOUTSEL.
-#define BM_SIM_SOPT2_RTCCLKOUTSEL (0x00000010U) //!< Bit mask for SIM_SOPT2_RTCCLKOUTSEL.
-#define BS_SIM_SOPT2_RTCCLKOUTSEL (1U)     //!< Bit field size in bits for SIM_SOPT2_RTCCLKOUTSEL.
+/*@{*/
+#define BP_SIM_SOPT2_RTCCLKOUTSEL (4U)     /*!< Bit position for SIM_SOPT2_RTCCLKOUTSEL. */
+#define BM_SIM_SOPT2_RTCCLKOUTSEL (0x00000010U) /*!< Bit mask for SIM_SOPT2_RTCCLKOUTSEL. */
+#define BS_SIM_SOPT2_RTCCLKOUTSEL (1U)     /*!< Bit field size in bits for SIM_SOPT2_RTCCLKOUTSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_RTCCLKOUTSEL field.
-#define BR_SIM_SOPT2_RTCCLKOUTSEL (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_RTCCLKOUTSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT2_RTCCLKOUTSEL field. */
+#define BR_SIM_SOPT2_RTCCLKOUTSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_RTCCLKOUTSEL))
 
-//! @brief Format value for bitfield SIM_SOPT2_RTCCLKOUTSEL.
-#define BF_SIM_SOPT2_RTCCLKOUTSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_RTCCLKOUTSEL), uint32_t) & BM_SIM_SOPT2_RTCCLKOUTSEL)
+/*! @brief Format value for bitfield SIM_SOPT2_RTCCLKOUTSEL. */
+#define BF_SIM_SOPT2_RTCCLKOUTSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_RTCCLKOUTSEL) & BM_SIM_SOPT2_RTCCLKOUTSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RTCCLKOUTSEL field to a new value.
-#define BW_SIM_SOPT2_RTCCLKOUTSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_RTCCLKOUTSEL) = (v))
-#endif
-//@}
+/*! @brief Set the RTCCLKOUTSEL field to a new value. */
+#define BW_SIM_SOPT2_RTCCLKOUTSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_RTCCLKOUTSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT2, field CLKOUTSEL[7:5] (RW)
@@ -496,24 +446,20 @@ typedef union _hw_sim_sopt2
  * - 110 - ERCLK0
  * - 111 - Reserved
  */
-//@{
-#define BP_SIM_SOPT2_CLKOUTSEL (5U)        //!< Bit position for SIM_SOPT2_CLKOUTSEL.
-#define BM_SIM_SOPT2_CLKOUTSEL (0x000000E0U) //!< Bit mask for SIM_SOPT2_CLKOUTSEL.
-#define BS_SIM_SOPT2_CLKOUTSEL (3U)        //!< Bit field size in bits for SIM_SOPT2_CLKOUTSEL.
+/*@{*/
+#define BP_SIM_SOPT2_CLKOUTSEL (5U)        /*!< Bit position for SIM_SOPT2_CLKOUTSEL. */
+#define BM_SIM_SOPT2_CLKOUTSEL (0x000000E0U) /*!< Bit mask for SIM_SOPT2_CLKOUTSEL. */
+#define BS_SIM_SOPT2_CLKOUTSEL (3U)        /*!< Bit field size in bits for SIM_SOPT2_CLKOUTSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_CLKOUTSEL field.
-#define BR_SIM_SOPT2_CLKOUTSEL (HW_SIM_SOPT2.B.CLKOUTSEL)
-#endif
+/*! @brief Read current value of the SIM_SOPT2_CLKOUTSEL field. */
+#define BR_SIM_SOPT2_CLKOUTSEL(x) (HW_SIM_SOPT2(x).B.CLKOUTSEL)
 
-//! @brief Format value for bitfield SIM_SOPT2_CLKOUTSEL.
-#define BF_SIM_SOPT2_CLKOUTSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_CLKOUTSEL), uint32_t) & BM_SIM_SOPT2_CLKOUTSEL)
+/*! @brief Format value for bitfield SIM_SOPT2_CLKOUTSEL. */
+#define BF_SIM_SOPT2_CLKOUTSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_CLKOUTSEL) & BM_SIM_SOPT2_CLKOUTSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKOUTSEL field to a new value.
-#define BW_SIM_SOPT2_CLKOUTSEL(v) (HW_SIM_SOPT2_WR((HW_SIM_SOPT2_RD() & ~BM_SIM_SOPT2_CLKOUTSEL) | BF_SIM_SOPT2_CLKOUTSEL(v)))
-#endif
-//@}
+/*! @brief Set the CLKOUTSEL field to a new value. */
+#define BW_SIM_SOPT2_CLKOUTSEL(x, v) (HW_SIM_SOPT2_WR(x, (HW_SIM_SOPT2_RD(x) & ~BM_SIM_SOPT2_CLKOUTSEL) | BF_SIM_SOPT2_CLKOUTSEL(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT2, field PTD7PAD[11] (RW)
@@ -525,24 +471,20 @@ typedef union _hw_sim_sopt2
  * - 0 - Single-pad drive strength for PTD7.
  * - 1 - Double pad drive strength for PTD7.
  */
-//@{
-#define BP_SIM_SOPT2_PTD7PAD (11U)         //!< Bit position for SIM_SOPT2_PTD7PAD.
-#define BM_SIM_SOPT2_PTD7PAD (0x00000800U) //!< Bit mask for SIM_SOPT2_PTD7PAD.
-#define BS_SIM_SOPT2_PTD7PAD (1U)          //!< Bit field size in bits for SIM_SOPT2_PTD7PAD.
+/*@{*/
+#define BP_SIM_SOPT2_PTD7PAD (11U)         /*!< Bit position for SIM_SOPT2_PTD7PAD. */
+#define BM_SIM_SOPT2_PTD7PAD (0x00000800U) /*!< Bit mask for SIM_SOPT2_PTD7PAD. */
+#define BS_SIM_SOPT2_PTD7PAD (1U)          /*!< Bit field size in bits for SIM_SOPT2_PTD7PAD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_PTD7PAD field.
-#define BR_SIM_SOPT2_PTD7PAD (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_PTD7PAD))
-#endif
+/*! @brief Read current value of the SIM_SOPT2_PTD7PAD field. */
+#define BR_SIM_SOPT2_PTD7PAD(x) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_PTD7PAD))
 
-//! @brief Format value for bitfield SIM_SOPT2_PTD7PAD.
-#define BF_SIM_SOPT2_PTD7PAD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_PTD7PAD), uint32_t) & BM_SIM_SOPT2_PTD7PAD)
+/*! @brief Format value for bitfield SIM_SOPT2_PTD7PAD. */
+#define BF_SIM_SOPT2_PTD7PAD(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_PTD7PAD) & BM_SIM_SOPT2_PTD7PAD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PTD7PAD field to a new value.
-#define BW_SIM_SOPT2_PTD7PAD(v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_PTD7PAD) = (v))
-#endif
-//@}
+/*! @brief Set the PTD7PAD field to a new value. */
+#define BW_SIM_SOPT2_PTD7PAD(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_PTD7PAD) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT2, field TRACECLKSEL[12] (RW)
@@ -554,24 +496,20 @@ typedef union _hw_sim_sopt2
  * - 0 - MCGOUTCLK
  * - 1 - Core/system clock
  */
-//@{
-#define BP_SIM_SOPT2_TRACECLKSEL (12U)     //!< Bit position for SIM_SOPT2_TRACECLKSEL.
-#define BM_SIM_SOPT2_TRACECLKSEL (0x00001000U) //!< Bit mask for SIM_SOPT2_TRACECLKSEL.
-#define BS_SIM_SOPT2_TRACECLKSEL (1U)      //!< Bit field size in bits for SIM_SOPT2_TRACECLKSEL.
+/*@{*/
+#define BP_SIM_SOPT2_TRACECLKSEL (12U)     /*!< Bit position for SIM_SOPT2_TRACECLKSEL. */
+#define BM_SIM_SOPT2_TRACECLKSEL (0x00001000U) /*!< Bit mask for SIM_SOPT2_TRACECLKSEL. */
+#define BS_SIM_SOPT2_TRACECLKSEL (1U)      /*!< Bit field size in bits for SIM_SOPT2_TRACECLKSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_TRACECLKSEL field.
-#define BR_SIM_SOPT2_TRACECLKSEL (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_TRACECLKSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT2_TRACECLKSEL field. */
+#define BR_SIM_SOPT2_TRACECLKSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_TRACECLKSEL))
 
-//! @brief Format value for bitfield SIM_SOPT2_TRACECLKSEL.
-#define BF_SIM_SOPT2_TRACECLKSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_TRACECLKSEL), uint32_t) & BM_SIM_SOPT2_TRACECLKSEL)
+/*! @brief Format value for bitfield SIM_SOPT2_TRACECLKSEL. */
+#define BF_SIM_SOPT2_TRACECLKSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_TRACECLKSEL) & BM_SIM_SOPT2_TRACECLKSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRACECLKSEL field to a new value.
-#define BW_SIM_SOPT2_TRACECLKSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_TRACECLKSEL) = (v))
-#endif
-//@}
+/*! @brief Set the TRACECLKSEL field to a new value. */
+#define BW_SIM_SOPT2_TRACECLKSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_TRACECLKSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT2, field PLLFLLSEL[16] (RW)
@@ -583,24 +521,20 @@ typedef union _hw_sim_sopt2
  * - 0 - MCGFLLCLK clock
  * - 1 - MCGPLLCLK clock
  */
-//@{
-#define BP_SIM_SOPT2_PLLFLLSEL (16U)       //!< Bit position for SIM_SOPT2_PLLFLLSEL.
-#define BM_SIM_SOPT2_PLLFLLSEL (0x00010000U) //!< Bit mask for SIM_SOPT2_PLLFLLSEL.
-#define BS_SIM_SOPT2_PLLFLLSEL (1U)        //!< Bit field size in bits for SIM_SOPT2_PLLFLLSEL.
+/*@{*/
+#define BP_SIM_SOPT2_PLLFLLSEL (16U)       /*!< Bit position for SIM_SOPT2_PLLFLLSEL. */
+#define BM_SIM_SOPT2_PLLFLLSEL (0x00010000U) /*!< Bit mask for SIM_SOPT2_PLLFLLSEL. */
+#define BS_SIM_SOPT2_PLLFLLSEL (1U)        /*!< Bit field size in bits for SIM_SOPT2_PLLFLLSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_PLLFLLSEL field.
-#define BR_SIM_SOPT2_PLLFLLSEL (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_PLLFLLSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT2_PLLFLLSEL field. */
+#define BR_SIM_SOPT2_PLLFLLSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_PLLFLLSEL))
 
-//! @brief Format value for bitfield SIM_SOPT2_PLLFLLSEL.
-#define BF_SIM_SOPT2_PLLFLLSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_PLLFLLSEL), uint32_t) & BM_SIM_SOPT2_PLLFLLSEL)
+/*! @brief Format value for bitfield SIM_SOPT2_PLLFLLSEL. */
+#define BF_SIM_SOPT2_PLLFLLSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_PLLFLLSEL) & BM_SIM_SOPT2_PLLFLLSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PLLFLLSEL field to a new value.
-#define BW_SIM_SOPT2_PLLFLLSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_PLLFLLSEL) = (v))
-#endif
-//@}
+/*! @brief Set the PLLFLLSEL field to a new value. */
+#define BW_SIM_SOPT2_PLLFLLSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_PLLFLLSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT2, field USBSRC[18] (RW)
@@ -612,30 +546,25 @@ typedef union _hw_sim_sopt2
  * - 1 - MCGPLLCLK/MCGFLLCLK clock divided by the USB fractional divider. See
  *     the SIM_CLKDIV2[USBFRAC, USBDIV] descriptions.
  */
-//@{
-#define BP_SIM_SOPT2_USBSRC  (18U)         //!< Bit position for SIM_SOPT2_USBSRC.
-#define BM_SIM_SOPT2_USBSRC  (0x00040000U) //!< Bit mask for SIM_SOPT2_USBSRC.
-#define BS_SIM_SOPT2_USBSRC  (1U)          //!< Bit field size in bits for SIM_SOPT2_USBSRC.
+/*@{*/
+#define BP_SIM_SOPT2_USBSRC  (18U)         /*!< Bit position for SIM_SOPT2_USBSRC. */
+#define BM_SIM_SOPT2_USBSRC  (0x00040000U) /*!< Bit mask for SIM_SOPT2_USBSRC. */
+#define BS_SIM_SOPT2_USBSRC  (1U)          /*!< Bit field size in bits for SIM_SOPT2_USBSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT2_USBSRC field.
-#define BR_SIM_SOPT2_USBSRC  (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_USBSRC))
-#endif
+/*! @brief Read current value of the SIM_SOPT2_USBSRC field. */
+#define BR_SIM_SOPT2_USBSRC(x) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_USBSRC))
 
-//! @brief Format value for bitfield SIM_SOPT2_USBSRC.
-#define BF_SIM_SOPT2_USBSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT2_USBSRC), uint32_t) & BM_SIM_SOPT2_USBSRC)
+/*! @brief Format value for bitfield SIM_SOPT2_USBSRC. */
+#define BF_SIM_SOPT2_USBSRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT2_USBSRC) & BM_SIM_SOPT2_USBSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBSRC field to a new value.
-#define BW_SIM_SOPT2_USBSRC(v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR, BP_SIM_SOPT2_USBSRC) = (v))
-#endif
-//@}
+/*! @brief Set the USBSRC field to a new value. */
+#define BW_SIM_SOPT2_USBSRC(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT2_ADDR(x), BP_SIM_SOPT2_USBSRC) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT4 - System Options Register 4
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT4 - System Options Register 4
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT4 - System Options Register 4 (RW)
  *
@@ -646,40 +575,37 @@ typedef union _hw_sim_sopt4
     uint32_t U;
     struct _hw_sim_sopt4_bitfields
     {
-        uint32_t FTM0FLT0 : 1;         //!< [0] FTM0 Fault 0 Select
-        uint32_t FTM0FLT1 : 1;         //!< [1] FTM0 Fault 1 Select
-        uint32_t RESERVED0 : 2;        //!< [3:2]
-        uint32_t FTM1FLT0 : 1;         //!< [4] FTM1 Fault 0 Select
-        uint32_t RESERVED1 : 13;       //!< [17:5]
-        uint32_t FTM1CH0SRC : 2;       //!< [19:18] FTM1 channel 0 input capture
-                                       //! source select
-        uint32_t RESERVED2 : 4;        //!< [23:20]
-        uint32_t FTM0CLKSEL : 1;       //!< [24] FlexTimer 0 External Clock Pin
-                                       //! Select
-        uint32_t FTM1CLKSEL : 1;       //!< [25] FTM1 External Clock Pin Select
-        uint32_t RESERVED3 : 2;        //!< [27:26]
-        uint32_t FTM0TRG0SRC : 1;      //!< [28] FlexTimer 0 Hardware Trigger 0
-                                       //! Source Select
-        uint32_t RESERVED4 : 3;        //!< [31:29]
+        uint32_t FTM0FLT0 : 1;         /*!< [0] FTM0 Fault 0 Select */
+        uint32_t FTM0FLT1 : 1;         /*!< [1] FTM0 Fault 1 Select */
+        uint32_t RESERVED0 : 2;        /*!< [3:2]  */
+        uint32_t FTM1FLT0 : 1;         /*!< [4] FTM1 Fault 0 Select */
+        uint32_t RESERVED1 : 13;       /*!< [17:5]  */
+        uint32_t FTM1CH0SRC : 2;       /*!< [19:18] FTM1 channel 0 input capture
+                                        * source select */
+        uint32_t RESERVED2 : 4;        /*!< [23:20]  */
+        uint32_t FTM0CLKSEL : 1;       /*!< [24] FlexTimer 0 External Clock Pin
+                                        * Select */
+        uint32_t FTM1CLKSEL : 1;       /*!< [25] FTM1 External Clock Pin Select */
+        uint32_t RESERVED3 : 2;        /*!< [27:26]  */
+        uint32_t FTM0TRG0SRC : 1;      /*!< [28] FlexTimer 0 Hardware Trigger 0
+                                        * Source Select */
+        uint32_t RESERVED4 : 3;        /*!< [31:29]  */
     } B;
 } hw_sim_sopt4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT4 register
  */
-//@{
-#define HW_SIM_SOPT4_ADDR        (REGS_SIM_BASE + 0x100CU)
+/*@{*/
+#define HW_SIM_SOPT4_ADDR(x)     ((x) + 0x100CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT4             (*(__IO hw_sim_sopt4_t *) HW_SIM_SOPT4_ADDR)
-#define HW_SIM_SOPT4_RD()        (HW_SIM_SOPT4.U)
-#define HW_SIM_SOPT4_WR(v)       (HW_SIM_SOPT4.U = (v))
-#define HW_SIM_SOPT4_SET(v)      (HW_SIM_SOPT4_WR(HW_SIM_SOPT4_RD() |  (v)))
-#define HW_SIM_SOPT4_CLR(v)      (HW_SIM_SOPT4_WR(HW_SIM_SOPT4_RD() & ~(v)))
-#define HW_SIM_SOPT4_TOG(v)      (HW_SIM_SOPT4_WR(HW_SIM_SOPT4_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT4(x)          (*(__IO hw_sim_sopt4_t *) HW_SIM_SOPT4_ADDR(x))
+#define HW_SIM_SOPT4_RD(x)       (HW_SIM_SOPT4(x).U)
+#define HW_SIM_SOPT4_WR(x, v)    (HW_SIM_SOPT4(x).U = (v))
+#define HW_SIM_SOPT4_SET(x, v)   (HW_SIM_SOPT4_WR(x, HW_SIM_SOPT4_RD(x) |  (v)))
+#define HW_SIM_SOPT4_CLR(x, v)   (HW_SIM_SOPT4_WR(x, HW_SIM_SOPT4_RD(x) & ~(v)))
+#define HW_SIM_SOPT4_TOG(x, v)   (HW_SIM_SOPT4_WR(x, HW_SIM_SOPT4_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT4 bitfields
@@ -696,24 +622,20 @@ typedef union _hw_sim_sopt4
  * - 0 - FTM0_FLT0 pin
  * - 1 - CMP0 out
  */
-//@{
-#define BP_SIM_SOPT4_FTM0FLT0 (0U)         //!< Bit position for SIM_SOPT4_FTM0FLT0.
-#define BM_SIM_SOPT4_FTM0FLT0 (0x00000001U) //!< Bit mask for SIM_SOPT4_FTM0FLT0.
-#define BS_SIM_SOPT4_FTM0FLT0 (1U)         //!< Bit field size in bits for SIM_SOPT4_FTM0FLT0.
+/*@{*/
+#define BP_SIM_SOPT4_FTM0FLT0 (0U)         /*!< Bit position for SIM_SOPT4_FTM0FLT0. */
+#define BM_SIM_SOPT4_FTM0FLT0 (0x00000001U) /*!< Bit mask for SIM_SOPT4_FTM0FLT0. */
+#define BS_SIM_SOPT4_FTM0FLT0 (1U)         /*!< Bit field size in bits for SIM_SOPT4_FTM0FLT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM0FLT0 field.
-#define BR_SIM_SOPT4_FTM0FLT0 (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0FLT0))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM0FLT0 field. */
+#define BR_SIM_SOPT4_FTM0FLT0(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0FLT0))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM0FLT0.
-#define BF_SIM_SOPT4_FTM0FLT0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM0FLT0), uint32_t) & BM_SIM_SOPT4_FTM0FLT0)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM0FLT0. */
+#define BF_SIM_SOPT4_FTM0FLT0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM0FLT0) & BM_SIM_SOPT4_FTM0FLT0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM0FLT0 field to a new value.
-#define BW_SIM_SOPT4_FTM0FLT0(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0FLT0) = (v))
-#endif
-//@}
+/*! @brief Set the FTM0FLT0 field to a new value. */
+#define BW_SIM_SOPT4_FTM0FLT0(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0FLT0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM0FLT1[1] (RW)
@@ -726,24 +648,20 @@ typedef union _hw_sim_sopt4
  * - 0 - FTM0_FLT1 pin
  * - 1 - CMP1 out
  */
-//@{
-#define BP_SIM_SOPT4_FTM0FLT1 (1U)         //!< Bit position for SIM_SOPT4_FTM0FLT1.
-#define BM_SIM_SOPT4_FTM0FLT1 (0x00000002U) //!< Bit mask for SIM_SOPT4_FTM0FLT1.
-#define BS_SIM_SOPT4_FTM0FLT1 (1U)         //!< Bit field size in bits for SIM_SOPT4_FTM0FLT1.
+/*@{*/
+#define BP_SIM_SOPT4_FTM0FLT1 (1U)         /*!< Bit position for SIM_SOPT4_FTM0FLT1. */
+#define BM_SIM_SOPT4_FTM0FLT1 (0x00000002U) /*!< Bit mask for SIM_SOPT4_FTM0FLT1. */
+#define BS_SIM_SOPT4_FTM0FLT1 (1U)         /*!< Bit field size in bits for SIM_SOPT4_FTM0FLT1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM0FLT1 field.
-#define BR_SIM_SOPT4_FTM0FLT1 (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0FLT1))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM0FLT1 field. */
+#define BR_SIM_SOPT4_FTM0FLT1(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0FLT1))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM0FLT1.
-#define BF_SIM_SOPT4_FTM0FLT1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM0FLT1), uint32_t) & BM_SIM_SOPT4_FTM0FLT1)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM0FLT1. */
+#define BF_SIM_SOPT4_FTM0FLT1(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM0FLT1) & BM_SIM_SOPT4_FTM0FLT1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM0FLT1 field to a new value.
-#define BW_SIM_SOPT4_FTM0FLT1(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0FLT1) = (v))
-#endif
-//@}
+/*! @brief Set the FTM0FLT1 field to a new value. */
+#define BW_SIM_SOPT4_FTM0FLT1(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0FLT1) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM1FLT0[4] (RW)
@@ -756,24 +674,20 @@ typedef union _hw_sim_sopt4
  * - 0 - FTM1_FLT0 pin
  * - 1 - CMP0 out
  */
-//@{
-#define BP_SIM_SOPT4_FTM1FLT0 (4U)         //!< Bit position for SIM_SOPT4_FTM1FLT0.
-#define BM_SIM_SOPT4_FTM1FLT0 (0x00000010U) //!< Bit mask for SIM_SOPT4_FTM1FLT0.
-#define BS_SIM_SOPT4_FTM1FLT0 (1U)         //!< Bit field size in bits for SIM_SOPT4_FTM1FLT0.
+/*@{*/
+#define BP_SIM_SOPT4_FTM1FLT0 (4U)         /*!< Bit position for SIM_SOPT4_FTM1FLT0. */
+#define BM_SIM_SOPT4_FTM1FLT0 (0x00000010U) /*!< Bit mask for SIM_SOPT4_FTM1FLT0. */
+#define BS_SIM_SOPT4_FTM1FLT0 (1U)         /*!< Bit field size in bits for SIM_SOPT4_FTM1FLT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM1FLT0 field.
-#define BR_SIM_SOPT4_FTM1FLT0 (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM1FLT0))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM1FLT0 field. */
+#define BR_SIM_SOPT4_FTM1FLT0(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM1FLT0))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM1FLT0.
-#define BF_SIM_SOPT4_FTM1FLT0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM1FLT0), uint32_t) & BM_SIM_SOPT4_FTM1FLT0)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM1FLT0. */
+#define BF_SIM_SOPT4_FTM1FLT0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM1FLT0) & BM_SIM_SOPT4_FTM1FLT0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM1FLT0 field to a new value.
-#define BW_SIM_SOPT4_FTM1FLT0(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM1FLT0) = (v))
-#endif
-//@}
+/*! @brief Set the FTM1FLT0 field to a new value. */
+#define BW_SIM_SOPT4_FTM1FLT0(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM1FLT0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM1CH0SRC[19:18] (RW)
@@ -787,24 +701,20 @@ typedef union _hw_sim_sopt4
  * - 10 - CMP1 output
  * - 11 - USB start of frame pulse
  */
-//@{
-#define BP_SIM_SOPT4_FTM1CH0SRC (18U)      //!< Bit position for SIM_SOPT4_FTM1CH0SRC.
-#define BM_SIM_SOPT4_FTM1CH0SRC (0x000C0000U) //!< Bit mask for SIM_SOPT4_FTM1CH0SRC.
-#define BS_SIM_SOPT4_FTM1CH0SRC (2U)       //!< Bit field size in bits for SIM_SOPT4_FTM1CH0SRC.
+/*@{*/
+#define BP_SIM_SOPT4_FTM1CH0SRC (18U)      /*!< Bit position for SIM_SOPT4_FTM1CH0SRC. */
+#define BM_SIM_SOPT4_FTM1CH0SRC (0x000C0000U) /*!< Bit mask for SIM_SOPT4_FTM1CH0SRC. */
+#define BS_SIM_SOPT4_FTM1CH0SRC (2U)       /*!< Bit field size in bits for SIM_SOPT4_FTM1CH0SRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM1CH0SRC field.
-#define BR_SIM_SOPT4_FTM1CH0SRC (HW_SIM_SOPT4.B.FTM1CH0SRC)
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM1CH0SRC field. */
+#define BR_SIM_SOPT4_FTM1CH0SRC(x) (HW_SIM_SOPT4(x).B.FTM1CH0SRC)
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM1CH0SRC.
-#define BF_SIM_SOPT4_FTM1CH0SRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM1CH0SRC), uint32_t) & BM_SIM_SOPT4_FTM1CH0SRC)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM1CH0SRC. */
+#define BF_SIM_SOPT4_FTM1CH0SRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM1CH0SRC) & BM_SIM_SOPT4_FTM1CH0SRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM1CH0SRC field to a new value.
-#define BW_SIM_SOPT4_FTM1CH0SRC(v) (HW_SIM_SOPT4_WR((HW_SIM_SOPT4_RD() & ~BM_SIM_SOPT4_FTM1CH0SRC) | BF_SIM_SOPT4_FTM1CH0SRC(v)))
-#endif
-//@}
+/*! @brief Set the FTM1CH0SRC field to a new value. */
+#define BW_SIM_SOPT4_FTM1CH0SRC(x, v) (HW_SIM_SOPT4_WR(x, (HW_SIM_SOPT4_RD(x) & ~BM_SIM_SOPT4_FTM1CH0SRC) | BF_SIM_SOPT4_FTM1CH0SRC(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM0CLKSEL[24] (RW)
@@ -817,24 +727,20 @@ typedef union _hw_sim_sopt4
  * - 0 - FTM_CLK0 pin
  * - 1 - FTM_CLK1 pin
  */
-//@{
-#define BP_SIM_SOPT4_FTM0CLKSEL (24U)      //!< Bit position for SIM_SOPT4_FTM0CLKSEL.
-#define BM_SIM_SOPT4_FTM0CLKSEL (0x01000000U) //!< Bit mask for SIM_SOPT4_FTM0CLKSEL.
-#define BS_SIM_SOPT4_FTM0CLKSEL (1U)       //!< Bit field size in bits for SIM_SOPT4_FTM0CLKSEL.
+/*@{*/
+#define BP_SIM_SOPT4_FTM0CLKSEL (24U)      /*!< Bit position for SIM_SOPT4_FTM0CLKSEL. */
+#define BM_SIM_SOPT4_FTM0CLKSEL (0x01000000U) /*!< Bit mask for SIM_SOPT4_FTM0CLKSEL. */
+#define BS_SIM_SOPT4_FTM0CLKSEL (1U)       /*!< Bit field size in bits for SIM_SOPT4_FTM0CLKSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM0CLKSEL field.
-#define BR_SIM_SOPT4_FTM0CLKSEL (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0CLKSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM0CLKSEL field. */
+#define BR_SIM_SOPT4_FTM0CLKSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0CLKSEL))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM0CLKSEL.
-#define BF_SIM_SOPT4_FTM0CLKSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM0CLKSEL), uint32_t) & BM_SIM_SOPT4_FTM0CLKSEL)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM0CLKSEL. */
+#define BF_SIM_SOPT4_FTM0CLKSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM0CLKSEL) & BM_SIM_SOPT4_FTM0CLKSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM0CLKSEL field to a new value.
-#define BW_SIM_SOPT4_FTM0CLKSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0CLKSEL) = (v))
-#endif
-//@}
+/*! @brief Set the FTM0CLKSEL field to a new value. */
+#define BW_SIM_SOPT4_FTM0CLKSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0CLKSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM1CLKSEL[25] (RW)
@@ -847,24 +753,20 @@ typedef union _hw_sim_sopt4
  * - 0 - FTM_CLK0 pin
  * - 1 - FTM_CLK1 pin
  */
-//@{
-#define BP_SIM_SOPT4_FTM1CLKSEL (25U)      //!< Bit position for SIM_SOPT4_FTM1CLKSEL.
-#define BM_SIM_SOPT4_FTM1CLKSEL (0x02000000U) //!< Bit mask for SIM_SOPT4_FTM1CLKSEL.
-#define BS_SIM_SOPT4_FTM1CLKSEL (1U)       //!< Bit field size in bits for SIM_SOPT4_FTM1CLKSEL.
+/*@{*/
+#define BP_SIM_SOPT4_FTM1CLKSEL (25U)      /*!< Bit position for SIM_SOPT4_FTM1CLKSEL. */
+#define BM_SIM_SOPT4_FTM1CLKSEL (0x02000000U) /*!< Bit mask for SIM_SOPT4_FTM1CLKSEL. */
+#define BS_SIM_SOPT4_FTM1CLKSEL (1U)       /*!< Bit field size in bits for SIM_SOPT4_FTM1CLKSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM1CLKSEL field.
-#define BR_SIM_SOPT4_FTM1CLKSEL (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM1CLKSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM1CLKSEL field. */
+#define BR_SIM_SOPT4_FTM1CLKSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM1CLKSEL))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM1CLKSEL.
-#define BF_SIM_SOPT4_FTM1CLKSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM1CLKSEL), uint32_t) & BM_SIM_SOPT4_FTM1CLKSEL)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM1CLKSEL. */
+#define BF_SIM_SOPT4_FTM1CLKSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM1CLKSEL) & BM_SIM_SOPT4_FTM1CLKSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM1CLKSEL field to a new value.
-#define BW_SIM_SOPT4_FTM1CLKSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM1CLKSEL) = (v))
-#endif
-//@}
+/*! @brief Set the FTM1CLKSEL field to a new value. */
+#define BW_SIM_SOPT4_FTM1CLKSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM1CLKSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT4, field FTM0TRG0SRC[28] (RW)
@@ -875,30 +777,25 @@ typedef union _hw_sim_sopt4
  * - 0 - HSCMP0 output drives FTM0 hardware trigger 0
  * - 1 - FTM1 channel match drives FTM0 hardware trigger 0
  */
-//@{
-#define BP_SIM_SOPT4_FTM0TRG0SRC (28U)     //!< Bit position for SIM_SOPT4_FTM0TRG0SRC.
-#define BM_SIM_SOPT4_FTM0TRG0SRC (0x10000000U) //!< Bit mask for SIM_SOPT4_FTM0TRG0SRC.
-#define BS_SIM_SOPT4_FTM0TRG0SRC (1U)      //!< Bit field size in bits for SIM_SOPT4_FTM0TRG0SRC.
+/*@{*/
+#define BP_SIM_SOPT4_FTM0TRG0SRC (28U)     /*!< Bit position for SIM_SOPT4_FTM0TRG0SRC. */
+#define BM_SIM_SOPT4_FTM0TRG0SRC (0x10000000U) /*!< Bit mask for SIM_SOPT4_FTM0TRG0SRC. */
+#define BS_SIM_SOPT4_FTM0TRG0SRC (1U)      /*!< Bit field size in bits for SIM_SOPT4_FTM0TRG0SRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT4_FTM0TRG0SRC field.
-#define BR_SIM_SOPT4_FTM0TRG0SRC (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0TRG0SRC))
-#endif
+/*! @brief Read current value of the SIM_SOPT4_FTM0TRG0SRC field. */
+#define BR_SIM_SOPT4_FTM0TRG0SRC(x) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0TRG0SRC))
 
-//! @brief Format value for bitfield SIM_SOPT4_FTM0TRG0SRC.
-#define BF_SIM_SOPT4_FTM0TRG0SRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT4_FTM0TRG0SRC), uint32_t) & BM_SIM_SOPT4_FTM0TRG0SRC)
+/*! @brief Format value for bitfield SIM_SOPT4_FTM0TRG0SRC. */
+#define BF_SIM_SOPT4_FTM0TRG0SRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT4_FTM0TRG0SRC) & BM_SIM_SOPT4_FTM0TRG0SRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM0TRG0SRC field to a new value.
-#define BW_SIM_SOPT4_FTM0TRG0SRC(v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR, BP_SIM_SOPT4_FTM0TRG0SRC) = (v))
-#endif
-//@}
+/*! @brief Set the FTM0TRG0SRC field to a new value. */
+#define BW_SIM_SOPT4_FTM0TRG0SRC(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT4_ADDR(x), BP_SIM_SOPT4_FTM0TRG0SRC) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT5 - System Options Register 5
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT5 - System Options Register 5
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT5 - System Options Register 5 (RW)
  *
@@ -909,32 +806,33 @@ typedef union _hw_sim_sopt5
     uint32_t U;
     struct _hw_sim_sopt5_bitfields
     {
-        uint32_t UART0TXSRC : 1;       //!< [0] UART 0 transmit data source select
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t UART0RXSRC : 2;       //!< [3:2] UART 0 receive data source select
-        uint32_t UART1TXSRC : 1;       //!< [4] UART 1 transmit data source select
-        uint32_t RESERVED1 : 1;        //!< [5]
-        uint32_t UART1RXSRC : 2;       //!< [7:6] UART 1 receive data source select
-        uint32_t RESERVED2 : 24;       //!< [31:8]
+        uint32_t UART0TXSRC : 1;       /*!< [0] UART 0 transmit data source select
+                                        * */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t UART0RXSRC : 2;       /*!< [3:2] UART 0 receive data source select
+                                        * */
+        uint32_t UART1TXSRC : 1;       /*!< [4] UART 1 transmit data source select
+                                        * */
+        uint32_t RESERVED1 : 1;        /*!< [5]  */
+        uint32_t UART1RXSRC : 2;       /*!< [7:6] UART 1 receive data source select
+                                        * */
+        uint32_t RESERVED2 : 24;       /*!< [31:8]  */
     } B;
 } hw_sim_sopt5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT5 register
  */
-//@{
-#define HW_SIM_SOPT5_ADDR        (REGS_SIM_BASE + 0x1010U)
+/*@{*/
+#define HW_SIM_SOPT5_ADDR(x)     ((x) + 0x1010U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT5             (*(__IO hw_sim_sopt5_t *) HW_SIM_SOPT5_ADDR)
-#define HW_SIM_SOPT5_RD()        (HW_SIM_SOPT5.U)
-#define HW_SIM_SOPT5_WR(v)       (HW_SIM_SOPT5.U = (v))
-#define HW_SIM_SOPT5_SET(v)      (HW_SIM_SOPT5_WR(HW_SIM_SOPT5_RD() |  (v)))
-#define HW_SIM_SOPT5_CLR(v)      (HW_SIM_SOPT5_WR(HW_SIM_SOPT5_RD() & ~(v)))
-#define HW_SIM_SOPT5_TOG(v)      (HW_SIM_SOPT5_WR(HW_SIM_SOPT5_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT5(x)          (*(__IO hw_sim_sopt5_t *) HW_SIM_SOPT5_ADDR(x))
+#define HW_SIM_SOPT5_RD(x)       (HW_SIM_SOPT5(x).U)
+#define HW_SIM_SOPT5_WR(x, v)    (HW_SIM_SOPT5(x).U = (v))
+#define HW_SIM_SOPT5_SET(x, v)   (HW_SIM_SOPT5_WR(x, HW_SIM_SOPT5_RD(x) |  (v)))
+#define HW_SIM_SOPT5_CLR(x, v)   (HW_SIM_SOPT5_WR(x, HW_SIM_SOPT5_RD(x) & ~(v)))
+#define HW_SIM_SOPT5_TOG(x, v)   (HW_SIM_SOPT5_WR(x, HW_SIM_SOPT5_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT5 bitfields
@@ -949,24 +847,20 @@ typedef union _hw_sim_sopt5
  * - 0 - UART0_TX pin
  * - 1 - UART0_TX pin modulated with FTM1 channel 0 output
  */
-//@{
-#define BP_SIM_SOPT5_UART0TXSRC (0U)       //!< Bit position for SIM_SOPT5_UART0TXSRC.
-#define BM_SIM_SOPT5_UART0TXSRC (0x00000001U) //!< Bit mask for SIM_SOPT5_UART0TXSRC.
-#define BS_SIM_SOPT5_UART0TXSRC (1U)       //!< Bit field size in bits for SIM_SOPT5_UART0TXSRC.
+/*@{*/
+#define BP_SIM_SOPT5_UART0TXSRC (0U)       /*!< Bit position for SIM_SOPT5_UART0TXSRC. */
+#define BM_SIM_SOPT5_UART0TXSRC (0x00000001U) /*!< Bit mask for SIM_SOPT5_UART0TXSRC. */
+#define BS_SIM_SOPT5_UART0TXSRC (1U)       /*!< Bit field size in bits for SIM_SOPT5_UART0TXSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT5_UART0TXSRC field.
-#define BR_SIM_SOPT5_UART0TXSRC (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR, BP_SIM_SOPT5_UART0TXSRC))
-#endif
+/*! @brief Read current value of the SIM_SOPT5_UART0TXSRC field. */
+#define BR_SIM_SOPT5_UART0TXSRC(x) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR(x), BP_SIM_SOPT5_UART0TXSRC))
 
-//! @brief Format value for bitfield SIM_SOPT5_UART0TXSRC.
-#define BF_SIM_SOPT5_UART0TXSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT5_UART0TXSRC), uint32_t) & BM_SIM_SOPT5_UART0TXSRC)
+/*! @brief Format value for bitfield SIM_SOPT5_UART0TXSRC. */
+#define BF_SIM_SOPT5_UART0TXSRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT5_UART0TXSRC) & BM_SIM_SOPT5_UART0TXSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART0TXSRC field to a new value.
-#define BW_SIM_SOPT5_UART0TXSRC(v) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR, BP_SIM_SOPT5_UART0TXSRC) = (v))
-#endif
-//@}
+/*! @brief Set the UART0TXSRC field to a new value. */
+#define BW_SIM_SOPT5_UART0TXSRC(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR(x), BP_SIM_SOPT5_UART0TXSRC) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT5, field UART0RXSRC[3:2] (RW)
@@ -979,24 +873,20 @@ typedef union _hw_sim_sopt5
  * - 10 - CMP1
  * - 11 - Reserved
  */
-//@{
-#define BP_SIM_SOPT5_UART0RXSRC (2U)       //!< Bit position for SIM_SOPT5_UART0RXSRC.
-#define BM_SIM_SOPT5_UART0RXSRC (0x0000000CU) //!< Bit mask for SIM_SOPT5_UART0RXSRC.
-#define BS_SIM_SOPT5_UART0RXSRC (2U)       //!< Bit field size in bits for SIM_SOPT5_UART0RXSRC.
+/*@{*/
+#define BP_SIM_SOPT5_UART0RXSRC (2U)       /*!< Bit position for SIM_SOPT5_UART0RXSRC. */
+#define BM_SIM_SOPT5_UART0RXSRC (0x0000000CU) /*!< Bit mask for SIM_SOPT5_UART0RXSRC. */
+#define BS_SIM_SOPT5_UART0RXSRC (2U)       /*!< Bit field size in bits for SIM_SOPT5_UART0RXSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT5_UART0RXSRC field.
-#define BR_SIM_SOPT5_UART0RXSRC (HW_SIM_SOPT5.B.UART0RXSRC)
-#endif
+/*! @brief Read current value of the SIM_SOPT5_UART0RXSRC field. */
+#define BR_SIM_SOPT5_UART0RXSRC(x) (HW_SIM_SOPT5(x).B.UART0RXSRC)
 
-//! @brief Format value for bitfield SIM_SOPT5_UART0RXSRC.
-#define BF_SIM_SOPT5_UART0RXSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT5_UART0RXSRC), uint32_t) & BM_SIM_SOPT5_UART0RXSRC)
+/*! @brief Format value for bitfield SIM_SOPT5_UART0RXSRC. */
+#define BF_SIM_SOPT5_UART0RXSRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT5_UART0RXSRC) & BM_SIM_SOPT5_UART0RXSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART0RXSRC field to a new value.
-#define BW_SIM_SOPT5_UART0RXSRC(v) (HW_SIM_SOPT5_WR((HW_SIM_SOPT5_RD() & ~BM_SIM_SOPT5_UART0RXSRC) | BF_SIM_SOPT5_UART0RXSRC(v)))
-#endif
-//@}
+/*! @brief Set the UART0RXSRC field to a new value. */
+#define BW_SIM_SOPT5_UART0RXSRC(x, v) (HW_SIM_SOPT5_WR(x, (HW_SIM_SOPT5_RD(x) & ~BM_SIM_SOPT5_UART0RXSRC) | BF_SIM_SOPT5_UART0RXSRC(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT5, field UART1TXSRC[4] (RW)
@@ -1007,24 +897,20 @@ typedef union _hw_sim_sopt5
  * - 0 - UART1_TX pin
  * - 1 - UART1_TX pin modulated with FTM1 channel 0 output
  */
-//@{
-#define BP_SIM_SOPT5_UART1TXSRC (4U)       //!< Bit position for SIM_SOPT5_UART1TXSRC.
-#define BM_SIM_SOPT5_UART1TXSRC (0x00000010U) //!< Bit mask for SIM_SOPT5_UART1TXSRC.
-#define BS_SIM_SOPT5_UART1TXSRC (1U)       //!< Bit field size in bits for SIM_SOPT5_UART1TXSRC.
+/*@{*/
+#define BP_SIM_SOPT5_UART1TXSRC (4U)       /*!< Bit position for SIM_SOPT5_UART1TXSRC. */
+#define BM_SIM_SOPT5_UART1TXSRC (0x00000010U) /*!< Bit mask for SIM_SOPT5_UART1TXSRC. */
+#define BS_SIM_SOPT5_UART1TXSRC (1U)       /*!< Bit field size in bits for SIM_SOPT5_UART1TXSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT5_UART1TXSRC field.
-#define BR_SIM_SOPT5_UART1TXSRC (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR, BP_SIM_SOPT5_UART1TXSRC))
-#endif
+/*! @brief Read current value of the SIM_SOPT5_UART1TXSRC field. */
+#define BR_SIM_SOPT5_UART1TXSRC(x) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR(x), BP_SIM_SOPT5_UART1TXSRC))
 
-//! @brief Format value for bitfield SIM_SOPT5_UART1TXSRC.
-#define BF_SIM_SOPT5_UART1TXSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT5_UART1TXSRC), uint32_t) & BM_SIM_SOPT5_UART1TXSRC)
+/*! @brief Format value for bitfield SIM_SOPT5_UART1TXSRC. */
+#define BF_SIM_SOPT5_UART1TXSRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT5_UART1TXSRC) & BM_SIM_SOPT5_UART1TXSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART1TXSRC field to a new value.
-#define BW_SIM_SOPT5_UART1TXSRC(v) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR, BP_SIM_SOPT5_UART1TXSRC) = (v))
-#endif
-//@}
+/*! @brief Set the UART1TXSRC field to a new value. */
+#define BW_SIM_SOPT5_UART1TXSRC(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT5_ADDR(x), BP_SIM_SOPT5_UART1TXSRC) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT5, field UART1RXSRC[7:6] (RW)
@@ -1037,30 +923,25 @@ typedef union _hw_sim_sopt5
  * - 10 - CMP1
  * - 11 - Reserved
  */
-//@{
-#define BP_SIM_SOPT5_UART1RXSRC (6U)       //!< Bit position for SIM_SOPT5_UART1RXSRC.
-#define BM_SIM_SOPT5_UART1RXSRC (0x000000C0U) //!< Bit mask for SIM_SOPT5_UART1RXSRC.
-#define BS_SIM_SOPT5_UART1RXSRC (2U)       //!< Bit field size in bits for SIM_SOPT5_UART1RXSRC.
+/*@{*/
+#define BP_SIM_SOPT5_UART1RXSRC (6U)       /*!< Bit position for SIM_SOPT5_UART1RXSRC. */
+#define BM_SIM_SOPT5_UART1RXSRC (0x000000C0U) /*!< Bit mask for SIM_SOPT5_UART1RXSRC. */
+#define BS_SIM_SOPT5_UART1RXSRC (2U)       /*!< Bit field size in bits for SIM_SOPT5_UART1RXSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT5_UART1RXSRC field.
-#define BR_SIM_SOPT5_UART1RXSRC (HW_SIM_SOPT5.B.UART1RXSRC)
-#endif
+/*! @brief Read current value of the SIM_SOPT5_UART1RXSRC field. */
+#define BR_SIM_SOPT5_UART1RXSRC(x) (HW_SIM_SOPT5(x).B.UART1RXSRC)
 
-//! @brief Format value for bitfield SIM_SOPT5_UART1RXSRC.
-#define BF_SIM_SOPT5_UART1RXSRC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT5_UART1RXSRC), uint32_t) & BM_SIM_SOPT5_UART1RXSRC)
+/*! @brief Format value for bitfield SIM_SOPT5_UART1RXSRC. */
+#define BF_SIM_SOPT5_UART1RXSRC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT5_UART1RXSRC) & BM_SIM_SOPT5_UART1RXSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART1RXSRC field to a new value.
-#define BW_SIM_SOPT5_UART1RXSRC(v) (HW_SIM_SOPT5_WR((HW_SIM_SOPT5_RD() & ~BM_SIM_SOPT5_UART1RXSRC) | BF_SIM_SOPT5_UART1RXSRC(v)))
-#endif
-//@}
+/*! @brief Set the UART1RXSRC field to a new value. */
+#define BW_SIM_SOPT5_UART1RXSRC(x, v) (HW_SIM_SOPT5_WR(x, (HW_SIM_SOPT5_RD(x) & ~BM_SIM_SOPT5_UART1RXSRC) | BF_SIM_SOPT5_UART1RXSRC(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SOPT7 - System Options Register 7
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SOPT7 - System Options Register 7
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SOPT7 - System Options Register 7 (RW)
  *
@@ -1071,30 +952,27 @@ typedef union _hw_sim_sopt7
     uint32_t U;
     struct _hw_sim_sopt7_bitfields
     {
-        uint32_t ADC0TRGSEL : 4;       //!< [3:0] ADC0 trigger select
-        uint32_t ADC0PRETRGSEL : 1;    //!< [4] ADC0 pretrigger select
-        uint32_t RESERVED0 : 2;        //!< [6:5]
-        uint32_t ADC0ALTTRGEN : 1;     //!< [7] ADC0 alternate trigger enable
-        uint32_t RESERVED1 : 24;       //!< [31:8]
+        uint32_t ADC0TRGSEL : 4;       /*!< [3:0] ADC0 trigger select */
+        uint32_t ADC0PRETRGSEL : 1;    /*!< [4] ADC0 pretrigger select */
+        uint32_t RESERVED0 : 2;        /*!< [6:5]  */
+        uint32_t ADC0ALTTRGEN : 1;     /*!< [7] ADC0 alternate trigger enable */
+        uint32_t RESERVED1 : 24;       /*!< [31:8]  */
     } B;
 } hw_sim_sopt7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SOPT7 register
  */
-//@{
-#define HW_SIM_SOPT7_ADDR        (REGS_SIM_BASE + 0x1018U)
+/*@{*/
+#define HW_SIM_SOPT7_ADDR(x)     ((x) + 0x1018U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SOPT7             (*(__IO hw_sim_sopt7_t *) HW_SIM_SOPT7_ADDR)
-#define HW_SIM_SOPT7_RD()        (HW_SIM_SOPT7.U)
-#define HW_SIM_SOPT7_WR(v)       (HW_SIM_SOPT7.U = (v))
-#define HW_SIM_SOPT7_SET(v)      (HW_SIM_SOPT7_WR(HW_SIM_SOPT7_RD() |  (v)))
-#define HW_SIM_SOPT7_CLR(v)      (HW_SIM_SOPT7_WR(HW_SIM_SOPT7_RD() & ~(v)))
-#define HW_SIM_SOPT7_TOG(v)      (HW_SIM_SOPT7_WR(HW_SIM_SOPT7_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SOPT7(x)          (*(__IO hw_sim_sopt7_t *) HW_SIM_SOPT7_ADDR(x))
+#define HW_SIM_SOPT7_RD(x)       (HW_SIM_SOPT7(x).U)
+#define HW_SIM_SOPT7_WR(x, v)    (HW_SIM_SOPT7(x).U = (v))
+#define HW_SIM_SOPT7_SET(x, v)   (HW_SIM_SOPT7_WR(x, HW_SIM_SOPT7_RD(x) |  (v)))
+#define HW_SIM_SOPT7_CLR(x, v)   (HW_SIM_SOPT7_WR(x, HW_SIM_SOPT7_RD(x) & ~(v)))
+#define HW_SIM_SOPT7_TOG(x, v)   (HW_SIM_SOPT7_WR(x, HW_SIM_SOPT7_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SOPT7 bitfields
@@ -1124,24 +1002,20 @@ typedef union _hw_sim_sopt7
  * - 1110 - Low-power timer trigger
  * - 1111 - Unused
  */
-//@{
-#define BP_SIM_SOPT7_ADC0TRGSEL (0U)       //!< Bit position for SIM_SOPT7_ADC0TRGSEL.
-#define BM_SIM_SOPT7_ADC0TRGSEL (0x0000000FU) //!< Bit mask for SIM_SOPT7_ADC0TRGSEL.
-#define BS_SIM_SOPT7_ADC0TRGSEL (4U)       //!< Bit field size in bits for SIM_SOPT7_ADC0TRGSEL.
+/*@{*/
+#define BP_SIM_SOPT7_ADC0TRGSEL (0U)       /*!< Bit position for SIM_SOPT7_ADC0TRGSEL. */
+#define BM_SIM_SOPT7_ADC0TRGSEL (0x0000000FU) /*!< Bit mask for SIM_SOPT7_ADC0TRGSEL. */
+#define BS_SIM_SOPT7_ADC0TRGSEL (4U)       /*!< Bit field size in bits for SIM_SOPT7_ADC0TRGSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT7_ADC0TRGSEL field.
-#define BR_SIM_SOPT7_ADC0TRGSEL (HW_SIM_SOPT7.B.ADC0TRGSEL)
-#endif
+/*! @brief Read current value of the SIM_SOPT7_ADC0TRGSEL field. */
+#define BR_SIM_SOPT7_ADC0TRGSEL(x) (HW_SIM_SOPT7(x).B.ADC0TRGSEL)
 
-//! @brief Format value for bitfield SIM_SOPT7_ADC0TRGSEL.
-#define BF_SIM_SOPT7_ADC0TRGSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT7_ADC0TRGSEL), uint32_t) & BM_SIM_SOPT7_ADC0TRGSEL)
+/*! @brief Format value for bitfield SIM_SOPT7_ADC0TRGSEL. */
+#define BF_SIM_SOPT7_ADC0TRGSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT7_ADC0TRGSEL) & BM_SIM_SOPT7_ADC0TRGSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADC0TRGSEL field to a new value.
-#define BW_SIM_SOPT7_ADC0TRGSEL(v) (HW_SIM_SOPT7_WR((HW_SIM_SOPT7_RD() & ~BM_SIM_SOPT7_ADC0TRGSEL) | BF_SIM_SOPT7_ADC0TRGSEL(v)))
-#endif
-//@}
+/*! @brief Set the ADC0TRGSEL field to a new value. */
+#define BW_SIM_SOPT7_ADC0TRGSEL(x, v) (HW_SIM_SOPT7_WR(x, (HW_SIM_SOPT7_RD(x) & ~BM_SIM_SOPT7_ADC0TRGSEL) | BF_SIM_SOPT7_ADC0TRGSEL(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT7, field ADC0PRETRGSEL[4] (RW)
@@ -1153,24 +1027,20 @@ typedef union _hw_sim_sopt7
  * - 0 - Pre-trigger A
  * - 1 - Pre-trigger B
  */
-//@{
-#define BP_SIM_SOPT7_ADC0PRETRGSEL (4U)    //!< Bit position for SIM_SOPT7_ADC0PRETRGSEL.
-#define BM_SIM_SOPT7_ADC0PRETRGSEL (0x00000010U) //!< Bit mask for SIM_SOPT7_ADC0PRETRGSEL.
-#define BS_SIM_SOPT7_ADC0PRETRGSEL (1U)    //!< Bit field size in bits for SIM_SOPT7_ADC0PRETRGSEL.
+/*@{*/
+#define BP_SIM_SOPT7_ADC0PRETRGSEL (4U)    /*!< Bit position for SIM_SOPT7_ADC0PRETRGSEL. */
+#define BM_SIM_SOPT7_ADC0PRETRGSEL (0x00000010U) /*!< Bit mask for SIM_SOPT7_ADC0PRETRGSEL. */
+#define BS_SIM_SOPT7_ADC0PRETRGSEL (1U)    /*!< Bit field size in bits for SIM_SOPT7_ADC0PRETRGSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT7_ADC0PRETRGSEL field.
-#define BR_SIM_SOPT7_ADC0PRETRGSEL (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR, BP_SIM_SOPT7_ADC0PRETRGSEL))
-#endif
+/*! @brief Read current value of the SIM_SOPT7_ADC0PRETRGSEL field. */
+#define BR_SIM_SOPT7_ADC0PRETRGSEL(x) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR(x), BP_SIM_SOPT7_ADC0PRETRGSEL))
 
-//! @brief Format value for bitfield SIM_SOPT7_ADC0PRETRGSEL.
-#define BF_SIM_SOPT7_ADC0PRETRGSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT7_ADC0PRETRGSEL), uint32_t) & BM_SIM_SOPT7_ADC0PRETRGSEL)
+/*! @brief Format value for bitfield SIM_SOPT7_ADC0PRETRGSEL. */
+#define BF_SIM_SOPT7_ADC0PRETRGSEL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT7_ADC0PRETRGSEL) & BM_SIM_SOPT7_ADC0PRETRGSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADC0PRETRGSEL field to a new value.
-#define BW_SIM_SOPT7_ADC0PRETRGSEL(v) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR, BP_SIM_SOPT7_ADC0PRETRGSEL) = (v))
-#endif
-//@}
+/*! @brief Set the ADC0PRETRGSEL field to a new value. */
+#define BW_SIM_SOPT7_ADC0PRETRGSEL(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR(x), BP_SIM_SOPT7_ADC0PRETRGSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SOPT7, field ADC0ALTTRGEN[7] (RW)
@@ -1181,30 +1051,25 @@ typedef union _hw_sim_sopt7
  * - 0 - PDB trigger selected for ADC0.
  * - 1 - Alternate trigger selected for ADC0.
  */
-//@{
-#define BP_SIM_SOPT7_ADC0ALTTRGEN (7U)     //!< Bit position for SIM_SOPT7_ADC0ALTTRGEN.
-#define BM_SIM_SOPT7_ADC0ALTTRGEN (0x00000080U) //!< Bit mask for SIM_SOPT7_ADC0ALTTRGEN.
-#define BS_SIM_SOPT7_ADC0ALTTRGEN (1U)     //!< Bit field size in bits for SIM_SOPT7_ADC0ALTTRGEN.
+/*@{*/
+#define BP_SIM_SOPT7_ADC0ALTTRGEN (7U)     /*!< Bit position for SIM_SOPT7_ADC0ALTTRGEN. */
+#define BM_SIM_SOPT7_ADC0ALTTRGEN (0x00000080U) /*!< Bit mask for SIM_SOPT7_ADC0ALTTRGEN. */
+#define BS_SIM_SOPT7_ADC0ALTTRGEN (1U)     /*!< Bit field size in bits for SIM_SOPT7_ADC0ALTTRGEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SOPT7_ADC0ALTTRGEN field.
-#define BR_SIM_SOPT7_ADC0ALTTRGEN (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR, BP_SIM_SOPT7_ADC0ALTTRGEN))
-#endif
+/*! @brief Read current value of the SIM_SOPT7_ADC0ALTTRGEN field. */
+#define BR_SIM_SOPT7_ADC0ALTTRGEN(x) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR(x), BP_SIM_SOPT7_ADC0ALTTRGEN))
 
-//! @brief Format value for bitfield SIM_SOPT7_ADC0ALTTRGEN.
-#define BF_SIM_SOPT7_ADC0ALTTRGEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SOPT7_ADC0ALTTRGEN), uint32_t) & BM_SIM_SOPT7_ADC0ALTTRGEN)
+/*! @brief Format value for bitfield SIM_SOPT7_ADC0ALTTRGEN. */
+#define BF_SIM_SOPT7_ADC0ALTTRGEN(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SOPT7_ADC0ALTTRGEN) & BM_SIM_SOPT7_ADC0ALTTRGEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADC0ALTTRGEN field to a new value.
-#define BW_SIM_SOPT7_ADC0ALTTRGEN(v) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR, BP_SIM_SOPT7_ADC0ALTTRGEN) = (v))
-#endif
-//@}
+/*! @brief Set the ADC0ALTTRGEN field to a new value. */
+#define BW_SIM_SOPT7_ADC0ALTTRGEN(x, v) (BITBAND_ACCESS32(HW_SIM_SOPT7_ADDR(x), BP_SIM_SOPT7_ADC0ALTTRGEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SDID - System Device Identification Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SDID - System Device Identification Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SDID - System Device Identification Register (RO)
  *
@@ -1215,26 +1080,23 @@ typedef union _hw_sim_sdid
     uint32_t U;
     struct _hw_sim_sdid_bitfields
     {
-        uint32_t PINID : 4;            //!< [3:0] Pincount identification
-        uint32_t FAMID : 3;            //!< [6:4] Kinetis family identification
-        uint32_t RESERVED0 : 5;        //!< [11:7]
-        uint32_t REVID : 4;            //!< [15:12] Device revision number
-        uint32_t RESERVED1 : 16;       //!< [31:16]
+        uint32_t PINID : 4;            /*!< [3:0] Pincount identification */
+        uint32_t FAMID : 3;            /*!< [6:4] Kinetis family identification */
+        uint32_t RESERVED0 : 5;        /*!< [11:7]  */
+        uint32_t REVID : 4;            /*!< [15:12] Device revision number */
+        uint32_t RESERVED1 : 16;       /*!< [31:16]  */
     } B;
 } hw_sim_sdid_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SDID register
  */
-//@{
-#define HW_SIM_SDID_ADDR         (REGS_SIM_BASE + 0x1024U)
+/*@{*/
+#define HW_SIM_SDID_ADDR(x)      ((x) + 0x1024U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SDID              (*(__I hw_sim_sdid_t *) HW_SIM_SDID_ADDR)
-#define HW_SIM_SDID_RD()         (HW_SIM_SDID.U)
-#endif
-//@}
+#define HW_SIM_SDID(x)           (*(__I hw_sim_sdid_t *) HW_SIM_SDID_ADDR(x))
+#define HW_SIM_SDID_RD(x)        (HW_SIM_SDID(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SDID bitfields
@@ -1263,16 +1125,14 @@ typedef union _hw_sim_sdid
  * - 1110 - Reserved
  * - 1111 - Reserved
  */
-//@{
-#define BP_SIM_SDID_PINID    (0U)          //!< Bit position for SIM_SDID_PINID.
-#define BM_SIM_SDID_PINID    (0x0000000FU) //!< Bit mask for SIM_SDID_PINID.
-#define BS_SIM_SDID_PINID    (4U)          //!< Bit field size in bits for SIM_SDID_PINID.
+/*@{*/
+#define BP_SIM_SDID_PINID    (0U)          /*!< Bit position for SIM_SDID_PINID. */
+#define BM_SIM_SDID_PINID    (0x0000000FU) /*!< Bit mask for SIM_SDID_PINID. */
+#define BS_SIM_SDID_PINID    (4U)          /*!< Bit field size in bits for SIM_SDID_PINID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SDID_PINID field.
-#define BR_SIM_SDID_PINID    (HW_SIM_SDID.B.PINID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_SDID_PINID field. */
+#define BR_SIM_SDID_PINID(x) (HW_SIM_SDID(x).B.PINID)
+/*@}*/
 
 /*!
  * @name Register SIM_SDID, field FAMID[6:4] (RO)
@@ -1289,38 +1149,33 @@ typedef union _hw_sim_sdid
  * - 110 - Reserved
  * - 111 - Reserved
  */
-//@{
-#define BP_SIM_SDID_FAMID    (4U)          //!< Bit position for SIM_SDID_FAMID.
-#define BM_SIM_SDID_FAMID    (0x00000070U) //!< Bit mask for SIM_SDID_FAMID.
-#define BS_SIM_SDID_FAMID    (3U)          //!< Bit field size in bits for SIM_SDID_FAMID.
+/*@{*/
+#define BP_SIM_SDID_FAMID    (4U)          /*!< Bit position for SIM_SDID_FAMID. */
+#define BM_SIM_SDID_FAMID    (0x00000070U) /*!< Bit mask for SIM_SDID_FAMID. */
+#define BS_SIM_SDID_FAMID    (3U)          /*!< Bit field size in bits for SIM_SDID_FAMID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SDID_FAMID field.
-#define BR_SIM_SDID_FAMID    (HW_SIM_SDID.B.FAMID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_SDID_FAMID field. */
+#define BR_SIM_SDID_FAMID(x) (HW_SIM_SDID(x).B.FAMID)
+/*@}*/
 
 /*!
  * @name Register SIM_SDID, field REVID[15:12] (RO)
  *
  * Specifies the silicon implementation number for the device.
  */
-//@{
-#define BP_SIM_SDID_REVID    (12U)         //!< Bit position for SIM_SDID_REVID.
-#define BM_SIM_SDID_REVID    (0x0000F000U) //!< Bit mask for SIM_SDID_REVID.
-#define BS_SIM_SDID_REVID    (4U)          //!< Bit field size in bits for SIM_SDID_REVID.
+/*@{*/
+#define BP_SIM_SDID_REVID    (12U)         /*!< Bit position for SIM_SDID_REVID. */
+#define BM_SIM_SDID_REVID    (0x0000F000U) /*!< Bit mask for SIM_SDID_REVID. */
+#define BS_SIM_SDID_REVID    (4U)          /*!< Bit field size in bits for SIM_SDID_REVID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SDID_REVID field.
-#define BR_SIM_SDID_REVID    (HW_SIM_SDID.B.REVID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_SDID_REVID field. */
+#define BR_SIM_SDID_REVID(x) (HW_SIM_SDID(x).B.REVID)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SCGC4 - System Clock Gating Control Register 4
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SCGC4 - System Clock Gating Control Register 4
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SCGC4 - System Clock Gating Control Register 4 (RW)
  *
@@ -1331,39 +1186,36 @@ typedef union _hw_sim_scgc4
     uint32_t U;
     struct _hw_sim_scgc4_bitfields
     {
-        uint32_t RESERVED0 : 1;        //!< [0]
-        uint32_t EWMb : 1;             //!< [1] EWM Clock Gate Control
-        uint32_t CMTb : 1;             //!< [2] CMT Clock Gate Control
-        uint32_t RESERVED1 : 3;        //!< [5:3]
-        uint32_t I2C0b : 1;            //!< [6] I2C0 Clock Gate Control
-        uint32_t RESERVED2 : 3;        //!< [9:7]
-        uint32_t UART0b : 1;           //!< [10] UART0 Clock Gate Control
-        uint32_t UART1b : 1;           //!< [11] UART1 Clock Gate Control
-        uint32_t UART2b : 1;           //!< [12] UART2 Clock Gate Control
-        uint32_t RESERVED3 : 5;        //!< [17:13]
-        uint32_t USBOTG : 1;           //!< [18] USB Clock Gate Control
-        uint32_t CMP : 1;              //!< [19] Comparator Clock Gate Control
-        uint32_t VREFb : 1;            //!< [20] VREF Clock Gate Control
-        uint32_t RESERVED4 : 11;       //!< [31:21]
+        uint32_t RESERVED0 : 1;        /*!< [0]  */
+        uint32_t EWMb : 1;             /*!< [1] EWM Clock Gate Control */
+        uint32_t CMTb : 1;             /*!< [2] CMT Clock Gate Control */
+        uint32_t RESERVED1 : 3;        /*!< [5:3]  */
+        uint32_t I2C0b : 1;            /*!< [6] I2C0 Clock Gate Control */
+        uint32_t RESERVED2 : 3;        /*!< [9:7]  */
+        uint32_t UART0b : 1;           /*!< [10] UART0 Clock Gate Control */
+        uint32_t UART1b : 1;           /*!< [11] UART1 Clock Gate Control */
+        uint32_t UART2b : 1;           /*!< [12] UART2 Clock Gate Control */
+        uint32_t RESERVED3 : 5;        /*!< [17:13]  */
+        uint32_t USBOTG : 1;           /*!< [18] USB Clock Gate Control */
+        uint32_t CMP : 1;              /*!< [19] Comparator Clock Gate Control */
+        uint32_t VREFb : 1;            /*!< [20] VREF Clock Gate Control */
+        uint32_t RESERVED4 : 11;       /*!< [31:21]  */
     } B;
 } hw_sim_scgc4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SCGC4 register
  */
-//@{
-#define HW_SIM_SCGC4_ADDR        (REGS_SIM_BASE + 0x1034U)
+/*@{*/
+#define HW_SIM_SCGC4_ADDR(x)     ((x) + 0x1034U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SCGC4             (*(__IO hw_sim_scgc4_t *) HW_SIM_SCGC4_ADDR)
-#define HW_SIM_SCGC4_RD()        (HW_SIM_SCGC4.U)
-#define HW_SIM_SCGC4_WR(v)       (HW_SIM_SCGC4.U = (v))
-#define HW_SIM_SCGC4_SET(v)      (HW_SIM_SCGC4_WR(HW_SIM_SCGC4_RD() |  (v)))
-#define HW_SIM_SCGC4_CLR(v)      (HW_SIM_SCGC4_WR(HW_SIM_SCGC4_RD() & ~(v)))
-#define HW_SIM_SCGC4_TOG(v)      (HW_SIM_SCGC4_WR(HW_SIM_SCGC4_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SCGC4(x)          (*(__IO hw_sim_scgc4_t *) HW_SIM_SCGC4_ADDR(x))
+#define HW_SIM_SCGC4_RD(x)       (HW_SIM_SCGC4(x).U)
+#define HW_SIM_SCGC4_WR(x, v)    (HW_SIM_SCGC4(x).U = (v))
+#define HW_SIM_SCGC4_SET(x, v)   (HW_SIM_SCGC4_WR(x, HW_SIM_SCGC4_RD(x) |  (v)))
+#define HW_SIM_SCGC4_CLR(x, v)   (HW_SIM_SCGC4_WR(x, HW_SIM_SCGC4_RD(x) & ~(v)))
+#define HW_SIM_SCGC4_TOG(x, v)   (HW_SIM_SCGC4_WR(x, HW_SIM_SCGC4_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SCGC4 bitfields
@@ -1378,24 +1230,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_EWM     (1U)          //!< Bit position for SIM_SCGC4_EWM.
-#define BM_SIM_SCGC4_EWM     (0x00000002U) //!< Bit mask for SIM_SCGC4_EWM.
-#define BS_SIM_SCGC4_EWM     (1U)          //!< Bit field size in bits for SIM_SCGC4_EWM.
+/*@{*/
+#define BP_SIM_SCGC4_EWM     (1U)          /*!< Bit position for SIM_SCGC4_EWM. */
+#define BM_SIM_SCGC4_EWM     (0x00000002U) /*!< Bit mask for SIM_SCGC4_EWM. */
+#define BS_SIM_SCGC4_EWM     (1U)          /*!< Bit field size in bits for SIM_SCGC4_EWM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_EWM field.
-#define BR_SIM_SCGC4_EWM     (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_EWM))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_EWM field. */
+#define BR_SIM_SCGC4_EWM(x)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_EWM))
 
-//! @brief Format value for bitfield SIM_SCGC4_EWM.
-#define BF_SIM_SCGC4_EWM(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_EWM), uint32_t) & BM_SIM_SCGC4_EWM)
+/*! @brief Format value for bitfield SIM_SCGC4_EWM. */
+#define BF_SIM_SCGC4_EWM(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_EWM) & BM_SIM_SCGC4_EWM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EWM field to a new value.
-#define BW_SIM_SCGC4_EWM(v)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_EWM) = (v))
-#endif
-//@}
+/*! @brief Set the EWM field to a new value. */
+#define BW_SIM_SCGC4_EWM(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_EWM) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field CMT[2] (RW)
@@ -1406,24 +1254,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_CMT     (2U)          //!< Bit position for SIM_SCGC4_CMT.
-#define BM_SIM_SCGC4_CMT     (0x00000004U) //!< Bit mask for SIM_SCGC4_CMT.
-#define BS_SIM_SCGC4_CMT     (1U)          //!< Bit field size in bits for SIM_SCGC4_CMT.
+/*@{*/
+#define BP_SIM_SCGC4_CMT     (2U)          /*!< Bit position for SIM_SCGC4_CMT. */
+#define BM_SIM_SCGC4_CMT     (0x00000004U) /*!< Bit mask for SIM_SCGC4_CMT. */
+#define BS_SIM_SCGC4_CMT     (1U)          /*!< Bit field size in bits for SIM_SCGC4_CMT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_CMT field.
-#define BR_SIM_SCGC4_CMT     (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_CMT))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_CMT field. */
+#define BR_SIM_SCGC4_CMT(x)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_CMT))
 
-//! @brief Format value for bitfield SIM_SCGC4_CMT.
-#define BF_SIM_SCGC4_CMT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_CMT), uint32_t) & BM_SIM_SCGC4_CMT)
+/*! @brief Format value for bitfield SIM_SCGC4_CMT. */
+#define BF_SIM_SCGC4_CMT(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_CMT) & BM_SIM_SCGC4_CMT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMT field to a new value.
-#define BW_SIM_SCGC4_CMT(v)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_CMT) = (v))
-#endif
-//@}
+/*! @brief Set the CMT field to a new value. */
+#define BW_SIM_SCGC4_CMT(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_CMT) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field I2C0[6] (RW)
@@ -1434,24 +1278,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_I2C0    (6U)          //!< Bit position for SIM_SCGC4_I2C0.
-#define BM_SIM_SCGC4_I2C0    (0x00000040U) //!< Bit mask for SIM_SCGC4_I2C0.
-#define BS_SIM_SCGC4_I2C0    (1U)          //!< Bit field size in bits for SIM_SCGC4_I2C0.
+/*@{*/
+#define BP_SIM_SCGC4_I2C0    (6U)          /*!< Bit position for SIM_SCGC4_I2C0. */
+#define BM_SIM_SCGC4_I2C0    (0x00000040U) /*!< Bit mask for SIM_SCGC4_I2C0. */
+#define BS_SIM_SCGC4_I2C0    (1U)          /*!< Bit field size in bits for SIM_SCGC4_I2C0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_I2C0 field.
-#define BR_SIM_SCGC4_I2C0    (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_I2C0))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_I2C0 field. */
+#define BR_SIM_SCGC4_I2C0(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_I2C0))
 
-//! @brief Format value for bitfield SIM_SCGC4_I2C0.
-#define BF_SIM_SCGC4_I2C0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_I2C0), uint32_t) & BM_SIM_SCGC4_I2C0)
+/*! @brief Format value for bitfield SIM_SCGC4_I2C0. */
+#define BF_SIM_SCGC4_I2C0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_I2C0) & BM_SIM_SCGC4_I2C0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the I2C0 field to a new value.
-#define BW_SIM_SCGC4_I2C0(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_I2C0) = (v))
-#endif
-//@}
+/*! @brief Set the I2C0 field to a new value. */
+#define BW_SIM_SCGC4_I2C0(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_I2C0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field UART0[10] (RW)
@@ -1462,24 +1302,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_UART0   (10U)         //!< Bit position for SIM_SCGC4_UART0.
-#define BM_SIM_SCGC4_UART0   (0x00000400U) //!< Bit mask for SIM_SCGC4_UART0.
-#define BS_SIM_SCGC4_UART0   (1U)          //!< Bit field size in bits for SIM_SCGC4_UART0.
+/*@{*/
+#define BP_SIM_SCGC4_UART0   (10U)         /*!< Bit position for SIM_SCGC4_UART0. */
+#define BM_SIM_SCGC4_UART0   (0x00000400U) /*!< Bit mask for SIM_SCGC4_UART0. */
+#define BS_SIM_SCGC4_UART0   (1U)          /*!< Bit field size in bits for SIM_SCGC4_UART0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_UART0 field.
-#define BR_SIM_SCGC4_UART0   (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART0))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_UART0 field. */
+#define BR_SIM_SCGC4_UART0(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART0))
 
-//! @brief Format value for bitfield SIM_SCGC4_UART0.
-#define BF_SIM_SCGC4_UART0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_UART0), uint32_t) & BM_SIM_SCGC4_UART0)
+/*! @brief Format value for bitfield SIM_SCGC4_UART0. */
+#define BF_SIM_SCGC4_UART0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_UART0) & BM_SIM_SCGC4_UART0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART0 field to a new value.
-#define BW_SIM_SCGC4_UART0(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART0) = (v))
-#endif
-//@}
+/*! @brief Set the UART0 field to a new value. */
+#define BW_SIM_SCGC4_UART0(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field UART1[11] (RW)
@@ -1490,24 +1326,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_UART1   (11U)         //!< Bit position for SIM_SCGC4_UART1.
-#define BM_SIM_SCGC4_UART1   (0x00000800U) //!< Bit mask for SIM_SCGC4_UART1.
-#define BS_SIM_SCGC4_UART1   (1U)          //!< Bit field size in bits for SIM_SCGC4_UART1.
+/*@{*/
+#define BP_SIM_SCGC4_UART1   (11U)         /*!< Bit position for SIM_SCGC4_UART1. */
+#define BM_SIM_SCGC4_UART1   (0x00000800U) /*!< Bit mask for SIM_SCGC4_UART1. */
+#define BS_SIM_SCGC4_UART1   (1U)          /*!< Bit field size in bits for SIM_SCGC4_UART1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_UART1 field.
-#define BR_SIM_SCGC4_UART1   (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART1))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_UART1 field. */
+#define BR_SIM_SCGC4_UART1(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART1))
 
-//! @brief Format value for bitfield SIM_SCGC4_UART1.
-#define BF_SIM_SCGC4_UART1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_UART1), uint32_t) & BM_SIM_SCGC4_UART1)
+/*! @brief Format value for bitfield SIM_SCGC4_UART1. */
+#define BF_SIM_SCGC4_UART1(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_UART1) & BM_SIM_SCGC4_UART1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART1 field to a new value.
-#define BW_SIM_SCGC4_UART1(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART1) = (v))
-#endif
-//@}
+/*! @brief Set the UART1 field to a new value. */
+#define BW_SIM_SCGC4_UART1(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART1) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field UART2[12] (RW)
@@ -1518,24 +1350,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_UART2   (12U)         //!< Bit position for SIM_SCGC4_UART2.
-#define BM_SIM_SCGC4_UART2   (0x00001000U) //!< Bit mask for SIM_SCGC4_UART2.
-#define BS_SIM_SCGC4_UART2   (1U)          //!< Bit field size in bits for SIM_SCGC4_UART2.
+/*@{*/
+#define BP_SIM_SCGC4_UART2   (12U)         /*!< Bit position for SIM_SCGC4_UART2. */
+#define BM_SIM_SCGC4_UART2   (0x00001000U) /*!< Bit mask for SIM_SCGC4_UART2. */
+#define BS_SIM_SCGC4_UART2   (1U)          /*!< Bit field size in bits for SIM_SCGC4_UART2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_UART2 field.
-#define BR_SIM_SCGC4_UART2   (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART2))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_UART2 field. */
+#define BR_SIM_SCGC4_UART2(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART2))
 
-//! @brief Format value for bitfield SIM_SCGC4_UART2.
-#define BF_SIM_SCGC4_UART2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_UART2), uint32_t) & BM_SIM_SCGC4_UART2)
+/*! @brief Format value for bitfield SIM_SCGC4_UART2. */
+#define BF_SIM_SCGC4_UART2(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_UART2) & BM_SIM_SCGC4_UART2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UART2 field to a new value.
-#define BW_SIM_SCGC4_UART2(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_UART2) = (v))
-#endif
-//@}
+/*! @brief Set the UART2 field to a new value. */
+#define BW_SIM_SCGC4_UART2(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_UART2) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field USBOTG[18] (RW)
@@ -1546,24 +1374,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_USBOTG  (18U)         //!< Bit position for SIM_SCGC4_USBOTG.
-#define BM_SIM_SCGC4_USBOTG  (0x00040000U) //!< Bit mask for SIM_SCGC4_USBOTG.
-#define BS_SIM_SCGC4_USBOTG  (1U)          //!< Bit field size in bits for SIM_SCGC4_USBOTG.
+/*@{*/
+#define BP_SIM_SCGC4_USBOTG  (18U)         /*!< Bit position for SIM_SCGC4_USBOTG. */
+#define BM_SIM_SCGC4_USBOTG  (0x00040000U) /*!< Bit mask for SIM_SCGC4_USBOTG. */
+#define BS_SIM_SCGC4_USBOTG  (1U)          /*!< Bit field size in bits for SIM_SCGC4_USBOTG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_USBOTG field.
-#define BR_SIM_SCGC4_USBOTG  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_USBOTG))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_USBOTG field. */
+#define BR_SIM_SCGC4_USBOTG(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_USBOTG))
 
-//! @brief Format value for bitfield SIM_SCGC4_USBOTG.
-#define BF_SIM_SCGC4_USBOTG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_USBOTG), uint32_t) & BM_SIM_SCGC4_USBOTG)
+/*! @brief Format value for bitfield SIM_SCGC4_USBOTG. */
+#define BF_SIM_SCGC4_USBOTG(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_USBOTG) & BM_SIM_SCGC4_USBOTG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBOTG field to a new value.
-#define BW_SIM_SCGC4_USBOTG(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_USBOTG) = (v))
-#endif
-//@}
+/*! @brief Set the USBOTG field to a new value. */
+#define BW_SIM_SCGC4_USBOTG(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_USBOTG) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field CMP[19] (RW)
@@ -1574,24 +1398,20 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_CMP     (19U)         //!< Bit position for SIM_SCGC4_CMP.
-#define BM_SIM_SCGC4_CMP     (0x00080000U) //!< Bit mask for SIM_SCGC4_CMP.
-#define BS_SIM_SCGC4_CMP     (1U)          //!< Bit field size in bits for SIM_SCGC4_CMP.
+/*@{*/
+#define BP_SIM_SCGC4_CMP     (19U)         /*!< Bit position for SIM_SCGC4_CMP. */
+#define BM_SIM_SCGC4_CMP     (0x00080000U) /*!< Bit mask for SIM_SCGC4_CMP. */
+#define BS_SIM_SCGC4_CMP     (1U)          /*!< Bit field size in bits for SIM_SCGC4_CMP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_CMP field.
-#define BR_SIM_SCGC4_CMP     (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_CMP))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_CMP field. */
+#define BR_SIM_SCGC4_CMP(x)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_CMP))
 
-//! @brief Format value for bitfield SIM_SCGC4_CMP.
-#define BF_SIM_SCGC4_CMP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_CMP), uint32_t) & BM_SIM_SCGC4_CMP)
+/*! @brief Format value for bitfield SIM_SCGC4_CMP. */
+#define BF_SIM_SCGC4_CMP(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_CMP) & BM_SIM_SCGC4_CMP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMP field to a new value.
-#define BW_SIM_SCGC4_CMP(v)  (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_CMP) = (v))
-#endif
-//@}
+/*! @brief Set the CMP field to a new value. */
+#define BW_SIM_SCGC4_CMP(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_CMP) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC4, field VREF[20] (RW)
@@ -1602,30 +1422,25 @@ typedef union _hw_sim_scgc4
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC4_VREF    (20U)         //!< Bit position for SIM_SCGC4_VREF.
-#define BM_SIM_SCGC4_VREF    (0x00100000U) //!< Bit mask for SIM_SCGC4_VREF.
-#define BS_SIM_SCGC4_VREF    (1U)          //!< Bit field size in bits for SIM_SCGC4_VREF.
+/*@{*/
+#define BP_SIM_SCGC4_VREF    (20U)         /*!< Bit position for SIM_SCGC4_VREF. */
+#define BM_SIM_SCGC4_VREF    (0x00100000U) /*!< Bit mask for SIM_SCGC4_VREF. */
+#define BS_SIM_SCGC4_VREF    (1U)          /*!< Bit field size in bits for SIM_SCGC4_VREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC4_VREF field.
-#define BR_SIM_SCGC4_VREF    (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_VREF))
-#endif
+/*! @brief Read current value of the SIM_SCGC4_VREF field. */
+#define BR_SIM_SCGC4_VREF(x) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_VREF))
 
-//! @brief Format value for bitfield SIM_SCGC4_VREF.
-#define BF_SIM_SCGC4_VREF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC4_VREF), uint32_t) & BM_SIM_SCGC4_VREF)
+/*! @brief Format value for bitfield SIM_SCGC4_VREF. */
+#define BF_SIM_SCGC4_VREF(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC4_VREF) & BM_SIM_SCGC4_VREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VREF field to a new value.
-#define BW_SIM_SCGC4_VREF(v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR, BP_SIM_SCGC4_VREF) = (v))
-#endif
-//@}
+/*! @brief Set the VREF field to a new value. */
+#define BW_SIM_SCGC4_VREF(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC4_ADDR(x), BP_SIM_SCGC4_VREF) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SCGC5 - System Clock Gating Control Register 5
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SCGC5 - System Clock Gating Control Register 5
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SCGC5 - System Clock Gating Control Register 5 (RW)
  *
@@ -1636,35 +1451,32 @@ typedef union _hw_sim_scgc5
     uint32_t U;
     struct _hw_sim_scgc5_bitfields
     {
-        uint32_t LPTIMER : 1;          //!< [0] Low Power Timer Access Control
-        uint32_t RESERVED0 : 4;        //!< [4:1]
-        uint32_t TSI : 1;              //!< [5] TSI Clock Gate Control
-        uint32_t RESERVED1 : 3;        //!< [8:6]
-        uint32_t PORTAb : 1;           //!< [9] Port A Clock Gate Control
-        uint32_t PORTBb : 1;           //!< [10] Port B Clock Gate Control
-        uint32_t PORTCb : 1;           //!< [11] Port C Clock Gate Control
-        uint32_t PORTDb : 1;           //!< [12] Port D Clock Gate Control
-        uint32_t PORTEb : 1;           //!< [13] Port E Clock Gate Control
-        uint32_t RESERVED2 : 18;       //!< [31:14]
+        uint32_t LPTIMER : 1;          /*!< [0] Low Power Timer Access Control */
+        uint32_t RESERVED0 : 4;        /*!< [4:1]  */
+        uint32_t TSI : 1;              /*!< [5] TSI Clock Gate Control */
+        uint32_t RESERVED1 : 3;        /*!< [8:6]  */
+        uint32_t PORTAb : 1;           /*!< [9] Port A Clock Gate Control */
+        uint32_t PORTBb : 1;           /*!< [10] Port B Clock Gate Control */
+        uint32_t PORTCb : 1;           /*!< [11] Port C Clock Gate Control */
+        uint32_t PORTDb : 1;           /*!< [12] Port D Clock Gate Control */
+        uint32_t PORTEb : 1;           /*!< [13] Port E Clock Gate Control */
+        uint32_t RESERVED2 : 18;       /*!< [31:14]  */
     } B;
 } hw_sim_scgc5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SCGC5 register
  */
-//@{
-#define HW_SIM_SCGC5_ADDR        (REGS_SIM_BASE + 0x1038U)
+/*@{*/
+#define HW_SIM_SCGC5_ADDR(x)     ((x) + 0x1038U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SCGC5             (*(__IO hw_sim_scgc5_t *) HW_SIM_SCGC5_ADDR)
-#define HW_SIM_SCGC5_RD()        (HW_SIM_SCGC5.U)
-#define HW_SIM_SCGC5_WR(v)       (HW_SIM_SCGC5.U = (v))
-#define HW_SIM_SCGC5_SET(v)      (HW_SIM_SCGC5_WR(HW_SIM_SCGC5_RD() |  (v)))
-#define HW_SIM_SCGC5_CLR(v)      (HW_SIM_SCGC5_WR(HW_SIM_SCGC5_RD() & ~(v)))
-#define HW_SIM_SCGC5_TOG(v)      (HW_SIM_SCGC5_WR(HW_SIM_SCGC5_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SCGC5(x)          (*(__IO hw_sim_scgc5_t *) HW_SIM_SCGC5_ADDR(x))
+#define HW_SIM_SCGC5_RD(x)       (HW_SIM_SCGC5(x).U)
+#define HW_SIM_SCGC5_WR(x, v)    (HW_SIM_SCGC5(x).U = (v))
+#define HW_SIM_SCGC5_SET(x, v)   (HW_SIM_SCGC5_WR(x, HW_SIM_SCGC5_RD(x) |  (v)))
+#define HW_SIM_SCGC5_CLR(x, v)   (HW_SIM_SCGC5_WR(x, HW_SIM_SCGC5_RD(x) & ~(v)))
+#define HW_SIM_SCGC5_TOG(x, v)   (HW_SIM_SCGC5_WR(x, HW_SIM_SCGC5_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SCGC5 bitfields
@@ -1679,24 +1491,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Access disabled
  * - 1 - Access enabled
  */
-//@{
-#define BP_SIM_SCGC5_LPTIMER (0U)          //!< Bit position for SIM_SCGC5_LPTIMER.
-#define BM_SIM_SCGC5_LPTIMER (0x00000001U) //!< Bit mask for SIM_SCGC5_LPTIMER.
-#define BS_SIM_SCGC5_LPTIMER (1U)          //!< Bit field size in bits for SIM_SCGC5_LPTIMER.
+/*@{*/
+#define BP_SIM_SCGC5_LPTIMER (0U)          /*!< Bit position for SIM_SCGC5_LPTIMER. */
+#define BM_SIM_SCGC5_LPTIMER (0x00000001U) /*!< Bit mask for SIM_SCGC5_LPTIMER. */
+#define BS_SIM_SCGC5_LPTIMER (1U)          /*!< Bit field size in bits for SIM_SCGC5_LPTIMER. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_LPTIMER field.
-#define BR_SIM_SCGC5_LPTIMER (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_LPTIMER))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_LPTIMER field. */
+#define BR_SIM_SCGC5_LPTIMER(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_LPTIMER))
 
-//! @brief Format value for bitfield SIM_SCGC5_LPTIMER.
-#define BF_SIM_SCGC5_LPTIMER(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_LPTIMER), uint32_t) & BM_SIM_SCGC5_LPTIMER)
+/*! @brief Format value for bitfield SIM_SCGC5_LPTIMER. */
+#define BF_SIM_SCGC5_LPTIMER(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_LPTIMER) & BM_SIM_SCGC5_LPTIMER)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPTIMER field to a new value.
-#define BW_SIM_SCGC5_LPTIMER(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_LPTIMER) = (v))
-#endif
-//@}
+/*! @brief Set the LPTIMER field to a new value. */
+#define BW_SIM_SCGC5_LPTIMER(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_LPTIMER) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field TSI[5] (RW)
@@ -1707,24 +1515,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_TSI     (5U)          //!< Bit position for SIM_SCGC5_TSI.
-#define BM_SIM_SCGC5_TSI     (0x00000020U) //!< Bit mask for SIM_SCGC5_TSI.
-#define BS_SIM_SCGC5_TSI     (1U)          //!< Bit field size in bits for SIM_SCGC5_TSI.
+/*@{*/
+#define BP_SIM_SCGC5_TSI     (5U)          /*!< Bit position for SIM_SCGC5_TSI. */
+#define BM_SIM_SCGC5_TSI     (0x00000020U) /*!< Bit mask for SIM_SCGC5_TSI. */
+#define BS_SIM_SCGC5_TSI     (1U)          /*!< Bit field size in bits for SIM_SCGC5_TSI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_TSI field.
-#define BR_SIM_SCGC5_TSI     (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_TSI))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_TSI field. */
+#define BR_SIM_SCGC5_TSI(x)  (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_TSI))
 
-//! @brief Format value for bitfield SIM_SCGC5_TSI.
-#define BF_SIM_SCGC5_TSI(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_TSI), uint32_t) & BM_SIM_SCGC5_TSI)
+/*! @brief Format value for bitfield SIM_SCGC5_TSI. */
+#define BF_SIM_SCGC5_TSI(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_TSI) & BM_SIM_SCGC5_TSI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TSI field to a new value.
-#define BW_SIM_SCGC5_TSI(v)  (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_TSI) = (v))
-#endif
-//@}
+/*! @brief Set the TSI field to a new value. */
+#define BW_SIM_SCGC5_TSI(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_TSI) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field PORTA[9] (RW)
@@ -1735,24 +1539,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_PORTA   (9U)          //!< Bit position for SIM_SCGC5_PORTA.
-#define BM_SIM_SCGC5_PORTA   (0x00000200U) //!< Bit mask for SIM_SCGC5_PORTA.
-#define BS_SIM_SCGC5_PORTA   (1U)          //!< Bit field size in bits for SIM_SCGC5_PORTA.
+/*@{*/
+#define BP_SIM_SCGC5_PORTA   (9U)          /*!< Bit position for SIM_SCGC5_PORTA. */
+#define BM_SIM_SCGC5_PORTA   (0x00000200U) /*!< Bit mask for SIM_SCGC5_PORTA. */
+#define BS_SIM_SCGC5_PORTA   (1U)          /*!< Bit field size in bits for SIM_SCGC5_PORTA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_PORTA field.
-#define BR_SIM_SCGC5_PORTA   (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTA))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_PORTA field. */
+#define BR_SIM_SCGC5_PORTA(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTA))
 
-//! @brief Format value for bitfield SIM_SCGC5_PORTA.
-#define BF_SIM_SCGC5_PORTA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_PORTA), uint32_t) & BM_SIM_SCGC5_PORTA)
+/*! @brief Format value for bitfield SIM_SCGC5_PORTA. */
+#define BF_SIM_SCGC5_PORTA(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_PORTA) & BM_SIM_SCGC5_PORTA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PORTA field to a new value.
-#define BW_SIM_SCGC5_PORTA(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTA) = (v))
-#endif
-//@}
+/*! @brief Set the PORTA field to a new value. */
+#define BW_SIM_SCGC5_PORTA(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTA) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field PORTB[10] (RW)
@@ -1763,24 +1563,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_PORTB   (10U)         //!< Bit position for SIM_SCGC5_PORTB.
-#define BM_SIM_SCGC5_PORTB   (0x00000400U) //!< Bit mask for SIM_SCGC5_PORTB.
-#define BS_SIM_SCGC5_PORTB   (1U)          //!< Bit field size in bits for SIM_SCGC5_PORTB.
+/*@{*/
+#define BP_SIM_SCGC5_PORTB   (10U)         /*!< Bit position for SIM_SCGC5_PORTB. */
+#define BM_SIM_SCGC5_PORTB   (0x00000400U) /*!< Bit mask for SIM_SCGC5_PORTB. */
+#define BS_SIM_SCGC5_PORTB   (1U)          /*!< Bit field size in bits for SIM_SCGC5_PORTB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_PORTB field.
-#define BR_SIM_SCGC5_PORTB   (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTB))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_PORTB field. */
+#define BR_SIM_SCGC5_PORTB(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTB))
 
-//! @brief Format value for bitfield SIM_SCGC5_PORTB.
-#define BF_SIM_SCGC5_PORTB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_PORTB), uint32_t) & BM_SIM_SCGC5_PORTB)
+/*! @brief Format value for bitfield SIM_SCGC5_PORTB. */
+#define BF_SIM_SCGC5_PORTB(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_PORTB) & BM_SIM_SCGC5_PORTB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PORTB field to a new value.
-#define BW_SIM_SCGC5_PORTB(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTB) = (v))
-#endif
-//@}
+/*! @brief Set the PORTB field to a new value. */
+#define BW_SIM_SCGC5_PORTB(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTB) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field PORTC[11] (RW)
@@ -1791,24 +1587,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_PORTC   (11U)         //!< Bit position for SIM_SCGC5_PORTC.
-#define BM_SIM_SCGC5_PORTC   (0x00000800U) //!< Bit mask for SIM_SCGC5_PORTC.
-#define BS_SIM_SCGC5_PORTC   (1U)          //!< Bit field size in bits for SIM_SCGC5_PORTC.
+/*@{*/
+#define BP_SIM_SCGC5_PORTC   (11U)         /*!< Bit position for SIM_SCGC5_PORTC. */
+#define BM_SIM_SCGC5_PORTC   (0x00000800U) /*!< Bit mask for SIM_SCGC5_PORTC. */
+#define BS_SIM_SCGC5_PORTC   (1U)          /*!< Bit field size in bits for SIM_SCGC5_PORTC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_PORTC field.
-#define BR_SIM_SCGC5_PORTC   (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTC))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_PORTC field. */
+#define BR_SIM_SCGC5_PORTC(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTC))
 
-//! @brief Format value for bitfield SIM_SCGC5_PORTC.
-#define BF_SIM_SCGC5_PORTC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_PORTC), uint32_t) & BM_SIM_SCGC5_PORTC)
+/*! @brief Format value for bitfield SIM_SCGC5_PORTC. */
+#define BF_SIM_SCGC5_PORTC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_PORTC) & BM_SIM_SCGC5_PORTC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PORTC field to a new value.
-#define BW_SIM_SCGC5_PORTC(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTC) = (v))
-#endif
-//@}
+/*! @brief Set the PORTC field to a new value. */
+#define BW_SIM_SCGC5_PORTC(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTC) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field PORTD[12] (RW)
@@ -1819,24 +1611,20 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_PORTD   (12U)         //!< Bit position for SIM_SCGC5_PORTD.
-#define BM_SIM_SCGC5_PORTD   (0x00001000U) //!< Bit mask for SIM_SCGC5_PORTD.
-#define BS_SIM_SCGC5_PORTD   (1U)          //!< Bit field size in bits for SIM_SCGC5_PORTD.
+/*@{*/
+#define BP_SIM_SCGC5_PORTD   (12U)         /*!< Bit position for SIM_SCGC5_PORTD. */
+#define BM_SIM_SCGC5_PORTD   (0x00001000U) /*!< Bit mask for SIM_SCGC5_PORTD. */
+#define BS_SIM_SCGC5_PORTD   (1U)          /*!< Bit field size in bits for SIM_SCGC5_PORTD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_PORTD field.
-#define BR_SIM_SCGC5_PORTD   (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTD))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_PORTD field. */
+#define BR_SIM_SCGC5_PORTD(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTD))
 
-//! @brief Format value for bitfield SIM_SCGC5_PORTD.
-#define BF_SIM_SCGC5_PORTD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_PORTD), uint32_t) & BM_SIM_SCGC5_PORTD)
+/*! @brief Format value for bitfield SIM_SCGC5_PORTD. */
+#define BF_SIM_SCGC5_PORTD(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_PORTD) & BM_SIM_SCGC5_PORTD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PORTD field to a new value.
-#define BW_SIM_SCGC5_PORTD(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTD) = (v))
-#endif
-//@}
+/*! @brief Set the PORTD field to a new value. */
+#define BW_SIM_SCGC5_PORTD(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTD) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC5, field PORTE[13] (RW)
@@ -1847,30 +1635,25 @@ typedef union _hw_sim_scgc5
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC5_PORTE   (13U)         //!< Bit position for SIM_SCGC5_PORTE.
-#define BM_SIM_SCGC5_PORTE   (0x00002000U) //!< Bit mask for SIM_SCGC5_PORTE.
-#define BS_SIM_SCGC5_PORTE   (1U)          //!< Bit field size in bits for SIM_SCGC5_PORTE.
+/*@{*/
+#define BP_SIM_SCGC5_PORTE   (13U)         /*!< Bit position for SIM_SCGC5_PORTE. */
+#define BM_SIM_SCGC5_PORTE   (0x00002000U) /*!< Bit mask for SIM_SCGC5_PORTE. */
+#define BS_SIM_SCGC5_PORTE   (1U)          /*!< Bit field size in bits for SIM_SCGC5_PORTE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC5_PORTE field.
-#define BR_SIM_SCGC5_PORTE   (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTE))
-#endif
+/*! @brief Read current value of the SIM_SCGC5_PORTE field. */
+#define BR_SIM_SCGC5_PORTE(x) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTE))
 
-//! @brief Format value for bitfield SIM_SCGC5_PORTE.
-#define BF_SIM_SCGC5_PORTE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC5_PORTE), uint32_t) & BM_SIM_SCGC5_PORTE)
+/*! @brief Format value for bitfield SIM_SCGC5_PORTE. */
+#define BF_SIM_SCGC5_PORTE(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC5_PORTE) & BM_SIM_SCGC5_PORTE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PORTE field to a new value.
-#define BW_SIM_SCGC5_PORTE(v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR, BP_SIM_SCGC5_PORTE) = (v))
-#endif
-//@}
+/*! @brief Set the PORTE field to a new value. */
+#define BW_SIM_SCGC5_PORTE(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC5_ADDR(x), BP_SIM_SCGC5_PORTE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SCGC6 - System Clock Gating Control Register 6
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SCGC6 - System Clock Gating Control Register 6
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SCGC6 - System Clock Gating Control Register 6 (RW)
  *
@@ -1881,44 +1664,41 @@ typedef union _hw_sim_scgc6
     uint32_t U;
     struct _hw_sim_scgc6_bitfields
     {
-        uint32_t FTFLb : 1;            //!< [0] Flash Memory Clock Gate Control
-        uint32_t DMAMUXb : 1;          //!< [1] DMA Mux Clock Gate Control
-        uint32_t RESERVED0 : 10;       //!< [11:2]
-        uint32_t SPI0b : 1;            //!< [12] SPI0 Clock Gate Control
-        uint32_t RESERVED1 : 2;        //!< [14:13]
-        uint32_t I2S : 1;              //!< [15] I2S Clock Gate Control
-        uint32_t RESERVED2 : 2;        //!< [17:16]
-        uint32_t CRCb : 1;             //!< [18] CRC Clock Gate Control
-        uint32_t RESERVED3 : 2;        //!< [20:19]
-        uint32_t USBDCDb : 1;          //!< [21] USB DCD Clock Gate Control
-        uint32_t PDB : 1;              //!< [22] PDB Clock Gate Control
-        uint32_t PITb : 1;             //!< [23] PIT Clock Gate Control
-        uint32_t FTM0b : 1;            //!< [24] FTM0 Clock Gate Control
-        uint32_t FTM1b : 1;            //!< [25] FTM1 Clock Gate Control
-        uint32_t RESERVED4 : 1;        //!< [26]
-        uint32_t ADC0b : 1;            //!< [27] ADC0 Clock Gate Control
-        uint32_t RESERVED5 : 1;        //!< [28]
-        uint32_t RTCb : 1;             //!< [29] RTC Access Control
-        uint32_t RESERVED6 : 2;        //!< [31:30]
+        uint32_t FTFLb : 1;            /*!< [0] Flash Memory Clock Gate Control */
+        uint32_t DMAMUXb : 1;          /*!< [1] DMA Mux Clock Gate Control */
+        uint32_t RESERVED0 : 10;       /*!< [11:2]  */
+        uint32_t SPI0b : 1;            /*!< [12] SPI0 Clock Gate Control */
+        uint32_t RESERVED1 : 2;        /*!< [14:13]  */
+        uint32_t I2S : 1;              /*!< [15] I2S Clock Gate Control */
+        uint32_t RESERVED2 : 2;        /*!< [17:16]  */
+        uint32_t CRC : 1;              /*!< [18] CRC Clock Gate Control */
+        uint32_t RESERVED3 : 2;        /*!< [20:19]  */
+        uint32_t USBDCDb : 1;          /*!< [21] USB DCD Clock Gate Control */
+        uint32_t PDB : 1;              /*!< [22] PDB Clock Gate Control */
+        uint32_t PITb : 1;             /*!< [23] PIT Clock Gate Control */
+        uint32_t FTM0b : 1;            /*!< [24] FTM0 Clock Gate Control */
+        uint32_t FTM1b : 1;            /*!< [25] FTM1 Clock Gate Control */
+        uint32_t RESERVED4 : 1;        /*!< [26]  */
+        uint32_t ADC0b : 1;            /*!< [27] ADC0 Clock Gate Control */
+        uint32_t RESERVED5 : 1;        /*!< [28]  */
+        uint32_t RTCb : 1;             /*!< [29] RTC Access Control */
+        uint32_t RESERVED6 : 2;        /*!< [31:30]  */
     } B;
 } hw_sim_scgc6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SCGC6 register
  */
-//@{
-#define HW_SIM_SCGC6_ADDR        (REGS_SIM_BASE + 0x103CU)
+/*@{*/
+#define HW_SIM_SCGC6_ADDR(x)     ((x) + 0x103CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SCGC6             (*(__IO hw_sim_scgc6_t *) HW_SIM_SCGC6_ADDR)
-#define HW_SIM_SCGC6_RD()        (HW_SIM_SCGC6.U)
-#define HW_SIM_SCGC6_WR(v)       (HW_SIM_SCGC6.U = (v))
-#define HW_SIM_SCGC6_SET(v)      (HW_SIM_SCGC6_WR(HW_SIM_SCGC6_RD() |  (v)))
-#define HW_SIM_SCGC6_CLR(v)      (HW_SIM_SCGC6_WR(HW_SIM_SCGC6_RD() & ~(v)))
-#define HW_SIM_SCGC6_TOG(v)      (HW_SIM_SCGC6_WR(HW_SIM_SCGC6_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SCGC6(x)          (*(__IO hw_sim_scgc6_t *) HW_SIM_SCGC6_ADDR(x))
+#define HW_SIM_SCGC6_RD(x)       (HW_SIM_SCGC6(x).U)
+#define HW_SIM_SCGC6_WR(x, v)    (HW_SIM_SCGC6(x).U = (v))
+#define HW_SIM_SCGC6_SET(x, v)   (HW_SIM_SCGC6_WR(x, HW_SIM_SCGC6_RD(x) |  (v)))
+#define HW_SIM_SCGC6_CLR(x, v)   (HW_SIM_SCGC6_WR(x, HW_SIM_SCGC6_RD(x) & ~(v)))
+#define HW_SIM_SCGC6_TOG(x, v)   (HW_SIM_SCGC6_WR(x, HW_SIM_SCGC6_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SCGC6 bitfields
@@ -1935,24 +1715,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_FTFL    (0U)          //!< Bit position for SIM_SCGC6_FTFL.
-#define BM_SIM_SCGC6_FTFL    (0x00000001U) //!< Bit mask for SIM_SCGC6_FTFL.
-#define BS_SIM_SCGC6_FTFL    (1U)          //!< Bit field size in bits for SIM_SCGC6_FTFL.
+/*@{*/
+#define BP_SIM_SCGC6_FTFL    (0U)          /*!< Bit position for SIM_SCGC6_FTFL. */
+#define BM_SIM_SCGC6_FTFL    (0x00000001U) /*!< Bit mask for SIM_SCGC6_FTFL. */
+#define BS_SIM_SCGC6_FTFL    (1U)          /*!< Bit field size in bits for SIM_SCGC6_FTFL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_FTFL field.
-#define BR_SIM_SCGC6_FTFL    (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTFL))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_FTFL field. */
+#define BR_SIM_SCGC6_FTFL(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTFL))
 
-//! @brief Format value for bitfield SIM_SCGC6_FTFL.
-#define BF_SIM_SCGC6_FTFL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_FTFL), uint32_t) & BM_SIM_SCGC6_FTFL)
+/*! @brief Format value for bitfield SIM_SCGC6_FTFL. */
+#define BF_SIM_SCGC6_FTFL(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_FTFL) & BM_SIM_SCGC6_FTFL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTFL field to a new value.
-#define BW_SIM_SCGC6_FTFL(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTFL) = (v))
-#endif
-//@}
+/*! @brief Set the FTFL field to a new value. */
+#define BW_SIM_SCGC6_FTFL(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTFL) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field DMAMUX[1] (RW)
@@ -1963,24 +1739,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_DMAMUX  (1U)          //!< Bit position for SIM_SCGC6_DMAMUX.
-#define BM_SIM_SCGC6_DMAMUX  (0x00000002U) //!< Bit mask for SIM_SCGC6_DMAMUX.
-#define BS_SIM_SCGC6_DMAMUX  (1U)          //!< Bit field size in bits for SIM_SCGC6_DMAMUX.
+/*@{*/
+#define BP_SIM_SCGC6_DMAMUX  (1U)          /*!< Bit position for SIM_SCGC6_DMAMUX. */
+#define BM_SIM_SCGC6_DMAMUX  (0x00000002U) /*!< Bit mask for SIM_SCGC6_DMAMUX. */
+#define BS_SIM_SCGC6_DMAMUX  (1U)          /*!< Bit field size in bits for SIM_SCGC6_DMAMUX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_DMAMUX field.
-#define BR_SIM_SCGC6_DMAMUX  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_DMAMUX))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_DMAMUX field. */
+#define BR_SIM_SCGC6_DMAMUX(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_DMAMUX))
 
-//! @brief Format value for bitfield SIM_SCGC6_DMAMUX.
-#define BF_SIM_SCGC6_DMAMUX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_DMAMUX), uint32_t) & BM_SIM_SCGC6_DMAMUX)
+/*! @brief Format value for bitfield SIM_SCGC6_DMAMUX. */
+#define BF_SIM_SCGC6_DMAMUX(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_DMAMUX) & BM_SIM_SCGC6_DMAMUX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAMUX field to a new value.
-#define BW_SIM_SCGC6_DMAMUX(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_DMAMUX) = (v))
-#endif
-//@}
+/*! @brief Set the DMAMUX field to a new value. */
+#define BW_SIM_SCGC6_DMAMUX(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_DMAMUX) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field SPI0[12] (RW)
@@ -1991,24 +1763,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_SPI0    (12U)         //!< Bit position for SIM_SCGC6_SPI0.
-#define BM_SIM_SCGC6_SPI0    (0x00001000U) //!< Bit mask for SIM_SCGC6_SPI0.
-#define BS_SIM_SCGC6_SPI0    (1U)          //!< Bit field size in bits for SIM_SCGC6_SPI0.
+/*@{*/
+#define BP_SIM_SCGC6_SPI0    (12U)         /*!< Bit position for SIM_SCGC6_SPI0. */
+#define BM_SIM_SCGC6_SPI0    (0x00001000U) /*!< Bit mask for SIM_SCGC6_SPI0. */
+#define BS_SIM_SCGC6_SPI0    (1U)          /*!< Bit field size in bits for SIM_SCGC6_SPI0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_SPI0 field.
-#define BR_SIM_SCGC6_SPI0    (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_SPI0))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_SPI0 field. */
+#define BR_SIM_SCGC6_SPI0(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_SPI0))
 
-//! @brief Format value for bitfield SIM_SCGC6_SPI0.
-#define BF_SIM_SCGC6_SPI0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_SPI0), uint32_t) & BM_SIM_SCGC6_SPI0)
+/*! @brief Format value for bitfield SIM_SCGC6_SPI0. */
+#define BF_SIM_SCGC6_SPI0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_SPI0) & BM_SIM_SCGC6_SPI0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPI0 field to a new value.
-#define BW_SIM_SCGC6_SPI0(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_SPI0) = (v))
-#endif
-//@}
+/*! @brief Set the SPI0 field to a new value. */
+#define BW_SIM_SCGC6_SPI0(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_SPI0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field I2S[15] (RW)
@@ -2019,24 +1787,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_I2S     (15U)         //!< Bit position for SIM_SCGC6_I2S.
-#define BM_SIM_SCGC6_I2S     (0x00008000U) //!< Bit mask for SIM_SCGC6_I2S.
-#define BS_SIM_SCGC6_I2S     (1U)          //!< Bit field size in bits for SIM_SCGC6_I2S.
+/*@{*/
+#define BP_SIM_SCGC6_I2S     (15U)         /*!< Bit position for SIM_SCGC6_I2S. */
+#define BM_SIM_SCGC6_I2S     (0x00008000U) /*!< Bit mask for SIM_SCGC6_I2S. */
+#define BS_SIM_SCGC6_I2S     (1U)          /*!< Bit field size in bits for SIM_SCGC6_I2S. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_I2S field.
-#define BR_SIM_SCGC6_I2S     (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_I2S))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_I2S field. */
+#define BR_SIM_SCGC6_I2S(x)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_I2S))
 
-//! @brief Format value for bitfield SIM_SCGC6_I2S.
-#define BF_SIM_SCGC6_I2S(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_I2S), uint32_t) & BM_SIM_SCGC6_I2S)
+/*! @brief Format value for bitfield SIM_SCGC6_I2S. */
+#define BF_SIM_SCGC6_I2S(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_I2S) & BM_SIM_SCGC6_I2S)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the I2S field to a new value.
-#define BW_SIM_SCGC6_I2S(v)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_I2S) = (v))
-#endif
-//@}
+/*! @brief Set the I2S field to a new value. */
+#define BW_SIM_SCGC6_I2S(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_I2S) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field CRC[18] (RW)
@@ -2047,24 +1811,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_CRC     (18U)         //!< Bit position for SIM_SCGC6_CRC.
-#define BM_SIM_SCGC6_CRC     (0x00040000U) //!< Bit mask for SIM_SCGC6_CRC.
-#define BS_SIM_SCGC6_CRC     (1U)          //!< Bit field size in bits for SIM_SCGC6_CRC.
+/*@{*/
+#define BP_SIM_SCGC6_CRC     (18U)         /*!< Bit position for SIM_SCGC6_CRC. */
+#define BM_SIM_SCGC6_CRC     (0x00040000U) /*!< Bit mask for SIM_SCGC6_CRC. */
+#define BS_SIM_SCGC6_CRC     (1U)          /*!< Bit field size in bits for SIM_SCGC6_CRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_CRC field.
-#define BR_SIM_SCGC6_CRC     (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_CRC))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_CRC field. */
+#define BR_SIM_SCGC6_CRC(x)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_CRC))
 
-//! @brief Format value for bitfield SIM_SCGC6_CRC.
-#define BF_SIM_SCGC6_CRC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_CRC), uint32_t) & BM_SIM_SCGC6_CRC)
+/*! @brief Format value for bitfield SIM_SCGC6_CRC. */
+#define BF_SIM_SCGC6_CRC(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_CRC) & BM_SIM_SCGC6_CRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC field to a new value.
-#define BW_SIM_SCGC6_CRC(v)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_CRC) = (v))
-#endif
-//@}
+/*! @brief Set the CRC field to a new value. */
+#define BW_SIM_SCGC6_CRC(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_CRC) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field USBDCD[21] (RW)
@@ -2075,24 +1835,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_USBDCD  (21U)         //!< Bit position for SIM_SCGC6_USBDCD.
-#define BM_SIM_SCGC6_USBDCD  (0x00200000U) //!< Bit mask for SIM_SCGC6_USBDCD.
-#define BS_SIM_SCGC6_USBDCD  (1U)          //!< Bit field size in bits for SIM_SCGC6_USBDCD.
+/*@{*/
+#define BP_SIM_SCGC6_USBDCD  (21U)         /*!< Bit position for SIM_SCGC6_USBDCD. */
+#define BM_SIM_SCGC6_USBDCD  (0x00200000U) /*!< Bit mask for SIM_SCGC6_USBDCD. */
+#define BS_SIM_SCGC6_USBDCD  (1U)          /*!< Bit field size in bits for SIM_SCGC6_USBDCD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_USBDCD field.
-#define BR_SIM_SCGC6_USBDCD  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_USBDCD))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_USBDCD field. */
+#define BR_SIM_SCGC6_USBDCD(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_USBDCD))
 
-//! @brief Format value for bitfield SIM_SCGC6_USBDCD.
-#define BF_SIM_SCGC6_USBDCD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_USBDCD), uint32_t) & BM_SIM_SCGC6_USBDCD)
+/*! @brief Format value for bitfield SIM_SCGC6_USBDCD. */
+#define BF_SIM_SCGC6_USBDCD(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_USBDCD) & BM_SIM_SCGC6_USBDCD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBDCD field to a new value.
-#define BW_SIM_SCGC6_USBDCD(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_USBDCD) = (v))
-#endif
-//@}
+/*! @brief Set the USBDCD field to a new value. */
+#define BW_SIM_SCGC6_USBDCD(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_USBDCD) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field PDB[22] (RW)
@@ -2103,24 +1859,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_PDB     (22U)         //!< Bit position for SIM_SCGC6_PDB.
-#define BM_SIM_SCGC6_PDB     (0x00400000U) //!< Bit mask for SIM_SCGC6_PDB.
-#define BS_SIM_SCGC6_PDB     (1U)          //!< Bit field size in bits for SIM_SCGC6_PDB.
+/*@{*/
+#define BP_SIM_SCGC6_PDB     (22U)         /*!< Bit position for SIM_SCGC6_PDB. */
+#define BM_SIM_SCGC6_PDB     (0x00400000U) /*!< Bit mask for SIM_SCGC6_PDB. */
+#define BS_SIM_SCGC6_PDB     (1U)          /*!< Bit field size in bits for SIM_SCGC6_PDB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_PDB field.
-#define BR_SIM_SCGC6_PDB     (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_PDB))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_PDB field. */
+#define BR_SIM_SCGC6_PDB(x)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_PDB))
 
-//! @brief Format value for bitfield SIM_SCGC6_PDB.
-#define BF_SIM_SCGC6_PDB(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_PDB), uint32_t) & BM_SIM_SCGC6_PDB)
+/*! @brief Format value for bitfield SIM_SCGC6_PDB. */
+#define BF_SIM_SCGC6_PDB(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_PDB) & BM_SIM_SCGC6_PDB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PDB field to a new value.
-#define BW_SIM_SCGC6_PDB(v)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_PDB) = (v))
-#endif
-//@}
+/*! @brief Set the PDB field to a new value. */
+#define BW_SIM_SCGC6_PDB(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_PDB) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field PIT[23] (RW)
@@ -2131,24 +1883,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_PIT     (23U)         //!< Bit position for SIM_SCGC6_PIT.
-#define BM_SIM_SCGC6_PIT     (0x00800000U) //!< Bit mask for SIM_SCGC6_PIT.
-#define BS_SIM_SCGC6_PIT     (1U)          //!< Bit field size in bits for SIM_SCGC6_PIT.
+/*@{*/
+#define BP_SIM_SCGC6_PIT     (23U)         /*!< Bit position for SIM_SCGC6_PIT. */
+#define BM_SIM_SCGC6_PIT     (0x00800000U) /*!< Bit mask for SIM_SCGC6_PIT. */
+#define BS_SIM_SCGC6_PIT     (1U)          /*!< Bit field size in bits for SIM_SCGC6_PIT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_PIT field.
-#define BR_SIM_SCGC6_PIT     (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_PIT))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_PIT field. */
+#define BR_SIM_SCGC6_PIT(x)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_PIT))
 
-//! @brief Format value for bitfield SIM_SCGC6_PIT.
-#define BF_SIM_SCGC6_PIT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_PIT), uint32_t) & BM_SIM_SCGC6_PIT)
+/*! @brief Format value for bitfield SIM_SCGC6_PIT. */
+#define BF_SIM_SCGC6_PIT(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_PIT) & BM_SIM_SCGC6_PIT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PIT field to a new value.
-#define BW_SIM_SCGC6_PIT(v)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_PIT) = (v))
-#endif
-//@}
+/*! @brief Set the PIT field to a new value. */
+#define BW_SIM_SCGC6_PIT(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_PIT) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field FTM0[24] (RW)
@@ -2159,24 +1907,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_FTM0    (24U)         //!< Bit position for SIM_SCGC6_FTM0.
-#define BM_SIM_SCGC6_FTM0    (0x01000000U) //!< Bit mask for SIM_SCGC6_FTM0.
-#define BS_SIM_SCGC6_FTM0    (1U)          //!< Bit field size in bits for SIM_SCGC6_FTM0.
+/*@{*/
+#define BP_SIM_SCGC6_FTM0    (24U)         /*!< Bit position for SIM_SCGC6_FTM0. */
+#define BM_SIM_SCGC6_FTM0    (0x01000000U) /*!< Bit mask for SIM_SCGC6_FTM0. */
+#define BS_SIM_SCGC6_FTM0    (1U)          /*!< Bit field size in bits for SIM_SCGC6_FTM0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_FTM0 field.
-#define BR_SIM_SCGC6_FTM0    (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTM0))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_FTM0 field. */
+#define BR_SIM_SCGC6_FTM0(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTM0))
 
-//! @brief Format value for bitfield SIM_SCGC6_FTM0.
-#define BF_SIM_SCGC6_FTM0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_FTM0), uint32_t) & BM_SIM_SCGC6_FTM0)
+/*! @brief Format value for bitfield SIM_SCGC6_FTM0. */
+#define BF_SIM_SCGC6_FTM0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_FTM0) & BM_SIM_SCGC6_FTM0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM0 field to a new value.
-#define BW_SIM_SCGC6_FTM0(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTM0) = (v))
-#endif
-//@}
+/*! @brief Set the FTM0 field to a new value. */
+#define BW_SIM_SCGC6_FTM0(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTM0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field FTM1[25] (RW)
@@ -2187,24 +1931,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_FTM1    (25U)         //!< Bit position for SIM_SCGC6_FTM1.
-#define BM_SIM_SCGC6_FTM1    (0x02000000U) //!< Bit mask for SIM_SCGC6_FTM1.
-#define BS_SIM_SCGC6_FTM1    (1U)          //!< Bit field size in bits for SIM_SCGC6_FTM1.
+/*@{*/
+#define BP_SIM_SCGC6_FTM1    (25U)         /*!< Bit position for SIM_SCGC6_FTM1. */
+#define BM_SIM_SCGC6_FTM1    (0x02000000U) /*!< Bit mask for SIM_SCGC6_FTM1. */
+#define BS_SIM_SCGC6_FTM1    (1U)          /*!< Bit field size in bits for SIM_SCGC6_FTM1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_FTM1 field.
-#define BR_SIM_SCGC6_FTM1    (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTM1))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_FTM1 field. */
+#define BR_SIM_SCGC6_FTM1(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTM1))
 
-//! @brief Format value for bitfield SIM_SCGC6_FTM1.
-#define BF_SIM_SCGC6_FTM1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_FTM1), uint32_t) & BM_SIM_SCGC6_FTM1)
+/*! @brief Format value for bitfield SIM_SCGC6_FTM1. */
+#define BF_SIM_SCGC6_FTM1(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_FTM1) & BM_SIM_SCGC6_FTM1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FTM1 field to a new value.
-#define BW_SIM_SCGC6_FTM1(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_FTM1) = (v))
-#endif
-//@}
+/*! @brief Set the FTM1 field to a new value. */
+#define BW_SIM_SCGC6_FTM1(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_FTM1) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field ADC0[27] (RW)
@@ -2215,24 +1955,20 @@ typedef union _hw_sim_scgc6
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC6_ADC0    (27U)         //!< Bit position for SIM_SCGC6_ADC0.
-#define BM_SIM_SCGC6_ADC0    (0x08000000U) //!< Bit mask for SIM_SCGC6_ADC0.
-#define BS_SIM_SCGC6_ADC0    (1U)          //!< Bit field size in bits for SIM_SCGC6_ADC0.
+/*@{*/
+#define BP_SIM_SCGC6_ADC0    (27U)         /*!< Bit position for SIM_SCGC6_ADC0. */
+#define BM_SIM_SCGC6_ADC0    (0x08000000U) /*!< Bit mask for SIM_SCGC6_ADC0. */
+#define BS_SIM_SCGC6_ADC0    (1U)          /*!< Bit field size in bits for SIM_SCGC6_ADC0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_ADC0 field.
-#define BR_SIM_SCGC6_ADC0    (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_ADC0))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_ADC0 field. */
+#define BR_SIM_SCGC6_ADC0(x) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_ADC0))
 
-//! @brief Format value for bitfield SIM_SCGC6_ADC0.
-#define BF_SIM_SCGC6_ADC0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_ADC0), uint32_t) & BM_SIM_SCGC6_ADC0)
+/*! @brief Format value for bitfield SIM_SCGC6_ADC0. */
+#define BF_SIM_SCGC6_ADC0(v) ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_ADC0) & BM_SIM_SCGC6_ADC0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADC0 field to a new value.
-#define BW_SIM_SCGC6_ADC0(v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_ADC0) = (v))
-#endif
-//@}
+/*! @brief Set the ADC0 field to a new value. */
+#define BW_SIM_SCGC6_ADC0(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_ADC0) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_SCGC6, field RTC[29] (RW)
@@ -2243,30 +1979,25 @@ typedef union _hw_sim_scgc6
  * - 0 - Access and interrupts disabled
  * - 1 - Access and interrupts enabled
  */
-//@{
-#define BP_SIM_SCGC6_RTC     (29U)         //!< Bit position for SIM_SCGC6_RTC.
-#define BM_SIM_SCGC6_RTC     (0x20000000U) //!< Bit mask for SIM_SCGC6_RTC.
-#define BS_SIM_SCGC6_RTC     (1U)          //!< Bit field size in bits for SIM_SCGC6_RTC.
+/*@{*/
+#define BP_SIM_SCGC6_RTC     (29U)         /*!< Bit position for SIM_SCGC6_RTC. */
+#define BM_SIM_SCGC6_RTC     (0x20000000U) /*!< Bit mask for SIM_SCGC6_RTC. */
+#define BS_SIM_SCGC6_RTC     (1U)          /*!< Bit field size in bits for SIM_SCGC6_RTC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC6_RTC field.
-#define BR_SIM_SCGC6_RTC     (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_RTC))
-#endif
+/*! @brief Read current value of the SIM_SCGC6_RTC field. */
+#define BR_SIM_SCGC6_RTC(x)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_RTC))
 
-//! @brief Format value for bitfield SIM_SCGC6_RTC.
-#define BF_SIM_SCGC6_RTC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC6_RTC), uint32_t) & BM_SIM_SCGC6_RTC)
+/*! @brief Format value for bitfield SIM_SCGC6_RTC. */
+#define BF_SIM_SCGC6_RTC(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC6_RTC) & BM_SIM_SCGC6_RTC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RTC field to a new value.
-#define BW_SIM_SCGC6_RTC(v)  (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR, BP_SIM_SCGC6_RTC) = (v))
-#endif
-//@}
+/*! @brief Set the RTC field to a new value. */
+#define BW_SIM_SCGC6_RTC(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC6_ADDR(x), BP_SIM_SCGC6_RTC) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_SCGC7 - System Clock Gating Control Register 7
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_SCGC7 - System Clock Gating Control Register 7
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_SCGC7 - System Clock Gating Control Register 7 (RW)
  *
@@ -2277,28 +2008,25 @@ typedef union _hw_sim_scgc7
     uint32_t U;
     struct _hw_sim_scgc7_bitfields
     {
-        uint32_t RESERVED0 : 1;        //!< [0]
-        uint32_t DMAb : 1;             //!< [1] DMA Clock Gate Control
-        uint32_t RESERVED1 : 30;       //!< [31:2]
+        uint32_t RESERVED0 : 1;        /*!< [0]  */
+        uint32_t DMA : 1;              /*!< [1] DMA Clock Gate Control */
+        uint32_t RESERVED1 : 30;       /*!< [31:2]  */
     } B;
 } hw_sim_scgc7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_SCGC7 register
  */
-//@{
-#define HW_SIM_SCGC7_ADDR        (REGS_SIM_BASE + 0x1040U)
+/*@{*/
+#define HW_SIM_SCGC7_ADDR(x)     ((x) + 0x1040U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_SCGC7             (*(__IO hw_sim_scgc7_t *) HW_SIM_SCGC7_ADDR)
-#define HW_SIM_SCGC7_RD()        (HW_SIM_SCGC7.U)
-#define HW_SIM_SCGC7_WR(v)       (HW_SIM_SCGC7.U = (v))
-#define HW_SIM_SCGC7_SET(v)      (HW_SIM_SCGC7_WR(HW_SIM_SCGC7_RD() |  (v)))
-#define HW_SIM_SCGC7_CLR(v)      (HW_SIM_SCGC7_WR(HW_SIM_SCGC7_RD() & ~(v)))
-#define HW_SIM_SCGC7_TOG(v)      (HW_SIM_SCGC7_WR(HW_SIM_SCGC7_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_SCGC7(x)          (*(__IO hw_sim_scgc7_t *) HW_SIM_SCGC7_ADDR(x))
+#define HW_SIM_SCGC7_RD(x)       (HW_SIM_SCGC7(x).U)
+#define HW_SIM_SCGC7_WR(x, v)    (HW_SIM_SCGC7(x).U = (v))
+#define HW_SIM_SCGC7_SET(x, v)   (HW_SIM_SCGC7_WR(x, HW_SIM_SCGC7_RD(x) |  (v)))
+#define HW_SIM_SCGC7_CLR(x, v)   (HW_SIM_SCGC7_WR(x, HW_SIM_SCGC7_RD(x) & ~(v)))
+#define HW_SIM_SCGC7_TOG(x, v)   (HW_SIM_SCGC7_WR(x, HW_SIM_SCGC7_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_SCGC7 bitfields
@@ -2313,30 +2041,25 @@ typedef union _hw_sim_scgc7
  * - 0 - Clock disabled
  * - 1 - Clock enabled
  */
-//@{
-#define BP_SIM_SCGC7_DMA     (1U)          //!< Bit position for SIM_SCGC7_DMA.
-#define BM_SIM_SCGC7_DMA     (0x00000002U) //!< Bit mask for SIM_SCGC7_DMA.
-#define BS_SIM_SCGC7_DMA     (1U)          //!< Bit field size in bits for SIM_SCGC7_DMA.
+/*@{*/
+#define BP_SIM_SCGC7_DMA     (1U)          /*!< Bit position for SIM_SCGC7_DMA. */
+#define BM_SIM_SCGC7_DMA     (0x00000002U) /*!< Bit mask for SIM_SCGC7_DMA. */
+#define BS_SIM_SCGC7_DMA     (1U)          /*!< Bit field size in bits for SIM_SCGC7_DMA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_SCGC7_DMA field.
-#define BR_SIM_SCGC7_DMA     (BITBAND_ACCESS32(HW_SIM_SCGC7_ADDR, BP_SIM_SCGC7_DMA))
-#endif
+/*! @brief Read current value of the SIM_SCGC7_DMA field. */
+#define BR_SIM_SCGC7_DMA(x)  (BITBAND_ACCESS32(HW_SIM_SCGC7_ADDR(x), BP_SIM_SCGC7_DMA))
 
-//! @brief Format value for bitfield SIM_SCGC7_DMA.
-#define BF_SIM_SCGC7_DMA(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_SCGC7_DMA), uint32_t) & BM_SIM_SCGC7_DMA)
+/*! @brief Format value for bitfield SIM_SCGC7_DMA. */
+#define BF_SIM_SCGC7_DMA(v)  ((uint32_t)((uint32_t)(v) << BP_SIM_SCGC7_DMA) & BM_SIM_SCGC7_DMA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMA field to a new value.
-#define BW_SIM_SCGC7_DMA(v)  (BITBAND_ACCESS32(HW_SIM_SCGC7_ADDR, BP_SIM_SCGC7_DMA) = (v))
-#endif
-//@}
+/*! @brief Set the DMA field to a new value. */
+#define BW_SIM_SCGC7_DMA(x, v) (BITBAND_ACCESS32(HW_SIM_SCGC7_ADDR(x), BP_SIM_SCGC7_DMA) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_CLKDIV1 - System Clock Divider Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_CLKDIV1 - System Clock Divider Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_CLKDIV1 - System Clock Divider Register 1 (RW)
  *
@@ -2349,30 +2072,27 @@ typedef union _hw_sim_clkdiv1
     uint32_t U;
     struct _hw_sim_clkdiv1_bitfields
     {
-        uint32_t RESERVED0 : 16;       //!< [15:0]
-        uint32_t OUTDIV4 : 4;          //!< [19:16] Clock 4 output divider value
-        uint32_t RESERVED1 : 4;        //!< [23:20]
-        uint32_t OUTDIV2 : 4;          //!< [27:24] Clock 2 output divider value
-        uint32_t OUTDIV1 : 4;          //!< [31:28] Clock 1 output divider value
+        uint32_t RESERVED0 : 16;       /*!< [15:0]  */
+        uint32_t OUTDIV4 : 4;          /*!< [19:16] Clock 4 output divider value */
+        uint32_t RESERVED1 : 4;        /*!< [23:20]  */
+        uint32_t OUTDIV2 : 4;          /*!< [27:24] Clock 2 output divider value */
+        uint32_t OUTDIV1 : 4;          /*!< [31:28] Clock 1 output divider value */
     } B;
 } hw_sim_clkdiv1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_CLKDIV1 register
  */
-//@{
-#define HW_SIM_CLKDIV1_ADDR      (REGS_SIM_BASE + 0x1044U)
+/*@{*/
+#define HW_SIM_CLKDIV1_ADDR(x)   ((x) + 0x1044U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_CLKDIV1           (*(__IO hw_sim_clkdiv1_t *) HW_SIM_CLKDIV1_ADDR)
-#define HW_SIM_CLKDIV1_RD()      (HW_SIM_CLKDIV1.U)
-#define HW_SIM_CLKDIV1_WR(v)     (HW_SIM_CLKDIV1.U = (v))
-#define HW_SIM_CLKDIV1_SET(v)    (HW_SIM_CLKDIV1_WR(HW_SIM_CLKDIV1_RD() |  (v)))
-#define HW_SIM_CLKDIV1_CLR(v)    (HW_SIM_CLKDIV1_WR(HW_SIM_CLKDIV1_RD() & ~(v)))
-#define HW_SIM_CLKDIV1_TOG(v)    (HW_SIM_CLKDIV1_WR(HW_SIM_CLKDIV1_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_CLKDIV1(x)        (*(__IO hw_sim_clkdiv1_t *) HW_SIM_CLKDIV1_ADDR(x))
+#define HW_SIM_CLKDIV1_RD(x)     (HW_SIM_CLKDIV1(x).U)
+#define HW_SIM_CLKDIV1_WR(x, v)  (HW_SIM_CLKDIV1(x).U = (v))
+#define HW_SIM_CLKDIV1_SET(x, v) (HW_SIM_CLKDIV1_WR(x, HW_SIM_CLKDIV1_RD(x) |  (v)))
+#define HW_SIM_CLKDIV1_CLR(x, v) (HW_SIM_CLKDIV1_WR(x, HW_SIM_CLKDIV1_RD(x) & ~(v)))
+#define HW_SIM_CLKDIV1_TOG(x, v) (HW_SIM_CLKDIV1_WR(x, HW_SIM_CLKDIV1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_CLKDIV1 bitfields
@@ -2402,24 +2122,20 @@ typedef union _hw_sim_clkdiv1
  * - 1110 - Divide-by-15.
  * - 1111 - Divide-by-16.
  */
-//@{
-#define BP_SIM_CLKDIV1_OUTDIV4 (16U)       //!< Bit position for SIM_CLKDIV1_OUTDIV4.
-#define BM_SIM_CLKDIV1_OUTDIV4 (0x000F0000U) //!< Bit mask for SIM_CLKDIV1_OUTDIV4.
-#define BS_SIM_CLKDIV1_OUTDIV4 (4U)        //!< Bit field size in bits for SIM_CLKDIV1_OUTDIV4.
+/*@{*/
+#define BP_SIM_CLKDIV1_OUTDIV4 (16U)       /*!< Bit position for SIM_CLKDIV1_OUTDIV4. */
+#define BM_SIM_CLKDIV1_OUTDIV4 (0x000F0000U) /*!< Bit mask for SIM_CLKDIV1_OUTDIV4. */
+#define BS_SIM_CLKDIV1_OUTDIV4 (4U)        /*!< Bit field size in bits for SIM_CLKDIV1_OUTDIV4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_CLKDIV1_OUTDIV4 field.
-#define BR_SIM_CLKDIV1_OUTDIV4 (HW_SIM_CLKDIV1.B.OUTDIV4)
-#endif
+/*! @brief Read current value of the SIM_CLKDIV1_OUTDIV4 field. */
+#define BR_SIM_CLKDIV1_OUTDIV4(x) (HW_SIM_CLKDIV1(x).B.OUTDIV4)
 
-//! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV4.
-#define BF_SIM_CLKDIV1_OUTDIV4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_CLKDIV1_OUTDIV4), uint32_t) & BM_SIM_CLKDIV1_OUTDIV4)
+/*! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV4. */
+#define BF_SIM_CLKDIV1_OUTDIV4(v) ((uint32_t)((uint32_t)(v) << BP_SIM_CLKDIV1_OUTDIV4) & BM_SIM_CLKDIV1_OUTDIV4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OUTDIV4 field to a new value.
-#define BW_SIM_CLKDIV1_OUTDIV4(v) (HW_SIM_CLKDIV1_WR((HW_SIM_CLKDIV1_RD() & ~BM_SIM_CLKDIV1_OUTDIV4) | BF_SIM_CLKDIV1_OUTDIV4(v)))
-#endif
-//@}
+/*! @brief Set the OUTDIV4 field to a new value. */
+#define BW_SIM_CLKDIV1_OUTDIV4(x, v) (HW_SIM_CLKDIV1_WR(x, (HW_SIM_CLKDIV1_RD(x) & ~BM_SIM_CLKDIV1_OUTDIV4) | BF_SIM_CLKDIV1_OUTDIV4(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_CLKDIV1, field OUTDIV2[27:24] (RW)
@@ -2445,24 +2161,20 @@ typedef union _hw_sim_clkdiv1
  * - 1110 - Divide-by-15.
  * - 1111 - Divide-by-16.
  */
-//@{
-#define BP_SIM_CLKDIV1_OUTDIV2 (24U)       //!< Bit position for SIM_CLKDIV1_OUTDIV2.
-#define BM_SIM_CLKDIV1_OUTDIV2 (0x0F000000U) //!< Bit mask for SIM_CLKDIV1_OUTDIV2.
-#define BS_SIM_CLKDIV1_OUTDIV2 (4U)        //!< Bit field size in bits for SIM_CLKDIV1_OUTDIV2.
+/*@{*/
+#define BP_SIM_CLKDIV1_OUTDIV2 (24U)       /*!< Bit position for SIM_CLKDIV1_OUTDIV2. */
+#define BM_SIM_CLKDIV1_OUTDIV2 (0x0F000000U) /*!< Bit mask for SIM_CLKDIV1_OUTDIV2. */
+#define BS_SIM_CLKDIV1_OUTDIV2 (4U)        /*!< Bit field size in bits for SIM_CLKDIV1_OUTDIV2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_CLKDIV1_OUTDIV2 field.
-#define BR_SIM_CLKDIV1_OUTDIV2 (HW_SIM_CLKDIV1.B.OUTDIV2)
-#endif
+/*! @brief Read current value of the SIM_CLKDIV1_OUTDIV2 field. */
+#define BR_SIM_CLKDIV1_OUTDIV2(x) (HW_SIM_CLKDIV1(x).B.OUTDIV2)
 
-//! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV2.
-#define BF_SIM_CLKDIV1_OUTDIV2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_CLKDIV1_OUTDIV2), uint32_t) & BM_SIM_CLKDIV1_OUTDIV2)
+/*! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV2. */
+#define BF_SIM_CLKDIV1_OUTDIV2(v) ((uint32_t)((uint32_t)(v) << BP_SIM_CLKDIV1_OUTDIV2) & BM_SIM_CLKDIV1_OUTDIV2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OUTDIV2 field to a new value.
-#define BW_SIM_CLKDIV1_OUTDIV2(v) (HW_SIM_CLKDIV1_WR((HW_SIM_CLKDIV1_RD() & ~BM_SIM_CLKDIV1_OUTDIV2) | BF_SIM_CLKDIV1_OUTDIV2(v)))
-#endif
-//@}
+/*! @brief Set the OUTDIV2 field to a new value. */
+#define BW_SIM_CLKDIV1_OUTDIV2(x, v) (HW_SIM_CLKDIV1_WR(x, (HW_SIM_CLKDIV1_RD(x) & ~BM_SIM_CLKDIV1_OUTDIV2) | BF_SIM_CLKDIV1_OUTDIV2(v)))
+/*@}*/
 
 /*!
  * @name Register SIM_CLKDIV1, field OUTDIV1[31:28] (RW)
@@ -2488,30 +2200,25 @@ typedef union _hw_sim_clkdiv1
  * - 1110 - Divide-by-15.
  * - 1111 - Divide-by-16.
  */
-//@{
-#define BP_SIM_CLKDIV1_OUTDIV1 (28U)       //!< Bit position for SIM_CLKDIV1_OUTDIV1.
-#define BM_SIM_CLKDIV1_OUTDIV1 (0xF0000000U) //!< Bit mask for SIM_CLKDIV1_OUTDIV1.
-#define BS_SIM_CLKDIV1_OUTDIV1 (4U)        //!< Bit field size in bits for SIM_CLKDIV1_OUTDIV1.
+/*@{*/
+#define BP_SIM_CLKDIV1_OUTDIV1 (28U)       /*!< Bit position for SIM_CLKDIV1_OUTDIV1. */
+#define BM_SIM_CLKDIV1_OUTDIV1 (0xF0000000U) /*!< Bit mask for SIM_CLKDIV1_OUTDIV1. */
+#define BS_SIM_CLKDIV1_OUTDIV1 (4U)        /*!< Bit field size in bits for SIM_CLKDIV1_OUTDIV1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_CLKDIV1_OUTDIV1 field.
-#define BR_SIM_CLKDIV1_OUTDIV1 (HW_SIM_CLKDIV1.B.OUTDIV1)
-#endif
+/*! @brief Read current value of the SIM_CLKDIV1_OUTDIV1 field. */
+#define BR_SIM_CLKDIV1_OUTDIV1(x) (HW_SIM_CLKDIV1(x).B.OUTDIV1)
 
-//! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV1.
-#define BF_SIM_CLKDIV1_OUTDIV1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_CLKDIV1_OUTDIV1), uint32_t) & BM_SIM_CLKDIV1_OUTDIV1)
+/*! @brief Format value for bitfield SIM_CLKDIV1_OUTDIV1. */
+#define BF_SIM_CLKDIV1_OUTDIV1(v) ((uint32_t)((uint32_t)(v) << BP_SIM_CLKDIV1_OUTDIV1) & BM_SIM_CLKDIV1_OUTDIV1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OUTDIV1 field to a new value.
-#define BW_SIM_CLKDIV1_OUTDIV1(v) (HW_SIM_CLKDIV1_WR((HW_SIM_CLKDIV1_RD() & ~BM_SIM_CLKDIV1_OUTDIV1) | BF_SIM_CLKDIV1_OUTDIV1(v)))
-#endif
-//@}
+/*! @brief Set the OUTDIV1 field to a new value. */
+#define BW_SIM_CLKDIV1_OUTDIV1(x, v) (HW_SIM_CLKDIV1_WR(x, (HW_SIM_CLKDIV1_RD(x) & ~BM_SIM_CLKDIV1_OUTDIV1) | BF_SIM_CLKDIV1_OUTDIV1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_CLKDIV2 - System Clock Divider Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_CLKDIV2 - System Clock Divider Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_CLKDIV2 - System Clock Divider Register 2 (RW)
  *
@@ -2522,28 +2229,25 @@ typedef union _hw_sim_clkdiv2
     uint32_t U;
     struct _hw_sim_clkdiv2_bitfields
     {
-        uint32_t USBFRAC : 1;          //!< [0] USB clock divider fraction
-        uint32_t USBDIV : 3;           //!< [3:1] USB clock divider divisor
-        uint32_t RESERVED0 : 28;       //!< [31:4]
+        uint32_t USBFRAC : 1;          /*!< [0] USB clock divider fraction */
+        uint32_t USBDIV : 3;           /*!< [3:1] USB clock divider divisor */
+        uint32_t RESERVED0 : 28;       /*!< [31:4]  */
     } B;
 } hw_sim_clkdiv2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_CLKDIV2 register
  */
-//@{
-#define HW_SIM_CLKDIV2_ADDR      (REGS_SIM_BASE + 0x1048U)
+/*@{*/
+#define HW_SIM_CLKDIV2_ADDR(x)   ((x) + 0x1048U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_CLKDIV2           (*(__IO hw_sim_clkdiv2_t *) HW_SIM_CLKDIV2_ADDR)
-#define HW_SIM_CLKDIV2_RD()      (HW_SIM_CLKDIV2.U)
-#define HW_SIM_CLKDIV2_WR(v)     (HW_SIM_CLKDIV2.U = (v))
-#define HW_SIM_CLKDIV2_SET(v)    (HW_SIM_CLKDIV2_WR(HW_SIM_CLKDIV2_RD() |  (v)))
-#define HW_SIM_CLKDIV2_CLR(v)    (HW_SIM_CLKDIV2_WR(HW_SIM_CLKDIV2_RD() & ~(v)))
-#define HW_SIM_CLKDIV2_TOG(v)    (HW_SIM_CLKDIV2_WR(HW_SIM_CLKDIV2_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_CLKDIV2(x)        (*(__IO hw_sim_clkdiv2_t *) HW_SIM_CLKDIV2_ADDR(x))
+#define HW_SIM_CLKDIV2_RD(x)     (HW_SIM_CLKDIV2(x).U)
+#define HW_SIM_CLKDIV2_WR(x, v)  (HW_SIM_CLKDIV2(x).U = (v))
+#define HW_SIM_CLKDIV2_SET(x, v) (HW_SIM_CLKDIV2_WR(x, HW_SIM_CLKDIV2_RD(x) |  (v)))
+#define HW_SIM_CLKDIV2_CLR(x, v) (HW_SIM_CLKDIV2_WR(x, HW_SIM_CLKDIV2_RD(x) & ~(v)))
+#define HW_SIM_CLKDIV2_TOG(x, v) (HW_SIM_CLKDIV2_WR(x, HW_SIM_CLKDIV2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_CLKDIV2 bitfields
@@ -2556,24 +2260,20 @@ typedef union _hw_sim_clkdiv2
  * when the MCGFLLCLK/MCGPLLCLK clock is the USB clock source (SOPT2[USBSRC] =
  * 1). Divider output clock = Divider input clock * [ (USBFRAC+1) / (USBDIV+1) ]
  */
-//@{
-#define BP_SIM_CLKDIV2_USBFRAC (0U)        //!< Bit position for SIM_CLKDIV2_USBFRAC.
-#define BM_SIM_CLKDIV2_USBFRAC (0x00000001U) //!< Bit mask for SIM_CLKDIV2_USBFRAC.
-#define BS_SIM_CLKDIV2_USBFRAC (1U)        //!< Bit field size in bits for SIM_CLKDIV2_USBFRAC.
+/*@{*/
+#define BP_SIM_CLKDIV2_USBFRAC (0U)        /*!< Bit position for SIM_CLKDIV2_USBFRAC. */
+#define BM_SIM_CLKDIV2_USBFRAC (0x00000001U) /*!< Bit mask for SIM_CLKDIV2_USBFRAC. */
+#define BS_SIM_CLKDIV2_USBFRAC (1U)        /*!< Bit field size in bits for SIM_CLKDIV2_USBFRAC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_CLKDIV2_USBFRAC field.
-#define BR_SIM_CLKDIV2_USBFRAC (BITBAND_ACCESS32(HW_SIM_CLKDIV2_ADDR, BP_SIM_CLKDIV2_USBFRAC))
-#endif
+/*! @brief Read current value of the SIM_CLKDIV2_USBFRAC field. */
+#define BR_SIM_CLKDIV2_USBFRAC(x) (BITBAND_ACCESS32(HW_SIM_CLKDIV2_ADDR(x), BP_SIM_CLKDIV2_USBFRAC))
 
-//! @brief Format value for bitfield SIM_CLKDIV2_USBFRAC.
-#define BF_SIM_CLKDIV2_USBFRAC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_CLKDIV2_USBFRAC), uint32_t) & BM_SIM_CLKDIV2_USBFRAC)
+/*! @brief Format value for bitfield SIM_CLKDIV2_USBFRAC. */
+#define BF_SIM_CLKDIV2_USBFRAC(v) ((uint32_t)((uint32_t)(v) << BP_SIM_CLKDIV2_USBFRAC) & BM_SIM_CLKDIV2_USBFRAC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBFRAC field to a new value.
-#define BW_SIM_CLKDIV2_USBFRAC(v) (BITBAND_ACCESS32(HW_SIM_CLKDIV2_ADDR, BP_SIM_CLKDIV2_USBFRAC) = (v))
-#endif
-//@}
+/*! @brief Set the USBFRAC field to a new value. */
+#define BW_SIM_CLKDIV2_USBFRAC(x, v) (BITBAND_ACCESS32(HW_SIM_CLKDIV2_ADDR(x), BP_SIM_CLKDIV2_USBFRAC) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_CLKDIV2, field USBDIV[3:1] (RW)
@@ -2582,30 +2282,25 @@ typedef union _hw_sim_clkdiv2
  * MCGFLLCLK/MCGPLLCLK clock is the USB clock source (SOPT2[USBSRC] = 1). Divider
  * output clock = Divider input clock * [ (USBFRAC+1) / (USBDIV+1) ]
  */
-//@{
-#define BP_SIM_CLKDIV2_USBDIV (1U)         //!< Bit position for SIM_CLKDIV2_USBDIV.
-#define BM_SIM_CLKDIV2_USBDIV (0x0000000EU) //!< Bit mask for SIM_CLKDIV2_USBDIV.
-#define BS_SIM_CLKDIV2_USBDIV (3U)         //!< Bit field size in bits for SIM_CLKDIV2_USBDIV.
+/*@{*/
+#define BP_SIM_CLKDIV2_USBDIV (1U)         /*!< Bit position for SIM_CLKDIV2_USBDIV. */
+#define BM_SIM_CLKDIV2_USBDIV (0x0000000EU) /*!< Bit mask for SIM_CLKDIV2_USBDIV. */
+#define BS_SIM_CLKDIV2_USBDIV (3U)         /*!< Bit field size in bits for SIM_CLKDIV2_USBDIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_CLKDIV2_USBDIV field.
-#define BR_SIM_CLKDIV2_USBDIV (HW_SIM_CLKDIV2.B.USBDIV)
-#endif
+/*! @brief Read current value of the SIM_CLKDIV2_USBDIV field. */
+#define BR_SIM_CLKDIV2_USBDIV(x) (HW_SIM_CLKDIV2(x).B.USBDIV)
 
-//! @brief Format value for bitfield SIM_CLKDIV2_USBDIV.
-#define BF_SIM_CLKDIV2_USBDIV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_CLKDIV2_USBDIV), uint32_t) & BM_SIM_CLKDIV2_USBDIV)
+/*! @brief Format value for bitfield SIM_CLKDIV2_USBDIV. */
+#define BF_SIM_CLKDIV2_USBDIV(v) ((uint32_t)((uint32_t)(v) << BP_SIM_CLKDIV2_USBDIV) & BM_SIM_CLKDIV2_USBDIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBDIV field to a new value.
-#define BW_SIM_CLKDIV2_USBDIV(v) (HW_SIM_CLKDIV2_WR((HW_SIM_CLKDIV2_RD() & ~BM_SIM_CLKDIV2_USBDIV) | BF_SIM_CLKDIV2_USBDIV(v)))
-#endif
-//@}
+/*! @brief Set the USBDIV field to a new value. */
+#define BW_SIM_CLKDIV2_USBDIV(x, v) (HW_SIM_CLKDIV2_WR(x, (HW_SIM_CLKDIV2_RD(x) & ~BM_SIM_CLKDIV2_USBDIV) | BF_SIM_CLKDIV2_USBDIV(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_FCFG1 - Flash Configuration Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_FCFG1 - Flash Configuration Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_FCFG1 - Flash Configuration Register 1 (RW)
  *
@@ -2619,34 +2314,31 @@ typedef union _hw_sim_fcfg1
     uint32_t U;
     struct _hw_sim_fcfg1_bitfields
     {
-        uint32_t FLASHDIS : 1;         //!< [0] Flash Disable
-        uint32_t FLASHDOZE : 1;        //!< [1] Flash Doze
-        uint32_t RESERVED0 : 6;        //!< [7:2]
-        uint32_t DEPART : 4;           //!< [11:8] FlexNVM partition
-        uint32_t RESERVED1 : 4;        //!< [15:12]
-        uint32_t EESIZE : 4;           //!< [19:16] EEPROM size
-        uint32_t RESERVED2 : 4;        //!< [23:20]
-        uint32_t PFSIZE : 4;           //!< [27:24] Program flash size
-        uint32_t NVMSIZE : 4;          //!< [31:28] FlexNVM size
+        uint32_t FLASHDIS : 1;         /*!< [0] Flash Disable */
+        uint32_t FLASHDOZE : 1;        /*!< [1] Flash Doze */
+        uint32_t RESERVED0 : 6;        /*!< [7:2]  */
+        uint32_t DEPART : 4;           /*!< [11:8] FlexNVM partition */
+        uint32_t RESERVED1 : 4;        /*!< [15:12]  */
+        uint32_t EESIZE : 4;           /*!< [19:16] EEPROM size */
+        uint32_t RESERVED2 : 4;        /*!< [23:20]  */
+        uint32_t PFSIZE : 4;           /*!< [27:24] Program flash size */
+        uint32_t NVMSIZE : 4;          /*!< [31:28] FlexNVM size */
     } B;
 } hw_sim_fcfg1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_FCFG1 register
  */
-//@{
-#define HW_SIM_FCFG1_ADDR        (REGS_SIM_BASE + 0x104CU)
+/*@{*/
+#define HW_SIM_FCFG1_ADDR(x)     ((x) + 0x104CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_FCFG1             (*(__IO hw_sim_fcfg1_t *) HW_SIM_FCFG1_ADDR)
-#define HW_SIM_FCFG1_RD()        (HW_SIM_FCFG1.U)
-#define HW_SIM_FCFG1_WR(v)       (HW_SIM_FCFG1.U = (v))
-#define HW_SIM_FCFG1_SET(v)      (HW_SIM_FCFG1_WR(HW_SIM_FCFG1_RD() |  (v)))
-#define HW_SIM_FCFG1_CLR(v)      (HW_SIM_FCFG1_WR(HW_SIM_FCFG1_RD() & ~(v)))
-#define HW_SIM_FCFG1_TOG(v)      (HW_SIM_FCFG1_WR(HW_SIM_FCFG1_RD() ^  (v)))
-#endif
-//@}
+#define HW_SIM_FCFG1(x)          (*(__IO hw_sim_fcfg1_t *) HW_SIM_FCFG1_ADDR(x))
+#define HW_SIM_FCFG1_RD(x)       (HW_SIM_FCFG1(x).U)
+#define HW_SIM_FCFG1_WR(x, v)    (HW_SIM_FCFG1(x).U = (v))
+#define HW_SIM_FCFG1_SET(x, v)   (HW_SIM_FCFG1_WR(x, HW_SIM_FCFG1_RD(x) |  (v)))
+#define HW_SIM_FCFG1_CLR(x, v)   (HW_SIM_FCFG1_WR(x, HW_SIM_FCFG1_RD(x) & ~(v)))
+#define HW_SIM_FCFG1_TOG(x, v)   (HW_SIM_FCFG1_WR(x, HW_SIM_FCFG1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_FCFG1 bitfields
@@ -2664,24 +2356,20 @@ typedef union _hw_sim_fcfg1
  * - 0 - Flash is enabled
  * - 1 - Flash is disabled
  */
-//@{
-#define BP_SIM_FCFG1_FLASHDIS (0U)         //!< Bit position for SIM_FCFG1_FLASHDIS.
-#define BM_SIM_FCFG1_FLASHDIS (0x00000001U) //!< Bit mask for SIM_FCFG1_FLASHDIS.
-#define BS_SIM_FCFG1_FLASHDIS (1U)         //!< Bit field size in bits for SIM_FCFG1_FLASHDIS.
+/*@{*/
+#define BP_SIM_FCFG1_FLASHDIS (0U)         /*!< Bit position for SIM_FCFG1_FLASHDIS. */
+#define BM_SIM_FCFG1_FLASHDIS (0x00000001U) /*!< Bit mask for SIM_FCFG1_FLASHDIS. */
+#define BS_SIM_FCFG1_FLASHDIS (1U)         /*!< Bit field size in bits for SIM_FCFG1_FLASHDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_FLASHDIS field.
-#define BR_SIM_FCFG1_FLASHDIS (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR, BP_SIM_FCFG1_FLASHDIS))
-#endif
+/*! @brief Read current value of the SIM_FCFG1_FLASHDIS field. */
+#define BR_SIM_FCFG1_FLASHDIS(x) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR(x), BP_SIM_FCFG1_FLASHDIS))
 
-//! @brief Format value for bitfield SIM_FCFG1_FLASHDIS.
-#define BF_SIM_FCFG1_FLASHDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_FCFG1_FLASHDIS), uint32_t) & BM_SIM_FCFG1_FLASHDIS)
+/*! @brief Format value for bitfield SIM_FCFG1_FLASHDIS. */
+#define BF_SIM_FCFG1_FLASHDIS(v) ((uint32_t)((uint32_t)(v) << BP_SIM_FCFG1_FLASHDIS) & BM_SIM_FCFG1_FLASHDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FLASHDIS field to a new value.
-#define BW_SIM_FCFG1_FLASHDIS(v) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR, BP_SIM_FCFG1_FLASHDIS) = (v))
-#endif
-//@}
+/*! @brief Set the FLASHDIS field to a new value. */
+#define BW_SIM_FCFG1_FLASHDIS(x, v) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR(x), BP_SIM_FCFG1_FLASHDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG1, field FLASHDOZE[1] (RW)
@@ -2697,40 +2385,34 @@ typedef union _hw_sim_fcfg1
  * - 0 - Flash remains enabled during Wait mode
  * - 1 - Flash is disabled for the duration of Wait mode
  */
-//@{
-#define BP_SIM_FCFG1_FLASHDOZE (1U)        //!< Bit position for SIM_FCFG1_FLASHDOZE.
-#define BM_SIM_FCFG1_FLASHDOZE (0x00000002U) //!< Bit mask for SIM_FCFG1_FLASHDOZE.
-#define BS_SIM_FCFG1_FLASHDOZE (1U)        //!< Bit field size in bits for SIM_FCFG1_FLASHDOZE.
+/*@{*/
+#define BP_SIM_FCFG1_FLASHDOZE (1U)        /*!< Bit position for SIM_FCFG1_FLASHDOZE. */
+#define BM_SIM_FCFG1_FLASHDOZE (0x00000002U) /*!< Bit mask for SIM_FCFG1_FLASHDOZE. */
+#define BS_SIM_FCFG1_FLASHDOZE (1U)        /*!< Bit field size in bits for SIM_FCFG1_FLASHDOZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_FLASHDOZE field.
-#define BR_SIM_FCFG1_FLASHDOZE (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR, BP_SIM_FCFG1_FLASHDOZE))
-#endif
+/*! @brief Read current value of the SIM_FCFG1_FLASHDOZE field. */
+#define BR_SIM_FCFG1_FLASHDOZE(x) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR(x), BP_SIM_FCFG1_FLASHDOZE))
 
-//! @brief Format value for bitfield SIM_FCFG1_FLASHDOZE.
-#define BF_SIM_FCFG1_FLASHDOZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_SIM_FCFG1_FLASHDOZE), uint32_t) & BM_SIM_FCFG1_FLASHDOZE)
+/*! @brief Format value for bitfield SIM_FCFG1_FLASHDOZE. */
+#define BF_SIM_FCFG1_FLASHDOZE(v) ((uint32_t)((uint32_t)(v) << BP_SIM_FCFG1_FLASHDOZE) & BM_SIM_FCFG1_FLASHDOZE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FLASHDOZE field to a new value.
-#define BW_SIM_FCFG1_FLASHDOZE(v) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR, BP_SIM_FCFG1_FLASHDOZE) = (v))
-#endif
-//@}
+/*! @brief Set the FLASHDOZE field to a new value. */
+#define BW_SIM_FCFG1_FLASHDOZE(x, v) (BITBAND_ACCESS32(HW_SIM_FCFG1_ADDR(x), BP_SIM_FCFG1_FLASHDOZE) = (v))
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG1, field DEPART[11:8] (RO)
  *
  * Data flash / EEPROM backup split . See DEPART bit description in FTFL chapter.
  */
-//@{
-#define BP_SIM_FCFG1_DEPART  (8U)          //!< Bit position for SIM_FCFG1_DEPART.
-#define BM_SIM_FCFG1_DEPART  (0x00000F00U) //!< Bit mask for SIM_FCFG1_DEPART.
-#define BS_SIM_FCFG1_DEPART  (4U)          //!< Bit field size in bits for SIM_FCFG1_DEPART.
+/*@{*/
+#define BP_SIM_FCFG1_DEPART  (8U)          /*!< Bit position for SIM_FCFG1_DEPART. */
+#define BM_SIM_FCFG1_DEPART  (0x00000F00U) /*!< Bit mask for SIM_FCFG1_DEPART. */
+#define BS_SIM_FCFG1_DEPART  (4U)          /*!< Bit field size in bits for SIM_FCFG1_DEPART. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_DEPART field.
-#define BR_SIM_FCFG1_DEPART  (HW_SIM_FCFG1.B.DEPART)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG1_DEPART field. */
+#define BR_SIM_FCFG1_DEPART(x) (HW_SIM_FCFG1(x).B.DEPART)
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG1, field EESIZE[19:16] (RO)
@@ -2750,16 +2432,14 @@ typedef union _hw_sim_fcfg1
  * - 1001 - 32 Bytes
  * - 1111 - 0 Bytes
  */
-//@{
-#define BP_SIM_FCFG1_EESIZE  (16U)         //!< Bit position for SIM_FCFG1_EESIZE.
-#define BM_SIM_FCFG1_EESIZE  (0x000F0000U) //!< Bit mask for SIM_FCFG1_EESIZE.
-#define BS_SIM_FCFG1_EESIZE  (4U)          //!< Bit field size in bits for SIM_FCFG1_EESIZE.
+/*@{*/
+#define BP_SIM_FCFG1_EESIZE  (16U)         /*!< Bit position for SIM_FCFG1_EESIZE. */
+#define BM_SIM_FCFG1_EESIZE  (0x000F0000U) /*!< Bit mask for SIM_FCFG1_EESIZE. */
+#define BS_SIM_FCFG1_EESIZE  (4U)          /*!< Bit field size in bits for SIM_FCFG1_EESIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_EESIZE field.
-#define BR_SIM_FCFG1_EESIZE  (HW_SIM_FCFG1.B.EESIZE)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG1_EESIZE field. */
+#define BR_SIM_FCFG1_EESIZE(x) (HW_SIM_FCFG1(x).B.EESIZE)
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG1, field PFSIZE[27:24] (RO)
@@ -2772,16 +2452,14 @@ typedef union _hw_sim_fcfg1
  * - 0101 - 64 KB of program flash memory, 2 KB protection region
  * - 0111 - 128 KB of program flash, 4 KB protection region
  */
-//@{
-#define BP_SIM_FCFG1_PFSIZE  (24U)         //!< Bit position for SIM_FCFG1_PFSIZE.
-#define BM_SIM_FCFG1_PFSIZE  (0x0F000000U) //!< Bit mask for SIM_FCFG1_PFSIZE.
-#define BS_SIM_FCFG1_PFSIZE  (4U)          //!< Bit field size in bits for SIM_FCFG1_PFSIZE.
+/*@{*/
+#define BP_SIM_FCFG1_PFSIZE  (24U)         /*!< Bit position for SIM_FCFG1_PFSIZE. */
+#define BM_SIM_FCFG1_PFSIZE  (0x0F000000U) /*!< Bit mask for SIM_FCFG1_PFSIZE. */
+#define BS_SIM_FCFG1_PFSIZE  (4U)          /*!< Bit field size in bits for SIM_FCFG1_PFSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_PFSIZE field.
-#define BR_SIM_FCFG1_PFSIZE  (HW_SIM_FCFG1.B.PFSIZE)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG1_PFSIZE field. */
+#define BR_SIM_FCFG1_PFSIZE(x) (HW_SIM_FCFG1(x).B.PFSIZE)
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG1, field NVMSIZE[31:28] (RO)
@@ -2793,22 +2471,19 @@ typedef union _hw_sim_fcfg1
  * - 0000 - 0 KB of FlexNVM
  * - 0011 - 32 KB of FlexNVM, 4 KB protection region
  */
-//@{
-#define BP_SIM_FCFG1_NVMSIZE (28U)         //!< Bit position for SIM_FCFG1_NVMSIZE.
-#define BM_SIM_FCFG1_NVMSIZE (0xF0000000U) //!< Bit mask for SIM_FCFG1_NVMSIZE.
-#define BS_SIM_FCFG1_NVMSIZE (4U)          //!< Bit field size in bits for SIM_FCFG1_NVMSIZE.
+/*@{*/
+#define BP_SIM_FCFG1_NVMSIZE (28U)         /*!< Bit position for SIM_FCFG1_NVMSIZE. */
+#define BM_SIM_FCFG1_NVMSIZE (0xF0000000U) /*!< Bit mask for SIM_FCFG1_NVMSIZE. */
+#define BS_SIM_FCFG1_NVMSIZE (4U)          /*!< Bit field size in bits for SIM_FCFG1_NVMSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG1_NVMSIZE field.
-#define BR_SIM_FCFG1_NVMSIZE (HW_SIM_FCFG1.B.NVMSIZE)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG1_NVMSIZE field. */
+#define BR_SIM_FCFG1_NVMSIZE(x) (HW_SIM_FCFG1(x).B.NVMSIZE)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_FCFG2 - Flash Configuration Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_FCFG2 - Flash Configuration Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_FCFG2 - Flash Configuration Register 2 (RO)
  *
@@ -2819,26 +2494,23 @@ typedef union _hw_sim_fcfg2
     uint32_t U;
     struct _hw_sim_fcfg2_bitfields
     {
-        uint32_t RESERVED0 : 16;       //!< [15:0]
-        uint32_t MAXADDR1 : 7;         //!< [22:16] Max address block 1
-        uint32_t PFLSH : 1;            //!< [23] Program flash
-        uint32_t MAXADDR0 : 7;         //!< [30:24] Max address block 0
-        uint32_t RESERVED1 : 1;        //!< [31]
+        uint32_t RESERVED0 : 16;       /*!< [15:0]  */
+        uint32_t MAXADDR1 : 7;         /*!< [22:16] Max address block 1 */
+        uint32_t PFLSH : 1;            /*!< [23] Program flash */
+        uint32_t MAXADDR0 : 7;         /*!< [30:24] Max address block 0 */
+        uint32_t RESERVED1 : 1;        /*!< [31]  */
     } B;
 } hw_sim_fcfg2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_FCFG2 register
  */
-//@{
-#define HW_SIM_FCFG2_ADDR        (REGS_SIM_BASE + 0x1050U)
+/*@{*/
+#define HW_SIM_FCFG2_ADDR(x)     ((x) + 0x1050U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_FCFG2             (*(__I hw_sim_fcfg2_t *) HW_SIM_FCFG2_ADDR)
-#define HW_SIM_FCFG2_RD()        (HW_SIM_FCFG2.U)
-#endif
-//@}
+#define HW_SIM_FCFG2(x)          (*(__I hw_sim_fcfg2_t *) HW_SIM_FCFG2_ADDR(x))
+#define HW_SIM_FCFG2_RD(x)       (HW_SIM_FCFG2(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_FCFG2 bitfields
@@ -2852,16 +2524,14 @@ typedef union _hw_sim_fcfg2
  * if MAXADDR1 = 0x20 the first invalid address of flash block 1 is 0x4_0000 +
  * 0x1000_0000 . This would be the MAXADDR1 value for a device with 256 KB FlexNVM.
  */
-//@{
-#define BP_SIM_FCFG2_MAXADDR1 (16U)        //!< Bit position for SIM_FCFG2_MAXADDR1.
-#define BM_SIM_FCFG2_MAXADDR1 (0x007F0000U) //!< Bit mask for SIM_FCFG2_MAXADDR1.
-#define BS_SIM_FCFG2_MAXADDR1 (7U)         //!< Bit field size in bits for SIM_FCFG2_MAXADDR1.
+/*@{*/
+#define BP_SIM_FCFG2_MAXADDR1 (16U)        /*!< Bit position for SIM_FCFG2_MAXADDR1. */
+#define BM_SIM_FCFG2_MAXADDR1 (0x007F0000U) /*!< Bit mask for SIM_FCFG2_MAXADDR1. */
+#define BS_SIM_FCFG2_MAXADDR1 (7U)         /*!< Bit field size in bits for SIM_FCFG2_MAXADDR1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG2_MAXADDR1 field.
-#define BR_SIM_FCFG2_MAXADDR1 (HW_SIM_FCFG2.B.MAXADDR1)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG2_MAXADDR1 field. */
+#define BR_SIM_FCFG2_MAXADDR1(x) (HW_SIM_FCFG2(x).B.MAXADDR1)
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG2, field PFLSH[23] (RO)
@@ -2872,16 +2542,14 @@ typedef union _hw_sim_fcfg2
  * - 0 - Physical flash block 1 is used as FlexNVM
  * - 1 - Physical flash block 1 is used as program flash
  */
-//@{
-#define BP_SIM_FCFG2_PFLSH   (23U)         //!< Bit position for SIM_FCFG2_PFLSH.
-#define BM_SIM_FCFG2_PFLSH   (0x00800000U) //!< Bit mask for SIM_FCFG2_PFLSH.
-#define BS_SIM_FCFG2_PFLSH   (1U)          //!< Bit field size in bits for SIM_FCFG2_PFLSH.
+/*@{*/
+#define BP_SIM_FCFG2_PFLSH   (23U)         /*!< Bit position for SIM_FCFG2_PFLSH. */
+#define BM_SIM_FCFG2_PFLSH   (0x00800000U) /*!< Bit mask for SIM_FCFG2_PFLSH. */
+#define BS_SIM_FCFG2_PFLSH   (1U)          /*!< Bit field size in bits for SIM_FCFG2_PFLSH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG2_PFLSH field.
-#define BR_SIM_FCFG2_PFLSH   (BITBAND_ACCESS32(HW_SIM_FCFG2_ADDR, BP_SIM_FCFG2_PFLSH))
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG2_PFLSH field. */
+#define BR_SIM_FCFG2_PFLSH(x) (BITBAND_ACCESS32(HW_SIM_FCFG2_ADDR(x), BP_SIM_FCFG2_PFLSH))
+/*@}*/
 
 /*!
  * @name Register SIM_FCFG2, field MAXADDR0[30:24] (RO)
@@ -2891,22 +2559,19 @@ typedef union _hw_sim_fcfg2
  * first invalid address of flash block 0 is 0x0004_0000. This would be the MAXADDR0
  * value for a device with 256 KB program flash in flash block 0.
  */
-//@{
-#define BP_SIM_FCFG2_MAXADDR0 (24U)        //!< Bit position for SIM_FCFG2_MAXADDR0.
-#define BM_SIM_FCFG2_MAXADDR0 (0x7F000000U) //!< Bit mask for SIM_FCFG2_MAXADDR0.
-#define BS_SIM_FCFG2_MAXADDR0 (7U)         //!< Bit field size in bits for SIM_FCFG2_MAXADDR0.
+/*@{*/
+#define BP_SIM_FCFG2_MAXADDR0 (24U)        /*!< Bit position for SIM_FCFG2_MAXADDR0. */
+#define BM_SIM_FCFG2_MAXADDR0 (0x7F000000U) /*!< Bit mask for SIM_FCFG2_MAXADDR0. */
+#define BS_SIM_FCFG2_MAXADDR0 (7U)         /*!< Bit field size in bits for SIM_FCFG2_MAXADDR0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_FCFG2_MAXADDR0 field.
-#define BR_SIM_FCFG2_MAXADDR0 (HW_SIM_FCFG2.B.MAXADDR0)
-#endif
-//@}
+/*! @brief Read current value of the SIM_FCFG2_MAXADDR0 field. */
+#define BR_SIM_FCFG2_MAXADDR0(x) (HW_SIM_FCFG2(x).B.MAXADDR0)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_UIDH - Unique Identification Register High
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_UIDH - Unique Identification Register High
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_UIDH - Unique Identification Register High (RO)
  *
@@ -2917,22 +2582,19 @@ typedef union _hw_sim_uidh
     uint32_t U;
     struct _hw_sim_uidh_bitfields
     {
-        uint32_t UID : 32;             //!< [31:0] Unique Identification
+        uint32_t UID : 32;             /*!< [31:0] Unique Identification */
     } B;
 } hw_sim_uidh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_UIDH register
  */
-//@{
-#define HW_SIM_UIDH_ADDR         (REGS_SIM_BASE + 0x1054U)
+/*@{*/
+#define HW_SIM_UIDH_ADDR(x)      ((x) + 0x1054U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_UIDH              (*(__I hw_sim_uidh_t *) HW_SIM_UIDH_ADDR)
-#define HW_SIM_UIDH_RD()         (HW_SIM_UIDH.U)
-#endif
-//@}
+#define HW_SIM_UIDH(x)           (*(__I hw_sim_uidh_t *) HW_SIM_UIDH_ADDR(x))
+#define HW_SIM_UIDH_RD(x)        (HW_SIM_UIDH(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_UIDH bitfields
@@ -2943,22 +2605,19 @@ typedef union _hw_sim_uidh
  *
  * Unique identification for the device.
  */
-//@{
-#define BP_SIM_UIDH_UID      (0U)          //!< Bit position for SIM_UIDH_UID.
-#define BM_SIM_UIDH_UID      (0xFFFFFFFFU) //!< Bit mask for SIM_UIDH_UID.
-#define BS_SIM_UIDH_UID      (32U)         //!< Bit field size in bits for SIM_UIDH_UID.
+/*@{*/
+#define BP_SIM_UIDH_UID      (0U)          /*!< Bit position for SIM_UIDH_UID. */
+#define BM_SIM_UIDH_UID      (0xFFFFFFFFU) /*!< Bit mask for SIM_UIDH_UID. */
+#define BS_SIM_UIDH_UID      (32U)         /*!< Bit field size in bits for SIM_UIDH_UID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_UIDH_UID field.
-#define BR_SIM_UIDH_UID      (HW_SIM_UIDH.B.UID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_UIDH_UID field. */
+#define BR_SIM_UIDH_UID(x)   (HW_SIM_UIDH(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_UIDMH - Unique Identification Register Mid-High
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_UIDMH - Unique Identification Register Mid-High
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_UIDMH - Unique Identification Register Mid-High (RO)
  *
@@ -2969,22 +2628,19 @@ typedef union _hw_sim_uidmh
     uint32_t U;
     struct _hw_sim_uidmh_bitfields
     {
-        uint32_t UID : 32;             //!< [31:0] Unique Identification
+        uint32_t UID : 32;             /*!< [31:0] Unique Identification */
     } B;
 } hw_sim_uidmh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_UIDMH register
  */
-//@{
-#define HW_SIM_UIDMH_ADDR        (REGS_SIM_BASE + 0x1058U)
+/*@{*/
+#define HW_SIM_UIDMH_ADDR(x)     ((x) + 0x1058U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_UIDMH             (*(__I hw_sim_uidmh_t *) HW_SIM_UIDMH_ADDR)
-#define HW_SIM_UIDMH_RD()        (HW_SIM_UIDMH.U)
-#endif
-//@}
+#define HW_SIM_UIDMH(x)          (*(__I hw_sim_uidmh_t *) HW_SIM_UIDMH_ADDR(x))
+#define HW_SIM_UIDMH_RD(x)       (HW_SIM_UIDMH(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_UIDMH bitfields
@@ -2995,22 +2651,19 @@ typedef union _hw_sim_uidmh
  *
  * Unique identification for the device.
  */
-//@{
-#define BP_SIM_UIDMH_UID     (0U)          //!< Bit position for SIM_UIDMH_UID.
-#define BM_SIM_UIDMH_UID     (0xFFFFFFFFU) //!< Bit mask for SIM_UIDMH_UID.
-#define BS_SIM_UIDMH_UID     (32U)         //!< Bit field size in bits for SIM_UIDMH_UID.
+/*@{*/
+#define BP_SIM_UIDMH_UID     (0U)          /*!< Bit position for SIM_UIDMH_UID. */
+#define BM_SIM_UIDMH_UID     (0xFFFFFFFFU) /*!< Bit mask for SIM_UIDMH_UID. */
+#define BS_SIM_UIDMH_UID     (32U)         /*!< Bit field size in bits for SIM_UIDMH_UID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_UIDMH_UID field.
-#define BR_SIM_UIDMH_UID     (HW_SIM_UIDMH.B.UID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_UIDMH_UID field. */
+#define BR_SIM_UIDMH_UID(x)  (HW_SIM_UIDMH(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_UIDML - Unique Identification Register Mid Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_UIDML - Unique Identification Register Mid Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_UIDML - Unique Identification Register Mid Low (RO)
  *
@@ -3021,22 +2674,19 @@ typedef union _hw_sim_uidml
     uint32_t U;
     struct _hw_sim_uidml_bitfields
     {
-        uint32_t UID : 32;             //!< [31:0] Unique Identification
+        uint32_t UID : 32;             /*!< [31:0] Unique Identification */
     } B;
 } hw_sim_uidml_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_UIDML register
  */
-//@{
-#define HW_SIM_UIDML_ADDR        (REGS_SIM_BASE + 0x105CU)
+/*@{*/
+#define HW_SIM_UIDML_ADDR(x)     ((x) + 0x105CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_UIDML             (*(__I hw_sim_uidml_t *) HW_SIM_UIDML_ADDR)
-#define HW_SIM_UIDML_RD()        (HW_SIM_UIDML.U)
-#endif
-//@}
+#define HW_SIM_UIDML(x)          (*(__I hw_sim_uidml_t *) HW_SIM_UIDML_ADDR(x))
+#define HW_SIM_UIDML_RD(x)       (HW_SIM_UIDML(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_UIDML bitfields
@@ -3047,22 +2697,19 @@ typedef union _hw_sim_uidml
  *
  * Unique identification for the device.
  */
-//@{
-#define BP_SIM_UIDML_UID     (0U)          //!< Bit position for SIM_UIDML_UID.
-#define BM_SIM_UIDML_UID     (0xFFFFFFFFU) //!< Bit mask for SIM_UIDML_UID.
-#define BS_SIM_UIDML_UID     (32U)         //!< Bit field size in bits for SIM_UIDML_UID.
+/*@{*/
+#define BP_SIM_UIDML_UID     (0U)          /*!< Bit position for SIM_UIDML_UID. */
+#define BM_SIM_UIDML_UID     (0xFFFFFFFFU) /*!< Bit mask for SIM_UIDML_UID. */
+#define BS_SIM_UIDML_UID     (32U)         /*!< Bit field size in bits for SIM_UIDML_UID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_UIDML_UID field.
-#define BR_SIM_UIDML_UID     (HW_SIM_UIDML.B.UID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_UIDML_UID field. */
+#define BR_SIM_UIDML_UID(x)  (HW_SIM_UIDML(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_SIM_UIDL - Unique Identification Register Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_SIM_UIDL - Unique Identification Register Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_SIM_UIDL - Unique Identification Register Low (RO)
  *
@@ -3073,22 +2720,19 @@ typedef union _hw_sim_uidl
     uint32_t U;
     struct _hw_sim_uidl_bitfields
     {
-        uint32_t UID : 32;             //!< [31:0] Unique Identification
+        uint32_t UID : 32;             /*!< [31:0] Unique Identification */
     } B;
 } hw_sim_uidl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire SIM_UIDL register
  */
-//@{
-#define HW_SIM_UIDL_ADDR         (REGS_SIM_BASE + 0x1060U)
+/*@{*/
+#define HW_SIM_UIDL_ADDR(x)      ((x) + 0x1060U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_SIM_UIDL              (*(__I hw_sim_uidl_t *) HW_SIM_UIDL_ADDR)
-#define HW_SIM_UIDL_RD()         (HW_SIM_UIDL.U)
-#endif
-//@}
+#define HW_SIM_UIDL(x)           (*(__I hw_sim_uidl_t *) HW_SIM_UIDL_ADDR(x))
+#define HW_SIM_UIDL_RD(x)        (HW_SIM_UIDL(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual SIM_UIDL bitfields
@@ -3099,60 +2743,57 @@ typedef union _hw_sim_uidl
  *
  * Unique identification for the device.
  */
-//@{
-#define BP_SIM_UIDL_UID      (0U)          //!< Bit position for SIM_UIDL_UID.
-#define BM_SIM_UIDL_UID      (0xFFFFFFFFU) //!< Bit mask for SIM_UIDL_UID.
-#define BS_SIM_UIDL_UID      (32U)         //!< Bit field size in bits for SIM_UIDL_UID.
+/*@{*/
+#define BP_SIM_UIDL_UID      (0U)          /*!< Bit position for SIM_UIDL_UID. */
+#define BM_SIM_UIDL_UID      (0xFFFFFFFFU) /*!< Bit mask for SIM_UIDL_UID. */
+#define BS_SIM_UIDL_UID      (32U)         /*!< Bit field size in bits for SIM_UIDL_UID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the SIM_UIDL_UID field.
-#define BR_SIM_UIDL_UID      (HW_SIM_UIDL.B.UID)
-#endif
-//@}
+/*! @brief Read current value of the SIM_UIDL_UID field. */
+#define BR_SIM_UIDL_UID(x)   (HW_SIM_UIDL(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_sim_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_sim_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All SIM module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_sim
 {
-    __IO hw_sim_sopt1_t SOPT1;             //!< [0x0] System Options Register 1
-    __IO hw_sim_sopt1cfg_t SOPT1CFG;       //!< [0x4] SOPT1 Configuration Register
+    __IO hw_sim_sopt1_t SOPT1;             /*!< [0x0] System Options Register 1 */
+    __IO hw_sim_sopt1cfg_t SOPT1CFG;       /*!< [0x4] SOPT1 Configuration Register */
     uint8_t _reserved0[4092];
-    __IO hw_sim_sopt2_t SOPT2;             //!< [0x1004] System Options Register 2
+    __IO hw_sim_sopt2_t SOPT2;             /*!< [0x1004] System Options Register 2 */
     uint8_t _reserved1[4];
-    __IO hw_sim_sopt4_t SOPT4;             //!< [0x100C] System Options Register 4
-    __IO hw_sim_sopt5_t SOPT5;             //!< [0x1010] System Options Register 5
+    __IO hw_sim_sopt4_t SOPT4;             /*!< [0x100C] System Options Register 4 */
+    __IO hw_sim_sopt5_t SOPT5;             /*!< [0x1010] System Options Register 5 */
     uint8_t _reserved2[4];
-    __IO hw_sim_sopt7_t SOPT7;             //!< [0x1018] System Options Register 7
+    __IO hw_sim_sopt7_t SOPT7;             /*!< [0x1018] System Options Register 7 */
     uint8_t _reserved3[8];
-    __I hw_sim_sdid_t SDID;                //!< [0x1024] System Device Identification Register
+    __I hw_sim_sdid_t SDID;                /*!< [0x1024] System Device Identification Register */
     uint8_t _reserved4[12];
-    __IO hw_sim_scgc4_t SCGC4;             //!< [0x1034] System Clock Gating Control Register 4
-    __IO hw_sim_scgc5_t SCGC5;             //!< [0x1038] System Clock Gating Control Register 5
-    __IO hw_sim_scgc6_t SCGC6;             //!< [0x103C] System Clock Gating Control Register 6
-    __IO hw_sim_scgc7_t SCGC7;             //!< [0x1040] System Clock Gating Control Register 7
-    __IO hw_sim_clkdiv1_t CLKDIV1;         //!< [0x1044] System Clock Divider Register 1
-    __IO hw_sim_clkdiv2_t CLKDIV2;         //!< [0x1048] System Clock Divider Register 2
-    __IO hw_sim_fcfg1_t FCFG1;             //!< [0x104C] Flash Configuration Register 1
-    __I hw_sim_fcfg2_t FCFG2;              //!< [0x1050] Flash Configuration Register 2
-    __I hw_sim_uidh_t UIDH;                //!< [0x1054] Unique Identification Register High
-    __I hw_sim_uidmh_t UIDMH;              //!< [0x1058] Unique Identification Register Mid-High
-    __I hw_sim_uidml_t UIDML;              //!< [0x105C] Unique Identification Register Mid Low
-    __I hw_sim_uidl_t UIDL;                //!< [0x1060] Unique Identification Register Low
+    __IO hw_sim_scgc4_t SCGC4;             /*!< [0x1034] System Clock Gating Control Register 4 */
+    __IO hw_sim_scgc5_t SCGC5;             /*!< [0x1038] System Clock Gating Control Register 5 */
+    __IO hw_sim_scgc6_t SCGC6;             /*!< [0x103C] System Clock Gating Control Register 6 */
+    __IO hw_sim_scgc7_t SCGC7;             /*!< [0x1040] System Clock Gating Control Register 7 */
+    __IO hw_sim_clkdiv1_t CLKDIV1;         /*!< [0x1044] System Clock Divider Register 1 */
+    __IO hw_sim_clkdiv2_t CLKDIV2;         /*!< [0x1048] System Clock Divider Register 2 */
+    __IO hw_sim_fcfg1_t FCFG1;             /*!< [0x104C] Flash Configuration Register 1 */
+    __I hw_sim_fcfg2_t FCFG2;              /*!< [0x1050] Flash Configuration Register 2 */
+    __I hw_sim_uidh_t UIDH;                /*!< [0x1054] Unique Identification Register High */
+    __I hw_sim_uidmh_t UIDMH;              /*!< [0x1058] Unique Identification Register Mid-High */
+    __I hw_sim_uidml_t UIDML;              /*!< [0x105C] Unique Identification Register Mid Low */
+    __I hw_sim_uidl_t UIDL;                /*!< [0x1060] Unique Identification Register Low */
 } hw_sim_t;
 #pragma pack()
 
-//! @brief Macro to access all SIM registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_SIM</code>.
-#define HW_SIM         (*(hw_sim_t *) REGS_SIM_BASE)
-#endif
+/*! @brief Macro to access all SIM registers. */
+/*! @param x SIM module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_SIM(SIM_BASE)</code>. */
+#define HW_SIM(x)      (*(hw_sim_t *)(x))
 
-#endif // __HW_SIM_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_SIM_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

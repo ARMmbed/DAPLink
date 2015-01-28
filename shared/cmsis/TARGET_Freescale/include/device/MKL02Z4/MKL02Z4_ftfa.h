@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESS OR IMPLIED
@@ -21,7 +21,8 @@
 #ifndef __HW_FTFA_REGISTERS_H__
 #define __HW_FTFA_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL02Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL02Z4 FTFA
@@ -53,442 +54,418 @@
  * - hw_ftfa_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_FTFA_BASE
-#define HW_FTFA_INSTANCE_COUNT (1U) //!< Number of instances of the FTFA module.
-#define REGS_FTFA_BASE (0x40020000U) //!< Base address for FTFA.
-#endif
-//@}
+#define HW_FTFA_INSTANCE_COUNT (1U) /*!< Number of instances of the FTFA module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FSTAT - Flash Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FSTAT - Flash Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FSTAT - Flash Status Register (RW)
  *
  * Reset value: 0x00U
  *
- * The FSTAT register reports the operational status of the flash memory module. The CCIF, RDCOLERR,
- * ACCERR, and FPVIOL bits are readable and writable. The MGSTAT0 bit is read only. The unassigned
- * bits read 0 and are not writable. When set, the Access Error (ACCERR) and Flash Protection
- * Violation (FPVIOL) bits in this register prevent the launch of any more commands until the flag
- * is cleared (by writing a one to it).
+ * The FSTAT register reports the operational status of the flash memory module.
+ * The CCIF, RDCOLERR, ACCERR, and FPVIOL bits are readable and writable. The
+ * MGSTAT0 bit is read only. The unassigned bits read 0 and are not writable. When
+ * set, the Access Error (ACCERR) and Flash Protection Violation (FPVIOL) bits in
+ * this register prevent the launch of any more commands until the flag is
+ * cleared (by writing a one to it).
  */
 typedef union _hw_ftfa_fstat
 {
     uint8_t U;
     struct _hw_ftfa_fstat_bitfields
     {
-        uint8_t MGSTAT0 : 1; //!< [0] Memory Controller Command Completion Status Flag
-        uint8_t RESERVED0 : 3; //!< [3:1] 
-        uint8_t FPVIOL : 1; //!< [4] Flash Protection Violation Flag
-        uint8_t ACCERR : 1; //!< [5] Flash Access Error Flag
-        uint8_t RDCOLERR : 1; //!< [6] Flash Read Collision Error Flag
-        uint8_t CCIF : 1; //!< [7] Command Complete Interrupt Flag
+        uint8_t MGSTAT0 : 1;           /*!< [0] Memory Controller Command Completion
+                                        * Status Flag */
+        uint8_t RESERVED0 : 3;         /*!< [3:1]  */
+        uint8_t FPVIOL : 1;            /*!< [4] Flash Protection Violation Flag */
+        uint8_t ACCERR : 1;            /*!< [5] Flash Access Error Flag */
+        uint8_t RDCOLERR : 1;          /*!< [6] Flash Read Collision Error Flag */
+        uint8_t CCIF : 1;              /*!< [7] Command Complete Interrupt Flag */
     } B;
 } hw_ftfa_fstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FSTAT register
  */
-//@{
-#define HW_FTFA_FSTAT_ADDR      (REGS_FTFA_BASE + 0x0U)
+/*@{*/
+#define HW_FTFA_FSTAT_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FSTAT           (*(__IO hw_ftfa_fstat_t *) HW_FTFA_FSTAT_ADDR)
-#define HW_FTFA_FSTAT_RD()      (HW_FTFA_FSTAT.U)
-#define HW_FTFA_FSTAT_WR(v)     (HW_FTFA_FSTAT.U = (v))
-#define HW_FTFA_FSTAT_SET(v)    (BME_OR8(HW_FTFA_FSTAT_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FSTAT_CLR(v)    (BME_AND8(HW_FTFA_FSTAT_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FSTAT_TOG(v)    (BME_XOR8(HW_FTFA_FSTAT_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FSTAT(x)         (*(__IO hw_ftfa_fstat_t *) HW_FTFA_FSTAT_ADDR(x))
+#define HW_FTFA_FSTAT_RD(x)      (HW_FTFA_FSTAT(x).U)
+#define HW_FTFA_FSTAT_WR(x, v)   (HW_FTFA_FSTAT(x).U = (v))
+#define HW_FTFA_FSTAT_SET(x, v)  (BME_OR8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FSTAT_CLR(x, v)  (BME_AND8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FSTAT_TOG(x, v)  (BME_XOR8(HW_FTFA_FSTAT_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FSTAT bitfields
+ * Constants & macros for individual FTFA_FSTAT bitfields
  */
 
-/*! @name Register FTFA_FSTAT, field MGSTAT0[0] (RO)
+/*!
+ * @name Register FTFA_FSTAT, field MGSTAT0[0] (RO)
  *
- * The MGSTAT0 status flag is set if an error is detected during execution of a flash command or
- * during the flash reset sequence. As a status flag, this bit cannot (and need not) be cleared by
- * the user like the other error flags in this register. The value of the MGSTAT0 bit for
- * "command-N" is valid only at the end of the "command-N" execution when CCIF=1 and before the next
- * command has been launched. At some point during the execution of "command-N+1," the previous
+ * The MGSTAT0 status flag is set if an error is detected during execution of a
+ * flash command or during the flash reset sequence. As a status flag, this bit
+ * cannot (and need not) be cleared by the user like the other error flags in this
+ * register. The value of the MGSTAT0 bit for "command-N" is valid only at the
+ * end of the "command-N" execution when CCIF=1 and before the next command has
+ * been launched. At some point during the execution of "command-N+1," the previous
  * result is discarded and any previous error is cleared.
  */
-//@{
-#define BP_FTFA_FSTAT_MGSTAT0      (0U)      //!< Bit position for FTFA_FSTAT_MGSTAT0.
-#define BM_FTFA_FSTAT_MGSTAT0      (0x01U)  //!< Bit mask for FTFA_FSTAT_MGSTAT0.
-#define BS_FTFA_FSTAT_MGSTAT0      (1U)  //!< Bitfield size in bits for FTFA_FSTAT_MGSTAT0.
+/*@{*/
+#define BP_FTFA_FSTAT_MGSTAT0 (0U)         /*!< Bit position for FTFA_FSTAT_MGSTAT0. */
+#define BM_FTFA_FSTAT_MGSTAT0 (0x01U)      /*!< Bit mask for FTFA_FSTAT_MGSTAT0. */
+#define BS_FTFA_FSTAT_MGSTAT0 (1U)         /*!< Bit field size in bits for FTFA_FSTAT_MGSTAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_MGSTAT0 field.
-#define BR_FTFA_FSTAT_MGSTAT0()   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_MGSTAT0, BS_FTFA_FSTAT_MGSTAT0))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSTAT_MGSTAT0 field. */
+#define BR_FTFA_FSTAT_MGSTAT0(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_MGSTAT0, BS_FTFA_FSTAT_MGSTAT0))
+/*@}*/
 
-/*! @name Register FTFA_FSTAT, field FPVIOL[4] (W1C)
+/*!
+ * @name Register FTFA_FSTAT, field FPVIOL[4] (W1C)
  *
- * The FPVIOL error bit indicates an attempt was made to program or erase an address in a protected
- * area of program flash memory during a command write sequence . While FPVIOL is set, the CCIF flag
- * cannot be cleared to launch a command. The FPVIOL bit is cleared by writing a 1 to it. Writing a
- * 0 to the FPVIOL bit has no effect.
+ * The FPVIOL error bit indicates an attempt was made to program or erase an
+ * address in a protected area of program flash memory during a command write
+ * sequence . While FPVIOL is set, the CCIF flag cannot be cleared to launch a command.
+ * The FPVIOL bit is cleared by writing a 1 to it. Writing a 0 to the FPVIOL bit
+ * has no effect.
  *
  * Values:
  * - 0 - No protection violation detected
  * - 1 - Protection violation detected
  */
-//@{
-#define BP_FTFA_FSTAT_FPVIOL      (4U)      //!< Bit position for FTFA_FSTAT_FPVIOL.
-#define BM_FTFA_FSTAT_FPVIOL      (0x10U)  //!< Bit mask for FTFA_FSTAT_FPVIOL.
-#define BS_FTFA_FSTAT_FPVIOL      (1U)  //!< Bitfield size in bits for FTFA_FSTAT_FPVIOL.
+/*@{*/
+#define BP_FTFA_FSTAT_FPVIOL (4U)          /*!< Bit position for FTFA_FSTAT_FPVIOL. */
+#define BM_FTFA_FSTAT_FPVIOL (0x10U)       /*!< Bit mask for FTFA_FSTAT_FPVIOL. */
+#define BS_FTFA_FSTAT_FPVIOL (1U)          /*!< Bit field size in bits for FTFA_FSTAT_FPVIOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_FPVIOL field.
-#define BR_FTFA_FSTAT_FPVIOL()   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_FPVIOL, BS_FTFA_FSTAT_FPVIOL))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_FPVIOL field. */
+#define BR_FTFA_FSTAT_FPVIOL(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_FPVIOL, BS_FTFA_FSTAT_FPVIOL))
 
-//! @brief Format value for bitfield FTFA_FSTAT_FPVIOL.
-#define BF_FTFA_FSTAT_FPVIOL(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_FPVIOL), uint8_t) & BM_FTFA_FSTAT_FPVIOL)
+/*! @brief Format value for bitfield FTFA_FSTAT_FPVIOL. */
+#define BF_FTFA_FSTAT_FPVIOL(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL) & BM_FTFA_FSTAT_FPVIOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FPVIOL field to a new value.
-#define BW_FTFA_FSTAT_FPVIOL(v)   (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL), BP_FTFA_FSTAT_FPVIOL, 1))
-#endif
-//@}
+/*! @brief Set the FPVIOL field to a new value. */
+#define BW_FTFA_FSTAT_FPVIOL(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_FPVIOL), BP_FTFA_FSTAT_FPVIOL, 1))
+/*@}*/
 
-/*! @name Register FTFA_FSTAT, field ACCERR[5] (W1C)
+/*!
+ * @name Register FTFA_FSTAT, field ACCERR[5] (W1C)
  *
- * The ACCERR error bit indicates an illegal access has occurred to a flash memory resource caused
- * by a violation of the command write sequence or issuing an illegal flash command. While ACCERR is
- * set, the CCIF flag cannot be cleared to launch a command. The ACCERR bit is cleared by writing a
- * 1 to it. Writing a 0 to the ACCERR bit has no effect.
+ * The ACCERR error bit indicates an illegal access has occurred to a flash
+ * memory resource caused by a violation of the command write sequence or issuing an
+ * illegal flash command. While ACCERR is set, the CCIF flag cannot be cleared to
+ * launch a command. The ACCERR bit is cleared by writing a 1 to it. Writing a 0
+ * to the ACCERR bit has no effect.
  *
  * Values:
  * - 0 - No access error detected
  * - 1 - Access error detected
  */
-//@{
-#define BP_FTFA_FSTAT_ACCERR      (5U)      //!< Bit position for FTFA_FSTAT_ACCERR.
-#define BM_FTFA_FSTAT_ACCERR      (0x20U)  //!< Bit mask for FTFA_FSTAT_ACCERR.
-#define BS_FTFA_FSTAT_ACCERR      (1U)  //!< Bitfield size in bits for FTFA_FSTAT_ACCERR.
+/*@{*/
+#define BP_FTFA_FSTAT_ACCERR (5U)          /*!< Bit position for FTFA_FSTAT_ACCERR. */
+#define BM_FTFA_FSTAT_ACCERR (0x20U)       /*!< Bit mask for FTFA_FSTAT_ACCERR. */
+#define BS_FTFA_FSTAT_ACCERR (1U)          /*!< Bit field size in bits for FTFA_FSTAT_ACCERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_ACCERR field.
-#define BR_FTFA_FSTAT_ACCERR()   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_ACCERR, BS_FTFA_FSTAT_ACCERR))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_ACCERR field. */
+#define BR_FTFA_FSTAT_ACCERR(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_ACCERR, BS_FTFA_FSTAT_ACCERR))
 
-//! @brief Format value for bitfield FTFA_FSTAT_ACCERR.
-#define BF_FTFA_FSTAT_ACCERR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_ACCERR), uint8_t) & BM_FTFA_FSTAT_ACCERR)
+/*! @brief Format value for bitfield FTFA_FSTAT_ACCERR. */
+#define BF_FTFA_FSTAT_ACCERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR) & BM_FTFA_FSTAT_ACCERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACCERR field to a new value.
-#define BW_FTFA_FSTAT_ACCERR(v)   (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR), BP_FTFA_FSTAT_ACCERR, 1))
-#endif
-//@}
+/*! @brief Set the ACCERR field to a new value. */
+#define BW_FTFA_FSTAT_ACCERR(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_ACCERR), BP_FTFA_FSTAT_ACCERR, 1))
+/*@}*/
 
-/*! @name Register FTFA_FSTAT, field RDCOLERR[6] (W1C)
+/*!
+ * @name Register FTFA_FSTAT, field RDCOLERR[6] (W1C)
  *
- * The RDCOLERR error bit indicates that the MCU attempted a read from a flash memory resource that
- * was being manipulated by a flash command (CCIF=0). Any simultaneous access is detected as a
- * collision error by the block arbitration logic. The read data in this case cannot be guaranteed.
- * The RDCOLERR bit is cleared by writing a 1 to it. Writing a 0 to RDCOLERR has no effect.
+ * The RDCOLERR error bit indicates that the MCU attempted a read from a flash
+ * memory resource that was being manipulated by a flash command (CCIF=0). Any
+ * simultaneous access is detected as a collision error by the block arbitration
+ * logic. The read data in this case cannot be guaranteed. The RDCOLERR bit is
+ * cleared by writing a 1 to it. Writing a 0 to RDCOLERR has no effect.
  *
  * Values:
  * - 0 - No collision error detected
  * - 1 - Collision error detected
  */
-//@{
-#define BP_FTFA_FSTAT_RDCOLERR      (6U)      //!< Bit position for FTFA_FSTAT_RDCOLERR.
-#define BM_FTFA_FSTAT_RDCOLERR      (0x40U)  //!< Bit mask for FTFA_FSTAT_RDCOLERR.
-#define BS_FTFA_FSTAT_RDCOLERR      (1U)  //!< Bitfield size in bits for FTFA_FSTAT_RDCOLERR.
+/*@{*/
+#define BP_FTFA_FSTAT_RDCOLERR (6U)        /*!< Bit position for FTFA_FSTAT_RDCOLERR. */
+#define BM_FTFA_FSTAT_RDCOLERR (0x40U)     /*!< Bit mask for FTFA_FSTAT_RDCOLERR. */
+#define BS_FTFA_FSTAT_RDCOLERR (1U)        /*!< Bit field size in bits for FTFA_FSTAT_RDCOLERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_RDCOLERR field.
-#define BR_FTFA_FSTAT_RDCOLERR()   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_RDCOLERR, BS_FTFA_FSTAT_RDCOLERR))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_RDCOLERR field. */
+#define BR_FTFA_FSTAT_RDCOLERR(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_RDCOLERR, BS_FTFA_FSTAT_RDCOLERR))
 
-//! @brief Format value for bitfield FTFA_FSTAT_RDCOLERR.
-#define BF_FTFA_FSTAT_RDCOLERR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_RDCOLERR), uint8_t) & BM_FTFA_FSTAT_RDCOLERR)
+/*! @brief Format value for bitfield FTFA_FSTAT_RDCOLERR. */
+#define BF_FTFA_FSTAT_RDCOLERR(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR) & BM_FTFA_FSTAT_RDCOLERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLERR field to a new value.
-#define BW_FTFA_FSTAT_RDCOLERR(v)   (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR), BP_FTFA_FSTAT_RDCOLERR, 1))
-#endif
-//@}
+/*! @brief Set the RDCOLERR field to a new value. */
+#define BW_FTFA_FSTAT_RDCOLERR(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_RDCOLERR), BP_FTFA_FSTAT_RDCOLERR, 1))
+/*@}*/
 
-/*! @name Register FTFA_FSTAT, field CCIF[7] (W1C)
+/*!
+ * @name Register FTFA_FSTAT, field CCIF[7] (W1C)
  *
- * The CCIF flag indicates that a flash command has completed. The CCIF flag is cleared by writing a
- * 1 to CCIF to launch a command, and CCIF stays low until command completion or command violation.
- * The CCIF bit is reset to 0 but is set to 1 by the memory controller at the end of the reset
- * initialization sequence. Depending on how quickly the read occurs after reset release, the user
- * may or may not see the 0 hardware reset value.
+ * The CCIF flag indicates that a flash command has completed. The CCIF flag is
+ * cleared by writing a 1 to CCIF to launch a command, and CCIF stays low until
+ * command completion or command violation. The CCIF bit is reset to 0 but is set
+ * to 1 by the memory controller at the end of the reset initialization sequence.
+ * Depending on how quickly the read occurs after reset release, the user may or
+ * may not see the 0 hardware reset value.
  *
  * Values:
  * - 0 - Flash command in progress
  * - 1 - Flash command has completed
  */
-//@{
-#define BP_FTFA_FSTAT_CCIF      (7U)      //!< Bit position for FTFA_FSTAT_CCIF.
-#define BM_FTFA_FSTAT_CCIF      (0x80U)  //!< Bit mask for FTFA_FSTAT_CCIF.
-#define BS_FTFA_FSTAT_CCIF      (1U)  //!< Bitfield size in bits for FTFA_FSTAT_CCIF.
+/*@{*/
+#define BP_FTFA_FSTAT_CCIF   (7U)          /*!< Bit position for FTFA_FSTAT_CCIF. */
+#define BM_FTFA_FSTAT_CCIF   (0x80U)       /*!< Bit mask for FTFA_FSTAT_CCIF. */
+#define BS_FTFA_FSTAT_CCIF   (1U)          /*!< Bit field size in bits for FTFA_FSTAT_CCIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSTAT_CCIF field.
-#define BR_FTFA_FSTAT_CCIF()   (BME_UBFX8(HW_FTFA_FSTAT_ADDR, BP_FTFA_FSTAT_CCIF, BS_FTFA_FSTAT_CCIF))
-#endif
+/*! @brief Read current value of the FTFA_FSTAT_CCIF field. */
+#define BR_FTFA_FSTAT_CCIF(x) (BME_UBFX8(HW_FTFA_FSTAT_ADDR(x), BP_FTFA_FSTAT_CCIF, BS_FTFA_FSTAT_CCIF))
 
-//! @brief Format value for bitfield FTFA_FSTAT_CCIF.
-#define BF_FTFA_FSTAT_CCIF(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FSTAT_CCIF), uint8_t) & BM_FTFA_FSTAT_CCIF)
+/*! @brief Format value for bitfield FTFA_FSTAT_CCIF. */
+#define BF_FTFA_FSTAT_CCIF(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FSTAT_CCIF) & BM_FTFA_FSTAT_CCIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIF field to a new value.
-#define BW_FTFA_FSTAT_CCIF(v)   (BME_BFI8(HW_FTFA_FSTAT_ADDR, ((uint8_t)(v) << BP_FTFA_FSTAT_CCIF), BP_FTFA_FSTAT_CCIF, 1))
-#endif
-//@}
+/*! @brief Set the CCIF field to a new value. */
+#define BW_FTFA_FSTAT_CCIF(x, v) (BME_BFI8(HW_FTFA_FSTAT_ADDR(x), ((uint8_t)(v) << BP_FTFA_FSTAT_CCIF), BP_FTFA_FSTAT_CCIF, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCNFG - Flash Configuration Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCNFG - Flash Configuration Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCNFG - Flash Configuration Register (RW)
  *
  * Reset value: 0x00U
  *
- * This register provides information on the current functional state of the flash memory module.
- * The erase control bits (ERSAREQ and ERSSUSP) have write restrictions. The unassigned bits read as
- * noted and are not writable.
+ * This register provides information on the current functional state of the
+ * flash memory module. The erase control bits (ERSAREQ and ERSSUSP) have write
+ * restrictions. The unassigned bits read as noted and are not writable.
  */
 typedef union _hw_ftfa_fcnfg
 {
     uint8_t U;
     struct _hw_ftfa_fcnfg_bitfields
     {
-        uint8_t RESERVED2 : 4; //!< [3:0] Reserved.
-        uint8_t ERSSUSP : 1; //!< [4] Erase Suspend
-        uint8_t ERSAREQ : 1; //!< [5] Erase All Request
-        uint8_t RDCOLLIE : 1; //!< [6] Read Collision Error Interrupt Enable
-        uint8_t CCIE : 1; //!< [7] Command Complete Interrupt Enable
+        uint8_t RESERVED0 : 4;         /*!< [3:0]  */
+        uint8_t ERSSUSP : 1;           /*!< [4] Erase Suspend */
+        uint8_t ERSAREQ : 1;           /*!< [5] Erase All Request */
+        uint8_t RDCOLLIE : 1;          /*!< [6] Read Collision Error Interrupt Enable
+                                        * */
+        uint8_t CCIE : 1;              /*!< [7] Command Complete Interrupt Enable */
     } B;
 } hw_ftfa_fcnfg_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCNFG register
  */
-//@{
-#define HW_FTFA_FCNFG_ADDR      (REGS_FTFA_BASE + 0x1U)
+/*@{*/
+#define HW_FTFA_FCNFG_ADDR(x)    ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCNFG           (*(__IO hw_ftfa_fcnfg_t *) HW_FTFA_FCNFG_ADDR)
-#define HW_FTFA_FCNFG_RD()      (HW_FTFA_FCNFG.U)
-#define HW_FTFA_FCNFG_WR(v)     (HW_FTFA_FCNFG.U = (v))
-#define HW_FTFA_FCNFG_SET(v)    (BME_OR8(HW_FTFA_FCNFG_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCNFG_CLR(v)    (BME_AND8(HW_FTFA_FCNFG_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCNFG_TOG(v)    (BME_XOR8(HW_FTFA_FCNFG_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCNFG(x)         (*(__IO hw_ftfa_fcnfg_t *) HW_FTFA_FCNFG_ADDR(x))
+#define HW_FTFA_FCNFG_RD(x)      (HW_FTFA_FCNFG(x).U)
+#define HW_FTFA_FCNFG_WR(x, v)   (HW_FTFA_FCNFG(x).U = (v))
+#define HW_FTFA_FCNFG_SET(x, v)  (BME_OR8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCNFG_CLR(x, v)  (BME_AND8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCNFG_TOG(x, v)  (BME_XOR8(HW_FTFA_FCNFG_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCNFG bitfields
+ * Constants & macros for individual FTFA_FCNFG bitfields
  */
 
-/*! @name Register FTFA_FCNFG, field ERSSUSP[4] (RW)
+/*!
+ * @name Register FTFA_FCNFG, field ERSSUSP[4] (RW)
  *
- * The ERSSUSP bit allows the user to suspend (interrupt) the Erase Flash Sector command while it is
- * executing.
+ * The ERSSUSP bit allows the user to suspend (interrupt) the Erase Flash Sector
+ * command while it is executing.
  *
  * Values:
  * - 0 - No suspend requested
  * - 1 - Suspend the current Erase Flash Sector command execution.
  */
-//@{
-#define BP_FTFA_FCNFG_ERSSUSP      (4U)      //!< Bit position for FTFA_FCNFG_ERSSUSP.
-#define BM_FTFA_FCNFG_ERSSUSP      (0x10U)  //!< Bit mask for FTFA_FCNFG_ERSSUSP.
-#define BS_FTFA_FCNFG_ERSSUSP      (1U)  //!< Bitfield size in bits for FTFA_FCNFG_ERSSUSP.
+/*@{*/
+#define BP_FTFA_FCNFG_ERSSUSP (4U)         /*!< Bit position for FTFA_FCNFG_ERSSUSP. */
+#define BM_FTFA_FCNFG_ERSSUSP (0x10U)      /*!< Bit mask for FTFA_FCNFG_ERSSUSP. */
+#define BS_FTFA_FCNFG_ERSSUSP (1U)         /*!< Bit field size in bits for FTFA_FCNFG_ERSSUSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_ERSSUSP field.
-#define BR_FTFA_FCNFG_ERSSUSP()   (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_ERSSUSP, BS_FTFA_FCNFG_ERSSUSP))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_ERSSUSP field. */
+#define BR_FTFA_FCNFG_ERSSUSP(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_ERSSUSP, BS_FTFA_FCNFG_ERSSUSP))
 
-//! @brief Format value for bitfield FTFA_FCNFG_ERSSUSP.
-#define BF_FTFA_FCNFG_ERSSUSP(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_ERSSUSP), uint8_t) & BM_FTFA_FCNFG_ERSSUSP)
+/*! @brief Format value for bitfield FTFA_FCNFG_ERSSUSP. */
+#define BF_FTFA_FCNFG_ERSSUSP(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP) & BM_FTFA_FCNFG_ERSSUSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERSSUSP field to a new value.
-#define BW_FTFA_FCNFG_ERSSUSP(v)   (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP), BP_FTFA_FCNFG_ERSSUSP, 1))
-#endif
-//@}
+/*! @brief Set the ERSSUSP field to a new value. */
+#define BW_FTFA_FCNFG_ERSSUSP(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_ERSSUSP), BP_FTFA_FCNFG_ERSSUSP, 1))
+/*@}*/
 
-/*! @name Register FTFA_FCNFG, field ERSAREQ[5] (RO)
+/*!
+ * @name Register FTFA_FCNFG, field ERSAREQ[5] (RO)
  *
- * This bit issues a request to the memory controller to execute the Erase All Blocks command and
- * release security. ERSAREQ is not directly writable but is under indirect user control. Refer to
- * the device's Chip Configuration details on how to request this command. The ERSAREQ bit sets when
- * an erase all request is triggered external to the flash memory module and CCIF is set (no command
- * is currently being executed). ERSAREQ is cleared by the flash memory module when the operation
- * completes.
+ * This bit issues a request to the memory controller to execute the Erase All
+ * Blocks command and release security. ERSAREQ is not directly writable but is
+ * under indirect user control. Refer to the device's Chip Configuration details on
+ * how to request this command. The ERSAREQ bit sets when an erase all request
+ * is triggered external to the flash memory module and CCIF is set (no command is
+ * currently being executed). ERSAREQ is cleared by the flash memory module when
+ * the operation completes.
  *
  * Values:
  * - 0 - No request or request complete
- * - 1 - Request to:  run the Erase All Blocks command,  verify the erased state,  program the security byte
- *     in the Flash Configuration Field to the unsecure state, and  release MCU security by setting
- *     the FSEC[SEC] field to the unsecure state.
+ * - 1 - Request to: run the Erase All Blocks command, verify the erased state,
+ *     program the security byte in the Flash Configuration Field to the unsecure
+ *     state, and release MCU security by setting the FSEC[SEC] field to the
+ *     unsecure state.
  */
-//@{
-#define BP_FTFA_FCNFG_ERSAREQ      (5U)      //!< Bit position for FTFA_FCNFG_ERSAREQ.
-#define BM_FTFA_FCNFG_ERSAREQ      (0x20U)  //!< Bit mask for FTFA_FCNFG_ERSAREQ.
-#define BS_FTFA_FCNFG_ERSAREQ      (1U)  //!< Bitfield size in bits for FTFA_FCNFG_ERSAREQ.
+/*@{*/
+#define BP_FTFA_FCNFG_ERSAREQ (5U)         /*!< Bit position for FTFA_FCNFG_ERSAREQ. */
+#define BM_FTFA_FCNFG_ERSAREQ (0x20U)      /*!< Bit mask for FTFA_FCNFG_ERSAREQ. */
+#define BS_FTFA_FCNFG_ERSAREQ (1U)         /*!< Bit field size in bits for FTFA_FCNFG_ERSAREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_ERSAREQ field.
-#define BR_FTFA_FCNFG_ERSAREQ()   (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_ERSAREQ, BS_FTFA_FCNFG_ERSAREQ))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FCNFG_ERSAREQ field. */
+#define BR_FTFA_FCNFG_ERSAREQ(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_ERSAREQ, BS_FTFA_FCNFG_ERSAREQ))
+/*@}*/
 
-/*! @name Register FTFA_FCNFG, field RDCOLLIE[6] (RW)
+/*!
+ * @name Register FTFA_FCNFG, field RDCOLLIE[6] (RW)
  *
- * The RDCOLLIE bit controls interrupt generation when a flash memory read collision error occurs.
+ * The RDCOLLIE bit controls interrupt generation when a flash memory read
+ * collision error occurs.
  *
  * Values:
  * - 0 - Read collision error interrupt disabled
- * - 1 - Read collision error interrupt enabled. An interrupt request is generated whenever a flash memory
- *     read collision error is detected (see the description of FSTAT[RDCOLERR]).
+ * - 1 - Read collision error interrupt enabled. An interrupt request is
+ *     generated whenever a flash memory read collision error is detected (see the
+ *     description of FSTAT[RDCOLERR]).
  */
-//@{
-#define BP_FTFA_FCNFG_RDCOLLIE      (6U)      //!< Bit position for FTFA_FCNFG_RDCOLLIE.
-#define BM_FTFA_FCNFG_RDCOLLIE      (0x40U)  //!< Bit mask for FTFA_FCNFG_RDCOLLIE.
-#define BS_FTFA_FCNFG_RDCOLLIE      (1U)  //!< Bitfield size in bits for FTFA_FCNFG_RDCOLLIE.
+/*@{*/
+#define BP_FTFA_FCNFG_RDCOLLIE (6U)        /*!< Bit position for FTFA_FCNFG_RDCOLLIE. */
+#define BM_FTFA_FCNFG_RDCOLLIE (0x40U)     /*!< Bit mask for FTFA_FCNFG_RDCOLLIE. */
+#define BS_FTFA_FCNFG_RDCOLLIE (1U)        /*!< Bit field size in bits for FTFA_FCNFG_RDCOLLIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_RDCOLLIE field.
-#define BR_FTFA_FCNFG_RDCOLLIE()   (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_RDCOLLIE, BS_FTFA_FCNFG_RDCOLLIE))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_RDCOLLIE field. */
+#define BR_FTFA_FCNFG_RDCOLLIE(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_RDCOLLIE, BS_FTFA_FCNFG_RDCOLLIE))
 
-//! @brief Format value for bitfield FTFA_FCNFG_RDCOLLIE.
-#define BF_FTFA_FCNFG_RDCOLLIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_RDCOLLIE), uint8_t) & BM_FTFA_FCNFG_RDCOLLIE)
+/*! @brief Format value for bitfield FTFA_FCNFG_RDCOLLIE. */
+#define BF_FTFA_FCNFG_RDCOLLIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE) & BM_FTFA_FCNFG_RDCOLLIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDCOLLIE field to a new value.
-#define BW_FTFA_FCNFG_RDCOLLIE(v)   (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE), BP_FTFA_FCNFG_RDCOLLIE, 1))
-#endif
-//@}
+/*! @brief Set the RDCOLLIE field to a new value. */
+#define BW_FTFA_FCNFG_RDCOLLIE(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_RDCOLLIE), BP_FTFA_FCNFG_RDCOLLIE, 1))
+/*@}*/
 
-/*! @name Register FTFA_FCNFG, field CCIE[7] (RW)
+/*!
+ * @name Register FTFA_FCNFG, field CCIE[7] (RW)
  *
  * The CCIE bit controls interrupt generation when a flash command completes.
  *
  * Values:
  * - 0 - Command complete interrupt disabled
- * - 1 - Command complete interrupt enabled. An interrupt request is generated whenever the FSTAT[CCIF] flag
- *     is set.
+ * - 1 - Command complete interrupt enabled. An interrupt request is generated
+ *     whenever the FSTAT[CCIF] flag is set.
  */
-//@{
-#define BP_FTFA_FCNFG_CCIE      (7U)      //!< Bit position for FTFA_FCNFG_CCIE.
-#define BM_FTFA_FCNFG_CCIE      (0x80U)  //!< Bit mask for FTFA_FCNFG_CCIE.
-#define BS_FTFA_FCNFG_CCIE      (1U)  //!< Bitfield size in bits for FTFA_FCNFG_CCIE.
+/*@{*/
+#define BP_FTFA_FCNFG_CCIE   (7U)          /*!< Bit position for FTFA_FCNFG_CCIE. */
+#define BM_FTFA_FCNFG_CCIE   (0x80U)       /*!< Bit mask for FTFA_FCNFG_CCIE. */
+#define BS_FTFA_FCNFG_CCIE   (1U)          /*!< Bit field size in bits for FTFA_FCNFG_CCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCNFG_CCIE field.
-#define BR_FTFA_FCNFG_CCIE()   (BME_UBFX8(HW_FTFA_FCNFG_ADDR, BP_FTFA_FCNFG_CCIE, BS_FTFA_FCNFG_CCIE))
-#endif
+/*! @brief Read current value of the FTFA_FCNFG_CCIE field. */
+#define BR_FTFA_FCNFG_CCIE(x) (BME_UBFX8(HW_FTFA_FCNFG_ADDR(x), BP_FTFA_FCNFG_CCIE, BS_FTFA_FCNFG_CCIE))
 
-//! @brief Format value for bitfield FTFA_FCNFG_CCIE.
-#define BF_FTFA_FCNFG_CCIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCNFG_CCIE), uint8_t) & BM_FTFA_FCNFG_CCIE)
+/*! @brief Format value for bitfield FTFA_FCNFG_CCIE. */
+#define BF_FTFA_FCNFG_CCIE(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCNFG_CCIE) & BM_FTFA_FCNFG_CCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCIE field to a new value.
-#define BW_FTFA_FCNFG_CCIE(v)   (BME_BFI8(HW_FTFA_FCNFG_ADDR, ((uint8_t)(v) << BP_FTFA_FCNFG_CCIE), BP_FTFA_FCNFG_CCIE, 1))
-#endif
-//@}
+/*! @brief Set the CCIE field to a new value. */
+#define BW_FTFA_FCNFG_CCIE(x, v) (BME_BFI8(HW_FTFA_FCNFG_ADDR(x), ((uint8_t)(v) << BP_FTFA_FCNFG_CCIE), BP_FTFA_FCNFG_CCIE, 1))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FSEC - Flash Security Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FSEC - Flash Security Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FSEC - Flash Security Register (RO)
  *
  * Reset value: 0x00U
  *
- * This read-only register holds all bits associated with the security of the MCU and flash memory
- * module. During the reset sequence, the register is loaded with the contents of the flash security
- * byte in the Flash Configuration Field located in program flash memory. The flash basis for the
- * values is signified by X in the reset value.
+ * This read-only register holds all bits associated with the security of the
+ * MCU and flash memory module. During the reset sequence, the register is loaded
+ * with the contents of the flash security byte in the Flash Configuration Field
+ * located in program flash memory. The flash basis for the values is signified by
+ * X in the reset value.
  */
 typedef union _hw_ftfa_fsec
 {
     uint8_t U;
     struct _hw_ftfa_fsec_bitfields
     {
-        uint8_t SEC : 2; //!< [1:0] Flash Security
-        uint8_t FSLACC : 2; //!< [3:2] Freescale Failure Analysis Access Code
-        uint8_t MEEN : 2; //!< [5:4] Mass Erase Enable Bits
-        uint8_t KEYEN : 2; //!< [7:6] Backdoor Key Security Enable
+        uint8_t SEC : 2;               /*!< [1:0] Flash Security */
+        uint8_t FSLACC : 2;            /*!< [3:2] Freescale Failure Analysis Access Code
+                                        * */
+        uint8_t MEEN : 2;              /*!< [5:4] Mass Erase Enable Bits */
+        uint8_t KEYEN : 2;             /*!< [7:6] Backdoor Key Security Enable */
     } B;
 } hw_ftfa_fsec_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FSEC register
  */
-//@{
-#define HW_FTFA_FSEC_ADDR      (REGS_FTFA_BASE + 0x2U)
+/*@{*/
+#define HW_FTFA_FSEC_ADDR(x)     ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FSEC           (*(__I hw_ftfa_fsec_t *) HW_FTFA_FSEC_ADDR)
-#define HW_FTFA_FSEC_RD()      (HW_FTFA_FSEC.U)
-#endif
-//@}
+#define HW_FTFA_FSEC(x)          (*(__I hw_ftfa_fsec_t *) HW_FTFA_FSEC_ADDR(x))
+#define HW_FTFA_FSEC_RD(x)       (HW_FTFA_FSEC(x).U)
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FSEC bitfields
+ * Constants & macros for individual FTFA_FSEC bitfields
  */
 
-/*! @name Register FTFA_FSEC, field SEC[1:0] (RO)
+/*!
+ * @name Register FTFA_FSEC, field SEC[1:0] (RO)
  *
- * These bits define the security state of the MCU. In the secure state, the MCU limits access to
- * flash memory module resources. The limitations are defined per device and are detailed in the
- * Chip Configuration details. If the flash memory module is unsecured using backdoor key access,
- * the SEC bits are forced to 10b.
+ * These bits define the security state of the MCU. In the secure state, the MCU
+ * limits access to flash memory module resources. The limitations are defined
+ * per device and are detailed in the Chip Configuration details. If the flash
+ * memory module is unsecured using backdoor key access, the SEC bits are forced to
+ * 10b.
  *
  * Values:
  * - 00 - MCU security status is secure
  * - 01 - MCU security status is secure
- * - 10 - MCU security status is unsecure (The standard shipping condition of the flash memory module is
- *     unsecure.)
+ * - 10 - MCU security status is unsecure (The standard shipping condition of
+ *     the flash memory module is unsecure.)
  * - 11 - MCU security status is secure
  */
-//@{
-#define BP_FTFA_FSEC_SEC      (0U)      //!< Bit position for FTFA_FSEC_SEC.
-#define BM_FTFA_FSEC_SEC      (0x03U)  //!< Bit mask for FTFA_FSEC_SEC.
-#define BS_FTFA_FSEC_SEC      (2U)  //!< Bitfield size in bits for FTFA_FSEC_SEC.
+/*@{*/
+#define BP_FTFA_FSEC_SEC     (0U)          /*!< Bit position for FTFA_FSEC_SEC. */
+#define BM_FTFA_FSEC_SEC     (0x03U)       /*!< Bit mask for FTFA_FSEC_SEC. */
+#define BS_FTFA_FSEC_SEC     (2U)          /*!< Bit field size in bits for FTFA_FSEC_SEC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_SEC field.
-#define BR_FTFA_FSEC_SEC()   (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_SEC, BS_FTFA_FSEC_SEC))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_SEC field. */
+#define BR_FTFA_FSEC_SEC(x)  (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_SEC, BS_FTFA_FSEC_SEC))
+/*@}*/
 
-/*! @name Register FTFA_FSEC, field FSLACC[3:2] (RO)
+/*!
+ * @name Register FTFA_FSEC, field FSLACC[3:2] (RO)
  *
- * These bits enable or disable access to the flash memory contents during returned part failure
- * analysis at Freescale. When SEC is secure and FSLACC is denied, access to the program flash
- * contents is denied and any failure analysis performed by Freescale factory test must begin with a
- * full erase to unsecure the part. When access is granted (SEC is unsecure, or SEC is secure and
- * FSLACC is granted), Freescale factory testing has visibility of the current flash contents. The
- * state of the FSLACC bits is only relevant when the SEC bits are set to secure. When the SEC field
- * is set to unsecure, the FSLACC setting does not matter.
+ * These bits enable or disable access to the flash memory contents during
+ * returned part failure analysis at Freescale. When SEC is secure and FSLACC is
+ * denied, access to the program flash contents is denied and any failure analysis
+ * performed by Freescale factory test must begin with a full erase to unsecure the
+ * part. When access is granted (SEC is unsecure, or SEC is secure and FSLACC is
+ * granted), Freescale factory testing has visibility of the current flash
+ * contents. The state of the FSLACC bits is only relevant when the SEC bits are set to
+ * secure. When the SEC field is set to unsecure, the FSLACC setting does not
+ * matter.
  *
  * Values:
  * - 00 - Freescale factory access granted
@@ -496,22 +473,22 @@ typedef union _hw_ftfa_fsec
  * - 10 - Freescale factory access denied
  * - 11 - Freescale factory access granted
  */
-//@{
-#define BP_FTFA_FSEC_FSLACC      (2U)      //!< Bit position for FTFA_FSEC_FSLACC.
-#define BM_FTFA_FSEC_FSLACC      (0x0cU)  //!< Bit mask for FTFA_FSEC_FSLACC.
-#define BS_FTFA_FSEC_FSLACC      (2U)  //!< Bitfield size in bits for FTFA_FSEC_FSLACC.
+/*@{*/
+#define BP_FTFA_FSEC_FSLACC  (2U)          /*!< Bit position for FTFA_FSEC_FSLACC. */
+#define BM_FTFA_FSEC_FSLACC  (0x0CU)       /*!< Bit mask for FTFA_FSEC_FSLACC. */
+#define BS_FTFA_FSEC_FSLACC  (2U)          /*!< Bit field size in bits for FTFA_FSEC_FSLACC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_FSLACC field.
-#define BR_FTFA_FSEC_FSLACC()   (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_FSLACC, BS_FTFA_FSEC_FSLACC))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_FSLACC field. */
+#define BR_FTFA_FSEC_FSLACC(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_FSLACC, BS_FTFA_FSEC_FSLACC))
+/*@}*/
 
-/*! @name Register FTFA_FSEC, field MEEN[5:4] (RO)
+/*!
+ * @name Register FTFA_FSEC, field MEEN[5:4] (RO)
  *
- * Enables and disables mass erase capability of the flash memory module. The state of the MEEN bits
- * is only relevant when the SEC bits are set to secure outside of NVM Normal Mode. When the SEC
- * field is set to unsecure, the MEEN setting does not matter.
+ * Enables and disables mass erase capability of the flash memory module. The
+ * state of the MEEN bits is only relevant when the SEC bits are set to secure
+ * outside of NVM Normal Mode. When the SEC field is set to unsecure, the MEEN
+ * setting does not matter.
  *
  * Values:
  * - 00 - Mass erase is enabled
@@ -519,1608 +496,1537 @@ typedef union _hw_ftfa_fsec
  * - 10 - Mass erase is disabled
  * - 11 - Mass erase is enabled
  */
-//@{
-#define BP_FTFA_FSEC_MEEN      (4U)      //!< Bit position for FTFA_FSEC_MEEN.
-#define BM_FTFA_FSEC_MEEN      (0x30U)  //!< Bit mask for FTFA_FSEC_MEEN.
-#define BS_FTFA_FSEC_MEEN      (2U)  //!< Bitfield size in bits for FTFA_FSEC_MEEN.
+/*@{*/
+#define BP_FTFA_FSEC_MEEN    (4U)          /*!< Bit position for FTFA_FSEC_MEEN. */
+#define BM_FTFA_FSEC_MEEN    (0x30U)       /*!< Bit mask for FTFA_FSEC_MEEN. */
+#define BS_FTFA_FSEC_MEEN    (2U)          /*!< Bit field size in bits for FTFA_FSEC_MEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_MEEN field.
-#define BR_FTFA_FSEC_MEEN()   (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_MEEN, BS_FTFA_FSEC_MEEN))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_MEEN field. */
+#define BR_FTFA_FSEC_MEEN(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_MEEN, BS_FTFA_FSEC_MEEN))
+/*@}*/
 
-/*! @name Register FTFA_FSEC, field KEYEN[7:6] (RO)
+/*!
+ * @name Register FTFA_FSEC, field KEYEN[7:6] (RO)
  *
  * These bits enable and disable backdoor key access to the flash memory module.
  *
  * Values:
  * - 00 - Backdoor key access disabled
- * - 01 - Backdoor key access disabled (preferred KEYEN state to disable backdoor key access)
+ * - 01 - Backdoor key access disabled (preferred KEYEN state to disable
+ *     backdoor key access)
  * - 10 - Backdoor key access enabled
  * - 11 - Backdoor key access disabled
  */
-//@{
-#define BP_FTFA_FSEC_KEYEN      (6U)      //!< Bit position for FTFA_FSEC_KEYEN.
-#define BM_FTFA_FSEC_KEYEN      (0xc0U)  //!< Bit mask for FTFA_FSEC_KEYEN.
-#define BS_FTFA_FSEC_KEYEN      (2U)  //!< Bitfield size in bits for FTFA_FSEC_KEYEN.
+/*@{*/
+#define BP_FTFA_FSEC_KEYEN   (6U)          /*!< Bit position for FTFA_FSEC_KEYEN. */
+#define BM_FTFA_FSEC_KEYEN   (0xC0U)       /*!< Bit mask for FTFA_FSEC_KEYEN. */
+#define BS_FTFA_FSEC_KEYEN   (2U)          /*!< Bit field size in bits for FTFA_FSEC_KEYEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FSEC_KEYEN field.
-#define BR_FTFA_FSEC_KEYEN()   (BME_UBFX8(HW_FTFA_FSEC_ADDR, BP_FTFA_FSEC_KEYEN, BS_FTFA_FSEC_KEYEN))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FSEC_KEYEN field. */
+#define BR_FTFA_FSEC_KEYEN(x) (BME_UBFX8(HW_FTFA_FSEC_ADDR(x), BP_FTFA_FSEC_KEYEN, BS_FTFA_FSEC_KEYEN))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FOPT - Flash Option Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FOPT - Flash Option Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FOPT - Flash Option Register (RO)
  *
  * Reset value: 0x00U
  *
- * The flash option register allows the MCU to customize its operations by examining the state of
- * these read-only bits, which are loaded from NVM at reset. The function of the bits is defined in
- * the device's Chip Configuration details. All bits in the register are read-only . During the
- * reset sequence, the register is loaded from the flash nonvolatile option byte in the Flash
- * Configuration Field located in program flash memory. The flash basis for the values is signified
- * by X in the reset value.
+ * The flash option register allows the MCU to customize its operations by
+ * examining the state of these read-only bits, which are loaded from NVM at reset.
+ * The function of the bits is defined in the device's Chip Configuration details.
+ * All bits in the register are read-only . During the reset sequence, the
+ * register is loaded from the flash nonvolatile option byte in the Flash Configuration
+ * Field located in program flash memory. The flash basis for the values is
+ * signified by X in the reset value.
  */
 typedef union _hw_ftfa_fopt
 {
     uint8_t U;
     struct _hw_ftfa_fopt_bitfields
     {
-        uint8_t OPT : 8; //!< [7:0] Nonvolatile Option
+        uint8_t OPT : 8;               /*!< [7:0] Nonvolatile Option */
     } B;
 } hw_ftfa_fopt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FOPT register
  */
-//@{
-#define HW_FTFA_FOPT_ADDR      (REGS_FTFA_BASE + 0x3U)
+/*@{*/
+#define HW_FTFA_FOPT_ADDR(x)     ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FOPT           (*(__I hw_ftfa_fopt_t *) HW_FTFA_FOPT_ADDR)
-#define HW_FTFA_FOPT_RD()      (HW_FTFA_FOPT.U)
-#endif
-//@}
+#define HW_FTFA_FOPT(x)          (*(__I hw_ftfa_fopt_t *) HW_FTFA_FOPT_ADDR(x))
+#define HW_FTFA_FOPT_RD(x)       (HW_FTFA_FOPT(x).U)
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FOPT bitfields
+ * Constants & macros for individual FTFA_FOPT bitfields
  */
 
-/*! @name Register FTFA_FOPT, field OPT[7:0] (RO)
+/*!
+ * @name Register FTFA_FOPT, field OPT[7:0] (RO)
  *
- * These bits are loaded from flash to this register at reset. Refer to the device's Chip
- * Configuration details for the definition and use of these bits.
+ * These bits are loaded from flash to this register at reset. Refer to the
+ * device's Chip Configuration details for the definition and use of these bits.
  */
-//@{
-#define BP_FTFA_FOPT_OPT      (0U)      //!< Bit position for FTFA_FOPT_OPT.
-#define BM_FTFA_FOPT_OPT      (0xffU)  //!< Bit mask for FTFA_FOPT_OPT.
-#define BS_FTFA_FOPT_OPT      (8U)  //!< Bitfield size in bits for FTFA_FOPT_OPT.
+/*@{*/
+#define BP_FTFA_FOPT_OPT     (0U)          /*!< Bit position for FTFA_FOPT_OPT. */
+#define BM_FTFA_FOPT_OPT     (0xFFU)       /*!< Bit mask for FTFA_FOPT_OPT. */
+#define BS_FTFA_FOPT_OPT     (8U)          /*!< Bit field size in bits for FTFA_FOPT_OPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FOPT_OPT field.
-#define BR_FTFA_FOPT_OPT()   (BME_UBFX8(HW_FTFA_FOPT_ADDR, BP_FTFA_FOPT_OPT, BS_FTFA_FOPT_OPT))
-#endif
-//@}
+/*! @brief Read current value of the FTFA_FOPT_OPT field. */
+#define BR_FTFA_FOPT_OPT(x)  (HW_FTFA_FOPT(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB3 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB3 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB3 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob3
 {
     uint8_t U;
     struct _hw_ftfa_fccob3_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB3 register
  */
-//@{
-#define HW_FTFA_FCCOB3_ADDR      (REGS_FTFA_BASE + 0x4U)
+/*@{*/
+#define HW_FTFA_FCCOB3_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB3           (*(__IO hw_ftfa_fccob3_t *) HW_FTFA_FCCOB3_ADDR)
-#define HW_FTFA_FCCOB3_RD()      (HW_FTFA_FCCOB3.U)
-#define HW_FTFA_FCCOB3_WR(v)     (HW_FTFA_FCCOB3.U = (v))
-#define HW_FTFA_FCCOB3_SET(v)    (BME_OR8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB3_CLR(v)    (BME_AND8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB3_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB3_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB3(x)        (*(__IO hw_ftfa_fccob3_t *) HW_FTFA_FCCOB3_ADDR(x))
+#define HW_FTFA_FCCOB3_RD(x)     (HW_FTFA_FCCOB3(x).U)
+#define HW_FTFA_FCCOB3_WR(x, v)  (HW_FTFA_FCCOB3(x).U = (v))
+#define HW_FTFA_FCCOB3_SET(x, v) (BME_OR8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB3_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB3_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB3_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB3 bitfields
+ * Constants & macros for individual FTFA_FCCOB3 bitfields
  */
 
-/*! @name Register FTFA_FCCOB3, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB3, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB3_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB3_CCOBN.
-#define BM_FTFA_FCCOB3_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB3_CCOBN.
-#define BS_FTFA_FCCOB3_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB3_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB3_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB3_CCOBn. */
+#define BM_FTFA_FCCOB3_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB3_CCOBn. */
+#define BS_FTFA_FCCOB3_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB3_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB3_CCOBN field.
-#define BR_FTFA_FCCOB3_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB3_ADDR, BP_FTFA_FCCOB3_CCOBN, BS_FTFA_FCCOB3_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB3_CCOBn field. */
+#define BR_FTFA_FCCOB3_CCOBn(x) (HW_FTFA_FCCOB3(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB3_CCOBN.
-#define BF_FTFA_FCCOB3_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB3_CCOBN), uint8_t) & BM_FTFA_FCCOB3_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB3_CCOBn. */
+#define BF_FTFA_FCCOB3_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB3_CCOBn) & BM_FTFA_FCCOB3_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB3_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB3_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB3_CCOBN), BP_FTFA_FCCOB3_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB3_CCOBn(x, v) (HW_FTFA_FCCOB3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB2 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB2 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB2 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob2
 {
     uint8_t U;
     struct _hw_ftfa_fccob2_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB2 register
  */
-//@{
-#define HW_FTFA_FCCOB2_ADDR      (REGS_FTFA_BASE + 0x5U)
+/*@{*/
+#define HW_FTFA_FCCOB2_ADDR(x)   ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB2           (*(__IO hw_ftfa_fccob2_t *) HW_FTFA_FCCOB2_ADDR)
-#define HW_FTFA_FCCOB2_RD()      (HW_FTFA_FCCOB2.U)
-#define HW_FTFA_FCCOB2_WR(v)     (HW_FTFA_FCCOB2.U = (v))
-#define HW_FTFA_FCCOB2_SET(v)    (BME_OR8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB2_CLR(v)    (BME_AND8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB2_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB2(x)        (*(__IO hw_ftfa_fccob2_t *) HW_FTFA_FCCOB2_ADDR(x))
+#define HW_FTFA_FCCOB2_RD(x)     (HW_FTFA_FCCOB2(x).U)
+#define HW_FTFA_FCCOB2_WR(x, v)  (HW_FTFA_FCCOB2(x).U = (v))
+#define HW_FTFA_FCCOB2_SET(x, v) (BME_OR8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB2_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB2_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB2 bitfields
+ * Constants & macros for individual FTFA_FCCOB2 bitfields
  */
 
-/*! @name Register FTFA_FCCOB2, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB2, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB2_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB2_CCOBN.
-#define BM_FTFA_FCCOB2_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB2_CCOBN.
-#define BS_FTFA_FCCOB2_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB2_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB2_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB2_CCOBn. */
+#define BM_FTFA_FCCOB2_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB2_CCOBn. */
+#define BS_FTFA_FCCOB2_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB2_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB2_CCOBN field.
-#define BR_FTFA_FCCOB2_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB2_ADDR, BP_FTFA_FCCOB2_CCOBN, BS_FTFA_FCCOB2_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB2_CCOBn field. */
+#define BR_FTFA_FCCOB2_CCOBn(x) (HW_FTFA_FCCOB2(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB2_CCOBN.
-#define BF_FTFA_FCCOB2_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB2_CCOBN), uint8_t) & BM_FTFA_FCCOB2_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB2_CCOBn. */
+#define BF_FTFA_FCCOB2_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB2_CCOBn) & BM_FTFA_FCCOB2_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB2_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB2_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB2_CCOBN), BP_FTFA_FCCOB2_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB2_CCOBn(x, v) (HW_FTFA_FCCOB2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB1 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB1 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB1 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob1
 {
     uint8_t U;
     struct _hw_ftfa_fccob1_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB1 register
  */
-//@{
-#define HW_FTFA_FCCOB1_ADDR      (REGS_FTFA_BASE + 0x6U)
+/*@{*/
+#define HW_FTFA_FCCOB1_ADDR(x)   ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB1           (*(__IO hw_ftfa_fccob1_t *) HW_FTFA_FCCOB1_ADDR)
-#define HW_FTFA_FCCOB1_RD()      (HW_FTFA_FCCOB1.U)
-#define HW_FTFA_FCCOB1_WR(v)     (HW_FTFA_FCCOB1.U = (v))
-#define HW_FTFA_FCCOB1_SET(v)    (BME_OR8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB1_CLR(v)    (BME_AND8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB1_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB1(x)        (*(__IO hw_ftfa_fccob1_t *) HW_FTFA_FCCOB1_ADDR(x))
+#define HW_FTFA_FCCOB1_RD(x)     (HW_FTFA_FCCOB1(x).U)
+#define HW_FTFA_FCCOB1_WR(x, v)  (HW_FTFA_FCCOB1(x).U = (v))
+#define HW_FTFA_FCCOB1_SET(x, v) (BME_OR8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB1_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB1_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB1 bitfields
+ * Constants & macros for individual FTFA_FCCOB1 bitfields
  */
 
-/*! @name Register FTFA_FCCOB1, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB1, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB1_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB1_CCOBN.
-#define BM_FTFA_FCCOB1_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB1_CCOBN.
-#define BS_FTFA_FCCOB1_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB1_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB1_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB1_CCOBn. */
+#define BM_FTFA_FCCOB1_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB1_CCOBn. */
+#define BS_FTFA_FCCOB1_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB1_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB1_CCOBN field.
-#define BR_FTFA_FCCOB1_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB1_ADDR, BP_FTFA_FCCOB1_CCOBN, BS_FTFA_FCCOB1_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB1_CCOBn field. */
+#define BR_FTFA_FCCOB1_CCOBn(x) (HW_FTFA_FCCOB1(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB1_CCOBN.
-#define BF_FTFA_FCCOB1_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB1_CCOBN), uint8_t) & BM_FTFA_FCCOB1_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB1_CCOBn. */
+#define BF_FTFA_FCCOB1_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB1_CCOBn) & BM_FTFA_FCCOB1_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB1_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB1_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB1_CCOBN), BP_FTFA_FCCOB1_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB1_CCOBn(x, v) (HW_FTFA_FCCOB1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB0 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB0 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB0 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob0
 {
     uint8_t U;
     struct _hw_ftfa_fccob0_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB0 register
  */
-//@{
-#define HW_FTFA_FCCOB0_ADDR      (REGS_FTFA_BASE + 0x7U)
+/*@{*/
+#define HW_FTFA_FCCOB0_ADDR(x)   ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB0           (*(__IO hw_ftfa_fccob0_t *) HW_FTFA_FCCOB0_ADDR)
-#define HW_FTFA_FCCOB0_RD()      (HW_FTFA_FCCOB0.U)
-#define HW_FTFA_FCCOB0_WR(v)     (HW_FTFA_FCCOB0.U = (v))
-#define HW_FTFA_FCCOB0_SET(v)    (BME_OR8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB0_CLR(v)    (BME_AND8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB0_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB0_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB0(x)        (*(__IO hw_ftfa_fccob0_t *) HW_FTFA_FCCOB0_ADDR(x))
+#define HW_FTFA_FCCOB0_RD(x)     (HW_FTFA_FCCOB0(x).U)
+#define HW_FTFA_FCCOB0_WR(x, v)  (HW_FTFA_FCCOB0(x).U = (v))
+#define HW_FTFA_FCCOB0_SET(x, v) (BME_OR8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB0_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB0_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB0_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB0 bitfields
+ * Constants & macros for individual FTFA_FCCOB0 bitfields
  */
 
-/*! @name Register FTFA_FCCOB0, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB0, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB0_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB0_CCOBN.
-#define BM_FTFA_FCCOB0_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB0_CCOBN.
-#define BS_FTFA_FCCOB0_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB0_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB0_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB0_CCOBn. */
+#define BM_FTFA_FCCOB0_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB0_CCOBn. */
+#define BS_FTFA_FCCOB0_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB0_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB0_CCOBN field.
-#define BR_FTFA_FCCOB0_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB0_ADDR, BP_FTFA_FCCOB0_CCOBN, BS_FTFA_FCCOB0_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB0_CCOBn field. */
+#define BR_FTFA_FCCOB0_CCOBn(x) (HW_FTFA_FCCOB0(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB0_CCOBN.
-#define BF_FTFA_FCCOB0_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB0_CCOBN), uint8_t) & BM_FTFA_FCCOB0_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB0_CCOBn. */
+#define BF_FTFA_FCCOB0_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB0_CCOBn) & BM_FTFA_FCCOB0_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB0_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB0_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB0_CCOBN), BP_FTFA_FCCOB0_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB0_CCOBn(x, v) (HW_FTFA_FCCOB0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB7 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB7 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB7 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob7
 {
     uint8_t U;
     struct _hw_ftfa_fccob7_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob7_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB7 register
  */
-//@{
-#define HW_FTFA_FCCOB7_ADDR      (REGS_FTFA_BASE + 0x8U)
+/*@{*/
+#define HW_FTFA_FCCOB7_ADDR(x)   ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB7           (*(__IO hw_ftfa_fccob7_t *) HW_FTFA_FCCOB7_ADDR)
-#define HW_FTFA_FCCOB7_RD()      (HW_FTFA_FCCOB7.U)
-#define HW_FTFA_FCCOB7_WR(v)     (HW_FTFA_FCCOB7.U = (v))
-#define HW_FTFA_FCCOB7_SET(v)    (BME_OR8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB7_CLR(v)    (BME_AND8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB7_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB7_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB7(x)        (*(__IO hw_ftfa_fccob7_t *) HW_FTFA_FCCOB7_ADDR(x))
+#define HW_FTFA_FCCOB7_RD(x)     (HW_FTFA_FCCOB7(x).U)
+#define HW_FTFA_FCCOB7_WR(x, v)  (HW_FTFA_FCCOB7(x).U = (v))
+#define HW_FTFA_FCCOB7_SET(x, v) (BME_OR8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB7_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB7_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB7_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB7 bitfields
+ * Constants & macros for individual FTFA_FCCOB7 bitfields
  */
 
-/*! @name Register FTFA_FCCOB7, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB7, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB7_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB7_CCOBN.
-#define BM_FTFA_FCCOB7_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB7_CCOBN.
-#define BS_FTFA_FCCOB7_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB7_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB7_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB7_CCOBn. */
+#define BM_FTFA_FCCOB7_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB7_CCOBn. */
+#define BS_FTFA_FCCOB7_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB7_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB7_CCOBN field.
-#define BR_FTFA_FCCOB7_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB7_ADDR, BP_FTFA_FCCOB7_CCOBN, BS_FTFA_FCCOB7_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB7_CCOBn field. */
+#define BR_FTFA_FCCOB7_CCOBn(x) (HW_FTFA_FCCOB7(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB7_CCOBN.
-#define BF_FTFA_FCCOB7_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB7_CCOBN), uint8_t) & BM_FTFA_FCCOB7_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB7_CCOBn. */
+#define BF_FTFA_FCCOB7_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB7_CCOBn) & BM_FTFA_FCCOB7_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB7_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB7_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB7_CCOBN), BP_FTFA_FCCOB7_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB7_CCOBn(x, v) (HW_FTFA_FCCOB7_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB6 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB6 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB6 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob6
 {
     uint8_t U;
     struct _hw_ftfa_fccob6_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob6_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB6 register
  */
-//@{
-#define HW_FTFA_FCCOB6_ADDR      (REGS_FTFA_BASE + 0x9U)
+/*@{*/
+#define HW_FTFA_FCCOB6_ADDR(x)   ((x) + 0x9U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB6           (*(__IO hw_ftfa_fccob6_t *) HW_FTFA_FCCOB6_ADDR)
-#define HW_FTFA_FCCOB6_RD()      (HW_FTFA_FCCOB6.U)
-#define HW_FTFA_FCCOB6_WR(v)     (HW_FTFA_FCCOB6.U = (v))
-#define HW_FTFA_FCCOB6_SET(v)    (BME_OR8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB6_CLR(v)    (BME_AND8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB6_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB6_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB6(x)        (*(__IO hw_ftfa_fccob6_t *) HW_FTFA_FCCOB6_ADDR(x))
+#define HW_FTFA_FCCOB6_RD(x)     (HW_FTFA_FCCOB6(x).U)
+#define HW_FTFA_FCCOB6_WR(x, v)  (HW_FTFA_FCCOB6(x).U = (v))
+#define HW_FTFA_FCCOB6_SET(x, v) (BME_OR8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB6_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB6_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB6_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB6 bitfields
+ * Constants & macros for individual FTFA_FCCOB6 bitfields
  */
 
-/*! @name Register FTFA_FCCOB6, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB6, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB6_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB6_CCOBN.
-#define BM_FTFA_FCCOB6_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB6_CCOBN.
-#define BS_FTFA_FCCOB6_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB6_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB6_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB6_CCOBn. */
+#define BM_FTFA_FCCOB6_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB6_CCOBn. */
+#define BS_FTFA_FCCOB6_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB6_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB6_CCOBN field.
-#define BR_FTFA_FCCOB6_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB6_ADDR, BP_FTFA_FCCOB6_CCOBN, BS_FTFA_FCCOB6_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB6_CCOBn field. */
+#define BR_FTFA_FCCOB6_CCOBn(x) (HW_FTFA_FCCOB6(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB6_CCOBN.
-#define BF_FTFA_FCCOB6_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB6_CCOBN), uint8_t) & BM_FTFA_FCCOB6_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB6_CCOBn. */
+#define BF_FTFA_FCCOB6_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB6_CCOBn) & BM_FTFA_FCCOB6_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB6_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB6_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB6_CCOBN), BP_FTFA_FCCOB6_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB6_CCOBn(x, v) (HW_FTFA_FCCOB6_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB5 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB5 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB5 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob5
 {
     uint8_t U;
     struct _hw_ftfa_fccob5_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob5_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB5 register
  */
-//@{
-#define HW_FTFA_FCCOB5_ADDR      (REGS_FTFA_BASE + 0xaU)
+/*@{*/
+#define HW_FTFA_FCCOB5_ADDR(x)   ((x) + 0xAU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB5           (*(__IO hw_ftfa_fccob5_t *) HW_FTFA_FCCOB5_ADDR)
-#define HW_FTFA_FCCOB5_RD()      (HW_FTFA_FCCOB5.U)
-#define HW_FTFA_FCCOB5_WR(v)     (HW_FTFA_FCCOB5.U = (v))
-#define HW_FTFA_FCCOB5_SET(v)    (BME_OR8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB5_CLR(v)    (BME_AND8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB5_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB5_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB5(x)        (*(__IO hw_ftfa_fccob5_t *) HW_FTFA_FCCOB5_ADDR(x))
+#define HW_FTFA_FCCOB5_RD(x)     (HW_FTFA_FCCOB5(x).U)
+#define HW_FTFA_FCCOB5_WR(x, v)  (HW_FTFA_FCCOB5(x).U = (v))
+#define HW_FTFA_FCCOB5_SET(x, v) (BME_OR8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB5_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB5_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB5_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB5 bitfields
+ * Constants & macros for individual FTFA_FCCOB5 bitfields
  */
 
-/*! @name Register FTFA_FCCOB5, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB5, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB5_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB5_CCOBN.
-#define BM_FTFA_FCCOB5_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB5_CCOBN.
-#define BS_FTFA_FCCOB5_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB5_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB5_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB5_CCOBn. */
+#define BM_FTFA_FCCOB5_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB5_CCOBn. */
+#define BS_FTFA_FCCOB5_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB5_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB5_CCOBN field.
-#define BR_FTFA_FCCOB5_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB5_ADDR, BP_FTFA_FCCOB5_CCOBN, BS_FTFA_FCCOB5_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB5_CCOBn field. */
+#define BR_FTFA_FCCOB5_CCOBn(x) (HW_FTFA_FCCOB5(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB5_CCOBN.
-#define BF_FTFA_FCCOB5_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB5_CCOBN), uint8_t) & BM_FTFA_FCCOB5_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB5_CCOBn. */
+#define BF_FTFA_FCCOB5_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB5_CCOBn) & BM_FTFA_FCCOB5_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB5_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB5_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB5_CCOBN), BP_FTFA_FCCOB5_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB5_CCOBn(x, v) (HW_FTFA_FCCOB5_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB4 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB4 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB4 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob4
 {
     uint8_t U;
     struct _hw_ftfa_fccob4_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB4 register
  */
-//@{
-#define HW_FTFA_FCCOB4_ADDR      (REGS_FTFA_BASE + 0xbU)
+/*@{*/
+#define HW_FTFA_FCCOB4_ADDR(x)   ((x) + 0xBU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB4           (*(__IO hw_ftfa_fccob4_t *) HW_FTFA_FCCOB4_ADDR)
-#define HW_FTFA_FCCOB4_RD()      (HW_FTFA_FCCOB4.U)
-#define HW_FTFA_FCCOB4_WR(v)     (HW_FTFA_FCCOB4.U = (v))
-#define HW_FTFA_FCCOB4_SET(v)    (BME_OR8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB4_CLR(v)    (BME_AND8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB4_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB4_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB4(x)        (*(__IO hw_ftfa_fccob4_t *) HW_FTFA_FCCOB4_ADDR(x))
+#define HW_FTFA_FCCOB4_RD(x)     (HW_FTFA_FCCOB4(x).U)
+#define HW_FTFA_FCCOB4_WR(x, v)  (HW_FTFA_FCCOB4(x).U = (v))
+#define HW_FTFA_FCCOB4_SET(x, v) (BME_OR8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB4_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB4_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB4_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB4 bitfields
+ * Constants & macros for individual FTFA_FCCOB4 bitfields
  */
 
-/*! @name Register FTFA_FCCOB4, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB4, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB4_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB4_CCOBN.
-#define BM_FTFA_FCCOB4_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB4_CCOBN.
-#define BS_FTFA_FCCOB4_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB4_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB4_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB4_CCOBn. */
+#define BM_FTFA_FCCOB4_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB4_CCOBn. */
+#define BS_FTFA_FCCOB4_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB4_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB4_CCOBN field.
-#define BR_FTFA_FCCOB4_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB4_ADDR, BP_FTFA_FCCOB4_CCOBN, BS_FTFA_FCCOB4_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB4_CCOBn field. */
+#define BR_FTFA_FCCOB4_CCOBn(x) (HW_FTFA_FCCOB4(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB4_CCOBN.
-#define BF_FTFA_FCCOB4_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB4_CCOBN), uint8_t) & BM_FTFA_FCCOB4_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB4_CCOBn. */
+#define BF_FTFA_FCCOB4_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB4_CCOBn) & BM_FTFA_FCCOB4_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB4_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB4_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB4_CCOBN), BP_FTFA_FCCOB4_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB4_CCOBn(x, v) (HW_FTFA_FCCOB4_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOBB - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOBB - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOBB - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccobb
 {
     uint8_t U;
     struct _hw_ftfa_fccobb_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccobb_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOBB register
  */
-//@{
-#define HW_FTFA_FCCOBB_ADDR      (REGS_FTFA_BASE + 0xcU)
+/*@{*/
+#define HW_FTFA_FCCOBB_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOBB           (*(__IO hw_ftfa_fccobb_t *) HW_FTFA_FCCOBB_ADDR)
-#define HW_FTFA_FCCOBB_RD()      (HW_FTFA_FCCOBB.U)
-#define HW_FTFA_FCCOBB_WR(v)     (HW_FTFA_FCCOBB.U = (v))
-#define HW_FTFA_FCCOBB_SET(v)    (BME_OR8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOBB_CLR(v)    (BME_AND8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOBB_TOG(v)    (BME_XOR8(HW_FTFA_FCCOBB_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOBB(x)        (*(__IO hw_ftfa_fccobb_t *) HW_FTFA_FCCOBB_ADDR(x))
+#define HW_FTFA_FCCOBB_RD(x)     (HW_FTFA_FCCOBB(x).U)
+#define HW_FTFA_FCCOBB_WR(x, v)  (HW_FTFA_FCCOBB(x).U = (v))
+#define HW_FTFA_FCCOBB_SET(x, v) (BME_OR8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOBB_CLR(x, v) (BME_AND8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOBB_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOBB_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOBB bitfields
+ * Constants & macros for individual FTFA_FCCOBB bitfields
  */
 
-/*! @name Register FTFA_FCCOBB, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOBB, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOBB_CCOBN      (0U)      //!< Bit position for FTFA_FCCOBB_CCOBN.
-#define BM_FTFA_FCCOBB_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOBB_CCOBN.
-#define BS_FTFA_FCCOBB_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOBB_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOBB_CCOBn (0U)          /*!< Bit position for FTFA_FCCOBB_CCOBn. */
+#define BM_FTFA_FCCOBB_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOBB_CCOBn. */
+#define BS_FTFA_FCCOBB_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOBB_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOBB_CCOBN field.
-#define BR_FTFA_FCCOBB_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOBB_ADDR, BP_FTFA_FCCOBB_CCOBN, BS_FTFA_FCCOBB_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOBB_CCOBn field. */
+#define BR_FTFA_FCCOBB_CCOBn(x) (HW_FTFA_FCCOBB(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOBB_CCOBN.
-#define BF_FTFA_FCCOBB_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOBB_CCOBN), uint8_t) & BM_FTFA_FCCOBB_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOBB_CCOBn. */
+#define BF_FTFA_FCCOBB_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOBB_CCOBn) & BM_FTFA_FCCOBB_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOBB_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOBB_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOBB_CCOBN), BP_FTFA_FCCOBB_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOBB_CCOBn(x, v) (HW_FTFA_FCCOBB_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOBA - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOBA - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOBA - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccoba
 {
     uint8_t U;
     struct _hw_ftfa_fccoba_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccoba_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOBA register
  */
-//@{
-#define HW_FTFA_FCCOBA_ADDR      (REGS_FTFA_BASE + 0xdU)
+/*@{*/
+#define HW_FTFA_FCCOBA_ADDR(x)   ((x) + 0xDU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOBA           (*(__IO hw_ftfa_fccoba_t *) HW_FTFA_FCCOBA_ADDR)
-#define HW_FTFA_FCCOBA_RD()      (HW_FTFA_FCCOBA.U)
-#define HW_FTFA_FCCOBA_WR(v)     (HW_FTFA_FCCOBA.U = (v))
-#define HW_FTFA_FCCOBA_SET(v)    (BME_OR8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOBA_CLR(v)    (BME_AND8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOBA_TOG(v)    (BME_XOR8(HW_FTFA_FCCOBA_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOBA(x)        (*(__IO hw_ftfa_fccoba_t *) HW_FTFA_FCCOBA_ADDR(x))
+#define HW_FTFA_FCCOBA_RD(x)     (HW_FTFA_FCCOBA(x).U)
+#define HW_FTFA_FCCOBA_WR(x, v)  (HW_FTFA_FCCOBA(x).U = (v))
+#define HW_FTFA_FCCOBA_SET(x, v) (BME_OR8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOBA_CLR(x, v) (BME_AND8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOBA_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOBA_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOBA bitfields
+ * Constants & macros for individual FTFA_FCCOBA bitfields
  */
 
-/*! @name Register FTFA_FCCOBA, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOBA, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOBA_CCOBN      (0U)      //!< Bit position for FTFA_FCCOBA_CCOBN.
-#define BM_FTFA_FCCOBA_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOBA_CCOBN.
-#define BS_FTFA_FCCOBA_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOBA_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOBA_CCOBn (0U)          /*!< Bit position for FTFA_FCCOBA_CCOBn. */
+#define BM_FTFA_FCCOBA_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOBA_CCOBn. */
+#define BS_FTFA_FCCOBA_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOBA_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOBA_CCOBN field.
-#define BR_FTFA_FCCOBA_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOBA_ADDR, BP_FTFA_FCCOBA_CCOBN, BS_FTFA_FCCOBA_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOBA_CCOBn field. */
+#define BR_FTFA_FCCOBA_CCOBn(x) (HW_FTFA_FCCOBA(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOBA_CCOBN.
-#define BF_FTFA_FCCOBA_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOBA_CCOBN), uint8_t) & BM_FTFA_FCCOBA_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOBA_CCOBn. */
+#define BF_FTFA_FCCOBA_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOBA_CCOBn) & BM_FTFA_FCCOBA_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOBA_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOBA_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOBA_CCOBN), BP_FTFA_FCCOBA_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOBA_CCOBn(x, v) (HW_FTFA_FCCOBA_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB9 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB9 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB9 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob9
 {
     uint8_t U;
     struct _hw_ftfa_fccob9_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob9_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB9 register
  */
-//@{
-#define HW_FTFA_FCCOB9_ADDR      (REGS_FTFA_BASE + 0xeU)
+/*@{*/
+#define HW_FTFA_FCCOB9_ADDR(x)   ((x) + 0xEU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB9           (*(__IO hw_ftfa_fccob9_t *) HW_FTFA_FCCOB9_ADDR)
-#define HW_FTFA_FCCOB9_RD()      (HW_FTFA_FCCOB9.U)
-#define HW_FTFA_FCCOB9_WR(v)     (HW_FTFA_FCCOB9.U = (v))
-#define HW_FTFA_FCCOB9_SET(v)    (BME_OR8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB9_CLR(v)    (BME_AND8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB9_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB9_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB9(x)        (*(__IO hw_ftfa_fccob9_t *) HW_FTFA_FCCOB9_ADDR(x))
+#define HW_FTFA_FCCOB9_RD(x)     (HW_FTFA_FCCOB9(x).U)
+#define HW_FTFA_FCCOB9_WR(x, v)  (HW_FTFA_FCCOB9(x).U = (v))
+#define HW_FTFA_FCCOB9_SET(x, v) (BME_OR8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB9_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB9_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB9_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB9 bitfields
+ * Constants & macros for individual FTFA_FCCOB9 bitfields
  */
 
-/*! @name Register FTFA_FCCOB9, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB9, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB9_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB9_CCOBN.
-#define BM_FTFA_FCCOB9_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB9_CCOBN.
-#define BS_FTFA_FCCOB9_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB9_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB9_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB9_CCOBn. */
+#define BM_FTFA_FCCOB9_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB9_CCOBn. */
+#define BS_FTFA_FCCOB9_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB9_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB9_CCOBN field.
-#define BR_FTFA_FCCOB9_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB9_ADDR, BP_FTFA_FCCOB9_CCOBN, BS_FTFA_FCCOB9_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB9_CCOBn field. */
+#define BR_FTFA_FCCOB9_CCOBn(x) (HW_FTFA_FCCOB9(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB9_CCOBN.
-#define BF_FTFA_FCCOB9_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB9_CCOBN), uint8_t) & BM_FTFA_FCCOB9_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB9_CCOBn. */
+#define BF_FTFA_FCCOB9_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB9_CCOBn) & BM_FTFA_FCCOB9_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB9_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB9_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB9_CCOBN), BP_FTFA_FCCOB9_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB9_CCOBn(x, v) (HW_FTFA_FCCOB9_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FCCOB8 - Flash Common Command Object Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FCCOB8 - Flash Common Command Object Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FCCOB8 - Flash Common Command Object Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FCCOB register group provides 12 bytes for command codes and parameters. The individual bytes
- * within the set append a 0-B hex identifier to the FCCOB register name: FCCOB0, FCCOB1, ...,
- * FCCOBB.
+ * The FCCOB register group provides 12 bytes for command codes and parameters.
+ * The individual bytes within the set append a 0-B hex identifier to the FCCOB
+ * register name: FCCOB0, FCCOB1, ..., FCCOBB.
  */
 typedef union _hw_ftfa_fccob8
 {
     uint8_t U;
     struct _hw_ftfa_fccob8_bitfields
     {
-        uint8_t CCOBN : 8; //!< [7:0] The FCCOB register provides a command code and relevant parameters to the memory controller.
+        uint8_t CCOBn : 8;             /*!< [7:0]  */
     } B;
 } hw_ftfa_fccob8_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FCCOB8 register
  */
-//@{
-#define HW_FTFA_FCCOB8_ADDR      (REGS_FTFA_BASE + 0xfU)
+/*@{*/
+#define HW_FTFA_FCCOB8_ADDR(x)   ((x) + 0xFU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FCCOB8           (*(__IO hw_ftfa_fccob8_t *) HW_FTFA_FCCOB8_ADDR)
-#define HW_FTFA_FCCOB8_RD()      (HW_FTFA_FCCOB8.U)
-#define HW_FTFA_FCCOB8_WR(v)     (HW_FTFA_FCCOB8.U = (v))
-#define HW_FTFA_FCCOB8_SET(v)    (BME_OR8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FCCOB8_CLR(v)    (BME_AND8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FCCOB8_TOG(v)    (BME_XOR8(HW_FTFA_FCCOB8_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FCCOB8(x)        (*(__IO hw_ftfa_fccob8_t *) HW_FTFA_FCCOB8_ADDR(x))
+#define HW_FTFA_FCCOB8_RD(x)     (HW_FTFA_FCCOB8(x).U)
+#define HW_FTFA_FCCOB8_WR(x, v)  (HW_FTFA_FCCOB8(x).U = (v))
+#define HW_FTFA_FCCOB8_SET(x, v) (BME_OR8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FCCOB8_CLR(x, v) (BME_AND8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FCCOB8_TOG(x, v) (BME_XOR8(HW_FTFA_FCCOB8_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FCCOB8 bitfields
+ * Constants & macros for individual FTFA_FCCOB8 bitfields
  */
 
-/*! @name Register FTFA_FCCOB8, field CCOBN[7:0] (RW)
+/*!
+ * @name Register FTFA_FCCOB8, field CCOBn[7:0] (RW)
  *
- * The FCCOB register provides a command code and relevant parameters to the memory controller. The
- * individual registers that compose the FCCOB data set can be written in any order, but you must
- * provide all needed values, which vary from command to command. First, set up all required FCCOB
- * fields and then initiate the command’s execution by writing a 1 to the FSTAT[CCIF] bit. This
- * clears the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed by the
- * user until the command completes (CCIF returns to 1). No command buffering or queueing is
- * provided; the next command can be loaded only after the current command completes. Some commands
- * return information to the FCCOB registers. Any values returned to FCCOB are available for reading
- * after the FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
- * generic flash command format. The first FCCOB register, FCCOB0, always contains the command code.
- * This 8-bit value defines the command to be executed. The command code is followed by the
- * parameters required for this specific flash command, typically an address and/or data values. The
- * command parameter table is written in terms of FCCOB Number (which is equivalent to the byte
- * number). This number is a reference to the FCCOB register name and is not the register address.
- * FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that defines the flash
- * command) 1 Flash address [23:16] 2 Flash address [15:8] 3 Flash address [7:0] 4 Data Byte 0 5
- * Data Byte 1 6 Data Byte 2 7 Data Byte 3 8 Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7
- * FCCOB Endianness and Multi-Byte Access : The FCCOB register group uses a big endian addressing
- * convention. For all command parameter fields larger than 1 byte, the most significant data
- * resides in the lowest FCCOB register number. The FCCOB register group may be read and written as
- * individual bytes, aligned words (2 bytes) or aligned longwords (4 bytes).
- *
- * Values:
- * -  - 
+ * The FCCOB register provides a command code and relevant parameters to the
+ * memory controller. The individual registers that compose the FCCOB data set can
+ * be written in any order, but you must provide all needed values, which vary
+ * from command to command. First, set up all required FCCOB fields and then
+ * initiate the command's execution by writing a 1 to the FSTAT[CCIF] bit. This clears
+ * the CCIF bit, which locks all FCCOB parameter fields and they cannot be changed
+ * by the user until the command completes (CCIF returns to 1). No command
+ * buffering or queueing is provided; the next command can be loaded only after the
+ * current command completes. Some commands return information to the FCCOB
+ * registers. Any values returned to FCCOB are available for reading after the
+ * FSTAT[CCIF] flag returns to 1 by the memory controller. The following table shows a
+ * generic flash command format. The first FCCOB register, FCCOB0, always contains
+ * the command code. This 8-bit value defines the command to be executed. The
+ * command code is followed by the parameters required for this specific flash
+ * command, typically an address and/or data values. The command parameter table is
+ * written in terms of FCCOB Number (which is equivalent to the byte number). This
+ * number is a reference to the FCCOB register name and is not the register
+ * address. FCCOB Number Typical Command Parameter Contents [7:0] 0 FCMD (a code that
+ * defines the flash command) 1 Flash address [23:16] 2 Flash address [15:8] 3
+ * Flash address [7:0] 4 Data Byte 0 5 Data Byte 1 6 Data Byte 2 7 Data Byte 3 8
+ * Data Byte 4 9 Data Byte 5 A Data Byte 6 B Data Byte 7 FCCOB Endianness and
+ * Multi-Byte Access : The FCCOB register group uses a big endian addressing
+ * convention. For all command parameter fields larger than 1 byte, the most significant
+ * data resides in the lowest FCCOB register number. The FCCOB register group may
+ * be read and written as individual bytes, aligned words (2 bytes) or aligned
+ * longwords (4 bytes).
  */
-//@{
-#define BP_FTFA_FCCOB8_CCOBN      (0U)      //!< Bit position for FTFA_FCCOB8_CCOBN.
-#define BM_FTFA_FCCOB8_CCOBN      (0xffU)  //!< Bit mask for FTFA_FCCOB8_CCOBN.
-#define BS_FTFA_FCCOB8_CCOBN      (8U)  //!< Bitfield size in bits for FTFA_FCCOB8_CCOBN.
+/*@{*/
+#define BP_FTFA_FCCOB8_CCOBn (0U)          /*!< Bit position for FTFA_FCCOB8_CCOBn. */
+#define BM_FTFA_FCCOB8_CCOBn (0xFFU)       /*!< Bit mask for FTFA_FCCOB8_CCOBn. */
+#define BS_FTFA_FCCOB8_CCOBn (8U)          /*!< Bit field size in bits for FTFA_FCCOB8_CCOBn. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FCCOB8_CCOBN field.
-#define BR_FTFA_FCCOB8_CCOBN()   (BME_UBFX8(HW_FTFA_FCCOB8_ADDR, BP_FTFA_FCCOB8_CCOBN, BS_FTFA_FCCOB8_CCOBN))
-#endif
+/*! @brief Read current value of the FTFA_FCCOB8_CCOBn field. */
+#define BR_FTFA_FCCOB8_CCOBn(x) (HW_FTFA_FCCOB8(x).U)
 
-//! @brief Format value for bitfield FTFA_FCCOB8_CCOBN.
-#define BF_FTFA_FCCOB8_CCOBN(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FCCOB8_CCOBN), uint8_t) & BM_FTFA_FCCOB8_CCOBN)
+/*! @brief Format value for bitfield FTFA_FCCOB8_CCOBn. */
+#define BF_FTFA_FCCOB8_CCOBn(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FCCOB8_CCOBn) & BM_FTFA_FCCOB8_CCOBn)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCOBN field to a new value.
-#define BW_FTFA_FCCOB8_CCOBN(v)   (BME_BFI8(HW_FTFA_FCCOB8_ADDR, ((uint8_t)(v) << BP_FTFA_FCCOB8_CCOBN), BP_FTFA_FCCOB8_CCOBN, 8))
-#endif
-//@}
+/*! @brief Set the CCOBn field to a new value. */
+#define BW_FTFA_FCCOB8_CCOBn(x, v) (HW_FTFA_FCCOB8_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT3 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT3 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT3 - Program Flash Protection Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FPROT registers define which logical program flash regions are protected from program and
- * erase operations. Protected flash regions cannot have their content changed; that is, these
- * regions cannot be programmed and cannot be erased by any flash command. Unprotected regions can
- * be changed by program and erase operations. The four FPROT registers allow up to 32 protectable
- * regions. Each bit protects a 1/32 region of the program flash memory except for memory
- * configurations with less than 32 KB of program flash where each assigned bit protects 1 KB . For
- * configurations with 24 KB of program flash memory or less, FPROT0 is not used. For configurations
- * with 16 KB of program flash memory or less, FPROT1 is not used. For configurations with 8 KB of
- * program flash memory, FPROT2 is not used. The bitfields are defined in each register as follows:
- * Program flash protection register Program flash protection bits FPROT0 PROT[31:24] FPROT1
- * PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0] During the reset sequence, the FPROT registers are
- * loaded with the contents of the program flash protection bytes in the Flash Configuration Field
- * as indicated in the following table. Program flash protection register Flash Configuration Field
- * offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008 To change the program
- * flash protection that is loaded during the reset sequence, unprotect the sector of program flash
- * memory that contains the Flash Configuration Field. Then, reprogram the program flash protection
- * byte.
+ * The FPROT registers define which logical program flash regions are protected
+ * from program and erase operations. Protected flash regions cannot have their
+ * content changed; that is, these regions cannot be programmed and cannot be
+ * erased by any flash command. Unprotected regions can be changed by program and
+ * erase operations. The four FPROT registers allow up to 32 protectable regions.
+ * Each bit protects a 1/32 region of the program flash memory except for memory
+ * configurations with less than 32 Kbytes of program flash where each assigned bit
+ * protects 1 Kbyte . For configurations with 24 Kbytes of program flash memory
+ * or less, FPROT0 is not used. For configurations with 16 Kbytes of program
+ * flash memory or less, FPROT1 is not used. For configurations with 8 Kbytes of
+ * program flash memory, FPROT2 is not used. The bitfields are defined in each
+ * register as follows: Program flash protection register Program flash protection bits
+ * FPROT0 PROT[31:24] FPROT1 PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0]
+ * During the reset sequence, the FPROT registers are loaded with the contents of the
+ * program flash protection bytes in the Flash Configuration Field as indicated
+ * in the following table. Program flash protection register Flash Configuration
+ * Field offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008
+ * To change the program flash protection that is loaded during the reset
+ * sequence, unprotect the sector of program flash memory that contains the Flash
+ * Configuration Field. Then, reprogram the program flash protection byte.
  */
 typedef union _hw_ftfa_fprot3
 {
     uint8_t U;
     struct _hw_ftfa_fprot3_bitfields
     {
-        uint8_t PROT : 8; //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT3 register
  */
-//@{
-#define HW_FTFA_FPROT3_ADDR      (REGS_FTFA_BASE + 0x10U)
+/*@{*/
+#define HW_FTFA_FPROT3_ADDR(x)   ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT3           (*(__IO hw_ftfa_fprot3_t *) HW_FTFA_FPROT3_ADDR)
-#define HW_FTFA_FPROT3_RD()      (HW_FTFA_FPROT3.U)
-#define HW_FTFA_FPROT3_WR(v)     (HW_FTFA_FPROT3.U = (v))
-#define HW_FTFA_FPROT3_SET(v)    (BME_OR8(HW_FTFA_FPROT3_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT3_CLR(v)    (BME_AND8(HW_FTFA_FPROT3_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT3_TOG(v)    (BME_XOR8(HW_FTFA_FPROT3_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT3(x)        (*(__IO hw_ftfa_fprot3_t *) HW_FTFA_FPROT3_ADDR(x))
+#define HW_FTFA_FPROT3_RD(x)     (HW_FTFA_FPROT3(x).U)
+#define HW_FTFA_FPROT3_WR(x, v)  (HW_FTFA_FPROT3(x).U = (v))
+#define HW_FTFA_FPROT3_SET(x, v) (BME_OR8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT3_CLR(x, v) (BME_AND8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT3_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT3_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FPROT3 bitfields
+ * Constants & macros for individual FTFA_FPROT3 bitfields
  */
 
-/*! @name Register FTFA_FPROT3, field PROT[7:0] (RW)
+/*!
+ * @name Register FTFA_FPROT3, field PROT[7:0] (RW)
  *
- * Each program flash region can be protected from program and erase operations by setting the
- * associated PROT bit. In NVM Normal mode: The protection can only be increased, meaning that
- * currently unprotected memory can be protected, but currently protected memory cannot be
- * unprotected. Since unprotected regions are marked with a 1 and protected regions use a 0, only
- * writes changing 1s to 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
- * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with 0-to-1
- * transitions are ignored. In NVM Special mode: All bits of FPROT are writable without restriction.
- * Unprotected areas can be protected and protected areas can be unprotected. The user must never
- * write to any FPROT register while a command is running (CCIF=0). Trying to alter data in any
- * protected area in the program flash memory results in a protection violation error and sets the
- * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible if it contains any
- * protected region. Each bit in the 32-bit protection register represents 1/32 of the total program
- * flash except for configurations where program flash memory is less than 32 KB . For
- * configurations with less than 32 KB of program flash memory, each assigned bit represents 1 KB.
+ * Each program flash region can be protected from program and erase operations
+ * by setting the associated PROT bit. In NVM Normal mode: The protection can
+ * only be increased, meaning that currently unprotected memory can be protected,
+ * but currently protected memory cannot be unprotected. Since unprotected regions
+ * are marked with a 1 and protected regions use a 0, only writes changing 1s to
+ * 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
+ * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with
+ * 0-to-1 transitions are ignored. In NVM Special mode: All bits of FPROT are
+ * writable without restriction. Unprotected areas can be protected and protected
+ * areas can be unprotected. The user must never write to any FPROT register while
+ * a command is running (CCIF=0). Trying to alter data in any protected area in
+ * the program flash memory results in a protection violation error and sets the
+ * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible
+ * if it contains any protected region. Each bit in the 32-bit protection
+ * register represents 1/32 of the total program flash except for configurations where
+ * program flash memory is less than 32 Kbytes. For configurations with less than
+ * 32 Kbytes of program flash memory, each assigned bit represents 1 Kbyte.
  *
  * Values:
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT3_PROT      (0U)      //!< Bit position for FTFA_FPROT3_PROT.
-#define BM_FTFA_FPROT3_PROT      (0xffU)  //!< Bit mask for FTFA_FPROT3_PROT.
-#define BS_FTFA_FPROT3_PROT      (8U)  //!< Bitfield size in bits for FTFA_FPROT3_PROT.
+/*@{*/
+#define BP_FTFA_FPROT3_PROT  (0U)          /*!< Bit position for FTFA_FPROT3_PROT. */
+#define BM_FTFA_FPROT3_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT3_PROT. */
+#define BS_FTFA_FPROT3_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT3_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT3_PROT field.
-#define BR_FTFA_FPROT3_PROT()   (BME_UBFX8(HW_FTFA_FPROT3_ADDR, BP_FTFA_FPROT3_PROT, BS_FTFA_FPROT3_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT3_PROT field. */
+#define BR_FTFA_FPROT3_PROT(x) (HW_FTFA_FPROT3(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT3_PROT.
-#define BF_FTFA_FPROT3_PROT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT3_PROT), uint8_t) & BM_FTFA_FPROT3_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT3_PROT. */
+#define BF_FTFA_FPROT3_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT3_PROT) & BM_FTFA_FPROT3_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT3_PROT(v)   (BME_BFI8(HW_FTFA_FPROT3_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT3_PROT), BP_FTFA_FPROT3_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT3_PROT(x, v) (HW_FTFA_FPROT3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT2 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT2 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT2 - Program Flash Protection Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FPROT registers define which logical program flash regions are protected from program and
- * erase operations. Protected flash regions cannot have their content changed; that is, these
- * regions cannot be programmed and cannot be erased by any flash command. Unprotected regions can
- * be changed by program and erase operations. The four FPROT registers allow up to 32 protectable
- * regions. Each bit protects a 1/32 region of the program flash memory except for memory
- * configurations with less than 32 KB of program flash where each assigned bit protects 1 KB . For
- * configurations with 24 KB of program flash memory or less, FPROT0 is not used. For configurations
- * with 16 KB of program flash memory or less, FPROT1 is not used. For configurations with 8 KB of
- * program flash memory, FPROT2 is not used. The bitfields are defined in each register as follows:
- * Program flash protection register Program flash protection bits FPROT0 PROT[31:24] FPROT1
- * PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0] During the reset sequence, the FPROT registers are
- * loaded with the contents of the program flash protection bytes in the Flash Configuration Field
- * as indicated in the following table. Program flash protection register Flash Configuration Field
- * offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008 To change the program
- * flash protection that is loaded during the reset sequence, unprotect the sector of program flash
- * memory that contains the Flash Configuration Field. Then, reprogram the program flash protection
- * byte.
+ * The FPROT registers define which logical program flash regions are protected
+ * from program and erase operations. Protected flash regions cannot have their
+ * content changed; that is, these regions cannot be programmed and cannot be
+ * erased by any flash command. Unprotected regions can be changed by program and
+ * erase operations. The four FPROT registers allow up to 32 protectable regions.
+ * Each bit protects a 1/32 region of the program flash memory except for memory
+ * configurations with less than 32 Kbytes of program flash where each assigned bit
+ * protects 1 Kbyte . For configurations with 24 Kbytes of program flash memory
+ * or less, FPROT0 is not used. For configurations with 16 Kbytes of program
+ * flash memory or less, FPROT1 is not used. For configurations with 8 Kbytes of
+ * program flash memory, FPROT2 is not used. The bitfields are defined in each
+ * register as follows: Program flash protection register Program flash protection bits
+ * FPROT0 PROT[31:24] FPROT1 PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0]
+ * During the reset sequence, the FPROT registers are loaded with the contents of the
+ * program flash protection bytes in the Flash Configuration Field as indicated
+ * in the following table. Program flash protection register Flash Configuration
+ * Field offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008
+ * To change the program flash protection that is loaded during the reset
+ * sequence, unprotect the sector of program flash memory that contains the Flash
+ * Configuration Field. Then, reprogram the program flash protection byte.
  */
 typedef union _hw_ftfa_fprot2
 {
     uint8_t U;
     struct _hw_ftfa_fprot2_bitfields
     {
-        uint8_t PROT : 8; //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT2 register
  */
-//@{
-#define HW_FTFA_FPROT2_ADDR      (REGS_FTFA_BASE + 0x11U)
+/*@{*/
+#define HW_FTFA_FPROT2_ADDR(x)   ((x) + 0x11U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT2           (*(__IO hw_ftfa_fprot2_t *) HW_FTFA_FPROT2_ADDR)
-#define HW_FTFA_FPROT2_RD()      (HW_FTFA_FPROT2.U)
-#define HW_FTFA_FPROT2_WR(v)     (HW_FTFA_FPROT2.U = (v))
-#define HW_FTFA_FPROT2_SET(v)    (BME_OR8(HW_FTFA_FPROT2_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT2_CLR(v)    (BME_AND8(HW_FTFA_FPROT2_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT2_TOG(v)    (BME_XOR8(HW_FTFA_FPROT2_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT2(x)        (*(__IO hw_ftfa_fprot2_t *) HW_FTFA_FPROT2_ADDR(x))
+#define HW_FTFA_FPROT2_RD(x)     (HW_FTFA_FPROT2(x).U)
+#define HW_FTFA_FPROT2_WR(x, v)  (HW_FTFA_FPROT2(x).U = (v))
+#define HW_FTFA_FPROT2_SET(x, v) (BME_OR8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT2_CLR(x, v) (BME_AND8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT2_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT2_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FPROT2 bitfields
+ * Constants & macros for individual FTFA_FPROT2 bitfields
  */
 
-/*! @name Register FTFA_FPROT2, field PROT[7:0] (RW)
+/*!
+ * @name Register FTFA_FPROT2, field PROT[7:0] (RW)
  *
- * Each program flash region can be protected from program and erase operations by setting the
- * associated PROT bit. In NVM Normal mode: The protection can only be increased, meaning that
- * currently unprotected memory can be protected, but currently protected memory cannot be
- * unprotected. Since unprotected regions are marked with a 1 and protected regions use a 0, only
- * writes changing 1s to 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
- * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with 0-to-1
- * transitions are ignored. In NVM Special mode: All bits of FPROT are writable without restriction.
- * Unprotected areas can be protected and protected areas can be unprotected. The user must never
- * write to any FPROT register while a command is running (CCIF=0). Trying to alter data in any
- * protected area in the program flash memory results in a protection violation error and sets the
- * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible if it contains any
- * protected region. Each bit in the 32-bit protection register represents 1/32 of the total program
- * flash except for configurations where program flash memory is less than 32 KB . For
- * configurations with less than 32 KB of program flash memory, each assigned bit represents 1 KB.
+ * Each program flash region can be protected from program and erase operations
+ * by setting the associated PROT bit. In NVM Normal mode: The protection can
+ * only be increased, meaning that currently unprotected memory can be protected,
+ * but currently protected memory cannot be unprotected. Since unprotected regions
+ * are marked with a 1 and protected regions use a 0, only writes changing 1s to
+ * 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
+ * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with
+ * 0-to-1 transitions are ignored. In NVM Special mode: All bits of FPROT are
+ * writable without restriction. Unprotected areas can be protected and protected
+ * areas can be unprotected. The user must never write to any FPROT register while
+ * a command is running (CCIF=0). Trying to alter data in any protected area in
+ * the program flash memory results in a protection violation error and sets the
+ * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible
+ * if it contains any protected region. Each bit in the 32-bit protection
+ * register represents 1/32 of the total program flash except for configurations where
+ * program flash memory is less than 32 Kbytes. For configurations with less than
+ * 32 Kbytes of program flash memory, each assigned bit represents 1 Kbyte.
  *
  * Values:
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT2_PROT      (0U)      //!< Bit position for FTFA_FPROT2_PROT.
-#define BM_FTFA_FPROT2_PROT      (0xffU)  //!< Bit mask for FTFA_FPROT2_PROT.
-#define BS_FTFA_FPROT2_PROT      (8U)  //!< Bitfield size in bits for FTFA_FPROT2_PROT.
+/*@{*/
+#define BP_FTFA_FPROT2_PROT  (0U)          /*!< Bit position for FTFA_FPROT2_PROT. */
+#define BM_FTFA_FPROT2_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT2_PROT. */
+#define BS_FTFA_FPROT2_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT2_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT2_PROT field.
-#define BR_FTFA_FPROT2_PROT()   (BME_UBFX8(HW_FTFA_FPROT2_ADDR, BP_FTFA_FPROT2_PROT, BS_FTFA_FPROT2_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT2_PROT field. */
+#define BR_FTFA_FPROT2_PROT(x) (HW_FTFA_FPROT2(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT2_PROT.
-#define BF_FTFA_FPROT2_PROT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT2_PROT), uint8_t) & BM_FTFA_FPROT2_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT2_PROT. */
+#define BF_FTFA_FPROT2_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT2_PROT) & BM_FTFA_FPROT2_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT2_PROT(v)   (BME_BFI8(HW_FTFA_FPROT2_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT2_PROT), BP_FTFA_FPROT2_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT2_PROT(x, v) (HW_FTFA_FPROT2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT1 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT1 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT1 - Program Flash Protection Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FPROT registers define which logical program flash regions are protected from program and
- * erase operations. Protected flash regions cannot have their content changed; that is, these
- * regions cannot be programmed and cannot be erased by any flash command. Unprotected regions can
- * be changed by program and erase operations. The four FPROT registers allow up to 32 protectable
- * regions. Each bit protects a 1/32 region of the program flash memory except for memory
- * configurations with less than 32 KB of program flash where each assigned bit protects 1 KB . For
- * configurations with 24 KB of program flash memory or less, FPROT0 is not used. For configurations
- * with 16 KB of program flash memory or less, FPROT1 is not used. For configurations with 8 KB of
- * program flash memory, FPROT2 is not used. The bitfields are defined in each register as follows:
- * Program flash protection register Program flash protection bits FPROT0 PROT[31:24] FPROT1
- * PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0] During the reset sequence, the FPROT registers are
- * loaded with the contents of the program flash protection bytes in the Flash Configuration Field
- * as indicated in the following table. Program flash protection register Flash Configuration Field
- * offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008 To change the program
- * flash protection that is loaded during the reset sequence, unprotect the sector of program flash
- * memory that contains the Flash Configuration Field. Then, reprogram the program flash protection
- * byte.
+ * The FPROT registers define which logical program flash regions are protected
+ * from program and erase operations. Protected flash regions cannot have their
+ * content changed; that is, these regions cannot be programmed and cannot be
+ * erased by any flash command. Unprotected regions can be changed by program and
+ * erase operations. The four FPROT registers allow up to 32 protectable regions.
+ * Each bit protects a 1/32 region of the program flash memory except for memory
+ * configurations with less than 32 Kbytes of program flash where each assigned bit
+ * protects 1 Kbyte . For configurations with 24 Kbytes of program flash memory
+ * or less, FPROT0 is not used. For configurations with 16 Kbytes of program
+ * flash memory or less, FPROT1 is not used. For configurations with 8 Kbytes of
+ * program flash memory, FPROT2 is not used. The bitfields are defined in each
+ * register as follows: Program flash protection register Program flash protection bits
+ * FPROT0 PROT[31:24] FPROT1 PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0]
+ * During the reset sequence, the FPROT registers are loaded with the contents of the
+ * program flash protection bytes in the Flash Configuration Field as indicated
+ * in the following table. Program flash protection register Flash Configuration
+ * Field offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008
+ * To change the program flash protection that is loaded during the reset
+ * sequence, unprotect the sector of program flash memory that contains the Flash
+ * Configuration Field. Then, reprogram the program flash protection byte.
  */
 typedef union _hw_ftfa_fprot1
 {
     uint8_t U;
     struct _hw_ftfa_fprot1_bitfields
     {
-        uint8_t PROT : 8; //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT1 register
  */
-//@{
-#define HW_FTFA_FPROT1_ADDR      (REGS_FTFA_BASE + 0x12U)
+/*@{*/
+#define HW_FTFA_FPROT1_ADDR(x)   ((x) + 0x12U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT1           (*(__IO hw_ftfa_fprot1_t *) HW_FTFA_FPROT1_ADDR)
-#define HW_FTFA_FPROT1_RD()      (HW_FTFA_FPROT1.U)
-#define HW_FTFA_FPROT1_WR(v)     (HW_FTFA_FPROT1.U = (v))
-#define HW_FTFA_FPROT1_SET(v)    (BME_OR8(HW_FTFA_FPROT1_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT1_CLR(v)    (BME_AND8(HW_FTFA_FPROT1_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT1_TOG(v)    (BME_XOR8(HW_FTFA_FPROT1_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT1(x)        (*(__IO hw_ftfa_fprot1_t *) HW_FTFA_FPROT1_ADDR(x))
+#define HW_FTFA_FPROT1_RD(x)     (HW_FTFA_FPROT1(x).U)
+#define HW_FTFA_FPROT1_WR(x, v)  (HW_FTFA_FPROT1(x).U = (v))
+#define HW_FTFA_FPROT1_SET(x, v) (BME_OR8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT1_CLR(x, v) (BME_AND8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT1_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT1_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FPROT1 bitfields
+ * Constants & macros for individual FTFA_FPROT1 bitfields
  */
 
-/*! @name Register FTFA_FPROT1, field PROT[7:0] (RW)
+/*!
+ * @name Register FTFA_FPROT1, field PROT[7:0] (RW)
  *
- * Each program flash region can be protected from program and erase operations by setting the
- * associated PROT bit. In NVM Normal mode: The protection can only be increased, meaning that
- * currently unprotected memory can be protected, but currently protected memory cannot be
- * unprotected. Since unprotected regions are marked with a 1 and protected regions use a 0, only
- * writes changing 1s to 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
- * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with 0-to-1
- * transitions are ignored. In NVM Special mode: All bits of FPROT are writable without restriction.
- * Unprotected areas can be protected and protected areas can be unprotected. The user must never
- * write to any FPROT register while a command is running (CCIF=0). Trying to alter data in any
- * protected area in the program flash memory results in a protection violation error and sets the
- * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible if it contains any
- * protected region. Each bit in the 32-bit protection register represents 1/32 of the total program
- * flash except for configurations where program flash memory is less than 32 KB . For
- * configurations with less than 32 KB of program flash memory, each assigned bit represents 1 KB.
+ * Each program flash region can be protected from program and erase operations
+ * by setting the associated PROT bit. In NVM Normal mode: The protection can
+ * only be increased, meaning that currently unprotected memory can be protected,
+ * but currently protected memory cannot be unprotected. Since unprotected regions
+ * are marked with a 1 and protected regions use a 0, only writes changing 1s to
+ * 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
+ * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with
+ * 0-to-1 transitions are ignored. In NVM Special mode: All bits of FPROT are
+ * writable without restriction. Unprotected areas can be protected and protected
+ * areas can be unprotected. The user must never write to any FPROT register while
+ * a command is running (CCIF=0). Trying to alter data in any protected area in
+ * the program flash memory results in a protection violation error and sets the
+ * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible
+ * if it contains any protected region. Each bit in the 32-bit protection
+ * register represents 1/32 of the total program flash except for configurations where
+ * program flash memory is less than 32 Kbytes. For configurations with less than
+ * 32 Kbytes of program flash memory, each assigned bit represents 1 Kbyte.
  *
  * Values:
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT1_PROT      (0U)      //!< Bit position for FTFA_FPROT1_PROT.
-#define BM_FTFA_FPROT1_PROT      (0xffU)  //!< Bit mask for FTFA_FPROT1_PROT.
-#define BS_FTFA_FPROT1_PROT      (8U)  //!< Bitfield size in bits for FTFA_FPROT1_PROT.
+/*@{*/
+#define BP_FTFA_FPROT1_PROT  (0U)          /*!< Bit position for FTFA_FPROT1_PROT. */
+#define BM_FTFA_FPROT1_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT1_PROT. */
+#define BS_FTFA_FPROT1_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT1_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT1_PROT field.
-#define BR_FTFA_FPROT1_PROT()   (BME_UBFX8(HW_FTFA_FPROT1_ADDR, BP_FTFA_FPROT1_PROT, BS_FTFA_FPROT1_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT1_PROT field. */
+#define BR_FTFA_FPROT1_PROT(x) (HW_FTFA_FPROT1(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT1_PROT.
-#define BF_FTFA_FPROT1_PROT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT1_PROT), uint8_t) & BM_FTFA_FPROT1_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT1_PROT. */
+#define BF_FTFA_FPROT1_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT1_PROT) & BM_FTFA_FPROT1_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT1_PROT(v)   (BME_BFI8(HW_FTFA_FPROT1_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT1_PROT), BP_FTFA_FPROT1_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT1_PROT(x, v) (HW_FTFA_FPROT1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_FTFA_FPROT0 - Program Flash Protection Registers
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_FTFA_FPROT0 - Program Flash Protection Registers
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_FTFA_FPROT0 - Program Flash Protection Registers (RW)
  *
  * Reset value: 0x00U
  *
- * The FPROT registers define which logical program flash regions are protected from program and
- * erase operations. Protected flash regions cannot have their content changed; that is, these
- * regions cannot be programmed and cannot be erased by any flash command. Unprotected regions can
- * be changed by program and erase operations. The four FPROT registers allow up to 32 protectable
- * regions. Each bit protects a 1/32 region of the program flash memory except for memory
- * configurations with less than 32 KB of program flash where each assigned bit protects 1 KB . For
- * configurations with 24 KB of program flash memory or less, FPROT0 is not used. For configurations
- * with 16 KB of program flash memory or less, FPROT1 is not used. For configurations with 8 KB of
- * program flash memory, FPROT2 is not used. The bitfields are defined in each register as follows:
- * Program flash protection register Program flash protection bits FPROT0 PROT[31:24] FPROT1
- * PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0] During the reset sequence, the FPROT registers are
- * loaded with the contents of the program flash protection bytes in the Flash Configuration Field
- * as indicated in the following table. Program flash protection register Flash Configuration Field
- * offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008 To change the program
- * flash protection that is loaded during the reset sequence, unprotect the sector of program flash
- * memory that contains the Flash Configuration Field. Then, reprogram the program flash protection
- * byte.
+ * The FPROT registers define which logical program flash regions are protected
+ * from program and erase operations. Protected flash regions cannot have their
+ * content changed; that is, these regions cannot be programmed and cannot be
+ * erased by any flash command. Unprotected regions can be changed by program and
+ * erase operations. The four FPROT registers allow up to 32 protectable regions.
+ * Each bit protects a 1/32 region of the program flash memory except for memory
+ * configurations with less than 32 Kbytes of program flash where each assigned bit
+ * protects 1 Kbyte . For configurations with 24 Kbytes of program flash memory
+ * or less, FPROT0 is not used. For configurations with 16 Kbytes of program
+ * flash memory or less, FPROT1 is not used. For configurations with 8 Kbytes of
+ * program flash memory, FPROT2 is not used. The bitfields are defined in each
+ * register as follows: Program flash protection register Program flash protection bits
+ * FPROT0 PROT[31:24] FPROT1 PROT[23:16] FPROT2 PROT[15:8] FPROT3 PROT[7:0]
+ * During the reset sequence, the FPROT registers are loaded with the contents of the
+ * program flash protection bytes in the Flash Configuration Field as indicated
+ * in the following table. Program flash protection register Flash Configuration
+ * Field offset address FPROT0 0x000B FPROT1 0x000A FPROT2 0x0009 FPROT3 0x0008
+ * To change the program flash protection that is loaded during the reset
+ * sequence, unprotect the sector of program flash memory that contains the Flash
+ * Configuration Field. Then, reprogram the program flash protection byte.
  */
 typedef union _hw_ftfa_fprot0
 {
     uint8_t U;
     struct _hw_ftfa_fprot0_bitfields
     {
-        uint8_t PROT : 8; //!< [7:0] Program Flash Region Protect
+        uint8_t PROT : 8;              /*!< [7:0] Program Flash Region Protect */
     } B;
 } hw_ftfa_fprot0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire FTFA_FPROT0 register
  */
-//@{
-#define HW_FTFA_FPROT0_ADDR      (REGS_FTFA_BASE + 0x13U)
+/*@{*/
+#define HW_FTFA_FPROT0_ADDR(x)   ((x) + 0x13U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_FTFA_FPROT0           (*(__IO hw_ftfa_fprot0_t *) HW_FTFA_FPROT0_ADDR)
-#define HW_FTFA_FPROT0_RD()      (HW_FTFA_FPROT0.U)
-#define HW_FTFA_FPROT0_WR(v)     (HW_FTFA_FPROT0.U = (v))
-#define HW_FTFA_FPROT0_SET(v)    (BME_OR8(HW_FTFA_FPROT0_ADDR, (uint8_t)(v)))
-#define HW_FTFA_FPROT0_CLR(v)    (BME_AND8(HW_FTFA_FPROT0_ADDR, (uint8_t)(~(v))))
-#define HW_FTFA_FPROT0_TOG(v)    (BME_XOR8(HW_FTFA_FPROT0_ADDR, (uint8_t)(v)))
-#endif
-//@}
+#define HW_FTFA_FPROT0(x)        (*(__IO hw_ftfa_fprot0_t *) HW_FTFA_FPROT0_ADDR(x))
+#define HW_FTFA_FPROT0_RD(x)     (HW_FTFA_FPROT0(x).U)
+#define HW_FTFA_FPROT0_WR(x, v)  (HW_FTFA_FPROT0(x).U = (v))
+#define HW_FTFA_FPROT0_SET(x, v) (BME_OR8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(v)))
+#define HW_FTFA_FPROT0_CLR(x, v) (BME_AND8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(~(v))))
+#define HW_FTFA_FPROT0_TOG(x, v) (BME_XOR8(HW_FTFA_FPROT0_ADDR(x), (uint8_t)(v)))
+/*@}*/
 
 /*
- * constants & macros for individual FTFA_FPROT0 bitfields
+ * Constants & macros for individual FTFA_FPROT0 bitfields
  */
 
-/*! @name Register FTFA_FPROT0, field PROT[7:0] (RW)
+/*!
+ * @name Register FTFA_FPROT0, field PROT[7:0] (RW)
  *
- * Each program flash region can be protected from program and erase operations by setting the
- * associated PROT bit. In NVM Normal mode: The protection can only be increased, meaning that
- * currently unprotected memory can be protected, but currently protected memory cannot be
- * unprotected. Since unprotected regions are marked with a 1 and protected regions use a 0, only
- * writes changing 1s to 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
- * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with 0-to-1
- * transitions are ignored. In NVM Special mode: All bits of FPROT are writable without restriction.
- * Unprotected areas can be protected and protected areas can be unprotected. The user must never
- * write to any FPROT register while a command is running (CCIF=0). Trying to alter data in any
- * protected area in the program flash memory results in a protection violation error and sets the
- * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible if it contains any
- * protected region. Each bit in the 32-bit protection register represents 1/32 of the total program
- * flash except for configurations where program flash memory is less than 32 KB . For
- * configurations with less than 32 KB of program flash memory, each assigned bit represents 1 KB.
+ * Each program flash region can be protected from program and erase operations
+ * by setting the associated PROT bit. In NVM Normal mode: The protection can
+ * only be increased, meaning that currently unprotected memory can be protected,
+ * but currently protected memory cannot be unprotected. Since unprotected regions
+ * are marked with a 1 and protected regions use a 0, only writes changing 1s to
+ * 0s are accepted. This 1-to-0 transition check is performed on a bit-by-bit
+ * basis. Those FPROT bits with 1-to-0 transitions are accepted while all bits with
+ * 0-to-1 transitions are ignored. In NVM Special mode: All bits of FPROT are
+ * writable without restriction. Unprotected areas can be protected and protected
+ * areas can be unprotected. The user must never write to any FPROT register while
+ * a command is running (CCIF=0). Trying to alter data in any protected area in
+ * the program flash memory results in a protection violation error and sets the
+ * FSTAT[FPVIOL] bit. A full block erase of a program flash block is not possible
+ * if it contains any protected region. Each bit in the 32-bit protection
+ * register represents 1/32 of the total program flash except for configurations where
+ * program flash memory is less than 32 Kbytes. For configurations with less than
+ * 32 Kbytes of program flash memory, each assigned bit represents 1 Kbyte.
  *
  * Values:
  * - 0 - Program flash region is protected.
  * - 1 - Program flash region is not protected
  */
-//@{
-#define BP_FTFA_FPROT0_PROT      (0U)      //!< Bit position for FTFA_FPROT0_PROT.
-#define BM_FTFA_FPROT0_PROT      (0xffU)  //!< Bit mask for FTFA_FPROT0_PROT.
-#define BS_FTFA_FPROT0_PROT      (8U)  //!< Bitfield size in bits for FTFA_FPROT0_PROT.
+/*@{*/
+#define BP_FTFA_FPROT0_PROT  (0U)          /*!< Bit position for FTFA_FPROT0_PROT. */
+#define BM_FTFA_FPROT0_PROT  (0xFFU)       /*!< Bit mask for FTFA_FPROT0_PROT. */
+#define BS_FTFA_FPROT0_PROT  (8U)          /*!< Bit field size in bits for FTFA_FPROT0_PROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the FTFA_FPROT0_PROT field.
-#define BR_FTFA_FPROT0_PROT()   (BME_UBFX8(HW_FTFA_FPROT0_ADDR, BP_FTFA_FPROT0_PROT, BS_FTFA_FPROT0_PROT))
-#endif
+/*! @brief Read current value of the FTFA_FPROT0_PROT field. */
+#define BR_FTFA_FPROT0_PROT(x) (HW_FTFA_FPROT0(x).U)
 
-//! @brief Format value for bitfield FTFA_FPROT0_PROT.
-#define BF_FTFA_FPROT0_PROT(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_FTFA_FPROT0_PROT), uint8_t) & BM_FTFA_FPROT0_PROT)
+/*! @brief Format value for bitfield FTFA_FPROT0_PROT. */
+#define BF_FTFA_FPROT0_PROT(v) ((uint8_t)((uint8_t)(v) << BP_FTFA_FPROT0_PROT) & BM_FTFA_FPROT0_PROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PROT field to a new value.
-#define BW_FTFA_FPROT0_PROT(v)   (BME_BFI8(HW_FTFA_FPROT0_ADDR, ((uint8_t)(v) << BP_FTFA_FPROT0_PROT), BP_FTFA_FPROT0_PROT, 8))
-#endif
-//@}
+/*! @brief Set the PROT field to a new value. */
+#define BW_FTFA_FPROT0_PROT(x, v) (HW_FTFA_FPROT0_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_ftfa_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_ftfa_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All FTFA module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_ftfa
 {
-    __IO hw_ftfa_fstat_t FSTAT; //!< [0x0] Flash Status Register
-    __IO hw_ftfa_fcnfg_t FCNFG; //!< [0x1] Flash Configuration Register
-    __I hw_ftfa_fsec_t FSEC; //!< [0x2] Flash Security Register
-    __I hw_ftfa_fopt_t FOPT; //!< [0x3] Flash Option Register
-    __IO hw_ftfa_fccob3_t FCCOB3; //!< [0x4] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob2_t FCCOB2; //!< [0x5] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob1_t FCCOB1; //!< [0x6] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob0_t FCCOB0; //!< [0x7] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob7_t FCCOB7; //!< [0x8] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob6_t FCCOB6; //!< [0x9] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob5_t FCCOB5; //!< [0xa] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob4_t FCCOB4; //!< [0xb] Flash Common Command Object Registers
-    __IO hw_ftfa_fccobb_t FCCOBB; //!< [0xc] Flash Common Command Object Registers
-    __IO hw_ftfa_fccoba_t FCCOBA; //!< [0xd] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob9_t FCCOB9; //!< [0xe] Flash Common Command Object Registers
-    __IO hw_ftfa_fccob8_t FCCOB8; //!< [0xf] Flash Common Command Object Registers
-    __IO hw_ftfa_fprot3_t FPROT3; //!< [0x10] Program Flash Protection Registers
-    __IO hw_ftfa_fprot2_t FPROT2; //!< [0x11] Program Flash Protection Registers
-    __IO hw_ftfa_fprot1_t FPROT1; //!< [0x12] Program Flash Protection Registers
-    __IO hw_ftfa_fprot0_t FPROT0; //!< [0x13] Program Flash Protection Registers
+    __IO hw_ftfa_fstat_t FSTAT;            /*!< [0x0] Flash Status Register */
+    __IO hw_ftfa_fcnfg_t FCNFG;            /*!< [0x1] Flash Configuration Register */
+    __I hw_ftfa_fsec_t FSEC;               /*!< [0x2] Flash Security Register */
+    __I hw_ftfa_fopt_t FOPT;               /*!< [0x3] Flash Option Register */
+    __IO hw_ftfa_fccob3_t FCCOB3;          /*!< [0x4] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob2_t FCCOB2;          /*!< [0x5] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob1_t FCCOB1;          /*!< [0x6] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob0_t FCCOB0;          /*!< [0x7] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob7_t FCCOB7;          /*!< [0x8] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob6_t FCCOB6;          /*!< [0x9] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob5_t FCCOB5;          /*!< [0xA] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob4_t FCCOB4;          /*!< [0xB] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccobb_t FCCOBB;          /*!< [0xC] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccoba_t FCCOBA;          /*!< [0xD] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob9_t FCCOB9;          /*!< [0xE] Flash Common Command Object Registers */
+    __IO hw_ftfa_fccob8_t FCCOB8;          /*!< [0xF] Flash Common Command Object Registers */
+    __IO hw_ftfa_fprot3_t FPROT3;          /*!< [0x10] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot2_t FPROT2;          /*!< [0x11] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot1_t FPROT1;          /*!< [0x12] Program Flash Protection Registers */
+    __IO hw_ftfa_fprot0_t FPROT0;          /*!< [0x13] Program Flash Protection Registers */
 } hw_ftfa_t;
 #pragma pack()
 
-//! @brief Macro to access all FTFA registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_FTFA</code>.
-#define HW_FTFA     (*(hw_ftfa_t *) REGS_FTFA_BASE)
-#endif
+/*! @brief Macro to access all FTFA registers. */
+/*! @param x FTFA module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_FTFA(FTFA_BASE)</code>. */
+#define HW_FTFA(x)     (*(hw_ftfa_t *)(x))
 
-#endif // __HW_FTFA_REGISTERS_H__
-// v22/130417/1.2.6
-// EOF
+#endif /* __HW_FTFA_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

@@ -16,7 +16,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 void    gpio_init(void);
 void    gpio_set_msd_led(uint8_t state);

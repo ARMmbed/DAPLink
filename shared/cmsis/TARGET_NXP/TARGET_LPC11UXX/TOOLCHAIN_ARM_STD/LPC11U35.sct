@@ -6,10 +6,15 @@ LR_IROM1 0x00000000 0x10000  {    ; load region size_region (64k)
    *(InRoot$$Sections)
    .ANY (+RO)
   }
-  
+
   RW_IRAM1 0x10000000 0x2000  {
    .ANY (+RW +ZI)
+   system_LPC11Uxx.o (+RW +ZI)
+   startup_LPC11Uxx.o (+RW +ZI)
   }
   
+  RW_IRAM2 0x20000000 0x800  {
+   .ANY (+RW +ZI)
+  } 
 }
 

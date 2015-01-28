@@ -21,7 +21,8 @@
 #ifndef __HW_CMT_REGISTERS_H__
 #define __HW_CMT_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 CMT
@@ -45,19 +46,12 @@
  * - hw_cmt_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_CMT_BASE
-#define HW_CMT_INSTANCE_COUNT (1U) //!< Number of instances of the CMT module.
-#define REGS_CMT_BASE (0x40062000U) //!< Base address for CMT.
-#endif
-//@}
+#define HW_CMT_INSTANCE_COUNT (1U) /*!< Number of instances of the CMT module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CGH1 - CMT Carrier Generator High Data Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CGH1 - CMT Carrier Generator High Data Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CGH1 - CMT Carrier Generator High Data Register 1 (RW)
  *
@@ -71,26 +65,23 @@ typedef union _hw_cmt_cgh1
     uint8_t U;
     struct _hw_cmt_cgh1_bitfields
     {
-        uint8_t PH : 8;                //!< [7:0] Primary Carrier High Time Data Value
+        uint8_t PH : 8;                /*!< [7:0] Primary Carrier High Time Data Value */
     } B;
 } hw_cmt_cgh1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CGH1 register
  */
-//@{
-#define HW_CMT_CGH1_ADDR         (REGS_CMT_BASE + 0x0U)
+/*@{*/
+#define HW_CMT_CGH1_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CGH1              (*(__IO hw_cmt_cgh1_t *) HW_CMT_CGH1_ADDR)
-#define HW_CMT_CGH1_RD()         (HW_CMT_CGH1.U)
-#define HW_CMT_CGH1_WR(v)        (HW_CMT_CGH1.U = (v))
-#define HW_CMT_CGH1_SET(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() |  (v)))
-#define HW_CMT_CGH1_CLR(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() & ~(v)))
-#define HW_CMT_CGH1_TOG(v)       (HW_CMT_CGH1_WR(HW_CMT_CGH1_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CGH1(x)           (*(__IO hw_cmt_cgh1_t *) HW_CMT_CGH1_ADDR(x))
+#define HW_CMT_CGH1_RD(x)        (HW_CMT_CGH1(x).U)
+#define HW_CMT_CGH1_WR(x, v)     (HW_CMT_CGH1(x).U = (v))
+#define HW_CMT_CGH1_SET(x, v)    (HW_CMT_CGH1_WR(x, HW_CMT_CGH1_RD(x) |  (v)))
+#define HW_CMT_CGH1_CLR(x, v)    (HW_CMT_CGH1_WR(x, HW_CMT_CGH1_RD(x) & ~(v)))
+#define HW_CMT_CGH1_TOG(x, v)    (HW_CMT_CGH1_WR(x, HW_CMT_CGH1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CGH1 bitfields
@@ -107,30 +98,25 @@ typedef union _hw_cmt_cgh1
  * written to non-zero values before the carrier generator is enabled to avoid
  * spurious results.
  */
-//@{
-#define BP_CMT_CGH1_PH       (0U)          //!< Bit position for CMT_CGH1_PH.
-#define BM_CMT_CGH1_PH       (0xFFU)       //!< Bit mask for CMT_CGH1_PH.
-#define BS_CMT_CGH1_PH       (8U)          //!< Bit field size in bits for CMT_CGH1_PH.
+/*@{*/
+#define BP_CMT_CGH1_PH       (0U)          /*!< Bit position for CMT_CGH1_PH. */
+#define BM_CMT_CGH1_PH       (0xFFU)       /*!< Bit mask for CMT_CGH1_PH. */
+#define BS_CMT_CGH1_PH       (8U)          /*!< Bit field size in bits for CMT_CGH1_PH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CGH1_PH field.
-#define BR_CMT_CGH1_PH       (HW_CMT_CGH1.B.PH)
-#endif
+/*! @brief Read current value of the CMT_CGH1_PH field. */
+#define BR_CMT_CGH1_PH(x)    (HW_CMT_CGH1(x).U)
 
-//! @brief Format value for bitfield CMT_CGH1_PH.
-#define BF_CMT_CGH1_PH(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CGH1_PH), uint8_t) & BM_CMT_CGH1_PH)
+/*! @brief Format value for bitfield CMT_CGH1_PH. */
+#define BF_CMT_CGH1_PH(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CGH1_PH) & BM_CMT_CGH1_PH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PH field to a new value.
-#define BW_CMT_CGH1_PH(v)    (HW_CMT_CGH1_WR((HW_CMT_CGH1_RD() & ~BM_CMT_CGH1_PH) | BF_CMT_CGH1_PH(v)))
-#endif
-//@}
+/*! @brief Set the PH field to a new value. */
+#define BW_CMT_CGH1_PH(x, v) (HW_CMT_CGH1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CGL1 - CMT Carrier Generator Low Data Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CGL1 - CMT Carrier Generator Low Data Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CGL1 - CMT Carrier Generator Low Data Register 1 (RW)
  *
@@ -144,26 +130,23 @@ typedef union _hw_cmt_cgl1
     uint8_t U;
     struct _hw_cmt_cgl1_bitfields
     {
-        uint8_t PL : 8;                //!< [7:0] Primary Carrier Low Time Data Value
+        uint8_t PL : 8;                /*!< [7:0] Primary Carrier Low Time Data Value */
     } B;
 } hw_cmt_cgl1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CGL1 register
  */
-//@{
-#define HW_CMT_CGL1_ADDR         (REGS_CMT_BASE + 0x1U)
+/*@{*/
+#define HW_CMT_CGL1_ADDR(x)      ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CGL1              (*(__IO hw_cmt_cgl1_t *) HW_CMT_CGL1_ADDR)
-#define HW_CMT_CGL1_RD()         (HW_CMT_CGL1.U)
-#define HW_CMT_CGL1_WR(v)        (HW_CMT_CGL1.U = (v))
-#define HW_CMT_CGL1_SET(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() |  (v)))
-#define HW_CMT_CGL1_CLR(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() & ~(v)))
-#define HW_CMT_CGL1_TOG(v)       (HW_CMT_CGL1_WR(HW_CMT_CGL1_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CGL1(x)           (*(__IO hw_cmt_cgl1_t *) HW_CMT_CGL1_ADDR(x))
+#define HW_CMT_CGL1_RD(x)        (HW_CMT_CGL1(x).U)
+#define HW_CMT_CGL1_WR(x, v)     (HW_CMT_CGL1(x).U = (v))
+#define HW_CMT_CGL1_SET(x, v)    (HW_CMT_CGL1_WR(x, HW_CMT_CGL1_RD(x) |  (v)))
+#define HW_CMT_CGL1_CLR(x, v)    (HW_CMT_CGL1_WR(x, HW_CMT_CGL1_RD(x) & ~(v)))
+#define HW_CMT_CGL1_TOG(x, v)    (HW_CMT_CGL1_WR(x, HW_CMT_CGL1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CGL1 bitfields
@@ -180,30 +163,25 @@ typedef union _hw_cmt_cgl1
  * written to non-zero values before the carrier generator is enabled to avoid
  * spurious results.
  */
-//@{
-#define BP_CMT_CGL1_PL       (0U)          //!< Bit position for CMT_CGL1_PL.
-#define BM_CMT_CGL1_PL       (0xFFU)       //!< Bit mask for CMT_CGL1_PL.
-#define BS_CMT_CGL1_PL       (8U)          //!< Bit field size in bits for CMT_CGL1_PL.
+/*@{*/
+#define BP_CMT_CGL1_PL       (0U)          /*!< Bit position for CMT_CGL1_PL. */
+#define BM_CMT_CGL1_PL       (0xFFU)       /*!< Bit mask for CMT_CGL1_PL. */
+#define BS_CMT_CGL1_PL       (8U)          /*!< Bit field size in bits for CMT_CGL1_PL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CGL1_PL field.
-#define BR_CMT_CGL1_PL       (HW_CMT_CGL1.B.PL)
-#endif
+/*! @brief Read current value of the CMT_CGL1_PL field. */
+#define BR_CMT_CGL1_PL(x)    (HW_CMT_CGL1(x).U)
 
-//! @brief Format value for bitfield CMT_CGL1_PL.
-#define BF_CMT_CGL1_PL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CGL1_PL), uint8_t) & BM_CMT_CGL1_PL)
+/*! @brief Format value for bitfield CMT_CGL1_PL. */
+#define BF_CMT_CGL1_PL(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CGL1_PL) & BM_CMT_CGL1_PL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PL field to a new value.
-#define BW_CMT_CGL1_PL(v)    (HW_CMT_CGL1_WR((HW_CMT_CGL1_RD() & ~BM_CMT_CGL1_PL) | BF_CMT_CGL1_PL(v)))
-#endif
-//@}
+/*! @brief Set the PL field to a new value. */
+#define BW_CMT_CGL1_PL(x, v) (HW_CMT_CGL1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CGH2 - CMT Carrier Generator High Data Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CGH2 - CMT Carrier Generator High Data Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CGH2 - CMT Carrier Generator High Data Register 2 (RW)
  *
@@ -217,26 +195,23 @@ typedef union _hw_cmt_cgh2
     uint8_t U;
     struct _hw_cmt_cgh2_bitfields
     {
-        uint8_t SH : 8;                //!< [7:0] Secondary Carrier High Time Data Value
+        uint8_t SH : 8;                /*!< [7:0] Secondary Carrier High Time Data Value */
     } B;
 } hw_cmt_cgh2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CGH2 register
  */
-//@{
-#define HW_CMT_CGH2_ADDR         (REGS_CMT_BASE + 0x2U)
+/*@{*/
+#define HW_CMT_CGH2_ADDR(x)      ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CGH2              (*(__IO hw_cmt_cgh2_t *) HW_CMT_CGH2_ADDR)
-#define HW_CMT_CGH2_RD()         (HW_CMT_CGH2.U)
-#define HW_CMT_CGH2_WR(v)        (HW_CMT_CGH2.U = (v))
-#define HW_CMT_CGH2_SET(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() |  (v)))
-#define HW_CMT_CGH2_CLR(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() & ~(v)))
-#define HW_CMT_CGH2_TOG(v)       (HW_CMT_CGH2_WR(HW_CMT_CGH2_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CGH2(x)           (*(__IO hw_cmt_cgh2_t *) HW_CMT_CGH2_ADDR(x))
+#define HW_CMT_CGH2_RD(x)        (HW_CMT_CGH2(x).U)
+#define HW_CMT_CGH2_WR(x, v)     (HW_CMT_CGH2(x).U = (v))
+#define HW_CMT_CGH2_SET(x, v)    (HW_CMT_CGH2_WR(x, HW_CMT_CGH2_RD(x) |  (v)))
+#define HW_CMT_CGH2_CLR(x, v)    (HW_CMT_CGH2_WR(x, HW_CMT_CGH2_RD(x) & ~(v)))
+#define HW_CMT_CGH2_TOG(x, v)    (HW_CMT_CGH2_WR(x, HW_CMT_CGH2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CGH2 bitfields
@@ -253,30 +228,25 @@ typedef union _hw_cmt_cgh2
  * written to nonzero values before the carrier generator is enabled when operating
  * in FSK mode.
  */
-//@{
-#define BP_CMT_CGH2_SH       (0U)          //!< Bit position for CMT_CGH2_SH.
-#define BM_CMT_CGH2_SH       (0xFFU)       //!< Bit mask for CMT_CGH2_SH.
-#define BS_CMT_CGH2_SH       (8U)          //!< Bit field size in bits for CMT_CGH2_SH.
+/*@{*/
+#define BP_CMT_CGH2_SH       (0U)          /*!< Bit position for CMT_CGH2_SH. */
+#define BM_CMT_CGH2_SH       (0xFFU)       /*!< Bit mask for CMT_CGH2_SH. */
+#define BS_CMT_CGH2_SH       (8U)          /*!< Bit field size in bits for CMT_CGH2_SH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CGH2_SH field.
-#define BR_CMT_CGH2_SH       (HW_CMT_CGH2.B.SH)
-#endif
+/*! @brief Read current value of the CMT_CGH2_SH field. */
+#define BR_CMT_CGH2_SH(x)    (HW_CMT_CGH2(x).U)
 
-//! @brief Format value for bitfield CMT_CGH2_SH.
-#define BF_CMT_CGH2_SH(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CGH2_SH), uint8_t) & BM_CMT_CGH2_SH)
+/*! @brief Format value for bitfield CMT_CGH2_SH. */
+#define BF_CMT_CGH2_SH(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CGH2_SH) & BM_CMT_CGH2_SH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SH field to a new value.
-#define BW_CMT_CGH2_SH(v)    (HW_CMT_CGH2_WR((HW_CMT_CGH2_RD() & ~BM_CMT_CGH2_SH) | BF_CMT_CGH2_SH(v)))
-#endif
-//@}
+/*! @brief Set the SH field to a new value. */
+#define BW_CMT_CGH2_SH(x, v) (HW_CMT_CGH2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CGL2 - CMT Carrier Generator Low Data Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CGL2 - CMT Carrier Generator Low Data Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CGL2 - CMT Carrier Generator Low Data Register 2 (RW)
  *
@@ -290,26 +260,23 @@ typedef union _hw_cmt_cgl2
     uint8_t U;
     struct _hw_cmt_cgl2_bitfields
     {
-        uint8_t SL : 8;                //!< [7:0] Secondary Carrier Low Time Data Value
+        uint8_t SL : 8;                /*!< [7:0] Secondary Carrier Low Time Data Value */
     } B;
 } hw_cmt_cgl2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CGL2 register
  */
-//@{
-#define HW_CMT_CGL2_ADDR         (REGS_CMT_BASE + 0x3U)
+/*@{*/
+#define HW_CMT_CGL2_ADDR(x)      ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CGL2              (*(__IO hw_cmt_cgl2_t *) HW_CMT_CGL2_ADDR)
-#define HW_CMT_CGL2_RD()         (HW_CMT_CGL2.U)
-#define HW_CMT_CGL2_WR(v)        (HW_CMT_CGL2.U = (v))
-#define HW_CMT_CGL2_SET(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() |  (v)))
-#define HW_CMT_CGL2_CLR(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() & ~(v)))
-#define HW_CMT_CGL2_TOG(v)       (HW_CMT_CGL2_WR(HW_CMT_CGL2_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CGL2(x)           (*(__IO hw_cmt_cgl2_t *) HW_CMT_CGL2_ADDR(x))
+#define HW_CMT_CGL2_RD(x)        (HW_CMT_CGL2(x).U)
+#define HW_CMT_CGL2_WR(x, v)     (HW_CMT_CGL2(x).U = (v))
+#define HW_CMT_CGL2_SET(x, v)    (HW_CMT_CGL2_WR(x, HW_CMT_CGL2_RD(x) |  (v)))
+#define HW_CMT_CGL2_CLR(x, v)    (HW_CMT_CGL2_WR(x, HW_CMT_CGL2_RD(x) & ~(v)))
+#define HW_CMT_CGL2_TOG(x, v)    (HW_CMT_CGL2_WR(x, HW_CMT_CGL2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CGL2 bitfields
@@ -326,30 +293,25 @@ typedef union _hw_cmt_cgl2
  * written to nonzero values before the carrier generator is enabled when operating
  * in FSK mode.
  */
-//@{
-#define BP_CMT_CGL2_SL       (0U)          //!< Bit position for CMT_CGL2_SL.
-#define BM_CMT_CGL2_SL       (0xFFU)       //!< Bit mask for CMT_CGL2_SL.
-#define BS_CMT_CGL2_SL       (8U)          //!< Bit field size in bits for CMT_CGL2_SL.
+/*@{*/
+#define BP_CMT_CGL2_SL       (0U)          /*!< Bit position for CMT_CGL2_SL. */
+#define BM_CMT_CGL2_SL       (0xFFU)       /*!< Bit mask for CMT_CGL2_SL. */
+#define BS_CMT_CGL2_SL       (8U)          /*!< Bit field size in bits for CMT_CGL2_SL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CGL2_SL field.
-#define BR_CMT_CGL2_SL       (HW_CMT_CGL2.B.SL)
-#endif
+/*! @brief Read current value of the CMT_CGL2_SL field. */
+#define BR_CMT_CGL2_SL(x)    (HW_CMT_CGL2(x).U)
 
-//! @brief Format value for bitfield CMT_CGL2_SL.
-#define BF_CMT_CGL2_SL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CGL2_SL), uint8_t) & BM_CMT_CGL2_SL)
+/*! @brief Format value for bitfield CMT_CGL2_SL. */
+#define BF_CMT_CGL2_SL(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CGL2_SL) & BM_CMT_CGL2_SL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SL field to a new value.
-#define BW_CMT_CGL2_SL(v)    (HW_CMT_CGL2_WR((HW_CMT_CGL2_RD() & ~BM_CMT_CGL2_SL) | BF_CMT_CGL2_SL(v)))
-#endif
-//@}
+/*! @brief Set the SL field to a new value. */
+#define BW_CMT_CGL2_SL(x, v) (HW_CMT_CGL2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_OC - CMT Output Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_OC - CMT Output Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_OC - CMT Output Control Register (RW)
  *
@@ -362,29 +324,26 @@ typedef union _hw_cmt_oc
     uint8_t U;
     struct _hw_cmt_oc_bitfields
     {
-        uint8_t RESERVED0 : 5;         //!< [4:0]
-        uint8_t IROPEN : 1;            //!< [5] IRO Pin Enable
-        uint8_t CMTPOL : 1;            //!< [6] CMT Output Polarity
-        uint8_t IROL : 1;              //!< [7] IRO Latch Control
+        uint8_t RESERVED0 : 5;         /*!< [4:0]  */
+        uint8_t IROPEN : 1;            /*!< [5] IRO Pin Enable */
+        uint8_t CMTPOL : 1;            /*!< [6] CMT Output Polarity */
+        uint8_t IROL : 1;              /*!< [7] IRO Latch Control */
     } B;
 } hw_cmt_oc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_OC register
  */
-//@{
-#define HW_CMT_OC_ADDR           (REGS_CMT_BASE + 0x4U)
+/*@{*/
+#define HW_CMT_OC_ADDR(x)        ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_OC                (*(__IO hw_cmt_oc_t *) HW_CMT_OC_ADDR)
-#define HW_CMT_OC_RD()           (HW_CMT_OC.U)
-#define HW_CMT_OC_WR(v)          (HW_CMT_OC.U = (v))
-#define HW_CMT_OC_SET(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() |  (v)))
-#define HW_CMT_OC_CLR(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() & ~(v)))
-#define HW_CMT_OC_TOG(v)         (HW_CMT_OC_WR(HW_CMT_OC_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_OC(x)             (*(__IO hw_cmt_oc_t *) HW_CMT_OC_ADDR(x))
+#define HW_CMT_OC_RD(x)          (HW_CMT_OC(x).U)
+#define HW_CMT_OC_WR(x, v)       (HW_CMT_OC(x).U = (v))
+#define HW_CMT_OC_SET(x, v)      (HW_CMT_OC_WR(x, HW_CMT_OC_RD(x) |  (v)))
+#define HW_CMT_OC_CLR(x, v)      (HW_CMT_OC_WR(x, HW_CMT_OC_RD(x) & ~(v)))
+#define HW_CMT_OC_TOG(x, v)      (HW_CMT_OC_WR(x, HW_CMT_OC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_OC bitfields
@@ -405,24 +364,20 @@ typedef union _hw_cmt_oc
  * - 0 - CMT_IRO signal disabled
  * - 1 - CMT_IRO signal enabled as output
  */
-//@{
-#define BP_CMT_OC_IROPEN     (5U)          //!< Bit position for CMT_OC_IROPEN.
-#define BM_CMT_OC_IROPEN     (0x20U)       //!< Bit mask for CMT_OC_IROPEN.
-#define BS_CMT_OC_IROPEN     (1U)          //!< Bit field size in bits for CMT_OC_IROPEN.
+/*@{*/
+#define BP_CMT_OC_IROPEN     (5U)          /*!< Bit position for CMT_OC_IROPEN. */
+#define BM_CMT_OC_IROPEN     (0x20U)       /*!< Bit mask for CMT_OC_IROPEN. */
+#define BS_CMT_OC_IROPEN     (1U)          /*!< Bit field size in bits for CMT_OC_IROPEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_OC_IROPEN field.
-#define BR_CMT_OC_IROPEN     (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_IROPEN))
-#endif
+/*! @brief Read current value of the CMT_OC_IROPEN field. */
+#define BR_CMT_OC_IROPEN(x)  (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_IROPEN))
 
-//! @brief Format value for bitfield CMT_OC_IROPEN.
-#define BF_CMT_OC_IROPEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_OC_IROPEN), uint8_t) & BM_CMT_OC_IROPEN)
+/*! @brief Format value for bitfield CMT_OC_IROPEN. */
+#define BF_CMT_OC_IROPEN(v)  ((uint8_t)((uint8_t)(v) << BP_CMT_OC_IROPEN) & BM_CMT_OC_IROPEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IROPEN field to a new value.
-#define BW_CMT_OC_IROPEN(v)  (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_IROPEN) = (v))
-#endif
-//@}
+/*! @brief Set the IROPEN field to a new value. */
+#define BW_CMT_OC_IROPEN(x, v) (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_IROPEN) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_OC, field CMTPOL[6] (RW)
@@ -433,24 +388,20 @@ typedef union _hw_cmt_oc
  * - 0 - CMT_IRO signal is active low
  * - 1 - CMT_IRO signal is active high
  */
-//@{
-#define BP_CMT_OC_CMTPOL     (6U)          //!< Bit position for CMT_OC_CMTPOL.
-#define BM_CMT_OC_CMTPOL     (0x40U)       //!< Bit mask for CMT_OC_CMTPOL.
-#define BS_CMT_OC_CMTPOL     (1U)          //!< Bit field size in bits for CMT_OC_CMTPOL.
+/*@{*/
+#define BP_CMT_OC_CMTPOL     (6U)          /*!< Bit position for CMT_OC_CMTPOL. */
+#define BM_CMT_OC_CMTPOL     (0x40U)       /*!< Bit mask for CMT_OC_CMTPOL. */
+#define BS_CMT_OC_CMTPOL     (1U)          /*!< Bit field size in bits for CMT_OC_CMTPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_OC_CMTPOL field.
-#define BR_CMT_OC_CMTPOL     (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_CMTPOL))
-#endif
+/*! @brief Read current value of the CMT_OC_CMTPOL field. */
+#define BR_CMT_OC_CMTPOL(x)  (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_CMTPOL))
 
-//! @brief Format value for bitfield CMT_OC_CMTPOL.
-#define BF_CMT_OC_CMTPOL(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_OC_CMTPOL), uint8_t) & BM_CMT_OC_CMTPOL)
+/*! @brief Format value for bitfield CMT_OC_CMTPOL. */
+#define BF_CMT_OC_CMTPOL(v)  ((uint8_t)((uint8_t)(v) << BP_CMT_OC_CMTPOL) & BM_CMT_OC_CMTPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMTPOL field to a new value.
-#define BW_CMT_OC_CMTPOL(v)  (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_CMTPOL) = (v))
-#endif
-//@}
+/*! @brief Set the CMTPOL field to a new value. */
+#define BW_CMT_OC_CMTPOL(x, v) (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_CMTPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_OC, field IROL[7] (RW)
@@ -459,30 +410,25 @@ typedef union _hw_cmt_oc
  * state of the CMT_IRO signal when MSC[MCGEN] bit is cleared and the IROPEN bit is
  * set.
  */
-//@{
-#define BP_CMT_OC_IROL       (7U)          //!< Bit position for CMT_OC_IROL.
-#define BM_CMT_OC_IROL       (0x80U)       //!< Bit mask for CMT_OC_IROL.
-#define BS_CMT_OC_IROL       (1U)          //!< Bit field size in bits for CMT_OC_IROL.
+/*@{*/
+#define BP_CMT_OC_IROL       (7U)          /*!< Bit position for CMT_OC_IROL. */
+#define BM_CMT_OC_IROL       (0x80U)       /*!< Bit mask for CMT_OC_IROL. */
+#define BS_CMT_OC_IROL       (1U)          /*!< Bit field size in bits for CMT_OC_IROL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_OC_IROL field.
-#define BR_CMT_OC_IROL       (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_IROL))
-#endif
+/*! @brief Read current value of the CMT_OC_IROL field. */
+#define BR_CMT_OC_IROL(x)    (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_IROL))
 
-//! @brief Format value for bitfield CMT_OC_IROL.
-#define BF_CMT_OC_IROL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_OC_IROL), uint8_t) & BM_CMT_OC_IROL)
+/*! @brief Format value for bitfield CMT_OC_IROL. */
+#define BF_CMT_OC_IROL(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_OC_IROL) & BM_CMT_OC_IROL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IROL field to a new value.
-#define BW_CMT_OC_IROL(v)    (BITBAND_ACCESS8(HW_CMT_OC_ADDR, BP_CMT_OC_IROL) = (v))
-#endif
-//@}
+/*! @brief Set the IROL field to a new value. */
+#define BW_CMT_OC_IROL(x, v) (BITBAND_ACCESS8(HW_CMT_OC_ADDR(x), BP_CMT_OC_IROL) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_MSC - CMT Modulator Status and Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_MSC - CMT Modulator Status and Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_MSC - CMT Modulator Status and Control Register (RW)
  *
@@ -498,32 +444,29 @@ typedef union _hw_cmt_msc
     uint8_t U;
     struct _hw_cmt_msc_bitfields
     {
-        uint8_t MCGEN : 1;             //!< [0] Modulator and Carrier Generator Enable
-        uint8_t EOCIE : 1;             //!< [1] End of Cycle Interrupt Enable
-        uint8_t FSK : 1;               //!< [2] FSK Mode Select
-        uint8_t BASE : 1;              //!< [3] Baseband Enable
-        uint8_t EXSPC : 1;             //!< [4] Extended Space Enable
-        uint8_t CMTDIV : 2;            //!< [6:5] CMT Clock Divide Prescaler
-        uint8_t EOCF : 1;              //!< [7] End Of Cycle Status Flag
+        uint8_t MCGEN : 1;             /*!< [0] Modulator and Carrier Generator Enable */
+        uint8_t EOCIE : 1;             /*!< [1] End of Cycle Interrupt Enable */
+        uint8_t FSK : 1;               /*!< [2] FSK Mode Select */
+        uint8_t BASE : 1;              /*!< [3] Baseband Enable */
+        uint8_t EXSPC : 1;             /*!< [4] Extended Space Enable */
+        uint8_t CMTDIV : 2;            /*!< [6:5] CMT Clock Divide Prescaler */
+        uint8_t EOCF : 1;              /*!< [7] End Of Cycle Status Flag */
     } B;
 } hw_cmt_msc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_MSC register
  */
-//@{
-#define HW_CMT_MSC_ADDR          (REGS_CMT_BASE + 0x5U)
+/*@{*/
+#define HW_CMT_MSC_ADDR(x)       ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_MSC               (*(__IO hw_cmt_msc_t *) HW_CMT_MSC_ADDR)
-#define HW_CMT_MSC_RD()          (HW_CMT_MSC.U)
-#define HW_CMT_MSC_WR(v)         (HW_CMT_MSC.U = (v))
-#define HW_CMT_MSC_SET(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() |  (v)))
-#define HW_CMT_MSC_CLR(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() & ~(v)))
-#define HW_CMT_MSC_TOG(v)        (HW_CMT_MSC_WR(HW_CMT_MSC_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_MSC(x)            (*(__IO hw_cmt_msc_t *) HW_CMT_MSC_ADDR(x))
+#define HW_CMT_MSC_RD(x)         (HW_CMT_MSC(x).U)
+#define HW_CMT_MSC_WR(x, v)      (HW_CMT_MSC(x).U = (v))
+#define HW_CMT_MSC_SET(x, v)     (HW_CMT_MSC_WR(x, HW_CMT_MSC_RD(x) |  (v)))
+#define HW_CMT_MSC_CLR(x, v)     (HW_CMT_MSC_WR(x, HW_CMT_MSC_RD(x) & ~(v)))
+#define HW_CMT_MSC_TOG(x, v)     (HW_CMT_MSC_WR(x, HW_CMT_MSC_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_MSC bitfields
@@ -544,24 +487,20 @@ typedef union _hw_cmt_msc
  * - 0 - Modulator and carrier generator disabled
  * - 1 - Modulator and carrier generator enabled
  */
-//@{
-#define BP_CMT_MSC_MCGEN     (0U)          //!< Bit position for CMT_MSC_MCGEN.
-#define BM_CMT_MSC_MCGEN     (0x01U)       //!< Bit mask for CMT_MSC_MCGEN.
-#define BS_CMT_MSC_MCGEN     (1U)          //!< Bit field size in bits for CMT_MSC_MCGEN.
+/*@{*/
+#define BP_CMT_MSC_MCGEN     (0U)          /*!< Bit position for CMT_MSC_MCGEN. */
+#define BM_CMT_MSC_MCGEN     (0x01U)       /*!< Bit mask for CMT_MSC_MCGEN. */
+#define BS_CMT_MSC_MCGEN     (1U)          /*!< Bit field size in bits for CMT_MSC_MCGEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_MCGEN field.
-#define BR_CMT_MSC_MCGEN     (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_MCGEN))
-#endif
+/*! @brief Read current value of the CMT_MSC_MCGEN field. */
+#define BR_CMT_MSC_MCGEN(x)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_MCGEN))
 
-//! @brief Format value for bitfield CMT_MSC_MCGEN.
-#define BF_CMT_MSC_MCGEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_MCGEN), uint8_t) & BM_CMT_MSC_MCGEN)
+/*! @brief Format value for bitfield CMT_MSC_MCGEN. */
+#define BF_CMT_MSC_MCGEN(v)  ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_MCGEN) & BM_CMT_MSC_MCGEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MCGEN field to a new value.
-#define BW_CMT_MSC_MCGEN(v)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_MCGEN) = (v))
-#endif
-//@}
+/*! @brief Set the MCGEN field to a new value. */
+#define BW_CMT_MSC_MCGEN(x, v) (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_MCGEN) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field EOCIE[1] (RW)
@@ -572,24 +511,20 @@ typedef union _hw_cmt_msc
  * - 0 - CPU interrupt disabled
  * - 1 - CPU interrupt enabled
  */
-//@{
-#define BP_CMT_MSC_EOCIE     (1U)          //!< Bit position for CMT_MSC_EOCIE.
-#define BM_CMT_MSC_EOCIE     (0x02U)       //!< Bit mask for CMT_MSC_EOCIE.
-#define BS_CMT_MSC_EOCIE     (1U)          //!< Bit field size in bits for CMT_MSC_EOCIE.
+/*@{*/
+#define BP_CMT_MSC_EOCIE     (1U)          /*!< Bit position for CMT_MSC_EOCIE. */
+#define BM_CMT_MSC_EOCIE     (0x02U)       /*!< Bit mask for CMT_MSC_EOCIE. */
+#define BS_CMT_MSC_EOCIE     (1U)          /*!< Bit field size in bits for CMT_MSC_EOCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_EOCIE field.
-#define BR_CMT_MSC_EOCIE     (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_EOCIE))
-#endif
+/*! @brief Read current value of the CMT_MSC_EOCIE field. */
+#define BR_CMT_MSC_EOCIE(x)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_EOCIE))
 
-//! @brief Format value for bitfield CMT_MSC_EOCIE.
-#define BF_CMT_MSC_EOCIE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_EOCIE), uint8_t) & BM_CMT_MSC_EOCIE)
+/*! @brief Format value for bitfield CMT_MSC_EOCIE. */
+#define BF_CMT_MSC_EOCIE(v)  ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_EOCIE) & BM_CMT_MSC_EOCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EOCIE field to a new value.
-#define BW_CMT_MSC_EOCIE(v)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_EOCIE) = (v))
-#endif
-//@}
+/*! @brief Set the EOCIE field to a new value. */
+#define BW_CMT_MSC_EOCIE(x, v) (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_EOCIE) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field FSK[2] (RW)
@@ -600,24 +535,20 @@ typedef union _hw_cmt_msc
  * - 0 - CMT operates in Time or Baseband mode
  * - 1 - CMT operates in FSK mode
  */
-//@{
-#define BP_CMT_MSC_FSK       (2U)          //!< Bit position for CMT_MSC_FSK.
-#define BM_CMT_MSC_FSK       (0x04U)       //!< Bit mask for CMT_MSC_FSK.
-#define BS_CMT_MSC_FSK       (1U)          //!< Bit field size in bits for CMT_MSC_FSK.
+/*@{*/
+#define BP_CMT_MSC_FSK       (2U)          /*!< Bit position for CMT_MSC_FSK. */
+#define BM_CMT_MSC_FSK       (0x04U)       /*!< Bit mask for CMT_MSC_FSK. */
+#define BS_CMT_MSC_FSK       (1U)          /*!< Bit field size in bits for CMT_MSC_FSK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_FSK field.
-#define BR_CMT_MSC_FSK       (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_FSK))
-#endif
+/*! @brief Read current value of the CMT_MSC_FSK field. */
+#define BR_CMT_MSC_FSK(x)    (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_FSK))
 
-//! @brief Format value for bitfield CMT_MSC_FSK.
-#define BF_CMT_MSC_FSK(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_FSK), uint8_t) & BM_CMT_MSC_FSK)
+/*! @brief Format value for bitfield CMT_MSC_FSK. */
+#define BF_CMT_MSC_FSK(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_FSK) & BM_CMT_MSC_FSK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FSK field to a new value.
-#define BW_CMT_MSC_FSK(v)    (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_FSK) = (v))
-#endif
-//@}
+/*! @brief Set the FSK field to a new value. */
+#define BW_CMT_MSC_FSK(x, v) (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_FSK) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field BASE[3] (RW)
@@ -633,24 +564,20 @@ typedef union _hw_cmt_msc
  * - 0 - Baseband mode disabled
  * - 1 - Baseband mode enabled
  */
-//@{
-#define BP_CMT_MSC_BASE      (3U)          //!< Bit position for CMT_MSC_BASE.
-#define BM_CMT_MSC_BASE      (0x08U)       //!< Bit mask for CMT_MSC_BASE.
-#define BS_CMT_MSC_BASE      (1U)          //!< Bit field size in bits for CMT_MSC_BASE.
+/*@{*/
+#define BP_CMT_MSC_BASE      (3U)          /*!< Bit position for CMT_MSC_BASE. */
+#define BM_CMT_MSC_BASE      (0x08U)       /*!< Bit mask for CMT_MSC_BASE. */
+#define BS_CMT_MSC_BASE      (1U)          /*!< Bit field size in bits for CMT_MSC_BASE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_BASE field.
-#define BR_CMT_MSC_BASE      (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_BASE))
-#endif
+/*! @brief Read current value of the CMT_MSC_BASE field. */
+#define BR_CMT_MSC_BASE(x)   (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_BASE))
 
-//! @brief Format value for bitfield CMT_MSC_BASE.
-#define BF_CMT_MSC_BASE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_BASE), uint8_t) & BM_CMT_MSC_BASE)
+/*! @brief Format value for bitfield CMT_MSC_BASE. */
+#define BF_CMT_MSC_BASE(v)   ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_BASE) & BM_CMT_MSC_BASE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BASE field to a new value.
-#define BW_CMT_MSC_BASE(v)   (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_BASE) = (v))
-#endif
-//@}
+/*! @brief Set the BASE field to a new value. */
+#define BW_CMT_MSC_BASE(x, v) (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_BASE) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field EXSPC[4] (RW)
@@ -661,24 +588,20 @@ typedef union _hw_cmt_msc
  * - 0 - Extended space disabled
  * - 1 - Extended space enabled
  */
-//@{
-#define BP_CMT_MSC_EXSPC     (4U)          //!< Bit position for CMT_MSC_EXSPC.
-#define BM_CMT_MSC_EXSPC     (0x10U)       //!< Bit mask for CMT_MSC_EXSPC.
-#define BS_CMT_MSC_EXSPC     (1U)          //!< Bit field size in bits for CMT_MSC_EXSPC.
+/*@{*/
+#define BP_CMT_MSC_EXSPC     (4U)          /*!< Bit position for CMT_MSC_EXSPC. */
+#define BM_CMT_MSC_EXSPC     (0x10U)       /*!< Bit mask for CMT_MSC_EXSPC. */
+#define BS_CMT_MSC_EXSPC     (1U)          /*!< Bit field size in bits for CMT_MSC_EXSPC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_EXSPC field.
-#define BR_CMT_MSC_EXSPC     (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_EXSPC))
-#endif
+/*! @brief Read current value of the CMT_MSC_EXSPC field. */
+#define BR_CMT_MSC_EXSPC(x)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_EXSPC))
 
-//! @brief Format value for bitfield CMT_MSC_EXSPC.
-#define BF_CMT_MSC_EXSPC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_EXSPC), uint8_t) & BM_CMT_MSC_EXSPC)
+/*! @brief Format value for bitfield CMT_MSC_EXSPC. */
+#define BF_CMT_MSC_EXSPC(v)  ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_EXSPC) & BM_CMT_MSC_EXSPC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EXSPC field to a new value.
-#define BW_CMT_MSC_EXSPC(v)  (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_EXSPC) = (v))
-#endif
-//@}
+/*! @brief Set the EXSPC field to a new value. */
+#define BW_CMT_MSC_EXSPC(x, v) (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_EXSPC) = (v))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field CMTDIV[6:5] (RW)
@@ -693,24 +616,20 @@ typedef union _hw_cmt_msc
  * - 10 - IF * 4
  * - 11 - IF * 8
  */
-//@{
-#define BP_CMT_MSC_CMTDIV    (5U)          //!< Bit position for CMT_MSC_CMTDIV.
-#define BM_CMT_MSC_CMTDIV    (0x60U)       //!< Bit mask for CMT_MSC_CMTDIV.
-#define BS_CMT_MSC_CMTDIV    (2U)          //!< Bit field size in bits for CMT_MSC_CMTDIV.
+/*@{*/
+#define BP_CMT_MSC_CMTDIV    (5U)          /*!< Bit position for CMT_MSC_CMTDIV. */
+#define BM_CMT_MSC_CMTDIV    (0x60U)       /*!< Bit mask for CMT_MSC_CMTDIV. */
+#define BS_CMT_MSC_CMTDIV    (2U)          /*!< Bit field size in bits for CMT_MSC_CMTDIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_CMTDIV field.
-#define BR_CMT_MSC_CMTDIV    (HW_CMT_MSC.B.CMTDIV)
-#endif
+/*! @brief Read current value of the CMT_MSC_CMTDIV field. */
+#define BR_CMT_MSC_CMTDIV(x) (HW_CMT_MSC(x).B.CMTDIV)
 
-//! @brief Format value for bitfield CMT_MSC_CMTDIV.
-#define BF_CMT_MSC_CMTDIV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_MSC_CMTDIV), uint8_t) & BM_CMT_MSC_CMTDIV)
+/*! @brief Format value for bitfield CMT_MSC_CMTDIV. */
+#define BF_CMT_MSC_CMTDIV(v) ((uint8_t)((uint8_t)(v) << BP_CMT_MSC_CMTDIV) & BM_CMT_MSC_CMTDIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMTDIV field to a new value.
-#define BW_CMT_MSC_CMTDIV(v) (HW_CMT_MSC_WR((HW_CMT_MSC_RD() & ~BM_CMT_MSC_CMTDIV) | BF_CMT_MSC_CMTDIV(v)))
-#endif
-//@}
+/*! @brief Set the CMTDIV field to a new value. */
+#define BW_CMT_MSC_CMTDIV(x, v) (HW_CMT_MSC_WR(x, (HW_CMT_MSC_RD(x) & ~BM_CMT_MSC_CMTDIV) | BF_CMT_MSC_CMTDIV(v)))
+/*@}*/
 
 /*!
  * @name Register CMT_MSC, field EOCF[7] (RO)
@@ -729,22 +648,19 @@ typedef union _hw_cmt_msc
  * - 0 - No end of modulation cycle occurrence since flag last cleared
  * - 1 - End of modulator cycle has occurred
  */
-//@{
-#define BP_CMT_MSC_EOCF      (7U)          //!< Bit position for CMT_MSC_EOCF.
-#define BM_CMT_MSC_EOCF      (0x80U)       //!< Bit mask for CMT_MSC_EOCF.
-#define BS_CMT_MSC_EOCF      (1U)          //!< Bit field size in bits for CMT_MSC_EOCF.
+/*@{*/
+#define BP_CMT_MSC_EOCF      (7U)          /*!< Bit position for CMT_MSC_EOCF. */
+#define BM_CMT_MSC_EOCF      (0x80U)       /*!< Bit mask for CMT_MSC_EOCF. */
+#define BS_CMT_MSC_EOCF      (1U)          /*!< Bit field size in bits for CMT_MSC_EOCF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_MSC_EOCF field.
-#define BR_CMT_MSC_EOCF      (BITBAND_ACCESS8(HW_CMT_MSC_ADDR, BP_CMT_MSC_EOCF))
-#endif
-//@}
+/*! @brief Read current value of the CMT_MSC_EOCF field. */
+#define BR_CMT_MSC_EOCF(x)   (BITBAND_ACCESS8(HW_CMT_MSC_ADDR(x), BP_CMT_MSC_EOCF))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CMD1 - CMT Modulator Data Register Mark High
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CMD1 - CMT Modulator Data Register Mark High
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CMD1 - CMT Modulator Data Register Mark High (RW)
  *
@@ -758,26 +674,23 @@ typedef union _hw_cmt_cmd1
     uint8_t U;
     struct _hw_cmt_cmd1_bitfields
     {
-        uint8_t MB : 8;                //!< [7:0]
+        uint8_t MB : 8;                /*!< [7:0]  */
     } B;
 } hw_cmt_cmd1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CMD1 register
  */
-//@{
-#define HW_CMT_CMD1_ADDR         (REGS_CMT_BASE + 0x6U)
+/*@{*/
+#define HW_CMT_CMD1_ADDR(x)      ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CMD1              (*(__IO hw_cmt_cmd1_t *) HW_CMT_CMD1_ADDR)
-#define HW_CMT_CMD1_RD()         (HW_CMT_CMD1.U)
-#define HW_CMT_CMD1_WR(v)        (HW_CMT_CMD1.U = (v))
-#define HW_CMT_CMD1_SET(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() |  (v)))
-#define HW_CMT_CMD1_CLR(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() & ~(v)))
-#define HW_CMT_CMD1_TOG(v)       (HW_CMT_CMD1_WR(HW_CMT_CMD1_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CMD1(x)           (*(__IO hw_cmt_cmd1_t *) HW_CMT_CMD1_ADDR(x))
+#define HW_CMT_CMD1_RD(x)        (HW_CMT_CMD1(x).U)
+#define HW_CMT_CMD1_WR(x, v)     (HW_CMT_CMD1(x).U = (v))
+#define HW_CMT_CMD1_SET(x, v)    (HW_CMT_CMD1_WR(x, HW_CMT_CMD1_RD(x) |  (v)))
+#define HW_CMT_CMD1_CLR(x, v)    (HW_CMT_CMD1_WR(x, HW_CMT_CMD1_RD(x) & ~(v)))
+#define HW_CMT_CMD1_TOG(x, v)    (HW_CMT_CMD1_WR(x, HW_CMT_CMD1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CMD1 bitfields
@@ -788,30 +701,25 @@ typedef union _hw_cmt_cmd1
  *
  * These bits control the upper mark periods of the modulator for all modes.
  */
-//@{
-#define BP_CMT_CMD1_MB       (0U)          //!< Bit position for CMT_CMD1_MB.
-#define BM_CMT_CMD1_MB       (0xFFU)       //!< Bit mask for CMT_CMD1_MB.
-#define BS_CMT_CMD1_MB       (8U)          //!< Bit field size in bits for CMT_CMD1_MB.
+/*@{*/
+#define BP_CMT_CMD1_MB       (0U)          /*!< Bit position for CMT_CMD1_MB. */
+#define BM_CMT_CMD1_MB       (0xFFU)       /*!< Bit mask for CMT_CMD1_MB. */
+#define BS_CMT_CMD1_MB       (8U)          /*!< Bit field size in bits for CMT_CMD1_MB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CMD1_MB field.
-#define BR_CMT_CMD1_MB       (HW_CMT_CMD1.B.MB)
-#endif
+/*! @brief Read current value of the CMT_CMD1_MB field. */
+#define BR_CMT_CMD1_MB(x)    (HW_CMT_CMD1(x).U)
 
-//! @brief Format value for bitfield CMT_CMD1_MB.
-#define BF_CMT_CMD1_MB(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CMD1_MB), uint8_t) & BM_CMT_CMD1_MB)
+/*! @brief Format value for bitfield CMT_CMD1_MB. */
+#define BF_CMT_CMD1_MB(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CMD1_MB) & BM_CMT_CMD1_MB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MB field to a new value.
-#define BW_CMT_CMD1_MB(v)    (HW_CMT_CMD1_WR((HW_CMT_CMD1_RD() & ~BM_CMT_CMD1_MB) | BF_CMT_CMD1_MB(v)))
-#endif
-//@}
+/*! @brief Set the MB field to a new value. */
+#define BW_CMT_CMD1_MB(x, v) (HW_CMT_CMD1_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CMD2 - CMT Modulator Data Register Mark Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CMD2 - CMT Modulator Data Register Mark Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CMD2 - CMT Modulator Data Register Mark Low (RW)
  *
@@ -825,26 +733,23 @@ typedef union _hw_cmt_cmd2
     uint8_t U;
     struct _hw_cmt_cmd2_bitfields
     {
-        uint8_t MB : 8;                //!< [7:0]
+        uint8_t MB : 8;                /*!< [7:0]  */
     } B;
 } hw_cmt_cmd2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CMD2 register
  */
-//@{
-#define HW_CMT_CMD2_ADDR         (REGS_CMT_BASE + 0x7U)
+/*@{*/
+#define HW_CMT_CMD2_ADDR(x)      ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CMD2              (*(__IO hw_cmt_cmd2_t *) HW_CMT_CMD2_ADDR)
-#define HW_CMT_CMD2_RD()         (HW_CMT_CMD2.U)
-#define HW_CMT_CMD2_WR(v)        (HW_CMT_CMD2.U = (v))
-#define HW_CMT_CMD2_SET(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() |  (v)))
-#define HW_CMT_CMD2_CLR(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() & ~(v)))
-#define HW_CMT_CMD2_TOG(v)       (HW_CMT_CMD2_WR(HW_CMT_CMD2_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CMD2(x)           (*(__IO hw_cmt_cmd2_t *) HW_CMT_CMD2_ADDR(x))
+#define HW_CMT_CMD2_RD(x)        (HW_CMT_CMD2(x).U)
+#define HW_CMT_CMD2_WR(x, v)     (HW_CMT_CMD2(x).U = (v))
+#define HW_CMT_CMD2_SET(x, v)    (HW_CMT_CMD2_WR(x, HW_CMT_CMD2_RD(x) |  (v)))
+#define HW_CMT_CMD2_CLR(x, v)    (HW_CMT_CMD2_WR(x, HW_CMT_CMD2_RD(x) & ~(v)))
+#define HW_CMT_CMD2_TOG(x, v)    (HW_CMT_CMD2_WR(x, HW_CMT_CMD2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CMD2 bitfields
@@ -855,30 +760,25 @@ typedef union _hw_cmt_cmd2
  *
  * These bits control the lower mark periods of the modulator for all modes.
  */
-//@{
-#define BP_CMT_CMD2_MB       (0U)          //!< Bit position for CMT_CMD2_MB.
-#define BM_CMT_CMD2_MB       (0xFFU)       //!< Bit mask for CMT_CMD2_MB.
-#define BS_CMT_CMD2_MB       (8U)          //!< Bit field size in bits for CMT_CMD2_MB.
+/*@{*/
+#define BP_CMT_CMD2_MB       (0U)          /*!< Bit position for CMT_CMD2_MB. */
+#define BM_CMT_CMD2_MB       (0xFFU)       /*!< Bit mask for CMT_CMD2_MB. */
+#define BS_CMT_CMD2_MB       (8U)          /*!< Bit field size in bits for CMT_CMD2_MB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CMD2_MB field.
-#define BR_CMT_CMD2_MB       (HW_CMT_CMD2.B.MB)
-#endif
+/*! @brief Read current value of the CMT_CMD2_MB field. */
+#define BR_CMT_CMD2_MB(x)    (HW_CMT_CMD2(x).U)
 
-//! @brief Format value for bitfield CMT_CMD2_MB.
-#define BF_CMT_CMD2_MB(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CMD2_MB), uint8_t) & BM_CMT_CMD2_MB)
+/*! @brief Format value for bitfield CMT_CMD2_MB. */
+#define BF_CMT_CMD2_MB(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CMD2_MB) & BM_CMT_CMD2_MB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MB field to a new value.
-#define BW_CMT_CMD2_MB(v)    (HW_CMT_CMD2_WR((HW_CMT_CMD2_RD() & ~BM_CMT_CMD2_MB) | BF_CMT_CMD2_MB(v)))
-#endif
-//@}
+/*! @brief Set the MB field to a new value. */
+#define BW_CMT_CMD2_MB(x, v) (HW_CMT_CMD2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CMD3 - CMT Modulator Data Register Space High
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CMD3 - CMT Modulator Data Register Space High
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CMD3 - CMT Modulator Data Register Space High (RW)
  *
@@ -892,26 +792,23 @@ typedef union _hw_cmt_cmd3
     uint8_t U;
     struct _hw_cmt_cmd3_bitfields
     {
-        uint8_t SB : 8;                //!< [7:0]
+        uint8_t SB : 8;                /*!< [7:0]  */
     } B;
 } hw_cmt_cmd3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CMD3 register
  */
-//@{
-#define HW_CMT_CMD3_ADDR         (REGS_CMT_BASE + 0x8U)
+/*@{*/
+#define HW_CMT_CMD3_ADDR(x)      ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CMD3              (*(__IO hw_cmt_cmd3_t *) HW_CMT_CMD3_ADDR)
-#define HW_CMT_CMD3_RD()         (HW_CMT_CMD3.U)
-#define HW_CMT_CMD3_WR(v)        (HW_CMT_CMD3.U = (v))
-#define HW_CMT_CMD3_SET(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() |  (v)))
-#define HW_CMT_CMD3_CLR(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() & ~(v)))
-#define HW_CMT_CMD3_TOG(v)       (HW_CMT_CMD3_WR(HW_CMT_CMD3_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CMD3(x)           (*(__IO hw_cmt_cmd3_t *) HW_CMT_CMD3_ADDR(x))
+#define HW_CMT_CMD3_RD(x)        (HW_CMT_CMD3(x).U)
+#define HW_CMT_CMD3_WR(x, v)     (HW_CMT_CMD3(x).U = (v))
+#define HW_CMT_CMD3_SET(x, v)    (HW_CMT_CMD3_WR(x, HW_CMT_CMD3_RD(x) |  (v)))
+#define HW_CMT_CMD3_CLR(x, v)    (HW_CMT_CMD3_WR(x, HW_CMT_CMD3_RD(x) & ~(v)))
+#define HW_CMT_CMD3_TOG(x, v)    (HW_CMT_CMD3_WR(x, HW_CMT_CMD3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CMD3 bitfields
@@ -922,30 +819,25 @@ typedef union _hw_cmt_cmd3
  *
  * These bits control the upper space periods of the modulator for all modes.
  */
-//@{
-#define BP_CMT_CMD3_SB       (0U)          //!< Bit position for CMT_CMD3_SB.
-#define BM_CMT_CMD3_SB       (0xFFU)       //!< Bit mask for CMT_CMD3_SB.
-#define BS_CMT_CMD3_SB       (8U)          //!< Bit field size in bits for CMT_CMD3_SB.
+/*@{*/
+#define BP_CMT_CMD3_SB       (0U)          /*!< Bit position for CMT_CMD3_SB. */
+#define BM_CMT_CMD3_SB       (0xFFU)       /*!< Bit mask for CMT_CMD3_SB. */
+#define BS_CMT_CMD3_SB       (8U)          /*!< Bit field size in bits for CMT_CMD3_SB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CMD3_SB field.
-#define BR_CMT_CMD3_SB       (HW_CMT_CMD3.B.SB)
-#endif
+/*! @brief Read current value of the CMT_CMD3_SB field. */
+#define BR_CMT_CMD3_SB(x)    (HW_CMT_CMD3(x).U)
 
-//! @brief Format value for bitfield CMT_CMD3_SB.
-#define BF_CMT_CMD3_SB(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CMD3_SB), uint8_t) & BM_CMT_CMD3_SB)
+/*! @brief Format value for bitfield CMT_CMD3_SB. */
+#define BF_CMT_CMD3_SB(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CMD3_SB) & BM_CMT_CMD3_SB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SB field to a new value.
-#define BW_CMT_CMD3_SB(v)    (HW_CMT_CMD3_WR((HW_CMT_CMD3_RD() & ~BM_CMT_CMD3_SB) | BF_CMT_CMD3_SB(v)))
-#endif
-//@}
+/*! @brief Set the SB field to a new value. */
+#define BW_CMT_CMD3_SB(x, v) (HW_CMT_CMD3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_CMD4 - CMT Modulator Data Register Space Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_CMD4 - CMT Modulator Data Register Space Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_CMD4 - CMT Modulator Data Register Space Low (RW)
  *
@@ -959,26 +851,23 @@ typedef union _hw_cmt_cmd4
     uint8_t U;
     struct _hw_cmt_cmd4_bitfields
     {
-        uint8_t SB : 8;                //!< [7:0]
+        uint8_t SB : 8;                /*!< [7:0]  */
     } B;
 } hw_cmt_cmd4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_CMD4 register
  */
-//@{
-#define HW_CMT_CMD4_ADDR         (REGS_CMT_BASE + 0x9U)
+/*@{*/
+#define HW_CMT_CMD4_ADDR(x)      ((x) + 0x9U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_CMD4              (*(__IO hw_cmt_cmd4_t *) HW_CMT_CMD4_ADDR)
-#define HW_CMT_CMD4_RD()         (HW_CMT_CMD4.U)
-#define HW_CMT_CMD4_WR(v)        (HW_CMT_CMD4.U = (v))
-#define HW_CMT_CMD4_SET(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() |  (v)))
-#define HW_CMT_CMD4_CLR(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() & ~(v)))
-#define HW_CMT_CMD4_TOG(v)       (HW_CMT_CMD4_WR(HW_CMT_CMD4_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_CMD4(x)           (*(__IO hw_cmt_cmd4_t *) HW_CMT_CMD4_ADDR(x))
+#define HW_CMT_CMD4_RD(x)        (HW_CMT_CMD4(x).U)
+#define HW_CMT_CMD4_WR(x, v)     (HW_CMT_CMD4(x).U = (v))
+#define HW_CMT_CMD4_SET(x, v)    (HW_CMT_CMD4_WR(x, HW_CMT_CMD4_RD(x) |  (v)))
+#define HW_CMT_CMD4_CLR(x, v)    (HW_CMT_CMD4_WR(x, HW_CMT_CMD4_RD(x) & ~(v)))
+#define HW_CMT_CMD4_TOG(x, v)    (HW_CMT_CMD4_WR(x, HW_CMT_CMD4_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_CMD4 bitfields
@@ -989,30 +878,25 @@ typedef union _hw_cmt_cmd4
  *
  * These bits control the lower space periods of the modulator for all modes.
  */
-//@{
-#define BP_CMT_CMD4_SB       (0U)          //!< Bit position for CMT_CMD4_SB.
-#define BM_CMT_CMD4_SB       (0xFFU)       //!< Bit mask for CMT_CMD4_SB.
-#define BS_CMT_CMD4_SB       (8U)          //!< Bit field size in bits for CMT_CMD4_SB.
+/*@{*/
+#define BP_CMT_CMD4_SB       (0U)          /*!< Bit position for CMT_CMD4_SB. */
+#define BM_CMT_CMD4_SB       (0xFFU)       /*!< Bit mask for CMT_CMD4_SB. */
+#define BS_CMT_CMD4_SB       (8U)          /*!< Bit field size in bits for CMT_CMD4_SB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_CMD4_SB field.
-#define BR_CMT_CMD4_SB       (HW_CMT_CMD4.B.SB)
-#endif
+/*! @brief Read current value of the CMT_CMD4_SB field. */
+#define BR_CMT_CMD4_SB(x)    (HW_CMT_CMD4(x).U)
 
-//! @brief Format value for bitfield CMT_CMD4_SB.
-#define BF_CMT_CMD4_SB(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_CMD4_SB), uint8_t) & BM_CMT_CMD4_SB)
+/*! @brief Format value for bitfield CMT_CMD4_SB. */
+#define BF_CMT_CMD4_SB(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_CMD4_SB) & BM_CMT_CMD4_SB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SB field to a new value.
-#define BW_CMT_CMD4_SB(v)    (HW_CMT_CMD4_WR((HW_CMT_CMD4_RD() & ~BM_CMT_CMD4_SB) | BF_CMT_CMD4_SB(v)))
-#endif
-//@}
+/*! @brief Set the SB field to a new value. */
+#define BW_CMT_CMD4_SB(x, v) (HW_CMT_CMD4_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_PPS - CMT Primary Prescaler Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_PPS - CMT Primary Prescaler Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_PPS - CMT Primary Prescaler Register (RW)
  *
@@ -1025,27 +909,24 @@ typedef union _hw_cmt_pps
     uint8_t U;
     struct _hw_cmt_pps_bitfields
     {
-        uint8_t PPSDIV : 4;            //!< [3:0] Primary Prescaler Divider
-        uint8_t RESERVED0 : 4;         //!< [7:4]
+        uint8_t PPSDIV : 4;            /*!< [3:0] Primary Prescaler Divider */
+        uint8_t RESERVED0 : 4;         /*!< [7:4]  */
     } B;
 } hw_cmt_pps_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_PPS register
  */
-//@{
-#define HW_CMT_PPS_ADDR          (REGS_CMT_BASE + 0xAU)
+/*@{*/
+#define HW_CMT_PPS_ADDR(x)       ((x) + 0xAU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_PPS               (*(__IO hw_cmt_pps_t *) HW_CMT_PPS_ADDR)
-#define HW_CMT_PPS_RD()          (HW_CMT_PPS.U)
-#define HW_CMT_PPS_WR(v)         (HW_CMT_PPS.U = (v))
-#define HW_CMT_PPS_SET(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() |  (v)))
-#define HW_CMT_PPS_CLR(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() & ~(v)))
-#define HW_CMT_PPS_TOG(v)        (HW_CMT_PPS_WR(HW_CMT_PPS_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_PPS(x)            (*(__IO hw_cmt_pps_t *) HW_CMT_PPS_ADDR(x))
+#define HW_CMT_PPS_RD(x)         (HW_CMT_PPS(x).U)
+#define HW_CMT_PPS_WR(x, v)      (HW_CMT_PPS(x).U = (v))
+#define HW_CMT_PPS_SET(x, v)     (HW_CMT_PPS_WR(x, HW_CMT_PPS_RD(x) |  (v)))
+#define HW_CMT_PPS_CLR(x, v)     (HW_CMT_PPS_WR(x, HW_CMT_PPS_RD(x) & ~(v)))
+#define HW_CMT_PPS_TOG(x, v)     (HW_CMT_PPS_WR(x, HW_CMT_PPS_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_PPS bitfields
@@ -1075,30 +956,25 @@ typedef union _hw_cmt_pps
  * - 1110 - Bus Clock * 15
  * - 1111 - Bus Clock * 16
  */
-//@{
-#define BP_CMT_PPS_PPSDIV    (0U)          //!< Bit position for CMT_PPS_PPSDIV.
-#define BM_CMT_PPS_PPSDIV    (0x0FU)       //!< Bit mask for CMT_PPS_PPSDIV.
-#define BS_CMT_PPS_PPSDIV    (4U)          //!< Bit field size in bits for CMT_PPS_PPSDIV.
+/*@{*/
+#define BP_CMT_PPS_PPSDIV    (0U)          /*!< Bit position for CMT_PPS_PPSDIV. */
+#define BM_CMT_PPS_PPSDIV    (0x0FU)       /*!< Bit mask for CMT_PPS_PPSDIV. */
+#define BS_CMT_PPS_PPSDIV    (4U)          /*!< Bit field size in bits for CMT_PPS_PPSDIV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_PPS_PPSDIV field.
-#define BR_CMT_PPS_PPSDIV    (HW_CMT_PPS.B.PPSDIV)
-#endif
+/*! @brief Read current value of the CMT_PPS_PPSDIV field. */
+#define BR_CMT_PPS_PPSDIV(x) (HW_CMT_PPS(x).B.PPSDIV)
 
-//! @brief Format value for bitfield CMT_PPS_PPSDIV.
-#define BF_CMT_PPS_PPSDIV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_PPS_PPSDIV), uint8_t) & BM_CMT_PPS_PPSDIV)
+/*! @brief Format value for bitfield CMT_PPS_PPSDIV. */
+#define BF_CMT_PPS_PPSDIV(v) ((uint8_t)((uint8_t)(v) << BP_CMT_PPS_PPSDIV) & BM_CMT_PPS_PPSDIV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PPSDIV field to a new value.
-#define BW_CMT_PPS_PPSDIV(v) (HW_CMT_PPS_WR((HW_CMT_PPS_RD() & ~BM_CMT_PPS_PPSDIV) | BF_CMT_PPS_PPSDIV(v)))
-#endif
-//@}
+/*! @brief Set the PPSDIV field to a new value. */
+#define BW_CMT_PPS_PPSDIV(x, v) (HW_CMT_PPS_WR(x, (HW_CMT_PPS_RD(x) & ~BM_CMT_PPS_PPSDIV) | BF_CMT_PPS_PPSDIV(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_CMT_DMA - CMT Direct Memory Access
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_CMT_DMA - CMT Direct Memory Access
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_CMT_DMA - CMT Direct Memory Access (RW)
  *
@@ -1111,27 +987,24 @@ typedef union _hw_cmt_dma
     uint8_t U;
     struct _hw_cmt_dma_bitfields
     {
-        uint8_t DMAb : 1;              //!< [0] DMA Enable
-        uint8_t RESERVED0 : 7;         //!< [7:1]
+        uint8_t DMA : 1;               /*!< [0] DMA Enable */
+        uint8_t RESERVED0 : 7;         /*!< [7:1]  */
     } B;
 } hw_cmt_dma_t;
-#endif
 
 /*!
  * @name Constants and macros for entire CMT_DMA register
  */
-//@{
-#define HW_CMT_DMA_ADDR          (REGS_CMT_BASE + 0xBU)
+/*@{*/
+#define HW_CMT_DMA_ADDR(x)       ((x) + 0xBU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_CMT_DMA               (*(__IO hw_cmt_dma_t *) HW_CMT_DMA_ADDR)
-#define HW_CMT_DMA_RD()          (HW_CMT_DMA.U)
-#define HW_CMT_DMA_WR(v)         (HW_CMT_DMA.U = (v))
-#define HW_CMT_DMA_SET(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() |  (v)))
-#define HW_CMT_DMA_CLR(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() & ~(v)))
-#define HW_CMT_DMA_TOG(v)        (HW_CMT_DMA_WR(HW_CMT_DMA_RD() ^  (v)))
-#endif
-//@}
+#define HW_CMT_DMA(x)            (*(__IO hw_cmt_dma_t *) HW_CMT_DMA_ADDR(x))
+#define HW_CMT_DMA_RD(x)         (HW_CMT_DMA(x).U)
+#define HW_CMT_DMA_WR(x, v)      (HW_CMT_DMA(x).U = (v))
+#define HW_CMT_DMA_SET(x, v)     (HW_CMT_DMA_WR(x, HW_CMT_DMA_RD(x) |  (v)))
+#define HW_CMT_DMA_CLR(x, v)     (HW_CMT_DMA_WR(x, HW_CMT_DMA_RD(x) & ~(v)))
+#define HW_CMT_DMA_TOG(x, v)     (HW_CMT_DMA_WR(x, HW_CMT_DMA_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual CMT_DMA bitfields
@@ -1146,56 +1019,51 @@ typedef union _hw_cmt_dma
  * - 0 - DMA transfer request and done are disabled
  * - 1 - DMA transfer request and done are enabled
  */
-//@{
-#define BP_CMT_DMA_DMA       (0U)          //!< Bit position for CMT_DMA_DMA.
-#define BM_CMT_DMA_DMA       (0x01U)       //!< Bit mask for CMT_DMA_DMA.
-#define BS_CMT_DMA_DMA       (1U)          //!< Bit field size in bits for CMT_DMA_DMA.
+/*@{*/
+#define BP_CMT_DMA_DMA       (0U)          /*!< Bit position for CMT_DMA_DMA. */
+#define BM_CMT_DMA_DMA       (0x01U)       /*!< Bit mask for CMT_DMA_DMA. */
+#define BS_CMT_DMA_DMA       (1U)          /*!< Bit field size in bits for CMT_DMA_DMA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the CMT_DMA_DMA field.
-#define BR_CMT_DMA_DMA       (BITBAND_ACCESS8(HW_CMT_DMA_ADDR, BP_CMT_DMA_DMA))
-#endif
+/*! @brief Read current value of the CMT_DMA_DMA field. */
+#define BR_CMT_DMA_DMA(x)    (BITBAND_ACCESS8(HW_CMT_DMA_ADDR(x), BP_CMT_DMA_DMA))
 
-//! @brief Format value for bitfield CMT_DMA_DMA.
-#define BF_CMT_DMA_DMA(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_CMT_DMA_DMA), uint8_t) & BM_CMT_DMA_DMA)
+/*! @brief Format value for bitfield CMT_DMA_DMA. */
+#define BF_CMT_DMA_DMA(v)    ((uint8_t)((uint8_t)(v) << BP_CMT_DMA_DMA) & BM_CMT_DMA_DMA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMA field to a new value.
-#define BW_CMT_DMA_DMA(v)    (BITBAND_ACCESS8(HW_CMT_DMA_ADDR, BP_CMT_DMA_DMA) = (v))
-#endif
-//@}
+/*! @brief Set the DMA field to a new value. */
+#define BW_CMT_DMA_DMA(x, v) (BITBAND_ACCESS8(HW_CMT_DMA_ADDR(x), BP_CMT_DMA_DMA) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_cmt_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_cmt_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All CMT module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_cmt
 {
-    __IO hw_cmt_cgh1_t CGH1;               //!< [0x0] CMT Carrier Generator High Data Register 1
-    __IO hw_cmt_cgl1_t CGL1;               //!< [0x1] CMT Carrier Generator Low Data Register 1
-    __IO hw_cmt_cgh2_t CGH2;               //!< [0x2] CMT Carrier Generator High Data Register 2
-    __IO hw_cmt_cgl2_t CGL2;               //!< [0x3] CMT Carrier Generator Low Data Register 2
-    __IO hw_cmt_oc_t OC;                   //!< [0x4] CMT Output Control Register
-    __IO hw_cmt_msc_t MSC;                 //!< [0x5] CMT Modulator Status and Control Register
-    __IO hw_cmt_cmd1_t CMD1;               //!< [0x6] CMT Modulator Data Register Mark High
-    __IO hw_cmt_cmd2_t CMD2;               //!< [0x7] CMT Modulator Data Register Mark Low
-    __IO hw_cmt_cmd3_t CMD3;               //!< [0x8] CMT Modulator Data Register Space High
-    __IO hw_cmt_cmd4_t CMD4;               //!< [0x9] CMT Modulator Data Register Space Low
-    __IO hw_cmt_pps_t PPS;                 //!< [0xA] CMT Primary Prescaler Register
-    __IO hw_cmt_dma_t DMA;                 //!< [0xB] CMT Direct Memory Access
+    __IO hw_cmt_cgh1_t CGH1;               /*!< [0x0] CMT Carrier Generator High Data Register 1 */
+    __IO hw_cmt_cgl1_t CGL1;               /*!< [0x1] CMT Carrier Generator Low Data Register 1 */
+    __IO hw_cmt_cgh2_t CGH2;               /*!< [0x2] CMT Carrier Generator High Data Register 2 */
+    __IO hw_cmt_cgl2_t CGL2;               /*!< [0x3] CMT Carrier Generator Low Data Register 2 */
+    __IO hw_cmt_oc_t OC;                   /*!< [0x4] CMT Output Control Register */
+    __IO hw_cmt_msc_t MSC;                 /*!< [0x5] CMT Modulator Status and Control Register */
+    __IO hw_cmt_cmd1_t CMD1;               /*!< [0x6] CMT Modulator Data Register Mark High */
+    __IO hw_cmt_cmd2_t CMD2;               /*!< [0x7] CMT Modulator Data Register Mark Low */
+    __IO hw_cmt_cmd3_t CMD3;               /*!< [0x8] CMT Modulator Data Register Space High */
+    __IO hw_cmt_cmd4_t CMD4;               /*!< [0x9] CMT Modulator Data Register Space Low */
+    __IO hw_cmt_pps_t PPS;                 /*!< [0xA] CMT Primary Prescaler Register */
+    __IO hw_cmt_dma_t DMA;                 /*!< [0xB] CMT Direct Memory Access */
 } hw_cmt_t;
 #pragma pack()
 
-//! @brief Macro to access all CMT registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_CMT</code>.
-#define HW_CMT         (*(hw_cmt_t *) REGS_CMT_BASE)
-#endif
+/*! @brief Macro to access all CMT registers. */
+/*! @param x CMT module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_CMT(CMT_BASE)</code>. */
+#define HW_CMT(x)      (*(hw_cmt_t *)(x))
 
-#endif // __HW_CMT_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_CMT_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

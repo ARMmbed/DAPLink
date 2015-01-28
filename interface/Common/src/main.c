@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "RTL.h"
 #include "rl_usb.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdint.h>
+#include "string.h"
+#include "stdio.h"
+#include "stdint.h"
 
 #include "main.h"
 #include "board.h"
@@ -29,13 +29,19 @@
 #include "tasks.h"
 
 #include "target_reset.h"
+
+// testing fail messages
+#include "virtual_fs.h"
+
 #include "swd_host.h"
 #include "version.h"
 #ifdef BOARD_UBLOX_C027
-#include <LPC11Uxx.h>
+#include "LPC11Uxx.h"
 #include "DAP_config.h"
 #include "read_uid.h"
 #endif
+
+#define USE_USB_EJECT_INSERT
 
 #if defined(BOARD_LPC1549) || defined(BOARD_LPC11U68) || defined(BOARD_LPC4337)
     #define USE_USB_EJECT_INSERT
@@ -92,7 +98,7 @@ static LED_STATE dap_led_state = LED_FLASH;
 static LED_STATE cdc_led_state = LED_FLASH;
 static LED_STATE msd_led_state = LED_FLASH;
 
-static uint8_t send_uID = 0;
+/*static*/ uint8_t send_uID = 0;
 
 #ifdef USE_USB_EJECT_INSERT
     typedef enum {
@@ -102,7 +108,7 @@ static uint8_t send_uID = 0;
     } EJECT_INSERT_MODE;
 
     // Delay of ~0.5 second using 90ms ticks
-    #define EJECT_INSERT_DELAY_500MS  (5)
+    #define EJECT_INSERT_DELAY_500MS  (11)
 
     // Variables to handle media eject/insert after a successful drag-n-drop
     extern BOOL USBD_MSC_MediaReadyEx;
@@ -197,11 +203,16 @@ void main_disable_debug_event(void) {
     return;
 }
 
-#define SIZE_DATA (64)
-os_mbx_declare(serial_mailbox, 20);
+#if defined(TARGET_ATSAM3U2C)
+  #define SIZE_DATA (64)//(256)
+#else
+  #define SIZE_DATA (64)
 
+#endif
+
+os_mbx_declare(serial_mailbox, 20);
+static uint8_t data[SIZE_DATA];
 __task void serial_process() {
-    uint8_t data[SIZE_DATA];
     int32_t len_data = 0;
     void *msg;
 
@@ -310,6 +321,11 @@ __task void main_task(void) {
     // Setup reset button
     gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
     button_activated = 1;
+    
+    // Update HTML version information file
+    init_auth_config();
+    // testing fail messages
+    //configure_fail_txt(TARGET_FAIL_ALGO_DL);
 
     // USB
     usbd_connect(0);
@@ -318,15 +334,17 @@ __task void main_task(void) {
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
 
-    // Update HTML version information file
-    update_html_file();
-
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 
 #ifndef BOARD_UBLOX_C027
     // Target running
     //target_set_state(RESET_RUN_WITH_DEBUG);
+#endif
+
+#ifdef BOARD_NRF51822AA
+    // Target running
+    target_set_state(RESET_RUN);
 #endif
 
     // start semihost task
@@ -365,11 +383,7 @@ __task void main_task(void) {
 
         if (flags & FLAGS_MAIN_RESET) {
             cdc_led_state = LED_OFF;
-            dap_led_state = LED_OFF;
-            msd_led_state = LED_OFF;
             gpio_set_cdc_led(0);
-            gpio_set_dap_led(0);
-            gpio_set_msd_led(0);
             //usbd_cdc_ser_flush();
             if (send_uID) {
                 // set the target in reset to not receive char on the serial port
@@ -383,11 +397,7 @@ __task void main_task(void) {
             // Reset target
             target_set_state(RESET_RUN);
             cdc_led_state = LED_FLASH;
-            dap_led_state = LED_FLASH;
-            msd_led_state = LED_FLASH;
             gpio_set_cdc_led(1);
-            gpio_set_dap_led(1);
-            gpio_set_msd_led(1);
             button_activated = 0;
         }
 
@@ -475,7 +485,7 @@ __task void main_task(void) {
                         usbd_connect(0);
                         usb_state = USB_CONNECTING;
                         // Update HTML file
-                        update_html_file();
+                        //update_html_file();
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = 10; //(90ms * 10 = 900ms)
                     }
@@ -559,7 +569,6 @@ __task void main_task(void) {
 }
 
 // Main Program
-
 int main (void) {
   /* Allow the board to do some last initialization before the main task is started */
   board_init();

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <MK20D5.h>
+#include "MK20D5.h"
 #include "gpio.h"
 
 void gpio_init(void) {

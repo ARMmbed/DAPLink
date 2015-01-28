@@ -21,7 +21,8 @@
 #ifndef __HW_UART_REGISTERS_H__
 #define __HW_UART_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL25Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL25Z4 UART
@@ -42,37 +43,14 @@
  * - hw_uart_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_UART_BASE
-#define HW_UART_INSTANCE_COUNT (2U) //!< Number of instances of the UART module.
-#define HW_UART1 (1U) //!< Instance number for UART1.
-#define HW_UART2 (2U) //!< Instance number for UART2.
-#define REGS_UART1_BASE (0x4006B000U) //!< Base address for UART1.
-#define REGS_UART2_BASE (0x4006C000U) //!< Base address for UART2.
+#define HW_UART_INSTANCE_COUNT (2U) /*!< Number of instances of the UART module. */
+#define HW_UART1 (1U) /*!< Instance number for UART1. */
+#define HW_UART2 (2U) /*!< Instance number for UART2. */
 
-//! @brief Table of base addresses for UART instances.
-static const uint32_t __g_regs_UART_base_addresses[] = {
-        0U,
-        REGS_UART1_BASE,
-        REGS_UART2_BASE,
-    };
+/*******************************************************************************
+ * HW_UART_BDH - UART Baud Rate Register: High
+ ******************************************************************************/
 
-//! @brief Get the base address of UART by instance number.
-//! @param x UART instance number, from 1 through 2.
-#define REGS_UART_BASE(x) (__g_regs_UART_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of UART.
-#define REGS_UART_INSTANCE(b) ((b) == REGS_UART1_BASE ? HW_UART1 : (b) == REGS_UART2_BASE ? HW_UART2 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_UART_BDH - UART Baud Rate Register: High
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_BDH - UART Baud Rate Register: High (RW)
  *
@@ -89,31 +67,28 @@ typedef union _hw_uart_bdh
     uint8_t U;
     struct _hw_uart_bdh_bitfields
     {
-        uint8_t SBR : 5;               //!< [4:0] Baud Rate Modulo Divisor.
-        uint8_t SBNS : 1;              //!< [5] Stop Bit Number Select
-        uint8_t RXEDGIE : 1;           //!< [6] RxD Input Active Edge Interrupt Enable
-                                       //! (for RXEDGIF)
-        uint8_t LBKDIE : 1;            //!< [7] LIN Break Detect Interrupt Enable (for
-                                       //! LBKDIF)
+        uint8_t SBR : 5;               /*!< [4:0] Baud Rate Modulo Divisor. */
+        uint8_t SBNS : 1;              /*!< [5] Stop Bit Number Select */
+        uint8_t RXEDGIE : 1;           /*!< [6] RxD Input Active Edge Interrupt Enable
+                                        * (for RXEDGIF) */
+        uint8_t LBKDIE : 1;            /*!< [7] LIN Break Detect Interrupt Enable (for
+                                        * LBKDIF) */
     } B;
 } hw_uart_bdh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_BDH register
  */
-//@{
-#define HW_UART_BDH_ADDR(x)      (REGS_UART_BASE(x) + 0x0U)
+/*@{*/
+#define HW_UART_BDH_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_BDH(x)           (*(__IO hw_uart_bdh_t *) HW_UART_BDH_ADDR(x))
 #define HW_UART_BDH_RD(x)        (HW_UART_BDH(x).U)
 #define HW_UART_BDH_WR(x, v)     (HW_UART_BDH(x).U = (v))
 #define HW_UART_BDH_SET(x, v)    (BME_OR8(HW_UART_BDH_ADDR(x), (uint8_t)(v)))
 #define HW_UART_BDH_CLR(x, v)    (BME_AND8(HW_UART_BDH_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_BDH_TOG(x, v)    (BME_XOR8(HW_UART_BDH_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_BDH bitfields
@@ -127,24 +102,20 @@ typedef union _hw_uart_bdh
  * UART baud rate generator is disabled to reduce supply current. When BR is 1 -
  * 8191, the UART baud rate equals BUSCLK/(16*BR).
  */
-//@{
-#define BP_UART_BDH_SBR      (0U)          //!< Bit position for UART_BDH_SBR.
-#define BM_UART_BDH_SBR      (0x1FU)       //!< Bit mask for UART_BDH_SBR.
-#define BS_UART_BDH_SBR      (5U)          //!< Bit field size in bits for UART_BDH_SBR.
+/*@{*/
+#define BP_UART_BDH_SBR      (0U)          /*!< Bit position for UART_BDH_SBR. */
+#define BM_UART_BDH_SBR      (0x1FU)       /*!< Bit mask for UART_BDH_SBR. */
+#define BS_UART_BDH_SBR      (5U)          /*!< Bit field size in bits for UART_BDH_SBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_BDH_SBR field.
+/*! @brief Read current value of the UART_BDH_SBR field. */
 #define BR_UART_BDH_SBR(x)   (BME_UBFX8(HW_UART_BDH_ADDR(x), BP_UART_BDH_SBR, BS_UART_BDH_SBR))
-#endif
 
-//! @brief Format value for bitfield UART_BDH_SBR.
-#define BF_UART_BDH_SBR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_BDH_SBR), uint8_t) & BM_UART_BDH_SBR)
+/*! @brief Format value for bitfield UART_BDH_SBR. */
+#define BF_UART_BDH_SBR(v)   ((uint8_t)((uint8_t)(v) << BP_UART_BDH_SBR) & BM_UART_BDH_SBR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBR field to a new value.
+/*! @brief Set the SBR field to a new value. */
 #define BW_UART_BDH_SBR(x, v) (BME_BFI8(HW_UART_BDH_ADDR(x), ((uint8_t)(v) << BP_UART_BDH_SBR), BP_UART_BDH_SBR, 5))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_BDH, field SBNS[5] (RW)
@@ -155,24 +126,20 @@ typedef union _hw_uart_bdh
  * - 0 - One stop bit.
  * - 1 - Two stop bit.
  */
-//@{
-#define BP_UART_BDH_SBNS     (5U)          //!< Bit position for UART_BDH_SBNS.
-#define BM_UART_BDH_SBNS     (0x20U)       //!< Bit mask for UART_BDH_SBNS.
-#define BS_UART_BDH_SBNS     (1U)          //!< Bit field size in bits for UART_BDH_SBNS.
+/*@{*/
+#define BP_UART_BDH_SBNS     (5U)          /*!< Bit position for UART_BDH_SBNS. */
+#define BM_UART_BDH_SBNS     (0x20U)       /*!< Bit mask for UART_BDH_SBNS. */
+#define BS_UART_BDH_SBNS     (1U)          /*!< Bit field size in bits for UART_BDH_SBNS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_BDH_SBNS field.
+/*! @brief Read current value of the UART_BDH_SBNS field. */
 #define BR_UART_BDH_SBNS(x)  (BME_UBFX8(HW_UART_BDH_ADDR(x), BP_UART_BDH_SBNS, BS_UART_BDH_SBNS))
-#endif
 
-//! @brief Format value for bitfield UART_BDH_SBNS.
-#define BF_UART_BDH_SBNS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_BDH_SBNS), uint8_t) & BM_UART_BDH_SBNS)
+/*! @brief Format value for bitfield UART_BDH_SBNS. */
+#define BF_UART_BDH_SBNS(v)  ((uint8_t)((uint8_t)(v) << BP_UART_BDH_SBNS) & BM_UART_BDH_SBNS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBNS field to a new value.
+/*! @brief Set the SBNS field to a new value. */
 #define BW_UART_BDH_SBNS(x, v) (BME_BFI8(HW_UART_BDH_ADDR(x), ((uint8_t)(v) << BP_UART_BDH_SBNS), BP_UART_BDH_SBNS, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_BDH, field RXEDGIE[6] (RW)
@@ -181,24 +148,20 @@ typedef union _hw_uart_bdh
  * - 0 - Hardware interrupts from UART_S2[RXEDGIF] disabled (use polling).
  * - 1 - Hardware interrupt requested when UART_S2[RXEDGIF] flag is 1.
  */
-//@{
-#define BP_UART_BDH_RXEDGIE  (6U)          //!< Bit position for UART_BDH_RXEDGIE.
-#define BM_UART_BDH_RXEDGIE  (0x40U)       //!< Bit mask for UART_BDH_RXEDGIE.
-#define BS_UART_BDH_RXEDGIE  (1U)          //!< Bit field size in bits for UART_BDH_RXEDGIE.
+/*@{*/
+#define BP_UART_BDH_RXEDGIE  (6U)          /*!< Bit position for UART_BDH_RXEDGIE. */
+#define BM_UART_BDH_RXEDGIE  (0x40U)       /*!< Bit mask for UART_BDH_RXEDGIE. */
+#define BS_UART_BDH_RXEDGIE  (1U)          /*!< Bit field size in bits for UART_BDH_RXEDGIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_BDH_RXEDGIE field.
+/*! @brief Read current value of the UART_BDH_RXEDGIE field. */
 #define BR_UART_BDH_RXEDGIE(x) (BME_UBFX8(HW_UART_BDH_ADDR(x), BP_UART_BDH_RXEDGIE, BS_UART_BDH_RXEDGIE))
-#endif
 
-//! @brief Format value for bitfield UART_BDH_RXEDGIE.
-#define BF_UART_BDH_RXEDGIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_BDH_RXEDGIE), uint8_t) & BM_UART_BDH_RXEDGIE)
+/*! @brief Format value for bitfield UART_BDH_RXEDGIE. */
+#define BF_UART_BDH_RXEDGIE(v) ((uint8_t)((uint8_t)(v) << BP_UART_BDH_RXEDGIE) & BM_UART_BDH_RXEDGIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXEDGIE field to a new value.
+/*! @brief Set the RXEDGIE field to a new value. */
 #define BW_UART_BDH_RXEDGIE(x, v) (BME_BFI8(HW_UART_BDH_ADDR(x), ((uint8_t)(v) << BP_UART_BDH_RXEDGIE), BP_UART_BDH_RXEDGIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_BDH, field LBKDIE[7] (RW)
@@ -207,30 +170,25 @@ typedef union _hw_uart_bdh
  * - 0 - Hardware interrupts from UART_S2[LBKDIF] disabled (use polling).
  * - 1 - Hardware interrupt requested when UART_S2[LBKDIF] flag is 1.
  */
-//@{
-#define BP_UART_BDH_LBKDIE   (7U)          //!< Bit position for UART_BDH_LBKDIE.
-#define BM_UART_BDH_LBKDIE   (0x80U)       //!< Bit mask for UART_BDH_LBKDIE.
-#define BS_UART_BDH_LBKDIE   (1U)          //!< Bit field size in bits for UART_BDH_LBKDIE.
+/*@{*/
+#define BP_UART_BDH_LBKDIE   (7U)          /*!< Bit position for UART_BDH_LBKDIE. */
+#define BM_UART_BDH_LBKDIE   (0x80U)       /*!< Bit mask for UART_BDH_LBKDIE. */
+#define BS_UART_BDH_LBKDIE   (1U)          /*!< Bit field size in bits for UART_BDH_LBKDIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_BDH_LBKDIE field.
+/*! @brief Read current value of the UART_BDH_LBKDIE field. */
 #define BR_UART_BDH_LBKDIE(x) (BME_UBFX8(HW_UART_BDH_ADDR(x), BP_UART_BDH_LBKDIE, BS_UART_BDH_LBKDIE))
-#endif
 
-//! @brief Format value for bitfield UART_BDH_LBKDIE.
-#define BF_UART_BDH_LBKDIE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_BDH_LBKDIE), uint8_t) & BM_UART_BDH_LBKDIE)
+/*! @brief Format value for bitfield UART_BDH_LBKDIE. */
+#define BF_UART_BDH_LBKDIE(v) ((uint8_t)((uint8_t)(v) << BP_UART_BDH_LBKDIE) & BM_UART_BDH_LBKDIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDIE field to a new value.
+/*! @brief Set the LBKDIE field to a new value. */
 #define BW_UART_BDH_LBKDIE(x, v) (BME_BFI8(HW_UART_BDH_ADDR(x), ((uint8_t)(v) << BP_UART_BDH_LBKDIE), BP_UART_BDH_LBKDIE, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_BDL - UART Baud Rate Register: Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_BDL - UART Baud Rate Register: Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_BDL - UART Baud Rate Register: Low (RW)
  *
@@ -249,26 +207,23 @@ typedef union _hw_uart_bdl
     uint8_t U;
     struct _hw_uart_bdl_bitfields
     {
-        uint8_t SBR : 8;               //!< [7:0] Baud Rate Modulo Divisor
+        uint8_t SBR : 8;               /*!< [7:0] Baud Rate Modulo Divisor */
     } B;
 } hw_uart_bdl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_BDL register
  */
-//@{
-#define HW_UART_BDL_ADDR(x)      (REGS_UART_BASE(x) + 0x1U)
+/*@{*/
+#define HW_UART_BDL_ADDR(x)      ((x) + 0x1U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_BDL(x)           (*(__IO hw_uart_bdl_t *) HW_UART_BDL_ADDR(x))
 #define HW_UART_BDL_RD(x)        (HW_UART_BDL(x).U)
 #define HW_UART_BDL_WR(x, v)     (HW_UART_BDL(x).U = (v))
 #define HW_UART_BDL_SET(x, v)    (BME_OR8(HW_UART_BDL_ADDR(x), (uint8_t)(v)))
 #define HW_UART_BDL_CLR(x, v)    (BME_AND8(HW_UART_BDL_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_BDL_TOG(x, v)    (BME_XOR8(HW_UART_BDL_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_BDL bitfields
@@ -282,30 +237,25 @@ typedef union _hw_uart_bdl
  * UART baud rate generator is disabled to reduce supply current. When BR is 1 -
  * 8191, the UART baud rate equals BUSCLK/(16*BR).
  */
-//@{
-#define BP_UART_BDL_SBR      (0U)          //!< Bit position for UART_BDL_SBR.
-#define BM_UART_BDL_SBR      (0xFFU)       //!< Bit mask for UART_BDL_SBR.
-#define BS_UART_BDL_SBR      (8U)          //!< Bit field size in bits for UART_BDL_SBR.
+/*@{*/
+#define BP_UART_BDL_SBR      (0U)          /*!< Bit position for UART_BDL_SBR. */
+#define BM_UART_BDL_SBR      (0xFFU)       /*!< Bit mask for UART_BDL_SBR. */
+#define BS_UART_BDL_SBR      (8U)          /*!< Bit field size in bits for UART_BDL_SBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_BDL_SBR field.
-#define BR_UART_BDL_SBR(x)   (BME_UBFX8(HW_UART_BDL_ADDR(x), BP_UART_BDL_SBR, BS_UART_BDL_SBR))
-#endif
+/*! @brief Read current value of the UART_BDL_SBR field. */
+#define BR_UART_BDL_SBR(x)   (HW_UART_BDL(x).U)
 
-//! @brief Format value for bitfield UART_BDL_SBR.
-#define BF_UART_BDL_SBR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_BDL_SBR), uint8_t) & BM_UART_BDL_SBR)
+/*! @brief Format value for bitfield UART_BDL_SBR. */
+#define BF_UART_BDL_SBR(v)   ((uint8_t)((uint8_t)(v) << BP_UART_BDL_SBR) & BM_UART_BDL_SBR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBR field to a new value.
-#define BW_UART_BDL_SBR(x, v) (BME_BFI8(HW_UART_BDL_ADDR(x), ((uint8_t)(v) << BP_UART_BDL_SBR), BP_UART_BDL_SBR, 8))
-#endif
-//@}
+/*! @brief Set the SBR field to a new value. */
+#define BW_UART_BDL_SBR(x, v) (HW_UART_BDL_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_C1 - UART Control Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_C1 - UART Control Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_C1 - UART Control Register 1 (RW)
  *
@@ -319,33 +269,30 @@ typedef union _hw_uart_c1
     uint8_t U;
     struct _hw_uart_c1_bitfields
     {
-        uint8_t PT : 1;                //!< [0] Parity Type
-        uint8_t PE : 1;                //!< [1] Parity Enable
-        uint8_t ILT : 1;               //!< [2] Idle Line Type Select
-        uint8_t WAKE : 1;              //!< [3] Receiver Wakeup Method Select
-        uint8_t M : 1;                 //!< [4] 9-Bit or 8-Bit Mode Select
-        uint8_t RSRC : 1;              //!< [5] Receiver Source Select
-        uint8_t UARTSWAI : 1;          //!< [6] UART Stops in Wait Mode
-        uint8_t LOOPS : 1;             //!< [7] Loop Mode Select
+        uint8_t PT : 1;                /*!< [0] Parity Type */
+        uint8_t PE : 1;                /*!< [1] Parity Enable */
+        uint8_t ILT : 1;               /*!< [2] Idle Line Type Select */
+        uint8_t WAKE : 1;              /*!< [3] Receiver Wakeup Method Select */
+        uint8_t M : 1;                 /*!< [4] 9-Bit or 8-Bit Mode Select */
+        uint8_t RSRC : 1;              /*!< [5] Receiver Source Select */
+        uint8_t UARTSWAI : 1;          /*!< [6] UART Stops in Wait Mode */
+        uint8_t LOOPS : 1;             /*!< [7] Loop Mode Select */
     } B;
 } hw_uart_c1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_C1 register
  */
-//@{
-#define HW_UART_C1_ADDR(x)       (REGS_UART_BASE(x) + 0x2U)
+/*@{*/
+#define HW_UART_C1_ADDR(x)       ((x) + 0x2U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_C1(x)            (*(__IO hw_uart_c1_t *) HW_UART_C1_ADDR(x))
 #define HW_UART_C1_RD(x)         (HW_UART_C1(x).U)
 #define HW_UART_C1_WR(x, v)      (HW_UART_C1(x).U = (v))
 #define HW_UART_C1_SET(x, v)     (BME_OR8(HW_UART_C1_ADDR(x), (uint8_t)(v)))
 #define HW_UART_C1_CLR(x, v)     (BME_AND8(HW_UART_C1_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_C1_TOG(x, v)     (BME_XOR8(HW_UART_C1_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_C1 bitfields
@@ -363,24 +310,20 @@ typedef union _hw_uart_c1
  * - 0 - Even parity.
  * - 1 - Odd parity.
  */
-//@{
-#define BP_UART_C1_PT        (0U)          //!< Bit position for UART_C1_PT.
-#define BM_UART_C1_PT        (0x01U)       //!< Bit mask for UART_C1_PT.
-#define BS_UART_C1_PT        (1U)          //!< Bit field size in bits for UART_C1_PT.
+/*@{*/
+#define BP_UART_C1_PT        (0U)          /*!< Bit position for UART_C1_PT. */
+#define BM_UART_C1_PT        (0x01U)       /*!< Bit mask for UART_C1_PT. */
+#define BS_UART_C1_PT        (1U)          /*!< Bit field size in bits for UART_C1_PT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_PT field.
+/*! @brief Read current value of the UART_C1_PT field. */
 #define BR_UART_C1_PT(x)     (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_PT, BS_UART_C1_PT))
-#endif
 
-//! @brief Format value for bitfield UART_C1_PT.
-#define BF_UART_C1_PT(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_PT), uint8_t) & BM_UART_C1_PT)
+/*! @brief Format value for bitfield UART_C1_PT. */
+#define BF_UART_C1_PT(v)     ((uint8_t)((uint8_t)(v) << BP_UART_C1_PT) & BM_UART_C1_PT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PT field to a new value.
+/*! @brief Set the PT field to a new value. */
 #define BW_UART_C1_PT(x, v)  (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_PT), BP_UART_C1_PT, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field PE[1] (RW)
@@ -393,24 +336,20 @@ typedef union _hw_uart_c1
  * - 0 - No hardware parity generation or checking.
  * - 1 - Parity enabled.
  */
-//@{
-#define BP_UART_C1_PE        (1U)          //!< Bit position for UART_C1_PE.
-#define BM_UART_C1_PE        (0x02U)       //!< Bit mask for UART_C1_PE.
-#define BS_UART_C1_PE        (1U)          //!< Bit field size in bits for UART_C1_PE.
+/*@{*/
+#define BP_UART_C1_PE        (1U)          /*!< Bit position for UART_C1_PE. */
+#define BM_UART_C1_PE        (0x02U)       /*!< Bit mask for UART_C1_PE. */
+#define BS_UART_C1_PE        (1U)          /*!< Bit field size in bits for UART_C1_PE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_PE field.
+/*! @brief Read current value of the UART_C1_PE field. */
 #define BR_UART_C1_PE(x)     (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_PE, BS_UART_C1_PE))
-#endif
 
-//! @brief Format value for bitfield UART_C1_PE.
-#define BF_UART_C1_PE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_PE), uint8_t) & BM_UART_C1_PE)
+/*! @brief Format value for bitfield UART_C1_PE. */
+#define BF_UART_C1_PE(v)     ((uint8_t)((uint8_t)(v) << BP_UART_C1_PE) & BM_UART_C1_PE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PE field to a new value.
+/*! @brief Set the PE field to a new value. */
 #define BW_UART_C1_PE(x, v)  (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_PE), BP_UART_C1_PE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field ILT[2] (RW)
@@ -423,24 +362,20 @@ typedef union _hw_uart_c1
  * - 0 - Idle character bit count starts after start bit.
  * - 1 - Idle character bit count starts after stop bit.
  */
-//@{
-#define BP_UART_C1_ILT       (2U)          //!< Bit position for UART_C1_ILT.
-#define BM_UART_C1_ILT       (0x04U)       //!< Bit mask for UART_C1_ILT.
-#define BS_UART_C1_ILT       (1U)          //!< Bit field size in bits for UART_C1_ILT.
+/*@{*/
+#define BP_UART_C1_ILT       (2U)          /*!< Bit position for UART_C1_ILT. */
+#define BM_UART_C1_ILT       (0x04U)       /*!< Bit mask for UART_C1_ILT. */
+#define BS_UART_C1_ILT       (1U)          /*!< Bit field size in bits for UART_C1_ILT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_ILT field.
+/*! @brief Read current value of the UART_C1_ILT field. */
 #define BR_UART_C1_ILT(x)    (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_ILT, BS_UART_C1_ILT))
-#endif
 
-//! @brief Format value for bitfield UART_C1_ILT.
-#define BF_UART_C1_ILT(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_ILT), uint8_t) & BM_UART_C1_ILT)
+/*! @brief Format value for bitfield UART_C1_ILT. */
+#define BF_UART_C1_ILT(v)    ((uint8_t)((uint8_t)(v) << BP_UART_C1_ILT) & BM_UART_C1_ILT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ILT field to a new value.
+/*! @brief Set the ILT field to a new value. */
 #define BW_UART_C1_ILT(x, v) (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_ILT), BP_UART_C1_ILT, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field WAKE[3] (RW)
@@ -449,24 +384,20 @@ typedef union _hw_uart_c1
  * - 0 - Idle-line wakeup.
  * - 1 - Address-mark wakeup.
  */
-//@{
-#define BP_UART_C1_WAKE      (3U)          //!< Bit position for UART_C1_WAKE.
-#define BM_UART_C1_WAKE      (0x08U)       //!< Bit mask for UART_C1_WAKE.
-#define BS_UART_C1_WAKE      (1U)          //!< Bit field size in bits for UART_C1_WAKE.
+/*@{*/
+#define BP_UART_C1_WAKE      (3U)          /*!< Bit position for UART_C1_WAKE. */
+#define BM_UART_C1_WAKE      (0x08U)       /*!< Bit mask for UART_C1_WAKE. */
+#define BS_UART_C1_WAKE      (1U)          /*!< Bit field size in bits for UART_C1_WAKE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_WAKE field.
+/*! @brief Read current value of the UART_C1_WAKE field. */
 #define BR_UART_C1_WAKE(x)   (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_WAKE, BS_UART_C1_WAKE))
-#endif
 
-//! @brief Format value for bitfield UART_C1_WAKE.
-#define BF_UART_C1_WAKE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_WAKE), uint8_t) & BM_UART_C1_WAKE)
+/*! @brief Format value for bitfield UART_C1_WAKE. */
+#define BF_UART_C1_WAKE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C1_WAKE) & BM_UART_C1_WAKE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WAKE field to a new value.
+/*! @brief Set the WAKE field to a new value. */
 #define BW_UART_C1_WAKE(x, v) (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_WAKE), BP_UART_C1_WAKE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field M[4] (RW)
@@ -476,24 +407,20 @@ typedef union _hw_uart_c1
  * - 1 - Receiver and transmitter use 9-bit data characters start + 8 data bits
  *     (lsb first) + 9th data bit + stop.
  */
-//@{
-#define BP_UART_C1_M         (4U)          //!< Bit position for UART_C1_M.
-#define BM_UART_C1_M         (0x10U)       //!< Bit mask for UART_C1_M.
-#define BS_UART_C1_M         (1U)          //!< Bit field size in bits for UART_C1_M.
+/*@{*/
+#define BP_UART_C1_M         (4U)          /*!< Bit position for UART_C1_M. */
+#define BM_UART_C1_M         (0x10U)       /*!< Bit mask for UART_C1_M. */
+#define BS_UART_C1_M         (1U)          /*!< Bit field size in bits for UART_C1_M. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_M field.
+/*! @brief Read current value of the UART_C1_M field. */
 #define BR_UART_C1_M(x)      (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_M, BS_UART_C1_M))
-#endif
 
-//! @brief Format value for bitfield UART_C1_M.
-#define BF_UART_C1_M(v)      (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_M), uint8_t) & BM_UART_C1_M)
+/*! @brief Format value for bitfield UART_C1_M. */
+#define BF_UART_C1_M(v)      ((uint8_t)((uint8_t)(v) << BP_UART_C1_M) & BM_UART_C1_M)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the M field to a new value.
+/*! @brief Set the M field to a new value. */
 #define BW_UART_C1_M(x, v)   (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_M), BP_UART_C1_M, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field RSRC[5] (RW)
@@ -508,24 +435,20 @@ typedef union _hw_uart_c1
  * - 1 - Single-wire UART mode where the TxD pin is connected to the transmitter
  *     output and receiver input.
  */
-//@{
-#define BP_UART_C1_RSRC      (5U)          //!< Bit position for UART_C1_RSRC.
-#define BM_UART_C1_RSRC      (0x20U)       //!< Bit mask for UART_C1_RSRC.
-#define BS_UART_C1_RSRC      (1U)          //!< Bit field size in bits for UART_C1_RSRC.
+/*@{*/
+#define BP_UART_C1_RSRC      (5U)          /*!< Bit position for UART_C1_RSRC. */
+#define BM_UART_C1_RSRC      (0x20U)       /*!< Bit mask for UART_C1_RSRC. */
+#define BS_UART_C1_RSRC      (1U)          /*!< Bit field size in bits for UART_C1_RSRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_RSRC field.
+/*! @brief Read current value of the UART_C1_RSRC field. */
 #define BR_UART_C1_RSRC(x)   (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_RSRC, BS_UART_C1_RSRC))
-#endif
 
-//! @brief Format value for bitfield UART_C1_RSRC.
-#define BF_UART_C1_RSRC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_RSRC), uint8_t) & BM_UART_C1_RSRC)
+/*! @brief Format value for bitfield UART_C1_RSRC. */
+#define BF_UART_C1_RSRC(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C1_RSRC) & BM_UART_C1_RSRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RSRC field to a new value.
+/*! @brief Set the RSRC field to a new value. */
 #define BW_UART_C1_RSRC(x, v) (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_RSRC), BP_UART_C1_RSRC, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field UARTSWAI[6] (RW)
@@ -535,24 +458,20 @@ typedef union _hw_uart_c1
  *     of an interrupt that wakes up the CPU.
  * - 1 - UART clocks freeze while CPU is in wait mode.
  */
-//@{
-#define BP_UART_C1_UARTSWAI  (6U)          //!< Bit position for UART_C1_UARTSWAI.
-#define BM_UART_C1_UARTSWAI  (0x40U)       //!< Bit mask for UART_C1_UARTSWAI.
-#define BS_UART_C1_UARTSWAI  (1U)          //!< Bit field size in bits for UART_C1_UARTSWAI.
+/*@{*/
+#define BP_UART_C1_UARTSWAI  (6U)          /*!< Bit position for UART_C1_UARTSWAI. */
+#define BM_UART_C1_UARTSWAI  (0x40U)       /*!< Bit mask for UART_C1_UARTSWAI. */
+#define BS_UART_C1_UARTSWAI  (1U)          /*!< Bit field size in bits for UART_C1_UARTSWAI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_UARTSWAI field.
+/*! @brief Read current value of the UART_C1_UARTSWAI field. */
 #define BR_UART_C1_UARTSWAI(x) (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_UARTSWAI, BS_UART_C1_UARTSWAI))
-#endif
 
-//! @brief Format value for bitfield UART_C1_UARTSWAI.
-#define BF_UART_C1_UARTSWAI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_UARTSWAI), uint8_t) & BM_UART_C1_UARTSWAI)
+/*! @brief Format value for bitfield UART_C1_UARTSWAI. */
+#define BF_UART_C1_UARTSWAI(v) ((uint8_t)((uint8_t)(v) << BP_UART_C1_UARTSWAI) & BM_UART_C1_UARTSWAI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UARTSWAI field to a new value.
+/*! @brief Set the UARTSWAI field to a new value. */
 #define BW_UART_C1_UARTSWAI(x, v) (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_UARTSWAI), BP_UART_C1_UARTSWAI, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C1, field LOOPS[7] (RW)
@@ -565,30 +484,25 @@ typedef union _hw_uart_c1
  * - 1 - Loop mode or single-wire mode where transmitter outputs are internally
  *     connected to receiver input. (See RSRC bit.) RxD pin is not used by UART.
  */
-//@{
-#define BP_UART_C1_LOOPS     (7U)          //!< Bit position for UART_C1_LOOPS.
-#define BM_UART_C1_LOOPS     (0x80U)       //!< Bit mask for UART_C1_LOOPS.
-#define BS_UART_C1_LOOPS     (1U)          //!< Bit field size in bits for UART_C1_LOOPS.
+/*@{*/
+#define BP_UART_C1_LOOPS     (7U)          /*!< Bit position for UART_C1_LOOPS. */
+#define BM_UART_C1_LOOPS     (0x80U)       /*!< Bit mask for UART_C1_LOOPS. */
+#define BS_UART_C1_LOOPS     (1U)          /*!< Bit field size in bits for UART_C1_LOOPS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C1_LOOPS field.
+/*! @brief Read current value of the UART_C1_LOOPS field. */
 #define BR_UART_C1_LOOPS(x)  (BME_UBFX8(HW_UART_C1_ADDR(x), BP_UART_C1_LOOPS, BS_UART_C1_LOOPS))
-#endif
 
-//! @brief Format value for bitfield UART_C1_LOOPS.
-#define BF_UART_C1_LOOPS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C1_LOOPS), uint8_t) & BM_UART_C1_LOOPS)
+/*! @brief Format value for bitfield UART_C1_LOOPS. */
+#define BF_UART_C1_LOOPS(v)  ((uint8_t)((uint8_t)(v) << BP_UART_C1_LOOPS) & BM_UART_C1_LOOPS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LOOPS field to a new value.
+/*! @brief Set the LOOPS field to a new value. */
 #define BW_UART_C1_LOOPS(x, v) (BME_BFI8(HW_UART_C1_ADDR(x), ((uint8_t)(v) << BP_UART_C1_LOOPS), BP_UART_C1_LOOPS, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_C2 - UART Control Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_C2 - UART Control Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_C2 - UART Control Register 2 (RW)
  *
@@ -601,34 +515,31 @@ typedef union _hw_uart_c2
     uint8_t U;
     struct _hw_uart_c2_bitfields
     {
-        uint8_t SBK : 1;               //!< [0] Send Break
-        uint8_t RWU : 1;               //!< [1] Receiver Wakeup Control
-        uint8_t RE : 1;                //!< [2] Receiver Enable
-        uint8_t TE : 1;                //!< [3] Transmitter Enable
-        uint8_t ILIE : 1;              //!< [4] Idle Line Interrupt Enable for IDLE
-        uint8_t RIE : 1;               //!< [5] Receiver Interrupt Enable for RDRF
-        uint8_t TCIE : 1;              //!< [6] Transmission Complete Interrupt Enable for
-                                       //! TC
-        uint8_t TIE : 1;               //!< [7] Transmit Interrupt Enable for TDRE
+        uint8_t SBK : 1;               /*!< [0] Send Break */
+        uint8_t RWU : 1;               /*!< [1] Receiver Wakeup Control */
+        uint8_t RE : 1;                /*!< [2] Receiver Enable */
+        uint8_t TE : 1;                /*!< [3] Transmitter Enable */
+        uint8_t ILIE : 1;              /*!< [4] Idle Line Interrupt Enable for IDLE */
+        uint8_t RIE : 1;               /*!< [5] Receiver Interrupt Enable for RDRF */
+        uint8_t TCIE : 1;              /*!< [6] Transmission Complete Interrupt Enable for
+                                        * TC */
+        uint8_t TIE : 1;               /*!< [7] Transmit Interrupt Enable for TDRE */
     } B;
 } hw_uart_c2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_C2 register
  */
-//@{
-#define HW_UART_C2_ADDR(x)       (REGS_UART_BASE(x) + 0x3U)
+/*@{*/
+#define HW_UART_C2_ADDR(x)       ((x) + 0x3U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_C2(x)            (*(__IO hw_uart_c2_t *) HW_UART_C2_ADDR(x))
 #define HW_UART_C2_RD(x)         (HW_UART_C2(x).U)
 #define HW_UART_C2_WR(x, v)      (HW_UART_C2(x).U = (v))
 #define HW_UART_C2_SET(x, v)     (BME_OR8(HW_UART_C2_ADDR(x), (uint8_t)(v)))
 #define HW_UART_C2_CLR(x, v)     (BME_AND8(HW_UART_C2_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_C2_TOG(x, v)     (BME_XOR8(HW_UART_C2_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_C2 bitfields
@@ -648,24 +559,20 @@ typedef union _hw_uart_c2
  * - 0 - Normal transmitter operation.
  * - 1 - Queue break character(s) to be sent.
  */
-//@{
-#define BP_UART_C2_SBK       (0U)          //!< Bit position for UART_C2_SBK.
-#define BM_UART_C2_SBK       (0x01U)       //!< Bit mask for UART_C2_SBK.
-#define BS_UART_C2_SBK       (1U)          //!< Bit field size in bits for UART_C2_SBK.
+/*@{*/
+#define BP_UART_C2_SBK       (0U)          /*!< Bit position for UART_C2_SBK. */
+#define BM_UART_C2_SBK       (0x01U)       /*!< Bit mask for UART_C2_SBK. */
+#define BS_UART_C2_SBK       (1U)          /*!< Bit field size in bits for UART_C2_SBK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_SBK field.
+/*! @brief Read current value of the UART_C2_SBK field. */
 #define BR_UART_C2_SBK(x)    (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_SBK, BS_UART_C2_SBK))
-#endif
 
-//! @brief Format value for bitfield UART_C2_SBK.
-#define BF_UART_C2_SBK(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_SBK), uint8_t) & BM_UART_C2_SBK)
+/*! @brief Format value for bitfield UART_C2_SBK. */
+#define BF_UART_C2_SBK(v)    ((uint8_t)((uint8_t)(v) << BP_UART_C2_SBK) & BM_UART_C2_SBK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SBK field to a new value.
+/*! @brief Set the SBK field to a new value. */
 #define BW_UART_C2_SBK(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_SBK), BP_UART_C2_SBK, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field RWU[1] (RW)
@@ -681,24 +588,20 @@ typedef union _hw_uart_c2
  * - 0 - Normal UART receiver operation.
  * - 1 - UART receiver in standby waiting for wakeup condition.
  */
-//@{
-#define BP_UART_C2_RWU       (1U)          //!< Bit position for UART_C2_RWU.
-#define BM_UART_C2_RWU       (0x02U)       //!< Bit mask for UART_C2_RWU.
-#define BS_UART_C2_RWU       (1U)          //!< Bit field size in bits for UART_C2_RWU.
+/*@{*/
+#define BP_UART_C2_RWU       (1U)          /*!< Bit position for UART_C2_RWU. */
+#define BM_UART_C2_RWU       (0x02U)       /*!< Bit mask for UART_C2_RWU. */
+#define BS_UART_C2_RWU       (1U)          /*!< Bit field size in bits for UART_C2_RWU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_RWU field.
+/*! @brief Read current value of the UART_C2_RWU field. */
 #define BR_UART_C2_RWU(x)    (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_RWU, BS_UART_C2_RWU))
-#endif
 
-//! @brief Format value for bitfield UART_C2_RWU.
-#define BF_UART_C2_RWU(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_RWU), uint8_t) & BM_UART_C2_RWU)
+/*! @brief Format value for bitfield UART_C2_RWU. */
+#define BF_UART_C2_RWU(v)    ((uint8_t)((uint8_t)(v) << BP_UART_C2_RWU) & BM_UART_C2_RWU)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RWU field to a new value.
+/*! @brief Set the RWU field to a new value. */
 #define BW_UART_C2_RWU(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_RWU), BP_UART_C2_RWU, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field RE[2] (RW)
@@ -711,24 +614,20 @@ typedef union _hw_uart_c2
  * - 0 - Receiver off.
  * - 1 - Receiver on.
  */
-//@{
-#define BP_UART_C2_RE        (2U)          //!< Bit position for UART_C2_RE.
-#define BM_UART_C2_RE        (0x04U)       //!< Bit mask for UART_C2_RE.
-#define BS_UART_C2_RE        (1U)          //!< Bit field size in bits for UART_C2_RE.
+/*@{*/
+#define BP_UART_C2_RE        (2U)          /*!< Bit position for UART_C2_RE. */
+#define BM_UART_C2_RE        (0x04U)       /*!< Bit mask for UART_C2_RE. */
+#define BS_UART_C2_RE        (1U)          /*!< Bit field size in bits for UART_C2_RE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_RE field.
+/*! @brief Read current value of the UART_C2_RE field. */
 #define BR_UART_C2_RE(x)     (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_RE, BS_UART_C2_RE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_RE.
-#define BF_UART_C2_RE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_RE), uint8_t) & BM_UART_C2_RE)
+/*! @brief Format value for bitfield UART_C2_RE. */
+#define BF_UART_C2_RE(v)     ((uint8_t)((uint8_t)(v) << BP_UART_C2_RE) & BM_UART_C2_RE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RE field to a new value.
+/*! @brief Set the RE field to a new value. */
 #define BW_UART_C2_RE(x, v)  (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_RE), BP_UART_C2_RE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field TE[3] (RW)
@@ -746,24 +645,20 @@ typedef union _hw_uart_c2
  * - 0 - Transmitter off.
  * - 1 - Transmitter on.
  */
-//@{
-#define BP_UART_C2_TE        (3U)          //!< Bit position for UART_C2_TE.
-#define BM_UART_C2_TE        (0x08U)       //!< Bit mask for UART_C2_TE.
-#define BS_UART_C2_TE        (1U)          //!< Bit field size in bits for UART_C2_TE.
+/*@{*/
+#define BP_UART_C2_TE        (3U)          /*!< Bit position for UART_C2_TE. */
+#define BM_UART_C2_TE        (0x08U)       /*!< Bit mask for UART_C2_TE. */
+#define BS_UART_C2_TE        (1U)          /*!< Bit field size in bits for UART_C2_TE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_TE field.
+/*! @brief Read current value of the UART_C2_TE field. */
 #define BR_UART_C2_TE(x)     (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_TE, BS_UART_C2_TE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_TE.
-#define BF_UART_C2_TE(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_TE), uint8_t) & BM_UART_C2_TE)
+/*! @brief Format value for bitfield UART_C2_TE. */
+#define BF_UART_C2_TE(v)     ((uint8_t)((uint8_t)(v) << BP_UART_C2_TE) & BM_UART_C2_TE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TE field to a new value.
+/*! @brief Set the TE field to a new value. */
 #define BW_UART_C2_TE(x, v)  (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_TE), BP_UART_C2_TE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field ILIE[4] (RW)
@@ -772,24 +667,20 @@ typedef union _hw_uart_c2
  * - 0 - Hardware interrupts from IDLE disabled; use polling.
  * - 1 - Hardware interrupt requested when IDLE flag is 1.
  */
-//@{
-#define BP_UART_C2_ILIE      (4U)          //!< Bit position for UART_C2_ILIE.
-#define BM_UART_C2_ILIE      (0x10U)       //!< Bit mask for UART_C2_ILIE.
-#define BS_UART_C2_ILIE      (1U)          //!< Bit field size in bits for UART_C2_ILIE.
+/*@{*/
+#define BP_UART_C2_ILIE      (4U)          /*!< Bit position for UART_C2_ILIE. */
+#define BM_UART_C2_ILIE      (0x10U)       /*!< Bit mask for UART_C2_ILIE. */
+#define BS_UART_C2_ILIE      (1U)          /*!< Bit field size in bits for UART_C2_ILIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_ILIE field.
+/*! @brief Read current value of the UART_C2_ILIE field. */
 #define BR_UART_C2_ILIE(x)   (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_ILIE, BS_UART_C2_ILIE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_ILIE.
-#define BF_UART_C2_ILIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_ILIE), uint8_t) & BM_UART_C2_ILIE)
+/*! @brief Format value for bitfield UART_C2_ILIE. */
+#define BF_UART_C2_ILIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C2_ILIE) & BM_UART_C2_ILIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ILIE field to a new value.
+/*! @brief Set the ILIE field to a new value. */
 #define BW_UART_C2_ILIE(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_ILIE), BP_UART_C2_ILIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field RIE[5] (RW)
@@ -798,24 +689,20 @@ typedef union _hw_uart_c2
  * - 0 - Hardware interrupts from RDRF disabled; use polling.
  * - 1 - Hardware interrupt requested when RDRF flag is 1.
  */
-//@{
-#define BP_UART_C2_RIE       (5U)          //!< Bit position for UART_C2_RIE.
-#define BM_UART_C2_RIE       (0x20U)       //!< Bit mask for UART_C2_RIE.
-#define BS_UART_C2_RIE       (1U)          //!< Bit field size in bits for UART_C2_RIE.
+/*@{*/
+#define BP_UART_C2_RIE       (5U)          /*!< Bit position for UART_C2_RIE. */
+#define BM_UART_C2_RIE       (0x20U)       /*!< Bit mask for UART_C2_RIE. */
+#define BS_UART_C2_RIE       (1U)          /*!< Bit field size in bits for UART_C2_RIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_RIE field.
+/*! @brief Read current value of the UART_C2_RIE field. */
 #define BR_UART_C2_RIE(x)    (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_RIE, BS_UART_C2_RIE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_RIE.
-#define BF_UART_C2_RIE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_RIE), uint8_t) & BM_UART_C2_RIE)
+/*! @brief Format value for bitfield UART_C2_RIE. */
+#define BF_UART_C2_RIE(v)    ((uint8_t)((uint8_t)(v) << BP_UART_C2_RIE) & BM_UART_C2_RIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RIE field to a new value.
+/*! @brief Set the RIE field to a new value. */
 #define BW_UART_C2_RIE(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_RIE), BP_UART_C2_RIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field TCIE[6] (RW)
@@ -824,24 +711,20 @@ typedef union _hw_uart_c2
  * - 0 - Hardware interrupts from TC disabled; use polling.
  * - 1 - Hardware interrupt requested when TC flag is 1.
  */
-//@{
-#define BP_UART_C2_TCIE      (6U)          //!< Bit position for UART_C2_TCIE.
-#define BM_UART_C2_TCIE      (0x40U)       //!< Bit mask for UART_C2_TCIE.
-#define BS_UART_C2_TCIE      (1U)          //!< Bit field size in bits for UART_C2_TCIE.
+/*@{*/
+#define BP_UART_C2_TCIE      (6U)          /*!< Bit position for UART_C2_TCIE. */
+#define BM_UART_C2_TCIE      (0x40U)       /*!< Bit mask for UART_C2_TCIE. */
+#define BS_UART_C2_TCIE      (1U)          /*!< Bit field size in bits for UART_C2_TCIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_TCIE field.
+/*! @brief Read current value of the UART_C2_TCIE field. */
 #define BR_UART_C2_TCIE(x)   (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_TCIE, BS_UART_C2_TCIE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_TCIE.
-#define BF_UART_C2_TCIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_TCIE), uint8_t) & BM_UART_C2_TCIE)
+/*! @brief Format value for bitfield UART_C2_TCIE. */
+#define BF_UART_C2_TCIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C2_TCIE) & BM_UART_C2_TCIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCIE field to a new value.
+/*! @brief Set the TCIE field to a new value. */
 #define BW_UART_C2_TCIE(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_TCIE), BP_UART_C2_TCIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C2, field TIE[7] (RW)
@@ -850,30 +733,25 @@ typedef union _hw_uart_c2
  * - 0 - Hardware interrupts from TDRE disabled; use polling.
  * - 1 - Hardware interrupt requested when TDRE flag is 1.
  */
-//@{
-#define BP_UART_C2_TIE       (7U)          //!< Bit position for UART_C2_TIE.
-#define BM_UART_C2_TIE       (0x80U)       //!< Bit mask for UART_C2_TIE.
-#define BS_UART_C2_TIE       (1U)          //!< Bit field size in bits for UART_C2_TIE.
+/*@{*/
+#define BP_UART_C2_TIE       (7U)          /*!< Bit position for UART_C2_TIE. */
+#define BM_UART_C2_TIE       (0x80U)       /*!< Bit mask for UART_C2_TIE. */
+#define BS_UART_C2_TIE       (1U)          /*!< Bit field size in bits for UART_C2_TIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C2_TIE field.
+/*! @brief Read current value of the UART_C2_TIE field. */
 #define BR_UART_C2_TIE(x)    (BME_UBFX8(HW_UART_C2_ADDR(x), BP_UART_C2_TIE, BS_UART_C2_TIE))
-#endif
 
-//! @brief Format value for bitfield UART_C2_TIE.
-#define BF_UART_C2_TIE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C2_TIE), uint8_t) & BM_UART_C2_TIE)
+/*! @brief Format value for bitfield UART_C2_TIE. */
+#define BF_UART_C2_TIE(v)    ((uint8_t)((uint8_t)(v) << BP_UART_C2_TIE) & BM_UART_C2_TIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TIE field to a new value.
+/*! @brief Set the TIE field to a new value. */
 #define BW_UART_C2_TIE(x, v) (BME_BFI8(HW_UART_C2_ADDR(x), ((uint8_t)(v) << BP_UART_C2_TIE), BP_UART_C2_TIE, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_S1 - UART Status Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_S1 - UART Status Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_S1 - UART Status Register 1 (RO)
  *
@@ -888,29 +766,26 @@ typedef union _hw_uart_s1
     uint8_t U;
     struct _hw_uart_s1_bitfields
     {
-        uint8_t PF : 1;                //!< [0] Parity Error Flag
-        uint8_t FE : 1;                //!< [1] Framing Error Flag
-        uint8_t NF : 1;                //!< [2] Noise Flag
-        uint8_t OR : 1;                //!< [3] Receiver Overrun Flag
-        uint8_t IDLE : 1;              //!< [4] Idle Line Flag
-        uint8_t RDRF : 1;              //!< [5] Receive Data Register Full Flag
-        uint8_t TC : 1;                //!< [6] Transmission Complete Flag
-        uint8_t TDRE : 1;              //!< [7] Transmit Data Register Empty Flag
+        uint8_t PF : 1;                /*!< [0] Parity Error Flag */
+        uint8_t FE : 1;                /*!< [1] Framing Error Flag */
+        uint8_t NF : 1;                /*!< [2] Noise Flag */
+        uint8_t OR : 1;                /*!< [3] Receiver Overrun Flag */
+        uint8_t IDLE : 1;              /*!< [4] Idle Line Flag */
+        uint8_t RDRF : 1;              /*!< [5] Receive Data Register Full Flag */
+        uint8_t TC : 1;                /*!< [6] Transmission Complete Flag */
+        uint8_t TDRE : 1;              /*!< [7] Transmit Data Register Empty Flag */
     } B;
 } hw_uart_s1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_S1 register
  */
-//@{
-#define HW_UART_S1_ADDR(x)       (REGS_UART_BASE(x) + 0x4U)
+/*@{*/
+#define HW_UART_S1_ADDR(x)       ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_S1(x)            (*(__I hw_uart_s1_t *) HW_UART_S1_ADDR(x))
 #define HW_UART_S1_RD(x)         (HW_UART_S1(x).U)
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_S1 bitfields
@@ -927,16 +802,14 @@ typedef union _hw_uart_s1
  * - 0 - No parity error.
  * - 1 - Parity error.
  */
-//@{
-#define BP_UART_S1_PF        (0U)          //!< Bit position for UART_S1_PF.
-#define BM_UART_S1_PF        (0x01U)       //!< Bit mask for UART_S1_PF.
-#define BS_UART_S1_PF        (1U)          //!< Bit field size in bits for UART_S1_PF.
+/*@{*/
+#define BP_UART_S1_PF        (0U)          /*!< Bit position for UART_S1_PF. */
+#define BM_UART_S1_PF        (0x01U)       /*!< Bit mask for UART_S1_PF. */
+#define BS_UART_S1_PF        (1U)          /*!< Bit field size in bits for UART_S1_PF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_PF field.
+/*! @brief Read current value of the UART_S1_PF field. */
 #define BR_UART_S1_PF(x)     (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_PF, BS_UART_S1_PF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field FE[1] (RO)
@@ -951,16 +824,14 @@ typedef union _hw_uart_s1
  *     correct.
  * - 1 - Framing error.
  */
-//@{
-#define BP_UART_S1_FE        (1U)          //!< Bit position for UART_S1_FE.
-#define BM_UART_S1_FE        (0x02U)       //!< Bit mask for UART_S1_FE.
-#define BS_UART_S1_FE        (1U)          //!< Bit field size in bits for UART_S1_FE.
+/*@{*/
+#define BP_UART_S1_FE        (1U)          /*!< Bit position for UART_S1_FE. */
+#define BM_UART_S1_FE        (0x02U)       /*!< Bit mask for UART_S1_FE. */
+#define BS_UART_S1_FE        (1U)          /*!< Bit field size in bits for UART_S1_FE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_FE field.
+/*! @brief Read current value of the UART_S1_FE field. */
 #define BR_UART_S1_FE(x)     (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_FE, BS_UART_S1_FE))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field NF[2] (RO)
@@ -975,16 +846,14 @@ typedef union _hw_uart_s1
  * - 0 - No noise detected.
  * - 1 - Noise detected in the received character in UART_D.
  */
-//@{
-#define BP_UART_S1_NF        (2U)          //!< Bit position for UART_S1_NF.
-#define BM_UART_S1_NF        (0x04U)       //!< Bit mask for UART_S1_NF.
-#define BS_UART_S1_NF        (1U)          //!< Bit field size in bits for UART_S1_NF.
+/*@{*/
+#define BP_UART_S1_NF        (2U)          /*!< Bit position for UART_S1_NF. */
+#define BM_UART_S1_NF        (0x04U)       /*!< Bit mask for UART_S1_NF. */
+#define BS_UART_S1_NF        (1U)          /*!< Bit field size in bits for UART_S1_NF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_NF field.
+/*! @brief Read current value of the UART_S1_NF field. */
 #define BR_UART_S1_NF(x)     (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_NF, BS_UART_S1_NF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field OR[3] (RO)
@@ -999,16 +868,14 @@ typedef union _hw_uart_s1
  * - 0 - No overrun.
  * - 1 - Receive overrun (new UART data lost).
  */
-//@{
-#define BP_UART_S1_OR        (3U)          //!< Bit position for UART_S1_OR.
-#define BM_UART_S1_OR        (0x08U)       //!< Bit mask for UART_S1_OR.
-#define BS_UART_S1_OR        (1U)          //!< Bit field size in bits for UART_S1_OR.
+/*@{*/
+#define BP_UART_S1_OR        (3U)          /*!< Bit position for UART_S1_OR. */
+#define BM_UART_S1_OR        (0x08U)       /*!< Bit mask for UART_S1_OR. */
+#define BS_UART_S1_OR        (1U)          /*!< Bit field size in bits for UART_S1_OR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_OR field.
+/*! @brief Read current value of the UART_S1_OR field. */
 #define BR_UART_S1_OR(x)     (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_OR, BS_UART_S1_OR))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field IDLE[4] (RO)
@@ -1031,16 +898,14 @@ typedef union _hw_uart_s1
  * - 0 - No idle line detected.
  * - 1 - Idle line was detected.
  */
-//@{
-#define BP_UART_S1_IDLE      (4U)          //!< Bit position for UART_S1_IDLE.
-#define BM_UART_S1_IDLE      (0x10U)       //!< Bit mask for UART_S1_IDLE.
-#define BS_UART_S1_IDLE      (1U)          //!< Bit field size in bits for UART_S1_IDLE.
+/*@{*/
+#define BP_UART_S1_IDLE      (4U)          /*!< Bit position for UART_S1_IDLE. */
+#define BM_UART_S1_IDLE      (0x10U)       /*!< Bit mask for UART_S1_IDLE. */
+#define BS_UART_S1_IDLE      (1U)          /*!< Bit field size in bits for UART_S1_IDLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_IDLE field.
+/*! @brief Read current value of the UART_S1_IDLE field. */
 #define BR_UART_S1_IDLE(x)   (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_IDLE, BS_UART_S1_IDLE))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field RDRF[5] (RO)
@@ -1053,16 +918,14 @@ typedef union _hw_uart_s1
  * - 0 - Receive data register empty.
  * - 1 - Receive data register full.
  */
-//@{
-#define BP_UART_S1_RDRF      (5U)          //!< Bit position for UART_S1_RDRF.
-#define BM_UART_S1_RDRF      (0x20U)       //!< Bit mask for UART_S1_RDRF.
-#define BS_UART_S1_RDRF      (1U)          //!< Bit field size in bits for UART_S1_RDRF.
+/*@{*/
+#define BP_UART_S1_RDRF      (5U)          /*!< Bit position for UART_S1_RDRF. */
+#define BM_UART_S1_RDRF      (0x20U)       /*!< Bit mask for UART_S1_RDRF. */
+#define BS_UART_S1_RDRF      (1U)          /*!< Bit field size in bits for UART_S1_RDRF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_RDRF field.
+/*! @brief Read current value of the UART_S1_RDRF field. */
 #define BR_UART_S1_RDRF(x)   (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_RDRF, BS_UART_S1_RDRF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field TC[6] (RO)
@@ -1077,16 +940,14 @@ typedef union _hw_uart_s1
  * - 0 - Transmitter active (sending data, a preamble, or a break).
  * - 1 - Transmitter idle (transmission activity complete).
  */
-//@{
-#define BP_UART_S1_TC        (6U)          //!< Bit position for UART_S1_TC.
-#define BM_UART_S1_TC        (0x40U)       //!< Bit mask for UART_S1_TC.
-#define BS_UART_S1_TC        (1U)          //!< Bit field size in bits for UART_S1_TC.
+/*@{*/
+#define BP_UART_S1_TC        (6U)          /*!< Bit position for UART_S1_TC. */
+#define BM_UART_S1_TC        (0x40U)       /*!< Bit mask for UART_S1_TC. */
+#define BS_UART_S1_TC        (1U)          /*!< Bit field size in bits for UART_S1_TC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_TC field.
+/*! @brief Read current value of the UART_S1_TC field. */
 #define BR_UART_S1_TC(x)     (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_TC, BS_UART_S1_TC))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S1, field TDRE[7] (RO)
@@ -1100,22 +961,19 @@ typedef union _hw_uart_s1
  * - 0 - Transmit data register (buffer) full.
  * - 1 - Transmit data register (buffer) empty.
  */
-//@{
-#define BP_UART_S1_TDRE      (7U)          //!< Bit position for UART_S1_TDRE.
-#define BM_UART_S1_TDRE      (0x80U)       //!< Bit mask for UART_S1_TDRE.
-#define BS_UART_S1_TDRE      (1U)          //!< Bit field size in bits for UART_S1_TDRE.
+/*@{*/
+#define BP_UART_S1_TDRE      (7U)          /*!< Bit position for UART_S1_TDRE. */
+#define BM_UART_S1_TDRE      (0x80U)       /*!< Bit mask for UART_S1_TDRE. */
+#define BS_UART_S1_TDRE      (1U)          /*!< Bit field size in bits for UART_S1_TDRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S1_TDRE field.
+/*! @brief Read current value of the UART_S1_TDRE field. */
 #define BR_UART_S1_TDRE(x)   (BME_UBFX8(HW_UART_S1_ADDR(x), BP_UART_S1_TDRE, BS_UART_S1_TDRE))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_S2 - UART Status Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_S2 - UART Status Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_S2 - UART Status Register 2 (RW)
  *
@@ -1136,33 +994,30 @@ typedef union _hw_uart_s2
     uint8_t U;
     struct _hw_uart_s2_bitfields
     {
-        uint8_t RAF : 1;               //!< [0] Receiver Active Flag
-        uint8_t LBKDE : 1;             //!< [1] LIN Break Detection Enable
-        uint8_t BRK13 : 1;             //!< [2] Break Character Generation Length
-        uint8_t RWUID : 1;             //!< [3] Receive Wake Up Idle Detect
-        uint8_t RXINV : 1;             //!< [4] Receive Data Inversion
-        uint8_t RESERVED0 : 1;         //!< [5]
-        uint8_t RXEDGIF : 1;           //!< [6] RxD Pin Active Edge Interrupt Flag
-        uint8_t LBKDIF : 1;            //!< [7] LIN Break Detect Interrupt Flag
+        uint8_t RAF : 1;               /*!< [0] Receiver Active Flag */
+        uint8_t LBKDE : 1;             /*!< [1] LIN Break Detection Enable */
+        uint8_t BRK13 : 1;             /*!< [2] Break Character Generation Length */
+        uint8_t RWUID : 1;             /*!< [3] Receive Wake Up Idle Detect */
+        uint8_t RXINV : 1;             /*!< [4] Receive Data Inversion */
+        uint8_t RESERVED0 : 1;         /*!< [5]  */
+        uint8_t RXEDGIF : 1;           /*!< [6] RxD Pin Active Edge Interrupt Flag */
+        uint8_t LBKDIF : 1;            /*!< [7] LIN Break Detect Interrupt Flag */
     } B;
 } hw_uart_s2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_S2 register
  */
-//@{
-#define HW_UART_S2_ADDR(x)       (REGS_UART_BASE(x) + 0x5U)
+/*@{*/
+#define HW_UART_S2_ADDR(x)       ((x) + 0x5U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_S2(x)            (*(__IO hw_uart_s2_t *) HW_UART_S2_ADDR(x))
 #define HW_UART_S2_RD(x)         (HW_UART_S2(x).U)
 #define HW_UART_S2_WR(x, v)      (HW_UART_S2(x).U = (v))
 #define HW_UART_S2_SET(x, v)     (BME_OR8(HW_UART_S2_ADDR(x), (uint8_t)(v)))
 #define HW_UART_S2_CLR(x, v)     (BME_AND8(HW_UART_S2_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_S2_TOG(x, v)     (BME_XOR8(HW_UART_S2_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_S2 bitfields
@@ -1180,16 +1035,14 @@ typedef union _hw_uart_s2
  * - 0 - UART receiver idle waiting for a start bit.
  * - 1 - UART receiver active (RxD input not idle).
  */
-//@{
-#define BP_UART_S2_RAF       (0U)          //!< Bit position for UART_S2_RAF.
-#define BM_UART_S2_RAF       (0x01U)       //!< Bit mask for UART_S2_RAF.
-#define BS_UART_S2_RAF       (1U)          //!< Bit field size in bits for UART_S2_RAF.
+/*@{*/
+#define BP_UART_S2_RAF       (0U)          /*!< Bit position for UART_S2_RAF. */
+#define BM_UART_S2_RAF       (0x01U)       /*!< Bit mask for UART_S2_RAF. */
+#define BS_UART_S2_RAF       (1U)          /*!< Bit field size in bits for UART_S2_RAF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_RAF field.
+/*! @brief Read current value of the UART_S2_RAF field. */
 #define BR_UART_S2_RAF(x)    (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_RAF, BS_UART_S2_RAF))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field LBKDE[1] (RW)
@@ -1205,24 +1058,20 @@ typedef union _hw_uart_s2
  *     0) or 12 (if M = 1, SBNS = 0 or M = 0, SBNS = 1) or 13 (if M = 1, SBNS =
  *     1).
  */
-//@{
-#define BP_UART_S2_LBKDE     (1U)          //!< Bit position for UART_S2_LBKDE.
-#define BM_UART_S2_LBKDE     (0x02U)       //!< Bit mask for UART_S2_LBKDE.
-#define BS_UART_S2_LBKDE     (1U)          //!< Bit field size in bits for UART_S2_LBKDE.
+/*@{*/
+#define BP_UART_S2_LBKDE     (1U)          /*!< Bit position for UART_S2_LBKDE. */
+#define BM_UART_S2_LBKDE     (0x02U)       /*!< Bit mask for UART_S2_LBKDE. */
+#define BS_UART_S2_LBKDE     (1U)          /*!< Bit field size in bits for UART_S2_LBKDE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_LBKDE field.
+/*! @brief Read current value of the UART_S2_LBKDE field. */
 #define BR_UART_S2_LBKDE(x)  (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_LBKDE, BS_UART_S2_LBKDE))
-#endif
 
-//! @brief Format value for bitfield UART_S2_LBKDE.
-#define BF_UART_S2_LBKDE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_LBKDE), uint8_t) & BM_UART_S2_LBKDE)
+/*! @brief Format value for bitfield UART_S2_LBKDE. */
+#define BF_UART_S2_LBKDE(v)  ((uint8_t)((uint8_t)(v) << BP_UART_S2_LBKDE) & BM_UART_S2_LBKDE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDE field to a new value.
+/*! @brief Set the LBKDE field to a new value. */
 #define BW_UART_S2_LBKDE(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_LBKDE), BP_UART_S2_LBKDE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field BRK13[2] (RW)
@@ -1238,24 +1087,20 @@ typedef union _hw_uart_s2
  *     SBNS = 0) or 14 (if M = 1, SBNS = 0 or M = 0, SBNS = 1) or 15 (if M = 1,
  *     SBNS = 1).
  */
-//@{
-#define BP_UART_S2_BRK13     (2U)          //!< Bit position for UART_S2_BRK13.
-#define BM_UART_S2_BRK13     (0x04U)       //!< Bit mask for UART_S2_BRK13.
-#define BS_UART_S2_BRK13     (1U)          //!< Bit field size in bits for UART_S2_BRK13.
+/*@{*/
+#define BP_UART_S2_BRK13     (2U)          /*!< Bit position for UART_S2_BRK13. */
+#define BM_UART_S2_BRK13     (0x04U)       /*!< Bit mask for UART_S2_BRK13. */
+#define BS_UART_S2_BRK13     (1U)          /*!< Bit field size in bits for UART_S2_BRK13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_BRK13 field.
+/*! @brief Read current value of the UART_S2_BRK13 field. */
 #define BR_UART_S2_BRK13(x)  (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_BRK13, BS_UART_S2_BRK13))
-#endif
 
-//! @brief Format value for bitfield UART_S2_BRK13.
-#define BF_UART_S2_BRK13(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_BRK13), uint8_t) & BM_UART_S2_BRK13)
+/*! @brief Format value for bitfield UART_S2_BRK13. */
+#define BF_UART_S2_BRK13(v)  ((uint8_t)((uint8_t)(v) << BP_UART_S2_BRK13) & BM_UART_S2_BRK13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BRK13 field to a new value.
+/*! @brief Set the BRK13 field to a new value. */
 #define BW_UART_S2_BRK13(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_BRK13), BP_UART_S2_BRK13, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field RWUID[3] (RW)
@@ -1269,24 +1114,20 @@ typedef union _hw_uart_s2
  * - 1 - During receive standby state (RWU = 1), the IDLE bit gets set upon
  *     detection of an idle character.
  */
-//@{
-#define BP_UART_S2_RWUID     (3U)          //!< Bit position for UART_S2_RWUID.
-#define BM_UART_S2_RWUID     (0x08U)       //!< Bit mask for UART_S2_RWUID.
-#define BS_UART_S2_RWUID     (1U)          //!< Bit field size in bits for UART_S2_RWUID.
+/*@{*/
+#define BP_UART_S2_RWUID     (3U)          /*!< Bit position for UART_S2_RWUID. */
+#define BM_UART_S2_RWUID     (0x08U)       /*!< Bit mask for UART_S2_RWUID. */
+#define BS_UART_S2_RWUID     (1U)          /*!< Bit field size in bits for UART_S2_RWUID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_RWUID field.
+/*! @brief Read current value of the UART_S2_RWUID field. */
 #define BR_UART_S2_RWUID(x)  (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_RWUID, BS_UART_S2_RWUID))
-#endif
 
-//! @brief Format value for bitfield UART_S2_RWUID.
-#define BF_UART_S2_RWUID(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_RWUID), uint8_t) & BM_UART_S2_RWUID)
+/*! @brief Format value for bitfield UART_S2_RWUID. */
+#define BF_UART_S2_RWUID(v)  ((uint8_t)((uint8_t)(v) << BP_UART_S2_RWUID) & BM_UART_S2_RWUID)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RWUID field to a new value.
+/*! @brief Set the RWUID field to a new value. */
 #define BW_UART_S2_RWUID(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_RWUID), BP_UART_S2_RWUID, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field RXINV[4] (RW)
@@ -1299,24 +1140,20 @@ typedef union _hw_uart_s2
  * - 0 - Receive data not inverted.
  * - 1 - Receive data inverted.
  */
-//@{
-#define BP_UART_S2_RXINV     (4U)          //!< Bit position for UART_S2_RXINV.
-#define BM_UART_S2_RXINV     (0x10U)       //!< Bit mask for UART_S2_RXINV.
-#define BS_UART_S2_RXINV     (1U)          //!< Bit field size in bits for UART_S2_RXINV.
+/*@{*/
+#define BP_UART_S2_RXINV     (4U)          /*!< Bit position for UART_S2_RXINV. */
+#define BM_UART_S2_RXINV     (0x10U)       /*!< Bit mask for UART_S2_RXINV. */
+#define BS_UART_S2_RXINV     (1U)          /*!< Bit field size in bits for UART_S2_RXINV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_RXINV field.
+/*! @brief Read current value of the UART_S2_RXINV field. */
 #define BR_UART_S2_RXINV(x)  (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_RXINV, BS_UART_S2_RXINV))
-#endif
 
-//! @brief Format value for bitfield UART_S2_RXINV.
-#define BF_UART_S2_RXINV(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_RXINV), uint8_t) & BM_UART_S2_RXINV)
+/*! @brief Format value for bitfield UART_S2_RXINV. */
+#define BF_UART_S2_RXINV(v)  ((uint8_t)((uint8_t)(v) << BP_UART_S2_RXINV) & BM_UART_S2_RXINV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXINV field to a new value.
+/*! @brief Set the RXINV field to a new value. */
 #define BW_UART_S2_RXINV(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_RXINV), BP_UART_S2_RXINV, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field RXEDGIF[6] (RW)
@@ -1328,24 +1165,20 @@ typedef union _hw_uart_s2
  * - 0 - No active edge on the receive pin has occurred.
  * - 1 - An active edge on the receive pin has occurred.
  */
-//@{
-#define BP_UART_S2_RXEDGIF   (6U)          //!< Bit position for UART_S2_RXEDGIF.
-#define BM_UART_S2_RXEDGIF   (0x40U)       //!< Bit mask for UART_S2_RXEDGIF.
-#define BS_UART_S2_RXEDGIF   (1U)          //!< Bit field size in bits for UART_S2_RXEDGIF.
+/*@{*/
+#define BP_UART_S2_RXEDGIF   (6U)          /*!< Bit position for UART_S2_RXEDGIF. */
+#define BM_UART_S2_RXEDGIF   (0x40U)       /*!< Bit mask for UART_S2_RXEDGIF. */
+#define BS_UART_S2_RXEDGIF   (1U)          /*!< Bit field size in bits for UART_S2_RXEDGIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_RXEDGIF field.
+/*! @brief Read current value of the UART_S2_RXEDGIF field. */
 #define BR_UART_S2_RXEDGIF(x) (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_RXEDGIF, BS_UART_S2_RXEDGIF))
-#endif
 
-//! @brief Format value for bitfield UART_S2_RXEDGIF.
-#define BF_UART_S2_RXEDGIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_RXEDGIF), uint8_t) & BM_UART_S2_RXEDGIF)
+/*! @brief Format value for bitfield UART_S2_RXEDGIF. */
+#define BF_UART_S2_RXEDGIF(v) ((uint8_t)((uint8_t)(v) << BP_UART_S2_RXEDGIF) & BM_UART_S2_RXEDGIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RXEDGIF field to a new value.
+/*! @brief Set the RXEDGIF field to a new value. */
 #define BW_UART_S2_RXEDGIF(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_RXEDGIF), BP_UART_S2_RXEDGIF, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_S2, field LBKDIF[7] (RW)
@@ -1357,30 +1190,25 @@ typedef union _hw_uart_s2
  * - 0 - No LIN break character has been detected.
  * - 1 - LIN break character has been detected.
  */
-//@{
-#define BP_UART_S2_LBKDIF    (7U)          //!< Bit position for UART_S2_LBKDIF.
-#define BM_UART_S2_LBKDIF    (0x80U)       //!< Bit mask for UART_S2_LBKDIF.
-#define BS_UART_S2_LBKDIF    (1U)          //!< Bit field size in bits for UART_S2_LBKDIF.
+/*@{*/
+#define BP_UART_S2_LBKDIF    (7U)          /*!< Bit position for UART_S2_LBKDIF. */
+#define BM_UART_S2_LBKDIF    (0x80U)       /*!< Bit mask for UART_S2_LBKDIF. */
+#define BS_UART_S2_LBKDIF    (1U)          /*!< Bit field size in bits for UART_S2_LBKDIF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_S2_LBKDIF field.
+/*! @brief Read current value of the UART_S2_LBKDIF field. */
 #define BR_UART_S2_LBKDIF(x) (BME_UBFX8(HW_UART_S2_ADDR(x), BP_UART_S2_LBKDIF, BS_UART_S2_LBKDIF))
-#endif
 
-//! @brief Format value for bitfield UART_S2_LBKDIF.
-#define BF_UART_S2_LBKDIF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_S2_LBKDIF), uint8_t) & BM_UART_S2_LBKDIF)
+/*! @brief Format value for bitfield UART_S2_LBKDIF. */
+#define BF_UART_S2_LBKDIF(v) ((uint8_t)((uint8_t)(v) << BP_UART_S2_LBKDIF) & BM_UART_S2_LBKDIF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LBKDIF field to a new value.
+/*! @brief Set the LBKDIF field to a new value. */
 #define BW_UART_S2_LBKDIF(x, v) (BME_BFI8(HW_UART_S2_ADDR(x), ((uint8_t)(v) << BP_UART_S2_LBKDIF), BP_UART_S2_LBKDIF, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_C3 - UART Control Register 3
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_C3 - UART Control Register 3
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_C3 - UART Control Register 3 (RW)
  *
@@ -1391,33 +1219,30 @@ typedef union _hw_uart_c3
     uint8_t U;
     struct _hw_uart_c3_bitfields
     {
-        uint8_t PEIE : 1;              //!< [0] Parity Error Interrupt Enable
-        uint8_t FEIE : 1;              //!< [1] Framing Error Interrupt Enable
-        uint8_t NEIE : 1;              //!< [2] Noise Error Interrupt Enable
-        uint8_t ORIE : 1;              //!< [3] Overrun Interrupt Enable
-        uint8_t TXINV : 1;             //!< [4] Transmit Data Inversion
-        uint8_t TXDIR : 1;             //!< [5] TxD Pin Direction in Single-Wire Mode
-        uint8_t T8 : 1;                //!< [6] Ninth Data Bit for Transmitter
-        uint8_t R8 : 1;                //!< [7] Ninth Data Bit for Receiver
+        uint8_t PEIE : 1;              /*!< [0] Parity Error Interrupt Enable */
+        uint8_t FEIE : 1;              /*!< [1] Framing Error Interrupt Enable */
+        uint8_t NEIE : 1;              /*!< [2] Noise Error Interrupt Enable */
+        uint8_t ORIE : 1;              /*!< [3] Overrun Interrupt Enable */
+        uint8_t TXINV : 1;             /*!< [4] Transmit Data Inversion */
+        uint8_t TXDIR : 1;             /*!< [5] TxD Pin Direction in Single-Wire Mode */
+        uint8_t T8 : 1;                /*!< [6] Ninth Data Bit for Transmitter */
+        uint8_t R8 : 1;                /*!< [7] Ninth Data Bit for Receiver */
     } B;
 } hw_uart_c3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_C3 register
  */
-//@{
-#define HW_UART_C3_ADDR(x)       (REGS_UART_BASE(x) + 0x6U)
+/*@{*/
+#define HW_UART_C3_ADDR(x)       ((x) + 0x6U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_C3(x)            (*(__IO hw_uart_c3_t *) HW_UART_C3_ADDR(x))
 #define HW_UART_C3_RD(x)         (HW_UART_C3(x).U)
 #define HW_UART_C3_WR(x, v)      (HW_UART_C3(x).U = (v))
 #define HW_UART_C3_SET(x, v)     (BME_OR8(HW_UART_C3_ADDR(x), (uint8_t)(v)))
 #define HW_UART_C3_CLR(x, v)     (BME_AND8(HW_UART_C3_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_C3_TOG(x, v)     (BME_XOR8(HW_UART_C3_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_C3 bitfields
@@ -1433,24 +1258,20 @@ typedef union _hw_uart_c3
  * - 0 - PF interrupts disabled; use polling).
  * - 1 - Hardware interrupt requested when PF is set.
  */
-//@{
-#define BP_UART_C3_PEIE      (0U)          //!< Bit position for UART_C3_PEIE.
-#define BM_UART_C3_PEIE      (0x01U)       //!< Bit mask for UART_C3_PEIE.
-#define BS_UART_C3_PEIE      (1U)          //!< Bit field size in bits for UART_C3_PEIE.
+/*@{*/
+#define BP_UART_C3_PEIE      (0U)          /*!< Bit position for UART_C3_PEIE. */
+#define BM_UART_C3_PEIE      (0x01U)       /*!< Bit mask for UART_C3_PEIE. */
+#define BS_UART_C3_PEIE      (1U)          /*!< Bit field size in bits for UART_C3_PEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_PEIE field.
+/*! @brief Read current value of the UART_C3_PEIE field. */
 #define BR_UART_C3_PEIE(x)   (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_PEIE, BS_UART_C3_PEIE))
-#endif
 
-//! @brief Format value for bitfield UART_C3_PEIE.
-#define BF_UART_C3_PEIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_PEIE), uint8_t) & BM_UART_C3_PEIE)
+/*! @brief Format value for bitfield UART_C3_PEIE. */
+#define BF_UART_C3_PEIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C3_PEIE) & BM_UART_C3_PEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PEIE field to a new value.
+/*! @brief Set the PEIE field to a new value. */
 #define BW_UART_C3_PEIE(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_PEIE), BP_UART_C3_PEIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field FEIE[1] (RW)
@@ -1462,24 +1283,20 @@ typedef union _hw_uart_c3
  * - 0 - FE interrupts disabled; use polling).
  * - 1 - Hardware interrupt requested when FE is set.
  */
-//@{
-#define BP_UART_C3_FEIE      (1U)          //!< Bit position for UART_C3_FEIE.
-#define BM_UART_C3_FEIE      (0x02U)       //!< Bit mask for UART_C3_FEIE.
-#define BS_UART_C3_FEIE      (1U)          //!< Bit field size in bits for UART_C3_FEIE.
+/*@{*/
+#define BP_UART_C3_FEIE      (1U)          /*!< Bit position for UART_C3_FEIE. */
+#define BM_UART_C3_FEIE      (0x02U)       /*!< Bit mask for UART_C3_FEIE. */
+#define BS_UART_C3_FEIE      (1U)          /*!< Bit field size in bits for UART_C3_FEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_FEIE field.
+/*! @brief Read current value of the UART_C3_FEIE field. */
 #define BR_UART_C3_FEIE(x)   (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_FEIE, BS_UART_C3_FEIE))
-#endif
 
-//! @brief Format value for bitfield UART_C3_FEIE.
-#define BF_UART_C3_FEIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_FEIE), uint8_t) & BM_UART_C3_FEIE)
+/*! @brief Format value for bitfield UART_C3_FEIE. */
+#define BF_UART_C3_FEIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C3_FEIE) & BM_UART_C3_FEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FEIE field to a new value.
+/*! @brief Set the FEIE field to a new value. */
 #define BW_UART_C3_FEIE(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_FEIE), BP_UART_C3_FEIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field NEIE[2] (RW)
@@ -1490,24 +1307,20 @@ typedef union _hw_uart_c3
  * - 0 - NF interrupts disabled; use polling).
  * - 1 - Hardware interrupt requested when NF is set.
  */
-//@{
-#define BP_UART_C3_NEIE      (2U)          //!< Bit position for UART_C3_NEIE.
-#define BM_UART_C3_NEIE      (0x04U)       //!< Bit mask for UART_C3_NEIE.
-#define BS_UART_C3_NEIE      (1U)          //!< Bit field size in bits for UART_C3_NEIE.
+/*@{*/
+#define BP_UART_C3_NEIE      (2U)          /*!< Bit position for UART_C3_NEIE. */
+#define BM_UART_C3_NEIE      (0x04U)       /*!< Bit mask for UART_C3_NEIE. */
+#define BS_UART_C3_NEIE      (1U)          /*!< Bit field size in bits for UART_C3_NEIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_NEIE field.
+/*! @brief Read current value of the UART_C3_NEIE field. */
 #define BR_UART_C3_NEIE(x)   (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_NEIE, BS_UART_C3_NEIE))
-#endif
 
-//! @brief Format value for bitfield UART_C3_NEIE.
-#define BF_UART_C3_NEIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_NEIE), uint8_t) & BM_UART_C3_NEIE)
+/*! @brief Format value for bitfield UART_C3_NEIE. */
+#define BF_UART_C3_NEIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C3_NEIE) & BM_UART_C3_NEIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NEIE field to a new value.
+/*! @brief Set the NEIE field to a new value. */
 #define BW_UART_C3_NEIE(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_NEIE), BP_UART_C3_NEIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field ORIE[3] (RW)
@@ -1519,24 +1332,20 @@ typedef union _hw_uart_c3
  * - 0 - OR interrupts disabled; use polling.
  * - 1 - Hardware interrupt requested when OR is set.
  */
-//@{
-#define BP_UART_C3_ORIE      (3U)          //!< Bit position for UART_C3_ORIE.
-#define BM_UART_C3_ORIE      (0x08U)       //!< Bit mask for UART_C3_ORIE.
-#define BS_UART_C3_ORIE      (1U)          //!< Bit field size in bits for UART_C3_ORIE.
+/*@{*/
+#define BP_UART_C3_ORIE      (3U)          /*!< Bit position for UART_C3_ORIE. */
+#define BM_UART_C3_ORIE      (0x08U)       /*!< Bit mask for UART_C3_ORIE. */
+#define BS_UART_C3_ORIE      (1U)          /*!< Bit field size in bits for UART_C3_ORIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_ORIE field.
+/*! @brief Read current value of the UART_C3_ORIE field. */
 #define BR_UART_C3_ORIE(x)   (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_ORIE, BS_UART_C3_ORIE))
-#endif
 
-//! @brief Format value for bitfield UART_C3_ORIE.
-#define BF_UART_C3_ORIE(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_ORIE), uint8_t) & BM_UART_C3_ORIE)
+/*! @brief Format value for bitfield UART_C3_ORIE. */
+#define BF_UART_C3_ORIE(v)   ((uint8_t)((uint8_t)(v) << BP_UART_C3_ORIE) & BM_UART_C3_ORIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ORIE field to a new value.
+/*! @brief Set the ORIE field to a new value. */
 #define BW_UART_C3_ORIE(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_ORIE), BP_UART_C3_ORIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field TXINV[4] (RW)
@@ -1549,24 +1358,20 @@ typedef union _hw_uart_c3
  * - 0 - Transmit data not inverted.
  * - 1 - Transmit data inverted.
  */
-//@{
-#define BP_UART_C3_TXINV     (4U)          //!< Bit position for UART_C3_TXINV.
-#define BM_UART_C3_TXINV     (0x10U)       //!< Bit mask for UART_C3_TXINV.
-#define BS_UART_C3_TXINV     (1U)          //!< Bit field size in bits for UART_C3_TXINV.
+/*@{*/
+#define BP_UART_C3_TXINV     (4U)          /*!< Bit position for UART_C3_TXINV. */
+#define BM_UART_C3_TXINV     (0x10U)       /*!< Bit mask for UART_C3_TXINV. */
+#define BS_UART_C3_TXINV     (1U)          /*!< Bit field size in bits for UART_C3_TXINV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_TXINV field.
+/*! @brief Read current value of the UART_C3_TXINV field. */
 #define BR_UART_C3_TXINV(x)  (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_TXINV, BS_UART_C3_TXINV))
-#endif
 
-//! @brief Format value for bitfield UART_C3_TXINV.
-#define BF_UART_C3_TXINV(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_TXINV), uint8_t) & BM_UART_C3_TXINV)
+/*! @brief Format value for bitfield UART_C3_TXINV. */
+#define BF_UART_C3_TXINV(v)  ((uint8_t)((uint8_t)(v) << BP_UART_C3_TXINV) & BM_UART_C3_TXINV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXINV field to a new value.
+/*! @brief Set the TXINV field to a new value. */
 #define BW_UART_C3_TXINV(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_TXINV), BP_UART_C3_TXINV, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field TXDIR[5] (RW)
@@ -1578,24 +1383,20 @@ typedef union _hw_uart_c3
  * - 0 - TxD pin is an input in single-wire mode.
  * - 1 - TxD pin is an output in single-wire mode.
  */
-//@{
-#define BP_UART_C3_TXDIR     (5U)          //!< Bit position for UART_C3_TXDIR.
-#define BM_UART_C3_TXDIR     (0x20U)       //!< Bit mask for UART_C3_TXDIR.
-#define BS_UART_C3_TXDIR     (1U)          //!< Bit field size in bits for UART_C3_TXDIR.
+/*@{*/
+#define BP_UART_C3_TXDIR     (5U)          /*!< Bit position for UART_C3_TXDIR. */
+#define BM_UART_C3_TXDIR     (0x20U)       /*!< Bit mask for UART_C3_TXDIR. */
+#define BS_UART_C3_TXDIR     (1U)          /*!< Bit field size in bits for UART_C3_TXDIR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_TXDIR field.
+/*! @brief Read current value of the UART_C3_TXDIR field. */
 #define BR_UART_C3_TXDIR(x)  (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_TXDIR, BS_UART_C3_TXDIR))
-#endif
 
-//! @brief Format value for bitfield UART_C3_TXDIR.
-#define BF_UART_C3_TXDIR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_TXDIR), uint8_t) & BM_UART_C3_TXDIR)
+/*! @brief Format value for bitfield UART_C3_TXDIR. */
+#define BF_UART_C3_TXDIR(v)  ((uint8_t)((uint8_t)(v) << BP_UART_C3_TXDIR) & BM_UART_C3_TXDIR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXDIR field to a new value.
+/*! @brief Set the TXDIR field to a new value. */
 #define BW_UART_C3_TXDIR(x, v) (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_TXDIR), BP_UART_C3_TXDIR, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field T8[6] (RW)
@@ -1608,24 +1409,20 @@ typedef union _hw_uart_c3
  * need to change in the new value, such as when it is used to generate mark or
  * space parity, it need not be written each time UART_D is written.
  */
-//@{
-#define BP_UART_C3_T8        (6U)          //!< Bit position for UART_C3_T8.
-#define BM_UART_C3_T8        (0x40U)       //!< Bit mask for UART_C3_T8.
-#define BS_UART_C3_T8        (1U)          //!< Bit field size in bits for UART_C3_T8.
+/*@{*/
+#define BP_UART_C3_T8        (6U)          /*!< Bit position for UART_C3_T8. */
+#define BM_UART_C3_T8        (0x40U)       /*!< Bit mask for UART_C3_T8. */
+#define BS_UART_C3_T8        (1U)          /*!< Bit field size in bits for UART_C3_T8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_T8 field.
+/*! @brief Read current value of the UART_C3_T8 field. */
 #define BR_UART_C3_T8(x)     (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_T8, BS_UART_C3_T8))
-#endif
 
-//! @brief Format value for bitfield UART_C3_T8.
-#define BF_UART_C3_T8(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C3_T8), uint8_t) & BM_UART_C3_T8)
+/*! @brief Format value for bitfield UART_C3_T8. */
+#define BF_UART_C3_T8(v)     ((uint8_t)((uint8_t)(v) << BP_UART_C3_T8) & BM_UART_C3_T8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the T8 field to a new value.
+/*! @brief Set the T8 field to a new value. */
 #define BW_UART_C3_T8(x, v)  (BME_BFI8(HW_UART_C3_ADDR(x), ((uint8_t)(v) << BP_UART_C3_T8), BP_UART_C3_T8, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C3, field R8[7] (RO)
@@ -1636,22 +1433,19 @@ typedef union _hw_uart_c3
  * reading UART_D completes automatic flag clearing sequences that could allow R8
  * and UART_D to be overwritten with new data.
  */
-//@{
-#define BP_UART_C3_R8        (7U)          //!< Bit position for UART_C3_R8.
-#define BM_UART_C3_R8        (0x80U)       //!< Bit mask for UART_C3_R8.
-#define BS_UART_C3_R8        (1U)          //!< Bit field size in bits for UART_C3_R8.
+/*@{*/
+#define BP_UART_C3_R8        (7U)          /*!< Bit position for UART_C3_R8. */
+#define BM_UART_C3_R8        (0x80U)       /*!< Bit mask for UART_C3_R8. */
+#define BS_UART_C3_R8        (1U)          /*!< Bit field size in bits for UART_C3_R8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C3_R8 field.
+/*! @brief Read current value of the UART_C3_R8 field. */
 #define BR_UART_C3_R8(x)     (BME_UBFX8(HW_UART_C3_ADDR(x), BP_UART_C3_R8, BS_UART_C3_R8))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_D - UART Data Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_D - UART Data Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_D - UART Data Register (RW)
  *
@@ -1667,33 +1461,30 @@ typedef union _hw_uart_d
     uint8_t U;
     struct _hw_uart_d_bitfields
     {
-        uint8_t R0T0 : 1;              //!< [0]
-        uint8_t R1T1 : 1;              //!< [1]
-        uint8_t R2T2 : 1;              //!< [2]
-        uint8_t R3T3 : 1;              //!< [3]
-        uint8_t R4T4 : 1;              //!< [4]
-        uint8_t R5T5 : 1;              //!< [5]
-        uint8_t R6T6 : 1;              //!< [6]
-        uint8_t R7T7 : 1;              //!< [7]
+        uint8_t R0T0 : 1;              /*!< [0]  */
+        uint8_t R1T1 : 1;              /*!< [1]  */
+        uint8_t R2T2 : 1;              /*!< [2]  */
+        uint8_t R3T3 : 1;              /*!< [3]  */
+        uint8_t R4T4 : 1;              /*!< [4]  */
+        uint8_t R5T5 : 1;              /*!< [5]  */
+        uint8_t R6T6 : 1;              /*!< [6]  */
+        uint8_t R7T7 : 1;              /*!< [7]  */
     } B;
 } hw_uart_d_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_D register
  */
-//@{
-#define HW_UART_D_ADDR(x)        (REGS_UART_BASE(x) + 0x7U)
+/*@{*/
+#define HW_UART_D_ADDR(x)        ((x) + 0x7U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_D(x)             (*(__IO hw_uart_d_t *) HW_UART_D_ADDR(x))
 #define HW_UART_D_RD(x)          (HW_UART_D(x).U)
 #define HW_UART_D_WR(x, v)       (HW_UART_D(x).U = (v))
 #define HW_UART_D_SET(x, v)      (BME_OR8(HW_UART_D_ADDR(x), (uint8_t)(v)))
 #define HW_UART_D_CLR(x, v)      (BME_AND8(HW_UART_D_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_D_TOG(x, v)      (BME_XOR8(HW_UART_D_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_D bitfields
@@ -1704,198 +1495,165 @@ typedef union _hw_uart_d
  *
  * Read receive data buffer 0 or write transmit data buffer 0.
  */
-//@{
-#define BP_UART_D_R0T0       (0U)          //!< Bit position for UART_D_R0T0.
-#define BM_UART_D_R0T0       (0x01U)       //!< Bit mask for UART_D_R0T0.
-#define BS_UART_D_R0T0       (1U)          //!< Bit field size in bits for UART_D_R0T0.
+/*@{*/
+#define BP_UART_D_R0T0       (0U)          /*!< Bit position for UART_D_R0T0. */
+#define BM_UART_D_R0T0       (0x01U)       /*!< Bit mask for UART_D_R0T0. */
+#define BS_UART_D_R0T0       (1U)          /*!< Bit field size in bits for UART_D_R0T0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R0T0 field.
+/*! @brief Read current value of the UART_D_R0T0 field. */
 #define BR_UART_D_R0T0(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R0T0, BS_UART_D_R0T0))
-#endif
 
-//! @brief Format value for bitfield UART_D_R0T0.
-#define BF_UART_D_R0T0(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R0T0), uint8_t) & BM_UART_D_R0T0)
+/*! @brief Format value for bitfield UART_D_R0T0. */
+#define BF_UART_D_R0T0(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R0T0) & BM_UART_D_R0T0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R0T0 field to a new value.
+/*! @brief Set the R0T0 field to a new value. */
 #define BW_UART_D_R0T0(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R0T0), BP_UART_D_R0T0, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R1T1[1] (RW)
  *
  * Read receive data buffer 1 or write transmit data buffer 1.
  */
-//@{
-#define BP_UART_D_R1T1       (1U)          //!< Bit position for UART_D_R1T1.
-#define BM_UART_D_R1T1       (0x02U)       //!< Bit mask for UART_D_R1T1.
-#define BS_UART_D_R1T1       (1U)          //!< Bit field size in bits for UART_D_R1T1.
+/*@{*/
+#define BP_UART_D_R1T1       (1U)          /*!< Bit position for UART_D_R1T1. */
+#define BM_UART_D_R1T1       (0x02U)       /*!< Bit mask for UART_D_R1T1. */
+#define BS_UART_D_R1T1       (1U)          /*!< Bit field size in bits for UART_D_R1T1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R1T1 field.
+/*! @brief Read current value of the UART_D_R1T1 field. */
 #define BR_UART_D_R1T1(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R1T1, BS_UART_D_R1T1))
-#endif
 
-//! @brief Format value for bitfield UART_D_R1T1.
-#define BF_UART_D_R1T1(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R1T1), uint8_t) & BM_UART_D_R1T1)
+/*! @brief Format value for bitfield UART_D_R1T1. */
+#define BF_UART_D_R1T1(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R1T1) & BM_UART_D_R1T1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R1T1 field to a new value.
+/*! @brief Set the R1T1 field to a new value. */
 #define BW_UART_D_R1T1(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R1T1), BP_UART_D_R1T1, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R2T2[2] (RW)
  *
  * Read receive data buffer 2 or write transmit data buffer 2.
  */
-//@{
-#define BP_UART_D_R2T2       (2U)          //!< Bit position for UART_D_R2T2.
-#define BM_UART_D_R2T2       (0x04U)       //!< Bit mask for UART_D_R2T2.
-#define BS_UART_D_R2T2       (1U)          //!< Bit field size in bits for UART_D_R2T2.
+/*@{*/
+#define BP_UART_D_R2T2       (2U)          /*!< Bit position for UART_D_R2T2. */
+#define BM_UART_D_R2T2       (0x04U)       /*!< Bit mask for UART_D_R2T2. */
+#define BS_UART_D_R2T2       (1U)          /*!< Bit field size in bits for UART_D_R2T2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R2T2 field.
+/*! @brief Read current value of the UART_D_R2T2 field. */
 #define BR_UART_D_R2T2(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R2T2, BS_UART_D_R2T2))
-#endif
 
-//! @brief Format value for bitfield UART_D_R2T2.
-#define BF_UART_D_R2T2(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R2T2), uint8_t) & BM_UART_D_R2T2)
+/*! @brief Format value for bitfield UART_D_R2T2. */
+#define BF_UART_D_R2T2(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R2T2) & BM_UART_D_R2T2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2T2 field to a new value.
+/*! @brief Set the R2T2 field to a new value. */
 #define BW_UART_D_R2T2(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R2T2), BP_UART_D_R2T2, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R3T3[3] (RW)
  *
  * Read receive data buffer 3 or write transmit data buffer 3.
  */
-//@{
-#define BP_UART_D_R3T3       (3U)          //!< Bit position for UART_D_R3T3.
-#define BM_UART_D_R3T3       (0x08U)       //!< Bit mask for UART_D_R3T3.
-#define BS_UART_D_R3T3       (1U)          //!< Bit field size in bits for UART_D_R3T3.
+/*@{*/
+#define BP_UART_D_R3T3       (3U)          /*!< Bit position for UART_D_R3T3. */
+#define BM_UART_D_R3T3       (0x08U)       /*!< Bit mask for UART_D_R3T3. */
+#define BS_UART_D_R3T3       (1U)          /*!< Bit field size in bits for UART_D_R3T3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R3T3 field.
+/*! @brief Read current value of the UART_D_R3T3 field. */
 #define BR_UART_D_R3T3(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R3T3, BS_UART_D_R3T3))
-#endif
 
-//! @brief Format value for bitfield UART_D_R3T3.
-#define BF_UART_D_R3T3(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R3T3), uint8_t) & BM_UART_D_R3T3)
+/*! @brief Format value for bitfield UART_D_R3T3. */
+#define BF_UART_D_R3T3(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R3T3) & BM_UART_D_R3T3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R3T3 field to a new value.
+/*! @brief Set the R3T3 field to a new value. */
 #define BW_UART_D_R3T3(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R3T3), BP_UART_D_R3T3, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R4T4[4] (RW)
  *
  * Read receive data buffer 4 or write transmit data buffer 4.
  */
-//@{
-#define BP_UART_D_R4T4       (4U)          //!< Bit position for UART_D_R4T4.
-#define BM_UART_D_R4T4       (0x10U)       //!< Bit mask for UART_D_R4T4.
-#define BS_UART_D_R4T4       (1U)          //!< Bit field size in bits for UART_D_R4T4.
+/*@{*/
+#define BP_UART_D_R4T4       (4U)          /*!< Bit position for UART_D_R4T4. */
+#define BM_UART_D_R4T4       (0x10U)       /*!< Bit mask for UART_D_R4T4. */
+#define BS_UART_D_R4T4       (1U)          /*!< Bit field size in bits for UART_D_R4T4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R4T4 field.
+/*! @brief Read current value of the UART_D_R4T4 field. */
 #define BR_UART_D_R4T4(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R4T4, BS_UART_D_R4T4))
-#endif
 
-//! @brief Format value for bitfield UART_D_R4T4.
-#define BF_UART_D_R4T4(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R4T4), uint8_t) & BM_UART_D_R4T4)
+/*! @brief Format value for bitfield UART_D_R4T4. */
+#define BF_UART_D_R4T4(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R4T4) & BM_UART_D_R4T4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R4T4 field to a new value.
+/*! @brief Set the R4T4 field to a new value. */
 #define BW_UART_D_R4T4(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R4T4), BP_UART_D_R4T4, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R5T5[5] (RW)
  *
  * Read receive data buffer 5 or write transmit data buffer 5.
  */
-//@{
-#define BP_UART_D_R5T5       (5U)          //!< Bit position for UART_D_R5T5.
-#define BM_UART_D_R5T5       (0x20U)       //!< Bit mask for UART_D_R5T5.
-#define BS_UART_D_R5T5       (1U)          //!< Bit field size in bits for UART_D_R5T5.
+/*@{*/
+#define BP_UART_D_R5T5       (5U)          /*!< Bit position for UART_D_R5T5. */
+#define BM_UART_D_R5T5       (0x20U)       /*!< Bit mask for UART_D_R5T5. */
+#define BS_UART_D_R5T5       (1U)          /*!< Bit field size in bits for UART_D_R5T5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R5T5 field.
+/*! @brief Read current value of the UART_D_R5T5 field. */
 #define BR_UART_D_R5T5(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R5T5, BS_UART_D_R5T5))
-#endif
 
-//! @brief Format value for bitfield UART_D_R5T5.
-#define BF_UART_D_R5T5(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R5T5), uint8_t) & BM_UART_D_R5T5)
+/*! @brief Format value for bitfield UART_D_R5T5. */
+#define BF_UART_D_R5T5(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R5T5) & BM_UART_D_R5T5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R5T5 field to a new value.
+/*! @brief Set the R5T5 field to a new value. */
 #define BW_UART_D_R5T5(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R5T5), BP_UART_D_R5T5, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R6T6[6] (RW)
  *
  * Read receive data buffer 6 or write transmit data buffer 6.
  */
-//@{
-#define BP_UART_D_R6T6       (6U)          //!< Bit position for UART_D_R6T6.
-#define BM_UART_D_R6T6       (0x40U)       //!< Bit mask for UART_D_R6T6.
-#define BS_UART_D_R6T6       (1U)          //!< Bit field size in bits for UART_D_R6T6.
+/*@{*/
+#define BP_UART_D_R6T6       (6U)          /*!< Bit position for UART_D_R6T6. */
+#define BM_UART_D_R6T6       (0x40U)       /*!< Bit mask for UART_D_R6T6. */
+#define BS_UART_D_R6T6       (1U)          /*!< Bit field size in bits for UART_D_R6T6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R6T6 field.
+/*! @brief Read current value of the UART_D_R6T6 field. */
 #define BR_UART_D_R6T6(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R6T6, BS_UART_D_R6T6))
-#endif
 
-//! @brief Format value for bitfield UART_D_R6T6.
-#define BF_UART_D_R6T6(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R6T6), uint8_t) & BM_UART_D_R6T6)
+/*! @brief Format value for bitfield UART_D_R6T6. */
+#define BF_UART_D_R6T6(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R6T6) & BM_UART_D_R6T6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R6T6 field to a new value.
+/*! @brief Set the R6T6 field to a new value. */
 #define BW_UART_D_R6T6(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R6T6), BP_UART_D_R6T6, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_D, field R7T7[7] (RW)
  *
  * Read receive data buffer 7 or write transmit data buffer 7.
  */
-//@{
-#define BP_UART_D_R7T7       (7U)          //!< Bit position for UART_D_R7T7.
-#define BM_UART_D_R7T7       (0x80U)       //!< Bit mask for UART_D_R7T7.
-#define BS_UART_D_R7T7       (1U)          //!< Bit field size in bits for UART_D_R7T7.
+/*@{*/
+#define BP_UART_D_R7T7       (7U)          /*!< Bit position for UART_D_R7T7. */
+#define BM_UART_D_R7T7       (0x80U)       /*!< Bit mask for UART_D_R7T7. */
+#define BS_UART_D_R7T7       (1U)          /*!< Bit field size in bits for UART_D_R7T7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_D_R7T7 field.
+/*! @brief Read current value of the UART_D_R7T7 field. */
 #define BR_UART_D_R7T7(x)    (BME_UBFX8(HW_UART_D_ADDR(x), BP_UART_D_R7T7, BS_UART_D_R7T7))
-#endif
 
-//! @brief Format value for bitfield UART_D_R7T7.
-#define BF_UART_D_R7T7(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_D_R7T7), uint8_t) & BM_UART_D_R7T7)
+/*! @brief Format value for bitfield UART_D_R7T7. */
+#define BF_UART_D_R7T7(v)    ((uint8_t)((uint8_t)(v) << BP_UART_D_R7T7) & BM_UART_D_R7T7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R7T7 field to a new value.
+/*! @brief Set the R7T7 field to a new value. */
 #define BW_UART_D_R7T7(x, v) (BME_BFI8(HW_UART_D_ADDR(x), ((uint8_t)(v) << BP_UART_D_R7T7), BP_UART_D_R7T7, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_UART_C4 - UART Control Register 4
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_UART_C4 - UART Control Register 4
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_UART_C4 - UART Control Register 4 (RW)
  *
@@ -1906,29 +1664,26 @@ typedef union _hw_uart_c4
     uint8_t U;
     struct _hw_uart_c4_bitfields
     {
-        uint8_t RESERVED0 : 5;         //!< [4:0]
-        uint8_t RDMAS : 1;             //!< [5] Receiver Full DMA Select
-        uint8_t RESERVED1 : 1;         //!< [6]
-        uint8_t TDMAS : 1;             //!< [7] Transmitter DMA Select
+        uint8_t RESERVED0 : 5;         /*!< [4:0]  */
+        uint8_t RDMAS : 1;             /*!< [5] Receiver Full DMA Select */
+        uint8_t RESERVED1 : 1;         /*!< [6]  */
+        uint8_t TDMAS : 1;             /*!< [7] Transmitter DMA Select */
     } B;
 } hw_uart_c4_t;
-#endif
 
 /*!
  * @name Constants and macros for entire UART_C4 register
  */
-//@{
-#define HW_UART_C4_ADDR(x)       (REGS_UART_BASE(x) + 0x8U)
+/*@{*/
+#define HW_UART_C4_ADDR(x)       ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_UART_C4(x)            (*(__IO hw_uart_c4_t *) HW_UART_C4_ADDR(x))
 #define HW_UART_C4_RD(x)         (HW_UART_C4(x).U)
 #define HW_UART_C4_WR(x, v)      (HW_UART_C4(x).U = (v))
 #define HW_UART_C4_SET(x, v)     (BME_OR8(HW_UART_C4_ADDR(x), (uint8_t)(v)))
 #define HW_UART_C4_CLR(x, v)     (BME_AND8(HW_UART_C4_ADDR(x), (uint8_t)(~(v))))
 #define HW_UART_C4_TOG(x, v)     (BME_XOR8(HW_UART_C4_ADDR(x), (uint8_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual UART_C4 bitfields
@@ -1948,24 +1703,20 @@ typedef union _hw_uart_c4
  * - 1 - If RIE is set and the RDRF flag is set, the RDRF DMA request signal is
  *     asserted to request a DMA transfer.
  */
-//@{
-#define BP_UART_C4_RDMAS     (5U)          //!< Bit position for UART_C4_RDMAS.
-#define BM_UART_C4_RDMAS     (0x20U)       //!< Bit mask for UART_C4_RDMAS.
-#define BS_UART_C4_RDMAS     (1U)          //!< Bit field size in bits for UART_C4_RDMAS.
+/*@{*/
+#define BP_UART_C4_RDMAS     (5U)          /*!< Bit position for UART_C4_RDMAS. */
+#define BM_UART_C4_RDMAS     (0x20U)       /*!< Bit mask for UART_C4_RDMAS. */
+#define BS_UART_C4_RDMAS     (1U)          /*!< Bit field size in bits for UART_C4_RDMAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C4_RDMAS field.
+/*! @brief Read current value of the UART_C4_RDMAS field. */
 #define BR_UART_C4_RDMAS(x)  (BME_UBFX8(HW_UART_C4_ADDR(x), BP_UART_C4_RDMAS, BS_UART_C4_RDMAS))
-#endif
 
-//! @brief Format value for bitfield UART_C4_RDMAS.
-#define BF_UART_C4_RDMAS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C4_RDMAS), uint8_t) & BM_UART_C4_RDMAS)
+/*! @brief Format value for bitfield UART_C4_RDMAS. */
+#define BF_UART_C4_RDMAS(v)  ((uint8_t)((uint8_t)(v) << BP_UART_C4_RDMAS) & BM_UART_C4_RDMAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDMAS field to a new value.
+/*! @brief Set the RDMAS field to a new value. */
 #define BW_UART_C4_RDMAS(x, v) (BME_BFI8(HW_UART_C4_ADDR(x), ((uint8_t)(v) << BP_UART_C4_RDMAS), BP_UART_C4_RDMAS, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register UART_C4, field TDMAS[7] (RW)
@@ -1983,54 +1734,48 @@ typedef union _hw_uart_c4
  * - 1 - If TIE is set and the TDRE flag is set, the TDRE DMA request signal is
  *     asserted to request a DMA transfer.
  */
-//@{
-#define BP_UART_C4_TDMAS     (7U)          //!< Bit position for UART_C4_TDMAS.
-#define BM_UART_C4_TDMAS     (0x80U)       //!< Bit mask for UART_C4_TDMAS.
-#define BS_UART_C4_TDMAS     (1U)          //!< Bit field size in bits for UART_C4_TDMAS.
+/*@{*/
+#define BP_UART_C4_TDMAS     (7U)          /*!< Bit position for UART_C4_TDMAS. */
+#define BM_UART_C4_TDMAS     (0x80U)       /*!< Bit mask for UART_C4_TDMAS. */
+#define BS_UART_C4_TDMAS     (1U)          /*!< Bit field size in bits for UART_C4_TDMAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the UART_C4_TDMAS field.
+/*! @brief Read current value of the UART_C4_TDMAS field. */
 #define BR_UART_C4_TDMAS(x)  (BME_UBFX8(HW_UART_C4_ADDR(x), BP_UART_C4_TDMAS, BS_UART_C4_TDMAS))
-#endif
 
-//! @brief Format value for bitfield UART_C4_TDMAS.
-#define BF_UART_C4_TDMAS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_UART_C4_TDMAS), uint8_t) & BM_UART_C4_TDMAS)
+/*! @brief Format value for bitfield UART_C4_TDMAS. */
+#define BF_UART_C4_TDMAS(v)  ((uint8_t)((uint8_t)(v) << BP_UART_C4_TDMAS) & BM_UART_C4_TDMAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDMAS field to a new value.
+/*! @brief Set the TDMAS field to a new value. */
 #define BW_UART_C4_TDMAS(x, v) (BME_BFI8(HW_UART_C4_ADDR(x), ((uint8_t)(v) << BP_UART_C4_TDMAS), BP_UART_C4_TDMAS, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_uart_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_uart_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All UART module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_uart
 {
-    __IO hw_uart_bdh_t BDH;                //!< [0x0] UART Baud Rate Register: High
-    __IO hw_uart_bdl_t BDL;                //!< [0x1] UART Baud Rate Register: Low
-    __IO hw_uart_c1_t C1;                  //!< [0x2] UART Control Register 1
-    __IO hw_uart_c2_t C2;                  //!< [0x3] UART Control Register 2
-    __I hw_uart_s1_t S1;                   //!< [0x4] UART Status Register 1
-    __IO hw_uart_s2_t S2;                  //!< [0x5] UART Status Register 2
-    __IO hw_uart_c3_t C3;                  //!< [0x6] UART Control Register 3
-    __IO hw_uart_d_t D;                    //!< [0x7] UART Data Register
-    __IO hw_uart_c4_t C4;                  //!< [0x8] UART Control Register 4
+    __IO hw_uart_bdh_t BDH;                /*!< [0x0] UART Baud Rate Register: High */
+    __IO hw_uart_bdl_t BDL;                /*!< [0x1] UART Baud Rate Register: Low */
+    __IO hw_uart_c1_t C1;                  /*!< [0x2] UART Control Register 1 */
+    __IO hw_uart_c2_t C2;                  /*!< [0x3] UART Control Register 2 */
+    __I hw_uart_s1_t S1;                   /*!< [0x4] UART Status Register 1 */
+    __IO hw_uart_s2_t S2;                  /*!< [0x5] UART Status Register 2 */
+    __IO hw_uart_c3_t C3;                  /*!< [0x6] UART Control Register 3 */
+    __IO hw_uart_d_t D;                    /*!< [0x7] UART Data Register */
+    __IO hw_uart_c4_t C4;                  /*!< [0x8] UART Control Register 4 */
 } hw_uart_t;
 #pragma pack()
 
-//! @brief Macro to access all UART registers.
-//! @param x UART instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_UART(0)</code>.
-#define HW_UART(x)     (*(hw_uart_t *) REGS_UART_BASE(x))
-#endif
+/*! @brief Macro to access all UART registers. */
+/*! @param x UART module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_UART(UART1_BASE)</code>. */
+#define HW_UART(x)     (*(hw_uart_t *)(x))
 
-#endif // __HW_UART_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_UART_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

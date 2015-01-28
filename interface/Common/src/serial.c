@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <RTL.h>
+#include "RTL.h"
 #include "serial.h"
 
 extern OS_ID serial_mailbox;

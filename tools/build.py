@@ -37,6 +37,13 @@ BOOTLOADER_PROJECTS = [
             'targets' : [
                             'lpc11u35_bootloader'
                         ]
+        },
+        {
+            'target' : 'ATSAM3U2C',
+            'path' : r'bootloader\mdk\atsam3u2c\atsam3u2c_bootloader.uvproj',
+            'targets' : [
+                            'ATSAM3U2C_bootloader'
+                        ]
         }
     ]
 
@@ -63,6 +70,9 @@ INTERFACE_PROJECTS = [
                             'k20dx128_k64f_if',
                             'k20dx128_k64f_openSDA_bootloader_if',
                             'k20dx128_k64f_mbed_bootloader_if',
+                            'k20dx128_k22f_if',
+                            'k20dx128_k22f_openSDA_bootloader_if',
+                            'k20dx128_k22f_mbed_bootloader_if',
                             'k20dx128_kl02z_if',
                             'k20dx128_kl02z_openSDA_bootloader_if',
                             'k20dx128_kl02z_mbed_bootloader_if',
@@ -251,7 +261,8 @@ class Builder(object):
 
                 if status != UV4Project.SUCCESS and status != UV4Project.WARNINGS:
                     print("* Error building target %s of %s" % (targetName, projectName))
-                    raise BuildError
+                    # Just build everything for right now
+                    #raise BuildError
 
 
 if __name__ == "__main__":

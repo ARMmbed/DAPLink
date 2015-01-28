@@ -28,12 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <assert.h>
+#include "assert.h"
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
 #include "device/fsl_device_registers.h"
 #include "fsl_platform_status.h"
-#include <string.h>
+#include "string.h"
 
 #if BL_TARGET_FLASH
 
@@ -41,15 +41,8 @@
 #define  FLASH_RUN_COMMAND_FUNCTION_MAX_SIZE  32
 static uint8_t flashRunCommand[FLASH_RUN_COMMAND_FUNCTION_MAX_SIZE];
 //! @brief A function pointer used to point to relocated flash_run_command()
-static void (*callFlashRunCommand)(void);
-
-//! @brief A pointer variable used to point to FTFx_FSTAT register
-//!
-//! We operate this var directly instead of using pre-processed MICRO sentences
-//! in flash_run_comamnd() to make sure that flash_run_command() will be compiled into
-//! position-independent code (PIC).
-typedef volatile uint8_t *ftfx_fstat_t;
-ftfx_fstat_t ftfx_fstat = (ftfx_fstat_t)&HW_FTFx_FSTAT;
+#define FTFx_REG_ACCESS_TYPE  volatile uint8_t *
+static void (*callFlashRunCommand)(FTFx_REG_ACCESS_TYPE);
 
 //! @brief Run flash command
 //!
@@ -57,7 +50,7 @@ ftfx_fstat_t ftfx_fstat = (ftfx_fstat_t)&HW_FTFx_FSTAT;
 //! properly even flash cache is disabled.
 //! It is for flash-resident bootloader only, not technically required for ROM or
 //! flashloader (RAM-resident bootloader).
-void flash_run_command(void)
+void flash_run_command(FTFx_REG_ACCESS_TYPE ftfx_fstat)
 {
     // clear CCIF bit
     *ftfx_fstat = BM_FTFx_FSTAT_CCIF;
@@ -88,7 +81,7 @@ void copy_flash_run_command(void)
     // Since the value of ARM function pointer is always odd, but the real start address
     // of function memory should be even, that's why -1 and +1 operation exist.
     memcpy((void *)flashRunCommand, (void *)((uint32_t)flash_run_command - 1), funcLength);
-    callFlashRunCommand = (void (*)(void))((uint32_t)flashRunCommand + 1);
+    callFlashRunCommand = (void (*)(FTFx_REG_ACCESS_TYPE))((uint32_t)flashRunCommand + 1);
 }
 #endif
 
@@ -108,16 +101,19 @@ void copy_flash_run_command(void)
 status_t flash_command_sequence(void)
 {
     // clear RDCOLERR & ACCERR & FPVIOL flag in flash status register
-    HW_FTFx_FSTAT_WR(BM_FTFx_FSTAT_RDCOLERR | BM_FTFx_FSTAT_ACCERR | BM_FTFx_FSTAT_FPVIOL);
+    HW_FTFx_FSTAT_WR(FTFx_BASE, BM_FTFx_FSTAT_RDCOLERR | BM_FTFx_FSTAT_ACCERR | BM_FTFx_FSTAT_FPVIOL);
 
 #if BL_TARGET_FLASH
-    callFlashRunCommand();
+    // We pass the ftfx_fstat address as a parameter to flash_run_comamnd() instead of using
+    // pre-processed MICRO sentences or operating global variable in flash_run_comamnd()
+    // to make sure that flash_run_command() will be compiled into position-independent code (PIC).
+    callFlashRunCommand((FTFx_REG_ACCESS_TYPE)(&HW_FTFx_FSTAT(FTFx_BASE)));
 #else
     // clear CCIF bit
-    HW_FTFx_FSTAT_WR(BM_FTFx_FSTAT_CCIF);
+    HW_FTFx_FSTAT_WR(FTFx_BASE, BM_FTFx_FSTAT_CCIF);
 
     // check CCIF bit of the flash status register, wait till it is set
-    while (!(HW_FTFx_FSTAT.B.CCIF));
+    while (!(HW_FTFx_FSTAT(FTFx_BASE).B.CCIF));
 #endif
 
     // Check error bits

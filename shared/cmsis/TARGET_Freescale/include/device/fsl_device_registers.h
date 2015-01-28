@@ -579,6 +579,52 @@
     // CMSIS-style register definitions
     #include "device/MKL46Z4/MKL46Z4.h"
 
+#elif (defined(CPU_MK24FN256VDC12))
+
+    #define MK24F25612_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "device/MK24F25612/MK24F25612.h"
+
+    /* Extension register headers. (These will eventually be merged into the CMSIS-style header.) */
+//    #include "device/MK24F25612/MK24F25612_adc.h"
+//    #include "device/MK24F25612/MK24F25612_aips.h"
+//    #include "device/MK24F25612/MK24F25612_cmp.h"
+//    #include "device/MK24F25612/MK24F25612_cmt.h"
+//    #include "device/MK24F25612/MK24F25612_crc.h"
+//    #include "device/MK24F25612/MK24F25612_dac.h"
+//    #include "device/MK24F25612/MK24F25612_dma.h"
+//    #include "device/MK24F25612/MK24F25612_dmamux.h"
+//    #include "device/MK24F25612/MK24F25612_ewm.h"
+    #include "device/MK24F25612/MK24F25612_fmc.h"
+    #include "device/MK24F25612/MK24F25612_ftfa.h"
+//    #include "device/MK24F25612/MK24F25612_ftm.h"
+//    #include "device/MK24F25612/MK24F25612_gpio.h"
+//    #include "device/MK24F25612/MK24F25612_i2c.h"
+//    #include "device/MK24F25612/MK24F25612_i2s.h"
+//    #include "device/MK24F25612/MK24F25612_llwu.h"
+//    #include "device/MK24F25612/MK24F25612_lptmr.h"
+//    #include "device/MK24F25612/MK24F25612_mcg.h"
+    #include "device/MK24F25612/MK24F25612_mcm.h"
+//    #include "device/MK24F25612/MK24F25612_osc.h"
+//    #include "device/MK24F25612/MK24F25612_pdb.h"
+//    #include "device/MK24F25612/MK24F25612_pit.h"
+//    #include "device/MK24F25612/MK24F25612_pmc.h"
+//    #include "device/MK24F25612/MK24F25612_port.h"
+//    #include "device/MK24F25612/MK24F25612_rcm.h"
+//    #include "device/MK24F25612/MK24F25612_rfsys.h"
+//    #include "device/MK24F25612/MK24F25612_rfvbat.h"
+//    #include "device/MK24F25612/MK24F25612_rng.h"
+//    #include "device/MK24F25612/MK24F25612_rtc.h"
+    #include "device/MK24F25612/MK24F25612_sim.h"
+//    #include "device/MK24F25612/MK24F25612_smc.h"
+//    #include "device/MK24F25612/MK24F25612_spi.h"
+//    #include "device/MK24F25612/MK24F25612_uart.h"
+//    #include "device/MK24F25612/MK24F25612_usb.h"
+//    #include "device/MK24F25612/MK24F25612_usbdcd.h"
+//    #include "device/MK24F25612/MK24F25612_vref.h"
+//    #include "device/MK24F25612/MK24F25612_wdog.h"
+
 #else
     #error "No valid CPU defined!"
 #endif

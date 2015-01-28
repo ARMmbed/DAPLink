@@ -21,7 +21,8 @@
 #ifndef __HW_DMA_REGISTERS_H__
 #define __HW_DMA_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL25Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL25Z4 DMA
@@ -31,40 +32,19 @@
  * Registers defined in this header file:
  * - HW_DMA_SARn - Source Address Register
  * - HW_DMA_DARn - Destination Address Register
- * - HW_DMA_DSR - DMA_DSR0 register.
+ * - HW_DMA_DSRn - DMA_DSR0 register.
  * - HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register
  * - HW_DMA_DCRn - DMA Control Register
  *
  * - hw_dma_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_DMA_BASE
-#define HW_DMA_INSTANCE_COUNT (1U) //!< Number of instances of the DMA module.
-#define HW_DMA0 (0U) //!< Instance number for DMA.
-#define REGS_DMA0_BASE (0x40008000U) //!< Base address for DMA.
+#define HW_DMA_INSTANCE_COUNT (1U) /*!< Number of instances of the DMA module. */
 
-//! @brief Table of base addresses for DMA instances.
-static const uint32_t __g_regs_DMA_base_addresses[] = {
-        REGS_DMA0_BASE,
-    };
+/*******************************************************************************
+ * HW_DMA_SARn - Source Address Register
+ ******************************************************************************/
 
-//! @brief Get the base address of DMA by instance number.
-//! @param x DMA instance number, from 0 through 0.
-#define REGS_DMA_BASE(x) (__g_regs_DMA_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of DMA.
-#define REGS_DMA_INSTANCE(b) ((b) == REGS_DMA0_BASE ? HW_DMA0 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DMA_SARn - Source Address Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DMA_SARn - Source Address Register (RW)
  *
@@ -82,28 +62,25 @@ typedef union _hw_dma_sarn
     uint32_t U;
     struct _hw_dma_sarn_bitfields
     {
-        uint32_t SAR : 32;             //!< [31:0]
+        uint32_t SAR : 32;             /*!< [31:0]  */
     } B;
 } hw_dma_sarn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DMA_SARn register
  */
-//@{
+/*@{*/
 #define HW_DMA_SARn_COUNT (4U)
 
-#define HW_DMA_SARn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x100U + (0x10U * n))
+#define HW_DMA_SARn_ADDR(x, n)   ((x) + 0x100U + (0x10U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_DMA_SARn(x, n)        (*(__IO hw_dma_sarn_t *) HW_DMA_SARn_ADDR(x, n))
 #define HW_DMA_SARn_RD(x, n)     (HW_DMA_SARn(x, n).U)
 #define HW_DMA_SARn_WR(x, n, v)  (HW_DMA_SARn(x, n).U = (v))
 #define HW_DMA_SARn_SET(x, n, v) (BME_OR32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(v)))
 #define HW_DMA_SARn_CLR(x, n, v) (BME_AND32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_DMA_SARn_TOG(x, n, v) (BME_XOR32(HW_DMA_SARn_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual DMA_SARn bitfields
@@ -121,29 +98,24 @@ typedef union _hw_dma_sarn
  * the allowed values, bits 31-20 read back as the written value. After being
  * written with any other value, bits 31-20 read back as an indeterminate value.
  */
-//@{
-#define BP_DMA_SARn_SAR      (0U)          //!< Bit position for DMA_SARn_SAR.
-#define BM_DMA_SARn_SAR      (0xFFFFFFFFU) //!< Bit mask for DMA_SARn_SAR.
-#define BS_DMA_SARn_SAR      (32U)         //!< Bit field size in bits for DMA_SARn_SAR.
+/*@{*/
+#define BP_DMA_SARn_SAR      (0U)          /*!< Bit position for DMA_SARn_SAR. */
+#define BM_DMA_SARn_SAR      (0xFFFFFFFFU) /*!< Bit mask for DMA_SARn_SAR. */
+#define BS_DMA_SARn_SAR      (32U)         /*!< Bit field size in bits for DMA_SARn_SAR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_SARn_SAR field.
-#define BR_DMA_SARn_SAR(x, n) (BME_UBFX32(HW_DMA_SARn_ADDR(x, n), BP_DMA_SARn_SAR, BS_DMA_SARn_SAR))
-#endif
+/*! @brief Read current value of the DMA_SARn_SAR field. */
+#define BR_DMA_SARn_SAR(x, n) (HW_DMA_SARn(x, n).U)
 
-//! @brief Format value for bitfield DMA_SARn_SAR.
-#define BF_DMA_SARn_SAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_SARn_SAR), uint32_t) & BM_DMA_SARn_SAR)
+/*! @brief Format value for bitfield DMA_SARn_SAR. */
+#define BF_DMA_SARn_SAR(v)   ((uint32_t)((uint32_t)(v) << BP_DMA_SARn_SAR) & BM_DMA_SARn_SAR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SAR field to a new value.
-#define BW_DMA_SARn_SAR(x, n, v) (BME_BFI32(HW_DMA_SARn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_SARn_SAR), BP_DMA_SARn_SAR, 32))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DARn - Destination Address Register
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the SAR field to a new value. */
+#define BW_DMA_SARn_SAR(x, n, v) (HW_DMA_SARn_WR(x, n, v))
+/*@}*/
+/*******************************************************************************
+ * HW_DMA_DARn - Destination Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DMA_DARn - Destination Address Register (RW)
  *
@@ -161,28 +133,25 @@ typedef union _hw_dma_darn
     uint32_t U;
     struct _hw_dma_darn_bitfields
     {
-        uint32_t DAR : 32;             //!< [31:0]
+        uint32_t DAR : 32;             /*!< [31:0]  */
     } B;
 } hw_dma_darn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DMA_DARn register
  */
-//@{
+/*@{*/
 #define HW_DMA_DARn_COUNT (4U)
 
-#define HW_DMA_DARn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x104U + (0x10U * n))
+#define HW_DMA_DARn_ADDR(x, n)   ((x) + 0x104U + (0x10U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_DMA_DARn(x, n)        (*(__IO hw_dma_darn_t *) HW_DMA_DARn_ADDR(x, n))
 #define HW_DMA_DARn_RD(x, n)     (HW_DMA_DARn(x, n).U)
 #define HW_DMA_DARn_WR(x, n, v)  (HW_DMA_DARn(x, n).U = (v))
 #define HW_DMA_DARn_SET(x, n, v) (BME_OR32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(v)))
 #define HW_DMA_DARn_CLR(x, n, v) (BME_AND32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_DMA_DARn_TOG(x, n, v) (BME_XOR32(HW_DMA_DARn_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual DMA_DARn bitfields
@@ -201,70 +170,61 @@ typedef union _hw_dma_darn
  * being written with any other value, bits 31-20 read back as an indeterminate
  * value.
  */
-//@{
-#define BP_DMA_DARn_DAR      (0U)          //!< Bit position for DMA_DARn_DAR.
-#define BM_DMA_DARn_DAR      (0xFFFFFFFFU) //!< Bit mask for DMA_DARn_DAR.
-#define BS_DMA_DARn_DAR      (32U)         //!< Bit field size in bits for DMA_DARn_DAR.
+/*@{*/
+#define BP_DMA_DARn_DAR      (0U)          /*!< Bit position for DMA_DARn_DAR. */
+#define BM_DMA_DARn_DAR      (0xFFFFFFFFU) /*!< Bit mask for DMA_DARn_DAR. */
+#define BS_DMA_DARn_DAR      (32U)         /*!< Bit field size in bits for DMA_DARn_DAR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DARn_DAR field.
-#define BR_DMA_DARn_DAR(x, n) (BME_UBFX32(HW_DMA_DARn_ADDR(x, n), BP_DMA_DARn_DAR, BS_DMA_DARn_DAR))
-#endif
+/*! @brief Read current value of the DMA_DARn_DAR field. */
+#define BR_DMA_DARn_DAR(x, n) (HW_DMA_DARn(x, n).U)
 
-//! @brief Format value for bitfield DMA_DARn_DAR.
-#define BF_DMA_DARn_DAR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DARn_DAR), uint32_t) & BM_DMA_DARn_DAR)
+/*! @brief Format value for bitfield DMA_DARn_DAR. */
+#define BF_DMA_DARn_DAR(v)   ((uint32_t)((uint32_t)(v) << BP_DMA_DARn_DAR) & BM_DMA_DARn_DAR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DAR field to a new value.
-#define BW_DMA_DARn_DAR(x, n, v) (BME_BFI32(HW_DMA_DARn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DARn_DAR), BP_DMA_DARn_DAR, 32))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DSR - DMA_DSR0 register.
-//-------------------------------------------------------------------------------------------
+/*! @brief Set the DAR field to a new value. */
+#define BW_DMA_DARn_DAR(x, n, v) (HW_DMA_DARn_WR(x, n, v))
+/*@}*/
+/*******************************************************************************
+ * HW_DMA_DSRn - DMA_DSR0 register.
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DMA_DSR - DMA_DSR0 register. (RW)
+ * @brief HW_DMA_DSRn - DMA_DSR0 register. (RW)
  *
  * Reset value: 0x00U
  */
-typedef union _hw_dma_dsr
+typedef union _hw_dma_dsrn
 {
     uint8_t U;
-    struct _hw_dma_dsr_bitfields
+    struct _hw_dma_dsrn_bitfields
     {
-        uint8_t RESERVED0 : 8;         //!< [7:0]
+        uint8_t RESERVED0 : 8;         /*!< [7:0]  */
     } B;
-} hw_dma_dsr_t;
-#endif
+} hw_dma_dsrn_t;
 
 /*!
- * @name Constants and macros for entire DMA_DSR register
+ * @name Constants and macros for entire DMA_DSRn register
  */
-//@{
-#define HW_DMA_DSR_COUNT (4U)
+/*@{*/
+#define HW_DMA_DSRn_COUNT (4U)
 
-#define HW_DMA_DSR_ADDR(x, n)    (REGS_DMA_BASE(x) + 0x10BU + (0x10U * n))
+#define HW_DMA_DSRn_ADDR(x, n)   ((x) + 0x10BU + (0x10U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DMA_DSR(x, n)         (*(__IO hw_dma_dsr_t *) HW_DMA_DSR_ADDR(x, n))
-#define HW_DMA_DSR_RD(x, n)      (HW_DMA_DSR(x, n).U)
-#define HW_DMA_DSR_WR(x, n, v)   (HW_DMA_DSR(x, n).U = (v))
-#define HW_DMA_DSR_SET(x, n, v)  (BME_OR8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(v)))
-#define HW_DMA_DSR_CLR(x, n, v)  (BME_AND8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(~(v))))
-#define HW_DMA_DSR_TOG(x, n, v)  (BME_XOR8(HW_DMA_DSR_ADDR(x, n), (uint8_t)(v)))
-#endif
-//@}
+#define HW_DMA_DSRn(x, n)        (*(__IO hw_dma_dsrn_t *) HW_DMA_DSRn_ADDR(x, n))
+#define HW_DMA_DSRn_RD(x, n)     (HW_DMA_DSRn(x, n).U)
+#define HW_DMA_DSRn_WR(x, n, v)  (HW_DMA_DSRn(x, n).U = (v))
+#define HW_DMA_DSRn_SET(x, n, v) (BME_OR8(HW_DMA_DSRn_ADDR(x, n), (uint8_t)(v)))
+#define HW_DMA_DSRn_CLR(x, n, v) (BME_AND8(HW_DMA_DSRn_ADDR(x, n), (uint8_t)(~(v))))
+#define HW_DMA_DSRn_TOG(x, n, v) (BME_XOR8(HW_DMA_DSRn_ADDR(x, n), (uint8_t)(v)))
+/*@}*/
 
 /*
- * Constants & macros for individual DMA_DSR bitfields
+ * Constants & macros for individual DMA_DSRn bitfields
  */
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DMA_DSR_BCRn - DMA Status Register / Byte Count Register (RW)
  *
@@ -287,36 +247,33 @@ typedef union _hw_dma_dsr_bcrn
     uint32_t U;
     struct _hw_dma_dsr_bcrn_bitfields
     {
-        uint32_t BCR : 24;             //!< [23:0]
-        uint32_t DONE : 1;             //!< [24] Transactions done
-        uint32_t BSY : 1;              //!< [25] Busy
-        uint32_t REQ : 1;              //!< [26] Request
-        uint32_t RESERVED0 : 1;        //!< [27]
-        uint32_t BED : 1;              //!< [28] Bus error on destination
-        uint32_t BES : 1;              //!< [29] Bus error on source
-        uint32_t CE : 1;               //!< [30] Configuration error
-        uint32_t RESERVED1 : 1;        //!< [31]
+        uint32_t BCR : 24;             /*!< [23:0]  */
+        uint32_t DONE : 1;             /*!< [24] Transactions done */
+        uint32_t BSY : 1;              /*!< [25] Busy */
+        uint32_t REQ : 1;              /*!< [26] Request */
+        uint32_t RESERVED0 : 1;        /*!< [27]  */
+        uint32_t BED : 1;              /*!< [28] Bus error on destination */
+        uint32_t BES : 1;              /*!< [29] Bus error on source */
+        uint32_t CE : 1;               /*!< [30] Configuration error */
+        uint32_t RESERVED1 : 1;        /*!< [31]  */
     } B;
 } hw_dma_dsr_bcrn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DMA_DSR_BCRn register
  */
-//@{
+/*@{*/
 #define HW_DMA_DSR_BCRn_COUNT (4U)
 
-#define HW_DMA_DSR_BCRn_ADDR(x, n) (REGS_DMA_BASE(x) + 0x108U + (0x10U * n))
+#define HW_DMA_DSR_BCRn_ADDR(x, n) ((x) + 0x108U + (0x10U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_DMA_DSR_BCRn(x, n)    (*(__IO hw_dma_dsr_bcrn_t *) HW_DMA_DSR_BCRn_ADDR(x, n))
 #define HW_DMA_DSR_BCRn_RD(x, n) (HW_DMA_DSR_BCRn(x, n).U)
 #define HW_DMA_DSR_BCRn_WR(x, n, v) (HW_DMA_DSR_BCRn(x, n).U = (v))
 #define HW_DMA_DSR_BCRn_SET(x, n, v) (BME_OR32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(v)))
 #define HW_DMA_DSR_BCRn_CLR(x, n, v) (BME_AND32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_DMA_DSR_BCRn_TOG(x, n, v) (BME_XOR32(HW_DMA_DSR_BCRn_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual DMA_DSR_BCRn bitfields
@@ -332,24 +289,20 @@ typedef union _hw_dma_dsr_bcrn
  * when the channel starts to execute. After being written with a value in this
  * range, bits 23-20 of BCR read back as 1111b.
  */
-//@{
-#define BP_DMA_DSR_BCRn_BCR  (0U)          //!< Bit position for DMA_DSR_BCRn_BCR.
-#define BM_DMA_DSR_BCRn_BCR  (0x00FFFFFFU) //!< Bit mask for DMA_DSR_BCRn_BCR.
-#define BS_DMA_DSR_BCRn_BCR  (24U)         //!< Bit field size in bits for DMA_DSR_BCRn_BCR.
+/*@{*/
+#define BP_DMA_DSR_BCRn_BCR  (0U)          /*!< Bit position for DMA_DSR_BCRn_BCR. */
+#define BM_DMA_DSR_BCRn_BCR  (0x00FFFFFFU) /*!< Bit mask for DMA_DSR_BCRn_BCR. */
+#define BS_DMA_DSR_BCRn_BCR  (24U)         /*!< Bit field size in bits for DMA_DSR_BCRn_BCR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_BCR field.
-#define BR_DMA_DSR_BCRn_BCR(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BCR, BS_DMA_DSR_BCRn_BCR))
-#endif
+/*! @brief Read current value of the DMA_DSR_BCRn_BCR field. */
+#define BR_DMA_DSR_BCRn_BCR(x, n) (HW_DMA_DSR_BCRn(x, n).B.BCR)
 
-//! @brief Format value for bitfield DMA_DSR_BCRn_BCR.
-#define BF_DMA_DSR_BCRn_BCR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCRn_BCR), uint32_t) & BM_DMA_DSR_BCRn_BCR)
+/*! @brief Format value for bitfield DMA_DSR_BCRn_BCR. */
+#define BF_DMA_DSR_BCRn_BCR(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DSR_BCRn_BCR) & BM_DMA_DSR_BCRn_BCR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BCR field to a new value.
-#define BW_DMA_DSR_BCRn_BCR(x, n, v) (BME_BFI32(HW_DMA_DSR_BCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DSR_BCRn_BCR), BP_DMA_DSR_BCRn_BCR, 24))
-#endif
-//@}
+/*! @brief Set the BCR field to a new value. */
+#define BW_DMA_DSR_BCRn_BCR(x, n, v) (HW_DMA_DSR_BCRn_WR(x, n, (HW_DMA_DSR_BCRn_RD(x, n) & ~BM_DMA_DSR_BCRn_BCR) | BF_DMA_DSR_BCRn_BCR(v)))
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field DONE[24] (W1C)
@@ -366,24 +319,20 @@ typedef union _hw_dma_dsr_bcrn
  *     bits and should be used in an interrupt service routine to clear the DMA
  *     interrupt and error bits.
  */
-//@{
-#define BP_DMA_DSR_BCRn_DONE (24U)         //!< Bit position for DMA_DSR_BCRn_DONE.
-#define BM_DMA_DSR_BCRn_DONE (0x01000000U) //!< Bit mask for DMA_DSR_BCRn_DONE.
-#define BS_DMA_DSR_BCRn_DONE (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_DONE.
+/*@{*/
+#define BP_DMA_DSR_BCRn_DONE (24U)         /*!< Bit position for DMA_DSR_BCRn_DONE. */
+#define BM_DMA_DSR_BCRn_DONE (0x01000000U) /*!< Bit mask for DMA_DSR_BCRn_DONE. */
+#define BS_DMA_DSR_BCRn_DONE (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_DONE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_DONE field.
+/*! @brief Read current value of the DMA_DSR_BCRn_DONE field. */
 #define BR_DMA_DSR_BCRn_DONE(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_DONE, BS_DMA_DSR_BCRn_DONE))
-#endif
 
-//! @brief Format value for bitfield DMA_DSR_BCRn_DONE.
-#define BF_DMA_DSR_BCRn_DONE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DSR_BCRn_DONE), uint32_t) & BM_DMA_DSR_BCRn_DONE)
+/*! @brief Format value for bitfield DMA_DSR_BCRn_DONE. */
+#define BF_DMA_DSR_BCRn_DONE(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DSR_BCRn_DONE) & BM_DMA_DSR_BCRn_DONE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DONE field to a new value.
+/*! @brief Set the DONE field to a new value. */
 #define BW_DMA_DSR_BCRn_DONE(x, n, v) (BME_BFI32(HW_DMA_DSR_BCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DSR_BCRn_DONE), BP_DMA_DSR_BCRn_DONE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field BSY[25] (RO)
@@ -394,16 +343,14 @@ typedef union _hw_dma_dsr_bcrn
  * - 1 - BSY is set the first time the channel is enabled after a transfer is
  *     initiated.
  */
-//@{
-#define BP_DMA_DSR_BCRn_BSY  (25U)         //!< Bit position for DMA_DSR_BCRn_BSY.
-#define BM_DMA_DSR_BCRn_BSY  (0x02000000U) //!< Bit mask for DMA_DSR_BCRn_BSY.
-#define BS_DMA_DSR_BCRn_BSY  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BSY.
+/*@{*/
+#define BP_DMA_DSR_BCRn_BSY  (25U)         /*!< Bit position for DMA_DSR_BCRn_BSY. */
+#define BM_DMA_DSR_BCRn_BSY  (0x02000000U) /*!< Bit mask for DMA_DSR_BCRn_BSY. */
+#define BS_DMA_DSR_BCRn_BSY  (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_BSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_BSY field.
+/*! @brief Read current value of the DMA_DSR_BCRn_BSY field. */
 #define BR_DMA_DSR_BCRn_BSY(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BSY, BS_DMA_DSR_BCRn_BSY))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field REQ[26] (RO)
@@ -414,16 +361,14 @@ typedef union _hw_dma_dsr_bcrn
  * - 1 - The DMA channel has a transfer remaining and the channel is not
  *     selected.
  */
-//@{
-#define BP_DMA_DSR_BCRn_REQ  (26U)         //!< Bit position for DMA_DSR_BCRn_REQ.
-#define BM_DMA_DSR_BCRn_REQ  (0x04000000U) //!< Bit mask for DMA_DSR_BCRn_REQ.
-#define BS_DMA_DSR_BCRn_REQ  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_REQ.
+/*@{*/
+#define BP_DMA_DSR_BCRn_REQ  (26U)         /*!< Bit position for DMA_DSR_BCRn_REQ. */
+#define BM_DMA_DSR_BCRn_REQ  (0x04000000U) /*!< Bit mask for DMA_DSR_BCRn_REQ. */
+#define BS_DMA_DSR_BCRn_REQ  (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_REQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_REQ field.
+/*! @brief Read current value of the DMA_DSR_BCRn_REQ field. */
 #define BR_DMA_DSR_BCRn_REQ(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_REQ, BS_DMA_DSR_BCRn_REQ))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field BED[28] (RO)
@@ -435,16 +380,14 @@ typedef union _hw_dma_dsr_bcrn
  * - 1 - The DMA channel terminated with a bus error during the write portion of
  *     a transfer.
  */
-//@{
-#define BP_DMA_DSR_BCRn_BED  (28U)         //!< Bit position for DMA_DSR_BCRn_BED.
-#define BM_DMA_DSR_BCRn_BED  (0x10000000U) //!< Bit mask for DMA_DSR_BCRn_BED.
-#define BS_DMA_DSR_BCRn_BED  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BED.
+/*@{*/
+#define BP_DMA_DSR_BCRn_BED  (28U)         /*!< Bit position for DMA_DSR_BCRn_BED. */
+#define BM_DMA_DSR_BCRn_BED  (0x10000000U) /*!< Bit mask for DMA_DSR_BCRn_BED. */
+#define BS_DMA_DSR_BCRn_BED  (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_BED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_BED field.
+/*! @brief Read current value of the DMA_DSR_BCRn_BED field. */
 #define BR_DMA_DSR_BCRn_BED(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BED, BS_DMA_DSR_BCRn_BED))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field BES[29] (RO)
@@ -456,16 +399,14 @@ typedef union _hw_dma_dsr_bcrn
  * - 1 - The DMA channel terminated with a bus error during the read portion of
  *     a transfer.
  */
-//@{
-#define BP_DMA_DSR_BCRn_BES  (29U)         //!< Bit position for DMA_DSR_BCRn_BES.
-#define BM_DMA_DSR_BCRn_BES  (0x20000000U) //!< Bit mask for DMA_DSR_BCRn_BES.
-#define BS_DMA_DSR_BCRn_BES  (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_BES.
+/*@{*/
+#define BP_DMA_DSR_BCRn_BES  (29U)         /*!< Bit position for DMA_DSR_BCRn_BES. */
+#define BM_DMA_DSR_BCRn_BES  (0x20000000U) /*!< Bit mask for DMA_DSR_BCRn_BES. */
+#define BS_DMA_DSR_BCRn_BES  (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_BES. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_BES field.
+/*! @brief Read current value of the DMA_DSR_BCRn_BES field. */
 #define BR_DMA_DSR_BCRn_BES(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_BES, BS_DMA_DSR_BCRn_BES))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DSR_BCRn, field CE[30] (RO)
@@ -481,21 +422,18 @@ typedef union _hw_dma_dsr_bcrn
  * - 0 - No configuration error exists.
  * - 1 - A configuration error has occurred.
  */
-//@{
-#define BP_DMA_DSR_BCRn_CE   (30U)         //!< Bit position for DMA_DSR_BCRn_CE.
-#define BM_DMA_DSR_BCRn_CE   (0x40000000U) //!< Bit mask for DMA_DSR_BCRn_CE.
-#define BS_DMA_DSR_BCRn_CE   (1U)          //!< Bit field size in bits for DMA_DSR_BCRn_CE.
+/*@{*/
+#define BP_DMA_DSR_BCRn_CE   (30U)         /*!< Bit position for DMA_DSR_BCRn_CE. */
+#define BM_DMA_DSR_BCRn_CE   (0x40000000U) /*!< Bit mask for DMA_DSR_BCRn_CE. */
+#define BS_DMA_DSR_BCRn_CE   (1U)          /*!< Bit field size in bits for DMA_DSR_BCRn_CE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DSR_BCRn_CE field.
+/*! @brief Read current value of the DMA_DSR_BCRn_CE field. */
 #define BR_DMA_DSR_BCRn_CE(x, n) (BME_UBFX32(HW_DMA_DSR_BCRn_ADDR(x, n), BP_DMA_DSR_BCRn_CE, BS_DMA_DSR_BCRn_CE))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_DMA_DCRn - DMA Control Register
-//-------------------------------------------------------------------------------------------
+/*@}*/
+/*******************************************************************************
+ * HW_DMA_DCRn - DMA Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DMA_DCRn - DMA Control Register (RW)
  *
@@ -506,46 +444,43 @@ typedef union _hw_dma_dcrn
     uint32_t U;
     struct _hw_dma_dcrn_bitfields
     {
-        uint32_t LCH2 : 2;             //!< [1:0] Link channel 2
-        uint32_t LCH1 : 2;             //!< [3:2] Link channel 1
-        uint32_t LINKCC : 2;           //!< [5:4] Link channel control
-        uint32_t RESERVED0 : 1;        //!< [6]
-        uint32_t D_REQ : 1;            //!< [7] Disable request
-        uint32_t DMOD : 4;             //!< [11:8] Destination address modulo
-        uint32_t SMOD : 4;             //!< [15:12] Source address modulo
-        uint32_t START : 1;            //!< [16] Start transfer
-        uint32_t DSIZE : 2;            //!< [18:17] Destination size
-        uint32_t DINC : 1;             //!< [19] Destination increment
-        uint32_t SSIZE : 2;            //!< [21:20] Source size
-        uint32_t SINC : 1;             //!< [22] Source increment
-        uint32_t EADREQ : 1;           //!< [23] Enable asynchronous DMA requests
-        uint32_t RESERVED1 : 4;        //!< [27:24]
-        uint32_t AA : 1;               //!< [28] Auto-align
-        uint32_t CS : 1;               //!< [29] Cycle steal
-        uint32_t ERQ : 1;              //!< [30] Enable peripheral request
-        uint32_t EINT : 1;             //!< [31] Enable interrupt on completion of
-                                       //! transfer
+        uint32_t LCH2 : 2;             /*!< [1:0] Link channel 2 */
+        uint32_t LCH1 : 2;             /*!< [3:2] Link channel 1 */
+        uint32_t LINKCC : 2;           /*!< [5:4] Link channel control */
+        uint32_t RESERVED0 : 1;        /*!< [6]  */
+        uint32_t D_REQ : 1;            /*!< [7] Disable request */
+        uint32_t DMOD : 4;             /*!< [11:8] Destination address modulo */
+        uint32_t SMOD : 4;             /*!< [15:12] Source address modulo */
+        uint32_t START : 1;            /*!< [16] Start transfer */
+        uint32_t DSIZE : 2;            /*!< [18:17] Destination size */
+        uint32_t DINC : 1;             /*!< [19] Destination increment */
+        uint32_t SSIZE : 2;            /*!< [21:20] Source size */
+        uint32_t SINC : 1;             /*!< [22] Source increment */
+        uint32_t EADREQ : 1;           /*!< [23] Enable asynchronous DMA requests */
+        uint32_t RESERVED1 : 4;        /*!< [27:24]  */
+        uint32_t AA : 1;               /*!< [28] Auto-align */
+        uint32_t CS : 1;               /*!< [29] Cycle steal */
+        uint32_t ERQ : 1;              /*!< [30] Enable peripheral request */
+        uint32_t EINT : 1;             /*!< [31] Enable interrupt on completion of
+                                        * transfer */
     } B;
 } hw_dma_dcrn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DMA_DCRn register
  */
-//@{
+/*@{*/
 #define HW_DMA_DCRn_COUNT (4U)
 
-#define HW_DMA_DCRn_ADDR(x, n)   (REGS_DMA_BASE(x) + 0x10CU + (0x10U * n))
+#define HW_DMA_DCRn_ADDR(x, n)   ((x) + 0x10CU + (0x10U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_DMA_DCRn(x, n)        (*(__IO hw_dma_dcrn_t *) HW_DMA_DCRn_ADDR(x, n))
 #define HW_DMA_DCRn_RD(x, n)     (HW_DMA_DCRn(x, n).U)
 #define HW_DMA_DCRn_WR(x, n, v)  (HW_DMA_DCRn(x, n).U = (v))
 #define HW_DMA_DCRn_SET(x, n, v) (BME_OR32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(v)))
 #define HW_DMA_DCRn_CLR(x, n, v) (BME_AND32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_DMA_DCRn_TOG(x, n, v) (BME_XOR32(HW_DMA_DCRn_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual DMA_DCRn bitfields
@@ -564,24 +499,20 @@ typedef union _hw_dma_dcrn
  * - 10 - DMA Channel 2
  * - 11 - DMA Channel 3
  */
-//@{
-#define BP_DMA_DCRn_LCH2     (0U)          //!< Bit position for DMA_DCRn_LCH2.
-#define BM_DMA_DCRn_LCH2     (0x00000003U) //!< Bit mask for DMA_DCRn_LCH2.
-#define BS_DMA_DCRn_LCH2     (2U)          //!< Bit field size in bits for DMA_DCRn_LCH2.
+/*@{*/
+#define BP_DMA_DCRn_LCH2     (0U)          /*!< Bit position for DMA_DCRn_LCH2. */
+#define BM_DMA_DCRn_LCH2     (0x00000003U) /*!< Bit mask for DMA_DCRn_LCH2. */
+#define BS_DMA_DCRn_LCH2     (2U)          /*!< Bit field size in bits for DMA_DCRn_LCH2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_LCH2 field.
+/*! @brief Read current value of the DMA_DCRn_LCH2 field. */
 #define BR_DMA_DCRn_LCH2(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LCH2, BS_DMA_DCRn_LCH2))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_LCH2.
-#define BF_DMA_DCRn_LCH2(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LCH2), uint32_t) & BM_DMA_DCRn_LCH2)
+/*! @brief Format value for bitfield DMA_DCRn_LCH2. */
+#define BF_DMA_DCRn_LCH2(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_LCH2) & BM_DMA_DCRn_LCH2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH2 field to a new value.
+/*! @brief Set the LCH2 field to a new value. */
 #define BW_DMA_DCRn_LCH2(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LCH2), BP_DMA_DCRn_LCH2, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field LCH1[3:2] (RW)
@@ -596,24 +527,20 @@ typedef union _hw_dma_dcrn
  * - 10 - DMA Channel 2
  * - 11 - DMA Channel 3
  */
-//@{
-#define BP_DMA_DCRn_LCH1     (2U)          //!< Bit position for DMA_DCRn_LCH1.
-#define BM_DMA_DCRn_LCH1     (0x0000000CU) //!< Bit mask for DMA_DCRn_LCH1.
-#define BS_DMA_DCRn_LCH1     (2U)          //!< Bit field size in bits for DMA_DCRn_LCH1.
+/*@{*/
+#define BP_DMA_DCRn_LCH1     (2U)          /*!< Bit position for DMA_DCRn_LCH1. */
+#define BM_DMA_DCRn_LCH1     (0x0000000CU) /*!< Bit mask for DMA_DCRn_LCH1. */
+#define BS_DMA_DCRn_LCH1     (2U)          /*!< Bit field size in bits for DMA_DCRn_LCH1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_LCH1 field.
+/*! @brief Read current value of the DMA_DCRn_LCH1 field. */
 #define BR_DMA_DCRn_LCH1(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LCH1, BS_DMA_DCRn_LCH1))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_LCH1.
-#define BF_DMA_DCRn_LCH1(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LCH1), uint32_t) & BM_DMA_DCRn_LCH1)
+/*! @brief Format value for bitfield DMA_DCRn_LCH1. */
+#define BF_DMA_DCRn_LCH1(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_LCH1) & BM_DMA_DCRn_LCH1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCH1 field to a new value.
+/*! @brief Set the LCH1 field to a new value. */
 #define BW_DMA_DCRn_LCH1(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LCH1), BP_DMA_DCRn_LCH1, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field LINKCC[5:4] (RW)
@@ -633,24 +560,20 @@ typedef union _hw_dma_dcrn
  * - 10 - Perform a link to channel LCH1 after each cycle-steal transfer
  * - 11 - Perform a link to channel LCH1 after the BCR decrements to zero
  */
-//@{
-#define BP_DMA_DCRn_LINKCC   (4U)          //!< Bit position for DMA_DCRn_LINKCC.
-#define BM_DMA_DCRn_LINKCC   (0x00000030U) //!< Bit mask for DMA_DCRn_LINKCC.
-#define BS_DMA_DCRn_LINKCC   (2U)          //!< Bit field size in bits for DMA_DCRn_LINKCC.
+/*@{*/
+#define BP_DMA_DCRn_LINKCC   (4U)          /*!< Bit position for DMA_DCRn_LINKCC. */
+#define BM_DMA_DCRn_LINKCC   (0x00000030U) /*!< Bit mask for DMA_DCRn_LINKCC. */
+#define BS_DMA_DCRn_LINKCC   (2U)          /*!< Bit field size in bits for DMA_DCRn_LINKCC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_LINKCC field.
+/*! @brief Read current value of the DMA_DCRn_LINKCC field. */
 #define BR_DMA_DCRn_LINKCC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_LINKCC, BS_DMA_DCRn_LINKCC))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_LINKCC.
-#define BF_DMA_DCRn_LINKCC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_LINKCC), uint32_t) & BM_DMA_DCRn_LINKCC)
+/*! @brief Format value for bitfield DMA_DCRn_LINKCC. */
+#define BF_DMA_DCRn_LINKCC(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_LINKCC) & BM_DMA_DCRn_LINKCC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINKCC field to a new value.
+/*! @brief Set the LINKCC field to a new value. */
 #define BW_DMA_DCRn_LINKCC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_LINKCC), BP_DMA_DCRn_LINKCC, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field D_REQ[7] (RW)
@@ -662,24 +585,20 @@ typedef union _hw_dma_dcrn
  * - 0 - ERQ bit is not affected.
  * - 1 - ERQ bit is cleared when the BCR is exhausted.
  */
-//@{
-#define BP_DMA_DCRn_D_REQ    (7U)          //!< Bit position for DMA_DCRn_D_REQ.
-#define BM_DMA_DCRn_D_REQ    (0x00000080U) //!< Bit mask for DMA_DCRn_D_REQ.
-#define BS_DMA_DCRn_D_REQ    (1U)          //!< Bit field size in bits for DMA_DCRn_D_REQ.
+/*@{*/
+#define BP_DMA_DCRn_D_REQ    (7U)          /*!< Bit position for DMA_DCRn_D_REQ. */
+#define BM_DMA_DCRn_D_REQ    (0x00000080U) /*!< Bit mask for DMA_DCRn_D_REQ. */
+#define BS_DMA_DCRn_D_REQ    (1U)          /*!< Bit field size in bits for DMA_DCRn_D_REQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_D_REQ field.
+/*! @brief Read current value of the DMA_DCRn_D_REQ field. */
 #define BR_DMA_DCRn_D_REQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_D_REQ, BS_DMA_DCRn_D_REQ))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_D_REQ.
-#define BF_DMA_DCRn_D_REQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_D_REQ), uint32_t) & BM_DMA_DCRn_D_REQ)
+/*! @brief Format value for bitfield DMA_DCRn_D_REQ. */
+#define BF_DMA_DCRn_D_REQ(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_D_REQ) & BM_DMA_DCRn_D_REQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the D_REQ field to a new value.
+/*! @brief Set the D_REQ field to a new value. */
 #define BW_DMA_DCRn_D_REQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_D_REQ), BP_DMA_DCRn_D_REQ, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field DMOD[11:8] (RW)
@@ -710,24 +629,20 @@ typedef union _hw_dma_dcrn
  * - 1110 - Circular buffer size is 128 KB
  * - 1111 - Circular buffer size is 256 KB
  */
-//@{
-#define BP_DMA_DCRn_DMOD     (8U)          //!< Bit position for DMA_DCRn_DMOD.
-#define BM_DMA_DCRn_DMOD     (0x00000F00U) //!< Bit mask for DMA_DCRn_DMOD.
-#define BS_DMA_DCRn_DMOD     (4U)          //!< Bit field size in bits for DMA_DCRn_DMOD.
+/*@{*/
+#define BP_DMA_DCRn_DMOD     (8U)          /*!< Bit position for DMA_DCRn_DMOD. */
+#define BM_DMA_DCRn_DMOD     (0x00000F00U) /*!< Bit mask for DMA_DCRn_DMOD. */
+#define BS_DMA_DCRn_DMOD     (4U)          /*!< Bit field size in bits for DMA_DCRn_DMOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_DMOD field.
+/*! @brief Read current value of the DMA_DCRn_DMOD field. */
 #define BR_DMA_DCRn_DMOD(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DMOD, BS_DMA_DCRn_DMOD))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_DMOD.
-#define BF_DMA_DCRn_DMOD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DMOD), uint32_t) & BM_DMA_DCRn_DMOD)
+/*! @brief Format value for bitfield DMA_DCRn_DMOD. */
+#define BF_DMA_DCRn_DMOD(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_DMOD) & BM_DMA_DCRn_DMOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMOD field to a new value.
+/*! @brief Set the DMOD field to a new value. */
 #define BW_DMA_DCRn_DMOD(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DMOD), BP_DMA_DCRn_DMOD, 4))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field SMOD[15:12] (RW)
@@ -758,24 +673,20 @@ typedef union _hw_dma_dcrn
  * - 1110 - Circular buffer size is 128 KB
  * - 1111 - Circular buffer size is 256 KB
  */
-//@{
-#define BP_DMA_DCRn_SMOD     (12U)         //!< Bit position for DMA_DCRn_SMOD.
-#define BM_DMA_DCRn_SMOD     (0x0000F000U) //!< Bit mask for DMA_DCRn_SMOD.
-#define BS_DMA_DCRn_SMOD     (4U)          //!< Bit field size in bits for DMA_DCRn_SMOD.
+/*@{*/
+#define BP_DMA_DCRn_SMOD     (12U)         /*!< Bit position for DMA_DCRn_SMOD. */
+#define BM_DMA_DCRn_SMOD     (0x0000F000U) /*!< Bit mask for DMA_DCRn_SMOD. */
+#define BS_DMA_DCRn_SMOD     (4U)          /*!< Bit field size in bits for DMA_DCRn_SMOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_SMOD field.
+/*! @brief Read current value of the DMA_DCRn_SMOD field. */
 #define BR_DMA_DCRn_SMOD(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SMOD, BS_DMA_DCRn_SMOD))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_SMOD.
-#define BF_DMA_DCRn_SMOD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SMOD), uint32_t) & BM_DMA_DCRn_SMOD)
+/*! @brief Format value for bitfield DMA_DCRn_SMOD. */
+#define BF_DMA_DCRn_SMOD(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_SMOD) & BM_DMA_DCRn_SMOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SMOD field to a new value.
+/*! @brief Set the SMOD field to a new value. */
 #define BW_DMA_DCRn_SMOD(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SMOD), BP_DMA_DCRn_SMOD, 4))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field START[16] (WORZ)
@@ -786,24 +697,17 @@ typedef union _hw_dma_dcrn
  *     START is cleared automatically after one module clock and always reads as
  *     logic 0.
  */
-//@{
-#define BP_DMA_DCRn_START    (16U)         //!< Bit position for DMA_DCRn_START.
-#define BM_DMA_DCRn_START    (0x00010000U) //!< Bit mask for DMA_DCRn_START.
-#define BS_DMA_DCRn_START    (1U)          //!< Bit field size in bits for DMA_DCRn_START.
+/*@{*/
+#define BP_DMA_DCRn_START    (16U)         /*!< Bit position for DMA_DCRn_START. */
+#define BM_DMA_DCRn_START    (0x00010000U) /*!< Bit mask for DMA_DCRn_START. */
+#define BS_DMA_DCRn_START    (1U)          /*!< Bit field size in bits for DMA_DCRn_START. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_START field.
-#define BR_DMA_DCRn_START(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_START, BS_DMA_DCRn_START))
-#endif
+/*! @brief Format value for bitfield DMA_DCRn_START. */
+#define BF_DMA_DCRn_START(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_START) & BM_DMA_DCRn_START)
 
-//! @brief Format value for bitfield DMA_DCRn_START.
-#define BF_DMA_DCRn_START(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_START), uint32_t) & BM_DMA_DCRn_START)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the START field to a new value.
+/*! @brief Set the START field to a new value. */
 #define BW_DMA_DCRn_START(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_START), BP_DMA_DCRn_START, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field DSIZE[18:17] (RW)
@@ -817,24 +721,20 @@ typedef union _hw_dma_dcrn
  * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly
  *     specified at time of channel activation)
  */
-//@{
-#define BP_DMA_DCRn_DSIZE    (17U)         //!< Bit position for DMA_DCRn_DSIZE.
-#define BM_DMA_DCRn_DSIZE    (0x00060000U) //!< Bit mask for DMA_DCRn_DSIZE.
-#define BS_DMA_DCRn_DSIZE    (2U)          //!< Bit field size in bits for DMA_DCRn_DSIZE.
+/*@{*/
+#define BP_DMA_DCRn_DSIZE    (17U)         /*!< Bit position for DMA_DCRn_DSIZE. */
+#define BM_DMA_DCRn_DSIZE    (0x00060000U) /*!< Bit mask for DMA_DCRn_DSIZE. */
+#define BS_DMA_DCRn_DSIZE    (2U)          /*!< Bit field size in bits for DMA_DCRn_DSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_DSIZE field.
+/*! @brief Read current value of the DMA_DCRn_DSIZE field. */
 #define BR_DMA_DCRn_DSIZE(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DSIZE, BS_DMA_DCRn_DSIZE))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_DSIZE.
-#define BF_DMA_DCRn_DSIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DSIZE), uint32_t) & BM_DMA_DCRn_DSIZE)
+/*! @brief Format value for bitfield DMA_DCRn_DSIZE. */
+#define BF_DMA_DCRn_DSIZE(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_DSIZE) & BM_DMA_DCRn_DSIZE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DSIZE field to a new value.
+/*! @brief Set the DSIZE field to a new value. */
 #define BW_DMA_DCRn_DSIZE(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DSIZE), BP_DMA_DCRn_DSIZE, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field DINC[19] (RW)
@@ -846,24 +746,20 @@ typedef union _hw_dma_dcrn
  * - 0 - No change to the DAR after a successful transfer.
  * - 1 - The DAR increments by 1, 2, 4 depending upon the size of the transfer.
  */
-//@{
-#define BP_DMA_DCRn_DINC     (19U)         //!< Bit position for DMA_DCRn_DINC.
-#define BM_DMA_DCRn_DINC     (0x00080000U) //!< Bit mask for DMA_DCRn_DINC.
-#define BS_DMA_DCRn_DINC     (1U)          //!< Bit field size in bits for DMA_DCRn_DINC.
+/*@{*/
+#define BP_DMA_DCRn_DINC     (19U)         /*!< Bit position for DMA_DCRn_DINC. */
+#define BM_DMA_DCRn_DINC     (0x00080000U) /*!< Bit mask for DMA_DCRn_DINC. */
+#define BS_DMA_DCRn_DINC     (1U)          /*!< Bit field size in bits for DMA_DCRn_DINC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_DINC field.
+/*! @brief Read current value of the DMA_DCRn_DINC field. */
 #define BR_DMA_DCRn_DINC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_DINC, BS_DMA_DCRn_DINC))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_DINC.
-#define BF_DMA_DCRn_DINC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_DINC), uint32_t) & BM_DMA_DCRn_DINC)
+/*! @brief Format value for bitfield DMA_DCRn_DINC. */
+#define BF_DMA_DCRn_DINC(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_DINC) & BM_DMA_DCRn_DINC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DINC field to a new value.
+/*! @brief Set the DINC field to a new value. */
 #define BW_DMA_DCRn_DINC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_DINC), BP_DMA_DCRn_DINC, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field SSIZE[21:20] (RW)
@@ -877,24 +773,20 @@ typedef union _hw_dma_dcrn
  * - 11 - Reserved (generates a configuration error (DSRn[CE]) if incorrectly
  *     specified at time of channel activation)
  */
-//@{
-#define BP_DMA_DCRn_SSIZE    (20U)         //!< Bit position for DMA_DCRn_SSIZE.
-#define BM_DMA_DCRn_SSIZE    (0x00300000U) //!< Bit mask for DMA_DCRn_SSIZE.
-#define BS_DMA_DCRn_SSIZE    (2U)          //!< Bit field size in bits for DMA_DCRn_SSIZE.
+/*@{*/
+#define BP_DMA_DCRn_SSIZE    (20U)         /*!< Bit position for DMA_DCRn_SSIZE. */
+#define BM_DMA_DCRn_SSIZE    (0x00300000U) /*!< Bit mask for DMA_DCRn_SSIZE. */
+#define BS_DMA_DCRn_SSIZE    (2U)          /*!< Bit field size in bits for DMA_DCRn_SSIZE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_SSIZE field.
+/*! @brief Read current value of the DMA_DCRn_SSIZE field. */
 #define BR_DMA_DCRn_SSIZE(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SSIZE, BS_DMA_DCRn_SSIZE))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_SSIZE.
-#define BF_DMA_DCRn_SSIZE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SSIZE), uint32_t) & BM_DMA_DCRn_SSIZE)
+/*! @brief Format value for bitfield DMA_DCRn_SSIZE. */
+#define BF_DMA_DCRn_SSIZE(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_SSIZE) & BM_DMA_DCRn_SSIZE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSIZE field to a new value.
+/*! @brief Set the SSIZE field to a new value. */
 #define BW_DMA_DCRn_SSIZE(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SSIZE), BP_DMA_DCRn_SSIZE, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field SINC[22] (RW)
@@ -905,24 +797,20 @@ typedef union _hw_dma_dcrn
  * - 0 - No change to SAR after a successful transfer.
  * - 1 - The SAR increments by 1, 2, 4 as determined by the transfer size.
  */
-//@{
-#define BP_DMA_DCRn_SINC     (22U)         //!< Bit position for DMA_DCRn_SINC.
-#define BM_DMA_DCRn_SINC     (0x00400000U) //!< Bit mask for DMA_DCRn_SINC.
-#define BS_DMA_DCRn_SINC     (1U)          //!< Bit field size in bits for DMA_DCRn_SINC.
+/*@{*/
+#define BP_DMA_DCRn_SINC     (22U)         /*!< Bit position for DMA_DCRn_SINC. */
+#define BM_DMA_DCRn_SINC     (0x00400000U) /*!< Bit mask for DMA_DCRn_SINC. */
+#define BS_DMA_DCRn_SINC     (1U)          /*!< Bit field size in bits for DMA_DCRn_SINC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_SINC field.
+/*! @brief Read current value of the DMA_DCRn_SINC field. */
 #define BR_DMA_DCRn_SINC(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_SINC, BS_DMA_DCRn_SINC))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_SINC.
-#define BF_DMA_DCRn_SINC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_SINC), uint32_t) & BM_DMA_DCRn_SINC)
+/*! @brief Format value for bitfield DMA_DCRn_SINC. */
+#define BF_DMA_DCRn_SINC(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_SINC) & BM_DMA_DCRn_SINC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SINC field to a new value.
+/*! @brief Set the SINC field to a new value. */
 #define BW_DMA_DCRn_SINC(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_SINC), BP_DMA_DCRn_SINC, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field EADREQ[23] (RW)
@@ -934,24 +822,20 @@ typedef union _hw_dma_dcrn
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DMA_DCRn_EADREQ   (23U)         //!< Bit position for DMA_DCRn_EADREQ.
-#define BM_DMA_DCRn_EADREQ   (0x00800000U) //!< Bit mask for DMA_DCRn_EADREQ.
-#define BS_DMA_DCRn_EADREQ   (1U)          //!< Bit field size in bits for DMA_DCRn_EADREQ.
+/*@{*/
+#define BP_DMA_DCRn_EADREQ   (23U)         /*!< Bit position for DMA_DCRn_EADREQ. */
+#define BM_DMA_DCRn_EADREQ   (0x00800000U) /*!< Bit mask for DMA_DCRn_EADREQ. */
+#define BS_DMA_DCRn_EADREQ   (1U)          /*!< Bit field size in bits for DMA_DCRn_EADREQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_EADREQ field.
+/*! @brief Read current value of the DMA_DCRn_EADREQ field. */
 #define BR_DMA_DCRn_EADREQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_EADREQ, BS_DMA_DCRn_EADREQ))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_EADREQ.
-#define BF_DMA_DCRn_EADREQ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_EADREQ), uint32_t) & BM_DMA_DCRn_EADREQ)
+/*! @brief Format value for bitfield DMA_DCRn_EADREQ. */
+#define BF_DMA_DCRn_EADREQ(v) ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_EADREQ) & BM_DMA_DCRn_EADREQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EADREQ field to a new value.
+/*! @brief Set the EADREQ field to a new value. */
 #define BW_DMA_DCRn_EADREQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_EADREQ), BP_DMA_DCRn_EADREQ, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field AA[28] (RW)
@@ -967,24 +851,20 @@ typedef union _hw_dma_dcrn
  *     enabled, the appropriate address register increments, regardless of DINC
  *     or SINC.
  */
-//@{
-#define BP_DMA_DCRn_AA       (28U)         //!< Bit position for DMA_DCRn_AA.
-#define BM_DMA_DCRn_AA       (0x10000000U) //!< Bit mask for DMA_DCRn_AA.
-#define BS_DMA_DCRn_AA       (1U)          //!< Bit field size in bits for DMA_DCRn_AA.
+/*@{*/
+#define BP_DMA_DCRn_AA       (28U)         /*!< Bit position for DMA_DCRn_AA. */
+#define BM_DMA_DCRn_AA       (0x10000000U) /*!< Bit mask for DMA_DCRn_AA. */
+#define BS_DMA_DCRn_AA       (1U)          /*!< Bit field size in bits for DMA_DCRn_AA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_AA field.
+/*! @brief Read current value of the DMA_DCRn_AA field. */
 #define BR_DMA_DCRn_AA(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_AA, BS_DMA_DCRn_AA))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_AA.
-#define BF_DMA_DCRn_AA(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_AA), uint32_t) & BM_DMA_DCRn_AA)
+/*! @brief Format value for bitfield DMA_DCRn_AA. */
+#define BF_DMA_DCRn_AA(v)    ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_AA) & BM_DMA_DCRn_AA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AA field to a new value.
+/*! @brief Set the AA field to a new value. */
 #define BW_DMA_DCRn_AA(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_AA), BP_DMA_DCRn_AA, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field CS[29] (RW)
@@ -994,24 +874,20 @@ typedef union _hw_dma_dcrn
  *     0.
  * - 1 - Forces a single read/write transfer per request.
  */
-//@{
-#define BP_DMA_DCRn_CS       (29U)         //!< Bit position for DMA_DCRn_CS.
-#define BM_DMA_DCRn_CS       (0x20000000U) //!< Bit mask for DMA_DCRn_CS.
-#define BS_DMA_DCRn_CS       (1U)          //!< Bit field size in bits for DMA_DCRn_CS.
+/*@{*/
+#define BP_DMA_DCRn_CS       (29U)         /*!< Bit position for DMA_DCRn_CS. */
+#define BM_DMA_DCRn_CS       (0x20000000U) /*!< Bit mask for DMA_DCRn_CS. */
+#define BS_DMA_DCRn_CS       (1U)          /*!< Bit field size in bits for DMA_DCRn_CS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_CS field.
+/*! @brief Read current value of the DMA_DCRn_CS field. */
 #define BR_DMA_DCRn_CS(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_CS, BS_DMA_DCRn_CS))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_CS.
-#define BF_DMA_DCRn_CS(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_CS), uint32_t) & BM_DMA_DCRn_CS)
+/*! @brief Format value for bitfield DMA_DCRn_CS. */
+#define BF_DMA_DCRn_CS(v)    ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_CS) & BM_DMA_DCRn_CS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CS field to a new value.
+/*! @brief Set the CS field to a new value. */
 #define BW_DMA_DCRn_CS(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_CS), BP_DMA_DCRn_CS, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field ERQ[30] (RW)
@@ -1024,24 +900,20 @@ typedef union _hw_dma_dcrn
  * - 1 - Enables peripheral request to initiate transfer. A software-initiated
  *     request (setting the START bit) is always enabled.
  */
-//@{
-#define BP_DMA_DCRn_ERQ      (30U)         //!< Bit position for DMA_DCRn_ERQ.
-#define BM_DMA_DCRn_ERQ      (0x40000000U) //!< Bit mask for DMA_DCRn_ERQ.
-#define BS_DMA_DCRn_ERQ      (1U)          //!< Bit field size in bits for DMA_DCRn_ERQ.
+/*@{*/
+#define BP_DMA_DCRn_ERQ      (30U)         /*!< Bit position for DMA_DCRn_ERQ. */
+#define BM_DMA_DCRn_ERQ      (0x40000000U) /*!< Bit mask for DMA_DCRn_ERQ. */
+#define BS_DMA_DCRn_ERQ      (1U)          /*!< Bit field size in bits for DMA_DCRn_ERQ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_ERQ field.
+/*! @brief Read current value of the DMA_DCRn_ERQ field. */
 #define BR_DMA_DCRn_ERQ(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_ERQ, BS_DMA_DCRn_ERQ))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_ERQ.
-#define BF_DMA_DCRn_ERQ(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_ERQ), uint32_t) & BM_DMA_DCRn_ERQ)
+/*! @brief Format value for bitfield DMA_DCRn_ERQ. */
+#define BF_DMA_DCRn_ERQ(v)   ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_ERQ) & BM_DMA_DCRn_ERQ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERQ field to a new value.
+/*! @brief Set the ERQ field to a new value. */
 #define BW_DMA_DCRn_ERQ(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_ERQ), BP_DMA_DCRn_ERQ, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register DMA_DCRn, field EINT[31] (RW)
@@ -1053,58 +925,86 @@ typedef union _hw_dma_dcrn
  * - 0 - No interrupt is generated.
  * - 1 - Interrupt signal is enabled.
  */
-//@{
-#define BP_DMA_DCRn_EINT     (31U)         //!< Bit position for DMA_DCRn_EINT.
-#define BM_DMA_DCRn_EINT     (0x80000000U) //!< Bit mask for DMA_DCRn_EINT.
-#define BS_DMA_DCRn_EINT     (1U)          //!< Bit field size in bits for DMA_DCRn_EINT.
+/*@{*/
+#define BP_DMA_DCRn_EINT     (31U)         /*!< Bit position for DMA_DCRn_EINT. */
+#define BM_DMA_DCRn_EINT     (0x80000000U) /*!< Bit mask for DMA_DCRn_EINT. */
+#define BS_DMA_DCRn_EINT     (1U)          /*!< Bit field size in bits for DMA_DCRn_EINT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DMA_DCRn_EINT field.
+/*! @brief Read current value of the DMA_DCRn_EINT field. */
 #define BR_DMA_DCRn_EINT(x, n) (BME_UBFX32(HW_DMA_DCRn_ADDR(x, n), BP_DMA_DCRn_EINT, BS_DMA_DCRn_EINT))
-#endif
 
-//! @brief Format value for bitfield DMA_DCRn_EINT.
-#define BF_DMA_DCRn_EINT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DMA_DCRn_EINT), uint32_t) & BM_DMA_DCRn_EINT)
+/*! @brief Format value for bitfield DMA_DCRn_EINT. */
+#define BF_DMA_DCRn_EINT(v)  ((uint32_t)((uint32_t)(v) << BP_DMA_DCRn_EINT) & BM_DMA_DCRn_EINT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EINT field to a new value.
+/*! @brief Set the EINT field to a new value. */
 #define BW_DMA_DCRn_EINT(x, n, v) (BME_BFI32(HW_DMA_DCRn_ADDR(x, n), ((uint32_t)(v) << BP_DMA_DCRn_EINT), BP_DMA_DCRn_EINT, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_dma_t - module struct
-//-------------------------------------------------------------------------------------------
+/*
+** Start of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma push
+  #pragma anon_unions
+#elif defined(__CWCC__)
+  #pragma push
+  #pragma cpp_extensions on
+#elif defined(__GNUC__)
+  /* anonymous unions are enabled by default */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=extended
+#else
+  #error Not supported compiler type
+#endif
+
+/*******************************************************************************
+ * hw_dma_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All DMA module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_dma
 {
     uint8_t _reserved0[256];
     struct {
-        __IO hw_dma_sarn_t SARn;           //!< [0x100] Source Address Register
-        __IO hw_dma_darn_t DARn;           //!< [0x104] Destination Address Register
+        __IO hw_dma_sarn_t SARn;           /*!< [0x100] Source Address Register */
+        __IO hw_dma_darn_t DARn;           /*!< [0x104] Destination Address Register */
         union {
             struct {
                 uint8_t _reserved0[3];
-                __IO hw_dma_dsr_t DSR;     //!< [0x10B] DMA_DSR0 register.
+                __IO hw_dma_dsrn_t DSRn;   /*!< [0x10B] DMA_DSR0 register. */
             } DMA_DSR_ACCESS8BIT;
-            __IO hw_dma_dsr_bcrn_t DSR_BCRn; //!< [0x108] DMA Status Register / Byte Count Register
+            __IO hw_dma_dsr_bcrn_t DSR_BCRn; /*!< [0x108] DMA Status Register / Byte Count Register */
         };
-        __IO hw_dma_dcrn_t DCRn;           //!< [0x10C] DMA Control Register
+        __IO hw_dma_dcrn_t DCRn;           /*!< [0x10C] DMA Control Register */
     } DMA[4];
 } hw_dma_t;
 #pragma pack()
 
-//! @brief Macro to access all DMA registers.
-//! @param x DMA instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_DMA(0)</code>.
-#define HW_DMA(x)      (*(hw_dma_t *) REGS_DMA_BASE(x))
+/*! @brief Macro to access all DMA registers. */
+/*! @param x DMA module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_DMA(DMA_BASE)</code>. */
+#define HW_DMA(x)      (*(hw_dma_t *)(x))
+
+/*
+** End of section using anonymous unions
+*/
+
+#if defined(__ARMCC_VERSION)
+  #pragma pop
+#elif defined(__CWCC__)
+  #pragma pop
+#elif defined(__GNUC__)
+  /* leave anonymous unions enabled */
+#elif defined(__IAR_SYSTEMS_ICC__)
+  #pragma language=default
+#else
+  #error Not supported compiler type
 #endif
 
-#endif // __HW_DMA_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_DMA_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

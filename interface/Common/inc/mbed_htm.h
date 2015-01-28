@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 #ifndef MBED_HTM_H
-#define MBED_HTM
+#define MBED_HTM_H
 
-#include "version_git.h"
-
-#if GIT_LOCAL_MODS == 1
-    #warning "Building with local modifications."
-    #define GIT_LOCAL_MODS_STR "Yes"
-#else
-    #define GIT_LOCAL_MODS_STR "No"
-#endif
-
-const unsigned char WebSide[] = {
-"<!-- mbed Microcontroller Website and Authentication Shortcut -->\r\n"
-"<!-- Version: " FW_BUILD " Build: " __DATE__ " " __TIME__ " Git Commit SHA: "  GIT_COMMIT_SHA " Git local mods:" GIT_LOCAL_MODS_STR"-->\r\n"
+static const unsigned char mbed_redirect_file[512] = {
+"<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
 "<html>\r\n"
 "<head>\r\n"
 "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"

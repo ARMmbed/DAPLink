@@ -74,10 +74,10 @@
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
-            <UserProg1Name>fromelf --bin -o firmware.bin "#L"</UserProg1Name>
-            <UserProg2Name>D:\tools\fix_checksum.exe firmware.bin</UserProg2Name>
+            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg2>0</RunUserProg2>
+            <UserProg1Name></UserProg1Name>
+            <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
@@ -170,6 +170,7 @@
             <Capability>1</Capability>
             <DriverSelection>4101</DriverSelection>
           </Flash1>
+          <bUseTDR>1</bUseTDR>
           <Flash2>BIN\ULP2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -306,7 +307,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x5000</Size>
+                <Size>0x10000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -442,7 +443,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_msc.c</FileName>

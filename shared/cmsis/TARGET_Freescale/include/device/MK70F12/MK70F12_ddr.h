@@ -21,7 +21,8 @@
 #ifndef __HW_DDR_REGISTERS_H__
 #define __HW_DDR_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 DDR
@@ -99,19 +100,12 @@
  * - hw_ddr_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_DDR_BASE
-#define HW_DDR_INSTANCE_COUNT (1U) //!< Number of instances of the DDR module.
-#define REGS_DDR_BASE (0x400AE000U) //!< Base address for DDR.
-#endif
-//@}
+#define HW_DDR_INSTANCE_COUNT (1U) /*!< Number of instances of the DDR module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR00 - DDR Control Register 0
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR00 - DDR Control Register 0
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR00 - DDR Control Register 0 (RW)
  *
@@ -122,30 +116,27 @@ typedef union _hw_ddr_cr00
     uint32_t U;
     struct _hw_ddr_cr00_bitfields
     {
-        uint32_t START : 1;            //!< [0] Start
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t DDRCLS : 4;           //!< [11:8] DRAM Class
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t VERSION : 16;         //!< [31:16] Version
+        uint32_t START : 1;            /*!< [0] Start */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t DDRCLS : 4;           /*!< [11:8] DRAM Class */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t VERSION : 16;         /*!< [31:16] Version */
     } B;
 } hw_ddr_cr00_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR00 register
  */
-//@{
-#define HW_DDR_CR00_ADDR         (REGS_DDR_BASE + 0x0U)
+/*@{*/
+#define HW_DDR_CR00_ADDR(x)      ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR00              (*(__IO hw_ddr_cr00_t *) HW_DDR_CR00_ADDR)
-#define HW_DDR_CR00_RD()         (HW_DDR_CR00.U)
-#define HW_DDR_CR00_WR(v)        (HW_DDR_CR00.U = (v))
-#define HW_DDR_CR00_SET(v)       (HW_DDR_CR00_WR(HW_DDR_CR00_RD() |  (v)))
-#define HW_DDR_CR00_CLR(v)       (HW_DDR_CR00_WR(HW_DDR_CR00_RD() & ~(v)))
-#define HW_DDR_CR00_TOG(v)       (HW_DDR_CR00_WR(HW_DDR_CR00_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR00(x)           (*(__IO hw_ddr_cr00_t *) HW_DDR_CR00_ADDR(x))
+#define HW_DDR_CR00_RD(x)        (HW_DDR_CR00(x).U)
+#define HW_DDR_CR00_WR(x, v)     (HW_DDR_CR00(x).U = (v))
+#define HW_DDR_CR00_SET(x, v)    (HW_DDR_CR00_WR(x, HW_DDR_CR00_RD(x) |  (v)))
+#define HW_DDR_CR00_CLR(x, v)    (HW_DDR_CR00_WR(x, HW_DDR_CR00_RD(x) & ~(v)))
+#define HW_DDR_CR00_TOG(x, v)    (HW_DDR_CR00_WR(x, HW_DDR_CR00_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR00 bitfields
@@ -156,24 +147,20 @@ typedef union _hw_ddr_cr00
  *
  * Initiates CMD processing in the memory controller.
  */
-//@{
-#define BP_DDR_CR00_START    (0U)          //!< Bit position for DDR_CR00_START.
-#define BM_DDR_CR00_START    (0x00000001U) //!< Bit mask for DDR_CR00_START.
-#define BS_DDR_CR00_START    (1U)          //!< Bit field size in bits for DDR_CR00_START.
+/*@{*/
+#define BP_DDR_CR00_START    (0U)          /*!< Bit position for DDR_CR00_START. */
+#define BM_DDR_CR00_START    (0x00000001U) /*!< Bit mask for DDR_CR00_START. */
+#define BS_DDR_CR00_START    (1U)          /*!< Bit field size in bits for DDR_CR00_START. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR00_START field.
-#define BR_DDR_CR00_START    (BITBAND_ACCESS32(HW_DDR_CR00_ADDR, BP_DDR_CR00_START))
-#endif
+/*! @brief Read current value of the DDR_CR00_START field. */
+#define BR_DDR_CR00_START(x) (BITBAND_ACCESS32(HW_DDR_CR00_ADDR(x), BP_DDR_CR00_START))
 
-//! @brief Format value for bitfield DDR_CR00_START.
-#define BF_DDR_CR00_START(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR00_START), uint32_t) & BM_DDR_CR00_START)
+/*! @brief Format value for bitfield DDR_CR00_START. */
+#define BF_DDR_CR00_START(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR00_START) & BM_DDR_CR00_START)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the START field to a new value.
-#define BW_DDR_CR00_START(v) (BITBAND_ACCESS32(HW_DDR_CR00_ADDR, BP_DDR_CR00_START) = (v))
-#endif
-//@}
+/*! @brief Set the START field to a new value. */
+#define BW_DDR_CR00_START(x, v) (BITBAND_ACCESS32(HW_DDR_CR00_ADDR(x), BP_DDR_CR00_START) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR00, field DDRCLS[11:8] (RW)
@@ -190,46 +177,39 @@ typedef union _hw_ddr_cr00
  * - 0110 - Reserved
  * - 1111 - Reserved
  */
-//@{
-#define BP_DDR_CR00_DDRCLS   (8U)          //!< Bit position for DDR_CR00_DDRCLS.
-#define BM_DDR_CR00_DDRCLS   (0x00000F00U) //!< Bit mask for DDR_CR00_DDRCLS.
-#define BS_DDR_CR00_DDRCLS   (4U)          //!< Bit field size in bits for DDR_CR00_DDRCLS.
+/*@{*/
+#define BP_DDR_CR00_DDRCLS   (8U)          /*!< Bit position for DDR_CR00_DDRCLS. */
+#define BM_DDR_CR00_DDRCLS   (0x00000F00U) /*!< Bit mask for DDR_CR00_DDRCLS. */
+#define BS_DDR_CR00_DDRCLS   (4U)          /*!< Bit field size in bits for DDR_CR00_DDRCLS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR00_DDRCLS field.
-#define BR_DDR_CR00_DDRCLS   (HW_DDR_CR00.B.DDRCLS)
-#endif
+/*! @brief Read current value of the DDR_CR00_DDRCLS field. */
+#define BR_DDR_CR00_DDRCLS(x) (HW_DDR_CR00(x).B.DDRCLS)
 
-//! @brief Format value for bitfield DDR_CR00_DDRCLS.
-#define BF_DDR_CR00_DDRCLS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR00_DDRCLS), uint32_t) & BM_DDR_CR00_DDRCLS)
+/*! @brief Format value for bitfield DDR_CR00_DDRCLS. */
+#define BF_DDR_CR00_DDRCLS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR00_DDRCLS) & BM_DDR_CR00_DDRCLS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DDRCLS field to a new value.
-#define BW_DDR_CR00_DDRCLS(v) (HW_DDR_CR00_WR((HW_DDR_CR00_RD() & ~BM_DDR_CR00_DDRCLS) | BF_DDR_CR00_DDRCLS(v)))
-#endif
-//@}
+/*! @brief Set the DDRCLS field to a new value. */
+#define BW_DDR_CR00_DDRCLS(x, v) (HW_DDR_CR00_WR(x, (HW_DDR_CR00_RD(x) & ~BM_DDR_CR00_DDRCLS) | BF_DDR_CR00_DDRCLS(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR00, field VERSION[31:16] (RO)
  *
  * Shows the version number of the memory controller. Reads as 0x2040.
  */
-//@{
-#define BP_DDR_CR00_VERSION  (16U)         //!< Bit position for DDR_CR00_VERSION.
-#define BM_DDR_CR00_VERSION  (0xFFFF0000U) //!< Bit mask for DDR_CR00_VERSION.
-#define BS_DDR_CR00_VERSION  (16U)         //!< Bit field size in bits for DDR_CR00_VERSION.
+/*@{*/
+#define BP_DDR_CR00_VERSION  (16U)         /*!< Bit position for DDR_CR00_VERSION. */
+#define BM_DDR_CR00_VERSION  (0xFFFF0000U) /*!< Bit mask for DDR_CR00_VERSION. */
+#define BS_DDR_CR00_VERSION  (16U)         /*!< Bit field size in bits for DDR_CR00_VERSION. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR00_VERSION field.
-#define BR_DDR_CR00_VERSION  (HW_DDR_CR00.B.VERSION)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR00_VERSION field. */
+#define BR_DDR_CR00_VERSION(x) (HW_DDR_CR00(x).B.VERSION)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR01 - DDR Control Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR01 - DDR Control Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR01 - DDR Control Register 1 (RO)
  *
@@ -240,27 +220,24 @@ typedef union _hw_ddr_cr01
     uint32_t U;
     struct _hw_ddr_cr01_bitfields
     {
-        uint32_t MAXROW : 5;           //!< [4:0] Maxmum Row
-        uint32_t RESERVED0 : 3;        //!< [7:5] Reserved
-        uint32_t MAXCOL : 4;           //!< [11:8] Maximum Column
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t CSMAX : 2;            //!< [17:16] Chip Select Maximum
-        uint32_t RESERVED2 : 14;       //!< [31:18] Reserved
+        uint32_t MAXROW : 5;           /*!< [4:0] Maxmum Row */
+        uint32_t RESERVED0 : 3;        /*!< [7:5] Reserved */
+        uint32_t MAXCOL : 4;           /*!< [11:8] Maximum Column */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t CSMAX : 2;            /*!< [17:16] Chip Select Maximum */
+        uint32_t RESERVED2 : 14;       /*!< [31:18] Reserved */
     } B;
 } hw_ddr_cr01_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR01 register
  */
-//@{
-#define HW_DDR_CR01_ADDR         (REGS_DDR_BASE + 0x4U)
+/*@{*/
+#define HW_DDR_CR01_ADDR(x)      ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR01              (*(__I hw_ddr_cr01_t *) HW_DDR_CR01_ADDR)
-#define HW_DDR_CR01_RD()         (HW_DDR_CR01.U)
-#endif
-//@}
+#define HW_DDR_CR01(x)           (*(__I hw_ddr_cr01_t *) HW_DDR_CR01_ADDR(x))
+#define HW_DDR_CR01_RD(x)        (HW_DDR_CR01(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR01 bitfields
@@ -273,16 +250,14 @@ typedef union _hw_ddr_cr01
  * value can be used to set the CR25[ADDPINS] field, where: ADDPINS = MAXROW minus
  * number of row bits in the memory device.
  */
-//@{
-#define BP_DDR_CR01_MAXROW   (0U)          //!< Bit position for DDR_CR01_MAXROW.
-#define BM_DDR_CR01_MAXROW   (0x0000001FU) //!< Bit mask for DDR_CR01_MAXROW.
-#define BS_DDR_CR01_MAXROW   (5U)          //!< Bit field size in bits for DDR_CR01_MAXROW.
+/*@{*/
+#define BP_DDR_CR01_MAXROW   (0U)          /*!< Bit position for DDR_CR01_MAXROW. */
+#define BM_DDR_CR01_MAXROW   (0x0000001FU) /*!< Bit mask for DDR_CR01_MAXROW. */
+#define BS_DDR_CR01_MAXROW   (5U)          /*!< Bit field size in bits for DDR_CR01_MAXROW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR01_MAXROW field.
-#define BR_DDR_CR01_MAXROW   (HW_DDR_CR01.B.MAXROW)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR01_MAXROW field. */
+#define BR_DDR_CR01_MAXROW(x) (HW_DDR_CR01(x).B.MAXROW)
+/*@}*/
 
 /*!
  * @name Register DDR_CR01, field MAXCOL[11:8] (RO)
@@ -300,16 +275,14 @@ typedef union _hw_ddr_cr01
  * - 1110 - Reserved
  * - 1111 - Reserved
  */
-//@{
-#define BP_DDR_CR01_MAXCOL   (8U)          //!< Bit position for DDR_CR01_MAXCOL.
-#define BM_DDR_CR01_MAXCOL   (0x00000F00U) //!< Bit mask for DDR_CR01_MAXCOL.
-#define BS_DDR_CR01_MAXCOL   (4U)          //!< Bit field size in bits for DDR_CR01_MAXCOL.
+/*@{*/
+#define BP_DDR_CR01_MAXCOL   (8U)          /*!< Bit position for DDR_CR01_MAXCOL. */
+#define BM_DDR_CR01_MAXCOL   (0x00000F00U) /*!< Bit mask for DDR_CR01_MAXCOL. */
+#define BS_DDR_CR01_MAXCOL   (4U)          /*!< Bit field size in bits for DDR_CR01_MAXCOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR01_MAXCOL field.
-#define BR_DDR_CR01_MAXCOL   (HW_DDR_CR01.B.MAXCOL)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR01_MAXCOL field. */
+#define BR_DDR_CR01_MAXCOL(x) (HW_DDR_CR01(x).B.MAXCOL)
+/*@}*/
 
 /*!
  * @name Register DDR_CR01, field CSMAX[17:16] (RO)
@@ -324,22 +297,19 @@ typedef union _hw_ddr_cr01
  * - 10 - Two
  * - 11 - Reserved
  */
-//@{
-#define BP_DDR_CR01_CSMAX    (16U)         //!< Bit position for DDR_CR01_CSMAX.
-#define BM_DDR_CR01_CSMAX    (0x00030000U) //!< Bit mask for DDR_CR01_CSMAX.
-#define BS_DDR_CR01_CSMAX    (2U)          //!< Bit field size in bits for DDR_CR01_CSMAX.
+/*@{*/
+#define BP_DDR_CR01_CSMAX    (16U)         /*!< Bit position for DDR_CR01_CSMAX. */
+#define BM_DDR_CR01_CSMAX    (0x00030000U) /*!< Bit mask for DDR_CR01_CSMAX. */
+#define BS_DDR_CR01_CSMAX    (2U)          /*!< Bit field size in bits for DDR_CR01_CSMAX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR01_CSMAX field.
-#define BR_DDR_CR01_CSMAX    (HW_DDR_CR01.B.CSMAX)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR01_CSMAX field. */
+#define BR_DDR_CR01_CSMAX(x) (HW_DDR_CR01(x).B.CSMAX)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR02 - DDR Control Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR02 - DDR Control Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR02 - DDR Control Register 2 (RW)
  *
@@ -350,28 +320,25 @@ typedef union _hw_ddr_cr02
     uint32_t U;
     struct _hw_ddr_cr02_bitfields
     {
-        uint32_t TINIT : 24;           //!< [23:0] Time Initialization
-        uint32_t INITAREF : 4;         //!< [27:24] Initialization Auto-Refresh
-        uint32_t RESERVED0 : 4;        //!< [31:28] Reserved
+        uint32_t TINIT : 24;           /*!< [23:0] Time Initialization */
+        uint32_t INITAREF : 4;         /*!< [27:24] Initialization Auto-Refresh */
+        uint32_t RESERVED0 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr02_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR02 register
  */
-//@{
-#define HW_DDR_CR02_ADDR         (REGS_DDR_BASE + 0x8U)
+/*@{*/
+#define HW_DDR_CR02_ADDR(x)      ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR02              (*(__IO hw_ddr_cr02_t *) HW_DDR_CR02_ADDR)
-#define HW_DDR_CR02_RD()         (HW_DDR_CR02.U)
-#define HW_DDR_CR02_WR(v)        (HW_DDR_CR02.U = (v))
-#define HW_DDR_CR02_SET(v)       (HW_DDR_CR02_WR(HW_DDR_CR02_RD() |  (v)))
-#define HW_DDR_CR02_CLR(v)       (HW_DDR_CR02_WR(HW_DDR_CR02_RD() & ~(v)))
-#define HW_DDR_CR02_TOG(v)       (HW_DDR_CR02_WR(HW_DDR_CR02_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR02(x)           (*(__IO hw_ddr_cr02_t *) HW_DDR_CR02_ADDR(x))
+#define HW_DDR_CR02_RD(x)        (HW_DDR_CR02(x).U)
+#define HW_DDR_CR02_WR(x, v)     (HW_DDR_CR02(x).U = (v))
+#define HW_DDR_CR02_SET(x, v)    (HW_DDR_CR02_WR(x, HW_DDR_CR02_RD(x) |  (v)))
+#define HW_DDR_CR02_CLR(x, v)    (HW_DDR_CR02_WR(x, HW_DDR_CR02_RD(x) & ~(v)))
+#define HW_DDR_CR02_TOG(x, v)    (HW_DDR_CR02_WR(x, HW_DDR_CR02_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR02 bitfields
@@ -382,54 +349,45 @@ typedef union _hw_ddr_cr02
  *
  * Defines the DRAM initialization time in cycles.
  */
-//@{
-#define BP_DDR_CR02_TINIT    (0U)          //!< Bit position for DDR_CR02_TINIT.
-#define BM_DDR_CR02_TINIT    (0x00FFFFFFU) //!< Bit mask for DDR_CR02_TINIT.
-#define BS_DDR_CR02_TINIT    (24U)         //!< Bit field size in bits for DDR_CR02_TINIT.
+/*@{*/
+#define BP_DDR_CR02_TINIT    (0U)          /*!< Bit position for DDR_CR02_TINIT. */
+#define BM_DDR_CR02_TINIT    (0x00FFFFFFU) /*!< Bit mask for DDR_CR02_TINIT. */
+#define BS_DDR_CR02_TINIT    (24U)         /*!< Bit field size in bits for DDR_CR02_TINIT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR02_TINIT field.
-#define BR_DDR_CR02_TINIT    (HW_DDR_CR02.B.TINIT)
-#endif
+/*! @brief Read current value of the DDR_CR02_TINIT field. */
+#define BR_DDR_CR02_TINIT(x) (HW_DDR_CR02(x).B.TINIT)
 
-//! @brief Format value for bitfield DDR_CR02_TINIT.
-#define BF_DDR_CR02_TINIT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR02_TINIT), uint32_t) & BM_DDR_CR02_TINIT)
+/*! @brief Format value for bitfield DDR_CR02_TINIT. */
+#define BF_DDR_CR02_TINIT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR02_TINIT) & BM_DDR_CR02_TINIT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TINIT field to a new value.
-#define BW_DDR_CR02_TINIT(v) (HW_DDR_CR02_WR((HW_DDR_CR02_RD() & ~BM_DDR_CR02_TINIT) | BF_DDR_CR02_TINIT(v)))
-#endif
-//@}
+/*! @brief Set the TINIT field to a new value. */
+#define BW_DDR_CR02_TINIT(x, v) (HW_DDR_CR02_WR(x, (HW_DDR_CR02_RD(x) & ~BM_DDR_CR02_TINIT) | BF_DDR_CR02_TINIT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR02, field INITAREF[27:24] (RW)
  *
  * Number of auto-refresh commands to execute during DRAM initialization.
  */
-//@{
-#define BP_DDR_CR02_INITAREF (24U)         //!< Bit position for DDR_CR02_INITAREF.
-#define BM_DDR_CR02_INITAREF (0x0F000000U) //!< Bit mask for DDR_CR02_INITAREF.
-#define BS_DDR_CR02_INITAREF (4U)          //!< Bit field size in bits for DDR_CR02_INITAREF.
+/*@{*/
+#define BP_DDR_CR02_INITAREF (24U)         /*!< Bit position for DDR_CR02_INITAREF. */
+#define BM_DDR_CR02_INITAREF (0x0F000000U) /*!< Bit mask for DDR_CR02_INITAREF. */
+#define BS_DDR_CR02_INITAREF (4U)          /*!< Bit field size in bits for DDR_CR02_INITAREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR02_INITAREF field.
-#define BR_DDR_CR02_INITAREF (HW_DDR_CR02.B.INITAREF)
-#endif
+/*! @brief Read current value of the DDR_CR02_INITAREF field. */
+#define BR_DDR_CR02_INITAREF(x) (HW_DDR_CR02(x).B.INITAREF)
 
-//! @brief Format value for bitfield DDR_CR02_INITAREF.
-#define BF_DDR_CR02_INITAREF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR02_INITAREF), uint32_t) & BM_DDR_CR02_INITAREF)
+/*! @brief Format value for bitfield DDR_CR02_INITAREF. */
+#define BF_DDR_CR02_INITAREF(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR02_INITAREF) & BM_DDR_CR02_INITAREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INITAREF field to a new value.
-#define BW_DDR_CR02_INITAREF(v) (HW_DDR_CR02_WR((HW_DDR_CR02_RD() & ~BM_DDR_CR02_INITAREF) | BF_DDR_CR02_INITAREF(v)))
-#endif
-//@}
+/*! @brief Set the INITAREF field to a new value. */
+#define BW_DDR_CR02_INITAREF(x, v) (HW_DDR_CR02_WR(x, (HW_DDR_CR02_RD(x) & ~BM_DDR_CR02_INITAREF) | BF_DDR_CR02_INITAREF(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR03 - DDR Control Register 3
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR03 - DDR Control Register 3
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR03 - DDR Control Register 3 (RW)
  *
@@ -440,33 +398,30 @@ typedef union _hw_ddr_cr03
     uint32_t U;
     struct _hw_ddr_cr03_bitfields
     {
-        uint32_t LATLIN : 4;           //!< [3:0] Latency Linear
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t LATGATE : 4;          //!< [11:8] Latency Gate
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t WRLAT : 4;            //!< [19:16] Write Latency
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t TCCD : 5;             //!< [28:24] Time CAS-to-CAS Delay
-        uint32_t RESERVED3 : 3;        //!< [31:29] Reserved
+        uint32_t LATLIN : 4;           /*!< [3:0] Latency Linear */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t LATGATE : 4;          /*!< [11:8] Latency Gate */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t WRLAT : 4;            /*!< [19:16] Write Latency */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t TCCD : 5;             /*!< [28:24] Time CAS-to-CAS Delay */
+        uint32_t RESERVED3 : 3;        /*!< [31:29] Reserved */
     } B;
 } hw_ddr_cr03_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR03 register
  */
-//@{
-#define HW_DDR_CR03_ADDR         (REGS_DDR_BASE + 0xCU)
+/*@{*/
+#define HW_DDR_CR03_ADDR(x)      ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR03              (*(__IO hw_ddr_cr03_t *) HW_DDR_CR03_ADDR)
-#define HW_DDR_CR03_RD()         (HW_DDR_CR03.U)
-#define HW_DDR_CR03_WR(v)        (HW_DDR_CR03.U = (v))
-#define HW_DDR_CR03_SET(v)       (HW_DDR_CR03_WR(HW_DDR_CR03_RD() |  (v)))
-#define HW_DDR_CR03_CLR(v)       (HW_DDR_CR03_WR(HW_DDR_CR03_RD() & ~(v)))
-#define HW_DDR_CR03_TOG(v)       (HW_DDR_CR03_WR(HW_DDR_CR03_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR03(x)           (*(__IO hw_ddr_cr03_t *) HW_DDR_CR03_ADDR(x))
+#define HW_DDR_CR03_RD(x)        (HW_DDR_CR03(x).U)
+#define HW_DDR_CR03_WR(x, v)     (HW_DDR_CR03(x).U = (v))
+#define HW_DDR_CR03_SET(x, v)    (HW_DDR_CR03_WR(x, HW_DDR_CR03_RD(x) |  (v)))
+#define HW_DDR_CR03_CLR(x, v)    (HW_DDR_CR03_WR(x, HW_DDR_CR03_RD(x) & ~(v)))
+#define HW_DDR_CR03_TOG(x, v)    (HW_DDR_CR03_WR(x, HW_DDR_CR03_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR03 bitfields
@@ -489,24 +444,20 @@ typedef union _hw_ddr_cr03
  * - 0011 - 1.5 cycles
  * - 1111 - 7.5 cycles
  */
-//@{
-#define BP_DDR_CR03_LATLIN   (0U)          //!< Bit position for DDR_CR03_LATLIN.
-#define BM_DDR_CR03_LATLIN   (0x0000000FU) //!< Bit mask for DDR_CR03_LATLIN.
-#define BS_DDR_CR03_LATLIN   (4U)          //!< Bit field size in bits for DDR_CR03_LATLIN.
+/*@{*/
+#define BP_DDR_CR03_LATLIN   (0U)          /*!< Bit position for DDR_CR03_LATLIN. */
+#define BM_DDR_CR03_LATLIN   (0x0000000FU) /*!< Bit mask for DDR_CR03_LATLIN. */
+#define BS_DDR_CR03_LATLIN   (4U)          /*!< Bit field size in bits for DDR_CR03_LATLIN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR03_LATLIN field.
-#define BR_DDR_CR03_LATLIN   (HW_DDR_CR03.B.LATLIN)
-#endif
+/*! @brief Read current value of the DDR_CR03_LATLIN field. */
+#define BR_DDR_CR03_LATLIN(x) (HW_DDR_CR03(x).B.LATLIN)
 
-//! @brief Format value for bitfield DDR_CR03_LATLIN.
-#define BF_DDR_CR03_LATLIN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR03_LATLIN), uint32_t) & BM_DDR_CR03_LATLIN)
+/*! @brief Format value for bitfield DDR_CR03_LATLIN. */
+#define BF_DDR_CR03_LATLIN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR03_LATLIN) & BM_DDR_CR03_LATLIN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LATLIN field to a new value.
-#define BW_DDR_CR03_LATLIN(v) (HW_DDR_CR03_WR((HW_DDR_CR03_RD() & ~BM_DDR_CR03_LATLIN) | BF_DDR_CR03_LATLIN(v)))
-#endif
-//@}
+/*! @brief Set the LATLIN field to a new value. */
+#define BW_DDR_CR03_LATLIN(x, v) (HW_DDR_CR03_WR(x, (HW_DDR_CR03_RD(x) & ~BM_DDR_CR03_LATLIN) | BF_DDR_CR03_LATLIN(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR03, field LATGATE[11:8] (RW)
@@ -518,24 +469,20 @@ typedef union _hw_ddr_cr03
  * smaller than LATLIN may have no effect on the data capture window, depending
  * on the fixed offsets in the ASIC and the board.
  */
-//@{
-#define BP_DDR_CR03_LATGATE  (8U)          //!< Bit position for DDR_CR03_LATGATE.
-#define BM_DDR_CR03_LATGATE  (0x00000F00U) //!< Bit mask for DDR_CR03_LATGATE.
-#define BS_DDR_CR03_LATGATE  (4U)          //!< Bit field size in bits for DDR_CR03_LATGATE.
+/*@{*/
+#define BP_DDR_CR03_LATGATE  (8U)          /*!< Bit position for DDR_CR03_LATGATE. */
+#define BM_DDR_CR03_LATGATE  (0x00000F00U) /*!< Bit mask for DDR_CR03_LATGATE. */
+#define BS_DDR_CR03_LATGATE  (4U)          /*!< Bit field size in bits for DDR_CR03_LATGATE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR03_LATGATE field.
-#define BR_DDR_CR03_LATGATE  (HW_DDR_CR03.B.LATGATE)
-#endif
+/*! @brief Read current value of the DDR_CR03_LATGATE field. */
+#define BR_DDR_CR03_LATGATE(x) (HW_DDR_CR03(x).B.LATGATE)
 
-//! @brief Format value for bitfield DDR_CR03_LATGATE.
-#define BF_DDR_CR03_LATGATE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR03_LATGATE), uint32_t) & BM_DDR_CR03_LATGATE)
+/*! @brief Format value for bitfield DDR_CR03_LATGATE. */
+#define BF_DDR_CR03_LATGATE(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR03_LATGATE) & BM_DDR_CR03_LATGATE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LATGATE field to a new value.
-#define BW_DDR_CR03_LATGATE(v) (HW_DDR_CR03_WR((HW_DDR_CR03_RD() & ~BM_DDR_CR03_LATGATE) | BF_DDR_CR03_LATGATE(v)))
-#endif
-//@}
+/*! @brief Set the LATGATE field to a new value. */
+#define BW_DDR_CR03_LATGATE(x, v) (HW_DDR_CR03_WR(x, (HW_DDR_CR03_RD(x) & ~BM_DDR_CR03_LATGATE) | BF_DDR_CR03_LATGATE(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR03, field WRLAT[19:16] (RW)
@@ -544,54 +491,45 @@ typedef union _hw_ddr_cr03
  * the time the write data is presented to the DRAM devices in cycles. This
  * parameter must be set to 0x1 when the memory controller is in DDR1 mode.
  */
-//@{
-#define BP_DDR_CR03_WRLAT    (16U)         //!< Bit position for DDR_CR03_WRLAT.
-#define BM_DDR_CR03_WRLAT    (0x000F0000U) //!< Bit mask for DDR_CR03_WRLAT.
-#define BS_DDR_CR03_WRLAT    (4U)          //!< Bit field size in bits for DDR_CR03_WRLAT.
+/*@{*/
+#define BP_DDR_CR03_WRLAT    (16U)         /*!< Bit position for DDR_CR03_WRLAT. */
+#define BM_DDR_CR03_WRLAT    (0x000F0000U) /*!< Bit mask for DDR_CR03_WRLAT. */
+#define BS_DDR_CR03_WRLAT    (4U)          /*!< Bit field size in bits for DDR_CR03_WRLAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR03_WRLAT field.
-#define BR_DDR_CR03_WRLAT    (HW_DDR_CR03.B.WRLAT)
-#endif
+/*! @brief Read current value of the DDR_CR03_WRLAT field. */
+#define BR_DDR_CR03_WRLAT(x) (HW_DDR_CR03(x).B.WRLAT)
 
-//! @brief Format value for bitfield DDR_CR03_WRLAT.
-#define BF_DDR_CR03_WRLAT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR03_WRLAT), uint32_t) & BM_DDR_CR03_WRLAT)
+/*! @brief Format value for bitfield DDR_CR03_WRLAT. */
+#define BF_DDR_CR03_WRLAT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR03_WRLAT) & BM_DDR_CR03_WRLAT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRLAT field to a new value.
-#define BW_DDR_CR03_WRLAT(v) (HW_DDR_CR03_WR((HW_DDR_CR03_RD() & ~BM_DDR_CR03_WRLAT) | BF_DDR_CR03_WRLAT(v)))
-#endif
-//@}
+/*! @brief Set the WRLAT field to a new value. */
+#define BW_DDR_CR03_WRLAT(x, v) (HW_DDR_CR03_WR(x, (HW_DDR_CR03_RD(x) & ~BM_DDR_CR03_WRLAT) | BF_DDR_CR03_WRLAT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR03, field TCCD[28:24] (RW)
  *
  * DRAM CAS-to-CAS parameter in cycles.
  */
-//@{
-#define BP_DDR_CR03_TCCD     (24U)         //!< Bit position for DDR_CR03_TCCD.
-#define BM_DDR_CR03_TCCD     (0x1F000000U) //!< Bit mask for DDR_CR03_TCCD.
-#define BS_DDR_CR03_TCCD     (5U)          //!< Bit field size in bits for DDR_CR03_TCCD.
+/*@{*/
+#define BP_DDR_CR03_TCCD     (24U)         /*!< Bit position for DDR_CR03_TCCD. */
+#define BM_DDR_CR03_TCCD     (0x1F000000U) /*!< Bit mask for DDR_CR03_TCCD. */
+#define BS_DDR_CR03_TCCD     (5U)          /*!< Bit field size in bits for DDR_CR03_TCCD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR03_TCCD field.
-#define BR_DDR_CR03_TCCD     (HW_DDR_CR03.B.TCCD)
-#endif
+/*! @brief Read current value of the DDR_CR03_TCCD field. */
+#define BR_DDR_CR03_TCCD(x)  (HW_DDR_CR03(x).B.TCCD)
 
-//! @brief Format value for bitfield DDR_CR03_TCCD.
-#define BF_DDR_CR03_TCCD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR03_TCCD), uint32_t) & BM_DDR_CR03_TCCD)
+/*! @brief Format value for bitfield DDR_CR03_TCCD. */
+#define BF_DDR_CR03_TCCD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR03_TCCD) & BM_DDR_CR03_TCCD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCCD field to a new value.
-#define BW_DDR_CR03_TCCD(v)  (HW_DDR_CR03_WR((HW_DDR_CR03_RD() & ~BM_DDR_CR03_TCCD) | BF_DDR_CR03_TCCD(v)))
-#endif
-//@}
+/*! @brief Set the TCCD field to a new value. */
+#define BW_DDR_CR03_TCCD(x, v) (HW_DDR_CR03_WR(x, (HW_DDR_CR03_RD(x) & ~BM_DDR_CR03_TCCD) | BF_DDR_CR03_TCCD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR04 - DDR Control Register 4
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR04 - DDR Control Register 4
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR04 - DDR Control Register 4 (RW)
  *
@@ -602,32 +540,29 @@ typedef union _hw_ddr_cr04
     uint32_t U;
     struct _hw_ddr_cr04_bitfields
     {
-        uint32_t TBINT : 3;            //!< [2:0] Time Burst Interrupt Interval
-        uint32_t RESERVED0 : 5;        //!< [7:3] Reserved
-        uint32_t TRRD : 3;             //!< [10:8]
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t TRC : 6;              //!< [21:16]
-        uint32_t RESERVED2 : 2;        //!< [23:22] Reserved
-        uint32_t TRASMIN : 8;          //!< [31:24] Time RAS Minimum
+        uint32_t TBINT : 3;            /*!< [2:0] Time Burst Interrupt Interval */
+        uint32_t RESERVED0 : 5;        /*!< [7:3] Reserved */
+        uint32_t TRRD : 3;             /*!< [10:8]  */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t TRC : 6;              /*!< [21:16]  */
+        uint32_t RESERVED2 : 2;        /*!< [23:22] Reserved */
+        uint32_t TRASMIN : 8;          /*!< [31:24] Time RAS Minimum */
     } B;
 } hw_ddr_cr04_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR04 register
  */
-//@{
-#define HW_DDR_CR04_ADDR         (REGS_DDR_BASE + 0x10U)
+/*@{*/
+#define HW_DDR_CR04_ADDR(x)      ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR04              (*(__IO hw_ddr_cr04_t *) HW_DDR_CR04_ADDR)
-#define HW_DDR_CR04_RD()         (HW_DDR_CR04.U)
-#define HW_DDR_CR04_WR(v)        (HW_DDR_CR04.U = (v))
-#define HW_DDR_CR04_SET(v)       (HW_DDR_CR04_WR(HW_DDR_CR04_RD() |  (v)))
-#define HW_DDR_CR04_CLR(v)       (HW_DDR_CR04_WR(HW_DDR_CR04_RD() & ~(v)))
-#define HW_DDR_CR04_TOG(v)       (HW_DDR_CR04_WR(HW_DDR_CR04_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR04(x)           (*(__IO hw_ddr_cr04_t *) HW_DDR_CR04_ADDR(x))
+#define HW_DDR_CR04_RD(x)        (HW_DDR_CR04(x).U)
+#define HW_DDR_CR04_WR(x, v)     (HW_DDR_CR04(x).U = (v))
+#define HW_DDR_CR04_SET(x, v)    (HW_DDR_CR04_WR(x, HW_DDR_CR04_RD(x) |  (v)))
+#define HW_DDR_CR04_CLR(x, v)    (HW_DDR_CR04_WR(x, HW_DDR_CR04_RD(x) & ~(v)))
+#define HW_DDR_CR04_TOG(x, v)    (HW_DDR_CR04_WR(x, HW_DDR_CR04_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR04 bitfields
@@ -638,24 +573,20 @@ typedef union _hw_ddr_cr04
  *
  * DRAM burst interrupt interval in cycles.
  */
-//@{
-#define BP_DDR_CR04_TBINT    (0U)          //!< Bit position for DDR_CR04_TBINT.
-#define BM_DDR_CR04_TBINT    (0x00000007U) //!< Bit mask for DDR_CR04_TBINT.
-#define BS_DDR_CR04_TBINT    (3U)          //!< Bit field size in bits for DDR_CR04_TBINT.
+/*@{*/
+#define BP_DDR_CR04_TBINT    (0U)          /*!< Bit position for DDR_CR04_TBINT. */
+#define BM_DDR_CR04_TBINT    (0x00000007U) /*!< Bit mask for DDR_CR04_TBINT. */
+#define BS_DDR_CR04_TBINT    (3U)          /*!< Bit field size in bits for DDR_CR04_TBINT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR04_TBINT field.
-#define BR_DDR_CR04_TBINT    (HW_DDR_CR04.B.TBINT)
-#endif
+/*! @brief Read current value of the DDR_CR04_TBINT field. */
+#define BR_DDR_CR04_TBINT(x) (HW_DDR_CR04(x).B.TBINT)
 
-//! @brief Format value for bitfield DDR_CR04_TBINT.
-#define BF_DDR_CR04_TBINT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR04_TBINT), uint32_t) & BM_DDR_CR04_TBINT)
+/*! @brief Format value for bitfield DDR_CR04_TBINT. */
+#define BF_DDR_CR04_TBINT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR04_TBINT) & BM_DDR_CR04_TBINT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TBINT field to a new value.
-#define BW_DDR_CR04_TBINT(v) (HW_DDR_CR04_WR((HW_DDR_CR04_RD() & ~BM_DDR_CR04_TBINT) | BF_DDR_CR04_TBINT(v)))
-#endif
-//@}
+/*! @brief Set the TBINT field to a new value. */
+#define BW_DDR_CR04_TBINT(x, v) (HW_DDR_CR04_WR(x, (HW_DDR_CR04_RD(x) & ~BM_DDR_CR04_TBINT) | BF_DDR_CR04_TBINT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR04, field TRRD[10:8] (RW)
@@ -663,24 +594,20 @@ typedef union _hw_ddr_cr04
  * Defines the DRAM activate-to-activate delay for different banks (TRRD) in
  * cycles.
  */
-//@{
-#define BP_DDR_CR04_TRRD     (8U)          //!< Bit position for DDR_CR04_TRRD.
-#define BM_DDR_CR04_TRRD     (0x00000700U) //!< Bit mask for DDR_CR04_TRRD.
-#define BS_DDR_CR04_TRRD     (3U)          //!< Bit field size in bits for DDR_CR04_TRRD.
+/*@{*/
+#define BP_DDR_CR04_TRRD     (8U)          /*!< Bit position for DDR_CR04_TRRD. */
+#define BM_DDR_CR04_TRRD     (0x00000700U) /*!< Bit mask for DDR_CR04_TRRD. */
+#define BS_DDR_CR04_TRRD     (3U)          /*!< Bit field size in bits for DDR_CR04_TRRD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR04_TRRD field.
-#define BR_DDR_CR04_TRRD     (HW_DDR_CR04.B.TRRD)
-#endif
+/*! @brief Read current value of the DDR_CR04_TRRD field. */
+#define BR_DDR_CR04_TRRD(x)  (HW_DDR_CR04(x).B.TRRD)
 
-//! @brief Format value for bitfield DDR_CR04_TRRD.
-#define BF_DDR_CR04_TRRD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR04_TRRD), uint32_t) & BM_DDR_CR04_TRRD)
+/*! @brief Format value for bitfield DDR_CR04_TRRD. */
+#define BF_DDR_CR04_TRRD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR04_TRRD) & BM_DDR_CR04_TRRD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRRD field to a new value.
-#define BW_DDR_CR04_TRRD(v)  (HW_DDR_CR04_WR((HW_DDR_CR04_RD() & ~BM_DDR_CR04_TRRD) | BF_DDR_CR04_TRRD(v)))
-#endif
-//@}
+/*! @brief Set the TRRD field to a new value. */
+#define BW_DDR_CR04_TRRD(x, v) (HW_DDR_CR04_WR(x, (HW_DDR_CR04_RD(x) & ~BM_DDR_CR04_TRRD) | BF_DDR_CR04_TRRD(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR04, field TRC[21:16] (RW)
@@ -688,54 +615,45 @@ typedef union _hw_ddr_cr04
  * Defines the DRAM period between active commands for the same bank (TRC) in
  * cycles.
  */
-//@{
-#define BP_DDR_CR04_TRC      (16U)         //!< Bit position for DDR_CR04_TRC.
-#define BM_DDR_CR04_TRC      (0x003F0000U) //!< Bit mask for DDR_CR04_TRC.
-#define BS_DDR_CR04_TRC      (6U)          //!< Bit field size in bits for DDR_CR04_TRC.
+/*@{*/
+#define BP_DDR_CR04_TRC      (16U)         /*!< Bit position for DDR_CR04_TRC. */
+#define BM_DDR_CR04_TRC      (0x003F0000U) /*!< Bit mask for DDR_CR04_TRC. */
+#define BS_DDR_CR04_TRC      (6U)          /*!< Bit field size in bits for DDR_CR04_TRC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR04_TRC field.
-#define BR_DDR_CR04_TRC      (HW_DDR_CR04.B.TRC)
-#endif
+/*! @brief Read current value of the DDR_CR04_TRC field. */
+#define BR_DDR_CR04_TRC(x)   (HW_DDR_CR04(x).B.TRC)
 
-//! @brief Format value for bitfield DDR_CR04_TRC.
-#define BF_DDR_CR04_TRC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR04_TRC), uint32_t) & BM_DDR_CR04_TRC)
+/*! @brief Format value for bitfield DDR_CR04_TRC. */
+#define BF_DDR_CR04_TRC(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR04_TRC) & BM_DDR_CR04_TRC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRC field to a new value.
-#define BW_DDR_CR04_TRC(v)   (HW_DDR_CR04_WR((HW_DDR_CR04_RD() & ~BM_DDR_CR04_TRC) | BF_DDR_CR04_TRC(v)))
-#endif
-//@}
+/*! @brief Set the TRC field to a new value. */
+#define BW_DDR_CR04_TRC(x, v) (HW_DDR_CR04_WR(x, (HW_DDR_CR04_RD(x) & ~BM_DDR_CR04_TRC) | BF_DDR_CR04_TRC(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR04, field TRASMIN[31:24] (RW)
  *
  * Defines the DRAM minimum row active time (TRAS_MIN) in cycles.
  */
-//@{
-#define BP_DDR_CR04_TRASMIN  (24U)         //!< Bit position for DDR_CR04_TRASMIN.
-#define BM_DDR_CR04_TRASMIN  (0xFF000000U) //!< Bit mask for DDR_CR04_TRASMIN.
-#define BS_DDR_CR04_TRASMIN  (8U)          //!< Bit field size in bits for DDR_CR04_TRASMIN.
+/*@{*/
+#define BP_DDR_CR04_TRASMIN  (24U)         /*!< Bit position for DDR_CR04_TRASMIN. */
+#define BM_DDR_CR04_TRASMIN  (0xFF000000U) /*!< Bit mask for DDR_CR04_TRASMIN. */
+#define BS_DDR_CR04_TRASMIN  (8U)          /*!< Bit field size in bits for DDR_CR04_TRASMIN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR04_TRASMIN field.
-#define BR_DDR_CR04_TRASMIN  (HW_DDR_CR04.B.TRASMIN)
-#endif
+/*! @brief Read current value of the DDR_CR04_TRASMIN field. */
+#define BR_DDR_CR04_TRASMIN(x) (HW_DDR_CR04(x).B.TRASMIN)
 
-//! @brief Format value for bitfield DDR_CR04_TRASMIN.
-#define BF_DDR_CR04_TRASMIN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR04_TRASMIN), uint32_t) & BM_DDR_CR04_TRASMIN)
+/*! @brief Format value for bitfield DDR_CR04_TRASMIN. */
+#define BF_DDR_CR04_TRASMIN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR04_TRASMIN) & BM_DDR_CR04_TRASMIN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRASMIN field to a new value.
-#define BW_DDR_CR04_TRASMIN(v) (HW_DDR_CR04_WR((HW_DDR_CR04_RD() & ~BM_DDR_CR04_TRASMIN) | BF_DDR_CR04_TRASMIN(v)))
-#endif
-//@}
+/*! @brief Set the TRASMIN field to a new value. */
+#define BW_DDR_CR04_TRASMIN(x, v) (HW_DDR_CR04_WR(x, (HW_DDR_CR04_RD(x) & ~BM_DDR_CR04_TRASMIN) | BF_DDR_CR04_TRASMIN(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR05 - DDR Control Register 5
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR05 - DDR Control Register 5
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR05 - DDR Control Register 5 (RW)
  *
@@ -746,33 +664,30 @@ typedef union _hw_ddr_cr05
     uint32_t U;
     struct _hw_ddr_cr05_bitfields
     {
-        uint32_t TWTR : 4;             //!< [3:0] Time Write-To-Read
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t TRP : 4;              //!< [11:8]
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t TRTP : 3;             //!< [18:16] Time Read-To-Precharge
-        uint32_t RESERVED2 : 5;        //!< [23:19] Reserved
-        uint32_t TMRD : 5;             //!< [28:24]
-        uint32_t RESERVED3 : 3;        //!< [31:29] Reserved
+        uint32_t TWTR : 4;             /*!< [3:0] Time Write-To-Read */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t TRP : 4;              /*!< [11:8]  */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t TRTP : 3;             /*!< [18:16] Time Read-To-Precharge */
+        uint32_t RESERVED2 : 5;        /*!< [23:19] Reserved */
+        uint32_t TMRD : 5;             /*!< [28:24]  */
+        uint32_t RESERVED3 : 3;        /*!< [31:29] Reserved */
     } B;
 } hw_ddr_cr05_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR05 register
  */
-//@{
-#define HW_DDR_CR05_ADDR         (REGS_DDR_BASE + 0x14U)
+/*@{*/
+#define HW_DDR_CR05_ADDR(x)      ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR05              (*(__IO hw_ddr_cr05_t *) HW_DDR_CR05_ADDR)
-#define HW_DDR_CR05_RD()         (HW_DDR_CR05.U)
-#define HW_DDR_CR05_WR(v)        (HW_DDR_CR05.U = (v))
-#define HW_DDR_CR05_SET(v)       (HW_DDR_CR05_WR(HW_DDR_CR05_RD() |  (v)))
-#define HW_DDR_CR05_CLR(v)       (HW_DDR_CR05_WR(HW_DDR_CR05_RD() & ~(v)))
-#define HW_DDR_CR05_TOG(v)       (HW_DDR_CR05_WR(HW_DDR_CR05_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR05(x)           (*(__IO hw_ddr_cr05_t *) HW_DDR_CR05_ADDR(x))
+#define HW_DDR_CR05_RD(x)        (HW_DDR_CR05(x).U)
+#define HW_DDR_CR05_WR(x, v)     (HW_DDR_CR05(x).U = (v))
+#define HW_DDR_CR05_SET(x, v)    (HW_DDR_CR05_WR(x, HW_DDR_CR05_RD(x) |  (v)))
+#define HW_DDR_CR05_CLR(x, v)    (HW_DDR_CR05_WR(x, HW_DDR_CR05_RD(x) & ~(v)))
+#define HW_DDR_CR05_TOG(x, v)    (HW_DDR_CR05_WR(x, HW_DDR_CR05_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR05 bitfields
@@ -784,102 +699,85 @@ typedef union _hw_ddr_cr05
  * Sets the number of cycles needed to switch from a write to a read operation,
  * as dictated by the DDR SDRAM specification.
  */
-//@{
-#define BP_DDR_CR05_TWTR     (0U)          //!< Bit position for DDR_CR05_TWTR.
-#define BM_DDR_CR05_TWTR     (0x0000000FU) //!< Bit mask for DDR_CR05_TWTR.
-#define BS_DDR_CR05_TWTR     (4U)          //!< Bit field size in bits for DDR_CR05_TWTR.
+/*@{*/
+#define BP_DDR_CR05_TWTR     (0U)          /*!< Bit position for DDR_CR05_TWTR. */
+#define BM_DDR_CR05_TWTR     (0x0000000FU) /*!< Bit mask for DDR_CR05_TWTR. */
+#define BS_DDR_CR05_TWTR     (4U)          /*!< Bit field size in bits for DDR_CR05_TWTR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR05_TWTR field.
-#define BR_DDR_CR05_TWTR     (HW_DDR_CR05.B.TWTR)
-#endif
+/*! @brief Read current value of the DDR_CR05_TWTR field. */
+#define BR_DDR_CR05_TWTR(x)  (HW_DDR_CR05(x).B.TWTR)
 
-//! @brief Format value for bitfield DDR_CR05_TWTR.
-#define BF_DDR_CR05_TWTR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR05_TWTR), uint32_t) & BM_DDR_CR05_TWTR)
+/*! @brief Format value for bitfield DDR_CR05_TWTR. */
+#define BF_DDR_CR05_TWTR(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR05_TWTR) & BM_DDR_CR05_TWTR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TWTR field to a new value.
-#define BW_DDR_CR05_TWTR(v)  (HW_DDR_CR05_WR((HW_DDR_CR05_RD() & ~BM_DDR_CR05_TWTR) | BF_DDR_CR05_TWTR(v)))
-#endif
-//@}
+/*! @brief Set the TWTR field to a new value. */
+#define BW_DDR_CR05_TWTR(x, v) (HW_DDR_CR05_WR(x, (HW_DDR_CR05_RD(x) & ~BM_DDR_CR05_TWTR) | BF_DDR_CR05_TWTR(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR05, field TRP[11:8] (RW)
  *
  * Defines the DRAM precharge command time (TRP) in cycles.
  */
-//@{
-#define BP_DDR_CR05_TRP      (8U)          //!< Bit position for DDR_CR05_TRP.
-#define BM_DDR_CR05_TRP      (0x00000F00U) //!< Bit mask for DDR_CR05_TRP.
-#define BS_DDR_CR05_TRP      (4U)          //!< Bit field size in bits for DDR_CR05_TRP.
+/*@{*/
+#define BP_DDR_CR05_TRP      (8U)          /*!< Bit position for DDR_CR05_TRP. */
+#define BM_DDR_CR05_TRP      (0x00000F00U) /*!< Bit mask for DDR_CR05_TRP. */
+#define BS_DDR_CR05_TRP      (4U)          /*!< Bit field size in bits for DDR_CR05_TRP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR05_TRP field.
-#define BR_DDR_CR05_TRP      (HW_DDR_CR05.B.TRP)
-#endif
+/*! @brief Read current value of the DDR_CR05_TRP field. */
+#define BR_DDR_CR05_TRP(x)   (HW_DDR_CR05(x).B.TRP)
 
-//! @brief Format value for bitfield DDR_CR05_TRP.
-#define BF_DDR_CR05_TRP(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR05_TRP), uint32_t) & BM_DDR_CR05_TRP)
+/*! @brief Format value for bitfield DDR_CR05_TRP. */
+#define BF_DDR_CR05_TRP(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR05_TRP) & BM_DDR_CR05_TRP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRP field to a new value.
-#define BW_DDR_CR05_TRP(v)   (HW_DDR_CR05_WR((HW_DDR_CR05_RD() & ~BM_DDR_CR05_TRP) | BF_DDR_CR05_TRP(v)))
-#endif
-//@}
+/*! @brief Set the TRP field to a new value. */
+#define BW_DDR_CR05_TRP(x, v) (HW_DDR_CR05_WR(x, (HW_DDR_CR05_RD(x) & ~BM_DDR_CR05_TRP) | BF_DDR_CR05_TRP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR05, field TRTP[18:16] (RW)
  *
  * Defines the DRAM read to precharge time (TRTP) in cycles.
  */
-//@{
-#define BP_DDR_CR05_TRTP     (16U)         //!< Bit position for DDR_CR05_TRTP.
-#define BM_DDR_CR05_TRTP     (0x00070000U) //!< Bit mask for DDR_CR05_TRTP.
-#define BS_DDR_CR05_TRTP     (3U)          //!< Bit field size in bits for DDR_CR05_TRTP.
+/*@{*/
+#define BP_DDR_CR05_TRTP     (16U)         /*!< Bit position for DDR_CR05_TRTP. */
+#define BM_DDR_CR05_TRTP     (0x00070000U) /*!< Bit mask for DDR_CR05_TRTP. */
+#define BS_DDR_CR05_TRTP     (3U)          /*!< Bit field size in bits for DDR_CR05_TRTP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR05_TRTP field.
-#define BR_DDR_CR05_TRTP     (HW_DDR_CR05.B.TRTP)
-#endif
+/*! @brief Read current value of the DDR_CR05_TRTP field. */
+#define BR_DDR_CR05_TRTP(x)  (HW_DDR_CR05(x).B.TRTP)
 
-//! @brief Format value for bitfield DDR_CR05_TRTP.
-#define BF_DDR_CR05_TRTP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR05_TRTP), uint32_t) & BM_DDR_CR05_TRTP)
+/*! @brief Format value for bitfield DDR_CR05_TRTP. */
+#define BF_DDR_CR05_TRTP(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR05_TRTP) & BM_DDR_CR05_TRTP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRTP field to a new value.
-#define BW_DDR_CR05_TRTP(v)  (HW_DDR_CR05_WR((HW_DDR_CR05_RD() & ~BM_DDR_CR05_TRTP) | BF_DDR_CR05_TRTP(v)))
-#endif
-//@}
+/*! @brief Set the TRTP field to a new value. */
+#define BW_DDR_CR05_TRTP(x, v) (HW_DDR_CR05_WR(x, (HW_DDR_CR05_RD(x) & ~BM_DDR_CR05_TRTP) | BF_DDR_CR05_TRTP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR05, field TMRD[28:24] (RW)
  *
  * DRAM TMRD parameter in cycles.
  */
-//@{
-#define BP_DDR_CR05_TMRD     (24U)         //!< Bit position for DDR_CR05_TMRD.
-#define BM_DDR_CR05_TMRD     (0x1F000000U) //!< Bit mask for DDR_CR05_TMRD.
-#define BS_DDR_CR05_TMRD     (5U)          //!< Bit field size in bits for DDR_CR05_TMRD.
+/*@{*/
+#define BP_DDR_CR05_TMRD     (24U)         /*!< Bit position for DDR_CR05_TMRD. */
+#define BM_DDR_CR05_TMRD     (0x1F000000U) /*!< Bit mask for DDR_CR05_TMRD. */
+#define BS_DDR_CR05_TMRD     (5U)          /*!< Bit field size in bits for DDR_CR05_TMRD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR05_TMRD field.
-#define BR_DDR_CR05_TMRD     (HW_DDR_CR05.B.TMRD)
-#endif
+/*! @brief Read current value of the DDR_CR05_TMRD field. */
+#define BR_DDR_CR05_TMRD(x)  (HW_DDR_CR05(x).B.TMRD)
 
-//! @brief Format value for bitfield DDR_CR05_TMRD.
-#define BF_DDR_CR05_TMRD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR05_TMRD), uint32_t) & BM_DDR_CR05_TMRD)
+/*! @brief Format value for bitfield DDR_CR05_TMRD. */
+#define BF_DDR_CR05_TMRD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR05_TMRD) & BM_DDR_CR05_TMRD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TMRD field to a new value.
-#define BW_DDR_CR05_TMRD(v)  (HW_DDR_CR05_WR((HW_DDR_CR05_RD() & ~BM_DDR_CR05_TMRD) | BF_DDR_CR05_TMRD(v)))
-#endif
-//@}
+/*! @brief Set the TMRD field to a new value. */
+#define BW_DDR_CR05_TMRD(x, v) (HW_DDR_CR05_WR(x, (HW_DDR_CR05_RD(x) & ~BM_DDR_CR05_TMRD) | BF_DDR_CR05_TMRD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR06 - DDR Control Register 6
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR06 - DDR Control Register 6
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR06 - DDR Control Register 6 (RW)
  *
@@ -890,29 +788,26 @@ typedef union _hw_ddr_cr06
     uint32_t U;
     struct _hw_ddr_cr06_bitfields
     {
-        uint32_t TMOD : 8;             //!< [7:0] Time Mode
-        uint32_t TRASMAX : 16;         //!< [23:8] Time Row Access Maximum
-        uint32_t INTWBR : 1;           //!< [24] Interrupt Write Burst
-        uint32_t RESERVED0 : 7;        //!< [31:25] Reserved
+        uint32_t TMOD : 8;             /*!< [7:0] Time Mode */
+        uint32_t TRASMAX : 16;         /*!< [23:8] Time Row Access Maximum */
+        uint32_t INTWBR : 1;           /*!< [24] Interrupt Write Burst */
+        uint32_t RESERVED0 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr06_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR06 register
  */
-//@{
-#define HW_DDR_CR06_ADDR         (REGS_DDR_BASE + 0x18U)
+/*@{*/
+#define HW_DDR_CR06_ADDR(x)      ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR06              (*(__IO hw_ddr_cr06_t *) HW_DDR_CR06_ADDR)
-#define HW_DDR_CR06_RD()         (HW_DDR_CR06.U)
-#define HW_DDR_CR06_WR(v)        (HW_DDR_CR06.U = (v))
-#define HW_DDR_CR06_SET(v)       (HW_DDR_CR06_WR(HW_DDR_CR06_RD() |  (v)))
-#define HW_DDR_CR06_CLR(v)       (HW_DDR_CR06_WR(HW_DDR_CR06_RD() & ~(v)))
-#define HW_DDR_CR06_TOG(v)       (HW_DDR_CR06_WR(HW_DDR_CR06_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR06(x)           (*(__IO hw_ddr_cr06_t *) HW_DDR_CR06_ADDR(x))
+#define HW_DDR_CR06_RD(x)        (HW_DDR_CR06(x).U)
+#define HW_DDR_CR06_WR(x, v)     (HW_DDR_CR06(x).U = (v))
+#define HW_DDR_CR06_SET(x, v)    (HW_DDR_CR06_WR(x, HW_DDR_CR06_RD(x) |  (v)))
+#define HW_DDR_CR06_CLR(x, v)    (HW_DDR_CR06_WR(x, HW_DDR_CR06_RD(x) & ~(v)))
+#define HW_DDR_CR06_TOG(x, v)    (HW_DDR_CR06_WR(x, HW_DDR_CR06_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR06 bitfields
@@ -925,48 +820,40 @@ typedef union _hw_ddr_cr06
  * leveling, this is defined as the number of cycles of wait time after a MRS
  * command to the ODT enable.
  */
-//@{
-#define BP_DDR_CR06_TMOD     (0U)          //!< Bit position for DDR_CR06_TMOD.
-#define BM_DDR_CR06_TMOD     (0x000000FFU) //!< Bit mask for DDR_CR06_TMOD.
-#define BS_DDR_CR06_TMOD     (8U)          //!< Bit field size in bits for DDR_CR06_TMOD.
+/*@{*/
+#define BP_DDR_CR06_TMOD     (0U)          /*!< Bit position for DDR_CR06_TMOD. */
+#define BM_DDR_CR06_TMOD     (0x000000FFU) /*!< Bit mask for DDR_CR06_TMOD. */
+#define BS_DDR_CR06_TMOD     (8U)          /*!< Bit field size in bits for DDR_CR06_TMOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR06_TMOD field.
-#define BR_DDR_CR06_TMOD     (HW_DDR_CR06.B.TMOD)
-#endif
+/*! @brief Read current value of the DDR_CR06_TMOD field. */
+#define BR_DDR_CR06_TMOD(x)  (HW_DDR_CR06(x).B.TMOD)
 
-//! @brief Format value for bitfield DDR_CR06_TMOD.
-#define BF_DDR_CR06_TMOD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR06_TMOD), uint32_t) & BM_DDR_CR06_TMOD)
+/*! @brief Format value for bitfield DDR_CR06_TMOD. */
+#define BF_DDR_CR06_TMOD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR06_TMOD) & BM_DDR_CR06_TMOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TMOD field to a new value.
-#define BW_DDR_CR06_TMOD(v)  (HW_DDR_CR06_WR((HW_DDR_CR06_RD() & ~BM_DDR_CR06_TMOD) | BF_DDR_CR06_TMOD(v)))
-#endif
-//@}
+/*! @brief Set the TMOD field to a new value. */
+#define BW_DDR_CR06_TMOD(x, v) (HW_DDR_CR06_WR(x, (HW_DDR_CR06_RD(x) & ~BM_DDR_CR06_TMOD) | BF_DDR_CR06_TMOD(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR06, field TRASMAX[23:8] (RW)
  *
  * Defines the DRAM maximum row active time (TRAS_MAX) in cycles.
  */
-//@{
-#define BP_DDR_CR06_TRASMAX  (8U)          //!< Bit position for DDR_CR06_TRASMAX.
-#define BM_DDR_CR06_TRASMAX  (0x00FFFF00U) //!< Bit mask for DDR_CR06_TRASMAX.
-#define BS_DDR_CR06_TRASMAX  (16U)         //!< Bit field size in bits for DDR_CR06_TRASMAX.
+/*@{*/
+#define BP_DDR_CR06_TRASMAX  (8U)          /*!< Bit position for DDR_CR06_TRASMAX. */
+#define BM_DDR_CR06_TRASMAX  (0x00FFFF00U) /*!< Bit mask for DDR_CR06_TRASMAX. */
+#define BS_DDR_CR06_TRASMAX  (16U)         /*!< Bit field size in bits for DDR_CR06_TRASMAX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR06_TRASMAX field.
-#define BR_DDR_CR06_TRASMAX  (HW_DDR_CR06.B.TRASMAX)
-#endif
+/*! @brief Read current value of the DDR_CR06_TRASMAX field. */
+#define BR_DDR_CR06_TRASMAX(x) (HW_DDR_CR06(x).B.TRASMAX)
 
-//! @brief Format value for bitfield DDR_CR06_TRASMAX.
-#define BF_DDR_CR06_TRASMAX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR06_TRASMAX), uint32_t) & BM_DDR_CR06_TRASMAX)
+/*! @brief Format value for bitfield DDR_CR06_TRASMAX. */
+#define BF_DDR_CR06_TRASMAX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR06_TRASMAX) & BM_DDR_CR06_TRASMAX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRASMAX field to a new value.
-#define BW_DDR_CR06_TRASMAX(v) (HW_DDR_CR06_WR((HW_DDR_CR06_RD() & ~BM_DDR_CR06_TRASMAX) | BF_DDR_CR06_TRASMAX(v)))
-#endif
-//@}
+/*! @brief Set the TRASMAX field to a new value. */
+#define BW_DDR_CR06_TRASMAX(x, v) (HW_DDR_CR06_WR(x, (HW_DDR_CR06_RD(x) & ~BM_DDR_CR06_TRASMAX) | BF_DDR_CR06_TRASMAX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR06, field INTWBR[24] (RW)
@@ -978,30 +865,25 @@ typedef union _hw_ddr_cr06
  * - 0 - Read commands cannot interrupt write commands
  * - 1 - Read commands can interrupt write commands
  */
-//@{
-#define BP_DDR_CR06_INTWBR   (24U)         //!< Bit position for DDR_CR06_INTWBR.
-#define BM_DDR_CR06_INTWBR   (0x01000000U) //!< Bit mask for DDR_CR06_INTWBR.
-#define BS_DDR_CR06_INTWBR   (1U)          //!< Bit field size in bits for DDR_CR06_INTWBR.
+/*@{*/
+#define BP_DDR_CR06_INTWBR   (24U)         /*!< Bit position for DDR_CR06_INTWBR. */
+#define BM_DDR_CR06_INTWBR   (0x01000000U) /*!< Bit mask for DDR_CR06_INTWBR. */
+#define BS_DDR_CR06_INTWBR   (1U)          /*!< Bit field size in bits for DDR_CR06_INTWBR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR06_INTWBR field.
-#define BR_DDR_CR06_INTWBR   (BITBAND_ACCESS32(HW_DDR_CR06_ADDR, BP_DDR_CR06_INTWBR))
-#endif
+/*! @brief Read current value of the DDR_CR06_INTWBR field. */
+#define BR_DDR_CR06_INTWBR(x) (BITBAND_ACCESS32(HW_DDR_CR06_ADDR(x), BP_DDR_CR06_INTWBR))
 
-//! @brief Format value for bitfield DDR_CR06_INTWBR.
-#define BF_DDR_CR06_INTWBR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR06_INTWBR), uint32_t) & BM_DDR_CR06_INTWBR)
+/*! @brief Format value for bitfield DDR_CR06_INTWBR. */
+#define BF_DDR_CR06_INTWBR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR06_INTWBR) & BM_DDR_CR06_INTWBR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INTWBR field to a new value.
-#define BW_DDR_CR06_INTWBR(v) (BITBAND_ACCESS32(HW_DDR_CR06_ADDR, BP_DDR_CR06_INTWBR) = (v))
-#endif
-//@}
+/*! @brief Set the INTWBR field to a new value. */
+#define BW_DDR_CR06_INTWBR(x, v) (BITBAND_ACCESS32(HW_DDR_CR06_ADDR(x), BP_DDR_CR06_INTWBR) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR07 - DDR Control Register 7
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR07 - DDR Control Register 7
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR07 - DDR Control Register 7 (RW)
  *
@@ -1012,33 +894,30 @@ typedef union _hw_ddr_cr07
     uint32_t U;
     struct _hw_ddr_cr07_bitfields
     {
-        uint32_t CLKPW : 3;            //!< [2:0] Clock Pulse Width
-        uint32_t RESERVED0 : 5;        //!< [7:3] Reserved
-        uint32_t TCKESR : 5;           //!< [12:8] Time Clock low Self Refresh
-        uint32_t RESERVED1 : 3;        //!< [15:13] Reserved
-        uint32_t AP : 1;               //!< [16] Auto Precharge
-        uint32_t RESERVED2 : 7;        //!< [23:17] Reserved
-        uint32_t CCAPEN : 1;           //!< [24] Concurrent Auto-Precharge Enable
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t CLKPW : 3;            /*!< [2:0] Clock Pulse Width */
+        uint32_t RESERVED0 : 5;        /*!< [7:3] Reserved */
+        uint32_t TCKESR : 5;           /*!< [12:8] Time Clock low Self Refresh */
+        uint32_t RESERVED1 : 3;        /*!< [15:13] Reserved */
+        uint32_t AP : 1;               /*!< [16] Auto Precharge */
+        uint32_t RESERVED2 : 7;        /*!< [23:17] Reserved */
+        uint32_t CCAPEN : 1;           /*!< [24] Concurrent Auto-Precharge Enable */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr07_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR07 register
  */
-//@{
-#define HW_DDR_CR07_ADDR         (REGS_DDR_BASE + 0x1CU)
+/*@{*/
+#define HW_DDR_CR07_ADDR(x)      ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR07              (*(__IO hw_ddr_cr07_t *) HW_DDR_CR07_ADDR)
-#define HW_DDR_CR07_RD()         (HW_DDR_CR07.U)
-#define HW_DDR_CR07_WR(v)        (HW_DDR_CR07.U = (v))
-#define HW_DDR_CR07_SET(v)       (HW_DDR_CR07_WR(HW_DDR_CR07_RD() |  (v)))
-#define HW_DDR_CR07_CLR(v)       (HW_DDR_CR07_WR(HW_DDR_CR07_RD() & ~(v)))
-#define HW_DDR_CR07_TOG(v)       (HW_DDR_CR07_WR(HW_DDR_CR07_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR07(x)           (*(__IO hw_ddr_cr07_t *) HW_DDR_CR07_ADDR(x))
+#define HW_DDR_CR07_RD(x)        (HW_DDR_CR07(x).U)
+#define HW_DDR_CR07_WR(x, v)     (HW_DDR_CR07(x).U = (v))
+#define HW_DDR_CR07_SET(x, v)    (HW_DDR_CR07_WR(x, HW_DDR_CR07_RD(x) |  (v)))
+#define HW_DDR_CR07_CLR(x, v)    (HW_DDR_CR07_WR(x, HW_DDR_CR07_RD(x) & ~(v)))
+#define HW_DDR_CR07_TOG(x, v)    (HW_DDR_CR07_WR(x, HW_DDR_CR07_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR07 bitfields
@@ -1049,48 +928,40 @@ typedef union _hw_ddr_cr07
  *
  * Minimum CLK pulse width in cycles.
  */
-//@{
-#define BP_DDR_CR07_CLKPW    (0U)          //!< Bit position for DDR_CR07_CLKPW.
-#define BM_DDR_CR07_CLKPW    (0x00000007U) //!< Bit mask for DDR_CR07_CLKPW.
-#define BS_DDR_CR07_CLKPW    (3U)          //!< Bit field size in bits for DDR_CR07_CLKPW.
+/*@{*/
+#define BP_DDR_CR07_CLKPW    (0U)          /*!< Bit position for DDR_CR07_CLKPW. */
+#define BM_DDR_CR07_CLKPW    (0x00000007U) /*!< Bit mask for DDR_CR07_CLKPW. */
+#define BS_DDR_CR07_CLKPW    (3U)          /*!< Bit field size in bits for DDR_CR07_CLKPW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR07_CLKPW field.
-#define BR_DDR_CR07_CLKPW    (HW_DDR_CR07.B.CLKPW)
-#endif
+/*! @brief Read current value of the DDR_CR07_CLKPW field. */
+#define BR_DDR_CR07_CLKPW(x) (HW_DDR_CR07(x).B.CLKPW)
 
-//! @brief Format value for bitfield DDR_CR07_CLKPW.
-#define BF_DDR_CR07_CLKPW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR07_CLKPW), uint32_t) & BM_DDR_CR07_CLKPW)
+/*! @brief Format value for bitfield DDR_CR07_CLKPW. */
+#define BF_DDR_CR07_CLKPW(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR07_CLKPW) & BM_DDR_CR07_CLKPW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKPW field to a new value.
-#define BW_DDR_CR07_CLKPW(v) (HW_DDR_CR07_WR((HW_DDR_CR07_RD() & ~BM_DDR_CR07_CLKPW) | BF_DDR_CR07_CLKPW(v)))
-#endif
-//@}
+/*! @brief Set the CLKPW field to a new value. */
+#define BW_DDR_CR07_CLKPW(x, v) (HW_DDR_CR07_WR(x, (HW_DDR_CR07_RD(x) & ~BM_DDR_CR07_CLKPW) | BF_DDR_CR07_CLKPW(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR07, field TCKESR[12:8] (RW)
  *
  * Minimum CLK low pulse width during self-refresh.
  */
-//@{
-#define BP_DDR_CR07_TCKESR   (8U)          //!< Bit position for DDR_CR07_TCKESR.
-#define BM_DDR_CR07_TCKESR   (0x00001F00U) //!< Bit mask for DDR_CR07_TCKESR.
-#define BS_DDR_CR07_TCKESR   (5U)          //!< Bit field size in bits for DDR_CR07_TCKESR.
+/*@{*/
+#define BP_DDR_CR07_TCKESR   (8U)          /*!< Bit position for DDR_CR07_TCKESR. */
+#define BM_DDR_CR07_TCKESR   (0x00001F00U) /*!< Bit mask for DDR_CR07_TCKESR. */
+#define BS_DDR_CR07_TCKESR   (5U)          /*!< Bit field size in bits for DDR_CR07_TCKESR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR07_TCKESR field.
-#define BR_DDR_CR07_TCKESR   (HW_DDR_CR07.B.TCKESR)
-#endif
+/*! @brief Read current value of the DDR_CR07_TCKESR field. */
+#define BR_DDR_CR07_TCKESR(x) (HW_DDR_CR07(x).B.TCKESR)
 
-//! @brief Format value for bitfield DDR_CR07_TCKESR.
-#define BF_DDR_CR07_TCKESR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR07_TCKESR), uint32_t) & BM_DDR_CR07_TCKESR)
+/*! @brief Format value for bitfield DDR_CR07_TCKESR. */
+#define BF_DDR_CR07_TCKESR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR07_TCKESR) & BM_DDR_CR07_TCKESR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCKESR field to a new value.
-#define BW_DDR_CR07_TCKESR(v) (HW_DDR_CR07_WR((HW_DDR_CR07_RD() & ~BM_DDR_CR07_TCKESR) | BF_DDR_CR07_TCKESR(v)))
-#endif
-//@}
+/*! @brief Set the TCKESR field to a new value. */
+#define BW_DDR_CR07_TCKESR(x, v) (HW_DDR_CR07_WR(x, (HW_DDR_CR07_RD(x) & ~BM_DDR_CR07_TCKESR) | BF_DDR_CR07_TCKESR(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR07, field AP[16] (RW)
@@ -1101,24 +972,20 @@ typedef union _hw_ddr_cr07
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR07_AP       (16U)         //!< Bit position for DDR_CR07_AP.
-#define BM_DDR_CR07_AP       (0x00010000U) //!< Bit mask for DDR_CR07_AP.
-#define BS_DDR_CR07_AP       (1U)          //!< Bit field size in bits for DDR_CR07_AP.
+/*@{*/
+#define BP_DDR_CR07_AP       (16U)         /*!< Bit position for DDR_CR07_AP. */
+#define BM_DDR_CR07_AP       (0x00010000U) /*!< Bit mask for DDR_CR07_AP. */
+#define BS_DDR_CR07_AP       (1U)          /*!< Bit field size in bits for DDR_CR07_AP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR07_AP field.
-#define BR_DDR_CR07_AP       (BITBAND_ACCESS32(HW_DDR_CR07_ADDR, BP_DDR_CR07_AP))
-#endif
+/*! @brief Read current value of the DDR_CR07_AP field. */
+#define BR_DDR_CR07_AP(x)    (BITBAND_ACCESS32(HW_DDR_CR07_ADDR(x), BP_DDR_CR07_AP))
 
-//! @brief Format value for bitfield DDR_CR07_AP.
-#define BF_DDR_CR07_AP(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR07_AP), uint32_t) & BM_DDR_CR07_AP)
+/*! @brief Format value for bitfield DDR_CR07_AP. */
+#define BF_DDR_CR07_AP(v)    ((uint32_t)((uint32_t)(v) << BP_DDR_CR07_AP) & BM_DDR_CR07_AP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AP field to a new value.
-#define BW_DDR_CR07_AP(v)    (BITBAND_ACCESS32(HW_DDR_CR07_ADDR, BP_DDR_CR07_AP) = (v))
-#endif
-//@}
+/*! @brief Set the AP field to a new value. */
+#define BW_DDR_CR07_AP(x, v) (BITBAND_ACCESS32(HW_DDR_CR07_ADDR(x), BP_DDR_CR07_AP) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR07, field CCAPEN[24] (RW)
@@ -1132,30 +999,25 @@ typedef union _hw_ddr_cr07
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR07_CCAPEN   (24U)         //!< Bit position for DDR_CR07_CCAPEN.
-#define BM_DDR_CR07_CCAPEN   (0x01000000U) //!< Bit mask for DDR_CR07_CCAPEN.
-#define BS_DDR_CR07_CCAPEN   (1U)          //!< Bit field size in bits for DDR_CR07_CCAPEN.
+/*@{*/
+#define BP_DDR_CR07_CCAPEN   (24U)         /*!< Bit position for DDR_CR07_CCAPEN. */
+#define BM_DDR_CR07_CCAPEN   (0x01000000U) /*!< Bit mask for DDR_CR07_CCAPEN. */
+#define BS_DDR_CR07_CCAPEN   (1U)          /*!< Bit field size in bits for DDR_CR07_CCAPEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR07_CCAPEN field.
-#define BR_DDR_CR07_CCAPEN   (BITBAND_ACCESS32(HW_DDR_CR07_ADDR, BP_DDR_CR07_CCAPEN))
-#endif
+/*! @brief Read current value of the DDR_CR07_CCAPEN field. */
+#define BR_DDR_CR07_CCAPEN(x) (BITBAND_ACCESS32(HW_DDR_CR07_ADDR(x), BP_DDR_CR07_CCAPEN))
 
-//! @brief Format value for bitfield DDR_CR07_CCAPEN.
-#define BF_DDR_CR07_CCAPEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR07_CCAPEN), uint32_t) & BM_DDR_CR07_CCAPEN)
+/*! @brief Format value for bitfield DDR_CR07_CCAPEN. */
+#define BF_DDR_CR07_CCAPEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR07_CCAPEN) & BM_DDR_CR07_CCAPEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CCAPEN field to a new value.
-#define BW_DDR_CR07_CCAPEN(v) (BITBAND_ACCESS32(HW_DDR_CR07_ADDR, BP_DDR_CR07_CCAPEN) = (v))
-#endif
-//@}
+/*! @brief Set the CCAPEN field to a new value. */
+#define BW_DDR_CR07_CCAPEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR07_ADDR(x), BP_DDR_CR07_CCAPEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR08 - DDR Control Register 8
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR08 - DDR Control Register 8
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR08 - DDR Control Register 8 (RW)
  *
@@ -1166,32 +1028,29 @@ typedef union _hw_ddr_cr08
     uint32_t U;
     struct _hw_ddr_cr08_bitfields
     {
-        uint32_t TRAS : 1;             //!< [0] Time RAS lockout
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t TRASDI : 8;           //!< [15:8] Time RAS-to-CAS Delay Interval
-        uint32_t TWR : 5;              //!< [20:16] Time Write Recovery
-        uint32_t RESERVED1 : 3;        //!< [23:21] Reserved
-        uint32_t TDAL : 5;             //!< [28:24]
-        uint32_t RESERVED2 : 3;        //!< [31:29] Reserved
+        uint32_t TRAS : 1;             /*!< [0] Time RAS lockout */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t TRASDI : 8;           /*!< [15:8] Time RAS-to-CAS Delay Interval */
+        uint32_t TWR : 5;              /*!< [20:16] Time Write Recovery */
+        uint32_t RESERVED1 : 3;        /*!< [23:21] Reserved */
+        uint32_t TDAL : 5;             /*!< [28:24]  */
+        uint32_t RESERVED2 : 3;        /*!< [31:29] Reserved */
     } B;
 } hw_ddr_cr08_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR08 register
  */
-//@{
-#define HW_DDR_CR08_ADDR         (REGS_DDR_BASE + 0x20U)
+/*@{*/
+#define HW_DDR_CR08_ADDR(x)      ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR08              (*(__IO hw_ddr_cr08_t *) HW_DDR_CR08_ADDR)
-#define HW_DDR_CR08_RD()         (HW_DDR_CR08.U)
-#define HW_DDR_CR08_WR(v)        (HW_DDR_CR08.U = (v))
-#define HW_DDR_CR08_SET(v)       (HW_DDR_CR08_WR(HW_DDR_CR08_RD() |  (v)))
-#define HW_DDR_CR08_CLR(v)       (HW_DDR_CR08_WR(HW_DDR_CR08_RD() & ~(v)))
-#define HW_DDR_CR08_TOG(v)       (HW_DDR_CR08_WR(HW_DDR_CR08_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR08(x)           (*(__IO hw_ddr_cr08_t *) HW_DDR_CR08_ADDR(x))
+#define HW_DDR_CR08_RD(x)        (HW_DDR_CR08(x).U)
+#define HW_DDR_CR08_WR(x, v)     (HW_DDR_CR08(x).U = (v))
+#define HW_DDR_CR08_SET(x, v)    (HW_DDR_CR08_WR(x, HW_DDR_CR08_RD(x) |  (v)))
+#define HW_DDR_CR08_CLR(x, v)    (HW_DDR_CR08_WR(x, HW_DDR_CR08_RD(x) & ~(v)))
+#define HW_DDR_CR08_TOG(x, v)    (HW_DDR_CR08_WR(x, HW_DDR_CR08_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR08 bitfields
@@ -1205,72 +1064,60 @@ typedef union _hw_ddr_cr08
  * parameter expires. 0 t RAS lockout not supported by memory device 1 t RAS
  * lockout supported by memory device
  */
-//@{
-#define BP_DDR_CR08_TRAS     (0U)          //!< Bit position for DDR_CR08_TRAS.
-#define BM_DDR_CR08_TRAS     (0x00000001U) //!< Bit mask for DDR_CR08_TRAS.
-#define BS_DDR_CR08_TRAS     (1U)          //!< Bit field size in bits for DDR_CR08_TRAS.
+/*@{*/
+#define BP_DDR_CR08_TRAS     (0U)          /*!< Bit position for DDR_CR08_TRAS. */
+#define BM_DDR_CR08_TRAS     (0x00000001U) /*!< Bit mask for DDR_CR08_TRAS. */
+#define BS_DDR_CR08_TRAS     (1U)          /*!< Bit field size in bits for DDR_CR08_TRAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR08_TRAS field.
-#define BR_DDR_CR08_TRAS     (BITBAND_ACCESS32(HW_DDR_CR08_ADDR, BP_DDR_CR08_TRAS))
-#endif
+/*! @brief Read current value of the DDR_CR08_TRAS field. */
+#define BR_DDR_CR08_TRAS(x)  (BITBAND_ACCESS32(HW_DDR_CR08_ADDR(x), BP_DDR_CR08_TRAS))
 
-//! @brief Format value for bitfield DDR_CR08_TRAS.
-#define BF_DDR_CR08_TRAS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR08_TRAS), uint32_t) & BM_DDR_CR08_TRAS)
+/*! @brief Format value for bitfield DDR_CR08_TRAS. */
+#define BF_DDR_CR08_TRAS(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR08_TRAS) & BM_DDR_CR08_TRAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRAS field to a new value.
-#define BW_DDR_CR08_TRAS(v)  (BITBAND_ACCESS32(HW_DDR_CR08_ADDR, BP_DDR_CR08_TRAS) = (v))
-#endif
-//@}
+/*! @brief Set the TRAS field to a new value. */
+#define BW_DDR_CR08_TRAS(x, v) (BITBAND_ACCESS32(HW_DDR_CR08_ADDR(x), BP_DDR_CR08_TRAS) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR08, field TRASDI[15:8] (RW)
  *
  * Defines the DRAM RAS-to-CAS delay in cycles.
  */
-//@{
-#define BP_DDR_CR08_TRASDI   (8U)          //!< Bit position for DDR_CR08_TRASDI.
-#define BM_DDR_CR08_TRASDI   (0x0000FF00U) //!< Bit mask for DDR_CR08_TRASDI.
-#define BS_DDR_CR08_TRASDI   (8U)          //!< Bit field size in bits for DDR_CR08_TRASDI.
+/*@{*/
+#define BP_DDR_CR08_TRASDI   (8U)          /*!< Bit position for DDR_CR08_TRASDI. */
+#define BM_DDR_CR08_TRASDI   (0x0000FF00U) /*!< Bit mask for DDR_CR08_TRASDI. */
+#define BS_DDR_CR08_TRASDI   (8U)          /*!< Bit field size in bits for DDR_CR08_TRASDI. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR08_TRASDI field.
-#define BR_DDR_CR08_TRASDI   (HW_DDR_CR08.B.TRASDI)
-#endif
+/*! @brief Read current value of the DDR_CR08_TRASDI field. */
+#define BR_DDR_CR08_TRASDI(x) (HW_DDR_CR08(x).B.TRASDI)
 
-//! @brief Format value for bitfield DDR_CR08_TRASDI.
-#define BF_DDR_CR08_TRASDI(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR08_TRASDI), uint32_t) & BM_DDR_CR08_TRASDI)
+/*! @brief Format value for bitfield DDR_CR08_TRASDI. */
+#define BF_DDR_CR08_TRASDI(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR08_TRASDI) & BM_DDR_CR08_TRASDI)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRASDI field to a new value.
-#define BW_DDR_CR08_TRASDI(v) (HW_DDR_CR08_WR((HW_DDR_CR08_RD() & ~BM_DDR_CR08_TRASDI) | BF_DDR_CR08_TRASDI(v)))
-#endif
-//@}
+/*! @brief Set the TRASDI field to a new value. */
+#define BW_DDR_CR08_TRASDI(x, v) (HW_DDR_CR08_WR(x, (HW_DDR_CR08_RD(x) & ~BM_DDR_CR08_TRASDI) | BF_DDR_CR08_TRASDI(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR08, field TWR[20:16] (RW)
  *
  * Defines the DRAM write recovery time (TWR) parameter in cycles.
  */
-//@{
-#define BP_DDR_CR08_TWR      (16U)         //!< Bit position for DDR_CR08_TWR.
-#define BM_DDR_CR08_TWR      (0x001F0000U) //!< Bit mask for DDR_CR08_TWR.
-#define BS_DDR_CR08_TWR      (5U)          //!< Bit field size in bits for DDR_CR08_TWR.
+/*@{*/
+#define BP_DDR_CR08_TWR      (16U)         /*!< Bit position for DDR_CR08_TWR. */
+#define BM_DDR_CR08_TWR      (0x001F0000U) /*!< Bit mask for DDR_CR08_TWR. */
+#define BS_DDR_CR08_TWR      (5U)          /*!< Bit field size in bits for DDR_CR08_TWR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR08_TWR field.
-#define BR_DDR_CR08_TWR      (HW_DDR_CR08.B.TWR)
-#endif
+/*! @brief Read current value of the DDR_CR08_TWR field. */
+#define BR_DDR_CR08_TWR(x)   (HW_DDR_CR08(x).B.TWR)
 
-//! @brief Format value for bitfield DDR_CR08_TWR.
-#define BF_DDR_CR08_TWR(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR08_TWR), uint32_t) & BM_DDR_CR08_TWR)
+/*! @brief Format value for bitfield DDR_CR08_TWR. */
+#define BF_DDR_CR08_TWR(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR08_TWR) & BM_DDR_CR08_TWR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TWR field to a new value.
-#define BW_DDR_CR08_TWR(v)   (HW_DDR_CR08_WR((HW_DDR_CR08_RD() & ~BM_DDR_CR08_TWR) | BF_DDR_CR08_TWR(v)))
-#endif
-//@}
+/*! @brief Set the TWR field to a new value. */
+#define BW_DDR_CR08_TWR(x, v) (HW_DDR_CR08_WR(x, (HW_DDR_CR08_RD(x) & ~BM_DDR_CR08_TWR) | BF_DDR_CR08_TWR(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR08, field TDAL[28:24] (RW)
@@ -1284,30 +1131,25 @@ typedef union _hw_ddr_cr08
  * value of 0x0. Else, the memory controller does not function properly when
  * auto-precharge is enabled.
  */
-//@{
-#define BP_DDR_CR08_TDAL     (24U)         //!< Bit position for DDR_CR08_TDAL.
-#define BM_DDR_CR08_TDAL     (0x1F000000U) //!< Bit mask for DDR_CR08_TDAL.
-#define BS_DDR_CR08_TDAL     (5U)          //!< Bit field size in bits for DDR_CR08_TDAL.
+/*@{*/
+#define BP_DDR_CR08_TDAL     (24U)         /*!< Bit position for DDR_CR08_TDAL. */
+#define BM_DDR_CR08_TDAL     (0x1F000000U) /*!< Bit mask for DDR_CR08_TDAL. */
+#define BS_DDR_CR08_TDAL     (5U)          /*!< Bit field size in bits for DDR_CR08_TDAL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR08_TDAL field.
-#define BR_DDR_CR08_TDAL     (HW_DDR_CR08.B.TDAL)
-#endif
+/*! @brief Read current value of the DDR_CR08_TDAL field. */
+#define BR_DDR_CR08_TDAL(x)  (HW_DDR_CR08(x).B.TDAL)
 
-//! @brief Format value for bitfield DDR_CR08_TDAL.
-#define BF_DDR_CR08_TDAL(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR08_TDAL), uint32_t) & BM_DDR_CR08_TDAL)
+/*! @brief Format value for bitfield DDR_CR08_TDAL. */
+#define BF_DDR_CR08_TDAL(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR08_TDAL) & BM_DDR_CR08_TDAL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDAL field to a new value.
-#define BW_DDR_CR08_TDAL(v)  (HW_DDR_CR08_WR((HW_DDR_CR08_RD() & ~BM_DDR_CR08_TDAL) | BF_DDR_CR08_TDAL(v)))
-#endif
-//@}
+/*! @brief Set the TDAL field to a new value. */
+#define BW_DDR_CR08_TDAL(x, v) (HW_DDR_CR08_WR(x, (HW_DDR_CR08_RD(x) & ~BM_DDR_CR08_TDAL) | BF_DDR_CR08_TDAL(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR09 - DDR Control Register 9
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR09 - DDR Control Register 9
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR09 - DDR Control Register 9 (RW)
  *
@@ -1318,30 +1160,27 @@ typedef union _hw_ddr_cr09
     uint32_t U;
     struct _hw_ddr_cr09_bitfields
     {
-        uint32_t TDLL : 16;            //!< [15:0] Time DLL
-        uint32_t NOCMD : 1;            //!< [16] No Command
-        uint32_t RESERVED0 : 7;        //!< [23:17] Reserved
-        uint32_t BSTLEN : 3;           //!< [26:24] Burst Length
-        uint32_t RESERVED1 : 5;        //!< [31:27] Reserved
+        uint32_t TDLL : 16;            /*!< [15:0] Time DLL */
+        uint32_t NOCMD : 1;            /*!< [16] No Command */
+        uint32_t RESERVED0 : 7;        /*!< [23:17] Reserved */
+        uint32_t BSTLEN : 3;           /*!< [26:24] Burst Length */
+        uint32_t RESERVED1 : 5;        /*!< [31:27] Reserved */
     } B;
 } hw_ddr_cr09_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR09 register
  */
-//@{
-#define HW_DDR_CR09_ADDR         (REGS_DDR_BASE + 0x24U)
+/*@{*/
+#define HW_DDR_CR09_ADDR(x)      ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR09              (*(__IO hw_ddr_cr09_t *) HW_DDR_CR09_ADDR)
-#define HW_DDR_CR09_RD()         (HW_DDR_CR09.U)
-#define HW_DDR_CR09_WR(v)        (HW_DDR_CR09.U = (v))
-#define HW_DDR_CR09_SET(v)       (HW_DDR_CR09_WR(HW_DDR_CR09_RD() |  (v)))
-#define HW_DDR_CR09_CLR(v)       (HW_DDR_CR09_WR(HW_DDR_CR09_RD() & ~(v)))
-#define HW_DDR_CR09_TOG(v)       (HW_DDR_CR09_WR(HW_DDR_CR09_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR09(x)           (*(__IO hw_ddr_cr09_t *) HW_DDR_CR09_ADDR(x))
+#define HW_DDR_CR09_RD(x)        (HW_DDR_CR09(x).U)
+#define HW_DDR_CR09_WR(x, v)     (HW_DDR_CR09(x).U = (v))
+#define HW_DDR_CR09_SET(x, v)    (HW_DDR_CR09_WR(x, HW_DDR_CR09_RD(x) |  (v)))
+#define HW_DDR_CR09_CLR(x, v)    (HW_DDR_CR09_WR(x, HW_DDR_CR09_RD(x) & ~(v)))
+#define HW_DDR_CR09_TOG(x, v)    (HW_DDR_CR09_WR(x, HW_DDR_CR09_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR09 bitfields
@@ -1352,24 +1191,20 @@ typedef union _hw_ddr_cr09
  *
  * DLL lock time in cycles.
  */
-//@{
-#define BP_DDR_CR09_TDLL     (0U)          //!< Bit position for DDR_CR09_TDLL.
-#define BM_DDR_CR09_TDLL     (0x0000FFFFU) //!< Bit mask for DDR_CR09_TDLL.
-#define BS_DDR_CR09_TDLL     (16U)         //!< Bit field size in bits for DDR_CR09_TDLL.
+/*@{*/
+#define BP_DDR_CR09_TDLL     (0U)          /*!< Bit position for DDR_CR09_TDLL. */
+#define BM_DDR_CR09_TDLL     (0x0000FFFFU) /*!< Bit mask for DDR_CR09_TDLL. */
+#define BS_DDR_CR09_TDLL     (16U)         /*!< Bit field size in bits for DDR_CR09_TDLL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR09_TDLL field.
-#define BR_DDR_CR09_TDLL     (HW_DDR_CR09.B.TDLL)
-#endif
+/*! @brief Read current value of the DDR_CR09_TDLL field. */
+#define BR_DDR_CR09_TDLL(x)  (HW_DDR_CR09(x).B.TDLL)
 
-//! @brief Format value for bitfield DDR_CR09_TDLL.
-#define BF_DDR_CR09_TDLL(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR09_TDLL), uint32_t) & BM_DDR_CR09_TDLL)
+/*! @brief Format value for bitfield DDR_CR09_TDLL. */
+#define BF_DDR_CR09_TDLL(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR09_TDLL) & BM_DDR_CR09_TDLL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDLL field to a new value.
-#define BW_DDR_CR09_TDLL(v)  (HW_DDR_CR09_WR((HW_DDR_CR09_RD() & ~BM_DDR_CR09_TDLL) | BF_DDR_CR09_TDLL(v)))
-#endif
-//@}
+/*! @brief Set the TDLL field to a new value. */
+#define BW_DDR_CR09_TDLL(x, v) (HW_DDR_CR09_WR(x, (HW_DDR_CR09_RD(x) & ~BM_DDR_CR09_TDLL) | BF_DDR_CR09_TDLL(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR09, field NOCMD[16] (RW)
@@ -1384,24 +1219,20 @@ typedef union _hw_ddr_cr09
  *     devices. If any other commands are issued, they are held until DLL
  *     initialization completes.
  */
-//@{
-#define BP_DDR_CR09_NOCMD    (16U)         //!< Bit position for DDR_CR09_NOCMD.
-#define BM_DDR_CR09_NOCMD    (0x00010000U) //!< Bit mask for DDR_CR09_NOCMD.
-#define BS_DDR_CR09_NOCMD    (1U)          //!< Bit field size in bits for DDR_CR09_NOCMD.
+/*@{*/
+#define BP_DDR_CR09_NOCMD    (16U)         /*!< Bit position for DDR_CR09_NOCMD. */
+#define BM_DDR_CR09_NOCMD    (0x00010000U) /*!< Bit mask for DDR_CR09_NOCMD. */
+#define BS_DDR_CR09_NOCMD    (1U)          /*!< Bit field size in bits for DDR_CR09_NOCMD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR09_NOCMD field.
-#define BR_DDR_CR09_NOCMD    (BITBAND_ACCESS32(HW_DDR_CR09_ADDR, BP_DDR_CR09_NOCMD))
-#endif
+/*! @brief Read current value of the DDR_CR09_NOCMD field. */
+#define BR_DDR_CR09_NOCMD(x) (BITBAND_ACCESS32(HW_DDR_CR09_ADDR(x), BP_DDR_CR09_NOCMD))
 
-//! @brief Format value for bitfield DDR_CR09_NOCMD.
-#define BF_DDR_CR09_NOCMD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR09_NOCMD), uint32_t) & BM_DDR_CR09_NOCMD)
+/*! @brief Format value for bitfield DDR_CR09_NOCMD. */
+#define BF_DDR_CR09_NOCMD(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR09_NOCMD) & BM_DDR_CR09_NOCMD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the NOCMD field to a new value.
-#define BW_DDR_CR09_NOCMD(v) (BITBAND_ACCESS32(HW_DDR_CR09_ADDR, BP_DDR_CR09_NOCMD) = (v))
-#endif
-//@}
+/*! @brief Set the NOCMD field to a new value. */
+#define BW_DDR_CR09_NOCMD(x, v) (BITBAND_ACCESS32(HW_DDR_CR09_ADDR(x), BP_DDR_CR09_NOCMD) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR09, field BSTLEN[26:24] (RW)
@@ -1422,30 +1253,25 @@ typedef union _hw_ddr_cr09
  * - 100 - Reserved
  * - 111 - Reserved.
  */
-//@{
-#define BP_DDR_CR09_BSTLEN   (24U)         //!< Bit position for DDR_CR09_BSTLEN.
-#define BM_DDR_CR09_BSTLEN   (0x07000000U) //!< Bit mask for DDR_CR09_BSTLEN.
-#define BS_DDR_CR09_BSTLEN   (3U)          //!< Bit field size in bits for DDR_CR09_BSTLEN.
+/*@{*/
+#define BP_DDR_CR09_BSTLEN   (24U)         /*!< Bit position for DDR_CR09_BSTLEN. */
+#define BM_DDR_CR09_BSTLEN   (0x07000000U) /*!< Bit mask for DDR_CR09_BSTLEN. */
+#define BS_DDR_CR09_BSTLEN   (3U)          /*!< Bit field size in bits for DDR_CR09_BSTLEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR09_BSTLEN field.
-#define BR_DDR_CR09_BSTLEN   (HW_DDR_CR09.B.BSTLEN)
-#endif
+/*! @brief Read current value of the DDR_CR09_BSTLEN field. */
+#define BR_DDR_CR09_BSTLEN(x) (HW_DDR_CR09(x).B.BSTLEN)
 
-//! @brief Format value for bitfield DDR_CR09_BSTLEN.
-#define BF_DDR_CR09_BSTLEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR09_BSTLEN), uint32_t) & BM_DDR_CR09_BSTLEN)
+/*! @brief Format value for bitfield DDR_CR09_BSTLEN. */
+#define BF_DDR_CR09_BSTLEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR09_BSTLEN) & BM_DDR_CR09_BSTLEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSTLEN field to a new value.
-#define BW_DDR_CR09_BSTLEN(v) (HW_DDR_CR09_WR((HW_DDR_CR09_RD() & ~BM_DDR_CR09_BSTLEN) | BF_DDR_CR09_BSTLEN(v)))
-#endif
-//@}
+/*! @brief Set the BSTLEN field to a new value. */
+#define BW_DDR_CR09_BSTLEN(x, v) (HW_DDR_CR09_WR(x, (HW_DDR_CR09_RD(x) & ~BM_DDR_CR09_BSTLEN) | BF_DDR_CR09_BSTLEN(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR10 - DDR Control Register 10
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR10 - DDR Control Register 10
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR10 - DDR Control Register 10 (RW)
  *
@@ -1456,30 +1282,28 @@ typedef union _hw_ddr_cr10
     uint32_t U;
     struct _hw_ddr_cr10_bitfields
     {
-        uint32_t TFAW : 6;             //!< [5:0] Time FAW
-        uint32_t RESERVED0 : 2;        //!< [7:6] Reserved
-        uint32_t TCPD : 16;            //!< [23:8] Time Clock Enable to Precharge Delay
-        uint32_t TRPAB : 4;            //!< [27:24] TRP All Bank
-        uint32_t RESERVED1 : 4;        //!< [31:28] Reserved
+        uint32_t TFAW : 6;             /*!< [5:0] Time FAW */
+        uint32_t RESERVED0 : 2;        /*!< [7:6] Reserved */
+        uint32_t TCPD : 16;            /*!< [23:8] Time Clock Enable to Precharge Delay
+                                        * */
+        uint32_t TRPAB : 4;            /*!< [27:24] TRP All Bank */
+        uint32_t RESERVED1 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr10_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR10 register
  */
-//@{
-#define HW_DDR_CR10_ADDR         (REGS_DDR_BASE + 0x28U)
+/*@{*/
+#define HW_DDR_CR10_ADDR(x)      ((x) + 0x28U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR10              (*(__IO hw_ddr_cr10_t *) HW_DDR_CR10_ADDR)
-#define HW_DDR_CR10_RD()         (HW_DDR_CR10.U)
-#define HW_DDR_CR10_WR(v)        (HW_DDR_CR10.U = (v))
-#define HW_DDR_CR10_SET(v)       (HW_DDR_CR10_WR(HW_DDR_CR10_RD() |  (v)))
-#define HW_DDR_CR10_CLR(v)       (HW_DDR_CR10_WR(HW_DDR_CR10_RD() & ~(v)))
-#define HW_DDR_CR10_TOG(v)       (HW_DDR_CR10_WR(HW_DDR_CR10_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR10(x)           (*(__IO hw_ddr_cr10_t *) HW_DDR_CR10_ADDR(x))
+#define HW_DDR_CR10_RD(x)        (HW_DDR_CR10(x).U)
+#define HW_DDR_CR10_WR(x, v)     (HW_DDR_CR10(x).U = (v))
+#define HW_DDR_CR10_SET(x, v)    (HW_DDR_CR10_WR(x, HW_DDR_CR10_RD(x) |  (v)))
+#define HW_DDR_CR10_CLR(x, v)    (HW_DDR_CR10_WR(x, HW_DDR_CR10_RD(x) & ~(v)))
+#define HW_DDR_CR10_TOG(x, v)    (HW_DDR_CR10_WR(x, HW_DDR_CR10_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR10 bitfields
@@ -1490,24 +1314,20 @@ typedef union _hw_ddr_cr10
  *
  * Defines the DRAM t FAW parameter in cycles.
  */
-//@{
-#define BP_DDR_CR10_TFAW     (0U)          //!< Bit position for DDR_CR10_TFAW.
-#define BM_DDR_CR10_TFAW     (0x0000003FU) //!< Bit mask for DDR_CR10_TFAW.
-#define BS_DDR_CR10_TFAW     (6U)          //!< Bit field size in bits for DDR_CR10_TFAW.
+/*@{*/
+#define BP_DDR_CR10_TFAW     (0U)          /*!< Bit position for DDR_CR10_TFAW. */
+#define BM_DDR_CR10_TFAW     (0x0000003FU) /*!< Bit mask for DDR_CR10_TFAW. */
+#define BS_DDR_CR10_TFAW     (6U)          /*!< Bit field size in bits for DDR_CR10_TFAW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR10_TFAW field.
-#define BR_DDR_CR10_TFAW     (HW_DDR_CR10.B.TFAW)
-#endif
+/*! @brief Read current value of the DDR_CR10_TFAW field. */
+#define BR_DDR_CR10_TFAW(x)  (HW_DDR_CR10(x).B.TFAW)
 
-//! @brief Format value for bitfield DDR_CR10_TFAW.
-#define BF_DDR_CR10_TFAW(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR10_TFAW), uint32_t) & BM_DDR_CR10_TFAW)
+/*! @brief Format value for bitfield DDR_CR10_TFAW. */
+#define BF_DDR_CR10_TFAW(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR10_TFAW) & BM_DDR_CR10_TFAW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TFAW field to a new value.
-#define BW_DDR_CR10_TFAW(v)  (HW_DDR_CR10_WR((HW_DDR_CR10_RD() & ~BM_DDR_CR10_TFAW) | BF_DDR_CR10_TFAW(v)))
-#endif
-//@}
+/*! @brief Set the TFAW field to a new value. */
+#define BW_DDR_CR10_TFAW(x, v) (HW_DDR_CR10_WR(x, (HW_DDR_CR10_RD(x) & ~BM_DDR_CR10_TFAW) | BF_DDR_CR10_TFAW(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR10, field TCPD[23:8] (RW)
@@ -1515,54 +1335,45 @@ typedef union _hw_ddr_cr10
  * Defines the DRAM TCPD (clock enable to precharge delay time) parameter in
  * cycles.
  */
-//@{
-#define BP_DDR_CR10_TCPD     (8U)          //!< Bit position for DDR_CR10_TCPD.
-#define BM_DDR_CR10_TCPD     (0x00FFFF00U) //!< Bit mask for DDR_CR10_TCPD.
-#define BS_DDR_CR10_TCPD     (16U)         //!< Bit field size in bits for DDR_CR10_TCPD.
+/*@{*/
+#define BP_DDR_CR10_TCPD     (8U)          /*!< Bit position for DDR_CR10_TCPD. */
+#define BM_DDR_CR10_TCPD     (0x00FFFF00U) /*!< Bit mask for DDR_CR10_TCPD. */
+#define BS_DDR_CR10_TCPD     (16U)         /*!< Bit field size in bits for DDR_CR10_TCPD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR10_TCPD field.
-#define BR_DDR_CR10_TCPD     (HW_DDR_CR10.B.TCPD)
-#endif
+/*! @brief Read current value of the DDR_CR10_TCPD field. */
+#define BR_DDR_CR10_TCPD(x)  (HW_DDR_CR10(x).B.TCPD)
 
-//! @brief Format value for bitfield DDR_CR10_TCPD.
-#define BF_DDR_CR10_TCPD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR10_TCPD), uint32_t) & BM_DDR_CR10_TCPD)
+/*! @brief Format value for bitfield DDR_CR10_TCPD. */
+#define BF_DDR_CR10_TCPD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR10_TCPD) & BM_DDR_CR10_TCPD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TCPD field to a new value.
-#define BW_DDR_CR10_TCPD(v)  (HW_DDR_CR10_WR((HW_DDR_CR10_RD() & ~BM_DDR_CR10_TCPD) | BF_DDR_CR10_TCPD(v)))
-#endif
-//@}
+/*! @brief Set the TCPD field to a new value. */
+#define BW_DDR_CR10_TCPD(x, v) (HW_DDR_CR10_WR(x, (HW_DDR_CR10_RD(x) & ~BM_DDR_CR10_TCPD) | BF_DDR_CR10_TCPD(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR10, field TRPAB[27:24] (RW)
  *
  * DRAM TRP All Bank parameter in cycles.
  */
-//@{
-#define BP_DDR_CR10_TRPAB    (24U)         //!< Bit position for DDR_CR10_TRPAB.
-#define BM_DDR_CR10_TRPAB    (0x0F000000U) //!< Bit mask for DDR_CR10_TRPAB.
-#define BS_DDR_CR10_TRPAB    (4U)          //!< Bit field size in bits for DDR_CR10_TRPAB.
+/*@{*/
+#define BP_DDR_CR10_TRPAB    (24U)         /*!< Bit position for DDR_CR10_TRPAB. */
+#define BM_DDR_CR10_TRPAB    (0x0F000000U) /*!< Bit mask for DDR_CR10_TRPAB. */
+#define BS_DDR_CR10_TRPAB    (4U)          /*!< Bit field size in bits for DDR_CR10_TRPAB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR10_TRPAB field.
-#define BR_DDR_CR10_TRPAB    (HW_DDR_CR10.B.TRPAB)
-#endif
+/*! @brief Read current value of the DDR_CR10_TRPAB field. */
+#define BR_DDR_CR10_TRPAB(x) (HW_DDR_CR10(x).B.TRPAB)
 
-//! @brief Format value for bitfield DDR_CR10_TRPAB.
-#define BF_DDR_CR10_TRPAB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR10_TRPAB), uint32_t) & BM_DDR_CR10_TRPAB)
+/*! @brief Format value for bitfield DDR_CR10_TRPAB. */
+#define BF_DDR_CR10_TRPAB(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR10_TRPAB) & BM_DDR_CR10_TRPAB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRPAB field to a new value.
-#define BW_DDR_CR10_TRPAB(v) (HW_DDR_CR10_WR((HW_DDR_CR10_RD() & ~BM_DDR_CR10_TRPAB) | BF_DDR_CR10_TRPAB(v)))
-#endif
-//@}
+/*! @brief Set the TRPAB field to a new value. */
+#define BW_DDR_CR10_TRPAB(x, v) (HW_DDR_CR10_WR(x, (HW_DDR_CR10_RD(x) & ~BM_DDR_CR10_TRPAB) | BF_DDR_CR10_TRPAB(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR11 - DDR Control Register 11
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR11 - DDR Control Register 11
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR11 - DDR Control Register 11 (RW)
  *
@@ -1573,33 +1384,30 @@ typedef union _hw_ddr_cr11
     uint32_t U;
     struct _hw_ddr_cr11_bitfields
     {
-        uint32_t REGDIMM : 1;          //!< [0] Registered DIMM
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t AREF : 1;             //!< [8] Auto Refresh
-        uint32_t RESERVED1 : 7;        //!< [15:9] Reserved
-        uint32_t AREFMODE : 1;         //!< [16] Auto Refresh Mode
-        uint32_t RESERVED2 : 7;        //!< [23:17] Reserved
-        uint32_t TREFEN : 1;           //!< [24]
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t REGDIMM : 1;          /*!< [0] Registered DIMM */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t AREF : 1;             /*!< [8] Auto Refresh */
+        uint32_t RESERVED1 : 7;        /*!< [15:9] Reserved */
+        uint32_t AREFMODE : 1;         /*!< [16] Auto Refresh Mode */
+        uint32_t RESERVED2 : 7;        /*!< [23:17] Reserved */
+        uint32_t TREFEN : 1;           /*!< [24]  */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr11_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR11 register
  */
-//@{
-#define HW_DDR_CR11_ADDR         (REGS_DDR_BASE + 0x2CU)
+/*@{*/
+#define HW_DDR_CR11_ADDR(x)      ((x) + 0x2CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR11              (*(__IO hw_ddr_cr11_t *) HW_DDR_CR11_ADDR)
-#define HW_DDR_CR11_RD()         (HW_DDR_CR11.U)
-#define HW_DDR_CR11_WR(v)        (HW_DDR_CR11.U = (v))
-#define HW_DDR_CR11_SET(v)       (HW_DDR_CR11_WR(HW_DDR_CR11_RD() |  (v)))
-#define HW_DDR_CR11_CLR(v)       (HW_DDR_CR11_WR(HW_DDR_CR11_RD() & ~(v)))
-#define HW_DDR_CR11_TOG(v)       (HW_DDR_CR11_WR(HW_DDR_CR11_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR11(x)           (*(__IO hw_ddr_cr11_t *) HW_DDR_CR11_ADDR(x))
+#define HW_DDR_CR11_RD(x)        (HW_DDR_CR11(x).U)
+#define HW_DDR_CR11_WR(x, v)     (HW_DDR_CR11(x).U = (v))
+#define HW_DDR_CR11_SET(x, v)    (HW_DDR_CR11_WR(x, HW_DDR_CR11_RD(x) |  (v)))
+#define HW_DDR_CR11_CLR(x, v)    (HW_DDR_CR11_WR(x, HW_DDR_CR11_RD(x) & ~(v)))
+#define HW_DDR_CR11_TOG(x, v)    (HW_DDR_CR11_WR(x, HW_DDR_CR11_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR11 bitfields
@@ -1612,24 +1420,20 @@ typedef union _hw_ddr_cr11
  * pipeline of the memory controller. 0 Normal operation 1 Enable registered DIMM
  * operation
  */
-//@{
-#define BP_DDR_CR11_REGDIMM  (0U)          //!< Bit position for DDR_CR11_REGDIMM.
-#define BM_DDR_CR11_REGDIMM  (0x00000001U) //!< Bit mask for DDR_CR11_REGDIMM.
-#define BS_DDR_CR11_REGDIMM  (1U)          //!< Bit field size in bits for DDR_CR11_REGDIMM.
+/*@{*/
+#define BP_DDR_CR11_REGDIMM  (0U)          /*!< Bit position for DDR_CR11_REGDIMM. */
+#define BM_DDR_CR11_REGDIMM  (0x00000001U) /*!< Bit mask for DDR_CR11_REGDIMM. */
+#define BS_DDR_CR11_REGDIMM  (1U)          /*!< Bit field size in bits for DDR_CR11_REGDIMM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR11_REGDIMM field.
-#define BR_DDR_CR11_REGDIMM  (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_REGDIMM))
-#endif
+/*! @brief Read current value of the DDR_CR11_REGDIMM field. */
+#define BR_DDR_CR11_REGDIMM(x) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_REGDIMM))
 
-//! @brief Format value for bitfield DDR_CR11_REGDIMM.
-#define BF_DDR_CR11_REGDIMM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR11_REGDIMM), uint32_t) & BM_DDR_CR11_REGDIMM)
+/*! @brief Format value for bitfield DDR_CR11_REGDIMM. */
+#define BF_DDR_CR11_REGDIMM(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR11_REGDIMM) & BM_DDR_CR11_REGDIMM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the REGDIMM field to a new value.
-#define BW_DDR_CR11_REGDIMM(v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_REGDIMM) = (v))
-#endif
-//@}
+/*! @brief Set the REGDIMM field to a new value. */
+#define BW_DDR_CR11_REGDIMM(x, v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_REGDIMM) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR11, field AREF[8] (WO)
@@ -1639,24 +1443,14 @@ typedef union _hw_ddr_cr11
  * memory controller automatically closes these banks before issuing the
  * auto-refresh command. 0 No action 1 Issue auto-refresh to the DRAM devices
  */
-//@{
-#define BP_DDR_CR11_AREF     (8U)          //!< Bit position for DDR_CR11_AREF.
-#define BM_DDR_CR11_AREF     (0x00000100U) //!< Bit mask for DDR_CR11_AREF.
-#define BS_DDR_CR11_AREF     (1U)          //!< Bit field size in bits for DDR_CR11_AREF.
+/*@{*/
+#define BP_DDR_CR11_AREF     (8U)          /*!< Bit position for DDR_CR11_AREF. */
+#define BM_DDR_CR11_AREF     (0x00000100U) /*!< Bit mask for DDR_CR11_AREF. */
+#define BS_DDR_CR11_AREF     (1U)          /*!< Bit field size in bits for DDR_CR11_AREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR11_AREF field.
-#define BR_DDR_CR11_AREF     (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_AREF))
-#endif
-
-//! @brief Format value for bitfield DDR_CR11_AREF.
-#define BF_DDR_CR11_AREF(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR11_AREF), uint32_t) & BM_DDR_CR11_AREF)
-
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AREF field to a new value.
-#define BW_DDR_CR11_AREF(v)  (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_AREF) = (v))
-#endif
-//@}
+/*! @brief Format value for bitfield DDR_CR11_AREF. */
+#define BF_DDR_CR11_AREF(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR11_AREF) & BM_DDR_CR11_AREF)
+/*@}*/
 
 /*!
  * @name Register DDR_CR11, field AREFMODE[16] (RW)
@@ -1668,24 +1462,20 @@ typedef union _hw_ddr_cr11
  * transaction (if the transaction is fully contained inside a single page), or until
  * the current transaction hits the end of the current page.
  */
-//@{
-#define BP_DDR_CR11_AREFMODE (16U)         //!< Bit position for DDR_CR11_AREFMODE.
-#define BM_DDR_CR11_AREFMODE (0x00010000U) //!< Bit mask for DDR_CR11_AREFMODE.
-#define BS_DDR_CR11_AREFMODE (1U)          //!< Bit field size in bits for DDR_CR11_AREFMODE.
+/*@{*/
+#define BP_DDR_CR11_AREFMODE (16U)         /*!< Bit position for DDR_CR11_AREFMODE. */
+#define BM_DDR_CR11_AREFMODE (0x00010000U) /*!< Bit mask for DDR_CR11_AREFMODE. */
+#define BS_DDR_CR11_AREFMODE (1U)          /*!< Bit field size in bits for DDR_CR11_AREFMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR11_AREFMODE field.
-#define BR_DDR_CR11_AREFMODE (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_AREFMODE))
-#endif
+/*! @brief Read current value of the DDR_CR11_AREFMODE field. */
+#define BR_DDR_CR11_AREFMODE(x) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_AREFMODE))
 
-//! @brief Format value for bitfield DDR_CR11_AREFMODE.
-#define BF_DDR_CR11_AREFMODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR11_AREFMODE), uint32_t) & BM_DDR_CR11_AREFMODE)
+/*! @brief Format value for bitfield DDR_CR11_AREFMODE. */
+#define BF_DDR_CR11_AREFMODE(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR11_AREFMODE) & BM_DDR_CR11_AREFMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AREFMODE field to a new value.
-#define BW_DDR_CR11_AREFMODE(v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_AREFMODE) = (v))
-#endif
-//@}
+/*! @brief Set the AREFMODE field to a new value. */
+#define BW_DDR_CR11_AREFMODE(x, v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_AREFMODE) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR11, field TREFEN[24] (RW)
@@ -1695,30 +1485,25 @@ typedef union _hw_ddr_cr11
  * and any refresh commands sent through the command interface or the register
  * interface. 0 Refresh commands disabled 1 Refresh commands enabled
  */
-//@{
-#define BP_DDR_CR11_TREFEN   (24U)         //!< Bit position for DDR_CR11_TREFEN.
-#define BM_DDR_CR11_TREFEN   (0x01000000U) //!< Bit mask for DDR_CR11_TREFEN.
-#define BS_DDR_CR11_TREFEN   (1U)          //!< Bit field size in bits for DDR_CR11_TREFEN.
+/*@{*/
+#define BP_DDR_CR11_TREFEN   (24U)         /*!< Bit position for DDR_CR11_TREFEN. */
+#define BM_DDR_CR11_TREFEN   (0x01000000U) /*!< Bit mask for DDR_CR11_TREFEN. */
+#define BS_DDR_CR11_TREFEN   (1U)          /*!< Bit field size in bits for DDR_CR11_TREFEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR11_TREFEN field.
-#define BR_DDR_CR11_TREFEN   (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_TREFEN))
-#endif
+/*! @brief Read current value of the DDR_CR11_TREFEN field. */
+#define BR_DDR_CR11_TREFEN(x) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_TREFEN))
 
-//! @brief Format value for bitfield DDR_CR11_TREFEN.
-#define BF_DDR_CR11_TREFEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR11_TREFEN), uint32_t) & BM_DDR_CR11_TREFEN)
+/*! @brief Format value for bitfield DDR_CR11_TREFEN. */
+#define BF_DDR_CR11_TREFEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR11_TREFEN) & BM_DDR_CR11_TREFEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TREFEN field to a new value.
-#define BW_DDR_CR11_TREFEN(v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR, BP_DDR_CR11_TREFEN) = (v))
-#endif
-//@}
+/*! @brief Set the TREFEN field to a new value. */
+#define BW_DDR_CR11_TREFEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR11_ADDR(x), BP_DDR_CR11_TREFEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR12 - DDR Control Register 12
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR12 - DDR Control Register 12
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR12 - DDR Control Register 12 (RW)
  *
@@ -1729,29 +1514,26 @@ typedef union _hw_ddr_cr12
     uint32_t U;
     struct _hw_ddr_cr12_bitfields
     {
-        uint32_t TRFC : 10;            //!< [9:0] Time Refresh Command
-        uint32_t RESERVED0 : 6;        //!< [15:10] Reserved
-        uint32_t TREF : 14;            //!< [29:16] Time Refresh
-        uint32_t RESERVED1 : 2;        //!< [31:30] Reserved
+        uint32_t TRFC : 10;            /*!< [9:0] Time Refresh Command */
+        uint32_t RESERVED0 : 6;        /*!< [15:10] Reserved */
+        uint32_t TREF : 14;            /*!< [29:16] Time Refresh */
+        uint32_t RESERVED1 : 2;        /*!< [31:30] Reserved */
     } B;
 } hw_ddr_cr12_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR12 register
  */
-//@{
-#define HW_DDR_CR12_ADDR         (REGS_DDR_BASE + 0x30U)
+/*@{*/
+#define HW_DDR_CR12_ADDR(x)      ((x) + 0x30U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR12              (*(__IO hw_ddr_cr12_t *) HW_DDR_CR12_ADDR)
-#define HW_DDR_CR12_RD()         (HW_DDR_CR12.U)
-#define HW_DDR_CR12_WR(v)        (HW_DDR_CR12.U = (v))
-#define HW_DDR_CR12_SET(v)       (HW_DDR_CR12_WR(HW_DDR_CR12_RD() |  (v)))
-#define HW_DDR_CR12_CLR(v)       (HW_DDR_CR12_WR(HW_DDR_CR12_RD() & ~(v)))
-#define HW_DDR_CR12_TOG(v)       (HW_DDR_CR12_WR(HW_DDR_CR12_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR12(x)           (*(__IO hw_ddr_cr12_t *) HW_DDR_CR12_ADDR(x))
+#define HW_DDR_CR12_RD(x)        (HW_DDR_CR12(x).U)
+#define HW_DDR_CR12_WR(x, v)     (HW_DDR_CR12(x).U = (v))
+#define HW_DDR_CR12_SET(x, v)    (HW_DDR_CR12_WR(x, HW_DDR_CR12_RD(x) |  (v)))
+#define HW_DDR_CR12_CLR(x, v)    (HW_DDR_CR12_WR(x, HW_DDR_CR12_RD(x) & ~(v)))
+#define HW_DDR_CR12_TOG(x, v)    (HW_DDR_CR12_WR(x, HW_DDR_CR12_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR12 bitfields
@@ -1762,54 +1544,45 @@ typedef union _hw_ddr_cr12
  *
  * Defines the DRAM refresh command time (TRFC) in cycles.
  */
-//@{
-#define BP_DDR_CR12_TRFC     (0U)          //!< Bit position for DDR_CR12_TRFC.
-#define BM_DDR_CR12_TRFC     (0x000003FFU) //!< Bit mask for DDR_CR12_TRFC.
-#define BS_DDR_CR12_TRFC     (10U)         //!< Bit field size in bits for DDR_CR12_TRFC.
+/*@{*/
+#define BP_DDR_CR12_TRFC     (0U)          /*!< Bit position for DDR_CR12_TRFC. */
+#define BM_DDR_CR12_TRFC     (0x000003FFU) /*!< Bit mask for DDR_CR12_TRFC. */
+#define BS_DDR_CR12_TRFC     (10U)         /*!< Bit field size in bits for DDR_CR12_TRFC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR12_TRFC field.
-#define BR_DDR_CR12_TRFC     (HW_DDR_CR12.B.TRFC)
-#endif
+/*! @brief Read current value of the DDR_CR12_TRFC field. */
+#define BR_DDR_CR12_TRFC(x)  (HW_DDR_CR12(x).B.TRFC)
 
-//! @brief Format value for bitfield DDR_CR12_TRFC.
-#define BF_DDR_CR12_TRFC(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR12_TRFC), uint32_t) & BM_DDR_CR12_TRFC)
+/*! @brief Format value for bitfield DDR_CR12_TRFC. */
+#define BF_DDR_CR12_TRFC(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR12_TRFC) & BM_DDR_CR12_TRFC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRFC field to a new value.
-#define BW_DDR_CR12_TRFC(v)  (HW_DDR_CR12_WR((HW_DDR_CR12_RD() & ~BM_DDR_CR12_TRFC) | BF_DDR_CR12_TRFC(v)))
-#endif
-//@}
+/*! @brief Set the TRFC field to a new value. */
+#define BW_DDR_CR12_TRFC(x, v) (HW_DDR_CR12_WR(x, (HW_DDR_CR12_RD(x) & ~BM_DDR_CR12_TRFC) | BF_DDR_CR12_TRFC(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR12, field TREF[29:16] (RW)
  *
  * Defines the DRAM cycles between refresh commands (TREF) in cycles.
  */
-//@{
-#define BP_DDR_CR12_TREF     (16U)         //!< Bit position for DDR_CR12_TREF.
-#define BM_DDR_CR12_TREF     (0x3FFF0000U) //!< Bit mask for DDR_CR12_TREF.
-#define BS_DDR_CR12_TREF     (14U)         //!< Bit field size in bits for DDR_CR12_TREF.
+/*@{*/
+#define BP_DDR_CR12_TREF     (16U)         /*!< Bit position for DDR_CR12_TREF. */
+#define BM_DDR_CR12_TREF     (0x3FFF0000U) /*!< Bit mask for DDR_CR12_TREF. */
+#define BS_DDR_CR12_TREF     (14U)         /*!< Bit field size in bits for DDR_CR12_TREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR12_TREF field.
-#define BR_DDR_CR12_TREF     (HW_DDR_CR12.B.TREF)
-#endif
+/*! @brief Read current value of the DDR_CR12_TREF field. */
+#define BR_DDR_CR12_TREF(x)  (HW_DDR_CR12(x).B.TREF)
 
-//! @brief Format value for bitfield DDR_CR12_TREF.
-#define BF_DDR_CR12_TREF(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR12_TREF), uint32_t) & BM_DDR_CR12_TREF)
+/*! @brief Format value for bitfield DDR_CR12_TREF. */
+#define BF_DDR_CR12_TREF(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR12_TREF) & BM_DDR_CR12_TREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TREF field to a new value.
-#define BW_DDR_CR12_TREF(v)  (HW_DDR_CR12_WR((HW_DDR_CR12_RD() & ~BM_DDR_CR12_TREF) | BF_DDR_CR12_TREF(v)))
-#endif
-//@}
+/*! @brief Set the TREF field to a new value. */
+#define BW_DDR_CR12_TREF(x, v) (HW_DDR_CR12_WR(x, (HW_DDR_CR12_RD(x) & ~BM_DDR_CR12_TREF) | BF_DDR_CR12_TREF(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR13 - DDR Control Register 13
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR13 - DDR Control Register 13
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR13 - DDR Control Register 13 (RW)
  *
@@ -1820,29 +1593,26 @@ typedef union _hw_ddr_cr13
     uint32_t U;
     struct _hw_ddr_cr13_bitfields
     {
-        uint32_t TREFINT : 14;         //!< [13:0] Reserved
-        uint32_t RESERVED0 : 2;        //!< [15:14] Reserved
-        uint32_t PD : 1;               //!< [16] Power Down
-        uint32_t RESERVED1 : 15;       //!< [31:17] Reserved
+        uint32_t TREFINT : 14;         /*!< [13:0] Reserved */
+        uint32_t RESERVED0 : 2;        /*!< [15:14] Reserved */
+        uint32_t PD : 1;               /*!< [16] Power Down */
+        uint32_t RESERVED1 : 15;       /*!< [31:17] Reserved */
     } B;
 } hw_ddr_cr13_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR13 register
  */
-//@{
-#define HW_DDR_CR13_ADDR         (REGS_DDR_BASE + 0x34U)
+/*@{*/
+#define HW_DDR_CR13_ADDR(x)      ((x) + 0x34U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR13              (*(__IO hw_ddr_cr13_t *) HW_DDR_CR13_ADDR)
-#define HW_DDR_CR13_RD()         (HW_DDR_CR13.U)
-#define HW_DDR_CR13_WR(v)        (HW_DDR_CR13.U = (v))
-#define HW_DDR_CR13_SET(v)       (HW_DDR_CR13_WR(HW_DDR_CR13_RD() |  (v)))
-#define HW_DDR_CR13_CLR(v)       (HW_DDR_CR13_WR(HW_DDR_CR13_RD() & ~(v)))
-#define HW_DDR_CR13_TOG(v)       (HW_DDR_CR13_WR(HW_DDR_CR13_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR13(x)           (*(__IO hw_ddr_cr13_t *) HW_DDR_CR13_ADDR(x))
+#define HW_DDR_CR13_RD(x)        (HW_DDR_CR13(x).U)
+#define HW_DDR_CR13_WR(x, v)     (HW_DDR_CR13(x).U = (v))
+#define HW_DDR_CR13_SET(x, v)    (HW_DDR_CR13_WR(x, HW_DDR_CR13_RD(x) |  (v)))
+#define HW_DDR_CR13_CLR(x, v)    (HW_DDR_CR13_WR(x, HW_DDR_CR13_RD(x) & ~(v)))
+#define HW_DDR_CR13_TOG(x, v)    (HW_DDR_CR13_WR(x, HW_DDR_CR13_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR13 bitfields
@@ -1851,24 +1621,20 @@ typedef union _hw_ddr_cr13
 /*!
  * @name Register DDR_CR13, field TREFINT[13:0] (RW)
  */
-//@{
-#define BP_DDR_CR13_TREFINT  (0U)          //!< Bit position for DDR_CR13_TREFINT.
-#define BM_DDR_CR13_TREFINT  (0x00003FFFU) //!< Bit mask for DDR_CR13_TREFINT.
-#define BS_DDR_CR13_TREFINT  (14U)         //!< Bit field size in bits for DDR_CR13_TREFINT.
+/*@{*/
+#define BP_DDR_CR13_TREFINT  (0U)          /*!< Bit position for DDR_CR13_TREFINT. */
+#define BM_DDR_CR13_TREFINT  (0x00003FFFU) /*!< Bit mask for DDR_CR13_TREFINT. */
+#define BS_DDR_CR13_TREFINT  (14U)         /*!< Bit field size in bits for DDR_CR13_TREFINT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR13_TREFINT field.
-#define BR_DDR_CR13_TREFINT  (HW_DDR_CR13.B.TREFINT)
-#endif
+/*! @brief Read current value of the DDR_CR13_TREFINT field. */
+#define BR_DDR_CR13_TREFINT(x) (HW_DDR_CR13(x).B.TREFINT)
 
-//! @brief Format value for bitfield DDR_CR13_TREFINT.
-#define BF_DDR_CR13_TREFINT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR13_TREFINT), uint32_t) & BM_DDR_CR13_TREFINT)
+/*! @brief Format value for bitfield DDR_CR13_TREFINT. */
+#define BF_DDR_CR13_TREFINT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR13_TREFINT) & BM_DDR_CR13_TREFINT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TREFINT field to a new value.
-#define BW_DDR_CR13_TREFINT(v) (HW_DDR_CR13_WR((HW_DDR_CR13_RD() & ~BM_DDR_CR13_TREFINT) | BF_DDR_CR13_TREFINT(v)))
-#endif
-//@}
+/*! @brief Set the TREFINT field to a new value. */
+#define BW_DDR_CR13_TREFINT(x, v) (HW_DDR_CR13_WR(x, (HW_DDR_CR13_RD(x) & ~BM_DDR_CR13_TREFINT) | BF_DDR_CR13_TREFINT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR13, field PD[16] (RW)
@@ -1882,30 +1648,25 @@ typedef union _hw_ddr_cr13
  *     disables the clock enable signal to the DRAM devices. Any subsequent commands in
  *     the command queue are suspended until this bit is cleared.
  */
-//@{
-#define BP_DDR_CR13_PD       (16U)         //!< Bit position for DDR_CR13_PD.
-#define BM_DDR_CR13_PD       (0x00010000U) //!< Bit mask for DDR_CR13_PD.
-#define BS_DDR_CR13_PD       (1U)          //!< Bit field size in bits for DDR_CR13_PD.
+/*@{*/
+#define BP_DDR_CR13_PD       (16U)         /*!< Bit position for DDR_CR13_PD. */
+#define BM_DDR_CR13_PD       (0x00010000U) /*!< Bit mask for DDR_CR13_PD. */
+#define BS_DDR_CR13_PD       (1U)          /*!< Bit field size in bits for DDR_CR13_PD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR13_PD field.
-#define BR_DDR_CR13_PD       (BITBAND_ACCESS32(HW_DDR_CR13_ADDR, BP_DDR_CR13_PD))
-#endif
+/*! @brief Read current value of the DDR_CR13_PD field. */
+#define BR_DDR_CR13_PD(x)    (BITBAND_ACCESS32(HW_DDR_CR13_ADDR(x), BP_DDR_CR13_PD))
 
-//! @brief Format value for bitfield DDR_CR13_PD.
-#define BF_DDR_CR13_PD(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR13_PD), uint32_t) & BM_DDR_CR13_PD)
+/*! @brief Format value for bitfield DDR_CR13_PD. */
+#define BF_DDR_CR13_PD(v)    ((uint32_t)((uint32_t)(v) << BP_DDR_CR13_PD) & BM_DDR_CR13_PD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PD field to a new value.
-#define BW_DDR_CR13_PD(v)    (BITBAND_ACCESS32(HW_DDR_CR13_ADDR, BP_DDR_CR13_PD) = (v))
-#endif
-//@}
+/*! @brief Set the PD field to a new value. */
+#define BW_DDR_CR13_PD(x, v) (BITBAND_ACCESS32(HW_DDR_CR13_ADDR(x), BP_DDR_CR13_PD) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR14 - DDR Control Register 14
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR14 - DDR Control Register 14
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR14 - DDR Control Register 14 (RW)
  *
@@ -1916,27 +1677,24 @@ typedef union _hw_ddr_cr14
     uint32_t U;
     struct _hw_ddr_cr14_bitfields
     {
-        uint32_t TPDEX : 16;           //!< [15:0] Time Power Down Exit
-        uint32_t TXSR : 16;            //!< [31:16] Time Exit Self Refresh
+        uint32_t TPDEX : 16;           /*!< [15:0] Time Power Down Exit */
+        uint32_t TXSR : 16;            /*!< [31:16] Time Exit Self Refresh */
     } B;
 } hw_ddr_cr14_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR14 register
  */
-//@{
-#define HW_DDR_CR14_ADDR         (REGS_DDR_BASE + 0x38U)
+/*@{*/
+#define HW_DDR_CR14_ADDR(x)      ((x) + 0x38U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR14              (*(__IO hw_ddr_cr14_t *) HW_DDR_CR14_ADDR)
-#define HW_DDR_CR14_RD()         (HW_DDR_CR14.U)
-#define HW_DDR_CR14_WR(v)        (HW_DDR_CR14.U = (v))
-#define HW_DDR_CR14_SET(v)       (HW_DDR_CR14_WR(HW_DDR_CR14_RD() |  (v)))
-#define HW_DDR_CR14_CLR(v)       (HW_DDR_CR14_WR(HW_DDR_CR14_RD() & ~(v)))
-#define HW_DDR_CR14_TOG(v)       (HW_DDR_CR14_WR(HW_DDR_CR14_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR14(x)           (*(__IO hw_ddr_cr14_t *) HW_DDR_CR14_ADDR(x))
+#define HW_DDR_CR14_RD(x)        (HW_DDR_CR14(x).U)
+#define HW_DDR_CR14_WR(x, v)     (HW_DDR_CR14(x).U = (v))
+#define HW_DDR_CR14_SET(x, v)    (HW_DDR_CR14_WR(x, HW_DDR_CR14_RD(x) |  (v)))
+#define HW_DDR_CR14_CLR(x, v)    (HW_DDR_CR14_WR(x, HW_DDR_CR14_RD(x) & ~(v)))
+#define HW_DDR_CR14_TOG(x, v)    (HW_DDR_CR14_WR(x, HW_DDR_CR14_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR14 bitfields
@@ -1947,54 +1705,45 @@ typedef union _hw_ddr_cr14
  *
  * Defines the DRAM power-down exit command period in cycles.
  */
-//@{
-#define BP_DDR_CR14_TPDEX    (0U)          //!< Bit position for DDR_CR14_TPDEX.
-#define BM_DDR_CR14_TPDEX    (0x0000FFFFU) //!< Bit mask for DDR_CR14_TPDEX.
-#define BS_DDR_CR14_TPDEX    (16U)         //!< Bit field size in bits for DDR_CR14_TPDEX.
+/*@{*/
+#define BP_DDR_CR14_TPDEX    (0U)          /*!< Bit position for DDR_CR14_TPDEX. */
+#define BM_DDR_CR14_TPDEX    (0x0000FFFFU) /*!< Bit mask for DDR_CR14_TPDEX. */
+#define BS_DDR_CR14_TPDEX    (16U)         /*!< Bit field size in bits for DDR_CR14_TPDEX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR14_TPDEX field.
-#define BR_DDR_CR14_TPDEX    (HW_DDR_CR14.B.TPDEX)
-#endif
+/*! @brief Read current value of the DDR_CR14_TPDEX field. */
+#define BR_DDR_CR14_TPDEX(x) (HW_DDR_CR14(x).B.TPDEX)
 
-//! @brief Format value for bitfield DDR_CR14_TPDEX.
-#define BF_DDR_CR14_TPDEX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR14_TPDEX), uint32_t) & BM_DDR_CR14_TPDEX)
+/*! @brief Format value for bitfield DDR_CR14_TPDEX. */
+#define BF_DDR_CR14_TPDEX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR14_TPDEX) & BM_DDR_CR14_TPDEX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TPDEX field to a new value.
-#define BW_DDR_CR14_TPDEX(v) (HW_DDR_CR14_WR((HW_DDR_CR14_RD() & ~BM_DDR_CR14_TPDEX) | BF_DDR_CR14_TPDEX(v)))
-#endif
-//@}
+/*! @brief Set the TPDEX field to a new value. */
+#define BW_DDR_CR14_TPDEX(x, v) (HW_DDR_CR14_WR(x, (HW_DDR_CR14_RD(x) & ~BM_DDR_CR14_TPDEX) | BF_DDR_CR14_TPDEX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR14, field TXSR[31:16] (RW)
  *
  * Defines the DRAM self-refresh exit time (TXSR) in cycles.
  */
-//@{
-#define BP_DDR_CR14_TXSR     (16U)         //!< Bit position for DDR_CR14_TXSR.
-#define BM_DDR_CR14_TXSR     (0xFFFF0000U) //!< Bit mask for DDR_CR14_TXSR.
-#define BS_DDR_CR14_TXSR     (16U)         //!< Bit field size in bits for DDR_CR14_TXSR.
+/*@{*/
+#define BP_DDR_CR14_TXSR     (16U)         /*!< Bit position for DDR_CR14_TXSR. */
+#define BM_DDR_CR14_TXSR     (0xFFFF0000U) /*!< Bit mask for DDR_CR14_TXSR. */
+#define BS_DDR_CR14_TXSR     (16U)         /*!< Bit field size in bits for DDR_CR14_TXSR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR14_TXSR field.
-#define BR_DDR_CR14_TXSR     (HW_DDR_CR14.B.TXSR)
-#endif
+/*! @brief Read current value of the DDR_CR14_TXSR field. */
+#define BR_DDR_CR14_TXSR(x)  (HW_DDR_CR14(x).B.TXSR)
 
-//! @brief Format value for bitfield DDR_CR14_TXSR.
-#define BF_DDR_CR14_TXSR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR14_TXSR), uint32_t) & BM_DDR_CR14_TXSR)
+/*! @brief Format value for bitfield DDR_CR14_TXSR. */
+#define BF_DDR_CR14_TXSR(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR14_TXSR) & BM_DDR_CR14_TXSR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXSR field to a new value.
-#define BW_DDR_CR14_TXSR(v)  (HW_DDR_CR14_WR((HW_DDR_CR14_RD() & ~BM_DDR_CR14_TXSR) | BF_DDR_CR14_TXSR(v)))
-#endif
-//@}
+/*! @brief Set the TXSR field to a new value. */
+#define BW_DDR_CR14_TXSR(x, v) (HW_DDR_CR14_WR(x, (HW_DDR_CR14_RD(x) & ~BM_DDR_CR14_TXSR) | BF_DDR_CR14_TXSR(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR15 - DDR Control Register 15
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR15 - DDR Control Register 15
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR15 - DDR Control Register 15 (RW)
  *
@@ -2005,30 +1754,27 @@ typedef union _hw_ddr_cr15
     uint32_t U;
     struct _hw_ddr_cr15_bitfields
     {
-        uint32_t TXSNR : 16;           //!< [15:0] TXSNR parameter
-        uint32_t SREF : 1;             //!< [16] Self Refresh
-        uint32_t RESERVED0 : 7;        //!< [23:17] Reserved
-        uint32_t PUREF : 1;            //!< [24] Power Up Refresh
-        uint32_t RESERVED1 : 7;        //!< [31:25] Reserved
+        uint32_t TXSNR : 16;           /*!< [15:0] TXSNR parameter */
+        uint32_t SREF : 1;             /*!< [16] Self Refresh */
+        uint32_t RESERVED0 : 7;        /*!< [23:17] Reserved */
+        uint32_t PUREF : 1;            /*!< [24] Power Up Refresh */
+        uint32_t RESERVED1 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr15_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR15 register
  */
-//@{
-#define HW_DDR_CR15_ADDR         (REGS_DDR_BASE + 0x3CU)
+/*@{*/
+#define HW_DDR_CR15_ADDR(x)      ((x) + 0x3CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR15              (*(__IO hw_ddr_cr15_t *) HW_DDR_CR15_ADDR)
-#define HW_DDR_CR15_RD()         (HW_DDR_CR15.U)
-#define HW_DDR_CR15_WR(v)        (HW_DDR_CR15.U = (v))
-#define HW_DDR_CR15_SET(v)       (HW_DDR_CR15_WR(HW_DDR_CR15_RD() |  (v)))
-#define HW_DDR_CR15_CLR(v)       (HW_DDR_CR15_WR(HW_DDR_CR15_RD() & ~(v)))
-#define HW_DDR_CR15_TOG(v)       (HW_DDR_CR15_WR(HW_DDR_CR15_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR15(x)           (*(__IO hw_ddr_cr15_t *) HW_DDR_CR15_ADDR(x))
+#define HW_DDR_CR15_RD(x)        (HW_DDR_CR15(x).U)
+#define HW_DDR_CR15_WR(x, v)     (HW_DDR_CR15(x).U = (v))
+#define HW_DDR_CR15_SET(x, v)    (HW_DDR_CR15_WR(x, HW_DDR_CR15_RD(x) |  (v)))
+#define HW_DDR_CR15_CLR(x, v)    (HW_DDR_CR15_WR(x, HW_DDR_CR15_RD(x) & ~(v)))
+#define HW_DDR_CR15_TOG(x, v)    (HW_DDR_CR15_WR(x, HW_DDR_CR15_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR15 bitfields
@@ -2039,24 +1785,20 @@ typedef union _hw_ddr_cr15
  *
  * Defines the DRAM TXSNR parameter in cycles.
  */
-//@{
-#define BP_DDR_CR15_TXSNR    (0U)          //!< Bit position for DDR_CR15_TXSNR.
-#define BM_DDR_CR15_TXSNR    (0x0000FFFFU) //!< Bit mask for DDR_CR15_TXSNR.
-#define BS_DDR_CR15_TXSNR    (16U)         //!< Bit field size in bits for DDR_CR15_TXSNR.
+/*@{*/
+#define BP_DDR_CR15_TXSNR    (0U)          /*!< Bit position for DDR_CR15_TXSNR. */
+#define BM_DDR_CR15_TXSNR    (0x0000FFFFU) /*!< Bit mask for DDR_CR15_TXSNR. */
+#define BS_DDR_CR15_TXSNR    (16U)         /*!< Bit field size in bits for DDR_CR15_TXSNR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR15_TXSNR field.
-#define BR_DDR_CR15_TXSNR    (HW_DDR_CR15.B.TXSNR)
-#endif
+/*! @brief Read current value of the DDR_CR15_TXSNR field. */
+#define BR_DDR_CR15_TXSNR(x) (HW_DDR_CR15(x).B.TXSNR)
 
-//! @brief Format value for bitfield DDR_CR15_TXSNR.
-#define BF_DDR_CR15_TXSNR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR15_TXSNR), uint32_t) & BM_DDR_CR15_TXSNR)
+/*! @brief Format value for bitfield DDR_CR15_TXSNR. */
+#define BF_DDR_CR15_TXSNR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR15_TXSNR) & BM_DDR_CR15_TXSNR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXSNR field to a new value.
-#define BW_DDR_CR15_TXSNR(v) (HW_DDR_CR15_WR((HW_DDR_CR15_RD() & ~BM_DDR_CR15_TXSNR) | BF_DDR_CR15_TXSNR(v)))
-#endif
-//@}
+/*! @brief Set the TXSNR field to a new value. */
+#define BW_DDR_CR15_TXSNR(x, v) (HW_DDR_CR15_WR(x, (HW_DDR_CR15_RD(x) & ~BM_DDR_CR15_TXSNR) | BF_DDR_CR15_TXSNR(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR15, field SREF[16] (RW)
@@ -2069,24 +1811,20 @@ typedef union _hw_ddr_cr15
  * operating mode after the self-refresh exit time (TXSR) of the device . The memory
  * controller resumes processing of the commands from the interruption point.
  */
-//@{
-#define BP_DDR_CR15_SREF     (16U)         //!< Bit position for DDR_CR15_SREF.
-#define BM_DDR_CR15_SREF     (0x00010000U) //!< Bit mask for DDR_CR15_SREF.
-#define BS_DDR_CR15_SREF     (1U)          //!< Bit field size in bits for DDR_CR15_SREF.
+/*@{*/
+#define BP_DDR_CR15_SREF     (16U)         /*!< Bit position for DDR_CR15_SREF. */
+#define BM_DDR_CR15_SREF     (0x00010000U) /*!< Bit mask for DDR_CR15_SREF. */
+#define BS_DDR_CR15_SREF     (1U)          /*!< Bit field size in bits for DDR_CR15_SREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR15_SREF field.
-#define BR_DDR_CR15_SREF     (BITBAND_ACCESS32(HW_DDR_CR15_ADDR, BP_DDR_CR15_SREF))
-#endif
+/*! @brief Read current value of the DDR_CR15_SREF field. */
+#define BR_DDR_CR15_SREF(x)  (BITBAND_ACCESS32(HW_DDR_CR15_ADDR(x), BP_DDR_CR15_SREF))
 
-//! @brief Format value for bitfield DDR_CR15_SREF.
-#define BF_DDR_CR15_SREF(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR15_SREF), uint32_t) & BM_DDR_CR15_SREF)
+/*! @brief Format value for bitfield DDR_CR15_SREF. */
+#define BF_DDR_CR15_SREF(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR15_SREF) & BM_DDR_CR15_SREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SREF field to a new value.
-#define BW_DDR_CR15_SREF(v)  (BITBAND_ACCESS32(HW_DDR_CR15_ADDR, BP_DDR_CR15_SREF) = (v))
-#endif
-//@}
+/*! @brief Set the SREF field to a new value. */
+#define BW_DDR_CR15_SREF(x, v) (BITBAND_ACCESS32(HW_DDR_CR15_ADDR(x), BP_DDR_CR15_SREF) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR15, field PUREF[24] (RW)
@@ -2101,30 +1839,25 @@ typedef union _hw_ddr_cr15
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR15_PUREF    (24U)         //!< Bit position for DDR_CR15_PUREF.
-#define BM_DDR_CR15_PUREF    (0x01000000U) //!< Bit mask for DDR_CR15_PUREF.
-#define BS_DDR_CR15_PUREF    (1U)          //!< Bit field size in bits for DDR_CR15_PUREF.
+/*@{*/
+#define BP_DDR_CR15_PUREF    (24U)         /*!< Bit position for DDR_CR15_PUREF. */
+#define BM_DDR_CR15_PUREF    (0x01000000U) /*!< Bit mask for DDR_CR15_PUREF. */
+#define BS_DDR_CR15_PUREF    (1U)          /*!< Bit field size in bits for DDR_CR15_PUREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR15_PUREF field.
-#define BR_DDR_CR15_PUREF    (BITBAND_ACCESS32(HW_DDR_CR15_ADDR, BP_DDR_CR15_PUREF))
-#endif
+/*! @brief Read current value of the DDR_CR15_PUREF field. */
+#define BR_DDR_CR15_PUREF(x) (BITBAND_ACCESS32(HW_DDR_CR15_ADDR(x), BP_DDR_CR15_PUREF))
 
-//! @brief Format value for bitfield DDR_CR15_PUREF.
-#define BF_DDR_CR15_PUREF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR15_PUREF), uint32_t) & BM_DDR_CR15_PUREF)
+/*! @brief Format value for bitfield DDR_CR15_PUREF. */
+#define BF_DDR_CR15_PUREF(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR15_PUREF) & BM_DDR_CR15_PUREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUREF field to a new value.
-#define BW_DDR_CR15_PUREF(v) (BITBAND_ACCESS32(HW_DDR_CR15_ADDR, BP_DDR_CR15_PUREF) = (v))
-#endif
-//@}
+/*! @brief Set the PUREF field to a new value. */
+#define BW_DDR_CR15_PUREF(x, v) (BITBAND_ACCESS32(HW_DDR_CR15_ADDR(x), BP_DDR_CR15_PUREF) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR16 - DDR Control Register 16
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR16 - DDR Control Register 16
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR16 - DDR Control Register 16 (RW)
  *
@@ -2135,31 +1868,28 @@ typedef union _hw_ddr_cr16
     uint32_t U;
     struct _hw_ddr_cr16_bitfields
     {
-        uint32_t QKREF : 1;            //!< [0] Quick Refresh
-        uint32_t RESERVED0 : 7;        //!< [7:1]
-        uint32_t CLKDLY : 3;           //!< [10:8] Clock Delay
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t LPCTRL : 5;           //!< [20:16] Low Power Control
-        uint32_t RESERVED2 : 11;       //!< [31:21] Reserved
+        uint32_t QKREF : 1;            /*!< [0] Quick Refresh */
+        uint32_t RESERVED0 : 7;        /*!< [7:1]  */
+        uint32_t CLKDLY : 3;           /*!< [10:8] Clock Delay */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t LPCTRL : 5;           /*!< [20:16] Low Power Control */
+        uint32_t RESERVED2 : 11;       /*!< [31:21] Reserved */
     } B;
 } hw_ddr_cr16_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR16 register
  */
-//@{
-#define HW_DDR_CR16_ADDR         (REGS_DDR_BASE + 0x40U)
+/*@{*/
+#define HW_DDR_CR16_ADDR(x)      ((x) + 0x40U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR16              (*(__IO hw_ddr_cr16_t *) HW_DDR_CR16_ADDR)
-#define HW_DDR_CR16_RD()         (HW_DDR_CR16.U)
-#define HW_DDR_CR16_WR(v)        (HW_DDR_CR16.U = (v))
-#define HW_DDR_CR16_SET(v)       (HW_DDR_CR16_WR(HW_DDR_CR16_RD() |  (v)))
-#define HW_DDR_CR16_CLR(v)       (HW_DDR_CR16_WR(HW_DDR_CR16_RD() & ~(v)))
-#define HW_DDR_CR16_TOG(v)       (HW_DDR_CR16_WR(HW_DDR_CR16_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR16(x)           (*(__IO hw_ddr_cr16_t *) HW_DDR_CR16_ADDR(x))
+#define HW_DDR_CR16_RD(x)        (HW_DDR_CR16(x).U)
+#define HW_DDR_CR16_WR(x, v)     (HW_DDR_CR16(x).U = (v))
+#define HW_DDR_CR16_SET(x, v)    (HW_DDR_CR16_WR(x, HW_DDR_CR16_RD(x) |  (v)))
+#define HW_DDR_CR16_CLR(x, v)    (HW_DDR_CR16_WR(x, HW_DDR_CR16_RD(x) & ~(v)))
+#define HW_DDR_CR16_TOG(x, v)    (HW_DDR_CR16_WR(x, HW_DDR_CR16_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR16 bitfields
@@ -2176,48 +1906,40 @@ typedef union _hw_ddr_cr16
  * - 0 - Continue memory initialization
  * - 1 - Interrupt memory initialization and enter self-refresh mode
  */
-//@{
-#define BP_DDR_CR16_QKREF    (0U)          //!< Bit position for DDR_CR16_QKREF.
-#define BM_DDR_CR16_QKREF    (0x00000001U) //!< Bit mask for DDR_CR16_QKREF.
-#define BS_DDR_CR16_QKREF    (1U)          //!< Bit field size in bits for DDR_CR16_QKREF.
+/*@{*/
+#define BP_DDR_CR16_QKREF    (0U)          /*!< Bit position for DDR_CR16_QKREF. */
+#define BM_DDR_CR16_QKREF    (0x00000001U) /*!< Bit mask for DDR_CR16_QKREF. */
+#define BS_DDR_CR16_QKREF    (1U)          /*!< Bit field size in bits for DDR_CR16_QKREF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR16_QKREF field.
-#define BR_DDR_CR16_QKREF    (BITBAND_ACCESS32(HW_DDR_CR16_ADDR, BP_DDR_CR16_QKREF))
-#endif
+/*! @brief Read current value of the DDR_CR16_QKREF field. */
+#define BR_DDR_CR16_QKREF(x) (BITBAND_ACCESS32(HW_DDR_CR16_ADDR(x), BP_DDR_CR16_QKREF))
 
-//! @brief Format value for bitfield DDR_CR16_QKREF.
-#define BF_DDR_CR16_QKREF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR16_QKREF), uint32_t) & BM_DDR_CR16_QKREF)
+/*! @brief Format value for bitfield DDR_CR16_QKREF. */
+#define BF_DDR_CR16_QKREF(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR16_QKREF) & BM_DDR_CR16_QKREF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the QKREF field to a new value.
-#define BW_DDR_CR16_QKREF(v) (BITBAND_ACCESS32(HW_DDR_CR16_ADDR, BP_DDR_CR16_QKREF) = (v))
-#endif
-//@}
+/*! @brief Set the QKREF field to a new value. */
+#define BW_DDR_CR16_QKREF(x, v) (BITBAND_ACCESS32(HW_DDR_CR16_ADDR(x), BP_DDR_CR16_QKREF) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR16, field CLKDLY[10:8] (RW)
  *
  * Additional cycles to delay CLK for status reporting.
  */
-//@{
-#define BP_DDR_CR16_CLKDLY   (8U)          //!< Bit position for DDR_CR16_CLKDLY.
-#define BM_DDR_CR16_CLKDLY   (0x00000700U) //!< Bit mask for DDR_CR16_CLKDLY.
-#define BS_DDR_CR16_CLKDLY   (3U)          //!< Bit field size in bits for DDR_CR16_CLKDLY.
+/*@{*/
+#define BP_DDR_CR16_CLKDLY   (8U)          /*!< Bit position for DDR_CR16_CLKDLY. */
+#define BM_DDR_CR16_CLKDLY   (0x00000700U) /*!< Bit mask for DDR_CR16_CLKDLY. */
+#define BS_DDR_CR16_CLKDLY   (3U)          /*!< Bit field size in bits for DDR_CR16_CLKDLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR16_CLKDLY field.
-#define BR_DDR_CR16_CLKDLY   (HW_DDR_CR16.B.CLKDLY)
-#endif
+/*! @brief Read current value of the DDR_CR16_CLKDLY field. */
+#define BR_DDR_CR16_CLKDLY(x) (HW_DDR_CR16(x).B.CLKDLY)
 
-//! @brief Format value for bitfield DDR_CR16_CLKDLY.
-#define BF_DDR_CR16_CLKDLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR16_CLKDLY), uint32_t) & BM_DDR_CR16_CLKDLY)
+/*! @brief Format value for bitfield DDR_CR16_CLKDLY. */
+#define BF_DDR_CR16_CLKDLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR16_CLKDLY) & BM_DDR_CR16_CLKDLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKDLY field to a new value.
-#define BW_DDR_CR16_CLKDLY(v) (HW_DDR_CR16_WR((HW_DDR_CR16_RD() & ~BM_DDR_CR16_CLKDLY) | BF_DDR_CR16_CLKDLY(v)))
-#endif
-//@}
+/*! @brief Set the CLKDLY field to a new value. */
+#define BW_DDR_CR16_CLKDLY(x, v) (HW_DDR_CR16_WR(x, (HW_DDR_CR16_RD(x) & ~BM_DDR_CR16_CLKDLY) | BF_DDR_CR16_CLKDLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR16, field LPCTRL[20:16] (RW)
@@ -2232,30 +1954,25 @@ typedef union _hw_ddr_cr16
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR16_LPCTRL   (16U)         //!< Bit position for DDR_CR16_LPCTRL.
-#define BM_DDR_CR16_LPCTRL   (0x001F0000U) //!< Bit mask for DDR_CR16_LPCTRL.
-#define BS_DDR_CR16_LPCTRL   (5U)          //!< Bit field size in bits for DDR_CR16_LPCTRL.
+/*@{*/
+#define BP_DDR_CR16_LPCTRL   (16U)         /*!< Bit position for DDR_CR16_LPCTRL. */
+#define BM_DDR_CR16_LPCTRL   (0x001F0000U) /*!< Bit mask for DDR_CR16_LPCTRL. */
+#define BS_DDR_CR16_LPCTRL   (5U)          /*!< Bit field size in bits for DDR_CR16_LPCTRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR16_LPCTRL field.
-#define BR_DDR_CR16_LPCTRL   (HW_DDR_CR16.B.LPCTRL)
-#endif
+/*! @brief Read current value of the DDR_CR16_LPCTRL field. */
+#define BR_DDR_CR16_LPCTRL(x) (HW_DDR_CR16(x).B.LPCTRL)
 
-//! @brief Format value for bitfield DDR_CR16_LPCTRL.
-#define BF_DDR_CR16_LPCTRL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR16_LPCTRL), uint32_t) & BM_DDR_CR16_LPCTRL)
+/*! @brief Format value for bitfield DDR_CR16_LPCTRL. */
+#define BF_DDR_CR16_LPCTRL(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR16_LPCTRL) & BM_DDR_CR16_LPCTRL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPCTRL field to a new value.
-#define BW_DDR_CR16_LPCTRL(v) (HW_DDR_CR16_WR((HW_DDR_CR16_RD() & ~BM_DDR_CR16_LPCTRL) | BF_DDR_CR16_LPCTRL(v)))
-#endif
-//@}
+/*! @brief Set the LPCTRL field to a new value. */
+#define BW_DDR_CR16_LPCTRL(x, v) (HW_DDR_CR16_WR(x, (HW_DDR_CR16_RD(x) & ~BM_DDR_CR16_LPCTRL) | BF_DDR_CR16_LPCTRL(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR17 - DDR Control Register 17
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR17 - DDR Control Register 17
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR17 - DDR Control Register 17 (RW)
  *
@@ -2266,27 +1983,24 @@ typedef union _hw_ddr_cr17
     uint32_t U;
     struct _hw_ddr_cr17_bitfields
     {
-        uint32_t LPPDCNT : 16;         //!< [15:0] Low Power Power Down Count
-        uint32_t LPRFCNT : 16;         //!< [31:16] Low Power Refresh Count
+        uint32_t LPPDCNT : 16;         /*!< [15:0] Low Power Power Down Count */
+        uint32_t LPRFCNT : 16;         /*!< [31:16] Low Power Refresh Count */
     } B;
 } hw_ddr_cr17_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR17 register
  */
-//@{
-#define HW_DDR_CR17_ADDR         (REGS_DDR_BASE + 0x44U)
+/*@{*/
+#define HW_DDR_CR17_ADDR(x)      ((x) + 0x44U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR17              (*(__IO hw_ddr_cr17_t *) HW_DDR_CR17_ADDR)
-#define HW_DDR_CR17_RD()         (HW_DDR_CR17.U)
-#define HW_DDR_CR17_WR(v)        (HW_DDR_CR17.U = (v))
-#define HW_DDR_CR17_SET(v)       (HW_DDR_CR17_WR(HW_DDR_CR17_RD() |  (v)))
-#define HW_DDR_CR17_CLR(v)       (HW_DDR_CR17_WR(HW_DDR_CR17_RD() & ~(v)))
-#define HW_DDR_CR17_TOG(v)       (HW_DDR_CR17_WR(HW_DDR_CR17_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR17(x)           (*(__IO hw_ddr_cr17_t *) HW_DDR_CR17_ADDR(x))
+#define HW_DDR_CR17_RD(x)        (HW_DDR_CR17(x).U)
+#define HW_DDR_CR17_WR(x, v)     (HW_DDR_CR17(x).U = (v))
+#define HW_DDR_CR17_SET(x, v)    (HW_DDR_CR17_WR(x, HW_DDR_CR17_RD(x) |  (v)))
+#define HW_DDR_CR17_CLR(x, v)    (HW_DDR_CR17_WR(x, HW_DDR_CR17_RD(x) & ~(v)))
+#define HW_DDR_CR17_TOG(x, v)    (HW_DDR_CR17_WR(x, HW_DDR_CR17_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR17 bitfields
@@ -2298,24 +2012,20 @@ typedef union _hw_ddr_cr17
  * Counts the number of idle cycles before memory power-down or power-down in
  * memory clock gating low power modes.
  */
-//@{
-#define BP_DDR_CR17_LPPDCNT  (0U)          //!< Bit position for DDR_CR17_LPPDCNT.
-#define BM_DDR_CR17_LPPDCNT  (0x0000FFFFU) //!< Bit mask for DDR_CR17_LPPDCNT.
-#define BS_DDR_CR17_LPPDCNT  (16U)         //!< Bit field size in bits for DDR_CR17_LPPDCNT.
+/*@{*/
+#define BP_DDR_CR17_LPPDCNT  (0U)          /*!< Bit position for DDR_CR17_LPPDCNT. */
+#define BM_DDR_CR17_LPPDCNT  (0x0000FFFFU) /*!< Bit mask for DDR_CR17_LPPDCNT. */
+#define BS_DDR_CR17_LPPDCNT  (16U)         /*!< Bit field size in bits for DDR_CR17_LPPDCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR17_LPPDCNT field.
-#define BR_DDR_CR17_LPPDCNT  (HW_DDR_CR17.B.LPPDCNT)
-#endif
+/*! @brief Read current value of the DDR_CR17_LPPDCNT field. */
+#define BR_DDR_CR17_LPPDCNT(x) (HW_DDR_CR17(x).B.LPPDCNT)
 
-//! @brief Format value for bitfield DDR_CR17_LPPDCNT.
-#define BF_DDR_CR17_LPPDCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR17_LPPDCNT), uint32_t) & BM_DDR_CR17_LPPDCNT)
+/*! @brief Format value for bitfield DDR_CR17_LPPDCNT. */
+#define BF_DDR_CR17_LPPDCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR17_LPPDCNT) & BM_DDR_CR17_LPPDCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPPDCNT field to a new value.
-#define BW_DDR_CR17_LPPDCNT(v) (HW_DDR_CR17_WR((HW_DDR_CR17_RD() & ~BM_DDR_CR17_LPPDCNT) | BF_DDR_CR17_LPPDCNT(v)))
-#endif
-//@}
+/*! @brief Set the LPPDCNT field to a new value. */
+#define BW_DDR_CR17_LPPDCNT(x, v) (HW_DDR_CR17_WR(x, (HW_DDR_CR17_RD(x) & ~BM_DDR_CR17_LPPDCNT) | BF_DDR_CR17_LPPDCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR17, field LPRFCNT[31:16] (RW)
@@ -2323,30 +2033,25 @@ typedef union _hw_ddr_cr17
  * Counts the number of idle cycles to the next memory self-refresh low power
  * mode.
  */
-//@{
-#define BP_DDR_CR17_LPRFCNT  (16U)         //!< Bit position for DDR_CR17_LPRFCNT.
-#define BM_DDR_CR17_LPRFCNT  (0xFFFF0000U) //!< Bit mask for DDR_CR17_LPRFCNT.
-#define BS_DDR_CR17_LPRFCNT  (16U)         //!< Bit field size in bits for DDR_CR17_LPRFCNT.
+/*@{*/
+#define BP_DDR_CR17_LPRFCNT  (16U)         /*!< Bit position for DDR_CR17_LPRFCNT. */
+#define BM_DDR_CR17_LPRFCNT  (0xFFFF0000U) /*!< Bit mask for DDR_CR17_LPRFCNT. */
+#define BS_DDR_CR17_LPRFCNT  (16U)         /*!< Bit field size in bits for DDR_CR17_LPRFCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR17_LPRFCNT field.
-#define BR_DDR_CR17_LPRFCNT  (HW_DDR_CR17.B.LPRFCNT)
-#endif
+/*! @brief Read current value of the DDR_CR17_LPRFCNT field. */
+#define BR_DDR_CR17_LPRFCNT(x) (HW_DDR_CR17(x).B.LPRFCNT)
 
-//! @brief Format value for bitfield DDR_CR17_LPRFCNT.
-#define BF_DDR_CR17_LPRFCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR17_LPRFCNT), uint32_t) & BM_DDR_CR17_LPRFCNT)
+/*! @brief Format value for bitfield DDR_CR17_LPRFCNT. */
+#define BF_DDR_CR17_LPRFCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR17_LPRFCNT) & BM_DDR_CR17_LPRFCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPRFCNT field to a new value.
-#define BW_DDR_CR17_LPRFCNT(v) (HW_DDR_CR17_WR((HW_DDR_CR17_RD() & ~BM_DDR_CR17_LPRFCNT) | BF_DDR_CR17_LPRFCNT(v)))
-#endif
-//@}
+/*! @brief Set the LPRFCNT field to a new value. */
+#define BW_DDR_CR17_LPRFCNT(x, v) (HW_DDR_CR17_WR(x, (HW_DDR_CR17_RD(x) & ~BM_DDR_CR17_LPRFCNT) | BF_DDR_CR17_LPRFCNT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR18 - DDR Control Register 18
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR18 - DDR Control Register 18
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR18 - DDR Control Register 18 (RW)
  *
@@ -2357,28 +2062,25 @@ typedef union _hw_ddr_cr18
     uint32_t U;
     struct _hw_ddr_cr18_bitfields
     {
-        uint32_t LPEXTCNT : 16;        //!< [15:0] Low Power External Count
-        uint32_t LPAUTO : 5;           //!< [20:16] Low Power Auto
-        uint32_t RESERVED0 : 11;       //!< [31:21] Reserved
+        uint32_t LPEXTCNT : 16;        /*!< [15:0] Low Power External Count */
+        uint32_t LPAUTO : 5;           /*!< [20:16] Low Power Auto */
+        uint32_t RESERVED0 : 11;       /*!< [31:21] Reserved */
     } B;
 } hw_ddr_cr18_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR18 register
  */
-//@{
-#define HW_DDR_CR18_ADDR         (REGS_DDR_BASE + 0x48U)
+/*@{*/
+#define HW_DDR_CR18_ADDR(x)      ((x) + 0x48U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR18              (*(__IO hw_ddr_cr18_t *) HW_DDR_CR18_ADDR)
-#define HW_DDR_CR18_RD()         (HW_DDR_CR18.U)
-#define HW_DDR_CR18_WR(v)        (HW_DDR_CR18.U = (v))
-#define HW_DDR_CR18_SET(v)       (HW_DDR_CR18_WR(HW_DDR_CR18_RD() |  (v)))
-#define HW_DDR_CR18_CLR(v)       (HW_DDR_CR18_WR(HW_DDR_CR18_RD() & ~(v)))
-#define HW_DDR_CR18_TOG(v)       (HW_DDR_CR18_WR(HW_DDR_CR18_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR18(x)           (*(__IO hw_ddr_cr18_t *) HW_DDR_CR18_ADDR(x))
+#define HW_DDR_CR18_RD(x)        (HW_DDR_CR18(x).U)
+#define HW_DDR_CR18_WR(x, v)     (HW_DDR_CR18(x).U = (v))
+#define HW_DDR_CR18_SET(x, v)    (HW_DDR_CR18_WR(x, HW_DDR_CR18_RD(x) |  (v)))
+#define HW_DDR_CR18_CLR(x, v)    (HW_DDR_CR18_WR(x, HW_DDR_CR18_RD(x) & ~(v)))
+#define HW_DDR_CR18_TOG(x, v)    (HW_DDR_CR18_WR(x, HW_DDR_CR18_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR18 bitfields
@@ -2390,24 +2092,20 @@ typedef union _hw_ddr_cr18
  * Counts the number of idle cycles before memory self-refresh in memory clock
  * gating low power mode.
  */
-//@{
-#define BP_DDR_CR18_LPEXTCNT (0U)          //!< Bit position for DDR_CR18_LPEXTCNT.
-#define BM_DDR_CR18_LPEXTCNT (0x0000FFFFU) //!< Bit mask for DDR_CR18_LPEXTCNT.
-#define BS_DDR_CR18_LPEXTCNT (16U)         //!< Bit field size in bits for DDR_CR18_LPEXTCNT.
+/*@{*/
+#define BP_DDR_CR18_LPEXTCNT (0U)          /*!< Bit position for DDR_CR18_LPEXTCNT. */
+#define BM_DDR_CR18_LPEXTCNT (0x0000FFFFU) /*!< Bit mask for DDR_CR18_LPEXTCNT. */
+#define BS_DDR_CR18_LPEXTCNT (16U)         /*!< Bit field size in bits for DDR_CR18_LPEXTCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR18_LPEXTCNT field.
-#define BR_DDR_CR18_LPEXTCNT (HW_DDR_CR18.B.LPEXTCNT)
-#endif
+/*! @brief Read current value of the DDR_CR18_LPEXTCNT field. */
+#define BR_DDR_CR18_LPEXTCNT(x) (HW_DDR_CR18(x).B.LPEXTCNT)
 
-//! @brief Format value for bitfield DDR_CR18_LPEXTCNT.
-#define BF_DDR_CR18_LPEXTCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR18_LPEXTCNT), uint32_t) & BM_DDR_CR18_LPEXTCNT)
+/*! @brief Format value for bitfield DDR_CR18_LPEXTCNT. */
+#define BF_DDR_CR18_LPEXTCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR18_LPEXTCNT) & BM_DDR_CR18_LPEXTCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPEXTCNT field to a new value.
-#define BW_DDR_CR18_LPEXTCNT(v) (HW_DDR_CR18_WR((HW_DDR_CR18_RD() & ~BM_DDR_CR18_LPEXTCNT) | BF_DDR_CR18_LPEXTCNT(v)))
-#endif
-//@}
+/*! @brief Set the LPEXTCNT field to a new value. */
+#define BW_DDR_CR18_LPEXTCNT(x, v) (HW_DDR_CR18_WR(x, (HW_DDR_CR18_RD(x) & ~BM_DDR_CR18_LPEXTCNT) | BF_DDR_CR18_LPEXTCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR18, field LPAUTO[20:16] (RW)
@@ -2421,30 +2119,25 @@ typedef union _hw_ddr_cr18
  * LPCTRL bit. 1 The controller/memory automatically enters this mode when the proper
  * counters expire, and only if the associated LPCTRL is set.
  */
-//@{
-#define BP_DDR_CR18_LPAUTO   (16U)         //!< Bit position for DDR_CR18_LPAUTO.
-#define BM_DDR_CR18_LPAUTO   (0x001F0000U) //!< Bit mask for DDR_CR18_LPAUTO.
-#define BS_DDR_CR18_LPAUTO   (5U)          //!< Bit field size in bits for DDR_CR18_LPAUTO.
+/*@{*/
+#define BP_DDR_CR18_LPAUTO   (16U)         /*!< Bit position for DDR_CR18_LPAUTO. */
+#define BM_DDR_CR18_LPAUTO   (0x001F0000U) /*!< Bit mask for DDR_CR18_LPAUTO. */
+#define BS_DDR_CR18_LPAUTO   (5U)          /*!< Bit field size in bits for DDR_CR18_LPAUTO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR18_LPAUTO field.
-#define BR_DDR_CR18_LPAUTO   (HW_DDR_CR18.B.LPAUTO)
-#endif
+/*! @brief Read current value of the DDR_CR18_LPAUTO field. */
+#define BR_DDR_CR18_LPAUTO(x) (HW_DDR_CR18(x).B.LPAUTO)
 
-//! @brief Format value for bitfield DDR_CR18_LPAUTO.
-#define BF_DDR_CR18_LPAUTO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR18_LPAUTO), uint32_t) & BM_DDR_CR18_LPAUTO)
+/*! @brief Format value for bitfield DDR_CR18_LPAUTO. */
+#define BF_DDR_CR18_LPAUTO(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR18_LPAUTO) & BM_DDR_CR18_LPAUTO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPAUTO field to a new value.
-#define BW_DDR_CR18_LPAUTO(v) (HW_DDR_CR18_WR((HW_DDR_CR18_RD() & ~BM_DDR_CR18_LPAUTO) | BF_DDR_CR18_LPAUTO(v)))
-#endif
-//@}
+/*! @brief Set the LPAUTO field to a new value. */
+#define BW_DDR_CR18_LPAUTO(x, v) (HW_DDR_CR18_WR(x, (HW_DDR_CR18_RD(x) & ~BM_DDR_CR18_LPAUTO) | BF_DDR_CR18_LPAUTO(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR19 - DDR Control Register 19
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR19 - DDR Control Register 19
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR19 - DDR Control Register 19 (RW)
  *
@@ -2455,27 +2148,24 @@ typedef union _hw_ddr_cr19
     uint32_t U;
     struct _hw_ddr_cr19_bitfields
     {
-        uint32_t LPINTCNT : 16;        //!< [15:0] Low Power Interval Count
-        uint32_t LPRFHOLD : 16;        //!< [31:16] Low Power Refresh Hold
+        uint32_t LPINTCNT : 16;        /*!< [15:0] Low Power Interval Count */
+        uint32_t LPRFHOLD : 16;        /*!< [31:16] Low Power Refresh Hold */
     } B;
 } hw_ddr_cr19_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR19 register
  */
-//@{
-#define HW_DDR_CR19_ADDR         (REGS_DDR_BASE + 0x4CU)
+/*@{*/
+#define HW_DDR_CR19_ADDR(x)      ((x) + 0x4CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR19              (*(__IO hw_ddr_cr19_t *) HW_DDR_CR19_ADDR)
-#define HW_DDR_CR19_RD()         (HW_DDR_CR19.U)
-#define HW_DDR_CR19_WR(v)        (HW_DDR_CR19.U = (v))
-#define HW_DDR_CR19_SET(v)       (HW_DDR_CR19_WR(HW_DDR_CR19_RD() |  (v)))
-#define HW_DDR_CR19_CLR(v)       (HW_DDR_CR19_WR(HW_DDR_CR19_RD() & ~(v)))
-#define HW_DDR_CR19_TOG(v)       (HW_DDR_CR19_WR(HW_DDR_CR19_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR19(x)           (*(__IO hw_ddr_cr19_t *) HW_DDR_CR19_ADDR(x))
+#define HW_DDR_CR19_RD(x)        (HW_DDR_CR19(x).U)
+#define HW_DDR_CR19_WR(x, v)     (HW_DDR_CR19(x).U = (v))
+#define HW_DDR_CR19_SET(x, v)    (HW_DDR_CR19_WR(x, HW_DDR_CR19_RD(x) |  (v)))
+#define HW_DDR_CR19_CLR(x, v)    (HW_DDR_CR19_WR(x, HW_DDR_CR19_RD(x) & ~(v)))
+#define HW_DDR_CR19_TOG(x, v)    (HW_DDR_CR19_WR(x, HW_DDR_CR19_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR19 bitfields
@@ -2488,24 +2178,20 @@ typedef union _hw_ddr_cr19
  * controller clock gating low power mode. This parameter must be programmed to a
  * non-zero value for proper operation.
  */
-//@{
-#define BP_DDR_CR19_LPINTCNT (0U)          //!< Bit position for DDR_CR19_LPINTCNT.
-#define BM_DDR_CR19_LPINTCNT (0x0000FFFFU) //!< Bit mask for DDR_CR19_LPINTCNT.
-#define BS_DDR_CR19_LPINTCNT (16U)         //!< Bit field size in bits for DDR_CR19_LPINTCNT.
+/*@{*/
+#define BP_DDR_CR19_LPINTCNT (0U)          /*!< Bit position for DDR_CR19_LPINTCNT. */
+#define BM_DDR_CR19_LPINTCNT (0x0000FFFFU) /*!< Bit mask for DDR_CR19_LPINTCNT. */
+#define BS_DDR_CR19_LPINTCNT (16U)         /*!< Bit field size in bits for DDR_CR19_LPINTCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR19_LPINTCNT field.
-#define BR_DDR_CR19_LPINTCNT (HW_DDR_CR19.B.LPINTCNT)
-#endif
+/*! @brief Read current value of the DDR_CR19_LPINTCNT field. */
+#define BR_DDR_CR19_LPINTCNT(x) (HW_DDR_CR19(x).B.LPINTCNT)
 
-//! @brief Format value for bitfield DDR_CR19_LPINTCNT.
-#define BF_DDR_CR19_LPINTCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR19_LPINTCNT), uint32_t) & BM_DDR_CR19_LPINTCNT)
+/*! @brief Format value for bitfield DDR_CR19_LPINTCNT. */
+#define BF_DDR_CR19_LPINTCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR19_LPINTCNT) & BM_DDR_CR19_LPINTCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPINTCNT field to a new value.
-#define BW_DDR_CR19_LPINTCNT(v) (HW_DDR_CR19_WR((HW_DDR_CR19_RD() & ~BM_DDR_CR19_LPINTCNT) | BF_DDR_CR19_LPINTCNT(v)))
-#endif
-//@}
+/*! @brief Set the LPINTCNT field to a new value. */
+#define BW_DDR_CR19_LPINTCNT(x, v) (HW_DDR_CR19_WR(x, (HW_DDR_CR19_RD(x) & ~BM_DDR_CR19_LPINTCNT) | BF_DDR_CR19_LPINTCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR19, field LPRFHOLD[31:16] (RW)
@@ -2519,30 +2205,25 @@ typedef union _hw_ddr_cr19
  * the counter resets to this value. If the DLL requires more than 16 cycles to
  * re-lock, then the ungated time is longer.
  */
-//@{
-#define BP_DDR_CR19_LPRFHOLD (16U)         //!< Bit position for DDR_CR19_LPRFHOLD.
-#define BM_DDR_CR19_LPRFHOLD (0xFFFF0000U) //!< Bit mask for DDR_CR19_LPRFHOLD.
-#define BS_DDR_CR19_LPRFHOLD (16U)         //!< Bit field size in bits for DDR_CR19_LPRFHOLD.
+/*@{*/
+#define BP_DDR_CR19_LPRFHOLD (16U)         /*!< Bit position for DDR_CR19_LPRFHOLD. */
+#define BM_DDR_CR19_LPRFHOLD (0xFFFF0000U) /*!< Bit mask for DDR_CR19_LPRFHOLD. */
+#define BS_DDR_CR19_LPRFHOLD (16U)         /*!< Bit field size in bits for DDR_CR19_LPRFHOLD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR19_LPRFHOLD field.
-#define BR_DDR_CR19_LPRFHOLD (HW_DDR_CR19.B.LPRFHOLD)
-#endif
+/*! @brief Read current value of the DDR_CR19_LPRFHOLD field. */
+#define BR_DDR_CR19_LPRFHOLD(x) (HW_DDR_CR19(x).B.LPRFHOLD)
 
-//! @brief Format value for bitfield DDR_CR19_LPRFHOLD.
-#define BF_DDR_CR19_LPRFHOLD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR19_LPRFHOLD), uint32_t) & BM_DDR_CR19_LPRFHOLD)
+/*! @brief Format value for bitfield DDR_CR19_LPRFHOLD. */
+#define BF_DDR_CR19_LPRFHOLD(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR19_LPRFHOLD) & BM_DDR_CR19_LPRFHOLD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPRFHOLD field to a new value.
-#define BW_DDR_CR19_LPRFHOLD(v) (HW_DDR_CR19_WR((HW_DDR_CR19_RD() & ~BM_DDR_CR19_LPRFHOLD) | BF_DDR_CR19_LPRFHOLD(v)))
-#endif
-//@}
+/*! @brief Set the LPRFHOLD field to a new value. */
+#define BW_DDR_CR19_LPRFHOLD(x, v) (HW_DDR_CR19_WR(x, (HW_DDR_CR19_RD(x) & ~BM_DDR_CR19_LPRFHOLD) | BF_DDR_CR19_LPRFHOLD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR20 - DDR Control Register 20
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR20 - DDR Control Register 20
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR20 - DDR Control Register 20 (RW)
  *
@@ -2553,33 +2234,30 @@ typedef union _hw_ddr_cr20
     uint32_t U;
     struct _hw_ddr_cr20_bitfields
     {
-        uint32_t LPRE : 2;             //!< [1:0] Low Power Refresh enable
-        uint32_t RESERVED0 : 6;        //!< [7:2] Reserved
-        uint32_t CKSRE : 4;            //!< [11:8]
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t CKSRX : 4;            //!< [19:16] Clock Self Refresh Exit
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t WRMD : 1;             //!< [24] Write Mode Register
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t LPRE : 2;             /*!< [1:0] Low Power Refresh enable */
+        uint32_t RESERVED0 : 6;        /*!< [7:2] Reserved */
+        uint32_t CKSRE : 4;            /*!< [11:8]  */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t CKSRX : 4;            /*!< [19:16] Clock Self Refresh Exit */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t WRMD : 1;             /*!< [24] Write Mode Register */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr20_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR20 register
  */
-//@{
-#define HW_DDR_CR20_ADDR         (REGS_DDR_BASE + 0x50U)
+/*@{*/
+#define HW_DDR_CR20_ADDR(x)      ((x) + 0x50U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR20              (*(__IO hw_ddr_cr20_t *) HW_DDR_CR20_ADDR)
-#define HW_DDR_CR20_RD()         (HW_DDR_CR20.U)
-#define HW_DDR_CR20_WR(v)        (HW_DDR_CR20.U = (v))
-#define HW_DDR_CR20_SET(v)       (HW_DDR_CR20_WR(HW_DDR_CR20_RD() |  (v)))
-#define HW_DDR_CR20_CLR(v)       (HW_DDR_CR20_WR(HW_DDR_CR20_RD() & ~(v)))
-#define HW_DDR_CR20_TOG(v)       (HW_DDR_CR20_WR(HW_DDR_CR20_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR20(x)           (*(__IO hw_ddr_cr20_t *) HW_DDR_CR20_ADDR(x))
+#define HW_DDR_CR20_RD(x)        (HW_DDR_CR20(x).U)
+#define HW_DDR_CR20_WR(x, v)     (HW_DDR_CR20(x).U = (v))
+#define HW_DDR_CR20_SET(x, v)    (HW_DDR_CR20_WR(x, HW_DDR_CR20_RD(x) |  (v)))
+#define HW_DDR_CR20_CLR(x, v)    (HW_DDR_CR20_WR(x, HW_DDR_CR20_RD(x) & ~(v)))
+#define HW_DDR_CR20_TOG(x, v)    (HW_DDR_CR20_WR(x, HW_DDR_CR20_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR20 bitfields
@@ -2598,24 +2276,20 @@ typedef union _hw_ddr_cr20
  * - 10 - Reserved
  * - 11 - Reserved
  */
-//@{
-#define BP_DDR_CR20_LPRE     (0U)          //!< Bit position for DDR_CR20_LPRE.
-#define BM_DDR_CR20_LPRE     (0x00000003U) //!< Bit mask for DDR_CR20_LPRE.
-#define BS_DDR_CR20_LPRE     (2U)          //!< Bit field size in bits for DDR_CR20_LPRE.
+/*@{*/
+#define BP_DDR_CR20_LPRE     (0U)          /*!< Bit position for DDR_CR20_LPRE. */
+#define BM_DDR_CR20_LPRE     (0x00000003U) /*!< Bit mask for DDR_CR20_LPRE. */
+#define BS_DDR_CR20_LPRE     (2U)          /*!< Bit field size in bits for DDR_CR20_LPRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR20_LPRE field.
-#define BR_DDR_CR20_LPRE     (HW_DDR_CR20.B.LPRE)
-#endif
+/*! @brief Read current value of the DDR_CR20_LPRE field. */
+#define BR_DDR_CR20_LPRE(x)  (HW_DDR_CR20(x).B.LPRE)
 
-//! @brief Format value for bitfield DDR_CR20_LPRE.
-#define BF_DDR_CR20_LPRE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR20_LPRE), uint32_t) & BM_DDR_CR20_LPRE)
+/*! @brief Format value for bitfield DDR_CR20_LPRE. */
+#define BF_DDR_CR20_LPRE(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR20_LPRE) & BM_DDR_CR20_LPRE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPRE field to a new value.
-#define BW_DDR_CR20_LPRE(v)  (HW_DDR_CR20_WR((HW_DDR_CR20_RD() & ~BM_DDR_CR20_LPRE) | BF_DDR_CR20_LPRE(v)))
-#endif
-//@}
+/*! @brief Set the LPRE field to a new value. */
+#define BW_DDR_CR20_LPRE(x, v) (HW_DDR_CR20_WR(x, (HW_DDR_CR20_RD(x) & ~BM_DDR_CR20_LPRE) | BF_DDR_CR20_LPRE(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR20, field CKSRE[11:8] (RW)
@@ -2624,24 +2298,20 @@ typedef union _hw_ddr_cr20
  * clock stable after entering self-refresh mode. The clock will run for a
  * minimum of cksre cycles after CLK falls.
  */
-//@{
-#define BP_DDR_CR20_CKSRE    (8U)          //!< Bit position for DDR_CR20_CKSRE.
-#define BM_DDR_CR20_CKSRE    (0x00000F00U) //!< Bit mask for DDR_CR20_CKSRE.
-#define BS_DDR_CR20_CKSRE    (4U)          //!< Bit field size in bits for DDR_CR20_CKSRE.
+/*@{*/
+#define BP_DDR_CR20_CKSRE    (8U)          /*!< Bit position for DDR_CR20_CKSRE. */
+#define BM_DDR_CR20_CKSRE    (0x00000F00U) /*!< Bit mask for DDR_CR20_CKSRE. */
+#define BS_DDR_CR20_CKSRE    (4U)          /*!< Bit field size in bits for DDR_CR20_CKSRE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR20_CKSRE field.
-#define BR_DDR_CR20_CKSRE    (HW_DDR_CR20.B.CKSRE)
-#endif
+/*! @brief Read current value of the DDR_CR20_CKSRE field. */
+#define BR_DDR_CR20_CKSRE(x) (HW_DDR_CR20(x).B.CKSRE)
 
-//! @brief Format value for bitfield DDR_CR20_CKSRE.
-#define BF_DDR_CR20_CKSRE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR20_CKSRE), uint32_t) & BM_DDR_CR20_CKSRE)
+/*! @brief Format value for bitfield DDR_CR20_CKSRE. */
+#define BF_DDR_CR20_CKSRE(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR20_CKSRE) & BM_DDR_CR20_CKSRE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CKSRE field to a new value.
-#define BW_DDR_CR20_CKSRE(v) (HW_DDR_CR20_WR((HW_DDR_CR20_RD() & ~BM_DDR_CR20_CKSRE) | BF_DDR_CR20_CKSRE(v)))
-#endif
-//@}
+/*! @brief Set the CKSRE field to a new value. */
+#define BW_DDR_CR20_CKSRE(x, v) (HW_DDR_CR20_WR(x, (HW_DDR_CR20_RD(x) & ~BM_DDR_CR20_CKSRE) | BF_DDR_CR20_CKSRE(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR20, field CKSRX[19:16] (RW)
@@ -2650,24 +2320,20 @@ typedef union _hw_ddr_cr20
  * the clock stable before exiting self-refresh mode. The clock will run for a
  * minimum of cksrx cycles before CLK rises.
  */
-//@{
-#define BP_DDR_CR20_CKSRX    (16U)         //!< Bit position for DDR_CR20_CKSRX.
-#define BM_DDR_CR20_CKSRX    (0x000F0000U) //!< Bit mask for DDR_CR20_CKSRX.
-#define BS_DDR_CR20_CKSRX    (4U)          //!< Bit field size in bits for DDR_CR20_CKSRX.
+/*@{*/
+#define BP_DDR_CR20_CKSRX    (16U)         /*!< Bit position for DDR_CR20_CKSRX. */
+#define BM_DDR_CR20_CKSRX    (0x000F0000U) /*!< Bit mask for DDR_CR20_CKSRX. */
+#define BS_DDR_CR20_CKSRX    (4U)          /*!< Bit field size in bits for DDR_CR20_CKSRX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR20_CKSRX field.
-#define BR_DDR_CR20_CKSRX    (HW_DDR_CR20.B.CKSRX)
-#endif
+/*! @brief Read current value of the DDR_CR20_CKSRX field. */
+#define BR_DDR_CR20_CKSRX(x) (HW_DDR_CR20(x).B.CKSRX)
 
-//! @brief Format value for bitfield DDR_CR20_CKSRX.
-#define BF_DDR_CR20_CKSRX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR20_CKSRX), uint32_t) & BM_DDR_CR20_CKSRX)
+/*! @brief Format value for bitfield DDR_CR20_CKSRX. */
+#define BF_DDR_CR20_CKSRX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR20_CKSRX) & BM_DDR_CR20_CKSRX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CKSRX field to a new value.
-#define BW_DDR_CR20_CKSRX(v) (HW_DDR_CR20_WR((HW_DDR_CR20_RD() & ~BM_DDR_CR20_CKSRX) | BF_DDR_CR20_CKSRX(v)))
-#endif
-//@}
+/*! @brief Set the CKSRX field to a new value. */
+#define BW_DDR_CR20_CKSRX(x, v) (HW_DDR_CR20_WR(x, (HW_DDR_CR20_RD(x) & ~BM_DDR_CR20_CKSRX) | BF_DDR_CR20_CKSRX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR20, field WRMD[24] (WO)
@@ -2680,30 +2346,19 @@ typedef union _hw_ddr_cr20
  * occurs 1 Write the mode parameters (EMRS register) in the DRAM devices. This
  * parameter always reads zero.
  */
-//@{
-#define BP_DDR_CR20_WRMD     (24U)         //!< Bit position for DDR_CR20_WRMD.
-#define BM_DDR_CR20_WRMD     (0x01000000U) //!< Bit mask for DDR_CR20_WRMD.
-#define BS_DDR_CR20_WRMD     (1U)          //!< Bit field size in bits for DDR_CR20_WRMD.
+/*@{*/
+#define BP_DDR_CR20_WRMD     (24U)         /*!< Bit position for DDR_CR20_WRMD. */
+#define BM_DDR_CR20_WRMD     (0x01000000U) /*!< Bit mask for DDR_CR20_WRMD. */
+#define BS_DDR_CR20_WRMD     (1U)          /*!< Bit field size in bits for DDR_CR20_WRMD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR20_WRMD field.
-#define BR_DDR_CR20_WRMD     (BITBAND_ACCESS32(HW_DDR_CR20_ADDR, BP_DDR_CR20_WRMD))
-#endif
+/*! @brief Format value for bitfield DDR_CR20_WRMD. */
+#define BF_DDR_CR20_WRMD(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR20_WRMD) & BM_DDR_CR20_WRMD)
+/*@}*/
 
-//! @brief Format value for bitfield DDR_CR20_WRMD.
-#define BF_DDR_CR20_WRMD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR20_WRMD), uint32_t) & BM_DDR_CR20_WRMD)
+/*******************************************************************************
+ * HW_DDR_CR21 - DDR Control Register 21
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRMD field to a new value.
-#define BW_DDR_CR20_WRMD(v)  (BITBAND_ACCESS32(HW_DDR_CR20_ADDR, BP_DDR_CR20_WRMD) = (v))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR21 - DDR Control Register 21
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR21 - DDR Control Register 21 (RW)
  *
@@ -2714,27 +2369,24 @@ typedef union _hw_ddr_cr21
     uint32_t U;
     struct _hw_ddr_cr21_bitfields
     {
-        uint32_t MR0DAT0 : 16;         //!< [15:0]
-        uint32_t MR1DAT0 : 16;         //!< [31:16]
+        uint32_t MR0DAT0 : 16;         /*!< [15:0]  */
+        uint32_t MR1DAT0 : 16;         /*!< [31:16]  */
     } B;
 } hw_ddr_cr21_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR21 register
  */
-//@{
-#define HW_DDR_CR21_ADDR         (REGS_DDR_BASE + 0x54U)
+/*@{*/
+#define HW_DDR_CR21_ADDR(x)      ((x) + 0x54U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR21              (*(__IO hw_ddr_cr21_t *) HW_DDR_CR21_ADDR)
-#define HW_DDR_CR21_RD()         (HW_DDR_CR21.U)
-#define HW_DDR_CR21_WR(v)        (HW_DDR_CR21.U = (v))
-#define HW_DDR_CR21_SET(v)       (HW_DDR_CR21_WR(HW_DDR_CR21_RD() |  (v)))
-#define HW_DDR_CR21_CLR(v)       (HW_DDR_CR21_WR(HW_DDR_CR21_RD() & ~(v)))
-#define HW_DDR_CR21_TOG(v)       (HW_DDR_CR21_WR(HW_DDR_CR21_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR21(x)           (*(__IO hw_ddr_cr21_t *) HW_DDR_CR21_ADDR(x))
+#define HW_DDR_CR21_RD(x)        (HW_DDR_CR21(x).U)
+#define HW_DDR_CR21_WR(x, v)     (HW_DDR_CR21(x).U = (v))
+#define HW_DDR_CR21_SET(x, v)    (HW_DDR_CR21_WR(x, HW_DDR_CR21_RD(x) |  (v)))
+#define HW_DDR_CR21_CLR(x, v)    (HW_DDR_CR21_WR(x, HW_DDR_CR21_RD(x) & ~(v)))
+#define HW_DDR_CR21_TOG(x, v)    (HW_DDR_CR21_WR(x, HW_DDR_CR21_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR21 bitfields
@@ -2745,54 +2397,45 @@ typedef union _hw_ddr_cr21
  *
  * Data to program into memory mode register 0 for chip select .
  */
-//@{
-#define BP_DDR_CR21_MR0DAT0  (0U)          //!< Bit position for DDR_CR21_MR0DAT0.
-#define BM_DDR_CR21_MR0DAT0  (0x0000FFFFU) //!< Bit mask for DDR_CR21_MR0DAT0.
-#define BS_DDR_CR21_MR0DAT0  (16U)         //!< Bit field size in bits for DDR_CR21_MR0DAT0.
+/*@{*/
+#define BP_DDR_CR21_MR0DAT0  (0U)          /*!< Bit position for DDR_CR21_MR0DAT0. */
+#define BM_DDR_CR21_MR0DAT0  (0x0000FFFFU) /*!< Bit mask for DDR_CR21_MR0DAT0. */
+#define BS_DDR_CR21_MR0DAT0  (16U)         /*!< Bit field size in bits for DDR_CR21_MR0DAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR21_MR0DAT0 field.
-#define BR_DDR_CR21_MR0DAT0  (HW_DDR_CR21.B.MR0DAT0)
-#endif
+/*! @brief Read current value of the DDR_CR21_MR0DAT0 field. */
+#define BR_DDR_CR21_MR0DAT0(x) (HW_DDR_CR21(x).B.MR0DAT0)
 
-//! @brief Format value for bitfield DDR_CR21_MR0DAT0.
-#define BF_DDR_CR21_MR0DAT0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR21_MR0DAT0), uint32_t) & BM_DDR_CR21_MR0DAT0)
+/*! @brief Format value for bitfield DDR_CR21_MR0DAT0. */
+#define BF_DDR_CR21_MR0DAT0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR21_MR0DAT0) & BM_DDR_CR21_MR0DAT0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MR0DAT0 field to a new value.
-#define BW_DDR_CR21_MR0DAT0(v) (HW_DDR_CR21_WR((HW_DDR_CR21_RD() & ~BM_DDR_CR21_MR0DAT0) | BF_DDR_CR21_MR0DAT0(v)))
-#endif
-//@}
+/*! @brief Set the MR0DAT0 field to a new value. */
+#define BW_DDR_CR21_MR0DAT0(x, v) (HW_DDR_CR21_WR(x, (HW_DDR_CR21_RD(x) & ~BM_DDR_CR21_MR0DAT0) | BF_DDR_CR21_MR0DAT0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR21, field MR1DAT0[31:16] (RW)
  *
  * Data to program into memory mode register 1 for chip select .
  */
-//@{
-#define BP_DDR_CR21_MR1DAT0  (16U)         //!< Bit position for DDR_CR21_MR1DAT0.
-#define BM_DDR_CR21_MR1DAT0  (0xFFFF0000U) //!< Bit mask for DDR_CR21_MR1DAT0.
-#define BS_DDR_CR21_MR1DAT0  (16U)         //!< Bit field size in bits for DDR_CR21_MR1DAT0.
+/*@{*/
+#define BP_DDR_CR21_MR1DAT0  (16U)         /*!< Bit position for DDR_CR21_MR1DAT0. */
+#define BM_DDR_CR21_MR1DAT0  (0xFFFF0000U) /*!< Bit mask for DDR_CR21_MR1DAT0. */
+#define BS_DDR_CR21_MR1DAT0  (16U)         /*!< Bit field size in bits for DDR_CR21_MR1DAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR21_MR1DAT0 field.
-#define BR_DDR_CR21_MR1DAT0  (HW_DDR_CR21.B.MR1DAT0)
-#endif
+/*! @brief Read current value of the DDR_CR21_MR1DAT0 field. */
+#define BR_DDR_CR21_MR1DAT0(x) (HW_DDR_CR21(x).B.MR1DAT0)
 
-//! @brief Format value for bitfield DDR_CR21_MR1DAT0.
-#define BF_DDR_CR21_MR1DAT0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR21_MR1DAT0), uint32_t) & BM_DDR_CR21_MR1DAT0)
+/*! @brief Format value for bitfield DDR_CR21_MR1DAT0. */
+#define BF_DDR_CR21_MR1DAT0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR21_MR1DAT0) & BM_DDR_CR21_MR1DAT0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MR1DAT0 field to a new value.
-#define BW_DDR_CR21_MR1DAT0(v) (HW_DDR_CR21_WR((HW_DDR_CR21_RD() & ~BM_DDR_CR21_MR1DAT0) | BF_DDR_CR21_MR1DAT0(v)))
-#endif
-//@}
+/*! @brief Set the MR1DAT0 field to a new value. */
+#define BW_DDR_CR21_MR1DAT0(x, v) (HW_DDR_CR21_WR(x, (HW_DDR_CR21_RD(x) & ~BM_DDR_CR21_MR1DAT0) | BF_DDR_CR21_MR1DAT0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR22 - DDR Control Register 22
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR22 - DDR Control Register 22
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR22 - DDR Control Register 22 (RW)
  *
@@ -2803,27 +2446,24 @@ typedef union _hw_ddr_cr22
     uint32_t U;
     struct _hw_ddr_cr22_bitfields
     {
-        uint32_t MR2DATA0 : 16;        //!< [15:0]
-        uint32_t MR3DAT0 : 16;         //!< [31:16]
+        uint32_t MR2DATA0 : 16;        /*!< [15:0]  */
+        uint32_t MR3DAT0 : 16;         /*!< [31:16]  */
     } B;
 } hw_ddr_cr22_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR22 register
  */
-//@{
-#define HW_DDR_CR22_ADDR         (REGS_DDR_BASE + 0x58U)
+/*@{*/
+#define HW_DDR_CR22_ADDR(x)      ((x) + 0x58U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR22              (*(__IO hw_ddr_cr22_t *) HW_DDR_CR22_ADDR)
-#define HW_DDR_CR22_RD()         (HW_DDR_CR22.U)
-#define HW_DDR_CR22_WR(v)        (HW_DDR_CR22.U = (v))
-#define HW_DDR_CR22_SET(v)       (HW_DDR_CR22_WR(HW_DDR_CR22_RD() |  (v)))
-#define HW_DDR_CR22_CLR(v)       (HW_DDR_CR22_WR(HW_DDR_CR22_RD() & ~(v)))
-#define HW_DDR_CR22_TOG(v)       (HW_DDR_CR22_WR(HW_DDR_CR22_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR22(x)           (*(__IO hw_ddr_cr22_t *) HW_DDR_CR22_ADDR(x))
+#define HW_DDR_CR22_RD(x)        (HW_DDR_CR22(x).U)
+#define HW_DDR_CR22_WR(x, v)     (HW_DDR_CR22(x).U = (v))
+#define HW_DDR_CR22_SET(x, v)    (HW_DDR_CR22_WR(x, HW_DDR_CR22_RD(x) |  (v)))
+#define HW_DDR_CR22_CLR(x, v)    (HW_DDR_CR22_WR(x, HW_DDR_CR22_RD(x) & ~(v)))
+#define HW_DDR_CR22_TOG(x, v)    (HW_DDR_CR22_WR(x, HW_DDR_CR22_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR22 bitfields
@@ -2834,56 +2474,47 @@ typedef union _hw_ddr_cr22
  *
  * Data to program into memory mode register 2 for chip select .
  */
-//@{
-#define BP_DDR_CR22_MR2DATA0 (0U)          //!< Bit position for DDR_CR22_MR2DATA0.
-#define BM_DDR_CR22_MR2DATA0 (0x0000FFFFU) //!< Bit mask for DDR_CR22_MR2DATA0.
-#define BS_DDR_CR22_MR2DATA0 (16U)         //!< Bit field size in bits for DDR_CR22_MR2DATA0.
+/*@{*/
+#define BP_DDR_CR22_MR2DATA0 (0U)          /*!< Bit position for DDR_CR22_MR2DATA0. */
+#define BM_DDR_CR22_MR2DATA0 (0x0000FFFFU) /*!< Bit mask for DDR_CR22_MR2DATA0. */
+#define BS_DDR_CR22_MR2DATA0 (16U)         /*!< Bit field size in bits for DDR_CR22_MR2DATA0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR22_MR2DATA0 field.
-#define BR_DDR_CR22_MR2DATA0 (HW_DDR_CR22.B.MR2DATA0)
-#endif
+/*! @brief Read current value of the DDR_CR22_MR2DATA0 field. */
+#define BR_DDR_CR22_MR2DATA0(x) (HW_DDR_CR22(x).B.MR2DATA0)
 
-//! @brief Format value for bitfield DDR_CR22_MR2DATA0.
-#define BF_DDR_CR22_MR2DATA0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR22_MR2DATA0), uint32_t) & BM_DDR_CR22_MR2DATA0)
+/*! @brief Format value for bitfield DDR_CR22_MR2DATA0. */
+#define BF_DDR_CR22_MR2DATA0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR22_MR2DATA0) & BM_DDR_CR22_MR2DATA0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MR2DATA0 field to a new value.
-#define BW_DDR_CR22_MR2DATA0(v) (HW_DDR_CR22_WR((HW_DDR_CR22_RD() & ~BM_DDR_CR22_MR2DATA0) | BF_DDR_CR22_MR2DATA0(v)))
-#endif
-//@}
+/*! @brief Set the MR2DATA0 field to a new value. */
+#define BW_DDR_CR22_MR2DATA0(x, v) (HW_DDR_CR22_WR(x, (HW_DDR_CR22_RD(x) & ~BM_DDR_CR22_MR2DATA0) | BF_DDR_CR22_MR2DATA0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR22, field MR3DAT0[31:16] (RW)
  *
  * Data to program into memory mode register 3 for chip select .
  */
-//@{
-#define BP_DDR_CR22_MR3DAT0  (16U)         //!< Bit position for DDR_CR22_MR3DAT0.
-#define BM_DDR_CR22_MR3DAT0  (0xFFFF0000U) //!< Bit mask for DDR_CR22_MR3DAT0.
-#define BS_DDR_CR22_MR3DAT0  (16U)         //!< Bit field size in bits for DDR_CR22_MR3DAT0.
+/*@{*/
+#define BP_DDR_CR22_MR3DAT0  (16U)         /*!< Bit position for DDR_CR22_MR3DAT0. */
+#define BM_DDR_CR22_MR3DAT0  (0xFFFF0000U) /*!< Bit mask for DDR_CR22_MR3DAT0. */
+#define BS_DDR_CR22_MR3DAT0  (16U)         /*!< Bit field size in bits for DDR_CR22_MR3DAT0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR22_MR3DAT0 field.
-#define BR_DDR_CR22_MR3DAT0  (HW_DDR_CR22.B.MR3DAT0)
-#endif
+/*! @brief Read current value of the DDR_CR22_MR3DAT0 field. */
+#define BR_DDR_CR22_MR3DAT0(x) (HW_DDR_CR22(x).B.MR3DAT0)
 
-//! @brief Format value for bitfield DDR_CR22_MR3DAT0.
-#define BF_DDR_CR22_MR3DAT0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR22_MR3DAT0), uint32_t) & BM_DDR_CR22_MR3DAT0)
+/*! @brief Format value for bitfield DDR_CR22_MR3DAT0. */
+#define BF_DDR_CR22_MR3DAT0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR22_MR3DAT0) & BM_DDR_CR22_MR3DAT0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MR3DAT0 field to a new value.
-#define BW_DDR_CR22_MR3DAT0(v) (HW_DDR_CR22_WR((HW_DDR_CR22_RD() & ~BM_DDR_CR22_MR3DAT0) | BF_DDR_CR22_MR3DAT0(v)))
-#endif
-//@}
+/*! @brief Set the MR3DAT0 field to a new value. */
+#define BW_DDR_CR22_MR3DAT0(x, v) (HW_DDR_CR22_WR(x, (HW_DDR_CR22_RD(x) & ~BM_DDR_CR22_MR3DAT0) | BF_DDR_CR22_MR3DAT0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR23 - DDR Control Register 23
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR23 - DDR Control Register 23
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR23 - DDR Control Register 23 (RO)
+ * @brief HW_DDR_CR23 - DDR Control Register 23 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -2892,23 +2523,20 @@ typedef union _hw_ddr_cr23
     uint32_t U;
     struct _hw_ddr_cr23_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr23_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR23 register
  */
-//@{
-#define HW_DDR_CR23_ADDR         (REGS_DDR_BASE + 0x5CU)
+/*@{*/
+#define HW_DDR_CR23_ADDR(x)      ((x) + 0x5CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR23              (*(__I hw_ddr_cr23_t *) HW_DDR_CR23_ADDR)
-#define HW_DDR_CR23_RD()         (HW_DDR_CR23.U)
-#endif
-//@}
+#define HW_DDR_CR23(x)           (*(__I hw_ddr_cr23_t *) HW_DDR_CR23_ADDR(x))
+#define HW_DDR_CR23_RD(x)        (HW_DDR_CR23(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR23 bitfields
@@ -2917,38 +2545,33 @@ typedef union _hw_ddr_cr23
 /*!
  * @name Register DDR_CR23, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR23_Not_Used (0U)          //!< Bit position for DDR_CR23_Not_Used.
-#define BM_DDR_CR23_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR23_Not_Used.
-#define BS_DDR_CR23_Not_Used (16U)         //!< Bit field size in bits for DDR_CR23_Not_Used.
+/*@{*/
+#define BP_DDR_CR23_Not_Used (0U)          /*!< Bit position for DDR_CR23_Not_Used. */
+#define BM_DDR_CR23_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR23_Not_Used. */
+#define BS_DDR_CR23_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR23_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR23_Not_Used field.
-#define BR_DDR_CR23_Not_Used (HW_DDR_CR23.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR23_Not_Used field. */
+#define BR_DDR_CR23_Not_Used(x) (HW_DDR_CR23(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR23, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR23_NOT_USED (16U)         //!< Bit position for DDR_CR23_NOT_USED.
-#define BM_DDR_CR23_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR23_NOT_USED.
-#define BS_DDR_CR23_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR23_NOT_USED.
+/*@{*/
+#define BP_DDR_CR23_NOT_USED (16U)         /*!< Bit position for DDR_CR23_NOT_USED. */
+#define BM_DDR_CR23_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR23_NOT_USED. */
+#define BS_DDR_CR23_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR23_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR23_NOT_USED field.
-#define BR_DDR_CR23_NOT_USED (HW_DDR_CR23.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR23_NOT_USED field. */
+#define BR_DDR_CR23_NOT_USED(x) (HW_DDR_CR23(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR24 - DDR Control Register 24
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR24 - DDR Control Register 24
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR24 - DDR Control Register 24 (RO)
+ * @brief HW_DDR_CR24 - DDR Control Register 24 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -2957,32 +2580,28 @@ typedef union _hw_ddr_cr24
     uint32_t U;
     struct _hw_ddr_cr24_bitfields
     {
-        uint32_t RESERVED0 : 32;       //!< [31:0]
+        uint32_t RESERVED0 : 32;       /*!< [31:0]  */
     } B;
 } hw_ddr_cr24_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR24 register
  */
-//@{
-#define HW_DDR_CR24_ADDR         (REGS_DDR_BASE + 0x60U)
+/*@{*/
+#define HW_DDR_CR24_ADDR(x)      ((x) + 0x60U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR24              (*(__I hw_ddr_cr24_t *) HW_DDR_CR24_ADDR)
-#define HW_DDR_CR24_RD()         (HW_DDR_CR24.U)
-#endif
-//@}
+#define HW_DDR_CR24(x)           (*(__I hw_ddr_cr24_t *) HW_DDR_CR24_ADDR(x))
+#define HW_DDR_CR24_RD(x)        (HW_DDR_CR24(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR24 bitfields
  */
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR25 - DDR Control Register 25
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR25 - DDR Control Register 25
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR25 - DDR Control Register 25 (RW)
  *
@@ -2993,33 +2612,30 @@ typedef union _hw_ddr_cr25
     uint32_t U;
     struct _hw_ddr_cr25_bitfields
     {
-        uint32_t BNK8 : 1;             //!< [0] Eight Bank Mode
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t ADDPINS : 3;          //!< [10:8] Address Pins
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t COLSIZ : 3;           //!< [18:16] Column Size
-        uint32_t RESERVED2 : 5;        //!< [23:19] Reserved
-        uint32_t APREBIT : 4;          //!< [27:24] Auto Precharge Bit
-        uint32_t RESERVED3 : 4;        //!< [31:28] Reserved
+        uint32_t BNK8 : 1;             /*!< [0] Eight Bank Mode */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t ADDPINS : 3;          /*!< [10:8] Address Pins */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t COLSIZ : 3;           /*!< [18:16] Column Size */
+        uint32_t RESERVED2 : 5;        /*!< [23:19] Reserved */
+        uint32_t APREBIT : 4;          /*!< [27:24] Auto Precharge Bit */
+        uint32_t RESERVED3 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr25_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR25 register
  */
-//@{
-#define HW_DDR_CR25_ADDR         (REGS_DDR_BASE + 0x64U)
+/*@{*/
+#define HW_DDR_CR25_ADDR(x)      ((x) + 0x64U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR25              (*(__IO hw_ddr_cr25_t *) HW_DDR_CR25_ADDR)
-#define HW_DDR_CR25_RD()         (HW_DDR_CR25.U)
-#define HW_DDR_CR25_WR(v)        (HW_DDR_CR25.U = (v))
-#define HW_DDR_CR25_SET(v)       (HW_DDR_CR25_WR(HW_DDR_CR25_RD() |  (v)))
-#define HW_DDR_CR25_CLR(v)       (HW_DDR_CR25_WR(HW_DDR_CR25_RD() & ~(v)))
-#define HW_DDR_CR25_TOG(v)       (HW_DDR_CR25_WR(HW_DDR_CR25_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR25(x)           (*(__IO hw_ddr_cr25_t *) HW_DDR_CR25_ADDR(x))
+#define HW_DDR_CR25_RD(x)        (HW_DDR_CR25(x).U)
+#define HW_DDR_CR25_WR(x, v)     (HW_DDR_CR25(x).U = (v))
+#define HW_DDR_CR25_SET(x, v)    (HW_DDR_CR25_WR(x, HW_DDR_CR25_RD(x) |  (v)))
+#define HW_DDR_CR25_CLR(x, v)    (HW_DDR_CR25_WR(x, HW_DDR_CR25_RD(x) & ~(v)))
+#define HW_DDR_CR25_TOG(x, v)    (HW_DDR_CR25_WR(x, HW_DDR_CR25_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR25 bitfields
@@ -3034,24 +2650,20 @@ typedef union _hw_ddr_cr25
  * - 0 - 4 banks
  * - 1 - 8 banks
  */
-//@{
-#define BP_DDR_CR25_BNK8     (0U)          //!< Bit position for DDR_CR25_BNK8.
-#define BM_DDR_CR25_BNK8     (0x00000001U) //!< Bit mask for DDR_CR25_BNK8.
-#define BS_DDR_CR25_BNK8     (1U)          //!< Bit field size in bits for DDR_CR25_BNK8.
+/*@{*/
+#define BP_DDR_CR25_BNK8     (0U)          /*!< Bit position for DDR_CR25_BNK8. */
+#define BM_DDR_CR25_BNK8     (0x00000001U) /*!< Bit mask for DDR_CR25_BNK8. */
+#define BS_DDR_CR25_BNK8     (1U)          /*!< Bit field size in bits for DDR_CR25_BNK8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR25_BNK8 field.
-#define BR_DDR_CR25_BNK8     (BITBAND_ACCESS32(HW_DDR_CR25_ADDR, BP_DDR_CR25_BNK8))
-#endif
+/*! @brief Read current value of the DDR_CR25_BNK8 field. */
+#define BR_DDR_CR25_BNK8(x)  (BITBAND_ACCESS32(HW_DDR_CR25_ADDR(x), BP_DDR_CR25_BNK8))
 
-//! @brief Format value for bitfield DDR_CR25_BNK8.
-#define BF_DDR_CR25_BNK8(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR25_BNK8), uint32_t) & BM_DDR_CR25_BNK8)
+/*! @brief Format value for bitfield DDR_CR25_BNK8. */
+#define BF_DDR_CR25_BNK8(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR25_BNK8) & BM_DDR_CR25_BNK8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BNK8 field to a new value.
-#define BW_DDR_CR25_BNK8(v)  (BITBAND_ACCESS32(HW_DDR_CR25_ADDR, BP_DDR_CR25_BNK8) = (v))
-#endif
-//@}
+/*! @brief Set the BNK8 field to a new value. */
+#define BW_DDR_CR25_BNK8(x, v) (BITBAND_ACCESS32(HW_DDR_CR25_ADDR(x), BP_DDR_CR25_BNK8) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR25, field ADDPINS[10:8] (RW)
@@ -3062,24 +2674,20 @@ typedef union _hw_ddr_cr25
  * based on the value of this parameter. For details, refer to section "DDR
  * SDRAM Address Mapping Options".
  */
-//@{
-#define BP_DDR_CR25_ADDPINS  (8U)          //!< Bit position for DDR_CR25_ADDPINS.
-#define BM_DDR_CR25_ADDPINS  (0x00000700U) //!< Bit mask for DDR_CR25_ADDPINS.
-#define BS_DDR_CR25_ADDPINS  (3U)          //!< Bit field size in bits for DDR_CR25_ADDPINS.
+/*@{*/
+#define BP_DDR_CR25_ADDPINS  (8U)          /*!< Bit position for DDR_CR25_ADDPINS. */
+#define BM_DDR_CR25_ADDPINS  (0x00000700U) /*!< Bit mask for DDR_CR25_ADDPINS. */
+#define BS_DDR_CR25_ADDPINS  (3U)          /*!< Bit field size in bits for DDR_CR25_ADDPINS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR25_ADDPINS field.
-#define BR_DDR_CR25_ADDPINS  (HW_DDR_CR25.B.ADDPINS)
-#endif
+/*! @brief Read current value of the DDR_CR25_ADDPINS field. */
+#define BR_DDR_CR25_ADDPINS(x) (HW_DDR_CR25(x).B.ADDPINS)
 
-//! @brief Format value for bitfield DDR_CR25_ADDPINS.
-#define BF_DDR_CR25_ADDPINS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR25_ADDPINS), uint32_t) & BM_DDR_CR25_ADDPINS)
+/*! @brief Format value for bitfield DDR_CR25_ADDPINS. */
+#define BF_DDR_CR25_ADDPINS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR25_ADDPINS) & BM_DDR_CR25_ADDPINS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDPINS field to a new value.
-#define BW_DDR_CR25_ADDPINS(v) (HW_DDR_CR25_WR((HW_DDR_CR25_RD() & ~BM_DDR_CR25_ADDPINS) | BF_DDR_CR25_ADDPINS(v)))
-#endif
-//@}
+/*! @brief Set the ADDPINS field to a new value. */
+#define BW_DDR_CR25_ADDPINS(x, v) (HW_DDR_CR25_WR(x, (HW_DDR_CR25_RD(x) & ~BM_DDR_CR25_ADDPINS) | BF_DDR_CR25_ADDPINS(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR25, field COLSIZ[18:16] (RW)
@@ -3089,54 +2697,45 @@ typedef union _hw_ddr_cr25
  * mapped contiguously into the memory map based on the value of this parameter. For
  * details, refer to section "DDR SDRAM Address Mapping Options".
  */
-//@{
-#define BP_DDR_CR25_COLSIZ   (16U)         //!< Bit position for DDR_CR25_COLSIZ.
-#define BM_DDR_CR25_COLSIZ   (0x00070000U) //!< Bit mask for DDR_CR25_COLSIZ.
-#define BS_DDR_CR25_COLSIZ   (3U)          //!< Bit field size in bits for DDR_CR25_COLSIZ.
+/*@{*/
+#define BP_DDR_CR25_COLSIZ   (16U)         /*!< Bit position for DDR_CR25_COLSIZ. */
+#define BM_DDR_CR25_COLSIZ   (0x00070000U) /*!< Bit mask for DDR_CR25_COLSIZ. */
+#define BS_DDR_CR25_COLSIZ   (3U)          /*!< Bit field size in bits for DDR_CR25_COLSIZ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR25_COLSIZ field.
-#define BR_DDR_CR25_COLSIZ   (HW_DDR_CR25.B.COLSIZ)
-#endif
+/*! @brief Read current value of the DDR_CR25_COLSIZ field. */
+#define BR_DDR_CR25_COLSIZ(x) (HW_DDR_CR25(x).B.COLSIZ)
 
-//! @brief Format value for bitfield DDR_CR25_COLSIZ.
-#define BF_DDR_CR25_COLSIZ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR25_COLSIZ), uint32_t) & BM_DDR_CR25_COLSIZ)
+/*! @brief Format value for bitfield DDR_CR25_COLSIZ. */
+#define BF_DDR_CR25_COLSIZ(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR25_COLSIZ) & BM_DDR_CR25_COLSIZ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COLSIZ field to a new value.
-#define BW_DDR_CR25_COLSIZ(v) (HW_DDR_CR25_WR((HW_DDR_CR25_RD() & ~BM_DDR_CR25_COLSIZ) | BF_DDR_CR25_COLSIZ(v)))
-#endif
-//@}
+/*! @brief Set the COLSIZ field to a new value. */
+#define BW_DDR_CR25_COLSIZ(x, v) (HW_DDR_CR25_WR(x, (HW_DDR_CR25_RD(x) & ~BM_DDR_CR25_COLSIZ) | BF_DDR_CR25_COLSIZ(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR25, field APREBIT[27:24] (RW)
  *
  * Location of the auto precharge bit in the DRAM address in decimal encoding.
  */
-//@{
-#define BP_DDR_CR25_APREBIT  (24U)         //!< Bit position for DDR_CR25_APREBIT.
-#define BM_DDR_CR25_APREBIT  (0x0F000000U) //!< Bit mask for DDR_CR25_APREBIT.
-#define BS_DDR_CR25_APREBIT  (4U)          //!< Bit field size in bits for DDR_CR25_APREBIT.
+/*@{*/
+#define BP_DDR_CR25_APREBIT  (24U)         /*!< Bit position for DDR_CR25_APREBIT. */
+#define BM_DDR_CR25_APREBIT  (0x0F000000U) /*!< Bit mask for DDR_CR25_APREBIT. */
+#define BS_DDR_CR25_APREBIT  (4U)          /*!< Bit field size in bits for DDR_CR25_APREBIT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR25_APREBIT field.
-#define BR_DDR_CR25_APREBIT  (HW_DDR_CR25.B.APREBIT)
-#endif
+/*! @brief Read current value of the DDR_CR25_APREBIT field. */
+#define BR_DDR_CR25_APREBIT(x) (HW_DDR_CR25(x).B.APREBIT)
 
-//! @brief Format value for bitfield DDR_CR25_APREBIT.
-#define BF_DDR_CR25_APREBIT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR25_APREBIT), uint32_t) & BM_DDR_CR25_APREBIT)
+/*! @brief Format value for bitfield DDR_CR25_APREBIT. */
+#define BF_DDR_CR25_APREBIT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR25_APREBIT) & BM_DDR_CR25_APREBIT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the APREBIT field to a new value.
-#define BW_DDR_CR25_APREBIT(v) (HW_DDR_CR25_WR((HW_DDR_CR25_RD() & ~BM_DDR_CR25_APREBIT) | BF_DDR_CR25_APREBIT(v)))
-#endif
-//@}
+/*! @brief Set the APREBIT field to a new value. */
+#define BW_DDR_CR25_APREBIT(x, v) (HW_DDR_CR25_WR(x, (HW_DDR_CR25_RD(x) & ~BM_DDR_CR25_APREBIT) | BF_DDR_CR25_APREBIT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR26 - DDR Control Register 26
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR26 - DDR Control Register 26
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR26 - DDR Control Register 26 (RW)
  *
@@ -3147,31 +2746,28 @@ typedef union _hw_ddr_cr26
     uint32_t U;
     struct _hw_ddr_cr26_bitfields
     {
-        uint32_t AGECNT : 8;           //!< [7:0] Age Count
-        uint32_t CMDAGE : 8;           //!< [15:8] Command Age count
-        uint32_t ADDCOL : 1;           //!< [16] Address Collision enable
-        uint32_t RESERVED0 : 7;        //!< [23:17] Reserved
-        uint32_t BNKSPT : 1;           //!< [24] Bank Split enable
-        uint32_t RESERVED1 : 7;        //!< [31:25] Reserved
+        uint32_t AGECNT : 8;           /*!< [7:0] Age Count */
+        uint32_t CMDAGE : 8;           /*!< [15:8] Command Age count */
+        uint32_t ADDCOL : 1;           /*!< [16] Address Collision enable */
+        uint32_t RESERVED0 : 7;        /*!< [23:17] Reserved */
+        uint32_t BNKSPT : 1;           /*!< [24] Bank Split enable */
+        uint32_t RESERVED1 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr26_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR26 register
  */
-//@{
-#define HW_DDR_CR26_ADDR         (REGS_DDR_BASE + 0x68U)
+/*@{*/
+#define HW_DDR_CR26_ADDR(x)      ((x) + 0x68U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR26              (*(__IO hw_ddr_cr26_t *) HW_DDR_CR26_ADDR)
-#define HW_DDR_CR26_RD()         (HW_DDR_CR26.U)
-#define HW_DDR_CR26_WR(v)        (HW_DDR_CR26.U = (v))
-#define HW_DDR_CR26_SET(v)       (HW_DDR_CR26_WR(HW_DDR_CR26_RD() |  (v)))
-#define HW_DDR_CR26_CLR(v)       (HW_DDR_CR26_WR(HW_DDR_CR26_RD() & ~(v)))
-#define HW_DDR_CR26_TOG(v)       (HW_DDR_CR26_WR(HW_DDR_CR26_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR26(x)           (*(__IO hw_ddr_cr26_t *) HW_DDR_CR26_ADDR(x))
+#define HW_DDR_CR26_RD(x)        (HW_DDR_CR26(x).U)
+#define HW_DDR_CR26_WR(x, v)     (HW_DDR_CR26(x).U = (v))
+#define HW_DDR_CR26_SET(x, v)    (HW_DDR_CR26_WR(x, HW_DDR_CR26_RD(x) |  (v)))
+#define HW_DDR_CR26_CLR(x, v)    (HW_DDR_CR26_WR(x, HW_DDR_CR26_RD(x) & ~(v)))
+#define HW_DDR_CR26_TOG(x, v)    (HW_DDR_CR26_WR(x, HW_DDR_CR26_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR26 bitfields
@@ -3184,24 +2780,20 @@ typedef union _hw_ddr_cr26
  * placement logic to fill the command queue, the command aging counters are
  * decremented one each time the master aging-rate counter counts down AGECNT cycles.
  */
-//@{
-#define BP_DDR_CR26_AGECNT   (0U)          //!< Bit position for DDR_CR26_AGECNT.
-#define BM_DDR_CR26_AGECNT   (0x000000FFU) //!< Bit mask for DDR_CR26_AGECNT.
-#define BS_DDR_CR26_AGECNT   (8U)          //!< Bit field size in bits for DDR_CR26_AGECNT.
+/*@{*/
+#define BP_DDR_CR26_AGECNT   (0U)          /*!< Bit position for DDR_CR26_AGECNT. */
+#define BM_DDR_CR26_AGECNT   (0x000000FFU) /*!< Bit mask for DDR_CR26_AGECNT. */
+#define BS_DDR_CR26_AGECNT   (8U)          /*!< Bit field size in bits for DDR_CR26_AGECNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR26_AGECNT field.
-#define BR_DDR_CR26_AGECNT   (HW_DDR_CR26.B.AGECNT)
-#endif
+/*! @brief Read current value of the DDR_CR26_AGECNT field. */
+#define BR_DDR_CR26_AGECNT(x) (HW_DDR_CR26(x).B.AGECNT)
 
-//! @brief Format value for bitfield DDR_CR26_AGECNT.
-#define BF_DDR_CR26_AGECNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR26_AGECNT), uint32_t) & BM_DDR_CR26_AGECNT)
+/*! @brief Format value for bitfield DDR_CR26_AGECNT. */
+#define BF_DDR_CR26_AGECNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR26_AGECNT) & BM_DDR_CR26_AGECNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AGECNT field to a new value.
-#define BW_DDR_CR26_AGECNT(v) (HW_DDR_CR26_WR((HW_DDR_CR26_RD() & ~BM_DDR_CR26_AGECNT) | BF_DDR_CR26_AGECNT(v)))
-#endif
-//@}
+/*! @brief Set the AGECNT field to a new value. */
+#define BW_DDR_CR26_AGECNT(x, v) (HW_DDR_CR26_WR(x, (HW_DDR_CR26_RD(x) & ~BM_DDR_CR26_AGECNT) | BF_DDR_CR26_AGECNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR26, field CMDAGE[15:8] (RW)
@@ -3211,24 +2803,20 @@ typedef union _hw_ddr_cr26
  * queue, the command aging counters decrement one each time the master aging-rate
  * counter counts down CR26[AGECNT] cycles.
  */
-//@{
-#define BP_DDR_CR26_CMDAGE   (8U)          //!< Bit position for DDR_CR26_CMDAGE.
-#define BM_DDR_CR26_CMDAGE   (0x0000FF00U) //!< Bit mask for DDR_CR26_CMDAGE.
-#define BS_DDR_CR26_CMDAGE   (8U)          //!< Bit field size in bits for DDR_CR26_CMDAGE.
+/*@{*/
+#define BP_DDR_CR26_CMDAGE   (8U)          /*!< Bit position for DDR_CR26_CMDAGE. */
+#define BM_DDR_CR26_CMDAGE   (0x0000FF00U) /*!< Bit mask for DDR_CR26_CMDAGE. */
+#define BS_DDR_CR26_CMDAGE   (8U)          /*!< Bit field size in bits for DDR_CR26_CMDAGE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR26_CMDAGE field.
-#define BR_DDR_CR26_CMDAGE   (HW_DDR_CR26.B.CMDAGE)
-#endif
+/*! @brief Read current value of the DDR_CR26_CMDAGE field. */
+#define BR_DDR_CR26_CMDAGE(x) (HW_DDR_CR26(x).B.CMDAGE)
 
-//! @brief Format value for bitfield DDR_CR26_CMDAGE.
-#define BF_DDR_CR26_CMDAGE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR26_CMDAGE), uint32_t) & BM_DDR_CR26_CMDAGE)
+/*! @brief Format value for bitfield DDR_CR26_CMDAGE. */
+#define BF_DDR_CR26_CMDAGE(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR26_CMDAGE) & BM_DDR_CR26_CMDAGE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMDAGE field to a new value.
-#define BW_DDR_CR26_CMDAGE(v) (HW_DDR_CR26_WR((HW_DDR_CR26_RD() & ~BM_DDR_CR26_CMDAGE) | BF_DDR_CR26_CMDAGE(v)))
-#endif
-//@}
+/*! @brief Set the CMDAGE field to a new value. */
+#define BW_DDR_CR26_CMDAGE(x, v) (HW_DDR_CR26_WR(x, (HW_DDR_CR26_RD(x) & ~BM_DDR_CR26_CMDAGE) | BF_DDR_CR26_CMDAGE(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR26, field ADDCOL[16] (RW)
@@ -3240,24 +2828,20 @@ typedef union _hw_ddr_cr26
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR26_ADDCOL   (16U)         //!< Bit position for DDR_CR26_ADDCOL.
-#define BM_DDR_CR26_ADDCOL   (0x00010000U) //!< Bit mask for DDR_CR26_ADDCOL.
-#define BS_DDR_CR26_ADDCOL   (1U)          //!< Bit field size in bits for DDR_CR26_ADDCOL.
+/*@{*/
+#define BP_DDR_CR26_ADDCOL   (16U)         /*!< Bit position for DDR_CR26_ADDCOL. */
+#define BM_DDR_CR26_ADDCOL   (0x00010000U) /*!< Bit mask for DDR_CR26_ADDCOL. */
+#define BS_DDR_CR26_ADDCOL   (1U)          /*!< Bit field size in bits for DDR_CR26_ADDCOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR26_ADDCOL field.
-#define BR_DDR_CR26_ADDCOL   (BITBAND_ACCESS32(HW_DDR_CR26_ADDR, BP_DDR_CR26_ADDCOL))
-#endif
+/*! @brief Read current value of the DDR_CR26_ADDCOL field. */
+#define BR_DDR_CR26_ADDCOL(x) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR(x), BP_DDR_CR26_ADDCOL))
 
-//! @brief Format value for bitfield DDR_CR26_ADDCOL.
-#define BF_DDR_CR26_ADDCOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR26_ADDCOL), uint32_t) & BM_DDR_CR26_ADDCOL)
+/*! @brief Format value for bitfield DDR_CR26_ADDCOL. */
+#define BF_DDR_CR26_ADDCOL(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR26_ADDCOL) & BM_DDR_CR26_ADDCOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDCOL field to a new value.
-#define BW_DDR_CR26_ADDCOL(v) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR, BP_DDR_CR26_ADDCOL) = (v))
-#endif
-//@}
+/*! @brief Set the ADDCOL field to a new value. */
+#define BW_DDR_CR26_ADDCOL(x, v) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR(x), BP_DDR_CR26_ADDCOL) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR26, field BNKSPT[24] (RW)
@@ -3268,30 +2852,25 @@ typedef union _hw_ddr_cr26
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR26_BNKSPT   (24U)         //!< Bit position for DDR_CR26_BNKSPT.
-#define BM_DDR_CR26_BNKSPT   (0x01000000U) //!< Bit mask for DDR_CR26_BNKSPT.
-#define BS_DDR_CR26_BNKSPT   (1U)          //!< Bit field size in bits for DDR_CR26_BNKSPT.
+/*@{*/
+#define BP_DDR_CR26_BNKSPT   (24U)         /*!< Bit position for DDR_CR26_BNKSPT. */
+#define BM_DDR_CR26_BNKSPT   (0x01000000U) /*!< Bit mask for DDR_CR26_BNKSPT. */
+#define BS_DDR_CR26_BNKSPT   (1U)          /*!< Bit field size in bits for DDR_CR26_BNKSPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR26_BNKSPT field.
-#define BR_DDR_CR26_BNKSPT   (BITBAND_ACCESS32(HW_DDR_CR26_ADDR, BP_DDR_CR26_BNKSPT))
-#endif
+/*! @brief Read current value of the DDR_CR26_BNKSPT field. */
+#define BR_DDR_CR26_BNKSPT(x) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR(x), BP_DDR_CR26_BNKSPT))
 
-//! @brief Format value for bitfield DDR_CR26_BNKSPT.
-#define BF_DDR_CR26_BNKSPT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR26_BNKSPT), uint32_t) & BM_DDR_CR26_BNKSPT)
+/*! @brief Format value for bitfield DDR_CR26_BNKSPT. */
+#define BF_DDR_CR26_BNKSPT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR26_BNKSPT) & BM_DDR_CR26_BNKSPT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BNKSPT field to a new value.
-#define BW_DDR_CR26_BNKSPT(v) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR, BP_DDR_CR26_BNKSPT) = (v))
-#endif
-//@}
+/*! @brief Set the BNKSPT field to a new value. */
+#define BW_DDR_CR26_BNKSPT(x, v) (BITBAND_ACCESS32(HW_DDR_CR26_ADDR(x), BP_DDR_CR26_BNKSPT) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR27 - DDR Control Register 27
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR27 - DDR Control Register 27
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR27 - DDR Control Register 27 (RW)
  *
@@ -3302,33 +2881,30 @@ typedef union _hw_ddr_cr27
     uint32_t U;
     struct _hw_ddr_cr27_bitfields
     {
-        uint32_t PLEN : 1;             //!< [0] Placement Enable
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t PRIEN : 1;            //!< [8] Priority Enable
-        uint32_t RESERVED1 : 7;        //!< [15:9] Reserved
-        uint32_t RWEN : 1;             //!< [16] Read Write same Enable
-        uint32_t RESERVED2 : 7;        //!< [23:17] Reserved
-        uint32_t SWPEN : 1;            //!< [24] Swap Enable
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t PLEN : 1;             /*!< [0] Placement Enable */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t PRIEN : 1;            /*!< [8] Priority Enable */
+        uint32_t RESERVED1 : 7;        /*!< [15:9] Reserved */
+        uint32_t RWEN : 1;             /*!< [16] Read Write same Enable */
+        uint32_t RESERVED2 : 7;        /*!< [23:17] Reserved */
+        uint32_t SWPEN : 1;            /*!< [24] Swap Enable */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr27_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR27 register
  */
-//@{
-#define HW_DDR_CR27_ADDR         (REGS_DDR_BASE + 0x6CU)
+/*@{*/
+#define HW_DDR_CR27_ADDR(x)      ((x) + 0x6CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR27              (*(__IO hw_ddr_cr27_t *) HW_DDR_CR27_ADDR)
-#define HW_DDR_CR27_RD()         (HW_DDR_CR27.U)
-#define HW_DDR_CR27_WR(v)        (HW_DDR_CR27.U = (v))
-#define HW_DDR_CR27_SET(v)       (HW_DDR_CR27_WR(HW_DDR_CR27_RD() |  (v)))
-#define HW_DDR_CR27_CLR(v)       (HW_DDR_CR27_WR(HW_DDR_CR27_RD() & ~(v)))
-#define HW_DDR_CR27_TOG(v)       (HW_DDR_CR27_WR(HW_DDR_CR27_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR27(x)           (*(__IO hw_ddr_cr27_t *) HW_DDR_CR27_ADDR(x))
+#define HW_DDR_CR27_RD(x)        (HW_DDR_CR27(x).U)
+#define HW_DDR_CR27_WR(x, v)     (HW_DDR_CR27(x).U = (v))
+#define HW_DDR_CR27_SET(x, v)    (HW_DDR_CR27_WR(x, HW_DDR_CR27_RD(x) |  (v)))
+#define HW_DDR_CR27_CLR(x, v)    (HW_DDR_CR27_WR(x, HW_DDR_CR27_RD(x) & ~(v)))
+#define HW_DDR_CR27_TOG(x, v)    (HW_DDR_CR27_WR(x, HW_DDR_CR27_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR27 bitfields
@@ -3344,24 +2920,20 @@ typedef union _hw_ddr_cr27
  * - 1 - Enabled. The command queue is filled according to the placement logic
  *     factors.
  */
-//@{
-#define BP_DDR_CR27_PLEN     (0U)          //!< Bit position for DDR_CR27_PLEN.
-#define BM_DDR_CR27_PLEN     (0x00000001U) //!< Bit mask for DDR_CR27_PLEN.
-#define BS_DDR_CR27_PLEN     (1U)          //!< Bit field size in bits for DDR_CR27_PLEN.
+/*@{*/
+#define BP_DDR_CR27_PLEN     (0U)          /*!< Bit position for DDR_CR27_PLEN. */
+#define BM_DDR_CR27_PLEN     (0x00000001U) /*!< Bit mask for DDR_CR27_PLEN. */
+#define BS_DDR_CR27_PLEN     (1U)          /*!< Bit field size in bits for DDR_CR27_PLEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR27_PLEN field.
-#define BR_DDR_CR27_PLEN     (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_PLEN))
-#endif
+/*! @brief Read current value of the DDR_CR27_PLEN field. */
+#define BR_DDR_CR27_PLEN(x)  (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_PLEN))
 
-//! @brief Format value for bitfield DDR_CR27_PLEN.
-#define BF_DDR_CR27_PLEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR27_PLEN), uint32_t) & BM_DDR_CR27_PLEN)
+/*! @brief Format value for bitfield DDR_CR27_PLEN. */
+#define BF_DDR_CR27_PLEN(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR27_PLEN) & BM_DDR_CR27_PLEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PLEN field to a new value.
-#define BW_DDR_CR27_PLEN(v)  (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_PLEN) = (v))
-#endif
-//@}
+/*! @brief Set the PLEN field to a new value. */
+#define BW_DDR_CR27_PLEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_PLEN) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR27, field PRIEN[8] (RW)
@@ -3372,24 +2944,20 @@ typedef union _hw_ddr_cr27
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR27_PRIEN    (8U)          //!< Bit position for DDR_CR27_PRIEN.
-#define BM_DDR_CR27_PRIEN    (0x00000100U) //!< Bit mask for DDR_CR27_PRIEN.
-#define BS_DDR_CR27_PRIEN    (1U)          //!< Bit field size in bits for DDR_CR27_PRIEN.
+/*@{*/
+#define BP_DDR_CR27_PRIEN    (8U)          /*!< Bit position for DDR_CR27_PRIEN. */
+#define BM_DDR_CR27_PRIEN    (0x00000100U) /*!< Bit mask for DDR_CR27_PRIEN. */
+#define BS_DDR_CR27_PRIEN    (1U)          /*!< Bit field size in bits for DDR_CR27_PRIEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR27_PRIEN field.
-#define BR_DDR_CR27_PRIEN    (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_PRIEN))
-#endif
+/*! @brief Read current value of the DDR_CR27_PRIEN field. */
+#define BR_DDR_CR27_PRIEN(x) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_PRIEN))
 
-//! @brief Format value for bitfield DDR_CR27_PRIEN.
-#define BF_DDR_CR27_PRIEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR27_PRIEN), uint32_t) & BM_DDR_CR27_PRIEN)
+/*! @brief Format value for bitfield DDR_CR27_PRIEN. */
+#define BF_DDR_CR27_PRIEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR27_PRIEN) & BM_DDR_CR27_PRIEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PRIEN field to a new value.
-#define BW_DDR_CR27_PRIEN(v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_PRIEN) = (v))
-#endif
-//@}
+/*! @brief Set the PRIEN field to a new value. */
+#define BW_DDR_CR27_PRIEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_PRIEN) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR27, field RWEN[16] (RW)
@@ -3400,24 +2968,20 @@ typedef union _hw_ddr_cr27
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR27_RWEN     (16U)         //!< Bit position for DDR_CR27_RWEN.
-#define BM_DDR_CR27_RWEN     (0x00010000U) //!< Bit mask for DDR_CR27_RWEN.
-#define BS_DDR_CR27_RWEN     (1U)          //!< Bit field size in bits for DDR_CR27_RWEN.
+/*@{*/
+#define BP_DDR_CR27_RWEN     (16U)         /*!< Bit position for DDR_CR27_RWEN. */
+#define BM_DDR_CR27_RWEN     (0x00010000U) /*!< Bit mask for DDR_CR27_RWEN. */
+#define BS_DDR_CR27_RWEN     (1U)          /*!< Bit field size in bits for DDR_CR27_RWEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR27_RWEN field.
-#define BR_DDR_CR27_RWEN     (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_RWEN))
-#endif
+/*! @brief Read current value of the DDR_CR27_RWEN field. */
+#define BR_DDR_CR27_RWEN(x)  (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_RWEN))
 
-//! @brief Format value for bitfield DDR_CR27_RWEN.
-#define BF_DDR_CR27_RWEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR27_RWEN), uint32_t) & BM_DDR_CR27_RWEN)
+/*! @brief Format value for bitfield DDR_CR27_RWEN. */
+#define BF_DDR_CR27_RWEN(v)  ((uint32_t)((uint32_t)(v) << BP_DDR_CR27_RWEN) & BM_DDR_CR27_RWEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RWEN field to a new value.
-#define BW_DDR_CR27_RWEN(v)  (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_RWEN) = (v))
-#endif
-//@}
+/*! @brief Set the RWEN field to a new value. */
+#define BW_DDR_CR27_RWEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_RWEN) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR27, field SWPEN[24] (RW)
@@ -3429,30 +2993,25 @@ typedef union _hw_ddr_cr27
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR27_SWPEN    (24U)         //!< Bit position for DDR_CR27_SWPEN.
-#define BM_DDR_CR27_SWPEN    (0x01000000U) //!< Bit mask for DDR_CR27_SWPEN.
-#define BS_DDR_CR27_SWPEN    (1U)          //!< Bit field size in bits for DDR_CR27_SWPEN.
+/*@{*/
+#define BP_DDR_CR27_SWPEN    (24U)         /*!< Bit position for DDR_CR27_SWPEN. */
+#define BM_DDR_CR27_SWPEN    (0x01000000U) /*!< Bit mask for DDR_CR27_SWPEN. */
+#define BS_DDR_CR27_SWPEN    (1U)          /*!< Bit field size in bits for DDR_CR27_SWPEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR27_SWPEN field.
-#define BR_DDR_CR27_SWPEN    (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_SWPEN))
-#endif
+/*! @brief Read current value of the DDR_CR27_SWPEN field. */
+#define BR_DDR_CR27_SWPEN(x) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_SWPEN))
 
-//! @brief Format value for bitfield DDR_CR27_SWPEN.
-#define BF_DDR_CR27_SWPEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR27_SWPEN), uint32_t) & BM_DDR_CR27_SWPEN)
+/*! @brief Format value for bitfield DDR_CR27_SWPEN. */
+#define BF_DDR_CR27_SWPEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR27_SWPEN) & BM_DDR_CR27_SWPEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SWPEN field to a new value.
-#define BW_DDR_CR27_SWPEN(v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR, BP_DDR_CR27_SWPEN) = (v))
-#endif
-//@}
+/*! @brief Set the SWPEN field to a new value. */
+#define BW_DDR_CR27_SWPEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR27_ADDR(x), BP_DDR_CR27_SWPEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR28 - DDR Control Register 28
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR28 - DDR Control Register 28
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR28 - DDR Control Register 28 (RW)
  *
@@ -3463,33 +3022,30 @@ typedef union _hw_ddr_cr28
     uint32_t U;
     struct _hw_ddr_cr28_bitfields
     {
-        uint32_t CSMAP : 1;            //!< [0] Chip Select Map
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t REDUC : 1;            //!< [8]
-        uint32_t RESERVED1 : 7;        //!< [15:9] Reserved
-        uint32_t BIGEND : 1;           //!< [16] Big Endian Enable
-        uint32_t RESERVED2 : 7;        //!< [23:17] Reserved
-        uint32_t CMDLATR : 1;          //!< [24] Command Latency Reduction Enable
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t CSMAP : 1;            /*!< [0] Chip Select Map */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t REDUC : 1;            /*!< [8]  */
+        uint32_t RESERVED1 : 7;        /*!< [15:9] Reserved */
+        uint32_t BIGEND : 1;           /*!< [16] Big Endian Enable */
+        uint32_t RESERVED2 : 7;        /*!< [23:17] Reserved */
+        uint32_t CMDLATR : 1;          /*!< [24] Command Latency Reduction Enable */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr28_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR28 register
  */
-//@{
-#define HW_DDR_CR28_ADDR         (REGS_DDR_BASE + 0x70U)
+/*@{*/
+#define HW_DDR_CR28_ADDR(x)      ((x) + 0x70U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR28              (*(__IO hw_ddr_cr28_t *) HW_DDR_CR28_ADDR)
-#define HW_DDR_CR28_RD()         (HW_DDR_CR28.U)
-#define HW_DDR_CR28_WR(v)        (HW_DDR_CR28.U = (v))
-#define HW_DDR_CR28_SET(v)       (HW_DDR_CR28_WR(HW_DDR_CR28_RD() |  (v)))
-#define HW_DDR_CR28_CLR(v)       (HW_DDR_CR28_WR(HW_DDR_CR28_RD() & ~(v)))
-#define HW_DDR_CR28_TOG(v)       (HW_DDR_CR28_WR(HW_DDR_CR28_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR28(x)           (*(__IO hw_ddr_cr28_t *) HW_DDR_CR28_ADDR(x))
+#define HW_DDR_CR28_RD(x)        (HW_DDR_CR28(x).U)
+#define HW_DDR_CR28_WR(x, v)     (HW_DDR_CR28(x).U = (v))
+#define HW_DDR_CR28_SET(x, v)    (HW_DDR_CR28_WR(x, HW_DDR_CR28_RD(x) |  (v)))
+#define HW_DDR_CR28_CLR(x, v)    (HW_DDR_CR28_WR(x, HW_DDR_CR28_RD(x) & ~(v)))
+#define HW_DDR_CR28_TOG(x, v)    (HW_DDR_CR28_WR(x, HW_DDR_CR28_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR28 bitfields
@@ -3501,24 +3057,20 @@ typedef union _hw_ddr_cr28
  * Defines if the chip select is enabled. 0 Chip select disabled 1 Chip select
  * enabled
  */
-//@{
-#define BP_DDR_CR28_CSMAP    (0U)          //!< Bit position for DDR_CR28_CSMAP.
-#define BM_DDR_CR28_CSMAP    (0x00000001U) //!< Bit mask for DDR_CR28_CSMAP.
-#define BS_DDR_CR28_CSMAP    (1U)          //!< Bit field size in bits for DDR_CR28_CSMAP.
+/*@{*/
+#define BP_DDR_CR28_CSMAP    (0U)          /*!< Bit position for DDR_CR28_CSMAP. */
+#define BM_DDR_CR28_CSMAP    (0x00000001U) /*!< Bit mask for DDR_CR28_CSMAP. */
+#define BS_DDR_CR28_CSMAP    (1U)          /*!< Bit field size in bits for DDR_CR28_CSMAP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR28_CSMAP field.
-#define BR_DDR_CR28_CSMAP    (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_CSMAP))
-#endif
+/*! @brief Read current value of the DDR_CR28_CSMAP field. */
+#define BR_DDR_CR28_CSMAP(x) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_CSMAP))
 
-//! @brief Format value for bitfield DDR_CR28_CSMAP.
-#define BF_DDR_CR28_CSMAP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR28_CSMAP), uint32_t) & BM_DDR_CR28_CSMAP)
+/*! @brief Format value for bitfield DDR_CR28_CSMAP. */
+#define BF_DDR_CR28_CSMAP(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR28_CSMAP) & BM_DDR_CR28_CSMAP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CSMAP field to a new value.
-#define BW_DDR_CR28_CSMAP(v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_CSMAP) = (v))
-#endif
-//@}
+/*! @brief Set the CSMAP field to a new value. */
+#define BW_DDR_CR28_CSMAP(x, v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_CSMAP) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR28, field REDUC[8] (RW)
@@ -3533,24 +3085,20 @@ typedef union _hw_ddr_cr28
  *     half of the memory busses (DQ, DQS, and DM) are unused and relevant data
  *     only exists in the lower half of the busses.
  */
-//@{
-#define BP_DDR_CR28_REDUC    (8U)          //!< Bit position for DDR_CR28_REDUC.
-#define BM_DDR_CR28_REDUC    (0x00000100U) //!< Bit mask for DDR_CR28_REDUC.
-#define BS_DDR_CR28_REDUC    (1U)          //!< Bit field size in bits for DDR_CR28_REDUC.
+/*@{*/
+#define BP_DDR_CR28_REDUC    (8U)          /*!< Bit position for DDR_CR28_REDUC. */
+#define BM_DDR_CR28_REDUC    (0x00000100U) /*!< Bit mask for DDR_CR28_REDUC. */
+#define BS_DDR_CR28_REDUC    (1U)          /*!< Bit field size in bits for DDR_CR28_REDUC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR28_REDUC field.
-#define BR_DDR_CR28_REDUC    (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_REDUC))
-#endif
+/*! @brief Read current value of the DDR_CR28_REDUC field. */
+#define BR_DDR_CR28_REDUC(x) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_REDUC))
 
-//! @brief Format value for bitfield DDR_CR28_REDUC.
-#define BF_DDR_CR28_REDUC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR28_REDUC), uint32_t) & BM_DDR_CR28_REDUC)
+/*! @brief Format value for bitfield DDR_CR28_REDUC. */
+#define BF_DDR_CR28_REDUC(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR28_REDUC) & BM_DDR_CR28_REDUC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the REDUC field to a new value.
-#define BW_DDR_CR28_REDUC(v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_REDUC) = (v))
-#endif
-//@}
+/*! @brief Set the REDUC field to a new value. */
+#define BW_DDR_CR28_REDUC(x, v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_REDUC) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR28, field BIGEND[16] (RW)
@@ -3561,24 +3109,20 @@ typedef union _hw_ddr_cr28
  * - 0 - Little endian
  * - 1 - Big endian
  */
-//@{
-#define BP_DDR_CR28_BIGEND   (16U)         //!< Bit position for DDR_CR28_BIGEND.
-#define BM_DDR_CR28_BIGEND   (0x00010000U) //!< Bit mask for DDR_CR28_BIGEND.
-#define BS_DDR_CR28_BIGEND   (1U)          //!< Bit field size in bits for DDR_CR28_BIGEND.
+/*@{*/
+#define BP_DDR_CR28_BIGEND   (16U)         /*!< Bit position for DDR_CR28_BIGEND. */
+#define BM_DDR_CR28_BIGEND   (0x00010000U) /*!< Bit mask for DDR_CR28_BIGEND. */
+#define BS_DDR_CR28_BIGEND   (1U)          /*!< Bit field size in bits for DDR_CR28_BIGEND. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR28_BIGEND field.
-#define BR_DDR_CR28_BIGEND   (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_BIGEND))
-#endif
+/*! @brief Read current value of the DDR_CR28_BIGEND field. */
+#define BR_DDR_CR28_BIGEND(x) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_BIGEND))
 
-//! @brief Format value for bitfield DDR_CR28_BIGEND.
-#define BF_DDR_CR28_BIGEND(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR28_BIGEND), uint32_t) & BM_DDR_CR28_BIGEND)
+/*! @brief Format value for bitfield DDR_CR28_BIGEND. */
+#define BF_DDR_CR28_BIGEND(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR28_BIGEND) & BM_DDR_CR28_BIGEND)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BIGEND field to a new value.
-#define BW_DDR_CR28_BIGEND(v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_BIGEND) = (v))
-#endif
-//@}
+/*! @brief Set the BIGEND field to a new value. */
+#define BW_DDR_CR28_BIGEND(x, v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_BIGEND) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR28, field CMDLATR[24] (RW)
@@ -3589,30 +3133,25 @@ typedef union _hw_ddr_cr28
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR28_CMDLATR  (24U)         //!< Bit position for DDR_CR28_CMDLATR.
-#define BM_DDR_CR28_CMDLATR  (0x01000000U) //!< Bit mask for DDR_CR28_CMDLATR.
-#define BS_DDR_CR28_CMDLATR  (1U)          //!< Bit field size in bits for DDR_CR28_CMDLATR.
+/*@{*/
+#define BP_DDR_CR28_CMDLATR  (24U)         /*!< Bit position for DDR_CR28_CMDLATR. */
+#define BM_DDR_CR28_CMDLATR  (0x01000000U) /*!< Bit mask for DDR_CR28_CMDLATR. */
+#define BS_DDR_CR28_CMDLATR  (1U)          /*!< Bit field size in bits for DDR_CR28_CMDLATR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR28_CMDLATR field.
-#define BR_DDR_CR28_CMDLATR  (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_CMDLATR))
-#endif
+/*! @brief Read current value of the DDR_CR28_CMDLATR field. */
+#define BR_DDR_CR28_CMDLATR(x) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_CMDLATR))
 
-//! @brief Format value for bitfield DDR_CR28_CMDLATR.
-#define BF_DDR_CR28_CMDLATR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR28_CMDLATR), uint32_t) & BM_DDR_CR28_CMDLATR)
+/*! @brief Format value for bitfield DDR_CR28_CMDLATR. */
+#define BF_DDR_CR28_CMDLATR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR28_CMDLATR) & BM_DDR_CR28_CMDLATR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMDLATR field to a new value.
-#define BW_DDR_CR28_CMDLATR(v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR, BP_DDR_CR28_CMDLATR) = (v))
-#endif
-//@}
+/*! @brief Set the CMDLATR field to a new value. */
+#define BW_DDR_CR28_CMDLATR(x, v) (BITBAND_ACCESS32(HW_DDR_CR28_ADDR(x), BP_DDR_CR28_CMDLATR) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR29 - DDR Control Register 29
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR29 - DDR Control Register 29
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR29 - DDR Control Register 29 (RW)
  *
@@ -3623,33 +3162,30 @@ typedef union _hw_ddr_cr29
     uint32_t U;
     struct _hw_ddr_cr29_bitfields
     {
-        uint32_t WRLATR : 1;           //!< [0] Write Latency Reduction enable
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t FSTWR : 1;            //!< [8] Fast Write
-        uint32_t RESERVED1 : 7;        //!< [15:9] Reserved
-        uint32_t QFULL : 2;            //!< [17:16] Queue Fullness
-        uint32_t RESERVED2 : 6;        //!< [23:18] Reserved
-        uint32_t RESYNC : 1;           //!< [24] Resyncronize
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t WRLATR : 1;           /*!< [0] Write Latency Reduction enable */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t FSTWR : 1;            /*!< [8] Fast Write */
+        uint32_t RESERVED1 : 7;        /*!< [15:9] Reserved */
+        uint32_t QFULL : 2;            /*!< [17:16] Queue Fullness */
+        uint32_t RESERVED2 : 6;        /*!< [23:18] Reserved */
+        uint32_t RESYNC : 1;           /*!< [24] Resyncronize */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr29_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR29 register
  */
-//@{
-#define HW_DDR_CR29_ADDR         (REGS_DDR_BASE + 0x74U)
+/*@{*/
+#define HW_DDR_CR29_ADDR(x)      ((x) + 0x74U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR29              (*(__IO hw_ddr_cr29_t *) HW_DDR_CR29_ADDR)
-#define HW_DDR_CR29_RD()         (HW_DDR_CR29.U)
-#define HW_DDR_CR29_WR(v)        (HW_DDR_CR29.U = (v))
-#define HW_DDR_CR29_SET(v)       (HW_DDR_CR29_WR(HW_DDR_CR29_RD() |  (v)))
-#define HW_DDR_CR29_CLR(v)       (HW_DDR_CR29_WR(HW_DDR_CR29_RD() & ~(v)))
-#define HW_DDR_CR29_TOG(v)       (HW_DDR_CR29_WR(HW_DDR_CR29_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR29(x)           (*(__IO hw_ddr_cr29_t *) HW_DDR_CR29_ADDR(x))
+#define HW_DDR_CR29_RD(x)        (HW_DDR_CR29(x).U)
+#define HW_DDR_CR29_WR(x, v)     (HW_DDR_CR29(x).U = (v))
+#define HW_DDR_CR29_SET(x, v)    (HW_DDR_CR29_WR(x, HW_DDR_CR29_RD(x) |  (v)))
+#define HW_DDR_CR29_CLR(x, v)    (HW_DDR_CR29_WR(x, HW_DDR_CR29_RD(x) & ~(v)))
+#define HW_DDR_CR29_TOG(x, v)    (HW_DDR_CR29_WR(x, HW_DDR_CR29_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR29 bitfields
@@ -3664,24 +3200,20 @@ typedef union _hw_ddr_cr29
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR29_WRLATR   (0U)          //!< Bit position for DDR_CR29_WRLATR.
-#define BM_DDR_CR29_WRLATR   (0x00000001U) //!< Bit mask for DDR_CR29_WRLATR.
-#define BS_DDR_CR29_WRLATR   (1U)          //!< Bit field size in bits for DDR_CR29_WRLATR.
+/*@{*/
+#define BP_DDR_CR29_WRLATR   (0U)          /*!< Bit position for DDR_CR29_WRLATR. */
+#define BM_DDR_CR29_WRLATR   (0x00000001U) /*!< Bit mask for DDR_CR29_WRLATR. */
+#define BS_DDR_CR29_WRLATR   (1U)          /*!< Bit field size in bits for DDR_CR29_WRLATR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR29_WRLATR field.
-#define BR_DDR_CR29_WRLATR   (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_WRLATR))
-#endif
+/*! @brief Read current value of the DDR_CR29_WRLATR field. */
+#define BR_DDR_CR29_WRLATR(x) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR(x), BP_DDR_CR29_WRLATR))
 
-//! @brief Format value for bitfield DDR_CR29_WRLATR.
-#define BF_DDR_CR29_WRLATR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR29_WRLATR), uint32_t) & BM_DDR_CR29_WRLATR)
+/*! @brief Format value for bitfield DDR_CR29_WRLATR. */
+#define BF_DDR_CR29_WRLATR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR29_WRLATR) & BM_DDR_CR29_WRLATR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRLATR field to a new value.
-#define BW_DDR_CR29_WRLATR(v) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_WRLATR) = (v))
-#endif
-//@}
+/*! @brief Set the WRLATR field to a new value. */
+#define BW_DDR_CR29_WRLATR(x, v) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR(x), BP_DDR_CR29_WRLATR) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR29, field FSTWR[8] (RW)
@@ -3699,24 +3231,20 @@ typedef union _hw_ddr_cr29
  *     mode, multi-word write command data must be available to the memory
  *     controller in sequential cycles.
  */
-//@{
-#define BP_DDR_CR29_FSTWR    (8U)          //!< Bit position for DDR_CR29_FSTWR.
-#define BM_DDR_CR29_FSTWR    (0x00000100U) //!< Bit mask for DDR_CR29_FSTWR.
-#define BS_DDR_CR29_FSTWR    (1U)          //!< Bit field size in bits for DDR_CR29_FSTWR.
+/*@{*/
+#define BP_DDR_CR29_FSTWR    (8U)          /*!< Bit position for DDR_CR29_FSTWR. */
+#define BM_DDR_CR29_FSTWR    (0x00000100U) /*!< Bit mask for DDR_CR29_FSTWR. */
+#define BS_DDR_CR29_FSTWR    (1U)          /*!< Bit field size in bits for DDR_CR29_FSTWR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR29_FSTWR field.
-#define BR_DDR_CR29_FSTWR    (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_FSTWR))
-#endif
+/*! @brief Read current value of the DDR_CR29_FSTWR field. */
+#define BR_DDR_CR29_FSTWR(x) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR(x), BP_DDR_CR29_FSTWR))
 
-//! @brief Format value for bitfield DDR_CR29_FSTWR.
-#define BF_DDR_CR29_FSTWR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR29_FSTWR), uint32_t) & BM_DDR_CR29_FSTWR)
+/*! @brief Format value for bitfield DDR_CR29_FSTWR. */
+#define BF_DDR_CR29_FSTWR(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR29_FSTWR) & BM_DDR_CR29_FSTWR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FSTWR field to a new value.
-#define BW_DDR_CR29_FSTWR(v) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_FSTWR) = (v))
-#endif
-//@}
+/*! @brief Set the FSTWR field to a new value. */
+#define BW_DDR_CR29_FSTWR(x, v) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR(x), BP_DDR_CR29_FSTWR) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR29, field QFULL[17:16] (RW)
@@ -3725,24 +3253,20 @@ typedef union _hw_ddr_cr29
  * When this value is reached, the g_almost_full signal will be driven to the
  * user interface.
  */
-//@{
-#define BP_DDR_CR29_QFULL    (16U)         //!< Bit position for DDR_CR29_QFULL.
-#define BM_DDR_CR29_QFULL    (0x00030000U) //!< Bit mask for DDR_CR29_QFULL.
-#define BS_DDR_CR29_QFULL    (2U)          //!< Bit field size in bits for DDR_CR29_QFULL.
+/*@{*/
+#define BP_DDR_CR29_QFULL    (16U)         /*!< Bit position for DDR_CR29_QFULL. */
+#define BM_DDR_CR29_QFULL    (0x00030000U) /*!< Bit mask for DDR_CR29_QFULL. */
+#define BS_DDR_CR29_QFULL    (2U)          /*!< Bit field size in bits for DDR_CR29_QFULL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR29_QFULL field.
-#define BR_DDR_CR29_QFULL    (HW_DDR_CR29.B.QFULL)
-#endif
+/*! @brief Read current value of the DDR_CR29_QFULL field. */
+#define BR_DDR_CR29_QFULL(x) (HW_DDR_CR29(x).B.QFULL)
 
-//! @brief Format value for bitfield DDR_CR29_QFULL.
-#define BF_DDR_CR29_QFULL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR29_QFULL), uint32_t) & BM_DDR_CR29_QFULL)
+/*! @brief Format value for bitfield DDR_CR29_QFULL. */
+#define BF_DDR_CR29_QFULL(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR29_QFULL) & BM_DDR_CR29_QFULL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the QFULL field to a new value.
-#define BW_DDR_CR29_QFULL(v) (HW_DDR_CR29_WR((HW_DDR_CR29_RD() & ~BM_DDR_CR29_QFULL) | BF_DDR_CR29_QFULL(v)))
-#endif
-//@}
+/*! @brief Set the QFULL field to a new value. */
+#define BW_DDR_CR29_QFULL(x, v) (HW_DDR_CR29_WR(x, (HW_DDR_CR29_RD(x) & ~BM_DDR_CR29_QFULL) | BF_DDR_CR29_QFULL(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR29, field RESYNC[24] (WO)
@@ -3753,30 +3277,19 @@ typedef union _hw_ddr_cr29
  * - 0 - No effect
  * - 1 - Initiate
  */
-//@{
-#define BP_DDR_CR29_RESYNC   (24U)         //!< Bit position for DDR_CR29_RESYNC.
-#define BM_DDR_CR29_RESYNC   (0x01000000U) //!< Bit mask for DDR_CR29_RESYNC.
-#define BS_DDR_CR29_RESYNC   (1U)          //!< Bit field size in bits for DDR_CR29_RESYNC.
+/*@{*/
+#define BP_DDR_CR29_RESYNC   (24U)         /*!< Bit position for DDR_CR29_RESYNC. */
+#define BM_DDR_CR29_RESYNC   (0x01000000U) /*!< Bit mask for DDR_CR29_RESYNC. */
+#define BS_DDR_CR29_RESYNC   (1U)          /*!< Bit field size in bits for DDR_CR29_RESYNC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR29_RESYNC field.
-#define BR_DDR_CR29_RESYNC   (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_RESYNC))
-#endif
+/*! @brief Format value for bitfield DDR_CR29_RESYNC. */
+#define BF_DDR_CR29_RESYNC(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR29_RESYNC) & BM_DDR_CR29_RESYNC)
+/*@}*/
 
-//! @brief Format value for bitfield DDR_CR29_RESYNC.
-#define BF_DDR_CR29_RESYNC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR29_RESYNC), uint32_t) & BM_DDR_CR29_RESYNC)
+/*******************************************************************************
+ * HW_DDR_CR30 - DDR Control Register 30
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESYNC field to a new value.
-#define BW_DDR_CR29_RESYNC(v) (BITBAND_ACCESS32(HW_DDR_CR29_ADDR, BP_DDR_CR29_RESYNC) = (v))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR30 - DDR Control Register 30
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR30 - DDR Control Register 30 (RW)
  *
@@ -3787,30 +3300,27 @@ typedef union _hw_ddr_cr30
     uint32_t U;
     struct _hw_ddr_cr30_bitfields
     {
-        uint32_t RSYNCRF : 1;          //!< [0] Resynchroize after Refresh
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t INTSTAT : 9;          //!< [16:8] Interrupt Status
-        uint32_t RESERVED1 : 7;        //!< [23:17] Reserved
-        uint32_t INTACK : 8;           //!< [31:24] Interupt Acknowlege
+        uint32_t RSYNCRF : 1;          /*!< [0] Resynchroize after Refresh */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t INTSTAT : 9;          /*!< [16:8] Interrupt Status */
+        uint32_t RESERVED1 : 7;        /*!< [23:17] Reserved */
+        uint32_t INTACK : 8;           /*!< [31:24] Interupt Acknowlege */
     } B;
 } hw_ddr_cr30_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR30 register
  */
-//@{
-#define HW_DDR_CR30_ADDR         (REGS_DDR_BASE + 0x78U)
+/*@{*/
+#define HW_DDR_CR30_ADDR(x)      ((x) + 0x78U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR30              (*(__IO hw_ddr_cr30_t *) HW_DDR_CR30_ADDR)
-#define HW_DDR_CR30_RD()         (HW_DDR_CR30.U)
-#define HW_DDR_CR30_WR(v)        (HW_DDR_CR30.U = (v))
-#define HW_DDR_CR30_SET(v)       (HW_DDR_CR30_WR(HW_DDR_CR30_RD() |  (v)))
-#define HW_DDR_CR30_CLR(v)       (HW_DDR_CR30_WR(HW_DDR_CR30_RD() & ~(v)))
-#define HW_DDR_CR30_TOG(v)       (HW_DDR_CR30_WR(HW_DDR_CR30_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR30(x)           (*(__IO hw_ddr_cr30_t *) HW_DDR_CR30_ADDR(x))
+#define HW_DDR_CR30_RD(x)        (HW_DDR_CR30(x).U)
+#define HW_DDR_CR30_WR(x, v)     (HW_DDR_CR30(x).U = (v))
+#define HW_DDR_CR30_SET(x, v)    (HW_DDR_CR30_WR(x, HW_DDR_CR30_RD(x) |  (v)))
+#define HW_DDR_CR30_CLR(x, v)    (HW_DDR_CR30_WR(x, HW_DDR_CR30_RD(x) & ~(v)))
+#define HW_DDR_CR30_TOG(x, v)    (HW_DDR_CR30_WR(x, HW_DDR_CR30_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR30 bitfields
@@ -3825,24 +3335,20 @@ typedef union _hw_ddr_cr30
  * - 0 - No effect
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR30_RSYNCRF  (0U)          //!< Bit position for DDR_CR30_RSYNCRF.
-#define BM_DDR_CR30_RSYNCRF  (0x00000001U) //!< Bit mask for DDR_CR30_RSYNCRF.
-#define BS_DDR_CR30_RSYNCRF  (1U)          //!< Bit field size in bits for DDR_CR30_RSYNCRF.
+/*@{*/
+#define BP_DDR_CR30_RSYNCRF  (0U)          /*!< Bit position for DDR_CR30_RSYNCRF. */
+#define BM_DDR_CR30_RSYNCRF  (0x00000001U) /*!< Bit mask for DDR_CR30_RSYNCRF. */
+#define BS_DDR_CR30_RSYNCRF  (1U)          /*!< Bit field size in bits for DDR_CR30_RSYNCRF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR30_RSYNCRF field.
-#define BR_DDR_CR30_RSYNCRF  (BITBAND_ACCESS32(HW_DDR_CR30_ADDR, BP_DDR_CR30_RSYNCRF))
-#endif
+/*! @brief Read current value of the DDR_CR30_RSYNCRF field. */
+#define BR_DDR_CR30_RSYNCRF(x) (BITBAND_ACCESS32(HW_DDR_CR30_ADDR(x), BP_DDR_CR30_RSYNCRF))
 
-//! @brief Format value for bitfield DDR_CR30_RSYNCRF.
-#define BF_DDR_CR30_RSYNCRF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR30_RSYNCRF), uint32_t) & BM_DDR_CR30_RSYNCRF)
+/*! @brief Format value for bitfield DDR_CR30_RSYNCRF. */
+#define BF_DDR_CR30_RSYNCRF(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR30_RSYNCRF) & BM_DDR_CR30_RSYNCRF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RSYNCRF field to a new value.
-#define BW_DDR_CR30_RSYNCRF(v) (BITBAND_ACCESS32(HW_DDR_CR30_ADDR, BP_DDR_CR30_RSYNCRF) = (v))
-#endif
-//@}
+/*! @brief Set the RSYNCRF field to a new value. */
+#define BW_DDR_CR30_RSYNCRF(x, v) (BITBAND_ACCESS32(HW_DDR_CR30_ADDR(x), BP_DDR_CR30_RSYNCRF) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR30, field INTSTAT[16:8] (RO)
@@ -3857,16 +3363,14 @@ typedef union _hw_ddr_cr30
  * accesses outside the defined physical memory space detected Bit[8]: A single
  * access outside the defined physical memory space detected
  */
-//@{
-#define BP_DDR_CR30_INTSTAT  (8U)          //!< Bit position for DDR_CR30_INTSTAT.
-#define BM_DDR_CR30_INTSTAT  (0x0001FF00U) //!< Bit mask for DDR_CR30_INTSTAT.
-#define BS_DDR_CR30_INTSTAT  (9U)          //!< Bit field size in bits for DDR_CR30_INTSTAT.
+/*@{*/
+#define BP_DDR_CR30_INTSTAT  (8U)          /*!< Bit position for DDR_CR30_INTSTAT. */
+#define BM_DDR_CR30_INTSTAT  (0x0001FF00U) /*!< Bit mask for DDR_CR30_INTSTAT. */
+#define BS_DDR_CR30_INTSTAT  (9U)          /*!< Bit field size in bits for DDR_CR30_INTSTAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR30_INTSTAT field.
-#define BR_DDR_CR30_INTSTAT  (HW_DDR_CR30.B.INTSTAT)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR30_INTSTAT field. */
+#define BR_DDR_CR30_INTSTAT(x) (HW_DDR_CR30(x).B.INTSTAT)
+/*@}*/
 
 /*!
  * @name Register DDR_CR30, field INTACK[31:24] (WORZ)
@@ -3877,30 +3381,22 @@ typedef union _hw_ddr_cr30
  * - 0 - No effect
  * - 1 - Clear the corresponding bit in INTSTATUS
  */
-//@{
-#define BP_DDR_CR30_INTACK   (24U)         //!< Bit position for DDR_CR30_INTACK.
-#define BM_DDR_CR30_INTACK   (0xFF000000U) //!< Bit mask for DDR_CR30_INTACK.
-#define BS_DDR_CR30_INTACK   (8U)          //!< Bit field size in bits for DDR_CR30_INTACK.
+/*@{*/
+#define BP_DDR_CR30_INTACK   (24U)         /*!< Bit position for DDR_CR30_INTACK. */
+#define BM_DDR_CR30_INTACK   (0xFF000000U) /*!< Bit mask for DDR_CR30_INTACK. */
+#define BS_DDR_CR30_INTACK   (8U)          /*!< Bit field size in bits for DDR_CR30_INTACK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR30_INTACK field.
-#define BR_DDR_CR30_INTACK   (HW_DDR_CR30.B.INTACK)
-#endif
+/*! @brief Format value for bitfield DDR_CR30_INTACK. */
+#define BF_DDR_CR30_INTACK(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR30_INTACK) & BM_DDR_CR30_INTACK)
 
-//! @brief Format value for bitfield DDR_CR30_INTACK.
-#define BF_DDR_CR30_INTACK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR30_INTACK), uint32_t) & BM_DDR_CR30_INTACK)
+/*! @brief Set the INTACK field to a new value. */
+#define BW_DDR_CR30_INTACK(x, v) (HW_DDR_CR30_WR(x, (HW_DDR_CR30_RD(x) & ~BM_DDR_CR30_INTACK) | BF_DDR_CR30_INTACK(v)))
+/*@}*/
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INTACK field to a new value.
-#define BW_DDR_CR30_INTACK(v) (HW_DDR_CR30_WR((HW_DDR_CR30_RD() & ~BM_DDR_CR30_INTACK) | BF_DDR_CR30_INTACK(v)))
-#endif
-//@}
+/*******************************************************************************
+ * HW_DDR_CR31 - DDR Control Register 31
+ ******************************************************************************/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR31 - DDR Control Register 31
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR31 - DDR Control Register 31 (RW)
  *
@@ -3911,27 +3407,24 @@ typedef union _hw_ddr_cr31
     uint32_t U;
     struct _hw_ddr_cr31_bitfields
     {
-        uint32_t INTMASK : 9;          //!< [8:0] Interrupt Mask
-        uint32_t RESERVED0 : 23;       //!< [31:9] Reserved
+        uint32_t INTMASK : 9;          /*!< [8:0] Interrupt Mask */
+        uint32_t RESERVED0 : 23;       /*!< [31:9] Reserved */
     } B;
 } hw_ddr_cr31_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR31 register
  */
-//@{
-#define HW_DDR_CR31_ADDR         (REGS_DDR_BASE + 0x7CU)
+/*@{*/
+#define HW_DDR_CR31_ADDR(x)      ((x) + 0x7CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR31              (*(__IO hw_ddr_cr31_t *) HW_DDR_CR31_ADDR)
-#define HW_DDR_CR31_RD()         (HW_DDR_CR31.U)
-#define HW_DDR_CR31_WR(v)        (HW_DDR_CR31.U = (v))
-#define HW_DDR_CR31_SET(v)       (HW_DDR_CR31_WR(HW_DDR_CR31_RD() |  (v)))
-#define HW_DDR_CR31_CLR(v)       (HW_DDR_CR31_WR(HW_DDR_CR31_RD() & ~(v)))
-#define HW_DDR_CR31_TOG(v)       (HW_DDR_CR31_WR(HW_DDR_CR31_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR31(x)           (*(__IO hw_ddr_cr31_t *) HW_DDR_CR31_ADDR(x))
+#define HW_DDR_CR31_RD(x)        (HW_DDR_CR31(x).U)
+#define HW_DDR_CR31_WR(x, v)     (HW_DDR_CR31(x).U = (v))
+#define HW_DDR_CR31_SET(x, v)    (HW_DDR_CR31_WR(x, HW_DDR_CR31_RD(x) |  (v)))
+#define HW_DDR_CR31_CLR(x, v)    (HW_DDR_CR31_WR(x, HW_DDR_CR31_RD(x) & ~(v)))
+#define HW_DDR_CR31_TOG(x, v)    (HW_DDR_CR31_WR(x, HW_DDR_CR31_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR31 bitfields
@@ -3946,30 +3439,25 @@ typedef union _hw_ddr_cr31
  * - 0 - No mask
  * - 1 - Mask corresponding interrupt signal
  */
-//@{
-#define BP_DDR_CR31_INTMASK  (0U)          //!< Bit position for DDR_CR31_INTMASK.
-#define BM_DDR_CR31_INTMASK  (0x000001FFU) //!< Bit mask for DDR_CR31_INTMASK.
-#define BS_DDR_CR31_INTMASK  (9U)          //!< Bit field size in bits for DDR_CR31_INTMASK.
+/*@{*/
+#define BP_DDR_CR31_INTMASK  (0U)          /*!< Bit position for DDR_CR31_INTMASK. */
+#define BM_DDR_CR31_INTMASK  (0x000001FFU) /*!< Bit mask for DDR_CR31_INTMASK. */
+#define BS_DDR_CR31_INTMASK  (9U)          /*!< Bit field size in bits for DDR_CR31_INTMASK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR31_INTMASK field.
-#define BR_DDR_CR31_INTMASK  (HW_DDR_CR31.B.INTMASK)
-#endif
+/*! @brief Read current value of the DDR_CR31_INTMASK field. */
+#define BR_DDR_CR31_INTMASK(x) (HW_DDR_CR31(x).B.INTMASK)
 
-//! @brief Format value for bitfield DDR_CR31_INTMASK.
-#define BF_DDR_CR31_INTMASK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR31_INTMASK), uint32_t) & BM_DDR_CR31_INTMASK)
+/*! @brief Format value for bitfield DDR_CR31_INTMASK. */
+#define BF_DDR_CR31_INTMASK(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR31_INTMASK) & BM_DDR_CR31_INTMASK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INTMASK field to a new value.
-#define BW_DDR_CR31_INTMASK(v) (HW_DDR_CR31_WR((HW_DDR_CR31_RD() & ~BM_DDR_CR31_INTMASK) | BF_DDR_CR31_INTMASK(v)))
-#endif
-//@}
+/*! @brief Set the INTMASK field to a new value. */
+#define BW_DDR_CR31_INTMASK(x, v) (HW_DDR_CR31_WR(x, (HW_DDR_CR31_RD(x) & ~BM_DDR_CR31_INTMASK) | BF_DDR_CR31_INTMASK(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR32 - DDR Control Register 32
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR32 - DDR Control Register 32
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR32 - DDR Control Register 32 (RO)
  *
@@ -3980,22 +3468,19 @@ typedef union _hw_ddr_cr32
     uint32_t U;
     struct _hw_ddr_cr32_bitfields
     {
-        uint32_t OORAD : 32;           //!< [31:0] Out Of Range Address
+        uint32_t OORAD : 32;           /*!< [31:0] Out Of Range Address */
     } B;
 } hw_ddr_cr32_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR32 register
  */
-//@{
-#define HW_DDR_CR32_ADDR         (REGS_DDR_BASE + 0x80U)
+/*@{*/
+#define HW_DDR_CR32_ADDR(x)      ((x) + 0x80U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR32              (*(__I hw_ddr_cr32_t *) HW_DDR_CR32_ADDR)
-#define HW_DDR_CR32_RD()         (HW_DDR_CR32.U)
-#endif
-//@}
+#define HW_DDR_CR32(x)           (*(__I hw_ddr_cr32_t *) HW_DDR_CR32_ADDR(x))
+#define HW_DDR_CR32_RD(x)        (HW_DDR_CR32(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR32 bitfields
@@ -4006,22 +3491,19 @@ typedef union _hw_ddr_cr32
  *
  * Address of the command that caused an out-of-range interrupt.
  */
-//@{
-#define BP_DDR_CR32_OORAD    (0U)          //!< Bit position for DDR_CR32_OORAD.
-#define BM_DDR_CR32_OORAD    (0xFFFFFFFFU) //!< Bit mask for DDR_CR32_OORAD.
-#define BS_DDR_CR32_OORAD    (32U)         //!< Bit field size in bits for DDR_CR32_OORAD.
+/*@{*/
+#define BP_DDR_CR32_OORAD    (0U)          /*!< Bit position for DDR_CR32_OORAD. */
+#define BM_DDR_CR32_OORAD    (0xFFFFFFFFU) /*!< Bit mask for DDR_CR32_OORAD. */
+#define BS_DDR_CR32_OORAD    (32U)         /*!< Bit field size in bits for DDR_CR32_OORAD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR32_OORAD field.
-#define BR_DDR_CR32_OORAD    (HW_DDR_CR32.B.OORAD)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR32_OORAD field. */
+#define BR_DDR_CR32_OORAD(x) (HW_DDR_CR32(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR33 - DDR Control Register 33
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR33 - DDR Control Register 33
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR33 - DDR Control Register 33 (RO)
  *
@@ -4032,27 +3514,24 @@ typedef union _hw_ddr_cr33
     uint32_t U;
     struct _hw_ddr_cr33_bitfields
     {
-        uint32_t OORLEN : 10;          //!< [9:0] Out Of Range Length
-        uint32_t RESERVED0 : 6;        //!< [15:10] Reserved
-        uint32_t OORTYP : 6;           //!< [21:16] Out Of Range Type
-        uint32_t RESERVED1 : 2;        //!< [23:22] Reserved
-        uint32_t OORID : 2;            //!< [25:24] Out Of Range source ID
-        uint32_t RESERVED2 : 6;        //!< [31:26] Reserved
+        uint32_t OORLEN : 10;          /*!< [9:0] Out Of Range Length */
+        uint32_t RESERVED0 : 6;        /*!< [15:10] Reserved */
+        uint32_t OORTYP : 6;           /*!< [21:16] Out Of Range Type */
+        uint32_t RESERVED1 : 2;        /*!< [23:22] Reserved */
+        uint32_t OORID : 2;            /*!< [25:24] Out Of Range source ID */
+        uint32_t RESERVED2 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_cr33_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR33 register
  */
-//@{
-#define HW_DDR_CR33_ADDR         (REGS_DDR_BASE + 0x84U)
+/*@{*/
+#define HW_DDR_CR33_ADDR(x)      ((x) + 0x84U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR33              (*(__I hw_ddr_cr33_t *) HW_DDR_CR33_ADDR)
-#define HW_DDR_CR33_RD()         (HW_DDR_CR33.U)
-#endif
-//@}
+#define HW_DDR_CR33(x)           (*(__I hw_ddr_cr33_t *) HW_DDR_CR33_ADDR(x))
+#define HW_DDR_CR33_RD(x)        (HW_DDR_CR33(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR33 bitfields
@@ -4063,54 +3542,47 @@ typedef union _hw_ddr_cr33
  *
  * Length of command that caused an out-of-range interrupt request.
  */
-//@{
-#define BP_DDR_CR33_OORLEN   (0U)          //!< Bit position for DDR_CR33_OORLEN.
-#define BM_DDR_CR33_OORLEN   (0x000003FFU) //!< Bit mask for DDR_CR33_OORLEN.
-#define BS_DDR_CR33_OORLEN   (10U)         //!< Bit field size in bits for DDR_CR33_OORLEN.
+/*@{*/
+#define BP_DDR_CR33_OORLEN   (0U)          /*!< Bit position for DDR_CR33_OORLEN. */
+#define BM_DDR_CR33_OORLEN   (0x000003FFU) /*!< Bit mask for DDR_CR33_OORLEN. */
+#define BS_DDR_CR33_OORLEN   (10U)         /*!< Bit field size in bits for DDR_CR33_OORLEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR33_OORLEN field.
-#define BR_DDR_CR33_OORLEN   (HW_DDR_CR33.B.OORLEN)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR33_OORLEN field. */
+#define BR_DDR_CR33_OORLEN(x) (HW_DDR_CR33(x).B.OORLEN)
+/*@}*/
 
 /*!
  * @name Register DDR_CR33, field OORTYP[21:16] (RO)
  *
  * Type of command that caused an out-of-range interrupt request.
  */
-//@{
-#define BP_DDR_CR33_OORTYP   (16U)         //!< Bit position for DDR_CR33_OORTYP.
-#define BM_DDR_CR33_OORTYP   (0x003F0000U) //!< Bit mask for DDR_CR33_OORTYP.
-#define BS_DDR_CR33_OORTYP   (6U)          //!< Bit field size in bits for DDR_CR33_OORTYP.
+/*@{*/
+#define BP_DDR_CR33_OORTYP   (16U)         /*!< Bit position for DDR_CR33_OORTYP. */
+#define BM_DDR_CR33_OORTYP   (0x003F0000U) /*!< Bit mask for DDR_CR33_OORTYP. */
+#define BS_DDR_CR33_OORTYP   (6U)          /*!< Bit field size in bits for DDR_CR33_OORTYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR33_OORTYP field.
-#define BR_DDR_CR33_OORTYP   (HW_DDR_CR33.B.OORTYP)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR33_OORTYP field. */
+#define BR_DDR_CR33_OORTYP(x) (HW_DDR_CR33(x).B.OORTYP)
+/*@}*/
 
 /*!
  * @name Register DDR_CR33, field OORID[25:24] (RO)
  *
  * Source ID of the command that caused an out-of-range interrupt request.
  */
-//@{
-#define BP_DDR_CR33_OORID    (24U)         //!< Bit position for DDR_CR33_OORID.
-#define BM_DDR_CR33_OORID    (0x03000000U) //!< Bit mask for DDR_CR33_OORID.
-#define BS_DDR_CR33_OORID    (2U)          //!< Bit field size in bits for DDR_CR33_OORID.
+/*@{*/
+#define BP_DDR_CR33_OORID    (24U)         /*!< Bit position for DDR_CR33_OORID. */
+#define BM_DDR_CR33_OORID    (0x03000000U) /*!< Bit mask for DDR_CR33_OORID. */
+#define BS_DDR_CR33_OORID    (2U)          /*!< Bit field size in bits for DDR_CR33_OORID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR33_OORID field.
-#define BR_DDR_CR33_OORID    (HW_DDR_CR33.B.OORID)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR33_OORID field. */
+#define BR_DDR_CR33_OORID(x) (HW_DDR_CR33(x).B.OORID)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR34 - DDR Control Register 34
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR34 - DDR Control Register 34
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR34 - DDR Control Register 34 (RW)
  *
@@ -4121,29 +3593,26 @@ typedef union _hw_ddr_cr34
     uint32_t U;
     struct _hw_ddr_cr34_bitfields
     {
-        uint32_t ODTRDC : 1;           //!< [0] ODT Read map CS
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t ODTWRCS : 1;          //!< [8] ODT Write map CS
-        uint32_t RESERVED1 : 23;       //!< [31:9] Reserved
+        uint32_t ODTRDC : 1;           /*!< [0] ODT Read map CS */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t ODTWRCS : 1;          /*!< [8] ODT Write map CS */
+        uint32_t RESERVED1 : 23;       /*!< [31:9] Reserved */
     } B;
 } hw_ddr_cr34_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR34 register
  */
-//@{
-#define HW_DDR_CR34_ADDR         (REGS_DDR_BASE + 0x88U)
+/*@{*/
+#define HW_DDR_CR34_ADDR(x)      ((x) + 0x88U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR34              (*(__IO hw_ddr_cr34_t *) HW_DDR_CR34_ADDR)
-#define HW_DDR_CR34_RD()         (HW_DDR_CR34.U)
-#define HW_DDR_CR34_WR(v)        (HW_DDR_CR34.U = (v))
-#define HW_DDR_CR34_SET(v)       (HW_DDR_CR34_WR(HW_DDR_CR34_RD() |  (v)))
-#define HW_DDR_CR34_CLR(v)       (HW_DDR_CR34_WR(HW_DDR_CR34_RD() & ~(v)))
-#define HW_DDR_CR34_TOG(v)       (HW_DDR_CR34_WR(HW_DDR_CR34_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR34(x)           (*(__IO hw_ddr_cr34_t *) HW_DDR_CR34_ADDR(x))
+#define HW_DDR_CR34_RD(x)        (HW_DDR_CR34(x).U)
+#define HW_DDR_CR34_WR(x, v)     (HW_DDR_CR34(x).U = (v))
+#define HW_DDR_CR34_SET(x, v)    (HW_DDR_CR34_WR(x, HW_DDR_CR34_RD(x) |  (v)))
+#define HW_DDR_CR34_CLR(x, v)    (HW_DDR_CR34_WR(x, HW_DDR_CR34_RD(x) & ~(v)))
+#define HW_DDR_CR34_TOG(x, v)    (HW_DDR_CR34_WR(x, HW_DDR_CR34_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR34 bitfields
@@ -4156,24 +3625,20 @@ typedef union _hw_ddr_cr34
  * select . 0 Reserved ODT termination when CS performs a read 1 CS has active
  * ODT termination when CS performs a read
  */
-//@{
-#define BP_DDR_CR34_ODTRDC   (0U)          //!< Bit position for DDR_CR34_ODTRDC.
-#define BM_DDR_CR34_ODTRDC   (0x00000001U) //!< Bit mask for DDR_CR34_ODTRDC.
-#define BS_DDR_CR34_ODTRDC   (1U)          //!< Bit field size in bits for DDR_CR34_ODTRDC.
+/*@{*/
+#define BP_DDR_CR34_ODTRDC   (0U)          /*!< Bit position for DDR_CR34_ODTRDC. */
+#define BM_DDR_CR34_ODTRDC   (0x00000001U) /*!< Bit mask for DDR_CR34_ODTRDC. */
+#define BS_DDR_CR34_ODTRDC   (1U)          /*!< Bit field size in bits for DDR_CR34_ODTRDC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR34_ODTRDC field.
-#define BR_DDR_CR34_ODTRDC   (BITBAND_ACCESS32(HW_DDR_CR34_ADDR, BP_DDR_CR34_ODTRDC))
-#endif
+/*! @brief Read current value of the DDR_CR34_ODTRDC field. */
+#define BR_DDR_CR34_ODTRDC(x) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR(x), BP_DDR_CR34_ODTRDC))
 
-//! @brief Format value for bitfield DDR_CR34_ODTRDC.
-#define BF_DDR_CR34_ODTRDC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR34_ODTRDC), uint32_t) & BM_DDR_CR34_ODTRDC)
+/*! @brief Format value for bitfield DDR_CR34_ODTRDC. */
+#define BF_DDR_CR34_ODTRDC(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR34_ODTRDC) & BM_DDR_CR34_ODTRDC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ODTRDC field to a new value.
-#define BW_DDR_CR34_ODTRDC(v) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR, BP_DDR_CR34_ODTRDC) = (v))
-#endif
-//@}
+/*! @brief Set the ODTRDC field to a new value. */
+#define BW_DDR_CR34_ODTRDC(x, v) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR(x), BP_DDR_CR34_ODTRDC) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR34, field ODTWRCS[8] (RW)
@@ -4182,30 +3647,25 @@ typedef union _hw_ddr_cr34
  * select . 0 No ODT termination when CS performs a write 1 CS has active ODT
  * termination when CS performs a write
  */
-//@{
-#define BP_DDR_CR34_ODTWRCS  (8U)          //!< Bit position for DDR_CR34_ODTWRCS.
-#define BM_DDR_CR34_ODTWRCS  (0x00000100U) //!< Bit mask for DDR_CR34_ODTWRCS.
-#define BS_DDR_CR34_ODTWRCS  (1U)          //!< Bit field size in bits for DDR_CR34_ODTWRCS.
+/*@{*/
+#define BP_DDR_CR34_ODTWRCS  (8U)          /*!< Bit position for DDR_CR34_ODTWRCS. */
+#define BM_DDR_CR34_ODTWRCS  (0x00000100U) /*!< Bit mask for DDR_CR34_ODTWRCS. */
+#define BS_DDR_CR34_ODTWRCS  (1U)          /*!< Bit field size in bits for DDR_CR34_ODTWRCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR34_ODTWRCS field.
-#define BR_DDR_CR34_ODTWRCS  (BITBAND_ACCESS32(HW_DDR_CR34_ADDR, BP_DDR_CR34_ODTWRCS))
-#endif
+/*! @brief Read current value of the DDR_CR34_ODTWRCS field. */
+#define BR_DDR_CR34_ODTWRCS(x) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR(x), BP_DDR_CR34_ODTWRCS))
 
-//! @brief Format value for bitfield DDR_CR34_ODTWRCS.
-#define BF_DDR_CR34_ODTWRCS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR34_ODTWRCS), uint32_t) & BM_DDR_CR34_ODTWRCS)
+/*! @brief Format value for bitfield DDR_CR34_ODTWRCS. */
+#define BF_DDR_CR34_ODTWRCS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR34_ODTWRCS) & BM_DDR_CR34_ODTWRCS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ODTWRCS field to a new value.
-#define BW_DDR_CR34_ODTWRCS(v) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR, BP_DDR_CR34_ODTWRCS) = (v))
-#endif
-//@}
+/*! @brief Set the ODTWRCS field to a new value. */
+#define BW_DDR_CR34_ODTWRCS(x, v) (BITBAND_ACCESS32(HW_DDR_CR34_ADDR(x), BP_DDR_CR34_ODTWRCS) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR35 - DDR Control Register 35
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR35 - DDR Control Register 35
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR35 - DDR Control Register 35 (RO)
  *
@@ -4216,25 +3676,22 @@ typedef union _hw_ddr_cr35
     uint32_t U;
     struct _hw_ddr_cr35_bitfields
     {
-        uint32_t R2WSMCS : 4;          //!< [3:0] Read To Write Same Chip Select
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t W2RSMCS : 4;          //!< [11:8] Write To Read Same Chip Select
-        uint32_t RESERVED1 : 20;       //!< [31:12] Reserved
+        uint32_t R2WSMCS : 4;          /*!< [3:0] Read To Write Same Chip Select */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t W2RSMCS : 4;          /*!< [11:8] Write To Read Same Chip Select */
+        uint32_t RESERVED1 : 20;       /*!< [31:12] Reserved */
     } B;
 } hw_ddr_cr35_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR35 register
  */
-//@{
-#define HW_DDR_CR35_ADDR         (REGS_DDR_BASE + 0x8CU)
+/*@{*/
+#define HW_DDR_CR35_ADDR(x)      ((x) + 0x8CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR35              (*(__I hw_ddr_cr35_t *) HW_DDR_CR35_ADDR)
-#define HW_DDR_CR35_RD()         (HW_DDR_CR35.U)
-#endif
-//@}
+#define HW_DDR_CR35(x)           (*(__I hw_ddr_cr35_t *) HW_DDR_CR35_ADDR(x))
+#define HW_DDR_CR35_RD(x)        (HW_DDR_CR35(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR35 bitfields
@@ -4246,16 +3703,14 @@ typedef union _hw_ddr_cr35
  * Additional clocks of delay to insert between RD and WR transaction types to
  * chip select to meet ODT timing requirements.
  */
-//@{
-#define BP_DDR_CR35_R2WSMCS  (0U)          //!< Bit position for DDR_CR35_R2WSMCS.
-#define BM_DDR_CR35_R2WSMCS  (0x0000000FU) //!< Bit mask for DDR_CR35_R2WSMCS.
-#define BS_DDR_CR35_R2WSMCS  (4U)          //!< Bit field size in bits for DDR_CR35_R2WSMCS.
+/*@{*/
+#define BP_DDR_CR35_R2WSMCS  (0U)          /*!< Bit position for DDR_CR35_R2WSMCS. */
+#define BM_DDR_CR35_R2WSMCS  (0x0000000FU) /*!< Bit mask for DDR_CR35_R2WSMCS. */
+#define BS_DDR_CR35_R2WSMCS  (4U)          /*!< Bit field size in bits for DDR_CR35_R2WSMCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR35_R2WSMCS field.
-#define BR_DDR_CR35_R2WSMCS  (HW_DDR_CR35.B.R2WSMCS)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR35_R2WSMCS field. */
+#define BR_DDR_CR35_R2WSMCS(x) (HW_DDR_CR35(x).B.R2WSMCS)
+/*@}*/
 
 /*!
  * @name Register DDR_CR35, field W2RSMCS[11:8] (RO)
@@ -4263,24 +3718,21 @@ typedef union _hw_ddr_cr35
  * Additional clocks of delay to insert between WR and RD transaction types to
  * chip select to meet ODT timing requirements.
  */
-//@{
-#define BP_DDR_CR35_W2RSMCS  (8U)          //!< Bit position for DDR_CR35_W2RSMCS.
-#define BM_DDR_CR35_W2RSMCS  (0x00000F00U) //!< Bit mask for DDR_CR35_W2RSMCS.
-#define BS_DDR_CR35_W2RSMCS  (4U)          //!< Bit field size in bits for DDR_CR35_W2RSMCS.
+/*@{*/
+#define BP_DDR_CR35_W2RSMCS  (8U)          /*!< Bit position for DDR_CR35_W2RSMCS. */
+#define BM_DDR_CR35_W2RSMCS  (0x00000F00U) /*!< Bit mask for DDR_CR35_W2RSMCS. */
+#define BS_DDR_CR35_W2RSMCS  (4U)          /*!< Bit field size in bits for DDR_CR35_W2RSMCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR35_W2RSMCS field.
-#define BR_DDR_CR35_W2RSMCS  (HW_DDR_CR35.B.W2RSMCS)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR35_W2RSMCS field. */
+#define BR_DDR_CR35_W2RSMCS(x) (HW_DDR_CR35(x).B.W2RSMCS)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR36 - DDR Control Register 36
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR36 - DDR Control Register 36
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR36 - DDR Control Register 36 (RO)
+ * @brief HW_DDR_CR36 - DDR Control Register 36 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -4289,23 +3741,20 @@ typedef union _hw_ddr_cr36
     uint32_t U;
     struct _hw_ddr_cr36_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr36_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR36 register
  */
-//@{
-#define HW_DDR_CR36_ADDR         (REGS_DDR_BASE + 0x90U)
+/*@{*/
+#define HW_DDR_CR36_ADDR(x)      ((x) + 0x90U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR36              (*(__I hw_ddr_cr36_t *) HW_DDR_CR36_ADDR)
-#define HW_DDR_CR36_RD()         (HW_DDR_CR36.U)
-#endif
-//@}
+#define HW_DDR_CR36(x)           (*(__I hw_ddr_cr36_t *) HW_DDR_CR36_ADDR(x))
+#define HW_DDR_CR36_RD(x)        (HW_DDR_CR36(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR36 bitfields
@@ -4314,36 +3763,31 @@ typedef union _hw_ddr_cr36
 /*!
  * @name Register DDR_CR36, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR36_Not_Used (0U)          //!< Bit position for DDR_CR36_Not_Used.
-#define BM_DDR_CR36_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR36_Not_Used.
-#define BS_DDR_CR36_Not_Used (16U)         //!< Bit field size in bits for DDR_CR36_Not_Used.
+/*@{*/
+#define BP_DDR_CR36_Not_Used (0U)          /*!< Bit position for DDR_CR36_Not_Used. */
+#define BM_DDR_CR36_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR36_Not_Used. */
+#define BS_DDR_CR36_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR36_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR36_Not_Used field.
-#define BR_DDR_CR36_Not_Used (HW_DDR_CR36.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR36_Not_Used field. */
+#define BR_DDR_CR36_Not_Used(x) (HW_DDR_CR36(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR36, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR36_NOT_USED (16U)         //!< Bit position for DDR_CR36_NOT_USED.
-#define BM_DDR_CR36_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR36_NOT_USED.
-#define BS_DDR_CR36_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR36_NOT_USED.
+/*@{*/
+#define BP_DDR_CR36_NOT_USED (16U)         /*!< Bit position for DDR_CR36_NOT_USED. */
+#define BM_DDR_CR36_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR36_NOT_USED. */
+#define BS_DDR_CR36_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR36_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR36_NOT_USED field.
-#define BR_DDR_CR36_NOT_USED (HW_DDR_CR36.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR36_NOT_USED field. */
+#define BR_DDR_CR36_NOT_USED(x) (HW_DDR_CR36(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR37 - DDR Control Register 37
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR37 - DDR Control Register 37
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR37 - DDR Control Register 37 (RW)
  *
@@ -4354,33 +3798,30 @@ typedef union _hw_ddr_cr37
     uint32_t U;
     struct _hw_ddr_cr37_bitfields
     {
-        uint32_t R2RSAME : 3;          //!< [2:0] R2R Same chip select delay
-        uint32_t RESERVED0 : 5;        //!< [7:3] Reserved
-        uint32_t R2WSAME : 3;          //!< [10:8] R2W Same chip select delay
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t W2RSAME : 3;          //!< [18:16] W2R Same chip select delay
-        uint32_t RESERVED2 : 5;        //!< [23:19] Reserved
-        uint32_t W2WSAME : 3;          //!< [26:24] W2W Same chip select delay
-        uint32_t RESERVED3 : 5;        //!< [31:27] Reserved
+        uint32_t R2RSAME : 3;          /*!< [2:0] R2R Same chip select delay */
+        uint32_t RESERVED0 : 5;        /*!< [7:3] Reserved */
+        uint32_t R2WSAME : 3;          /*!< [10:8] R2W Same chip select delay */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t W2RSAME : 3;          /*!< [18:16] W2R Same chip select delay */
+        uint32_t RESERVED2 : 5;        /*!< [23:19] Reserved */
+        uint32_t W2WSAME : 3;          /*!< [26:24] W2W Same chip select delay */
+        uint32_t RESERVED3 : 5;        /*!< [31:27] Reserved */
     } B;
 } hw_ddr_cr37_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR37 register
  */
-//@{
-#define HW_DDR_CR37_ADDR         (REGS_DDR_BASE + 0x94U)
+/*@{*/
+#define HW_DDR_CR37_ADDR(x)      ((x) + 0x94U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR37              (*(__IO hw_ddr_cr37_t *) HW_DDR_CR37_ADDR)
-#define HW_DDR_CR37_RD()         (HW_DDR_CR37.U)
-#define HW_DDR_CR37_WR(v)        (HW_DDR_CR37.U = (v))
-#define HW_DDR_CR37_SET(v)       (HW_DDR_CR37_WR(HW_DDR_CR37_RD() |  (v)))
-#define HW_DDR_CR37_CLR(v)       (HW_DDR_CR37_WR(HW_DDR_CR37_RD() & ~(v)))
-#define HW_DDR_CR37_TOG(v)       (HW_DDR_CR37_WR(HW_DDR_CR37_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR37(x)           (*(__IO hw_ddr_cr37_t *) HW_DDR_CR37_ADDR(x))
+#define HW_DDR_CR37_RD(x)        (HW_DDR_CR37(x).U)
+#define HW_DDR_CR37_WR(x, v)     (HW_DDR_CR37(x).U = (v))
+#define HW_DDR_CR37_SET(x, v)    (HW_DDR_CR37_WR(x, HW_DDR_CR37_RD(x) |  (v)))
+#define HW_DDR_CR37_CLR(x, v)    (HW_DDR_CR37_WR(x, HW_DDR_CR37_RD(x) & ~(v)))
+#define HW_DDR_CR37_TOG(x, v)    (HW_DDR_CR37_WR(x, HW_DDR_CR37_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR37 bitfields
@@ -4392,24 +3833,20 @@ typedef union _hw_ddr_cr37
  * Additional clocks of delay to insert between reads and reads to the chip
  * select.
  */
-//@{
-#define BP_DDR_CR37_R2RSAME  (0U)          //!< Bit position for DDR_CR37_R2RSAME.
-#define BM_DDR_CR37_R2RSAME  (0x00000007U) //!< Bit mask for DDR_CR37_R2RSAME.
-#define BS_DDR_CR37_R2RSAME  (3U)          //!< Bit field size in bits for DDR_CR37_R2RSAME.
+/*@{*/
+#define BP_DDR_CR37_R2RSAME  (0U)          /*!< Bit position for DDR_CR37_R2RSAME. */
+#define BM_DDR_CR37_R2RSAME  (0x00000007U) /*!< Bit mask for DDR_CR37_R2RSAME. */
+#define BS_DDR_CR37_R2RSAME  (3U)          /*!< Bit field size in bits for DDR_CR37_R2RSAME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR37_R2RSAME field.
-#define BR_DDR_CR37_R2RSAME  (HW_DDR_CR37.B.R2RSAME)
-#endif
+/*! @brief Read current value of the DDR_CR37_R2RSAME field. */
+#define BR_DDR_CR37_R2RSAME(x) (HW_DDR_CR37(x).B.R2RSAME)
 
-//! @brief Format value for bitfield DDR_CR37_R2RSAME.
-#define BF_DDR_CR37_R2RSAME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR37_R2RSAME), uint32_t) & BM_DDR_CR37_R2RSAME)
+/*! @brief Format value for bitfield DDR_CR37_R2RSAME. */
+#define BF_DDR_CR37_R2RSAME(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR37_R2RSAME) & BM_DDR_CR37_R2RSAME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2RSAME field to a new value.
-#define BW_DDR_CR37_R2RSAME(v) (HW_DDR_CR37_WR((HW_DDR_CR37_RD() & ~BM_DDR_CR37_R2RSAME) | BF_DDR_CR37_R2RSAME(v)))
-#endif
-//@}
+/*! @brief Set the R2RSAME field to a new value. */
+#define BW_DDR_CR37_R2RSAME(x, v) (HW_DDR_CR37_WR(x, (HW_DDR_CR37_RD(x) & ~BM_DDR_CR37_R2RSAME) | BF_DDR_CR37_R2RSAME(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR37, field R2WSAME[10:8] (RW)
@@ -4417,24 +3854,20 @@ typedef union _hw_ddr_cr37
  * Additional clocks of delay to insert between reads and writes to the chip
  * select.
  */
-//@{
-#define BP_DDR_CR37_R2WSAME  (8U)          //!< Bit position for DDR_CR37_R2WSAME.
-#define BM_DDR_CR37_R2WSAME  (0x00000700U) //!< Bit mask for DDR_CR37_R2WSAME.
-#define BS_DDR_CR37_R2WSAME  (3U)          //!< Bit field size in bits for DDR_CR37_R2WSAME.
+/*@{*/
+#define BP_DDR_CR37_R2WSAME  (8U)          /*!< Bit position for DDR_CR37_R2WSAME. */
+#define BM_DDR_CR37_R2WSAME  (0x00000700U) /*!< Bit mask for DDR_CR37_R2WSAME. */
+#define BS_DDR_CR37_R2WSAME  (3U)          /*!< Bit field size in bits for DDR_CR37_R2WSAME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR37_R2WSAME field.
-#define BR_DDR_CR37_R2WSAME  (HW_DDR_CR37.B.R2WSAME)
-#endif
+/*! @brief Read current value of the DDR_CR37_R2WSAME field. */
+#define BR_DDR_CR37_R2WSAME(x) (HW_DDR_CR37(x).B.R2WSAME)
 
-//! @brief Format value for bitfield DDR_CR37_R2WSAME.
-#define BF_DDR_CR37_R2WSAME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR37_R2WSAME), uint32_t) & BM_DDR_CR37_R2WSAME)
+/*! @brief Format value for bitfield DDR_CR37_R2WSAME. */
+#define BF_DDR_CR37_R2WSAME(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR37_R2WSAME) & BM_DDR_CR37_R2WSAME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2WSAME field to a new value.
-#define BW_DDR_CR37_R2WSAME(v) (HW_DDR_CR37_WR((HW_DDR_CR37_RD() & ~BM_DDR_CR37_R2WSAME) | BF_DDR_CR37_R2WSAME(v)))
-#endif
-//@}
+/*! @brief Set the R2WSAME field to a new value. */
+#define BW_DDR_CR37_R2WSAME(x, v) (HW_DDR_CR37_WR(x, (HW_DDR_CR37_RD(x) & ~BM_DDR_CR37_R2WSAME) | BF_DDR_CR37_R2WSAME(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR37, field W2RSAME[18:16] (RW)
@@ -4442,24 +3875,20 @@ typedef union _hw_ddr_cr37
  * Additional clocks of delay to insert between writes and reads to the chip
  * select.
  */
-//@{
-#define BP_DDR_CR37_W2RSAME  (16U)         //!< Bit position for DDR_CR37_W2RSAME.
-#define BM_DDR_CR37_W2RSAME  (0x00070000U) //!< Bit mask for DDR_CR37_W2RSAME.
-#define BS_DDR_CR37_W2RSAME  (3U)          //!< Bit field size in bits for DDR_CR37_W2RSAME.
+/*@{*/
+#define BP_DDR_CR37_W2RSAME  (16U)         /*!< Bit position for DDR_CR37_W2RSAME. */
+#define BM_DDR_CR37_W2RSAME  (0x00070000U) /*!< Bit mask for DDR_CR37_W2RSAME. */
+#define BS_DDR_CR37_W2RSAME  (3U)          /*!< Bit field size in bits for DDR_CR37_W2RSAME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR37_W2RSAME field.
-#define BR_DDR_CR37_W2RSAME  (HW_DDR_CR37.B.W2RSAME)
-#endif
+/*! @brief Read current value of the DDR_CR37_W2RSAME field. */
+#define BR_DDR_CR37_W2RSAME(x) (HW_DDR_CR37(x).B.W2RSAME)
 
-//! @brief Format value for bitfield DDR_CR37_W2RSAME.
-#define BF_DDR_CR37_W2RSAME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR37_W2RSAME), uint32_t) & BM_DDR_CR37_W2RSAME)
+/*! @brief Format value for bitfield DDR_CR37_W2RSAME. */
+#define BF_DDR_CR37_W2RSAME(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR37_W2RSAME) & BM_DDR_CR37_W2RSAME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the W2RSAME field to a new value.
-#define BW_DDR_CR37_W2RSAME(v) (HW_DDR_CR37_WR((HW_DDR_CR37_RD() & ~BM_DDR_CR37_W2RSAME) | BF_DDR_CR37_W2RSAME(v)))
-#endif
-//@}
+/*! @brief Set the W2RSAME field to a new value. */
+#define BW_DDR_CR37_W2RSAME(x, v) (HW_DDR_CR37_WR(x, (HW_DDR_CR37_RD(x) & ~BM_DDR_CR37_W2RSAME) | BF_DDR_CR37_W2RSAME(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR37, field W2WSAME[26:24] (RW)
@@ -4467,30 +3896,25 @@ typedef union _hw_ddr_cr37
  * Additional clocks of delay to insert between writes and writes to the chip
  * select.
  */
-//@{
-#define BP_DDR_CR37_W2WSAME  (24U)         //!< Bit position for DDR_CR37_W2WSAME.
-#define BM_DDR_CR37_W2WSAME  (0x07000000U) //!< Bit mask for DDR_CR37_W2WSAME.
-#define BS_DDR_CR37_W2WSAME  (3U)          //!< Bit field size in bits for DDR_CR37_W2WSAME.
+/*@{*/
+#define BP_DDR_CR37_W2WSAME  (24U)         /*!< Bit position for DDR_CR37_W2WSAME. */
+#define BM_DDR_CR37_W2WSAME  (0x07000000U) /*!< Bit mask for DDR_CR37_W2WSAME. */
+#define BS_DDR_CR37_W2WSAME  (3U)          /*!< Bit field size in bits for DDR_CR37_W2WSAME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR37_W2WSAME field.
-#define BR_DDR_CR37_W2WSAME  (HW_DDR_CR37.B.W2WSAME)
-#endif
+/*! @brief Read current value of the DDR_CR37_W2WSAME field. */
+#define BR_DDR_CR37_W2WSAME(x) (HW_DDR_CR37(x).B.W2WSAME)
 
-//! @brief Format value for bitfield DDR_CR37_W2WSAME.
-#define BF_DDR_CR37_W2WSAME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR37_W2WSAME), uint32_t) & BM_DDR_CR37_W2WSAME)
+/*! @brief Format value for bitfield DDR_CR37_W2WSAME. */
+#define BF_DDR_CR37_W2WSAME(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR37_W2WSAME) & BM_DDR_CR37_W2WSAME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the W2WSAME field to a new value.
-#define BW_DDR_CR37_W2WSAME(v) (HW_DDR_CR37_WR((HW_DDR_CR37_RD() & ~BM_DDR_CR37_W2WSAME) | BF_DDR_CR37_W2WSAME(v)))
-#endif
-//@}
+/*! @brief Set the W2WSAME field to a new value. */
+#define BW_DDR_CR37_W2WSAME(x, v) (HW_DDR_CR37_WR(x, (HW_DDR_CR37_RD(x) & ~BM_DDR_CR37_W2WSAME) | BF_DDR_CR37_W2WSAME(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR38 - DDR Control Register 38
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR38 - DDR Control Register 38
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR38 - DDR Control Register 38 (RW)
  *
@@ -4501,31 +3925,28 @@ typedef union _hw_ddr_cr38
     uint32_t U;
     struct _hw_ddr_cr38_bitfields
     {
-        uint32_t PDNCS : 5;            //!< [4:0] OCD Pull Down adjustment Chip Select
-        uint32_t RESERVED0 : 3;        //!< [7:5] Reserved
-        uint32_t PUPCS : 5;            //!< [12:8] OCD Pull Up adjustment Chip Select
-        uint32_t RESERVED1 : 3;        //!< [15:13] Reserved
-        uint32_t PWRCNT : 11;          //!< [26:16] Port 0 Write Count
-        uint32_t RESERVED2 : 5;        //!< [31:27] Reserved
+        uint32_t PDNCS : 5;            /*!< [4:0] OCD Pull Down adjustment Chip Select */
+        uint32_t RESERVED0 : 3;        /*!< [7:5] Reserved */
+        uint32_t PUPCS : 5;            /*!< [12:8] OCD Pull Up adjustment Chip Select */
+        uint32_t RESERVED1 : 3;        /*!< [15:13] Reserved */
+        uint32_t PWRCNT : 11;          /*!< [26:16] Port 0 Write Count */
+        uint32_t RESERVED2 : 5;        /*!< [31:27] Reserved */
     } B;
 } hw_ddr_cr38_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR38 register
  */
-//@{
-#define HW_DDR_CR38_ADDR         (REGS_DDR_BASE + 0x98U)
+/*@{*/
+#define HW_DDR_CR38_ADDR(x)      ((x) + 0x98U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR38              (*(__IO hw_ddr_cr38_t *) HW_DDR_CR38_ADDR)
-#define HW_DDR_CR38_RD()         (HW_DDR_CR38.U)
-#define HW_DDR_CR38_WR(v)        (HW_DDR_CR38.U = (v))
-#define HW_DDR_CR38_SET(v)       (HW_DDR_CR38_WR(HW_DDR_CR38_RD() |  (v)))
-#define HW_DDR_CR38_CLR(v)       (HW_DDR_CR38_WR(HW_DDR_CR38_RD() & ~(v)))
-#define HW_DDR_CR38_TOG(v)       (HW_DDR_CR38_WR(HW_DDR_CR38_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR38(x)           (*(__IO hw_ddr_cr38_t *) HW_DDR_CR38_ADDR(x))
+#define HW_DDR_CR38_RD(x)        (HW_DDR_CR38(x).U)
+#define HW_DDR_CR38_WR(x, v)     (HW_DDR_CR38(x).U = (v))
+#define HW_DDR_CR38_SET(x, v)    (HW_DDR_CR38_WR(x, HW_DDR_CR38_RD(x) |  (v)))
+#define HW_DDR_CR38_CLR(x, v)    (HW_DDR_CR38_WR(x, HW_DDR_CR38_RD(x) & ~(v)))
+#define HW_DDR_CR38_TOG(x, v)    (HW_DDR_CR38_WR(x, HW_DDR_CR38_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR38 bitfields
@@ -4539,24 +3960,20 @@ typedef union _hw_ddr_cr38
  * Bit[4] 0 Decrement OCD settings 1 Increment OCD settings Bit[3:0] Number of OCD
  * adjustment commands to issue
  */
-//@{
-#define BP_DDR_CR38_PDNCS    (0U)          //!< Bit position for DDR_CR38_PDNCS.
-#define BM_DDR_CR38_PDNCS    (0x0000001FU) //!< Bit mask for DDR_CR38_PDNCS.
-#define BS_DDR_CR38_PDNCS    (5U)          //!< Bit field size in bits for DDR_CR38_PDNCS.
+/*@{*/
+#define BP_DDR_CR38_PDNCS    (0U)          /*!< Bit position for DDR_CR38_PDNCS. */
+#define BM_DDR_CR38_PDNCS    (0x0000001FU) /*!< Bit mask for DDR_CR38_PDNCS. */
+#define BS_DDR_CR38_PDNCS    (5U)          /*!< Bit field size in bits for DDR_CR38_PDNCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR38_PDNCS field.
-#define BR_DDR_CR38_PDNCS    (HW_DDR_CR38.B.PDNCS)
-#endif
+/*! @brief Read current value of the DDR_CR38_PDNCS field. */
+#define BR_DDR_CR38_PDNCS(x) (HW_DDR_CR38(x).B.PDNCS)
 
-//! @brief Format value for bitfield DDR_CR38_PDNCS.
-#define BF_DDR_CR38_PDNCS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR38_PDNCS), uint32_t) & BM_DDR_CR38_PDNCS)
+/*! @brief Format value for bitfield DDR_CR38_PDNCS. */
+#define BF_DDR_CR38_PDNCS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR38_PDNCS) & BM_DDR_CR38_PDNCS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PDNCS field to a new value.
-#define BW_DDR_CR38_PDNCS(v) (HW_DDR_CR38_WR((HW_DDR_CR38_RD() & ~BM_DDR_CR38_PDNCS) | BF_DDR_CR38_PDNCS(v)))
-#endif
-//@}
+/*! @brief Set the PDNCS field to a new value. */
+#define BW_DDR_CR38_PDNCS(x, v) (HW_DDR_CR38_WR(x, (HW_DDR_CR38_RD(x) & ~BM_DDR_CR38_PDNCS) | BF_DDR_CR38_PDNCS(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR38, field PUPCS[12:8] (RW)
@@ -4566,24 +3983,20 @@ typedef union _hw_ddr_cr38
  * Bit[12] 0 Decrement OCD settings 1 Increment OCD settings Bit[11:8] Number of OCD
  * adjustment commands to issue
  */
-//@{
-#define BP_DDR_CR38_PUPCS    (8U)          //!< Bit position for DDR_CR38_PUPCS.
-#define BM_DDR_CR38_PUPCS    (0x00001F00U) //!< Bit mask for DDR_CR38_PUPCS.
-#define BS_DDR_CR38_PUPCS    (5U)          //!< Bit field size in bits for DDR_CR38_PUPCS.
+/*@{*/
+#define BP_DDR_CR38_PUPCS    (8U)          /*!< Bit position for DDR_CR38_PUPCS. */
+#define BM_DDR_CR38_PUPCS    (0x00001F00U) /*!< Bit mask for DDR_CR38_PUPCS. */
+#define BS_DDR_CR38_PUPCS    (5U)          /*!< Bit field size in bits for DDR_CR38_PUPCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR38_PUPCS field.
-#define BR_DDR_CR38_PUPCS    (HW_DDR_CR38.B.PUPCS)
-#endif
+/*! @brief Read current value of the DDR_CR38_PUPCS field. */
+#define BR_DDR_CR38_PUPCS(x) (HW_DDR_CR38(x).B.PUPCS)
 
-//! @brief Format value for bitfield DDR_CR38_PUPCS.
-#define BF_DDR_CR38_PUPCS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR38_PUPCS), uint32_t) & BM_DDR_CR38_PUPCS)
+/*! @brief Format value for bitfield DDR_CR38_PUPCS. */
+#define BF_DDR_CR38_PUPCS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR38_PUPCS) & BM_DDR_CR38_PUPCS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUPCS field to a new value.
-#define BW_DDR_CR38_PUPCS(v) (HW_DDR_CR38_WR((HW_DDR_CR38_RD() & ~BM_DDR_CR38_PUPCS) | BF_DDR_CR38_PUPCS(v)))
-#endif
-//@}
+/*! @brief Set the PUPCS field to a new value. */
+#define BW_DDR_CR38_PUPCS(x, v) (HW_DDR_CR38_WR(x, (HW_DDR_CR38_RD(x) & ~BM_DDR_CR38_PUPCS) | BF_DDR_CR38_PUPCS(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR38, field PWRCNT[26:16] (RW)
@@ -4597,30 +4010,25 @@ typedef union _hw_ddr_cr38
  * issue commands of zero length to the memory controller core, which the core
  * interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR38_PWRCNT   (16U)         //!< Bit position for DDR_CR38_PWRCNT.
-#define BM_DDR_CR38_PWRCNT   (0x07FF0000U) //!< Bit mask for DDR_CR38_PWRCNT.
-#define BS_DDR_CR38_PWRCNT   (11U)         //!< Bit field size in bits for DDR_CR38_PWRCNT.
+/*@{*/
+#define BP_DDR_CR38_PWRCNT   (16U)         /*!< Bit position for DDR_CR38_PWRCNT. */
+#define BM_DDR_CR38_PWRCNT   (0x07FF0000U) /*!< Bit mask for DDR_CR38_PWRCNT. */
+#define BS_DDR_CR38_PWRCNT   (11U)         /*!< Bit field size in bits for DDR_CR38_PWRCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR38_PWRCNT field.
-#define BR_DDR_CR38_PWRCNT   (HW_DDR_CR38.B.PWRCNT)
-#endif
+/*! @brief Read current value of the DDR_CR38_PWRCNT field. */
+#define BR_DDR_CR38_PWRCNT(x) (HW_DDR_CR38(x).B.PWRCNT)
 
-//! @brief Format value for bitfield DDR_CR38_PWRCNT.
-#define BF_DDR_CR38_PWRCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR38_PWRCNT), uint32_t) & BM_DDR_CR38_PWRCNT)
+/*! @brief Format value for bitfield DDR_CR38_PWRCNT. */
+#define BF_DDR_CR38_PWRCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR38_PWRCNT) & BM_DDR_CR38_PWRCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PWRCNT field to a new value.
-#define BW_DDR_CR38_PWRCNT(v) (HW_DDR_CR38_WR((HW_DDR_CR38_RD() & ~BM_DDR_CR38_PWRCNT) | BF_DDR_CR38_PWRCNT(v)))
-#endif
-//@}
+/*! @brief Set the PWRCNT field to a new value. */
+#define BW_DDR_CR38_PWRCNT(x, v) (HW_DDR_CR38_WR(x, (HW_DDR_CR38_RD(x) & ~BM_DDR_CR38_PWRCNT) | BF_DDR_CR38_PWRCNT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR39 - DDR Control Register 39
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR39 - DDR Control Register 39
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR39 - DDR Control Register 39 (RW)
  *
@@ -4631,31 +4039,28 @@ typedef union _hw_ddr_cr39
     uint32_t U;
     struct _hw_ddr_cr39_bitfields
     {
-        uint32_t P0RDCNT : 11;         //!< [10:0] Port 0 Read command Count
-        uint32_t RESERVED0 : 5;        //!< [15:11] Reserved
-        uint32_t RP0 : 2;              //!< [17:16] Port 0 Read command Priority
-        uint32_t RESERVED1 : 6;        //!< [23:18] Reserved
-        uint32_t WP0 : 2;              //!< [25:24] Port 0 Write command Priority
-        uint32_t RESERVED2 : 6;        //!< [31:26] Reserved
+        uint32_t P0RDCNT : 11;         /*!< [10:0] Port 0 Read command Count */
+        uint32_t RESERVED0 : 5;        /*!< [15:11] Reserved */
+        uint32_t RP0 : 2;              /*!< [17:16] Port 0 Read command Priority */
+        uint32_t RESERVED1 : 6;        /*!< [23:18] Reserved */
+        uint32_t WP0 : 2;              /*!< [25:24] Port 0 Write command Priority */
+        uint32_t RESERVED2 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_cr39_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR39 register
  */
-//@{
-#define HW_DDR_CR39_ADDR         (REGS_DDR_BASE + 0x9CU)
+/*@{*/
+#define HW_DDR_CR39_ADDR(x)      ((x) + 0x9CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR39              (*(__IO hw_ddr_cr39_t *) HW_DDR_CR39_ADDR)
-#define HW_DDR_CR39_RD()         (HW_DDR_CR39.U)
-#define HW_DDR_CR39_WR(v)        (HW_DDR_CR39.U = (v))
-#define HW_DDR_CR39_SET(v)       (HW_DDR_CR39_WR(HW_DDR_CR39_RD() |  (v)))
-#define HW_DDR_CR39_CLR(v)       (HW_DDR_CR39_WR(HW_DDR_CR39_RD() & ~(v)))
-#define HW_DDR_CR39_TOG(v)       (HW_DDR_CR39_WR(HW_DDR_CR39_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR39(x)           (*(__IO hw_ddr_cr39_t *) HW_DDR_CR39_ADDR(x))
+#define HW_DDR_CR39_RD(x)        (HW_DDR_CR39(x).U)
+#define HW_DDR_CR39_WR(x, v)     (HW_DDR_CR39(x).U = (v))
+#define HW_DDR_CR39_SET(x, v)    (HW_DDR_CR39_WR(x, HW_DDR_CR39_RD(x) |  (v)))
+#define HW_DDR_CR39_CLR(x, v)    (HW_DDR_CR39_WR(x, HW_DDR_CR39_RD(x) & ~(v)))
+#define HW_DDR_CR39_TOG(x, v)    (HW_DDR_CR39_WR(x, HW_DDR_CR39_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR39 bitfields
@@ -4673,24 +4078,20 @@ typedef union _hw_ddr_cr39
  * causes the port to issue commands of zero length to the memory controller core,
  * which the core interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR39_P0RDCNT  (0U)          //!< Bit position for DDR_CR39_P0RDCNT.
-#define BM_DDR_CR39_P0RDCNT  (0x000007FFU) //!< Bit mask for DDR_CR39_P0RDCNT.
-#define BS_DDR_CR39_P0RDCNT  (11U)         //!< Bit field size in bits for DDR_CR39_P0RDCNT.
+/*@{*/
+#define BP_DDR_CR39_P0RDCNT  (0U)          /*!< Bit position for DDR_CR39_P0RDCNT. */
+#define BM_DDR_CR39_P0RDCNT  (0x000007FFU) /*!< Bit mask for DDR_CR39_P0RDCNT. */
+#define BS_DDR_CR39_P0RDCNT  (11U)         /*!< Bit field size in bits for DDR_CR39_P0RDCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR39_P0RDCNT field.
-#define BR_DDR_CR39_P0RDCNT  (HW_DDR_CR39.B.P0RDCNT)
-#endif
+/*! @brief Read current value of the DDR_CR39_P0RDCNT field. */
+#define BR_DDR_CR39_P0RDCNT(x) (HW_DDR_CR39(x).B.P0RDCNT)
 
-//! @brief Format value for bitfield DDR_CR39_P0RDCNT.
-#define BF_DDR_CR39_P0RDCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR39_P0RDCNT), uint32_t) & BM_DDR_CR39_P0RDCNT)
+/*! @brief Format value for bitfield DDR_CR39_P0RDCNT. */
+#define BF_DDR_CR39_P0RDCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR39_P0RDCNT) & BM_DDR_CR39_P0RDCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0RDCNT field to a new value.
-#define BW_DDR_CR39_P0RDCNT(v) (HW_DDR_CR39_WR((HW_DDR_CR39_RD() & ~BM_DDR_CR39_P0RDCNT) | BF_DDR_CR39_P0RDCNT(v)))
-#endif
-//@}
+/*! @brief Set the P0RDCNT field to a new value. */
+#define BW_DDR_CR39_P0RDCNT(x, v) (HW_DDR_CR39_WR(x, (HW_DDR_CR39_RD(x) & ~BM_DDR_CR39_P0RDCNT) | BF_DDR_CR39_P0RDCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR39, field RP0[17:16] (RW)
@@ -4703,24 +4104,20 @@ typedef union _hw_ddr_cr39
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR39_RP0      (16U)         //!< Bit position for DDR_CR39_RP0.
-#define BM_DDR_CR39_RP0      (0x00030000U) //!< Bit mask for DDR_CR39_RP0.
-#define BS_DDR_CR39_RP0      (2U)          //!< Bit field size in bits for DDR_CR39_RP0.
+/*@{*/
+#define BP_DDR_CR39_RP0      (16U)         /*!< Bit position for DDR_CR39_RP0. */
+#define BM_DDR_CR39_RP0      (0x00030000U) /*!< Bit mask for DDR_CR39_RP0. */
+#define BS_DDR_CR39_RP0      (2U)          /*!< Bit field size in bits for DDR_CR39_RP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR39_RP0 field.
-#define BR_DDR_CR39_RP0      (HW_DDR_CR39.B.RP0)
-#endif
+/*! @brief Read current value of the DDR_CR39_RP0 field. */
+#define BR_DDR_CR39_RP0(x)   (HW_DDR_CR39(x).B.RP0)
 
-//! @brief Format value for bitfield DDR_CR39_RP0.
-#define BF_DDR_CR39_RP0(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR39_RP0), uint32_t) & BM_DDR_CR39_RP0)
+/*! @brief Format value for bitfield DDR_CR39_RP0. */
+#define BF_DDR_CR39_RP0(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR39_RP0) & BM_DDR_CR39_RP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RP0 field to a new value.
-#define BW_DDR_CR39_RP0(v)   (HW_DDR_CR39_WR((HW_DDR_CR39_RD() & ~BM_DDR_CR39_RP0) | BF_DDR_CR39_RP0(v)))
-#endif
-//@}
+/*! @brief Set the RP0 field to a new value. */
+#define BW_DDR_CR39_RP0(x, v) (HW_DDR_CR39_WR(x, (HW_DDR_CR39_RD(x) & ~BM_DDR_CR39_RP0) | BF_DDR_CR39_RP0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR39, field WP0[25:24] (RW)
@@ -4733,30 +4130,25 @@ typedef union _hw_ddr_cr39
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR39_WP0      (24U)         //!< Bit position for DDR_CR39_WP0.
-#define BM_DDR_CR39_WP0      (0x03000000U) //!< Bit mask for DDR_CR39_WP0.
-#define BS_DDR_CR39_WP0      (2U)          //!< Bit field size in bits for DDR_CR39_WP0.
+/*@{*/
+#define BP_DDR_CR39_WP0      (24U)         /*!< Bit position for DDR_CR39_WP0. */
+#define BM_DDR_CR39_WP0      (0x03000000U) /*!< Bit mask for DDR_CR39_WP0. */
+#define BS_DDR_CR39_WP0      (2U)          /*!< Bit field size in bits for DDR_CR39_WP0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR39_WP0 field.
-#define BR_DDR_CR39_WP0      (HW_DDR_CR39.B.WP0)
-#endif
+/*! @brief Read current value of the DDR_CR39_WP0 field. */
+#define BR_DDR_CR39_WP0(x)   (HW_DDR_CR39(x).B.WP0)
 
-//! @brief Format value for bitfield DDR_CR39_WP0.
-#define BF_DDR_CR39_WP0(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR39_WP0), uint32_t) & BM_DDR_CR39_WP0)
+/*! @brief Format value for bitfield DDR_CR39_WP0. */
+#define BF_DDR_CR39_WP0(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR39_WP0) & BM_DDR_CR39_WP0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP0 field to a new value.
-#define BW_DDR_CR39_WP0(v)   (HW_DDR_CR39_WR((HW_DDR_CR39_RD() & ~BM_DDR_CR39_WP0) | BF_DDR_CR39_WP0(v)))
-#endif
-//@}
+/*! @brief Set the WP0 field to a new value. */
+#define BW_DDR_CR39_WP0(x, v) (HW_DDR_CR39_WR(x, (HW_DDR_CR39_RD(x) & ~BM_DDR_CR39_WP0) | BF_DDR_CR39_WP0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR40 - DDR Control Register 40
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR40 - DDR Control Register 40
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR40 - DDR Control Register 40 (RW)
  *
@@ -4767,29 +4159,26 @@ typedef union _hw_ddr_cr40
     uint32_t U;
     struct _hw_ddr_cr40_bitfields
     {
-        uint32_t P0TYP : 2;            //!< [1:0] Port 0 Type
-        uint32_t RESERVED0 : 6;        //!< [7:2] Reserved
-        uint32_t P1WRCNT : 11;         //!< [18:8] Port 1 Write command Count
-        uint32_t RESERVED1 : 13;       //!< [31:19] Reserved
+        uint32_t P0TYP : 2;            /*!< [1:0] Port 0 Type */
+        uint32_t RESERVED0 : 6;        /*!< [7:2] Reserved */
+        uint32_t P1WRCNT : 11;         /*!< [18:8] Port 1 Write command Count */
+        uint32_t RESERVED1 : 13;       /*!< [31:19] Reserved */
     } B;
 } hw_ddr_cr40_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR40 register
  */
-//@{
-#define HW_DDR_CR40_ADDR         (REGS_DDR_BASE + 0xA0U)
+/*@{*/
+#define HW_DDR_CR40_ADDR(x)      ((x) + 0xA0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR40              (*(__IO hw_ddr_cr40_t *) HW_DDR_CR40_ADDR)
-#define HW_DDR_CR40_RD()         (HW_DDR_CR40.U)
-#define HW_DDR_CR40_WR(v)        (HW_DDR_CR40.U = (v))
-#define HW_DDR_CR40_SET(v)       (HW_DDR_CR40_WR(HW_DDR_CR40_RD() |  (v)))
-#define HW_DDR_CR40_CLR(v)       (HW_DDR_CR40_WR(HW_DDR_CR40_RD() & ~(v)))
-#define HW_DDR_CR40_TOG(v)       (HW_DDR_CR40_WR(HW_DDR_CR40_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR40(x)           (*(__IO hw_ddr_cr40_t *) HW_DDR_CR40_ADDR(x))
+#define HW_DDR_CR40_RD(x)        (HW_DDR_CR40(x).U)
+#define HW_DDR_CR40_WR(x, v)     (HW_DDR_CR40(x).U = (v))
+#define HW_DDR_CR40_SET(x, v)    (HW_DDR_CR40_WR(x, HW_DDR_CR40_RD(x) |  (v)))
+#define HW_DDR_CR40_CLR(x, v)    (HW_DDR_CR40_WR(x, HW_DDR_CR40_RD(x) & ~(v)))
+#define HW_DDR_CR40_TOG(x, v)    (HW_DDR_CR40_WR(x, HW_DDR_CR40_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR40 bitfields
@@ -4801,24 +4190,20 @@ typedef union _hw_ddr_cr40
  * Clock domain relativity between port 0 and the controller core. 00
  * Asynchronous 01 Reserved 01 Reserved 11 Synchronous
  */
-//@{
-#define BP_DDR_CR40_P0TYP    (0U)          //!< Bit position for DDR_CR40_P0TYP.
-#define BM_DDR_CR40_P0TYP    (0x00000003U) //!< Bit mask for DDR_CR40_P0TYP.
-#define BS_DDR_CR40_P0TYP    (2U)          //!< Bit field size in bits for DDR_CR40_P0TYP.
+/*@{*/
+#define BP_DDR_CR40_P0TYP    (0U)          /*!< Bit position for DDR_CR40_P0TYP. */
+#define BM_DDR_CR40_P0TYP    (0x00000003U) /*!< Bit mask for DDR_CR40_P0TYP. */
+#define BS_DDR_CR40_P0TYP    (2U)          /*!< Bit field size in bits for DDR_CR40_P0TYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR40_P0TYP field.
-#define BR_DDR_CR40_P0TYP    (HW_DDR_CR40.B.P0TYP)
-#endif
+/*! @brief Read current value of the DDR_CR40_P0TYP field. */
+#define BR_DDR_CR40_P0TYP(x) (HW_DDR_CR40(x).B.P0TYP)
 
-//! @brief Format value for bitfield DDR_CR40_P0TYP.
-#define BF_DDR_CR40_P0TYP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR40_P0TYP), uint32_t) & BM_DDR_CR40_P0TYP)
+/*! @brief Format value for bitfield DDR_CR40_P0TYP. */
+#define BF_DDR_CR40_P0TYP(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR40_P0TYP) & BM_DDR_CR40_P0TYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0TYP field to a new value.
-#define BW_DDR_CR40_P0TYP(v) (HW_DDR_CR40_WR((HW_DDR_CR40_RD() & ~BM_DDR_CR40_P0TYP) | BF_DDR_CR40_P0TYP(v)))
-#endif
-//@}
+/*! @brief Set the P0TYP field to a new value. */
+#define BW_DDR_CR40_P0TYP(x, v) (HW_DDR_CR40_WR(x, (HW_DDR_CR40_RD(x) & ~BM_DDR_CR40_P0TYP) | BF_DDR_CR40_P0TYP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR40, field P1WRCNT[18:8] (RW)
@@ -4832,30 +4217,25 @@ typedef union _hw_ddr_cr40
  * port to issue commands of zero length to the memory controller core, which the
  * core interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR40_P1WRCNT  (8U)          //!< Bit position for DDR_CR40_P1WRCNT.
-#define BM_DDR_CR40_P1WRCNT  (0x0007FF00U) //!< Bit mask for DDR_CR40_P1WRCNT.
-#define BS_DDR_CR40_P1WRCNT  (11U)         //!< Bit field size in bits for DDR_CR40_P1WRCNT.
+/*@{*/
+#define BP_DDR_CR40_P1WRCNT  (8U)          /*!< Bit position for DDR_CR40_P1WRCNT. */
+#define BM_DDR_CR40_P1WRCNT  (0x0007FF00U) /*!< Bit mask for DDR_CR40_P1WRCNT. */
+#define BS_DDR_CR40_P1WRCNT  (11U)         /*!< Bit field size in bits for DDR_CR40_P1WRCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR40_P1WRCNT field.
-#define BR_DDR_CR40_P1WRCNT  (HW_DDR_CR40.B.P1WRCNT)
-#endif
+/*! @brief Read current value of the DDR_CR40_P1WRCNT field. */
+#define BR_DDR_CR40_P1WRCNT(x) (HW_DDR_CR40(x).B.P1WRCNT)
 
-//! @brief Format value for bitfield DDR_CR40_P1WRCNT.
-#define BF_DDR_CR40_P1WRCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR40_P1WRCNT), uint32_t) & BM_DDR_CR40_P1WRCNT)
+/*! @brief Format value for bitfield DDR_CR40_P1WRCNT. */
+#define BF_DDR_CR40_P1WRCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR40_P1WRCNT) & BM_DDR_CR40_P1WRCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1WRCNT field to a new value.
-#define BW_DDR_CR40_P1WRCNT(v) (HW_DDR_CR40_WR((HW_DDR_CR40_RD() & ~BM_DDR_CR40_P1WRCNT) | BF_DDR_CR40_P1WRCNT(v)))
-#endif
-//@}
+/*! @brief Set the P1WRCNT field to a new value. */
+#define BW_DDR_CR40_P1WRCNT(x, v) (HW_DDR_CR40_WR(x, (HW_DDR_CR40_RD(x) & ~BM_DDR_CR40_P1WRCNT) | BF_DDR_CR40_P1WRCNT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR41 - DDR Control Register 41
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR41 - DDR Control Register 41
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR41 - DDR Control Register 41 (RW)
  *
@@ -4866,31 +4246,28 @@ typedef union _hw_ddr_cr41
     uint32_t U;
     struct _hw_ddr_cr41_bitfields
     {
-        uint32_t P1RDCNT : 11;         //!< [10:0] Port 1 Read command Count
-        uint32_t RESERVED0 : 5;        //!< [15:11] Reserved
-        uint32_t RP1 : 2;              //!< [17:16] Read command priority Port 1
-        uint32_t RESERVED1 : 6;        //!< [23:18] Reserved
-        uint32_t WP1 : 2;              //!< [25:24] Write command priority Port 1
-        uint32_t RESERVED2 : 6;        //!< [31:26] Reserved
+        uint32_t P1RDCNT : 11;         /*!< [10:0] Port 1 Read command Count */
+        uint32_t RESERVED0 : 5;        /*!< [15:11] Reserved */
+        uint32_t RP1 : 2;              /*!< [17:16] Read command priority Port 1 */
+        uint32_t RESERVED1 : 6;        /*!< [23:18] Reserved */
+        uint32_t WP1 : 2;              /*!< [25:24] Write command priority Port 1 */
+        uint32_t RESERVED2 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_cr41_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR41 register
  */
-//@{
-#define HW_DDR_CR41_ADDR         (REGS_DDR_BASE + 0xA4U)
+/*@{*/
+#define HW_DDR_CR41_ADDR(x)      ((x) + 0xA4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR41              (*(__IO hw_ddr_cr41_t *) HW_DDR_CR41_ADDR)
-#define HW_DDR_CR41_RD()         (HW_DDR_CR41.U)
-#define HW_DDR_CR41_WR(v)        (HW_DDR_CR41.U = (v))
-#define HW_DDR_CR41_SET(v)       (HW_DDR_CR41_WR(HW_DDR_CR41_RD() |  (v)))
-#define HW_DDR_CR41_CLR(v)       (HW_DDR_CR41_WR(HW_DDR_CR41_RD() & ~(v)))
-#define HW_DDR_CR41_TOG(v)       (HW_DDR_CR41_WR(HW_DDR_CR41_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR41(x)           (*(__IO hw_ddr_cr41_t *) HW_DDR_CR41_ADDR(x))
+#define HW_DDR_CR41_RD(x)        (HW_DDR_CR41(x).U)
+#define HW_DDR_CR41_WR(x, v)     (HW_DDR_CR41(x).U = (v))
+#define HW_DDR_CR41_SET(x, v)    (HW_DDR_CR41_WR(x, HW_DDR_CR41_RD(x) |  (v)))
+#define HW_DDR_CR41_CLR(x, v)    (HW_DDR_CR41_WR(x, HW_DDR_CR41_RD(x) & ~(v)))
+#define HW_DDR_CR41_TOG(x, v)    (HW_DDR_CR41_WR(x, HW_DDR_CR41_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR41 bitfields
@@ -4908,24 +4285,20 @@ typedef union _hw_ddr_cr41
  * causes the port to issue commands of zero length to the controller core, which the
  * core interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR41_P1RDCNT  (0U)          //!< Bit position for DDR_CR41_P1RDCNT.
-#define BM_DDR_CR41_P1RDCNT  (0x000007FFU) //!< Bit mask for DDR_CR41_P1RDCNT.
-#define BS_DDR_CR41_P1RDCNT  (11U)         //!< Bit field size in bits for DDR_CR41_P1RDCNT.
+/*@{*/
+#define BP_DDR_CR41_P1RDCNT  (0U)          /*!< Bit position for DDR_CR41_P1RDCNT. */
+#define BM_DDR_CR41_P1RDCNT  (0x000007FFU) /*!< Bit mask for DDR_CR41_P1RDCNT. */
+#define BS_DDR_CR41_P1RDCNT  (11U)         /*!< Bit field size in bits for DDR_CR41_P1RDCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR41_P1RDCNT field.
-#define BR_DDR_CR41_P1RDCNT  (HW_DDR_CR41.B.P1RDCNT)
-#endif
+/*! @brief Read current value of the DDR_CR41_P1RDCNT field. */
+#define BR_DDR_CR41_P1RDCNT(x) (HW_DDR_CR41(x).B.P1RDCNT)
 
-//! @brief Format value for bitfield DDR_CR41_P1RDCNT.
-#define BF_DDR_CR41_P1RDCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR41_P1RDCNT), uint32_t) & BM_DDR_CR41_P1RDCNT)
+/*! @brief Format value for bitfield DDR_CR41_P1RDCNT. */
+#define BF_DDR_CR41_P1RDCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR41_P1RDCNT) & BM_DDR_CR41_P1RDCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1RDCNT field to a new value.
-#define BW_DDR_CR41_P1RDCNT(v) (HW_DDR_CR41_WR((HW_DDR_CR41_RD() & ~BM_DDR_CR41_P1RDCNT) | BF_DDR_CR41_P1RDCNT(v)))
-#endif
-//@}
+/*! @brief Set the P1RDCNT field to a new value. */
+#define BW_DDR_CR41_P1RDCNT(x, v) (HW_DDR_CR41_WR(x, (HW_DDR_CR41_RD(x) & ~BM_DDR_CR41_P1RDCNT) | BF_DDR_CR41_P1RDCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR41, field RP1[17:16] (RW)
@@ -4938,24 +4311,20 @@ typedef union _hw_ddr_cr41
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR41_RP1      (16U)         //!< Bit position for DDR_CR41_RP1.
-#define BM_DDR_CR41_RP1      (0x00030000U) //!< Bit mask for DDR_CR41_RP1.
-#define BS_DDR_CR41_RP1      (2U)          //!< Bit field size in bits for DDR_CR41_RP1.
+/*@{*/
+#define BP_DDR_CR41_RP1      (16U)         /*!< Bit position for DDR_CR41_RP1. */
+#define BM_DDR_CR41_RP1      (0x00030000U) /*!< Bit mask for DDR_CR41_RP1. */
+#define BS_DDR_CR41_RP1      (2U)          /*!< Bit field size in bits for DDR_CR41_RP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR41_RP1 field.
-#define BR_DDR_CR41_RP1      (HW_DDR_CR41.B.RP1)
-#endif
+/*! @brief Read current value of the DDR_CR41_RP1 field. */
+#define BR_DDR_CR41_RP1(x)   (HW_DDR_CR41(x).B.RP1)
 
-//! @brief Format value for bitfield DDR_CR41_RP1.
-#define BF_DDR_CR41_RP1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR41_RP1), uint32_t) & BM_DDR_CR41_RP1)
+/*! @brief Format value for bitfield DDR_CR41_RP1. */
+#define BF_DDR_CR41_RP1(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR41_RP1) & BM_DDR_CR41_RP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RP1 field to a new value.
-#define BW_DDR_CR41_RP1(v)   (HW_DDR_CR41_WR((HW_DDR_CR41_RD() & ~BM_DDR_CR41_RP1) | BF_DDR_CR41_RP1(v)))
-#endif
-//@}
+/*! @brief Set the RP1 field to a new value. */
+#define BW_DDR_CR41_RP1(x, v) (HW_DDR_CR41_WR(x, (HW_DDR_CR41_RD(x) & ~BM_DDR_CR41_RP1) | BF_DDR_CR41_RP1(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR41, field WP1[25:24] (RW)
@@ -4968,30 +4337,25 @@ typedef union _hw_ddr_cr41
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR41_WP1      (24U)         //!< Bit position for DDR_CR41_WP1.
-#define BM_DDR_CR41_WP1      (0x03000000U) //!< Bit mask for DDR_CR41_WP1.
-#define BS_DDR_CR41_WP1      (2U)          //!< Bit field size in bits for DDR_CR41_WP1.
+/*@{*/
+#define BP_DDR_CR41_WP1      (24U)         /*!< Bit position for DDR_CR41_WP1. */
+#define BM_DDR_CR41_WP1      (0x03000000U) /*!< Bit mask for DDR_CR41_WP1. */
+#define BS_DDR_CR41_WP1      (2U)          /*!< Bit field size in bits for DDR_CR41_WP1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR41_WP1 field.
-#define BR_DDR_CR41_WP1      (HW_DDR_CR41.B.WP1)
-#endif
+/*! @brief Read current value of the DDR_CR41_WP1 field. */
+#define BR_DDR_CR41_WP1(x)   (HW_DDR_CR41(x).B.WP1)
 
-//! @brief Format value for bitfield DDR_CR41_WP1.
-#define BF_DDR_CR41_WP1(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR41_WP1), uint32_t) & BM_DDR_CR41_WP1)
+/*! @brief Format value for bitfield DDR_CR41_WP1. */
+#define BF_DDR_CR41_WP1(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR41_WP1) & BM_DDR_CR41_WP1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP1 field to a new value.
-#define BW_DDR_CR41_WP1(v)   (HW_DDR_CR41_WR((HW_DDR_CR41_RD() & ~BM_DDR_CR41_WP1) | BF_DDR_CR41_WP1(v)))
-#endif
-//@}
+/*! @brief Set the WP1 field to a new value. */
+#define BW_DDR_CR41_WP1(x, v) (HW_DDR_CR41_WR(x, (HW_DDR_CR41_RD(x) & ~BM_DDR_CR41_WP1) | BF_DDR_CR41_WP1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR42 - DDR Control Register 42
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR42 - DDR Control Register 42
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR42 - DDR Control Register 42 (RW)
  *
@@ -5002,29 +4366,26 @@ typedef union _hw_ddr_cr42
     uint32_t U;
     struct _hw_ddr_cr42_bitfields
     {
-        uint32_t P1TYP : 2;            //!< [1:0] Port 1 Type
-        uint32_t RESERVED0 : 6;        //!< [7:2] Reserved
-        uint32_t P2WRCNT : 11;         //!< [18:8] Port 2 Write command Count
-        uint32_t RESERVED1 : 13;       //!< [31:19] Reserved
+        uint32_t P1TYP : 2;            /*!< [1:0] Port 1 Type */
+        uint32_t RESERVED0 : 6;        /*!< [7:2] Reserved */
+        uint32_t P2WRCNT : 11;         /*!< [18:8] Port 2 Write command Count */
+        uint32_t RESERVED1 : 13;       /*!< [31:19] Reserved */
     } B;
 } hw_ddr_cr42_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR42 register
  */
-//@{
-#define HW_DDR_CR42_ADDR         (REGS_DDR_BASE + 0xA8U)
+/*@{*/
+#define HW_DDR_CR42_ADDR(x)      ((x) + 0xA8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR42              (*(__IO hw_ddr_cr42_t *) HW_DDR_CR42_ADDR)
-#define HW_DDR_CR42_RD()         (HW_DDR_CR42.U)
-#define HW_DDR_CR42_WR(v)        (HW_DDR_CR42.U = (v))
-#define HW_DDR_CR42_SET(v)       (HW_DDR_CR42_WR(HW_DDR_CR42_RD() |  (v)))
-#define HW_DDR_CR42_CLR(v)       (HW_DDR_CR42_WR(HW_DDR_CR42_RD() & ~(v)))
-#define HW_DDR_CR42_TOG(v)       (HW_DDR_CR42_WR(HW_DDR_CR42_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR42(x)           (*(__IO hw_ddr_cr42_t *) HW_DDR_CR42_ADDR(x))
+#define HW_DDR_CR42_RD(x)        (HW_DDR_CR42(x).U)
+#define HW_DDR_CR42_WR(x, v)     (HW_DDR_CR42(x).U = (v))
+#define HW_DDR_CR42_SET(x, v)    (HW_DDR_CR42_WR(x, HW_DDR_CR42_RD(x) |  (v)))
+#define HW_DDR_CR42_CLR(x, v)    (HW_DDR_CR42_WR(x, HW_DDR_CR42_RD(x) & ~(v)))
+#define HW_DDR_CR42_TOG(x, v)    (HW_DDR_CR42_WR(x, HW_DDR_CR42_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR42 bitfields
@@ -5036,24 +4397,20 @@ typedef union _hw_ddr_cr42
  * Clock domain relativity between port 1 and the controller core. 00
  * Asynchronous 01 Reserved 01 Reserved 11 Synchronous
  */
-//@{
-#define BP_DDR_CR42_P1TYP    (0U)          //!< Bit position for DDR_CR42_P1TYP.
-#define BM_DDR_CR42_P1TYP    (0x00000003U) //!< Bit mask for DDR_CR42_P1TYP.
-#define BS_DDR_CR42_P1TYP    (2U)          //!< Bit field size in bits for DDR_CR42_P1TYP.
+/*@{*/
+#define BP_DDR_CR42_P1TYP    (0U)          /*!< Bit position for DDR_CR42_P1TYP. */
+#define BM_DDR_CR42_P1TYP    (0x00000003U) /*!< Bit mask for DDR_CR42_P1TYP. */
+#define BS_DDR_CR42_P1TYP    (2U)          /*!< Bit field size in bits for DDR_CR42_P1TYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR42_P1TYP field.
-#define BR_DDR_CR42_P1TYP    (HW_DDR_CR42.B.P1TYP)
-#endif
+/*! @brief Read current value of the DDR_CR42_P1TYP field. */
+#define BR_DDR_CR42_P1TYP(x) (HW_DDR_CR42(x).B.P1TYP)
 
-//! @brief Format value for bitfield DDR_CR42_P1TYP.
-#define BF_DDR_CR42_P1TYP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR42_P1TYP), uint32_t) & BM_DDR_CR42_P1TYP)
+/*! @brief Format value for bitfield DDR_CR42_P1TYP. */
+#define BF_DDR_CR42_P1TYP(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR42_P1TYP) & BM_DDR_CR42_P1TYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1TYP field to a new value.
-#define BW_DDR_CR42_P1TYP(v) (HW_DDR_CR42_WR((HW_DDR_CR42_RD() & ~BM_DDR_CR42_P1TYP) | BF_DDR_CR42_P1TYP(v)))
-#endif
-//@}
+/*! @brief Set the P1TYP field to a new value. */
+#define BW_DDR_CR42_P1TYP(x, v) (HW_DDR_CR42_WR(x, (HW_DDR_CR42_RD(x) & ~BM_DDR_CR42_P1TYP) | BF_DDR_CR42_P1TYP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR42, field P2WRCNT[18:8] (RW)
@@ -5067,30 +4424,25 @@ typedef union _hw_ddr_cr42
  * port to issue commands of zero length to the memory controller core, which the
  * core interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR42_P2WRCNT  (8U)          //!< Bit position for DDR_CR42_P2WRCNT.
-#define BM_DDR_CR42_P2WRCNT  (0x0007FF00U) //!< Bit mask for DDR_CR42_P2WRCNT.
-#define BS_DDR_CR42_P2WRCNT  (11U)         //!< Bit field size in bits for DDR_CR42_P2WRCNT.
+/*@{*/
+#define BP_DDR_CR42_P2WRCNT  (8U)          /*!< Bit position for DDR_CR42_P2WRCNT. */
+#define BM_DDR_CR42_P2WRCNT  (0x0007FF00U) /*!< Bit mask for DDR_CR42_P2WRCNT. */
+#define BS_DDR_CR42_P2WRCNT  (11U)         /*!< Bit field size in bits for DDR_CR42_P2WRCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR42_P2WRCNT field.
-#define BR_DDR_CR42_P2WRCNT  (HW_DDR_CR42.B.P2WRCNT)
-#endif
+/*! @brief Read current value of the DDR_CR42_P2WRCNT field. */
+#define BR_DDR_CR42_P2WRCNT(x) (HW_DDR_CR42(x).B.P2WRCNT)
 
-//! @brief Format value for bitfield DDR_CR42_P2WRCNT.
-#define BF_DDR_CR42_P2WRCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR42_P2WRCNT), uint32_t) & BM_DDR_CR42_P2WRCNT)
+/*! @brief Format value for bitfield DDR_CR42_P2WRCNT. */
+#define BF_DDR_CR42_P2WRCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR42_P2WRCNT) & BM_DDR_CR42_P2WRCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2WRCNT field to a new value.
-#define BW_DDR_CR42_P2WRCNT(v) (HW_DDR_CR42_WR((HW_DDR_CR42_RD() & ~BM_DDR_CR42_P2WRCNT) | BF_DDR_CR42_P2WRCNT(v)))
-#endif
-//@}
+/*! @brief Set the P2WRCNT field to a new value. */
+#define BW_DDR_CR42_P2WRCNT(x, v) (HW_DDR_CR42_WR(x, (HW_DDR_CR42_RD(x) & ~BM_DDR_CR42_P2WRCNT) | BF_DDR_CR42_P2WRCNT(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR43 - DDR Control Register 43
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR43 - DDR Control Register 43
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR43 - DDR Control Register 43 (RW)
  *
@@ -5101,31 +4453,28 @@ typedef union _hw_ddr_cr43
     uint32_t U;
     struct _hw_ddr_cr43_bitfields
     {
-        uint32_t P2RDCNT : 11;         //!< [10:0] Port 2 Read command Count
-        uint32_t RESERVED0 : 5;        //!< [15:11] Reserved
-        uint32_t RP2 : 2;              //!< [17:16] Read command priority Port 2
-        uint32_t RESERVED1 : 6;        //!< [23:18] Reserved
-        uint32_t WP2 : 2;              //!< [25:24] Write command priority Port 2
-        uint32_t RESERVED2 : 6;        //!< [31:26] Reserved
+        uint32_t P2RDCNT : 11;         /*!< [10:0] Port 2 Read command Count */
+        uint32_t RESERVED0 : 5;        /*!< [15:11] Reserved */
+        uint32_t RP2 : 2;              /*!< [17:16] Read command priority Port 2 */
+        uint32_t RESERVED1 : 6;        /*!< [23:18] Reserved */
+        uint32_t WP2 : 2;              /*!< [25:24] Write command priority Port 2 */
+        uint32_t RESERVED2 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_cr43_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR43 register
  */
-//@{
-#define HW_DDR_CR43_ADDR         (REGS_DDR_BASE + 0xACU)
+/*@{*/
+#define HW_DDR_CR43_ADDR(x)      ((x) + 0xACU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR43              (*(__IO hw_ddr_cr43_t *) HW_DDR_CR43_ADDR)
-#define HW_DDR_CR43_RD()         (HW_DDR_CR43.U)
-#define HW_DDR_CR43_WR(v)        (HW_DDR_CR43.U = (v))
-#define HW_DDR_CR43_SET(v)       (HW_DDR_CR43_WR(HW_DDR_CR43_RD() |  (v)))
-#define HW_DDR_CR43_CLR(v)       (HW_DDR_CR43_WR(HW_DDR_CR43_RD() & ~(v)))
-#define HW_DDR_CR43_TOG(v)       (HW_DDR_CR43_WR(HW_DDR_CR43_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR43(x)           (*(__IO hw_ddr_cr43_t *) HW_DDR_CR43_ADDR(x))
+#define HW_DDR_CR43_RD(x)        (HW_DDR_CR43(x).U)
+#define HW_DDR_CR43_WR(x, v)     (HW_DDR_CR43(x).U = (v))
+#define HW_DDR_CR43_SET(x, v)    (HW_DDR_CR43_WR(x, HW_DDR_CR43_RD(x) |  (v)))
+#define HW_DDR_CR43_CLR(x, v)    (HW_DDR_CR43_WR(x, HW_DDR_CR43_RD(x) & ~(v)))
+#define HW_DDR_CR43_TOG(x, v)    (HW_DDR_CR43_WR(x, HW_DDR_CR43_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR43 bitfields
@@ -5143,24 +4492,20 @@ typedef union _hw_ddr_cr43
  * causes the port to issue commands of zero length to the controller core, which the
  * core interprets as the pre-configured value of 128 bytes.
  */
-//@{
-#define BP_DDR_CR43_P2RDCNT  (0U)          //!< Bit position for DDR_CR43_P2RDCNT.
-#define BM_DDR_CR43_P2RDCNT  (0x000007FFU) //!< Bit mask for DDR_CR43_P2RDCNT.
-#define BS_DDR_CR43_P2RDCNT  (11U)         //!< Bit field size in bits for DDR_CR43_P2RDCNT.
+/*@{*/
+#define BP_DDR_CR43_P2RDCNT  (0U)          /*!< Bit position for DDR_CR43_P2RDCNT. */
+#define BM_DDR_CR43_P2RDCNT  (0x000007FFU) /*!< Bit mask for DDR_CR43_P2RDCNT. */
+#define BS_DDR_CR43_P2RDCNT  (11U)         /*!< Bit field size in bits for DDR_CR43_P2RDCNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR43_P2RDCNT field.
-#define BR_DDR_CR43_P2RDCNT  (HW_DDR_CR43.B.P2RDCNT)
-#endif
+/*! @brief Read current value of the DDR_CR43_P2RDCNT field. */
+#define BR_DDR_CR43_P2RDCNT(x) (HW_DDR_CR43(x).B.P2RDCNT)
 
-//! @brief Format value for bitfield DDR_CR43_P2RDCNT.
-#define BF_DDR_CR43_P2RDCNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR43_P2RDCNT), uint32_t) & BM_DDR_CR43_P2RDCNT)
+/*! @brief Format value for bitfield DDR_CR43_P2RDCNT. */
+#define BF_DDR_CR43_P2RDCNT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR43_P2RDCNT) & BM_DDR_CR43_P2RDCNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2RDCNT field to a new value.
-#define BW_DDR_CR43_P2RDCNT(v) (HW_DDR_CR43_WR((HW_DDR_CR43_RD() & ~BM_DDR_CR43_P2RDCNT) | BF_DDR_CR43_P2RDCNT(v)))
-#endif
-//@}
+/*! @brief Set the P2RDCNT field to a new value. */
+#define BW_DDR_CR43_P2RDCNT(x, v) (HW_DDR_CR43_WR(x, (HW_DDR_CR43_RD(x) & ~BM_DDR_CR43_P2RDCNT) | BF_DDR_CR43_P2RDCNT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR43, field RP2[17:16] (RW)
@@ -5173,24 +4518,20 @@ typedef union _hw_ddr_cr43
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR43_RP2      (16U)         //!< Bit position for DDR_CR43_RP2.
-#define BM_DDR_CR43_RP2      (0x00030000U) //!< Bit mask for DDR_CR43_RP2.
-#define BS_DDR_CR43_RP2      (2U)          //!< Bit field size in bits for DDR_CR43_RP2.
+/*@{*/
+#define BP_DDR_CR43_RP2      (16U)         /*!< Bit position for DDR_CR43_RP2. */
+#define BM_DDR_CR43_RP2      (0x00030000U) /*!< Bit mask for DDR_CR43_RP2. */
+#define BS_DDR_CR43_RP2      (2U)          /*!< Bit field size in bits for DDR_CR43_RP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR43_RP2 field.
-#define BR_DDR_CR43_RP2      (HW_DDR_CR43.B.RP2)
-#endif
+/*! @brief Read current value of the DDR_CR43_RP2 field. */
+#define BR_DDR_CR43_RP2(x)   (HW_DDR_CR43(x).B.RP2)
 
-//! @brief Format value for bitfield DDR_CR43_RP2.
-#define BF_DDR_CR43_RP2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR43_RP2), uint32_t) & BM_DDR_CR43_RP2)
+/*! @brief Format value for bitfield DDR_CR43_RP2. */
+#define BF_DDR_CR43_RP2(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR43_RP2) & BM_DDR_CR43_RP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RP2 field to a new value.
-#define BW_DDR_CR43_RP2(v)   (HW_DDR_CR43_WR((HW_DDR_CR43_RD() & ~BM_DDR_CR43_RP2) | BF_DDR_CR43_RP2(v)))
-#endif
-//@}
+/*! @brief Set the RP2 field to a new value. */
+#define BW_DDR_CR43_RP2(x, v) (HW_DDR_CR43_WR(x, (HW_DDR_CR43_RD(x) & ~BM_DDR_CR43_RP2) | BF_DDR_CR43_RP2(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR43, field WP2[25:24] (RW)
@@ -5203,30 +4544,25 @@ typedef union _hw_ddr_cr43
  * - 10 - -----
  * - 11 - Lowest
  */
-//@{
-#define BP_DDR_CR43_WP2      (24U)         //!< Bit position for DDR_CR43_WP2.
-#define BM_DDR_CR43_WP2      (0x03000000U) //!< Bit mask for DDR_CR43_WP2.
-#define BS_DDR_CR43_WP2      (2U)          //!< Bit field size in bits for DDR_CR43_WP2.
+/*@{*/
+#define BP_DDR_CR43_WP2      (24U)         /*!< Bit position for DDR_CR43_WP2. */
+#define BM_DDR_CR43_WP2      (0x03000000U) /*!< Bit mask for DDR_CR43_WP2. */
+#define BS_DDR_CR43_WP2      (2U)          /*!< Bit field size in bits for DDR_CR43_WP2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR43_WP2 field.
-#define BR_DDR_CR43_WP2      (HW_DDR_CR43.B.WP2)
-#endif
+/*! @brief Read current value of the DDR_CR43_WP2 field. */
+#define BR_DDR_CR43_WP2(x)   (HW_DDR_CR43(x).B.WP2)
 
-//! @brief Format value for bitfield DDR_CR43_WP2.
-#define BF_DDR_CR43_WP2(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR43_WP2), uint32_t) & BM_DDR_CR43_WP2)
+/*! @brief Format value for bitfield DDR_CR43_WP2. */
+#define BF_DDR_CR43_WP2(v)   ((uint32_t)((uint32_t)(v) << BP_DDR_CR43_WP2) & BM_DDR_CR43_WP2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WP2 field to a new value.
-#define BW_DDR_CR43_WP2(v)   (HW_DDR_CR43_WR((HW_DDR_CR43_RD() & ~BM_DDR_CR43_WP2) | BF_DDR_CR43_WP2(v)))
-#endif
-//@}
+/*! @brief Set the WP2 field to a new value. */
+#define BW_DDR_CR43_WP2(x, v) (HW_DDR_CR43_WR(x, (HW_DDR_CR43_RD(x) & ~BM_DDR_CR43_WP2) | BF_DDR_CR43_WP2(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR44 - DDR Control Register 44
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR44 - DDR Control Register 44
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR44 - DDR Control Register 44 (RW)
  *
@@ -5237,33 +4573,30 @@ typedef union _hw_ddr_cr44
     uint32_t U;
     struct _hw_ddr_cr44_bitfields
     {
-        uint32_t P2TYP : 2;            //!< [1:0] Port 2 Type
-        uint32_t RESERVED0 : 6;        //!< [7:2] Reserved
-        uint32_t WRRLAT : 1;           //!< [8] WRR Latency
-        uint32_t RESERVED1 : 7;        //!< [15:9] Reserved
-        uint32_t WRRSHARE : 1;         //!< [16] WRR Shared arbitration
-        uint32_t RESERVED2 : 7;        //!< [23:17] Reserved
-        uint32_t WRRERR : 4;           //!< [27:24] WRR parameters Error
-        uint32_t RESERVED3 : 4;        //!< [31:28] Reserved
+        uint32_t P2TYP : 2;            /*!< [1:0] Port 2 Type */
+        uint32_t RESERVED0 : 6;        /*!< [7:2] Reserved */
+        uint32_t WRRLAT : 1;           /*!< [8] WRR Latency */
+        uint32_t RESERVED1 : 7;        /*!< [15:9] Reserved */
+        uint32_t WRRSHARE : 1;         /*!< [16] WRR Shared arbitration */
+        uint32_t RESERVED2 : 7;        /*!< [23:17] Reserved */
+        uint32_t WRRERR : 4;           /*!< [27:24] WRR parameters Error */
+        uint32_t RESERVED3 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr44_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR44 register
  */
-//@{
-#define HW_DDR_CR44_ADDR         (REGS_DDR_BASE + 0xB0U)
+/*@{*/
+#define HW_DDR_CR44_ADDR(x)      ((x) + 0xB0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR44              (*(__IO hw_ddr_cr44_t *) HW_DDR_CR44_ADDR)
-#define HW_DDR_CR44_RD()         (HW_DDR_CR44.U)
-#define HW_DDR_CR44_WR(v)        (HW_DDR_CR44.U = (v))
-#define HW_DDR_CR44_SET(v)       (HW_DDR_CR44_WR(HW_DDR_CR44_RD() |  (v)))
-#define HW_DDR_CR44_CLR(v)       (HW_DDR_CR44_WR(HW_DDR_CR44_RD() & ~(v)))
-#define HW_DDR_CR44_TOG(v)       (HW_DDR_CR44_WR(HW_DDR_CR44_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR44(x)           (*(__IO hw_ddr_cr44_t *) HW_DDR_CR44_ADDR(x))
+#define HW_DDR_CR44_RD(x)        (HW_DDR_CR44(x).U)
+#define HW_DDR_CR44_WR(x, v)     (HW_DDR_CR44(x).U = (v))
+#define HW_DDR_CR44_SET(x, v)    (HW_DDR_CR44_WR(x, HW_DDR_CR44_RD(x) |  (v)))
+#define HW_DDR_CR44_CLR(x, v)    (HW_DDR_CR44_WR(x, HW_DDR_CR44_RD(x) & ~(v)))
+#define HW_DDR_CR44_TOG(x, v)    (HW_DDR_CR44_WR(x, HW_DDR_CR44_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR44 bitfields
@@ -5275,24 +4608,20 @@ typedef union _hw_ddr_cr44
  * Clock domain relativity between port 2 and the controller core. 00
  * Asynchronous 01 Reserved 01 Reserved 11 Synchronous
  */
-//@{
-#define BP_DDR_CR44_P2TYP    (0U)          //!< Bit position for DDR_CR44_P2TYP.
-#define BM_DDR_CR44_P2TYP    (0x00000003U) //!< Bit mask for DDR_CR44_P2TYP.
-#define BS_DDR_CR44_P2TYP    (2U)          //!< Bit field size in bits for DDR_CR44_P2TYP.
+/*@{*/
+#define BP_DDR_CR44_P2TYP    (0U)          /*!< Bit position for DDR_CR44_P2TYP. */
+#define BM_DDR_CR44_P2TYP    (0x00000003U) /*!< Bit mask for DDR_CR44_P2TYP. */
+#define BS_DDR_CR44_P2TYP    (2U)          /*!< Bit field size in bits for DDR_CR44_P2TYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR44_P2TYP field.
-#define BR_DDR_CR44_P2TYP    (HW_DDR_CR44.B.P2TYP)
-#endif
+/*! @brief Read current value of the DDR_CR44_P2TYP field. */
+#define BR_DDR_CR44_P2TYP(x) (HW_DDR_CR44(x).B.P2TYP)
 
-//! @brief Format value for bitfield DDR_CR44_P2TYP.
-#define BF_DDR_CR44_P2TYP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR44_P2TYP), uint32_t) & BM_DDR_CR44_P2TYP)
+/*! @brief Format value for bitfield DDR_CR44_P2TYP. */
+#define BF_DDR_CR44_P2TYP(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR44_P2TYP) & BM_DDR_CR44_P2TYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2TYP field to a new value.
-#define BW_DDR_CR44_P2TYP(v) (HW_DDR_CR44_WR((HW_DDR_CR44_RD() & ~BM_DDR_CR44_P2TYP) | BF_DDR_CR44_P2TYP(v)))
-#endif
-//@}
+/*! @brief Set the P2TYP field to a new value. */
+#define BW_DDR_CR44_P2TYP(x, v) (HW_DDR_CR44_WR(x, (HW_DDR_CR44_RD(x) & ~BM_DDR_CR44_P2TYP) | BF_DDR_CR44_P2TYP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR44, field WRRLAT[8] (RW)
@@ -5303,24 +4632,20 @@ typedef union _hw_ddr_cr44
  * - 0 - Free-running
  * - 1 - Limited
  */
-//@{
-#define BP_DDR_CR44_WRRLAT   (8U)          //!< Bit position for DDR_CR44_WRRLAT.
-#define BM_DDR_CR44_WRRLAT   (0x00000100U) //!< Bit mask for DDR_CR44_WRRLAT.
-#define BS_DDR_CR44_WRRLAT   (1U)          //!< Bit field size in bits for DDR_CR44_WRRLAT.
+/*@{*/
+#define BP_DDR_CR44_WRRLAT   (8U)          /*!< Bit position for DDR_CR44_WRRLAT. */
+#define BM_DDR_CR44_WRRLAT   (0x00000100U) /*!< Bit mask for DDR_CR44_WRRLAT. */
+#define BS_DDR_CR44_WRRLAT   (1U)          /*!< Bit field size in bits for DDR_CR44_WRRLAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR44_WRRLAT field.
-#define BR_DDR_CR44_WRRLAT   (BITBAND_ACCESS32(HW_DDR_CR44_ADDR, BP_DDR_CR44_WRRLAT))
-#endif
+/*! @brief Read current value of the DDR_CR44_WRRLAT field. */
+#define BR_DDR_CR44_WRRLAT(x) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR(x), BP_DDR_CR44_WRRLAT))
 
-//! @brief Format value for bitfield DDR_CR44_WRRLAT.
-#define BF_DDR_CR44_WRRLAT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR44_WRRLAT), uint32_t) & BM_DDR_CR44_WRRLAT)
+/*! @brief Format value for bitfield DDR_CR44_WRRLAT. */
+#define BF_DDR_CR44_WRRLAT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR44_WRRLAT) & BM_DDR_CR44_WRRLAT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRRLAT field to a new value.
-#define BW_DDR_CR44_WRRLAT(v) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR, BP_DDR_CR44_WRRLAT) = (v))
-#endif
-//@}
+/*! @brief Set the WRRLAT field to a new value. */
+#define BW_DDR_CR44_WRRLAT(x, v) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR(x), BP_DDR_CR44_WRRLAT) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR44, field WRRSHARE[16] (RW)
@@ -5332,24 +4657,20 @@ typedef union _hw_ddr_cr44
  * - 0 - Port 0 and port 1 are treated independently for arbitration
  * - 1 - Port 0 and port 1 are grouped together for arbitration
  */
-//@{
-#define BP_DDR_CR44_WRRSHARE (16U)         //!< Bit position for DDR_CR44_WRRSHARE.
-#define BM_DDR_CR44_WRRSHARE (0x00010000U) //!< Bit mask for DDR_CR44_WRRSHARE.
-#define BS_DDR_CR44_WRRSHARE (1U)          //!< Bit field size in bits for DDR_CR44_WRRSHARE.
+/*@{*/
+#define BP_DDR_CR44_WRRSHARE (16U)         /*!< Bit position for DDR_CR44_WRRSHARE. */
+#define BM_DDR_CR44_WRRSHARE (0x00010000U) /*!< Bit mask for DDR_CR44_WRRSHARE. */
+#define BS_DDR_CR44_WRRSHARE (1U)          /*!< Bit field size in bits for DDR_CR44_WRRSHARE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR44_WRRSHARE field.
-#define BR_DDR_CR44_WRRSHARE (BITBAND_ACCESS32(HW_DDR_CR44_ADDR, BP_DDR_CR44_WRRSHARE))
-#endif
+/*! @brief Read current value of the DDR_CR44_WRRSHARE field. */
+#define BR_DDR_CR44_WRRSHARE(x) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR(x), BP_DDR_CR44_WRRSHARE))
 
-//! @brief Format value for bitfield DDR_CR44_WRRSHARE.
-#define BF_DDR_CR44_WRRSHARE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR44_WRRSHARE), uint32_t) & BM_DDR_CR44_WRRSHARE)
+/*! @brief Format value for bitfield DDR_CR44_WRRSHARE. */
+#define BF_DDR_CR44_WRRSHARE(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR44_WRRSHARE) & BM_DDR_CR44_WRRSHARE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRRSHARE field to a new value.
-#define BW_DDR_CR44_WRRSHARE(v) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR, BP_DDR_CR44_WRRSHARE) = (v))
-#endif
-//@}
+/*! @brief Set the WRRSHARE field to a new value. */
+#define BW_DDR_CR44_WRRSHARE(x, v) (BITBAND_ACCESS32(HW_DDR_CR44_ADDR(x), BP_DDR_CR44_WRRSHARE) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR44, field WRRERR[27:24] (RO)
@@ -5361,22 +4682,19 @@ typedef union _hw_ddr_cr44
  * relative priority parameters have been programmed with a zero value. Bit[24] The
  * port ordering parameters do not all contain unique values.
  */
-//@{
-#define BP_DDR_CR44_WRRERR   (24U)         //!< Bit position for DDR_CR44_WRRERR.
-#define BM_DDR_CR44_WRRERR   (0x0F000000U) //!< Bit mask for DDR_CR44_WRRERR.
-#define BS_DDR_CR44_WRRERR   (4U)          //!< Bit field size in bits for DDR_CR44_WRRERR.
+/*@{*/
+#define BP_DDR_CR44_WRRERR   (24U)         /*!< Bit position for DDR_CR44_WRRERR. */
+#define BM_DDR_CR44_WRRERR   (0x0F000000U) /*!< Bit mask for DDR_CR44_WRRERR. */
+#define BS_DDR_CR44_WRRERR   (4U)          /*!< Bit field size in bits for DDR_CR44_WRRERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR44_WRRERR field.
-#define BR_DDR_CR44_WRRERR   (HW_DDR_CR44.B.WRRERR)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR44_WRRERR field. */
+#define BR_DDR_CR44_WRRERR(x) (HW_DDR_CR44(x).B.WRRERR)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR45 - DDR Control Register 45
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR45 - DDR Control Register 45
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR45 - DDR Control Register 45 (RW)
  *
@@ -5387,33 +4705,30 @@ typedef union _hw_ddr_cr45
     uint32_t U;
     struct _hw_ddr_cr45_bitfields
     {
-        uint32_t P0PRI0 : 4;           //!< [3:0] Port 0 Priority 0 commands
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t P0PRI1 : 4;           //!< [11:8] Port 0 Priority 1 commands
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t P0PRI2 : 4;           //!< [19:16] Port 0 Priority 2 commands
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t P0PRI3 : 4;           //!< [27:24] Port 0 Priority 3 commands
-        uint32_t RESERVED3 : 4;        //!< [31:28] Reserved
+        uint32_t P0PRI0 : 4;           /*!< [3:0] Port 0 Priority 0 commands */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t P0PRI1 : 4;           /*!< [11:8] Port 0 Priority 1 commands */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t P0PRI2 : 4;           /*!< [19:16] Port 0 Priority 2 commands */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t P0PRI3 : 4;           /*!< [27:24] Port 0 Priority 3 commands */
+        uint32_t RESERVED3 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr45_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR45 register
  */
-//@{
-#define HW_DDR_CR45_ADDR         (REGS_DDR_BASE + 0xB4U)
+/*@{*/
+#define HW_DDR_CR45_ADDR(x)      ((x) + 0xB4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR45              (*(__IO hw_ddr_cr45_t *) HW_DDR_CR45_ADDR)
-#define HW_DDR_CR45_RD()         (HW_DDR_CR45.U)
-#define HW_DDR_CR45_WR(v)        (HW_DDR_CR45.U = (v))
-#define HW_DDR_CR45_SET(v)       (HW_DDR_CR45_WR(HW_DDR_CR45_RD() |  (v)))
-#define HW_DDR_CR45_CLR(v)       (HW_DDR_CR45_WR(HW_DDR_CR45_RD() & ~(v)))
-#define HW_DDR_CR45_TOG(v)       (HW_DDR_CR45_WR(HW_DDR_CR45_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR45(x)           (*(__IO hw_ddr_cr45_t *) HW_DDR_CR45_ADDR(x))
+#define HW_DDR_CR45_RD(x)        (HW_DDR_CR45(x).U)
+#define HW_DDR_CR45_WR(x, v)     (HW_DDR_CR45(x).U = (v))
+#define HW_DDR_CR45_SET(x, v)    (HW_DDR_CR45_WR(x, HW_DDR_CR45_RD(x) |  (v)))
+#define HW_DDR_CR45_CLR(x, v)    (HW_DDR_CR45_WR(x, HW_DDR_CR45_RD(x) & ~(v)))
+#define HW_DDR_CR45_TOG(x, v)    (HW_DDR_CR45_WR(x, HW_DDR_CR45_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR45 bitfields
@@ -5430,24 +4745,20 @@ typedef union _hw_ddr_cr45
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR45_P0PRI0   (0U)          //!< Bit position for DDR_CR45_P0PRI0.
-#define BM_DDR_CR45_P0PRI0   (0x0000000FU) //!< Bit mask for DDR_CR45_P0PRI0.
-#define BS_DDR_CR45_P0PRI0   (4U)          //!< Bit field size in bits for DDR_CR45_P0PRI0.
+/*@{*/
+#define BP_DDR_CR45_P0PRI0   (0U)          /*!< Bit position for DDR_CR45_P0PRI0. */
+#define BM_DDR_CR45_P0PRI0   (0x0000000FU) /*!< Bit mask for DDR_CR45_P0PRI0. */
+#define BS_DDR_CR45_P0PRI0   (4U)          /*!< Bit field size in bits for DDR_CR45_P0PRI0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR45_P0PRI0 field.
-#define BR_DDR_CR45_P0PRI0   (HW_DDR_CR45.B.P0PRI0)
-#endif
+/*! @brief Read current value of the DDR_CR45_P0PRI0 field. */
+#define BR_DDR_CR45_P0PRI0(x) (HW_DDR_CR45(x).B.P0PRI0)
 
-//! @brief Format value for bitfield DDR_CR45_P0PRI0.
-#define BF_DDR_CR45_P0PRI0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR45_P0PRI0), uint32_t) & BM_DDR_CR45_P0PRI0)
+/*! @brief Format value for bitfield DDR_CR45_P0PRI0. */
+#define BF_DDR_CR45_P0PRI0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR45_P0PRI0) & BM_DDR_CR45_P0PRI0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0PRI0 field to a new value.
-#define BW_DDR_CR45_P0PRI0(v) (HW_DDR_CR45_WR((HW_DDR_CR45_RD() & ~BM_DDR_CR45_P0PRI0) | BF_DDR_CR45_P0PRI0(v)))
-#endif
-//@}
+/*! @brief Set the P0PRI0 field to a new value. */
+#define BW_DDR_CR45_P0PRI0(x, v) (HW_DDR_CR45_WR(x, (HW_DDR_CR45_RD(x) & ~BM_DDR_CR45_P0PRI0) | BF_DDR_CR45_P0PRI0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR45, field P0PRI1[11:8] (RW)
@@ -5460,24 +4771,20 @@ typedef union _hw_ddr_cr45
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR45_P0PRI1   (8U)          //!< Bit position for DDR_CR45_P0PRI1.
-#define BM_DDR_CR45_P0PRI1   (0x00000F00U) //!< Bit mask for DDR_CR45_P0PRI1.
-#define BS_DDR_CR45_P0PRI1   (4U)          //!< Bit field size in bits for DDR_CR45_P0PRI1.
+/*@{*/
+#define BP_DDR_CR45_P0PRI1   (8U)          /*!< Bit position for DDR_CR45_P0PRI1. */
+#define BM_DDR_CR45_P0PRI1   (0x00000F00U) /*!< Bit mask for DDR_CR45_P0PRI1. */
+#define BS_DDR_CR45_P0PRI1   (4U)          /*!< Bit field size in bits for DDR_CR45_P0PRI1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR45_P0PRI1 field.
-#define BR_DDR_CR45_P0PRI1   (HW_DDR_CR45.B.P0PRI1)
-#endif
+/*! @brief Read current value of the DDR_CR45_P0PRI1 field. */
+#define BR_DDR_CR45_P0PRI1(x) (HW_DDR_CR45(x).B.P0PRI1)
 
-//! @brief Format value for bitfield DDR_CR45_P0PRI1.
-#define BF_DDR_CR45_P0PRI1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR45_P0PRI1), uint32_t) & BM_DDR_CR45_P0PRI1)
+/*! @brief Format value for bitfield DDR_CR45_P0PRI1. */
+#define BF_DDR_CR45_P0PRI1(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR45_P0PRI1) & BM_DDR_CR45_P0PRI1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0PRI1 field to a new value.
-#define BW_DDR_CR45_P0PRI1(v) (HW_DDR_CR45_WR((HW_DDR_CR45_RD() & ~BM_DDR_CR45_P0PRI1) | BF_DDR_CR45_P0PRI1(v)))
-#endif
-//@}
+/*! @brief Set the P0PRI1 field to a new value. */
+#define BW_DDR_CR45_P0PRI1(x, v) (HW_DDR_CR45_WR(x, (HW_DDR_CR45_RD(x) & ~BM_DDR_CR45_P0PRI1) | BF_DDR_CR45_P0PRI1(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR45, field P0PRI2[19:16] (RW)
@@ -5490,24 +4797,20 @@ typedef union _hw_ddr_cr45
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR45_P0PRI2   (16U)         //!< Bit position for DDR_CR45_P0PRI2.
-#define BM_DDR_CR45_P0PRI2   (0x000F0000U) //!< Bit mask for DDR_CR45_P0PRI2.
-#define BS_DDR_CR45_P0PRI2   (4U)          //!< Bit field size in bits for DDR_CR45_P0PRI2.
+/*@{*/
+#define BP_DDR_CR45_P0PRI2   (16U)         /*!< Bit position for DDR_CR45_P0PRI2. */
+#define BM_DDR_CR45_P0PRI2   (0x000F0000U) /*!< Bit mask for DDR_CR45_P0PRI2. */
+#define BS_DDR_CR45_P0PRI2   (4U)          /*!< Bit field size in bits for DDR_CR45_P0PRI2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR45_P0PRI2 field.
-#define BR_DDR_CR45_P0PRI2   (HW_DDR_CR45.B.P0PRI2)
-#endif
+/*! @brief Read current value of the DDR_CR45_P0PRI2 field. */
+#define BR_DDR_CR45_P0PRI2(x) (HW_DDR_CR45(x).B.P0PRI2)
 
-//! @brief Format value for bitfield DDR_CR45_P0PRI2.
-#define BF_DDR_CR45_P0PRI2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR45_P0PRI2), uint32_t) & BM_DDR_CR45_P0PRI2)
+/*! @brief Format value for bitfield DDR_CR45_P0PRI2. */
+#define BF_DDR_CR45_P0PRI2(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR45_P0PRI2) & BM_DDR_CR45_P0PRI2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0PRI2 field to a new value.
-#define BW_DDR_CR45_P0PRI2(v) (HW_DDR_CR45_WR((HW_DDR_CR45_RD() & ~BM_DDR_CR45_P0PRI2) | BF_DDR_CR45_P0PRI2(v)))
-#endif
-//@}
+/*! @brief Set the P0PRI2 field to a new value. */
+#define BW_DDR_CR45_P0PRI2(x, v) (HW_DDR_CR45_WR(x, (HW_DDR_CR45_RD(x) & ~BM_DDR_CR45_P0PRI2) | BF_DDR_CR45_P0PRI2(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR45, field P0PRI3[27:24] (RW)
@@ -5520,30 +4823,25 @@ typedef union _hw_ddr_cr45
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR45_P0PRI3   (24U)         //!< Bit position for DDR_CR45_P0PRI3.
-#define BM_DDR_CR45_P0PRI3   (0x0F000000U) //!< Bit mask for DDR_CR45_P0PRI3.
-#define BS_DDR_CR45_P0PRI3   (4U)          //!< Bit field size in bits for DDR_CR45_P0PRI3.
+/*@{*/
+#define BP_DDR_CR45_P0PRI3   (24U)         /*!< Bit position for DDR_CR45_P0PRI3. */
+#define BM_DDR_CR45_P0PRI3   (0x0F000000U) /*!< Bit mask for DDR_CR45_P0PRI3. */
+#define BS_DDR_CR45_P0PRI3   (4U)          /*!< Bit field size in bits for DDR_CR45_P0PRI3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR45_P0PRI3 field.
-#define BR_DDR_CR45_P0PRI3   (HW_DDR_CR45.B.P0PRI3)
-#endif
+/*! @brief Read current value of the DDR_CR45_P0PRI3 field. */
+#define BR_DDR_CR45_P0PRI3(x) (HW_DDR_CR45(x).B.P0PRI3)
 
-//! @brief Format value for bitfield DDR_CR45_P0PRI3.
-#define BF_DDR_CR45_P0PRI3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR45_P0PRI3), uint32_t) & BM_DDR_CR45_P0PRI3)
+/*! @brief Format value for bitfield DDR_CR45_P0PRI3. */
+#define BF_DDR_CR45_P0PRI3(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR45_P0PRI3) & BM_DDR_CR45_P0PRI3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0PRI3 field to a new value.
-#define BW_DDR_CR45_P0PRI3(v) (HW_DDR_CR45_WR((HW_DDR_CR45_RD() & ~BM_DDR_CR45_P0PRI3) | BF_DDR_CR45_P0PRI3(v)))
-#endif
-//@}
+/*! @brief Set the P0PRI3 field to a new value. */
+#define BW_DDR_CR45_P0PRI3(x, v) (HW_DDR_CR45_WR(x, (HW_DDR_CR45_RD(x) & ~BM_DDR_CR45_P0PRI3) | BF_DDR_CR45_P0PRI3(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR46 - DDR Control Register 46
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR46 - DDR Control Register 46
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR46 - DDR Control Register 46 (RW)
  *
@@ -5554,31 +4852,28 @@ typedef union _hw_ddr_cr46
     uint32_t U;
     struct _hw_ddr_cr46_bitfields
     {
-        uint32_t P0ORD : 2;            //!< [1:0] Port 0 Order
-        uint32_t RESERVED0 : 6;        //!< [7:2] Reserved
-        uint32_t P0PRIRLX : 10;        //!< [17:8] Port 0 Priority Relax
-        uint32_t RESERVED1 : 6;        //!< [23:18] Reserved
-        uint32_t P1PRI0 : 4;           //!< [27:24] Port 1 Priority 0 commands
-        uint32_t RESERVED2 : 4;        //!< [31:28] Reserved
+        uint32_t P0ORD : 2;            /*!< [1:0] Port 0 Order */
+        uint32_t RESERVED0 : 6;        /*!< [7:2] Reserved */
+        uint32_t P0PRIRLX : 10;        /*!< [17:8] Port 0 Priority Relax */
+        uint32_t RESERVED1 : 6;        /*!< [23:18] Reserved */
+        uint32_t P1PRI0 : 4;           /*!< [27:24] Port 1 Priority 0 commands */
+        uint32_t RESERVED2 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr46_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR46 register
  */
-//@{
-#define HW_DDR_CR46_ADDR         (REGS_DDR_BASE + 0xB8U)
+/*@{*/
+#define HW_DDR_CR46_ADDR(x)      ((x) + 0xB8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR46              (*(__IO hw_ddr_cr46_t *) HW_DDR_CR46_ADDR)
-#define HW_DDR_CR46_RD()         (HW_DDR_CR46.U)
-#define HW_DDR_CR46_WR(v)        (HW_DDR_CR46.U = (v))
-#define HW_DDR_CR46_SET(v)       (HW_DDR_CR46_WR(HW_DDR_CR46_RD() |  (v)))
-#define HW_DDR_CR46_CLR(v)       (HW_DDR_CR46_WR(HW_DDR_CR46_RD() & ~(v)))
-#define HW_DDR_CR46_TOG(v)       (HW_DDR_CR46_WR(HW_DDR_CR46_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR46(x)           (*(__IO hw_ddr_cr46_t *) HW_DDR_CR46_ADDR(x))
+#define HW_DDR_CR46_RD(x)        (HW_DDR_CR46(x).U)
+#define HW_DDR_CR46_WR(x, v)     (HW_DDR_CR46(x).U = (v))
+#define HW_DDR_CR46_SET(x, v)    (HW_DDR_CR46_WR(x, HW_DDR_CR46_RD(x) |  (v)))
+#define HW_DDR_CR46_CLR(x, v)    (HW_DDR_CR46_WR(x, HW_DDR_CR46_RD(x) & ~(v)))
+#define HW_DDR_CR46_TOG(x, v)    (HW_DDR_CR46_WR(x, HW_DDR_CR46_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR46 bitfields
@@ -5601,48 +4896,40 @@ typedef union _hw_ddr_cr46
  * - 10 - ------
  * - 11 - Lowest listing in the scan order
  */
-//@{
-#define BP_DDR_CR46_P0ORD    (0U)          //!< Bit position for DDR_CR46_P0ORD.
-#define BM_DDR_CR46_P0ORD    (0x00000003U) //!< Bit mask for DDR_CR46_P0ORD.
-#define BS_DDR_CR46_P0ORD    (2U)          //!< Bit field size in bits for DDR_CR46_P0ORD.
+/*@{*/
+#define BP_DDR_CR46_P0ORD    (0U)          /*!< Bit position for DDR_CR46_P0ORD. */
+#define BM_DDR_CR46_P0ORD    (0x00000003U) /*!< Bit mask for DDR_CR46_P0ORD. */
+#define BS_DDR_CR46_P0ORD    (2U)          /*!< Bit field size in bits for DDR_CR46_P0ORD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR46_P0ORD field.
-#define BR_DDR_CR46_P0ORD    (HW_DDR_CR46.B.P0ORD)
-#endif
+/*! @brief Read current value of the DDR_CR46_P0ORD field. */
+#define BR_DDR_CR46_P0ORD(x) (HW_DDR_CR46(x).B.P0ORD)
 
-//! @brief Format value for bitfield DDR_CR46_P0ORD.
-#define BF_DDR_CR46_P0ORD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR46_P0ORD), uint32_t) & BM_DDR_CR46_P0ORD)
+/*! @brief Format value for bitfield DDR_CR46_P0ORD. */
+#define BF_DDR_CR46_P0ORD(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR46_P0ORD) & BM_DDR_CR46_P0ORD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0ORD field to a new value.
-#define BW_DDR_CR46_P0ORD(v) (HW_DDR_CR46_WR((HW_DDR_CR46_RD() & ~BM_DDR_CR46_P0ORD) | BF_DDR_CR46_P0ORD(v)))
-#endif
-//@}
+/*! @brief Set the P0ORD field to a new value. */
+#define BW_DDR_CR46_P0ORD(x, v) (HW_DDR_CR46_WR(x, (HW_DDR_CR46_RD(x) & ~BM_DDR_CR46_P0ORD) | BF_DDR_CR46_P0ORD(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR46, field P0PRIRLX[17:8] (RW)
  *
  * Counter value to trigger prioity relax on port 0.
  */
-//@{
-#define BP_DDR_CR46_P0PRIRLX (8U)          //!< Bit position for DDR_CR46_P0PRIRLX.
-#define BM_DDR_CR46_P0PRIRLX (0x0003FF00U) //!< Bit mask for DDR_CR46_P0PRIRLX.
-#define BS_DDR_CR46_P0PRIRLX (10U)         //!< Bit field size in bits for DDR_CR46_P0PRIRLX.
+/*@{*/
+#define BP_DDR_CR46_P0PRIRLX (8U)          /*!< Bit position for DDR_CR46_P0PRIRLX. */
+#define BM_DDR_CR46_P0PRIRLX (0x0003FF00U) /*!< Bit mask for DDR_CR46_P0PRIRLX. */
+#define BS_DDR_CR46_P0PRIRLX (10U)         /*!< Bit field size in bits for DDR_CR46_P0PRIRLX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR46_P0PRIRLX field.
-#define BR_DDR_CR46_P0PRIRLX (HW_DDR_CR46.B.P0PRIRLX)
-#endif
+/*! @brief Read current value of the DDR_CR46_P0PRIRLX field. */
+#define BR_DDR_CR46_P0PRIRLX(x) (HW_DDR_CR46(x).B.P0PRIRLX)
 
-//! @brief Format value for bitfield DDR_CR46_P0PRIRLX.
-#define BF_DDR_CR46_P0PRIRLX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR46_P0PRIRLX), uint32_t) & BM_DDR_CR46_P0PRIRLX)
+/*! @brief Format value for bitfield DDR_CR46_P0PRIRLX. */
+#define BF_DDR_CR46_P0PRIRLX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR46_P0PRIRLX) & BM_DDR_CR46_P0PRIRLX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P0PRIRLX field to a new value.
-#define BW_DDR_CR46_P0PRIRLX(v) (HW_DDR_CR46_WR((HW_DDR_CR46_RD() & ~BM_DDR_CR46_P0PRIRLX) | BF_DDR_CR46_P0PRIRLX(v)))
-#endif
-//@}
+/*! @brief Set the P0PRIRLX field to a new value. */
+#define BW_DDR_CR46_P0PRIRLX(x, v) (HW_DDR_CR46_WR(x, (HW_DDR_CR46_RD(x) & ~BM_DDR_CR46_P0PRIRLX) | BF_DDR_CR46_P0PRIRLX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR46, field P1PRI0[27:24] (RW)
@@ -5655,30 +4942,25 @@ typedef union _hw_ddr_cr46
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR46_P1PRI0   (24U)         //!< Bit position for DDR_CR46_P1PRI0.
-#define BM_DDR_CR46_P1PRI0   (0x0F000000U) //!< Bit mask for DDR_CR46_P1PRI0.
-#define BS_DDR_CR46_P1PRI0   (4U)          //!< Bit field size in bits for DDR_CR46_P1PRI0.
+/*@{*/
+#define BP_DDR_CR46_P1PRI0   (24U)         /*!< Bit position for DDR_CR46_P1PRI0. */
+#define BM_DDR_CR46_P1PRI0   (0x0F000000U) /*!< Bit mask for DDR_CR46_P1PRI0. */
+#define BS_DDR_CR46_P1PRI0   (4U)          /*!< Bit field size in bits for DDR_CR46_P1PRI0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR46_P1PRI0 field.
-#define BR_DDR_CR46_P1PRI0   (HW_DDR_CR46.B.P1PRI0)
-#endif
+/*! @brief Read current value of the DDR_CR46_P1PRI0 field. */
+#define BR_DDR_CR46_P1PRI0(x) (HW_DDR_CR46(x).B.P1PRI0)
 
-//! @brief Format value for bitfield DDR_CR46_P1PRI0.
-#define BF_DDR_CR46_P1PRI0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR46_P1PRI0), uint32_t) & BM_DDR_CR46_P1PRI0)
+/*! @brief Format value for bitfield DDR_CR46_P1PRI0. */
+#define BF_DDR_CR46_P1PRI0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR46_P1PRI0) & BM_DDR_CR46_P1PRI0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1PRI0 field to a new value.
-#define BW_DDR_CR46_P1PRI0(v) (HW_DDR_CR46_WR((HW_DDR_CR46_RD() & ~BM_DDR_CR46_P1PRI0) | BF_DDR_CR46_P1PRI0(v)))
-#endif
-//@}
+/*! @brief Set the P1PRI0 field to a new value. */
+#define BW_DDR_CR46_P1PRI0(x, v) (HW_DDR_CR46_WR(x, (HW_DDR_CR46_RD(x) & ~BM_DDR_CR46_P1PRI0) | BF_DDR_CR46_P1PRI0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR47 - DDR Control Register 47
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR47 - DDR Control Register 47
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR47 - DDR Control Register 47 (RW)
  *
@@ -5689,33 +4971,30 @@ typedef union _hw_ddr_cr47
     uint32_t U;
     struct _hw_ddr_cr47_bitfields
     {
-        uint32_t P1PRI1 : 4;           //!< [3:0] Port 1 Priority 1 commands
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t P1PRI2 : 4;           //!< [11:8] Port 1 Priority 2 commands
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t P1PRI3 : 4;           //!< [19:16] Port 1 Priority 3 commands
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t P1ORD : 2;            //!< [25:24] Port 1 Order
-        uint32_t RESERVED3 : 6;        //!< [31:26] Reserved
+        uint32_t P1PRI1 : 4;           /*!< [3:0] Port 1 Priority 1 commands */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t P1PRI2 : 4;           /*!< [11:8] Port 1 Priority 2 commands */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t P1PRI3 : 4;           /*!< [19:16] Port 1 Priority 3 commands */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t P1ORD : 2;            /*!< [25:24] Port 1 Order */
+        uint32_t RESERVED3 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_cr47_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR47 register
  */
-//@{
-#define HW_DDR_CR47_ADDR         (REGS_DDR_BASE + 0xBCU)
+/*@{*/
+#define HW_DDR_CR47_ADDR(x)      ((x) + 0xBCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR47              (*(__IO hw_ddr_cr47_t *) HW_DDR_CR47_ADDR)
-#define HW_DDR_CR47_RD()         (HW_DDR_CR47.U)
-#define HW_DDR_CR47_WR(v)        (HW_DDR_CR47.U = (v))
-#define HW_DDR_CR47_SET(v)       (HW_DDR_CR47_WR(HW_DDR_CR47_RD() |  (v)))
-#define HW_DDR_CR47_CLR(v)       (HW_DDR_CR47_WR(HW_DDR_CR47_RD() & ~(v)))
-#define HW_DDR_CR47_TOG(v)       (HW_DDR_CR47_WR(HW_DDR_CR47_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR47(x)           (*(__IO hw_ddr_cr47_t *) HW_DDR_CR47_ADDR(x))
+#define HW_DDR_CR47_RD(x)        (HW_DDR_CR47(x).U)
+#define HW_DDR_CR47_WR(x, v)     (HW_DDR_CR47(x).U = (v))
+#define HW_DDR_CR47_SET(x, v)    (HW_DDR_CR47_WR(x, HW_DDR_CR47_RD(x) |  (v)))
+#define HW_DDR_CR47_CLR(x, v)    (HW_DDR_CR47_WR(x, HW_DDR_CR47_RD(x) & ~(v)))
+#define HW_DDR_CR47_TOG(x, v)    (HW_DDR_CR47_WR(x, HW_DDR_CR47_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR47 bitfields
@@ -5732,24 +5011,20 @@ typedef union _hw_ddr_cr47
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR47_P1PRI1   (0U)          //!< Bit position for DDR_CR47_P1PRI1.
-#define BM_DDR_CR47_P1PRI1   (0x0000000FU) //!< Bit mask for DDR_CR47_P1PRI1.
-#define BS_DDR_CR47_P1PRI1   (4U)          //!< Bit field size in bits for DDR_CR47_P1PRI1.
+/*@{*/
+#define BP_DDR_CR47_P1PRI1   (0U)          /*!< Bit position for DDR_CR47_P1PRI1. */
+#define BM_DDR_CR47_P1PRI1   (0x0000000FU) /*!< Bit mask for DDR_CR47_P1PRI1. */
+#define BS_DDR_CR47_P1PRI1   (4U)          /*!< Bit field size in bits for DDR_CR47_P1PRI1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR47_P1PRI1 field.
-#define BR_DDR_CR47_P1PRI1   (HW_DDR_CR47.B.P1PRI1)
-#endif
+/*! @brief Read current value of the DDR_CR47_P1PRI1 field. */
+#define BR_DDR_CR47_P1PRI1(x) (HW_DDR_CR47(x).B.P1PRI1)
 
-//! @brief Format value for bitfield DDR_CR47_P1PRI1.
-#define BF_DDR_CR47_P1PRI1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR47_P1PRI1), uint32_t) & BM_DDR_CR47_P1PRI1)
+/*! @brief Format value for bitfield DDR_CR47_P1PRI1. */
+#define BF_DDR_CR47_P1PRI1(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR47_P1PRI1) & BM_DDR_CR47_P1PRI1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1PRI1 field to a new value.
-#define BW_DDR_CR47_P1PRI1(v) (HW_DDR_CR47_WR((HW_DDR_CR47_RD() & ~BM_DDR_CR47_P1PRI1) | BF_DDR_CR47_P1PRI1(v)))
-#endif
-//@}
+/*! @brief Set the P1PRI1 field to a new value. */
+#define BW_DDR_CR47_P1PRI1(x, v) (HW_DDR_CR47_WR(x, (HW_DDR_CR47_RD(x) & ~BM_DDR_CR47_P1PRI1) | BF_DDR_CR47_P1PRI1(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR47, field P1PRI2[11:8] (RW)
@@ -5762,24 +5037,20 @@ typedef union _hw_ddr_cr47
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR47_P1PRI2   (8U)          //!< Bit position for DDR_CR47_P1PRI2.
-#define BM_DDR_CR47_P1PRI2   (0x00000F00U) //!< Bit mask for DDR_CR47_P1PRI2.
-#define BS_DDR_CR47_P1PRI2   (4U)          //!< Bit field size in bits for DDR_CR47_P1PRI2.
+/*@{*/
+#define BP_DDR_CR47_P1PRI2   (8U)          /*!< Bit position for DDR_CR47_P1PRI2. */
+#define BM_DDR_CR47_P1PRI2   (0x00000F00U) /*!< Bit mask for DDR_CR47_P1PRI2. */
+#define BS_DDR_CR47_P1PRI2   (4U)          /*!< Bit field size in bits for DDR_CR47_P1PRI2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR47_P1PRI2 field.
-#define BR_DDR_CR47_P1PRI2   (HW_DDR_CR47.B.P1PRI2)
-#endif
+/*! @brief Read current value of the DDR_CR47_P1PRI2 field. */
+#define BR_DDR_CR47_P1PRI2(x) (HW_DDR_CR47(x).B.P1PRI2)
 
-//! @brief Format value for bitfield DDR_CR47_P1PRI2.
-#define BF_DDR_CR47_P1PRI2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR47_P1PRI2), uint32_t) & BM_DDR_CR47_P1PRI2)
+/*! @brief Format value for bitfield DDR_CR47_P1PRI2. */
+#define BF_DDR_CR47_P1PRI2(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR47_P1PRI2) & BM_DDR_CR47_P1PRI2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1PRI2 field to a new value.
-#define BW_DDR_CR47_P1PRI2(v) (HW_DDR_CR47_WR((HW_DDR_CR47_RD() & ~BM_DDR_CR47_P1PRI2) | BF_DDR_CR47_P1PRI2(v)))
-#endif
-//@}
+/*! @brief Set the P1PRI2 field to a new value. */
+#define BW_DDR_CR47_P1PRI2(x, v) (HW_DDR_CR47_WR(x, (HW_DDR_CR47_RD(x) & ~BM_DDR_CR47_P1PRI2) | BF_DDR_CR47_P1PRI2(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR47, field P1PRI3[19:16] (RW)
@@ -5792,24 +5063,20 @@ typedef union _hw_ddr_cr47
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR47_P1PRI3   (16U)         //!< Bit position for DDR_CR47_P1PRI3.
-#define BM_DDR_CR47_P1PRI3   (0x000F0000U) //!< Bit mask for DDR_CR47_P1PRI3.
-#define BS_DDR_CR47_P1PRI3   (4U)          //!< Bit field size in bits for DDR_CR47_P1PRI3.
+/*@{*/
+#define BP_DDR_CR47_P1PRI3   (16U)         /*!< Bit position for DDR_CR47_P1PRI3. */
+#define BM_DDR_CR47_P1PRI3   (0x000F0000U) /*!< Bit mask for DDR_CR47_P1PRI3. */
+#define BS_DDR_CR47_P1PRI3   (4U)          /*!< Bit field size in bits for DDR_CR47_P1PRI3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR47_P1PRI3 field.
-#define BR_DDR_CR47_P1PRI3   (HW_DDR_CR47.B.P1PRI3)
-#endif
+/*! @brief Read current value of the DDR_CR47_P1PRI3 field. */
+#define BR_DDR_CR47_P1PRI3(x) (HW_DDR_CR47(x).B.P1PRI3)
 
-//! @brief Format value for bitfield DDR_CR47_P1PRI3.
-#define BF_DDR_CR47_P1PRI3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR47_P1PRI3), uint32_t) & BM_DDR_CR47_P1PRI3)
+/*! @brief Format value for bitfield DDR_CR47_P1PRI3. */
+#define BF_DDR_CR47_P1PRI3(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR47_P1PRI3) & BM_DDR_CR47_P1PRI3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1PRI3 field to a new value.
-#define BW_DDR_CR47_P1PRI3(v) (HW_DDR_CR47_WR((HW_DDR_CR47_RD() & ~BM_DDR_CR47_P1PRI3) | BF_DDR_CR47_P1PRI3(v)))
-#endif
-//@}
+/*! @brief Set the P1PRI3 field to a new value. */
+#define BW_DDR_CR47_P1PRI3(x, v) (HW_DDR_CR47_WR(x, (HW_DDR_CR47_RD(x) & ~BM_DDR_CR47_P1PRI3) | BF_DDR_CR47_P1PRI3(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR47, field P1ORD[25:24] (RW)
@@ -5828,30 +5095,25 @@ typedef union _hw_ddr_cr47
  * - 10 -
  * - 11 - Lowest listing in the scan order
  */
-//@{
-#define BP_DDR_CR47_P1ORD    (24U)         //!< Bit position for DDR_CR47_P1ORD.
-#define BM_DDR_CR47_P1ORD    (0x03000000U) //!< Bit mask for DDR_CR47_P1ORD.
-#define BS_DDR_CR47_P1ORD    (2U)          //!< Bit field size in bits for DDR_CR47_P1ORD.
+/*@{*/
+#define BP_DDR_CR47_P1ORD    (24U)         /*!< Bit position for DDR_CR47_P1ORD. */
+#define BM_DDR_CR47_P1ORD    (0x03000000U) /*!< Bit mask for DDR_CR47_P1ORD. */
+#define BS_DDR_CR47_P1ORD    (2U)          /*!< Bit field size in bits for DDR_CR47_P1ORD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR47_P1ORD field.
-#define BR_DDR_CR47_P1ORD    (HW_DDR_CR47.B.P1ORD)
-#endif
+/*! @brief Read current value of the DDR_CR47_P1ORD field. */
+#define BR_DDR_CR47_P1ORD(x) (HW_DDR_CR47(x).B.P1ORD)
 
-//! @brief Format value for bitfield DDR_CR47_P1ORD.
-#define BF_DDR_CR47_P1ORD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR47_P1ORD), uint32_t) & BM_DDR_CR47_P1ORD)
+/*! @brief Format value for bitfield DDR_CR47_P1ORD. */
+#define BF_DDR_CR47_P1ORD(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR47_P1ORD) & BM_DDR_CR47_P1ORD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1ORD field to a new value.
-#define BW_DDR_CR47_P1ORD(v) (HW_DDR_CR47_WR((HW_DDR_CR47_RD() & ~BM_DDR_CR47_P1ORD) | BF_DDR_CR47_P1ORD(v)))
-#endif
-//@}
+/*! @brief Set the P1ORD field to a new value. */
+#define BW_DDR_CR47_P1ORD(x, v) (HW_DDR_CR47_WR(x, (HW_DDR_CR47_RD(x) & ~BM_DDR_CR47_P1ORD) | BF_DDR_CR47_P1ORD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR48 - DDR Control Register 48
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR48 - DDR Control Register 48
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR48 - DDR Control Register 48 (RW)
  *
@@ -5862,31 +5124,28 @@ typedef union _hw_ddr_cr48
     uint32_t U;
     struct _hw_ddr_cr48_bitfields
     {
-        uint32_t P1PRIRLX : 10;        //!< [9:0] Port 1 Priority Relax
-        uint32_t RESERVED0 : 6;        //!< [15:10] Reserved
-        uint32_t P2PRI0 : 4;           //!< [19:16] Port 2 Priority 0 commands
-        uint32_t RESERVED1 : 4;        //!< [23:20] Reserved
-        uint32_t P2PRI1 : 4;           //!< [27:24] Port 2 Priority 1 commands
-        uint32_t RESERVED2 : 4;        //!< [31:28] Reserved
+        uint32_t P1PRIRLX : 10;        /*!< [9:0] Port 1 Priority Relax */
+        uint32_t RESERVED0 : 6;        /*!< [15:10] Reserved */
+        uint32_t P2PRI0 : 4;           /*!< [19:16] Port 2 Priority 0 commands */
+        uint32_t RESERVED1 : 4;        /*!< [23:20] Reserved */
+        uint32_t P2PRI1 : 4;           /*!< [27:24] Port 2 Priority 1 commands */
+        uint32_t RESERVED2 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr48_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR48 register
  */
-//@{
-#define HW_DDR_CR48_ADDR         (REGS_DDR_BASE + 0xC0U)
+/*@{*/
+#define HW_DDR_CR48_ADDR(x)      ((x) + 0xC0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR48              (*(__IO hw_ddr_cr48_t *) HW_DDR_CR48_ADDR)
-#define HW_DDR_CR48_RD()         (HW_DDR_CR48.U)
-#define HW_DDR_CR48_WR(v)        (HW_DDR_CR48.U = (v))
-#define HW_DDR_CR48_SET(v)       (HW_DDR_CR48_WR(HW_DDR_CR48_RD() |  (v)))
-#define HW_DDR_CR48_CLR(v)       (HW_DDR_CR48_WR(HW_DDR_CR48_RD() & ~(v)))
-#define HW_DDR_CR48_TOG(v)       (HW_DDR_CR48_WR(HW_DDR_CR48_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR48(x)           (*(__IO hw_ddr_cr48_t *) HW_DDR_CR48_ADDR(x))
+#define HW_DDR_CR48_RD(x)        (HW_DDR_CR48(x).U)
+#define HW_DDR_CR48_WR(x, v)     (HW_DDR_CR48(x).U = (v))
+#define HW_DDR_CR48_SET(x, v)    (HW_DDR_CR48_WR(x, HW_DDR_CR48_RD(x) |  (v)))
+#define HW_DDR_CR48_CLR(x, v)    (HW_DDR_CR48_WR(x, HW_DDR_CR48_RD(x) & ~(v)))
+#define HW_DDR_CR48_TOG(x, v)    (HW_DDR_CR48_WR(x, HW_DDR_CR48_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR48 bitfields
@@ -5897,24 +5156,20 @@ typedef union _hw_ddr_cr48
  *
  * Counter value to trigger priority relax on port 1.
  */
-//@{
-#define BP_DDR_CR48_P1PRIRLX (0U)          //!< Bit position for DDR_CR48_P1PRIRLX.
-#define BM_DDR_CR48_P1PRIRLX (0x000003FFU) //!< Bit mask for DDR_CR48_P1PRIRLX.
-#define BS_DDR_CR48_P1PRIRLX (10U)         //!< Bit field size in bits for DDR_CR48_P1PRIRLX.
+/*@{*/
+#define BP_DDR_CR48_P1PRIRLX (0U)          /*!< Bit position for DDR_CR48_P1PRIRLX. */
+#define BM_DDR_CR48_P1PRIRLX (0x000003FFU) /*!< Bit mask for DDR_CR48_P1PRIRLX. */
+#define BS_DDR_CR48_P1PRIRLX (10U)         /*!< Bit field size in bits for DDR_CR48_P1PRIRLX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR48_P1PRIRLX field.
-#define BR_DDR_CR48_P1PRIRLX (HW_DDR_CR48.B.P1PRIRLX)
-#endif
+/*! @brief Read current value of the DDR_CR48_P1PRIRLX field. */
+#define BR_DDR_CR48_P1PRIRLX(x) (HW_DDR_CR48(x).B.P1PRIRLX)
 
-//! @brief Format value for bitfield DDR_CR48_P1PRIRLX.
-#define BF_DDR_CR48_P1PRIRLX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR48_P1PRIRLX), uint32_t) & BM_DDR_CR48_P1PRIRLX)
+/*! @brief Format value for bitfield DDR_CR48_P1PRIRLX. */
+#define BF_DDR_CR48_P1PRIRLX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR48_P1PRIRLX) & BM_DDR_CR48_P1PRIRLX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P1PRIRLX field to a new value.
-#define BW_DDR_CR48_P1PRIRLX(v) (HW_DDR_CR48_WR((HW_DDR_CR48_RD() & ~BM_DDR_CR48_P1PRIRLX) | BF_DDR_CR48_P1PRIRLX(v)))
-#endif
-//@}
+/*! @brief Set the P1PRIRLX field to a new value. */
+#define BW_DDR_CR48_P1PRIRLX(x, v) (HW_DDR_CR48_WR(x, (HW_DDR_CR48_RD(x) & ~BM_DDR_CR48_P1PRIRLX) | BF_DDR_CR48_P1PRIRLX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR48, field P2PRI0[19:16] (RW)
@@ -5927,24 +5182,20 @@ typedef union _hw_ddr_cr48
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR48_P2PRI0   (16U)         //!< Bit position for DDR_CR48_P2PRI0.
-#define BM_DDR_CR48_P2PRI0   (0x000F0000U) //!< Bit mask for DDR_CR48_P2PRI0.
-#define BS_DDR_CR48_P2PRI0   (4U)          //!< Bit field size in bits for DDR_CR48_P2PRI0.
+/*@{*/
+#define BP_DDR_CR48_P2PRI0   (16U)         /*!< Bit position for DDR_CR48_P2PRI0. */
+#define BM_DDR_CR48_P2PRI0   (0x000F0000U) /*!< Bit mask for DDR_CR48_P2PRI0. */
+#define BS_DDR_CR48_P2PRI0   (4U)          /*!< Bit field size in bits for DDR_CR48_P2PRI0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR48_P2PRI0 field.
-#define BR_DDR_CR48_P2PRI0   (HW_DDR_CR48.B.P2PRI0)
-#endif
+/*! @brief Read current value of the DDR_CR48_P2PRI0 field. */
+#define BR_DDR_CR48_P2PRI0(x) (HW_DDR_CR48(x).B.P2PRI0)
 
-//! @brief Format value for bitfield DDR_CR48_P2PRI0.
-#define BF_DDR_CR48_P2PRI0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR48_P2PRI0), uint32_t) & BM_DDR_CR48_P2PRI0)
+/*! @brief Format value for bitfield DDR_CR48_P2PRI0. */
+#define BF_DDR_CR48_P2PRI0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR48_P2PRI0) & BM_DDR_CR48_P2PRI0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2PRI0 field to a new value.
-#define BW_DDR_CR48_P2PRI0(v) (HW_DDR_CR48_WR((HW_DDR_CR48_RD() & ~BM_DDR_CR48_P2PRI0) | BF_DDR_CR48_P2PRI0(v)))
-#endif
-//@}
+/*! @brief Set the P2PRI0 field to a new value. */
+#define BW_DDR_CR48_P2PRI0(x, v) (HW_DDR_CR48_WR(x, (HW_DDR_CR48_RD(x) & ~BM_DDR_CR48_P2PRI0) | BF_DDR_CR48_P2PRI0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR48, field P2PRI1[27:24] (RW)
@@ -5957,30 +5208,25 @@ typedef union _hw_ddr_cr48
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR48_P2PRI1   (24U)         //!< Bit position for DDR_CR48_P2PRI1.
-#define BM_DDR_CR48_P2PRI1   (0x0F000000U) //!< Bit mask for DDR_CR48_P2PRI1.
-#define BS_DDR_CR48_P2PRI1   (4U)          //!< Bit field size in bits for DDR_CR48_P2PRI1.
+/*@{*/
+#define BP_DDR_CR48_P2PRI1   (24U)         /*!< Bit position for DDR_CR48_P2PRI1. */
+#define BM_DDR_CR48_P2PRI1   (0x0F000000U) /*!< Bit mask for DDR_CR48_P2PRI1. */
+#define BS_DDR_CR48_P2PRI1   (4U)          /*!< Bit field size in bits for DDR_CR48_P2PRI1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR48_P2PRI1 field.
-#define BR_DDR_CR48_P2PRI1   (HW_DDR_CR48.B.P2PRI1)
-#endif
+/*! @brief Read current value of the DDR_CR48_P2PRI1 field. */
+#define BR_DDR_CR48_P2PRI1(x) (HW_DDR_CR48(x).B.P2PRI1)
 
-//! @brief Format value for bitfield DDR_CR48_P2PRI1.
-#define BF_DDR_CR48_P2PRI1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR48_P2PRI1), uint32_t) & BM_DDR_CR48_P2PRI1)
+/*! @brief Format value for bitfield DDR_CR48_P2PRI1. */
+#define BF_DDR_CR48_P2PRI1(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR48_P2PRI1) & BM_DDR_CR48_P2PRI1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2PRI1 field to a new value.
-#define BW_DDR_CR48_P2PRI1(v) (HW_DDR_CR48_WR((HW_DDR_CR48_RD() & ~BM_DDR_CR48_P2PRI1) | BF_DDR_CR48_P2PRI1(v)))
-#endif
-//@}
+/*! @brief Set the P2PRI1 field to a new value. */
+#define BW_DDR_CR48_P2PRI1(x, v) (HW_DDR_CR48_WR(x, (HW_DDR_CR48_RD(x) & ~BM_DDR_CR48_P2PRI1) | BF_DDR_CR48_P2PRI1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR49 - DDR Control Register 49
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR49 - DDR Control Register 49
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR49 - DDR Control Register 49 (RW)
  *
@@ -5991,31 +5237,28 @@ typedef union _hw_ddr_cr49
     uint32_t U;
     struct _hw_ddr_cr49_bitfields
     {
-        uint32_t P2PRI2 : 4;           //!< [3:0] Port 2 Priority 2 commands
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t P2PRI3 : 4;           //!< [11:8] Port 2 Priority 3 commands
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t P2ORD : 2;            //!< [17:16] Port 2 Order
-        uint32_t RESERVED2 : 14;       //!< [31:18] Reserved
+        uint32_t P2PRI2 : 4;           /*!< [3:0] Port 2 Priority 2 commands */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t P2PRI3 : 4;           /*!< [11:8] Port 2 Priority 3 commands */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t P2ORD : 2;            /*!< [17:16] Port 2 Order */
+        uint32_t RESERVED2 : 14;       /*!< [31:18] Reserved */
     } B;
 } hw_ddr_cr49_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR49 register
  */
-//@{
-#define HW_DDR_CR49_ADDR         (REGS_DDR_BASE + 0xC4U)
+/*@{*/
+#define HW_DDR_CR49_ADDR(x)      ((x) + 0xC4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR49              (*(__IO hw_ddr_cr49_t *) HW_DDR_CR49_ADDR)
-#define HW_DDR_CR49_RD()         (HW_DDR_CR49.U)
-#define HW_DDR_CR49_WR(v)        (HW_DDR_CR49.U = (v))
-#define HW_DDR_CR49_SET(v)       (HW_DDR_CR49_WR(HW_DDR_CR49_RD() |  (v)))
-#define HW_DDR_CR49_CLR(v)       (HW_DDR_CR49_WR(HW_DDR_CR49_RD() & ~(v)))
-#define HW_DDR_CR49_TOG(v)       (HW_DDR_CR49_WR(HW_DDR_CR49_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR49(x)           (*(__IO hw_ddr_cr49_t *) HW_DDR_CR49_ADDR(x))
+#define HW_DDR_CR49_RD(x)        (HW_DDR_CR49(x).U)
+#define HW_DDR_CR49_WR(x, v)     (HW_DDR_CR49(x).U = (v))
+#define HW_DDR_CR49_SET(x, v)    (HW_DDR_CR49_WR(x, HW_DDR_CR49_RD(x) |  (v)))
+#define HW_DDR_CR49_CLR(x, v)    (HW_DDR_CR49_WR(x, HW_DDR_CR49_RD(x) & ~(v)))
+#define HW_DDR_CR49_TOG(x, v)    (HW_DDR_CR49_WR(x, HW_DDR_CR49_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR49 bitfields
@@ -6032,24 +5275,20 @@ typedef union _hw_ddr_cr49
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR49_P2PRI2   (0U)          //!< Bit position for DDR_CR49_P2PRI2.
-#define BM_DDR_CR49_P2PRI2   (0x0000000FU) //!< Bit mask for DDR_CR49_P2PRI2.
-#define BS_DDR_CR49_P2PRI2   (4U)          //!< Bit field size in bits for DDR_CR49_P2PRI2.
+/*@{*/
+#define BP_DDR_CR49_P2PRI2   (0U)          /*!< Bit position for DDR_CR49_P2PRI2. */
+#define BM_DDR_CR49_P2PRI2   (0x0000000FU) /*!< Bit mask for DDR_CR49_P2PRI2. */
+#define BS_DDR_CR49_P2PRI2   (4U)          /*!< Bit field size in bits for DDR_CR49_P2PRI2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR49_P2PRI2 field.
-#define BR_DDR_CR49_P2PRI2   (HW_DDR_CR49.B.P2PRI2)
-#endif
+/*! @brief Read current value of the DDR_CR49_P2PRI2 field. */
+#define BR_DDR_CR49_P2PRI2(x) (HW_DDR_CR49(x).B.P2PRI2)
 
-//! @brief Format value for bitfield DDR_CR49_P2PRI2.
-#define BF_DDR_CR49_P2PRI2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR49_P2PRI2), uint32_t) & BM_DDR_CR49_P2PRI2)
+/*! @brief Format value for bitfield DDR_CR49_P2PRI2. */
+#define BF_DDR_CR49_P2PRI2(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR49_P2PRI2) & BM_DDR_CR49_P2PRI2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2PRI2 field to a new value.
-#define BW_DDR_CR49_P2PRI2(v) (HW_DDR_CR49_WR((HW_DDR_CR49_RD() & ~BM_DDR_CR49_P2PRI2) | BF_DDR_CR49_P2PRI2(v)))
-#endif
-//@}
+/*! @brief Set the P2PRI2 field to a new value. */
+#define BW_DDR_CR49_P2PRI2(x, v) (HW_DDR_CR49_WR(x, (HW_DDR_CR49_RD(x) & ~BM_DDR_CR49_P2PRI2) | BF_DDR_CR49_P2PRI2(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR49, field P2PRI3[11:8] (RW)
@@ -6062,24 +5301,20 @@ typedef union _hw_ddr_cr49
  * - 1110 - -----
  * - 1111 - Highest
  */
-//@{
-#define BP_DDR_CR49_P2PRI3   (8U)          //!< Bit position for DDR_CR49_P2PRI3.
-#define BM_DDR_CR49_P2PRI3   (0x00000F00U) //!< Bit mask for DDR_CR49_P2PRI3.
-#define BS_DDR_CR49_P2PRI3   (4U)          //!< Bit field size in bits for DDR_CR49_P2PRI3.
+/*@{*/
+#define BP_DDR_CR49_P2PRI3   (8U)          /*!< Bit position for DDR_CR49_P2PRI3. */
+#define BM_DDR_CR49_P2PRI3   (0x00000F00U) /*!< Bit mask for DDR_CR49_P2PRI3. */
+#define BS_DDR_CR49_P2PRI3   (4U)          /*!< Bit field size in bits for DDR_CR49_P2PRI3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR49_P2PRI3 field.
-#define BR_DDR_CR49_P2PRI3   (HW_DDR_CR49.B.P2PRI3)
-#endif
+/*! @brief Read current value of the DDR_CR49_P2PRI3 field. */
+#define BR_DDR_CR49_P2PRI3(x) (HW_DDR_CR49(x).B.P2PRI3)
 
-//! @brief Format value for bitfield DDR_CR49_P2PRI3.
-#define BF_DDR_CR49_P2PRI3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR49_P2PRI3), uint32_t) & BM_DDR_CR49_P2PRI3)
+/*! @brief Format value for bitfield DDR_CR49_P2PRI3. */
+#define BF_DDR_CR49_P2PRI3(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR49_P2PRI3) & BM_DDR_CR49_P2PRI3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2PRI3 field to a new value.
-#define BW_DDR_CR49_P2PRI3(v) (HW_DDR_CR49_WR((HW_DDR_CR49_RD() & ~BM_DDR_CR49_P2PRI3) | BF_DDR_CR49_P2PRI3(v)))
-#endif
-//@}
+/*! @brief Set the P2PRI3 field to a new value. */
+#define BW_DDR_CR49_P2PRI3(x, v) (HW_DDR_CR49_WR(x, (HW_DDR_CR49_RD(x) & ~BM_DDR_CR49_P2PRI3) | BF_DDR_CR49_P2PRI3(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR49, field P2ORD[17:16] (RW)
@@ -6098,30 +5333,25 @@ typedef union _hw_ddr_cr49
  * - 10 - -----
  * - 11 - Lowest listing in the scan order
  */
-//@{
-#define BP_DDR_CR49_P2ORD    (16U)         //!< Bit position for DDR_CR49_P2ORD.
-#define BM_DDR_CR49_P2ORD    (0x00030000U) //!< Bit mask for DDR_CR49_P2ORD.
-#define BS_DDR_CR49_P2ORD    (2U)          //!< Bit field size in bits for DDR_CR49_P2ORD.
+/*@{*/
+#define BP_DDR_CR49_P2ORD    (16U)         /*!< Bit position for DDR_CR49_P2ORD. */
+#define BM_DDR_CR49_P2ORD    (0x00030000U) /*!< Bit mask for DDR_CR49_P2ORD. */
+#define BS_DDR_CR49_P2ORD    (2U)          /*!< Bit field size in bits for DDR_CR49_P2ORD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR49_P2ORD field.
-#define BR_DDR_CR49_P2ORD    (HW_DDR_CR49.B.P2ORD)
-#endif
+/*! @brief Read current value of the DDR_CR49_P2ORD field. */
+#define BR_DDR_CR49_P2ORD(x) (HW_DDR_CR49(x).B.P2ORD)
 
-//! @brief Format value for bitfield DDR_CR49_P2ORD.
-#define BF_DDR_CR49_P2ORD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR49_P2ORD), uint32_t) & BM_DDR_CR49_P2ORD)
+/*! @brief Format value for bitfield DDR_CR49_P2ORD. */
+#define BF_DDR_CR49_P2ORD(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR49_P2ORD) & BM_DDR_CR49_P2ORD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2ORD field to a new value.
-#define BW_DDR_CR49_P2ORD(v) (HW_DDR_CR49_WR((HW_DDR_CR49_RD() & ~BM_DDR_CR49_P2ORD) | BF_DDR_CR49_P2ORD(v)))
-#endif
-//@}
+/*! @brief Set the P2ORD field to a new value. */
+#define BW_DDR_CR49_P2ORD(x, v) (HW_DDR_CR49_WR(x, (HW_DDR_CR49_RD(x) & ~BM_DDR_CR49_P2ORD) | BF_DDR_CR49_P2ORD(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR50 - DDR Control Register 50
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR50 - DDR Control Register 50
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR50 - DDR Control Register 50 (RW)
  *
@@ -6132,29 +5362,26 @@ typedef union _hw_ddr_cr50
     uint32_t U;
     struct _hw_ddr_cr50_bitfields
     {
-        uint32_t P2PRIRLX : 10;        //!< [9:0] Port 2 Priority Relax
-        uint32_t RESERVED0 : 6;        //!< [15:10] Reserved
-        uint32_t CLKSTATUS : 1;        //!< [16] Clock Status
-        uint32_t RESERVED1 : 15;       //!< [31:17] Reserved
+        uint32_t P2PRIRLX : 10;        /*!< [9:0] Port 2 Priority Relax */
+        uint32_t RESERVED0 : 6;        /*!< [15:10] Reserved */
+        uint32_t CLKSTATUS : 1;        /*!< [16] Clock Status */
+        uint32_t RESERVED1 : 15;       /*!< [31:17] Reserved */
     } B;
 } hw_ddr_cr50_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR50 register
  */
-//@{
-#define HW_DDR_CR50_ADDR         (REGS_DDR_BASE + 0xC8U)
+/*@{*/
+#define HW_DDR_CR50_ADDR(x)      ((x) + 0xC8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR50              (*(__IO hw_ddr_cr50_t *) HW_DDR_CR50_ADDR)
-#define HW_DDR_CR50_RD()         (HW_DDR_CR50.U)
-#define HW_DDR_CR50_WR(v)        (HW_DDR_CR50.U = (v))
-#define HW_DDR_CR50_SET(v)       (HW_DDR_CR50_WR(HW_DDR_CR50_RD() |  (v)))
-#define HW_DDR_CR50_CLR(v)       (HW_DDR_CR50_WR(HW_DDR_CR50_RD() & ~(v)))
-#define HW_DDR_CR50_TOG(v)       (HW_DDR_CR50_WR(HW_DDR_CR50_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR50(x)           (*(__IO hw_ddr_cr50_t *) HW_DDR_CR50_ADDR(x))
+#define HW_DDR_CR50_RD(x)        (HW_DDR_CR50(x).U)
+#define HW_DDR_CR50_WR(x, v)     (HW_DDR_CR50(x).U = (v))
+#define HW_DDR_CR50_SET(x, v)    (HW_DDR_CR50_WR(x, HW_DDR_CR50_RD(x) |  (v)))
+#define HW_DDR_CR50_CLR(x, v)    (HW_DDR_CR50_WR(x, HW_DDR_CR50_RD(x) & ~(v)))
+#define HW_DDR_CR50_TOG(x, v)    (HW_DDR_CR50_WR(x, HW_DDR_CR50_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR50 bitfields
@@ -6165,24 +5392,20 @@ typedef union _hw_ddr_cr50
  *
  * Counter value to trigger priority relax on port 2.
  */
-//@{
-#define BP_DDR_CR50_P2PRIRLX (0U)          //!< Bit position for DDR_CR50_P2PRIRLX.
-#define BM_DDR_CR50_P2PRIRLX (0x000003FFU) //!< Bit mask for DDR_CR50_P2PRIRLX.
-#define BS_DDR_CR50_P2PRIRLX (10U)         //!< Bit field size in bits for DDR_CR50_P2PRIRLX.
+/*@{*/
+#define BP_DDR_CR50_P2PRIRLX (0U)          /*!< Bit position for DDR_CR50_P2PRIRLX. */
+#define BM_DDR_CR50_P2PRIRLX (0x000003FFU) /*!< Bit mask for DDR_CR50_P2PRIRLX. */
+#define BS_DDR_CR50_P2PRIRLX (10U)         /*!< Bit field size in bits for DDR_CR50_P2PRIRLX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR50_P2PRIRLX field.
-#define BR_DDR_CR50_P2PRIRLX (HW_DDR_CR50.B.P2PRIRLX)
-#endif
+/*! @brief Read current value of the DDR_CR50_P2PRIRLX field. */
+#define BR_DDR_CR50_P2PRIRLX(x) (HW_DDR_CR50(x).B.P2PRIRLX)
 
-//! @brief Format value for bitfield DDR_CR50_P2PRIRLX.
-#define BF_DDR_CR50_P2PRIRLX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR50_P2PRIRLX), uint32_t) & BM_DDR_CR50_P2PRIRLX)
+/*! @brief Format value for bitfield DDR_CR50_P2PRIRLX. */
+#define BF_DDR_CR50_P2PRIRLX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR50_P2PRIRLX) & BM_DDR_CR50_P2PRIRLX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the P2PRIRLX field to a new value.
-#define BW_DDR_CR50_P2PRIRLX(v) (HW_DDR_CR50_WR((HW_DDR_CR50_RD() & ~BM_DDR_CR50_P2PRIRLX) | BF_DDR_CR50_P2PRIRLX(v)))
-#endif
-//@}
+/*! @brief Set the P2PRIRLX field to a new value. */
+#define BW_DDR_CR50_P2PRIRLX(x, v) (HW_DDR_CR50_WR(x, (HW_DDR_CR50_RD(x) & ~BM_DDR_CR50_P2PRIRLX) | BF_DDR_CR50_P2PRIRLX(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR50, field CLKSTATUS[16] (RO)
@@ -6193,22 +5416,19 @@ typedef union _hw_ddr_cr50
  * - 0 - Disabled
  * - 1 - Enabled
  */
-//@{
-#define BP_DDR_CR50_CLKSTATUS (16U)        //!< Bit position for DDR_CR50_CLKSTATUS.
-#define BM_DDR_CR50_CLKSTATUS (0x00010000U) //!< Bit mask for DDR_CR50_CLKSTATUS.
-#define BS_DDR_CR50_CLKSTATUS (1U)         //!< Bit field size in bits for DDR_CR50_CLKSTATUS.
+/*@{*/
+#define BP_DDR_CR50_CLKSTATUS (16U)        /*!< Bit position for DDR_CR50_CLKSTATUS. */
+#define BM_DDR_CR50_CLKSTATUS (0x00010000U) /*!< Bit mask for DDR_CR50_CLKSTATUS. */
+#define BS_DDR_CR50_CLKSTATUS (1U)         /*!< Bit field size in bits for DDR_CR50_CLKSTATUS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR50_CLKSTATUS field.
-#define BR_DDR_CR50_CLKSTATUS (BITBAND_ACCESS32(HW_DDR_CR50_ADDR, BP_DDR_CR50_CLKSTATUS))
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR50_CLKSTATUS field. */
+#define BR_DDR_CR50_CLKSTATUS(x) (BITBAND_ACCESS32(HW_DDR_CR50_ADDR(x), BP_DDR_CR50_CLKSTATUS))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR51 - DDR Control Register 51
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR51 - DDR Control Register 51
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR51 - DDR Control Register 51 (RW)
  *
@@ -6219,29 +5439,26 @@ typedef union _hw_ddr_cr51
     uint32_t U;
     struct _hw_ddr_cr51_bitfields
     {
-        uint32_t DLLRSTDLY : 16;       //!< [15:0] DLL Reset Delay
-        uint32_t DLLRADLY : 8;         //!< [23:16] DLL Reset Adjust Delay
-        uint32_t PHYWRLAT : 4;         //!< [27:24] PHY Write Latency
-        uint32_t RESERVED0 : 4;        //!< [31:28] Reserved
+        uint32_t DLLRSTDLY : 16;       /*!< [15:0] DLL Reset Delay */
+        uint32_t DLLRADLY : 8;         /*!< [23:16] DLL Reset Adjust Delay */
+        uint32_t PHYWRLAT : 4;         /*!< [27:24] PHY Write Latency */
+        uint32_t RESERVED0 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr51_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR51 register
  */
-//@{
-#define HW_DDR_CR51_ADDR         (REGS_DDR_BASE + 0xCCU)
+/*@{*/
+#define HW_DDR_CR51_ADDR(x)      ((x) + 0xCCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR51              (*(__IO hw_ddr_cr51_t *) HW_DDR_CR51_ADDR)
-#define HW_DDR_CR51_RD()         (HW_DDR_CR51.U)
-#define HW_DDR_CR51_WR(v)        (HW_DDR_CR51.U = (v))
-#define HW_DDR_CR51_SET(v)       (HW_DDR_CR51_WR(HW_DDR_CR51_RD() |  (v)))
-#define HW_DDR_CR51_CLR(v)       (HW_DDR_CR51_WR(HW_DDR_CR51_RD() & ~(v)))
-#define HW_DDR_CR51_TOG(v)       (HW_DDR_CR51_WR(HW_DDR_CR51_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR51(x)           (*(__IO hw_ddr_cr51_t *) HW_DDR_CR51_ADDR(x))
+#define HW_DDR_CR51_RD(x)        (HW_DDR_CR51(x).U)
+#define HW_DDR_CR51_WR(x, v)     (HW_DDR_CR51(x).U = (v))
+#define HW_DDR_CR51_SET(x, v)    (HW_DDR_CR51_WR(x, HW_DDR_CR51_RD(x) |  (v)))
+#define HW_DDR_CR51_CLR(x, v)    (HW_DDR_CR51_WR(x, HW_DDR_CR51_RD(x) & ~(v)))
+#define HW_DDR_CR51_TOG(x, v)    (HW_DDR_CR51_WR(x, HW_DDR_CR51_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR51 bitfields
@@ -6252,24 +5469,20 @@ typedef union _hw_ddr_cr51
  *
  * Minimum number of cycles required for DLL reset.
  */
-//@{
-#define BP_DDR_CR51_DLLRSTDLY (0U)         //!< Bit position for DDR_CR51_DLLRSTDLY.
-#define BM_DDR_CR51_DLLRSTDLY (0x0000FFFFU) //!< Bit mask for DDR_CR51_DLLRSTDLY.
-#define BS_DDR_CR51_DLLRSTDLY (16U)        //!< Bit field size in bits for DDR_CR51_DLLRSTDLY.
+/*@{*/
+#define BP_DDR_CR51_DLLRSTDLY (0U)         /*!< Bit position for DDR_CR51_DLLRSTDLY. */
+#define BM_DDR_CR51_DLLRSTDLY (0x0000FFFFU) /*!< Bit mask for DDR_CR51_DLLRSTDLY. */
+#define BS_DDR_CR51_DLLRSTDLY (16U)        /*!< Bit field size in bits for DDR_CR51_DLLRSTDLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR51_DLLRSTDLY field.
-#define BR_DDR_CR51_DLLRSTDLY (HW_DDR_CR51.B.DLLRSTDLY)
-#endif
+/*! @brief Read current value of the DDR_CR51_DLLRSTDLY field. */
+#define BR_DDR_CR51_DLLRSTDLY(x) (HW_DDR_CR51(x).B.DLLRSTDLY)
 
-//! @brief Format value for bitfield DDR_CR51_DLLRSTDLY.
-#define BF_DDR_CR51_DLLRSTDLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR51_DLLRSTDLY), uint32_t) & BM_DDR_CR51_DLLRSTDLY)
+/*! @brief Format value for bitfield DDR_CR51_DLLRSTDLY. */
+#define BF_DDR_CR51_DLLRSTDLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR51_DLLRSTDLY) & BM_DDR_CR51_DLLRSTDLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DLLRSTDLY field to a new value.
-#define BW_DDR_CR51_DLLRSTDLY(v) (HW_DDR_CR51_WR((HW_DDR_CR51_RD() & ~BM_DDR_CR51_DLLRSTDLY) | BF_DDR_CR51_DLLRSTDLY(v)))
-#endif
-//@}
+/*! @brief Set the DLLRSTDLY field to a new value. */
+#define BW_DDR_CR51_DLLRSTDLY(x, v) (HW_DDR_CR51_WR(x, (HW_DDR_CR51_RD(x) & ~BM_DDR_CR51_DLLRSTDLY) | BF_DDR_CR51_DLLRSTDLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR51, field DLLRADLY[23:16] (RW)
@@ -6277,24 +5490,20 @@ typedef union _hw_ddr_cr51
  * Minimum number of cycles after setting master delay in DLL until reset is
  * released.
  */
-//@{
-#define BP_DDR_CR51_DLLRADLY (16U)         //!< Bit position for DDR_CR51_DLLRADLY.
-#define BM_DDR_CR51_DLLRADLY (0x00FF0000U) //!< Bit mask for DDR_CR51_DLLRADLY.
-#define BS_DDR_CR51_DLLRADLY (8U)          //!< Bit field size in bits for DDR_CR51_DLLRADLY.
+/*@{*/
+#define BP_DDR_CR51_DLLRADLY (16U)         /*!< Bit position for DDR_CR51_DLLRADLY. */
+#define BM_DDR_CR51_DLLRADLY (0x00FF0000U) /*!< Bit mask for DDR_CR51_DLLRADLY. */
+#define BS_DDR_CR51_DLLRADLY (8U)          /*!< Bit field size in bits for DDR_CR51_DLLRADLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR51_DLLRADLY field.
-#define BR_DDR_CR51_DLLRADLY (HW_DDR_CR51.B.DLLRADLY)
-#endif
+/*! @brief Read current value of the DDR_CR51_DLLRADLY field. */
+#define BR_DDR_CR51_DLLRADLY(x) (HW_DDR_CR51(x).B.DLLRADLY)
 
-//! @brief Format value for bitfield DDR_CR51_DLLRADLY.
-#define BF_DDR_CR51_DLLRADLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR51_DLLRADLY), uint32_t) & BM_DDR_CR51_DLLRADLY)
+/*! @brief Format value for bitfield DDR_CR51_DLLRADLY. */
+#define BF_DDR_CR51_DLLRADLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR51_DLLRADLY) & BM_DDR_CR51_DLLRADLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DLLRADLY field to a new value.
-#define BW_DDR_CR51_DLLRADLY(v) (HW_DDR_CR51_WR((HW_DDR_CR51_RD() & ~BM_DDR_CR51_DLLRADLY) | BF_DDR_CR51_DLLRADLY(v)))
-#endif
-//@}
+/*! @brief Set the DLLRADLY field to a new value. */
+#define BW_DDR_CR51_DLLRADLY(x, v) (HW_DDR_CR51_WR(x, (HW_DDR_CR51_RD(x) & ~BM_DDR_CR51_DLLRADLY) | BF_DDR_CR51_DLLRADLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR51, field PHYWRLAT[27:24] (RO)
@@ -6307,22 +5516,19 @@ typedef union _hw_ddr_cr51
  * dfi_phy_wrlat_base + wrlat_adj that are less than 3 are not supported. All DFI timing
  * parameters must be programmed relative to the DFI clock.
  */
-//@{
-#define BP_DDR_CR51_PHYWRLAT (24U)         //!< Bit position for DDR_CR51_PHYWRLAT.
-#define BM_DDR_CR51_PHYWRLAT (0x0F000000U) //!< Bit mask for DDR_CR51_PHYWRLAT.
-#define BS_DDR_CR51_PHYWRLAT (4U)          //!< Bit field size in bits for DDR_CR51_PHYWRLAT.
+/*@{*/
+#define BP_DDR_CR51_PHYWRLAT (24U)         /*!< Bit position for DDR_CR51_PHYWRLAT. */
+#define BM_DDR_CR51_PHYWRLAT (0x0F000000U) /*!< Bit mask for DDR_CR51_PHYWRLAT. */
+#define BS_DDR_CR51_PHYWRLAT (4U)          /*!< Bit field size in bits for DDR_CR51_PHYWRLAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR51_PHYWRLAT field.
-#define BR_DDR_CR51_PHYWRLAT (HW_DDR_CR51.B.PHYWRLAT)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR51_PHYWRLAT field. */
+#define BR_DDR_CR51_PHYWRLAT(x) (HW_DDR_CR51(x).B.PHYWRLAT)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR52 - DDR Control Register 52
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR52 - DDR Control Register 52
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR52 - DDR Control Register 52 (RW)
  *
@@ -6333,33 +5539,30 @@ typedef union _hw_ddr_cr52
     uint32_t U;
     struct _hw_ddr_cr52_bitfields
     {
-        uint32_t PYWRLTBS : 4;         //!< [3:0] PHY Write Latency Base
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t PHYRDLAT : 4;         //!< [11:8] PHY Read Latency
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t RDDATAEN : 4;         //!< [19:16] Read Data Enable
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t RDDTENBAS : 4;        //!< [27:24] Read Data Enable Base
-        uint32_t RESERVED3 : 4;        //!< [31:28] Reserved
+        uint32_t PYWRLTBS : 4;         /*!< [3:0] PHY Write Latency Base */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t PHYRDLAT : 4;         /*!< [11:8] PHY Read Latency */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t RDDATAEN : 4;         /*!< [19:16] Read Data Enable */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t RDDTENBAS : 4;        /*!< [27:24] Read Data Enable Base */
+        uint32_t RESERVED3 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr52_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR52 register
  */
-//@{
-#define HW_DDR_CR52_ADDR         (REGS_DDR_BASE + 0xD0U)
+/*@{*/
+#define HW_DDR_CR52_ADDR(x)      ((x) + 0xD0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR52              (*(__IO hw_ddr_cr52_t *) HW_DDR_CR52_ADDR)
-#define HW_DDR_CR52_RD()         (HW_DDR_CR52.U)
-#define HW_DDR_CR52_WR(v)        (HW_DDR_CR52.U = (v))
-#define HW_DDR_CR52_SET(v)       (HW_DDR_CR52_WR(HW_DDR_CR52_RD() |  (v)))
-#define HW_DDR_CR52_CLR(v)       (HW_DDR_CR52_WR(HW_DDR_CR52_RD() & ~(v)))
-#define HW_DDR_CR52_TOG(v)       (HW_DDR_CR52_WR(HW_DDR_CR52_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR52(x)           (*(__IO hw_ddr_cr52_t *) HW_DDR_CR52_ADDR(x))
+#define HW_DDR_CR52_RD(x)        (HW_DDR_CR52(x).U)
+#define HW_DDR_CR52_WR(x, v)     (HW_DDR_CR52(x).U = (v))
+#define HW_DDR_CR52_SET(x, v)    (HW_DDR_CR52_WR(x, HW_DDR_CR52_RD(x) |  (v)))
+#define HW_DDR_CR52_CLR(x, v)    (HW_DDR_CR52_WR(x, HW_DDR_CR52_RD(x) & ~(v)))
+#define HW_DDR_CR52_TOG(x, v)    (HW_DDR_CR52_WR(x, HW_DDR_CR52_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR52 bitfields
@@ -6370,94 +5573,79 @@ typedef union _hw_ddr_cr52
  *
  * Sets DFI base value for the t PHY_RWLAT timing parameter.
  */
-//@{
-#define BP_DDR_CR52_PYWRLTBS (0U)          //!< Bit position for DDR_CR52_PYWRLTBS.
-#define BM_DDR_CR52_PYWRLTBS (0x0000000FU) //!< Bit mask for DDR_CR52_PYWRLTBS.
-#define BS_DDR_CR52_PYWRLTBS (4U)          //!< Bit field size in bits for DDR_CR52_PYWRLTBS.
+/*@{*/
+#define BP_DDR_CR52_PYWRLTBS (0U)          /*!< Bit position for DDR_CR52_PYWRLTBS. */
+#define BM_DDR_CR52_PYWRLTBS (0x0000000FU) /*!< Bit mask for DDR_CR52_PYWRLTBS. */
+#define BS_DDR_CR52_PYWRLTBS (4U)          /*!< Bit field size in bits for DDR_CR52_PYWRLTBS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR52_PYWRLTBS field.
-#define BR_DDR_CR52_PYWRLTBS (HW_DDR_CR52.B.PYWRLTBS)
-#endif
+/*! @brief Read current value of the DDR_CR52_PYWRLTBS field. */
+#define BR_DDR_CR52_PYWRLTBS(x) (HW_DDR_CR52(x).B.PYWRLTBS)
 
-//! @brief Format value for bitfield DDR_CR52_PYWRLTBS.
-#define BF_DDR_CR52_PYWRLTBS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR52_PYWRLTBS), uint32_t) & BM_DDR_CR52_PYWRLTBS)
+/*! @brief Format value for bitfield DDR_CR52_PYWRLTBS. */
+#define BF_DDR_CR52_PYWRLTBS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR52_PYWRLTBS) & BM_DDR_CR52_PYWRLTBS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PYWRLTBS field to a new value.
-#define BW_DDR_CR52_PYWRLTBS(v) (HW_DDR_CR52_WR((HW_DDR_CR52_RD() & ~BM_DDR_CR52_PYWRLTBS) | BF_DDR_CR52_PYWRLTBS(v)))
-#endif
-//@}
+/*! @brief Set the PYWRLTBS field to a new value. */
+#define BW_DDR_CR52_PYWRLTBS(x, v) (HW_DDR_CR52_WR(x, (HW_DDR_CR52_RD(x) & ~BM_DDR_CR52_PYWRLTBS) | BF_DDR_CR52_PYWRLTBS(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR52, field PHYRDLAT[11:8] (RW)
  *
  * Holds the t PHY_RDLAT timing parameter.
  */
-//@{
-#define BP_DDR_CR52_PHYRDLAT (8U)          //!< Bit position for DDR_CR52_PHYRDLAT.
-#define BM_DDR_CR52_PHYRDLAT (0x00000F00U) //!< Bit mask for DDR_CR52_PHYRDLAT.
-#define BS_DDR_CR52_PHYRDLAT (4U)          //!< Bit field size in bits for DDR_CR52_PHYRDLAT.
+/*@{*/
+#define BP_DDR_CR52_PHYRDLAT (8U)          /*!< Bit position for DDR_CR52_PHYRDLAT. */
+#define BM_DDR_CR52_PHYRDLAT (0x00000F00U) /*!< Bit mask for DDR_CR52_PHYRDLAT. */
+#define BS_DDR_CR52_PHYRDLAT (4U)          /*!< Bit field size in bits for DDR_CR52_PHYRDLAT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR52_PHYRDLAT field.
-#define BR_DDR_CR52_PHYRDLAT (HW_DDR_CR52.B.PHYRDLAT)
-#endif
+/*! @brief Read current value of the DDR_CR52_PHYRDLAT field. */
+#define BR_DDR_CR52_PHYRDLAT(x) (HW_DDR_CR52(x).B.PHYRDLAT)
 
-//! @brief Format value for bitfield DDR_CR52_PHYRDLAT.
-#define BF_DDR_CR52_PHYRDLAT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR52_PHYRDLAT), uint32_t) & BM_DDR_CR52_PHYRDLAT)
+/*! @brief Format value for bitfield DDR_CR52_PHYRDLAT. */
+#define BF_DDR_CR52_PHYRDLAT(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR52_PHYRDLAT) & BM_DDR_CR52_PHYRDLAT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYRDLAT field to a new value.
-#define BW_DDR_CR52_PHYRDLAT(v) (HW_DDR_CR52_WR((HW_DDR_CR52_RD() & ~BM_DDR_CR52_PHYRDLAT) | BF_DDR_CR52_PHYRDLAT(v)))
-#endif
-//@}
+/*! @brief Set the PHYRDLAT field to a new value. */
+#define BW_DDR_CR52_PHYRDLAT(x, v) (HW_DDR_CR52_WR(x, (HW_DDR_CR52_RD(x) & ~BM_DDR_CR52_PHYRDLAT) | BF_DDR_CR52_PHYRDLAT(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR52, field RDDATAEN[19:16] (RO)
  *
  * Holds the calculated DFI t RDDATA_EN timing parameter.
  */
-//@{
-#define BP_DDR_CR52_RDDATAEN (16U)         //!< Bit position for DDR_CR52_RDDATAEN.
-#define BM_DDR_CR52_RDDATAEN (0x000F0000U) //!< Bit mask for DDR_CR52_RDDATAEN.
-#define BS_DDR_CR52_RDDATAEN (4U)          //!< Bit field size in bits for DDR_CR52_RDDATAEN.
+/*@{*/
+#define BP_DDR_CR52_RDDATAEN (16U)         /*!< Bit position for DDR_CR52_RDDATAEN. */
+#define BM_DDR_CR52_RDDATAEN (0x000F0000U) /*!< Bit mask for DDR_CR52_RDDATAEN. */
+#define BS_DDR_CR52_RDDATAEN (4U)          /*!< Bit field size in bits for DDR_CR52_RDDATAEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR52_RDDATAEN field.
-#define BR_DDR_CR52_RDDATAEN (HW_DDR_CR52.B.RDDATAEN)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR52_RDDATAEN field. */
+#define BR_DDR_CR52_RDDATAEN(x) (HW_DDR_CR52(x).B.RDDATAEN)
+/*@}*/
 
 /*!
  * @name Register DDR_CR52, field RDDTENBAS[27:24] (RW)
  *
  * Sets DFI base value for the t RDDATA_EN timing parameter.
  */
-//@{
-#define BP_DDR_CR52_RDDTENBAS (24U)        //!< Bit position for DDR_CR52_RDDTENBAS.
-#define BM_DDR_CR52_RDDTENBAS (0x0F000000U) //!< Bit mask for DDR_CR52_RDDTENBAS.
-#define BS_DDR_CR52_RDDTENBAS (4U)         //!< Bit field size in bits for DDR_CR52_RDDTENBAS.
+/*@{*/
+#define BP_DDR_CR52_RDDTENBAS (24U)        /*!< Bit position for DDR_CR52_RDDTENBAS. */
+#define BM_DDR_CR52_RDDTENBAS (0x0F000000U) /*!< Bit mask for DDR_CR52_RDDTENBAS. */
+#define BS_DDR_CR52_RDDTENBAS (4U)         /*!< Bit field size in bits for DDR_CR52_RDDTENBAS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR52_RDDTENBAS field.
-#define BR_DDR_CR52_RDDTENBAS (HW_DDR_CR52.B.RDDTENBAS)
-#endif
+/*! @brief Read current value of the DDR_CR52_RDDTENBAS field. */
+#define BR_DDR_CR52_RDDTENBAS(x) (HW_DDR_CR52(x).B.RDDTENBAS)
 
-//! @brief Format value for bitfield DDR_CR52_RDDTENBAS.
-#define BF_DDR_CR52_RDDTENBAS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR52_RDDTENBAS), uint32_t) & BM_DDR_CR52_RDDTENBAS)
+/*! @brief Format value for bitfield DDR_CR52_RDDTENBAS. */
+#define BF_DDR_CR52_RDDTENBAS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR52_RDDTENBAS) & BM_DDR_CR52_RDDTENBAS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDDTENBAS field to a new value.
-#define BW_DDR_CR52_RDDTENBAS(v) (HW_DDR_CR52_WR((HW_DDR_CR52_RD() & ~BM_DDR_CR52_RDDTENBAS) | BF_DDR_CR52_RDDTENBAS(v)))
-#endif
-//@}
+/*! @brief Set the RDDTENBAS field to a new value. */
+#define BW_DDR_CR52_RDDTENBAS(x, v) (HW_DDR_CR52_WR(x, (HW_DDR_CR52_RD(x) & ~BM_DDR_CR52_RDDTENBAS) | BF_DDR_CR52_RDDTENBAS(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR53 - DDR Control Register 53
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR53 - DDR Control Register 53
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR53 - DDR Control Register 53 (RW)
  *
@@ -6468,31 +5656,28 @@ typedef union _hw_ddr_cr53
     uint32_t U;
     struct _hw_ddr_cr53_bitfields
     {
-        uint32_t CLKDISCS : 1;         //!< [0] DRAM Clock Disable for chip select
-        uint32_t RESERVED0 : 7;        //!< [7:1] Reserved
-        uint32_t CRTLUPDMN : 4;        //!< [11:8] DFI CRTLUPD Minimum
-        uint32_t RESERVED1 : 4;        //!< [15:12] Reserved
-        uint32_t CTRLUPDMX : 14;       //!< [29:16] DFI CRTLUPD Minimum
-        uint32_t RESERVED2 : 2;        //!< [31:30] Reserved
+        uint32_t CLKDISCS : 1;         /*!< [0] DRAM Clock Disable for chip select */
+        uint32_t RESERVED0 : 7;        /*!< [7:1] Reserved */
+        uint32_t CRTLUPDMN : 4;        /*!< [11:8] DFI CRTLUPD Minimum */
+        uint32_t RESERVED1 : 4;        /*!< [15:12] Reserved */
+        uint32_t CTRLUPDMX : 14;       /*!< [29:16] DFI CRTLUPD Minimum */
+        uint32_t RESERVED2 : 2;        /*!< [31:30] Reserved */
     } B;
 } hw_ddr_cr53_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR53 register
  */
-//@{
-#define HW_DDR_CR53_ADDR         (REGS_DDR_BASE + 0xD4U)
+/*@{*/
+#define HW_DDR_CR53_ADDR(x)      ((x) + 0xD4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR53              (*(__IO hw_ddr_cr53_t *) HW_DDR_CR53_ADDR)
-#define HW_DDR_CR53_RD()         (HW_DDR_CR53.U)
-#define HW_DDR_CR53_WR(v)        (HW_DDR_CR53.U = (v))
-#define HW_DDR_CR53_SET(v)       (HW_DDR_CR53_WR(HW_DDR_CR53_RD() |  (v)))
-#define HW_DDR_CR53_CLR(v)       (HW_DDR_CR53_WR(HW_DDR_CR53_RD() & ~(v)))
-#define HW_DDR_CR53_TOG(v)       (HW_DDR_CR53_WR(HW_DDR_CR53_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR53(x)           (*(__IO hw_ddr_cr53_t *) HW_DDR_CR53_ADDR(x))
+#define HW_DDR_CR53_RD(x)        (HW_DDR_CR53(x).U)
+#define HW_DDR_CR53_WR(x, v)     (HW_DDR_CR53(x).U = (v))
+#define HW_DDR_CR53_SET(x, v)    (HW_DDR_CR53_WR(x, HW_DDR_CR53_RD(x) |  (v)))
+#define HW_DDR_CR53_CLR(x, v)    (HW_DDR_CR53_WR(x, HW_DDR_CR53_RD(x) & ~(v)))
+#define HW_DDR_CR53_TOG(x, v)    (HW_DDR_CR53_WR(x, HW_DDR_CR53_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR53 bitfields
@@ -6507,70 +5692,59 @@ typedef union _hw_ddr_cr53
  * - 0 - Memory clock active
  * - 1 - Memory clock disabled
  */
-//@{
-#define BP_DDR_CR53_CLKDISCS (0U)          //!< Bit position for DDR_CR53_CLKDISCS.
-#define BM_DDR_CR53_CLKDISCS (0x00000001U) //!< Bit mask for DDR_CR53_CLKDISCS.
-#define BS_DDR_CR53_CLKDISCS (1U)          //!< Bit field size in bits for DDR_CR53_CLKDISCS.
+/*@{*/
+#define BP_DDR_CR53_CLKDISCS (0U)          /*!< Bit position for DDR_CR53_CLKDISCS. */
+#define BM_DDR_CR53_CLKDISCS (0x00000001U) /*!< Bit mask for DDR_CR53_CLKDISCS. */
+#define BS_DDR_CR53_CLKDISCS (1U)          /*!< Bit field size in bits for DDR_CR53_CLKDISCS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR53_CLKDISCS field.
-#define BR_DDR_CR53_CLKDISCS (BITBAND_ACCESS32(HW_DDR_CR53_ADDR, BP_DDR_CR53_CLKDISCS))
-#endif
+/*! @brief Read current value of the DDR_CR53_CLKDISCS field. */
+#define BR_DDR_CR53_CLKDISCS(x) (BITBAND_ACCESS32(HW_DDR_CR53_ADDR(x), BP_DDR_CR53_CLKDISCS))
 
-//! @brief Format value for bitfield DDR_CR53_CLKDISCS.
-#define BF_DDR_CR53_CLKDISCS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR53_CLKDISCS), uint32_t) & BM_DDR_CR53_CLKDISCS)
+/*! @brief Format value for bitfield DDR_CR53_CLKDISCS. */
+#define BF_DDR_CR53_CLKDISCS(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR53_CLKDISCS) & BM_DDR_CR53_CLKDISCS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKDISCS field to a new value.
-#define BW_DDR_CR53_CLKDISCS(v) (BITBAND_ACCESS32(HW_DDR_CR53_ADDR, BP_DDR_CR53_CLKDISCS) = (v))
-#endif
-//@}
+/*! @brief Set the CLKDISCS field to a new value. */
+#define BW_DDR_CR53_CLKDISCS(x, v) (BITBAND_ACCESS32(HW_DDR_CR53_ADDR(x), BP_DDR_CR53_CLKDISCS) = (v))
+/*@}*/
 
 /*!
  * @name Register DDR_CR53, field CRTLUPDMN[11:8] (RO)
  *
  * Holds the DFI t CTRLUPD_MIN timing parameter.
  */
-//@{
-#define BP_DDR_CR53_CRTLUPDMN (8U)         //!< Bit position for DDR_CR53_CRTLUPDMN.
-#define BM_DDR_CR53_CRTLUPDMN (0x00000F00U) //!< Bit mask for DDR_CR53_CRTLUPDMN.
-#define BS_DDR_CR53_CRTLUPDMN (4U)         //!< Bit field size in bits for DDR_CR53_CRTLUPDMN.
+/*@{*/
+#define BP_DDR_CR53_CRTLUPDMN (8U)         /*!< Bit position for DDR_CR53_CRTLUPDMN. */
+#define BM_DDR_CR53_CRTLUPDMN (0x00000F00U) /*!< Bit mask for DDR_CR53_CRTLUPDMN. */
+#define BS_DDR_CR53_CRTLUPDMN (4U)         /*!< Bit field size in bits for DDR_CR53_CRTLUPDMN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR53_CRTLUPDMN field.
-#define BR_DDR_CR53_CRTLUPDMN (HW_DDR_CR53.B.CRTLUPDMN)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR53_CRTLUPDMN field. */
+#define BR_DDR_CR53_CRTLUPDMN(x) (HW_DDR_CR53(x).B.CRTLUPDMN)
+/*@}*/
 
 /*!
  * @name Register DDR_CR53, field CTRLUPDMX[29:16] (RW)
  *
  * Contains the DFI t TRLUPD_MAX timing parameter.
  */
-//@{
-#define BP_DDR_CR53_CTRLUPDMX (16U)        //!< Bit position for DDR_CR53_CTRLUPDMX.
-#define BM_DDR_CR53_CTRLUPDMX (0x3FFF0000U) //!< Bit mask for DDR_CR53_CTRLUPDMX.
-#define BS_DDR_CR53_CTRLUPDMX (14U)        //!< Bit field size in bits for DDR_CR53_CTRLUPDMX.
+/*@{*/
+#define BP_DDR_CR53_CTRLUPDMX (16U)        /*!< Bit position for DDR_CR53_CTRLUPDMX. */
+#define BM_DDR_CR53_CTRLUPDMX (0x3FFF0000U) /*!< Bit mask for DDR_CR53_CTRLUPDMX. */
+#define BS_DDR_CR53_CTRLUPDMX (14U)        /*!< Bit field size in bits for DDR_CR53_CTRLUPDMX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR53_CTRLUPDMX field.
-#define BR_DDR_CR53_CTRLUPDMX (HW_DDR_CR53.B.CTRLUPDMX)
-#endif
+/*! @brief Read current value of the DDR_CR53_CTRLUPDMX field. */
+#define BR_DDR_CR53_CTRLUPDMX(x) (HW_DDR_CR53(x).B.CTRLUPDMX)
 
-//! @brief Format value for bitfield DDR_CR53_CTRLUPDMX.
-#define BF_DDR_CR53_CTRLUPDMX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR53_CTRLUPDMX), uint32_t) & BM_DDR_CR53_CTRLUPDMX)
+/*! @brief Format value for bitfield DDR_CR53_CTRLUPDMX. */
+#define BF_DDR_CR53_CTRLUPDMX(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR53_CTRLUPDMX) & BM_DDR_CR53_CTRLUPDMX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CTRLUPDMX field to a new value.
-#define BW_DDR_CR53_CTRLUPDMX(v) (HW_DDR_CR53_WR((HW_DDR_CR53_RD() & ~BM_DDR_CR53_CTRLUPDMX) | BF_DDR_CR53_CTRLUPDMX(v)))
-#endif
-//@}
+/*! @brief Set the CTRLUPDMX field to a new value. */
+#define BW_DDR_CR53_CTRLUPDMX(x, v) (HW_DDR_CR53_WR(x, (HW_DDR_CR53_RD(x) & ~BM_DDR_CR53_CTRLUPDMX) | BF_DDR_CR53_CTRLUPDMX(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR54 - DDR Control Register 54
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR54 - DDR Control Register 54
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR54 - DDR Control Register 54 (RW)
  *
@@ -6581,29 +5755,26 @@ typedef union _hw_ddr_cr54
     uint32_t U;
     struct _hw_ddr_cr54_bitfields
     {
-        uint32_t PHYUPDTY0 : 14;       //!< [13:0] DFI PHYUPD Type 0
-        uint32_t RESERVED0 : 2;        //!< [15:14] Reserved
-        uint32_t PHYUPDTY1 : 14;       //!< [29:16] DFI PHYUPD Type 1
-        uint32_t RESERVED1 : 2;        //!< [31:30] Reserved
+        uint32_t PHYUPDTY0 : 14;       /*!< [13:0] DFI PHYUPD Type 0 */
+        uint32_t RESERVED0 : 2;        /*!< [15:14] Reserved */
+        uint32_t PHYUPDTY1 : 14;       /*!< [29:16] DFI PHYUPD Type 1 */
+        uint32_t RESERVED1 : 2;        /*!< [31:30] Reserved */
     } B;
 } hw_ddr_cr54_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR54 register
  */
-//@{
-#define HW_DDR_CR54_ADDR         (REGS_DDR_BASE + 0xD8U)
+/*@{*/
+#define HW_DDR_CR54_ADDR(x)      ((x) + 0xD8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR54              (*(__IO hw_ddr_cr54_t *) HW_DDR_CR54_ADDR)
-#define HW_DDR_CR54_RD()         (HW_DDR_CR54.U)
-#define HW_DDR_CR54_WR(v)        (HW_DDR_CR54.U = (v))
-#define HW_DDR_CR54_SET(v)       (HW_DDR_CR54_WR(HW_DDR_CR54_RD() |  (v)))
-#define HW_DDR_CR54_CLR(v)       (HW_DDR_CR54_WR(HW_DDR_CR54_RD() & ~(v)))
-#define HW_DDR_CR54_TOG(v)       (HW_DDR_CR54_WR(HW_DDR_CR54_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR54(x)           (*(__IO hw_ddr_cr54_t *) HW_DDR_CR54_ADDR(x))
+#define HW_DDR_CR54_RD(x)        (HW_DDR_CR54(x).U)
+#define HW_DDR_CR54_WR(x, v)     (HW_DDR_CR54(x).U = (v))
+#define HW_DDR_CR54_SET(x, v)    (HW_DDR_CR54_WR(x, HW_DDR_CR54_RD(x) |  (v)))
+#define HW_DDR_CR54_CLR(x, v)    (HW_DDR_CR54_WR(x, HW_DDR_CR54_RD(x) & ~(v)))
+#define HW_DDR_CR54_TOG(x, v)    (HW_DDR_CR54_WR(x, HW_DDR_CR54_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR54 bitfields
@@ -6614,54 +5785,45 @@ typedef union _hw_ddr_cr54
  *
  * Holds the DFI t PHYUPD_TYPE0 timing parameter.
  */
-//@{
-#define BP_DDR_CR54_PHYUPDTY0 (0U)         //!< Bit position for DDR_CR54_PHYUPDTY0.
-#define BM_DDR_CR54_PHYUPDTY0 (0x00003FFFU) //!< Bit mask for DDR_CR54_PHYUPDTY0.
-#define BS_DDR_CR54_PHYUPDTY0 (14U)        //!< Bit field size in bits for DDR_CR54_PHYUPDTY0.
+/*@{*/
+#define BP_DDR_CR54_PHYUPDTY0 (0U)         /*!< Bit position for DDR_CR54_PHYUPDTY0. */
+#define BM_DDR_CR54_PHYUPDTY0 (0x00003FFFU) /*!< Bit mask for DDR_CR54_PHYUPDTY0. */
+#define BS_DDR_CR54_PHYUPDTY0 (14U)        /*!< Bit field size in bits for DDR_CR54_PHYUPDTY0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR54_PHYUPDTY0 field.
-#define BR_DDR_CR54_PHYUPDTY0 (HW_DDR_CR54.B.PHYUPDTY0)
-#endif
+/*! @brief Read current value of the DDR_CR54_PHYUPDTY0 field. */
+#define BR_DDR_CR54_PHYUPDTY0(x) (HW_DDR_CR54(x).B.PHYUPDTY0)
 
-//! @brief Format value for bitfield DDR_CR54_PHYUPDTY0.
-#define BF_DDR_CR54_PHYUPDTY0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR54_PHYUPDTY0), uint32_t) & BM_DDR_CR54_PHYUPDTY0)
+/*! @brief Format value for bitfield DDR_CR54_PHYUPDTY0. */
+#define BF_DDR_CR54_PHYUPDTY0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR54_PHYUPDTY0) & BM_DDR_CR54_PHYUPDTY0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYUPDTY0 field to a new value.
-#define BW_DDR_CR54_PHYUPDTY0(v) (HW_DDR_CR54_WR((HW_DDR_CR54_RD() & ~BM_DDR_CR54_PHYUPDTY0) | BF_DDR_CR54_PHYUPDTY0(v)))
-#endif
-//@}
+/*! @brief Set the PHYUPDTY0 field to a new value. */
+#define BW_DDR_CR54_PHYUPDTY0(x, v) (HW_DDR_CR54_WR(x, (HW_DDR_CR54_RD(x) & ~BM_DDR_CR54_PHYUPDTY0) | BF_DDR_CR54_PHYUPDTY0(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR54, field PHYUPDTY1[29:16] (RW)
  *
  * Holds the DFI t PHYUPD_TYPE1 timing parameter.
  */
-//@{
-#define BP_DDR_CR54_PHYUPDTY1 (16U)        //!< Bit position for DDR_CR54_PHYUPDTY1.
-#define BM_DDR_CR54_PHYUPDTY1 (0x3FFF0000U) //!< Bit mask for DDR_CR54_PHYUPDTY1.
-#define BS_DDR_CR54_PHYUPDTY1 (14U)        //!< Bit field size in bits for DDR_CR54_PHYUPDTY1.
+/*@{*/
+#define BP_DDR_CR54_PHYUPDTY1 (16U)        /*!< Bit position for DDR_CR54_PHYUPDTY1. */
+#define BM_DDR_CR54_PHYUPDTY1 (0x3FFF0000U) /*!< Bit mask for DDR_CR54_PHYUPDTY1. */
+#define BS_DDR_CR54_PHYUPDTY1 (14U)        /*!< Bit field size in bits for DDR_CR54_PHYUPDTY1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR54_PHYUPDTY1 field.
-#define BR_DDR_CR54_PHYUPDTY1 (HW_DDR_CR54.B.PHYUPDTY1)
-#endif
+/*! @brief Read current value of the DDR_CR54_PHYUPDTY1 field. */
+#define BR_DDR_CR54_PHYUPDTY1(x) (HW_DDR_CR54(x).B.PHYUPDTY1)
 
-//! @brief Format value for bitfield DDR_CR54_PHYUPDTY1.
-#define BF_DDR_CR54_PHYUPDTY1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR54_PHYUPDTY1), uint32_t) & BM_DDR_CR54_PHYUPDTY1)
+/*! @brief Format value for bitfield DDR_CR54_PHYUPDTY1. */
+#define BF_DDR_CR54_PHYUPDTY1(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR54_PHYUPDTY1) & BM_DDR_CR54_PHYUPDTY1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYUPDTY1 field to a new value.
-#define BW_DDR_CR54_PHYUPDTY1(v) (HW_DDR_CR54_WR((HW_DDR_CR54_RD() & ~BM_DDR_CR54_PHYUPDTY1) | BF_DDR_CR54_PHYUPDTY1(v)))
-#endif
-//@}
+/*! @brief Set the PHYUPDTY1 field to a new value. */
+#define BW_DDR_CR54_PHYUPDTY1(x, v) (HW_DDR_CR54_WR(x, (HW_DDR_CR54_RD(x) & ~BM_DDR_CR54_PHYUPDTY1) | BF_DDR_CR54_PHYUPDTY1(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR55 - DDR Control Register 55
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR55 - DDR Control Register 55
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR55 - DDR Control Register 55 (RW)
  *
@@ -6672,29 +5834,26 @@ typedef union _hw_ddr_cr55
     uint32_t U;
     struct _hw_ddr_cr55_bitfields
     {
-        uint32_t PHYUPDTY2 : 14;       //!< [13:0] DFI PHYUPD TYPE2
-        uint32_t RESERVED0 : 2;        //!< [15:14] Reserved
-        uint32_t PHYUPDTY3 : 14;       //!< [29:16] DFI PHYUPD TYPE3
-        uint32_t RESERVED1 : 2;        //!< [31:30] Reserved
+        uint32_t PHYUPDTY2 : 14;       /*!< [13:0] DFI PHYUPD TYPE2 */
+        uint32_t RESERVED0 : 2;        /*!< [15:14] Reserved */
+        uint32_t PHYUPDTY3 : 14;       /*!< [29:16] DFI PHYUPD TYPE3 */
+        uint32_t RESERVED1 : 2;        /*!< [31:30] Reserved */
     } B;
 } hw_ddr_cr55_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR55 register
  */
-//@{
-#define HW_DDR_CR55_ADDR         (REGS_DDR_BASE + 0xDCU)
+/*@{*/
+#define HW_DDR_CR55_ADDR(x)      ((x) + 0xDCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR55              (*(__IO hw_ddr_cr55_t *) HW_DDR_CR55_ADDR)
-#define HW_DDR_CR55_RD()         (HW_DDR_CR55.U)
-#define HW_DDR_CR55_WR(v)        (HW_DDR_CR55.U = (v))
-#define HW_DDR_CR55_SET(v)       (HW_DDR_CR55_WR(HW_DDR_CR55_RD() |  (v)))
-#define HW_DDR_CR55_CLR(v)       (HW_DDR_CR55_WR(HW_DDR_CR55_RD() & ~(v)))
-#define HW_DDR_CR55_TOG(v)       (HW_DDR_CR55_WR(HW_DDR_CR55_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR55(x)           (*(__IO hw_ddr_cr55_t *) HW_DDR_CR55_ADDR(x))
+#define HW_DDR_CR55_RD(x)        (HW_DDR_CR55(x).U)
+#define HW_DDR_CR55_WR(x, v)     (HW_DDR_CR55(x).U = (v))
+#define HW_DDR_CR55_SET(x, v)    (HW_DDR_CR55_WR(x, HW_DDR_CR55_RD(x) |  (v)))
+#define HW_DDR_CR55_CLR(x, v)    (HW_DDR_CR55_WR(x, HW_DDR_CR55_RD(x) & ~(v)))
+#define HW_DDR_CR55_TOG(x, v)    (HW_DDR_CR55_WR(x, HW_DDR_CR55_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR55 bitfields
@@ -6705,54 +5864,45 @@ typedef union _hw_ddr_cr55
  *
  * Holds the DFI t PHYUPD_TYPE2 timing parameter.
  */
-//@{
-#define BP_DDR_CR55_PHYUPDTY2 (0U)         //!< Bit position for DDR_CR55_PHYUPDTY2.
-#define BM_DDR_CR55_PHYUPDTY2 (0x00003FFFU) //!< Bit mask for DDR_CR55_PHYUPDTY2.
-#define BS_DDR_CR55_PHYUPDTY2 (14U)        //!< Bit field size in bits for DDR_CR55_PHYUPDTY2.
+/*@{*/
+#define BP_DDR_CR55_PHYUPDTY2 (0U)         /*!< Bit position for DDR_CR55_PHYUPDTY2. */
+#define BM_DDR_CR55_PHYUPDTY2 (0x00003FFFU) /*!< Bit mask for DDR_CR55_PHYUPDTY2. */
+#define BS_DDR_CR55_PHYUPDTY2 (14U)        /*!< Bit field size in bits for DDR_CR55_PHYUPDTY2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR55_PHYUPDTY2 field.
-#define BR_DDR_CR55_PHYUPDTY2 (HW_DDR_CR55.B.PHYUPDTY2)
-#endif
+/*! @brief Read current value of the DDR_CR55_PHYUPDTY2 field. */
+#define BR_DDR_CR55_PHYUPDTY2(x) (HW_DDR_CR55(x).B.PHYUPDTY2)
 
-//! @brief Format value for bitfield DDR_CR55_PHYUPDTY2.
-#define BF_DDR_CR55_PHYUPDTY2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR55_PHYUPDTY2), uint32_t) & BM_DDR_CR55_PHYUPDTY2)
+/*! @brief Format value for bitfield DDR_CR55_PHYUPDTY2. */
+#define BF_DDR_CR55_PHYUPDTY2(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR55_PHYUPDTY2) & BM_DDR_CR55_PHYUPDTY2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYUPDTY2 field to a new value.
-#define BW_DDR_CR55_PHYUPDTY2(v) (HW_DDR_CR55_WR((HW_DDR_CR55_RD() & ~BM_DDR_CR55_PHYUPDTY2) | BF_DDR_CR55_PHYUPDTY2(v)))
-#endif
-//@}
+/*! @brief Set the PHYUPDTY2 field to a new value. */
+#define BW_DDR_CR55_PHYUPDTY2(x, v) (HW_DDR_CR55_WR(x, (HW_DDR_CR55_RD(x) & ~BM_DDR_CR55_PHYUPDTY2) | BF_DDR_CR55_PHYUPDTY2(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR55, field PHYUPDTY3[29:16] (RW)
  *
  * Holds the DFI t PHYUPD_TYPE3 timing parameter.
  */
-//@{
-#define BP_DDR_CR55_PHYUPDTY3 (16U)        //!< Bit position for DDR_CR55_PHYUPDTY3.
-#define BM_DDR_CR55_PHYUPDTY3 (0x3FFF0000U) //!< Bit mask for DDR_CR55_PHYUPDTY3.
-#define BS_DDR_CR55_PHYUPDTY3 (14U)        //!< Bit field size in bits for DDR_CR55_PHYUPDTY3.
+/*@{*/
+#define BP_DDR_CR55_PHYUPDTY3 (16U)        /*!< Bit position for DDR_CR55_PHYUPDTY3. */
+#define BM_DDR_CR55_PHYUPDTY3 (0x3FFF0000U) /*!< Bit mask for DDR_CR55_PHYUPDTY3. */
+#define BS_DDR_CR55_PHYUPDTY3 (14U)        /*!< Bit field size in bits for DDR_CR55_PHYUPDTY3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR55_PHYUPDTY3 field.
-#define BR_DDR_CR55_PHYUPDTY3 (HW_DDR_CR55.B.PHYUPDTY3)
-#endif
+/*! @brief Read current value of the DDR_CR55_PHYUPDTY3 field. */
+#define BR_DDR_CR55_PHYUPDTY3(x) (HW_DDR_CR55(x).B.PHYUPDTY3)
 
-//! @brief Format value for bitfield DDR_CR55_PHYUPDTY3.
-#define BF_DDR_CR55_PHYUPDTY3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR55_PHYUPDTY3), uint32_t) & BM_DDR_CR55_PHYUPDTY3)
+/*! @brief Format value for bitfield DDR_CR55_PHYUPDTY3. */
+#define BF_DDR_CR55_PHYUPDTY3(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR55_PHYUPDTY3) & BM_DDR_CR55_PHYUPDTY3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYUPDTY3 field to a new value.
-#define BW_DDR_CR55_PHYUPDTY3(v) (HW_DDR_CR55_WR((HW_DDR_CR55_RD() & ~BM_DDR_CR55_PHYUPDTY3) | BF_DDR_CR55_PHYUPDTY3(v)))
-#endif
-//@}
+/*! @brief Set the PHYUPDTY3 field to a new value. */
+#define BW_DDR_CR55_PHYUPDTY3(x, v) (HW_DDR_CR55_WR(x, (HW_DDR_CR55_RD(x) & ~BM_DDR_CR55_PHYUPDTY3) | BF_DDR_CR55_PHYUPDTY3(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR56 - DDR Control Register 56
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR56 - DDR Control Register 56
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR56 - DDR Control Register 56 (RW)
  *
@@ -6763,31 +5913,28 @@ typedef union _hw_ddr_cr56
     uint32_t U;
     struct _hw_ddr_cr56_bitfields
     {
-        uint32_t PHYUPDRESP : 14;      //!< [13:0] TDFI PHYUPDRESP parameter
-        uint32_t RESERVED0 : 2;        //!< [15:14] Reserved
-        uint32_t RDLATADJ : 4;         //!< [19:16] Read Latency Adjust
-        uint32_t RESERVED1 : 4;        //!< [23:20] Reserved
-        uint32_t WRLATADJ : 4;         //!< [27:24] Write Latency Adjust
-        uint32_t RESERVED2 : 4;        //!< [31:28] Reserved
+        uint32_t PHYUPDRESP : 14;      /*!< [13:0] TDFI PHYUPDRESP parameter */
+        uint32_t RESERVED0 : 2;        /*!< [15:14] Reserved */
+        uint32_t RDLATADJ : 4;         /*!< [19:16] Read Latency Adjust */
+        uint32_t RESERVED1 : 4;        /*!< [23:20] Reserved */
+        uint32_t WRLATADJ : 4;         /*!< [27:24] Write Latency Adjust */
+        uint32_t RESERVED2 : 4;        /*!< [31:28] Reserved */
     } B;
 } hw_ddr_cr56_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR56 register
  */
-//@{
-#define HW_DDR_CR56_ADDR         (REGS_DDR_BASE + 0xE0U)
+/*@{*/
+#define HW_DDR_CR56_ADDR(x)      ((x) + 0xE0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR56              (*(__IO hw_ddr_cr56_t *) HW_DDR_CR56_ADDR)
-#define HW_DDR_CR56_RD()         (HW_DDR_CR56.U)
-#define HW_DDR_CR56_WR(v)        (HW_DDR_CR56.U = (v))
-#define HW_DDR_CR56_SET(v)       (HW_DDR_CR56_WR(HW_DDR_CR56_RD() |  (v)))
-#define HW_DDR_CR56_CLR(v)       (HW_DDR_CR56_WR(HW_DDR_CR56_RD() & ~(v)))
-#define HW_DDR_CR56_TOG(v)       (HW_DDR_CR56_WR(HW_DDR_CR56_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR56(x)           (*(__IO hw_ddr_cr56_t *) HW_DDR_CR56_ADDR(x))
+#define HW_DDR_CR56_RD(x)        (HW_DDR_CR56(x).U)
+#define HW_DDR_CR56_WR(x, v)     (HW_DDR_CR56(x).U = (v))
+#define HW_DDR_CR56_SET(x, v)    (HW_DDR_CR56_WR(x, HW_DDR_CR56_RD(x) |  (v)))
+#define HW_DDR_CR56_CLR(x, v)    (HW_DDR_CR56_WR(x, HW_DDR_CR56_RD(x) & ~(v)))
+#define HW_DDR_CR56_TOG(x, v)    (HW_DDR_CR56_WR(x, HW_DDR_CR56_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR56 bitfields
@@ -6798,78 +5945,65 @@ typedef union _hw_ddr_cr56
  *
  * Contains the DFI t PHYUPD_RESP timing parameter.
  */
-//@{
-#define BP_DDR_CR56_PHYUPDRESP (0U)        //!< Bit position for DDR_CR56_PHYUPDRESP.
-#define BM_DDR_CR56_PHYUPDRESP (0x00003FFFU) //!< Bit mask for DDR_CR56_PHYUPDRESP.
-#define BS_DDR_CR56_PHYUPDRESP (14U)       //!< Bit field size in bits for DDR_CR56_PHYUPDRESP.
+/*@{*/
+#define BP_DDR_CR56_PHYUPDRESP (0U)        /*!< Bit position for DDR_CR56_PHYUPDRESP. */
+#define BM_DDR_CR56_PHYUPDRESP (0x00003FFFU) /*!< Bit mask for DDR_CR56_PHYUPDRESP. */
+#define BS_DDR_CR56_PHYUPDRESP (14U)       /*!< Bit field size in bits for DDR_CR56_PHYUPDRESP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR56_PHYUPDRESP field.
-#define BR_DDR_CR56_PHYUPDRESP (HW_DDR_CR56.B.PHYUPDRESP)
-#endif
+/*! @brief Read current value of the DDR_CR56_PHYUPDRESP field. */
+#define BR_DDR_CR56_PHYUPDRESP(x) (HW_DDR_CR56(x).B.PHYUPDRESP)
 
-//! @brief Format value for bitfield DDR_CR56_PHYUPDRESP.
-#define BF_DDR_CR56_PHYUPDRESP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR56_PHYUPDRESP), uint32_t) & BM_DDR_CR56_PHYUPDRESP)
+/*! @brief Format value for bitfield DDR_CR56_PHYUPDRESP. */
+#define BF_DDR_CR56_PHYUPDRESP(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR56_PHYUPDRESP) & BM_DDR_CR56_PHYUPDRESP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYUPDRESP field to a new value.
-#define BW_DDR_CR56_PHYUPDRESP(v) (HW_DDR_CR56_WR((HW_DDR_CR56_RD() & ~BM_DDR_CR56_PHYUPDRESP) | BF_DDR_CR56_PHYUPDRESP(v)))
-#endif
-//@}
+/*! @brief Set the PHYUPDRESP field to a new value. */
+#define BW_DDR_CR56_PHYUPDRESP(x, v) (HW_DDR_CR56_WR(x, (HW_DDR_CR56_RD(x) & ~BM_DDR_CR56_PHYUPDRESP) | BF_DDR_CR56_PHYUPDRESP(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR56, field RDLATADJ[19:16] (RW)
  *
  * Adjustment value for PHY read timing.
  */
-//@{
-#define BP_DDR_CR56_RDLATADJ (16U)         //!< Bit position for DDR_CR56_RDLATADJ.
-#define BM_DDR_CR56_RDLATADJ (0x000F0000U) //!< Bit mask for DDR_CR56_RDLATADJ.
-#define BS_DDR_CR56_RDLATADJ (4U)          //!< Bit field size in bits for DDR_CR56_RDLATADJ.
+/*@{*/
+#define BP_DDR_CR56_RDLATADJ (16U)         /*!< Bit position for DDR_CR56_RDLATADJ. */
+#define BM_DDR_CR56_RDLATADJ (0x000F0000U) /*!< Bit mask for DDR_CR56_RDLATADJ. */
+#define BS_DDR_CR56_RDLATADJ (4U)          /*!< Bit field size in bits for DDR_CR56_RDLATADJ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR56_RDLATADJ field.
-#define BR_DDR_CR56_RDLATADJ (HW_DDR_CR56.B.RDLATADJ)
-#endif
+/*! @brief Read current value of the DDR_CR56_RDLATADJ field. */
+#define BR_DDR_CR56_RDLATADJ(x) (HW_DDR_CR56(x).B.RDLATADJ)
 
-//! @brief Format value for bitfield DDR_CR56_RDLATADJ.
-#define BF_DDR_CR56_RDLATADJ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR56_RDLATADJ), uint32_t) & BM_DDR_CR56_RDLATADJ)
+/*! @brief Format value for bitfield DDR_CR56_RDLATADJ. */
+#define BF_DDR_CR56_RDLATADJ(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR56_RDLATADJ) & BM_DDR_CR56_RDLATADJ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RDLATADJ field to a new value.
-#define BW_DDR_CR56_RDLATADJ(v) (HW_DDR_CR56_WR((HW_DDR_CR56_RD() & ~BM_DDR_CR56_RDLATADJ) | BF_DDR_CR56_RDLATADJ(v)))
-#endif
-//@}
+/*! @brief Set the RDLATADJ field to a new value. */
+#define BW_DDR_CR56_RDLATADJ(x, v) (HW_DDR_CR56_WR(x, (HW_DDR_CR56_RD(x) & ~BM_DDR_CR56_RDLATADJ) | BF_DDR_CR56_RDLATADJ(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR56, field WRLATADJ[27:24] (RW)
  *
  * Adjustment value for PHY write timing.
  */
-//@{
-#define BP_DDR_CR56_WRLATADJ (24U)         //!< Bit position for DDR_CR56_WRLATADJ.
-#define BM_DDR_CR56_WRLATADJ (0x0F000000U) //!< Bit mask for DDR_CR56_WRLATADJ.
-#define BS_DDR_CR56_WRLATADJ (4U)          //!< Bit field size in bits for DDR_CR56_WRLATADJ.
+/*@{*/
+#define BP_DDR_CR56_WRLATADJ (24U)         /*!< Bit position for DDR_CR56_WRLATADJ. */
+#define BM_DDR_CR56_WRLATADJ (0x0F000000U) /*!< Bit mask for DDR_CR56_WRLATADJ. */
+#define BS_DDR_CR56_WRLATADJ (4U)          /*!< Bit field size in bits for DDR_CR56_WRLATADJ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR56_WRLATADJ field.
-#define BR_DDR_CR56_WRLATADJ (HW_DDR_CR56.B.WRLATADJ)
-#endif
+/*! @brief Read current value of the DDR_CR56_WRLATADJ field. */
+#define BR_DDR_CR56_WRLATADJ(x) (HW_DDR_CR56(x).B.WRLATADJ)
 
-//! @brief Format value for bitfield DDR_CR56_WRLATADJ.
-#define BF_DDR_CR56_WRLATADJ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR56_WRLATADJ), uint32_t) & BM_DDR_CR56_WRLATADJ)
+/*! @brief Format value for bitfield DDR_CR56_WRLATADJ. */
+#define BF_DDR_CR56_WRLATADJ(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR56_WRLATADJ) & BM_DDR_CR56_WRLATADJ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WRLATADJ field to a new value.
-#define BW_DDR_CR56_WRLATADJ(v) (HW_DDR_CR56_WR((HW_DDR_CR56_RD() & ~BM_DDR_CR56_WRLATADJ) | BF_DDR_CR56_WRLATADJ(v)))
-#endif
-//@}
+/*! @brief Set the WRLATADJ field to a new value. */
+#define BW_DDR_CR56_WRLATADJ(x, v) (HW_DDR_CR56_WR(x, (HW_DDR_CR56_RD(x) & ~BM_DDR_CR56_WRLATADJ) | BF_DDR_CR56_WRLATADJ(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR57 - DDR Control Register 57
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR57 - DDR Control Register 57
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_CR57 - DDR Control Register 57 (RW)
  *
@@ -6880,33 +6014,30 @@ typedef union _hw_ddr_cr57
     uint32_t U;
     struct _hw_ddr_cr57_bitfields
     {
-        uint32_t CMDDLY : 4;           //!< [3:0] Command Delay
-        uint32_t RESERVED0 : 4;        //!< [7:4] Reserved
-        uint32_t CLKDISDLY : 3;        //!< [10:8] DFI Clock Disable Delay
-        uint32_t RESERVED1 : 5;        //!< [15:11] Reserved
-        uint32_t CLKENDLY : 4;         //!< [19:16] DFI Clock Enable Delay
-        uint32_t RESERVED2 : 4;        //!< [23:20] Reserved
-        uint32_t ODTALTEN : 1;         //!< [24] ODT Alternate Enable
-        uint32_t RESERVED3 : 7;        //!< [31:25] Reserved
+        uint32_t CMDDLY : 4;           /*!< [3:0] Command Delay */
+        uint32_t RESERVED0 : 4;        /*!< [7:4] Reserved */
+        uint32_t CLKDISDLY : 3;        /*!< [10:8] DFI Clock Disable Delay */
+        uint32_t RESERVED1 : 5;        /*!< [15:11] Reserved */
+        uint32_t CLKENDLY : 4;         /*!< [19:16] DFI Clock Enable Delay */
+        uint32_t RESERVED2 : 4;        /*!< [23:20] Reserved */
+        uint32_t ODTALTEN : 1;         /*!< [24] ODT Alternate Enable */
+        uint32_t RESERVED3 : 7;        /*!< [31:25] Reserved */
     } B;
 } hw_ddr_cr57_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR57 register
  */
-//@{
-#define HW_DDR_CR57_ADDR         (REGS_DDR_BASE + 0xE4U)
+/*@{*/
+#define HW_DDR_CR57_ADDR(x)      ((x) + 0xE4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR57              (*(__IO hw_ddr_cr57_t *) HW_DDR_CR57_ADDR)
-#define HW_DDR_CR57_RD()         (HW_DDR_CR57.U)
-#define HW_DDR_CR57_WR(v)        (HW_DDR_CR57.U = (v))
-#define HW_DDR_CR57_SET(v)       (HW_DDR_CR57_WR(HW_DDR_CR57_RD() |  (v)))
-#define HW_DDR_CR57_CLR(v)       (HW_DDR_CR57_WR(HW_DDR_CR57_RD() & ~(v)))
-#define HW_DDR_CR57_TOG(v)       (HW_DDR_CR57_WR(HW_DDR_CR57_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_CR57(x)           (*(__IO hw_ddr_cr57_t *) HW_DDR_CR57_ADDR(x))
+#define HW_DDR_CR57_RD(x)        (HW_DDR_CR57(x).U)
+#define HW_DDR_CR57_WR(x, v)     (HW_DDR_CR57(x).U = (v))
+#define HW_DDR_CR57_SET(x, v)    (HW_DDR_CR57_WR(x, HW_DDR_CR57_RD(x) |  (v)))
+#define HW_DDR_CR57_CLR(x, v)    (HW_DDR_CR57_WR(x, HW_DDR_CR57_RD(x) & ~(v)))
+#define HW_DDR_CR57_TOG(x, v)    (HW_DDR_CR57_WR(x, HW_DDR_CR57_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR57 bitfields
@@ -6917,72 +6048,60 @@ typedef union _hw_ddr_cr57
  *
  * Delay from DFI command to memory command.
  */
-//@{
-#define BP_DDR_CR57_CMDDLY   (0U)          //!< Bit position for DDR_CR57_CMDDLY.
-#define BM_DDR_CR57_CMDDLY   (0x0000000FU) //!< Bit mask for DDR_CR57_CMDDLY.
-#define BS_DDR_CR57_CMDDLY   (4U)          //!< Bit field size in bits for DDR_CR57_CMDDLY.
+/*@{*/
+#define BP_DDR_CR57_CMDDLY   (0U)          /*!< Bit position for DDR_CR57_CMDDLY. */
+#define BM_DDR_CR57_CMDDLY   (0x0000000FU) /*!< Bit mask for DDR_CR57_CMDDLY. */
+#define BS_DDR_CR57_CMDDLY   (4U)          /*!< Bit field size in bits for DDR_CR57_CMDDLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR57_CMDDLY field.
-#define BR_DDR_CR57_CMDDLY   (HW_DDR_CR57.B.CMDDLY)
-#endif
+/*! @brief Read current value of the DDR_CR57_CMDDLY field. */
+#define BR_DDR_CR57_CMDDLY(x) (HW_DDR_CR57(x).B.CMDDLY)
 
-//! @brief Format value for bitfield DDR_CR57_CMDDLY.
-#define BF_DDR_CR57_CMDDLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR57_CMDDLY), uint32_t) & BM_DDR_CR57_CMDDLY)
+/*! @brief Format value for bitfield DDR_CR57_CMDDLY. */
+#define BF_DDR_CR57_CMDDLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR57_CMDDLY) & BM_DDR_CR57_CMDDLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMDDLY field to a new value.
-#define BW_DDR_CR57_CMDDLY(v) (HW_DDR_CR57_WR((HW_DDR_CR57_RD() & ~BM_DDR_CR57_CMDDLY) | BF_DDR_CR57_CMDDLY(v)))
-#endif
-//@}
+/*! @brief Set the CMDDLY field to a new value. */
+#define BW_DDR_CR57_CMDDLY(x, v) (HW_DDR_CR57_WR(x, (HW_DDR_CR57_RD(x) & ~BM_DDR_CR57_CMDDLY) | BF_DDR_CR57_CMDDLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR57, field CLKDISDLY[10:8] (RW)
  *
  * Delay from DFI clock disable to memory clock disenable.
  */
-//@{
-#define BP_DDR_CR57_CLKDISDLY (8U)         //!< Bit position for DDR_CR57_CLKDISDLY.
-#define BM_DDR_CR57_CLKDISDLY (0x00000700U) //!< Bit mask for DDR_CR57_CLKDISDLY.
-#define BS_DDR_CR57_CLKDISDLY (3U)         //!< Bit field size in bits for DDR_CR57_CLKDISDLY.
+/*@{*/
+#define BP_DDR_CR57_CLKDISDLY (8U)         /*!< Bit position for DDR_CR57_CLKDISDLY. */
+#define BM_DDR_CR57_CLKDISDLY (0x00000700U) /*!< Bit mask for DDR_CR57_CLKDISDLY. */
+#define BS_DDR_CR57_CLKDISDLY (3U)         /*!< Bit field size in bits for DDR_CR57_CLKDISDLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR57_CLKDISDLY field.
-#define BR_DDR_CR57_CLKDISDLY (HW_DDR_CR57.B.CLKDISDLY)
-#endif
+/*! @brief Read current value of the DDR_CR57_CLKDISDLY field. */
+#define BR_DDR_CR57_CLKDISDLY(x) (HW_DDR_CR57(x).B.CLKDISDLY)
 
-//! @brief Format value for bitfield DDR_CR57_CLKDISDLY.
-#define BF_DDR_CR57_CLKDISDLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR57_CLKDISDLY), uint32_t) & BM_DDR_CR57_CLKDISDLY)
+/*! @brief Format value for bitfield DDR_CR57_CLKDISDLY. */
+#define BF_DDR_CR57_CLKDISDLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR57_CLKDISDLY) & BM_DDR_CR57_CLKDISDLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKDISDLY field to a new value.
-#define BW_DDR_CR57_CLKDISDLY(v) (HW_DDR_CR57_WR((HW_DDR_CR57_RD() & ~BM_DDR_CR57_CLKDISDLY) | BF_DDR_CR57_CLKDISDLY(v)))
-#endif
-//@}
+/*! @brief Set the CLKDISDLY field to a new value. */
+#define BW_DDR_CR57_CLKDISDLY(x, v) (HW_DDR_CR57_WR(x, (HW_DDR_CR57_RD(x) & ~BM_DDR_CR57_CLKDISDLY) | BF_DDR_CR57_CLKDISDLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR57, field CLKENDLY[19:16] (RW)
  *
  * Delay from DFI clock enable to memory clock enable.
  */
-//@{
-#define BP_DDR_CR57_CLKENDLY (16U)         //!< Bit position for DDR_CR57_CLKENDLY.
-#define BM_DDR_CR57_CLKENDLY (0x000F0000U) //!< Bit mask for DDR_CR57_CLKENDLY.
-#define BS_DDR_CR57_CLKENDLY (4U)          //!< Bit field size in bits for DDR_CR57_CLKENDLY.
+/*@{*/
+#define BP_DDR_CR57_CLKENDLY (16U)         /*!< Bit position for DDR_CR57_CLKENDLY. */
+#define BM_DDR_CR57_CLKENDLY (0x000F0000U) /*!< Bit mask for DDR_CR57_CLKENDLY. */
+#define BS_DDR_CR57_CLKENDLY (4U)          /*!< Bit field size in bits for DDR_CR57_CLKENDLY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR57_CLKENDLY field.
-#define BR_DDR_CR57_CLKENDLY (HW_DDR_CR57.B.CLKENDLY)
-#endif
+/*! @brief Read current value of the DDR_CR57_CLKENDLY field. */
+#define BR_DDR_CR57_CLKENDLY(x) (HW_DDR_CR57(x).B.CLKENDLY)
 
-//! @brief Format value for bitfield DDR_CR57_CLKENDLY.
-#define BF_DDR_CR57_CLKENDLY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR57_CLKENDLY), uint32_t) & BM_DDR_CR57_CLKENDLY)
+/*! @brief Format value for bitfield DDR_CR57_CLKENDLY. */
+#define BF_DDR_CR57_CLKENDLY(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR57_CLKENDLY) & BM_DDR_CR57_CLKENDLY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKENDLY field to a new value.
-#define BW_DDR_CR57_CLKENDLY(v) (HW_DDR_CR57_WR((HW_DDR_CR57_RD() & ~BM_DDR_CR57_CLKENDLY) | BF_DDR_CR57_CLKENDLY(v)))
-#endif
-//@}
+/*! @brief Set the CLKENDLY field to a new value. */
+#define BW_DDR_CR57_CLKENDLY(x, v) (HW_DDR_CR57_WR(x, (HW_DDR_CR57_RD(x) & ~BM_DDR_CR57_CLKENDLY) | BF_DDR_CR57_CLKENDLY(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_CR57, field ODTALTEN[24] (RW)
@@ -6993,32 +6112,27 @@ typedef union _hw_ddr_cr57
  * - 0 - Disable
  * - 1 - Enable
  */
-//@{
-#define BP_DDR_CR57_ODTALTEN (24U)         //!< Bit position for DDR_CR57_ODTALTEN.
-#define BM_DDR_CR57_ODTALTEN (0x01000000U) //!< Bit mask for DDR_CR57_ODTALTEN.
-#define BS_DDR_CR57_ODTALTEN (1U)          //!< Bit field size in bits for DDR_CR57_ODTALTEN.
+/*@{*/
+#define BP_DDR_CR57_ODTALTEN (24U)         /*!< Bit position for DDR_CR57_ODTALTEN. */
+#define BM_DDR_CR57_ODTALTEN (0x01000000U) /*!< Bit mask for DDR_CR57_ODTALTEN. */
+#define BS_DDR_CR57_ODTALTEN (1U)          /*!< Bit field size in bits for DDR_CR57_ODTALTEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR57_ODTALTEN field.
-#define BR_DDR_CR57_ODTALTEN (BITBAND_ACCESS32(HW_DDR_CR57_ADDR, BP_DDR_CR57_ODTALTEN))
-#endif
+/*! @brief Read current value of the DDR_CR57_ODTALTEN field. */
+#define BR_DDR_CR57_ODTALTEN(x) (BITBAND_ACCESS32(HW_DDR_CR57_ADDR(x), BP_DDR_CR57_ODTALTEN))
 
-//! @brief Format value for bitfield DDR_CR57_ODTALTEN.
-#define BF_DDR_CR57_ODTALTEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_CR57_ODTALTEN), uint32_t) & BM_DDR_CR57_ODTALTEN)
+/*! @brief Format value for bitfield DDR_CR57_ODTALTEN. */
+#define BF_DDR_CR57_ODTALTEN(v) ((uint32_t)((uint32_t)(v) << BP_DDR_CR57_ODTALTEN) & BM_DDR_CR57_ODTALTEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ODTALTEN field to a new value.
-#define BW_DDR_CR57_ODTALTEN(v) (BITBAND_ACCESS32(HW_DDR_CR57_ADDR, BP_DDR_CR57_ODTALTEN) = (v))
-#endif
-//@}
+/*! @brief Set the ODTALTEN field to a new value. */
+#define BW_DDR_CR57_ODTALTEN(x, v) (BITBAND_ACCESS32(HW_DDR_CR57_ADDR(x), BP_DDR_CR57_ODTALTEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR58 - DDR Control Register 58
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR58 - DDR Control Register 58
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR58 - DDR Control Register 58 (RO)
+ * @brief HW_DDR_CR58 - DDR Control Register 58 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7027,23 +6141,20 @@ typedef union _hw_ddr_cr58
     uint32_t U;
     struct _hw_ddr_cr58_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr58_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR58 register
  */
-//@{
-#define HW_DDR_CR58_ADDR         (REGS_DDR_BASE + 0xE8U)
+/*@{*/
+#define HW_DDR_CR58_ADDR(x)      ((x) + 0xE8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR58              (*(__I hw_ddr_cr58_t *) HW_DDR_CR58_ADDR)
-#define HW_DDR_CR58_RD()         (HW_DDR_CR58.U)
-#endif
-//@}
+#define HW_DDR_CR58(x)           (*(__I hw_ddr_cr58_t *) HW_DDR_CR58_ADDR(x))
+#define HW_DDR_CR58_RD(x)        (HW_DDR_CR58(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR58 bitfields
@@ -7052,38 +6163,33 @@ typedef union _hw_ddr_cr58
 /*!
  * @name Register DDR_CR58, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR58_Not_Used (0U)          //!< Bit position for DDR_CR58_Not_Used.
-#define BM_DDR_CR58_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR58_Not_Used.
-#define BS_DDR_CR58_Not_Used (16U)         //!< Bit field size in bits for DDR_CR58_Not_Used.
+/*@{*/
+#define BP_DDR_CR58_Not_Used (0U)          /*!< Bit position for DDR_CR58_Not_Used. */
+#define BM_DDR_CR58_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR58_Not_Used. */
+#define BS_DDR_CR58_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR58_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR58_Not_Used field.
-#define BR_DDR_CR58_Not_Used (HW_DDR_CR58.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR58_Not_Used field. */
+#define BR_DDR_CR58_Not_Used(x) (HW_DDR_CR58(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR58, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR58_NOT_USED (16U)         //!< Bit position for DDR_CR58_NOT_USED.
-#define BM_DDR_CR58_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR58_NOT_USED.
-#define BS_DDR_CR58_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR58_NOT_USED.
+/*@{*/
+#define BP_DDR_CR58_NOT_USED (16U)         /*!< Bit position for DDR_CR58_NOT_USED. */
+#define BM_DDR_CR58_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR58_NOT_USED. */
+#define BS_DDR_CR58_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR58_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR58_NOT_USED field.
-#define BR_DDR_CR58_NOT_USED (HW_DDR_CR58.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR58_NOT_USED field. */
+#define BR_DDR_CR58_NOT_USED(x) (HW_DDR_CR58(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR59 - DDR Control Register 59
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR59 - DDR Control Register 59
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR59 - DDR Control Register 59 (RO)
+ * @brief HW_DDR_CR59 - DDR Control Register 59 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7092,23 +6198,20 @@ typedef union _hw_ddr_cr59
     uint32_t U;
     struct _hw_ddr_cr59_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr59_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR59 register
  */
-//@{
-#define HW_DDR_CR59_ADDR         (REGS_DDR_BASE + 0xECU)
+/*@{*/
+#define HW_DDR_CR59_ADDR(x)      ((x) + 0xECU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR59              (*(__I hw_ddr_cr59_t *) HW_DDR_CR59_ADDR)
-#define HW_DDR_CR59_RD()         (HW_DDR_CR59.U)
-#endif
-//@}
+#define HW_DDR_CR59(x)           (*(__I hw_ddr_cr59_t *) HW_DDR_CR59_ADDR(x))
+#define HW_DDR_CR59_RD(x)        (HW_DDR_CR59(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR59 bitfields
@@ -7117,38 +6220,33 @@ typedef union _hw_ddr_cr59
 /*!
  * @name Register DDR_CR59, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR59_Not_Used (0U)          //!< Bit position for DDR_CR59_Not_Used.
-#define BM_DDR_CR59_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR59_Not_Used.
-#define BS_DDR_CR59_Not_Used (16U)         //!< Bit field size in bits for DDR_CR59_Not_Used.
+/*@{*/
+#define BP_DDR_CR59_Not_Used (0U)          /*!< Bit position for DDR_CR59_Not_Used. */
+#define BM_DDR_CR59_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR59_Not_Used. */
+#define BS_DDR_CR59_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR59_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR59_Not_Used field.
-#define BR_DDR_CR59_Not_Used (HW_DDR_CR59.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR59_Not_Used field. */
+#define BR_DDR_CR59_Not_Used(x) (HW_DDR_CR59(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR59, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR59_NOT_USED (16U)         //!< Bit position for DDR_CR59_NOT_USED.
-#define BM_DDR_CR59_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR59_NOT_USED.
-#define BS_DDR_CR59_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR59_NOT_USED.
+/*@{*/
+#define BP_DDR_CR59_NOT_USED (16U)         /*!< Bit position for DDR_CR59_NOT_USED. */
+#define BM_DDR_CR59_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR59_NOT_USED. */
+#define BS_DDR_CR59_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR59_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR59_NOT_USED field.
-#define BR_DDR_CR59_NOT_USED (HW_DDR_CR59.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR59_NOT_USED field. */
+#define BR_DDR_CR59_NOT_USED(x) (HW_DDR_CR59(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR60 - DDR Control Register 60
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR60 - DDR Control Register 60
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR60 - DDR Control Register 60 (RO)
+ * @brief HW_DDR_CR60 - DDR Control Register 60 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7157,23 +6255,20 @@ typedef union _hw_ddr_cr60
     uint32_t U;
     struct _hw_ddr_cr60_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr60_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR60 register
  */
-//@{
-#define HW_DDR_CR60_ADDR         (REGS_DDR_BASE + 0xF0U)
+/*@{*/
+#define HW_DDR_CR60_ADDR(x)      ((x) + 0xF0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR60              (*(__I hw_ddr_cr60_t *) HW_DDR_CR60_ADDR)
-#define HW_DDR_CR60_RD()         (HW_DDR_CR60.U)
-#endif
-//@}
+#define HW_DDR_CR60(x)           (*(__I hw_ddr_cr60_t *) HW_DDR_CR60_ADDR(x))
+#define HW_DDR_CR60_RD(x)        (HW_DDR_CR60(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR60 bitfields
@@ -7182,38 +6277,33 @@ typedef union _hw_ddr_cr60
 /*!
  * @name Register DDR_CR60, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR60_Not_Used (0U)          //!< Bit position for DDR_CR60_Not_Used.
-#define BM_DDR_CR60_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR60_Not_Used.
-#define BS_DDR_CR60_Not_Used (16U)         //!< Bit field size in bits for DDR_CR60_Not_Used.
+/*@{*/
+#define BP_DDR_CR60_Not_Used (0U)          /*!< Bit position for DDR_CR60_Not_Used. */
+#define BM_DDR_CR60_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR60_Not_Used. */
+#define BS_DDR_CR60_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR60_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR60_Not_Used field.
-#define BR_DDR_CR60_Not_Used (HW_DDR_CR60.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR60_Not_Used field. */
+#define BR_DDR_CR60_Not_Used(x) (HW_DDR_CR60(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR60, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR60_NOT_USED (16U)         //!< Bit position for DDR_CR60_NOT_USED.
-#define BM_DDR_CR60_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR60_NOT_USED.
-#define BS_DDR_CR60_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR60_NOT_USED.
+/*@{*/
+#define BP_DDR_CR60_NOT_USED (16U)         /*!< Bit position for DDR_CR60_NOT_USED. */
+#define BM_DDR_CR60_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR60_NOT_USED. */
+#define BS_DDR_CR60_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR60_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR60_NOT_USED field.
-#define BR_DDR_CR60_NOT_USED (HW_DDR_CR60.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR60_NOT_USED field. */
+#define BR_DDR_CR60_NOT_USED(x) (HW_DDR_CR60(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR61 - DDR Control Register 61
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR61 - DDR Control Register 61
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR61 - DDR Control Register 61 (RO)
+ * @brief HW_DDR_CR61 - DDR Control Register 61 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7222,23 +6312,20 @@ typedef union _hw_ddr_cr61
     uint32_t U;
     struct _hw_ddr_cr61_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr61_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR61 register
  */
-//@{
-#define HW_DDR_CR61_ADDR         (REGS_DDR_BASE + 0xF4U)
+/*@{*/
+#define HW_DDR_CR61_ADDR(x)      ((x) + 0xF4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR61              (*(__I hw_ddr_cr61_t *) HW_DDR_CR61_ADDR)
-#define HW_DDR_CR61_RD()         (HW_DDR_CR61.U)
-#endif
-//@}
+#define HW_DDR_CR61(x)           (*(__I hw_ddr_cr61_t *) HW_DDR_CR61_ADDR(x))
+#define HW_DDR_CR61_RD(x)        (HW_DDR_CR61(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR61 bitfields
@@ -7247,38 +6334,33 @@ typedef union _hw_ddr_cr61
 /*!
  * @name Register DDR_CR61, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR61_Not_Used (0U)          //!< Bit position for DDR_CR61_Not_Used.
-#define BM_DDR_CR61_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR61_Not_Used.
-#define BS_DDR_CR61_Not_Used (16U)         //!< Bit field size in bits for DDR_CR61_Not_Used.
+/*@{*/
+#define BP_DDR_CR61_Not_Used (0U)          /*!< Bit position for DDR_CR61_Not_Used. */
+#define BM_DDR_CR61_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR61_Not_Used. */
+#define BS_DDR_CR61_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR61_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR61_Not_Used field.
-#define BR_DDR_CR61_Not_Used (HW_DDR_CR61.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR61_Not_Used field. */
+#define BR_DDR_CR61_Not_Used(x) (HW_DDR_CR61(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR61, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR61_NOT_USED (16U)         //!< Bit position for DDR_CR61_NOT_USED.
-#define BM_DDR_CR61_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR61_NOT_USED.
-#define BS_DDR_CR61_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR61_NOT_USED.
+/*@{*/
+#define BP_DDR_CR61_NOT_USED (16U)         /*!< Bit position for DDR_CR61_NOT_USED. */
+#define BM_DDR_CR61_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR61_NOT_USED. */
+#define BS_DDR_CR61_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR61_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR61_NOT_USED field.
-#define BR_DDR_CR61_NOT_USED (HW_DDR_CR61.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR61_NOT_USED field. */
+#define BR_DDR_CR61_NOT_USED(x) (HW_DDR_CR61(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR62 - DDR Control Register 62
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR62 - DDR Control Register 62
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR62 - DDR Control Register 62 (RO)
+ * @brief HW_DDR_CR62 - DDR Control Register 62 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7287,23 +6369,20 @@ typedef union _hw_ddr_cr62
     uint32_t U;
     struct _hw_ddr_cr62_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr62_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR62 register
  */
-//@{
-#define HW_DDR_CR62_ADDR         (REGS_DDR_BASE + 0xF8U)
+/*@{*/
+#define HW_DDR_CR62_ADDR(x)      ((x) + 0xF8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR62              (*(__I hw_ddr_cr62_t *) HW_DDR_CR62_ADDR)
-#define HW_DDR_CR62_RD()         (HW_DDR_CR62.U)
-#endif
-//@}
+#define HW_DDR_CR62(x)           (*(__I hw_ddr_cr62_t *) HW_DDR_CR62_ADDR(x))
+#define HW_DDR_CR62_RD(x)        (HW_DDR_CR62(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR62 bitfields
@@ -7312,38 +6391,33 @@ typedef union _hw_ddr_cr62
 /*!
  * @name Register DDR_CR62, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR62_Not_Used (0U)          //!< Bit position for DDR_CR62_Not_Used.
-#define BM_DDR_CR62_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR62_Not_Used.
-#define BS_DDR_CR62_Not_Used (16U)         //!< Bit field size in bits for DDR_CR62_Not_Used.
+/*@{*/
+#define BP_DDR_CR62_Not_Used (0U)          /*!< Bit position for DDR_CR62_Not_Used. */
+#define BM_DDR_CR62_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR62_Not_Used. */
+#define BS_DDR_CR62_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR62_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR62_Not_Used field.
-#define BR_DDR_CR62_Not_Used (HW_DDR_CR62.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR62_Not_Used field. */
+#define BR_DDR_CR62_Not_Used(x) (HW_DDR_CR62(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR62, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR62_NOT_USED (16U)         //!< Bit position for DDR_CR62_NOT_USED.
-#define BM_DDR_CR62_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR62_NOT_USED.
-#define BS_DDR_CR62_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR62_NOT_USED.
+/*@{*/
+#define BP_DDR_CR62_NOT_USED (16U)         /*!< Bit position for DDR_CR62_NOT_USED. */
+#define BM_DDR_CR62_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR62_NOT_USED. */
+#define BS_DDR_CR62_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR62_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR62_NOT_USED field.
-#define BR_DDR_CR62_NOT_USED (HW_DDR_CR62.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR62_NOT_USED field. */
+#define BR_DDR_CR62_NOT_USED(x) (HW_DDR_CR62(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_CR63 - DDR Control Register 63
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_CR63 - DDR Control Register 63
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_DDR_CR63 - DDR Control Register 63 (RO)
+ * @brief HW_DDR_CR63 - DDR Control Register 63 (ROZ)
  *
  * Reset value: 0x00000000U
  */
@@ -7352,23 +6426,20 @@ typedef union _hw_ddr_cr63
     uint32_t U;
     struct _hw_ddr_cr63_bitfields
     {
-        uint32_t Not_Used : 16;        //!< [15:0] Reserved
-        uint32_t NOT_USED : 16;        //!< [31:16] Reserved
+        uint32_t Not_Used : 16;        /*!< [15:0] Reserved */
+        uint32_t NOT_USED : 16;        /*!< [31:16] Reserved */
     } B;
 } hw_ddr_cr63_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_CR63 register
  */
-//@{
-#define HW_DDR_CR63_ADDR         (REGS_DDR_BASE + 0xFCU)
+/*@{*/
+#define HW_DDR_CR63_ADDR(x)      ((x) + 0xFCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_CR63              (*(__I hw_ddr_cr63_t *) HW_DDR_CR63_ADDR)
-#define HW_DDR_CR63_RD()         (HW_DDR_CR63.U)
-#endif
-//@}
+#define HW_DDR_CR63(x)           (*(__I hw_ddr_cr63_t *) HW_DDR_CR63_ADDR(x))
+#define HW_DDR_CR63_RD(x)        (HW_DDR_CR63(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_CR63 bitfields
@@ -7377,36 +6448,31 @@ typedef union _hw_ddr_cr63
 /*!
  * @name Register DDR_CR63, field Not_Used[15:0] (ROZ)
  */
-//@{
-#define BP_DDR_CR63_Not_Used (0U)          //!< Bit position for DDR_CR63_Not_Used.
-#define BM_DDR_CR63_Not_Used (0x0000FFFFU) //!< Bit mask for DDR_CR63_Not_Used.
-#define BS_DDR_CR63_Not_Used (16U)         //!< Bit field size in bits for DDR_CR63_Not_Used.
+/*@{*/
+#define BP_DDR_CR63_Not_Used (0U)          /*!< Bit position for DDR_CR63_Not_Used. */
+#define BM_DDR_CR63_Not_Used (0x0000FFFFU) /*!< Bit mask for DDR_CR63_Not_Used. */
+#define BS_DDR_CR63_Not_Used (16U)         /*!< Bit field size in bits for DDR_CR63_Not_Used. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR63_Not_Used field.
-#define BR_DDR_CR63_Not_Used (HW_DDR_CR63.B.Not_Used)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR63_Not_Used field. */
+#define BR_DDR_CR63_Not_Used(x) (HW_DDR_CR63(x).B.Not_Used)
+/*@}*/
 
 /*!
  * @name Register DDR_CR63, field NOT_USED[31:16] (ROZ)
  */
-//@{
-#define BP_DDR_CR63_NOT_USED (16U)         //!< Bit position for DDR_CR63_NOT_USED.
-#define BM_DDR_CR63_NOT_USED (0xFFFF0000U) //!< Bit mask for DDR_CR63_NOT_USED.
-#define BS_DDR_CR63_NOT_USED (16U)         //!< Bit field size in bits for DDR_CR63_NOT_USED.
+/*@{*/
+#define BP_DDR_CR63_NOT_USED (16U)         /*!< Bit position for DDR_CR63_NOT_USED. */
+#define BM_DDR_CR63_NOT_USED (0xFFFF0000U) /*!< Bit mask for DDR_CR63_NOT_USED. */
+#define BS_DDR_CR63_NOT_USED (16U)         /*!< Bit field size in bits for DDR_CR63_NOT_USED. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_CR63_NOT_USED field.
-#define BR_DDR_CR63_NOT_USED (HW_DDR_CR63.B.NOT_USED)
-#endif
-//@}
+/*! @brief Read current value of the DDR_CR63_NOT_USED field. */
+#define BR_DDR_CR63_NOT_USED(x) (HW_DDR_CR63(x).B.NOT_USED)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_DDR_RCR - RCR Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_DDR_RCR - RCR Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_RCR - RCR Control Register (RW)
  *
@@ -7420,28 +6486,25 @@ typedef union _hw_ddr_rcr
     uint32_t U;
     struct _hw_ddr_rcr_bitfields
     {
-        uint32_t RESERVED0 : 30;       //!< [29:0]
-        uint32_t RST : 1;              //!< [30] Reset
-        uint32_t RESERVED1 : 1;        //!< [31]
+        uint32_t RESERVED0 : 30;       /*!< [29:0]  */
+        uint32_t RST : 1;              /*!< [30] Reset */
+        uint32_t RESERVED1 : 1;        /*!< [31]  */
     } B;
 } hw_ddr_rcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_RCR register
  */
-//@{
-#define HW_DDR_RCR_ADDR          (REGS_DDR_BASE + 0x180U)
+/*@{*/
+#define HW_DDR_RCR_ADDR(x)       ((x) + 0x180U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_RCR               (*(__IO hw_ddr_rcr_t *) HW_DDR_RCR_ADDR)
-#define HW_DDR_RCR_RD()          (HW_DDR_RCR.U)
-#define HW_DDR_RCR_WR(v)         (HW_DDR_RCR.U = (v))
-#define HW_DDR_RCR_SET(v)        (HW_DDR_RCR_WR(HW_DDR_RCR_RD() |  (v)))
-#define HW_DDR_RCR_CLR(v)        (HW_DDR_RCR_WR(HW_DDR_RCR_RD() & ~(v)))
-#define HW_DDR_RCR_TOG(v)        (HW_DDR_RCR_WR(HW_DDR_RCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_RCR(x)            (*(__IO hw_ddr_rcr_t *) HW_DDR_RCR_ADDR(x))
+#define HW_DDR_RCR_RD(x)         (HW_DDR_RCR(x).U)
+#define HW_DDR_RCR_WR(x, v)      (HW_DDR_RCR(x).U = (v))
+#define HW_DDR_RCR_SET(x, v)     (HW_DDR_RCR_WR(x, HW_DDR_RCR_RD(x) |  (v)))
+#define HW_DDR_RCR_CLR(x, v)     (HW_DDR_RCR_WR(x, HW_DDR_RCR_RD(x) & ~(v)))
+#define HW_DDR_RCR_TOG(x, v)     (HW_DDR_RCR_WR(x, HW_DDR_RCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_RCR bitfields
@@ -7457,30 +6520,19 @@ typedef union _hw_ddr_rcr
  * - 0 - No software reset
  * - 1 - Force software reset
  */
-//@{
-#define BP_DDR_RCR_RST       (30U)         //!< Bit position for DDR_RCR_RST.
-#define BM_DDR_RCR_RST       (0x40000000U) //!< Bit mask for DDR_RCR_RST.
-#define BS_DDR_RCR_RST       (1U)          //!< Bit field size in bits for DDR_RCR_RST.
+/*@{*/
+#define BP_DDR_RCR_RST       (30U)         /*!< Bit position for DDR_RCR_RST. */
+#define BM_DDR_RCR_RST       (0x40000000U) /*!< Bit mask for DDR_RCR_RST. */
+#define BS_DDR_RCR_RST       (1U)          /*!< Bit field size in bits for DDR_RCR_RST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_RCR_RST field.
-#define BR_DDR_RCR_RST       (BITBAND_ACCESS32(HW_DDR_RCR_ADDR, BP_DDR_RCR_RST))
-#endif
+/*! @brief Format value for bitfield DDR_RCR_RST. */
+#define BF_DDR_RCR_RST(v)    ((uint32_t)((uint32_t)(v) << BP_DDR_RCR_RST) & BM_DDR_RCR_RST)
+/*@}*/
 
-//! @brief Format value for bitfield DDR_RCR_RST.
-#define BF_DDR_RCR_RST(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_RCR_RST), uint32_t) & BM_DDR_RCR_RST)
+/*******************************************************************************
+ * HW_DDR_PAD_CTRL - I/O Pad Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RST field to a new value.
-#define BW_DDR_RCR_RST(v)    (BITBAND_ACCESS32(HW_DDR_RCR_ADDR, BP_DDR_RCR_RST) = (v))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_DDR_PAD_CTRL - I/O Pad Control Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_DDR_PAD_CTRL - I/O Pad Control Register (RW)
  *
@@ -7491,31 +6543,28 @@ typedef union _hw_ddr_pad_ctrl
     uint32_t U;
     struct _hw_ddr_pad_ctrl_bitfields
     {
-        uint32_t SPARE_DLY_CTRL : 4;   //!< [3:0] These SPARE_DLY_CTRL[3:0]bits
-                                       //! set the delay chains in the spare logic.
-        uint32_t RESERVED0 : 20;       //!< [23:4] Reserved
-        uint32_t PAD_ODT_CS0 : 2;      //!< [25:24] Required to enable ODT and
-                                       //! configure ODT resistor value in the pad.
-        uint32_t RESERVED1 : 6;        //!< [31:26] Reserved
+        uint32_t SPARE_DLY_CTRL : 4;   /*!< [3:0] These SPARE_DLY_CTRL[3:0]bits
+                                        * set the delay chains in the spare logic. */
+        uint32_t RESERVED0 : 20;       /*!< [23:4] Reserved */
+        uint32_t PAD_ODT_CS0 : 2;      /*!< [25:24] Required to enable ODT and
+                                        * configure ODT resistor value in the pad. */
+        uint32_t RESERVED1 : 6;        /*!< [31:26] Reserved */
     } B;
 } hw_ddr_pad_ctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire DDR_PAD_CTRL register
  */
-//@{
-#define HW_DDR_PAD_CTRL_ADDR     (REGS_DDR_BASE + 0x1ACU)
+/*@{*/
+#define HW_DDR_PAD_CTRL_ADDR(x)  ((x) + 0x1ACU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_DDR_PAD_CTRL          (*(__IO hw_ddr_pad_ctrl_t *) HW_DDR_PAD_CTRL_ADDR)
-#define HW_DDR_PAD_CTRL_RD()     (HW_DDR_PAD_CTRL.U)
-#define HW_DDR_PAD_CTRL_WR(v)    (HW_DDR_PAD_CTRL.U = (v))
-#define HW_DDR_PAD_CTRL_SET(v)   (HW_DDR_PAD_CTRL_WR(HW_DDR_PAD_CTRL_RD() |  (v)))
-#define HW_DDR_PAD_CTRL_CLR(v)   (HW_DDR_PAD_CTRL_WR(HW_DDR_PAD_CTRL_RD() & ~(v)))
-#define HW_DDR_PAD_CTRL_TOG(v)   (HW_DDR_PAD_CTRL_WR(HW_DDR_PAD_CTRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_DDR_PAD_CTRL(x)       (*(__IO hw_ddr_pad_ctrl_t *) HW_DDR_PAD_CTRL_ADDR(x))
+#define HW_DDR_PAD_CTRL_RD(x)    (HW_DDR_PAD_CTRL(x).U)
+#define HW_DDR_PAD_CTRL_WR(x, v) (HW_DDR_PAD_CTRL(x).U = (v))
+#define HW_DDR_PAD_CTRL_SET(x, v) (HW_DDR_PAD_CTRL_WR(x, HW_DDR_PAD_CTRL_RD(x) |  (v)))
+#define HW_DDR_PAD_CTRL_CLR(x, v) (HW_DDR_PAD_CTRL_WR(x, HW_DDR_PAD_CTRL_RD(x) & ~(v)))
+#define HW_DDR_PAD_CTRL_TOG(x, v) (HW_DDR_PAD_CTRL_WR(x, HW_DDR_PAD_CTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual DDR_PAD_CTRL bitfields
@@ -7529,24 +6578,20 @@ typedef union _hw_ddr_pad_ctrl
  * used. Do not write to this bit field. Read access can fail if
  * SPARE_DLY_CTRL[1:0] = 00. Use SPARE_DLY_CTRL[1:0] = 01 instead.
  */
-//@{
-#define BP_DDR_PAD_CTRL_SPARE_DLY_CTRL (0U) //!< Bit position for DDR_PAD_CTRL_SPARE_DLY_CTRL.
-#define BM_DDR_PAD_CTRL_SPARE_DLY_CTRL (0x0000000FU) //!< Bit mask for DDR_PAD_CTRL_SPARE_DLY_CTRL.
-#define BS_DDR_PAD_CTRL_SPARE_DLY_CTRL (4U) //!< Bit field size in bits for DDR_PAD_CTRL_SPARE_DLY_CTRL.
+/*@{*/
+#define BP_DDR_PAD_CTRL_SPARE_DLY_CTRL (0U) /*!< Bit position for DDR_PAD_CTRL_SPARE_DLY_CTRL. */
+#define BM_DDR_PAD_CTRL_SPARE_DLY_CTRL (0x0000000FU) /*!< Bit mask for DDR_PAD_CTRL_SPARE_DLY_CTRL. */
+#define BS_DDR_PAD_CTRL_SPARE_DLY_CTRL (4U) /*!< Bit field size in bits for DDR_PAD_CTRL_SPARE_DLY_CTRL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_PAD_CTRL_SPARE_DLY_CTRL field.
-#define BR_DDR_PAD_CTRL_SPARE_DLY_CTRL (HW_DDR_PAD_CTRL.B.SPARE_DLY_CTRL)
-#endif
+/*! @brief Read current value of the DDR_PAD_CTRL_SPARE_DLY_CTRL field. */
+#define BR_DDR_PAD_CTRL_SPARE_DLY_CTRL(x) (HW_DDR_PAD_CTRL(x).B.SPARE_DLY_CTRL)
 
-//! @brief Format value for bitfield DDR_PAD_CTRL_SPARE_DLY_CTRL.
-#define BF_DDR_PAD_CTRL_SPARE_DLY_CTRL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_PAD_CTRL_SPARE_DLY_CTRL), uint32_t) & BM_DDR_PAD_CTRL_SPARE_DLY_CTRL)
+/*! @brief Format value for bitfield DDR_PAD_CTRL_SPARE_DLY_CTRL. */
+#define BF_DDR_PAD_CTRL_SPARE_DLY_CTRL(v) ((uint32_t)((uint32_t)(v) << BP_DDR_PAD_CTRL_SPARE_DLY_CTRL) & BM_DDR_PAD_CTRL_SPARE_DLY_CTRL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SPARE_DLY_CTRL field to a new value.
-#define BW_DDR_PAD_CTRL_SPARE_DLY_CTRL(v) (HW_DDR_PAD_CTRL_WR((HW_DDR_PAD_CTRL_RD() & ~BM_DDR_PAD_CTRL_SPARE_DLY_CTRL) | BF_DDR_PAD_CTRL_SPARE_DLY_CTRL(v)))
-#endif
-//@}
+/*! @brief Set the SPARE_DLY_CTRL field to a new value. */
+#define BW_DDR_PAD_CTRL_SPARE_DLY_CTRL(x, v) (HW_DDR_PAD_CTRL_WR(x, (HW_DDR_PAD_CTRL_RD(x) & ~BM_DDR_PAD_CTRL_SPARE_DLY_CTRL) | BF_DDR_PAD_CTRL_SPARE_DLY_CTRL(v)))
+/*@}*/
 
 /*!
  * @name Register DDR_PAD_CTRL, field PAD_ODT_CS0[25:24] (RW)
@@ -7563,112 +6608,107 @@ typedef union _hw_ddr_pad_ctrl
  * - 10 - 150 Ohms
  * - 11 - 50 Ohms
  */
-//@{
-#define BP_DDR_PAD_CTRL_PAD_ODT_CS0 (24U)  //!< Bit position for DDR_PAD_CTRL_PAD_ODT_CS0.
-#define BM_DDR_PAD_CTRL_PAD_ODT_CS0 (0x03000000U) //!< Bit mask for DDR_PAD_CTRL_PAD_ODT_CS0.
-#define BS_DDR_PAD_CTRL_PAD_ODT_CS0 (2U)   //!< Bit field size in bits for DDR_PAD_CTRL_PAD_ODT_CS0.
+/*@{*/
+#define BP_DDR_PAD_CTRL_PAD_ODT_CS0 (24U)  /*!< Bit position for DDR_PAD_CTRL_PAD_ODT_CS0. */
+#define BM_DDR_PAD_CTRL_PAD_ODT_CS0 (0x03000000U) /*!< Bit mask for DDR_PAD_CTRL_PAD_ODT_CS0. */
+#define BS_DDR_PAD_CTRL_PAD_ODT_CS0 (2U)   /*!< Bit field size in bits for DDR_PAD_CTRL_PAD_ODT_CS0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the DDR_PAD_CTRL_PAD_ODT_CS0 field.
-#define BR_DDR_PAD_CTRL_PAD_ODT_CS0 (HW_DDR_PAD_CTRL.B.PAD_ODT_CS0)
-#endif
+/*! @brief Read current value of the DDR_PAD_CTRL_PAD_ODT_CS0 field. */
+#define BR_DDR_PAD_CTRL_PAD_ODT_CS0(x) (HW_DDR_PAD_CTRL(x).B.PAD_ODT_CS0)
 
-//! @brief Format value for bitfield DDR_PAD_CTRL_PAD_ODT_CS0.
-#define BF_DDR_PAD_CTRL_PAD_ODT_CS0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_DDR_PAD_CTRL_PAD_ODT_CS0), uint32_t) & BM_DDR_PAD_CTRL_PAD_ODT_CS0)
+/*! @brief Format value for bitfield DDR_PAD_CTRL_PAD_ODT_CS0. */
+#define BF_DDR_PAD_CTRL_PAD_ODT_CS0(v) ((uint32_t)((uint32_t)(v) << BP_DDR_PAD_CTRL_PAD_ODT_CS0) & BM_DDR_PAD_CTRL_PAD_ODT_CS0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PAD_ODT_CS0 field to a new value.
-#define BW_DDR_PAD_CTRL_PAD_ODT_CS0(v) (HW_DDR_PAD_CTRL_WR((HW_DDR_PAD_CTRL_RD() & ~BM_DDR_PAD_CTRL_PAD_ODT_CS0) | BF_DDR_PAD_CTRL_PAD_ODT_CS0(v)))
-#endif
-//@}
+/*! @brief Set the PAD_ODT_CS0 field to a new value. */
+#define BW_DDR_PAD_CTRL_PAD_ODT_CS0(x, v) (HW_DDR_PAD_CTRL_WR(x, (HW_DDR_PAD_CTRL_RD(x) & ~BM_DDR_PAD_CTRL_PAD_ODT_CS0) | BF_DDR_PAD_CTRL_PAD_ODT_CS0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_ddr_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_ddr_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All DDR module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_ddr
 {
-    __IO hw_ddr_cr00_t CR00;               //!< [0x0] DDR Control Register 0
-    __I hw_ddr_cr01_t CR01;                //!< [0x4] DDR Control Register 1
-    __IO hw_ddr_cr02_t CR02;               //!< [0x8] DDR Control Register 2
-    __IO hw_ddr_cr03_t CR03;               //!< [0xC] DDR Control Register 3
-    __IO hw_ddr_cr04_t CR04;               //!< [0x10] DDR Control Register 4
-    __IO hw_ddr_cr05_t CR05;               //!< [0x14] DDR Control Register 5
-    __IO hw_ddr_cr06_t CR06;               //!< [0x18] DDR Control Register 6
-    __IO hw_ddr_cr07_t CR07;               //!< [0x1C] DDR Control Register 7
-    __IO hw_ddr_cr08_t CR08;               //!< [0x20] DDR Control Register 8
-    __IO hw_ddr_cr09_t CR09;               //!< [0x24] DDR Control Register 9
-    __IO hw_ddr_cr10_t CR10;               //!< [0x28] DDR Control Register 10
-    __IO hw_ddr_cr11_t CR11;               //!< [0x2C] DDR Control Register 11
-    __IO hw_ddr_cr12_t CR12;               //!< [0x30] DDR Control Register 12
-    __IO hw_ddr_cr13_t CR13;               //!< [0x34] DDR Control Register 13
-    __IO hw_ddr_cr14_t CR14;               //!< [0x38] DDR Control Register 14
-    __IO hw_ddr_cr15_t CR15;               //!< [0x3C] DDR Control Register 15
-    __IO hw_ddr_cr16_t CR16;               //!< [0x40] DDR Control Register 16
-    __IO hw_ddr_cr17_t CR17;               //!< [0x44] DDR Control Register 17
-    __IO hw_ddr_cr18_t CR18;               //!< [0x48] DDR Control Register 18
-    __IO hw_ddr_cr19_t CR19;               //!< [0x4C] DDR Control Register 19
-    __IO hw_ddr_cr20_t CR20;               //!< [0x50] DDR Control Register 20
-    __IO hw_ddr_cr21_t CR21;               //!< [0x54] DDR Control Register 21
-    __IO hw_ddr_cr22_t CR22;               //!< [0x58] DDR Control Register 22
-    __I hw_ddr_cr23_t CR23;                //!< [0x5C] DDR Control Register 23
-    __I hw_ddr_cr24_t CR24;                //!< [0x60] DDR Control Register 24
-    __IO hw_ddr_cr25_t CR25;               //!< [0x64] DDR Control Register 25
-    __IO hw_ddr_cr26_t CR26;               //!< [0x68] DDR Control Register 26
-    __IO hw_ddr_cr27_t CR27;               //!< [0x6C] DDR Control Register 27
-    __IO hw_ddr_cr28_t CR28;               //!< [0x70] DDR Control Register 28
-    __IO hw_ddr_cr29_t CR29;               //!< [0x74] DDR Control Register 29
-    __IO hw_ddr_cr30_t CR30;               //!< [0x78] DDR Control Register 30
-    __IO hw_ddr_cr31_t CR31;               //!< [0x7C] DDR Control Register 31
-    __I hw_ddr_cr32_t CR32;                //!< [0x80] DDR Control Register 32
-    __I hw_ddr_cr33_t CR33;                //!< [0x84] DDR Control Register 33
-    __IO hw_ddr_cr34_t CR34;               //!< [0x88] DDR Control Register 34
-    __I hw_ddr_cr35_t CR35;                //!< [0x8C] DDR Control Register 35
-    __I hw_ddr_cr36_t CR36;                //!< [0x90] DDR Control Register 36
-    __IO hw_ddr_cr37_t CR37;               //!< [0x94] DDR Control Register 37
-    __IO hw_ddr_cr38_t CR38;               //!< [0x98] DDR Control Register 38
-    __IO hw_ddr_cr39_t CR39;               //!< [0x9C] DDR Control Register 39
-    __IO hw_ddr_cr40_t CR40;               //!< [0xA0] DDR Control Register 40
-    __IO hw_ddr_cr41_t CR41;               //!< [0xA4] DDR Control Register 41
-    __IO hw_ddr_cr42_t CR42;               //!< [0xA8] DDR Control Register 42
-    __IO hw_ddr_cr43_t CR43;               //!< [0xAC] DDR Control Register 43
-    __IO hw_ddr_cr44_t CR44;               //!< [0xB0] DDR Control Register 44
-    __IO hw_ddr_cr45_t CR45;               //!< [0xB4] DDR Control Register 45
-    __IO hw_ddr_cr46_t CR46;               //!< [0xB8] DDR Control Register 46
-    __IO hw_ddr_cr47_t CR47;               //!< [0xBC] DDR Control Register 47
-    __IO hw_ddr_cr48_t CR48;               //!< [0xC0] DDR Control Register 48
-    __IO hw_ddr_cr49_t CR49;               //!< [0xC4] DDR Control Register 49
-    __IO hw_ddr_cr50_t CR50;               //!< [0xC8] DDR Control Register 50
-    __IO hw_ddr_cr51_t CR51;               //!< [0xCC] DDR Control Register 51
-    __IO hw_ddr_cr52_t CR52;               //!< [0xD0] DDR Control Register 52
-    __IO hw_ddr_cr53_t CR53;               //!< [0xD4] DDR Control Register 53
-    __IO hw_ddr_cr54_t CR54;               //!< [0xD8] DDR Control Register 54
-    __IO hw_ddr_cr55_t CR55;               //!< [0xDC] DDR Control Register 55
-    __IO hw_ddr_cr56_t CR56;               //!< [0xE0] DDR Control Register 56
-    __IO hw_ddr_cr57_t CR57;               //!< [0xE4] DDR Control Register 57
-    __I hw_ddr_cr58_t CR58;                //!< [0xE8] DDR Control Register 58
-    __I hw_ddr_cr59_t CR59;                //!< [0xEC] DDR Control Register 59
-    __I hw_ddr_cr60_t CR60;                //!< [0xF0] DDR Control Register 60
-    __I hw_ddr_cr61_t CR61;                //!< [0xF4] DDR Control Register 61
-    __I hw_ddr_cr62_t CR62;                //!< [0xF8] DDR Control Register 62
-    __I hw_ddr_cr63_t CR63;                //!< [0xFC] DDR Control Register 63
+    __IO hw_ddr_cr00_t CR00;               /*!< [0x0] DDR Control Register 0 */
+    __I hw_ddr_cr01_t CR01;                /*!< [0x4] DDR Control Register 1 */
+    __IO hw_ddr_cr02_t CR02;               /*!< [0x8] DDR Control Register 2 */
+    __IO hw_ddr_cr03_t CR03;               /*!< [0xC] DDR Control Register 3 */
+    __IO hw_ddr_cr04_t CR04;               /*!< [0x10] DDR Control Register 4 */
+    __IO hw_ddr_cr05_t CR05;               /*!< [0x14] DDR Control Register 5 */
+    __IO hw_ddr_cr06_t CR06;               /*!< [0x18] DDR Control Register 6 */
+    __IO hw_ddr_cr07_t CR07;               /*!< [0x1C] DDR Control Register 7 */
+    __IO hw_ddr_cr08_t CR08;               /*!< [0x20] DDR Control Register 8 */
+    __IO hw_ddr_cr09_t CR09;               /*!< [0x24] DDR Control Register 9 */
+    __IO hw_ddr_cr10_t CR10;               /*!< [0x28] DDR Control Register 10 */
+    __IO hw_ddr_cr11_t CR11;               /*!< [0x2C] DDR Control Register 11 */
+    __IO hw_ddr_cr12_t CR12;               /*!< [0x30] DDR Control Register 12 */
+    __IO hw_ddr_cr13_t CR13;               /*!< [0x34] DDR Control Register 13 */
+    __IO hw_ddr_cr14_t CR14;               /*!< [0x38] DDR Control Register 14 */
+    __IO hw_ddr_cr15_t CR15;               /*!< [0x3C] DDR Control Register 15 */
+    __IO hw_ddr_cr16_t CR16;               /*!< [0x40] DDR Control Register 16 */
+    __IO hw_ddr_cr17_t CR17;               /*!< [0x44] DDR Control Register 17 */
+    __IO hw_ddr_cr18_t CR18;               /*!< [0x48] DDR Control Register 18 */
+    __IO hw_ddr_cr19_t CR19;               /*!< [0x4C] DDR Control Register 19 */
+    __IO hw_ddr_cr20_t CR20;               /*!< [0x50] DDR Control Register 20 */
+    __IO hw_ddr_cr21_t CR21;               /*!< [0x54] DDR Control Register 21 */
+    __IO hw_ddr_cr22_t CR22;               /*!< [0x58] DDR Control Register 22 */
+    __I hw_ddr_cr23_t CR23;                /*!< [0x5C] DDR Control Register 23 */
+    __I hw_ddr_cr24_t CR24;                /*!< [0x60] DDR Control Register 24 */
+    __IO hw_ddr_cr25_t CR25;               /*!< [0x64] DDR Control Register 25 */
+    __IO hw_ddr_cr26_t CR26;               /*!< [0x68] DDR Control Register 26 */
+    __IO hw_ddr_cr27_t CR27;               /*!< [0x6C] DDR Control Register 27 */
+    __IO hw_ddr_cr28_t CR28;               /*!< [0x70] DDR Control Register 28 */
+    __IO hw_ddr_cr29_t CR29;               /*!< [0x74] DDR Control Register 29 */
+    __IO hw_ddr_cr30_t CR30;               /*!< [0x78] DDR Control Register 30 */
+    __IO hw_ddr_cr31_t CR31;               /*!< [0x7C] DDR Control Register 31 */
+    __I hw_ddr_cr32_t CR32;                /*!< [0x80] DDR Control Register 32 */
+    __I hw_ddr_cr33_t CR33;                /*!< [0x84] DDR Control Register 33 */
+    __IO hw_ddr_cr34_t CR34;               /*!< [0x88] DDR Control Register 34 */
+    __I hw_ddr_cr35_t CR35;                /*!< [0x8C] DDR Control Register 35 */
+    __I hw_ddr_cr36_t CR36;                /*!< [0x90] DDR Control Register 36 */
+    __IO hw_ddr_cr37_t CR37;               /*!< [0x94] DDR Control Register 37 */
+    __IO hw_ddr_cr38_t CR38;               /*!< [0x98] DDR Control Register 38 */
+    __IO hw_ddr_cr39_t CR39;               /*!< [0x9C] DDR Control Register 39 */
+    __IO hw_ddr_cr40_t CR40;               /*!< [0xA0] DDR Control Register 40 */
+    __IO hw_ddr_cr41_t CR41;               /*!< [0xA4] DDR Control Register 41 */
+    __IO hw_ddr_cr42_t CR42;               /*!< [0xA8] DDR Control Register 42 */
+    __IO hw_ddr_cr43_t CR43;               /*!< [0xAC] DDR Control Register 43 */
+    __IO hw_ddr_cr44_t CR44;               /*!< [0xB0] DDR Control Register 44 */
+    __IO hw_ddr_cr45_t CR45;               /*!< [0xB4] DDR Control Register 45 */
+    __IO hw_ddr_cr46_t CR46;               /*!< [0xB8] DDR Control Register 46 */
+    __IO hw_ddr_cr47_t CR47;               /*!< [0xBC] DDR Control Register 47 */
+    __IO hw_ddr_cr48_t CR48;               /*!< [0xC0] DDR Control Register 48 */
+    __IO hw_ddr_cr49_t CR49;               /*!< [0xC4] DDR Control Register 49 */
+    __IO hw_ddr_cr50_t CR50;               /*!< [0xC8] DDR Control Register 50 */
+    __IO hw_ddr_cr51_t CR51;               /*!< [0xCC] DDR Control Register 51 */
+    __IO hw_ddr_cr52_t CR52;               /*!< [0xD0] DDR Control Register 52 */
+    __IO hw_ddr_cr53_t CR53;               /*!< [0xD4] DDR Control Register 53 */
+    __IO hw_ddr_cr54_t CR54;               /*!< [0xD8] DDR Control Register 54 */
+    __IO hw_ddr_cr55_t CR55;               /*!< [0xDC] DDR Control Register 55 */
+    __IO hw_ddr_cr56_t CR56;               /*!< [0xE0] DDR Control Register 56 */
+    __IO hw_ddr_cr57_t CR57;               /*!< [0xE4] DDR Control Register 57 */
+    __I hw_ddr_cr58_t CR58;                /*!< [0xE8] DDR Control Register 58 */
+    __I hw_ddr_cr59_t CR59;                /*!< [0xEC] DDR Control Register 59 */
+    __I hw_ddr_cr60_t CR60;                /*!< [0xF0] DDR Control Register 60 */
+    __I hw_ddr_cr61_t CR61;                /*!< [0xF4] DDR Control Register 61 */
+    __I hw_ddr_cr62_t CR62;                /*!< [0xF8] DDR Control Register 62 */
+    __I hw_ddr_cr63_t CR63;                /*!< [0xFC] DDR Control Register 63 */
     uint8_t _reserved0[128];
-    __IO hw_ddr_rcr_t RCR;                 //!< [0x180] RCR Control Register
+    __IO hw_ddr_rcr_t RCR;                 /*!< [0x180] RCR Control Register */
     uint8_t _reserved1[40];
-    __IO hw_ddr_pad_ctrl_t PAD_CTRL;       //!< [0x1AC] I/O Pad Control Register
+    __IO hw_ddr_pad_ctrl_t PAD_CTRL;       /*!< [0x1AC] I/O Pad Control Register */
 } hw_ddr_t;
 #pragma pack()
 
-//! @brief Macro to access all DDR registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_DDR</code>.
-#define HW_DDR         (*(hw_ddr_t *) REGS_DDR_BASE)
-#endif
+/*! @brief Macro to access all DDR registers. */
+/*! @param x DDR module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_DDR(DDR_BASE)</code>. */
+#define HW_DDR(x)      (*(hw_ddr_t *)(x))
 
-#endif // __HW_DDR_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_DDR_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

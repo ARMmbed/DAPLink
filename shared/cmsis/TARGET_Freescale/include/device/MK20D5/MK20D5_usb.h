@@ -21,7 +21,8 @@
 #ifndef __HW_USB_REGISTERS_H__
 #define __HW_USB_REGISTERS_H__
 
-#include "regs.h"
+#include "MK20D5.h"
+#include "fsl_bitband.h"
 
 /*
  * MK20D5 USB
@@ -61,19 +62,12 @@
  * - hw_usb_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_USB_BASE
-#define HW_USB_INSTANCE_COUNT (1U) //!< Number of instances of the USB module.
-#define REGS_USB_BASE (0x40072000U) //!< Base address for USB0.
-#endif
-//@}
+#define HW_USB_INSTANCE_COUNT (1U) /*!< Number of instances of the USB module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_PERID - Peripheral ID Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_PERID - Peripheral ID Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_PERID - Peripheral ID Register (RO)
  *
@@ -87,23 +81,20 @@ typedef union _hw_usb_perid
     uint8_t U;
     struct _hw_usb_perid_bitfields
     {
-        uint8_t ID : 6;                //!< [5:0] Peripheral identification bits
-        uint8_t RESERVED0 : 2;         //!< [7:6]
+        uint8_t ID : 6;                /*!< [5:0] Peripheral identification bits */
+        uint8_t RESERVED0 : 2;         /*!< [7:6]  */
     } B;
 } hw_usb_perid_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_PERID register
  */
-//@{
-#define HW_USB_PERID_ADDR        (REGS_USB_BASE + 0x0U)
+/*@{*/
+#define HW_USB_PERID_ADDR(x)     ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_PERID             (*(__I hw_usb_perid_t *) HW_USB_PERID_ADDR)
-#define HW_USB_PERID_RD()        (HW_USB_PERID.U)
-#endif
-//@}
+#define HW_USB_PERID(x)          (*(__I hw_usb_perid_t *) HW_USB_PERID_ADDR(x))
+#define HW_USB_PERID_RD(x)       (HW_USB_PERID(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_PERID bitfields
@@ -114,22 +105,19 @@ typedef union _hw_usb_perid
  *
  * These bits always read 0x04 (00_0100)
  */
-//@{
-#define BP_USB_PERID_ID      (0U)          //!< Bit position for USB_PERID_ID.
-#define BM_USB_PERID_ID      (0x3FU)       //!< Bit mask for USB_PERID_ID.
-#define BS_USB_PERID_ID      (6U)          //!< Bit field size in bits for USB_PERID_ID.
+/*@{*/
+#define BP_USB_PERID_ID      (0U)          /*!< Bit position for USB_PERID_ID. */
+#define BM_USB_PERID_ID      (0x3FU)       /*!< Bit mask for USB_PERID_ID. */
+#define BS_USB_PERID_ID      (6U)          /*!< Bit field size in bits for USB_PERID_ID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_PERID_ID field.
-#define BR_USB_PERID_ID      (HW_USB_PERID.B.ID)
-#endif
-//@}
+/*! @brief Read current value of the USB_PERID_ID field. */
+#define BR_USB_PERID_ID(x)   (HW_USB_PERID(x).B.ID)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_IDCOMP - Peripheral ID Complement Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_IDCOMP - Peripheral ID Complement Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_IDCOMP - Peripheral ID Complement Register (RO)
  *
@@ -143,23 +131,20 @@ typedef union _hw_usb_idcomp
     uint8_t U;
     struct _hw_usb_idcomp_bitfields
     {
-        uint8_t NID : 6;               //!< [5:0]
-        uint8_t RESERVED0 : 2;         //!< [7:6]
+        uint8_t NID : 6;               /*!< [5:0]  */
+        uint8_t RESERVED0 : 2;         /*!< [7:6]  */
     } B;
 } hw_usb_idcomp_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_IDCOMP register
  */
-//@{
-#define HW_USB_IDCOMP_ADDR       (REGS_USB_BASE + 0x4U)
+/*@{*/
+#define HW_USB_IDCOMP_ADDR(x)    ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_IDCOMP            (*(__I hw_usb_idcomp_t *) HW_USB_IDCOMP_ADDR)
-#define HW_USB_IDCOMP_RD()       (HW_USB_IDCOMP.U)
-#endif
-//@}
+#define HW_USB_IDCOMP(x)         (*(__I hw_usb_idcomp_t *) HW_USB_IDCOMP_ADDR(x))
+#define HW_USB_IDCOMP_RD(x)      (HW_USB_IDCOMP(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_IDCOMP bitfields
@@ -170,22 +155,19 @@ typedef union _hw_usb_idcomp
  *
  * Ones complement of peripheral identification bits.
  */
-//@{
-#define BP_USB_IDCOMP_NID    (0U)          //!< Bit position for USB_IDCOMP_NID.
-#define BM_USB_IDCOMP_NID    (0x3FU)       //!< Bit mask for USB_IDCOMP_NID.
-#define BS_USB_IDCOMP_NID    (6U)          //!< Bit field size in bits for USB_IDCOMP_NID.
+/*@{*/
+#define BP_USB_IDCOMP_NID    (0U)          /*!< Bit position for USB_IDCOMP_NID. */
+#define BM_USB_IDCOMP_NID    (0x3FU)       /*!< Bit mask for USB_IDCOMP_NID. */
+#define BS_USB_IDCOMP_NID    (6U)          /*!< Bit field size in bits for USB_IDCOMP_NID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_IDCOMP_NID field.
-#define BR_USB_IDCOMP_NID    (HW_USB_IDCOMP.B.NID)
-#endif
-//@}
+/*! @brief Read current value of the USB_IDCOMP_NID field. */
+#define BR_USB_IDCOMP_NID(x) (HW_USB_IDCOMP(x).B.NID)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_REV - Peripheral Revision Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_REV - Peripheral Revision Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_REV - Peripheral Revision Register (RO)
  *
@@ -198,22 +180,19 @@ typedef union _hw_usb_rev
     uint8_t U;
     struct _hw_usb_rev_bitfields
     {
-        uint8_t REV : 8;               //!< [7:0] Revision
+        uint8_t REV : 8;               /*!< [7:0] Revision */
     } B;
 } hw_usb_rev_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_REV register
  */
-//@{
-#define HW_USB_REV_ADDR          (REGS_USB_BASE + 0x8U)
+/*@{*/
+#define HW_USB_REV_ADDR(x)       ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_REV               (*(__I hw_usb_rev_t *) HW_USB_REV_ADDR)
-#define HW_USB_REV_RD()          (HW_USB_REV.U)
-#endif
-//@}
+#define HW_USB_REV(x)            (*(__I hw_usb_rev_t *) HW_USB_REV_ADDR(x))
+#define HW_USB_REV_RD(x)         (HW_USB_REV(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_REV bitfields
@@ -224,22 +203,19 @@ typedef union _hw_usb_rev
  *
  * Indicate the revision number of the USB Core.
  */
-//@{
-#define BP_USB_REV_REV       (0U)          //!< Bit position for USB_REV_REV.
-#define BM_USB_REV_REV       (0xFFU)       //!< Bit mask for USB_REV_REV.
-#define BS_USB_REV_REV       (8U)          //!< Bit field size in bits for USB_REV_REV.
+/*@{*/
+#define BP_USB_REV_REV       (0U)          /*!< Bit position for USB_REV_REV. */
+#define BM_USB_REV_REV       (0xFFU)       /*!< Bit mask for USB_REV_REV. */
+#define BS_USB_REV_REV       (8U)          /*!< Bit field size in bits for USB_REV_REV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_REV_REV field.
-#define BR_USB_REV_REV       (HW_USB_REV.B.REV)
-#endif
-//@}
+/*! @brief Read current value of the USB_REV_REV field. */
+#define BR_USB_REV_REV(x)    (HW_USB_REV(x).U)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ADDINFO - Peripheral Additional Info Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ADDINFO - Peripheral Additional Info Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_ADDINFO - Peripheral Additional Info Register (RO)
  *
@@ -254,24 +230,21 @@ typedef union _hw_usb_addinfo
     uint8_t U;
     struct _hw_usb_addinfo_bitfields
     {
-        uint8_t IEHOST : 1;            //!< [0]
-        uint8_t RESERVED0 : 2;         //!< [2:1]
-        uint8_t IRQNUM : 5;            //!< [7:3] Assigned Interrupt Request Number
+        uint8_t IEHOST : 1;            /*!< [0]  */
+        uint8_t RESERVED0 : 2;         /*!< [2:1]  */
+        uint8_t IRQNUM : 5;            /*!< [7:3] Assigned Interrupt Request Number */
     } B;
 } hw_usb_addinfo_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ADDINFO register
  */
-//@{
-#define HW_USB_ADDINFO_ADDR      (REGS_USB_BASE + 0xCU)
+/*@{*/
+#define HW_USB_ADDINFO_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ADDINFO           (*(__I hw_usb_addinfo_t *) HW_USB_ADDINFO_ADDR)
-#define HW_USB_ADDINFO_RD()      (HW_USB_ADDINFO.U)
-#endif
-//@}
+#define HW_USB_ADDINFO(x)        (*(__I hw_usb_addinfo_t *) HW_USB_ADDINFO_ADDR(x))
+#define HW_USB_ADDINFO_RD(x)     (HW_USB_ADDINFO(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ADDINFO bitfields
@@ -282,36 +255,31 @@ typedef union _hw_usb_addinfo
  *
  * This bit is set if host mode is enabled.
  */
-//@{
-#define BP_USB_ADDINFO_IEHOST (0U)         //!< Bit position for USB_ADDINFO_IEHOST.
-#define BM_USB_ADDINFO_IEHOST (0x01U)      //!< Bit mask for USB_ADDINFO_IEHOST.
-#define BS_USB_ADDINFO_IEHOST (1U)         //!< Bit field size in bits for USB_ADDINFO_IEHOST.
+/*@{*/
+#define BP_USB_ADDINFO_IEHOST (0U)         /*!< Bit position for USB_ADDINFO_IEHOST. */
+#define BM_USB_ADDINFO_IEHOST (0x01U)      /*!< Bit mask for USB_ADDINFO_IEHOST. */
+#define BS_USB_ADDINFO_IEHOST (1U)         /*!< Bit field size in bits for USB_ADDINFO_IEHOST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ADDINFO_IEHOST field.
-#define BR_USB_ADDINFO_IEHOST (BITBAND_ACCESS8(HW_USB_ADDINFO_ADDR, BP_USB_ADDINFO_IEHOST))
-#endif
-//@}
+/*! @brief Read current value of the USB_ADDINFO_IEHOST field. */
+#define BR_USB_ADDINFO_IEHOST(x) (BITBAND_ACCESS8(HW_USB_ADDINFO_ADDR(x), BP_USB_ADDINFO_IEHOST))
+/*@}*/
 
 /*!
  * @name Register USB_ADDINFO, field IRQNUM[7:3] (RO)
  */
-//@{
-#define BP_USB_ADDINFO_IRQNUM (3U)         //!< Bit position for USB_ADDINFO_IRQNUM.
-#define BM_USB_ADDINFO_IRQNUM (0xF8U)      //!< Bit mask for USB_ADDINFO_IRQNUM.
-#define BS_USB_ADDINFO_IRQNUM (5U)         //!< Bit field size in bits for USB_ADDINFO_IRQNUM.
+/*@{*/
+#define BP_USB_ADDINFO_IRQNUM (3U)         /*!< Bit position for USB_ADDINFO_IRQNUM. */
+#define BM_USB_ADDINFO_IRQNUM (0xF8U)      /*!< Bit mask for USB_ADDINFO_IRQNUM. */
+#define BS_USB_ADDINFO_IRQNUM (5U)         /*!< Bit field size in bits for USB_ADDINFO_IRQNUM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ADDINFO_IRQNUM field.
-#define BR_USB_ADDINFO_IRQNUM (HW_USB_ADDINFO.B.IRQNUM)
-#endif
-//@}
+/*! @brief Read current value of the USB_ADDINFO_IRQNUM field. */
+#define BR_USB_ADDINFO_IRQNUM(x) (HW_USB_ADDINFO(x).B.IRQNUM)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_OTGISTAT - OTG Interrupt Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_OTGISTAT - OTG Interrupt Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_OTGISTAT - OTG Interrupt Status Register (RW)
  *
@@ -327,33 +295,30 @@ typedef union _hw_usb_otgistat
     uint8_t U;
     struct _hw_usb_otgistat_bitfields
     {
-        uint8_t AVBUSCHG : 1;          //!< [0]
-        uint8_t RESERVED0 : 1;         //!< [1]
-        uint8_t B_SESS_CHG : 1;        //!< [2]
-        uint8_t SESSVLDCHG : 1;        //!< [3]
-        uint8_t RESERVED1 : 1;         //!< [4]
-        uint8_t LINE_STATE_CHG : 1;    //!< [5]
-        uint8_t ONEMSEC : 1;           //!< [6]
-        uint8_t IDCHG : 1;             //!< [7]
+        uint8_t AVBUSCHG : 1;          /*!< [0]  */
+        uint8_t RESERVED0 : 1;         /*!< [1]  */
+        uint8_t B_SESS_CHG : 1;        /*!< [2]  */
+        uint8_t SESSVLDCHG : 1;        /*!< [3]  */
+        uint8_t RESERVED1 : 1;         /*!< [4]  */
+        uint8_t LINE_STATE_CHG : 1;    /*!< [5]  */
+        uint8_t ONEMSEC : 1;           /*!< [6]  */
+        uint8_t IDCHG : 1;             /*!< [7]  */
     } B;
 } hw_usb_otgistat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_OTGISTAT register
  */
-//@{
-#define HW_USB_OTGISTAT_ADDR     (REGS_USB_BASE + 0x10U)
+/*@{*/
+#define HW_USB_OTGISTAT_ADDR(x)  ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_OTGISTAT          (*(__IO hw_usb_otgistat_t *) HW_USB_OTGISTAT_ADDR)
-#define HW_USB_OTGISTAT_RD()     (HW_USB_OTGISTAT.U)
-#define HW_USB_OTGISTAT_WR(v)    (HW_USB_OTGISTAT.U = (v))
-#define HW_USB_OTGISTAT_SET(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() |  (v)))
-#define HW_USB_OTGISTAT_CLR(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() & ~(v)))
-#define HW_USB_OTGISTAT_TOG(v)   (HW_USB_OTGISTAT_WR(HW_USB_OTGISTAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_OTGISTAT(x)       (*(__IO hw_usb_otgistat_t *) HW_USB_OTGISTAT_ADDR(x))
+#define HW_USB_OTGISTAT_RD(x)    (HW_USB_OTGISTAT(x).U)
+#define HW_USB_OTGISTAT_WR(x, v) (HW_USB_OTGISTAT(x).U = (v))
+#define HW_USB_OTGISTAT_SET(x, v) (HW_USB_OTGISTAT_WR(x, HW_USB_OTGISTAT_RD(x) |  (v)))
+#define HW_USB_OTGISTAT_CLR(x, v) (HW_USB_OTGISTAT_WR(x, HW_USB_OTGISTAT_RD(x) & ~(v)))
+#define HW_USB_OTGISTAT_TOG(x, v) (HW_USB_OTGISTAT_WR(x, HW_USB_OTGISTAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_OTGISTAT bitfields
@@ -364,48 +329,40 @@ typedef union _hw_usb_otgistat
  *
  * This bit is set when a change in VBUS is detected on an A device.
  */
-//@{
-#define BP_USB_OTGISTAT_AVBUSCHG (0U)      //!< Bit position for USB_OTGISTAT_AVBUSCHG.
-#define BM_USB_OTGISTAT_AVBUSCHG (0x01U)   //!< Bit mask for USB_OTGISTAT_AVBUSCHG.
-#define BS_USB_OTGISTAT_AVBUSCHG (1U)      //!< Bit field size in bits for USB_OTGISTAT_AVBUSCHG.
+/*@{*/
+#define BP_USB_OTGISTAT_AVBUSCHG (0U)      /*!< Bit position for USB_OTGISTAT_AVBUSCHG. */
+#define BM_USB_OTGISTAT_AVBUSCHG (0x01U)   /*!< Bit mask for USB_OTGISTAT_AVBUSCHG. */
+#define BS_USB_OTGISTAT_AVBUSCHG (1U)      /*!< Bit field size in bits for USB_OTGISTAT_AVBUSCHG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_AVBUSCHG field.
-#define BR_USB_OTGISTAT_AVBUSCHG (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_AVBUSCHG))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_AVBUSCHG field. */
+#define BR_USB_OTGISTAT_AVBUSCHG(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_AVBUSCHG))
 
-//! @brief Format value for bitfield USB_OTGISTAT_AVBUSCHG.
-#define BF_USB_OTGISTAT_AVBUSCHG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_AVBUSCHG), uint8_t) & BM_USB_OTGISTAT_AVBUSCHG)
+/*! @brief Format value for bitfield USB_OTGISTAT_AVBUSCHG. */
+#define BF_USB_OTGISTAT_AVBUSCHG(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_AVBUSCHG) & BM_USB_OTGISTAT_AVBUSCHG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVBUSCHG field to a new value.
-#define BW_USB_OTGISTAT_AVBUSCHG(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_AVBUSCHG) = (v))
-#endif
-//@}
+/*! @brief Set the AVBUSCHG field to a new value. */
+#define BW_USB_OTGISTAT_AVBUSCHG(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_AVBUSCHG) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGISTAT, field B_SESS_CHG[2] (RW)
  *
  * This bit is set when a change in VBUS is detected on a B device.
  */
-//@{
-#define BP_USB_OTGISTAT_B_SESS_CHG (2U)    //!< Bit position for USB_OTGISTAT_B_SESS_CHG.
-#define BM_USB_OTGISTAT_B_SESS_CHG (0x04U) //!< Bit mask for USB_OTGISTAT_B_SESS_CHG.
-#define BS_USB_OTGISTAT_B_SESS_CHG (1U)    //!< Bit field size in bits for USB_OTGISTAT_B_SESS_CHG.
+/*@{*/
+#define BP_USB_OTGISTAT_B_SESS_CHG (2U)    /*!< Bit position for USB_OTGISTAT_B_SESS_CHG. */
+#define BM_USB_OTGISTAT_B_SESS_CHG (0x04U) /*!< Bit mask for USB_OTGISTAT_B_SESS_CHG. */
+#define BS_USB_OTGISTAT_B_SESS_CHG (1U)    /*!< Bit field size in bits for USB_OTGISTAT_B_SESS_CHG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_B_SESS_CHG field.
-#define BR_USB_OTGISTAT_B_SESS_CHG (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_B_SESS_CHG))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_B_SESS_CHG field. */
+#define BR_USB_OTGISTAT_B_SESS_CHG(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_B_SESS_CHG))
 
-//! @brief Format value for bitfield USB_OTGISTAT_B_SESS_CHG.
-#define BF_USB_OTGISTAT_B_SESS_CHG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_B_SESS_CHG), uint8_t) & BM_USB_OTGISTAT_B_SESS_CHG)
+/*! @brief Format value for bitfield USB_OTGISTAT_B_SESS_CHG. */
+#define BF_USB_OTGISTAT_B_SESS_CHG(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_B_SESS_CHG) & BM_USB_OTGISTAT_B_SESS_CHG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the B_SESS_CHG field to a new value.
-#define BW_USB_OTGISTAT_B_SESS_CHG(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_B_SESS_CHG) = (v))
-#endif
-//@}
+/*! @brief Set the B_SESS_CHG field to a new value. */
+#define BW_USB_OTGISTAT_B_SESS_CHG(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_B_SESS_CHG) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGISTAT, field SESSVLDCHG[3] (RW)
@@ -413,24 +370,20 @@ typedef union _hw_usb_otgistat
  * This bit is set when a change in VBUS is detected indicating a session valid
  * or a session no longer valid.
  */
-//@{
-#define BP_USB_OTGISTAT_SESSVLDCHG (3U)    //!< Bit position for USB_OTGISTAT_SESSVLDCHG.
-#define BM_USB_OTGISTAT_SESSVLDCHG (0x08U) //!< Bit mask for USB_OTGISTAT_SESSVLDCHG.
-#define BS_USB_OTGISTAT_SESSVLDCHG (1U)    //!< Bit field size in bits for USB_OTGISTAT_SESSVLDCHG.
+/*@{*/
+#define BP_USB_OTGISTAT_SESSVLDCHG (3U)    /*!< Bit position for USB_OTGISTAT_SESSVLDCHG. */
+#define BM_USB_OTGISTAT_SESSVLDCHG (0x08U) /*!< Bit mask for USB_OTGISTAT_SESSVLDCHG. */
+#define BS_USB_OTGISTAT_SESSVLDCHG (1U)    /*!< Bit field size in bits for USB_OTGISTAT_SESSVLDCHG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_SESSVLDCHG field.
-#define BR_USB_OTGISTAT_SESSVLDCHG (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_SESSVLDCHG))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_SESSVLDCHG field. */
+#define BR_USB_OTGISTAT_SESSVLDCHG(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_SESSVLDCHG))
 
-//! @brief Format value for bitfield USB_OTGISTAT_SESSVLDCHG.
-#define BF_USB_OTGISTAT_SESSVLDCHG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_SESSVLDCHG), uint8_t) & BM_USB_OTGISTAT_SESSVLDCHG)
+/*! @brief Format value for bitfield USB_OTGISTAT_SESSVLDCHG. */
+#define BF_USB_OTGISTAT_SESSVLDCHG(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_SESSVLDCHG) & BM_USB_OTGISTAT_SESSVLDCHG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SESSVLDCHG field to a new value.
-#define BW_USB_OTGISTAT_SESSVLDCHG(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_SESSVLDCHG) = (v))
-#endif
-//@}
+/*! @brief Set the SESSVLDCHG field to a new value. */
+#define BW_USB_OTGISTAT_SESSVLDCHG(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_SESSVLDCHG) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGISTAT, field LINE_STATE_CHG[5] (RW)
@@ -439,24 +392,20 @@ typedef union _hw_usb_otgistat
  * with this bit can be used to detect Reset, Resume, Connect, and Data Line Pulse
  * signals.
  */
-//@{
-#define BP_USB_OTGISTAT_LINE_STATE_CHG (5U) //!< Bit position for USB_OTGISTAT_LINE_STATE_CHG.
-#define BM_USB_OTGISTAT_LINE_STATE_CHG (0x20U) //!< Bit mask for USB_OTGISTAT_LINE_STATE_CHG.
-#define BS_USB_OTGISTAT_LINE_STATE_CHG (1U) //!< Bit field size in bits for USB_OTGISTAT_LINE_STATE_CHG.
+/*@{*/
+#define BP_USB_OTGISTAT_LINE_STATE_CHG (5U) /*!< Bit position for USB_OTGISTAT_LINE_STATE_CHG. */
+#define BM_USB_OTGISTAT_LINE_STATE_CHG (0x20U) /*!< Bit mask for USB_OTGISTAT_LINE_STATE_CHG. */
+#define BS_USB_OTGISTAT_LINE_STATE_CHG (1U) /*!< Bit field size in bits for USB_OTGISTAT_LINE_STATE_CHG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_LINE_STATE_CHG field.
-#define BR_USB_OTGISTAT_LINE_STATE_CHG (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_LINE_STATE_CHG))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_LINE_STATE_CHG field. */
+#define BR_USB_OTGISTAT_LINE_STATE_CHG(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_LINE_STATE_CHG))
 
-//! @brief Format value for bitfield USB_OTGISTAT_LINE_STATE_CHG.
-#define BF_USB_OTGISTAT_LINE_STATE_CHG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_LINE_STATE_CHG), uint8_t) & BM_USB_OTGISTAT_LINE_STATE_CHG)
+/*! @brief Format value for bitfield USB_OTGISTAT_LINE_STATE_CHG. */
+#define BF_USB_OTGISTAT_LINE_STATE_CHG(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_LINE_STATE_CHG) & BM_USB_OTGISTAT_LINE_STATE_CHG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINE_STATE_CHG field to a new value.
-#define BW_USB_OTGISTAT_LINE_STATE_CHG(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_LINE_STATE_CHG) = (v))
-#endif
-//@}
+/*! @brief Set the LINE_STATE_CHG field to a new value. */
+#define BW_USB_OTGISTAT_LINE_STATE_CHG(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_LINE_STATE_CHG) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGISTAT, field ONEMSEC[6] (RW)
@@ -465,24 +414,20 @@ typedef union _hw_usb_otgistat
  * until cleared by software. The interrupt must be serviced every millisecond
  * to avoid losing 1msec counts.
  */
-//@{
-#define BP_USB_OTGISTAT_ONEMSEC (6U)       //!< Bit position for USB_OTGISTAT_ONEMSEC.
-#define BM_USB_OTGISTAT_ONEMSEC (0x40U)    //!< Bit mask for USB_OTGISTAT_ONEMSEC.
-#define BS_USB_OTGISTAT_ONEMSEC (1U)       //!< Bit field size in bits for USB_OTGISTAT_ONEMSEC.
+/*@{*/
+#define BP_USB_OTGISTAT_ONEMSEC (6U)       /*!< Bit position for USB_OTGISTAT_ONEMSEC. */
+#define BM_USB_OTGISTAT_ONEMSEC (0x40U)    /*!< Bit mask for USB_OTGISTAT_ONEMSEC. */
+#define BS_USB_OTGISTAT_ONEMSEC (1U)       /*!< Bit field size in bits for USB_OTGISTAT_ONEMSEC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_ONEMSEC field.
-#define BR_USB_OTGISTAT_ONEMSEC (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_ONEMSEC))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_ONEMSEC field. */
+#define BR_USB_OTGISTAT_ONEMSEC(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_ONEMSEC))
 
-//! @brief Format value for bitfield USB_OTGISTAT_ONEMSEC.
-#define BF_USB_OTGISTAT_ONEMSEC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_ONEMSEC), uint8_t) & BM_USB_OTGISTAT_ONEMSEC)
+/*! @brief Format value for bitfield USB_OTGISTAT_ONEMSEC. */
+#define BF_USB_OTGISTAT_ONEMSEC(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_ONEMSEC) & BM_USB_OTGISTAT_ONEMSEC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ONEMSEC field to a new value.
-#define BW_USB_OTGISTAT_ONEMSEC(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_ONEMSEC) = (v))
-#endif
-//@}
+/*! @brief Set the ONEMSEC field to a new value. */
+#define BW_USB_OTGISTAT_ONEMSEC(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_ONEMSEC) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGISTAT, field IDCHG[7] (RW)
@@ -490,30 +435,25 @@ typedef union _hw_usb_otgistat
  * This bit is set when a change in the ID Signal from the USB connector is
  * sensed.
  */
-//@{
-#define BP_USB_OTGISTAT_IDCHG (7U)         //!< Bit position for USB_OTGISTAT_IDCHG.
-#define BM_USB_OTGISTAT_IDCHG (0x80U)      //!< Bit mask for USB_OTGISTAT_IDCHG.
-#define BS_USB_OTGISTAT_IDCHG (1U)         //!< Bit field size in bits for USB_OTGISTAT_IDCHG.
+/*@{*/
+#define BP_USB_OTGISTAT_IDCHG (7U)         /*!< Bit position for USB_OTGISTAT_IDCHG. */
+#define BM_USB_OTGISTAT_IDCHG (0x80U)      /*!< Bit mask for USB_OTGISTAT_IDCHG. */
+#define BS_USB_OTGISTAT_IDCHG (1U)         /*!< Bit field size in bits for USB_OTGISTAT_IDCHG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGISTAT_IDCHG field.
-#define BR_USB_OTGISTAT_IDCHG (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_IDCHG))
-#endif
+/*! @brief Read current value of the USB_OTGISTAT_IDCHG field. */
+#define BR_USB_OTGISTAT_IDCHG(x) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_IDCHG))
 
-//! @brief Format value for bitfield USB_OTGISTAT_IDCHG.
-#define BF_USB_OTGISTAT_IDCHG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGISTAT_IDCHG), uint8_t) & BM_USB_OTGISTAT_IDCHG)
+/*! @brief Format value for bitfield USB_OTGISTAT_IDCHG. */
+#define BF_USB_OTGISTAT_IDCHG(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGISTAT_IDCHG) & BM_USB_OTGISTAT_IDCHG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDCHG field to a new value.
-#define BW_USB_OTGISTAT_IDCHG(v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR, BP_USB_OTGISTAT_IDCHG) = (v))
-#endif
-//@}
+/*! @brief Set the IDCHG field to a new value. */
+#define BW_USB_OTGISTAT_IDCHG(x, v) (BITBAND_ACCESS8(HW_USB_OTGISTAT_ADDR(x), BP_USB_OTGISTAT_IDCHG) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_OTGICR - OTG Interrupt Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_OTGICR - OTG Interrupt Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_OTGICR - OTG Interrupt Control Register (RW)
  *
@@ -527,33 +467,31 @@ typedef union _hw_usb_otgicr
     uint8_t U;
     struct _hw_usb_otgicr_bitfields
     {
-        uint8_t AVBUSEN : 1;           //!< [0] A VBUS Valid interrupt enable
-        uint8_t RESERVED0 : 1;         //!< [1]
-        uint8_t BSESSEN : 1;           //!< [2] B Session END interrupt enable
-        uint8_t SESSVLDEN : 1;         //!< [3] Session valid interrupt enable
-        uint8_t RESERVED1 : 1;         //!< [4]
-        uint8_t LINESTATEEN : 1;       //!< [5] Line State change interrupt enable
-        uint8_t ONEMSECEN : 1;         //!< [6] 1 millisecond interrupt enable
-        uint8_t IDEN : 1;              //!< [7] ID interrupt enable
+        uint8_t AVBUSEN : 1;           /*!< [0] A VBUS Valid interrupt enable */
+        uint8_t RESERVED0 : 1;         /*!< [1]  */
+        uint8_t BSESSEN : 1;           /*!< [2] B Session END interrupt enable */
+        uint8_t SESSVLDEN : 1;         /*!< [3] Session valid interrupt enable */
+        uint8_t RESERVED1 : 1;         /*!< [4]  */
+        uint8_t LINESTATEEN : 1;       /*!< [5] Line State change interrupt enable
+                                        * */
+        uint8_t ONEMSECEN : 1;         /*!< [6] 1 millisecond interrupt enable */
+        uint8_t IDEN : 1;              /*!< [7] ID interrupt enable */
     } B;
 } hw_usb_otgicr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_OTGICR register
  */
-//@{
-#define HW_USB_OTGICR_ADDR       (REGS_USB_BASE + 0x14U)
+/*@{*/
+#define HW_USB_OTGICR_ADDR(x)    ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_OTGICR            (*(__IO hw_usb_otgicr_t *) HW_USB_OTGICR_ADDR)
-#define HW_USB_OTGICR_RD()       (HW_USB_OTGICR.U)
-#define HW_USB_OTGICR_WR(v)      (HW_USB_OTGICR.U = (v))
-#define HW_USB_OTGICR_SET(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() |  (v)))
-#define HW_USB_OTGICR_CLR(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() & ~(v)))
-#define HW_USB_OTGICR_TOG(v)     (HW_USB_OTGICR_WR(HW_USB_OTGICR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_OTGICR(x)         (*(__IO hw_usb_otgicr_t *) HW_USB_OTGICR_ADDR(x))
+#define HW_USB_OTGICR_RD(x)      (HW_USB_OTGICR(x).U)
+#define HW_USB_OTGICR_WR(x, v)   (HW_USB_OTGICR(x).U = (v))
+#define HW_USB_OTGICR_SET(x, v)  (HW_USB_OTGICR_WR(x, HW_USB_OTGICR_RD(x) |  (v)))
+#define HW_USB_OTGICR_CLR(x, v)  (HW_USB_OTGICR_WR(x, HW_USB_OTGICR_RD(x) & ~(v)))
+#define HW_USB_OTGICR_TOG(x, v)  (HW_USB_OTGICR_WR(x, HW_USB_OTGICR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_OTGICR bitfields
@@ -566,24 +504,20 @@ typedef union _hw_usb_otgicr
  * - 0 - The AVBUSCHG interrupt is disabled
  * - 1 - The AVBUSCHG interrupt is enabled
  */
-//@{
-#define BP_USB_OTGICR_AVBUSEN (0U)         //!< Bit position for USB_OTGICR_AVBUSEN.
-#define BM_USB_OTGICR_AVBUSEN (0x01U)      //!< Bit mask for USB_OTGICR_AVBUSEN.
-#define BS_USB_OTGICR_AVBUSEN (1U)         //!< Bit field size in bits for USB_OTGICR_AVBUSEN.
+/*@{*/
+#define BP_USB_OTGICR_AVBUSEN (0U)         /*!< Bit position for USB_OTGICR_AVBUSEN. */
+#define BM_USB_OTGICR_AVBUSEN (0x01U)      /*!< Bit mask for USB_OTGICR_AVBUSEN. */
+#define BS_USB_OTGICR_AVBUSEN (1U)         /*!< Bit field size in bits for USB_OTGICR_AVBUSEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_AVBUSEN field.
-#define BR_USB_OTGICR_AVBUSEN (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_AVBUSEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_AVBUSEN field. */
+#define BR_USB_OTGICR_AVBUSEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_AVBUSEN))
 
-//! @brief Format value for bitfield USB_OTGICR_AVBUSEN.
-#define BF_USB_OTGICR_AVBUSEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_AVBUSEN), uint8_t) & BM_USB_OTGICR_AVBUSEN)
+/*! @brief Format value for bitfield USB_OTGICR_AVBUSEN. */
+#define BF_USB_OTGICR_AVBUSEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_AVBUSEN) & BM_USB_OTGICR_AVBUSEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVBUSEN field to a new value.
-#define BW_USB_OTGICR_AVBUSEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_AVBUSEN) = (v))
-#endif
-//@}
+/*! @brief Set the AVBUSEN field to a new value. */
+#define BW_USB_OTGICR_AVBUSEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_AVBUSEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGICR, field BSESSEN[2] (RW)
@@ -592,24 +526,20 @@ typedef union _hw_usb_otgicr
  * - 0 - The B_SESS_CHG interrupt is disabled
  * - 1 - The B_SESS_CHG interrupt is enabled
  */
-//@{
-#define BP_USB_OTGICR_BSESSEN (2U)         //!< Bit position for USB_OTGICR_BSESSEN.
-#define BM_USB_OTGICR_BSESSEN (0x04U)      //!< Bit mask for USB_OTGICR_BSESSEN.
-#define BS_USB_OTGICR_BSESSEN (1U)         //!< Bit field size in bits for USB_OTGICR_BSESSEN.
+/*@{*/
+#define BP_USB_OTGICR_BSESSEN (2U)         /*!< Bit position for USB_OTGICR_BSESSEN. */
+#define BM_USB_OTGICR_BSESSEN (0x04U)      /*!< Bit mask for USB_OTGICR_BSESSEN. */
+#define BS_USB_OTGICR_BSESSEN (1U)         /*!< Bit field size in bits for USB_OTGICR_BSESSEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_BSESSEN field.
-#define BR_USB_OTGICR_BSESSEN (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_BSESSEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_BSESSEN field. */
+#define BR_USB_OTGICR_BSESSEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_BSESSEN))
 
-//! @brief Format value for bitfield USB_OTGICR_BSESSEN.
-#define BF_USB_OTGICR_BSESSEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_BSESSEN), uint8_t) & BM_USB_OTGICR_BSESSEN)
+/*! @brief Format value for bitfield USB_OTGICR_BSESSEN. */
+#define BF_USB_OTGICR_BSESSEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_BSESSEN) & BM_USB_OTGICR_BSESSEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSESSEN field to a new value.
-#define BW_USB_OTGICR_BSESSEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_BSESSEN) = (v))
-#endif
-//@}
+/*! @brief Set the BSESSEN field to a new value. */
+#define BW_USB_OTGICR_BSESSEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_BSESSEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGICR, field SESSVLDEN[3] (RW)
@@ -618,24 +548,20 @@ typedef union _hw_usb_otgicr
  * - 0 - The SESSVLDCHG interrupt is disabled.
  * - 1 - The SESSVLDCHG interrupt is enabled.
  */
-//@{
-#define BP_USB_OTGICR_SESSVLDEN (3U)       //!< Bit position for USB_OTGICR_SESSVLDEN.
-#define BM_USB_OTGICR_SESSVLDEN (0x08U)    //!< Bit mask for USB_OTGICR_SESSVLDEN.
-#define BS_USB_OTGICR_SESSVLDEN (1U)       //!< Bit field size in bits for USB_OTGICR_SESSVLDEN.
+/*@{*/
+#define BP_USB_OTGICR_SESSVLDEN (3U)       /*!< Bit position for USB_OTGICR_SESSVLDEN. */
+#define BM_USB_OTGICR_SESSVLDEN (0x08U)    /*!< Bit mask for USB_OTGICR_SESSVLDEN. */
+#define BS_USB_OTGICR_SESSVLDEN (1U)       /*!< Bit field size in bits for USB_OTGICR_SESSVLDEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_SESSVLDEN field.
-#define BR_USB_OTGICR_SESSVLDEN (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_SESSVLDEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_SESSVLDEN field. */
+#define BR_USB_OTGICR_SESSVLDEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_SESSVLDEN))
 
-//! @brief Format value for bitfield USB_OTGICR_SESSVLDEN.
-#define BF_USB_OTGICR_SESSVLDEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_SESSVLDEN), uint8_t) & BM_USB_OTGICR_SESSVLDEN)
+/*! @brief Format value for bitfield USB_OTGICR_SESSVLDEN. */
+#define BF_USB_OTGICR_SESSVLDEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_SESSVLDEN) & BM_USB_OTGICR_SESSVLDEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SESSVLDEN field to a new value.
-#define BW_USB_OTGICR_SESSVLDEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_SESSVLDEN) = (v))
-#endif
-//@}
+/*! @brief Set the SESSVLDEN field to a new value. */
+#define BW_USB_OTGICR_SESSVLDEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_SESSVLDEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGICR, field LINESTATEEN[5] (RW)
@@ -644,24 +570,20 @@ typedef union _hw_usb_otgicr
  * - 0 - The LINE_STAT_CHG interrupt is disabled.
  * - 1 - The LINE_STAT_CHG interrupt is enabled
  */
-//@{
-#define BP_USB_OTGICR_LINESTATEEN (5U)     //!< Bit position for USB_OTGICR_LINESTATEEN.
-#define BM_USB_OTGICR_LINESTATEEN (0x20U)  //!< Bit mask for USB_OTGICR_LINESTATEEN.
-#define BS_USB_OTGICR_LINESTATEEN (1U)     //!< Bit field size in bits for USB_OTGICR_LINESTATEEN.
+/*@{*/
+#define BP_USB_OTGICR_LINESTATEEN (5U)     /*!< Bit position for USB_OTGICR_LINESTATEEN. */
+#define BM_USB_OTGICR_LINESTATEEN (0x20U)  /*!< Bit mask for USB_OTGICR_LINESTATEEN. */
+#define BS_USB_OTGICR_LINESTATEEN (1U)     /*!< Bit field size in bits for USB_OTGICR_LINESTATEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_LINESTATEEN field.
-#define BR_USB_OTGICR_LINESTATEEN (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_LINESTATEEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_LINESTATEEN field. */
+#define BR_USB_OTGICR_LINESTATEEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_LINESTATEEN))
 
-//! @brief Format value for bitfield USB_OTGICR_LINESTATEEN.
-#define BF_USB_OTGICR_LINESTATEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_LINESTATEEN), uint8_t) & BM_USB_OTGICR_LINESTATEEN)
+/*! @brief Format value for bitfield USB_OTGICR_LINESTATEEN. */
+#define BF_USB_OTGICR_LINESTATEEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_LINESTATEEN) & BM_USB_OTGICR_LINESTATEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINESTATEEN field to a new value.
-#define BW_USB_OTGICR_LINESTATEEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_LINESTATEEN) = (v))
-#endif
-//@}
+/*! @brief Set the LINESTATEEN field to a new value. */
+#define BW_USB_OTGICR_LINESTATEEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_LINESTATEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGICR, field ONEMSECEN[6] (RW)
@@ -670,24 +592,20 @@ typedef union _hw_usb_otgicr
  * - 0 - The 1msec timer interrupt is disabled.
  * - 1 - The 1msec timer interrupt is enabled.
  */
-//@{
-#define BP_USB_OTGICR_ONEMSECEN (6U)       //!< Bit position for USB_OTGICR_ONEMSECEN.
-#define BM_USB_OTGICR_ONEMSECEN (0x40U)    //!< Bit mask for USB_OTGICR_ONEMSECEN.
-#define BS_USB_OTGICR_ONEMSECEN (1U)       //!< Bit field size in bits for USB_OTGICR_ONEMSECEN.
+/*@{*/
+#define BP_USB_OTGICR_ONEMSECEN (6U)       /*!< Bit position for USB_OTGICR_ONEMSECEN. */
+#define BM_USB_OTGICR_ONEMSECEN (0x40U)    /*!< Bit mask for USB_OTGICR_ONEMSECEN. */
+#define BS_USB_OTGICR_ONEMSECEN (1U)       /*!< Bit field size in bits for USB_OTGICR_ONEMSECEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_ONEMSECEN field.
-#define BR_USB_OTGICR_ONEMSECEN (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_ONEMSECEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_ONEMSECEN field. */
+#define BR_USB_OTGICR_ONEMSECEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_ONEMSECEN))
 
-//! @brief Format value for bitfield USB_OTGICR_ONEMSECEN.
-#define BF_USB_OTGICR_ONEMSECEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_ONEMSECEN), uint8_t) & BM_USB_OTGICR_ONEMSECEN)
+/*! @brief Format value for bitfield USB_OTGICR_ONEMSECEN. */
+#define BF_USB_OTGICR_ONEMSECEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_ONEMSECEN) & BM_USB_OTGICR_ONEMSECEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ONEMSECEN field to a new value.
-#define BW_USB_OTGICR_ONEMSECEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_ONEMSECEN) = (v))
-#endif
-//@}
+/*! @brief Set the ONEMSECEN field to a new value. */
+#define BW_USB_OTGICR_ONEMSECEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_ONEMSECEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGICR, field IDEN[7] (RW)
@@ -696,30 +614,25 @@ typedef union _hw_usb_otgicr
  * - 0 - The ID interrupt is disabled
  * - 1 - The ID interrupt is enabled
  */
-//@{
-#define BP_USB_OTGICR_IDEN   (7U)          //!< Bit position for USB_OTGICR_IDEN.
-#define BM_USB_OTGICR_IDEN   (0x80U)       //!< Bit mask for USB_OTGICR_IDEN.
-#define BS_USB_OTGICR_IDEN   (1U)          //!< Bit field size in bits for USB_OTGICR_IDEN.
+/*@{*/
+#define BP_USB_OTGICR_IDEN   (7U)          /*!< Bit position for USB_OTGICR_IDEN. */
+#define BM_USB_OTGICR_IDEN   (0x80U)       /*!< Bit mask for USB_OTGICR_IDEN. */
+#define BS_USB_OTGICR_IDEN   (1U)          /*!< Bit field size in bits for USB_OTGICR_IDEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGICR_IDEN field.
-#define BR_USB_OTGICR_IDEN   (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_IDEN))
-#endif
+/*! @brief Read current value of the USB_OTGICR_IDEN field. */
+#define BR_USB_OTGICR_IDEN(x) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_IDEN))
 
-//! @brief Format value for bitfield USB_OTGICR_IDEN.
-#define BF_USB_OTGICR_IDEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGICR_IDEN), uint8_t) & BM_USB_OTGICR_IDEN)
+/*! @brief Format value for bitfield USB_OTGICR_IDEN. */
+#define BF_USB_OTGICR_IDEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGICR_IDEN) & BM_USB_OTGICR_IDEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the IDEN field to a new value.
-#define BW_USB_OTGICR_IDEN(v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR, BP_USB_OTGICR_IDEN) = (v))
-#endif
-//@}
+/*! @brief Set the IDEN field to a new value. */
+#define BW_USB_OTGICR_IDEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGICR_ADDR(x), BP_USB_OTGICR_IDEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_OTGSTAT - OTG Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_OTGSTAT - OTG Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_OTGSTAT - OTG Status Register (RW)
  *
@@ -733,33 +646,30 @@ typedef union _hw_usb_otgstat
     uint8_t U;
     struct _hw_usb_otgstat_bitfields
     {
-        uint8_t AVBUSVLD : 1;          //!< [0] A VBUS Valid
-        uint8_t RESERVED0 : 1;         //!< [1]
-        uint8_t BSESSEND : 1;          //!< [2] B Session END
-        uint8_t SESS_VLD : 1;          //!< [3] Session valid
-        uint8_t RESERVED1 : 1;         //!< [4]
-        uint8_t LINESTATESTABLE : 1;   //!< [5]
-        uint8_t ONEMSECEN : 1;         //!< [6]
-        uint8_t ID : 1;                //!< [7]
+        uint8_t AVBUSVLD : 1;          /*!< [0] A VBUS Valid */
+        uint8_t RESERVED0 : 1;         /*!< [1]  */
+        uint8_t BSESSEND : 1;          /*!< [2] B Session END */
+        uint8_t SESS_VLD : 1;          /*!< [3] Session valid */
+        uint8_t RESERVED1 : 1;         /*!< [4]  */
+        uint8_t LINESTATESTABLE : 1;   /*!< [5]  */
+        uint8_t ONEMSECEN : 1;         /*!< [6]  */
+        uint8_t ID : 1;                /*!< [7]  */
     } B;
 } hw_usb_otgstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_OTGSTAT register
  */
-//@{
-#define HW_USB_OTGSTAT_ADDR      (REGS_USB_BASE + 0x18U)
+/*@{*/
+#define HW_USB_OTGSTAT_ADDR(x)   ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_OTGSTAT           (*(__IO hw_usb_otgstat_t *) HW_USB_OTGSTAT_ADDR)
-#define HW_USB_OTGSTAT_RD()      (HW_USB_OTGSTAT.U)
-#define HW_USB_OTGSTAT_WR(v)     (HW_USB_OTGSTAT.U = (v))
-#define HW_USB_OTGSTAT_SET(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() |  (v)))
-#define HW_USB_OTGSTAT_CLR(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() & ~(v)))
-#define HW_USB_OTGSTAT_TOG(v)    (HW_USB_OTGSTAT_WR(HW_USB_OTGSTAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_OTGSTAT(x)        (*(__IO hw_usb_otgstat_t *) HW_USB_OTGSTAT_ADDR(x))
+#define HW_USB_OTGSTAT_RD(x)     (HW_USB_OTGSTAT(x).U)
+#define HW_USB_OTGSTAT_WR(x, v)  (HW_USB_OTGSTAT(x).U = (v))
+#define HW_USB_OTGSTAT_SET(x, v) (HW_USB_OTGSTAT_WR(x, HW_USB_OTGSTAT_RD(x) |  (v)))
+#define HW_USB_OTGSTAT_CLR(x, v) (HW_USB_OTGSTAT_WR(x, HW_USB_OTGSTAT_RD(x) & ~(v)))
+#define HW_USB_OTGSTAT_TOG(x, v) (HW_USB_OTGSTAT_WR(x, HW_USB_OTGSTAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_OTGSTAT bitfields
@@ -772,24 +682,20 @@ typedef union _hw_usb_otgstat
  * - 0 - The VBUS voltage is below the A VBUS Valid threshold.
  * - 1 - The VBUS voltage is above the A VBUS Valid threshold.
  */
-//@{
-#define BP_USB_OTGSTAT_AVBUSVLD (0U)       //!< Bit position for USB_OTGSTAT_AVBUSVLD.
-#define BM_USB_OTGSTAT_AVBUSVLD (0x01U)    //!< Bit mask for USB_OTGSTAT_AVBUSVLD.
-#define BS_USB_OTGSTAT_AVBUSVLD (1U)       //!< Bit field size in bits for USB_OTGSTAT_AVBUSVLD.
+/*@{*/
+#define BP_USB_OTGSTAT_AVBUSVLD (0U)       /*!< Bit position for USB_OTGSTAT_AVBUSVLD. */
+#define BM_USB_OTGSTAT_AVBUSVLD (0x01U)    /*!< Bit mask for USB_OTGSTAT_AVBUSVLD. */
+#define BS_USB_OTGSTAT_AVBUSVLD (1U)       /*!< Bit field size in bits for USB_OTGSTAT_AVBUSVLD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_AVBUSVLD field.
-#define BR_USB_OTGSTAT_AVBUSVLD (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_AVBUSVLD))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_AVBUSVLD field. */
+#define BR_USB_OTGSTAT_AVBUSVLD(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_AVBUSVLD))
 
-//! @brief Format value for bitfield USB_OTGSTAT_AVBUSVLD.
-#define BF_USB_OTGSTAT_AVBUSVLD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_AVBUSVLD), uint8_t) & BM_USB_OTGSTAT_AVBUSVLD)
+/*! @brief Format value for bitfield USB_OTGSTAT_AVBUSVLD. */
+#define BF_USB_OTGSTAT_AVBUSVLD(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_AVBUSVLD) & BM_USB_OTGSTAT_AVBUSVLD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AVBUSVLD field to a new value.
-#define BW_USB_OTGSTAT_AVBUSVLD(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_AVBUSVLD) = (v))
-#endif
-//@}
+/*! @brief Set the AVBUSVLD field to a new value. */
+#define BW_USB_OTGSTAT_AVBUSVLD(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_AVBUSVLD) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGSTAT, field BSESSEND[2] (RW)
@@ -798,24 +704,20 @@ typedef union _hw_usb_otgstat
  * - 0 - The VBUS voltage is above the B session End threshold.
  * - 1 - The VBUS voltage is below the B session End threshold.
  */
-//@{
-#define BP_USB_OTGSTAT_BSESSEND (2U)       //!< Bit position for USB_OTGSTAT_BSESSEND.
-#define BM_USB_OTGSTAT_BSESSEND (0x04U)    //!< Bit mask for USB_OTGSTAT_BSESSEND.
-#define BS_USB_OTGSTAT_BSESSEND (1U)       //!< Bit field size in bits for USB_OTGSTAT_BSESSEND.
+/*@{*/
+#define BP_USB_OTGSTAT_BSESSEND (2U)       /*!< Bit position for USB_OTGSTAT_BSESSEND. */
+#define BM_USB_OTGSTAT_BSESSEND (0x04U)    /*!< Bit mask for USB_OTGSTAT_BSESSEND. */
+#define BS_USB_OTGSTAT_BSESSEND (1U)       /*!< Bit field size in bits for USB_OTGSTAT_BSESSEND. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_BSESSEND field.
-#define BR_USB_OTGSTAT_BSESSEND (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_BSESSEND))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_BSESSEND field. */
+#define BR_USB_OTGSTAT_BSESSEND(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_BSESSEND))
 
-//! @brief Format value for bitfield USB_OTGSTAT_BSESSEND.
-#define BF_USB_OTGSTAT_BSESSEND(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_BSESSEND), uint8_t) & BM_USB_OTGSTAT_BSESSEND)
+/*! @brief Format value for bitfield USB_OTGSTAT_BSESSEND. */
+#define BF_USB_OTGSTAT_BSESSEND(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_BSESSEND) & BM_USB_OTGSTAT_BSESSEND)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BSESSEND field to a new value.
-#define BW_USB_OTGSTAT_BSESSEND(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_BSESSEND) = (v))
-#endif
-//@}
+/*! @brief Set the BSESSEND field to a new value. */
+#define BW_USB_OTGSTAT_BSESSEND(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_BSESSEND) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGSTAT, field SESS_VLD[3] (RW)
@@ -824,24 +726,20 @@ typedef union _hw_usb_otgstat
  * - 0 - The VBUS voltage is below the B session Valid threshold
  * - 1 - The VBUS voltage is above the B session Valid threshold.
  */
-//@{
-#define BP_USB_OTGSTAT_SESS_VLD (3U)       //!< Bit position for USB_OTGSTAT_SESS_VLD.
-#define BM_USB_OTGSTAT_SESS_VLD (0x08U)    //!< Bit mask for USB_OTGSTAT_SESS_VLD.
-#define BS_USB_OTGSTAT_SESS_VLD (1U)       //!< Bit field size in bits for USB_OTGSTAT_SESS_VLD.
+/*@{*/
+#define BP_USB_OTGSTAT_SESS_VLD (3U)       /*!< Bit position for USB_OTGSTAT_SESS_VLD. */
+#define BM_USB_OTGSTAT_SESS_VLD (0x08U)    /*!< Bit mask for USB_OTGSTAT_SESS_VLD. */
+#define BS_USB_OTGSTAT_SESS_VLD (1U)       /*!< Bit field size in bits for USB_OTGSTAT_SESS_VLD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_SESS_VLD field.
-#define BR_USB_OTGSTAT_SESS_VLD (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_SESS_VLD))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_SESS_VLD field. */
+#define BR_USB_OTGSTAT_SESS_VLD(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_SESS_VLD))
 
-//! @brief Format value for bitfield USB_OTGSTAT_SESS_VLD.
-#define BF_USB_OTGSTAT_SESS_VLD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_SESS_VLD), uint8_t) & BM_USB_OTGSTAT_SESS_VLD)
+/*! @brief Format value for bitfield USB_OTGSTAT_SESS_VLD. */
+#define BF_USB_OTGSTAT_SESS_VLD(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_SESS_VLD) & BM_USB_OTGSTAT_SESS_VLD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SESS_VLD field to a new value.
-#define BW_USB_OTGSTAT_SESS_VLD(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_SESS_VLD) = (v))
-#endif
-//@}
+/*! @brief Set the SESS_VLD field to a new value. */
+#define BW_USB_OTGSTAT_SESS_VLD(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_SESS_VLD) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGSTAT, field LINESTATESTABLE[5] (RW)
@@ -855,48 +753,40 @@ typedef union _hw_usb_otgstat
  * - 0 - The LINE_STAT_CHG bit is not yet stable.
  * - 1 - The LINE_STAT_CHG bit has been debounced and is stable.
  */
-//@{
-#define BP_USB_OTGSTAT_LINESTATESTABLE (5U) //!< Bit position for USB_OTGSTAT_LINESTATESTABLE.
-#define BM_USB_OTGSTAT_LINESTATESTABLE (0x20U) //!< Bit mask for USB_OTGSTAT_LINESTATESTABLE.
-#define BS_USB_OTGSTAT_LINESTATESTABLE (1U) //!< Bit field size in bits for USB_OTGSTAT_LINESTATESTABLE.
+/*@{*/
+#define BP_USB_OTGSTAT_LINESTATESTABLE (5U) /*!< Bit position for USB_OTGSTAT_LINESTATESTABLE. */
+#define BM_USB_OTGSTAT_LINESTATESTABLE (0x20U) /*!< Bit mask for USB_OTGSTAT_LINESTATESTABLE. */
+#define BS_USB_OTGSTAT_LINESTATESTABLE (1U) /*!< Bit field size in bits for USB_OTGSTAT_LINESTATESTABLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_LINESTATESTABLE field.
-#define BR_USB_OTGSTAT_LINESTATESTABLE (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_LINESTATESTABLE))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_LINESTATESTABLE field. */
+#define BR_USB_OTGSTAT_LINESTATESTABLE(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_LINESTATESTABLE))
 
-//! @brief Format value for bitfield USB_OTGSTAT_LINESTATESTABLE.
-#define BF_USB_OTGSTAT_LINESTATESTABLE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_LINESTATESTABLE), uint8_t) & BM_USB_OTGSTAT_LINESTATESTABLE)
+/*! @brief Format value for bitfield USB_OTGSTAT_LINESTATESTABLE. */
+#define BF_USB_OTGSTAT_LINESTATESTABLE(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_LINESTATESTABLE) & BM_USB_OTGSTAT_LINESTATESTABLE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LINESTATESTABLE field to a new value.
-#define BW_USB_OTGSTAT_LINESTATESTABLE(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_LINESTATESTABLE) = (v))
-#endif
-//@}
+/*! @brief Set the LINESTATESTABLE field to a new value. */
+#define BW_USB_OTGSTAT_LINESTATESTABLE(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_LINESTATESTABLE) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGSTAT, field ONEMSECEN[6] (RW)
  *
  * This bit is reserved for the 1msec count, but it is not useful to software.
  */
-//@{
-#define BP_USB_OTGSTAT_ONEMSECEN (6U)      //!< Bit position for USB_OTGSTAT_ONEMSECEN.
-#define BM_USB_OTGSTAT_ONEMSECEN (0x40U)   //!< Bit mask for USB_OTGSTAT_ONEMSECEN.
-#define BS_USB_OTGSTAT_ONEMSECEN (1U)      //!< Bit field size in bits for USB_OTGSTAT_ONEMSECEN.
+/*@{*/
+#define BP_USB_OTGSTAT_ONEMSECEN (6U)      /*!< Bit position for USB_OTGSTAT_ONEMSECEN. */
+#define BM_USB_OTGSTAT_ONEMSECEN (0x40U)   /*!< Bit mask for USB_OTGSTAT_ONEMSECEN. */
+#define BS_USB_OTGSTAT_ONEMSECEN (1U)      /*!< Bit field size in bits for USB_OTGSTAT_ONEMSECEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_ONEMSECEN field.
-#define BR_USB_OTGSTAT_ONEMSECEN (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_ONEMSECEN))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_ONEMSECEN field. */
+#define BR_USB_OTGSTAT_ONEMSECEN(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_ONEMSECEN))
 
-//! @brief Format value for bitfield USB_OTGSTAT_ONEMSECEN.
-#define BF_USB_OTGSTAT_ONEMSECEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_ONEMSECEN), uint8_t) & BM_USB_OTGSTAT_ONEMSECEN)
+/*! @brief Format value for bitfield USB_OTGSTAT_ONEMSECEN. */
+#define BF_USB_OTGSTAT_ONEMSECEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_ONEMSECEN) & BM_USB_OTGSTAT_ONEMSECEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ONEMSECEN field to a new value.
-#define BW_USB_OTGSTAT_ONEMSECEN(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_ONEMSECEN) = (v))
-#endif
-//@}
+/*! @brief Set the ONEMSECEN field to a new value. */
+#define BW_USB_OTGSTAT_ONEMSECEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_ONEMSECEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGSTAT, field ID[7] (RW)
@@ -908,30 +798,25 @@ typedef union _hw_usb_otgstat
  * - 1 - Indicates no cable is attached or a Type B cable has been plugged into
  *     the USB connector
  */
-//@{
-#define BP_USB_OTGSTAT_ID    (7U)          //!< Bit position for USB_OTGSTAT_ID.
-#define BM_USB_OTGSTAT_ID    (0x80U)       //!< Bit mask for USB_OTGSTAT_ID.
-#define BS_USB_OTGSTAT_ID    (1U)          //!< Bit field size in bits for USB_OTGSTAT_ID.
+/*@{*/
+#define BP_USB_OTGSTAT_ID    (7U)          /*!< Bit position for USB_OTGSTAT_ID. */
+#define BM_USB_OTGSTAT_ID    (0x80U)       /*!< Bit mask for USB_OTGSTAT_ID. */
+#define BS_USB_OTGSTAT_ID    (1U)          /*!< Bit field size in bits for USB_OTGSTAT_ID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGSTAT_ID field.
-#define BR_USB_OTGSTAT_ID    (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_ID))
-#endif
+/*! @brief Read current value of the USB_OTGSTAT_ID field. */
+#define BR_USB_OTGSTAT_ID(x) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_ID))
 
-//! @brief Format value for bitfield USB_OTGSTAT_ID.
-#define BF_USB_OTGSTAT_ID(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGSTAT_ID), uint8_t) & BM_USB_OTGSTAT_ID)
+/*! @brief Format value for bitfield USB_OTGSTAT_ID. */
+#define BF_USB_OTGSTAT_ID(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGSTAT_ID) & BM_USB_OTGSTAT_ID)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ID field to a new value.
-#define BW_USB_OTGSTAT_ID(v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR, BP_USB_OTGSTAT_ID) = (v))
-#endif
-//@}
+/*! @brief Set the ID field to a new value. */
+#define BW_USB_OTGSTAT_ID(x, v) (BITBAND_ACCESS8(HW_USB_OTGSTAT_ADDR(x), BP_USB_OTGSTAT_ID) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_OTGCTL - OTG Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_OTGCTL - OTG Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_OTGCTL - OTG Control Register (RW)
  *
@@ -945,32 +830,30 @@ typedef union _hw_usb_otgctl
     uint8_t U;
     struct _hw_usb_otgctl_bitfields
     {
-        uint8_t RESERVED0 : 2;         //!< [1:0]
-        uint8_t OTGEN : 1;             //!< [2] On-The-Go pullup/pulldown resistor enable
-        uint8_t RESERVED1 : 1;         //!< [3]
-        uint8_t DMLOW : 1;             //!< [4] D- Data Line pull-down resistor enable
-        uint8_t DPLOW : 1;             //!< [5] D+ Data Line pull-down resistor enable
-        uint8_t RESERVED2 : 1;         //!< [6]
-        uint8_t DPHIGH : 1;            //!< [7] D+ Data Line pullup resistor enable
+        uint8_t RESERVED0 : 2;         /*!< [1:0]  */
+        uint8_t OTGEN : 1;             /*!< [2] On-The-Go pullup/pulldown resistor enable
+                                        * */
+        uint8_t RESERVED1 : 1;         /*!< [3]  */
+        uint8_t DMLOW : 1;             /*!< [4] D- Data Line pull-down resistor enable */
+        uint8_t DPLOW : 1;             /*!< [5] D+ Data Line pull-down resistor enable */
+        uint8_t RESERVED2 : 1;         /*!< [6]  */
+        uint8_t DPHIGH : 1;            /*!< [7] D+ Data Line pullup resistor enable */
     } B;
 } hw_usb_otgctl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_OTGCTL register
  */
-//@{
-#define HW_USB_OTGCTL_ADDR       (REGS_USB_BASE + 0x1CU)
+/*@{*/
+#define HW_USB_OTGCTL_ADDR(x)    ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_OTGCTL            (*(__IO hw_usb_otgctl_t *) HW_USB_OTGCTL_ADDR)
-#define HW_USB_OTGCTL_RD()       (HW_USB_OTGCTL.U)
-#define HW_USB_OTGCTL_WR(v)      (HW_USB_OTGCTL.U = (v))
-#define HW_USB_OTGCTL_SET(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() |  (v)))
-#define HW_USB_OTGCTL_CLR(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() & ~(v)))
-#define HW_USB_OTGCTL_TOG(v)     (HW_USB_OTGCTL_WR(HW_USB_OTGCTL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_OTGCTL(x)         (*(__IO hw_usb_otgctl_t *) HW_USB_OTGCTL_ADDR(x))
+#define HW_USB_OTGCTL_RD(x)      (HW_USB_OTGCTL(x).U)
+#define HW_USB_OTGCTL_WR(x, v)   (HW_USB_OTGCTL(x).U = (v))
+#define HW_USB_OTGCTL_SET(x, v)  (HW_USB_OTGCTL_WR(x, HW_USB_OTGCTL_RD(x) |  (v)))
+#define HW_USB_OTGCTL_CLR(x, v)  (HW_USB_OTGCTL_WR(x, HW_USB_OTGCTL_RD(x) & ~(v)))
+#define HW_USB_OTGCTL_TOG(x, v)  (HW_USB_OTGCTL_WR(x, HW_USB_OTGCTL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_OTGCTL bitfields
@@ -985,24 +868,20 @@ typedef union _hw_usb_otgctl
  *     the D+ and D- Data Line pull-down resistors are engaged.
  * - 1 - The pull-up and pull-down controls in this register are used.
  */
-//@{
-#define BP_USB_OTGCTL_OTGEN  (2U)          //!< Bit position for USB_OTGCTL_OTGEN.
-#define BM_USB_OTGCTL_OTGEN  (0x04U)       //!< Bit mask for USB_OTGCTL_OTGEN.
-#define BS_USB_OTGCTL_OTGEN  (1U)          //!< Bit field size in bits for USB_OTGCTL_OTGEN.
+/*@{*/
+#define BP_USB_OTGCTL_OTGEN  (2U)          /*!< Bit position for USB_OTGCTL_OTGEN. */
+#define BM_USB_OTGCTL_OTGEN  (0x04U)       /*!< Bit mask for USB_OTGCTL_OTGEN. */
+#define BS_USB_OTGCTL_OTGEN  (1U)          /*!< Bit field size in bits for USB_OTGCTL_OTGEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGCTL_OTGEN field.
-#define BR_USB_OTGCTL_OTGEN  (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_OTGEN))
-#endif
+/*! @brief Read current value of the USB_OTGCTL_OTGEN field. */
+#define BR_USB_OTGCTL_OTGEN(x) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_OTGEN))
 
-//! @brief Format value for bitfield USB_OTGCTL_OTGEN.
-#define BF_USB_OTGCTL_OTGEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGCTL_OTGEN), uint8_t) & BM_USB_OTGCTL_OTGEN)
+/*! @brief Format value for bitfield USB_OTGCTL_OTGEN. */
+#define BF_USB_OTGCTL_OTGEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGCTL_OTGEN) & BM_USB_OTGCTL_OTGEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OTGEN field to a new value.
-#define BW_USB_OTGCTL_OTGEN(v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_OTGEN) = (v))
-#endif
-//@}
+/*! @brief Set the OTGEN field to a new value. */
+#define BW_USB_OTGCTL_OTGEN(x, v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_OTGEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGCTL, field DMLOW[4] (RW)
@@ -1011,24 +890,20 @@ typedef union _hw_usb_otgctl
  * - 0 - D- pulldown resistor is not enabled.
  * - 1 - D- pulldown resistor is enabled.
  */
-//@{
-#define BP_USB_OTGCTL_DMLOW  (4U)          //!< Bit position for USB_OTGCTL_DMLOW.
-#define BM_USB_OTGCTL_DMLOW  (0x10U)       //!< Bit mask for USB_OTGCTL_DMLOW.
-#define BS_USB_OTGCTL_DMLOW  (1U)          //!< Bit field size in bits for USB_OTGCTL_DMLOW.
+/*@{*/
+#define BP_USB_OTGCTL_DMLOW  (4U)          /*!< Bit position for USB_OTGCTL_DMLOW. */
+#define BM_USB_OTGCTL_DMLOW  (0x10U)       /*!< Bit mask for USB_OTGCTL_DMLOW. */
+#define BS_USB_OTGCTL_DMLOW  (1U)          /*!< Bit field size in bits for USB_OTGCTL_DMLOW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGCTL_DMLOW field.
-#define BR_USB_OTGCTL_DMLOW  (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DMLOW))
-#endif
+/*! @brief Read current value of the USB_OTGCTL_DMLOW field. */
+#define BR_USB_OTGCTL_DMLOW(x) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DMLOW))
 
-//! @brief Format value for bitfield USB_OTGCTL_DMLOW.
-#define BF_USB_OTGCTL_DMLOW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGCTL_DMLOW), uint8_t) & BM_USB_OTGCTL_DMLOW)
+/*! @brief Format value for bitfield USB_OTGCTL_DMLOW. */
+#define BF_USB_OTGCTL_DMLOW(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGCTL_DMLOW) & BM_USB_OTGCTL_DMLOW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMLOW field to a new value.
-#define BW_USB_OTGCTL_DMLOW(v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DMLOW) = (v))
-#endif
-//@}
+/*! @brief Set the DMLOW field to a new value. */
+#define BW_USB_OTGCTL_DMLOW(x, v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DMLOW) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGCTL, field DPLOW[5] (RW)
@@ -1039,24 +914,20 @@ typedef union _hw_usb_otgctl
  * - 0 - D+ pulldown resistor is not enabled.
  * - 1 - D+ pulldown resistor is enabled.
  */
-//@{
-#define BP_USB_OTGCTL_DPLOW  (5U)          //!< Bit position for USB_OTGCTL_DPLOW.
-#define BM_USB_OTGCTL_DPLOW  (0x20U)       //!< Bit mask for USB_OTGCTL_DPLOW.
-#define BS_USB_OTGCTL_DPLOW  (1U)          //!< Bit field size in bits for USB_OTGCTL_DPLOW.
+/*@{*/
+#define BP_USB_OTGCTL_DPLOW  (5U)          /*!< Bit position for USB_OTGCTL_DPLOW. */
+#define BM_USB_OTGCTL_DPLOW  (0x20U)       /*!< Bit mask for USB_OTGCTL_DPLOW. */
+#define BS_USB_OTGCTL_DPLOW  (1U)          /*!< Bit field size in bits for USB_OTGCTL_DPLOW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGCTL_DPLOW field.
-#define BR_USB_OTGCTL_DPLOW  (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DPLOW))
-#endif
+/*! @brief Read current value of the USB_OTGCTL_DPLOW field. */
+#define BR_USB_OTGCTL_DPLOW(x) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DPLOW))
 
-//! @brief Format value for bitfield USB_OTGCTL_DPLOW.
-#define BF_USB_OTGCTL_DPLOW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGCTL_DPLOW), uint8_t) & BM_USB_OTGCTL_DPLOW)
+/*! @brief Format value for bitfield USB_OTGCTL_DPLOW. */
+#define BF_USB_OTGCTL_DPLOW(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGCTL_DPLOW) & BM_USB_OTGCTL_DPLOW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPLOW field to a new value.
-#define BW_USB_OTGCTL_DPLOW(v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DPLOW) = (v))
-#endif
-//@}
+/*! @brief Set the DPLOW field to a new value. */
+#define BW_USB_OTGCTL_DPLOW(x, v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DPLOW) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_OTGCTL, field DPHIGH[7] (RW)
@@ -1065,32 +936,27 @@ typedef union _hw_usb_otgctl
  * - 0 - D+ pullup resistor is not enabled
  * - 1 - D+ pullup resistor is enabled
  */
-//@{
-#define BP_USB_OTGCTL_DPHIGH (7U)          //!< Bit position for USB_OTGCTL_DPHIGH.
-#define BM_USB_OTGCTL_DPHIGH (0x80U)       //!< Bit mask for USB_OTGCTL_DPHIGH.
-#define BS_USB_OTGCTL_DPHIGH (1U)          //!< Bit field size in bits for USB_OTGCTL_DPHIGH.
+/*@{*/
+#define BP_USB_OTGCTL_DPHIGH (7U)          /*!< Bit position for USB_OTGCTL_DPHIGH. */
+#define BM_USB_OTGCTL_DPHIGH (0x80U)       /*!< Bit mask for USB_OTGCTL_DPHIGH. */
+#define BS_USB_OTGCTL_DPHIGH (1U)          /*!< Bit field size in bits for USB_OTGCTL_DPHIGH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OTGCTL_DPHIGH field.
-#define BR_USB_OTGCTL_DPHIGH (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DPHIGH))
-#endif
+/*! @brief Read current value of the USB_OTGCTL_DPHIGH field. */
+#define BR_USB_OTGCTL_DPHIGH(x) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DPHIGH))
 
-//! @brief Format value for bitfield USB_OTGCTL_DPHIGH.
-#define BF_USB_OTGCTL_DPHIGH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_OTGCTL_DPHIGH), uint8_t) & BM_USB_OTGCTL_DPHIGH)
+/*! @brief Format value for bitfield USB_OTGCTL_DPHIGH. */
+#define BF_USB_OTGCTL_DPHIGH(v) ((uint8_t)((uint8_t)(v) << BP_USB_OTGCTL_DPHIGH) & BM_USB_OTGCTL_DPHIGH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPHIGH field to a new value.
-#define BW_USB_OTGCTL_DPHIGH(v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR, BP_USB_OTGCTL_DPHIGH) = (v))
-#endif
-//@}
+/*! @brief Set the DPHIGH field to a new value. */
+#define BW_USB_OTGCTL_DPHIGH(x, v) (BITBAND_ACCESS8(HW_USB_OTGCTL_ADDR(x), BP_USB_OTGCTL_DPHIGH) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ISTAT - Interrupt Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ISTAT - Interrupt Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
- * @brief HW_USB_ISTAT - Interrupt Status Register (RW)
+ * @brief HW_USB_ISTAT - Interrupt Status Register (W1C)
  *
  * Reset value: 0x00U
  *
@@ -1107,33 +973,30 @@ typedef union _hw_usb_istat
     uint8_t U;
     struct _hw_usb_istat_bitfields
     {
-        uint8_t USBRST : 1;            //!< [0]
-        uint8_t ERROR : 1;             //!< [1]
-        uint8_t SOFTOK : 1;            //!< [2]
-        uint8_t TOKDNE : 1;            //!< [3]
-        uint8_t SLEEP : 1;             //!< [4]
-        uint8_t RESUME : 1;            //!< [5]
-        uint8_t ATTACH : 1;            //!< [6] Attach Interrupt
-        uint8_t STALL : 1;             //!< [7] Stall Interrupt
+        uint8_t USBRST : 1;            /*!< [0]  */
+        uint8_t ERROR : 1;             /*!< [1]  */
+        uint8_t SOFTOK : 1;            /*!< [2]  */
+        uint8_t TOKDNE : 1;            /*!< [3]  */
+        uint8_t SLEEP : 1;             /*!< [4]  */
+        uint8_t RESUME : 1;            /*!< [5]  */
+        uint8_t ATTACH : 1;            /*!< [6] Attach Interrupt */
+        uint8_t STALL : 1;             /*!< [7] Stall Interrupt */
     } B;
 } hw_usb_istat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ISTAT register
  */
-//@{
-#define HW_USB_ISTAT_ADDR        (REGS_USB_BASE + 0x80U)
+/*@{*/
+#define HW_USB_ISTAT_ADDR(x)     ((x) + 0x80U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ISTAT             (*(__IO hw_usb_istat_t *) HW_USB_ISTAT_ADDR)
-#define HW_USB_ISTAT_RD()        (HW_USB_ISTAT.U)
-#define HW_USB_ISTAT_WR(v)       (HW_USB_ISTAT.U = (v))
-#define HW_USB_ISTAT_SET(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() |  (v)))
-#define HW_USB_ISTAT_CLR(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() & ~(v)))
-#define HW_USB_ISTAT_TOG(v)      (HW_USB_ISTAT_WR(HW_USB_ISTAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_ISTAT(x)          (*(__IO hw_usb_istat_t *) HW_USB_ISTAT_ADDR(x))
+#define HW_USB_ISTAT_RD(x)       (HW_USB_ISTAT(x).U)
+#define HW_USB_ISTAT_WR(x, v)    (HW_USB_ISTAT(x).U = (v))
+#define HW_USB_ISTAT_SET(x, v)   (HW_USB_ISTAT_WR(x, HW_USB_ISTAT_RD(x) |  (v)))
+#define HW_USB_ISTAT_CLR(x, v)   (HW_USB_ISTAT_WR(x, HW_USB_ISTAT_RD(x) & ~(v)))
+#define HW_USB_ISTAT_TOG(x, v)   (HW_USB_ISTAT_WR(x, HW_USB_ISTAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ISTAT bitfields
@@ -1148,24 +1011,20 @@ typedef union _hw_usb_istat
  * microseconds. It is not asserted again until the USB reset condition has been
  * removed and then reasserted.
  */
-//@{
-#define BP_USB_ISTAT_USBRST  (0U)          //!< Bit position for USB_ISTAT_USBRST.
-#define BM_USB_ISTAT_USBRST  (0x01U)       //!< Bit mask for USB_ISTAT_USBRST.
-#define BS_USB_ISTAT_USBRST  (1U)          //!< Bit field size in bits for USB_ISTAT_USBRST.
+/*@{*/
+#define BP_USB_ISTAT_USBRST  (0U)          /*!< Bit position for USB_ISTAT_USBRST. */
+#define BM_USB_ISTAT_USBRST  (0x01U)       /*!< Bit mask for USB_ISTAT_USBRST. */
+#define BS_USB_ISTAT_USBRST  (1U)          /*!< Bit field size in bits for USB_ISTAT_USBRST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_USBRST field.
-#define BR_USB_ISTAT_USBRST  (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_USBRST))
-#endif
+/*! @brief Read current value of the USB_ISTAT_USBRST field. */
+#define BR_USB_ISTAT_USBRST(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_USBRST))
 
-//! @brief Format value for bitfield USB_ISTAT_USBRST.
-#define BF_USB_ISTAT_USBRST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_USBRST), uint8_t) & BM_USB_ISTAT_USBRST)
+/*! @brief Format value for bitfield USB_ISTAT_USBRST. */
+#define BF_USB_ISTAT_USBRST(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_USBRST) & BM_USB_ISTAT_USBRST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBRST field to a new value.
-#define BW_USB_ISTAT_USBRST(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_USBRST) = (v))
-#endif
-//@}
+/*! @brief Set the USBRST field to a new value. */
+#define BW_USB_ISTAT_USBRST(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_USBRST) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field ERROR[1] (W1C)
@@ -1174,24 +1033,20 @@ typedef union _hw_usb_istat
  * occur. The processor must then read the ERRSTAT register to determine the
  * source of the error.
  */
-//@{
-#define BP_USB_ISTAT_ERROR   (1U)          //!< Bit position for USB_ISTAT_ERROR.
-#define BM_USB_ISTAT_ERROR   (0x02U)       //!< Bit mask for USB_ISTAT_ERROR.
-#define BS_USB_ISTAT_ERROR   (1U)          //!< Bit field size in bits for USB_ISTAT_ERROR.
+/*@{*/
+#define BP_USB_ISTAT_ERROR   (1U)          /*!< Bit position for USB_ISTAT_ERROR. */
+#define BM_USB_ISTAT_ERROR   (0x02U)       /*!< Bit mask for USB_ISTAT_ERROR. */
+#define BS_USB_ISTAT_ERROR   (1U)          /*!< Bit field size in bits for USB_ISTAT_ERROR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_ERROR field.
-#define BR_USB_ISTAT_ERROR   (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_ERROR))
-#endif
+/*! @brief Read current value of the USB_ISTAT_ERROR field. */
+#define BR_USB_ISTAT_ERROR(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_ERROR))
 
-//! @brief Format value for bitfield USB_ISTAT_ERROR.
-#define BF_USB_ISTAT_ERROR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_ERROR), uint8_t) & BM_USB_ISTAT_ERROR)
+/*! @brief Format value for bitfield USB_ISTAT_ERROR. */
+#define BF_USB_ISTAT_ERROR(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_ERROR) & BM_USB_ISTAT_ERROR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERROR field to a new value.
-#define BW_USB_ISTAT_ERROR(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_ERROR) = (v))
-#endif
-//@}
+/*! @brief Set the ERROR field to a new value. */
+#define BW_USB_ISTAT_ERROR(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_ERROR) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field SOFTOK[2] (W1C)
@@ -1200,24 +1055,20 @@ typedef union _hw_usb_istat
  * Host mode this bit is set when the SOF threshold is reached, so that software
  * can prepare for the next SOF.
  */
-//@{
-#define BP_USB_ISTAT_SOFTOK  (2U)          //!< Bit position for USB_ISTAT_SOFTOK.
-#define BM_USB_ISTAT_SOFTOK  (0x04U)       //!< Bit mask for USB_ISTAT_SOFTOK.
-#define BS_USB_ISTAT_SOFTOK  (1U)          //!< Bit field size in bits for USB_ISTAT_SOFTOK.
+/*@{*/
+#define BP_USB_ISTAT_SOFTOK  (2U)          /*!< Bit position for USB_ISTAT_SOFTOK. */
+#define BM_USB_ISTAT_SOFTOK  (0x04U)       /*!< Bit mask for USB_ISTAT_SOFTOK. */
+#define BS_USB_ISTAT_SOFTOK  (1U)          /*!< Bit field size in bits for USB_ISTAT_SOFTOK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_SOFTOK field.
-#define BR_USB_ISTAT_SOFTOK  (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_SOFTOK))
-#endif
+/*! @brief Read current value of the USB_ISTAT_SOFTOK field. */
+#define BR_USB_ISTAT_SOFTOK(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_SOFTOK))
 
-//! @brief Format value for bitfield USB_ISTAT_SOFTOK.
-#define BF_USB_ISTAT_SOFTOK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_SOFTOK), uint8_t) & BM_USB_ISTAT_SOFTOK)
+/*! @brief Format value for bitfield USB_ISTAT_SOFTOK. */
+#define BF_USB_ISTAT_SOFTOK(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_SOFTOK) & BM_USB_ISTAT_SOFTOK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SOFTOK field to a new value.
-#define BW_USB_ISTAT_SOFTOK(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_SOFTOK) = (v))
-#endif
-//@}
+/*! @brief Set the SOFTOK field to a new value. */
+#define BW_USB_ISTAT_SOFTOK(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_SOFTOK) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field TOKDNE[3] (W1C)
@@ -1228,24 +1079,20 @@ typedef union _hw_usb_istat
  * register to be cleared or the STAT holding register to be loaded into the STAT
  * register.
  */
-//@{
-#define BP_USB_ISTAT_TOKDNE  (3U)          //!< Bit position for USB_ISTAT_TOKDNE.
-#define BM_USB_ISTAT_TOKDNE  (0x08U)       //!< Bit mask for USB_ISTAT_TOKDNE.
-#define BS_USB_ISTAT_TOKDNE  (1U)          //!< Bit field size in bits for USB_ISTAT_TOKDNE.
+/*@{*/
+#define BP_USB_ISTAT_TOKDNE  (3U)          /*!< Bit position for USB_ISTAT_TOKDNE. */
+#define BM_USB_ISTAT_TOKDNE  (0x08U)       /*!< Bit mask for USB_ISTAT_TOKDNE. */
+#define BS_USB_ISTAT_TOKDNE  (1U)          /*!< Bit field size in bits for USB_ISTAT_TOKDNE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_TOKDNE field.
-#define BR_USB_ISTAT_TOKDNE  (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_TOKDNE))
-#endif
+/*! @brief Read current value of the USB_ISTAT_TOKDNE field. */
+#define BR_USB_ISTAT_TOKDNE(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_TOKDNE))
 
-//! @brief Format value for bitfield USB_ISTAT_TOKDNE.
-#define BF_USB_ISTAT_TOKDNE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_TOKDNE), uint8_t) & BM_USB_ISTAT_TOKDNE)
+/*! @brief Format value for bitfield USB_ISTAT_TOKDNE. */
+#define BF_USB_ISTAT_TOKDNE(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_TOKDNE) & BM_USB_ISTAT_TOKDNE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOKDNE field to a new value.
-#define BW_USB_ISTAT_TOKDNE(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_TOKDNE) = (v))
-#endif
-//@}
+/*! @brief Set the TOKDNE field to a new value. */
+#define BW_USB_ISTAT_TOKDNE(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_TOKDNE) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field SLEEP[4] (W1C)
@@ -1253,24 +1100,20 @@ typedef union _hw_usb_istat
  * This bit is set when the USB Module detects a constant idle on the USB bus
  * for 3 milliseconds. The sleep timer is reset by activity on the USB bus.
  */
-//@{
-#define BP_USB_ISTAT_SLEEP   (4U)          //!< Bit position for USB_ISTAT_SLEEP.
-#define BM_USB_ISTAT_SLEEP   (0x10U)       //!< Bit mask for USB_ISTAT_SLEEP.
-#define BS_USB_ISTAT_SLEEP   (1U)          //!< Bit field size in bits for USB_ISTAT_SLEEP.
+/*@{*/
+#define BP_USB_ISTAT_SLEEP   (4U)          /*!< Bit position for USB_ISTAT_SLEEP. */
+#define BM_USB_ISTAT_SLEEP   (0x10U)       /*!< Bit mask for USB_ISTAT_SLEEP. */
+#define BS_USB_ISTAT_SLEEP   (1U)          /*!< Bit field size in bits for USB_ISTAT_SLEEP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_SLEEP field.
-#define BR_USB_ISTAT_SLEEP   (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_SLEEP))
-#endif
+/*! @brief Read current value of the USB_ISTAT_SLEEP field. */
+#define BR_USB_ISTAT_SLEEP(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_SLEEP))
 
-//! @brief Format value for bitfield USB_ISTAT_SLEEP.
-#define BF_USB_ISTAT_SLEEP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_SLEEP), uint8_t) & BM_USB_ISTAT_SLEEP)
+/*! @brief Format value for bitfield USB_ISTAT_SLEEP. */
+#define BF_USB_ISTAT_SLEEP(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_SLEEP) & BM_USB_ISTAT_SLEEP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SLEEP field to a new value.
-#define BW_USB_ISTAT_SLEEP(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_SLEEP) = (v))
-#endif
-//@}
+/*! @brief Set the SLEEP field to a new value. */
+#define BW_USB_ISTAT_SLEEP(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_SLEEP) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field RESUME[5] (W1C)
@@ -1279,24 +1122,20 @@ typedef union _hw_usb_istat
  * remote wake-up signaling on the USB bus. When not in suspend mode this
  * interrupt should be disabled.
  */
-//@{
-#define BP_USB_ISTAT_RESUME  (5U)          //!< Bit position for USB_ISTAT_RESUME.
-#define BM_USB_ISTAT_RESUME  (0x20U)       //!< Bit mask for USB_ISTAT_RESUME.
-#define BS_USB_ISTAT_RESUME  (1U)          //!< Bit field size in bits for USB_ISTAT_RESUME.
+/*@{*/
+#define BP_USB_ISTAT_RESUME  (5U)          /*!< Bit position for USB_ISTAT_RESUME. */
+#define BM_USB_ISTAT_RESUME  (0x20U)       /*!< Bit mask for USB_ISTAT_RESUME. */
+#define BS_USB_ISTAT_RESUME  (1U)          /*!< Bit field size in bits for USB_ISTAT_RESUME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_RESUME field.
-#define BR_USB_ISTAT_RESUME  (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_RESUME))
-#endif
+/*! @brief Read current value of the USB_ISTAT_RESUME field. */
+#define BR_USB_ISTAT_RESUME(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_RESUME))
 
-//! @brief Format value for bitfield USB_ISTAT_RESUME.
-#define BF_USB_ISTAT_RESUME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_RESUME), uint8_t) & BM_USB_ISTAT_RESUME)
+/*! @brief Format value for bitfield USB_ISTAT_RESUME. */
+#define BF_USB_ISTAT_RESUME(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_RESUME) & BM_USB_ISTAT_RESUME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESUME field to a new value.
-#define BW_USB_ISTAT_RESUME(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_RESUME) = (v))
-#endif
-//@}
+/*! @brief Set the RESUME field to a new value. */
+#define BW_USB_ISTAT_RESUME(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_RESUME) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field ATTACH[6] (W1C)
@@ -1305,24 +1144,20 @@ typedef union _hw_usb_istat
  * signal is only valid if HOSTMODEEN is true. This interrupt signifies that a
  * peripheral is now present and must be configured.
  */
-//@{
-#define BP_USB_ISTAT_ATTACH  (6U)          //!< Bit position for USB_ISTAT_ATTACH.
-#define BM_USB_ISTAT_ATTACH  (0x40U)       //!< Bit mask for USB_ISTAT_ATTACH.
-#define BS_USB_ISTAT_ATTACH  (1U)          //!< Bit field size in bits for USB_ISTAT_ATTACH.
+/*@{*/
+#define BP_USB_ISTAT_ATTACH  (6U)          /*!< Bit position for USB_ISTAT_ATTACH. */
+#define BM_USB_ISTAT_ATTACH  (0x40U)       /*!< Bit mask for USB_ISTAT_ATTACH. */
+#define BS_USB_ISTAT_ATTACH  (1U)          /*!< Bit field size in bits for USB_ISTAT_ATTACH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_ATTACH field.
-#define BR_USB_ISTAT_ATTACH  (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_ATTACH))
-#endif
+/*! @brief Read current value of the USB_ISTAT_ATTACH field. */
+#define BR_USB_ISTAT_ATTACH(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_ATTACH))
 
-//! @brief Format value for bitfield USB_ISTAT_ATTACH.
-#define BF_USB_ISTAT_ATTACH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_ATTACH), uint8_t) & BM_USB_ISTAT_ATTACH)
+/*! @brief Format value for bitfield USB_ISTAT_ATTACH. */
+#define BF_USB_ISTAT_ATTACH(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_ATTACH) & BM_USB_ISTAT_ATTACH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ATTACH field to a new value.
-#define BW_USB_ISTAT_ATTACH(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_ATTACH) = (v))
-#endif
-//@}
+/*! @brief Set the ATTACH field to a new value. */
+#define BW_USB_ISTAT_ATTACH(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_ATTACH) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ISTAT, field STALL[7] (W1C)
@@ -1333,30 +1168,25 @@ typedef union _hw_usb_istat
  * determine is the last USB transaction was completed successfully or if it
  * stalled.
  */
-//@{
-#define BP_USB_ISTAT_STALL   (7U)          //!< Bit position for USB_ISTAT_STALL.
-#define BM_USB_ISTAT_STALL   (0x80U)       //!< Bit mask for USB_ISTAT_STALL.
-#define BS_USB_ISTAT_STALL   (1U)          //!< Bit field size in bits for USB_ISTAT_STALL.
+/*@{*/
+#define BP_USB_ISTAT_STALL   (7U)          /*!< Bit position for USB_ISTAT_STALL. */
+#define BM_USB_ISTAT_STALL   (0x80U)       /*!< Bit mask for USB_ISTAT_STALL. */
+#define BS_USB_ISTAT_STALL   (1U)          /*!< Bit field size in bits for USB_ISTAT_STALL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ISTAT_STALL field.
-#define BR_USB_ISTAT_STALL   (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_STALL))
-#endif
+/*! @brief Read current value of the USB_ISTAT_STALL field. */
+#define BR_USB_ISTAT_STALL(x) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_STALL))
 
-//! @brief Format value for bitfield USB_ISTAT_STALL.
-#define BF_USB_ISTAT_STALL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ISTAT_STALL), uint8_t) & BM_USB_ISTAT_STALL)
+/*! @brief Format value for bitfield USB_ISTAT_STALL. */
+#define BF_USB_ISTAT_STALL(v) ((uint8_t)((uint8_t)(v) << BP_USB_ISTAT_STALL) & BM_USB_ISTAT_STALL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the STALL field to a new value.
-#define BW_USB_ISTAT_STALL(v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR, BP_USB_ISTAT_STALL) = (v))
-#endif
-//@}
+/*! @brief Set the STALL field to a new value. */
+#define BW_USB_ISTAT_STALL(x, v) (BITBAND_ACCESS8(HW_USB_ISTAT_ADDR(x), BP_USB_ISTAT_STALL) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_INTEN - Interrupt Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_INTEN - Interrupt Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_INTEN - Interrupt Enable Register (RW)
  *
@@ -1372,33 +1202,30 @@ typedef union _hw_usb_inten
     uint8_t U;
     struct _hw_usb_inten_bitfields
     {
-        uint8_t USBRSTEN : 1;          //!< [0] USBRST Interrupt Enable
-        uint8_t ERROREN : 1;           //!< [1] ERROR Interrupt Enable
-        uint8_t SOFTOKEN : 1;          //!< [2] SOFTOK Interrupt Enable
-        uint8_t TOKDNEEN : 1;          //!< [3] TOKDNE Interrupt Enable
-        uint8_t SLEEPEN : 1;           //!< [4] SLEEP Interrupt Enable
-        uint8_t RESUMEEN : 1;          //!< [5] RESUME Interrupt Enable
-        uint8_t ATTACHEN : 1;          //!< [6] ATTACH Interrupt Enable
-        uint8_t STALLEN : 1;           //!< [7] STALL Interrupt Enable
+        uint8_t USBRSTEN : 1;          /*!< [0] USBRST Interrupt Enable */
+        uint8_t ERROREN : 1;           /*!< [1] ERROR Interrupt Enable */
+        uint8_t SOFTOKEN : 1;          /*!< [2] SOFTOK Interrupt Enable */
+        uint8_t TOKDNEEN : 1;          /*!< [3] TOKDNE Interrupt Enable */
+        uint8_t SLEEPEN : 1;           /*!< [4] SLEEP Interrupt Enable */
+        uint8_t RESUMEEN : 1;          /*!< [5] RESUME Interrupt Enable */
+        uint8_t ATTACHEN : 1;          /*!< [6] ATTACH Interrupt Enable */
+        uint8_t STALLEN : 1;           /*!< [7] STALL Interrupt Enable */
     } B;
 } hw_usb_inten_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_INTEN register
  */
-//@{
-#define HW_USB_INTEN_ADDR        (REGS_USB_BASE + 0x84U)
+/*@{*/
+#define HW_USB_INTEN_ADDR(x)     ((x) + 0x84U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_INTEN             (*(__IO hw_usb_inten_t *) HW_USB_INTEN_ADDR)
-#define HW_USB_INTEN_RD()        (HW_USB_INTEN.U)
-#define HW_USB_INTEN_WR(v)       (HW_USB_INTEN.U = (v))
-#define HW_USB_INTEN_SET(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() |  (v)))
-#define HW_USB_INTEN_CLR(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() & ~(v)))
-#define HW_USB_INTEN_TOG(v)      (HW_USB_INTEN_WR(HW_USB_INTEN_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_INTEN(x)          (*(__IO hw_usb_inten_t *) HW_USB_INTEN_ADDR(x))
+#define HW_USB_INTEN_RD(x)       (HW_USB_INTEN(x).U)
+#define HW_USB_INTEN_WR(x, v)    (HW_USB_INTEN(x).U = (v))
+#define HW_USB_INTEN_SET(x, v)   (HW_USB_INTEN_WR(x, HW_USB_INTEN_RD(x) |  (v)))
+#define HW_USB_INTEN_CLR(x, v)   (HW_USB_INTEN_WR(x, HW_USB_INTEN_RD(x) & ~(v)))
+#define HW_USB_INTEN_TOG(x, v)   (HW_USB_INTEN_WR(x, HW_USB_INTEN_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_INTEN bitfields
@@ -1411,24 +1238,20 @@ typedef union _hw_usb_inten
  * - 0 - The USBRST interrupt is not enabled.
  * - 1 - The USBRST interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_USBRSTEN (0U)         //!< Bit position for USB_INTEN_USBRSTEN.
-#define BM_USB_INTEN_USBRSTEN (0x01U)      //!< Bit mask for USB_INTEN_USBRSTEN.
-#define BS_USB_INTEN_USBRSTEN (1U)         //!< Bit field size in bits for USB_INTEN_USBRSTEN.
+/*@{*/
+#define BP_USB_INTEN_USBRSTEN (0U)         /*!< Bit position for USB_INTEN_USBRSTEN. */
+#define BM_USB_INTEN_USBRSTEN (0x01U)      /*!< Bit mask for USB_INTEN_USBRSTEN. */
+#define BS_USB_INTEN_USBRSTEN (1U)         /*!< Bit field size in bits for USB_INTEN_USBRSTEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_USBRSTEN field.
-#define BR_USB_INTEN_USBRSTEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_USBRSTEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_USBRSTEN field. */
+#define BR_USB_INTEN_USBRSTEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_USBRSTEN))
 
-//! @brief Format value for bitfield USB_INTEN_USBRSTEN.
-#define BF_USB_INTEN_USBRSTEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_USBRSTEN), uint8_t) & BM_USB_INTEN_USBRSTEN)
+/*! @brief Format value for bitfield USB_INTEN_USBRSTEN. */
+#define BF_USB_INTEN_USBRSTEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_USBRSTEN) & BM_USB_INTEN_USBRSTEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBRSTEN field to a new value.
-#define BW_USB_INTEN_USBRSTEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_USBRSTEN) = (v))
-#endif
-//@}
+/*! @brief Set the USBRSTEN field to a new value. */
+#define BW_USB_INTEN_USBRSTEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_USBRSTEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field ERROREN[1] (RW)
@@ -1437,24 +1260,20 @@ typedef union _hw_usb_inten
  * - 0 - The ERROR interrupt is not enabled.
  * - 1 - The ERROR interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_ERROREN (1U)          //!< Bit position for USB_INTEN_ERROREN.
-#define BM_USB_INTEN_ERROREN (0x02U)       //!< Bit mask for USB_INTEN_ERROREN.
-#define BS_USB_INTEN_ERROREN (1U)          //!< Bit field size in bits for USB_INTEN_ERROREN.
+/*@{*/
+#define BP_USB_INTEN_ERROREN (1U)          /*!< Bit position for USB_INTEN_ERROREN. */
+#define BM_USB_INTEN_ERROREN (0x02U)       /*!< Bit mask for USB_INTEN_ERROREN. */
+#define BS_USB_INTEN_ERROREN (1U)          /*!< Bit field size in bits for USB_INTEN_ERROREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_ERROREN field.
-#define BR_USB_INTEN_ERROREN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_ERROREN))
-#endif
+/*! @brief Read current value of the USB_INTEN_ERROREN field. */
+#define BR_USB_INTEN_ERROREN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_ERROREN))
 
-//! @brief Format value for bitfield USB_INTEN_ERROREN.
-#define BF_USB_INTEN_ERROREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_ERROREN), uint8_t) & BM_USB_INTEN_ERROREN)
+/*! @brief Format value for bitfield USB_INTEN_ERROREN. */
+#define BF_USB_INTEN_ERROREN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_ERROREN) & BM_USB_INTEN_ERROREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ERROREN field to a new value.
-#define BW_USB_INTEN_ERROREN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_ERROREN) = (v))
-#endif
-//@}
+/*! @brief Set the ERROREN field to a new value. */
+#define BW_USB_INTEN_ERROREN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_ERROREN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field SOFTOKEN[2] (RW)
@@ -1463,24 +1282,20 @@ typedef union _hw_usb_inten
  * - 0 - The SOFTOK interrupt is not enabled.
  * - 1 - The SOFTOK interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_SOFTOKEN (2U)         //!< Bit position for USB_INTEN_SOFTOKEN.
-#define BM_USB_INTEN_SOFTOKEN (0x04U)      //!< Bit mask for USB_INTEN_SOFTOKEN.
-#define BS_USB_INTEN_SOFTOKEN (1U)         //!< Bit field size in bits for USB_INTEN_SOFTOKEN.
+/*@{*/
+#define BP_USB_INTEN_SOFTOKEN (2U)         /*!< Bit position for USB_INTEN_SOFTOKEN. */
+#define BM_USB_INTEN_SOFTOKEN (0x04U)      /*!< Bit mask for USB_INTEN_SOFTOKEN. */
+#define BS_USB_INTEN_SOFTOKEN (1U)         /*!< Bit field size in bits for USB_INTEN_SOFTOKEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_SOFTOKEN field.
-#define BR_USB_INTEN_SOFTOKEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_SOFTOKEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_SOFTOKEN field. */
+#define BR_USB_INTEN_SOFTOKEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_SOFTOKEN))
 
-//! @brief Format value for bitfield USB_INTEN_SOFTOKEN.
-#define BF_USB_INTEN_SOFTOKEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_SOFTOKEN), uint8_t) & BM_USB_INTEN_SOFTOKEN)
+/*! @brief Format value for bitfield USB_INTEN_SOFTOKEN. */
+#define BF_USB_INTEN_SOFTOKEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_SOFTOKEN) & BM_USB_INTEN_SOFTOKEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SOFTOKEN field to a new value.
-#define BW_USB_INTEN_SOFTOKEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_SOFTOKEN) = (v))
-#endif
-//@}
+/*! @brief Set the SOFTOKEN field to a new value. */
+#define BW_USB_INTEN_SOFTOKEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_SOFTOKEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field TOKDNEEN[3] (RW)
@@ -1489,24 +1304,20 @@ typedef union _hw_usb_inten
  * - 0 - The TOKDNE interrupt is not enabled.
  * - 1 - The TOKDNE interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_TOKDNEEN (3U)         //!< Bit position for USB_INTEN_TOKDNEEN.
-#define BM_USB_INTEN_TOKDNEEN (0x08U)      //!< Bit mask for USB_INTEN_TOKDNEEN.
-#define BS_USB_INTEN_TOKDNEEN (1U)         //!< Bit field size in bits for USB_INTEN_TOKDNEEN.
+/*@{*/
+#define BP_USB_INTEN_TOKDNEEN (3U)         /*!< Bit position for USB_INTEN_TOKDNEEN. */
+#define BM_USB_INTEN_TOKDNEEN (0x08U)      /*!< Bit mask for USB_INTEN_TOKDNEEN. */
+#define BS_USB_INTEN_TOKDNEEN (1U)         /*!< Bit field size in bits for USB_INTEN_TOKDNEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_TOKDNEEN field.
-#define BR_USB_INTEN_TOKDNEEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_TOKDNEEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_TOKDNEEN field. */
+#define BR_USB_INTEN_TOKDNEEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_TOKDNEEN))
 
-//! @brief Format value for bitfield USB_INTEN_TOKDNEEN.
-#define BF_USB_INTEN_TOKDNEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_TOKDNEEN), uint8_t) & BM_USB_INTEN_TOKDNEEN)
+/*! @brief Format value for bitfield USB_INTEN_TOKDNEEN. */
+#define BF_USB_INTEN_TOKDNEEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_TOKDNEEN) & BM_USB_INTEN_TOKDNEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOKDNEEN field to a new value.
-#define BW_USB_INTEN_TOKDNEEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_TOKDNEEN) = (v))
-#endif
-//@}
+/*! @brief Set the TOKDNEEN field to a new value. */
+#define BW_USB_INTEN_TOKDNEEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_TOKDNEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field SLEEPEN[4] (RW)
@@ -1515,24 +1326,20 @@ typedef union _hw_usb_inten
  * - 0 - The SLEEP interrupt is not enabled.
  * - 1 - The SLEEP interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_SLEEPEN (4U)          //!< Bit position for USB_INTEN_SLEEPEN.
-#define BM_USB_INTEN_SLEEPEN (0x10U)       //!< Bit mask for USB_INTEN_SLEEPEN.
-#define BS_USB_INTEN_SLEEPEN (1U)          //!< Bit field size in bits for USB_INTEN_SLEEPEN.
+/*@{*/
+#define BP_USB_INTEN_SLEEPEN (4U)          /*!< Bit position for USB_INTEN_SLEEPEN. */
+#define BM_USB_INTEN_SLEEPEN (0x10U)       /*!< Bit mask for USB_INTEN_SLEEPEN. */
+#define BS_USB_INTEN_SLEEPEN (1U)          /*!< Bit field size in bits for USB_INTEN_SLEEPEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_SLEEPEN field.
-#define BR_USB_INTEN_SLEEPEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_SLEEPEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_SLEEPEN field. */
+#define BR_USB_INTEN_SLEEPEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_SLEEPEN))
 
-//! @brief Format value for bitfield USB_INTEN_SLEEPEN.
-#define BF_USB_INTEN_SLEEPEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_SLEEPEN), uint8_t) & BM_USB_INTEN_SLEEPEN)
+/*! @brief Format value for bitfield USB_INTEN_SLEEPEN. */
+#define BF_USB_INTEN_SLEEPEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_SLEEPEN) & BM_USB_INTEN_SLEEPEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SLEEPEN field to a new value.
-#define BW_USB_INTEN_SLEEPEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_SLEEPEN) = (v))
-#endif
-//@}
+/*! @brief Set the SLEEPEN field to a new value. */
+#define BW_USB_INTEN_SLEEPEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_SLEEPEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field RESUMEEN[5] (RW)
@@ -1541,24 +1348,20 @@ typedef union _hw_usb_inten
  * - 0 - The RESUME interrupt is not enabled.
  * - 1 - The RESUME interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_RESUMEEN (5U)         //!< Bit position for USB_INTEN_RESUMEEN.
-#define BM_USB_INTEN_RESUMEEN (0x20U)      //!< Bit mask for USB_INTEN_RESUMEEN.
-#define BS_USB_INTEN_RESUMEEN (1U)         //!< Bit field size in bits for USB_INTEN_RESUMEEN.
+/*@{*/
+#define BP_USB_INTEN_RESUMEEN (5U)         /*!< Bit position for USB_INTEN_RESUMEEN. */
+#define BM_USB_INTEN_RESUMEEN (0x20U)      /*!< Bit mask for USB_INTEN_RESUMEEN. */
+#define BS_USB_INTEN_RESUMEEN (1U)         /*!< Bit field size in bits for USB_INTEN_RESUMEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_RESUMEEN field.
-#define BR_USB_INTEN_RESUMEEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_RESUMEEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_RESUMEEN field. */
+#define BR_USB_INTEN_RESUMEEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_RESUMEEN))
 
-//! @brief Format value for bitfield USB_INTEN_RESUMEEN.
-#define BF_USB_INTEN_RESUMEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_RESUMEEN), uint8_t) & BM_USB_INTEN_RESUMEEN)
+/*! @brief Format value for bitfield USB_INTEN_RESUMEEN. */
+#define BF_USB_INTEN_RESUMEEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_RESUMEEN) & BM_USB_INTEN_RESUMEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESUMEEN field to a new value.
-#define BW_USB_INTEN_RESUMEEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_RESUMEEN) = (v))
-#endif
-//@}
+/*! @brief Set the RESUMEEN field to a new value. */
+#define BW_USB_INTEN_RESUMEEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_RESUMEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field ATTACHEN[6] (RW)
@@ -1567,24 +1370,20 @@ typedef union _hw_usb_inten
  * - 0 - The ATTACH interrupt is not enabled.
  * - 1 - The ATTACH interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_ATTACHEN (6U)         //!< Bit position for USB_INTEN_ATTACHEN.
-#define BM_USB_INTEN_ATTACHEN (0x40U)      //!< Bit mask for USB_INTEN_ATTACHEN.
-#define BS_USB_INTEN_ATTACHEN (1U)         //!< Bit field size in bits for USB_INTEN_ATTACHEN.
+/*@{*/
+#define BP_USB_INTEN_ATTACHEN (6U)         /*!< Bit position for USB_INTEN_ATTACHEN. */
+#define BM_USB_INTEN_ATTACHEN (0x40U)      /*!< Bit mask for USB_INTEN_ATTACHEN. */
+#define BS_USB_INTEN_ATTACHEN (1U)         /*!< Bit field size in bits for USB_INTEN_ATTACHEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_ATTACHEN field.
-#define BR_USB_INTEN_ATTACHEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_ATTACHEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_ATTACHEN field. */
+#define BR_USB_INTEN_ATTACHEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_ATTACHEN))
 
-//! @brief Format value for bitfield USB_INTEN_ATTACHEN.
-#define BF_USB_INTEN_ATTACHEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_ATTACHEN), uint8_t) & BM_USB_INTEN_ATTACHEN)
+/*! @brief Format value for bitfield USB_INTEN_ATTACHEN. */
+#define BF_USB_INTEN_ATTACHEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_ATTACHEN) & BM_USB_INTEN_ATTACHEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ATTACHEN field to a new value.
-#define BW_USB_INTEN_ATTACHEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_ATTACHEN) = (v))
-#endif
-//@}
+/*! @brief Set the ATTACHEN field to a new value. */
+#define BW_USB_INTEN_ATTACHEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_ATTACHEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_INTEN, field STALLEN[7] (RW)
@@ -1593,30 +1392,25 @@ typedef union _hw_usb_inten
  * - 0 - The STALL interrupt is not enabled.
  * - 1 - The STALL interrupt is enabled.
  */
-//@{
-#define BP_USB_INTEN_STALLEN (7U)          //!< Bit position for USB_INTEN_STALLEN.
-#define BM_USB_INTEN_STALLEN (0x80U)       //!< Bit mask for USB_INTEN_STALLEN.
-#define BS_USB_INTEN_STALLEN (1U)          //!< Bit field size in bits for USB_INTEN_STALLEN.
+/*@{*/
+#define BP_USB_INTEN_STALLEN (7U)          /*!< Bit position for USB_INTEN_STALLEN. */
+#define BM_USB_INTEN_STALLEN (0x80U)       /*!< Bit mask for USB_INTEN_STALLEN. */
+#define BS_USB_INTEN_STALLEN (1U)          /*!< Bit field size in bits for USB_INTEN_STALLEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_INTEN_STALLEN field.
-#define BR_USB_INTEN_STALLEN (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_STALLEN))
-#endif
+/*! @brief Read current value of the USB_INTEN_STALLEN field. */
+#define BR_USB_INTEN_STALLEN(x) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_STALLEN))
 
-//! @brief Format value for bitfield USB_INTEN_STALLEN.
-#define BF_USB_INTEN_STALLEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_INTEN_STALLEN), uint8_t) & BM_USB_INTEN_STALLEN)
+/*! @brief Format value for bitfield USB_INTEN_STALLEN. */
+#define BF_USB_INTEN_STALLEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_INTEN_STALLEN) & BM_USB_INTEN_STALLEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the STALLEN field to a new value.
-#define BW_USB_INTEN_STALLEN(v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR, BP_USB_INTEN_STALLEN) = (v))
-#endif
-//@}
+/*! @brief Set the STALLEN field to a new value. */
+#define BW_USB_INTEN_STALLEN(x, v) (BITBAND_ACCESS8(HW_USB_INTEN_ADDR(x), BP_USB_INTEN_STALLEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ERRSTAT - Error Interrupt Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ERRSTAT - Error Interrupt Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_ERRSTAT - Error Interrupt Status Register (RW)
  *
@@ -1636,33 +1430,30 @@ typedef union _hw_usb_errstat
     uint8_t U;
     struct _hw_usb_errstat_bitfields
     {
-        uint8_t PIDERR : 1;            //!< [0]
-        uint8_t CRC5EOF : 1;           //!< [1]
-        uint8_t CRC16 : 1;             //!< [2]
-        uint8_t DFN8 : 1;              //!< [3]
-        uint8_t BTOERR : 1;            //!< [4]
-        uint8_t DMAERR : 1;            //!< [5]
-        uint8_t RESERVED0 : 1;         //!< [6]
-        uint8_t BTSERR : 1;            //!< [7]
+        uint8_t PIDERR : 1;            /*!< [0]  */
+        uint8_t CRC5EOF : 1;           /*!< [1]  */
+        uint8_t CRC16 : 1;             /*!< [2]  */
+        uint8_t DFN8 : 1;              /*!< [3]  */
+        uint8_t BTOERR : 1;            /*!< [4]  */
+        uint8_t DMAERR : 1;            /*!< [5]  */
+        uint8_t RESERVED0 : 1;         /*!< [6]  */
+        uint8_t BTSERR : 1;            /*!< [7]  */
     } B;
 } hw_usb_errstat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ERRSTAT register
  */
-//@{
-#define HW_USB_ERRSTAT_ADDR      (REGS_USB_BASE + 0x88U)
+/*@{*/
+#define HW_USB_ERRSTAT_ADDR(x)   ((x) + 0x88U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ERRSTAT           (*(__IO hw_usb_errstat_t *) HW_USB_ERRSTAT_ADDR)
-#define HW_USB_ERRSTAT_RD()      (HW_USB_ERRSTAT.U)
-#define HW_USB_ERRSTAT_WR(v)     (HW_USB_ERRSTAT.U = (v))
-#define HW_USB_ERRSTAT_SET(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() |  (v)))
-#define HW_USB_ERRSTAT_CLR(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() & ~(v)))
-#define HW_USB_ERRSTAT_TOG(v)    (HW_USB_ERRSTAT_WR(HW_USB_ERRSTAT_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_ERRSTAT(x)        (*(__IO hw_usb_errstat_t *) HW_USB_ERRSTAT_ADDR(x))
+#define HW_USB_ERRSTAT_RD(x)     (HW_USB_ERRSTAT(x).U)
+#define HW_USB_ERRSTAT_WR(x, v)  (HW_USB_ERRSTAT(x).U = (v))
+#define HW_USB_ERRSTAT_SET(x, v) (HW_USB_ERRSTAT_WR(x, HW_USB_ERRSTAT_RD(x) |  (v)))
+#define HW_USB_ERRSTAT_CLR(x, v) (HW_USB_ERRSTAT_WR(x, HW_USB_ERRSTAT_RD(x) & ~(v)))
+#define HW_USB_ERRSTAT_TOG(x, v) (HW_USB_ERRSTAT_WR(x, HW_USB_ERRSTAT_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ERRSTAT bitfields
@@ -1673,24 +1464,20 @@ typedef union _hw_usb_errstat
  *
  * This bit is set when the PID check field fails.
  */
-//@{
-#define BP_USB_ERRSTAT_PIDERR (0U)         //!< Bit position for USB_ERRSTAT_PIDERR.
-#define BM_USB_ERRSTAT_PIDERR (0x01U)      //!< Bit mask for USB_ERRSTAT_PIDERR.
-#define BS_USB_ERRSTAT_PIDERR (1U)         //!< Bit field size in bits for USB_ERRSTAT_PIDERR.
+/*@{*/
+#define BP_USB_ERRSTAT_PIDERR (0U)         /*!< Bit position for USB_ERRSTAT_PIDERR. */
+#define BM_USB_ERRSTAT_PIDERR (0x01U)      /*!< Bit mask for USB_ERRSTAT_PIDERR. */
+#define BS_USB_ERRSTAT_PIDERR (1U)         /*!< Bit field size in bits for USB_ERRSTAT_PIDERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_PIDERR field.
-#define BR_USB_ERRSTAT_PIDERR (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_PIDERR))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_PIDERR field. */
+#define BR_USB_ERRSTAT_PIDERR(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_PIDERR))
 
-//! @brief Format value for bitfield USB_ERRSTAT_PIDERR.
-#define BF_USB_ERRSTAT_PIDERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_PIDERR), uint8_t) & BM_USB_ERRSTAT_PIDERR)
+/*! @brief Format value for bitfield USB_ERRSTAT_PIDERR. */
+#define BF_USB_ERRSTAT_PIDERR(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_PIDERR) & BM_USB_ERRSTAT_PIDERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PIDERR field to a new value.
-#define BW_USB_ERRSTAT_PIDERR(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_PIDERR) = (v))
-#endif
-//@}
+/*! @brief Set the PIDERR field to a new value. */
+#define BW_USB_ERRSTAT_PIDERR(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_PIDERR) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field CRC5EOF[1] (W1C)
@@ -1704,48 +1491,40 @@ typedef union _hw_usb_errstat
  * This interrupt is useful when developing USB packet scheduling software to
  * ensure that no USB transactions cross the start of the next frame.
  */
-//@{
-#define BP_USB_ERRSTAT_CRC5EOF (1U)        //!< Bit position for USB_ERRSTAT_CRC5EOF.
-#define BM_USB_ERRSTAT_CRC5EOF (0x02U)     //!< Bit mask for USB_ERRSTAT_CRC5EOF.
-#define BS_USB_ERRSTAT_CRC5EOF (1U)        //!< Bit field size in bits for USB_ERRSTAT_CRC5EOF.
+/*@{*/
+#define BP_USB_ERRSTAT_CRC5EOF (1U)        /*!< Bit position for USB_ERRSTAT_CRC5EOF. */
+#define BM_USB_ERRSTAT_CRC5EOF (0x02U)     /*!< Bit mask for USB_ERRSTAT_CRC5EOF. */
+#define BS_USB_ERRSTAT_CRC5EOF (1U)        /*!< Bit field size in bits for USB_ERRSTAT_CRC5EOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_CRC5EOF field.
-#define BR_USB_ERRSTAT_CRC5EOF (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_CRC5EOF))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_CRC5EOF field. */
+#define BR_USB_ERRSTAT_CRC5EOF(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_CRC5EOF))
 
-//! @brief Format value for bitfield USB_ERRSTAT_CRC5EOF.
-#define BF_USB_ERRSTAT_CRC5EOF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_CRC5EOF), uint8_t) & BM_USB_ERRSTAT_CRC5EOF)
+/*! @brief Format value for bitfield USB_ERRSTAT_CRC5EOF. */
+#define BF_USB_ERRSTAT_CRC5EOF(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_CRC5EOF) & BM_USB_ERRSTAT_CRC5EOF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC5EOF field to a new value.
-#define BW_USB_ERRSTAT_CRC5EOF(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_CRC5EOF) = (v))
-#endif
-//@}
+/*! @brief Set the CRC5EOF field to a new value. */
+#define BW_USB_ERRSTAT_CRC5EOF(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_CRC5EOF) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field CRC16[2] (W1C)
  *
  * This bit is set when a data packet is rejected due to a CRC16 error.
  */
-//@{
-#define BP_USB_ERRSTAT_CRC16 (2U)          //!< Bit position for USB_ERRSTAT_CRC16.
-#define BM_USB_ERRSTAT_CRC16 (0x04U)       //!< Bit mask for USB_ERRSTAT_CRC16.
-#define BS_USB_ERRSTAT_CRC16 (1U)          //!< Bit field size in bits for USB_ERRSTAT_CRC16.
+/*@{*/
+#define BP_USB_ERRSTAT_CRC16 (2U)          /*!< Bit position for USB_ERRSTAT_CRC16. */
+#define BM_USB_ERRSTAT_CRC16 (0x04U)       /*!< Bit mask for USB_ERRSTAT_CRC16. */
+#define BS_USB_ERRSTAT_CRC16 (1U)          /*!< Bit field size in bits for USB_ERRSTAT_CRC16. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_CRC16 field.
-#define BR_USB_ERRSTAT_CRC16 (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_CRC16))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_CRC16 field. */
+#define BR_USB_ERRSTAT_CRC16(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_CRC16))
 
-//! @brief Format value for bitfield USB_ERRSTAT_CRC16.
-#define BF_USB_ERRSTAT_CRC16(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_CRC16), uint8_t) & BM_USB_ERRSTAT_CRC16)
+/*! @brief Format value for bitfield USB_ERRSTAT_CRC16. */
+#define BF_USB_ERRSTAT_CRC16(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_CRC16) & BM_USB_ERRSTAT_CRC16)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC16 field to a new value.
-#define BW_USB_ERRSTAT_CRC16(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_CRC16) = (v))
-#endif
-//@}
+/*! @brief Set the CRC16 field to a new value. */
+#define BW_USB_ERRSTAT_CRC16(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_CRC16) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field DFN8[3] (W1C)
@@ -1754,24 +1533,20 @@ typedef union _hw_usb_errstat
  * Specification 1.0 requires that data fields be an integral number of bytes. If the
  * data field was not an integral number of bytes, this bit is set.
  */
-//@{
-#define BP_USB_ERRSTAT_DFN8  (3U)          //!< Bit position for USB_ERRSTAT_DFN8.
-#define BM_USB_ERRSTAT_DFN8  (0x08U)       //!< Bit mask for USB_ERRSTAT_DFN8.
-#define BS_USB_ERRSTAT_DFN8  (1U)          //!< Bit field size in bits for USB_ERRSTAT_DFN8.
+/*@{*/
+#define BP_USB_ERRSTAT_DFN8  (3U)          /*!< Bit position for USB_ERRSTAT_DFN8. */
+#define BM_USB_ERRSTAT_DFN8  (0x08U)       /*!< Bit mask for USB_ERRSTAT_DFN8. */
+#define BS_USB_ERRSTAT_DFN8  (1U)          /*!< Bit field size in bits for USB_ERRSTAT_DFN8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_DFN8 field.
-#define BR_USB_ERRSTAT_DFN8  (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_DFN8))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_DFN8 field. */
+#define BR_USB_ERRSTAT_DFN8(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_DFN8))
 
-//! @brief Format value for bitfield USB_ERRSTAT_DFN8.
-#define BF_USB_ERRSTAT_DFN8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_DFN8), uint8_t) & BM_USB_ERRSTAT_DFN8)
+/*! @brief Format value for bitfield USB_ERRSTAT_DFN8. */
+#define BF_USB_ERRSTAT_DFN8(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_DFN8) & BM_USB_ERRSTAT_DFN8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DFN8 field to a new value.
-#define BW_USB_ERRSTAT_DFN8(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_DFN8) = (v))
-#endif
-//@}
+/*! @brief Set the DFN8 field to a new value. */
+#define BW_USB_ERRSTAT_DFN8(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_DFN8) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field BTOERR[4] (W1C)
@@ -1782,24 +1557,20 @@ typedef union _hw_usb_errstat
  * handshake phases of a IN TOKEN. If more than 16 bit times are counted from the
  * previous EOP before a transition from IDLE, a bus turnaround timeout error occurs.
  */
-//@{
-#define BP_USB_ERRSTAT_BTOERR (4U)         //!< Bit position for USB_ERRSTAT_BTOERR.
-#define BM_USB_ERRSTAT_BTOERR (0x10U)      //!< Bit mask for USB_ERRSTAT_BTOERR.
-#define BS_USB_ERRSTAT_BTOERR (1U)         //!< Bit field size in bits for USB_ERRSTAT_BTOERR.
+/*@{*/
+#define BP_USB_ERRSTAT_BTOERR (4U)         /*!< Bit position for USB_ERRSTAT_BTOERR. */
+#define BM_USB_ERRSTAT_BTOERR (0x10U)      /*!< Bit mask for USB_ERRSTAT_BTOERR. */
+#define BS_USB_ERRSTAT_BTOERR (1U)         /*!< Bit field size in bits for USB_ERRSTAT_BTOERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_BTOERR field.
-#define BR_USB_ERRSTAT_BTOERR (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_BTOERR))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_BTOERR field. */
+#define BR_USB_ERRSTAT_BTOERR(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_BTOERR))
 
-//! @brief Format value for bitfield USB_ERRSTAT_BTOERR.
-#define BF_USB_ERRSTAT_BTOERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_BTOERR), uint8_t) & BM_USB_ERRSTAT_BTOERR)
+/*! @brief Format value for bitfield USB_ERRSTAT_BTOERR. */
+#define BF_USB_ERRSTAT_BTOERR(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_BTOERR) & BM_USB_ERRSTAT_BTOERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BTOERR field to a new value.
-#define BW_USB_ERRSTAT_BTOERR(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_BTOERR) = (v))
-#endif
-//@}
+/*! @brief Set the BTOERR field to a new value. */
+#define BW_USB_ERRSTAT_BTOERR(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_BTOERR) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field DMAERR[5] (W1C)
@@ -1814,24 +1585,20 @@ typedef union _hw_usb_errstat
  * than the buffer size allocated in the BDT. In this case the data packet is
  * truncated as it is put into buffer memory.
  */
-//@{
-#define BP_USB_ERRSTAT_DMAERR (5U)         //!< Bit position for USB_ERRSTAT_DMAERR.
-#define BM_USB_ERRSTAT_DMAERR (0x20U)      //!< Bit mask for USB_ERRSTAT_DMAERR.
-#define BS_USB_ERRSTAT_DMAERR (1U)         //!< Bit field size in bits for USB_ERRSTAT_DMAERR.
+/*@{*/
+#define BP_USB_ERRSTAT_DMAERR (5U)         /*!< Bit position for USB_ERRSTAT_DMAERR. */
+#define BM_USB_ERRSTAT_DMAERR (0x20U)      /*!< Bit mask for USB_ERRSTAT_DMAERR. */
+#define BS_USB_ERRSTAT_DMAERR (1U)         /*!< Bit field size in bits for USB_ERRSTAT_DMAERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_DMAERR field.
-#define BR_USB_ERRSTAT_DMAERR (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_DMAERR))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_DMAERR field. */
+#define BR_USB_ERRSTAT_DMAERR(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_DMAERR))
 
-//! @brief Format value for bitfield USB_ERRSTAT_DMAERR.
-#define BF_USB_ERRSTAT_DMAERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_DMAERR), uint8_t) & BM_USB_ERRSTAT_DMAERR)
+/*! @brief Format value for bitfield USB_ERRSTAT_DMAERR. */
+#define BF_USB_ERRSTAT_DMAERR(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_DMAERR) & BM_USB_ERRSTAT_DMAERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAERR field to a new value.
-#define BW_USB_ERRSTAT_DMAERR(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_DMAERR) = (v))
-#endif
-//@}
+/*! @brief Set the DMAERR field to a new value. */
+#define BW_USB_ERRSTAT_DMAERR(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_DMAERR) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERRSTAT, field BTSERR[7] (W1C)
@@ -1839,30 +1606,25 @@ typedef union _hw_usb_errstat
  * This bit is set when a bit stuff error is detected. If set, the corresponding
  * packet is rejected due to the error.
  */
-//@{
-#define BP_USB_ERRSTAT_BTSERR (7U)         //!< Bit position for USB_ERRSTAT_BTSERR.
-#define BM_USB_ERRSTAT_BTSERR (0x80U)      //!< Bit mask for USB_ERRSTAT_BTSERR.
-#define BS_USB_ERRSTAT_BTSERR (1U)         //!< Bit field size in bits for USB_ERRSTAT_BTSERR.
+/*@{*/
+#define BP_USB_ERRSTAT_BTSERR (7U)         /*!< Bit position for USB_ERRSTAT_BTSERR. */
+#define BM_USB_ERRSTAT_BTSERR (0x80U)      /*!< Bit mask for USB_ERRSTAT_BTSERR. */
+#define BS_USB_ERRSTAT_BTSERR (1U)         /*!< Bit field size in bits for USB_ERRSTAT_BTSERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERRSTAT_BTSERR field.
-#define BR_USB_ERRSTAT_BTSERR (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_BTSERR))
-#endif
+/*! @brief Read current value of the USB_ERRSTAT_BTSERR field. */
+#define BR_USB_ERRSTAT_BTSERR(x) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_BTSERR))
 
-//! @brief Format value for bitfield USB_ERRSTAT_BTSERR.
-#define BF_USB_ERRSTAT_BTSERR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERRSTAT_BTSERR), uint8_t) & BM_USB_ERRSTAT_BTSERR)
+/*! @brief Format value for bitfield USB_ERRSTAT_BTSERR. */
+#define BF_USB_ERRSTAT_BTSERR(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERRSTAT_BTSERR) & BM_USB_ERRSTAT_BTSERR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BTSERR field to a new value.
-#define BW_USB_ERRSTAT_BTSERR(v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR, BP_USB_ERRSTAT_BTSERR) = (v))
-#endif
-//@}
+/*! @brief Set the BTSERR field to a new value. */
+#define BW_USB_ERRSTAT_BTSERR(x, v) (BITBAND_ACCESS8(HW_USB_ERRSTAT_ADDR(x), BP_USB_ERRSTAT_BTSERR) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ERREN - Error Interrupt Enable Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ERREN - Error Interrupt Enable Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_ERREN - Error Interrupt Enable Register (RW)
  *
@@ -1880,33 +1642,30 @@ typedef union _hw_usb_erren
     uint8_t U;
     struct _hw_usb_erren_bitfields
     {
-        uint8_t PIDERREN : 1;          //!< [0] PIDERR Interrupt Enable
-        uint8_t CRC5EOFEN : 1;         //!< [1] CRC5/EOF Interrupt Enable
-        uint8_t CRC16EN : 1;           //!< [2] CRC16 Interrupt Enable
-        uint8_t DFN8EN : 1;            //!< [3] DFN8 Interrupt Enable
-        uint8_t BTOERREN : 1;          //!< [4] BTOERR Interrupt Enable
-        uint8_t DMAERREN : 1;          //!< [5] DMAERR Interrupt Enable
-        uint8_t RESERVED0 : 1;         //!< [6]
-        uint8_t BTSERREN : 1;          //!< [7] BTSERR Interrupt Enable
+        uint8_t PIDERREN : 1;          /*!< [0] PIDERR Interrupt Enable */
+        uint8_t CRC5EOFEN : 1;         /*!< [1] CRC5/EOF Interrupt Enable */
+        uint8_t CRC16EN : 1;           /*!< [2] CRC16 Interrupt Enable */
+        uint8_t DFN8EN : 1;            /*!< [3] DFN8 Interrupt Enable */
+        uint8_t BTOERREN : 1;          /*!< [4] BTOERR Interrupt Enable */
+        uint8_t DMAERREN : 1;          /*!< [5] DMAERR Interrupt Enable */
+        uint8_t RESERVED0 : 1;         /*!< [6]  */
+        uint8_t BTSERREN : 1;          /*!< [7] BTSERR Interrupt Enable */
     } B;
 } hw_usb_erren_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ERREN register
  */
-//@{
-#define HW_USB_ERREN_ADDR        (REGS_USB_BASE + 0x8CU)
+/*@{*/
+#define HW_USB_ERREN_ADDR(x)     ((x) + 0x8CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ERREN             (*(__IO hw_usb_erren_t *) HW_USB_ERREN_ADDR)
-#define HW_USB_ERREN_RD()        (HW_USB_ERREN.U)
-#define HW_USB_ERREN_WR(v)       (HW_USB_ERREN.U = (v))
-#define HW_USB_ERREN_SET(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() |  (v)))
-#define HW_USB_ERREN_CLR(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() & ~(v)))
-#define HW_USB_ERREN_TOG(v)      (HW_USB_ERREN_WR(HW_USB_ERREN_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_ERREN(x)          (*(__IO hw_usb_erren_t *) HW_USB_ERREN_ADDR(x))
+#define HW_USB_ERREN_RD(x)       (HW_USB_ERREN(x).U)
+#define HW_USB_ERREN_WR(x, v)    (HW_USB_ERREN(x).U = (v))
+#define HW_USB_ERREN_SET(x, v)   (HW_USB_ERREN_WR(x, HW_USB_ERREN_RD(x) |  (v)))
+#define HW_USB_ERREN_CLR(x, v)   (HW_USB_ERREN_WR(x, HW_USB_ERREN_RD(x) & ~(v)))
+#define HW_USB_ERREN_TOG(x, v)   (HW_USB_ERREN_WR(x, HW_USB_ERREN_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ERREN bitfields
@@ -1919,24 +1678,20 @@ typedef union _hw_usb_erren
  * - 0 - The PIDERR interrupt is not enabled.
  * - 1 - The PIDERR interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_PIDERREN (0U)         //!< Bit position for USB_ERREN_PIDERREN.
-#define BM_USB_ERREN_PIDERREN (0x01U)      //!< Bit mask for USB_ERREN_PIDERREN.
-#define BS_USB_ERREN_PIDERREN (1U)         //!< Bit field size in bits for USB_ERREN_PIDERREN.
+/*@{*/
+#define BP_USB_ERREN_PIDERREN (0U)         /*!< Bit position for USB_ERREN_PIDERREN. */
+#define BM_USB_ERREN_PIDERREN (0x01U)      /*!< Bit mask for USB_ERREN_PIDERREN. */
+#define BS_USB_ERREN_PIDERREN (1U)         /*!< Bit field size in bits for USB_ERREN_PIDERREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_PIDERREN field.
-#define BR_USB_ERREN_PIDERREN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_PIDERREN))
-#endif
+/*! @brief Read current value of the USB_ERREN_PIDERREN field. */
+#define BR_USB_ERREN_PIDERREN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_PIDERREN))
 
-//! @brief Format value for bitfield USB_ERREN_PIDERREN.
-#define BF_USB_ERREN_PIDERREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_PIDERREN), uint8_t) & BM_USB_ERREN_PIDERREN)
+/*! @brief Format value for bitfield USB_ERREN_PIDERREN. */
+#define BF_USB_ERREN_PIDERREN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_PIDERREN) & BM_USB_ERREN_PIDERREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PIDERREN field to a new value.
-#define BW_USB_ERREN_PIDERREN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_PIDERREN) = (v))
-#endif
-//@}
+/*! @brief Set the PIDERREN field to a new value. */
+#define BW_USB_ERREN_PIDERREN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_PIDERREN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field CRC5EOFEN[1] (RW)
@@ -1945,24 +1700,20 @@ typedef union _hw_usb_erren
  * - 0 - The CRC5/EOF interrupt is not enabled.
  * - 1 - The CRC5/EOF interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_CRC5EOFEN (1U)        //!< Bit position for USB_ERREN_CRC5EOFEN.
-#define BM_USB_ERREN_CRC5EOFEN (0x02U)     //!< Bit mask for USB_ERREN_CRC5EOFEN.
-#define BS_USB_ERREN_CRC5EOFEN (1U)        //!< Bit field size in bits for USB_ERREN_CRC5EOFEN.
+/*@{*/
+#define BP_USB_ERREN_CRC5EOFEN (1U)        /*!< Bit position for USB_ERREN_CRC5EOFEN. */
+#define BM_USB_ERREN_CRC5EOFEN (0x02U)     /*!< Bit mask for USB_ERREN_CRC5EOFEN. */
+#define BS_USB_ERREN_CRC5EOFEN (1U)        /*!< Bit field size in bits for USB_ERREN_CRC5EOFEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_CRC5EOFEN field.
-#define BR_USB_ERREN_CRC5EOFEN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_CRC5EOFEN))
-#endif
+/*! @brief Read current value of the USB_ERREN_CRC5EOFEN field. */
+#define BR_USB_ERREN_CRC5EOFEN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_CRC5EOFEN))
 
-//! @brief Format value for bitfield USB_ERREN_CRC5EOFEN.
-#define BF_USB_ERREN_CRC5EOFEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_CRC5EOFEN), uint8_t) & BM_USB_ERREN_CRC5EOFEN)
+/*! @brief Format value for bitfield USB_ERREN_CRC5EOFEN. */
+#define BF_USB_ERREN_CRC5EOFEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_CRC5EOFEN) & BM_USB_ERREN_CRC5EOFEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC5EOFEN field to a new value.
-#define BW_USB_ERREN_CRC5EOFEN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_CRC5EOFEN) = (v))
-#endif
-//@}
+/*! @brief Set the CRC5EOFEN field to a new value. */
+#define BW_USB_ERREN_CRC5EOFEN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_CRC5EOFEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field CRC16EN[2] (RW)
@@ -1971,24 +1722,20 @@ typedef union _hw_usb_erren
  * - 0 - The CRC16 interrupt is not enabled.
  * - 1 - The CRC16 interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_CRC16EN (2U)          //!< Bit position for USB_ERREN_CRC16EN.
-#define BM_USB_ERREN_CRC16EN (0x04U)       //!< Bit mask for USB_ERREN_CRC16EN.
-#define BS_USB_ERREN_CRC16EN (1U)          //!< Bit field size in bits for USB_ERREN_CRC16EN.
+/*@{*/
+#define BP_USB_ERREN_CRC16EN (2U)          /*!< Bit position for USB_ERREN_CRC16EN. */
+#define BM_USB_ERREN_CRC16EN (0x04U)       /*!< Bit mask for USB_ERREN_CRC16EN. */
+#define BS_USB_ERREN_CRC16EN (1U)          /*!< Bit field size in bits for USB_ERREN_CRC16EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_CRC16EN field.
-#define BR_USB_ERREN_CRC16EN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_CRC16EN))
-#endif
+/*! @brief Read current value of the USB_ERREN_CRC16EN field. */
+#define BR_USB_ERREN_CRC16EN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_CRC16EN))
 
-//! @brief Format value for bitfield USB_ERREN_CRC16EN.
-#define BF_USB_ERREN_CRC16EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_CRC16EN), uint8_t) & BM_USB_ERREN_CRC16EN)
+/*! @brief Format value for bitfield USB_ERREN_CRC16EN. */
+#define BF_USB_ERREN_CRC16EN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_CRC16EN) & BM_USB_ERREN_CRC16EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CRC16EN field to a new value.
-#define BW_USB_ERREN_CRC16EN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_CRC16EN) = (v))
-#endif
-//@}
+/*! @brief Set the CRC16EN field to a new value. */
+#define BW_USB_ERREN_CRC16EN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_CRC16EN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field DFN8EN[3] (RW)
@@ -1997,24 +1744,20 @@ typedef union _hw_usb_erren
  * - 0 - The DFN8 interrupt is not enabled.
  * - 1 - The DFN8 interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_DFN8EN  (3U)          //!< Bit position for USB_ERREN_DFN8EN.
-#define BM_USB_ERREN_DFN8EN  (0x08U)       //!< Bit mask for USB_ERREN_DFN8EN.
-#define BS_USB_ERREN_DFN8EN  (1U)          //!< Bit field size in bits for USB_ERREN_DFN8EN.
+/*@{*/
+#define BP_USB_ERREN_DFN8EN  (3U)          /*!< Bit position for USB_ERREN_DFN8EN. */
+#define BM_USB_ERREN_DFN8EN  (0x08U)       /*!< Bit mask for USB_ERREN_DFN8EN. */
+#define BS_USB_ERREN_DFN8EN  (1U)          /*!< Bit field size in bits for USB_ERREN_DFN8EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_DFN8EN field.
-#define BR_USB_ERREN_DFN8EN  (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_DFN8EN))
-#endif
+/*! @brief Read current value of the USB_ERREN_DFN8EN field. */
+#define BR_USB_ERREN_DFN8EN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_DFN8EN))
 
-//! @brief Format value for bitfield USB_ERREN_DFN8EN.
-#define BF_USB_ERREN_DFN8EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_DFN8EN), uint8_t) & BM_USB_ERREN_DFN8EN)
+/*! @brief Format value for bitfield USB_ERREN_DFN8EN. */
+#define BF_USB_ERREN_DFN8EN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_DFN8EN) & BM_USB_ERREN_DFN8EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DFN8EN field to a new value.
-#define BW_USB_ERREN_DFN8EN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_DFN8EN) = (v))
-#endif
-//@}
+/*! @brief Set the DFN8EN field to a new value. */
+#define BW_USB_ERREN_DFN8EN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_DFN8EN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field BTOERREN[4] (RW)
@@ -2023,24 +1766,20 @@ typedef union _hw_usb_erren
  * - 0 - The BTOERR interrupt is not enabled.
  * - 1 - The BTOERR interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_BTOERREN (4U)         //!< Bit position for USB_ERREN_BTOERREN.
-#define BM_USB_ERREN_BTOERREN (0x10U)      //!< Bit mask for USB_ERREN_BTOERREN.
-#define BS_USB_ERREN_BTOERREN (1U)         //!< Bit field size in bits for USB_ERREN_BTOERREN.
+/*@{*/
+#define BP_USB_ERREN_BTOERREN (4U)         /*!< Bit position for USB_ERREN_BTOERREN. */
+#define BM_USB_ERREN_BTOERREN (0x10U)      /*!< Bit mask for USB_ERREN_BTOERREN. */
+#define BS_USB_ERREN_BTOERREN (1U)         /*!< Bit field size in bits for USB_ERREN_BTOERREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_BTOERREN field.
-#define BR_USB_ERREN_BTOERREN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_BTOERREN))
-#endif
+/*! @brief Read current value of the USB_ERREN_BTOERREN field. */
+#define BR_USB_ERREN_BTOERREN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_BTOERREN))
 
-//! @brief Format value for bitfield USB_ERREN_BTOERREN.
-#define BF_USB_ERREN_BTOERREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_BTOERREN), uint8_t) & BM_USB_ERREN_BTOERREN)
+/*! @brief Format value for bitfield USB_ERREN_BTOERREN. */
+#define BF_USB_ERREN_BTOERREN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_BTOERREN) & BM_USB_ERREN_BTOERREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BTOERREN field to a new value.
-#define BW_USB_ERREN_BTOERREN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_BTOERREN) = (v))
-#endif
-//@}
+/*! @brief Set the BTOERREN field to a new value. */
+#define BW_USB_ERREN_BTOERREN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_BTOERREN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field DMAERREN[5] (RW)
@@ -2049,24 +1788,20 @@ typedef union _hw_usb_erren
  * - 0 - The DMAERR interrupt is not enabled.
  * - 1 - The DMAERR interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_DMAERREN (5U)         //!< Bit position for USB_ERREN_DMAERREN.
-#define BM_USB_ERREN_DMAERREN (0x20U)      //!< Bit mask for USB_ERREN_DMAERREN.
-#define BS_USB_ERREN_DMAERREN (1U)         //!< Bit field size in bits for USB_ERREN_DMAERREN.
+/*@{*/
+#define BP_USB_ERREN_DMAERREN (5U)         /*!< Bit position for USB_ERREN_DMAERREN. */
+#define BM_USB_ERREN_DMAERREN (0x20U)      /*!< Bit mask for USB_ERREN_DMAERREN. */
+#define BS_USB_ERREN_DMAERREN (1U)         /*!< Bit field size in bits for USB_ERREN_DMAERREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_DMAERREN field.
-#define BR_USB_ERREN_DMAERREN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_DMAERREN))
-#endif
+/*! @brief Read current value of the USB_ERREN_DMAERREN field. */
+#define BR_USB_ERREN_DMAERREN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_DMAERREN))
 
-//! @brief Format value for bitfield USB_ERREN_DMAERREN.
-#define BF_USB_ERREN_DMAERREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_DMAERREN), uint8_t) & BM_USB_ERREN_DMAERREN)
+/*! @brief Format value for bitfield USB_ERREN_DMAERREN. */
+#define BF_USB_ERREN_DMAERREN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_DMAERREN) & BM_USB_ERREN_DMAERREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMAERREN field to a new value.
-#define BW_USB_ERREN_DMAERREN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_DMAERREN) = (v))
-#endif
-//@}
+/*! @brief Set the DMAERREN field to a new value. */
+#define BW_USB_ERREN_DMAERREN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_DMAERREN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ERREN, field BTSERREN[7] (RW)
@@ -2075,30 +1810,25 @@ typedef union _hw_usb_erren
  * - 0 - The BTSERR interrupt is not enabled.
  * - 1 - The BTSERR interrupt is enabled.
  */
-//@{
-#define BP_USB_ERREN_BTSERREN (7U)         //!< Bit position for USB_ERREN_BTSERREN.
-#define BM_USB_ERREN_BTSERREN (0x80U)      //!< Bit mask for USB_ERREN_BTSERREN.
-#define BS_USB_ERREN_BTSERREN (1U)         //!< Bit field size in bits for USB_ERREN_BTSERREN.
+/*@{*/
+#define BP_USB_ERREN_BTSERREN (7U)         /*!< Bit position for USB_ERREN_BTSERREN. */
+#define BM_USB_ERREN_BTSERREN (0x80U)      /*!< Bit mask for USB_ERREN_BTSERREN. */
+#define BS_USB_ERREN_BTSERREN (1U)         /*!< Bit field size in bits for USB_ERREN_BTSERREN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ERREN_BTSERREN field.
-#define BR_USB_ERREN_BTSERREN (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_BTSERREN))
-#endif
+/*! @brief Read current value of the USB_ERREN_BTSERREN field. */
+#define BR_USB_ERREN_BTSERREN(x) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_BTSERREN))
 
-//! @brief Format value for bitfield USB_ERREN_BTSERREN.
-#define BF_USB_ERREN_BTSERREN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ERREN_BTSERREN), uint8_t) & BM_USB_ERREN_BTSERREN)
+/*! @brief Format value for bitfield USB_ERREN_BTSERREN. */
+#define BF_USB_ERREN_BTSERREN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ERREN_BTSERREN) & BM_USB_ERREN_BTSERREN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BTSERREN field to a new value.
-#define BW_USB_ERREN_BTSERREN(v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR, BP_USB_ERREN_BTSERREN) = (v))
-#endif
-//@}
+/*! @brief Set the BTSERREN field to a new value. */
+#define BW_USB_ERREN_BTSERREN(x, v) (BITBAND_ACCESS8(HW_USB_ERREN_ADDR(x), BP_USB_ERREN_BTSERREN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_STAT - Status Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_STAT - Status Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_STAT - Status Register (RO)
  *
@@ -2124,25 +1854,22 @@ typedef union _hw_usb_stat
     uint8_t U;
     struct _hw_usb_stat_bitfields
     {
-        uint8_t RESERVED0 : 2;         //!< [1:0]
-        uint8_t ODD : 1;               //!< [2]
-        uint8_t TX : 1;                //!< [3] Transmit Indicator
-        uint8_t ENDP : 4;              //!< [7:4]
+        uint8_t RESERVED0 : 2;         /*!< [1:0]  */
+        uint8_t ODD : 1;               /*!< [2]  */
+        uint8_t TX : 1;                /*!< [3] Transmit Indicator */
+        uint8_t ENDP : 4;              /*!< [7:4]  */
     } B;
 } hw_usb_stat_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_STAT register
  */
-//@{
-#define HW_USB_STAT_ADDR         (REGS_USB_BASE + 0x90U)
+/*@{*/
+#define HW_USB_STAT_ADDR(x)      ((x) + 0x90U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_STAT              (*(__I hw_usb_stat_t *) HW_USB_STAT_ADDR)
-#define HW_USB_STAT_RD()         (HW_USB_STAT.U)
-#endif
-//@}
+#define HW_USB_STAT(x)           (*(__I hw_usb_stat_t *) HW_USB_STAT_ADDR(x))
+#define HW_USB_STAT_RD(x)        (HW_USB_STAT(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_STAT bitfields
@@ -2154,16 +1881,14 @@ typedef union _hw_usb_stat
  * this bit is set if the last Buffer Descriptor updated was in the odd bank of
  * the BDT.
  */
-//@{
-#define BP_USB_STAT_ODD      (2U)          //!< Bit position for USB_STAT_ODD.
-#define BM_USB_STAT_ODD      (0x04U)       //!< Bit mask for USB_STAT_ODD.
-#define BS_USB_STAT_ODD      (1U)          //!< Bit field size in bits for USB_STAT_ODD.
+/*@{*/
+#define BP_USB_STAT_ODD      (2U)          /*!< Bit position for USB_STAT_ODD. */
+#define BM_USB_STAT_ODD      (0x04U)       /*!< Bit mask for USB_STAT_ODD. */
+#define BS_USB_STAT_ODD      (1U)          /*!< Bit field size in bits for USB_STAT_ODD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_STAT_ODD field.
-#define BR_USB_STAT_ODD      (BITBAND_ACCESS8(HW_USB_STAT_ADDR, BP_USB_STAT_ODD))
-#endif
-//@}
+/*! @brief Read current value of the USB_STAT_ODD field. */
+#define BR_USB_STAT_ODD(x)   (BITBAND_ACCESS8(HW_USB_STAT_ADDR(x), BP_USB_STAT_ODD))
+/*@}*/
 
 /*!
  * @name Register USB_STAT, field TX[3] (RO)
@@ -2172,16 +1897,14 @@ typedef union _hw_usb_stat
  * - 0 - The most recent transaction was a Receive operation.
  * - 1 - The most recent transaction was a Transmit operation.
  */
-//@{
-#define BP_USB_STAT_TX       (3U)          //!< Bit position for USB_STAT_TX.
-#define BM_USB_STAT_TX       (0x08U)       //!< Bit mask for USB_STAT_TX.
-#define BS_USB_STAT_TX       (1U)          //!< Bit field size in bits for USB_STAT_TX.
+/*@{*/
+#define BP_USB_STAT_TX       (3U)          /*!< Bit position for USB_STAT_TX. */
+#define BM_USB_STAT_TX       (0x08U)       /*!< Bit mask for USB_STAT_TX. */
+#define BS_USB_STAT_TX       (1U)          /*!< Bit field size in bits for USB_STAT_TX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_STAT_TX field.
-#define BR_USB_STAT_TX       (BITBAND_ACCESS8(HW_USB_STAT_ADDR, BP_USB_STAT_TX))
-#endif
-//@}
+/*! @brief Read current value of the USB_STAT_TX field. */
+#define BR_USB_STAT_TX(x)    (BITBAND_ACCESS8(HW_USB_STAT_ADDR(x), BP_USB_STAT_TX))
+/*@}*/
 
 /*!
  * @name Register USB_STAT, field ENDP[7:4] (RO)
@@ -2190,22 +1913,19 @@ typedef union _hw_usb_stat
  * the previous token. This allows the processor core to determine which BDT
  * entry was updated by the last USB transaction.
  */
-//@{
-#define BP_USB_STAT_ENDP     (4U)          //!< Bit position for USB_STAT_ENDP.
-#define BM_USB_STAT_ENDP     (0xF0U)       //!< Bit mask for USB_STAT_ENDP.
-#define BS_USB_STAT_ENDP     (4U)          //!< Bit field size in bits for USB_STAT_ENDP.
+/*@{*/
+#define BP_USB_STAT_ENDP     (4U)          /*!< Bit position for USB_STAT_ENDP. */
+#define BM_USB_STAT_ENDP     (0xF0U)       /*!< Bit mask for USB_STAT_ENDP. */
+#define BS_USB_STAT_ENDP     (4U)          /*!< Bit field size in bits for USB_STAT_ENDP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_STAT_ENDP field.
-#define BR_USB_STAT_ENDP     (HW_USB_STAT.B.ENDP)
-#endif
-//@}
+/*! @brief Read current value of the USB_STAT_ENDP field. */
+#define BR_USB_STAT_ENDP(x)  (HW_USB_STAT(x).B.ENDP)
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_CTL - Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_CTL - Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_CTL - Control Register (RW)
  *
@@ -2219,34 +1939,31 @@ typedef union _hw_usb_ctl
     uint8_t U;
     struct _hw_usb_ctl_bitfields
     {
-        uint8_t USBENSOFEN : 1;        //!< [0] USB Enable
-        uint8_t ODDRST : 1;            //!< [1]
-        uint8_t RESUME : 1;            //!< [2]
-        uint8_t HOSTMODEEN : 1;        //!< [3]
-        uint8_t RESET : 1;             //!< [4]
-        uint8_t TXSUSPENDTOKENBUSY : 1; //!< [5]
-        uint8_t SE0 : 1;               //!< [6] Live USB Single Ended Zero signal
-        uint8_t JSTATE : 1;            //!< [7] Live USB differential receiver JSTATE
-                                       //! signal
+        uint8_t USBENSOFEN : 1;        /*!< [0] USB Enable */
+        uint8_t ODDRST : 1;            /*!< [1]  */
+        uint8_t RESUME : 1;            /*!< [2]  */
+        uint8_t HOSTMODEEN : 1;        /*!< [3]  */
+        uint8_t RESET : 1;             /*!< [4]  */
+        uint8_t TXSUSPENDTOKENBUSY : 1; /*!< [5]  */
+        uint8_t SE0 : 1;               /*!< [6] Live USB Single Ended Zero signal */
+        uint8_t JSTATE : 1;            /*!< [7] Live USB differential receiver JSTATE
+                                        * signal */
     } B;
 } hw_usb_ctl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_CTL register
  */
-//@{
-#define HW_USB_CTL_ADDR          (REGS_USB_BASE + 0x94U)
+/*@{*/
+#define HW_USB_CTL_ADDR(x)       ((x) + 0x94U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_CTL               (*(__IO hw_usb_ctl_t *) HW_USB_CTL_ADDR)
-#define HW_USB_CTL_RD()          (HW_USB_CTL.U)
-#define HW_USB_CTL_WR(v)         (HW_USB_CTL.U = (v))
-#define HW_USB_CTL_SET(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() |  (v)))
-#define HW_USB_CTL_CLR(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() & ~(v)))
-#define HW_USB_CTL_TOG(v)        (HW_USB_CTL_WR(HW_USB_CTL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_CTL(x)            (*(__IO hw_usb_ctl_t *) HW_USB_CTL_ADDR(x))
+#define HW_USB_CTL_RD(x)         (HW_USB_CTL(x).U)
+#define HW_USB_CTL_WR(x, v)      (HW_USB_CTL(x).U = (v))
+#define HW_USB_CTL_SET(x, v)     (HW_USB_CTL_WR(x, HW_USB_CTL_RD(x) |  (v)))
+#define HW_USB_CTL_CLR(x, v)     (HW_USB_CTL_WR(x, HW_USB_CTL_RD(x) & ~(v)))
+#define HW_USB_CTL_TOG(x, v)     (HW_USB_CTL_WR(x, HW_USB_CTL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_CTL bitfields
@@ -2263,24 +1980,20 @@ typedef union _hw_usb_ctl
  * - 0 - The USB Module is disabled.
  * - 1 - The USB Module is enabled.
  */
-//@{
-#define BP_USB_CTL_USBENSOFEN (0U)         //!< Bit position for USB_CTL_USBENSOFEN.
-#define BM_USB_CTL_USBENSOFEN (0x01U)      //!< Bit mask for USB_CTL_USBENSOFEN.
-#define BS_USB_CTL_USBENSOFEN (1U)         //!< Bit field size in bits for USB_CTL_USBENSOFEN.
+/*@{*/
+#define BP_USB_CTL_USBENSOFEN (0U)         /*!< Bit position for USB_CTL_USBENSOFEN. */
+#define BM_USB_CTL_USBENSOFEN (0x01U)      /*!< Bit mask for USB_CTL_USBENSOFEN. */
+#define BS_USB_CTL_USBENSOFEN (1U)         /*!< Bit field size in bits for USB_CTL_USBENSOFEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_USBENSOFEN field.
-#define BR_USB_CTL_USBENSOFEN (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_USBENSOFEN))
-#endif
+/*! @brief Read current value of the USB_CTL_USBENSOFEN field. */
+#define BR_USB_CTL_USBENSOFEN(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_USBENSOFEN))
 
-//! @brief Format value for bitfield USB_CTL_USBENSOFEN.
-#define BF_USB_CTL_USBENSOFEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_USBENSOFEN), uint8_t) & BM_USB_CTL_USBENSOFEN)
+/*! @brief Format value for bitfield USB_CTL_USBENSOFEN. */
+#define BF_USB_CTL_USBENSOFEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_USBENSOFEN) & BM_USB_CTL_USBENSOFEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBENSOFEN field to a new value.
-#define BW_USB_CTL_USBENSOFEN(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_USBENSOFEN) = (v))
-#endif
-//@}
+/*! @brief Set the USBENSOFEN field to a new value. */
+#define BW_USB_CTL_USBENSOFEN(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_USBENSOFEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field ODDRST[1] (RW)
@@ -2288,24 +2001,20 @@ typedef union _hw_usb_ctl
  * Setting this bit to 1 resets all the BDT ODD ping/pong bits to 0, which then
  * specifies the EVEN BDT bank.
  */
-//@{
-#define BP_USB_CTL_ODDRST    (1U)          //!< Bit position for USB_CTL_ODDRST.
-#define BM_USB_CTL_ODDRST    (0x02U)       //!< Bit mask for USB_CTL_ODDRST.
-#define BS_USB_CTL_ODDRST    (1U)          //!< Bit field size in bits for USB_CTL_ODDRST.
+/*@{*/
+#define BP_USB_CTL_ODDRST    (1U)          /*!< Bit position for USB_CTL_ODDRST. */
+#define BM_USB_CTL_ODDRST    (0x02U)       /*!< Bit mask for USB_CTL_ODDRST. */
+#define BS_USB_CTL_ODDRST    (1U)          /*!< Bit field size in bits for USB_CTL_ODDRST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_ODDRST field.
-#define BR_USB_CTL_ODDRST    (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_ODDRST))
-#endif
+/*! @brief Read current value of the USB_CTL_ODDRST field. */
+#define BR_USB_CTL_ODDRST(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_ODDRST))
 
-//! @brief Format value for bitfield USB_CTL_ODDRST.
-#define BF_USB_CTL_ODDRST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_ODDRST), uint8_t) & BM_USB_CTL_ODDRST)
+/*! @brief Format value for bitfield USB_CTL_ODDRST. */
+#define BF_USB_CTL_ODDRST(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_ODDRST) & BM_USB_CTL_ODDRST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ODDRST field to a new value.
-#define BW_USB_CTL_ODDRST(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_ODDRST) = (v))
-#endif
-//@}
+/*! @brief Set the ODDRST field to a new value. */
+#define BW_USB_CTL_ODDRST(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_ODDRST) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field RESUME[2] (RW)
@@ -2317,24 +2026,20 @@ typedef union _hw_usb_ctl
  * signaling when the RESUME bit is cleared. For more information on RESUME
  * signaling see Section 7.1.4.5 of the USB specification version 1.0.
  */
-//@{
-#define BP_USB_CTL_RESUME    (2U)          //!< Bit position for USB_CTL_RESUME.
-#define BM_USB_CTL_RESUME    (0x04U)       //!< Bit mask for USB_CTL_RESUME.
-#define BS_USB_CTL_RESUME    (1U)          //!< Bit field size in bits for USB_CTL_RESUME.
+/*@{*/
+#define BP_USB_CTL_RESUME    (2U)          /*!< Bit position for USB_CTL_RESUME. */
+#define BM_USB_CTL_RESUME    (0x04U)       /*!< Bit mask for USB_CTL_RESUME. */
+#define BS_USB_CTL_RESUME    (1U)          /*!< Bit field size in bits for USB_CTL_RESUME. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_RESUME field.
-#define BR_USB_CTL_RESUME    (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_RESUME))
-#endif
+/*! @brief Read current value of the USB_CTL_RESUME field. */
+#define BR_USB_CTL_RESUME(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_RESUME))
 
-//! @brief Format value for bitfield USB_CTL_RESUME.
-#define BF_USB_CTL_RESUME(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_RESUME), uint8_t) & BM_USB_CTL_RESUME)
+/*! @brief Format value for bitfield USB_CTL_RESUME. */
+#define BF_USB_CTL_RESUME(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_RESUME) & BM_USB_CTL_RESUME)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESUME field to a new value.
-#define BW_USB_CTL_RESUME(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_RESUME) = (v))
-#endif
-//@}
+/*! @brief Set the RESUME field to a new value. */
+#define BW_USB_CTL_RESUME(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_RESUME) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field HOSTMODEEN[3] (RW)
@@ -2343,24 +2048,20 @@ typedef union _hw_usb_ctl
  * host mode, the USB module performs USB transactions under the programmed control
  * of the host processor.
  */
-//@{
-#define BP_USB_CTL_HOSTMODEEN (3U)         //!< Bit position for USB_CTL_HOSTMODEEN.
-#define BM_USB_CTL_HOSTMODEEN (0x08U)      //!< Bit mask for USB_CTL_HOSTMODEEN.
-#define BS_USB_CTL_HOSTMODEEN (1U)         //!< Bit field size in bits for USB_CTL_HOSTMODEEN.
+/*@{*/
+#define BP_USB_CTL_HOSTMODEEN (3U)         /*!< Bit position for USB_CTL_HOSTMODEEN. */
+#define BM_USB_CTL_HOSTMODEEN (0x08U)      /*!< Bit mask for USB_CTL_HOSTMODEEN. */
+#define BS_USB_CTL_HOSTMODEEN (1U)         /*!< Bit field size in bits for USB_CTL_HOSTMODEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_HOSTMODEEN field.
-#define BR_USB_CTL_HOSTMODEEN (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_HOSTMODEEN))
-#endif
+/*! @brief Read current value of the USB_CTL_HOSTMODEEN field. */
+#define BR_USB_CTL_HOSTMODEEN(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_HOSTMODEEN))
 
-//! @brief Format value for bitfield USB_CTL_HOSTMODEEN.
-#define BF_USB_CTL_HOSTMODEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_HOSTMODEEN), uint8_t) & BM_USB_CTL_HOSTMODEEN)
+/*! @brief Format value for bitfield USB_CTL_HOSTMODEEN. */
+#define BF_USB_CTL_HOSTMODEEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_HOSTMODEEN) & BM_USB_CTL_HOSTMODEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HOSTMODEEN field to a new value.
-#define BW_USB_CTL_HOSTMODEEN(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_HOSTMODEEN) = (v))
-#endif
-//@}
+/*! @brief Set the HOSTMODEEN field to a new value. */
+#define BW_USB_CTL_HOSTMODEEN(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_HOSTMODEEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field RESET[4] (RW)
@@ -2372,24 +2073,20 @@ typedef union _hw_usb_ctl
  * information on RESET signaling see Section 7.1.4.3 of the USB specification version
  * 1.0.
  */
-//@{
-#define BP_USB_CTL_RESET     (4U)          //!< Bit position for USB_CTL_RESET.
-#define BM_USB_CTL_RESET     (0x10U)       //!< Bit mask for USB_CTL_RESET.
-#define BS_USB_CTL_RESET     (1U)          //!< Bit field size in bits for USB_CTL_RESET.
+/*@{*/
+#define BP_USB_CTL_RESET     (4U)          /*!< Bit position for USB_CTL_RESET. */
+#define BM_USB_CTL_RESET     (0x10U)       /*!< Bit mask for USB_CTL_RESET. */
+#define BS_USB_CTL_RESET     (1U)          /*!< Bit field size in bits for USB_CTL_RESET. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_RESET field.
-#define BR_USB_CTL_RESET     (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_RESET))
-#endif
+/*! @brief Read current value of the USB_CTL_RESET field. */
+#define BR_USB_CTL_RESET(x)  (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_RESET))
 
-//! @brief Format value for bitfield USB_CTL_RESET.
-#define BF_USB_CTL_RESET(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_RESET), uint8_t) & BM_USB_CTL_RESET)
+/*! @brief Format value for bitfield USB_CTL_RESET. */
+#define BF_USB_CTL_RESET(v)  ((uint8_t)((uint8_t)(v) << BP_USB_CTL_RESET) & BM_USB_CTL_RESET)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RESET field to a new value.
-#define BW_USB_CTL_RESET(v)  (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_RESET) = (v))
-#endif
-//@}
+/*! @brief Set the RESET field to a new value. */
+#define BW_USB_CTL_RESET(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_RESET) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field TXSUSPENDTOKENBUSY[5] (RW)
@@ -2403,76 +2100,63 @@ typedef union _hw_usb_ctl
  * set by the SIE when a Setup Token is received allowing software to dequeue any
  * pending packet transactions in the BDT before resuming token processing.
  */
-//@{
-#define BP_USB_CTL_TXSUSPENDTOKENBUSY (5U) //!< Bit position for USB_CTL_TXSUSPENDTOKENBUSY.
-#define BM_USB_CTL_TXSUSPENDTOKENBUSY (0x20U) //!< Bit mask for USB_CTL_TXSUSPENDTOKENBUSY.
-#define BS_USB_CTL_TXSUSPENDTOKENBUSY (1U) //!< Bit field size in bits for USB_CTL_TXSUSPENDTOKENBUSY.
+/*@{*/
+#define BP_USB_CTL_TXSUSPENDTOKENBUSY (5U) /*!< Bit position for USB_CTL_TXSUSPENDTOKENBUSY. */
+#define BM_USB_CTL_TXSUSPENDTOKENBUSY (0x20U) /*!< Bit mask for USB_CTL_TXSUSPENDTOKENBUSY. */
+#define BS_USB_CTL_TXSUSPENDTOKENBUSY (1U) /*!< Bit field size in bits for USB_CTL_TXSUSPENDTOKENBUSY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_TXSUSPENDTOKENBUSY field.
-#define BR_USB_CTL_TXSUSPENDTOKENBUSY (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_TXSUSPENDTOKENBUSY))
-#endif
+/*! @brief Read current value of the USB_CTL_TXSUSPENDTOKENBUSY field. */
+#define BR_USB_CTL_TXSUSPENDTOKENBUSY(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_TXSUSPENDTOKENBUSY))
 
-//! @brief Format value for bitfield USB_CTL_TXSUSPENDTOKENBUSY.
-#define BF_USB_CTL_TXSUSPENDTOKENBUSY(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_TXSUSPENDTOKENBUSY), uint8_t) & BM_USB_CTL_TXSUSPENDTOKENBUSY)
+/*! @brief Format value for bitfield USB_CTL_TXSUSPENDTOKENBUSY. */
+#define BF_USB_CTL_TXSUSPENDTOKENBUSY(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_TXSUSPENDTOKENBUSY) & BM_USB_CTL_TXSUSPENDTOKENBUSY)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TXSUSPENDTOKENBUSY field to a new value.
-#define BW_USB_CTL_TXSUSPENDTOKENBUSY(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_TXSUSPENDTOKENBUSY) = (v))
-#endif
-//@}
+/*! @brief Set the TXSUSPENDTOKENBUSY field to a new value. */
+#define BW_USB_CTL_TXSUSPENDTOKENBUSY(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_TXSUSPENDTOKENBUSY) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field SE0[6] (RW)
  */
-//@{
-#define BP_USB_CTL_SE0       (6U)          //!< Bit position for USB_CTL_SE0.
-#define BM_USB_CTL_SE0       (0x40U)       //!< Bit mask for USB_CTL_SE0.
-#define BS_USB_CTL_SE0       (1U)          //!< Bit field size in bits for USB_CTL_SE0.
+/*@{*/
+#define BP_USB_CTL_SE0       (6U)          /*!< Bit position for USB_CTL_SE0. */
+#define BM_USB_CTL_SE0       (0x40U)       /*!< Bit mask for USB_CTL_SE0. */
+#define BS_USB_CTL_SE0       (1U)          /*!< Bit field size in bits for USB_CTL_SE0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_SE0 field.
-#define BR_USB_CTL_SE0       (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_SE0))
-#endif
+/*! @brief Read current value of the USB_CTL_SE0 field. */
+#define BR_USB_CTL_SE0(x)    (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_SE0))
 
-//! @brief Format value for bitfield USB_CTL_SE0.
-#define BF_USB_CTL_SE0(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_SE0), uint8_t) & BM_USB_CTL_SE0)
+/*! @brief Format value for bitfield USB_CTL_SE0. */
+#define BF_USB_CTL_SE0(v)    ((uint8_t)((uint8_t)(v) << BP_USB_CTL_SE0) & BM_USB_CTL_SE0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SE0 field to a new value.
-#define BW_USB_CTL_SE0(v)    (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_SE0) = (v))
-#endif
-//@}
+/*! @brief Set the SE0 field to a new value. */
+#define BW_USB_CTL_SE0(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_SE0) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_CTL, field JSTATE[7] (RW)
  *
  * The polarity of this signal is affected by the current state of LSEN .
  */
-//@{
-#define BP_USB_CTL_JSTATE    (7U)          //!< Bit position for USB_CTL_JSTATE.
-#define BM_USB_CTL_JSTATE    (0x80U)       //!< Bit mask for USB_CTL_JSTATE.
-#define BS_USB_CTL_JSTATE    (1U)          //!< Bit field size in bits for USB_CTL_JSTATE.
+/*@{*/
+#define BP_USB_CTL_JSTATE    (7U)          /*!< Bit position for USB_CTL_JSTATE. */
+#define BM_USB_CTL_JSTATE    (0x80U)       /*!< Bit mask for USB_CTL_JSTATE. */
+#define BS_USB_CTL_JSTATE    (1U)          /*!< Bit field size in bits for USB_CTL_JSTATE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CTL_JSTATE field.
-#define BR_USB_CTL_JSTATE    (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_JSTATE))
-#endif
+/*! @brief Read current value of the USB_CTL_JSTATE field. */
+#define BR_USB_CTL_JSTATE(x) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_JSTATE))
 
-//! @brief Format value for bitfield USB_CTL_JSTATE.
-#define BF_USB_CTL_JSTATE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CTL_JSTATE), uint8_t) & BM_USB_CTL_JSTATE)
+/*! @brief Format value for bitfield USB_CTL_JSTATE. */
+#define BF_USB_CTL_JSTATE(v) ((uint8_t)((uint8_t)(v) << BP_USB_CTL_JSTATE) & BM_USB_CTL_JSTATE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the JSTATE field to a new value.
-#define BW_USB_CTL_JSTATE(v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR, BP_USB_CTL_JSTATE) = (v))
-#endif
-//@}
+/*! @brief Set the JSTATE field to a new value. */
+#define BW_USB_CTL_JSTATE(x, v) (BITBAND_ACCESS8(HW_USB_CTL_ADDR(x), BP_USB_CTL_JSTATE) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ADDR - Address Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ADDR - Address Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_ADDR - Address Register (RW)
  *
@@ -2492,27 +2176,24 @@ typedef union _hw_usb_addr
     uint8_t U;
     struct _hw_usb_addr_bitfields
     {
-        uint8_t ADDR : 7;              //!< [6:0] USB address
-        uint8_t LSEN : 1;              //!< [7] Low Speed Enable bit
+        uint8_t ADDR : 7;              /*!< [6:0] USB address */
+        uint8_t LSEN : 1;              /*!< [7] Low Speed Enable bit */
     } B;
 } hw_usb_addr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ADDR register
  */
-//@{
-#define HW_USB_ADDR_ADDR         (REGS_USB_BASE + 0x98U)
+/*@{*/
+#define HW_USB_ADDR_ADDR(x)      ((x) + 0x98U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ADDR              (*(__IO hw_usb_addr_t *) HW_USB_ADDR_ADDR)
-#define HW_USB_ADDR_RD()         (HW_USB_ADDR.U)
-#define HW_USB_ADDR_WR(v)        (HW_USB_ADDR.U = (v))
-#define HW_USB_ADDR_SET(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() |  (v)))
-#define HW_USB_ADDR_CLR(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() & ~(v)))
-#define HW_USB_ADDR_TOG(v)       (HW_USB_ADDR_WR(HW_USB_ADDR_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_ADDR(x)           (*(__IO hw_usb_addr_t *) HW_USB_ADDR_ADDR(x))
+#define HW_USB_ADDR_RD(x)        (HW_USB_ADDR(x).U)
+#define HW_USB_ADDR_WR(x, v)     (HW_USB_ADDR(x).U = (v))
+#define HW_USB_ADDR_SET(x, v)    (HW_USB_ADDR_WR(x, HW_USB_ADDR_RD(x) |  (v)))
+#define HW_USB_ADDR_CLR(x, v)    (HW_USB_ADDR_WR(x, HW_USB_ADDR_RD(x) & ~(v)))
+#define HW_USB_ADDR_TOG(x, v)    (HW_USB_ADDR_WR(x, HW_USB_ADDR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ADDR bitfields
@@ -2524,24 +2205,20 @@ typedef union _hw_usb_addr
  * This 7-bit value defines the USB address that the USB Module decodes in
  * peripheral mode, or transmit when in host mode.
  */
-//@{
-#define BP_USB_ADDR_ADDR     (0U)          //!< Bit position for USB_ADDR_ADDR.
-#define BM_USB_ADDR_ADDR     (0x7FU)       //!< Bit mask for USB_ADDR_ADDR.
-#define BS_USB_ADDR_ADDR     (7U)          //!< Bit field size in bits for USB_ADDR_ADDR.
+/*@{*/
+#define BP_USB_ADDR_ADDR     (0U)          /*!< Bit position for USB_ADDR_ADDR. */
+#define BM_USB_ADDR_ADDR     (0x7FU)       /*!< Bit mask for USB_ADDR_ADDR. */
+#define BS_USB_ADDR_ADDR     (7U)          /*!< Bit field size in bits for USB_ADDR_ADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ADDR_ADDR field.
-#define BR_USB_ADDR_ADDR     (HW_USB_ADDR.B.ADDR)
-#endif
+/*! @brief Read current value of the USB_ADDR_ADDR field. */
+#define BR_USB_ADDR_ADDR(x)  (HW_USB_ADDR(x).B.ADDR)
 
-//! @brief Format value for bitfield USB_ADDR_ADDR.
-#define BF_USB_ADDR_ADDR(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ADDR_ADDR), uint8_t) & BM_USB_ADDR_ADDR)
+/*! @brief Format value for bitfield USB_ADDR_ADDR. */
+#define BF_USB_ADDR_ADDR(v)  ((uint8_t)((uint8_t)(v) << BP_USB_ADDR_ADDR) & BM_USB_ADDR_ADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADDR field to a new value.
-#define BW_USB_ADDR_ADDR(v)  (HW_USB_ADDR_WR((HW_USB_ADDR_RD() & ~BM_USB_ADDR_ADDR) | BF_USB_ADDR_ADDR(v)))
-#endif
-//@}
+/*! @brief Set the ADDR field to a new value. */
+#define BW_USB_ADDR_ADDR(x, v) (HW_USB_ADDR_WR(x, (HW_USB_ADDR_RD(x) & ~BM_USB_ADDR_ADDR) | BF_USB_ADDR_ADDR(v)))
+/*@}*/
 
 /*!
  * @name Register USB_ADDR, field LSEN[7] (RW)
@@ -2550,30 +2227,25 @@ typedef union _hw_usb_addr
  * token register must be performed at low speed. This enables the USB Module to
  * perform the necessary preamble required for low-speed data transmissions.
  */
-//@{
-#define BP_USB_ADDR_LSEN     (7U)          //!< Bit position for USB_ADDR_LSEN.
-#define BM_USB_ADDR_LSEN     (0x80U)       //!< Bit mask for USB_ADDR_LSEN.
-#define BS_USB_ADDR_LSEN     (1U)          //!< Bit field size in bits for USB_ADDR_LSEN.
+/*@{*/
+#define BP_USB_ADDR_LSEN     (7U)          /*!< Bit position for USB_ADDR_LSEN. */
+#define BM_USB_ADDR_LSEN     (0x80U)       /*!< Bit mask for USB_ADDR_LSEN. */
+#define BS_USB_ADDR_LSEN     (1U)          /*!< Bit field size in bits for USB_ADDR_LSEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ADDR_LSEN field.
-#define BR_USB_ADDR_LSEN     (BITBAND_ACCESS8(HW_USB_ADDR_ADDR, BP_USB_ADDR_LSEN))
-#endif
+/*! @brief Read current value of the USB_ADDR_LSEN field. */
+#define BR_USB_ADDR_LSEN(x)  (BITBAND_ACCESS8(HW_USB_ADDR_ADDR(x), BP_USB_ADDR_LSEN))
 
-//! @brief Format value for bitfield USB_ADDR_LSEN.
-#define BF_USB_ADDR_LSEN(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ADDR_LSEN), uint8_t) & BM_USB_ADDR_LSEN)
+/*! @brief Format value for bitfield USB_ADDR_LSEN. */
+#define BF_USB_ADDR_LSEN(v)  ((uint8_t)((uint8_t)(v) << BP_USB_ADDR_LSEN) & BM_USB_ADDR_LSEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LSEN field to a new value.
-#define BW_USB_ADDR_LSEN(v)  (BITBAND_ACCESS8(HW_USB_ADDR_ADDR, BP_USB_ADDR_LSEN) = (v))
-#endif
-//@}
+/*! @brief Set the LSEN field to a new value. */
+#define BW_USB_ADDR_LSEN(x, v) (BITBAND_ACCESS8(HW_USB_ADDR_ADDR(x), BP_USB_ADDR_LSEN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_BDTPAGE1 - BDT Page Register 1
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_BDTPAGE1 - BDT Page Register 1
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_BDTPAGE1 - BDT Page Register 1 (RW)
  *
@@ -2589,27 +2261,24 @@ typedef union _hw_usb_bdtpage1
     uint8_t U;
     struct _hw_usb_bdtpage1_bitfields
     {
-        uint8_t RESERVED0 : 1;         //!< [0]
-        uint8_t BDTBA : 7;             //!< [7:1]
+        uint8_t RESERVED0 : 1;         /*!< [0]  */
+        uint8_t BDTBA : 7;             /*!< [7:1]  */
     } B;
 } hw_usb_bdtpage1_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_BDTPAGE1 register
  */
-//@{
-#define HW_USB_BDTPAGE1_ADDR     (REGS_USB_BASE + 0x9CU)
+/*@{*/
+#define HW_USB_BDTPAGE1_ADDR(x)  ((x) + 0x9CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_BDTPAGE1          (*(__IO hw_usb_bdtpage1_t *) HW_USB_BDTPAGE1_ADDR)
-#define HW_USB_BDTPAGE1_RD()     (HW_USB_BDTPAGE1.U)
-#define HW_USB_BDTPAGE1_WR(v)    (HW_USB_BDTPAGE1.U = (v))
-#define HW_USB_BDTPAGE1_SET(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() |  (v)))
-#define HW_USB_BDTPAGE1_CLR(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() & ~(v)))
-#define HW_USB_BDTPAGE1_TOG(v)   (HW_USB_BDTPAGE1_WR(HW_USB_BDTPAGE1_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_BDTPAGE1(x)       (*(__IO hw_usb_bdtpage1_t *) HW_USB_BDTPAGE1_ADDR(x))
+#define HW_USB_BDTPAGE1_RD(x)    (HW_USB_BDTPAGE1(x).U)
+#define HW_USB_BDTPAGE1_WR(x, v) (HW_USB_BDTPAGE1(x).U = (v))
+#define HW_USB_BDTPAGE1_SET(x, v) (HW_USB_BDTPAGE1_WR(x, HW_USB_BDTPAGE1_RD(x) |  (v)))
+#define HW_USB_BDTPAGE1_CLR(x, v) (HW_USB_BDTPAGE1_WR(x, HW_USB_BDTPAGE1_RD(x) & ~(v)))
+#define HW_USB_BDTPAGE1_TOG(x, v) (HW_USB_BDTPAGE1_WR(x, HW_USB_BDTPAGE1_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_BDTPAGE1 bitfields
@@ -2620,30 +2289,25 @@ typedef union _hw_usb_bdtpage1
  *
  * This field provides address bits 15 through 9 of the BDT base address.
  */
-//@{
-#define BP_USB_BDTPAGE1_BDTBA (1U)         //!< Bit position for USB_BDTPAGE1_BDTBA.
-#define BM_USB_BDTPAGE1_BDTBA (0xFEU)      //!< Bit mask for USB_BDTPAGE1_BDTBA.
-#define BS_USB_BDTPAGE1_BDTBA (7U)         //!< Bit field size in bits for USB_BDTPAGE1_BDTBA.
+/*@{*/
+#define BP_USB_BDTPAGE1_BDTBA (1U)         /*!< Bit position for USB_BDTPAGE1_BDTBA. */
+#define BM_USB_BDTPAGE1_BDTBA (0xFEU)      /*!< Bit mask for USB_BDTPAGE1_BDTBA. */
+#define BS_USB_BDTPAGE1_BDTBA (7U)         /*!< Bit field size in bits for USB_BDTPAGE1_BDTBA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_BDTPAGE1_BDTBA field.
-#define BR_USB_BDTPAGE1_BDTBA (HW_USB_BDTPAGE1.B.BDTBA)
-#endif
+/*! @brief Read current value of the USB_BDTPAGE1_BDTBA field. */
+#define BR_USB_BDTPAGE1_BDTBA(x) (HW_USB_BDTPAGE1(x).B.BDTBA)
 
-//! @brief Format value for bitfield USB_BDTPAGE1_BDTBA.
-#define BF_USB_BDTPAGE1_BDTBA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_BDTPAGE1_BDTBA), uint8_t) & BM_USB_BDTPAGE1_BDTBA)
+/*! @brief Format value for bitfield USB_BDTPAGE1_BDTBA. */
+#define BF_USB_BDTPAGE1_BDTBA(v) ((uint8_t)((uint8_t)(v) << BP_USB_BDTPAGE1_BDTBA) & BM_USB_BDTPAGE1_BDTBA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE1_BDTBA(v) (HW_USB_BDTPAGE1_WR((HW_USB_BDTPAGE1_RD() & ~BM_USB_BDTPAGE1_BDTBA) | BF_USB_BDTPAGE1_BDTBA(v)))
-#endif
-//@}
+/*! @brief Set the BDTBA field to a new value. */
+#define BW_USB_BDTPAGE1_BDTBA(x, v) (HW_USB_BDTPAGE1_WR(x, (HW_USB_BDTPAGE1_RD(x) & ~BM_USB_BDTPAGE1_BDTBA) | BF_USB_BDTPAGE1_BDTBA(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_FRMNUML - Frame Number Register Low
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_FRMNUML - Frame Number Register Low
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_FRMNUML - Frame Number Register Low (RW)
  *
@@ -2658,26 +2322,23 @@ typedef union _hw_usb_frmnuml
     uint8_t U;
     struct _hw_usb_frmnuml_bitfields
     {
-        uint8_t FRM : 8;               //!< [7:0]
+        uint8_t FRM : 8;               /*!< [7:0]  */
     } B;
 } hw_usb_frmnuml_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_FRMNUML register
  */
-//@{
-#define HW_USB_FRMNUML_ADDR      (REGS_USB_BASE + 0xA0U)
+/*@{*/
+#define HW_USB_FRMNUML_ADDR(x)   ((x) + 0xA0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_FRMNUML           (*(__IO hw_usb_frmnuml_t *) HW_USB_FRMNUML_ADDR)
-#define HW_USB_FRMNUML_RD()      (HW_USB_FRMNUML.U)
-#define HW_USB_FRMNUML_WR(v)     (HW_USB_FRMNUML.U = (v))
-#define HW_USB_FRMNUML_SET(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() |  (v)))
-#define HW_USB_FRMNUML_CLR(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() & ~(v)))
-#define HW_USB_FRMNUML_TOG(v)    (HW_USB_FRMNUML_WR(HW_USB_FRMNUML_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_FRMNUML(x)        (*(__IO hw_usb_frmnuml_t *) HW_USB_FRMNUML_ADDR(x))
+#define HW_USB_FRMNUML_RD(x)     (HW_USB_FRMNUML(x).U)
+#define HW_USB_FRMNUML_WR(x, v)  (HW_USB_FRMNUML(x).U = (v))
+#define HW_USB_FRMNUML_SET(x, v) (HW_USB_FRMNUML_WR(x, HW_USB_FRMNUML_RD(x) |  (v)))
+#define HW_USB_FRMNUML_CLR(x, v) (HW_USB_FRMNUML_WR(x, HW_USB_FRMNUML_RD(x) & ~(v)))
+#define HW_USB_FRMNUML_TOG(x, v) (HW_USB_FRMNUML_WR(x, HW_USB_FRMNUML_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_FRMNUML bitfields
@@ -2690,30 +2351,25 @@ typedef union _hw_usb_frmnuml
  * used to compute the address where the current Buffer Descriptor Table (BDT)
  * resides in system memory.
  */
-//@{
-#define BP_USB_FRMNUML_FRM   (0U)          //!< Bit position for USB_FRMNUML_FRM.
-#define BM_USB_FRMNUML_FRM   (0xFFU)       //!< Bit mask for USB_FRMNUML_FRM.
-#define BS_USB_FRMNUML_FRM   (8U)          //!< Bit field size in bits for USB_FRMNUML_FRM.
+/*@{*/
+#define BP_USB_FRMNUML_FRM   (0U)          /*!< Bit position for USB_FRMNUML_FRM. */
+#define BM_USB_FRMNUML_FRM   (0xFFU)       /*!< Bit mask for USB_FRMNUML_FRM. */
+#define BS_USB_FRMNUML_FRM   (8U)          /*!< Bit field size in bits for USB_FRMNUML_FRM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_FRMNUML_FRM field.
-#define BR_USB_FRMNUML_FRM   (HW_USB_FRMNUML.B.FRM)
-#endif
+/*! @brief Read current value of the USB_FRMNUML_FRM field. */
+#define BR_USB_FRMNUML_FRM(x) (HW_USB_FRMNUML(x).U)
 
-//! @brief Format value for bitfield USB_FRMNUML_FRM.
-#define BF_USB_FRMNUML_FRM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_FRMNUML_FRM), uint8_t) & BM_USB_FRMNUML_FRM)
+/*! @brief Format value for bitfield USB_FRMNUML_FRM. */
+#define BF_USB_FRMNUML_FRM(v) ((uint8_t)((uint8_t)(v) << BP_USB_FRMNUML_FRM) & BM_USB_FRMNUML_FRM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRM field to a new value.
-#define BW_USB_FRMNUML_FRM(v) (HW_USB_FRMNUML_WR((HW_USB_FRMNUML_RD() & ~BM_USB_FRMNUML_FRM) | BF_USB_FRMNUML_FRM(v)))
-#endif
-//@}
+/*! @brief Set the FRM field to a new value. */
+#define BW_USB_FRMNUML_FRM(x, v) (HW_USB_FRMNUML_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_FRMNUMH - Frame Number Register High
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_FRMNUMH - Frame Number Register High
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_FRMNUMH - Frame Number Register High (RW)
  *
@@ -2728,27 +2384,24 @@ typedef union _hw_usb_frmnumh
     uint8_t U;
     struct _hw_usb_frmnumh_bitfields
     {
-        uint8_t FRM : 3;               //!< [2:0]
-        uint8_t RESERVED0 : 5;         //!< [7:3]
+        uint8_t FRM : 3;               /*!< [2:0]  */
+        uint8_t RESERVED0 : 5;         /*!< [7:3]  */
     } B;
 } hw_usb_frmnumh_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_FRMNUMH register
  */
-//@{
-#define HW_USB_FRMNUMH_ADDR      (REGS_USB_BASE + 0xA4U)
+/*@{*/
+#define HW_USB_FRMNUMH_ADDR(x)   ((x) + 0xA4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_FRMNUMH           (*(__IO hw_usb_frmnumh_t *) HW_USB_FRMNUMH_ADDR)
-#define HW_USB_FRMNUMH_RD()      (HW_USB_FRMNUMH.U)
-#define HW_USB_FRMNUMH_WR(v)     (HW_USB_FRMNUMH.U = (v))
-#define HW_USB_FRMNUMH_SET(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() |  (v)))
-#define HW_USB_FRMNUMH_CLR(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() & ~(v)))
-#define HW_USB_FRMNUMH_TOG(v)    (HW_USB_FRMNUMH_WR(HW_USB_FRMNUMH_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_FRMNUMH(x)        (*(__IO hw_usb_frmnumh_t *) HW_USB_FRMNUMH_ADDR(x))
+#define HW_USB_FRMNUMH_RD(x)     (HW_USB_FRMNUMH(x).U)
+#define HW_USB_FRMNUMH_WR(x, v)  (HW_USB_FRMNUMH(x).U = (v))
+#define HW_USB_FRMNUMH_SET(x, v) (HW_USB_FRMNUMH_WR(x, HW_USB_FRMNUMH_RD(x) |  (v)))
+#define HW_USB_FRMNUMH_CLR(x, v) (HW_USB_FRMNUMH_WR(x, HW_USB_FRMNUMH_RD(x) & ~(v)))
+#define HW_USB_FRMNUMH_TOG(x, v) (HW_USB_FRMNUMH_WR(x, HW_USB_FRMNUMH_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_FRMNUMH bitfields
@@ -2761,30 +2414,25 @@ typedef union _hw_usb_frmnumh
  * used to compute the address where the current Buffer Descriptor Table (BDT)
  * resides in system memory.
  */
-//@{
-#define BP_USB_FRMNUMH_FRM   (0U)          //!< Bit position for USB_FRMNUMH_FRM.
-#define BM_USB_FRMNUMH_FRM   (0x07U)       //!< Bit mask for USB_FRMNUMH_FRM.
-#define BS_USB_FRMNUMH_FRM   (3U)          //!< Bit field size in bits for USB_FRMNUMH_FRM.
+/*@{*/
+#define BP_USB_FRMNUMH_FRM   (0U)          /*!< Bit position for USB_FRMNUMH_FRM. */
+#define BM_USB_FRMNUMH_FRM   (0x07U)       /*!< Bit mask for USB_FRMNUMH_FRM. */
+#define BS_USB_FRMNUMH_FRM   (3U)          /*!< Bit field size in bits for USB_FRMNUMH_FRM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_FRMNUMH_FRM field.
-#define BR_USB_FRMNUMH_FRM   (HW_USB_FRMNUMH.B.FRM)
-#endif
+/*! @brief Read current value of the USB_FRMNUMH_FRM field. */
+#define BR_USB_FRMNUMH_FRM(x) (HW_USB_FRMNUMH(x).B.FRM)
 
-//! @brief Format value for bitfield USB_FRMNUMH_FRM.
-#define BF_USB_FRMNUMH_FRM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_FRMNUMH_FRM), uint8_t) & BM_USB_FRMNUMH_FRM)
+/*! @brief Format value for bitfield USB_FRMNUMH_FRM. */
+#define BF_USB_FRMNUMH_FRM(v) ((uint8_t)((uint8_t)(v) << BP_USB_FRMNUMH_FRM) & BM_USB_FRMNUMH_FRM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FRM field to a new value.
-#define BW_USB_FRMNUMH_FRM(v) (HW_USB_FRMNUMH_WR((HW_USB_FRMNUMH_RD() & ~BM_USB_FRMNUMH_FRM) | BF_USB_FRMNUMH_FRM(v)))
-#endif
-//@}
+/*! @brief Set the FRM field to a new value. */
+#define BW_USB_FRMNUMH_FRM(x, v) (HW_USB_FRMNUMH_WR(x, (HW_USB_FRMNUMH_RD(x) & ~BM_USB_FRMNUMH_FRM) | BF_USB_FRMNUMH_FRM(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_TOKEN - Token Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_TOKEN - Token Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_TOKEN - Token Register (RW)
  *
@@ -2809,27 +2457,24 @@ typedef union _hw_usb_token
     uint8_t U;
     struct _hw_usb_token_bitfields
     {
-        uint8_t TOKENENDPT : 4;        //!< [3:0]
-        uint8_t TOKENPID : 4;          //!< [7:4]
+        uint8_t TOKENENDPT : 4;        /*!< [3:0]  */
+        uint8_t TOKENPID : 4;          /*!< [7:4]  */
     } B;
 } hw_usb_token_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_TOKEN register
  */
-//@{
-#define HW_USB_TOKEN_ADDR        (REGS_USB_BASE + 0xA8U)
+/*@{*/
+#define HW_USB_TOKEN_ADDR(x)     ((x) + 0xA8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_TOKEN             (*(__IO hw_usb_token_t *) HW_USB_TOKEN_ADDR)
-#define HW_USB_TOKEN_RD()        (HW_USB_TOKEN.U)
-#define HW_USB_TOKEN_WR(v)       (HW_USB_TOKEN.U = (v))
-#define HW_USB_TOKEN_SET(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() |  (v)))
-#define HW_USB_TOKEN_CLR(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() & ~(v)))
-#define HW_USB_TOKEN_TOG(v)      (HW_USB_TOKEN_WR(HW_USB_TOKEN_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_TOKEN(x)          (*(__IO hw_usb_token_t *) HW_USB_TOKEN_ADDR(x))
+#define HW_USB_TOKEN_RD(x)       (HW_USB_TOKEN(x).U)
+#define HW_USB_TOKEN_WR(x, v)    (HW_USB_TOKEN(x).U = (v))
+#define HW_USB_TOKEN_SET(x, v)   (HW_USB_TOKEN_WR(x, HW_USB_TOKEN_RD(x) |  (v)))
+#define HW_USB_TOKEN_CLR(x, v)   (HW_USB_TOKEN_WR(x, HW_USB_TOKEN_RD(x) & ~(v)))
+#define HW_USB_TOKEN_TOG(x, v)   (HW_USB_TOKEN_WR(x, HW_USB_TOKEN_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_TOKEN bitfields
@@ -2841,24 +2486,20 @@ typedef union _hw_usb_token
  * This 4 bit field holds the Endpoint address for the token command. The four
  * bit value written must be a valid endpoint.
  */
-//@{
-#define BP_USB_TOKEN_TOKENENDPT (0U)       //!< Bit position for USB_TOKEN_TOKENENDPT.
-#define BM_USB_TOKEN_TOKENENDPT (0x0FU)    //!< Bit mask for USB_TOKEN_TOKENENDPT.
-#define BS_USB_TOKEN_TOKENENDPT (4U)       //!< Bit field size in bits for USB_TOKEN_TOKENENDPT.
+/*@{*/
+#define BP_USB_TOKEN_TOKENENDPT (0U)       /*!< Bit position for USB_TOKEN_TOKENENDPT. */
+#define BM_USB_TOKEN_TOKENENDPT (0x0FU)    /*!< Bit mask for USB_TOKEN_TOKENENDPT. */
+#define BS_USB_TOKEN_TOKENENDPT (4U)       /*!< Bit field size in bits for USB_TOKEN_TOKENENDPT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_TOKEN_TOKENENDPT field.
-#define BR_USB_TOKEN_TOKENENDPT (HW_USB_TOKEN.B.TOKENENDPT)
-#endif
+/*! @brief Read current value of the USB_TOKEN_TOKENENDPT field. */
+#define BR_USB_TOKEN_TOKENENDPT(x) (HW_USB_TOKEN(x).B.TOKENENDPT)
 
-//! @brief Format value for bitfield USB_TOKEN_TOKENENDPT.
-#define BF_USB_TOKEN_TOKENENDPT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_TOKEN_TOKENENDPT), uint8_t) & BM_USB_TOKEN_TOKENENDPT)
+/*! @brief Format value for bitfield USB_TOKEN_TOKENENDPT. */
+#define BF_USB_TOKEN_TOKENENDPT(v) ((uint8_t)((uint8_t)(v) << BP_USB_TOKEN_TOKENENDPT) & BM_USB_TOKEN_TOKENENDPT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOKENENDPT field to a new value.
-#define BW_USB_TOKEN_TOKENENDPT(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD() & ~BM_USB_TOKEN_TOKENENDPT) | BF_USB_TOKEN_TOKENENDPT(v)))
-#endif
-//@}
+/*! @brief Set the TOKENENDPT field to a new value. */
+#define BW_USB_TOKEN_TOKENENDPT(x, v) (HW_USB_TOKEN_WR(x, (HW_USB_TOKEN_RD(x) & ~BM_USB_TOKEN_TOKENENDPT) | BF_USB_TOKEN_TOKENENDPT(v)))
+/*@}*/
 
 /*!
  * @name Register USB_TOKEN, field TOKENPID[7:4] (RW)
@@ -2870,30 +2511,25 @@ typedef union _hw_usb_token
  * - 1001 - IN Token. USB Module performs an In (RX) transaction.
  * - 1101 - SETUP Token. USB Module performs a SETUP (TX) transaction
  */
-//@{
-#define BP_USB_TOKEN_TOKENPID (4U)         //!< Bit position for USB_TOKEN_TOKENPID.
-#define BM_USB_TOKEN_TOKENPID (0xF0U)      //!< Bit mask for USB_TOKEN_TOKENPID.
-#define BS_USB_TOKEN_TOKENPID (4U)         //!< Bit field size in bits for USB_TOKEN_TOKENPID.
+/*@{*/
+#define BP_USB_TOKEN_TOKENPID (4U)         /*!< Bit position for USB_TOKEN_TOKENPID. */
+#define BM_USB_TOKEN_TOKENPID (0xF0U)      /*!< Bit mask for USB_TOKEN_TOKENPID. */
+#define BS_USB_TOKEN_TOKENPID (4U)         /*!< Bit field size in bits for USB_TOKEN_TOKENPID. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_TOKEN_TOKENPID field.
-#define BR_USB_TOKEN_TOKENPID (HW_USB_TOKEN.B.TOKENPID)
-#endif
+/*! @brief Read current value of the USB_TOKEN_TOKENPID field. */
+#define BR_USB_TOKEN_TOKENPID(x) (HW_USB_TOKEN(x).B.TOKENPID)
 
-//! @brief Format value for bitfield USB_TOKEN_TOKENPID.
-#define BF_USB_TOKEN_TOKENPID(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_TOKEN_TOKENPID), uint8_t) & BM_USB_TOKEN_TOKENPID)
+/*! @brief Format value for bitfield USB_TOKEN_TOKENPID. */
+#define BF_USB_TOKEN_TOKENPID(v) ((uint8_t)((uint8_t)(v) << BP_USB_TOKEN_TOKENPID) & BM_USB_TOKEN_TOKENPID)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOKENPID field to a new value.
-#define BW_USB_TOKEN_TOKENPID(v) (HW_USB_TOKEN_WR((HW_USB_TOKEN_RD() & ~BM_USB_TOKEN_TOKENPID) | BF_USB_TOKEN_TOKENPID(v)))
-#endif
-//@}
+/*! @brief Set the TOKENPID field to a new value. */
+#define BW_USB_TOKEN_TOKENPID(x, v) (HW_USB_TOKEN_WR(x, (HW_USB_TOKEN_RD(x) & ~BM_USB_TOKEN_TOKENPID) | BF_USB_TOKEN_TOKENPID(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_SOFTHLD - SOF Threshold Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_SOFTHLD - SOF Threshold Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_SOFTHLD - SOF Threshold Register (RW)
  *
@@ -2921,26 +2557,23 @@ typedef union _hw_usb_softhld
     uint8_t U;
     struct _hw_usb_softhld_bitfields
     {
-        uint8_t CNT : 8;               //!< [7:0]
+        uint8_t CNT : 8;               /*!< [7:0]  */
     } B;
 } hw_usb_softhld_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_SOFTHLD register
  */
-//@{
-#define HW_USB_SOFTHLD_ADDR      (REGS_USB_BASE + 0xACU)
+/*@{*/
+#define HW_USB_SOFTHLD_ADDR(x)   ((x) + 0xACU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_SOFTHLD           (*(__IO hw_usb_softhld_t *) HW_USB_SOFTHLD_ADDR)
-#define HW_USB_SOFTHLD_RD()      (HW_USB_SOFTHLD.U)
-#define HW_USB_SOFTHLD_WR(v)     (HW_USB_SOFTHLD.U = (v))
-#define HW_USB_SOFTHLD_SET(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() |  (v)))
-#define HW_USB_SOFTHLD_CLR(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() & ~(v)))
-#define HW_USB_SOFTHLD_TOG(v)    (HW_USB_SOFTHLD_WR(HW_USB_SOFTHLD_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_SOFTHLD(x)        (*(__IO hw_usb_softhld_t *) HW_USB_SOFTHLD_ADDR(x))
+#define HW_USB_SOFTHLD_RD(x)     (HW_USB_SOFTHLD(x).U)
+#define HW_USB_SOFTHLD_WR(x, v)  (HW_USB_SOFTHLD(x).U = (v))
+#define HW_USB_SOFTHLD_SET(x, v) (HW_USB_SOFTHLD_WR(x, HW_USB_SOFTHLD_RD(x) |  (v)))
+#define HW_USB_SOFTHLD_CLR(x, v) (HW_USB_SOFTHLD_WR(x, HW_USB_SOFTHLD_RD(x) & ~(v)))
+#define HW_USB_SOFTHLD_TOG(x, v) (HW_USB_SOFTHLD_WR(x, HW_USB_SOFTHLD_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_SOFTHLD bitfields
@@ -2951,30 +2584,25 @@ typedef union _hw_usb_softhld
  *
  * This 8-bit field represents the SOF count threshold in byte times.
  */
-//@{
-#define BP_USB_SOFTHLD_CNT   (0U)          //!< Bit position for USB_SOFTHLD_CNT.
-#define BM_USB_SOFTHLD_CNT   (0xFFU)       //!< Bit mask for USB_SOFTHLD_CNT.
-#define BS_USB_SOFTHLD_CNT   (8U)          //!< Bit field size in bits for USB_SOFTHLD_CNT.
+/*@{*/
+#define BP_USB_SOFTHLD_CNT   (0U)          /*!< Bit position for USB_SOFTHLD_CNT. */
+#define BM_USB_SOFTHLD_CNT   (0xFFU)       /*!< Bit mask for USB_SOFTHLD_CNT. */
+#define BS_USB_SOFTHLD_CNT   (8U)          /*!< Bit field size in bits for USB_SOFTHLD_CNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_SOFTHLD_CNT field.
-#define BR_USB_SOFTHLD_CNT   (HW_USB_SOFTHLD.B.CNT)
-#endif
+/*! @brief Read current value of the USB_SOFTHLD_CNT field. */
+#define BR_USB_SOFTHLD_CNT(x) (HW_USB_SOFTHLD(x).U)
 
-//! @brief Format value for bitfield USB_SOFTHLD_CNT.
-#define BF_USB_SOFTHLD_CNT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_SOFTHLD_CNT), uint8_t) & BM_USB_SOFTHLD_CNT)
+/*! @brief Format value for bitfield USB_SOFTHLD_CNT. */
+#define BF_USB_SOFTHLD_CNT(v) ((uint8_t)((uint8_t)(v) << BP_USB_SOFTHLD_CNT) & BM_USB_SOFTHLD_CNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CNT field to a new value.
-#define BW_USB_SOFTHLD_CNT(v) (HW_USB_SOFTHLD_WR((HW_USB_SOFTHLD_RD() & ~BM_USB_SOFTHLD_CNT) | BF_USB_SOFTHLD_CNT(v)))
-#endif
-//@}
+/*! @brief Set the CNT field to a new value. */
+#define BW_USB_SOFTHLD_CNT(x, v) (HW_USB_SOFTHLD_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_BDTPAGE2 - BDT Page Register 2
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_BDTPAGE2 - BDT Page Register 2
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_BDTPAGE2 - BDT Page Register 2 (RW)
  *
@@ -2989,26 +2617,23 @@ typedef union _hw_usb_bdtpage2
     uint8_t U;
     struct _hw_usb_bdtpage2_bitfields
     {
-        uint8_t BDTBA : 8;             //!< [7:0]
+        uint8_t BDTBA : 8;             /*!< [7:0]  */
     } B;
 } hw_usb_bdtpage2_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_BDTPAGE2 register
  */
-//@{
-#define HW_USB_BDTPAGE2_ADDR     (REGS_USB_BASE + 0xB0U)
+/*@{*/
+#define HW_USB_BDTPAGE2_ADDR(x)  ((x) + 0xB0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_BDTPAGE2          (*(__IO hw_usb_bdtpage2_t *) HW_USB_BDTPAGE2_ADDR)
-#define HW_USB_BDTPAGE2_RD()     (HW_USB_BDTPAGE2.U)
-#define HW_USB_BDTPAGE2_WR(v)    (HW_USB_BDTPAGE2.U = (v))
-#define HW_USB_BDTPAGE2_SET(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() |  (v)))
-#define HW_USB_BDTPAGE2_CLR(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() & ~(v)))
-#define HW_USB_BDTPAGE2_TOG(v)   (HW_USB_BDTPAGE2_WR(HW_USB_BDTPAGE2_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_BDTPAGE2(x)       (*(__IO hw_usb_bdtpage2_t *) HW_USB_BDTPAGE2_ADDR(x))
+#define HW_USB_BDTPAGE2_RD(x)    (HW_USB_BDTPAGE2(x).U)
+#define HW_USB_BDTPAGE2_WR(x, v) (HW_USB_BDTPAGE2(x).U = (v))
+#define HW_USB_BDTPAGE2_SET(x, v) (HW_USB_BDTPAGE2_WR(x, HW_USB_BDTPAGE2_RD(x) |  (v)))
+#define HW_USB_BDTPAGE2_CLR(x, v) (HW_USB_BDTPAGE2_WR(x, HW_USB_BDTPAGE2_RD(x) & ~(v)))
+#define HW_USB_BDTPAGE2_TOG(x, v) (HW_USB_BDTPAGE2_WR(x, HW_USB_BDTPAGE2_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_BDTPAGE2 bitfields
@@ -3020,30 +2645,25 @@ typedef union _hw_usb_bdtpage2
  * This 8 bit field provides address bits 23 through 16 of the BDT base address,
  * which defines where the Buffer Descriptor Table resides in system memory.
  */
-//@{
-#define BP_USB_BDTPAGE2_BDTBA (0U)         //!< Bit position for USB_BDTPAGE2_BDTBA.
-#define BM_USB_BDTPAGE2_BDTBA (0xFFU)      //!< Bit mask for USB_BDTPAGE2_BDTBA.
-#define BS_USB_BDTPAGE2_BDTBA (8U)         //!< Bit field size in bits for USB_BDTPAGE2_BDTBA.
+/*@{*/
+#define BP_USB_BDTPAGE2_BDTBA (0U)         /*!< Bit position for USB_BDTPAGE2_BDTBA. */
+#define BM_USB_BDTPAGE2_BDTBA (0xFFU)      /*!< Bit mask for USB_BDTPAGE2_BDTBA. */
+#define BS_USB_BDTPAGE2_BDTBA (8U)         /*!< Bit field size in bits for USB_BDTPAGE2_BDTBA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_BDTPAGE2_BDTBA field.
-#define BR_USB_BDTPAGE2_BDTBA (HW_USB_BDTPAGE2.B.BDTBA)
-#endif
+/*! @brief Read current value of the USB_BDTPAGE2_BDTBA field. */
+#define BR_USB_BDTPAGE2_BDTBA(x) (HW_USB_BDTPAGE2(x).U)
 
-//! @brief Format value for bitfield USB_BDTPAGE2_BDTBA.
-#define BF_USB_BDTPAGE2_BDTBA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_BDTPAGE2_BDTBA), uint8_t) & BM_USB_BDTPAGE2_BDTBA)
+/*! @brief Format value for bitfield USB_BDTPAGE2_BDTBA. */
+#define BF_USB_BDTPAGE2_BDTBA(v) ((uint8_t)((uint8_t)(v) << BP_USB_BDTPAGE2_BDTBA) & BM_USB_BDTPAGE2_BDTBA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE2_BDTBA(v) (HW_USB_BDTPAGE2_WR((HW_USB_BDTPAGE2_RD() & ~BM_USB_BDTPAGE2_BDTBA) | BF_USB_BDTPAGE2_BDTBA(v)))
-#endif
-//@}
+/*! @brief Set the BDTBA field to a new value. */
+#define BW_USB_BDTPAGE2_BDTBA(x, v) (HW_USB_BDTPAGE2_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_BDTPAGE3 - BDT Page Register 3
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_BDTPAGE3 - BDT Page Register 3
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_BDTPAGE3 - BDT Page Register 3 (RW)
  *
@@ -3058,26 +2678,23 @@ typedef union _hw_usb_bdtpage3
     uint8_t U;
     struct _hw_usb_bdtpage3_bitfields
     {
-        uint8_t BDTBA : 8;             //!< [7:0]
+        uint8_t BDTBA : 8;             /*!< [7:0]  */
     } B;
 } hw_usb_bdtpage3_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_BDTPAGE3 register
  */
-//@{
-#define HW_USB_BDTPAGE3_ADDR     (REGS_USB_BASE + 0xB4U)
+/*@{*/
+#define HW_USB_BDTPAGE3_ADDR(x)  ((x) + 0xB4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_BDTPAGE3          (*(__IO hw_usb_bdtpage3_t *) HW_USB_BDTPAGE3_ADDR)
-#define HW_USB_BDTPAGE3_RD()     (HW_USB_BDTPAGE3.U)
-#define HW_USB_BDTPAGE3_WR(v)    (HW_USB_BDTPAGE3.U = (v))
-#define HW_USB_BDTPAGE3_SET(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() |  (v)))
-#define HW_USB_BDTPAGE3_CLR(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() & ~(v)))
-#define HW_USB_BDTPAGE3_TOG(v)   (HW_USB_BDTPAGE3_WR(HW_USB_BDTPAGE3_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_BDTPAGE3(x)       (*(__IO hw_usb_bdtpage3_t *) HW_USB_BDTPAGE3_ADDR(x))
+#define HW_USB_BDTPAGE3_RD(x)    (HW_USB_BDTPAGE3(x).U)
+#define HW_USB_BDTPAGE3_WR(x, v) (HW_USB_BDTPAGE3(x).U = (v))
+#define HW_USB_BDTPAGE3_SET(x, v) (HW_USB_BDTPAGE3_WR(x, HW_USB_BDTPAGE3_RD(x) |  (v)))
+#define HW_USB_BDTPAGE3_CLR(x, v) (HW_USB_BDTPAGE3_WR(x, HW_USB_BDTPAGE3_RD(x) & ~(v)))
+#define HW_USB_BDTPAGE3_TOG(x, v) (HW_USB_BDTPAGE3_WR(x, HW_USB_BDTPAGE3_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_BDTPAGE3 bitfields
@@ -3089,30 +2706,25 @@ typedef union _hw_usb_bdtpage3
  * This 8 bit field provides address bits 31 through 24 of the BDT base address,
  * which defines where the Buffer Descriptor Table resides in system memory.
  */
-//@{
-#define BP_USB_BDTPAGE3_BDTBA (0U)         //!< Bit position for USB_BDTPAGE3_BDTBA.
-#define BM_USB_BDTPAGE3_BDTBA (0xFFU)      //!< Bit mask for USB_BDTPAGE3_BDTBA.
-#define BS_USB_BDTPAGE3_BDTBA (8U)         //!< Bit field size in bits for USB_BDTPAGE3_BDTBA.
+/*@{*/
+#define BP_USB_BDTPAGE3_BDTBA (0U)         /*!< Bit position for USB_BDTPAGE3_BDTBA. */
+#define BM_USB_BDTPAGE3_BDTBA (0xFFU)      /*!< Bit mask for USB_BDTPAGE3_BDTBA. */
+#define BS_USB_BDTPAGE3_BDTBA (8U)         /*!< Bit field size in bits for USB_BDTPAGE3_BDTBA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_BDTPAGE3_BDTBA field.
-#define BR_USB_BDTPAGE3_BDTBA (HW_USB_BDTPAGE3.B.BDTBA)
-#endif
+/*! @brief Read current value of the USB_BDTPAGE3_BDTBA field. */
+#define BR_USB_BDTPAGE3_BDTBA(x) (HW_USB_BDTPAGE3(x).U)
 
-//! @brief Format value for bitfield USB_BDTPAGE3_BDTBA.
-#define BF_USB_BDTPAGE3_BDTBA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_BDTPAGE3_BDTBA), uint8_t) & BM_USB_BDTPAGE3_BDTBA)
+/*! @brief Format value for bitfield USB_BDTPAGE3_BDTBA. */
+#define BF_USB_BDTPAGE3_BDTBA(v) ((uint8_t)((uint8_t)(v) << BP_USB_BDTPAGE3_BDTBA) & BM_USB_BDTPAGE3_BDTBA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BDTBA field to a new value.
-#define BW_USB_BDTPAGE3_BDTBA(v) (HW_USB_BDTPAGE3_WR((HW_USB_BDTPAGE3_RD() & ~BM_USB_BDTPAGE3_BDTBA) | BF_USB_BDTPAGE3_BDTBA(v)))
-#endif
-//@}
+/*! @brief Set the BDTBA field to a new value. */
+#define BW_USB_BDTPAGE3_BDTBA(x, v) (HW_USB_BDTPAGE3_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_ENDPTn - Endpoint Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_ENDPTn - Endpoint Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_ENDPTn - Endpoint Control Register (RW)
  *
@@ -3135,35 +2747,32 @@ typedef union _hw_usb_endptn
     uint8_t U;
     struct _hw_usb_endptn_bitfields
     {
-        uint8_t EPHSHK : 1;            //!< [0]
-        uint8_t EPSTALL : 1;           //!< [1]
-        uint8_t EPTXEN : 1;            //!< [2]
-        uint8_t EPRXEN : 1;            //!< [3]
-        uint8_t EPCTLDIS : 1;          //!< [4]
-        uint8_t RESERVED0 : 1;         //!< [5]
-        uint8_t RETRYDIS : 1;          //!< [6]
-        uint8_t HOSTWOHUB : 1;         //!< [7]
+        uint8_t EPHSHK : 1;            /*!< [0]  */
+        uint8_t EPSTALL : 1;           /*!< [1]  */
+        uint8_t EPTXEN : 1;            /*!< [2]  */
+        uint8_t EPRXEN : 1;            /*!< [3]  */
+        uint8_t EPCTLDIS : 1;          /*!< [4]  */
+        uint8_t RESERVED0 : 1;         /*!< [5]  */
+        uint8_t RETRYDIS : 1;          /*!< [6]  */
+        uint8_t HOSTWOHUB : 1;         /*!< [7]  */
     } B;
 } hw_usb_endptn_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_ENDPTn register
  */
-//@{
+/*@{*/
 #define HW_USB_ENDPTn_COUNT (16U)
 
-#define HW_USB_ENDPTn_ADDR(n)    (REGS_USB_BASE + 0xC0U + (0x4U * n))
+#define HW_USB_ENDPTn_ADDR(x, n) ((x) + 0xC0U + (0x4U * (n)))
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_ENDPTn(n)         (*(__IO hw_usb_endptn_t *) HW_USB_ENDPTn_ADDR(n))
-#define HW_USB_ENDPTn_RD(n)      (HW_USB_ENDPTn(n).U)
-#define HW_USB_ENDPTn_WR(n, v)   (HW_USB_ENDPTn(n).U = (v))
-#define HW_USB_ENDPTn_SET(n, v)  (HW_USB_ENDPTn_WR(n, HW_USB_ENDPTn_RD(n) |  (v)))
-#define HW_USB_ENDPTn_CLR(n, v)  (HW_USB_ENDPTn_WR(n, HW_USB_ENDPTn_RD(n) & ~(v)))
-#define HW_USB_ENDPTn_TOG(n, v)  (HW_USB_ENDPTn_WR(n, HW_USB_ENDPTn_RD(n) ^  (v)))
-#endif
-//@}
+#define HW_USB_ENDPTn(x, n)      (*(__IO hw_usb_endptn_t *) HW_USB_ENDPTn_ADDR(x, n))
+#define HW_USB_ENDPTn_RD(x, n)   (HW_USB_ENDPTn(x, n).U)
+#define HW_USB_ENDPTn_WR(x, n, v) (HW_USB_ENDPTn(x, n).U = (v))
+#define HW_USB_ENDPTn_SET(x, n, v) (HW_USB_ENDPTn_WR(x, n, HW_USB_ENDPTn_RD(x, n) |  (v)))
+#define HW_USB_ENDPTn_CLR(x, n, v) (HW_USB_ENDPTn_WR(x, n, HW_USB_ENDPTn_RD(x, n) & ~(v)))
+#define HW_USB_ENDPTn_TOG(x, n, v) (HW_USB_ENDPTn_WR(x, n, HW_USB_ENDPTn_RD(x, n) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_ENDPTn bitfields
@@ -3172,162 +2781,133 @@ typedef union _hw_usb_endptn
 /*!
  * @name Register USB_ENDPTn, field EPHSHK[0] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_EPHSHK (0U)          //!< Bit position for USB_ENDPTn_EPHSHK.
-#define BM_USB_ENDPTn_EPHSHK (0x01U)       //!< Bit mask for USB_ENDPTn_EPHSHK.
-#define BS_USB_ENDPTn_EPHSHK (1U)          //!< Bit field size in bits for USB_ENDPTn_EPHSHK.
+/*@{*/
+#define BP_USB_ENDPTn_EPHSHK (0U)          /*!< Bit position for USB_ENDPTn_EPHSHK. */
+#define BM_USB_ENDPTn_EPHSHK (0x01U)       /*!< Bit mask for USB_ENDPTn_EPHSHK. */
+#define BS_USB_ENDPTn_EPHSHK (1U)          /*!< Bit field size in bits for USB_ENDPTn_EPHSHK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_EPHSHK field.
-#define BR_USB_ENDPTn_EPHSHK(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPHSHK))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_EPHSHK field. */
+#define BR_USB_ENDPTn_EPHSHK(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPHSHK))
 
-//! @brief Format value for bitfield USB_ENDPTn_EPHSHK.
-#define BF_USB_ENDPTn_EPHSHK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_EPHSHK), uint8_t) & BM_USB_ENDPTn_EPHSHK)
+/*! @brief Format value for bitfield USB_ENDPTn_EPHSHK. */
+#define BF_USB_ENDPTn_EPHSHK(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_EPHSHK) & BM_USB_ENDPTn_EPHSHK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPHSHK field to a new value.
-#define BW_USB_ENDPTn_EPHSHK(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPHSHK) = (v))
-#endif
-//@}
+/*! @brief Set the EPHSHK field to a new value. */
+#define BW_USB_ENDPTn_EPHSHK(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPHSHK) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field EPSTALL[1] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_EPSTALL (1U)         //!< Bit position for USB_ENDPTn_EPSTALL.
-#define BM_USB_ENDPTn_EPSTALL (0x02U)      //!< Bit mask for USB_ENDPTn_EPSTALL.
-#define BS_USB_ENDPTn_EPSTALL (1U)         //!< Bit field size in bits for USB_ENDPTn_EPSTALL.
+/*@{*/
+#define BP_USB_ENDPTn_EPSTALL (1U)         /*!< Bit position for USB_ENDPTn_EPSTALL. */
+#define BM_USB_ENDPTn_EPSTALL (0x02U)      /*!< Bit mask for USB_ENDPTn_EPSTALL. */
+#define BS_USB_ENDPTn_EPSTALL (1U)         /*!< Bit field size in bits for USB_ENDPTn_EPSTALL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_EPSTALL field.
-#define BR_USB_ENDPTn_EPSTALL(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPSTALL))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_EPSTALL field. */
+#define BR_USB_ENDPTn_EPSTALL(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPSTALL))
 
-//! @brief Format value for bitfield USB_ENDPTn_EPSTALL.
-#define BF_USB_ENDPTn_EPSTALL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_EPSTALL), uint8_t) & BM_USB_ENDPTn_EPSTALL)
+/*! @brief Format value for bitfield USB_ENDPTn_EPSTALL. */
+#define BF_USB_ENDPTn_EPSTALL(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_EPSTALL) & BM_USB_ENDPTn_EPSTALL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPSTALL field to a new value.
-#define BW_USB_ENDPTn_EPSTALL(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPSTALL) = (v))
-#endif
-//@}
+/*! @brief Set the EPSTALL field to a new value. */
+#define BW_USB_ENDPTn_EPSTALL(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPSTALL) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field EPTXEN[2] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_EPTXEN (2U)          //!< Bit position for USB_ENDPTn_EPTXEN.
-#define BM_USB_ENDPTn_EPTXEN (0x04U)       //!< Bit mask for USB_ENDPTn_EPTXEN.
-#define BS_USB_ENDPTn_EPTXEN (1U)          //!< Bit field size in bits for USB_ENDPTn_EPTXEN.
+/*@{*/
+#define BP_USB_ENDPTn_EPTXEN (2U)          /*!< Bit position for USB_ENDPTn_EPTXEN. */
+#define BM_USB_ENDPTn_EPTXEN (0x04U)       /*!< Bit mask for USB_ENDPTn_EPTXEN. */
+#define BS_USB_ENDPTn_EPTXEN (1U)          /*!< Bit field size in bits for USB_ENDPTn_EPTXEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_EPTXEN field.
-#define BR_USB_ENDPTn_EPTXEN(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPTXEN))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_EPTXEN field. */
+#define BR_USB_ENDPTn_EPTXEN(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPTXEN))
 
-//! @brief Format value for bitfield USB_ENDPTn_EPTXEN.
-#define BF_USB_ENDPTn_EPTXEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_EPTXEN), uint8_t) & BM_USB_ENDPTn_EPTXEN)
+/*! @brief Format value for bitfield USB_ENDPTn_EPTXEN. */
+#define BF_USB_ENDPTn_EPTXEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_EPTXEN) & BM_USB_ENDPTn_EPTXEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPTXEN field to a new value.
-#define BW_USB_ENDPTn_EPTXEN(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPTXEN) = (v))
-#endif
-//@}
+/*! @brief Set the EPTXEN field to a new value. */
+#define BW_USB_ENDPTn_EPTXEN(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPTXEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field EPRXEN[3] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_EPRXEN (3U)          //!< Bit position for USB_ENDPTn_EPRXEN.
-#define BM_USB_ENDPTn_EPRXEN (0x08U)       //!< Bit mask for USB_ENDPTn_EPRXEN.
-#define BS_USB_ENDPTn_EPRXEN (1U)          //!< Bit field size in bits for USB_ENDPTn_EPRXEN.
+/*@{*/
+#define BP_USB_ENDPTn_EPRXEN (3U)          /*!< Bit position for USB_ENDPTn_EPRXEN. */
+#define BM_USB_ENDPTn_EPRXEN (0x08U)       /*!< Bit mask for USB_ENDPTn_EPRXEN. */
+#define BS_USB_ENDPTn_EPRXEN (1U)          /*!< Bit field size in bits for USB_ENDPTn_EPRXEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_EPRXEN field.
-#define BR_USB_ENDPTn_EPRXEN(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPRXEN))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_EPRXEN field. */
+#define BR_USB_ENDPTn_EPRXEN(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPRXEN))
 
-//! @brief Format value for bitfield USB_ENDPTn_EPRXEN.
-#define BF_USB_ENDPTn_EPRXEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_EPRXEN), uint8_t) & BM_USB_ENDPTn_EPRXEN)
+/*! @brief Format value for bitfield USB_ENDPTn_EPRXEN. */
+#define BF_USB_ENDPTn_EPRXEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_EPRXEN) & BM_USB_ENDPTn_EPRXEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPRXEN field to a new value.
-#define BW_USB_ENDPTn_EPRXEN(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPRXEN) = (v))
-#endif
-//@}
+/*! @brief Set the EPRXEN field to a new value. */
+#define BW_USB_ENDPTn_EPRXEN(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPRXEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field EPCTLDIS[4] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_EPCTLDIS (4U)        //!< Bit position for USB_ENDPTn_EPCTLDIS.
-#define BM_USB_ENDPTn_EPCTLDIS (0x10U)     //!< Bit mask for USB_ENDPTn_EPCTLDIS.
-#define BS_USB_ENDPTn_EPCTLDIS (1U)        //!< Bit field size in bits for USB_ENDPTn_EPCTLDIS.
+/*@{*/
+#define BP_USB_ENDPTn_EPCTLDIS (4U)        /*!< Bit position for USB_ENDPTn_EPCTLDIS. */
+#define BM_USB_ENDPTn_EPCTLDIS (0x10U)     /*!< Bit mask for USB_ENDPTn_EPCTLDIS. */
+#define BS_USB_ENDPTn_EPCTLDIS (1U)        /*!< Bit field size in bits for USB_ENDPTn_EPCTLDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_EPCTLDIS field.
-#define BR_USB_ENDPTn_EPCTLDIS(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPCTLDIS))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_EPCTLDIS field. */
+#define BR_USB_ENDPTn_EPCTLDIS(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPCTLDIS))
 
-//! @brief Format value for bitfield USB_ENDPTn_EPCTLDIS.
-#define BF_USB_ENDPTn_EPCTLDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_EPCTLDIS), uint8_t) & BM_USB_ENDPTn_EPCTLDIS)
+/*! @brief Format value for bitfield USB_ENDPTn_EPCTLDIS. */
+#define BF_USB_ENDPTn_EPCTLDIS(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_EPCTLDIS) & BM_USB_ENDPTn_EPCTLDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EPCTLDIS field to a new value.
-#define BW_USB_ENDPTn_EPCTLDIS(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_EPCTLDIS) = (v))
-#endif
-//@}
+/*! @brief Set the EPCTLDIS field to a new value. */
+#define BW_USB_ENDPTn_EPCTLDIS(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_EPCTLDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field RETRYDIS[6] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_RETRYDIS (6U)        //!< Bit position for USB_ENDPTn_RETRYDIS.
-#define BM_USB_ENDPTn_RETRYDIS (0x40U)     //!< Bit mask for USB_ENDPTn_RETRYDIS.
-#define BS_USB_ENDPTn_RETRYDIS (1U)        //!< Bit field size in bits for USB_ENDPTn_RETRYDIS.
+/*@{*/
+#define BP_USB_ENDPTn_RETRYDIS (6U)        /*!< Bit position for USB_ENDPTn_RETRYDIS. */
+#define BM_USB_ENDPTn_RETRYDIS (0x40U)     /*!< Bit mask for USB_ENDPTn_RETRYDIS. */
+#define BS_USB_ENDPTn_RETRYDIS (1U)        /*!< Bit field size in bits for USB_ENDPTn_RETRYDIS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_RETRYDIS field.
-#define BR_USB_ENDPTn_RETRYDIS(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_RETRYDIS))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_RETRYDIS field. */
+#define BR_USB_ENDPTn_RETRYDIS(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_RETRYDIS))
 
-//! @brief Format value for bitfield USB_ENDPTn_RETRYDIS.
-#define BF_USB_ENDPTn_RETRYDIS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_RETRYDIS), uint8_t) & BM_USB_ENDPTn_RETRYDIS)
+/*! @brief Format value for bitfield USB_ENDPTn_RETRYDIS. */
+#define BF_USB_ENDPTn_RETRYDIS(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_RETRYDIS) & BM_USB_ENDPTn_RETRYDIS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the RETRYDIS field to a new value.
-#define BW_USB_ENDPTn_RETRYDIS(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_RETRYDIS) = (v))
-#endif
-//@}
+/*! @brief Set the RETRYDIS field to a new value. */
+#define BW_USB_ENDPTn_RETRYDIS(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_RETRYDIS) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_ENDPTn, field HOSTWOHUB[7] (RW)
  */
-//@{
-#define BP_USB_ENDPTn_HOSTWOHUB (7U)       //!< Bit position for USB_ENDPTn_HOSTWOHUB.
-#define BM_USB_ENDPTn_HOSTWOHUB (0x80U)    //!< Bit mask for USB_ENDPTn_HOSTWOHUB.
-#define BS_USB_ENDPTn_HOSTWOHUB (1U)       //!< Bit field size in bits for USB_ENDPTn_HOSTWOHUB.
+/*@{*/
+#define BP_USB_ENDPTn_HOSTWOHUB (7U)       /*!< Bit position for USB_ENDPTn_HOSTWOHUB. */
+#define BM_USB_ENDPTn_HOSTWOHUB (0x80U)    /*!< Bit mask for USB_ENDPTn_HOSTWOHUB. */
+#define BS_USB_ENDPTn_HOSTWOHUB (1U)       /*!< Bit field size in bits for USB_ENDPTn_HOSTWOHUB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_ENDPTn_HOSTWOHUB field.
-#define BR_USB_ENDPTn_HOSTWOHUB(n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_HOSTWOHUB))
-#endif
+/*! @brief Read current value of the USB_ENDPTn_HOSTWOHUB field. */
+#define BR_USB_ENDPTn_HOSTWOHUB(x, n) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_HOSTWOHUB))
 
-//! @brief Format value for bitfield USB_ENDPTn_HOSTWOHUB.
-#define BF_USB_ENDPTn_HOSTWOHUB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_ENDPTn_HOSTWOHUB), uint8_t) & BM_USB_ENDPTn_HOSTWOHUB)
+/*! @brief Format value for bitfield USB_ENDPTn_HOSTWOHUB. */
+#define BF_USB_ENDPTn_HOSTWOHUB(v) ((uint8_t)((uint8_t)(v) << BP_USB_ENDPTn_HOSTWOHUB) & BM_USB_ENDPTn_HOSTWOHUB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HOSTWOHUB field to a new value.
-#define BW_USB_ENDPTn_HOSTWOHUB(n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(n), BP_USB_ENDPTn_HOSTWOHUB) = (v))
-#endif
-//@}
+/*! @brief Set the HOSTWOHUB field to a new value. */
+#define BW_USB_ENDPTn_HOSTWOHUB(x, n, v) (BITBAND_ACCESS8(HW_USB_ENDPTn_ADDR(x, n), BP_USB_ENDPTn_HOSTWOHUB) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_USBCTRL - USB Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_USBCTRL - USB Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_USBCTRL - USB Control Register (RW)
  *
@@ -3338,28 +2918,25 @@ typedef union _hw_usb_usbctrl
     uint8_t U;
     struct _hw_usb_usbctrl_bitfields
     {
-        uint8_t RESERVED0 : 6;         //!< [5:0]
-        uint8_t PDE : 1;               //!< [6]
-        uint8_t SUSP : 1;              //!< [7]
+        uint8_t RESERVED0 : 6;         /*!< [5:0]  */
+        uint8_t PDE : 1;               /*!< [6]  */
+        uint8_t SUSP : 1;              /*!< [7]  */
     } B;
 } hw_usb_usbctrl_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_USBCTRL register
  */
-//@{
-#define HW_USB_USBCTRL_ADDR      (REGS_USB_BASE + 0x100U)
+/*@{*/
+#define HW_USB_USBCTRL_ADDR(x)   ((x) + 0x100U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_USBCTRL           (*(__IO hw_usb_usbctrl_t *) HW_USB_USBCTRL_ADDR)
-#define HW_USB_USBCTRL_RD()      (HW_USB_USBCTRL.U)
-#define HW_USB_USBCTRL_WR(v)     (HW_USB_USBCTRL.U = (v))
-#define HW_USB_USBCTRL_SET(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() |  (v)))
-#define HW_USB_USBCTRL_CLR(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() & ~(v)))
-#define HW_USB_USBCTRL_TOG(v)    (HW_USB_USBCTRL_WR(HW_USB_USBCTRL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_USBCTRL(x)        (*(__IO hw_usb_usbctrl_t *) HW_USB_USBCTRL_ADDR(x))
+#define HW_USB_USBCTRL_RD(x)     (HW_USB_USBCTRL(x).U)
+#define HW_USB_USBCTRL_WR(x, v)  (HW_USB_USBCTRL(x).U = (v))
+#define HW_USB_USBCTRL_SET(x, v) (HW_USB_USBCTRL_WR(x, HW_USB_USBCTRL_RD(x) |  (v)))
+#define HW_USB_USBCTRL_CLR(x, v) (HW_USB_USBCTRL_WR(x, HW_USB_USBCTRL_RD(x) & ~(v)))
+#define HW_USB_USBCTRL_TOG(x, v) (HW_USB_USBCTRL_WR(x, HW_USB_USBCTRL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_USBCTRL bitfields
@@ -3374,24 +2951,20 @@ typedef union _hw_usb_usbctrl
  * - 0 - Weak pulldowns are disabled on D+ and D-
  * - 1 - Weak pulldowns are enabled on D+ and D-.
  */
-//@{
-#define BP_USB_USBCTRL_PDE   (6U)          //!< Bit position for USB_USBCTRL_PDE.
-#define BM_USB_USBCTRL_PDE   (0x40U)       //!< Bit mask for USB_USBCTRL_PDE.
-#define BS_USB_USBCTRL_PDE   (1U)          //!< Bit field size in bits for USB_USBCTRL_PDE.
+/*@{*/
+#define BP_USB_USBCTRL_PDE   (6U)          /*!< Bit position for USB_USBCTRL_PDE. */
+#define BM_USB_USBCTRL_PDE   (0x40U)       /*!< Bit mask for USB_USBCTRL_PDE. */
+#define BS_USB_USBCTRL_PDE   (1U)          /*!< Bit field size in bits for USB_USBCTRL_PDE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBCTRL_PDE field.
-#define BR_USB_USBCTRL_PDE   (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR, BP_USB_USBCTRL_PDE))
-#endif
+/*! @brief Read current value of the USB_USBCTRL_PDE field. */
+#define BR_USB_USBCTRL_PDE(x) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR(x), BP_USB_USBCTRL_PDE))
 
-//! @brief Format value for bitfield USB_USBCTRL_PDE.
-#define BF_USB_USBCTRL_PDE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_USBCTRL_PDE), uint8_t) & BM_USB_USBCTRL_PDE)
+/*! @brief Format value for bitfield USB_USBCTRL_PDE. */
+#define BF_USB_USBCTRL_PDE(v) ((uint8_t)((uint8_t)(v) << BP_USB_USBCTRL_PDE) & BM_USB_USBCTRL_PDE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PDE field to a new value.
-#define BW_USB_USBCTRL_PDE(v) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR, BP_USB_USBCTRL_PDE) = (v))
-#endif
-//@}
+/*! @brief Set the PDE field to a new value. */
+#define BW_USB_USBCTRL_PDE(x, v) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR(x), BP_USB_USBCTRL_PDE) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_USBCTRL, field SUSP[7] (RW)
@@ -3402,30 +2975,25 @@ typedef union _hw_usb_usbctrl
  * - 0 - USB transceiver is not in suspend state.
  * - 1 - USB transceiver is in suspend state.
  */
-//@{
-#define BP_USB_USBCTRL_SUSP  (7U)          //!< Bit position for USB_USBCTRL_SUSP.
-#define BM_USB_USBCTRL_SUSP  (0x80U)       //!< Bit mask for USB_USBCTRL_SUSP.
-#define BS_USB_USBCTRL_SUSP  (1U)          //!< Bit field size in bits for USB_USBCTRL_SUSP.
+/*@{*/
+#define BP_USB_USBCTRL_SUSP  (7U)          /*!< Bit position for USB_USBCTRL_SUSP. */
+#define BM_USB_USBCTRL_SUSP  (0x80U)       /*!< Bit mask for USB_USBCTRL_SUSP. */
+#define BS_USB_USBCTRL_SUSP  (1U)          /*!< Bit field size in bits for USB_USBCTRL_SUSP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBCTRL_SUSP field.
-#define BR_USB_USBCTRL_SUSP  (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR, BP_USB_USBCTRL_SUSP))
-#endif
+/*! @brief Read current value of the USB_USBCTRL_SUSP field. */
+#define BR_USB_USBCTRL_SUSP(x) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR(x), BP_USB_USBCTRL_SUSP))
 
-//! @brief Format value for bitfield USB_USBCTRL_SUSP.
-#define BF_USB_USBCTRL_SUSP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_USBCTRL_SUSP), uint8_t) & BM_USB_USBCTRL_SUSP)
+/*! @brief Format value for bitfield USB_USBCTRL_SUSP. */
+#define BF_USB_USBCTRL_SUSP(v) ((uint8_t)((uint8_t)(v) << BP_USB_USBCTRL_SUSP) & BM_USB_USBCTRL_SUSP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SUSP field to a new value.
-#define BW_USB_USBCTRL_SUSP(v) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR, BP_USB_USBCTRL_SUSP) = (v))
-#endif
-//@}
+/*! @brief Set the SUSP field to a new value. */
+#define BW_USB_USBCTRL_SUSP(x, v) (BITBAND_ACCESS8(HW_USB_USBCTRL_ADDR(x), BP_USB_USBCTRL_SUSP) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_OBSERVE - USB OTG Observe Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_OBSERVE - USB OTG Observe Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_OBSERVE - USB OTG Observe Register (RO)
  *
@@ -3440,26 +3008,23 @@ typedef union _hw_usb_observe
     uint8_t U;
     struct _hw_usb_observe_bitfields
     {
-        uint8_t RESERVED0 : 4;         //!< [3:0]
-        uint8_t DMPD : 1;              //!< [4]
-        uint8_t RESERVED1 : 1;         //!< [5]
-        uint8_t DPPD : 1;              //!< [6]
-        uint8_t DPPU : 1;              //!< [7]
+        uint8_t RESERVED0 : 4;         /*!< [3:0]  */
+        uint8_t DMPD : 1;              /*!< [4]  */
+        uint8_t RESERVED1 : 1;         /*!< [5]  */
+        uint8_t DPPD : 1;              /*!< [6]  */
+        uint8_t DPPU : 1;              /*!< [7]  */
     } B;
 } hw_usb_observe_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_OBSERVE register
  */
-//@{
-#define HW_USB_OBSERVE_ADDR      (REGS_USB_BASE + 0x104U)
+/*@{*/
+#define HW_USB_OBSERVE_ADDR(x)   ((x) + 0x104U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_OBSERVE           (*(__I hw_usb_observe_t *) HW_USB_OBSERVE_ADDR)
-#define HW_USB_OBSERVE_RD()      (HW_USB_OBSERVE.U)
-#endif
-//@}
+#define HW_USB_OBSERVE(x)        (*(__I hw_usb_observe_t *) HW_USB_OBSERVE_ADDR(x))
+#define HW_USB_OBSERVE_RD(x)     (HW_USB_OBSERVE(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual USB_OBSERVE bitfields
@@ -3474,16 +3039,14 @@ typedef union _hw_usb_observe
  * - 0 - D- pulldown disabled.
  * - 1 - D- pulldown enabled.
  */
-//@{
-#define BP_USB_OBSERVE_DMPD  (4U)          //!< Bit position for USB_OBSERVE_DMPD.
-#define BM_USB_OBSERVE_DMPD  (0x10U)       //!< Bit mask for USB_OBSERVE_DMPD.
-#define BS_USB_OBSERVE_DMPD  (1U)          //!< Bit field size in bits for USB_OBSERVE_DMPD.
+/*@{*/
+#define BP_USB_OBSERVE_DMPD  (4U)          /*!< Bit position for USB_OBSERVE_DMPD. */
+#define BM_USB_OBSERVE_DMPD  (0x10U)       /*!< Bit mask for USB_OBSERVE_DMPD. */
+#define BS_USB_OBSERVE_DMPD  (1U)          /*!< Bit field size in bits for USB_OBSERVE_DMPD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OBSERVE_DMPD field.
-#define BR_USB_OBSERVE_DMPD  (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR, BP_USB_OBSERVE_DMPD))
-#endif
-//@}
+/*! @brief Read current value of the USB_OBSERVE_DMPD field. */
+#define BR_USB_OBSERVE_DMPD(x) (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR(x), BP_USB_OBSERVE_DMPD))
+/*@}*/
 
 /*!
  * @name Register USB_OBSERVE, field DPPD[6] (RO)
@@ -3494,16 +3057,14 @@ typedef union _hw_usb_observe
  * - 0 - D+ pulldown disabled.
  * - 1 - D+ pulldown enabled.
  */
-//@{
-#define BP_USB_OBSERVE_DPPD  (6U)          //!< Bit position for USB_OBSERVE_DPPD.
-#define BM_USB_OBSERVE_DPPD  (0x40U)       //!< Bit mask for USB_OBSERVE_DPPD.
-#define BS_USB_OBSERVE_DPPD  (1U)          //!< Bit field size in bits for USB_OBSERVE_DPPD.
+/*@{*/
+#define BP_USB_OBSERVE_DPPD  (6U)          /*!< Bit position for USB_OBSERVE_DPPD. */
+#define BM_USB_OBSERVE_DPPD  (0x40U)       /*!< Bit mask for USB_OBSERVE_DPPD. */
+#define BS_USB_OBSERVE_DPPD  (1U)          /*!< Bit field size in bits for USB_OBSERVE_DPPD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OBSERVE_DPPD field.
-#define BR_USB_OBSERVE_DPPD  (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR, BP_USB_OBSERVE_DPPD))
-#endif
-//@}
+/*! @brief Read current value of the USB_OBSERVE_DPPD field. */
+#define BR_USB_OBSERVE_DPPD(x) (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR(x), BP_USB_OBSERVE_DPPD))
+/*@}*/
 
 /*!
  * @name Register USB_OBSERVE, field DPPU[7] (RO)
@@ -3514,22 +3075,19 @@ typedef union _hw_usb_observe
  * - 0 - D+ pullup disabled.
  * - 1 - D+ pullup enabled.
  */
-//@{
-#define BP_USB_OBSERVE_DPPU  (7U)          //!< Bit position for USB_OBSERVE_DPPU.
-#define BM_USB_OBSERVE_DPPU  (0x80U)       //!< Bit mask for USB_OBSERVE_DPPU.
-#define BS_USB_OBSERVE_DPPU  (1U)          //!< Bit field size in bits for USB_OBSERVE_DPPU.
+/*@{*/
+#define BP_USB_OBSERVE_DPPU  (7U)          /*!< Bit position for USB_OBSERVE_DPPU. */
+#define BM_USB_OBSERVE_DPPU  (0x80U)       /*!< Bit mask for USB_OBSERVE_DPPU. */
+#define BS_USB_OBSERVE_DPPU  (1U)          /*!< Bit field size in bits for USB_OBSERVE_DPPU. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_OBSERVE_DPPU field.
-#define BR_USB_OBSERVE_DPPU  (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR, BP_USB_OBSERVE_DPPU))
-#endif
-//@}
+/*! @brief Read current value of the USB_OBSERVE_DPPU field. */
+#define BR_USB_OBSERVE_DPPU(x) (BITBAND_ACCESS8(HW_USB_OBSERVE_ADDR(x), BP_USB_OBSERVE_DPPU))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_CONTROL - USB OTG Control Register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_CONTROL - USB OTG Control Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_CONTROL - USB OTG Control Register (RW)
  *
@@ -3540,28 +3098,25 @@ typedef union _hw_usb_control
     uint8_t U;
     struct _hw_usb_control_bitfields
     {
-        uint8_t RESERVED0 : 4;         //!< [3:0]
-        uint8_t DPPULLUPNONOTG : 1;    //!< [4]
-        uint8_t RESERVED1 : 3;         //!< [7:5]
+        uint8_t RESERVED0 : 4;         /*!< [3:0]  */
+        uint8_t DPPULLUPNONOTG : 1;    /*!< [4]  */
+        uint8_t RESERVED1 : 3;         /*!< [7:5]  */
     } B;
 } hw_usb_control_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_CONTROL register
  */
-//@{
-#define HW_USB_CONTROL_ADDR      (REGS_USB_BASE + 0x108U)
+/*@{*/
+#define HW_USB_CONTROL_ADDR(x)   ((x) + 0x108U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_CONTROL           (*(__IO hw_usb_control_t *) HW_USB_CONTROL_ADDR)
-#define HW_USB_CONTROL_RD()      (HW_USB_CONTROL.U)
-#define HW_USB_CONTROL_WR(v)     (HW_USB_CONTROL.U = (v))
-#define HW_USB_CONTROL_SET(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() |  (v)))
-#define HW_USB_CONTROL_CLR(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() & ~(v)))
-#define HW_USB_CONTROL_TOG(v)    (HW_USB_CONTROL_WR(HW_USB_CONTROL_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_CONTROL(x)        (*(__IO hw_usb_control_t *) HW_USB_CONTROL_ADDR(x))
+#define HW_USB_CONTROL_RD(x)     (HW_USB_CONTROL(x).U)
+#define HW_USB_CONTROL_WR(x, v)  (HW_USB_CONTROL(x).U = (v))
+#define HW_USB_CONTROL_SET(x, v) (HW_USB_CONTROL_WR(x, HW_USB_CONTROL_RD(x) |  (v)))
+#define HW_USB_CONTROL_CLR(x, v) (HW_USB_CONTROL_WR(x, HW_USB_CONTROL_RD(x) & ~(v)))
+#define HW_USB_CONTROL_TOG(x, v) (HW_USB_CONTROL_WR(x, HW_USB_CONTROL_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_CONTROL bitfields
@@ -3577,30 +3132,25 @@ typedef union _hw_usb_control
  * - 0 - DP Pull up in non-OTG device mode is not enabled.
  * - 1 - DP Pull up in non-OTG device mode is enabled.
  */
-//@{
-#define BP_USB_CONTROL_DPPULLUPNONOTG (4U) //!< Bit position for USB_CONTROL_DPPULLUPNONOTG.
-#define BM_USB_CONTROL_DPPULLUPNONOTG (0x10U) //!< Bit mask for USB_CONTROL_DPPULLUPNONOTG.
-#define BS_USB_CONTROL_DPPULLUPNONOTG (1U) //!< Bit field size in bits for USB_CONTROL_DPPULLUPNONOTG.
+/*@{*/
+#define BP_USB_CONTROL_DPPULLUPNONOTG (4U) /*!< Bit position for USB_CONTROL_DPPULLUPNONOTG. */
+#define BM_USB_CONTROL_DPPULLUPNONOTG (0x10U) /*!< Bit mask for USB_CONTROL_DPPULLUPNONOTG. */
+#define BS_USB_CONTROL_DPPULLUPNONOTG (1U) /*!< Bit field size in bits for USB_CONTROL_DPPULLUPNONOTG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_CONTROL_DPPULLUPNONOTG field.
-#define BR_USB_CONTROL_DPPULLUPNONOTG (BITBAND_ACCESS8(HW_USB_CONTROL_ADDR, BP_USB_CONTROL_DPPULLUPNONOTG))
-#endif
+/*! @brief Read current value of the USB_CONTROL_DPPULLUPNONOTG field. */
+#define BR_USB_CONTROL_DPPULLUPNONOTG(x) (BITBAND_ACCESS8(HW_USB_CONTROL_ADDR(x), BP_USB_CONTROL_DPPULLUPNONOTG))
 
-//! @brief Format value for bitfield USB_CONTROL_DPPULLUPNONOTG.
-#define BF_USB_CONTROL_DPPULLUPNONOTG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_CONTROL_DPPULLUPNONOTG), uint8_t) & BM_USB_CONTROL_DPPULLUPNONOTG)
+/*! @brief Format value for bitfield USB_CONTROL_DPPULLUPNONOTG. */
+#define BF_USB_CONTROL_DPPULLUPNONOTG(v) ((uint8_t)((uint8_t)(v) << BP_USB_CONTROL_DPPULLUPNONOTG) & BM_USB_CONTROL_DPPULLUPNONOTG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DPPULLUPNONOTG field to a new value.
-#define BW_USB_CONTROL_DPPULLUPNONOTG(v) (BITBAND_ACCESS8(HW_USB_CONTROL_ADDR, BP_USB_CONTROL_DPPULLUPNONOTG) = (v))
-#endif
-//@}
+/*! @brief Set the DPPULLUPNONOTG field to a new value. */
+#define BW_USB_CONTROL_DPPULLUPNONOTG(x, v) (BITBAND_ACCESS8(HW_USB_CONTROL_ADDR(x), BP_USB_CONTROL_DPPULLUPNONOTG) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_USB_USBTRC0 - USB Transceiver Control Register 0
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_USB_USBTRC0 - USB Transceiver Control Register 0
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_USBTRC0 - USB Transceiver Control Register 0 (RW)
  *
@@ -3611,31 +3161,29 @@ typedef union _hw_usb_usbtrc0
     uint8_t U;
     struct _hw_usb_usbtrc0_bitfields
     {
-        uint8_t USB_RESUME_INT : 1;    //!< [0] USB Asynchronous Interrupt
-        uint8_t SYNC_DET : 1;          //!< [1] Synchronous USB Interrupt Detect
-        uint8_t RESERVED0 : 3;         //!< [4:2]
-        uint8_t USBRESMEN : 1;         //!< [5] Asynchronous Resume Interrupt Enable
-        uint8_t RESERVED1 : 1;         //!< [6]
-        uint8_t USBRESET : 1;          //!< [7] USB reset
+        uint8_t USB_RESUME_INT : 1;    /*!< [0] USB Asynchronous Interrupt */
+        uint8_t SYNC_DET : 1;          /*!< [1] Synchronous USB Interrupt Detect */
+        uint8_t RESERVED0 : 3;         /*!< [4:2]  */
+        uint8_t USBRESMEN : 1;         /*!< [5] Asynchronous Resume Interrupt Enable
+                                        * */
+        uint8_t RESERVED1 : 1;         /*!< [6]  */
+        uint8_t USBRESET : 1;          /*!< [7] USB reset */
     } B;
 } hw_usb_usbtrc0_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_USBTRC0 register
  */
-//@{
-#define HW_USB_USBTRC0_ADDR      (REGS_USB_BASE + 0x10CU)
+/*@{*/
+#define HW_USB_USBTRC0_ADDR(x)   ((x) + 0x10CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_USBTRC0           (*(__IO hw_usb_usbtrc0_t *) HW_USB_USBTRC0_ADDR)
-#define HW_USB_USBTRC0_RD()      (HW_USB_USBTRC0.U)
-#define HW_USB_USBTRC0_WR(v)     (HW_USB_USBTRC0.U = (v))
-#define HW_USB_USBTRC0_SET(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() |  (v)))
-#define HW_USB_USBTRC0_CLR(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() & ~(v)))
-#define HW_USB_USBTRC0_TOG(v)    (HW_USB_USBTRC0_WR(HW_USB_USBTRC0_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_USBTRC0(x)        (*(__IO hw_usb_usbtrc0_t *) HW_USB_USBTRC0_ADDR(x))
+#define HW_USB_USBTRC0_RD(x)     (HW_USB_USBTRC0(x).U)
+#define HW_USB_USBTRC0_WR(x, v)  (HW_USB_USBTRC0(x).U = (v))
+#define HW_USB_USBTRC0_SET(x, v) (HW_USB_USBTRC0_WR(x, HW_USB_USBTRC0_RD(x) |  (v)))
+#define HW_USB_USBTRC0_CLR(x, v) (HW_USB_USBTRC0_WR(x, HW_USB_USBTRC0_RD(x) & ~(v)))
+#define HW_USB_USBTRC0_TOG(x, v) (HW_USB_USBTRC0_WR(x, HW_USB_USBTRC0_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_USBTRC0 bitfields
@@ -3648,16 +3196,14 @@ typedef union _hw_usb_usbtrc0
  * - 0 - No interrupt was generated.
  * - 1 - Interrupt was generated because of the USB asynchronous interrupt.
  */
-//@{
-#define BP_USB_USBTRC0_USB_RESUME_INT (0U) //!< Bit position for USB_USBTRC0_USB_RESUME_INT.
-#define BM_USB_USBTRC0_USB_RESUME_INT (0x01U) //!< Bit mask for USB_USBTRC0_USB_RESUME_INT.
-#define BS_USB_USBTRC0_USB_RESUME_INT (1U) //!< Bit field size in bits for USB_USBTRC0_USB_RESUME_INT.
+/*@{*/
+#define BP_USB_USBTRC0_USB_RESUME_INT (0U) /*!< Bit position for USB_USBTRC0_USB_RESUME_INT. */
+#define BM_USB_USBTRC0_USB_RESUME_INT (0x01U) /*!< Bit mask for USB_USBTRC0_USB_RESUME_INT. */
+#define BS_USB_USBTRC0_USB_RESUME_INT (1U) /*!< Bit field size in bits for USB_USBTRC0_USB_RESUME_INT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBTRC0_USB_RESUME_INT field.
-#define BR_USB_USBTRC0_USB_RESUME_INT (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_USB_RESUME_INT))
-#endif
-//@}
+/*! @brief Read current value of the USB_USBTRC0_USB_RESUME_INT field. */
+#define BR_USB_USBTRC0_USB_RESUME_INT(x) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR(x), BP_USB_USBTRC0_USB_RESUME_INT))
+/*@}*/
 
 /*!
  * @name Register USB_USBTRC0, field SYNC_DET[1] (RO)
@@ -3666,16 +3212,14 @@ typedef union _hw_usb_usbtrc0
  * - 0 - Synchronous interrupt has not been detected.
  * - 1 - Synchronous interrupt has been detected.
  */
-//@{
-#define BP_USB_USBTRC0_SYNC_DET (1U)       //!< Bit position for USB_USBTRC0_SYNC_DET.
-#define BM_USB_USBTRC0_SYNC_DET (0x02U)    //!< Bit mask for USB_USBTRC0_SYNC_DET.
-#define BS_USB_USBTRC0_SYNC_DET (1U)       //!< Bit field size in bits for USB_USBTRC0_SYNC_DET.
+/*@{*/
+#define BP_USB_USBTRC0_SYNC_DET (1U)       /*!< Bit position for USB_USBTRC0_SYNC_DET. */
+#define BM_USB_USBTRC0_SYNC_DET (0x02U)    /*!< Bit mask for USB_USBTRC0_SYNC_DET. */
+#define BS_USB_USBTRC0_SYNC_DET (1U)       /*!< Bit field size in bits for USB_USBTRC0_SYNC_DET. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBTRC0_SYNC_DET field.
-#define BR_USB_USBTRC0_SYNC_DET (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_SYNC_DET))
-#endif
-//@}
+/*! @brief Read current value of the USB_USBTRC0_SYNC_DET field. */
+#define BR_USB_USBTRC0_SYNC_DET(x) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR(x), BP_USB_USBTRC0_SYNC_DET))
+/*@}*/
 
 /*!
  * @name Register USB_USBTRC0, field USBRESMEN[5] (RW)
@@ -3693,24 +3237,20 @@ typedef union _hw_usb_usbtrc0
  *     asynchronously detects K-state using the unfiltered state of the D+ and D-
  *     pins. This interupt should only be enabled when the Transceiver is suspended.
  */
-//@{
-#define BP_USB_USBTRC0_USBRESMEN (5U)      //!< Bit position for USB_USBTRC0_USBRESMEN.
-#define BM_USB_USBTRC0_USBRESMEN (0x20U)   //!< Bit mask for USB_USBTRC0_USBRESMEN.
-#define BS_USB_USBTRC0_USBRESMEN (1U)      //!< Bit field size in bits for USB_USBTRC0_USBRESMEN.
+/*@{*/
+#define BP_USB_USBTRC0_USBRESMEN (5U)      /*!< Bit position for USB_USBTRC0_USBRESMEN. */
+#define BM_USB_USBTRC0_USBRESMEN (0x20U)   /*!< Bit mask for USB_USBTRC0_USBRESMEN. */
+#define BS_USB_USBTRC0_USBRESMEN (1U)      /*!< Bit field size in bits for USB_USBTRC0_USBRESMEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBTRC0_USBRESMEN field.
-#define BR_USB_USBTRC0_USBRESMEN (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_USBRESMEN))
-#endif
+/*! @brief Read current value of the USB_USBTRC0_USBRESMEN field. */
+#define BR_USB_USBTRC0_USBRESMEN(x) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR(x), BP_USB_USBTRC0_USBRESMEN))
 
-//! @brief Format value for bitfield USB_USBTRC0_USBRESMEN.
-#define BF_USB_USBTRC0_USBRESMEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_USBTRC0_USBRESMEN), uint8_t) & BM_USB_USBTRC0_USBRESMEN)
+/*! @brief Format value for bitfield USB_USBTRC0_USBRESMEN. */
+#define BF_USB_USBTRC0_USBRESMEN(v) ((uint8_t)((uint8_t)(v) << BP_USB_USBTRC0_USBRESMEN) & BM_USB_USBTRC0_USBRESMEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBRESMEN field to a new value.
-#define BW_USB_USBTRC0_USBRESMEN(v) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_USBRESMEN) = (v))
-#endif
-//@}
+/*! @brief Set the USBRESMEN field to a new value. */
+#define BW_USB_USBTRC0_USBRESMEN(x, v) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR(x), BP_USB_USBTRC0_USBRESMEN) = (v))
+/*@}*/
 
 /*!
  * @name Register USB_USBTRC0, field USBRESET[7] (WO)
@@ -3722,30 +3262,19 @@ typedef union _hw_usb_usbtrc0
  * - 0 - Normal USB module operation.
  * - 1 - Returns the USB module to its reset state.
  */
-//@{
-#define BP_USB_USBTRC0_USBRESET (7U)       //!< Bit position for USB_USBTRC0_USBRESET.
-#define BM_USB_USBTRC0_USBRESET (0x80U)    //!< Bit mask for USB_USBTRC0_USBRESET.
-#define BS_USB_USBTRC0_USBRESET (1U)       //!< Bit field size in bits for USB_USBTRC0_USBRESET.
+/*@{*/
+#define BP_USB_USBTRC0_USBRESET (7U)       /*!< Bit position for USB_USBTRC0_USBRESET. */
+#define BM_USB_USBTRC0_USBRESET (0x80U)    /*!< Bit mask for USB_USBTRC0_USBRESET. */
+#define BS_USB_USBTRC0_USBRESET (1U)       /*!< Bit field size in bits for USB_USBTRC0_USBRESET. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBTRC0_USBRESET field.
-#define BR_USB_USBTRC0_USBRESET (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_USBRESET))
-#endif
+/*! @brief Format value for bitfield USB_USBTRC0_USBRESET. */
+#define BF_USB_USBTRC0_USBRESET(v) ((uint8_t)((uint8_t)(v) << BP_USB_USBTRC0_USBRESET) & BM_USB_USBTRC0_USBRESET)
+/*@}*/
 
-//! @brief Format value for bitfield USB_USBTRC0_USBRESET.
-#define BF_USB_USBTRC0_USBRESET(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_USBTRC0_USBRESET), uint8_t) & BM_USB_USBTRC0_USBRESET)
+/*******************************************************************************
+ * HW_USB_USBFRMADJUST - Frame Adjust Register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the USBRESET field to a new value.
-#define BW_USB_USBTRC0_USBRESET(v) (BITBAND_ACCESS8(HW_USB_USBTRC0_ADDR, BP_USB_USBTRC0_USBRESET) = (v))
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_USB_USBFRMADJUST - Frame Adjust Register
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_USB_USBFRMADJUST - Frame Adjust Register (RW)
  *
@@ -3756,26 +3285,23 @@ typedef union _hw_usb_usbfrmadjust
     uint8_t U;
     struct _hw_usb_usbfrmadjust_bitfields
     {
-        uint8_t ADJ : 8;               //!< [7:0] Frame Adjustment
+        uint8_t ADJ : 8;               /*!< [7:0] Frame Adjustment */
     } B;
 } hw_usb_usbfrmadjust_t;
-#endif
 
 /*!
  * @name Constants and macros for entire USB_USBFRMADJUST register
  */
-//@{
-#define HW_USB_USBFRMADJUST_ADDR (REGS_USB_BASE + 0x114U)
+/*@{*/
+#define HW_USB_USBFRMADJUST_ADDR(x) ((x) + 0x114U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_USB_USBFRMADJUST      (*(__IO hw_usb_usbfrmadjust_t *) HW_USB_USBFRMADJUST_ADDR)
-#define HW_USB_USBFRMADJUST_RD() (HW_USB_USBFRMADJUST.U)
-#define HW_USB_USBFRMADJUST_WR(v) (HW_USB_USBFRMADJUST.U = (v))
-#define HW_USB_USBFRMADJUST_SET(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() |  (v)))
-#define HW_USB_USBFRMADJUST_CLR(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() & ~(v)))
-#define HW_USB_USBFRMADJUST_TOG(v) (HW_USB_USBFRMADJUST_WR(HW_USB_USBFRMADJUST_RD() ^  (v)))
-#endif
-//@}
+#define HW_USB_USBFRMADJUST(x)   (*(__IO hw_usb_usbfrmadjust_t *) HW_USB_USBFRMADJUST_ADDR(x))
+#define HW_USB_USBFRMADJUST_RD(x) (HW_USB_USBFRMADJUST(x).U)
+#define HW_USB_USBFRMADJUST_WR(x, v) (HW_USB_USBFRMADJUST(x).U = (v))
+#define HW_USB_USBFRMADJUST_SET(x, v) (HW_USB_USBFRMADJUST_WR(x, HW_USB_USBFRMADJUST_RD(x) |  (v)))
+#define HW_USB_USBFRMADJUST_CLR(x, v) (HW_USB_USBFRMADJUST_WR(x, HW_USB_USBFRMADJUST_RD(x) & ~(v)))
+#define HW_USB_USBFRMADJUST_TOG(x, v) (HW_USB_USBFRMADJUST_WR(x, HW_USB_USBFRMADJUST_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual USB_USBFRMADJUST bitfields
@@ -3790,101 +3316,96 @@ typedef union _hw_usb_usbfrmadjust
  * by -128 to +127 to compensate for inaccuracies in the USB 48-MHz clock.
  * Changes to the ADJ bit take effect at the next start of the next frame.
  */
-//@{
-#define BP_USB_USBFRMADJUST_ADJ (0U)       //!< Bit position for USB_USBFRMADJUST_ADJ.
-#define BM_USB_USBFRMADJUST_ADJ (0xFFU)    //!< Bit mask for USB_USBFRMADJUST_ADJ.
-#define BS_USB_USBFRMADJUST_ADJ (8U)       //!< Bit field size in bits for USB_USBFRMADJUST_ADJ.
+/*@{*/
+#define BP_USB_USBFRMADJUST_ADJ (0U)       /*!< Bit position for USB_USBFRMADJUST_ADJ. */
+#define BM_USB_USBFRMADJUST_ADJ (0xFFU)    /*!< Bit mask for USB_USBFRMADJUST_ADJ. */
+#define BS_USB_USBFRMADJUST_ADJ (8U)       /*!< Bit field size in bits for USB_USBFRMADJUST_ADJ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the USB_USBFRMADJUST_ADJ field.
-#define BR_USB_USBFRMADJUST_ADJ (HW_USB_USBFRMADJUST.B.ADJ)
-#endif
+/*! @brief Read current value of the USB_USBFRMADJUST_ADJ field. */
+#define BR_USB_USBFRMADJUST_ADJ(x) (HW_USB_USBFRMADJUST(x).U)
 
-//! @brief Format value for bitfield USB_USBFRMADJUST_ADJ.
-#define BF_USB_USBFRMADJUST_ADJ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint8_t) << BP_USB_USBFRMADJUST_ADJ), uint8_t) & BM_USB_USBFRMADJUST_ADJ)
+/*! @brief Format value for bitfield USB_USBFRMADJUST_ADJ. */
+#define BF_USB_USBFRMADJUST_ADJ(v) ((uint8_t)((uint8_t)(v) << BP_USB_USBFRMADJUST_ADJ) & BM_USB_USBFRMADJUST_ADJ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ADJ field to a new value.
-#define BW_USB_USBFRMADJUST_ADJ(v) (HW_USB_USBFRMADJUST_WR((HW_USB_USBFRMADJUST_RD() & ~BM_USB_USBFRMADJUST_ADJ) | BF_USB_USBFRMADJUST_ADJ(v)))
-#endif
-//@}
+/*! @brief Set the ADJ field to a new value. */
+#define BW_USB_USBFRMADJUST_ADJ(x, v) (HW_USB_USBFRMADJUST_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_usb_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_usb_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All USB module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_usb
 {
-    __I hw_usb_perid_t PERID;              //!< [0x0] Peripheral ID Register
+    __I hw_usb_perid_t PERID;              /*!< [0x0] Peripheral ID Register */
     uint8_t _reserved0[3];
-    __I hw_usb_idcomp_t IDCOMP;            //!< [0x4] Peripheral ID Complement Register
+    __I hw_usb_idcomp_t IDCOMP;            /*!< [0x4] Peripheral ID Complement Register */
     uint8_t _reserved1[3];
-    __I hw_usb_rev_t REV;                  //!< [0x8] Peripheral Revision Register
+    __I hw_usb_rev_t REV;                  /*!< [0x8] Peripheral Revision Register */
     uint8_t _reserved2[3];
-    __I hw_usb_addinfo_t ADDINFO;          //!< [0xC] Peripheral Additional Info Register
+    __I hw_usb_addinfo_t ADDINFO;          /*!< [0xC] Peripheral Additional Info Register */
     uint8_t _reserved3[3];
-    __IO hw_usb_otgistat_t OTGISTAT;       //!< [0x10] OTG Interrupt Status Register
+    __IO hw_usb_otgistat_t OTGISTAT;       /*!< [0x10] OTG Interrupt Status Register */
     uint8_t _reserved4[3];
-    __IO hw_usb_otgicr_t OTGICR;           //!< [0x14] OTG Interrupt Control Register
+    __IO hw_usb_otgicr_t OTGICR;           /*!< [0x14] OTG Interrupt Control Register */
     uint8_t _reserved5[3];
-    __IO hw_usb_otgstat_t OTGSTAT;         //!< [0x18] OTG Status Register
+    __IO hw_usb_otgstat_t OTGSTAT;         /*!< [0x18] OTG Status Register */
     uint8_t _reserved6[3];
-    __IO hw_usb_otgctl_t OTGCTL;           //!< [0x1C] OTG Control Register
+    __IO hw_usb_otgctl_t OTGCTL;           /*!< [0x1C] OTG Control Register */
     uint8_t _reserved7[99];
-    __IO hw_usb_istat_t ISTAT;             //!< [0x80] Interrupt Status Register
+    __IO hw_usb_istat_t ISTAT;             /*!< [0x80] Interrupt Status Register */
     uint8_t _reserved8[3];
-    __IO hw_usb_inten_t INTEN;             //!< [0x84] Interrupt Enable Register
+    __IO hw_usb_inten_t INTEN;             /*!< [0x84] Interrupt Enable Register */
     uint8_t _reserved9[3];
-    __IO hw_usb_errstat_t ERRSTAT;         //!< [0x88] Error Interrupt Status Register
+    __IO hw_usb_errstat_t ERRSTAT;         /*!< [0x88] Error Interrupt Status Register */
     uint8_t _reserved10[3];
-    __IO hw_usb_erren_t ERREN;             //!< [0x8C] Error Interrupt Enable Register
+    __IO hw_usb_erren_t ERREN;             /*!< [0x8C] Error Interrupt Enable Register */
     uint8_t _reserved11[3];
-    __I hw_usb_stat_t STAT;                //!< [0x90] Status Register
+    __I hw_usb_stat_t STAT;                /*!< [0x90] Status Register */
     uint8_t _reserved12[3];
-    __IO hw_usb_ctl_t CTL;                 //!< [0x94] Control Register
+    __IO hw_usb_ctl_t CTL;                 /*!< [0x94] Control Register */
     uint8_t _reserved13[3];
-    __IO hw_usb_addr_t ADDR;               //!< [0x98] Address Register
+    __IO hw_usb_addr_t ADDR;               /*!< [0x98] Address Register */
     uint8_t _reserved14[3];
-    __IO hw_usb_bdtpage1_t BDTPAGE1;       //!< [0x9C] BDT Page Register 1
+    __IO hw_usb_bdtpage1_t BDTPAGE1;       /*!< [0x9C] BDT Page Register 1 */
     uint8_t _reserved15[3];
-    __IO hw_usb_frmnuml_t FRMNUML;         //!< [0xA0] Frame Number Register Low
+    __IO hw_usb_frmnuml_t FRMNUML;         /*!< [0xA0] Frame Number Register Low */
     uint8_t _reserved16[3];
-    __IO hw_usb_frmnumh_t FRMNUMH;         //!< [0xA4] Frame Number Register High
+    __IO hw_usb_frmnumh_t FRMNUMH;         /*!< [0xA4] Frame Number Register High */
     uint8_t _reserved17[3];
-    __IO hw_usb_token_t TOKEN;             //!< [0xA8] Token Register
+    __IO hw_usb_token_t TOKEN;             /*!< [0xA8] Token Register */
     uint8_t _reserved18[3];
-    __IO hw_usb_softhld_t SOFTHLD;         //!< [0xAC] SOF Threshold Register
+    __IO hw_usb_softhld_t SOFTHLD;         /*!< [0xAC] SOF Threshold Register */
     uint8_t _reserved19[3];
-    __IO hw_usb_bdtpage2_t BDTPAGE2;       //!< [0xB0] BDT Page Register 2
+    __IO hw_usb_bdtpage2_t BDTPAGE2;       /*!< [0xB0] BDT Page Register 2 */
     uint8_t _reserved20[3];
-    __IO hw_usb_bdtpage3_t BDTPAGE3;       //!< [0xB4] BDT Page Register 3
+    __IO hw_usb_bdtpage3_t BDTPAGE3;       /*!< [0xB4] BDT Page Register 3 */
     uint8_t _reserved21[11];
     struct {
-        __IO hw_usb_endptn_t ENDPTn;       //!< [0xC0] Endpoint Control Register
+        __IO hw_usb_endptn_t ENDPTn;       /*!< [0xC0] Endpoint Control Register */
         uint8_t _reserved0[3];
     } ENDPOINT[16];
-    __IO hw_usb_usbctrl_t USBCTRL;         //!< [0x100] USB Control Register
+    __IO hw_usb_usbctrl_t USBCTRL;         /*!< [0x100] USB Control Register */
     uint8_t _reserved22[3];
-    __I hw_usb_observe_t OBSERVE;          //!< [0x104] USB OTG Observe Register
+    __I hw_usb_observe_t OBSERVE;          /*!< [0x104] USB OTG Observe Register */
     uint8_t _reserved23[3];
-    __IO hw_usb_control_t CONTROL;         //!< [0x108] USB OTG Control Register
+    __IO hw_usb_control_t CONTROL;         /*!< [0x108] USB OTG Control Register */
     uint8_t _reserved24[3];
-    __IO hw_usb_usbtrc0_t USBTRC0;         //!< [0x10C] USB Transceiver Control Register 0
+    __IO hw_usb_usbtrc0_t USBTRC0;         /*!< [0x10C] USB Transceiver Control Register 0 */
     uint8_t _reserved25[7];
-    __IO hw_usb_usbfrmadjust_t USBFRMADJUST; //!< [0x114] Frame Adjust Register
+    __IO hw_usb_usbfrmadjust_t USBFRMADJUST; /*!< [0x114] Frame Adjust Register */
 } hw_usb_t;
 #pragma pack()
 
-//! @brief Macro to access all USB registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_USB</code>.
-#define HW_USB         (*(hw_usb_t *) REGS_USB_BASE)
-#endif
+/*! @brief Macro to access all USB registers. */
+/*! @param x USB module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_USB(USB0_BASE)</code>. */
+#define HW_USB(x)      (*(hw_usb_t *)(x))
 
-#endif // __HW_USB_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_USB_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

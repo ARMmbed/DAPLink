@@ -16,14 +16,9 @@
 #ifndef USB_BUF_H
 #define USB_BUF_H
 
-#include <absacc.h>
-#include <stdint.h>
+#include "absacc.h"
+#include "stdint.h"
 
-uint32_t usb_buffer[FLASH_SECTOR_SIZE/4] __at(0x20000000);
-
-#if defined(TARGET_LPC11U35) && (FLASH_SECTOR_SIZE > 2048)
-  // SRAM block on LPC11U35 is limited to 2KB
-  #error "USB buffer too large for this platform"
-#endif
+uint32_t usb_buffer[512/4];
 
 #endif

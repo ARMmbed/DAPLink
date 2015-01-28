@@ -10,12 +10,38 @@
 **                          IAR ANSI C/C++ Compiler for ARM
 **
 **     Reference manual:    KL05P48M48SF1RM, Rev.3, Sep 2012
-**     Version:             rev. 1.7, 2013-10-29
+**     Version:             rev. 1.6, 2013-04-11
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for MKL05Z4
 **
-**     Copyright: 1997 - 2013 Freescale, Inc. All Rights Reserved.
+**     Copyright: 1997 - 2013 Freescale, Inc.
+**     All rights reserved.
+**
+**     Redistribution and use in source and binary forms, with or without modification,
+**     are permitted provided that the following conditions are met:
+**
+**     o Redistributions of source code must retain the above copyright notice, this list
+**       of conditions and the following disclaimer.
+**
+**     o Redistributions in binary form must reproduce the above copyright notice, this
+**       list of conditions and the following disclaimer in the documentation and/or
+**       other materials provided with the distribution.
+**
+**     o Neither the name of Freescale Semiconductor, Inc. nor the names of its
+**       contributors may be used to endorse or promote products derived from this
+**       software without specific prior written permission.
+**
+**     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**     ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **
 **     http:                 www.freescale.com
 **     mail:                 support@freescale.com
@@ -37,16 +63,14 @@
 **         Changed start of doxygen comment.
 **     - rev. 1.6 (2013-04-11)
 **         SystemInit methods updated with predefined initialization sequence.
-**     - rev. 1.7 (2013-10-29)
-**         Definition of BITBAND macros updated to support peripherals with 32-bit acces disabled.
 **
 ** ###################################################################
 */
 
 /*!
  * @file MKL05Z4.h
- * @version 1.7
- * @date 2013-10-29
+ * @version 1.6
+ * @date 2013-04-11
  * @brief CMSIS Peripheral Access Layer for MKL05Z4
  *
  * CMSIS Peripheral Access Layer for MKL05Z4
@@ -59,7 +83,7 @@
  * compatible) */
 #define MCU_MEM_MAP_VERSION 0x0100u
 /** Memory map minor version */
-#define MCU_MEM_MAP_VERSION_MINOR 0x0007u
+#define MCU_MEM_MAP_VERSION_MINOR 0x0006u
 
 
 /* ----------------------------------------------------------------------------
@@ -72,6 +96,8 @@
  */
 
 /** Interrupt Number Definitions */
+#define NUMBER_OF_INT_VECTORS 48                 /**< Number of interrupts in the Vector table */
+
 typedef enum IRQn {
   /* Core interrupts */
   NonMaskableInt_IRQn          = -14,              /**< Non Maskable Interrupt */
@@ -330,8 +356,10 @@ typedef struct {
 #define ADC0_BASE                                (0x4003B000u)
 /** Peripheral ADC0 base pointer */
 #define ADC0                                     ((ADC_Type *)ADC0_BASE)
+/** Array initializer of ADC peripheral base addresses */
+#define ADC_BASE_ADDRS                           { ADC0_BASE }
 /** Array initializer of ADC peripheral base pointers */
-#define ADC_BASES                                { ADC0 }
+#define ADC_BASE_PTRS                            { ADC0 }
 
 /*!
  * @}
@@ -435,8 +463,10 @@ typedef struct {
 #define CMP0_BASE                                (0x40073000u)
 /** Peripheral CMP0 base pointer */
 #define CMP0                                     ((CMP_Type *)CMP0_BASE)
+/** Array initializer of CMP peripheral base addresses */
+#define CMP_BASE_ADDRS                           { CMP0_BASE }
 /** Array initializer of CMP peripheral base pointers */
-#define CMP_BASES                                { CMP0 }
+#define CMP_BASE_PTRS                            { CMP0 }
 
 /*!
  * @}
@@ -525,8 +555,10 @@ typedef struct {
 #define DAC0_BASE                                (0x4003F000u)
 /** Peripheral DAC0 base pointer */
 #define DAC0                                     ((DAC_Type *)DAC0_BASE)
+/** Array initializer of DAC peripheral base addresses */
+#define DAC_BASE_ADDRS                           { DAC0_BASE }
 /** Array initializer of DAC peripheral base pointers */
-#define DAC_BASES                                { DAC0 }
+#define DAC_BASE_PTRS                            { DAC0 }
 
 /*!
  * @}
@@ -643,8 +675,10 @@ typedef struct {
 #define DMA_BASE                                 (0x40008000u)
 /** Peripheral DMA base pointer */
 #define DMA0                                     ((DMA_Type *)DMA_BASE)
+/** Array initializer of DMA peripheral base addresses */
+#define DMA_BASE_ADDRS                           { DMA_BASE }
 /** Array initializer of DMA peripheral base pointers */
-#define DMA_BASES                                { DMA0 }
+#define DMA_BASE_PTRS                            { DMA0 }
 
 /*!
  * @}
@@ -693,8 +727,10 @@ typedef struct {
 #define DMAMUX0_BASE                             (0x40021000u)
 /** Peripheral DMAMUX0 base pointer */
 #define DMAMUX0                                  ((DMAMUX_Type *)DMAMUX0_BASE)
+/** Array initializer of DMAMUX peripheral base addresses */
+#define DMAMUX_BASE_ADDRS                        { DMAMUX0_BASE }
 /** Array initializer of DMAMUX peripheral base pointers */
-#define DMAMUX_BASES                             { DMAMUX0 }
+#define DMAMUX_BASE_PTRS                         { DMAMUX0 }
 
 /*!
  * @}
@@ -768,8 +804,10 @@ typedef struct {
 #define FPTB_BASE                                (0xF80FF040u)
 /** Peripheral FPTB base pointer */
 #define FPTB                                     ((FGPIO_Type *)FPTB_BASE)
+/** Array initializer of FGPIO peripheral base addresses */
+#define FGPIO_BASE_ADDRS                         { FPTA_BASE, FPTB_BASE }
 /** Array initializer of FGPIO peripheral base pointers */
-#define FGPIO_BASES                              { FPTA, FPTB }
+#define FGPIO_BASE_PTRS                          { FPTA, FPTB }
 
 /*!
  * @}
@@ -930,8 +968,10 @@ typedef struct {
 #define FTFA_BASE                                (0x40020000u)
 /** Peripheral FTFA base pointer */
 #define FTFA                                     ((FTFA_Type *)FTFA_BASE)
+/** Array initializer of FTFA peripheral base addresses */
+#define FTFA_BASE_ADDRS                          { FTFA_BASE }
 /** Array initializer of FTFA peripheral base pointers */
-#define FTFA_BASES                               { FTFA }
+#define FTFA_BASE_PTRS                           { FTFA }
 
 /*!
  * @}
@@ -1005,8 +1045,10 @@ typedef struct {
 #define PTB_BASE                                 (0x400FF040u)
 /** Peripheral PTB base pointer */
 #define PTB                                      ((GPIO_Type *)PTB_BASE)
+/** Array initializer of GPIO peripheral base addresses */
+#define GPIO_BASE_ADDRS                          { PTA_BASE, PTB_BASE }
 /** Array initializer of GPIO peripheral base pointers */
-#define GPIO_BASES                               { PTA, PTB }
+#define GPIO_BASE_PTRS                           { PTA, PTB }
 
 /*!
  * @}
@@ -1164,8 +1206,10 @@ typedef struct {
 #define I2C0_BASE                                (0x40066000u)
 /** Peripheral I2C0 base pointer */
 #define I2C0                                     ((I2C_Type *)I2C0_BASE)
+/** Array initializer of I2C peripheral base addresses */
+#define I2C_BASE_ADDRS                           { I2C0_BASE }
 /** Array initializer of I2C peripheral base pointers */
-#define I2C_BASES                                { I2C0 }
+#define I2C_BASE_PTRS                            { I2C0 }
 
 /*!
  * @}
@@ -1307,8 +1351,10 @@ typedef struct {
 #define LLWU_BASE                                (0x4007C000u)
 /** Peripheral LLWU base pointer */
 #define LLWU                                     ((LLWU_Type *)LLWU_BASE)
+/** Array initializer of LLWU peripheral base addresses */
+#define LLWU_BASE_ADDRS                          { LLWU_BASE }
 /** Array initializer of LLWU peripheral base pointers */
-#define LLWU_BASES                               { LLWU }
+#define LLWU_BASE_PTRS                           { LLWU }
 
 /*!
  * @}
@@ -1385,8 +1431,10 @@ typedef struct {
 #define LPTMR0_BASE                              (0x40040000u)
 /** Peripheral LPTMR0 base pointer */
 #define LPTMR0                                   ((LPTMR_Type *)LPTMR0_BASE)
+/** Array initializer of LPTMR peripheral base addresses */
+#define LPTMR_BASE_ADDRS                         { LPTMR0_BASE }
 /** Array initializer of LPTMR peripheral base pointers */
-#define LPTMR_BASES                              { LPTMR0 }
+#define LPTMR_BASE_PTRS                          { LPTMR0 }
 
 /*!
  * @}
@@ -1515,8 +1563,10 @@ typedef struct {
 #define MCG_BASE                                 (0x40064000u)
 /** Peripheral MCG base pointer */
 #define MCG                                      ((MCG_Type *)MCG_BASE)
+/** Array initializer of MCG peripheral base addresses */
+#define MCG_BASE_ADDRS                           { MCG_BASE }
 /** Array initializer of MCG peripheral base pointers */
-#define MCG_BASES                                { MCG }
+#define MCG_BASE_PTRS                            { MCG }
 
 /*!
  * @}
@@ -1594,8 +1644,10 @@ typedef struct {
 #define MCM_BASE                                 (0xF0003000u)
 /** Peripheral MCM base pointer */
 #define MCM                                      ((MCM_Type *)MCM_BASE)
+/** Array initializer of MCM peripheral base addresses */
+#define MCM_BASE_ADDRS                           { MCM_BASE }
 /** Array initializer of MCM peripheral base pointers */
-#define MCM_BASES                                { MCM }
+#define MCM_BASE_PTRS                            { MCM }
 
 /*!
  * @}
@@ -1737,8 +1789,10 @@ typedef struct {
 #define MTB_BASE                                 (0xF0000000u)
 /** Peripheral MTB base pointer */
 #define MTB                                      ((MTB_Type *)MTB_BASE)
+/** Array initializer of MTB peripheral base addresses */
+#define MTB_BASE_ADDRS                           { MTB_BASE }
 /** Array initializer of MTB peripheral base pointers */
-#define MTB_BASES                                { MTB }
+#define MTB_BASE_PTRS                            { MTB }
 
 /*!
  * @}
@@ -1846,8 +1900,10 @@ typedef struct {
 #define MTBDWT_BASE                              (0xF0001000u)
 /** Peripheral MTBDWT base pointer */
 #define MTBDWT                                   ((MTBDWT_Type *)MTBDWT_BASE)
+/** Array initializer of MTBDWT peripheral base addresses */
+#define MTBDWT_BASE_ADDRS                        { MTBDWT_BASE }
 /** Array initializer of MTBDWT peripheral base pointers */
-#define MTBDWT_BASES                             { MTBDWT }
+#define MTBDWT_BASE_PTRS                         { MTBDWT }
 
 /*!
  * @}
@@ -1973,8 +2029,10 @@ typedef struct {
 #define FTFA_FlashConfig_BASE                    (0x400u)
 /** Peripheral FTFA_FlashConfig base pointer */
 #define FTFA_FlashConfig                         ((NV_Type *)FTFA_FlashConfig_BASE)
+/** Array initializer of NV peripheral base addresses */
+#define NV_BASE_ADDRS                            { FTFA_FlashConfig_BASE }
 /** Array initializer of NV peripheral base pointers */
-#define NV_BASES                                 { FTFA_FlashConfig }
+#define NV_BASE_PTRS                             { FTFA_FlashConfig }
 
 /*!
  * @}
@@ -2028,8 +2086,10 @@ typedef struct {
 #define OSC0_BASE                                (0x40065000u)
 /** Peripheral OSC0 base pointer */
 #define OSC0                                     ((OSC_Type *)OSC0_BASE)
+/** Array initializer of OSC peripheral base addresses */
+#define OSC_BASE_ADDRS                           { OSC0_BASE }
 /** Array initializer of OSC peripheral base pointers */
-#define OSC_BASES                                { OSC0 }
+#define OSC_BASE_PTRS                            { OSC0 }
 
 /*!
  * @}
@@ -2111,8 +2171,10 @@ typedef struct {
 #define PIT_BASE                                 (0x40037000u)
 /** Peripheral PIT base pointer */
 #define PIT                                      ((PIT_Type *)PIT_BASE)
+/** Array initializer of PIT peripheral base addresses */
+#define PIT_BASE_ADDRS                           { PIT_BASE }
 /** Array initializer of PIT peripheral base pointers */
-#define PIT_BASES                                { PIT }
+#define PIT_BASE_PTRS                            { PIT }
 
 /*!
  * @}
@@ -2186,8 +2248,10 @@ typedef struct {
 #define PMC_BASE                                 (0x4007D000u)
 /** Peripheral PMC base pointer */
 #define PMC                                      ((PMC_Type *)PMC_BASE)
+/** Array initializer of PMC peripheral base addresses */
+#define PMC_BASE_ADDRS                           { PMC_BASE }
 /** Array initializer of PMC peripheral base pointers */
-#define PMC_BASES                                { PMC }
+#define PMC_BASE_PTRS                            { PMC }
 
 /*!
  * @}
@@ -2273,8 +2337,10 @@ typedef struct {
 #define PORTB_BASE                               (0x4004A000u)
 /** Peripheral PORTB base pointer */
 #define PORTB                                    ((PORT_Type *)PORTB_BASE)
+/** Array initializer of PORT peripheral base addresses */
+#define PORT_BASE_ADDRS                          { PORTA_BASE, PORTB_BASE }
 /** Array initializer of PORT peripheral base pointers */
-#define PORT_BASES                               { PORTA, PORTB }
+#define PORT_BASE_PTRS                           { PORTA, PORTB }
 
 /*!
  * @}
@@ -2351,8 +2417,10 @@ typedef struct {
 #define RCM_BASE                                 (0x4007F000u)
 /** Peripheral RCM base pointer */
 #define RCM                                      ((RCM_Type *)RCM_BASE)
+/** Array initializer of RCM peripheral base addresses */
+#define RCM_BASE_ADDRS                           { RCM_BASE }
 /** Array initializer of RCM peripheral base pointers */
-#define RCM_BASES                                { RCM }
+#define RCM_BASE_PTRS                            { RCM }
 
 /*!
  * @}
@@ -2453,8 +2521,10 @@ typedef struct {
 #define ROM_BASE                                 (0xF0002000u)
 /** Peripheral ROM base pointer */
 #define ROM                                      ((ROM_Type *)ROM_BASE)
+/** Array initializer of ROM peripheral base addresses */
+#define ROM_BASE_ADDRS                           { ROM_BASE }
 /** Array initializer of ROM peripheral base pointers */
-#define ROM_BASES                                { ROM }
+#define ROM_BASE_PTRS                            { ROM }
 
 /*!
  * @}
@@ -2577,8 +2647,10 @@ typedef struct {
 #define RTC_BASE                                 (0x4003D000u)
 /** Peripheral RTC base pointer */
 #define RTC                                      ((RTC_Type *)RTC_BASE)
+/** Array initializer of RTC peripheral base addresses */
+#define RTC_BASE_ADDRS                           { RTC_BASE }
 /** Array initializer of RTC peripheral base pointers */
-#define RTC_BASES                                { RTC }
+#define RTC_BASE_PTRS                            { RTC }
 
 /*!
  * @}
@@ -2786,8 +2858,10 @@ typedef struct {
 #define SIM_BASE                                 (0x40047000u)
 /** Peripheral SIM base pointer */
 #define SIM                                      ((SIM_Type *)SIM_BASE)
+/** Array initializer of SIM peripheral base addresses */
+#define SIM_BASE_ADDRS                           { SIM_BASE }
 /** Array initializer of SIM peripheral base pointers */
-#define SIM_BASES                                { SIM }
+#define SIM_BASE_PTRS                            { SIM }
 
 /*!
  * @}
@@ -2860,8 +2934,10 @@ typedef struct {
 #define SMC_BASE                                 (0x4007E000u)
 /** Peripheral SMC base pointer */
 #define SMC                                      ((SMC_Type *)SMC_BASE)
+/** Array initializer of SMC peripheral base addresses */
+#define SMC_BASE_ADDRS                           { SMC_BASE }
 /** Array initializer of SMC peripheral base pointers */
-#define SMC_BASES                                { SMC }
+#define SMC_BASE_PTRS                            { SMC }
 
 /*!
  * @}
@@ -2965,8 +3041,10 @@ typedef struct {
 #define SPI0_BASE                                (0x40076000u)
 /** Peripheral SPI0 base pointer */
 #define SPI0                                     ((SPI_Type *)SPI0_BASE)
+/** Array initializer of SPI peripheral base addresses */
+#define SPI_BASE_ADDRS                           { SPI0_BASE }
 /** Array initializer of SPI peripheral base pointers */
-#define SPI_BASES                                { SPI0 }
+#define SPI_BASE_PTRS                            { SPI0 }
 
 /*!
  * @}
@@ -3095,8 +3173,10 @@ typedef struct {
 #define TPM1_BASE                                (0x40039000u)
 /** Peripheral TPM1 base pointer */
 #define TPM1                                     ((TPM_Type *)TPM1_BASE)
+/** Array initializer of TPM peripheral base addresses */
+#define TPM_BASE_ADDRS                           { TPM0_BASE, TPM1_BASE }
 /** Array initializer of TPM peripheral base pointers */
-#define TPM_BASES                                { TPM0, TPM1 }
+#define TPM_BASE_PTRS                            { TPM0, TPM1 }
 
 /*!
  * @}
@@ -3194,8 +3274,10 @@ typedef struct {
 #define TSI0_BASE                                (0x40045000u)
 /** Peripheral TSI0 base pointer */
 #define TSI0                                     ((TSI_Type *)TSI0_BASE)
+/** Array initializer of TSI peripheral base addresses */
+#define TSI_BASE_ADDRS                           { TSI0_BASE }
 /** Array initializer of TSI peripheral base pointers */
-#define TSI_BASES                                { TSI0 }
+#define TSI_BASE_PTRS                            { TSI0 }
 
 /*!
  * @}
@@ -3390,8 +3472,10 @@ typedef struct {
 #define UART0_BASE                               (0x4006A000u)
 /** Peripheral UART0 base pointer */
 #define UART0                                    ((UART0_Type *)UART0_BASE)
+/** Array initializer of UART0 peripheral base addresses */
+#define UART0_BASE_ADDRS                         { UART0_BASE }
 /** Array initializer of UART0 peripheral base pointers */
-#define UART0_BASES                              { UART0 }
+#define UART0_BASE_PTRS                          { UART0 }
 
 /*!
  * @}

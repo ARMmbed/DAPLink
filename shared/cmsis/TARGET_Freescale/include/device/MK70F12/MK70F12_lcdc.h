@@ -21,7 +21,8 @@
 #ifndef __HW_LCDC_REGISTERS_H__
 #define __HW_LCDC_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 LCDC
@@ -58,19 +59,12 @@
  * - hw_lcdc_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_LCDC_BASE
-#define HW_LCDC_INSTANCE_COUNT (1U) //!< Number of instances of the LCDC module.
-#define REGS_LCDC_BASE (0x400B6000U) //!< Base address for LCDC.
-#endif
-//@}
+#define HW_LCDC_INSTANCE_COUNT (1U) /*!< Number of instances of the LCDC module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LSSAR - LCDC screen start address register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LSSAR - LCDC screen start address register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LSSAR - LCDC screen start address register (RW)
  *
@@ -84,27 +78,24 @@ typedef union _hw_lcdc_lssar
     uint32_t U;
     struct _hw_lcdc_lssar_bitfields
     {
-        uint32_t RESERVED0 : 2;        //!< [1:0]
-        uint32_t SSA : 30;             //!< [31:2] Screen start address of LCD panel
+        uint32_t RESERVED0 : 2;        /*!< [1:0]  */
+        uint32_t SSA : 30;             /*!< [31:2] Screen start address of LCD panel */
     } B;
 } hw_lcdc_lssar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LSSAR register
  */
-//@{
-#define HW_LCDC_LSSAR_ADDR       (REGS_LCDC_BASE + 0x0U)
+/*@{*/
+#define HW_LCDC_LSSAR_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LSSAR            (*(__IO hw_lcdc_lssar_t *) HW_LCDC_LSSAR_ADDR)
-#define HW_LCDC_LSSAR_RD()       (HW_LCDC_LSSAR.U)
-#define HW_LCDC_LSSAR_WR(v)      (HW_LCDC_LSSAR.U = (v))
-#define HW_LCDC_LSSAR_SET(v)     (HW_LCDC_LSSAR_WR(HW_LCDC_LSSAR_RD() |  (v)))
-#define HW_LCDC_LSSAR_CLR(v)     (HW_LCDC_LSSAR_WR(HW_LCDC_LSSAR_RD() & ~(v)))
-#define HW_LCDC_LSSAR_TOG(v)     (HW_LCDC_LSSAR_WR(HW_LCDC_LSSAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LSSAR(x)         (*(__IO hw_lcdc_lssar_t *) HW_LCDC_LSSAR_ADDR(x))
+#define HW_LCDC_LSSAR_RD(x)      (HW_LCDC_LSSAR(x).U)
+#define HW_LCDC_LSSAR_WR(x, v)   (HW_LCDC_LSSAR(x).U = (v))
+#define HW_LCDC_LSSAR_SET(x, v)  (HW_LCDC_LSSAR_WR(x, HW_LCDC_LSSAR_RD(x) |  (v)))
+#define HW_LCDC_LSSAR_CLR(x, v)  (HW_LCDC_LSSAR_WR(x, HW_LCDC_LSSAR_RD(x) & ~(v)))
+#define HW_LCDC_LSSAR_TOG(x, v)  (HW_LCDC_LSSAR_WR(x, HW_LCDC_LSSAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LSSAR bitfields
@@ -117,30 +108,25 @@ typedef union _hw_lcdc_lssar
  * location that enables a complete picture to be stored in a 4 MB memory
  * boundary (A [21:0]). A [31:22] has a fixed value for a picture's image.
  */
-//@{
-#define BP_LCDC_LSSAR_SSA    (2U)          //!< Bit position for LCDC_LSSAR_SSA.
-#define BM_LCDC_LSSAR_SSA    (0xFFFFFFFCU) //!< Bit mask for LCDC_LSSAR_SSA.
-#define BS_LCDC_LSSAR_SSA    (30U)         //!< Bit field size in bits for LCDC_LSSAR_SSA.
+/*@{*/
+#define BP_LCDC_LSSAR_SSA    (2U)          /*!< Bit position for LCDC_LSSAR_SSA. */
+#define BM_LCDC_LSSAR_SSA    (0xFFFFFFFCU) /*!< Bit mask for LCDC_LSSAR_SSA. */
+#define BS_LCDC_LSSAR_SSA    (30U)         /*!< Bit field size in bits for LCDC_LSSAR_SSA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LSSAR_SSA field.
-#define BR_LCDC_LSSAR_SSA    (HW_LCDC_LSSAR.B.SSA)
-#endif
+/*! @brief Read current value of the LCDC_LSSAR_SSA field. */
+#define BR_LCDC_LSSAR_SSA(x) (HW_LCDC_LSSAR(x).B.SSA)
 
-//! @brief Format value for bitfield LCDC_LSSAR_SSA.
-#define BF_LCDC_LSSAR_SSA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LSSAR_SSA), uint32_t) & BM_LCDC_LSSAR_SSA)
+/*! @brief Format value for bitfield LCDC_LSSAR_SSA. */
+#define BF_LCDC_LSSAR_SSA(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LSSAR_SSA) & BM_LCDC_LSSAR_SSA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SSA field to a new value.
-#define BW_LCDC_LSSAR_SSA(v) (HW_LCDC_LSSAR_WR((HW_LCDC_LSSAR_RD() & ~BM_LCDC_LSSAR_SSA) | BF_LCDC_LSSAR_SSA(v)))
-#endif
-//@}
+/*! @brief Set the SSA field to a new value. */
+#define BW_LCDC_LSSAR_SSA(x, v) (HW_LCDC_LSSAR_WR(x, (HW_LCDC_LSSAR_RD(x) & ~BM_LCDC_LSSAR_SSA) | BF_LCDC_LSSAR_SSA(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LSR - LCDC size register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LSR - LCDC size register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LSR - LCDC size register (RW)
  *
@@ -153,29 +139,26 @@ typedef union _hw_lcdc_lsr
     uint32_t U;
     struct _hw_lcdc_lsr_bitfields
     {
-        uint32_t YMAX : 10;            //!< [9:0] Screen height
-        uint32_t RESERVED0 : 10;       //!< [19:10]
-        uint32_t XMAX : 7;             //!< [26:20] Screen width divided by 16
-        uint32_t RESERVED1 : 5;        //!< [31:27]
+        uint32_t YMAX : 10;            /*!< [9:0] Screen height */
+        uint32_t RESERVED0 : 10;       /*!< [19:10]  */
+        uint32_t XMAX : 7;             /*!< [26:20] Screen width divided by 16 */
+        uint32_t RESERVED1 : 5;        /*!< [31:27]  */
     } B;
 } hw_lcdc_lsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LSR register
  */
-//@{
-#define HW_LCDC_LSR_ADDR         (REGS_LCDC_BASE + 0x4U)
+/*@{*/
+#define HW_LCDC_LSR_ADDR(x)      ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LSR              (*(__IO hw_lcdc_lsr_t *) HW_LCDC_LSR_ADDR)
-#define HW_LCDC_LSR_RD()         (HW_LCDC_LSR.U)
-#define HW_LCDC_LSR_WR(v)        (HW_LCDC_LSR.U = (v))
-#define HW_LCDC_LSR_SET(v)       (HW_LCDC_LSR_WR(HW_LCDC_LSR_RD() |  (v)))
-#define HW_LCDC_LSR_CLR(v)       (HW_LCDC_LSR_WR(HW_LCDC_LSR_RD() & ~(v)))
-#define HW_LCDC_LSR_TOG(v)       (HW_LCDC_LSR_WR(HW_LCDC_LSR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LSR(x)           (*(__IO hw_lcdc_lsr_t *) HW_LCDC_LSR_ADDR(x))
+#define HW_LCDC_LSR_RD(x)        (HW_LCDC_LSR(x).U)
+#define HW_LCDC_LSR_WR(x, v)     (HW_LCDC_LSR(x).U = (v))
+#define HW_LCDC_LSR_SET(x, v)    (HW_LCDC_LSR_WR(x, HW_LCDC_LSR_RD(x) |  (v)))
+#define HW_LCDC_LSR_CLR(x, v)    (HW_LCDC_LSR_WR(x, HW_LCDC_LSR_RD(x) & ~(v)))
+#define HW_LCDC_LSR_TOG(x, v)    (HW_LCDC_LSR_WR(x, HW_LCDC_LSR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LSR bitfields
@@ -187,24 +170,20 @@ typedef union _hw_lcdc_lsr
  * Specifies the height of LCD panel in terms of pixels or lines. Lines are
  * numbered from 1 to YMAX for a total of YMAX lines.
  */
-//@{
-#define BP_LCDC_LSR_YMAX     (0U)          //!< Bit position for LCDC_LSR_YMAX.
-#define BM_LCDC_LSR_YMAX     (0x000003FFU) //!< Bit mask for LCDC_LSR_YMAX.
-#define BS_LCDC_LSR_YMAX     (10U)         //!< Bit field size in bits for LCDC_LSR_YMAX.
+/*@{*/
+#define BP_LCDC_LSR_YMAX     (0U)          /*!< Bit position for LCDC_LSR_YMAX. */
+#define BM_LCDC_LSR_YMAX     (0x000003FFU) /*!< Bit mask for LCDC_LSR_YMAX. */
+#define BS_LCDC_LSR_YMAX     (10U)         /*!< Bit field size in bits for LCDC_LSR_YMAX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LSR_YMAX field.
-#define BR_LCDC_LSR_YMAX     (HW_LCDC_LSR.B.YMAX)
-#endif
+/*! @brief Read current value of the LCDC_LSR_YMAX field. */
+#define BR_LCDC_LSR_YMAX(x)  (HW_LCDC_LSR(x).B.YMAX)
 
-//! @brief Format value for bitfield LCDC_LSR_YMAX.
-#define BF_LCDC_LSR_YMAX(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LSR_YMAX), uint32_t) & BM_LCDC_LSR_YMAX)
+/*! @brief Format value for bitfield LCDC_LSR_YMAX. */
+#define BF_LCDC_LSR_YMAX(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LSR_YMAX) & BM_LCDC_LSR_YMAX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the YMAX field to a new value.
-#define BW_LCDC_LSR_YMAX(v)  (HW_LCDC_LSR_WR((HW_LCDC_LSR_RD() & ~BM_LCDC_LSR_YMAX) | BF_LCDC_LSR_YMAX(v)))
-#endif
-//@}
+/*! @brief Set the YMAX field to a new value. */
+#define BW_LCDC_LSR_YMAX(x, v) (HW_LCDC_LSR_WR(x, (HW_LCDC_LSR_RD(x) & ~BM_LCDC_LSR_YMAX) | BF_LCDC_LSR_YMAX(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LSR, field XMAX[26:20] (RW)
@@ -213,30 +192,25 @@ typedef union _hw_lcdc_lsr
  * XMAX[20] is ignored, forcing the x-axis of the screen size to be a multiple of
  * 32 pixels/line.
  */
-//@{
-#define BP_LCDC_LSR_XMAX     (20U)         //!< Bit position for LCDC_LSR_XMAX.
-#define BM_LCDC_LSR_XMAX     (0x07F00000U) //!< Bit mask for LCDC_LSR_XMAX.
-#define BS_LCDC_LSR_XMAX     (7U)          //!< Bit field size in bits for LCDC_LSR_XMAX.
+/*@{*/
+#define BP_LCDC_LSR_XMAX     (20U)         /*!< Bit position for LCDC_LSR_XMAX. */
+#define BM_LCDC_LSR_XMAX     (0x07F00000U) /*!< Bit mask for LCDC_LSR_XMAX. */
+#define BS_LCDC_LSR_XMAX     (7U)          /*!< Bit field size in bits for LCDC_LSR_XMAX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LSR_XMAX field.
-#define BR_LCDC_LSR_XMAX     (HW_LCDC_LSR.B.XMAX)
-#endif
+/*! @brief Read current value of the LCDC_LSR_XMAX field. */
+#define BR_LCDC_LSR_XMAX(x)  (HW_LCDC_LSR(x).B.XMAX)
 
-//! @brief Format value for bitfield LCDC_LSR_XMAX.
-#define BF_LCDC_LSR_XMAX(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LSR_XMAX), uint32_t) & BM_LCDC_LSR_XMAX)
+/*! @brief Format value for bitfield LCDC_LSR_XMAX. */
+#define BF_LCDC_LSR_XMAX(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LSR_XMAX) & BM_LCDC_LSR_XMAX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the XMAX field to a new value.
-#define BW_LCDC_LSR_XMAX(v)  (HW_LCDC_LSR_WR((HW_LCDC_LSR_RD() & ~BM_LCDC_LSR_XMAX) | BF_LCDC_LSR_XMAX(v)))
-#endif
-//@}
+/*! @brief Set the XMAX field to a new value. */
+#define BW_LCDC_LSR_XMAX(x, v) (HW_LCDC_LSR_WR(x, (HW_LCDC_LSR_RD(x) & ~BM_LCDC_LSR_XMAX) | BF_LCDC_LSR_XMAX(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LVPWR - LCDC virtual page width register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LVPWR - LCDC virtual page width register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LVPWR - LCDC virtual page width register (RW)
  *
@@ -250,27 +224,24 @@ typedef union _hw_lcdc_lvpwr
     uint32_t U;
     struct _hw_lcdc_lvpwr_bitfields
     {
-        uint32_t VPW : 11;             //!< [10:0] Virtual page width
-        uint32_t RESERVED0 : 21;       //!< [31:11]
+        uint32_t VPW : 11;             /*!< [10:0] Virtual page width */
+        uint32_t RESERVED0 : 21;       /*!< [31:11]  */
     } B;
 } hw_lcdc_lvpwr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LVPWR register
  */
-//@{
-#define HW_LCDC_LVPWR_ADDR       (REGS_LCDC_BASE + 0x8U)
+/*@{*/
+#define HW_LCDC_LVPWR_ADDR(x)    ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LVPWR            (*(__IO hw_lcdc_lvpwr_t *) HW_LCDC_LVPWR_ADDR)
-#define HW_LCDC_LVPWR_RD()       (HW_LCDC_LVPWR.U)
-#define HW_LCDC_LVPWR_WR(v)      (HW_LCDC_LVPWR.U = (v))
-#define HW_LCDC_LVPWR_SET(v)     (HW_LCDC_LVPWR_WR(HW_LCDC_LVPWR_RD() |  (v)))
-#define HW_LCDC_LVPWR_CLR(v)     (HW_LCDC_LVPWR_WR(HW_LCDC_LVPWR_RD() & ~(v)))
-#define HW_LCDC_LVPWR_TOG(v)     (HW_LCDC_LVPWR_WR(HW_LCDC_LVPWR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LVPWR(x)         (*(__IO hw_lcdc_lvpwr_t *) HW_LCDC_LVPWR_ADDR(x))
+#define HW_LCDC_LVPWR_RD(x)      (HW_LCDC_LVPWR(x).U)
+#define HW_LCDC_LVPWR_WR(x, v)   (HW_LCDC_LVPWR(x).U = (v))
+#define HW_LCDC_LVPWR_SET(x, v)  (HW_LCDC_LVPWR_WR(x, HW_LCDC_LVPWR_RD(x) |  (v)))
+#define HW_LCDC_LVPWR_CLR(x, v)  (HW_LCDC_LVPWR_WR(x, HW_LCDC_LVPWR_RD(x) & ~(v)))
+#define HW_LCDC_LVPWR_TOG(x, v)  (HW_LCDC_LVPWR_WR(x, HW_LCDC_LVPWR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LVPWR bitfields
@@ -283,30 +254,25 @@ typedef union _hw_lcdc_lvpwr
  * 32-bit words required to hold the data for one virtual line. VPW is used in
  * calculating the starting address representing the beginning of each displayed line.
  */
-//@{
-#define BP_LCDC_LVPWR_VPW    (0U)          //!< Bit position for LCDC_LVPWR_VPW.
-#define BM_LCDC_LVPWR_VPW    (0x000007FFU) //!< Bit mask for LCDC_LVPWR_VPW.
-#define BS_LCDC_LVPWR_VPW    (11U)         //!< Bit field size in bits for LCDC_LVPWR_VPW.
+/*@{*/
+#define BP_LCDC_LVPWR_VPW    (0U)          /*!< Bit position for LCDC_LVPWR_VPW. */
+#define BM_LCDC_LVPWR_VPW    (0x000007FFU) /*!< Bit mask for LCDC_LVPWR_VPW. */
+#define BS_LCDC_LVPWR_VPW    (11U)         /*!< Bit field size in bits for LCDC_LVPWR_VPW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LVPWR_VPW field.
-#define BR_LCDC_LVPWR_VPW    (HW_LCDC_LVPWR.B.VPW)
-#endif
+/*! @brief Read current value of the LCDC_LVPWR_VPW field. */
+#define BR_LCDC_LVPWR_VPW(x) (HW_LCDC_LVPWR(x).B.VPW)
 
-//! @brief Format value for bitfield LCDC_LVPWR_VPW.
-#define BF_LCDC_LVPWR_VPW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LVPWR_VPW), uint32_t) & BM_LCDC_LVPWR_VPW)
+/*! @brief Format value for bitfield LCDC_LVPWR_VPW. */
+#define BF_LCDC_LVPWR_VPW(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LVPWR_VPW) & BM_LCDC_LVPWR_VPW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VPW field to a new value.
-#define BW_LCDC_LVPWR_VPW(v) (HW_LCDC_LVPWR_WR((HW_LCDC_LVPWR_RD() & ~BM_LCDC_LVPWR_VPW) | BF_LCDC_LVPWR_VPW(v)))
-#endif
-//@}
+/*! @brief Set the VPW field to a new value. */
+#define BW_LCDC_LVPWR_VPW(x, v) (HW_LCDC_LVPWR_WR(x, (HW_LCDC_LVPWR_RD(x) & ~BM_LCDC_LVPWR_VPW) | BF_LCDC_LVPWR_VPW(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LCPR - LCDC cursor position register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LCPR - LCDC cursor position register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LCPR - LCDC cursor position register (RW)
  *
@@ -319,32 +285,29 @@ typedef union _hw_lcdc_lcpr
     uint32_t U;
     struct _hw_lcdc_lcpr_bitfields
     {
-        uint32_t CYP : 10;             //!< [9:0] Cursor Y position
-        uint32_t RESERVED0 : 6;        //!< [15:10]
-        uint32_t CXP : 10;             //!< [25:16] Cursor X position
-        uint32_t RESERVED1 : 2;        //!< [27:26]
-        uint32_t OP : 1;               //!< [28] Arithmetic operation control
-        uint32_t RESERVED2 : 1;        //!< [29]
-        uint32_t CC : 2;               //!< [31:30] Cursor control
+        uint32_t CYP : 10;             /*!< [9:0] Cursor Y position */
+        uint32_t RESERVED0 : 6;        /*!< [15:10]  */
+        uint32_t CXP : 10;             /*!< [25:16] Cursor X position */
+        uint32_t RESERVED1 : 2;        /*!< [27:26]  */
+        uint32_t OP : 1;               /*!< [28] Arithmetic operation control */
+        uint32_t RESERVED2 : 1;        /*!< [29]  */
+        uint32_t CC : 2;               /*!< [31:30] Cursor control */
     } B;
 } hw_lcdc_lcpr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LCPR register
  */
-//@{
-#define HW_LCDC_LCPR_ADDR        (REGS_LCDC_BASE + 0xCU)
+/*@{*/
+#define HW_LCDC_LCPR_ADDR(x)     ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LCPR             (*(__IO hw_lcdc_lcpr_t *) HW_LCDC_LCPR_ADDR)
-#define HW_LCDC_LCPR_RD()        (HW_LCDC_LCPR.U)
-#define HW_LCDC_LCPR_WR(v)       (HW_LCDC_LCPR.U = (v))
-#define HW_LCDC_LCPR_SET(v)      (HW_LCDC_LCPR_WR(HW_LCDC_LCPR_RD() |  (v)))
-#define HW_LCDC_LCPR_CLR(v)      (HW_LCDC_LCPR_WR(HW_LCDC_LCPR_RD() & ~(v)))
-#define HW_LCDC_LCPR_TOG(v)      (HW_LCDC_LCPR_WR(HW_LCDC_LCPR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LCPR(x)          (*(__IO hw_lcdc_lcpr_t *) HW_LCDC_LCPR_ADDR(x))
+#define HW_LCDC_LCPR_RD(x)       (HW_LCDC_LCPR(x).U)
+#define HW_LCDC_LCPR_WR(x, v)    (HW_LCDC_LCPR(x).U = (v))
+#define HW_LCDC_LCPR_SET(x, v)   (HW_LCDC_LCPR_WR(x, HW_LCDC_LCPR_RD(x) |  (v)))
+#define HW_LCDC_LCPR_CLR(x, v)   (HW_LCDC_LCPR_WR(x, HW_LCDC_LCPR_RD(x) & ~(v)))
+#define HW_LCDC_LCPR_TOG(x, v)   (HW_LCDC_LCPR_WR(x, HW_LCDC_LCPR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LCPR bitfields
@@ -356,24 +319,20 @@ typedef union _hw_lcdc_lcpr
  * Represents the cursor's vertical starting position Y in pixel count (from 0
  * to YMAX).
  */
-//@{
-#define BP_LCDC_LCPR_CYP     (0U)          //!< Bit position for LCDC_LCPR_CYP.
-#define BM_LCDC_LCPR_CYP     (0x000003FFU) //!< Bit mask for LCDC_LCPR_CYP.
-#define BS_LCDC_LCPR_CYP     (10U)         //!< Bit field size in bits for LCDC_LCPR_CYP.
+/*@{*/
+#define BP_LCDC_LCPR_CYP     (0U)          /*!< Bit position for LCDC_LCPR_CYP. */
+#define BM_LCDC_LCPR_CYP     (0x000003FFU) /*!< Bit mask for LCDC_LCPR_CYP. */
+#define BS_LCDC_LCPR_CYP     (10U)         /*!< Bit field size in bits for LCDC_LCPR_CYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCPR_CYP field.
-#define BR_LCDC_LCPR_CYP     (HW_LCDC_LCPR.B.CYP)
-#endif
+/*! @brief Read current value of the LCDC_LCPR_CYP field. */
+#define BR_LCDC_LCPR_CYP(x)  (HW_LCDC_LCPR(x).B.CYP)
 
-//! @brief Format value for bitfield LCDC_LCPR_CYP.
-#define BF_LCDC_LCPR_CYP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCPR_CYP), uint32_t) & BM_LCDC_LCPR_CYP)
+/*! @brief Format value for bitfield LCDC_LCPR_CYP. */
+#define BF_LCDC_LCPR_CYP(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LCPR_CYP) & BM_LCDC_LCPR_CYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CYP field to a new value.
-#define BW_LCDC_LCPR_CYP(v)  (HW_LCDC_LCPR_WR((HW_LCDC_LCPR_RD() & ~BM_LCDC_LCPR_CYP) | BF_LCDC_LCPR_CYP(v)))
-#endif
-//@}
+/*! @brief Set the CYP field to a new value. */
+#define BW_LCDC_LCPR_CYP(x, v) (HW_LCDC_LCPR_WR(x, (HW_LCDC_LCPR_RD(x) & ~BM_LCDC_LCPR_CYP) | BF_LCDC_LCPR_CYP(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCPR, field CXP[25:16] (RW)
@@ -381,24 +340,20 @@ typedef union _hw_lcdc_lcpr
  * Represents the cursor's horizontal starting position X in pixel count (from 0
  * to XMAX).
  */
-//@{
-#define BP_LCDC_LCPR_CXP     (16U)         //!< Bit position for LCDC_LCPR_CXP.
-#define BM_LCDC_LCPR_CXP     (0x03FF0000U) //!< Bit mask for LCDC_LCPR_CXP.
-#define BS_LCDC_LCPR_CXP     (10U)         //!< Bit field size in bits for LCDC_LCPR_CXP.
+/*@{*/
+#define BP_LCDC_LCPR_CXP     (16U)         /*!< Bit position for LCDC_LCPR_CXP. */
+#define BM_LCDC_LCPR_CXP     (0x03FF0000U) /*!< Bit mask for LCDC_LCPR_CXP. */
+#define BS_LCDC_LCPR_CXP     (10U)         /*!< Bit field size in bits for LCDC_LCPR_CXP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCPR_CXP field.
-#define BR_LCDC_LCPR_CXP     (HW_LCDC_LCPR.B.CXP)
-#endif
+/*! @brief Read current value of the LCDC_LCPR_CXP field. */
+#define BR_LCDC_LCPR_CXP(x)  (HW_LCDC_LCPR(x).B.CXP)
 
-//! @brief Format value for bitfield LCDC_LCPR_CXP.
-#define BF_LCDC_LCPR_CXP(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCPR_CXP), uint32_t) & BM_LCDC_LCPR_CXP)
+/*! @brief Format value for bitfield LCDC_LCPR_CXP. */
+#define BF_LCDC_LCPR_CXP(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LCPR_CXP) & BM_LCDC_LCPR_CXP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CXP field to a new value.
-#define BW_LCDC_LCPR_CXP(v)  (HW_LCDC_LCPR_WR((HW_LCDC_LCPR_RD() & ~BM_LCDC_LCPR_CXP) | BF_LCDC_LCPR_CXP(v)))
-#endif
-//@}
+/*! @brief Set the CXP field to a new value. */
+#define BW_LCDC_LCPR_CXP(x, v) (HW_LCDC_LCPR_WR(x, (HW_LCDC_LCPR_RD(x) & ~BM_LCDC_LCPR_CXP) | BF_LCDC_LCPR_CXP(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCPR, field OP[28] (RW)
@@ -409,24 +364,20 @@ typedef union _hw_lcdc_lcpr
  * - 0 - Disable arithmetic operation
  * - 1 - Enable arithmetic operation
  */
-//@{
-#define BP_LCDC_LCPR_OP      (28U)         //!< Bit position for LCDC_LCPR_OP.
-#define BM_LCDC_LCPR_OP      (0x10000000U) //!< Bit mask for LCDC_LCPR_OP.
-#define BS_LCDC_LCPR_OP      (1U)          //!< Bit field size in bits for LCDC_LCPR_OP.
+/*@{*/
+#define BP_LCDC_LCPR_OP      (28U)         /*!< Bit position for LCDC_LCPR_OP. */
+#define BM_LCDC_LCPR_OP      (0x10000000U) /*!< Bit mask for LCDC_LCPR_OP. */
+#define BS_LCDC_LCPR_OP      (1U)          /*!< Bit field size in bits for LCDC_LCPR_OP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCPR_OP field.
-#define BR_LCDC_LCPR_OP      (BITBAND_ACCESS32(HW_LCDC_LCPR_ADDR, BP_LCDC_LCPR_OP))
-#endif
+/*! @brief Read current value of the LCDC_LCPR_OP field. */
+#define BR_LCDC_LCPR_OP(x)   (BITBAND_ACCESS32(HW_LCDC_LCPR_ADDR(x), BP_LCDC_LCPR_OP))
 
-//! @brief Format value for bitfield LCDC_LCPR_OP.
-#define BF_LCDC_LCPR_OP(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCPR_OP), uint32_t) & BM_LCDC_LCPR_OP)
+/*! @brief Format value for bitfield LCDC_LCPR_OP. */
+#define BF_LCDC_LCPR_OP(v)   ((uint32_t)((uint32_t)(v) << BP_LCDC_LCPR_OP) & BM_LCDC_LCPR_OP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OP field to a new value.
-#define BW_LCDC_LCPR_OP(v)   (BITBAND_ACCESS32(HW_LCDC_LCPR_ADDR, BP_LCDC_LCPR_OP) = (v))
-#endif
-//@}
+/*! @brief Set the OP field to a new value. */
+#define BW_LCDC_LCPR_OP(x, v) (BITBAND_ACCESS32(HW_LCDC_LCPR_ADDR(x), BP_LCDC_LCPR_OP) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCPR, field CC[31:30] (RW)
@@ -442,30 +393,25 @@ typedef union _hw_lcdc_lcpr
  * cursor color in LCCMR. Logic AND between LCD display data and the cursor color
  * in LCCMR.
  */
-//@{
-#define BP_LCDC_LCPR_CC      (30U)         //!< Bit position for LCDC_LCPR_CC.
-#define BM_LCDC_LCPR_CC      (0xC0000000U) //!< Bit mask for LCDC_LCPR_CC.
-#define BS_LCDC_LCPR_CC      (2U)          //!< Bit field size in bits for LCDC_LCPR_CC.
+/*@{*/
+#define BP_LCDC_LCPR_CC      (30U)         /*!< Bit position for LCDC_LCPR_CC. */
+#define BM_LCDC_LCPR_CC      (0xC0000000U) /*!< Bit mask for LCDC_LCPR_CC. */
+#define BS_LCDC_LCPR_CC      (2U)          /*!< Bit field size in bits for LCDC_LCPR_CC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCPR_CC field.
-#define BR_LCDC_LCPR_CC      (HW_LCDC_LCPR.B.CC)
-#endif
+/*! @brief Read current value of the LCDC_LCPR_CC field. */
+#define BR_LCDC_LCPR_CC(x)   (HW_LCDC_LCPR(x).B.CC)
 
-//! @brief Format value for bitfield LCDC_LCPR_CC.
-#define BF_LCDC_LCPR_CC(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCPR_CC), uint32_t) & BM_LCDC_LCPR_CC)
+/*! @brief Format value for bitfield LCDC_LCPR_CC. */
+#define BF_LCDC_LCPR_CC(v)   ((uint32_t)((uint32_t)(v) << BP_LCDC_LCPR_CC) & BM_LCDC_LCPR_CC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CC field to a new value.
-#define BW_LCDC_LCPR_CC(v)   (HW_LCDC_LCPR_WR((HW_LCDC_LCPR_RD() & ~BM_LCDC_LCPR_CC) | BF_LCDC_LCPR_CC(v)))
-#endif
-//@}
+/*! @brief Set the CC field to a new value. */
+#define BW_LCDC_LCPR_CC(x, v) (HW_LCDC_LCPR_WR(x, (HW_LCDC_LCPR_RD(x) & ~BM_LCDC_LCPR_CC) | BF_LCDC_LCPR_CC(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LCWHB - LCDC cursor width, height, and blink register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LCWHB - LCDC cursor width, height, and blink register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LCWHB - LCDC cursor width, height, and blink register (RW)
  *
@@ -478,32 +424,29 @@ typedef union _hw_lcdc_lcwhb
     uint32_t U;
     struct _hw_lcdc_lcwhb_bitfields
     {
-        uint32_t BD : 8;               //!< [7:0] Blink divisor
-        uint32_t RESERVED0 : 8;        //!< [15:8]
-        uint32_t CH : 5;               //!< [20:16] Cursor height
-        uint32_t RESERVED1 : 3;        //!< [23:21]
-        uint32_t CW : 5;               //!< [28:24] Cursor width
-        uint32_t RESERVED2 : 2;        //!< [30:29]
-        uint32_t BK_EN : 1;            //!< [31] Blink enable
+        uint32_t BD : 8;               /*!< [7:0] Blink divisor */
+        uint32_t RESERVED0 : 8;        /*!< [15:8]  */
+        uint32_t CH : 5;               /*!< [20:16] Cursor height */
+        uint32_t RESERVED1 : 3;        /*!< [23:21]  */
+        uint32_t CW : 5;               /*!< [28:24] Cursor width */
+        uint32_t RESERVED2 : 2;        /*!< [30:29]  */
+        uint32_t BK_EN : 1;            /*!< [31] Blink enable */
     } B;
 } hw_lcdc_lcwhb_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LCWHB register
  */
-//@{
-#define HW_LCDC_LCWHB_ADDR       (REGS_LCDC_BASE + 0x10U)
+/*@{*/
+#define HW_LCDC_LCWHB_ADDR(x)    ((x) + 0x10U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LCWHB            (*(__IO hw_lcdc_lcwhb_t *) HW_LCDC_LCWHB_ADDR)
-#define HW_LCDC_LCWHB_RD()       (HW_LCDC_LCWHB.U)
-#define HW_LCDC_LCWHB_WR(v)      (HW_LCDC_LCWHB.U = (v))
-#define HW_LCDC_LCWHB_SET(v)     (HW_LCDC_LCWHB_WR(HW_LCDC_LCWHB_RD() |  (v)))
-#define HW_LCDC_LCWHB_CLR(v)     (HW_LCDC_LCWHB_WR(HW_LCDC_LCWHB_RD() & ~(v)))
-#define HW_LCDC_LCWHB_TOG(v)     (HW_LCDC_LCWHB_WR(HW_LCDC_LCWHB_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LCWHB(x)         (*(__IO hw_lcdc_lcwhb_t *) HW_LCDC_LCWHB_ADDR(x))
+#define HW_LCDC_LCWHB_RD(x)      (HW_LCDC_LCWHB(x).U)
+#define HW_LCDC_LCWHB_WR(x, v)   (HW_LCDC_LCWHB(x).U = (v))
+#define HW_LCDC_LCWHB_SET(x, v)  (HW_LCDC_LCWHB_WR(x, HW_LCDC_LCWHB_RD(x) |  (v)))
+#define HW_LCDC_LCWHB_CLR(x, v)  (HW_LCDC_LCWHB_WR(x, HW_LCDC_LCWHB_RD(x) & ~(v)))
+#define HW_LCDC_LCWHB_TOG(x, v)  (HW_LCDC_LCWHB_WR(x, HW_LCDC_LCWHB_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LCWHB bitfields
@@ -517,24 +460,20 @@ typedef union _hw_lcdc_lcwhb
  * counter value equals BD, the cursor toggles on/off. Hence larger the BD, slower
  * the cursor will blink. The fastest blinking is disabled when BD is 0.
  */
-//@{
-#define BP_LCDC_LCWHB_BD     (0U)          //!< Bit position for LCDC_LCWHB_BD.
-#define BM_LCDC_LCWHB_BD     (0x000000FFU) //!< Bit mask for LCDC_LCWHB_BD.
-#define BS_LCDC_LCWHB_BD     (8U)          //!< Bit field size in bits for LCDC_LCWHB_BD.
+/*@{*/
+#define BP_LCDC_LCWHB_BD     (0U)          /*!< Bit position for LCDC_LCWHB_BD. */
+#define BM_LCDC_LCWHB_BD     (0x000000FFU) /*!< Bit mask for LCDC_LCWHB_BD. */
+#define BS_LCDC_LCWHB_BD     (8U)          /*!< Bit field size in bits for LCDC_LCWHB_BD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCWHB_BD field.
-#define BR_LCDC_LCWHB_BD     (HW_LCDC_LCWHB.B.BD)
-#endif
+/*! @brief Read current value of the LCDC_LCWHB_BD field. */
+#define BR_LCDC_LCWHB_BD(x)  (HW_LCDC_LCWHB(x).B.BD)
 
-//! @brief Format value for bitfield LCDC_LCWHB_BD.
-#define BF_LCDC_LCWHB_BD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCWHB_BD), uint32_t) & BM_LCDC_LCWHB_BD)
+/*! @brief Format value for bitfield LCDC_LCWHB_BD. */
+#define BF_LCDC_LCWHB_BD(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LCWHB_BD) & BM_LCDC_LCWHB_BD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BD field to a new value.
-#define BW_LCDC_LCWHB_BD(v)  (HW_LCDC_LCWHB_WR((HW_LCDC_LCWHB_RD() & ~BM_LCDC_LCWHB_BD) | BF_LCDC_LCWHB_BD(v)))
-#endif
-//@}
+/*! @brief Set the BD field to a new value. */
+#define BW_LCDC_LCWHB_BD(x, v) (HW_LCDC_LCWHB_WR(x, (HW_LCDC_LCWHB_RD(x) & ~BM_LCDC_LCWHB_BD) | BF_LCDC_LCWHB_BD(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCWHB, field CH[20:16] (RW)
@@ -542,24 +481,20 @@ typedef union _hw_lcdc_lcwhb
  * Specifies the height of hardware cursor in pixels. This field can be any
  * value between 1 and 31 (setting this field to zero disables the cursor).
  */
-//@{
-#define BP_LCDC_LCWHB_CH     (16U)         //!< Bit position for LCDC_LCWHB_CH.
-#define BM_LCDC_LCWHB_CH     (0x001F0000U) //!< Bit mask for LCDC_LCWHB_CH.
-#define BS_LCDC_LCWHB_CH     (5U)          //!< Bit field size in bits for LCDC_LCWHB_CH.
+/*@{*/
+#define BP_LCDC_LCWHB_CH     (16U)         /*!< Bit position for LCDC_LCWHB_CH. */
+#define BM_LCDC_LCWHB_CH     (0x001F0000U) /*!< Bit mask for LCDC_LCWHB_CH. */
+#define BS_LCDC_LCWHB_CH     (5U)          /*!< Bit field size in bits for LCDC_LCWHB_CH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCWHB_CH field.
-#define BR_LCDC_LCWHB_CH     (HW_LCDC_LCWHB.B.CH)
-#endif
+/*! @brief Read current value of the LCDC_LCWHB_CH field. */
+#define BR_LCDC_LCWHB_CH(x)  (HW_LCDC_LCWHB(x).B.CH)
 
-//! @brief Format value for bitfield LCDC_LCWHB_CH.
-#define BF_LCDC_LCWHB_CH(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCWHB_CH), uint32_t) & BM_LCDC_LCWHB_CH)
+/*! @brief Format value for bitfield LCDC_LCWHB_CH. */
+#define BF_LCDC_LCWHB_CH(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LCWHB_CH) & BM_LCDC_LCWHB_CH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH field to a new value.
-#define BW_LCDC_LCWHB_CH(v)  (HW_LCDC_LCWHB_WR((HW_LCDC_LCWHB_RD() & ~BM_LCDC_LCWHB_CH) | BF_LCDC_LCWHB_CH(v)))
-#endif
-//@}
+/*! @brief Set the CH field to a new value. */
+#define BW_LCDC_LCWHB_CH(x, v) (HW_LCDC_LCWHB_WR(x, (HW_LCDC_LCWHB_RD(x) & ~BM_LCDC_LCWHB_CH) | BF_LCDC_LCWHB_CH(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCWHB, field CW[28:24] (RW)
@@ -567,24 +502,20 @@ typedef union _hw_lcdc_lcwhb
  * Specifies the width of hardware cursor in pixels. This field can be any value
  * between 1 and 31 (setting this field to zero disables the cursor).
  */
-//@{
-#define BP_LCDC_LCWHB_CW     (24U)         //!< Bit position for LCDC_LCWHB_CW.
-#define BM_LCDC_LCWHB_CW     (0x1F000000U) //!< Bit mask for LCDC_LCWHB_CW.
-#define BS_LCDC_LCWHB_CW     (5U)          //!< Bit field size in bits for LCDC_LCWHB_CW.
+/*@{*/
+#define BP_LCDC_LCWHB_CW     (24U)         /*!< Bit position for LCDC_LCWHB_CW. */
+#define BM_LCDC_LCWHB_CW     (0x1F000000U) /*!< Bit mask for LCDC_LCWHB_CW. */
+#define BS_LCDC_LCWHB_CW     (5U)          /*!< Bit field size in bits for LCDC_LCWHB_CW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCWHB_CW field.
-#define BR_LCDC_LCWHB_CW     (HW_LCDC_LCWHB.B.CW)
-#endif
+/*! @brief Read current value of the LCDC_LCWHB_CW field. */
+#define BR_LCDC_LCWHB_CW(x)  (HW_LCDC_LCWHB(x).B.CW)
 
-//! @brief Format value for bitfield LCDC_LCWHB_CW.
-#define BF_LCDC_LCWHB_CW(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCWHB_CW), uint32_t) & BM_LCDC_LCWHB_CW)
+/*! @brief Format value for bitfield LCDC_LCWHB_CW. */
+#define BF_LCDC_LCWHB_CW(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LCWHB_CW) & BM_LCDC_LCWHB_CW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CW field to a new value.
-#define BW_LCDC_LCWHB_CW(v)  (HW_LCDC_LCWHB_WR((HW_LCDC_LCWHB_RD() & ~BM_LCDC_LCWHB_CW) | BF_LCDC_LCWHB_CW(v)))
-#endif
-//@}
+/*! @brief Set the CW field to a new value. */
+#define BW_LCDC_LCWHB_CW(x, v) (HW_LCDC_LCWHB_WR(x, (HW_LCDC_LCWHB_RD(x) & ~BM_LCDC_LCWHB_CW) | BF_LCDC_LCWHB_CW(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCWHB, field BK_EN[31] (RW)
@@ -595,30 +526,25 @@ typedef union _hw_lcdc_lcwhb
  * - 0 - Blink is disabled.
  * - 1 - Blink is enabled.
  */
-//@{
-#define BP_LCDC_LCWHB_BK_EN  (31U)         //!< Bit position for LCDC_LCWHB_BK_EN.
-#define BM_LCDC_LCWHB_BK_EN  (0x80000000U) //!< Bit mask for LCDC_LCWHB_BK_EN.
-#define BS_LCDC_LCWHB_BK_EN  (1U)          //!< Bit field size in bits for LCDC_LCWHB_BK_EN.
+/*@{*/
+#define BP_LCDC_LCWHB_BK_EN  (31U)         /*!< Bit position for LCDC_LCWHB_BK_EN. */
+#define BM_LCDC_LCWHB_BK_EN  (0x80000000U) /*!< Bit mask for LCDC_LCWHB_BK_EN. */
+#define BS_LCDC_LCWHB_BK_EN  (1U)          /*!< Bit field size in bits for LCDC_LCWHB_BK_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCWHB_BK_EN field.
-#define BR_LCDC_LCWHB_BK_EN  (BITBAND_ACCESS32(HW_LCDC_LCWHB_ADDR, BP_LCDC_LCWHB_BK_EN))
-#endif
+/*! @brief Read current value of the LCDC_LCWHB_BK_EN field. */
+#define BR_LCDC_LCWHB_BK_EN(x) (BITBAND_ACCESS32(HW_LCDC_LCWHB_ADDR(x), BP_LCDC_LCWHB_BK_EN))
 
-//! @brief Format value for bitfield LCDC_LCWHB_BK_EN.
-#define BF_LCDC_LCWHB_BK_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCWHB_BK_EN), uint32_t) & BM_LCDC_LCWHB_BK_EN)
+/*! @brief Format value for bitfield LCDC_LCWHB_BK_EN. */
+#define BF_LCDC_LCWHB_BK_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LCWHB_BK_EN) & BM_LCDC_LCWHB_BK_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BK_EN field to a new value.
-#define BW_LCDC_LCWHB_BK_EN(v) (BITBAND_ACCESS32(HW_LCDC_LCWHB_ADDR, BP_LCDC_LCWHB_BK_EN) = (v))
-#endif
-//@}
+/*! @brief Set the BK_EN field to a new value. */
+#define BW_LCDC_LCWHB_BK_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LCWHB_ADDR(x), BP_LCDC_LCWHB_BK_EN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LCCMR - LCDC color cursor mapping register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LCCMR - LCDC color cursor mapping register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LCCMR - LCDC color cursor mapping register (RW)
  *
@@ -635,29 +561,26 @@ typedef union _hw_lcdc_lccmr
     uint32_t U;
     struct _hw_lcdc_lccmr_bitfields
     {
-        uint32_t CUR_COL_B : 6;        //!< [5:0] Cursor blue field
-        uint32_t CUR_COL_G : 6;        //!< [11:6] Cursor green field
-        uint32_t CUR_COL_R : 6;        //!< [17:12] Cursor red field
-        uint32_t RESERVED0 : 14;       //!< [31:18]
+        uint32_t CUR_COL_B : 6;        /*!< [5:0] Cursor blue field */
+        uint32_t CUR_COL_G : 6;        /*!< [11:6] Cursor green field */
+        uint32_t CUR_COL_R : 6;        /*!< [17:12] Cursor red field */
+        uint32_t RESERVED0 : 14;       /*!< [31:18]  */
     } B;
 } hw_lcdc_lccmr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LCCMR register
  */
-//@{
-#define HW_LCDC_LCCMR_ADDR       (REGS_LCDC_BASE + 0x14U)
+/*@{*/
+#define HW_LCDC_LCCMR_ADDR(x)    ((x) + 0x14U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LCCMR            (*(__IO hw_lcdc_lccmr_t *) HW_LCDC_LCCMR_ADDR)
-#define HW_LCDC_LCCMR_RD()       (HW_LCDC_LCCMR.U)
-#define HW_LCDC_LCCMR_WR(v)      (HW_LCDC_LCCMR.U = (v))
-#define HW_LCDC_LCCMR_SET(v)     (HW_LCDC_LCCMR_WR(HW_LCDC_LCCMR_RD() |  (v)))
-#define HW_LCDC_LCCMR_CLR(v)     (HW_LCDC_LCCMR_WR(HW_LCDC_LCCMR_RD() & ~(v)))
-#define HW_LCDC_LCCMR_TOG(v)     (HW_LCDC_LCCMR_WR(HW_LCDC_LCCMR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LCCMR(x)         (*(__IO hw_lcdc_lccmr_t *) HW_LCDC_LCCMR_ADDR(x))
+#define HW_LCDC_LCCMR_RD(x)      (HW_LCDC_LCCMR(x).U)
+#define HW_LCDC_LCCMR_WR(x, v)   (HW_LCDC_LCCMR(x).U = (v))
+#define HW_LCDC_LCCMR_SET(x, v)  (HW_LCDC_LCCMR_WR(x, HW_LCDC_LCCMR_RD(x) |  (v)))
+#define HW_LCDC_LCCMR_CLR(x, v)  (HW_LCDC_LCCMR_WR(x, HW_LCDC_LCCMR_RD(x) & ~(v)))
+#define HW_LCDC_LCCMR_TOG(x, v)  (HW_LCDC_LCCMR_WR(x, HW_LCDC_LCCMR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LCCMR bitfields
@@ -672,24 +595,20 @@ typedef union _hw_lcdc_lccmr
  * - 000000 - No blue
  * - 111111 - Full blue
  */
-//@{
-#define BP_LCDC_LCCMR_CUR_COL_B (0U)       //!< Bit position for LCDC_LCCMR_CUR_COL_B.
-#define BM_LCDC_LCCMR_CUR_COL_B (0x0000003FU) //!< Bit mask for LCDC_LCCMR_CUR_COL_B.
-#define BS_LCDC_LCCMR_CUR_COL_B (6U)       //!< Bit field size in bits for LCDC_LCCMR_CUR_COL_B.
+/*@{*/
+#define BP_LCDC_LCCMR_CUR_COL_B (0U)       /*!< Bit position for LCDC_LCCMR_CUR_COL_B. */
+#define BM_LCDC_LCCMR_CUR_COL_B (0x0000003FU) /*!< Bit mask for LCDC_LCCMR_CUR_COL_B. */
+#define BS_LCDC_LCCMR_CUR_COL_B (6U)       /*!< Bit field size in bits for LCDC_LCCMR_CUR_COL_B. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCCMR_CUR_COL_B field.
-#define BR_LCDC_LCCMR_CUR_COL_B (HW_LCDC_LCCMR.B.CUR_COL_B)
-#endif
+/*! @brief Read current value of the LCDC_LCCMR_CUR_COL_B field. */
+#define BR_LCDC_LCCMR_CUR_COL_B(x) (HW_LCDC_LCCMR(x).B.CUR_COL_B)
 
-//! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_B.
-#define BF_LCDC_LCCMR_CUR_COL_B(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCCMR_CUR_COL_B), uint32_t) & BM_LCDC_LCCMR_CUR_COL_B)
+/*! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_B. */
+#define BF_LCDC_LCCMR_CUR_COL_B(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LCCMR_CUR_COL_B) & BM_LCDC_LCCMR_CUR_COL_B)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CUR_COL_B field to a new value.
-#define BW_LCDC_LCCMR_CUR_COL_B(v) (HW_LCDC_LCCMR_WR((HW_LCDC_LCCMR_RD() & ~BM_LCDC_LCCMR_CUR_COL_B) | BF_LCDC_LCCMR_CUR_COL_B(v)))
-#endif
-//@}
+/*! @brief Set the CUR_COL_B field to a new value. */
+#define BW_LCDC_LCCMR_CUR_COL_B(x, v) (HW_LCDC_LCCMR_WR(x, (HW_LCDC_LCCMR_RD(x) & ~BM_LCDC_LCCMR_CUR_COL_B) | BF_LCDC_LCCMR_CUR_COL_B(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCCMR, field CUR_COL_G[11:6] (RW)
@@ -700,24 +619,20 @@ typedef union _hw_lcdc_lccmr
  * - 000000 - No green
  * - 111111 - Full green
  */
-//@{
-#define BP_LCDC_LCCMR_CUR_COL_G (6U)       //!< Bit position for LCDC_LCCMR_CUR_COL_G.
-#define BM_LCDC_LCCMR_CUR_COL_G (0x00000FC0U) //!< Bit mask for LCDC_LCCMR_CUR_COL_G.
-#define BS_LCDC_LCCMR_CUR_COL_G (6U)       //!< Bit field size in bits for LCDC_LCCMR_CUR_COL_G.
+/*@{*/
+#define BP_LCDC_LCCMR_CUR_COL_G (6U)       /*!< Bit position for LCDC_LCCMR_CUR_COL_G. */
+#define BM_LCDC_LCCMR_CUR_COL_G (0x00000FC0U) /*!< Bit mask for LCDC_LCCMR_CUR_COL_G. */
+#define BS_LCDC_LCCMR_CUR_COL_G (6U)       /*!< Bit field size in bits for LCDC_LCCMR_CUR_COL_G. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCCMR_CUR_COL_G field.
-#define BR_LCDC_LCCMR_CUR_COL_G (HW_LCDC_LCCMR.B.CUR_COL_G)
-#endif
+/*! @brief Read current value of the LCDC_LCCMR_CUR_COL_G field. */
+#define BR_LCDC_LCCMR_CUR_COL_G(x) (HW_LCDC_LCCMR(x).B.CUR_COL_G)
 
-//! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_G.
-#define BF_LCDC_LCCMR_CUR_COL_G(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCCMR_CUR_COL_G), uint32_t) & BM_LCDC_LCCMR_CUR_COL_G)
+/*! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_G. */
+#define BF_LCDC_LCCMR_CUR_COL_G(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LCCMR_CUR_COL_G) & BM_LCDC_LCCMR_CUR_COL_G)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CUR_COL_G field to a new value.
-#define BW_LCDC_LCCMR_CUR_COL_G(v) (HW_LCDC_LCCMR_WR((HW_LCDC_LCCMR_RD() & ~BM_LCDC_LCCMR_CUR_COL_G) | BF_LCDC_LCCMR_CUR_COL_G(v)))
-#endif
-//@}
+/*! @brief Set the CUR_COL_G field to a new value. */
+#define BW_LCDC_LCCMR_CUR_COL_G(x, v) (HW_LCDC_LCCMR_WR(x, (HW_LCDC_LCCMR_RD(x) & ~BM_LCDC_LCCMR_CUR_COL_G) | BF_LCDC_LCCMR_CUR_COL_G(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LCCMR, field CUR_COL_R[17:12] (RW)
@@ -728,30 +643,25 @@ typedef union _hw_lcdc_lccmr
  * - 000000 - No red
  * - 111111 - Full red
  */
-//@{
-#define BP_LCDC_LCCMR_CUR_COL_R (12U)      //!< Bit position for LCDC_LCCMR_CUR_COL_R.
-#define BM_LCDC_LCCMR_CUR_COL_R (0x0003F000U) //!< Bit mask for LCDC_LCCMR_CUR_COL_R.
-#define BS_LCDC_LCCMR_CUR_COL_R (6U)       //!< Bit field size in bits for LCDC_LCCMR_CUR_COL_R.
+/*@{*/
+#define BP_LCDC_LCCMR_CUR_COL_R (12U)      /*!< Bit position for LCDC_LCCMR_CUR_COL_R. */
+#define BM_LCDC_LCCMR_CUR_COL_R (0x0003F000U) /*!< Bit mask for LCDC_LCCMR_CUR_COL_R. */
+#define BS_LCDC_LCCMR_CUR_COL_R (6U)       /*!< Bit field size in bits for LCDC_LCCMR_CUR_COL_R. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LCCMR_CUR_COL_R field.
-#define BR_LCDC_LCCMR_CUR_COL_R (HW_LCDC_LCCMR.B.CUR_COL_R)
-#endif
+/*! @brief Read current value of the LCDC_LCCMR_CUR_COL_R field. */
+#define BR_LCDC_LCCMR_CUR_COL_R(x) (HW_LCDC_LCCMR(x).B.CUR_COL_R)
 
-//! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_R.
-#define BF_LCDC_LCCMR_CUR_COL_R(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LCCMR_CUR_COL_R), uint32_t) & BM_LCDC_LCCMR_CUR_COL_R)
+/*! @brief Format value for bitfield LCDC_LCCMR_CUR_COL_R. */
+#define BF_LCDC_LCCMR_CUR_COL_R(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LCCMR_CUR_COL_R) & BM_LCDC_LCCMR_CUR_COL_R)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CUR_COL_R field to a new value.
-#define BW_LCDC_LCCMR_CUR_COL_R(v) (HW_LCDC_LCCMR_WR((HW_LCDC_LCCMR_RD() & ~BM_LCDC_LCCMR_CUR_COL_R) | BF_LCDC_LCCMR_CUR_COL_R(v)))
-#endif
-//@}
+/*! @brief Set the CUR_COL_R field to a new value. */
+#define BW_LCDC_LCCMR_CUR_COL_R(x, v) (HW_LCDC_LCCMR_WR(x, (HW_LCDC_LCCMR_RD(x) & ~BM_LCDC_LCCMR_CUR_COL_R) | BF_LCDC_LCCMR_CUR_COL_R(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LPCR - LCDC panel configuration register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LPCR - LCDC panel configuration register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LPCR - LCDC panel configuration register (RW)
  *
@@ -764,43 +674,40 @@ typedef union _hw_lcdc_lpcr
     uint32_t U;
     struct _hw_lcdc_lpcr_bitfields
     {
-        uint32_t PCD : 6;              //!< [5:0] Pixel clock divider
-        uint32_t RESERVED0 : 1;        //!< [6]
-        uint32_t SCLKSEL : 1;          //!< [7] LSCLK select
-        uint32_t ACD : 7;              //!< [14:8] Alternate crystal direction
-        uint32_t ACDSEL : 1;           //!< [15] ACD clock source select
-        uint32_t REV_VS : 1;           //!< [16] Reverse vertical scan
-        uint32_t SWAP_SEL : 1;         //!< [17] Swap select
-        uint32_t END_SEL : 1;          //!< [18] Endian select
-        uint32_t SCLKIDLE : 1;         //!< [19] LSCLK idle enable
-        uint32_t OEPOL : 1;            //!< [20] Output enable polarity
-        uint32_t CLKPOL : 1;           //!< [21] LCD shift clock polarity
-        uint32_t LPPOL : 1;            //!< [22] Line pulse polarity
-        uint32_t FLMPOL : 1;           //!< [23] First line marker polarity
-        uint32_t PIXPOL : 1;           //!< [24] Pixel polarity
-        uint32_t BPIX : 3;             //!< [27:25] Bits per pixel
-        uint32_t PBSIZ : 2;            //!< [29:28] Panel bus width
-        uint32_t COLOR : 1;            //!< [30] Interfaces to color display
-        uint32_t TFT : 1;              //!< [31] Interfaces to TFT display
+        uint32_t PCD : 6;              /*!< [5:0] Pixel clock divider */
+        uint32_t RESERVED0 : 1;        /*!< [6]  */
+        uint32_t SCLKSEL : 1;          /*!< [7] LSCLK select */
+        uint32_t ACD : 7;              /*!< [14:8] Alternate crystal direction */
+        uint32_t ACDSEL : 1;           /*!< [15] ACD clock source select */
+        uint32_t REV_VS : 1;           /*!< [16] Reverse vertical scan */
+        uint32_t SWAP_SEL : 1;         /*!< [17] Swap select */
+        uint32_t END_SEL : 1;          /*!< [18] Endian select */
+        uint32_t SCLKIDLE : 1;         /*!< [19] LSCLK idle enable */
+        uint32_t OEPOL : 1;            /*!< [20] Output enable polarity */
+        uint32_t CLKPOL : 1;           /*!< [21] LCD shift clock polarity */
+        uint32_t LPPOL : 1;            /*!< [22] Line pulse polarity */
+        uint32_t FLMPOL : 1;           /*!< [23] First line marker polarity */
+        uint32_t PIXPOL : 1;           /*!< [24] Pixel polarity */
+        uint32_t BPIX : 3;             /*!< [27:25] Bits per pixel */
+        uint32_t PBSIZ : 2;            /*!< [29:28] Panel bus width */
+        uint32_t COLOR : 1;            /*!< [30] Interfaces to color display */
+        uint32_t TFT : 1;              /*!< [31] Interfaces to TFT display */
     } B;
 } hw_lcdc_lpcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LPCR register
  */
-//@{
-#define HW_LCDC_LPCR_ADDR        (REGS_LCDC_BASE + 0x18U)
+/*@{*/
+#define HW_LCDC_LPCR_ADDR(x)     ((x) + 0x18U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LPCR             (*(__IO hw_lcdc_lpcr_t *) HW_LCDC_LPCR_ADDR)
-#define HW_LCDC_LPCR_RD()        (HW_LCDC_LPCR.U)
-#define HW_LCDC_LPCR_WR(v)       (HW_LCDC_LPCR.U = (v))
-#define HW_LCDC_LPCR_SET(v)      (HW_LCDC_LPCR_WR(HW_LCDC_LPCR_RD() |  (v)))
-#define HW_LCDC_LPCR_CLR(v)      (HW_LCDC_LPCR_WR(HW_LCDC_LPCR_RD() & ~(v)))
-#define HW_LCDC_LPCR_TOG(v)      (HW_LCDC_LPCR_WR(HW_LCDC_LPCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LPCR(x)          (*(__IO hw_lcdc_lpcr_t *) HW_LCDC_LPCR_ADDR(x))
+#define HW_LCDC_LPCR_RD(x)       (HW_LCDC_LPCR(x).U)
+#define HW_LCDC_LPCR_WR(x, v)    (HW_LCDC_LPCR(x).U = (v))
+#define HW_LCDC_LPCR_SET(x, v)   (HW_LCDC_LPCR_WR(x, HW_LCDC_LPCR_RD(x) |  (v)))
+#define HW_LCDC_LPCR_CLR(x, v)   (HW_LCDC_LPCR_WR(x, HW_LCDC_LPCR_RD(x) & ~(v)))
+#define HW_LCDC_LPCR_TOG(x, v)   (HW_LCDC_LPCR_WR(x, HW_LCDC_LPCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LPCR bitfields
@@ -817,24 +724,20 @@ typedef union _hw_lcdc_lpcr
  * fourth of system clock frequency in TFT and CSTN modes respectively, otherwise LD
  * will be incorrect.
  */
-//@{
-#define BP_LCDC_LPCR_PCD     (0U)          //!< Bit position for LCDC_LPCR_PCD.
-#define BM_LCDC_LPCR_PCD     (0x0000003FU) //!< Bit mask for LCDC_LPCR_PCD.
-#define BS_LCDC_LPCR_PCD     (6U)          //!< Bit field size in bits for LCDC_LPCR_PCD.
+/*@{*/
+#define BP_LCDC_LPCR_PCD     (0U)          /*!< Bit position for LCDC_LPCR_PCD. */
+#define BM_LCDC_LPCR_PCD     (0x0000003FU) /*!< Bit mask for LCDC_LPCR_PCD. */
+#define BS_LCDC_LPCR_PCD     (6U)          /*!< Bit field size in bits for LCDC_LPCR_PCD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_PCD field.
-#define BR_LCDC_LPCR_PCD     (HW_LCDC_LPCR.B.PCD)
-#endif
+/*! @brief Read current value of the LCDC_LPCR_PCD field. */
+#define BR_LCDC_LPCR_PCD(x)  (HW_LCDC_LPCR(x).B.PCD)
 
-//! @brief Format value for bitfield LCDC_LPCR_PCD.
-#define BF_LCDC_LPCR_PCD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_PCD), uint32_t) & BM_LCDC_LPCR_PCD)
+/*! @brief Format value for bitfield LCDC_LPCR_PCD. */
+#define BF_LCDC_LPCR_PCD(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_PCD) & BM_LCDC_LPCR_PCD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PCD field to a new value.
-#define BW_LCDC_LPCR_PCD(v)  (HW_LCDC_LPCR_WR((HW_LCDC_LPCR_RD() & ~BM_LCDC_LPCR_PCD) | BF_LCDC_LPCR_PCD(v)))
-#endif
-//@}
+/*! @brief Set the PCD field to a new value. */
+#define BW_LCDC_LPCR_PCD(x, v) (HW_LCDC_LPCR_WR(x, (HW_LCDC_LPCR_RD(x) & ~BM_LCDC_LPCR_PCD) | BF_LCDC_LPCR_PCD(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field SCLKSEL[7] (RW)
@@ -846,24 +749,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Disable OE and LSCLK in TFT mode when no data output.
  * - 1 - Always enable LSCLK in TFT mode even if there is no data output.
  */
-//@{
-#define BP_LCDC_LPCR_SCLKSEL (7U)          //!< Bit position for LCDC_LPCR_SCLKSEL.
-#define BM_LCDC_LPCR_SCLKSEL (0x00000080U) //!< Bit mask for LCDC_LPCR_SCLKSEL.
-#define BS_LCDC_LPCR_SCLKSEL (1U)          //!< Bit field size in bits for LCDC_LPCR_SCLKSEL.
+/*@{*/
+#define BP_LCDC_LPCR_SCLKSEL (7U)          /*!< Bit position for LCDC_LPCR_SCLKSEL. */
+#define BM_LCDC_LPCR_SCLKSEL (0x00000080U) /*!< Bit mask for LCDC_LPCR_SCLKSEL. */
+#define BS_LCDC_LPCR_SCLKSEL (1U)          /*!< Bit field size in bits for LCDC_LPCR_SCLKSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_SCLKSEL field.
-#define BR_LCDC_LPCR_SCLKSEL (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SCLKSEL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_SCLKSEL field. */
+#define BR_LCDC_LPCR_SCLKSEL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SCLKSEL))
 
-//! @brief Format value for bitfield LCDC_LPCR_SCLKSEL.
-#define BF_LCDC_LPCR_SCLKSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_SCLKSEL), uint32_t) & BM_LCDC_LPCR_SCLKSEL)
+/*! @brief Format value for bitfield LCDC_LPCR_SCLKSEL. */
+#define BF_LCDC_LPCR_SCLKSEL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_SCLKSEL) & BM_LCDC_LPCR_SCLKSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SCLKSEL field to a new value.
-#define BW_LCDC_LPCR_SCLKSEL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SCLKSEL) = (v))
-#endif
-//@}
+/*! @brief Set the SCLKSEL field to a new value. */
+#define BW_LCDC_LPCR_SCLKSEL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SCLKSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field ACD[14:8] (RW)
@@ -873,24 +772,20 @@ typedef union _hw_lcdc_lpcr
  * toggles is the programmed value plus one. For active mode (TFT=1), this
  * parameter is not used.
  */
-//@{
-#define BP_LCDC_LPCR_ACD     (8U)          //!< Bit position for LCDC_LPCR_ACD.
-#define BM_LCDC_LPCR_ACD     (0x00007F00U) //!< Bit mask for LCDC_LPCR_ACD.
-#define BS_LCDC_LPCR_ACD     (7U)          //!< Bit field size in bits for LCDC_LPCR_ACD.
+/*@{*/
+#define BP_LCDC_LPCR_ACD     (8U)          /*!< Bit position for LCDC_LPCR_ACD. */
+#define BM_LCDC_LPCR_ACD     (0x00007F00U) /*!< Bit mask for LCDC_LPCR_ACD. */
+#define BS_LCDC_LPCR_ACD     (7U)          /*!< Bit field size in bits for LCDC_LPCR_ACD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_ACD field.
-#define BR_LCDC_LPCR_ACD     (HW_LCDC_LPCR.B.ACD)
-#endif
+/*! @brief Read current value of the LCDC_LPCR_ACD field. */
+#define BR_LCDC_LPCR_ACD(x)  (HW_LCDC_LPCR(x).B.ACD)
 
-//! @brief Format value for bitfield LCDC_LPCR_ACD.
-#define BF_LCDC_LPCR_ACD(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_ACD), uint32_t) & BM_LCDC_LPCR_ACD)
+/*! @brief Format value for bitfield LCDC_LPCR_ACD. */
+#define BF_LCDC_LPCR_ACD(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_ACD) & BM_LCDC_LPCR_ACD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACD field to a new value.
-#define BW_LCDC_LPCR_ACD(v)  (HW_LCDC_LPCR_WR((HW_LCDC_LPCR_RD() & ~BM_LCDC_LPCR_ACD) | BF_LCDC_LPCR_ACD(v)))
-#endif
-//@}
+/*! @brief Set the ACD field to a new value. */
+#define BW_LCDC_LPCR_ACD(x, v) (HW_LCDC_LPCR_WR(x, (HW_LCDC_LPCR_RD(x) & ~BM_LCDC_LPCR_ACD) | BF_LCDC_LPCR_ACD(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field ACDSEL[15] (RW)
@@ -901,24 +796,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Use FLM as a clock source for ACD count.
  * - 1 - Use LP/HSYNC as a clock source for ACD count.
  */
-//@{
-#define BP_LCDC_LPCR_ACDSEL  (15U)         //!< Bit position for LCDC_LPCR_ACDSEL.
-#define BM_LCDC_LPCR_ACDSEL  (0x00008000U) //!< Bit mask for LCDC_LPCR_ACDSEL.
-#define BS_LCDC_LPCR_ACDSEL  (1U)          //!< Bit field size in bits for LCDC_LPCR_ACDSEL.
+/*@{*/
+#define BP_LCDC_LPCR_ACDSEL  (15U)         /*!< Bit position for LCDC_LPCR_ACDSEL. */
+#define BM_LCDC_LPCR_ACDSEL  (0x00008000U) /*!< Bit mask for LCDC_LPCR_ACDSEL. */
+#define BS_LCDC_LPCR_ACDSEL  (1U)          /*!< Bit field size in bits for LCDC_LPCR_ACDSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_ACDSEL field.
-#define BR_LCDC_LPCR_ACDSEL  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_ACDSEL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_ACDSEL field. */
+#define BR_LCDC_LPCR_ACDSEL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_ACDSEL))
 
-//! @brief Format value for bitfield LCDC_LPCR_ACDSEL.
-#define BF_LCDC_LPCR_ACDSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_ACDSEL), uint32_t) & BM_LCDC_LPCR_ACDSEL)
+/*! @brief Format value for bitfield LCDC_LPCR_ACDSEL. */
+#define BF_LCDC_LPCR_ACDSEL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_ACDSEL) & BM_LCDC_LPCR_ACDSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACDSEL field to a new value.
-#define BW_LCDC_LPCR_ACDSEL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_ACDSEL) = (v))
-#endif
-//@}
+/*! @brief Set the ACDSEL field to a new value. */
+#define BW_LCDC_LPCR_ACDSEL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_ACDSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field REV_VS[16] (RW)
@@ -931,24 +822,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Vertical scan in normal direction.
  * - 1 - Vertical scan in reverse direction.
  */
-//@{
-#define BP_LCDC_LPCR_REV_VS  (16U)         //!< Bit position for LCDC_LPCR_REV_VS.
-#define BM_LCDC_LPCR_REV_VS  (0x00010000U) //!< Bit mask for LCDC_LPCR_REV_VS.
-#define BS_LCDC_LPCR_REV_VS  (1U)          //!< Bit field size in bits for LCDC_LPCR_REV_VS.
+/*@{*/
+#define BP_LCDC_LPCR_REV_VS  (16U)         /*!< Bit position for LCDC_LPCR_REV_VS. */
+#define BM_LCDC_LPCR_REV_VS  (0x00010000U) /*!< Bit mask for LCDC_LPCR_REV_VS. */
+#define BS_LCDC_LPCR_REV_VS  (1U)          /*!< Bit field size in bits for LCDC_LPCR_REV_VS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_REV_VS field.
-#define BR_LCDC_LPCR_REV_VS  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_REV_VS))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_REV_VS field. */
+#define BR_LCDC_LPCR_REV_VS(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_REV_VS))
 
-//! @brief Format value for bitfield LCDC_LPCR_REV_VS.
-#define BF_LCDC_LPCR_REV_VS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_REV_VS), uint32_t) & BM_LCDC_LPCR_REV_VS)
+/*! @brief Format value for bitfield LCDC_LPCR_REV_VS. */
+#define BF_LCDC_LPCR_REV_VS(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_REV_VS) & BM_LCDC_LPCR_REV_VS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the REV_VS field to a new value.
-#define BW_LCDC_LPCR_REV_VS(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_REV_VS) = (v))
-#endif
-//@}
+/*! @brief Set the REV_VS field to a new value. */
+#define BW_LCDC_LPCR_REV_VS(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_REV_VS) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field SWAP_SEL[17] (RW)
@@ -966,24 +853,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - 24 bpp, 18 bpp, 16 bpp, 12 bpp mode.
  * - 1 - 8 bpp, 4 bpp, 2 bpp, and 1 bpp mode.
  */
-//@{
-#define BP_LCDC_LPCR_SWAP_SEL (17U)        //!< Bit position for LCDC_LPCR_SWAP_SEL.
-#define BM_LCDC_LPCR_SWAP_SEL (0x00020000U) //!< Bit mask for LCDC_LPCR_SWAP_SEL.
-#define BS_LCDC_LPCR_SWAP_SEL (1U)         //!< Bit field size in bits for LCDC_LPCR_SWAP_SEL.
+/*@{*/
+#define BP_LCDC_LPCR_SWAP_SEL (17U)        /*!< Bit position for LCDC_LPCR_SWAP_SEL. */
+#define BM_LCDC_LPCR_SWAP_SEL (0x00020000U) /*!< Bit mask for LCDC_LPCR_SWAP_SEL. */
+#define BS_LCDC_LPCR_SWAP_SEL (1U)         /*!< Bit field size in bits for LCDC_LPCR_SWAP_SEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_SWAP_SEL field.
-#define BR_LCDC_LPCR_SWAP_SEL (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SWAP_SEL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_SWAP_SEL field. */
+#define BR_LCDC_LPCR_SWAP_SEL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SWAP_SEL))
 
-//! @brief Format value for bitfield LCDC_LPCR_SWAP_SEL.
-#define BF_LCDC_LPCR_SWAP_SEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_SWAP_SEL), uint32_t) & BM_LCDC_LPCR_SWAP_SEL)
+/*! @brief Format value for bitfield LCDC_LPCR_SWAP_SEL. */
+#define BF_LCDC_LPCR_SWAP_SEL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_SWAP_SEL) & BM_LCDC_LPCR_SWAP_SEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SWAP_SEL field to a new value.
-#define BW_LCDC_LPCR_SWAP_SEL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SWAP_SEL) = (v))
-#endif
-//@}
+/*! @brief Set the SWAP_SEL field to a new value. */
+#define BW_LCDC_LPCR_SWAP_SEL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SWAP_SEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field END_SEL[18] (RW)
@@ -994,24 +877,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Little Endian
  * - 1 - Big Endian
  */
-//@{
-#define BP_LCDC_LPCR_END_SEL (18U)         //!< Bit position for LCDC_LPCR_END_SEL.
-#define BM_LCDC_LPCR_END_SEL (0x00040000U) //!< Bit mask for LCDC_LPCR_END_SEL.
-#define BS_LCDC_LPCR_END_SEL (1U)          //!< Bit field size in bits for LCDC_LPCR_END_SEL.
+/*@{*/
+#define BP_LCDC_LPCR_END_SEL (18U)         /*!< Bit position for LCDC_LPCR_END_SEL. */
+#define BM_LCDC_LPCR_END_SEL (0x00040000U) /*!< Bit mask for LCDC_LPCR_END_SEL. */
+#define BS_LCDC_LPCR_END_SEL (1U)          /*!< Bit field size in bits for LCDC_LPCR_END_SEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_END_SEL field.
-#define BR_LCDC_LPCR_END_SEL (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_END_SEL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_END_SEL field. */
+#define BR_LCDC_LPCR_END_SEL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_END_SEL))
 
-//! @brief Format value for bitfield LCDC_LPCR_END_SEL.
-#define BF_LCDC_LPCR_END_SEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_END_SEL), uint32_t) & BM_LCDC_LPCR_END_SEL)
+/*! @brief Format value for bitfield LCDC_LPCR_END_SEL. */
+#define BF_LCDC_LPCR_END_SEL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_END_SEL) & BM_LCDC_LPCR_END_SEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the END_SEL field to a new value.
-#define BW_LCDC_LPCR_END_SEL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_END_SEL) = (v))
-#endif
-//@}
+/*! @brief Set the END_SEL field to a new value. */
+#define BW_LCDC_LPCR_END_SEL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_END_SEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field SCLKIDLE[19] (RW)
@@ -1022,24 +901,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Disable LSCLK
  * - 1 - Enable LSCLK
  */
-//@{
-#define BP_LCDC_LPCR_SCLKIDLE (19U)        //!< Bit position for LCDC_LPCR_SCLKIDLE.
-#define BM_LCDC_LPCR_SCLKIDLE (0x00080000U) //!< Bit mask for LCDC_LPCR_SCLKIDLE.
-#define BS_LCDC_LPCR_SCLKIDLE (1U)         //!< Bit field size in bits for LCDC_LPCR_SCLKIDLE.
+/*@{*/
+#define BP_LCDC_LPCR_SCLKIDLE (19U)        /*!< Bit position for LCDC_LPCR_SCLKIDLE. */
+#define BM_LCDC_LPCR_SCLKIDLE (0x00080000U) /*!< Bit mask for LCDC_LPCR_SCLKIDLE. */
+#define BS_LCDC_LPCR_SCLKIDLE (1U)         /*!< Bit field size in bits for LCDC_LPCR_SCLKIDLE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_SCLKIDLE field.
-#define BR_LCDC_LPCR_SCLKIDLE (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SCLKIDLE))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_SCLKIDLE field. */
+#define BR_LCDC_LPCR_SCLKIDLE(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SCLKIDLE))
 
-//! @brief Format value for bitfield LCDC_LPCR_SCLKIDLE.
-#define BF_LCDC_LPCR_SCLKIDLE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_SCLKIDLE), uint32_t) & BM_LCDC_LPCR_SCLKIDLE)
+/*! @brief Format value for bitfield LCDC_LPCR_SCLKIDLE. */
+#define BF_LCDC_LPCR_SCLKIDLE(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_SCLKIDLE) & BM_LCDC_LPCR_SCLKIDLE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SCLKIDLE field to a new value.
-#define BW_LCDC_LPCR_SCLKIDLE(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_SCLKIDLE) = (v))
-#endif
-//@}
+/*! @brief Set the SCLKIDLE field to a new value. */
+#define BW_LCDC_LPCR_SCLKIDLE(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_SCLKIDLE) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field OEPOL[20] (RW)
@@ -1050,24 +925,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Active high
  * - 1 - Active low
  */
-//@{
-#define BP_LCDC_LPCR_OEPOL   (20U)         //!< Bit position for LCDC_LPCR_OEPOL.
-#define BM_LCDC_LPCR_OEPOL   (0x00100000U) //!< Bit mask for LCDC_LPCR_OEPOL.
-#define BS_LCDC_LPCR_OEPOL   (1U)          //!< Bit field size in bits for LCDC_LPCR_OEPOL.
+/*@{*/
+#define BP_LCDC_LPCR_OEPOL   (20U)         /*!< Bit position for LCDC_LPCR_OEPOL. */
+#define BM_LCDC_LPCR_OEPOL   (0x00100000U) /*!< Bit mask for LCDC_LPCR_OEPOL. */
+#define BS_LCDC_LPCR_OEPOL   (1U)          /*!< Bit field size in bits for LCDC_LPCR_OEPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_OEPOL field.
-#define BR_LCDC_LPCR_OEPOL   (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_OEPOL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_OEPOL field. */
+#define BR_LCDC_LPCR_OEPOL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_OEPOL))
 
-//! @brief Format value for bitfield LCDC_LPCR_OEPOL.
-#define BF_LCDC_LPCR_OEPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_OEPOL), uint32_t) & BM_LCDC_LPCR_OEPOL)
+/*! @brief Format value for bitfield LCDC_LPCR_OEPOL. */
+#define BF_LCDC_LPCR_OEPOL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_OEPOL) & BM_LCDC_LPCR_OEPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the OEPOL field to a new value.
-#define BW_LCDC_LPCR_OEPOL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_OEPOL) = (v))
-#endif
-//@}
+/*! @brief Set the OEPOL field to a new value. */
+#define BW_LCDC_LPCR_OEPOL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_OEPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field CLKPOL[21] (RW)
@@ -1080,24 +951,20 @@ typedef union _hw_lcdc_lpcr
  * - 1 - Active on positive edge of LSCLK. In TFT mode, active on negative edge
  *     of LSCLK.
  */
-//@{
-#define BP_LCDC_LPCR_CLKPOL  (21U)         //!< Bit position for LCDC_LPCR_CLKPOL.
-#define BM_LCDC_LPCR_CLKPOL  (0x00200000U) //!< Bit mask for LCDC_LPCR_CLKPOL.
-#define BS_LCDC_LPCR_CLKPOL  (1U)          //!< Bit field size in bits for LCDC_LPCR_CLKPOL.
+/*@{*/
+#define BP_LCDC_LPCR_CLKPOL  (21U)         /*!< Bit position for LCDC_LPCR_CLKPOL. */
+#define BM_LCDC_LPCR_CLKPOL  (0x00200000U) /*!< Bit mask for LCDC_LPCR_CLKPOL. */
+#define BS_LCDC_LPCR_CLKPOL  (1U)          /*!< Bit field size in bits for LCDC_LPCR_CLKPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_CLKPOL field.
-#define BR_LCDC_LPCR_CLKPOL  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_CLKPOL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_CLKPOL field. */
+#define BR_LCDC_LPCR_CLKPOL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_CLKPOL))
 
-//! @brief Format value for bitfield LCDC_LPCR_CLKPOL.
-#define BF_LCDC_LPCR_CLKPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_CLKPOL), uint32_t) & BM_LCDC_LPCR_CLKPOL)
+/*! @brief Format value for bitfield LCDC_LPCR_CLKPOL. */
+#define BF_LCDC_LPCR_CLKPOL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_CLKPOL) & BM_LCDC_LPCR_CLKPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CLKPOL field to a new value.
-#define BW_LCDC_LPCR_CLKPOL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_CLKPOL) = (v))
-#endif
-//@}
+/*! @brief Set the CLKPOL field to a new value. */
+#define BW_LCDC_LPCR_CLKPOL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_CLKPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field LPPOL[22] (RW)
@@ -1108,24 +975,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Active high
  * - 1 - Active low
  */
-//@{
-#define BP_LCDC_LPCR_LPPOL   (22U)         //!< Bit position for LCDC_LPCR_LPPOL.
-#define BM_LCDC_LPCR_LPPOL   (0x00400000U) //!< Bit mask for LCDC_LPCR_LPPOL.
-#define BS_LCDC_LPCR_LPPOL   (1U)          //!< Bit field size in bits for LCDC_LPCR_LPPOL.
+/*@{*/
+#define BP_LCDC_LPCR_LPPOL   (22U)         /*!< Bit position for LCDC_LPCR_LPPOL. */
+#define BM_LCDC_LPCR_LPPOL   (0x00400000U) /*!< Bit mask for LCDC_LPCR_LPPOL. */
+#define BS_LCDC_LPCR_LPPOL   (1U)          /*!< Bit field size in bits for LCDC_LPCR_LPPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_LPPOL field.
-#define BR_LCDC_LPCR_LPPOL   (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_LPPOL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_LPPOL field. */
+#define BR_LCDC_LPCR_LPPOL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_LPPOL))
 
-//! @brief Format value for bitfield LCDC_LPCR_LPPOL.
-#define BF_LCDC_LPCR_LPPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_LPPOL), uint32_t) & BM_LCDC_LPCR_LPPOL)
+/*! @brief Format value for bitfield LCDC_LPCR_LPPOL. */
+#define BF_LCDC_LPCR_LPPOL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_LPPOL) & BM_LCDC_LPCR_LPPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LPPOL field to a new value.
-#define BW_LCDC_LPCR_LPPOL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_LPPOL) = (v))
-#endif
-//@}
+/*! @brief Set the LPPOL field to a new value. */
+#define BW_LCDC_LPCR_LPPOL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_LPPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field FLMPOL[23] (RW)
@@ -1136,24 +999,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Active high
  * - 1 - Active low
  */
-//@{
-#define BP_LCDC_LPCR_FLMPOL  (23U)         //!< Bit position for LCDC_LPCR_FLMPOL.
-#define BM_LCDC_LPCR_FLMPOL  (0x00800000U) //!< Bit mask for LCDC_LPCR_FLMPOL.
-#define BS_LCDC_LPCR_FLMPOL  (1U)          //!< Bit field size in bits for LCDC_LPCR_FLMPOL.
+/*@{*/
+#define BP_LCDC_LPCR_FLMPOL  (23U)         /*!< Bit position for LCDC_LPCR_FLMPOL. */
+#define BM_LCDC_LPCR_FLMPOL  (0x00800000U) /*!< Bit mask for LCDC_LPCR_FLMPOL. */
+#define BS_LCDC_LPCR_FLMPOL  (1U)          /*!< Bit field size in bits for LCDC_LPCR_FLMPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_FLMPOL field.
-#define BR_LCDC_LPCR_FLMPOL  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_FLMPOL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_FLMPOL field. */
+#define BR_LCDC_LPCR_FLMPOL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_FLMPOL))
 
-//! @brief Format value for bitfield LCDC_LPCR_FLMPOL.
-#define BF_LCDC_LPCR_FLMPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_FLMPOL), uint32_t) & BM_LCDC_LPCR_FLMPOL)
+/*! @brief Format value for bitfield LCDC_LPCR_FLMPOL. */
+#define BF_LCDC_LPCR_FLMPOL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_FLMPOL) & BM_LCDC_LPCR_FLMPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the FLMPOL field to a new value.
-#define BW_LCDC_LPCR_FLMPOL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_FLMPOL) = (v))
-#endif
-//@}
+/*! @brief Set the FLMPOL field to a new value. */
+#define BW_LCDC_LPCR_FLMPOL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_FLMPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field PIXPOL[24] (RW)
@@ -1164,24 +1023,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - Active high
  * - 1 - Active low
  */
-//@{
-#define BP_LCDC_LPCR_PIXPOL  (24U)         //!< Bit position for LCDC_LPCR_PIXPOL.
-#define BM_LCDC_LPCR_PIXPOL  (0x01000000U) //!< Bit mask for LCDC_LPCR_PIXPOL.
-#define BS_LCDC_LPCR_PIXPOL  (1U)          //!< Bit field size in bits for LCDC_LPCR_PIXPOL.
+/*@{*/
+#define BP_LCDC_LPCR_PIXPOL  (24U)         /*!< Bit position for LCDC_LPCR_PIXPOL. */
+#define BM_LCDC_LPCR_PIXPOL  (0x01000000U) /*!< Bit mask for LCDC_LPCR_PIXPOL. */
+#define BS_LCDC_LPCR_PIXPOL  (1U)          /*!< Bit field size in bits for LCDC_LPCR_PIXPOL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_PIXPOL field.
-#define BR_LCDC_LPCR_PIXPOL  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_PIXPOL))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_PIXPOL field. */
+#define BR_LCDC_LPCR_PIXPOL(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_PIXPOL))
 
-//! @brief Format value for bitfield LCDC_LPCR_PIXPOL.
-#define BF_LCDC_LPCR_PIXPOL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_PIXPOL), uint32_t) & BM_LCDC_LPCR_PIXPOL)
+/*! @brief Format value for bitfield LCDC_LPCR_PIXPOL. */
+#define BF_LCDC_LPCR_PIXPOL(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_PIXPOL) & BM_LCDC_LPCR_PIXPOL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PIXPOL field to a new value.
-#define BW_LCDC_LPCR_PIXPOL(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_PIXPOL) = (v))
-#endif
-//@}
+/*! @brief Set the PIXPOL field to a new value. */
+#define BW_LCDC_LPCR_PIXPOL(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_PIXPOL) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field BPIX[27:25] (RW)
@@ -1201,24 +1056,20 @@ typedef union _hw_lcdc_lpcr
  * - 110 - 18 bpp (32-bits of memory used)
  * - 111 - 24 bpp (32-bits of memory used)
  */
-//@{
-#define BP_LCDC_LPCR_BPIX    (25U)         //!< Bit position for LCDC_LPCR_BPIX.
-#define BM_LCDC_LPCR_BPIX    (0x0E000000U) //!< Bit mask for LCDC_LPCR_BPIX.
-#define BS_LCDC_LPCR_BPIX    (3U)          //!< Bit field size in bits for LCDC_LPCR_BPIX.
+/*@{*/
+#define BP_LCDC_LPCR_BPIX    (25U)         /*!< Bit position for LCDC_LPCR_BPIX. */
+#define BM_LCDC_LPCR_BPIX    (0x0E000000U) /*!< Bit mask for LCDC_LPCR_BPIX. */
+#define BS_LCDC_LPCR_BPIX    (3U)          /*!< Bit field size in bits for LCDC_LPCR_BPIX. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_BPIX field.
-#define BR_LCDC_LPCR_BPIX    (HW_LCDC_LPCR.B.BPIX)
-#endif
+/*! @brief Read current value of the LCDC_LPCR_BPIX field. */
+#define BR_LCDC_LPCR_BPIX(x) (HW_LCDC_LPCR(x).B.BPIX)
 
-//! @brief Format value for bitfield LCDC_LPCR_BPIX.
-#define BF_LCDC_LPCR_BPIX(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_BPIX), uint32_t) & BM_LCDC_LPCR_BPIX)
+/*! @brief Format value for bitfield LCDC_LPCR_BPIX. */
+#define BF_LCDC_LPCR_BPIX(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_BPIX) & BM_LCDC_LPCR_BPIX)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BPIX field to a new value.
-#define BW_LCDC_LPCR_BPIX(v) (HW_LCDC_LPCR_WR((HW_LCDC_LPCR_RD() & ~BM_LCDC_LPCR_BPIX) | BF_LCDC_LPCR_BPIX(v)))
-#endif
-//@}
+/*! @brief Set the BPIX field to a new value. */
+#define BW_LCDC_LPCR_BPIX(x, v) (HW_LCDC_LPCR_WR(x, (HW_LCDC_LPCR_RD(x) & ~BM_LCDC_LPCR_BPIX) | BF_LCDC_LPCR_BPIX(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field PBSIZ[29:28] (RW)
@@ -1233,24 +1084,20 @@ typedef union _hw_lcdc_lpcr
  * - 010 - 4-bit
  * - 011 - 8-bit
  */
-//@{
-#define BP_LCDC_LPCR_PBSIZ   (28U)         //!< Bit position for LCDC_LPCR_PBSIZ.
-#define BM_LCDC_LPCR_PBSIZ   (0x30000000U) //!< Bit mask for LCDC_LPCR_PBSIZ.
-#define BS_LCDC_LPCR_PBSIZ   (2U)          //!< Bit field size in bits for LCDC_LPCR_PBSIZ.
+/*@{*/
+#define BP_LCDC_LPCR_PBSIZ   (28U)         /*!< Bit position for LCDC_LPCR_PBSIZ. */
+#define BM_LCDC_LPCR_PBSIZ   (0x30000000U) /*!< Bit mask for LCDC_LPCR_PBSIZ. */
+#define BS_LCDC_LPCR_PBSIZ   (2U)          /*!< Bit field size in bits for LCDC_LPCR_PBSIZ. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_PBSIZ field.
-#define BR_LCDC_LPCR_PBSIZ   (HW_LCDC_LPCR.B.PBSIZ)
-#endif
+/*! @brief Read current value of the LCDC_LPCR_PBSIZ field. */
+#define BR_LCDC_LPCR_PBSIZ(x) (HW_LCDC_LPCR(x).B.PBSIZ)
 
-//! @brief Format value for bitfield LCDC_LPCR_PBSIZ.
-#define BF_LCDC_LPCR_PBSIZ(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_PBSIZ), uint32_t) & BM_LCDC_LPCR_PBSIZ)
+/*! @brief Format value for bitfield LCDC_LPCR_PBSIZ. */
+#define BF_LCDC_LPCR_PBSIZ(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_PBSIZ) & BM_LCDC_LPCR_PBSIZ)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PBSIZ field to a new value.
-#define BW_LCDC_LPCR_PBSIZ(v) (HW_LCDC_LPCR_WR((HW_LCDC_LPCR_RD() & ~BM_LCDC_LPCR_PBSIZ) | BF_LCDC_LPCR_PBSIZ(v)))
-#endif
-//@}
+/*! @brief Set the PBSIZ field to a new value. */
+#define BW_LCDC_LPCR_PBSIZ(x, v) (HW_LCDC_LPCR_WR(x, (HW_LCDC_LPCR_RD(x) & ~BM_LCDC_LPCR_PBSIZ) | BF_LCDC_LPCR_PBSIZ(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field COLOR[30] (RW)
@@ -1263,24 +1110,20 @@ typedef union _hw_lcdc_lpcr
  * - 0 - LCD panel is a Monochrome display.
  * - 1 - LCD panel is a Color display.
  */
-//@{
-#define BP_LCDC_LPCR_COLOR   (30U)         //!< Bit position for LCDC_LPCR_COLOR.
-#define BM_LCDC_LPCR_COLOR   (0x40000000U) //!< Bit mask for LCDC_LPCR_COLOR.
-#define BS_LCDC_LPCR_COLOR   (1U)          //!< Bit field size in bits for LCDC_LPCR_COLOR.
+/*@{*/
+#define BP_LCDC_LPCR_COLOR   (30U)         /*!< Bit position for LCDC_LPCR_COLOR. */
+#define BM_LCDC_LPCR_COLOR   (0x40000000U) /*!< Bit mask for LCDC_LPCR_COLOR. */
+#define BS_LCDC_LPCR_COLOR   (1U)          /*!< Bit field size in bits for LCDC_LPCR_COLOR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_COLOR field.
-#define BR_LCDC_LPCR_COLOR   (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_COLOR))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_COLOR field. */
+#define BR_LCDC_LPCR_COLOR(x) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_COLOR))
 
-//! @brief Format value for bitfield LCDC_LPCR_COLOR.
-#define BF_LCDC_LPCR_COLOR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_COLOR), uint32_t) & BM_LCDC_LPCR_COLOR)
+/*! @brief Format value for bitfield LCDC_LPCR_COLOR. */
+#define BF_LCDC_LPCR_COLOR(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_COLOR) & BM_LCDC_LPCR_COLOR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COLOR field to a new value.
-#define BW_LCDC_LPCR_COLOR(v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_COLOR) = (v))
-#endif
-//@}
+/*! @brief Set the COLOR field to a new value. */
+#define BW_LCDC_LPCR_COLOR(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_COLOR) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCR, field TFT[31] (RW)
@@ -1296,30 +1139,25 @@ typedef union _hw_lcdc_lpcr
  * - 1 - LCD panel is an active display: "digital CRT" signal format, FRC is
  *     bypassed.
  */
-//@{
-#define BP_LCDC_LPCR_TFT     (31U)         //!< Bit position for LCDC_LPCR_TFT.
-#define BM_LCDC_LPCR_TFT     (0x80000000U) //!< Bit mask for LCDC_LPCR_TFT.
-#define BS_LCDC_LPCR_TFT     (1U)          //!< Bit field size in bits for LCDC_LPCR_TFT.
+/*@{*/
+#define BP_LCDC_LPCR_TFT     (31U)         /*!< Bit position for LCDC_LPCR_TFT. */
+#define BM_LCDC_LPCR_TFT     (0x80000000U) /*!< Bit mask for LCDC_LPCR_TFT. */
+#define BS_LCDC_LPCR_TFT     (1U)          /*!< Bit field size in bits for LCDC_LPCR_TFT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCR_TFT field.
-#define BR_LCDC_LPCR_TFT     (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_TFT))
-#endif
+/*! @brief Read current value of the LCDC_LPCR_TFT field. */
+#define BR_LCDC_LPCR_TFT(x)  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_TFT))
 
-//! @brief Format value for bitfield LCDC_LPCR_TFT.
-#define BF_LCDC_LPCR_TFT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCR_TFT), uint32_t) & BM_LCDC_LPCR_TFT)
+/*! @brief Format value for bitfield LCDC_LPCR_TFT. */
+#define BF_LCDC_LPCR_TFT(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCR_TFT) & BM_LCDC_LPCR_TFT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TFT field to a new value.
-#define BW_LCDC_LPCR_TFT(v)  (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR, BP_LCDC_LPCR_TFT) = (v))
-#endif
-//@}
+/*! @brief Set the TFT field to a new value. */
+#define BW_LCDC_LPCR_TFT(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCR_ADDR(x), BP_LCDC_LPCR_TFT) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LHCR - LCDC horizontal configuration register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LHCR - LCDC horizontal configuration register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LHCR - LCDC horizontal configuration register (RW)
  *
@@ -1333,30 +1171,27 @@ typedef union _hw_lcdc_lhcr
     uint32_t U;
     struct _hw_lcdc_lhcr_bitfields
     {
-        uint32_t H_WAIT_2 : 8;         //!< [7:0] Wait between HSYNC and start of
-                                       //! next line
-        uint32_t H_WAIT_1 : 8;         //!< [15:8] Wait between OE and HSYNC
-        uint32_t RESERVED0 : 10;       //!< [25:16]
-        uint32_t H_WIDTH : 6;          //!< [31:26] Horizontal sync pulse width
+        uint32_t H_WAIT_2 : 8;         /*!< [7:0] Wait between HSYNC and start of
+                                        * next line */
+        uint32_t H_WAIT_1 : 8;         /*!< [15:8] Wait between OE and HSYNC */
+        uint32_t RESERVED0 : 10;       /*!< [25:16]  */
+        uint32_t H_WIDTH : 6;          /*!< [31:26] Horizontal sync pulse width */
     } B;
 } hw_lcdc_lhcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LHCR register
  */
-//@{
-#define HW_LCDC_LHCR_ADDR        (REGS_LCDC_BASE + 0x1CU)
+/*@{*/
+#define HW_LCDC_LHCR_ADDR(x)     ((x) + 0x1CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LHCR             (*(__IO hw_lcdc_lhcr_t *) HW_LCDC_LHCR_ADDR)
-#define HW_LCDC_LHCR_RD()        (HW_LCDC_LHCR.U)
-#define HW_LCDC_LHCR_WR(v)       (HW_LCDC_LHCR.U = (v))
-#define HW_LCDC_LHCR_SET(v)      (HW_LCDC_LHCR_WR(HW_LCDC_LHCR_RD() |  (v)))
-#define HW_LCDC_LHCR_CLR(v)      (HW_LCDC_LHCR_WR(HW_LCDC_LHCR_RD() & ~(v)))
-#define HW_LCDC_LHCR_TOG(v)      (HW_LCDC_LHCR_WR(HW_LCDC_LHCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LHCR(x)          (*(__IO hw_lcdc_lhcr_t *) HW_LCDC_LHCR_ADDR(x))
+#define HW_LCDC_LHCR_RD(x)       (HW_LCDC_LHCR(x).U)
+#define HW_LCDC_LHCR_WR(x, v)    (HW_LCDC_LHCR(x).U = (v))
+#define HW_LCDC_LHCR_SET(x, v)   (HW_LCDC_LHCR_WR(x, HW_LCDC_LHCR_RD(x) |  (v)))
+#define HW_LCDC_LHCR_CLR(x, v)   (HW_LCDC_LHCR_WR(x, HW_LCDC_LHCR_RD(x) & ~(v)))
+#define HW_LCDC_LHCR_TOG(x, v)   (HW_LCDC_LHCR_WR(x, HW_LCDC_LHCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LHCR bitfields
@@ -1371,24 +1206,20 @@ typedef union _hw_lcdc_lhcr
  * signal and the first display data in each line. Total delay time equals (H_WAIT_2
  * + 2) of SCLK periods.
  */
-//@{
-#define BP_LCDC_LHCR_H_WAIT_2 (0U)         //!< Bit position for LCDC_LHCR_H_WAIT_2.
-#define BM_LCDC_LHCR_H_WAIT_2 (0x000000FFU) //!< Bit mask for LCDC_LHCR_H_WAIT_2.
-#define BS_LCDC_LHCR_H_WAIT_2 (8U)         //!< Bit field size in bits for LCDC_LHCR_H_WAIT_2.
+/*@{*/
+#define BP_LCDC_LHCR_H_WAIT_2 (0U)         /*!< Bit position for LCDC_LHCR_H_WAIT_2. */
+#define BM_LCDC_LHCR_H_WAIT_2 (0x000000FFU) /*!< Bit mask for LCDC_LHCR_H_WAIT_2. */
+#define BS_LCDC_LHCR_H_WAIT_2 (8U)         /*!< Bit field size in bits for LCDC_LHCR_H_WAIT_2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LHCR_H_WAIT_2 field.
-#define BR_LCDC_LHCR_H_WAIT_2 (HW_LCDC_LHCR.B.H_WAIT_2)
-#endif
+/*! @brief Read current value of the LCDC_LHCR_H_WAIT_2 field. */
+#define BR_LCDC_LHCR_H_WAIT_2(x) (HW_LCDC_LHCR(x).B.H_WAIT_2)
 
-//! @brief Format value for bitfield LCDC_LHCR_H_WAIT_2.
-#define BF_LCDC_LHCR_H_WAIT_2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LHCR_H_WAIT_2), uint32_t) & BM_LCDC_LHCR_H_WAIT_2)
+/*! @brief Format value for bitfield LCDC_LHCR_H_WAIT_2. */
+#define BF_LCDC_LHCR_H_WAIT_2(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LHCR_H_WAIT_2) & BM_LCDC_LHCR_H_WAIT_2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the H_WAIT_2 field to a new value.
-#define BW_LCDC_LHCR_H_WAIT_2(v) (HW_LCDC_LHCR_WR((HW_LCDC_LHCR_RD() & ~BM_LCDC_LHCR_H_WAIT_2) | BF_LCDC_LHCR_H_WAIT_2(v)))
-#endif
-//@}
+/*! @brief Set the H_WAIT_2 field to a new value. */
+#define BW_LCDC_LHCR_H_WAIT_2(x, v) (HW_LCDC_LHCR_WR(x, (HW_LCDC_LHCR_RD(x) & ~BM_LCDC_LHCR_H_WAIT_2) | BF_LCDC_LHCR_H_WAIT_2(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LHCR, field H_WAIT_1[15:8] (RW)
@@ -1399,24 +1230,20 @@ typedef union _hw_lcdc_lhcr
  * last display data and the beginning of the LP signal. Total delay time equals
  * (H_WAIT_1 + 1) of SCLK periods.
  */
-//@{
-#define BP_LCDC_LHCR_H_WAIT_1 (8U)         //!< Bit position for LCDC_LHCR_H_WAIT_1.
-#define BM_LCDC_LHCR_H_WAIT_1 (0x0000FF00U) //!< Bit mask for LCDC_LHCR_H_WAIT_1.
-#define BS_LCDC_LHCR_H_WAIT_1 (8U)         //!< Bit field size in bits for LCDC_LHCR_H_WAIT_1.
+/*@{*/
+#define BP_LCDC_LHCR_H_WAIT_1 (8U)         /*!< Bit position for LCDC_LHCR_H_WAIT_1. */
+#define BM_LCDC_LHCR_H_WAIT_1 (0x0000FF00U) /*!< Bit mask for LCDC_LHCR_H_WAIT_1. */
+#define BS_LCDC_LHCR_H_WAIT_1 (8U)         /*!< Bit field size in bits for LCDC_LHCR_H_WAIT_1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LHCR_H_WAIT_1 field.
-#define BR_LCDC_LHCR_H_WAIT_1 (HW_LCDC_LHCR.B.H_WAIT_1)
-#endif
+/*! @brief Read current value of the LCDC_LHCR_H_WAIT_1 field. */
+#define BR_LCDC_LHCR_H_WAIT_1(x) (HW_LCDC_LHCR(x).B.H_WAIT_1)
 
-//! @brief Format value for bitfield LCDC_LHCR_H_WAIT_1.
-#define BF_LCDC_LHCR_H_WAIT_1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LHCR_H_WAIT_1), uint32_t) & BM_LCDC_LHCR_H_WAIT_1)
+/*! @brief Format value for bitfield LCDC_LHCR_H_WAIT_1. */
+#define BF_LCDC_LHCR_H_WAIT_1(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LHCR_H_WAIT_1) & BM_LCDC_LHCR_H_WAIT_1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the H_WAIT_1 field to a new value.
-#define BW_LCDC_LHCR_H_WAIT_1(v) (HW_LCDC_LHCR_WR((HW_LCDC_LHCR_RD() & ~BM_LCDC_LHCR_H_WAIT_1) | BF_LCDC_LHCR_H_WAIT_1(v)))
-#endif
-//@}
+/*! @brief Set the H_WAIT_1 field to a new value. */
+#define BW_LCDC_LHCR_H_WAIT_1(x, v) (HW_LCDC_LHCR_WR(x, (HW_LCDC_LHCR_RD(x) & ~BM_LCDC_LHCR_H_WAIT_1) | BF_LCDC_LHCR_H_WAIT_1(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LHCR, field H_WIDTH[31:26] (RW)
@@ -1424,30 +1251,25 @@ typedef union _hw_lcdc_lhcr
  * Specifies the number of SCLK periods for which HSYNC is activated. The active
  * time is equal to (H_WIDTH + 1) of the SCLK periods.
  */
-//@{
-#define BP_LCDC_LHCR_H_WIDTH (26U)         //!< Bit position for LCDC_LHCR_H_WIDTH.
-#define BM_LCDC_LHCR_H_WIDTH (0xFC000000U) //!< Bit mask for LCDC_LHCR_H_WIDTH.
-#define BS_LCDC_LHCR_H_WIDTH (6U)          //!< Bit field size in bits for LCDC_LHCR_H_WIDTH.
+/*@{*/
+#define BP_LCDC_LHCR_H_WIDTH (26U)         /*!< Bit position for LCDC_LHCR_H_WIDTH. */
+#define BM_LCDC_LHCR_H_WIDTH (0xFC000000U) /*!< Bit mask for LCDC_LHCR_H_WIDTH. */
+#define BS_LCDC_LHCR_H_WIDTH (6U)          /*!< Bit field size in bits for LCDC_LHCR_H_WIDTH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LHCR_H_WIDTH field.
-#define BR_LCDC_LHCR_H_WIDTH (HW_LCDC_LHCR.B.H_WIDTH)
-#endif
+/*! @brief Read current value of the LCDC_LHCR_H_WIDTH field. */
+#define BR_LCDC_LHCR_H_WIDTH(x) (HW_LCDC_LHCR(x).B.H_WIDTH)
 
-//! @brief Format value for bitfield LCDC_LHCR_H_WIDTH.
-#define BF_LCDC_LHCR_H_WIDTH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LHCR_H_WIDTH), uint32_t) & BM_LCDC_LHCR_H_WIDTH)
+/*! @brief Format value for bitfield LCDC_LHCR_H_WIDTH. */
+#define BF_LCDC_LHCR_H_WIDTH(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LHCR_H_WIDTH) & BM_LCDC_LHCR_H_WIDTH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the H_WIDTH field to a new value.
-#define BW_LCDC_LHCR_H_WIDTH(v) (HW_LCDC_LHCR_WR((HW_LCDC_LHCR_RD() & ~BM_LCDC_LHCR_H_WIDTH) | BF_LCDC_LHCR_H_WIDTH(v)))
-#endif
-//@}
+/*! @brief Set the H_WIDTH field to a new value. */
+#define BW_LCDC_LHCR_H_WIDTH(x, v) (HW_LCDC_LHCR_WR(x, (HW_LCDC_LHCR_RD(x) & ~BM_LCDC_LHCR_H_WIDTH) | BF_LCDC_LHCR_H_WIDTH(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LVCR - LCDC vertical configuration register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LVCR - LCDC vertical configuration register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LVCR - LCDC vertical configuration register (RW)
  *
@@ -1461,29 +1283,26 @@ typedef union _hw_lcdc_lvcr
     uint32_t U;
     struct _hw_lcdc_lvcr_bitfields
     {
-        uint32_t V_WAIT_2 : 8;         //!< [7:0] Wait between frames 2
-        uint32_t V_WAIT_1 : 8;         //!< [15:8] Wait between frames 1
-        uint32_t RESERVED0 : 10;       //!< [25:16]
-        uint32_t V_WIDTH : 6;          //!< [31:26] Vertical sync pulse width
+        uint32_t V_WAIT_2 : 8;         /*!< [7:0] Wait between frames 2 */
+        uint32_t V_WAIT_1 : 8;         /*!< [15:8] Wait between frames 1 */
+        uint32_t RESERVED0 : 10;       /*!< [25:16]  */
+        uint32_t V_WIDTH : 6;          /*!< [31:26] Vertical sync pulse width */
     } B;
 } hw_lcdc_lvcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LVCR register
  */
-//@{
-#define HW_LCDC_LVCR_ADDR        (REGS_LCDC_BASE + 0x20U)
+/*@{*/
+#define HW_LCDC_LVCR_ADDR(x)     ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LVCR             (*(__IO hw_lcdc_lvcr_t *) HW_LCDC_LVCR_ADDR)
-#define HW_LCDC_LVCR_RD()        (HW_LCDC_LVCR.U)
-#define HW_LCDC_LVCR_WR(v)       (HW_LCDC_LVCR.U = (v))
-#define HW_LCDC_LVCR_SET(v)      (HW_LCDC_LVCR_WR(HW_LCDC_LVCR_RD() |  (v)))
-#define HW_LCDC_LVCR_CLR(v)      (HW_LCDC_LVCR_WR(HW_LCDC_LVCR_RD() & ~(v)))
-#define HW_LCDC_LVCR_TOG(v)      (HW_LCDC_LVCR_WR(HW_LCDC_LVCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LVCR(x)          (*(__IO hw_lcdc_lvcr_t *) HW_LCDC_LVCR_ADDR(x))
+#define HW_LCDC_LVCR_RD(x)       (HW_LCDC_LVCR(x).U)
+#define HW_LCDC_LVCR_WR(x, v)    (HW_LCDC_LVCR(x).U = (v))
+#define HW_LCDC_LVCR_SET(x, v)   (HW_LCDC_LVCR_WR(x, HW_LCDC_LVCR_RD(x) |  (v)))
+#define HW_LCDC_LVCR_CLR(x, v)   (HW_LCDC_LVCR_WR(x, HW_LCDC_LVCR_RD(x) & ~(v)))
+#define HW_LCDC_LVCR_TOG(x, v)   (HW_LCDC_LVCR_WR(x, HW_LCDC_LVCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LVCR bitfields
@@ -1497,24 +1316,20 @@ typedef union _hw_lcdc_lvcr
  * (V_WAIT_2 ) lines. Set this field to zero for passive non-color mode. The minimum
  * value of this field is 0x01.
  */
-//@{
-#define BP_LCDC_LVCR_V_WAIT_2 (0U)         //!< Bit position for LCDC_LVCR_V_WAIT_2.
-#define BM_LCDC_LVCR_V_WAIT_2 (0x000000FFU) //!< Bit mask for LCDC_LVCR_V_WAIT_2.
-#define BS_LCDC_LVCR_V_WAIT_2 (8U)         //!< Bit field size in bits for LCDC_LVCR_V_WAIT_2.
+/*@{*/
+#define BP_LCDC_LVCR_V_WAIT_2 (0U)         /*!< Bit position for LCDC_LVCR_V_WAIT_2. */
+#define BM_LCDC_LVCR_V_WAIT_2 (0x000000FFU) /*!< Bit mask for LCDC_LVCR_V_WAIT_2. */
+#define BS_LCDC_LVCR_V_WAIT_2 (8U)         /*!< Bit field size in bits for LCDC_LVCR_V_WAIT_2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LVCR_V_WAIT_2 field.
-#define BR_LCDC_LVCR_V_WAIT_2 (HW_LCDC_LVCR.B.V_WAIT_2)
-#endif
+/*! @brief Read current value of the LCDC_LVCR_V_WAIT_2 field. */
+#define BR_LCDC_LVCR_V_WAIT_2(x) (HW_LCDC_LVCR(x).B.V_WAIT_2)
 
-//! @brief Format value for bitfield LCDC_LVCR_V_WAIT_2.
-#define BF_LCDC_LVCR_V_WAIT_2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LVCR_V_WAIT_2), uint32_t) & BM_LCDC_LVCR_V_WAIT_2)
+/*! @brief Format value for bitfield LCDC_LVCR_V_WAIT_2. */
+#define BF_LCDC_LVCR_V_WAIT_2(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LVCR_V_WAIT_2) & BM_LCDC_LVCR_V_WAIT_2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the V_WAIT_2 field to a new value.
-#define BW_LCDC_LVCR_V_WAIT_2(v) (HW_LCDC_LVCR_WR((HW_LCDC_LVCR_RD() & ~BM_LCDC_LVCR_V_WAIT_2) | BF_LCDC_LVCR_V_WAIT_2(v)))
-#endif
-//@}
+/*! @brief Set the V_WAIT_2 field to a new value. */
+#define BW_LCDC_LVCR_V_WAIT_2(x, v) (HW_LCDC_LVCR_WR(x, (HW_LCDC_LVCR_RD(x) & ~BM_LCDC_LVCR_V_WAIT_2) | BF_LCDC_LVCR_V_WAIT_2(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LVCR, field V_WAIT_1[15:8] (RW)
@@ -1525,24 +1340,20 @@ typedef union _hw_lcdc_lvcr
  * periods, between the last line of the frame to the beginning of next frame. This
  * field has no meaning in passive non-color mode.
  */
-//@{
-#define BP_LCDC_LVCR_V_WAIT_1 (8U)         //!< Bit position for LCDC_LVCR_V_WAIT_1.
-#define BM_LCDC_LVCR_V_WAIT_1 (0x0000FF00U) //!< Bit mask for LCDC_LVCR_V_WAIT_1.
-#define BS_LCDC_LVCR_V_WAIT_1 (8U)         //!< Bit field size in bits for LCDC_LVCR_V_WAIT_1.
+/*@{*/
+#define BP_LCDC_LVCR_V_WAIT_1 (8U)         /*!< Bit position for LCDC_LVCR_V_WAIT_1. */
+#define BM_LCDC_LVCR_V_WAIT_1 (0x0000FF00U) /*!< Bit mask for LCDC_LVCR_V_WAIT_1. */
+#define BS_LCDC_LVCR_V_WAIT_1 (8U)         /*!< Bit field size in bits for LCDC_LVCR_V_WAIT_1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LVCR_V_WAIT_1 field.
-#define BR_LCDC_LVCR_V_WAIT_1 (HW_LCDC_LVCR.B.V_WAIT_1)
-#endif
+/*! @brief Read current value of the LCDC_LVCR_V_WAIT_1 field. */
+#define BR_LCDC_LVCR_V_WAIT_1(x) (HW_LCDC_LVCR(x).B.V_WAIT_1)
 
-//! @brief Format value for bitfield LCDC_LVCR_V_WAIT_1.
-#define BF_LCDC_LVCR_V_WAIT_1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LVCR_V_WAIT_1), uint32_t) & BM_LCDC_LVCR_V_WAIT_1)
+/*! @brief Format value for bitfield LCDC_LVCR_V_WAIT_1. */
+#define BF_LCDC_LVCR_V_WAIT_1(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LVCR_V_WAIT_1) & BM_LCDC_LVCR_V_WAIT_1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the V_WAIT_1 field to a new value.
-#define BW_LCDC_LVCR_V_WAIT_1(v) (HW_LCDC_LVCR_WR((HW_LCDC_LVCR_RD() & ~BM_LCDC_LVCR_V_WAIT_1) | BF_LCDC_LVCR_V_WAIT_1(v)))
-#endif
-//@}
+/*! @brief Set the V_WAIT_1 field to a new value. */
+#define BW_LCDC_LVCR_V_WAIT_1(x, v) (HW_LCDC_LVCR_WR(x, (HW_LCDC_LVCR_RD(x) & ~BM_LCDC_LVCR_V_WAIT_1) | BF_LCDC_LVCR_V_WAIT_1(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LVCR, field V_WIDTH[31:26] (RW)
@@ -1553,30 +1364,25 @@ typedef union _hw_lcdc_lvcr
  * on. For passive mode (TFT=0) and non-color mode, see Horizontal Sync Pulse
  * Timing in Passive Mode diagram .
  */
-//@{
-#define BP_LCDC_LVCR_V_WIDTH (26U)         //!< Bit position for LCDC_LVCR_V_WIDTH.
-#define BM_LCDC_LVCR_V_WIDTH (0xFC000000U) //!< Bit mask for LCDC_LVCR_V_WIDTH.
-#define BS_LCDC_LVCR_V_WIDTH (6U)          //!< Bit field size in bits for LCDC_LVCR_V_WIDTH.
+/*@{*/
+#define BP_LCDC_LVCR_V_WIDTH (26U)         /*!< Bit position for LCDC_LVCR_V_WIDTH. */
+#define BM_LCDC_LVCR_V_WIDTH (0xFC000000U) /*!< Bit mask for LCDC_LVCR_V_WIDTH. */
+#define BS_LCDC_LVCR_V_WIDTH (6U)          /*!< Bit field size in bits for LCDC_LVCR_V_WIDTH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LVCR_V_WIDTH field.
-#define BR_LCDC_LVCR_V_WIDTH (HW_LCDC_LVCR.B.V_WIDTH)
-#endif
+/*! @brief Read current value of the LCDC_LVCR_V_WIDTH field. */
+#define BR_LCDC_LVCR_V_WIDTH(x) (HW_LCDC_LVCR(x).B.V_WIDTH)
 
-//! @brief Format value for bitfield LCDC_LVCR_V_WIDTH.
-#define BF_LCDC_LVCR_V_WIDTH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LVCR_V_WIDTH), uint32_t) & BM_LCDC_LVCR_V_WIDTH)
+/*! @brief Format value for bitfield LCDC_LVCR_V_WIDTH. */
+#define BF_LCDC_LVCR_V_WIDTH(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LVCR_V_WIDTH) & BM_LCDC_LVCR_V_WIDTH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the V_WIDTH field to a new value.
-#define BW_LCDC_LVCR_V_WIDTH(v) (HW_LCDC_LVCR_WR((HW_LCDC_LVCR_RD() & ~BM_LCDC_LVCR_V_WIDTH) | BF_LCDC_LVCR_V_WIDTH(v)))
-#endif
-//@}
+/*! @brief Set the V_WIDTH field to a new value. */
+#define BW_LCDC_LVCR_V_WIDTH(x, v) (HW_LCDC_LVCR_WR(x, (HW_LCDC_LVCR_RD(x) & ~BM_LCDC_LVCR_V_WIDTH) | BF_LCDC_LVCR_V_WIDTH(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LPOR - LCDC panning offset register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LPOR - LCDC panning offset register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LPOR - LCDC panning offset register (RW)
  *
@@ -1589,27 +1395,24 @@ typedef union _hw_lcdc_lpor
     uint32_t U;
     struct _hw_lcdc_lpor_bitfields
     {
-        uint32_t POS : 5;              //!< [4:0] Panning offset
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t POS : 5;              /*!< [4:0] Panning offset */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_lcdc_lpor_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LPOR register
  */
-//@{
-#define HW_LCDC_LPOR_ADDR        (REGS_LCDC_BASE + 0x24U)
+/*@{*/
+#define HW_LCDC_LPOR_ADDR(x)     ((x) + 0x24U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LPOR             (*(__IO hw_lcdc_lpor_t *) HW_LCDC_LPOR_ADDR)
-#define HW_LCDC_LPOR_RD()        (HW_LCDC_LPOR.U)
-#define HW_LCDC_LPOR_WR(v)       (HW_LCDC_LPOR.U = (v))
-#define HW_LCDC_LPOR_SET(v)      (HW_LCDC_LPOR_WR(HW_LCDC_LPOR_RD() |  (v)))
-#define HW_LCDC_LPOR_CLR(v)      (HW_LCDC_LPOR_WR(HW_LCDC_LPOR_RD() & ~(v)))
-#define HW_LCDC_LPOR_TOG(v)      (HW_LCDC_LPOR_WR(HW_LCDC_LPOR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LPOR(x)          (*(__IO hw_lcdc_lpor_t *) HW_LCDC_LPOR_ADDR(x))
+#define HW_LCDC_LPOR_RD(x)       (HW_LCDC_LPOR(x).U)
+#define HW_LCDC_LPOR_WR(x, v)    (HW_LCDC_LPOR(x).U = (v))
+#define HW_LCDC_LPOR_SET(x, v)   (HW_LCDC_LPOR_WR(x, HW_LCDC_LPOR_RD(x) |  (v)))
+#define HW_LCDC_LPOR_CLR(x, v)   (HW_LCDC_LPOR_WR(x, HW_LCDC_LPOR_RD(x) & ~(v)))
+#define HW_LCDC_LPOR_TOG(x, v)   (HW_LCDC_LPOR_WR(x, HW_LCDC_LPOR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LPOR bitfields
@@ -1626,30 +1429,25 @@ typedef union _hw_lcdc_lpor
  * achieve panning of the final image by N bits: Bits per pixel POS Effective #
  * of pixels panned on image 1 N N 2 2N N 4 4N N 8 8N N 12/16 16N N
  */
-//@{
-#define BP_LCDC_LPOR_POS     (0U)          //!< Bit position for LCDC_LPOR_POS.
-#define BM_LCDC_LPOR_POS     (0x0000001FU) //!< Bit mask for LCDC_LPOR_POS.
-#define BS_LCDC_LPOR_POS     (5U)          //!< Bit field size in bits for LCDC_LPOR_POS.
+/*@{*/
+#define BP_LCDC_LPOR_POS     (0U)          /*!< Bit position for LCDC_LPOR_POS. */
+#define BM_LCDC_LPOR_POS     (0x0000001FU) /*!< Bit mask for LCDC_LPOR_POS. */
+#define BS_LCDC_LPOR_POS     (5U)          /*!< Bit field size in bits for LCDC_LPOR_POS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPOR_POS field.
-#define BR_LCDC_LPOR_POS     (HW_LCDC_LPOR.B.POS)
-#endif
+/*! @brief Read current value of the LCDC_LPOR_POS field. */
+#define BR_LCDC_LPOR_POS(x)  (HW_LCDC_LPOR(x).B.POS)
 
-//! @brief Format value for bitfield LCDC_LPOR_POS.
-#define BF_LCDC_LPOR_POS(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPOR_POS), uint32_t) & BM_LCDC_LPOR_POS)
+/*! @brief Format value for bitfield LCDC_LPOR_POS. */
+#define BF_LCDC_LPOR_POS(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LPOR_POS) & BM_LCDC_LPOR_POS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the POS field to a new value.
-#define BW_LCDC_LPOR_POS(v)  (HW_LCDC_LPOR_WR((HW_LCDC_LPOR_RD() & ~BM_LCDC_LPOR_POS) | BF_LCDC_LPOR_POS(v)))
-#endif
-//@}
+/*! @brief Set the POS field to a new value. */
+#define BW_LCDC_LPOR_POS(x, v) (HW_LCDC_LPOR_WR(x, (HW_LCDC_LPOR_RD(x) & ~BM_LCDC_LPOR_POS) | BF_LCDC_LPOR_POS(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LPCCR - LCDC PWM contrast control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LPCCR - LCDC PWM contrast control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LPCCR - LCDC PWM contrast control register (RW)
  *
@@ -1663,31 +1461,28 @@ typedef union _hw_lcdc_lpccr
     uint32_t U;
     struct _hw_lcdc_lpccr_bitfields
     {
-        uint32_t PW : 8;               //!< [7:0] Pulse-width
-        uint32_t CC_EN : 1;            //!< [8] Contrast control enable
-        uint32_t SCR : 2;              //!< [10:9] Source select
-        uint32_t RESERVED0 : 4;        //!< [14:11]
-        uint32_t LDMSK : 1;            //!< [15] LD mask
-        uint32_t RESERVED1 : 16;       //!< [31:16]
+        uint32_t PW : 8;               /*!< [7:0] Pulse-width */
+        uint32_t CC_EN : 1;            /*!< [8] Contrast control enable */
+        uint32_t SCR : 2;              /*!< [10:9] Source select */
+        uint32_t RESERVED0 : 4;        /*!< [14:11]  */
+        uint32_t LDMSK : 1;            /*!< [15] LD mask */
+        uint32_t RESERVED1 : 16;       /*!< [31:16]  */
     } B;
 } hw_lcdc_lpccr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LPCCR register
  */
-//@{
-#define HW_LCDC_LPCCR_ADDR       (REGS_LCDC_BASE + 0x2CU)
+/*@{*/
+#define HW_LCDC_LPCCR_ADDR(x)    ((x) + 0x2CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LPCCR            (*(__IO hw_lcdc_lpccr_t *) HW_LCDC_LPCCR_ADDR)
-#define HW_LCDC_LPCCR_RD()       (HW_LCDC_LPCCR.U)
-#define HW_LCDC_LPCCR_WR(v)      (HW_LCDC_LPCCR.U = (v))
-#define HW_LCDC_LPCCR_SET(v)     (HW_LCDC_LPCCR_WR(HW_LCDC_LPCCR_RD() |  (v)))
-#define HW_LCDC_LPCCR_CLR(v)     (HW_LCDC_LPCCR_WR(HW_LCDC_LPCCR_RD() & ~(v)))
-#define HW_LCDC_LPCCR_TOG(v)     (HW_LCDC_LPCCR_WR(HW_LCDC_LPCCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LPCCR(x)         (*(__IO hw_lcdc_lpccr_t *) HW_LCDC_LPCCR_ADDR(x))
+#define HW_LCDC_LPCCR_RD(x)      (HW_LCDC_LPCCR(x).U)
+#define HW_LCDC_LPCCR_WR(x, v)   (HW_LCDC_LPCCR(x).U = (v))
+#define HW_LCDC_LPCCR_SET(x, v)  (HW_LCDC_LPCCR_WR(x, HW_LCDC_LPCCR_RD(x) |  (v)))
+#define HW_LCDC_LPCCR_CLR(x, v)  (HW_LCDC_LPCCR_WR(x, HW_LCDC_LPCCR_RD(x) & ~(v)))
+#define HW_LCDC_LPCCR_TOG(x, v)  (HW_LCDC_LPCCR_WR(x, HW_LCDC_LPCCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LPCCR bitfields
@@ -1699,24 +1494,20 @@ typedef union _hw_lcdc_lpccr
  * Controls the pulse-width of the built-in PWM that controls the contrast of
  * LCD screen.
  */
-//@{
-#define BP_LCDC_LPCCR_PW     (0U)          //!< Bit position for LCDC_LPCCR_PW.
-#define BM_LCDC_LPCCR_PW     (0x000000FFU) //!< Bit mask for LCDC_LPCCR_PW.
-#define BS_LCDC_LPCCR_PW     (8U)          //!< Bit field size in bits for LCDC_LPCCR_PW.
+/*@{*/
+#define BP_LCDC_LPCCR_PW     (0U)          /*!< Bit position for LCDC_LPCCR_PW. */
+#define BM_LCDC_LPCCR_PW     (0x000000FFU) /*!< Bit mask for LCDC_LPCCR_PW. */
+#define BS_LCDC_LPCCR_PW     (8U)          /*!< Bit field size in bits for LCDC_LPCCR_PW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCCR_PW field.
-#define BR_LCDC_LPCCR_PW     (HW_LCDC_LPCCR.B.PW)
-#endif
+/*! @brief Read current value of the LCDC_LPCCR_PW field. */
+#define BR_LCDC_LPCCR_PW(x)  (HW_LCDC_LPCCR(x).B.PW)
 
-//! @brief Format value for bitfield LCDC_LPCCR_PW.
-#define BF_LCDC_LPCCR_PW(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCCR_PW), uint32_t) & BM_LCDC_LPCCR_PW)
+/*! @brief Format value for bitfield LCDC_LPCCR_PW. */
+#define BF_LCDC_LPCCR_PW(v)  ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCCR_PW) & BM_LCDC_LPCCR_PW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PW field to a new value.
-#define BW_LCDC_LPCCR_PW(v)  (HW_LCDC_LPCCR_WR((HW_LCDC_LPCCR_RD() & ~BM_LCDC_LPCCR_PW) | BF_LCDC_LPCCR_PW(v)))
-#endif
-//@}
+/*! @brief Set the PW field to a new value. */
+#define BW_LCDC_LPCCR_PW(x, v) (HW_LCDC_LPCCR_WR(x, (HW_LCDC_LPCCR_RD(x) & ~BM_LCDC_LPCCR_PW) | BF_LCDC_LPCCR_PW(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCCR, field CC_EN[8] (RW)
@@ -1727,24 +1518,20 @@ typedef union _hw_lcdc_lpccr
  * - 0 - Contrast control is off.
  * - 1 - Contrast control is on.
  */
-//@{
-#define BP_LCDC_LPCCR_CC_EN  (8U)          //!< Bit position for LCDC_LPCCR_CC_EN.
-#define BM_LCDC_LPCCR_CC_EN  (0x00000100U) //!< Bit mask for LCDC_LPCCR_CC_EN.
-#define BS_LCDC_LPCCR_CC_EN  (1U)          //!< Bit field size in bits for LCDC_LPCCR_CC_EN.
+/*@{*/
+#define BP_LCDC_LPCCR_CC_EN  (8U)          /*!< Bit position for LCDC_LPCCR_CC_EN. */
+#define BM_LCDC_LPCCR_CC_EN  (0x00000100U) /*!< Bit mask for LCDC_LPCCR_CC_EN. */
+#define BS_LCDC_LPCCR_CC_EN  (1U)          /*!< Bit field size in bits for LCDC_LPCCR_CC_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCCR_CC_EN field.
-#define BR_LCDC_LPCCR_CC_EN  (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR, BP_LCDC_LPCCR_CC_EN))
-#endif
+/*! @brief Read current value of the LCDC_LPCCR_CC_EN field. */
+#define BR_LCDC_LPCCR_CC_EN(x) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR(x), BP_LCDC_LPCCR_CC_EN))
 
-//! @brief Format value for bitfield LCDC_LPCCR_CC_EN.
-#define BF_LCDC_LPCCR_CC_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCCR_CC_EN), uint32_t) & BM_LCDC_LPCCR_CC_EN)
+/*! @brief Format value for bitfield LCDC_LPCCR_CC_EN. */
+#define BF_LCDC_LPCCR_CC_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCCR_CC_EN) & BM_LCDC_LPCCR_CC_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CC_EN field to a new value.
-#define BW_LCDC_LPCCR_CC_EN(v) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR, BP_LCDC_LPCCR_CC_EN) = (v))
-#endif
-//@}
+/*! @brief Set the CC_EN field to a new value. */
+#define BW_LCDC_LPCCR_CC_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR(x), BP_LCDC_LPCCR_CC_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCCR, field SCR[10:9] (RW)
@@ -1758,24 +1545,20 @@ typedef union _hw_lcdc_lpccr
  * - 10 - LCD clock
  * - 11 - Reserved
  */
-//@{
-#define BP_LCDC_LPCCR_SCR    (9U)          //!< Bit position for LCDC_LPCCR_SCR.
-#define BM_LCDC_LPCCR_SCR    (0x00000600U) //!< Bit mask for LCDC_LPCCR_SCR.
-#define BS_LCDC_LPCCR_SCR    (2U)          //!< Bit field size in bits for LCDC_LPCCR_SCR.
+/*@{*/
+#define BP_LCDC_LPCCR_SCR    (9U)          /*!< Bit position for LCDC_LPCCR_SCR. */
+#define BM_LCDC_LPCCR_SCR    (0x00000600U) /*!< Bit mask for LCDC_LPCCR_SCR. */
+#define BS_LCDC_LPCCR_SCR    (2U)          /*!< Bit field size in bits for LCDC_LPCCR_SCR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCCR_SCR field.
-#define BR_LCDC_LPCCR_SCR    (HW_LCDC_LPCCR.B.SCR)
-#endif
+/*! @brief Read current value of the LCDC_LPCCR_SCR field. */
+#define BR_LCDC_LPCCR_SCR(x) (HW_LCDC_LPCCR(x).B.SCR)
 
-//! @brief Format value for bitfield LCDC_LPCCR_SCR.
-#define BF_LCDC_LPCCR_SCR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCCR_SCR), uint32_t) & BM_LCDC_LPCCR_SCR)
+/*! @brief Format value for bitfield LCDC_LPCCR_SCR. */
+#define BF_LCDC_LPCCR_SCR(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCCR_SCR) & BM_LCDC_LPCCR_SCR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SCR field to a new value.
-#define BW_LCDC_LPCCR_SCR(v) (HW_LCDC_LPCCR_WR((HW_LCDC_LPCCR_RD() & ~BM_LCDC_LPCCR_SCR) | BF_LCDC_LPCCR_SCR(v)))
-#endif
-//@}
+/*! @brief Set the SCR field to a new value. */
+#define BW_LCDC_LPCCR_SCR(x, v) (HW_LCDC_LPCCR_WR(x, (HW_LCDC_LPCCR_RD(x) & ~BM_LCDC_LPCCR_SCR) | BF_LCDC_LPCCR_SCR(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LPCCR, field LDMSK[15] (RW)
@@ -1786,30 +1569,25 @@ typedef union _hw_lcdc_lpccr
  * - 0 - LD [23:0] is normal.
  * - 1 - LD [23:0] always equals 0.
  */
-//@{
-#define BP_LCDC_LPCCR_LDMSK  (15U)         //!< Bit position for LCDC_LPCCR_LDMSK.
-#define BM_LCDC_LPCCR_LDMSK  (0x00008000U) //!< Bit mask for LCDC_LPCCR_LDMSK.
-#define BS_LCDC_LPCCR_LDMSK  (1U)          //!< Bit field size in bits for LCDC_LPCCR_LDMSK.
+/*@{*/
+#define BP_LCDC_LPCCR_LDMSK  (15U)         /*!< Bit position for LCDC_LPCCR_LDMSK. */
+#define BM_LCDC_LPCCR_LDMSK  (0x00008000U) /*!< Bit mask for LCDC_LPCCR_LDMSK. */
+#define BS_LCDC_LPCCR_LDMSK  (1U)          /*!< Bit field size in bits for LCDC_LPCCR_LDMSK. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LPCCR_LDMSK field.
-#define BR_LCDC_LPCCR_LDMSK  (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR, BP_LCDC_LPCCR_LDMSK))
-#endif
+/*! @brief Read current value of the LCDC_LPCCR_LDMSK field. */
+#define BR_LCDC_LPCCR_LDMSK(x) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR(x), BP_LCDC_LPCCR_LDMSK))
 
-//! @brief Format value for bitfield LCDC_LPCCR_LDMSK.
-#define BF_LCDC_LPCCR_LDMSK(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LPCCR_LDMSK), uint32_t) & BM_LCDC_LPCCR_LDMSK)
+/*! @brief Format value for bitfield LCDC_LPCCR_LDMSK. */
+#define BF_LCDC_LPCCR_LDMSK(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LPCCR_LDMSK) & BM_LCDC_LPCCR_LDMSK)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LDMSK field to a new value.
-#define BW_LCDC_LPCCR_LDMSK(v) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR, BP_LCDC_LPCCR_LDMSK) = (v))
-#endif
-//@}
+/*! @brief Set the LDMSK field to a new value. */
+#define BW_LCDC_LPCCR_LDMSK(x, v) (BITBAND_ACCESS32(HW_LCDC_LPCCR_ADDR(x), BP_LCDC_LPCCR_LDMSK) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LDCR - LCDC DMA control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LDCR - LCDC DMA control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LDCR - LCDC DMA control register (RW)
  *
@@ -1824,30 +1602,27 @@ typedef union _hw_lcdc_ldcr
     uint32_t U;
     struct _hw_lcdc_ldcr_bitfields
     {
-        uint32_t TM : 7;               //!< [6:0] DMA trigger mark
-        uint32_t RESERVED0 : 9;        //!< [15:7]
-        uint32_t HM : 7;               //!< [22:16] DMA high mark
-        uint32_t RESERVED1 : 8;        //!< [30:23]
-        uint32_t BURST : 1;            //!< [31] Burst length
+        uint32_t TM : 7;               /*!< [6:0] DMA trigger mark */
+        uint32_t RESERVED0 : 9;        /*!< [15:7]  */
+        uint32_t HM : 7;               /*!< [22:16] DMA high mark */
+        uint32_t RESERVED1 : 8;        /*!< [30:23]  */
+        uint32_t BURST : 1;            /*!< [31] Burst length */
     } B;
 } hw_lcdc_ldcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LDCR register
  */
-//@{
-#define HW_LCDC_LDCR_ADDR        (REGS_LCDC_BASE + 0x30U)
+/*@{*/
+#define HW_LCDC_LDCR_ADDR(x)     ((x) + 0x30U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LDCR             (*(__IO hw_lcdc_ldcr_t *) HW_LCDC_LDCR_ADDR)
-#define HW_LCDC_LDCR_RD()        (HW_LCDC_LDCR.U)
-#define HW_LCDC_LDCR_WR(v)       (HW_LCDC_LDCR.U = (v))
-#define HW_LCDC_LDCR_SET(v)      (HW_LCDC_LDCR_WR(HW_LCDC_LDCR_RD() |  (v)))
-#define HW_LCDC_LDCR_CLR(v)      (HW_LCDC_LDCR_WR(HW_LCDC_LDCR_RD() & ~(v)))
-#define HW_LCDC_LDCR_TOG(v)      (HW_LCDC_LDCR_WR(HW_LCDC_LDCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LDCR(x)          (*(__IO hw_lcdc_ldcr_t *) HW_LCDC_LDCR_ADDR(x))
+#define HW_LCDC_LDCR_RD(x)       (HW_LCDC_LDCR(x).U)
+#define HW_LCDC_LDCR_WR(x, v)    (HW_LCDC_LDCR(x).U = (v))
+#define HW_LCDC_LDCR_SET(x, v)   (HW_LCDC_LDCR_WR(x, HW_LCDC_LDCR_RD(x) |  (v)))
+#define HW_LCDC_LDCR_CLR(x, v)   (HW_LCDC_LDCR_WR(x, HW_LCDC_LDCR_RD(x) & ~(v)))
+#define HW_LCDC_LDCR_TOG(x, v)   (HW_LCDC_LDCR_WR(x, HW_LCDC_LDCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LDCR bitfields
@@ -1859,24 +1634,20 @@ typedef union _hw_lcdc_ldcr
  * Sets the low-level mark in the pixel buffer to trigger a DMA request. The
  * low-level mark equals the number of words left in the pixel buffer.
  */
-//@{
-#define BP_LCDC_LDCR_TM      (0U)          //!< Bit position for LCDC_LDCR_TM.
-#define BM_LCDC_LDCR_TM      (0x0000007FU) //!< Bit mask for LCDC_LDCR_TM.
-#define BS_LCDC_LDCR_TM      (7U)          //!< Bit field size in bits for LCDC_LDCR_TM.
+/*@{*/
+#define BP_LCDC_LDCR_TM      (0U)          /*!< Bit position for LCDC_LDCR_TM. */
+#define BM_LCDC_LDCR_TM      (0x0000007FU) /*!< Bit mask for LCDC_LDCR_TM. */
+#define BS_LCDC_LDCR_TM      (7U)          /*!< Bit field size in bits for LCDC_LDCR_TM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LDCR_TM field.
-#define BR_LCDC_LDCR_TM      (HW_LCDC_LDCR.B.TM)
-#endif
+/*! @brief Read current value of the LCDC_LDCR_TM field. */
+#define BR_LCDC_LDCR_TM(x)   (HW_LCDC_LDCR(x).B.TM)
 
-//! @brief Format value for bitfield LCDC_LDCR_TM.
-#define BF_LCDC_LDCR_TM(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LDCR_TM), uint32_t) & BM_LCDC_LDCR_TM)
+/*! @brief Format value for bitfield LCDC_LDCR_TM. */
+#define BF_LCDC_LDCR_TM(v)   ((uint32_t)((uint32_t)(v) << BP_LCDC_LDCR_TM) & BM_LCDC_LDCR_TM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TM field to a new value.
-#define BW_LCDC_LDCR_TM(v)   (HW_LCDC_LDCR_WR((HW_LCDC_LDCR_RD() & ~BM_LCDC_LDCR_TM) | BF_LCDC_LDCR_TM(v)))
-#endif
-//@}
+/*! @brief Set the TM field to a new value. */
+#define BW_LCDC_LDCR_TM(x, v) (HW_LCDC_LDCR_WR(x, (HW_LCDC_LDCR_RD(x) & ~BM_LCDC_LDCR_TM) | BF_LCDC_LDCR_TM(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LDCR, field HM[22:16] (RW)
@@ -1888,24 +1659,20 @@ typedef union _hw_lcdc_ldcr
  * length (in words) of each request is equal to the DMA high mark setting and its
  * value must be larger than TM.
  */
-//@{
-#define BP_LCDC_LDCR_HM      (16U)         //!< Bit position for LCDC_LDCR_HM.
-#define BM_LCDC_LDCR_HM      (0x007F0000U) //!< Bit mask for LCDC_LDCR_HM.
-#define BS_LCDC_LDCR_HM      (7U)          //!< Bit field size in bits for LCDC_LDCR_HM.
+/*@{*/
+#define BP_LCDC_LDCR_HM      (16U)         /*!< Bit position for LCDC_LDCR_HM. */
+#define BM_LCDC_LDCR_HM      (0x007F0000U) /*!< Bit mask for LCDC_LDCR_HM. */
+#define BS_LCDC_LDCR_HM      (7U)          /*!< Bit field size in bits for LCDC_LDCR_HM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LDCR_HM field.
-#define BR_LCDC_LDCR_HM      (HW_LCDC_LDCR.B.HM)
-#endif
+/*! @brief Read current value of the LCDC_LDCR_HM field. */
+#define BR_LCDC_LDCR_HM(x)   (HW_LCDC_LDCR(x).B.HM)
 
-//! @brief Format value for bitfield LCDC_LDCR_HM.
-#define BF_LCDC_LDCR_HM(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LDCR_HM), uint32_t) & BM_LCDC_LDCR_HM)
+/*! @brief Format value for bitfield LCDC_LDCR_HM. */
+#define BF_LCDC_LDCR_HM(v)   ((uint32_t)((uint32_t)(v) << BP_LCDC_LDCR_HM) & BM_LCDC_LDCR_HM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the HM field to a new value.
-#define BW_LCDC_LDCR_HM(v)   (HW_LCDC_LDCR_WR((HW_LCDC_LDCR_RD() & ~BM_LCDC_LDCR_HM) | BF_LCDC_LDCR_HM(v)))
-#endif
-//@}
+/*! @brief Set the HM field to a new value. */
+#define BW_LCDC_LDCR_HM(x, v) (HW_LCDC_LDCR_WR(x, (HW_LCDC_LDCR_RD(x) & ~BM_LCDC_LDCR_HM) | BF_LCDC_LDCR_HM(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LDCR, field BURST[31] (RW)
@@ -1916,30 +1683,25 @@ typedef union _hw_lcdc_ldcr
  * - 0 - Burst length is dynamic.
  * - 1 - Burst length is fixed.
  */
-//@{
-#define BP_LCDC_LDCR_BURST   (31U)         //!< Bit position for LCDC_LDCR_BURST.
-#define BM_LCDC_LDCR_BURST   (0x80000000U) //!< Bit mask for LCDC_LDCR_BURST.
-#define BS_LCDC_LDCR_BURST   (1U)          //!< Bit field size in bits for LCDC_LDCR_BURST.
+/*@{*/
+#define BP_LCDC_LDCR_BURST   (31U)         /*!< Bit position for LCDC_LDCR_BURST. */
+#define BM_LCDC_LDCR_BURST   (0x80000000U) /*!< Bit mask for LCDC_LDCR_BURST. */
+#define BS_LCDC_LDCR_BURST   (1U)          /*!< Bit field size in bits for LCDC_LDCR_BURST. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LDCR_BURST field.
-#define BR_LCDC_LDCR_BURST   (BITBAND_ACCESS32(HW_LCDC_LDCR_ADDR, BP_LCDC_LDCR_BURST))
-#endif
+/*! @brief Read current value of the LCDC_LDCR_BURST field. */
+#define BR_LCDC_LDCR_BURST(x) (BITBAND_ACCESS32(HW_LCDC_LDCR_ADDR(x), BP_LCDC_LDCR_BURST))
 
-//! @brief Format value for bitfield LCDC_LDCR_BURST.
-#define BF_LCDC_LDCR_BURST(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LDCR_BURST), uint32_t) & BM_LCDC_LDCR_BURST)
+/*! @brief Format value for bitfield LCDC_LDCR_BURST. */
+#define BF_LCDC_LDCR_BURST(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LDCR_BURST) & BM_LCDC_LDCR_BURST)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BURST field to a new value.
-#define BW_LCDC_LDCR_BURST(v) (BITBAND_ACCESS32(HW_LCDC_LDCR_ADDR, BP_LCDC_LDCR_BURST) = (v))
-#endif
-//@}
+/*! @brief Set the BURST field to a new value. */
+#define BW_LCDC_LDCR_BURST(x, v) (BITBAND_ACCESS32(HW_LCDC_LDCR_ADDR(x), BP_LCDC_LDCR_BURST) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LRMCR - LCDC refresh mode control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LRMCR - LCDC refresh mode control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LRMCR - LCDC refresh mode control register (RW)
  *
@@ -1958,27 +1720,24 @@ typedef union _hw_lcdc_lrmcr
     uint32_t U;
     struct _hw_lcdc_lrmcr_bitfields
     {
-        uint32_t SELF_REF : 1;         //!< [0] Self-refresh
-        uint32_t RESERVED0 : 31;       //!< [31:1]
+        uint32_t SELF_REF : 1;         /*!< [0] Self-refresh */
+        uint32_t RESERVED0 : 31;       /*!< [31:1]  */
     } B;
 } hw_lcdc_lrmcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LRMCR register
  */
-//@{
-#define HW_LCDC_LRMCR_ADDR       (REGS_LCDC_BASE + 0x34U)
+/*@{*/
+#define HW_LCDC_LRMCR_ADDR(x)    ((x) + 0x34U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LRMCR            (*(__IO hw_lcdc_lrmcr_t *) HW_LCDC_LRMCR_ADDR)
-#define HW_LCDC_LRMCR_RD()       (HW_LCDC_LRMCR.U)
-#define HW_LCDC_LRMCR_WR(v)      (HW_LCDC_LRMCR.U = (v))
-#define HW_LCDC_LRMCR_SET(v)     (HW_LCDC_LRMCR_WR(HW_LCDC_LRMCR_RD() |  (v)))
-#define HW_LCDC_LRMCR_CLR(v)     (HW_LCDC_LRMCR_WR(HW_LCDC_LRMCR_RD() & ~(v)))
-#define HW_LCDC_LRMCR_TOG(v)     (HW_LCDC_LRMCR_WR(HW_LCDC_LRMCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LRMCR(x)         (*(__IO hw_lcdc_lrmcr_t *) HW_LCDC_LRMCR_ADDR(x))
+#define HW_LCDC_LRMCR_RD(x)      (HW_LCDC_LRMCR(x).U)
+#define HW_LCDC_LRMCR_WR(x, v)   (HW_LCDC_LRMCR(x).U = (v))
+#define HW_LCDC_LRMCR_SET(x, v)  (HW_LCDC_LRMCR_WR(x, HW_LCDC_LRMCR_RD(x) |  (v)))
+#define HW_LCDC_LRMCR_CLR(x, v)  (HW_LCDC_LRMCR_WR(x, HW_LCDC_LRMCR_RD(x) & ~(v)))
+#define HW_LCDC_LRMCR_TOG(x, v)  (HW_LCDC_LRMCR_WR(x, HW_LCDC_LRMCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LRMCR bitfields
@@ -1993,30 +1752,25 @@ typedef union _hw_lcdc_lrmcr
  * - 0 - Disable self-refresh
  * - 1 - Enable self-refresh
  */
-//@{
-#define BP_LCDC_LRMCR_SELF_REF (0U)        //!< Bit position for LCDC_LRMCR_SELF_REF.
-#define BM_LCDC_LRMCR_SELF_REF (0x00000001U) //!< Bit mask for LCDC_LRMCR_SELF_REF.
-#define BS_LCDC_LRMCR_SELF_REF (1U)        //!< Bit field size in bits for LCDC_LRMCR_SELF_REF.
+/*@{*/
+#define BP_LCDC_LRMCR_SELF_REF (0U)        /*!< Bit position for LCDC_LRMCR_SELF_REF. */
+#define BM_LCDC_LRMCR_SELF_REF (0x00000001U) /*!< Bit mask for LCDC_LRMCR_SELF_REF. */
+#define BS_LCDC_LRMCR_SELF_REF (1U)        /*!< Bit field size in bits for LCDC_LRMCR_SELF_REF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LRMCR_SELF_REF field.
-#define BR_LCDC_LRMCR_SELF_REF (BITBAND_ACCESS32(HW_LCDC_LRMCR_ADDR, BP_LCDC_LRMCR_SELF_REF))
-#endif
+/*! @brief Read current value of the LCDC_LRMCR_SELF_REF field. */
+#define BR_LCDC_LRMCR_SELF_REF(x) (BITBAND_ACCESS32(HW_LCDC_LRMCR_ADDR(x), BP_LCDC_LRMCR_SELF_REF))
 
-//! @brief Format value for bitfield LCDC_LRMCR_SELF_REF.
-#define BF_LCDC_LRMCR_SELF_REF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LRMCR_SELF_REF), uint32_t) & BM_LCDC_LRMCR_SELF_REF)
+/*! @brief Format value for bitfield LCDC_LRMCR_SELF_REF. */
+#define BF_LCDC_LRMCR_SELF_REF(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LRMCR_SELF_REF) & BM_LCDC_LRMCR_SELF_REF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the SELF_REF field to a new value.
-#define BW_LCDC_LRMCR_SELF_REF(v) (BITBAND_ACCESS32(HW_LCDC_LRMCR_ADDR, BP_LCDC_LRMCR_SELF_REF) = (v))
-#endif
-//@}
+/*! @brief Set the SELF_REF field to a new value. */
+#define BW_LCDC_LRMCR_SELF_REF(x, v) (BITBAND_ACCESS32(HW_LCDC_LRMCR_ADDR(x), BP_LCDC_LRMCR_SELF_REF) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LICR - LCDC interrupt configuration register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LICR - LCDC interrupt configuration register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LICR - LCDC interrupt configuration register (RW)
  *
@@ -2035,31 +1789,29 @@ typedef union _hw_lcdc_licr
     uint32_t U;
     struct _hw_lcdc_licr_bitfields
     {
-        uint32_t INTCON : 1;           //!< [0] Interrupt condition
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t INTSYN : 1;           //!< [2] Interrupt source
-        uint32_t RESERVED1 : 1;        //!< [3]
-        uint32_t GW_INT_CON : 1;       //!< [4] Graphic window interrupt condition
-        uint32_t RESERVED2 : 27;       //!< [31:5]
+        uint32_t INTCON : 1;           /*!< [0] Interrupt condition */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t INTSYN : 1;           /*!< [2] Interrupt source */
+        uint32_t RESERVED1 : 1;        /*!< [3]  */
+        uint32_t GW_INT_CON : 1;       /*!< [4] Graphic window interrupt condition
+                                        * */
+        uint32_t RESERVED2 : 27;       /*!< [31:5]  */
     } B;
 } hw_lcdc_licr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LICR register
  */
-//@{
-#define HW_LCDC_LICR_ADDR        (REGS_LCDC_BASE + 0x38U)
+/*@{*/
+#define HW_LCDC_LICR_ADDR(x)     ((x) + 0x38U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LICR             (*(__IO hw_lcdc_licr_t *) HW_LCDC_LICR_ADDR)
-#define HW_LCDC_LICR_RD()        (HW_LCDC_LICR.U)
-#define HW_LCDC_LICR_WR(v)       (HW_LCDC_LICR.U = (v))
-#define HW_LCDC_LICR_SET(v)      (HW_LCDC_LICR_WR(HW_LCDC_LICR_RD() |  (v)))
-#define HW_LCDC_LICR_CLR(v)      (HW_LCDC_LICR_WR(HW_LCDC_LICR_RD() & ~(v)))
-#define HW_LCDC_LICR_TOG(v)      (HW_LCDC_LICR_WR(HW_LCDC_LICR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LICR(x)          (*(__IO hw_lcdc_licr_t *) HW_LCDC_LICR_ADDR(x))
+#define HW_LCDC_LICR_RD(x)       (HW_LCDC_LICR(x).U)
+#define HW_LCDC_LICR_WR(x, v)    (HW_LCDC_LICR(x).U = (v))
+#define HW_LCDC_LICR_SET(x, v)   (HW_LCDC_LICR_WR(x, HW_LCDC_LICR_RD(x) |  (v)))
+#define HW_LCDC_LICR_CLR(x, v)   (HW_LCDC_LICR_WR(x, HW_LCDC_LICR_RD(x) & ~(v)))
+#define HW_LCDC_LICR_TOG(x, v)   (HW_LCDC_LICR_WR(x, HW_LCDC_LICR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LICR bitfields
@@ -2075,24 +1827,20 @@ typedef union _hw_lcdc_licr
  * - 0 - Interrupt flag is set when the end of frame (EOF) is reached.
  * - 1 - Interrupt flag is set when the beginning of frame (BOF) is reached.
  */
-//@{
-#define BP_LCDC_LICR_INTCON  (0U)          //!< Bit position for LCDC_LICR_INTCON.
-#define BM_LCDC_LICR_INTCON  (0x00000001U) //!< Bit mask for LCDC_LICR_INTCON.
-#define BS_LCDC_LICR_INTCON  (1U)          //!< Bit field size in bits for LCDC_LICR_INTCON.
+/*@{*/
+#define BP_LCDC_LICR_INTCON  (0U)          /*!< Bit position for LCDC_LICR_INTCON. */
+#define BM_LCDC_LICR_INTCON  (0x00000001U) /*!< Bit mask for LCDC_LICR_INTCON. */
+#define BS_LCDC_LICR_INTCON  (1U)          /*!< Bit field size in bits for LCDC_LICR_INTCON. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LICR_INTCON field.
-#define BR_LCDC_LICR_INTCON  (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_INTCON))
-#endif
+/*! @brief Read current value of the LCDC_LICR_INTCON field. */
+#define BR_LCDC_LICR_INTCON(x) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_INTCON))
 
-//! @brief Format value for bitfield LCDC_LICR_INTCON.
-#define BF_LCDC_LICR_INTCON(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LICR_INTCON), uint32_t) & BM_LCDC_LICR_INTCON)
+/*! @brief Format value for bitfield LCDC_LICR_INTCON. */
+#define BF_LCDC_LICR_INTCON(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LICR_INTCON) & BM_LCDC_LICR_INTCON)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INTCON field to a new value.
-#define BW_LCDC_LICR_INTCON(v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_INTCON) = (v))
-#endif
-//@}
+/*! @brief Set the INTCON field to a new value. */
+#define BW_LCDC_LICR_INTCON(x, v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_INTCON) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LICR, field INTSYN[2] (RW)
@@ -2113,24 +1861,20 @@ typedef union _hw_lcdc_licr
  * - 1 - Interrupt flag is set on output of the last/first data of frame to LCD
  *     panel.
  */
-//@{
-#define BP_LCDC_LICR_INTSYN  (2U)          //!< Bit position for LCDC_LICR_INTSYN.
-#define BM_LCDC_LICR_INTSYN  (0x00000004U) //!< Bit mask for LCDC_LICR_INTSYN.
-#define BS_LCDC_LICR_INTSYN  (1U)          //!< Bit field size in bits for LCDC_LICR_INTSYN.
+/*@{*/
+#define BP_LCDC_LICR_INTSYN  (2U)          /*!< Bit position for LCDC_LICR_INTSYN. */
+#define BM_LCDC_LICR_INTSYN  (0x00000004U) /*!< Bit mask for LCDC_LICR_INTSYN. */
+#define BS_LCDC_LICR_INTSYN  (1U)          /*!< Bit field size in bits for LCDC_LICR_INTSYN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LICR_INTSYN field.
-#define BR_LCDC_LICR_INTSYN  (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_INTSYN))
-#endif
+/*! @brief Read current value of the LCDC_LICR_INTSYN field. */
+#define BR_LCDC_LICR_INTSYN(x) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_INTSYN))
 
-//! @brief Format value for bitfield LCDC_LICR_INTSYN.
-#define BF_LCDC_LICR_INTSYN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LICR_INTSYN), uint32_t) & BM_LCDC_LICR_INTSYN)
+/*! @brief Format value for bitfield LCDC_LICR_INTSYN. */
+#define BF_LCDC_LICR_INTSYN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LICR_INTSYN) & BM_LCDC_LICR_INTSYN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INTSYN field to a new value.
-#define BW_LCDC_LICR_INTSYN(v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_INTSYN) = (v))
-#endif
-//@}
+/*! @brief Set the INTSYN field to a new value. */
+#define BW_LCDC_LICR_INTSYN(x, v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_INTSYN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LICR, field GW_INT_CON[4] (RW)
@@ -2142,30 +1886,25 @@ typedef union _hw_lcdc_licr
  * - 0 - Interrupt flag is set when end of graphic window is reached.
  * - 1 - Interrupt flag is set when beginning of graphic window is reached.
  */
-//@{
-#define BP_LCDC_LICR_GW_INT_CON (4U)       //!< Bit position for LCDC_LICR_GW_INT_CON.
-#define BM_LCDC_LICR_GW_INT_CON (0x00000010U) //!< Bit mask for LCDC_LICR_GW_INT_CON.
-#define BS_LCDC_LICR_GW_INT_CON (1U)       //!< Bit field size in bits for LCDC_LICR_GW_INT_CON.
+/*@{*/
+#define BP_LCDC_LICR_GW_INT_CON (4U)       /*!< Bit position for LCDC_LICR_GW_INT_CON. */
+#define BM_LCDC_LICR_GW_INT_CON (0x00000010U) /*!< Bit mask for LCDC_LICR_GW_INT_CON. */
+#define BS_LCDC_LICR_GW_INT_CON (1U)       /*!< Bit field size in bits for LCDC_LICR_GW_INT_CON. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LICR_GW_INT_CON field.
-#define BR_LCDC_LICR_GW_INT_CON (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_GW_INT_CON))
-#endif
+/*! @brief Read current value of the LCDC_LICR_GW_INT_CON field. */
+#define BR_LCDC_LICR_GW_INT_CON(x) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_GW_INT_CON))
 
-//! @brief Format value for bitfield LCDC_LICR_GW_INT_CON.
-#define BF_LCDC_LICR_GW_INT_CON(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LICR_GW_INT_CON), uint32_t) & BM_LCDC_LICR_GW_INT_CON)
+/*! @brief Format value for bitfield LCDC_LICR_GW_INT_CON. */
+#define BF_LCDC_LICR_GW_INT_CON(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LICR_GW_INT_CON) & BM_LCDC_LICR_GW_INT_CON)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GW_INT_CON field to a new value.
-#define BW_LCDC_LICR_GW_INT_CON(v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR, BP_LCDC_LICR_GW_INT_CON) = (v))
-#endif
-//@}
+/*! @brief Set the GW_INT_CON field to a new value. */
+#define BW_LCDC_LICR_GW_INT_CON(x, v) (BITBAND_ACCESS32(HW_LCDC_LICR_ADDR(x), BP_LCDC_LICR_GW_INT_CON) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LIER - LCDC interrupt enable register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LIER - LCDC interrupt enable register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LIER - LCDC interrupt enable register (RW)
  *
@@ -2179,37 +1918,34 @@ typedef union _hw_lcdc_lier
     uint32_t U;
     struct _hw_lcdc_lier_bitfields
     {
-        uint32_t BOF_EN : 1;           //!< [0] Beginning of frame interrupt enable
-        uint32_t EOF_EN : 1;           //!< [1] End of frame interrupt enable
-        uint32_t RESERVED0 : 1;        //!< [2]
-        uint32_t UDR_ERR_EN : 1;       //!< [3] Under run error interrupt enable
-        uint32_t GW_BOF_EN : 1;        //!< [4] Graphic window beginning of frame
-                                       //! interrupt enable
-        uint32_t GW_EOF_EN : 1;        //!< [5] Graphic window end of frame
-                                       //! interrupt enable
-        uint32_t RESERVED1 : 1;        //!< [6]
-        uint32_t GW_UDR_ERR_EN : 1;    //!< [7] Graphic window under run error
-                                       //! interrupt enable
-        uint32_t RESERVED2 : 24;       //!< [31:8]
+        uint32_t BOF_EN : 1;           /*!< [0] Beginning of frame interrupt enable */
+        uint32_t EOF_EN : 1;           /*!< [1] End of frame interrupt enable */
+        uint32_t RESERVED0 : 1;        /*!< [2]  */
+        uint32_t UDR_ERR_EN : 1;       /*!< [3] Under run error interrupt enable */
+        uint32_t GW_BOF_EN : 1;        /*!< [4] Graphic window beginning of frame
+                                        * interrupt enable */
+        uint32_t GW_EOF_EN : 1;        /*!< [5] Graphic window end of frame
+                                        * interrupt enable */
+        uint32_t RESERVED1 : 1;        /*!< [6]  */
+        uint32_t GW_UDR_ERR_EN : 1;    /*!< [7] Graphic window under run error
+                                        * interrupt enable */
+        uint32_t RESERVED2 : 24;       /*!< [31:8]  */
     } B;
 } hw_lcdc_lier_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LIER register
  */
-//@{
-#define HW_LCDC_LIER_ADDR        (REGS_LCDC_BASE + 0x3CU)
+/*@{*/
+#define HW_LCDC_LIER_ADDR(x)     ((x) + 0x3CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LIER             (*(__IO hw_lcdc_lier_t *) HW_LCDC_LIER_ADDR)
-#define HW_LCDC_LIER_RD()        (HW_LCDC_LIER.U)
-#define HW_LCDC_LIER_WR(v)       (HW_LCDC_LIER.U = (v))
-#define HW_LCDC_LIER_SET(v)      (HW_LCDC_LIER_WR(HW_LCDC_LIER_RD() |  (v)))
-#define HW_LCDC_LIER_CLR(v)      (HW_LCDC_LIER_WR(HW_LCDC_LIER_RD() & ~(v)))
-#define HW_LCDC_LIER_TOG(v)      (HW_LCDC_LIER_WR(HW_LCDC_LIER_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LIER(x)          (*(__IO hw_lcdc_lier_t *) HW_LCDC_LIER_ADDR(x))
+#define HW_LCDC_LIER_RD(x)       (HW_LCDC_LIER(x).U)
+#define HW_LCDC_LIER_WR(x, v)    (HW_LCDC_LIER(x).U = (v))
+#define HW_LCDC_LIER_SET(x, v)   (HW_LCDC_LIER_WR(x, HW_LCDC_LIER_RD(x) |  (v)))
+#define HW_LCDC_LIER_CLR(x, v)   (HW_LCDC_LIER_WR(x, HW_LCDC_LIER_RD(x) & ~(v)))
+#define HW_LCDC_LIER_TOG(x, v)   (HW_LCDC_LIER_WR(x, HW_LCDC_LIER_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LIER bitfields
@@ -2225,24 +1961,20 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_BOF_EN  (0U)          //!< Bit position for LCDC_LIER_BOF_EN.
-#define BM_LCDC_LIER_BOF_EN  (0x00000001U) //!< Bit mask for LCDC_LIER_BOF_EN.
-#define BS_LCDC_LIER_BOF_EN  (1U)          //!< Bit field size in bits for LCDC_LIER_BOF_EN.
+/*@{*/
+#define BP_LCDC_LIER_BOF_EN  (0U)          /*!< Bit position for LCDC_LIER_BOF_EN. */
+#define BM_LCDC_LIER_BOF_EN  (0x00000001U) /*!< Bit mask for LCDC_LIER_BOF_EN. */
+#define BS_LCDC_LIER_BOF_EN  (1U)          /*!< Bit field size in bits for LCDC_LIER_BOF_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_BOF_EN field.
-#define BR_LCDC_LIER_BOF_EN  (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_BOF_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_BOF_EN field. */
+#define BR_LCDC_LIER_BOF_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_BOF_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_BOF_EN.
-#define BF_LCDC_LIER_BOF_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_BOF_EN), uint32_t) & BM_LCDC_LIER_BOF_EN)
+/*! @brief Format value for bitfield LCDC_LIER_BOF_EN. */
+#define BF_LCDC_LIER_BOF_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_BOF_EN) & BM_LCDC_LIER_BOF_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the BOF_EN field to a new value.
-#define BW_LCDC_LIER_BOF_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_BOF_EN) = (v))
-#endif
-//@}
+/*! @brief Set the BOF_EN field to a new value. */
+#define BW_LCDC_LIER_BOF_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_BOF_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LIER, field EOF_EN[1] (RW)
@@ -2254,24 +1986,20 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_EOF_EN  (1U)          //!< Bit position for LCDC_LIER_EOF_EN.
-#define BM_LCDC_LIER_EOF_EN  (0x00000002U) //!< Bit mask for LCDC_LIER_EOF_EN.
-#define BS_LCDC_LIER_EOF_EN  (1U)          //!< Bit field size in bits for LCDC_LIER_EOF_EN.
+/*@{*/
+#define BP_LCDC_LIER_EOF_EN  (1U)          /*!< Bit position for LCDC_LIER_EOF_EN. */
+#define BM_LCDC_LIER_EOF_EN  (0x00000002U) /*!< Bit mask for LCDC_LIER_EOF_EN. */
+#define BS_LCDC_LIER_EOF_EN  (1U)          /*!< Bit field size in bits for LCDC_LIER_EOF_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_EOF_EN field.
-#define BR_LCDC_LIER_EOF_EN  (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_EOF_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_EOF_EN field. */
+#define BR_LCDC_LIER_EOF_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_EOF_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_EOF_EN.
-#define BF_LCDC_LIER_EOF_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_EOF_EN), uint32_t) & BM_LCDC_LIER_EOF_EN)
+/*! @brief Format value for bitfield LCDC_LIER_EOF_EN. */
+#define BF_LCDC_LIER_EOF_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_EOF_EN) & BM_LCDC_LIER_EOF_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the EOF_EN field to a new value.
-#define BW_LCDC_LIER_EOF_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_EOF_EN) = (v))
-#endif
-//@}
+/*! @brief Set the EOF_EN field to a new value. */
+#define BW_LCDC_LIER_EOF_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_EOF_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LIER, field UDR_ERR_EN[3] (RW)
@@ -2282,24 +2010,20 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_UDR_ERR_EN (3U)       //!< Bit position for LCDC_LIER_UDR_ERR_EN.
-#define BM_LCDC_LIER_UDR_ERR_EN (0x00000008U) //!< Bit mask for LCDC_LIER_UDR_ERR_EN.
-#define BS_LCDC_LIER_UDR_ERR_EN (1U)       //!< Bit field size in bits for LCDC_LIER_UDR_ERR_EN.
+/*@{*/
+#define BP_LCDC_LIER_UDR_ERR_EN (3U)       /*!< Bit position for LCDC_LIER_UDR_ERR_EN. */
+#define BM_LCDC_LIER_UDR_ERR_EN (0x00000008U) /*!< Bit mask for LCDC_LIER_UDR_ERR_EN. */
+#define BS_LCDC_LIER_UDR_ERR_EN (1U)       /*!< Bit field size in bits for LCDC_LIER_UDR_ERR_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_UDR_ERR_EN field.
-#define BR_LCDC_LIER_UDR_ERR_EN (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_UDR_ERR_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_UDR_ERR_EN field. */
+#define BR_LCDC_LIER_UDR_ERR_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_UDR_ERR_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_UDR_ERR_EN.
-#define BF_LCDC_LIER_UDR_ERR_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_UDR_ERR_EN), uint32_t) & BM_LCDC_LIER_UDR_ERR_EN)
+/*! @brief Format value for bitfield LCDC_LIER_UDR_ERR_EN. */
+#define BF_LCDC_LIER_UDR_ERR_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_UDR_ERR_EN) & BM_LCDC_LIER_UDR_ERR_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the UDR_ERR_EN field to a new value.
-#define BW_LCDC_LIER_UDR_ERR_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_UDR_ERR_EN) = (v))
-#endif
-//@}
+/*! @brief Set the UDR_ERR_EN field to a new value. */
+#define BW_LCDC_LIER_UDR_ERR_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_UDR_ERR_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LIER, field GW_BOF_EN[4] (RW)
@@ -2311,24 +2035,20 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_GW_BOF_EN (4U)        //!< Bit position for LCDC_LIER_GW_BOF_EN.
-#define BM_LCDC_LIER_GW_BOF_EN (0x00000010U) //!< Bit mask for LCDC_LIER_GW_BOF_EN.
-#define BS_LCDC_LIER_GW_BOF_EN (1U)        //!< Bit field size in bits for LCDC_LIER_GW_BOF_EN.
+/*@{*/
+#define BP_LCDC_LIER_GW_BOF_EN (4U)        /*!< Bit position for LCDC_LIER_GW_BOF_EN. */
+#define BM_LCDC_LIER_GW_BOF_EN (0x00000010U) /*!< Bit mask for LCDC_LIER_GW_BOF_EN. */
+#define BS_LCDC_LIER_GW_BOF_EN (1U)        /*!< Bit field size in bits for LCDC_LIER_GW_BOF_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_GW_BOF_EN field.
-#define BR_LCDC_LIER_GW_BOF_EN (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_BOF_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_GW_BOF_EN field. */
+#define BR_LCDC_LIER_GW_BOF_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_BOF_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_GW_BOF_EN.
-#define BF_LCDC_LIER_GW_BOF_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_GW_BOF_EN), uint32_t) & BM_LCDC_LIER_GW_BOF_EN)
+/*! @brief Format value for bitfield LCDC_LIER_GW_BOF_EN. */
+#define BF_LCDC_LIER_GW_BOF_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_GW_BOF_EN) & BM_LCDC_LIER_GW_BOF_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GW_BOF_EN field to a new value.
-#define BW_LCDC_LIER_GW_BOF_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_BOF_EN) = (v))
-#endif
-//@}
+/*! @brief Set the GW_BOF_EN field to a new value. */
+#define BW_LCDC_LIER_GW_BOF_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_BOF_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LIER, field GW_EOF_EN[5] (RW)
@@ -2340,24 +2060,20 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_GW_EOF_EN (5U)        //!< Bit position for LCDC_LIER_GW_EOF_EN.
-#define BM_LCDC_LIER_GW_EOF_EN (0x00000020U) //!< Bit mask for LCDC_LIER_GW_EOF_EN.
-#define BS_LCDC_LIER_GW_EOF_EN (1U)        //!< Bit field size in bits for LCDC_LIER_GW_EOF_EN.
+/*@{*/
+#define BP_LCDC_LIER_GW_EOF_EN (5U)        /*!< Bit position for LCDC_LIER_GW_EOF_EN. */
+#define BM_LCDC_LIER_GW_EOF_EN (0x00000020U) /*!< Bit mask for LCDC_LIER_GW_EOF_EN. */
+#define BS_LCDC_LIER_GW_EOF_EN (1U)        /*!< Bit field size in bits for LCDC_LIER_GW_EOF_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_GW_EOF_EN field.
-#define BR_LCDC_LIER_GW_EOF_EN (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_EOF_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_GW_EOF_EN field. */
+#define BR_LCDC_LIER_GW_EOF_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_EOF_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_GW_EOF_EN.
-#define BF_LCDC_LIER_GW_EOF_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_GW_EOF_EN), uint32_t) & BM_LCDC_LIER_GW_EOF_EN)
+/*! @brief Format value for bitfield LCDC_LIER_GW_EOF_EN. */
+#define BF_LCDC_LIER_GW_EOF_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_GW_EOF_EN) & BM_LCDC_LIER_GW_EOF_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GW_EOF_EN field to a new value.
-#define BW_LCDC_LIER_GW_EOF_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_EOF_EN) = (v))
-#endif
-//@}
+/*! @brief Set the GW_EOF_EN field to a new value. */
+#define BW_LCDC_LIER_GW_EOF_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_EOF_EN) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LIER, field GW_UDR_ERR_EN[7] (RW)
@@ -2368,30 +2084,25 @@ typedef union _hw_lcdc_lier
  * - 0 - Mask interrupt.
  * - 1 - Enable interrupt.
  */
-//@{
-#define BP_LCDC_LIER_GW_UDR_ERR_EN (7U)    //!< Bit position for LCDC_LIER_GW_UDR_ERR_EN.
-#define BM_LCDC_LIER_GW_UDR_ERR_EN (0x00000080U) //!< Bit mask for LCDC_LIER_GW_UDR_ERR_EN.
-#define BS_LCDC_LIER_GW_UDR_ERR_EN (1U)    //!< Bit field size in bits for LCDC_LIER_GW_UDR_ERR_EN.
+/*@{*/
+#define BP_LCDC_LIER_GW_UDR_ERR_EN (7U)    /*!< Bit position for LCDC_LIER_GW_UDR_ERR_EN. */
+#define BM_LCDC_LIER_GW_UDR_ERR_EN (0x00000080U) /*!< Bit mask for LCDC_LIER_GW_UDR_ERR_EN. */
+#define BS_LCDC_LIER_GW_UDR_ERR_EN (1U)    /*!< Bit field size in bits for LCDC_LIER_GW_UDR_ERR_EN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LIER_GW_UDR_ERR_EN field.
-#define BR_LCDC_LIER_GW_UDR_ERR_EN (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_UDR_ERR_EN))
-#endif
+/*! @brief Read current value of the LCDC_LIER_GW_UDR_ERR_EN field. */
+#define BR_LCDC_LIER_GW_UDR_ERR_EN(x) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_UDR_ERR_EN))
 
-//! @brief Format value for bitfield LCDC_LIER_GW_UDR_ERR_EN.
-#define BF_LCDC_LIER_GW_UDR_ERR_EN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LIER_GW_UDR_ERR_EN), uint32_t) & BM_LCDC_LIER_GW_UDR_ERR_EN)
+/*! @brief Format value for bitfield LCDC_LIER_GW_UDR_ERR_EN. */
+#define BF_LCDC_LIER_GW_UDR_ERR_EN(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LIER_GW_UDR_ERR_EN) & BM_LCDC_LIER_GW_UDR_ERR_EN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GW_UDR_ERR_EN field to a new value.
-#define BW_LCDC_LIER_GW_UDR_ERR_EN(v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR, BP_LCDC_LIER_GW_UDR_ERR_EN) = (v))
-#endif
-//@}
+/*! @brief Set the GW_UDR_ERR_EN field to a new value. */
+#define BW_LCDC_LIER_GW_UDR_ERR_EN(x, v) (BITBAND_ACCESS32(HW_LCDC_LIER_ADDR(x), BP_LCDC_LIER_GW_UDR_ERR_EN) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LISR - LCDC interrupt status register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LISR - LCDC interrupt status register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LISR - LCDC interrupt status register (RO)
  *
@@ -2408,30 +2119,27 @@ typedef union _hw_lcdc_lisr
     uint32_t U;
     struct _hw_lcdc_lisr_bitfields
     {
-        uint32_t BOF : 1;              //!< [0] Beginning of frame
-        uint32_t EOFb : 1;             //!< [1] End of frame
-        uint32_t RESERVED0 : 1;        //!< [2]
-        uint32_t UDR_ERR : 1;          //!< [3] Under run error
-        uint32_t GW_BOF : 1;           //!< [4] Graphic window beginning of frame
-        uint32_t GW_EOF : 1;           //!< [5] Graphic window end of frame
-        uint32_t RESERVED1 : 1;        //!< [6]
-        uint32_t GW_UDR_ERR : 1;       //!< [7] Graphic window under run error
-        uint32_t RESERVED2 : 24;       //!< [31:8]
+        uint32_t BOF : 1;              /*!< [0] Beginning of frame */
+        uint32_t EOFb : 1;             /*!< [1] End of frame */
+        uint32_t RESERVED0 : 1;        /*!< [2]  */
+        uint32_t UDR_ERR : 1;          /*!< [3] Under run error */
+        uint32_t GW_BOF : 1;           /*!< [4] Graphic window beginning of frame */
+        uint32_t GW_EOF : 1;           /*!< [5] Graphic window end of frame */
+        uint32_t RESERVED1 : 1;        /*!< [6]  */
+        uint32_t GW_UDR_ERR : 1;       /*!< [7] Graphic window under run error */
+        uint32_t RESERVED2 : 24;       /*!< [31:8]  */
     } B;
 } hw_lcdc_lisr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LISR register
  */
-//@{
-#define HW_LCDC_LISR_ADDR        (REGS_LCDC_BASE + 0x40U)
+/*@{*/
+#define HW_LCDC_LISR_ADDR(x)     ((x) + 0x40U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LISR             (*(__I hw_lcdc_lisr_t *) HW_LCDC_LISR_ADDR)
-#define HW_LCDC_LISR_RD()        (HW_LCDC_LISR.U)
-#endif
-//@}
+#define HW_LCDC_LISR(x)          (*(__I hw_lcdc_lisr_t *) HW_LCDC_LISR_ADDR(x))
+#define HW_LCDC_LISR_RD(x)       (HW_LCDC_LISR(x).U)
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LISR bitfields
@@ -2447,16 +2155,14 @@ typedef union _hw_lcdc_lisr
  * - 0 - Interrupt has not occurred.
  * - 1 - Interrupt has occurred.
  */
-//@{
-#define BP_LCDC_LISR_BOF     (0U)          //!< Bit position for LCDC_LISR_BOF.
-#define BM_LCDC_LISR_BOF     (0x00000001U) //!< Bit mask for LCDC_LISR_BOF.
-#define BS_LCDC_LISR_BOF     (1U)          //!< Bit field size in bits for LCDC_LISR_BOF.
+/*@{*/
+#define BP_LCDC_LISR_BOF     (0U)          /*!< Bit position for LCDC_LISR_BOF. */
+#define BM_LCDC_LISR_BOF     (0x00000001U) /*!< Bit mask for LCDC_LISR_BOF. */
+#define BS_LCDC_LISR_BOF     (1U)          /*!< Bit field size in bits for LCDC_LISR_BOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_BOF field.
-#define BR_LCDC_LISR_BOF     (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_BOF))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_BOF field. */
+#define BR_LCDC_LISR_BOF(x)  (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_BOF))
+/*@}*/
 
 /*!
  * @name Register LCDC_LISR, field EOF[1] (RO)
@@ -2468,16 +2174,14 @@ typedef union _hw_lcdc_lisr
  * - 0 - Interrupt has not occurred.
  * - 1 - Interrupt has occurred.
  */
-//@{
-#define BP_LCDC_LISR_EOF     (1U)          //!< Bit position for LCDC_LISR_EOF.
-#define BM_LCDC_LISR_EOF     (0x00000002U) //!< Bit mask for LCDC_LISR_EOF.
-#define BS_LCDC_LISR_EOF     (1U)          //!< Bit field size in bits for LCDC_LISR_EOF.
+/*@{*/
+#define BP_LCDC_LISR_EOF     (1U)          /*!< Bit position for LCDC_LISR_EOF. */
+#define BM_LCDC_LISR_EOF     (0x00000002U) /*!< Bit mask for LCDC_LISR_EOF. */
+#define BS_LCDC_LISR_EOF     (1U)          /*!< Bit field size in bits for LCDC_LISR_EOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_EOF field.
-#define BR_LCDC_LISR_EOF     (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_EOF))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_EOF field. */
+#define BR_LCDC_LISR_EOF(x)  (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_EOF))
+/*@}*/
 
 /*!
  * @name Register LCDC_LISR, field UDR_ERR[3] (RO)
@@ -2491,16 +2195,14 @@ typedef union _hw_lcdc_lisr
  * - 0 - Interrupt has not occurred.
  * - 1 - Interrupt has occurred.
  */
-//@{
-#define BP_LCDC_LISR_UDR_ERR (3U)          //!< Bit position for LCDC_LISR_UDR_ERR.
-#define BM_LCDC_LISR_UDR_ERR (0x00000008U) //!< Bit mask for LCDC_LISR_UDR_ERR.
-#define BS_LCDC_LISR_UDR_ERR (1U)          //!< Bit field size in bits for LCDC_LISR_UDR_ERR.
+/*@{*/
+#define BP_LCDC_LISR_UDR_ERR (3U)          /*!< Bit position for LCDC_LISR_UDR_ERR. */
+#define BM_LCDC_LISR_UDR_ERR (0x00000008U) /*!< Bit mask for LCDC_LISR_UDR_ERR. */
+#define BS_LCDC_LISR_UDR_ERR (1U)          /*!< Bit field size in bits for LCDC_LISR_UDR_ERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_UDR_ERR field.
-#define BR_LCDC_LISR_UDR_ERR (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_UDR_ERR))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_UDR_ERR field. */
+#define BR_LCDC_LISR_UDR_ERR(x) (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_UDR_ERR))
+/*@}*/
 
 /*!
  * @name Register LCDC_LISR, field GW_BOF[4] (RO)
@@ -2513,16 +2215,14 @@ typedef union _hw_lcdc_lisr
  * - 0 - Interrupt has not occurred.
  * - 1 - Interrupt has occurred.
  */
-//@{
-#define BP_LCDC_LISR_GW_BOF  (4U)          //!< Bit position for LCDC_LISR_GW_BOF.
-#define BM_LCDC_LISR_GW_BOF  (0x00000010U) //!< Bit mask for LCDC_LISR_GW_BOF.
-#define BS_LCDC_LISR_GW_BOF  (1U)          //!< Bit field size in bits for LCDC_LISR_GW_BOF.
+/*@{*/
+#define BP_LCDC_LISR_GW_BOF  (4U)          /*!< Bit position for LCDC_LISR_GW_BOF. */
+#define BM_LCDC_LISR_GW_BOF  (0x00000010U) /*!< Bit mask for LCDC_LISR_GW_BOF. */
+#define BS_LCDC_LISR_GW_BOF  (1U)          /*!< Bit field size in bits for LCDC_LISR_GW_BOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_GW_BOF field.
-#define BR_LCDC_LISR_GW_BOF  (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_GW_BOF))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_GW_BOF field. */
+#define BR_LCDC_LISR_GW_BOF(x) (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_GW_BOF))
+/*@}*/
 
 /*!
  * @name Register LCDC_LISR, field GW_EOF[5] (RO)
@@ -2534,16 +2234,14 @@ typedef union _hw_lcdc_lisr
  * - 0 - Interrupt has not occurred.
  * - 1 - Interrupt has occurred.
  */
-//@{
-#define BP_LCDC_LISR_GW_EOF  (5U)          //!< Bit position for LCDC_LISR_GW_EOF.
-#define BM_LCDC_LISR_GW_EOF  (0x00000020U) //!< Bit mask for LCDC_LISR_GW_EOF.
-#define BS_LCDC_LISR_GW_EOF  (1U)          //!< Bit field size in bits for LCDC_LISR_GW_EOF.
+/*@{*/
+#define BP_LCDC_LISR_GW_EOF  (5U)          /*!< Bit position for LCDC_LISR_GW_EOF. */
+#define BM_LCDC_LISR_GW_EOF  (0x00000020U) /*!< Bit mask for LCDC_LISR_GW_EOF. */
+#define BS_LCDC_LISR_GW_EOF  (1U)          /*!< Bit field size in bits for LCDC_LISR_GW_EOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_GW_EOF field.
-#define BR_LCDC_LISR_GW_EOF  (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_GW_EOF))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_GW_EOF field. */
+#define BR_LCDC_LISR_GW_EOF(x) (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_GW_EOF))
+/*@}*/
 
 /*!
  * @name Register LCDC_LISR, field GW_UDR_ERR[7] (RO)
@@ -2557,22 +2255,19 @@ typedef union _hw_lcdc_lisr
  * - 0 - Graphic window under run has not occurred.
  * - 1 - Graphic window under run has occurred.
  */
-//@{
-#define BP_LCDC_LISR_GW_UDR_ERR (7U)       //!< Bit position for LCDC_LISR_GW_UDR_ERR.
-#define BM_LCDC_LISR_GW_UDR_ERR (0x00000080U) //!< Bit mask for LCDC_LISR_GW_UDR_ERR.
-#define BS_LCDC_LISR_GW_UDR_ERR (1U)       //!< Bit field size in bits for LCDC_LISR_GW_UDR_ERR.
+/*@{*/
+#define BP_LCDC_LISR_GW_UDR_ERR (7U)       /*!< Bit position for LCDC_LISR_GW_UDR_ERR. */
+#define BM_LCDC_LISR_GW_UDR_ERR (0x00000080U) /*!< Bit mask for LCDC_LISR_GW_UDR_ERR. */
+#define BS_LCDC_LISR_GW_UDR_ERR (1U)       /*!< Bit field size in bits for LCDC_LISR_GW_UDR_ERR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LISR_GW_UDR_ERR field.
-#define BR_LCDC_LISR_GW_UDR_ERR (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR, BP_LCDC_LISR_GW_UDR_ERR))
-#endif
-//@}
+/*! @brief Read current value of the LCDC_LISR_GW_UDR_ERR field. */
+#define BR_LCDC_LISR_GW_UDR_ERR(x) (BITBAND_ACCESS32(HW_LCDC_LISR_ADDR(x), BP_LCDC_LISR_GW_UDR_ERR))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWSAR - LCDC graphic window start address register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWSAR - LCDC graphic window start address register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWSAR - LCDC graphic window start address register (RW)
  *
@@ -2586,28 +2281,25 @@ typedef union _hw_lcdc_lgwsar
     uint32_t U;
     struct _hw_lcdc_lgwsar_bitfields
     {
-        uint32_t RESERVED0 : 2;        //!< [1:0]
-        uint32_t GWSA : 30;            //!< [31:2] Graphic window start address on LCD
-                                       //! screen
+        uint32_t RESERVED0 : 2;        /*!< [1:0]  */
+        uint32_t GWSA : 30;            /*!< [31:2] Graphic window start address on LCD
+                                        * screen */
     } B;
 } hw_lcdc_lgwsar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWSAR register
  */
-//@{
-#define HW_LCDC_LGWSAR_ADDR      (REGS_LCDC_BASE + 0x50U)
+/*@{*/
+#define HW_LCDC_LGWSAR_ADDR(x)   ((x) + 0x50U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWSAR           (*(__IO hw_lcdc_lgwsar_t *) HW_LCDC_LGWSAR_ADDR)
-#define HW_LCDC_LGWSAR_RD()      (HW_LCDC_LGWSAR.U)
-#define HW_LCDC_LGWSAR_WR(v)     (HW_LCDC_LGWSAR.U = (v))
-#define HW_LCDC_LGWSAR_SET(v)    (HW_LCDC_LGWSAR_WR(HW_LCDC_LGWSAR_RD() |  (v)))
-#define HW_LCDC_LGWSAR_CLR(v)    (HW_LCDC_LGWSAR_WR(HW_LCDC_LGWSAR_RD() & ~(v)))
-#define HW_LCDC_LGWSAR_TOG(v)    (HW_LCDC_LGWSAR_WR(HW_LCDC_LGWSAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWSAR(x)        (*(__IO hw_lcdc_lgwsar_t *) HW_LCDC_LGWSAR_ADDR(x))
+#define HW_LCDC_LGWSAR_RD(x)     (HW_LCDC_LGWSAR(x).U)
+#define HW_LCDC_LGWSAR_WR(x, v)  (HW_LCDC_LGWSAR(x).U = (v))
+#define HW_LCDC_LGWSAR_SET(x, v) (HW_LCDC_LGWSAR_WR(x, HW_LCDC_LGWSAR_RD(x) |  (v)))
+#define HW_LCDC_LGWSAR_CLR(x, v) (HW_LCDC_LGWSAR_WR(x, HW_LCDC_LGWSAR_RD(x) & ~(v)))
+#define HW_LCDC_LGWSAR_TOG(x, v) (HW_LCDC_LGWSAR_WR(x, HW_LCDC_LGWSAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWSAR bitfields
@@ -2621,30 +2313,25 @@ typedef union _hw_lcdc_lgwsar
  * in a 4Mbyte memory boundary (A[21:0]). A[31:22] has a fixed value for the
  * graphic window picture's image.
  */
-//@{
-#define BP_LCDC_LGWSAR_GWSA  (2U)          //!< Bit position for LCDC_LGWSAR_GWSA.
-#define BM_LCDC_LGWSAR_GWSA  (0xFFFFFFFCU) //!< Bit mask for LCDC_LGWSAR_GWSA.
-#define BS_LCDC_LGWSAR_GWSA  (30U)         //!< Bit field size in bits for LCDC_LGWSAR_GWSA.
+/*@{*/
+#define BP_LCDC_LGWSAR_GWSA  (2U)          /*!< Bit position for LCDC_LGWSAR_GWSA. */
+#define BM_LCDC_LGWSAR_GWSA  (0xFFFFFFFCU) /*!< Bit mask for LCDC_LGWSAR_GWSA. */
+#define BS_LCDC_LGWSAR_GWSA  (30U)         /*!< Bit field size in bits for LCDC_LGWSAR_GWSA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWSAR_GWSA field.
-#define BR_LCDC_LGWSAR_GWSA  (HW_LCDC_LGWSAR.B.GWSA)
-#endif
+/*! @brief Read current value of the LCDC_LGWSAR_GWSA field. */
+#define BR_LCDC_LGWSAR_GWSA(x) (HW_LCDC_LGWSAR(x).B.GWSA)
 
-//! @brief Format value for bitfield LCDC_LGWSAR_GWSA.
-#define BF_LCDC_LGWSAR_GWSA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWSAR_GWSA), uint32_t) & BM_LCDC_LGWSAR_GWSA)
+/*! @brief Format value for bitfield LCDC_LGWSAR_GWSA. */
+#define BF_LCDC_LGWSAR_GWSA(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWSAR_GWSA) & BM_LCDC_LGWSAR_GWSA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWSA field to a new value.
-#define BW_LCDC_LGWSAR_GWSA(v) (HW_LCDC_LGWSAR_WR((HW_LCDC_LGWSAR_RD() & ~BM_LCDC_LGWSAR_GWSA) | BF_LCDC_LGWSAR_GWSA(v)))
-#endif
-//@}
+/*! @brief Set the GWSA field to a new value. */
+#define BW_LCDC_LGWSAR_GWSA(x, v) (HW_LCDC_LGWSAR_WR(x, (HW_LCDC_LGWSAR_RD(x) & ~BM_LCDC_LGWSAR_GWSA) | BF_LCDC_LGWSAR_GWSA(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWSR - LCDC graphic window size register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWSR - LCDC graphic window size register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWSR - LCDC graphic window size register (RW)
  *
@@ -2658,29 +2345,26 @@ typedef union _hw_lcdc_lgwsr
     uint32_t U;
     struct _hw_lcdc_lgwsr_bitfields
     {
-        uint32_t GWH : 10;             //!< [9:0] Graphic window height
-        uint32_t RESERVED0 : 10;       //!< [19:10]
-        uint32_t GWW : 7;              //!< [26:20] Graphic window width divided by 16
-        uint32_t RESERVED1 : 5;        //!< [31:27]
+        uint32_t GWH : 10;             /*!< [9:0] Graphic window height */
+        uint32_t RESERVED0 : 10;       /*!< [19:10]  */
+        uint32_t GWW : 7;              /*!< [26:20] Graphic window width divided by 16 */
+        uint32_t RESERVED1 : 5;        /*!< [31:27]  */
     } B;
 } hw_lcdc_lgwsr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWSR register
  */
-//@{
-#define HW_LCDC_LGWSR_ADDR       (REGS_LCDC_BASE + 0x54U)
+/*@{*/
+#define HW_LCDC_LGWSR_ADDR(x)    ((x) + 0x54U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWSR            (*(__IO hw_lcdc_lgwsr_t *) HW_LCDC_LGWSR_ADDR)
-#define HW_LCDC_LGWSR_RD()       (HW_LCDC_LGWSR.U)
-#define HW_LCDC_LGWSR_WR(v)      (HW_LCDC_LGWSR.U = (v))
-#define HW_LCDC_LGWSR_SET(v)     (HW_LCDC_LGWSR_WR(HW_LCDC_LGWSR_RD() |  (v)))
-#define HW_LCDC_LGWSR_CLR(v)     (HW_LCDC_LGWSR_WR(HW_LCDC_LGWSR_RD() & ~(v)))
-#define HW_LCDC_LGWSR_TOG(v)     (HW_LCDC_LGWSR_WR(HW_LCDC_LGWSR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWSR(x)         (*(__IO hw_lcdc_lgwsr_t *) HW_LCDC_LGWSR_ADDR(x))
+#define HW_LCDC_LGWSR_RD(x)      (HW_LCDC_LGWSR(x).U)
+#define HW_LCDC_LGWSR_WR(x, v)   (HW_LCDC_LGWSR(x).U = (v))
+#define HW_LCDC_LGWSR_SET(x, v)  (HW_LCDC_LGWSR_WR(x, HW_LCDC_LGWSR_RD(x) |  (v)))
+#define HW_LCDC_LGWSR_CLR(x, v)  (HW_LCDC_LGWSR_WR(x, HW_LCDC_LGWSR_RD(x) & ~(v)))
+#define HW_LCDC_LGWSR_TOG(x, v)  (HW_LCDC_LGWSR_WR(x, HW_LCDC_LGWSR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWSR bitfields
@@ -2693,24 +2377,20 @@ typedef union _hw_lcdc_lgwsr
  * are numbered from 1 to GW_YMAX for a total of GW_YMAX lines. Graphic window
  * size cannot be set to 0.
  */
-//@{
-#define BP_LCDC_LGWSR_GWH    (0U)          //!< Bit position for LCDC_LGWSR_GWH.
-#define BM_LCDC_LGWSR_GWH    (0x000003FFU) //!< Bit mask for LCDC_LGWSR_GWH.
-#define BS_LCDC_LGWSR_GWH    (10U)         //!< Bit field size in bits for LCDC_LGWSR_GWH.
+/*@{*/
+#define BP_LCDC_LGWSR_GWH    (0U)          /*!< Bit position for LCDC_LGWSR_GWH. */
+#define BM_LCDC_LGWSR_GWH    (0x000003FFU) /*!< Bit mask for LCDC_LGWSR_GWH. */
+#define BS_LCDC_LGWSR_GWH    (10U)         /*!< Bit field size in bits for LCDC_LGWSR_GWH. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWSR_GWH field.
-#define BR_LCDC_LGWSR_GWH    (HW_LCDC_LGWSR.B.GWH)
-#endif
+/*! @brief Read current value of the LCDC_LGWSR_GWH field. */
+#define BR_LCDC_LGWSR_GWH(x) (HW_LCDC_LGWSR(x).B.GWH)
 
-//! @brief Format value for bitfield LCDC_LGWSR_GWH.
-#define BF_LCDC_LGWSR_GWH(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWSR_GWH), uint32_t) & BM_LCDC_LGWSR_GWH)
+/*! @brief Format value for bitfield LCDC_LGWSR_GWH. */
+#define BF_LCDC_LGWSR_GWH(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWSR_GWH) & BM_LCDC_LGWSR_GWH)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWH field to a new value.
-#define BW_LCDC_LGWSR_GWH(v) (HW_LCDC_LGWSR_WR((HW_LCDC_LGWSR_RD() & ~BM_LCDC_LGWSR_GWH) | BF_LCDC_LGWSR_GWH(v)))
-#endif
-//@}
+/*! @brief Set the GWH field to a new value. */
+#define BW_LCDC_LGWSR_GWH(x, v) (HW_LCDC_LGWSR_WR(x, (HW_LCDC_LGWSR_RD(x) & ~BM_LCDC_LGWSR_GWH) | BF_LCDC_LGWSR_GWH(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWSR, field GWW[26:20] (RW)
@@ -2719,30 +2399,25 @@ typedef union _hw_lcdc_lgwsr
  * bpp), GW_XMAX [20] is ignored, forcing the x-axis of the screen size to be a
  * multiple of 32 pixels/line. Graphic window size cannot be set to 0.
  */
-//@{
-#define BP_LCDC_LGWSR_GWW    (20U)         //!< Bit position for LCDC_LGWSR_GWW.
-#define BM_LCDC_LGWSR_GWW    (0x07F00000U) //!< Bit mask for LCDC_LGWSR_GWW.
-#define BS_LCDC_LGWSR_GWW    (7U)          //!< Bit field size in bits for LCDC_LGWSR_GWW.
+/*@{*/
+#define BP_LCDC_LGWSR_GWW    (20U)         /*!< Bit position for LCDC_LGWSR_GWW. */
+#define BM_LCDC_LGWSR_GWW    (0x07F00000U) /*!< Bit mask for LCDC_LGWSR_GWW. */
+#define BS_LCDC_LGWSR_GWW    (7U)          /*!< Bit field size in bits for LCDC_LGWSR_GWW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWSR_GWW field.
-#define BR_LCDC_LGWSR_GWW    (HW_LCDC_LGWSR.B.GWW)
-#endif
+/*! @brief Read current value of the LCDC_LGWSR_GWW field. */
+#define BR_LCDC_LGWSR_GWW(x) (HW_LCDC_LGWSR(x).B.GWW)
 
-//! @brief Format value for bitfield LCDC_LGWSR_GWW.
-#define BF_LCDC_LGWSR_GWW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWSR_GWW), uint32_t) & BM_LCDC_LGWSR_GWW)
+/*! @brief Format value for bitfield LCDC_LGWSR_GWW. */
+#define BF_LCDC_LGWSR_GWW(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWSR_GWW) & BM_LCDC_LGWSR_GWW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWW field to a new value.
-#define BW_LCDC_LGWSR_GWW(v) (HW_LCDC_LGWSR_WR((HW_LCDC_LGWSR_RD() & ~BM_LCDC_LGWSR_GWW) | BF_LCDC_LGWSR_GWW(v)))
-#endif
-//@}
+/*! @brief Set the GWW field to a new value. */
+#define BW_LCDC_LGWSR_GWW(x, v) (HW_LCDC_LGWSR_WR(x, (HW_LCDC_LGWSR_RD(x) & ~BM_LCDC_LGWSR_GWW) | BF_LCDC_LGWSR_GWW(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWVPWR - LCDC graphic window virtual page width register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWVPWR - LCDC graphic window virtual page width register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWVPWR - LCDC graphic window virtual page width register (RW)
  *
@@ -2756,27 +2431,24 @@ typedef union _hw_lcdc_lgwvpwr
     uint32_t U;
     struct _hw_lcdc_lgwvpwr_bitfields
     {
-        uint32_t GWVPW : 11;           //!< [10:0] Graphic window virtual page width
-        uint32_t RESERVED0 : 21;       //!< [31:11]
+        uint32_t GWVPW : 11;           /*!< [10:0] Graphic window virtual page width */
+        uint32_t RESERVED0 : 21;       /*!< [31:11]  */
     } B;
 } hw_lcdc_lgwvpwr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWVPWR register
  */
-//@{
-#define HW_LCDC_LGWVPWR_ADDR     (REGS_LCDC_BASE + 0x58U)
+/*@{*/
+#define HW_LCDC_LGWVPWR_ADDR(x)  ((x) + 0x58U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWVPWR          (*(__IO hw_lcdc_lgwvpwr_t *) HW_LCDC_LGWVPWR_ADDR)
-#define HW_LCDC_LGWVPWR_RD()     (HW_LCDC_LGWVPWR.U)
-#define HW_LCDC_LGWVPWR_WR(v)    (HW_LCDC_LGWVPWR.U = (v))
-#define HW_LCDC_LGWVPWR_SET(v)   (HW_LCDC_LGWVPWR_WR(HW_LCDC_LGWVPWR_RD() |  (v)))
-#define HW_LCDC_LGWVPWR_CLR(v)   (HW_LCDC_LGWVPWR_WR(HW_LCDC_LGWVPWR_RD() & ~(v)))
-#define HW_LCDC_LGWVPWR_TOG(v)   (HW_LCDC_LGWVPWR_WR(HW_LCDC_LGWVPWR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWVPWR(x)       (*(__IO hw_lcdc_lgwvpwr_t *) HW_LCDC_LGWVPWR_ADDR(x))
+#define HW_LCDC_LGWVPWR_RD(x)    (HW_LCDC_LGWVPWR(x).U)
+#define HW_LCDC_LGWVPWR_WR(x, v) (HW_LCDC_LGWVPWR(x).U = (v))
+#define HW_LCDC_LGWVPWR_SET(x, v) (HW_LCDC_LGWVPWR_WR(x, HW_LCDC_LGWVPWR_RD(x) |  (v)))
+#define HW_LCDC_LGWVPWR_CLR(x, v) (HW_LCDC_LGWVPWR_WR(x, HW_LCDC_LGWVPWR_RD(x) & ~(v)))
+#define HW_LCDC_LGWVPWR_TOG(x, v) (HW_LCDC_LGWVPWR_WR(x, HW_LCDC_LGWVPWR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWVPWR bitfields
@@ -2790,30 +2462,25 @@ typedef union _hw_lcdc_lgwvpwr
  * GWVPW is used in calculating the starting address representing the beginning
  * of each line of the graphic window picture.
  */
-//@{
-#define BP_LCDC_LGWVPWR_GWVPW (0U)         //!< Bit position for LCDC_LGWVPWR_GWVPW.
-#define BM_LCDC_LGWVPWR_GWVPW (0x000007FFU) //!< Bit mask for LCDC_LGWVPWR_GWVPW.
-#define BS_LCDC_LGWVPWR_GWVPW (11U)        //!< Bit field size in bits for LCDC_LGWVPWR_GWVPW.
+/*@{*/
+#define BP_LCDC_LGWVPWR_GWVPW (0U)         /*!< Bit position for LCDC_LGWVPWR_GWVPW. */
+#define BM_LCDC_LGWVPWR_GWVPW (0x000007FFU) /*!< Bit mask for LCDC_LGWVPWR_GWVPW. */
+#define BS_LCDC_LGWVPWR_GWVPW (11U)        /*!< Bit field size in bits for LCDC_LGWVPWR_GWVPW. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWVPWR_GWVPW field.
-#define BR_LCDC_LGWVPWR_GWVPW (HW_LCDC_LGWVPWR.B.GWVPW)
-#endif
+/*! @brief Read current value of the LCDC_LGWVPWR_GWVPW field. */
+#define BR_LCDC_LGWVPWR_GWVPW(x) (HW_LCDC_LGWVPWR(x).B.GWVPW)
 
-//! @brief Format value for bitfield LCDC_LGWVPWR_GWVPW.
-#define BF_LCDC_LGWVPWR_GWVPW(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWVPWR_GWVPW), uint32_t) & BM_LCDC_LGWVPWR_GWVPW)
+/*! @brief Format value for bitfield LCDC_LGWVPWR_GWVPW. */
+#define BF_LCDC_LGWVPWR_GWVPW(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWVPWR_GWVPW) & BM_LCDC_LGWVPWR_GWVPW)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWVPW field to a new value.
-#define BW_LCDC_LGWVPWR_GWVPW(v) (HW_LCDC_LGWVPWR_WR((HW_LCDC_LGWVPWR_RD() & ~BM_LCDC_LGWVPWR_GWVPW) | BF_LCDC_LGWVPWR_GWVPW(v)))
-#endif
-//@}
+/*! @brief Set the GWVPW field to a new value. */
+#define BW_LCDC_LGWVPWR_GWVPW(x, v) (HW_LCDC_LGWVPWR_WR(x, (HW_LCDC_LGWVPWR_RD(x) & ~BM_LCDC_LGWVPWR_GWVPW) | BF_LCDC_LGWVPWR_GWVPW(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWPOR - LCDC graphic window panning offset register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWPOR - LCDC graphic window panning offset register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWPOR - LCDC graphic window panning offset register (RW)
  *
@@ -2826,27 +2493,24 @@ typedef union _hw_lcdc_lgwpor
     uint32_t U;
     struct _hw_lcdc_lgwpor_bitfields
     {
-        uint32_t GWPO : 5;             //!< [4:0] Graphic window panning offset
-        uint32_t RESERVED0 : 27;       //!< [31:5]
+        uint32_t GWPO : 5;             /*!< [4:0] Graphic window panning offset */
+        uint32_t RESERVED0 : 27;       /*!< [31:5]  */
     } B;
 } hw_lcdc_lgwpor_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWPOR register
  */
-//@{
-#define HW_LCDC_LGWPOR_ADDR      (REGS_LCDC_BASE + 0x5CU)
+/*@{*/
+#define HW_LCDC_LGWPOR_ADDR(x)   ((x) + 0x5CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWPOR           (*(__IO hw_lcdc_lgwpor_t *) HW_LCDC_LGWPOR_ADDR)
-#define HW_LCDC_LGWPOR_RD()      (HW_LCDC_LGWPOR.U)
-#define HW_LCDC_LGWPOR_WR(v)     (HW_LCDC_LGWPOR.U = (v))
-#define HW_LCDC_LGWPOR_SET(v)    (HW_LCDC_LGWPOR_WR(HW_LCDC_LGWPOR_RD() |  (v)))
-#define HW_LCDC_LGWPOR_CLR(v)    (HW_LCDC_LGWPOR_WR(HW_LCDC_LGWPOR_RD() & ~(v)))
-#define HW_LCDC_LGWPOR_TOG(v)    (HW_LCDC_LGWPOR_WR(HW_LCDC_LGWPOR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWPOR(x)        (*(__IO hw_lcdc_lgwpor_t *) HW_LCDC_LGWPOR_ADDR(x))
+#define HW_LCDC_LGWPOR_RD(x)     (HW_LCDC_LGWPOR(x).U)
+#define HW_LCDC_LGWPOR_WR(x, v)  (HW_LCDC_LGWPOR(x).U = (v))
+#define HW_LCDC_LGWPOR_SET(x, v) (HW_LCDC_LGWPOR_WR(x, HW_LCDC_LGWPOR_RD(x) |  (v)))
+#define HW_LCDC_LGWPOR_CLR(x, v) (HW_LCDC_LGWPOR_WR(x, HW_LCDC_LGWPOR_RD(x) & ~(v)))
+#define HW_LCDC_LGWPOR_TOG(x, v) (HW_LCDC_LGWPOR_WR(x, HW_LCDC_LGWPOR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWPOR bitfields
@@ -2864,30 +2528,25 @@ typedef union _hw_lcdc_lgwpor
  * final image by N bits: Bits per pixel GWPO Effective number of pixels panned 1 N
  * N 2 2N N 4 4N N 8 8N N 12/16 16N N
  */
-//@{
-#define BP_LCDC_LGWPOR_GWPO  (0U)          //!< Bit position for LCDC_LGWPOR_GWPO.
-#define BM_LCDC_LGWPOR_GWPO  (0x0000001FU) //!< Bit mask for LCDC_LGWPOR_GWPO.
-#define BS_LCDC_LGWPOR_GWPO  (5U)          //!< Bit field size in bits for LCDC_LGWPOR_GWPO.
+/*@{*/
+#define BP_LCDC_LGWPOR_GWPO  (0U)          /*!< Bit position for LCDC_LGWPOR_GWPO. */
+#define BM_LCDC_LGWPOR_GWPO  (0x0000001FU) /*!< Bit mask for LCDC_LGWPOR_GWPO. */
+#define BS_LCDC_LGWPOR_GWPO  (5U)          /*!< Bit field size in bits for LCDC_LGWPOR_GWPO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWPOR_GWPO field.
-#define BR_LCDC_LGWPOR_GWPO  (HW_LCDC_LGWPOR.B.GWPO)
-#endif
+/*! @brief Read current value of the LCDC_LGWPOR_GWPO field. */
+#define BR_LCDC_LGWPOR_GWPO(x) (HW_LCDC_LGWPOR(x).B.GWPO)
 
-//! @brief Format value for bitfield LCDC_LGWPOR_GWPO.
-#define BF_LCDC_LGWPOR_GWPO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWPOR_GWPO), uint32_t) & BM_LCDC_LGWPOR_GWPO)
+/*! @brief Format value for bitfield LCDC_LGWPOR_GWPO. */
+#define BF_LCDC_LGWPOR_GWPO(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWPOR_GWPO) & BM_LCDC_LGWPOR_GWPO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWPO field to a new value.
-#define BW_LCDC_LGWPOR_GWPO(v) (HW_LCDC_LGWPOR_WR((HW_LCDC_LGWPOR_RD() & ~BM_LCDC_LGWPOR_GWPO) | BF_LCDC_LGWPOR_GWPO(v)))
-#endif
-//@}
+/*! @brief Set the GWPO field to a new value. */
+#define BW_LCDC_LGWPOR_GWPO(x, v) (HW_LCDC_LGWPOR_WR(x, (HW_LCDC_LGWPOR_RD(x) & ~BM_LCDC_LGWPOR_GWPO) | BF_LCDC_LGWPOR_GWPO(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWPR - LCDC graphic window position register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWPR - LCDC graphic window position register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWPR - LCDC graphic window position register (RW)
  *
@@ -2903,29 +2562,26 @@ typedef union _hw_lcdc_lgwpr
     uint32_t U;
     struct _hw_lcdc_lgwpr_bitfields
     {
-        uint32_t GWYP : 10;            //!< [9:0] Graphic window Y position
-        uint32_t RESERVED0 : 6;        //!< [15:10]
-        uint32_t GWXP : 10;            //!< [25:16] Graphic window X position
-        uint32_t RESERVED1 : 6;        //!< [31:26]
+        uint32_t GWYP : 10;            /*!< [9:0] Graphic window Y position */
+        uint32_t RESERVED0 : 6;        /*!< [15:10]  */
+        uint32_t GWXP : 10;            /*!< [25:16] Graphic window X position */
+        uint32_t RESERVED1 : 6;        /*!< [31:26]  */
     } B;
 } hw_lcdc_lgwpr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWPR register
  */
-//@{
-#define HW_LCDC_LGWPR_ADDR       (REGS_LCDC_BASE + 0x60U)
+/*@{*/
+#define HW_LCDC_LGWPR_ADDR(x)    ((x) + 0x60U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWPR            (*(__IO hw_lcdc_lgwpr_t *) HW_LCDC_LGWPR_ADDR)
-#define HW_LCDC_LGWPR_RD()       (HW_LCDC_LGWPR.U)
-#define HW_LCDC_LGWPR_WR(v)      (HW_LCDC_LGWPR.U = (v))
-#define HW_LCDC_LGWPR_SET(v)     (HW_LCDC_LGWPR_WR(HW_LCDC_LGWPR_RD() |  (v)))
-#define HW_LCDC_LGWPR_CLR(v)     (HW_LCDC_LGWPR_WR(HW_LCDC_LGWPR_RD() & ~(v)))
-#define HW_LCDC_LGWPR_TOG(v)     (HW_LCDC_LGWPR_WR(HW_LCDC_LGWPR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWPR(x)         (*(__IO hw_lcdc_lgwpr_t *) HW_LCDC_LGWPR_ADDR(x))
+#define HW_LCDC_LGWPR_RD(x)      (HW_LCDC_LGWPR(x).U)
+#define HW_LCDC_LGWPR_WR(x, v)   (HW_LCDC_LGWPR(x).U = (v))
+#define HW_LCDC_LGWPR_SET(x, v)  (HW_LCDC_LGWPR_WR(x, HW_LCDC_LGWPR_RD(x) |  (v)))
+#define HW_LCDC_LGWPR_CLR(x, v)  (HW_LCDC_LGWPR_WR(x, HW_LCDC_LGWPR_RD(x) & ~(v)))
+#define HW_LCDC_LGWPR_TOG(x, v)  (HW_LCDC_LGWPR_WR(x, HW_LCDC_LGWPR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWPR bitfields
@@ -2937,24 +2593,20 @@ typedef union _hw_lcdc_lgwpr
  * Represents the graphic window's vertical starting position in line (from 0 to
  * YMAX).
  */
-//@{
-#define BP_LCDC_LGWPR_GWYP   (0U)          //!< Bit position for LCDC_LGWPR_GWYP.
-#define BM_LCDC_LGWPR_GWYP   (0x000003FFU) //!< Bit mask for LCDC_LGWPR_GWYP.
-#define BS_LCDC_LGWPR_GWYP   (10U)         //!< Bit field size in bits for LCDC_LGWPR_GWYP.
+/*@{*/
+#define BP_LCDC_LGWPR_GWYP   (0U)          /*!< Bit position for LCDC_LGWPR_GWYP. */
+#define BM_LCDC_LGWPR_GWYP   (0x000003FFU) /*!< Bit mask for LCDC_LGWPR_GWYP. */
+#define BS_LCDC_LGWPR_GWYP   (10U)         /*!< Bit field size in bits for LCDC_LGWPR_GWYP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWPR_GWYP field.
-#define BR_LCDC_LGWPR_GWYP   (HW_LCDC_LGWPR.B.GWYP)
-#endif
+/*! @brief Read current value of the LCDC_LGWPR_GWYP field. */
+#define BR_LCDC_LGWPR_GWYP(x) (HW_LCDC_LGWPR(x).B.GWYP)
 
-//! @brief Format value for bitfield LCDC_LGWPR_GWYP.
-#define BF_LCDC_LGWPR_GWYP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWPR_GWYP), uint32_t) & BM_LCDC_LGWPR_GWYP)
+/*! @brief Format value for bitfield LCDC_LGWPR_GWYP. */
+#define BF_LCDC_LGWPR_GWYP(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWPR_GWYP) & BM_LCDC_LGWPR_GWYP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWYP field to a new value.
-#define BW_LCDC_LGWPR_GWYP(v) (HW_LCDC_LGWPR_WR((HW_LCDC_LGWPR_RD() & ~BM_LCDC_LGWPR_GWYP) | BF_LCDC_LGWPR_GWYP(v)))
-#endif
-//@}
+/*! @brief Set the GWYP field to a new value. */
+#define BW_LCDC_LGWPR_GWYP(x, v) (HW_LCDC_LGWPR_WR(x, (HW_LCDC_LGWPR_RD(x) & ~BM_LCDC_LGWPR_GWYP) | BF_LCDC_LGWPR_GWYP(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWPR, field GWXP[25:16] (RW)
@@ -2962,30 +2614,25 @@ typedef union _hw_lcdc_lgwpr
  * Represents the graphic window's horizontal starting position in pixel count
  * (from 0 to XMAX).
  */
-//@{
-#define BP_LCDC_LGWPR_GWXP   (16U)         //!< Bit position for LCDC_LGWPR_GWXP.
-#define BM_LCDC_LGWPR_GWXP   (0x03FF0000U) //!< Bit mask for LCDC_LGWPR_GWXP.
-#define BS_LCDC_LGWPR_GWXP   (10U)         //!< Bit field size in bits for LCDC_LGWPR_GWXP.
+/*@{*/
+#define BP_LCDC_LGWPR_GWXP   (16U)         /*!< Bit position for LCDC_LGWPR_GWXP. */
+#define BM_LCDC_LGWPR_GWXP   (0x03FF0000U) /*!< Bit mask for LCDC_LGWPR_GWXP. */
+#define BS_LCDC_LGWPR_GWXP   (10U)         /*!< Bit field size in bits for LCDC_LGWPR_GWXP. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWPR_GWXP field.
-#define BR_LCDC_LGWPR_GWXP   (HW_LCDC_LGWPR.B.GWXP)
-#endif
+/*! @brief Read current value of the LCDC_LGWPR_GWXP field. */
+#define BR_LCDC_LGWPR_GWXP(x) (HW_LCDC_LGWPR(x).B.GWXP)
 
-//! @brief Format value for bitfield LCDC_LGWPR_GWXP.
-#define BF_LCDC_LGWPR_GWXP(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWPR_GWXP), uint32_t) & BM_LCDC_LGWPR_GWXP)
+/*! @brief Format value for bitfield LCDC_LGWPR_GWXP. */
+#define BF_LCDC_LGWPR_GWXP(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWPR_GWXP) & BM_LCDC_LGWPR_GWXP)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWXP field to a new value.
-#define BW_LCDC_LGWPR_GWXP(v) (HW_LCDC_LGWPR_WR((HW_LCDC_LGWPR_RD() & ~BM_LCDC_LGWPR_GWXP) | BF_LCDC_LGWPR_GWXP(v)))
-#endif
-//@}
+/*! @brief Set the GWXP field to a new value. */
+#define BW_LCDC_LGWPR_GWXP(x, v) (HW_LCDC_LGWPR_WR(x, (HW_LCDC_LGWPR_RD(x) & ~BM_LCDC_LGWPR_GWXP) | BF_LCDC_LGWPR_GWXP(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWCR - LCDC graphic window control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWCR - LCDC graphic window control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWCR - LCDC graphic window control register (RW)
  *
@@ -3001,36 +2648,33 @@ typedef union _hw_lcdc_lgwcr
     uint32_t U;
     struct _hw_lcdc_lgwcr_bitfields
     {
-        uint32_t GWCKB : 6;            //!< [5:0] Graphic window color keying blue
-                                       //! component
-        uint32_t GWCKG : 6;            //!< [11:6] Graphic window color keying green
-                                       //! component
-        uint32_t GWCKR : 6;            //!< [17:12] Graphic window color keying red
-                                       //! component
-        uint32_t RESERVED0 : 3;        //!< [20:18]
-        uint32_t GW_RVS : 1;           //!< [21] Graphic window reverse vertical scan
-        uint32_t GWE : 1;              //!< [22] Graphic window enable
-        uint32_t GWCKE : 1;            //!< [23] Graphic window color keying enable
-        uint32_t GWAV : 8;             //!< [31:24] Graphic window alpha value
+        uint32_t GWCKB : 6;            /*!< [5:0] Graphic window color keying blue
+                                        * component */
+        uint32_t GWCKG : 6;            /*!< [11:6] Graphic window color keying green
+                                        * component */
+        uint32_t GWCKR : 6;            /*!< [17:12] Graphic window color keying red
+                                        * component */
+        uint32_t RESERVED0 : 3;        /*!< [20:18]  */
+        uint32_t GW_RVS : 1;           /*!< [21] Graphic window reverse vertical scan */
+        uint32_t GWE : 1;              /*!< [22] Graphic window enable */
+        uint32_t GWCKE : 1;            /*!< [23] Graphic window color keying enable */
+        uint32_t GWAV : 8;             /*!< [31:24] Graphic window alpha value */
     } B;
 } hw_lcdc_lgwcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWCR register
  */
-//@{
-#define HW_LCDC_LGWCR_ADDR       (REGS_LCDC_BASE + 0x64U)
+/*@{*/
+#define HW_LCDC_LGWCR_ADDR(x)    ((x) + 0x64U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWCR            (*(__IO hw_lcdc_lgwcr_t *) HW_LCDC_LGWCR_ADDR)
-#define HW_LCDC_LGWCR_RD()       (HW_LCDC_LGWCR.U)
-#define HW_LCDC_LGWCR_WR(v)      (HW_LCDC_LGWCR.U = (v))
-#define HW_LCDC_LGWCR_SET(v)     (HW_LCDC_LGWCR_WR(HW_LCDC_LGWCR_RD() |  (v)))
-#define HW_LCDC_LGWCR_CLR(v)     (HW_LCDC_LGWCR_WR(HW_LCDC_LGWCR_RD() & ~(v)))
-#define HW_LCDC_LGWCR_TOG(v)     (HW_LCDC_LGWCR_WR(HW_LCDC_LGWCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWCR(x)         (*(__IO hw_lcdc_lgwcr_t *) HW_LCDC_LGWCR_ADDR(x))
+#define HW_LCDC_LGWCR_RD(x)      (HW_LCDC_LGWCR(x).U)
+#define HW_LCDC_LGWCR_WR(x, v)   (HW_LCDC_LGWCR(x).U = (v))
+#define HW_LCDC_LGWCR_SET(x, v)  (HW_LCDC_LGWCR_WR(x, HW_LCDC_LGWCR_RD(x) |  (v)))
+#define HW_LCDC_LGWCR_CLR(x, v)  (HW_LCDC_LGWCR_WR(x, HW_LCDC_LGWCR_RD(x) & ~(v)))
+#define HW_LCDC_LGWCR_TOG(x, v)  (HW_LCDC_LGWCR_WR(x, HW_LCDC_LGWCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWCR bitfields
@@ -3043,24 +2687,20 @@ typedef union _hw_lcdc_lgwcr
  * - 000000 - No blue
  * - 111111 - Full blue
  */
-//@{
-#define BP_LCDC_LGWCR_GWCKB  (0U)          //!< Bit position for LCDC_LGWCR_GWCKB.
-#define BM_LCDC_LGWCR_GWCKB  (0x0000003FU) //!< Bit mask for LCDC_LGWCR_GWCKB.
-#define BS_LCDC_LGWCR_GWCKB  (6U)          //!< Bit field size in bits for LCDC_LGWCR_GWCKB.
+/*@{*/
+#define BP_LCDC_LGWCR_GWCKB  (0U)          /*!< Bit position for LCDC_LGWCR_GWCKB. */
+#define BM_LCDC_LGWCR_GWCKB  (0x0000003FU) /*!< Bit mask for LCDC_LGWCR_GWCKB. */
+#define BS_LCDC_LGWCR_GWCKB  (6U)          /*!< Bit field size in bits for LCDC_LGWCR_GWCKB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWCKB field.
-#define BR_LCDC_LGWCR_GWCKB  (HW_LCDC_LGWCR.B.GWCKB)
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWCKB field. */
+#define BR_LCDC_LGWCR_GWCKB(x) (HW_LCDC_LGWCR(x).B.GWCKB)
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWCKB.
-#define BF_LCDC_LGWCR_GWCKB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWCKB), uint32_t) & BM_LCDC_LGWCR_GWCKB)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWCKB. */
+#define BF_LCDC_LGWCR_GWCKB(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWCKB) & BM_LCDC_LGWCR_GWCKB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWCKB field to a new value.
-#define BW_LCDC_LGWCR_GWCKB(v) (HW_LCDC_LGWCR_WR((HW_LCDC_LGWCR_RD() & ~BM_LCDC_LGWCR_GWCKB) | BF_LCDC_LGWCR_GWCKB(v)))
-#endif
-//@}
+/*! @brief Set the GWCKB field to a new value. */
+#define BW_LCDC_LGWCR_GWCKB(x, v) (HW_LCDC_LGWCR_WR(x, (HW_LCDC_LGWCR_RD(x) & ~BM_LCDC_LGWCR_GWCKB) | BF_LCDC_LGWCR_GWCKB(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GWCKG[11:6] (RW)
@@ -3069,24 +2709,20 @@ typedef union _hw_lcdc_lgwcr
  * - 000000 - No green
  * - 111111 - Full green
  */
-//@{
-#define BP_LCDC_LGWCR_GWCKG  (6U)          //!< Bit position for LCDC_LGWCR_GWCKG.
-#define BM_LCDC_LGWCR_GWCKG  (0x00000FC0U) //!< Bit mask for LCDC_LGWCR_GWCKG.
-#define BS_LCDC_LGWCR_GWCKG  (6U)          //!< Bit field size in bits for LCDC_LGWCR_GWCKG.
+/*@{*/
+#define BP_LCDC_LGWCR_GWCKG  (6U)          /*!< Bit position for LCDC_LGWCR_GWCKG. */
+#define BM_LCDC_LGWCR_GWCKG  (0x00000FC0U) /*!< Bit mask for LCDC_LGWCR_GWCKG. */
+#define BS_LCDC_LGWCR_GWCKG  (6U)          /*!< Bit field size in bits for LCDC_LGWCR_GWCKG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWCKG field.
-#define BR_LCDC_LGWCR_GWCKG  (HW_LCDC_LGWCR.B.GWCKG)
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWCKG field. */
+#define BR_LCDC_LGWCR_GWCKG(x) (HW_LCDC_LGWCR(x).B.GWCKG)
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWCKG.
-#define BF_LCDC_LGWCR_GWCKG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWCKG), uint32_t) & BM_LCDC_LGWCR_GWCKG)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWCKG. */
+#define BF_LCDC_LGWCR_GWCKG(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWCKG) & BM_LCDC_LGWCR_GWCKG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWCKG field to a new value.
-#define BW_LCDC_LGWCR_GWCKG(v) (HW_LCDC_LGWCR_WR((HW_LCDC_LGWCR_RD() & ~BM_LCDC_LGWCR_GWCKG) | BF_LCDC_LGWCR_GWCKG(v)))
-#endif
-//@}
+/*! @brief Set the GWCKG field to a new value. */
+#define BW_LCDC_LGWCR_GWCKG(x, v) (HW_LCDC_LGWCR_WR(x, (HW_LCDC_LGWCR_RD(x) & ~BM_LCDC_LGWCR_GWCKG) | BF_LCDC_LGWCR_GWCKG(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GWCKR[17:12] (RW)
@@ -3095,24 +2731,20 @@ typedef union _hw_lcdc_lgwcr
  * - 000000 - No red
  * - 111111 - Full red
  */
-//@{
-#define BP_LCDC_LGWCR_GWCKR  (12U)         //!< Bit position for LCDC_LGWCR_GWCKR.
-#define BM_LCDC_LGWCR_GWCKR  (0x0003F000U) //!< Bit mask for LCDC_LGWCR_GWCKR.
-#define BS_LCDC_LGWCR_GWCKR  (6U)          //!< Bit field size in bits for LCDC_LGWCR_GWCKR.
+/*@{*/
+#define BP_LCDC_LGWCR_GWCKR  (12U)         /*!< Bit position for LCDC_LGWCR_GWCKR. */
+#define BM_LCDC_LGWCR_GWCKR  (0x0003F000U) /*!< Bit mask for LCDC_LGWCR_GWCKR. */
+#define BS_LCDC_LGWCR_GWCKR  (6U)          /*!< Bit field size in bits for LCDC_LGWCR_GWCKR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWCKR field.
-#define BR_LCDC_LGWCR_GWCKR  (HW_LCDC_LGWCR.B.GWCKR)
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWCKR field. */
+#define BR_LCDC_LGWCR_GWCKR(x) (HW_LCDC_LGWCR(x).B.GWCKR)
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWCKR.
-#define BF_LCDC_LGWCR_GWCKR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWCKR), uint32_t) & BM_LCDC_LGWCR_GWCKR)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWCKR. */
+#define BF_LCDC_LGWCR_GWCKR(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWCKR) & BM_LCDC_LGWCR_GWCKR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWCKR field to a new value.
-#define BW_LCDC_LGWCR_GWCKR(v) (HW_LCDC_LGWCR_WR((HW_LCDC_LGWCR_RD() & ~BM_LCDC_LGWCR_GWCKR) | BF_LCDC_LGWCR_GWCKR(v)))
-#endif
-//@}
+/*! @brief Set the GWCKR field to a new value. */
+#define BW_LCDC_LGWCR_GWCKR(x, v) (HW_LCDC_LGWCR_WR(x, (HW_LCDC_LGWCR_RD(x) & ~BM_LCDC_LGWCR_GWCKR) | BF_LCDC_LGWCR_GWCKR(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GW_RVS[21] (RW)
@@ -3125,24 +2757,20 @@ typedef union _hw_lcdc_lgwcr
  * - 0 - Vertical scan in normal direction.
  * - 1 - Vertical scan in reverse direction.
  */
-//@{
-#define BP_LCDC_LGWCR_GW_RVS (21U)         //!< Bit position for LCDC_LGWCR_GW_RVS.
-#define BM_LCDC_LGWCR_GW_RVS (0x00200000U) //!< Bit mask for LCDC_LGWCR_GW_RVS.
-#define BS_LCDC_LGWCR_GW_RVS (1U)          //!< Bit field size in bits for LCDC_LGWCR_GW_RVS.
+/*@{*/
+#define BP_LCDC_LGWCR_GW_RVS (21U)         /*!< Bit position for LCDC_LGWCR_GW_RVS. */
+#define BM_LCDC_LGWCR_GW_RVS (0x00200000U) /*!< Bit mask for LCDC_LGWCR_GW_RVS. */
+#define BS_LCDC_LGWCR_GW_RVS (1U)          /*!< Bit field size in bits for LCDC_LGWCR_GW_RVS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GW_RVS field.
-#define BR_LCDC_LGWCR_GW_RVS (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GW_RVS))
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GW_RVS field. */
+#define BR_LCDC_LGWCR_GW_RVS(x) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GW_RVS))
 
-//! @brief Format value for bitfield LCDC_LGWCR_GW_RVS.
-#define BF_LCDC_LGWCR_GW_RVS(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GW_RVS), uint32_t) & BM_LCDC_LGWCR_GW_RVS)
+/*! @brief Format value for bitfield LCDC_LGWCR_GW_RVS. */
+#define BF_LCDC_LGWCR_GW_RVS(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GW_RVS) & BM_LCDC_LGWCR_GW_RVS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GW_RVS field to a new value.
-#define BW_LCDC_LGWCR_GW_RVS(v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GW_RVS) = (v))
-#endif
-//@}
+/*! @brief Set the GW_RVS field to a new value. */
+#define BW_LCDC_LGWCR_GW_RVS(x, v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GW_RVS) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GWE[22] (RW)
@@ -3153,24 +2781,20 @@ typedef union _hw_lcdc_lgwcr
  * - 0 - Disable graphic window on screen.
  * - 1 - Enable graphic window on screen.
  */
-//@{
-#define BP_LCDC_LGWCR_GWE    (22U)         //!< Bit position for LCDC_LGWCR_GWE.
-#define BM_LCDC_LGWCR_GWE    (0x00400000U) //!< Bit mask for LCDC_LGWCR_GWE.
-#define BS_LCDC_LGWCR_GWE    (1U)          //!< Bit field size in bits for LCDC_LGWCR_GWE.
+/*@{*/
+#define BP_LCDC_LGWCR_GWE    (22U)         /*!< Bit position for LCDC_LGWCR_GWE. */
+#define BM_LCDC_LGWCR_GWE    (0x00400000U) /*!< Bit mask for LCDC_LGWCR_GWE. */
+#define BS_LCDC_LGWCR_GWE    (1U)          /*!< Bit field size in bits for LCDC_LGWCR_GWE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWE field.
-#define BR_LCDC_LGWCR_GWE    (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GWE))
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWE field. */
+#define BR_LCDC_LGWCR_GWE(x) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GWE))
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWE.
-#define BF_LCDC_LGWCR_GWE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWE), uint32_t) & BM_LCDC_LGWCR_GWE)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWE. */
+#define BF_LCDC_LGWCR_GWE(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWE) & BM_LCDC_LGWCR_GWE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWE field to a new value.
-#define BW_LCDC_LGWCR_GWE(v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GWE) = (v))
-#endif
-//@}
+/*! @brief Set the GWE field to a new value. */
+#define BW_LCDC_LGWCR_GWE(x, v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GWE) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GWCKE[23] (RW)
@@ -3181,24 +2805,20 @@ typedef union _hw_lcdc_lgwcr
  * - 0 - Disable color keying of graphic window.
  * - 1 - Enable color keying of graphic window.
  */
-//@{
-#define BP_LCDC_LGWCR_GWCKE  (23U)         //!< Bit position for LCDC_LGWCR_GWCKE.
-#define BM_LCDC_LGWCR_GWCKE  (0x00800000U) //!< Bit mask for LCDC_LGWCR_GWCKE.
-#define BS_LCDC_LGWCR_GWCKE  (1U)          //!< Bit field size in bits for LCDC_LGWCR_GWCKE.
+/*@{*/
+#define BP_LCDC_LGWCR_GWCKE  (23U)         /*!< Bit position for LCDC_LGWCR_GWCKE. */
+#define BM_LCDC_LGWCR_GWCKE  (0x00800000U) /*!< Bit mask for LCDC_LGWCR_GWCKE. */
+#define BS_LCDC_LGWCR_GWCKE  (1U)          /*!< Bit field size in bits for LCDC_LGWCR_GWCKE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWCKE field.
-#define BR_LCDC_LGWCR_GWCKE  (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GWCKE))
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWCKE field. */
+#define BR_LCDC_LGWCR_GWCKE(x) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GWCKE))
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWCKE.
-#define BF_LCDC_LGWCR_GWCKE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWCKE), uint32_t) & BM_LCDC_LGWCR_GWCKE)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWCKE. */
+#define BF_LCDC_LGWCR_GWCKE(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWCKE) & BM_LCDC_LGWCR_GWCKE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWCKE field to a new value.
-#define BW_LCDC_LGWCR_GWCKE(v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR, BP_LCDC_LGWCR_GWCKE) = (v))
-#endif
-//@}
+/*! @brief Set the GWCKE field to a new value. */
+#define BW_LCDC_LGWCR_GWCKE(x, v) (BITBAND_ACCESS32(HW_LCDC_LGWCR_ADDR(x), BP_LCDC_LGWCR_GWCKE) = (v))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWCR, field GWAV[31:24] (RW)
@@ -3210,30 +2830,25 @@ typedef union _hw_lcdc_lgwcr
  * - 0 - Graphic window totally transparent (not displayed on LCD screen).
  * - 1 - Graphic window totally opaque (completely visible on LCD screen).
  */
-//@{
-#define BP_LCDC_LGWCR_GWAV   (24U)         //!< Bit position for LCDC_LGWCR_GWAV.
-#define BM_LCDC_LGWCR_GWAV   (0xFF000000U) //!< Bit mask for LCDC_LGWCR_GWAV.
-#define BS_LCDC_LGWCR_GWAV   (8U)          //!< Bit field size in bits for LCDC_LGWCR_GWAV.
+/*@{*/
+#define BP_LCDC_LGWCR_GWAV   (24U)         /*!< Bit position for LCDC_LGWCR_GWAV. */
+#define BM_LCDC_LGWCR_GWAV   (0xFF000000U) /*!< Bit mask for LCDC_LGWCR_GWAV. */
+#define BS_LCDC_LGWCR_GWAV   (8U)          /*!< Bit field size in bits for LCDC_LGWCR_GWAV. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWCR_GWAV field.
-#define BR_LCDC_LGWCR_GWAV   (HW_LCDC_LGWCR.B.GWAV)
-#endif
+/*! @brief Read current value of the LCDC_LGWCR_GWAV field. */
+#define BR_LCDC_LGWCR_GWAV(x) (HW_LCDC_LGWCR(x).B.GWAV)
 
-//! @brief Format value for bitfield LCDC_LGWCR_GWAV.
-#define BF_LCDC_LGWCR_GWAV(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWCR_GWAV), uint32_t) & BM_LCDC_LGWCR_GWAV)
+/*! @brief Format value for bitfield LCDC_LGWCR_GWAV. */
+#define BF_LCDC_LGWCR_GWAV(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWCR_GWAV) & BM_LCDC_LGWCR_GWAV)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWAV field to a new value.
-#define BW_LCDC_LGWCR_GWAV(v) (HW_LCDC_LGWCR_WR((HW_LCDC_LGWCR_RD() & ~BM_LCDC_LGWCR_GWAV) | BF_LCDC_LGWCR_GWAV(v)))
-#endif
-//@}
+/*! @brief Set the GWAV field to a new value. */
+#define BW_LCDC_LGWCR_GWAV(x, v) (HW_LCDC_LGWCR_WR(x, (HW_LCDC_LGWCR_RD(x) & ~BM_LCDC_LGWCR_GWAV) | BF_LCDC_LGWCR_GWAV(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LGWDCR - LCDC graphic window DMA control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LGWDCR - LCDC graphic window DMA control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LGWDCR - LCDC graphic window DMA control register (RW)
  *
@@ -3248,30 +2863,27 @@ typedef union _hw_lcdc_lgwdcr
     uint32_t U;
     struct _hw_lcdc_lgwdcr_bitfields
     {
-        uint32_t GWTM : 7;             //!< [6:0] Graphic window DMA low mark
-        uint32_t RESERVED0 : 9;        //!< [15:7]
-        uint32_t GWHM : 7;             //!< [22:16] Graphic window DMA high mark
-        uint32_t RESERVED1 : 8;        //!< [30:23]
-        uint32_t GWBT : 1;             //!< [31] Graphic window DMA burst type
+        uint32_t GWTM : 7;             /*!< [6:0] Graphic window DMA low mark */
+        uint32_t RESERVED0 : 9;        /*!< [15:7]  */
+        uint32_t GWHM : 7;             /*!< [22:16] Graphic window DMA high mark */
+        uint32_t RESERVED1 : 8;        /*!< [30:23]  */
+        uint32_t GWBT : 1;             /*!< [31] Graphic window DMA burst type */
     } B;
 } hw_lcdc_lgwdcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LGWDCR register
  */
-//@{
-#define HW_LCDC_LGWDCR_ADDR      (REGS_LCDC_BASE + 0x68U)
+/*@{*/
+#define HW_LCDC_LGWDCR_ADDR(x)   ((x) + 0x68U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LGWDCR           (*(__IO hw_lcdc_lgwdcr_t *) HW_LCDC_LGWDCR_ADDR)
-#define HW_LCDC_LGWDCR_RD()      (HW_LCDC_LGWDCR.U)
-#define HW_LCDC_LGWDCR_WR(v)     (HW_LCDC_LGWDCR.U = (v))
-#define HW_LCDC_LGWDCR_SET(v)    (HW_LCDC_LGWDCR_WR(HW_LCDC_LGWDCR_RD() |  (v)))
-#define HW_LCDC_LGWDCR_CLR(v)    (HW_LCDC_LGWDCR_WR(HW_LCDC_LGWDCR_RD() & ~(v)))
-#define HW_LCDC_LGWDCR_TOG(v)    (HW_LCDC_LGWDCR_WR(HW_LCDC_LGWDCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LGWDCR(x)        (*(__IO hw_lcdc_lgwdcr_t *) HW_LCDC_LGWDCR_ADDR(x))
+#define HW_LCDC_LGWDCR_RD(x)     (HW_LCDC_LGWDCR(x).U)
+#define HW_LCDC_LGWDCR_WR(x, v)  (HW_LCDC_LGWDCR(x).U = (v))
+#define HW_LCDC_LGWDCR_SET(x, v) (HW_LCDC_LGWDCR_WR(x, HW_LCDC_LGWDCR_RD(x) |  (v)))
+#define HW_LCDC_LGWDCR_CLR(x, v) (HW_LCDC_LGWDCR_WR(x, HW_LCDC_LGWDCR_RD(x) & ~(v)))
+#define HW_LCDC_LGWDCR_TOG(x, v) (HW_LCDC_LGWDCR_WR(x, HW_LCDC_LGWDCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LGWDCR bitfields
@@ -3283,24 +2895,20 @@ typedef union _hw_lcdc_lgwdcr
  * Sets low level mark in the graphic window FIFO to trigger a DMA request. Low
  * level mark equals the number of words left in the pixel buffer.
  */
-//@{
-#define BP_LCDC_LGWDCR_GWTM  (0U)          //!< Bit position for LCDC_LGWDCR_GWTM.
-#define BM_LCDC_LGWDCR_GWTM  (0x0000007FU) //!< Bit mask for LCDC_LGWDCR_GWTM.
-#define BS_LCDC_LGWDCR_GWTM  (7U)          //!< Bit field size in bits for LCDC_LGWDCR_GWTM.
+/*@{*/
+#define BP_LCDC_LGWDCR_GWTM  (0U)          /*!< Bit position for LCDC_LGWDCR_GWTM. */
+#define BM_LCDC_LGWDCR_GWTM  (0x0000007FU) /*!< Bit mask for LCDC_LGWDCR_GWTM. */
+#define BS_LCDC_LGWDCR_GWTM  (7U)          /*!< Bit field size in bits for LCDC_LGWDCR_GWTM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWDCR_GWTM field.
-#define BR_LCDC_LGWDCR_GWTM  (HW_LCDC_LGWDCR.B.GWTM)
-#endif
+/*! @brief Read current value of the LCDC_LGWDCR_GWTM field. */
+#define BR_LCDC_LGWDCR_GWTM(x) (HW_LCDC_LGWDCR(x).B.GWTM)
 
-//! @brief Format value for bitfield LCDC_LGWDCR_GWTM.
-#define BF_LCDC_LGWDCR_GWTM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWDCR_GWTM), uint32_t) & BM_LCDC_LGWDCR_GWTM)
+/*! @brief Format value for bitfield LCDC_LGWDCR_GWTM. */
+#define BF_LCDC_LGWDCR_GWTM(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWDCR_GWTM) & BM_LCDC_LGWDCR_GWTM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWTM field to a new value.
-#define BW_LCDC_LGWDCR_GWTM(v) (HW_LCDC_LGWDCR_WR((HW_LCDC_LGWDCR_RD() & ~BM_LCDC_LGWDCR_GWTM) | BF_LCDC_LGWDCR_GWTM(v)))
-#endif
-//@}
+/*! @brief Set the GWTM field to a new value. */
+#define BW_LCDC_LGWDCR_GWTM(x, v) (HW_LCDC_LGWDCR_WR(x, (HW_LCDC_LGWDCR_RD(x) & ~BM_LCDC_LGWDCR_GWTM) | BF_LCDC_LGWDCR_GWTM(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWDCR, field GWHM[22:16] (RW)
@@ -3312,24 +2920,20 @@ typedef union _hw_lcdc_lgwdcr
  * burst length, burst length (in words) of each request is equal to the DMA high
  * mark setting and its value must be larger than GWTM.
  */
-//@{
-#define BP_LCDC_LGWDCR_GWHM  (16U)         //!< Bit position for LCDC_LGWDCR_GWHM.
-#define BM_LCDC_LGWDCR_GWHM  (0x007F0000U) //!< Bit mask for LCDC_LGWDCR_GWHM.
-#define BS_LCDC_LGWDCR_GWHM  (7U)          //!< Bit field size in bits for LCDC_LGWDCR_GWHM.
+/*@{*/
+#define BP_LCDC_LGWDCR_GWHM  (16U)         /*!< Bit position for LCDC_LGWDCR_GWHM. */
+#define BM_LCDC_LGWDCR_GWHM  (0x007F0000U) /*!< Bit mask for LCDC_LGWDCR_GWHM. */
+#define BS_LCDC_LGWDCR_GWHM  (7U)          /*!< Bit field size in bits for LCDC_LGWDCR_GWHM. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWDCR_GWHM field.
-#define BR_LCDC_LGWDCR_GWHM  (HW_LCDC_LGWDCR.B.GWHM)
-#endif
+/*! @brief Read current value of the LCDC_LGWDCR_GWHM field. */
+#define BR_LCDC_LGWDCR_GWHM(x) (HW_LCDC_LGWDCR(x).B.GWHM)
 
-//! @brief Format value for bitfield LCDC_LGWDCR_GWHM.
-#define BF_LCDC_LGWDCR_GWHM(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWDCR_GWHM), uint32_t) & BM_LCDC_LGWDCR_GWHM)
+/*! @brief Format value for bitfield LCDC_LGWDCR_GWHM. */
+#define BF_LCDC_LGWDCR_GWHM(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWDCR_GWHM) & BM_LCDC_LGWDCR_GWHM)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWHM field to a new value.
-#define BW_LCDC_LGWDCR_GWHM(v) (HW_LCDC_LGWDCR_WR((HW_LCDC_LGWDCR_RD() & ~BM_LCDC_LGWDCR_GWHM) | BF_LCDC_LGWDCR_GWHM(v)))
-#endif
-//@}
+/*! @brief Set the GWHM field to a new value. */
+#define BW_LCDC_LGWDCR_GWHM(x, v) (HW_LCDC_LGWDCR_WR(x, (HW_LCDC_LGWDCR_RD(x) & ~BM_LCDC_LGWDCR_GWHM) | BF_LCDC_LGWDCR_GWHM(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LGWDCR, field GWBT[31] (RW)
@@ -3340,30 +2944,25 @@ typedef union _hw_lcdc_lgwdcr
  * - 0 - Burst length is dynamic.
  * - 1 - Burst length is fixed.
  */
-//@{
-#define BP_LCDC_LGWDCR_GWBT  (31U)         //!< Bit position for LCDC_LGWDCR_GWBT.
-#define BM_LCDC_LGWDCR_GWBT  (0x80000000U) //!< Bit mask for LCDC_LGWDCR_GWBT.
-#define BS_LCDC_LGWDCR_GWBT  (1U)          //!< Bit field size in bits for LCDC_LGWDCR_GWBT.
+/*@{*/
+#define BP_LCDC_LGWDCR_GWBT  (31U)         /*!< Bit position for LCDC_LGWDCR_GWBT. */
+#define BM_LCDC_LGWDCR_GWBT  (0x80000000U) /*!< Bit mask for LCDC_LGWDCR_GWBT. */
+#define BS_LCDC_LGWDCR_GWBT  (1U)          /*!< Bit field size in bits for LCDC_LGWDCR_GWBT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LGWDCR_GWBT field.
-#define BR_LCDC_LGWDCR_GWBT  (BITBAND_ACCESS32(HW_LCDC_LGWDCR_ADDR, BP_LCDC_LGWDCR_GWBT))
-#endif
+/*! @brief Read current value of the LCDC_LGWDCR_GWBT field. */
+#define BR_LCDC_LGWDCR_GWBT(x) (BITBAND_ACCESS32(HW_LCDC_LGWDCR_ADDR(x), BP_LCDC_LGWDCR_GWBT))
 
-//! @brief Format value for bitfield LCDC_LGWDCR_GWBT.
-#define BF_LCDC_LGWDCR_GWBT(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LGWDCR_GWBT), uint32_t) & BM_LCDC_LGWDCR_GWBT)
+/*! @brief Format value for bitfield LCDC_LGWDCR_GWBT. */
+#define BF_LCDC_LGWDCR_GWBT(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LGWDCR_GWBT) & BM_LCDC_LGWDCR_GWBT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GWBT field to a new value.
-#define BW_LCDC_LGWDCR_GWBT(v) (BITBAND_ACCESS32(HW_LCDC_LGWDCR_ADDR, BP_LCDC_LGWDCR_GWBT) = (v))
-#endif
-//@}
+/*! @brief Set the GWBT field to a new value. */
+#define BW_LCDC_LGWDCR_GWBT(x, v) (BITBAND_ACCESS32(HW_LCDC_LGWDCR_ADDR(x), BP_LCDC_LGWDCR_GWBT) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LAUSCR - LCDC AUS mode control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LAUSCR - LCDC AUS mode control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LAUSCR - LCDC AUS mode control register (RW)
  *
@@ -3376,33 +2975,30 @@ typedef union _hw_lcdc_lauscr
     uint32_t U;
     struct _hw_lcdc_lauscr_bitfields
     {
-        uint32_t AGWCKB : 8;           //!< [7:0] AUS graphic window color keying blue
-                                       //! component
-        uint32_t AGWCKG : 8;           //!< [15:8] AUS graphic window color keying
-                                       //! green component
-        uint32_t AGWCKR : 8;           //!< [23:16] AUS graphic window color keying red
-                                       //! component
-        uint32_t RESERVED0 : 7;        //!< [30:24]
-        uint32_t AUS_Mode : 1;         //!< [31] AUS mode control
+        uint32_t AGWCKB : 8;           /*!< [7:0] AUS graphic window color keying blue
+                                        * component */
+        uint32_t AGWCKG : 8;           /*!< [15:8] AUS graphic window color keying
+                                        * green component */
+        uint32_t AGWCKR : 8;           /*!< [23:16] AUS graphic window color keying red
+                                        * component */
+        uint32_t RESERVED0 : 7;        /*!< [30:24]  */
+        uint32_t AUS_Mode : 1;         /*!< [31] AUS mode control */
     } B;
 } hw_lcdc_lauscr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LAUSCR register
  */
-//@{
-#define HW_LCDC_LAUSCR_ADDR      (REGS_LCDC_BASE + 0x80U)
+/*@{*/
+#define HW_LCDC_LAUSCR_ADDR(x)   ((x) + 0x80U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LAUSCR           (*(__IO hw_lcdc_lauscr_t *) HW_LCDC_LAUSCR_ADDR)
-#define HW_LCDC_LAUSCR_RD()      (HW_LCDC_LAUSCR.U)
-#define HW_LCDC_LAUSCR_WR(v)     (HW_LCDC_LAUSCR.U = (v))
-#define HW_LCDC_LAUSCR_SET(v)    (HW_LCDC_LAUSCR_WR(HW_LCDC_LAUSCR_RD() |  (v)))
-#define HW_LCDC_LAUSCR_CLR(v)    (HW_LCDC_LAUSCR_WR(HW_LCDC_LAUSCR_RD() & ~(v)))
-#define HW_LCDC_LAUSCR_TOG(v)    (HW_LCDC_LAUSCR_WR(HW_LCDC_LAUSCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LAUSCR(x)        (*(__IO hw_lcdc_lauscr_t *) HW_LCDC_LAUSCR_ADDR(x))
+#define HW_LCDC_LAUSCR_RD(x)     (HW_LCDC_LAUSCR(x).U)
+#define HW_LCDC_LAUSCR_WR(x, v)  (HW_LCDC_LAUSCR(x).U = (v))
+#define HW_LCDC_LAUSCR_SET(x, v) (HW_LCDC_LAUSCR_WR(x, HW_LCDC_LAUSCR_RD(x) |  (v)))
+#define HW_LCDC_LAUSCR_CLR(x, v) (HW_LCDC_LAUSCR_WR(x, HW_LCDC_LAUSCR_RD(x) & ~(v)))
+#define HW_LCDC_LAUSCR_TOG(x, v) (HW_LCDC_LAUSCR_WR(x, HW_LCDC_LAUSCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LAUSCR bitfields
@@ -3413,72 +3009,60 @@ typedef union _hw_lcdc_lauscr
  *
  * Defines the blue component of graphic window color keying (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCR_AGWCKB (0U)         //!< Bit position for LCDC_LAUSCR_AGWCKB.
-#define BM_LCDC_LAUSCR_AGWCKB (0x000000FFU) //!< Bit mask for LCDC_LAUSCR_AGWCKB.
-#define BS_LCDC_LAUSCR_AGWCKB (8U)         //!< Bit field size in bits for LCDC_LAUSCR_AGWCKB.
+/*@{*/
+#define BP_LCDC_LAUSCR_AGWCKB (0U)         /*!< Bit position for LCDC_LAUSCR_AGWCKB. */
+#define BM_LCDC_LAUSCR_AGWCKB (0x000000FFU) /*!< Bit mask for LCDC_LAUSCR_AGWCKB. */
+#define BS_LCDC_LAUSCR_AGWCKB (8U)         /*!< Bit field size in bits for LCDC_LAUSCR_AGWCKB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCR_AGWCKB field.
-#define BR_LCDC_LAUSCR_AGWCKB (HW_LCDC_LAUSCR.B.AGWCKB)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCR_AGWCKB field. */
+#define BR_LCDC_LAUSCR_AGWCKB(x) (HW_LCDC_LAUSCR(x).B.AGWCKB)
 
-//! @brief Format value for bitfield LCDC_LAUSCR_AGWCKB.
-#define BF_LCDC_LAUSCR_AGWCKB(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCR_AGWCKB), uint32_t) & BM_LCDC_LAUSCR_AGWCKB)
+/*! @brief Format value for bitfield LCDC_LAUSCR_AGWCKB. */
+#define BF_LCDC_LAUSCR_AGWCKB(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCR_AGWCKB) & BM_LCDC_LAUSCR_AGWCKB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AGWCKB field to a new value.
-#define BW_LCDC_LAUSCR_AGWCKB(v) (HW_LCDC_LAUSCR_WR((HW_LCDC_LAUSCR_RD() & ~BM_LCDC_LAUSCR_AGWCKB) | BF_LCDC_LAUSCR_AGWCKB(v)))
-#endif
-//@}
+/*! @brief Set the AGWCKB field to a new value. */
+#define BW_LCDC_LAUSCR_AGWCKB(x, v) (HW_LCDC_LAUSCR_WR(x, (HW_LCDC_LAUSCR_RD(x) & ~BM_LCDC_LAUSCR_AGWCKB) | BF_LCDC_LAUSCR_AGWCKB(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LAUSCR, field AGWCKG[15:8] (RW)
  *
  * Defines the green component of graphic window color keying (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCR_AGWCKG (8U)         //!< Bit position for LCDC_LAUSCR_AGWCKG.
-#define BM_LCDC_LAUSCR_AGWCKG (0x0000FF00U) //!< Bit mask for LCDC_LAUSCR_AGWCKG.
-#define BS_LCDC_LAUSCR_AGWCKG (8U)         //!< Bit field size in bits for LCDC_LAUSCR_AGWCKG.
+/*@{*/
+#define BP_LCDC_LAUSCR_AGWCKG (8U)         /*!< Bit position for LCDC_LAUSCR_AGWCKG. */
+#define BM_LCDC_LAUSCR_AGWCKG (0x0000FF00U) /*!< Bit mask for LCDC_LAUSCR_AGWCKG. */
+#define BS_LCDC_LAUSCR_AGWCKG (8U)         /*!< Bit field size in bits for LCDC_LAUSCR_AGWCKG. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCR_AGWCKG field.
-#define BR_LCDC_LAUSCR_AGWCKG (HW_LCDC_LAUSCR.B.AGWCKG)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCR_AGWCKG field. */
+#define BR_LCDC_LAUSCR_AGWCKG(x) (HW_LCDC_LAUSCR(x).B.AGWCKG)
 
-//! @brief Format value for bitfield LCDC_LAUSCR_AGWCKG.
-#define BF_LCDC_LAUSCR_AGWCKG(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCR_AGWCKG), uint32_t) & BM_LCDC_LAUSCR_AGWCKG)
+/*! @brief Format value for bitfield LCDC_LAUSCR_AGWCKG. */
+#define BF_LCDC_LAUSCR_AGWCKG(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCR_AGWCKG) & BM_LCDC_LAUSCR_AGWCKG)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AGWCKG field to a new value.
-#define BW_LCDC_LAUSCR_AGWCKG(v) (HW_LCDC_LAUSCR_WR((HW_LCDC_LAUSCR_RD() & ~BM_LCDC_LAUSCR_AGWCKG) | BF_LCDC_LAUSCR_AGWCKG(v)))
-#endif
-//@}
+/*! @brief Set the AGWCKG field to a new value. */
+#define BW_LCDC_LAUSCR_AGWCKG(x, v) (HW_LCDC_LAUSCR_WR(x, (HW_LCDC_LAUSCR_RD(x) & ~BM_LCDC_LAUSCR_AGWCKG) | BF_LCDC_LAUSCR_AGWCKG(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LAUSCR, field AGWCKR[23:16] (RW)
  *
  * Defines the red component of graphic window color keying (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCR_AGWCKR (16U)        //!< Bit position for LCDC_LAUSCR_AGWCKR.
-#define BM_LCDC_LAUSCR_AGWCKR (0x00FF0000U) //!< Bit mask for LCDC_LAUSCR_AGWCKR.
-#define BS_LCDC_LAUSCR_AGWCKR (8U)         //!< Bit field size in bits for LCDC_LAUSCR_AGWCKR.
+/*@{*/
+#define BP_LCDC_LAUSCR_AGWCKR (16U)        /*!< Bit position for LCDC_LAUSCR_AGWCKR. */
+#define BM_LCDC_LAUSCR_AGWCKR (0x00FF0000U) /*!< Bit mask for LCDC_LAUSCR_AGWCKR. */
+#define BS_LCDC_LAUSCR_AGWCKR (8U)         /*!< Bit field size in bits for LCDC_LAUSCR_AGWCKR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCR_AGWCKR field.
-#define BR_LCDC_LAUSCR_AGWCKR (HW_LCDC_LAUSCR.B.AGWCKR)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCR_AGWCKR field. */
+#define BR_LCDC_LAUSCR_AGWCKR(x) (HW_LCDC_LAUSCR(x).B.AGWCKR)
 
-//! @brief Format value for bitfield LCDC_LAUSCR_AGWCKR.
-#define BF_LCDC_LAUSCR_AGWCKR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCR_AGWCKR), uint32_t) & BM_LCDC_LAUSCR_AGWCKR)
+/*! @brief Format value for bitfield LCDC_LAUSCR_AGWCKR. */
+#define BF_LCDC_LAUSCR_AGWCKR(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCR_AGWCKR) & BM_LCDC_LAUSCR_AGWCKR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AGWCKR field to a new value.
-#define BW_LCDC_LAUSCR_AGWCKR(v) (HW_LCDC_LAUSCR_WR((HW_LCDC_LAUSCR_RD() & ~BM_LCDC_LAUSCR_AGWCKR) | BF_LCDC_LAUSCR_AGWCKR(v)))
-#endif
-//@}
+/*! @brief Set the AGWCKR field to a new value. */
+#define BW_LCDC_LAUSCR_AGWCKR(x, v) (HW_LCDC_LAUSCR_WR(x, (HW_LCDC_LAUSCR_RD(x) & ~BM_LCDC_LAUSCR_AGWCKR) | BF_LCDC_LAUSCR_AGWCKR(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LAUSCR, field AUS_Mode[31] (RW)
@@ -3490,30 +3074,25 @@ typedef union _hw_lcdc_lauscr
  * - 0 - Normal mode
  * - 1 - AUS mode
  */
-//@{
-#define BP_LCDC_LAUSCR_AUS_Mode (31U)      //!< Bit position for LCDC_LAUSCR_AUS_Mode.
-#define BM_LCDC_LAUSCR_AUS_Mode (0x80000000U) //!< Bit mask for LCDC_LAUSCR_AUS_Mode.
-#define BS_LCDC_LAUSCR_AUS_Mode (1U)       //!< Bit field size in bits for LCDC_LAUSCR_AUS_Mode.
+/*@{*/
+#define BP_LCDC_LAUSCR_AUS_Mode (31U)      /*!< Bit position for LCDC_LAUSCR_AUS_Mode. */
+#define BM_LCDC_LAUSCR_AUS_Mode (0x80000000U) /*!< Bit mask for LCDC_LAUSCR_AUS_Mode. */
+#define BS_LCDC_LAUSCR_AUS_Mode (1U)       /*!< Bit field size in bits for LCDC_LAUSCR_AUS_Mode. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCR_AUS_Mode field.
-#define BR_LCDC_LAUSCR_AUS_Mode (BITBAND_ACCESS32(HW_LCDC_LAUSCR_ADDR, BP_LCDC_LAUSCR_AUS_Mode))
-#endif
+/*! @brief Read current value of the LCDC_LAUSCR_AUS_Mode field. */
+#define BR_LCDC_LAUSCR_AUS_Mode(x) (BITBAND_ACCESS32(HW_LCDC_LAUSCR_ADDR(x), BP_LCDC_LAUSCR_AUS_Mode))
 
-//! @brief Format value for bitfield LCDC_LAUSCR_AUS_Mode.
-#define BF_LCDC_LAUSCR_AUS_Mode(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCR_AUS_Mode), uint32_t) & BM_LCDC_LAUSCR_AUS_Mode)
+/*! @brief Format value for bitfield LCDC_LAUSCR_AUS_Mode. */
+#define BF_LCDC_LAUSCR_AUS_Mode(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCR_AUS_Mode) & BM_LCDC_LAUSCR_AUS_Mode)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the AUS_Mode field to a new value.
-#define BW_LCDC_LAUSCR_AUS_Mode(v) (BITBAND_ACCESS32(HW_LCDC_LAUSCR_ADDR, BP_LCDC_LAUSCR_AUS_Mode) = (v))
-#endif
-//@}
+/*! @brief Set the AUS_Mode field to a new value. */
+#define BW_LCDC_LAUSCR_AUS_Mode(x, v) (BITBAND_ACCESS32(HW_LCDC_LAUSCR_ADDR(x), BP_LCDC_LAUSCR_AUS_Mode) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LCDC_LAUSCCR - LCDC AUS mode cursor control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LCDC_LAUSCCR - LCDC AUS mode cursor control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LCDC_LAUSCCR - LCDC AUS mode cursor control register (RW)
  *
@@ -3527,29 +3106,26 @@ typedef union _hw_lcdc_lausccr
     uint32_t U;
     struct _hw_lcdc_lausccr_bitfields
     {
-        uint32_t ACUR_COL_B : 8;       //!< [7:0] AUS cursor red field
-        uint32_t ACUR_COL_G : 8;       //!< [15:8] AUS cursor green field
-        uint32_t ACUR_COL_R : 8;       //!< [23:16] AUS cursor red field
-        uint32_t RESERVED0 : 8;        //!< [31:24]
+        uint32_t ACUR_COL_B : 8;       /*!< [7:0] AUS cursor red field */
+        uint32_t ACUR_COL_G : 8;       /*!< [15:8] AUS cursor green field */
+        uint32_t ACUR_COL_R : 8;       /*!< [23:16] AUS cursor red field */
+        uint32_t RESERVED0 : 8;        /*!< [31:24]  */
     } B;
 } hw_lcdc_lausccr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LCDC_LAUSCCR register
  */
-//@{
-#define HW_LCDC_LAUSCCR_ADDR     (REGS_LCDC_BASE + 0x84U)
+/*@{*/
+#define HW_LCDC_LAUSCCR_ADDR(x)  ((x) + 0x84U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LCDC_LAUSCCR          (*(__IO hw_lcdc_lausccr_t *) HW_LCDC_LAUSCCR_ADDR)
-#define HW_LCDC_LAUSCCR_RD()     (HW_LCDC_LAUSCCR.U)
-#define HW_LCDC_LAUSCCR_WR(v)    (HW_LCDC_LAUSCCR.U = (v))
-#define HW_LCDC_LAUSCCR_SET(v)   (HW_LCDC_LAUSCCR_WR(HW_LCDC_LAUSCCR_RD() |  (v)))
-#define HW_LCDC_LAUSCCR_CLR(v)   (HW_LCDC_LAUSCCR_WR(HW_LCDC_LAUSCCR_RD() & ~(v)))
-#define HW_LCDC_LAUSCCR_TOG(v)   (HW_LCDC_LAUSCCR_WR(HW_LCDC_LAUSCCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LCDC_LAUSCCR(x)       (*(__IO hw_lcdc_lausccr_t *) HW_LCDC_LAUSCCR_ADDR(x))
+#define HW_LCDC_LAUSCCR_RD(x)    (HW_LCDC_LAUSCCR(x).U)
+#define HW_LCDC_LAUSCCR_WR(x, v) (HW_LCDC_LAUSCCR(x).U = (v))
+#define HW_LCDC_LAUSCCR_SET(x, v) (HW_LCDC_LAUSCCR_WR(x, HW_LCDC_LAUSCCR_RD(x) |  (v)))
+#define HW_LCDC_LAUSCCR_CLR(x, v) (HW_LCDC_LAUSCCR_WR(x, HW_LCDC_LAUSCCR_RD(x) & ~(v)))
+#define HW_LCDC_LAUSCCR_TOG(x, v) (HW_LCDC_LAUSCCR_WR(x, HW_LCDC_LAUSCCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LCDC_LAUSCCR bitfields
@@ -3560,120 +3136,107 @@ typedef union _hw_lcdc_lausccr
  *
  * Defines the blue component of cursor color in color mode (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCCR_ACUR_COL_B (0U)    //!< Bit position for LCDC_LAUSCCR_ACUR_COL_B.
-#define BM_LCDC_LAUSCCR_ACUR_COL_B (0x000000FFU) //!< Bit mask for LCDC_LAUSCCR_ACUR_COL_B.
-#define BS_LCDC_LAUSCCR_ACUR_COL_B (8U)    //!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_B.
+/*@{*/
+#define BP_LCDC_LAUSCCR_ACUR_COL_B (0U)    /*!< Bit position for LCDC_LAUSCCR_ACUR_COL_B. */
+#define BM_LCDC_LAUSCCR_ACUR_COL_B (0x000000FFU) /*!< Bit mask for LCDC_LAUSCCR_ACUR_COL_B. */
+#define BS_LCDC_LAUSCCR_ACUR_COL_B (8U)    /*!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_B. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_B field.
-#define BR_LCDC_LAUSCCR_ACUR_COL_B (HW_LCDC_LAUSCCR.B.ACUR_COL_B)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_B field. */
+#define BR_LCDC_LAUSCCR_ACUR_COL_B(x) (HW_LCDC_LAUSCCR(x).B.ACUR_COL_B)
 
-//! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_B.
-#define BF_LCDC_LAUSCCR_ACUR_COL_B(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCCR_ACUR_COL_B), uint32_t) & BM_LCDC_LAUSCCR_ACUR_COL_B)
+/*! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_B. */
+#define BF_LCDC_LAUSCCR_ACUR_COL_B(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCCR_ACUR_COL_B) & BM_LCDC_LAUSCCR_ACUR_COL_B)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACUR_COL_B field to a new value.
-#define BW_LCDC_LAUSCCR_ACUR_COL_B(v) (HW_LCDC_LAUSCCR_WR((HW_LCDC_LAUSCCR_RD() & ~BM_LCDC_LAUSCCR_ACUR_COL_B) | BF_LCDC_LAUSCCR_ACUR_COL_B(v)))
-#endif
-//@}
+/*! @brief Set the ACUR_COL_B field to a new value. */
+#define BW_LCDC_LAUSCCR_ACUR_COL_B(x, v) (HW_LCDC_LAUSCCR_WR(x, (HW_LCDC_LAUSCCR_RD(x) & ~BM_LCDC_LAUSCCR_ACUR_COL_B) | BF_LCDC_LAUSCCR_ACUR_COL_B(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LAUSCCR, field ACUR_COL_G[15:8] (RW)
  *
  * Defines the green component of cursor color in color mode (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCCR_ACUR_COL_G (8U)    //!< Bit position for LCDC_LAUSCCR_ACUR_COL_G.
-#define BM_LCDC_LAUSCCR_ACUR_COL_G (0x0000FF00U) //!< Bit mask for LCDC_LAUSCCR_ACUR_COL_G.
-#define BS_LCDC_LAUSCCR_ACUR_COL_G (8U)    //!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_G.
+/*@{*/
+#define BP_LCDC_LAUSCCR_ACUR_COL_G (8U)    /*!< Bit position for LCDC_LAUSCCR_ACUR_COL_G. */
+#define BM_LCDC_LAUSCCR_ACUR_COL_G (0x0000FF00U) /*!< Bit mask for LCDC_LAUSCCR_ACUR_COL_G. */
+#define BS_LCDC_LAUSCCR_ACUR_COL_G (8U)    /*!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_G. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_G field.
-#define BR_LCDC_LAUSCCR_ACUR_COL_G (HW_LCDC_LAUSCCR.B.ACUR_COL_G)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_G field. */
+#define BR_LCDC_LAUSCCR_ACUR_COL_G(x) (HW_LCDC_LAUSCCR(x).B.ACUR_COL_G)
 
-//! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_G.
-#define BF_LCDC_LAUSCCR_ACUR_COL_G(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCCR_ACUR_COL_G), uint32_t) & BM_LCDC_LAUSCCR_ACUR_COL_G)
+/*! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_G. */
+#define BF_LCDC_LAUSCCR_ACUR_COL_G(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCCR_ACUR_COL_G) & BM_LCDC_LAUSCCR_ACUR_COL_G)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACUR_COL_G field to a new value.
-#define BW_LCDC_LAUSCCR_ACUR_COL_G(v) (HW_LCDC_LAUSCCR_WR((HW_LCDC_LAUSCCR_RD() & ~BM_LCDC_LAUSCCR_ACUR_COL_G) | BF_LCDC_LAUSCCR_ACUR_COL_G(v)))
-#endif
-//@}
+/*! @brief Set the ACUR_COL_G field to a new value. */
+#define BW_LCDC_LAUSCCR_ACUR_COL_G(x, v) (HW_LCDC_LAUSCCR_WR(x, (HW_LCDC_LAUSCCR_RD(x) & ~BM_LCDC_LAUSCCR_ACUR_COL_G) | BF_LCDC_LAUSCCR_ACUR_COL_G(v)))
+/*@}*/
 
 /*!
  * @name Register LCDC_LAUSCCR, field ACUR_COL_R[23:16] (RW)
  *
  * Defines the red component of cursor color in color mode (AUS mode only).
  */
-//@{
-#define BP_LCDC_LAUSCCR_ACUR_COL_R (16U)   //!< Bit position for LCDC_LAUSCCR_ACUR_COL_R.
-#define BM_LCDC_LAUSCCR_ACUR_COL_R (0x00FF0000U) //!< Bit mask for LCDC_LAUSCCR_ACUR_COL_R.
-#define BS_LCDC_LAUSCCR_ACUR_COL_R (8U)    //!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_R.
+/*@{*/
+#define BP_LCDC_LAUSCCR_ACUR_COL_R (16U)   /*!< Bit position for LCDC_LAUSCCR_ACUR_COL_R. */
+#define BM_LCDC_LAUSCCR_ACUR_COL_R (0x00FF0000U) /*!< Bit mask for LCDC_LAUSCCR_ACUR_COL_R. */
+#define BS_LCDC_LAUSCCR_ACUR_COL_R (8U)    /*!< Bit field size in bits for LCDC_LAUSCCR_ACUR_COL_R. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_R field.
-#define BR_LCDC_LAUSCCR_ACUR_COL_R (HW_LCDC_LAUSCCR.B.ACUR_COL_R)
-#endif
+/*! @brief Read current value of the LCDC_LAUSCCR_ACUR_COL_R field. */
+#define BR_LCDC_LAUSCCR_ACUR_COL_R(x) (HW_LCDC_LAUSCCR(x).B.ACUR_COL_R)
 
-//! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_R.
-#define BF_LCDC_LAUSCCR_ACUR_COL_R(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LCDC_LAUSCCR_ACUR_COL_R), uint32_t) & BM_LCDC_LAUSCCR_ACUR_COL_R)
+/*! @brief Format value for bitfield LCDC_LAUSCCR_ACUR_COL_R. */
+#define BF_LCDC_LAUSCCR_ACUR_COL_R(v) ((uint32_t)((uint32_t)(v) << BP_LCDC_LAUSCCR_ACUR_COL_R) & BM_LCDC_LAUSCCR_ACUR_COL_R)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ACUR_COL_R field to a new value.
-#define BW_LCDC_LAUSCCR_ACUR_COL_R(v) (HW_LCDC_LAUSCCR_WR((HW_LCDC_LAUSCCR_RD() & ~BM_LCDC_LAUSCCR_ACUR_COL_R) | BF_LCDC_LAUSCCR_ACUR_COL_R(v)))
-#endif
-//@}
+/*! @brief Set the ACUR_COL_R field to a new value. */
+#define BW_LCDC_LAUSCCR_ACUR_COL_R(x, v) (HW_LCDC_LAUSCCR_WR(x, (HW_LCDC_LAUSCCR_RD(x) & ~BM_LCDC_LAUSCCR_ACUR_COL_R) | BF_LCDC_LAUSCCR_ACUR_COL_R(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_lcdc_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_lcdc_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All LCDC module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_lcdc
 {
-    __IO hw_lcdc_lssar_t LSSAR;            //!< [0x0] LCDC screen start address register
-    __IO hw_lcdc_lsr_t LSR;                //!< [0x4] LCDC size register
-    __IO hw_lcdc_lvpwr_t LVPWR;            //!< [0x8] LCDC virtual page width register
-    __IO hw_lcdc_lcpr_t LCPR;              //!< [0xC] LCDC cursor position register
-    __IO hw_lcdc_lcwhb_t LCWHB;            //!< [0x10] LCDC cursor width, height, and blink register
-    __IO hw_lcdc_lccmr_t LCCMR;            //!< [0x14] LCDC color cursor mapping register
-    __IO hw_lcdc_lpcr_t LPCR;              //!< [0x18] LCDC panel configuration register
-    __IO hw_lcdc_lhcr_t LHCR;              //!< [0x1C] LCDC horizontal configuration register
-    __IO hw_lcdc_lvcr_t LVCR;              //!< [0x20] LCDC vertical configuration register
-    __IO hw_lcdc_lpor_t LPOR;              //!< [0x24] LCDC panning offset register
+    __IO hw_lcdc_lssar_t LSSAR;            /*!< [0x0] LCDC screen start address register */
+    __IO hw_lcdc_lsr_t LSR;                /*!< [0x4] LCDC size register */
+    __IO hw_lcdc_lvpwr_t LVPWR;            /*!< [0x8] LCDC virtual page width register */
+    __IO hw_lcdc_lcpr_t LCPR;              /*!< [0xC] LCDC cursor position register */
+    __IO hw_lcdc_lcwhb_t LCWHB;            /*!< [0x10] LCDC cursor width, height, and blink register */
+    __IO hw_lcdc_lccmr_t LCCMR;            /*!< [0x14] LCDC color cursor mapping register */
+    __IO hw_lcdc_lpcr_t LPCR;              /*!< [0x18] LCDC panel configuration register */
+    __IO hw_lcdc_lhcr_t LHCR;              /*!< [0x1C] LCDC horizontal configuration register */
+    __IO hw_lcdc_lvcr_t LVCR;              /*!< [0x20] LCDC vertical configuration register */
+    __IO hw_lcdc_lpor_t LPOR;              /*!< [0x24] LCDC panning offset register */
     uint8_t _reserved0[4];
-    __IO hw_lcdc_lpccr_t LPCCR;            //!< [0x2C] LCDC PWM contrast control register
-    __IO hw_lcdc_ldcr_t LDCR;              //!< [0x30] LCDC DMA control register
-    __IO hw_lcdc_lrmcr_t LRMCR;            //!< [0x34] LCDC refresh mode control register
-    __IO hw_lcdc_licr_t LICR;              //!< [0x38] LCDC interrupt configuration register
-    __IO hw_lcdc_lier_t LIER;              //!< [0x3C] LCDC interrupt enable register
-    __I hw_lcdc_lisr_t LISR;               //!< [0x40] LCDC interrupt status register
+    __IO hw_lcdc_lpccr_t LPCCR;            /*!< [0x2C] LCDC PWM contrast control register */
+    __IO hw_lcdc_ldcr_t LDCR;              /*!< [0x30] LCDC DMA control register */
+    __IO hw_lcdc_lrmcr_t LRMCR;            /*!< [0x34] LCDC refresh mode control register */
+    __IO hw_lcdc_licr_t LICR;              /*!< [0x38] LCDC interrupt configuration register */
+    __IO hw_lcdc_lier_t LIER;              /*!< [0x3C] LCDC interrupt enable register */
+    __I hw_lcdc_lisr_t LISR;               /*!< [0x40] LCDC interrupt status register */
     uint8_t _reserved1[12];
-    __IO hw_lcdc_lgwsar_t LGWSAR;          //!< [0x50] LCDC graphic window start address register
-    __IO hw_lcdc_lgwsr_t LGWSR;            //!< [0x54] LCDC graphic window size register
-    __IO hw_lcdc_lgwvpwr_t LGWVPWR;        //!< [0x58] LCDC graphic window virtual page width register
-    __IO hw_lcdc_lgwpor_t LGWPOR;          //!< [0x5C] LCDC graphic window panning offset register
-    __IO hw_lcdc_lgwpr_t LGWPR;            //!< [0x60] LCDC graphic window position register
-    __IO hw_lcdc_lgwcr_t LGWCR;            //!< [0x64] LCDC graphic window control register
-    __IO hw_lcdc_lgwdcr_t LGWDCR;          //!< [0x68] LCDC graphic window DMA control register
+    __IO hw_lcdc_lgwsar_t LGWSAR;          /*!< [0x50] LCDC graphic window start address register */
+    __IO hw_lcdc_lgwsr_t LGWSR;            /*!< [0x54] LCDC graphic window size register */
+    __IO hw_lcdc_lgwvpwr_t LGWVPWR;        /*!< [0x58] LCDC graphic window virtual page width register */
+    __IO hw_lcdc_lgwpor_t LGWPOR;          /*!< [0x5C] LCDC graphic window panning offset register */
+    __IO hw_lcdc_lgwpr_t LGWPR;            /*!< [0x60] LCDC graphic window position register */
+    __IO hw_lcdc_lgwcr_t LGWCR;            /*!< [0x64] LCDC graphic window control register */
+    __IO hw_lcdc_lgwdcr_t LGWDCR;          /*!< [0x68] LCDC graphic window DMA control register */
     uint8_t _reserved2[20];
-    __IO hw_lcdc_lauscr_t LAUSCR;          //!< [0x80] LCDC AUS mode control register
-    __IO hw_lcdc_lausccr_t LAUSCCR;        //!< [0x84] LCDC AUS mode cursor control register
+    __IO hw_lcdc_lauscr_t LAUSCR;          /*!< [0x80] LCDC AUS mode control register */
+    __IO hw_lcdc_lausccr_t LAUSCCR;        /*!< [0x84] LCDC AUS mode cursor control register */
 } hw_lcdc_t;
 #pragma pack()
 
-//! @brief Macro to access all LCDC registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_LCDC</code>.
-#define HW_LCDC        (*(hw_lcdc_t *) REGS_LCDC_BASE)
-#endif
+/*! @brief Macro to access all LCDC registers. */
+/*! @param x LCDC module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_LCDC(LCDC_BASE)</code>. */
+#define HW_LCDC(x)     (*(hw_lcdc_t *)(x))
 
-#endif // __HW_LCDC_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_LCDC_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

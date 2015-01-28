@@ -30,7 +30,8 @@
 
 #include "SSD_FTFx_Common.h"
 #include "flash/flash.h"
-#include "fsl_platform_common.h"
+#include "fsl_platform_status.h"
+#include "fsl_platform_types.h"
 #include "device/fsl_device_registers.h"
 
 ////////////////////////////////////////////////////////////////////////////////

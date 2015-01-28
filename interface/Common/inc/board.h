@@ -16,7 +16,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 typedef struct {
     const uint8_t id[4];

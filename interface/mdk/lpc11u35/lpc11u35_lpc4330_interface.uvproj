@@ -128,6 +128,7 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -139,9 +140,11 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -353,11 +356,13 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
+            <uC99>0</uC99>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--no_inline</MiscControls>
               <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E, NO_SEMIHOST</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NXP\DBG_LPC4330;..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35;..\..\interface\cmsis;..\..\interface\cmsis\TARGET_NXP\TARGET_LPC11UXX;..\..\..\shared\rtos</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NXP\DBG_LPC4330;..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35;..\..\interface\cmsis;..\..\interface\cmsis\TARGET_NXP\TARGET_LPC11UXX;..\..\..\shared\rtos;..\..\..\shared\cmsis</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -369,6 +374,7 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -385,6 +391,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
+            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35_LPC4330.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -471,7 +478,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -519,6 +526,8 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -538,6 +547,54 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\virtual_fs.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--gnu; --c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -585,9 +642,9 @@
               <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC4330\target_reset.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC4330\target_flash.h</FilePath>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -625,6 +682,8 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -641,6 +700,7 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -877,6 +937,7 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -888,9 +949,11 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1090,8 +1153,8 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
-            <oTime>1</oTime>
+            <Optim>1</Optim>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
             <Strict>0</Strict>
@@ -1102,11 +1165,13 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
+            <uC99>0</uC99>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>TARGET_LPC11U35, __RTX, DBG_LPC4330, BOARD_BAMBINO_210E</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NXP\DBG_LPC4330;..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35;..\..\interface\cmsis;..\..\interface\cmsis\TARGET_NXP\TARGET_LPC11UXX;..\..\..\shared\rtos</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NXP\DBG_LPC4330;..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35;..\..\interface\cmsis;..\..\interface\cmsis\TARGET_NXP\TARGET_LPC11UXX;..\..\..\shared\rtos;..\..\..\shared\cmsis</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1118,6 +1183,7 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>NO_CRP</Define>
@@ -1134,6 +1200,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x1FFFE000</DataAddressRange>
+            <pXoBase></pXoBase>
             <ScatterFile>..\..\..\shared\cmsis\TARGET_NXP\TARGET_LPC11UXX\TOOLCHAIN_ARM_STD\LPC11U35_LPC4330_bootloader.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -1220,7 +1287,7 @@
             <File>
               <FileName>usb_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Common\src\usb_config.c</FilePath>
+              <FilePath>..\..\interface\hal\TARGET_NXP\TARGET_LPC11U35\usb_config.c</FilePath>
             </File>
             <File>
               <FileName>usbd_user_cdc_acm.c</FileName>
@@ -1268,6 +1335,8 @@
                     <wLevel>0</wLevel>
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <VariousControls>
                       <MiscControls>--c99</MiscControls>
                       <Define></Define>
@@ -1287,6 +1356,54 @@
               <FileName>mbed_htm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\inc\mbed_htm.h</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\virtual_fs.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--gnu; --c99</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -1334,9 +1451,9 @@
               <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC4330\target_reset.c</FilePath>
             </File>
             <File>
-              <FileName>target_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\target\hal\DBG_NXP\DBG_LPC4330\target_flash.h</FilePath>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\target\hal\DBG_NXP\target_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1374,6 +1491,8 @@
                 <wLevel>0</wLevel>
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1390,6 +1509,7 @@
                 <SwStkChk>2</SwStkChk>
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>

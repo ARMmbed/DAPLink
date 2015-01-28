@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
-#include <rl_usb.h>
-#include <..\..\RL\USB\INC\usb.h>
+#include "RTL.h"
+#include "rl_usb.h"
+#include "..\..\RL\USB\INC\usb.h"
 
 #pragma thumb
 #pragma O3
@@ -1169,6 +1169,8 @@ void usbd_class_init     (void)                                       {
 #endif
                                                                       }
 
+U64 stk_usb_msc_task[400 / 8];
+
 void USBD_RTX_TaskInit (void) {
 
 #ifdef __RTX
@@ -1183,7 +1185,11 @@ void USBD_RTX_TaskInit (void) {
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
-      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
+      if (USBD_RTX_P_EP[i] != USBD_RTX_MSC_EP_BULK_Event) {
+        USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
+      } else {
+        USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, stk_usb_msc_task, sizeof(stk_usb_msc_task));
+      }
     }
   }
 
@@ -1270,7 +1276,7 @@ const U8 USBD_DeviceDescriptor[] = {
   USB_DEVICE_DESC_SIZE,                 /* bLength */
   USB_DEVICE_DESCRIPTOR_TYPE,           /* bDescriptorType */
 #if ((USBD_HS_ENABLE) || (USBD_MULTI_IF))
-  WBVAL(0x0110), /* 2.00 */             /* bcdUSB */
+  WBVAL(0x0200), /* 2.00 */             /* bcdUSB */
 #else
   WBVAL(0x0110), /* 1.10 */             /* bcdUSB */
 #endif

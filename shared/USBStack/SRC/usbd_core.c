@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
-#include <rl_usb.h>
-#include <string.h>
+#include "RTL.h"
+#include "rl_usb.h"
+#include "string.h"
 #include "usb_for_lib.h"
 #include "version.h"
 
@@ -55,8 +55,11 @@ __RL_USBD_VER   EQU     0x470
  */
 
 void usbd_init (void) {
+#if defined(TARGET_ATSAM3U2C)  
+  USBD_HighSpeed     = __TRUE;
+#elif defined(TARGET_LPC11U35) || defined(TARGET_MK20DX)
   USBD_HighSpeed     = __FALSE;
-
+#endif
   usbd_class_init();
   USBD_RTX_TaskInit();
 

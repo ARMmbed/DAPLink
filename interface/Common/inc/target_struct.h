@@ -16,7 +16,11 @@
 #ifndef TARGET_H
 #define TARGET_H
 
-#include <stdint.h>
+#include "stdint.h"
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 typedef struct {
     uint32_t breakpoint;
@@ -43,6 +47,9 @@ typedef struct {
 
 } TARGET_FLASH;
 
+//! @brief Details about the flash algorithm.
+extern const TARGET_FLASH flash;
+
 typedef enum {
     RESET_HOLD,              // Hold target in reset
     RESET_PROGRAM,           // Reset target and setup for flash programming.
@@ -51,5 +58,9 @@ typedef enum {
     NO_DEBUG,                // Disable debug on running target
     DEBUG                    // Enable debug on running target
 } TARGET_RESET_STATE;
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

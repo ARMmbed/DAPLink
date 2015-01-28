@@ -15,8 +15,8 @@
  */
 #ifdef SEMIHOST
 
-#include <RTL.h>
-#include <string.h>
+#include "RTL.h"
+#include "string.h"
 
 #include "tasks.h"
 #include "main.h"

@@ -21,7 +21,8 @@
 #ifndef __HW_LMEM_REGISTERS_H__
 #define __HW_LMEM_REGISTERS_H__
 
-#include "regs.h"
+#include "MK70F12.h"
+#include "fsl_bitband.h"
 
 /*
  * MK70F12 LMEM
@@ -43,19 +44,12 @@
  * - hw_lmem_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_LMEM_BASE
-#define HW_LMEM_INSTANCE_COUNT (1U) //!< Number of instances of the LMEM module.
-#define REGS_LMEM_BASE (0xE0082000U) //!< Base address for LMEM.
-#endif
-//@}
+#define HW_LMEM_INSTANCE_COUNT (1U) /*!< Number of instances of the LMEM module. */
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PCCCR - Cache control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PCCCR - Cache control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PCCCR - Cache control register (RW)
  *
@@ -66,34 +60,31 @@ typedef union _hw_lmem_pcccr
     uint32_t U;
     struct _hw_lmem_pcccr_bitfields
     {
-        uint32_t ENCACHE : 1;          //!< [0] Cache enable
-        uint32_t ENWRBUF : 1;          //!< [1] Enable Write Buffer
-        uint32_t RESERVED0 : 22;       //!< [23:2]
-        uint32_t INVW0 : 1;            //!< [24] Invalidate Way 0
-        uint32_t PUSHW0 : 1;           //!< [25] Push Way 0
-        uint32_t INVW1 : 1;            //!< [26] Invalidate Way 1
-        uint32_t PUSHW1 : 1;           //!< [27] Push Way 1
-        uint32_t RESERVED1 : 3;        //!< [30:28]
-        uint32_t GO : 1;               //!< [31] Initiate Cache Command
+        uint32_t ENCACHE : 1;          /*!< [0] Cache enable */
+        uint32_t ENWRBUF : 1;          /*!< [1] Enable Write Buffer */
+        uint32_t RESERVED0 : 22;       /*!< [23:2]  */
+        uint32_t INVW0 : 1;            /*!< [24] Invalidate Way 0 */
+        uint32_t PUSHW0 : 1;           /*!< [25] Push Way 0 */
+        uint32_t INVW1 : 1;            /*!< [26] Invalidate Way 1 */
+        uint32_t PUSHW1 : 1;           /*!< [27] Push Way 1 */
+        uint32_t RESERVED1 : 3;        /*!< [30:28]  */
+        uint32_t GO : 1;               /*!< [31] Initiate Cache Command */
     } B;
 } hw_lmem_pcccr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PCCCR register
  */
-//@{
-#define HW_LMEM_PCCCR_ADDR       (REGS_LMEM_BASE + 0x0U)
+/*@{*/
+#define HW_LMEM_PCCCR_ADDR(x)    ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PCCCR            (*(__IO hw_lmem_pcccr_t *) HW_LMEM_PCCCR_ADDR)
-#define HW_LMEM_PCCCR_RD()       (HW_LMEM_PCCCR.U)
-#define HW_LMEM_PCCCR_WR(v)      (HW_LMEM_PCCCR.U = (v))
-#define HW_LMEM_PCCCR_SET(v)     (HW_LMEM_PCCCR_WR(HW_LMEM_PCCCR_RD() |  (v)))
-#define HW_LMEM_PCCCR_CLR(v)     (HW_LMEM_PCCCR_WR(HW_LMEM_PCCCR_RD() & ~(v)))
-#define HW_LMEM_PCCCR_TOG(v)     (HW_LMEM_PCCCR_WR(HW_LMEM_PCCCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PCCCR(x)         (*(__IO hw_lmem_pcccr_t *) HW_LMEM_PCCCR_ADDR(x))
+#define HW_LMEM_PCCCR_RD(x)      (HW_LMEM_PCCCR(x).U)
+#define HW_LMEM_PCCCR_WR(x, v)   (HW_LMEM_PCCCR(x).U = (v))
+#define HW_LMEM_PCCCR_SET(x, v)  (HW_LMEM_PCCCR_WR(x, HW_LMEM_PCCCR_RD(x) |  (v)))
+#define HW_LMEM_PCCCR_CLR(x, v)  (HW_LMEM_PCCCR_WR(x, HW_LMEM_PCCCR_RD(x) & ~(v)))
+#define HW_LMEM_PCCCR_TOG(x, v)  (HW_LMEM_PCCCR_WR(x, HW_LMEM_PCCCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PCCCR bitfields
@@ -106,24 +97,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - Cache disabled
  * - 1 - Cache enabled
  */
-//@{
-#define BP_LMEM_PCCCR_ENCACHE (0U)         //!< Bit position for LMEM_PCCCR_ENCACHE.
-#define BM_LMEM_PCCCR_ENCACHE (0x00000001U) //!< Bit mask for LMEM_PCCCR_ENCACHE.
-#define BS_LMEM_PCCCR_ENCACHE (1U)         //!< Bit field size in bits for LMEM_PCCCR_ENCACHE.
+/*@{*/
+#define BP_LMEM_PCCCR_ENCACHE (0U)         /*!< Bit position for LMEM_PCCCR_ENCACHE. */
+#define BM_LMEM_PCCCR_ENCACHE (0x00000001U) /*!< Bit mask for LMEM_PCCCR_ENCACHE. */
+#define BS_LMEM_PCCCR_ENCACHE (1U)         /*!< Bit field size in bits for LMEM_PCCCR_ENCACHE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_ENCACHE field.
-#define BR_LMEM_PCCCR_ENCACHE (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_ENCACHE))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_ENCACHE field. */
+#define BR_LMEM_PCCCR_ENCACHE(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_ENCACHE))
 
-//! @brief Format value for bitfield LMEM_PCCCR_ENCACHE.
-#define BF_LMEM_PCCCR_ENCACHE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_ENCACHE), uint32_t) & BM_LMEM_PCCCR_ENCACHE)
+/*! @brief Format value for bitfield LMEM_PCCCR_ENCACHE. */
+#define BF_LMEM_PCCCR_ENCACHE(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_ENCACHE) & BM_LMEM_PCCCR_ENCACHE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ENCACHE field to a new value.
-#define BW_LMEM_PCCCR_ENCACHE(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_ENCACHE) = (v))
-#endif
-//@}
+/*! @brief Set the ENCACHE field to a new value. */
+#define BW_LMEM_PCCCR_ENCACHE(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_ENCACHE) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field ENWRBUF[1] (RW)
@@ -132,24 +119,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - Write buffer disabled
  * - 1 - Write buffer enabled
  */
-//@{
-#define BP_LMEM_PCCCR_ENWRBUF (1U)         //!< Bit position for LMEM_PCCCR_ENWRBUF.
-#define BM_LMEM_PCCCR_ENWRBUF (0x00000002U) //!< Bit mask for LMEM_PCCCR_ENWRBUF.
-#define BS_LMEM_PCCCR_ENWRBUF (1U)         //!< Bit field size in bits for LMEM_PCCCR_ENWRBUF.
+/*@{*/
+#define BP_LMEM_PCCCR_ENWRBUF (1U)         /*!< Bit position for LMEM_PCCCR_ENWRBUF. */
+#define BM_LMEM_PCCCR_ENWRBUF (0x00000002U) /*!< Bit mask for LMEM_PCCCR_ENWRBUF. */
+#define BS_LMEM_PCCCR_ENWRBUF (1U)         /*!< Bit field size in bits for LMEM_PCCCR_ENWRBUF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_ENWRBUF field.
-#define BR_LMEM_PCCCR_ENWRBUF (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_ENWRBUF))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_ENWRBUF field. */
+#define BR_LMEM_PCCCR_ENWRBUF(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_ENWRBUF))
 
-//! @brief Format value for bitfield LMEM_PCCCR_ENWRBUF.
-#define BF_LMEM_PCCCR_ENWRBUF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_ENWRBUF), uint32_t) & BM_LMEM_PCCCR_ENWRBUF)
+/*! @brief Format value for bitfield LMEM_PCCCR_ENWRBUF. */
+#define BF_LMEM_PCCCR_ENWRBUF(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_ENWRBUF) & BM_LMEM_PCCCR_ENWRBUF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ENWRBUF field to a new value.
-#define BW_LMEM_PCCCR_ENWRBUF(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_ENWRBUF) = (v))
-#endif
-//@}
+/*! @brief Set the ENWRBUF field to a new value. */
+#define BW_LMEM_PCCCR_ENWRBUF(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_ENWRBUF) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field INVW0[24] (RW)
@@ -161,24 +144,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, invalidate all lines in way 0.
  */
-//@{
-#define BP_LMEM_PCCCR_INVW0  (24U)         //!< Bit position for LMEM_PCCCR_INVW0.
-#define BM_LMEM_PCCCR_INVW0  (0x01000000U) //!< Bit mask for LMEM_PCCCR_INVW0.
-#define BS_LMEM_PCCCR_INVW0  (1U)          //!< Bit field size in bits for LMEM_PCCCR_INVW0.
+/*@{*/
+#define BP_LMEM_PCCCR_INVW0  (24U)         /*!< Bit position for LMEM_PCCCR_INVW0. */
+#define BM_LMEM_PCCCR_INVW0  (0x01000000U) /*!< Bit mask for LMEM_PCCCR_INVW0. */
+#define BS_LMEM_PCCCR_INVW0  (1U)          /*!< Bit field size in bits for LMEM_PCCCR_INVW0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_INVW0 field.
-#define BR_LMEM_PCCCR_INVW0  (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_INVW0))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_INVW0 field. */
+#define BR_LMEM_PCCCR_INVW0(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_INVW0))
 
-//! @brief Format value for bitfield LMEM_PCCCR_INVW0.
-#define BF_LMEM_PCCCR_INVW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_INVW0), uint32_t) & BM_LMEM_PCCCR_INVW0)
+/*! @brief Format value for bitfield LMEM_PCCCR_INVW0. */
+#define BF_LMEM_PCCCR_INVW0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_INVW0) & BM_LMEM_PCCCR_INVW0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INVW0 field to a new value.
-#define BW_LMEM_PCCCR_INVW0(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_INVW0) = (v))
-#endif
-//@}
+/*! @brief Set the INVW0 field to a new value. */
+#define BW_LMEM_PCCCR_INVW0(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_INVW0) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field PUSHW0[25] (RW)
@@ -187,24 +166,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, push all modified lines in way 0
  */
-//@{
-#define BP_LMEM_PCCCR_PUSHW0 (25U)         //!< Bit position for LMEM_PCCCR_PUSHW0.
-#define BM_LMEM_PCCCR_PUSHW0 (0x02000000U) //!< Bit mask for LMEM_PCCCR_PUSHW0.
-#define BS_LMEM_PCCCR_PUSHW0 (1U)          //!< Bit field size in bits for LMEM_PCCCR_PUSHW0.
+/*@{*/
+#define BP_LMEM_PCCCR_PUSHW0 (25U)         /*!< Bit position for LMEM_PCCCR_PUSHW0. */
+#define BM_LMEM_PCCCR_PUSHW0 (0x02000000U) /*!< Bit mask for LMEM_PCCCR_PUSHW0. */
+#define BS_LMEM_PCCCR_PUSHW0 (1U)          /*!< Bit field size in bits for LMEM_PCCCR_PUSHW0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_PUSHW0 field.
-#define BR_LMEM_PCCCR_PUSHW0 (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_PUSHW0))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_PUSHW0 field. */
+#define BR_LMEM_PCCCR_PUSHW0(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_PUSHW0))
 
-//! @brief Format value for bitfield LMEM_PCCCR_PUSHW0.
-#define BF_LMEM_PCCCR_PUSHW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_PUSHW0), uint32_t) & BM_LMEM_PCCCR_PUSHW0)
+/*! @brief Format value for bitfield LMEM_PCCCR_PUSHW0. */
+#define BF_LMEM_PCCCR_PUSHW0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_PUSHW0) & BM_LMEM_PCCCR_PUSHW0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUSHW0 field to a new value.
-#define BW_LMEM_PCCCR_PUSHW0(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_PUSHW0) = (v))
-#endif
-//@}
+/*! @brief Set the PUSHW0 field to a new value. */
+#define BW_LMEM_PCCCR_PUSHW0(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_PUSHW0) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field INVW1[26] (RW)
@@ -216,24 +191,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, invalidate all lines in way 1
  */
-//@{
-#define BP_LMEM_PCCCR_INVW1  (26U)         //!< Bit position for LMEM_PCCCR_INVW1.
-#define BM_LMEM_PCCCR_INVW1  (0x04000000U) //!< Bit mask for LMEM_PCCCR_INVW1.
-#define BS_LMEM_PCCCR_INVW1  (1U)          //!< Bit field size in bits for LMEM_PCCCR_INVW1.
+/*@{*/
+#define BP_LMEM_PCCCR_INVW1  (26U)         /*!< Bit position for LMEM_PCCCR_INVW1. */
+#define BM_LMEM_PCCCR_INVW1  (0x04000000U) /*!< Bit mask for LMEM_PCCCR_INVW1. */
+#define BS_LMEM_PCCCR_INVW1  (1U)          /*!< Bit field size in bits for LMEM_PCCCR_INVW1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_INVW1 field.
-#define BR_LMEM_PCCCR_INVW1  (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_INVW1))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_INVW1 field. */
+#define BR_LMEM_PCCCR_INVW1(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_INVW1))
 
-//! @brief Format value for bitfield LMEM_PCCCR_INVW1.
-#define BF_LMEM_PCCCR_INVW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_INVW1), uint32_t) & BM_LMEM_PCCCR_INVW1)
+/*! @brief Format value for bitfield LMEM_PCCCR_INVW1. */
+#define BF_LMEM_PCCCR_INVW1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_INVW1) & BM_LMEM_PCCCR_INVW1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INVW1 field to a new value.
-#define BW_LMEM_PCCCR_INVW1(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_INVW1) = (v))
-#endif
-//@}
+/*! @brief Set the INVW1 field to a new value. */
+#define BW_LMEM_PCCCR_INVW1(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_INVW1) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field PUSHW1[27] (RW)
@@ -242,24 +213,20 @@ typedef union _hw_lmem_pcccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, push all modified lines in way 1
  */
-//@{
-#define BP_LMEM_PCCCR_PUSHW1 (27U)         //!< Bit position for LMEM_PCCCR_PUSHW1.
-#define BM_LMEM_PCCCR_PUSHW1 (0x08000000U) //!< Bit mask for LMEM_PCCCR_PUSHW1.
-#define BS_LMEM_PCCCR_PUSHW1 (1U)          //!< Bit field size in bits for LMEM_PCCCR_PUSHW1.
+/*@{*/
+#define BP_LMEM_PCCCR_PUSHW1 (27U)         /*!< Bit position for LMEM_PCCCR_PUSHW1. */
+#define BM_LMEM_PCCCR_PUSHW1 (0x08000000U) /*!< Bit mask for LMEM_PCCCR_PUSHW1. */
+#define BS_LMEM_PCCCR_PUSHW1 (1U)          /*!< Bit field size in bits for LMEM_PCCCR_PUSHW1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_PUSHW1 field.
-#define BR_LMEM_PCCCR_PUSHW1 (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_PUSHW1))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_PUSHW1 field. */
+#define BR_LMEM_PCCCR_PUSHW1(x) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_PUSHW1))
 
-//! @brief Format value for bitfield LMEM_PCCCR_PUSHW1.
-#define BF_LMEM_PCCCR_PUSHW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_PUSHW1), uint32_t) & BM_LMEM_PCCCR_PUSHW1)
+/*! @brief Format value for bitfield LMEM_PCCCR_PUSHW1. */
+#define BF_LMEM_PCCCR_PUSHW1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_PUSHW1) & BM_LMEM_PCCCR_PUSHW1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUSHW1 field to a new value.
-#define BW_LMEM_PCCCR_PUSHW1(v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_PUSHW1) = (v))
-#endif
-//@}
+/*! @brief Set the PUSHW1 field to a new value. */
+#define BW_LMEM_PCCCR_PUSHW1(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_PUSHW1) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCCR, field GO[31] (RW)
@@ -273,30 +240,25 @@ typedef union _hw_lmem_pcccr
  * - 1 - Write: initiate command indicated by bits 27-24. Read: cache command
  *     active.
  */
-//@{
-#define BP_LMEM_PCCCR_GO     (31U)         //!< Bit position for LMEM_PCCCR_GO.
-#define BM_LMEM_PCCCR_GO     (0x80000000U) //!< Bit mask for LMEM_PCCCR_GO.
-#define BS_LMEM_PCCCR_GO     (1U)          //!< Bit field size in bits for LMEM_PCCCR_GO.
+/*@{*/
+#define BP_LMEM_PCCCR_GO     (31U)         /*!< Bit position for LMEM_PCCCR_GO. */
+#define BM_LMEM_PCCCR_GO     (0x80000000U) /*!< Bit mask for LMEM_PCCCR_GO. */
+#define BS_LMEM_PCCCR_GO     (1U)          /*!< Bit field size in bits for LMEM_PCCCR_GO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCR_GO field.
-#define BR_LMEM_PCCCR_GO     (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_GO))
-#endif
+/*! @brief Read current value of the LMEM_PCCCR_GO field. */
+#define BR_LMEM_PCCCR_GO(x)  (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_GO))
 
-//! @brief Format value for bitfield LMEM_PCCCR_GO.
-#define BF_LMEM_PCCCR_GO(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCR_GO), uint32_t) & BM_LMEM_PCCCR_GO)
+/*! @brief Format value for bitfield LMEM_PCCCR_GO. */
+#define BF_LMEM_PCCCR_GO(v)  ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCR_GO) & BM_LMEM_PCCCR_GO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GO field to a new value.
-#define BW_LMEM_PCCCR_GO(v)  (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR, BP_LMEM_PCCCR_GO) = (v))
-#endif
-//@}
+/*! @brief Set the GO field to a new value. */
+#define BW_LMEM_PCCCR_GO(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCCR_ADDR(x), BP_LMEM_PCCCR_GO) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PCCLCR - Cache line control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PCCLCR - Cache line control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PCCLCR - Cache line control register (RW)
  *
@@ -312,41 +274,38 @@ typedef union _hw_lmem_pcclcr
     uint32_t U;
     struct _hw_lmem_pcclcr_bitfields
     {
-        uint32_t LGO : 1;              //!< [0] Initiate Cache Line Command
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t CACHEADDR : 10;       //!< [11:2] Cache address
-        uint32_t RESERVED1 : 2;        //!< [13:12]
-        uint32_t WSEL : 1;             //!< [14] Way select
-        uint32_t RESERVED2 : 1;        //!< [15]
-        uint32_t TDSEL : 1;            //!< [16] Tag/Data Select
-        uint32_t RESERVED3 : 3;        //!< [19:17]
-        uint32_t LCIVB : 1;            //!< [20] Line Command Initial Valid Bit
-        uint32_t LCIMB : 1;            //!< [21] Line Command Initial Modified Bit
-        uint32_t LCWAY : 1;            //!< [22] Line Command Way
-        uint32_t RESERVED4 : 1;        //!< [23]
-        uint32_t LCMD : 2;             //!< [25:24] Line Command
-        uint32_t LADSEL : 1;           //!< [26] Line Address Select
-        uint32_t LACC : 1;             //!< [27] Line access type
-        uint32_t RESERVED5 : 4;        //!< [31:28]
+        uint32_t LGO : 1;              /*!< [0] Initiate Cache Line Command */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t CACHEADDR : 10;       /*!< [11:2] Cache address */
+        uint32_t RESERVED1 : 2;        /*!< [13:12]  */
+        uint32_t WSEL : 1;             /*!< [14] Way select */
+        uint32_t RESERVED2 : 1;        /*!< [15]  */
+        uint32_t TDSEL : 1;            /*!< [16] Tag/Data Select */
+        uint32_t RESERVED3 : 3;        /*!< [19:17]  */
+        uint32_t LCIVB : 1;            /*!< [20] Line Command Initial Valid Bit */
+        uint32_t LCIMB : 1;            /*!< [21] Line Command Initial Modified Bit */
+        uint32_t LCWAY : 1;            /*!< [22] Line Command Way */
+        uint32_t RESERVED4 : 1;        /*!< [23]  */
+        uint32_t LCMD : 2;             /*!< [25:24] Line Command */
+        uint32_t LADSEL : 1;           /*!< [26] Line Address Select */
+        uint32_t LACC : 1;             /*!< [27] Line access type */
+        uint32_t RESERVED5 : 4;        /*!< [31:28]  */
     } B;
 } hw_lmem_pcclcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PCCLCR register
  */
-//@{
-#define HW_LMEM_PCCLCR_ADDR      (REGS_LMEM_BASE + 0x4U)
+/*@{*/
+#define HW_LMEM_PCCLCR_ADDR(x)   ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PCCLCR           (*(__IO hw_lmem_pcclcr_t *) HW_LMEM_PCCLCR_ADDR)
-#define HW_LMEM_PCCLCR_RD()      (HW_LMEM_PCCLCR.U)
-#define HW_LMEM_PCCLCR_WR(v)     (HW_LMEM_PCCLCR.U = (v))
-#define HW_LMEM_PCCLCR_SET(v)    (HW_LMEM_PCCLCR_WR(HW_LMEM_PCCLCR_RD() |  (v)))
-#define HW_LMEM_PCCLCR_CLR(v)    (HW_LMEM_PCCLCR_WR(HW_LMEM_PCCLCR_RD() & ~(v)))
-#define HW_LMEM_PCCLCR_TOG(v)    (HW_LMEM_PCCLCR_WR(HW_LMEM_PCCLCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PCCLCR(x)        (*(__IO hw_lmem_pcclcr_t *) HW_LMEM_PCCLCR_ADDR(x))
+#define HW_LMEM_PCCLCR_RD(x)     (HW_LMEM_PCCLCR(x).U)
+#define HW_LMEM_PCCLCR_WR(x, v)  (HW_LMEM_PCCLCR(x).U = (v))
+#define HW_LMEM_PCCLCR_SET(x, v) (HW_LMEM_PCCLCR_WR(x, HW_LMEM_PCCLCR_RD(x) |  (v)))
+#define HW_LMEM_PCCLCR_CLR(x, v) (HW_LMEM_PCCLCR_WR(x, HW_LMEM_PCCLCR_RD(x) & ~(v)))
+#define HW_LMEM_PCCLCR_TOG(x, v) (HW_LMEM_PCCLCR_WR(x, HW_LMEM_PCCLCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PCCLCR bitfields
@@ -365,24 +324,20 @@ typedef union _hw_lmem_pcclcr
  * - 1 - Write: initiate line command indicated by bits 27-24. Read: line
  *     command active.
  */
-//@{
-#define BP_LMEM_PCCLCR_LGO   (0U)          //!< Bit position for LMEM_PCCLCR_LGO.
-#define BM_LMEM_PCCLCR_LGO   (0x00000001U) //!< Bit mask for LMEM_PCCLCR_LGO.
-#define BS_LMEM_PCCLCR_LGO   (1U)          //!< Bit field size in bits for LMEM_PCCLCR_LGO.
+/*@{*/
+#define BP_LMEM_PCCLCR_LGO   (0U)          /*!< Bit position for LMEM_PCCLCR_LGO. */
+#define BM_LMEM_PCCLCR_LGO   (0x00000001U) /*!< Bit mask for LMEM_PCCLCR_LGO. */
+#define BS_LMEM_PCCLCR_LGO   (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_LGO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LGO field.
-#define BR_LMEM_PCCLCR_LGO   (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LGO))
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_LGO field. */
+#define BR_LMEM_PCCLCR_LGO(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LGO))
 
-//! @brief Format value for bitfield LMEM_PCCLCR_LGO.
-#define BF_LMEM_PCCLCR_LGO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_LGO), uint32_t) & BM_LMEM_PCCLCR_LGO)
+/*! @brief Format value for bitfield LMEM_PCCLCR_LGO. */
+#define BF_LMEM_PCCLCR_LGO(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_LGO) & BM_LMEM_PCCLCR_LGO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LGO field to a new value.
-#define BW_LMEM_PCCLCR_LGO(v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LGO) = (v))
-#endif
-//@}
+/*! @brief Set the LGO field to a new value. */
+#define BW_LMEM_PCCLCR_LGO(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LGO) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field CACHEADDR[11:2] (RW)
@@ -390,24 +345,20 @@ typedef union _hw_lmem_pcclcr
  * CLCR[11:4] bits are used to access the tag arrays CLCR[11:2] bits are used to
  * access the data arrays
  */
-//@{
-#define BP_LMEM_PCCLCR_CACHEADDR (2U)      //!< Bit position for LMEM_PCCLCR_CACHEADDR.
-#define BM_LMEM_PCCLCR_CACHEADDR (0x00000FFCU) //!< Bit mask for LMEM_PCCLCR_CACHEADDR.
-#define BS_LMEM_PCCLCR_CACHEADDR (10U)     //!< Bit field size in bits for LMEM_PCCLCR_CACHEADDR.
+/*@{*/
+#define BP_LMEM_PCCLCR_CACHEADDR (2U)      /*!< Bit position for LMEM_PCCLCR_CACHEADDR. */
+#define BM_LMEM_PCCLCR_CACHEADDR (0x00000FFCU) /*!< Bit mask for LMEM_PCCLCR_CACHEADDR. */
+#define BS_LMEM_PCCLCR_CACHEADDR (10U)     /*!< Bit field size in bits for LMEM_PCCLCR_CACHEADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_CACHEADDR field.
-#define BR_LMEM_PCCLCR_CACHEADDR (HW_LMEM_PCCLCR.B.CACHEADDR)
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_CACHEADDR field. */
+#define BR_LMEM_PCCLCR_CACHEADDR(x) (HW_LMEM_PCCLCR(x).B.CACHEADDR)
 
-//! @brief Format value for bitfield LMEM_PCCLCR_CACHEADDR.
-#define BF_LMEM_PCCLCR_CACHEADDR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_CACHEADDR), uint32_t) & BM_LMEM_PCCLCR_CACHEADDR)
+/*! @brief Format value for bitfield LMEM_PCCLCR_CACHEADDR. */
+#define BF_LMEM_PCCLCR_CACHEADDR(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_CACHEADDR) & BM_LMEM_PCCLCR_CACHEADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CACHEADDR field to a new value.
-#define BW_LMEM_PCCLCR_CACHEADDR(v) (HW_LMEM_PCCLCR_WR((HW_LMEM_PCCLCR_RD() & ~BM_LMEM_PCCLCR_CACHEADDR) | BF_LMEM_PCCLCR_CACHEADDR(v)))
-#endif
-//@}
+/*! @brief Set the CACHEADDR field to a new value. */
+#define BW_LMEM_PCCLCR_CACHEADDR(x, v) (HW_LMEM_PCCLCR_WR(x, (HW_LMEM_PCCLCR_RD(x) & ~BM_LMEM_PCCLCR_CACHEADDR) | BF_LMEM_PCCLCR_CACHEADDR(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field WSEL[14] (RW)
@@ -418,24 +369,20 @@ typedef union _hw_lmem_pcclcr
  * - 0 - Way 0
  * - 1 - Way 1
  */
-//@{
-#define BP_LMEM_PCCLCR_WSEL  (14U)         //!< Bit position for LMEM_PCCLCR_WSEL.
-#define BM_LMEM_PCCLCR_WSEL  (0x00004000U) //!< Bit mask for LMEM_PCCLCR_WSEL.
-#define BS_LMEM_PCCLCR_WSEL  (1U)          //!< Bit field size in bits for LMEM_PCCLCR_WSEL.
+/*@{*/
+#define BP_LMEM_PCCLCR_WSEL  (14U)         /*!< Bit position for LMEM_PCCLCR_WSEL. */
+#define BM_LMEM_PCCLCR_WSEL  (0x00004000U) /*!< Bit mask for LMEM_PCCLCR_WSEL. */
+#define BS_LMEM_PCCLCR_WSEL  (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_WSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_WSEL field.
-#define BR_LMEM_PCCLCR_WSEL  (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_WSEL))
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_WSEL field. */
+#define BR_LMEM_PCCLCR_WSEL(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_WSEL))
 
-//! @brief Format value for bitfield LMEM_PCCLCR_WSEL.
-#define BF_LMEM_PCCLCR_WSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_WSEL), uint32_t) & BM_LMEM_PCCLCR_WSEL)
+/*! @brief Format value for bitfield LMEM_PCCLCR_WSEL. */
+#define BF_LMEM_PCCLCR_WSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_WSEL) & BM_LMEM_PCCLCR_WSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WSEL field to a new value.
-#define BW_LMEM_PCCLCR_WSEL(v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_WSEL) = (v))
-#endif
-//@}
+/*! @brief Set the WSEL field to a new value. */
+#define BW_LMEM_PCCLCR_WSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_WSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field TDSEL[16] (RW)
@@ -446,24 +393,20 @@ typedef union _hw_lmem_pcclcr
  * - 0 - Data
  * - 1 - Tag
  */
-//@{
-#define BP_LMEM_PCCLCR_TDSEL (16U)         //!< Bit position for LMEM_PCCLCR_TDSEL.
-#define BM_LMEM_PCCLCR_TDSEL (0x00010000U) //!< Bit mask for LMEM_PCCLCR_TDSEL.
-#define BS_LMEM_PCCLCR_TDSEL (1U)          //!< Bit field size in bits for LMEM_PCCLCR_TDSEL.
+/*@{*/
+#define BP_LMEM_PCCLCR_TDSEL (16U)         /*!< Bit position for LMEM_PCCLCR_TDSEL. */
+#define BM_LMEM_PCCLCR_TDSEL (0x00010000U) /*!< Bit mask for LMEM_PCCLCR_TDSEL. */
+#define BS_LMEM_PCCLCR_TDSEL (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_TDSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_TDSEL field.
-#define BR_LMEM_PCCLCR_TDSEL (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_TDSEL))
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_TDSEL field. */
+#define BR_LMEM_PCCLCR_TDSEL(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_TDSEL))
 
-//! @brief Format value for bitfield LMEM_PCCLCR_TDSEL.
-#define BF_LMEM_PCCLCR_TDSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_TDSEL), uint32_t) & BM_LMEM_PCCLCR_TDSEL)
+/*! @brief Format value for bitfield LMEM_PCCLCR_TDSEL. */
+#define BF_LMEM_PCCLCR_TDSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_TDSEL) & BM_LMEM_PCCLCR_TDSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDSEL field to a new value.
-#define BW_LMEM_PCCLCR_TDSEL(v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_TDSEL) = (v))
-#endif
-//@}
+/*! @brief Set the TDSEL field to a new value. */
+#define BW_LMEM_PCCLCR_TDSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_TDSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LCIVB[20] (RO)
@@ -472,16 +415,14 @@ typedef union _hw_lmem_pcclcr
  * of the valid bit If command used physical address and a hit, then this bit
  * shows the initial state of the valid bit. If a miss, this bit reads zero.
  */
-//@{
-#define BP_LMEM_PCCLCR_LCIVB (20U)         //!< Bit position for LMEM_PCCLCR_LCIVB.
-#define BM_LMEM_PCCLCR_LCIVB (0x00100000U) //!< Bit mask for LMEM_PCCLCR_LCIVB.
-#define BS_LMEM_PCCLCR_LCIVB (1U)          //!< Bit field size in bits for LMEM_PCCLCR_LCIVB.
+/*@{*/
+#define BP_LMEM_PCCLCR_LCIVB (20U)         /*!< Bit position for LMEM_PCCLCR_LCIVB. */
+#define BM_LMEM_PCCLCR_LCIVB (0x00100000U) /*!< Bit mask for LMEM_PCCLCR_LCIVB. */
+#define BS_LMEM_PCCLCR_LCIVB (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_LCIVB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LCIVB field.
-#define BR_LMEM_PCCLCR_LCIVB (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LCIVB))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PCCLCR_LCIVB field. */
+#define BR_LMEM_PCCLCR_LCIVB(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LCIVB))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LCIMB[21] (RO)
@@ -490,32 +431,28 @@ typedef union _hw_lmem_pcclcr
  * of the modified bit If command used physical address and a hit, then this bit
  * shows the initial state of the modified bit. If a miss, this bit reads zero.
  */
-//@{
-#define BP_LMEM_PCCLCR_LCIMB (21U)         //!< Bit position for LMEM_PCCLCR_LCIMB.
-#define BM_LMEM_PCCLCR_LCIMB (0x00200000U) //!< Bit mask for LMEM_PCCLCR_LCIMB.
-#define BS_LMEM_PCCLCR_LCIMB (1U)          //!< Bit field size in bits for LMEM_PCCLCR_LCIMB.
+/*@{*/
+#define BP_LMEM_PCCLCR_LCIMB (21U)         /*!< Bit position for LMEM_PCCLCR_LCIMB. */
+#define BM_LMEM_PCCLCR_LCIMB (0x00200000U) /*!< Bit mask for LMEM_PCCLCR_LCIMB. */
+#define BS_LMEM_PCCLCR_LCIMB (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_LCIMB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LCIMB field.
-#define BR_LMEM_PCCLCR_LCIMB (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LCIMB))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PCCLCR_LCIMB field. */
+#define BR_LMEM_PCCLCR_LCIMB(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LCIMB))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LCWAY[22] (RO)
  *
  * Indicates the way used by the line command.
  */
-//@{
-#define BP_LMEM_PCCLCR_LCWAY (22U)         //!< Bit position for LMEM_PCCLCR_LCWAY.
-#define BM_LMEM_PCCLCR_LCWAY (0x00400000U) //!< Bit mask for LMEM_PCCLCR_LCWAY.
-#define BS_LMEM_PCCLCR_LCWAY (1U)          //!< Bit field size in bits for LMEM_PCCLCR_LCWAY.
+/*@{*/
+#define BP_LMEM_PCCLCR_LCWAY (22U)         /*!< Bit position for LMEM_PCCLCR_LCWAY. */
+#define BM_LMEM_PCCLCR_LCWAY (0x00400000U) /*!< Bit mask for LMEM_PCCLCR_LCWAY. */
+#define BS_LMEM_PCCLCR_LCWAY (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_LCWAY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LCWAY field.
-#define BR_LMEM_PCCLCR_LCWAY (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LCWAY))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PCCLCR_LCWAY field. */
+#define BR_LMEM_PCCLCR_LCWAY(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LCWAY))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LCMD[25:24] (RW)
@@ -526,24 +463,20 @@ typedef union _hw_lmem_pcclcr
  * - 10 - Push
  * - 11 - Clear
  */
-//@{
-#define BP_LMEM_PCCLCR_LCMD  (24U)         //!< Bit position for LMEM_PCCLCR_LCMD.
-#define BM_LMEM_PCCLCR_LCMD  (0x03000000U) //!< Bit mask for LMEM_PCCLCR_LCMD.
-#define BS_LMEM_PCCLCR_LCMD  (2U)          //!< Bit field size in bits for LMEM_PCCLCR_LCMD.
+/*@{*/
+#define BP_LMEM_PCCLCR_LCMD  (24U)         /*!< Bit position for LMEM_PCCLCR_LCMD. */
+#define BM_LMEM_PCCLCR_LCMD  (0x03000000U) /*!< Bit mask for LMEM_PCCLCR_LCMD. */
+#define BS_LMEM_PCCLCR_LCMD  (2U)          /*!< Bit field size in bits for LMEM_PCCLCR_LCMD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LCMD field.
-#define BR_LMEM_PCCLCR_LCMD  (HW_LMEM_PCCLCR.B.LCMD)
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_LCMD field. */
+#define BR_LMEM_PCCLCR_LCMD(x) (HW_LMEM_PCCLCR(x).B.LCMD)
 
-//! @brief Format value for bitfield LMEM_PCCLCR_LCMD.
-#define BF_LMEM_PCCLCR_LCMD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_LCMD), uint32_t) & BM_LMEM_PCCLCR_LCMD)
+/*! @brief Format value for bitfield LMEM_PCCLCR_LCMD. */
+#define BF_LMEM_PCCLCR_LCMD(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_LCMD) & BM_LMEM_PCCLCR_LCMD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCMD field to a new value.
-#define BW_LMEM_PCCLCR_LCMD(v) (HW_LMEM_PCCLCR_WR((HW_LMEM_PCCLCR_RD() & ~BM_LMEM_PCCLCR_LCMD) | BF_LMEM_PCCLCR_LCMD(v)))
-#endif
-//@}
+/*! @brief Set the LCMD field to a new value. */
+#define BW_LMEM_PCCLCR_LCMD(x, v) (HW_LMEM_PCCLCR_WR(x, (HW_LMEM_PCCLCR_RD(x) & ~BM_LMEM_PCCLCR_LCMD) | BF_LMEM_PCCLCR_LCMD(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LADSEL[26] (RW)
@@ -556,24 +489,20 @@ typedef union _hw_lmem_pcclcr
  * - 0 - Cache address
  * - 1 - Physical address
  */
-//@{
-#define BP_LMEM_PCCLCR_LADSEL (26U)        //!< Bit position for LMEM_PCCLCR_LADSEL.
-#define BM_LMEM_PCCLCR_LADSEL (0x04000000U) //!< Bit mask for LMEM_PCCLCR_LADSEL.
-#define BS_LMEM_PCCLCR_LADSEL (1U)         //!< Bit field size in bits for LMEM_PCCLCR_LADSEL.
+/*@{*/
+#define BP_LMEM_PCCLCR_LADSEL (26U)        /*!< Bit position for LMEM_PCCLCR_LADSEL. */
+#define BM_LMEM_PCCLCR_LADSEL (0x04000000U) /*!< Bit mask for LMEM_PCCLCR_LADSEL. */
+#define BS_LMEM_PCCLCR_LADSEL (1U)         /*!< Bit field size in bits for LMEM_PCCLCR_LADSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LADSEL field.
-#define BR_LMEM_PCCLCR_LADSEL (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LADSEL))
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_LADSEL field. */
+#define BR_LMEM_PCCLCR_LADSEL(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LADSEL))
 
-//! @brief Format value for bitfield LMEM_PCCLCR_LADSEL.
-#define BF_LMEM_PCCLCR_LADSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_LADSEL), uint32_t) & BM_LMEM_PCCLCR_LADSEL)
+/*! @brief Format value for bitfield LMEM_PCCLCR_LADSEL. */
+#define BF_LMEM_PCCLCR_LADSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_LADSEL) & BM_LMEM_PCCLCR_LADSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LADSEL field to a new value.
-#define BW_LMEM_PCCLCR_LADSEL(v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LADSEL) = (v))
-#endif
-//@}
+/*! @brief Set the LADSEL field to a new value. */
+#define BW_LMEM_PCCLCR_LADSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LADSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCLCR, field LACC[27] (RW)
@@ -582,30 +511,25 @@ typedef union _hw_lmem_pcclcr
  * - 0 - Read
  * - 1 - Write
  */
-//@{
-#define BP_LMEM_PCCLCR_LACC  (27U)         //!< Bit position for LMEM_PCCLCR_LACC.
-#define BM_LMEM_PCCLCR_LACC  (0x08000000U) //!< Bit mask for LMEM_PCCLCR_LACC.
-#define BS_LMEM_PCCLCR_LACC  (1U)          //!< Bit field size in bits for LMEM_PCCLCR_LACC.
+/*@{*/
+#define BP_LMEM_PCCLCR_LACC  (27U)         /*!< Bit position for LMEM_PCCLCR_LACC. */
+#define BM_LMEM_PCCLCR_LACC  (0x08000000U) /*!< Bit mask for LMEM_PCCLCR_LACC. */
+#define BS_LMEM_PCCLCR_LACC  (1U)          /*!< Bit field size in bits for LMEM_PCCLCR_LACC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCLCR_LACC field.
-#define BR_LMEM_PCCLCR_LACC  (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LACC))
-#endif
+/*! @brief Read current value of the LMEM_PCCLCR_LACC field. */
+#define BR_LMEM_PCCLCR_LACC(x) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LACC))
 
-//! @brief Format value for bitfield LMEM_PCCLCR_LACC.
-#define BF_LMEM_PCCLCR_LACC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCLCR_LACC), uint32_t) & BM_LMEM_PCCLCR_LACC)
+/*! @brief Format value for bitfield LMEM_PCCLCR_LACC. */
+#define BF_LMEM_PCCLCR_LACC(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCLCR_LACC) & BM_LMEM_PCCLCR_LACC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LACC field to a new value.
-#define BW_LMEM_PCCLCR_LACC(v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR, BP_LMEM_PCCLCR_LACC) = (v))
-#endif
-//@}
+/*! @brief Set the LACC field to a new value. */
+#define BW_LMEM_PCCLCR_LACC(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCLCR_ADDR(x), BP_LMEM_PCCLCR_LACC) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PCCSAR - Cache search address register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PCCSAR - Cache search address register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PCCSAR - Cache search address register (RW)
  *
@@ -619,28 +543,25 @@ typedef union _hw_lmem_pccsar
     uint32_t U;
     struct _hw_lmem_pccsar_bitfields
     {
-        uint32_t LGO : 1;              //!< [0] Initiate Cache Line Command
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t PHYADDR : 30;         //!< [31:2] Physical Address
+        uint32_t LGO : 1;              /*!< [0] Initiate Cache Line Command */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t PHYADDR : 30;         /*!< [31:2] Physical Address */
     } B;
 } hw_lmem_pccsar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PCCSAR register
  */
-//@{
-#define HW_LMEM_PCCSAR_ADDR      (REGS_LMEM_BASE + 0x8U)
+/*@{*/
+#define HW_LMEM_PCCSAR_ADDR(x)   ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PCCSAR           (*(__IO hw_lmem_pccsar_t *) HW_LMEM_PCCSAR_ADDR)
-#define HW_LMEM_PCCSAR_RD()      (HW_LMEM_PCCSAR.U)
-#define HW_LMEM_PCCSAR_WR(v)     (HW_LMEM_PCCSAR.U = (v))
-#define HW_LMEM_PCCSAR_SET(v)    (HW_LMEM_PCCSAR_WR(HW_LMEM_PCCSAR_RD() |  (v)))
-#define HW_LMEM_PCCSAR_CLR(v)    (HW_LMEM_PCCSAR_WR(HW_LMEM_PCCSAR_RD() & ~(v)))
-#define HW_LMEM_PCCSAR_TOG(v)    (HW_LMEM_PCCSAR_WR(HW_LMEM_PCCSAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PCCSAR(x)        (*(__IO hw_lmem_pccsar_t *) HW_LMEM_PCCSAR_ADDR(x))
+#define HW_LMEM_PCCSAR_RD(x)     (HW_LMEM_PCCSAR(x).U)
+#define HW_LMEM_PCCSAR_WR(x, v)  (HW_LMEM_PCCSAR(x).U = (v))
+#define HW_LMEM_PCCSAR_SET(x, v) (HW_LMEM_PCCSAR_WR(x, HW_LMEM_PCCSAR_RD(x) |  (v)))
+#define HW_LMEM_PCCSAR_CLR(x, v) (HW_LMEM_PCCSAR_WR(x, HW_LMEM_PCCSAR_RD(x) & ~(v)))
+#define HW_LMEM_PCCSAR_TOG(x, v) (HW_LMEM_PCCSAR_WR(x, HW_LMEM_PCCSAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PCCSAR bitfields
@@ -659,24 +580,20 @@ typedef union _hw_lmem_pccsar
  * - 1 - Write: initiate line command indicated by bits CLCR[27:24]. Read: line
  *     command active.
  */
-//@{
-#define BP_LMEM_PCCSAR_LGO   (0U)          //!< Bit position for LMEM_PCCSAR_LGO.
-#define BM_LMEM_PCCSAR_LGO   (0x00000001U) //!< Bit mask for LMEM_PCCSAR_LGO.
-#define BS_LMEM_PCCSAR_LGO   (1U)          //!< Bit field size in bits for LMEM_PCCSAR_LGO.
+/*@{*/
+#define BP_LMEM_PCCSAR_LGO   (0U)          /*!< Bit position for LMEM_PCCSAR_LGO. */
+#define BM_LMEM_PCCSAR_LGO   (0x00000001U) /*!< Bit mask for LMEM_PCCSAR_LGO. */
+#define BS_LMEM_PCCSAR_LGO   (1U)          /*!< Bit field size in bits for LMEM_PCCSAR_LGO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCSAR_LGO field.
-#define BR_LMEM_PCCSAR_LGO   (BITBAND_ACCESS32(HW_LMEM_PCCSAR_ADDR, BP_LMEM_PCCSAR_LGO))
-#endif
+/*! @brief Read current value of the LMEM_PCCSAR_LGO field. */
+#define BR_LMEM_PCCSAR_LGO(x) (BITBAND_ACCESS32(HW_LMEM_PCCSAR_ADDR(x), BP_LMEM_PCCSAR_LGO))
 
-//! @brief Format value for bitfield LMEM_PCCSAR_LGO.
-#define BF_LMEM_PCCSAR_LGO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCSAR_LGO), uint32_t) & BM_LMEM_PCCSAR_LGO)
+/*! @brief Format value for bitfield LMEM_PCCSAR_LGO. */
+#define BF_LMEM_PCCSAR_LGO(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCSAR_LGO) & BM_LMEM_PCCSAR_LGO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LGO field to a new value.
-#define BW_LMEM_PCCSAR_LGO(v) (BITBAND_ACCESS32(HW_LMEM_PCCSAR_ADDR, BP_LMEM_PCCSAR_LGO) = (v))
-#endif
-//@}
+/*! @brief Set the LGO field to a new value. */
+#define BW_LMEM_PCCSAR_LGO(x, v) (BITBAND_ACCESS32(HW_LMEM_PCCSAR_ADDR(x), BP_LMEM_PCCSAR_LGO) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCSAR, field PHYADDR[31:2] (RW)
@@ -685,30 +602,25 @@ typedef union _hw_lmem_pccsar
  * used for tag compare CSAR[11:4] bits are used to access the tag arrays
  * CSAR[11:2] bits are used to access the data arrays
  */
-//@{
-#define BP_LMEM_PCCSAR_PHYADDR (2U)        //!< Bit position for LMEM_PCCSAR_PHYADDR.
-#define BM_LMEM_PCCSAR_PHYADDR (0xFFFFFFFCU) //!< Bit mask for LMEM_PCCSAR_PHYADDR.
-#define BS_LMEM_PCCSAR_PHYADDR (30U)       //!< Bit field size in bits for LMEM_PCCSAR_PHYADDR.
+/*@{*/
+#define BP_LMEM_PCCSAR_PHYADDR (2U)        /*!< Bit position for LMEM_PCCSAR_PHYADDR. */
+#define BM_LMEM_PCCSAR_PHYADDR (0xFFFFFFFCU) /*!< Bit mask for LMEM_PCCSAR_PHYADDR. */
+#define BS_LMEM_PCCSAR_PHYADDR (30U)       /*!< Bit field size in bits for LMEM_PCCSAR_PHYADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCSAR_PHYADDR field.
-#define BR_LMEM_PCCSAR_PHYADDR (HW_LMEM_PCCSAR.B.PHYADDR)
-#endif
+/*! @brief Read current value of the LMEM_PCCSAR_PHYADDR field. */
+#define BR_LMEM_PCCSAR_PHYADDR(x) (HW_LMEM_PCCSAR(x).B.PHYADDR)
 
-//! @brief Format value for bitfield LMEM_PCCSAR_PHYADDR.
-#define BF_LMEM_PCCSAR_PHYADDR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCSAR_PHYADDR), uint32_t) & BM_LMEM_PCCSAR_PHYADDR)
+/*! @brief Format value for bitfield LMEM_PCCSAR_PHYADDR. */
+#define BF_LMEM_PCCSAR_PHYADDR(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCSAR_PHYADDR) & BM_LMEM_PCCSAR_PHYADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYADDR field to a new value.
-#define BW_LMEM_PCCSAR_PHYADDR(v) (HW_LMEM_PCCSAR_WR((HW_LMEM_PCCSAR_RD() & ~BM_LMEM_PCCSAR_PHYADDR) | BF_LMEM_PCCSAR_PHYADDR(v)))
-#endif
-//@}
+/*! @brief Set the PHYADDR field to a new value. */
+#define BW_LMEM_PCCSAR_PHYADDR(x, v) (HW_LMEM_PCCSAR_WR(x, (HW_LMEM_PCCSAR_RD(x) & ~BM_LMEM_PCCSAR_PHYADDR) | BF_LMEM_PCCSAR_PHYADDR(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PCCCVR - Cache read/write value register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PCCCVR - Cache read/write value register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PCCCVR - Cache read/write value register (RW)
  *
@@ -722,26 +634,23 @@ typedef union _hw_lmem_pcccvr
     uint32_t U;
     struct _hw_lmem_pcccvr_bitfields
     {
-        uint32_t DATA : 32;            //!< [31:0] Cache read/write Data
+        uint32_t DATA : 32;            /*!< [31:0] Cache read/write Data */
     } B;
 } hw_lmem_pcccvr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PCCCVR register
  */
-//@{
-#define HW_LMEM_PCCCVR_ADDR      (REGS_LMEM_BASE + 0xCU)
+/*@{*/
+#define HW_LMEM_PCCCVR_ADDR(x)   ((x) + 0xCU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PCCCVR           (*(__IO hw_lmem_pcccvr_t *) HW_LMEM_PCCCVR_ADDR)
-#define HW_LMEM_PCCCVR_RD()      (HW_LMEM_PCCCVR.U)
-#define HW_LMEM_PCCCVR_WR(v)     (HW_LMEM_PCCCVR.U = (v))
-#define HW_LMEM_PCCCVR_SET(v)    (HW_LMEM_PCCCVR_WR(HW_LMEM_PCCCVR_RD() |  (v)))
-#define HW_LMEM_PCCCVR_CLR(v)    (HW_LMEM_PCCCVR_WR(HW_LMEM_PCCCVR_RD() & ~(v)))
-#define HW_LMEM_PCCCVR_TOG(v)    (HW_LMEM_PCCCVR_WR(HW_LMEM_PCCCVR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PCCCVR(x)        (*(__IO hw_lmem_pcccvr_t *) HW_LMEM_PCCCVR_ADDR(x))
+#define HW_LMEM_PCCCVR_RD(x)     (HW_LMEM_PCCCVR(x).U)
+#define HW_LMEM_PCCCVR_WR(x, v)  (HW_LMEM_PCCCVR(x).U = (v))
+#define HW_LMEM_PCCCVR_SET(x, v) (HW_LMEM_PCCCVR_WR(x, HW_LMEM_PCCCVR_RD(x) |  (v)))
+#define HW_LMEM_PCCCVR_CLR(x, v) (HW_LMEM_PCCCVR_WR(x, HW_LMEM_PCCCVR_RD(x) & ~(v)))
+#define HW_LMEM_PCCCVR_TOG(x, v) (HW_LMEM_PCCCVR_WR(x, HW_LMEM_PCCCVR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PCCCVR bitfields
@@ -755,30 +664,25 @@ typedef union _hw_lmem_pcccvr
  * CCVR[3:2] bits are reserved For data search, read or write: CCVR[31:0] bits are
  * used for data array R/W value
  */
-//@{
-#define BP_LMEM_PCCCVR_DATA  (0U)          //!< Bit position for LMEM_PCCCVR_DATA.
-#define BM_LMEM_PCCCVR_DATA  (0xFFFFFFFFU) //!< Bit mask for LMEM_PCCCVR_DATA.
-#define BS_LMEM_PCCCVR_DATA  (32U)         //!< Bit field size in bits for LMEM_PCCCVR_DATA.
+/*@{*/
+#define BP_LMEM_PCCCVR_DATA  (0U)          /*!< Bit position for LMEM_PCCCVR_DATA. */
+#define BM_LMEM_PCCCVR_DATA  (0xFFFFFFFFU) /*!< Bit mask for LMEM_PCCCVR_DATA. */
+#define BS_LMEM_PCCCVR_DATA  (32U)         /*!< Bit field size in bits for LMEM_PCCCVR_DATA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCCVR_DATA field.
-#define BR_LMEM_PCCCVR_DATA  (HW_LMEM_PCCCVR.B.DATA)
-#endif
+/*! @brief Read current value of the LMEM_PCCCVR_DATA field. */
+#define BR_LMEM_PCCCVR_DATA(x) (HW_LMEM_PCCCVR(x).U)
 
-//! @brief Format value for bitfield LMEM_PCCCVR_DATA.
-#define BF_LMEM_PCCCVR_DATA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCCVR_DATA), uint32_t) & BM_LMEM_PCCCVR_DATA)
+/*! @brief Format value for bitfield LMEM_PCCCVR_DATA. */
+#define BF_LMEM_PCCCVR_DATA(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCCVR_DATA) & BM_LMEM_PCCCVR_DATA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DATA field to a new value.
-#define BW_LMEM_PCCCVR_DATA(v) (HW_LMEM_PCCCVR_WR((HW_LMEM_PCCCVR_RD() & ~BM_LMEM_PCCCVR_DATA) | BF_LMEM_PCCCVR_DATA(v)))
-#endif
-//@}
+/*! @brief Set the DATA field to a new value. */
+#define BW_LMEM_PCCCVR_DATA(x, v) (HW_LMEM_PCCCVR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PCCRMR - Cache regions mode register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PCCRMR - Cache regions mode register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PCCRMR - Cache regions mode register (RW)
  *
@@ -802,41 +706,38 @@ typedef union _hw_lmem_pccrmr
     uint32_t U;
     struct _hw_lmem_pccrmr_bitfields
     {
-        uint32_t R15 : 2;              //!< [1:0] Region 15 mode
-        uint32_t R14 : 2;              //!< [3:2] Region 14 mode
-        uint32_t R13 : 2;              //!< [5:4] Region 13 mode
-        uint32_t R12 : 2;              //!< [7:6] Region 12 mode
-        uint32_t R11 : 2;              //!< [9:8] Region 11 mode
-        uint32_t R10 : 2;              //!< [11:10] Region 10 mode
-        uint32_t R9 : 2;               //!< [13:12] Region 9 mode
-        uint32_t R8 : 2;               //!< [15:14] Region 8 mode
-        uint32_t R7 : 2;               //!< [17:16] Region 7 mode
-        uint32_t R6 : 2;               //!< [19:18] Region 6 mode
-        uint32_t R5 : 2;               //!< [21:20] Region 5 mode
-        uint32_t R4 : 2;               //!< [23:22] Region 4 mode
-        uint32_t R3 : 2;               //!< [25:24] Region 3 mode
-        uint32_t R2 : 2;               //!< [27:26] Region 2 mode
-        uint32_t R1 : 2;               //!< [29:28] Region 1 mode
-        uint32_t R0 : 2;               //!< [31:30] Region 0 mode
+        uint32_t R15 : 2;              /*!< [1:0] Region 15 mode */
+        uint32_t R14 : 2;              /*!< [3:2] Region 14 mode */
+        uint32_t R13 : 2;              /*!< [5:4] Region 13 mode */
+        uint32_t R12 : 2;              /*!< [7:6] Region 12 mode */
+        uint32_t R11 : 2;              /*!< [9:8] Region 11 mode */
+        uint32_t R10 : 2;              /*!< [11:10] Region 10 mode */
+        uint32_t R9 : 2;               /*!< [13:12] Region 9 mode */
+        uint32_t R8 : 2;               /*!< [15:14] Region 8 mode */
+        uint32_t R7 : 2;               /*!< [17:16] Region 7 mode */
+        uint32_t R6 : 2;               /*!< [19:18] Region 6 mode */
+        uint32_t R5 : 2;               /*!< [21:20] Region 5 mode */
+        uint32_t R4 : 2;               /*!< [23:22] Region 4 mode */
+        uint32_t R3 : 2;               /*!< [25:24] Region 3 mode */
+        uint32_t R2 : 2;               /*!< [27:26] Region 2 mode */
+        uint32_t R1 : 2;               /*!< [29:28] Region 1 mode */
+        uint32_t R0 : 2;               /*!< [31:30] Region 0 mode */
     } B;
 } hw_lmem_pccrmr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PCCRMR register
  */
-//@{
-#define HW_LMEM_PCCRMR_ADDR      (REGS_LMEM_BASE + 0x20U)
+/*@{*/
+#define HW_LMEM_PCCRMR_ADDR(x)   ((x) + 0x20U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PCCRMR           (*(__IO hw_lmem_pccrmr_t *) HW_LMEM_PCCRMR_ADDR)
-#define HW_LMEM_PCCRMR_RD()      (HW_LMEM_PCCRMR.U)
-#define HW_LMEM_PCCRMR_WR(v)     (HW_LMEM_PCCRMR.U = (v))
-#define HW_LMEM_PCCRMR_SET(v)    (HW_LMEM_PCCRMR_WR(HW_LMEM_PCCRMR_RD() |  (v)))
-#define HW_LMEM_PCCRMR_CLR(v)    (HW_LMEM_PCCRMR_WR(HW_LMEM_PCCRMR_RD() & ~(v)))
-#define HW_LMEM_PCCRMR_TOG(v)    (HW_LMEM_PCCRMR_WR(HW_LMEM_PCCRMR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PCCRMR(x)        (*(__IO hw_lmem_pccrmr_t *) HW_LMEM_PCCRMR_ADDR(x))
+#define HW_LMEM_PCCRMR_RD(x)     (HW_LMEM_PCCRMR(x).U)
+#define HW_LMEM_PCCRMR_WR(x, v)  (HW_LMEM_PCCRMR(x).U = (v))
+#define HW_LMEM_PCCRMR_SET(x, v) (HW_LMEM_PCCRMR_WR(x, HW_LMEM_PCCRMR_RD(x) |  (v)))
+#define HW_LMEM_PCCRMR_CLR(x, v) (HW_LMEM_PCCRMR_WR(x, HW_LMEM_PCCRMR_RD(x) & ~(v)))
+#define HW_LMEM_PCCRMR_TOG(x, v) (HW_LMEM_PCCRMR_WR(x, HW_LMEM_PCCRMR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PCCRMR bitfields
@@ -853,24 +754,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R15   (0U)          //!< Bit position for LMEM_PCCRMR_R15.
-#define BM_LMEM_PCCRMR_R15   (0x00000003U) //!< Bit mask for LMEM_PCCRMR_R15.
-#define BS_LMEM_PCCRMR_R15   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R15.
+/*@{*/
+#define BP_LMEM_PCCRMR_R15   (0U)          /*!< Bit position for LMEM_PCCRMR_R15. */
+#define BM_LMEM_PCCRMR_R15   (0x00000003U) /*!< Bit mask for LMEM_PCCRMR_R15. */
+#define BS_LMEM_PCCRMR_R15   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R15. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R15 field.
-#define BR_LMEM_PCCRMR_R15   (HW_LMEM_PCCRMR.B.R15)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R15 field. */
+#define BR_LMEM_PCCRMR_R15(x) (HW_LMEM_PCCRMR(x).B.R15)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R15.
-#define BF_LMEM_PCCRMR_R15(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R15), uint32_t) & BM_LMEM_PCCRMR_R15)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R15. */
+#define BF_LMEM_PCCRMR_R15(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R15) & BM_LMEM_PCCRMR_R15)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R15 field to a new value.
-#define BW_LMEM_PCCRMR_R15(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R15) | BF_LMEM_PCCRMR_R15(v)))
-#endif
-//@}
+/*! @brief Set the R15 field to a new value. */
+#define BW_LMEM_PCCRMR_R15(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R15) | BF_LMEM_PCCRMR_R15(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R14[3:2] (RW)
@@ -883,24 +780,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R14   (2U)          //!< Bit position for LMEM_PCCRMR_R14.
-#define BM_LMEM_PCCRMR_R14   (0x0000000CU) //!< Bit mask for LMEM_PCCRMR_R14.
-#define BS_LMEM_PCCRMR_R14   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R14.
+/*@{*/
+#define BP_LMEM_PCCRMR_R14   (2U)          /*!< Bit position for LMEM_PCCRMR_R14. */
+#define BM_LMEM_PCCRMR_R14   (0x0000000CU) /*!< Bit mask for LMEM_PCCRMR_R14. */
+#define BS_LMEM_PCCRMR_R14   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R14. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R14 field.
-#define BR_LMEM_PCCRMR_R14   (HW_LMEM_PCCRMR.B.R14)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R14 field. */
+#define BR_LMEM_PCCRMR_R14(x) (HW_LMEM_PCCRMR(x).B.R14)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R14.
-#define BF_LMEM_PCCRMR_R14(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R14), uint32_t) & BM_LMEM_PCCRMR_R14)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R14. */
+#define BF_LMEM_PCCRMR_R14(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R14) & BM_LMEM_PCCRMR_R14)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R14 field to a new value.
-#define BW_LMEM_PCCRMR_R14(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R14) | BF_LMEM_PCCRMR_R14(v)))
-#endif
-//@}
+/*! @brief Set the R14 field to a new value. */
+#define BW_LMEM_PCCRMR_R14(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R14) | BF_LMEM_PCCRMR_R14(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R13[5:4] (RW)
@@ -913,24 +806,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R13   (4U)          //!< Bit position for LMEM_PCCRMR_R13.
-#define BM_LMEM_PCCRMR_R13   (0x00000030U) //!< Bit mask for LMEM_PCCRMR_R13.
-#define BS_LMEM_PCCRMR_R13   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R13.
+/*@{*/
+#define BP_LMEM_PCCRMR_R13   (4U)          /*!< Bit position for LMEM_PCCRMR_R13. */
+#define BM_LMEM_PCCRMR_R13   (0x00000030U) /*!< Bit mask for LMEM_PCCRMR_R13. */
+#define BS_LMEM_PCCRMR_R13   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R13 field.
-#define BR_LMEM_PCCRMR_R13   (HW_LMEM_PCCRMR.B.R13)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R13 field. */
+#define BR_LMEM_PCCRMR_R13(x) (HW_LMEM_PCCRMR(x).B.R13)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R13.
-#define BF_LMEM_PCCRMR_R13(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R13), uint32_t) & BM_LMEM_PCCRMR_R13)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R13. */
+#define BF_LMEM_PCCRMR_R13(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R13) & BM_LMEM_PCCRMR_R13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R13 field to a new value.
-#define BW_LMEM_PCCRMR_R13(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R13) | BF_LMEM_PCCRMR_R13(v)))
-#endif
-//@}
+/*! @brief Set the R13 field to a new value. */
+#define BW_LMEM_PCCRMR_R13(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R13) | BF_LMEM_PCCRMR_R13(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R12[7:6] (RW)
@@ -943,24 +832,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R12   (6U)          //!< Bit position for LMEM_PCCRMR_R12.
-#define BM_LMEM_PCCRMR_R12   (0x000000C0U) //!< Bit mask for LMEM_PCCRMR_R12.
-#define BS_LMEM_PCCRMR_R12   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R12.
+/*@{*/
+#define BP_LMEM_PCCRMR_R12   (6U)          /*!< Bit position for LMEM_PCCRMR_R12. */
+#define BM_LMEM_PCCRMR_R12   (0x000000C0U) /*!< Bit mask for LMEM_PCCRMR_R12. */
+#define BS_LMEM_PCCRMR_R12   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R12. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R12 field.
-#define BR_LMEM_PCCRMR_R12   (HW_LMEM_PCCRMR.B.R12)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R12 field. */
+#define BR_LMEM_PCCRMR_R12(x) (HW_LMEM_PCCRMR(x).B.R12)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R12.
-#define BF_LMEM_PCCRMR_R12(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R12), uint32_t) & BM_LMEM_PCCRMR_R12)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R12. */
+#define BF_LMEM_PCCRMR_R12(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R12) & BM_LMEM_PCCRMR_R12)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R12 field to a new value.
-#define BW_LMEM_PCCRMR_R12(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R12) | BF_LMEM_PCCRMR_R12(v)))
-#endif
-//@}
+/*! @brief Set the R12 field to a new value. */
+#define BW_LMEM_PCCRMR_R12(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R12) | BF_LMEM_PCCRMR_R12(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R11[9:8] (RW)
@@ -973,24 +858,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R11   (8U)          //!< Bit position for LMEM_PCCRMR_R11.
-#define BM_LMEM_PCCRMR_R11   (0x00000300U) //!< Bit mask for LMEM_PCCRMR_R11.
-#define BS_LMEM_PCCRMR_R11   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R11.
+/*@{*/
+#define BP_LMEM_PCCRMR_R11   (8U)          /*!< Bit position for LMEM_PCCRMR_R11. */
+#define BM_LMEM_PCCRMR_R11   (0x00000300U) /*!< Bit mask for LMEM_PCCRMR_R11. */
+#define BS_LMEM_PCCRMR_R11   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R11. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R11 field.
-#define BR_LMEM_PCCRMR_R11   (HW_LMEM_PCCRMR.B.R11)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R11 field. */
+#define BR_LMEM_PCCRMR_R11(x) (HW_LMEM_PCCRMR(x).B.R11)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R11.
-#define BF_LMEM_PCCRMR_R11(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R11), uint32_t) & BM_LMEM_PCCRMR_R11)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R11. */
+#define BF_LMEM_PCCRMR_R11(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R11) & BM_LMEM_PCCRMR_R11)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R11 field to a new value.
-#define BW_LMEM_PCCRMR_R11(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R11) | BF_LMEM_PCCRMR_R11(v)))
-#endif
-//@}
+/*! @brief Set the R11 field to a new value. */
+#define BW_LMEM_PCCRMR_R11(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R11) | BF_LMEM_PCCRMR_R11(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R10[11:10] (RW)
@@ -1003,24 +884,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R10   (10U)         //!< Bit position for LMEM_PCCRMR_R10.
-#define BM_LMEM_PCCRMR_R10   (0x00000C00U) //!< Bit mask for LMEM_PCCRMR_R10.
-#define BS_LMEM_PCCRMR_R10   (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R10.
+/*@{*/
+#define BP_LMEM_PCCRMR_R10   (10U)         /*!< Bit position for LMEM_PCCRMR_R10. */
+#define BM_LMEM_PCCRMR_R10   (0x00000C00U) /*!< Bit mask for LMEM_PCCRMR_R10. */
+#define BS_LMEM_PCCRMR_R10   (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R10 field.
-#define BR_LMEM_PCCRMR_R10   (HW_LMEM_PCCRMR.B.R10)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R10 field. */
+#define BR_LMEM_PCCRMR_R10(x) (HW_LMEM_PCCRMR(x).B.R10)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R10.
-#define BF_LMEM_PCCRMR_R10(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R10), uint32_t) & BM_LMEM_PCCRMR_R10)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R10. */
+#define BF_LMEM_PCCRMR_R10(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R10) & BM_LMEM_PCCRMR_R10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R10 field to a new value.
-#define BW_LMEM_PCCRMR_R10(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R10) | BF_LMEM_PCCRMR_R10(v)))
-#endif
-//@}
+/*! @brief Set the R10 field to a new value. */
+#define BW_LMEM_PCCRMR_R10(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R10) | BF_LMEM_PCCRMR_R10(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R9[13:12] (RW)
@@ -1033,24 +910,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R9    (12U)         //!< Bit position for LMEM_PCCRMR_R9.
-#define BM_LMEM_PCCRMR_R9    (0x00003000U) //!< Bit mask for LMEM_PCCRMR_R9.
-#define BS_LMEM_PCCRMR_R9    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R9.
+/*@{*/
+#define BP_LMEM_PCCRMR_R9    (12U)         /*!< Bit position for LMEM_PCCRMR_R9. */
+#define BM_LMEM_PCCRMR_R9    (0x00003000U) /*!< Bit mask for LMEM_PCCRMR_R9. */
+#define BS_LMEM_PCCRMR_R9    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R9 field.
-#define BR_LMEM_PCCRMR_R9    (HW_LMEM_PCCRMR.B.R9)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R9 field. */
+#define BR_LMEM_PCCRMR_R9(x) (HW_LMEM_PCCRMR(x).B.R9)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R9.
-#define BF_LMEM_PCCRMR_R9(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R9), uint32_t) & BM_LMEM_PCCRMR_R9)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R9. */
+#define BF_LMEM_PCCRMR_R9(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R9) & BM_LMEM_PCCRMR_R9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R9 field to a new value.
-#define BW_LMEM_PCCRMR_R9(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R9) | BF_LMEM_PCCRMR_R9(v)))
-#endif
-//@}
+/*! @brief Set the R9 field to a new value. */
+#define BW_LMEM_PCCRMR_R9(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R9) | BF_LMEM_PCCRMR_R9(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R8[15:14] (RW)
@@ -1063,24 +936,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R8    (14U)         //!< Bit position for LMEM_PCCRMR_R8.
-#define BM_LMEM_PCCRMR_R8    (0x0000C000U) //!< Bit mask for LMEM_PCCRMR_R8.
-#define BS_LMEM_PCCRMR_R8    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R8.
+/*@{*/
+#define BP_LMEM_PCCRMR_R8    (14U)         /*!< Bit position for LMEM_PCCRMR_R8. */
+#define BM_LMEM_PCCRMR_R8    (0x0000C000U) /*!< Bit mask for LMEM_PCCRMR_R8. */
+#define BS_LMEM_PCCRMR_R8    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R8 field.
-#define BR_LMEM_PCCRMR_R8    (HW_LMEM_PCCRMR.B.R8)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R8 field. */
+#define BR_LMEM_PCCRMR_R8(x) (HW_LMEM_PCCRMR(x).B.R8)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R8.
-#define BF_LMEM_PCCRMR_R8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R8), uint32_t) & BM_LMEM_PCCRMR_R8)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R8. */
+#define BF_LMEM_PCCRMR_R8(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R8) & BM_LMEM_PCCRMR_R8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R8 field to a new value.
-#define BW_LMEM_PCCRMR_R8(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R8) | BF_LMEM_PCCRMR_R8(v)))
-#endif
-//@}
+/*! @brief Set the R8 field to a new value. */
+#define BW_LMEM_PCCRMR_R8(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R8) | BF_LMEM_PCCRMR_R8(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R7[17:16] (RW)
@@ -1093,24 +962,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R7    (16U)         //!< Bit position for LMEM_PCCRMR_R7.
-#define BM_LMEM_PCCRMR_R7    (0x00030000U) //!< Bit mask for LMEM_PCCRMR_R7.
-#define BS_LMEM_PCCRMR_R7    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R7.
+/*@{*/
+#define BP_LMEM_PCCRMR_R7    (16U)         /*!< Bit position for LMEM_PCCRMR_R7. */
+#define BM_LMEM_PCCRMR_R7    (0x00030000U) /*!< Bit mask for LMEM_PCCRMR_R7. */
+#define BS_LMEM_PCCRMR_R7    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R7 field.
-#define BR_LMEM_PCCRMR_R7    (HW_LMEM_PCCRMR.B.R7)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R7 field. */
+#define BR_LMEM_PCCRMR_R7(x) (HW_LMEM_PCCRMR(x).B.R7)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R7.
-#define BF_LMEM_PCCRMR_R7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R7), uint32_t) & BM_LMEM_PCCRMR_R7)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R7. */
+#define BF_LMEM_PCCRMR_R7(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R7) & BM_LMEM_PCCRMR_R7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R7 field to a new value.
-#define BW_LMEM_PCCRMR_R7(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R7) | BF_LMEM_PCCRMR_R7(v)))
-#endif
-//@}
+/*! @brief Set the R7 field to a new value. */
+#define BW_LMEM_PCCRMR_R7(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R7) | BF_LMEM_PCCRMR_R7(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R6[19:18] (RW)
@@ -1123,24 +988,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R6    (18U)         //!< Bit position for LMEM_PCCRMR_R6.
-#define BM_LMEM_PCCRMR_R6    (0x000C0000U) //!< Bit mask for LMEM_PCCRMR_R6.
-#define BS_LMEM_PCCRMR_R6    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R6.
+/*@{*/
+#define BP_LMEM_PCCRMR_R6    (18U)         /*!< Bit position for LMEM_PCCRMR_R6. */
+#define BM_LMEM_PCCRMR_R6    (0x000C0000U) /*!< Bit mask for LMEM_PCCRMR_R6. */
+#define BS_LMEM_PCCRMR_R6    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R6 field.
-#define BR_LMEM_PCCRMR_R6    (HW_LMEM_PCCRMR.B.R6)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R6 field. */
+#define BR_LMEM_PCCRMR_R6(x) (HW_LMEM_PCCRMR(x).B.R6)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R6.
-#define BF_LMEM_PCCRMR_R6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R6), uint32_t) & BM_LMEM_PCCRMR_R6)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R6. */
+#define BF_LMEM_PCCRMR_R6(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R6) & BM_LMEM_PCCRMR_R6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R6 field to a new value.
-#define BW_LMEM_PCCRMR_R6(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R6) | BF_LMEM_PCCRMR_R6(v)))
-#endif
-//@}
+/*! @brief Set the R6 field to a new value. */
+#define BW_LMEM_PCCRMR_R6(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R6) | BF_LMEM_PCCRMR_R6(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R5[21:20] (RW)
@@ -1153,24 +1014,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R5    (20U)         //!< Bit position for LMEM_PCCRMR_R5.
-#define BM_LMEM_PCCRMR_R5    (0x00300000U) //!< Bit mask for LMEM_PCCRMR_R5.
-#define BS_LMEM_PCCRMR_R5    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R5.
+/*@{*/
+#define BP_LMEM_PCCRMR_R5    (20U)         /*!< Bit position for LMEM_PCCRMR_R5. */
+#define BM_LMEM_PCCRMR_R5    (0x00300000U) /*!< Bit mask for LMEM_PCCRMR_R5. */
+#define BS_LMEM_PCCRMR_R5    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R5 field.
-#define BR_LMEM_PCCRMR_R5    (HW_LMEM_PCCRMR.B.R5)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R5 field. */
+#define BR_LMEM_PCCRMR_R5(x) (HW_LMEM_PCCRMR(x).B.R5)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R5.
-#define BF_LMEM_PCCRMR_R5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R5), uint32_t) & BM_LMEM_PCCRMR_R5)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R5. */
+#define BF_LMEM_PCCRMR_R5(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R5) & BM_LMEM_PCCRMR_R5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R5 field to a new value.
-#define BW_LMEM_PCCRMR_R5(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R5) | BF_LMEM_PCCRMR_R5(v)))
-#endif
-//@}
+/*! @brief Set the R5 field to a new value. */
+#define BW_LMEM_PCCRMR_R5(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R5) | BF_LMEM_PCCRMR_R5(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R4[23:22] (RW)
@@ -1183,24 +1040,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R4    (22U)         //!< Bit position for LMEM_PCCRMR_R4.
-#define BM_LMEM_PCCRMR_R4    (0x00C00000U) //!< Bit mask for LMEM_PCCRMR_R4.
-#define BS_LMEM_PCCRMR_R4    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R4.
+/*@{*/
+#define BP_LMEM_PCCRMR_R4    (22U)         /*!< Bit position for LMEM_PCCRMR_R4. */
+#define BM_LMEM_PCCRMR_R4    (0x00C00000U) /*!< Bit mask for LMEM_PCCRMR_R4. */
+#define BS_LMEM_PCCRMR_R4    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R4 field.
-#define BR_LMEM_PCCRMR_R4    (HW_LMEM_PCCRMR.B.R4)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R4 field. */
+#define BR_LMEM_PCCRMR_R4(x) (HW_LMEM_PCCRMR(x).B.R4)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R4.
-#define BF_LMEM_PCCRMR_R4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R4), uint32_t) & BM_LMEM_PCCRMR_R4)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R4. */
+#define BF_LMEM_PCCRMR_R4(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R4) & BM_LMEM_PCCRMR_R4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R4 field to a new value.
-#define BW_LMEM_PCCRMR_R4(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R4) | BF_LMEM_PCCRMR_R4(v)))
-#endif
-//@}
+/*! @brief Set the R4 field to a new value. */
+#define BW_LMEM_PCCRMR_R4(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R4) | BF_LMEM_PCCRMR_R4(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R3[25:24] (RW)
@@ -1213,24 +1066,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R3    (24U)         //!< Bit position for LMEM_PCCRMR_R3.
-#define BM_LMEM_PCCRMR_R3    (0x03000000U) //!< Bit mask for LMEM_PCCRMR_R3.
-#define BS_LMEM_PCCRMR_R3    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R3.
+/*@{*/
+#define BP_LMEM_PCCRMR_R3    (24U)         /*!< Bit position for LMEM_PCCRMR_R3. */
+#define BM_LMEM_PCCRMR_R3    (0x03000000U) /*!< Bit mask for LMEM_PCCRMR_R3. */
+#define BS_LMEM_PCCRMR_R3    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R3 field.
-#define BR_LMEM_PCCRMR_R3    (HW_LMEM_PCCRMR.B.R3)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R3 field. */
+#define BR_LMEM_PCCRMR_R3(x) (HW_LMEM_PCCRMR(x).B.R3)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R3.
-#define BF_LMEM_PCCRMR_R3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R3), uint32_t) & BM_LMEM_PCCRMR_R3)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R3. */
+#define BF_LMEM_PCCRMR_R3(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R3) & BM_LMEM_PCCRMR_R3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R3 field to a new value.
-#define BW_LMEM_PCCRMR_R3(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R3) | BF_LMEM_PCCRMR_R3(v)))
-#endif
-//@}
+/*! @brief Set the R3 field to a new value. */
+#define BW_LMEM_PCCRMR_R3(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R3) | BF_LMEM_PCCRMR_R3(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R2[27:26] (RW)
@@ -1243,24 +1092,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R2    (26U)         //!< Bit position for LMEM_PCCRMR_R2.
-#define BM_LMEM_PCCRMR_R2    (0x0C000000U) //!< Bit mask for LMEM_PCCRMR_R2.
-#define BS_LMEM_PCCRMR_R2    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R2.
+/*@{*/
+#define BP_LMEM_PCCRMR_R2    (26U)         /*!< Bit position for LMEM_PCCRMR_R2. */
+#define BM_LMEM_PCCRMR_R2    (0x0C000000U) /*!< Bit mask for LMEM_PCCRMR_R2. */
+#define BS_LMEM_PCCRMR_R2    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R2 field.
-#define BR_LMEM_PCCRMR_R2    (HW_LMEM_PCCRMR.B.R2)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R2 field. */
+#define BR_LMEM_PCCRMR_R2(x) (HW_LMEM_PCCRMR(x).B.R2)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R2.
-#define BF_LMEM_PCCRMR_R2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R2), uint32_t) & BM_LMEM_PCCRMR_R2)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R2. */
+#define BF_LMEM_PCCRMR_R2(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R2) & BM_LMEM_PCCRMR_R2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2 field to a new value.
-#define BW_LMEM_PCCRMR_R2(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R2) | BF_LMEM_PCCRMR_R2(v)))
-#endif
-//@}
+/*! @brief Set the R2 field to a new value. */
+#define BW_LMEM_PCCRMR_R2(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R2) | BF_LMEM_PCCRMR_R2(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R1[29:28] (RW)
@@ -1273,24 +1118,20 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R1    (28U)         //!< Bit position for LMEM_PCCRMR_R1.
-#define BM_LMEM_PCCRMR_R1    (0x30000000U) //!< Bit mask for LMEM_PCCRMR_R1.
-#define BS_LMEM_PCCRMR_R1    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R1.
+/*@{*/
+#define BP_LMEM_PCCRMR_R1    (28U)         /*!< Bit position for LMEM_PCCRMR_R1. */
+#define BM_LMEM_PCCRMR_R1    (0x30000000U) /*!< Bit mask for LMEM_PCCRMR_R1. */
+#define BS_LMEM_PCCRMR_R1    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R1 field.
-#define BR_LMEM_PCCRMR_R1    (HW_LMEM_PCCRMR.B.R1)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R1 field. */
+#define BR_LMEM_PCCRMR_R1(x) (HW_LMEM_PCCRMR(x).B.R1)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R1.
-#define BF_LMEM_PCCRMR_R1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R1), uint32_t) & BM_LMEM_PCCRMR_R1)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R1. */
+#define BF_LMEM_PCCRMR_R1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R1) & BM_LMEM_PCCRMR_R1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R1 field to a new value.
-#define BW_LMEM_PCCRMR_R1(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R1) | BF_LMEM_PCCRMR_R1(v)))
-#endif
-//@}
+/*! @brief Set the R1 field to a new value. */
+#define BW_LMEM_PCCRMR_R1(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R1) | BF_LMEM_PCCRMR_R1(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PCCRMR, field R0[31:30] (RW)
@@ -1303,30 +1144,25 @@ typedef union _hw_lmem_pccrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PCCRMR_R0    (30U)         //!< Bit position for LMEM_PCCRMR_R0.
-#define BM_LMEM_PCCRMR_R0    (0xC0000000U) //!< Bit mask for LMEM_PCCRMR_R0.
-#define BS_LMEM_PCCRMR_R0    (2U)          //!< Bit field size in bits for LMEM_PCCRMR_R0.
+/*@{*/
+#define BP_LMEM_PCCRMR_R0    (30U)         /*!< Bit position for LMEM_PCCRMR_R0. */
+#define BM_LMEM_PCCRMR_R0    (0xC0000000U) /*!< Bit mask for LMEM_PCCRMR_R0. */
+#define BS_LMEM_PCCRMR_R0    (2U)          /*!< Bit field size in bits for LMEM_PCCRMR_R0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PCCRMR_R0 field.
-#define BR_LMEM_PCCRMR_R0    (HW_LMEM_PCCRMR.B.R0)
-#endif
+/*! @brief Read current value of the LMEM_PCCRMR_R0 field. */
+#define BR_LMEM_PCCRMR_R0(x) (HW_LMEM_PCCRMR(x).B.R0)
 
-//! @brief Format value for bitfield LMEM_PCCRMR_R0.
-#define BF_LMEM_PCCRMR_R0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PCCRMR_R0), uint32_t) & BM_LMEM_PCCRMR_R0)
+/*! @brief Format value for bitfield LMEM_PCCRMR_R0. */
+#define BF_LMEM_PCCRMR_R0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PCCRMR_R0) & BM_LMEM_PCCRMR_R0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R0 field to a new value.
-#define BW_LMEM_PCCRMR_R0(v) (HW_LMEM_PCCRMR_WR((HW_LMEM_PCCRMR_RD() & ~BM_LMEM_PCCRMR_R0) | BF_LMEM_PCCRMR_R0(v)))
-#endif
-//@}
+/*! @brief Set the R0 field to a new value. */
+#define BW_LMEM_PCCRMR_R0(x, v) (HW_LMEM_PCCRMR_WR(x, (HW_LMEM_PCCRMR_RD(x) & ~BM_LMEM_PCCRMR_R0) | BF_LMEM_PCCRMR_R0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PSCCR - Cache control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PSCCR - Cache control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PSCCR - Cache control register (RW)
  *
@@ -1337,34 +1173,31 @@ typedef union _hw_lmem_psccr
     uint32_t U;
     struct _hw_lmem_psccr_bitfields
     {
-        uint32_t ENCACHE : 1;          //!< [0] Cache enable
-        uint32_t ENWRBUF : 1;          //!< [1] Enable Write Buffer
-        uint32_t RESERVED0 : 22;       //!< [23:2]
-        uint32_t INVW0 : 1;            //!< [24] Invalidate Way 0
-        uint32_t PUSHW0 : 1;           //!< [25] Push Way 0
-        uint32_t INVW1 : 1;            //!< [26] Invalidate Way 1
-        uint32_t PUSHW1 : 1;           //!< [27] Push Way 1
-        uint32_t RESERVED1 : 3;        //!< [30:28]
-        uint32_t GO : 1;               //!< [31] Initiate Cache Command
+        uint32_t ENCACHE : 1;          /*!< [0] Cache enable */
+        uint32_t ENWRBUF : 1;          /*!< [1] Enable Write Buffer */
+        uint32_t RESERVED0 : 22;       /*!< [23:2]  */
+        uint32_t INVW0 : 1;            /*!< [24] Invalidate Way 0 */
+        uint32_t PUSHW0 : 1;           /*!< [25] Push Way 0 */
+        uint32_t INVW1 : 1;            /*!< [26] Invalidate Way 1 */
+        uint32_t PUSHW1 : 1;           /*!< [27] Push Way 1 */
+        uint32_t RESERVED1 : 3;        /*!< [30:28]  */
+        uint32_t GO : 1;               /*!< [31] Initiate Cache Command */
     } B;
 } hw_lmem_psccr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PSCCR register
  */
-//@{
-#define HW_LMEM_PSCCR_ADDR       (REGS_LMEM_BASE + 0x800U)
+/*@{*/
+#define HW_LMEM_PSCCR_ADDR(x)    ((x) + 0x800U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PSCCR            (*(__IO hw_lmem_psccr_t *) HW_LMEM_PSCCR_ADDR)
-#define HW_LMEM_PSCCR_RD()       (HW_LMEM_PSCCR.U)
-#define HW_LMEM_PSCCR_WR(v)      (HW_LMEM_PSCCR.U = (v))
-#define HW_LMEM_PSCCR_SET(v)     (HW_LMEM_PSCCR_WR(HW_LMEM_PSCCR_RD() |  (v)))
-#define HW_LMEM_PSCCR_CLR(v)     (HW_LMEM_PSCCR_WR(HW_LMEM_PSCCR_RD() & ~(v)))
-#define HW_LMEM_PSCCR_TOG(v)     (HW_LMEM_PSCCR_WR(HW_LMEM_PSCCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PSCCR(x)         (*(__IO hw_lmem_psccr_t *) HW_LMEM_PSCCR_ADDR(x))
+#define HW_LMEM_PSCCR_RD(x)      (HW_LMEM_PSCCR(x).U)
+#define HW_LMEM_PSCCR_WR(x, v)   (HW_LMEM_PSCCR(x).U = (v))
+#define HW_LMEM_PSCCR_SET(x, v)  (HW_LMEM_PSCCR_WR(x, HW_LMEM_PSCCR_RD(x) |  (v)))
+#define HW_LMEM_PSCCR_CLR(x, v)  (HW_LMEM_PSCCR_WR(x, HW_LMEM_PSCCR_RD(x) & ~(v)))
+#define HW_LMEM_PSCCR_TOG(x, v)  (HW_LMEM_PSCCR_WR(x, HW_LMEM_PSCCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PSCCR bitfields
@@ -1377,24 +1210,20 @@ typedef union _hw_lmem_psccr
  * - 0 - Cache disabled
  * - 1 - Cache enabled
  */
-//@{
-#define BP_LMEM_PSCCR_ENCACHE (0U)         //!< Bit position for LMEM_PSCCR_ENCACHE.
-#define BM_LMEM_PSCCR_ENCACHE (0x00000001U) //!< Bit mask for LMEM_PSCCR_ENCACHE.
-#define BS_LMEM_PSCCR_ENCACHE (1U)         //!< Bit field size in bits for LMEM_PSCCR_ENCACHE.
+/*@{*/
+#define BP_LMEM_PSCCR_ENCACHE (0U)         /*!< Bit position for LMEM_PSCCR_ENCACHE. */
+#define BM_LMEM_PSCCR_ENCACHE (0x00000001U) /*!< Bit mask for LMEM_PSCCR_ENCACHE. */
+#define BS_LMEM_PSCCR_ENCACHE (1U)         /*!< Bit field size in bits for LMEM_PSCCR_ENCACHE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_ENCACHE field.
-#define BR_LMEM_PSCCR_ENCACHE (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_ENCACHE))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_ENCACHE field. */
+#define BR_LMEM_PSCCR_ENCACHE(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_ENCACHE))
 
-//! @brief Format value for bitfield LMEM_PSCCR_ENCACHE.
-#define BF_LMEM_PSCCR_ENCACHE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_ENCACHE), uint32_t) & BM_LMEM_PSCCR_ENCACHE)
+/*! @brief Format value for bitfield LMEM_PSCCR_ENCACHE. */
+#define BF_LMEM_PSCCR_ENCACHE(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_ENCACHE) & BM_LMEM_PSCCR_ENCACHE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ENCACHE field to a new value.
-#define BW_LMEM_PSCCR_ENCACHE(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_ENCACHE) = (v))
-#endif
-//@}
+/*! @brief Set the ENCACHE field to a new value. */
+#define BW_LMEM_PSCCR_ENCACHE(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_ENCACHE) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field ENWRBUF[1] (RW)
@@ -1403,24 +1232,20 @@ typedef union _hw_lmem_psccr
  * - 0 - Write buffer disabled
  * - 1 - Write buffer enabled
  */
-//@{
-#define BP_LMEM_PSCCR_ENWRBUF (1U)         //!< Bit position for LMEM_PSCCR_ENWRBUF.
-#define BM_LMEM_PSCCR_ENWRBUF (0x00000002U) //!< Bit mask for LMEM_PSCCR_ENWRBUF.
-#define BS_LMEM_PSCCR_ENWRBUF (1U)         //!< Bit field size in bits for LMEM_PSCCR_ENWRBUF.
+/*@{*/
+#define BP_LMEM_PSCCR_ENWRBUF (1U)         /*!< Bit position for LMEM_PSCCR_ENWRBUF. */
+#define BM_LMEM_PSCCR_ENWRBUF (0x00000002U) /*!< Bit mask for LMEM_PSCCR_ENWRBUF. */
+#define BS_LMEM_PSCCR_ENWRBUF (1U)         /*!< Bit field size in bits for LMEM_PSCCR_ENWRBUF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_ENWRBUF field.
-#define BR_LMEM_PSCCR_ENWRBUF (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_ENWRBUF))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_ENWRBUF field. */
+#define BR_LMEM_PSCCR_ENWRBUF(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_ENWRBUF))
 
-//! @brief Format value for bitfield LMEM_PSCCR_ENWRBUF.
-#define BF_LMEM_PSCCR_ENWRBUF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_ENWRBUF), uint32_t) & BM_LMEM_PSCCR_ENWRBUF)
+/*! @brief Format value for bitfield LMEM_PSCCR_ENWRBUF. */
+#define BF_LMEM_PSCCR_ENWRBUF(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_ENWRBUF) & BM_LMEM_PSCCR_ENWRBUF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ENWRBUF field to a new value.
-#define BW_LMEM_PSCCR_ENWRBUF(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_ENWRBUF) = (v))
-#endif
-//@}
+/*! @brief Set the ENWRBUF field to a new value. */
+#define BW_LMEM_PSCCR_ENWRBUF(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_ENWRBUF) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field INVW0[24] (RW)
@@ -1432,24 +1257,20 @@ typedef union _hw_lmem_psccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, invalidate all lines in way 0.
  */
-//@{
-#define BP_LMEM_PSCCR_INVW0  (24U)         //!< Bit position for LMEM_PSCCR_INVW0.
-#define BM_LMEM_PSCCR_INVW0  (0x01000000U) //!< Bit mask for LMEM_PSCCR_INVW0.
-#define BS_LMEM_PSCCR_INVW0  (1U)          //!< Bit field size in bits for LMEM_PSCCR_INVW0.
+/*@{*/
+#define BP_LMEM_PSCCR_INVW0  (24U)         /*!< Bit position for LMEM_PSCCR_INVW0. */
+#define BM_LMEM_PSCCR_INVW0  (0x01000000U) /*!< Bit mask for LMEM_PSCCR_INVW0. */
+#define BS_LMEM_PSCCR_INVW0  (1U)          /*!< Bit field size in bits for LMEM_PSCCR_INVW0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_INVW0 field.
-#define BR_LMEM_PSCCR_INVW0  (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_INVW0))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_INVW0 field. */
+#define BR_LMEM_PSCCR_INVW0(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_INVW0))
 
-//! @brief Format value for bitfield LMEM_PSCCR_INVW0.
-#define BF_LMEM_PSCCR_INVW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_INVW0), uint32_t) & BM_LMEM_PSCCR_INVW0)
+/*! @brief Format value for bitfield LMEM_PSCCR_INVW0. */
+#define BF_LMEM_PSCCR_INVW0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_INVW0) & BM_LMEM_PSCCR_INVW0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INVW0 field to a new value.
-#define BW_LMEM_PSCCR_INVW0(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_INVW0) = (v))
-#endif
-//@}
+/*! @brief Set the INVW0 field to a new value. */
+#define BW_LMEM_PSCCR_INVW0(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_INVW0) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field PUSHW0[25] (RW)
@@ -1458,24 +1279,20 @@ typedef union _hw_lmem_psccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, push all modified lines in way 0
  */
-//@{
-#define BP_LMEM_PSCCR_PUSHW0 (25U)         //!< Bit position for LMEM_PSCCR_PUSHW0.
-#define BM_LMEM_PSCCR_PUSHW0 (0x02000000U) //!< Bit mask for LMEM_PSCCR_PUSHW0.
-#define BS_LMEM_PSCCR_PUSHW0 (1U)          //!< Bit field size in bits for LMEM_PSCCR_PUSHW0.
+/*@{*/
+#define BP_LMEM_PSCCR_PUSHW0 (25U)         /*!< Bit position for LMEM_PSCCR_PUSHW0. */
+#define BM_LMEM_PSCCR_PUSHW0 (0x02000000U) /*!< Bit mask for LMEM_PSCCR_PUSHW0. */
+#define BS_LMEM_PSCCR_PUSHW0 (1U)          /*!< Bit field size in bits for LMEM_PSCCR_PUSHW0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_PUSHW0 field.
-#define BR_LMEM_PSCCR_PUSHW0 (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_PUSHW0))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_PUSHW0 field. */
+#define BR_LMEM_PSCCR_PUSHW0(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_PUSHW0))
 
-//! @brief Format value for bitfield LMEM_PSCCR_PUSHW0.
-#define BF_LMEM_PSCCR_PUSHW0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_PUSHW0), uint32_t) & BM_LMEM_PSCCR_PUSHW0)
+/*! @brief Format value for bitfield LMEM_PSCCR_PUSHW0. */
+#define BF_LMEM_PSCCR_PUSHW0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_PUSHW0) & BM_LMEM_PSCCR_PUSHW0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUSHW0 field to a new value.
-#define BW_LMEM_PSCCR_PUSHW0(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_PUSHW0) = (v))
-#endif
-//@}
+/*! @brief Set the PUSHW0 field to a new value. */
+#define BW_LMEM_PSCCR_PUSHW0(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_PUSHW0) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field INVW1[26] (RW)
@@ -1487,24 +1304,20 @@ typedef union _hw_lmem_psccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, invalidate all lines in way 1
  */
-//@{
-#define BP_LMEM_PSCCR_INVW1  (26U)         //!< Bit position for LMEM_PSCCR_INVW1.
-#define BM_LMEM_PSCCR_INVW1  (0x04000000U) //!< Bit mask for LMEM_PSCCR_INVW1.
-#define BS_LMEM_PSCCR_INVW1  (1U)          //!< Bit field size in bits for LMEM_PSCCR_INVW1.
+/*@{*/
+#define BP_LMEM_PSCCR_INVW1  (26U)         /*!< Bit position for LMEM_PSCCR_INVW1. */
+#define BM_LMEM_PSCCR_INVW1  (0x04000000U) /*!< Bit mask for LMEM_PSCCR_INVW1. */
+#define BS_LMEM_PSCCR_INVW1  (1U)          /*!< Bit field size in bits for LMEM_PSCCR_INVW1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_INVW1 field.
-#define BR_LMEM_PSCCR_INVW1  (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_INVW1))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_INVW1 field. */
+#define BR_LMEM_PSCCR_INVW1(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_INVW1))
 
-//! @brief Format value for bitfield LMEM_PSCCR_INVW1.
-#define BF_LMEM_PSCCR_INVW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_INVW1), uint32_t) & BM_LMEM_PSCCR_INVW1)
+/*! @brief Format value for bitfield LMEM_PSCCR_INVW1. */
+#define BF_LMEM_PSCCR_INVW1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_INVW1) & BM_LMEM_PSCCR_INVW1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the INVW1 field to a new value.
-#define BW_LMEM_PSCCR_INVW1(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_INVW1) = (v))
-#endif
-//@}
+/*! @brief Set the INVW1 field to a new value. */
+#define BW_LMEM_PSCCR_INVW1(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_INVW1) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field PUSHW1[27] (RW)
@@ -1513,24 +1326,20 @@ typedef union _hw_lmem_psccr
  * - 0 - No operation
  * - 1 - When setting the GO bit, push all modified lines in way 1
  */
-//@{
-#define BP_LMEM_PSCCR_PUSHW1 (27U)         //!< Bit position for LMEM_PSCCR_PUSHW1.
-#define BM_LMEM_PSCCR_PUSHW1 (0x08000000U) //!< Bit mask for LMEM_PSCCR_PUSHW1.
-#define BS_LMEM_PSCCR_PUSHW1 (1U)          //!< Bit field size in bits for LMEM_PSCCR_PUSHW1.
+/*@{*/
+#define BP_LMEM_PSCCR_PUSHW1 (27U)         /*!< Bit position for LMEM_PSCCR_PUSHW1. */
+#define BM_LMEM_PSCCR_PUSHW1 (0x08000000U) /*!< Bit mask for LMEM_PSCCR_PUSHW1. */
+#define BS_LMEM_PSCCR_PUSHW1 (1U)          /*!< Bit field size in bits for LMEM_PSCCR_PUSHW1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_PUSHW1 field.
-#define BR_LMEM_PSCCR_PUSHW1 (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_PUSHW1))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_PUSHW1 field. */
+#define BR_LMEM_PSCCR_PUSHW1(x) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_PUSHW1))
 
-//! @brief Format value for bitfield LMEM_PSCCR_PUSHW1.
-#define BF_LMEM_PSCCR_PUSHW1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_PUSHW1), uint32_t) & BM_LMEM_PSCCR_PUSHW1)
+/*! @brief Format value for bitfield LMEM_PSCCR_PUSHW1. */
+#define BF_LMEM_PSCCR_PUSHW1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_PUSHW1) & BM_LMEM_PSCCR_PUSHW1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PUSHW1 field to a new value.
-#define BW_LMEM_PSCCR_PUSHW1(v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_PUSHW1) = (v))
-#endif
-//@}
+/*! @brief Set the PUSHW1 field to a new value. */
+#define BW_LMEM_PSCCR_PUSHW1(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_PUSHW1) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCCR, field GO[31] (RW)
@@ -1544,30 +1353,25 @@ typedef union _hw_lmem_psccr
  * - 1 - Write: initiate command indicated by bits 27-24. Read: cache command
  *     active.
  */
-//@{
-#define BP_LMEM_PSCCR_GO     (31U)         //!< Bit position for LMEM_PSCCR_GO.
-#define BM_LMEM_PSCCR_GO     (0x80000000U) //!< Bit mask for LMEM_PSCCR_GO.
-#define BS_LMEM_PSCCR_GO     (1U)          //!< Bit field size in bits for LMEM_PSCCR_GO.
+/*@{*/
+#define BP_LMEM_PSCCR_GO     (31U)         /*!< Bit position for LMEM_PSCCR_GO. */
+#define BM_LMEM_PSCCR_GO     (0x80000000U) /*!< Bit mask for LMEM_PSCCR_GO. */
+#define BS_LMEM_PSCCR_GO     (1U)          /*!< Bit field size in bits for LMEM_PSCCR_GO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCR_GO field.
-#define BR_LMEM_PSCCR_GO     (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_GO))
-#endif
+/*! @brief Read current value of the LMEM_PSCCR_GO field. */
+#define BR_LMEM_PSCCR_GO(x)  (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_GO))
 
-//! @brief Format value for bitfield LMEM_PSCCR_GO.
-#define BF_LMEM_PSCCR_GO(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCR_GO), uint32_t) & BM_LMEM_PSCCR_GO)
+/*! @brief Format value for bitfield LMEM_PSCCR_GO. */
+#define BF_LMEM_PSCCR_GO(v)  ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCR_GO) & BM_LMEM_PSCCR_GO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GO field to a new value.
-#define BW_LMEM_PSCCR_GO(v)  (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR, BP_LMEM_PSCCR_GO) = (v))
-#endif
-//@}
+/*! @brief Set the GO field to a new value. */
+#define BW_LMEM_PSCCR_GO(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCCR_ADDR(x), BP_LMEM_PSCCR_GO) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PSCLCR - Cache line control register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PSCLCR - Cache line control register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PSCLCR - Cache line control register (RW)
  *
@@ -1583,41 +1387,38 @@ typedef union _hw_lmem_psclcr
     uint32_t U;
     struct _hw_lmem_psclcr_bitfields
     {
-        uint32_t LGO : 1;              //!< [0] Initiate Cache Line Command
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t CACHEADDR : 10;       //!< [11:2] Cache address
-        uint32_t RESERVED1 : 2;        //!< [13:12]
-        uint32_t WSEL : 1;             //!< [14] Way select
-        uint32_t RESERVED2 : 1;        //!< [15]
-        uint32_t TDSEL : 1;            //!< [16] Tag/Data Select
-        uint32_t RESERVED3 : 3;        //!< [19:17]
-        uint32_t LCIVB : 1;            //!< [20] Line Command Initial Valid Bit
-        uint32_t LCIMB : 1;            //!< [21] Line Command Initial Modified Bit
-        uint32_t LCWAY : 1;            //!< [22] Line Command Way
-        uint32_t RESERVED4 : 1;        //!< [23]
-        uint32_t LCMD : 2;             //!< [25:24] Line Command
-        uint32_t LADSEL : 1;           //!< [26] Line Address Select
-        uint32_t LACC : 1;             //!< [27] Line access type
-        uint32_t RESERVED5 : 4;        //!< [31:28]
+        uint32_t LGO : 1;              /*!< [0] Initiate Cache Line Command */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t CACHEADDR : 10;       /*!< [11:2] Cache address */
+        uint32_t RESERVED1 : 2;        /*!< [13:12]  */
+        uint32_t WSEL : 1;             /*!< [14] Way select */
+        uint32_t RESERVED2 : 1;        /*!< [15]  */
+        uint32_t TDSEL : 1;            /*!< [16] Tag/Data Select */
+        uint32_t RESERVED3 : 3;        /*!< [19:17]  */
+        uint32_t LCIVB : 1;            /*!< [20] Line Command Initial Valid Bit */
+        uint32_t LCIMB : 1;            /*!< [21] Line Command Initial Modified Bit */
+        uint32_t LCWAY : 1;            /*!< [22] Line Command Way */
+        uint32_t RESERVED4 : 1;        /*!< [23]  */
+        uint32_t LCMD : 2;             /*!< [25:24] Line Command */
+        uint32_t LADSEL : 1;           /*!< [26] Line Address Select */
+        uint32_t LACC : 1;             /*!< [27] Line access type */
+        uint32_t RESERVED5 : 4;        /*!< [31:28]  */
     } B;
 } hw_lmem_psclcr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PSCLCR register
  */
-//@{
-#define HW_LMEM_PSCLCR_ADDR      (REGS_LMEM_BASE + 0x804U)
+/*@{*/
+#define HW_LMEM_PSCLCR_ADDR(x)   ((x) + 0x804U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PSCLCR           (*(__IO hw_lmem_psclcr_t *) HW_LMEM_PSCLCR_ADDR)
-#define HW_LMEM_PSCLCR_RD()      (HW_LMEM_PSCLCR.U)
-#define HW_LMEM_PSCLCR_WR(v)     (HW_LMEM_PSCLCR.U = (v))
-#define HW_LMEM_PSCLCR_SET(v)    (HW_LMEM_PSCLCR_WR(HW_LMEM_PSCLCR_RD() |  (v)))
-#define HW_LMEM_PSCLCR_CLR(v)    (HW_LMEM_PSCLCR_WR(HW_LMEM_PSCLCR_RD() & ~(v)))
-#define HW_LMEM_PSCLCR_TOG(v)    (HW_LMEM_PSCLCR_WR(HW_LMEM_PSCLCR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PSCLCR(x)        (*(__IO hw_lmem_psclcr_t *) HW_LMEM_PSCLCR_ADDR(x))
+#define HW_LMEM_PSCLCR_RD(x)     (HW_LMEM_PSCLCR(x).U)
+#define HW_LMEM_PSCLCR_WR(x, v)  (HW_LMEM_PSCLCR(x).U = (v))
+#define HW_LMEM_PSCLCR_SET(x, v) (HW_LMEM_PSCLCR_WR(x, HW_LMEM_PSCLCR_RD(x) |  (v)))
+#define HW_LMEM_PSCLCR_CLR(x, v) (HW_LMEM_PSCLCR_WR(x, HW_LMEM_PSCLCR_RD(x) & ~(v)))
+#define HW_LMEM_PSCLCR_TOG(x, v) (HW_LMEM_PSCLCR_WR(x, HW_LMEM_PSCLCR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PSCLCR bitfields
@@ -1636,24 +1437,20 @@ typedef union _hw_lmem_psclcr
  * - 1 - Write: initiate line command indicated by bits 27-24. Read: line
  *     command active.
  */
-//@{
-#define BP_LMEM_PSCLCR_LGO   (0U)          //!< Bit position for LMEM_PSCLCR_LGO.
-#define BM_LMEM_PSCLCR_LGO   (0x00000001U) //!< Bit mask for LMEM_PSCLCR_LGO.
-#define BS_LMEM_PSCLCR_LGO   (1U)          //!< Bit field size in bits for LMEM_PSCLCR_LGO.
+/*@{*/
+#define BP_LMEM_PSCLCR_LGO   (0U)          /*!< Bit position for LMEM_PSCLCR_LGO. */
+#define BM_LMEM_PSCLCR_LGO   (0x00000001U) /*!< Bit mask for LMEM_PSCLCR_LGO. */
+#define BS_LMEM_PSCLCR_LGO   (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_LGO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LGO field.
-#define BR_LMEM_PSCLCR_LGO   (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LGO))
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_LGO field. */
+#define BR_LMEM_PSCLCR_LGO(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LGO))
 
-//! @brief Format value for bitfield LMEM_PSCLCR_LGO.
-#define BF_LMEM_PSCLCR_LGO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_LGO), uint32_t) & BM_LMEM_PSCLCR_LGO)
+/*! @brief Format value for bitfield LMEM_PSCLCR_LGO. */
+#define BF_LMEM_PSCLCR_LGO(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_LGO) & BM_LMEM_PSCLCR_LGO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LGO field to a new value.
-#define BW_LMEM_PSCLCR_LGO(v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LGO) = (v))
-#endif
-//@}
+/*! @brief Set the LGO field to a new value. */
+#define BW_LMEM_PSCLCR_LGO(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LGO) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field CACHEADDR[11:2] (RW)
@@ -1661,24 +1458,20 @@ typedef union _hw_lmem_psclcr
  * CLCR[11:4] bits are used to access the tag arrays CLCR[11:2] bits are used to
  * access the data arrays
  */
-//@{
-#define BP_LMEM_PSCLCR_CACHEADDR (2U)      //!< Bit position for LMEM_PSCLCR_CACHEADDR.
-#define BM_LMEM_PSCLCR_CACHEADDR (0x00000FFCU) //!< Bit mask for LMEM_PSCLCR_CACHEADDR.
-#define BS_LMEM_PSCLCR_CACHEADDR (10U)     //!< Bit field size in bits for LMEM_PSCLCR_CACHEADDR.
+/*@{*/
+#define BP_LMEM_PSCLCR_CACHEADDR (2U)      /*!< Bit position for LMEM_PSCLCR_CACHEADDR. */
+#define BM_LMEM_PSCLCR_CACHEADDR (0x00000FFCU) /*!< Bit mask for LMEM_PSCLCR_CACHEADDR. */
+#define BS_LMEM_PSCLCR_CACHEADDR (10U)     /*!< Bit field size in bits for LMEM_PSCLCR_CACHEADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_CACHEADDR field.
-#define BR_LMEM_PSCLCR_CACHEADDR (HW_LMEM_PSCLCR.B.CACHEADDR)
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_CACHEADDR field. */
+#define BR_LMEM_PSCLCR_CACHEADDR(x) (HW_LMEM_PSCLCR(x).B.CACHEADDR)
 
-//! @brief Format value for bitfield LMEM_PSCLCR_CACHEADDR.
-#define BF_LMEM_PSCLCR_CACHEADDR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_CACHEADDR), uint32_t) & BM_LMEM_PSCLCR_CACHEADDR)
+/*! @brief Format value for bitfield LMEM_PSCLCR_CACHEADDR. */
+#define BF_LMEM_PSCLCR_CACHEADDR(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_CACHEADDR) & BM_LMEM_PSCLCR_CACHEADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CACHEADDR field to a new value.
-#define BW_LMEM_PSCLCR_CACHEADDR(v) (HW_LMEM_PSCLCR_WR((HW_LMEM_PSCLCR_RD() & ~BM_LMEM_PSCLCR_CACHEADDR) | BF_LMEM_PSCLCR_CACHEADDR(v)))
-#endif
-//@}
+/*! @brief Set the CACHEADDR field to a new value. */
+#define BW_LMEM_PSCLCR_CACHEADDR(x, v) (HW_LMEM_PSCLCR_WR(x, (HW_LMEM_PSCLCR_RD(x) & ~BM_LMEM_PSCLCR_CACHEADDR) | BF_LMEM_PSCLCR_CACHEADDR(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field WSEL[14] (RW)
@@ -1689,24 +1482,20 @@ typedef union _hw_lmem_psclcr
  * - 0 - Way 0
  * - 1 - Way 1
  */
-//@{
-#define BP_LMEM_PSCLCR_WSEL  (14U)         //!< Bit position for LMEM_PSCLCR_WSEL.
-#define BM_LMEM_PSCLCR_WSEL  (0x00004000U) //!< Bit mask for LMEM_PSCLCR_WSEL.
-#define BS_LMEM_PSCLCR_WSEL  (1U)          //!< Bit field size in bits for LMEM_PSCLCR_WSEL.
+/*@{*/
+#define BP_LMEM_PSCLCR_WSEL  (14U)         /*!< Bit position for LMEM_PSCLCR_WSEL. */
+#define BM_LMEM_PSCLCR_WSEL  (0x00004000U) /*!< Bit mask for LMEM_PSCLCR_WSEL. */
+#define BS_LMEM_PSCLCR_WSEL  (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_WSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_WSEL field.
-#define BR_LMEM_PSCLCR_WSEL  (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_WSEL))
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_WSEL field. */
+#define BR_LMEM_PSCLCR_WSEL(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_WSEL))
 
-//! @brief Format value for bitfield LMEM_PSCLCR_WSEL.
-#define BF_LMEM_PSCLCR_WSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_WSEL), uint32_t) & BM_LMEM_PSCLCR_WSEL)
+/*! @brief Format value for bitfield LMEM_PSCLCR_WSEL. */
+#define BF_LMEM_PSCLCR_WSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_WSEL) & BM_LMEM_PSCLCR_WSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the WSEL field to a new value.
-#define BW_LMEM_PSCLCR_WSEL(v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_WSEL) = (v))
-#endif
-//@}
+/*! @brief Set the WSEL field to a new value. */
+#define BW_LMEM_PSCLCR_WSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_WSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field TDSEL[16] (RW)
@@ -1717,24 +1506,20 @@ typedef union _hw_lmem_psclcr
  * - 0 - Data
  * - 1 - Tag
  */
-//@{
-#define BP_LMEM_PSCLCR_TDSEL (16U)         //!< Bit position for LMEM_PSCLCR_TDSEL.
-#define BM_LMEM_PSCLCR_TDSEL (0x00010000U) //!< Bit mask for LMEM_PSCLCR_TDSEL.
-#define BS_LMEM_PSCLCR_TDSEL (1U)          //!< Bit field size in bits for LMEM_PSCLCR_TDSEL.
+/*@{*/
+#define BP_LMEM_PSCLCR_TDSEL (16U)         /*!< Bit position for LMEM_PSCLCR_TDSEL. */
+#define BM_LMEM_PSCLCR_TDSEL (0x00010000U) /*!< Bit mask for LMEM_PSCLCR_TDSEL. */
+#define BS_LMEM_PSCLCR_TDSEL (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_TDSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_TDSEL field.
-#define BR_LMEM_PSCLCR_TDSEL (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_TDSEL))
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_TDSEL field. */
+#define BR_LMEM_PSCLCR_TDSEL(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_TDSEL))
 
-//! @brief Format value for bitfield LMEM_PSCLCR_TDSEL.
-#define BF_LMEM_PSCLCR_TDSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_TDSEL), uint32_t) & BM_LMEM_PSCLCR_TDSEL)
+/*! @brief Format value for bitfield LMEM_PSCLCR_TDSEL. */
+#define BF_LMEM_PSCLCR_TDSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_TDSEL) & BM_LMEM_PSCLCR_TDSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TDSEL field to a new value.
-#define BW_LMEM_PSCLCR_TDSEL(v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_TDSEL) = (v))
-#endif
-//@}
+/*! @brief Set the TDSEL field to a new value. */
+#define BW_LMEM_PSCLCR_TDSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_TDSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LCIVB[20] (RO)
@@ -1743,16 +1528,14 @@ typedef union _hw_lmem_psclcr
  * of the valid bit If command used physical address and a hit, then this bit
  * shows the initial state of the valid bit. If a miss, this bit reads zero.
  */
-//@{
-#define BP_LMEM_PSCLCR_LCIVB (20U)         //!< Bit position for LMEM_PSCLCR_LCIVB.
-#define BM_LMEM_PSCLCR_LCIVB (0x00100000U) //!< Bit mask for LMEM_PSCLCR_LCIVB.
-#define BS_LMEM_PSCLCR_LCIVB (1U)          //!< Bit field size in bits for LMEM_PSCLCR_LCIVB.
+/*@{*/
+#define BP_LMEM_PSCLCR_LCIVB (20U)         /*!< Bit position for LMEM_PSCLCR_LCIVB. */
+#define BM_LMEM_PSCLCR_LCIVB (0x00100000U) /*!< Bit mask for LMEM_PSCLCR_LCIVB. */
+#define BS_LMEM_PSCLCR_LCIVB (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_LCIVB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LCIVB field.
-#define BR_LMEM_PSCLCR_LCIVB (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LCIVB))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PSCLCR_LCIVB field. */
+#define BR_LMEM_PSCLCR_LCIVB(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LCIVB))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LCIMB[21] (RO)
@@ -1761,32 +1544,28 @@ typedef union _hw_lmem_psclcr
  * of the modified bit If command used physical address and a hit, then this bit
  * shows the initial state of the modified bit. If a miss, this bit reads zero.
  */
-//@{
-#define BP_LMEM_PSCLCR_LCIMB (21U)         //!< Bit position for LMEM_PSCLCR_LCIMB.
-#define BM_LMEM_PSCLCR_LCIMB (0x00200000U) //!< Bit mask for LMEM_PSCLCR_LCIMB.
-#define BS_LMEM_PSCLCR_LCIMB (1U)          //!< Bit field size in bits for LMEM_PSCLCR_LCIMB.
+/*@{*/
+#define BP_LMEM_PSCLCR_LCIMB (21U)         /*!< Bit position for LMEM_PSCLCR_LCIMB. */
+#define BM_LMEM_PSCLCR_LCIMB (0x00200000U) /*!< Bit mask for LMEM_PSCLCR_LCIMB. */
+#define BS_LMEM_PSCLCR_LCIMB (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_LCIMB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LCIMB field.
-#define BR_LMEM_PSCLCR_LCIMB (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LCIMB))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PSCLCR_LCIMB field. */
+#define BR_LMEM_PSCLCR_LCIMB(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LCIMB))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LCWAY[22] (RO)
  *
  * Indicates the way used by the line command.
  */
-//@{
-#define BP_LMEM_PSCLCR_LCWAY (22U)         //!< Bit position for LMEM_PSCLCR_LCWAY.
-#define BM_LMEM_PSCLCR_LCWAY (0x00400000U) //!< Bit mask for LMEM_PSCLCR_LCWAY.
-#define BS_LMEM_PSCLCR_LCWAY (1U)          //!< Bit field size in bits for LMEM_PSCLCR_LCWAY.
+/*@{*/
+#define BP_LMEM_PSCLCR_LCWAY (22U)         /*!< Bit position for LMEM_PSCLCR_LCWAY. */
+#define BM_LMEM_PSCLCR_LCWAY (0x00400000U) /*!< Bit mask for LMEM_PSCLCR_LCWAY. */
+#define BS_LMEM_PSCLCR_LCWAY (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_LCWAY. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LCWAY field.
-#define BR_LMEM_PSCLCR_LCWAY (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LCWAY))
-#endif
-//@}
+/*! @brief Read current value of the LMEM_PSCLCR_LCWAY field. */
+#define BR_LMEM_PSCLCR_LCWAY(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LCWAY))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LCMD[25:24] (RW)
@@ -1797,24 +1576,20 @@ typedef union _hw_lmem_psclcr
  * - 10 - Push
  * - 11 - Clear
  */
-//@{
-#define BP_LMEM_PSCLCR_LCMD  (24U)         //!< Bit position for LMEM_PSCLCR_LCMD.
-#define BM_LMEM_PSCLCR_LCMD  (0x03000000U) //!< Bit mask for LMEM_PSCLCR_LCMD.
-#define BS_LMEM_PSCLCR_LCMD  (2U)          //!< Bit field size in bits for LMEM_PSCLCR_LCMD.
+/*@{*/
+#define BP_LMEM_PSCLCR_LCMD  (24U)         /*!< Bit position for LMEM_PSCLCR_LCMD. */
+#define BM_LMEM_PSCLCR_LCMD  (0x03000000U) /*!< Bit mask for LMEM_PSCLCR_LCMD. */
+#define BS_LMEM_PSCLCR_LCMD  (2U)          /*!< Bit field size in bits for LMEM_PSCLCR_LCMD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LCMD field.
-#define BR_LMEM_PSCLCR_LCMD  (HW_LMEM_PSCLCR.B.LCMD)
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_LCMD field. */
+#define BR_LMEM_PSCLCR_LCMD(x) (HW_LMEM_PSCLCR(x).B.LCMD)
 
-//! @brief Format value for bitfield LMEM_PSCLCR_LCMD.
-#define BF_LMEM_PSCLCR_LCMD(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_LCMD), uint32_t) & BM_LMEM_PSCLCR_LCMD)
+/*! @brief Format value for bitfield LMEM_PSCLCR_LCMD. */
+#define BF_LMEM_PSCLCR_LCMD(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_LCMD) & BM_LMEM_PSCLCR_LCMD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LCMD field to a new value.
-#define BW_LMEM_PSCLCR_LCMD(v) (HW_LMEM_PSCLCR_WR((HW_LMEM_PSCLCR_RD() & ~BM_LMEM_PSCLCR_LCMD) | BF_LMEM_PSCLCR_LCMD(v)))
-#endif
-//@}
+/*! @brief Set the LCMD field to a new value. */
+#define BW_LMEM_PSCLCR_LCMD(x, v) (HW_LMEM_PSCLCR_WR(x, (HW_LMEM_PSCLCR_RD(x) & ~BM_LMEM_PSCLCR_LCMD) | BF_LMEM_PSCLCR_LCMD(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LADSEL[26] (RW)
@@ -1827,24 +1602,20 @@ typedef union _hw_lmem_psclcr
  * - 0 - Cache address
  * - 1 - Physical address
  */
-//@{
-#define BP_LMEM_PSCLCR_LADSEL (26U)        //!< Bit position for LMEM_PSCLCR_LADSEL.
-#define BM_LMEM_PSCLCR_LADSEL (0x04000000U) //!< Bit mask for LMEM_PSCLCR_LADSEL.
-#define BS_LMEM_PSCLCR_LADSEL (1U)         //!< Bit field size in bits for LMEM_PSCLCR_LADSEL.
+/*@{*/
+#define BP_LMEM_PSCLCR_LADSEL (26U)        /*!< Bit position for LMEM_PSCLCR_LADSEL. */
+#define BM_LMEM_PSCLCR_LADSEL (0x04000000U) /*!< Bit mask for LMEM_PSCLCR_LADSEL. */
+#define BS_LMEM_PSCLCR_LADSEL (1U)         /*!< Bit field size in bits for LMEM_PSCLCR_LADSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LADSEL field.
-#define BR_LMEM_PSCLCR_LADSEL (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LADSEL))
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_LADSEL field. */
+#define BR_LMEM_PSCLCR_LADSEL(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LADSEL))
 
-//! @brief Format value for bitfield LMEM_PSCLCR_LADSEL.
-#define BF_LMEM_PSCLCR_LADSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_LADSEL), uint32_t) & BM_LMEM_PSCLCR_LADSEL)
+/*! @brief Format value for bitfield LMEM_PSCLCR_LADSEL. */
+#define BF_LMEM_PSCLCR_LADSEL(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_LADSEL) & BM_LMEM_PSCLCR_LADSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LADSEL field to a new value.
-#define BW_LMEM_PSCLCR_LADSEL(v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LADSEL) = (v))
-#endif
-//@}
+/*! @brief Set the LADSEL field to a new value. */
+#define BW_LMEM_PSCLCR_LADSEL(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LADSEL) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCLCR, field LACC[27] (RW)
@@ -1853,30 +1624,25 @@ typedef union _hw_lmem_psclcr
  * - 0 - Read
  * - 1 - Write
  */
-//@{
-#define BP_LMEM_PSCLCR_LACC  (27U)         //!< Bit position for LMEM_PSCLCR_LACC.
-#define BM_LMEM_PSCLCR_LACC  (0x08000000U) //!< Bit mask for LMEM_PSCLCR_LACC.
-#define BS_LMEM_PSCLCR_LACC  (1U)          //!< Bit field size in bits for LMEM_PSCLCR_LACC.
+/*@{*/
+#define BP_LMEM_PSCLCR_LACC  (27U)         /*!< Bit position for LMEM_PSCLCR_LACC. */
+#define BM_LMEM_PSCLCR_LACC  (0x08000000U) /*!< Bit mask for LMEM_PSCLCR_LACC. */
+#define BS_LMEM_PSCLCR_LACC  (1U)          /*!< Bit field size in bits for LMEM_PSCLCR_LACC. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCLCR_LACC field.
-#define BR_LMEM_PSCLCR_LACC  (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LACC))
-#endif
+/*! @brief Read current value of the LMEM_PSCLCR_LACC field. */
+#define BR_LMEM_PSCLCR_LACC(x) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LACC))
 
-//! @brief Format value for bitfield LMEM_PSCLCR_LACC.
-#define BF_LMEM_PSCLCR_LACC(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCLCR_LACC), uint32_t) & BM_LMEM_PSCLCR_LACC)
+/*! @brief Format value for bitfield LMEM_PSCLCR_LACC. */
+#define BF_LMEM_PSCLCR_LACC(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCLCR_LACC) & BM_LMEM_PSCLCR_LACC)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LACC field to a new value.
-#define BW_LMEM_PSCLCR_LACC(v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR, BP_LMEM_PSCLCR_LACC) = (v))
-#endif
-//@}
+/*! @brief Set the LACC field to a new value. */
+#define BW_LMEM_PSCLCR_LACC(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCLCR_ADDR(x), BP_LMEM_PSCLCR_LACC) = (v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PSCSAR - Cache search address register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PSCSAR - Cache search address register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PSCSAR - Cache search address register (RW)
  *
@@ -1890,28 +1656,25 @@ typedef union _hw_lmem_pscsar
     uint32_t U;
     struct _hw_lmem_pscsar_bitfields
     {
-        uint32_t LGO : 1;              //!< [0] Initiate Cache Line Command
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t PHYADDR : 30;         //!< [31:2] Physical Address
+        uint32_t LGO : 1;              /*!< [0] Initiate Cache Line Command */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t PHYADDR : 30;         /*!< [31:2] Physical Address */
     } B;
 } hw_lmem_pscsar_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PSCSAR register
  */
-//@{
-#define HW_LMEM_PSCSAR_ADDR      (REGS_LMEM_BASE + 0x808U)
+/*@{*/
+#define HW_LMEM_PSCSAR_ADDR(x)   ((x) + 0x808U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PSCSAR           (*(__IO hw_lmem_pscsar_t *) HW_LMEM_PSCSAR_ADDR)
-#define HW_LMEM_PSCSAR_RD()      (HW_LMEM_PSCSAR.U)
-#define HW_LMEM_PSCSAR_WR(v)     (HW_LMEM_PSCSAR.U = (v))
-#define HW_LMEM_PSCSAR_SET(v)    (HW_LMEM_PSCSAR_WR(HW_LMEM_PSCSAR_RD() |  (v)))
-#define HW_LMEM_PSCSAR_CLR(v)    (HW_LMEM_PSCSAR_WR(HW_LMEM_PSCSAR_RD() & ~(v)))
-#define HW_LMEM_PSCSAR_TOG(v)    (HW_LMEM_PSCSAR_WR(HW_LMEM_PSCSAR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PSCSAR(x)        (*(__IO hw_lmem_pscsar_t *) HW_LMEM_PSCSAR_ADDR(x))
+#define HW_LMEM_PSCSAR_RD(x)     (HW_LMEM_PSCSAR(x).U)
+#define HW_LMEM_PSCSAR_WR(x, v)  (HW_LMEM_PSCSAR(x).U = (v))
+#define HW_LMEM_PSCSAR_SET(x, v) (HW_LMEM_PSCSAR_WR(x, HW_LMEM_PSCSAR_RD(x) |  (v)))
+#define HW_LMEM_PSCSAR_CLR(x, v) (HW_LMEM_PSCSAR_WR(x, HW_LMEM_PSCSAR_RD(x) & ~(v)))
+#define HW_LMEM_PSCSAR_TOG(x, v) (HW_LMEM_PSCSAR_WR(x, HW_LMEM_PSCSAR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PSCSAR bitfields
@@ -1930,24 +1693,20 @@ typedef union _hw_lmem_pscsar
  * - 1 - Write: initiate line command indicated by bits CLCR[27:24]. Read: line
  *     command active.
  */
-//@{
-#define BP_LMEM_PSCSAR_LGO   (0U)          //!< Bit position for LMEM_PSCSAR_LGO.
-#define BM_LMEM_PSCSAR_LGO   (0x00000001U) //!< Bit mask for LMEM_PSCSAR_LGO.
-#define BS_LMEM_PSCSAR_LGO   (1U)          //!< Bit field size in bits for LMEM_PSCSAR_LGO.
+/*@{*/
+#define BP_LMEM_PSCSAR_LGO   (0U)          /*!< Bit position for LMEM_PSCSAR_LGO. */
+#define BM_LMEM_PSCSAR_LGO   (0x00000001U) /*!< Bit mask for LMEM_PSCSAR_LGO. */
+#define BS_LMEM_PSCSAR_LGO   (1U)          /*!< Bit field size in bits for LMEM_PSCSAR_LGO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCSAR_LGO field.
-#define BR_LMEM_PSCSAR_LGO   (BITBAND_ACCESS32(HW_LMEM_PSCSAR_ADDR, BP_LMEM_PSCSAR_LGO))
-#endif
+/*! @brief Read current value of the LMEM_PSCSAR_LGO field. */
+#define BR_LMEM_PSCSAR_LGO(x) (BITBAND_ACCESS32(HW_LMEM_PSCSAR_ADDR(x), BP_LMEM_PSCSAR_LGO))
 
-//! @brief Format value for bitfield LMEM_PSCSAR_LGO.
-#define BF_LMEM_PSCSAR_LGO(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCSAR_LGO), uint32_t) & BM_LMEM_PSCSAR_LGO)
+/*! @brief Format value for bitfield LMEM_PSCSAR_LGO. */
+#define BF_LMEM_PSCSAR_LGO(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCSAR_LGO) & BM_LMEM_PSCSAR_LGO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the LGO field to a new value.
-#define BW_LMEM_PSCSAR_LGO(v) (BITBAND_ACCESS32(HW_LMEM_PSCSAR_ADDR, BP_LMEM_PSCSAR_LGO) = (v))
-#endif
-//@}
+/*! @brief Set the LGO field to a new value. */
+#define BW_LMEM_PSCSAR_LGO(x, v) (BITBAND_ACCESS32(HW_LMEM_PSCSAR_ADDR(x), BP_LMEM_PSCSAR_LGO) = (v))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCSAR, field PHYADDR[31:2] (RW)
@@ -1956,30 +1715,25 @@ typedef union _hw_lmem_pscsar
  * used for tag compare CSAR[11:4] bits are used to access the tag arrays
  * CSAR[11:2] bits are used to access the data arrays
  */
-//@{
-#define BP_LMEM_PSCSAR_PHYADDR (2U)        //!< Bit position for LMEM_PSCSAR_PHYADDR.
-#define BM_LMEM_PSCSAR_PHYADDR (0xFFFFFFFCU) //!< Bit mask for LMEM_PSCSAR_PHYADDR.
-#define BS_LMEM_PSCSAR_PHYADDR (30U)       //!< Bit field size in bits for LMEM_PSCSAR_PHYADDR.
+/*@{*/
+#define BP_LMEM_PSCSAR_PHYADDR (2U)        /*!< Bit position for LMEM_PSCSAR_PHYADDR. */
+#define BM_LMEM_PSCSAR_PHYADDR (0xFFFFFFFCU) /*!< Bit mask for LMEM_PSCSAR_PHYADDR. */
+#define BS_LMEM_PSCSAR_PHYADDR (30U)       /*!< Bit field size in bits for LMEM_PSCSAR_PHYADDR. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCSAR_PHYADDR field.
-#define BR_LMEM_PSCSAR_PHYADDR (HW_LMEM_PSCSAR.B.PHYADDR)
-#endif
+/*! @brief Read current value of the LMEM_PSCSAR_PHYADDR field. */
+#define BR_LMEM_PSCSAR_PHYADDR(x) (HW_LMEM_PSCSAR(x).B.PHYADDR)
 
-//! @brief Format value for bitfield LMEM_PSCSAR_PHYADDR.
-#define BF_LMEM_PSCSAR_PHYADDR(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCSAR_PHYADDR), uint32_t) & BM_LMEM_PSCSAR_PHYADDR)
+/*! @brief Format value for bitfield LMEM_PSCSAR_PHYADDR. */
+#define BF_LMEM_PSCSAR_PHYADDR(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCSAR_PHYADDR) & BM_LMEM_PSCSAR_PHYADDR)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PHYADDR field to a new value.
-#define BW_LMEM_PSCSAR_PHYADDR(v) (HW_LMEM_PSCSAR_WR((HW_LMEM_PSCSAR_RD() & ~BM_LMEM_PSCSAR_PHYADDR) | BF_LMEM_PSCSAR_PHYADDR(v)))
-#endif
-//@}
+/*! @brief Set the PHYADDR field to a new value. */
+#define BW_LMEM_PSCSAR_PHYADDR(x, v) (HW_LMEM_PSCSAR_WR(x, (HW_LMEM_PSCSAR_RD(x) & ~BM_LMEM_PSCSAR_PHYADDR) | BF_LMEM_PSCSAR_PHYADDR(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PSCCVR - Cache read/write value register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PSCCVR - Cache read/write value register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PSCCVR - Cache read/write value register (RW)
  *
@@ -1993,26 +1747,23 @@ typedef union _hw_lmem_psccvr
     uint32_t U;
     struct _hw_lmem_psccvr_bitfields
     {
-        uint32_t DATA : 32;            //!< [31:0] Cache read/write Data
+        uint32_t DATA : 32;            /*!< [31:0] Cache read/write Data */
     } B;
 } hw_lmem_psccvr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PSCCVR register
  */
-//@{
-#define HW_LMEM_PSCCVR_ADDR      (REGS_LMEM_BASE + 0x80CU)
+/*@{*/
+#define HW_LMEM_PSCCVR_ADDR(x)   ((x) + 0x80CU)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PSCCVR           (*(__IO hw_lmem_psccvr_t *) HW_LMEM_PSCCVR_ADDR)
-#define HW_LMEM_PSCCVR_RD()      (HW_LMEM_PSCCVR.U)
-#define HW_LMEM_PSCCVR_WR(v)     (HW_LMEM_PSCCVR.U = (v))
-#define HW_LMEM_PSCCVR_SET(v)    (HW_LMEM_PSCCVR_WR(HW_LMEM_PSCCVR_RD() |  (v)))
-#define HW_LMEM_PSCCVR_CLR(v)    (HW_LMEM_PSCCVR_WR(HW_LMEM_PSCCVR_RD() & ~(v)))
-#define HW_LMEM_PSCCVR_TOG(v)    (HW_LMEM_PSCCVR_WR(HW_LMEM_PSCCVR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PSCCVR(x)        (*(__IO hw_lmem_psccvr_t *) HW_LMEM_PSCCVR_ADDR(x))
+#define HW_LMEM_PSCCVR_RD(x)     (HW_LMEM_PSCCVR(x).U)
+#define HW_LMEM_PSCCVR_WR(x, v)  (HW_LMEM_PSCCVR(x).U = (v))
+#define HW_LMEM_PSCCVR_SET(x, v) (HW_LMEM_PSCCVR_WR(x, HW_LMEM_PSCCVR_RD(x) |  (v)))
+#define HW_LMEM_PSCCVR_CLR(x, v) (HW_LMEM_PSCCVR_WR(x, HW_LMEM_PSCCVR_RD(x) & ~(v)))
+#define HW_LMEM_PSCCVR_TOG(x, v) (HW_LMEM_PSCCVR_WR(x, HW_LMEM_PSCCVR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PSCCVR bitfields
@@ -2026,30 +1777,25 @@ typedef union _hw_lmem_psccvr
  * CCVR[3:2] bits are reserved For data search, read or write: CCVR[31:0] bits are
  * used for data array R/W value
  */
-//@{
-#define BP_LMEM_PSCCVR_DATA  (0U)          //!< Bit position for LMEM_PSCCVR_DATA.
-#define BM_LMEM_PSCCVR_DATA  (0xFFFFFFFFU) //!< Bit mask for LMEM_PSCCVR_DATA.
-#define BS_LMEM_PSCCVR_DATA  (32U)         //!< Bit field size in bits for LMEM_PSCCVR_DATA.
+/*@{*/
+#define BP_LMEM_PSCCVR_DATA  (0U)          /*!< Bit position for LMEM_PSCCVR_DATA. */
+#define BM_LMEM_PSCCVR_DATA  (0xFFFFFFFFU) /*!< Bit mask for LMEM_PSCCVR_DATA. */
+#define BS_LMEM_PSCCVR_DATA  (32U)         /*!< Bit field size in bits for LMEM_PSCCVR_DATA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCCVR_DATA field.
-#define BR_LMEM_PSCCVR_DATA  (HW_LMEM_PSCCVR.B.DATA)
-#endif
+/*! @brief Read current value of the LMEM_PSCCVR_DATA field. */
+#define BR_LMEM_PSCCVR_DATA(x) (HW_LMEM_PSCCVR(x).U)
 
-//! @brief Format value for bitfield LMEM_PSCCVR_DATA.
-#define BF_LMEM_PSCCVR_DATA(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCCVR_DATA), uint32_t) & BM_LMEM_PSCCVR_DATA)
+/*! @brief Format value for bitfield LMEM_PSCCVR_DATA. */
+#define BF_LMEM_PSCCVR_DATA(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCCVR_DATA) & BM_LMEM_PSCCVR_DATA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DATA field to a new value.
-#define BW_LMEM_PSCCVR_DATA(v) (HW_LMEM_PSCCVR_WR((HW_LMEM_PSCCVR_RD() & ~BM_LMEM_PSCCVR_DATA) | BF_LMEM_PSCCVR_DATA(v)))
-#endif
-//@}
+/*! @brief Set the DATA field to a new value. */
+#define BW_LMEM_PSCCVR_DATA(x, v) (HW_LMEM_PSCCVR_WR(x, v))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_LMEM_PSCRMR - Cache regions mode register
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_LMEM_PSCRMR - Cache regions mode register
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_LMEM_PSCRMR - Cache regions mode register (RW)
  *
@@ -2073,41 +1819,38 @@ typedef union _hw_lmem_pscrmr
     uint32_t U;
     struct _hw_lmem_pscrmr_bitfields
     {
-        uint32_t R15 : 2;              //!< [1:0] Region 15 mode
-        uint32_t R14 : 2;              //!< [3:2] Region 14 mode
-        uint32_t R13 : 2;              //!< [5:4] Region 13 mode
-        uint32_t R12 : 2;              //!< [7:6] Region 12 mode
-        uint32_t R11 : 2;              //!< [9:8] Region 11 mode
-        uint32_t R10 : 2;              //!< [11:10] Region 10 mode
-        uint32_t R9 : 2;               //!< [13:12] Region 9 mode
-        uint32_t R8 : 2;               //!< [15:14] Region 8 mode
-        uint32_t R7 : 2;               //!< [17:16] Region 7 mode
-        uint32_t R6 : 2;               //!< [19:18] Region 6 mode
-        uint32_t R5 : 2;               //!< [21:20] Region 5 mode
-        uint32_t R4 : 2;               //!< [23:22] Region 4 mode
-        uint32_t R3 : 2;               //!< [25:24] Region 3 mode
-        uint32_t R2 : 2;               //!< [27:26] Region 2 mode
-        uint32_t R1 : 2;               //!< [29:28] Region 1 mode
-        uint32_t R0 : 2;               //!< [31:30] Region 0 mode
+        uint32_t R15 : 2;              /*!< [1:0] Region 15 mode */
+        uint32_t R14 : 2;              /*!< [3:2] Region 14 mode */
+        uint32_t R13 : 2;              /*!< [5:4] Region 13 mode */
+        uint32_t R12 : 2;              /*!< [7:6] Region 12 mode */
+        uint32_t R11 : 2;              /*!< [9:8] Region 11 mode */
+        uint32_t R10 : 2;              /*!< [11:10] Region 10 mode */
+        uint32_t R9 : 2;               /*!< [13:12] Region 9 mode */
+        uint32_t R8 : 2;               /*!< [15:14] Region 8 mode */
+        uint32_t R7 : 2;               /*!< [17:16] Region 7 mode */
+        uint32_t R6 : 2;               /*!< [19:18] Region 6 mode */
+        uint32_t R5 : 2;               /*!< [21:20] Region 5 mode */
+        uint32_t R4 : 2;               /*!< [23:22] Region 4 mode */
+        uint32_t R3 : 2;               /*!< [25:24] Region 3 mode */
+        uint32_t R2 : 2;               /*!< [27:26] Region 2 mode */
+        uint32_t R1 : 2;               /*!< [29:28] Region 1 mode */
+        uint32_t R0 : 2;               /*!< [31:30] Region 0 mode */
     } B;
 } hw_lmem_pscrmr_t;
-#endif
 
 /*!
  * @name Constants and macros for entire LMEM_PSCRMR register
  */
-//@{
-#define HW_LMEM_PSCRMR_ADDR      (REGS_LMEM_BASE + 0x820U)
+/*@{*/
+#define HW_LMEM_PSCRMR_ADDR(x)   ((x) + 0x820U)
 
-#ifndef __LANGUAGE_ASM__
-#define HW_LMEM_PSCRMR           (*(__IO hw_lmem_pscrmr_t *) HW_LMEM_PSCRMR_ADDR)
-#define HW_LMEM_PSCRMR_RD()      (HW_LMEM_PSCRMR.U)
-#define HW_LMEM_PSCRMR_WR(v)     (HW_LMEM_PSCRMR.U = (v))
-#define HW_LMEM_PSCRMR_SET(v)    (HW_LMEM_PSCRMR_WR(HW_LMEM_PSCRMR_RD() |  (v)))
-#define HW_LMEM_PSCRMR_CLR(v)    (HW_LMEM_PSCRMR_WR(HW_LMEM_PSCRMR_RD() & ~(v)))
-#define HW_LMEM_PSCRMR_TOG(v)    (HW_LMEM_PSCRMR_WR(HW_LMEM_PSCRMR_RD() ^  (v)))
-#endif
-//@}
+#define HW_LMEM_PSCRMR(x)        (*(__IO hw_lmem_pscrmr_t *) HW_LMEM_PSCRMR_ADDR(x))
+#define HW_LMEM_PSCRMR_RD(x)     (HW_LMEM_PSCRMR(x).U)
+#define HW_LMEM_PSCRMR_WR(x, v)  (HW_LMEM_PSCRMR(x).U = (v))
+#define HW_LMEM_PSCRMR_SET(x, v) (HW_LMEM_PSCRMR_WR(x, HW_LMEM_PSCRMR_RD(x) |  (v)))
+#define HW_LMEM_PSCRMR_CLR(x, v) (HW_LMEM_PSCRMR_WR(x, HW_LMEM_PSCRMR_RD(x) & ~(v)))
+#define HW_LMEM_PSCRMR_TOG(x, v) (HW_LMEM_PSCRMR_WR(x, HW_LMEM_PSCRMR_RD(x) ^  (v)))
+/*@}*/
 
 /*
  * Constants & macros for individual LMEM_PSCRMR bitfields
@@ -2124,24 +1867,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R15   (0U)          //!< Bit position for LMEM_PSCRMR_R15.
-#define BM_LMEM_PSCRMR_R15   (0x00000003U) //!< Bit mask for LMEM_PSCRMR_R15.
-#define BS_LMEM_PSCRMR_R15   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R15.
+/*@{*/
+#define BP_LMEM_PSCRMR_R15   (0U)          /*!< Bit position for LMEM_PSCRMR_R15. */
+#define BM_LMEM_PSCRMR_R15   (0x00000003U) /*!< Bit mask for LMEM_PSCRMR_R15. */
+#define BS_LMEM_PSCRMR_R15   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R15. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R15 field.
-#define BR_LMEM_PSCRMR_R15   (HW_LMEM_PSCRMR.B.R15)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R15 field. */
+#define BR_LMEM_PSCRMR_R15(x) (HW_LMEM_PSCRMR(x).B.R15)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R15.
-#define BF_LMEM_PSCRMR_R15(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R15), uint32_t) & BM_LMEM_PSCRMR_R15)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R15. */
+#define BF_LMEM_PSCRMR_R15(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R15) & BM_LMEM_PSCRMR_R15)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R15 field to a new value.
-#define BW_LMEM_PSCRMR_R15(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R15) | BF_LMEM_PSCRMR_R15(v)))
-#endif
-//@}
+/*! @brief Set the R15 field to a new value. */
+#define BW_LMEM_PSCRMR_R15(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R15) | BF_LMEM_PSCRMR_R15(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R14[3:2] (RW)
@@ -2154,24 +1893,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R14   (2U)          //!< Bit position for LMEM_PSCRMR_R14.
-#define BM_LMEM_PSCRMR_R14   (0x0000000CU) //!< Bit mask for LMEM_PSCRMR_R14.
-#define BS_LMEM_PSCRMR_R14   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R14.
+/*@{*/
+#define BP_LMEM_PSCRMR_R14   (2U)          /*!< Bit position for LMEM_PSCRMR_R14. */
+#define BM_LMEM_PSCRMR_R14   (0x0000000CU) /*!< Bit mask for LMEM_PSCRMR_R14. */
+#define BS_LMEM_PSCRMR_R14   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R14. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R14 field.
-#define BR_LMEM_PSCRMR_R14   (HW_LMEM_PSCRMR.B.R14)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R14 field. */
+#define BR_LMEM_PSCRMR_R14(x) (HW_LMEM_PSCRMR(x).B.R14)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R14.
-#define BF_LMEM_PSCRMR_R14(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R14), uint32_t) & BM_LMEM_PSCRMR_R14)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R14. */
+#define BF_LMEM_PSCRMR_R14(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R14) & BM_LMEM_PSCRMR_R14)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R14 field to a new value.
-#define BW_LMEM_PSCRMR_R14(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R14) | BF_LMEM_PSCRMR_R14(v)))
-#endif
-//@}
+/*! @brief Set the R14 field to a new value. */
+#define BW_LMEM_PSCRMR_R14(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R14) | BF_LMEM_PSCRMR_R14(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R13[5:4] (RW)
@@ -2184,24 +1919,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R13   (4U)          //!< Bit position for LMEM_PSCRMR_R13.
-#define BM_LMEM_PSCRMR_R13   (0x00000030U) //!< Bit mask for LMEM_PSCRMR_R13.
-#define BS_LMEM_PSCRMR_R13   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R13.
+/*@{*/
+#define BP_LMEM_PSCRMR_R13   (4U)          /*!< Bit position for LMEM_PSCRMR_R13. */
+#define BM_LMEM_PSCRMR_R13   (0x00000030U) /*!< Bit mask for LMEM_PSCRMR_R13. */
+#define BS_LMEM_PSCRMR_R13   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R13. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R13 field.
-#define BR_LMEM_PSCRMR_R13   (HW_LMEM_PSCRMR.B.R13)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R13 field. */
+#define BR_LMEM_PSCRMR_R13(x) (HW_LMEM_PSCRMR(x).B.R13)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R13.
-#define BF_LMEM_PSCRMR_R13(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R13), uint32_t) & BM_LMEM_PSCRMR_R13)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R13. */
+#define BF_LMEM_PSCRMR_R13(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R13) & BM_LMEM_PSCRMR_R13)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R13 field to a new value.
-#define BW_LMEM_PSCRMR_R13(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R13) | BF_LMEM_PSCRMR_R13(v)))
-#endif
-//@}
+/*! @brief Set the R13 field to a new value. */
+#define BW_LMEM_PSCRMR_R13(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R13) | BF_LMEM_PSCRMR_R13(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R12[7:6] (RW)
@@ -2214,24 +1945,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R12   (6U)          //!< Bit position for LMEM_PSCRMR_R12.
-#define BM_LMEM_PSCRMR_R12   (0x000000C0U) //!< Bit mask for LMEM_PSCRMR_R12.
-#define BS_LMEM_PSCRMR_R12   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R12.
+/*@{*/
+#define BP_LMEM_PSCRMR_R12   (6U)          /*!< Bit position for LMEM_PSCRMR_R12. */
+#define BM_LMEM_PSCRMR_R12   (0x000000C0U) /*!< Bit mask for LMEM_PSCRMR_R12. */
+#define BS_LMEM_PSCRMR_R12   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R12. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R12 field.
-#define BR_LMEM_PSCRMR_R12   (HW_LMEM_PSCRMR.B.R12)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R12 field. */
+#define BR_LMEM_PSCRMR_R12(x) (HW_LMEM_PSCRMR(x).B.R12)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R12.
-#define BF_LMEM_PSCRMR_R12(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R12), uint32_t) & BM_LMEM_PSCRMR_R12)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R12. */
+#define BF_LMEM_PSCRMR_R12(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R12) & BM_LMEM_PSCRMR_R12)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R12 field to a new value.
-#define BW_LMEM_PSCRMR_R12(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R12) | BF_LMEM_PSCRMR_R12(v)))
-#endif
-//@}
+/*! @brief Set the R12 field to a new value. */
+#define BW_LMEM_PSCRMR_R12(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R12) | BF_LMEM_PSCRMR_R12(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R11[9:8] (RW)
@@ -2244,24 +1971,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R11   (8U)          //!< Bit position for LMEM_PSCRMR_R11.
-#define BM_LMEM_PSCRMR_R11   (0x00000300U) //!< Bit mask for LMEM_PSCRMR_R11.
-#define BS_LMEM_PSCRMR_R11   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R11.
+/*@{*/
+#define BP_LMEM_PSCRMR_R11   (8U)          /*!< Bit position for LMEM_PSCRMR_R11. */
+#define BM_LMEM_PSCRMR_R11   (0x00000300U) /*!< Bit mask for LMEM_PSCRMR_R11. */
+#define BS_LMEM_PSCRMR_R11   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R11. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R11 field.
-#define BR_LMEM_PSCRMR_R11   (HW_LMEM_PSCRMR.B.R11)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R11 field. */
+#define BR_LMEM_PSCRMR_R11(x) (HW_LMEM_PSCRMR(x).B.R11)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R11.
-#define BF_LMEM_PSCRMR_R11(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R11), uint32_t) & BM_LMEM_PSCRMR_R11)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R11. */
+#define BF_LMEM_PSCRMR_R11(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R11) & BM_LMEM_PSCRMR_R11)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R11 field to a new value.
-#define BW_LMEM_PSCRMR_R11(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R11) | BF_LMEM_PSCRMR_R11(v)))
-#endif
-//@}
+/*! @brief Set the R11 field to a new value. */
+#define BW_LMEM_PSCRMR_R11(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R11) | BF_LMEM_PSCRMR_R11(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R10[11:10] (RW)
@@ -2274,24 +1997,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R10   (10U)         //!< Bit position for LMEM_PSCRMR_R10.
-#define BM_LMEM_PSCRMR_R10   (0x00000C00U) //!< Bit mask for LMEM_PSCRMR_R10.
-#define BS_LMEM_PSCRMR_R10   (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R10.
+/*@{*/
+#define BP_LMEM_PSCRMR_R10   (10U)         /*!< Bit position for LMEM_PSCRMR_R10. */
+#define BM_LMEM_PSCRMR_R10   (0x00000C00U) /*!< Bit mask for LMEM_PSCRMR_R10. */
+#define BS_LMEM_PSCRMR_R10   (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R10. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R10 field.
-#define BR_LMEM_PSCRMR_R10   (HW_LMEM_PSCRMR.B.R10)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R10 field. */
+#define BR_LMEM_PSCRMR_R10(x) (HW_LMEM_PSCRMR(x).B.R10)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R10.
-#define BF_LMEM_PSCRMR_R10(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R10), uint32_t) & BM_LMEM_PSCRMR_R10)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R10. */
+#define BF_LMEM_PSCRMR_R10(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R10) & BM_LMEM_PSCRMR_R10)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R10 field to a new value.
-#define BW_LMEM_PSCRMR_R10(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R10) | BF_LMEM_PSCRMR_R10(v)))
-#endif
-//@}
+/*! @brief Set the R10 field to a new value. */
+#define BW_LMEM_PSCRMR_R10(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R10) | BF_LMEM_PSCRMR_R10(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R9[13:12] (RW)
@@ -2304,24 +2023,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R9    (12U)         //!< Bit position for LMEM_PSCRMR_R9.
-#define BM_LMEM_PSCRMR_R9    (0x00003000U) //!< Bit mask for LMEM_PSCRMR_R9.
-#define BS_LMEM_PSCRMR_R9    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R9.
+/*@{*/
+#define BP_LMEM_PSCRMR_R9    (12U)         /*!< Bit position for LMEM_PSCRMR_R9. */
+#define BM_LMEM_PSCRMR_R9    (0x00003000U) /*!< Bit mask for LMEM_PSCRMR_R9. */
+#define BS_LMEM_PSCRMR_R9    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R9. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R9 field.
-#define BR_LMEM_PSCRMR_R9    (HW_LMEM_PSCRMR.B.R9)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R9 field. */
+#define BR_LMEM_PSCRMR_R9(x) (HW_LMEM_PSCRMR(x).B.R9)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R9.
-#define BF_LMEM_PSCRMR_R9(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R9), uint32_t) & BM_LMEM_PSCRMR_R9)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R9. */
+#define BF_LMEM_PSCRMR_R9(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R9) & BM_LMEM_PSCRMR_R9)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R9 field to a new value.
-#define BW_LMEM_PSCRMR_R9(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R9) | BF_LMEM_PSCRMR_R9(v)))
-#endif
-//@}
+/*! @brief Set the R9 field to a new value. */
+#define BW_LMEM_PSCRMR_R9(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R9) | BF_LMEM_PSCRMR_R9(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R8[15:14] (RW)
@@ -2334,24 +2049,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R8    (14U)         //!< Bit position for LMEM_PSCRMR_R8.
-#define BM_LMEM_PSCRMR_R8    (0x0000C000U) //!< Bit mask for LMEM_PSCRMR_R8.
-#define BS_LMEM_PSCRMR_R8    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R8.
+/*@{*/
+#define BP_LMEM_PSCRMR_R8    (14U)         /*!< Bit position for LMEM_PSCRMR_R8. */
+#define BM_LMEM_PSCRMR_R8    (0x0000C000U) /*!< Bit mask for LMEM_PSCRMR_R8. */
+#define BS_LMEM_PSCRMR_R8    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R8. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R8 field.
-#define BR_LMEM_PSCRMR_R8    (HW_LMEM_PSCRMR.B.R8)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R8 field. */
+#define BR_LMEM_PSCRMR_R8(x) (HW_LMEM_PSCRMR(x).B.R8)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R8.
-#define BF_LMEM_PSCRMR_R8(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R8), uint32_t) & BM_LMEM_PSCRMR_R8)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R8. */
+#define BF_LMEM_PSCRMR_R8(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R8) & BM_LMEM_PSCRMR_R8)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R8 field to a new value.
-#define BW_LMEM_PSCRMR_R8(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R8) | BF_LMEM_PSCRMR_R8(v)))
-#endif
-//@}
+/*! @brief Set the R8 field to a new value. */
+#define BW_LMEM_PSCRMR_R8(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R8) | BF_LMEM_PSCRMR_R8(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R7[17:16] (RW)
@@ -2364,24 +2075,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R7    (16U)         //!< Bit position for LMEM_PSCRMR_R7.
-#define BM_LMEM_PSCRMR_R7    (0x00030000U) //!< Bit mask for LMEM_PSCRMR_R7.
-#define BS_LMEM_PSCRMR_R7    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R7.
+/*@{*/
+#define BP_LMEM_PSCRMR_R7    (16U)         /*!< Bit position for LMEM_PSCRMR_R7. */
+#define BM_LMEM_PSCRMR_R7    (0x00030000U) /*!< Bit mask for LMEM_PSCRMR_R7. */
+#define BS_LMEM_PSCRMR_R7    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R7. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R7 field.
-#define BR_LMEM_PSCRMR_R7    (HW_LMEM_PSCRMR.B.R7)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R7 field. */
+#define BR_LMEM_PSCRMR_R7(x) (HW_LMEM_PSCRMR(x).B.R7)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R7.
-#define BF_LMEM_PSCRMR_R7(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R7), uint32_t) & BM_LMEM_PSCRMR_R7)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R7. */
+#define BF_LMEM_PSCRMR_R7(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R7) & BM_LMEM_PSCRMR_R7)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R7 field to a new value.
-#define BW_LMEM_PSCRMR_R7(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R7) | BF_LMEM_PSCRMR_R7(v)))
-#endif
-//@}
+/*! @brief Set the R7 field to a new value. */
+#define BW_LMEM_PSCRMR_R7(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R7) | BF_LMEM_PSCRMR_R7(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R6[19:18] (RW)
@@ -2394,24 +2101,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R6    (18U)         //!< Bit position for LMEM_PSCRMR_R6.
-#define BM_LMEM_PSCRMR_R6    (0x000C0000U) //!< Bit mask for LMEM_PSCRMR_R6.
-#define BS_LMEM_PSCRMR_R6    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R6.
+/*@{*/
+#define BP_LMEM_PSCRMR_R6    (18U)         /*!< Bit position for LMEM_PSCRMR_R6. */
+#define BM_LMEM_PSCRMR_R6    (0x000C0000U) /*!< Bit mask for LMEM_PSCRMR_R6. */
+#define BS_LMEM_PSCRMR_R6    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R6. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R6 field.
-#define BR_LMEM_PSCRMR_R6    (HW_LMEM_PSCRMR.B.R6)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R6 field. */
+#define BR_LMEM_PSCRMR_R6(x) (HW_LMEM_PSCRMR(x).B.R6)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R6.
-#define BF_LMEM_PSCRMR_R6(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R6), uint32_t) & BM_LMEM_PSCRMR_R6)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R6. */
+#define BF_LMEM_PSCRMR_R6(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R6) & BM_LMEM_PSCRMR_R6)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R6 field to a new value.
-#define BW_LMEM_PSCRMR_R6(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R6) | BF_LMEM_PSCRMR_R6(v)))
-#endif
-//@}
+/*! @brief Set the R6 field to a new value. */
+#define BW_LMEM_PSCRMR_R6(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R6) | BF_LMEM_PSCRMR_R6(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R5[21:20] (RW)
@@ -2424,24 +2127,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R5    (20U)         //!< Bit position for LMEM_PSCRMR_R5.
-#define BM_LMEM_PSCRMR_R5    (0x00300000U) //!< Bit mask for LMEM_PSCRMR_R5.
-#define BS_LMEM_PSCRMR_R5    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R5.
+/*@{*/
+#define BP_LMEM_PSCRMR_R5    (20U)         /*!< Bit position for LMEM_PSCRMR_R5. */
+#define BM_LMEM_PSCRMR_R5    (0x00300000U) /*!< Bit mask for LMEM_PSCRMR_R5. */
+#define BS_LMEM_PSCRMR_R5    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R5. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R5 field.
-#define BR_LMEM_PSCRMR_R5    (HW_LMEM_PSCRMR.B.R5)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R5 field. */
+#define BR_LMEM_PSCRMR_R5(x) (HW_LMEM_PSCRMR(x).B.R5)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R5.
-#define BF_LMEM_PSCRMR_R5(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R5), uint32_t) & BM_LMEM_PSCRMR_R5)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R5. */
+#define BF_LMEM_PSCRMR_R5(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R5) & BM_LMEM_PSCRMR_R5)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R5 field to a new value.
-#define BW_LMEM_PSCRMR_R5(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R5) | BF_LMEM_PSCRMR_R5(v)))
-#endif
-//@}
+/*! @brief Set the R5 field to a new value. */
+#define BW_LMEM_PSCRMR_R5(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R5) | BF_LMEM_PSCRMR_R5(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R4[23:22] (RW)
@@ -2454,24 +2153,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R4    (22U)         //!< Bit position for LMEM_PSCRMR_R4.
-#define BM_LMEM_PSCRMR_R4    (0x00C00000U) //!< Bit mask for LMEM_PSCRMR_R4.
-#define BS_LMEM_PSCRMR_R4    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R4.
+/*@{*/
+#define BP_LMEM_PSCRMR_R4    (22U)         /*!< Bit position for LMEM_PSCRMR_R4. */
+#define BM_LMEM_PSCRMR_R4    (0x00C00000U) /*!< Bit mask for LMEM_PSCRMR_R4. */
+#define BS_LMEM_PSCRMR_R4    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R4. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R4 field.
-#define BR_LMEM_PSCRMR_R4    (HW_LMEM_PSCRMR.B.R4)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R4 field. */
+#define BR_LMEM_PSCRMR_R4(x) (HW_LMEM_PSCRMR(x).B.R4)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R4.
-#define BF_LMEM_PSCRMR_R4(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R4), uint32_t) & BM_LMEM_PSCRMR_R4)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R4. */
+#define BF_LMEM_PSCRMR_R4(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R4) & BM_LMEM_PSCRMR_R4)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R4 field to a new value.
-#define BW_LMEM_PSCRMR_R4(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R4) | BF_LMEM_PSCRMR_R4(v)))
-#endif
-//@}
+/*! @brief Set the R4 field to a new value. */
+#define BW_LMEM_PSCRMR_R4(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R4) | BF_LMEM_PSCRMR_R4(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R3[25:24] (RW)
@@ -2484,24 +2179,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R3    (24U)         //!< Bit position for LMEM_PSCRMR_R3.
-#define BM_LMEM_PSCRMR_R3    (0x03000000U) //!< Bit mask for LMEM_PSCRMR_R3.
-#define BS_LMEM_PSCRMR_R3    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R3.
+/*@{*/
+#define BP_LMEM_PSCRMR_R3    (24U)         /*!< Bit position for LMEM_PSCRMR_R3. */
+#define BM_LMEM_PSCRMR_R3    (0x03000000U) /*!< Bit mask for LMEM_PSCRMR_R3. */
+#define BS_LMEM_PSCRMR_R3    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R3. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R3 field.
-#define BR_LMEM_PSCRMR_R3    (HW_LMEM_PSCRMR.B.R3)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R3 field. */
+#define BR_LMEM_PSCRMR_R3(x) (HW_LMEM_PSCRMR(x).B.R3)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R3.
-#define BF_LMEM_PSCRMR_R3(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R3), uint32_t) & BM_LMEM_PSCRMR_R3)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R3. */
+#define BF_LMEM_PSCRMR_R3(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R3) & BM_LMEM_PSCRMR_R3)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R3 field to a new value.
-#define BW_LMEM_PSCRMR_R3(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R3) | BF_LMEM_PSCRMR_R3(v)))
-#endif
-//@}
+/*! @brief Set the R3 field to a new value. */
+#define BW_LMEM_PSCRMR_R3(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R3) | BF_LMEM_PSCRMR_R3(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R2[27:26] (RW)
@@ -2514,24 +2205,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R2    (26U)         //!< Bit position for LMEM_PSCRMR_R2.
-#define BM_LMEM_PSCRMR_R2    (0x0C000000U) //!< Bit mask for LMEM_PSCRMR_R2.
-#define BS_LMEM_PSCRMR_R2    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R2.
+/*@{*/
+#define BP_LMEM_PSCRMR_R2    (26U)         /*!< Bit position for LMEM_PSCRMR_R2. */
+#define BM_LMEM_PSCRMR_R2    (0x0C000000U) /*!< Bit mask for LMEM_PSCRMR_R2. */
+#define BS_LMEM_PSCRMR_R2    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R2. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R2 field.
-#define BR_LMEM_PSCRMR_R2    (HW_LMEM_PSCRMR.B.R2)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R2 field. */
+#define BR_LMEM_PSCRMR_R2(x) (HW_LMEM_PSCRMR(x).B.R2)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R2.
-#define BF_LMEM_PSCRMR_R2(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R2), uint32_t) & BM_LMEM_PSCRMR_R2)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R2. */
+#define BF_LMEM_PSCRMR_R2(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R2) & BM_LMEM_PSCRMR_R2)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R2 field to a new value.
-#define BW_LMEM_PSCRMR_R2(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R2) | BF_LMEM_PSCRMR_R2(v)))
-#endif
-//@}
+/*! @brief Set the R2 field to a new value. */
+#define BW_LMEM_PSCRMR_R2(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R2) | BF_LMEM_PSCRMR_R2(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R1[29:28] (RW)
@@ -2544,24 +2231,20 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R1    (28U)         //!< Bit position for LMEM_PSCRMR_R1.
-#define BM_LMEM_PSCRMR_R1    (0x30000000U) //!< Bit mask for LMEM_PSCRMR_R1.
-#define BS_LMEM_PSCRMR_R1    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R1.
+/*@{*/
+#define BP_LMEM_PSCRMR_R1    (28U)         /*!< Bit position for LMEM_PSCRMR_R1. */
+#define BM_LMEM_PSCRMR_R1    (0x30000000U) /*!< Bit mask for LMEM_PSCRMR_R1. */
+#define BS_LMEM_PSCRMR_R1    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R1. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R1 field.
-#define BR_LMEM_PSCRMR_R1    (HW_LMEM_PSCRMR.B.R1)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R1 field. */
+#define BR_LMEM_PSCRMR_R1(x) (HW_LMEM_PSCRMR(x).B.R1)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R1.
-#define BF_LMEM_PSCRMR_R1(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R1), uint32_t) & BM_LMEM_PSCRMR_R1)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R1. */
+#define BF_LMEM_PSCRMR_R1(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R1) & BM_LMEM_PSCRMR_R1)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R1 field to a new value.
-#define BW_LMEM_PSCRMR_R1(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R1) | BF_LMEM_PSCRMR_R1(v)))
-#endif
-//@}
+/*! @brief Set the R1 field to a new value. */
+#define BW_LMEM_PSCRMR_R1(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R1) | BF_LMEM_PSCRMR_R1(v)))
+/*@}*/
 
 /*!
  * @name Register LMEM_PSCRMR, field R0[31:30] (RW)
@@ -2574,57 +2257,52 @@ typedef union _hw_lmem_pscrmr
  * - 10 - Write-through
  * - 11 - Write-back
  */
-//@{
-#define BP_LMEM_PSCRMR_R0    (30U)         //!< Bit position for LMEM_PSCRMR_R0.
-#define BM_LMEM_PSCRMR_R0    (0xC0000000U) //!< Bit mask for LMEM_PSCRMR_R0.
-#define BS_LMEM_PSCRMR_R0    (2U)          //!< Bit field size in bits for LMEM_PSCRMR_R0.
+/*@{*/
+#define BP_LMEM_PSCRMR_R0    (30U)         /*!< Bit position for LMEM_PSCRMR_R0. */
+#define BM_LMEM_PSCRMR_R0    (0xC0000000U) /*!< Bit mask for LMEM_PSCRMR_R0. */
+#define BS_LMEM_PSCRMR_R0    (2U)          /*!< Bit field size in bits for LMEM_PSCRMR_R0. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the LMEM_PSCRMR_R0 field.
-#define BR_LMEM_PSCRMR_R0    (HW_LMEM_PSCRMR.B.R0)
-#endif
+/*! @brief Read current value of the LMEM_PSCRMR_R0 field. */
+#define BR_LMEM_PSCRMR_R0(x) (HW_LMEM_PSCRMR(x).B.R0)
 
-//! @brief Format value for bitfield LMEM_PSCRMR_R0.
-#define BF_LMEM_PSCRMR_R0(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_LMEM_PSCRMR_R0), uint32_t) & BM_LMEM_PSCRMR_R0)
+/*! @brief Format value for bitfield LMEM_PSCRMR_R0. */
+#define BF_LMEM_PSCRMR_R0(v) ((uint32_t)((uint32_t)(v) << BP_LMEM_PSCRMR_R0) & BM_LMEM_PSCRMR_R0)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the R0 field to a new value.
-#define BW_LMEM_PSCRMR_R0(v) (HW_LMEM_PSCRMR_WR((HW_LMEM_PSCRMR_RD() & ~BM_LMEM_PSCRMR_R0) | BF_LMEM_PSCRMR_R0(v)))
-#endif
-//@}
+/*! @brief Set the R0 field to a new value. */
+#define BW_LMEM_PSCRMR_R0(x, v) (HW_LMEM_PSCRMR_WR(x, (HW_LMEM_PSCRMR_RD(x) & ~BM_LMEM_PSCRMR_R0) | BF_LMEM_PSCRMR_R0(v)))
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_lmem_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_lmem_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All LMEM module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_lmem
 {
-    __IO hw_lmem_pcccr_t PCCCR;            //!< [0x0] Cache control register
-    __IO hw_lmem_pcclcr_t PCCLCR;          //!< [0x4] Cache line control register
-    __IO hw_lmem_pccsar_t PCCSAR;          //!< [0x8] Cache search address register
-    __IO hw_lmem_pcccvr_t PCCCVR;          //!< [0xC] Cache read/write value register
+    __IO hw_lmem_pcccr_t PCCCR;            /*!< [0x0] Cache control register */
+    __IO hw_lmem_pcclcr_t PCCLCR;          /*!< [0x4] Cache line control register */
+    __IO hw_lmem_pccsar_t PCCSAR;          /*!< [0x8] Cache search address register */
+    __IO hw_lmem_pcccvr_t PCCCVR;          /*!< [0xC] Cache read/write value register */
     uint8_t _reserved0[16];
-    __IO hw_lmem_pccrmr_t PCCRMR;          //!< [0x20] Cache regions mode register
+    __IO hw_lmem_pccrmr_t PCCRMR;          /*!< [0x20] Cache regions mode register */
     uint8_t _reserved1[2012];
-    __IO hw_lmem_psccr_t PSCCR;            //!< [0x800] Cache control register
-    __IO hw_lmem_psclcr_t PSCLCR;          //!< [0x804] Cache line control register
-    __IO hw_lmem_pscsar_t PSCSAR;          //!< [0x808] Cache search address register
-    __IO hw_lmem_psccvr_t PSCCVR;          //!< [0x80C] Cache read/write value register
+    __IO hw_lmem_psccr_t PSCCR;            /*!< [0x800] Cache control register */
+    __IO hw_lmem_psclcr_t PSCLCR;          /*!< [0x804] Cache line control register */
+    __IO hw_lmem_pscsar_t PSCSAR;          /*!< [0x808] Cache search address register */
+    __IO hw_lmem_psccvr_t PSCCVR;          /*!< [0x80C] Cache read/write value register */
     uint8_t _reserved2[16];
-    __IO hw_lmem_pscrmr_t PSCRMR;          //!< [0x820] Cache regions mode register
+    __IO hw_lmem_pscrmr_t PSCRMR;          /*!< [0x820] Cache regions mode register */
 } hw_lmem_t;
 #pragma pack()
 
-//! @brief Macro to access all LMEM registers.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_LMEM</code>.
-#define HW_LMEM        (*(hw_lmem_t *) REGS_LMEM_BASE)
-#endif
+/*! @brief Macro to access all LMEM registers. */
+/*! @param x LMEM module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_LMEM(LMEM_BASE)</code>. */
+#define HW_LMEM(x)     (*(hw_lmem_t *)(x))
 
-#endif // __HW_LMEM_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_LMEM_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */

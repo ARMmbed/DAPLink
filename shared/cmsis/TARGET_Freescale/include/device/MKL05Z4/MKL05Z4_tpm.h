@@ -21,7 +21,8 @@
 #ifndef __HW_TPM_REGISTERS_H__
 #define __HW_TPM_REGISTERS_H__
 
-#include "regs.h"
+#include "MKL05Z4.h"
+#include "fsl_bitband.h"
 
 /*
  * MKL05Z4 TPM
@@ -40,36 +41,14 @@
  * - hw_tpm_t - Struct containing all module registers.
  */
 
-//! @name Module base addresses
-//@{
-#ifndef REGS_TPM_BASE
-#define HW_TPM_INSTANCE_COUNT (2U) //!< Number of instances of the TPM module.
-#define HW_TPM0 (0U) //!< Instance number for TPM0.
-#define HW_TPM1 (1U) //!< Instance number for TPM1.
-#define REGS_TPM0_BASE (0x40038000U) //!< Base address for TPM0.
-#define REGS_TPM1_BASE (0x40039000U) //!< Base address for TPM1.
+#define HW_TPM_INSTANCE_COUNT (2U) /*!< Number of instances of the TPM module. */
+#define HW_TPM0 (0U) /*!< Instance number for TPM0. */
+#define HW_TPM1 (1U) /*!< Instance number for TPM1. */
 
-//! @brief Table of base addresses for TPM instances.
-static const uint32_t __g_regs_TPM_base_addresses[] = {
-        REGS_TPM0_BASE,
-        REGS_TPM1_BASE,
-    };
+/*******************************************************************************
+ * HW_TPM_SC - Status and Control
+ ******************************************************************************/
 
-//! @brief Get the base address of TPM by instance number.
-//! @param x TPM instance number, from 0 through 1.
-#define REGS_TPM_BASE(x) (__g_regs_TPM_base_addresses[(x)])
-
-//! @brief Get the instance number given a base address.
-//! @param b Base address for an instance of TPM.
-#define REGS_TPM_INSTANCE(b) ((b) == REGS_TPM0_BASE ? HW_TPM0 : (b) == REGS_TPM1_BASE ? HW_TPM1 : 0)
-#endif
-//@}
-
-//-------------------------------------------------------------------------------------------
-// HW_TPM_SC - Status and Control
-//-------------------------------------------------------------------------------------------
-
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_SC - Status and Control (RW)
  *
@@ -84,32 +63,29 @@ typedef union _hw_tpm_sc
     uint32_t U;
     struct _hw_tpm_sc_bitfields
     {
-        uint32_t PS : 3;               //!< [2:0] Prescale Factor Selection
-        uint32_t CMOD : 2;             //!< [4:3] Clock Mode Selection
-        uint32_t CPWMS : 1;            //!< [5] Center-aligned PWM Select
-        uint32_t TOIE : 1;             //!< [6] Timer Overflow Interrupt Enable
-        uint32_t TOF : 1;              //!< [7] Timer Overflow Flag
-        uint32_t DMAb : 1;             //!< [8] DMA Enable
-        uint32_t RESERVED0 : 23;       //!< [31:9]
+        uint32_t PS : 3;               /*!< [2:0] Prescale Factor Selection */
+        uint32_t CMOD : 2;             /*!< [4:3] Clock Mode Selection */
+        uint32_t CPWMS : 1;            /*!< [5] Center-aligned PWM Select */
+        uint32_t TOIE : 1;             /*!< [6] Timer Overflow Interrupt Enable */
+        uint32_t TOF : 1;              /*!< [7] Timer Overflow Flag */
+        uint32_t DMA : 1;              /*!< [8] DMA Enable */
+        uint32_t RESERVED0 : 23;       /*!< [31:9]  */
     } B;
 } hw_tpm_sc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_SC register
  */
-//@{
-#define HW_TPM_SC_ADDR(x)        (REGS_TPM_BASE(x) + 0x0U)
+/*@{*/
+#define HW_TPM_SC_ADDR(x)        ((x) + 0x0U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_SC(x)             (*(__IO hw_tpm_sc_t *) HW_TPM_SC_ADDR(x))
 #define HW_TPM_SC_RD(x)          (HW_TPM_SC(x).U)
 #define HW_TPM_SC_WR(x, v)       (HW_TPM_SC(x).U = (v))
 #define HW_TPM_SC_SET(x, v)      (BME_OR32(HW_TPM_SC_ADDR(x), (uint32_t)(v)))
 #define HW_TPM_SC_CLR(x, v)      (BME_AND32(HW_TPM_SC_ADDR(x), (uint32_t)(~(v))))
 #define HW_TPM_SC_TOG(x, v)      (BME_XOR32(HW_TPM_SC_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_SC bitfields
@@ -131,24 +107,20 @@ typedef union _hw_tpm_sc
  * - 110 - Divide by 64
  * - 111 - Divide by 128
  */
-//@{
-#define BP_TPM_SC_PS         (0U)          //!< Bit position for TPM_SC_PS.
-#define BM_TPM_SC_PS         (0x00000007U) //!< Bit mask for TPM_SC_PS.
-#define BS_TPM_SC_PS         (3U)          //!< Bit field size in bits for TPM_SC_PS.
+/*@{*/
+#define BP_TPM_SC_PS         (0U)          /*!< Bit position for TPM_SC_PS. */
+#define BM_TPM_SC_PS         (0x00000007U) /*!< Bit mask for TPM_SC_PS. */
+#define BS_TPM_SC_PS         (3U)          /*!< Bit field size in bits for TPM_SC_PS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_PS field.
+/*! @brief Read current value of the TPM_SC_PS field. */
 #define BR_TPM_SC_PS(x)      (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_PS, BS_TPM_SC_PS))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_PS.
-#define BF_TPM_SC_PS(v)      (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_PS), uint32_t) & BM_TPM_SC_PS)
+/*! @brief Format value for bitfield TPM_SC_PS. */
+#define BF_TPM_SC_PS(v)      ((uint32_t)((uint32_t)(v) << BP_TPM_SC_PS) & BM_TPM_SC_PS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the PS field to a new value.
+/*! @brief Set the PS field to a new value. */
 #define BW_TPM_SC_PS(x, v)   (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_PS), BP_TPM_SC_PS, 3))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_SC, field CMOD[4:3] (RW)
@@ -163,24 +135,20 @@ typedef union _hw_tpm_sc
  *     to the LPTPM counter clock
  * - 11 - Reserved
  */
-//@{
-#define BP_TPM_SC_CMOD       (3U)          //!< Bit position for TPM_SC_CMOD.
-#define BM_TPM_SC_CMOD       (0x00000018U) //!< Bit mask for TPM_SC_CMOD.
-#define BS_TPM_SC_CMOD       (2U)          //!< Bit field size in bits for TPM_SC_CMOD.
+/*@{*/
+#define BP_TPM_SC_CMOD       (3U)          /*!< Bit position for TPM_SC_CMOD. */
+#define BM_TPM_SC_CMOD       (0x00000018U) /*!< Bit mask for TPM_SC_CMOD. */
+#define BS_TPM_SC_CMOD       (2U)          /*!< Bit field size in bits for TPM_SC_CMOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_CMOD field.
+/*! @brief Read current value of the TPM_SC_CMOD field. */
 #define BR_TPM_SC_CMOD(x)    (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_CMOD, BS_TPM_SC_CMOD))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_CMOD.
-#define BF_TPM_SC_CMOD(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_CMOD), uint32_t) & BM_TPM_SC_CMOD)
+/*! @brief Format value for bitfield TPM_SC_CMOD. */
+#define BF_TPM_SC_CMOD(v)    ((uint32_t)((uint32_t)(v) << BP_TPM_SC_CMOD) & BM_TPM_SC_CMOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CMOD field to a new value.
+/*! @brief Set the CMOD field to a new value. */
 #define BW_TPM_SC_CMOD(x, v) (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_CMOD), BP_TPM_SC_CMOD, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_SC, field CPWMS[5] (RW)
@@ -193,24 +161,20 @@ typedef union _hw_tpm_sc
  * - 0 - LPTPM counter operates in up counting mode.
  * - 1 - LPTPM counter operates in up-down counting mode.
  */
-//@{
-#define BP_TPM_SC_CPWMS      (5U)          //!< Bit position for TPM_SC_CPWMS.
-#define BM_TPM_SC_CPWMS      (0x00000020U) //!< Bit mask for TPM_SC_CPWMS.
-#define BS_TPM_SC_CPWMS      (1U)          //!< Bit field size in bits for TPM_SC_CPWMS.
+/*@{*/
+#define BP_TPM_SC_CPWMS      (5U)          /*!< Bit position for TPM_SC_CPWMS. */
+#define BM_TPM_SC_CPWMS      (0x00000020U) /*!< Bit mask for TPM_SC_CPWMS. */
+#define BS_TPM_SC_CPWMS      (1U)          /*!< Bit field size in bits for TPM_SC_CPWMS. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_CPWMS field.
+/*! @brief Read current value of the TPM_SC_CPWMS field. */
 #define BR_TPM_SC_CPWMS(x)   (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_CPWMS, BS_TPM_SC_CPWMS))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_CPWMS.
-#define BF_TPM_SC_CPWMS(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_CPWMS), uint32_t) & BM_TPM_SC_CPWMS)
+/*! @brief Format value for bitfield TPM_SC_CPWMS. */
+#define BF_TPM_SC_CPWMS(v)   ((uint32_t)((uint32_t)(v) << BP_TPM_SC_CPWMS) & BM_TPM_SC_CPWMS)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CPWMS field to a new value.
+/*! @brief Set the CPWMS field to a new value. */
 #define BW_TPM_SC_CPWMS(x, v) (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_CPWMS), BP_TPM_SC_CPWMS, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_SC, field TOIE[6] (RW)
@@ -221,24 +185,20 @@ typedef union _hw_tpm_sc
  * - 0 - Disable TOF interrupts. Use software polling or DMA request.
  * - 1 - Enable TOF interrupts. An interrupt is generated when TOF equals one.
  */
-//@{
-#define BP_TPM_SC_TOIE       (6U)          //!< Bit position for TPM_SC_TOIE.
-#define BM_TPM_SC_TOIE       (0x00000040U) //!< Bit mask for TPM_SC_TOIE.
-#define BS_TPM_SC_TOIE       (1U)          //!< Bit field size in bits for TPM_SC_TOIE.
+/*@{*/
+#define BP_TPM_SC_TOIE       (6U)          /*!< Bit position for TPM_SC_TOIE. */
+#define BM_TPM_SC_TOIE       (0x00000040U) /*!< Bit mask for TPM_SC_TOIE. */
+#define BS_TPM_SC_TOIE       (1U)          /*!< Bit field size in bits for TPM_SC_TOIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_TOIE field.
+/*! @brief Read current value of the TPM_SC_TOIE field. */
 #define BR_TPM_SC_TOIE(x)    (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_TOIE, BS_TPM_SC_TOIE))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_TOIE.
-#define BF_TPM_SC_TOIE(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_TOIE), uint32_t) & BM_TPM_SC_TOIE)
+/*! @brief Format value for bitfield TPM_SC_TOIE. */
+#define BF_TPM_SC_TOIE(v)    ((uint32_t)((uint32_t)(v) << BP_TPM_SC_TOIE) & BM_TPM_SC_TOIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOIE field to a new value.
+/*! @brief Set the TOIE field to a new value. */
 #define BW_TPM_SC_TOIE(x, v) (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_TOIE), BP_TPM_SC_TOIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_SC, field TOF[7] (W1C)
@@ -254,24 +214,20 @@ typedef union _hw_tpm_sc
  * - 0 - LPTPM counter has not overflowed.
  * - 1 - LPTPM counter has overflowed.
  */
-//@{
-#define BP_TPM_SC_TOF        (7U)          //!< Bit position for TPM_SC_TOF.
-#define BM_TPM_SC_TOF        (0x00000080U) //!< Bit mask for TPM_SC_TOF.
-#define BS_TPM_SC_TOF        (1U)          //!< Bit field size in bits for TPM_SC_TOF.
+/*@{*/
+#define BP_TPM_SC_TOF        (7U)          /*!< Bit position for TPM_SC_TOF. */
+#define BM_TPM_SC_TOF        (0x00000080U) /*!< Bit mask for TPM_SC_TOF. */
+#define BS_TPM_SC_TOF        (1U)          /*!< Bit field size in bits for TPM_SC_TOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_TOF field.
+/*! @brief Read current value of the TPM_SC_TOF field. */
 #define BR_TPM_SC_TOF(x)     (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_TOF, BS_TPM_SC_TOF))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_TOF.
-#define BF_TPM_SC_TOF(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_TOF), uint32_t) & BM_TPM_SC_TOF)
+/*! @brief Format value for bitfield TPM_SC_TOF. */
+#define BF_TPM_SC_TOF(v)     ((uint32_t)((uint32_t)(v) << BP_TPM_SC_TOF) & BM_TPM_SC_TOF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOF field to a new value.
+/*! @brief Set the TOF field to a new value. */
 #define BW_TPM_SC_TOF(x, v)  (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_TOF), BP_TPM_SC_TOF, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_SC, field DMA[8] (RW)
@@ -282,30 +238,25 @@ typedef union _hw_tpm_sc
  * - 0 - Disables DMA transfers.
  * - 1 - Enables DMA transfers.
  */
-//@{
-#define BP_TPM_SC_DMA        (8U)          //!< Bit position for TPM_SC_DMA.
-#define BM_TPM_SC_DMA        (0x00000100U) //!< Bit mask for TPM_SC_DMA.
-#define BS_TPM_SC_DMA        (1U)          //!< Bit field size in bits for TPM_SC_DMA.
+/*@{*/
+#define BP_TPM_SC_DMA        (8U)          /*!< Bit position for TPM_SC_DMA. */
+#define BM_TPM_SC_DMA        (0x00000100U) /*!< Bit mask for TPM_SC_DMA. */
+#define BS_TPM_SC_DMA        (1U)          /*!< Bit field size in bits for TPM_SC_DMA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_SC_DMA field.
+/*! @brief Read current value of the TPM_SC_DMA field. */
 #define BR_TPM_SC_DMA(x)     (BME_UBFX32(HW_TPM_SC_ADDR(x), BP_TPM_SC_DMA, BS_TPM_SC_DMA))
-#endif
 
-//! @brief Format value for bitfield TPM_SC_DMA.
-#define BF_TPM_SC_DMA(v)     (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_SC_DMA), uint32_t) & BM_TPM_SC_DMA)
+/*! @brief Format value for bitfield TPM_SC_DMA. */
+#define BF_TPM_SC_DMA(v)     ((uint32_t)((uint32_t)(v) << BP_TPM_SC_DMA) & BM_TPM_SC_DMA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMA field to a new value.
+/*! @brief Set the DMA field to a new value. */
 #define BW_TPM_SC_DMA(x, v)  (BME_BFI32(HW_TPM_SC_ADDR(x), ((uint32_t)(v) << BP_TPM_SC_DMA), BP_TPM_SC_DMA, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TPM_CNT - Counter
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TPM_CNT - Counter
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_CNT - Counter (RW)
  *
@@ -322,27 +273,24 @@ typedef union _hw_tpm_cnt
     uint32_t U;
     struct _hw_tpm_cnt_bitfields
     {
-        uint32_t COUNT : 16;           //!< [15:0] Counter value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t COUNT : 16;           /*!< [15:0] Counter value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_tpm_cnt_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_CNT register
  */
-//@{
-#define HW_TPM_CNT_ADDR(x)       (REGS_TPM_BASE(x) + 0x4U)
+/*@{*/
+#define HW_TPM_CNT_ADDR(x)       ((x) + 0x4U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_CNT(x)            (*(__IO hw_tpm_cnt_t *) HW_TPM_CNT_ADDR(x))
 #define HW_TPM_CNT_RD(x)         (HW_TPM_CNT(x).U)
 #define HW_TPM_CNT_WR(x, v)      (HW_TPM_CNT(x).U = (v))
 #define HW_TPM_CNT_SET(x, v)     (BME_OR32(HW_TPM_CNT_ADDR(x), (uint32_t)(v)))
 #define HW_TPM_CNT_CLR(x, v)     (BME_AND32(HW_TPM_CNT_ADDR(x), (uint32_t)(~(v))))
 #define HW_TPM_CNT_TOG(x, v)     (BME_XOR32(HW_TPM_CNT_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_CNT bitfields
@@ -351,30 +299,25 @@ typedef union _hw_tpm_cnt
 /*!
  * @name Register TPM_CNT, field COUNT[15:0] (RW)
  */
-//@{
-#define BP_TPM_CNT_COUNT     (0U)          //!< Bit position for TPM_CNT_COUNT.
-#define BM_TPM_CNT_COUNT     (0x0000FFFFU) //!< Bit mask for TPM_CNT_COUNT.
-#define BS_TPM_CNT_COUNT     (16U)         //!< Bit field size in bits for TPM_CNT_COUNT.
+/*@{*/
+#define BP_TPM_CNT_COUNT     (0U)          /*!< Bit position for TPM_CNT_COUNT. */
+#define BM_TPM_CNT_COUNT     (0x0000FFFFU) /*!< Bit mask for TPM_CNT_COUNT. */
+#define BS_TPM_CNT_COUNT     (16U)         /*!< Bit field size in bits for TPM_CNT_COUNT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CNT_COUNT field.
+/*! @brief Read current value of the TPM_CNT_COUNT field. */
 #define BR_TPM_CNT_COUNT(x)  (BME_UBFX32(HW_TPM_CNT_ADDR(x), BP_TPM_CNT_COUNT, BS_TPM_CNT_COUNT))
-#endif
 
-//! @brief Format value for bitfield TPM_CNT_COUNT.
-#define BF_TPM_CNT_COUNT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CNT_COUNT), uint32_t) & BM_TPM_CNT_COUNT)
+/*! @brief Format value for bitfield TPM_CNT_COUNT. */
+#define BF_TPM_CNT_COUNT(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CNT_COUNT) & BM_TPM_CNT_COUNT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the COUNT field to a new value.
+/*! @brief Set the COUNT field to a new value. */
 #define BW_TPM_CNT_COUNT(x, v) (BME_BFI32(HW_TPM_CNT_ADDR(x), ((uint32_t)(v) << BP_TPM_CNT_COUNT), BP_TPM_CNT_COUNT, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TPM_MOD - Modulo
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TPM_MOD - Modulo
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_MOD - Modulo (RW)
  *
@@ -394,27 +337,24 @@ typedef union _hw_tpm_mod
     uint32_t U;
     struct _hw_tpm_mod_bitfields
     {
-        uint32_t MOD : 16;             //!< [15:0] Modulo value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t MOD : 16;             /*!< [15:0] Modulo value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_tpm_mod_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_MOD register
  */
-//@{
-#define HW_TPM_MOD_ADDR(x)       (REGS_TPM_BASE(x) + 0x8U)
+/*@{*/
+#define HW_TPM_MOD_ADDR(x)       ((x) + 0x8U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_MOD(x)            (*(__IO hw_tpm_mod_t *) HW_TPM_MOD_ADDR(x))
 #define HW_TPM_MOD_RD(x)         (HW_TPM_MOD(x).U)
 #define HW_TPM_MOD_WR(x, v)      (HW_TPM_MOD(x).U = (v))
 #define HW_TPM_MOD_SET(x, v)     (BME_OR32(HW_TPM_MOD_ADDR(x), (uint32_t)(v)))
 #define HW_TPM_MOD_CLR(x, v)     (BME_AND32(HW_TPM_MOD_ADDR(x), (uint32_t)(~(v))))
 #define HW_TPM_MOD_TOG(x, v)     (BME_XOR32(HW_TPM_MOD_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_MOD bitfields
@@ -425,30 +365,25 @@ typedef union _hw_tpm_mod
  *
  * When writing this field, all bytes must be written at the same time.
  */
-//@{
-#define BP_TPM_MOD_MOD       (0U)          //!< Bit position for TPM_MOD_MOD.
-#define BM_TPM_MOD_MOD       (0x0000FFFFU) //!< Bit mask for TPM_MOD_MOD.
-#define BS_TPM_MOD_MOD       (16U)         //!< Bit field size in bits for TPM_MOD_MOD.
+/*@{*/
+#define BP_TPM_MOD_MOD       (0U)          /*!< Bit position for TPM_MOD_MOD. */
+#define BM_TPM_MOD_MOD       (0x0000FFFFU) /*!< Bit mask for TPM_MOD_MOD. */
+#define BS_TPM_MOD_MOD       (16U)         /*!< Bit field size in bits for TPM_MOD_MOD. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_MOD_MOD field.
+/*! @brief Read current value of the TPM_MOD_MOD field. */
 #define BR_TPM_MOD_MOD(x)    (BME_UBFX32(HW_TPM_MOD_ADDR(x), BP_TPM_MOD_MOD, BS_TPM_MOD_MOD))
-#endif
 
-//! @brief Format value for bitfield TPM_MOD_MOD.
-#define BF_TPM_MOD_MOD(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_MOD_MOD), uint32_t) & BM_TPM_MOD_MOD)
+/*! @brief Format value for bitfield TPM_MOD_MOD. */
+#define BF_TPM_MOD_MOD(v)    ((uint32_t)((uint32_t)(v) << BP_TPM_MOD_MOD) & BM_TPM_MOD_MOD)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MOD field to a new value.
+/*! @brief Set the MOD field to a new value. */
 #define BW_TPM_MOD_MOD(x, v) (BME_BFI32(HW_TPM_MOD_ADDR(x), ((uint32_t)(v) << BP_TPM_MOD_MOD), BP_TPM_MOD_MOD, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TPM_CnSC - Channel (n) Status and Control
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TPM_CnSC - Channel (n) Status and Control
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_CnSC - Channel (n) Status and Control (RW)
  *
@@ -474,36 +409,33 @@ typedef union _hw_tpm_cnsc
     uint32_t U;
     struct _hw_tpm_cnsc_bitfields
     {
-        uint32_t DMAb : 1;             //!< [0] DMA Enable
-        uint32_t RESERVED0 : 1;        //!< [1]
-        uint32_t ELSA : 1;             //!< [2] Edge or Level Select
-        uint32_t ELSB : 1;             //!< [3] Edge or Level Select
-        uint32_t MSA : 1;              //!< [4] Channel Mode Select
-        uint32_t MSB : 1;              //!< [5] Channel Mode Select
-        uint32_t CHIE : 1;             //!< [6] Channel Interrupt Enable
-        uint32_t CHF : 1;              //!< [7] Channel Flag
-        uint32_t RESERVED1 : 24;       //!< [31:8]
+        uint32_t DMA : 1;              /*!< [0] DMA Enable */
+        uint32_t RESERVED0 : 1;        /*!< [1]  */
+        uint32_t ELSA : 1;             /*!< [2] Edge or Level Select */
+        uint32_t ELSB : 1;             /*!< [3] Edge or Level Select */
+        uint32_t MSA : 1;              /*!< [4] Channel Mode Select */
+        uint32_t MSB : 1;              /*!< [5] Channel Mode Select */
+        uint32_t CHIE : 1;             /*!< [6] Channel Interrupt Enable */
+        uint32_t CHF : 1;              /*!< [7] Channel Flag */
+        uint32_t RESERVED1 : 24;       /*!< [31:8]  */
     } B;
 } hw_tpm_cnsc_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_CnSC register
  */
-//@{
+/*@{*/
 #define HW_TPM_CnSC_COUNT (6U)
 
-#define HW_TPM_CnSC_ADDR(x, n)   (REGS_TPM_BASE(x) + 0xCU + (0x8U * n))
+#define HW_TPM_CnSC_ADDR(x, n)   ((x) + 0xCU + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_CnSC(x, n)        (*(__IO hw_tpm_cnsc_t *) HW_TPM_CnSC_ADDR(x, n))
 #define HW_TPM_CnSC_RD(x, n)     (HW_TPM_CnSC(x, n).U)
 #define HW_TPM_CnSC_WR(x, n, v)  (HW_TPM_CnSC(x, n).U = (v))
 #define HW_TPM_CnSC_SET(x, n, v) (BME_OR32(HW_TPM_CnSC_ADDR(x, n), (uint32_t)(v)))
 #define HW_TPM_CnSC_CLR(x, n, v) (BME_AND32(HW_TPM_CnSC_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_TPM_CnSC_TOG(x, n, v) (BME_XOR32(HW_TPM_CnSC_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_CnSC bitfields
@@ -518,24 +450,20 @@ typedef union _hw_tpm_cnsc
  * - 0 - Disable DMA transfers.
  * - 1 - Enable DMA transfers.
  */
-//@{
-#define BP_TPM_CnSC_DMA      (0U)          //!< Bit position for TPM_CnSC_DMA.
-#define BM_TPM_CnSC_DMA      (0x00000001U) //!< Bit mask for TPM_CnSC_DMA.
-#define BS_TPM_CnSC_DMA      (1U)          //!< Bit field size in bits for TPM_CnSC_DMA.
+/*@{*/
+#define BP_TPM_CnSC_DMA      (0U)          /*!< Bit position for TPM_CnSC_DMA. */
+#define BM_TPM_CnSC_DMA      (0x00000001U) /*!< Bit mask for TPM_CnSC_DMA. */
+#define BS_TPM_CnSC_DMA      (1U)          /*!< Bit field size in bits for TPM_CnSC_DMA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_DMA field.
+/*! @brief Read current value of the TPM_CnSC_DMA field. */
 #define BR_TPM_CnSC_DMA(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_DMA, BS_TPM_CnSC_DMA))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_DMA.
-#define BF_TPM_CnSC_DMA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_DMA), uint32_t) & BM_TPM_CnSC_DMA)
+/*! @brief Format value for bitfield TPM_CnSC_DMA. */
+#define BF_TPM_CnSC_DMA(v)   ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_DMA) & BM_TPM_CnSC_DMA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DMA field to a new value.
+/*! @brief Set the DMA field to a new value. */
 #define BW_TPM_CnSC_DMA(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_DMA), BP_TPM_CnSC_DMA, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field ELSA[2] (RW)
@@ -544,24 +472,20 @@ typedef union _hw_tpm_cnsc
  * channel is disabled, this bit will not change state until acknowledged in the LPTPM
  * counter clock domain.
  */
-//@{
-#define BP_TPM_CnSC_ELSA     (2U)          //!< Bit position for TPM_CnSC_ELSA.
-#define BM_TPM_CnSC_ELSA     (0x00000004U) //!< Bit mask for TPM_CnSC_ELSA.
-#define BS_TPM_CnSC_ELSA     (1U)          //!< Bit field size in bits for TPM_CnSC_ELSA.
+/*@{*/
+#define BP_TPM_CnSC_ELSA     (2U)          /*!< Bit position for TPM_CnSC_ELSA. */
+#define BM_TPM_CnSC_ELSA     (0x00000004U) /*!< Bit mask for TPM_CnSC_ELSA. */
+#define BS_TPM_CnSC_ELSA     (1U)          /*!< Bit field size in bits for TPM_CnSC_ELSA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_ELSA field.
+/*! @brief Read current value of the TPM_CnSC_ELSA field. */
 #define BR_TPM_CnSC_ELSA(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_ELSA, BS_TPM_CnSC_ELSA))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_ELSA.
-#define BF_TPM_CnSC_ELSA(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_ELSA), uint32_t) & BM_TPM_CnSC_ELSA)
+/*! @brief Format value for bitfield TPM_CnSC_ELSA. */
+#define BF_TPM_CnSC_ELSA(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_ELSA) & BM_TPM_CnSC_ELSA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ELSA field to a new value.
+/*! @brief Set the ELSA field to a new value. */
 #define BW_TPM_CnSC_ELSA(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_ELSA), BP_TPM_CnSC_ELSA, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field ELSB[3] (RW)
@@ -570,24 +494,20 @@ typedef union _hw_tpm_cnsc
  * channel is disabled, this bit will not change state until acknowledged in the LPTPM
  * counter clock domain.
  */
-//@{
-#define BP_TPM_CnSC_ELSB     (3U)          //!< Bit position for TPM_CnSC_ELSB.
-#define BM_TPM_CnSC_ELSB     (0x00000008U) //!< Bit mask for TPM_CnSC_ELSB.
-#define BS_TPM_CnSC_ELSB     (1U)          //!< Bit field size in bits for TPM_CnSC_ELSB.
+/*@{*/
+#define BP_TPM_CnSC_ELSB     (3U)          /*!< Bit position for TPM_CnSC_ELSB. */
+#define BM_TPM_CnSC_ELSB     (0x00000008U) /*!< Bit mask for TPM_CnSC_ELSB. */
+#define BS_TPM_CnSC_ELSB     (1U)          /*!< Bit field size in bits for TPM_CnSC_ELSB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_ELSB field.
+/*! @brief Read current value of the TPM_CnSC_ELSB field. */
 #define BR_TPM_CnSC_ELSB(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_ELSB, BS_TPM_CnSC_ELSB))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_ELSB.
-#define BF_TPM_CnSC_ELSB(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_ELSB), uint32_t) & BM_TPM_CnSC_ELSB)
+/*! @brief Format value for bitfield TPM_CnSC_ELSB. */
+#define BF_TPM_CnSC_ELSB(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_ELSB) & BM_TPM_CnSC_ELSB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the ELSB field to a new value.
+/*! @brief Set the ELSB field to a new value. */
 #define BW_TPM_CnSC_ELSB(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_ELSB), BP_TPM_CnSC_ELSB, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field MSA[4] (RW)
@@ -596,24 +516,20 @@ typedef union _hw_tpm_cnsc
  * dependent on the channel mode. When a channel is disabled, this bit will not change
  * state until acknowledged in the LPTPM counter clock domain.
  */
-//@{
-#define BP_TPM_CnSC_MSA      (4U)          //!< Bit position for TPM_CnSC_MSA.
-#define BM_TPM_CnSC_MSA      (0x00000010U) //!< Bit mask for TPM_CnSC_MSA.
-#define BS_TPM_CnSC_MSA      (1U)          //!< Bit field size in bits for TPM_CnSC_MSA.
+/*@{*/
+#define BP_TPM_CnSC_MSA      (4U)          /*!< Bit position for TPM_CnSC_MSA. */
+#define BM_TPM_CnSC_MSA      (0x00000010U) /*!< Bit mask for TPM_CnSC_MSA. */
+#define BS_TPM_CnSC_MSA      (1U)          /*!< Bit field size in bits for TPM_CnSC_MSA. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_MSA field.
+/*! @brief Read current value of the TPM_CnSC_MSA field. */
 #define BR_TPM_CnSC_MSA(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_MSA, BS_TPM_CnSC_MSA))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_MSA.
-#define BF_TPM_CnSC_MSA(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_MSA), uint32_t) & BM_TPM_CnSC_MSA)
+/*! @brief Format value for bitfield TPM_CnSC_MSA. */
+#define BF_TPM_CnSC_MSA(v)   ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_MSA) & BM_TPM_CnSC_MSA)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSA field to a new value.
+/*! @brief Set the MSA field to a new value. */
 #define BW_TPM_CnSC_MSA(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_MSA), BP_TPM_CnSC_MSA, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field MSB[5] (RW)
@@ -622,24 +538,20 @@ typedef union _hw_tpm_cnsc
  * dependent on the channel mode. When a channel is disabled, this bit will not change
  * state until acknowledged in the LPTPM counter clock domain.
  */
-//@{
-#define BP_TPM_CnSC_MSB      (5U)          //!< Bit position for TPM_CnSC_MSB.
-#define BM_TPM_CnSC_MSB      (0x00000020U) //!< Bit mask for TPM_CnSC_MSB.
-#define BS_TPM_CnSC_MSB      (1U)          //!< Bit field size in bits for TPM_CnSC_MSB.
+/*@{*/
+#define BP_TPM_CnSC_MSB      (5U)          /*!< Bit position for TPM_CnSC_MSB. */
+#define BM_TPM_CnSC_MSB      (0x00000020U) /*!< Bit mask for TPM_CnSC_MSB. */
+#define BS_TPM_CnSC_MSB      (1U)          /*!< Bit field size in bits for TPM_CnSC_MSB. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_MSB field.
+/*! @brief Read current value of the TPM_CnSC_MSB field. */
 #define BR_TPM_CnSC_MSB(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_MSB, BS_TPM_CnSC_MSB))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_MSB.
-#define BF_TPM_CnSC_MSB(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_MSB), uint32_t) & BM_TPM_CnSC_MSB)
+/*! @brief Format value for bitfield TPM_CnSC_MSB. */
+#define BF_TPM_CnSC_MSB(v)   ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_MSB) & BM_TPM_CnSC_MSB)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the MSB field to a new value.
+/*! @brief Set the MSB field to a new value. */
 #define BW_TPM_CnSC_MSB(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_MSB), BP_TPM_CnSC_MSB, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field CHIE[6] (RW)
@@ -650,24 +562,20 @@ typedef union _hw_tpm_cnsc
  * - 0 - Disable channel interrupts.
  * - 1 - Enable channel interrupts.
  */
-//@{
-#define BP_TPM_CnSC_CHIE     (6U)          //!< Bit position for TPM_CnSC_CHIE.
-#define BM_TPM_CnSC_CHIE     (0x00000040U) //!< Bit mask for TPM_CnSC_CHIE.
-#define BS_TPM_CnSC_CHIE     (1U)          //!< Bit field size in bits for TPM_CnSC_CHIE.
+/*@{*/
+#define BP_TPM_CnSC_CHIE     (6U)          /*!< Bit position for TPM_CnSC_CHIE. */
+#define BM_TPM_CnSC_CHIE     (0x00000040U) /*!< Bit mask for TPM_CnSC_CHIE. */
+#define BS_TPM_CnSC_CHIE     (1U)          /*!< Bit field size in bits for TPM_CnSC_CHIE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_CHIE field.
+/*! @brief Read current value of the TPM_CnSC_CHIE field. */
 #define BR_TPM_CnSC_CHIE(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_CHIE, BS_TPM_CnSC_CHIE))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_CHIE.
-#define BF_TPM_CnSC_CHIE(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_CHIE), uint32_t) & BM_TPM_CnSC_CHIE)
+/*! @brief Format value for bitfield TPM_CnSC_CHIE. */
+#define BF_TPM_CnSC_CHIE(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_CHIE) & BM_TPM_CnSC_CHIE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CHIE field to a new value.
+/*! @brief Set the CHIE field to a new value. */
 #define BW_TPM_CnSC_CHIE(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_CHIE), BP_TPM_CnSC_CHIE, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CnSC, field CHF[7] (W1C)
@@ -683,29 +591,24 @@ typedef union _hw_tpm_cnsc
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_CnSC_CHF      (7U)          //!< Bit position for TPM_CnSC_CHF.
-#define BM_TPM_CnSC_CHF      (0x00000080U) //!< Bit mask for TPM_CnSC_CHF.
-#define BS_TPM_CnSC_CHF      (1U)          //!< Bit field size in bits for TPM_CnSC_CHF.
+/*@{*/
+#define BP_TPM_CnSC_CHF      (7U)          /*!< Bit position for TPM_CnSC_CHF. */
+#define BM_TPM_CnSC_CHF      (0x00000080U) /*!< Bit mask for TPM_CnSC_CHF. */
+#define BS_TPM_CnSC_CHF      (1U)          /*!< Bit field size in bits for TPM_CnSC_CHF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnSC_CHF field.
+/*! @brief Read current value of the TPM_CnSC_CHF field. */
 #define BR_TPM_CnSC_CHF(x, n) (BME_UBFX32(HW_TPM_CnSC_ADDR(x, n), BP_TPM_CnSC_CHF, BS_TPM_CnSC_CHF))
-#endif
 
-//! @brief Format value for bitfield TPM_CnSC_CHF.
-#define BF_TPM_CnSC_CHF(v)   (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnSC_CHF), uint32_t) & BM_TPM_CnSC_CHF)
+/*! @brief Format value for bitfield TPM_CnSC_CHF. */
+#define BF_TPM_CnSC_CHF(v)   ((uint32_t)((uint32_t)(v) << BP_TPM_CnSC_CHF) & BM_TPM_CnSC_CHF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CHF field to a new value.
+/*! @brief Set the CHF field to a new value. */
 #define BW_TPM_CnSC_CHF(x, n, v) (BME_BFI32(HW_TPM_CnSC_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnSC_CHF), BP_TPM_CnSC_CHF, 1))
-#endif
-//@}
-//-------------------------------------------------------------------------------------------
-// HW_TPM_CnV - Channel (n) Value
-//-------------------------------------------------------------------------------------------
+/*@}*/
+/*******************************************************************************
+ * HW_TPM_CnV - Channel (n) Value
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_CnV - Channel (n) Value (RW)
  *
@@ -722,29 +625,26 @@ typedef union _hw_tpm_cnv
     uint32_t U;
     struct _hw_tpm_cnv_bitfields
     {
-        uint32_t VAL : 16;             //!< [15:0] Channel Value
-        uint32_t RESERVED0 : 16;       //!< [31:16]
+        uint32_t VAL : 16;             /*!< [15:0] Channel Value */
+        uint32_t RESERVED0 : 16;       /*!< [31:16]  */
     } B;
 } hw_tpm_cnv_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_CnV register
  */
-//@{
+/*@{*/
 #define HW_TPM_CnV_COUNT (6U)
 
-#define HW_TPM_CnV_ADDR(x, n)    (REGS_TPM_BASE(x) + 0x10U + (0x8U * n))
+#define HW_TPM_CnV_ADDR(x, n)    ((x) + 0x10U + (0x8U * (n)))
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_CnV(x, n)         (*(__IO hw_tpm_cnv_t *) HW_TPM_CnV_ADDR(x, n))
 #define HW_TPM_CnV_RD(x, n)      (HW_TPM_CnV(x, n).U)
 #define HW_TPM_CnV_WR(x, n, v)   (HW_TPM_CnV(x, n).U = (v))
 #define HW_TPM_CnV_SET(x, n, v)  (BME_OR32(HW_TPM_CnV_ADDR(x, n), (uint32_t)(v)))
 #define HW_TPM_CnV_CLR(x, n, v)  (BME_AND32(HW_TPM_CnV_ADDR(x, n), (uint32_t)(~(v))))
 #define HW_TPM_CnV_TOG(x, n, v)  (BME_XOR32(HW_TPM_CnV_ADDR(x, n), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_CnV bitfields
@@ -757,30 +657,25 @@ typedef union _hw_tpm_cnv
  * output modes. When writing this field, all bytes must be written at the same
  * time.
  */
-//@{
-#define BP_TPM_CnV_VAL       (0U)          //!< Bit position for TPM_CnV_VAL.
-#define BM_TPM_CnV_VAL       (0x0000FFFFU) //!< Bit mask for TPM_CnV_VAL.
-#define BS_TPM_CnV_VAL       (16U)         //!< Bit field size in bits for TPM_CnV_VAL.
+/*@{*/
+#define BP_TPM_CnV_VAL       (0U)          /*!< Bit position for TPM_CnV_VAL. */
+#define BM_TPM_CnV_VAL       (0x0000FFFFU) /*!< Bit mask for TPM_CnV_VAL. */
+#define BS_TPM_CnV_VAL       (16U)         /*!< Bit field size in bits for TPM_CnV_VAL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CnV_VAL field.
+/*! @brief Read current value of the TPM_CnV_VAL field. */
 #define BR_TPM_CnV_VAL(x, n) (BME_UBFX32(HW_TPM_CnV_ADDR(x, n), BP_TPM_CnV_VAL, BS_TPM_CnV_VAL))
-#endif
 
-//! @brief Format value for bitfield TPM_CnV_VAL.
-#define BF_TPM_CnV_VAL(v)    (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CnV_VAL), uint32_t) & BM_TPM_CnV_VAL)
+/*! @brief Format value for bitfield TPM_CnV_VAL. */
+#define BF_TPM_CnV_VAL(v)    ((uint32_t)((uint32_t)(v) << BP_TPM_CnV_VAL) & BM_TPM_CnV_VAL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the VAL field to a new value.
+/*! @brief Set the VAL field to a new value. */
 #define BW_TPM_CnV_VAL(x, n, v) (BME_BFI32(HW_TPM_CnV_ADDR(x, n), ((uint32_t)(v) << BP_TPM_CnV_VAL), BP_TPM_CnV_VAL, 16))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TPM_STATUS - Capture and Compare Status
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TPM_STATUS - Capture and Compare Status
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_STATUS - Capture and Compare Status (RW)
  *
@@ -802,34 +697,31 @@ typedef union _hw_tpm_status
     uint32_t U;
     struct _hw_tpm_status_bitfields
     {
-        uint32_t CH0F : 1;             //!< [0] Channel 0 Flag
-        uint32_t CH1F : 1;             //!< [1] Channel 1 Flag
-        uint32_t CH2F : 1;             //!< [2] Channel 2 Flag
-        uint32_t CH3F : 1;             //!< [3] Channel 3 Flag
-        uint32_t CH4F : 1;             //!< [4] Channel 4 Flag
-        uint32_t CH5F : 1;             //!< [5] Channel 5 Flag
-        uint32_t RESERVED0 : 2;        //!< [7:6]
-        uint32_t TOF : 1;              //!< [8] Timer Overflow Flag
-        uint32_t RESERVED1 : 23;       //!< [31:9]
+        uint32_t CH0F : 1;             /*!< [0] Channel 0 Flag */
+        uint32_t CH1F : 1;             /*!< [1] Channel 1 Flag */
+        uint32_t CH2F : 1;             /*!< [2] Channel 2 Flag */
+        uint32_t CH3F : 1;             /*!< [3] Channel 3 Flag */
+        uint32_t CH4F : 1;             /*!< [4] Channel 4 Flag */
+        uint32_t CH5F : 1;             /*!< [5] Channel 5 Flag */
+        uint32_t RESERVED0 : 2;        /*!< [7:6]  */
+        uint32_t TOF : 1;              /*!< [8] Timer Overflow Flag */
+        uint32_t RESERVED1 : 23;       /*!< [31:9]  */
     } B;
 } hw_tpm_status_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_STATUS register
  */
-//@{
-#define HW_TPM_STATUS_ADDR(x)    (REGS_TPM_BASE(x) + 0x50U)
+/*@{*/
+#define HW_TPM_STATUS_ADDR(x)    ((x) + 0x50U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_STATUS(x)         (*(__IO hw_tpm_status_t *) HW_TPM_STATUS_ADDR(x))
 #define HW_TPM_STATUS_RD(x)      (HW_TPM_STATUS(x).U)
 #define HW_TPM_STATUS_WR(x, v)   (HW_TPM_STATUS(x).U = (v))
 #define HW_TPM_STATUS_SET(x, v)  (BME_OR32(HW_TPM_STATUS_ADDR(x), (uint32_t)(v)))
 #define HW_TPM_STATUS_CLR(x, v)  (BME_AND32(HW_TPM_STATUS_ADDR(x), (uint32_t)(~(v))))
 #define HW_TPM_STATUS_TOG(x, v)  (BME_XOR32(HW_TPM_STATUS_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_STATUS bitfields
@@ -844,24 +736,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH0F   (0U)          //!< Bit position for TPM_STATUS_CH0F.
-#define BM_TPM_STATUS_CH0F   (0x00000001U) //!< Bit mask for TPM_STATUS_CH0F.
-#define BS_TPM_STATUS_CH0F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH0F.
+/*@{*/
+#define BP_TPM_STATUS_CH0F   (0U)          /*!< Bit position for TPM_STATUS_CH0F. */
+#define BM_TPM_STATUS_CH0F   (0x00000001U) /*!< Bit mask for TPM_STATUS_CH0F. */
+#define BS_TPM_STATUS_CH0F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH0F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH0F field.
+/*! @brief Read current value of the TPM_STATUS_CH0F field. */
 #define BR_TPM_STATUS_CH0F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH0F, BS_TPM_STATUS_CH0F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH0F.
-#define BF_TPM_STATUS_CH0F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH0F), uint32_t) & BM_TPM_STATUS_CH0F)
+/*! @brief Format value for bitfield TPM_STATUS_CH0F. */
+#define BF_TPM_STATUS_CH0F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH0F) & BM_TPM_STATUS_CH0F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH0F field to a new value.
+/*! @brief Set the CH0F field to a new value. */
 #define BW_TPM_STATUS_CH0F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH0F), BP_TPM_STATUS_CH0F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field CH1F[1] (W1C)
@@ -872,24 +760,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH1F   (1U)          //!< Bit position for TPM_STATUS_CH1F.
-#define BM_TPM_STATUS_CH1F   (0x00000002U) //!< Bit mask for TPM_STATUS_CH1F.
-#define BS_TPM_STATUS_CH1F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH1F.
+/*@{*/
+#define BP_TPM_STATUS_CH1F   (1U)          /*!< Bit position for TPM_STATUS_CH1F. */
+#define BM_TPM_STATUS_CH1F   (0x00000002U) /*!< Bit mask for TPM_STATUS_CH1F. */
+#define BS_TPM_STATUS_CH1F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH1F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH1F field.
+/*! @brief Read current value of the TPM_STATUS_CH1F field. */
 #define BR_TPM_STATUS_CH1F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH1F, BS_TPM_STATUS_CH1F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH1F.
-#define BF_TPM_STATUS_CH1F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH1F), uint32_t) & BM_TPM_STATUS_CH1F)
+/*! @brief Format value for bitfield TPM_STATUS_CH1F. */
+#define BF_TPM_STATUS_CH1F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH1F) & BM_TPM_STATUS_CH1F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH1F field to a new value.
+/*! @brief Set the CH1F field to a new value. */
 #define BW_TPM_STATUS_CH1F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH1F), BP_TPM_STATUS_CH1F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field CH2F[2] (W1C)
@@ -900,24 +784,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH2F   (2U)          //!< Bit position for TPM_STATUS_CH2F.
-#define BM_TPM_STATUS_CH2F   (0x00000004U) //!< Bit mask for TPM_STATUS_CH2F.
-#define BS_TPM_STATUS_CH2F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH2F.
+/*@{*/
+#define BP_TPM_STATUS_CH2F   (2U)          /*!< Bit position for TPM_STATUS_CH2F. */
+#define BM_TPM_STATUS_CH2F   (0x00000004U) /*!< Bit mask for TPM_STATUS_CH2F. */
+#define BS_TPM_STATUS_CH2F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH2F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH2F field.
+/*! @brief Read current value of the TPM_STATUS_CH2F field. */
 #define BR_TPM_STATUS_CH2F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH2F, BS_TPM_STATUS_CH2F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH2F.
-#define BF_TPM_STATUS_CH2F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH2F), uint32_t) & BM_TPM_STATUS_CH2F)
+/*! @brief Format value for bitfield TPM_STATUS_CH2F. */
+#define BF_TPM_STATUS_CH2F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH2F) & BM_TPM_STATUS_CH2F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH2F field to a new value.
+/*! @brief Set the CH2F field to a new value. */
 #define BW_TPM_STATUS_CH2F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH2F), BP_TPM_STATUS_CH2F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field CH3F[3] (W1C)
@@ -928,24 +808,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH3F   (3U)          //!< Bit position for TPM_STATUS_CH3F.
-#define BM_TPM_STATUS_CH3F   (0x00000008U) //!< Bit mask for TPM_STATUS_CH3F.
-#define BS_TPM_STATUS_CH3F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH3F.
+/*@{*/
+#define BP_TPM_STATUS_CH3F   (3U)          /*!< Bit position for TPM_STATUS_CH3F. */
+#define BM_TPM_STATUS_CH3F   (0x00000008U) /*!< Bit mask for TPM_STATUS_CH3F. */
+#define BS_TPM_STATUS_CH3F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH3F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH3F field.
+/*! @brief Read current value of the TPM_STATUS_CH3F field. */
 #define BR_TPM_STATUS_CH3F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH3F, BS_TPM_STATUS_CH3F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH3F.
-#define BF_TPM_STATUS_CH3F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH3F), uint32_t) & BM_TPM_STATUS_CH3F)
+/*! @brief Format value for bitfield TPM_STATUS_CH3F. */
+#define BF_TPM_STATUS_CH3F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH3F) & BM_TPM_STATUS_CH3F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH3F field to a new value.
+/*! @brief Set the CH3F field to a new value. */
 #define BW_TPM_STATUS_CH3F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH3F), BP_TPM_STATUS_CH3F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field CH4F[4] (W1C)
@@ -956,24 +832,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH4F   (4U)          //!< Bit position for TPM_STATUS_CH4F.
-#define BM_TPM_STATUS_CH4F   (0x00000010U) //!< Bit mask for TPM_STATUS_CH4F.
-#define BS_TPM_STATUS_CH4F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH4F.
+/*@{*/
+#define BP_TPM_STATUS_CH4F   (4U)          /*!< Bit position for TPM_STATUS_CH4F. */
+#define BM_TPM_STATUS_CH4F   (0x00000010U) /*!< Bit mask for TPM_STATUS_CH4F. */
+#define BS_TPM_STATUS_CH4F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH4F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH4F field.
+/*! @brief Read current value of the TPM_STATUS_CH4F field. */
 #define BR_TPM_STATUS_CH4F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH4F, BS_TPM_STATUS_CH4F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH4F.
-#define BF_TPM_STATUS_CH4F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH4F), uint32_t) & BM_TPM_STATUS_CH4F)
+/*! @brief Format value for bitfield TPM_STATUS_CH4F. */
+#define BF_TPM_STATUS_CH4F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH4F) & BM_TPM_STATUS_CH4F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH4F field to a new value.
+/*! @brief Set the CH4F field to a new value. */
 #define BW_TPM_STATUS_CH4F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH4F), BP_TPM_STATUS_CH4F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field CH5F[5] (W1C)
@@ -984,24 +856,20 @@ typedef union _hw_tpm_status
  * - 0 - No channel event has occurred.
  * - 1 - A channel event has occurred.
  */
-//@{
-#define BP_TPM_STATUS_CH5F   (5U)          //!< Bit position for TPM_STATUS_CH5F.
-#define BM_TPM_STATUS_CH5F   (0x00000020U) //!< Bit mask for TPM_STATUS_CH5F.
-#define BS_TPM_STATUS_CH5F   (1U)          //!< Bit field size in bits for TPM_STATUS_CH5F.
+/*@{*/
+#define BP_TPM_STATUS_CH5F   (5U)          /*!< Bit position for TPM_STATUS_CH5F. */
+#define BM_TPM_STATUS_CH5F   (0x00000020U) /*!< Bit mask for TPM_STATUS_CH5F. */
+#define BS_TPM_STATUS_CH5F   (1U)          /*!< Bit field size in bits for TPM_STATUS_CH5F. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_CH5F field.
+/*! @brief Read current value of the TPM_STATUS_CH5F field. */
 #define BR_TPM_STATUS_CH5F(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_CH5F, BS_TPM_STATUS_CH5F))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_CH5F.
-#define BF_TPM_STATUS_CH5F(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_CH5F), uint32_t) & BM_TPM_STATUS_CH5F)
+/*! @brief Format value for bitfield TPM_STATUS_CH5F. */
+#define BF_TPM_STATUS_CH5F(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_CH5F) & BM_TPM_STATUS_CH5F)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CH5F field to a new value.
+/*! @brief Set the CH5F field to a new value. */
 #define BW_TPM_STATUS_CH5F(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_CH5F), BP_TPM_STATUS_CH5F, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_STATUS, field TOF[8] (W1C)
@@ -1012,30 +880,25 @@ typedef union _hw_tpm_status
  * - 0 - LPTPM counter has not overflowed.
  * - 1 - LPTPM counter has overflowed.
  */
-//@{
-#define BP_TPM_STATUS_TOF    (8U)          //!< Bit position for TPM_STATUS_TOF.
-#define BM_TPM_STATUS_TOF    (0x00000100U) //!< Bit mask for TPM_STATUS_TOF.
-#define BS_TPM_STATUS_TOF    (1U)          //!< Bit field size in bits for TPM_STATUS_TOF.
+/*@{*/
+#define BP_TPM_STATUS_TOF    (8U)          /*!< Bit position for TPM_STATUS_TOF. */
+#define BM_TPM_STATUS_TOF    (0x00000100U) /*!< Bit mask for TPM_STATUS_TOF. */
+#define BS_TPM_STATUS_TOF    (1U)          /*!< Bit field size in bits for TPM_STATUS_TOF. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_STATUS_TOF field.
+/*! @brief Read current value of the TPM_STATUS_TOF field. */
 #define BR_TPM_STATUS_TOF(x) (BME_UBFX32(HW_TPM_STATUS_ADDR(x), BP_TPM_STATUS_TOF, BS_TPM_STATUS_TOF))
-#endif
 
-//! @brief Format value for bitfield TPM_STATUS_TOF.
-#define BF_TPM_STATUS_TOF(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_STATUS_TOF), uint32_t) & BM_TPM_STATUS_TOF)
+/*! @brief Format value for bitfield TPM_STATUS_TOF. */
+#define BF_TPM_STATUS_TOF(v) ((uint32_t)((uint32_t)(v) << BP_TPM_STATUS_TOF) & BM_TPM_STATUS_TOF)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TOF field to a new value.
+/*! @brief Set the TOF field to a new value. */
 #define BW_TPM_STATUS_TOF(x, v) (BME_BFI32(HW_TPM_STATUS_ADDR(x), ((uint32_t)(v) << BP_TPM_STATUS_TOF), BP_TPM_STATUS_TOF, 1))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// HW_TPM_CONF - Configuration
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * HW_TPM_CONF - Configuration
+ ******************************************************************************/
 
-#ifndef __LANGUAGE_ASM__
 /*!
  * @brief HW_TPM_CONF - Configuration (RW)
  *
@@ -1049,37 +912,34 @@ typedef union _hw_tpm_conf
     uint32_t U;
     struct _hw_tpm_conf_bitfields
     {
-        uint32_t RESERVED0 : 5;        //!< [4:0]
-        uint32_t DOZEEN : 1;           //!< [5] Doze Enable
-        uint32_t DBGMODE : 2;          //!< [7:6] Debug Mode
-        uint32_t RESERVED1 : 1;        //!< [8]
-        uint32_t GTBEEN : 1;           //!< [9] Global time base enable
-        uint32_t RESERVED2 : 6;        //!< [15:10]
-        uint32_t CSOT : 1;             //!< [16] Counter Start on Trigger
-        uint32_t CSOO : 1;             //!< [17] Counter Stop On Overflow
-        uint32_t CROT : 1;             //!< [18] Counter Reload On Trigger
-        uint32_t RESERVED3 : 5;        //!< [23:19]
-        uint32_t TRGSEL : 4;           //!< [27:24] Trigger Select
-        uint32_t RESERVED4 : 4;        //!< [31:28]
+        uint32_t RESERVED0 : 5;        /*!< [4:0]  */
+        uint32_t DOZEEN : 1;           /*!< [5] Doze Enable */
+        uint32_t DBGMODE : 2;          /*!< [7:6] Debug Mode */
+        uint32_t RESERVED1 : 1;        /*!< [8]  */
+        uint32_t GTBEEN : 1;           /*!< [9] Global time base enable */
+        uint32_t RESERVED2 : 6;        /*!< [15:10]  */
+        uint32_t CSOT : 1;             /*!< [16] Counter Start on Trigger */
+        uint32_t CSOO : 1;             /*!< [17] Counter Stop On Overflow */
+        uint32_t CROT : 1;             /*!< [18] Counter Reload On Trigger */
+        uint32_t RESERVED3 : 5;        /*!< [23:19]  */
+        uint32_t TRGSEL : 4;           /*!< [27:24] Trigger Select */
+        uint32_t RESERVED4 : 4;        /*!< [31:28]  */
     } B;
 } hw_tpm_conf_t;
-#endif
 
 /*!
  * @name Constants and macros for entire TPM_CONF register
  */
-//@{
-#define HW_TPM_CONF_ADDR(x)      (REGS_TPM_BASE(x) + 0x84U)
+/*@{*/
+#define HW_TPM_CONF_ADDR(x)      ((x) + 0x84U)
 
-#ifndef __LANGUAGE_ASM__
 #define HW_TPM_CONF(x)           (*(__IO hw_tpm_conf_t *) HW_TPM_CONF_ADDR(x))
 #define HW_TPM_CONF_RD(x)        (HW_TPM_CONF(x).U)
 #define HW_TPM_CONF_WR(x, v)     (HW_TPM_CONF(x).U = (v))
 #define HW_TPM_CONF_SET(x, v)    (BME_OR32(HW_TPM_CONF_ADDR(x), (uint32_t)(v)))
 #define HW_TPM_CONF_CLR(x, v)    (BME_AND32(HW_TPM_CONF_ADDR(x), (uint32_t)(~(v))))
 #define HW_TPM_CONF_TOG(x, v)    (BME_XOR32(HW_TPM_CONF_ADDR(x), (uint32_t)(v)))
-#endif
-//@}
+/*@}*/
 
 /*
  * Constants & macros for individual TPM_CONF bitfields
@@ -1095,24 +955,20 @@ typedef union _hw_tpm_conf
  * - 1 - Internal LPTPM counter is paused and does not increment during Doze
  *     mode. Trigger inputs and input capture events are also ignored.
  */
-//@{
-#define BP_TPM_CONF_DOZEEN   (5U)          //!< Bit position for TPM_CONF_DOZEEN.
-#define BM_TPM_CONF_DOZEEN   (0x00000020U) //!< Bit mask for TPM_CONF_DOZEEN.
-#define BS_TPM_CONF_DOZEEN   (1U)          //!< Bit field size in bits for TPM_CONF_DOZEEN.
+/*@{*/
+#define BP_TPM_CONF_DOZEEN   (5U)          /*!< Bit position for TPM_CONF_DOZEEN. */
+#define BM_TPM_CONF_DOZEEN   (0x00000020U) /*!< Bit mask for TPM_CONF_DOZEEN. */
+#define BS_TPM_CONF_DOZEEN   (1U)          /*!< Bit field size in bits for TPM_CONF_DOZEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_DOZEEN field.
+/*! @brief Read current value of the TPM_CONF_DOZEEN field. */
 #define BR_TPM_CONF_DOZEEN(x) (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_DOZEEN, BS_TPM_CONF_DOZEEN))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_DOZEEN.
-#define BF_TPM_CONF_DOZEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_DOZEEN), uint32_t) & BM_TPM_CONF_DOZEEN)
+/*! @brief Format value for bitfield TPM_CONF_DOZEEN. */
+#define BF_TPM_CONF_DOZEEN(v) ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_DOZEEN) & BM_TPM_CONF_DOZEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DOZEEN field to a new value.
+/*! @brief Set the DOZEEN field to a new value. */
 #define BW_TPM_CONF_DOZEEN(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_DOZEEN), BP_TPM_CONF_DOZEEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field DBGMODE[7:6] (RW)
@@ -1125,24 +981,20 @@ typedef union _hw_tpm_conf
  *     Trigger inputs and input capture events are also ignored.
  * - 11 - LPTPM counter continues in debug mode.
  */
-//@{
-#define BP_TPM_CONF_DBGMODE  (6U)          //!< Bit position for TPM_CONF_DBGMODE.
-#define BM_TPM_CONF_DBGMODE  (0x000000C0U) //!< Bit mask for TPM_CONF_DBGMODE.
-#define BS_TPM_CONF_DBGMODE  (2U)          //!< Bit field size in bits for TPM_CONF_DBGMODE.
+/*@{*/
+#define BP_TPM_CONF_DBGMODE  (6U)          /*!< Bit position for TPM_CONF_DBGMODE. */
+#define BM_TPM_CONF_DBGMODE  (0x000000C0U) /*!< Bit mask for TPM_CONF_DBGMODE. */
+#define BS_TPM_CONF_DBGMODE  (2U)          /*!< Bit field size in bits for TPM_CONF_DBGMODE. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_DBGMODE field.
+/*! @brief Read current value of the TPM_CONF_DBGMODE field. */
 #define BR_TPM_CONF_DBGMODE(x) (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_DBGMODE, BS_TPM_CONF_DBGMODE))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_DBGMODE.
-#define BF_TPM_CONF_DBGMODE(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_DBGMODE), uint32_t) & BM_TPM_CONF_DBGMODE)
+/*! @brief Format value for bitfield TPM_CONF_DBGMODE. */
+#define BF_TPM_CONF_DBGMODE(v) ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_DBGMODE) & BM_TPM_CONF_DBGMODE)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the DBGMODE field to a new value.
+/*! @brief Set the DBGMODE field to a new value. */
 #define BW_TPM_CONF_DBGMODE(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_DBGMODE), BP_TPM_CONF_DBGMODE, 2))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field GTBEEN[9] (RW)
@@ -1158,24 +1010,20 @@ typedef union _hw_tpm_conf
  * - 1 - All channels use an externally generated global timebase as their
  *     timebase
  */
-//@{
-#define BP_TPM_CONF_GTBEEN   (9U)          //!< Bit position for TPM_CONF_GTBEEN.
-#define BM_TPM_CONF_GTBEEN   (0x00000200U) //!< Bit mask for TPM_CONF_GTBEEN.
-#define BS_TPM_CONF_GTBEEN   (1U)          //!< Bit field size in bits for TPM_CONF_GTBEEN.
+/*@{*/
+#define BP_TPM_CONF_GTBEEN   (9U)          /*!< Bit position for TPM_CONF_GTBEEN. */
+#define BM_TPM_CONF_GTBEEN   (0x00000200U) /*!< Bit mask for TPM_CONF_GTBEEN. */
+#define BS_TPM_CONF_GTBEEN   (1U)          /*!< Bit field size in bits for TPM_CONF_GTBEEN. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_GTBEEN field.
+/*! @brief Read current value of the TPM_CONF_GTBEEN field. */
 #define BR_TPM_CONF_GTBEEN(x) (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_GTBEEN, BS_TPM_CONF_GTBEEN))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_GTBEEN.
-#define BF_TPM_CONF_GTBEEN(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_GTBEEN), uint32_t) & BM_TPM_CONF_GTBEEN)
+/*! @brief Format value for bitfield TPM_CONF_GTBEEN. */
+#define BF_TPM_CONF_GTBEEN(v) ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_GTBEEN) & BM_TPM_CONF_GTBEEN)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the GTBEEN field to a new value.
+/*! @brief Set the GTBEEN field to a new value. */
 #define BW_TPM_CONF_GTBEEN(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_GTBEEN), BP_TPM_CONF_GTBEEN, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field CSOT[16] (RW)
@@ -1193,24 +1041,20 @@ typedef union _hw_tpm_conf
  *     selected input trigger is detected, after it has been enabled or after it has
  *     stopped due to overflow.
  */
-//@{
-#define BP_TPM_CONF_CSOT     (16U)         //!< Bit position for TPM_CONF_CSOT.
-#define BM_TPM_CONF_CSOT     (0x00010000U) //!< Bit mask for TPM_CONF_CSOT.
-#define BS_TPM_CONF_CSOT     (1U)          //!< Bit field size in bits for TPM_CONF_CSOT.
+/*@{*/
+#define BP_TPM_CONF_CSOT     (16U)         /*!< Bit position for TPM_CONF_CSOT. */
+#define BM_TPM_CONF_CSOT     (0x00010000U) /*!< Bit mask for TPM_CONF_CSOT. */
+#define BS_TPM_CONF_CSOT     (1U)          /*!< Bit field size in bits for TPM_CONF_CSOT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_CSOT field.
+/*! @brief Read current value of the TPM_CONF_CSOT field. */
 #define BR_TPM_CONF_CSOT(x)  (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_CSOT, BS_TPM_CONF_CSOT))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_CSOT.
-#define BF_TPM_CONF_CSOT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_CSOT), uint32_t) & BM_TPM_CONF_CSOT)
+/*! @brief Format value for bitfield TPM_CONF_CSOT. */
+#define BF_TPM_CONF_CSOT(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_CSOT) & BM_TPM_CONF_CSOT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CSOT field to a new value.
+/*! @brief Set the CSOT field to a new value. */
 #define BW_TPM_CONF_CSOT(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_CSOT), BP_TPM_CONF_CSOT, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field CSOO[17] (RW)
@@ -1228,24 +1072,20 @@ typedef union _hw_tpm_conf
  * - 0 - LPTPM counter continues incrementing or decrementing after overflow
  * - 1 - LPTPM counter stops incrementing or decrementing after overflow.
  */
-//@{
-#define BP_TPM_CONF_CSOO     (17U)         //!< Bit position for TPM_CONF_CSOO.
-#define BM_TPM_CONF_CSOO     (0x00020000U) //!< Bit mask for TPM_CONF_CSOO.
-#define BS_TPM_CONF_CSOO     (1U)          //!< Bit field size in bits for TPM_CONF_CSOO.
+/*@{*/
+#define BP_TPM_CONF_CSOO     (17U)         /*!< Bit position for TPM_CONF_CSOO. */
+#define BM_TPM_CONF_CSOO     (0x00020000U) /*!< Bit mask for TPM_CONF_CSOO. */
+#define BS_TPM_CONF_CSOO     (1U)          /*!< Bit field size in bits for TPM_CONF_CSOO. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_CSOO field.
+/*! @brief Read current value of the TPM_CONF_CSOO field. */
 #define BR_TPM_CONF_CSOO(x)  (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_CSOO, BS_TPM_CONF_CSOO))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_CSOO.
-#define BF_TPM_CONF_CSOO(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_CSOO), uint32_t) & BM_TPM_CONF_CSOO)
+/*! @brief Format value for bitfield TPM_CONF_CSOO. */
+#define BF_TPM_CONF_CSOO(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_CSOO) & BM_TPM_CONF_CSOO)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CSOO field to a new value.
+/*! @brief Set the CSOO field to a new value. */
 #define BW_TPM_CONF_CSOO(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_CSOO), BP_TPM_CONF_CSOO, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field CROT[18] (RW)
@@ -1262,24 +1102,20 @@ typedef union _hw_tpm_conf
  * - 1 - Counter is reloaded when a rising edge is detected on the selected
  *     input trigger
  */
-//@{
-#define BP_TPM_CONF_CROT     (18U)         //!< Bit position for TPM_CONF_CROT.
-#define BM_TPM_CONF_CROT     (0x00040000U) //!< Bit mask for TPM_CONF_CROT.
-#define BS_TPM_CONF_CROT     (1U)          //!< Bit field size in bits for TPM_CONF_CROT.
+/*@{*/
+#define BP_TPM_CONF_CROT     (18U)         /*!< Bit position for TPM_CONF_CROT. */
+#define BM_TPM_CONF_CROT     (0x00040000U) /*!< Bit mask for TPM_CONF_CROT. */
+#define BS_TPM_CONF_CROT     (1U)          /*!< Bit field size in bits for TPM_CONF_CROT. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_CROT field.
+/*! @brief Read current value of the TPM_CONF_CROT field. */
 #define BR_TPM_CONF_CROT(x)  (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_CROT, BS_TPM_CONF_CROT))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_CROT.
-#define BF_TPM_CONF_CROT(v)  (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_CROT), uint32_t) & BM_TPM_CONF_CROT)
+/*! @brief Format value for bitfield TPM_CONF_CROT. */
+#define BF_TPM_CONF_CROT(v)  ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_CROT) & BM_TPM_CONF_CROT)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the CROT field to a new value.
+/*! @brief Set the CROT field to a new value. */
 #define BW_TPM_CONF_CROT(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_CROT), BP_TPM_CONF_CROT, 1))
-#endif
-//@}
+/*@}*/
 
 /*!
  * @name Register TPM_CONF, field TRGSEL[27:24] (RW)
@@ -1288,56 +1124,50 @@ typedef union _hw_tpm_conf
  * the counter. This field should only be changed when the LPTPM counter is
  * disabled. See Chip configuration section for available options.
  */
-//@{
-#define BP_TPM_CONF_TRGSEL   (24U)         //!< Bit position for TPM_CONF_TRGSEL.
-#define BM_TPM_CONF_TRGSEL   (0x0F000000U) //!< Bit mask for TPM_CONF_TRGSEL.
-#define BS_TPM_CONF_TRGSEL   (4U)          //!< Bit field size in bits for TPM_CONF_TRGSEL.
+/*@{*/
+#define BP_TPM_CONF_TRGSEL   (24U)         /*!< Bit position for TPM_CONF_TRGSEL. */
+#define BM_TPM_CONF_TRGSEL   (0x0F000000U) /*!< Bit mask for TPM_CONF_TRGSEL. */
+#define BS_TPM_CONF_TRGSEL   (4U)          /*!< Bit field size in bits for TPM_CONF_TRGSEL. */
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Read current value of the TPM_CONF_TRGSEL field.
+/*! @brief Read current value of the TPM_CONF_TRGSEL field. */
 #define BR_TPM_CONF_TRGSEL(x) (BME_UBFX32(HW_TPM_CONF_ADDR(x), BP_TPM_CONF_TRGSEL, BS_TPM_CONF_TRGSEL))
-#endif
 
-//! @brief Format value for bitfield TPM_CONF_TRGSEL.
-#define BF_TPM_CONF_TRGSEL(v) (__REG_VALUE_TYPE((__REG_VALUE_TYPE((v), uint32_t) << BP_TPM_CONF_TRGSEL), uint32_t) & BM_TPM_CONF_TRGSEL)
+/*! @brief Format value for bitfield TPM_CONF_TRGSEL. */
+#define BF_TPM_CONF_TRGSEL(v) ((uint32_t)((uint32_t)(v) << BP_TPM_CONF_TRGSEL) & BM_TPM_CONF_TRGSEL)
 
-#ifndef __LANGUAGE_ASM__
-//! @brief Set the TRGSEL field to a new value.
+/*! @brief Set the TRGSEL field to a new value. */
 #define BW_TPM_CONF_TRGSEL(x, v) (BME_BFI32(HW_TPM_CONF_ADDR(x), ((uint32_t)(v) << BP_TPM_CONF_TRGSEL), BP_TPM_CONF_TRGSEL, 4))
-#endif
-//@}
+/*@}*/
 
-//-------------------------------------------------------------------------------------------
-// hw_tpm_t - module struct
-//-------------------------------------------------------------------------------------------
+/*******************************************************************************
+ * hw_tpm_t - module struct
+ ******************************************************************************/
 /*!
  * @brief All TPM module registers.
  */
-#ifndef __LANGUAGE_ASM__
 #pragma pack(1)
 typedef struct _hw_tpm
 {
-    __IO hw_tpm_sc_t SC;                   //!< [0x0] Status and Control
-    __IO hw_tpm_cnt_t CNT;                 //!< [0x4] Counter
-    __IO hw_tpm_mod_t MOD;                 //!< [0x8] Modulo
+    __IO hw_tpm_sc_t SC;                   /*!< [0x0] Status and Control */
+    __IO hw_tpm_cnt_t CNT;                 /*!< [0x4] Counter */
+    __IO hw_tpm_mod_t MOD;                 /*!< [0x8] Modulo */
     struct {
-        __IO hw_tpm_cnsc_t CnSC;           //!< [0xC] Channel (n) Status and Control
-        __IO hw_tpm_cnv_t CnV;             //!< [0x10] Channel (n) Value
+        __IO hw_tpm_cnsc_t CnSC;           /*!< [0xC] Channel (n) Status and Control */
+        __IO hw_tpm_cnv_t CnV;             /*!< [0x10] Channel (n) Value */
     } CONTROLS[6];
     uint8_t _reserved0[20];
-    __IO hw_tpm_status_t STATUS;           //!< [0x50] Capture and Compare Status
+    __IO hw_tpm_status_t STATUS;           /*!< [0x50] Capture and Compare Status */
     uint8_t _reserved1[48];
-    __IO hw_tpm_conf_t CONF;               //!< [0x84] Configuration
+    __IO hw_tpm_conf_t CONF;               /*!< [0x84] Configuration */
 } hw_tpm_t;
 #pragma pack()
 
-//! @brief Macro to access all TPM registers.
-//! @param x TPM instance number.
-//! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
-//!     use the '&' operator, like <code>&HW_TPM(0)</code>.
-#define HW_TPM(x)      (*(hw_tpm_t *) REGS_TPM_BASE(x))
-#endif
+/*! @brief Macro to access all TPM registers. */
+/*! @param x TPM module instance base address. */
+/*! @return Reference (not a pointer) to the registers struct. To get a pointer to the struct,
+ *     use the '&' operator, like <code>&HW_TPM(TPM0_BASE)</code>. */
+#define HW_TPM(x)      (*(hw_tpm_t *)(x))
 
-#endif // __HW_TPM_REGISTERS_H__
-// v22/130726/0.9
-// EOF
+#endif /* __HW_TPM_REGISTERS_H__ */
+/* v33/140401/2.1.0 */
+/* EOF */
