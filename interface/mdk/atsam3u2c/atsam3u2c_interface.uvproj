@@ -687,7 +687,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -1678,7 +1678,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -2712,7 +2712,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -3660,7 +3660,7 @@
             <File>
               <FileName>target_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Atmel\target_flash.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
