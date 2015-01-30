@@ -168,8 +168,8 @@ hex_parse_status_t parse_hex_blob(uint8_t *hex_blob, uint32_t hex_blob_size, uin
         }
         hex_blob++;
     }
-    // decoded an entire hex block
-    status = HEX_PARSE_OK;
+    // decoded an entire hex block - verify
+    status = (hex_blob_size == (uint32_t)(*hex_parse_cnt)) ? HEX_PARSE_OK : HEX_PARSE_FAILURE;
 hex_parser_exit:
     memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
     // figure the start address for the buffer before returning

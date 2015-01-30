@@ -58,6 +58,10 @@ static void blinkLED(){
     gpio_set_dap_led(1);
 }
 
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
+{
+    return 0;
+}
 
 
 //Erase NRF and blink every 50ms in the process

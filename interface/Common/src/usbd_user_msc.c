@@ -95,7 +95,7 @@ static uint32_t filename_valid(uint8_t c)
         if(c == *valid_char) {
             return 1;
         }
-    } while (*(valid_char++) != '\0');
+    } while ((uint8_t)(*(valid_char++)) != '\0');
     return 0;
 }        
 
@@ -178,7 +178,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             debug_msg("%s", "FLASH WRITE\r\n");
             //debug_data(buf, USBD_MSC_BlockSize);
             status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
-            if (status != TARGET_OK) {
+            if ((status != TARGET_OK) || (status != TARGET_HEX_FILE_EOF)) {
                 file_transfer_state.transfer_started = 0;
                 configure_fail_txt(status);
                 main_usb_disconnect_event();
@@ -216,7 +216,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
                 debug_msg("%s", "FLASH WRITE\r\n");
                 //debug_data(buf, USBD_MSC_BlockSize);
                 status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
-                if (status != TARGET_OK) {
+                if ((status != TARGET_OK) || (status != TARGET_HEX_FILE_EOF)) {
                     file_transfer_state.transfer_started = 0;
                     configure_fail_txt(status);
                     main_usb_disconnect_event();
@@ -229,8 +229,10 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         }
     }
     
-    // see if a complete transfer occured by knowing it started and comparing filesize expectations
-    if ((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && (file_transfer_state.transfer_started == 1 )){
+    // see if a complete transfer occured by knowing it started and comparing filesize expectations (BIN)
+    //  finding an EOF from hex file (HEX)
+    if (((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && (file_transfer_state.transfer_started == 1 )) || 
+         (TARGET_HEX_FILE_EOF == status)) {
         // do the disconnect - maybe write some programming stats to the file
         debug_msg("%s", "FLASH END\r\n");
         // we know the contents have been reveived. Time to eject

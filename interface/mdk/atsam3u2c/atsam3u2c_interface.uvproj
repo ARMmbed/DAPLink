@@ -141,7 +141,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -660,11 +660,6 @@
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\uart.c</FilePath>
             </File>
             <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usb_buf.h</FilePath>
-            </File>
-            <File>
               <FileName>usbd_SAM3U2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usbd_SAM3U2C.c</FilePath>
@@ -1089,7 +1084,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>7</TargetSelection>
@@ -1651,11 +1646,6 @@
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\uart.c</FilePath>
             </File>
             <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usb_buf.h</FilePath>
-            </File>
-            <File>
               <FileName>usbd_SAM3U2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usbd_SAM3U2C.c</FilePath>
@@ -2166,7 +2156,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -2685,11 +2675,6 @@
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\uart.c</FilePath>
             </File>
             <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usb_buf.h</FilePath>
-            </File>
-            <File>
               <FileName>usbd_SAM3U2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usbd_SAM3U2C.c</FilePath>
@@ -3114,7 +3099,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>1</TargetSelection>
@@ -3631,11 +3616,6 @@
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_buf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C\usb_buf.h</FilePath>
             </File>
             <File>
               <FileName>usbd_SAM3U2C.c</FileName>

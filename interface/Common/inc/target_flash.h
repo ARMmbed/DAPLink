@@ -45,6 +45,7 @@ static const char *const known_extensions[] = {
 
 typedef enum target_flash_status {
     TARGET_OK = 0,
+    TARGET_HEX_FILE_EOF,
     TARGET_FAIL_RESET,
     TARGET_FAIL_ALGO_DL,
     TARGET_FAIL_ALGO_DATA_SEQ,
@@ -53,7 +54,12 @@ typedef enum target_flash_status {
     TARGET_FAIL_UNLOCK,
     TARGET_FAIL_ERASE_SECTOR,
     TARGET_FAIL_ERASE_ALL,
-    TARGET_FAIL_WRITE
+    TARGET_FAIL_WRITE,
+    TARGET_FAIL_WRITE_UNALIGNED,
+    TARGET_FAIL_UNKNOWN_APP_FORMAT,
+    TARGET_FAIL_HEX_CKSUM,
+    TARGET_FAIL_HEX_PARSER,
+    TARGET_FAIL_HEX_PROGRAM
 }target_flash_status_t;
 
 static const char *const fail_txt_contents[] = {
@@ -67,6 +73,11 @@ static const char *const fail_txt_contents[] = {
     "Flash algorithm erase sector command FAILURE\r\n",
     "Flash algorithm erase all command FAILURE\r\n",
     "Flash algorithm write command FAILURE\r\n",
+    "Flash program address and data buffer unaligned\r\n",
+    "The application file format is unknown and cannot be parsed and/or processed.\r\n",
+    "The hex file cannot be decoded. Checksum calculation failure occured.\r\n",
+    "The hex file cannot be decoded. Parser logic failure occured.\r\n"
+    "The hex file cannot be programmed. Logic failure occured.\r\n"
 };
 
 //! @brief Verify that security will not be enabled.
@@ -78,8 +89,6 @@ uint8_t validate_bin_nvic(uint8_t *buf);
 uint8_t validate_hexfile(uint8_t *buf);
 target_flash_status_t target_flash_init(extension_t ext);
 target_flash_status_t target_flash_uninit(void);
-target_flash_status_t target_flash_erase_chip(void);
-target_flash_status_t target_flash_erase_sector(uint32_t adr);
 target_flash_status_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 //@}
 

@@ -17,7 +17,8 @@ enum hex_parse_status_t {
     HEX_PARSE_UNALIGNED,    /*!< The address of decoded data isnt consecutive. Need to program what was returned and continue to parse the input buffer */
     HEX_PARSE_LINE_OVERRUN, /*!< Error state when the record length is longer than the record structure */
     HEX_PARSE_CKSUM_FAIL,   /*!< Error state when the record checksum doesnt properly compute */
-    HEX_PARSE_UNINIT        /*!< Default state. Return of this type is unrecoverable logic error */
+    HEX_PARSE_UNINIT,       /*!< Default state. Return of this type is unrecoverable logic error */
+    HEX_PARSE_FAILURE       /*!< Amount of hex data to decode didnt match the parsing logics count of decoded bytes */
 };
 
 /** Prepare any state that is maintained for the start of a file
