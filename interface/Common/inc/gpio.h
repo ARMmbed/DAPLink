@@ -16,6 +16,8 @@
 #ifndef GPIO_H
 #define GPIO_H
 
+#include "RTL.h"
+
 void gpio_init(void);
 void gpio_enable_button_flag(OS_TID task, uint16_t flag);
 void gpio_set_dap_led(uint8_t state);

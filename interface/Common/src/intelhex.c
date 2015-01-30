@@ -2,8 +2,6 @@
 #include "stdio.h"
 #include "string.h"
 
-#define MAX_RECORD_SIZE 0x25
-
 typedef enum hex_record_t hex_record_t;
 enum hex_record_t {
     DATA_RECORD = 0,
@@ -13,6 +11,8 @@ enum hex_record_t {
     EXT_LINEAR_ADDR_RECORD = 4,
     START_LINEAR_ADDR_RECORD = 5
 };    
+
+#define MAX_RECORD_SIZE 0x25
 
 typedef union hex_line_t hex_line_t;
 union __attribute__((packed)) hex_line_t {
@@ -128,8 +128,8 @@ hex_parse_status_t parse_hex_blob(uint8_t *hex_blob, uint32_t hex_blob_size, uin
                             
                             case EOF_RECORD:
                                 // pad rest of the buffer with 0xff
-                                memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
-                                *bin_buf_cnt = bin_buf_size;
+                                //memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
+                                //*bin_buf_cnt = bin_buf_size;
                                 status = HEX_PARSE_EOF;
                                 goto hex_parser_exit;
                             
@@ -169,8 +169,9 @@ hex_parse_status_t parse_hex_blob(uint8_t *hex_blob, uint32_t hex_blob_size, uin
         }
         hex_blob++;
     }
-    // decoded an entire hex block - verify
-    status = (hex_blob_size == (uint32_t)(*hex_parse_cnt)) ? HEX_PARSE_OK : HEX_PARSE_FAILURE;
+    // decoded an entire hex block - verify (cant do this hex_parse_cnt is figured below)
+    //status = (hex_blob_size == (uint32_t)(*hex_parse_cnt)) ? HEX_PARSE_OK : HEX_PARSE_FAILURE;
+    status = HEX_PARSE_OK;
 hex_parser_exit:
     memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
     // figure the start address for the buffer before returning

@@ -45,7 +45,6 @@ static const char *const known_extensions[] = {
 
 typedef enum target_flash_status {
     TARGET_OK = 0,
-    TARGET_HEX_FILE_EOF,
     TARGET_FAIL_RESET,
     TARGET_FAIL_ALGO_DL,
     TARGET_FAIL_ALGO_DATA_SEQ,
@@ -59,7 +58,8 @@ typedef enum target_flash_status {
     TARGET_FAIL_UNKNOWN_APP_FORMAT,
     TARGET_FAIL_HEX_CKSUM,
     TARGET_FAIL_HEX_PARSER,
-    TARGET_FAIL_HEX_PROGRAM
+    TARGET_FAIL_HEX_PROGRAM,
+    TARGET_HEX_FILE_EOF,
 }target_flash_status_t;
 
 static const char *const fail_txt_contents[] = {
@@ -77,7 +77,8 @@ static const char *const fail_txt_contents[] = {
     "The application file format is unknown and cannot be parsed and/or processed.\r\n",
     "The hex file cannot be decoded. Checksum calculation failure occured.\r\n",
     "The hex file cannot be decoded. Parser logic failure occured.\r\n"
-    "The hex file cannot be programmed. Logic failure occured.\r\n"
+    "The hex file cannot be programmed. Logic failure occured.\r\n",
+    ""
 };
 
 //! @brief Verify that security will not be enabled.

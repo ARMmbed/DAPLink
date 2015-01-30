@@ -356,7 +356,7 @@ void USBD_ConfigEP (USB_ENDPOINT_DESCRIPTOR *pEPD) {
     UDPHS->UDPHS_EPT[num].UDPHS_EPTCTLENB = 
       (0x1 <<  9) |  /* Received OUT Data Interrupt Enable                    */
       (0x1 << 10) |  /* Transmitted IN Data Complete Interrupt Enable         */
-      (0x0 <<  4) |  /* NYET Disable (Only for High Speed Bulk OUT endpoints) */
+      (0x1 <<  4) |  /* NYET Disable (Only for High Speed Bulk OUT endpoints) */
       (0x1 << 13) ;  /* Stall Sent /ISO CRC Error/Number of Transaction Error */
   }
 }

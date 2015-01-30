@@ -141,7 +141,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>0</UsePdscDebugDescription>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -421,6 +421,11 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\DAP.c</FilePath>
@@ -678,11 +683,6 @@
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\DBG_ATSAM4E\target_reset.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -994,7 +994,7 @@
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\</ListingPath>
+          <ListingPath>.\Lst\nrf51822mkit_0x5000\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -1364,6 +1364,11 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\DAP.c</FilePath>
@@ -1664,11 +1669,6 @@
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\DBG_ATSAM4E\target_reset.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -2156,7 +2156,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>0</UsePdscDebugDescription>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -2436,6 +2436,11 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\DAP.c</FilePath>
@@ -2693,11 +2698,6 @@
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\DBG_ATSAM4E\target_reset.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
@@ -3002,14 +3002,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Obj\</OutputDirectory>
+          <OutputDirectory>.\Obj\atsam4e_0x5000\</OutputDirectory>
           <OutputName>ATSAM3U2C_ATSAM4E_0x5000</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Lst\</ListingPath>
+          <ListingPath>.\Lst\atsam4e_0x5000\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -3379,6 +3379,11 @@
           <GroupName>Common</GroupName>
           <Files>
             <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\DAP.c</FilePath>
@@ -3538,6 +3543,49 @@
               <FileName>intelhex.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\intelhex.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls>--gnu</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>serial.c</FileName>
@@ -3636,11 +3684,6 @@
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Atmel\DBG_ATSAM4E\target_reset.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>nrf51822_mkit_app_config.c</FileName>
