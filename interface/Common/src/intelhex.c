@@ -2,6 +2,8 @@
 #include "stdio.h"
 #include "string.h"
 
+#define MAX_RECORD_SIZE 0x25
+
 typedef enum hex_record_t hex_record_t;
 enum hex_record_t {
     DATA_RECORD = 0,
@@ -14,12 +16,12 @@ enum hex_record_t {
 
 typedef union hex_line_t hex_line_t;
 union __attribute__((packed)) hex_line_t {
-    uint8_t buf[0x25];
+    uint8_t buf[MAX_RECORD_SIZE];
     struct __attribute__((packed)) {
         uint8_t  byte_count;
         uint16_t address;
         uint8_t  record_type;
-        uint8_t  data[0x20];
+        uint8_t  data[MAX_RECORD_SIZE-0x5];
         uint8_t  checksum;
     };
 };
@@ -50,11 +52,10 @@ static uint8_t ctoh(char c)
 static uint8_t validate_checksum(hex_line_t *record)
 {
     uint8_t result = 0, i = 0;
-    for ( ; i < (record->byte_count+4); i++) {
+    for ( ; i < (record->byte_count+5); i++) {
         result += record->buf[i];
     }
-    result = (uint8_t)((~result)+1);
-    return ((uint8_t)result == (uint8_t)record->buf[record->byte_count+4]);
+    return (result == 0);
 }
 
 static hex_line_t line = {0}, shadow_line = {0};
