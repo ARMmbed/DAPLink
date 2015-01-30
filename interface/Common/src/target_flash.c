@@ -194,7 +194,8 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
     uint32_t bin_buf_written = 0;   // The amount of data in the binary buffer starting at address above
     uint32_t block_size = size;     // the amount of data in a block to be decoded
     uint32_t block_amt_parsed = 0;  // amount of data parsed in the block on the last call
-    static uint32_t target_flash_address = 0;
+    uint32_t target_flash_address = 0;
+    uint32_t tmp = 0;
     
     while (1) {
         // try to decode a block of hex data into bin data
@@ -214,6 +215,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
                 }
             }
             // write to target RAM
+            tmp = flash.program_buffer+target_ram_idx;
             if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, bin_buffer, bin_buf_written)) {
                 return TARGET_FAIL_ALGO_DATA_SEQ;
             }
@@ -234,6 +236,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
                 // cleanup
                 if (target_ram_idx > 0) {
                     // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
+                    tmp = bin_buf_written-target_ram_idx;
                     if (0 == swd_write_memory(flash.program_buffer, bin_buffer+(bin_buf_written-target_ram_idx), target_ram_idx)) {
                         return TARGET_FAIL_ALGO_DATA_SEQ;
                     }
@@ -260,6 +263,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             }
             target_ram_idx += bin_buf_written;
             // pad RAM with 00
+            tmp = flash.ram_to_flash_bytes_to_be_written-target_ram_idx;
             if (target_ram_idx < flash.ram_to_flash_bytes_to_be_written) {
                 if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, (uint8_t *)zero_buffer, (flash.ram_to_flash_bytes_to_be_written-target_ram_idx))) {
                     return TARGET_FAIL_ALGO_DATA_SEQ;
@@ -280,6 +284,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
                 // cleanup
                 if (target_ram_idx > 0) {
                     // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
+                    tmp = bin_buf_written-target_ram_idx;
                     if (0 == swd_write_memory(flash.program_buffer, bin_buffer+(bin_buf_written-target_ram_idx), target_ram_idx)) {
                         return TARGET_FAIL_ALGO_DATA_SEQ;
                     }
@@ -308,6 +313,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             }
             target_ram_idx += bin_buf_written;
             // pad RAM with 00
+            tmp = flash.ram_to_flash_bytes_to_be_written-target_ram_idx;
             if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, (uint8_t *)zero_buffer, (flash.ram_to_flash_bytes_to_be_written-target_ram_idx))) {
                 return TARGET_FAIL_ALGO_DATA_SEQ;
             }
@@ -331,5 +337,6 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
         else if ((HEX_PARSE_UNINIT == status) || (HEX_PARSE_FAILURE == status)) {
             return TARGET_FAIL_HEX_PARSER;
         }
+        tmp = tmp;
     }
 }
