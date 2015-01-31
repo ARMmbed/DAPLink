@@ -23,6 +23,9 @@
 #include "daplink_debug.h"
 #include "version.h"
 
+#include "swd_host.h"
+static uint8_t tmpbuf[512] = {0};
+
 void usbd_msc_init(void)
 {    
     // Setup the filesystem based on target parameters
@@ -80,7 +83,7 @@ void usbd_msc_read_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
     }
     
-    // Some files require funtime content. If one generate and overwrite the the read sequence
+    // Some files require runtime content. If one generate and overwrite the the read sequence
     //  buffer with the newer data (only works for files < 512 bytes and known location on fs)
     if (block == (mbr.reserved_logical_sectors + (mbr.logical_sectors_per_fat*mbr.num_fats) 
         + ((mbr.max_root_dir_entries*sizeof(FatDirectoryEntry_t)/mbr.bytes_per_sector)))) {
@@ -238,6 +241,16 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         status = TARGET_OK;
         // do the disconnect - maybe write some programming stats to the file
         debug_msg("%s", "FLASH END\r\n");
+        // read target memory and write across USB
+        //-----------------------------------------
+        uint32_t addr = target_device.flash_start;
+        while (addr < target_device.flash_end) {
+            swd_read_memory(addr, tmpbuf, USBD_MSC_BlockSize);
+            debug_data(tmpbuf, USBD_MSC_BlockSize);
+            addr += USBD_MSC_BlockSize;
+        }
+        debug_msg("%s", "FLASH END\r\n");
+        //-----------------------------------------
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
         configure_fail_txt(status);

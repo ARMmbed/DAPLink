@@ -51,8 +51,8 @@ static inline uint32_t daplink_debug_print(const char* format, ...)
 
 static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
 {
-    int32_t s = USBD_CDC_ACM_DataSend((uint8_t *)&buf, size);
-    os_dly_wait(5);
+    int32_t s = USBD_CDC_ACM_DataSend(buf, size);
+    os_dly_wait(10);
     return (uint32_t)s;
 }
 
