@@ -53,7 +53,9 @@ typedef enum target_flash_status {
     TARGET_FAIL_UNLOCK,
     TARGET_FAIL_ERASE_SECTOR,
     TARGET_FAIL_ERASE_ALL,
-    TARGET_FAIL_WRITE
+    TARGET_FAIL_WRITE,
+    TARGET_FAIL_INVALID_HEX_FILE,
+    TARGET_HEX_FILE_EOF,
 }target_flash_status_t;
 
 static const char *const fail_txt_contents[] = {
@@ -67,6 +69,7 @@ static const char *const fail_txt_contents[] = {
     "Flash algorithm erase sector command FAILURE\r\n",
     "Flash algorithm erase all command FAILURE\r\n",
     "Flash algorithm write command FAILURE\r\n",
+    "The interface firmware FAILED to parse the hex file\r\n",
 };
 
 //! @brief Verify that security will not be enabled.

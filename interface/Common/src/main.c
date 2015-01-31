@@ -395,7 +395,7 @@ __task void main_task(void) {
                 send_uID = 0;
             }
             // Reset target
-            target_set_state(RESET_RUN);
+            target_set_state(RESET_RUN_WITH_DEBUG);
             cdc_led_state = LED_FLASH;
             gpio_set_cdc_led(1);
             button_activated = 0;
