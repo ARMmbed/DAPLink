@@ -38,6 +38,7 @@ static uint8_t bin_buffer[512];
 static uint32_t bin_start_addr = 0;
 static uint8_t *bin_ptr = bin_buffer;
 const static uint8_t *bin_end = bin_buffer + sizeof(bin_buffer);
+static uint8_t  chip_is_erased = 0;
 
 static /*inline*/ uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
@@ -80,6 +81,8 @@ target_flash_status_t target_flash_init(extension_t ext) {
     
     bin_ptr = bin_buffer;
     bin_start_addr = 0;
+    chip_is_erased = 0;
+    intelhex_reset();
     
     PORT_SWD_SETUP();
     if (!target_set_state(RESET_PROGRAM)) {
@@ -116,28 +119,26 @@ target_flash_status_t target_flash_erase_chip(void) {
     }
     
 //    target_set_state(RESET_PROGRAM);
-    target_flash_init(input_file_ext);    
+//     target_flash_init(input_file_ext);    
     
     return TARGET_OK;
 }
 
 target_flash_status_t target_flash_program_page_bin(uint32_t addr, uint8_t * buf, uint32_t size)
 {
-    static uint8_t  chip_is_erased = 0;
-    
     uint32_t bytes_written = 0;
     
-	  // Program a page in target flash.
-    if (!swd_write_memory(flash.program_buffer, buf, size)) {
-        return TARGET_FAIL_ALGO_DATA_SEQ;
-    }
-    
     if (addr == 0) {
-        if (!target_flash_erase_chip()) { 
+        if (target_flash_erase_chip()) { 
             return TARGET_FAIL_ERASE_ALL;
         }
         
         chip_is_erased = 1;
+    }
+    
+	  // Program a page in target flash.
+    if (!swd_write_memory(flash.program_buffer, buf, size)) {
+        return TARGET_FAIL_ALGO_DATA_SEQ;
     }
     
     while(bytes_written < size) {
