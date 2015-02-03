@@ -243,7 +243,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         debug_msg("%s", "FLASH END\r\n");
           
 #ifdef AUTO_RUN
-        target_set_state(RESET_RUN_WITH_DEBUG);   
+        target_set_state(RESET_RUN);   
 #endif
 
         // we know the contents have been reveived. Time to eject

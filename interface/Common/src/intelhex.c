@@ -37,7 +37,7 @@ static uint8_t intelhex_data_lsd = 0;
 static uint8_t intelhex_line_index = 0;
 static uint8_t intelhex_record_processed = 0;
 static uint32_t intelhex_base_address = 0;
-static uint32_t intelhex_parsed_address = 0;
+static uint32_t intelhex_next_address = 0;
 
 /** Converts a character representation of a hex to real value.
  *   @param c is the hex value in char format
@@ -68,7 +68,7 @@ void intelhex_reset(void)
     intelhex_line_index = 0;
     intelhex_record_processed = 0;
     intelhex_base_address = 0;
-    intelhex_parsed_address = 0;
+    intelhex_next_address = 0;
 }
 
 int32_t intelhex_parse(uint8_t **p_hex_buf, uint8_t **p_bin_buf, uint32_t *address, uint32_t hex_buf_size, uint32_t bin_buf_size)
@@ -77,6 +77,7 @@ int32_t intelhex_parse(uint8_t **p_hex_buf, uint8_t **p_bin_buf, uint32_t *addre
     uint8_t *bin_ptr = *p_bin_buf;
     uint8_t *hex_end = hex_ptr + hex_buf_size;
     uint32_t bin_size = 0;
+    uint32_t next_address = intelhex_next_address;
 
     int32_t return_value = INTELHEX_TO_CONTINUE;
 
@@ -104,10 +105,10 @@ int32_t intelhex_parse(uint8_t **p_hex_buf, uint8_t **p_bin_buf, uint32_t *addre
 
             if (DATA_RECORD == intelhex_line.record_type) {
                 // find discrete blocks, process current intelhex_line next time
-                if ((intelhex_base_address + intelhex_line.address) != intelhex_parsed_address) {
-                    LOG("Memory from 0x%X to 0x%X is skipped.\n", intelhex_parsed_address, intelhex_base_address + intelhex_line.address);
+                if ((intelhex_base_address + intelhex_line.address) != next_address) {
+                    LOG("Memory from 0x%X to 0x%X is skipped.\n", intelhex_next_address, intelhex_base_address + intelhex_line.address);
 
-                    intelhex_parsed_address = intelhex_base_address + intelhex_line.address;
+                    intelhex_next_address = intelhex_base_address + intelhex_line.address;
                     hex_ptr--;             // roll back EOF, leave current intelhex_line to process next time
                     intelhex_record_processed = 2;  // avoid changing intelhex_line.address next time
 
@@ -132,7 +133,8 @@ int32_t intelhex_parse(uint8_t **p_hex_buf, uint8_t **p_bin_buf, uint32_t *addre
                 bin_size += intelhex_line.byte_count;
 
                 // store the end address of bin data
-                intelhex_parsed_address = intelhex_base_address + intelhex_line.address + intelhex_line.byte_count;
+                next_address = intelhex_base_address + intelhex_line.address + intelhex_line.byte_count;
+                intelhex_next_address = next_address;
             } else if (EOF_RECORD == intelhex_line.record_type) {
                 return_value = INTELHEX_DONE;
                 break;
@@ -171,7 +173,7 @@ int32_t intelhex_parse(uint8_t **p_hex_buf, uint8_t **p_bin_buf, uint32_t *addre
         }
     }
 
-    *address = intelhex_parsed_address - bin_size; // calculate the start address for bin data
+    *address = next_address - bin_size; // calculate the start address for bin data
     *p_bin_buf = bin_ptr;
     *p_hex_buf = hex_ptr;
 

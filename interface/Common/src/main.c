@@ -122,10 +122,10 @@ USB_CONNECT usb_state;
 static USB_BUSY usb_busy;
 static uint32_t usb_busy_count;
 
-static U64 stk_timer_30_task[TIMER_TASK_30_STACK/8];
-static U64 stk_dap_task[DAP_TASK_STACK/8];
-static U64 stk_serial_task[SERIAL_TASK_STACK/8];
-static U64 stk_main_task[MAIN_TASK_STACK/8];
+U64 stk_timer_30_task[TIMER_TASK_30_STACK/8];
+U64 stk_dap_task[DAP_TASK_STACK/8];
+U64 stk_serial_task[SERIAL_TASK_STACK/8];
+U64 stk_main_task[MAIN_TASK_STACK/8];
 
 // Timer task, set flags every 30mS and 90mS
 __task void timer_task_30mS(void) {
@@ -395,7 +395,7 @@ __task void main_task(void) {
                 send_uID = 0;
             }
             // Reset target
-            target_set_state(RESET_RUN_WITH_DEBUG);
+            target_set_state(RESET_RUN);
             cdc_led_state = LED_FLASH;
             gpio_set_cdc_led(1);
             button_activated = 0;

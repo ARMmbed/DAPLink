@@ -118,8 +118,16 @@ target_flash_status_t target_flash_erase_chip(void) {
         return TARGET_FAIL_ERASE_ALL;
     }
     
-//    target_set_state(RESET_PROGRAM);
-//     target_flash_init(input_file_ext);    
+//     target_set_state(RESET_PROGRAM);
+
+//     // Download flash programming algorithm to target and initialise.
+//     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
+//         return TARGET_FAIL_ALGO_DL;
+//     }
+
+//     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
+//         return TARGET_FAIL_INIT;
+//     }    
     
     return TARGET_OK;
 }
@@ -230,7 +238,7 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
         
         return TARGET_OK;
     } else {
-        return target_flash_program_page_bin(addr, buf, size);
+        return TARGET_FAIL_INVALID_HEX_FILE;
     }
     
 }
