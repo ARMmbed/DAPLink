@@ -386,9 +386,6 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency      */
 void SystemInit (void) {
   volatile uint32_t i;
 
-  // enable USBRAM and SRAM1
-  LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 26) | (1 << 27);
-
 	#if (CLOCK_SETUP)                                 /* Clock Setup              */
 
 #if ((SYSPLLCLKSEL_Val & 0x03) == 1)

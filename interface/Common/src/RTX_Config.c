@@ -29,9 +29,9 @@
 //   <i> Default: 6
 #ifndef OS_TASKCNT
     #ifdef SEMIHOST
-        #define OS_TASKCNT    15//13
+        #define OS_TASKCNT    13//13
     #else
-        #define OS_TASKCNT    14//12
+        #define OS_TASKCNT    12//12
     #endif
 #endif
 
@@ -40,7 +40,7 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     4
+ #define OS_PRIVCNT     5
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
@@ -61,7 +61,7 @@
 // <i> Include the stack checking code for a stack overflow.
 // <i> Note that additional code reduces the Kernel performance.
 #ifndef OS_STKCHECK
- #define OS_STKCHECK    1
+ #define OS_STKCHECK    0
 #endif
 
 // <q>Run in privileged mode
