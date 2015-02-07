@@ -200,6 +200,20 @@ int32_t uart_set_configuration (UART_Configuration *config) {
             parity = 0x00;
         break;
     }
+    
+    if (config->FlowControl == UART_FLOW_CONTROL_RTS_CTS) {
+        LPC_IOCON->PIO0_17 |= 0x01;     // RTS
+        LPC_IOCON->PIO0_7  |= 0x01;     // CTS
+        
+        // enable auto RTS and CTS
+        LPC_USART->MCR = (1 << 6) | (1 << 7);
+    } else {
+        LPC_IOCON->PIO0_17 &= ~0x01;     // RTS
+        LPC_IOCON->PIO0_7  &= ~0x01;     // CTS
+        
+        // disable auto RTS and CTS
+        LPC_USART->MCR = (0 << 6) | (0 << 7);
+    }
 
     LPC_USART->LCR = (data_bits << 0)
                    | (stop_bits << 2)
