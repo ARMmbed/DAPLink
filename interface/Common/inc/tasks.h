@@ -35,6 +35,6 @@
 #define TIMER_TASK_30_STACK (120)
 #define DAP_TASK_STACK      (240)
 #define SERIAL_TASK_STACK   (360)
-#define MAIN_TASK_STACK     (180)
+#define MAIN_TASK_STACK     (240)
 
 #endif

@@ -15,6 +15,8 @@
  */
 #include "target_reset.h"
 #include "swd_host.h"
+#include "DAP_config.h"
+#include "RTL.h"
 
 void target_before_init_debug(void) {
     return;
@@ -25,5 +27,22 @@ uint8_t target_unlock_sequence(void) {
 }
 
 uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+    uint8_t retval = swd_set_target_state(state);
+    
+    if (RESET_RUN == state) {
+        const uint32_t POWER_RESET_ADDR = (0x40000000 + 0x544);
+        const uint32_t POWER_RESET_DATA = 0x01;
+                
+        swd_read_memory(POWER_RESET_ADDR, (uint8_t *)&POWER_RESET_DATA, 4);
+        
+        PIN_SWDIO_OUT_ENABLE();
+        PIN_SWDIO_OUT(0);
+        PIN_SWCLK_TCK_CLR();
+        
+        os_dly_wait(1);
+        
+        PIN_SWDIO_OUT(1);
+    }
+    
+    return retval;
 }
