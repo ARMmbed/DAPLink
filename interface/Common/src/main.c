@@ -21,7 +21,6 @@
 #include "stdint.h"
 
 #include "main.h"
-#include "board.h"
 #include "gpio.h"
 #include "uart.h"
 #include "semihost.h"
@@ -570,8 +569,5 @@ __task void main_task(void) {
 
 // Main Program
 int main (void) {
-  /* Allow the board to do some last initialization before the main task is started */
-  board_init();
-
   os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

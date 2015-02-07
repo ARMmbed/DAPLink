@@ -16,19 +16,19 @@
 
 #include "target_config.h"
 
-// LPC1768 target information
+// LPC1114 target information
 const target_cfg_t target_device = {
-    .board_id   = "9004",
-    .secret     = "FFFFFFF8",
-    .sector_size    = 1024, 
+    .board_id   = "1114",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 4096, //1024,
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (kB(512)/1024), 
+    .sector_cnt     = (kB(32)/4096), //(kB(32)/1024),
     .flash_start    = 0,
-    .flash_end      = kB(512),
+    .flash_end      = kB(32),
     .ram_start      = 0x10000000,
-    .ram_end        = 0x10008000,
-    .disc_size      = kB(512)
+    .ram_end        = 0x10002000,
+    .disc_size      = kB(32)
 };
 
