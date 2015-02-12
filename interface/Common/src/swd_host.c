@@ -403,142 +403,87 @@ static uint8_t swd_write_byte(uint32_t addr, uint8_t val) {
 // Read unaligned data from target memory.
 // size is in bytes.
 uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
-    uint32_t end = address + size;
-    while (address < end) {
+    uint32_t n;
+
+    // Read bytes until word aligned
+    while ((size > 0) && (address & 0x3)) {
         if (!swd_read_byte(address, data)) {
             return 0;
-        }        
+        }
         address++;
         data++;
+        size--;
     }
+
+    // Read word aligned blocks
+    while (size > 3) {
+        // Limit to auto increment page size
+        n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+        if (size < n) {
+            n = size & 0xFFFFFFFC; // Only count complete words remaining
+        }
+
+        if (!swd_read_block(address, data, n)) {
+            return 0;
+        }
+
+        address += n;
+        data += n;
+        size -= n;
+    }
+
+    // Read remaining bytes
+    while (size > 0) {
+        if (!swd_read_byte(address, data)) {
+            return 0;
+        }
+        address++;
+        data++;
+        size--;
+    }
+
     return 1;
 }
-//    uint32_t n;
-
-//    // Read bytes until word aligned
-//    while ((size > 0) && (address & 0x3)) {
-//        if (!swd_read_byte(address, data)) {
-//            return 0;
-//        }
-//        address++;
-//        data++;
-//        size--;
-//    }
-
-//    // Read word aligned blocks
-//    while (size > 3) {
-//        // Limit to auto increment page size
-//        n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
-//        if (size < n) {
-//            n = size & 0xFFFFFFFC; // Only count complete words remaining
-//        }
-
-//        if (!swd_read_block(address, data, n)) {
-//            return 0;
-//        }
-
-//        address += n;
-//        data += n;
-//        size -= n;
-//    }
-
-//    // Read remaining bytes
-//    while (size > 0) {
-//        if (!swd_read_byte(address, data)) {
-//            return 0;
-//        }
-//        address++;
-//        data++;
-//        size--;
-//    }
-
-//    return 1;
-//}
 
 // Write unaligned data to target memory.
 // size is in bytes.
-//uint8_t verify[636] = {0};
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
-    uint32_t end = address + size;
-    uint8_t data_read;
-    while (address <= end) {
+    uint32_t n = 0;
+    // Write bytes until word aligned
+    while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {
             return 0;
         }
-        
-        if (!swd_read_byte(address, &data_read)) {
-            return 0;
-        }
-        
-        if (*data != data_read) {
-            return 0;
-        }
-        
         address++;
         data++;
+        size--;
     }
+    // Write word aligned blocks
+    // Limit to auto increment page size
+    //n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+    //if (size < n) {
+    //    n = size & 0xFFFFFFFC; // Only count complete words remaining
+    //}
+    n = size & 0xfffffffc;
+    if (!swd_write_block(address, data, n)) {
+        return 0;
+    }
+    address += n;
+    data += n;
+    size -= n;
+
+    // Write remaining bytes
+    while (size > 0) {
+        if (!swd_write_byte(address, *data)) {
+            return 0;
+        }
+        address++;
+        data++;
+        size--;
+    }
+
     return 1;
 }
-
-////    uint32_t n = 0, i = 0;
-////    uint8_t check8;
-//    uint32_t n = 0;
-//    // Write bytes until word aligned
-//    while ((size > 0) && (address & 0x3)) {
-//        if (!swd_write_byte(address, *data)) {
-//            return 0;
-//        }
-////        if (!swd_read_byte(address, &check8)) {
-////            return 0;
-////        }
-////        if (check8 != *data) {
-////            return 0;
-////        }
-//        address++;
-//        data++;
-//        size--;
-//    }
-//    // Write word aligned blocks
-//    // Limit to auto increment page size
-//    //n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
-//    //if (size < n) {
-//    //    n = size & 0xFFFFFFFC; // Only count complete words remaining
-//    //}
-//    n = size & 0xfffffffc;
-//    if (!swd_write_block(address, data, n)) {
-//        return 0;
-//    }
-////    if (!swd_read_block(address, verify, n)) {
-////        return 0;
-////    }
-////    do {
-////        if (verify[i] != data[i]) {
-////            return 0;
-////        }
-////    } while ((++i) < n);
-
-//    address += n;
-//    data += n;
-//    size -= n;
-
-//    // Write remaining bytes
-//    while (size > 0) {
-//        if (!swd_write_byte(address, *data)) {
-//            return 0;
-//        }
-////        if (!swd_read_byte(address, &check8)) {
-////            return 0;
-////        }
-////        if (check8 != *data) {
-////            return 0;
-////        }
-//        address++;
-//        data++;
-//        size--;
-//    }
-
-//    return 1;
-//}
 
 // Execute system call.
 static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
@@ -811,7 +756,7 @@ static uint8_t JTAG2SWD() {
 
 uint8_t swd_init_debug(void) {
     uint32_t tmp = 0;
-
+    swd_init();
     // init dap state with fake values
     dap_state.select = 0xffffffff;
     dap_state.csw = 0xffffffff;
