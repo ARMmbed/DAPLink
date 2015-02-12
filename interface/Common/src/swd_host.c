@@ -198,7 +198,7 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
     }
 
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
-    ack = swd_transfer_retry(req, 0);
+    ack = swd_transfer_retry(req, NULL);
 
     return (ack == 0x01);
 }
@@ -448,6 +448,13 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 // Write unaligned data to target memory.
 // size is in bytes.
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
+//    while (size-- != 0) {
+//        swd_write_byte(address, (uint32_t)*data);
+//        address += 1;
+//        data += 1;
+//    }
+//    return 1;
+//}
     uint32_t n = 0;
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
@@ -459,11 +466,6 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         size--;
     }
     // Write word aligned blocks
-    // Limit to auto increment page size
-    //n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
-    //if (size < n) {
-    //    n = size & 0xFFFFFFFC; // Only count complete words remaining
-    //}
     n = size & 0xfffffffc;
     if (!swd_write_block(address, data, n)) {
         return 0;
@@ -484,11 +486,12 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
     return 1;
 }
-
+#include "flash_blob.h"
+    uint8_t buf[100];
 // Execute system call.
 static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     uint32_t i, status;
-
+    
     if (!swd_write_dp(DP_SELECT, 0)) {
         return 0;
     }
@@ -514,6 +517,10 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
 
     // xPSR
     if (!swd_write_core_register(16, state->xpsr)) {
+        return 0;
+    }
+    
+    if (!swd_write_block(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)){
         return 0;
     }
 
@@ -756,14 +763,10 @@ static uint8_t JTAG2SWD() {
 
 uint8_t swd_init_debug(void) {
     uint32_t tmp = 0;
-    swd_init();
     // init dap state with fake values
     dap_state.select = 0xffffffff;
     dap_state.csw = 0xffffffff;
-
-    DAP_Setup();
-    PORT_SWD_SETUP();
-
+    swd_init();
     // call a target dependant function
     // this function can do several stuff before really
     // initing the debug
@@ -820,6 +823,7 @@ void swd_set_target_reset(uint8_t asserted) {
 
 uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
     uint32_t val;
+    swd_init();
     switch (state) {
         case RESET_HOLD:
             swd_set_target_reset(1);
@@ -942,8 +946,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             break;
 
         case DEBUG:
-            DAP_Setup();
-            PORT_SWD_SETUP();
+            swd_init();
 
             if (!JTAG2SWD()) {
                 return 0;

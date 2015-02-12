@@ -316,7 +316,7 @@ __task void main_task(void) {
 #endif 
 
     usbd_init();
-    swd_init();
+    //swd_init();
 
     // Setup reset button
     gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);

@@ -586,6 +586,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -678,11 +683,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -1011,7 +1011,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1453,6 +1453,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1545,11 +1550,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -1658,7 +1658,7 @@
                   <RVCTZI>0</RVCTZI>
                   <RVCTOtherData>0</RVCTOtherData>
                   <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
+                  <IncludeInBuild>1</IncludeInBuild>
                   <AlwaysBuild>2</AlwaysBuild>
                   <GenerateAssemblyFile>2</GenerateAssemblyFile>
                   <AssembleAssemblyFile>2</AssembleAssemblyFile>
@@ -1699,6 +1699,49 @@
               <FileName>frdm_kl46z_app_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL46Z\frdm_kl46z_app_config.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -2449,6 +2492,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2541,11 +2589,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -3316,6 +3359,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3408,11 +3456,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -4183,6 +4226,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4275,11 +4323,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -5050,6 +5093,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5142,11 +5190,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -5917,6 +5960,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6009,11 +6057,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -6784,6 +6827,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -6876,11 +6924,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -7651,6 +7694,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -7743,11 +7791,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -8518,6 +8561,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -8610,11 +8658,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -9385,6 +9428,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -9477,11 +9525,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -10252,6 +10295,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -10344,11 +10392,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -10677,7 +10720,7 @@
             <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -10691,7 +10734,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>BIN\UL2CM3.DLL</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -10893,7 +10936,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TARGET_MK20D5, __RTX, DBG_KL46Z, BOARD_FRDM_KL46Z, INTERFACE_GEN_32KHZ</Define>
+              <Define>TARGET_MK20D5, __RTX, DBG_KL46Z, BOARD_FRDM_KL46Z</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\src;..\..\Common\inc;..\..\target\hal\DBG_Freescale\DBG_KL46Z;..\..\interface\hal\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\cmsis;..\..\..\shared\cmsis\TARGET_Freescale\TARGET_MK20DX;..\..\..\shared\rtos;..\..\target\hal\DBG_Freescale\common;..\..\..\shared\cmsis</IncludePath>
             </VariousControls>
@@ -11119,6 +11162,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -11211,11 +11259,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -11716,7 +11759,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -12158,6 +12201,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -12250,11 +12298,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -13025,6 +13068,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -13117,11 +13165,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -13892,6 +13935,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -13984,11 +14032,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -14759,6 +14802,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -14851,11 +14899,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -15626,6 +15669,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -15718,11 +15766,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -16579,6 +16622,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -16671,11 +16719,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -17004,7 +17047,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>8</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -17446,6 +17489,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -17538,11 +17586,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -18313,6 +18356,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -18405,11 +18453,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -19180,6 +19223,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -19272,11 +19320,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -20047,6 +20090,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -20139,11 +20187,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -20914,6 +20957,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -21006,11 +21054,6 @@
               <FileName>target_reset_Lseries.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\common\target_reset_Lseries.c</FilePath>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -21781,6 +21824,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -21873,11 +21921,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -22203,10 +22246,10 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
+            <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -22220,7 +22263,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>BIN\UL2CM3.DLL</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -22685,6 +22728,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -22777,11 +22825,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
@@ -22883,11 +22926,97 @@
               <FileName>frdm_kl25z_app_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL25Z\frdm_kl25z_app_config.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>frdm_kl46z_app_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\target\hal\DBG_Freescale\DBG_KL46Z\frdm_kl46z_app_config.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -23675,6 +23804,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>target_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\src\target_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -23767,11 +23901,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>target_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_Freescale\common\target_flash.c</FilePath>
             </File>
             <File>
               <FileName>frdm_k64f_app_config.c</FileName>
