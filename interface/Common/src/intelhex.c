@@ -1,5 +1,21 @@
+/* CMSIS-DAP Interface Firmware
+ * Copyright (c) 2009-2015 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "intelhex.h"
-#include "stdio.h"
+//#include "stdio.h"
 #include "string.h"
 
 typedef enum hex_record_t hex_record_t;
@@ -12,16 +28,14 @@ enum hex_record_t {
     START_LINEAR_ADDR_RECORD = 5
 };    
 
-#define MAX_RECORD_SIZE 0x25
-
 typedef union hex_line_t hex_line_t;
 union __attribute__((packed)) hex_line_t {
-    uint8_t buf[MAX_RECORD_SIZE];
+    uint8_t buf[0x25];
     struct __attribute__((packed)) {
         uint8_t  byte_count;
         uint16_t address;
         uint8_t  record_type;
-        uint8_t  data[MAX_RECORD_SIZE-0x5];
+        uint8_t  data[0x25-0x5];
         uint8_t  checksum;
     };
 };
@@ -73,10 +87,10 @@ void reset_hex_parser(void)
     load_unaligned_record = 0;
 }
 
-hex_parse_status_t parse_hex_blob(uint8_t *hex_blob, uint32_t hex_blob_size, uint32_t *hex_parse_cnt, uint8_t *bin_buf, uint32_t bin_buf_size, uint32_t *bin_buf_address, uint32_t *bin_buf_cnt)
+hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t hex_blob_size, uint32_t *hex_parse_cnt, uint8_t *bin_buf, const uint32_t bin_buf_size, uint32_t *bin_buf_address, uint32_t *bin_buf_cnt)
 {
-    uint8_t *end = hex_blob + hex_blob_size;
-    hex_parse_status_t status = HEX_PARSE_UNINIT;
+    uint8_t *end = (uint8_t *)hex_blob + hex_blob_size;
+    hexfile_parse_status_t status = HEX_PARSE_UNINIT;
     // reset the amount of data that is being return'd
     *bin_buf_cnt = (uint32_t)0;
 
