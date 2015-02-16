@@ -65,54 +65,56 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 
 
 //Erase NRF and blink every 50ms in the process
-static void nrf_Emergency_Erase(){
-    //make sure SWD is initialized
-    if (!swd_init_debug()) {
-		return;
-	}
-    
-    blinkLED();    
-    
-    //Set NVMC->CONFIG on NRF to 2    
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 2)) {
-		return;
-	}
+static void nrf_Emergency_Erase()
+{
+    target_flash_init(BIN);
+    target_flash_erase_chip();
+//    //make sure SWD is initialized
+//    if (!swd_init_debug()) {
+//		return;
+//	}
+//    
+//    blinkLED();    
+//    
+//    //Set NVMC->CONFIG on NRF to 2    
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 2)) {
+//		return;
+//	}
 
-    blinkLED();
-    blinkLED();
-   
+//    blinkLED();
+//    blinkLED();
+//   
 
-    //Set NVMC->ERASEALL on NRF to 1 to start chip erase
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 1)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    
-    //Set NVMC->CONFIG on NRF to 0
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 0)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
+//    //Set NVMC->ERASEALL on NRF to 1 to start chip erase
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 1)) {
+//		return;
+//	}
+//    
+//    blinkLED();
+//    blinkLED();
+//    blinkLED();
+//    blinkLED();
+//    
+//    //Set NVMC->CONFIG on NRF to 0
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 0)) {
+//		return;
+//	}
+//    
+//    blinkLED();
+//    blinkLED();
 
-	//swd_set_target_state(RESET_PROGRAM);
-	//target_flash_init(SystemCoreClock);
-	//target_flash_program_page(0,(uint8_t *)nrfBlinkyApp,800);
-
+//	//swd_set_target_state(RESET_PROGRAM);
+//	//target_flash_init(SystemCoreClock);
+//	//target_flash_program_page(0,(uint8_t *)nrfBlinkyApp,800);
 }
 
 void target_before_init_debug(void) {

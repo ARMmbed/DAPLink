@@ -126,13 +126,13 @@ static target_flash_status_t target_flash_erase_sector(uint32_t sector)
     return TARGET_OK;
 }
 
-//static target_flash_status_t target_flash_erase_chip(void)
-//{
-//    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
-//        return TARGET_FAIL_ERASE_ALL;
-//    }
-//    return TARGET_OK;
-//}
+target_flash_status_t target_flash_erase_chip(void)
+{
+    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
+        return TARGET_FAIL_ERASE_ALL;
+    }
+    return TARGET_OK;
+}
 
 static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size)
 {
@@ -170,9 +170,24 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
     return TARGET_OK;
 }
 
-static const uint8_t zero_buffer[512] = {0};
-static uint8_t bin_buffer[512] = {0};
-static uint32_t target_ram_idx = 0;         // running count of amount of data in target RAM
+static const uint8_t zero_buffer[512] = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+};
+static uint8_t bin_buffer[256] = {0};
+static volatile uint32_t target_ram_idx = 0;         // running count of amount of data in target RAM
 
 static void set_hex_state_vars(void)
 {
@@ -183,52 +198,44 @@ static void set_hex_state_vars(void)
 
 static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf, uint32_t size)
 {
-    static uint32_t target_flash_address = 0;
-    uint32_t tmp;
-    do {
-        // store the block start address if aligned with the programming size
-        target_flash_address = (addr / flash.ram_to_flash_bytes_to_be_written) * flash.ram_to_flash_bytes_to_be_written;
-        // check if security bits were set. Could be an odd alignment boundry that breaks (bin_buf only has part of security region)
-        if (1 == security_bits_set(target_flash_address, buf, size)) {
-            return TARGET_FAIL_SECURITY_BITS;
+    // store the block start address if aligned with the programming size
+    uint32_t target_flash_address = (addr / flash.ram_to_flash_bytes_to_be_written) * flash.ram_to_flash_bytes_to_be_written;
+    // check if security bits were set. Could be an odd alignment boundry that breaks (bin_buf only has part of security region)
+    if (1 == security_bits_set(target_flash_address, buf, size)) {
+        return TARGET_FAIL_SECURITY_BITS;
+    }
+    // possibly erase a sector
+    if (target_flash_address % target_device.sector_size == 0) {
+        if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
+            return TARGET_FAIL_ERASE_SECTOR;
         }
-        // possibly erase a sector
-        if (target_flash_address % target_device.sector_size == 0) {
-            if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
-                return TARGET_FAIL_ERASE_SECTOR;
+    }
+    // write to target RAM
+    if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, buf, size)) {
+        return TARGET_FAIL_ALGO_DATA_SEQ;
+    }
+    target_ram_idx += size;
+    // program a block if necessary
+    if (target_ram_idx >= flash.ram_to_flash_bytes_to_be_written) {
+        if (0 == swd_flash_syscall_exec(
+            & flash.sys_call_param
+            , flash.program_page
+            , target_flash_address + target_device.flash_start
+            , flash.ram_to_flash_bytes_to_be_written
+            , flash.program_buffer
+            , 0)
+            ) {
+            return TARGET_FAIL_WRITE;
+        }
+        target_ram_idx -= flash.ram_to_flash_bytes_to_be_written;
+        // cleanup
+        if (target_ram_idx > 0) {
+            // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
+            if (0 == swd_write_memory(flash.program_buffer, buf+(size-target_ram_idx), target_ram_idx)) {
+                return TARGET_FAIL_ALGO_DATA_SEQ;
             }
         }
-        // write to target RAM
-        tmp = flash.program_buffer+target_ram_idx;
-        if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, bin_buffer, size)) {
-            return TARGET_FAIL_ALGO_DATA_SEQ;
-        }
-        target_ram_idx += size;
-        // program a block if necessary
-        if (target_ram_idx >= flash.ram_to_flash_bytes_to_be_written) {
-            if (0 == swd_flash_syscall_exec(
-                & flash.sys_call_param
-                , flash.program_page
-                , target_flash_address + target_device.flash_start
-                , flash.ram_to_flash_bytes_to_be_written
-                , flash.program_buffer
-                , 0)
-                ) {
-                return TARGET_FAIL_WRITE;
-            }
-            target_ram_idx -= flash.ram_to_flash_bytes_to_be_written;
-            // cleanup
-            if (target_ram_idx > 0) {
-                // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
-                tmp = size-target_ram_idx;
-                if (0 == swd_write_memory(flash.program_buffer, bin_buffer+(size-target_ram_idx), target_ram_idx)) {
-                    return TARGET_FAIL_ALGO_DATA_SEQ;
-                }
-            }
-        }
-        size -= flash.ram_to_flash_bytes_to_be_written;
-        addr += flash.ram_to_flash_bytes_to_be_written;
-    } while (size != 0);
+    }
     return TARGET_OK;
 }
     
@@ -237,102 +244,29 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
     hexfile_parse_status_t status = HEX_PARSE_UNINIT;
     uint32_t bin_start_address = 0; // Decoded from the hex file, the binary buffer data starts at this address
     uint32_t bin_buf_written = 0;   // The amount of data in the binary buffer starting at address above
-    uint32_t block_size = size;     // the amount of data in a block to be decoded
     uint32_t block_amt_parsed = 0;  // amount of data parsed in the block on the last call
-    uint32_t target_flash_address = 0;
-    uint32_t tmp = 0;
     
     while (1) {
         // try to decode a block of hex data into bin data
-        status = parse_hex_blob(buf, block_size, &block_amt_parsed, bin_buffer, sizeof(bin_buffer), &bin_start_address, &bin_buf_written);
+        status = parse_hex_blob(buf, size, &block_amt_parsed, bin_buffer, sizeof(bin_buffer), &bin_start_address, &bin_buf_written);
         // the entire block of hex was decoded. This is a simple state
         if (HEX_PARSE_OK == status) {
+            // hex file data decoded. Write to target RAM and program if necessary
             return flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
         }
         else if (HEX_PARSE_UNALIGNED == status) {
-            // store the block start address if aligned with the programming size
-            target_flash_address = (bin_start_address / flash.ram_to_flash_bytes_to_be_written) * flash.ram_to_flash_bytes_to_be_written;
-            // check if security bits were set. Could be an odd alignment boundry that breaks (bin_buf only has part of security region)
-            if (1 == security_bits_set(target_flash_address, bin_buffer, bin_buf_written)) {
-                return TARGET_FAIL_SECURITY_BITS;
-            }
-            // possibly erase a sector
-            if (target_flash_address % target_device.sector_size == 0) {
-                if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
-                    return TARGET_FAIL_ERASE_SECTOR;
-                }
-            }
-            // write to target RAM
-            if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, bin_buffer, bin_buf_written)) {
-                return TARGET_FAIL_ALGO_DATA_SEQ;
-            }
-            target_ram_idx += bin_buf_written;
-            // pad RAM with 00
-            tmp = flash.ram_to_flash_bytes_to_be_written-target_ram_idx;
-            if (target_ram_idx < flash.ram_to_flash_bytes_to_be_written) {
-                if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, (uint8_t *)zero_buffer, (flash.ram_to_flash_bytes_to_be_written-target_ram_idx))) {
-                    return TARGET_FAIL_ALGO_DATA_SEQ;
-                }
-            }
-            else {
-                if (0 == swd_flash_syscall_exec(
-                    & flash.sys_call_param
-                    , flash.program_page
-                    , target_flash_address + target_device.flash_start
-                    , flash.ram_to_flash_bytes_to_be_written
-                    , flash.program_buffer
-                    , 0)
-                    ) {
-                    return TARGET_FAIL_WRITE;
-                }
-                target_ram_idx -= flash.ram_to_flash_bytes_to_be_written;
-                // cleanup
-                if (target_ram_idx > 0) {
-                    // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
-                    tmp = bin_buf_written-target_ram_idx;
-                    if (0 == swd_write_memory(flash.program_buffer, bin_buffer+(bin_buf_written-target_ram_idx), target_ram_idx)) {
-                        return TARGET_FAIL_ALGO_DATA_SEQ;
-                    }
-                }
-            }            
+            // unaligned address. Write data to target RAM and force pad with 00
+            flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+            flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+                    
             // incrememntal offset to finish the block
-            block_size = (size - block_amt_parsed);
+            size -= block_amt_parsed;
             buf += block_amt_parsed;
         }
         else if (HEX_PARSE_EOF == status) {
-            // store the block start address if aligned with the programming size
-            target_flash_address = (bin_start_address / flash.ram_to_flash_bytes_to_be_written) * flash.ram_to_flash_bytes_to_be_written;          
-            // check if security bits were set
-            if (1 == security_bits_set(target_flash_address, bin_buffer, bin_buf_written)) {
-                return TARGET_FAIL_SECURITY_BITS;
-            }
-            // possibly erase a sector
-            if (target_flash_address % target_device.sector_size == 0) {
-                if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
-                    return TARGET_FAIL_ERASE_SECTOR;
-                }
-            }
-            // write to target RAM
-            if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, bin_buffer, bin_buf_written)) {
-                return TARGET_FAIL_ALGO_DATA_SEQ;
-            }
-            target_ram_idx += bin_buf_written;
-            // pad RAM with 00
-            tmp = flash.ram_to_flash_bytes_to_be_written-target_ram_idx;
-            if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, (uint8_t *)zero_buffer, (flash.ram_to_flash_bytes_to_be_written-target_ram_idx))) {
-                return TARGET_FAIL_ALGO_DATA_SEQ;
-            }
-            // program
-            if (0 == swd_flash_syscall_exec(
-                & flash.sys_call_param
-                , flash.program_page
-                , target_flash_address + target_device.flash_start
-                , flash.ram_to_flash_bytes_to_be_written
-                , flash.program_buffer
-                , 0)
-                ) {
-                return TARGET_FAIL_WRITE;
-            }
+            // eof state. Make sure all data is programmed and 0 pad to align
+            flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+            flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
             target_ram_idx = 0;
             return TARGET_HEX_FILE_EOF;
         }
@@ -342,6 +276,5 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
         else if ((HEX_PARSE_UNINIT == status) || (HEX_PARSE_FAILURE == status)) {
             return TARGET_FAIL_HEX_PARSER;
         }
-        tmp = tmp;
     }
 }

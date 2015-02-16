@@ -91,6 +91,7 @@ uint8_t validate_hexfile(uint8_t *buf);
 target_flash_status_t target_flash_init(extension_t ext);
 target_flash_status_t target_flash_uninit(void);
 target_flash_status_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
+target_flash_status_t target_flash_erase_chip(void);
 //@}
 
 #ifdef __cplusplus

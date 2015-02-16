@@ -72,9 +72,9 @@ static uint8_t validate_checksum(hex_line_t *record)
     return (result == 0);
 }
 
-static hex_line_t line = {0}, shadow_line = {0};
-static uint32_t last_known_address = 0;
-static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
+hex_line_t line = {0}, shadow_line = {0};
+uint32_t last_known_address = 0;
+uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
 
 void reset_hex_parser(void)
 {
