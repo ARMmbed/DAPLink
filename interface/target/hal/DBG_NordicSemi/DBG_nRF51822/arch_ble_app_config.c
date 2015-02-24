@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef BOARD_H
-#define BOARD_H
 
-#include "stdint.h"
+#include "target_config.h"
 
-typedef struct {
-    const uint8_t id[4];
-    const uint8_t secret[9];
-} BOARD;
-
-extern BOARD board;
-
-// Init function called in main() before the main task is started
-void board_init(void);
-
-#endif
+// nrf51822-mkit target information
+const target_cfg_t target_device = {
+    .board_id   = "9009",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 1024,
+    // Assume memory is regions are same size (smallest). Flash algo should ignore requests
+    //  when variable sized sectors exist
+    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
+    .sector_cnt     = (kB(256)/1024),
+    .flash_start    = 0,
+    .flash_end      = kB(256),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20004000,
+    .disc_size      = MB(8)
+};
