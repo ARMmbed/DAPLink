@@ -20,7 +20,7 @@
 #include "swd_host.h"
 #include "stdint.h"
 
-static const uint32_t LPC1114_FLM[] = {
+const uint32_t LPC1114_FLM[] = {
     /*0x000*/ 0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2, 
     /*0x020*/ 0x47700b00, 0x21004841, 0x22016301, 0x63416342, 0x6b416342, 0xd0fc07c9, 0x493c6382, 0x39402002, 
     /*0x040*/ 0x20006008, 0x20004770, 0xb5f84770, 0x20324c38, 0x2500444c, 0x46222607, 0x4621c261, 0x4f353114, 
@@ -33,7 +33,7 @@ static const uint32_t LPC1114_FLM[] = {
     /*0x120*/ 0x696847b8, 0xd0002800, 0xbdf82001, 0x40048040, 0x00000004, 0x1fff1ff1, 0x00002ee0, 0x00000000, 
 };
 
-static const TARGET_FLASH flash = {
+const TARGET_FLASH flash = {
     0x10000025, // Init
     0x10000047, // UnInit
     0x1000004B, // EraseChip
@@ -49,6 +49,7 @@ static const TARGET_FLASH flash = {
     0x10000000, // algo_start
     0x00000150, // algo_size
     LPC1114_FLM,// image
+	
     256         // ram_to_flash_bytes_to_be_written
 };
 

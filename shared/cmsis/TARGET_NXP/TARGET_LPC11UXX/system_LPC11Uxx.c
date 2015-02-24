@@ -386,7 +386,7 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency      */
 void SystemInit (void) {
   volatile uint32_t i;
 
-#if (CLOCK_SETUP)                                 /* Clock Setup              */
+	#if (CLOCK_SETUP)                                 /* Clock Setup              */
 
 #if ((SYSPLLCLKSEL_Val & 0x03) == 1)
   LPC_SYSCON->PDRUNCFG     &= ~(1 << 5);          /* Power-up System Osc      */
@@ -447,9 +447,5 @@ void SystemInit (void) {
   /* System clock to the IOCON needs to be enabled or
   most of the I/O related peripherals won't work. */
   LPC_SYSCON->SYSAHBCLKCTRL |= (1<<16);
-  
-  // enable USBRAM and SRAM1
-  LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 26) | (1 << 27);
-  
 
 }

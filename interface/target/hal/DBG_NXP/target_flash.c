@@ -68,11 +68,6 @@ target_flash_status_t target_flash_init(extension_t ext)
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.init, 0, 0 /* clk value is not used */, 0, 0)) {
         return TARGET_FAIL_INIT;
     }
-    
-
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
-        return TARGET_FAIL_ERASE_ALL;
-    }
 
     return TARGET_OK;
 }
@@ -100,12 +95,12 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
     uint32_t bytes_written = 0;
     target_flash_status_t status = TARGET_OK;
     // we need to erase a sector
-//     if (addr % target_device.sector_size == 0) {
-//         status = target_flash_erase_sector(addr / target_device.sector_size);
-//         if (status != TARGET_OK) {
-//             return status;
-//         }
-//     }
+    if (addr % target_device.sector_size == 0) {
+        status = target_flash_erase_sector(addr / target_device.sector_size);
+        if (status != TARGET_OK) {
+            return status;
+        }
+    }
 
     // Program a page in target flash.
     if (!swd_write_memory(flash.program_buffer, buf, size)) {

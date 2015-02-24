@@ -205,6 +205,12 @@ Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
                 IMPORT  SystemInit
                 IMPORT  __main
+				
+				; Power on RAM1 and USBRAM area
+				LDR     R0, =0x40048080 ; System clock control
+				LDR     R1, =0x0C00485F ; boot default + RAM1, USBRAM
+				STR     R1, [R0]
+				
                 LDR     R0, =SystemInit
                 BLX     R0
                 LDR     R0, =__main
