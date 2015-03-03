@@ -98,7 +98,8 @@ target_flash_status_t target_flash_init(extension_t ext)
         reset_hex_parser();
         set_hex_state_vars();
     }
-    return TARGET_OK;
+    //return TARGET_OK;
+    return target_flash_erase_chip();
 }
 
 target_flash_status_t target_flash_uninit(void)
@@ -144,12 +145,12 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
         if (1 == security_bits_set(addr, buf, size)) {
             return TARGET_FAIL_SECURITY_BITS;
         }
-        // we need to erase a sector
-        if (addr % target_device.sector_size == 0) {
-            if (TARGET_OK != target_flash_erase_sector(addr / target_device.sector_size)) {
-                return TARGET_FAIL_ERASE_SECTOR;
-            }
-        }
+//        // we need to erase a sector
+//        if (addr % target_device.sector_size == 0) {
+//            if (TARGET_OK != target_flash_erase_sector(addr / target_device.sector_size)) {
+//                return TARGET_FAIL_ERASE_SECTOR;
+//            }
+//        }
         // Write a page in target RAM to be programmed.
         if (0 == swd_write_memory(flash.program_buffer, buf, size)) {
             return TARGET_FAIL_ALGO_DATA_SEQ;
@@ -204,12 +205,12 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     if (1 == security_bits_set(target_flash_address, buf, size)) {
         return TARGET_FAIL_SECURITY_BITS;
     }
-    // possibly erase a sector
-    if (target_flash_address % target_device.sector_size == 0) {
-        if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
-            return TARGET_FAIL_ERASE_SECTOR;
-        }
-    }
+//    // possibly erase a sector
+//    if (target_flash_address % target_device.sector_size == 0) {
+//        if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
+//            return TARGET_FAIL_ERASE_SECTOR;
+//        }
+//    }
     // write to target RAM
     if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, buf, size)) {
         return TARGET_FAIL_ALGO_DATA_SEQ;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "board.h"
+
 #include "read_uid.h"
 #include "sam3u2c.h"
 

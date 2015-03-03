@@ -17,7 +17,7 @@
 
 #include "main.h"
 #include "version.h"
-#include "board.h"
+#include "target_config.h"
 #include "mbed_htm.h"
 #include "read_uid.h"
 
@@ -65,7 +65,7 @@ static void setup_string_id_auth() {
 
     // string id
     for (i = 0; i < 4; i++)
-        string_auth[idx++] = board.id[i];
+        string_auth[idx++] = target_device.board_id[i];
     for (i = 0; i < 4; i++)
         string_auth[idx++] = fw_version[i];
     for (i = 0; i < 4; i++)
@@ -112,11 +112,11 @@ uint8_t * get_uid_string_interface(void) {
 
 static void compute_auth() {
     uint32_t id, fw, sec;
-    id = atoi((uint8_t *)board.id  , 4, 16);
+    id = atoi((uint8_t *)target_device.board_id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
     auth ^= unique_id;
-    sec = atoi((uint8_t *)(board.secret), 8, 16);
+    sec = atoi((uint8_t *)(target_device.secret), 8, 16);
     auth ^= sec;
 }
 

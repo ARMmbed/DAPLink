@@ -534,11 +534,6 @@
               <FilePath>..\..\Common\src\version.c</FilePath>
             </File>
             <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
               <FileName>intelhex.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\intelhex.c</FilePath>
@@ -1528,11 +1523,6 @@
               <FileName>version.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
             </File>
             <File>
               <FileName>intelhex.c</FileName>
@@ -2698,11 +2688,6 @@
               <FilePath>..\..\Common\src\version.c</FilePath>
             </File>
             <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
-            </File>
-            <File>
               <FileName>intelhex.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\intelhex.c</FilePath>
@@ -3649,11 +3634,6 @@
               <FileName>version.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\src\version.c</FilePath>
-            </File>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Common\src\board.c</FilePath>
             </File>
             <File>
               <FileName>intelhex.c</FileName>
