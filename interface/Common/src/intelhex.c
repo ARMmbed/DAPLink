@@ -125,7 +125,10 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                         switch (line.record_type) {
                             case DATA_RECORD:
                                 // verify this is a continous block of memory or need to exit and dump
-                                if (((last_known_address & 0xffff0000) | line.address) > (last_known_address + shadow_line.byte_count)) {
+                                if (((last_known_address & 0xffff0000) | line.address) > (shadow_line.address + shadow_line.byte_count)) {
+                                     // keeping a record of the last hex record
+                                    memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
+                                    
                                     load_unaligned_record = 1;
                                     status = HEX_PARSE_UNALIGNED;
                                     goto hex_parser_exit;
