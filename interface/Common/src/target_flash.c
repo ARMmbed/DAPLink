@@ -281,7 +281,10 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             }
             flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
             //flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
-            flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            // Check if rest of page needs to be padded
+            if (target_ram_idx != 0) {
+                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            }
                     
             // incrememntal offset to finish the block
             size -= block_amt_parsed;
@@ -295,7 +298,9 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             }
             flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
             //flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
-            flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            if (target_ram_idx != 0) {
+                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            }
             target_ram_idx = 0;
             return TARGET_HEX_FILE_EOF;
         }
