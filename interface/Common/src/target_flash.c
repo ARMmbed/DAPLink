@@ -231,9 +231,6 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
 //    }
     // write to target RAM
     if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, buf, size)) {
-        if (size == 0) {
-            return TARGET_OK;
-        }
         return TARGET_FAIL_ALGO_DATA_SEQ;
     }
     target_ram_idx += size;
@@ -305,19 +302,14 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
         }
         else if (HEX_PARSE_EOF == status) {
             // Check if there is content in ram buffer that needs to be written to chip
-            if (bin_buf_written == 0) {
-                // Check if rest of page needs to be padded and programmed
-                if (target_ram_idx != 0) {
-                    flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            if (bin_buf_written != 0) {
+                // Check if ram index needs to be shifted
+                if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
+                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
                 }
-                return TARGET_HEX_FILE_EOF;   
+                flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
             }
-            // eof state. Make sure all data is programmed and f // 0 pad to align
-            // Check if ram index needs to be shifted
-            if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
-                flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
-            }
-            flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+            
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
                 flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
