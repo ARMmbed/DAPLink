@@ -73,7 +73,7 @@ static uint8_t validate_checksum(hex_line_t *record)
 }
 
 hex_line_t line = {0}, shadow_line = {0};
-uint32_t last_known_address = 0;
+uint32_t last_known_address = 0, next_address_to_write = 0;
 uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
 
 void reset_hex_parser(void)
@@ -81,6 +81,7 @@ void reset_hex_parser(void)
     memset(line.buf, 0, sizeof(hex_line_t));
     memset(shadow_line.buf, 0, sizeof(hex_line_t));
     last_known_address = 0;
+    next_address_to_write = 0;
     low_nibble = 0;
     idx = 0;
     record_processed = 0;
@@ -104,8 +105,8 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
         memcpy((uint8_t *)bin_buf, (uint8_t *)line.data, line.byte_count);
         bin_buf += line.byte_count;
         *bin_buf_cnt = (uint32_t)(*bin_buf_cnt) + line.byte_count;
-        // this stores the last known start address of decoded data
-        last_known_address = ((last_known_address & 0xffff0000) | line.address) + line.byte_count;
+        // Store next address to write
+        next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
     }
     
     while (hex_blob != end) {
@@ -124,23 +125,22 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                         line.address = swap16(line.address);
                         switch (line.record_type) {
                             case DATA_RECORD:
+                                // keeping a record of the last hex record
+                                memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
+                                
                                 // verify this is a continous block of memory or need to exit and dump
-                                if (((last_known_address & 0xffff0000) | line.address) > (shadow_line.address + shadow_line.byte_count)) {
-                                     // keeping a record of the last hex record
-                                    memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
-                                    
+                                if (((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
                                     load_unaligned_record = 1;
                                     status = HEX_PARSE_UNALIGNED;
                                     goto hex_parser_exit;
                                 }
-                                // keeping a record of the last hex record
-                                memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
+                                
                                 // move from line buffer back to input buffer
                                 memcpy(bin_buf, line.data, line.byte_count);
                                 bin_buf += line.byte_count;
                                 *bin_buf_cnt = (uint32_t)(*bin_buf_cnt) + line.byte_count;
-                                // this stores the last known start address of decoded data
-                                last_known_address = ((last_known_address & 0xffff0000) | line.address) + line.byte_count;
+                                // Save next address to write
+                                next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
                                 break;
                             
                             case EOF_RECORD:
@@ -151,8 +151,19 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                 goto hex_parser_exit;
                             
                             case EXT_LINEAR_ADDR_RECORD:
+                                // Update buffer and buffer start address if exit is needed
+                                memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
+                                // figure the start address for the buffer before returning
+                                *bin_buf_address = next_address_to_write - (uint32_t)(*bin_buf_cnt);
+                                *hex_parse_cnt = (uint32_t)(hex_blob_size - (end - hex_blob));
+                            
                                 // update the address msb's
-                                last_known_address = (last_known_address & 0x0000ffff) | ((line.data[0] << 24) | (line.data[1] << 16));
+                                next_address_to_write = (next_address_to_write & 0x00000000) | ((line.data[0] << 24) | (line.data[1] << 16));
+                                
+                                // Need to exit and program if buffer has been filled
+                                status = HEX_PARSE_UNALIGNED;
+                                return status;
+                            
                                 break;
                             
                             default:
@@ -192,7 +203,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
 hex_parser_exit:
     memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
     // figure the start address for the buffer before returning
-    *bin_buf_address = last_known_address - (uint32_t)(*bin_buf_cnt);
+    *bin_buf_address = next_address_to_write - (uint32_t)(*bin_buf_cnt);
     *hex_parse_cnt = (uint32_t)(hex_blob_size - (end - hex_blob));
     return status;
 }

@@ -231,6 +231,9 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
 //    }
     // write to target RAM
     if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, buf, size)) {
+        if (size == 0) {
+            return TARGET_OK;
+        }
         return TARGET_FAIL_ALGO_DATA_SEQ;
     }
     target_ram_idx += size;
@@ -270,17 +273,27 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
         status = parse_hex_blob(buf, size, &block_amt_parsed, bin_buffer, sizeof(bin_buffer), &bin_start_address, &bin_buf_written);
         // the entire block of hex was decoded. This is a simple state
         if (HEX_PARSE_OK == status) {
+            // Check if buffer has not been filled with anything, then simply return because hex line was not complete
+            if (bin_buf_written == 0) {
+                return TARGET_OK;
+            }
             // hex file data decoded. Write to target RAM and program if necessary
-            return flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
-        }
-        else if (HEX_PARSE_UNALIGNED == status) {
-            // unaligned address. Write data to target RAM and force pad with ff //00
-            // Check if ram index needs to be shifted
             if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
                 flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
             }
-            flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
-            //flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            return flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+        }
+        else if (HEX_PARSE_UNALIGNED == status) {
+            // Check if buffer has not been filled with anything, then simply return because hex line was not complete
+            if (bin_buf_written != 0) {
+                // unaligned address. Write data to target RAM and force pad with ff //00
+                // Check if ram index needs to be shifted
+                if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
+                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
+                }
+                flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+            }
+            
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
                 flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
@@ -291,17 +304,25 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             buf += block_amt_parsed;
         }
         else if (HEX_PARSE_EOF == status) {
+            // Check if there is content in ram buffer that needs to be written to chip
+            if (bin_buf_written == 0) {
+                // Check if rest of page needs to be padded and programmed
+                if (target_ram_idx != 0) {
+                    flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+                }
+                return TARGET_HEX_FILE_EOF;   
+            }
             // eof state. Make sure all data is programmed and f // 0 pad to align
             // Check if ram index needs to be shifted
             if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
                 flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
             }
             flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
-            //flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)zero_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+            // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
                 flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
             }
-            target_ram_idx = 0;
+            //target_ram_idx = 0;
             return TARGET_HEX_FILE_EOF;
         }
         else if (HEX_PARSE_CKSUM_FAIL == status) {
