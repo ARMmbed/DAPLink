@@ -26,6 +26,9 @@ void target_before_init_debug(void) {
     swd_set_target_reset(1);
 }
 
+void board_init(void) {
+}
+
 uint8_t target_unlock_sequence(void) {
     uint32_t val;
 

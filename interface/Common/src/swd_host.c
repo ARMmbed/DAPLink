@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
 
+#include "RTL.h"
 #include "target_flash.h"
 #include "target_reset.h"
 #include "target_config.h"
+#include "flash_blob.h"
 #include "swd_host.h"
 #include "debug_cm.h"
 #include "DAP_config.h"
@@ -486,8 +487,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
     return 1;
 }
-#include "flash_blob.h"
-    uint8_t buf[100];
+
 // Execute system call.
 static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     uint32_t i, status;
