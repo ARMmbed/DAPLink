@@ -24,7 +24,7 @@
 #include "string.h"
 
 //static target_flash_status_t target_flash_erase_chip(void);
-static target_flash_status_t target_flash_erase_sector(uint32_t adr);
+//static target_flash_status_t target_flash_erase_sector(uint32_t adr);
 static target_flash_status_t program_hex(uint8_t *buf, uint32_t size);
 static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size);
 static void set_hex_state_vars(void);
@@ -119,13 +119,13 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
     return TARGET_FAIL_UNKNOWN_APP_FORMAT;
 }
 
-static target_flash_status_t target_flash_erase_sector(uint32_t sector)
-{
-    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
-        return TARGET_FAIL_ERASE_SECTOR;
-    }
-    return TARGET_OK;
-}
+//static target_flash_status_t target_flash_erase_sector(uint32_t sector)
+//{
+//    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
+//        return TARGET_FAIL_ERASE_SECTOR;
+//    }
+//    return TARGET_OK;
+//}
 
 target_flash_status_t target_flash_erase_chip(void)
 {
@@ -171,22 +171,6 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
     return TARGET_OK;
 }
 
-static const uint8_t zero_buffer[512] = {
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-};
 static const uint8_t ff_buffer[512] = {
     0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
     0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,

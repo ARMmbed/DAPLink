@@ -50,13 +50,13 @@
 		0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF};*/
 	
 	//Blink with 50ms interval
-static void blinkLED(){
-    gpio_set_dap_led(1);
-    os_dly_wait(5);
-    gpio_set_dap_led(0);
-    os_dly_wait(5);
-    gpio_set_dap_led(1);
-}
+//static void blinkLED(){
+//    gpio_set_dap_led(1);
+//    os_dly_wait(5);
+//    gpio_set_dap_led(0);
+//    os_dly_wait(5);
+//    gpio_set_dap_led(1);
+//}
 
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {

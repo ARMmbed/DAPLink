@@ -15,6 +15,7 @@
  */
 
 #include "read_uid.h"
+#include "board.h"
 #include "sam3u2c.h"
 
 void board_init(void)

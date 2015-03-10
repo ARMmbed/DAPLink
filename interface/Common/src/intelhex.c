@@ -72,15 +72,14 @@ static uint8_t validate_checksum(hex_line_t *record)
     return (result == 0);
 }
 
-hex_line_t line = {0}, shadow_line = {0};
-uint32_t last_known_address = 0, next_address_to_write = 0;
-uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
+static hex_line_t line = {0}, shadow_line = {0};
+static uint32_t next_address_to_write = 0;
+static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
 
 void reset_hex_parser(void)
 {
     memset(line.buf, 0, sizeof(hex_line_t));
     memset(shadow_line.buf, 0, sizeof(hex_line_t));
-    last_known_address = 0;
     next_address_to_write = 0;
     low_nibble = 0;
     idx = 0;
@@ -151,20 +150,11 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                 goto hex_parser_exit;
                             
                             case EXT_LINEAR_ADDR_RECORD:
-                                // Update buffer and buffer start address if exit is needed
-                                memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
-                                // figure the start address for the buffer before returning
-                                *bin_buf_address = next_address_to_write - (uint32_t)(*bin_buf_cnt);
-                                *hex_parse_cnt = (uint32_t)(hex_blob_size - (end - hex_blob));
-                            
                                 // update the address msb's
                                 next_address_to_write = (next_address_to_write & 0x00000000) | ((line.data[0] << 24) | (line.data[1] << 16));
-                                
                                 // Need to exit and program if buffer has been filled
                                 status = HEX_PARSE_UNALIGNED;
-                                return status;
-                            
-                                break;
+                                goto hex_parser_exit;
                             
                             default:
                                 break;

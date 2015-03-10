@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef VERSION_H
-#define VERSION_H
 
-#include "stdint.h"
+#ifndef BOARD_H
+#define BOARD_H
 
-// built for bootloader 1xxx
-//#define FW_BUILD "1203"
-// build for bootloader 0xxx
-#define FW_BUILD "0222"
-
-uint8_t   update_html_file        (uint8_t * buf, uint32_t bufsize);
-uint8_t * get_uid_string          (void);
-uint8_t   get_len_string_interface(void);
-uint8_t * get_uid_string_interface(void);
-void      init_auth_config        (void);
+#ifdef __cplusplus
+  extern "C" {
+#endif
+      
+void board_init(void);
+      
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

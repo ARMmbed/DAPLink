@@ -21,7 +21,7 @@
 #include "stdint.h"
 
 #include "main.h"
-//#include "board.h"
+#include "board.h"
 #include "gpio.h"
 #include "uart.h"
 #include "semihost.h"
