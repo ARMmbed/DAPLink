@@ -104,7 +104,9 @@ static const file_allocation_table_t fat = {
 #endif
 
 //#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+//#define URL_NAME "MBED    HTM"
 #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@U\"/>\r\n"
+#define URL_NAME "IBM     HTM"
 
 static const uint8_t mbed_redirect_file[512] =
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
@@ -175,7 +177,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = 0x00000000
     },
     .f1  = {
-    /*uint8_t[11] */ .filename = "MBED    HTM",
+    /*uint8_t[11] */ .filename = URL_NAME,
     /*uint8_t */ .attributes = 0x01,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
