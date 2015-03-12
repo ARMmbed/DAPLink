@@ -103,10 +103,10 @@ static const file_allocation_table_t fat = {
   #define GIT_LOCAL_MODS_STR "No"
 #endif
 
-//#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-//#define URL_NAME "MBED    HTM"
-#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
-#define URL_NAME "IBM     HTM"
+#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+#define URL_NAME "MBED    HTM"
+//#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
+//#define URL_NAME "IBM     HTM"
 
 const uint8_t mbed_redirect_file[512] =
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
