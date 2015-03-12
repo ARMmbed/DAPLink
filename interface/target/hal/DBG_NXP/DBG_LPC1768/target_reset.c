@@ -27,3 +27,22 @@ uint8_t target_unlock_sequence(void) {
 uint8_t target_set_state(TARGET_RESET_STATE state) {
     return swd_set_target_state(state);
 }
+
+
+//
+// UBLOX code for power detection
+
+// #ifdef BOARD_UBLOX_C027
+//     PORT_SWD_SETUP();
+//     // wait until reset output to the target is pulled high
+//     while (!PIN_nRESET_IN()) {
+//         /* wait doing nothing */
+//     }
+//     os_dly_wait(4);
+//     // if the reset input from button is low then enter isp programming mode
+//     if (!(LPC_GPIO->B[19/*RESET_PIN*/ + (1/*RESET_PORT*/ << 5)] & 1)) {
+//         enter_isp();
+//     }
+// #endif
+
+//
