@@ -111,6 +111,7 @@ typedef struct virtual_media {
 } virtual_media_t;
 
 extern virtual_media_t fs[];
+extern const uint8_t mbed_redirect_file[];
 
 void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);
