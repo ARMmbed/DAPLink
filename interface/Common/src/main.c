@@ -224,21 +224,22 @@ __task void serial_process()
 }
 
 extern __task void hid_process(void);
+__attribute__((weak)) void prerun_target_config(void){}
 
 __task void main_task(void)
 {
     // State processing
-    uint16_t flags;
+    uint16_t flags = 0;
     // LED
     uint8_t hid_led_value = 1;
     uint8_t cdc_led_value = 1;
     uint8_t msc_led_value = 1;
     // USB
-    uint32_t usb_state_count;
+    uint32_t usb_state_count = USB_BUSY_TIME;
     // thread running after usb connected started
     uint8_t thread_started = 0;
     // button state
-    char button_activated;
+    uint8_t button_activated = 0;
 
     // Initialize our serial mailbox
     os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
@@ -255,6 +256,9 @@ __task void main_task(void)
     // Setup reset button
     gpio_enable_button_flag(main_task_id, FLAGS_MAIN_RESET);
     button_activated = 1;
+    
+    // do some init with the target before USB and files are configured
+    prerun_target_config();
     
     // Update HTML version information file
     init_auth_config();

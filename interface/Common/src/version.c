@@ -22,12 +22,12 @@
 #include "read_uid.h"
 #include "virtual_fs.h"
 
-char mac_string[33] = {0};
+char mac_string[16] = {0};
+char uuid_string[33] = {0};
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
 
 static uint32_t unique_id;
-static uint8_t already_unique_id = 0;
 static uint32_t auth;
 uint8_t string_auth[25 + 4];
 uint8_t string_auth_descriptor[2+25*2];
@@ -40,22 +40,38 @@ static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
     *ch2 = nybble_chars[ b & 0x0F ];
 }
 
-void build_mac_string(uint32_t *uuid_data)
+void build_uuid_string(uint32_t *uuid_data)
 {
     uint32_t i = 0, j = 0, k = 0;
     uint8_t b = 0;
-    // patch for MAC use. Make sure MSB bits are set correctly
-    uuid_data[2] |=  (0x2 << 8);
-    uuid_data[2] &= ~(0x1 << 8);
+    // format UUID
     for (; j<32; j+=8) {
         for (; i<4; i++) {
             b = uuid_data[k] >> (24-(i*8));
-            get_byte_hex(b, (uint8_t *)&mac_string[j+2*i], (uint8_t *)&mac_string[j+2*i+1]);
+            get_byte_hex(b, (uint8_t *)&uuid_string[j+2*i], (uint8_t *)&uuid_string[j+2*i+1]);
         }
         i = 0;
         k++;
     }
-    mac_string[32] = '\0';
+    uuid_string[32] = '\0';
+}
+
+void build_mac_string(uint32_t *uuid_data)
+{
+    uint32_t i = 0;
+    uint8_t b = 0;
+    // patch for MAC use. Make sure MSB bits are set correctly
+    uuid_data[2] |=  (0x2 << 8);
+    uuid_data[2] &= ~(0x1 << 8);
+    for (; i<2; i++) {
+        b = uuid_data[2] >> (8-(i*8));
+        get_byte_hex(b, (uint8_t *)&mac_string[i*2], (uint8_t *)&mac_string[i*2+1]);
+    }
+    for (; i<6; i++) {
+        b = uuid_data[3] >> (24-((i-2)*8));
+        get_byte_hex(b, (uint8_t *)&mac_string[i*2], (uint8_t *)&mac_string[i*2+1]);
+    }
+    mac_string[15] = '\0';
 }
 
 static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base)
@@ -194,15 +210,20 @@ static uint8_t get_html_character(HTMLCTX *h)
                 // Check next HTML character
                 s = (uint8_t)(*h->phtml);
                 switch (s) {
-                    case 'A':
+                    case 'A':   // platform ID string
                         sptr = (uint8_t *)(string_auth+4); // auth string
                         h->substitute = 1;
                         break;
 
                     // Add any additional substitutions here
-                    case 'M':
+                    case 'M':   // MAC address
                         h->substitute = 1;
-                        sptr = (uint8_t *)&(mac_string[strlen(mac_string)]);    // target UUID only so many bits...
+                        sptr = (uint8_t *)&mac_string;    // target UUID only so many bits...
+                        break;
+                    
+                    case 'U':   // UUID
+                        h->substitute = 1;
+                        sptr = (uint8_t *)&uuid_string;    // target UUID only so many bits...
                         break;
                     
                     default:
@@ -246,14 +267,6 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
     HTMLCTX html;                 // HTML reader context
     uint8_t c;                    // Current character from HTML reader
     uint32_t i = 0;
-    
-    if (already_unique_id == 0) {
-        read_unique_id(&unique_id);
-        compute_auth();
-        setup_string_id_auth();
-        setup_string_descriptor();
-        already_unique_id = 1;
-    }
 
     // Write file
     init_html(&html, (uint8_t *)mbed_redirect_file);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "target_flash.h"
+#include "target_struct.h"
 // THis should be a c file
 static const uint32_t K64F_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,

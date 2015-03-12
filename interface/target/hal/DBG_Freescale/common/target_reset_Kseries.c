@@ -15,6 +15,10 @@
  */
 #include "target_reset.h"
 #include "swd_host.h"
+#include "target_config.h"
+#include "flash_blob.h"
+#include "version.h"
+
 
 #define MDM_STATUS 0x01000000
 #define MDM_CTRL   0x01000004
@@ -22,8 +26,25 @@
 
 #define MCU_ID     0x001c0000
 
-void target_before_init_debug(void) {
+void target_before_init_debug(void)
+{
     swd_set_target_reset(1);
+}
+
+void prerun_target_config(void)
+{    
+    // SIM peripheral   0x40047000
+    // address offset   0x    1054
+    uint32_t UUID_LOC = 0x40048054;
+    uint32_t uuid[4] = {0};
+    // get a hold of the target
+    target_set_state(RESET_PROGRAM);
+    // do mass-erase if necessary
+    target_unlock_sequence();
+    // get target UUID
+    swd_read_memory(UUID_LOC, (uint8_t *)&uuid, 16);
+    // stringify and store the MAC generated from a UUID
+    build_mac_string(uuid);
 }
 
 void board_init(void) {
