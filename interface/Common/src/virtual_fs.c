@@ -103,11 +103,14 @@ static const file_allocation_table_t fat = {
   #define GIT_LOCAL_MODS_STR "No"
 #endif
 
+//#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@U\"/>\r\n"
+
 static const uint8_t mbed_redirect_file[512] =
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
     "<html>\r\n"
     "<head>\r\n"
-    "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+    URL
     "<title>mbed Website Shortcut</title>\r\n"
     "</head>\r\n"
     "<body></body>\r\n"
