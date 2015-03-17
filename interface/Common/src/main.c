@@ -44,7 +44,7 @@
 #define FLAGS_LED_BLINK_30MS      (1 << 6)
 // Timing constants (in 90mS ticks)
 // USB busy time
-#define USB_BUSY_TIME           (10)
+#define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur
 #define USB_CONNECT_DELAY       (5)
 // Delay before target may be taken out of reset or reprogrammed after startup
