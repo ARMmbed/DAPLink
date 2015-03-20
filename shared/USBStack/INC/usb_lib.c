@@ -1745,6 +1745,15 @@ const U8 USBD_ConfigDescriptor[] = {
   MSC_EP
 #endif
 
+#if (USBD_HID_ENABLE)
+  HID_DESC
+#if (USBD_HID_EP_INTOUT != 0)
+  HID_EP_INOUT
+#else
+  HID_EP
+#endif
+#endif
+
 #if (USBD_CDC_ACM_ENABLE)
 #if (USBD_MULTI_IF)
   CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM,2)
@@ -1753,15 +1762,6 @@ const U8 USBD_ConfigDescriptor[] = {
   CDC_ACM_EP_IF0
   CDC_ACM_DESC_IF1
   CDC_ACM_EP_IF1
-#endif
-
-#if (USBD_HID_ENABLE)
-  HID_DESC
-#if (USBD_HID_EP_INTOUT != 0)
-  HID_EP_INOUT
-#else
-  HID_EP
-#endif
 #endif
 
 /* Terminator */                                                                                            \
@@ -1800,14 +1800,9 @@ const U8 USBD_ConfigDescriptor_HS[] = {
   ADC_EP_HS
 #endif
 
-#if (USBD_CDC_ACM_ENABLE)
-#if (USBD_MULTI_IF)
-  CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM,2)
-#endif
-  CDC_ACM_DESC_IF0
-  CDC_ACM_EP_IF0_HS
-  CDC_ACM_DESC_IF1
-  CDC_ACM_EP_IF1_HS
+#if (USBD_MSC_ENABLE)
+  MSC_DESC
+  MSC_EP_HS
 #endif
 
 #if (USBD_HID_ENABLE)
@@ -1819,9 +1814,14 @@ const U8 USBD_ConfigDescriptor_HS[] = {
 #endif
 #endif
 
-#if (USBD_MSC_ENABLE)
-  MSC_DESC
-  MSC_EP_HS
+#if (USBD_CDC_ACM_ENABLE)
+#if (USBD_MULTI_IF)
+  CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM,2)
+#endif
+  CDC_ACM_DESC_IF0
+  CDC_ACM_EP_IF0_HS
+  CDC_ACM_DESC_IF1
+  CDC_ACM_EP_IF1_HS
 #endif
 
 /* Terminator */                                                                                            \
