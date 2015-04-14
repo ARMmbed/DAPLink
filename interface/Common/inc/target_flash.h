@@ -77,7 +77,7 @@ static const char *const fail_txt_contents[] = {
     "The application file format is unknown and cannot be parsed and/or processed.\r\n",
     "The hex file cannot be decoded. Checksum calculation failure occured.\r\n",
     "The hex file cannot be decoded. Parser logic failure occured.\r\n"
-    "The hex file cannot be programmed. Logic failure occured.\r\n",
+    "The hex file cannot be programmed. Logic failure occurred.\r\n",
     ""
 };
 

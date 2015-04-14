@@ -169,23 +169,17 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             // prepare the target device
             status = target_flash_init(file_transfer_state.file_type);
             if (status != TARGET_OK) {
-                file_transfer_state.transfer_started = 0;
-                configure_fail_txt(status);
-                main_usb_disconnect_event();
-                return;
+                goto msc_fail_exit;
             }
-            // writing in 2 places less than ideal but manageable
+            // writing in 2 places less than ideal but manageable for the time being
             debug_msg("%d: %s", __LINE__, "FLASH WRITE - ");
             //debug_data(buf, USBD_MSC_BlockSize);
             status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
             debug_msg("%d\r\n", status);
             if ((status != TARGET_OK) && (status != TARGET_HEX_FILE_EOF)) {
-                file_transfer_state.transfer_started = 0;
-                configure_fail_txt(status);
-                main_usb_disconnect_event();
-                return;
+                goto msc_fail_exit;
             }
-            return;
+            goto msc_complete;
         }
     }
     // if the root dir comes we should look at it and parse for info that can end a transfer
@@ -219,10 +213,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
                 status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
                 debug_msg("%d\r\n", status);
                 if ((status != TARGET_OK) && (status != TARGET_HEX_FILE_EOF)) {
-                    file_transfer_state.transfer_started = 0;
-                    configure_fail_txt(status);
-                    main_usb_disconnect_event();
-                    return;
+                    goto msc_fail_exit;
                 }
                 // and do the housekeeping
                 file_transfer_state.amt_written += USBD_MSC_BlockSize;
@@ -231,21 +222,30 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         }
     }
     
+msc_complete:
     // see if a complete transfer occured by knowing it started and comparing filesize expectations (BIN)
     //  finding an EOF from hex file (HEX)
     if (((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && (file_transfer_state.transfer_started == 1 )) || 
          (TARGET_HEX_FILE_EOF == status)) {
+        // hex file complete exit needs to look like binary file complete exit
         status = TARGET_OK;
         // do the disconnect - maybe write some programming stats to the file
         debug_msg("%s", "FLASH END\r\n");
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
         configure_fail_txt(status);
-        main_usb_disconnect_event();
+        main_msc_disconnect_event();
         return;
     }
     
     // There is one more known state where the root dir is updated with the amount of data transfered but not the whole file transfer was complete
     //  To handle this we need a state to kick off a timer for a fixed amount of time where we can receive more continous sectors and assume
     //  they are valid file data. This is only the case for bin files since the only known end is the filesize from the root dir entry.
+    return;
+    
+msc_fail_exit:
+    file_transfer_state.transfer_started = 0;
+    configure_fail_txt(status);
+    main_force_msc_disconnect_event();
+    return;
 }

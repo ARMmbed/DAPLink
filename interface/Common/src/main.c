@@ -31,17 +31,18 @@
 
 // Event flags for main task
 // Timers events
-#define FLAGS_MAIN_90MS           (1 << 0)
-#define FLAGS_MAIN_30MS           (1 << 1)
+#define FLAGS_MAIN_90MS                 (1 << 0)
+#define FLAGS_MAIN_30MS                 (1 << 1)
 // Reset events
-#define FLAGS_MAIN_RESET          (1 << 2)
+#define FLAGS_MAIN_RESET                (1 << 2)
 // USB Events
-#define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
+#define FLAGS_MAIN_MSC_DISCONNECT       (1 << 3)
+#define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
 // Other Events
-#define FLAGS_MAIN_POWERDOWN      (1 << 4)
-#define FLAGS_MAIN_DISABLEDEBUG   (1 << 5)
+#define FLAGS_MAIN_POWERDOWN            (1 << 4)
+#define FLAGS_MAIN_DISABLEDEBUG         (1 << 5)
 // Used by msd when flashing a new binary
-#define FLAGS_LED_BLINK_30MS      (1 << 6)
+#define FLAGS_LED_BLINK_30MS            (1 << 6)
 // Timing constants (in 90mS ticks)
 // USB busy time
 #define USB_BUSY_TIME           (33)
@@ -137,10 +138,17 @@ void main_usb_busy_event(void) {
     return;
 }
 
-// A new binary has been flashed in the target
-void main_usb_disconnect_event(void)
+// A new program has been flashed in the target
+void main_msc_disconnect_event(void)
 {
-    os_evt_set(FLAGS_MAIN_USB_DISCONNECT, main_task_id);
+    os_evt_set(FLAGS_MAIN_MSC_DISCONNECT, main_task_id);
+    return;
+}
+
+// A failure has occured during msc programming
+void main_force_msc_disconnect_event(void)
+{
+    os_evt_set(FLAGS_MAIN_FORCE_MSC_DISCONNECT, main_task_id);
     return;
 }
 
@@ -286,17 +294,24 @@ __task void main_task(void)
                         | FLAGS_MAIN_90MS               // 90mS tick
                         | FLAGS_MAIN_30MS               // 30mS tick
                         | FLAGS_MAIN_POWERDOWN          // Power down interface
-                        | FLAGS_MAIN_DISABLEDEBUG       // Power down interface
-                        | FLAGS_MAIN_USB_DISCONNECT,    // Disable target debug
+                        | FLAGS_MAIN_DISABLEDEBUG       // Disable target debug
+                        | FLAGS_MAIN_MSC_DISCONNECT    // programming complete - disconnect msc endpoint
+                        | FLAGS_MAIN_FORCE_MSC_DISCONNECT,  // programming failure - force disconnect msc endpoint
                         NO_TIMEOUT);
 
         // Find out what event happened
         flags = os_evt_get();
 
-        if (flags & FLAGS_MAIN_USB_DISCONNECT) {
-            usb_busy = USB_IDLE;                         // USB not busy
+        if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
+            usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = USB_CONNECT_DELAY;
-            usb_state = USB_DISCONNECT_CONNECT;        // disconnect the usb
+            usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
+        }
+        
+        if (flags & FLAGS_MAIN_FORCE_MSC_DISCONNECT) {
+            usb_busy = USB_IDLE;                    // USB not busy
+            usb_state_count = 0;
+            usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
 
         if (flags & FLAGS_MAIN_RESET) {

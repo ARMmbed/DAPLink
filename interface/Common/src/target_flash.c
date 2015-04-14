@@ -64,11 +64,8 @@ uint8_t validate_bin_nvic(uint8_t *buf)
 uint8_t validate_hexfile(uint8_t *buf)
 {
     // look here for known hex records
-    //  Logic: ARM 32bit hex files should set the MSB 16 bits of addres
-    //  before any other data is sent. There is a chance that another block
-    //  could be sent with extended linear address as record 0 but that is slim
-    //  and the eject mechanism should take place to generate the fail.txt
-    return ((buf[0] == ':') && (buf[8] == '4')) ? 1 : 0;
+    // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
+    return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
 }
 
 target_flash_status_t target_flash_init(extension_t ext)
@@ -91,7 +88,6 @@ target_flash_status_t target_flash_init(extension_t ext)
         reset_hex_parser();
         set_hex_state_vars();
     }
-    //return TARGET_OK;
     return target_flash_erase_chip();
 }
 
