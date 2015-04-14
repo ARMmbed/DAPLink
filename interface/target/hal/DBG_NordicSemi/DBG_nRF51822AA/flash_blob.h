@@ -20,7 +20,13 @@
 #include "swd_host.h"
 #include "target_reset.h"
 #include "stdint.h"
+
+#if defined (TARGET_ATSAM3U2C) 
 #include "system_SAM3U.h"
+#elif defined (TARGET_MKL26Z)
+#include "MKL26Z4.h"
+#endif
+
 #include "debug_cm.h"
 #include "RTL.h"
 

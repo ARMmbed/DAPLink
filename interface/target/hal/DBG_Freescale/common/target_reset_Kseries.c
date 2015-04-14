@@ -24,7 +24,8 @@
 #define MDM_CTRL   0x01000004
 #define MDM_IDR    0x010000fc
 
-#define MCU_ID     0x001c0000
+//#define MCU_ID     0x001c0000 // K64, K22 (K series)
+#define MCU_ID     0x001c0020 // L series
 
 void target_before_init_debug(void)
 {
