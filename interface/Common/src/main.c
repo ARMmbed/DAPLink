@@ -28,6 +28,7 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "version.h"
+#include "virtual_fs.h"
 
 // Event flags for main task
 // Timers events
@@ -402,6 +403,7 @@ __task void main_task(void)
                             thread_started = 1;
                         }
                         usb_state = USB_CONNECTED;
+                        reset_file_transfer_state();
                         USBD_MSC_MediaReady = 1;
                     }
                     break;

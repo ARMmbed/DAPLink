@@ -133,14 +133,6 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     extension_t start_type_identified = UNKNOWN;
     target_flash_status_t status = TARGET_OK;
     uint32_t i = 0;
-    static struct {
-        uint32_t start_block;
-        uint32_t amt_to_write;
-        uint32_t amt_written;
-        uint32_t last_block_written;
-        uint32_t transfer_started;
-        extension_t file_type;
-    } file_transfer_state = {0,0,0,0,0,UNKNOWN};
     
     if (!USBD_MSC_MediaReady) {
         return;

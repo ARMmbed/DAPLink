@@ -303,3 +303,11 @@ void virtual_fs_init(void)
     fs[6].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
     fs[8].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
 }
+
+file_transfer_state_t file_transfer_state;
+
+void reset_file_transfer_state(void)
+{
+    static const file_transfer_state_t default_transfer_state = {0,0,0,0,0,UNKNOWN};
+    file_transfer_state = default_transfer_state;
+}
