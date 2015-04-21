@@ -238,6 +238,8 @@ msc_complete:
 msc_fail_exit:
     file_transfer_state.transfer_started = 0;
     configure_fail_txt(status);
-    main_force_msc_disconnect_event();
+    //main_force_msc_disconnect_event();
+    main_msc_disconnect_event();
+    USBD_MSC_MediaReady = 0;
     return;
 }
