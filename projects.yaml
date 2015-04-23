@@ -1,0 +1,14 @@
+settings:
+    export_dir:
+        - projectfiles/$tool$/$project_name$
+
+module:
+    tools: &module_tools
+    - records/tools/uvision.yaml
+    - records/tools/make_gcc_arm.yaml
+
+projects:
+    template:
+        - *module_tools
+        - records/projects/template.yaml
+        
