@@ -1,0 +1,5 @@
+common:
+    group_name:
+        - usb_core
+    source_files:
+        - source/common/usb

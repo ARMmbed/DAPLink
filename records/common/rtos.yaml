@@ -1,0 +1,5 @@
+common:
+    group_name:
+        - rtos
+    source_files:
+        - source/common/rtos

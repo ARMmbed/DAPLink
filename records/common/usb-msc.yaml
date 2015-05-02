@@ -1,0 +1,7 @@
+common:
+    group_name:
+        - usb_msc
+    source_files:
+        - source/common/usb/msc
+        - source/common/endpoints/drag-n-drop
+        
