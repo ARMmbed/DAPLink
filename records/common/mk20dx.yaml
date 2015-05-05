@@ -1,0 +1,6 @@
+common:
+    group_name:
+        - mk20dx
+    source_files:
+        - source/common/cmsis-core/freescale/mk20dx
+        

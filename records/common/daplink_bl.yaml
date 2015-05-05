@@ -1,0 +1,6 @@
+common:
+    group_name:
+        - daplink_bl
+    source_files:
+        - source/daplink_bl
+        

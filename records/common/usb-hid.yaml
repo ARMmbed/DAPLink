@@ -3,4 +3,4 @@ common:
         - usb_hid
     source_files:
         - source/common/usb/hid
-        - source/endpoints/cmsis-dap
+        - source/common/endpoints/cmsis-dap
