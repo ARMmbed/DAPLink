@@ -1,0 +1,11 @@
+common:
+    target:
+        - cortex-m0
+    source_files:
+        - source/common/cmsis-core/freescale/kl26z
+        - source/common/hal/freescale/kl26z
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/freescale/kl26z/armcc/kl26z_daplink_bl.sct

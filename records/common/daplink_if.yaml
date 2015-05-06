@@ -3,4 +3,5 @@ common:
         - daplink_if
     source_files:
         - source/daplink_if
+        - source/common/cmsis-core
         

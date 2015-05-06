@@ -6,31 +6,23 @@ tool_specific:
     uvision:
         macros:
             -
-        linker_file:
-            - source/FlashAlgo.lin
         misc:
             Cads:
                 MiscControls:
                     - --gnu
                     - --c99
                 Optim:
-                    - 0
+                    - 3
                 uC99:
-                    - enable
-                OneElfS:
-                    - enable
-                Ropi:
-                    - enable
-                Rwpi:
                     - enable
             TargetOption:
                 AfterMake:
                     RunUserProg1:
                         - enable
                     UserProg1Name:
-                        - ..\..\..\scripts\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
+                        - fromelf --bin $L@L.axf -o $L@L
                     RunUserProg2:
-                        - enable
+                        - disable
                     UserProg2Name:
-                        - python ..\..\..\scripts\generate_blobs.py $L@L
+                        - 
 

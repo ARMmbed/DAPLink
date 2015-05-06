@@ -3,4 +3,5 @@ common:
         - daplink_bl
     source_files:
         - source/daplink_bl
+        - source/common/cmsis-core
         

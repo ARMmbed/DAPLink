@@ -4,11 +4,16 @@ settings:
 
 module:
     tools: &module_tools
-    - records/tools/uvision.yaml
-    - records/tools/make_gcc_arm.yaml
+        - records/tools/uvision.yaml
+        - records/tools/make_gcc_arm.yaml
+    bl: &module_bl
+        - records/common/rtos.yaml
+        - records/common/usb-core.yaml
+        - records/common/usb-msc.yaml
+        - records/common/daplink_bl.yaml
 
 projects:
-    template:
+    kl26z_daplink_bl:
         - *module_tools
-        - records/projects/template.yaml
-        
+        - *module_bl
+        - records/projects/kl26z_daplink_bl.yaml

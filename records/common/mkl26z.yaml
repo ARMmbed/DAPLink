@@ -1,6 +1,0 @@
-common:
-    group_name:
-        - mkl26z
-    source_files:
-        - source/common/cmsis-core/freescale/mkl26z
-        
