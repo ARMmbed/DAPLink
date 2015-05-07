@@ -1,7 +1,10 @@
 common:
     group_name:
         - daplink_bl
+    macros:
+        - TARGET_KL26Z
     source_files:
         - source/daplink_bl
         - source/common/cmsis-core
+        - source/common/hal
         

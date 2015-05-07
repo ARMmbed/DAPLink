@@ -44,8 +44,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>build\</OutputDirectory>
-          <OutputName></OutputName>
+          <OutputDirectory>.\build\kl26z_daplink_bl\</OutputDirectory>
+          <OutputName>kl26z_daplink_bl</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -360,7 +360,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--gnu --c99 </MiscControls>
-              <Define></Define>
+              <Define> TARGET_KL26Z, </Define>
               <Undefine></Undefine>
               <IncludePath>  ../../../source/common/cmsis-core/freescale/kl26z;  ../../../source/common/hal/freescale/kl26z</IncludePath>
             </VariousControls>
@@ -377,7 +377,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define> TARGET_KL26Z, </Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>

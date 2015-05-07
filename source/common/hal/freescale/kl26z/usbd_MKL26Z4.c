@@ -15,11 +15,11 @@
  */
 #include "RTL.h"
 #include "rl_usb.h"
-#if defined(TARGET_MK20D5)
+#if defined(TARGET_K20D5)
 #include "MK20D5.h"
-#elif defined(TARGET_MKL26Z)
+#elif defined(TARGET_KL26Z)
 #include "MKL26Z4.h"
-#elif defined(TARGET_MKL46Z)
+#elif defined(TARGET_KL46Z)
 #include "MKL46Z4.h"
 #else
 #error "Unknown target type"

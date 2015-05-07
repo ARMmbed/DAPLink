@@ -30,7 +30,7 @@ Provides definitions about:
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
 
-#if defined(TARGET_MKL26Z)
+#if defined(TARGET_KL26Z)
 #include "MKL26Z4.h"                          // Debug Unit Cortex-M Processor Header File
 #else
 #error "Unknown target type"
