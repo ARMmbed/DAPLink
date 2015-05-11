@@ -65,7 +65,7 @@ __task void main_task(void) {
 	mainTask=os_tsk_self();
 	ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
 
-    update_html_file();
+    //update_html_file();
 
     usbd_init();
     usbd_connect(__TRUE);

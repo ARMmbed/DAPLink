@@ -4,8 +4,6 @@ common:
 
 tool_specific:
     uvision:
-        macros:
-            -
         misc:
             Cads:
                 MiscControls:
@@ -25,4 +23,3 @@ tool_specific:
                         - disable
                     UserProg2Name:
                         - 
-

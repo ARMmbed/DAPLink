@@ -1,6 +1,0 @@
-common:
-    group_name:
-        - sam3u2c
-    source_files:
-        - source/common/cmsis-core/atmel/sam3u2c
-        

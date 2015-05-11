@@ -2,5 +2,5 @@ common:
     group_name:
         - usb_hid
     source_files:
-        - source/common/usb/hid
         - source/common/endpoints/cmsis-dap
+        

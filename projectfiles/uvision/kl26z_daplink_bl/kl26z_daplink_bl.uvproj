@@ -44,7 +44,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\build\kl26z_daplink_bl\</OutputDirectory>
+          <OutputDirectory>.\build\</OutputDirectory>
           <OutputName>kl26z_daplink_bl</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
@@ -220,7 +220,7 @@
             <RvdsVP>0</RvdsVP>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
-            <StupSel>8</StupSel>
+            <StupSel>0</StupSel>
             <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
@@ -236,7 +236,7 @@
             <Ro1Chk>0</Ro1Chk>
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
-            <Ir1Chk>1</Ir1Chk>
+            <Ir1Chk>0</Ir1Chk>
             <Ir2Chk>0</Ir2Chk>
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
@@ -290,27 +290,27 @@
                 <Size>0x0</Size>
               </XRAM>
               <OCR_RVCT1>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT1>
               <OCR_RVCT2>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT2>
               <OCR_RVCT3>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT3>
               <OCR_RVCT4>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT5>
@@ -360,9 +360,9 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--gnu --c99 </MiscControls>
-              <Define> TARGET_KL26Z, </Define>
+              <Define>TARGET_KL26Z,</Define>
               <Undefine></Undefine>
-              <IncludePath>  ../../../source/common/cmsis-core/freescale/kl26z;  ../../../source/common/hal/freescale/kl26z</IncludePath>
+              <IncludePath>../../../source/common/rtos;../../../source/common/usb;../../../source/common/endpoints/drag-n-drop;../../../source/daplink_bl;../../../source/common/cmsis-core;../../../source/common/hal;../../../source/common/cmsis-core/freescale/kl26z;../../../source/common/hal/freescale/kl26z</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -521,16 +521,6 @@
           <GroupName>usb_msc</GroupName>
           <Files>
             <File>
-              <FileName>usbd_core_msc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../source/common/usb/msc/usbd_core_msc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_msc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../source/common/usb/msc/usbd_msc.c</FilePath>
-            </File>
-            <File>
               <FileName>intelhex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../source/common/endpoints/drag-n-drop/intelhex.c</FilePath>
@@ -556,9 +546,39 @@
               <FilePath>../../../source/common/usb/usb_lib.c</FilePath>
             </File>
             <File>
+              <FileName>usbd_cdc_acm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_cdc_acm.c</FilePath>
+            </File>
+            <File>
               <FileName>usbd_core.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../source/common/usb/usbd_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core_cdc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_core_cdc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core_hid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_core_hid.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core_msc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_core_msc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_hid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_hid.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_msc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../source/common/usb/usbd_msc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -583,7 +603,7 @@
             <File>
               <FileName>version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../source/daplink_bl/version.c</FilePath>
+              <FilePath>../../../source/common/hal/version.c</FilePath>
             </File>
             <File>
               <FileName>SVC_Table.s</FileName>

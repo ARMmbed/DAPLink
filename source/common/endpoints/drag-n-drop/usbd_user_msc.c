@@ -138,6 +138,12 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         return;
     }
     
+    if (file_transfer_state.transfer_failed) {
+        debug_msg("%d: %s\r\n", __LINE__, "Transfer_failed - exit");
+        return;
+    }
+    
+    
     debug_msg("block: %d\r\n", block);
     // indicate msd activity
     main_blink_msd_led(0);
@@ -237,9 +243,8 @@ msc_complete:
     
 msc_fail_exit:
     file_transfer_state.transfer_started = 0;
+    file_transfer_state.transfer_failed = 1;
     configure_fail_txt(status);
-    //main_force_msc_disconnect_event();
-    main_msc_disconnect_event();
-    USBD_MSC_MediaReady = 0;
+    main_force_msc_disconnect_event();
     return;
 }

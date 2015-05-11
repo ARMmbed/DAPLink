@@ -19,9 +19,9 @@
 static uint32_t unique_id[4];
 void read_unique_id(uint32_t * id) {
   id[0] = unique_id[0];
-  //id[1] = unique_id[1];
-  //id[2] = unique_id[2];
-  //id[3] = unique_id[3];
+  id[1] = unique_id[1];
+  id[2] = unique_id[2];
+  id[3] = unique_id[3];
 }
 
 void create_unique_id(void){

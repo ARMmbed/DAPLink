@@ -308,6 +308,6 @@ file_transfer_state_t file_transfer_state;
 
 void reset_file_transfer_state(void)
 {
-    static const file_transfer_state_t default_transfer_state = {0,0,0,0,0,UNKNOWN};
+    static const file_transfer_state_t default_transfer_state = {0,0,0,0,0,0,UNKNOWN};
     file_transfer_state = default_transfer_state;
 }

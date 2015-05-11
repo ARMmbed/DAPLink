@@ -69,7 +69,7 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20DX)
+  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20DX) || defined(TARGET_KL26Z)
     #define OS_CLOCK       48000000
   #elif defined(TARGET_ATSAM3U2C)
     #define OS_CLOCK       96000000

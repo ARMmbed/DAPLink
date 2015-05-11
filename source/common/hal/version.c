@@ -27,10 +27,11 @@ char uuid_string[33] = {0};
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
 
-static uint32_t unique_id;
+static uint32_t unique_id[4];
+static uint8_t already_unique_id = 0;
 static uint32_t auth;
-uint8_t string_auth[25 + 4];
-uint8_t string_auth_descriptor[2+25*2];
+uint8_t string_auth[49 + 4]; //25 + 4
+uint8_t string_auth_descriptor[2+49*2]; // 2+25*2
 static const char nybble_chars[] = "0123456789abcdef";
 
 static void setup_string_id_auth(void);
@@ -96,7 +97,7 @@ static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base)
 
 static void setup_string_id_auth()
 {
-    uint8_t i = 0, idx = 0;
+    uint8_t i = 0, j = 0, idx = 0;
 
     string_auth[0] = '$';
     string_auth[1] = '$';
@@ -111,9 +112,11 @@ static void setup_string_id_auth()
         string_auth[idx++] = fw_version[i];
     }
     for (i = 0; i < 4; i++) {
-        get_byte_hex((unique_id >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
+        for(j = 0; j < 4; j++) {
+            get_byte_hex((unique_id[j] >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i + 8*j], &string_auth[idx + 2*i + 1] + 8*j);
+        }
     }
-    idx+=8;
+    idx+=32; //8
 
     //string auth
     for (i = 0; i < 4; i++) {
@@ -166,7 +169,7 @@ static void compute_auth()
     id = atoi((uint8_t *)target_device.board_id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
-    auth ^= unique_id;
+    auth ^= unique_id[0];
     sec = atoi((uint8_t *)(target_device.secret), 8, 16);
     auth ^= sec;
 }
@@ -254,7 +257,7 @@ static uint8_t get_html_character(HTMLCTX *h)
 
 void init_auth_config(void)
 {
-    read_unique_id(&unique_id);
+    read_unique_id(unique_id);
     compute_auth();
     setup_string_id_auth();
     setup_string_descriptor();
@@ -267,6 +270,11 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
     HTMLCTX html;                 // HTML reader context
     uint8_t c;                    // Current character from HTML reader
     uint32_t i = 0;
+    
+    if (already_unique_id == 0) {
+        init_auth_config();
+        already_unique_id = 1;
+    }
 
     // Write file
     init_html(&html, (uint8_t *)mbed_redirect_file);

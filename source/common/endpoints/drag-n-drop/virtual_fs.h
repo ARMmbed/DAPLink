@@ -122,6 +122,7 @@ typedef struct file_transfer_state {
     uint32_t amt_written;
     uint32_t last_block_written;
     uint32_t transfer_started;
+    uint32_t transfer_failed;
     extension_t file_type;
 } file_transfer_state_t;
 
