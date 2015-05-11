@@ -1,7 +1,21 @@
 common:
     group_name:
         - rtos
-    source_files:
+    macros:
+        - __RTX
+    include_paths:
         - source/common/rtos
+    source_files:
         - source/common/rtos/cm3
+        - source/common/rtos/rt_Event.c
+        - source/common/rtos/rt_List.c
+        - source/common/rtos/rt_Mailbox.c
+        - source/common/rtos/rt_MemBox.c
+        - source/common/rtos/rt_Mutex.c
+        - source/common/rtos/rt_Robin.c
+        - source/common/rtos/rt_Semaphore.c
+        - source/common/rtos/rt_System.c
+        - source/common/rtos/rt_Task.c
+        - source/common/rtos/rt_Time.c
+        - source/common/rtos/rt_Timer.c
         

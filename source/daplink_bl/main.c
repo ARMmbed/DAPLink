@@ -58,6 +58,21 @@ __task void led_task(void) {
     }
 }
 
+// Flash DAP LED using 30mS tick (from interface firmware project)
+void main_blink_msd_led(uint8_t permanent) {
+//    dap_led_usb_activity=1;
+//    dap_led_state = (permanent) ? LED_FLASH_PERMANENT : LED_FLASH;
+//    return;
+}
+
+void main_force_msc_disconnect_event(void) {
+    
+}
+
+void main_msc_disconnect_event(void) {
+    
+}
+
 __task void main_task(void) {
     BOOL led_state = __FALSE;
     uint8_t flags, time_blink_led;
@@ -95,11 +110,11 @@ int main (void)
 {	
     gpio_init();
 
-    if (!gpio_get_pin_loader_state()) {
-        os_sys_init(main_task);
-    }
+    //if (!gpio_get_pin_loader_state()) {
+    //    os_sys_init(main_task);
+    //}
 
-    relocate_vector_table();
+    //relocate_vector_table();
 
     // modify stack pointer and start app
     modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);

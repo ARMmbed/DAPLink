@@ -11,14 +11,12 @@ tool_specific:
                     - --c99
                 Optim:
                     - 3
-                uC99:
-                    - enable
             TargetOption:
                 AfterMake:
                     RunUserProg1:
                         - enable
                     UserProg1Name:
-                        - fromelf --bin $L@L.axf -o $L@L
+                        - fromelf --bin $L@L.axf -o $L@L.bin
                     RunUserProg2:
                         - disable
                     UserProg2Name:

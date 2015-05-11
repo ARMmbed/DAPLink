@@ -19,5 +19,8 @@
 #include "stdint.h"
 
 void main_transfer_finished(uint8_t success);
+void main_blink_msd_led(uint8_t permanent);
+void main_force_msc_disconnect_event(void);
+void main_msc_disconnect_event(void);
 
 #endif

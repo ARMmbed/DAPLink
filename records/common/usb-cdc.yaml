@@ -2,5 +2,6 @@ common:
     group_name:
         - usb_cdc
     source_files:
+        - source/common/usb/usbcdc
         - source/common/endpoints/usb2uart
         

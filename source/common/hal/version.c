@@ -106,7 +106,7 @@ static void setup_string_id_auth()
     idx += 4;
     // string id
     for (i = 0; i < 4; i++) {
-        string_auth[idx++] = target_device.board_id[i];
+//        string_auth[idx++] = target_device.board_id[i];
     }
     for (i = 0; i < 4; i++) {
         string_auth[idx++] = fw_version[i];
@@ -166,11 +166,11 @@ uint8_t *get_uid_string_interface(void)
 static void compute_auth()
 {
     uint32_t id = 0, fw = 0, sec = 0;
-    id = atoi((uint8_t *)target_device.board_id  , 4, 16);
+//    id = atoi((uint8_t *)target_device.board_id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
     auth ^= unique_id[0];
-    sec = atoi((uint8_t *)(target_device.secret), 8, 16);
+//    sec = atoi((uint8_t *)(target_device.secret), 8, 16);
     auth ^= sec;
 }
 

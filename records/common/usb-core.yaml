@@ -1,5 +1,7 @@
 common:
     group_name:
         - usb_core
-    source_files:
+    include_paths:
         - source/common/usb
+    source_files:
+        - source/common/usb/usbd_core.c
