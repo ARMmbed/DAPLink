@@ -7,7 +7,6 @@ module:
         - records/tools/uvision.yaml
         - records/tools/make_gcc_arm.yaml
     bl: &module_bl
-        - records/common/rtos.yaml
         - records/common/usb-core.yaml
         - records/common/usb-msc.yaml
         - records/common/daplink_bl.yaml
@@ -16,4 +15,5 @@ projects:
     kl26z_daplink_bl:
         - *module_tools
         - *module_bl
+        - records/common/rtos-cm0.yaml
         - records/projects/kl26z_daplink_bl.yaml

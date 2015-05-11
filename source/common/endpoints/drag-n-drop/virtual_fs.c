@@ -17,7 +17,7 @@
 #include "virtual_fs.h"
 #include "string.h"
 #include "version.h"
-#include "version_git.h"
+//#include "version_git.h"
 
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
@@ -121,9 +121,9 @@ const uint8_t mbed_redirect_file[512] =
 
 static const uint8_t details_file[512] =
     "Version: " FW_BUILD "\r\n"
-    "Build:   " __DATE__ " " __TIME__ "\r\n"
-    "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
-    "Git Local mods: " GIT_LOCAL_MODS_STR "\r\n";
+    "Build:   " __DATE__ " " __TIME__ "\r\n";
+//    "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
+//    "Git Local mods: " GIT_LOCAL_MODS_STR "\r\n";
 
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";

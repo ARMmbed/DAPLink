@@ -1,0 +1,7 @@
+common:
+    group_name:
+        - rtos
+    source_files:
+        - source/common/rtos
+        - source/common/rtos/cm4
+        

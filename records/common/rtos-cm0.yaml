@@ -3,4 +3,5 @@ common:
         - rtos
     source_files:
         - source/common/rtos
+        - source/common/rtos/cm0
         

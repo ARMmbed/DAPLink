@@ -2,7 +2,9 @@ common:
     target:
         - cortex-m0
     source_files:
+        - source/common/cmsis-core
         - source/common/cmsis-core/freescale/kl26z
+        - source/common/cmsis-core/freescale/kl26z/armcc
         - source/common/hal/freescale/kl26z
 
 tool_specific:
