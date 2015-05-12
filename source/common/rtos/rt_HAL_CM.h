@@ -85,7 +85,7 @@ extern BIT dbg_msg;
  #define rt_dec(p)     __disable_irq();(*p)--;__enable_irq();
 #endif
 
-__inline U32 rt_inc_qi (U32 size, U8 *count, U8 *first) {
+static inline U32 rt_inc_qi (U32 size, U8 *count, U8 *first) {
   U32 cnt,c2;
 #ifdef __USE_EXCLUSIVE_ACCESS
   do {
@@ -110,14 +110,14 @@ __inline U32 rt_inc_qi (U32 size, U8 *count, U8 *first) {
   return (cnt);
 }
 
-__inline void rt_systick_init (void) {
+static inline void rt_systick_init (void) {
   NVIC_ST_RELOAD  = os_trv;
   NVIC_ST_CURRENT = 0;
   NVIC_ST_CTRL    = 0x0007;
   NVIC_SYS_PRI3  |= 0xFF000000;
 }
 
-__inline void rt_svc_init (void) {
+static inline void rt_svc_init (void) {
 #if !(__TARGET_ARCH_6S_M)
   int sh,prigroup;
 #endif

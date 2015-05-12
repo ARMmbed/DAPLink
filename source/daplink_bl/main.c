@@ -23,7 +23,7 @@
 #include "main.h"
 #include "gpio.h"
 #include "version.h"
-#include "vector_table.h"
+//#include "vector_table.h"
 
 // Reference to our main task
 OS_TID mainTask, ledTask;

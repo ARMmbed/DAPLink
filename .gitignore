@@ -51,6 +51,7 @@ JLink*.*
 Output
 Lst
 Obj
+build
 
 # cscope
 cscope.*
