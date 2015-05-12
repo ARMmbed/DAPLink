@@ -16,12 +16,12 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include "stdint.h"
+#include "RTL.h"
 
-void    gpio_init(void);
-void    gpio_set_msd_led(uint8_t state);
-void    gpio_set_cdc_led(uint8_t state);
-void    gpio_set_dap_led(uint8_t state);
-uint8_t gpio_get_pin_loader_state(void);
+void gpio_init(void);
+void gpio_enable_button_flag(OS_TID task, uint16_t flag);
+void gpio_set_dap_led(uint8_t state);
+void gpio_set_cdc_led(uint8_t state);
+void gpio_set_msd_led(uint8_t state);
 
 #endif
