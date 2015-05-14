@@ -2,16 +2,16 @@ common:
     target:
         - cortex-m0
     macros:
-        - TARGET_KL26Z
+        - INTERFACE_KL26Z
+        - APP_OFFSET_32K
     source_files:
         - source/daplink_bl/target/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z
         - source/common/hal/freescale/kl26z
+        - source/common/cmsis-core/freescale/kl26z/armcc
 
 tool_specific:
     uvision:
-        source_files:
-            - source/common/cmsis-core/freescale/kl26z/armcc
         linker_file:
             - source/common/cmsis-core/freescale/kl26z/armcc/kl26z_daplink_bl.sct
             

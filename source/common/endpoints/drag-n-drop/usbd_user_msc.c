@@ -51,7 +51,7 @@ void usbd_msc_read_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     }
     
     // indicate msc activity
-    main_blink_msd_led(0);
+    main_blink_msc_led(MAIN_LED_OFF);
     
     // A block is requested from the host. We dont have a flat file system image on disc
     //  rather just the required bits (mbr, fat, root dir, file data). The fs structure 
@@ -145,8 +145,8 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     
     
     debug_msg("block: %d\r\n", block);
-    // indicate msd activity
-    main_blink_msd_led(0);
+    // indicate msc activity
+    main_blink_msc_led(MAIN_LED_OFF);
       
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated

@@ -69,25 +69,25 @@ __Vectors       DCD     __initial_sp  ; Top of Stack
                 DCD     FTFA_IRQHandler  ; FTFA interrupt
                 DCD     LVD_LVW_IRQHandler  ; Low Voltage Detect, Low Voltage Warning
                 DCD     LLW_IRQHandler  ; Low Leakage Wakeup
-                DCD     I2C0_IRQHandler  ; I2C0 interrupt
-                DCD     I2C1_IRQHandler  ; I2C0 interrupt 25
-                DCD     SPI0_IRQHandler  ; SPI0 interrupt
-                DCD     SPI1_IRQHandler  ; SPI1 interrupt
+                DCD     I2C0_IRQHandler ; I2C0 interrupt
+                DCD     I2C1_IRQHandler ; I2C0 interrupt 25
+                DCD     SPI0_IRQHandler ; SPI0 interrupt
+                DCD     SPI1_IRQHandler ; SPI1 interrupt
                 DCD     UART0_IRQHandler  ; UART0 status/error interrupt
                 DCD     UART1_IRQHandler  ; UART1 status/error interrupt
                 DCD     UART2_IRQHandler  ; UART2 status/error interrupt
-                DCD     ADC0_IRQHandler  ; ADC0 interrupt
-                DCD     CMP0_IRQHandler  ; CMP0 interrupt
-                DCD     TPM0_IRQHandler  ; TPM0 fault, overflow and channels interrupt
-                DCD     TPM1_IRQHandler  ; TPM1 fault, overflow and channels interrupt
-                DCD     TPM2_IRQHandler  ; TPM2 fault, overflow and channels interrupt
+                DCD     ADC0_IRQHandler ; ADC0 interrupt
+                DCD     CMP0_IRQHandler ; CMP0 interrupt
+                DCD     TPM0_IRQHandler ; TPM0 fault, overflow and channels interrupt
+                DCD     TPM1_IRQHandler ; TPM1 fault, overflow and channels interrupt
+                DCD     TPM2_IRQHandler ; TPM2 fault, overflow and channels interrupt
                 DCD     RTC_IRQHandler  ; RTC interrupt
                 DCD     RTC_Seconds_IRQHandler  ; RTC seconds interrupt
                 DCD     PIT_IRQHandler  ; PIT timer interrupt
                 DCD     Reserved39_IRQHandler  ; Reserved interrupt 39
-                DCD     USB0_IRQHandler  ; USB0 interrupt
-                DCD     DAC0_IRQHandler  ; DAC interrupt
-                DCD     TSI0_IRQHandler  ; TSI0 interrupt
+                DCD     USB0_IRQHandler ; USB0 interrupt
+                DCD     DAC0_IRQHandler ; DAC interrupt
+                DCD     TSI0_IRQHandler ; TSI0 interrupt
                 DCD     MCG_IRQHandler  ; MCG interrupt
                 DCD     LPTimer_IRQHandler  ; LPTimer interrupt
                 DCD     Reserved45_IRQHandler  ; Reserved interrupt 45
@@ -224,9 +224,9 @@ FOPT            EQU     0xFF
 FSEC            EQU     0xFE
 ;   </h>
 
-                IF      :DEF:OPENSDA_BOOTLOADER
+                IF      :DEF:APP_OFFSET_32K
                 AREA    |.ARM.__at_0x8400|, CODE, READONLY
-                ELIF    :DEF:MBED_BOOTLOADER
+                ELIF    :DEF:APP_OFFSET_20k
                 AREA    |.ARM.__at_0x5400|, CODE, READONLY
                 ELSE
                 AREA    |.ARM.__at_0x400 |, CODE, READONLY
@@ -278,39 +278,39 @@ SysTick_Handler PROC
                 ENDP
 
 Default_Handler PROC
-                EXPORT  DMA0_IRQHandler     [WEAK]
-                EXPORT  DMA1_IRQHandler     [WEAK]
-                EXPORT  DMA2_IRQHandler     [WEAK]
-                EXPORT  DMA3_IRQHandler     [WEAK]
+                EXPORT  DMA0_IRQHandler           [WEAK]
+                EXPORT  DMA1_IRQHandler           [WEAK]
+                EXPORT  DMA2_IRQHandler           [WEAK]
+                EXPORT  DMA3_IRQHandler           [WEAK]
                 EXPORT  Reserved20_IRQHandler     [WEAK]
-                EXPORT  FTFA_IRQHandler     [WEAK]
-                EXPORT  LVD_LVW_IRQHandler     [WEAK]
-                EXPORT  LLW_IRQHandler     [WEAK]
-                EXPORT  I2C0_IRQHandler     [WEAK]
-                EXPORT  I2C1_IRQHandler     [WEAK]
-                EXPORT  SPI0_IRQHandler     [WEAK]
-                EXPORT  SPI1_IRQHandler     [WEAK]
-                EXPORT  UART0_IRQHandler     [WEAK]
-                EXPORT  UART1_IRQHandler     [WEAK]
-                EXPORT  UART2_IRQHandler     [WEAK]
-                EXPORT  ADC0_IRQHandler     [WEAK]
-                EXPORT  CMP0_IRQHandler     [WEAK]
-                EXPORT  TPM0_IRQHandler     [WEAK]
-                EXPORT  TPM1_IRQHandler     [WEAK]
-                EXPORT  TPM2_IRQHandler     [WEAK]
-                EXPORT  RTC_IRQHandler     [WEAK]
-                EXPORT  RTC_Seconds_IRQHandler     [WEAK]
-                EXPORT  PIT_IRQHandler     [WEAK]
+                EXPORT  FTFA_IRQHandler           [WEAK]
+                EXPORT  LVD_LVW_IRQHandler        [WEAK]
+                EXPORT  LLW_IRQHandler            [WEAK]
+                EXPORT  I2C0_IRQHandler           [WEAK]
+                EXPORT  I2C1_IRQHandler           [WEAK]
+                EXPORT  SPI0_IRQHandler           [WEAK]
+                EXPORT  SPI1_IRQHandler           [WEAK]
+                EXPORT  UART0_IRQHandler          [WEAK]
+                EXPORT  UART1_IRQHandler          [WEAK]
+                EXPORT  UART2_IRQHandler          [WEAK]
+                EXPORT  ADC0_IRQHandler           [WEAK]
+                EXPORT  CMP0_IRQHandler           [WEAK]
+                EXPORT  TPM0_IRQHandler           [WEAK]
+                EXPORT  TPM1_IRQHandler           [WEAK]
+                EXPORT  TPM2_IRQHandler           [WEAK]
+                EXPORT  RTC_IRQHandler            [WEAK]
+                EXPORT  RTC_Seconds_IRQHandler    [WEAK]
+                EXPORT  PIT_IRQHandler            [WEAK]
                 EXPORT  Reserved39_IRQHandler     [WEAK]
-                EXPORT  USB0_IRQHandler     [WEAK]
-                EXPORT  DAC0_IRQHandler     [WEAK]
-                EXPORT  TSI0_IRQHandler     [WEAK]
-                EXPORT  MCG_IRQHandler     [WEAK]
-                EXPORT  LPTimer_IRQHandler     [WEAK]
+                EXPORT  USB0_IRQHandler           [WEAK]
+                EXPORT  DAC0_IRQHandler           [WEAK]
+                EXPORT  TSI0_IRQHandler           [WEAK]
+                EXPORT  MCG_IRQHandler            [WEAK]
+                EXPORT  LPTimer_IRQHandler        [WEAK]
                 EXPORT  Reserved45_IRQHandler     [WEAK]
-                EXPORT  PORTA_IRQHandler     [WEAK]
-                EXPORT  PORTD_IRQHandler     [WEAK]
-                EXPORT  DefaultISR                      [WEAK]
+                EXPORT  PORTA_IRQHandler          [WEAK]
+                EXPORT  PORTD_IRQHandler          [WEAK]
+                EXPORT  DefaultISR                [WEAK]
 
 DMA0_IRQHandler
 DMA1_IRQHandler
@@ -347,34 +347,27 @@ PORTD_IRQHandler
 DefaultISR
 
                 B       .
-
                 ENDP
-
-
                 ALIGN
-
 ; User Initial Stack & Heap
-
                 IF      :DEF:__MICROLIB
-
+                
                 EXPORT  __initial_sp
                 EXPORT  __heap_base
                 EXPORT  __heap_limit
-
+                
                 ELSE
-
+                
                 IMPORT  __use_two_region_memory
                 EXPORT  __user_initial_stackheap
 __user_initial_stackheap
-
                 LDR     R0, =  Heap_Mem
-                LDR     R1, =(Stack_Mem + Stack_Size)
-                LDR     R2, = (Heap_Mem +  Heap_Size)
-                LDR     R3, = Stack_Mem
+                LDR     R1, = (Stack_Mem + Stack_Size)
+                LDR     R2, = (Heap_Mem  + Heap_Size)
+                LDR     R3, =  Stack_Mem
                 BX      LR
-
                 ALIGN
 
                 ENDIF
-
+                
                 END

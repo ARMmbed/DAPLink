@@ -13,14 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #ifndef MAIN_H
 #define MAIN_H
 
 #include "stdint.h"
 
-void main_transfer_finished(uint8_t success);
-void main_blink_msd_led(uint8_t permanent);
-void main_force_msc_disconnect_event(void);
+/**
+ @enum main_usb_busy_t
+ @brief Defines the filtered activity of the USB connection
+ */ 
+typedef enum {
+    MAIN_USB_IDLE,   /*!< MAIN_USB_IDLE value means no bus activity */
+    MAIN_USB_ACTIVE  /*!< MAIN_USB_ACTIVE value means MSC transfers are occuring */
+} main_usb_busy_t;
+
+/**
+ @enum main_usb_connect_t
+ @brief State the USB connection can be in
+ */ 
+typedef enum {
+    MAIN_USB_DISCONNECTED,       /*!< MAIN_USB_DISCONNECTED state for a USB */
+    MAIN_USB_CONNECTING,         /*!< MAIN_USB_CONNECTING state for a USB */
+    MAIN_USB_CONNECTED,          /*!< MAIN_USB_CONNECTED state for a USB */
+    MAIN_USB_CHECK_CONNECTED,    /*!< MAIN_USB_CHECK_CONNECTED state for a USB */
+    MAIN_USB_DISCONNECTING,      /*!< MAIN_USB_DISCONNECTING state for a USB */
+    MAIN_USB_DISCONNECT_CONNECT  /*!< MAIN_USB_DISCONNECT_CONNECT state for a USB */
+} main_usb_connect_t;
+
+/**
+ @enum main_led_state_t
+ @brief Statest the USB connection can be in
+ */ 
+typedef enum {
+    MAIN_LED_OFF = 0,
+    MAIN_LED_FLASH,
+    MAIN_LED_FLASH_PERMANENT
+} main_led_state_t;
+
+/**
+ Allows other parts of the program to request the device to eject physical media
+ @param  none
+ @return none
+*/
 void main_msc_disconnect_event(void);
+
+/**
+ Allows other parts of the program to request the device to immediately eject physical media
+ @param  none
+ @return none
+*/
+void main_force_msc_disconnect_event(void);
+
+/**
+ Allows other parts of the program to request a LED to toggle state
+ @param  permanent decides if the led should remain on or flash
+ @return none
+*/
+void main_blink_msc_led(main_led_state_t permanent);
 
 #endif

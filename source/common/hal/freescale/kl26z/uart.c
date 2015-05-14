@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(TARGET_KL26Z)
+#if defined(INTERFACE_KL26Z)
 #include "MKL26Z4.h"
 #else
 #error "Unknown target type"

@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #ifndef GPIO_H
 #define GPIO_H
 
-#include "RTL.h"
+#include "DAP_Config.h"
+
+// wiring on PCB is unknown so implementations may vary
+typedef enum led_state {
+    GPIO_LED_OFF = 0,
+    GPIO_LED_ON
+} gpio_led_state_t;
 
 void gpio_init(void);
-void gpio_enable_button_flag(OS_TID task, uint16_t flag);
-void gpio_set_dap_led(uint8_t state);
-void gpio_set_cdc_led(uint8_t state);
-void gpio_set_msd_led(uint8_t state);
+void gpio_set_hid_led(gpio_led_state_t state);
+void gpio_set_cdc_led(gpio_led_state_t state);
+void gpio_set_msc_led(gpio_led_state_t state);
+uint8_t gpio_get_sw_reset(void);
 
 #endif

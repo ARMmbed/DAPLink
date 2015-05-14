@@ -43,7 +43,7 @@
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
- #define OS_STKSIZE     110
+ #define OS_STKSIZE     200
 #endif
 
 // <q>Check for the stack overflow
@@ -69,7 +69,7 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20DX) || defined(TARGET_KL26Z)
+  #if defined(TARGET_LPC11U35) || defined(TARGET_MK20DX) || defined(INTERFACE_KL26Z)
     #define OS_CLOCK       48000000
   #elif defined(TARGET_ATSAM3U2C)
     #define OS_CLOCK       96000000

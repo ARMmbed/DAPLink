@@ -13,109 +13,257 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include "main.h"
+#include "gpio.h"
+#include "tasks.h"
 #include "RTL.h"
 #include "rl_usb.h"
 
-#include "stdint.h"
-
-#include "tasks.h"
-#include "flash_hal.h"
-#include "main.h"
-#include "gpio.h"
-#include "version.h"
+//#include "device_cfg.h"
 //#include "vector_table.h"
 
-// Reference to our main task
-OS_TID mainTask, ledTask;
+// common to bootloader and CMSIS-DAP
 
-#define INITIAL_SP      (*(uint32_t *)(START_APP_ADDRESS))
-#define RESET_HANDLER   (*(uint32_t *)(START_APP_ADDRESS + 4))
+//#include "MK20D5.h"
+//#include "usbd_user_msc.h"
+//#include "validate_user_application.h"
 
-#define TRANSFER_FINISHED_SUCCESS       (1 << 0)
-#define TRANSFER_FINISHED_FAIL          (1 << 1)
+// debug macros that use ITM0. Does current implementation not working with RTX or
+//  when called from tasks maybe usless. Only good for debugging bootloader and 
+//  CMSIS-DAP when compiled for non-bootloader use
+//#include "retarget.h"
 
-void main_transfer_finished(uint8_t success) {
-    if (success) {
-        isr_evt_set(TRANSFER_FINISHED_SUCCESS, mainTask);
-    } else {
-        isr_evt_set(TRANSFER_FINISHED_FAIL, mainTask);
-    }
-}
-
-__asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc) {
+__asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
+{
     MOV SP, R0
     BX R1
 }
 
-__task void led_task(void) {
-    BOOL led_state = __FALSE;
-    os_itv_set(100); // 100mS
+#if   defined(APP_OFFSET_20K)
+#define APP_OFFSET (0x5000)
+#elif defined(APP_OFFSET_32K)
+#define APP_OFFSET (0x8000)
+#else
+#error "APP_OFFSET_ macro not provided"
+#endif
+
+#define INITIAL_SP      (*(uint32_t *)(APP_OFFSET))
+#define RESET_HANDLER   (*(uint32_t *)(APP_OFFSET + 4))
+
+// Event flags for main task
+// Timers events
+#define FLAGS_MAIN_90MS           (1 << 0)
+#define FLAGS_MAIN_30MS           (1 << 1)
+// USB Events
+#define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
+#define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
+// Used by msc when flashing a new binary
+#define FLAGS_LED_BLINK_30MS      (1 << 6)
+
+// Timing constants (in 90mS ticks)
+// USB busy time
+#define USB_BUSY_CNT            (11)
+#define USB_EJECT_CNT           (33)
+// Delay before a USB device connect may occur
+#define USB_CONNECT_DELAY       (6)
+// Decrement to zero
+#define DECZERO(x)              (x ? --x : 0)
+#define NO_TIMEOUT              (0xffff)
+
+// Global state of usb used in 
+main_usb_connect_t usb_state;
+
+// Reference to our main task
+OS_TID main_task_id;
+
+static uint8_t msc_led_usb_activity = 0;
+static main_led_state_t msc_led_state = MAIN_LED_FLASH;
+
+static main_usb_busy_t usb_busy;
+static uint32_t usb_busy_count;
+
+static uint64_t stk_timer_task[TIMER_TASK_STACK/8];
+static uint64_t stk_main_task [MAIN_TASK_STACK /8];
+
+// Timer task, set flags every 30mS and 90mS
+__task void timer_task_30mS(void)
+{
+    uint8_t i = 0;
+    os_itv_set(3); // 30mS
 
     while(1) {
-        gpio_set_cdc_led(led_state);
-        led_state = !led_state;
         os_itv_wait();
+        os_evt_set(FLAGS_MAIN_30MS, main_task_id);
+        if (!(i++ % 3)) {
+            os_evt_set(FLAGS_MAIN_90MS, main_task_id);
+        }
     }
 }
 
-// Flash DAP LED using 30mS tick (from interface firmware project)
-void main_blink_msd_led(uint8_t permanent) {
-//    dap_led_usb_activity=1;
-//    dap_led_state = (permanent) ? LED_FLASH_PERMANENT : LED_FLASH;
-//    return;
+// Flash MSD LED using 30mS tick
+void main_blink_msc_led(main_led_state_t permanent)
+{
+    msc_led_usb_activity = 1;
+    msc_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    return;
 }
 
-void main_force_msc_disconnect_event(void) {
-    
+// A new program has been flashed in the target
+void main_msc_disconnect_event(void)
+{
+    os_evt_set(FLAGS_MAIN_USB_DISCONNECT, main_task_id);
+    return;
 }
 
-void main_msc_disconnect_event(void) {
-    
+// A failure has occured during msc programming
+void main_force_msc_disconnect_event(void)
+{
+    os_evt_set(FLAGS_MAIN_FORCE_MSC_DISCONNECT, main_task_id);
+    return;
 }
 
-__task void main_task(void) {
-    BOOL led_state = __FALSE;
-    uint8_t flags, time_blink_led;
+__task void main_task(void)
+{
+    // State processing
+    uint16_t flags;
+    // LED
+    gpio_led_state_t msc_led_value = GPIO_LED_ON;
+    // USB
+    uint32_t usb_state_count;
+
+    // Get a reference to this task
+    main_task_id = os_tsk_self();
     
-	mainTask=os_tsk_self();
-	ledTask = os_tsk_create(led_task, LED_TASK_PRIORITY);
+    // Turn on LEDs
+    gpio_set_hid_led(GPIO_LED_OFF);
+    gpio_set_cdc_led(GPIO_LED_OFF);
+    gpio_set_msc_led(GPIO_LED_OFF);
 
-    //update_html_file();
-
+    // USB
     usbd_init();
-    usbd_connect(__TRUE);
+    usbd_connect(0);
+    usb_busy = MAIN_USB_IDLE;
+    usb_busy_count = 0;
+    usb_state = MAIN_USB_CONNECTING;
+    usb_state_count = USB_CONNECT_DELAY;
 
-    os_evt_wait_or(TRANSFER_FINISHED_SUCCESS | TRANSFER_FINISHED_FAIL, NO_TIMEOUT);
+    // Start timer tasks
+    os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_task, TIMER_TASK_STACK);
 
-    os_dly_wait(200);
-
-    usbd_connect(__FALSE);
-
-    // Find out what event happened
-    flags = os_evt_get();
-	
-    time_blink_led = (flags & TRANSFER_FINISHED_SUCCESS) ? 10 : 50;
-	// if we blink here, dont do it in a thread
-	os_tsk_delete(ledTask);
-	
     while(1) {
-        gpio_set_msd_led(led_state);
-        led_state = !led_state;
-        os_dly_wait(time_blink_led);
+        // need to create a new event for programming failure
+        os_evt_wait_or(   FLAGS_MAIN_90MS               // 90mS tick
+                        | FLAGS_MAIN_30MS               // 30mS tick
+                        | FLAGS_MAIN_USB_DISCONNECT     // Programming complete, disconnect and reset MCU
+                        | FLAGS_MAIN_FORCE_MSC_DISCONNECT // programming error, eject MSC and show error file upon connection
+                        , NO_TIMEOUT );
+
+        // Find out what event happened
+        flags = os_evt_get();
+
+        // this happens when programming is complete and successful.
+        if (flags & FLAGS_MAIN_USB_DISCONNECT) {
+            usb_busy = MAIN_USB_IDLE;            // USB not busy
+            usb_state_count = USB_CONNECT_DELAY;
+            usb_state = MAIN_USB_DISCONNECTING;  // disconnect the usb
+        }
+        
+        // programming failure occured. Eject and re-connect with fail file.
+        if (flags & FLAGS_MAIN_FORCE_MSC_DISCONNECT) {
+            usb_busy = MAIN_USB_IDLE;                    // USB not busy
+            usb_state_count = 0;
+            usb_state = MAIN_USB_DISCONNECT_CONNECT;     // disconnect the usb
+        }
+
+        if (flags & FLAGS_MAIN_90MS) {
+            // Update USB busy status
+            switch (usb_busy) {
+
+                case MAIN_USB_ACTIVE:
+                    if (DECZERO(usb_busy_count) == 0) {
+                        usb_busy = MAIN_USB_IDLE;
+                    }
+                    break;
+
+                case MAIN_USB_IDLE:
+                default:
+                    break;
+            }
+
+            // Update USB connect status
+            switch (usb_state) {
+
+                case MAIN_USB_DISCONNECTING:
+                    // Wait until USB is idle before disconnecting
+                    if (usb_busy == MAIN_USB_IDLE && (DECZERO(usb_state_count) == 0)) {
+                        usbd_connect(0);
+                        usb_state = MAIN_USB_DISCONNECTED;
+                    }
+                    break;
+
+                case MAIN_USB_DISCONNECT_CONNECT:
+                    // Wait until USB is idle before disconnecting
+                    if ((usb_busy == MAIN_USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
+                        usbd_connect(0);
+                        usb_state = MAIN_USB_CONNECTING;
+						// Delay the connecting state before reconnecting to the host - improved usage with VMs
+						usb_state_count = USB_EJECT_CNT;
+                    }
+                    break;
+
+                case MAIN_USB_CONNECTING:
+                    // Wait before connecting
+                    if (DECZERO(usb_state_count) == 0) {
+                        usbd_connect(1);
+                        usb_state = MAIN_USB_CHECK_CONNECTED;
+                    }
+                    break;
+
+                case MAIN_USB_CHECK_CONNECTED:
+                    if(usbd_configured()) {
+                        usb_state = MAIN_USB_CONNECTED;
+                    }
+                    break;
+
+                case MAIN_USB_DISCONNECTED:
+                    NVIC_SystemReset();
+                    break;
+                
+                case MAIN_USB_CONNECTED:
+                default:
+                    break;
+            }
+         }
+
+        // 30mS tick used for flashing LED when USB is busy
+        if (flags & FLAGS_MAIN_30MS) {
+            if (msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
+                // Flash MSD LED ONCE
+                msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
+                msc_led_usb_activity = ((GPIO_LED_ON == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) ? 0 : 1;
+                // Update hardware
+                gpio_set_msc_led(msc_led_value);
+            }
+        }
     }
 }
 
-// Main Program
+uint32_t validate_user_application(uint32_t addr) { return 1; } 
+
 int main (void)
-{	
+{
+    // init leds and button
     gpio_init();
-
-    //if (!gpio_get_pin_loader_state()) {
-    //    os_sys_init(main_task);
-    //}
-
-    //relocate_vector_table();
-
-    // modify stack pointer and start app
-    modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
+    // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing
+    if (gpio_get_sw_reset() && validate_user_application(APP_OFFSET)) {
+        // change to the new vector table
+        SCB->VTOR = APP_OFFSET;
+        // modify stack pointer and start app
+        modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
+    }
+    // config the usb interface descriptor and web auth token before USB connects
+    //unique_string_auth_config();
+    // either the rst pin was pressed or we have an empty app region
+    os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

@@ -17,7 +17,7 @@
 #include "rl_usb.h"
 #if defined(TARGET_K20D5)
 #include "MK20D5.h"
-#elif defined(TARGET_KL26Z)
+#elif defined(INTERFACE_KL26Z)
 #include "MKL26Z4.h"
 #elif defined(TARGET_KL46Z)
 #include "MKL46Z4.h"
