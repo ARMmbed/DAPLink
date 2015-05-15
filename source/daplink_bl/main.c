@@ -249,7 +249,7 @@ __task void main_task(void)
     }
 }
 
-uint32_t validate_user_application(uint32_t addr) { return 1; } 
+uint32_t validate_user_application(uint32_t addr) { return 1; }
 
 int main (void)
 {
