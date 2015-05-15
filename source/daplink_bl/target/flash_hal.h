@@ -13,32 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef FLASH_H
-#define FLASH_H
+#ifndef FLASH_HAL_H
+#define FLASH_HAL_H
 
-#include "stdint.h"
-
-#define START_APP_ADDRESS (0x5000)
-
-#if defined(TARGET_LPC11U35)
-  #define SECTOR_SIZE       (0x1000)
-  #define NB_SECTOR         (16)
-
-#elif defined(TARGET_MK20DX)
-  #define SECTOR_SIZE       (0x400)
-  #define NB_SECTOR         (128)
-
-#elif defined(TARGET_ATSAM3U2C)
-  #define SECTOR_SIZE       (0x1000)
-  #define NB_SECTOR         (32)
-#endif
-
-#define END_FLASH         (NB_SECTOR*SECTOR_SIZE)
-
-int  flash_hal_init         (uint32_t clk);
-int  flash_hal_uninit       (uint32_t fnc);
-int  flash_hal_erase_sector (uint32_t adr);
-int  flash_hal_program_page (uint32_t adr, uint32_t sz, unsigned char *buf);
+#include "FlashPrg.h"
 
 uint32_t  __swi(3) flash_program_page_svc (uint32_t adr, uint32_t sz, uint8_t *buf);
 uint32_t  __swi(2) flash_erase_sector_svc (uint32_t addr);

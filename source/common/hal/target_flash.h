@@ -21,27 +21,12 @@
 #ifdef __cplusplus
   extern "C" {
 #endif
-
-//ToDo: move all into .c and extern access. causing duplicate entries in memory
       
 typedef enum extension {
     UNKNOWN = 0,
     BIN,
     HEX,
 } extension_t;
-
-// known extension types
-// CRD - chrome
-// PAR - IE
-// Extensions dont matter much if you're looking for specific file data
-//  other than size parsing but hex and srec have specific EOF records
-static const char *const known_extensions[] = {
-    "BIN",
-    "bin",
-    "HEX",
-    "hex",
-    0,
-};
 
 typedef enum target_flash_status {
     TARGET_OK = 0,
@@ -86,8 +71,6 @@ target_flash_status_t check_security_bits(uint32_t flashAddr, uint8_t *data);
 
 //! @name Flash programming operations
 //@{
-uint8_t validate_bin_nvic(uint8_t *buf);
-uint8_t validate_hexfile(uint8_t *buf);
 target_flash_status_t target_flash_init(extension_t ext);
 target_flash_status_t target_flash_uninit(void);
 target_flash_status_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);

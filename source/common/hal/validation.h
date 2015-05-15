@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef USB_BUF_H
-#define USB_BUF_H
+
+#ifndef VALIDATION_H
+#define VALIDATION_H
 
 #include "stdint.h"
 
-uint32_t usb_buffer[512/4];
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+uint8_t validate_bin_nvic(uint8_t *buf);
+uint8_t validate_hexfile(uint8_t *buf);
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif
+

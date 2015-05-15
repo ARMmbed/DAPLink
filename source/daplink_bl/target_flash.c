@@ -19,52 +19,14 @@
 #include "target_config.h"
 #include "intelhex.h"
 #include "string.h"
-#include "FlashOS.h"
 
+// later defined elsewhere
 #define MSC_BLOCK_SIZE (512)
 
 static target_flash_status_t program_hex(uint8_t *buf, uint32_t size);
 static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size);
 static void set_hex_state_vars(void);
 static extension_t file_extension;
-
-static inline uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
-{
-    return ((test < min) || (test > max)) ? 0 : 1;
-}
-
-uint8_t validate_bin_nvic(uint8_t *buf)
-{
-    // test for known required NVIC entries
-    //  00 is stack pointer (RAM address)
-    //  04 is Reset vector  (FLASH address)
-    //  08 NMI_Handler      (FLASH address)
-    //  12 HardFault_Handler(FLASH address)
-    uint32_t i = 4, nvic_val = 0;
-    // test the initial SP value
-    memcpy(&nvic_val, buf+0, sizeof(nvic_val));
-    if (0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
-        return 0;
-    }
-    // Reset_Handler
-    // NMI_Handler
-    // HardFault_Handler
-    for ( ; i <=12; i+=4) {
-        memcpy(&nvic_val, buf+i, sizeof(nvic_val));
-        if (0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
-            return 0;
-        }
-    }
-    
-    return 1;
-}
-
-uint8_t validate_hexfile(uint8_t *buf)
-{
-    // look here for known hex records
-    // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
-    return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
-}
 
 target_flash_status_t target_flash_init(extension_t ext)
 {
@@ -73,6 +35,11 @@ target_flash_status_t target_flash_init(extension_t ext)
         reset_hex_parser();
         set_hex_state_vars();
     }
+    
+    if (0 != Init(0, 0, 0)) {
+        return TARGET_FAIL_INIT;
+    }
+    
     return target_flash_erase_chip();
 }
 
@@ -158,19 +125,19 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     uint32_t target_flash_address = (addr / MSC_BLOCK_SIZE) * MSC_BLOCK_SIZE;
 
     // write to target RAM
-    memcpy(hex_buffer+target_ram_idx, buf, size);
+    memcpy((uint8_t *)(hex_buffer+target_ram_idx), buf, size);
     target_ram_idx += size;
     // program a block if necessary
     if (target_ram_idx >= MSC_BLOCK_SIZE) {
-        if (0 != flash_program_page_svc(target_flash_address + target_device.flash_start, MSC_BLOCK_SIZE, hex_buffer)) {
+        if (0 != flash_program_page_svc(target_flash_address, MSC_BLOCK_SIZE, hex_buffer)) {
             return TARGET_FAIL_WRITE;
         }
         target_ram_idx -= MSC_BLOCK_SIZE;
         // cleanup
         if (target_ram_idx > 0) {
             // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
-            memcpy(hex_buffer, buf+(size-target_ram_idx), target_ram_idx);
-            memset(hex_buffer+target_ram_idx, 0, sizeof(hex_buffer)-target_ram_idx);
+            memcpy((uint8_t *)(hex_buffer), (uint8_t *)(buf+(size-target_ram_idx)), target_ram_idx);
+            memset((uint8_t *)(hex_buffer+target_ram_idx), 0xff, sizeof(hex_buffer)-target_ram_idx);
         }
     }
     return TARGET_OK;

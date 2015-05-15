@@ -144,14 +144,18 @@ Provides definitions about:
 #define PIN_CDC_LED             (1<<PIN_CDC_LED_BIT)
 
 // SW RESET BUTTON PTB1
-#define PIN_SW_RESET_PORT       PORTB
-#define PIN_SW_RESET_GPIO       PTB
-#define PIN_SW_RESET_BIT        1
+#define PIN_SW_RESET_PORT       PORTD//PORTB
+#define PIN_SW_RESET_GPIO       PTD//PTB
+#define PIN_SW_RESET_BIT        0//1
 #define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
 
 // Connected LED                Not available
 
 // Target Running LED           Not available
+
+// USB IRQ Macros
+#define DISABLE_USB_IRQ()       NVIC_DisableIRQ(USB0_IRQn)
+#define ENABLE_USB_IRQ()        NVIC_EnableIRQ(USB0_IRQn)
 
 
 //**************************************************************************************************

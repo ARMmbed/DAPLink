@@ -16,23 +16,9 @@
  
 #include "main.h"
 #include "gpio.h"
-#include "tasks.h"
+#include "validation.h"
 #include "RTL.h"
 #include "rl_usb.h"
-
-//#include "device_cfg.h"
-//#include "vector_table.h"
-
-// common to bootloader and CMSIS-DAP
-
-//#include "MK20D5.h"
-//#include "usbd_user_msc.h"
-//#include "validate_user_application.h"
-
-// debug macros that use ITM0. Does current implementation not working with RTX or
-//  when called from tasks maybe usless. Only good for debugging bootloader and 
-//  CMSIS-DAP when compiled for non-bootloader use
-//#include "retarget.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -76,8 +62,13 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 static main_usb_busy_t usb_busy;
 static uint32_t usb_busy_count;
 
-static uint64_t stk_timer_task[TIMER_TASK_STACK/8];
-static uint64_t stk_main_task [MAIN_TASK_STACK /8];
+#define TIMER_TASK_30_PRIORITY  (11)
+#define TIMER_TASK_STACK        (100)
+static uint64_t stk_timer_task[TIMER_TASK_STACK/sizeof(uint64_t)];
+
+#define MAIN_TASK_PRIORITY      (10)
+#define MAIN_TASK_STACK         (200)
+static uint64_t stk_main_task [MAIN_TASK_STACK /sizeof(uint64_t)];
 
 // Timer task, set flags every 30mS and 90mS
 __task void timer_task_30mS(void)
@@ -242,14 +233,12 @@ __task void main_task(void)
     }
 }
 
-uint32_t validate_user_application(uint32_t addr) { return 1; }
-
 int main (void)
 {
     // init leds and button
     gpio_init();
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing
-    if (gpio_get_sw_reset() && validate_user_application(APP_OFFSET)) {
+    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)APP_OFFSET)) {
         // change to the new vector table
         SCB->VTOR = APP_OFFSET;
         // modify stack pointer and start app

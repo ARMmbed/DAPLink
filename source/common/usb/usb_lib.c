@@ -1169,7 +1169,7 @@ void usbd_class_init     (void)                                       {
 #endif
                                                                       }
 
-U64 stk_usb_msc_task[600 / 8];
+U64 stk_usb_msc_task[600 / sizeof(U64)];
 
 void USBD_RTX_TaskInit (void) {
 

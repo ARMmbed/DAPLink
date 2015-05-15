@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-#include "FlashPrg.h"
+#include "flash_hal.h"
+#include "DAP_Config.h"
 
-uint32_t __SVC_2 (uint32_t addr) {
-    return EraseSector(addr);
+uint32_t __SVC_2 (uint32_t addr)
+{
+    int retval = -1;
+    DISABLE_USB_IRQ();
+    retval = EraseSector(addr);
+    ENABLE_USB_IRQ();
+    return retval;
 }
 
-uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf) {
-    return ProgramPage(adr, sz, (uint32_t *)buf);
+uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf)
+{
+    int retval = -1;
+    DISABLE_USB_IRQ();
+    retval = ProgramPage(adr, sz, (uint32_t *)buf);
+    ENABLE_USB_IRQ();
+    return retval;
 }

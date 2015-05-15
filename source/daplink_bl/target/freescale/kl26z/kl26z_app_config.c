@@ -29,5 +29,5 @@ const target_cfg_t target_device = {
     .flash_end      = kB(128),
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
-    .disc_size      = (kB(128)-kB(32))
+    .disc_size      = kB(512)
 };

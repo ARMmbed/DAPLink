@@ -28,7 +28,7 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #define OS_TASKCNT    8
+    #define OS_TASKCNT  6
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -167,12 +167,14 @@ void os_tmr_call (U16 info) {
 
 
 /*--------------------------- os_error --------------------------------------*/
-
+U32 err = 0;
 void os_error (U32 err_code) {
   /* This function is called when a runtime error is detected. Parameter */
   /* 'err_code' holds the runtime error code (defined in RTL.H).         */
 
   /* HERE: include optional code to be executed on runtime error. */
+  err = err_code;
+  err = err;
   for (;;);
 }
 

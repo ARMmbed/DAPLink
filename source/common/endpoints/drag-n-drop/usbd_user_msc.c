@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
+#include "main.h"
 #include "RTL.h"
 #include "rl_usb.h"
-#include "string.h"
-#include "main.h"
-#include "usb_buf.h"
 #include "virtual_fs.h"
 #include "daplink_debug.h"
+#include "validation.h"
 #include "version.h"
+
+static uint32_t usb_buffer[512/sizeof(uint32_t)];
 
 void usbd_msc_init(void)
 {    
@@ -97,7 +98,20 @@ static uint32_t filename_valid(uint8_t c)
         }
     } while ((uint8_t)(*(valid_char++)) != '\0');
     return 0;
-}        
+}
+
+// known extension types
+// CRD - chrome
+// PAR - IE
+// Extensions dont matter much if you're looking for specific file data
+//  other than size parsing but hex and srec have specific EOF records
+static const char *const known_extensions[] = {
+    "BIN",
+    "bin",
+    "HEX",
+    "hex",
+    0,
+};
 
 static uint32_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
 {
