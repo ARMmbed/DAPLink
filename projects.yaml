@@ -16,4 +16,5 @@ projects:
         - *module_tools
         - *module_bl
         - records/common/rtos-cm0.yaml
+        - records/common/fsl_flash_driver.yaml
         - records/projects/kl26z_daplink_bl.yaml

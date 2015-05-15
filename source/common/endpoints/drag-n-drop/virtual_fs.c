@@ -43,7 +43,7 @@ mbr_t mbr = {
     /*uint8_t */.boot_record_signature      = 0x29,         // signature is present
     /*uint32_t*/.volume_id                  = 0x27021974,   // serial number
     // needs to match the root dir label
-    /*char[11]*/.volume_label               = {'M','B','E','D',' ',' ',' ',' ','D','N','D'},
+    /*char[11]*/.volume_label               = {'D','A','P','L','I','N','K','-','D','N','D'},
     // unused by msft - just a label (FAT, FAT12, FAT16)
     /*char[8] */.file_system_type           = {'F','A','T','1','2',' ',' ',' '},
 
@@ -163,7 +163,7 @@ static FatDirectoryEntry_t const empty_dir_entry = {
 //  be accounted for in dir1
 static root_dir_t dir1 = {
     .dir = {
-    /*uint8_t[11] */ .filename = "MBED       ",
+    /*uint8_t[11] */ .filename = "DAPLINK    ",
     /*uint8_t */ .attributes = 0x28,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -290,7 +290,7 @@ void virtual_fs_init(void)
     //uint32_t number_clusters_needed = (number_sectors_needed / mbr.sectors_per_cluster);
     //uint32_t fat_sector_size =        (((number_clusters_needed / 1023) / 1024) * 3);
     // number of sectors = (media size in bytes) / bytes per sector
-//    mbr.total_logical_sectors = ((target_device.disc_size + kB(64)) / mbr.bytes_per_sector);
+    mbr.total_logical_sectors = ((target_device.disc_size + kB(64)) / mbr.bytes_per_sector);
     // number of cluster = ((number of sectors) / sectors per cluster)
     // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));

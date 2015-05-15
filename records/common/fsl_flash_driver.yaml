@@ -1,0 +1,18 @@
+common:
+    group_name:
+        - fsl_flash_driver
+    include_paths:
+        - source/daplink_bl/target/iap_api/freescale/driver
+        - source/daplink_bl/target/iap_api/freescale/devices
+    source_files:
+        - source/daplink_bl/target/iap_api/freescale
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_init.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_erase.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_program.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_erase_all.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_verify_erase.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_get_property.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_verify_program.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_verify_erase_all.c
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_command_sequence.c
+

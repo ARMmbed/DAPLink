@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_COMMON_H
-#define TARGET_FLASH_COMMON_H
+#ifndef TARGET_FLASH_H
+#define TARGET_FLASH_H
 
 #include "stdint.h"
 
@@ -75,8 +75,8 @@ static const char *const fail_txt_contents[] = {
     "Flash algorithm write command FAILURE\r\n",
     "Flash program address and data buffer unaligned\r\n",
     "The application file format is unknown and cannot be parsed and/or processed.\r\n",
-    "The hex file cannot be decoded. Checksum calculation failure occured.\r\n",
-    "The hex file cannot be decoded. Parser logic failure occured.\r\n"
+    "The hex file cannot be decoded. Checksum calculation failure occurred.\r\n",
+    "The hex file cannot be decoded. Parser logic failure occurred.\r\n"
     "The hex file cannot be programmed. Logic failure occurred.\r\n",
     ""
 };
@@ -99,4 +99,4 @@ target_flash_status_t target_flash_erase_chip(void);
   }
 #endif
 
-#endif // TARGET_FLASH_COMMON_H
+#endif // TARGET_FLASH_H
