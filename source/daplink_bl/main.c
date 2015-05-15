@@ -40,14 +40,7 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
     BX R1
 }
 
-#if   defined(APP_OFFSET_20K)
-#define APP_OFFSET (0x5000)
-#elif defined(APP_OFFSET_32K)
-#define APP_OFFSET (0x8000)
-#else
-#error "APP_OFFSET_ macro not provided"
-#endif
-
+#define APP_OFFSET      (0x8000)
 #define INITIAL_SP      (*(uint32_t *)(APP_OFFSET))
 #define RESET_HANDLER   (*(uint32_t *)(APP_OFFSET + 4))
 
