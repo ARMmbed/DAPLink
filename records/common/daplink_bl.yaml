@@ -3,7 +3,8 @@ common:
         - daplink_bl
     source_files:
         - source/daplink_bl
-        - source/daplink_bl/target/
+        - source/daplink_bl/target
+        - source/daplink_bl/target/iap_api
         - source/common/cmsis-core
         - source/common/hal
         

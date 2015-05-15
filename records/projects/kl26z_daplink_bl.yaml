@@ -5,7 +5,8 @@ common:
         - INTERFACE_KL26Z
         - APP_OFFSET_32K
     source_files:
-        - source/daplink_bl/target/freescale/kl26z
+        - source/daplink_bl/target/iap_api/freescale/driver
+        - source/daplink_bl/target/iap_api/freescale/devices/MKL26Z4
         - source/common/cmsis-core/freescale/kl26z
         - source/common/hal/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z/armcc
