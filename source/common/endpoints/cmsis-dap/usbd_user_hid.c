@@ -160,7 +160,7 @@ __task void hid_process(void * argv) {
     while (1) {
         os_evt_wait_or(DAP_PAQUET_RECEIVED, 0xffff);
         usbd_hid_process ();
-        main_blink_dap_led(0);
+        main_blink_hid_led(MAIN_LED_OFF);
     }
 }
 

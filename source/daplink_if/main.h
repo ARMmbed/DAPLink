@@ -18,12 +18,19 @@
 
 #include "stdint.h"
 
-typedef enum {
+// LED state
+typedef enum main_led_state {
+    MAIN_LED_OFF = 0,
+    MAIN_LED_FLASH,
+    MAIN_LED_FLASH_PERMANENT
+} main_led_state_t;
+
+typedef enum main_usb_busy {
     USB_IDLE,
     USB_ACTIVE
-} USB_BUSY;
+} main_usb_busy_t;
 
-typedef enum {
+typedef enum main_usb_connect {
     USB_DISCONNECTED,
     USB_CONNECTING,
     USB_CONNECTED,
@@ -31,7 +38,7 @@ typedef enum {
     USB_CONFIGURED,
     USB_DISCONNECTING,
     USB_DISCONNECT_CONNECT
-} USB_CONNECT;
+} main_usb_connect_t;
 
 void main_reset_target(uint8_t send_unique_id);
 void main_usb_configure_event(void);
@@ -40,8 +47,8 @@ void main_powerdown_event(void);
 void main_disable_debug_event(void);
 void main_msc_disconnect_event(void);
 void main_force_msc_disconnect_event(void);
-void main_blink_dap_led(uint8_t permanent);
-void main_blink_msd_led(uint8_t permanent);
-void main_blink_cdc_led(uint8_t permanent);
+void main_blink_hid_led(main_led_state_t permanent);
+void main_blink_msc_led(main_led_state_t permanent);
+void main_blink_cdc_led(main_led_state_t permanent);
 
 #endif

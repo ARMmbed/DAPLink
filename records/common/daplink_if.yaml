@@ -3,5 +3,7 @@ common:
         - daplink_if
     source_files:
         - source/daplink_if
+        - source/daplink_if/target
         - source/common/cmsis-core
+        - source/common/hal
         

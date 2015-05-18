@@ -4,13 +4,19 @@ common:
     macros:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
+    include_paths:
+        - source/common/hal/freescale/kl26z
     source_files:
         - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_kl_series.c
-        - source/daplink_bl/target/iap_api/freescale/devices/MKL26Z4        
+        - source/daplink_bl/target/iap_api/freescale/devices/MKL26Z4
         - source/daplink_bl/target/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z
-        - source/common/hal/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z/armcc
+        - source/common/hal/freescale/kl26z/gpio.c
+        - source/common/hal/freescale/kl26z/read_uid.c
+        - source/common/hal/freescale/kl26z/uart.c
+        - source/common/hal/freescale/kl26z/usb_config_if.c
+        - source/common/hal/freescale/kl26z/usbd_MKL26Z4.c
 
 tool_specific:
     uvision:

@@ -10,11 +10,22 @@ module:
         - records/common/usb-core.yaml
         - records/common/usb-msc.yaml
         - records/common/daplink_bl.yaml
+    if: &module_if
+        - records/common/usb-core.yaml
+        - records/common/usb-msc.yaml
+        - records/common/usb-cdc.yaml
+        - records/common/usb-hid.yaml
+        - records/common/daplink_if.yaml
 
 projects:
-    kl26z_daplink_bl:
+    kl26z_bl:
         - *module_tools
         - *module_bl
         - records/common/rtos-cm0.yaml
         - records/common/fsl_flash_driver.yaml
-        - records/projects/kl26z_daplink_bl.yaml
+        - records/projects/kl26z_bl.yaml
+    kl26z_nrf51822_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm0.yaml
+        - records/projects/kl26z_nrf51822_if.yaml

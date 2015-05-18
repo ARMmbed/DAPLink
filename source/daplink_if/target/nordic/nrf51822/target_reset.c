@@ -14,7 +14,6 @@
  * limitations under the License.
  */
  
-#include "sam3u.h"
 #include "RTL.h"
 #include "debug_cm.h"
 #include "target_reset.h"
@@ -51,11 +50,11 @@
 	
 	//Blink with 50ms interval
 static void blinkLED(){
-    gpio_set_dap_led(1);
+    gpio_set_hid_led(GPIO_LED_ON);
     os_dly_wait(5);
-    gpio_set_dap_led(0);
+    gpio_set_hid_led(GPIO_LED_OFF);
     os_dly_wait(5);
-    gpio_set_dap_led(1);
+    gpio_set_hid_led(GPIO_LED_ON);
 }
 
 
@@ -122,15 +121,15 @@ uint8_t target_unlock_sequence(void) {
 uint8_t target_set_state(TARGET_RESET_STATE state) {
 	uint32_t  count=0;
 	//Check for 5 Second emergency erase routine
-	while(!((PIOA->PIO_PDSR >> 25) &1)){
+	while(0 == gpio_get_sw_reset()){
         os_dly_wait(1);
         count++;
-        gpio_set_dap_led((count>>4)&1);//Blink every 160ms
+        gpio_set_hid_led((gpio_led_state_t)(count>>4&1));//Blink every 160ms
         if(count>500){            
             nrf_Emergency_Erase();
             return swd_set_target_state(state);
         }
     }
-    gpio_set_dap_led(1);
+    gpio_set_hid_led(GPIO_LED_ON);
     return swd_set_target_state(state);
 }
