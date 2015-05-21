@@ -12,8 +12,6 @@ module:
         - records/common/daplink_bl.yaml
     if: &module_if
         - records/common/usb-core.yaml
-        - records/common/usb-msc.yaml
-        - records/common/usb-cdc.yaml
         - records/common/usb-hid.yaml
         - records/common/daplink_if.yaml
 

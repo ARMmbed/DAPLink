@@ -490,52 +490,52 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
 // Execute system call.
 static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
-    uint32_t i, status;
-    
-    if (!swd_write_dp(DP_SELECT, 0)) {
-        return 0;
-    }
+//    uint32_t i, status;
+//    
+//    if (!swd_write_dp(DP_SELECT, 0)) {
+//        return 0;
+//    }
 
-    // R0, R1, R2, R3
-    for (i = 0; i < 4; i++) {
-        if (!swd_write_core_register(i, state->r[i])) {
-            return 0;
-        }
-    }
+//    // R0, R1, R2, R3
+//    for (i = 0; i < 4; i++) {
+//        if (!swd_write_core_register(i, state->r[i])) {
+//            return 0;
+//        }
+//    }
 
-    // R9
-    if (!swd_write_core_register(9, state->r[9])) {
-        return 0;
-    }
+//    // R9
+//    if (!swd_write_core_register(9, state->r[9])) {
+//        return 0;
+//    }
 
-    // R13, R14, R15
-    for (i=13; i<16; i++) {
-        if (!swd_write_core_register(i, state->r[i])) {
-            return 0;
-        }
-    }
+//    // R13, R14, R15
+//    for (i=13; i<16; i++) {
+//        if (!swd_write_core_register(i, state->r[i])) {
+//            return 0;
+//        }
+//    }
 
-    // xPSR
-    if (!swd_write_core_register(16, state->xpsr)) {
-        return 0;
-    }
-    
-    if (!swd_write_block(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)){
-        return 0;
-    }
+//    // xPSR
+//    if (!swd_write_core_register(16, state->xpsr)) {
+//        return 0;
+//    }
+//    
+//    if (!swd_write_block(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)){
+//        return 0;
+//    }
 
-    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-        return 0;
-    }
+//    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
+//        return 0;
+//    }
 
-    // check status
-    if (!swd_read_dp(DP_CTRL_STAT, &status)){
-        return 0;
-    }
+//    // check status
+//    if (!swd_read_dp(DP_CTRL_STAT, &status)){
+//        return 0;
+//    }
 
-    if (status & (STICKYERR | WDATAERR)) {
-        return 0;
-    }
+//    if (status & (STICKYERR | WDATAERR)) {
+//        return 0;
+//    }
 
     return 1;
 }

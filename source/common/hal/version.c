@@ -20,7 +20,7 @@
 #include "target_config.h"
 #include "board.h"
 #include "read_uid.h"
-#include "virtual_fs.h"
+//#include "virtual_fs.h"
 
 char mac_string[16] = {0};
 char uuid_string[33] = {0};
@@ -263,26 +263,26 @@ void init_auth_config(void)
     setup_string_descriptor();
 }
 
-void update_html_file(uint8_t *buf, uint32_t bufsize)
-{
-    // Update a file containing the version information for this firmware
-    // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
-    HTMLCTX html;                 // HTML reader context
-    uint8_t c;                    // Current character from HTML reader
-    uint32_t i = 0;
-    
-    if (already_unique_id == 0) {
-        init_auth_config();
-        already_unique_id = 1;
-    }
+//void update_html_file(uint8_t *buf, uint32_t bufsize)
+//{
+//    // Update a file containing the version information for this firmware
+//    // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
+//    HTMLCTX html;                 // HTML reader context
+//    uint8_t c;                    // Current character from HTML reader
+//    uint32_t i = 0;
+//    
+//    if (already_unique_id == 0) {
+//        init_auth_config();
+//        already_unique_id = 1;
+//    }
 
-    // Write file
-    init_html(&html, (uint8_t *)mbed_redirect_file);
-    do {
-        c = get_html_character(&html);
-        if (c != '\0') {
-            buf[i++] = c;
-        }
-    } while (c != '\0');
-    memset(buf+i, ' ', bufsize - i);
-}
+//    // Write file
+//    init_html(&html, (uint8_t *)mbed_redirect_file);
+//    do {
+//        c = get_html_character(&html);
+//        if (c != '\0') {
+//            buf[i++] = c;
+//        }
+//    } while (c != '\0');
+//    memset(buf+i, ' ', bufsize - i);
+//}
