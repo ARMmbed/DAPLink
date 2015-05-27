@@ -144,10 +144,15 @@ Provides definitions about:
 #define PIN_CDC_LED             (1<<PIN_CDC_LED_BIT)
 
 // SW RESET BUTTON PTB1
-#define PIN_SW_RESET_PORT       PORTD//PORTB
-#define PIN_SW_RESET_GPIO       PTD//PTB
-#define PIN_SW_RESET_BIT        0//1
+#define PIN_SW_RESET_PORT       PORTB
+#define PIN_SW_RESET_GPIO       PTB
+#define PIN_SW_RESET_BIT        1
 #define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
+// SW RESET BUTTON PTD0 - FRDM-KL26
+//#define PIN_SW_RESET_PORT       PORTD//PORTB
+//#define PIN_SW_RESET_GPIO       PTD//PTB
+//#define PIN_SW_RESET_BIT        0//1
+//#define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
 
 // Connected LED                Not available
 
