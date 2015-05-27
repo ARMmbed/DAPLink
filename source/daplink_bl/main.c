@@ -17,6 +17,7 @@
 #include "main.h"
 #include "gpio.h"
 #include "validation.h"
+#include "virtual_fs.h"
 #include "RTL.h"
 #include "rl_usb.h"
 
@@ -42,10 +43,9 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 
 // Timing constants (in 90mS ticks)
 // USB busy time
-#define USB_BUSY_CNT            (11)
-#define USB_EJECT_CNT           (33)
+#define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur
-#define USB_CONNECT_DELAY       (6)
+#define USB_CONNECT_DELAY       (11)
 // Decrement to zero
 #define DECZERO(x)              (x ? --x : 0)
 #define NO_TIMEOUT              (0xffff)
@@ -149,14 +149,14 @@ __task void main_task(void)
         // this happens when programming is complete and successful.
         if (flags & FLAGS_MAIN_USB_DISCONNECT) {
             usb_busy = MAIN_USB_IDLE;            // USB not busy
-            usb_state_count = USB_CONNECT_DELAY;
+            usb_state_count = USB_BUSY_TIME;
             usb_state = MAIN_USB_DISCONNECTING;  // disconnect the usb
         }
         
         // programming failure occured. Eject and re-connect with fail file.
         if (flags & FLAGS_MAIN_FORCE_MSC_DISCONNECT) {
             usb_busy = MAIN_USB_IDLE;                    // USB not busy
-            usb_state_count = 0;
+            usb_state_count = USB_BUSY_TIME;
             usb_state = MAIN_USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
 
@@ -189,10 +189,10 @@ __task void main_task(void)
                 case MAIN_USB_DISCONNECT_CONNECT:
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == MAIN_USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
-                        usbd_connect(0);
+                        USBD_MSC_MediaReady = 0;
                         usb_state = MAIN_USB_CONNECTING;
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
-						usb_state_count = USB_EJECT_CNT;
+						usb_state_count = USB_CONNECT_DELAY;
                     }
                     break;
 
@@ -207,6 +207,8 @@ __task void main_task(void)
                 case MAIN_USB_CHECK_CONNECTED:
                     if(usbd_configured()) {
                         usb_state = MAIN_USB_CONNECTED;
+                        reset_file_transfer_state();
+                        USBD_MSC_MediaReady = 1;
                     }
                     break;
 

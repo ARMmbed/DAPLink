@@ -10,7 +10,9 @@ tool_specific:
                     - --gnu
                     - --c99
                 Optim:
-                    - 3
+                    - 2
+                oTime:
+                    - enable
             TargetOption:
                 AfterMake:
                     RunUserProg1:
