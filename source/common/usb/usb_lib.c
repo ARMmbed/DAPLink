@@ -1169,7 +1169,7 @@ void usbd_class_init     (void)                                       {
 #endif
                                                                       }
 
-U64 stk_usb_msc_task[600 / sizeof(U64)];
+//U64 stk_usb_msc_task[600 / sizeof(U64)];
 
 void USBD_RTX_TaskInit (void) {
 
@@ -1182,14 +1182,22 @@ void USBD_RTX_TaskInit (void) {
     USBD_RTX_DevTask = os_tsk_create(USBD_RTX_Device,      3);
   }
 
+// TODO - Non scalable patch https://github.com/ARMmbed/CMSIS-DAP/blob/master/shared/USBStack/INC/usb_lib.c
+//  for (i = 0; i <= 15; i++) {
+//    USBD_RTX_EPTask[i] = 0;
+//    if (USBD_RTX_P_EP[i]) {
+//      if (USBD_RTX_P_EP[i] != USBD_RTX_MSC_EP_BULK_Event) {
+//        USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
+//      } else {
+//        USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, stk_usb_msc_task, sizeof(stk_usb_msc_task));
+//      }
+//    }
+//  }
+  
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
-      if (USBD_RTX_P_EP[i] != USBD_RTX_MSC_EP_BULK_Event) {
-        USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
-      } else {
-        USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, stk_usb_msc_task, sizeof(stk_usb_msc_task));
-      }
+      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
     }
   }
 
