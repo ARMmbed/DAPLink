@@ -23,12 +23,12 @@
 #include "gpio.h"
 #include "uart.h"
 #include "semihost.h"
-//#include "serial.h"
+#include "serial.h"
 #include "tasks.h"
 #include "target_reset.h"
 #include "swd_host.h"
 #include "version.h"
-//#include "virtual_fs.h"
+#include "virtual_fs.h"
 
 // Event flags for main task
 // Timers events
@@ -160,70 +160,70 @@ void main_disable_debug_event(void)
     return;
 }
 
-//os_mbx_declare(serial_mailbox, 20);
-//#define SIZE_DATA (64)
-//static uint8_t data[SIZE_DATA];
+os_mbx_declare(serial_mailbox, 20);
+#define SIZE_DATA (64)
+static uint8_t data[SIZE_DATA];
 
-//__task void serial_process()
-//{
-//    UART_Configuration config;
-//    int32_t len_data = 0;
-//    void *msg;
+__task void serial_process()
+{
+    UART_Configuration config;
+    int32_t len_data = 0;
+    void *msg;
 
-//    while (1) {
-//        // Check our mailbox to see if we need to set anything up with the UART
-//        // before we do any sending or receiving
-//        if (os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK) {
-//            switch((SERIAL_MSG)(unsigned)msg) {
-//                case SERIAL_INITIALIZE:
-//                    uart_initialize();
-//                    break;
-//                
-//                case SERIAL_UNINITIALIZE:
-//                    uart_uninitialize();
-//                    break;
-//                
-//                case SERIAL_RESET:
-//                    uart_reset();
-//                    break;
-//                
-//                case SERIAL_SET_CONFIGURATION:
-//                    serial_get_configuration(&config);
-//                    uart_set_configuration(&config);
-//                    break;
-//                
-//                default:
-//                    break;
-//            }
-//        }
+    while (1) {
+        // Check our mailbox to see if we need to set anything up with the UART
+        // before we do any sending or receiving
+        if (os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK) {
+            switch((SERIAL_MSG)(unsigned)msg) {
+                case SERIAL_INITIALIZE:
+                    uart_initialize();
+                    break;
+                
+                case SERIAL_UNINITIALIZE:
+                    uart_uninitialize();
+                    break;
+                
+                case SERIAL_RESET:
+                    uart_reset();
+                    break;
+                
+                case SERIAL_SET_CONFIGURATION:
+                    serial_get_configuration(&config);
+                    uart_set_configuration(&config);
+                    break;
+                
+                default:
+                    break;
+            }
+        }
 
-//        len_data = USBD_CDC_ACM_DataFree();
-//        if (len_data > SIZE_DATA) {
-//            len_data = SIZE_DATA;
-//        }
-//        if (len_data) {
-//            len_data = uart_read_data(data, len_data);
-//        }
-//        if (len_data) {
-//            if(USBD_CDC_ACM_DataSend(data , len_data)) {
-//                main_blink_cdc_led(MAIN_LED_OFF);
-//            }
-//        }
+        len_data = USBD_CDC_ACM_DataFree();
+        if (len_data > SIZE_DATA) {
+            len_data = SIZE_DATA;
+        }
+        if (len_data) {
+            len_data = uart_read_data(data, len_data);
+        }
+        if (len_data) {
+            if(USBD_CDC_ACM_DataSend(data , len_data)) {
+                main_blink_cdc_led(MAIN_LED_OFF);
+            }
+        }
 
-//        len_data = uart_write_free();
-//        if (len_data > SIZE_DATA) {
-//            len_data = SIZE_DATA;
-//        }
-//        if (len_data) {
-//            len_data = USBD_CDC_ACM_DataRead(data, len_data);
-//        }
-//        if (len_data) {
-//            if (uart_write_data(data, len_data)) {
-//                main_blink_cdc_led(MAIN_LED_OFF);
-//            }
-//        }
-//    }
-//}
+        len_data = uart_write_free();
+        if (len_data > SIZE_DATA) {
+            len_data = SIZE_DATA;
+        }
+        if (len_data) {
+            len_data = USBD_CDC_ACM_DataRead(data, len_data);
+        }
+        if (len_data) {
+            if (uart_write_data(data, len_data)) {
+                main_blink_cdc_led(MAIN_LED_OFF);
+            }
+        }
+    }
+}
 
 extern __task void hid_process(void);
 __attribute__((weak)) void prerun_target_config(void){}
