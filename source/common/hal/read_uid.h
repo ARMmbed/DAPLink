@@ -18,7 +18,7 @@
 
 #include "stdint.h"
 
-void read_unique_id(uint32_t * id);
+void read_unique_id(uint32_t *id);
 void create_unique_id(void);
 
 #ifdef BOARD_UBLOX_C027

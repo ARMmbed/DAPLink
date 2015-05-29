@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(INTERFACE_KL26Z)
-#include "MKL26Z4.h"
-#else
-#error "Unknown target type"
-#endif
+
+#include "DAP_Config.h"
 #include "read_uid.h"
 
-void read_unique_id(uint32_t * id) {
-    *id = SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH;
+void read_unique_id(uint32_t *id)
+{
+    id[0] = SIM->UIDL;
+    id[1] = SIM->UIDML;
+    id[2] = SIM->UIDMH;
+    id[3] = 0;
 }
