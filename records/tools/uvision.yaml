@@ -5,6 +5,9 @@ common:
 tool_specific:
     uvision:
         misc:
+            ArmAdsMisc:
+                useUlib:
+                    - enable
             Cads:
                 MiscControls:
                     - --gnu

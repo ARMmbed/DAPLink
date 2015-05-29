@@ -3,9 +3,9 @@
 ## Setup
 Skip any step where a compatible tool already exists
 
-1. Install [Python 2.7.x](https://www.python.org/downloads/)
-2. Install [pip](https://pip.pypa.io/en/latest/installing.html)
-3. Install DAPLink dependencies (see command below)
+1. Install [Python 2.7.x](https://www.python.org/downloads/) and make sure it's added to path
+2. Install [pip](https://pip.pypa.io/en/latest/installing.html) and make sure <python_install_loc>\Scripts it's added to path
+3. Install DAPLink dependencies using pip (see command below)
 4. Install [Keil MDK-ARM](https://www.keil.com/download/product/)
 
 ```
