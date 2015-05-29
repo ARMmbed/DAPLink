@@ -93,19 +93,19 @@ Provides definitions about:
 
 // Debug Port I/O Pins
 
-// SWCLK Pin                    PTD0(D10)
-#define PIN_SWCLK_PORT          PORTD
-#define PIN_SWCLK_GPIO          PTD
-#define PIN_SWCLK_BIT           0
+// SWCLK Pin                    PTC5(C5)
+#define PIN_SWCLK_PORT          PORTC
+#define PIN_SWCLK_GPIO          PTC
+#define PIN_SWCLK_BIT           5
 #define PIN_SWCLK               (1<<PIN_SWCLK_BIT)
 
-// SWDIO Pin                    PTD3(D12)
-#define PIN_SWDIO_PORT          PORTD
-#define PIN_SWDIO_GPIO          PTD
-#define PIN_SWDIO_BIT           3
+// SWDIO Pin                    PTC6(C6)
+#define PIN_SWDIO_PORT          PORTC
+#define PIN_SWDIO_GPIO          PTC
+#define PIN_SWDIO_BIT           6
 #define PIN_SWDIO               (1<<PIN_SWDIO_BIT)
 
-// nRESET Pin                   PTC8(D6)
+// nRESET Pin                   PTC8(C8)
 #define PIN_nRESET_PORT         PORTC
 #define PIN_nRESET_GPIO         PTC
 #define PIN_nRESET_BIT          8
@@ -134,13 +134,13 @@ Provides definitions about:
 // MSC_LED PTD5
 #define PIN_MSC_LED_PORT        PORTD
 #define PIN_MSC_LED_GPIO        PTD
-#define PIN_MSC_LED_BIT         5
+#define PIN_MSC_LED_BIT         4
 #define PIN_MSC_LED             (1<<PIN_MSC_LED_BIT)
 
 // CDC_LED PTD6
 #define PIN_CDC_LED_PORT        PORTD
 #define PIN_CDC_LED_GPIO        PTD
-#define PIN_CDC_LED_BIT         6
+#define PIN_CDC_LED_BIT         4
 #define PIN_CDC_LED             (1<<PIN_CDC_LED_BIT)
 
 // SW RESET BUTTON PTB1

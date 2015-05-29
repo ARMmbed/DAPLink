@@ -21,12 +21,12 @@
 #include "uart.h"
 #include "string.h"
 
-// Serial PTE22,PTE23
-#define UART_NO 2
-#define TARGET_UART_PORT PORTE
-#define TARGET_UART_RX_PIN 23
-#define TARGET_UART_TX_PIN 22
-#define TARGET_UART_ALT 4
+// Serial PTC3, PTC4
+#define UART_NO 1
+#define TARGET_UART_PORT PORTC
+#define TARGET_UART_RX_PIN 3
+#define TARGET_UART_TX_PIN 4
+#define TARGET_UART_ALT 3
 
 #if UART_NO==0
 #define TARGET_UART UART0
