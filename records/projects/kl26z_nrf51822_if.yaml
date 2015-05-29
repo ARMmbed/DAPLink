@@ -5,6 +5,7 @@ common:
         - INTERFACE_KL26Z
         - TARGET_NRF51822
         - APP_OFFSET_32K
+        - DAPLINK_IF
     include_paths:
         - source/daplink_if/target/nordic/nrf51822
     source_files:

@@ -17,7 +17,6 @@
 #include "virtual_fs.h"
 #include "string.h"
 #include "version.h"
-//#include "version_git.h"
 
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
@@ -103,10 +102,21 @@ static const file_allocation_table_t fat = {
   #define GIT_LOCAL_MODS_STR "No"
 #endif
 
-#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-#define URL_NAME "MBED    HTM"
-//#define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
-//#define URL_NAME "IBM     HTM"
+#if   defined(DAPLINK_IF)
+  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+  #define URL_NAME      "MBED    HTM"
+  #define DRIVE_NAME    "DAPLINK  IF"
+#elif defined(DAPLINK_IF_IBM)
+  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
+  #define URL_NAME      "IBM     HTM"
+  #define DRIVE_NAME    "DAPLINK  IF"
+#elif defined(DAPLINK_BL)
+  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+  #define URL_NAME      "MBED    HTM"
+  #define DRIVE_NAME    "DAPLINK  BL"
+#else
+  #error "Build type not defined"
+#endif
 
 const uint8_t mbed_redirect_file[512] =
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
@@ -163,7 +173,7 @@ static FatDirectoryEntry_t const empty_dir_entry = {
 //  be accounted for in dir1
 static root_dir_t dir1 = {
     .dir = {
-    /*uint8_t[11] */ .filename = "DAPLINK    ",
+    /*uint8_t[11] */ .filename = DRIVE_NAME,
     /*uint8_t */ .attributes = 0x28,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,

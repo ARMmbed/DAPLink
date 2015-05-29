@@ -66,7 +66,7 @@
     #define CPU_INT_FAST_CLK_HZ             4000000u /* Value of the fast internal oscillator clock frequency in Hz  */
     #define DEFAULT_SYSTEM_CLOCK            41943040u /* Default System clock value */
 #elif (CLOCK_SETUP == 1)
-    #define CPU_XTAL_CLK_HZ                 8000000u /* Value of the external crystal or oscillator clock frequency in Hz */
+    #define CPU_XTAL_CLK_HZ                 16000000u/* Value of the external crystal or oscillator clock frequency in Hz */
     #define CPU_INT_SLOW_CLK_HZ             32768u   /* Value of the slow internal oscillator clock frequency in Hz  */
     #define CPU_INT_FAST_CLK_HZ             4000000u /* Value of the fast internal oscillator clock frequency in Hz  */
     #define DEFAULT_SYSTEM_CLOCK            48000000u /* Default System clock value */
@@ -122,10 +122,10 @@ void SystemInit (void) {
   OSC0->CR = (uint8_t)0x89U;
   MCG->C2 = (uint8_t)0x24U;
   /* MCG->C1: CLKS=2,FRDIV=3,IREFS=0,IRCLKEN=1,IREFSTEN=0 */
-  MCG->C1 = (uint8_t)0x9AU;
+  MCG->C1 = (uint8_t)0xA2U; //was 0x9AU; for 8Mhz
   /* MCG->C4: DMX32=0,DRST_DRS=0 */
   MCG->C4 &= (uint8_t)~(uint8_t)0xE0U;
-  MCG->C5 = (uint8_t)0x01U;
+  MCG->C5 = (uint8_t)0x03U; //was 0x01U; for 8Mhz 
   /* MCG->C6: LOLIE0=0,PLLS=0,CME0=0,VDIV0=0 */
   MCG->C6 = (uint8_t)0x00U;
   while((MCG->S & MCG_S_IREFST_MASK) != 0x00U) { /* Check that the source of the FLL reference clock is the external reference clock. */

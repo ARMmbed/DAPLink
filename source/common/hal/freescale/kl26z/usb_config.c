@@ -42,10 +42,10 @@
 //       <i> Device release number in binary-coded decimal (bcdDevice)
 //   </h>
 #define USBD_POWER                  0
-#define USBD_MAX_PACKET0            8
+#define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
-#define USBD_DEVDESC_IDPRODUCT      0x0204
-#define USBD_DEVDESC_BCDDEVICE      0x0100
+#define USBD_DEVDESC_IDPRODUCT      0x1000 //was 0x0204
+#define USBD_DEVDESC_BCDDEVICE      0x1000 //was 0x0100
 
 //   <h> Configuration Settings
 //     <i> These settings affect Configuration Descriptor
@@ -76,7 +76,7 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"MBED"
-#define USBD_STRDESC_PROD           L"MBED CMSIS-DAP"
+#define USBD_STRDESC_PROD           L"MBED DAPLINK"
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -184,8 +184,8 @@
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
-                                    "1.0 "
+                                    "DAPLINK VFS     " \
+                                    "0.1"
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
