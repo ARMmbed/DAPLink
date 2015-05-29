@@ -121,9 +121,9 @@
 //       </h>
 //     </e>
 #ifndef HID_ENDPOINT
-#define HID_ENDPOINT 0
+  #define HID_ENDPOINT 0
 #else
-#define HID_ENDPOINT 1
+  #define HID_ENDPOINT 1
 #endif
 #define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
@@ -171,9 +171,9 @@
 //       </h>
 //     </e>
 #ifndef MSC_ENDPOINT
-#define MSC_ENDPOINT 0
+  #define MSC_ENDPOINT 0
 #else
-#define MSC_ENDPOINT 1
+  #define MSC_ENDPOINT 1
 #endif
 #define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          2
@@ -288,9 +288,9 @@
 //     </e>
 
 #ifndef CDC_ENDPOINT
-#define CDC_ENDPOINT 0
+  #define CDC_ENDPOINT 0
 #else
-#define CDC_ENDPOINT 1
+  #define CDC_ENDPOINT 1
 #endif
 #define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           3
