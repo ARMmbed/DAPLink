@@ -74,7 +74,7 @@ static uint32_t usb_busy_count;
 
 static U64 stk_timer_30_task[TIMER_TASK_30_STACK/8];
 static U64 stk_dap_task[DAP_TASK_STACK/8];
-//static U64 stk_serial_task[SERIAL_TASK_STACK/8];
+static U64 stk_serial_task[SERIAL_TASK_STACK/8];
 static U64 stk_main_task[MAIN_TASK_STACK/8];
 
 // Timer task, set flags every 30mS and 90mS
@@ -244,7 +244,7 @@ __task void main_task(void)
     uint8_t button_activated = 0;
 
     // Initialize our serial mailbox
-//    os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
+    os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
     // Get a reference to this task
     main_task_id = os_tsk_self();
     
@@ -372,11 +372,11 @@ __task void main_task(void)
                 case USB_DISCONNECT_CONNECT:
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
-                        //usbd_connect(0);
+                        usbd_connect(0);
                         usb_state = USB_CONNECTING;
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = USB_BUSY_TIME;
-                        //USBD_MSC_MediaReady = 0;
+                        USBD_MSC_MediaReady = 0;
                     }
                     break;
 
@@ -392,12 +392,12 @@ __task void main_task(void)
                     if(usbd_configured()) {
                         if (!thread_started) {
                             os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
-//                            serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
+                            serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
                             thread_started = 1;
                         }
                         usb_state = USB_CONNECTED;
-//                        reset_file_transfer_state();
-//                        USBD_MSC_MediaReady = 1;
+                        reset_file_transfer_state();
+                        USBD_MSC_MediaReady = 1;
                     }
                     break;
 

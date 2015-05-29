@@ -1,13 +1,8 @@
 common:
     group_name:
         - daplink_if
-    include_paths:
-        - source/daplink_if
     source_files:
-        - source/daplink_if/main.c
-        - source/daplink_if/RTX_Config.c
-        - source/daplink_if/swd_host.c
-        - source/daplink_if/SVC_Table.s
+        - source/daplink_if
         - source/daplink_if/target
         - source/common/cmsis-core
         - source/common/hal

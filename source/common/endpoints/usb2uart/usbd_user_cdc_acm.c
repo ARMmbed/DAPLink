@@ -122,7 +122,7 @@ int32_t USBD_CDC_ACM_SendBreak (uint16_t dur) {
             main_reset_target(0);
         }
     }
-    return 0;
+    return (1);
 }
 
 

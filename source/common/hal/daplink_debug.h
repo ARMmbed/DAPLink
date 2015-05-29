@@ -35,7 +35,7 @@
 #if defined (MSC_DEBUG)
 static inline uint32_t daplink_debug_print(const char* format, ...)
 {
-    char buf[128] = {0};
+    char buf[64] = {0};
     int32_t r = 0, s = 0;
     va_list arg;
     
@@ -53,9 +53,16 @@ static inline uint32_t daplink_debug_print(const char* format, ...)
 
 static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
 {
-    int32_t s = USBD_CDC_ACM_DataSend(buf, size);
-    os_dly_wait(10);
-    return (uint32_t)s;
+    uint32_t chunks = size / USBD_CDC_ACM_SENDBUF_SIZE;
+    uint32_t remainder = size % USBD_CDC_ACM_SENDBUF_SIZE;
+    uint32_t send_amt = 0;
+    int32_t i = 0;
+    for ( ; i < chunks; i++) {
+        send_amt += USBD_CDC_ACM_DataSend(buf+(i*USBD_CDC_ACM_SENDBUF_SIZE), USBD_CDC_ACM_SENDBUF_SIZE);
+        os_dly_wait(1);
+    }
+    send_amt += USBD_CDC_ACM_DataSend(buf+((i+1)*USBD_CDC_ACM_SENDBUF_SIZE), remainder);
+    return (uint32_t)send_amt;
 }
 
 #else
