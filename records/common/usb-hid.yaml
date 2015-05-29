@@ -3,7 +3,7 @@ common:
         - usb_hid
     macros:
         - HID_ENDPOINT
-    source_files:
+    sources:
         - source/common/usb/hid
         - source/common/endpoints/cmsis-dap
         

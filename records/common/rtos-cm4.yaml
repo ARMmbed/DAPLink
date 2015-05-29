@@ -3,9 +3,9 @@ common:
         - rtos
     macros:
         - __RTX
-    include_paths:
+    includes:
         - source/common/rtos
-    source_files:
+    sources:
         - source/common/rtos/cm4
         - source/common/rtos/rt_Event.c
         - source/common/rtos/rt_List.c

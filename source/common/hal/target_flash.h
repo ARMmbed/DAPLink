@@ -44,6 +44,7 @@ typedef enum target_flash_status {
     TARGET_FAIL_HEX_CKSUM,
     TARGET_FAIL_HEX_PARSER,
     TARGET_FAIL_HEX_PROGRAM,
+    TARGET_FAIL_HEX_INVALID_ADDRESS,
     TARGET_HEX_FILE_EOF,
 } target_flash_status_t;
 
@@ -61,9 +62,10 @@ static const char *const fail_txt_contents[] = {
     "Flash program address and data buffer unaligned\r\n",
     "The application file format is unknown and cannot be parsed and/or processed.\r\n",
     "The hex file cannot be decoded. Checksum calculation failure occurred.\r\n",
-    "The hex file cannot be decoded. Parser logic failure occurred.\r\n"
+    "The hex file cannot be decoded. Parser logic failure occurred.\r\n",
     "The hex file cannot be programmed. Logic failure occurred.\r\n",
-    ""
+    "The hex file addressing is not compatible with the allocated application memory map.\r\n",
+    "",
 };
 
 //! @brief Verify that security will not be enabled.

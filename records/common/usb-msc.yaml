@@ -3,7 +3,7 @@ common:
         - usb_msc
     macros:
         - MSC_ENDPOINT
-    source_files:
+    sources:
         - source/common/usb/msc
         - source/common/endpoints/drag-n-drop
         

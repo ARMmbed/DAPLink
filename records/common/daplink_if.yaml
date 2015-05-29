@@ -1,7 +1,7 @@
 common:
     group_name:
         - daplink_if
-    source_files:
+    sources:
         - source/daplink_if
         - source/daplink_if/target
         - source/common/cmsis-core

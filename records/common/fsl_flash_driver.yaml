@@ -1,10 +1,10 @@
 common:
     group_name:
         - fsl_flash_driver
-    include_paths:
+    includes:
         - source/daplink_bl/target/iap_api/freescale/driver
         - source/daplink_bl/target/iap_api/freescale/devices
-    source_files:
+    sources:
         - source/daplink_bl/target/iap_api/freescale
         - source/daplink_bl/target/iap_api/freescale/driver/flash_init.c
         - source/daplink_bl/target/iap_api/freescale/driver/flash_erase.c

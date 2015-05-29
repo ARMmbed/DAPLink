@@ -6,9 +6,9 @@ common:
         - TARGET_NRF51822
         - APP_OFFSET_32K
         - DAPLINK_IF
-    include_paths:
+    includes:
         - source/daplink_if/target/nordic/nrf51822
-    source_files:
+    sources:
         - source/daplink_if/target/nordic/nrf51822/microbit_app_config.c
         - source/daplink_if/target/nordic/nrf51822/target_reset.c
         - source/common/cmsis-core/freescale/kl26z

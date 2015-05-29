@@ -3,7 +3,7 @@ common:
         - usb_cdc
     macros:
         - CDC_ENDPOINT
-    source_files:
+    sources:
         - source/common/usb/cdc
         - source/common/endpoints/usb2uart
         

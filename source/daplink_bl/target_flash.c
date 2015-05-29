@@ -1,4 +1,4 @@
-/* CMSIS-DAP Interface Firmware
+ /* CMSIS-DAP Interface Firmware
  * Copyright (c) 2009-2013 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,8 +70,11 @@ target_flash_status_t target_flash_erase_sector(uint32_t sector)
 
 target_flash_status_t target_flash_erase_chip(void)
 {
+    uint32_t status = 0;
     for (uint32_t i = target_device.flash_start; i < target_device.flash_end; i += target_device.sector_size) {
-        if (0 != target_flash_erase_sector(i/target_device.sector_size)) {
+        //if (0 != target_flash_erase_sector(i/target_device.sector_size)) {
+        status = target_flash_erase_sector(i/target_device.sector_size);
+        if(status != 0) {
             return TARGET_FAIL_ERASE_ALL;
         }
     }
@@ -121,6 +124,10 @@ static void set_hex_state_vars(void)
 
 static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf, uint32_t size)
 {
+    // dont allow programming space that hasnt been allocated for the application
+    if (addr < target_device.flash_start) {
+        return TARGET_FAIL_HEX_INVALID_ADDRESS;
+    }
     // store the block start address if aligned with the programming size
     uint32_t target_flash_address = (addr / MSC_BLOCK_SIZE) * MSC_BLOCK_SIZE;
 
@@ -149,6 +156,7 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
     uint32_t bin_start_address = 0; // Decoded from the hex file, the binary buffer data starts at this address
     uint32_t bin_buf_written = 0;   // The amount of data in the binary buffer starting at address above
     uint32_t block_amt_parsed = 0;  // amount of data parsed in the block on the last call
+    target_flash_status_t flash_status = TARGET_HEX_FILE_EOF;
     
     while (1) {
         // try to decode a block of hex data into bin data
@@ -161,7 +169,10 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             }
             // hex file data decoded. Write to target RAM and program if necessary
             if ( (bin_start_address % MSC_BLOCK_SIZE) > target_ram_idx ) {
-                flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                flash_status = flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                if (TARGET_OK != flash_status) {
+                    return flash_status;
+                }
             }
             return flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
         }
@@ -171,14 +182,23 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
                 // unaligned address. Write data to target RAM and force pad with ff //00
                 // Check if ram index needs to be shifted
                 if ( (bin_start_address % MSC_BLOCK_SIZE) > target_ram_idx ) {
-                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                    flash_status = flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                    if (TARGET_OK != flash_status) {
+                        return flash_status;
+                    }
                 }
-                flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+                flash_status = flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+                if (TARGET_OK != flash_status) {
+                    return flash_status;
+                }
             }
             
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
-                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, MSC_BLOCK_SIZE-target_ram_idx);
+                flash_status = flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, MSC_BLOCK_SIZE-target_ram_idx);
+                if (TARGET_OK != flash_status) {
+                    return flash_status;
+                }
             }
                     
             // incrememntal offset to finish the block
@@ -190,14 +210,23 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             if (bin_buf_written != 0) {
                 // Check if ram index needs to be shifted
                 if ( (bin_start_address % MSC_BLOCK_SIZE) > target_ram_idx ) {
-                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                    flash_status = flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % MSC_BLOCK_SIZE) - target_ram_idx);
+                    if (TARGET_OK != flash_status) {
+                        return flash_status;
+                    }
                 }
-                flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+                flash_status = flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
+                if (TARGET_OK != flash_status) {
+                    return flash_status;
+                }
             }
             
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
-                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, MSC_BLOCK_SIZE-target_ram_idx);
+                flash_status = flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, MSC_BLOCK_SIZE-target_ram_idx);
+                if (TARGET_OK != flash_status) {
+                    return flash_status;
+                }
             }
             //target_ram_idx = 0;
             return TARGET_HEX_FILE_EOF;

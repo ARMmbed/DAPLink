@@ -5,7 +5,7 @@ common:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
         - DAPLINK_BL
-    source_files:
+    sources:
         - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_kl_series.c
         - source/daplink_bl/target/iap_api/freescale/devices/MKL26Z4
         - source/daplink_bl/target/freescale/kl26z
