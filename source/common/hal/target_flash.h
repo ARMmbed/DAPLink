@@ -45,7 +45,7 @@ typedef enum target_flash_status {
     TARGET_FAIL_HEX_PARSER,
     TARGET_FAIL_HEX_PROGRAM,
     TARGET_HEX_FILE_EOF,
-}target_flash_status_t;
+} target_flash_status_t;
 
 static const char *const fail_txt_contents[] = {
     "",

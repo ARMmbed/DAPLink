@@ -16,7 +16,8 @@
 #ifndef SWDHOST_CM_H
 #define SWDHOST_CM_H
 
-#include "target_struct.h"
+#include "flash_blob.h"
+#include "target_reset.h"
 
 uint8_t swd_init(void);
 uint8_t swd_init_debug(void);
@@ -29,7 +30,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size);
 void swd_set_target_reset(uint8_t asserted);
 uint8_t swd_is_semihost_event(uint32_t *r0, uint32_t *r1);
 uint8_t swd_semihost_restart(uint32_t r0);
-uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4);
+uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4);
 
 uint8_t swd_set_target_state(TARGET_RESET_STATE state);
 

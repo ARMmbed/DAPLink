@@ -21,6 +21,7 @@
 #include "daplink_debug.h"
 #include "validation.h"
 #include "version.h"
+#include "flash_blob.h"
 
 static uint32_t usb_buffer[512/sizeof(uint32_t)];
 

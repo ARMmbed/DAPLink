@@ -16,7 +16,6 @@
 #ifndef TARGET_RESET_H
 #define TARGET_RESET_H
 
-//#include "target_struct.h"
 #include "stdint.h"
 
 typedef enum {

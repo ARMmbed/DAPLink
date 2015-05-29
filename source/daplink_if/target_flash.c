@@ -14,15 +14,14 @@
  * limitations under the License.
  */
  
+#include "target_flash.h"
 #include "target_reset.h"
 #include "gpio.h"
-#include "target_flash.h"
+#include "flash_blob.h"
 #include "validation.h"
 #include "target_config.h"
 #include "intelhex.h"
 #include "string.h"
-
-#include "flash_blob.h"
 #include "swd_host.h"
 
 static target_flash_status_t program_hex(uint8_t *buf, uint32_t size);
@@ -37,11 +36,11 @@ target_flash_status_t target_flash_init(extension_t ext)
     }
     
     // Download flash programming algorithm to target and initialise.
-    if (0 == swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
+    if (0 == swd_write_memory(flash.algo_start, (uint8_t *)flash.algo_blob, flash.algo_size)) {
         return TARGET_FAIL_ALGO_DL;
     }
 
-    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.init, target_device.flash_start, 0 /* clk value is not used */, 0, 0)) {
+    if (0 == swd_flash_syscall_exec(&flash.sys_call_s, flash.init, target_device.flash_start, 0 /* clk value is not used */, 0, 0)) {
         return TARGET_FAIL_INIT;
     }
     
@@ -72,7 +71,7 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
 
 target_flash_status_t target_flash_erase_sector(uint32_t sector)
 {
-    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
+    if (0 == swd_flash_syscall_exec(&flash.sys_call_s, flash.erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
         return TARGET_FAIL_ERASE_SECTOR;
     }
     return TARGET_OK;
@@ -80,7 +79,7 @@ target_flash_status_t target_flash_erase_sector(uint32_t sector)
 
 target_flash_status_t target_flash_erase_chip(void)
 {
-    if (0 == swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
+    if (0 == swd_flash_syscall_exec(&flash.sys_call_s, flash.erase_chip, 0, 0, 0, 0)) {
         return TARGET_FAIL_ERASE_ALL;
     }
     return TARGET_OK;
@@ -91,7 +90,7 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
     // called from msc logic so assumed that the smallest size is 512 (size of sector)
     //  flash algo must support this as minimum size.
     //  ToDO: akward requirement. look at flash algo flexibility in flash write sizes
-    while (size >= flash.ram_to_flash_bytes_to_be_written) {
+    while (size >= flash.program_buffer_size) {
         // Export a hook to verify the flash protect is NOT set
         if (1 == security_bits_set(addr, buf, size)) {
             return TARGET_FAIL_SECURITY_BITS;
@@ -108,16 +107,16 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
         }
         // Exectue a program flash sequence on the target device
         if (0 == swd_flash_syscall_exec(
-            & flash.sys_call_param
+            & flash.sys_call_s
             , flash.program_page
             , addr + target_device.flash_start
-            , flash.ram_to_flash_bytes_to_be_written
+            , flash.program_buffer_size
             , flash.program_buffer
             , 0)
             ) {
             return TARGET_FAIL_WRITE;
         }
-        size -= flash.ram_to_flash_bytes_to_be_written;
+        size -= flash.program_buffer_size;
     }
     return TARGET_OK;
 }
@@ -153,7 +152,7 @@ static void set_hex_state_vars(void)
 static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf, uint32_t size)
 {
     // store the block start address if aligned with the programming size
-    uint32_t target_flash_address = (addr / flash.ram_to_flash_bytes_to_be_written) * flash.ram_to_flash_bytes_to_be_written;
+    uint32_t target_flash_address = (addr / flash.program_buffer_size) * flash.program_buffer_size;
     // check if security bits were set. Could be an odd alignment boundry that breaks (bin_buf only has part of security region)
     if (1 == security_bits_set(target_flash_address, buf, size)) {
         return TARGET_FAIL_SECURITY_BITS;
@@ -170,18 +169,18 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     }
     target_ram_idx += size;
     // program a block if necessary
-    if (target_ram_idx >= flash.ram_to_flash_bytes_to_be_written) {
+    if (target_ram_idx >= flash.program_buffer_size) {
         if (0 == swd_flash_syscall_exec(
-            & flash.sys_call_param
+            & flash.sys_call_s
             , flash.program_page
             , target_flash_address + target_device.flash_start
-            , flash.ram_to_flash_bytes_to_be_written
+            , flash.program_buffer_size
             , flash.program_buffer
             , 0)
             ) {
             return TARGET_FAIL_WRITE;
         }
-        target_ram_idx -= flash.ram_to_flash_bytes_to_be_written;
+        target_ram_idx -= flash.program_buffer_size;
         // cleanup
         if (target_ram_idx > 0) {
             // write excess data to target RAM at bottom of buffer. This re-aligns offsets that may occur based on hex formatting
@@ -210,8 +209,8 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
                 return TARGET_OK;
             }
             // hex file data decoded. Write to target RAM and program if necessary
-            if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
-                flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
+            if ( (bin_start_address % flash.program_buffer_size) > target_ram_idx ) {
+                flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.program_buffer_size) - target_ram_idx);
             }
             return flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
         }
@@ -220,15 +219,15 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             if (bin_buf_written != 0) {
                 // unaligned address. Write data to target RAM and force pad with ff //00
                 // Check if ram index needs to be shifted
-                if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
-                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
+                if ( (bin_start_address % flash.program_buffer_size) > target_ram_idx ) {
+                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.program_buffer_size) - target_ram_idx);
                 }
                 flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
             }
             
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
-                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.program_buffer_size-target_ram_idx);
             }
                     
             // incrememntal offset to finish the block
@@ -239,15 +238,15 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size)
             // Check if there is content in ram buffer that needs to be written to chip
             if (bin_buf_written != 0) {
                 // Check if ram index needs to be shifted
-                if ( (bin_start_address % flash.ram_to_flash_bytes_to_be_written) > target_ram_idx ) {
-                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.ram_to_flash_bytes_to_be_written) - target_ram_idx);
+                if ( (bin_start_address % flash.program_buffer_size) > target_ram_idx ) {
+                    flexible_program_block(bin_start_address, (uint8_t *)ff_buffer, (bin_start_address % flash.program_buffer_size) - target_ram_idx);
                 }
                 flexible_program_block(bin_start_address, bin_buffer, bin_buf_written);
             }
             
             // Check if rest of page needs to be padded
             if (target_ram_idx != 0) {
-                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.ram_to_flash_bytes_to_be_written-target_ram_idx);
+                flexible_program_block(bin_start_address+bin_buf_written, (uint8_t *)ff_buffer, flash.program_buffer_size-target_ram_idx);
             }
             //target_ram_idx = 0;
             return TARGET_HEX_FILE_EOF;

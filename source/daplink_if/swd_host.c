@@ -18,7 +18,6 @@
 #include "target_flash.h"
 #include "target_reset.h"
 #include "target_config.h"
-#include "flash_blob.h"
 #include "swd_host.h"
 #include "debug_cm.h"
 #include "DAP_config.h"
@@ -660,7 +659,7 @@ uint8_t swd_semihost_restart(uint32_t r0) {
     return 1;
 }
 
-uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
+uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
     DEBUG_STATE state = {{0},0};
     // Call flash algorithm function on target and wait for result.
     state.r[0]     = arg1;                   // R0: Argument 1

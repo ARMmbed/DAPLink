@@ -13,23 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
+#ifndef FLASH_BLOB_H
+#define FLASH_BLOB_H
 
-#include "target_struct.h"
-#include "swd_host.h"
-#include "target_reset.h"
 #include "stdint.h"
 
-#if defined (TARGET_ATSAM3U2C) 
-#include "system_SAM3U.h"
-#elif defined (TARGET_MKL26Z)
-#include "MKL26Z4.h"
+#ifdef __cplusplus
+  extern "C" {
 #endif
+      
+typedef struct {
+    uint32_t breakpoint;
+    uint32_t static_base;
+    uint32_t stack_pointer;
+} program_syscall_t;
 
-#include "debug_cm.h"
-#include "RTL.h"
-
+typedef struct {
+    const uint32_t  init;
+    const uint32_t  uninit;
+    const uint32_t  erase_chip;
+    const uint32_t  erase_sector;
+    const uint32_t  program_page;
+    const program_syscall_t sys_call_s;
+    const uint32_t  program_buffer;
+    const uint32_t  algo_start;
+    const uint32_t  algo_size;
+    const uint32_t *algo_blob;
+    const uint32_t  program_buffer_size;
+} program_target_t;
 
 static const uint32_t nRF51822AA_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
@@ -43,26 +54,26 @@ static const uint32_t nRF51822AA_FLM[] = {
     /*0x0E0*/ 0x0, 
 };
 
-static const TARGET_FLASH flash = {
-    0x20000021, // Init
-    0x20000025, // UnInit
-    0x20000029, // EraseChip
-    0x20000049, // EraseSector
-    0x20000071, // ProgramPage
-
-    // RSB : base adreess is address of Execution Region PrgData in map file
-    //       to access global/static data
-    // RSP : Initial stack pointer
+static const program_target_t flash = {
+    .init = 0x20000021,
+    .uninit = 0x20000025,
+    .erase_chip = 0x20000029,
+    .erase_sector = 0x20000049,
+    .program_page = 0x20000071,
     {
-      0x20000001,             // breakpoint location
-      0x20000020+0x00000150,  // static_base
-      0x20001000              // stack_pointer
+        .breakpoint = 0x20000001,
+        .static_base = 0x20000020 + 0x00000150,
+        .stack_pointer = 0x20001000
     },
-    0x20000200,               // program_buffer
-    0x20000000,               // algo_start
-    0x00000150,               // algo_size
-    nRF51822AA_FLM,           // image
-    512                       // ram_to_flash_bytes_to_be_written
+    .program_buffer = 0x20000200,
+    .algo_start = 0x20000000,
+    .algo_size = 0x00000150,
+    .algo_blob = nRF51822AA_FLM,
+    .program_buffer_size = 512 // should be USBD_MSC_BlockSize
 };
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

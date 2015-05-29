@@ -118,6 +118,10 @@ uint8_t target_unlock_sequence(void) {
     return 1;
 }
 
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
+    return 1;
+}
+
 uint8_t target_set_state(TARGET_RESET_STATE state) {
 	uint32_t  count=0;
 	//Check for 5 Second emergency erase routine
