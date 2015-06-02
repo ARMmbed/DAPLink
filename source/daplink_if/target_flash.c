@@ -157,12 +157,12 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     if (1 == security_bits_set(target_flash_address, buf, size)) {
         return TARGET_FAIL_SECURITY_BITS;
     }
-    // possibly erase a sector
-    if (target_flash_address % target_device.sector_size == 0) {
-        if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
-            return TARGET_FAIL_ERASE_SECTOR;
-        }
-    }
+//    // possibly erase a sector
+//    if (target_flash_address % target_device.sector_size == 0) {
+//        if (TARGET_OK != target_flash_erase_sector(target_flash_address / target_device.sector_size)) {
+//            return TARGET_FAIL_ERASE_SECTOR;
+//        }
+//    }
     // write to target RAM
     if (0 == swd_write_memory(flash.program_buffer+target_ram_idx, buf, size)) {
         return TARGET_FAIL_ALGO_DATA_SEQ;
