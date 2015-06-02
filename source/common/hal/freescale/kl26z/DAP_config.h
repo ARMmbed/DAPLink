@@ -31,6 +31,7 @@ Provides definitions about:
 */
 
 #include "MKL26Z4.h"
+//#include "swd_host.h"
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
@@ -218,9 +219,9 @@ static __inline void PORT_SWD_SETUP (void) {
   PIN_SWDIO_GPIO->PSOR = PIN_SWDIO;
   PIN_nRESET_GPIO->PSOR = PIN_nRESET;
 
-  PIN_SWCLK_GPIO->PDDR |= PIN_SWCLK;
-  PIN_SWDIO_GPIO->PDDR |= PIN_SWDIO;
-  PIN_nRESET_GPIO->PDDR |= PIN_nRESET;
+  PIN_SWCLK_GPIO->PDDR |= (PIN_SWCLK);
+  PIN_SWDIO_GPIO->PDDR |= (PIN_SWDIO);
+  PIN_nRESET_GPIO->PDDR |= (PIN_nRESET);
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -232,9 +233,9 @@ static __inline void PORT_OFF (void) {
   PIN_SWDIO_GPIO->PCOR = PIN_SWDIO;
   PIN_nRESET_GPIO->PSOR = PIN_nRESET;
 
-  PIN_SWCLK_GPIO->PDDR |= PIN_SWCLK;
-  PIN_SWDIO_GPIO->PDDR |= PIN_SWDIO;
-  PIN_nRESET_GPIO->PDDR |= PIN_nRESET;
+  PIN_SWCLK_GPIO->PDDR |= (PIN_SWCLK);
+  PIN_SWDIO_GPIO->PDDR |= (PIN_SWDIO);
+  PIN_nRESET_GPIO->PDDR |= (PIN_nRESET);
 }
 
 
@@ -244,7 +245,7 @@ static __inline void PORT_OFF (void) {
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
 static __forceinline uint32_t PIN_SWCLK_TCK_IN  (void) {
-  return (0);   // Not available
+  return (PIN_SWCLK_GPIO->PDIR & PIN_SWCLK) ? 1 : 0;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
@@ -387,6 +388,35 @@ static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
   }
 }
 
+//static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+//	
+// /**There is no reset pin on the nRF51822, so we need to use a reset routine:
+//	Enable reset through the RESET register in the POWER peripheral. 
+//	Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs. 
+//  */
+//  if (bit & 1) {
+//      PIOA->PIO_SODR = PIN_SWDIO;
+//      PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+//	} else {
+//        swd_init_debug();
+//        //Set POWER->RESET on NRF to 1
+//        if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)){
+//            return;
+//        }
+//        
+//		if(!swd_write_ap(AP_DRW, 1)){
+//            return;
+//        }
+//        
+//        //Hold RESET and SWCLK low for a minimum of 100us
+//        PIOA->PIO_OER = PIN_SWDIO;
+//        PIOA->PIO_OER = PIN_SWCLK;     
+//        PIOA->PIO_CODR = PIN_SWDIO;
+//        PIOA->PIO_CODR = PIN_SWCLK;
+//        os_dly_wait(1);
+//	}
+//}
+
 ///@}
 
 
@@ -450,7 +480,7 @@ static __inline void DAP_SETUP (void) {
                 SIM_SCGC5_PORTE_MASK;   /* Enable Port E Clock */
 
   /* Configure I/O pin SWCLK */
-  PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1);    /* GPIO */
+  PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1);   /* GPIO */
   PIN_SWCLK_GPIO->PSOR  = PIN_SWCLK;                      /* High level */
   PIN_SWCLK_GPIO->PDDR |= PIN_SWCLK;                      /* Output */
 
@@ -458,15 +488,15 @@ static __inline void DAP_SETUP (void) {
   PIN_SWDIO_PORT->PCR[PIN_SWDIO_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
                                        PORT_PCR_PE_MASK |  /* Pull enable */
                                        PORT_PCR_PS_MASK;   /* Pull-up */
-  PIN_SWDIO_GPIO->PSOR  = PIN_SWDIO;              /* High level */
-  PIN_SWDIO_GPIO->PDDR |= PIN_SWDIO;              /* Output */
+  PIN_SWDIO_GPIO->PSOR  = PIN_SWDIO;                       /* High level */
+  PIN_SWDIO_GPIO->PDDR &= ~(PIN_SWDIO);                    /* Input */
 
     /* Configure I/O pin nRESET */
-  PIN_nRESET_PORT->PCR[PIN_nRESET_BIT]       = PORT_PCR_MUX(1)  |  /* GPIO */
-                                               PORT_PCR_PE_MASK |  /* Pull enable */
-                                               PORT_PCR_PS_MASK;   /* Pull-up */
-  PIN_nRESET_GPIO->PSOR  = PIN_nRESET;                    /* High level */
-  PIN_nRESET_GPIO->PDDR |= PIN_nRESET;                    /* Output */
+  PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
+                                         PORT_PCR_PE_MASK |  /* Pull enable */
+                                         PORT_PCR_PS_MASK;   /* Pull-up */
+  PIN_nRESET_GPIO->PSOR  = PIN_nRESET;                       /* High level */
+  PIN_nRESET_GPIO->PDDR |= PIN_nRESET;                       /* Output */
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.

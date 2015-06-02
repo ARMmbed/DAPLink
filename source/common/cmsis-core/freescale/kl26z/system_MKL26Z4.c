@@ -119,7 +119,7 @@ void SystemInit (void) {
   /* PORTA->PCR19: ISF=0,MUX=0 */
   PORTA->PCR[19] &= (uint32_t)~0x01000700UL;
   /* Switch to FBE Mode */
-  OSC0->CR = (uint8_t)0x89U;
+  OSC0->CR = (uint8_t)0x80U; // was 0x89U for 8Mhz
   MCG->C2 = (uint8_t)0x24U;
   /* MCG->C1: CLKS=2,FRDIV=3,IREFS=0,IRCLKEN=1,IREFSTEN=0 */
   MCG->C1 = (uint8_t)0xA2U; //was 0x9AU; for 8Mhz

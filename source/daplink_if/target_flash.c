@@ -40,7 +40,7 @@ target_flash_status_t target_flash_init(extension_t ext)
         return TARGET_FAIL_ALGO_DL;
     }
 
-    if (0 == swd_flash_syscall_exec(&flash.sys_call_s, flash.init, target_device.flash_start, 0 /* clk value is not used */, 0, 0)) {
+    if (0 == swd_flash_syscall_exec(&flash.sys_call_s, flash.init, target_device.flash_start, 0, 0, 0)) {
         return TARGET_FAIL_INIT;
     }
     

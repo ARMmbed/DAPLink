@@ -29,9 +29,9 @@
 //   <i> Default: 6
 #ifndef OS_TASKCNT
     #ifdef SEMIHOST
-        #define OS_TASKCNT    15
+        #define OS_TASKCNT    13
     #else
-        #define OS_TASKCNT    14
+        #define OS_TASKCNT    12
     #endif
 #endif
 
@@ -50,7 +50,7 @@
   #if defined(TARGET_ATSAM3U2C)
     #define OS_STKSIZE     220//80//250
   #else
-    #define OS_STKSIZE     100
+    #define OS_STKSIZE     140
   #endif
 #endif
 
