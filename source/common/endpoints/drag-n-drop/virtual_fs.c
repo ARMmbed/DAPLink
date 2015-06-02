@@ -114,6 +114,10 @@ static const file_allocation_table_t fat = {
   #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
   #define URL_NAME      "MBED    HTM"
   #define DRIVE_NAME    "DAPLINK  BL"
+#elif defined(MICROBIT)
+  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://developer.mbed.org\"/>\r\n"
+  #define URL_NAME      "MBED    HTM"
+  #define DRIVE_NAME    "MICROBIT   "
 #else
   #error "Build type not defined"
 #endif
