@@ -48,67 +48,67 @@
 		0x50000500,0x00000308,0x20000000,0x0000000C,0x0000017C,0x00000012,0x00000013,0x00F42400,
 		0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF};*/
 	
-	//Blink with 50ms interval
-static void blinkLED(){
-    gpio_set_hid_led(GPIO_LED_ON);
-    os_dly_wait(5);
-    gpio_set_hid_led(GPIO_LED_OFF);
-    os_dly_wait(5);
-    gpio_set_hid_led(GPIO_LED_ON);
-}
+//	//Blink with 50ms interval
+//static void blinkLED(){
+//    gpio_set_hid_led(GPIO_LED_ON);
+//    os_dly_wait(5);
+//    gpio_set_hid_led(GPIO_LED_OFF);
+//    os_dly_wait(5);
+//    gpio_set_hid_led(GPIO_LED_ON);
+//}
 
 
 
-//Erase NRF and blink every 50ms in the process
-static void nrf_Emergency_Erase(){
-    //make sure SWD is initialized
-    if (!swd_init_debug()) {
-		return;
-	}
-    
-    blinkLED();    
-    
-    //Set NVMC->CONFIG on NRF to 2    
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 2)) {
-		return;
-	}
+////Erase NRF and blink every 50ms in the process
+//static void nrf_Emergency_Erase(){
+//    //make sure SWD is initialized
+//    if (!swd_init_debug()) {
+//		return;
+//	}
+//    
+//    blinkLED();    
+//    
+//    //Set NVMC->CONFIG on NRF to 2    
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 2)) {
+//		return;
+//	}
 
-    blinkLED();
-    blinkLED();
-   
+//    blinkLED();
+//    blinkLED();
+//   
 
-    //Set NVMC->ERASEALL on NRF to 1 to start chip erase
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 1)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    
-    //Set NVMC->CONFIG on NRF to 0
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 0)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
+//    //Set NVMC->ERASEALL on NRF to 1 to start chip erase
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 1)) {
+//		return;
+//	}
+//    
+//    blinkLED();
+//    blinkLED();
+//    blinkLED();
+//    blinkLED();
+//    
+//    //Set NVMC->CONFIG on NRF to 0
+//    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+//		return;
+//	}
+//    if (!swd_write_ap(AP_DRW, 0)) {
+//		return;
+//	}
+//    
+//    blinkLED();
+//    blinkLED();
 
-	//swd_set_target_state(RESET_PROGRAM);
-	//target_flash_init(SystemCoreClock);
-	//target_flash_program_page(0,(uint8_t *)nrfBlinkyApp,800);
+//	//swd_set_target_state(RESET_PROGRAM);
+//	//target_flash_init(SystemCoreClock);
+//	//target_flash_program_page(0,(uint8_t *)nrfBlinkyApp,800);
 
-}
+//}
 
 void target_before_init_debug(void) {
     return;
@@ -123,17 +123,71 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
 }
 
 uint8_t target_set_state(TARGET_RESET_STATE state) {
-	uint32_t  count=0;
-	//Check for 5 Second emergency erase routine
-	while(0 == gpio_get_sw_reset()){
-        os_dly_wait(1);
-        count++;
-        gpio_set_hid_led((gpio_led_state_t)(count>>4&1));//Blink every 160ms
-        if(count>500){            
-            nrf_Emergency_Erase();
-            return swd_set_target_state(state);
-        }
-    }
-    gpio_set_hid_led(GPIO_LED_ON);
+// THIS SHOULD BE IMPLEMENTED IN MAIN FOR ALL TARGETS
+//	uint32_t  count=0;
+//	//Check for 5 Second emergency erase routine
+//	while(0 == gpio_get_sw_reset()){
+//        os_dly_wait(1);
+//        count++;
+//        gpio_set_hid_led((gpio_led_state_t)(count>>4&1));//Blink every 160ms
+//        if(count>500){            
+//            nrf_Emergency_Erase();
+//            return swd_set_target_state(state);
+//        }
+//    }
+//    gpio_set_hid_led(GPIO_LED_ON);
     return swd_set_target_state(state);
+}
+
+
+//static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+//	
+// /**There is no reset pin on the nRF51822, so we need to use a reset routine:
+//	Enable reset through the RESET register in the POWER peripheral. 
+//	Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs. 
+//  */
+//  if (bit & 1) {
+//      PIOA->PIO_SODR = PIN_SWDIO;
+//      PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+//	} else {
+//        swd_init_debug();
+//        //Set POWER->RESET on NRF to 1
+//        if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)){
+//            return;
+//        }
+//        
+//		if(!swd_write_ap(AP_DRW, 1)){
+//            return;
+//        }
+//        
+//        //Hold RESET and SWCLK low for a minimum of 100us
+//        PIOA->PIO_OER = PIN_SWDIO;
+//        PIOA->PIO_OER = PIN_SWCLK;     
+//        PIOA->PIO_CODR = PIN_SWDIO;
+//        PIOA->PIO_CODR = PIN_SWCLK;
+//        os_dly_wait(1);
+//	}
+//}
+
+
+void swd_set_target_reset(uint8_t asserted)
+{
+    if (asserted) {
+        swd_init_debug();
+        //Set POWER->RESET on NRF to 1
+        if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)) {
+            return;
+        }
+        
+		if(!swd_write_ap(AP_DRW, 1)){
+            return;
+        }
+        //Hold RESET and SWCLK low for a minimum of 100us
+        PIN_SWCLK_TCK_CLR();
+        PIN_SWDIO_TMS_CLR();
+        //os_dly_wait(1);
+    } else {
+        PIN_SWCLK_TCK_SET();
+        PIN_SWDIO_TMS_SET();
+    }
 }

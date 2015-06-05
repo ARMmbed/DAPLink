@@ -40,6 +40,12 @@ typedef enum main_usb_connect {
     USB_DISCONNECT_CONNECT
 } main_usb_connect_t;
 
+typedef enum main_reset_state {
+    MAIN_RESET_PRESSED = 0,
+    MAIN_RESET_RELEASED,
+    MAIN_RESET_TARGET
+} main_reset_state_t;
+
 void main_reset_target(uint8_t send_unique_id);
 void main_usb_configure_event(void);
 void main_usb_busy_event(void);

@@ -388,35 +388,6 @@ static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
   }
 }
 
-//static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
-//	
-// /**There is no reset pin on the nRF51822, so we need to use a reset routine:
-//	Enable reset through the RESET register in the POWER peripheral. 
-//	Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs. 
-//  */
-//  if (bit & 1) {
-//      PIOA->PIO_SODR = PIN_SWDIO;
-//      PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
-//	} else {
-//        swd_init_debug();
-//        //Set POWER->RESET on NRF to 1
-//        if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)){
-//            return;
-//        }
-//        
-//		if(!swd_write_ap(AP_DRW, 1)){
-//            return;
-//        }
-//        
-//        //Hold RESET and SWCLK low for a minimum of 100us
-//        PIOA->PIO_OER = PIN_SWDIO;
-//        PIOA->PIO_OER = PIN_SWCLK;     
-//        PIOA->PIO_CODR = PIN_SWDIO;
-//        PIOA->PIO_CODR = PIN_SWCLK;
-//        os_dly_wait(1);
-//	}
-//}
-
 ///@}
 
 

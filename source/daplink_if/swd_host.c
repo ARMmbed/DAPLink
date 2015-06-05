@@ -811,8 +811,7 @@ uint8_t swd_init_debug(void) {
     return 1;
 }
 
-
-void swd_set_target_reset(uint8_t asserted) {
+__weak void swd_set_target_reset(uint8_t asserted) {
     if (asserted) {
         PIN_nRESET_OUT(0);
     } else {
