@@ -48,7 +48,7 @@
 // USB busy time
 #define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur
-#define USB_CONNECT_DELAY       (5)
+#define USB_CONNECT_DELAY       (17)
 // Delay before target may be taken out of reset or reprogrammed after startup
 #define STARTUP_DELAY           (1)
 // Decrement to zero
