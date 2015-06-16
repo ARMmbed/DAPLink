@@ -49,7 +49,7 @@ extern uint32_t SystemCoreClock;
 static void clear_buffers(void);
 
 // Size must be 2^n for using quick wrap around
-#define  BUFFER_SIZE          (512)
+#define  BUFFER_SIZE          (64)
 
 struct {
     uint8_t  data[BUFFER_SIZE];

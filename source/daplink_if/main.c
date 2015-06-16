@@ -307,7 +307,6 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_RESET) {
             cdc_led_state = MAIN_LED_OFF;
             gpio_set_cdc_led(GPIO_LED_OFF);
-            //usbd_cdc_ser_flush();
             // Reset target
             target_set_state(RESET_RUN);
             cdc_led_state = MAIN_LED_FLASH;
@@ -418,7 +417,6 @@ __task void main_task(void)
                 case MAIN_RESET_TARGET:
                     cdc_led_state = MAIN_LED_OFF;
                     gpio_set_cdc_led(GPIO_LED_OFF);
-                    //usbd_cdc_ser_flush();
                     target_set_state(RESET_RUN);
                     cdc_led_state = MAIN_LED_FLASH;
                     gpio_set_cdc_led(GPIO_LED_ON);

@@ -17,7 +17,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include "DAP_Config.h"
+#include "IO_Config.h"
 
 // wiring on PCB is unknown so implementations may vary
 typedef enum led_state {

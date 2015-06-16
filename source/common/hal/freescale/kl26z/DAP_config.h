@@ -17,6 +17,7 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
+#include "IO_Config.h"
 
 //**************************************************************************************************
 /**
@@ -29,9 +30,6 @@ Provides definitions about:
  - Debug Access Port communication mode (JTAG or SWD).
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
-
-#include "MKL26Z4.h"
-//#include "swd_host.h"
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
@@ -90,79 +88,6 @@ Provides definitions about:
 #endif
 
 ///@}
-
-
-// Debug Port I/O Pins
-
-// SWCLK Pin                    PTC5(C5)
-#define PIN_SWCLK_PORT          PORTC
-#define PIN_SWCLK_GPIO          PTC
-#define PIN_SWCLK_BIT           5
-#define PIN_SWCLK               (1<<PIN_SWCLK_BIT)
-
-// SWDIO Pin                    PTC6(C6)
-#define PIN_SWDIO_PORT          PORTC
-#define PIN_SWDIO_GPIO          PTC
-#define PIN_SWDIO_BIT           6
-#define PIN_SWDIO               (1<<PIN_SWDIO_BIT)
-
-// nRESET Pin                   PTC8(C8)
-#define PIN_nRESET_PORT         PORTC
-#define PIN_nRESET_GPIO         PTC
-#define PIN_nRESET_BIT          8
-#define PIN_nRESET              (1<<PIN_nRESET_BIT)
-
-// PWR_REG_EN PTD2 - Not connected
-#define PIN_POWER_EN_PORT       PORTD
-#define PIN_POWER_EN_GPIO       PTD
-#define PIN_POWER_EN_BIT        2
-#define PIN_POWER_EN            (1<<PIN_POWER_EN_BIT)
-
-// VTRG_FAULT_B PTD3 - Not connected
-#define PIN_VTRG_FAULT_B_PORT   PORTD
-#define PIN_VTRG_FAULT_B_GPIO   PTD
-#define PIN_VTRG_FAULT_B_BIT    7
-#define PIN_VTRG_FAULT_B_EN     (1<<PIN_VTRG_FAULT_B_BIT)
-
-// Debug Unit LEDs
-
-// HID_LED PTD4
-#define PIN_HID_LED_PORT        PORTD
-#define PIN_HID_LED_GPIO        PTD
-#define PIN_HID_LED_BIT         4
-#define PIN_HID_LED             (1<<PIN_HID_LED_BIT)
-
-// MSC_LED PTD5
-#define PIN_MSC_LED_PORT        PORTD
-#define PIN_MSC_LED_GPIO        PTD
-#define PIN_MSC_LED_BIT         4
-#define PIN_MSC_LED             (1<<PIN_MSC_LED_BIT)
-
-// CDC_LED PTD6
-#define PIN_CDC_LED_PORT        PORTD
-#define PIN_CDC_LED_GPIO        PTD
-#define PIN_CDC_LED_BIT         4
-#define PIN_CDC_LED             (1<<PIN_CDC_LED_BIT)
-
-// SW RESET BUTTON PTB1
-#define PIN_SW_RESET_PORT       PORTB
-#define PIN_SW_RESET_GPIO       PTB
-#define PIN_SW_RESET_BIT        1
-#define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
-// SW RESET BUTTON PTD0 - FRDM-KL26
-//#define PIN_SW_RESET_PORT       PORTD//PORTB
-//#define PIN_SW_RESET_GPIO       PTD//PTB
-//#define PIN_SW_RESET_BIT        0//1
-//#define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
-
-// Connected LED                Not available
-
-// Target Running LED           Not available
-
-// USB IRQ Macros
-#define DISABLE_USB_IRQ()       NVIC_DisableIRQ(USB0_IRQn)
-#define ENABLE_USB_IRQ()        NVIC_EnableIRQ(USB0_IRQn)
-
 
 //**************************************************************************************************
 /**
