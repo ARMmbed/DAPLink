@@ -303,6 +303,16 @@ __task void main_task(void)
             usb_state_count = 0;
             usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
+        
+        if (flags & FLAGS_MAIN_RESET) {
+            cdc_led_state = MAIN_LED_OFF;
+            gpio_set_cdc_led(GPIO_LED_OFF);
+            //usbd_cdc_ser_flush();
+            // Reset target
+            target_set_state(RESET_RUN);
+            cdc_led_state = MAIN_LED_FLASH;
+            gpio_set_cdc_led(GPIO_LED_ON);
+        }
 
         if (flags & FLAGS_MAIN_POWERDOWN) {
             // Stop semihost task
@@ -344,7 +354,6 @@ __task void main_task(void)
                 case USB_DISCONNECTING:
                     // Wait until USB is idle before disconnecting
                     if (usb_busy == USB_IDLE) {
-                        //usbd_connect(0);
                         usb_state = USB_DISCONNECTED;
                     }
                     break;
@@ -352,7 +361,6 @@ __task void main_task(void)
                 case USB_DISCONNECT_CONNECT:
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
-                        usbd_connect(0);
                         usb_state = USB_CONNECTING;
 						// Delay the connecting state before reconnecting to the host - improved usage with VMs
 						usb_state_count = USB_BUSY_TIME;
@@ -467,10 +475,7 @@ __task void main_task(void)
     }
 }
 
-// Main Program
 int main (void)
 {
-    // Allow the board to do some last initialization before the main task is started
-    //board_init();
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }
