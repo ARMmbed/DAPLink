@@ -136,7 +136,7 @@ uint8_t target_set_state(TARGET_RESET_STATE state) {
 //        }
 //    }
 //    gpio_set_hid_led(GPIO_LED_ON);
-    return swd_set_target_state(state);
+    return swd_set_target_state_sw(state);
 }
 
 

@@ -46,25 +46,17 @@
 #define MAX_SWD_RETRY 100//10
 #define MAX_TIMEOUT   10000  // Timeout for syscalls on target
 
+#define SOFT_RESET  SYSRESETREQ
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
-// Otherwise a hardware reset is the default. This will not affect
 // DAP operations as they are controlled by the remote debugger.
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(TARGET_NRF51822)
-#define CONF_SYSRESETREQ
+  // SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
+  #define SOFT_RESET  SYSRESETREQ
 #elif defined(BOARD_LPC4337)
-#define CONF_VECTRESET
-#endif
-
-#if defined(CONF_SYSRESETREQ)
-// SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
-#define SOFT_RESET  SYSRESETREQ
-
-#elif defined(CONF_VECTRESET)
-// VECTRESET - Software reset of Cortex-M core
-// For some Cortex-M devices, VECTRESET is the only way to reset the core.
-// VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
-#define SOFT_RESET  VECTRESET
-
+  // VECTRESET - Software reset of Cortex-M core
+  // For some Cortex-M devices, VECTRESET is the only way to reset the core.
+  // VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
+  #define SOFT_RESET  VECTRESET
 #endif
 
 typedef struct {
@@ -811,15 +803,13 @@ uint8_t swd_init_debug(void) {
     return 1;
 }
 
-__weak void swd_set_target_reset(uint8_t asserted) {
-    if (asserted) {
-        PIN_nRESET_OUT(0);
-    } else {
-        PIN_nRESET_OUT(1);
-    }
+__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
+{
+    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
 }
 
-uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
+uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
+{
     uint32_t val;
     swd_init();
     switch (state) {
@@ -830,7 +820,106 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
         case RESET_RUN:
             swd_set_target_reset(1);
             os_dly_wait(2);
+            swd_set_target_reset(0);
+            os_dly_wait(2);
+            break;
 
+        case RESET_RUN_WITH_DEBUG:
+            swd_set_target_reset(1);
+            os_dly_wait(1);
+            swd_set_target_reset(0);
+            os_dly_wait(1);
+            if (!swd_init_debug()) {
+                return 0;
+            }
+            // Enable debug (for semihost)
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
+                return 0;
+            }
+            // Reset again                  
+            swd_set_target_reset(1);
+            os_dly_wait(1);
+            swd_set_target_reset(0);
+            os_dly_wait(1);
+            break;
+
+        case RESET_PROGRAM:
+            swd_set_target_reset(1);
+            os_dly_wait(2);
+            swd_set_target_reset(0);
+            os_dly_wait(2);
+            if (!swd_init_debug()) {
+                return 0;
+            }
+            // Enable debug
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
+                return 0;
+            }
+            // Enable halt on reset
+            if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
+                return 0;
+            }
+            // Reset again
+            swd_set_target_reset(1);
+            os_dly_wait(2);
+            swd_set_target_reset(0);
+            os_dly_wait(2);
+            do {
+                if (!swd_read_word(DBG_HCSR, &val)) {
+                    return 0;
+                }
+            } while((val & S_HALT) == 0);
+            // Disable halt on reset
+            if (!swd_write_word(DBG_EMCR, 0)) {
+                return 0;
+            }
+            break;
+
+        case NO_DEBUG:
+            if (!swd_write_word(DBG_HCSR, DBGKEY)) {
+                return 0;
+            }
+            break;
+
+        case DEBUG:
+            if (!JTAG2SWD()) {
+                return 0;
+            }
+            if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+                return 0;
+            }
+            // Ensure CTRL/STAT register selected in DPBANKSEL
+            if (!swd_write_dp(DP_SELECT, 0)) {
+                return 0;
+            }
+            // Power up
+            if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
+                return 0;
+            }
+            // Enable debug (for semihost)
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
+                return 0;
+            }
+            break;
+
+        default:
+            return 0;
+    }
+    return 1;
+}
+
+uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
+{
+    uint32_t val;
+    swd_init();
+    switch (state) {
+        case RESET_HOLD:
+            swd_set_target_reset(1);
+            break;
+
+        case RESET_RUN:
+            swd_set_target_reset(1);
+            os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
             break;
@@ -839,101 +928,51 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             // First reset
             swd_set_target_reset(1);
             os_dly_wait(1);
-
             swd_set_target_reset(0);
             os_dly_wait(1);
-
             if (!swd_init_debug()) {
                 return 0;
             }
-
             // Enable debug (for semihost)
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
-
-            // Reset again
-            #if defined(TARGET_NRF51822)
-            //SysReset
+            // Reset again - SysReset
             swd_write_word(NVIC_AIRCR, VECTKEY | SYSRESETREQ);
-            #else                        
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-            #endif
             break;
 
         case RESET_PROGRAM:
-#if !defined(SOFT_RESET)
-            // Use hardware reset (HW RESET)
-            // First reset
-            swd_set_target_reset(1);
-            os_dly_wait(2);
-
-            swd_set_target_reset(0);
-            os_dly_wait(2);
-
             if (!swd_init_debug()) {
                 return 0;
             }
-
-            // Enable debug
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-
-            // Enable halt on reset
-            if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
-                return 0;
-            }
-
-            // Reset again
-            swd_set_target_reset(1);
-            os_dly_wait(2);
-
-            swd_set_target_reset(0);
-#else            
-            if (!swd_init_debug()) {
-                return 0;
-            }
-
             // Enable debug and halt the core (DHCSR <- 0xA05F0003)
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
                 return 0;
-            }
-            
+            }          
             // Wait until core is halted
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
                 }
             } while((val & S_HALT) == 0);
-
             // Enable halt on reset
             if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
                 return 0;
             }
-
             // Perform a soft reset
             if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
                 return 0;
             }
-#endif
             os_dly_wait(2);
-
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
                 }
             } while((val & S_HALT) == 0);
-
             // Disable halt on reset
             if (!swd_write_word(DBG_EMCR, 0)) {
                 return 0;
             }
-
             break;
 
 
@@ -944,31 +983,24 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             break;
 
         case DEBUG:
-            swd_init();
-
             if (!JTAG2SWD()) {
                 return 0;
             }
-
             if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
                 return 0;
             }
-
             // Ensure CTRL/STAT register selected in DPBANKSEL
             if (!swd_write_dp(DP_SELECT, 0)) {
                 return 0;
             }
-
             // Power up
             if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
                 return 0;
             }
-
             // Enable debug (for semihost)
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
-
             break;
 
         default:

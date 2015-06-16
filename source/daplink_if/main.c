@@ -48,7 +48,7 @@
 // USB busy time
 #define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur
-#define USB_CONNECT_DELAY       (17)
+#define USB_CONNECT_DELAY       (11)
 // Delay before target may be taken out of reset or reprogrammed after startup
 #define STARTUP_DELAY           (1)
 // Decrement to zero
@@ -396,6 +396,7 @@ __task void main_task(void)
                 case MAIN_RESET_RELEASED:
                     if (0 == gpio_get_sw_reset()) {
                         main_reset_button_state = MAIN_RESET_PRESSED;
+                        target_set_state(RESET_HOLD);
                     }
                     break;
                 

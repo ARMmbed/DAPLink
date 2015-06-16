@@ -31,6 +31,7 @@ uint8_t swd_is_semihost_event(uint32_t *r0, uint32_t *r1);
 uint8_t swd_semihost_restart(uint32_t r0);
 uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4);
 void swd_set_target_reset(uint8_t asserted);
-uint8_t swd_set_target_state(TARGET_RESET_STATE state);
+uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state);
+uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state);
 
 #endif
