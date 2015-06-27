@@ -1,6 +1,10 @@
 settings:
     export_dir:
         - projectfiles/$tool$/$project_name$
+    tools:
+        uvision:
+            template:
+                - records/tools/uvision.uvproj.tmpl
 
 module:
     tools: &module_tools

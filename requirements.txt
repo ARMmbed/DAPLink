@@ -1,1 +1,1 @@
-project_generator>=0.5
+project_generator>=0.6
