@@ -1,28 +1,5 @@
-common:
-    target:
-        - cortex-m0
-
 tool_specific:
     uvision:
-        misc:
-            ArmAdsMisc:
-                useUlib:
-                    - enable
-            Cads:
-                MiscControls:
-                    - --gnu
-                    - --c99
-                Optim:
-                    - 2
-                oTime:
-                    - enable
-            TargetOption:
-                AfterMake:
-                    RunUserProg1:
-                        - enable
-                    UserProg1Name:
-                        - fromelf --bin $L@L.axf -o $L@L.bin
-                    RunUserProg2:
-                        - disable
-                    UserProg2Name:
-                        - 
+        macros:
+            - 
+

@@ -662,7 +662,7 @@
     #define KL26Z4_SERIES
 
     /* CMSIS-style register definitions */
-    #include "MKL26Z4/MKL26Z4.h"
+    #include "MKL26Z4/MKL26Z4_registers.h"
     /* Extension register definitions */
     #include "MKL26Z4/MKL26Z4_extension.h"
     /* CPU specific feature definitions */
