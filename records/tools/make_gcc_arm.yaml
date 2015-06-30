@@ -1,7 +1,3 @@
-common:
-    target:
-        - cortex-m0
-
 tool_specific:
     make_gcc_arm:
         mcu:
