@@ -1,6 +1,6 @@
 common:
     target:
-        - cortex-m0
+        - mkl26z128xxx4
     macros:
         - INTERFACE_KL26Z
         - TARGET_NRF51822
