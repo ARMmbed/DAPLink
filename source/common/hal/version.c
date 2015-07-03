@@ -209,13 +209,17 @@ static uint8_t get_html_character(HTMLCTX *h)
             // Get next HTML character
             c = (uint8_t)(*h->phtml++);
             // Indicates substitution
+            if (c == '$') {
+                h->substitute = 1;
+                sptr = (uint8_t *)target_device.url;
+            }
             if (c == '@') {
                 // Check next HTML character
                 s = (uint8_t)(*h->phtml);
                 switch (s) {
                     case 'A':   // platform ID string
+                        h->substitute = 1;    
                         sptr = (uint8_t *)(string_auth+4); // auth string
-                        h->substitute = 1;
                         break;
 
                     // Add any additional substitutions here

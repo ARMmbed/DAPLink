@@ -29,5 +29,8 @@ const target_cfg_t target_device = {
     .flash_end      = kB(256),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
-    .disc_size      = MB(8)
+    .disc_size      = MB(8),
+    .url            = "http://developer.mbed.org",
+    .url_name       = "MBED    HTM",
+    .drive_name     = "MICROBIT   "
 };

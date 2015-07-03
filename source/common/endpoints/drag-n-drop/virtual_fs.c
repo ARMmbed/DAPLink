@@ -95,43 +95,47 @@ static const file_allocation_table_t fat = {
 };
 
 // Tool for release awareness and tracking
-#if (GIT_LOCAL_MODS == 1)
-  #warning "Building with local modifications."
-  #define GIT_LOCAL_MODS_STR "Yes"
-#else
-  #define GIT_LOCAL_MODS_STR "No"
-#endif
+//#if (GIT_LOCAL_MODS == 1)
+//  #warning "Building with local modifications."
+//  #define GIT_LOCAL_MODS_STR "Yes"
+//#else
+//  #define GIT_LOCAL_MODS_STR "No"
+//#endif
 
-#if   defined(DAPLINK_IF)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "DAPLINK  IF"
-#elif defined(DAPLINK_IF_IBM)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
-  #define URL_NAME      "IBM     HTM"
-  #define DRIVE_NAME    "DAPLINK  IF"
-#elif defined(DAPLINK_BL)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "DAPLINK  BL"
-#elif defined(MICROBIT)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://developer.mbed.org\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "MICROBIT   "
-#else
-  #error "Build type not defined"
-#endif
+//#if   defined(DAPLINK_IF)
+//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+//  #define URL_NAME      "MBED    HTM"
+//  #define DRIVE_NAME    "DAPLINK  IF"
+//#elif defined(DAPLINK_IF_IBM)
+//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
+//  #define URL_NAME      "IBM     HTM"
+//  #define DRIVE_NAME    "DAPLINK  IF"
+//#elif defined(DAPLINK_BL)
+//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
+//  #define URL_NAME      "MBED    HTM"
+//  #define DRIVE_NAME    "DAPLINK  BL"
+//#elif defined(MICROBIT)
+//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://developer.mbed.org\"/>\r\n"
+//  #define URL_NAME      "MBED    HTM"
+//  #define DRIVE_NAME    "MICROBIT   "
+//#else
+//  #error "Build type not defined"
+//#endif
 
 const uint8_t mbed_redirect_file[512] =
+    "<!doctype html>\r\n"
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
     "<html>\r\n"
     "<head>\r\n"
-    URL
+    "<meta charset=\"utf-8\">\r\n"
     "<title>mbed Website Shortcut</title>\r\n"
     "</head>\r\n"
-    "<body></body>\r\n"
-    "</html>\r\n"
-    "\r\n";
+    "<body>\r\n"
+    "<script>\r\n"
+    "window.location.replace(\"$\");\r\n"
+    "</script>\r\n"
+    "</body>\r\n"
+    "</html>\r\n";
 
 static const uint8_t details_file[512] =
     "Version: " FW_BUILD "\r\n"
@@ -177,7 +181,7 @@ static FatDirectoryEntry_t const empty_dir_entry = {
 //  be accounted for in dir1
 static root_dir_t dir1 = {
     .dir = {
-    /*uint8_t[11] */ .filename = DRIVE_NAME,
+    /*uint8_t[11] */ .filename = {""},
     /*uint8_t */ .attributes = 0x28,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -191,7 +195,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = 0x00000000
     },
     .f1  = {
-    /*uint8_t[11] */ .filename = URL_NAME,
+    /*uint8_t[11] */ .filename = {""},
     /*uint8_t */ .attributes = 0x01,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -309,7 +313,8 @@ void virtual_fs_init(void)
     // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
     // patch root direcotry entries
-    //dir1.f1.filesize = strlen((const char *)mbed_redirect_file);
+    memcpy(dir1.dir.filename, target_device.drive_name, sizeof(target_device.drive_name));
+    memcpy(dir1.f1.filename, target_device.url_name, sizeof(target_device.url_name));
     dir1.f2.filesize = strlen((const char *)details_file);
     // patch fs entries (fat sizes and all blank regions)
     fs[1].length = sizeof(fat) * mbr.logical_sectors_per_fat;

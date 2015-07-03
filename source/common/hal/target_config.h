@@ -48,6 +48,9 @@ typedef struct target_cfg{
     uint32_t ram_start;     /*!< Lowest contigous RAM address the application uses */
     uint32_t ram_end;       /*!< Highest contigous RAM address the application uses */
     uint32_t disc_size;     /*!< Size of USB disc (largest known application file) */
+    const char *url;        /*!< The URL that the shortcut on disc should direct to */
+    uint8_t url_name[11];   /*!< Name of the .htm redirect file on disc */
+    uint8_t drive_name[11]; /*!< Name of the MSC drive that */
 }target_cfg_t;
 
 extern target_cfg_t const target_device;
