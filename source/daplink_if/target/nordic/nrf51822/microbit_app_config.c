@@ -16,9 +16,9 @@
 
 #include "target_config.h"
 
-// nrf51822-mkit target information
+// microbit target information
 const target_cfg_t target_device = {
-    .board_id   = "1070",
+    .board_id   = "9900",
     .secret     = "xxxxxxxx",
     .sector_size    = 1024,
     // Assume memory is regions are same size (smallest). Flash algo should ignore requests
@@ -30,7 +30,7 @@ const target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
     .disc_size      = MB(8),
-    .url            = "http://developer.mbed.org",
+    .url            = "http://www.microbit.co.uk/getting-started",
     .url_name       = "MBED    HTM",
     .drive_name     = "MICROBIT   "
 };
