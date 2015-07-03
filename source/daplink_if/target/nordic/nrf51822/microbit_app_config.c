@@ -31,6 +31,6 @@ const target_cfg_t target_device = {
     .ram_end        = 0x20004000,
     .disc_size      = MB(8),
     .url            = "http://www.microbit.co.uk/getting-started",
-    .url_name       = "MBED    HTM",
+    .url_name       = "MICROBITHTM",
     .drive_name     = "MICROBIT   "
 };
