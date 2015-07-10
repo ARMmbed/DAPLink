@@ -23,9 +23,9 @@ void board_init(void)
   create_unique_id();
 }
 
-void HardFault_Handler(void)
-{
-    int i = 0;
-    i = i;
-    NVIC_SystemReset();
-}
+//void HardFault_Handler(void)
+//{
+//    int i = 0;
+//    i = i;
+//    NVIC_SystemReset();
+//}

@@ -1,8 +1,10 @@
 common:
     target:
-        - sam3u2c
+        #- sam3u2c
+        - cortex-m3
     macros:
         - INTERFACE_SAM3U2C
+        - __SAM3U2C__
         - DAPLINK_BL
     includes:
         - source/common/cmsis-core/atmel/sam3u2c/component
@@ -12,7 +14,7 @@ common:
         - source/daplink_bl/target/iap_api/atmel
         - source/daplink_bl/target/atmel/sam3u2c
         - source/common/cmsis-core/atmel/sam3u2c
-        - source/common/hal/atmel
+        - source/common/hal/atmel/sam3u2c
 
 tool_specific:
     uvision:
