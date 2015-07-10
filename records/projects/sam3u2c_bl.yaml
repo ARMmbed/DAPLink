@@ -1,0 +1,21 @@
+common:
+    target:
+        - sam3u2c
+    macros:
+        - INTERFACE_SAM3U2C
+        - DAPLINK_BL
+    includes:
+        - source/common/cmsis-core/atmel/sam3u2c/component
+        - source/common/cmsis-core/atmel/sam3u2c/instance
+        - source/common/cmsis-core/atmel/sam3u2c/pio
+    sources:
+        - source/daplink_bl/target/iap_api/atmel
+        - source/daplink_bl/target/atmel/sam3u2c
+        - source/common/cmsis-core/atmel/sam3u2c
+        - source/common/hal/atmel
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/atmel/sam3u2c/armcc/sam3u2c_daplink_bl.sct
+            
