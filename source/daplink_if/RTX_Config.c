@@ -40,7 +40,11 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
+#if defined(INTERFACE_LPC11U35)
+ #define OS_PRIVCNT     5
+#else
  #define OS_PRIVCNT     4
+#endif
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
@@ -49,6 +53,8 @@
 #ifndef OS_STKSIZE
   #if defined(TARGET_ATSAM3U2C)
     #define OS_STKSIZE     220//80//250
+  #elif defined(INTERFACE_LPC11U35)
+    #define OS_STKSIZE     112
   #else
     #define OS_STKSIZE     140
   #endif

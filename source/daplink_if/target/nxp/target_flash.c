@@ -81,6 +81,13 @@ target_flash_status_t target_flash_erase_sector(unsigned int sector)
     return TARGET_OK;
 }
 
+target_flash_status_t target_flash_erase_address(unsigned int addr)
+{
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, addr, 0, 0, 0)) {
+        return TARGET_FAIL_ERASE_SECTOR;
+    }
+    return TARGET_OK;
+}
 target_flash_status_t target_flash_erase_chip(void)
 {
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_chip, 0, 0, 0, 0)) {
@@ -96,7 +103,13 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
     target_flash_status_t status = TARGET_OK;
     // we need to erase a sector
     if (addr % target_device.sector_size == 0) {
-        status = target_flash_erase_sector(addr / target_device.sector_size);
+#if defined(BOARD_LPC4337) || defined(BOARD_LPC11U68)
+		if ((addr < SECTOR_BOUNDARY) || ((addr >= SECTOR_BOUNDARY) && (addr % SECTOR_BOUNDARY_ALIGN == 0))) {
+			status = target_flash_erase_address(addr);
+		}
+#else
+        status = target_flash_erase_address(addr);
+#endif
         if (status != TARGET_OK) {
             return status;
         }

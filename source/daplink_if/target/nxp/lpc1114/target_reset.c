@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "RTL.h"
+#include "debug_cm.h"
 #include "target_reset.h"
 #include "swd_host.h"
+#include "DAP_Config.h"
+#include "target_flash.h"
 
 void target_before_init_debug(void) {
     return;
@@ -25,5 +29,10 @@ uint8_t target_unlock_sequence(void) {
 }
 
 uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+    return swd_set_target_state_sw(state);
 }
+
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
+    return 0;
+}
+

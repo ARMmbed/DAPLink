@@ -33,8 +33,14 @@
 //  have to use the largest stack or these have to be defined in multiple places... Not ideal
 //  may want to move away from threads for some of these behaviours to optimize mempory usage (RAM)
 #define TIMER_TASK_30_STACK (100)
+#if defined(INTERFACE_LPC11U35)
+#define DAP_TASK_STACK      (240)
+#define SERIAL_TASK_STACK   (360)
+#define MAIN_TASK_STACK     (160)
+#else
 #define DAP_TASK_STACK      (260)
 #define SERIAL_TASK_STACK   (200)
 #define MAIN_TASK_STACK     (400)
+#endif
 
 #endif

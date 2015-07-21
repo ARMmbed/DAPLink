@@ -33,3 +33,8 @@ projects:
         - *module_if
         - records/common/rtos-cm0.yaml
         - records/projects/kl26z_nrf51822_if.yaml
+    lpc11u35_lpc1114_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm0.yaml
+        - records/projects/lpc11u35_lpc1114_if.yaml

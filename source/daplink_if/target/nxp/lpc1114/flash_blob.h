@@ -13,14 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
+#ifndef FLASH_BLOB_H
+#define FLASH_BLOB_H
 
-#include "target_struct.h"
-#include "swd_host.h"
-#include "stdint.h"
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
-const uint32_t LPC1114_FLM[] = {
+typedef struct {
+    uint32_t breakpoint;
+    uint32_t static_base;
+    uint32_t stack_pointer;
+} program_syscall_t;
+
+typedef struct {
+    const uint32_t  init;
+    const uint32_t  uninit;
+    const uint32_t  erase_chip;
+    const uint32_t  erase_sector;
+    const uint32_t  program_page;
+    const program_syscall_t sys_call_s;
+    const uint32_t  program_buffer;
+    const uint32_t  algo_start;
+    const uint32_t  algo_size;
+    const uint32_t *algo_blob;
+    const uint32_t  program_buffer_size;
+} program_target_t;
+
+static const uint32_t LPC1114_FLM[] = {
     /*0x000*/ 0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2, 
     /*0x020*/ 0x47700b00, 0x21004841, 0x22016301, 0x63416342, 0x6b416342, 0xd0fc07c9, 0x493c6382, 0x39402002, 
     /*0x040*/ 0x20006008, 0x20004770, 0xb5f84770, 0x20324c38, 0x2500444c, 0x46222607, 0x4621c261, 0x4f353114, 
@@ -33,7 +53,7 @@ const uint32_t LPC1114_FLM[] = {
     /*0x120*/ 0x696847b8, 0xd0002800, 0xbdf82001, 0x40048040, 0x00000004, 0x1fff1ff1, 0x00002ee0, 0x00000000, 
 };
 
-const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x10000025, // Init
     0x10000047, // UnInit
     0x1000004B, // EraseChip
@@ -48,9 +68,13 @@ const TARGET_FLASH flash = {
     0x10000200, // program_buffer
     0x10000000, // algo_start
     0x00000150, // algo_size
-    LPC1114_FLM,// image
+    LPC1114_FLM,// algo_blob
 	
-    256         // ram_to_flash_bytes_to_be_written
+    256         // program_buffer_size
 };
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

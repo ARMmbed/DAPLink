@@ -65,7 +65,7 @@ void gpio_init(void) {
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1<<19) | (1<<23) | (1<<24));
 }
 
-void gpio_set_dap_led(uint8_t state) {
+void gpio_set_hid_led(gpio_led_state_t state) {
     if (state) {
         LPC_GPIO->SET[0] |= (PIN_DAP_LED);
     } else {
@@ -73,7 +73,7 @@ void gpio_set_dap_led(uint8_t state) {
     }
 }
 
-void gpio_set_cdc_led(uint8_t state) {
+void gpio_set_cdc_led(gpio_led_state_t state) {
     if (state) {
       LPC_GPIO->SET[0] |= (PIN_CDC_LED);
     } else {
@@ -81,7 +81,7 @@ void gpio_set_cdc_led(uint8_t state) {
     }
 }
 
-void gpio_set_msd_led(uint8_t state) {
+void gpio_set_msc_led(gpio_led_state_t state) {
     if (state) {
         LPC_GPIO->SET[0] |= (PIN_MSD_LED);
     } else {
@@ -117,3 +117,9 @@ void FLEX_INT0_IRQHandler() {
     // ack interrupt
     LPC_GPIO_PIN_INT->IST = 0x01;
 }
+
+uint8_t gpio_get_sw_reset(void)
+{
+    return (LPC_GPIO->W[RESET_PORT] & (1 << RESET_PIN)) ? 1 : 0;
+}
+
