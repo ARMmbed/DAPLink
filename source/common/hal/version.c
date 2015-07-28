@@ -106,7 +106,7 @@ static void setup_string_id_auth()
     idx += 4;
     // string id
     for (i = 0; i < 4; i++) {
-//        string_auth[idx++] = target_device.board_id[i];
+        string_auth[idx++] = target_device.board_id[i];
     }
     for (i = 0; i < 4; i++) {
         string_auth[idx++] = fw_version[i];
@@ -166,97 +166,12 @@ uint8_t *get_uid_string_interface(void)
 static void compute_auth()
 {
     uint32_t id = 0, fw = 0, sec = 0;
-//    id = atoi((uint8_t *)target_device.board_id  , 4, 16);
+    id = atoi((uint8_t *)target_device.board_id  , 4, 16);
     fw = atoi((uint8_t *)fw_version, 4, 16);
     auth = (id) | (fw << 16);
     auth ^= unique_id[0];
-//    sec = atoi((uint8_t *)(target_device.secret), 8, 16);
+    sec = atoi((uint8_t *)(target_device.secret), 8, 16);
     auth ^= sec;
-}
-
-// HTML character reader context
-typedef struct {
-    uint8_t *phtml;        // Pointer to current position in HTML data in flash
-    uint8_t substitute;    // TRUE if characters should be read from a substitution string, otherwise read from HTML data.
-} HTMLCTX;
-
-
-static void init_html(HTMLCTX *h, uint8_t *ptr)
-{
-    h->substitute = 0;
-    h->phtml = ptr;
-    return;
-}
-
-static uint8_t get_html_character(HTMLCTX *h)
-{
-    // Returns the next character from the HTML data at h->phtml.
-    // Substitutes special sequences @V etc. with variable text.
-    uint8_t c = 0, s = 0;     // Character from HTML data
-    static uint8_t *sptr;     // Pointer to substitution string data
-    uint8_t valid = 0;        // Set to false if we need to read an additional character
-
-    do {
-        valid = 1;
-        if (h->substitute) {
-            // Check next substitution character
-            if ((uint8_t)(*sptr) == '\0') {
-                // End of substituted string
-                h->substitute = 0;
-            }
-        }
-        if (!h->substitute) {
-            // Get next HTML character
-            c = (uint8_t)(*h->phtml++);
-            // Indicates substitution
-            if (c == '$') {
-                h->substitute = 1;
-                sptr = (uint8_t *)target_device.url;
-            }
-            if (c == '@') {
-                // Check next HTML character
-                s = (uint8_t)(*h->phtml);
-                switch (s) {
-                    case 'A':   // platform ID string
-                        h->substitute = 1;    
-                        sptr = (uint8_t *)(string_auth+4); // auth string
-                        break;
-
-                    // Add any additional substitutions here
-                    case 'M':   // MAC address
-                        h->substitute = 1;
-                        sptr = (uint8_t *)&mac_string;    // target UUID only so many bits...
-                        break;
-                    
-                    case 'U':   // UUID
-                        h->substitute = 1;
-                        sptr = (uint8_t *)&uuid_string;    // target UUID only so many bits...
-                        break;
-                    
-                    default:
-                        break;
-                }
-                if (h->substitute) {
-                    // If a vaild substitution sequence was found then discard this character
-                    // Increment HTML pointer
-                    h->phtml++;
-                    // Check for the case of the substitution string being zero characters length
-                    if ((uint8_t)(*sptr) == '\0') {
-                        // Effectively the substitution is already completed
-                        h->substitute = 0;
-                        // Must read another character
-                        valid = 0;
-                    }
-                }
-            }
-        }
-        if (h->substitute) {
-            // Get next substitution character
-            c = (uint8_t)(*sptr++);
-        }
-    } while (!valid);
-
-    return c;
 }
 
 void init_auth_config(void)
@@ -267,26 +182,81 @@ void init_auth_config(void)
     setup_string_descriptor();
 }
 
+static uint32_t peek(uint8_t *buf, uint8_t c)
+{
+    uint32_t cnt = 0, ret = 0;
+    do {
+        if (*(buf) == c) {
+            ret = cnt;
+            break;
+        } else {
+            cnt++;
+        }
+    } while (*(buf++) != '\0');
+    return ret;
+}
+
+static void insert(uint8_t *buf, uint8_t *d, uint8_t *s)
+{
+    uint32_t dlen = strlen((const char *)d);
+    uint32_t slen = strlen((const char *)s);
+    // push out
+    memcpy(buf+slen, d, dlen);
+    // instert
+    memcpy(buf, s, slen);
+}
+
 void update_html_file(uint8_t *buf, uint32_t bufsize)
 {
-    // Update a file containing the version information for this firmware
-    // This assumes exclusive access to the file system (i.e. USB not enabled at this time)
-    HTMLCTX html;                 // HTML reader context
-    uint8_t c;                    // Current character from HTML reader
-    uint32_t i = 0;
+    uint8_t *orig_buf = buf;
+    uint32_t loc = 0;
     
-    if (already_unique_id == 0) {
+    if (0 == already_unique_id) {
         init_auth_config();
         already_unique_id = 1;
     }
 
-    // Write file
-    init_html(&html, (uint8_t *)mbed_redirect_file);
+    //memset(buf, ' ', bufsize);
+    memcpy(buf, mbed_redirect_file, strlen((const char *)mbed_redirect_file));
     do {
-        c = get_html_character(&html);
-        if (c != '\0') {
-            buf[i++] = c;
+        // URL replacement
+        loc = peek(buf, '$');
+        if (loc != 0) {
+            // offset the insert location
+            buf += loc;
+            insert(buf, buf+1, (uint8_t *)target_device.url);
+            //memcpy(buf, target_device.url, strlen(target_device.url));
+            // append what was over written
+            //memcpy(buf+strlen(target_device.url), mbed_redirect_file+loc+1, strlen((const char *)mbed_redirect_file));
         }
-    } while (c != '\0');
-    memset(buf+i, ' ', bufsize - i);
+        // key replacement
+        loc = peek(buf, '@');
+        if (loc != 0) {
+            buf += loc;
+            switch(*(buf+1)) {
+                case 'a':
+                case 'A':   // platform ID string
+                    // buffer, preserve data, insert data
+                    insert(buf, buf+2, string_auth+4);
+                    break;
+
+                case 'm':
+                case 'M':   // MAC address
+                    // buffer, preserve data, insert data    
+                    insert(buf, buf+2, (uint8_t *)mac_string);
+                    break;
+                
+                case 'u':
+                case 'U':   // UUID
+                    // buffer, preserve data, insert data    
+                    insert(buf, buf+2, (uint8_t *)uuid_string);
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+    } while(*buf != '\0' && loc != 0);
+    loc = strlen((const char *)orig_buf);
+    memset(orig_buf+loc, ' ', bufsize-loc-1);
 }
