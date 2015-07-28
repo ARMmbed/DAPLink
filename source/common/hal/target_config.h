@@ -33,12 +33,16 @@
 
 // Not sure what this is suppose to mean. used in swd_host and needs to be looked further into
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)
+      
+typedef struct cfg_setting {
+
+} cfg_setting_t;
 
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
  */ 
-typedef struct target_cfg{
+typedef struct target_cfg {
     uint8_t  board_id[4];   /*!< A unique identifier for the bootloader or DAPLink application */
     uint8_t  secret[8];     /*!< Mangaged by mbed.org To request a secret email support@mbed.org */
     uint32_t sector_size;   /*!< Number of bytes in a sector used by flash erase and filesystem */
@@ -51,7 +55,8 @@ typedef struct target_cfg{
     const char *url;        /*!< The URL that the shortcut on disc should direct to */
     uint8_t url_name[11];   /*!< Name of the .htm redirect file on disc */
     uint8_t drive_name[11]; /*!< Name of the MSC drive that */
-}target_cfg_t;
+    cfg_setting_t cfg;      /*!< A structure of data used to configure behaviour */
+} target_cfg_t;
 
 extern target_cfg_t const target_device;
 
