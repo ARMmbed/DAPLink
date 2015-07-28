@@ -35,8 +35,11 @@
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)
       
 typedef struct cfg_setting {
-
+    const char str[16];
+    const uint8_t num;
 } cfg_setting_t;
+
+extern const cfg_setting_t cfg_data;
 
 /**
  @struct target_cfg_t
@@ -58,7 +61,7 @@ typedef struct target_cfg {
     cfg_setting_t cfg;      /*!< A structure of data used to configure behaviour */
 } target_cfg_t;
 
-extern target_cfg_t const target_device;
+extern const target_cfg_t target_device;
 
 #ifdef __cplusplus
   }

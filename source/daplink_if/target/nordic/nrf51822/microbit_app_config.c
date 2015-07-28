@@ -16,6 +16,11 @@
 
 #include "target_config.h"
 
+const cfg_setting_t cfg_data __attribute__((section("cfgrom"))) = {
+    .str = "THIS IS A TEST",
+    .num = 254
+};
+
 // microbit target information
 const target_cfg_t target_device = {
     .board_id   = "9900",

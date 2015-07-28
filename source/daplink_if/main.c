@@ -466,5 +466,6 @@ __task void main_task(void)
 
 int main (void)
 {
+    int loc = (int*)&cfg_data;
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }
