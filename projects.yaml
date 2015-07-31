@@ -1,6 +1,6 @@
 settings:
     export_dir:
-        - projectfiles/$tool$/$project_name$
+        - projectfiles/{tool}/{project_name}
     tools:
         uvision:
             template:
