@@ -1,4 +1,6 @@
 common:
+    tools_supported:
+        - uvision
     target:
         - mkl26z128xxx4
     macros:
