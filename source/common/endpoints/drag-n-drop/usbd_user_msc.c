@@ -137,14 +137,14 @@ static const char *const known_cfg_extensions[] = {
     0
 };
 
-static uint32_t cfg_file_entry(const FatDirectoryEntry_t dir_entry)
+static uint32_t cfg_file_entry_mod(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
-    // we may see the following. Validate all or keep looking
-    //  entry with invalid or reserved first byte
-    //  entry with a false filesize.
+    // Look for the file deletion 
+    //  a know extension
+    //  and a valid file size
     while (known_cfg_extensions[i] != 0) {
-        if(1 == filename_valid(dir_entry.filename[0])) {
+        if(0xe5 == dir_entry.filename[0]) {
             if (0 == strncmp(known_cfg_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
                 return (dir_entry.filesize) ? 1 : 0;
             }
@@ -228,8 +228,8 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             // test for a known dir entry file type and also that the filesize is greater than 0
             if (1 == exec_file_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
-            } else if (1 == cfg_file_entry(tmp_file)) {
-                
+            } else if (1 == cfg_file_entry_mod(tmp_file)) {
+                goto cfg_action;
             }
         }
     }
@@ -270,6 +270,7 @@ msc_complete:
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
         configure_fail_txt(status);
+cfg_action:
         main_msc_disconnect_event();
         return;
     }

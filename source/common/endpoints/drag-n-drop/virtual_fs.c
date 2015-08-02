@@ -204,7 +204,7 @@ static root_dir_t dir1 = {
     },
 //    .f3  = {0},
     .f3 = {
-    /*uint8_t[11] */ .filename = "HARD RSTTXT",
+    /*uint8_t[11] */ .filename = "HARD RSTCFG",
     /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -266,17 +266,52 @@ virtual_media_t fs[] = {
     {(uint8_t *)&dir1, sizeof(dir1)},
     {(uint8_t *)&dir2, sizeof(dir2)},
     
-    //start of file contents
+    //start of file contents, empty area between every file (8*512 is start of data reigion need to pad between files - 1)
+    //f1 [5]
     {(uint8_t *)&mbed_redirect_file, sizeof(mbed_redirect_file)},    
-    //empty area between every file (8*512 is start of data reigion need to pad between files - 1
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f2 [7]
     {(uint8_t *)&details_file, sizeof(details_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f3 [9]
     {(uint8_t *)&hardware_rst_file, sizeof(hardware_rst_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f4 [11]
     {(uint8_t *)&fail_file,    sizeof(fail_file)},
-    
-    // add other meaningful file data entries here
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f5 [13]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f6 [15]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f7 [17]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f8 [19]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f9 [21]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f10 [23]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f11 [25]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f12 [27]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f13 [29]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f14 [31]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f15 [33]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     
     // end of fs data
     {(uint8_t *)0, 0},
@@ -319,6 +354,18 @@ void virtual_fs_init(void)
     fs[6].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
     fs[8].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
     fs[10].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[12].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[14].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[16].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[18].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[20].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[22].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[24].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[26].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[28].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[30].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[32].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[34].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
 }
 
 file_transfer_state_t file_transfer_state;
