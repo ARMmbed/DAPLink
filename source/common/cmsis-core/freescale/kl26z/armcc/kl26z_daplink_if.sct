@@ -1,4 +1,4 @@
-LR_IROM1 0x00008000 0x18000  {   ; load region size_region (96k)
+LR_IROM1 0x00008000 0x17C00  {   ; load region size_region (96k)
   ER_IROM1 0x00008000 0x17C00  { ; load address = execution address
     *.o (RESET, +First)
     * (InRoot$$Sections)
@@ -8,9 +8,8 @@ LR_IROM1 0x00008000 0x18000  {   ; load region size_region (96k)
     .ANY (+RW +ZI)
   }
 }
-LR_IROM2 0x00017C00 0x400 {	 ; reserve last sector for config data
-  ER_IROM2 0x00017C00 0x400 {
+LR_CONFIG 0x0001FC00 0x400 {	 ; reserve last sector for config data
+  ER_CONFIG 0x0001FC00 0x400 {
     .ANY (cfgrom)
   }
 }
-

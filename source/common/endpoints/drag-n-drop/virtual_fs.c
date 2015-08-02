@@ -94,34 +94,6 @@ static const file_allocation_table_t fat = {
     }
 };
 
-// Tool for release awareness and tracking
-//#if (GIT_LOCAL_MODS == 1)
-//  #warning "Building with local modifications."
-//  #define GIT_LOCAL_MODS_STR "Yes"
-//#else
-//  #define GIT_LOCAL_MODS_STR "No"
-//#endif
-
-//#if   defined(DAPLINK_IF)
-//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-//  #define URL_NAME      "MBED    HTM"
-//  #define DRIVE_NAME    "DAPLINK  IF"
-//#elif defined(DAPLINK_IF_IBM)
-//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
-//  #define URL_NAME      "IBM     HTM"
-//  #define DRIVE_NAME    "DAPLINK  IF"
-//#elif defined(DAPLINK_BL)
-//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-//  #define URL_NAME      "MBED    HTM"
-//  #define DRIVE_NAME    "DAPLINK  BL"
-//#elif defined(MICROBIT)
-//  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://developer.mbed.org\"/>\r\n"
-//  #define URL_NAME      "MBED    HTM"
-//  #define DRIVE_NAME    "MICROBIT   "
-//#else
-//  #error "Build type not defined"
-//#endif
-
 const uint8_t mbed_redirect_file[512] =
     "<!doctype html>\r\n"
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
@@ -140,8 +112,15 @@ const uint8_t mbed_redirect_file[512] =
 static const uint8_t details_file[512] =
     "Version: " FW_BUILD "\r\n"
     "Build:   " __DATE__ " " __TIME__ "\r\n";
-//    "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
-//    "Git Local mods: " GIT_LOCAL_MODS_STR "\r\n";
+
+static const uint8_t hardware_rst_file[512] =
+    "# Behaviour configuration file\r\n"
+    "# Reset can be hard or auto\r\n"
+    "#     hard - user must disconnect power, press reset button or send a serian break command\r\n"
+    "#     auto - upon programming completion, when the drive remounts the target MCU automatically resets\r\n"
+    "# \r\n"
+    "# The filename indicates how your board will behave\r\n"
+    "# Delete this file to toggle the behaviour\r\n";
 
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
@@ -157,7 +136,7 @@ static FatDirectoryEntry_t const fail_txt_dir_entry = {
 /*uint16_t*/ .first_cluster_high_16 = 0x0000,
 /*uint16_t*/ .modification_time = 0x83dc,
 /*uint16_t*/ .modification_date = 0x34bb,
-/*uint16_t*/ .first_cluster_low_16 = 0x0004,    // always must be last sector
+/*uint16_t*/ .first_cluster_low_16 = 0x0005,    // always must be last sector
 /*uint32_t*/ .filesize = sizeof(fail_file)
 };
 
@@ -222,7 +201,20 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
-    .f3  = {0},
+    .f3 = {
+    /*uint8_t[11] */ .filename = "HARD RSTTXT",
+    /*uint8_t */ .attributes = 0x01,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0021,
+    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x83dc,
+    /*uint16_t*/ .modification_date = 0x30bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0004,
+    /*uint32_t*/ .filesize = sizeof(details_file)
+    },
     .f4  = {0},
     .f5  = {0},    
     .f6  = {0},
@@ -278,6 +270,8 @@ virtual_media_t fs[] = {
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     {(uint8_t *)&details_file, sizeof(details_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&hardware_rst_file, sizeof(hardware_rst_file)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     {(uint8_t *)&fail_file,    sizeof(fail_file)},
     
     // add other meaningful file data entries here
@@ -292,11 +286,11 @@ virtual_media_t fs[] = {
 void configure_fail_txt(target_flash_status_t reason)
 {
     // set the dir entry to a file or empty it
-    dir1.f3 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
+    dir1.f4 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
     // update the filesize (pass/fail)
-    dir1.f3.filesize = strlen((const char *)fail_txt_contents[reason]);
+    dir1.f4.filesize = strlen((const char *)fail_txt_contents[reason]);
     // and the memory that we point to (file contents)
-    fs[9].sect = (uint8_t *)fail_txt_contents[reason];
+    fs[11].sect = (uint8_t *)fail_txt_contents[reason];
 }
 
 // Update known entries and mbr data when the program boots

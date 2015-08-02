@@ -16,6 +16,10 @@
 
 #include "target_config.h"
 
+static const cfg_setting_t config __attribute__((section("cfgrom"))) = {
+    .auto_rst   = 0,
+};
+
 // kl26z128 target information
 const target_cfg_t target_device = {
     .board_id   = "0000",
@@ -24,13 +28,14 @@ const target_cfg_t target_device = {
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((kB(128)-kB(32))/1024),
+    .sector_cnt     = ((kB(127)-kB(32))/1024),
     .flash_start    = kB(32),
-    .flash_end      = kB(128),
+    .flash_end      = kB(127),
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
     .disc_size      = kB(512),
     .url            = "https://developer.mbed.org/handbook/DAPLink",
     .url_name       = "DAPLINK HTM",
-    .drive_name     = "BOOTLOADER "
+    .drive_name     = "MAINTENANCE",
+    .cfg            = &config,
 };

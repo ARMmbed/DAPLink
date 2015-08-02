@@ -18,6 +18,7 @@
 #include "flash_hal.h"
 #include "target_config.h"
 #include "intelhex.h"
+#include "validation.h"
 #include "string.h"
 
 // later defined elsewhere
@@ -127,6 +128,12 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     // dont allow programming space that hasnt been allocated for the application
     if (addr < target_device.flash_start) {
         return TARGET_FAIL_HEX_INVALID_ADDRESS;
+    }
+    // validate the NVIC entry to make sure the image is correct for the execution offset address
+    if (addr == target_device.flash_start) {
+        if (0 == validate_bin_nvic(buf)) {
+            return TARGET_FAIL_HEX_INVALID_APP_OFFSET;
+        }
     }
     // store the block start address if aligned with the programming size
     uint32_t target_flash_address = (addr / MSC_BLOCK_SIZE) * MSC_BLOCK_SIZE;
