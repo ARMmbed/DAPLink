@@ -114,13 +114,14 @@ static const uint8_t details_file[512] =
     "Build:   " __DATE__ " " __TIME__ "\r\n";
 
 static const uint8_t hardware_rst_file[512] =
-    "# Behaviour configuration file\r\n"
+    "# Behavior configuration file\r\n"
     "# Reset can be hard or auto\r\n"
-    "#     hard - user must disconnect power, press reset button or send a serian break command\r\n"
-    "#     auto - upon programming completion, when the drive remounts the target MCU automatically resets\r\n"
+    "#     hard - user must disconnect power, press reset button or send a serial break command\r\n"
+    "#     auto - upon programming completion, when the drive remounts the \r\n"
+    "#            target MCU automatically resets\r\n"
     "# \r\n"
-    "# The filename indicates how your board will behave\r\n"
-    "# Delete this file to toggle the behaviour\r\n";
+    "# The filename indicates how your board will reset the target\r\n"
+    "# Delete this file to toggle the behavior\r\n";
 
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
@@ -201,9 +202,10 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
+//    .f3  = {0},
     .f3 = {
     /*uint8_t[11] */ .filename = "HARD RSTTXT",
-    /*uint8_t */ .attributes = 0x01,
+    /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
     /*uint16_t*/ .creation_time = 0x0000,
@@ -310,11 +312,13 @@ void virtual_fs_init(void)
     memcpy(dir1.dir.filename, target_device.drive_name, sizeof(target_device.drive_name));
     memcpy(dir1.f1.filename, target_device.url_name, sizeof(target_device.url_name));
     dir1.f2.filesize = strlen((const char *)details_file);
+    dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // patch fs entries (fat sizes and all blank regions)
-    fs[1].length = sizeof(fat) * mbr.logical_sectors_per_fat;
-    fs[2].length = fs[1].length;
-    fs[6].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
-    fs[8].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[1].length  = sizeof(fat) * mbr.logical_sectors_per_fat;
+    fs[2].length  = fs[1].length;
+    fs[6].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[8].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[10].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
 }
 
 file_transfer_state_t file_transfer_state;

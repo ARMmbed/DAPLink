@@ -16,9 +16,8 @@
 
 #include "target_config.h"
 
-const cfg_setting_t cfg_data __attribute__((section("cfgrom"))) = {
-    .str = "THIS IS A TEST",
-    .num = 254
+const cfg_setting_t config __attribute__((section("cfgrom"))) = {
+
 };
 
 // microbit target information
@@ -37,5 +36,6 @@ const target_cfg_t target_device = {
     .disc_size      = MB(8),
     .url            = "http://mbed.org/device/?code=@A",
     .url_name       = "MICROBITHTM",
-    .drive_name     = "MICROBIT   "
+    .drive_name     = "MICROBIT   ",
+    .cfg            = &config,
 };

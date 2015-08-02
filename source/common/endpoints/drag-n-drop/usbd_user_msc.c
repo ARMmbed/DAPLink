@@ -195,16 +195,17 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         }
     }
     // if the root dir comes we should look at it and parse for info that can end a transfer
-    else if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
+    if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
              (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 2))) {
         // start looking for a known file and some info about it
         for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
-            debug_msg("na:%.11s\tatrb:%8d\tsz:%8d\tst:%8d\tcr:%8d\tmod:%8d\taccd:%8d\r\n"
-                , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
-                , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
+//            debug_msg("na:%.11s\tatrb:%8d\tsz:%8d\tst:%8d\tcr:%8d\tmod:%8d\taccd:%8d\r\n"
+//                , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
+//                , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
+            debug_msg("name:%.11s\r\n\t sz:%8d\r\n", tmp_file.filename, tmp_file.filesize);
             // test for a known dir entry file type and also that the filesize is greater than 0
-            if (1 == wanted_dir_entry(tmp_file)) {
+            if (1 == wanted_dir_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
             }
         }

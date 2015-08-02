@@ -376,6 +376,10 @@ __task void main_task(void)
                         usb_state = USB_CONNECTED;
                         reset_file_transfer_state();
                         USBD_MSC_MediaReady = 1;
+                        // auto reset the board if configured to do so
+                        if (1 == target_device.cfg->auto_rst) {
+                            target_set_state(RESET_RUN);
+                        }
                     }
                     break;
 

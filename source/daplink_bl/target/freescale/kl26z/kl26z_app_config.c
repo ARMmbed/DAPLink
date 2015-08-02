@@ -17,7 +17,7 @@
 #include "target_config.h"
 
 static const cfg_setting_t config __attribute__((section("cfgrom"))) = {
-    .auto_rst   = 0,
+    .auto_rst   = 1,
 };
 
 // kl26z128 target information
