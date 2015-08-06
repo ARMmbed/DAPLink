@@ -91,6 +91,15 @@ __task void timer_task_30mS(void)
     }
 }
 
+// Functions called from multiple places in the main loop
+void target_reset(void)
+{
+	cdc_led_state = MAIN_LED_OFF;
+	gpio_set_cdc_led(GPIO_LED_OFF);
+	target_set_state(RESET_RUN);
+	cdc_led_state = MAIN_LED_FLASH;
+	gpio_set_cdc_led(GPIO_LED_ON);
+}
 // Functions called from other tasks to trigger events in the main task
 // parameter should be reset type??
 void main_reset_target(uint8_t send_unique_id)
@@ -288,6 +297,10 @@ __task void main_task(void)
         flags = os_evt_get();
 
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
+            // auto reset the board if configured to do so
+            if (1 == target_device.cfg->auto_rst) {
+						  target_reset();
+            }
             usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = USB_CONNECT_DELAY;
             usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
@@ -300,12 +313,7 @@ __task void main_task(void)
         }
         
         if (flags & FLAGS_MAIN_RESET) {
-            cdc_led_state = MAIN_LED_OFF;
-            gpio_set_cdc_led(GPIO_LED_OFF);
-            // Reset target
-            target_set_state(RESET_RUN);
-            cdc_led_state = MAIN_LED_FLASH;
-            gpio_set_cdc_led(GPIO_LED_ON);
+            target_reset();
         }
 
         if (flags & FLAGS_MAIN_POWERDOWN) {
@@ -376,10 +384,6 @@ __task void main_task(void)
                         usb_state = USB_CONNECTED;
                         reset_file_transfer_state();
                         USBD_MSC_MediaReady = 1;
-                        // auto reset the board if configured to do so
-                        if (1 == target_device.cfg->auto_rst) {
-                            target_set_state(RESET_RUN);
-                        }
                     }
                     break;
 
@@ -410,11 +414,7 @@ __task void main_task(void)
                     break;
                 
                 case MAIN_RESET_TARGET:
-                    cdc_led_state = MAIN_LED_OFF;
-                    gpio_set_cdc_led(GPIO_LED_OFF);
-                    target_set_state(RESET_RUN);
-                    cdc_led_state = MAIN_LED_FLASH;
-                    gpio_set_cdc_led(GPIO_LED_ON);
+                    target_reset();
                     main_reset_button_state = MAIN_RESET_RELEASED;
                     break;
             }
