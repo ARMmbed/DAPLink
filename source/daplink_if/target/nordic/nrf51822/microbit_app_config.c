@@ -16,9 +16,7 @@
 
 #include "target_config.h"
 
-const cfg_setting_t config __attribute__((section("cfgrom"))) = {
-
-};
+const cfg_setting_t config __attribute__((section("cfgrom")));
 
 // microbit target information
 const target_cfg_t target_device = {
