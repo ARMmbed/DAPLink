@@ -29,9 +29,9 @@
 //   <i> Default: 6
 #ifndef OS_TASKCNT
     #ifdef SEMIHOST
-        #define OS_TASKCNT    13
-    #else
         #define OS_TASKCNT    12
+    #else
+        #define OS_TASKCNT    11
     #endif
 #endif
 
@@ -40,24 +40,28 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
-#if defined(INTERFACE_LPC11U35)
- #define OS_PRIVCNT     5
-#else
- #define OS_PRIVCNT     4
-#endif
+ #define OS_PRIVCNT     (8)
+ // Threads with user provided stacks:
+ // -serial_process
+ // -hid_process
+ // -timer_task_30mS
+ // -main_task
+ // -USBD_RTX_CDC_ACM_EP_BULK_Event
+ // -USBD_RTX_CDC_ACM_EP_INTIN_Event
+ // -USBD_RTX_MSC_EP_BULK_Event
+ // -USBD_RTX_HID_EP_INT_Event
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
-  #if defined(TARGET_ATSAM3U2C)
-    #define OS_STKSIZE     220//80//250
-  #elif defined(INTERFACE_LPC11U35)
-    #define OS_STKSIZE     112
-  #else
-    #define OS_STKSIZE     140
-  #endif
+    #define OS_STKSIZE     80
+    // Used by:
+    // -os_idle_demon
+    // -USBD_RTX_EndPoint0
+    // -USBD_RTX_Core
+    // -USBD_RTX_Device
 #endif
 
 // <q>Check for the stack overflow
