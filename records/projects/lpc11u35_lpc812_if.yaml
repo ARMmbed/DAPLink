@@ -1,0 +1,22 @@
+common:
+    target:
+        - lpc11u35-501
+    macros:
+        - INTERFACE_LPC11U35
+        - TARGET_LPC812
+        - APP_OFFSET_32K
+        - DAPLINK_IF
+    includes:
+        - source/daplink_if/target/nxp/lpc812
+    sources:
+        - source/daplink_if/target/nxp/lpc812/app_config.c
+        - source/daplink_if/target/nxp/lpc812/target_reset.c
+        - source/common/cmsis-core/nxp/lpc11u35
+        - source/common/cmsis-core/nxp/lpc11u35/armcc
+        - source/common/hal/nxp/lpc11u35
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/nxp/lpc11u35/armcc/lpc11u35_daplink_if.sct
+

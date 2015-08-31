@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RTL.h"
-#include "debug_cm.h"
-#include "target_reset.h"
-#include "swd_host.h"
-#include "DAP_Config.h"
-#include "target_flash.h"
 
-void target_before_init_debug(void) {
-    return;
-}
+#include "target_config.h"
 
-uint8_t target_unlock_sequence(void) {
-    return 1;
-}
-
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state_hw(state);
-}
-
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
-    return 0;
-}
+// LPC812 target information
+const target_cfg_t target_device = {
+    .board_id   = "1050",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 1024,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    .sector_cnt     = (kB(16)/1024),
+    .flash_start    = 0,
+    .flash_end      = kB(16),
+    .ram_start      = 0x10000000,
+    .ram_end        = 0x10001000,
+    .disc_size      = kB(16)
+};
 
