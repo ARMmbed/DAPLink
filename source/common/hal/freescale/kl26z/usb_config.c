@@ -20,6 +20,9 @@
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
+#define USBD_RTX_CORE_STACK         136
+#define USBD_RTX_DEVICE_STACK       224
+#define USBD_RTX_ENDPOINT0_STACK    312
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)

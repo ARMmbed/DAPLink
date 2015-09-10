@@ -40,7 +40,7 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     (8)
+ #define OS_PRIVCNT     OS_TASKCNT
  // Threads with user provided stacks:
  // -serial_process
  // -hid_process
@@ -50,18 +50,18 @@
  // -USBD_RTX_CDC_ACM_EP_INTIN_Event
  // -USBD_RTX_MSC_EP_BULK_Event
  // -USBD_RTX_HID_EP_INT_Event
+ // -USBD_RTX_EndPoint0
+ // -USBD_RTX_Core
+ // -USBD_RTX_Device
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
-    #define OS_STKSIZE     80
+    #define OS_STKSIZE     34
     // Used by:
     // -os_idle_demon
-    // -USBD_RTX_EndPoint0
-    // -USBD_RTX_Core
-    // -USBD_RTX_Device
 #endif
 
 // <q>Check for the stack overflow

@@ -1174,6 +1174,16 @@ typedef struct {
   U16 size;
 } user_stack_t;
 
+#if USBD_ENABLE && !defined(USBD_RTX_CORE_STACK)
+    #error "USB core stack must be defined"
+#endif
+#if USBD_ENABLE && !defined(USBD_RTX_DEVICE_STACK)
+    #error "USB device stack must be defined"
+#endif
+#if USBD_ENABLE && !defined(USBD_RTX_ENDPOINT0_STACK)
+    #error "USB endpoint 0 must be defined"
+#endif
+
 #if !defined(USBD_HID_EP_INTIN_STACK)
   #define USBD_HID_EP_INTIN_STACK 0
 #endif
@@ -1197,6 +1207,12 @@ typedef struct {
 #endif
 #if !defined(USBD_CDC_ACM_EP_BULKOUT_STACK)
   #define USBD_CDC_ACM_EP_BULKOUT_STACK 0
+#endif
+
+#if USBD_ENABLE
+  static U64 usbd_core_stack[USBD_RTX_CORE_STACK/8];
+  static U64 usbd_device_stack[USBD_RTX_DEVICE_STACK/8];
+  static U64 usbd_endpoint0_stack[USBD_RTX_ENDPOINT0_STACK/8];
 #endif
 
 #if (USBD_HID_EP_INTIN_STACK > 0)
@@ -1275,6 +1291,9 @@ typedef struct {
 #endif
 
 static const user_stack_t user_stack_list[16] = {
+  #if USBD_ENABLE 
+    [0] = {usbd_endpoint0_stack, sizeof(usbd_endpoint0_stack)},
+  #endif
   #if (USBD_HID_EP_INTIN_STACK > 0)
     [USBD_HID_EP_INTIN] = {usbd_hid_ep_intin_stack, sizeof(usbd_hid_ep_intin_stack)},
   #endif
@@ -1309,7 +1328,8 @@ void USBD_RTX_TaskInit (void) {
 
   USBD_RTX_DevTask = 0;
   if (USBD_RTX_P_Device) {
-    USBD_RTX_DevTask = os_tsk_create(USBD_RTX_Device,      3);
+    USBD_RTX_DevTask = os_tsk_create_user(USBD_RTX_Device, 3, usbd_device_stack,
+                                          sizeof(usbd_device_stack));
   }
 
   for (i = 0; i <= 15; i++) {
@@ -1322,7 +1342,8 @@ void USBD_RTX_TaskInit (void) {
 
   USBD_RTX_CoreTask = 0;
   if (USBD_RTX_P_Core) {
-    USBD_RTX_CoreTask = os_tsk_create(USBD_RTX_Core,       2);
+    USBD_RTX_CoreTask = os_tsk_create_user(USBD_RTX_Core, 2, usbd_core_stack,
+                                           sizeof(usbd_core_stack));
   }
 #endif
 }
