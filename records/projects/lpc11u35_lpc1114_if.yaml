@@ -1,6 +1,6 @@
 common:
     target:
-        - cortex-m0
+        - lpc11u35-501
     macros:
         - INTERFACE_LPC11U35
         - TARGET_LPC1114
