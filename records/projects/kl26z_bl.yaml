@@ -12,6 +12,8 @@ common:
         - source/common/cmsis-core/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z/armcc
         - source/common/hal/freescale/kl26z
+    debugger:
+        - cmsis-dap
 
 tool_specific:
     uvision:
