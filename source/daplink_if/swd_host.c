@@ -105,11 +105,20 @@ uint8_t swd_read_dp(uint8_t adr, uint32_t *val) {
     uint32_t tmp_in;
     uint8_t tmp_out[4];
     uint8_t ack;
+	uint32_t tmp;
 
     tmp_in = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(adr);
     ack = swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
 
-    *val = (tmp_out[3] << 24) | (tmp_out[2] << 16) | (tmp_out[1] << 8) | tmp_out[0];
+    *val = 0;
+    tmp = tmp_out[3];
+    *val |= (tmp << 24);
+    tmp = tmp_out[2];
+    *val |= (tmp << 16);
+    tmp = tmp_out[1];
+    *val |= (tmp << 8);
+    tmp = tmp_out[0];
+    *val |= (tmp << 0);	
 
     return (ack == 0x01);
 }
@@ -142,6 +151,7 @@ uint8_t swd_write_dp(uint8_t adr, uint32_t val) {
 uint8_t swd_read_ap(uint32_t adr, uint32_t *val) {
     uint8_t tmp_in, ack;
     uint8_t tmp_out[4];
+	uint32_t tmp;
 
     uint32_t apsel = adr & 0xff000000;
     uint32_t bank_sel = adr & APBANKSEL;
@@ -156,7 +166,15 @@ uint8_t swd_read_ap(uint32_t adr, uint32_t *val) {
     swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
     ack = swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
 
-    *val = (tmp_out[3] << 24) | (tmp_out[2] << 16) | (tmp_out[1] << 8) | tmp_out[0];
+    *val = 0;
+    tmp = tmp_out[3];
+    *val |= (tmp << 24);
+    tmp = tmp_out[2];
+    *val |= (tmp << 16);
+    tmp = tmp_out[1];
+    *val |= (tmp << 8);
+    tmp = tmp_out[0];
+    *val |= (tmp << 0);	
 
     return (ack == 0x01);
 }
@@ -286,6 +304,7 @@ static uint8_t swd_read_data(uint32_t addr, uint32_t *val) {
     uint8_t tmp_in[4];
     uint8_t tmp_out[4];
     uint8_t req, ack;
+	uint32_t tmp;
 
     // put addr in TAR register
     int2array(tmp_in, addr, 4);
@@ -304,7 +323,15 @@ static uint8_t swd_read_data(uint32_t addr, uint32_t *val) {
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, (uint32_t *)tmp_out);
 
-    *val = (tmp_out[3] << 24) | (tmp_out[2] << 16) | (tmp_out[1] << 8) | tmp_out[0];
+    *val = 0;
+    tmp = tmp_out[3];
+    *val |= (tmp << 24);
+    tmp = tmp_out[2];
+    *val |= (tmp << 16);
+    tmp = tmp_out[1];
+    *val |= (tmp << 8);
+    tmp = tmp_out[0];
+    *val |= (tmp << 0);	
 
     return (ack == 0x01);
 }

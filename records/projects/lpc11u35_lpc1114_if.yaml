@@ -1,0 +1,28 @@
+common:
+    target:
+        - cortex-m0
+    macros:
+        - INTERFACE_LPC11U35
+        - TARGET_LPC1114
+        - APP_OFFSET_32K
+        - DAPLINK_IF
+        - OS_STKCHECK=0
+    includes:
+        - source/daplink_if/target/nxp/lpc1114
+    sources:
+        - source/daplink_if/target/nxp/lpc1114/lpc1114_app_config.c
+        - source/daplink_if/target/nxp/lpc1114/target_reset.c
+        - source/common/cmsis-core/nxp/lpc11u35
+        - source/common/cmsis-core/nxp/lpc11u35/armcc
+        - source/common/hal/nxp/lpc11u35
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/nxp/lpc11u35/armcc/lpc11u35_daplink_if.sct
+        AfterMake:
+            RunUserProg1:
+                - $KARM\BIN\ElfDwT.exe #L1
+            RunUserProg2:
+                - "fromelf --bin $L@L.axf -o $L@L.bin"
+
