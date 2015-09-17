@@ -1,1 +1,4 @@
 project_generator==0.6.1
+mbed_ls
+pyserial
+pyOCD
