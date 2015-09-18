@@ -126,7 +126,7 @@ static void set_hex_state_vars(void)
 static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf, uint32_t size)
 {
     // dont allow programming space that hasnt been allocated for the application
-    if (addr < target_device.flash_start) {
+    if ((addr < target_device.flash_start) || (addr >= target_device.flash_end)) {
         return TARGET_FAIL_HEX_INVALID_ADDRESS;
     }
     // validate the NVIC entry to make sure the image is correct for the execution offset address
