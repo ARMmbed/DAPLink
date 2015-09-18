@@ -65,7 +65,7 @@ static const char *const fail_txt_contents[] = {
     "The hex file cannot be decoded. Checksum calculation failure occurred.\r\n",
     "The hex file cannot be decoded. Parser logic failure occurred.\r\n",
     "The hex file cannot be programmed. Logic failure occurred.\r\n",
-    "The hex file addressing is not compatible with the allocated application memory map.\r\n",
+    "The hex file you dropped isn't compatible with this mode or device. Are you in MAINTENANCE mode? See HELP FAQ.HTM\r\n",
     "The hex file offset load address is not correct .\r\n",
     "",
 };

@@ -34,8 +34,8 @@ const target_cfg_t target_device = {
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
     .disc_size      = kB(512),
-    .url            = "https://developer.mbed.org/handbook/DAPLink",
-    .url_name       = "DAPLINK HTM",
+    .url            = "https://mbed.org/daplink/kl26_bl",
+    .url_name       = "HELP FAQHTM",
     .drive_name     = "MAINTENANCE",
     .cfg            = &config,
 };
