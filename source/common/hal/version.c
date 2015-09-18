@@ -24,6 +24,7 @@
 
 char mac_string[16] = {0};
 char uuid_string[33] = {0};
+char version_string[49+4] = {0};
 // Pointers to substitution strings
 const char *fw_version = (const char *)FW_BUILD;
 
@@ -93,6 +94,26 @@ static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base)
         str++;
     }
     return k;
+}
+
+static void setup_string_version()
+{
+    uint8_t i = 0, idx = 0;
+
+		/* XXXXYYYY: <board id><fw version> */
+    for (i = 0; i < 4; i++) {
+        version_string[idx++] = target_device.board_id[i];
+    }
+    for (i = 0; i < 4; i++) {
+        version_string[idx++] = fw_version[i];
+    }
+		/* Pad out to be as long as the id string */
+		for (i = 0; i < 20; i++) {
+        version_string[idx++] = 'x';
+    }
+		
+		/* Null terminate */
+    version_string[idx] = '\0';
 }
 
 static void setup_string_id_auth()
@@ -180,6 +201,7 @@ void init_auth_config(void)
     compute_auth();
     setup_string_id_auth();
     setup_string_descriptor();
+		setup_string_version();
 }
 
 static uint32_t peek(uint8_t *buf, uint8_t c)
@@ -250,6 +272,12 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
                 case 'U':   // UUID
                     // buffer, preserve data, insert data    
                     insert(buf, buf+2, (uint8_t *)uuid_string);
+                    break;
+								
+                case 'v':
+                case 'V':   // Firmware version
+                    // buffer, preserve data, insert data    
+                    insert(buf, buf+2, (uint8_t *)version_string);
                     break;
                 
                 default:

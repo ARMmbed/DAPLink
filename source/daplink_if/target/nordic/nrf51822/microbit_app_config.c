@@ -32,7 +32,7 @@ const target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
     .disc_size      = MB(8),
-    .url            = "http://mbed.org/device/?code=@A",
+    .url            = "https://www.microbit.co.uk/device?mbedcode=@V",
     .url_name       = "MICROBITHTM",
     .drive_name     = "MICROBIT   ",
     .cfg            = &config,
