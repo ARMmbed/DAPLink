@@ -32,6 +32,7 @@ can be built using the mbed build api, which requires a valid username
 and password.
 """
 import os
+import traceback
 import serial
 import shutil
 import argparse
@@ -199,7 +200,7 @@ def test_serial(port):
     return test_passed
 
 
-def test_mass_storage(filename):
+def test_mass_storage(filename, mount_point):
     """Test the mass storage endpoint
 
     Requirements:
@@ -244,7 +245,7 @@ def test_hid(target_id, filename):
 
 
 def test_board(user, password, target_id, serial_port,
-               mount_point, platform_name):
+               mount_point, platform_name, cached=False):
     """Run tests to validate DAPLINK fimrware"""
     print("**Testing board %s**" % platform_name)
     test_passed = True
@@ -255,23 +256,32 @@ def test_board(user, password, target_id, serial_port,
         if not os.path.isdir(destdir):
             os.mkdir(destdir)
 
-        # TODO - cache build?
         print
-        print 'Starting remote build'
-        filename = mbedapi.build_repo(user, password, repo, platform, destdir)
-        print 'Remote build finished'
+        filename = os.path.join("tmp",  platform_name + ".bin")
+        if cached and os.path.isfile(filename):
+            print "Using cached file"
+        else:
+            print 'Starting remote build'
+            if os.path.isfile(filename):
+                os.remove(filename)
+            built_file = mbedapi.build_repo(user, password, repo, platform,
+                                            destdir)
+            os.rename(built_file, filename)
+            print 'Remote build finished'
+
         # TODO - Load boot block
         # TODO - Load interface
         print
-        print 'Starting Mass storage test'
-        test_passed &= test_mass_storage(filename)
+        print 'Starting HID'
+        test_passed &= test_hid(target_id, filename)
         print
         print 'Starting Serial port test'
         test_passed &= test_serial(serial_port)
         print
-        print '\r\n\r\nStarting HID'
-        test_passed &= test_hid(target_id, filename)
+        print 'Starting Mass storage test'
+        test_passed &= test_mass_storage(filename, mount_point)
     except Exception:
+        traceback.print_exc()
         test_passed = False
 
     if test_passed:
@@ -288,6 +298,8 @@ if __name__ == "__main__":
                         help='MBED username', required=True)
     parser.add_argument('--password', type=str,
                         help='MBED password', required=True)
+    parser.add_argument('--cached', help='Use cached build',
+                        action="store_true", default=False, required=False)
     args = parser.parse_args()
 
     test_passed = True
@@ -299,7 +311,8 @@ if __name__ == "__main__":
         mount_point = mbed['mount_point']
         platform_name = mbed['platform_name']
         test_passed &= test_board(args.user, args.password, target_id,
-                                  serial_port, mount_point, platform_name)
+                                  serial_port, mount_point, platform_name,
+                                  args.cached)
     if test_passed:
         print "All boards passed"
         exit(0)
