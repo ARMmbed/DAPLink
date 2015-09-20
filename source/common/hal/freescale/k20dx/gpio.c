@@ -24,9 +24,6 @@
     #define SDA_USB_P5V_SENSE (7)   // PTD7
 #endif
 
-//static U16 isr_flags;
-//static OS_TID isr_notify;
-
 #define PWM_FREQUENCY    ((float)(32768.0))
 #define FTM0_MOD_VALUE    (int)((float)(SystemCoreClock)/PWM_FREQUENCY)
 
@@ -159,34 +156,3 @@ uint8_t GPIOGetButtonState(void)
 {
     return 0;
 }
-
-void gpio_enable_button_flag(OS_TID task, U16 flags)
-{
-    // When the "reset" button is pressed the ISR will set the
-    // event flags "flags" for task "task"
-
-    // Keep a local copy of task & flags
-    //isr_notify=task;
-    //isr_flags=flags;
-
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
-    //sw2 - interrupt on falling edge
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(10)|PORT_PCR_MUX(1);
-
-    NVIC_ClearPendingIRQ(PORTB_IRQn);
-    NVIC_EnableIRQ(PORTB_IRQn);
-}
-
-void PORTB_IRQHandler(void)
-{
-    if (PIN_nRESET_PORT->ISFR == (1<<PIN_nRESET_BIT))
-    {
-        PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
-        // Notify a task that the button has been pressed
-        // disable interrupt
-        PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); // IRQ Falling edge
-
-        //isr_evt_set(isr_flags, isr_notify);
-    }
-}
-
