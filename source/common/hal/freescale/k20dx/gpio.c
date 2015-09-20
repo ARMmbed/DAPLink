@@ -132,7 +132,27 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {
-    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
+    //TODO - Handle reset button on k20dx.  The logic below does not work
+    //       correctly because as soon as the reset button is pressed
+    //       reset is reconfigured as an output.  That causes this
+    //       this function to return that the reset button is not
+    //       pressed.  For now just return that the button is not
+    //       pressed.
+    uint8_t reset_driven;
+    uint8_t not_pressed;
+
+    // Normally there is a dedicated pin to set reset and a
+    // dedicated pin to read the reset button.  This is not the
+    // case for boards using the K20DX which uses the same pin
+    // to read the reset button and to trigger a reset.  Because
+    // of this button reads must be masked off when the reset
+    // button is being driven.
+    
+    // Pin is open drian so it is only driven when it is an output and set low
+    reset_driven = !(PIN_nRESET_GPIO->PDOR & PIN_nRESET) && (PIN_nRESET_GPIO->PDDR & PIN_nRESET);
+    not_pressed = PIN_nRESET_GPIO->PDIR & PIN_nRESET;
+
+    return not_pressed || reset_driven;
 }
 
 uint8_t GPIOGetButtonState(void)
