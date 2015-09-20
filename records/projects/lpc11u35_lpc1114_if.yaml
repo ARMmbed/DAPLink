@@ -3,7 +3,6 @@ common:
         - lpc11u35-501
     macros:
         - INTERFACE_LPC11U35
-        - TARGET_LPC1114
         - APP_OFFSET_32K
         - DAPLINK_IF
         - OS_STKCHECK=0

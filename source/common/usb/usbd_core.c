@@ -55,7 +55,7 @@ __RL_USBD_VER   EQU     0x470
  */
 
 void usbd_init (void) {
-#if defined(TARGET_ATSAM3U2C)
+#if defined(INTERFACE_ATSAM3U2C)
   USBD_HighSpeed     = __TRUE;
 #else
   USBD_HighSpeed     = __FALSE;

@@ -3,7 +3,6 @@ common:
         - mkl26z128xxx4
     macros:
         - INTERFACE_KL26Z
-        - TARGET_NRF51822
         - APP_OFFSET_32K
         - DAPLINK_IF
     includes:
