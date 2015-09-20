@@ -18,15 +18,6 @@
 #include "DAP_config.h"
 #include "gpio.h"
 
-#if defined(INTERFACE_GEN_32KHZ) && defined(INTERFACE_POWER_EN)
-#error "Cannot use 32kHz clock gen and power enable simultaneously."
-#endif
-
-// Pin definitions
-#define CLK_32K_PIN (6)     // PTD6
-#define POWER_EN_PIN (6)    // PTD6
-#define VTRG_FAULT_B (7)    // PTD7
-
 #if defined(BOARD_FRDM_K64F)
     #define SDA_USB_P5V_SENSE (5)   // PTD5
 #elif defined(BOARD_FRDM_KL25Z)
@@ -54,10 +45,18 @@ void gpio_init(void)
     // led on
     LED_CONNECTED_GPIO->PCOR  |= 1UL << LED_CONNECTED_BIT;
 
+    // reset button configured as gpio input
+    PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
+    
 #if defined(INTERFACE_GEN_32KHZ)
+    #if (PIN_CLK_32K_BIT != 6) || (PIN_CLK_32K_PORT != PORTD)
+        #error "Clock pin changed - FTM code below must be updated"
+    #endif
+
     // we use PTD6 to generate 32kHz clk
     // ftm0_ch6 (alternate function 4)
-    PORTD->PCR[CLK_32K_PIN] = PORT_PCR_MUX(4) | PORT_PCR_DSE_MASK;
+    PIN_CLK_32K_PORT->PCR[PIN_CLK_32K_BIT] = PORT_PCR_MUX(4) | PORT_PCR_DSE_MASK;
     // enable clk for ftm0
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
 
@@ -101,15 +100,15 @@ void gpio_init(void)
     //	VTRG_FAULT_B not currently implemented. Just power the target ;)
 	
     // configure pin as GPIO
-    PORTD->PCR[POWER_EN_PIN] = PORT_PCR_MUX(1);
+    PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
 	// force always on logic 1
-    PTD->PDOR |= 1UL << POWER_EN_PIN;
-    PTD->PDDR |= 1UL << POWER_EN_PIN;
+    PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
+    PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
 
 #endif
 }
 
-void gpio_set_dap_led(uint8_t state)
+void gpio_set_hid_led(gpio_led_state_t state)
 {
     if (state)
     {
@@ -121,14 +120,19 @@ void gpio_set_dap_led(uint8_t state)
     }
 }
 
-void gpio_set_cdc_led(uint8_t state)
+void gpio_set_cdc_led(gpio_led_state_t state)
 {
-    gpio_set_dap_led(state);
+    gpio_set_hid_led(state);
 }
 
-void gpio_set_msd_led(uint8_t state)
+void gpio_set_msc_led(gpio_led_state_t state)
 {
-    gpio_set_dap_led(state);
+    gpio_set_hid_led(state);
+}
+
+uint8_t gpio_get_sw_reset(void)
+{
+    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
 }
 
 uint8_t GPIOGetButtonState(void)

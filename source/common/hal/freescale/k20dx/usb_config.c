@@ -20,6 +20,9 @@
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
+#define USBD_RTX_CORE_STACK         136
+#define USBD_RTX_DEVICE_STACK       224
+#define USBD_RTX_ENDPOINT0_STACK    312
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
@@ -42,10 +45,10 @@
 //       <i> Device release number in binary-coded decimal (bcdDevice)
 //   </h>
 #define USBD_POWER                  0
-#define USBD_MAX_PACKET0            8
+#define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
 #define USBD_DEVDESC_IDPRODUCT      0x0204
-#define USBD_DEVDESC_BCDDEVICE      0x0100
+#define USBD_DEVDESC_BCDDEVICE      0x1000 //was 0x0100
 
 //   <h> Configuration Settings
 //     <i> These settings affect Configuration Descriptor
@@ -120,13 +123,19 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#define USBD_HID_ENABLE             1
+#ifndef HID_ENDPOINT
+  #define HID_ENDPOINT 0
+#else
+  #define HID_ENDPOINT 1
+#endif
+#define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
+#define USBD_HID_EP_INTIN_STACK     200
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          0
-#define USBD_HID_HS_WMAXPACKETSIZE  4
+#define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
 #define USBD_HID_STRDESC            L"MBED CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
@@ -165,17 +174,23 @@
 //         </h>
 //       </h>
 //     </e>
-#define USBD_MSC_ENABLE             1
+#ifndef MSC_ENDPOINT
+  #define MSC_ENDPOINT 0
+#else
+  #define MSC_ENDPOINT 1
+#endif
+#define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          2
 #define USBD_MSC_EP_BULKOUT         2
+#define USBD_MSC_EP_BULKIN_STACK    600
 #define USBD_MSC_WMAXPACKETSIZE     64
 #define USBD_MSC_HS_ENABLE          0
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
-                                    "1.0 "
+                                    "DAPLINK VFS     " \
+                                    "0.1"
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
@@ -276,8 +291,15 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
-#define USBD_CDC_ACM_ENABLE             1
+
+#ifndef CDC_ENDPOINT
+  #define CDC_ENDPOINT 0
+#else
+  #define CDC_ENDPOINT 1
+#endif
+#define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           3
+#define USBD_CDC_ACM_EP_INTIN_STACK     144
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          0
@@ -285,13 +307,14 @@
 #define USBD_CDC_ACM_HS_BINTERVAL       2
 #define USBD_CDC_ACM_EP_BULKIN          4
 #define USBD_CDC_ACM_EP_BULKOUT         4
+#define USBD_CDC_ACM_EP_BULKIN_STACK    192
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
 #define USBD_CDC_ACM_HS_BINTERVAL1      0
 #define USBD_CDC_ACM_CIF_STRDESC        L"USB_CDC"
 #define USBD_CDC_ACM_DIF_STRDESC        L"USB_CDC1"
-#define USBD_CDC_ACM_SENDBUF_SIZE       512
+#define USBD_CDC_ACM_SENDBUF_SIZE       64
 #define USBD_CDC_ACM_RECEIVEBUF_SIZE    64
 #if (((USBD_CDC_ACM_HS_ENABLE1) && (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_HS_WMAXPACKETSIZE1)) || (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_WMAXPACKETSIZE1))
 #error "Send Buffer size must be larger or equal to Bulk In maximum packet size!"

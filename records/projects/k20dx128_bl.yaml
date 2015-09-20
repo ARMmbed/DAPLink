@@ -1,0 +1,22 @@
+common:
+    target:
+        - mk20dx128xxx5
+    macros:
+        - INTERFACE_K20D5
+        - CPU_MK20DX128VFM5
+        - DAPLINK_BL
+    sources:
+        - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_k_series.c
+        - source/daplink_bl/target/iap_api/freescale/devices/MK20D5
+        - source/daplink_bl/target/freescale/k20dx
+        - source/common/cmsis-core/freescale/k20dx
+        - source/common/cmsis-core/freescale/k20dx/armcc
+        - source/common/hal/freescale/k20dx
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/freescale/k20dx/armcc/k20dx_daplink_bl.sct
+

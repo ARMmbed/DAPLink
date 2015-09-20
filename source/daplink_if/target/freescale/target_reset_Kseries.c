@@ -139,6 +139,6 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 }
 
 uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+    return swd_set_target_state_hw(state);
 }
 

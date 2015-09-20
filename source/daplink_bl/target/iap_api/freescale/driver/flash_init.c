@@ -65,7 +65,7 @@ status_t flash_init(flash_driver_t * driver)
     }
 
     // calculate the flash density from SIM_FCFG1.PFSIZE
-    uint32_t flashDensity = kFlashDensities[(SIM_FCFG1_REG(SIM) >> SIM_FCFG1_PFSIZE_SHIFT)] << 12;
+    uint32_t flashDensity = kFlashDensities[((SIM_FCFG1_REG(SIM) & SIM_FCFG1_PFSIZE_MASK) >> SIM_FCFG1_PFSIZE_SHIFT)] << 12;
     if (flashDensity == 0)
     {
         return kStatus_FlashSizeError;

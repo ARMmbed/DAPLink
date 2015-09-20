@@ -17,6 +17,7 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
+#include "IO_Config.h"
 
 //**************************************************************************************************
 /**
@@ -90,50 +91,6 @@ Provides definitions about:
 
 ///@}
 
-
-// Debug Port I/O Pins
-
-// SWCLK Pin                    PTC5
-#define PIN_SWCLK_PORT          PORTC
-#define PIN_SWCLK_GPIO          PTC
-#define PIN_SWCLK_BIT           5
-
-// SWDIO Out Pin                PTC6
-#define PIN_SWDIO_OUT_PORT      PORTC
-#define PIN_SWDIO_OUT_GPIO      PTC
-#define PIN_SWDIO_OUT_BIT       6
-
-// SWDIO In Pin                 PTC7
-#define PIN_SWDIO_IN_PORT       PORTC
-#define PIN_SWDIO_IN_GPIO       PTC
-#define PIN_SWDIO_IN_BIT        7
-
-// SWDIO Neg. Output Enable Pin PTB0
-#define PIN_SWDIO_NOE_PORT      PORTB
-#define PIN_SWDIO_NOE_GPIO      PTB
-#define PIN_SWDIO_NOE_BIT       0
-
-// SWD Neg. Enable Pin          PTA4
-#define PIN_SWD_NOE_PORT        PORTA
-#define PIN_SWD_NOE_GPIO        PTA
-#define PIN_SWD_NOE_BIT         4
-
-// nRESET Pin                   PTB1
-#define PIN_nRESET_PORT         PORTB
-#define PIN_nRESET_GPIO         PTB
-#define PIN_nRESET_BIT          1
-
-
-// Debug Unit LEDs
-
-// Connected LED                PTD4
-#define LED_CONNECTED_PORT      PORTD
-#define LED_CONNECTED_GPIO      PTD
-#define LED_CONNECTED_BIT       4
-
-// Target Running LED           Not available
-
-
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_PortIO_gr CMSIS-DAP Hardware I/O Pin Access
@@ -191,14 +148,14 @@ static __inline void PORT_SWD_SETUP (void) {
     PIN_SWD_NOE_GPIO->PCOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
 
-    PTA->PDDR = PTA->PDDR | (1<<4);
-    PTA->PCOR = PTA->PCOR | (1<<4);
-    PTB->PCOR = PTB->PCOR | (1<<0);
+    PIN_SWD_NOE_GPIO->PDDR = PIN_SWD_NOE_GPIO->PDDR | (1<<PIN_SWD_NOE_BIT);
+    PIN_SWD_NOE_GPIO->PCOR = PIN_SWD_NOE_GPIO->PCOR | (1<<PIN_SWD_NOE_BIT);
+    PIN_SWDIO_NOE_GPIO->PCOR = PIN_SWDIO_NOE_GPIO->PCOR | (1<<PIN_SWDIO_NOE_BIT);
 
-    PTB->PSOR = (1<<1);
-    PTB->PDDR = PTB->PDDR | (1<<1); //output
+    PIN_nRESET_GPIO->PSOR = PIN_nRESET;
+    PIN_nRESET_GPIO->PDDR |= PIN_nRESET; //output
 
-    PORTB->PCR[1] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); /* IRQ Falling edge */    //disable interrupt
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(00)|PORT_PCR_MUX(1); /* IRQ Falling edge */    //disable interrupt
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -210,10 +167,8 @@ static __inline void PORT_OFF (void) {
     PIN_SWD_NOE_GPIO->PSOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
 
-    PTC->PCOR = PTB->PCOR | (1<<5);
-
-    PORTB->PCR[1] |= PORT_PCR_ISF_MASK;
-    PORTB->PCR[1] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(10)|PORT_PCR_MUX(1); /* IRQ Falling edge */ ;   //disable interrupt
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_IRQC(10)|PORT_PCR_MUX(1); /* IRQ Falling edge */ ;   //disable interrupt
 }
 
 
