@@ -44,6 +44,11 @@ projects:
         - *module_if
         - records/common/rtos-cm3.yaml
         - records/projects/k20dx128_k22f_if.yaml
+    k20dx_k64f_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm3.yaml
+        - records/projects/k20dx128_k64f_if.yaml
     lpc11u35_lpc1114_if:
         - *module_tools
         - *module_if

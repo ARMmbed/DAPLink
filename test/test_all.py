@@ -44,7 +44,8 @@ TEST_REPO = 'https://developer.mbed.org/users/c1728p9/code/daplink-validation/'
 
 name_to_build_target = {
     'K22F': 'FRDM-K22F',
-    'LPC812': 'NXP-LPC800-MAX'
+    'LPC812': 'NXP-LPC800-MAX',
+    'K64F': 'FRDM-K64F'
 }
 
 
