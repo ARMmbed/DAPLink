@@ -21,9 +21,4 @@
 
 uint32_t usb_buffer[512/4];
 
-#if defined(INTERFACE_LPC11U35) && (FLASH_SECTOR_SIZE > 2048)
-  // SRAM block on LPC11U35 is limited to 2KB
-  #error "USB buffer too large for this platform"
-#endif
-
 #endif

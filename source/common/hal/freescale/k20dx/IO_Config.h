@@ -55,36 +55,16 @@
 
 // Power and fault detection
 
-#if defined(INTERFACE_POWER_EN)
+// PWR_REG_EN PTD2              PTD6
+#define PIN_POWER_EN_PORT       PORTD
+#define PIN_POWER_EN_GPIO       PTD
+#define PIN_POWER_EN_BIT        (6)
+#define PIN_POWER_EN            (1<<PIN_POWER_EN_BIT)
 
-    // PWR_REG_EN PTD2              PTD6
-    #define PIN_POWER_EN_PORT       PORTD
-    #define PIN_POWER_EN_GPIO       PTD
-    #define PIN_POWER_EN_BIT        (6)
-    #define PIN_POWER_EN            (1<<PIN_POWER_EN_BIT)
-
-    // VTRG_FAULT_B PTD7
-    #define PIN_VTRG_FAULT_B_PORT   PORTD
-    #define PIN_VTRG_FAULT_B_GPIO   PTD
-    #define PIN_VTRG_FAULT_B_BIT    (7)
-
-#endif
-
-// Clock generation
-
-#if defined(INTERFACE_GEN_32KHZ)
-
-// CLK_32K PTD6
-#define PIN_CLK_32K_PORT        PORTD
-#define PIN_CLK_32K_GPIO        PTD
-#define PIN_CLK_32K_BIT         (6)
-
-#endif
-
-#if defined(INTERFACE_GEN_32KHZ) && defined(INTERFACE_POWER_EN)
-    #error "Cannot use 32kHz clock gen and power enable simultaneously."
-#endif
-
+// VTRG_FAULT_B PTD7
+#define PIN_VTRG_FAULT_B_PORT   PORTD
+#define PIN_VTRG_FAULT_B_GPIO   PTD
+#define PIN_VTRG_FAULT_B_BIT    (7)
 
 // Debug Unit LEDs
 

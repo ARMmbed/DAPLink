@@ -24,9 +24,6 @@
     #define SDA_USB_P5V_SENSE (7)   // PTD7
 #endif
 
-#define PWM_FREQUENCY    ((float)(32768.0))
-#define FTM0_MOD_VALUE    (int)((float)(SystemCoreClock)/PWM_FREQUENCY)
-
 void gpio_init(void)
 {
     // enable clock to ports
@@ -45,64 +42,12 @@ void gpio_init(void)
     // reset button configured as gpio input
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
-    
-#if defined(INTERFACE_GEN_32KHZ)
-    #if (PIN_CLK_32K_BIT != 6) || (PIN_CLK_32K_PORT != PORTD)
-        #error "Clock pin changed - FTM code below must be updated"
-    #endif
 
-    // we use PTD6 to generate 32kHz clk
-    // ftm0_ch6 (alternate function 4)
-    PIN_CLK_32K_PORT->PCR[PIN_CLK_32K_BIT] = PORT_PCR_MUX(4) | PORT_PCR_DSE_MASK;
-    // enable clk for ftm0
-    SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
-
-    // configure PWM to generate a 32kHz clock used
-    // by the RTC module of the target.
-    // Choose EDGE-Aligned PWM:  selected when QUADEN=0, DECAPEN=0, COMBINE=0, CPWMS=0, and MSnB=1  (page 964)
-
-    //disable write protection
-    FTM0->MODE |= FTM_MODE_WPDIS_MASK;
-
-    //FTMEN is bit 0, need to set to zero so DECAPEN can be set to 0
-    FTM0->MODE &= ~FTM_MODE_FTMEN_MASK;
-
-    //QUADEN = 0; DECAPEN = 0; COMBINE = 0; CPWMS = 0; MSnB = 1
-    FTM0->QDCTRL &= ~FTM_QDCTRL_QUADEN_MASK;
-    FTM0->COMBINE &= ~FTM_COMBINE_DECAPEN3_MASK;
-    FTM0->COMBINE &= ~FTM_COMBINE_COMBINE3_MASK;
-    FTM0->SC &= ~FTM_SC_CPWMS_MASK;
-    FTM0->CONTROLS[6].CnSC |= FTM_CnSC_MSB_MASK;
-
-    // ELSnB:ELSnA = 1:0
-    FTM0->CONTROLS[6].CnSC |= FTM_CnSC_ELSB_MASK;
-    FTM0->CONTROLS[6].CnSC &= ~FTM_CnSC_ELSA_MASK;
-
-    // set CNT, MOD (period) and CNTIN
-    FTM0->CNT = 0x0;
-    FTM0->MOD = FTM0_MOD_VALUE;
-    FTM0->CNTIN = 0;
-
-    // set pulsewidth to period/2
-    FTM0->CONTROLS[6].CnV = FTM0_MOD_VALUE/2;
-
-    // select clock (system core clock)
-    FTM0->SC = FTM_SC_PS(0) | FTM_SC_CLKS(1);
-
-    //enable write protection
-    FTM0->MODE &= ~FTM_MODE_WPDIS_MASK;
-	
-#elif defined(INTERFACE_POWER_EN)
-    // POWER_EN (PTD5) and VTRG_FAULT_B (PTD7)
-    //	VTRG_FAULT_B not currently implemented. Just power the target ;)
-	
     // configure pin as GPIO
     PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
 	// force always on logic 1
     PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
     PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
-
-#endif
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)

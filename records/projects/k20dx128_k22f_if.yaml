@@ -5,7 +5,6 @@ common:
         - INTERFACE_K20D5
         - APP_OFFSET_32K
         - DAPLINK_IF
-        - INTERFACE_POWER_EN
     includes:
         - source/daplink_if/target/freescale/k22f
     sources:
