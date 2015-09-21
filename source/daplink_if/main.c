@@ -22,7 +22,6 @@
 #include "board.h"
 #include "gpio.h"
 #include "uart.h"
-#include "semihost.h"
 #include "serial.h"
 #include "tasks.h"
 #include "target_reset.h"
@@ -268,10 +267,6 @@ __task void main_task(void)
     usb_busy_count = 0;
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
-    
-    // start semihost task
-    semihost_init();
-    semihost_enable();
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
@@ -314,8 +309,6 @@ __task void main_task(void)
         }
 
         if (flags & FLAGS_MAIN_POWERDOWN) {
-            // Stop semihost task
-            semihost_disable();
             // Disable debug
             target_set_state(NO_DEBUG);
             // Disconnect USB
@@ -329,8 +322,6 @@ __task void main_task(void)
         }
 
         if (flags & FLAGS_MAIN_DISABLEDEBUG) {
-            // Stop semihost task
-            semihost_disable();
             // Disable debug
             target_set_state(NO_DEBUG);
         }

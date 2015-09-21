@@ -1169,10 +1169,157 @@ void usbd_class_init     (void)                                       {
 #endif
                                                                       }
 
-#if defined(INTERFACE_LPC11U35)
-U64 stk_usb_msc_task[600 / sizeof(U64)];
+typedef struct {
+  void * stack;
+  U16 size;
+} user_stack_t;
+
+#if USBD_ENABLE && !defined(USBD_RTX_CORE_STACK)
+    #error "USB core stack must be defined"
 #endif
-																	  
+#if USBD_ENABLE && !defined(USBD_RTX_DEVICE_STACK)
+    #error "USB device stack must be defined"
+#endif
+#if USBD_ENABLE && !defined(USBD_RTX_ENDPOINT0_STACK)
+    #error "USB endpoint 0 must be defined"
+#endif
+
+#if !defined(USBD_HID_EP_INTIN_STACK)
+  #define USBD_HID_EP_INTIN_STACK 0
+#endif
+#if !defined(USBD_HID_EP_INTOUT_STACK)
+  #define USBD_HID_EP_INTOUT_STACK 0
+#endif
+#if !defined(USBD_MSC_EP_BULKIN_STACK)
+  #define USBD_MSC_EP_BULKIN_STACK 0
+#endif
+#if !defined(USBD_MSC_EP_BULKOUT_STACK)
+  #define USBD_MSC_EP_BULKOUT_STACK 0
+#endif
+#if !defined(USBD_ADC_EP_ISOOUT_STACK)
+  #define USBD_ADC_EP_ISOOUT_STACK 0
+#endif
+#if !defined(USBD_CDC_ACM_EP_INTIN_STACK)
+  #define USBD_CDC_ACM_EP_INTIN_STACK 0
+#endif
+#if !defined(USBD_CDC_ACM_EP_BULKIN_STACK)
+  #define USBD_CDC_ACM_EP_BULKIN_STACK 0
+#endif
+#if !defined(USBD_CDC_ACM_EP_BULKOUT_STACK)
+  #define USBD_CDC_ACM_EP_BULKOUT_STACK 0
+#endif
+
+#if USBD_ENABLE
+  static U64 usbd_core_stack[USBD_RTX_CORE_STACK/8];
+  static U64 usbd_device_stack[USBD_RTX_DEVICE_STACK/8];
+  static U64 usbd_endpoint0_stack[USBD_RTX_ENDPOINT0_STACK/8];
+#endif
+
+#if (USBD_HID_EP_INTIN_STACK > 0)
+  static U64 usbd_hid_ep_intin_stack[USBD_HID_EP_INTIN_STACK/8];
+#endif
+#if (USBD_HID_EP_INTOUT_STACK > 0)
+  static U64 usbd_hid_ep_intout_stack[USBD_HID_EP_INTOUT_STACK/8];
+#endif
+#if (USBD_MSC_EP_BULKIN_STACK > 0)
+  static U64 usbd_msc_ep_bulkin_stack[USBD_MSC_EP_BULKIN_STACK/8];
+#endif
+#if (USBD_MSC_EP_BULKOUT_STACK > 0)
+  static U64 usbd_msc_ep_bulkout_stack[USBD_MSC_EP_BULKOUT_STACK/8];
+#endif
+#if (USBD_ADC_EP_ISOOUT_STACK > 0)
+  static U64 usbd_adc_ep_isoout_stack[USBD_ADC_EP_ISOOUT_STACK/8];
+#endif
+#if (USBD_CDC_ACM_EP_INTIN_STACK > 0)
+  static U64 usbd_cdc_acm_ep_intin_stack[USBD_CDC_ACM_EP_INTIN_STACK/8];
+#endif
+#if (USBD_CDC_ACM_EP_BULKIN_STACK > 0)
+  static U64 usbd_cdc_acm_ep_bulkin_stack[USBD_CDC_ACM_EP_BULKIN_STACK/8];
+#endif
+#if (USBD_CDC_ACM_EP_BULKOUT_STACK > 0)
+  static U64 usbd_cdc_acm_ep_bulkout_stack[USBD_CDC_ACM_EP_BULKOUT_STACK/8];
+#endif
+
+// Check HID
+#if (USBD_HID_ENABLE && !USBD_HID_EP_INTIN_STACK && USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT)
+  #error "USBD_HID_EP_INTIN_STACK must be defined"
+#endif
+#if (USBD_HID_ENABLE && !USBD_HID_EP_INTOUT_STACK && USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT)
+  #error "USBD_HID_EP_INTOUT_STACK must be defined"
+#endif
+#if (USBD_HID_ENABLE && USBD_HID_EP_INTIN_STACK == 0 && USBD_HID_EP_INTOUT_STACK == 0)
+  #error "HID stack must be defined"
+#endif
+#if (USBD_HID_EP_INTIN_STACK > 0 && USBD_HID_EP_INTOUT_STACK > 0 && USBD_HID_EP_INTIN == USBD_HID_EP_INTOUT)
+  #error "Multiple HID stacks defined for same EP"
+#endif
+
+// Check MSC
+#if (USBD_MSC_ENABLE && !USBD_MSC_EP_BULKIN_STACK && USBD_MSC_EP_BULKIN != USBD_MSC_EP_BULKOUT)
+  #error "USBD_MSC_EP_BULKIN_STACK must be defined"
+#endif
+#if (USBD_MSC_ENABLE && !USBD_MSC_EP_BULKOUT_STACK && USBD_MSC_EP_BULKIN != USBD_MSC_EP_BULKOUT)
+  #error "USBD_MSC_EP_BULKIN_STACK must be defined"
+#endif
+#if (USBD_MSC_ENABLE && USBD_MSC_EP_BULKIN_STACK == 0 && USBD_MSC_EP_BULKOUT_STACK == 0)
+  #error "MSC stack must be defined"
+#endif
+#if (USBD_MSC_EP_BULKIN_STACK > 0 && USBD_MSC_EP_BULKOUT_STACK > 0 && USBD_MSC_EP_BULKIN == USBD_MSC_EP_BULKOUT)
+  #error "Multiple MSC stacks defined for same EP"
+#endif
+
+// Check ADC
+#if (USBD_ADC_ENABLE && !USBD_ADC_EP_ISOOUT_STACK)
+  #error "ADC stack must be defined"
+#endif
+
+// Check CDC
+#if (USBD_CDC_ACM_ENABLE && !USBD_CDC_ACM_EP_INTIN_STACK)
+  #error "CDC ACM INTIN stack must be defined"
+#endif
+#if (USBD_CDC_ACM_ENABLE && !USBD_CDC_ACM_EP_BULKIN_STACK && USBD_CDC_ACM_EP_BULKIN != USBD_CDC_ACM_EP_BULKOUT)
+  #error "USBD_CDC_ACM_EP_BULKIN must be defined"
+#endif
+#if (USBD_CDC_ACM_ENABLE && !USBD_CDC_ACM_EP_BULKOUT_STACK && USBD_CDC_ACM_EP_BULKIN != USBD_CDC_ACM_EP_BULKOUT)
+  #error "USBD_CDC_ACM_EP_BULKOUT must be defined"
+#endif
+#if (USBD_CDC_ACM_ENABLE && USBD_CDC_ACM_EP_BULKIN_STACK == 0 && USBD_CDC_ACM_EP_BULKOUT_STACK == 0)
+  #error "CDC BULK stack must be defined"
+#endif
+#if (USBD_CDC_ACM_EP_BULKIN_STACK > 0 && USBD_CDC_ACM_EP_BULKOUT_STACK > 0 && USBD_CDC_ACM_EP_BULKIN == USBD_CDC_ACM_EP_BULKOUT)
+  #error "Multiple CDC stacks defined for same EP"
+#endif
+
+static const user_stack_t user_stack_list[16] = {
+  #if USBD_ENABLE 
+    [0] = {usbd_endpoint0_stack, sizeof(usbd_endpoint0_stack)},
+  #endif
+  #if (USBD_HID_EP_INTIN_STACK > 0)
+    [USBD_HID_EP_INTIN] = {usbd_hid_ep_intin_stack, sizeof(usbd_hid_ep_intin_stack)},
+  #endif
+  #if (USBD_HID_EP_INTOUT_STACK > 0)
+    [USBD_HID_EP_INTOUT] = {usbd_hid_ep_intout_stack, sizeof(usbd_hid_ep_intout_stack)},
+  #endif
+  #if (USBD_MSC_EP_BULKIN_STACK > 0)
+    [USBD_MSC_EP_BULKIN] = {usbd_msc_ep_bulkin_stack, sizeof(usbd_msc_ep_bulkin_stack)},
+  #endif
+  #if (USBD_MSC_EP_BULKOUT_STACK > 0)
+    [USBD_MSC_EP_BULKOUT] = {usbd_msc_ep_bulkout_stack, sizeof(usbd_msc_ep_bulkout_stack)},
+  #endif
+  #if (USBD_ADC_EP_ISOOUT_STACK > 0)
+    [USBD_ADC_EP_ISOOUT] = {usbd_adc_ep_isoout_stack, sizeof(usbd_adc_ep_isoout_stack)},
+  #endif
+  #if (USBD_CDC_ACM_EP_INTIN_STACK > 0)
+    [USBD_CDC_ACM_EP_INTIN] = {usbd_cdc_acm_ep_intin_stack, sizeof(usbd_cdc_acm_ep_intin_stack)},
+  #endif
+  #if (USBD_CDC_ACM_EP_BULKIN_STACK > 0)
+    [USBD_CDC_ACM_EP_BULKIN] = {usbd_cdc_acm_ep_bulkin_stack, sizeof(usbd_cdc_acm_ep_bulkin_stack)},
+  #endif
+  #if (USBD_CDC_ACM_EP_BULKOUT_STACK > 0)
+    [USBD_CDC_ACM_EP_BULKOUT] = {usbd_cdc_acm_ep_bulkout_stack, sizeof(usbd_cdc_acm_ep_bulkout_stack)},
+  #endif
+};
+
 void USBD_RTX_TaskInit (void) {
 
 #ifdef __RTX
@@ -1181,33 +1328,22 @@ void USBD_RTX_TaskInit (void) {
 
   USBD_RTX_DevTask = 0;
   if (USBD_RTX_P_Device) {
-    USBD_RTX_DevTask = os_tsk_create(USBD_RTX_Device,      3);
+    USBD_RTX_DevTask = os_tsk_create_user(USBD_RTX_Device, 3, usbd_device_stack,
+                                          sizeof(usbd_device_stack));
   }
 
-#if defined(INTERFACE_LPC11U35)
-// TODO - Non scalable patch https://github.com/ARMmbed/CMSIS-DAP/blob/master/shared/USBStack/INC/usb_lib.c
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
-      if (USBD_RTX_P_EP[i] != USBD_RTX_MSC_EP_BULK_Event) {
-        USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
-      } else {
-        USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, stk_usb_msc_task, sizeof(stk_usb_msc_task));
-      }
+      USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, user_stack_list[i].stack,
+                                              user_stack_list[i].size);
     }
   }
-#else  
-  for (i = 0; i <= 15; i++) {
-    USBD_RTX_EPTask[i] = 0;
-    if (USBD_RTX_P_EP[i]) {
-      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
-    }
-  }
-#endif
 
   USBD_RTX_CoreTask = 0;
   if (USBD_RTX_P_Core) {
-    USBD_RTX_CoreTask = os_tsk_create(USBD_RTX_Core,       2);
+    USBD_RTX_CoreTask = os_tsk_create_user(USBD_RTX_Core, 2, usbd_core_stack,
+                                           sizeof(usbd_core_stack));
   }
 #endif
 }

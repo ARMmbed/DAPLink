@@ -13,12 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
+#ifndef FLASH_BLOB_H
+#define FLASH_BLOB_H
 
-#include "target_struct.h"
-#include "swd_host.h"
-#include "stdint.h"
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+typedef struct {
+    uint32_t breakpoint;
+    uint32_t static_base;
+    uint32_t stack_pointer;
+} program_syscall_t;
+
+typedef struct {
+    const uint32_t  init;
+    const uint32_t  uninit;
+    const uint32_t  erase_chip;
+    const uint32_t  erase_sector;
+    const uint32_t  program_page;
+    const program_syscall_t sys_call_s;
+    const uint32_t  program_buffer;
+    const uint32_t  algo_start;
+    const uint32_t  algo_size;
+    const uint32_t *algo_blob;
+    const uint32_t  program_buffer_size;
+} program_target_t;
 
 static const uint32_t LPC812_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
@@ -36,7 +56,7 @@ static const uint32_t LPC812_FLM[] = {
     /* 0x140 */ 0x4, 0x40048040, 0x8, 0x1fff1ff1
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x10000025, // init
     0x10000049, // uninit
     0x1000004d, // erase_chip
@@ -52,5 +72,9 @@ static const TARGET_FLASH flash = {
 
     64          // ram_to_flash_bytes_to_be_written
 };
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

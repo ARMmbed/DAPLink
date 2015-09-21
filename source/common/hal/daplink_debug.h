@@ -33,36 +33,38 @@
 #endif
 
 #if defined (MSC_DEBUG)
-static inline uint32_t daplink_debug_print(const char* format, ...)
-{
-    char buf[64] = {0};
-    int32_t r = 0, s = 0;
-    va_list arg;
-    
-    va_start(arg, format);
-    r = vsprintf(buf, format, arg);
-    if(r > sizeof(buf)) {
-        return 0;
-    }
-    va_end(arg);
-    s = USBD_CDC_ACM_DataSend((uint8_t *)&buf, strlen(buf));
-    os_dly_wait(1);
-    
-    return (r == s) ? (uint32_t)r : 0;
-}
 
 static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
 {
-    uint32_t chunks = size / USBD_CDC_ACM_SENDBUF_SIZE;
-    uint32_t remainder = size % USBD_CDC_ACM_SENDBUF_SIZE;
-    uint32_t send_amt = 0;
-    int32_t i = 0;
-    for ( ; i < chunks; i++) {
-        send_amt += USBD_CDC_ACM_DataSend(buf+(i*USBD_CDC_ACM_SENDBUF_SIZE), USBD_CDC_ACM_SENDBUF_SIZE);
+    uint32_t size_sent = 0;
+    while (1) {
+        size_sent += USBD_CDC_ACM_DataSend(buf + size_sent, size - size_sent);
+        if (size_sent >= size) {
+            break;
+        }
         os_dly_wait(1);
     }
-    send_amt += USBD_CDC_ACM_DataSend(buf+((i+1)*USBD_CDC_ACM_SENDBUF_SIZE), remainder);
-    return (uint32_t)send_amt;
+    return size_sent;
+}
+
+static inline uint32_t daplink_debug_print(const char* format, ...)
+{
+    char buf[128] = {0};
+    uint32_t ret;
+    int32_t r = 0;
+    va_list arg;
+    ret = 1;
+    
+    va_start(arg, format);
+    r = vsnprintf(buf, sizeof(buf), format, arg);
+    if(r >= sizeof(buf)) {
+        r = snprintf(buf, sizeof(buf), "<Error - string length %i exceeds print buffer>\r\n", r);
+        ret = 0;
+    }
+    va_end(arg);
+    daplink_debug((uint8_t*)buf, r);
+    
+    return ret;
 }
 
 #else

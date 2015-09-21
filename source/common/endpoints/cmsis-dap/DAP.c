@@ -17,7 +17,6 @@
 #include "string.h"
 #include "DAP_config.h"
 #include "DAP.h"
-#include "semihost.h"
 
 
 #define DAP_FW_VER      "1.0"   // Firmware Version
@@ -38,7 +37,7 @@
 
  // Clock Macros
 
-#if defined(TARGET_ATSAM3U2C)
+#if defined(INTERFACE_ATSAM3U2C)
   #define MAX_SWJ_CLOCK(delay_cycles) \
     (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
   #define CLOCK_DELAY(swj_clock) \
@@ -220,8 +219,6 @@ static uint32_t DAP_Connect(uint8_t *request, uint8_t *response) {
     port = *request;
   }
 
-  semihost_disable();
-
   switch (port) {
 #if (DAP_SWD != 0)
     case DAP_PORT_SWD:
@@ -253,8 +250,6 @@ static uint32_t DAP_Disconnect(uint8_t *response) {
 
   DAP_Data.debug_port = DAP_PORT_DISABLED;
   PORT_OFF();
-
-  semihost_enable();
 
   *response = DAP_OK;
   return (1);

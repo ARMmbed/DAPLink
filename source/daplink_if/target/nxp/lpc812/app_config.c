@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef SEMIHOST_H
-#define SEMIHOST_H
 
-void semihost_init(void);
-void semihost_enable(void);
-void semihost_disable(void);
+#include "target_config.h"
 
-#endif
+// LPC812 target information
+const target_cfg_t target_device = {
+    .board_id   = "1050",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 1024,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    .sector_cnt     = (kB(16)/1024),
+    .flash_start    = 0,
+    .flash_end      = kB(16),
+    .ram_start      = 0x10000000,
+    .ram_end        = 0x10001000,
+    .disc_size      = kB(16)
+};
+

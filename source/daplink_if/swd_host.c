@@ -611,31 +611,6 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val) {
     return 0;
 }
 
-uint8_t swd_is_semihost_event(uint32_t *r0, uint32_t *r1) {
-    uint32_t val;
-
-    if (!swd_read_word(DBG_HCSR, &val)) {
-        return 0;
-    }
-
-    // Not hit breakpoint
-    if ((val & S_HALT) == 0) {
-        return 0;
-    }
-
-    // Has hit breakpoint
-    // Read r0 and r1
-    if (!swd_read_core_register(0, r0)) {
-        return 0;
-    }
-
-    if (!swd_read_core_register(1, r1)) {
-        return 0;
-    }
-
-    return 1;
-}
-
 static uint8_t swd_wait_until_halted(void) {
     // Wait for target to stop
     uint32_t val, i, timeout = MAX_TIMEOUT;
@@ -650,32 +625,6 @@ static uint8_t swd_wait_until_halted(void) {
         }
     }
     return 0;
-}
-
-// Restart target after BKPT
-uint8_t swd_semihost_restart(uint32_t r0) {
-    uint32_t pc;
-
-    // Update r0
-    if (!swd_write_core_register(0, r0)) {
-        return 0;
-    }
-
-    // Update PC
-    if (!swd_read_core_register(15, &pc)) {
-        return 0;
-    }
-
-    if (!swd_write_core_register(15, pc + 2)) {
-        return 0;
-    }
-
-    // Restart
-    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-        return 0;
-    }
-
-    return 1;
 }
 
 uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
@@ -851,25 +800,6 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             break;
 
-        case RESET_RUN_WITH_DEBUG:
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-            if (!swd_init_debug()) {
-                return 0;
-            }
-            // Enable debug (for semihost)
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-            // Reset again                  
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-            break;
-
         case RESET_PROGRAM:
             swd_set_target_reset(1);
             os_dly_wait(2);
@@ -923,7 +853,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
                 return 0;
             }
-            // Enable debug (for semihost)
+            // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
@@ -949,23 +879,6 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
-            break;
-
-        case RESET_RUN_WITH_DEBUG:
-            // First reset
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-            if (!swd_init_debug()) {
-                return 0;
-            }
-            // Enable debug (for semihost)
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-            // Reset again - SysReset
-            swd_write_word(NVIC_AIRCR, VECTKEY | SYSRESETREQ);
             break;
 
         case RESET_PROGRAM:
@@ -1024,7 +937,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
                 return 0;
             }
-            // Enable debug (for semihost)
+            // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }

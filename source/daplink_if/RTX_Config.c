@@ -28,11 +28,7 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #ifdef SEMIHOST
-        #define OS_TASKCNT    13
-    #else
-        #define OS_TASKCNT    12
-    #endif
+    #define OS_TASKCNT    11
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -40,24 +36,28 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
-#if defined(INTERFACE_LPC11U35)
- #define OS_PRIVCNT     5
-#else
- #define OS_PRIVCNT     4
-#endif
+ #define OS_PRIVCNT     OS_TASKCNT
+ // Threads with user provided stacks:
+ // -serial_process
+ // -hid_process
+ // -timer_task_30mS
+ // -main_task
+ // -USBD_RTX_CDC_ACM_EP_BULK_Event
+ // -USBD_RTX_CDC_ACM_EP_INTIN_Event
+ // -USBD_RTX_MSC_EP_BULK_Event
+ // -USBD_RTX_HID_EP_INT_Event
+ // -USBD_RTX_EndPoint0
+ // -USBD_RTX_Core
+ // -USBD_RTX_Device
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
-  #if defined(TARGET_ATSAM3U2C)
-    #define OS_STKSIZE     220//80//250
-  #elif defined(INTERFACE_LPC11U35)
-    #define OS_STKSIZE     112
-  #else
-    #define OS_STKSIZE     140
-  #endif
+    #define OS_STKSIZE     34
+    // Used by:
+    // -os_idle_demon
 #endif
 
 // <q>Check for the stack overflow
@@ -83,7 +83,7 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_MK20D5) || defined (INTERFACE_KL26Z)
+  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z)
     #define OS_CLOCK    48000000
   #elif defined(INTERFACE_ATSAM3U2C)
     #define OS_CLOCK    96000000

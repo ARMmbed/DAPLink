@@ -3,7 +3,6 @@ common:
         - mkl26z128xxx4
     macros:
         - INTERFACE_KL26Z
-        - TARGET_NRF51822
         - APP_OFFSET_32K
         - DAPLINK_IF
     includes:
@@ -14,6 +13,8 @@ common:
         - source/common/cmsis-core/freescale/kl26z
         - source/common/cmsis-core/freescale/kl26z/armcc
         - source/common/hal/freescale/kl26z
+    debugger:
+        - cmsis-dap
 
 tool_specific:
     uvision:

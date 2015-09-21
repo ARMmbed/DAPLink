@@ -109,6 +109,8 @@ def basic_test(board_id, file):
         flash = board.flash
         interface = board.interface
 
+        print "\r\n\r\n----- FLASH NEW BINARY -----"
+        flash.flashBinary(binary_file, addr_bin)
 
         print "\r\n\r\n------ GET Unique ID ------"
         print "Unique ID: %s" % board.getUniqueID()
@@ -257,9 +259,6 @@ def basic_test(board_id, file):
             print "TEST PASSED"
         else:
             print "TEST FAILED"
-
-        print "\r\n\r\n----- FLASH NEW BINARY -----"
-        flash.flashBinary(binary_file, addr_bin)
 
         target.reset()
         print "HID test complete"

@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_RESET_H
-#define TARGET_RESET_H
 
-#include "stdint.h"
+#include "target_config.h"
 
-typedef enum {
-    RESET_HOLD,              // Hold target in reset
-    RESET_PROGRAM,           // Reset target and setup for flash programming.
-    RESET_RUN,               // Reset target and run normally
-    NO_DEBUG,                // Disable debug on running target
-    DEBUG                    // Enable debug on running target
-} TARGET_RESET_STATE;
-
-void target_before_init_debug(void);
-uint8_t target_unlock_sequence(void);
-uint8_t target_set_state(TARGET_RESET_STATE state);
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size);
-
-#endif
+// k20dx128 target information
+const target_cfg_t target_device = {
+    .board_id   = "0000",
+    .secret     = "xxxxxxxx",
+    .sector_size    = 1024,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
+    .sector_cnt     = ((kB(128)-kB(32))/1024),
+    .flash_start    = kB(32),
+    .flash_end      = kB(128),
+    .ram_start      = 0x1fffe000,
+    .ram_end        = 0x20002000,
+    .disc_size      = kB(512)
+};
