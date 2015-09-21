@@ -28,11 +28,7 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #ifdef SEMIHOST
-        #define OS_TASKCNT    12
-    #else
-        #define OS_TASKCNT    11
-    #endif
+    #define OS_TASKCNT    11
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>

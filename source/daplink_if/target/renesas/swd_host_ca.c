@@ -656,36 +656,6 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val, uint32_t cmd) {
 
 }
 
-uint8_t swd_is_semihost_event(uint32_t *r0, uint32_t *r1) {
-    uint32_t val;
-    uint32_t work_cmd;
-
-    if (!swd_read_word(DBG_HCSR, &val)) {
-        return 0;
-    }
-
-    // Not hit breakpoint
-    if ((val & S_HALT) == 0) {
-        return 0;
-    }
-
-    // Has hit breakpoint
-    // Read r0 and r1
-    work_cmd = 0;
-    work_cmd = (CMD_MCR | (0 << 12));
-    if (!swd_read_core_register(0, r0, work_cmd)) {
-        return 0;
-    }
-
-    work_cmd = 0;
-    work_cmd = (CMD_MCR | (1 << 12));
-    if (!swd_read_core_register(1, r1, work_cmd)) {
-        return 0;
-    }
-
-    return 1;
-}
-
 static uint8_t swd_wait_until_halted(void) {
     // Wait for target to stop
     uint32_t val, i, timeout = MAX_TIMEOUT;
@@ -701,48 +671,6 @@ static uint8_t swd_wait_until_halted(void) {
         os_dly_wait(1);
     }
     return 0;
-}
-
-// Restart target after BKPT
-uint8_t swd_semihost_restart(uint32_t r0) {
-    uint32_t pc;
-    uint32_t work_cmd;
-
-    // Update r0
-    work_cmd = 0;
-    work_cmd = (CMD_MRC | (0 << 12));
-    if (!swd_write_core_register(0, r0, work_cmd)) {
-            return 0;
-        }
-
-    // Update PC
-    /* R15(PC) */
-    /* check PC */
-    work_cmd = 0;
-    work_cmd = (CMD_MCR | (15 << 12));
-    if (!swd_read_core_register(15, &pc, work_cmd)) {
-        return 0;
-    }
-
-    /* MRC R7 */
-    work_cmd = 0;
-    work_cmd = (CMD_MRC | (7 << 12));
-    if (!swd_write_core_register(7, pc + 4, work_cmd)) {
-        return 0;
-    }
-    /* MOV R15, R7 */
-    work_cmd = 0;
-    work_cmd = (CMD_MOV | (15 << 12) | (7));
-    if (!swd_write_word(DBGITR, work_cmd)) {
-        return 0;
-    }
-
-    // Restart
-    if (!swd_restart_req()) {
-        return 0;
-    }
-
-    return 1;
 }
 
 uint8_t swd_flash_syscall_exec(const FLASH_SYSCALL *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
@@ -938,31 +866,6 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             os_dly_wait(2);
             break;
 
-        case RESET_RUN_WITH_DEBUG:
-            // First reset
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-
-            if (!swd_init_debug()) {
-                return 0;
-            }
-
-            // Enable debug (for semihost)
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-
-            // Reset again
-            swd_set_target_reset(1);
-            os_dly_wait(1);
-
-            swd_set_target_reset(0);
-            os_dly_wait(1);
-            break;
-
         case RESET_PROGRAM:
             // Use hardware reset (HW RESET)
             // First reset
@@ -1017,7 +920,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
                 return 0;
             }
 
-            // Enable debug (for semihost)
+            // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }

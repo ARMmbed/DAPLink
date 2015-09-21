@@ -17,7 +17,6 @@
 #include "string.h"
 #include "DAP_config.h"
 #include "DAP.h"
-#include "semihost.h"
 
 
 #define DAP_FW_VER      "1.0"   // Firmware Version
@@ -220,8 +219,6 @@ static uint32_t DAP_Connect(uint8_t *request, uint8_t *response) {
     port = *request;
   }
 
-  semihost_disable();
-
   switch (port) {
 #if (DAP_SWD != 0)
     case DAP_PORT_SWD:
@@ -253,8 +250,6 @@ static uint32_t DAP_Disconnect(uint8_t *response) {
 
   DAP_Data.debug_port = DAP_PORT_DISABLED;
   PORT_OFF();
-
-  semihost_enable();
 
   *response = DAP_OK;
   return (1);

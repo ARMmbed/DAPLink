@@ -27,7 +27,6 @@
 #define DAP_TASK_PRIORITY           (15)
 #define MSC_TASK_PRIORITY           (5)
 #define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
-#define SEMIHOST_TASK_PRIORITY      (2)
 
 // trouble here is that reset for different targets is implemented differently so all targets
 //  have to use the largest stack or these have to be defined in multiple places... Not ideal
