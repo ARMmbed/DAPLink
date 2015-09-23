@@ -298,7 +298,7 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
             // auto reset the board if configured to do so
-            if (1 == target_device.cfg->auto_rst) {
+            if (NULL != target_device.cfg && 1 == target_device.cfg->auto_rst) {
 						  target_reset();
             }
             usb_busy = USB_IDLE;                    // USB not busy
