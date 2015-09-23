@@ -85,8 +85,15 @@ target_flash_status_t target_flash_erase_chip(void)
     return TARGET_OK;
 }
 
-static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size)
+static target_flash_status_t program_bin(uint32_t offset, uint8_t *buf, uint32_t size)
 {
+    uint32_t addr = target_device.flash_start + offset;
+
+    // dont allow programming space that hasnt been allocated for the application
+    if ((addr < target_device.flash_start) || (addr >= target_device.flash_end)) {
+        return TARGET_FAIL_BIN_INVALID_ADDRESS;
+    }
+
     // Erase flash if this has not been done
     if (!erased) {
         target_flash_status_t ret;
@@ -100,7 +107,7 @@ static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t s
     // called from msc logic so assumed that the smallest size is 512 (size of sector)
     //  flash algo must support this as minimum size.
     //  ToDO: akward requirement. look at flash algo flexibility in flash write sizes
-    if (0 != flash_program_page_svc(addr + target_device.flash_start, size, buf)) {
+    if (0 != flash_program_page_svc(addr, size, buf)) {
         return TARGET_FAIL_WRITE;
     }
     return TARGET_OK;

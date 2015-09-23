@@ -47,6 +47,7 @@ typedef enum target_flash_status {
     TARGET_FAIL_HEX_INVALID_ADDRESS,
     TARGET_FAIL_HEX_INVALID_APP_OFFSET,
     TARGET_HEX_FILE_EOF,
+    TARGET_FAIL_BIN_INVALID_ADDRESS
 } target_flash_status_t;
 
 static const char *const fail_txt_contents[] = {
@@ -67,6 +68,7 @@ static const char *const fail_txt_contents[] = {
     "The hex file cannot be programmed. Logic failure occurred.\r\n",
     "The hex file you dropped isn't compatible with this mode or device. Are you in MAINTENANCE mode? See HELP FAQ.HTM\r\n",
     "The hex file offset load address is not correct .\r\n",
+    "The binary file is too large.\r\n",
     "",
 };
 
