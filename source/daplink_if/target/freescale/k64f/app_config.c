@@ -29,5 +29,8 @@ const target_cfg_t target_device = {
     .flash_end      = MB(1),
     .ram_start      = 0x1FFF0000,
     .ram_end        = 0x20030000,
-    .disc_size      = MB(1)
+    .disc_size      = MB(1),
+    .url            = "http://mbed.org/device/?code=@A",
+    .url_name       = "MBED    HTM",
+    .drive_name     = "DAPLINK  IF"
 };
