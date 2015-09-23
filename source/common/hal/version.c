@@ -203,88 +203,69 @@ void init_auth_config(void)
     setup_string_descriptor();
 		setup_string_version();
 }
-
-static uint32_t peek(uint8_t *buf, uint8_t c)
+static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count)
 {
-    uint32_t cnt = 0, ret = 0;
-    do {
-        if (*(buf) == c) {
-            ret = cnt;
-            break;
-        } else {
-            cnt++;
-        }
-    } while (*(buf++) != '\0');
-    return ret;
-}
-
-static void insert(uint8_t *buf, uint8_t *d, uint8_t *s)
-{
-    uint32_t dlen = strlen((const char *)d);
-    uint32_t slen = strlen((const char *)s);
-    // push out
-    memcpy(buf+slen, d, dlen);
-    // instert
-    memcpy(buf, s, slen);
+    uint32_t buf_len = strlen((const char *)buf);
+    uint32_t str_len = strlen((const char *)new_str);
+    // push out string
+    memmove(buf + str_len, buf + strip_count, buf_len - strip_count);
+    // insert
+    memcpy(buf, new_str, str_len);
 }
 
 void update_html_file(uint8_t *buf, uint32_t bufsize)
 {
+    uint32_t size_left;
     uint8_t *orig_buf = buf;
-    uint32_t loc = 0;
+    uint8_t *insert_string;
     
     if (0 == already_unique_id) {
         init_auth_config();
         already_unique_id = 1;
     }
 
-    //memset(buf, ' ', bufsize);
+    // Zero out buffer so strlen operations don't go out of bounds
+    memset(buf, 0, bufsize);
     memcpy(buf, mbed_redirect_file, strlen((const char *)mbed_redirect_file));
     do {
-        // URL replacement
-        loc = peek(buf, '$');
-        if (loc != 0) {
-            // offset the insert location
-            buf += loc;
-            insert(buf, buf+1, (uint8_t *)target_device.url);
-            //memcpy(buf, target_device.url, strlen(target_device.url));
-            // append what was over written
-            //memcpy(buf+strlen(target_device.url), mbed_redirect_file+loc+1, strlen((const char *)mbed_redirect_file));
-        }
-        // key replacement
-        loc = peek(buf, '@');
-        if (loc != 0) {
-            buf += loc;
+        // Look for key or the end of the string
+        while ((*buf != '@') && (*buf != 0)) buf++;
+        
+        // If key was found then replace it
+        if ('@' == *buf) {
             switch(*(buf+1)) {
                 case 'a':
                 case 'A':   // platform ID string
-                    // buffer, preserve data, insert data
-                    insert(buf, buf+2, string_auth+4);
+                    insert_string = string_auth + 4;
                     break;
 
                 case 'm':
                 case 'M':   // MAC address
-                    // buffer, preserve data, insert data    
-                    insert(buf, buf+2, (uint8_t *)mac_string);
+                    insert_string = (uint8_t *)mac_string;
                     break;
                 
                 case 'u':
                 case 'U':   // UUID
-                    // buffer, preserve data, insert data    
-                    insert(buf, buf+2, (uint8_t *)uuid_string);
+                    insert_string = (uint8_t *)uuid_string;
                     break;
 								
                 case 'v':
                 case 'V':   // Firmware version
-                    // buffer, preserve data, insert data    
-                    insert(buf, buf+2, (uint8_t *)version_string);
+                    insert_string = (uint8_t *)version_string;
                     break;
                 
+                case 'r':
+                case 'R':   // URL replacement
+                    insert_string = (uint8_t *)target_device.url;
+                    break;
+
                 default:
+                    insert_string = (uint8_t *)"ERROR";
                     break;
             }
+            insert(buf, insert_string, 2);
         }
-    } while(*buf != '\0' && loc != 0);
-    loc = strlen((const char *)orig_buf);
-    memset(orig_buf+loc, ' ', bufsize-loc-1);
+    } while(*buf != '\0');
+    size_left = buf - orig_buf;
+    memset(buf, ' ', bufsize - size_left);
 }

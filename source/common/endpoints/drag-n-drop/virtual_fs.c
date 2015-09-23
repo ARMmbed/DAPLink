@@ -104,7 +104,7 @@ const uint8_t mbed_redirect_file[512] =
     "</head>\r\n"
     "<body>\r\n"
     "<script>\r\n"
-    "window.location.replace(\"$\");\r\n"
+    "window.location.replace(\"@R\");\r\n"
     "</script>\r\n"
     "</body>\r\n"
     "</html>\r\n";
