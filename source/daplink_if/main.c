@@ -91,6 +91,15 @@ __task void timer_task_30mS(void)
     }
 }
 
+// Functions called from multiple places in the main loop
+void target_reset(void)
+{
+    cdc_led_state = MAIN_LED_OFF;
+    gpio_set_cdc_led(GPIO_LED_OFF);
+    target_set_state(RESET_RUN);
+    cdc_led_state = MAIN_LED_FLASH;
+    gpio_set_cdc_led(GPIO_LED_ON);
+}
 // Functions called from other tasks to trigger events in the main task
 // parameter should be reset type??
 void main_reset_target(uint8_t send_unique_id)
@@ -177,20 +186,20 @@ __task void serial_process()
                 case SERIAL_INITIALIZE:
                     uart_initialize();
                     break;
-                
+
                 case SERIAL_UNINITIALIZE:
                     uart_uninitialize();
                     break;
-                
+
                 case SERIAL_RESET:
                     uart_reset();
                     break;
-                
+
                 case SERIAL_SET_CONFIGURATION:
                     serial_get_configuration(&config);
                     uart_set_configuration(&config);
                     break;
-                
+
                 default:
                     break;
             }
@@ -246,17 +255,17 @@ __task void main_task(void)
     os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
     // Get a reference to this task
     main_task_id = os_tsk_self();
-    
+
     // leds
     gpio_init();
     // Turn off LED
     gpio_set_hid_led(GPIO_LED_ON);
     gpio_set_cdc_led(GPIO_LED_ON);
-    gpio_set_msc_led(GPIO_LED_ON); 
-    
+    gpio_set_msc_led(GPIO_LED_ON);
+
     // do some init with the target before USB and files are configured
     prerun_target_config();
-    
+
     // Update HTML version information file
     init_auth_config();
 
@@ -270,7 +279,7 @@ __task void main_task(void)
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
-    
+
     // Target running
     target_set_state(RESET_RUN);
 
@@ -288,24 +297,23 @@ __task void main_task(void)
         flags = os_evt_get();
 
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
+            // auto reset the board if configured to do so
+            if (CFG_VALID(target_device) && 1 == target_device.cfg->auto_rst) {
+                target_reset();
+            }
             usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = USB_CONNECT_DELAY;
             usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
-        
+
         if (flags & FLAGS_MAIN_FORCE_MSC_DISCONNECT) {
             usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = 0;
             usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
-        
+
         if (flags & FLAGS_MAIN_RESET) {
-            cdc_led_state = MAIN_LED_OFF;
-            gpio_set_cdc_led(GPIO_LED_OFF);
-            // Reset target
-            target_set_state(RESET_RUN);
-            cdc_led_state = MAIN_LED_FLASH;
-            gpio_set_cdc_led(GPIO_LED_ON);
+            target_reset();
         }
 
         if (flags & FLAGS_MAIN_POWERDOWN) {
@@ -352,8 +360,8 @@ __task void main_task(void)
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
                         usb_state = USB_CONNECTING;
-						// Delay the connecting state before reconnecting to the host - improved usage with VMs
-						usb_state_count = USB_BUSY_TIME;
+                        // Delay the connecting state before reconnecting to the host - improved usage with VMs
+                        usb_state_count = USB_BUSY_TIME;
                         USBD_MSC_MediaReady = 0;
                     }
                     break;
@@ -397,24 +405,20 @@ __task void main_task(void)
                         target_set_state(RESET_HOLD);
                     }
                     break;
-                
+
                 case MAIN_RESET_PRESSED:
                     // ToDo: add a counter to do a mass erase or target recovery after xxx seconds of being held
                     if (1 == gpio_get_sw_reset()) {
                         main_reset_button_state = MAIN_RESET_TARGET;
                     }
                     break;
-                
+
                 case MAIN_RESET_TARGET:
-                    cdc_led_state = MAIN_LED_OFF;
-                    gpio_set_cdc_led(GPIO_LED_OFF);
-                    target_set_state(RESET_RUN);
-                    cdc_led_state = MAIN_LED_FLASH;
-                    gpio_set_cdc_led(GPIO_LED_ON);
+                    target_reset();
                     main_reset_button_state = MAIN_RESET_RELEASED;
                     break;
             }
-            
+
             if (hid_led_usb_activity && ((hid_led_state == MAIN_LED_FLASH) || (hid_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash DAP LED ONCE
                 if (hid_led_value) {

@@ -100,12 +100,12 @@ static uint32_t filename_valid(uint8_t c)
     return 0;
 }
 
-// known extension types
+// known executable extension types
 // CRD - chrome
 // PAR - IE
 // Extensions dont matter much if you're looking for specific file data
 //  other than size parsing but hex and srec have specific EOF records
-static const char *const known_extensions[] = {
+static const char *const known_exec_extensions[] = {
     "BIN",
     "bin",
     "HEX",
@@ -113,15 +113,39 @@ static const char *const known_extensions[] = {
     0,
 };
 
-static uint32_t wanted_dir_entry(const FatDirectoryEntry_t dir_entry)
+static uint32_t exec_file_entry(const FatDirectoryEntry_t dir_entry)
 {
     uint32_t i = 0;
     // we may see the following. Validate all or keep looking
     //  entry with invalid or reserved first byte
     //  entry with a false filesize.
-    while (known_extensions[i] != 0) {
+    while (known_exec_extensions[i] != 0) {
         if(1 == filename_valid(dir_entry.filename[0])) {
-            if (0 == strncmp(known_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
+            if (0 == strncmp(known_exec_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
+                return (dir_entry.filesize) ? 1 : 0;
+            }
+        }
+        i++;
+    }
+    return 0;
+}
+
+// known configuration file extensions
+static const char *const known_cfg_extensions[] = {
+    "CFG",
+    "cfg",
+    0
+};
+
+static uint32_t cfg_file_entry_mod(const FatDirectoryEntry_t dir_entry)
+{
+    uint32_t i = 0;
+    // Look for the file deletion 
+    //  a know extension
+    //  and a valid file size
+    while (known_cfg_extensions[i] != 0) {
+        if(0xe5 == dir_entry.filename[0]) {
+            if (0 == strncmp(known_cfg_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
                 return (dir_entry.filesize) ? 1 : 0;
             }
         }
@@ -195,17 +219,20 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
         }
     }
     // if the root dir comes we should look at it and parse for info that can end a transfer
-    else if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
+    if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
              (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 2))) {
         // start looking for a known file and some info about it
         for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
-            debug_msg("na:%.11s\tatrb:%8d\tsz:%8d\tst:%8d\tcr:%8d\tmod:%8d\taccd:%8d\r\n"
-                , tmp_file.filename, tmp_file.attributes, tmp_file.filesize, tmp_file.first_cluster_low_16
-                , tmp_file.creation_time_ms, tmp_file.modification_time, tmp_file.accessed_date);
+            debug_msg("name:%*s\t attributes:%8d\t size:%8d\r\n", 11, tmp_file.filename, tmp_file.attributes, tmp_file.filesize);
             // test for a known dir entry file type and also that the filesize is greater than 0
-            if (1 == wanted_dir_entry(tmp_file)) {
+            if (1 == exec_file_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
+            } else if (1 == cfg_file_entry_mod(tmp_file)) {
+                // here we need a handler to modify the root directory entry and change the
+                //  target_device.cfg structure based on user input
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                goto cfg_action;
             }
         }
     }
@@ -246,6 +273,7 @@ msc_complete:
         // we know the contents have been reveived. Time to eject
         file_transfer_state.transfer_started = 0;
         configure_fail_txt(status);
+cfg_action:
         main_msc_disconnect_event();
         return;
     }

@@ -18,7 +18,9 @@
 #include "flash_hal.h"
 #include "target_config.h"
 #include "intelhex.h"
+#include "validation.h"
 #include "string.h"
+#include "stdbool.h"
 
 // later defined elsewhere
 #define MSC_BLOCK_SIZE (512)
@@ -27,10 +29,12 @@ static target_flash_status_t program_hex(uint8_t *buf, uint32_t size);
 static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size);
 static void set_hex_state_vars(void);
 static extension_t file_extension;
+static bool erased = false;
 
 target_flash_status_t target_flash_init(extension_t ext)
 {
     file_extension = ext;
+    erased = false;
     if (HEX == file_extension) {
         reset_hex_parser();
         set_hex_state_vars();
@@ -40,7 +44,7 @@ target_flash_status_t target_flash_init(extension_t ext)
         return TARGET_FAIL_INIT;
     }
     
-    return target_flash_erase_chip();
+    return TARGET_OK;
 }
 
 target_flash_status_t target_flash_uninit(void)
@@ -81,12 +85,29 @@ target_flash_status_t target_flash_erase_chip(void)
     return TARGET_OK;
 }
 
-static target_flash_status_t program_bin(uint32_t addr, uint8_t *buf, uint32_t size)
+static target_flash_status_t program_bin(uint32_t offset, uint8_t *buf, uint32_t size)
 {
+    uint32_t addr = target_device.flash_start + offset;
+
+    // dont allow programming space that hasnt been allocated for the application
+    if ((addr < target_device.flash_start) || (addr >= target_device.flash_end)) {
+        return TARGET_FAIL_BIN_INVALID_ADDRESS;
+    }
+
+    // Erase flash if this has not been done
+    if (!erased) {
+        target_flash_status_t ret;
+        erased = true;
+        ret = target_flash_erase_chip();
+        if (TARGET_OK != ret) {
+            return ret;
+        }
+    }
+
     // called from msc logic so assumed that the smallest size is 512 (size of sector)
     //  flash algo must support this as minimum size.
     //  ToDO: akward requirement. look at flash algo flexibility in flash write sizes
-    if (0 != flash_program_page_svc(addr + target_device.flash_start, size, buf)) {
+    if (0 != flash_program_page_svc(addr, size, buf)) {
         return TARGET_FAIL_WRITE;
     }
     return TARGET_OK;
@@ -125,9 +146,26 @@ static void set_hex_state_vars(void)
 static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf, uint32_t size)
 {
     // dont allow programming space that hasnt been allocated for the application
-    if (addr < target_device.flash_start) {
+    if ((addr < target_device.flash_start) || (addr >= target_device.flash_end)) {
         return TARGET_FAIL_HEX_INVALID_ADDRESS;
     }
+    // validate the NVIC entry to make sure the image is correct for the execution offset address
+    if (addr == target_device.flash_start) {
+        if (0 == validate_bin_nvic(buf)) {
+            return TARGET_FAIL_HEX_INVALID_APP_OFFSET;
+        }
+    }
+
+    // Erase flash if this has not been done
+    if (!erased) {
+        target_flash_status_t ret;
+        erased = true;
+        ret = target_flash_erase_chip();
+        if (TARGET_OK != ret) {
+            return ret;
+        }
+    }
+
     // store the block start address if aligned with the programming size
     uint32_t target_flash_address = (addr / MSC_BLOCK_SIZE) * MSC_BLOCK_SIZE;
 

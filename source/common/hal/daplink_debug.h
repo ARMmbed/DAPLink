@@ -47,9 +47,9 @@ static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
     return size_sent;
 }
 
+char buf[128] = {0};
 static inline uint32_t daplink_debug_print(const char* format, ...)
 {
-    char buf[128] = {0};
     uint32_t ret;
     int32_t r = 0;
     va_list arg;

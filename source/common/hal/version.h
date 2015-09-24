@@ -18,10 +18,7 @@
 
 #include "stdint.h"
 
-// built for bootloader 1xxx
-//#define FW_BUILD "1203"
-// build for bootloader 0xxx
-#define FW_BUILD "0227"
+#define FW_BUILD "0231"
 
 void update_html_file(uint8_t *buf, uint32_t bufsize);
 uint8_t * get_uid_string          (void);

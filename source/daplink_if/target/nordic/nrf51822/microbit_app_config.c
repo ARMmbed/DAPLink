@@ -16,9 +16,11 @@
 
 #include "target_config.h"
 
-// nrf51822-mkit target information
+static const cfg_setting_t config __attribute__((section("cfgrom"), zero_init));
+
+// microbit target information
 const target_cfg_t target_device = {
-    .board_id   = "1070",
+    .board_id   = "9900",
     .secret     = "xxxxxxxx",
     .sector_size    = 1024,
     // Assume memory is regions are same size (smallest). Flash algo should ignore requests
@@ -29,5 +31,9 @@ const target_cfg_t target_device = {
     .flash_end      = kB(256),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
-    .disc_size      = MB(8)
+    .disc_size      = MB(8),
+    .url            = "https://www.microbit.co.uk/device?mbedcode=@V",
+    .url_name       = "MICROBITHTM",
+    .drive_name     = "MICROBIT   ",
+    .cfg            = &config,
 };

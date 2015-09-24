@@ -77,7 +77,8 @@ mbr_t mbr = {
         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     },
-    /*uint16_t*/.signature = 0xAA55,
+    // Set signature to 0xAA55 to make drive bootable
+    /*uint16_t*/.signature = 0x0000,
 };
 
 // FAT is only valid for files on disc that are part of this file. Not writeable during
@@ -94,50 +95,36 @@ static const file_allocation_table_t fat = {
     }
 };
 
-// Tool for release awareness and tracking
-#if (GIT_LOCAL_MODS == 1)
-  #warning "Building with local modifications."
-  #define GIT_LOCAL_MODS_STR "Yes"
-#else
-  #define GIT_LOCAL_MODS_STR "No"
-#endif
-
-#if   defined(DAPLINK_IF)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "DAPLINK  IF"
-#elif defined(DAPLINK_IF_IBM)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/partnerdevice/ibmethernet/@M\"/>\r\n"
-  #define URL_NAME      "IBM     HTM"
-  #define DRIVE_NAME    "DAPLINK  IF"
-#elif defined(DAPLINK_BL)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://mbed.org/device/?code=@A\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "DAPLINK  BL"
-#elif defined(MICROBIT)
-  #define URL "<meta http-equiv=\"refresh\" content=\"0; url=http://developer.mbed.org\"/>\r\n"
-  #define URL_NAME      "MBED    HTM"
-  #define DRIVE_NAME    "MICROBIT   "
-#else
-  #error "Build type not defined"
-#endif
-
 const uint8_t mbed_redirect_file[512] =
+    "<!doctype html>\r\n"
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
     "<html>\r\n"
     "<head>\r\n"
-    URL
+    "<meta charset=\"utf-8\">\r\n"
     "<title>mbed Website Shortcut</title>\r\n"
     "</head>\r\n"
-    "<body></body>\r\n"
-    "</html>\r\n"
-    "\r\n";
+    "<body>\r\n"
+    "<script>\r\n"
+    "window.location.replace(\"@R\");\r\n"
+    "</script>\r\n"
+    "</body>\r\n"
+    "</html>\r\n";
 
 static const uint8_t details_file[512] =
+    "DAPLink Firmware - see https://mbed.com/daplink\r\n"
     "Version: " FW_BUILD "\r\n"
     "Build:   " __DATE__ " " __TIME__ "\r\n";
-//    "Git Commit SHA: " GIT_COMMIT_SHA "\r\n"
-//    "Git Local mods: " GIT_LOCAL_MODS_STR "\r\n";
+
+static const uint8_t hardware_rst_file[512] =
+    "# Behavior configuration file\r\n"
+    "# Reset can be hard or auto\r\n"
+    "#     hard - user must disconnect power, press reset button or send a serial break command\r\n"
+    "#     auto - upon programming completion the target MCU automatically resets\r\n"
+    "#            and starts running\r\n"
+    "# \r\n"
+    "# The filename indicates how your board will reset the target\r\n"
+    "# Delete this file to toggle the behavior\r\n"
+    "# This setting can only be changed in maintenance mode\r\n";
 
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
@@ -153,7 +140,7 @@ static FatDirectoryEntry_t const fail_txt_dir_entry = {
 /*uint16_t*/ .first_cluster_high_16 = 0x0000,
 /*uint16_t*/ .modification_time = 0x83dc,
 /*uint16_t*/ .modification_date = 0x34bb,
-/*uint16_t*/ .first_cluster_low_16 = 0x0004,    // always must be last sector
+/*uint16_t*/ .first_cluster_low_16 = 0x0005,    // always must be last sector
 /*uint32_t*/ .filesize = sizeof(fail_file)
 };
 
@@ -177,7 +164,7 @@ static FatDirectoryEntry_t const empty_dir_entry = {
 //  be accounted for in dir1
 static root_dir_t dir1 = {
     .dir = {
-    /*uint8_t[11] */ .filename = DRIVE_NAME,
+    /*uint8_t[11] */ .filename = {""},
     /*uint8_t */ .attributes = 0x28,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -191,7 +178,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = 0x00000000
     },
     .f1  = {
-    /*uint8_t[11] */ .filename = URL_NAME,
+    /*uint8_t[11] */ .filename = {""},
     /*uint8_t */ .attributes = 0x01,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -218,7 +205,20 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
-    .f3  = {0},
+    .f3 = {
+    /*uint8_t[11] */ .filename = "HARD RSTCFG",
+    /*uint8_t */ .attributes = 0x02,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0021,
+    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x83dc,
+    /*uint16_t*/ .modification_date = 0x30bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0004,
+    /*uint32_t*/ .filesize = sizeof(hardware_rst_file)
+    },
     .f4  = {0},
     .f5  = {0},    
     .f6  = {0},
@@ -268,15 +268,52 @@ virtual_media_t fs[] = {
     {(uint8_t *)&dir1, sizeof(dir1)},
     {(uint8_t *)&dir2, sizeof(dir2)},
     
-    //start of file contents
+    //start of file contents, empty area between every file (8*512 is start of data reigion need to pad between files - 1)
+    //f1 [5]
     {(uint8_t *)&mbed_redirect_file, sizeof(mbed_redirect_file)},    
-    //empty area between every file (8*512 is start of data reigion need to pad between files - 1
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f2 [7]
     {(uint8_t *)&details_file, sizeof(details_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f3 [9]
+    {(uint8_t *)&hardware_rst_file, sizeof(hardware_rst_file)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f4 [11]
     {(uint8_t *)&fail_file,    sizeof(fail_file)},
-    
-    // add other meaningful file data entries here
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f5 [13]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f6 [15]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f7 [17]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f8 [19]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f9 [21]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f10 [23]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f11 [25]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f12 [27]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f13 [29]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f14 [31]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    //f15 [33]
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     
     // end of fs data
     {(uint8_t *)0, 0},
@@ -288,11 +325,11 @@ virtual_media_t fs[] = {
 void configure_fail_txt(target_flash_status_t reason)
 {
     // set the dir entry to a file or empty it
-    dir1.f3 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
+    dir1.f4 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
     // update the filesize (pass/fail)
-    dir1.f3.filesize = strlen((const char *)fail_txt_contents[reason]);
+    dir1.f4.filesize = strlen((const char *)fail_txt_contents[reason]);
     // and the memory that we point to (file contents)
-    fs[9].sect = (uint8_t *)fail_txt_contents[reason];
+    fs[11].sect = (uint8_t *)fail_txt_contents[reason];
 }
 
 // Update known entries and mbr data when the program boots
@@ -309,13 +346,28 @@ void virtual_fs_init(void)
     // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
     // patch root direcotry entries
-    //dir1.f1.filesize = strlen((const char *)mbed_redirect_file);
+    memcpy(dir1.dir.filename, target_device.drive_name, sizeof(target_device.drive_name));
+    memcpy(dir1.f1.filename, target_device.url_name, sizeof(target_device.url_name));
     dir1.f2.filesize = strlen((const char *)details_file);
+    dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // patch fs entries (fat sizes and all blank regions)
-    fs[1].length = sizeof(fat) * mbr.logical_sectors_per_fat;
-    fs[2].length = fs[1].length;
-    fs[6].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
-    fs[8].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[1].length  = sizeof(fat) * mbr.logical_sectors_per_fat;
+    fs[2].length  = fs[1].length;
+    fs[6].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[8].length  = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[10].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[12].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[14].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[16].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[18].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[20].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[22].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[24].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[26].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[28].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[30].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[32].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
+    fs[34].length = sizeof(blank_reigon)*(mbr.sectors_per_cluster - 1);
 }
 
 file_transfer_state_t file_transfer_state;

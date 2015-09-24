@@ -27,10 +27,6 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
     BX R1
 }
 
-#define APP_OFFSET      (0x8000)
-#define INITIAL_SP      (*(uint32_t *)(APP_OFFSET))
-#define RESET_HANDLER   (*(uint32_t *)(APP_OFFSET + 4))
-
 // Event flags for main task
 // Timers events
 #define FLAGS_MAIN_90MS           (1 << 0)
@@ -240,11 +236,11 @@ int main (void)
     // init leds and button
     gpio_init();
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing
-    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)APP_OFFSET)) {
+    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)target_device.flash_start)) {
         // change to the new vector table
-        SCB->VTOR = APP_OFFSET;
+        SCB->VTOR = target_device.flash_start;
         // modify stack pointer and start app
-        modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
+        modify_stack_pointer_and_start_app((*(uint32_t *)(target_device.flash_start)), (*(uint32_t *)(target_device.flash_start + 4)));
     }
     // config the usb interface descriptor and web auth token before USB connects
     //unique_string_auth_config();

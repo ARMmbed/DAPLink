@@ -34,23 +34,36 @@
 // Not sure what this is suppose to mean. used in swd_host and needs to be looked further into
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)
 
+// 'kvld' in hex - key valid
+#define CfG_KEY             0x6b766c64
+#define CFG_VALID(dev)      (NULL != (dev).cfg && CfG_KEY == (dev).cfg->key)
+      
+typedef struct cfg_setting {
+    const uint32_t key;
+    const uint8_t auto_rst;
+} cfg_setting_t;
+
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
  */ 
-typedef struct target_cfg{
-    uint8_t  board_id[4];   /*!< A unique identifier for the bootloader or DAPLink application */
-    uint8_t  secret[8];     /*!< Mangaged by mbed.org To request a secret email support@mbed.org */
-    uint32_t sector_size;   /*!< Number of bytes in a sector used by flash erase and filesystem */
-    uint32_t sector_cnt;    /*!< Number of sectors a device has */
-    uint32_t flash_start;   /*!< Address of the application entry point */
-    uint32_t flash_end;     /*!< Address where the flash ends */
-    uint32_t ram_start;     /*!< Lowest contigous RAM address the application uses */
-    uint32_t ram_end;       /*!< Highest contigous RAM address the application uses */
-    uint32_t disc_size;     /*!< Size of USB disc (largest known application file) */
-}target_cfg_t;
+typedef struct target_cfg {
+    uint8_t  board_id[4];       /*!< A unique identifier for the bootloader or DAPLink application */
+    uint8_t  secret[8];         /*!< Mangaged by mbed.org To request a secret email support@mbed.org */
+    uint32_t sector_size;       /*!< Number of bytes in a sector used by flash erase and filesystem */
+    uint32_t sector_cnt;        /*!< Number of sectors a device has */
+    uint32_t flash_start;       /*!< Address of the application entry point */
+    uint32_t flash_end;         /*!< Address where the flash ends */
+    uint32_t ram_start;         /*!< Lowest contigous RAM address the application uses */
+    uint32_t ram_end;           /*!< Highest contigous RAM address the application uses */
+    uint32_t disc_size;         /*!< Size of USB disc (largest known application file) */
+    const char *url;            /*!< The URL that the shortcut on disc should direct to */
+    uint8_t url_name[11];       /*!< Name of the .htm redirect file on disc */
+    uint8_t drive_name[11];     /*!< Name of the MSC drive that */
+    const cfg_setting_t *cfg;   /*!< A structure of data used to configure behaviour */
+} target_cfg_t;
 
-extern target_cfg_t const target_device;
+extern const target_cfg_t target_device;
 
 #ifdef __cplusplus
   }
