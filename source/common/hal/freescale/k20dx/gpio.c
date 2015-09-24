@@ -18,6 +18,10 @@
 #include "DAP_config.h"
 #include "gpio.h"
 
+// Power target in all configurations
+// aside from bootloader
+#define INTERFACE_POWER_EN  !defined(DAPLINK_BL)
+
 #if defined(BOARD_FRDM_K64F)
     #define SDA_USB_P5V_SENSE (5)   // PTD5
 #elif defined(BOARD_FRDM_KL25Z)
@@ -43,11 +47,13 @@ void gpio_init(void)
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
 
+#if INTERFACE_POWER_EN
     // configure pin as GPIO
     PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
 	// force always on logic 1
     PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
     PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
+#endif
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
