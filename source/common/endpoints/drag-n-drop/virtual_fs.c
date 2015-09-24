@@ -111,7 +111,7 @@ const uint8_t mbed_redirect_file[512] =
     "</html>\r\n";
 
 static const uint8_t details_file[512] =
-    "DAPLink Firmware - see http://mbed.org/daplink \r\n"
+    "DAPLink Firmware - see https://mbed.com/daplink\r\n"
     "Version: " FW_BUILD "\r\n"
     "Build:   " __DATE__ " " __TIME__ "\r\n";
 
@@ -119,11 +119,12 @@ static const uint8_t hardware_rst_file[512] =
     "# Behavior configuration file\r\n"
     "# Reset can be hard or auto\r\n"
     "#     hard - user must disconnect power, press reset button or send a serial break command\r\n"
-    "#     auto - upon programming completion, when the drive remounts the \r\n"
-    "#            target MCU automatically resets\r\n"
+    "#     auto - upon programming completion the target MCU automatically resets\r\n"
+    "#            and starts running\r\n"
     "# \r\n"
     "# The filename indicates how your board will reset the target\r\n"
-    "# Delete this file to toggle the behavior\r\n";
+    "# Delete this file to toggle the behavior\r\n"
+    "# This setting can only be changed in maintenance mode\r\n";
 
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
@@ -204,7 +205,6 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0003,
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
-//    .f3  = {0},
     .f3 = {
     /*uint8_t[11] */ .filename = "HARD RSTCFG",
     /*uint8_t */ .attributes = 0x02,
@@ -217,7 +217,7 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .modification_time = 0x83dc,
     /*uint16_t*/ .modification_date = 0x30bb,
     /*uint16_t*/ .first_cluster_low_16 = 0x0004,
-    /*uint32_t*/ .filesize = sizeof(details_file)
+    /*uint32_t*/ .filesize = sizeof(hardware_rst_file)
     },
     .f4  = {0},
     .f5  = {0},    

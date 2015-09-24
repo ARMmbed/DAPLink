@@ -17,6 +17,7 @@
 #include "target_config.h"
 
 static const cfg_setting_t config __attribute__((section("cfgrom"))) = {
+    .key        = CfG_KEY,
     .auto_rst   = 1,
 };
 
@@ -34,7 +35,7 @@ const target_cfg_t target_device = {
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
     .disc_size      = kB(512),
-    .url            = "https://mbed.org/daplink/kl26_bl",
+    .url            = "https://mbed.com/daplink",
     .url_name       = "HELP FAQHTM",
     .drive_name     = "MAINTENANCE",
     .cfg            = &config,

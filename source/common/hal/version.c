@@ -100,19 +100,19 @@ static void setup_string_version()
 {
     uint8_t i = 0, idx = 0;
 
-		/* XXXXYYYY: <board id><fw version> */
+        /* XXXXYYYY: <board id><fw version> */
     for (i = 0; i < 4; i++) {
         version_string[idx++] = target_device.board_id[i];
     }
     for (i = 0; i < 4; i++) {
         version_string[idx++] = fw_version[i];
     }
-		/* Pad out to be as long as the id string */
-		for (i = 0; i < 20; i++) {
+        /* Pad out to be as long as the id string */
+        for (i = 0; i < 20; i++) {
         version_string[idx++] = 'x';
     }
-		
-		/* Null terminate */
+
+        /* Null terminate */
     version_string[idx] = '\0';
 }
 
@@ -201,7 +201,7 @@ void init_auth_config(void)
     compute_auth();
     setup_string_id_auth();
     setup_string_descriptor();
-		setup_string_version();
+    setup_string_version();
 }
 static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count)
 {
@@ -218,7 +218,7 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
     uint32_t size_left;
     uint8_t *orig_buf = buf;
     uint8_t *insert_string;
-    
+
     if (0 == already_unique_id) {
         init_auth_config();
         already_unique_id = 1;
@@ -230,7 +230,7 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
     do {
         // Look for key or the end of the string
         while ((*buf != '@') && (*buf != 0)) buf++;
-        
+
         // If key was found then replace it
         if ('@' == *buf) {
             switch(*(buf+1)) {
@@ -243,17 +243,17 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
                 case 'M':   // MAC address
                     insert_string = (uint8_t *)mac_string;
                     break;
-                
+
                 case 'u':
                 case 'U':   // UUID
                     insert_string = (uint8_t *)uuid_string;
                     break;
-								
+
                 case 'v':
                 case 'V':   // Firmware version
                     insert_string = (uint8_t *)version_string;
                     break;
-                
+
                 case 'r':
                 case 'R':   // URL replacement
                     insert_string = (uint8_t *)target_device.url;

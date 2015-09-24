@@ -33,8 +33,13 @@
 
 // Not sure what this is suppose to mean. used in swd_host and needs to be looked further into
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)
+
+// 'kvld' in hex - key valid
+#define CfG_KEY             0x6b766c64
+#define CFG_VALID(dev)      (NULL != (dev).cfg && CfG_KEY == (dev).cfg->key)
       
 typedef struct cfg_setting {
+    const uint32_t key;
     const uint8_t auto_rst;
 } cfg_setting_t;
 
