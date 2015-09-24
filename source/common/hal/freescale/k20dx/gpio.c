@@ -22,12 +22,6 @@
 // aside from bootloader
 #define INTERFACE_POWER_EN  !defined(DAPLINK_BL)
 
-#if defined(BOARD_FRDM_K64F)
-    #define SDA_USB_P5V_SENSE (5)   // PTD5
-#elif defined(BOARD_FRDM_KL25Z)
-    #define SDA_USB_P5V_SENSE (7)   // PTD7
-#endif
-
 void gpio_init(void)
 {
     // enable clock to ports
