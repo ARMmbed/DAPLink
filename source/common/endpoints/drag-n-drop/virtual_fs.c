@@ -17,6 +17,7 @@
 #include "virtual_fs.h"
 #include "string.h"
 #include "version.h"
+#include "config_settings.h"
 
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
@@ -335,6 +336,8 @@ void configure_fail_txt(target_flash_status_t reason)
 // Update known entries and mbr data when the program boots
 void virtual_fs_init(void)
 {
+    char* str;
+    uint32_t str_len;
     // 64KB is mbr, FATs, root dir, ect...
     //uint32_t wanted_size_in_bytes   = (target_device.disc_size + KB(64);
     //uint32_t number_sectors_needed  = (wanted_size_in_bytes / mbr.bytes_per_sector);
@@ -350,6 +353,10 @@ void virtual_fs_init(void)
     memcpy(dir1.f1.filename, target_device.url_name, sizeof(target_device.url_name));
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
+    // Update filename to reflect configuration
+    str = config_get_auto_rst() ? "AUTO RSTCFG" : "HARD RSTCFG";
+    str_len = strlen(str);
+    memcpy(dir1.f3.filename, str, str_len);
     // patch fs entries (fat sizes and all blank regions)
     fs[1].length  = sizeof(fat) * mbr.logical_sectors_per_fat;
     fs[2].length  = fs[1].length;

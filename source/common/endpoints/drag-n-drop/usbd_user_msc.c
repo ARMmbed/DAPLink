@@ -21,6 +21,7 @@
 #include "daplink_debug.h"
 #include "validation.h"
 #include "version.h"
+#include "config_settings.h"
 
 static uint32_t usb_buffer[512/sizeof(uint32_t)];
 
@@ -229,9 +230,8 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             if (1 == exec_file_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
             } else if (1 == cfg_file_entry_mod(tmp_file)) {
-                // here we need a handler to modify the root directory entry and change the
-                //  target_device.cfg structure based on user input
                 debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                config_set_auto_rst(!config_get_auto_rst());
                 goto cfg_action;
             }
         }

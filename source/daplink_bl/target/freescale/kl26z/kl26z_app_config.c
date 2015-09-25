@@ -16,8 +16,7 @@
 
 #include "target_config.h"
 
-static const cfg_setting_t config __attribute__((section("cfgrom"))) = {
-    .key        = CfG_KEY,
+static const cfg_setting_t config = {
     .auto_rst   = 1,
 };
 

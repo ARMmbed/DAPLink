@@ -32,5 +32,5 @@ const target_cfg_t target_device = {
     .disc_size      = MB(1),
     .url            = "https://mbed.org/device/?code=@A",
     .url_name       = "MBED    HTM",
-    .drive_name     = "DAPLINK    "
+    .drive_name     = "DAPLINK    ",
 };
