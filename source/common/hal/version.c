@@ -107,10 +107,6 @@ static void setup_string_version()
     for (i = 0; i < 4; i++) {
         version_string[idx++] = fw_version[i];
     }
-        /* Pad out to be as long as the id string */
-        for (i = 0; i < 20; i++) {
-        version_string[idx++] = 'x';
-    }
 
         /* Null terminate */
     version_string[idx] = '\0';
