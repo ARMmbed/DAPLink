@@ -39,6 +39,12 @@ projects:
         - *module_if
         - records/common/rtos-cm0.yaml
         - records/projects/kl26z_nrf51822_if.yaml
+    microbit_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm0.yaml
+        - records/projects/kl26z_nrf51822_if.yaml
+        - records/overrides/microbit.yaml
     k20dx_k22f_if:
         - *module_tools
         - *module_if

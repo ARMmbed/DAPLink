@@ -34,10 +34,9 @@ static volatile const cfg_setting_t config_rom __attribute__((section("cfgrom"),
 // Ram copy of config
 static cfg_setting_t config_ram;
 
-// These are the defaults if no default is 
-// supplied.  To overwrite set target_device.cfg to the
-// desired defaults
-static const cfg_setting_t default_config = 
+// Configuration defaults in flash
+__attribute__((weak))
+const cfg_setting_t config_default = 
 {
     .auto_rst = 0,
 };
@@ -93,7 +92,7 @@ void config_init()
 #endif
 
     // Fill in the ram copy with the defaults
-    memcpy(&config_ram, &default_config, sizeof(config_ram));
+    memcpy(&config_ram, &config_default, sizeof(config_ram));
 
     // Read settings from flash if the key is valid
     if (CFG_KEY == config_rom.key) {

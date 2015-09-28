@@ -25,8 +25,16 @@
 char mac_string[16] = {0};
 char uuid_string[33] = {0};
 char version_string[49+4] = {0};
+
 // Pointers to substitution strings
-const char *fw_version = (const char *)FW_BUILD;
+const char * const fw_version = (const char *)FW_BUILD;
+__attribute__((weak))
+//Drive and URL must be 11 characters to follow the 8.3 convention
+const char daplink_drive_name[11] = DAPLINK_DRIVE_NAME;
+__attribute__((weak))
+const char daplink_url_name[11] = DAPLINK_URL_NAME;
+__attribute__((weak))
+const char * const daplink_target_url = DAPLINK_TARGET_URL;
 
 static uint32_t unique_id[4];
 static uint8_t already_unique_id = 0;
@@ -252,7 +260,7 @@ void update_html_file(uint8_t *buf, uint32_t bufsize)
 
                 case 'r':
                 case 'R':   // URL replacement
-                    insert_string = (uint8_t *)target_device.url;
+                    insert_string = (uint8_t *)daplink_target_url;
                     break;
 
                 default:

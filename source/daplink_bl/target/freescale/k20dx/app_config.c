@@ -29,8 +29,4 @@ const target_cfg_t target_device = {
     .flash_end      = kB(127),
     .ram_start      = 0x1fffe000,
     .ram_end        = 0x20002000,
-    .disc_size      = kB(512),
-    .url            = "https://mbed.com/daplink",
-    .url_name       = "MBED    HTM",
-    .drive_name     = "MAINTENANCE",
 };

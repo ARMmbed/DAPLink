@@ -19,6 +19,10 @@
 #include "version.h"
 #include "config_settings.h"
 
+// Must be bigger than 4x the flash size of the biggest supported
+// device.  This is to accomidate for hex file programming.
+const uint32_t disc_size = MB(8);
+
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
 mbr_t mbr = {
@@ -339,18 +343,18 @@ void virtual_fs_init(void)
     char* str;
     uint32_t str_len;
     // 64KB is mbr, FATs, root dir, ect...
-    //uint32_t wanted_size_in_bytes   = (target_device.disc_size + KB(64);
+    //uint32_t wanted_size_in_bytes   = (disc_size + KB(64);
     //uint32_t number_sectors_needed  = (wanted_size_in_bytes / mbr.bytes_per_sector);
     //uint32_t number_clusters_needed = (number_sectors_needed / mbr.sectors_per_cluster);
     //uint32_t fat_sector_size =        (((number_clusters_needed / 1023) / 1024) * 3);
     // number of sectors = (media size in bytes) / bytes per sector
-    mbr.total_logical_sectors = ((target_device.disc_size + kB(64)) / mbr.bytes_per_sector);
+    mbr.total_logical_sectors = ((disc_size + kB(64)) / mbr.bytes_per_sector);
     // number of cluster = ((number of sectors) / sectors per cluster)
     // secotrs per fat   = (3 x ((number of clusters + 1023) / 1024))
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
     // patch root direcotry entries
-    memcpy(dir1.dir.filename, target_device.drive_name, sizeof(target_device.drive_name));
-    memcpy(dir1.f1.filename, target_device.url_name, sizeof(target_device.url_name));
+    memcpy(dir1.dir.filename, daplink_drive_name, sizeof(daplink_drive_name));
+    memcpy(dir1.f1.filename, daplink_url_name, sizeof(daplink_url_name));
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // Update filename to reflect configuration
