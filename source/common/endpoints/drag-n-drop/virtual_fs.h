@@ -100,7 +100,7 @@ typedef struct root_dir {
 
 typedef struct virtual_media {
     uint8_t *sect;
-    uint32_t length;
+    uint16_t length;
 } virtual_media_t;
 
 extern virtual_media_t fs[];
