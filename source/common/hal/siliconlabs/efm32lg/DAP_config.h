@@ -146,9 +146,9 @@ static __inline void PORT_SWD_SETUP (void) {
   //GPIO->P[port].MODE[L/H] = (mode << (pin*4))
   
   //Set output mode to pushpull
-	GPIO_PinModeSet(PIN_SWCLK_PORT, PIN_SWCLK_BIT, gpioModePushPull, 1);
-	GPIO_PinModeSet(PIN_SWDIO_PORT, PIN_SWDIO_BIT, gpioModePushPull, 1);
-	GPIO_PinModeSet(PIN_nRESET_PORT, PIN_nRESET_BIT, gpioModePushPull, 1);
+	GPIO_PinModeSet(PIN_SWCLK_PORT, PIN_SWCLK_BIT, gpioModePushPullDrive, 1);
+	GPIO_PinModeSet(PIN_SWDIO_PORT, PIN_SWDIO_BIT, gpioModePushPullDrive, 1);
+	GPIO_PinModeSet(PIN_nRESET_PORT, PIN_nRESET_BIT, gpioModePushPullDrive, 1);
 
   //Set outputs high
   GPIO->P[PIN_SWCLK_GPIO].DOUTSET = PIN_SWCLK;
@@ -162,9 +162,9 @@ Disables the DAP Hardware I/O pins which configures:
 */
 static __inline void PORT_OFF (void) {
   //Set output mode to pushpull
-  GPIO_PinModeSet(PIN_SWCLK_PORT, PIN_SWCLK_BIT, gpioModePushPull, 1);
-	GPIO_PinModeSet(PIN_SWDIO_PORT, PIN_SWDIO_BIT, gpioModePushPull, 1);
-	GPIO_PinModeSet(PIN_nRESET_PORT, PIN_nRESET_BIT, gpioModePushPull, 1);
+  GPIO_PinModeSet(PIN_SWCLK_PORT, PIN_SWCLK_BIT, gpioModeDisabled, 1);
+	GPIO_PinModeSet(PIN_SWDIO_PORT, PIN_SWDIO_BIT, gpioModeDisabled, 1);
+	GPIO_PinModeSet(PIN_nRESET_PORT, PIN_nRESET_BIT, gpioModeDisabled, 1);
 
   //Set reset high, SWD pins low
   GPIO->P[PIN_SWCLK_GPIO].DOUTCLR = PIN_SWCLK;
@@ -243,7 +243,7 @@ Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
 static __forceinline void     PIN_SWDIO_OUT_ENABLE  (void) {
-  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N))) | (0x4 << PIN_SWDIO_BIT_N);
+  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N))) | (GPIO_MODE_OUTPUTDRIVE << PIN_SWDIO_BIT_N);
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -251,7 +251,9 @@ Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 called prior \ref PIN_SWDIO_IN function calls.
 */
 static __forceinline void     PIN_SWDIO_OUT_DISABLE (void) {
-  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N)));
+  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N))) | (GPIO_MODE_INPUT << PIN_SWDIO_BIT_N);
+	//Add pulldown
+	GPIO->P[PIN_SWDIO_GPIO].DOUTCLR = PIN_SWDIO;
 }
 
 
@@ -382,22 +384,22 @@ static __inline void DAP_SETUP (void) {
   
   /* Configure I/O pin SWCLK */
   // set input (pullup) mode
-  GPIO->P[PIN_SWCLK_GPIO].PIN_SWCLK_MODE = (GPIO->P[PIN_SWCLK_GPIO].PIN_SWCLK_MODE & (~(0xF << PIN_SWCLK_BIT_N))) | (GPIO_MODE_INPUTPULL << PIN_SWCLK_BIT_N);
+  GPIO->P[PIN_SWCLK_GPIO].PIN_SWCLK_MODE = (GPIO->P[PIN_SWCLK_GPIO].PIN_SWCLK_MODE & (~(0xF << PIN_SWCLK_BIT_N))) | (GPIO_MODE_INPUT << PIN_SWCLK_BIT_N);
   // set high
   GPIO->P[PIN_SWCLK_GPIO].DOUTSET = PIN_SWCLK;
 
 
   /* Configure I/O pin SWDIO */
   // set input (pullup) mode
-  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N))) | (GPIO_MODE_INPUTPULL << PIN_SWDIO_BIT_N);
+  GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE = (GPIO->P[PIN_SWDIO_GPIO].PIN_SWDIO_MODE & (~(0xF << PIN_SWDIO_BIT_N))) | (GPIO_MODE_INPUT << PIN_SWDIO_BIT_N);
   // set high
   GPIO->P[PIN_SWDIO_GPIO].DOUTSET = PIN_SWDIO;
 
   /* Configure I/O pin nRESET */
+	// set high
+  GPIO->P[PIN_nRESET_GPIO].DOUTSET = PIN_nRESET;
   // set output mode
   GPIO->P[PIN_nRESET_GPIO].PIN_nRESET_MODE = (GPIO->P[PIN_nRESET_GPIO].PIN_nRESET_MODE & (~(0xF << PIN_nRESET_BIT_N))) | (GPIO_MODE_OUTPUT << PIN_nRESET_BIT_N);
-  // set high
-  GPIO->P[PIN_nRESET_GPIO].DOUTSET = PIN_nRESET;
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.

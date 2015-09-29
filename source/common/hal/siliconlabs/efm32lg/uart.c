@@ -57,8 +57,8 @@ int32_t uart_initialize(void)
     
     // disable GPIO pins used by leuart
     CMU_ClockEnable(cmuClock_GPIO, true);
-		GPIO_PinModeSet(PIN_UART_RX_PORT, PIN_UART_RX_BIT, gpioModeDisabled, 1);	
-		GPIO_PinModeSet(PIN_UART_TX_PORT, PIN_UART_TX_BIT, gpioModeDisabled, 1);
+		GPIO_PinModeSet(PIN_UART_RX_PORT, PIN_UART_RX_BIT, gpioModeInput, 0);	
+		GPIO_PinModeSet(PIN_UART_TX_PORT, PIN_UART_TX_BIT, gpioModePushPull, 0);
     
     // enable clock to uart
     CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_CORELEDIV2);
