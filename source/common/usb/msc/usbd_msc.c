@@ -1035,6 +1035,7 @@ __task void USBD_RTX_MSC_EP_BULKIN_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -1054,6 +1055,7 @@ __task void USBD_RTX_MSC_EP_BULKOUT_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -1071,5 +1073,6 @@ __task void USBD_RTX_MSC_EP_BULK_Event (void) {
       USBD_MSC_EP_BULK_Event (usbd_os_evt_get());
     }
   }
+  while(1);
 }
 #endif

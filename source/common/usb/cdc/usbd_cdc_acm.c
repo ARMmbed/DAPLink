@@ -674,6 +674,7 @@ __task void USBD_RTX_CDC_ACM_EP_INTIN_Event (void) {
       USBD_CDC_ACM_EP_INTIN_Event (usbd_os_evt_get());
     }
   }
+  while(1);
 }
 
 
@@ -693,6 +694,7 @@ __task void USBD_RTX_CDC_ACM_EP_BULKIN_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -712,6 +714,7 @@ __task void USBD_RTX_CDC_ACM_EP_BULKOUT_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -729,6 +732,7 @@ __task void USBD_RTX_CDC_ACM_EP_BULK_Event (void) {
       USBD_CDC_ACM_EP_BULK_Event (usbd_os_evt_get());
     }
   }
+  while(1);
 }
 #endif
 
