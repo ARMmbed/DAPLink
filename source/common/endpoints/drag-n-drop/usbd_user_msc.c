@@ -75,7 +75,13 @@ void usbd_msc_read_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     }
     // now send the data if a known sector and valid data in memory - otherwise send 0's
     if (fs_read.sect != 0 && real_data_present == 1) {
-        memcpy(buf, &fs_read.sect[req_sector_offset], num_of_blocks * USBD_MSC_BlockSize);
+        if(i == 0) {
+          //deal with MBR, save RAM
+          memcpy(buf, &fs_read.sect[req_sector_offset], sizeof(mbr_t));
+          memset((buf+sizeof(mbr_t)), 0, (num_of_blocks * USBD_MSC_BlockSize) - sizeof(mbr_t));
+        } else {
+          memcpy(buf, &fs_read.sect[req_sector_offset], num_of_blocks * USBD_MSC_BlockSize);
+        }
     }
     else {
         memset(buf, 0, num_of_blocks * USBD_MSC_BlockSize);
