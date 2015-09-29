@@ -22,6 +22,7 @@
 #include "validation.h"
 #include "version.h"
 
+#if (MSC_ENDPOINT)
 static uint32_t usb_buffer[512/sizeof(uint32_t)];
 
 void usbd_msc_init(void)
@@ -296,3 +297,4 @@ msc_fail_exit:
     main_force_msc_disconnect_event();
     return;
 }
+#endif
