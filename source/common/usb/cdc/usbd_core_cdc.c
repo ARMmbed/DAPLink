@@ -19,6 +19,7 @@
 #include "usb_for_lib.h"
 
 
+#ifdef CDC_ENDPOINT
 /*
  *  USB Device Endpoint 0 Event Callback - CDC specific handling (Setup Request To Interface)
  *    Parameters:      none
@@ -115,3 +116,4 @@ __weak BOOL USBD_EndPoint0_Out_CDC_ReqToIF (void) {
   }
   return (__FALSE);
 }
+#endif

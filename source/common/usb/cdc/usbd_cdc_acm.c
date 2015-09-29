@@ -19,6 +19,7 @@
 #include "usb_for_lib.h"
 
 
+#ifdef CDC_ENDPOINT
 /* Module global variables                                                    */
 
 /** \ingroup  USBD_CDC_ACM_global_variables
@@ -735,4 +736,4 @@ __task void USBD_RTX_CDC_ACM_EP_BULK_Event (void) {
   while(1);
 }
 #endif
-
+#endif
