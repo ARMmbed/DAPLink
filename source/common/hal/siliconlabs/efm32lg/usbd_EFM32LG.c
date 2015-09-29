@@ -64,7 +64,7 @@
 #define EP_IN_TYPE(num)      ((DIEPCTL(num) >> 18) & 3)
 #define EP_OUT_TYPE(num)     ((DOEPCTL(num) >> 18) & 3)
 
-uint32_t OutMaxPacketSize[6] = {USBD_MAX_PACKET0,0,0,0,0,0};
+uint32_t OutMaxPacketSize[7] = {USBD_MAX_PACKET0,0,0,0,0,0,0};
 
 #if (USBD_HID_ENABLE == 1)
 uint32_t HID_IntInPacketData     [(USBD_HID_MAX_PACKET + 3) / 4];
@@ -76,7 +76,7 @@ uint32_t MSC_IntInPacketData     [(USBD_MSC_MAX_PACKET + 3) / 4];
 uint32_t CDC_ACM_IntInPacketData [(USBD_CDC_ACM_MAX_PACKET  + 3) / 4];
 #endif
 
-uint32_t *InPacketDataPtr[6] = { 0,
+uint32_t *InPacketDataPtr[7] = { 0,
 #if   ((USBD_HID_ENABLE     == 1) && (USBD_HID_EP_INTIN      == 1))
                        HID_IntInPacketData,
 #elif ((USBD_CDC_ACM_ENABLE == 1) && (USBD_CDC_ACM_EP_INTIN  == 1))
@@ -124,6 +124,15 @@ uint32_t *InPacketDataPtr[6] = { 0,
 #else
                             0, 
 #endif
+#if   ((USBD_HID_ENABLE     == 1) && (USBD_HID_EP_INTIN      == 6))
+                       HID_IntInPacketData, 
+#elif ((USBD_CDC_ACM_ENABLE == 1) && (USBD_CDC_ACM_EP_INTIN  == 6))
+                       CDC_ACM_IntInPacketData, 
+#elif ((USBD_MSC_ENABLE     == 1) && (USBD_MSC_EP_INTIN      == 6))
+                       MSC_IntInPacketData, 
+#else
+                            0, 
+#endif
 };
 
 
@@ -131,7 +140,7 @@ uint32_t *InPacketDataPtr[6] = { 0,
 
 uint32_t ADC_IsoOutPacketData    [(USBD_ADC_WMAXPACKETSIZE + 3) / 4];
 
-uint32_t *IsoOutPacketDataPtr[6] = { 0,
+uint32_t *IsoOutPacketDataPtr[7] = { 0,
 #if    (USBD_ADC_EP_ISOOUT == 1)
                                      ADC_IsoOutPacketData,
 #else
@@ -159,17 +168,22 @@ uint32_t *IsoOutPacketDataPtr[6] = { 0,
 #else
                                      0,
 #endif
+#if    (USBD_ADC_EP_ISOOUT == 6)
+                                     ADC_IsoOutPacketData,
+#else
+                                     0,
+#endif
 };
 #else
-uint32_t *IsoOutPacketDataPtr[6] = { 0 };
+uint32_t *IsoOutPacketDataPtr[7] = { 0 };
 #endif
 
 
-uint32_t InPacketDataCnt[6]      = { 0 };
+uint32_t InPacketDataCnt[7]      = { 0 };
 uint32_t InPacketDataReady       =   0  ;
 uint32_t SyncWriteEP             =   0  ;
 
-uint32_t IsoOutPacketDataCnt[6]  = { 0 };
+uint32_t IsoOutPacketDataCnt[7]  = { 0 };
 uint32_t IsoOutTokenRead         =   0  ;
 
 /*
