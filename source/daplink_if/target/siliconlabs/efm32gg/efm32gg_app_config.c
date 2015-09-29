@@ -16,9 +16,9 @@
 
 #include "target_config.h"
 
-// LPC1114 target information
+// EFM32GG target information
 const target_cfg_t target_device = {
-    .board_id   = "1114",
+    .board_id   = "2015",
     .secret     = "78a0cd72",
     .sector_size    = 4096,
     // Assume memory is regions are same size. Flash algo should ignore requests
@@ -32,6 +32,6 @@ const target_cfg_t target_device = {
     .disc_size      = MB(1),
     .url            = "https://mbed.org/device/?code=@A",
     .url_name       = "MBED    HTM",
-    .drive_name     = "DAPLINK    "
+    .drive_name     = "EFM32 DAP  "
 };
 

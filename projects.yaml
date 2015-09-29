@@ -64,3 +64,8 @@ projects:
         - *module_if
         - records/common/rtos-cm0.yaml
         - records/projects/lpc11u35_efm32gg_if.yaml
+    efm32lg_efm32gg_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm3.yaml
+        - records/projects/efm32lg_efm32gg_if.yaml
