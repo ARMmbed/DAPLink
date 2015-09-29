@@ -11,4 +11,8 @@ LR_IROM1 0x00000000 0x8000  {    ; load region size_region
   }
 
 }
-
+LR_CONFIG 0x0001FC00 0x400 {	 ; reserve last sector for config data
+  ER_CONFIG 0x0001FC00 UNINIT 0x400 {
+    .ANY (cfgrom)
+  }
+}

@@ -20,6 +20,7 @@
 #include "virtual_fs.h"
 #include "RTL.h"
 #include "rl_usb.h"
+#include "config_settings.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -235,6 +236,8 @@ int main (void)
 {
     // init leds and button
     gpio_init();
+    // init settings
+    config_init();
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing
     if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)target_device.flash_start)) {
         // change to the new vector table

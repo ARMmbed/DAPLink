@@ -110,6 +110,8 @@ typedef struct virtual_media {
     uint32_t length;
 } virtual_media_t;
 
+extern const uint32_t disc_size;
+
 extern virtual_media_t fs[];
 extern const uint8_t mbed_redirect_file[];
 

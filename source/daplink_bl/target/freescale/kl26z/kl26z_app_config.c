@@ -16,11 +16,6 @@
 
 #include "target_config.h"
 
-static const cfg_setting_t config __attribute__((section("cfgrom"))) = {
-    .key        = CfG_KEY,
-    .auto_rst   = 1,
-};
-
 // kl26z128 target information
 const target_cfg_t target_device = {
     .board_id   = "0000",
@@ -34,9 +29,4 @@ const target_cfg_t target_device = {
     .flash_end      = kB(127),
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
-    .disc_size      = kB(512),
-    .url            = "https://mbed.com/daplink",
-    .url_name       = "HELP FAQHTM",
-    .drive_name     = "MAINTENANCE",
-    .cfg            = &config,
 };
