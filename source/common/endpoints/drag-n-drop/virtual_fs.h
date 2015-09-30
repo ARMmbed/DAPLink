@@ -24,6 +24,18 @@
   extern "C" {
 #endif
 
+// URL_NAME and DRIVE_NAME must be 11 characters excluding
+// the null terminated character
+#if defined(DAPLINK_BL)
+    #define DAPLINK_URL_NAME        "HELP_FAQHTM"
+    #define DAPLINK_DRIVE_NAME      "MAINTENANCE"
+    #define DAPLINK_TARGET_URL      "https://mbed.com/daplink"
+#else
+    #define DAPLINK_URL_NAME        "MBED    HTM"
+    #define DAPLINK_DRIVE_NAME      "DAPLINK    "
+    #define DAPLINK_TARGET_URL      "https://mbed.org/device/?code=@A"
+#endif
+
 typedef struct {
     uint8_t boot_sector[11];
     /* DOS 2.0 BPB - Bios Parameter Block, 11 bytes */
@@ -114,6 +126,10 @@ extern const uint32_t disc_size;
 
 extern virtual_media_t fs[];
 extern const uint8_t mbed_redirect_file[];
+
+extern const char daplink_drive_name[11];
+extern const char daplink_url_name[11];
+extern const char * const daplink_target_url;
 
 void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);
