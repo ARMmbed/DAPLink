@@ -28,6 +28,7 @@
 #include "swd_host.h"
 #include "version.h"
 #include "virtual_fs.h"
+#include "config_settings.h"
 
 // Event flags for main task
 // Timers events
@@ -251,6 +252,9 @@ __task void main_task(void)
     // button state
     main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
 
+    // Initialize settings
+    config_init();
+
     // Initialize our serial mailbox
     os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
     // Get a reference to this task
@@ -298,7 +302,7 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
             // auto reset the board if configured to do so
-            if (CFG_VALID(target_device) && 1 == target_device.cfg->auto_rst) {
+            if (config_get_auto_rst()) {
                 target_reset();
             }
             usb_busy = USB_IDLE;                    // USB not busy

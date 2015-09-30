@@ -24,13 +24,9 @@ const target_cfg_t target_device = {
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((kB(128)-kB(32))/1024),
+    .sector_cnt     = ((kB(127)-kB(32))/1024),
     .flash_start    = kB(32),
-    .flash_end      = kB(128),
+    .flash_end      = kB(127),
     .ram_start      = 0x1fffe000,
     .ram_end        = 0x20002000,
-    .disc_size      = kB(512),
-    .url            = "https://mbed.com/daplink",
-    .url_name       = "MBED    HTM",
-    .drive_name     = "MAINTENANCE"
 };

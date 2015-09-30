@@ -1,4 +1,4 @@
-LR_IROM1 0x00008000 0x17C00  {   ; load region size_region (96k)
+LR_IROM1 0x00008000 0x17C00  {   ; load region size_region (96k - 1k)
   ER_IROM1 0x00008000 0x17C00  { ; load address = execution address
     *.o (RESET, +First)
     * (InRoot$$Sections)

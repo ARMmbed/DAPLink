@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "version.h"
+#include "config_settings.h"
 
-// frdm-k64f target information
-const target_cfg_t target_device = {
-    .board_id   = "0231",
-    .secret     = "xxxxxxxx",
-    .sector_size    = 2048,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (kB(512)/2048),
-    .flash_start    = 0,
-    .flash_end      = kB(512),
-    .ram_start      = 0x1FFF0000,
-    .ram_end        = 0x20010000,
-};
+// URL_NAME and DRIVE_NAME must be 11 characters excluding
+// the null terminated character
+const char daplink_url_name[11] =   "MICROBITHTM";
+const char daplink_drive_name[11] = "MICROBIT   ";
+const char * const daplink_target_url = "https://www.microbit.co.uk/device?mbedcode=@V";

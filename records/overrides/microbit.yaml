@@ -1,0 +1,5 @@
+common:
+    group_name:
+        - microbit
+    sources:
+        - source/overrides/microbit.c
