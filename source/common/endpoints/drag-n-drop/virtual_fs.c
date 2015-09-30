@@ -100,6 +100,15 @@ static const file_allocation_table_t fat = {
     .f = {
         0xF8, 0xFF, 0xFF, // Sector 0, 1
         0xFF, 0xFF, 0xFF, // Sector 2, 3
+        0xFF, 0x0F, 0x00, // Sector 4, 5
+        0x00, 0x00, 0x00,
+    }
+};
+
+static const file_allocation_table_t fat_fail = {
+    .f = {
+        0xF8, 0xFF, 0xFF, // Sector 0, 1
+        0xFF, 0xFF, 0xFF, // Sector 2, 3
         0xFF, 0xFF, 0xFF, // Sector 4, 5
         0x00, 0x00, 0x00,
     }
@@ -334,12 +343,17 @@ virtual_media_t fs[] = {
 //  modification if/when more files are added to the file-system
 void configure_fail_txt(target_flash_status_t reason)
 {
+    const uint8_t * fat_ptr;
     // set the dir entry to a file or empty it
     dir1.f4 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
+    fat_ptr = (TARGET_OK == reason) ? fat.f : fat_fail.f;
     // update the filesize (pass/fail)
     dir1.f4.filesize = strlen((const char *)fail_txt_contents[reason]);
     // and the memory that we point to (file contents)
     fs[11].sect = (uint8_t *)fail_txt_contents[reason];
+
+    fs[1].sect = (uint8_t*) fat_ptr;
+    fs[2].sect = (uint8_t*)fat_ptr;
 }
 
 // Update known entries and mbr data when the program boots
@@ -363,7 +377,7 @@ void virtual_fs_init(void)
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // Update filename to reflect configuration
-    str = config_get_auto_rst() ? "AUTO_RSTCFG" : "HARD_RSTCFG";
+    str = config_get_auto_rst() ? ".AUTORSTCFG" : ".HARDRSTCFG";
     str_len = strlen(str);
     memcpy(dir1.f3.filename, str, str_len);
     // patch fs entries (fat sizes and all blank regions)
