@@ -33,6 +33,7 @@ struct {
 } write_buffer, read_buffer;
 
 uint32_t tx_in_progress = 0;
+uint32_t resetted = 1;
 
 void clear_buffers(void)
 {
@@ -52,24 +53,17 @@ void serial_baud(uint32_t baudrate);
 
 int32_t uart_initialize(void)
 {
-    NVIC_DisableIRQ(UART_RX_TX_IRQn);
-    clear_buffers();
-    
-    // disable GPIO pins used by leuart
-    CMU_ClockEnable(cmuClock_GPIO, true);
-		GPIO_PinModeSet(PIN_UART_RX_PORT, PIN_UART_RX_BIT, gpioModeInput, 0);	
-		GPIO_PinModeSet(PIN_UART_TX_PORT, PIN_UART_TX_BIT, gpioModePushPull, 0);
-    
     // enable clock to uart
     CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_CORELEDIV2);
     CMU_ClockEnable(cmuClock_LFB, true);
     CMU_ClockEnable(UART_CLK, true);
-    
+  
+    LEUART_Reset(UART);
     // set output location
     UART->ROUTE = (UART->ROUTE & _LEUART_ROUTE_LOCATION_MASK) | UART_LOC;
-    
-    NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
-    NVIC_EnableIRQ(UART_RX_TX_IRQn);
+  
+    clear_buffers();
+    tx_in_progress = 0;
     return 1;
 }
 
@@ -79,19 +73,28 @@ int32_t uart_uninitialize(void)
     LEUART_Enable(UART, leuartDisable);
     
     clear_buffers();
+    tx_in_progress = 0;
     return 1;
 }
 
 int32_t uart_reset(void)
 {
+    resetted = 1;
+  
+    // enable clock to uart
+    CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_CORELEDIV2);
+    CMU_ClockEnable(cmuClock_LFB, true);
+    CMU_ClockEnable(UART_CLK, true);
+  
     // disable interrupt
-    NVIC_DisableIRQ(UART_RX_TX_IRQn);
-    clear_buffers();
     LEUART_IntDisable(UART, LEUART_IF_TXBL);
-    UART->CMD = LEUART_CMD_CLEARTX | LEUART_CMD_CLEARRX;
+    LEUART_Reset(UART);
+    // set output location
+    UART->ROUTE = (UART->ROUTE & _LEUART_ROUTE_LOCATION_MASK) | UART_LOC;
+    // reset function
+    clear_buffers();
     tx_in_progress = 0;
-    // enable interrupt
-    NVIC_EnableIRQ(UART_RX_TX_IRQn);
+    
     return 1;
 }
 
@@ -133,7 +136,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 {
     LEUART_Init_TypeDef internal_config = LEUART_INIT_DEFAULT;
     // disable interrupt
-    NVIC_DisableIRQ(UART_RX_TX_IRQn);
+    clear_buffers();
     
     switch(config->DataBits) {
       case UART_DATA_BITS_8:
@@ -168,17 +171,29 @@ int32_t uart_set_configuration(UART_Configuration *config)
         break;
     }
     
+    internal_config.enable = leuartDisable;
     internal_config.baudrate = config->Baudrate;
     
+    LEUART_Reset(UART);
     LEUART_Init(UART, &internal_config);
     serial_baud(internal_config.baudrate);
     
-    clear_buffers();
+    if(resetted == 0) {
     
-    // Enable UART interrupt
-    NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
-    NVIC_EnableIRQ(UART_RX_TX_IRQn);
-    LEUART_IntEnable(UART, LEUART_IEN_RXDATAV);
+      LEUART_Enable(UART, leuartEnable);
+      
+      // Enable UART interrupt
+      NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
+      NVIC_EnableIRQ(UART_RX_TX_IRQn);
+      LEUART_IntEnable(UART, LEUART_IEN_RXDATAV);
+      
+      // enable GPIO pins used by leuart
+      CMU_ClockEnable(cmuClock_GPIO, true);
+      GPIO_PinModeSet(PIN_UART_RX_PORT, PIN_UART_RX_BIT, gpioModeInput, 0); 
+      GPIO_PinModeSet(PIN_UART_TX_PORT, PIN_UART_TX_BIT, gpioModePushPull, 0);
+    } else {
+      resetted = 0;
+    }
     return 1;
 }
 
@@ -229,6 +244,7 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
     if (size == 0) {
         return 0;
     }
+    
     cnt = 0;
     while (size--) {
         if (read_buffer.cnt_in != read_buffer.cnt_out) {
