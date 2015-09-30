@@ -23,6 +23,14 @@
 // device.  This is to accomidate for hex file programming.
 const uint32_t disc_size = MB(8);
 
+//Drive and URL must be 11 characters to follow the 8.3 convention
+__attribute__((weak))
+const char daplink_drive_name[11] = DAPLINK_DRIVE_NAME;
+__attribute__((weak))
+const char daplink_url_name[11] = DAPLINK_URL_NAME;
+__attribute__((weak))
+const char * const daplink_target_url = DAPLINK_TARGET_URL;
+
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
 mbr_t mbr = {

@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-#include "version.h"
-#include "config_settings.h"
+#include "virtual_fs.h"
 
 // URL_NAME and DRIVE_NAME must be 11 characters excluding
 // the null terminated character
+__attribute__((aligned (4)))
 const char daplink_url_name[11] =   "MICROBITHTM";
+__attribute__((aligned (4)))
 const char daplink_drive_name[11] = "MICROBIT   ";
+__attribute__((aligned (4)))
 const char * const daplink_target_url = "https://www.microbit.co.uk/device?mbedcode=@V";
+
+// TODO - investigate why "__attribute__((weak, aligned (4)))" is needed to prevent a
+// hardfault from occurring.

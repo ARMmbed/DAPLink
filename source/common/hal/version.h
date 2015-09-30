@@ -19,21 +19,6 @@
 #include "stdint.h"
 
 #define FW_BUILD "0231"
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-#if defined(DAPLINK_BL)
-    #define DAPLINK_URL_NAME        "HELP_FAQHTM"
-    #define DAPLINK_DRIVE_NAME      "MAINTENANCE"
-    #define DAPLINK_TARGET_URL      "https://mbed.com/daplink"
-#else
-    #define DAPLINK_URL_NAME        "MBED    HTM"
-    #define DAPLINK_DRIVE_NAME      "DAPLINK    "
-    #define DAPLINK_TARGET_URL      "https://mbed.org/device/?code=@A"
-#endif
-
-extern const char daplink_drive_name[11];
-extern const char daplink_url_name[11];
-extern const char * const daplink_target_url;
 
 void update_html_file(uint8_t *buf, uint32_t bufsize);
 uint8_t * get_uid_string          (void);
