@@ -65,8 +65,9 @@ projects:
         - *module_if
         - records/common/rtos-cm0.yaml
         - records/projects/lpc11u35_lpc812_if.yaml
-    lpc11u35_efm32gg_if:
+    lpc11u35_efm32gg_stk_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
-        - records/projects/lpc11u35_efm32gg_if.yaml
+        - records/projects/lpc11u35_efm32gg_stk_if.yaml
+        - records/overrides/siliconlabs/efm32gg-stk.yaml

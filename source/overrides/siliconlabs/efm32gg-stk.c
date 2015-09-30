@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "version.h"
+#include "config_settings.h"
 
-// EFM32GG STK target information
-const target_cfg_t target_device = {
-    .board_id   = "2015",
-    .secret     = "78a0cd72",
-    .sector_size    = 4096,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (MB(1)/4096),
-    .flash_start    = 0,
-    .flash_end      = MB(1),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20010000,
-};
-
+// URL_NAME and DRIVE_NAME must be 11 characters excluding
+// the null terminated character
+const char daplink_url_name[11] =   "MBED    HTM";
+const char daplink_drive_name[11] = "EFM32 DAP  ";
+const char * const daplink_target_url = "https://mbed.org/device/?code=@A";
