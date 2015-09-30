@@ -219,7 +219,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
     .f3 = {
-    /*uint8_t[11] */ .filename = "HARD RSTCFG",
+    /*uint8_t[11] */ .filename = "HARD_RSTCFG",
     /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -366,7 +366,7 @@ void virtual_fs_init(void)
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // Update filename to reflect configuration
-    str = config_get_auto_rst() ? "AUTO RSTCFG" : "HARD RSTCFG";
+    str = config_get_auto_rst() ? "AUTO_RSTCFG" : "HARD_RSTCFG";
     str_len = strlen(str);
     memcpy(dir1.f3.filename, str, str_len);
     // patch fs entries (fat sizes and all blank regions)
