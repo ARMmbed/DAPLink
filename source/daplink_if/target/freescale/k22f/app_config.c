@@ -16,7 +16,10 @@
 
 #include "target_config.h"
 
-// frdm-k64f target information
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
+// frdm-k22f target information
 const target_cfg_t target_device = {
     .board_id   = "0231",
     .secret     = "xxxxxxxx",
@@ -29,4 +32,5 @@ const target_cfg_t target_device = {
     .flash_end      = kB(512),
     .ram_start      = 0x1FFF0000,
     .ram_end        = 0x20010000,
+    .flash_algo     = (program_target_t*)&flash,
 };
