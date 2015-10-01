@@ -17,6 +17,7 @@
 #define TARGET_RESET_H
 
 #include "stdint.h"
+#include "stdbool.h"
 
 typedef enum {
     RESET_HOLD,              // Hold target in reset
@@ -30,5 +31,6 @@ void target_before_init_debug(void);
 uint8_t target_unlock_sequence(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size);
+void target_forward_reset(bool assert_reset);
 
 #endif
