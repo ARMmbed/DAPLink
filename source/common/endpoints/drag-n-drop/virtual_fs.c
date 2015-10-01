@@ -377,7 +377,7 @@ void virtual_fs_init(void)
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // Update filename to reflect configuration
-    str = config_get_auto_rst() ? ".AUTORSTCFG" : ".HARDRSTCFG";
+    str = config_get_auto_rst() ? "AUTO_RSTCFG" : "HARD_RSTCFG";
     str_len = strlen(str);
     memcpy(dir1.f3.filename, str, str_len);
     // patch fs entries (fat sizes and all blank regions)
