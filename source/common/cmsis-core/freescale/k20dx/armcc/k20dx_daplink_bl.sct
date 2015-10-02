@@ -6,10 +6,13 @@ LR_IROM1 0x00000000 0x8000  {    ; load region size_region
    .ANY (+RO)
   }
 
-  RW_IRAM1 0x1FFFE000 0x00004000  {  ; RW data
+  RW_IRAM1 0x1FFFE000 0x00003F00  {  ; RW data
    .ANY (+RW +ZI)
   }
 
+  RW_CONFIG 0x20001F00 UNINIT 0x100 {
+    .ANY (cfgram)
+  }
 }
 LR_CONFIG 0x0001FC00 0x400 {	 ; reserve last sector for config data
   ER_CONFIG 0x0001FC00 UNINIT 0x400 {

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
+#include <ctype.h>
+
 #include "main.h"
 #include "RTL.h"
 #include "rl_usb.h"
@@ -22,6 +25,7 @@
 #include "validation.h"
 #include "version.h"
 #include "config_settings.h"
+#include "daplink.h"
 
 static uint32_t usb_buffer[512/sizeof(uint32_t)];
 
@@ -131,28 +135,29 @@ static uint32_t exec_file_entry(const FatDirectoryEntry_t dir_entry)
     return 0;
 }
 
-// known configuration file extensions
-static const char *const known_cfg_extensions[] = {
-    "CFG",
-    "cfg",
-    0
-};
-
-static uint32_t cfg_file_entry_mod(const FatDirectoryEntry_t dir_entry)
+static bool data_same_ignore_case(const char * str1, const char * str2, uint32_t size)
 {
-    uint32_t i = 0;
-    // Look for the file deletion 
-    //  a know extension
-    //  and a valid file size
-    while (known_cfg_extensions[i] != 0) {
-        if(0xe5 == dir_entry.filename[0]) {
-            if (0 == strncmp(known_cfg_extensions[i], (const char *)&dir_entry.filename[8], 3)) {
-                return (dir_entry.filesize) ? 1 : 0;
-            }
+    uint32_t i;
+    for (i = 0; i < size; i++) {
+        if (tolower(str1[i]) != tolower(str2[i])) {
+            return false;
         }
-        i++;
     }
-    return 0;
+    return true;
+}
+
+static bool check_file_deleted(const FatDirectoryEntry_t * dir_entry, const char * filename)
+{
+    // Look for the file deletion 
+    //  the correct name
+    //  and a valid file size
+    if(0xe5 == dir_entry->filename[0]) {
+        const uint32_t size = sizeof(dir_entry->filename) - 1;
+        if (data_same_ignore_case(&filename[1], (const char *)&dir_entry->filename[1], size)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 static extension_t identify_start_sequence(uint8_t *buf)
@@ -229,9 +234,21 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             // test for a known dir entry file type and also that the filesize is greater than 0
             if (1 == exec_file_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
-            } else if (1 == cfg_file_entry_mod(tmp_file)) {
+            } else if (check_file_deleted(&tmp_file, virtual_fs_auto_rstcfg)) {
                 debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
-                config_set_auto_rst(!config_get_auto_rst());
+                config_set_auto_rst(false);
+                goto cfg_action;
+            } else if (check_file_deleted(&tmp_file, virtual_fs_hard_rstcfg)) {
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                config_set_auto_rst(true);
+                goto cfg_action;
+            } else if (check_file_deleted(&tmp_file, daplink_mode_file_name)) {
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                if (daplink_is_interface()) {
+                    config_ram_set_hold_in_bl(true);
+                } else {
+                    // Do nothing - bootloader will go to interface by default
+                }
                 goto cfg_action;
             }
         }
