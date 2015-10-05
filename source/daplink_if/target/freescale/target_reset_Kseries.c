@@ -16,7 +16,6 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "target_config.h"
-#include "flash_blob.h"
 #include "version.h"
 
 

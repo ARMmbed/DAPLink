@@ -538,7 +538,9 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
         return 0;
     }
     
-    if (!swd_write_block(flash.algo_start, (uint8_t *)flash.algo_blob, flash.algo_size)){
+    if (!swd_write_block(target_device.flash_algo->algo_start, 
+            (uint8_t *)target_device.flash_algo->algo_blob, 
+            target_device.flash_algo->algo_size)){
         return 0;
     }
 

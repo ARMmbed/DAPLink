@@ -22,7 +22,6 @@
 #include "gpio.h"
 #include "target_flash.h"
 #include "target_config.h"
-#include "flash_blob.h"
 #include "intelhex.h"
 
 #include "string.h"
