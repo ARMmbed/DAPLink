@@ -1,0 +1,31 @@
+common:
+    target:
+        - efm32lg-stk
+    macros:
+        - INTERFACE_EFM32LG
+        - DAPLINK_IF
+        - EFM32LG990F256
+    includes:
+        - source/daplink_if/target/siliconlabs/efm32gg
+        - source/common/hal/siliconlabs/emlib/inc
+        - source/common/hal/siliconlabs/usb/inc
+    sources:
+        - source/daplink_if/target/siliconlabs/efm32gg/efm32gg_app_config.c
+        - source/daplink_if/target/siliconlabs/efm32gg/target_reset.c
+        - source/common/cmsis-core/siliconlabs/efm32lg
+        - source/common/cmsis-core/siliconlabs/efm32lg/armcc
+        - source/common/hal/siliconlabs/efm32lg
+        - source/common/hal/siliconlabs/emlib/src
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/siliconlabs/efm32lg/armcc/efm32lg_daplink_if.sct
+        AfterMake:
+            RunUserProg1:
+                - $KARM\BIN\ElfDwT.exe #L1
+            RunUserProg2:
+                - "fromelf --bin $L@L.axf -o $L@L.bin"
+

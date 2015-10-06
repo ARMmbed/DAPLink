@@ -177,6 +177,7 @@ os_mbx_declare(serial_mailbox, 20);
 #define SIZE_DATA (64)
 static uint8_t data[SIZE_DATA];
 
+#ifdef CDC_ENDPOINT
 __task void serial_process()
 {
     UART_Configuration config;
@@ -237,6 +238,7 @@ __task void serial_process()
         }
     }
 }
+#endif
 
 extern __task void hid_process(void);
 __attribute__((weak)) void prerun_target_config(void){}
@@ -386,7 +388,9 @@ __task void main_task(void)
                     if(usbd_configured()) {
                         if (!thread_started) {
                             os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
+#ifdef CDC_ENDPOINT
                             serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
+#endif
                             thread_started = 1;
                         }
                         usb_state = USB_CONNECTED;

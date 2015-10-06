@@ -878,5 +878,6 @@ __task void USBD_RTX_EndPoint0 (void) {
       USBD_EndPoint0 (usbd_os_evt_get());
     }
   }
+  while(1);
 }
 #endif

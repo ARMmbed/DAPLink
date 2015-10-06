@@ -39,6 +39,8 @@ U32         Length;                        /* R/W Length */
 U8          BulkStage;                     /* Bulk Stage */
 U32         BulkLen;                       /* Bulk In/Out Length */
 
+// Only include MSC functions when MSC is defined
+#if (MSC_ENDPOINT)
 
 /* Dummy Weak Functions that need to be provided by user */
 __weak void usbd_msc_init       ()                                      {};
@@ -1035,6 +1037,7 @@ __task void USBD_RTX_MSC_EP_BULKIN_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -1054,6 +1057,7 @@ __task void USBD_RTX_MSC_EP_BULKOUT_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -1071,5 +1075,8 @@ __task void USBD_RTX_MSC_EP_BULK_Event (void) {
       USBD_MSC_EP_BULK_Event (usbd_os_evt_get());
     }
   }
+  while(1);
 }
+#endif
+
 #endif

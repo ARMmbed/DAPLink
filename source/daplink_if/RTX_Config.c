@@ -83,7 +83,7 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z)
+  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z) || defined (INTERFACE_EFM32LG)
     #define OS_CLOCK    48000000
   #elif defined(INTERFACE_ATSAM3U2C)
     #define OS_CLOCK    96000000
