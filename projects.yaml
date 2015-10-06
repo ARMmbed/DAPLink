@@ -42,7 +42,7 @@ projects:
         - records/common/rtos-cm0.yaml
         - records/projects/host_kl26z.yaml
         - records/projects/kl26z_nrf51822_if.yaml
-    microbit_if:
+    kl26z_microbit_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
