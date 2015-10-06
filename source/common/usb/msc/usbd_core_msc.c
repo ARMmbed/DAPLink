@@ -18,6 +18,7 @@
 #include "string.h"
 #include "usb_for_lib.h"
 
+#if (MSC_ENDPOINT)
 
 /*
  *  Clear Feature USB Device Request - MSC specific handling
@@ -62,3 +63,4 @@ __weak BOOL USBD_EndPoint0_Setup_MSC_ReqToIF (void) {
   }
   return (__FALSE);
 }
+#endif

@@ -398,6 +398,7 @@ __task void USBD_RTX_HID_EP_INTIN_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -417,6 +418,7 @@ __task void USBD_RTX_HID_EP_INTOUT_Event (void) {
       }
     }
   }
+  while(1);
 }
 
 
@@ -434,6 +436,7 @@ __task void USBD_RTX_HID_EP_INT_Event (void) {
       USBD_HID_EP_INT_Event (usbd_os_evt_get());
     }
   }
+  while(1);
 }
 #endif
 

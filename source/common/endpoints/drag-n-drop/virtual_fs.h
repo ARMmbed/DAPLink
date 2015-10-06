@@ -47,15 +47,8 @@ typedef struct {
     uint32_t volume_id;
     char     volume_label[11];
     char     file_system_type[8];
-    /* bootstrap data in bytes 62-509 */
-    uint8_t  bootstrap[448];
-    /* These entries in place of bootstrap code are the *nix partitions */
-    //uint8_t  partition_one[16];
-    //uint8_t  partition_two[16];
-    //uint8_t  partition_three[16];
-    //uint8_t  partition_four[16];
-    /* Mandatory value at bytes 510-511, must be 0xaa55 */
-    uint16_t signature;
+    /* Removed 448 bytes of empty bootstrap section */
+    /* Removed 2 bytes of empty signature, not needed because drive is not bootable */
 } __attribute__((packed)) mbr_t;
 
 // cannot exceed 512 conseutive bytes or media read logic fails
@@ -107,7 +100,7 @@ typedef struct root_dir {
 
 typedef struct virtual_media {
     uint8_t *sect;
-    uint32_t length;
+    uint16_t length;
 } virtual_media_t;
 
 extern const uint32_t disc_size;
