@@ -1,9 +1,7 @@
 common:
-    group_name:
-        - usb_msc
     macros:
         - MSC_ENDPOINT
     sources:
-        - source/common/usb/msc
-        - source/common/endpoints/drag-n-drop
-        
+        usb_msc:
+            - source/common/usb/msc
+            - source/common/endpoints/drag-n-drop

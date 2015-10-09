@@ -1,0 +1,10 @@
+common:
+    target:
+        - lpc11u35-501
+    macros:
+        - INTERFACE_LPC11U35
+    sources:
+        host:
+            - source/common/cmsis-core/nxp/lpc11u35
+            - source/common/cmsis-core/nxp/lpc11u35/armcc
+            - source/common/hal/nxp/lpc11u35

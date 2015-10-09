@@ -1,0 +1,13 @@
+common:
+    target:
+        - mkl26z128xxx4
+    macros:
+        - INTERFACE_KL26Z
+        - CPU_MKL26Z128VLH4
+    sources:
+        host:
+            - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_kl_series.c
+            - source/daplink_bl/target/iap_api/freescale/devices/MKL26Z4
+            - source/common/cmsis-core/freescale/kl26z
+            - source/common/cmsis-core/freescale/kl26z/armcc
+            - source/common/hal/freescale/kl26z

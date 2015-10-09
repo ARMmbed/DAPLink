@@ -1,18 +1,12 @@
 common:
-    target:
-        - mk20dx128xxx5
     macros:
-        - INTERFACE_K20D5
         - APP_OFFSET_32K
-        - DAPLINK_IF
     includes:
         - source/daplink_if/target/freescale/k64f
     sources:
-        - source/daplink_if/target/freescale/k64f/app_config.c
-        - source/daplink_if/target/freescale/target_reset_Kseries.c
-        - source/common/cmsis-core/freescale/k20dx
-        - source/common/cmsis-core/freescale/k20dx/armcc
-        - source/common/hal/freescale/k20dx
+        target_specific:
+            - source/daplink_if/target/freescale/k64f/app_config.c
+            - source/daplink_if/target/freescale/target_reset_Kseries.c
     debugger:
         - cmsis-dap
 
