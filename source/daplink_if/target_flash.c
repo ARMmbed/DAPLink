@@ -145,6 +145,10 @@ target_flash_status_t program_bin(uint32_t addr, uint8_t * buf, uint32_t size)
     uint32_t bytes_written = 0;
     target_flash_status_t status = TARGET_OK;
 
+    // check if security bits were set
+    if (1 == security_bits_set(addr, buf, size)) {
+        return TARGET_FAIL_SECURITY_BITS;
+    }
 	
     // we need to erase a sector
     if (addr % target_device.sector_size == 0) {
@@ -218,8 +222,8 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
 
     // store the block start address if aligned with the programming size
     uint32_t target_flash_address = (addr / flash->program_buffer_size) * flash->program_buffer_size;
-    // check if security bits were set. Could be an odd alignment boundry that breaks (bin_buf only has part of security region)
-    if (1 == security_bits_set(target_flash_address, buf, size)) {
+    // check if security bits were set
+    if (1 == security_bits_set(addr, buf, size)) {
         return TARGET_FAIL_SECURITY_BITS;
     }
 //    // possibly erase a sector
