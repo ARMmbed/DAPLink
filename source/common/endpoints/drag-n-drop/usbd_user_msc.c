@@ -27,7 +27,24 @@
 #include "config_settings.h"
 #include "daplink.h"
 
+typedef struct file_transfer_state {
+    uint32_t start_block;
+    uint32_t amt_to_write;
+    uint32_t amt_written;
+    uint32_t next_block_to_write;
+    uint32_t transfer_started;
+    uint32_t transfer_finished;
+    extension_t file_type;
+} file_transfer_state_t;
+
 static uint32_t usb_buffer[512/sizeof(uint32_t)];
+static file_transfer_state_t file_transfer_state;
+
+void reset_file_transfer_state(void)
+{
+    static const file_transfer_state_t default_transfer_state = {0,0,0,0,0,0,UNKNOWN};
+    file_transfer_state = default_transfer_state;
+}
 
 void usbd_msc_init(void)
 {    
@@ -171,6 +188,27 @@ static extension_t identify_start_sequence(uint8_t *buf)
     return UNKNOWN;
 }
 
+// Start the usb disconnect timer.  If no more data arrives
+// then fail with the given status.
+static void start_disconnect_reconnect_timer(target_flash_status_t status)
+{
+    configure_fail_txt(status);
+    main_msc_disconnect_event();
+}
+
+// Complete the transfer with the given status.  After this
+// call no more data received over USB will get processed
+// until after reconnecting. This should only be called
+// from usbd_msc_write_sect and after calling it there
+// should be a return to prevent further processing.
+// Note - this function does not detach USB immediately.
+//        It waits until usb is idle before disconnecting.
+static void tranfer_complete(target_flash_status_t status)
+{
+    file_transfer_state.transfer_finished = 1;
+    start_disconnect_reconnect_timer(status);
+}
+
 void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
 {
     FatDirectoryEntry_t tmp_file = {0};
@@ -181,17 +219,55 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
     if (!USBD_MSC_MediaReady) {
         return;
     }
-    
-    if (file_transfer_state.transfer_failed) {
+
+    // Restart the disconnect counter on every packet
+    // so the device does not detach in the middle of a
+    // transfer.
+    main_msc_delay_disconnect_event();
+
+    if (file_transfer_state.transfer_finished) {
         debug_msg("%d: %s\r\n", __LINE__, "Transfer_failed - exit");
         return;
     }
-    
-    
+
     debug_msg("block: %d\r\n", block);
     // indicate msc activity
     main_blink_msc_led(MAIN_LED_OFF);
-      
+
+    // if the root dir comes we should look at it and parse for info that can end a transfer
+    if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
+             (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 2))) {
+        // start looking for a known file and some info about it
+        for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
+            memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
+            debug_msg("name:%*s\t attributes:%8d\t size:%8d\r\n", 11, tmp_file.filename, tmp_file.attributes, tmp_file.filesize);
+            // test for a known dir entry file type and also that the filesize is greater than 0
+            if (1 == exec_file_entry(tmp_file)) {
+                file_transfer_state.amt_to_write = tmp_file.filesize;
+                start_disconnect_reconnect_timer(TARGET_FAIL_TRANSFER_IN_PROGRESS);
+            } else if (check_file_deleted(&tmp_file, virtual_fs_auto_rstcfg)) {
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                config_set_auto_rst(false);
+                tranfer_complete(TARGET_OK);
+                return;
+            } else if (check_file_deleted(&tmp_file, virtual_fs_hard_rstcfg)) {
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                config_set_auto_rst(true);
+                tranfer_complete(TARGET_OK);
+                return;
+            } else if (check_file_deleted(&tmp_file, daplink_mode_file_name)) {
+                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
+                if (daplink_is_interface()) {
+                    config_ram_set_hold_in_bl(true);
+                } else {
+                    // Do nothing - bootloader will go to interface by default
+                }
+                tranfer_complete(TARGET_OK);
+                return;
+            }
+        }
+    }
+
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated
     if (0 == file_transfer_state.transfer_started) {
@@ -206,106 +282,58 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
                 file_transfer_state.amt_to_write = 0xffffffff;
             }
             file_transfer_state.amt_written = USBD_MSC_BlockSize;
-            file_transfer_state.last_block_written = block;
+            file_transfer_state.next_block_to_write = block;
             file_transfer_state.transfer_started = 1;
             file_transfer_state.file_type = start_type_identified;
+            start_disconnect_reconnect_timer(TARGET_FAIL_TRANSFER_IN_PROGRESS);
             
             // prepare the target device
             status = target_flash_init(file_transfer_state.file_type);
             if (status != TARGET_OK) {
-                goto msc_fail_exit;
+                tranfer_complete(status);
+                return;
             }
-            // writing in 2 places less than ideal but manageable for the time being
-            debug_msg("%d: %s", __LINE__, "FLASH WRITE - ");
-            //debug_data(buf, USBD_MSC_BlockSize);
-            status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
-            debug_msg("%d\r\n", status);
-            if ((status != TARGET_OK) && (status != TARGET_HEX_FILE_EOF)) {
-                goto msc_fail_exit;
-            }
-            goto msc_complete;
         }
     }
-    // if the root dir comes we should look at it and parse for info that can end a transfer
-    if ((block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 1)) || 
-             (block == ((mbr.num_fats * mbr.logical_sectors_per_fat) + 2))) {
-        // start looking for a known file and some info about it
-        for( ; i < USBD_MSC_BlockSize/sizeof(tmp_file); i++) {
-            memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
-            debug_msg("name:%*s\t attributes:%8d\t size:%8d\r\n", 11, tmp_file.filename, tmp_file.attributes, tmp_file.filesize);
-            // test for a known dir entry file type and also that the filesize is greater than 0
-            if (1 == exec_file_entry(tmp_file)) {
-                file_transfer_state.amt_to_write = tmp_file.filesize;
-            } else if (check_file_deleted(&tmp_file, virtual_fs_auto_rstcfg)) {
-                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
-                config_set_auto_rst(false);
-                goto cfg_action;
-            } else if (check_file_deleted(&tmp_file, virtual_fs_hard_rstcfg)) {
-                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
-                config_set_auto_rst(true);
-                goto cfg_action;
-            } else if (check_file_deleted(&tmp_file, daplink_mode_file_name)) {
-                debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
-                if (daplink_is_interface()) {
-                    config_ram_set_hold_in_bl(true);
-                } else {
-                    // Do nothing - bootloader will go to interface by default
-                }
-                goto cfg_action;
-            }
-        }
+    
+    // Transfer must have been started for processing beyond this point
+    if (!file_transfer_state.transfer_started) {
+        return;
     }
 
     // write data to media
-    if ((block >= file_transfer_state.start_block) && 
-        (file_transfer_state.transfer_started == 1)) {
-        if (block >= file_transfer_state.start_block) {
-            // check for contiguous transfer
-            if (block != (file_transfer_state.last_block_written+1)) {
-                // this is non-contigous transfer. need to wait for then next proper block
-                debug_msg("%s", "BLOCK OUT OF ORDER\r\n");
+    if (block >= file_transfer_state.start_block) {
+        // check for contiguous transfer
+        if (block == file_transfer_state.next_block_to_write) {
+            debug_msg("%d: %s", __LINE__, "FLASH WRITE - ");
+            status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
+            debug_msg("%d\r\n", status);
+            if ((status != TARGET_OK) && (status != TARGET_HEX_FILE_EOF)) {
+                tranfer_complete(status);
+                return;
             }
-            else {
-                debug_msg("%d: %s", __LINE__, "FLASH WRITE - ");
-                //debug_data(buf, USBD_MSC_BlockSize);
-                status = target_flash_program_page((block-file_transfer_state.start_block)*USBD_MSC_BlockSize, buf, USBD_MSC_BlockSize*num_of_blocks);
-                debug_msg("%d\r\n", status);
-                if ((status != TARGET_OK) && (status != TARGET_HEX_FILE_EOF)) {
-                    goto msc_fail_exit;
-                }
-                // and do the housekeeping
-                file_transfer_state.amt_written += USBD_MSC_BlockSize;
-                file_transfer_state.last_block_written = block;
-            }
+            // and do the housekeeping
+            file_transfer_state.amt_written += USBD_MSC_BlockSize;
+            file_transfer_state.next_block_to_write = block + 1;
+        } else {
+            // this is non-contigous transfer. need to wait for then next proper block
+            debug_msg("%s", "BLOCK OUT OF ORDER\r\n");
         }
     }
-    
-msc_complete:
-    // see if a complete transfer occured by knowing it started and comparing filesize expectations (BIN)
-    //  finding an EOF from hex file (HEX)
-    if (((file_transfer_state.amt_written >= file_transfer_state.amt_to_write) && (file_transfer_state.transfer_started == 1 )) || 
-         (TARGET_HEX_FILE_EOF == status)) {
-        // hex file complete exit needs to look like binary file complete exit
-        status = TARGET_OK;
-        // do the disconnect - maybe write some programming stats to the file
-        debug_msg("%s", "FLASH END\r\n");
-        // we know the contents have been reveived. Time to eject
-        file_transfer_state.transfer_started = 0;
-        configure_fail_txt(status);
-cfg_action:
-        main_msc_disconnect_event();
-        return;
+
+    // See if a complete transfer occured.
+    if (file_transfer_state.amt_written >= file_transfer_state.amt_to_write) {
+        // hex files since they have a record which indicates the end.
+        if (TARGET_HEX_FILE_EOF == status) {
+            debug_msg("%s", "FLASH END\r\n");
+            tranfer_complete(TARGET_OK);
+            return;
+        }
+        // set the status of binary file programming
+        start_disconnect_reconnect_timer(TARGET_OK);
+    } else {
+        // If no more data comes in fail with the message
+        // because an in progress tranfer timed out
+        start_disconnect_reconnect_timer(TARGET_FAIL_TRANSFER_IN_PROGRESS);
     }
-    
-    // There is one more known state where the root dir is updated with the amount of data transfered but not the whole file transfer was complete
-    //  To handle this we need a state to kick off a timer for a fixed amount of time where we can receive more continous sectors and assume
-    //  they are valid file data. This is only the case for bin files since the only known end is the filesize from the root dir entry.
-    return;
-    
-msc_fail_exit:
-    file_transfer_state.transfer_started = 0;
-    file_transfer_state.transfer_failed = 1;
-    configure_fail_txt(status);
-    main_force_msc_disconnect_event();
-    return;
 }

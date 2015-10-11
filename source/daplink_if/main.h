@@ -52,6 +52,7 @@ void main_usb_busy_event(void);
 void main_powerdown_event(void);
 void main_disable_debug_event(void);
 void main_msc_disconnect_event(void);
+void main_msc_delay_disconnect_event(void);
 void main_force_msc_disconnect_event(void);
 void main_blink_hid_led(main_led_state_t permanent);
 void main_blink_msc_led(main_led_state_t permanent);

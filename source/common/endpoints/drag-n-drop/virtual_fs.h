@@ -126,18 +126,6 @@ extern const char * const virtual_fs_hard_rstcfg;
 void configure_fail_txt(target_flash_status_t reason);
 void virtual_fs_init(void);
 
-typedef struct file_transfer_state {
-    uint32_t start_block;
-    uint32_t amt_to_write;
-    uint32_t amt_written;
-    uint32_t last_block_written;
-    uint32_t transfer_started;
-    uint32_t transfer_failed;
-    extension_t file_type;
-} file_transfer_state_t;
-
-extern file_transfer_state_t file_transfer_state;
-
 void reset_file_transfer_state(void);
 
 #ifdef __cplusplus
