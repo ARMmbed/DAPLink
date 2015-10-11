@@ -18,10 +18,7 @@
 #include "DAP_config.h"
 #include "gpio.h"
 #include "target_reset.h"
-
-// Power target in all configurations
-// aside from bootloader
-#define INTERFACE_POWER_EN  !defined(DAPLINK_BL)
+#include "daplink.h"
 
 void gpio_init(void)
 {
@@ -42,13 +39,16 @@ void gpio_init(void)
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
 
-#if INTERFACE_POWER_EN
-    // configure pin as GPIO
-    PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
-	// force always on logic 1
-    PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
-    PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
-#endif
+    // Keep powered off in bootloader mode
+    // to prevent the target from effecting the state
+    // of the reset line / reset button
+    if (!daplink_is_bootloader()) {
+        // configure pin as GPIO
+        PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
+        // force always on logic 1
+        PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
+        PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
+    }
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
