@@ -202,7 +202,9 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             
             // binary file transfer - reset parsing
             file_transfer_state.start_block = block;
-            file_transfer_state.amt_to_write = 0xffffffff;
+            if (0 == file_transfer_state.amt_to_write) {
+                file_transfer_state.amt_to_write = 0xffffffff;
+            }
             file_transfer_state.amt_written = USBD_MSC_BlockSize;
             file_transfer_state.last_block_written = block;
             file_transfer_state.transfer_started = 1;
@@ -232,7 +234,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
             memcpy(&tmp_file, &buf[i*sizeof(tmp_file)], sizeof(tmp_file));
             debug_msg("name:%*s\t attributes:%8d\t size:%8d\r\n", 11, tmp_file.filename, tmp_file.attributes, tmp_file.filesize);
             // test for a known dir entry file type and also that the filesize is greater than 0
-            if (1 == exec_file_entry(tmp_file) && 0 != file_transfer_state.transfer_started) {
+            if (1 == exec_file_entry(tmp_file)) {
                 file_transfer_state.amt_to_write = tmp_file.filesize;
             } else if (check_file_deleted(&tmp_file, virtual_fs_auto_rstcfg)) {
                 debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
