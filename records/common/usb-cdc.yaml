@@ -1,9 +1,7 @@
 common:
-    group_name:
-        - usb_cdc
     macros:
         - CDC_ENDPOINT
     sources:
-        - source/common/usb/cdc
-        - source/common/endpoints/usb2uart
-        
+        usb_cdc:
+            - source/common/usb/cdc
+            - source/common/endpoints/usb2uart

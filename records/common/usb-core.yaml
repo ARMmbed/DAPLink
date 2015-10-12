@@ -1,7 +1,6 @@
 common:
-    group_name:
-        - usb_core
     includes:
         - source/common/usb
     sources:
-        - source/common/usb/usbd_core.c
+        usb_core:
+            - source/common/usb/usbd_core.c

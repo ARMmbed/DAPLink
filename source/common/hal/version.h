@@ -18,7 +18,7 @@
 
 #include "stdint.h"
 
-#define FW_BUILD "0233"
+#define FW_BUILD "0234"
 
 void update_html_file(uint8_t *buf, uint32_t bufsize);
 uint8_t * get_uid_string          (void);
