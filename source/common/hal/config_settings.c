@@ -115,8 +115,10 @@ void config_init()
 
 void config_set_auto_rst(bool on) 
 {
+#if FLASH_WRITE_ALLOWED
     config_ram.auto_rst = on;
     program_cfg(&config_ram);
+#endif
 }
 
 bool config_get_auto_rst()
