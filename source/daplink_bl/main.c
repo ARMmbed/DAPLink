@@ -113,6 +113,11 @@ __task void main_task(void)
     // USB
     uint32_t usb_state_count;
 
+    if (config_ram_get_initial_hold_in_bl()) {
+        // Delay for 3 seconds for VMs
+        os_dly_wait(300);
+    }
+
     // Get a reference to this task
     main_task_id = os_tsk_self();
     
@@ -238,8 +243,9 @@ int main (void)
     gpio_init();
     // init settings
     config_init();
-    // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing
-    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)target_device.flash_start)) {
+    // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
+    // If the interface has set the hold in bootloader setting don't jump to app
+    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t*)target_device.flash_start) && !config_ram_get_initial_hold_in_bl()) {
         // change to the new vector table
         SCB->VTOR = target_device.flash_start;
         // modify stack pointer and start app

@@ -367,6 +367,10 @@ __task void main_task(void)
                 case USB_DISCONNECT_CONNECT:
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
+                        // If hold in bootloader has been set then reset after usb is disconnected
+                        if (config_ram_get_hold_in_bl()) {
+                            NVIC_SystemReset();
+                        }
                         usb_state = USB_CONNECTING;
                         // Delay the connecting state before reconnecting to the host - improved usage with VMs
                         usb_state_count = USB_BUSY_TIME;

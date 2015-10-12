@@ -23,6 +23,9 @@
 // device.  This is to accomidate for hex file programming.
 const uint32_t disc_size = MB(8);
 
+const char * const virtual_fs_auto_rstcfg = "AUTO_RSTCFG";
+const char * const virtual_fs_hard_rstcfg = "HARD_RSTCFG";
+
 // mbr is in RAM so the members can be updated at runtime to change drive capacity based
 //  on target MCU that is attached
 mbr_t mbr = {
@@ -92,8 +95,8 @@ static const file_allocation_table_t fat = {
     .f = {
         0xF8, 0xFF, 0xFF, // Sector 0, 1
         0xFF, 0xFF, 0xFF, // Sector 2, 3
-        0xFF, 0x0F, 0x00, // Sector 4, 5
-        0x00, 0x00, 0x00,
+        0xFF, 0xFF, 0xFF, // Sector 4, 5
+        0x00, 0x00, 0x00, // Sector 6, 7
     }
 };
 
@@ -102,7 +105,7 @@ static const file_allocation_table_t fat_fail = {
         0xF8, 0xFF, 0xFF, // Sector 0, 1
         0xFF, 0xFF, 0xFF, // Sector 2, 3
         0xFF, 0xFF, 0xFF, // Sector 4, 5
-        0x00, 0x00, 0x00,
+        0xFF, 0x0F, 0x00, // Sector 6, 7
     }
 };
 
@@ -137,6 +140,9 @@ static const uint8_t hardware_rst_file[512] =
     "# Delete this file to toggle the behavior\r\n"
     "# This setting can only be changed in maintenance mode\r\n";
 
+static const uint8_t switch_mode_file[512] = 
+    "# Delete this file to switch between DAPLINK and MAINTENANCE mode\r\n";
+
 static const uint8_t fail_file[512] =
     "Placeholder for fail.txt data\r\n";
 
@@ -151,7 +157,7 @@ static FatDirectoryEntry_t const fail_txt_dir_entry = {
 /*uint16_t*/ .first_cluster_high_16 = 0x0000,
 /*uint16_t*/ .modification_time = 0x83dc,
 /*uint16_t*/ .modification_date = 0x34bb,
-/*uint16_t*/ .first_cluster_low_16 = 0x0005,    // always must be last sector
+/*uint16_t*/ .first_cluster_low_16 = 0x0006,    // always must be last sector
 /*uint32_t*/ .filesize = sizeof(fail_file)
 };
 
@@ -217,7 +223,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
     .f3 = {
-    /*uint8_t[11] */ .filename = "HARD_RSTCFG",
+    /*uint8_t[11] */ .filename = {""},
     /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -230,7 +236,20 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0004,
     /*uint32_t*/ .filesize = sizeof(hardware_rst_file)
     },
-    .f4  = {0},
+    .f4 = {
+    /*uint8_t[13] */ .filename = {""},
+    /*uint8_t */ .attributes = 0x02,
+    /*uint8_t */ .reserved = 0x00,
+    /*uint8_t */ .creation_time_ms = 0x00,
+    /*uint16_t*/ .creation_time = 0x0000,
+    /*uint16_t*/ .creation_date = 0x0021,
+    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .first_cluster_high_16 = 0x0000,
+    /*uint16_t*/ .modification_time = 0x83dc,
+    /*uint16_t*/ .modification_date = 0x30bb,
+    /*uint16_t*/ .first_cluster_low_16 = 0x0005,
+    /*uint32_t*/ .filesize = 0x00000000,
+    },
     .f5  = {0},    
     .f6  = {0},
     .f7  = {0},
@@ -290,10 +309,10 @@ virtual_media_t fs[] = {
     {(uint8_t *)&hardware_rst_file, sizeof(hardware_rst_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     //f4 [11]
-    {(uint8_t *)&fail_file,    sizeof(fail_file)},
+    {(uint8_t *)&switch_mode_file, sizeof(switch_mode_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     //f5 [13]
-    {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
+    {(uint8_t *)&fail_file,    sizeof(fail_file)},
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
     //f6 [15]
     {(uint8_t *)&blank_reigon, sizeof(blank_reigon)},
@@ -337,12 +356,12 @@ void configure_fail_txt(target_flash_status_t reason)
 {
     const uint8_t * fat_ptr;
     // set the dir entry to a file or empty it
-    dir1.f4 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
+    dir1.f5 = (TARGET_OK == reason) ? empty_dir_entry : fail_txt_dir_entry;
     fat_ptr = (TARGET_OK == reason) ? fat.f : fat_fail.f;
     // update the filesize (pass/fail)
-    dir1.f4.filesize = strlen((const char *)fail_txt_contents[reason]);
+    dir1.f5.filesize = strlen((const char *)fail_txt_contents[reason]);
     // and the memory that we point to (file contents)
-    fs[11].sect = (uint8_t *)fail_txt_contents[reason];
+    fs[13].sect = (uint8_t *)fail_txt_contents[reason];
 
     fs[1].sect = (uint8_t*) fat_ptr;
     fs[2].sect = (uint8_t*)fat_ptr;
@@ -351,7 +370,7 @@ void configure_fail_txt(target_flash_status_t reason)
 // Update known entries and mbr data when the program boots
 void virtual_fs_init(void)
 {
-    char* str;
+    const char* str;
     uint32_t str_len;
     // 64KB is mbr, FATs, root dir, ect...
     //uint32_t wanted_size_in_bytes   = (disc_size + KB(64);
@@ -369,9 +388,12 @@ void virtual_fs_init(void)
     dir1.f2.filesize = strlen((const char *)details_file);
     dir1.f3.filesize = strlen((const char *)hardware_rst_file);
     // Update filename to reflect configuration
-    str = config_get_auto_rst() ? "AUTO_RSTCFG" : "HARD_RSTCFG";
+    str = config_get_auto_rst() ? virtual_fs_auto_rstcfg : virtual_fs_hard_rstcfg;
     str_len = strlen(str);
     memcpy(dir1.f3.filename, str, str_len);
+    memcpy(dir1.f4.filename, daplink_mode_file_name, sizeof(daplink_mode_file_name));
+    dir1.f4.filesize = strlen((const char *)switch_mode_file);
+
     // patch fs entries (fat sizes and all blank regions)
     fs[1].length  = sizeof(fat) * mbr.logical_sectors_per_fat;
     fs[2].length  = fs[1].length;
