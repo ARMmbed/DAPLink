@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "daplink.h"
+#include "virtual_fs.h"
 
-// LPC1114 target information
-const target_cfg_t target_device = {
-    .board_id   = "1114",
-    .secret     = "78a0cd72",
-    .sector_size    = 4096,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (kB(32)/4096),
-    .flash_start    = 0,
-    .flash_end      = kB(32),
-    .ram_start      = 0x10000000,
-    .ram_end        = 0x10001000,
-};
+// daplink_mode_file_name, daplink_url_name and 
+// daplink_drive_name strings must be 11 characters 
+// excluding the null terminated character
+const char daplink_mode_file_name[11] = "START_IFCFG";
+const char daplink_url_name[11] =       "HELP_FAQHTM";
+const char daplink_drive_name[11] =     "MAINTENANCE";
+const char * const daplink_target_url = "https://mbed.com/daplink";
 
+bool daplink_is_bootloader()
+{
+    return true;
+}
+
+bool daplink_is_interface()
+{
+    return false;
+}

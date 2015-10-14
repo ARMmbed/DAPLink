@@ -17,10 +17,15 @@
 #include "RTL.h"
 #include "DAP_config.h"
 #include "gpio.h"
+#include "target_reset.h"
+#include "daplink.h"
 
-// Power target in all configurations
-// aside from bootloader
-#define INTERFACE_POWER_EN  !defined(DAPLINK_BL)
+static void busy_wait(uint32_t cycles)
+{
+    volatile uint32_t i;
+    i = cycles;
+    while (i > 0) i--;
+}
 
 void gpio_init(void)
 {
@@ -41,13 +46,24 @@ void gpio_init(void)
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
 
-#if INTERFACE_POWER_EN
-    // configure pin as GPIO
-    PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
-	// force always on logic 1
-    PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
-    PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
-#endif
+    // Keep powered off in bootloader mode
+    // to prevent the target from effecting the state
+    // of the reset line / reset button
+    if (!daplink_is_bootloader()) {
+        // configure pin as GPIO
+        PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
+        // force always on logic 1
+        PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
+        PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
+    }
+
+    // Let the voltage rails stabilize.  This is especailly important
+    // during software resets, since the target's 3.3v rail can take
+    // 20-50ms to drain.  During this time the target could be driving
+    // the reset pin low, causing the bootloader to think the reset
+    // button is pressed.
+    // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
+    busy_wait(1000000);
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
@@ -74,30 +90,16 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {
-    //TODO - Handle reset button on k20dx.  The logic below does not work
-    //       correctly because as soon as the reset button is pressed
-    //       reset is reconfigured as an output.  That causes this
-    //       this function to return that the reset button is not
-    //       pressed.  For now just return that the button is not
-    //       pressed.
-    uint8_t reset_driven;
-    uint8_t not_pressed;
-
-    // Normally there is a dedicated pin to set reset and a
-    // dedicated pin to read the reset button.  This is not the
-    // case for boards using the K20DX which uses the same pin
-    // to read the reset button and to trigger a reset.  Because
-    // of this button reads must be masked off when the reset
-    // button is being driven.
-    
-    // Pin is open drian so it is only driven when it is an output and set low
-    reset_driven = !(PIN_nRESET_GPIO->PDOR & PIN_nRESET) && (PIN_nRESET_GPIO->PDDR & PIN_nRESET);
-    not_pressed = PIN_nRESET_GPIO->PDIR & PIN_nRESET;
-
-    return not_pressed || reset_driven;
+    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
 }
 
 uint8_t GPIOGetButtonState(void)
 {
     return 0;
+}
+
+void target_forward_reset(bool assert_reset)
+{
+    // Do nothing - reset button is already tied to the target 
+    //              reset pin on k20dx interface hardware
 }

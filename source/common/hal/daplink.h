@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef DAPLINK_H
+#define DAPLINK_H
 
-#include "target_config.h"
+#include <stdbool.h>
 
-// The file flash_blob.c must only be included in app_config.c
-#include "flash_blob.c"
+bool daplink_is_bootloader(void);
+bool daplink_is_interface(void);
 
-// LPC812 target information
-const target_cfg_t target_device = {
-    .board_id   = "1050",
-    .secret     = "xxxxxxxx",
-    .sector_size    = 1024,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    .sector_cnt     = (kB(16)/1024),
-    .flash_start    = 0,
-    .flash_end      = kB(16),
-    .ram_start      = 0x10000000,
-    .ram_end        = 0x10001000,
-    .flash_algo     = (program_target_t*)&flash,
-};
-
+#endif

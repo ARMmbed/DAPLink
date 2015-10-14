@@ -14,36 +14,8 @@
  * limitations under the License.
  */
 
- #ifndef FLASH_BLOB_H
-#define FLASH_BLOB_H
+#include "flash_blob.h"
 
-#include "target_flash.h"
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
-typedef struct {
-    uint32_t breakpoint;
-    uint32_t static_base;
-    uint32_t stack_pointer;
-} program_syscall_t;
-
-typedef struct {
-    const uint32_t  init;
-    const uint32_t  uninit;
-    const uint32_t  erase_chip;
-    const uint32_t  erase_sector;
-    const uint32_t  program_page;
-    const program_syscall_t sys_call_s;
-    const uint32_t  program_buffer;
-    const uint32_t  algo_start;
-    const uint32_t  algo_size;
-    const uint32_t *algo_blob;
-    const uint32_t  program_buffer_size;
-} program_target_t;
-
-// THis should be a c file
 static const uint32_t K64F_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x4604b570, 0x4616460d, 0x5020f24c, 0x81c84932, 0x1028f64d, 0x460881c8, 0xf0208800, 0x80080001,
@@ -107,9 +79,3 @@ static const program_target_t flash = {
     K64F_FLM,  // image, flash algo instruction array
     512        // ram_to_flash_bytes_to_be_written
 };
-
-#ifdef __cplusplus
-  }
-#endif
-
-#endif

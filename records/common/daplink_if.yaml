@@ -1,9 +1,9 @@
 common:
-    group_name:
-        - daplink_if
+    macros:
+        - DAPLINK_IF
     sources:
-        - source/daplink_if
-        - source/daplink_if/target
-        - source/common/cmsis-core
-        - source/common/hal
-        
+        daplink_if:
+            - source/daplink_if
+            - source/daplink_if/target
+            - source/common/cmsis-core
+            - source/common/hal

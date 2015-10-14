@@ -1,9 +1,7 @@
 common:
-    group_name:
-        - usb_hid
     macros:
         - HID_ENDPOINT
     sources:
-        - source/common/usb/hid
-        - source/common/endpoints/cmsis-dap
-        
+        usb_hid:
+            - source/common/usb/hid
+            - source/common/endpoints/cmsis-dap

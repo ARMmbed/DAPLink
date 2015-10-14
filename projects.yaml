@@ -1,6 +1,6 @@
 settings:
     export_dir:
-        - projectfiles/$tool$/$project_name$
+        - projectfiles/{tool}/{project_name}
     tools:
         uvision:
             template:
@@ -27,43 +27,51 @@ projects:
         - *module_bl
         - records/common/rtos-cm0.yaml
         - records/common/fsl_flash_driver.yaml
+        - records/projects/host_kl26z.yaml
         - records/projects/kl26z_bl.yaml
     k20dx_bl:
         - *module_tools
         - *module_bl
         - records/common/rtos-cm3.yaml
         - records/common/fsl_flash_driver.yaml
+        - records/projects/host_k20dx128.yaml
         - records/projects/k20dx128_bl.yaml
     kl26z_nrf51822_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
+        - records/projects/host_kl26z.yaml
         - records/projects/kl26z_nrf51822_if.yaml
     microbit_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
+        - records/projects/host_kl26z.yaml
         - records/projects/kl26z_nrf51822_if.yaml
         - records/overrides/microbit.yaml
     k20dx_k22f_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm3.yaml
+        - records/projects/host_k20dx128.yaml
         - records/projects/k20dx128_k22f_if.yaml
     k20dx_k64f_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm3.yaml
+        - records/projects/host_k20dx128.yaml
         - records/projects/k20dx128_k64f_if.yaml
     lpc11u35_lpc1114_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
+        - records/projects/host_lpc11u35.yaml
         - records/projects/lpc11u35_lpc1114_if.yaml
     lpc11u35_lpc812_if:
         - *module_tools
         - *module_if
         - records/common/rtos-cm0.yaml
+        - records/projects/host_lpc11u35.yaml
         - records/projects/lpc11u35_lpc812_if.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_tools

@@ -28,13 +28,6 @@ char version_string[49+4] = {0};
 
 // Pointers to substitution strings
 const char * const fw_version = (const char *)FW_BUILD;
-__attribute__((weak))
-//Drive and URL must be 11 characters to follow the 8.3 convention
-const char daplink_drive_name[11] = DAPLINK_DRIVE_NAME;
-__attribute__((weak))
-const char daplink_url_name[11] = DAPLINK_URL_NAME;
-__attribute__((weak))
-const char * const daplink_target_url = DAPLINK_TARGET_URL;
 
 static uint32_t unique_id[4];
 static uint8_t already_unique_id = 0;

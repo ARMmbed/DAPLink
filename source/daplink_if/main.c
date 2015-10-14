@@ -92,15 +92,19 @@ __task void timer_task_30mS(void)
     }
 }
 
-// Functions called from multiple places in the main loop
-void target_reset(void)
+// Forward reset from the user pressing the reset button
+// Boards which tie the reset pin directly to the target
+// should override this function with a stub that does nothing
+__attribute__((weak))
+void target_forward_reset(bool assert_reset)
 {
-    cdc_led_state = MAIN_LED_OFF;
-    gpio_set_cdc_led(GPIO_LED_OFF);
-    target_set_state(RESET_RUN);
-    cdc_led_state = MAIN_LED_FLASH;
-    gpio_set_cdc_led(GPIO_LED_ON);
+    if (assert_reset) {
+        target_set_state(RESET_HOLD);
+    } else {
+        target_set_state(RESET_RUN);
+    }
 }
+
 // Functions called from other tasks to trigger events in the main task
 // parameter should be reset type??
 void main_reset_target(uint8_t send_unique_id)
@@ -303,7 +307,7 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
             // auto reset the board if configured to do so
             if (config_get_auto_rst()) {
-                target_reset();
+                target_set_state(RESET_RUN);
             }
             usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = USB_CONNECT_DELAY;
@@ -317,7 +321,7 @@ __task void main_task(void)
         }
 
         if (flags & FLAGS_MAIN_RESET) {
-            target_reset();
+            target_set_state(RESET_RUN);
         }
 
         if (flags & FLAGS_MAIN_POWERDOWN) {
@@ -363,6 +367,10 @@ __task void main_task(void)
                 case USB_DISCONNECT_CONNECT:
                     // Wait until USB is idle before disconnecting
                     if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
+                        // If hold in bootloader has been set then reset after usb is disconnected
+                        if (config_ram_get_hold_in_bl()) {
+                            NVIC_SystemReset();
+                        }
                         usb_state = USB_CONNECTING;
                         // Delay the connecting state before reconnecting to the host - improved usage with VMs
                         usb_state_count = USB_BUSY_TIME;
@@ -406,7 +414,7 @@ __task void main_task(void)
                 case MAIN_RESET_RELEASED:
                     if (0 == gpio_get_sw_reset()) {
                         main_reset_button_state = MAIN_RESET_PRESSED;
-                        target_set_state(RESET_HOLD);
+                        target_forward_reset(true);
                     }
                     break;
 
@@ -418,7 +426,7 @@ __task void main_task(void)
                     break;
 
                 case MAIN_RESET_TARGET:
-                    target_reset();
+                    target_forward_reset(false);
                     main_reset_button_state = MAIN_RESET_RELEASED;
                     break;
             }

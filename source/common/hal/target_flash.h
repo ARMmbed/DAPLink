@@ -17,6 +17,7 @@
 #define TARGET_FLASH_H
 
 #include "stdint.h"
+#include "flash_blob.h"
 
 #ifdef __cplusplus
   extern "C" {

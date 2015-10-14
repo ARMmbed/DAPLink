@@ -22,7 +22,6 @@
 #include "gpio.h"
 #include "target_flash.h"
 #include "target_config.h"
-#include "flash_blob.h"
 #include "DAP_config.h"
 #include "intelhex.h"
 
