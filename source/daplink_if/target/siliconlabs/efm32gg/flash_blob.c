@@ -14,32 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef FLASH_BLOB_H
-#define FLASH_BLOB_H
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
-typedef struct {
-    uint32_t breakpoint;
-    uint32_t static_base;
-    uint32_t stack_pointer;
-} program_syscall_t;
-
-typedef struct {
-    const uint32_t  init;
-    const uint32_t  uninit;
-    const uint32_t  erase_chip;
-    const uint32_t  erase_sector;
-    const uint32_t  program_page;
-    const program_syscall_t sys_call_s;
-    const uint32_t  program_buffer;
-    const uint32_t  algo_start;
-    const uint32_t  algo_size;
-    const uint32_t *algo_blob;
-    const uint32_t  program_buffer_size;
-} TARGET_FLASH;
+#include "flash_blob.h"
 
 static const uint32_t efm32gg_flash_prog_blob[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
@@ -66,7 +41,7 @@ static const uint32_t efm32gg_flash_prog_blob[] = {
     0x0105f021, 0x20006081, 0x00004770, 0x400c0000, 0x00000000, 
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x200000B5, // Init
     0x2000029D, // UnInit
     0x20000029, // EraseChip
@@ -88,10 +63,3 @@ static const TARGET_FLASH flash = {
     efm32gg_flash_prog_blob,         // address of prog_blob
     0x00000200                 // ram_to_flash_bytes_to_be_written
 };
-
-
-#ifdef __cplusplus
-  }
-#endif
-
-#endif

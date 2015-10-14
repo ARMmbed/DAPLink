@@ -16,6 +16,9 @@
 
 #include "target_config.h"
 
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
 // EFM32GG STK target information
 const target_cfg_t target_device = {
     .board_id   = "2015",
@@ -29,5 +32,5 @@ const target_cfg_t target_device = {
     .flash_end      = MB(1),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20010000,
+    .flash_algo     = (program_target_t*)&flash,
 };
-
