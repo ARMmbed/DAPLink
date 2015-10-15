@@ -21,7 +21,7 @@
 #define MDM_CTRL    0x01000004     //
 #define MDM_IDR     0x010000fc     // read-only identification register
 
-#define MCU_ID      0x001c0020
+#define MDM_ID      0x001c0020     // L series
 
 void target_before_init_debug(void) {
     swd_set_target_reset(1);
@@ -38,7 +38,7 @@ uint8_t target_unlock_sequence(void) {
         return 0;
     }
     // verify the result
-    if (val != MCU_ID) {
+    if (val != MDM_ID) {
         return 0;
     }
 
