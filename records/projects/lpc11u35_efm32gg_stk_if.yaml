@@ -1,0 +1,19 @@
+common:
+    includes:
+        - source/daplink_if/target/siliconlabs/efm32gg
+    sources:
+        target_specific:
+            - source/daplink_if/target/siliconlabs/efm32gg/app_config.c
+            - source/daplink_if/target/siliconlabs/efm32gg/target_reset.c
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/nxp/lpc11u35/armcc/lpc11u35_daplink_if.sct
+        AfterMake:
+            RunUserProg1:
+                - $KARM\BIN\ElfDwT.exe #L1
+            RunUserProg2:
+                - "fromelf --bin $L@L.axf -o $L@L.bin"

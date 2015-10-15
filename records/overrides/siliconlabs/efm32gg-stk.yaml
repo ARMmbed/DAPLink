@@ -1,0 +1,5 @@
+common:
+    group_name:
+        - efm32gg-stk
+    sources:
+        - source/overrides/siliconlabs/efm32gg-stk.c
