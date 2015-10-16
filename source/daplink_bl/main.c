@@ -35,6 +35,7 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 // USB Events
 #define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
 #define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
+#define FLAGS_MAIN_MSC_DELAY_DISCONNECT (1 << 8)
 // Used by msc when flashing a new binary
 #define FLAGS_LED_BLINK_30MS      (1 << 6)
 
@@ -97,6 +98,13 @@ void main_msc_disconnect_event(void)
     return;
 }
 
+// New data has arrived so the disconnect needs to be delayed
+void main_msc_delay_disconnect_event(void)
+{
+    os_evt_set(FLAGS_MAIN_MSC_DELAY_DISCONNECT, main_task_id);
+    return;
+}
+
 // A failure has occured during msc programming
 void main_force_msc_disconnect_event(void)
 {
@@ -142,11 +150,21 @@ __task void main_task(void)
         os_evt_wait_or(   FLAGS_MAIN_90MS               // 90mS tick
                         | FLAGS_MAIN_30MS               // 30mS tick
                         | FLAGS_MAIN_USB_DISCONNECT     // Programming complete, disconnect and reset MCU
+                        | FLAGS_MAIN_MSC_DELAY_DISCONNECT // new data has arrived so delay the disconnect
                         | FLAGS_MAIN_FORCE_MSC_DISCONNECT // programming error, eject MSC and show error file upon connection
                         , NO_TIMEOUT );
 
         // Find out what event happened
         flags = os_evt_get();
+
+        // data has arrived over usb so delay the disconnect
+        if (flags & FLAGS_MAIN_MSC_DELAY_DISCONNECT) {
+            if ((MAIN_USB_DISCONNECT_CONNECT == usb_state) ||
+                    (MAIN_USB_DISCONNECTING == usb_state)) {
+                // Reset the disconnect counter
+                usb_state_count = USB_CONNECT_DELAY;
+            }
+        }
 
         // this happens when programming is complete and successful.
         if (flags & FLAGS_MAIN_USB_DISCONNECT) {

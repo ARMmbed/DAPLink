@@ -39,6 +39,7 @@
 // USB Events
 #define FLAGS_MAIN_MSC_DISCONNECT       (1 << 3)
 #define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
+#define FLAGS_MAIN_MSC_DELAY_DISCONNECT (1 << 8)
 // Other Events
 #define FLAGS_MAIN_POWERDOWN            (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG         (1 << 5)
@@ -149,6 +150,13 @@ void main_usb_busy_event(void) {
 void main_msc_disconnect_event(void)
 {
     os_evt_set(FLAGS_MAIN_MSC_DISCONNECT, main_task_id);
+    return;
+}
+
+// New data has arrived so the disconnect needs to be aborted
+void main_msc_delay_disconnect_event(void)
+{
+    os_evt_set(FLAGS_MAIN_MSC_DELAY_DISCONNECT, main_task_id);
     return;
 }
 
@@ -298,17 +306,22 @@ __task void main_task(void)
                         | FLAGS_MAIN_POWERDOWN          // Power down interface
                         | FLAGS_MAIN_DISABLEDEBUG       // Disable target debug
                         | FLAGS_MAIN_MSC_DISCONNECT    // programming complete - disconnect msc endpoint
+                        | FLAGS_MAIN_MSC_DELAY_DISCONNECT // new data has arrived so delay the disconnect
                         | FLAGS_MAIN_FORCE_MSC_DISCONNECT,  // programming failure - force disconnect msc endpoint
                         NO_TIMEOUT);
 
         // Find out what event happened
         flags = os_evt_get();
 
+        if (flags & FLAGS_MAIN_MSC_DELAY_DISCONNECT) {
+            if (USB_DISCONNECT_CONNECT == usb_state) {
+                // Reset the disconnect counter
+                usb_state_count = USB_CONNECT_DELAY;
+            }
+        }
+
         if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
             // auto reset the board if configured to do so
-            if (config_get_auto_rst()) {
-                target_set_state(RESET_RUN);
-            }
             usb_busy = USB_IDLE;                    // USB not busy
             usb_state_count = USB_CONNECT_DELAY;
             usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
@@ -370,6 +383,10 @@ __task void main_task(void)
                         // If hold in bootloader has been set then reset after usb is disconnected
                         if (config_ram_get_hold_in_bl()) {
                             NVIC_SystemReset();
+                        }
+                        // Resume the target if configured to do so
+                        if (config_get_auto_rst()) {
+                            target_set_state(RESET_RUN);
                         }
                         usb_state = USB_CONNECTING;
                         // Delay the connecting state before reconnecting to the host - improved usage with VMs

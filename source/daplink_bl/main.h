@@ -59,6 +59,13 @@ typedef enum {
 void main_msc_disconnect_event(void);
 
 /**
+ Delay the disconnect if there is one in progress
+ @param  none
+ @return none
+*/
+void main_msc_delay_disconnect_event(void);
+
+/**
  Allows other parts of the program to request the device to immediately eject physical media
  @param  none
  @return none

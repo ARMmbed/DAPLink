@@ -21,7 +21,7 @@
 #define MDM_CTRL    0x01000004     //
 #define MDM_IDR     0x010000fc     // read-only identification register
 
-#define MCU_ID      0x001c0020
+#define MDM_ID      0x001c0020     // L series
 
 void target_before_init_debug(void) {
     swd_set_target_reset(1);
@@ -38,7 +38,7 @@ uint8_t target_unlock_sequence(void) {
         return 0;
     }
     // verify the result
-    if (val != MCU_ID) {
+    if (val != MDM_ID) {
         return 0;
     }
 
@@ -96,21 +96,20 @@ uint8_t target_unlock_sequence(void) {
 // [0xf]=data flash protection bytes (FlexNVM devices only)
 //
 // This function checks that:
-// - 0x0-0xb==0xff
-// - 0xe-0xf==0xff
-// - FSEC=0xfe
+// - FSEC does not disable mass erase or secure the device.
 //
-// FOPT can be set to any value.
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
-    if (addr == 0x400) {
+    const uint32_t fsec_addr = 0x40C;
+    if ((addr <= fsec_addr) && (addr + size) > fsec_addr) {
+        uint8_t fsec = data[fsec_addr - addr];
         // make sure we can unsecure the device or dont program at all
-        if ((data[0xc] & 0x30) == 0x20) {
+        if ((fsec & 0x30) == 0x20) {
             // Dont allow programming mass-erase disabled state
             return 1;
         }
         // Security is OK long as we can mass-erase (comment the following out to enable target security)
-        if ((data[0xc] & 0x03) != 0x02) {
+        if ((fsec & 0x03) != 0x02) {
             return 1;
         }
     }
@@ -120,4 +119,3 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 uint8_t target_set_state(TARGET_RESET_STATE state) {
     return swd_set_target_state(state);
 }
-
