@@ -21,6 +21,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "config_settings.h"
+#include "version.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -133,6 +134,9 @@ __task void main_task(void)
     gpio_set_hid_led(GPIO_LED_OFF);
     gpio_set_cdc_led(GPIO_LED_OFF);
     gpio_set_msc_led(GPIO_LED_OFF);
+
+    // Update version information file
+    init_auth_config();
 
     // USB
     usbd_init();

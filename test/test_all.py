@@ -17,306 +17,431 @@
 DAPLink validation and testing tool
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --user USER          MBED username
-  --password PASSWORD  MBED password
+  -h, --help            show this help message and exit
+  --user USER           MBED username (required for compile-api)
+  --password PASSWORD   MBED password (required for compile-api)
+  --project {k20dx_k64f_if,kl26z_nrf51822_if,lpc11u35_lpc1114_if,kl26z_microbit
+_if,lpc11u35_lpc812_if,k20dx_k22f_if}
+                        Project to test
+  --nobuild             Skip build step. Binaries must have been built
+                        already.
+  --noloadif            Skip load step for interface.
+  --noloadbl            Skip load step for bootloader.
+  --notestendpt         Dont test the interface USB endpoints.
+  --testfirst           If multiple boards of the same type are found only
+                        test the first one.
+  --verbose {Minimal,Normal,Verbose,All}
+                        Verbose output
 
-This script runs test to validate that the DAPLink firmware running
-on all boards attached to this pc is working correctly.  In specific
-this patch validates that the MSD, CDC and HID endpoints are
-functioning correctly.
+The purpose of this script is test the daplink projects
+and verify as much of it is bug free as reasonable.
+1. Build all or some of the projects
+2. Load new interface code (bootloader in the future too)
+3. Test filesystem and file contents
+4. Test each USB endpoint (HID, MSD, CDC)
 
-To run this script the user name and password to a valid MBED account
-must be supplied.  This is so test firmware for the board being tested
-can be built using the mbed build api, which requires a valid username
-and password.
+
+Example usages
+------------------------
+
+Test everything on all projects in the repository:
+test_all.py --user <username> --password <password>
+
+Test everything on a single project in the repository:
+test_all.py --project <project> --testfirst --user <username>
+    --password <password>
+
+Quickly verify that the mass storage and the filesystem
+have not regressed after creating a build using:
+test_all.py --nobuild --project <project name>
+
+Verify that the USB endpoints are working correctly on
+an existing board with firmware already loaded:
+test_all.py --nobuild --noloadif --user <username> --password <password>
 """
+from __future__ import absolute_import
+from __future__ import print_function
+
 import os
-import traceback
-import serial
-import shutil
+import re
+import time
 import argparse
-import mbedapi
-import mbed_lstools
-import basic_test
+from hid_test import test_hid
+from serial_test import test_serial
+from msd_test import test_mass_storage
+from daplink_board import get_all_attached_daplink_boards
+from project_generator.generate import Generator
+from test_info import TestInfo
 
 TEST_REPO = 'https://developer.mbed.org/users/c1728p9/code/daplink-validation/'
 
-name_to_build_target = {
-    'K22F': 'FRDM-K22F',
-    'LPC812': 'NXP-LPC800-MAX',
-    'K64F': 'FRDM-K64F'
-}
 
-
-def same(d1, d2):
-    d1 = bytearray(d1)
-    d2 = bytearray(d2)
-
-    for i in range(min(len(d1), len(d2))):
-        if d1[i] != d2[i]:
-            print("at %i %i != %i" % (i, d1[i], d2[i]))
-            return False
-    if len(d1) != len(d2):
-        print("Lengths differ: %i, %i" % (len(d1), len(d2)))
-        return False
-    return True
-
-# http://digital.ni.com/public.nsf/allkb/D37754FFA24F7C3F86256706005B9BE7
-standard_baud = [
-    9600,
-    14400,
-    19200,
-    28800,
-    38400,
-    56000,
-    57600,
-    115200,
-    ]
-
-low_standard_baud = [
-    110,
-    300,
-    600,
-    1200,
-    2400,
-    4800,
-]
-
-high_standard_baud = [
-    128000,
-    153600,
-    230400,
-    256000,
-    460800,
-    921600,
-    ]
-
-
-def calc_timeout(data, baud):
-    """Calculate a timeout given the data and baudrate
-
-    Positional arguments:
-        data - data to be sent
-        baud - baud rate to send data
-
-    Calculate a reasonable timeout given the supplied parameters.
-    This function adds slightly more time then is needed, to accont
-    for latency and various configurations.
-    """
-    return 12 * len(data) / float(baud) + 0.2
-
-
-def test_serial(port):
-    """Test the serial port endpoint
-
-    Requirements:
-        -daplink-validation must be loaded for the target.
-
-    Positional arguments:
-        port - the serial port to open as a string
-
-    Return:
-        True if the test passed, False otherwise
-    """
-    test_passed = True
-
-    # Generate a 8 KB block of dummy data
-    # and test a large block transfer
-    test_data = [i for i in range(0, 256)] * 4 * 8
-    baud = 115200
-    timeout = calc_timeout(test_data, baud)
-    with serial.Serial(port, baudrate=baud, timeout=timeout) as sp:
-
-        # Reset the target
-        sp.sendBreak()
-
-        # Wait until the target is initialized
-        expected_resp = "{init}"
-        resp = sp.read(len(expected_resp))
-        if not same(resp, expected_resp):
-            print "Fail on init: %s" % resp
-            test_passed = False
-
-        sp.write(test_data)
-        resp = sp.read(len(test_data))
-        if same(resp, test_data):
-            print "Block test passed"
-        else:
-            print "Block test failed"
-            test_passed = False
-
-    # Generate a 4KB block of dummy data
-    # and test supported baud rates
-    test_data = [i for i in range(0, 256)] * 4 * 4
-    for baud in standard_baud:
-        # Setup with a baud of 115200
-        with serial.Serial(port, baudrate=115200, timeout=1) as sp:
-
-            # Reset the target
-            sp.sendBreak()
-
-            # Wait until the target is initialized
-            expected_resp = "{init}"
-            resp = sp.read(len(expected_resp))
-            if not same(resp, expected_resp):
-                print "Fail on init: %s" % resp
-                test_passed = False
-                continue
-
-            # Change baudrate to that of the first test
-            command = "{baud:%i}" % baud
-            sp.write(command)
-            resp = sp.read(len(command))
-            if not same(resp, command):
-                print "Fail on baud command: %s" % resp
-                test_passed = False
-                continue
-
-        # Open serial port at the new baud
-        print("Testing baud %i" % baud)
-        test_time = calc_timeout(test_data, baud)
-        with serial.Serial(port, baudrate=baud, timeout=test_time) as sp:
-
-            # Read the response indicating that the baudrate
-            # on the target has changed
-            expected_resp = "{change}"
-            resp = sp.read(len(expected_resp))
-            if not same(resp, expected_resp):
-                sp.write("Baud test")
-                print "Fail on baud change %s" % resp
-                test_passed = False
-                continue
-
-            # Perform test
-            sp.write(test_data)
-            resp = sp.read(len(test_data))
-            resp = bytearray(resp)
-            if same(test_data, resp):
-                print "Pass"
-            else:
-                print "Fail"
-                test_passed = False
-
-    return test_passed
-
-
-def test_mass_storage(filename, mount_point):
-    """Test the mass storage endpoint
-
-    Requirements:
-        None
-
-    Positional arguments:
-        filename - A string containing the name of the file to load
-
-    Return:
-        True if the test passed, False otherwise
-    """
-    # TODO - parse filesystem
-    shutil.copy(filename, mount_point)
-    # TODO - verify binary is correct
-    # TODO - test copy speed
-    # TODO - test all supported file formats
-    # TODO - test expected failure cases / corrupt files
-    return True
-
-
-def test_hid(target_id, filename):
-    """Test the HID endpoint
-
-    Requirements:
-        None
-
-    Positional arguments:
-        target_id - A string containing board identifier
-        filename - A string containing the name of the file to load
-
-    Return:
-        True if the test passed, False otherwise
-    """
-    basic_test.basic_test(target_id, filename)
-    # TODO - make a dedicated test
-    # TODO - test all DapLink commands
-    # TODO - test various clock speeds
-    # TODO - test turnaround settings
-    # TODO - test HID speed
-    # TODO - test ram/rom transfer speeds
-    return True
-
-
-def test_board(user, password, target_id, serial_port,
-               mount_point, platform_name, cached=False):
+def test_endpoints(board, parent_test):
     """Run tests to validate DAPLINK fimrware"""
-    print("**Testing board %s**" % platform_name)
+    test_info = parent_test.create_subtest('test_endpoints')
+    board.build_target_firmware(test_info)
+    test_hid(board, parent_test)
+    test_serial(board, test_info)
+    test_mass_storage(board, test_info)
+
+
+# Determine interface or bootloader - also check if name is valid
+# Handle building project when requested
+# Handle testing project when requested
+class ProjectTester(object):
+
+    _if_exp = re.compile("^([a-z0-9]+)_([a-z0-9_]+)_if$")
+    _bl_exp = re.compile("^([a-z0-9]+)_bl$")
+    _tool = 'uvision'
+    _name_to_board_id = {
+        'k20dx_k22f_if': 0x0231,
+        'k20dx_k64f_if': 0x0240,
+        'kl26z_microbit_if': 0x9900,
+        'kl26z_nrf51822_if': 0x9900,
+        'lpc11u35_lpc812_if': 0x1050,
+        'lpc11u35_lpc1114_if': 0x1114,
+        'lpc11u35_efm32gg_stk_if': 0x2015,
+    }
+
+    def __init__(self, yaml_prj, path='.'):
+        self.prj = yaml_prj
+        self._path = path
+        self.name = yaml_prj.name
+        if_match = self._if_exp.match(self.name)
+        if if_match is not None:
+            self._bl_name = if_match.group(1) + '_bl'
+            self._is_bl = False
+            self._board_id = self._name_to_board_id[self.name]
+        bl_match = self._bl_exp.match(self.name)
+        if bl_match is not None:
+            self._is_bl = True
+        if if_match is None and bl_match is None:
+            raise Exception("Invalid project name %s" % self.name)
+        self._built = False
+        self._boards = None
+        self._bl = None
+        self._test_info = TestInfo(self.get_name())
+        build_path = os.path.normpath(path + os.sep + 'projectfiles' + os.sep +
+                                      self._tool + os.sep + self.name +
+                                      os.sep + 'build')
+        self._hex_file = os.path.normpath(build_path + os.sep +
+                                          self.name + '.hex')
+        self._bin_file = os.path.normpath(build_path + os.sep +
+                                          self.name + '.bin')
+
+        # By default test all configurations and boards
+        self._only_test_first = False
+        self._load_if = True
+        self._load_bl = True
+        self._test_if_bl = True
+        self._test_ep = True
+
+    def is_bl(self):
+        return self._is_bl
+
+    def get_name(self):
+        return self.name
+
+    def get_built(self):
+        """
+        Return true if the project has been built in the current session
+        """
+        return self._built
+
+    def get_bl_name(self):
+        """
+        Get the name of the bootloader
+
+        This function should only be called if the project
+        is not a bootloader
+        """
+        assert not self.is_bl()
+        return self._bl_name
+
+    def set_bl(self, bl_prj):
+        """
+        Set the boot loader for this interface.
+
+        Note - this function should only be called on
+        an interface project.
+        """
+        assert isinstance(bl_prj, ProjectTester)
+        assert not self._is_bl
+        self._bl = bl_prj
+
+    def get_binary(self):
+        """
+        Get the binary file associated with this project
+
+        Returns None if the bin file has not been created yet.
+        """
+        return self._bin_file if os.path.isfile(self._bin_file) else None
+
+    def get_hex(self):
+        """
+        Get the hex file associated with this project
+
+        Returns None if the hex file has not been created yet.
+        """
+        return self._hex_file if os.path.isfile(self._hex_file) else None
+
+    def get_board_id(self):
+        """
+        Get the board ID for this project
+
+        Board ID is only valid if the target is not a bootloader
+        """
+        return self._board_id
+
+    def set_test_boards(self, boards):
+        assert type(boards) is list
+        self._boards = boards
+
+    def get_test_boards(self):
+        return self._boards
+
+    def get_test_info(self):
+        return self._test_info
+
+    def build(self, clean=True):
+        self._test_info.info("Building %s" % self.name)
+        start = time.time()
+        #TODO - build bootloader if it isn't built yet
+        #TODO - print info on bootloader
+        ret = self.prj.export(self._tool, False)
+        self._test_info.info('Export return value %s' % ret)
+        if ret != 0:
+            raise Exception('Export return value %s' % ret)
+        ret = self.prj.build(self._tool)
+        self._test_info.info('Build return value %s' % ret)
+        if ret != 0:
+            raise Exception('Build return value %s' % ret)
+        files = self.prj.get_generated_project_files(self._tool)
+        export_path = files['path']
+        base_file = os.path.normpath(export_path + os.sep + 'build' +
+                                     os.sep + self.name)
+        built_hex_file = base_file + '.hex'
+        built_bin_file = base_file + '.bin'
+        assert (os.path.abspath(self._hex_file) ==
+                os.path.abspath(built_hex_file))
+        assert (os.path.abspath(self._bin_file) ==
+                os.path.abspath(built_bin_file))
+        self._hex_file = built_hex_file
+        self._bin_file = built_bin_file
+        stop = time.time()
+        self._test_info.info('Build took %s seconds' % (stop - start))
+        self._built = True
+
+    def test_set_first_board_only(self, first):
+        assert type(first) is bool
+        self._only_test_first = first
+
+    def test_set_load_if(self, load):
+        assert type(load) is bool
+        self._load_if = load
+
+    def test_set_load_bl(self, load):
+        assert type(load) is bool
+        self._load_bl = load
+
+    def test_set_test_if_bl(self, run_test):
+        assert type(run_test) is bool
+        self._test_if_bl = run_test
+
+    def test_set_test_ep(self, run_test):
+        assert type(run_test) is bool
+        self._test_ep = run_test
+
+    def test(self):
+        boards_to_test = self._boards
+        if self._only_test_first:
+            boards_to_test = self._boards[0:1]
+        for board in boards_to_test:
+            # Load interface & bootloader
+            if self._load_if:
+                print("Loading interface")
+                board.load_interface(self.get_hex(), self._test_info)
+                #TODO - check CRC
+
+            if self._load_bl:
+                pass
+                #TODO - load bootloader
+                #TODO - check CRC
+
+            if self._test_if_bl:
+
+                # Test bootloader
+
+                # Test interface
+                board.test_fs(self._test_info)
+                board.test_fs_contents(self._test_info)
+
+            # Test endpoint
+            if self._test_ep:
+                test_endpoints(board, self._test_info)
+
+        return not self._test_info.get_failed()
+
+
+def main():
+    # Save current directory
+    cur_dir = os.getcwd()
+    parent_dir = os.path.dirname(cur_dir)
+    os.chdir(parent_dir)
+
+    # Wrap every project in a ProjectTester object
+    # Tie every bootloader to one or more interface projects
+    projects = list(Generator('projects.yaml').generate())
+    yaml_dir = os.getcwd()
+    all_projects = [ProjectTester(project, yaml_dir) for project in projects]
+    if_project_list = [project for project in all_projects
+                       if not project.is_bl()]
+    bl_project_list = [project for project in all_projects
+                       if project.is_bl()]
+    bl_name_to_proj = {project.name: project for
+                       project in bl_project_list}
+    for project in if_project_list:
+        bl_name = project.get_bl_name()
+        if bl_name in bl_name_to_proj:
+            project.set_bl(bl_name_to_proj[bl_name])
+    #TODO - make sure all bootloaders are tied to an interface, make sure all
+    # objects are accounted for
+
+    # Create list of projects to show user
+    prj_names = [prj.get_name() for prj in if_project_list]
+    name_to_prj = {prj.get_name(): prj for prj in if_project_list}
+
+    VERB_MINIMAL = 'Minimal'    # Just top level errors
+    VERB_NORMAL = 'Normal'      # Top level errors and warnings
+    VERB_VERBOSE = 'Verbose'    # All errors and warnings
+    VERB_ALL = 'All'            # All errors
+    VERB_LEVELS = [VERB_MINIMAL, VERB_NORMAL, VERB_VERBOSE, VERB_ALL]
+
+    description = 'DAPLink validation and testing tool'
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--user', type=str, default=None,
+                        help='MBED username (required for compile-api)')
+    parser.add_argument('--password', type=str, default=None,
+                        help='MBED password (required for compile-api)')
+    parser.add_argument('--project', help='Project to test', action='append',
+                        choices=prj_names, default=[], required=False)
+    parser.add_argument('--nobuild', help='Skip build step.  Binaries must have been built already.', default=False,
+                        action='store_true')
+    parser.add_argument('--noloadif', help='Skip load step for interface.',
+                        default=False, action='store_true')
+    parser.add_argument('--noloadbl', help='Skip load step for bootloader.',
+                        default=False, action='store_true')
+    parser.add_argument('--notestendpt', help='Dont test the interface USB endpoints.',
+                        default=False, action='store_true')
+    parser.add_argument('--testfirst', help='If multiple boards of the same type are found only test the first one.',
+                        default=False, action='store_true')
+    parser.add_argument('--verbose', help='Verbose output',
+                        choices=VERB_LEVELS, default=VERB_NORMAL)
+    args = parser.parse_args()
+
+    # Validate args
+    if not args.notestendpt:
+        if args.user is None:
+            print("'--user' must be specified when testing USB endpoints")
+            exit(-1)
+        if args.password is None:
+            print("'--password' must be specified when testing USB endpoints")
+            exit(-1)
+
+    boards_explicitly_specified = len(args.project) != 0
+
+    # Put together the list of projects to build
+    if boards_explicitly_specified:
+        projects_to_test = [name_to_prj[name] for name in args.project]
+    else:
+        projects_to_test = if_project_list
+
+    # Collect attached mbed devices
+    all_boards = get_all_attached_daplink_boards()
+
+    # Attach firmware build credentials
+    if not args.notestendpt:
+        for board in all_boards:
+            board.set_build_login(args.user, args.password)
+
+    # Create table mapping each board id to boards
+    board_id_to_board_list = {}
+    for board in all_boards:
+        board_id = board.get_board_id()
+        if board_id not in board_id_to_board_list:
+            board_id_to_board_list[board_id] = []
+        board_id_to_board_list[board_id].append(board)
+
+    # Attach each test board to a project
+    for project in projects_to_test:
+        board_id = project.get_board_id()
+        if board_id in board_id_to_board_list:
+            project.set_test_boards(board_id_to_board_list[board_id])
+
+    # Fail if a board for the requested project is not attached
+    if boards_explicitly_specified:
+        for project in projects_to_test:
+            if project.get_test_boards() is None:
+                print("No test board(s) for project %s" % project.get_name())
+                exit(-1)
+
+    # Build all projects
+    if not args.nobuild:
+        for project in projects_to_test:
+            project.build()
+
+    # Test all projects with boards that are attached
     test_passed = True
-    try:
-        platform = name_to_build_target[platform_name]
-        repo = TEST_REPO
-        destdir = 'tmp'
-        if not os.path.isdir(destdir):
-            os.mkdir(destdir)
-
-        print
-        filename = os.path.join("tmp",  platform_name + ".bin")
-        if cached and os.path.isfile(filename):
-            print "Using cached file"
+    tested_projects = []
+    untested_projects = []
+    for project in projects_to_test:
+        if project.get_test_boards() is not None:
+            project.test_set_first_board_only(args.testfirst)
+            project.test_set_load_if(not args.noloadif)
+            project.test_set_load_bl(not args.noloadbl)
+            project.test_set_test_ep(not args.notestendpt)
+            test_passed &= project.test()
+            tested_projects.append(project)
         else:
-            print 'Starting remote build'
-            if os.path.isfile(filename):
-                os.remove(filename)
-            built_file = mbedapi.build_repo(user, password, repo, platform,
-                                            destdir)
-            os.rename(built_file, filename)
-            print 'Remote build finished'
+            # Cannot test board
+            untested_projects.append(project)
+    assert (len(tested_projects) + len(untested_projects) ==
+            len(projects_to_test))
+    if len(tested_projects) == 0:
+        print("Test Failed - no connected boards to test")
+        exit(-1)
+    if boards_explicitly_specified:
+        # Error should have been triggered before this
+        # point if there were boards that couldn't be tested
+        assert len(untested_projects) == 0
 
-        # TODO - Load boot block
-        # TODO - Load interface
-        print
-        print 'Starting HID'
-        test_passed &= test_hid(target_id, filename)
-        print
-        print 'Starting Serial port test'
-        test_passed &= test_serial(serial_port)
-        print
-        print 'Starting Mass storage test'
-        test_passed &= test_mass_storage(filename, mount_point)
-    except Exception:
-        traceback.print_exc()
-        test_passed = False
+    # Print info for boards tested
+    for project in tested_projects:
+        print('')
+        if args.verbose == VERB_MINIMAL:
+            project.get_test_info().print_msg(TestInfo.FAILURE, 0)
+        elif args.verbose == VERB_NORMAL:
+            project.get_test_info().print_msg(TestInfo.WARNING, None)
+        elif args.verbose == VERB_VERBOSE:
+            project.get_test_info().print_msg(TestInfo.WARNING, None)
+        elif args.verbose == VERB_ALL:
+            project.get_test_info().print_msg(TestInfo.INFO, None)
+        else:
+            # This should never happen
+            assert False
+
+    # Warn about untested boards
+    print('')
+    for project in untested_projects:
+        print('Warning - project %s is untested' % project.get_name())
 
     if test_passed:
-        print "Board %s passed" % platform_name
+        print("All boards passed")
+        exit(0)
     else:
-        print "Board %s failed" % platform_name
-    return test_passed
+        print("Test Failed")
+        exit(-1)
 
 
 if __name__ == "__main__":
-    description = 'DAPLink validation and testing tool'
-    parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--user', type=str,
-                        help='MBED username', required=True)
-    parser.add_argument('--password', type=str,
-                        help='MBED password', required=True)
-    parser.add_argument('--cached', help='Use cached build',
-                        action="store_true", default=False, required=False)
-    args = parser.parse_args()
-
-    test_passed = True
-    lstools = mbed_lstools.create()
-    mbed_list = lstools.list_mbeds()
-    for mbed in mbed_list:
-        target_id = mbed['target_id']
-        serial_port = mbed['serial_port']
-        mount_point = mbed['mount_point']
-        platform_name = mbed['platform_name']
-        test_passed &= test_board(args.user, args.password, target_id,
-                                  serial_port, mount_point, platform_name,
-                                  args.cached)
-    if test_passed:
-        print "All boards passed"
-        exit(0)
-    else:
-        print "Test Failed"
-        exit(-1)
+    main()
