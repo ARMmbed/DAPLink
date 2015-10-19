@@ -195,7 +195,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = 0x00000000
     },
     .f1  = {
-    /*uint8_t[11] */ .filename = {""},
+    /*uint8_t[11] */ .filename = {""}, // daplink_url_name
     /*uint8_t */ .attributes = 0x01,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -223,7 +223,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = sizeof(details_file)
     },
     .f3 = {
-    /*uint8_t[11] */ .filename = {""},
+    /*uint8_t[11] */ .filename = {""}, // virtual_fs_auto_rstcfg / virtual_fs_hard_rstcfg
     /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -237,7 +237,7 @@ static root_dir_t dir1 = {
     /*uint32_t*/ .filesize = sizeof(hardware_rst_file)
     },
     .f4 = {
-    /*uint8_t[13] */ .filename = {""},
+    /*uint8_t[13] */ .filename = {""}, // daplink_mode_file_name
     /*uint8_t */ .attributes = 0x02,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
@@ -250,7 +250,7 @@ static root_dir_t dir1 = {
     /*uint16_t*/ .first_cluster_low_16 = 0x0005,
     /*uint32_t*/ .filesize = 0x00000000,
     },
-    .f5  = {0},    
+    .f5  = {0}, // fail.txt or empty
     .f6  = {0},
     .f7  = {0},
     .f8  = {0},
