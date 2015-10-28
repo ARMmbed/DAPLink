@@ -177,6 +177,16 @@ static bool check_file_deleted(const FatDirectoryEntry_t * dir_entry, const char
     return false;
 }
 
+static bool check_file_created(const FatDirectoryEntry_t * dir_entry, const char * filename)
+{
+    //  the correct name
+    const uint32_t size = sizeof(dir_entry->filename);
+    if (data_same_ignore_case(&filename[0], (const char *)&dir_entry->filename[0], size)) {
+        return true;
+    }
+    return false;
+}
+
 static extension_t identify_start_sequence(uint8_t *buf)
 {
     if (1 == validate_bin_nvic(buf)) {
@@ -255,7 +265,7 @@ void usbd_msc_write_sect(uint32_t block, uint8_t *buf, uint32_t num_of_blocks)
                 config_set_auto_rst(true);
                 tranfer_complete(TARGET_OK);
                 return;
-            } else if (check_file_deleted(&tmp_file, daplink_mode_file_name)) {
+            } else if (check_file_created(&tmp_file, daplink_mode_file_name)) {
                 debug_msg("%s", "USER CFG ACTION DETECTED\r\n");
                 if (daplink_is_interface()) {
                     config_ram_set_hold_in_bl(true);

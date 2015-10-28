@@ -139,10 +139,10 @@ class DaplinkBoard:
 
     def get_mode(self):
         """Return either MODE_IF or MODE_BL"""
-        if os.path.isfile(self.start_bl_path):
-            return self.MODE_IF
-        elif os.path.isfile(self.start_if_path):
+        if os.path.isfile(self.check_bl_path):
             return self.MODE_BL
+        elif os.path.isfile(self.check_if_path):
+            return self.MODE_IF
         else:
             raise Exception("Unsupported board - cannot change mode!")
 
@@ -163,12 +163,16 @@ class DaplinkBoard:
             # No mode change needed
             return
 
-        if mode is self.MODE_IF:
+        if mode is self.MODE_BL:
             test_info.info("changing mode IF -> BL")
-            os.remove(self.start_if_path)
-        elif mode is self.MODE_BL:
+            # Create file to enter BL mode
+            with open(self.start_bl_path, 'wb') as _:
+                pass
+        elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
-            os.remove(self.start_bl_path)
+            # Create file to enter BL mode
+            with open(self.start_if_path, 'wb') as _:
+                pass
         else:
             test_info.warning("Board is in unknown mode")
         self.wait_for_remount(test_info)
@@ -348,6 +352,10 @@ class DaplinkBoard:
         assert self.unique_id is not None
         assert self.mount_point is not None
         self.board_id = int(self.unique_id[0:4], 16)
+        self.check_bl_path = os.path.normpath(self.mount_point +
+                                              os.sep + 'HELP_FAQ.HTM')
+        self.check_if_path = os.path.normpath(self.mount_point +
+                                              os.sep + 'MBED.HTM')
         self.start_bl_path = os.path.normpath(self.mount_point +
                                               os.sep + 'START_BL.CFG')
         self.start_if_path = os.path.normpath(self.mount_point +
