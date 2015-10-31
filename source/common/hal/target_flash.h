@@ -51,6 +51,7 @@ typedef enum target_flash_status {
     TARGET_HEX_FILE_EOF,
     TARGET_FAIL_BIN_INVALID_ADDRESS,
     TARGET_FAIL_TRANSFER_IN_PROGRESS,
+    TARGET_FAIL_ERROR_DURING_TRANSFER,
 
     // Add new values here
 
@@ -98,6 +99,8 @@ static const char *const fail_txt_contents[] = {
     "The binary file is too large.\r\n",
     // TARGET_FAIL_TRANSFER_IN_PROGRESS
     "The transfer timed out.\r\n",
+    // TARGET_FAIL_ERROR_DURING_TRANSFER
+    "An error occurred during the transfer\n",
 };
 
 // target_flash_status_t and fail_txt_contents must stay in sync

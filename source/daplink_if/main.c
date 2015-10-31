@@ -27,7 +27,7 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "version.h"
-#include "virtual_fs.h"
+#include "virtual_fs_user.h"
 #include "config_settings.h"
 
 // Event flags for main task
@@ -411,7 +411,7 @@ __task void main_task(void)
                             thread_started = 1;
                         }
                         usb_state = USB_CONNECTED;
-                        reset_file_transfer_state();
+                        vfs_user_build_filesystem();
                         USBD_MSC_MediaReady = 1;
                     }
                     break;

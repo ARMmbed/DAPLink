@@ -17,58 +17,31 @@
 #ifndef VIRTUAL_FS_H
 #define VIRTUAL_FS_H
 
-#include "target_config.h"
-#include "target_flash.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
-typedef struct {
-    uint8_t boot_sector[11];
-    /* DOS 2.0 BPB - Bios Parameter Block, 11 bytes */
-    uint16_t bytes_per_sector;
-    uint8_t  sectors_per_cluster;
-    uint16_t reserved_logical_sectors;
-    uint8_t  num_fats;
-    uint16_t max_root_dir_entries;
-    uint16_t total_logical_sectors;
-    uint8_t  media_descriptor;
-    uint16_t logical_sectors_per_fat;
-    /* DOS 3.31 BPB - Bios Parameter Block, 12 bytes */
-    uint16_t physical_sectors_per_track;
-    uint16_t heads;
-    uint32_t hidden_sectors;
-    uint32_t big_sectors_on_drive;
-    /* Extended BIOS Parameter Block, 26 bytes */
-    uint8_t  physical_drive_number;
-    uint8_t  not_used;
-    uint8_t  boot_record_signature;
-    uint32_t volume_id;
-    char     volume_label[11];
-    char     file_system_type[8];
-    /* bootstrap data in bytes 62-509 */
-    uint8_t  bootstrap[448];
-    /* These entries in place of bootstrap code are the *nix partitions */
-    //uint8_t  partition_one[16];
-    //uint8_t  partition_two[16];
-    //uint8_t  partition_three[16];
-    //uint8_t  partition_four[16];
-    /* Mandatory value at bytes 510-511, must be 0xaa55 */
-    uint16_t signature;
-} __attribute__((packed)) mbr_t;
+#define VFS_SECTOR_SIZE      512
 
-// cannot exceed 512 conseutive bytes or media read logic fails
-extern mbr_t mbr;
+typedef char vfs_filename_t[11];
 
-typedef struct file_allocation_table {
-    uint8_t f[512];
-} file_allocation_table_t;
+typedef enum {
+    VFS_FILE_CREATED = 0,   /*!< A new file was created */
+    VFS_FILE_DELETED,       /*!< An existing file was deleted */
+    VFS_FILE_CHANGED,       /*!< Some attribute of the file changed.
+                                  Note: when a file is deleted or 
+                                  created a file changed
+                                  notification will also occur*/
+} vfs_file_change_t;
+
+typedef void * vfs_file_t;
 
 typedef union FatDirectoryEntry {
     uint8_t data[32];
     struct {
-        uint8_t filename[11];
+        vfs_filename_t filename;
         uint8_t attributes;
         uint8_t reserved;
         uint8_t creation_time_ms;
@@ -83,50 +56,41 @@ typedef union FatDirectoryEntry {
     } __attribute__((packed)) ;
 } __attribute__((packed)) FatDirectoryEntry_t;
 
-// to save RAM all files must be in the first root dir entry (512 bytes)
-//  but 2 actually exist on disc (32 entries) to accomodate hidden OS files,
-//  folders and metadata 
-typedef struct root_dir {
-    FatDirectoryEntry_t dir;
-    FatDirectoryEntry_t f1;
-    FatDirectoryEntry_t f2;
-    FatDirectoryEntry_t f3;
-    FatDirectoryEntry_t f4;
-    FatDirectoryEntry_t f5;
-    FatDirectoryEntry_t f6;
-    FatDirectoryEntry_t f7;
-    FatDirectoryEntry_t f8;
-    FatDirectoryEntry_t f9;
-    FatDirectoryEntry_t f10;
-    FatDirectoryEntry_t f11;
-    FatDirectoryEntry_t f12;
-    FatDirectoryEntry_t f13;
-    FatDirectoryEntry_t f14;
-    FatDirectoryEntry_t f15;
-} root_dir_t;
+// Callback for when data is written to a file on the virtual filesystem
+typedef void (*vfs_write_funct_t)(uint32_t sector_offset, const uint8_t* data, uint32_t num_sectors);
+// Callback for when data is ready from the virtual filesystem
+typedef uint32_t (*vfs_read_funct_t)(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
+// Callback for when a file's attributes are changed on the virtual filesystem.  Note that the 'entry' parameter
+// can be saved and compared to other directory entry pointers to see if they are referencing the same object.  The
+// same cannot be done with new_entry_data_ptr since it points to a temporary buffer.
+typedef void (*vfs_file_change_func_t)(const vfs_filename_t filename, vfs_file_change_t change,
+                                   const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr);
 
-typedef struct virtual_media {
-    uint8_t *sect;
-    uint32_t length;
-} virtual_media_t;
+// Initialize the filesystem with the given size and name
+void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size);
 
-extern const uint32_t disc_size;
+// Get the total size of the virtual filesystem
+uint32_t vfs_get_total_size(void);
 
-extern virtual_media_t fs[];
-extern const uint8_t mbed_redirect_file[];
+// Add a file to the virtual FS and return a handle to this file.
+// This must be called before vfs_read or vfs_write are called.
+// Adding a new file after vfs_read or vfs_write have been called results in undefined behavior.
+vfs_file_t vfs_add_file(const vfs_filename_t filename, vfs_read_funct_t read_cb, vfs_write_funct_t write_cb, uint32_t len);
 
-extern const char daplink_mode_file_name[11];
-extern const char daplink_drive_name[11];
-extern const char daplink_url_name[11];
-extern const char * const daplink_target_url;
+// Set the attributes of a file
+void vfs_file_set_attr(vfs_file_t file, uint8_t attr);
 
-extern const char * const virtual_fs_auto_rstcfg;
-extern const char * const virtual_fs_hard_rstcfg;
+// Convert the cluster index to a sector index
+uint32_t vfs_cluster_to_sector(uint32_t cluster_idx);
 
-void configure_fail_txt(target_flash_status_t reason);
-void virtual_fs_init(void);
+// Set the callback when a file is created, deleted or has atributes changed.
+void vfs_set_file_change_callback(vfs_file_change_func_t cb);
 
-void reset_file_transfer_state(void);
+// Read one or more sectors from the virtual filesystem
+void vfs_read(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors);
+
+// Write one or more sectors to the virtual filesystem
+void vfs_write(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors);
 
 #ifdef __cplusplus
 }

@@ -13,21 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef COMPILER_H
-#define COMPILER_H
 
-#define COMPILER_CONCAT_(a, b) a##b
-#define COMPILER_CONCAT(a, b) COMPILER_CONCAT_(a, b)
+#ifndef VIRTUAL_FS_USER_H
+#define VIRTUAL_FS_USER_H
 
-// Divide by zero if the the expression is false.  This
-// causes an error at compile time.
-//
-// The special value '__COUNTER__' is used to create a unique value to
-// append to 'compiler_assert_' to create a unique token.  This prevents
-// conflicts resulting from the same enum being declared multiple times.
-#define COMPILER_ASSERT(e) enum { COMPILER_CONCAT(compiler_assert_, __COUNTER__) = 1/((e) ? 1 : 0) }
+#include <stdint.h>
 
-#define COUNT_OF_ARRAY(array)       (sizeof(array)/sizeof(array[0]))
+#include "virtual_fs.h"
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+extern const vfs_filename_t daplink_mode_file_name;
+extern const vfs_filename_t daplink_drive_name;
+extern const vfs_filename_t daplink_url_name;
+extern const char * const daplink_target_url;
+// Changes to the virtual filesystem must only occur during this
+// call or by writes from the host.  Modifying the filesystem
+// outside this call results in undefined behavior.
+void vfs_user_build_filesystem(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -23,8 +23,8 @@
   extern "C" {
 #endif
 
-uint8_t validate_bin_nvic(uint8_t *buf);
-uint8_t validate_hexfile(uint8_t *buf);
+uint8_t validate_bin_nvic(const uint8_t *buf);
+uint8_t validate_hexfile(const uint8_t *buf);
 
 #ifdef __cplusplus
   }

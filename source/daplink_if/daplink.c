@@ -20,11 +20,11 @@
 // daplink_mode_file_name, daplink_url_name and 
 // daplink_drive_name strings must be 11 characters 
 // excluding the null terminated character
-const char daplink_mode_file_name[11] = "START_BLCFG";
+const vfs_filename_t daplink_mode_file_name = "START_BLCFG";
 __attribute__((weak))
-const char daplink_url_name[11] =       "MBED    HTM";
+const vfs_filename_t daplink_url_name =       "MBED    HTM";
 __attribute__((weak))
-const char daplink_drive_name[11] =     "DAPLINK    ";
+const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
 __attribute__((weak))
 const char * const daplink_target_url = "https://mbed.org/device/?code=@A";
 

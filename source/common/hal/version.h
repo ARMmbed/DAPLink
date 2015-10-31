@@ -20,7 +20,11 @@
 
 #define FW_BUILD "0234"
 
-void update_html_file(uint8_t *buf, uint32_t bufsize);
+extern char mac_string[16];
+extern char uuid_string[33];
+extern char version_string[49+4];
+extern uint8_t string_auth[49 + 4];
+
 uint8_t * get_uid_string          (void);
 uint8_t   get_len_string_interface(void);
 uint8_t * get_uid_string_interface(void);
