@@ -37,43 +37,52 @@ static const char nybble_chars[] = "0123456789abcdef";
 
 static void setup_string_id_auth(void);
 
-static void get_byte_hex( uint8_t b, uint8_t *ch1, uint8_t *ch2 ) {
-    *ch1 = nybble_chars[ ( b >> 4 ) & 0x0F ];
-    *ch2 = nybble_chars[ b & 0x0F ];
+static int write_hex8(uint8_t value, uint8_t * str)
+{
+    *(str + 0) = nybble_chars[ (value >> 4) & 0x0F ];
+    *(str + 1) = nybble_chars[ (value >> 0) & 0x0F ];
+    return 2;
+}
+
+static int write_hex16(uint16_t value, uint8_t * str)
+{
+    int pos = 0;
+    pos += write_hex8((value >> 8) & 0xFF, str + pos);
+    pos += write_hex8((value >> 0) & 0xFF, str + pos);
+    return pos;
+}
+
+static int write_hex32(uint32_t value, uint8_t * str)
+{
+    int pos = 0;
+    pos += write_hex8((value >> 0x18) & 0xFF, str + pos);
+    pos += write_hex8((value >> 0x10) & 0xFF, str + pos);
+    pos += write_hex8((value >> 0x08) & 0xFF, str + pos);
+    pos += write_hex8((value >> 0x00) & 0xFF, str + pos);
+    return pos;
 }
 
 void build_uuid_string(uint32_t *uuid_data)
 {
-    uint32_t i = 0, j = 0, k = 0;
-    uint8_t b = 0;
-    // format UUID
-    for (; j<32; j+=8) {
-        for (; i<4; i++) {
-            b = uuid_data[k] >> (24-(i*8));
-            get_byte_hex(b, (uint8_t *)&uuid_string[j+2*i], (uint8_t *)&uuid_string[j+2*i+1]);
-        }
-        i = 0;
-        k++;
+    int i;
+    uint32_t idx = 0;
+    for (i = 0; i < 4; i++) {
+        idx += write_hex32(uuid_data[i], (uint8_t*)uuid_string + idx);
     }
-    uuid_string[32] = '\0';
+    uuid_string[idx++] = '\0';
 }
 
 void build_mac_string(uint32_t *uuid_data)
 {
-    uint32_t i = 0;
-    uint8_t b = 0;
+    uint32_t idx = 0;
+
     // patch for MAC use. Make sure MSB bits are set correctly
     uuid_data[2] |=  (0x2 << 8);
     uuid_data[2] &= ~(0x1 << 8);
-    for (; i<2; i++) {
-        b = uuid_data[2] >> (8-(i*8));
-        get_byte_hex(b, (uint8_t *)&mac_string[i*2], (uint8_t *)&mac_string[i*2+1]);
-    }
-    for (; i<6; i++) {
-        b = uuid_data[3] >> (24-((i-2)*8));
-        get_byte_hex(b, (uint8_t *)&mac_string[i*2], (uint8_t *)&mac_string[i*2+1]);
-    }
-    mac_string[15] = '\0';
+
+    idx += write_hex16(uuid_data[2] & 0xFFFF, (uint8_t*)mac_string + idx);
+    idx += write_hex32(uuid_data[3], (uint8_t*)mac_string + idx);
+    mac_string[idx++] = 0;
 }
 
 static uint32_t atoi(uint8_t * str, uint8_t size, uint8_t base)
@@ -114,7 +123,7 @@ static void setup_string_version()
 
 static void setup_string_id_auth()
 {
-    uint8_t i = 0, j = 0, idx = 0;
+    uint8_t i = 0, idx = 0;
 
     string_auth[0] = '$';
     string_auth[1] = '$';
@@ -129,18 +138,14 @@ static void setup_string_id_auth()
         string_auth[idx++] = fw_version[i];
     }
     for (i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
-            get_byte_hex((unique_id[j] >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i + 8*j], &string_auth[idx + 2*i + 1] + 8*j);
-        }
+        idx += write_hex32(unique_id[i], string_auth + idx);
     }
-    idx+=32; //8
 
     //string auth
-    for (i = 0; i < 4; i++) {
-        get_byte_hex((auth >> 8*(3 - i)) & 0xff, &string_auth[idx + 2*i], &string_auth[idx + 2*i + 1]);
-    }
-    idx+=8;
-    string_auth[idx] = 0;
+    idx += write_hex32(auth, string_auth + idx);
+
+    // Null terminate
+    string_auth[idx++] = 0;
 }
 
 static void setup_string_descriptor()
