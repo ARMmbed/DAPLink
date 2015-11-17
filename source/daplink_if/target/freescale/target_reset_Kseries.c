@@ -16,7 +16,7 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "target_config.h"
-#include "version.h"
+#include "info.h"
 
 
 #define MDM_STATUS 0x01000000
@@ -43,7 +43,7 @@ void prerun_target_config(void)
     // get target UUID
     swd_read_memory(UUID_LOC, (uint8_t *)&uuid, 16);
     // stringify and store the MAC generated from a UUID
-    build_mac_string(uuid);
+    info_set_uuid_target(uuid);
 }
 
 void board_init(void) {

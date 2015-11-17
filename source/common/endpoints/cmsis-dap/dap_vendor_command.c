@@ -18,7 +18,7 @@
 #include "string.h"
 
 #include "rl_usb.h"
-#include "version.h"
+#include "info.h"
 #include "DAP_config.h"
 #include "uart.h"
 #include "DAP.h"
@@ -33,11 +33,11 @@ uint32_t DAP_ProcessVendorCommand(uint8_t *request, uint8_t *response) {
 
     // get unique ID command
     if (*request == ID_DAP_Vendor0) {
-        uint8_t * id_str = get_uid_string();
-        uint8_t len = strlen((const char *)(id_str + 4));
+        const char * id_str = info_get_unique_id();
+        uint8_t len = strlen(id_str);
         *response = ID_DAP_Vendor0;
         *(response + 1) = len;
-        memcpy(response + 2, id_str + 4, len);
+        memcpy(response + 2, id_str, len);
         return (len + 2);
     }
 

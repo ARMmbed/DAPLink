@@ -26,7 +26,7 @@
 #include "tasks.h"
 #include "target_reset.h"
 #include "swd_host.h"
-#include "version.h"
+#include "info.h"
 #include "virtual_fs_user.h"
 #include "config_settings.h"
 
@@ -282,8 +282,8 @@ __task void main_task(void)
     // do some init with the target before USB and files are configured
     prerun_target_config();
 
-    // Update HTML version information file
-    init_auth_config();
+    // Update versions and IDs
+    info_init();
 
     // USB
     usbd_init();
