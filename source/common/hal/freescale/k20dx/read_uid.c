@@ -17,5 +17,8 @@
 #include "read_uid.h"
 
 void read_unique_id(uint32_t * id) {
-        *id = SIM->UIDL ^ SIM->UIDML ^ SIM->UIDMH ^ SIM->UIDH;
+        id[0] = SIM->UIDL;
+        id[1] = SIM->UIDML;
+        id[2] = SIM->UIDMH;
+        id[3] = SIM->UIDH;
 }
