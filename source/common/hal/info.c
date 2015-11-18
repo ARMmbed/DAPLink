@@ -34,9 +34,10 @@ static char string_board_id[4 + 1];
 static char string_host_id[32 + 1];
 static char string_target_id[32 + 1];
 static char string_hdk_id[8 + 1];
+static char string_version[4 + 1];
 
 static char usb_desc_unique_id[2 + sizeof(string_unique_id) * 2];
-static const char * const fw_version = (const char *)FW_BUILD;
+
 
 const char * info_get_unique_id(void)
 {
@@ -64,7 +65,7 @@ const char * info_get_hdk_id(void)
 }
 const char * info_get_version(void)
 {
-    return fw_version;
+    return string_version;
 }
 const char * info_get_mac(void)
 {
@@ -133,6 +134,14 @@ static void setup_basics()
     // Board ID
     memcpy(string_board_id, target_device.board_id, 4);
     string_board_id[4] = 0;
+
+    // Version
+    idx = 0;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 1000) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 100 ) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 10  ) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 1   ) % 10;
+    string_version[idx++] = 0;
 }
 
 static void setup_unique_id()

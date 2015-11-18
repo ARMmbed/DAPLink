@@ -18,8 +18,6 @@
 
 #include "stdint.h"
 
-#define FW_BUILD "0234"
-
 void info_init(void);
 void info_set_uuid_target(uint32_t *uuid_data);
 

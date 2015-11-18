@@ -17,6 +17,11 @@
 #include "RTL.h"
 
 #include "gpio.h"
+#include "compiler.h"
+#include "daplink.h"
+
+// This GPIO configuration is only valid for the LPC11U35 HDK
+COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_LPC11U35);
 
 static uint16_t isr_flags;
 static OS_TID isr_notify;

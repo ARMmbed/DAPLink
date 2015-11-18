@@ -18,6 +18,12 @@
 #define __IO_CONFIG_H__
 
 #include "MKL26Z4.h"
+#include "compiler.h"
+#include "daplink.h"
+
+// This GPIO configuration is only valid for the KL26 HDK
+COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_KL26);
+
 
 // Debug Port I/O Pins
 

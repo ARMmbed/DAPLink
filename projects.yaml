@@ -10,6 +10,7 @@ module:
     tools: &module_tools
         - records/tools/uvision.yaml
         - records/tools/make_gcc_arm.yaml
+        - records/tools/version.yaml
     bl: &module_bl
         - records/common/usb-core.yaml
         - records/common/usb-msc.yaml

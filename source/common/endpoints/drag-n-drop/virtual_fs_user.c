@@ -75,9 +75,7 @@ static const uint8_t mbed_redirect_file[512] =
     "</html>\r\n";
 
 static const uint8_t details_file[512] =
-    "DAPLink Firmware - see https://mbed.com/daplink\r\n"
-    "Version: " FW_BUILD "\r\n"
-    "Build:   " __DATE__ " " __TIME__ "\r\n";
+    "DAPLink Firmware - see https://mbed.com/daplink\r\n";
 
 static const uint8_t hardware_rst_file[512] =
     "# Behavior configuration file\r\n"

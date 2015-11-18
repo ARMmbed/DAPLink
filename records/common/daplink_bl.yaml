@@ -1,6 +1,7 @@
 common:
     macros:
         - DAPLINK_BL
+        - DAPLINK_BUILD_KEY=0x9B939D93  # DAPLINK_BUILD_KEY_BL
     sources:
         daplink_bl:
             - source/daplink_bl
