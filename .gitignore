@@ -68,5 +68,11 @@ tags
 html
 debug.txt
 
+# virtualenv
+env/
+
+# release
+uvision_release/
+
 #Misc
 .DS_Store
