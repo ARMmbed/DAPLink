@@ -74,5 +74,8 @@ env/
 # release
 uvision_release/
 
+# git info
+source/common/hal/version_git.h
+
 #Misc
 .DS_Store
