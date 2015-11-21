@@ -88,7 +88,7 @@ static file_transfer_state_t file_transfer_state;
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change,
                                 const FatDirectoryEntry_t * old_entry, const FatDirectoryEntry_t * new_entry);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
-static uint32_t get_file_size(vfs_read_funct_t read_func);
+static uint32_t get_file_size(vfs_read_cb_t read_func);
 
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
@@ -124,22 +124,22 @@ void vfs_user_build_filesystem(void)
 
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
-    vfs_add_file(daplink_url_name, read_file_mbed_htm, 0, file_size);
+    vfs_create_file(daplink_url_name, read_file_mbed_htm, 0, file_size);
 
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
-    vfs_add_file("DETAILS TXT", read_file_details_txt, 0, file_size);
+    vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
 
     // HARD_RST.CFG / AUTO_RST.CFG
     name = auto_rst ? virtual_fs_auto_rstcfg : virtual_fs_hard_rstcfg;
     file_size = get_file_size(read_file_reset_cfg);
-    file = vfs_add_file(name, read_file_reset_cfg, 0, file_size);
-    vfs_file_set_attr(file, 0x02); // Hidden
+    file = vfs_create_file(name, read_file_reset_cfg, 0, file_size);
+    vfs_file_set_attr(file, VFS_FILE_ATTR_HIDDEN);
 
     // FAIL.TXT
     if (fail_reason != 0) {
         file_size = get_file_size(read_file_fail_txt);
-        vfs_add_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
+        vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
     }
 
     // Set mass storage parameters
@@ -302,12 +302,13 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
 // Get the filesize from a filesize callback.
 // The file data must be null terminated for this to work correctly.
-static uint32_t get_file_size(vfs_read_funct_t read_func)
+static uint32_t get_file_size(vfs_read_cb_t read_func)
 {
-    static uint8_t sect_buf[512];
+    // USB buffer must not be in use when get_file_size is called
+    static uint8_t * dummy_buffer = (uint8_t *)usb_buffer;
 
     // Determine size of the file by faking a read
-    return read_func(0, sect_buf, 1);
+    return read_func(0, dummy_buffer, 1);
 }
 
 // File callback to be used with vfs_add_file to return file contents

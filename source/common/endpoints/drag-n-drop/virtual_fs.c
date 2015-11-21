@@ -77,8 +77,8 @@ typedef struct root_dir {
 } root_dir_t;
 
 typedef struct virtual_media {
-    vfs_read_funct_t read_func;
-    vfs_write_funct_t write_func;
+    vfs_read_cb_t read_cb;
+    vfs_write_cb_t write_cb;
     uint32_t length;
 } virtual_media_t;
 
@@ -89,6 +89,8 @@ static uint32_t read_mbr(uint32_t offset, uint8_t* data, uint32_t size);
 static uint32_t read_fat(uint32_t offset, uint8_t* data, uint32_t size);
 static uint32_t read_dir1(uint32_t offset, uint8_t* data, uint32_t size);
 static void write_dir1(uint32_t offset, const uint8_t* data, uint32_t size);
+static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
+                     const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr);
 
 // If sector size changes update comment below
 COMPILER_ASSERT(0x0200 == VFS_SECTOR_SIZE);
@@ -178,7 +180,7 @@ COMPILER_ASSERT(MEDIA_IDX_COUNT == COUNT_OF_ARRAY(virtual_media_tmpl));
 
 static const FatDirectoryEntry_t root_dir_entry = {
     /*uint8_t[11] */ .filename = {""},
-    /*uint8_t */ .attributes = 0x28,
+    /*uint8_t */ .attributes = VFS_FILE_ATTR_VOLUME_LABEL | VFS_FILE_ATTR_ARCHIVE,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
     /*uint16_t*/ .creation_time = 0x0000,
@@ -191,9 +193,9 @@ static const FatDirectoryEntry_t root_dir_entry = {
     /*uint32_t*/ .filesize = 0x00000000
 };
 
-static const FatDirectoryEntry_t dir_entry_dflt = {
+static const FatDirectoryEntry_t dir_entry_tmpl = {
     /*uint8_t[11] */ .filename = {""},
-    /*uint8_t */ .attributes = 0x01,
+    /*uint8_t */ .attributes = VFS_FILE_ATTR_READ_ONLY,
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
     /*uint16_t*/ .creation_time = 0x0000,
@@ -211,7 +213,7 @@ file_allocation_table_t fat;
 virtual_media_t virtual_media[16];
 root_dir_t dir1;
 uint8_t file_count;
-vfs_file_change_func_t change_func;
+vfs_file_change_cb_t file_change_cb;
 uint32_t virtual_media_idx;
 uint32_t fat_idx;
 uint32_t dir_idx;
@@ -256,7 +258,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     memset(&dir1, 0, sizeof(dir1));
     dir_idx = 0;
     file_count = 0;
-    change_func = 0;
+    file_change_cb = file_change_cb_stub;
     virtual_media_idx = 0;
     data_start = 0;
 
@@ -302,14 +304,23 @@ uint32_t vfs_cluster_to_sector(uint32_t cluster_idx)
     return sectors_before_data + (cluster_idx - 2) * mbr.sectors_per_cluster;
 }
 
-vfs_file_t vfs_add_file(const vfs_filename_t filename, vfs_read_funct_t read_cb, vfs_write_funct_t write_cb, uint32_t len)
+vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
 {
     uint8_t cluster_idx = fat_idx;
     FatDirectoryEntry_t * de;
+    uint32_t clusters;
+    uint32_t cluster_size;
+    uint32_t i;
 
-    //TODO - handle files larger than 1 sector
+    // Compute the number of clusters in the file
+    cluster_size = mbr.bytes_per_sector * mbr.sectors_per_cluster;
+    clusters = (len + cluster_size - 1) / cluster_size;
 
-    // Update fat table
+    // Write the cluster chain to the fat table
+    for (i = 0; i < clusters - 1; i++) {
+        write_fat(&fat, fat_idx, fat_idx + 1);
+        fat_idx++;
+    }
     write_fat(&fat, fat_idx, 0xFFF);
     fat_idx++;
 
@@ -317,22 +328,22 @@ vfs_file_t vfs_add_file(const vfs_filename_t filename, vfs_read_funct_t read_cb,
     de = &dir1.f[dir_idx];
     dir_idx++;
 
-    memcpy(de, &dir_entry_dflt, sizeof(dir_entry_dflt));
+    memcpy(de, &dir_entry_tmpl, sizeof(dir_entry_tmpl));
     memcpy(de->filename, filename, 11);
     de->filesize = len;
     de->first_cluster_high_16 = (cluster_idx >> 16) & 0xFFFF;
     de->first_cluster_low_16 = (cluster_idx >> 0) & 0xFFFF;
 
     // Update virtual media
-    virtual_media[virtual_media_idx].read_func = read_zero;
-    virtual_media[virtual_media_idx].write_func = write_none;
+    virtual_media[virtual_media_idx].read_cb = read_zero;
+    virtual_media[virtual_media_idx].write_cb = write_none;
     if (0 != read_cb) {
-        virtual_media[virtual_media_idx].read_func = read_cb;
+        virtual_media[virtual_media_idx].read_cb = read_cb;
     }
     if (0 != write_cb) {
-        virtual_media[virtual_media_idx].write_func = write_cb;
+        virtual_media[virtual_media_idx].write_cb = write_cb;
     }
-    virtual_media[virtual_media_idx].length = mbr.bytes_per_sector * mbr.sectors_per_cluster;
+    virtual_media[virtual_media_idx].length = clusters * mbr.bytes_per_sector * mbr.sectors_per_cluster;
     virtual_media_idx++;
 
     file_count += 1;
@@ -340,15 +351,15 @@ vfs_file_t vfs_add_file(const vfs_filename_t filename, vfs_read_funct_t read_cb,
     return de;
 }
 
-void vfs_file_set_attr(vfs_file_t file, uint8_t attr)
+void vfs_file_set_attr(vfs_file_t file, vfs_file_attr_bit_t attr)
 {
     FatDirectoryEntry_t * de = file;
     de->attributes = attr;
 }
 
-void vfs_set_file_change_callback(vfs_file_change_func_t cb)
+void vfs_set_file_change_callback(vfs_file_change_cb_t cb)
 {
-    change_func = cb;
+    file_change_cb = cb;
 }
 
 void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
@@ -371,7 +382,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
             uint32_t sectors_to_write = vm_end - requested_sector;
             sectors_to_write = MIN(sectors_to_write, num_sectors);
             sector_offset = requested_sector - current_sector;
-            virtual_media[i].read_func(sector_offset, buf, sectors_to_write);
+            virtual_media[i].read_cb(sector_offset, buf, sectors_to_write);
             // Update requested sector
             requested_sector += sectors_to_write;
             num_sectors -= sectors_to_write;
@@ -387,7 +398,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
     }
 }
 
-void vfs_write(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
+void vfs_write(uint32_t requested_sector, const uint8_t *buf, uint32_t num_sectors)
 {
     uint8_t i = 0;
     uint32_t current_sector;
@@ -404,7 +415,7 @@ void vfs_write(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
             uint32_t sectors_to_read = vm_end - requested_sector;
             sectors_to_read = MIN(sectors_to_read, num_sectors);
             sector_offset = requested_sector - current_sector;
-            virtual_media[i].write_func(sector_offset, buf, sectors_to_read);
+            virtual_media[i].write_cb(sector_offset, buf, sectors_to_read);
             // Update requested sector
             requested_sector += sectors_to_read;
             num_sectors -= sectors_to_read;
@@ -511,29 +522,31 @@ static void write_dir1(uint32_t sector_offset, const uint8_t* data, uint32_t num
         if (0 == memcmp(&old_dir->f[i], &new_dir->f[i], sizeof(new_dir->f[i]))) {
             continue;
         }
-        same_name = 0 == memcmp(old_dir->f[i].filename, new_dir->f[i].filename, sizeof(new_dir->f[i].filename));
+        // If were at this point then something has changed in the file
+
+        same_name = (0 == memcmp(old_dir->f[i].filename, new_dir->f[i].filename, sizeof(new_dir->f[i].filename))) ? 1 : 0;
 
         // Changed
-        if (0 != change_func) {
-            change_func(new_dir->f[i].filename, VFS_FILE_CHANGED, &old_dir->f[i], &new_dir->f[i]);
-        }
+        file_change_cb(new_dir->f[i].filename, VFS_FILE_CHANGED, &old_dir->f[i], &new_dir->f[i]);
 
         // Deleted
         if (0xe5 == (uint8_t)new_dir->f[i].filename[0]) {
-            if (0 != change_func) {
-                change_func(old_dir->f[i].filename, VFS_FILE_DELETED, &old_dir->f[i], &new_dir->f[i]);
-            }
+            file_change_cb(old_dir->f[i].filename, VFS_FILE_DELETED, &old_dir->f[i], &new_dir->f[i]);
             continue;
         }
 
         // Created
         if (!same_name && filename_valid(new_dir->f[i].filename)) {
-            if (0 != change_func) {
-                change_func(new_dir->f[i].filename, VFS_FILE_CREATED, &old_dir->f[i], &new_dir->f[i]);
-            }
+            file_change_cb(new_dir->f[i].filename, VFS_FILE_CREATED, &old_dir->f[i], &new_dir->f[i]);
             continue;
         }
     }
 
     memcpy(old_dir, new_dir, VFS_SECTOR_SIZE);
+}
+
+static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
+                     const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr)
+{
+    // Do nothing
 }
