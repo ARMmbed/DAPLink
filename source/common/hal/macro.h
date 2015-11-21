@@ -14,18 +14,17 @@
  * limitations under the License.
  */
  
-#ifndef COMPILER_H
-#define COMPILER_H
+#ifndef MACRO_H
+#define MACRO_H
 
-#define COMPILER_CONCAT_(a, b) a##b
-#define COMPILER_CONCAT(a, b) COMPILER_CONCAT_(a, b)
+#define ELEMENTS_IN_ARRAY(array)        (sizeof(array)/sizeof(array[0]))
 
-// Divide by zero if the the expression is false.  This
-// causes an error at compile time.
-//
-// The special value '__COUNTER__' is used to create a unique value to
-// append to 'compiler_assert_' to create a unique token.  This prevents
-// conflicts resulting from the same enum being declared multiple times.
-#define COMPILER_ASSERT(e) enum { COMPILER_CONCAT(compiler_assert_, __COUNTER__) = 1/((e) ? 1 : 0) }
+#define MB(size)                        ((size) * 1024 * 1024)
+
+#define KB(size)                        ((size) * 1024)
+
+#define MIN(a,b)                        ((a) < (b) ? (a) : (b))
+
+#define MAX(a,b)                        ((a) > (b) ? (a) : (b))
 
 #endif

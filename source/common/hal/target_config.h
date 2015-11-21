@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include "stdint.h"
 #include "target_flash.h"
+#include "macro.h"
 
 #ifdef __cplusplus
   extern "C" {
@@ -29,9 +30,6 @@
  @addtogroup
  @{
 */
-    
-#define kB(x)   (x*1024)
-#define MB(x)   (kB(x)*1024)
 
 // Not sure what this is suppose to mean. used in swd_host and needs to be looked further into
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)

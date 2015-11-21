@@ -19,11 +19,9 @@
 #include "version.h"
 #include "config_settings.h"
 #include "compiler.h"
+#include "macro.h"
 
 #include "daplink_debug.h"
-
-#define MIN(a,b) ((a) < (b) ? a : b)
-#define kB(x)   (x*1024)
 
 // Virtual file system driver
 // Limitations:
@@ -176,7 +174,7 @@ const virtual_media_t virtual_media_tmpl[] = {
     /* Raw filesystem contents follow */
 };
 // Keep virtual_media_idx_t in sync with virtual_media_tmpl
-COMPILER_ASSERT(MEDIA_IDX_COUNT == COUNT_OF_ARRAY(virtual_media_tmpl));
+COMPILER_ASSERT(MEDIA_IDX_COUNT == ELEMENTS_IN_ARRAY(virtual_media_tmpl));
 
 static const FatDirectoryEntry_t root_dir_entry = {
     /*uint8_t[11] */ .filename = {""},
@@ -264,7 +262,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
 
     // Initialize MBR
     memcpy(&mbr, &mbr_tmpl, sizeof(mbr_t));
-    mbr.total_logical_sectors = ((disk_size + kB(64)) / mbr.bytes_per_sector);
+    mbr.total_logical_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
     mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
 
     // Initailize virtual media
@@ -275,7 +273,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     // Initialize indexes
     virtual_media_idx = MEDIA_IDX_COUNT;
     data_start = 0;
-    for (i = 0; i < COUNT_OF_ARRAY(virtual_media_tmpl); i++) {
+    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media_tmpl); i++) {
         data_start += virtual_media[i].length;
     }
 
@@ -371,7 +369,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
     memset(buf, 0, num_sectors * VFS_SECTOR_SIZE);
 
     current_sector = 0;
-    for (i = 0; i < COUNT_OF_ARRAY(virtual_media); i++) {
+    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media); i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
         uint32_t vm_start = current_sector;
         uint32_t vm_end = current_sector + vm_sectors;
