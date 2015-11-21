@@ -30,16 +30,14 @@
 #include "target_flash.h"
 #include "virtual_fs_user.h"
 
-#define INVALID_SECTOR  0
-
 typedef struct file_transfer_state {
-    uint32_t start_sector;
+    vfs_file_t file_to_program;
+    vfs_sector_t start_sector;
+    vfs_sector_t next_sector_to_write;
     uint32_t amt_to_write;
     uint32_t amt_written;
-    uint32_t next_sector_to_write;
     bool transfer_started;
-    const FatDirectoryEntry_t * file_to_program_de;
-    uint32_t transfer_finished;
+    bool transfer_finished;
     extension_t file_type;
 } file_transfer_state_t;
 
@@ -49,6 +47,17 @@ static const uint32_t disc_size = MB(8);
 
 static const char * const virtual_fs_auto_rstcfg = "AUTO_RSTCFG";
 static const char * const virtual_fs_hard_rstcfg = "HARD_RSTCFG";
+
+static const file_transfer_state_t default_transfer_state = {
+    VFS_FILE_INVALID,
+    VFS_INVALID_SECTOR,
+    VFS_INVALID_SECTOR,
+    0,
+    0,
+    false,
+    false,
+    UNKNOWN
+};
 
 static const uint8_t mbed_redirect_file[512] =
     "<!doctype html>\r\n"
@@ -85,8 +94,7 @@ static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static target_flash_status_t fail_reason = TARGET_OK;
 static file_transfer_state_t file_transfer_state;
 
-static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change,
-                                const FatDirectoryEntry_t * old_entry, const FatDirectoryEntry_t * new_entry);
+static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
 static uint32_t get_file_size(vfs_read_cb_t read_func);
 
@@ -95,7 +103,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
 static uint32_t read_file_reset_cfg(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
-static void update_transfer_info(extension_t type, const FatDirectoryEntry_t * de, uint32_t sector, uint32_t size);
+static void update_transfer_info(extension_t type, const vfs_file_t file, uint32_t sector, uint32_t size);
 static void update_transfer_state(target_flash_status_t status);
 static extension_t identify_file_name(const vfs_filename_t filename);
 static extension_t identify_start_sequence(const uint8_t *buf);
@@ -108,7 +116,6 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize);
 // when mass storage is inactive.
 void vfs_user_build_filesystem(void)
 {
-    static const file_transfer_state_t default_transfer_state = {0,0,0,0,INVALID_SECTOR,UNKNOWN};
     const char * name;
     uint32_t file_size;
     vfs_file_t file;
@@ -196,22 +203,15 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
 
 
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
-static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change,
-                                const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr)
+static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
     if (VFS_FILE_CHANGED == change) {
         extension_t type;
         type = identify_file_name(filename);
         if (UNKNOWN != type) {
-            uint32_t size;
-            uint32_t sector;
-            uint32_t cluster_idx;
-
-            size = new_entry_data_ptr->filesize;
-            cluster_idx = new_entry_data_ptr->first_cluster_low_16;
-            // Cluster only valid if size > 0
-            sector = size == 0 ? INVALID_SECTOR : vfs_cluster_to_sector(cluster_idx);
-            update_transfer_info(type, entry, sector, new_entry_data_ptr->first_cluster_low_16);
+            uint32_t size = vfs_file_get_size(new_file_data);
+            vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
+            update_transfer_info(type, file, sector, size);
             update_transfer_state(TARGET_OK);
         }
     }
@@ -360,9 +360,9 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
 // Update info about the current file transfer and check for completion
 // type     - Format of the file taht is being sent.  Currently BIN and HEX are supported.
 // de       - Directory entry in the VFS of the file being written.  Set to null if unused.
-// sector   - Starting sector of the tranfer.  Set to INVALID_SECTOR if unknown
+// sector   - Starting sector of the tranfer.  Set to VFS_INVALID_SECTOR if unknown
 // size     - Size of file being transfered.  Set to 0 if unknown
-static void update_transfer_info(extension_t type, const FatDirectoryEntry_t * de, uint32_t sector, uint32_t size)
+static void update_transfer_info(extension_t type, vfs_file_t file, uint32_t sector, uint32_t size)
 {
     target_flash_status_t status = TARGET_OK;
 
@@ -372,12 +372,12 @@ static void update_transfer_info(extension_t type, const FatDirectoryEntry_t * d
     }
 
     // Initialize the directory entry if it has not been set
-    if (0 == file_transfer_state.file_to_program_de) {
-        file_transfer_state.file_to_program_de = de;
+    if (VFS_FILE_INVALID == file_transfer_state.file_to_program) {
+        file_transfer_state.file_to_program = file;
     }
 
     // Initialize the starting sector if it has not been set
-    if (INVALID_SECTOR == file_transfer_state.start_sector) {
+    if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = sector;
     }
 
@@ -389,8 +389,8 @@ static void update_transfer_info(extension_t type, const FatDirectoryEntry_t * d
     }
 
     // Check - Directory entry must be the same (or null)
-    if ((0 != de) && (de != file_transfer_state.file_to_program_de)) {
-        debug_msg("error: entry != file_transfer_state.file_to_program_de: %p, %p\n", de, file_transfer_state.file_to_program_de);
+    if ((VFS_FILE_INVALID != file) && (file != file_transfer_state.file_to_program)) {
+        debug_msg("error: entry != file_transfer_state.file_to_program: %p, %p\n", file, file_transfer_state.file_to_program);
         status = TARGET_FAIL_ERROR_DURING_TRANSFER;
         goto end;
     }
@@ -403,7 +403,7 @@ static void update_transfer_info(extension_t type, const FatDirectoryEntry_t * d
     }
 
     // Check - Starting sector must be the same
-    if ((INVALID_SECTOR != sector) && (sector != file_transfer_state.start_sector)) {
+    if ((VFS_INVALID_SECTOR != sector) && (sector != file_transfer_state.start_sector)) {
         debug_msg("error: starting sector changed from %i to %i\n", file_transfer_state.start_sector, sector);
         status = TARGET_FAIL_ERROR_DURING_TRANSFER;
         goto end;
@@ -483,7 +483,7 @@ static void start_disconnect_reconnect_timer(target_flash_status_t status)
 //        It waits until usb is idle before disconnecting.
 static void tranfer_complete(target_flash_status_t status)
 {
-    file_transfer_state.transfer_finished = 1;
+    file_transfer_state.transfer_finished = true;
     start_disconnect_reconnect_timer(status);
 }
 

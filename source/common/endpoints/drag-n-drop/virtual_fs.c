@@ -67,6 +67,24 @@ typedef struct file_allocation_table {
     uint8_t f[512];
 } file_allocation_table_t;
 
+typedef union FatDirectoryEntry {
+    uint8_t data[32];
+    struct {
+        vfs_filename_t filename;
+        uint8_t attributes;
+        uint8_t reserved;
+        uint8_t creation_time_ms;
+        uint16_t creation_time;
+        uint16_t creation_date;
+        uint16_t accessed_date;
+        uint16_t first_cluster_high_16;
+        uint16_t modification_time;
+        uint16_t modification_date;
+        uint16_t first_cluster_low_16;
+        uint32_t filesize;
+    } __attribute__((packed)) ;
+} __attribute__((packed)) FatDirectoryEntry_t;
+
 // to save RAM all files must be in the first root dir entry (512 bytes)
 //  but 2 actually exist on disc (32 entries) to accomodate hidden OS files,
 //  folders and metadata 
@@ -88,7 +106,8 @@ static uint32_t read_fat(uint32_t offset, uint8_t* data, uint32_t size);
 static uint32_t read_dir1(uint32_t offset, uint8_t* data, uint32_t size);
 static void write_dir1(uint32_t offset, const uint8_t* data, uint32_t size);
 static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
-                     const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr);
+                                vfs_file_t file, vfs_file_t new_file_data);
+static uint32_t cluster_to_sector(uint32_t cluster_idx);
 
 // If sector size changes update comment below
 COMPILER_ASSERT(0x0200 == VFS_SECTOR_SIZE);
@@ -296,12 +315,6 @@ uint32_t vfs_get_total_size()
     return mbr.bytes_per_sector * mbr.total_logical_sectors;
 }
 
-uint32_t vfs_cluster_to_sector(uint32_t cluster_idx)
-{
-    uint32_t sectors_before_data = data_start / mbr.bytes_per_sector;
-    return sectors_before_data + (cluster_idx - 2) * mbr.sectors_per_cluster;
-}
-
 vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
 {
     uint8_t cluster_idx = fat_idx;
@@ -353,6 +366,22 @@ void vfs_file_set_attr(vfs_file_t file, vfs_file_attr_bit_t attr)
 {
     FatDirectoryEntry_t * de = file;
     de->attributes = attr;
+}
+
+vfs_sector_t vfs_file_get_start_sector(vfs_file_t file)
+{
+    FatDirectoryEntry_t * de = file;
+    if (vfs_file_get_size(file) == 0) {
+        return VFS_INVALID_SECTOR;
+    }
+
+    return cluster_to_sector(de->first_cluster_low_16);
+}
+
+uint32_t vfs_file_get_size(vfs_file_t file)
+{
+    FatDirectoryEntry_t * de = file;
+    return de->filesize;
 }
 
 void vfs_set_file_change_callback(vfs_file_change_cb_t cb)
@@ -525,17 +554,17 @@ static void write_dir1(uint32_t sector_offset, const uint8_t* data, uint32_t num
         same_name = (0 == memcmp(old_dir->f[i].filename, new_dir->f[i].filename, sizeof(new_dir->f[i].filename))) ? 1 : 0;
 
         // Changed
-        file_change_cb(new_dir->f[i].filename, VFS_FILE_CHANGED, &old_dir->f[i], &new_dir->f[i]);
+        file_change_cb(new_dir->f[i].filename, VFS_FILE_CHANGED, (vfs_file_t)&old_dir->f[i], (vfs_file_t)&new_dir->f[i]);
 
         // Deleted
         if (0xe5 == (uint8_t)new_dir->f[i].filename[0]) {
-            file_change_cb(old_dir->f[i].filename, VFS_FILE_DELETED, &old_dir->f[i], &new_dir->f[i]);
+            file_change_cb(old_dir->f[i].filename, VFS_FILE_DELETED, (vfs_file_t)&old_dir->f[i], (vfs_file_t)&new_dir->f[i]);
             continue;
         }
 
         // Created
         if (!same_name && filename_valid(new_dir->f[i].filename)) {
-            file_change_cb(new_dir->f[i].filename, VFS_FILE_CREATED, &old_dir->f[i], &new_dir->f[i]);
+            file_change_cb(new_dir->f[i].filename, VFS_FILE_CREATED, (vfs_file_t)&old_dir->f[i], (vfs_file_t)&new_dir->f[i]);
             continue;
         }
     }
@@ -543,8 +572,13 @@ static void write_dir1(uint32_t sector_offset, const uint8_t* data, uint32_t num
     memcpy(old_dir, new_dir, VFS_SECTOR_SIZE);
 }
 
-static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
-                     const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr)
+static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
     // Do nothing
+}
+
+static uint32_t cluster_to_sector(uint32_t cluster_idx)
+{
+    uint32_t sectors_before_data = data_start / mbr.bytes_per_sector;
+    return sectors_before_data + (cluster_idx - 2) * mbr.sectors_per_cluster;
 }

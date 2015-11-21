@@ -23,7 +23,9 @@
   extern "C" {
 #endif
 
-#define VFS_SECTOR_SIZE      512
+#define VFS_SECTOR_SIZE         512
+#define VFS_INVALID_SECTOR      0xFFFFFFFF
+#define VFS_FILE_INVALID        0
 
 typedef char vfs_filename_t[11];
 
@@ -46,34 +48,17 @@ typedef enum {
 } vfs_file_change_t;
 
 typedef void * vfs_file_t;
-
-typedef union FatDirectoryEntry {
-    uint8_t data[32];
-    struct {
-        vfs_filename_t filename;
-        uint8_t attributes;
-        uint8_t reserved;
-        uint8_t creation_time_ms;
-        uint16_t creation_time;
-        uint16_t creation_date;
-        uint16_t accessed_date;
-        uint16_t first_cluster_high_16;
-        uint16_t modification_time;
-        uint16_t modification_date;
-        uint16_t first_cluster_low_16;
-        uint32_t filesize;
-    } __attribute__((packed)) ;
-} __attribute__((packed)) FatDirectoryEntry_t;
+typedef uint32_t vfs_sector_t;
 
 // Callback for when data is written to a file on the virtual filesystem
 typedef void (*vfs_write_cb_t)(uint32_t sector_offset, const uint8_t* data, uint32_t num_sectors);
 // Callback for when data is ready from the virtual filesystem
 typedef uint32_t (*vfs_read_cb_t)(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-// Callback for when a file's attributes are changed on the virtual filesystem.  Note that the 'entry' parameter
-// can be saved and compared to other directory entry pointers to see if they are referencing the same object.  The
-// same cannot be done with new_entry_data_ptr since it points to a temporary buffer.
+// Callback for when a file's attributes are changed on the virtual filesystem.  Note that the 'file' parameter
+// can be saved and compared to other files to see if they are referencing the same object.  The
+// same cannot be done with new_file_data since it points to a temporary buffer.
 typedef void (*vfs_file_change_cb_t)(const vfs_filename_t filename, vfs_file_change_t change,
-                                   const FatDirectoryEntry_t * entry, const FatDirectoryEntry_t * new_entry_data_ptr);
+                                   vfs_file_t file, vfs_file_t new_file_data);
 
 // Initialize the filesystem with the given size and name
 void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size);
@@ -89,8 +74,13 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
 // Set the attributes of a file
 void vfs_file_set_attr(vfs_file_t file, vfs_file_attr_bit_t attr);
 
-// Convert the cluster index to a sector index
-uint32_t vfs_cluster_to_sector(uint32_t cluster_idx);
+// Get the starting sector of this file.
+// NOTE - If the file size is 0 there is no starting
+// sector so VFS_INVALID_SECTOR will be returned.
+vfs_sector_t vfs_file_get_start_sector(vfs_file_t file);
+
+// Get the size of the file.
+uint32_t vfs_file_get_size(vfs_file_t file);
 
 // Set the callback when a file is created, deleted or has atributes changed.
 void vfs_set_file_change_callback(vfs_file_change_cb_t cb);
