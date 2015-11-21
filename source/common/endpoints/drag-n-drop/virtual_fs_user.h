@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-#ifndef VALIDATION_H
-#define VALIDATION_H
+#ifndef VIRTUAL_FS_USER_H
+#define VIRTUAL_FS_USER_H
 
-#include "stdint.h"
+#include <stdint.h>
+
+#include "virtual_fs.h"
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
-uint8_t validate_bin_nvic(const uint8_t *buf);
-uint8_t validate_hexfile(const uint8_t *buf);
+extern const vfs_filename_t daplink_mode_file_name;
+extern const vfs_filename_t daplink_drive_name;
+extern const vfs_filename_t daplink_url_name;
+extern const char * const daplink_target_url;
+// Changes to the virtual filesystem must only occur during this
+// call or by writes from the host.  Modifying the filesystem
+// outside this call results in undefined behavior.
+void vfs_user_build_filesystem(void);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif
-

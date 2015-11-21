@@ -17,11 +17,12 @@
 #include "main.h"
 #include "gpio.h"
 #include "validation.h"
-#include "virtual_fs.h"
+#include "virtual_fs_user.h"
 #include "RTL.h"
 #include "rl_usb.h"
 #include "config_settings.h"
 #include "version.h"
+#include "target_config.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -231,7 +232,7 @@ __task void main_task(void)
                 case MAIN_USB_CHECK_CONNECTED:
                     if(usbd_configured()) {
                         usb_state = MAIN_USB_CONNECTED;
-                        reset_file_transfer_state();
+                        vfs_user_build_filesystem();
                         USBD_MSC_MediaReady = 1;
                     }
                     break;

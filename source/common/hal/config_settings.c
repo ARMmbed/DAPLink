@@ -28,9 +28,6 @@
     #include "FlashPrg.h"
 #endif
 
-#define MIN(a,b) ((a) < (b) ? a : b)
-
-
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
 #define SECTOR_BUFFER_SIZE  16

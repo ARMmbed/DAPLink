@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#ifndef MACRO_H
+#define MACRO_H
 
-#ifndef VALIDATION_H
-#define VALIDATION_H
+#define ELEMENTS_IN_ARRAY(array)        (sizeof(array)/sizeof(array[0]))
 
-#include "stdint.h"
+#define MB(size)                        ((size) * 1024 * 1024)
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#define KB(size)                        ((size) * 1024)
 
-uint8_t validate_bin_nvic(const uint8_t *buf);
-uint8_t validate_hexfile(const uint8_t *buf);
+#define MIN(a,b)                        ((a) < (b) ? (a) : (b))
 
-#ifdef __cplusplus
-  }
-#endif
+#define MAX(a,b)                        ((a) > (b) ? (a) : (b))
 
 #endif
-
