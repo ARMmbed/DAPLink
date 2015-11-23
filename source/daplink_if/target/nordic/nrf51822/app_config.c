@@ -27,9 +27,9 @@ const target_cfg_t target_device = {
     // Assume memory is regions are same size (smallest). Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (kB(256)/1024),
+    .sector_cnt     = (KB(256)/1024),
     .flash_start    = 0,
-    .flash_end      = kB(256),
+    .flash_end      = KB(256),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
     .flash_algo     = (program_target_t*)&flash,

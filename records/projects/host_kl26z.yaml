@@ -4,6 +4,7 @@ common:
     macros:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
+        - DAPLINK_HDK_ID=0x646c0001  # DAPLINK_HDK_ID_KL26
     sources:
         host:
             - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_kl_series.c

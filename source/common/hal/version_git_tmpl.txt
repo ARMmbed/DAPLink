@@ -1,3 +1,4 @@
+
 /* CMSIS-DAP Interface Firmware
  * Copyright (c) 2009-2013 ARM Limited
  *
@@ -13,22 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef VERSION_GIT_H
+#define VERSION_GIT_H
 
-#include "stdint.h"
-
-#define FW_BUILD "0234"
-
-extern char mac_string[16];
-extern char uuid_string[33];
-extern char version_string[49+4];
-extern uint8_t string_auth[49 + 4];
-
-uint8_t * get_uid_string          (void);
-uint8_t   get_len_string_interface(void);
-uint8_t * get_uid_string_interface(void);
-void      init_auth_config        (void);
-void build_mac_string(uint32_t *uuid_data);
+#define GIT_COMMIT_SHA  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#define GIT_LOCAL_MODS  1
 
 #endif
+

@@ -24,9 +24,9 @@ const target_cfg_t target_device = {
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((kB(127)-kB(32))/1024),
-    .flash_start    = kB(32),
-    .flash_end      = kB(127),
+    .sector_cnt     = ((KB(127)-KB(32))/1024),
+    .flash_start    = KB(32),
+    .flash_end      = KB(127),
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
     /* .flash_algo not needed for bootloader */

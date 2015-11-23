@@ -18,6 +18,11 @@
 #define __IO_CONFIG_H__
 
 #include "MK20D5.h"
+#include "compiler.h"
+#include "daplink.h"
+
+// This GPIO configuration is only valid for the K20DX HDK
+COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_K20DX);
 
 
 // Debug Port I/O Pins

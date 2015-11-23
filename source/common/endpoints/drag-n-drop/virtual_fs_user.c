@@ -23,7 +23,7 @@
 #include "virtual_fs.h"
 #include "daplink_debug.h"
 #include "validation.h"
-#include "version.h"
+#include "info.h"
 #include "config_settings.h"
 #include "daplink.h"
 #include "target_config.h"
@@ -75,9 +75,7 @@ static const uint8_t mbed_redirect_file[512] =
     "</html>\r\n";
 
 static const uint8_t details_file[512] =
-    "DAPLink Firmware - see https://mbed.com/daplink\r\n"
-    "Version: " FW_BUILD "\r\n"
-    "Build:   " __DATE__ " " __TIME__ "\r\n";
+    "DAPLink Firmware - see https://mbed.com/daplink\r\n";
 
 static const uint8_t hardware_rst_file[512] =
     "# Behavior configuration file\r\n"
@@ -517,24 +515,39 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
         // If key was found then replace it
         if ('@' == *buf) {
             switch(*(buf+1)) {
-                case 'a':
-                case 'A':   // platform ID string
-                    insert_string = string_auth + 4;
-                    break;
-
                 case 'm':
                 case 'M':   // MAC address
-                    insert_string = (uint8_t *)mac_string;
+                    insert_string = (uint8_t *)info_get_mac();
                     break;
 
                 case 'u':
                 case 'U':   // UUID
-                    insert_string = (uint8_t *)uuid_string;
+                    insert_string = (uint8_t *)info_get_unique_id();
+                    break;
+
+                case 'b':
+                case 'B':   // Board ID
+                    insert_string = (uint8_t *)info_get_board_id();
+                    break;
+
+                case 'h':
+                case 'H':   // Host ID
+                    insert_string = (uint8_t *)info_get_host_id();
+                    break;
+
+                case 't':
+                case 'T':   // Target ID
+                    insert_string = (uint8_t *)info_get_target_id();
+                    break;
+
+                case 'd':
+                case 'D':   // HDK
+                    insert_string = (uint8_t *)info_get_hdk_id();
                     break;
 
                 case 'v':
                 case 'V':   // Firmware version
-                    insert_string = (uint8_t *)version_string;
+                    insert_string = (uint8_t *)info_get_version();
                     break;
 
                 case 'r':

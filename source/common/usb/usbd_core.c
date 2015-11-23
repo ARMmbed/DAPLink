@@ -17,7 +17,7 @@
 #include "rl_usb.h"
 #include "string.h"
 #include "usb_for_lib.h"
-#include "version.h"
+#include "info.h"
 
 U16               USBD_DeviceStatus;
 U8                USBD_DeviceAddress;
@@ -367,8 +367,8 @@ __inline BOOL USBD_ReqGetDescriptor (void) {
 
             // added by sam to send unique id string descriptor
           if (USBD_SetupPacket.wValueL == 3) {
-              USBD_EP0Data.pData = get_uid_string_interface();
-              len = get_len_string_interface();
+              USBD_EP0Data.pData = (uint8_t*)info_get_unique_id_string_descriptor();
+              len = ((USB_STRING_DESCRIPTOR *)USBD_EP0Data.pData)->bLength;
               break;
           }
 

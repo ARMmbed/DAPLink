@@ -18,6 +18,13 @@
 
 #include <stdbool.h>
 
+#define DAPLINK_BUILD_KEY_IF        0x9B939699
+#define DAPLINK_BUILD_KEY_BL        0x9B939D93
+
+#define DAPLINK_HDK_ID_K20DX        0x646c0000
+#define DAPLINK_HDK_ID_KL26         0x646c0001
+#define DAPLINK_HDK_ID_LPC11U35     0x646c0002
+
 bool daplink_is_bootloader(void);
 bool daplink_is_interface(void);
 

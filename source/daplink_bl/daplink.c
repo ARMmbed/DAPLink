@@ -16,6 +16,9 @@
 
 #include "daplink.h"
 #include "virtual_fs.h"
+#include "compiler.h"
+
+COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_BL);
 
 // daplink_mode_file_name, daplink_url_name and 
 // daplink_drive_name strings must be 11 characters 

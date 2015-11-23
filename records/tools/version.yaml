@@ -1,0 +1,3 @@
+common:
+    macros:
+        - DAPLINK_VERSION=234

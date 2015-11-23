@@ -16,6 +16,9 @@
 
 #include "daplink.h"
 #include "virtual_fs.h"
+#include "compiler.h"
+
+COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
 
 // daplink_mode_file_name, daplink_url_name and 
 // daplink_drive_name strings must be 11 characters 
@@ -26,7 +29,7 @@ const vfs_filename_t daplink_url_name =       "MBED    HTM";
 __attribute__((weak))
 const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
 __attribute__((weak))
-const char * const daplink_target_url = "https://mbed.org/device/?code=@A";
+const char * const daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T";
 
 bool daplink_is_bootloader()
 {
