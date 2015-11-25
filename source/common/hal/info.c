@@ -25,7 +25,7 @@
 // Raw variables
 static uint32_t host_id[4];
 static uint32_t target_id[4];
-static uint32_t hdk_id = 123456;     //TODO - this needs to be set externally
+static uint32_t hdk_id = DAPLINK_HDK_ID;
 
 // Strings
 static char string_unique_id[48 + 1];

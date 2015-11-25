@@ -74,7 +74,7 @@ def _unique_id_to_host_id(unique_id):
     Version  - 4 bytes
     Host ID  - Everything else
     """
-    return unique_id[8:]
+    return unique_id[8:8 + 32]
 
 
 def _get_board_endpoints(unique_id):
