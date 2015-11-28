@@ -328,12 +328,14 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     clusters = (len + cluster_size - 1) / cluster_size;
 
     // Write the cluster chain to the fat table
-    for (i = 0; i < clusters - 1; i++) {
-        write_fat(&fat, fat_idx, fat_idx + 1);
+    if (len > 0) {
+        for (i = 0; i < clusters - 1; i++) {
+            write_fat(&fat, fat_idx, fat_idx + 1);
+            fat_idx++;
+        }
+        write_fat(&fat, fat_idx, 0xFFF);
         fat_idx++;
     }
-    write_fat(&fat, fat_idx, 0xFFF);
-    fat_idx++;
 
     // Update directory entry
     de = &dir1.f[dir_idx];
