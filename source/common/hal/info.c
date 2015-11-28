@@ -21,6 +21,7 @@
 #include "board.h"
 #include "read_uid.h"
 #include "virtual_fs.h"
+#include "util.h"
 
 // Raw variables
 static uint32_t host_id[4];
@@ -77,32 +78,6 @@ const char * info_get_unique_id_string_descriptor(void)
     return usb_desc_unique_id;
 }
 
-static int write_hex8(uint8_t value, char * str)
-{
-    static const char nybble_chars[] = "0123456789abcdef";
-    *(str + 0) = nybble_chars[ (value >> 4) & 0x0F ];
-    *(str + 1) = nybble_chars[ (value >> 0) & 0x0F ];
-    return 2;
-}
-
-static int write_hex16(uint16_t value, char * str)
-{
-    int pos = 0;
-    pos += write_hex8((value >> 8) & 0xFF, str + pos);
-    pos += write_hex8((value >> 0) & 0xFF, str + pos);
-    return pos;
-}
-
-static int write_hex32(uint32_t value, char * str)
-{
-    int pos = 0;
-    pos += write_hex8((value >> 0x18) & 0xFF, str + pos);
-    pos += write_hex8((value >> 0x10) & 0xFF, str + pos);
-    pos += write_hex8((value >> 0x08) & 0xFF, str + pos);
-    pos += write_hex8((value >> 0x00) & 0xFF, str + pos);
-    return pos;
-}
-
 static void setup_basics()
 {
     uint8_t i = 0, idx = 0;
@@ -115,20 +90,20 @@ static void setup_basics()
     // Host ID
     idx = 0;
     for (i = 0; i < 4; i++) {
-        idx += write_hex32(host_id[i], string_host_id + idx);
+        idx += util_write_hex32(string_host_id + idx, host_id[i]);
     }
     string_host_id[idx++] = 0;
 
     // Target ID
     idx = 0;
     for (i = 0; i < 4; i++) {
-        idx += write_hex32(target_id[i], string_target_id + idx);
+        idx += util_write_hex32(string_target_id + idx, target_id[i]);
     }
     string_target_id[idx++] = 0;
 
     // HDK ID
     idx = 0;
-    idx += write_hex32(hdk_id, string_hdk_id + idx);
+    idx += util_write_hex32(string_hdk_id + idx, hdk_id);
     string_hdk_id[idx++] = 0;
 
     // Board ID
@@ -191,7 +166,7 @@ void info_set_uuid_target(uint32_t *uuid_data)
     uuid_data[2] |=  (0x2 << 8);
     uuid_data[2] &= ~(0x1 << 8);
 
-    idx += write_hex16(uuid_data[2] & 0xFFFF, string_mac + idx);
-    idx += write_hex32(uuid_data[3], string_mac + idx);
+    idx += util_write_hex16(string_mac + idx, uuid_data[2] & 0xFFFF);
+    idx += util_write_hex32(string_mac + idx, uuid_data[3]);
     string_mac[idx++] = 0;
 }
