@@ -1335,7 +1335,13 @@ void USBD_RTX_TaskInit (void) {
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
-      USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], 2, user_stack_list[i].stack,
+      // Set the control endpoint (endpoint 0) thread to a high priority.
+      // According to the USB 2.0 specification, the time to complete standard
+      // request with no data must be under 50ms.  If a long caluclation
+      // such as a CRC is running on a higher priority thread, USB enumeration
+      // can fail because of this timeout.
+      uint8_t priority = 0 == i ? 200 : 2;
+      USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], priority, user_stack_list[i].stack,
                                               user_stack_list[i].size);
     }
   }
