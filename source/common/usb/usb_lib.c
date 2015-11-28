@@ -1348,13 +1348,24 @@ void USBD_RTX_TaskInit (void) {
 #endif
 }
 
+/*------------------------------------------------------------------------------
+ *      CDC Sizes
+ *----------------------------------------------------------------------------*/
+#define CDC_HEADER_SIZE                         5
+#define CDC_CALL_MANAGEMENT_SIZE                5
+#define CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE    4
+#define CDC_UNION_SIZE                          5
 
 /*------------------------------------------------------------------------------
  *      USB Device Descriptors
  *----------------------------------------------------------------------------*/
 #define USBD_MSC_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
-#define USBD_CDC_ACM_DESC_LEN             (USB_INTERFACE_DESC_SIZE + /*USBD_MULTI_IF * USB_INTERFACE_ASSOC_DESC_SIZE +*/ 0x0013                 + \
-                                           USB_ENDPOINT_DESC_SIZE + USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
+#define USBD_CDC_ACM_DESC_LEN             (USBD_MULTI_IF * USB_INTERFACE_ASSOC_DESC_SIZE                                                        + \
+                                           /* CDC Interface 1 */                                                                                  \
+                                           USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE                                 + \
+                                           CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE + CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE                       + \
+                                           /* CDC Interface 2 */                                                                                  \
+                                           USB_INTERFACE_DESC_SIZE + USB_ENDPOINT_DESC_SIZE + USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + USB_HID_DESC_SIZE                                                          + \
                                           (USB_ENDPOINT_DESC_SIZE*(1+(USBD_HID_EP_INTOUT != 0))))
 #define USBD_HID_DESC_OFS                 (USB_CONFIGUARTION_DESC_SIZE + USB_INTERFACE_DESC_SIZE                                                + \
@@ -1779,23 +1790,23 @@ const U8 USBD_DeviceQualifier_HS[] = { 0 };
   USBD_CDC_ACM_CIF_STR_NUM,             /* iInterface: */                                                   \
                                                                                                             \
 /* Header Functional Descriptor */                                                                          \
-  0x05,                                 /* bLength: Endpoint Descriptor size */                             \
+  CDC_HEADER_SIZE,                      /* bLength: Endpoint Descriptor size */                             \
   CDC_CS_INTERFACE,                     /* bDescriptorType: CS_INTERFACE */                                 \
   CDC_HEADER,                           /* bDescriptorSubtype: Header Func Desc */                          \
   WBVAL(CDC_V1_10), /* 1.10 */          /* bcdCDC */                                                        \
 /* Call Management Functional Descriptor */                                                                 \
-  0x05,                                 /* bFunctionLength */                                               \
+  CDC_CALL_MANAGEMENT_SIZE,             /* bFunctionLength */                                               \
   CDC_CS_INTERFACE,                     /* bDescriptorType: CS_INTERFACE */                                 \
   CDC_CALL_MANAGEMENT,                  /* bDescriptorSubtype: Call Management Func Desc */                 \
   0x03,                                 /* bmCapabilities: device handles call management */                \
   0x02,                                 /* bDataInterface: CDC data IF ID */                                \
 /* Abstract Control Management Functional Descriptor */                                                     \
-  0x04,                                 /* bFunctionLength */                                               \
+  CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE, /* bFunctionLength */                                               \
   CDC_CS_INTERFACE,                     /* bDescriptorType: CS_INTERFACE */                                 \
   CDC_ABSTRACT_CONTROL_MANAGEMENT,      /* bDescriptorSubtype: Abstract Control Management desc */          \
   0x06,                                 /* bmCapabilities: SET_LINE_CODING, GET_LINE_CODING, SET_CONTROL_LINE_STATE supported */ \
 /* Union Functional Descriptor */                                                                           \
-  0x05,                                 /* bFunctionLength */                                               \
+  CDC_UNION_SIZE,                       /* bFunctionLength */                                               \
   CDC_CS_INTERFACE,                     /* bDescriptorType: CS_INTERFACE */                                 \
   CDC_UNION,                            /* bDescriptorSubtype: Union func desc */                           \
   USBD_CDC_ACM_CIF_NUM,                 /* bMasterInterface: Communication class interface is master */     \
