@@ -17,6 +17,7 @@
 #define DAPLINK_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "daplink_addr.h"
 #include "compiler.h"
@@ -42,6 +43,14 @@ COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RA
 #define DAPLINK_HDK_ID_K20DX        0x646c0000
 #define DAPLINK_HDK_ID_KL26         0x646c0001
 #define DAPLINK_HDK_ID_LPC11U35     0x646c0002
+
+#define DAPLINK_INFO_OFFSET         0x20
+
+typedef struct {
+    uint32_t build_key;
+    uint32_t hdk_id;
+    uint32_t version;
+} daplink_info_t;
 
 bool daplink_is_bootloader(void);
 bool daplink_is_interface(void);

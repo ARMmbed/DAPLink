@@ -22,11 +22,22 @@
 #include "read_uid.h"
 #include "virtual_fs.h"
 #include "util.h"
+#include "crc.h"
+#include "daplink.h"
+
+// Constant variables
+static const daplink_info_t * const info_bl = (daplink_info_t *)(DAPLINK_ROM_BL_START + DAPLINK_INFO_OFFSET);
+static const daplink_info_t * const info_if = (daplink_info_t *)(DAPLINK_ROM_IF_START + DAPLINK_INFO_OFFSET);
 
 // Raw variables
 static uint32_t host_id[4];
 static uint32_t target_id[4];
 static uint32_t hdk_id = DAPLINK_HDK_ID;
+
+static uint32_t crc_bootloader;
+static uint32_t crc_interface;
+static uint32_t crc_config_admin;
+static uint32_t crc_config_user;
 
 // Strings
 static char string_unique_id[48 + 1];
@@ -149,6 +160,7 @@ static void setup_string_descriptor()
 
 void info_init(void)
 {
+    info_crc_compute();
     read_unique_id(host_id);
     setup_basics();
     setup_unique_id();
@@ -169,4 +181,107 @@ void info_set_uuid_target(uint32_t *uuid_data)
     idx += util_write_hex16(string_mac + idx, uuid_data[2] & 0xFFFF);
     idx += util_write_hex32(string_mac + idx, uuid_data[3]);
     string_mac[idx++] = 0;
+}
+
+bool info_get_bootloader_present(void)
+{
+    bool present = true;
+    if (0 == DAPLINK_ROM_BL_SIZE) {
+        present = false;
+    }
+    if (DAPLINK_BUILD_KEY_BL != info_bl->build_key) {
+        present = false;
+    }
+    if (DAPLINK_HDK_ID != info_bl->hdk_id) {
+        present = false;
+    }
+    return present;
+}
+
+bool info_get_interface_present(void)
+{
+    bool present = true;
+    if (0 == DAPLINK_ROM_IF_SIZE) {
+        present = false;
+    }
+    if (DAPLINK_BUILD_KEY_IF != info_if->build_key) {
+        present = false;
+    }
+    if (DAPLINK_HDK_ID != info_if->hdk_id) {
+        present = false;
+    }
+    return present;
+}
+
+bool info_get_config_admin_present(void)
+{
+    //TODO, c1728p9 - check if admin config has been loaded
+    return false;
+}
+
+bool info_get_config_user_present(void)
+{
+    //TODO, c1728p9 - check if user config has a valid key
+    return false;
+}
+
+uint32_t info_get_crc_bootloader()
+{
+    return crc_bootloader;
+}
+
+uint32_t info_get_crc_interface()
+{
+    return crc_interface;
+}
+
+uint32_t info_get_crc_config_admin()
+{
+    return crc_config_admin;
+}
+
+uint32_t info_get_crc_config_user()
+{
+    return crc_config_user;
+}
+
+void info_crc_compute()
+{
+    crc_bootloader = 0;
+    crc_interface = 0;
+    crc_config_admin = 0;
+    crc_config_user = 0;
+    
+    // Compute the CRCs of regions that exist
+    if (DAPLINK_ROM_BL_SIZE > 0) {
+        crc_bootloader = crc32((void*)DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4);
+    }
+    if (DAPLINK_ROM_IF_SIZE > 0) {
+        crc_interface = crc32((void*)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
+    }
+    if (DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0) {
+        crc_config_admin = crc32((void*)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
+    }
+    if (DAPLINK_ROM_CONFIG_USER_SIZE > 0) {
+        crc_config_user = crc32((void*)DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE);
+    }
+}
+
+// Get version info as an integer
+uint32_t info_get_bootloader_version(void)
+{
+    // Don't read version if image is not present
+    if (!info_get_bootloader_present()) {
+        return 0;
+    }
+    return info_bl->version;    
+}
+
+uint32_t info_get_interface_version(void)
+{
+    // Don't read version if image is not present
+    if (!info_get_interface_present()) {
+        return 0;
+    }
+    return info_if->version;
 }

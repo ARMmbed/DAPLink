@@ -48,7 +48,7 @@
           <OutputName>FlashAlgo</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
@@ -77,7 +77,7 @@
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>$KARM\BIN\ElfDwT.exe #L</UserProg1Name>
-            <UserProg2Name>fromelf --bin $L@L.axf -o $L@L.bin</UserProg2Name>
+            <UserProg2Name>..\..\..\tools\post_build_script.bat $L@L $KARM</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>

@@ -13,9 +13,9 @@ UVISION_PROJ_DIR = os.path.join("projectfiles", "uvision")
 RELEASE_PKG_DIR = os.path.join("uvision_release")
 COPY_PATTERN_LIST = [
     "%s.axf",
-    "%s.bin",
+    "%s_crc.bin",
     "%s.build_log.htm",
-    "%s.hex",
+    "%s_crc.hex",
     "%s.htm",
     "%s.map",
     ]
