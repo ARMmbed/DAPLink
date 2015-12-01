@@ -47,9 +47,6 @@ typedef struct file_transfer_state {
 // device.  This is to accomidate for hex file programming.
 static const uint32_t disc_size = MB(8);
 
-static const char * const virtual_fs_auto_rstcfg = "AUTO_RSTCFG";
-static const char * const virtual_fs_hard_rstcfg = "HARD_RSTCFG";
-
 static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
     VFS_INVALID_SECTOR,
@@ -76,17 +73,6 @@ static const uint8_t mbed_redirect_file[512] =
     "</body>\r\n"
     "</html>\r\n";
 
-static const uint8_t hardware_rst_file[512] =
-    "# Behavior configuration file\r\n"
-    "# Reset can be hard or auto\r\n"
-    "#     hard - user must disconnect power, press reset button or send a serial break command\r\n"
-    "#     auto - upon programming completion the target MCU automatically resets\r\n"
-    "#            and starts running\r\n"
-    "#\r\n"
-    "# The filename indicates how your board will reset the target\r\n"
-    "# Delete this file to toggle the behavior\r\n"
-    "# This setting can only be changed in maintenance mode\r\n";
-
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static target_flash_status_t fail_reason = TARGET_OK;
 static file_transfer_state_t file_transfer_state;
@@ -97,7 +83,6 @@ static uint32_t get_file_size(vfs_read_cb_t read_func);
 
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-static uint32_t read_file_reset_cfg(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void update_transfer_info(extension_t type, const vfs_file_t file, uint32_t sector, uint32_t size);
@@ -113,13 +98,9 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize);
 // when mass storage is inactive.
 void vfs_user_build_filesystem(void)
 {
-    const char * name;
     uint32_t file_size;
-    vfs_file_t file;
-    bool auto_rst;
 
     // Update anything that could have changed file system state
-    auto_rst = config_get_auto_rst();
     file_transfer_state = default_transfer_state;
 
     // Setup the filesystem based on target parameters
@@ -133,12 +114,6 @@ void vfs_user_build_filesystem(void)
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
-
-    // HARD_RST.CFG / AUTO_RST.CFG
-    name = auto_rst ? virtual_fs_auto_rstcfg : virtual_fs_hard_rstcfg;
-    file_size = get_file_size(read_file_reset_cfg);
-    file = vfs_create_file(name, read_file_reset_cfg, 0, file_size);
-    vfs_file_set_attr(file, VFS_FILE_ATTR_HIDDEN);
 
     // FAIL.TXT
     if (fail_reason != 0) {
@@ -221,15 +196,15 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
                 // Do nothing - bootloader will go to interface by default
             }
             tranfer_complete(TARGET_OK);
-        }
-    } else if (VFS_FILE_DELETED == change) {
-        if (!memcmp(filename, virtual_fs_auto_rstcfg, sizeof(vfs_filename_t))) {
-            config_set_auto_rst(false);
-            tranfer_complete(TARGET_OK);
-        } else if (!memcmp(filename, virtual_fs_hard_rstcfg, sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(true);
             tranfer_complete(TARGET_OK);
+        } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
+            config_set_auto_rst(false);
+            tranfer_complete(TARGET_OK);
         }
+    } else if (VFS_FILE_DELETED == change) {
+        // No delete events to handle
     }
 }
 
@@ -385,18 +360,6 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     pos += util_write_string(buf + pos, "\r\n");
 
     return pos;
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_reset_cfg(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    const char* contents = (const char*)hardware_rst_file;
-    uint32_t size = strlen(contents);
-    if (sector_offset != 0) {
-        return 0;
-    }
-    memcpy(data, contents, size);
-    return size;
 }
 
 // File callback to be used with vfs_add_file to return file contents
