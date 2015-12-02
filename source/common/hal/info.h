@@ -16,10 +16,12 @@
 #ifndef INFO_H
 #define INFO_H
 
+#include <stdbool.h>
 #include "stdint.h"
 
 void info_init(void);
 void info_set_uuid_target(uint32_t *uuid_data);
+void info_crc_compute(void);
 
 
 // Get the 48 digit unique ID as a null terminated string.
@@ -53,5 +55,24 @@ const char * info_get_mac(void);
 // offset 1, size 1, bDescriptorType always 3
 // offset 2, size n, bString - unicode encoded unique id
 const char * info_get_unique_id_string_descriptor(void);
+
+
+// Check if various regions are present
+bool info_get_bootloader_present(void);
+bool info_get_interface_present(void);
+bool info_get_config_admin_present(void);
+bool info_get_config_user_present(void);
+
+// Get the CRCs of various regions.
+// The CRC returned is only valid if
+// the given region is present.
+uint32_t info_get_crc_bootloader(void);
+uint32_t info_get_crc_interface(void);
+uint32_t info_get_crc_config_admin(void);
+uint32_t info_get_crc_config_user(void);
+
+// Get version info as an integer
+uint32_t info_get_bootloader_version(void);
+uint32_t info_get_interface_version(void);
 
 #endif

@@ -1,21 +1,29 @@
-LR_IROM1 0x00000000 0x8000  {    ; load region size_region
+#! armcc -E
 
-  ER_IROM1 0x00000000 0x8000  {  ; load address = execution address
+#include "../daplink_addr.h"
+
+LR_IROM1 DAPLINK_ROM_BL_START DAPLINK_ROM_BL_SIZE {  ; load region size_region
+
+  ER_IROM1 DAPLINK_ROM_BL_START DAPLINK_ROM_BL_SIZE {  ; load address = execution address
    *.o (RESET, +First)
    *(InRoot$$Sections)
    .ANY (+RO)
   }
 
-  RW_IRAM1 0x1FFFE000 0x00003F00  {  ; RW data
+  RW_IRAM1 DAPLINK_RAM_APP_START DAPLINK_RAM_APP_SIZE {  ; RW data
    .ANY (+RW +ZI)
   }
 
-  RW_CONFIG 0x20001F00 UNINIT 0x100 {
+  RW_CONFIG DAPLINK_RAM_SHARED_START UNINIT DAPLINK_RAM_SHARED_SIZE {
     .ANY (cfgram)
   }
+
+  ER_IROM1_CRC (DAPLINK_ROM_BL_START + DAPLINK_ROM_BL_SIZE - 4) FIXED FILL 0xFFFFFFFF 4 {
+    ; reserve space for the CRC
+  }
 }
-LR_CONFIG 0x0001FC00 0x400 {	 ; reserve last sector for config data
-  ER_CONFIG 0x0001FC00 UNINIT 0x400 {
+LR_CONFIG DAPLINK_ROM_CONFIG_USER_START DAPLINK_ROM_CONFIG_USER_SIZE {  ; reserve last sector for config data
+  ER_CONFIG DAPLINK_ROM_CONFIG_USER_START UNINIT DAPLINK_ROM_CONFIG_USER_SIZE {
     .ANY (cfgrom)
   }
 }
