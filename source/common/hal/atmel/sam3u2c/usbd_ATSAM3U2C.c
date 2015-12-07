@@ -543,6 +543,15 @@ uint32_t USBD_GetError (void) {
  */
 
 void UDPHS_IRQHandler (void) {
+    NVIC_DisableIRQ(UDPHS_IRQn);
+    USBD_SignalHandler();
+}
+
+/*
+ *  USB Device Service Routine
+ */
+
+void USBD_Handler (void) {
   uint32_t intsta, eptsta, n;
 
   intsta = UDPHS->UDPHS_INTSTA & UDPHS->UDPHS_IEN;
@@ -704,4 +713,5 @@ void UDPHS_IRQHandler (void) {
       }
     }
   }
+  NVIC_EnableIRQ(UDPHS_IRQn);
 }

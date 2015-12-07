@@ -101,6 +101,7 @@ class ProjectTester(object):
         'lpc11u35_lpc812_if': 0x1050,
         'lpc11u35_lpc1114_if': 0x1114,
         'lpc11u35_efm32gg_stk_if': 0x2015,
+        'sam3u2c_nrf51822_if': 0x1100,
     }
 
     def __init__(self, yaml_prj, path='.'):

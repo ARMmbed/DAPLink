@@ -40,8 +40,14 @@ projects:
         - *module_tools
         - *module_bl
         - records/common/rtos-cm3.yaml
-        #- records/common/sam3u2c_flash_driver.yaml
+        - records/projects/host_sam3u2c.yaml
         - records/projects/sam3u2c_bl.yaml
+    sam3u2c_nrf51822_if:
+        - *module_tools
+        - *module_if
+        - records/common/rtos-cm3.yaml
+        - records/projects/host_sam3u2c.yaml
+        - records/projects/sam3u2c_nrf51822_if.yaml
     kl26z_nrf51822_if:
         - *module_tools
         - *module_if

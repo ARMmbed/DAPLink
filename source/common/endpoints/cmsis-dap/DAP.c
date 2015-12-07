@@ -37,7 +37,7 @@
 
  // Clock Macros
 
-#if defined(INTERFACE_ATSAM3U2C)
+#if defined(INTERFACE_SAM3U2C)
   #define MAX_SWJ_CLOCK(delay_cycles) \
     (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
   #define CLOCK_DELAY(swj_clock) \

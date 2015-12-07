@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "flash_hal.h"        // FlashOS Structures
+//#include "flash_hal.h"        // FlashOS Structures       //TODO - uncomment
+#include "target_config.h"    // target_device
 
 #define KEY_VALUE             (0x5A)
 #define FCMD_WP               (0x1)           // "Write page" command
@@ -104,36 +105,35 @@ static void _WritePage(uint32_t Addr, volatile uint32_t* pSrc, int PerformErase)
 *
 **********************************************************************
 */
-
-int flash_hal_init (uint32_t clk) {
+uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc) {
   //
 	// No special init required
 	//
   return (0);
 }
 
-int flash_hal_uninit (uint32_t fnc) {
+uint32_t UnInit(uint32_t fnc) {
   //
 	// No special uninit required
 	//
   return (0);
 }
 
-int flash_hal_erase_chip (void) {
+uint32_t EraseChip(void) {
   uint32_t Addr;
   //
 	// Return value 0 == O.K.
 	// Return value 1 == Error
   // Erase complete chip by erasing sector-by-sector
-	Addr = START_APP_ADDRESS;
+	Addr = target_device.flash_start;
   do {
     _WritePage(Addr, (volatile uint32_t*)0, 1);
     Addr += (1 << 8);
-	} while (Addr < END_FLASH);
+	} while (Addr < target_device.flash_end);
   return (0);  // O.K.
 }
 
-int flash_hal_erase_sector (uint32_t adr) {
+uint32_t EraseSector(uint32_t adr) {
   uint32_t NumPagesLeft;
   //
 	// Return value 0 == O.K.
@@ -149,8 +149,9 @@ int flash_hal_erase_sector (uint32_t adr) {
   return (0);  // O.K.
 }
 
-int flash_hal_program_page (uint32_t adr, uint32_t sz, unsigned char *buf) {
+uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf) {
   uint32_t NumPagesLeft;
+  unsigned char * temp_buf = (unsigned char *)buf;
   //
 	// Return value 0 == O.K.
 	// Return value 1 == Error
@@ -161,9 +162,9 @@ int flash_hal_program_page (uint32_t adr, uint32_t sz, unsigned char *buf) {
   //
   NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB pages
   do {
-    _WritePage(adr, (volatile uint32_t*)buf, 0);
+    _WritePage(adr, (volatile uint32_t*)temp_buf, 0);
     adr += (1 << 8);
-		buf += (1 << 8);
+		temp_buf += (1 << 8);
 	} while (--NumPagesLeft);
   return (0);                                  // Finished without Errors
 }

@@ -51,7 +51,8 @@ board_id_to_build_target = {
     0x0231: 'FRDM-K22F',
     0x1050: 'NXP-LPC800-MAX',
     0x0240: 'FRDM-K64F',
-    0x9900: 'Microbit'
+    0x9900: 'Microbit',
+    0x1100: 'Nordic-nRF51-DK',
 }
 
 
