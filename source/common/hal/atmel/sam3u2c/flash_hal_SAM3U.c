@@ -43,7 +43,7 @@ typedef struct {
   volatile uint32_t MC_FRR;
 } SFR_TABLE;
 
-
+__attribute__((section("ram_func")))
 static void _FeedWDT(void) {
   //
 	// Feed watchdog if enabled
@@ -60,6 +60,7 @@ static void _FeedWDT(void) {
 **********************************************************************
 */
 
+__attribute__((section("ram_func")))
 static void _WritePage(uint32_t Addr, volatile uint32_t* pSrc, int PerformErase) {
   SFR_TABLE* pSFRs;
 	volatile uint32_t* pDest;
@@ -105,6 +106,7 @@ static void _WritePage(uint32_t Addr, volatile uint32_t* pSrc, int PerformErase)
 *
 **********************************************************************
 */
+__attribute__((section("ram_func")))
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc) {
   //
 	// No special init required
@@ -112,6 +114,7 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc) {
   return (0);
 }
 
+__attribute__((section("ram_func")))
 uint32_t UnInit(uint32_t fnc) {
   //
 	// No special uninit required
@@ -119,6 +122,7 @@ uint32_t UnInit(uint32_t fnc) {
   return (0);
 }
 
+__attribute__((section("ram_func")))
 uint32_t EraseChip(void) {
   uint32_t Addr;
   //
@@ -133,6 +137,7 @@ uint32_t EraseChip(void) {
   return (0);  // O.K.
 }
 
+__attribute__((section("ram_func")))
 uint32_t EraseSector(uint32_t adr) {
   uint32_t NumPagesLeft;
   //
@@ -149,6 +154,7 @@ uint32_t EraseSector(uint32_t adr) {
   return (0);  // O.K.
 }
 
+__attribute__((section("ram_func")))
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf) {
   uint32_t NumPagesLeft;
   unsigned char * temp_buf = (unsigned char *)buf;
