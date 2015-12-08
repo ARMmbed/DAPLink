@@ -166,7 +166,11 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf) {
 	// App always calls this function with 1 KB aligned start-adresses
   // Always called with multiple of 1 page to program
   //
+  sz = ROUND_UP(sz, 256);    // Round up to page size
   NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB pages
+  if (0 == NumPagesLeft) {
+    return 1;
+  }
   do {
     _WritePage(adr, (volatile uint32_t*)temp_buf, 0);
     adr += (1 << 8);
