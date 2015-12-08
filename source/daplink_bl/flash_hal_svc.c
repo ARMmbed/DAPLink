@@ -15,22 +15,28 @@
  */
 
 #include "flash_hal.h"
-#include "DAP_Config.h"
+#include "cortex_m.h"
 
 uint32_t __SVC_2 (uint32_t addr)
 {
+    cortex_int_state_t state;
     int retval = -1;
-    DISABLE_USB_IRQ();
-    retval = EraseSector(addr);
-    ENABLE_USB_IRQ();
+    state = cortex_int_get_and_disable();
+    {
+        retval = EraseSector(addr);
+    }
+    cortex_int_restore(state);
     return retval;
 }
 
 uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf)
 {
     int retval = -1;
-    DISABLE_USB_IRQ();
-    retval = ProgramPage(adr, sz, (uint32_t *)buf);
-    ENABLE_USB_IRQ();
+    cortex_int_state_t state;
+    state = cortex_int_get_and_disable();
+    {
+        retval = ProgramPage(adr, sz, (uint32_t *)buf);
+    }
+    cortex_int_restore(state);
     return retval;
 }

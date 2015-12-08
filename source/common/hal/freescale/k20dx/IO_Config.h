@@ -106,8 +106,4 @@ COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_K20DX);
 #define PIN_SW_RESET_BIT        (1)
 #define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
 
-// USB IRQ Macros
-#define DISABLE_USB_IRQ()       NVIC_DisableIRQ(USB0_IRQn)
-#define ENABLE_USB_IRQ()        NVIC_EnableIRQ(USB0_IRQn)
-
 #endif

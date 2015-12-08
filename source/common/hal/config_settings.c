@@ -19,6 +19,7 @@
 #include "target_flash.h"
 #include "target_config.h"
 #include "compiler.h"
+#include "cortex_m.h"
 
 // Setting/flash should only be changed in the
 // bootloader
@@ -120,21 +121,26 @@ static void program_cfg(cfg_setting_t* new_cfg)
 #if FLASH_WRITE_ALLOWED
     uint32_t status;
     uint32_t addr;
+    cortex_int_state_t state;
 
     addr = (uint32_t)&config_rom;
 
-    __disable_irq();
-    status = EraseSector(addr);
-    __enable_irq();
+    state = cortex_int_get_and_disable();
+    {
+        status = EraseSector(addr);
+    }
+    cortex_int_restore(state);
     if(status != 0) {
         return;
     }
 
     memset(write_buffer, 0xFF, sizeof(write_buffer));
     memcpy(write_buffer, new_cfg, sizeof(cfg_setting_t));
-    __disable_irq();
-    status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
-    __enable_irq();
+    state = cortex_int_get_and_disable();
+    {
+        status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
+    }
+    cortex_int_restore(state);
     if (0 != status) {
         return;
     }
