@@ -27,6 +27,6 @@ const target_cfg_t target_device = {
     .sector_cnt     = ((KB(128)-KB(32))/0x1000),
     .flash_start    = 0x00080000 + KB(32),
     .flash_end      = 0x00080000 + KB(128),
-    .ram_start      = 0x20000200,
-    .ram_end        = 0x20003E00
+    .ram_start      = 0x2007C000,
+    .ram_end        = 0x20084000
 };
