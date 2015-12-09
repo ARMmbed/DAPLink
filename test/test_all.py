@@ -208,7 +208,7 @@ class ProjectTester(object):
         start = time.time()
         #TODO - build bootloader if it isn't built yet
         #TODO - print info on bootloader
-        ret = self.prj.export(self._tool, False)
+        ret = self.prj.generate(self._tool, False)
         self._test_info.info('Export return value %s' % ret)
         if ret != 0:
             raise Exception('Export return value %s' % ret)

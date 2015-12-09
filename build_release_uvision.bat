@@ -9,5 +9,5 @@ if [%1]==[] pip install -r requirements.txt
 REM use custom requirements if specified
 if not [%1]==[] pip install -r %1
 pip freeze                                      > uvision_release\build_requirements.txt
-pgen export -t uvision -b
+progen generate -t uvision -b
 python tools/copy_release_files.py
