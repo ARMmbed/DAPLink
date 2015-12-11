@@ -27,4 +27,8 @@
 
 #define MAX(a,b)                        ((a) > (b) ? (a) : (b))
 
+#define ROUND_UP(value, boundary)       ((value) + ((boundary) - (value)) % (boundary))
+
+#define ROUND_DOWN(value, boundary)     ((value) - ((value) % (boundary)))
+
 #endif

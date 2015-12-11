@@ -1,6 +1,8 @@
 common:
     macros:
         - CDC_ENDPOINT
+    includes:
+        - source/common/endpoints/usb2uart
     sources:
         usb_cdc:
             - source/common/usb/cdc

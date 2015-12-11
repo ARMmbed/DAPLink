@@ -8,7 +8,6 @@ settings:
 
 module:
     tools: &module_tools
-        - records/tools/uvision.yaml
         - records/tools/make_gcc_arm.yaml
         - records/tools/version.yaml
     bl: &module_bl

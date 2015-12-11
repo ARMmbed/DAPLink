@@ -5,6 +5,10 @@ common:
         - INTERFACE_K20D5
         - CPU_MK20DX128VFM5
         - DAPLINK_HDK_ID=0x646c0000  # DAPLINK_HDK_ID_K20DX
+    includes:
+        - source/daplink_bl/target/iap_api/freescale/devices/MK20D5
+        - source/common/cmsis-core/freescale/k20dx
+        - source/common/hal/freescale/k20dx
     sources:
         host:
             - source/daplink_bl/target/iap_api/freescale/driver/flash_densities_k_series.c

@@ -2,6 +2,10 @@ common:
     macros:
         - DAPLINK_IF
         - DAPLINK_BUILD_KEY=0x9B939699  # DAPLINK_BUILD_KEY_IF
+    includes:
+        - source/daplink_if
+        - source/common/cmsis-core
+        - source/common/hal
     sources:
         daplink_if:
             - source/daplink_if

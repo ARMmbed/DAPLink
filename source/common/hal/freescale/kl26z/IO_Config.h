@@ -87,10 +87,6 @@ COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_KL26);
 
 // Target Running LED           Not available
 
-// USB IRQ Macros
-#define DISABLE_USB_IRQ()       NVIC_DisableIRQ(USB0_IRQn)
-#define ENABLE_USB_IRQ()        NVIC_EnableIRQ(USB0_IRQn)
-
 // UART
 #define UART_PORT               PORTC
 #define UART_NUM                (1)

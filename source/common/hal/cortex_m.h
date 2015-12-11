@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef CORTEX_M_H
+#define CORTEX_M_H
 
-#include "flash_hal.h"
-#include "cortex_m.h"
+#include <stdint.h>
 
-uint32_t __SVC_2 (uint32_t addr)
+typedef int cortex_int_state_t;
+
+__attribute__((always_inline))
+static cortex_int_state_t cortex_int_get_and_disable(void)
 {
     cortex_int_state_t state;
-    int retval = -1;
-    state = cortex_int_get_and_disable();
-    {
-        retval = EraseSector(addr);
-    }
-    cortex_int_restore(state);
-    return retval;
+    state = __disable_irq();
+    return state;
 }
 
-uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf)
+__attribute__((always_inline))
+static void cortex_int_restore(cortex_int_state_t state)
 {
-    int retval = -1;
-    cortex_int_state_t state;
-    state = cortex_int_get_and_disable();
-    {
-        retval = ProgramPage(adr, sz, (uint32_t *)buf);
+    if (!state) {
+        __enable_irq();
     }
-    cortex_int_restore(state);
-    return retval;
 }
+
+#endif

@@ -4,6 +4,9 @@ common:
     macros:
         - INTERFACE_LPC11U35
         - DAPLINK_HDK_ID=0x646c0002  # DAPLINK_HDK_ID_LPC11U35
+    includes:
+        - source/common/cmsis-core/nxp/lpc11u35
+        - source/common/hal/nxp/lpc11u35
     sources:
         host:
             - source/common/cmsis-core/nxp/lpc11u35
