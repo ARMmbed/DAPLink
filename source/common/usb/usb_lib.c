@@ -1209,6 +1209,31 @@ typedef struct {
   #define USBD_CDC_ACM_EP_BULKOUT_STACK 0
 #endif
 
+#if USBD_HID_EP_INTIN == 0 && USBD_HID_EP_INTIN_STACK > 0
+  #error "USBD_HID_EP_INTIN stack unused - must be 0"
+#endif
+#if USBD_HID_EP_INTOUT == 0 && USBD_HID_EP_INTOUT_STACK > 0
+  #error "USBD_HID_EP_INTOUT stack unused - must be 0"
+#endif
+#if USBD_MSC_EP_BULKIN == 0 && USBD_MSC_EP_BULKIN_STACK > 0
+  #error "USBD_MSC_EP_BULKIN stack unused - must be 0"
+#endif
+#if USBD_MSC_EP_BULKOUT == 0 && USBD_MSC_EP_BULKOUT_STACK > 0
+  #error "USBD_MSC_EP_BULKOUT stack unused - must be 0"
+#endif
+#if USBD_ADC_EP_ISOOUT == 0 && USBD_ADC_EP_ISOOUT_STACK > 0
+  #error "USBD_ADC_EP_ISOOUT stack unused - must be 0"
+#endif
+#if USBD_CDC_ACM_EP_INTIN == 0 && USBD_CDC_ACM_EP_INTIN_STACK > 0
+  #error "USBD_CDC_ACM_EP_INTIN stack unused - must be 0"
+#endif
+#if USBD_CDC_ACM_EP_BULKIN == 0 && USBD_CDC_ACM_EP_BULKIN_STACK > 0
+  #error "USBD_CDC_ACM_EP_BULKIN stack unused - must be 0"
+#endif
+#if USBD_CDC_ACM_EP_BULKOUT == 0 && USBD_CDC_ACM_EP_BULKOUT_STACK > 0
+  #error "USBD_CDC_ACM_EP_BULKOUT stack unused - must be 0"
+#endif
+
 #if USBD_ENABLE
   static U64 usbd_core_stack[USBD_RTX_CORE_STACK/8];
   static U64 usbd_device_stack[USBD_RTX_DEVICE_STACK/8];
@@ -1244,7 +1269,7 @@ typedef struct {
 #if (USBD_HID_ENABLE && !USBD_HID_EP_INTIN_STACK && USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT)
   #error "USBD_HID_EP_INTIN_STACK must be defined"
 #endif
-#if (USBD_HID_ENABLE && !USBD_HID_EP_INTOUT_STACK && USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT)
+#if (USBD_HID_ENABLE && !USBD_HID_EP_INTOUT_STACK && USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT && USBD_HID_EP_INTOUT != 0)
   #error "USBD_HID_EP_INTOUT_STACK must be defined"
 #endif
 #if (USBD_HID_ENABLE && USBD_HID_EP_INTIN_STACK == 0 && USBD_HID_EP_INTOUT_STACK == 0)
