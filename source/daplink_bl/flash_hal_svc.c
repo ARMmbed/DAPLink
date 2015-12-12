@@ -22,9 +22,7 @@ uint32_t __SVC_2 (uint32_t addr)
     cortex_int_state_t state;
     int retval = -1;
     state = cortex_int_get_and_disable();
-    {
-        retval = EraseSector(addr);
-    }
+    retval = EraseSector(addr);
     cortex_int_restore(state);
     return retval;
 }
@@ -34,9 +32,7 @@ uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf)
     int retval = -1;
     cortex_int_state_t state;
     state = cortex_int_get_and_disable();
-    {
-        retval = ProgramPage(adr, sz, (uint32_t *)buf);
-    }
+    retval = ProgramPage(adr, sz, (uint32_t *)buf);
     cortex_int_restore(state);
     return retval;
 }
