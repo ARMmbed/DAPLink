@@ -1369,7 +1369,7 @@ void USBD_RTX_TaskInit (void) {
       // request with no data must be under 50ms.  If a long caluclation
       // such as a CRC is running on a higher priority thread, USB enumeration
       // can fail because of this timeout.
-      uint8_t priority = 0 == i ? 200 : 2;
+      uint8_t priority = 0 == i ? 200 : 20;
       USBD_RTX_EPTask[i] = os_tsk_create_user(USBD_RTX_P_EP[i], priority, user_stack_list[i].stack,
                                               user_stack_list[i].size);
     }

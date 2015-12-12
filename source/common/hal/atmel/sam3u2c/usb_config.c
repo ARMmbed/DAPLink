@@ -137,7 +137,7 @@
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          1
 #define USBD_HID_HS_WMAXPACKETSIZE  64
-#define USBD_HID_HS_BINTERVAL       6
+#define USBD_HID_HS_BINTERVAL       1
 #define USBD_HID_STRDESC            L"MBED CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
