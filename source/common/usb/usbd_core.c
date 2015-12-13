@@ -55,11 +55,7 @@ __RL_USBD_VER   EQU     0x470
  */
 
 void usbd_init (void) {
-#if defined(INTERFACE_SAM3U2C)
-  USBD_HighSpeed     = __TRUE;
-#else
   USBD_HighSpeed     = __FALSE;
-#endif
   usbd_class_init();
   USBD_RTX_TaskInit();
 
