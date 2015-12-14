@@ -390,12 +390,10 @@ void USBD_HID_SOF_Event (void) {
 
 __task void USBD_RTX_HID_EP_INTIN_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      if (usbd_os_evt_get() & USBD_EVT_IN) {
-        USBD_HID_EP_INTIN_Event (0);
-      }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    if (usbd_os_evt_get() & USBD_EVT_IN) {
+      USBD_HID_EP_INTIN_Event (0);
     }
   }
 }
@@ -409,12 +407,10 @@ __task void USBD_RTX_HID_EP_INTIN_Event (void) {
 
 __task void USBD_RTX_HID_EP_INTOUT_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      if (usbd_os_evt_get() & USBD_EVT_OUT) {
-        USBD_HID_EP_INTOUT_Event (0);
-      }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    if (usbd_os_evt_get() & USBD_EVT_OUT) {
+      USBD_HID_EP_INTOUT_Event (0);
     }
   }
 }
@@ -428,11 +424,9 @@ __task void USBD_RTX_HID_EP_INTOUT_Event (void) {
 
 __task void USBD_RTX_HID_EP_INT_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      USBD_HID_EP_INT_Event (usbd_os_evt_get());
-    }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    USBD_HID_EP_INT_Event (usbd_os_evt_get());
   }
 }
 #endif

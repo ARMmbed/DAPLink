@@ -872,11 +872,9 @@ stall_i:      USBD_SetStallEP(0x80);
 #ifdef __RTX
 __task void USBD_RTX_EndPoint0 (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      USBD_EndPoint0 (usbd_os_evt_get());
-    }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    USBD_EndPoint0 (usbd_os_evt_get());
   }
 }
 #endif
