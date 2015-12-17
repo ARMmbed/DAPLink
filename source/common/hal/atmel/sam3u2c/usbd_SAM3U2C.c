@@ -112,12 +112,7 @@ static int USBD_GetSizeEP (uint32_t EPNum) {
  *    Return Value:    None
  */
 
-#ifdef __RTX
-void __svc(1) USBD_IntrEna (void);
-void __SVC_1               (void) {
-#else
 void          USBD_IntrEna (void) {
-#endif
   NVIC_EnableIRQ(UDPHS_IRQn);           /* Enable USB interrupt               */
 }
 

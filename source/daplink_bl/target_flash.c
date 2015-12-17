@@ -66,7 +66,7 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t * buf, ui
 
 target_flash_status_t target_flash_erase_sector(uint32_t sector)
 {
-    if (0 != flash_erase_sector_svc(sector*target_device.sector_size)) {
+    if (0 != flash_erase_sector(sector*target_device.sector_size)) {
         return TARGET_FAIL_ERASE_SECTOR;
     }
     return TARGET_OK;
@@ -107,7 +107,7 @@ static target_flash_status_t program_bin(uint32_t offset, uint8_t *buf, uint32_t
     // called from msc logic so assumed that the smallest size is 512 (size of sector)
     //  flash algo must support this as minimum size.
     //  ToDO: akward requirement. look at flash algo flexibility in flash write sizes
-    if (0 != flash_program_page_svc(addr, size, buf)) {
+    if (0 != flash_program_page(addr, size, buf)) {
         return TARGET_FAIL_WRITE;
     }
     return TARGET_OK;
@@ -174,7 +174,7 @@ static target_flash_status_t flexible_program_block(uint32_t addr, uint8_t *buf,
     target_ram_idx += size;
     // program a block if necessary
     if (target_ram_idx >= MSC_BLOCK_SIZE) {
-        if (0 != flash_program_page_svc(target_flash_address, MSC_BLOCK_SIZE, hex_buffer)) {
+        if (0 != flash_program_page(target_flash_address, MSC_BLOCK_SIZE, hex_buffer)) {
             return TARGET_FAIL_WRITE;
         }
         target_ram_idx -= MSC_BLOCK_SIZE;

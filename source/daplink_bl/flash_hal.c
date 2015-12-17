@@ -17,7 +17,7 @@
 #include "flash_hal.h"
 #include "cortex_m.h"
 
-uint32_t __SVC_2 (uint32_t addr)
+uint32_t  flash_erase_sector(uint32_t addr)
 {
     cortex_int_state_t state;
     int retval = -1;
@@ -27,7 +27,7 @@ uint32_t __SVC_2 (uint32_t addr)
     return retval;
 }
 
-uint32_t __SVC_3 (uint32_t adr, uint32_t sz, uint8_t *buf)
+uint32_t  flash_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
     int retval = -1;
     cortex_int_state_t state;

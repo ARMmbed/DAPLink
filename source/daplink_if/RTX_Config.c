@@ -28,7 +28,12 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #define OS_TASKCNT    11
+    #define OS_TASKCNT    4
+    // Threads with user provided stacks:
+    // -serial_process
+    // -hid_process
+    // -timer_task_30mS
+    // -main_task
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -37,18 +42,7 @@
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
  #define OS_PRIVCNT     OS_TASKCNT
- // Threads with user provided stacks:
- // -serial_process
- // -hid_process
- // -timer_task_30mS
- // -main_task
- // -USBD_RTX_CDC_ACM_EP_BULK_Event
- // -USBD_RTX_CDC_ACM_EP_INTIN_Event
- // -USBD_RTX_MSC_EP_BULK_Event
- // -USBD_RTX_HID_EP_INT_Event
- // -USBD_RTX_EndPoint0
- // -USBD_RTX_Core
- // -USBD_RTX_Device
+ // All tasks use private stacks (aside from background thread)
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>

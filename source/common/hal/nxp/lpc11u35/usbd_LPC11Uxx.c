@@ -583,6 +583,11 @@ U32 USBD_GetFrame (void) {
  */
 
 void USB_IRQHandler (void) {
+    NVIC_DisableIRQ(USB_IRQn);
+    USBD_SignalHandler();
+}
+
+void USBD_Handler (void) {
 
   U32 sts, val, num;
 
@@ -716,4 +721,5 @@ void USB_IRQHandler (void) {
       }
     }
   }
+  NVIC_EnableIRQ(USB_IRQn);
 }

@@ -74,12 +74,7 @@ __inline static void protected_xor (uint32_t *addr, uint32_t val) { *addr ^= val
  *    Return Value:    None
  */
 
-#ifdef __RTX
-void __svc(1) USBD_IntrEna (void);
-void __SVC_1               (void) {
-#else
 void          USBD_IntrEna (void) {
-#endif
   NVIC_EnableIRQ   (USB0_IRQn);         /* Enable OTG interrupt               */
 }
 
@@ -506,6 +501,14 @@ U32 USBD_GetError (void) {
  *  USB Device Interrupt Service Routine
  */
 void USB0_IRQHandler(void) {
+    NVIC_DisableIRQ(USB0_IRQn);
+    USBD_SignalHandler();
+}
+
+/*
+ *  USB Device Service Routine
+ */
+void USBD_Handler (void) {
   uint32_t istr, num, dir, ev_odd, stat;
 
   istr  = USB0->ISTAT;
@@ -638,4 +641,5 @@ void USB0_IRQHandler(void) {
       }
     }
   }
+  NVIC_EnableIRQ(USB0_IRQn);
 }
