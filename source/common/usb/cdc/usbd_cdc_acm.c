@@ -668,11 +668,9 @@ void USBD_CDC_ACM_EP_BULK_Event (uint32_t event) {
 
 __task void USBD_RTX_CDC_ACM_EP_INTIN_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      USBD_CDC_ACM_EP_INTIN_Event (usbd_os_evt_get());
-    }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    USBD_CDC_ACM_EP_INTIN_Event (usbd_os_evt_get());
   }
 }
 
@@ -685,12 +683,10 @@ __task void USBD_RTX_CDC_ACM_EP_INTIN_Event (void) {
 
 __task void USBD_RTX_CDC_ACM_EP_BULKIN_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      if (usbd_os_evt_get() & USBD_EVT_IN) {
-        USBD_CDC_ACM_EP_BULKIN_Event (0);
-      }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    if (usbd_os_evt_get() & USBD_EVT_IN) {
+      USBD_CDC_ACM_EP_BULKIN_Event (0);
     }
   }
 }
@@ -704,12 +700,10 @@ __task void USBD_RTX_CDC_ACM_EP_BULKIN_Event (void) {
 
 __task void USBD_RTX_CDC_ACM_EP_BULKOUT_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      if (usbd_os_evt_get() & USBD_EVT_OUT) {
-        USBD_CDC_ACM_EP_BULKOUT_Event (0);
-      }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    if (usbd_os_evt_get() & USBD_EVT_OUT) {
+      USBD_CDC_ACM_EP_BULKOUT_Event (0);
     }
   }
 }
@@ -723,11 +717,9 @@ __task void USBD_RTX_CDC_ACM_EP_BULKOUT_Event (void) {
 
 __task void USBD_RTX_CDC_ACM_EP_BULK_Event (void) {
 
-  if (__rtx) {
-    for (;;) {
-      usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-      USBD_CDC_ACM_EP_BULK_Event (usbd_os_evt_get());
-    }
+  for (;;) {
+    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
+    USBD_CDC_ACM_EP_BULK_Event (usbd_os_evt_get());
   }
 }
 #endif

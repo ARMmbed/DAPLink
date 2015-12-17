@@ -67,23 +67,21 @@ typedef struct file_allocation_table {
     uint8_t f[512];
 } file_allocation_table_t;
 
-typedef union FatDirectoryEntry {
-    uint8_t data[32];
-    struct {
-        vfs_filename_t filename;
-        uint8_t attributes;
-        uint8_t reserved;
-        uint8_t creation_time_ms;
-        uint16_t creation_time;
-        uint16_t creation_date;
-        uint16_t accessed_date;
-        uint16_t first_cluster_high_16;
-        uint16_t modification_time;
-        uint16_t modification_date;
-        uint16_t first_cluster_low_16;
-        uint32_t filesize;
-    } __attribute__((packed)) ;
+typedef struct FatDirectoryEntry {
+	vfs_filename_t filename;
+	uint8_t attributes;
+	uint8_t reserved;
+	uint8_t creation_time_ms;
+	uint16_t creation_time;
+	uint16_t creation_date;
+	uint16_t accessed_date;
+	uint16_t first_cluster_high_16;
+	uint16_t modification_time;
+	uint16_t modification_date;
+	uint16_t first_cluster_low_16;
+	uint32_t filesize;
 } __attribute__((packed)) FatDirectoryEntry_t;
+COMPILER_ASSERT(sizeof(FatDirectoryEntry_t) == 32);
 
 // to save RAM all files must be in the first root dir entry (512 bytes)
 //  but 2 actually exist on disc (32 entries) to accomodate hidden OS files,

@@ -126,9 +126,7 @@ static void program_cfg(cfg_setting_t* new_cfg)
     addr = (uint32_t)&config_rom;
 
     state = cortex_int_get_and_disable();
-    {
-        status = EraseSector(addr);
-    }
+    status = EraseSector(addr);
     cortex_int_restore(state);
     if(status != 0) {
         return;
@@ -137,9 +135,7 @@ static void program_cfg(cfg_setting_t* new_cfg)
     memset(write_buffer, 0xFF, sizeof(write_buffer));
     memcpy(write_buffer, new_cfg, sizeof(cfg_setting_t));
     state = cortex_int_get_and_disable();
-    {
-        status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
-    }
+    status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
     cortex_int_restore(state);
     if (0 != status) {
         return;
