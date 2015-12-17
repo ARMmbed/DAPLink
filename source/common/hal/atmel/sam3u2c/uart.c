@@ -224,21 +224,11 @@ static int32_t _NumBytesWriteFree(CIRCBUFFER* pBuffer) {
 **********************************************************************
 */
 
-#ifdef __RTX
-void __svc(2) UART_IntrEna (void);
-void __SVC_2               (void) {
-#else
-void          UART_IntrEna (void) {
-#endif
+void UART_IntrEna (void) {
   NVIC_EnableIRQ(UART_IRQn);            // Enable USB interrupt               
 }
 
-#ifdef __RTX
-void __svc(3) UART_IntrDis (void);
-void __SVC_3               (void) {
-#else
-void          UART_IntrDis (void) {
-#endif
+void UART_IntrDis (void) {
   NVIC_DisableIRQ(UART_IRQn);           // Enable USB interrupt               
 }
 

@@ -1,0 +1,13 @@
+common:
+    macros:
+        - TARGET_NRF51822
+        - APP_OFFSET_32K
+    sources:
+        target_specific:
+            - source/daplink_if/target/nordic/nrf51822/nordic_dk_app_config.c
+            - source/daplink_if/target/nordic/nrf51822/target_reset.c
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/common/cmsis-core/atmel/sam3u2c/armcc/sam3u2c_daplink_if.sct

@@ -60,9 +60,9 @@ __Vectors       DCD     __initial_sp              ;  0: Top of Stack
                 DCD     BusFault_Handler          ;  5: Bus Fault Handler
                 DCD     UsageFault_Handler        ;  6: Usage Fault Handler
                 DCD     0                         ;  7: Reserved
-                DCD     0                         ;  8: Reserved
-                DCD     0                         ;  9: Reserved
-                DCD     0                         ; 10: Reserved
+                DCD     DAPLINK_BUILD_KEY         ;  8: Build type - BL/IF
+                DCD     DAPLINK_HDK_ID            ;  9: Compatibility
+                DCD     DAPLINK_VERSION           ; 10:Version
                 DCD     SVC_Handler               ; 11: SVCall Handler
                 DCD     DebugMon_Handler          ; 12: Debug Monitor Handler
                 DCD     0                         ; 13: Reserved

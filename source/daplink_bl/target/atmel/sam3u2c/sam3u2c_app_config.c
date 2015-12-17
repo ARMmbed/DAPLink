@@ -16,21 +16,17 @@
 
 #include "target_config.h"
 
-// The file flash_blob.c must only be included in app_config
-#include "flash_blob.c"
-
-// nrf51822-mkit target information
+// atsam3u2c target information
 const target_cfg_t target_device = {
-    .board_id   = "1100",
+    .board_id   = "0000",
     .secret     = "xxxxxxxx",
-    .sector_size    = 1024,
-    // Assume memory is regions are same size (smallest). Flash algo should ignore requests
+    .sector_size    = 0x1000,
+    // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (KB(256)/1024),
-    .flash_start    = 0,
-    .flash_end      = KB(256),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20008000,
-    .flash_algo     = (program_target_t*)&flash,
+    .sector_cnt     = ((KB(128)-KB(32))/0x1000),
+    .flash_start    = 0x00080000 + KB(32),
+    .flash_end      = 0x00080000 + KB(128),
+    .ram_start      = 0x2007C000,
+    .ram_end        = 0x20084000
 };

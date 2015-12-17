@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-#include "read_uid.h"
-#include "board.h"
+#ifndef __IO_CONFIG_H__
+#define __IO_CONFIG_H__
+
 #include "sam3u2c.h"
 
-void board_init(void)
-{
-  create_unique_id();
-}
-
-//void HardFault_Handler(void)
-//{
-//    int i = 0;
-//    i = i;
-//    NVIC_SystemReset();
-//}
+#endif

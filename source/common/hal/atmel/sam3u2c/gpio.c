@@ -17,12 +17,14 @@
 #include "RTL.h"
 #include "gpio.h"
 #include "uart.h"
+#include "compiler.h"
+#include "daplink.h"
+
+// This GPIO configuration is only valid for the SAM3U2C
+COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_SAM3U2C);
 
 #define _BIT_LED_GREEN       (29)      // PA29
 #define _BIT_BOOT_MODE_PIN   (25)      // PA25
-
-static uint16_t isr_flags;
-static OS_TID isr_notify;
 
 void gpio_init(void) {
   volatile int Cnt;
@@ -38,57 +40,42 @@ void gpio_init(void) {
 	PIOA->PIO_PUER = (1 << _BIT_BOOT_MODE_PIN); // Enable pull-up	
     Cnt = 1000000;
 	do {} while (--Cnt);    // Give pull-up some time to become active
+
+    // Enable port A interrupts in the NVIC
+    NVIC_EnableIRQ(PIOA_IRQn);
 }
 
-void gpio_set_dap_led(uint8_t state) {
-  if (state) {
+void gpio_set_hid_led(gpio_led_state_t state) {
+  if (GPIO_LED_ON == state) {
     PIOA->PIO_CODR = (1 << _BIT_LED_GREEN); // Green LED == on
   } else {
     PIOA->PIO_SODR = (1 << _BIT_LED_GREEN); // Green LED == off
   }
 }
 
-void gpio_set_cdc_led(uint8_t state) {
+void gpio_set_cdc_led(gpio_led_state_t state) {
 // Only 1 LED on hardware which is used for DAP/MSD
 }
 
-void gpio_set_msd_led(uint8_t state) {
-  if (state) {
+void gpio_set_msc_led(gpio_led_state_t state) {
+  if (GPIO_LED_ON == state) {
     PIOA->PIO_CODR = (1 << _BIT_LED_GREEN); // Green LED == on
   } else {
     PIOA->PIO_SODR = (1 << _BIT_LED_GREEN); // Green LED == off
   }
-}
-
-void gpio_enable_button_flag(OS_TID task, uint16_t flags) {
-	/* Keep a local copy of task & flags */
-	isr_notify=task;
-	isr_flags=flags;
-	//
-	// Enable interrupt on falling edge of "reset" button
-  //
-  PIOA->PIO_AIMER  = (1 << _BIT_BOOT_MODE_PIN);  // Enable additional interrupt mode
-  PIOA->PIO_ESR    = (1 << _BIT_BOOT_MODE_PIN);  // Interrupt shall trigger on edges
-  PIOA->PIO_FELLSR = (1 << _BIT_BOOT_MODE_PIN);  // Interrupt shall trigger on falling edges only.
-  PIOA->PIO_IER    = (1 << _BIT_BOOT_MODE_PIN);  // Enable interrupt for "reset" pin
-  PIOA->PIO_IFER   = (1 << _BIT_BOOT_MODE_PIN);  // Enable input filter
-  PIOA->PIO_SCIFSR = (1 << _BIT_BOOT_MODE_PIN);  // Filter glitches
-  PIOA->PIO_ISR;   // Clear all PIO interrupt status flags.
- // NVIC_SetPriority(PIOA_IRQn, 2);
-  NVIC_EnableIRQ(PIOA_IRQn);
 }
 
 void PIOA_IRQHandler(void) {
   //
-	// ISR is called when "reset" button on board is pressed
+	// ISR is called when flow control is de-asserted
 	//	
   uint32_t interrupts = PIOA->PIO_ISR;  
   if((interrupts >> 9) & 1){//CTS
       uart_software_flow_control();    
   }
-  
-  if ((interrupts >> _BIT_BOOT_MODE_PIN) & 1) { // Check if interrupt was caused by I/O change on "reset" pin. This also clears interrupt status flags		
-    isr_evt_set(isr_flags, isr_notify);
-  }
-  
+}
+
+uint8_t gpio_get_sw_reset()
+{
+    return (PIOA->PIO_PDSR & (1 << _BIT_BOOT_MODE_PIN)) != 0;
 }

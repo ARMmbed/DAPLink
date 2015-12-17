@@ -20,6 +20,9 @@
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
+#define USBD_RTX_CORE_STACK         0
+#define USBD_RTX_DEVICE_STACK       0
+#define USBD_RTX_ENDPOINT0_STACK    0
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
@@ -120,14 +123,21 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#define USBD_HID_ENABLE             1
+#ifndef HID_ENDPOINT
+  #define HID_ENDPOINT 0
+#else
+  #define HID_ENDPOINT 1
+#endif
+#define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           3
+#define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_EP_INTOUT          0//6
+#define USBD_HID_EP_INTOUT_STACK    0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          1
 #define USBD_HID_HS_WMAXPACKETSIZE  64
-#define USBD_HID_HS_BINTERVAL       6
+#define USBD_HID_HS_BINTERVAL       1
 #define USBD_HID_STRDESC            L"MBED CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
@@ -165,17 +175,24 @@
 //         </h>
 //       </h>
 //     </e>
-#define USBD_MSC_ENABLE             1
+#ifndef MSC_ENDPOINT
+  #define MSC_ENDPOINT 0
+#else
+  #define MSC_ENDPOINT 1
+#endif
+#define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          1
+#define USBD_MSC_EP_BULKIN_STACK    0
 #define USBD_MSC_EP_BULKOUT         2
+#define USBD_MSC_EP_BULKOUT_STACK   0
 #define USBD_MSC_WMAXPACKETSIZE     64
 #define USBD_MSC_HS_ENABLE          1
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
-                                    "1.0 "
+                                    "DAPLINK VFS     " \
+                                    "0.1"
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
@@ -276,15 +293,23 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
-#define USBD_CDC_ACM_ENABLE             1
+#ifndef CDC_ENDPOINT
+  #define CDC_ENDPOINT 0
+#else
+  #define CDC_ENDPOINT 1
+#endif
+#define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           4
+#define USBD_CDC_ACM_EP_INTIN_STACK     0
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          1
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE  64
 #define USBD_CDC_ACM_HS_BINTERVAL       2
 #define USBD_CDC_ACM_EP_BULKIN          6
+#define USBD_CDC_ACM_EP_BULKIN_STACK    0
 #define USBD_CDC_ACM_EP_BULKOUT         5
+#define USBD_CDC_ACM_EP_BULKOUT_STACK   0
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         1
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
