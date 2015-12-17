@@ -31,33 +31,41 @@
 #error "USB HID Input Report Size must match DAP Packet Size"
 #endif
 
-static volatile uint8_t  USB_RequestFlag;       // Request  Buffer Usage Flag
-static volatile uint32_t USB_RequestIn;         // Request  Buffer In  Index
-static volatile uint32_t USB_RequestOut;        // Request  Buffer Out Index
+#define FREE_SEM_INIT_COUNT          (DAP_PACKET_COUNT)
+#define PROC_SEM_INIT_COUNT          0
+#define SEND_SEM_INIT_COUNT          0
 
-static volatile uint8_t  USB_ResponseIdle;      // Response Buffer Idle  Flag
-static volatile uint8_t  USB_ResponseFlag;      // Response Buffer Usage Flag
-static volatile uint32_t USB_ResponseIn;        // Response Buffer In  Index
-static volatile uint32_t USB_ResponseOut;       // Response Buffer Out Index
-
+static          uint8_t  temp_buf                      [DAP_PACKET_SIZE];
 static          uint8_t  USB_Request [DAP_PACKET_COUNT][DAP_PACKET_SIZE];  // Request  Buffer
-static          uint8_t  USB_Response[DAP_PACKET_COUNT][DAP_PACKET_SIZE];  // Response Buffer
 
-// Reference to the dap task
-static OS_TID dapTask;
+static OS_SEM free_sem;
+static OS_SEM proc_sem;
+static OS_SEM send_sem;
 
-// dap paquet received event to release the dap task waiting for this event
-#define DAP_PAQUET_RECEIVED        (0x0001)
+static OS_MUT hid_mutex;
+
+
+// Only used by HID out thread
+static uint32_t recv_idx;
+
+// Only used by hid_process
+static uint32_t proc_idx;
+
+// Used by hid_process and HID out thread
+// so must be synchronized to HID lock
+static uint32_t send_idx;
+static volatile uint8_t  USB_ResponseIdle;
 
 // USB HID Callback: when system initializes
 void usbd_hid_init (void) {
-    USB_RequestFlag   = 0;
-    USB_RequestIn     = 0;
-    USB_RequestOut    = 0;
-    USB_ResponseIdle  = 1;
-    USB_ResponseFlag  = 0;
-    USB_ResponseIn    = 0;
-    USB_ResponseOut   = 0;
+    recv_idx = 0;
+    proc_idx = 0;
+    send_idx = 0;
+    USB_ResponseIdle = 1;
+    os_sem_init(&free_sem, FREE_SEM_INIT_COUNT);
+    os_sem_init(&proc_sem, PROC_SEM_INIT_COUNT);
+    os_sem_init(&send_sem, SEND_SEM_INIT_COUNT);
+    os_mut_init(&hid_mutex);
 }
 
 // USB HID Callback: when data needs to be prepared for the host
@@ -69,19 +77,17 @@ int usbd_hid_get_report (U8 rtype, U8 rid, U8 *buf, U8 req) {
                 case USBD_HID_REQ_PERIOD_UPDATE:
                     break;
                 case USBD_HID_REQ_EP_INT:
-                    if ((USB_ResponseOut != USB_ResponseIn) || USB_ResponseFlag) {
-                        memcpy(buf, USB_Response[USB_ResponseOut], DAP_PACKET_SIZE);
-                        USB_ResponseOut++;
-                        if (USB_ResponseOut == DAP_PACKET_COUNT) {
-                            USB_ResponseOut = 0;
-                        }
-                        if (USB_ResponseOut == USB_ResponseIn) {
-                            USB_ResponseFlag = 0;
-                        }
+                    os_mut_wait(&hid_mutex, 0xFFFF);
+                    if (os_sem_wait(&send_sem, 0) == OS_R_OK) {
+                        memcpy(buf, USB_Request[send_idx], DAP_PACKET_SIZE);
+                        send_idx = (send_idx + 1) % DAP_PACKET_COUNT;
+                        os_sem_send(&free_sem);
+                        os_mut_release(&hid_mutex);
                         return (DAP_PACKET_SIZE);
                     } else {
                         USB_ResponseIdle = 1;
                     }
+                    os_mut_release(&hid_mutex);
                     break;
             }
             break;
@@ -100,67 +106,41 @@ void usbd_hid_set_report (U8 rtype, U8 rid, U8 *buf, int len, U8 req) {
                 DAP_TransferAbort = 1;
                 break;
             }
-            if (USB_RequestFlag && (USB_RequestIn == USB_RequestOut)) {
-                break;  // Discard packet when buffer is full
-            }
             // Store data into request packet buffer
-            memcpy(USB_Request[USB_RequestIn], buf, len);
-            USB_RequestIn++;
-            if (USB_RequestIn == DAP_PACKET_COUNT) {
-                USB_RequestIn = 0;
+            // If there are no free buffers discard the data
+            if (os_sem_wait(&free_sem, 0) == OS_R_OK) {
+                memcpy(USB_Request[recv_idx], buf, len);
+                recv_idx = (recv_idx + 1) % DAP_PACKET_COUNT;
+                os_sem_send(&proc_sem);
             }
-            if (USB_RequestIn == USB_RequestOut) {
-                USB_RequestFlag = 1;
-            }
-            os_evt_set(DAP_PAQUET_RECEIVED, dapTask);
             break;
         case HID_REPORT_FEATURE:
             break;
     }
 }
 
-
-// Process USB HID Data
-void usbd_hid_process (void) {
-    uint32_t n;
-
-    // Process pending requests
-    while ((USB_RequestOut != USB_RequestIn) || USB_RequestFlag) {
-        // Process DAP Command and prepare response
-        DAP_ProcessCommand(USB_Request[USB_RequestOut], USB_Response[USB_ResponseIn]);
-
-        // Update request index and flag
-        USB_RequestOut = (USB_RequestOut +1) % DAP_PACKET_COUNT;
-        if (USB_RequestOut == USB_RequestIn) {
-            USB_RequestFlag = 0;
-        }
-
-        if (USB_ResponseIdle) {
-            // Request that data is send back to host
-            USB_ResponseIdle = 0;
-            usbd_hid_get_report_trigger(0, USB_Response[USB_ResponseIn], DAP_PACKET_SIZE);
-        } else {
-            // Update response index and flag
-            n = USB_ResponseIn + 1;
-            if (n == DAP_PACKET_COUNT) {
-                n = 0;
-            }
-            USB_ResponseIn = n;
-            if (USB_ResponseIn == USB_ResponseOut) {
-                USB_ResponseFlag = 1;
-            }
-        }
-    }
-}
-
-
 // CMSIS-DAP task
 __task void hid_process(void * argv) {
-    dapTask = os_tsk_self();
     while (1) {
-        os_evt_wait_or(DAP_PAQUET_RECEIVED, 0xffff);
-        usbd_hid_process ();
+
+        // Process DAP Command
+        os_sem_wait(&proc_sem, 0xFFFF);
+        DAP_ProcessCommand(USB_Request[proc_idx], temp_buf);
+        memcpy(USB_Request[proc_idx], temp_buf, DAP_PACKET_SIZE);
+        proc_idx = (proc_idx + 1) % DAP_PACKET_COUNT;
+        os_sem_send(&send_sem);
+
+        // Send input report if USB is idle
+        os_mut_wait(&hid_mutex, 0xFFFF);
+        if (USB_ResponseIdle) {
+            USB_ResponseIdle = 0;
+            os_sem_wait(&send_sem, 0xFFFF);
+            usbd_hid_get_report_trigger(0, USB_Request[send_idx], DAP_PACKET_SIZE);
+            send_idx = (send_idx + 1) % DAP_PACKET_COUNT;
+            os_sem_send(&free_sem);
+        }
+        os_mut_release(&hid_mutex);
+
         main_blink_hid_led(MAIN_LED_OFF);
     }
 }
-
