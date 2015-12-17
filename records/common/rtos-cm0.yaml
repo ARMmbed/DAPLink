@@ -1,6 +1,4 @@
 common:
-    macros:
-        - __RTX
     includes:
         - source/common/rtos
     sources:

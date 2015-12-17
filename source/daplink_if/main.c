@@ -43,6 +43,7 @@
 // Other Events
 #define FLAGS_MAIN_POWERDOWN            (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG         (1 << 5)
+#define FLAGS_MAIN_PROC_USB             (1 << 9)
 // Used by msd when flashing a new binary
 #define FLAGS_LED_BLINK_30MS            (1 << 6)
 // Timing constants (in 90mS ticks)
@@ -181,6 +182,11 @@ void main_disable_debug_event(void)
     return;
 }
 
+void USBD_SignalHandler()
+{
+    isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+}
+
 os_mbx_declare(serial_mailbox, 20);
 #define SIZE_DATA (64)
 static uint8_t data[SIZE_DATA];
@@ -305,13 +311,18 @@ __task void main_task(void)
                         | FLAGS_MAIN_30MS               // 30mS tick
                         | FLAGS_MAIN_POWERDOWN          // Power down interface
                         | FLAGS_MAIN_DISABLEDEBUG       // Disable target debug
-                        | FLAGS_MAIN_MSC_DISCONNECT    // programming complete - disconnect msc endpoint
+                        | FLAGS_MAIN_MSC_DISCONNECT     // programming complete - disconnect msc endpoint
                         | FLAGS_MAIN_MSC_DELAY_DISCONNECT // new data has arrived so delay the disconnect
-                        | FLAGS_MAIN_FORCE_MSC_DISCONNECT,  // programming failure - force disconnect msc endpoint
-                        NO_TIMEOUT);
+                        | FLAGS_MAIN_FORCE_MSC_DISCONNECT // programming failure - force disconnect msc endpoint
+                        | FLAGS_MAIN_PROC_USB           // process usb events
+                        ,NO_TIMEOUT);
 
         // Find out what event happened
         flags = os_evt_get();
+
+        if (flags & FLAGS_MAIN_PROC_USB) {
+            USBD_Handler();
+        }
 
         if (flags & FLAGS_MAIN_MSC_DELAY_DISCONNECT) {
             if (USB_DISCONNECT_CONNECT == usb_state) {

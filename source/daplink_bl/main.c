@@ -38,6 +38,7 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 #define FLAGS_MAIN_USB_DISCONNECT (1 << 3)
 #define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
 #define FLAGS_MAIN_MSC_DELAY_DISCONNECT (1 << 8)
+#define FLAGS_MAIN_PROC_USB             (1 << 9)
 // Used by msc when flashing a new binary
 #define FLAGS_LED_BLINK_30MS      (1 << 6)
 
@@ -67,7 +68,7 @@ static uint32_t usb_busy_count;
 static uint64_t stk_timer_task[TIMER_TASK_STACK/sizeof(uint64_t)];
 
 #define MAIN_TASK_PRIORITY      (10)
-#define MAIN_TASK_STACK         (200)
+#define MAIN_TASK_STACK         (700)
 static uint64_t stk_main_task [MAIN_TASK_STACK /sizeof(uint64_t)];
 
 // Timer task, set flags every 30mS and 90mS
@@ -114,6 +115,11 @@ void main_force_msc_disconnect_event(void)
     return;
 }
 
+void USBD_SignalHandler()
+{
+    isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+}
+
 __task void main_task(void)
 {
     // State processing
@@ -157,10 +163,15 @@ __task void main_task(void)
                         | FLAGS_MAIN_USB_DISCONNECT     // Programming complete, disconnect and reset MCU
                         | FLAGS_MAIN_MSC_DELAY_DISCONNECT // new data has arrived so delay the disconnect
                         | FLAGS_MAIN_FORCE_MSC_DISCONNECT // programming error, eject MSC and show error file upon connection
+                        | FLAGS_MAIN_PROC_USB           // process usb events
                         , NO_TIMEOUT );
 
         // Find out what event happened
         flags = os_evt_get();
+
+        if (flags & FLAGS_MAIN_PROC_USB) {
+            USBD_Handler();
+        }
 
         // data has arrived over usb so delay the disconnect
         if (flags & FLAGS_MAIN_MSC_DELAY_DISCONNECT) {

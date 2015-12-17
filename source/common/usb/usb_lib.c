@@ -1169,6 +1169,8 @@ void usbd_class_init     (void)                                       {
 #endif
                                                                       }
 
+#ifdef __RTX
+
 typedef struct {
   void * stack;
   U16 size;
@@ -1344,6 +1346,8 @@ static const user_stack_t user_stack_list[16] = {
     [USBD_CDC_ACM_EP_BULKOUT] = {usbd_cdc_acm_ep_bulkout_stack, sizeof(usbd_cdc_acm_ep_bulkout_stack)},
   #endif
 };
+
+#endif /* __RTX */
 
 void USBD_RTX_TaskInit (void) {
 

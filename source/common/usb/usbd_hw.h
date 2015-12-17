@@ -39,5 +39,7 @@ extern U32  USBD_ReadEP      (U32  EPNum, U8 *pData);
 extern U32  USBD_WriteEP     (U32  EPNum, U8 *pData, U32 cnt);
 extern U32  USBD_GetFrame    (void);
 extern U32  USBD_GetError    (void);
+extern void USBD_SignalHandler(void);
+extern void USBD_Handler     (void);
 
 #endif  /* __USBD_HW_H__ */

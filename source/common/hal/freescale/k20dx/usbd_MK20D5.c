@@ -486,6 +486,15 @@ U32 USBD_GetError (void) {
  *  USB Device Interrupt Service Routine
  */
 void USB0_IRQHandler(void) {
+    NVIC_DisableIRQ(USB0_IRQn);
+    USBD_SignalHandler();
+}
+
+/*
+ *  USB Device Service Routine
+ */
+
+void USBD_Handler (void) {
   uint32_t istr, num, dir, ev_odd, stat;
 
   istr  = USB0->ISTAT;
@@ -618,4 +627,5 @@ void USB0_IRQHandler(void) {
       }
     }
   }
+  NVIC_EnableIRQ(USB0_IRQn);
 }
