@@ -74,12 +74,7 @@ __inline static void protected_xor (uint32_t *addr, uint32_t val) { *addr ^= val
  *    Return Value:    None
  */
 
-#ifdef __RTX
-void __svc(1) USBD_IntrEna (void);
-void __SVC_1               (void) {
-#else
 void          USBD_IntrEna (void) {
-#endif
   NVIC_EnableIRQ   (USB0_IRQn);         /* Enable OTG interrupt               */
 }
 
