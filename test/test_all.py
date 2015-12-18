@@ -320,6 +320,9 @@ def main():
 
     description = 'DAPLink validation and testing tool'
     parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--targetdir',
+                        help='Directory with pre-build target test images.',
+                        default=None)
     parser.add_argument('--user', type=str, default=None,
                         help='MBED username (required for compile-api)')
     parser.add_argument('--password', type=str, default=None,
@@ -340,13 +343,19 @@ def main():
                         choices=VERB_LEVELS, default=VERB_NORMAL)
     args = parser.parse_args()
 
+    use_prebuilt = args.targetdir is not None
+    use_compile_api = args.user is not None and args.password is not None
+
     # Validate args
     if not args.notestendpt:
-        if args.user is None:
-            print("'--user' must be specified when testing USB endpoints")
-            exit(-1)
-        if args.password is None:
-            print("'--password' must be specified when testing USB endpoints")
+        if not use_prebuilt and not use_compile_api:
+            print("Endpoint test requires target test images.")
+            print("  Directory with pre-build target test images")
+            print("  must be specified with '--targetdir'")
+            print("OR")
+            print("  Mbed login credentials '--user' and '--password' must")
+            print("  be specified so test images can be built with")
+            print("  the compile API.")
             exit(-1)
 
     boards_explicitly_specified = len(args.project) != 0
@@ -363,7 +372,10 @@ def main():
     # Attach firmware build credentials
     if not args.notestendpt:
         for board in all_boards:
-            board.set_build_login(args.user, args.password)
+            if args.targetdir is None:
+                board.set_build_login(args.user, args.password)
+            else:
+                board.set_build_prebuilt_dir(args.targetdir)
 
     # Create table mapping each board id to boards
     board_id_to_board_list = {}

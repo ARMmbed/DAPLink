@@ -103,9 +103,12 @@ class DaplinkBoard:
 
         self.unique_id = unique_id
         self._update_board_info()
-        self._target_firmware_built = False
+        self._target_firmware_present = False
         self._username = None
         self._password = None
+        self._target_dir = None
+        self._target_hex_path = None
+        self._target_bin_path = None
 
     def get_unique_id(self):
         return self.unique_id
@@ -148,11 +151,11 @@ class DaplinkBoard:
             raise Exception("Unsupported board - cannot change mode!")
 
     def get_target_hex_path(self):
-        assert self._target_firmware_built
+        assert self._target_firmware_present
         return self._target_hex_path
 
     def get_target_bin_path(self):
-        assert self._target_firmware_built
+        assert self._target_firmware_present
         return self._target_bin_path
 
     def set_mode(self, mode, parent_test):
@@ -189,49 +192,62 @@ class DaplinkBoard:
         self._username = username
         self._password = password
 
+    def set_build_prebuilt_dir(self, directory):
+        assert isinstance(directory, six.string_types)
+        self._target_dir = directory
+
     def build_target_firmware(self, parent_test):
         """
         Build test firmware for the board
 
         Login credentials must have been set with set_build_login.
         """
-        assert self._username is not None and self._password is not None
-        test_info = parent_test.create_subtest('build_target_test_firmware')
+        prebuilt = self._target_dir is not None
+        build_login = (self._username is not None and
+                       self._password is not None)
+        assert prebuilt or build_login
+        if prebuilt:
+            destdir = self._target_dir
+        else:
+            destdir = 'tmp'
         build_name = board_id_to_build_target[self.get_board_id()]
-        destdir = 'tmp'
-        if not os.path.isdir(destdir):
-            os.mkdir(destdir)
-        name_base = os.path.normpath("tmp" + os.sep + build_name)
+        name_base = os.path.normpath(destdir + os.sep + build_name)
         self._target_hex_path = name_base + '.hex'
         self._target_bin_path = name_base + '.bin'
-        # Remove previous build files
-        if os.path.isfile(self._target_hex_path):
-            os.remove(self._target_hex_path)
-        if os.path.isfile(self._target_bin_path):
-            os.remove(self._target_bin_path)
-        test_info.info('Starting remote build')
-        start = time.time()
-        built_file = mbedapi.build_repo(self._username, self._password,
-                                        TEST_REPO, build_name, destdir)
-        stop = time.time()
-        test_info.info("Build took %s seconds" % (stop - start))
-        extension = os.path.splitext(built_file)[1].lower()
-        assert extension == '.hex' or extension == '.bin'
-        if extension == '.hex':
-            intel_hex = IntelHex(built_file)
-            # Only supporting devices with the starting
-            # address at 0 currently
-            assert intel_hex.minaddr() == 0
-            intel_hex.tobinfile(self._target_bin_path)
-            os.rename(built_file, self._target_hex_path)
-        if extension == '.bin':
-            intel_hex = IntelHex()
-            intel_hex.loadbin(built_file, offset=0)
-            intel_hex.tofile(self._target_hex_path, 'hex')
-            os.rename(built_file, self._target_bin_path)
+        # Build target test image if a prebuild location is not specified
+        if not prebuilt:
+            test_info = parent_test.create_subtest('build_target_test_firmware')
+            if not os.path.isdir(destdir):
+                os.mkdir(destdir)
+            # Remove previous build files
+            if os.path.isfile(self._target_hex_path):
+                os.remove(self._target_hex_path)
+            if os.path.isfile(self._target_bin_path):
+                os.remove(self._target_bin_path)
+            test_info.info('Starting remote build')
+            start = time.time()
+            built_file = mbedapi.build_repo(self._username, self._password,
+                                            TEST_REPO, build_name, destdir)
+            stop = time.time()
+            test_info.info("Build took %s seconds" % (stop - start))
+            extension = os.path.splitext(built_file)[1].lower()
+            assert extension == '.hex' or extension == '.bin'
+            if extension == '.hex':
+                intel_hex = IntelHex(built_file)
+                # Only supporting devices with the starting
+                # address at 0 currently
+                assert intel_hex.minaddr() == 0
+                intel_hex.tobinfile(self._target_bin_path)
+                os.rename(built_file, self._target_hex_path)
+            if extension == '.bin':
+                intel_hex = IntelHex()
+                intel_hex.loadbin(built_file, offset=0)
+                intel_hex.tofile(self._target_hex_path, 'hex')
+                os.rename(built_file, self._target_bin_path)
+        # Assert that required files are present
         assert os.path.isfile(self._target_hex_path)
         assert os.path.isfile(self._target_bin_path)
-        self._target_firmware_built = True
+        self._target_firmware_present = True
 
     def read_target_memory(self, addr, size, resume=True):
         assert self.get_mode() == self.MODE_IF
