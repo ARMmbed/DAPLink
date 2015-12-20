@@ -2,6 +2,6 @@ common:
     includes:
         - source/target/siliconlabs/efm32gg
     sources:
-        target_specific:
+        target:
             - source/target/siliconlabs/efm32gg/app_config.c
             - source/target/siliconlabs/efm32gg/target_reset.c

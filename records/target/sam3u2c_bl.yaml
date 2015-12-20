@@ -1,4 +1,4 @@
 common:
     sources:
-        target_specific:
+        target:
             - source/target/bootloader/atmel/sam3u2c/app_config.c

@@ -2,6 +2,6 @@ common:
     includes:
         - source/target/nordic/nrf51822
     sources:
-        target_specific:
+        target:
             - source/target/nordic/nrf51822/app_config.c
             - source/target/nordic/nrf51822/target_reset.c
