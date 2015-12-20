@@ -454,10 +454,8 @@ FOPT            EQU     0xFD
 FSEC            EQU     0xFE
 ;   </h>
 ; </h>
-                IF      :DEF:APP_OFFSET_32K
+                IF      :DEF:DAPLINK_IF
                 AREA    |.ARM.__at_0x8400|, CODE, READONLY
-                ELIF    :DEF:APP_OFFSET_20k
-                AREA    |.ARM.__at_0x5400|, CODE, READONLY
                 ELSE
                 AREA    |.ARM.__at_0x400 |, CODE, READONLY
                 ENDIF

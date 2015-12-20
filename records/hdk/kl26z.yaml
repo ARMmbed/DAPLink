@@ -30,3 +30,9 @@ common:
             - source/hal/freescale/iap/driver/flash_verify_program.c
             - source/hal/freescale/iap/driver/flash_verify_erase_all.c
             - source/hal/freescale/iap/driver/flash_command_sequence.c
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hal\freescale\kl26z\cmsis-core"

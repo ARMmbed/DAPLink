@@ -17,11 +17,6 @@
 #ifndef DAPLINK_ADDR_H
 #define DAPLINK_ADDR_H 
 
-// TODO - uncomment and remove sam3u2c_daplink_bl.sct when pgen supports linker defines
-#if !defined(DAPLINK_IF) && !defined(DAPLINK_BL)
-    #define DAPLINK_IF
-#endif
-
 /* Device sizes */
 
 #define DAPLINK_ROM_START               0x00080000

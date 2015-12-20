@@ -1,16 +1,7 @@
 common:
-    macros:
-        - APP_OFFSET_32K
     includes:
         - source/target/nordic/nrf51822
     sources:
         target_specific:
             - source/target/nordic/nrf51822/app_config.c
             - source/target/nordic/nrf51822/target_reset.c
-    debugger:
-        - cmsis-dap
-
-tool_specific:
-    uvision:
-        linker_file:
-            - source/hal/freescale/kl26z/cmsis-core/armcc/kl26z_daplink_if.sct

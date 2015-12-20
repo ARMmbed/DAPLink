@@ -13,3 +13,9 @@ common:
             - source/hal/atmel/sam3u2c/cmsis-core
             - source/hal/atmel/sam3u2c/cmsis-core/armcc
             - source/hal/atmel/sam3u2c
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hal\atmel\sam3u2c\cmsis-core"

@@ -12,3 +12,9 @@ common:
             - source/hal/nxp/lpc11u35/cmsis-core
             - source/hal/nxp/lpc11u35/cmsis-core/armcc
             - source/hal/nxp/lpc11u35
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hal\nxp\lpc11u35\cmsis-core"

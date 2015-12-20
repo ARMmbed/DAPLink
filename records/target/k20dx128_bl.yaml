@@ -2,11 +2,3 @@ common:
     sources:
         target_specific:
             - source/target/bootloader/freescale/k20dx/app_config.c
-    debugger:
-        - cmsis-dap
-
-tool_specific:
-    uvision:
-        linker_file:
-            - source/hal/freescale/k20dx/cmsis-core/armcc/k20dx_daplink_bl.sct
-
