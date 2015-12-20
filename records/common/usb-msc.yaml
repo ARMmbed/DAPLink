@@ -1,9 +1,0 @@
-common:
-    macros:
-        - MSC_ENDPOINT
-    includes:
-        - source/endpoints/drag-n-drop
-    sources:
-        usb_msc:
-            - source/usb/msc
-            - source/endpoints/drag-n-drop

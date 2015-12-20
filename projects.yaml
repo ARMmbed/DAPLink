@@ -11,81 +11,85 @@ module:
         - records/tools/make_gcc_arm.yaml
         - records/tools/version.yaml
     bl: &module_bl
-        - records/common/usb-core.yaml
-        - records/common/usb-msc.yaml
-        - records/common/daplink_bl.yaml
+        - records/usb/usb-core.yaml
+        - records/usb/usb-msc.yaml
+        - records/daplink/bootloader.yaml
+        - records/daplink/drag-n-drop.yaml
     if: &module_if
-        - records/common/usb-core.yaml
-        - records/common/usb-hid.yaml
-        - records/common/usb-msc.yaml
-        - records/common/usb-cdc.yaml
-        - records/common/daplink_if.yaml
+        - records/usb/usb-core.yaml
+        - records/usb/usb-hid.yaml
+        - records/usb/usb-msc.yaml
+        - records/usb/usb-cdc.yaml
+        - records/daplink/cmsis-dap.yaml
+        - records/daplink/drag-n-drop.yaml
+        - records/daplink/usb2uart.yaml
+        - records/daplink/interface.yaml
 
 projects:
     kl26z_bl:
         - *module_tools
         - *module_bl
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/kl26z.yaml
         - records/target/kl26z_bl.yaml
     k20dx_bl:
         - *module_tools
         - *module_bl
-        - records/common/rtos-cm3.yaml
+        - records/rtos/rtos-cm3.yaml
         - records/hdk/k20dx128.yaml
         - records/target/k20dx128_bl.yaml
     sam3u2c_bl:
         - *module_tools
         - *module_bl
-        - records/common/rtos-cm3.yaml
+        - records/rtos/rtos-cm3.yaml
         - records/hdk/sam3u2c.yaml
         - records/target/sam3u2c_bl.yaml
     sam3u2c_nrf51822_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm3.yaml
+        - records/rtos/rtos-cm3.yaml
         - records/hdk/sam3u2c.yaml
         - records/target/nrf51822_dk.yaml
     kl26z_nrf51822_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/kl26z.yaml
         - records/target/nrf51822.yaml
     kl26z_microbit_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/kl26z.yaml
         - records/target/nrf51822.yaml
         - records/overrides/microbit.yaml
     k20dx_k22f_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm3.yaml
+        - records/rtos/rtos-cm3.yaml
         - records/hdk/k20dx128.yaml
         - records/target/k22f.yaml
     k20dx_k64f_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm3.yaml
+        - records/rtos/rtos-cm3.yaml
         - records/hdk/k20dx128.yaml
         - records/target/k64f.yaml
     lpc11u35_lpc1114_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/lpc11u35.yaml
         - records/target/lpc1114.yaml
     lpc11u35_lpc812_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/lpc11u35.yaml
         - records/target/lpc812.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_tools
         - *module_if
-        - records/common/rtos-cm0.yaml
+        - records/rtos/rtos-cm0.yaml
         - records/hdk/lpc11u35.yaml
         - records/target/efm32gg_stk.yaml

@@ -2,5 +2,5 @@ common:
     includes:
         - source/usb
     sources:
-        usb_core:
+        usb:
             - source/usb/usbd_core.c
