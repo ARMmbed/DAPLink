@@ -2,8 +2,8 @@ common:
     macros:
         - MSC_ENDPOINT
     includes:
-        - source/common/endpoints/drag-n-drop
+        - source/endpoints/drag-n-drop
     sources:
         usb_msc:
-            - source/common/usb/msc
-            - source/common/endpoints/drag-n-drop
+            - source/usb/msc
+            - source/endpoints/drag-n-drop

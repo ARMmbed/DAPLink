@@ -1,0 +1,9 @@
+common:
+    sources:
+        target_specific:
+            - source/target/bootloader/atmel/sam3u2c/app_config.c
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/hal/atmel/sam3u2c/cmsis-core/armcc/sam3u2c_daplink_bl.sct

@@ -1,0 +1,11 @@
+common:
+    sources:
+        target_specific:
+            - source/target/bootloader/freescale/kl26z/app_config.c
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/hal/freescale/kl26z/cmsis-core/armcc/kl26z_daplink_bl.sct

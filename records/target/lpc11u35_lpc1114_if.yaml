@@ -1,0 +1,20 @@
+common:
+    includes:
+        - source/target/nxp/lpc1114
+    sources:
+        target_specific:
+            - source/target/nxp/lpc1114/app_config.c
+            - source/target/nxp/lpc1114/target_reset.c
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/hal/nxp/lpc11u35/cmsis-core/armcc/lpc11u35_daplink_if.sct
+        AfterMake:
+            RunUserProg1:
+                - $KARM\BIN\ElfDwT.exe #L1
+            RunUserProg2:
+                - "fromelf --bin $L@L.axf -o $L@L.bin"
+

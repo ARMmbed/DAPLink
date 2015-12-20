@@ -1,0 +1,16 @@
+common:
+    macros:
+        - APP_OFFSET_32K
+    includes:
+        - source/target/freescale/k22f
+    sources:
+        target_specific:
+            - source/target/freescale/k22f/app_config.c
+            - source/target/freescale/target_reset_Kseries.c
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/hal/freescale/k20dx/cmsis-core/armcc/k20dx_daplink_if.sct

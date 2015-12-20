@@ -1,0 +1,15 @@
+common:
+    includes:
+        - source/target/nxp/lpc812
+    sources:
+        target_specific:
+            - source/target/nxp/lpc812/app_config.c
+            - source/target/nxp/lpc812/target_reset.c
+    debugger:
+        - cmsis-dap
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/hal/nxp/lpc11u35/cmsis-core/armcc/lpc11u35_daplink_if.sct
+

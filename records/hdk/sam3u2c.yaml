@@ -1,0 +1,15 @@
+common:
+    target:
+        - atsam3u2c
+    macros:
+        - INTERFACE_SAM3U2C
+        - __SAM3U2C__
+        - DAPLINK_HDK_ID=0x646c0003  # DAPLINK_HDK_ID_SAM3U2C
+    includes:
+        - source/hal/atmel/sam3u2c/cmsis-core
+        - source/hal/atmel/sam3u2c
+    sources:
+        hal:
+            - source/hal/atmel/sam3u2c/cmsis-core
+            - source/hal/atmel/sam3u2c/cmsis-core/armcc
+            - source/hal/atmel/sam3u2c

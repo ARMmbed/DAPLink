@@ -3,15 +3,11 @@ common:
         - DAPLINK_BL
         - DAPLINK_BUILD_KEY=0x9B939D93  # DAPLINK_BUILD_KEY_BL
     includes:
-        - source/daplink_bl
-        - source/daplink_bl/target
-        - source/daplink_bl/target/iap_api
-        - source/common/cmsis-core
-        - source/common/hal
+        - source/daplink
+        - source/daplink/bootloader
+        - source/hal/cmsis-core
+        - source/hal
     sources:
         daplink_bl:
-            - source/daplink_bl
-            - source/daplink_bl/target
-            - source/daplink_bl/target/iap_api
-            - source/common/cmsis-core
-            - source/common/hal
+            - source/daplink
+            - source/daplink/bootloader
