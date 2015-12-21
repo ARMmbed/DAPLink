@@ -29,6 +29,7 @@
 #include "info.h"
 #include "virtual_fs_user.h"
 #include "config_settings.h"
+#include "daplink.h"
 
 // Event flags for main task
 // Timers events
@@ -510,5 +511,10 @@ __task void main_task(void)
 
 int main (void)
 {
+    // Explicitly set the vector table since the bootloader might not set
+    // it to what we expect.
+    #if DAPLINK_ROM_BL_SIZE > 0
+        SCB->VTOR = SCB_VTOR_TBLOFF_Msk & DAPLINK_ROM_IF_START;
+    #endif
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }
