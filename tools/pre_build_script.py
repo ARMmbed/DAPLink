@@ -46,7 +46,7 @@ VERSION_GIT_FILE_TEMPLATE = """
 """
 
 
-GIT_VERSION_FILE_PATH = "../../../source/common/hal/version_git.h"
+GIT_VERSION_FILE_PATH = "../../../source/daplink/version_git.h"
 
 def pre_build():
     print "#> Pre-build script start"

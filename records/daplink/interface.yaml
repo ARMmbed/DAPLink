@@ -1,0 +1,21 @@
+common:
+    macros:
+        - DAPLINK_IF
+        - DAPLINK_BUILD_KEY=0x9B939699  # DAPLINK_BUILD_KEY_IF
+    includes:
+        - source/daplink
+        - source/daplink/interface
+        - source/cmsis-core
+        - source/hdk_hal
+    sources:
+        daplink_if:
+            - source/daplink
+            - source/daplink/interface
+
+tool_specific:
+    uvision:
+        linker_file:
+            - source/daplink/daplink.sct
+        misc:
+            ld_flags:
+                - --predefine="-DDAPLINK_IF"

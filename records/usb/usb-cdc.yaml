@@ -1,0 +1,6 @@
+common:
+    macros:
+        - CDC_ENDPOINT
+    sources:
+        usb:
+            - source/usb/cdc

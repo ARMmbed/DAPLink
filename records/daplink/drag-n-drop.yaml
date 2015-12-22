@@ -1,0 +1,6 @@
+common:
+    includes:
+        - source/daplink/drag-n-drop
+    sources:
+        drag-n-drop:
+            - source/daplink/drag-n-drop

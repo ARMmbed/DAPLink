@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/bootloader/freescale/kl26z/app_config.c

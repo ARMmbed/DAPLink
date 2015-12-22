@@ -1,0 +1,6 @@
+common:
+    includes:
+        - source/usb
+    sources:
+        usb:
+            - source/usb/usbd_core.c

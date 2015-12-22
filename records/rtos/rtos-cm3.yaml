@@ -1,0 +1,17 @@
+common:
+    includes:
+        - source/rtos
+    sources:
+        rtos:
+            - source/rtos/cm3
+            - source/rtos/rt_Event.c
+            - source/rtos/rt_List.c
+            - source/rtos/rt_Mailbox.c
+            - source/rtos/rt_MemBox.c
+            - source/rtos/rt_Mutex.c
+            - source/rtos/rt_Robin.c
+            - source/rtos/rt_Semaphore.c
+            - source/rtos/rt_System.c
+            - source/rtos/rt_Task.c
+            - source/rtos/rt_Time.c
+            - source/rtos/rt_Timer.c

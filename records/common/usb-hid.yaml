@@ -1,9 +1,0 @@
-common:
-    macros:
-        - HID_ENDPOINT
-    includes:
-        - source/common/endpoints/cmsis-dap
-    sources:
-        usb_hid:
-            - source/common/usb/hid
-            - source/common/endpoints/cmsis-dap
