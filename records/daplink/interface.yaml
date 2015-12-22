@@ -5,8 +5,8 @@ common:
     includes:
         - source/daplink
         - source/daplink/interface
-        - source/hal/cmsis-core
-        - source/hal
+        - source/cmsis-core
+        - source/hdk_hal
     sources:
         daplink_if:
             - source/daplink

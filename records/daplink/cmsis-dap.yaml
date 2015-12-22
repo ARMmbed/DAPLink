@@ -1,6 +1,6 @@
 common:
     includes:
-        - source/cmsis-dap
+        - source/daplink/cmsis-dap
     sources:
         cmsis-dap:
-            - source/cmsis-dap
+            - source/daplink/cmsis-dap
