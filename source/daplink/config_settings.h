@@ -27,7 +27,10 @@ bool config_get_auto_rst(void);
 
 // Get/set settings residing in shared ram
 void config_ram_set_hold_in_bl(bool hold);
+void config_ram_set_assert(const char * file, uint16_t line);
+void config_ram_clear_assert(void);
 bool config_ram_get_hold_in_bl(void);
 bool config_ram_get_initial_hold_in_bl(void);
+bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line);
 
 #endif

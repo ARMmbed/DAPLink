@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include "util.h"
+#include "config_settings.h"
 
 
 uint32_t util_write_hex8(char * str, uint8_t value)
@@ -97,4 +98,9 @@ uint32_t util_write_string(char * str, const char * data)
         pos++;
     }
     return pos;
+}
+
+void _util_assert(const char * filename, uint16_t line)
+{
+    config_ram_set_assert(filename, line);
 }

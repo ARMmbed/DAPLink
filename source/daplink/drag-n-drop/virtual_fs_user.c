@@ -73,9 +73,13 @@ static const uint8_t mbed_redirect_file[512] =
     "</body>\r\n"
     "</html>\r\n";
 
+static const vfs_filename_t assert_file = "ASSERT  TXT";
+
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static target_flash_status_t fail_reason = TARGET_OK;
 static file_transfer_state_t file_transfer_state;
+static char assert_buf[64 + 1];
+static uint16_t assert_line;
 
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
@@ -84,6 +88,7 @@ static uint32_t get_file_size(vfs_read_cb_t read_func);
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
+static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void update_transfer_info(extension_t type, const vfs_file_t file, uint32_t sector, uint32_t size);
 static void update_transfer_state(target_flash_status_t status);
@@ -99,6 +104,7 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize);
 void vfs_user_build_filesystem(void)
 {
     uint32_t file_size;
+    vfs_file_t file;
 
     // Update anything that could have changed file system state
     file_transfer_state = default_transfer_state;
@@ -119,6 +125,13 @@ void vfs_user_build_filesystem(void)
     if (fail_reason != 0) {
         file_size = get_file_size(read_file_fail_txt);
         vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
+    }
+
+    // ASSERT.TXT
+    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
+        file_size = get_file_size(read_file_assert_txt);
+        file = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+        vfs_file_set_attr(file, VFS_FILE_ATTR_HIDDEN);
     }
 
     // Set mass storage parameters
@@ -202,9 +215,17 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(false);
             tranfer_complete(TARGET_OK);
+        } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
+            // Test asserts
+            util_assert(0);
+        } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
+            // Remount to update the drive
+            tranfer_complete(TARGET_OK);
         }
     } else if (VFS_FILE_DELETED == change) {
-        // No delete events to handle
+        if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
+            config_ram_clear_assert();
+        }
     }
 }
 
@@ -393,6 +414,27 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
     }
     memcpy(data, contents, size);
     return size;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
+{
+    uint32_t pos;
+    char * buf = (char *)data;
+    if (sector_offset != 0) {
+        return 0;
+    }
+    pos = 0;
+    
+    pos += util_write_string(buf + pos, "Assert\r\n");
+    pos += util_write_string(buf + pos, "File: ");
+    pos += util_write_string(buf + pos, assert_buf);
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Line: ");
+    pos += util_write_uint32(buf + pos, assert_line);
+    pos += util_write_string(buf + pos, "\r\n");
+
+    return pos;
 }
 
 // Update info about the current file transfer and check for completion
