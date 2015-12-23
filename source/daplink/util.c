@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+#include <string.h>
+
 #include "util.h"
 
 
@@ -67,6 +69,24 @@ uint32_t util_write_uint32(char * str, uint32_t value)
     }
     
     return digits;
+}
+
+uint32_t util_write_uint32_zp(char * str, uint32_t value, uint16_t total_size)
+{
+    uint32_t size;
+
+    // Get the size of value
+    size = util_write_uint32(str, value);
+    if (size >= total_size) {
+        return size;
+    }
+
+    // Zero fill
+    memset(str, '0', total_size);
+
+    // Write value
+    util_write_uint32(str + (total_size - size), value);
+    return total_size;
 }
 
 uint32_t util_write_string(char * str, const char * data)

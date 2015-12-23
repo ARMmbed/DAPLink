@@ -25,6 +25,7 @@ uint32_t util_write_hex16(char * str, uint16_t value);
 uint32_t util_write_hex32(char * str, uint32_t value);
 uint32_t util_write_uint32(char * str, uint32_t value);
 uint32_t util_write_uint32(char * str, uint32_t value);
+uint32_t util_write_uint32_zp(char * str, uint32_t value, uint16_t total_size);
 uint32_t util_write_string(char * str, const char * data);
 
 #endif

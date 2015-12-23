@@ -297,13 +297,14 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
 {
     uint32_t pos;
+    const char * mode_str;
     char * buf = (char *)data;
     if (sector_offset != 0) {
         return 0;
     }
     
     pos = 0;
-    pos += util_write_string(buf + pos, "DAPLink Firmware - see https://mbed.com/daplink\r\n");
+    pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
 
     // Unique ID
     pos += util_write_string(buf + pos, "Unique ID: ");
@@ -320,20 +321,27 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     pos += util_write_string(buf + pos, config_get_auto_rst() ? "1" : "0");
     pos += util_write_string(buf + pos, "\r\n");
 
+    // Current mode
+    mode_str = daplink_is_bootloader() ? "Bootloader" : "Interface";
+    pos += util_write_string(buf + pos, "Daplink Mode: ");
+    pos += util_write_string(buf + pos, mode_str);
+    pos += util_write_string(buf + pos, "\r\n");
+
     // Current build's version
-    pos += util_write_string(buf + pos, "Version: ");
+    pos += util_write_string(buf + pos, mode_str);
+    pos += util_write_string(buf + pos, " Version: ");
     pos += util_write_string(buf + pos, info_get_version());
     pos += util_write_string(buf + pos, "\r\n");
 
     // Other builds version (bl or if)
     if (!daplink_is_bootloader() && info_get_bootloader_present()) {
         pos += util_write_string(buf + pos, "Bootloader Version: ");
-        pos += util_write_uint32(buf + pos, info_get_bootloader_version());
+        pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
         pos += util_write_string(buf + pos, "\r\n");
     }
     if (!daplink_is_interface() && info_get_interface_present()) {
         pos += util_write_string(buf + pos, "Interface Version: ");
-        pos += util_write_uint32(buf + pos, info_get_interface_version());
+        pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
         pos += util_write_string(buf + pos, "\r\n");
     }
 
@@ -345,6 +353,19 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     // Local modifications when making the build
     pos += util_write_string(buf + pos, "Local Mods: ");
     pos += util_write_uint32(buf + pos, GIT_LOCAL_MODS);
+    pos += util_write_string(buf + pos, "\r\n");
+
+    // Supported USB endpoints
+    pos += util_write_string(buf + pos, "USB Interfaces: ");
+    #ifdef MSC_ENDPOINT
+    pos += util_write_string(buf + pos, "MSD");
+    #endif
+    #ifdef HID_ENDPOINT
+    pos += util_write_string(buf + pos, ", CDC");
+    #endif
+    #ifdef CDC_ENDPOINT
+    pos += util_write_string(buf + pos, ", CMSIS-DAP");
+    #endif
     pos += util_write_string(buf + pos, "\r\n");
 
     // CRC of the bootloader (if there is one)
