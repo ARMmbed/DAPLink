@@ -96,19 +96,34 @@ def _get_board_endpoints(unique_id):
 
 class DaplinkBoard:
 
-    MODE_IF = "MODE_IF"
-    MODE_BL = "MODE_BL"
+
+    MODE_IF = "interface"
+    MODE_BL = "bootloader"
+
+    # Keys for details.txt
+    KEY_UNIQUE_ID = "unique_id"
+    KEY_HDK_ID = "hdk_id"
+    KEY_MODE = "daplink_mode"
+    KEY_BL_VERSION = "bootloader_version"
+    KEY_IF_VERSION = "interface_version"
+    KEY_GIT_SHA = "git_sha"
+    KEY_LOCAL_MODS = "local_mods"
+    KEY_USB_INTERFACES = "usb_interfaces"
+    KEY_BL_CRC = "bootloader_crc"
+    KEY_IF_CRC = "interface_crc"
 
     def __init__(self, unique_id):
 
         self.unique_id = unique_id
-        self._update_board_info()
+        self.details_txt = None
         self._target_firmware_present = False
         self._username = None
         self._password = None
         self._target_dir = None
         self._target_hex_path = None
         self._target_bin_path = None
+        self._mode = None
+        self._update_board_info()
 
     def get_unique_id(self):
         return self.unique_id
@@ -143,12 +158,8 @@ class DaplinkBoard:
 
     def get_mode(self):
         """Return either MODE_IF or MODE_BL"""
-        if os.path.isfile(self.check_bl_path):
-            return self.MODE_BL
-        elif os.path.isfile(self.check_if_path):
-            return self.MODE_IF
-        else:
-            raise Exception("Unsupported board - cannot change mode!")
+        assert self._mode in (DaplinkBoard.MODE_BL, DaplinkBoard.MODE_IF)
+        return self._mode
 
     def get_target_hex_path(self):
         assert self._target_firmware_present
@@ -307,6 +318,8 @@ class DaplinkBoard:
             else:
                 test_info.info("File %s valid" % filename)
 
+        self.test_details_txt(test_info)
+
     def load_interface(self, filepath, parent_test):
         """Load an interface binary or hex"""
         test_info = parent_test.create_subtest('load_interface')
@@ -369,12 +382,131 @@ class DaplinkBoard:
         assert self.unique_id is not None
         assert self.mount_point is not None
         self.board_id = int(self.unique_id[0:4], 16)
-        self.check_bl_path = os.path.normpath(self.mount_point +
-                                              os.sep + 'HELP_FAQ.HTM')
-        self.check_if_path = os.path.normpath(self.mount_point +
-                                              os.sep + 'MBED.HTM')
+
+        # Note - Some legacy boards might not have details.txt
+        self._parse_details_txt()
+
+        self.mode = None
+        if DaplinkBoard.KEY_MODE in self.details_txt:
+            self._mode = self.details_txt[DaplinkBoard.KEY_MODE]
+        else:
+            # TODO - remove file check when old bootloader have been
+            # updated
+            check_bl_path = os.path.normpath(self.mount_point +
+                                            os.sep + 'HELP_FAQ.HTM')
+            check_if_path = os.path.normpath(self.mount_point +
+                                            os.sep + 'MBED.HTM')
+            if os.path.isfile(check_bl_path):
+                self._mode = self.MODE_BL
+            elif os.path.isfile(check_if_path):
+                self._mode = self.MODE_IF
+            else:
+                raise Exception("Could not determine board mode!")
+
         self.start_bl_path = os.path.normpath(self.mount_point +
                                               os.sep + 'START_BL.CFG')
         self.start_if_path = os.path.normpath(self.mount_point +
                                               os.sep + 'START_IF.CFG')
+        return True
+
+    def test_details_txt(self, parent_test):
+        """Check that details.txt has all requied fields"""
+        test_info = parent_test.create_subtest('test_details_txt')
+        required_key_and_format = {
+            DaplinkBoard.KEY_UNIQUE_ID: re.compile("^[a-f0-9]{48}$"),
+            DaplinkBoard.KEY_HDK_ID: re.compile("^[a-f0-9]{8}$"),
+            DaplinkBoard.KEY_GIT_SHA: re.compile("^[a-f0-9]{40}$"),
+            DaplinkBoard.KEY_LOCAL_MODS: re.compile("^[01]{1}$"),
+            DaplinkBoard.KEY_USB_INTERFACES: re.compile("^.+$"),
+            DaplinkBoard.KEY_MODE: re.compile("(interface|bootloader)"),
+        }
+        optional_key_and_format = {
+            DaplinkBoard.KEY_BL_VERSION: re.compile("^[0-9]{4}$"),
+            DaplinkBoard.KEY_IF_VERSION: re.compile("^[0-9]{4}$"),
+            DaplinkBoard.KEY_BL_CRC: re.compile("^0x[a-f0-9]{8}$"),
+            DaplinkBoard.KEY_IF_CRC: re.compile("^0x[a-f0-9]{8}$"),
+        }
+        # 1. keys and values are alphanumeric
+        # 2. no duplicate keys
+        # 3. format is key : value
+        # 4. required keys are present
+        # 5. optional keys have the expected format
+        if not self._parse_details_txt(test_info):
+            test_info.failure("Could not parse details.txt")
+            return
+
+        # Check for required keys
+        required_keys = required_key_and_format.keys()
+        for key in required_keys:
+            if not key in self.details_txt:
+                test_info.failure("Missing detail.txt entry: %s" % key)
+                continue
+
+            value = self.details_txt[key]
+            pattern = required_key_and_format[key]
+            if pattern.match(value) is None:
+                test_info.failure("Bad format detail.txt %s: %s" % (key, value))
+
+        # Check format of optional values
+        optional = optional_key_and_format.keys()
+        for key in optional_key_and_format:
+            if not key in self.details_txt:
+                continue
+
+            value = self.details_txt[key]
+            pattern = optional_key_and_format[key]
+            if pattern.match(value) is None:
+                test_info.failure("Bad format detail.txt %s: %s" % (key, value))
+
+        # Check details.txt contents
+        details_unique_id = None
+        details_hdk_id = None
+        if DaplinkBoard.KEY_UNIQUE_ID in self.details_txt:
+            details_unique_id = self.details_txt[DaplinkBoard.KEY_UNIQUE_ID]
+        if DaplinkBoard.KEY_HDK_ID in self.details_txt:
+            details_hdk_id = self.details_txt[DaplinkBoard.KEY_HDK_ID]
+        if details_unique_id is not None:
+            if details_unique_id != self.unique_id:
+                test_info.failure("Unique ID mismatch in details.txt")
+            if details_hdk_id is not None:
+                if details_hdk_id != details_unique_id[-8:]:
+                    test_info.failure("HDK ID is not the last 8 "
+                                      "digits of unique ID")
+
+    def _parse_details_txt(self, test_info=None):
+        """Parse details.txt and return True if successful"""
+        filename = os.path.normpath(self.mount_point + os.sep + "details.txt")
+        line_format = re.compile("^([a-zA-Z0-9 ]+): +(.+)$")
+        if not os.path.isfile(filename):
+            self.details_txt = {}
+            return False
+
+        details_table = {}
+        with open(filename, "r") as file_handle:
+            for line in file_handle:
+                if len(line) <= 0:
+                    if test_info is not None:
+                        test_info.failure("Empty line in details.txt")
+                    continue
+
+                if line[0] == '#':
+                    # The line is a comment
+                    continue
+
+                match = line_format.match(line)
+                if match is None:
+                    if test_info is not None:
+                        test_info.failure("Invalid line: %s" % line)
+                    continue
+
+                key = match.group(1)
+                key = key.lower().replace(" ", "_")
+                value = match.group(2)
+                value = value.lower()
+                if key in details_table:
+                    if test_info is not None:
+                        test_info.failure("Duplicate key %s" % key)
+                    continue
+                details_table[key] = value
+        self.details_txt = details_table
         return True
