@@ -23,6 +23,7 @@
 #include "config_settings.h"
 #include "info.h"
 #include "target_config.h"
+#include "util.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -118,6 +119,13 @@ void main_force_msc_disconnect_event(void)
 void USBD_SignalHandler()
 {
     isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+}
+
+void HardFault_Handler()
+{
+    util_assert(0);
+    NVIC_SystemReset();
+    while (1); // Wait for reset
 }
 
 __task void main_task(void)

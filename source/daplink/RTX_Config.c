@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 #include "RTL.h"
+#include "util.h"
+#include "IO_config.h" // NVIC_SystemReset
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -182,9 +184,24 @@ void os_error (U32 err_code) {
   /* This function is called when a runtime error is detected. Parameter */
   /* 'err_code' holds the runtime error code (defined in RTL.H).         */
 
-  /* HERE: include optional code to be executed on runtime error. */
-  for (;;)
-    err_code = err_code;
+  switch (err_code) {
+    case OS_ERR_STK_OVF:
+      util_assert(0);
+      break;
+    case OS_ERR_FIFO_OVF:
+      util_assert(0);
+      break;
+    case OS_ERR_MBX_OVF:
+      util_assert(0);
+      break;
+    default:
+      util_assert(0);
+      break;
+  }
+
+  NVIC_SystemReset();
+
+  for (;;); // Wait for reset
 }
 
 

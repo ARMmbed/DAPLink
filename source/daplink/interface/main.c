@@ -30,6 +30,7 @@
 #include "virtual_fs_user.h"
 #include "config_settings.h"
 #include "daplink.h"
+#include "util.h"
 
 // Event flags for main task
 // Timers events
@@ -186,6 +187,13 @@ void main_disable_debug_event(void)
 void USBD_SignalHandler()
 {
     isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+}
+
+void HardFault_Handler()
+{
+    util_assert(0);
+    NVIC_SystemReset();
+    while (1); // Wait for reset
 }
 
 os_mbx_declare(serial_mailbox, 20);
