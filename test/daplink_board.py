@@ -94,6 +94,60 @@ def _get_board_endpoints(unique_id):
     return None
 
 
+def _parse_kvp_file(file_path, parent_test=None):
+    """Parse details.txt and return True if successful"""
+    test_info = None
+    kvp = {}
+    if parent_test is not None:
+        test_info = parent_test.create_subtest('parse_kvp_file')
+    line_format = re.compile("^([a-zA-Z0-9 ]+): +(.+)$")
+    if not os.path.isfile(file_path):
+        return kvp
+
+    with open(file_path, "r") as file_handle:
+        for line in file_handle:
+            if len(line) <= 0:
+                if test_info is not None:
+                    test_info.failure("Empty line in %s" % file_path)
+                continue
+
+            if line[0] == '#':
+                # The line is a comment
+                continue
+
+            match = line_format.match(line)
+            if match is None:
+                if test_info is not None:
+                    test_info.failure("Invalid line: %s" % line)
+                continue
+
+            key = match.group(1)
+            key = key.lower().replace(" ", "_")
+            value = match.group(2)
+            value = value.lower()
+            if key in kvp:
+                if test_info is not None:
+                    test_info.failure("Duplicate key %s" % key)
+                continue
+            kvp[key] = value
+    return kvp
+
+
+class AssertInfo(object):
+
+    def __init__(self, file, line):
+        self._file = file
+        self._line = line
+    
+    @property
+    def file(self):
+        return self._file
+        
+    @property
+    def line(self):
+        return self._line
+        
+
 class DaplinkBoard:
 
 
@@ -123,6 +177,7 @@ class DaplinkBoard:
         self._target_hex_path = None
         self._target_bin_path = None
         self._mode = None
+        self._assert = None
         self._update_board_info()
 
     def get_unique_id(self):
@@ -147,8 +202,7 @@ class DaplinkBoard:
         return None if there there is no failure
         """
         msg = None
-        fail_file = os.path.normpath(self.get_mount_point() +
-                                     os.sep + 'FAIL.TXT')
+        fail_file = self.get_file_path('FAIL.TXT')
         if not self.get_connected():
             raise Exception('Board not connected')
         if os.path.isfile(fail_file):
@@ -156,10 +210,18 @@ class DaplinkBoard:
                 msg = fail_file_handle.read()
         return msg
 
+    def get_assert_info(self):
+        """Return an AssertInfo if an assert occurred, else None"""
+        return self._assert
+
     def get_mode(self):
         """Return either MODE_IF or MODE_BL"""
         assert self._mode in (DaplinkBoard.MODE_BL, DaplinkBoard.MODE_IF)
         return self._mode
+
+    def get_file_path(self, file):
+        """Convenience function to the path to a file on the drive"""
+        return os.path.normpath(self.mount_point + os.sep + file)
 
     def get_target_hex_path(self):
         assert self._target_firmware_present
@@ -178,15 +240,19 @@ class DaplinkBoard:
             # No mode change needed
             return
 
+        start_bl_path = self.get_file_path('START_BL.CFG')
+        start_if_path = self.get_file_path('START_IF.CFG')
         if mode is self.MODE_BL:
             test_info.info("changing mode IF -> BL")
             # Create file to enter BL mode
-            with open(self.start_bl_path, 'wb') as _:
+            start_bl_path = self.get_file_path('START_BL.CFG')
+            with open(start_bl_path, 'wb') as _:
                 pass
         elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
             # Create file to enter BL mode
-            with open(self.start_if_path, 'wb') as _:
+            start_if_path = self.get_file_path('START_IF.CFG')
+            with open(start_if_path, 'wb') as _:
                 pass
         else:
             test_info.warning("Board is in unknown mode")
@@ -301,7 +367,7 @@ class DaplinkBoard:
         trail_white_re = re.compile(trail_white)
         end_of_file_re = re.compile(end_of_file)
         for filename in files:
-            filename = os.path.normpath(self.mount_point + os.sep + filename)
+            filename = self.get_file_path(filename)
             with open(filename, 'rb') as file_handle:
                 file_contents = file_handle.read()
             if non_ascii_re.search(file_contents):
@@ -328,7 +394,7 @@ class DaplinkBoard:
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as firmware_file:
             data = firmware_file.read()
-        out_file = os.path.normpath(self.mount_point + os.sep + filename)
+        out_file = self.get_file_path(filename)
         start = time.time()
         with open(out_file, 'wb') as firmware_file:
             firmware_file.write(data)
@@ -384,7 +450,9 @@ class DaplinkBoard:
         self.board_id = int(self.unique_id[0:4], 16)
 
         # Note - Some legacy boards might not have details.txt
-        self._parse_details_txt()
+        details_txt_path = self.get_file_path("details.txt")
+        self.details_txt = _parse_kvp_file(details_txt_path)
+        self._parse_assert_txt()
 
         self.mode = None
         if DaplinkBoard.KEY_MODE in self.details_txt:
@@ -392,21 +460,14 @@ class DaplinkBoard:
         else:
             # TODO - remove file check when old bootloader have been
             # updated
-            check_bl_path = os.path.normpath(self.mount_point +
-                                            os.sep + 'HELP_FAQ.HTM')
-            check_if_path = os.path.normpath(self.mount_point +
-                                            os.sep + 'MBED.HTM')
+            check_bl_path = self.get_file_path('HELP_FAQ.HTM')
+            check_if_path = self.get_file_path('MBED.HTM')
             if os.path.isfile(check_bl_path):
                 self._mode = self.MODE_BL
             elif os.path.isfile(check_if_path):
                 self._mode = self.MODE_IF
             else:
                 raise Exception("Could not determine board mode!")
-
-        self.start_bl_path = os.path.normpath(self.mount_point +
-                                              os.sep + 'START_BL.CFG')
-        self.start_if_path = os.path.normpath(self.mount_point +
-                                              os.sep + 'START_IF.CFG')
         return True
 
     def test_details_txt(self, parent_test):
@@ -431,18 +492,20 @@ class DaplinkBoard:
         # 3. format is key : value
         # 4. required keys are present
         # 5. optional keys have the expected format
-        if not self._parse_details_txt(test_info):
+        details_txt_path = self.get_file_path("details.txt")
+        details_txt = _parse_kvp_file(details_txt_path, test_info)
+        if not details_txt:
             test_info.failure("Could not parse details.txt")
             return
 
         # Check for required keys
         required_keys = required_key_and_format.keys()
         for key in required_keys:
-            if not key in self.details_txt:
+            if not key in details_txt:
                 test_info.failure("Missing detail.txt entry: %s" % key)
                 continue
 
-            value = self.details_txt[key]
+            value = details_txt[key]
             pattern = required_key_and_format[key]
             if pattern.match(value) is None:
                 test_info.failure("Bad format detail.txt %s: %s" % (key, value))
@@ -450,10 +513,10 @@ class DaplinkBoard:
         # Check format of optional values
         optional = optional_key_and_format.keys()
         for key in optional_key_and_format:
-            if not key in self.details_txt:
+            if not key in details_txt:
                 continue
 
-            value = self.details_txt[key]
+            value = details_txt[key]
             pattern = optional_key_and_format[key]
             if pattern.match(value) is None:
                 test_info.failure("Bad format detail.txt %s: %s" % (key, value))
@@ -461,10 +524,10 @@ class DaplinkBoard:
         # Check details.txt contents
         details_unique_id = None
         details_hdk_id = None
-        if DaplinkBoard.KEY_UNIQUE_ID in self.details_txt:
-            details_unique_id = self.details_txt[DaplinkBoard.KEY_UNIQUE_ID]
-        if DaplinkBoard.KEY_HDK_ID in self.details_txt:
-            details_hdk_id = self.details_txt[DaplinkBoard.KEY_HDK_ID]
+        if DaplinkBoard.KEY_UNIQUE_ID in details_txt:
+            details_unique_id = details_txt[DaplinkBoard.KEY_UNIQUE_ID]
+        if DaplinkBoard.KEY_HDK_ID in details_txt:
+            details_hdk_id = details_txt[DaplinkBoard.KEY_HDK_ID]
         if details_unique_id is not None:
             if details_unique_id != self.unique_id:
                 test_info.failure("Unique ID mismatch in details.txt")
@@ -473,40 +536,14 @@ class DaplinkBoard:
                     test_info.failure("HDK ID is not the last 8 "
                                       "digits of unique ID")
 
-    def _parse_details_txt(self, test_info=None):
-        """Parse details.txt and return True if successful"""
-        filename = os.path.normpath(self.mount_point + os.sep + "details.txt")
-        line_format = re.compile("^([a-zA-Z0-9 ]+): +(.+)$")
-        if not os.path.isfile(filename):
-            self.details_txt = {}
-            return False
+    def _parse_assert_txt(self):
+        file_path = self.get_file_path("assert.txt")
+        if not os.path.isfile(file_path):
+            self._assert = None
+            return
 
-        details_table = {}
-        with open(filename, "r") as file_handle:
-            for line in file_handle:
-                if len(line) <= 0:
-                    if test_info is not None:
-                        test_info.failure("Empty line in details.txt")
-                    continue
+        assert_table = _parse_kvp_file(file_path)
+        assert "file" in assert_table
+        assert "line" in assert_table
 
-                if line[0] == '#':
-                    # The line is a comment
-                    continue
-
-                match = line_format.match(line)
-                if match is None:
-                    if test_info is not None:
-                        test_info.failure("Invalid line: %s" % line)
-                    continue
-
-                key = match.group(1)
-                key = key.lower().replace(" ", "_")
-                value = match.group(2)
-                value = value.lower()
-                if key in details_table:
-                    if test_info is not None:
-                        test_info.failure("Duplicate key %s" % key)
-                    continue
-                details_table[key] = value
-        self.details_txt = details_table
-        return True
+        self._assert = AssertInfo(assert_table["file"], assert_table['line'])
