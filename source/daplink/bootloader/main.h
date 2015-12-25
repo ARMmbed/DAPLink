@@ -37,8 +37,7 @@ typedef enum {
     MAIN_USB_CONNECTING,         /*!< MAIN_USB_CONNECTING state for a USB */
     MAIN_USB_CONNECTED,          /*!< MAIN_USB_CONNECTED state for a USB */
     MAIN_USB_CHECK_CONNECTED,    /*!< MAIN_USB_CHECK_CONNECTED state for a USB */
-    MAIN_USB_DISCONNECTING,      /*!< MAIN_USB_DISCONNECTING state for a USB */
-    MAIN_USB_DISCONNECT_CONNECT  /*!< MAIN_USB_DISCONNECT_CONNECT state for a USB */
+    MAIN_USB_DISCONNECTING       /*!< MAIN_USB_DISCONNECTING state for a USB */
 } main_usb_connect_t;
 
 /**

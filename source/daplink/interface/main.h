@@ -25,19 +25,13 @@ typedef enum main_led_state {
     MAIN_LED_FLASH_PERMANENT
 } main_led_state_t;
 
-typedef enum main_usb_busy {
-    USB_IDLE,
-    USB_ACTIVE
-} main_usb_busy_t;
-
 typedef enum main_usb_connect {
     USB_DISCONNECTED,
     USB_CONNECTING,
     USB_CONNECTED,
     USB_CHECK_CONNECTED,
     USB_CONFIGURED,
-    USB_DISCONNECTING,
-    USB_DISCONNECT_CONNECT
+    USB_DISCONNECTING
 } main_usb_connect_t;
 
 typedef enum main_reset_state {
