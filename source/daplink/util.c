@@ -18,6 +18,8 @@
 
 #include "util.h"
 #include "config_settings.h"
+#include "virtual_fs_user.h"
+#include "cortex_m.h"
 
 
 uint32_t util_write_hex8(char * str, uint8_t value)
@@ -102,5 +104,31 @@ uint32_t util_write_string(char * str, const char * data)
 
 void _util_assert(const char * filename, uint16_t line)
 {
-    config_ram_set_assert(filename, line);
+    bool assert_set;
+    cortex_int_state_t int_state;
+
+    int_state = cortex_int_get_and_disable();
+
+    // Only write the assert if there is not already one
+    assert_set = config_ram_get_assert(0, 0, 0);
+    if (!assert_set) {
+        config_ram_set_assert(filename, line);
+    }
+
+    cortex_int_restore(int_state);
+
+    // Start a remount if this is the first assert
+    // Do not call vfs_user_remount from an ISR!
+    if (!assert_set && !cortex_in_isr()) {
+        vfs_user_remount();
+    }
+}
+
+void util_assert_clear()
+{
+    cortex_int_state_t int_state;
+
+    int_state = cortex_int_get_and_disable();
+    config_ram_clear_assert();
+    cortex_int_restore(int_state);
 }

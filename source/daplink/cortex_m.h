@@ -17,6 +17,9 @@
 #define CORTEX_M_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#include "IO_config.h"
 
 typedef int cortex_int_state_t;
 
@@ -34,6 +37,12 @@ static void cortex_int_restore(cortex_int_state_t state)
     if (!state) {
         __enable_irq();
     }
+}
+
+__attribute__((always_inline))
+static bool cortex_in_isr(void)
+{
+    return (__get_xPSR() & 0x1F) != 0;
 }
 
 #endif

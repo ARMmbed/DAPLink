@@ -397,7 +397,7 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         }
     } else if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
-            config_ram_clear_assert();
+            util_assert_clear();
         }
     }
 }
