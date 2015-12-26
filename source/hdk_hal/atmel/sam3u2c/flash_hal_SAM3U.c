@@ -143,10 +143,10 @@ uint32_t EraseSector(uint32_t adr) {
   //
 	// Return value 0 == O.K.
 	// Return value 1 == Error
-	// Application assumes that this function always erases 4 KB
-	// Application always calls this function with 4 KB aligned addresses
+	// Application assumes that this function always erases 1 KB
+	// Application always calls this function with 1 KB aligned addresses
 	//
-	NumPagesLeft = 0x1000 >> 8;                                         // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 4 KB sectors
+	NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB sectors
   do {
     _WritePage(adr, (volatile uint32_t*)0, 1);
     adr += (1 << 8);

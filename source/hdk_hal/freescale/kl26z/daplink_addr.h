@@ -47,6 +47,11 @@
 #define DAPLINK_RAM_SHARED_START        0x20002F00
 #define DAPLINK_RAM_SHARED_SIZE         0x00000100
 
+/* Flash Programming Info */
+
+#define DAPLINK_SECTOR_SIZE             0x00000400
+#define DAPLINK_MIN_WRITE_SIZE          0x00000100
+
 /* Current build */
 
 #if defined(DAPLINK_BL)

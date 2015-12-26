@@ -21,6 +21,8 @@
 #include <stdbool.h>
 
 #include "virtual_fs.h"
+#include "target_flash.h"
+#include "error.h"
 
 #ifdef __cplusplus
   extern "C" {
@@ -31,11 +33,17 @@ extern const vfs_filename_t daplink_drive_name;
 extern const vfs_filename_t daplink_url_name;
 extern const char * const daplink_target_url;
 
+
+/* Callable from anywhere */
+
 // Enable or disable the virtual filesystem
 void vfs_user_enable(bool enabled);
 
 // Remount the virtual filesystem
 void vfs_user_remount(void);
+
+
+/* Callable only from the thread running virtual_fs_user.h */
 
 // Initialize the VFS user code
 // Must be called after USB has been initialized (usbd_init())
@@ -45,6 +53,7 @@ void vfs_user_init(bool enabled);
 // Run the vfs_user state machine
 // Notes: Must only be called from the thread runnning USB
 void vfs_user_periodic(uint32_t elapsed_ms);
+
 
 #ifdef __cplusplus
 }
