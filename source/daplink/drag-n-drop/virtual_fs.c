@@ -315,7 +315,7 @@ uint32_t vfs_get_total_size()
 
 vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
 {
-    uint8_t cluster_idx = fat_idx;
+    uint32_t first_cluster;
     FatDirectoryEntry_t * de;
     uint32_t clusters;
     uint32_t cluster_size;
@@ -326,7 +326,9 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     clusters = (len + cluster_size - 1) / cluster_size;
 
     // Write the cluster chain to the fat table
+    first_cluster = 0;
     if (len > 0) {
+        first_cluster = fat_idx;
         for (i = 0; i < clusters - 1; i++) {
             write_fat(&fat, fat_idx, fat_idx + 1);
             fat_idx++;
@@ -342,8 +344,8 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     memcpy(de, &dir_entry_tmpl, sizeof(dir_entry_tmpl));
     memcpy(de->filename, filename, 11);
     de->filesize = len;
-    de->first_cluster_high_16 = (cluster_idx >> 16) & 0xFFFF;
-    de->first_cluster_low_16 = (cluster_idx >> 0) & 0xFFFF;
+    de->first_cluster_high_16 = (first_cluster >> 16) & 0xFFFF;
+    de->first_cluster_low_16 = (first_cluster >> 0) & 0xFFFF;
 
     // Update virtual media
     virtual_media[virtual_media_idx].read_cb = read_zero;
