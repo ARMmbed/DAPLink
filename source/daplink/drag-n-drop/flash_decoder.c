@@ -272,9 +272,16 @@ static error_t get_flash(flash_decoder_type_t type, uint32_t addr, bool addr_val
         flash_start_local = target_device.flash_start;
         flash_intf_local = flash_intf_target;
     } else if (!daplink_is_bootloader() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {
-        // TODO - set IAP flash
-        util_assert(0);
-        status = ERROR_FAILURE;
+        if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
+            // Address is wrong so display error message
+            status = ERROR_FD_BL_UPDT_ADDR_WRONG;
+            flash_start_local = 0;
+            flash_intf_local = 0;
+        } else {
+            // Setup for update
+            flash_start_local = DAPLINK_ROM_BL_START;
+            flash_intf_local = flash_intf_iap_protected;
+        }
     } else if (!(daplink_is_interface()) && (FLASH_DECODER_TYPE_INTERFACE == type)) {
         if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
             // Address is wrong so display error message

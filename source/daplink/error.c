@@ -76,6 +76,8 @@ static const char *const error_message[] = {
 
     /* Flash decoder errors */
 
+    // ERROR_FD_BL_UPDT_ADDR_WRONG
+    "The starting address for the bootloader update is wrong.",
     // ERROR_FD_INTF_UPDT_ADDR_WRONG
     "The starting address for the interface update is wrong.",
     // ERROR_FD_UNSUPPORTED_UPDATE
@@ -93,6 +95,14 @@ static const char *const error_message[] = {
     "In application programming sector erase failed.",
     // ERROR_IAP_ERASE_ALL
     "In application programming mass erase failed.",
+    // ERROR_IAP_OUT_OF_BOUNDS
+    "In application programming aborted due to an out of bounds address.",
+    // ERROR_IAP_UPDT_NOT_SUPPORTED
+    "In application programming not supported on this device.",
+    // ERROR_IAP_UPDT_INCOMPLETE
+    "In application programming failed because the update sent was incomplete.",
+    // ERROR_BL_UPDT_BAD_CRC
+    "The bootloader CRC did not pass.",
 
 };
 COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
