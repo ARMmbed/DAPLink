@@ -102,10 +102,14 @@ uint32_t util_write_string(char * str, const char * data)
     return pos;
 }
 
-void _util_assert(const char * filename, uint16_t line)
+void _util_assert(bool expression, const char * filename, uint16_t line)
 {
     bool assert_set;
     cortex_int_state_t int_state;
+
+    if (expression) {
+        return;
+    }
 
     int_state = cortex_int_get_and_disable();
 
