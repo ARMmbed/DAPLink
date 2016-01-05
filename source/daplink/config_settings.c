@@ -71,6 +71,8 @@ typedef struct __attribute__ ((__packed__)) cfg_ram {
 
     // Configurable values
     uint8_t hold_in_bl;
+    char assert_file_name[64 + 1];
+    uint16_t assert_line;
 
     // Add new members here
 
@@ -86,7 +88,7 @@ static cfg_setting_t config_rom_copy;
 #endif
 
 // Configuration RAM
-static volatile cfg_ram_t config_ram __attribute__((section("cfgram"), zero_init));
+static cfg_ram_t config_ram __attribute__((section("cfgram"), zero_init));
 // Ram copy of RAM config
 static cfg_ram_t config_ram_copy;
 
@@ -145,6 +147,7 @@ static void program_cfg(cfg_setting_t* new_cfg)
 
 void config_init()
 {
+    uint32_t new_size;
 #if FLASH_WRITE_ALLOWED
     Init(0,0,0);
 #endif
@@ -177,15 +180,24 @@ void config_init()
     memset(&config_ram_copy, 0, sizeof(config_ram_copy));
 
     // Read settings from RAM if the key is valid
+    new_size = sizeof(config_ram);
     if (CFG_KEY == config_ram.key) {
         uint32_t size = MIN(config_ram.size, sizeof(config_ram));
+        new_size = MAX(config_ram.size, sizeof(config_ram));
         memcpy(&config_ram_copy, (void*)&config_ram, size);
+        config_ram_copy.assert_file_name[sizeof(config_ram_copy.assert_file_name) - 1] = 0;
     }
 
     // Initialize RAM
     memset((void*)&config_ram, 0, sizeof(config_ram));
     config_ram.key = CFG_KEY;
-    config_ram.size = sizeof(config_ram);
+    config_ram.size = new_size;
+
+    // Copy assert info back over (must be explicitly cleared)
+    memcpy(config_ram.assert_file_name,
+           config_ram_copy.assert_file_name,
+           sizeof(config_ram_copy.assert_file_name));
+    config_ram.assert_line =  config_ram_copy.assert_line;
 }
 
 void config_set_auto_rst(bool on)
@@ -206,6 +218,35 @@ void config_ram_set_hold_in_bl(bool hold)
     config_ram.hold_in_bl = hold;
 }
 
+void config_ram_set_assert(const char * file, uint16_t line)
+{
+    // Initialize
+    uint32_t file_name_size = strlen(file) + 1;
+    const char * start;
+    uint32_t assert_buf_size = sizeof(config_ram.assert_file_name);
+    uint32_t copy_size;
+    memset(config_ram.assert_file_name, 0, sizeof(config_ram.assert_file_name));
+
+    // Determine size to copy
+    if (file_name_size <= assert_buf_size) {
+        start = file;
+        copy_size = file_name_size;
+    } else {
+        start = &file[file_name_size - assert_buf_size];
+        copy_size = assert_buf_size;
+    }
+
+    // Write to ram
+    memcpy(config_ram.assert_file_name, start, copy_size);
+    config_ram.assert_line = line;
+}
+
+void config_ram_clear_assert()
+{
+    memset(config_ram.assert_file_name, 0, sizeof(config_ram.assert_file_name));
+    config_ram.assert_line = 0;
+}
+
 bool config_ram_get_hold_in_bl()
 {
     return config_ram.hold_in_bl;
@@ -214,4 +255,41 @@ bool config_ram_get_hold_in_bl()
 bool config_ram_get_initial_hold_in_bl()
 {
     return config_ram_copy.hold_in_bl;
+}
+
+bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line)
+{
+    // Initialize
+    const char * start;
+    uint32_t copy_size;
+    uint32_t assert_size = strlen(config_ram.assert_file_name) + 1;
+    if (0 != buf) {
+        memset(buf, 0, buf_size);
+    }
+    if (0 != line) {
+        *line = 0;
+    }
+
+    // If the string is empty then there is no assert
+    if (0 == config_ram.assert_file_name[0]) {
+        return false;
+    }
+
+    // Determine size to copy
+    if (assert_size <= buf_size) {
+        start = config_ram.assert_file_name;
+        copy_size = assert_size;
+    } else {
+        start = &config_ram.assert_file_name[assert_size - buf_size];
+        copy_size = buf_size;
+    }
+
+    // Copy data over
+    if (0 != buf) {
+        *line = config_ram.assert_line;
+    }
+    if (0 != line) {
+        memcpy(buf, start, copy_size);
+    }
+    return true;
 }

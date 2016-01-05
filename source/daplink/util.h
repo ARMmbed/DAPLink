@@ -17,6 +17,7 @@
 #define UTIL_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "stdint.h"
 
 // Write the value to the address specified and return the size
@@ -27,5 +28,9 @@ uint32_t util_write_uint32(char * str, uint32_t value);
 uint32_t util_write_uint32(char * str, uint32_t value);
 uint32_t util_write_uint32_zp(char * str, uint32_t value, uint16_t total_size);
 uint32_t util_write_string(char * str, const char * data);
+#define util_assert(expression)     _util_assert((expression), __FILE__, __LINE__)
+void util_assert_clear(void);
+
+void _util_assert(bool expression, const char * filename, uint16_t line);
 
 #endif

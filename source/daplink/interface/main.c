@@ -30,6 +30,7 @@
 #include "virtual_fs_user.h"
 #include "config_settings.h"
 #include "daplink.h"
+#include "util.h"
 
 // Event flags for main task
 // Timers events
@@ -37,10 +38,6 @@
 #define FLAGS_MAIN_30MS                 (1 << 1)
 // Reset events
 #define FLAGS_MAIN_RESET                (1 << 2)
-// USB Events
-#define FLAGS_MAIN_MSC_DISCONNECT       (1 << 3)
-#define FLAGS_MAIN_FORCE_MSC_DISCONNECT (1 << 7)
-#define FLAGS_MAIN_MSC_DELAY_DISCONNECT (1 << 8)
 // Other Events
 #define FLAGS_MAIN_POWERDOWN            (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG         (1 << 5)
@@ -71,9 +68,6 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 
 // Global state of usb
 main_usb_connect_t usb_state;
-
-static main_usb_busy_t usb_busy;
-static uint32_t usb_busy_count;
 
 static U64 stk_timer_30_task[TIMER_TASK_30_STACK/8];
 static U64 stk_dap_task[DAP_TASK_STACK/8];
@@ -140,35 +134,6 @@ void main_blink_msc_led(main_led_state_t permanent)
     return;
 }
 
-// MSC data transfer in progress
-void main_usb_busy_event(void) {
-    usb_busy_count = USB_BUSY_TIME;
-    usb_busy = USB_ACTIVE;
-    //os_evt_set(FLAGS_MAIN_USB_BUSY, main_task_id);
-    return;
-}
-
-// A new program has been flashed in the target
-void main_msc_disconnect_event(void)
-{
-    os_evt_set(FLAGS_MAIN_MSC_DISCONNECT, main_task_id);
-    return;
-}
-
-// New data has arrived so the disconnect needs to be aborted
-void main_msc_delay_disconnect_event(void)
-{
-    os_evt_set(FLAGS_MAIN_MSC_DELAY_DISCONNECT, main_task_id);
-    return;
-}
-
-// A failure has occured during msc programming
-void main_force_msc_disconnect_event(void)
-{
-    os_evt_set(FLAGS_MAIN_FORCE_MSC_DISCONNECT, main_task_id);
-    return;
-}
-
 // Power down the interface
 void main_powerdown_event(void)
 {
@@ -186,6 +151,13 @@ void main_disable_debug_event(void)
 void USBD_SignalHandler()
 {
     isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+}
+
+void HardFault_Handler()
+{
+    util_assert(0);
+    NVIC_SystemReset();
+    while (1); // Wait for reset
 }
 
 os_mbx_declare(serial_mailbox, 20);
@@ -294,9 +266,8 @@ __task void main_task(void)
 
     // USB
     usbd_init();
+    vfs_user_enable(true);
     usbd_connect(0);
-    usb_busy = USB_IDLE;
-    usb_busy_count = 0;
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
 
@@ -312,9 +283,6 @@ __task void main_task(void)
                         | FLAGS_MAIN_30MS               // 30mS tick
                         | FLAGS_MAIN_POWERDOWN          // Power down interface
                         | FLAGS_MAIN_DISABLEDEBUG       // Disable target debug
-                        | FLAGS_MAIN_MSC_DISCONNECT     // programming complete - disconnect msc endpoint
-                        | FLAGS_MAIN_MSC_DELAY_DISCONNECT // new data has arrived so delay the disconnect
-                        | FLAGS_MAIN_FORCE_MSC_DISCONNECT // programming failure - force disconnect msc endpoint
                         | FLAGS_MAIN_PROC_USB           // process usb events
                         ,NO_TIMEOUT);
 
@@ -323,26 +291,6 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_PROC_USB) {
             USBD_Handler();
-        }
-
-        if (flags & FLAGS_MAIN_MSC_DELAY_DISCONNECT) {
-            if (USB_DISCONNECT_CONNECT == usb_state) {
-                // Reset the disconnect counter
-                usb_state_count = USB_CONNECT_DELAY;
-            }
-        }
-
-        if (flags & FLAGS_MAIN_MSC_DISCONNECT) {
-            // auto reset the board if configured to do so
-            usb_busy = USB_IDLE;                    // USB not busy
-            usb_state_count = USB_CONNECT_DELAY;
-            usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
-        }
-
-        if (flags & FLAGS_MAIN_FORCE_MSC_DISCONNECT) {
-            usb_busy = USB_IDLE;                    // USB not busy
-            usb_state_count = 0;
-            usb_state = USB_DISCONNECT_CONNECT;     // disconnect the usb
         }
 
         if (flags & FLAGS_MAIN_RESET) {
@@ -369,42 +317,13 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
-            switch (usb_busy) {
-                case USB_ACTIVE:
-                    if (DECZERO(usb_busy_count) == 0) {
-                        usb_busy=USB_IDLE;
-                    }
-                    break;
+            vfs_user_periodic(90); // FLAGS_MAIN_90MS
 
-                case USB_IDLE:
-                default:
-                    break;
-            }
             // Update USB connect status
             switch (usb_state) {
                 case USB_DISCONNECTING:
-                    // Wait until USB is idle before disconnecting
-                    if (usb_busy == USB_IDLE) {
-                        usb_state = USB_DISCONNECTED;
-                    }
-                    break;
-
-                case USB_DISCONNECT_CONNECT:
-                    // Wait until USB is idle before disconnecting
-                    if ((usb_busy == USB_IDLE) && (DECZERO(usb_state_count) == 0)) {
-                        // If hold in bootloader has been set then reset after usb is disconnected
-                        if (config_ram_get_hold_in_bl()) {
-                            NVIC_SystemReset();
-                        }
-                        // Resume the target if configured to do so
-                        if (config_get_auto_rst()) {
-                            target_set_state(RESET_RUN);
-                        }
-                        usb_state = USB_CONNECTING;
-                        // Delay the connecting state before reconnecting to the host - improved usage with VMs
-                        usb_state_count = USB_BUSY_TIME;
-                        USBD_MSC_MediaReady = 0;
-                    }
+                    usb_state = USB_DISCONNECTED;
+                    usbd_connect(0);
                     break;
 
                 case USB_CONNECTING:
@@ -423,8 +342,6 @@ __task void main_task(void)
                             thread_started = 1;
                         }
                         usb_state = USB_CONNECTED;
-                        vfs_user_build_filesystem();
-                        USBD_MSC_MediaReady = 1;
                     }
                     break;
 

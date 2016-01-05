@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 #include "RTL.h"
+#include "util.h"
+#include "IO_config.h" // NVIC_SystemReset
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -28,7 +30,12 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-    #define OS_TASKCNT  6
+    #define OS_TASKCNT    4
+    // Threads with user provided stacks:
+    // -serial_process
+    // -hid_process
+    // -timer_task_30mS
+    // -main_task
 #endif
 
 //   <o>Number of tasks with user-provided stack <0-250>
@@ -36,14 +43,17 @@
 //   <i> The memory space for the stack is provided by the user.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     0
+ #define OS_PRIVCNT     OS_TASKCNT
+ // All tasks use private stacks (aside from background thread)
 #endif
 
 //   <o>Task stack size [bytes] <20-4096:8><#/4>
 //   <i> Set the stack size for tasks which is assigned by the system.
 //   <i> Default: 200
 #ifndef OS_STKSIZE
- #define OS_STKSIZE     200
+    #define OS_STKSIZE     34
+    // Used by:
+    // -os_idle_demon
 #endif
 
 // <q>Check for the stack overflow
@@ -69,10 +79,12 @@
 //   <i> Set the timer clock value for selected timer.
 //   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined(INTERFACE_KL26Z)
-    #define OS_CLOCK       48000000
+  #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z)
+    #define OS_CLOCK    48000000
   #elif defined(INTERFACE_SAM3U2C)
-    #define OS_CLOCK       96000000
+    #define OS_CLOCK    96000000
+  #elif defined(INTERFACE_LPC4322)
+    #define OS_CLOCK    204000000
   #endif
 #endif
 
@@ -167,15 +179,29 @@ void os_tmr_call (U16 info) {
 
 
 /*--------------------------- os_error --------------------------------------*/
-U32 err = 0;
+
 void os_error (U32 err_code) {
   /* This function is called when a runtime error is detected. Parameter */
   /* 'err_code' holds the runtime error code (defined in RTL.H).         */
 
-  /* HERE: include optional code to be executed on runtime error. */
-  err = err_code;
-  err = err;
-  for (;;);
+  switch (err_code) {
+    case OS_ERR_STK_OVF:
+      util_assert(0);
+      break;
+    case OS_ERR_FIFO_OVF:
+      util_assert(0);
+      break;
+    case OS_ERR_MBX_OVF:
+      util_assert(0);
+      break;
+    default:
+      util_assert(0);
+      break;
+  }
+
+  NVIC_SystemReset();
+
+  for (;;); // Wait for reset
 }
 
 

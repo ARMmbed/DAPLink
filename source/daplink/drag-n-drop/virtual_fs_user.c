@@ -31,6 +31,8 @@
 #include "virtual_fs_user.h"
 #include "util.h"
 #include "version_git.h"
+#include "IO_config.h"
+#include "target_reset.h"
 
 typedef struct file_transfer_state {
     vfs_file_t file_to_program;
@@ -42,6 +44,12 @@ typedef struct file_transfer_state {
     bool transfer_finished;
     extension_t file_type;
 } file_transfer_state_t;
+
+typedef enum {
+    VFS_USER_STATE_DISCONNECTED,
+    VFS_USER_STATE_RECONNECTING,
+    VFS_USER_STATE_CONNECTED
+} vfs_user_state_t;
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomidate for hex file programming.
@@ -73,10 +81,35 @@ static const uint8_t mbed_redirect_file[512] =
     "</body>\r\n"
     "</html>\r\n";
 
+static const vfs_filename_t assert_file = "ASSERT  TXT";
+static const uint32_t connect_delay_ms = 0;
+static const uint32_t disconnect_delay_ms = 500;
+static const uint32_t reconnect_delay_ms = 1100;    // Must be above 1s
+
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static target_flash_status_t fail_reason = TARGET_OK;
 static file_transfer_state_t file_transfer_state;
+static char assert_buf[64 + 1];
+static uint16_t assert_line;
 
+// These variables can be access from multiple threads
+// so access to them must be synchronized
+static vfs_user_state_t vfs_state;
+static vfs_user_state_t vfs_state_next;
+static uint32_t vfs_state_remaining_ms;
+
+static OS_MUT sync_mutex;
+static OS_TID sync_thread = 0;
+
+// Synchronization functions
+static void sync_init(void);
+static void sync_assert_usb_thread(void);
+static void sync_lock(void);
+static void sync_unlock(void);
+
+static void vfs_user_disconnect_delay(void);
+static bool changing_state(void);
+static void build_filesystem(void);
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
 static uint32_t get_file_size(vfs_read_cb_t read_func);
@@ -84,6 +117,7 @@ static uint32_t get_file_size(vfs_read_cb_t read_func);
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
+static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void update_transfer_info(extension_t type, const vfs_file_t file, uint32_t sector, uint32_t size);
 static void update_transfer_state(target_flash_status_t status);
@@ -94,9 +128,198 @@ static void tranfer_complete(target_flash_status_t status);
 static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 
+
 // Rebuild the virtual filesystem.  This must only be called
 // when mass storage is inactive.
-void vfs_user_build_filesystem(void)
+void vfs_user_enable(bool enable)
+{
+    sync_lock();
+    if (enable) {
+        vfs_state_remaining_ms = connect_delay_ms;
+        vfs_state_next = VFS_USER_STATE_CONNECTED;
+    } else {
+        vfs_state_remaining_ms = disconnect_delay_ms;
+        vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+    }
+    sync_unlock();
+}
+
+void vfs_user_remount(void)
+{
+    sync_lock();
+    // Only start a remount if in the connected state and not in a transition
+    if (!changing_state() && (VFS_USER_STATE_CONNECTED == vfs_state)) {
+        vfs_state_next = VFS_USER_STATE_RECONNECTING;
+        vfs_state_remaining_ms = disconnect_delay_ms;
+    }
+    sync_unlock();
+}
+
+void vfs_user_init(bool enable)
+{
+    sync_assert_usb_thread();
+
+    build_filesystem();
+    if (enable) {
+        vfs_state = VFS_USER_STATE_CONNECTED;
+        vfs_state_next = VFS_USER_STATE_CONNECTED;
+        USBD_MSC_MediaReady = 1;
+    } else {
+        vfs_state = VFS_USER_STATE_DISCONNECTED;
+        vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+        USBD_MSC_MediaReady = 0;
+    }
+}
+
+void vfs_user_periodic(uint32_t elapsed_ms)
+{
+    vfs_user_state_t vfs_state_local;
+    sync_assert_usb_thread();
+    sync_lock();
+
+    // Return immediately if the desired state has been reached
+    if (!changing_state()) {
+        sync_unlock();
+        return;
+    }
+
+    // Wait until the required amount of time has passed
+    // before changing state
+    if (vfs_state_remaining_ms > 0) {
+        vfs_state_remaining_ms -= MIN(elapsed_ms, vfs_state_remaining_ms);
+        sync_unlock();
+        return;
+    }
+
+    // Transistion to new state
+    vfs_state = vfs_state_next;
+    switch (vfs_state) {
+        case VFS_USER_STATE_RECONNECTING:
+            // Transition back to the connected state
+            vfs_state_next = VFS_USER_STATE_CONNECTED;
+            vfs_state_remaining_ms = reconnect_delay_ms;
+            break;
+        default:
+            // No state change logic required in other states
+            break;
+    }
+    vfs_state_local = vfs_state;
+    sync_unlock();
+
+    // Perform processing from the state change
+    switch (vfs_state_local) {
+        case VFS_USER_STATE_DISCONNECTED:
+            USBD_MSC_MediaReady = 0;
+            break;
+        case VFS_USER_STATE_RECONNECTING:
+            USBD_MSC_MediaReady = 0;
+            // Reset if programming was successful  //TODO - move to flash layer
+            if (daplink_is_bootloader() && (TARGET_OK == fail_reason)) {
+                NVIC_SystemReset();
+            }
+            // If hold in bootloader has been set then reset after usb is disconnected
+            if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
+                NVIC_SystemReset();
+            }
+            // Resume the target if configured to do so //TODO - move to flash layer
+            if (config_get_auto_rst()) {
+                target_set_state(RESET_RUN);
+            }
+            break;
+        case VFS_USER_STATE_CONNECTED:
+            build_filesystem();
+            USBD_MSC_MediaReady = 1;
+            break;
+    }
+    return;
+}
+
+void usbd_msc_init(void)
+{
+    sync_init();
+    build_filesystem();
+    vfs_state = VFS_USER_STATE_DISCONNECTED;
+    vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+    vfs_state_remaining_ms = 0;
+    USBD_MSC_MediaReady = 0;
+}
+
+void usbd_msc_read_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
+{
+    sync_assert_usb_thread();
+
+    // dont proceed if we're not ready
+    if (!USBD_MSC_MediaReady) {
+        return;
+    }
+
+    // indicate msc activity
+    main_blink_msc_led(MAIN_LED_OFF);
+
+    vfs_read(sector, buf, num_of_sectors);
+}
+
+void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
+{
+    sync_assert_usb_thread();
+
+    if (!USBD_MSC_MediaReady) {
+        return;
+    }
+
+    // Restart the disconnect counter on every packet
+    // so the device does not detach in the middle of a
+    // transfer.
+    vfs_user_disconnect_delay();
+
+    if (file_transfer_state.transfer_finished) {
+        debug_msg("%d: %s\r\n", __LINE__, "Transfer_finished - exit");
+        return;
+    }
+
+    debug_msg("sector: %d\r\n", sector);
+
+    // indicate msc activity
+    main_blink_msc_led(MAIN_LED_OFF);
+
+    vfs_write(sector, buf, num_of_sectors);
+    file_data_handler(sector, buf, num_of_sectors);
+}
+
+static void sync_init(void)
+{
+    sync_thread = os_tsk_self();
+    os_mut_init(&sync_mutex);
+}
+
+static void sync_assert_usb_thread(void)
+{
+    util_assert(os_tsk_self() == sync_thread);
+}
+
+static void sync_lock(void)
+{
+    os_mut_wait(&sync_mutex, 0xFFFF);
+}
+
+static void sync_unlock(void)
+{
+    os_mut_release(&sync_mutex);
+}
+
+static void vfs_user_disconnect_delay()
+{
+    if (VFS_USER_STATE_CONNECTED == vfs_state) {
+        vfs_state_remaining_ms = disconnect_delay_ms;
+    }
+}
+
+static bool changing_state()
+{
+    return vfs_state != vfs_state_next;
+}
+
+static void build_filesystem()
 {
     uint32_t file_size;
 
@@ -121,6 +344,12 @@ void vfs_user_build_filesystem(void)
         vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
     }
 
+    // ASSERT.TXT
+    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
+        file_size = get_file_size(read_file_assert_txt);
+        vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+    }
+
     // Set mass storage parameters
     USBD_MSC_MemorySize = vfs_get_total_size();
     USBD_MSC_BlockSize  = VFS_SECTOR_SIZE;
@@ -128,51 +357,6 @@ void vfs_user_build_filesystem(void)
     USBD_MSC_BlockCount = USBD_MSC_MemorySize / USBD_MSC_BlockSize;
     USBD_MSC_BlockBuf   = (uint8_t *)usb_buffer;
 }
-
-void usbd_msc_init(void)
-{
-    vfs_user_build_filesystem();
-    USBD_MSC_MediaReady = __TRUE;
-}
-
-void usbd_msc_read_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
-{
-    // dont proceed if we're not ready
-    if (!USBD_MSC_MediaReady) {
-        return;
-    }
-
-    // indicate msc activity
-    main_blink_msc_led(MAIN_LED_OFF);
-
-    vfs_read(sector, buf, num_of_sectors);
-}
-
-void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
-{
-    if (!USBD_MSC_MediaReady) {
-        return;
-    }
-
-    // Restart the disconnect counter on every packet
-    // so the device does not detach in the middle of a
-    // transfer.
-    main_msc_delay_disconnect_event();
-
-    if (file_transfer_state.transfer_finished) {
-        debug_msg("%d: %s\r\n", __LINE__, "Transfer_finished - exit");
-        return;
-    }
-
-    debug_msg("sector: %d\r\n", sector);
-
-    // indicate msc activity
-    main_blink_msc_led(MAIN_LED_OFF);
-
-    vfs_write(sector, buf, num_of_sectors);
-    file_data_handler(sector, buf, num_of_sectors);
-}
-
 
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
@@ -202,9 +386,17 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(false);
             tranfer_complete(TARGET_OK);
+        } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
+            // Test asserts
+            util_assert(0);
+        } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
+            // Remount to update the drive
+            tranfer_complete(TARGET_OK);
         }
     } else if (VFS_FILE_DELETED == change) {
-        // No delete events to handle
+        if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
+            util_assert_clear();
+        }
     }
 }
 
@@ -395,6 +587,27 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
     return size;
 }
 
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
+{
+    uint32_t pos;
+    char * buf = (char *)data;
+    if (sector_offset != 0) {
+        return 0;
+    }
+    pos = 0;
+    
+    pos += util_write_string(buf + pos, "Assert\r\n");
+    pos += util_write_string(buf + pos, "File: ");
+    pos += util_write_string(buf + pos, assert_buf);
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Line: ");
+    pos += util_write_uint32(buf + pos, assert_line);
+    pos += util_write_string(buf + pos, "\r\n");
+
+    return pos;
+}
+
 // Update info about the current file transfer and check for completion
 // type     - Format of the file taht is being sent.  Currently BIN and HEX are supported.
 // de       - Directory entry in the VFS of the file being written.  Set to null if unused.
@@ -511,7 +724,7 @@ static extension_t identify_start_sequence(const uint8_t *buf)
 static void start_disconnect_reconnect_timer(target_flash_status_t status)
 {
     fail_reason = status;
-    main_msc_disconnect_event();
+    vfs_user_remount();
 }
 
 // Complete the transfer with the given status.  After this
