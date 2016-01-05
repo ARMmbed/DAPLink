@@ -20,5 +20,6 @@
 
 uint16_t    crc16(const void * data, int nBytes);
 uint32_t    crc32(const void * data, int nBytes);
+uint32_t    crc32_continue(uint32_t prev_crc, const void * data, int nBytes);
 
 #endif /* _crc_h */
