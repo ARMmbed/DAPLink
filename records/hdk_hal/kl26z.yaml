@@ -5,6 +5,7 @@ common:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
         - DAPLINK_HDK_ID=0x646c0001  # DAPLINK_HDK_ID_KL26
+        - BL_TARGET_FLASH
     includes:
         - source/hdk_hal/freescale/kl26z
         - source/hdk_hal/freescale/iap/devices/MKL26Z4

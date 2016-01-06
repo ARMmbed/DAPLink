@@ -35,56 +35,6 @@
 #include "fsl_platform_status.h"
 #include "string.h"
 
-#if BL_TARGET_FLASH
-
-//! @brief A static buffer used to hold flash_run_command()
-#define  FLASH_RUN_COMMAND_FUNCTION_MAX_SIZE  32
-static uint8_t flashRunCommand[FLASH_RUN_COMMAND_FUNCTION_MAX_SIZE];
-//! @brief A function pointer used to point to relocated flash_run_command()
-#define FTFx_REG_ACCESS_TYPE  volatile uint8_t *
-static void (*callFlashRunCommand)(FTFx_REG_ACCESS_TYPE);
-
-//! @brief Run flash command
-//!
-//! This function should be copied to RAM for execution to make sure that code works
-//! properly even flash cache is disabled.
-//! It is for flash-resident bootloader only, not technically required for ROM or
-//! flashloader (RAM-resident bootloader).
-void flash_run_command(FTFx_REG_ACCESS_TYPE ftfx_fstat)
-{
-    // clear CCIF bit
-    *ftfx_fstat = FTFx_FSTAT_CCIF_MASK;
-
-    // check CCIF bit of the flash status register, wait till it is set
-    while (!((*ftfx_fstat) & FTFx_FSTAT_CCIF_MASK));
-}
-
-//! @brief Be used for determining the size of flash_run_command()
-//!
-//! This function must be defined that lexically follows flash_run_command(),
-//! so we can determine the size of flash_run_command() at runtime and not worry
-//! about toolchain or code generation differences.
-void flash_run_command_end(void)
-{}
-
-//! @brief Copy flash_run_command() to RAM
-//!
-//! This function copys the memory between flash_run_command() and flash_run_command_end()
-//! into the buffer which is also means that copying flash_run_command() to RAM.
-void copy_flash_run_command(void)
-{
-    // Calculate the valid length of flash_run_command() memory
-    uint32_t funcLength = (uint32_t)flash_run_command_end - (uint32_t)flash_run_command;
-
-    assert(funcLength <= FLASH_RUN_COMMAND_FUNCTION_MAX_SIZE);
-
-    // Since the value of ARM function pointer is always odd, but the real start address
-    // of function memory should be even, that's why -1 and +1 operation exist.
-    memcpy((void *)flashRunCommand, (void *)((uint32_t)flash_run_command - 1), funcLength);
-    callFlashRunCommand = (void (*)(FTFx_REG_ACCESS_TYPE))((uint32_t)flashRunCommand + 1);
-}
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
 //!
 //! @brief Flash Command Sequence
@@ -98,23 +48,19 @@ void copy_flash_run_command(void)
 //! @return An error code or kStatus_Success
 //!
 ////////////////////////////////////////////////////////////////////////////////
+#if BL_TARGET_FLASH
+__attribute__((section("ram_func")))
+#endif
 status_t flash_command_sequence(void)
 {
     // clear RDCOLERR & ACCERR & FPVIOL flag in flash status register
     FTFx_FSTAT_WR(FTFx, FTFx_FSTAT_RDCOLERR_MASK | FTFx_FSTAT_ACCERR_MASK | FTFx_FSTAT_FPVIOL_MASK);
 
-#if BL_TARGET_FLASH
-    // We pass the ftfx_fstat address as a parameter to flash_run_comamnd() instead of using
-    // pre-processed MICRO sentences or operating global variable in flash_run_comamnd()
-    // to make sure that flash_run_command() will be compiled into position-independent code (PIC).
-    callFlashRunCommand((FTFx_REG_ACCESS_TYPE)(&HW_FTFx_FSTAT(FTFx_BASE)));
-#else
     // clear CCIF bit
     FTFx_FSTAT_WR(FTFx, FTFx_FSTAT_CCIF_MASK);
 
     // check CCIF bit of the flash status register, wait till it is set
     while (!(FTFx_FSTAT_RD(FTFx) & FTFx_FSTAT_CCIF_MASK));
-#endif
 
     // Check error bits
     // Get flash status register value
