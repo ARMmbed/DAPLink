@@ -215,6 +215,7 @@ def test_mass_storage(board, parent_test):
     test = MassStorageTester(board, test_info, "Load hex with flushes")
     test.set_programming_data(hex_file_contents, 'image.hex')
     test.set_expected_data(bin_file_contents)
+    test.set_flush_size(0x1000)
     test.run()
 
     # Test loading a binary smaller than a sector
