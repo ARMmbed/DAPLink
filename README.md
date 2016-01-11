@@ -12,7 +12,6 @@ Skip any step where a compatible tool already exists
 > git clone https://github.com/mbedmicro/DAPLink
 > pip install virtualenv
 > virtualenv venv
-> 
 ```
 
 ## Develop
