@@ -58,7 +58,7 @@ def calc_timeout(data, baud):
     return 12 * len(data) / float(baud) + 0.2
 
 
-def test_serial(board, parent_test):
+def test_serial(workspace, parent_test):
     """Test the serial port endpoint
 
     Requirements:
@@ -71,7 +71,7 @@ def test_serial(board, parent_test):
         True if the test passed, False otherwise
     """
     test_info = parent_test.create_subtest("Serial test")
-    port = board.get_serial_port()
+    port = workspace.board.get_serial_port()
     test_info.info("Testing serial port %s" % port)
 
     # Note: OSX sends a break command when a serial port is closed.
