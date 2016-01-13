@@ -70,6 +70,7 @@ debug.txt
 
 # virtualenv
 env/
+venv/
 
 # release
 uvision_release/
