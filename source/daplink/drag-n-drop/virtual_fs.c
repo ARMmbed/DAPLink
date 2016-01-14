@@ -20,6 +20,7 @@
 #include "config_settings.h"
 #include "compiler.h"
 #include "macro.h"
+#include "util.h"
 
 #include "daplink_debug.h"
 
@@ -106,6 +107,8 @@ static void write_dir1(uint32_t offset, const uint8_t* data, uint32_t size);
 static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
                                 vfs_file_t file, vfs_file_t new_file_data);
 static uint32_t cluster_to_sector(uint32_t cluster_idx);
+static bool filename_valid(const vfs_filename_t filename);
+static bool filename_character_valid(char character);
 
 // If sector size changes update comment below
 COMPILER_ASSERT(0x0200 == VFS_SECTOR_SIZE);
@@ -315,18 +318,22 @@ uint32_t vfs_get_total_size()
 
 vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
 {
-    uint8_t cluster_idx = fat_idx;
+    uint32_t first_cluster;
     FatDirectoryEntry_t * de;
     uint32_t clusters;
     uint32_t cluster_size;
     uint32_t i;
+
+    util_assert(filename_valid(filename));
 
     // Compute the number of clusters in the file
     cluster_size = mbr.bytes_per_sector * mbr.sectors_per_cluster;
     clusters = (len + cluster_size - 1) / cluster_size;
 
     // Write the cluster chain to the fat table
+    first_cluster = 0;
     if (len > 0) {
+        first_cluster = fat_idx;
         for (i = 0; i < clusters - 1; i++) {
             write_fat(&fat, fat_idx, fat_idx + 1);
             fat_idx++;
@@ -342,8 +349,8 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     memcpy(de, &dir_entry_tmpl, sizeof(dir_entry_tmpl));
     memcpy(de->filename, filename, 11);
     de->filesize = len;
-    de->first_cluster_high_16 = (cluster_idx >> 16) & 0xFFFF;
-    de->first_cluster_low_16 = (cluster_idx >> 0) & 0xFFFF;
+    de->first_cluster_high_16 = (first_cluster >> 16) & 0xFFFF;
+    de->first_cluster_low_16 = (first_cluster >> 0) & 0xFFFF;
 
     // Update virtual media
     virtual_media[virtual_media_idx].read_cb = read_zero;
@@ -510,26 +517,6 @@ static uint32_t read_dir1(uint32_t sector_offset, uint8_t* data, uint32_t num_se
     return read_size;
 }
 
-static bool filename_valid(vfs_filename_t filename)
-{
-    const char valid_char[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ _";
-    uint32_t i, j;
-
-    for (i = 0; i < sizeof(vfs_filename_t); i++) {
-        bool valid = false;
-        for (j = 0; j < sizeof(valid_char) - 1; j++) {
-            if (filename[i] == valid_char[j]) {
-                valid = true;
-                break;
-            }
-        }
-        if (!valid) {
-            return false;
-        }
-    }
-    return true;
-}
-
 static void write_dir1(uint32_t sector_offset, const uint8_t* data, uint32_t num_sectors)
 {
     root_dir_t * old_dir;
@@ -581,4 +568,64 @@ static uint32_t cluster_to_sector(uint32_t cluster_idx)
 {
     uint32_t sectors_before_data = data_start / mbr.bytes_per_sector;
     return sectors_before_data + (cluster_idx - 2) * mbr.sectors_per_cluster;
+}
+
+static bool filename_valid(const vfs_filename_t  filename)
+{
+    // Information on valid 8.3 filenames can be found in
+    // the microsoft hardware whitepaper:
+    //
+    // Microsoft Extensible Firmware Initiative
+    // FAT32 File System Specification
+    // FAT: General Overview of On-Disk Format
+
+    const char invalid_starting_chars[] = {
+        0xE5, // Deleted
+        0x00, // Deleted (and all following entries are free)
+        0x20, // Space not allowed as first character
+    };
+    uint32_t i;
+
+    // Check for invalid starting characters
+    for (i = 0; i < sizeof(invalid_starting_chars); i++) {
+        if (invalid_starting_chars[i] == filename[0]) {
+            return false;
+        }
+    }
+
+    // Make sure all the characters are valid
+    for (i = 0; i < sizeof(filename); i++) {
+        if (!filename_character_valid(filename[i])) {
+            return false;
+        }
+    }
+
+    // All checks have passed so filename is valid
+    return true;
+}
+
+static bool filename_character_valid(char character)
+{
+    const char invalid_chars[] = {0x22, 0x2A, 0x2B, 0x2C, 0x2E, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x5B, 0x5C, 0x5D, 0x7C};
+    uint32_t i;
+
+    // Lower case characters are not allowed
+    if ((character >= 'a') && (character <= 'z')) {
+        return false;
+    }
+
+    // Values less than 0x20 are not allowed except 0x5
+    if ((character < 0x20) && (character != 0x5)) {
+        return false;
+    }
+
+    // Check for special characters that are not allowed
+    for (i = 0; i < sizeof(invalid_chars); i++) {
+        if (invalid_chars[i] == character) {
+            return false;
+        }
+    }
+
+    // All of the checks have passed so this is a valid file name character
+    return true;
 }

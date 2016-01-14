@@ -17,6 +17,7 @@
 #include "rl_usb.h"
 #include "string.h"
 #include "usb_for_lib.h"
+#include "util.h"
 
 BOOL        USBD_MSC_MediaReady   = __FALSE;
 BOOL        USBD_MSC_ReadOnly     = __FALSE;
@@ -966,6 +967,9 @@ void USBD_MSC_BulkOut (void) {
       }
       break;
     case MSC_BS_CSW:
+      // Previous transfer must be complete
+      // before the next transfer begins
+      util_assert(0);
       break;
     default:
       USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);

@@ -157,11 +157,6 @@ extern volatile uint32_t * const restrict kFCCOBx;
 // Prototypes
 ////////////////////////////////////////////////////////////////////////////////
 
-#if BL_TARGET_FLASH
-//! @brief Copy flash_run_command() to RAM
-void copy_flash_run_command(void);
-#endif
-
 // Internal function Flash command sequence. Called by driver APIs only
 status_t flash_command_sequence(void);
 

@@ -94,7 +94,7 @@ reflect(unsigned long data, unsigned char nBits)
 
 /*********************************************************************
  *
- * Function:    crcSlow()
+ * Function:    crc32()
  * 
  * Description: Compute the CRC of a given message.
  *
@@ -146,4 +146,60 @@ crc32(const void * data, int nBytes)
      */
     return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE);
 
-}   /* crcSlow() */
+}   /* crc32() */
+
+/*********************************************************************
+ *
+ * Function:    crc32_continue()
+ * 
+ * Description: Compute the CRC of a given message.
+ *
+ * Notes:		
+ *
+ * Returns:		The CRC of the message.
+ *
+ *********************************************************************/
+uint32_t
+crc32_continue(uint32_t prev_crc, const void * data, int nBytes)
+{
+    crc            remainder = REFLECT_REMAINDER(prev_crc ^ FINAL_XOR_VALUE);
+	int            byte;
+	unsigned char  bit;
+    unsigned char const * message = data;
+
+
+    /*
+     * Perform modulo-2 division, a byte at a time.
+     */
+    for (byte = 0; byte < nBytes; ++byte)
+    {
+        /*
+         * Bring the next byte into the remainder.
+         */
+        remainder ^= (REFLECT_DATA(message[byte]) << (WIDTH - 8));
+
+        /*
+         * Perform modulo-2 division, a bit at a time.
+         */
+        for (bit = 8; bit > 0; --bit)
+        {
+            /*
+             * Try to divide the current data bit.
+             */
+            if (remainder & TOPBIT)
+            {
+                remainder = (remainder << 1) ^ POLYNOMIAL;
+            }
+            else
+            {
+                remainder = (remainder << 1);
+            }
+        }
+    }
+
+    /*
+     * The final remainder is the CRC result.
+     */
+    return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE);
+
+}   /* crc32_continue() */

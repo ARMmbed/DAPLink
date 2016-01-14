@@ -23,6 +23,7 @@
 #include "stdint.h"
 #include "RTL.h"
 #include "rl_usb.h"
+#include "macro.h"
 
 #ifdef __cplusplus
  extern "C" {
@@ -34,20 +35,32 @@
 
 #if defined (MSC_DEBUG)
 
+static const char error_msg[] = "\r\n<OVERFLOW>\r\n";
+
 static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
 {
-    uint32_t size_sent = 0;
-    while (1) {
-        size_sent += USBD_CDC_ACM_DataSend(buf + size_sent, size - size_sent);
-        if (size_sent >= size) {
-            break;
-        }
-        os_dly_wait(1);
+    uint32_t total_free;
+    uint32_t write_free;
+    uint32_t error_len = strlen(error_msg);
+
+    total_free = USBD_CDC_ACM_DataFree();
+    if (total_free < error_len) {
+        // No space
+        return 0;
     }
-    return size_sent;
+
+    // Size available for writing
+    write_free = total_free - error_len;
+    size = MIN(write_free, size);
+    USBD_CDC_ACM_DataSend(buf, size);
+
+    if (write_free == size) {
+        USBD_CDC_ACM_DataSend((uint8_t*)error_msg, error_len);
+    }
+    return size;
 }
 
-static char buf[128] = {0};
+static char daplink_debug_buf[128] = {0};
 static inline uint32_t daplink_debug_print(const char* format, ...)
 {
     uint32_t ret;
@@ -56,13 +69,13 @@ static inline uint32_t daplink_debug_print(const char* format, ...)
     ret = 1;
     
     va_start(arg, format);
-    r = vsnprintf(buf, sizeof(buf), format, arg);
-    if(r >= sizeof(buf)) {
-        r = snprintf(buf, sizeof(buf), "<Error - string length %i exceeds print buffer>\r\n", r);
+    r = vsnprintf(daplink_debug_buf, sizeof(daplink_debug_buf), format, arg);
+    if(r >= sizeof(daplink_debug_buf)) {
+        r = snprintf(daplink_debug_buf, sizeof(daplink_debug_buf), "<Error - string length %i exceeds print buffer>\r\n", r);
         ret = 0;
     }
     va_end(arg);
-    daplink_debug((uint8_t*)buf, r);
+    daplink_debug((uint8_t*)daplink_debug_buf, r);
     
     return ret;
 }

@@ -87,11 +87,6 @@ status_t flash_init(flash_driver_t * driver)
 
     driver->PFlashCallback = NULL;
 
-    // copy flash_run_command() to RAM
-#if BL_TARGET_FLASH
-    copy_flash_run_command();
-#endif
-
     return kStatus_Success;
 }
 
