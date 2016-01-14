@@ -19,7 +19,12 @@ from __future__ import print_function
 import argparse
 import itertools
 import binascii
+import struct
 import intelhex
+
+VECTOR_FMT = "<7I"
+CHECKSUM_FMT = "<1I"
+CHECKSUM_OFFSET = 0x1C
 
 
 def ranges(i):
@@ -54,6 +59,31 @@ def main():
     assert regions == 1, ("Error - only 1 region allowed in "
                           "hex file %i found." % regions)
     start, end = start_end_pairs[0]
+
+    # Checksum the vector table
+    #
+    # Note this is only required for NXP devices but
+    # it doesn't hurt to checksum all builds
+
+    # Compute a checksum on the first 7 vector nvic vectors
+    vector_size = struct.calcsize(VECTOR_FMT)
+    vector_data = new_hex_file.tobinarray(start=start, size=vector_size)
+    vectors = struct.unpack(VECTOR_FMT, vector_data)
+    assert len(vectors) == 7, "Incorrect size of %i" % len(vectors)
+    checksum = 0
+    for vector in vectors:
+        checksum += vector
+    checksum = (~checksum + 1) & 0xFFFFFFFF  # Two's compliment
+
+    # Write checksum back to hex
+    csum_start = CHECKSUM_OFFSET + start
+    csum_data = struct.pack(CHECKSUM_FMT, checksum)
+    assert len(csum_data) == 4
+    new_hex_file.puts(csum_start, csum_data)
+
+    # CRC the entire image
+    #
+    # This is required for all builds
 
     # Compute checksum over the range (don't include data at location of crc)
     size = end - start + 1
