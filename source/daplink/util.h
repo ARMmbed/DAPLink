@@ -28,6 +28,11 @@ uint32_t util_write_uint32(char * str, uint32_t value);
 uint32_t util_write_uint32(char * str, uint32_t value);
 uint32_t util_write_uint32_zp(char * str, uint32_t value, uint16_t total_size);
 uint32_t util_write_string(char * str, const char * data);
+
+uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor);
+uint32_t util_div_round_down(uint32_t dividen, uint32_t divisor);
+uint32_t util_div_round(uint32_t dividen, uint32_t divisor);
+
 #define util_assert(expression)     _util_assert((expression), __FILE__, __LINE__)
 void util_assert_clear(void);
 
