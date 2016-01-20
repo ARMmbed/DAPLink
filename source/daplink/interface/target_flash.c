@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "target_flash.h"
+
+#include "target_config.h"
 #include "target_reset.h"
 #include "gpio.h"
 #include "validation.h"
@@ -24,6 +24,14 @@
 #include "swd_host.h"
 #include "flash_intf.h"
 #include "util.h"
+
+static error_t target_flash_init(void);
+static error_t target_flash_uninit(void);
+static error_t target_flash_program_page(uint32_t adr, const uint8_t * buf, uint32_t size);
+static error_t target_flash_erase_sector(uint32_t sector);
+static error_t target_flash_erase_chip(void);
+static uint32_t target_flash_program_page_min_size(uint32_t addr);
+static uint32_t target_flash_erase_sector_size(uint32_t addr);
 
 static const flash_intf_t flash_intf = {
     target_flash_init,
@@ -37,7 +45,7 @@ static const flash_intf_t flash_intf = {
     
 const flash_intf_t * const flash_intf_target = &flash_intf;
 
-error_t target_flash_init()
+static error_t target_flash_init()
 {
     const program_target_t * const flash = target_device.flash_algo;
 
@@ -57,13 +65,13 @@ error_t target_flash_init()
     return ERROR_SUCCESS;
 }
 
-error_t target_flash_uninit(void)
+static error_t target_flash_uninit(void)
 {
     // when programming is complete the target should be put and held in reset
     return ERROR_SUCCESS;
 }
 
-error_t target_flash_program_page(uint32_t addr, const uint8_t * buf, uint32_t size)
+static error_t target_flash_program_page(uint32_t addr, const uint8_t * buf, uint32_t size)
 {
     const program_target_t * const flash = target_device.flash_algo;
 
@@ -96,7 +104,7 @@ error_t target_flash_program_page(uint32_t addr, const uint8_t * buf, uint32_t s
     return ERROR_SUCCESS;
 }
 
-error_t target_flash_erase_sector(uint32_t sector)
+static error_t target_flash_erase_sector(uint32_t sector)
 {
     const program_target_t * const flash = target_device.flash_algo;
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, sector*target_device.sector_size, 0, 0, 0)) {
@@ -105,7 +113,7 @@ error_t target_flash_erase_sector(uint32_t sector)
     return ERROR_SUCCESS;
 }
 
-error_t target_flash_erase_chip(void)
+static error_t target_flash_erase_chip(void)
 {
     const program_target_t * const flash = target_device.flash_algo;
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
@@ -114,14 +122,14 @@ error_t target_flash_erase_chip(void)
     return ERROR_SUCCESS;
 }
 
-uint32_t target_flash_program_page_min_size(uint32_t addr)
+static uint32_t target_flash_program_page_min_size(uint32_t addr)
 {
     uint32_t size = 256;
     util_assert(target_device.sector_size >= size);
     return size;
 }
 
-uint32_t target_flash_erase_sector_size(uint32_t addr)
+static uint32_t target_flash_erase_sector_size(uint32_t addr)
 {
     if ((addr >= target_device.flash_start) && (addr < target_device.flash_end)) {
         return target_device.sector_size;

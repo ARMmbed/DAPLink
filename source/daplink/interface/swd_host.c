@@ -15,7 +15,6 @@
  */
 
 #include "RTL.h"
-#include "target_flash.h"
 #include "target_reset.h"
 #include "target_config.h"
 #include "swd_host.h"

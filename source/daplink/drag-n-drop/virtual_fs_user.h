@@ -21,7 +21,6 @@
 #include <stdbool.h>
 
 #include "virtual_fs.h"
-#include "target_flash.h"
 #include "error.h"
 
 #ifdef __cplusplus

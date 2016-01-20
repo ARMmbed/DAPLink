@@ -20,7 +20,6 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "gpio.h"
-#include "target_flash.h"
 
 /*static const uint32_t nrfBlinkyApp[200] = {0x20000810,0x000000F5,0x00000107,0x00000109,0x00000000,
 		0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x0000010B,0x00000000,

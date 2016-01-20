@@ -19,7 +19,7 @@
 
 #include <stddef.h>
 #include "stdint.h"
-#include "target_flash.h"
+#include "flash_blob.h"
 #include "macro.h"
 
 #ifdef __cplusplus

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "target_reset.h"
-#include "target_flash.h"
 #include "swd_host.h"
 
 #define MDM_STATUS  0x01000000

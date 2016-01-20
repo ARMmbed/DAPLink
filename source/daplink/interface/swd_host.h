@@ -16,7 +16,7 @@
 #ifndef SWDHOST_CM_H
 #define SWDHOST_CM_H
 
-#include "target_flash.h"
+#include "flash_blob.h"
 #include "target_reset.h"
 
 uint8_t swd_init(void);

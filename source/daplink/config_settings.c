@@ -16,7 +16,6 @@
 
 #include <string.h>
 #include "config_settings.h"
-#include "target_flash.h"
 #include "target_config.h"
 #include "compiler.h"
 #include "cortex_m.h"
