@@ -46,7 +46,9 @@ typedef struct {
 } stream_t;
 
 typedef struct {
-    uint8_t dummy;
+    uint8_t vector_buf[FLASH_DECODER_MIN_SIZE];
+    uint8_t buf_pos;
+    uint32_t flash_addr;
 } bin_state_t;
 
 typedef struct {
@@ -198,13 +200,58 @@ static error_t open_bin(void * state)
 static error_t write_bin(void * state, const uint8_t * data, uint32_t size)
 {
     error_t status;
-    status = flash_decoder_write(data, size, 0, false);
-    if (ERROR_SUCCESS == status) {
-        // There is no way to determine the end of a binary
-        // file so any point could be the end
-        status = ERROR_SUCCESS_DONE_OR_CONTINUE;
+    bin_state_t * bin_state = (bin_state_t *)state;
+
+    if (bin_state->buf_pos < FLASH_DECODER_MIN_SIZE) {
+        flash_decoder_type_t flash_type;
+        uint32_t size_left;
+        uint32_t copy_size;
+        uint32_t start_addr;
+        const flash_intf_t * flash_intf;
+
+        // Buffer Data
+        size_left = FLASH_DECODER_MIN_SIZE - bin_state->buf_pos;
+        copy_size = MIN(size_left, size);
+        memcpy(bin_state->vector_buf + bin_state->buf_pos, data, copy_size);
+        bin_state->buf_pos += copy_size;
+        if (bin_state->buf_pos < FLASH_DECODER_MIN_SIZE) {
+            // Not enough data to determine type
+            return ERROR_SUCCESS;
+        }
+        data += copy_size;
+        size -= copy_size;
+
+        // Determine type
+        flash_type = flash_decoder_detect_type(bin_state->vector_buf, bin_state->buf_pos, 0, false);
+        if (FLASH_DECODER_TYPE_UNKNOWN == flash_type) {
+            return ERROR_FD_UNSUPPORTED_UPDATE;
+        }
+
+        // Determine flash addresss
+        status = flash_decoder_get_flash(flash_type, 0, false, &start_addr, &flash_intf);
+        if (ERROR_SUCCESS != status) {
+            return status;
+        }
+        bin_state->flash_addr = start_addr;
+
+        // Pass on data to the decoder
+        status = flash_decoder_write(bin_state->flash_addr, bin_state->vector_buf, bin_state->buf_pos);
+        if (ERROR_SUCCESS != status) {
+            return status;
+        }
+        bin_state->flash_addr += bin_state->buf_pos;
     }
-    return status;
+
+    // Write data
+    status = flash_decoder_write(bin_state->flash_addr, data, size);
+    if (ERROR_SUCCESS != status) {
+        return status;
+    }
+    bin_state->flash_addr += size;
+
+    // There is no way to determine the end of a binary
+    // file so any point could be the end
+    return ERROR_SUCCESS_DONE_OR_CONTINUE;
 }
 
 static error_t close_bin(void * state)
@@ -250,13 +297,13 @@ static error_t write_hex(void * state, const uint8_t * data, uint32_t size)
         // the entire block of hex was decoded. This is a simple state
         if (HEX_PARSE_OK == parse_status) {
             if (bin_buf_written > 0) {
-                status = flash_decoder_write(hex_state->bin_buffer, bin_buf_written, bin_start_address, true);
+                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
             }
             break;
         }
         else if (HEX_PARSE_UNALIGNED == parse_status) {
             if (bin_buf_written > 0) {
-                status = flash_decoder_write(hex_state->bin_buffer, bin_buf_written, bin_start_address, true);
+                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
                 if (ERROR_SUCCESS != status) {
                     break;
                 }
@@ -268,7 +315,7 @@ static error_t write_hex(void * state, const uint8_t * data, uint32_t size)
         }
         else if (HEX_PARSE_EOF == parse_status) {
             if (bin_buf_written > 0) {
-                status = flash_decoder_write(hex_state->bin_buffer, bin_buf_written, bin_start_address, true);
+                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
                 if (ERROR_SUCCESS == status) {
                     status = ERROR_SUCCESS_DONE;
                 }

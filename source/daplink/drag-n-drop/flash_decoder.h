@@ -20,7 +20,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "flash_intf.h"
 #include "error.h"
+
+// Enough space for 12 vectors
+#define FLASH_DECODER_MIN_SIZE      0x30
 
 typedef enum {
     FLASH_DECODER_TYPE_UNKNOWN,
@@ -30,8 +34,10 @@ typedef enum {
 } flash_decoder_type_t;
 
 flash_decoder_type_t flash_decoder_detect_type(const uint8_t * data, uint32_t size, uint32_t addr, bool addr_valid);
+error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool addr_valid, uint32_t * start_addr, const flash_intf_t ** flash_intf);
+
 error_t flash_decoder_open(void);
-error_t flash_decoder_write(const uint8_t * data, uint32_t size, uint32_t addr, bool addr_valid);
+error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size);
 error_t flash_decoder_close(void);
 
 #endif
