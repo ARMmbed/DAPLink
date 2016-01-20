@@ -33,11 +33,13 @@ typedef enum {
     STREAM_STATE_ERROR
 } stream_state_t;
 
+typedef bool (*stream_detect_cb_t)(const uint8_t * data, uint32_t size);
 typedef error_t (*stream_open_cb_t)(void * state);
 typedef error_t (*stream_write_cb_t)(void * state, const uint8_t * data, uint32_t size);
 typedef error_t (*stream_close_cb_t)(void * state);
 
 typedef struct {
+    stream_detect_cb_t detect;
     stream_open_cb_t open;
     stream_write_cb_t write;
     stream_close_cb_t close;
@@ -57,17 +59,19 @@ typedef union {
      hex_state_t hex;
 } shared_state_t;
 
+static bool detect_bin(const uint8_t * data, uint32_t size);
 static error_t open_bin(void * state);
 static error_t write_bin(void * state, const uint8_t * data, uint32_t size);
 static error_t close_bin(void * state);
 
+static bool detect_hex(const uint8_t * data, uint32_t size);
 static error_t open_hex(void * state);
 static error_t write_hex(void * state, const uint8_t * data, uint32_t size);
 static error_t close_hex(void * state);
 
 stream_t stream[] = {
-    {open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
-    {open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
+    {detect_bin, open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
+    {detect_hex, open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
 };
 COMPILER_ASSERT(ELEMENTS_IN_ARRAY(stream) == STREAM_TYPE_COUNT);
 // STREAM_TYPE_NONE must not be included in count
@@ -84,13 +88,13 @@ static void stream_thread_assert(void)  {util_assert(os_tsk_self() == stream_thr
 
 stream_type_t stream_start_identify(const uint8_t * data, uint32_t size)
 {
-    if (FLASH_DECODER_TYPE_UNKNOWN != flash_decoder_detect_type(data, size, 0, false)) {
-        return STREAM_TYPE_BIN;
+    stream_type_t i;
+    for (i = STREAM_TYPE_START; i < STREAM_TYPE_COUNT; i++) {
+        if (stream[i].detect(data, size)) {
+            return i;
+        }
     }
 
-    else if (1 == validate_hexfile(data)) {
-        return STREAM_TYPE_HEX;
-    }
     return STREAM_TYPE_NONE;
 }
 
@@ -179,6 +183,11 @@ error_t stream_close(void)
 
 /* Binary file processing */
 
+static bool detect_bin(const uint8_t * data, uint32_t size)
+{
+    return FLASH_DECODER_TYPE_UNKNOWN != flash_decoder_detect_type(data, size, 0, false);
+}
+
 static error_t open_bin(void * state)
 {
     error_t status;
@@ -206,6 +215,11 @@ static error_t close_bin(void * state)
 }
 
 /* Hex file processing */
+
+static bool detect_hex(const uint8_t * data, uint32_t size)
+{
+    return 1 == validate_hexfile(data);
+}
 
 static error_t open_hex(void * state)
 {
