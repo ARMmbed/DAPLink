@@ -50,17 +50,26 @@
 #define DAPLINK_RAM_APP2_START          0x20000000
 #define DAPLINK_RAM_APP2_SIZE           0x00000800
 
+/* Flash Programming Info */
+
+#define DAPLINK_SECTOR_SIZE             0x00000100
+#define DAPLINK_MIN_WRITE_SIZE          0x00000100
+
 /* Current build */
 
 #if defined(DAPLINK_BL)
 
     #define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
     #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
+    #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
+    #define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_IF_SIZE
 
 #elif defined(DAPLINK_IF)
 
     #define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
     #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
+    #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
+    #define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
 
 #else
 

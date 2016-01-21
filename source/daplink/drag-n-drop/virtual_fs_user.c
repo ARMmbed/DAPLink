@@ -26,23 +26,33 @@
 #include "info.h"
 #include "config_settings.h"
 #include "daplink.h"
-#include "target_config.h"
-#include "target_flash.h"
 #include "virtual_fs_user.h"
 #include "util.h"
 #include "version_git.h"
 #include "IO_config.h"
 #include "target_reset.h"
+#include "file_stream.h"
+#include "error.h"
+
+// Set to 1 to enable debugging
+#define DEBUG_VIRTUAL_FS_USER     0
+
+#if DEBUG_VIRTUAL_FS_USER
+    #define vfs_user_printf    debug_msg
+#else
+    #define vfs_user_printf(...)
+#endif
 
 typedef struct file_transfer_state {
     vfs_file_t file_to_program;
     vfs_sector_t start_sector;
-    vfs_sector_t next_sector_to_write;
-    uint32_t amt_to_write;
-    uint32_t amt_written;
-    bool transfer_started;
+    vfs_sector_t file_next_sector;
+    uint32_t size_processed;
+    uint32_t file_size;
+    error_t status;
     bool transfer_finished;
-    extension_t file_type;
+    bool stream_open;
+    stream_type_t stream;
 } file_transfer_state_t;
 
 typedef enum {
@@ -61,9 +71,10 @@ static const file_transfer_state_t default_transfer_state = {
     VFS_INVALID_SECTOR,
     0,
     0,
+    ERROR_SUCCESS,
     false,
     false,
-    UNKNOWN
+    STREAM_TYPE_NONE
 };
 
 static const uint8_t mbed_redirect_file[512] =
@@ -87,7 +98,7 @@ static const uint32_t disconnect_delay_ms = 500;
 static const uint32_t reconnect_delay_ms = 1100;    // Must be above 1s
 
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
-static target_flash_status_t fail_reason = TARGET_OK;
+static error_t fail_reason = ERROR_SUCCESS;
 static file_transfer_state_t file_transfer_state;
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
@@ -119,12 +130,11 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
-static void update_transfer_info(extension_t type, const vfs_file_t file, uint32_t sector, uint32_t size);
-static void update_transfer_state(target_flash_status_t status);
-static extension_t identify_file_name(const vfs_filename_t filename);
-static extension_t identify_start_sequence(const uint8_t *buf);
-static void start_disconnect_reconnect_timer(target_flash_status_t status);
-static void tranfer_complete(target_flash_status_t status);
+static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
+static void transfer_update_stream_open(stream_type_t stream, uint32_t start_sector, error_t status);
+static void transfer_update_stream_data(uint32_t current_sector, uint32_t size, error_t status);
+static void transfer_check_for_completion(void);
+
 static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 
@@ -135,8 +145,10 @@ void vfs_user_enable(bool enable)
 {
     sync_lock();
     if (enable) {
-        vfs_state_remaining_ms = connect_delay_ms;
-        vfs_state_next = VFS_USER_STATE_CONNECTED;
+        if (VFS_USER_STATE_DISCONNECTED == vfs_state_next) {
+            vfs_state_remaining_ms = connect_delay_ms;
+            vfs_state_next = VFS_USER_STATE_CONNECTED;
+        }
     } else {
         vfs_state_remaining_ms = disconnect_delay_ms;
         vfs_state_next = VFS_USER_STATE_DISCONNECTED;
@@ -174,6 +186,7 @@ void vfs_user_init(bool enable)
 void vfs_user_periodic(uint32_t elapsed_ms)
 {
     vfs_user_state_t vfs_state_local;
+    vfs_user_state_t vfs_state_local_prev;
     sync_assert_usb_thread();
     sync_lock();
 
@@ -191,7 +204,10 @@ void vfs_user_periodic(uint32_t elapsed_ms)
         return;
     }
 
+    vfs_user_printf("vfs_user_periodic()\r\n");
+
     // Transistion to new state
+    vfs_state_local_prev = vfs_state;
     vfs_state = vfs_state_next;
     switch (vfs_state) {
         case VFS_USER_STATE_RECONNECTING:
@@ -206,15 +222,27 @@ void vfs_user_periodic(uint32_t elapsed_ms)
     vfs_state_local = vfs_state;
     sync_unlock();
 
-    // Perform processing from the state change
-    switch (vfs_state_local) {
+    // Processing when leaving a state
+    vfs_user_printf("    state %i->%i\r\n", vfs_state_local_prev, vfs_state_local);
+    switch (vfs_state_local_prev) {
         case VFS_USER_STATE_DISCONNECTED:
-            USBD_MSC_MediaReady = 0;
+            // No action needed
             break;
         case VFS_USER_STATE_RECONNECTING:
-            USBD_MSC_MediaReady = 0;
+            // No action needed
+            break;
+        case VFS_USER_STATE_CONNECTED:
+            if (file_transfer_state.stream_open) {
+                error_t status;
+                file_transfer_state.stream_open = false;
+                status = stream_close();
+                if (ERROR_SUCCESS == fail_reason) {
+                    fail_reason = status;
+                }
+                vfs_user_printf("    stream_close ret %i\r\n", status);
+            }
             // Reset if programming was successful  //TODO - move to flash layer
-            if (daplink_is_bootloader() && (TARGET_OK == fail_reason)) {
+            if (daplink_is_bootloader() && (ERROR_SUCCESS == fail_reason)) {
                 NVIC_SystemReset();
             }
             // If hold in bootloader has been set then reset after usb is disconnected
@@ -225,6 +253,16 @@ void vfs_user_periodic(uint32_t elapsed_ms)
             if (config_get_auto_rst()) {
                 target_set_state(RESET_RUN);
             }
+            break;
+    }
+
+    // Processing when entering a state
+    switch (vfs_state_local) {
+        case VFS_USER_STATE_DISCONNECTED:
+            USBD_MSC_MediaReady = 0;
+            break;
+        case VFS_USER_STATE_RECONNECTING:
+            USBD_MSC_MediaReady = 0;
             break;
         case VFS_USER_STATE_CONNECTED:
             build_filesystem();
@@ -273,11 +311,8 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
     vfs_user_disconnect_delay();
 
     if (file_transfer_state.transfer_finished) {
-        debug_msg("%d: %s\r\n", __LINE__, "Transfer_finished - exit");
         return;
     }
-
-    debug_msg("sector: %d\r\n", sector);
 
     // indicate msc activity
     main_blink_msc_led(MAIN_LED_OFF);
@@ -339,7 +374,7 @@ static void build_filesystem()
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
 
     // FAIL.TXT
-    if (fail_reason != 0) {
+    if (fail_reason != ERROR_SUCCESS) {
         file_size = get_file_size(read_file_fail_txt);
         vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
     }
@@ -361,39 +396,50 @@ static void build_filesystem()
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
+    vfs_user_printf("virtual_fs_user file_change_handler(name=%*s, change=%i)\r\n", 11, filename, change);
+
     if (VFS_FILE_CHANGED == change) {
-        extension_t type;
-        type = identify_file_name(filename);
-        if (UNKNOWN != type) {
+        if (file == file_transfer_state.file_to_program) {
+            stream_type_t stream;
             uint32_t size = vfs_file_get_size(new_file_data);
             vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
-            update_transfer_info(type, file, sector, size);
-            update_transfer_state(TARGET_OK);
+            vfs_user_printf("    file properties changed, size=%i\r\n", 11, size);
+            stream = stream_type_from_name(filename);
+            transfer_update_file_info(file, sector, size, stream);
         }
     }
 
     if (VFS_FILE_CREATED == change) {
+        stream_type_t stream;
         if (!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
             if (daplink_is_interface()) {
                 config_ram_set_hold_in_bl(true);
             } else {
                 // Do nothing - bootloader will go to interface by default
             }
-            tranfer_complete(TARGET_OK);
+            vfs_user_remount();
         } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(true);
-            tranfer_complete(TARGET_OK);
+            vfs_user_remount();
         } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(false);
-            tranfer_complete(TARGET_OK);
+            vfs_user_remount();
         } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
             // Test asserts
             util_assert(0);
         } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
             // Remount to update the drive
-            tranfer_complete(TARGET_OK);
-        }
-    } else if (VFS_FILE_DELETED == change) {
+            vfs_user_remount();
+        } else if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
+            stream = stream_type_from_name(filename);
+            uint32_t size = vfs_file_get_size(new_file_data);
+            vfs_user_printf("    found file to decode, type=%i\r\n", stream);
+            vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
+            transfer_update_file_info(file, sector, size, stream);
+        } 
+    }
+
+    if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
             util_assert_clear();
         }
@@ -404,39 +450,30 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 // for detecting the start of a BIN/HEX file and performing programming
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors)
 {
-    extension_t start_type_identified = UNKNOWN;
-    target_flash_status_t status = TARGET_OK;
+    error_t status;
+    stream_type_t stream;
+    uint32_t size;
+
+    vfs_user_printf("virtual_fs_user file_data_handler(sector=%i, num_of_sectors=%i)\r\n", sector, num_of_sectors);
 
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated
-    if (!file_transfer_state.transfer_started) {
+    if (!file_transfer_state.stream_open) {
         // look for file types we can program
-        start_type_identified = identify_start_sequence(buf);
-        if (start_type_identified != UNKNOWN) {
-            debug_msg("%s", "FLASH INIT\r\n");
-
-            file_transfer_state.amt_written = 0;
-            file_transfer_state.transfer_started = 1;
-            file_transfer_state.next_sector_to_write = sector;
-            update_transfer_info(start_type_identified, 0, sector, 0);
-
-            // Transfer must not be finished - can change from update_transfer_info
-            if (file_transfer_state.transfer_finished) {
-                return;
-            }
-
-            // prepare the target device
-            status = target_flash_init(file_transfer_state.file_type);
-            update_transfer_state(status);
+        stream = stream_start_identify((uint8_t*)buf, VFS_SECTOR_SIZE * num_of_sectors);
+        if (STREAM_TYPE_NONE != stream) {
+            status = stream_open(stream);
+            vfs_user_printf("    stream_open stream=%i ret %i\r\n", stream, status);
+            transfer_update_stream_open(stream, sector, status);
         }
     }
 
     // Transfer must have been started for processing beyond this point
-    if (!file_transfer_state.transfer_started) {
+    if (!file_transfer_state.stream_open) {
         return;
     }
 
-    // Transfer must not be finished - can change from update_transfer_state
+    // Transfer must not be finished
     if (file_transfer_state.transfer_finished) {
         return;
     }
@@ -446,22 +483,16 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
         return;
     }
 
-    // sectors must be in oder
-    if (sector != file_transfer_state.next_sector_to_write) {
-        debug_msg("%s", "SECTOR OUT OF ORDER\r\n");
+    // sectors must be in order
+    if (sector != file_transfer_state.file_next_sector) {
+        vfs_user_printf("    SECTOR OUT OF ORDER\r\n");
         return;
     }
 
-    debug_msg("%d: %s", __LINE__, "FLASH WRITE - ");
-    status = target_flash_program_page((sector-file_transfer_state.start_sector)*VFS_SECTOR_SIZE, (uint8_t*)buf, VFS_SECTOR_SIZE*num_of_sectors);
-    debug_msg("%d\r\n", status);
-    debug_msg("Writing - start 0x%x, buf *%p=0x%x, size %i\r\n",(sector-file_transfer_state.start_sector)*VFS_SECTOR_SIZE, (uint8_t*)buf, ((uint8_t*)buf)[0], VFS_SECTOR_SIZE*num_of_sectors);
-    // and do the housekeeping
-    file_transfer_state.amt_written += VFS_SECTOR_SIZE;
-    file_transfer_state.next_sector_to_write = sector + 1;
-
-    // Update status
-    update_transfer_state(status);
+    size = VFS_SECTOR_SIZE * num_of_sectors;
+    status = stream_write((uint8_t*)buf, size);
+    vfs_user_printf("    stream_write ret %i\r\n", status);
+    transfer_update_stream_data(sector, size, status);
 }
 
 // Get the filesize from a filesize callback.
@@ -578,7 +609,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
 {
-    const char* contents = (const char*)fail_txt_contents[fail_reason];
+    const char* contents = (const char*)error_get_string(fail_reason);
     uint32_t size = strlen(contents);
     if (sector_offset != 0) {
         return 0;
@@ -608,134 +639,144 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
     return pos;
 }
 
-// Update info about the current file transfer and check for completion
-// type     - Format of the file taht is being sent.  Currently BIN and HEX are supported.
-// de       - Directory entry in the VFS of the file being written.  Set to null if unused.
-// sector   - Starting sector of the tranfer.  Set to VFS_INVALID_SECTOR if unknown
-// size     - Size of file being transfered.  Set to 0 if unknown
-static void update_transfer_info(extension_t type, vfs_file_t file, uint32_t sector, uint32_t size)
+// Update the tranfer state with file information
+void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
 {
-    target_flash_status_t status = TARGET_OK;
-
-    // Initialize the type if it has not been set
-    if (UNKNOWN == file_transfer_state.file_type) {
-        file_transfer_state.file_type = type;
-    }
+    vfs_user_printf("virtual_fs_user transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
 
     // Initialize the directory entry if it has not been set
     if (VFS_FILE_INVALID == file_transfer_state.file_to_program) {
         file_transfer_state.file_to_program = file;
     }
+    // Initialize the starting sector if it has not been set
+    if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
+        file_transfer_state.start_sector = start_sector;
+    }
+    // Initialize the stream if it has not been set
+    if (STREAM_TYPE_NONE == file_transfer_state.stream) {
+        file_transfer_state.stream = stream;
+    }
+
+    // Check - File size must be the same or bigger
+    if (size < file_transfer_state.file_size) {
+        vfs_user_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
+        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+    }
+    // Check - Starting sector must be the same  - this is optional for file info since it may not be present initially
+    if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
+        vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
+        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+    }
+    // Check - stream must be the same
+    if (stream != file_transfer_state.stream) {
+        vfs_user_printf("error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+    }
+
+    // Update values - Size is the only value that can change and it can only increase.
+    if (size > file_transfer_state.file_size) {
+        file_transfer_state.file_size = size;
+    }
+    transfer_check_for_completion();
+}
+
+// Update the tranfer state with new information
+static void transfer_update_stream_open(stream_type_t stream, uint32_t start_sector, error_t status)
+{
+    util_assert(!file_transfer_state.stream_open);
+    vfs_user_printf("virtual_fs_user transfer_update_stream_open(stream=%i, start_sector=%i, status=%i)\r\n",
+                    stream, start_sector, status);
+
+    // Status should still be at it's default of ERROR_SUCCESS
+    util_assert(ERROR_SUCCESS == file_transfer_state.status);
 
     // Initialize the starting sector if it has not been set
     if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
-        file_transfer_state.start_sector = sector;
+        file_transfer_state.start_sector = start_sector;
     }
-
-    // Check - Type must be the same
-    if (type != file_transfer_state.file_type) {
-        debug_msg("error: changed types during tranfer from %i to %i\n", type, file_transfer_state.file_type);
-        status = TARGET_FAIL_ERROR_DURING_TRANSFER;
-        goto end;
-    }
-
-    // Check - Directory entry must be the same (or null)
-    if ((VFS_FILE_INVALID != file) && (file != file_transfer_state.file_to_program)) {
-        debug_msg("error: entry != file_transfer_state.file_to_program: %p, %p\n", file, file_transfer_state.file_to_program);
-        status = TARGET_FAIL_ERROR_DURING_TRANSFER;
-        goto end;
-    }
-
-    // Check - File size must be the same or bigger (or 0)
-    if ((0 != size) && (size < file_transfer_state.amt_to_write)) {
-        debug_msg("error: file size changed from %i to %i\n", file_transfer_state.amt_to_write, size);
-        status = TARGET_FAIL_ERROR_DURING_TRANSFER;
-        goto end;
+    // Initialize the stream if it has not been set
+    if (STREAM_TYPE_NONE == file_transfer_state.stream) {
+        file_transfer_state.stream = stream;
     }
 
     // Check - Starting sector must be the same
-    if ((VFS_INVALID_SECTOR != sector) && (sector != file_transfer_state.start_sector)) {
-        debug_msg("error: starting sector changed from %i to %i\n", file_transfer_state.start_sector, sector);
-        status = TARGET_FAIL_ERROR_DURING_TRANSFER;
-        goto end;
+    if (start_sector != file_transfer_state.start_sector) {
+        vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
+        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+    }
+    // Check - stream must be the same
+    if (stream != file_transfer_state.stream) {
+        vfs_user_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
     }
 
-    end:
+    // Check - were there any errors with the open
+    if (ERROR_SUCCESS == file_transfer_state.status) {
+        file_transfer_state.status = status;
+    }
 
-    // Update values - Size is the only value that can change and it can only increase.
-    file_transfer_state.amt_to_write = size;
-    update_transfer_state(status);
+    if (ERROR_SUCCESS == status) {
+        file_transfer_state.file_next_sector = start_sector;
+        file_transfer_state.stream_open = true;
+    }
+    transfer_check_for_completion();
 }
 
-// Check the current file transfer state and status and
-// either finish the transfer or set the disconnect timer.
-static void update_transfer_state(target_flash_status_t status)
+// Update the tranfer state with new information
+static void transfer_update_stream_data(uint32_t current_sector, uint32_t size, error_t status)
 {
-    // An error occurred
-    if ((TARGET_HEX_FILE_EOF != status) && (TARGET_OK != status)) {
-        tranfer_complete(status);
-        return;
-    }
+    util_assert(file_transfer_state.stream_open);
+    util_assert(size % VFS_SECTOR_SIZE == 0);
+    util_assert(file_transfer_state.file_next_sector == current_sector);
 
-    // Hex file parsing has indicated the end of the file
-    if (TARGET_HEX_FILE_EOF == status) {
-        debug_msg("%s", "FLASH END\r\n");
-        tranfer_complete(TARGET_OK);
-        return;
-    }
+    file_transfer_state.size_processed += size;
+    file_transfer_state.file_next_sector = current_sector + size / VFS_SECTOR_SIZE;
+    
+    // Update status
+    file_transfer_state.status = status;
+    transfer_check_for_completion();
+}
 
-    // Check if the full size of the file has been written
-    if (file_transfer_state.amt_written >= file_transfer_state.amt_to_write) {
-        start_disconnect_reconnect_timer(TARGET_OK);
+// Check if the current transfer is still in progress, done, or if an error has occurred
+static void transfer_check_for_completion()
+{
+    bool file_fully_processed;
+    bool size_nonzero;
+
+    util_assert(!file_transfer_state.transfer_finished);
+
+    // Check for completion of transfer
+    file_fully_processed = file_transfer_state.size_processed >= file_transfer_state.file_size;
+    size_nonzero = file_transfer_state.file_size > 0;
+
+    if ((ERROR_SUCCESS_DONE == file_transfer_state.status) && file_fully_processed && size_nonzero) {
+        // Full filesize has been transfered and the end of the stream has been reached.
+        // Mark the transfer as finished and set result to success.
+        vfs_user_printf("virtual_fs_user transfer_check_for_completion transfer successful\r\n");
+        fail_reason = ERROR_SUCCESS;
+        file_transfer_state.transfer_finished = true;
+    } else if ((ERROR_SUCCESS_DONE_OR_CONTINUE == file_transfer_state.status) && file_fully_processed && size_nonzero) {
+        // Full filesize has been transfered but the stream could not determine the end of the file.
+        // Set the result to success but let the filetransfer time out. 
+        vfs_user_printf("virtual_fs_user transfer_check_for_completion transfer successful, checking for more data\r\n");
+        fail_reason = ERROR_SUCCESS;
+    } else if ((ERROR_SUCCESS == file_transfer_state.status) || 
+               (ERROR_SUCCESS_DONE == file_transfer_state.status) || 
+               (ERROR_SUCCESS_DONE_OR_CONTINUE == file_transfer_state.status)) {
+        fail_reason = ERROR_TRANSFER_IN_PROGRESS;
+        // Transfer still in progress
     } else {
-        // If no more data comes in fail with the message
-        // because an in progress tranfer timed out
-        start_disconnect_reconnect_timer(TARGET_FAIL_TRANSFER_IN_PROGRESS);
+        // An error has occurred
+        vfs_user_printf("virtual_fs_user transfer_check_for_completion error=%i,\r\n"
+                        "    file_finished=%i, size_processed=%i file_size=%i\r\n",
+                        file_transfer_state.status, file_fully_processed,
+                        file_transfer_state.size_processed, file_transfer_state.file_size);
+        fail_reason = file_transfer_state.status;
+        file_transfer_state.transfer_finished = true;
     }
-}
 
-// Identify the file type from its extension
-static extension_t identify_file_name(const vfs_filename_t filename)
-{
-    // 8.3 file names must be in upper case
-    if (0 == strncmp("BIN", &filename[8], 3)) {
-        return BIN;
-    } else if (0 == strncmp("HEX", &filename[8], 3)) {
-        return HEX;
-    } else {
-        return UNKNOWN;
-    }
-}
-
-// Identify a file type from its contents
-static extension_t identify_start_sequence(const uint8_t *buf)
-{
-    if (1 == validate_bin_nvic(buf)) {
-        return BIN;
-    }
-    else if (1 == validate_hexfile(buf)) {
-        return HEX;
-    }
-    return UNKNOWN;
-}
-
-// Start the usb disconnect timer.  If no more data arrives
-// then fail with the given status.
-static void start_disconnect_reconnect_timer(target_flash_status_t status)
-{
-    fail_reason = status;
+    // Always start remounting
     vfs_user_remount();
-}
-
-// Complete the transfer with the given status.  After this
-// call no more data received over USB will get processed
-// until after reconnecting.
-// Note - this function does not detach USB immediately.
-//        It waits until usb is idle before disconnecting.
-static void tranfer_complete(target_flash_status_t status)
-{
-    file_transfer_state.transfer_finished = true;
-    start_disconnect_reconnect_timer(status);
 }
 
 // Remove strip_count characters from the start of buf and then insert

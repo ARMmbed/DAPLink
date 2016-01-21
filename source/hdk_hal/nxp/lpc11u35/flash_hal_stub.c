@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RTL.h"
-#include "debug_cm.h"
-#include "target_reset.h"
-#include "swd_host.h"
-#include "DAP_Config.h"
+#include "flash_hal.h"
 
-void target_before_init_debug(void) {
-    return;
+uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
+{
+    return (1); // IAP not supported
 }
 
-uint8_t target_unlock_sequence(void) {
-    return 1;
+uint32_t UnInit(uint32_t fnc)
+{
+    return (1); // IAP not supported
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state_hw(state);
+uint32_t EraseChip(void)
+{
+    return (1); // IAP not supported
 }
 
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
-    return 0;
+uint32_t EraseSector(uint32_t adr)
+{
+    return (1); // IAP not supported
 }
 
+uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
+{
+    return (1); // IAP not supported
+}

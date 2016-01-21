@@ -18,7 +18,6 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "DAP_Config.h"
-#include "target_flash.h"
 
 void target_before_init_debug(void) {
     return;
