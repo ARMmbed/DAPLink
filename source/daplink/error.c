@@ -101,6 +101,8 @@ static const char *const error_message[] = {
     "In application programming not supported on this device.",
     // ERROR_IAP_UPDT_INCOMPLETE
     "In application programming failed because the update sent was incomplete.",
+    // ERROR_IAP_NO_INTERCEPT
+    "",
     // ERROR_BL_UPDT_BAD_CRC
     "The bootloader CRC did not pass.",
 

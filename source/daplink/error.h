@@ -62,6 +62,7 @@ typedef enum {
     ERROR_IAP_OUT_OF_BOUNDS,
     ERROR_IAP_UPDT_NOT_SUPPORTED,
     ERROR_IAP_UPDT_INCOMPLETE,
+    ERROR_IAP_NO_INTERCEPT,
     ERROR_BL_UPDT_BAD_CRC,
 
     // Add new values here
