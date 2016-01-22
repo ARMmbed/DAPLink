@@ -15,6 +15,7 @@
  */
 #include "LPC11Uxx.h"
 #include "uart.h"
+#include "util.h"
 
 static uint32_t baudrate;
 static uint32_t dll;
@@ -123,9 +124,7 @@ int32_t uart_set_configuration (UART_Configuration *config) {
 
     uint8_t DivAddVal = 0;
     uint8_t MulVal = 1;
-    uint16_t dlv;
-    uint8_t mv, dav, hit = 0, data_bits = 8, parity, stop_bits = 0;
-    float ratio, err, calcbaud;
+    uint8_t mv, data_bits = 8, parity, stop_bits = 0;
 
     // disable interrupt
     NVIC_DisableIRQ (UART_IRQn);
@@ -133,38 +132,12 @@ int32_t uart_set_configuration (UART_Configuration *config) {
     // reset uart
     uart_reset();
 
-    dll =  SystemCoreClock / (16 * config->Baudrate);
     baudrate = config->Baudrate;
 
-    // First we check to see if the basic divide with no DivAddVal/MulVal
-    // ratio gives us an integer result. If it does, we set DivAddVal = 0,
-    // MulVal = 1. Otherwise, we search the valid ratio value range to find
-    // the closest match. This could be more elegant, using search methods
-    // and/or lookup tables, but the brute force method is not that much
-    // slower, and is more maintainable.
-    if ((SystemCoreClock % (16 * config->Baudrate)) != 0) {     // Checking for zero remainder
-        float err_best = (float) config->Baudrate;
-        unsigned short dlmax = dll;
-        for (dlv = dlmax/2; (dlv <= dlmax) && !hit; dlv++) {
-            for ( mv = 1; mv <= 15; mv++) {
-                for ( dav = 1; dav < mv; dav++) {
-                    ratio = 1.0 + ((float) dav / (float) mv);
-                    calcbaud = (float)SystemCoreClock / (16.0 * (float) dlv * ratio);
-                    err = ((config->Baudrate - calcbaud) > 0) ? (config->Baudrate - calcbaud) : -(config->Baudrate - calcbaud);
-                    if (err < err_best) {
-                        dll = dlv;
-                        DivAddVal = dav;
-                        MulVal = mv;
-                        err_best = err;
-                        if (err < 10) {
-                            hit = 1;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    // Compute baud rate dividers
+    mv = 15;
+    dll = util_div_round_down(SystemCoreClock, 16 * config->Baudrate);
+    DivAddVal = util_div_round(SystemCoreClock * mv, dll * config->Baudrate * 16) - mv;
 
     // set LCR[DLAB] to enable writing to divider registers
     LPC_USART->LCR |= (1 << 7);
