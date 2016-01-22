@@ -175,7 +175,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size)
     }
 
     // Set the initial address the first time through
-    if (initial_addr_set) {
+    if (!initial_addr_set) {
         initial_addr = addr;
         current_addr = initial_addr;
         flash_decoder_printf("     initial_addr=0x%x\r\n", initial_addr);
