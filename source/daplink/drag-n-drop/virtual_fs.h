@@ -23,6 +23,7 @@
   extern "C" {
 #endif
 
+#define VFS_CLUSTER_SIZE        0x1000
 #define VFS_SECTOR_SIZE         512
 #define VFS_INVALID_SECTOR      0xFFFFFFFF
 #define VFS_FILE_INVALID        0

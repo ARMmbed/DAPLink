@@ -149,17 +149,24 @@ error_t stream_write(const uint8_t * data, uint32_t size)
 {
     error_t status;
 
-    stream_thread_assert();
-
     // Stream must be open already
     if (state != STREAM_STATE_OPEN) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
 
+    // Check thread after checking state since the stream thread is
+    // set only if stream_open has been called
+    stream_thread_assert();
+
     // Write to stream
     status = current_stream->write(&shared_state, data, size);
-    if ((ERROR_SUCCESS != status) && (ERROR_SUCCESS_DONE_OR_CONTINUE != status)) {
+    if (ERROR_SUCCESS_DONE == status) {
+        state = STREAM_STATE_END;
+    } else if ((ERROR_SUCCESS_DONE_OR_CONTINUE == status) || (ERROR_SUCCESS == status) ) {
+        // Stream should remain in the open state
+        util_assert(STREAM_STATE_OPEN == state);
+    } else {
         state = STREAM_STATE_ERROR;
     }
     return status;
@@ -169,13 +176,15 @@ error_t stream_close(void)
 {
     error_t status;
 
-    stream_thread_assert();
-
     // Stream must not be closed already
     if (STREAM_STATE_CLOSED == state) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
+
+    // Check thread after checking state since the stream thread is
+    // set only if stream_open has been called
+    stream_thread_assert();
 
     // Close stream
     status = current_stream->close(&shared_state);

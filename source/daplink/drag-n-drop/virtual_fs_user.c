@@ -43,16 +43,20 @@
     #define vfs_user_printf(...)
 #endif
 
-typedef struct file_transfer_state {
-    vfs_file_t file_to_program;
-    vfs_sector_t start_sector;
-    vfs_sector_t file_next_sector;
-    uint32_t size_processed;
-    uint32_t file_size;
-    error_t status;
-    bool transfer_finished;
-    bool stream_open;
-    stream_type_t stream;
+typedef struct {
+    vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
+    vfs_sector_t start_sector;      // Start sector of the file being programmed
+    vfs_sector_t file_next_sector;  // Expected next sector of the file
+    uint32_t size_processed;        // Size of the file read so far
+    uint32_t file_size;             // Size of the file indicated by root dir.  Only allowed to increase
+    bool transfer_finished;         // Transfer done, ignore all further writes
+    bool stream_open;               // State of the stream
+    bool stream_started;            // Stream processing started. This only gets reset remount
+    bool stream_finished;           // Stream processing is done. This only gets reset remount
+    bool stream_optional_finish;    // True if the stream processing can be considered done
+    bool file_info_optional_finish; // True if the file transfer can be considered done
+    bool transfer_timeout;          // Set if the transfer was finished because of a timeout. This only gets reset remount
+    stream_type_t stream;           // Current stream or STREAM_TYPE_NONE is stream is closed.  This only gets reset remount
 } file_transfer_state_t;
 
 typedef enum {
@@ -71,10 +75,14 @@ static const file_transfer_state_t default_transfer_state = {
     VFS_INVALID_SECTOR,
     0,
     0,
-    ERROR_SUCCESS,
     false,
     false,
-    STREAM_TYPE_NONE
+    false,
+    false,
+    false,
+    false,
+    false,
+    STREAM_TYPE_NONE,
 };
 
 static const uint8_t mbed_redirect_file[512] =
@@ -131,9 +139,9 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
-static void transfer_update_stream_open(stream_type_t stream, uint32_t start_sector, error_t status);
-static void transfer_update_stream_data(uint32_t current_sector, uint32_t size, error_t status);
-static void transfer_check_for_completion(void);
+static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
+static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t size);
+static void transfer_update_state(error_t status);
 
 static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
@@ -232,15 +240,13 @@ void vfs_user_periodic(uint32_t elapsed_ms)
             // No action needed
             break;
         case VFS_USER_STATE_CONNECTED:
-            if (file_transfer_state.stream_open) {
-                error_t status;
-                file_transfer_state.stream_open = false;
-                status = stream_close();
-                if (ERROR_SUCCESS == fail_reason) {
-                    fail_reason = status;
-                }
-                vfs_user_printf("    stream_close ret %i\r\n", status);
+            // Close ongoing transfer if there is one
+            if (!file_transfer_state.transfer_finished) {
+                vfs_user_printf("    transfer timeout\r\n");
+                file_transfer_state.transfer_timeout = true;
+                transfer_update_state(ERROR_SUCCESS);
             }
+            util_assert(file_transfer_state.transfer_finished);
             // Reset if programming was successful  //TODO - move to flash layer
             if (daplink_is_bootloader() && (ERROR_SUCCESS == fail_reason)) {
                 NVIC_SystemReset();
@@ -396,14 +402,13 @@ static void build_filesystem()
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
-    vfs_user_printf("virtual_fs_user file_change_handler(name=%*s, change=%i)\r\n", 11, filename, change);
+    vfs_user_printf("virtual_fs_user file_change_handler(name=%*s, file=%p, change=%i)\r\n", 11, filename, file, change);
 
     if (VFS_FILE_CHANGED == change) {
         if (file == file_transfer_state.file_to_program) {
             stream_type_t stream;
             uint32_t size = vfs_file_get_size(new_file_data);
             vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
-            vfs_user_printf("    file properties changed, size=%i\r\n", 11, size);
             stream = stream_type_from_name(filename);
             transfer_update_file_info(file, sector, size, stream);
         }
@@ -433,7 +438,6 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         } else if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
             stream = stream_type_from_name(filename);
             uint32_t size = vfs_file_get_size(new_file_data);
-            vfs_user_printf("    found file to decode, type=%i\r\n", stream);
             vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
             transfer_update_file_info(file, sector, size, stream);
         } 
@@ -450,49 +454,35 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 // for detecting the start of a BIN/HEX file and performing programming
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors)
 {
-    error_t status;
     stream_type_t stream;
     uint32_t size;
 
-    vfs_user_printf("virtual_fs_user file_data_handler(sector=%i, num_of_sectors=%i)\r\n", sector, num_of_sectors);
-
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated
-    if (!file_transfer_state.stream_open) {
+    if (!file_transfer_state.stream_started) {
         // look for file types we can program
         stream = stream_start_identify((uint8_t*)buf, VFS_SECTOR_SIZE * num_of_sectors);
         if (STREAM_TYPE_NONE != stream) {
-            status = stream_open(stream);
-            vfs_user_printf("    stream_open stream=%i ret %i\r\n", stream, status);
-            transfer_update_stream_open(stream, sector, status);
+            transfer_stream_open(stream, sector);
         }
     }
 
-    // Transfer must have been started for processing beyond this point
-    if (!file_transfer_state.stream_open) {
-        return;
-    }
+    if (file_transfer_state.stream_started) {
 
-    // Transfer must not be finished
-    if (file_transfer_state.transfer_finished) {
-        return;
-    }
+        // Ignore sectors coming before this file
+        if (sector < file_transfer_state.start_sector) {
+            return;
+        }
 
-    // Ignore sectors coming before this file
-    if (sector < file_transfer_state.start_sector) {
-        return;
-    }
+        // sectors must be in order
+        if (sector != file_transfer_state.file_next_sector) {
+            vfs_user_printf("    SECTOR OUT OF ORDER\r\n");
+            return;
+        }
 
-    // sectors must be in order
-    if (sector != file_transfer_state.file_next_sector) {
-        vfs_user_printf("    SECTOR OUT OF ORDER\r\n");
-        return;
+        size = VFS_SECTOR_SIZE * num_of_sectors;
+        transfer_stream_data(sector, buf, size);
     }
-
-    size = VFS_SECTOR_SIZE * num_of_sectors;
-    status = stream_write((uint8_t*)buf, size);
-    vfs_user_printf("    stream_write ret %i\r\n", status);
-    transfer_update_stream_data(sector, size, status);
 }
 
 // Get the filesize from a filesize callback.
@@ -640,143 +630,235 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
 }
 
 // Update the tranfer state with file information
-void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
+static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
 {
     vfs_user_printf("virtual_fs_user transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
+    if (file_transfer_state.transfer_finished) {
+        util_assert(0);
+        return;
+    }
 
     // Initialize the directory entry if it has not been set
     if (VFS_FILE_INVALID == file_transfer_state.file_to_program) {
         file_transfer_state.file_to_program = file;
+        if (file != VFS_FILE_INVALID) {
+            vfs_user_printf("    file_to_program=%p\r\n", file);
+        }
     }
     // Initialize the starting sector if it has not been set
     if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
+        if (start_sector != VFS_INVALID_SECTOR) {
+            vfs_user_printf("    start_sector=%i\r\n", start_sector);
+        }
     }
     // Initialize the stream if it has not been set
     if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
+        if (stream != STREAM_TYPE_NONE) {
+            vfs_user_printf("    stream=%i\r\n", stream);
+        }
     }
 
     // Check - File size must be the same or bigger
     if (size < file_transfer_state.file_size) {
         vfs_user_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
-        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+        return;
     }
     // Check - Starting sector must be the same  - this is optional for file info since it may not be present initially
     if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
         vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
-        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+        return;
     }
     // Check - stream must be the same
     if (stream != file_transfer_state.stream) {
-        vfs_user_printf("error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
-        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+        vfs_user_printf("    error: changed types during transfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+        return;
     }
 
     // Update values - Size is the only value that can change and it can only increase.
     if (size > file_transfer_state.file_size) {
         file_transfer_state.file_size = size;
+        vfs_user_printf("    updated size=%i\r\n", size);
     }
-    transfer_check_for_completion();
+
+    transfer_update_state(ERROR_SUCCESS);
 }
 
 // Update the tranfer state with new information
-static void transfer_update_stream_open(stream_type_t stream, uint32_t start_sector, error_t status)
+static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
 {
+    error_t status;
     util_assert(!file_transfer_state.stream_open);
-    vfs_user_printf("virtual_fs_user transfer_update_stream_open(stream=%i, start_sector=%i, status=%i)\r\n",
-                    stream, start_sector, status);
-
-    // Status should still be at it's default of ERROR_SUCCESS
-    util_assert(ERROR_SUCCESS == file_transfer_state.status);
+    util_assert(start_sector != VFS_INVALID_SECTOR);
+    vfs_user_printf("virtual_fs_user transfer_update_stream_open(stream=%i, start_sector=%i)\r\n",
+                    stream, start_sector);
 
     // Initialize the starting sector if it has not been set
     if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
+        if (start_sector != VFS_INVALID_SECTOR) {
+            vfs_user_printf("    start_sector=%i\r\n", start_sector);
+        }
     }
     // Initialize the stream if it has not been set
     if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
+        if (stream != STREAM_TYPE_NONE) {
+            vfs_user_printf("    stream=%i\r\n", stream);
+        }
     }
 
     // Check - Starting sector must be the same
     if (start_sector != file_transfer_state.start_sector) {
         vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
-        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+        return;
     }
     // Check - stream must be the same
     if (stream != file_transfer_state.stream) {
         vfs_user_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
-        file_transfer_state.status = ERROR_ERROR_DURING_TRANSFER;
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+        return;
     }
 
-    // Check - were there any errors with the open
-    if (ERROR_SUCCESS == file_transfer_state.status) {
-        file_transfer_state.status = status;
-    }
-
+    // Open stream
+    status = stream_open(stream);
+    vfs_user_printf("    stream_open stream=%i ret %i\r\n", stream, status);
     if (ERROR_SUCCESS == status) {
         file_transfer_state.file_next_sector = start_sector;
         file_transfer_state.stream_open = true;
+        file_transfer_state.stream_started = true;
     }
-    transfer_check_for_completion();
+
+    transfer_update_state(status);
 }
 
 // Update the tranfer state with new information
-static void transfer_update_stream_data(uint32_t current_sector, uint32_t size, error_t status)
+static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t size)
 {
-    util_assert(file_transfer_state.stream_open);
+    error_t status;
+    vfs_user_printf("virtual_fs_user transfer_stream_data(sector=%i, size=%i)\r\n", sector, size);
+    vfs_user_printf("    file offset=0x%x, data=%x,%x,%x,%x,...\r\n",
+        file_transfer_state.size_processed, data[0],data[1],data[2],data[3]);
+
+    if (file_transfer_state.stream_finished) {
+        // In this state steam processing has been finished but the
+        // amount of data transferred still needs to be recorded
+        vfs_user_printf("    stream closed so ignoring data\r\n", status);
+        file_transfer_state.size_processed += size;
+        file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
+        transfer_update_state(ERROR_SUCCESS);
+        return;
+    }
+
     util_assert(size % VFS_SECTOR_SIZE == 0);
-    util_assert(file_transfer_state.file_next_sector == current_sector);
+    util_assert(file_transfer_state.stream_open);
+    status = stream_write((uint8_t*)data, size);
+    vfs_user_printf("    stream_write ret=%i\r\n", status);
+    if (ERROR_SUCCESS_DONE == status) {
+        status = stream_close();
+        vfs_user_printf("    stream_close ret=%i\r\n", status);
+        file_transfer_state.stream_open = false;
+        file_transfer_state.stream_finished = true;
+    } else if (ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
+        status = ERROR_SUCCESS;
+        file_transfer_state.stream_optional_finish = true;
+    } else {
+        file_transfer_state.stream_optional_finish = false;
+    }
 
     file_transfer_state.size_processed += size;
-    file_transfer_state.file_next_sector = current_sector + size / VFS_SECTOR_SIZE;
-    
-    // Update status
-    file_transfer_state.status = status;
-    transfer_check_for_completion();
+    file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
+
+    transfer_update_state(status);
 }
 
 // Check if the current transfer is still in progress, done, or if an error has occurred
-static void transfer_check_for_completion()
+static void transfer_update_state(error_t status)
 {
-    bool file_fully_processed;
-    bool size_nonzero;
+    bool transfer_timeout;
+    bool transfer_started;
+    bool transfer_can_be_finished;
+    bool transfer_must_be_finished;
+    bool transfer_error;
+    bool too_much_transfered;
+    error_t local_status = status;
 
-    util_assert(!file_transfer_state.transfer_finished);
+    if (file_transfer_state.transfer_finished) {
+        util_assert(0);
+        return;
+    }
 
-    // Check for completion of transfer
-    file_fully_processed = file_transfer_state.size_processed >= file_transfer_state.file_size;
-    size_nonzero = file_transfer_state.file_size > 0;
+    // Update file info status
+    file_transfer_state.file_info_optional_finish =
+        (file_transfer_state.file_to_program != VFS_FILE_INVALID ) &&
+        (file_transfer_state.size_processed >= file_transfer_state.file_size) &&
+        (file_transfer_state.file_size > 0);
 
-    if ((ERROR_SUCCESS_DONE == file_transfer_state.status) && file_fully_processed && size_nonzero) {
-        // Full filesize has been transfered and the end of the stream has been reached.
-        // Mark the transfer as finished and set result to success.
-        vfs_user_printf("virtual_fs_user transfer_check_for_completion transfer successful\r\n");
-        fail_reason = ERROR_SUCCESS;
+    transfer_error = local_status != ERROR_SUCCESS ? true : false;
+    transfer_timeout = file_transfer_state.transfer_timeout;
+    transfer_started = (VFS_FILE_INVALID != file_transfer_state.file_to_program) ||
+                       (STREAM_TYPE_NONE != file_transfer_state.stream);
+    too_much_transfered = file_transfer_state.size_processed > 
+                          ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
+    transfer_can_be_finished = file_transfer_state.file_info_optional_finish &&
+                               file_transfer_state.stream_optional_finish;
+    transfer_must_be_finished = file_transfer_state.stream_finished &&
+                                file_transfer_state.file_info_optional_finish &&
+                                !too_much_transfered;
+
+    if (transfer_error) {
+        // Local status already set
         file_transfer_state.transfer_finished = true;
-    } else if ((ERROR_SUCCESS_DONE_OR_CONTINUE == file_transfer_state.status) && file_fully_processed && size_nonzero) {
-        // Full filesize has been transfered but the stream could not determine the end of the file.
-        // Set the result to success but let the filetransfer time out. 
-        vfs_user_printf("virtual_fs_user transfer_check_for_completion transfer successful, checking for more data\r\n");
-        fail_reason = ERROR_SUCCESS;
-    } else if ((ERROR_SUCCESS == file_transfer_state.status) || 
-               (ERROR_SUCCESS_DONE == file_transfer_state.status) || 
-               (ERROR_SUCCESS_DONE_OR_CONTINUE == file_transfer_state.status)) {
-        fail_reason = ERROR_TRANSFER_IN_PROGRESS;
-        // Transfer still in progress
-    } else {
-        // An error has occurred
-        vfs_user_printf("virtual_fs_user transfer_check_for_completion error=%i,\r\n"
-                        "    file_finished=%i, size_processed=%i file_size=%i\r\n",
-                        file_transfer_state.status, file_fully_processed,
-                        file_transfer_state.size_processed, file_transfer_state.file_size);
-        fail_reason = file_transfer_state.status;
+    } if (transfer_timeout) {
+        bool transfer_successful = !transfer_started || transfer_can_be_finished;
+        local_status = transfer_successful ? ERROR_SUCCESS : ERROR_TRANSFER_TIMEOUT;
+        file_transfer_state.transfer_finished = true;
+    } else if (transfer_must_be_finished) {
+        local_status = ERROR_SUCCESS;
         file_transfer_state.transfer_finished = true;
     }
 
-    // Always start remounting
-    vfs_user_remount();
+    if (file_transfer_state.transfer_finished) {
+        vfs_user_printf("virtual_fs_user transfer_update_state(status=%i)\r\n", status);
+        vfs_user_printf("    file=%p, start_sect= %i, size=%i\r\n", 
+            file_transfer_state.file_to_program, file_transfer_state.start_sector,
+            file_transfer_state.file_size);
+        vfs_user_printf("    stream=%i, size_processed=%i, opt_finish=%i, timeout=%i\r\n", 
+            file_transfer_state.stream, file_transfer_state.size_processed,
+            file_transfer_state.file_info_optional_finish, transfer_timeout);
+
+        // Close the file stream if it is open
+        if (file_transfer_state.stream_open) {
+            error_t close_status;
+            close_status = stream_close();
+            vfs_user_printf("    stream closed ret=%i\r\n", close_status);
+            file_transfer_state.stream_open = false;
+            if (ERROR_SUCCESS == local_status) {
+                local_status = close_status;
+            }
+        }
+
+        if (too_much_transfered) {
+            if (ERROR_SUCCESS == local_status) {
+                local_status = ERROR_FILE_BOUNDS;
+            }
+        }
+
+        // Set the fail reason 
+        fail_reason = local_status;
+        vfs_user_printf("    Transfer finished, status: %i=%s\r\n", fail_reason, error_get_string(fail_reason));
+    }
+
+    // If this state change is not from aborting a transfer
+    // due to a remount then trigger a remount
+    if (!transfer_timeout) {
+        vfs_user_remount();
+    }
 }
 
 // Remove strip_count characters from the start of buf and then insert
@@ -859,4 +941,3 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
     size_left = buf - orig_buf;
     memset(buf, 0, bufsize - size_left);
 }
-
