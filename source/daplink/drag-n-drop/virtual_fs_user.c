@@ -103,7 +103,7 @@ static const uint8_t mbed_redirect_file[512] =
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 static const uint32_t connect_delay_ms = 0;
 static const uint32_t disconnect_delay_ms = 500;
-static const uint32_t reconnect_delay_ms = 1100;    // Must be above 1s
+static const uint32_t reconnect_delay_ms = 2500;    // Must be above 1s for windows (more for linux)
 
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static error_t fail_reason = ERROR_SUCCESS;
