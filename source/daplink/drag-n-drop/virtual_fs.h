@@ -83,6 +83,9 @@ vfs_sector_t vfs_file_get_start_sector(vfs_file_t file);
 // Get the size of the file.
 uint32_t vfs_file_get_size(vfs_file_t file);
 
+// Get the attributes of a file
+vfs_file_attr_bit_t vfs_file_get_attr(vfs_file_t file);
+
 // Set the callback when a file is created, deleted or has atributes changed.
 void vfs_set_file_change_callback(vfs_file_change_cb_t cb);
 
