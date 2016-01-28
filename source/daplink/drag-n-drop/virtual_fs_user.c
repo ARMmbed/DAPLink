@@ -436,10 +436,15 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
             // Remount to update the drive
             vfs_user_remount();
         } else if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
-            stream = stream_type_from_name(filename);
-            uint32_t size = vfs_file_get_size(new_file_data);
-            vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
-            transfer_update_file_info(file, sector, size, stream);
+            // Check for a know file extension to detect the current file being
+            // transferred.  Ignore hidden files since MAC uses hidden files with
+            // the same extension to keep track of transfer info in some cases.
+            if (!(VFS_FILE_ATTR_HIDDEN & vfs_file_get_attr(new_file_data))) {
+                stream = stream_type_from_name(filename);
+                uint32_t size = vfs_file_get_size(new_file_data);
+                vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
+                transfer_update_file_info(file, sector, size, stream);
+            }
         } 
     }
 
