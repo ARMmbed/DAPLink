@@ -31,7 +31,7 @@
  @{
 */
 
-// Not sure what this is suppose to mean. used in swd_host and needs to be looked further into
+// This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)
 
 /**

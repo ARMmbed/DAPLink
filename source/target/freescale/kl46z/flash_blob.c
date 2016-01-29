@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "target_flash.h"
+#include "flash_blob.h"
 
-static const uint32_t KL25Z_FLM[] = {
+static const uint32_t KL46Z_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x4604b570, 0x4616460d, 0x49302000, 0x48306008, 0xf0004448, 0x2800f8e9, 0x2001d001, 0x2000bd70,
     0x4601e7fc, 0x47702000, 0x492ab510, 0x44484828, 0xf8c2f000, 0x2c004604, 0x2100d105, 0x44484824,
@@ -68,9 +68,9 @@ static const uint32_t KL25Z_FLM[] = {
     0x00000020, 0x40020004, 0x00000000,
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x20000021, // Init
-    0x20000039, // UnInit
+    0x20000021, // UnInit
     0x20000049, // EraseChip
     0x2000006F, // EraseSector
     0x2000009F, // ProgramPage
@@ -87,9 +87,7 @@ static const TARGET_FLASH flash = {
 
     0x20000a00, // program_buffer, any valid RAM location with +512 bytes of headroom
     0x20000000, // algo_start, start of RAM
-    sizeof(KL25Z_FLM), // algo_size, size of array above
-    KL25Z_FLM,  // image, flash algo instruction array
+    sizeof(KL46Z_FLM), // algo_size, size of array above
+    KL46Z_FLM,  // image, flash algo instruction array
     512        // ram_to_flash_bytes_to_be_written
 };
-
-

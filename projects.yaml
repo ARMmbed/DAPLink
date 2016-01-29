@@ -70,14 +70,42 @@ projects:
         - *module_hif_kl26z
         - records/target/nrf51822.yaml
         - records/overrides/microbit.yaml
+    k20dx_k20dx_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/k20dx.yaml
     k20dx_k22f_if:
         - *module_if
         - *module_hif_k20dx128
         - records/target/k22f.yaml
+    k20dx_k24f_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/k24f.yaml
     k20dx_k64f_if:
         - *module_if
         - *module_hif_k20dx128
         - records/target/k64f.yaml
+    k20dx_kl02z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl02z.yaml
+    k20dx_kl05z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl05z.yaml
+    k20dx_kl25z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl25z.yaml
+    k20dx_kl26z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl26z.yaml
+    k20dx_kl46z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl46z.yaml
     lpc11u35_lpc1114_if:
         - *module_if
         - *module_hif_lpc11u35

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "target_flash.h"
+#include "flash_blob.h"
 
-static const uint32_t KL26Z_FLM[] = {
+static const uint32_t KL02Z_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x492bb510, 0x60082000, 0x4448482a, 0xf88af000, 0xd0002800, 0xbd102001, 0x47702000, 0xb5104825,
     0xf0004448, 0x0004f871, 0x4822d105, 0x44482100, 0xf908f000, 0xf0004604, 0x4620f834, 0xb570bd10,
@@ -56,7 +56,7 @@ static const uint32_t KL26Z_FLM[] = {
     0x00000000, 0x00000000, 0x00000020, 0x40020004, 0x00000000,
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x20000021, // Init
     0x20000039, // UnInit
     0x2000003D, // EraseChip
@@ -69,15 +69,13 @@ static const TARGET_FLASH flash = {
     // RSP : Initial stack pointer
     {
         0x20000001, // breakpoint instruction address
-        0x20000000 + 0x20 + 0x474,  // static base register value (image start + header + static base offset)
+        0x20000000 + 0x20 + 0x470,  // static base register value (image start + header + static base offset)
         0x20000800  // initial stack pointer
     },
 
     0x20000a00, // program_buffer, any valid RAM location with +512 bytes of headroom
     0x20000000, // algo_start, start of RAM
-    sizeof(KL26Z_FLM), // algo_size, size of array above
-    KL26Z_FLM,  // image, flash algo instruction array
+    sizeof(KL02Z_FLM), // algo_size, size of array above
+    KL02Z_FLM,  // image, flash algo instruction array
     512        // ram_to_flash_bytes_to_be_written
 };
-
-
