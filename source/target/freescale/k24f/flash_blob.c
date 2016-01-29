@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "target_flash.h"
+#include "flash_blob.h"
 
 const uint32_t K24F256_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
@@ -52,7 +52,7 @@ const uint32_t K24F256_FLM[] = {
     0x00400000, 0x00800000, 0x01000000, 0x01000000, 0x40020004, 0x00000000,
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x20000021, // Init
     0x20000049, // UnInit
     0x2000004D, // EraseChip
@@ -75,4 +75,3 @@ static const TARGET_FLASH flash = {
     K24F256_FLM,  // image, flash algo instruction array
     512        // ram_to_flash_bytes_to_be_written
 };
-
