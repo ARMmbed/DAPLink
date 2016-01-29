@@ -74,6 +74,11 @@ def test_serial(board, parent_test):
     port = board.get_serial_port()
     test_info.info("Testing serial port %s" % port)
 
+    # Note: OSX sends a break command when a serial port is closed.
+    # To avoid problems while testing keep the serial port open the
+    # whole time.  Use the property 'baudrate' to change the baud
+    # instead of opening a new instance.
+
     # Generate a 8 KB block of dummy data
     # and test a large block transfer
     test_data = [i for i in range(0, 256)] * 4 * 8
@@ -98,13 +103,14 @@ def test_serial(board, parent_test):
         else:
             test_info.failure("Block test failed")
 
-    # Generate a 4KB block of dummy data
-    # and test supported baud rates
-    test_data = [i for i in range(0, 256)] * 4 * 4
-    test_data = str(bytearray(test_data))
-    for baud in standard_baud:
-        # Setup with a baud of 115200
-        with serial.Serial(port, baudrate=115200, timeout=1) as sp:
+        # Generate a 4KB block of dummy data
+        # and test supported baud rates
+        test_data = [i for i in range(0, 256)] * 4 * 4
+        test_data = str(bytearray(test_data))
+        for baud in standard_baud:
+            # Set baud to 115200
+            sp.baudrate = 115200
+            sp.timeout = 1.0
 
             # Reset the target
             sp.sendBreak()
@@ -124,10 +130,11 @@ def test_serial(board, parent_test):
                 test_info.failure("Fail on baud command: %s" % resp)
                 continue
 
-        # Open serial port at the new baud
-        test_info.info("Testing baud %i" % baud)
-        test_time = calc_timeout(test_data, baud)
-        with serial.Serial(port, baudrate=baud, timeout=test_time) as sp:
+            # Update baud for test
+            test_info.info("Testing baud %i" % baud)
+            test_time = calc_timeout(test_data, baud)
+            sp.baudrate = baud
+            sp.timeout = test_time
 
             # Read the response indicating that the baudrate
             # on the target has changed
