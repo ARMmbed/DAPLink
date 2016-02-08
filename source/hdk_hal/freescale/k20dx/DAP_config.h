@@ -134,14 +134,14 @@ Configures the DAP Hardware I/O pins for JTAG mode:
  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
  - TDO to input mode.
 */
-static __inline void PORT_JTAG_SETUP (void) {}
+static inline void PORT_JTAG_SETUP (void) {}
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
 */
-static __inline void PORT_SWD_SETUP (void) {
+static inline void PORT_SWD_SETUP (void) {
     PIN_SWCLK_GPIO->PSOR     = 1 << PIN_SWCLK_BIT;
     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
     PIN_SWDIO_NOE_GPIO->PCOR = 1 << PIN_SWDIO_NOE_BIT;
@@ -162,7 +162,7 @@ static __inline void PORT_SWD_SETUP (void) {
 Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
-static __inline void PORT_OFF (void) {
+static inline void PORT_OFF (void) {
     PIN_SWDIO_NOE_GPIO->PSOR = 1 << PIN_SWDIO_NOE_BIT;
     PIN_SWD_NOE_GPIO->PSOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
@@ -334,7 +334,7 @@ It is recommended to provide the following LEDs for status indication:
            - 1: Connect LED ON: debugger is connected to CMSIS-DAP Debug Unit.
            - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
 */
-static __inline void LED_CONNECTED_OUT (uint32_t bit) {
+static inline void LED_CONNECTED_OUT (uint32_t bit) {
     BITBAND_REG(LED_CONNECTED_GPIO->PDOR, LED_CONNECTED_BIT) = ~bit;
 }
 
@@ -343,7 +343,7 @@ static __inline void LED_CONNECTED_OUT (uint32_t bit) {
            - 1: Target Running LED ON: program execution in target started.
            - 0: Target Running LED OFF: program execution in target stopped.
 */
-static __inline void LED_RUNNING_OUT (uint32_t bit) {
+static inline void LED_RUNNING_OUT (uint32_t bit) {
     ;             // Not available
 }
 
@@ -367,7 +367,7 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
  - for nTRST, nRESET a weak pull-up (if available) is enabled.
  - LED output pins are enabled and LEDs are turned off.
 */
-static __inline void DAP_SETUP (void) {
+static inline void DAP_SETUP (void) {
 
     SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK |  /* Enable Port A Clock */
                 SIM_SCGC5_PORTB_MASK |  /* Enable Port B Clock */
@@ -422,7 +422,7 @@ when a device needs a time-critical unlock sequence that enables the debug port.
 \return 0 = no device specific reset sequence is implemented.\n
         1 = a device specific reset sequence is implemented.
 */
-static __inline uint32_t RESET_TARGET (void) {
+static inline uint32_t RESET_TARGET (void) {
     return (0);              // change to '1' when a device reset sequence is implemented
 }
 
