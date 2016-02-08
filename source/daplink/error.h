@@ -26,7 +26,8 @@ typedef enum {
     
     /* VFS user errors */
     ERROR_ERROR_DURING_TRANSFER,
-    ERROR_TRANSFER_IN_PROGRESS,
+    ERROR_TRANSFER_TIMEOUT,
+    ERROR_FILE_BOUNDS,
 
     /* Target flash errors */
     ERROR_RESET,

@@ -391,6 +391,12 @@ uint32_t vfs_file_get_size(vfs_file_t file)
     return de->filesize;
 }
 
+vfs_file_attr_bit_t vfs_file_get_attr(vfs_file_t file)
+{
+    FatDirectoryEntry_t * de = file;
+    return (vfs_file_attr_bit_t)de->attributes;
+}
+
 void vfs_set_file_change_callback(vfs_file_change_cb_t cb)
 {
     file_change_cb = cb;

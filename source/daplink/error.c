@@ -33,8 +33,10 @@ static const char *const error_message[] = {
 
     // ERROR_ERROR_DURING_TRANSFER
     "An error occurred during the transfer\n",
-    // ERROR_TRANSFER_IN_PROGRESS
+    // ERROR_TRANSFER_TIMEOUT
     "The transfer timed out.\r\n",
+    // ERROR_FILE_BOUNDS
+    "Possible mismatch between file size and size programmed\r\n",
 
     /* Target flash errors */
 
