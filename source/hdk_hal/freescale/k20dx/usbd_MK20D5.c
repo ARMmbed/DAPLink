@@ -52,21 +52,21 @@ uint32_t Data1  = 0x55555555;
 #define OUT_TOKEN      0x01
 #define TOK_PID(idx)   ((BD[idx].stat >> 2) & 0x0F)
 
-__inline static void protected_and (uint32_t *addr, uint32_t val)
+inline static void protected_and (uint32_t *addr, uint32_t val)
 {
     cortex_int_state_t state;
     state = cortex_int_get_and_disable();
     *addr = *addr & val;
     cortex_int_restore(state);
 }
-__inline static void protected_or  (uint32_t *addr, uint32_t val)
+inline static void protected_or  (uint32_t *addr, uint32_t val)
 {
     cortex_int_state_t state;
     state = cortex_int_get_and_disable();
     *addr = *addr | val;
     cortex_int_restore(state);
 }
-__inline static void protected_xor (uint32_t *addr, uint32_t val)
+inline static void protected_xor (uint32_t *addr, uint32_t val)
 {
     cortex_int_state_t state;
     state = cortex_int_get_and_disable();
