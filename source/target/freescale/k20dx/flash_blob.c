@@ -1,5 +1,5 @@
 /* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2014 ARM Limited
+ * Copyright (c) 2009-2013 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "target_flash.h"
+#include "flash_blob.h"
 
 static const uint32_t K20D50M_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
@@ -46,7 +46,7 @@ static const uint32_t K20D50M_FLM[] = {
     0x40020004, 0x00000000,
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x20000021, // Init
     0x20000049, // UnInit
     0x2000004D, // EraseChip
@@ -69,5 +69,3 @@ static const TARGET_FLASH flash = {
     K20D50M_FLM,  // image, flash algo instruction array
     512        // ram_to_flash_bytes_to_be_written
 };
-
-

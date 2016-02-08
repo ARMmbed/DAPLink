@@ -15,21 +15,31 @@
  */
 #include "target_reset.h"
 #include "swd_host.h"
+#include "target_config.h"
+#include "info.h"
 
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004     //
 #define MDM_IDR     0x010000fc     // read-only identification register
-
 #define MDM_ID      0x001c0020     // L series
 
-void target_before_init_debug(void) {
+void target_before_init_debug(void)
+{
     swd_set_target_reset(1);
 }
 
-void board_init(void) {
+void board_init(void)
+{
+
 }
 
-uint8_t target_unlock_sequence(void) {
+void prerun_target_config(void)
+{    
+
+}
+
+uint8_t target_unlock_sequence(void)
+{
     uint32_t val;
 
     // read the device ID
@@ -115,6 +125,7 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    return swd_set_target_state_hw(state);
 }
