@@ -23,58 +23,58 @@ static const char *const error_message[] = {
     /* Shared errors */
 
     // ERROR_SUCCESS
-    "Operation was successful\r\n",
+    "Operation was successful",
     // ERROR_FAILURE
-    "An error has occurred\r\n",
+    "An error has occurred",
     // ERROR_INTERNAL
-    "An internal error has occurred\r\n",
+    "An internal error has occurred",
 
     /* VFS user errors */
 
     // ERROR_ERROR_DURING_TRANSFER
-    "An error occurred during the transfer\n",
+    "An error occurred during the transfer",
     // ERROR_TRANSFER_TIMEOUT
-    "The transfer timed out.\r\n",
+    "The transfer timed out.",
     // ERROR_FILE_BOUNDS
-    "Possible mismatch between file size and size programmed\r\n",
+    "Possible mismatch between file size and size programmed",
 
     /* Target flash errors */
 
     // ERROR_RESET
-    "The interface firmware FAILED to reset/halt the target MCU\r\n",
+    "The interface firmware FAILED to reset/halt the target MCU",
     // ERROR_ALGO_DL
-    "The interface firmware FAILED to download the flash programming algorithms to the target MCU\r\n",
+    "The interface firmware FAILED to download the flash programming algorithms to the target MCU",
     // ERROR_ALGO_DATA_SEQ
-    "The interface firmware FAILED to download the flash data contents to be programmed\r\n",
+    "The interface firmware FAILED to download the flash data contents to be programmed",
     // ERROR_INIT
-    "The interface firmware FAILED to initialize the target MCU\r\n",
+    "The interface firmware FAILED to initialize the target MCU",
     // ERROR_SECURITY_BITS
-    "The interface firmware ABORTED programming. Image is trying to set security bits\r\n",
+    "The interface firmware ABORTED programming. Image is trying to set security bits",
     // ERROR_UNLOCK
-    "The interface firmware FAILED to unlock the target for programming\r\n",
+    "The interface firmware FAILED to unlock the target for programming",
     // ERROR_ERASE_SECTOR
-    "Flash algorithm erase sector command FAILURE\r\n",
+    "Flash algorithm erase sector command FAILURE",
     // ERROR_ERASE_ALL
-    "Flash algorithm erase all command FAILURE\r\n",
+    "Flash algorithm erase all command FAILURE",
     // ERROR_WRITE
-    "Flash algorithm write command FAILURE\r\n",
+    "Flash algorithm write command FAILURE",
 
     /* File stream errors */
 
     // ERROR_SUCCESS_DONE
-    "End of stream has been reached\r\n",
+    "End of stream has been reached",
     // ERROR_SUCCESS_DONE_OR_CONTINUE
-    "End of stream is unknown\r\n",
+    "End of stream is unknown",
     // ERROR_HEX_CKSUM
-    "The hex file cannot be decoded. Checksum calculation failure occurred.\r\n",
+    "The hex file cannot be decoded. Checksum calculation failure occurred.",
     // ERROR_HEX_PARSER
-    "The hex file cannot be decoded. Parser logic failure occurred.\r\n",
+    "The hex file cannot be decoded. Parser logic failure occurred.",
     // ERROR_HEX_PROGRAM
-    "The hex file cannot be programmed. Logic failure occurred.\r\n",
+    "The hex file cannot be programmed. Logic failure occurred.",
     // ERROR_HEX_INVALID_ADDRESS
-    "The hex file you dropped isn't compatible with this mode or device. Are you in MAINTENANCE mode? See HELP FAQ.HTM\r\n",
+    "The hex file you dropped isn't compatible with this mode or device. Are you in MAINTENANCE mode? See HELP FAQ.HTM",
     // ERROR_HEX_INVALID_APP_OFFSET
-    "The hex file offset load address is not correct.\r\n",
+    "The hex file offset load address is not correct.",
 
     /* Flash decoder errors */
 
@@ -83,7 +83,7 @@ static const char *const error_message[] = {
     // ERROR_FD_INTF_UPDT_ADDR_WRONG
     "The starting address for the interface update is wrong.",
     // ERROR_FD_UNSUPPORTED_UPDATE
-    "The application file format is unknown and cannot be parsed and/or processed.\r\n",
+    "The application file format is unknown and cannot be parsed and/or processed.",
 
     /* Flash IAP interface */
 

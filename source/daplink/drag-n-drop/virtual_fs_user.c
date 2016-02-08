@@ -610,6 +610,10 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
         return 0;
     }
     memcpy(data, contents, size);
+    data[size] = '\r';
+    size++;
+    data[size] = '\n';
+    size++;
     return size;
 }
 
