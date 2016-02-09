@@ -137,6 +137,7 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
+static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
 static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
@@ -391,6 +392,19 @@ static void build_filesystem()
         vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
     }
 
+    // NEED_BL.TXT
+    volatile uint32_t bl_start = DAPLINK_ROM_BL_START; // Silence warnings about null pointer
+    volatile uint32_t if_start = DAPLINK_ROM_IF_START; // Silence warnings about null pointer
+    if (daplink_is_interface() &&
+        (DAPLINK_ROM_BL_SIZE > 0) &&
+        (0 == memcmp((void*)bl_start, (void*)if_start, DAPLINK_MIN_WRITE_SIZE))) {
+        // If the bootloader contains a copy of the interfaces vector table
+        // then an error occurred when updating so warn that the bootloader is
+        // missing.
+        file_size = get_file_size(read_file_need_bl_txt);
+        vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
+    }
+
     // Set mass storage parameters
     USBD_MSC_MemorySize = vfs_get_total_size();
     USBD_MSC_BlockSize  = VFS_SECTOR_SIZE;
@@ -636,6 +650,19 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
     pos += util_write_string(buf + pos, "\r\n");
 
     return pos;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
+{
+    const char* contents = "A bootloader update was started but unable to complete.\r\n"
+                           "Reload the bootloader to fix this error message.\r\n";
+    uint32_t size = strlen(contents);
+    if (sector_offset != 0) {
+        return 0;
+    }
+    memcpy(data, contents, size);
+    return size;
 }
 
 // Update the tranfer state with file information
