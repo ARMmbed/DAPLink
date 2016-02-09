@@ -98,30 +98,38 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     *start_addr = 0;
     *flash_intf = 0;
 
-    if (FLASH_DECODER_TYPE_TARGET == type) {
-        flash_start_local = target_device.flash_start;
-        flash_intf_local = flash_intf_target;
-    } else if (!daplink_is_bootloader() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {
-        if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
-            // Address is wrong so display error message
-            status = ERROR_FD_BL_UPDT_ADDR_WRONG;
-            flash_start_local = 0;
-            flash_intf_local = 0;
-        } else {
-            // Setup for update
-            flash_start_local = DAPLINK_ROM_BL_START;
-            flash_intf_local = flash_intf_iap_protected;
-        }
-    } else if (!(daplink_is_interface()) && (FLASH_DECODER_TYPE_INTERFACE == type)) {
-        if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
-            // Address is wrong so display error message
-            status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
-            flash_start_local = 0;
-            flash_intf_local = 0;
-        } else {
-            // Setup for update
+    if (daplink_is_bootloader()) {
+        if (FLASH_DECODER_TYPE_INTERFACE == type) {
+            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+                // Address is wrong so display error message
+                status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
+                flash_start_local = 0;
+                flash_intf_local = 0;
+            } else {
+                // Setup for update
+                flash_start_local = DAPLINK_ROM_IF_START;
+                flash_intf_local = flash_intf_iap_protected;
+            }
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
+            // "Target" update in this case would be a 3rd party interface application
             flash_start_local = DAPLINK_ROM_IF_START;
             flash_intf_local = flash_intf_iap_protected;
+        }
+    } else if (daplink_is_interface()) {
+        if (FLASH_DECODER_TYPE_BOOTLOADER == type) {
+            if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
+                // Address is wrong so display error message
+                status = ERROR_FD_BL_UPDT_ADDR_WRONG;
+                flash_start_local = 0;
+                flash_intf_local = 0;
+            } else {
+                // Setup for update
+                flash_start_local = DAPLINK_ROM_BL_START;
+                flash_intf_local = flash_intf_iap_protected;
+            }
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
+            flash_start_local = target_device.flash_start;
+            flash_intf_local = flash_intf_target;
         }
     } else {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
