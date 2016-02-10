@@ -16,7 +16,6 @@
 #ifndef USB_BUF_H
 #define USB_BUF_H
 
-#include "absacc.h"
 #include "stdint.h"
 
 uint32_t usb_buffer[512/4];
