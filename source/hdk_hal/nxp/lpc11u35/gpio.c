@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "LPC11Uxx.h"
-#include "RTL.h"
 
 #include "gpio.h"
 #include "compiler.h"
@@ -23,9 +22,6 @@
 // This GPIO configuration is only valid for the LPC11U35 HDK
 COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_LPC11U35);
 
-static uint16_t isr_flags;
-static OS_TID isr_notify;
-
 #ifdef DBG_LPC812
 #define SW_RESET_BUTTON    0
 #else
@@ -33,8 +29,8 @@ static OS_TID isr_notify;
 #endif
 
 #ifdef SW_RESET_BUTTON
-#define RESET_PORT        (0)
-#define RESET_PIN         (1)
+#define RESET_PORT        (1)
+#define RESET_PIN         (19)
 #define RESET_INT_CH      (0)
 #define RESET_INT_MASK    (1 << RESET_INT_CH)
 #endif
@@ -43,7 +39,8 @@ static OS_TID isr_notify;
 #define PIN_MSD_LED       (1<<20)
 #define PIN_CDC_LED       (1<<11)
 
-void gpio_init(void) {
+void gpio_init(void)
+{
     // enable clock for GPIO port 0
     LPC_SYSCON->SYSAHBCLKCTRL |= (1UL << 6);
 
@@ -70,7 +67,8 @@ void gpio_init(void) {
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1<<19) | (1<<23) | (1<<24));
 }
 
-void gpio_set_hid_led(gpio_led_state_t state) {
+void gpio_set_hid_led(gpio_led_state_t state)
+{
     if (state) {
         LPC_GPIO->SET[0] |= (PIN_DAP_LED);
     } else {
@@ -78,7 +76,8 @@ void gpio_set_hid_led(gpio_led_state_t state) {
     }
 }
 
-void gpio_set_cdc_led(gpio_led_state_t state) {
+void gpio_set_cdc_led(gpio_led_state_t state)
+{
     if (state) {
       LPC_GPIO->SET[0] |= (PIN_CDC_LED);
     } else {
@@ -86,7 +85,8 @@ void gpio_set_cdc_led(gpio_led_state_t state) {
     }
 }
 
-void gpio_set_msc_led(gpio_led_state_t state) {
+void gpio_set_msc_led(gpio_led_state_t state)
+{
     if (state) {
         LPC_GPIO->SET[0] |= (PIN_MSD_LED);
     } else {
@@ -94,37 +94,7 @@ void gpio_set_msc_led(gpio_led_state_t state) {
     }
 }
 
-void gpio_enable_button_flag(OS_TID task, uint16_t flags) {
-    /* When the "reset" button is pressed the ISR will set the */
-    /* event flags "flags" for task "task" */
-
-    /* Keep a local copy of task & flags */
-    isr_notify=task;
-    isr_flags=flags;
-
-#if SW_RESET_BUTTON
-    LPC_SYSCON->STARTERP0 |= RESET_INT_MASK;
-    LPC_SYSCON->PINTSEL[RESET_INT_CH] = (RESET_PORT) ? (RESET_PIN + 24) : (RESET_PIN);
-
-    if (!(LPC_GPIO_PIN_INT->ISEL & RESET_INT_MASK))
-        LPC_GPIO_PIN_INT->IST = RESET_INT_MASK;
-
-    LPC_GPIO_PIN_INT->IENF |= RESET_INT_MASK;
-
-    NVIC_EnableIRQ(FLEX_INT0_IRQn);
-#endif
-}
-
-void FLEX_INT0_IRQHandler() {
-    isr_evt_set(isr_flags, isr_notify);
-    NVIC_DisableIRQ(FLEX_INT0_IRQn);
-
-    // ack interrupt
-    LPC_GPIO_PIN_INT->IST = 0x01;
-}
-
 uint8_t gpio_get_sw_reset(void)
 {
-    return (LPC_GPIO->W[RESET_PORT] & (1 << RESET_PIN)) ? 1 : 0;
+    return (LPC_GPIO->PIN[RESET_PORT] & (1 << RESET_PIN)) ? 1 : 0;
 }
-

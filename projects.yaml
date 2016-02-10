@@ -86,3 +86,7 @@ projects:
         - *module_if
         - *module_hdk_lpc11u35
         - records/target/efm32gg_stk.yaml
+    lpc11u35_ty51822r3_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/ty51822r3.yaml
