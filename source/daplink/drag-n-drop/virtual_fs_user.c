@@ -364,6 +364,7 @@ static bool changing_state()
 static void build_filesystem()
 {
     uint32_t file_size;
+    vfs_file_t file_handle;
 
     // Update anything that could have changed file system state
     file_transfer_state = default_transfer_state;
@@ -389,7 +390,8 @@ static void build_filesystem()
     // ASSERT.TXT
     if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
         file_size = get_file_size(read_file_assert_txt);
-        vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+        file_handle = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+        vfs_file_set_attr(file_handle, (vfs_file_attr_bit_t)0); // Remove read only attribute
     }
 
     // NEED_BL.TXT
