@@ -85,7 +85,7 @@ static const file_transfer_state_t default_transfer_state = {
     STREAM_TYPE_NONE,
 };
 
-static const uint8_t mbed_redirect_file[512] =
+static const char mbed_redirect_file[] =
     "<!doctype html>\r\n"
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
     "<html>\r\n"
@@ -921,7 +921,7 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
     // Zero out buffer so strlen operations don't go out of bounds
     memset(buf, 0, bufsize);
-    memcpy(buf, mbed_redirect_file, strlen((const char *)mbed_redirect_file));
+    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
     do {
         // Look for key or the end of the string
         while ((*buf != '@') && (*buf != 0)) buf++;
