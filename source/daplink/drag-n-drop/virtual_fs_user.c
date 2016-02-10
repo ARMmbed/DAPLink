@@ -466,7 +466,9 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 
     if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
+            // Clear assert and remount to update the drive
             util_assert_clear();
+            vfs_user_remount();
         }
     }
 }
