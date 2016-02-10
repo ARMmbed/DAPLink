@@ -1,0 +1,5 @@
+common:
+    sources:
+        target:
+            - source/target/ssci/nrf51822/ssci_app_config.c
+            - source/target/ssci/nrf51822/target_reset.c
