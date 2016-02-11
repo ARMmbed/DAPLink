@@ -17,7 +17,7 @@
 #include "main.h"
 #include "gpio.h"
 #include "validation.h"
-#include "virtual_fs_user.h"
+#include "vfs_manager.h"
 #include "RTL.h"
 #include "rl_usb.h"
 #include "config_settings.h"
@@ -139,7 +139,7 @@ __task void main_task(void)
 
     // USB
     usbd_init();
-    vfs_user_init(true);
+    vfs_mngr_init(true);
     usbd_connect(0);
     usb_busy = MAIN_USB_IDLE;
     usb_busy_count = 0;
@@ -164,7 +164,7 @@ __task void main_task(void)
         }
 
         if (flags & FLAGS_MAIN_90MS) {
-            vfs_user_periodic(90); // FLAGS_MAIN_90MS
+            vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 
             // Update USB busy status
             switch (usb_busy) {

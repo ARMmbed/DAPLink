@@ -21,12 +21,12 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "virtual_fs.h"
+#include "vfs_manager.h"
 #include "daplink_debug.h"
 #include "validation.h"
 #include "info.h"
 #include "config_settings.h"
 #include "daplink.h"
-#include "virtual_fs_user.h"
 #include "util.h"
 #include "version_git.h"
 #include "IO_config.h"
@@ -35,12 +35,12 @@
 #include "error.h"
 
 // Set to 1 to enable debugging
-#define DEBUG_VIRTUAL_FS_USER     0
+#define DEBUG_VFS_MANAGER     0
 
-#if DEBUG_VIRTUAL_FS_USER
-    #define vfs_user_printf    debug_msg
+#if DEBUG_VFS_MANAGER
+    #define vfs_mngr_printf    debug_msg
 #else
-    #define vfs_user_printf(...)
+    #define vfs_mngr_printf(...)
 #endif
 
 typedef struct {
@@ -62,14 +62,10 @@ typedef struct {
 } file_transfer_state_t;
 
 typedef enum {
-    VFS_USER_STATE_DISCONNECTED,
-    VFS_USER_STATE_RECONNECTING,
-    VFS_USER_STATE_CONNECTED
-} vfs_user_state_t;
-
-// Must be bigger than 4x the flash size of the biggest supported
-// device.  This is to accomidate for hex file programming.
-static const uint32_t disc_size = MB(8);
+    VFS_MNGR_STATE_DISCONNECTED,
+    VFS_MNGR_STATE_RECONNECTING,
+    VFS_MNGR_STATE_CONNECTED
+} vfs_mngr_state_t;
 
 static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
@@ -89,22 +85,6 @@ static const file_transfer_state_t default_transfer_state = {
     STREAM_TYPE_NONE,
 };
 
-static const char mbed_redirect_file[] =
-    "<!doctype html>\r\n"
-    "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
-    "<html>\r\n"
-    "<head>\r\n"
-    "<meta charset=\"utf-8\">\r\n"
-    "<title>mbed Website Shortcut</title>\r\n"
-    "</head>\r\n"
-    "<body>\r\n"
-    "<script>\r\n"
-    "window.location.replace(\"@R\");\r\n"
-    "</script>\r\n"
-    "</body>\r\n"
-    "</html>\r\n";
-
-static const vfs_filename_t assert_file = "ASSERT  TXT";
 static const uint32_t connect_delay_ms = 0;
 static const uint32_t disconnect_delay_ms = 500;
 static const uint32_t reconnect_delay_ms = 2500;    // Must be above 1s for windows (more for linux)
@@ -112,13 +92,11 @@ static const uint32_t reconnect_delay_ms = 2500;    // Must be above 1s for wind
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static error_t fail_reason = ERROR_SUCCESS;
 static file_transfer_state_t file_transfer_state;
-static char assert_buf[64 + 1];
-static uint16_t assert_line;
 
 // These variables can be access from multiple threads
 // so access to them must be synchronized
-static vfs_user_state_t vfs_state;
-static vfs_user_state_t vfs_state_next;
+static vfs_mngr_state_t vfs_state;
+static vfs_mngr_state_t vfs_state_next;
 static uint32_t vfs_state_remaining_ms;
 
 static OS_MUT sync_mutex;
@@ -130,76 +108,64 @@ static void sync_assert_usb_thread(void);
 static void sync_lock(void);
 static void sync_unlock(void);
 
-static void vfs_user_disconnect_delay(void);
+static void vfs_mngr_disconnect_delay(void);
 static bool changing_state(void);
 static void build_filesystem(void);
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
-static uint32_t get_file_size(vfs_read_cb_t read_func);
-
-static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
-static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
 static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
 static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t size);
 static void transfer_update_state(error_t status);
 
-static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count);
-static void update_html_file(uint8_t *buf, uint32_t bufsize);
 
-
-// Rebuild the virtual filesystem.  This must only be called
-// when mass storage is inactive.
-void vfs_user_enable(bool enable)
+void vfs_mngr_fs_enable(bool enable)
 {
     sync_lock();
     if (enable) {
-        if (VFS_USER_STATE_DISCONNECTED == vfs_state_next) {
+        if (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next) {
             vfs_state_remaining_ms = connect_delay_ms;
-            vfs_state_next = VFS_USER_STATE_CONNECTED;
+            vfs_state_next = VFS_MNGR_STATE_CONNECTED;
         }
     } else {
         vfs_state_remaining_ms = disconnect_delay_ms;
-        vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+        vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
     }
     sync_unlock();
 }
 
-void vfs_user_remount(void)
+void vfs_mngr_fs_remount(void)
 {
     sync_lock();
     // Only start a remount if in the connected state and not in a transition
-    if (!changing_state() && (VFS_USER_STATE_CONNECTED == vfs_state)) {
-        vfs_state_next = VFS_USER_STATE_RECONNECTING;
+    if (!changing_state() && (VFS_MNGR_STATE_CONNECTED == vfs_state)) {
+        vfs_state_next = VFS_MNGR_STATE_RECONNECTING;
         vfs_state_remaining_ms = disconnect_delay_ms;
     }
     sync_unlock();
 }
 
-void vfs_user_init(bool enable)
+void vfs_mngr_init(bool enable)
 {
     sync_assert_usb_thread();
 
     build_filesystem();
     if (enable) {
-        vfs_state = VFS_USER_STATE_CONNECTED;
-        vfs_state_next = VFS_USER_STATE_CONNECTED;
+        vfs_state = VFS_MNGR_STATE_CONNECTED;
+        vfs_state_next = VFS_MNGR_STATE_CONNECTED;
         USBD_MSC_MediaReady = 1;
     } else {
-        vfs_state = VFS_USER_STATE_DISCONNECTED;
-        vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+        vfs_state = VFS_MNGR_STATE_DISCONNECTED;
+        vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
         USBD_MSC_MediaReady = 0;
     }
 }
 
-void vfs_user_periodic(uint32_t elapsed_ms)
+void vfs_mngr_periodic(uint32_t elapsed_ms)
 {
-    vfs_user_state_t vfs_state_local;
-    vfs_user_state_t vfs_state_local_prev;
+    vfs_mngr_state_t vfs_state_local;
+    vfs_mngr_state_t vfs_state_local_prev;
     sync_assert_usb_thread();
     sync_lock();
 
@@ -217,15 +183,15 @@ void vfs_user_periodic(uint32_t elapsed_ms)
         return;
     }
 
-    vfs_user_printf("vfs_user_periodic()\r\n");
+    vfs_mngr_printf("vfs_mngr_periodic()\r\n");
 
     // Transistion to new state
     vfs_state_local_prev = vfs_state;
     vfs_state = vfs_state_next;
     switch (vfs_state) {
-        case VFS_USER_STATE_RECONNECTING:
+        case VFS_MNGR_STATE_RECONNECTING:
             // Transition back to the connected state
-            vfs_state_next = VFS_USER_STATE_CONNECTED;
+            vfs_state_next = VFS_MNGR_STATE_CONNECTED;
             vfs_state_remaining_ms = reconnect_delay_ms;
             break;
         default:
@@ -236,46 +202,35 @@ void vfs_user_periodic(uint32_t elapsed_ms)
     sync_unlock();
 
     // Processing when leaving a state
-    vfs_user_printf("    state %i->%i\r\n", vfs_state_local_prev, vfs_state_local);
+    vfs_mngr_printf("    state %i->%i\r\n", vfs_state_local_prev, vfs_state_local);
     switch (vfs_state_local_prev) {
-        case VFS_USER_STATE_DISCONNECTED:
+        case VFS_MNGR_STATE_DISCONNECTED:
             // No action needed
             break;
-        case VFS_USER_STATE_RECONNECTING:
+        case VFS_MNGR_STATE_RECONNECTING:
             // No action needed
             break;
-        case VFS_USER_STATE_CONNECTED:
+        case VFS_MNGR_STATE_CONNECTED:
             // Close ongoing transfer if there is one
             if (!file_transfer_state.transfer_finished) {
-                vfs_user_printf("    transfer timeout\r\n");
+                vfs_mngr_printf("    transfer timeout\r\n");
                 file_transfer_state.transfer_timeout = true;
                 transfer_update_state(ERROR_SUCCESS);
             }
             util_assert(file_transfer_state.transfer_finished);
-            // Reset if programming was successful  //TODO - move to flash layer
-            if (daplink_is_bootloader() && (ERROR_SUCCESS == fail_reason)) {
-                NVIC_SystemReset();
-            }
-            // If hold in bootloader has been set then reset after usb is disconnected
-            if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
-                NVIC_SystemReset();
-            }
-            // Resume the target if configured to do so //TODO - move to flash layer
-            if (config_get_auto_rst()) {
-                target_set_state(RESET_RUN);
-            }
+            vfs_user_disconnecting();
             break;
     }
 
     // Processing when entering a state
     switch (vfs_state_local) {
-        case VFS_USER_STATE_DISCONNECTED:
+        case VFS_MNGR_STATE_DISCONNECTED:
             USBD_MSC_MediaReady = 0;
             break;
-        case VFS_USER_STATE_RECONNECTING:
+        case VFS_MNGR_STATE_RECONNECTING:
             USBD_MSC_MediaReady = 0;
             break;
-        case VFS_USER_STATE_CONNECTED:
+        case VFS_MNGR_STATE_CONNECTED:
             build_filesystem();
             USBD_MSC_MediaReady = 1;
             break;
@@ -283,12 +238,18 @@ void vfs_user_periodic(uint32_t elapsed_ms)
     return;
 }
 
+error_t vfs_mngr_get_transfer_status()
+{
+    sync_assert_usb_thread();
+    return fail_reason;
+}
+
 void usbd_msc_init(void)
 {
     sync_init();
     build_filesystem();
-    vfs_state = VFS_USER_STATE_DISCONNECTED;
-    vfs_state_next = VFS_USER_STATE_DISCONNECTED;
+    vfs_state = VFS_MNGR_STATE_DISCONNECTED;
+    vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
     vfs_state_remaining_ms = 0;
     USBD_MSC_MediaReady = 0;
 }
@@ -319,7 +280,7 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
     // Restart the disconnect counter on every packet
     // so the device does not detach in the middle of a
     // transfer.
-    vfs_user_disconnect_delay();
+    vfs_mngr_disconnect_delay();
 
     if (file_transfer_state.transfer_finished) {
         return;
@@ -353,9 +314,9 @@ static void sync_unlock(void)
     os_mut_release(&sync_mutex);
 }
 
-static void vfs_user_disconnect_delay()
+static void vfs_mngr_disconnect_delay()
 {
-    if (VFS_USER_STATE_CONNECTED == vfs_state) {
+    if (VFS_MNGR_STATE_CONNECTED == vfs_state) {
         vfs_state_remaining_ms = disconnect_delay_ms;
     }
 }
@@ -367,49 +328,11 @@ static bool changing_state()
 
 static void build_filesystem()
 {
-    uint32_t file_size;
-    vfs_file_t file_handle;
-
     // Update anything that could have changed file system state
     file_transfer_state = default_transfer_state;
 
-    // Setup the filesystem based on target parameters
-    vfs_init(daplink_drive_name, disc_size);
+    vfs_user_build_filesystem();
     vfs_set_file_change_callback(file_change_handler);
-
-    // MBED.HTM
-    file_size = get_file_size(read_file_mbed_htm);
-    vfs_create_file(daplink_url_name, read_file_mbed_htm, 0, file_size);
-
-    // DETAILS.TXT
-    file_size = get_file_size(read_file_details_txt);
-    vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
-
-    // FAIL.TXT
-    if (fail_reason != ERROR_SUCCESS) {
-        file_size = get_file_size(read_file_fail_txt);
-        vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
-    }
-
-    // ASSERT.TXT
-    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
-        file_size = get_file_size(read_file_assert_txt);
-        file_handle = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
-        vfs_file_set_attr(file_handle, (vfs_file_attr_bit_t)0); // Remove read only attribute
-    }
-
-    // NEED_BL.TXT
-    volatile uint32_t bl_start = DAPLINK_ROM_BL_START; // Silence warnings about null pointer
-    volatile uint32_t if_start = DAPLINK_ROM_IF_START; // Silence warnings about null pointer
-    if (daplink_is_interface() &&
-        (DAPLINK_ROM_BL_SIZE > 0) &&
-        (0 == memcmp((void*)bl_start, (void*)if_start, DAPLINK_MIN_WRITE_SIZE))) {
-        // If the bootloader contains a copy of the interfaces vector table
-        // then an error occurred when updating so warn that the bootloader is
-        // missing.
-        file_size = get_file_size(read_file_need_bl_txt);
-        vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
-    }
 
     // Set mass storage parameters
     USBD_MSC_MemorySize = vfs_get_total_size();
@@ -422,8 +345,10 @@ static void build_filesystem()
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
-    vfs_user_printf("virtual_fs_user file_change_handler(name=%*s, file=%p, change=%i)\r\n", 11, filename, file, change);
+    vfs_mngr_printf("vfs_manager file_change_handler(name=%*s, file=%p, change=%i)\r\n", 11, filename, file, change);
 
+    vfs_user_file_change_handler(filename, change, file, new_file_data);
+    
     if (VFS_FILE_CHANGED == change) {
         if (file == file_transfer_state.file_to_program) {
             stream_type_t stream;
@@ -436,26 +361,7 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 
     if (VFS_FILE_CREATED == change) {
         stream_type_t stream;
-        if (!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
-            if (daplink_is_interface()) {
-                config_ram_set_hold_in_bl(true);
-            } else {
-                // Do nothing - bootloader will go to interface by default
-            }
-            vfs_user_remount();
-        } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
-            config_set_auto_rst(true);
-            vfs_user_remount();
-        } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
-            config_set_auto_rst(false);
-            vfs_user_remount();
-        } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
-            // Test asserts
-            util_assert(0);
-        } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
-            // Remount to update the drive
-            vfs_user_remount();
-        } else if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
+        if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
             // Check for a know file extension to detect the current file being
             // transferred.  Ignore hidden files since MAC uses hidden files with
             // the same extension to keep track of transfer info in some cases.
@@ -469,11 +375,7 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
     }
 
     if (VFS_FILE_DELETED == change) {
-        if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
-            // Clear assert and remount to update the drive
-            util_assert_clear();
-            vfs_user_remount();
-        }
+        // Unused
     }
 }
 
@@ -503,9 +405,9 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // sectors must be in order
         if (sector != file_transfer_state.file_next_sector) {
-            vfs_user_printf("virtual_fs_user file_data_handler\r\n");
+            vfs_mngr_printf("vfs_manager file_data_handler\r\n");
             if (sector < file_transfer_state.file_next_sector) {
-                vfs_user_printf("    new out of order sector = 0x%x, prev = 0x%x\r\n",
+                vfs_mngr_printf("    new out of order sector = 0x%x, prev = 0x%x\r\n",
                     sector, file_transfer_state.last_ooo_sector);
 
                 if (VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
@@ -514,7 +416,7 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
                 file_transfer_state.last_ooo_sector =
                     MIN(file_transfer_state.last_ooo_sector, sector);
             }
-            vfs_user_printf("    SECTOR OUT OF ORDER - 0x%x\r\n", sector);
+            vfs_mngr_printf("    SECTOR OUT OF ORDER - 0x%x\r\n", sector);
             return;
         }
 
@@ -525,8 +427,8 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // If stream processing is done then discard the data
         if (file_transfer_state.stream_finished) {
-            vfs_user_printf("virtual_fs_user file_data_handler\r\n    sector=%i, size=%i\r\n", sector, size);
-            vfs_user_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
+            vfs_mngr_printf("vfs_manager file_data_handler\r\n    sector=%i, size=%i\r\n", sector, size);
+            vfs_mngr_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
                 file_transfer_state.size_transferred, buf[0],buf[1],buf[2],buf[3]);
             transfer_update_state(ERROR_SUCCESS);
             return;
@@ -536,171 +438,10 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
     }
 }
 
-// Get the filesize from a filesize callback.
-// The file data must be null terminated for this to work correctly.
-static uint32_t get_file_size(vfs_read_cb_t read_func)
-{
-    // USB buffer must not be in use when get_file_size is called
-    static uint8_t * dummy_buffer = (uint8_t *)usb_buffer;
-
-    // Determine size of the file by faking a read
-    return read_func(0, dummy_buffer, 1);
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    if (sector_offset != 0) {
-        return 0;
-    }
-    update_html_file(data, VFS_SECTOR_SIZE);
-    return strlen((const char *)data);
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    uint32_t pos;
-    const char * mode_str;
-    char * buf = (char *)data;
-    if (sector_offset != 0) {
-        return 0;
-    }
-    
-    pos = 0;
-    pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
-
-    // Unique ID
-    pos += util_write_string(buf + pos, "Unique ID: ");
-    pos += util_write_string(buf + pos, info_get_unique_id());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // HDK ID
-    pos += util_write_string(buf + pos, "HDK ID: ");
-    pos += util_write_string(buf + pos, info_get_hdk_id());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Settings
-    pos += util_write_string(buf + pos, "Auto Reset: ");
-    pos += util_write_string(buf + pos, config_get_auto_rst() ? "1" : "0");
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Current mode
-    mode_str = daplink_is_bootloader() ? "Bootloader" : "Interface";
-    pos += util_write_string(buf + pos, "Daplink Mode: ");
-    pos += util_write_string(buf + pos, mode_str);
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Current build's version
-    pos += util_write_string(buf + pos, mode_str);
-    pos += util_write_string(buf + pos, " Version: ");
-    pos += util_write_string(buf + pos, info_get_version());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Other builds version (bl or if)
-    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
-        pos += util_write_string(buf + pos, "Bootloader Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-    if (!daplink_is_interface() && info_get_interface_present()) {
-        pos += util_write_string(buf + pos, "Interface Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    // GIT sha
-    pos += util_write_string(buf + pos, "Git SHA: ");
-    pos += util_write_string(buf + pos, GIT_COMMIT_SHA);
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Local modifications when making the build
-    pos += util_write_string(buf + pos, "Local Mods: ");
-    pos += util_write_uint32(buf + pos, GIT_LOCAL_MODS);
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Supported USB endpoints
-    pos += util_write_string(buf + pos, "USB Interfaces: ");
-    #ifdef MSC_ENDPOINT
-    pos += util_write_string(buf + pos, "MSD");
-    #endif
-    #ifdef HID_ENDPOINT
-    pos += util_write_string(buf + pos, ", CDC");
-    #endif
-    #ifdef CDC_ENDPOINT
-    pos += util_write_string(buf + pos, ", CMSIS-DAP");
-    #endif
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // CRC of the bootloader (if there is one)
-    if (info_get_bootloader_present()) {
-        pos += util_write_string(buf + pos, "Bootloader CRC: 0x");
-        pos += util_write_hex32(buf + pos, info_get_crc_bootloader());
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    // CRC of the interface
-    pos += util_write_string(buf + pos, "Interface CRC: 0x");
-    pos += util_write_hex32(buf + pos, info_get_crc_interface());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    return pos;
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    const char* contents = (const char*)error_get_string(fail_reason);
-    uint32_t size = strlen(contents);
-    if (sector_offset != 0) {
-        return 0;
-    }
-    memcpy(data, contents, size);
-    data[size] = '\r';
-    size++;
-    data[size] = '\n';
-    size++;
-    return size;
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    uint32_t pos;
-    char * buf = (char *)data;
-    if (sector_offset != 0) {
-        return 0;
-    }
-    pos = 0;
-    
-    pos += util_write_string(buf + pos, "Assert\r\n");
-    pos += util_write_string(buf + pos, "File: ");
-    pos += util_write_string(buf + pos, assert_buf);
-    pos += util_write_string(buf + pos, "\r\n");
-    pos += util_write_string(buf + pos, "Line: ");
-    pos += util_write_uint32(buf + pos, assert_line);
-    pos += util_write_string(buf + pos, "\r\n");
-
-    return pos;
-}
-
-// File callback to be used with vfs_add_file to return file contents
-static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
-{
-    const char* contents = "A bootloader update was started but unable to complete.\r\n"
-                           "Reload the bootloader to fix this error message.\r\n";
-    uint32_t size = strlen(contents);
-    if (sector_offset != 0) {
-        return 0;
-    }
-    memcpy(data, contents, size);
-    return size;
-}
-
 // Update the tranfer state with file information
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
 {
-    vfs_user_printf("virtual_fs_user transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
+    vfs_mngr_printf("vfs_manager transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
     if (file_transfer_state.transfer_finished) {
         util_assert(0);
         return;
@@ -710,39 +451,39 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     if (VFS_FILE_INVALID == file_transfer_state.file_to_program) {
         file_transfer_state.file_to_program = file;
         if (file != VFS_FILE_INVALID) {
-            vfs_user_printf("    file_to_program=%p\r\n", file);
+            vfs_mngr_printf("    file_to_program=%p\r\n", file);
         }
     }
     // Initialize the starting sector if it has not been set
     if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
         if (start_sector != VFS_INVALID_SECTOR) {
-            vfs_user_printf("    start_sector=%i\r\n", start_sector);
+            vfs_mngr_printf("    start_sector=%i\r\n", start_sector);
         }
     }
     // Initialize the stream if it has not been set
     if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
         if (stream != STREAM_TYPE_NONE) {
-            vfs_user_printf("    stream=%i\r\n", stream);
+            vfs_mngr_printf("    stream=%i\r\n", stream);
         }
     }
 
     // Check - File size must be the same or bigger
     if (size < file_transfer_state.file_size) {
-        vfs_user_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
+        vfs_mngr_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
     // Check - Starting sector must be the same  - this is optional for file info since it may not be present initially
     if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
-        vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
+        vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
     // Check - stream must be the same
     if (stream != file_transfer_state.stream) {
-        vfs_user_printf("    error: changed types during transfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        vfs_mngr_printf("    error: changed types during transfer from %i to %i\r\n", stream, file_transfer_state.stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
@@ -750,7 +491,7 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     // Update values - Size is the only value that can change and it can only increase.
     if (size > file_transfer_state.file_size) {
         file_transfer_state.file_size = size;
-        vfs_user_printf("    updated size=%i\r\n", size);
+        vfs_mngr_printf("    updated size=%i\r\n", size);
     }
 
     transfer_update_state(ERROR_SUCCESS);
@@ -762,40 +503,40 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
     error_t status;
     util_assert(!file_transfer_state.stream_open);
     util_assert(start_sector != VFS_INVALID_SECTOR);
-    vfs_user_printf("virtual_fs_user transfer_update_stream_open(stream=%i, start_sector=%i)\r\n",
+    vfs_mngr_printf("vfs_manager transfer_update_stream_open(stream=%i, start_sector=%i)\r\n",
                     stream, start_sector);
 
     // Initialize the starting sector if it has not been set
     if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
         if (start_sector != VFS_INVALID_SECTOR) {
-            vfs_user_printf("    start_sector=%i\r\n", start_sector);
+            vfs_mngr_printf("    start_sector=%i\r\n", start_sector);
         }
     }
     // Initialize the stream if it has not been set
     if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
         if (stream != STREAM_TYPE_NONE) {
-            vfs_user_printf("    stream=%i\r\n", stream);
+            vfs_mngr_printf("    stream=%i\r\n", stream);
         }
     }
 
     // Check - Starting sector must be the same
     if (start_sector != file_transfer_state.start_sector) {
-        vfs_user_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
+        vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
     // Check - stream must be the same
     if (stream != file_transfer_state.stream) {
-        vfs_user_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        vfs_mngr_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
 
     // Open stream
     status = stream_open(stream);
-    vfs_user_printf("    stream_open stream=%i ret %i\r\n", stream, status);
+    vfs_mngr_printf("    stream_open stream=%i ret %i\r\n", stream, status);
     if (ERROR_SUCCESS == status) {
         file_transfer_state.file_next_sector = start_sector;
         file_transfer_state.stream_open = true;
@@ -809,8 +550,8 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
 static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t size)
 {
     error_t status;
-    vfs_user_printf("virtual_fs_user transfer_stream_data(sector=%i, size=%i)\r\n", sector, size);
-    vfs_user_printf("    size processed=0x%x, data=%x,%x,%x,%x,...\r\n",
+    vfs_mngr_printf("vfs_manager transfer_stream_data(sector=%i, size=%i)\r\n", sector, size);
+    vfs_mngr_printf("    size processed=0x%x, data=%x,%x,%x,%x,...\r\n",
         file_transfer_state.size_processed, data[0],data[1],data[2],data[3]);
 
     if (file_transfer_state.stream_finished) {
@@ -820,10 +561,10 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
     util_assert(size % VFS_SECTOR_SIZE == 0);
     util_assert(file_transfer_state.stream_open);
     status = stream_write((uint8_t*)data, size);
-    vfs_user_printf("    stream_write ret=%i\r\n", status);
+    vfs_mngr_printf("    stream_write ret=%i\r\n", status);
     if (ERROR_SUCCESS_DONE == status) {
         status = stream_close();
-        vfs_user_printf("    stream_close ret=%i\r\n", status);
+        vfs_mngr_printf("    stream_close ret=%i\r\n", status);
         file_transfer_state.stream_open = false;
         file_transfer_state.stream_finished = true;
     } else if (ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
@@ -897,11 +638,11 @@ static void transfer_update_state(error_t status)
     }
 
     if (file_transfer_state.transfer_finished) {
-        vfs_user_printf("virtual_fs_user transfer_update_state(status=%i)\r\n", status);
-        vfs_user_printf("    file=%p, start_sect= %i, size=%i\r\n", 
+        vfs_mngr_printf("vfs_manager transfer_update_state(status=%i)\r\n", status);
+        vfs_mngr_printf("    file=%p, start_sect= %i, size=%i\r\n", 
             file_transfer_state.file_to_program, file_transfer_state.start_sector,
             file_transfer_state.file_size);
-        vfs_user_printf("    stream=%i, size_processed=%i, opt_finish=%i, timeout=%i\r\n", 
+        vfs_mngr_printf("    stream=%i, size_processed=%i, opt_finish=%i, timeout=%i\r\n", 
             file_transfer_state.stream, file_transfer_state.size_processed,
             file_transfer_state.file_info_optional_finish, transfer_timeout);
 
@@ -909,7 +650,7 @@ static void transfer_update_state(error_t status)
         if (file_transfer_state.stream_open) {
             error_t close_status;
             close_status = stream_close();
-            vfs_user_printf("    stream closed ret=%i\r\n", close_status);
+            vfs_mngr_printf("    stream closed ret=%i\r\n", close_status);
             file_transfer_state.stream_open = false;
             if (ERROR_SUCCESS == local_status) {
                 local_status = close_status;
@@ -926,93 +667,12 @@ static void transfer_update_state(error_t status)
 
         // Set the fail reason 
         fail_reason = local_status;
-        vfs_user_printf("    Transfer finished, status: %i=%s\r\n", fail_reason, error_get_string(fail_reason));
+        vfs_mngr_printf("    Transfer finished, status: %i=%s\r\n", fail_reason, error_get_string(fail_reason));
     }
 
     // If this state change is not from aborting a transfer
     // due to a remount then trigger a remount
     if (!transfer_timeout) {
-        vfs_user_remount();
+        vfs_mngr_fs_remount();
     }
-}
-
-// Remove strip_count characters from the start of buf and then insert
-// new_str at the new start of buf.
-static void insert(uint8_t *buf, uint8_t* new_str, uint32_t strip_count)
-{
-    uint32_t buf_len = strlen((const char *)buf);
-    uint32_t str_len = strlen((const char *)new_str);
-    // push out string
-    memmove(buf + str_len, buf + strip_count, buf_len - strip_count);
-    // insert
-    memcpy(buf, new_str, str_len);
-}
-
-// Fill buf with the contents of the mbed redirect file by
-// expanding the special characters in mbed_redirect_file.
-static void update_html_file(uint8_t *buf, uint32_t bufsize)
-{
-    uint32_t size_left;
-    uint8_t *orig_buf = buf;
-    uint8_t *insert_string;
-
-    // Zero out buffer so strlen operations don't go out of bounds
-    memset(buf, 0, bufsize);
-    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
-    do {
-        // Look for key or the end of the string
-        while ((*buf != '@') && (*buf != 0)) buf++;
-
-        // If key was found then replace it
-        if ('@' == *buf) {
-            switch(*(buf+1)) {
-                case 'm':
-                case 'M':   // MAC address
-                    insert_string = (uint8_t *)info_get_mac();
-                    break;
-
-                case 'u':
-                case 'U':   // UUID
-                    insert_string = (uint8_t *)info_get_unique_id();
-                    break;
-
-                case 'b':
-                case 'B':   // Board ID
-                    insert_string = (uint8_t *)info_get_board_id();
-                    break;
-
-                case 'h':
-                case 'H':   // Host ID
-                    insert_string = (uint8_t *)info_get_host_id();
-                    break;
-
-                case 't':
-                case 'T':   // Target ID
-                    insert_string = (uint8_t *)info_get_target_id();
-                    break;
-
-                case 'd':
-                case 'D':   // HDK
-                    insert_string = (uint8_t *)info_get_hdk_id();
-                    break;
-
-                case 'v':
-                case 'V':   // Firmware version
-                    insert_string = (uint8_t *)info_get_version();
-                    break;
-
-                case 'r':
-                case 'R':   // URL replacement
-                    insert_string = (uint8_t *)daplink_target_url;
-                    break;
-
-                default:
-                    insert_string = (uint8_t *)"ERROR";
-                    break;
-            }
-            insert(buf, insert_string, 2);
-        }
-    } while(*buf != '\0');
-    size_left = buf - orig_buf;
-    memset(buf, 0, bufsize - size_left);
 }
