@@ -125,6 +125,11 @@ void FLEX_INT0_IRQHandler() {
 
 uint8_t gpio_get_sw_reset(void)
 {
-    return (LPC_GPIO->W[RESET_PORT] & (1 << RESET_PIN)) ? 1 : 0;
+    return LPC_GPIO->W[RESET_PORT * 32 + RESET_PIN] ? 1 : 0;
 }
 
+void target_forward_reset(bool assert_reset)
+{
+    // Do nothing - reset button is already tied to the target 
+    //              reset pin on lpc11u35 interface hardware
+}
