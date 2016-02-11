@@ -47,8 +47,9 @@ typedef struct {
     vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
     vfs_sector_t start_sector;      // Start sector of the file being programmed
     vfs_sector_t file_next_sector;  // Expected next sector of the file
-    uint32_t size_processed;        // Size of the file read so far
+    uint32_t size_processed;        // The number of bytes processed by the stream
     uint32_t file_size;             // Size of the file indicated by root dir.  Only allowed to increase
+    uint32_t size_transferred;      // The number of bytes transferred
     bool transfer_finished;         // Transfer done, ignore all further writes
     bool stream_open;               // State of the stream
     bool stream_started;            // Stream processing started. This only gets reset remount
@@ -73,6 +74,7 @@ static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
     VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
+    0,
     0,
     0,
     false,
@@ -503,7 +505,20 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
             return;
         }
 
+        // This sector could be part of the file so record it
         size = VFS_SECTOR_SIZE * num_of_sectors;
+        file_transfer_state.size_transferred += size;
+        file_transfer_state.file_next_sector = sector + num_of_sectors;
+
+        // If stream processing is done then discard the data
+        if (file_transfer_state.stream_finished) {
+            vfs_user_printf("virtual_fs_user file_data_handler(sector=%i, size=%i)\r\n", sector, size);
+            vfs_user_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
+                file_transfer_state.size_transferred, buf[0],buf[1],buf[2],buf[3]);
+            transfer_update_state(ERROR_SUCCESS);
+            return;
+        }
+
         transfer_stream_data(sector, buf, size);
     }
 }
@@ -782,19 +797,13 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
 {
     error_t status;
     vfs_user_printf("virtual_fs_user transfer_stream_data(sector=%i, size=%i)\r\n", sector, size);
-    vfs_user_printf("    file offset=0x%x, data=%x,%x,%x,%x,...\r\n",
+    vfs_user_printf("    size processed=0x%x, data=%x,%x,%x,%x,...\r\n",
         file_transfer_state.size_processed, data[0],data[1],data[2],data[3]);
 
     if (file_transfer_state.stream_finished) {
-        // In this state steam processing has been finished but the
-        // amount of data transferred still needs to be recorded
-        vfs_user_printf("    stream closed so ignoring data\r\n", status);
-        file_transfer_state.size_processed += size;
-        file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
-        transfer_update_state(ERROR_SUCCESS);
+        util_assert(0);
         return;
     }
-
     util_assert(size % VFS_SECTOR_SIZE == 0);
     util_assert(file_transfer_state.stream_open);
     status = stream_write((uint8_t*)data, size);
@@ -812,8 +821,6 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
     }
 
     file_transfer_state.size_processed += size;
-    file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
-
     transfer_update_state(status);
 }
 
@@ -836,7 +843,7 @@ static void transfer_update_state(error_t status)
     // Update file info status
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID ) &&
-        (file_transfer_state.size_processed >= file_transfer_state.file_size) &&
+        (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
         (file_transfer_state.file_size > 0);
 
     transfer_error = local_status != ERROR_SUCCESS ? true : false;
@@ -846,7 +853,8 @@ static void transfer_update_state(error_t status)
     too_much_transfered = file_transfer_state.size_processed > 
                           ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
     transfer_can_be_finished = file_transfer_state.file_info_optional_finish &&
-                               file_transfer_state.stream_optional_finish;
+                               (file_transfer_state.stream_optional_finish || 
+                                file_transfer_state.stream_finished);
     transfer_must_be_finished = file_transfer_state.stream_finished &&
                                 file_transfer_state.file_info_optional_finish &&
                                 !too_much_transfered;
