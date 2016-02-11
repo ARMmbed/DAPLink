@@ -47,6 +47,7 @@ typedef struct {
     vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
     vfs_sector_t start_sector;      // Start sector of the file being programmed
     vfs_sector_t file_next_sector;  // Expected next sector of the file
+    vfs_sector_t last_ooo_sector;   // Last out of order sector within the file
     uint32_t size_processed;        // The number of bytes processed by the stream
     uint32_t file_size;             // Size of the file indicated by root dir.  Only allowed to increase
     uint32_t size_transferred;      // The number of bytes transferred
@@ -72,6 +73,7 @@ static const uint32_t disc_size = MB(8);
 
 static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
+    VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
     0,
@@ -501,7 +503,18 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // sectors must be in order
         if (sector != file_transfer_state.file_next_sector) {
-            vfs_user_printf("    SECTOR OUT OF ORDER\r\n");
+            vfs_user_printf("virtual_fs_user file_data_handler\r\n");
+            if (sector < file_transfer_state.file_next_sector) {
+                vfs_user_printf("    new out of order sector = 0x%x, prev = 0x%x\r\n",
+                    sector, file_transfer_state.last_ooo_sector);
+
+                if (VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
+                    file_transfer_state.last_ooo_sector = sector;
+                }
+                file_transfer_state.last_ooo_sector =
+                    MIN(file_transfer_state.last_ooo_sector, sector);
+            }
+            vfs_user_printf("    SECTOR OUT OF ORDER - 0x%x\r\n", sector);
             return;
         }
 
@@ -512,7 +525,7 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // If stream processing is done then discard the data
         if (file_transfer_state.stream_finished) {
-            vfs_user_printf("virtual_fs_user file_data_handler(sector=%i, size=%i)\r\n", sector, size);
+            vfs_user_printf("virtual_fs_user file_data_handler\r\n    sector=%i, size=%i\r\n", sector, size);
             vfs_user_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
                 file_transfer_state.size_transferred, buf[0],buf[1],buf[2],buf[3]);
             transfer_update_state(ERROR_SUCCESS);
@@ -833,6 +846,7 @@ static void transfer_update_state(error_t status)
     bool transfer_must_be_finished;
     bool transfer_error;
     bool too_much_transfered;
+    bool out_of_order_sector;
     error_t local_status = status;
 
     if (file_transfer_state.transfer_finished) {
@@ -858,6 +872,17 @@ static void transfer_update_state(error_t status)
     transfer_must_be_finished = file_transfer_state.stream_finished &&
                                 file_transfer_state.file_info_optional_finish &&
                                 !too_much_transfered;
+    out_of_order_sector = false;
+    if (file_transfer_state.last_ooo_sector != VFS_INVALID_SECTOR) {
+        util_assert(file_transfer_state.start_sector != VFS_INVALID_SECTOR);
+        uint32_t sector_offset = (file_transfer_state.last_ooo_sector -
+                                  file_transfer_state.start_sector) * VFS_SECTOR_SIZE;
+        if (sector_offset < file_transfer_state.size_processed) {
+            // The out of order sector was within the range of data already
+            // processed.
+            out_of_order_sector = true;
+        }
+    }
 
     if (transfer_error) {
         // Local status already set
@@ -891,8 +916,10 @@ static void transfer_update_state(error_t status)
             }
         }
 
-        if (too_much_transfered) {
-            if (ERROR_SUCCESS == local_status) {
+        if (ERROR_SUCCESS == local_status) {
+            if (out_of_order_sector) {
+                local_status = ERROR_OOO_SECTOR;
+            } else if (too_much_transfered) {
                 local_status = ERROR_FILE_BOUNDS;
             }
         }

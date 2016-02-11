@@ -28,6 +28,7 @@ typedef enum {
     ERROR_ERROR_DURING_TRANSFER,
     ERROR_TRANSFER_TIMEOUT,
     ERROR_FILE_BOUNDS,
+    ERROR_OOO_SECTOR,
 
     /* Target flash errors */
     ERROR_RESET,

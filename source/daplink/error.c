@@ -37,6 +37,8 @@ static const char *const error_message[] = {
     "The transfer timed out.",
     // ERROR_FILE_BOUNDS
     "Possible mismatch between file size and size programmed",
+    // ERROR_OOO_SECTOR
+    "File sent out of order by PC. Target might not be programmed correctly.",
 
     /* Target flash errors */
 
