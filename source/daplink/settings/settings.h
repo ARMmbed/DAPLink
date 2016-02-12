@@ -23,7 +23,9 @@ void config_init(void);
 
 // Get/set settings residing in flash
 void config_set_auto_rst(bool on);
+void config_set_automation_allowed(bool on);
 bool config_get_auto_rst(void);
+bool config_get_automation_allowed(void);
 
 // Get/set settings residing in shared ram
 void config_ram_set_hold_in_bl(bool hold);

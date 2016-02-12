@@ -28,6 +28,7 @@
 #include "IO_config.h"      // for NVIC_SystemReset
 #include "version_git.h"
 #include "info.h"
+#include "gpio.h"           // for gpio_get_sw_reset
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomidate for hex file programming.
@@ -111,6 +112,13 @@ void vfs_user_build_filesystem()
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
+    // Allow settings to be changed if automation mode is
+    // enabled or if the user is holding the reset button
+    bool btn_pressed = !gpio_get_sw_reset();
+    if (!btn_pressed && !config_get_automation_allowed()) {
+        return;
+    }
+
     if (VFS_FILE_CHANGED == change) {
         // Unused
     }
@@ -134,6 +142,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
             util_assert(0);
         } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
             // Remount to update the drive
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "AUTO_ON ACT", sizeof(vfs_filename_t))) {
+            config_set_automation_allowed(true);
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "AUTO_OFFACT", sizeof(vfs_filename_t))) {
+            config_set_automation_allowed(false);
             vfs_mngr_fs_remount();
         }
     }
@@ -207,6 +221,9 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     // Settings
     pos += util_write_string(buf + pos, "Auto Reset: ");
     pos += util_write_string(buf + pos, config_get_auto_rst() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Automation allowed: ");
+    pos += util_write_string(buf + pos, config_get_automation_allowed() ? "1" : "0");
     pos += util_write_string(buf + pos, "\r\n");
 
     // Current mode
