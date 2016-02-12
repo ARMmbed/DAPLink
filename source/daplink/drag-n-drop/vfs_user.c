@@ -171,10 +171,6 @@ void vfs_user_disconnecting()
     if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
         NVIC_SystemReset();
     }
-    // Resume the target if configured to do so //TODO - move to flash layer
-    if (config_get_auto_rst()) {
-        target_set_state(RESET_RUN);
-    }
 }
 
 // Get the filesize from a filesize callback.
