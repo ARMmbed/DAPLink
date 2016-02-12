@@ -206,6 +206,8 @@ static error_t program_page(uint32_t addr, const uint8_t * buf, uint32_t size)
         return ERROR_IAP_WRITE;
     }
     if (addr + size >= updt_end) {
+        // Something has been updated so recompute the crc
+        info_crc_compute();
         update_complete = true;
     }
     return ERROR_SUCCESS;
