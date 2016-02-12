@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CONFIG_SETTINGS_H
-#define CONFIG_SETTINGS_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include<stdint.h>
 #include<stdbool.h>
@@ -32,5 +32,8 @@ void config_ram_clear_assert(void);
 bool config_ram_get_hold_in_bl(void);
 bool config_ram_get_initial_hold_in_bl(void);
 bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line);
+
+// Private - should only be called from settings.c
+void config_rom_init(void);
 
 #endif

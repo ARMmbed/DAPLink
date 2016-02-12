@@ -22,7 +22,7 @@
 #include "macro.h"
 #include "error.h"
 #include "util.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "target_reset.h"
 #include "daplink.h"
 #include "IO_config.h"      // for NVIC_SystemReset

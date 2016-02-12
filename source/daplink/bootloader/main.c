@@ -20,7 +20,7 @@
 #include "vfs_manager.h"
 #include "RTL.h"
 #include "rl_usb.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "info.h"
 #include "target_config.h"
 #include "util.h"

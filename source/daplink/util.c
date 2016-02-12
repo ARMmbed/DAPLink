@@ -17,7 +17,7 @@
 #include <string.h>
 
 #include "util.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "vfs_manager.h"
 #include "cortex_m.h"
 

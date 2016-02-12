@@ -16,6 +16,8 @@ module:
         - records/usb/usb-msc.yaml
         - records/daplink/bootloader.yaml
         - records/daplink/drag-n-drop.yaml
+        - records/daplink/settings.yaml
+        - records/daplink/settings_rom_stub.yaml
     if: &module_if
         - *module_tools
         - records/usb/usb-core.yaml
@@ -25,6 +27,8 @@ module:
         - records/daplink/cmsis-dap.yaml
         - records/daplink/drag-n-drop.yaml
         - records/daplink/usb2uart.yaml
+        - records/daplink/settings.yaml
+        - records/daplink/settings_rom.yaml
         - records/daplink/interface.yaml
     # HDKs
     hdk_k20dx128: &module_hdk_k20dx128

@@ -28,7 +28,7 @@
 #include "swd_host.h"
 #include "info.h"
 #include "vfs_manager.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "daplink.h"
 #include "util.h"
 

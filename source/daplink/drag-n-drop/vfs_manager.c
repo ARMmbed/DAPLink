@@ -25,7 +25,7 @@
 #include "daplink_debug.h"
 #include "validation.h"
 #include "info.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "daplink.h"
 #include "util.h"
 #include "version_git.h"
