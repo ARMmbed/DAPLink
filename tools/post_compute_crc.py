@@ -40,11 +40,14 @@ def main():
                         help="Output hex file to write CRC32.")
     parser.add_argument("--bin", type=str, default=None,
                         help="Output binary file to write CRC32.")
+    parser.add_argument("--txt", type=str, default=None,
+                        help="Output text file to write CRC32.")
 
     args = parser.parse_args()
     input_file = args.input
     output_file = args.output
     output_file_binary = args.bin
+    output_file_txt = args.txt
 
     # Read in hex file
     new_hex_file = intelhex.IntelHex()
@@ -101,9 +104,12 @@ def main():
     new_hex_file.tofile(output_file, 'hex')
     if output_file_binary is not None:
         new_hex_file.tofile(output_file_binary, 'bin')
+    if output_file_txt is not None:
+        with open(output_file_txt, 'w') as file_handle:
+            file_handle.write("0x%08x\n" % crc32)
 
     # Print info on operation
-    print("Start 0x%x, Length 0x%x, CRC32 0x%x" % (start, size, crc32))
+    print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))
 
 if __name__ == '__main__':
     main()

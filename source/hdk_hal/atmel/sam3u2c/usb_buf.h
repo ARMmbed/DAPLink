@@ -22,10 +22,7 @@
 // I think this was > 512 becuse of lack of clairity
 #define USB_MSC_BUF_SIZE (512*2)
 
-/* "absacc.h" defines __at(addr) for __attribute__((at(addr))) as shown below, and the file is deprecated */
-#define __at(_addr) __attribute__ ((at(_addr)))
-
 // was FLASH_SECTOR_SIZE/2 so 4*1024/2
-uint32_t usb_buffer[USB_MSC_BUF_SIZE/2];// __at(0x20000000);
+uint32_t usb_buffer[USB_MSC_BUF_SIZE/2];
 
 #endif

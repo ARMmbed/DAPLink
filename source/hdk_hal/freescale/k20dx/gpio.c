@@ -29,6 +29,13 @@ static void busy_wait(uint32_t cycles)
 
 void gpio_init(void)
 {
+    // Enable hardfault on unaligned access for the interface only.
+    // If this is done in the bootloader than then it might (will) break
+    // older application firmware or firmware from 3rd party vendors.
+    #if  defined(DAPLINK_IF)
+    SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
+    #endif
+
     // enable clock to ports
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
     

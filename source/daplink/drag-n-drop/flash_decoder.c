@@ -35,12 +35,6 @@
 #endif
 
 typedef enum {
-    DATA_MODE_UNSET,
-    DATA_MODE_STREAM,
-    DATA_MODE_ADDR,
-} data_mode_t;
-
-typedef enum {
     DECODER_STATE_CLOSED,
     DECODER_STATE_OPEN,
     DECODER_STATE_ERROR
@@ -48,11 +42,14 @@ typedef enum {
 
 static uint8_t flash_buf[FLASH_DECODER_MIN_SIZE];
 static decoder_state_t state = DECODER_STATE_CLOSED;
+static flash_decoder_type_t flash_type;
 static uint32_t flash_buf_pos;
 static uint32_t initial_addr;
 static uint32_t current_addr;
 static bool flash_initialized;
 static bool initial_addr_set;
+
+static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t * data, uint32_t size);
 
 flash_decoder_type_t flash_decoder_detect_type(const uint8_t * data, uint32_t size, uint32_t addr, bool addr_valid)
 {
@@ -101,30 +98,38 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     *start_addr = 0;
     *flash_intf = 0;
 
-    if (FLASH_DECODER_TYPE_TARGET == type) {
-        flash_start_local = target_device.flash_start;
-        flash_intf_local = flash_intf_target;
-    } else if (!daplink_is_bootloader() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {
-        if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
-            // Address is wrong so display error message
-            status = ERROR_FD_BL_UPDT_ADDR_WRONG;
-            flash_start_local = 0;
-            flash_intf_local = 0;
-        } else {
-            // Setup for update
-            flash_start_local = DAPLINK_ROM_BL_START;
-            flash_intf_local = flash_intf_iap_protected;
-        }
-    } else if (!(daplink_is_interface()) && (FLASH_DECODER_TYPE_INTERFACE == type)) {
-        if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
-            // Address is wrong so display error message
-            status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
-            flash_start_local = 0;
-            flash_intf_local = 0;
-        } else {
-            // Setup for update
+    if (daplink_is_bootloader()) {
+        if (FLASH_DECODER_TYPE_INTERFACE == type) {
+            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+                // Address is wrong so display error message
+                status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
+                flash_start_local = 0;
+                flash_intf_local = 0;
+            } else {
+                // Setup for update
+                flash_start_local = DAPLINK_ROM_IF_START;
+                flash_intf_local = flash_intf_iap_protected;
+            }
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
+            // "Target" update in this case would be a 3rd party interface application
             flash_start_local = DAPLINK_ROM_IF_START;
             flash_intf_local = flash_intf_iap_protected;
+        }
+    } else if (daplink_is_interface()) {
+        if (FLASH_DECODER_TYPE_BOOTLOADER == type) {
+            if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
+                // Address is wrong so display error message
+                status = ERROR_FD_BL_UPDT_ADDR_WRONG;
+                flash_start_local = 0;
+                flash_intf_local = 0;
+            } else {
+                // Setup for update
+                flash_start_local = DAPLINK_ROM_BL_START;
+                flash_intf_local = flash_intf_iap_protected;
+            }
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
+            flash_start_local = target_device.flash_start;
+            flash_intf_local = flash_intf_target;
         }
     } else {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
@@ -155,6 +160,7 @@ error_t flash_decoder_open(void)
 
     memset(flash_buf, 0xff, sizeof(flash_buf));
     state = DECODER_STATE_OPEN;
+    flash_type = FLASH_DECODER_TYPE_UNKNOWN;
     flash_buf_pos = 0;
     initial_addr = 0;
     current_addr = 0;
@@ -184,7 +190,6 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size)
 
     if (!flash_initialized) {
         uint32_t copy_size;
-        flash_decoder_type_t flash_type;
         bool flash_type_known = false;
         bool sequential;
 
@@ -265,6 +270,13 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size)
             return status;
         }
     }
+
+    // Check if this is the end of data
+    if (flash_decoder_is_at_end(addr, data, size)) {
+        flash_decoder_printf("    End of transfer detected - addr 0x%08x, size 0x%08x\r\n",
+                             addr, size);
+        return ERROR_SUCCESS_DONE;
+    }
     return ERROR_SUCCESS;
 }
 
@@ -285,4 +297,27 @@ error_t flash_decoder_close(void)
     }
 
     return status;
+}
+
+static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t * data, uint32_t size)
+{
+    uint32_t end_addr;
+    switch (flash_type) {
+        case FLASH_DECODER_TYPE_BOOTLOADER:
+            end_addr = DAPLINK_ROM_BL_START + DAPLINK_ROM_BL_SIZE;
+            break;
+        case FLASH_DECODER_TYPE_INTERFACE:
+            end_addr = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE;
+            break;
+        case FLASH_DECODER_TYPE_TARGET:
+            end_addr = target_device.flash_end;
+            break;
+        default:
+            return false;
+    }
+    if (addr + size >= end_addr) {
+        return true;
+    } else {
+        return false;
+    }
 }

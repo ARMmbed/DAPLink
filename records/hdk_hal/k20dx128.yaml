@@ -37,3 +37,9 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hdk_hal\freescale\k20dx"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access

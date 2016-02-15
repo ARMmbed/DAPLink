@@ -47,8 +47,10 @@ typedef struct {
     vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
     vfs_sector_t start_sector;      // Start sector of the file being programmed
     vfs_sector_t file_next_sector;  // Expected next sector of the file
-    uint32_t size_processed;        // Size of the file read so far
+    vfs_sector_t last_ooo_sector;   // Last out of order sector within the file
+    uint32_t size_processed;        // The number of bytes processed by the stream
     uint32_t file_size;             // Size of the file indicated by root dir.  Only allowed to increase
+    uint32_t size_transferred;      // The number of bytes transferred
     bool transfer_finished;         // Transfer done, ignore all further writes
     bool stream_open;               // State of the stream
     bool stream_started;            // Stream processing started. This only gets reset remount
@@ -73,6 +75,8 @@ static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
     VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
+    VFS_INVALID_SECTOR,
+    0,
     0,
     0,
     false,
@@ -85,7 +89,7 @@ static const file_transfer_state_t default_transfer_state = {
     STREAM_TYPE_NONE,
 };
 
-static const uint8_t mbed_redirect_file[512] =
+static const char mbed_redirect_file[] =
     "<!doctype html>\r\n"
     "<!-- mbed Platform Website and Authentication Shortcut -->\r\n"
     "<html>\r\n"
@@ -137,6 +141,7 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t* data, uint32
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
+static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
 static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
@@ -363,6 +368,7 @@ static bool changing_state()
 static void build_filesystem()
 {
     uint32_t file_size;
+    vfs_file_t file_handle;
 
     // Update anything that could have changed file system state
     file_transfer_state = default_transfer_state;
@@ -388,7 +394,21 @@ static void build_filesystem()
     // ASSERT.TXT
     if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
         file_size = get_file_size(read_file_assert_txt);
-        vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+        file_handle = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
+        vfs_file_set_attr(file_handle, (vfs_file_attr_bit_t)0); // Remove read only attribute
+    }
+
+    // NEED_BL.TXT
+    volatile uint32_t bl_start = DAPLINK_ROM_BL_START; // Silence warnings about null pointer
+    volatile uint32_t if_start = DAPLINK_ROM_IF_START; // Silence warnings about null pointer
+    if (daplink_is_interface() &&
+        (DAPLINK_ROM_BL_SIZE > 0) &&
+        (0 == memcmp((void*)bl_start, (void*)if_start, DAPLINK_MIN_WRITE_SIZE))) {
+        // If the bootloader contains a copy of the interfaces vector table
+        // then an error occurred when updating so warn that the bootloader is
+        // missing.
+        file_size = get_file_size(read_file_need_bl_txt);
+        vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
     }
 
     // Set mass storage parameters
@@ -450,7 +470,9 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 
     if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
+            // Clear assert and remount to update the drive
             util_assert_clear();
+            vfs_user_remount();
         }
     }
 }
@@ -481,11 +503,35 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // sectors must be in order
         if (sector != file_transfer_state.file_next_sector) {
-            vfs_user_printf("    SECTOR OUT OF ORDER\r\n");
+            vfs_user_printf("virtual_fs_user file_data_handler\r\n");
+            if (sector < file_transfer_state.file_next_sector) {
+                vfs_user_printf("    new out of order sector = 0x%x, prev = 0x%x\r\n",
+                    sector, file_transfer_state.last_ooo_sector);
+
+                if (VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
+                    file_transfer_state.last_ooo_sector = sector;
+                }
+                file_transfer_state.last_ooo_sector =
+                    MIN(file_transfer_state.last_ooo_sector, sector);
+            }
+            vfs_user_printf("    SECTOR OUT OF ORDER - 0x%x\r\n", sector);
             return;
         }
 
+        // This sector could be part of the file so record it
         size = VFS_SECTOR_SIZE * num_of_sectors;
+        file_transfer_state.size_transferred += size;
+        file_transfer_state.file_next_sector = sector + num_of_sectors;
+
+        // If stream processing is done then discard the data
+        if (file_transfer_state.stream_finished) {
+            vfs_user_printf("virtual_fs_user file_data_handler\r\n    sector=%i, size=%i\r\n", sector, size);
+            vfs_user_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
+                file_transfer_state.size_transferred, buf[0],buf[1],buf[2],buf[3]);
+            transfer_update_state(ERROR_SUCCESS);
+            return;
+        }
+
         transfer_stream_data(sector, buf, size);
     }
 }
@@ -610,6 +656,10 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
         return 0;
     }
     memcpy(data, contents, size);
+    data[size] = '\r';
+    size++;
+    data[size] = '\n';
+    size++;
     return size;
 }
 
@@ -632,6 +682,19 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
     pos += util_write_string(buf + pos, "\r\n");
 
     return pos;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
+{
+    const char* contents = "A bootloader update was started but unable to complete.\r\n"
+                           "Reload the bootloader to fix this error message.\r\n";
+    uint32_t size = strlen(contents);
+    if (sector_offset != 0) {
+        return 0;
+    }
+    memcpy(data, contents, size);
+    return size;
 }
 
 // Update the tranfer state with file information
@@ -747,19 +810,13 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
 {
     error_t status;
     vfs_user_printf("virtual_fs_user transfer_stream_data(sector=%i, size=%i)\r\n", sector, size);
-    vfs_user_printf("    file offset=0x%x, data=%x,%x,%x,%x,...\r\n",
+    vfs_user_printf("    size processed=0x%x, data=%x,%x,%x,%x,...\r\n",
         file_transfer_state.size_processed, data[0],data[1],data[2],data[3]);
 
     if (file_transfer_state.stream_finished) {
-        // In this state steam processing has been finished but the
-        // amount of data transferred still needs to be recorded
-        vfs_user_printf("    stream closed so ignoring data\r\n", status);
-        file_transfer_state.size_processed += size;
-        file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
-        transfer_update_state(ERROR_SUCCESS);
+        util_assert(0);
         return;
     }
-
     util_assert(size % VFS_SECTOR_SIZE == 0);
     util_assert(file_transfer_state.stream_open);
     status = stream_write((uint8_t*)data, size);
@@ -777,8 +834,6 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
     }
 
     file_transfer_state.size_processed += size;
-    file_transfer_state.file_next_sector = sector + size / VFS_SECTOR_SIZE;
-
     transfer_update_state(status);
 }
 
@@ -791,6 +846,7 @@ static void transfer_update_state(error_t status)
     bool transfer_must_be_finished;
     bool transfer_error;
     bool too_much_transfered;
+    bool out_of_order_sector;
     error_t local_status = status;
 
     if (file_transfer_state.transfer_finished) {
@@ -801,7 +857,7 @@ static void transfer_update_state(error_t status)
     // Update file info status
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID ) &&
-        (file_transfer_state.size_processed >= file_transfer_state.file_size) &&
+        (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
         (file_transfer_state.file_size > 0);
 
     transfer_error = local_status != ERROR_SUCCESS ? true : false;
@@ -811,10 +867,22 @@ static void transfer_update_state(error_t status)
     too_much_transfered = file_transfer_state.size_processed > 
                           ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
     transfer_can_be_finished = file_transfer_state.file_info_optional_finish &&
-                               file_transfer_state.stream_optional_finish;
+                               (file_transfer_state.stream_optional_finish || 
+                                file_transfer_state.stream_finished);
     transfer_must_be_finished = file_transfer_state.stream_finished &&
                                 file_transfer_state.file_info_optional_finish &&
                                 !too_much_transfered;
+    out_of_order_sector = false;
+    if (file_transfer_state.last_ooo_sector != VFS_INVALID_SECTOR) {
+        util_assert(file_transfer_state.start_sector != VFS_INVALID_SECTOR);
+        uint32_t sector_offset = (file_transfer_state.last_ooo_sector -
+                                  file_transfer_state.start_sector) * VFS_SECTOR_SIZE;
+        if (sector_offset < file_transfer_state.size_processed) {
+            // The out of order sector was within the range of data already
+            // processed.
+            out_of_order_sector = true;
+        }
+    }
 
     if (transfer_error) {
         // Local status already set
@@ -848,8 +916,10 @@ static void transfer_update_state(error_t status)
             }
         }
 
-        if (too_much_transfered) {
-            if (ERROR_SUCCESS == local_status) {
+        if (ERROR_SUCCESS == local_status) {
+            if (out_of_order_sector) {
+                local_status = ERROR_OOO_SECTOR;
+            } else if (too_much_transfered) {
                 local_status = ERROR_FILE_BOUNDS;
             }
         }
@@ -888,7 +958,7 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
     // Zero out buffer so strlen operations don't go out of bounds
     memset(buf, 0, bufsize);
-    memcpy(buf, mbed_redirect_file, strlen((const char *)mbed_redirect_file));
+    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
     do {
         // Look for key or the end of the string
         while ((*buf != '@') && (*buf != 0)) buf++;

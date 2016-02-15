@@ -18,6 +18,7 @@ COPY_PATTERN_LIST = [
     "%s_crc.hex",
     "%s.htm",
     "%s.map",
+    "%s_crc.txt",
     ]
 
 

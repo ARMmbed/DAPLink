@@ -28,4 +28,6 @@
 // conflicts resulting from the same enum being declared multiple times.
 #define COMPILER_ASSERT(e) enum { COMPILER_CONCAT(compiler_assert_, __COUNTER__) = 1/((e) ? 1 : 0) }
 
+#define __at(_addr) __attribute__ ((at(_addr)))
+
 #endif

@@ -30,14 +30,15 @@ from pyOCD.utility.conversion import float32beToU32be
 # TODO - test ram/rom transfer speeds
 
 
-def test_hid(board, parent_test):
+def test_hid(workspace, parent_test):
     test_info = parent_test.create_subtest("HID test")
+    board = workspace.board
     with MbedBoard.chooseBoard(board_id=board.get_unique_id()) as mbed_board:
         addr = 0
         size = 0
 
         target_type = mbed_board.getTargetType()
-        binary_file = board.get_target_bin_path()
+        binary_file = workspace.target.bin_path
 
         addr_bin = 0x00000000
 
@@ -254,6 +255,9 @@ def test_hid(board, parent_test):
             test_info.info("TEST PASSED")
         else:
             test_info.failure("TEST FAILED")
+
+        test_info.info("\r\n\r\n----- Restoring image -----")
+        flash.flashBinary(binary_file, addr_bin)
 
         target.reset()
         test_info.info("HID test complete")

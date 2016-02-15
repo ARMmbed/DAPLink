@@ -22,8 +22,6 @@
 #include "macro.h"
 #include "util.h"
 
-#include "daplink_debug.h"
-
 // Virtual file system driver
 // Limitations:
 //   - files must be contiguous
@@ -537,7 +535,6 @@ static void write_dir1(uint32_t sector_offset, const uint8_t* data, uint32_t num
 
     // Start at index 1 to get past drive name
     for (i = 1; i < sizeof(old_dir->f) / sizeof(old_dir->f[0]); i++) {
-        debug_msg("name:%*s\t attributes:%8d\t size:%8d\r\n", 11, new_dir->f[i].filename, new_dir->f[i].attributes, new_dir->f[i].filesize);
         bool same_name;
         if (0 == memcmp(&old_dir->f[i], &new_dir->f[i], sizeof(new_dir->f[i]))) {
             continue;
