@@ -99,6 +99,8 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     *start_addr = 0;
     *flash_intf = 0;
 
+    flash_start_local = 0;
+    flash_intf_local = 0;
     if (daplink_is_bootloader()) {
         if (FLASH_DECODER_TYPE_INTERFACE == type) {
             if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
