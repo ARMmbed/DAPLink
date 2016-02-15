@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
 
-#include "target_struct.h"
-#include "swd_host.h"
-#include "stdint.h"
+#include "flash_blob.h"
 
 static const uint32_t LPC1768_FLM[] = {
     0xe00abe00, 0x062d780d, 0x24084068, 0xd3000040, 0x1e644058, 0x1c49d1fa, 0x2a001e52, 0x4770d1f2,
@@ -37,7 +33,7 @@ static const uint32_t LPC1768_FLM[] = {
     /*0x180*/ 0x12345678, 0x87654321L, 0x0, 0x0
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x1000002f, // init
     0x10000051, // uninit
     0x10000055, // erase_chip
@@ -53,5 +49,3 @@ static const TARGET_FLASH flash = {
 
     512          // ram_to_flash_bytes_to_be_written
 };
-
-#endif

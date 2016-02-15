@@ -16,6 +16,9 @@
 
 #include "target_config.h"
 
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
 // LPC1768 target information
 const target_cfg_t target_device = {
     .board_id   = "9004",
@@ -29,6 +32,6 @@ const target_cfg_t target_device = {
     .flash_end      = KB(512),
     .ram_start      = 0x10000000,
     .ram_end        = 0x10008000,
-    .disc_size      = KB(512)
+    .flash_algo     = (program_target_t*)&flash,
 };
 

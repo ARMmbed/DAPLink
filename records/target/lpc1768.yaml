@@ -1,0 +1,7 @@
+common:
+    includes:
+        - source/target/nxp/lpc1768
+    sources:
+        target:
+            - source/target/nxp/lpc1768/app_config.c
+            - source/target/nxp/lpc1768/target_reset.c
