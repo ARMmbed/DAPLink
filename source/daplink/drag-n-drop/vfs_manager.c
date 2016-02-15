@@ -405,18 +405,20 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         // sectors must be in order
         if (sector != file_transfer_state.file_next_sector) {
-            vfs_mngr_printf("vfs_manager file_data_handler\r\n");
+            vfs_mngr_printf("vfs_manager file_data_handler sector=%i\r\n", sector);
             if (sector < file_transfer_state.file_next_sector) {
-                vfs_mngr_printf("    new out of order sector = 0x%x, prev = 0x%x\r\n",
-                    sector, file_transfer_state.last_ooo_sector);
-
+                vfs_mngr_printf("    sector out of order! lowest ooo = %i\r\n",
+                    file_transfer_state.last_ooo_sector);
                 if (VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
                     file_transfer_state.last_ooo_sector = sector;
                 }
                 file_transfer_state.last_ooo_sector =
                     MIN(file_transfer_state.last_ooo_sector, sector);
+            } else {
+                vfs_mngr_printf("    sector not part of file transfer\r\n");
             }
-            vfs_mngr_printf("    SECTOR OUT OF ORDER - 0x%x\r\n", sector);
+            vfs_mngr_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
+                file_transfer_state.size_transferred, buf[0],buf[1],buf[2],buf[3]);
             return;
         }
 
