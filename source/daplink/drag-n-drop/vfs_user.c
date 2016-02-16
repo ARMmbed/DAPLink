@@ -210,9 +210,9 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     pos += util_write_string(buf + pos, info_get_unique_id());
     pos += util_write_string(buf + pos, "\r\n");
 
-    // HDK ID
-    pos += util_write_string(buf + pos, "HDK ID: ");
-    pos += util_write_string(buf + pos, info_get_hdk_id());
+    // HIF ID
+    pos += util_write_string(buf + pos, "HIF ID: ");
+    pos += util_write_string(buf + pos, info_get_hif_id());
     pos += util_write_string(buf + pos, "\r\n");
 
     // Settings
@@ -406,8 +406,8 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
                     break;
 
                 case 'd':
-                case 'D':   // HDK
-                    insert_string = (uint8_t *)info_get_hdk_id();
+                case 'D':   // HIF
+                    insert_string = (uint8_t *)info_get_hif_id();
                     break;
 
                 case 'v':

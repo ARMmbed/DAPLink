@@ -27,7 +27,7 @@ void info_crc_compute(void);
 // Get the 48 digit unique ID as a null terminated string.
 // This is the string used as the USB serial number.
 // This string is made up of the following:
-// <board ID><4 reserved bytes><host ID><hdk ID>
+// <board ID><4 reserved bytes><host ID><hif ID>
 const char * info_get_unique_id(void);
 
 // Get the 4 digit board ID as a null terminated string
@@ -39,8 +39,8 @@ const char * info_get_host_id(void);
 // Get the 32 digit ID of the target processor as a null terminated string
 const char * info_get_target_id(void);
 
-// Get the 8 digit hdk ID as a null terminated string
-const char * info_get_hdk_id(void);
+// Get the 8 digit hif ID as a null terminated string
+const char * info_get_hif_id(void);
 
 // Get the 4 digit version ID as a null terminated string
 const char * info_get_version(void);

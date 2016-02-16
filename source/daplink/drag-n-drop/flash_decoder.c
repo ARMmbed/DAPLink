@@ -60,7 +60,7 @@ flash_decoder_type_t flash_decoder_detect_type(const uint8_t * data, uint32_t si
 
     // Check if this is a daplink image
     memcpy(&info, data + DAPLINK_INFO_OFFSET, sizeof(info));
-    if (DAPLINK_HDK_ID == info.hdk_id) {
+    if (DAPLINK_HIF_ID == info.hif_id) {
         if (DAPLINK_BUILD_KEY_IF == info.build_key) {
             // Interface update
             return FLASH_DECODER_TYPE_INTERFACE;

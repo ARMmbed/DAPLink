@@ -6,7 +6,7 @@ common:
         - source/daplink
         - source/daplink/interface
         - source/cmsis-core
-        - source/hdk_hal
+        - source/hif_hal
     sources:
         daplink_if:
             - source/daplink

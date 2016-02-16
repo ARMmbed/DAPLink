@@ -40,16 +40,16 @@ COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RA
 #define DAPLINK_BUILD_KEY_IF        0x9B939699
 #define DAPLINK_BUILD_KEY_BL        0x9B939D93
 
-#define DAPLINK_HDK_ID_K20DX        0x646c0000
-#define DAPLINK_HDK_ID_KL26         0x646c0001
-#define DAPLINK_HDK_ID_LPC11U35     0x646c0002
-#define DAPLINK_HDK_ID_SAM3U2C      0x646c0003
+#define DAPLINK_HIF_ID_K20DX        0x646c0000
+#define DAPLINK_HIF_ID_KL26         0x646c0001
+#define DAPLINK_HIF_ID_LPC11U35     0x646c0002
+#define DAPLINK_HIF_ID_SAM3U2C      0x646c0003
 
 #define DAPLINK_INFO_OFFSET         0x20
 
 typedef struct {
     uint32_t build_key;
-    uint32_t hdk_id;
+    uint32_t hif_id;
     uint32_t version;
 } daplink_info_t;
 

@@ -27,7 +27,7 @@ ASSERT_FILE_NAME = "ASSERT.TXT"
 NEED_BL_FILE_NAME = "NEED_BL.TXT"
 DAPLINK_VECTOR_TABLE_OFFSET = 0x00
 DAPLINK_BUILD_KEY_OFFSET = 0x20
-DAPLINK_HDK_ID_OFFSET = 0x24
+DAPLINK_HIF_ID_OFFSET = 0x24
 
 
 def intel_hex_get_sections(intel_hex):
@@ -382,15 +382,15 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.set_expected_data(raw_data)
     test.run()
 
-    # Test wrong HDK ID
+    # Test wrong HIF ID
     # Bootloader should perform interface update regardless of key
     if data_type == board.MODE_IF:
         local_raw_data = bytearray(raw_data)
-        local_raw_data[DAPLINK_HDK_ID_OFFSET] = \
-            (local_raw_data[DAPLINK_HDK_ID_OFFSET] + 1) % 0x100
+        local_raw_data[DAPLINK_HIF_ID_OFFSET] = \
+            (local_raw_data[DAPLINK_HIF_ID_OFFSET] + 1) % 0x100
         file_name = get_file_name()
         local_data = get_file_content(data_start, local_raw_data)
-        test = DLMassStorageTester(board, test_info, "Wrong HDK ID",
+        test = DLMassStorageTester(board, test_info, "Wrong HIF ID",
                                    board_mode)
         test.set_programming_data(local_data, file_name)
         test.set_expected_data(local_raw_data)

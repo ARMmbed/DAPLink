@@ -116,7 +116,7 @@ Provides definitions about:
 
 // Debug Port I/O Pins
 // For LPC11Uxx DAPs all SWD and JTAG pins are on GPIO port 0
-// Default is mbed HDK reference design with LPC11U35/501
+// Default is mbed HIF reference design with LPC11U35/501
 // SWCLK/TCK Pin                PIO0_7
 #define PIN_SWCLK_IN_BIT        7
 #define PIN_SWCLK               (1 << PIN_SWCLK_IN_BIT)

@@ -112,22 +112,22 @@ class DAPLinkFirmware(firmware.Firmware):
 
         # Set type
         self._type = None
-        string_hdk = None
+        string_hif = None
         match = self._IF_RE.match(name)
         if match:
-            string_hdk = match.group(1)
+            string_hif = match.group(1)
             self._type = self.TYPE.INTERFACE
         match = self._BL_RE.match(name)
         if match:
-            string_hdk = match.group(1)
+            string_hif = match.group(1)
             self._type = self.TYPE.BOOTLOADER
         if self._type is None:
             assert False, 'Bad project name "%s"' % name
 
-        # Set HDK
-        assert string_hdk in info.HDK_STRING_TO_ID, 'Unknown HDK "%s" must ' \
-            'be added to HDK_STRING_TO_ID in info.py' % string_hdk
-        self._hdk_id = info.HDK_STRING_TO_ID[string_hdk]
+        # Set HIF
+        assert string_hif in info.HIF_STRING_TO_ID, 'Unknown HIF "%s" must ' \
+            'be added to HIF_STRING_TO_ID in info.py' % string_hif
+        self._hif_id = info.HIF_STRING_TO_ID[string_hif]
 
         # Set board ID
         self._board_id = None
@@ -158,9 +158,9 @@ class DAPLinkFirmware(firmware.Firmware):
         board_id = self.board_id
         if board_id is None:
             board_id = 0
-        return "Name=%s Board ID=0x%04x HDK ID=0x%08x" % (self.name,
+        return "Name=%s Board ID=0x%04x HIF ID=0x%08x" % (self.name,
                                                           board_id,
-                                                          self.hdk_id)
+                                                          self.hif_id)
 
     @property
     def valid(self):
@@ -172,8 +172,8 @@ class DAPLinkFirmware(firmware.Firmware):
         return self._name
 
     @property
-    def hdk_id(self):
-        return self._hdk_id
+    def hif_id(self):
+        return self._hif_id
 
     @property
     def board_id(self):

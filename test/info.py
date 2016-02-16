@@ -15,8 +15,8 @@
 #
 from __future__ import absolute_import
 
-# Add new HDKs here
-HDK_STRING_TO_ID = {
+# Add new HIFs here
+HIF_STRING_TO_ID = {
     'k20dx': 0x646c0000,
     'kl26z': 0x646c0001,
     'lpc11u35': 0x646c0002,
