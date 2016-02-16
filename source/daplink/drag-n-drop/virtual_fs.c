@@ -240,13 +240,20 @@ COMPILER_ASSERT(sizeof(virtual_media) > sizeof(virtual_media_tmpl));
 
 static void write_fat(file_allocation_table_t * fat, uint32_t idx, uint16_t val)
 {
-    uint8_t low_idx;
-    uint8_t high_idx;
+    uint32_t low_idx;
+    uint32_t high_idx;
     uint8_t low_data;
     uint8_t high_data;
 
     low_idx = idx * 3 / 2;
     high_idx = idx * 3 / 2 + 1;
+
+    // Assert that this is still within the fat table
+    if (high_idx >= ELEMENTS_IN_ARRAY(fat->f)) {
+        util_assert(0);
+        return;
+    }
+
     if (idx & 1) {
         // Odd - lower byte shared
         low_data = (val << 4) & 0xF0;
@@ -341,6 +348,10 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     }
 
     // Update directory entry
+    if (dir_idx >= ELEMENTS_IN_ARRAY(dir1.f)) {
+        util_assert(0);
+        return 0;
+    }
     de = &dir1.f[dir_idx];
     dir_idx++;
 
@@ -351,6 +362,10 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     de->first_cluster_low_16 = (first_cluster >> 0) & 0xFFFF;
 
     // Update virtual media
+    if (virtual_media_idx >= ELEMENTS_IN_ARRAY(virtual_media)) {
+        util_assert(0);
+        return 0;
+    }
     virtual_media[virtual_media_idx].read_cb = read_zero;
     virtual_media[virtual_media_idx].write_cb = write_none;
     if (0 != read_cb) {
