@@ -54,6 +54,7 @@ static const vfs_filename_t assert_file = "ASSERT  TXT";
 static uint8_t file_buffer[VFS_SECTOR_SIZE];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
+static assert_source_t assert_source;
 
 static uint32_t get_file_size(vfs_read_cb_t read_func);
 
@@ -89,7 +90,7 @@ void vfs_user_build_filesystem()
     }
 
     // ASSERT.TXT
-    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line)) {
+    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line, &assert_source)) {
         file_size = get_file_size(read_file_assert_txt);
         file_handle = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
         vfs_file_set_attr(file_handle, (vfs_file_attr_bit_t)0); // Remove read only attribute
@@ -304,12 +305,22 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t* data, uint32
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint32_t num_sectors)
 {
     uint32_t pos;
+    const char * source_str;
     char * buf = (char *)data;
     if (sector_offset != 0) {
         return 0;
     }
     pos = 0;
-    
+
+    if (ASSERT_SOURCE_NONE == assert_source) {
+    } else if (ASSERT_SOURCE_BL == assert_source) {
+        source_str = "Bootloader";
+    } else if (ASSERT_SOURCE_APP == assert_source) {
+        source_str = "Application";
+    } else {
+        source_str = 0;
+    }
+
     pos += util_write_string(buf + pos, "Assert\r\n");
     pos += util_write_string(buf + pos, "File: ");
     pos += util_write_string(buf + pos, assert_buf);
@@ -317,6 +328,11 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
     pos += util_write_string(buf + pos, "Line: ");
     pos += util_write_uint32(buf + pos, assert_line);
     pos += util_write_string(buf + pos, "\r\n");
+    if (source_str != 0) {
+        pos += util_write_string(buf + pos, "Source: ");
+        pos += util_write_string(buf + pos, source_str);
+        pos += util_write_string(buf + pos, "\r\n");
+    }
 
     return pos;
 }

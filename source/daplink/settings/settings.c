@@ -19,6 +19,7 @@
 #include "target_config.h"
 #include "compiler.h"
 #include "cortex_m.h"
+#include "daplink.h"
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
@@ -37,6 +38,7 @@ typedef struct __attribute__ ((__packed__)) cfg_ram {
     uint8_t hold_in_bl;
     char assert_file_name[64 + 1];
     uint16_t assert_line;
+    uint8_t assert_source;
 
     // Add new members here
 
@@ -73,6 +75,7 @@ void config_init()
            config_ram_copy.assert_file_name,
            sizeof(config_ram_copy.assert_file_name));
     config_ram.assert_line =  config_ram_copy.assert_line;
+    config_ram.assert_source =  config_ram_copy.assert_source;
 
     config_rom_init();
 }
@@ -103,6 +106,13 @@ void config_ram_set_assert(const char * file, uint16_t line)
     // Write to ram
     memcpy(config_ram.assert_file_name, start, copy_size);
     config_ram.assert_line = line;
+    if (daplink_is_bootloader()) {
+        config_ram.assert_source = ASSERT_SOURCE_BL;
+    } else if (daplink_is_interface()) {
+        config_ram.assert_source = ASSERT_SOURCE_APP;
+    } else {
+        config_ram.assert_source = ASSERT_SOURCE_NONE;
+    }
 }
 
 void config_ram_clear_assert()
@@ -121,7 +131,7 @@ bool config_ram_get_initial_hold_in_bl()
     return config_ram_copy.hold_in_bl;
 }
 
-bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line)
+bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line, assert_source_t * source)
 {
     // Initialize
     const char * start;
@@ -132,6 +142,9 @@ bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line)
     }
     if (0 != line) {
         *line = 0;
+    }
+    if (0 != source) {
+        *source = ASSERT_SOURCE_NONE;
     }
 
     // If the string is empty then there is no assert
@@ -154,6 +167,9 @@ bool config_ram_get_assert(char * buf, uint16_t buf_size, uint16_t * line)
     }
     if (0 != line) {
         memcpy(buf, start, copy_size);
+    }
+    if (0 != source) {
+        *source = (assert_source_t)config_ram.assert_source;
     }
     return true;
 }
