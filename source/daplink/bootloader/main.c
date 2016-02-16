@@ -17,14 +17,13 @@
 #include "main.h"
 #include "gpio.h"
 #include "validation.h"
-#include "virtual_fs_user.h"
+#include "vfs_manager.h"
 #include "RTL.h"
 #include "rl_usb.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "info.h"
 #include "target_config.h"
 #include "util.h"
-#include "target_reset.h" // TODO - remove when target reset is moved out of virtual_fs_user.c
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -105,13 +104,6 @@ void HardFault_Handler()
     while (1); // Wait for reset
 }
 
-// TODO - remove when target reset is moved out of virtual_fs_user.c
-__attribute__((weak))
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return 0;
-}
-
 __task void main_task(void)
 {
     // State processing
@@ -139,7 +131,7 @@ __task void main_task(void)
 
     // USB
     usbd_init();
-    vfs_user_init(true);
+    vfs_mngr_init(true);
     usbd_connect(0);
     usb_busy = MAIN_USB_IDLE;
     usb_busy_count = 0;
@@ -164,7 +156,7 @@ __task void main_task(void)
         }
 
         if (flags & FLAGS_MAIN_90MS) {
-            vfs_user_periodic(90); // FLAGS_MAIN_90MS
+            vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 
             // Update USB busy status
             switch (usb_busy) {

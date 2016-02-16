@@ -24,6 +24,7 @@
 #include "swd_host.h"
 #include "flash_intf.h"
 #include "util.h"
+#include "settings.h"
 
 static error_t target_flash_init(void);
 static error_t target_flash_uninit(void);
@@ -67,7 +68,10 @@ static error_t target_flash_init()
 
 static error_t target_flash_uninit(void)
 {
-    // when programming is complete the target should be put and held in reset
+    // Resume the target if configured to do so
+    if (config_get_auto_rst()) {
+        target_set_state(RESET_RUN);
+    }
     return ERROR_SUCCESS;
 }
 

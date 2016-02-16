@@ -17,7 +17,7 @@
 #include "virtual_fs.h"
 #include "string.h"
 #include "info.h"
-#include "config_settings.h"
+#include "settings.h"
 #include "compiler.h"
 #include "macro.h"
 #include "util.h"

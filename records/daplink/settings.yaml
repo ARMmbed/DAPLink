@@ -1,0 +1,6 @@
+common:
+    includes:
+        - source/daplink/settings
+    sources:
+        settings:
+            - source/daplink/settings/settings.c

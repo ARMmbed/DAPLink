@@ -24,16 +24,18 @@ CFG_KEY = 0x6b766c64
 # 32 - key
 # 16 - offset_of_end
 # 8  - auto_rst
+# 8  - automation_allowed
 # 0  - 'end' member omitted
-FORMAT = '<LHB'
+FORMAT = '<LHBB'
 FORMAT_LENGTH = struct.calcsize(FORMAT)
 MINIMUM_ALIGN = 1 << 10  # 1k aligned
 
 
-def create_hex(filename, addr, auto_rst, pad_size):
+def create_hex(filename, addr, auto_rst, automation_allowed, pad_size):
     file_format = 'hex'
     intel_hex = IntelHex()
-    intel_hex.puts(addr, struct.pack(FORMAT, CFG_KEY, FORMAT_LENGTH, auto_rst))
+    intel_hex.puts(addr, struct.pack(FORMAT, CFG_KEY, FORMAT_LENGTH, auto_rst,
+                                     automation_allowed))
     pad_addr = addr + FORMAT_LENGTH
     pad_byte_count = pad_size - (FORMAT_LENGTH % pad_size)
     pad_data = '\xFF' * pad_byte_count
@@ -50,6 +52,7 @@ POWERS_OF_TWO = [2**num for num in range(0, 32)]
 parser = argparse.ArgumentParser(description='Configuration Creator')
 parser.add_argument("--addr", type=str_to_int, required=True, help="Address of configuration data")
 parser.add_argument("--auto_rst", type=int, required=True, choices=[0, 1], help="Auto reset configuration value")
+parser.add_argument("--automation_allowed", type=int, required=True, choices=[0,1], help="Allow automation from filesystem interaction")
 parser.add_argument("--pad", type=int, default=16, choices=POWERS_OF_TWO, metavar="{1, 2, 4,...}", help="Byte aligned boundary to pad region to")
 parser.add_argument("--output_file", type=str, default='settings.hex', help="Name of output file")
 
@@ -65,7 +68,8 @@ def main():
     print "Settings:"
     print "  auto_rst: %i" % args.auto_rst
     print ""
-    create_hex(args.output_file, args.addr, args.auto_rst, args.pad)
+    create_hex(args.output_file, args.addr, args.auto_rst,
+               args.automation_allowed, args.pad)
 
 if __name__ == '__main__':
     main()

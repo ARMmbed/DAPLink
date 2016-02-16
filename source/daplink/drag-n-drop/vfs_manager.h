@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef VIRTUAL_FS_USER_H
-#define VIRTUAL_FS_USER_H
+#ifndef VFS_MANAGER_USER_H
+#define VFS_MANAGER_USER_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -36,22 +36,38 @@ extern const char * const daplink_target_url;
 /* Callable from anywhere */
 
 // Enable or disable the virtual filesystem
-void vfs_user_enable(bool enabled);
+void vfs_mngr_fs_enable(bool enabled);
 
 // Remount the virtual filesystem
-void vfs_user_remount(void);
+void vfs_mngr_fs_remount(void);
 
 
-/* Callable only from the thread running virtual_fs_user.h */
+/* Callable only from the thread running the virtual fs */
 
-// Initialize the VFS user code
+// Initialize the VFS manager
 // Must be called after USB has been initialized (usbd_init())
 // Notes: Must only be called from the thread runnning USB
-void vfs_user_init(bool enabled);
+void vfs_mngr_init(bool enabled);
 
-// Run the vfs_user state machine
+// Run the vfs manager state machine
 // Notes: Must only be called from the thread runnning USB
-void vfs_user_periodic(uint32_t elapsed_ms);
+void vfs_mngr_periodic(uint32_t elapsed_ms);
+
+// Return the status of the last transfer or ERROR_SUCCESS
+// if none have been performed yet
+error_t vfs_mngr_get_transfer_status(void);
+
+
+/* Use functions */
+
+// Build the filesystem by calling vfs_init and then adding files with vfs_create_file
+void vfs_user_build_filesystem(void);
+
+// Called when a file on the filesystem changes
+void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
+
+// Called when VFS is disconnecting
+void vfs_user_disconnecting(void);
 
 
 #ifdef __cplusplus
