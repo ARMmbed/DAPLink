@@ -4,7 +4,7 @@ common:
     macros:
         - INTERFACE_SAM3U2C
         - __SAM3U2C__
-        - DAPLINK_HIF_ID=0x646c0003  # DAPLINK_HIF_ID_SAM3U2C
+        - DAPLINK_HIF_ID=0x97969903  # DAPLINK_HIF_ID_SAM3U2C
     includes:
         - source/hif_hal/atmel/sam3u2c
         - source/hif_hal/atmel/sam3u2c

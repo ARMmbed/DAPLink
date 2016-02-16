@@ -3,7 +3,7 @@ common:
         - lpc11u35_501
     macros:
         - INTERFACE_LPC11U35
-        - DAPLINK_HIF_ID=0x646c0002  # DAPLINK_HIF_ID_LPC11U35
+        - DAPLINK_HIF_ID=0x97969902  # DAPLINK_HIF_ID_LPC11U35
     includes:
         - source/hif_hal/nxp/lpc11u35
         - source/hif_hal/nxp/lpc11u35

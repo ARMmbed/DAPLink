@@ -4,7 +4,7 @@ common:
     macros:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
-        - DAPLINK_HIF_ID=0x646c0001  # DAPLINK_HIF_ID_KL26
+        - DAPLINK_HIF_ID=0x97969901  # DAPLINK_HIF_ID_KL26
         - BL_TARGET_FLASH
     includes:
         - source/hif_hal/freescale/kl26z
