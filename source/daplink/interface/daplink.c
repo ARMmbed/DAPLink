@@ -23,7 +23,7 @@ COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
 // daplink_mode_file_name, daplink_url_name and 
 // daplink_drive_name strings must be 11 characters 
 // excluding the null terminated character
-const vfs_filename_t daplink_mode_file_name = "START_BLCFG";
+const vfs_filename_t daplink_mode_file_name = "START_BLACT";
 __attribute__((weak))
 const vfs_filename_t daplink_url_name =       "MBED    HTM";
 __attribute__((weak))

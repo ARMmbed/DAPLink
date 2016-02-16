@@ -286,17 +286,23 @@ class DaplinkBoard(object):
             # No mode change needed
             return
 
-        start_bl_path = self.get_file_path('START_BL.CFG')
-        start_if_path = self.get_file_path('START_IF.CFG')
         if mode is self.MODE_BL:
             test_info.info("changing mode IF -> BL")
             # Create file to enter BL mode
+            start_bl_path = self.get_file_path('START_BL.ACT')
+            with open(start_bl_path, 'wb') as _:
+                pass
+            # Create file to enter BL mode - Legacy
             start_bl_path = self.get_file_path('START_BL.CFG')
             with open(start_bl_path, 'wb') as _:
                 pass
         elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
-            # Create file to enter BL mode
+            # Create file to enter IF mode
+            start_if_path = self.get_file_path('START_IF.ACT')
+            with open(start_if_path, 'wb') as _:
+                pass
+            # Create file to enter IF mode - Legacy
             start_if_path = self.get_file_path('START_IF.CFG')
             with open(start_if_path, 'wb') as _:
                 pass
