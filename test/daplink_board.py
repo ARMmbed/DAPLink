@@ -462,7 +462,7 @@ class DaplinkBoard(object):
         if data_crc != details_crc:
             test_info.failure("Bootloader CRC is wrong")
 
-    def wait_for_remount(self, parent_test, wait_time=15):
+    def wait_for_remount(self, parent_test, wait_time=120):
         test_info = parent_test.create_subtest('wait_for_remount')
         elapsed = 0
         start = time.time()
