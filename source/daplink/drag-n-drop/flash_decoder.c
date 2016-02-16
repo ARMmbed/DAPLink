@@ -38,6 +38,7 @@
 typedef enum {
     DECODER_STATE_CLOSED,
     DECODER_STATE_OPEN,
+    DECODER_STATE_DONE,
     DECODER_STATE_ERROR
 } decoder_state_t;
 
@@ -283,6 +284,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size)
     if (flash_decoder_is_at_end(addr, data, size)) {
         flash_decoder_printf("    End of transfer detected - addr 0x%08x, size 0x%08x\r\n",
                              addr, size);
+        state = DECODER_STATE_DONE;
         return ERROR_SUCCESS_DONE;
     }
     return ERROR_SUCCESS;
@@ -291,6 +293,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t * data, uint32_t size)
 error_t flash_decoder_close(void)
 {
     error_t status = ERROR_SUCCESS;
+    decoder_state_t prev_state = state;
     flash_decoder_printf("flash_decoder_close()\r\n");
 
     if (DECODER_STATE_CLOSED == state) {
@@ -302,6 +305,11 @@ error_t flash_decoder_close(void)
     if (flash_initialized) {
         status = flash_manager_uninit();
         flash_decoder_printf("    flash_manager_uninit ret %i\r\n", status);
+    }
+    if ((DECODER_STATE_DONE != prev_state) &&
+        (flash_type != FLASH_DECODER_TYPE_TARGET) &&
+            (status == ERROR_SUCCESS)) {
+        status = ERROR_IAP_UPDT_INCOMPLETE;
     }
 
     return status;
