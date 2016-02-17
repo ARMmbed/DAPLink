@@ -51,8 +51,8 @@ class Firmware(object):
         raise NotImplementedError()
 
     @property
-    def hdk_id(self):
-        """HDK ID for the type of board this firmware can run on"""
+    def hif_id(self):
+        """HIF ID for the type of board this firmware can run on"""
         raise NotImplementedError()
 
     @property

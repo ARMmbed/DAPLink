@@ -21,8 +21,8 @@
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the KL26 HDK
-COMPILER_ASSERT(DAPLINK_HDK_ID == DAPLINK_HDK_ID_KL26);
+// This GPIO configuration is only valid for the KL26 HIF
+COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_KL26);
 
 
 // Debug Port I/O Pins

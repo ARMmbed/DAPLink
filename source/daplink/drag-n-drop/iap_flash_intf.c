@@ -127,7 +127,11 @@ static error_t uninit(void)
     if (iap_status != 0) {
         return ERROR_IAP_UNINIT;
     }
-    if (!update_complete) {
+    if (!update_complete && !daplink_is_bootloader()) {
+        // Interface - Error if the bootloader update is not complete
+        // Bootloader - For 3rd party applications the end of the update
+        //              is unknown so it is not an error if the transfer
+        //              ends early.
         return ERROR_IAP_UPDT_INCOMPLETE;
     }
     return ERROR_SUCCESS;

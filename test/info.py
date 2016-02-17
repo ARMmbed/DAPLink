@@ -15,12 +15,12 @@
 #
 from __future__ import absolute_import
 
-# Add new HDKs here
-HDK_STRING_TO_ID = {
-    'k20dx': 0x646c0000,
-    'kl26z': 0x646c0001,
-    'lpc11u35': 0x646c0002,
-    'sam3u2c': 0x646c0003,
+# Add new HIFs here
+HIF_STRING_TO_ID = {
+    'k20dx': 0x97969900,
+    'kl26z': 0x97969901,
+    'lpc11u35': 0x97969902,
+    'sam3u2c': 0x97969903,
 }
 
 # Add new firmware with a hard coded board ID here

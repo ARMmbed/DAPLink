@@ -195,7 +195,7 @@ class DaplinkBoard(object):
 
     # Keys for details.txt
     KEY_UNIQUE_ID = "unique_id"
-    KEY_HDK_ID = "hdk_id"
+    KEY_HIF_ID = "hif_id"
     KEY_MODE = "daplink_mode"
     KEY_BL_VERSION = "bootloader_version"
     KEY_IF_VERSION = "interface_version"
@@ -225,8 +225,8 @@ class DaplinkBoard(object):
         return self.board_id
 
     @property
-    def hdk_id(self):
-        return self._hdk_id
+    def hif_id(self):
+        return self._hif_id
 
     @property
     def name(self):
@@ -286,17 +286,23 @@ class DaplinkBoard(object):
             # No mode change needed
             return
 
-        start_bl_path = self.get_file_path('START_BL.CFG')
-        start_if_path = self.get_file_path('START_IF.CFG')
         if mode is self.MODE_BL:
             test_info.info("changing mode IF -> BL")
             # Create file to enter BL mode
+            start_bl_path = self.get_file_path('START_BL.ACT')
+            with open(start_bl_path, 'wb') as _:
+                pass
+            # Create file to enter BL mode - Legacy
             start_bl_path = self.get_file_path('START_BL.CFG')
             with open(start_bl_path, 'wb') as _:
                 pass
         elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
-            # Create file to enter BL mode
+            # Create file to enter IF mode
+            start_if_path = self.get_file_path('START_IF.ACT')
+            with open(start_if_path, 'wb') as _:
+                pass
+            # Create file to enter IF mode - Legacy
             start_if_path = self.get_file_path('START_IF.CFG')
             with open(start_if_path, 'wb') as _:
                 pass
@@ -515,7 +521,7 @@ class DaplinkBoard(object):
         assert self.unique_id is not None
         assert self.mount_point is not None
         self.board_id = int(self.unique_id[0:4], 16)
-        self._hdk_id = int(self.unique_id[-8:], 16)
+        self._hif_id = int(self.unique_id[-8:], 16)
 
         # Note - Some legacy boards might not have details.txt
         details_txt_path = self.get_file_path("details.txt")
@@ -548,7 +554,7 @@ class DaplinkBoard(object):
         test_info = parent_test.create_subtest('test_details_txt')
         required_key_and_format = {
             DaplinkBoard.KEY_UNIQUE_ID: re.compile("^[a-f0-9]{48}$"),
-            DaplinkBoard.KEY_HDK_ID: re.compile("^[a-f0-9]{8}$"),
+            DaplinkBoard.KEY_HIF_ID: re.compile("^[a-f0-9]{8}$"),
             DaplinkBoard.KEY_GIT_SHA: re.compile("^[a-f0-9]{40}$"),
             DaplinkBoard.KEY_LOCAL_MODS: re.compile("^[01]{1}$"),
             DaplinkBoard.KEY_USB_INTERFACES: re.compile("^.+$"),
@@ -596,17 +602,17 @@ class DaplinkBoard(object):
 
         # Check details.txt contents
         details_unique_id = None
-        details_hdk_id = None
+        details_hif_id = None
         if DaplinkBoard.KEY_UNIQUE_ID in details_txt:
             details_unique_id = details_txt[DaplinkBoard.KEY_UNIQUE_ID]
-        if DaplinkBoard.KEY_HDK_ID in details_txt:
-            details_hdk_id = details_txt[DaplinkBoard.KEY_HDK_ID]
+        if DaplinkBoard.KEY_HIF_ID in details_txt:
+            details_hif_id = details_txt[DaplinkBoard.KEY_HIF_ID]
         if details_unique_id is not None:
             if details_unique_id != self.unique_id:
                 test_info.failure("Unique ID mismatch in details.txt")
-            if details_hdk_id is not None:
-                if details_hdk_id != details_unique_id[-8:]:
-                    test_info.failure("HDK ID is not the last 8 "
+            if details_hif_id is not None:
+                if details_hif_id != details_unique_id[-8:]:
+                    test_info.failure("HIF ID is not the last 8 "
                                       "digits of unique ID")
 
     def _parse_assert_txt(self):

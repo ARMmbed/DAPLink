@@ -30,63 +30,63 @@ module:
         - records/daplink/settings.yaml
         - records/daplink/settings_rom.yaml
         - records/daplink/interface.yaml
-    # HDKs
-    hdk_k20dx128: &module_hdk_k20dx128
+    # HIFs
+    hif_k20dx128: &module_hif_k20dx128
         - records/rtos/rtos-cm3.yaml
-        - records/hdk_hal/k20dx128.yaml
-    hdk_kl26z: &module_hdk_kl26z
+        - records/hif_hal/k20dx128.yaml
+    hif_kl26z: &module_hif_kl26z
         - records/rtos/rtos-cm0.yaml
-        - records/hdk_hal/kl26z.yaml
-    hdk_lpc11u35: &module_hdk_lpc11u35
+        - records/hif_hal/kl26z.yaml
+    hif_lpc11u35: &module_hif_lpc11u35
         - records/rtos/rtos-cm0.yaml
-        - records/hdk_hal/lpc11u35.yaml
-    hdk_sam3u2c: &module_hdk_sam3u2c
+        - records/hif_hal/lpc11u35.yaml
+    hif_sam3u2c: &module_hif_sam3u2c
         - records/rtos/rtos-cm3.yaml
-        - records/hdk_hal/sam3u2c.yaml
+        - records/hif_hal/sam3u2c.yaml
 
 projects:
     kl26z_bl:
         - *module_bl
-        - *module_hdk_kl26z
+        - *module_hif_kl26z
         - records/target/kl26z_bl.yaml
     k20dx_bl:
         - *module_bl
-        - *module_hdk_k20dx128
+        - *module_hif_k20dx128
         - records/target/k20dx128_bl.yaml
     sam3u2c_bl:
         - *module_bl
-        - *module_hdk_sam3u2c
+        - *module_hif_sam3u2c
         - records/target/sam3u2c_bl.yaml
     sam3u2c_nrf51822_if:
         - *module_if
-        - *module_hdk_sam3u2c
+        - *module_hif_sam3u2c
         - records/target/nrf51822_dk.yaml
     kl26z_nrf51822_if:
         - *module_if
-        - *module_hdk_kl26z
+        - *module_hif_kl26z
         - records/target/nrf51822.yaml
     kl26z_microbit_if:
         - *module_if
-        - *module_hdk_kl26z
+        - *module_hif_kl26z
         - records/target/nrf51822.yaml
         - records/overrides/microbit.yaml
     k20dx_k22f_if:
         - *module_if
-        - *module_hdk_k20dx128
+        - *module_hif_k20dx128
         - records/target/k22f.yaml
     k20dx_k64f_if:
         - *module_if
-        - *module_hdk_k20dx128
+        - *module_hif_k20dx128
         - records/target/k64f.yaml
     lpc11u35_lpc1114_if:
         - *module_if
-        - *module_hdk_lpc11u35
+        - *module_hif_lpc11u35
         - records/target/lpc1114.yaml
     lpc11u35_lpc812_if:
         - *module_if
-        - *module_hdk_lpc11u35
+        - *module_hif_lpc11u35
         - records/target/lpc812.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_if
-        - *module_hdk_lpc11u35
+        - *module_hif_lpc11u35
         - records/target/efm32gg_stk.yaml

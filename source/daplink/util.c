@@ -129,7 +129,7 @@ void _util_assert(bool expression, const char * filename, uint16_t line)
     int_state = cortex_int_get_and_disable();
 
     // Only write the assert if there is not already one
-    assert_set = config_ram_get_assert(0, 0, 0);
+    assert_set = config_ram_get_assert(0, 0, 0, 0);
     if (!assert_set) {
         config_ram_set_assert(filename, line);
     }
