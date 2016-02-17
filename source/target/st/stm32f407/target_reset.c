@@ -16,14 +16,22 @@
 #include "target_reset.h"
 #include "swd_host.h"
 
-void target_before_init_debug(void) {
+void target_before_init_debug(void)
+{
     return;
 }
 
-uint8_t target_unlock_sequence(void) {
+uint8_t target_unlock_sequence(void)
+{
     return 1;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
+{
+    return 0;
+}
+
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    return swd_set_target_state_hw(state);
 }

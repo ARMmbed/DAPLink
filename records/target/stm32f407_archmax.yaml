@@ -1,0 +1,5 @@
+common:
+    sources:
+        target:
+            - source/target/st/stm32f407/archmax_app_config.c
+            - source/target/st/stm32f407/target_reset.c

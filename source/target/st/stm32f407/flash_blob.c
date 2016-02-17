@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef TARGET_FLASH_H
-#define TARGET_FLASH_H
 
-#include "target_struct.h"
-#include "swd_host.h"
-#include "target_reset.h"
-#include "stdint.h"
-#include "debug_cm.h"
-#include "RTL.h"
+#include "flash_blob.h"
 
 
-static const uint32_t flash_algo_blob[] = {
+static const uint32_t STM32F407_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
 
     /*0x020*/ 0xe000300, 0xd3022820L, 0x1d000940, 0x28104770, 0x900d302, 0x47701cc0, 0x47700880, 0x49414842, 
@@ -40,7 +33,7 @@ static const uint32_t flash_algo_blob[] = {
     /*0x160*/ 0x201, 0x0, 
 };
 
-static const TARGET_FLASH flash = {
+static const program_target_t flash = {
     0x2000003D, // Init
     0x2000006B, // UnInit
     0x20000079, // EraseChip
@@ -56,8 +49,6 @@ static const TARGET_FLASH flash = {
     0x20001000, // program_buffer
     0x20000000, // algo_start
     0x00000170, // algo_size
-    flash_algo_blob,// image
+    STM32F407_FLM,// image
     512        // ram_to_flash_bytes_to_be_written
 };
-
-#endif

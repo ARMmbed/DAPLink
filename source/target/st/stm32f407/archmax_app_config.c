@@ -16,6 +16,9 @@
 
 #include "target_config.h"
 
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
 // nrf51822-mkit target information
 const target_cfg_t target_device = {
     .board_id   = "9011",
@@ -29,5 +32,5 @@ const target_cfg_t target_device = {
     .flash_end      = 0x08100000,
     .ram_start      = 0x20000000,
     .ram_end        = 0x20020000,
-    .disc_size      = MB(8)
+    .flash_algo     = (program_target_t*)&flash,
 };

@@ -126,3 +126,7 @@ projects:
         - *module_if
         - *module_hdk_lpc11u35
         - records/target/lpc1768_archpro.yaml
+    lpc11u35_archmax_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/stm32f407_archmax.yaml
