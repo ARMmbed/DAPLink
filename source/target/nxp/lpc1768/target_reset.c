@@ -13,36 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "RTL.h"
+#include "debug_cm.h"
 #include "target_reset.h"
 #include "swd_host.h"
+#include "DAP_Config.h"
 
-void target_before_init_debug(void) {
+void target_before_init_debug(void)
+{
     return;
 }
 
-uint8_t target_unlock_sequence(void) {
+uint8_t target_unlock_sequence(void)
+{
     return 1;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    return swd_set_target_state_hw(state);
 }
 
-
-//
-// UBLOX code for power detection
-
-// #ifdef BOARD_UBLOX_C027
-//     PORT_SWD_SETUP();
-//     // wait until reset output to the target is pulled high
-//     while (!PIN_nRESET_IN()) {
-//         /* wait doing nothing */
-//     }
-//     os_dly_wait(4);
-//     // if the reset input from button is low then enter isp programming mode
-//     if (!(LPC_GPIO->B[19/*RESET_PIN*/ + (1/*RESET_PORT*/ << 5)] & 1)) {
-//         enter_isp();
-//     }
-// #endif
-
-//
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
+{
+    return 0;
+}

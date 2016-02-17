@@ -118,3 +118,11 @@ projects:
         - *module_if
         - *module_hdk_lpc11u35
         - records/target/efm32gg_stk.yaml
+    lpc11u35_archble_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/nrf51822_archble.yaml
+    lpc11u35_archpro_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/lpc1768_archpro.yaml
