@@ -106,10 +106,6 @@ projects:
         - *module_if
         - *module_hdk_k20dx128
         - records/target/kl46z.yaml
-    lpc11u35_lpc1114_if:
-        - *module_if
-        - *module_hdk_lpc11u35
-        - records/target/lpc1114.yaml
     lpc11u35_lpc812_if:
         - *module_if
         - *module_hdk_lpc11u35
@@ -130,3 +126,19 @@ projects:
         - *module_if
         - *module_hdk_lpc11u35
         - records/target/stm32f407_archmax.yaml
+    lpc11u35_hrm1017_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/nrf51822_hrm1017.yaml
+    lpc11u35_sscity_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/nrf51822_sscity.yaml
+    lpc11u35_ssci824_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/lpc824_ssci824.yaml
+    lpc11u35_ssci1114_if:
+        - *module_if
+        - *module_hdk_lpc11u35
+        - records/target/lpc1114_ssci1114.yaml

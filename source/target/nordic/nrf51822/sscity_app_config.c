@@ -16,20 +16,21 @@
 
 #include "target_config.h"
 
-// LPC824 target information
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
+// switch science nrf51822 r3 target information
 const target_cfg_t target_device = {
-    .board_id   = "1018",    // Switch Science mbed LPC824
-    //.board_id   = "0824",    // LPCXpresso824-MAX
+    .board_id   = "1019",
     .secret     = "xxxxxxxx",
     .sector_size    = 1024,
-    // Assume memory is regions are same size. Flash algo should ignore requests
+    // Assume memory is regions are same size (smallest). Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (KB(32)/1024),
+    .sector_cnt     = (KB(256)/1024),
     .flash_start    = 0,
-    .flash_end      = KB(32),
-    .ram_start      = 0x10000000,
-    .ram_end        = 0x10002000,
-    .disc_size      = KB(32)
+    .flash_end      = KB(256),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20008000,
+    .flash_algo     = (program_target_t*)&flash,
 };
-
