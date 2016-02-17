@@ -312,8 +312,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t* data, uint
     }
     pos = 0;
 
-    if (ASSERT_SOURCE_NONE == assert_source) {
-    } else if (ASSERT_SOURCE_BL == assert_source) {
+    if (ASSERT_SOURCE_BL == assert_source) {
         source_str = "Bootloader";
     } else if (ASSERT_SOURCE_APP == assert_source) {
         source_str = "Application";
