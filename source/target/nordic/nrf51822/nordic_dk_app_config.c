@@ -19,7 +19,7 @@
 // The file flash_blob.c must only be included in app_config
 #include "flash_blob.c"
 
-// nrf51822-mkit target information
+// nrf51822-dk target information
 const target_cfg_t target_device = {
     .board_id   = "1100",
     .secret     = "xxxxxxxx",

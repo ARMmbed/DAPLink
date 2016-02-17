@@ -53,18 +53,22 @@ projects:
         - *module_bl
         - *module_hdk_sam3u2c
         - records/target/sam3u2c_bl.yaml
-    sam3u2c_nrf51822_if:
+    sam3u2c_nrf51mkit_if:
+        - *module_if
+        - *module_hdk_sam3u2c
+        - records/target/nrf51822_mkit.yaml
+    sam3u2c_nrf51dk_if:
         - *module_if
         - *module_hdk_sam3u2c
         - records/target/nrf51822_dk.yaml
-    kl26z_nrf51822_if:
+    sam3u2c_nrf51dongle_if:
         - *module_if
-        - *module_hdk_kl26z
-        - records/target/nrf51822.yaml
+        - *module_hdk_sam3u2c
+        - records/target/nrf51822_dongle.yaml
     kl26z_microbit_if:
         - *module_if
         - *module_hdk_kl26z
-        - records/target/nrf51822.yaml
+        - records/target/nrf51822_microbit.yaml
         - records/overrides/microbit.yaml
     k20dx_k20dx_if:
         - *module_if
