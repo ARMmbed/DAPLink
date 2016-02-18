@@ -69,7 +69,7 @@ uint8_t target_unlock_sequence(void)
     // flash in secured mode
     if (val & (1 << 2)) {
         // hold the device in reset
-        target_set_state(RESET_HOLD);
+        swd_set_target_reset(1);
         // write the mass-erase enable bit
         if (!swd_write_ap(MDM_CTRL, 1)) {
             return 0;

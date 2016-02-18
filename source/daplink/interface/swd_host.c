@@ -94,6 +94,9 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t * data) {
 
 
 uint8_t swd_init(void) {
+    //TODO - DAP_Setup puts GPIO pins in a hi-z state which can
+    //       cause problems on re-init.  This needs to be investigated
+    //       and fixed.
     DAP_Setup();
     PORT_SWD_SETUP();
     return 1;
