@@ -74,10 +74,18 @@ def test_hid(workspace, parent_test):
             addr = 0x20000001
             size = 0x502
             addr_flash = 0x10000
+        elif target_type == "kl05z":
+            addr = 0x20000001
+            size = 0x502
+            addr_flash = 0x6000
         elif target_type == "lpc800":
             addr = 0x10000001
             size = 0x502
             addr_flash = 0x2000
+        elif target_type == "lpc11xx_32":
+            addr = 0x10000001
+            size = 0x502
+            addr_flash = 0x4000
         elif target_type == "nrf51":
             addr = 0x20000001
             size = 0x502

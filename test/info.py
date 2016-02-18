@@ -69,8 +69,20 @@ TARGET_NAME_TO_BOARD_ID = {
     'Seeeduino-Arch-Pro': 0x9004,
     'Seeed-Arch-Max': 0x9011,
     'mbed-HRM1017': 0x1017,
-    #'Switch-Science-mbed-TY51822r3': 0x1019,        # Not supported currently
+    'Switch-Science-mbed-TY51822r3': 0x1019,
     'Switch-Science-mbed-LPC824': 0x1018,
+    'LPC1114FN28': 0x1114
 }
+
+#Hack until these targets have an image with a valid vector table
+TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
+    'Microbit',
+    'Nordic-nRF51-DK',
+    'Nordic-nRF51822',
+    'Nordic-nRF51-Dongle',
+    'Seeed-Arch-BLE',
+    'mbed-HRM1017',
+    'Switch-Science-mbed-TY51822r3',
+]
 
 BOARD_ID_TO_BUILD_TARGET = {v: k for k, v in TARGET_NAME_TO_BOARD_ID.items()}
