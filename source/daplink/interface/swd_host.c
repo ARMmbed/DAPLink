@@ -466,14 +466,8 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 // Write unaligned data to target memory.
 // size is in bytes.
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
-//    while (size-- != 0) {
-//        swd_write_byte(address, (uint32_t)*data);
-//        address += 1;
-//        data += 1;
-//    }
-//    return 1;
-//}
     uint32_t n = 0;
+
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {
@@ -483,14 +477,22 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         data++;
         size--;
     }
+
     // Write word aligned blocks
-    n = size & 0xfffffffc;
-    if (!swd_write_block(address, data, n)) {
-        return 0;
+    while (size > 3) {
+        // Limit to auto increment page size
+        n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+        if (size < n) {
+            n = size & 0xFFFFFFFC; // Only count complete words remaining
+        }
+
+        if (!swd_write_block(address, data, n)) {
+            return 0;
+        }
+        address += n;
+        data += n;
+        size -= n;
     }
-    address += n;
-    data += n;
-    size -= n;
 
     // Write remaining bytes
     while (size > 0) {
@@ -537,7 +539,7 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
         return 0;
     }
     
-    if (!swd_write_block(target_device.flash_algo->algo_start, 
+    if (!swd_write_memory(target_device.flash_algo->algo_start, 
             (uint8_t *)target_device.flash_algo->algo_blob, 
             target_device.flash_algo->algo_size)){
         return 0;
