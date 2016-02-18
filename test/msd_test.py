@@ -22,11 +22,6 @@ import shutil
 import six
 import info
 
-BOARD_ID_LOCKED_WHEN_ERASED = set([
-    0x0231,  # K22F
-    0x0240,  # K64F
-])
-
 
 def _same(d1, d2):
     assert type(d1) is bytearray
@@ -268,7 +263,7 @@ def test_mass_storage(workspace, parent_test):
         hex_file_contents = bytearray(test_file.read())
     blank_bin_contents = bytearray([0xff]) * 0x2000
     vectors_and_pad = bin_file_contents[0:32] + blank_bin_contents
-    locked_when_erased = board.get_board_id() in BOARD_ID_LOCKED_WHEN_ERASED
+    locked_when_erased = board.get_board_id() in info.BOARD_ID_LOCKED_WHEN_ERASED
     bad_vector_table = target.name in info.TARGET_WITH_BAD_VECTOR_TABLE_LIST
 
     # Test loading a binary file with shutils

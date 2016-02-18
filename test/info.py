@@ -74,6 +74,15 @@ TARGET_NAME_TO_BOARD_ID = {
     'LPC1114FN28': 0x1114
 }
 
+BOARD_ID_LOCKED_WHEN_ERASED = set([
+    0x0231,  # K22F
+    0x0240,  # K64F
+    0x0230,  # K20DX
+    0x0200,  # KL25Z
+    0x0220,  # KL46Z
+    0x0210,  # KL05Z
+])
+
 #Hack until these targets have an image with a valid vector table
 TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'Microbit',
