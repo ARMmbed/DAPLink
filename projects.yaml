@@ -110,10 +110,14 @@ projects:
         - *module_if
         - *module_hif_k20dx128
         - records/target/kl46z.yaml
-    lpc11u35_lpc812_if:
+    lpc11u35_lpc812xpresso_if:
         - *module_if
         - *module_hif_lpc11u35
-        - records/target/lpc812.yaml
+        - records/target/lpc812_xpresso.yaml
+    lpc11u35_lpc824xpresso_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc824_xpresso.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_if
         - *module_hif_lpc11u35
