@@ -1,0 +1,5 @@
+common:
+    sources:
+        target:
+            - source/target/nordic/nrf51822/rblnano_app_config.c
+            - source/target/nordic/nrf51822/target_reset.c

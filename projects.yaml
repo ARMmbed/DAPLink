@@ -110,6 +110,14 @@ projects:
         - *module_if
         - *module_hif_k20dx128
         - records/target/kl46z.yaml
+    k20dx_rbl_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/nrf51822_rbl.yaml
+    k20dx_rblnano_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/nrf51822_rblnano.yaml
     lpc11u35_lpc812xpresso_if:
         - *module_if
         - *module_hif_lpc11u35
@@ -126,6 +134,10 @@ projects:
         - *module_if
         - *module_hif_lpc11u35
         - records/target/nrf51822_archble.yaml
+    lpc11u35_tiny_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_tiny.yaml
     lpc11u35_archpro_if:
         - *module_if
         - *module_hif_lpc11u35
@@ -150,3 +162,7 @@ projects:
         - *module_if
         - *module_hif_lpc11u35
         - records/target/lpc1114_ssci1114.yaml
+    lpc11u35_c027_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc1768_c027.yaml
