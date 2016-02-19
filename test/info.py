@@ -29,7 +29,7 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'k20dx_k64f_if': 0x0240,
     'kl26z_microbit_if': 0x9900,
     'kl26z_nrf51822_if': 0x9900,
-    'lpc11u35_lpc812_if': 0x1050,
+    'lpc11u35_lpc812xpresso_if': 0x1050,
     'lpc11u35_ssci1114_if': 0x1114,
     'lpc11u35_efm32gg_stk_if': 0x2015,
     'sam3u2c_nrf51dk_if': 0x1100,
@@ -48,6 +48,11 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_hrm1017_if': 0x1017,
     'lpc11u35_sscity_if': 0x1019,
     'lpc11u35_ssci824_if': 0x1018,
+    'lpc11u35_lpc824xpresso_if': 0x0824,
+    'k20dx_rbl_if': 0x1090,
+    'k20dx_rblnano_if': 0x1095,
+    'lpc11u35_tiny_if': 0x9012,
+    'lpc11u35_c027_if': 0x1234,
 }
 
 TARGET_NAME_TO_BOARD_ID = {
@@ -71,7 +76,12 @@ TARGET_NAME_TO_BOARD_ID = {
     'mbed-HRM1017': 0x1017,
     'Switch-Science-mbed-TY51822r3': 0x1019,
     'Switch-Science-mbed-LPC824': 0x1018,
-    'LPC1114FN28': 0x1114
+    'LPC1114FN28': 0x1114,
+    'LPCXpresso824-MAX': 0x0824,
+    'RedBearLab-nRF51822': 0x1090,
+    'RedBearLab-BLE-Nano': 0x1095,
+    'Seeed-Tiny-BLE': 0x9012,
+    'u-blox-C027': 0x1234,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
@@ -92,6 +102,9 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'Seeed-Arch-BLE',
     'mbed-HRM1017',
     'Switch-Science-mbed-TY51822r3',
+    'RedBearLab-nRF51822',
+    'RedBearLab-BLE-Nano',
+    'Seeed-Tiny-BLE',
 ]
 
 BOARD_ID_TO_BUILD_TARGET = {v: k for k, v in TARGET_NAME_TO_BOARD_ID.items()}
