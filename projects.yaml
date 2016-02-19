@@ -57,36 +57,112 @@ projects:
         - *module_bl
         - *module_hif_sam3u2c
         - records/target/sam3u2c_bl.yaml
-    sam3u2c_nrf51822_if:
+    sam3u2c_nrf51mkit_if:
+        - *module_if
+        - *module_hif_sam3u2c
+        - records/target/nrf51822_mkit.yaml
+    sam3u2c_nrf51dk_if:
         - *module_if
         - *module_hif_sam3u2c
         - records/target/nrf51822_dk.yaml
-    kl26z_nrf51822_if:
+    sam3u2c_nrf51dongle_if:
         - *module_if
-        - *module_hif_kl26z
-        - records/target/nrf51822.yaml
+        - *module_hif_sam3u2c
+        - records/target/nrf51822_dongle.yaml
     kl26z_microbit_if:
         - *module_if
         - *module_hif_kl26z
-        - records/target/nrf51822.yaml
+        - records/target/nrf51822_microbit.yaml
         - records/overrides/microbit.yaml
+    k20dx_k20dx_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/k20dx.yaml
     k20dx_k22f_if:
         - *module_if
         - *module_hif_k20dx128
         - records/target/k22f.yaml
+    k20dx_k24f_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/k24f.yaml
     k20dx_k64f_if:
         - *module_if
         - *module_hif_k20dx128
         - records/target/k64f.yaml
-    lpc11u35_lpc1114_if:
+    k20dx_kl02z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl02z.yaml
+    k20dx_kl05z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl05z.yaml
+    k20dx_kl25z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl25z.yaml
+    k20dx_kl26z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl26z.yaml
+    k20dx_kl46z_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/kl46z.yaml
+    k20dx_rbl_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/nrf51822_rbl.yaml
+    k20dx_rblnano_if:
+        - *module_if
+        - *module_hif_k20dx128
+        - records/target/nrf51822_rblnano.yaml
+    lpc11u35_lpc812xpresso_if:
         - *module_if
         - *module_hif_lpc11u35
-        - records/target/lpc1114.yaml
-    lpc11u35_lpc812_if:
+        - records/target/lpc812_xpresso.yaml
+    lpc11u35_lpc824xpresso_if:
         - *module_if
         - *module_hif_lpc11u35
-        - records/target/lpc812.yaml
+        - records/target/lpc824_xpresso.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_if
         - *module_hif_lpc11u35
         - records/target/efm32gg_stk.yaml
+    lpc11u35_archble_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_archble.yaml
+    lpc11u35_tiny_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_tiny.yaml
+    lpc11u35_archpro_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc1768_archpro.yaml
+    lpc11u35_archmax_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/stm32f407_archmax.yaml
+    lpc11u35_hrm1017_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_hrm1017.yaml
+    lpc11u35_sscity_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_sscity.yaml
+    lpc11u35_ssci824_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc824_ssci824.yaml
+    lpc11u35_ssci1114_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc1114_ssci1114.yaml
+    lpc11u35_c027_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/lpc1768_c027.yaml

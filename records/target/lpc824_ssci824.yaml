@@ -1,0 +1,5 @@
+common:
+    sources:
+        target_specific:
+            - source/target/nxp/lpc824/scci824_app_config.c
+            - source/target/nxp/lpc824/target_reset.c

@@ -1,0 +1,7 @@
+common:
+    includes:
+        - source/target/nxp/lpc812
+    sources:
+        target_specific:
+            - source/target/nxp/lpc812/xpresso_app_config.c
+            - source/target/nxp/lpc812/target_reset.c

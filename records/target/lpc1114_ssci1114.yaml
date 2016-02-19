@@ -1,0 +1,5 @@
+common:
+    sources:
+        target:
+            - source/target/nxp/lpc1114/ssci1114_app_config.c
+            - source/target/nxp/lpc1114/target_reset.c

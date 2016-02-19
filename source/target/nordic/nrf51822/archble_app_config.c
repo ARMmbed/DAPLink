@@ -16,7 +16,10 @@
 
 #include "target_config.h"
 
-// nrf51822-mkit target information
+ // The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
+
+// Seeed arch ble target information
 const target_cfg_t target_device = {
     .board_id   = "9009",
     .secret     = "xxxxxxxx",
@@ -29,5 +32,5 @@ const target_cfg_t target_device = {
     .flash_end      = KB(256),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
-    .disc_size      = MB(8)
+    .flash_algo     = (program_target_t*)&flash,
 };

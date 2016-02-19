@@ -325,9 +325,9 @@ static error_t write_hex(void * state, const uint8_t * data, uint32_t size)
         else if (HEX_PARSE_EOF == parse_status) {
             if (bin_buf_written > 0) {
                 status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
-                if (ERROR_SUCCESS == status) {
-                    status = ERROR_SUCCESS_DONE;
-                }
+            }
+            if (ERROR_SUCCESS == status) {
+                status = ERROR_SUCCESS_DONE;
             }
             break;
         }

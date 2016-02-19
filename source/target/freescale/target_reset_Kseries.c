@@ -18,12 +18,10 @@
 #include "target_config.h"
 #include "info.h"
 
-
-#define MDM_STATUS 0x01000000
-#define MDM_CTRL   0x01000004
-#define MDM_IDR    0x010000fc
-
-#define MDM_ID     0x001c0000 // K64, K22 (K series)
+#define MDM_STATUS  0x01000000
+#define MDM_CTRL    0x01000004
+#define MDM_IDR     0x010000fc
+#define MDM_ID      0x001c0000 // K64, K22 (K series)
 
 void target_before_init_debug(void)
 {
@@ -46,10 +44,13 @@ void prerun_target_config(void)
     info_set_uuid_target(uuid);
 }
 
-void board_init(void) {
+void board_init(void)
+{
+
 }
 
-uint8_t target_unlock_sequence(void) {
+uint8_t target_unlock_sequence(void)
+{
     uint32_t val;
 
     // read the device ID
@@ -68,7 +69,7 @@ uint8_t target_unlock_sequence(void) {
     // flash in secured mode
     if (val & (1 << 2)) {
         // hold the device in reset
-        target_set_state(RESET_HOLD);
+        swd_set_target_reset(1);
         // write the mass-erase enable bit
         if (!swd_write_ap(MDM_CTRL, 1)) {
             return 0;
@@ -135,6 +136,7 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
     return swd_set_target_state_hw(state);
 }
