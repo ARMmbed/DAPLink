@@ -1,7 +1,7 @@
 project_generator>=0.8.3
 mbed_ls
 pyserial
-git+https://github.com/c1728p9/pyOCD.git@pydapaccess_package#egg=pyOCD
+git+https://github.com/c1728p9/pyOCD.git@daplink_testing#egg=pyOCD
 requests
 intelhex
 six
