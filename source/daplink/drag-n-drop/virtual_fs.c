@@ -215,11 +215,11 @@ static const FatDirectoryEntry_t dir_entry_tmpl = {
     /*uint8_t */ .reserved = 0x00,
     /*uint8_t */ .creation_time_ms = 0x00,
     /*uint16_t*/ .creation_time = 0x0000,
-    /*uint16_t*/ .creation_date = 0x0000,
-    /*uint16_t*/ .accessed_date = 0xbb32,
+    /*uint16_t*/ .creation_date = 0x4876,
+    /*uint16_t*/ .accessed_date = 0x4876,
     /*uint16_t*/ .first_cluster_high_16 = 0x0000,
     /*uint16_t*/ .modification_time = 0x83dc,
-    /*uint16_t*/ .modification_date = 0x34bb,
+    /*uint16_t*/ .modification_date = 0x4876,
     /*uint16_t*/ .first_cluster_low_16 = 0x0000,
     /*uint32_t*/ .filesize = 0x00000000
 };
