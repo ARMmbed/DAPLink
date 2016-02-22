@@ -107,6 +107,10 @@ def test_hid(workspace, parent_test):
             addr = 0x20000001
             size = 0x1102
             addr_flash = 0x00000000
+        elif target_type == "lpc824":
+            addr = 0x10000001
+            size = 0x502
+            addr_flash = 0x4000
         else:
             raise Exception("A board is not supported by this test script.")
 
