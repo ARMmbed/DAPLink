@@ -569,6 +569,7 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
         vfs_mngr_printf("    stream_close ret=%i\r\n", status);
         file_transfer_state.stream_open = false;
         file_transfer_state.stream_finished = true;
+        file_transfer_state.stream_optional_finish = true;
     } else if (ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
         status = ERROR_SUCCESS;
         file_transfer_state.stream_optional_finish = true;
@@ -597,24 +598,34 @@ static void transfer_update_state(error_t status)
         return;
     }
 
-    // Update file info status
+    too_much_transfered = file_transfer_state.size_processed > 
+                          ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
+    // Update file info status.  The end of a file is never known for sure since
+    // what looks like a complete file could be part of a file getting flushed to disk.
+    // The criteria for an successful optional finish is
+    // 1. A file has been detected
+    // 2. The size of the file indicated in the root dir has been transferred
+    // 3. The file size is greater than zero
+    // 4. The size processed by the stream does not exceed size of the
+    //    file indicated in the root dir
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID ) &&
         (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
-        (file_transfer_state.file_size > 0);
+        (file_transfer_state.file_size > 0) &&
+        (!too_much_transfered);
 
     transfer_error = local_status != ERROR_SUCCESS ? true : false;
     transfer_timeout = file_transfer_state.transfer_timeout;
     transfer_started = (VFS_FILE_INVALID != file_transfer_state.file_to_program) ||
                        (STREAM_TYPE_NONE != file_transfer_state.stream);
-    too_much_transfered = file_transfer_state.size_processed > 
-                          ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
+    // The transfer can be finished if both file and stream processing
+    // can be considered complete
     transfer_can_be_finished = file_transfer_state.file_info_optional_finish &&
-                               (file_transfer_state.stream_optional_finish || 
-                                file_transfer_state.stream_finished);
+                               file_transfer_state.stream_optional_finish;
+    // The transfer must be fnished if stream processing is for sure complete
+    // and file processing can be considered complete
     transfer_must_be_finished = file_transfer_state.stream_finished &&
-                                file_transfer_state.file_info_optional_finish &&
-                                !too_much_transfered;
+                                file_transfer_state.file_info_optional_finish;
     out_of_order_sector = false;
     if (file_transfer_state.last_ooo_sector != VFS_INVALID_SECTOR) {
         util_assert(file_transfer_state.start_sector != VFS_INVALID_SECTOR);
