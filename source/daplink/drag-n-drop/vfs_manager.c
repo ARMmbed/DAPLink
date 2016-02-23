@@ -43,6 +43,32 @@
     #define vfs_mngr_printf(...)
 #endif
 
+#define INVALID_TIMEOUT_MS  0xFFFFFFFF
+#define MAX_EVENT_TIME_MS   60000
+
+#define CONNECT_DELAY_MS 0
+#define RECONNECT_DELAY_MS 2500    // Must be above 1s for windows (more for linux)
+// TRANSFER_IN_PROGRESS
+#define DISCONNECT_DELAY_TRANSFER_TIMEOUT_MS 20000
+// TRANSFER_CAN_BE_FINISHED
+#define DISCONNECT_DELAY_TRANSFER_IDLE_MS 500
+// TRANSFER_NOT_STARTED || TRASNFER_FINISHED
+#define DISCONNECT_DELAY_MS 500
+
+// Make sure none of the delays exceed the max time
+COMPILER_ASSERT(CONNECT_DELAY_MS < MAX_EVENT_TIME_MS);
+COMPILER_ASSERT(RECONNECT_DELAY_MS < MAX_EVENT_TIME_MS);
+COMPILER_ASSERT(DISCONNECT_DELAY_TRANSFER_TIMEOUT_MS < MAX_EVENT_TIME_MS);
+COMPILER_ASSERT(DISCONNECT_DELAY_TRANSFER_IDLE_MS < MAX_EVENT_TIME_MS);
+COMPILER_ASSERT(DISCONNECT_DELAY_MS < MAX_EVENT_TIME_MS);
+
+typedef enum {
+    TRANSFER_NOT_STARTED,
+    TRANSFER_IN_PROGRESS,
+    TRANSFER_CAN_BE_FINISHED,
+    TRASNFER_FINISHED,
+} transfer_state_t;
+
 typedef struct {
     vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
     vfs_sector_t start_sector;      // Start sector of the file being programmed
@@ -51,7 +77,7 @@ typedef struct {
     uint32_t size_processed;        // The number of bytes processed by the stream
     uint32_t file_size;             // Size of the file indicated by root dir.  Only allowed to increase
     uint32_t size_transferred;      // The number of bytes transferred
-    bool transfer_finished;         // Transfer done, ignore all further writes
+    transfer_state_t transfer_state;// Transfer state
     bool stream_open;               // State of the stream
     bool stream_started;            // Stream processing started. This only gets reset remount
     bool stream_finished;           // Stream processing is done. This only gets reset remount
@@ -75,7 +101,7 @@ static const file_transfer_state_t default_transfer_state = {
     0,
     0,
     0,
-    false,
+    TRANSFER_NOT_STARTED,
     false,
     false,
     false,
@@ -85,10 +111,6 @@ static const file_transfer_state_t default_transfer_state = {
     STREAM_TYPE_NONE,
 };
 
-static const uint32_t connect_delay_ms = 0;
-static const uint32_t disconnect_delay_ms = 500;
-static const uint32_t reconnect_delay_ms = 2500;    // Must be above 1s for windows (more for linux)
-
 static uint32_t usb_buffer[VFS_SECTOR_SIZE/sizeof(uint32_t)];
 static error_t fail_reason = ERROR_SUCCESS;
 static file_transfer_state_t file_transfer_state;
@@ -97,7 +119,7 @@ static file_transfer_state_t file_transfer_state;
 // so access to them must be synchronized
 static vfs_mngr_state_t vfs_state;
 static vfs_mngr_state_t vfs_state_next;
-static uint32_t vfs_state_remaining_ms;
+static uint32_t time_usb_idle;
 
 static OS_MUT sync_mutex;
 static OS_TID sync_thread = 0;
@@ -108,11 +130,11 @@ static void sync_assert_usb_thread(void);
 static void sync_lock(void);
 static void sync_unlock(void);
 
-static void vfs_mngr_disconnect_delay(void);
 static bool changing_state(void);
 static void build_filesystem(void);
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
+static bool ready_for_state_change(void);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
 static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
@@ -125,11 +147,9 @@ void vfs_mngr_fs_enable(bool enable)
     sync_lock();
     if (enable) {
         if (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next) {
-            vfs_state_remaining_ms = connect_delay_ms;
             vfs_state_next = VFS_MNGR_STATE_CONNECTED;
         }
     } else {
-        vfs_state_remaining_ms = disconnect_delay_ms;
         vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
     }
     sync_unlock();
@@ -141,7 +161,6 @@ void vfs_mngr_fs_remount(void)
     // Only start a remount if in the connected state and not in a transition
     if (!changing_state() && (VFS_MNGR_STATE_CONNECTED == vfs_state)) {
         vfs_state_next = VFS_MNGR_STATE_RECONNECTING;
-        vfs_state_remaining_ms = disconnect_delay_ms;
     }
     sync_unlock();
 }
@@ -164,6 +183,7 @@ void vfs_mngr_init(bool enable)
 
 void vfs_mngr_periodic(uint32_t elapsed_ms)
 {
+    bool change_state;
     vfs_mngr_state_t vfs_state_local;
     vfs_mngr_state_t vfs_state_local_prev;
     sync_assert_usb_thread();
@@ -175,15 +195,18 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
         return;
     }
 
-    // Wait until the required amount of time has passed
-    // before changing state
-    if (vfs_state_remaining_ms > 0) {
-        vfs_state_remaining_ms -= MIN(elapsed_ms, vfs_state_remaining_ms);
-        sync_unlock();
+    change_state = ready_for_state_change();
+    if (time_usb_idle < MAX_EVENT_TIME_MS) {
+        time_usb_idle += elapsed_ms;
+    }
+    sync_unlock();
+    if (!change_state) {
         return;
     }
 
     vfs_mngr_printf("vfs_mngr_periodic()\r\n");
+    vfs_mngr_printf("   time_usb_idle=%i\r\n", time_usb_idle);
+    vfs_mngr_printf("   transfer_state=%i\r\n", file_transfer_state.transfer_state);
 
     // Transistion to new state
     vfs_state_local_prev = vfs_state;
@@ -192,13 +215,13 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
         case VFS_MNGR_STATE_RECONNECTING:
             // Transition back to the connected state
             vfs_state_next = VFS_MNGR_STATE_CONNECTED;
-            vfs_state_remaining_ms = reconnect_delay_ms;
             break;
         default:
             // No state change logic required in other states
             break;
     }
     vfs_state_local = vfs_state;
+    time_usb_idle = 0;
     sync_unlock();
 
     // Processing when leaving a state
@@ -212,12 +235,12 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
             break;
         case VFS_MNGR_STATE_CONNECTED:
             // Close ongoing transfer if there is one
-            if (!file_transfer_state.transfer_finished) {
+            if (file_transfer_state.transfer_state != TRASNFER_FINISHED) {
                 vfs_mngr_printf("    transfer timeout\r\n");
                 file_transfer_state.transfer_timeout = true;
                 transfer_update_state(ERROR_SUCCESS);
             }
-            util_assert(file_transfer_state.transfer_finished);
+            util_assert(TRASNFER_FINISHED == file_transfer_state.transfer_state);
             vfs_user_disconnecting();
             break;
     }
@@ -250,7 +273,7 @@ void usbd_msc_init(void)
     build_filesystem();
     vfs_state = VFS_MNGR_STATE_DISCONNECTED;
     vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
-    vfs_state_remaining_ms = 0;
+    time_usb_idle = 0;
     USBD_MSC_MediaReady = 0;
 }
 
@@ -280,9 +303,9 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
     // Restart the disconnect counter on every packet
     // so the device does not detach in the middle of a
     // transfer.
-    vfs_mngr_disconnect_delay();
+    time_usb_idle = 0;
 
-    if (file_transfer_state.transfer_finished) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         return;
     }
 
@@ -312,13 +335,6 @@ static void sync_lock(void)
 static void sync_unlock(void)
 {
     os_mut_release(&sync_mutex);
-}
-
-static void vfs_mngr_disconnect_delay()
-{
-    if (VFS_MNGR_STATE_CONNECTED == vfs_state) {
-        vfs_state_remaining_ms = disconnect_delay_ms;
-    }
 }
 
 static bool changing_state()
@@ -440,11 +456,52 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
     }
 }
 
+static bool ready_for_state_change(void)
+{
+    uint32_t timeout_ms = INVALID_TIMEOUT_MS;
+    util_assert(vfs_state != vfs_state_next);
+
+    if (VFS_MNGR_STATE_CONNECTED == vfs_state) {
+        switch (file_transfer_state.transfer_state) {
+            case TRANSFER_NOT_STARTED:
+            case TRASNFER_FINISHED:
+                timeout_ms = DISCONNECT_DELAY_MS;
+                break;
+            case TRANSFER_IN_PROGRESS:
+                timeout_ms = DISCONNECT_DELAY_TRANSFER_TIMEOUT_MS;
+                break;
+            case TRANSFER_CAN_BE_FINISHED:
+                timeout_ms = DISCONNECT_DELAY_TRANSFER_IDLE_MS;
+                break;
+            default:
+                util_assert(0);
+                timeout_ms = DISCONNECT_DELAY_MS;
+                break;
+        }
+    } else if ((VFS_MNGR_STATE_DISCONNECTED == vfs_state) &&
+               (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
+        timeout_ms = CONNECT_DELAY_MS;
+    } else if ((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
+               (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
+        timeout_ms = RECONNECT_DELAY_MS;
+    } else if ((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
+               (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next)) {
+        timeout_ms = 0;
+    }
+
+    if (INVALID_TIMEOUT_MS == timeout_ms) {
+        util_assert(0);
+        timeout_ms = 0;
+    }
+
+    return time_usb_idle > timeout_ms ? true : false;
+}
+
 // Update the tranfer state with file information
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
 {
     vfs_mngr_printf("vfs_manager transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
-    if (file_transfer_state.transfer_finished) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         util_assert(0);
         return;
     }
@@ -593,7 +650,7 @@ static void transfer_update_state(error_t status)
     bool out_of_order_sector;
     error_t local_status = status;
 
-    if (file_transfer_state.transfer_finished) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         util_assert(0);
         return;
     }
@@ -640,17 +697,21 @@ static void transfer_update_state(error_t status)
 
     if (transfer_error) {
         // Local status already set
-        file_transfer_state.transfer_finished = true;
-    } if (transfer_timeout) {
+        file_transfer_state.transfer_state = TRASNFER_FINISHED;
+    } else if (transfer_timeout) {
         bool transfer_successful = !transfer_started || transfer_can_be_finished;
         local_status = transfer_successful ? ERROR_SUCCESS : ERROR_TRANSFER_TIMEOUT;
-        file_transfer_state.transfer_finished = true;
+        file_transfer_state.transfer_state = TRASNFER_FINISHED;
     } else if (transfer_must_be_finished) {
         local_status = ERROR_SUCCESS;
-        file_transfer_state.transfer_finished = true;
+        file_transfer_state.transfer_state = TRASNFER_FINISHED;
+    } else if(transfer_can_be_finished) {
+        file_transfer_state.transfer_state = TRANSFER_CAN_BE_FINISHED;
+    } else if (transfer_started) {
+        file_transfer_state.transfer_state = TRANSFER_IN_PROGRESS;
     }
 
-    if (file_transfer_state.transfer_finished) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         vfs_mngr_printf("vfs_manager transfer_update_state(status=%i)\r\n", status);
         vfs_mngr_printf("    file=%p, start_sect= %i, size=%i\r\n", 
             file_transfer_state.file_to_program, file_transfer_state.start_sector,
