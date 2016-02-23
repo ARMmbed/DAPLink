@@ -78,8 +78,8 @@
 //     </e>
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
-#define USBD_STRDESC_MAN            L"MBED"
-#define USBD_STRDESC_PROD           L"MBED CMSIS-DAP"
+#define USBD_STRDESC_MAN            L"ARM"
+#define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -132,7 +132,7 @@
 #define USBD_HID_HS_ENABLE          0
 #define USBD_HID_HS_WMAXPACKETSIZE  4
 #define USBD_HID_HS_BINTERVAL       6
-#define USBD_HID_STRDESC            L"MBED CMSIS-DAP"
+#define USBD_HID_STRDESC            L"CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
 #define USBD_HID_INREPORT_MAX_SZ    64
@@ -178,8 +178,10 @@
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
+// Make sure changes to USBD_MSC_INQUIRY_DATA are coordinated with mbed-ls
+// since this is used to detect DAPLink drives
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
+                                    "VFS             " \
                                     "1.0 "
 
 //     <e0.0> Audio Device (ADC)
@@ -296,8 +298,8 @@
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
 #define USBD_CDC_ACM_HS_BINTERVAL1      0
-#define USBD_CDC_ACM_CIF_STRDESC        L"USB_CDC"
-#define USBD_CDC_ACM_DIF_STRDESC        L"USB_CDC1"
+#define USBD_CDC_ACM_CIF_STRDESC        L"mbed Serial Port"
+#define USBD_CDC_ACM_DIF_STRDESC        L"mbed Serial Port"
 #define USBD_CDC_ACM_SENDBUF_SIZE       256
 #define USBD_CDC_ACM_RECEIVEBUF_SIZE    256
 #if (((USBD_CDC_ACM_HS_ENABLE1) && (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_HS_WMAXPACKETSIZE1)) || (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_WMAXPACKETSIZE1))
