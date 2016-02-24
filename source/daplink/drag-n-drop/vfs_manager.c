@@ -622,7 +622,9 @@ static void transfer_stream_data(uint32_t sector, const uint8_t * data, uint32_t
     status = stream_write((uint8_t*)data, size);
     vfs_mngr_printf("    stream_write ret=%i\r\n", status);
     if (ERROR_SUCCESS_DONE == status) {
-        status = stream_close();
+        // Override status so ERROR_SUCCESS_DONE
+        // does not get passed into transfer_update_state
+        status = stream_close();  
         vfs_mngr_printf("    stream_close ret=%i\r\n", status);
         file_transfer_state.stream_open = false;
         file_transfer_state.stream_finished = true;
@@ -645,11 +647,12 @@ static void transfer_update_state(error_t status)
     bool transfer_started;
     bool transfer_can_be_finished;
     bool transfer_must_be_finished;
-    bool transfer_error;
     bool too_much_transfered;
     bool out_of_order_sector;
     error_t local_status = status;
 
+    util_assert((status != ERROR_SUCCESS_DONE) &&
+                (status != ERROR_SUCCESS_DONE_OR_CONTINUE));
     if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         util_assert(0);
         return;
@@ -663,15 +666,11 @@ static void transfer_update_state(error_t status)
     // 1. A file has been detected
     // 2. The size of the file indicated in the root dir has been transferred
     // 3. The file size is greater than zero
-    // 4. The size processed by the stream does not exceed size of the
-    //    file indicated in the root dir
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID ) &&
         (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
-        (file_transfer_state.file_size > 0) &&
-        (!too_much_transfered);
+        (file_transfer_state.file_size > 0);
 
-    transfer_error = local_status != ERROR_SUCCESS ? true : false;
     transfer_timeout = file_transfer_state.transfer_timeout;
     transfer_started = (VFS_FILE_INVALID != file_transfer_state.file_to_program) ||
                        (STREAM_TYPE_NONE != file_transfer_state.stream);
@@ -695,15 +694,23 @@ static void transfer_update_state(error_t status)
         }
     }
 
-    if (transfer_error) {
-        // Local status already set
+    // Set the transfer state and set the status if necessary
+    if (local_status != ERROR_SUCCESS) {
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
     } else if (transfer_timeout) {
-        bool transfer_successful = !transfer_started || transfer_can_be_finished;
-        local_status = transfer_successful ? ERROR_SUCCESS : ERROR_TRANSFER_TIMEOUT;
+        if (too_much_transfered) {
+            local_status = ERROR_FILE_BOUNDS;
+        } else if (out_of_order_sector) {
+            local_status = ERROR_OOO_SECTOR;
+        } else if (!transfer_started) {
+            local_status = ERROR_SUCCESS;
+        } else if (transfer_can_be_finished) {
+            local_status = ERROR_SUCCESS;
+        } else {
+            local_status = ERROR_TRANSFER_TIMEOUT;
+        }
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
     } else if (transfer_must_be_finished) {
-        local_status = ERROR_SUCCESS;
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
     } else if(transfer_can_be_finished) {
         file_transfer_state.transfer_state = TRANSFER_CAN_BE_FINISHED;
@@ -728,14 +735,6 @@ static void transfer_update_state(error_t status)
             file_transfer_state.stream_open = false;
             if (ERROR_SUCCESS == local_status) {
                 local_status = close_status;
-            }
-        }
-
-        if (ERROR_SUCCESS == local_status) {
-            if (out_of_order_sector) {
-                local_status = ERROR_OOO_SECTOR;
-            } else if (too_much_transfered) {
-                local_status = ERROR_FILE_BOUNDS;
             }
         }
 
