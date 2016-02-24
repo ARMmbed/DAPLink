@@ -647,7 +647,6 @@ static void transfer_update_state(error_t status)
     bool transfer_started;
     bool transfer_can_be_finished;
     bool transfer_must_be_finished;
-    bool too_much_transfered;
     bool out_of_order_sector;
     error_t local_status = status;
 
@@ -658,8 +657,6 @@ static void transfer_update_state(error_t status)
         return;
     }
 
-    too_much_transfered = file_transfer_state.size_processed > 
-                          ROUND_UP(file_transfer_state.file_size, VFS_CLUSTER_SIZE);
     // Update file info status.  The end of a file is never known for sure since
     // what looks like a complete file could be part of a file getting flushed to disk.
     // The criteria for an successful optional finish is
@@ -698,9 +695,7 @@ static void transfer_update_state(error_t status)
     if (local_status != ERROR_SUCCESS) {
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
     } else if (transfer_timeout) {
-        if (too_much_transfered) {
-            local_status = ERROR_FILE_BOUNDS;
-        } else if (out_of_order_sector) {
+        if (out_of_order_sector) {
             local_status = ERROR_OOO_SECTOR;
         } else if (!transfer_started) {
             local_status = ERROR_SUCCESS;
