@@ -25,6 +25,10 @@ COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
 
 #define RESET_PORT        (0)
 #define RESET_PIN         (1)
+#define RESET_FWRD_PORT   (1)
+#define RESET_FWRD_PIN    (19)
+#define RESET_OUT_PORT    (0)
+#define RESET_OUT_PIN     (2)
 
 #define PIN_DAP_LED       (1<<21)
 #define PIN_MSD_LED       (1<<20)
@@ -48,10 +52,13 @@ void gpio_init(void) {
     LPC_GPIO->DIR[0]  |= (PIN_CDC_LED);
     LPC_GPIO->CLR[0]  |= (PIN_CDC_LED);
 
-    // configure Button as input
-#if SW_RESET_BUTTON
-    LPC_GPIO->DIR[RESET_PORT]  &= ~(1 << RESET_PIN);
-#endif
+    // configure Button(s) as input
+    LPC_GPIO->DIR[RESET_PORT] &= ~(1 << RESET_PIN);
+    LPC_GPIO->DIR[RESET_FWRD_PORT] &= ~(1 << RESET_FWRD_PIN);
+
+    // open drain logic for reset button
+    LPC_GPIO->CLR[RESET_OUT_PORT] = (1 << RESET_OUT_PIN);
+    LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
 
     /* Enable AHB clock to the FlexInt, GroupedInt domain. */
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1<<19) | (1<<23) | (1<<24));
@@ -83,11 +90,22 @@ void gpio_set_msc_led(gpio_led_state_t state) {
 
 uint8_t gpio_get_sw_reset(void)
 {
-    return LPC_GPIO->W[RESET_PORT * 32 + RESET_PIN] ? 1 : 0;
+    uint8_t reset_forward_pressed;
+    uint8_t reset_pressed;
+    reset_forward_pressed = LPC_GPIO->PIN[RESET_FWRD_PORT] & (1 << RESET_FWRD_PIN) ? 0 : 1;
+
+    // Forward reset
+    if (reset_forward_pressed) {
+        LPC_GPIO->DIR[RESET_OUT_PORT] |= (1 << RESET_OUT_PIN);
+    } else {
+        LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
+    }
+
+    reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[RESET_PORT] & (1 << RESET_PIN) ? 0 : 1);
+    return !reset_pressed;
 }
 
 void target_forward_reset(bool assert_reset)
 {
-    // Do nothing - reset button is already tied to the target 
-    //              reset pin on lpc11u35 interface hardware
+    // Do nothing - reset is forwarded in gpio_get_sw_reset
 }
