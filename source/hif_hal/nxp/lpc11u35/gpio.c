@@ -23,21 +23,8 @@
 // This GPIO configuration is only valid for the LPC11U35 HIF
 COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
 
-static uint16_t isr_flags;
-static OS_TID isr_notify;
-
-#ifdef DBG_LPC812
-#define SW_RESET_BUTTON    0
-#else
-#define SW_RESET_BUTTON    1
-#endif
-
-#ifdef SW_RESET_BUTTON
 #define RESET_PORT        (0)
 #define RESET_PIN         (1)
-#define RESET_INT_CH      (0)
-#define RESET_INT_MASK    (1 << RESET_INT_CH)
-#endif
 
 #define PIN_DAP_LED       (1<<21)
 #define PIN_MSD_LED       (1<<20)
@@ -92,35 +79,6 @@ void gpio_set_msc_led(gpio_led_state_t state) {
     } else {
         LPC_GPIO->CLR[0] |= (PIN_MSD_LED);
     }
-}
-
-void gpio_enable_button_flag(OS_TID task, uint16_t flags) {
-    /* When the "reset" button is pressed the ISR will set the */
-    /* event flags "flags" for task "task" */
-
-    /* Keep a local copy of task & flags */
-    isr_notify=task;
-    isr_flags=flags;
-
-#if SW_RESET_BUTTON
-    LPC_SYSCON->STARTERP0 |= RESET_INT_MASK;
-    LPC_SYSCON->PINTSEL[RESET_INT_CH] = (RESET_PORT) ? (RESET_PIN + 24) : (RESET_PIN);
-
-    if (!(LPC_GPIO_PIN_INT->ISEL & RESET_INT_MASK))
-        LPC_GPIO_PIN_INT->IST = RESET_INT_MASK;
-
-    LPC_GPIO_PIN_INT->IENF |= RESET_INT_MASK;
-
-    NVIC_EnableIRQ(FLEX_INT0_IRQn);
-#endif
-}
-
-void FLEX_INT0_IRQHandler() {
-    isr_evt_set(isr_flags, isr_notify);
-    NVIC_DisableIRQ(FLEX_INT0_IRQn);
-
-    // ack interrupt
-    LPC_GPIO_PIN_INT->IST = 0x01;
 }
 
 uint8_t gpio_get_sw_reset(void)
