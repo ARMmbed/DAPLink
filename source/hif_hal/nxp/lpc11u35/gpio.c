@@ -91,17 +91,17 @@ void gpio_init(void) {
 
     // configure GPIO-LED as output
     // DAP led (green)
-    LPC_GPIO->DIR[0]  |= (PIN_DAP_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_DAP_LED);
+    LPC_GPIO->SET[0] = (PIN_DAP_LED);
+    LPC_GPIO->DIR[0] |= (PIN_DAP_LED);
 
     // MSD led (red)
-    LPC_GPIO->DIR[0]  |= (PIN_MSD_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_MSD_LED);
+    LPC_GPIO->SET[0] = (PIN_MSD_LED);
+    LPC_GPIO->DIR[0] |= (PIN_MSD_LED);
 
     // Serial LED (blue)
       LPC_IOCON->TDI_PIO0_11 |= 0x01;
-    LPC_GPIO->DIR[0]  |= (PIN_CDC_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_CDC_LED);
+    LPC_GPIO->SET[0] = (PIN_CDC_LED);
+    LPC_GPIO->DIR[0] |= (PIN_CDC_LED);
 
     // configure Button(s) as input
     LPC_GPIO->DIR[RESET_PORT] &= ~(1 << RESET_PIN);
@@ -132,25 +132,25 @@ void gpio_init(void) {
 
 void gpio_set_hid_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] |= (PIN_DAP_LED);
+        LPC_GPIO->SET[0] = (PIN_DAP_LED);
     } else {
-        LPC_GPIO->CLR[0] |= (PIN_DAP_LED);
+        LPC_GPIO->CLR[0] = (PIN_DAP_LED);
     }
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state) {
     if (state) {
-      LPC_GPIO->SET[0] |= (PIN_CDC_LED);
+      LPC_GPIO->SET[0] = (PIN_CDC_LED);
     } else {
-      LPC_GPIO->CLR[0] |= (PIN_CDC_LED);
+      LPC_GPIO->CLR[0] = (PIN_CDC_LED);
     }
 }
 
 void gpio_set_msc_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] |= (PIN_MSD_LED);
+        LPC_GPIO->SET[0] = (PIN_MSD_LED);
     } else {
-        LPC_GPIO->CLR[0] |= (PIN_MSD_LED);
+        LPC_GPIO->CLR[0] = (PIN_MSD_LED);
     }
 }
 
