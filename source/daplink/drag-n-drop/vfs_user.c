@@ -144,10 +144,10 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
             // Remount to update the drive
             vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "AUTO_ON ACT", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_ON CFG", sizeof(vfs_filename_t))) {
             config_set_automation_allowed(true);
             vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "AUTO_OFFACT", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_automation_allowed(false);
             vfs_mngr_fs_remount();
         }
