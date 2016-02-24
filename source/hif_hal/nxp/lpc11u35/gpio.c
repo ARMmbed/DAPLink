@@ -23,25 +23,67 @@
 // This GPIO configuration is only valid for the LPC11U35 HIF
 COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
 
-static uint16_t isr_flags;
-static OS_TID isr_notify;
-
-#ifdef DBG_LPC812
-#define SW_RESET_BUTTON    0
-#else
-#define SW_RESET_BUTTON    1
-#endif
-
-#ifdef SW_RESET_BUTTON
 #define RESET_PORT        (0)
 #define RESET_PIN         (1)
-#define RESET_INT_CH      (0)
-#define RESET_INT_MASK    (1 << RESET_INT_CH)
-#endif
+#define RESET_FWRD_PORT   (1)
+#define RESET_FWRD_PIN    (19)
+#define RESET_OUT_PORT    (0)
+#define RESET_OUT_PIN     (2)
 
 #define PIN_DAP_LED       (1<<21)
 #define PIN_MSD_LED       (1<<20)
 #define PIN_CDC_LED       (1<<11)
+
+
+// taken code from the Nxp App Note AN11305 
+/* This data must be global so it is not read from the stack */
+typedef void (*IAP)(uint32_t [], uint32_t []);
+static IAP iap_entry = (IAP)0x1fff1ff1;
+static uint32_t command[5], result[4];
+#define init_msdstate() *((uint32_t *)(0x10000054)) = 0x0
+
+/* This function resets some microcontroller peripherals to reset
+   hardware configuration to ensure that the USB In-System Programming module
+   will work properly. It is normally called from reset and assumes some reset
+   configuration settings for the MCU.
+   Some of the peripheral configurations may be redundant in your specific
+   project.
+*/
+void ReinvokeISP(void)
+{
+  /* make sure USB clock is turned on before calling ISP */
+  LPC_SYSCON->SYSAHBCLKCTRL |= 0x04000;
+  /* make sure 32-bit Timer 1 is turned on before calling ISP */
+  LPC_SYSCON->SYSAHBCLKCTRL |= 0x00400;
+  /* make sure GPIO clock is turned on before calling ISP */
+  LPC_SYSCON->SYSAHBCLKCTRL |= 0x00040;
+  /* make sure IO configuration clock is turned on before calling ISP */
+  LPC_SYSCON->SYSAHBCLKCTRL |= 0x10000;
+
+  /* make sure AHB clock divider is 1:1 */
+  LPC_SYSCON->SYSAHBCLKDIV = 1;
+
+  /* Send Reinvoke ISP command to ISP entry point*/
+  command[0] = 57;
+
+  init_msdstate();					 /* Initialize Storage state machine */
+  /* Set stack pointer to ROM value (reset default) This must be the last
+     piece of code executed before calling ISP, because most C expressions
+     and function returns will fail after the stack pointer is changed. */
+  __set_MSP(*((volatile uint32_t *)0x00000000));
+
+  /* Enter ISP. We call "iap_entry" to enter ISP because the ISP entry is done
+     through the same command interface as IAP. */
+  iap_entry(command, result);
+  // Not supposed to come back!
+}
+
+static void busy_wait(uint32_t cycles)
+{
+    volatile uint32_t i;
+    i = cycles;
+    while (i > 0) i--;
+}
 
 void gpio_init(void) {
     // enable clock for GPIO port 0
@@ -61,13 +103,31 @@ void gpio_init(void) {
     LPC_GPIO->DIR[0]  |= (PIN_CDC_LED);
     LPC_GPIO->CLR[0]  |= (PIN_CDC_LED);
 
-    // configure Button as input
-#if SW_RESET_BUTTON
-    LPC_GPIO->DIR[RESET_PORT]  &= ~(1 << RESET_PIN);
-#endif
+    // configure Button(s) as input
+    LPC_GPIO->DIR[RESET_PORT] &= ~(1 << RESET_PIN);
+    LPC_GPIO->DIR[RESET_FWRD_PORT] &= ~(1 << RESET_FWRD_PIN);
+
+    // open drain logic for reset button
+    LPC_GPIO->CLR[RESET_OUT_PORT] = (1 << RESET_OUT_PIN);
+    LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
 
     /* Enable AHB clock to the FlexInt, GroupedInt domain. */
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1<<19) | (1<<23) | (1<<24));
+
+    // Give the cap on the reset button time to charge
+    busy_wait(10000);
+
+    if (gpio_get_sw_reset() == 0) {
+        IRQn_Type irq;
+        // Disable SYSTICK timer and interrupt before calling into ISP
+        SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk);
+        // Disable all nvic interrupts
+        for (irq = (IRQn_Type)0; irq < (IRQn_Type)32; irq++) {
+            NVIC_DisableIRQ(irq);
+            NVIC_ClearPendingIRQ(irq);
+        }
+        ReinvokeISP();
+    }
 }
 
 void gpio_set_hid_led(gpio_led_state_t state) {
@@ -94,42 +154,24 @@ void gpio_set_msc_led(gpio_led_state_t state) {
     }
 }
 
-void gpio_enable_button_flag(OS_TID task, uint16_t flags) {
-    /* When the "reset" button is pressed the ISR will set the */
-    /* event flags "flags" for task "task" */
-
-    /* Keep a local copy of task & flags */
-    isr_notify=task;
-    isr_flags=flags;
-
-#if SW_RESET_BUTTON
-    LPC_SYSCON->STARTERP0 |= RESET_INT_MASK;
-    LPC_SYSCON->PINTSEL[RESET_INT_CH] = (RESET_PORT) ? (RESET_PIN + 24) : (RESET_PIN);
-
-    if (!(LPC_GPIO_PIN_INT->ISEL & RESET_INT_MASK))
-        LPC_GPIO_PIN_INT->IST = RESET_INT_MASK;
-
-    LPC_GPIO_PIN_INT->IENF |= RESET_INT_MASK;
-
-    NVIC_EnableIRQ(FLEX_INT0_IRQn);
-#endif
-}
-
-void FLEX_INT0_IRQHandler() {
-    isr_evt_set(isr_flags, isr_notify);
-    NVIC_DisableIRQ(FLEX_INT0_IRQn);
-
-    // ack interrupt
-    LPC_GPIO_PIN_INT->IST = 0x01;
-}
-
 uint8_t gpio_get_sw_reset(void)
 {
-    return LPC_GPIO->W[RESET_PORT * 32 + RESET_PIN] ? 1 : 0;
+    uint8_t reset_forward_pressed;
+    uint8_t reset_pressed;
+    reset_forward_pressed = LPC_GPIO->PIN[RESET_FWRD_PORT] & (1 << RESET_FWRD_PIN) ? 0 : 1;
+
+    // Forward reset
+    if (reset_forward_pressed) {
+        LPC_GPIO->DIR[RESET_OUT_PORT] |= (1 << RESET_OUT_PIN);
+    } else {
+        LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
+    }
+
+    reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[RESET_PORT] & (1 << RESET_PIN) ? 0 : 1);
+    return !reset_pressed;
 }
 
 void target_forward_reset(bool assert_reset)
 {
-    // Do nothing - reset button is already tied to the target 
-    //              reset pin on lpc11u35 interface hardware
+    // Do nothing - reset is forwarded in gpio_get_sw_reset
 }
