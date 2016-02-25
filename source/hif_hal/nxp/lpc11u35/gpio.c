@@ -19,6 +19,7 @@
 #include "gpio.h"
 #include "compiler.h"
 #include "daplink.h"
+#include "target_reset.h"
 
 // This GPIO configuration is only valid for the LPC11U35 HIF
 COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
@@ -166,9 +167,9 @@ uint8_t gpio_get_sw_reset(void)
     //    with other reset sources such as programming or CDC Break
     if (last_reset_forward_pressed != reset_forward_pressed) {
         if (reset_forward_pressed) {
-            LPC_GPIO->DIR[RESET_OUT_PORT] |= (1 << RESET_OUT_PIN);
+            target_set_state(RESET_HOLD);
         } else {
-            LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
+            target_set_state(RESET_RUN);
         }
         last_reset_forward_pressed = reset_forward_pressed;
     }
