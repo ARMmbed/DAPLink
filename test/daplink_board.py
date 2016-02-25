@@ -609,11 +609,16 @@ class DaplinkBoard(object):
             details_hif_id = details_txt[DaplinkBoard.KEY_HIF_ID]
         if details_unique_id is not None:
             if details_unique_id != self.unique_id:
-                test_info.failure("Unique ID mismatch in details.txt")
+                test_info.failure("Unique ID mismatch in details.txt "
+                                  "details.txt=%s, usb=%s" %
+                                  (details_unique_id, self.unique_id))
             if details_hif_id is not None:
-                if details_hif_id != details_unique_id[-8:]:
+                usb_hif = details_unique_id[-8:]
+                if details_hif_id != usb_hif:
                     test_info.failure("HIF ID is not the last 8 "
-                                      "digits of unique ID")
+                                      "digits of unique ID "
+                                      "details.txt=%s, usb=%s" %
+                                      (details_hif_id, usb_hif))
 
     def _parse_assert_txt(self):
         file_path = self.get_file_path("ASSERT.TXT")
