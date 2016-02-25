@@ -25,7 +25,7 @@
 */
 
 #define _CPU_CLK_HZ   SystemCoreClock
-#define _CDC_BUFFER_SIZE  (256) //64
+#define _CDC_BUFFER_SIZE  (512)
 
 #define MIN(a, b)     (((a) < (b)) ? (a) : (b))
 #define MAX(a, b)     (((a) > (b)) ? (a) : (b))

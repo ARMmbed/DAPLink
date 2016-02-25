@@ -19,6 +19,7 @@
 #include "gpio.h"
 #include "compiler.h"
 #include "daplink.h"
+#include "target_reset.h"
 
 // This GPIO configuration is only valid for the LPC11U35 HIF
 COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
@@ -91,17 +92,17 @@ void gpio_init(void) {
 
     // configure GPIO-LED as output
     // DAP led (green)
-    LPC_GPIO->DIR[0]  |= (PIN_DAP_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_DAP_LED);
+    LPC_GPIO->SET[0] = (PIN_DAP_LED);
+    LPC_GPIO->DIR[0] |= (PIN_DAP_LED);
 
     // MSD led (red)
-    LPC_GPIO->DIR[0]  |= (PIN_MSD_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_MSD_LED);
+    LPC_GPIO->SET[0] = (PIN_MSD_LED);
+    LPC_GPIO->DIR[0] |= (PIN_MSD_LED);
 
     // Serial LED (blue)
       LPC_IOCON->TDI_PIO0_11 |= 0x01;
-    LPC_GPIO->DIR[0]  |= (PIN_CDC_LED);
-    LPC_GPIO->CLR[0]  |= (PIN_CDC_LED);
+    LPC_GPIO->SET[0] = (PIN_CDC_LED);
+    LPC_GPIO->DIR[0] |= (PIN_CDC_LED);
 
     // configure Button(s) as input
     LPC_GPIO->DIR[RESET_PORT] &= ~(1 << RESET_PIN);
@@ -132,39 +133,45 @@ void gpio_init(void) {
 
 void gpio_set_hid_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] |= (PIN_DAP_LED);
+        LPC_GPIO->SET[0] = (PIN_DAP_LED);
     } else {
-        LPC_GPIO->CLR[0] |= (PIN_DAP_LED);
+        LPC_GPIO->CLR[0] = (PIN_DAP_LED);
     }
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state) {
     if (state) {
-      LPC_GPIO->SET[0] |= (PIN_CDC_LED);
+      LPC_GPIO->SET[0] = (PIN_CDC_LED);
     } else {
-      LPC_GPIO->CLR[0] |= (PIN_CDC_LED);
+      LPC_GPIO->CLR[0] = (PIN_CDC_LED);
     }
 }
 
 void gpio_set_msc_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] |= (PIN_MSD_LED);
+        LPC_GPIO->SET[0] = (PIN_MSD_LED);
     } else {
-        LPC_GPIO->CLR[0] |= (PIN_MSD_LED);
+        LPC_GPIO->CLR[0] = (PIN_MSD_LED);
     }
 }
 
 uint8_t gpio_get_sw_reset(void)
 {
+    static uint8_t last_reset_forward_pressed = 0;
     uint8_t reset_forward_pressed;
     uint8_t reset_pressed;
     reset_forward_pressed = LPC_GPIO->PIN[RESET_FWRD_PORT] & (1 << RESET_FWRD_PIN) ? 0 : 1;
 
-    // Forward reset
-    if (reset_forward_pressed) {
-        LPC_GPIO->DIR[RESET_OUT_PORT] |= (1 << RESET_OUT_PIN);
-    } else {
-        LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
+    // Forward reset if the state of the button has changed
+    //    This must be done on button changes so it does not interfere
+    //    with other reset sources such as programming or CDC Break
+    if (last_reset_forward_pressed != reset_forward_pressed) {
+        if (reset_forward_pressed) {
+            target_set_state(RESET_HOLD);
+        } else {
+            target_set_state(RESET_RUN);
+        }
+        last_reset_forward_pressed = reset_forward_pressed;
     }
 
     reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[RESET_PORT] & (1 << RESET_PIN) ? 0 : 1);

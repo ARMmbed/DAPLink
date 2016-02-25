@@ -19,7 +19,7 @@
 #include "string.h"
 
 // Size must be 2^n for using quick wrap around
-#define UART_BUFFER_SIZE    (64)
+#define UART_BUFFER_SIZE    (512)
 
 struct {
     uint8_t  data[UART_BUFFER_SIZE];

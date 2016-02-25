@@ -135,7 +135,7 @@ def daplink_test(workspace, parent_test):
     test.run()
 
     # Test loading a hex file with shutils
-    test = DLMassStorageTester(board, test_info, "Shutil hex file load"
+    test = DLMassStorageTester(board, test_info, "Shutil hex file load "
                                "interface", board.MODE_BL)
     test.set_shutils_copy(interface.hex_path)
     test.set_expected_data(bin_data)
@@ -352,35 +352,31 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.run()
 
     # Test bad crc in file data
-    file_name = get_file_name()
-    local_raw_data = bytearray(raw_data)
-    local_raw_data[0x100] = (local_raw_data[0x100] + 1) % 0x100  # Corrupt CRC
-    local_data = get_file_content(data_start, local_raw_data)
-    test = DLMassStorageTester(board, test_info, 'Wrong data CRC',
-                               board_mode)
-    test.set_programming_data(local_data, file_name)
+    # Note - crc is only a requirment for loading bootloades
     if board_mode == board.MODE_IF:
+        file_name = get_file_name()
+        local_raw_data = bytearray(raw_data)
+        local_raw_data[0x100] = (local_raw_data[0x100] + 1) % 0x100  # Corrupt CRC
+        local_data = get_file_content(data_start, local_raw_data)
+        test = DLMassStorageTester(board, test_info, 'Wrong data CRC',
+                                   board_mode)
+        test.set_programming_data(local_data, file_name)
         test.set_expected_failure_msg('The bootloader CRC did not pass.\r\n')
         test.set_expected_data(None)
-    elif board_mode == board.MODE_BL:
-        # Interface images can be from other vendors and be missing
-        # the crc, so don't treat this as an error
-        test.set_expected_data(local_raw_data)
-    test.run()
-    # If bootloader is missing then this should be indicated by a file
-    if (board_mode == board.MODE_IF and
-            not os.path.isfile(board.get_file_path(NEED_BL_FILE_NAME))):
-        test_info.failure("Bootloader missing but file %s not present" %
-                          NEED_BL_FILE_NAME)
+        test.run()
+        # If bootloader is missing then this should be indicated by a file
+        if not os.path.isfile(board.get_file_path(NEED_BL_FILE_NAME)):
+            test_info.failure("Bootloader missing but file %s not present" %
+                              NEED_BL_FILE_NAME)
 
-    # Restore a good image
-    file_name = get_file_name()
-    local_data = get_file_content(data_start, raw_data)
-    test = DLMassStorageTester(board, test_info, "Normal Load",
-                               board_mode)
-    test.set_programming_data(local_data, file_name)
-    test.set_expected_data(raw_data)
-    test.run()
+        # Restore a good image
+        file_name = get_file_name()
+        local_data = get_file_content(data_start, raw_data)
+        test = DLMassStorageTester(board, test_info, "Normal Load",
+                                   board_mode)
+        test.set_programming_data(local_data, file_name)
+        test.set_expected_data(raw_data)
+        test.run()
 
     # Test wrong HIF ID
     # Bootloader should perform interface update regardless of key
