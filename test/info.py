@@ -53,6 +53,9 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'k20dx_rblnano_if': 0x1095,
     'lpc11u35_tiny_if': 0x9012,
     'lpc11u35_c027_if': 0x1234,
+    'lpc11u35_arm_watch_stm32f411_if': 5050,
+    'lpc11u35_arm_watch_efm32_if': 5051,
+    'lpc11u35_arm_watch_nrf51_if': 5052,
 }
 
 TARGET_NAME_TO_BOARD_ID = {
@@ -82,6 +85,9 @@ TARGET_NAME_TO_BOARD_ID = {
     'RedBearLab-BLE-Nano': 0x1095,
     'Seeed-Tiny-BLE': 0x9012,
     'u-blox-C027': 0x1234,
+    #lpc11u35_arm_watch_stm32f411_if
+    #lpc11u35_arm_watch_efm32_if
+    #lpc11u35_arm_watch_nrf51_if
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
