@@ -135,9 +135,5 @@ static uint32_t target_flash_program_page_min_size(uint32_t addr)
 
 static uint32_t target_flash_erase_sector_size(uint32_t addr)
 {
-    if ((addr >= target_device.flash_start) && (addr < target_device.flash_end)) {
-        return target_device.sector_size;
-    } else {
-        return 0;
-    }
+    return target_device.sector_size;
 }

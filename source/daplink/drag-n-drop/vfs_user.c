@@ -262,10 +262,10 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t* data, uin
     #ifdef MSC_ENDPOINT
     pos += util_write_string(buf + pos, "MSD");
     #endif
-    #ifdef HID_ENDPOINT
+    #ifdef CDC_ENDPOINT
     pos += util_write_string(buf + pos, ", CDC");
     #endif
-    #ifdef CDC_ENDPOINT
+    #ifdef HID_ENDPOINT
     pos += util_write_string(buf + pos, ", HID");
     #endif
     pos += util_write_string(buf + pos, "\r\n");

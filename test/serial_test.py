@@ -17,6 +17,7 @@
 
 from __future__ import absolute_import
 from __future__ import division
+from threading import Thread
 import serial
 
 
@@ -96,8 +97,10 @@ def test_serial(workspace, parent_test):
         if not _same(resp, expected_resp):
             test_info.failure("Fail on init: %s" % resp)
 
-        sp.write(test_data)
+        write_thread = Thread(target=sp.write, args=(test_data,))
+        write_thread.start()
         resp = sp.read(len(test_data))
+        write_thread.join()
         if _same(resp, test_data):
             test_info.info("Block test passed")
         else:
@@ -145,8 +148,10 @@ def test_serial(workspace, parent_test):
                 continue
 
             # Perform test
-            sp.write(test_data)
+            write_thread = Thread(target=sp.write, args=(test_data,))
+            write_thread.start()
             resp = sp.read(len(test_data))
+            write_thread.join()
             resp = bytearray(resp)
             if _same(test_data, resp):
                 test_info.info("Pass")

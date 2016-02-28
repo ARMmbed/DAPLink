@@ -1,0 +1,7 @@
+common:
+    includes:
+        - source/target/nordic/nrf51822
+    sources:
+        target:
+            - source/target/nordic/nrf51822/arm_watch_nrf51_app_config.c
+            - source/target/nordic/nrf51822/target_reset.c

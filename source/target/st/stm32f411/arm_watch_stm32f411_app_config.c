@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RTL.h"
-#include "debug_cm.h"
-#include "target_reset.h"
-#include "swd_host.h"
-#include "DAP_Config.h"
 
-void target_before_init_debug(void) {
-    return;
-}
+#include "target_config.h"
 
-uint8_t target_unlock_sequence(void) {
-    return 1;
-}
+// The file flash_blob.c must only be included in app_config.c
+#include "flash_blob.c"
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state_sw(state);
-}
-
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size) {
-    return 0;
-}
+// target information
+const target_cfg_t target_device = {
+    .board_id   = "5050",
+    .secret     = "xxxxxxxx",
+    .sector_size    = KB(16),
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    .sector_cnt     = 32,
+    .flash_start    = 0x08000000,
+    .flash_end      = 0x08000000 + KB(512),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20020000,
+    .flash_algo     = (program_target_t*)&flash,
+};
 

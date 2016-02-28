@@ -18,23 +18,8 @@
 
 #include "gpio.h"
 #include "compiler.h"
-#include "daplink.h"
 #include "target_reset.h"
-
-// This GPIO configuration is only valid for the LPC11U35 HIF
-COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
-
-#define RESET_PORT        (0)
-#define RESET_PIN         (1)
-#define RESET_FWRD_PORT   (1)
-#define RESET_FWRD_PIN    (19)
-#define RESET_OUT_PORT    (0)
-#define RESET_OUT_PIN     (2)
-
-#define PIN_DAP_LED       (1<<21)
-#define PIN_MSD_LED       (1<<20)
-#define PIN_CDC_LED       (1<<11)
-
+#include "IO_Config.h"
 
 // taken code from the Nxp App Note AN11305 
 /* This data must be global so it is not read from the stack */
@@ -92,25 +77,30 @@ void gpio_init(void) {
 
     // configure GPIO-LED as output
     // DAP led (green)
-    LPC_GPIO->SET[0] = (PIN_DAP_LED);
-    LPC_GPIO->DIR[0] |= (PIN_DAP_LED);
+    PIN_DAP_LED_IOCON = PIN_DAP_LED_IOCON_INIT;
+    LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
+    LPC_GPIO->DIR[PIN_DAP_LED_PORT] |= PIN_DAP_LED;
 
     // MSD led (red)
-    LPC_GPIO->SET[0] = (PIN_MSD_LED);
-    LPC_GPIO->DIR[0] |= (PIN_MSD_LED);
+    PIN_MSD_LED_IOCON = PIN_MSD_LED_IOCON_INIT;
+    LPC_GPIO->SET[PIN_MSD_LED_PORT] = PIN_MSD_LED;
+    LPC_GPIO->DIR[PIN_MSD_LED_PORT] |= PIN_MSD_LED;
 
     // Serial LED (blue)
-      LPC_IOCON->TDI_PIO0_11 |= 0x01;
-    LPC_GPIO->SET[0] = (PIN_CDC_LED);
-    LPC_GPIO->DIR[0] |= (PIN_CDC_LED);
+    PIN_CDC_LED_IOCON = PIN_CDC_LED_IOCON_INIT;
+    LPC_GPIO->SET[PIN_CDC_LED_PORT] = PIN_CDC_LED;
+    LPC_GPIO->DIR[PIN_CDC_LED_PORT] |= PIN_CDC_LED;
 
     // configure Button(s) as input
-    LPC_GPIO->DIR[RESET_PORT] &= ~(1 << RESET_PIN);
-    LPC_GPIO->DIR[RESET_FWRD_PORT] &= ~(1 << RESET_FWRD_PIN);
+    PIN_RESET_IN_IOCON = PIN_RESET_IN_IOCON_INIT;
+    LPC_GPIO->DIR[PIN_RESET_IN_PORT] &= ~PIN_RESET_IN;
+    PIN_RESET_IN_FWRD_IOCON = PIN_RESET_IN_FWRD_IOCON_INIT;
+    LPC_GPIO->DIR[PIN_RESET_IN_FWRD_PORT] &= ~PIN_RESET_IN_FWRD;
 
     // open drain logic for reset button
-    LPC_GPIO->CLR[RESET_OUT_PORT] = (1 << RESET_OUT_PIN);
-    LPC_GPIO->DIR[RESET_OUT_PORT] &= ~(1 << RESET_OUT_PIN);
+    PIN_nRESET_IOCON = PIN_nRESET_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+    LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
 
     /* Enable AHB clock to the FlexInt, GroupedInt domain. */
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1<<19) | (1<<23) | (1<<24));
@@ -133,25 +123,25 @@ void gpio_init(void) {
 
 void gpio_set_hid_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] = (PIN_DAP_LED);
+        LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
     } else {
-        LPC_GPIO->CLR[0] = (PIN_DAP_LED);
+        LPC_GPIO->CLR[PIN_DAP_LED_PORT] = PIN_DAP_LED;
     }
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state) {
     if (state) {
-      LPC_GPIO->SET[0] = (PIN_CDC_LED);
+      LPC_GPIO->SET[PIN_CDC_LED_PORT] = PIN_CDC_LED;
     } else {
-      LPC_GPIO->CLR[0] = (PIN_CDC_LED);
+      LPC_GPIO->CLR[PIN_CDC_LED_PORT] = PIN_CDC_LED;
     }
 }
 
 void gpio_set_msc_led(gpio_led_state_t state) {
     if (state) {
-        LPC_GPIO->SET[0] = (PIN_MSD_LED);
+        LPC_GPIO->SET[PIN_MSD_LED_PORT] = PIN_MSD_LED;
     } else {
-        LPC_GPIO->CLR[0] = (PIN_MSD_LED);
+        LPC_GPIO->CLR[PIN_MSD_LED_PORT] = PIN_MSD_LED;
     }
 }
 
@@ -160,7 +150,7 @@ uint8_t gpio_get_sw_reset(void)
     static uint8_t last_reset_forward_pressed = 0;
     uint8_t reset_forward_pressed;
     uint8_t reset_pressed;
-    reset_forward_pressed = LPC_GPIO->PIN[RESET_FWRD_PORT] & (1 << RESET_FWRD_PIN) ? 0 : 1;
+    reset_forward_pressed = LPC_GPIO->PIN[PIN_RESET_IN_FWRD_PORT] & PIN_RESET_IN_FWRD ? 0 : 1;
 
     // Forward reset if the state of the button has changed
     //    This must be done on button changes so it does not interfere
@@ -174,7 +164,7 @@ uint8_t gpio_get_sw_reset(void)
         last_reset_forward_pressed = reset_forward_pressed;
     }
 
-    reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[RESET_PORT] & (1 << RESET_PIN) ? 0 : 1);
+    reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[PIN_RESET_IN_PORT] & PIN_RESET_IN ? 0 : 1);
     return !reset_pressed;
 }
 

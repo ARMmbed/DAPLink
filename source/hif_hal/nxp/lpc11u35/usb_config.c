@@ -123,14 +123,19 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#define USBD_HID_ENABLE             1
+#ifndef HID_ENDPOINT
+  #define HID_ENDPOINT 0
+#else
+  #define HID_ENDPOINT 1
+#endif
+#define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
 #define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          0
-#define USBD_HID_HS_WMAXPACKETSIZE  4
+#define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
 #define USBD_HID_STRDESC            L"CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
@@ -169,7 +174,12 @@
 //         </h>
 //       </h>
 //     </e>
-#define USBD_MSC_ENABLE             1
+#ifndef MSC_ENDPOINT
+  #define MSC_ENDPOINT 0
+#else
+  #define MSC_ENDPOINT 1
+#endif
+#define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          2
 #define USBD_MSC_EP_BULKOUT         2
 #define USBD_MSC_EP_BULKIN_STACK    0
@@ -182,7 +192,7 @@
 // since this is used to detect DAPLink drives
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
                                     "VFS             " \
-                                    "1.0 "
+                                    "0.1"
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
@@ -283,7 +293,13 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
-#define USBD_CDC_ACM_ENABLE             1
+
+#ifndef CDC_ENDPOINT
+  #define CDC_ENDPOINT 0
+#else
+  #define CDC_ENDPOINT 1
+#endif
+#define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           3
 #define USBD_CDC_ACM_EP_INTIN_STACK     0
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
