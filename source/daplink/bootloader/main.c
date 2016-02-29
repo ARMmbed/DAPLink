@@ -62,11 +62,11 @@ static main_usb_busy_t usb_busy;
 static uint32_t usb_busy_count;
 
 #define TIMER_TASK_30_PRIORITY  (11)
-#define TIMER_TASK_STACK        (100)
+#define TIMER_TASK_STACK        (136)
 static uint64_t stk_timer_task[TIMER_TASK_STACK/sizeof(uint64_t)];
 
 #define MAIN_TASK_PRIORITY      (10)
-#define MAIN_TASK_STACK         (700)
+#define MAIN_TASK_STACK         (800)
 static uint64_t stk_main_task [MAIN_TASK_STACK /sizeof(uint64_t)];
 
 // Timer task, set flags every 30mS and 90mS
