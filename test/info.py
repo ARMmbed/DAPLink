@@ -53,9 +53,9 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'k20dx_rblnano_if': 0x1095,
     'lpc11u35_tiny_if': 0x9012,
     'lpc11u35_c027_if': 0x1234,
-    'lpc11u35_arm_watch_stm32f411_if': 5050,
-    'lpc11u35_arm_watch_efm32_if': 5051,
-    'lpc11u35_arm_watch_nrf51_if': 5052,
+    'lpc11u35_arm_watch_stm32f411_if': 0x5050,
+    'lpc11u35_arm_watch_efm32_if': 0x5051,
+    'lpc11u35_arm_watch_nrf51_if': 0x5052,
 }
 
 TARGET_NAME_TO_BOARD_ID = {
