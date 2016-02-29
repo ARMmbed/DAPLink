@@ -1,7 +1,0 @@
-common:
-    includes:
-        - source/target/st/stm32f411
-    sources:
-        target:
-            - source/target/st/stm32f411/arm_watch_stm32f411_app_config.c
-            - source/target/st/stm32f411/target_reset.c

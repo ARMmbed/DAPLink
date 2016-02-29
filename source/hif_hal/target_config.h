@@ -39,8 +39,6 @@
  @brief  The firmware configuration struct has unique about the chip its running on.
  */ 
 typedef struct target_cfg {
-    uint8_t  board_id[4];           /*!< A unique identifier for the bootloader or DAPLink application */
-    uint8_t  secret[8];             /*!< Mangaged by mbed.org To request a secret email support@mbed.org */
     uint32_t sector_size;           /*!< Number of bytes in a sector used by flash erase and filesystem */
     uint32_t sector_cnt;            /*!< Number of sectors a device has */
     uint32_t flash_start;           /*!< Address of the application entry point */

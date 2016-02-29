@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/board/sam3u2c_bl.c

@@ -25,21 +25,21 @@ HIF_STRING_TO_ID = {
 
 # Add new firmware with a hard coded board ID here
 FIRMWARE_NAME_TO_BOARD_ID = {
-    'k20dx_k22f_if': 0x0231,
-    'k20dx_k64f_if': 0x0240,
+    'k20dx_frdmk22f_if': 0x0231,
+    'k20dx_frdmk64f_if': 0x0240,
     'kl26z_microbit_if': 0x9900,
     'kl26z_nrf51822_if': 0x9900,
     'lpc11u35_lpc812xpresso_if': 0x1050,
     'lpc11u35_ssci1114_if': 0x1114,
     'lpc11u35_efm32gg_stk_if': 0x2015,
     'sam3u2c_nrf51dk_if': 0x1100,
-    'k20dx_k20dx_if': 0x0230,
-    'k20dx_k24f_if': 0x0280,
-    'k20dx_kl02z_if': 0x0250,
-    'k20dx_kl05z_if': 0x0210,
-    'k20dx_kl25z_if': 0x0200,
-    'k20dx_kl26z_if': 0x0260,
-    'k20dx_kl46z_if': 0x0220,
+    'k20dx_frdmk20dx_if': 0x0230,
+    'k20dx_frdmk24f_if': 0x0280,
+    'k20dx_frdmkl02z_if': 0x0250,
+    'k20dx_frdmkl05z_if': 0x0210,
+    'k20dx_frdmkl25z_if': 0x0200,
+    'k20dx_frdmkl26z_if': 0x0260,
+    'k20dx_frdmkl46z_if': 0x0220,
     'sam3u2c_nrf51mkit_if': 0x1070,
     'sam3u2c_nrf51dongle_if': 0x1120,
     'lpc11u35_archble_if': 0x9009,
@@ -66,11 +66,11 @@ TARGET_NAME_TO_BOARD_ID = {
     'Microbit': 0x9900,
     'Nordic-nRF51-DK': 0x1100,
     'FRDM-K20D50M': 0x0230,
-    #k20dx_k24f_if
-    #k20dx_kl02z_if
+    #k20dx_frdmk24f_if
+    #k20dx_frdmkl02z_if
     'FRDM-KL05Z': 0x0210,
     'KL25Z': 0x0200,
-    #k20dx_kl26z_if
+    #k20dx_frdmkl26z_if
     'FRDM-KL46Z': 0x0220,
     'Nordic-nRF51822': 0x1070,
     'Nordic-nRF51-Dongle': 0x1120,

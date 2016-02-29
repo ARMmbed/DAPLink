@@ -1,7 +1,0 @@
-common:
-    includes:
-        - source/target/freescale/kl46z
-    sources:
-        target:
-            - source/target/freescale/kl46z/app_config.c
-            - source/target/freescale/target_reset_Lseries.c

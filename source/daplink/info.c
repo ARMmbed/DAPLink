@@ -118,7 +118,8 @@ static void setup_basics()
     string_hif_id[idx++] = 0;
 
     // Board ID
-    memcpy(string_board_id, target_device.board_id, 4);
+    extern char * board_id; //TODO - remove
+    memcpy(string_board_id, board_id, 4);
     string_board_id[4] = 0;
 
     // Version

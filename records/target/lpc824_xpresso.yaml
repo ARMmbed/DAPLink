@@ -1,5 +1,0 @@
-common:
-    sources:
-        target_specific:
-            - source/target/nxp/lpc824/xpresso_app_config.c
-            - source/target/nxp/lpc824/target_reset.c
