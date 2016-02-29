@@ -178,3 +178,7 @@ projects:
         - *module_if
         - *module_hif_lpc11u35
         - records/target/nrf51822_arm_watch.yaml
+    lpc11u35_archlink_if:
+        - *module_if
+        - *module_hif_lpc11u35
+        - records/target/nrf51822_archlink.yaml
