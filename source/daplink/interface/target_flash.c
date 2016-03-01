@@ -72,6 +72,7 @@ static error_t target_flash_uninit(void)
     if (config_get_auto_rst()) {
         target_set_state(RESET_RUN);
     }
+    swd_off();
     return ERROR_SUCCESS;
 }
 
