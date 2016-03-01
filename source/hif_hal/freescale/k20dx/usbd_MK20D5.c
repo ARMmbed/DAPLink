@@ -17,6 +17,7 @@
 #include "rl_usb.h"
 #include "MK20D5.h"
 #include "cortex_m.h"
+#include "util.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -410,7 +411,7 @@ void USBD_ClearEPBuf (uint32_t EPNum) {
  *    Return Value:    Number of bytes read
  */
 
-uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
+uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData, uint32_t size) {
   uint32_t n, sz, idx, setup = 0;
 
   idx = IDX(EPNum, RX, 0);
@@ -418,6 +419,10 @@ uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
 
   if ((EPNum == 0) && (TOK_PID(idx) == SETUP_TOKEN)) setup = 1;
 
+  if (size < sz) {
+    util_assert(0);
+    sz = size;
+  }
   for (n = 0; n < sz; n++) {
     pData[n] = EPBuf[idx][n];
   }

@@ -1004,7 +1004,7 @@ void USBD_MSC_EP_BULKIN_Event (U32 event) {
  */
 
 void USBD_MSC_EP_BULKOUT_Event (U32 event) {
-  BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf);
+  BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf, USBD_MSC_BulkBufSize);
   USBD_MSC_BulkOut();
 }
 

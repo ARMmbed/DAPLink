@@ -35,7 +35,7 @@ extern void USBD_ResetEP     (U32  EPNum);
 extern void USBD_SetStallEP  (U32  EPNum);
 extern void USBD_ClrStallEP  (U32  EPNum);
 extern void USBD_ClearEPBuf  (U32  EPNum);
-extern U32  USBD_ReadEP      (U32  EPNum, U8 *pData);
+extern U32  USBD_ReadEP      (U32  EPNum, U8 *pData, U32 cnt);
 extern U32  USBD_WriteEP     (U32  EPNum, U8 *pData, U32 cnt);
 extern U32  USBD_GetFrame    (void);
 extern U32  USBD_GetError    (void);

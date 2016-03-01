@@ -57,6 +57,7 @@ extern const U8   usbd_msc_ep_bulkin;
 extern const U8   usbd_msc_ep_bulkout;
 extern const U16  usbd_msc_maxpacketsize[2];
 extern const U8  *usbd_msc_inquiry_data;
+extern const U16  USBD_MSC_BulkBufSize;
 extern       U8   USBD_MSC_BulkBuf      [];
 
 extern const U8   usbd_adc_enable;

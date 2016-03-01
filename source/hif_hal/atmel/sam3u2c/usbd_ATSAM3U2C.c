@@ -12,6 +12,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "sam3u.h"
+#include "util.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -448,17 +449,21 @@ void USBD_ClrStallEP (uint32_t EPNum) {
  *    Return Value:    Number of bytes read
  */
 
-uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
-  uint32_t cnt, n;
+uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData, uint32_t size) {
+  uint32_t cnt, n, copy_sz;
   uint8_t *pEPFIFO;                                /* Pointer to EP FIFO           */
 
   EPNum  &= 0x0F;
   pEPFIFO = (uint8_t *)((uint32_t *)UDPHS_EPTFIFO_BASE + (16384*EPNum));
   cnt     = (UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA >> 20) & 0x07FF;  /* Get by */
-  for (n = 0; n < cnt; n++) {
+  copy_sz = cnt > size ? size : cnt;
+  for (n = 0; n < copy_sz; n++) {
     *pData++ = *pEPFIFO++;
   }
-  UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 9);   /* Rece OUT Clear   */
+  util_assert(cnt == copy_sz);
+  if (cnt == copy_sz) {
+    UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 9);   /* Rece OUT Clear   */
+  }
 
   /* RX_Setup must be cleared after Setup packet is read                      */
   UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 12);  /* Rece SETUP Clear */

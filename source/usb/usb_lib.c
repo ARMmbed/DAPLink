@@ -83,7 +83,8 @@ const   U8   usbd_msc_ep_bulkin         =  USBD_MSC_EP_BULKIN;
 const   U8   usbd_msc_ep_bulkout        =  USBD_MSC_EP_BULKOUT;
 const   U16  usbd_msc_maxpacketsize[2]  = {USBD_MSC_WMAXPACKETSIZE, USBD_MSC_HS_WMAXPACKETSIZE};
 const   U8  *usbd_msc_inquiry_data      =  USBD_MSC_INQUIRY_DATA;
-        U8   USBD_MSC_BulkBuf             [USBD_MSC_MAX_PACKET*USBD_MSC_ENABLE];
+const   U16  USBD_MSC_BulkBufSize       = USBD_MSC_MAX_PACKET;
+        U8   USBD_MSC_BulkBuf             [USBD_MSC_MAX_PACKET];
 #endif
 
 #if    (USBD_ADC_ENABLE)
