@@ -42,6 +42,8 @@ void prerun_target_config(void)
     swd_read_memory(UUID_LOC, (uint8_t *)&uuid, 16);
     // stringify and store the MAC generated from a UUID
     info_set_uuid_target(uuid);
+    // Let the target run
+    target_set_state(RESET_RUN);
 }
 
 void board_init(void)

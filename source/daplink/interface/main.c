@@ -31,6 +31,7 @@
 #include "settings.h"
 #include "daplink.h"
 #include "util.h"
+#include "DAP.h"
 
 // Event flags for main task
 // Timers events
@@ -258,6 +259,9 @@ __task void main_task(void)
     gpio_set_cdc_led(GPIO_LED_ON);
     gpio_set_msc_led(GPIO_LED_ON);
 
+    // Initialize the DAP 
+    DAP_Setup();
+
     // do some init with the target before USB and files are configured
     prerun_target_config();
 
@@ -273,9 +277,6 @@ __task void main_task(void)
 
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
-
-    // Target running
-    target_set_state(RESET_RUN);
 
     while(1) {
         os_evt_wait_or(   FLAGS_MAIN_RESET              // Put target in reset state
