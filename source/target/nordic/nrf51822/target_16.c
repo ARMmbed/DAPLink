@@ -28,4 +28,5 @@ const target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
     .flash_algo     = (program_target_t*)&flash,
+    .erase_reset    = 1,
 };

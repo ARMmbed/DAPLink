@@ -46,6 +46,7 @@ typedef struct target_cfg {
     uint32_t ram_start;             /*!< Lowest contigous RAM address the application uses */
     uint32_t ram_end;               /*!< Highest contigous RAM address the application uses */
     program_target_t * flash_algo;  /*!< A pointer to the flash algorithm structure */
+    uint8_t erase_reset;            /*!< Reset after performing an erase */
 } target_cfg_t;
 
 extern const target_cfg_t target_device;
