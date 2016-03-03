@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-
-// Override all defines if IO_CONFIG_OVERRIDE is defined
-#ifdef IO_CONFIG_OVERRIDE
-#include "IO_Config_Override.h"
-#ifndef __IO_CONFIG_H__
-#define __IO_CONFIG_H__
-#endif
-#endif
-
-
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -61,18 +51,18 @@ COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
 #define PIN_CDC_LED_IOCON               LPC_IOCON->TDI_PIO0_11
 #define PIN_CDC_LED_IOCON_INIT          (FUNC_1 | PULL_UP_ENABLED)
 
-// Non-Forwarded Reset in PIN           PIO0_1
-#define PIN_RESET_IN_PORT               0
-#define PIN_RESET_IN_BIT                1
+// Non-Forwarded Reset in PIN           PIO1_19
+#define PIN_RESET_IN_PORT               1
+#define PIN_RESET_IN_BIT                19
 #define PIN_RESET_IN                    (1 << PIN_RESET_IN_BIT)
-#define PIN_RESET_IN_IOCON              LPC_IOCON->PIO0_1
+#define PIN_RESET_IN_IOCON              LPC_IOCON->PIO1_19
 #define PIN_RESET_IN_IOCON_INIT         (FUNC_0 | OPENDRAIN | PULL_UP_ENABLED)
 
-// Forwarded Reset in PIN               PIO1_19
-#define PIN_RESET_IN_FWRD_PORT          1
-#define PIN_RESET_IN_FWRD_BIT           19
+// Forwarded Reset in PIN               PIO0_1
+#define PIN_RESET_IN_FWRD_PORT          0
+#define PIN_RESET_IN_FWRD_BIT           1
 #define PIN_RESET_IN_FWRD               (1 << PIN_RESET_IN_FWRD_BIT)
-#define PIN_RESET_IN_FWRD_IOCON         LPC_IOCON->PIO1_19
+#define PIN_RESET_IN_FWRD_IOCON         LPC_IOCON->PIO0_1
 #define PIN_RESET_IN_FWRD_IOCON_INIT    (FUNC_0 | OPENDRAIN | PULL_UP_ENABLED)
 
 // nRESET OUT Pin                       PIO0_2
