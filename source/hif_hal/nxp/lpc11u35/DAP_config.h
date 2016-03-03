@@ -173,13 +173,9 @@ Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
 static __inline void PORT_OFF (void) {
-    LPC_GPIO->CLR[PIN_SWCLK_PORT] = PIN_SWCLK;
-    LPC_GPIO->CLR[PIN_SWDIO_PORT] = PIN_SWDIO;
-    // open drain logic
-    LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET; // reset not an output
-    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
-    LPC_GPIO->DIR[PIN_SWCLK_PORT] |= PIN_SWCLK; 
-    LPC_GPIO->DIR[PIN_SWDIO_PORT] |= PIN_SWDIO; 
+    LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
+    LPC_GPIO->DIR[PIN_SWCLK_PORT] &= ~PIN_SWCLK; 
+    LPC_GPIO->DIR[PIN_SWDIO_PORT] &= ~PIN_SWDIO; 
 }
 
 

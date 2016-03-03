@@ -154,13 +154,9 @@ Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
 static __inline void PORT_OFF (void) {
-  PIN_SWCLK_GPIO->PCOR = PIN_SWCLK;
-  PIN_SWDIO_GPIO->PCOR = PIN_SWDIO;
-  PIN_nRESET_GPIO->PSOR = PIN_nRESET;
-
-  PIN_SWCLK_GPIO->PDDR |= (PIN_SWCLK);
-  PIN_SWDIO_GPIO->PDDR |= (PIN_SWDIO);
-  PIN_nRESET_GPIO->PDDR |= (PIN_nRESET);
+  PIN_SWCLK_GPIO->PDDR &= ~(PIN_SWCLK);
+  PIN_SWDIO_GPIO->PDDR &= ~(PIN_SWDIO);
+  PIN_nRESET_GPIO->PDDR &= ~(PIN_nRESET);
 }
 
 
@@ -376,7 +372,8 @@ static __inline void DAP_SETUP (void) {
                 SIM_SCGC5_PORTE_MASK;   /* Enable Port E Clock */
 
   /* Configure I/O pin SWCLK */
-  PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1);   /* GPIO */
+  PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1)  | /* GPIO */
+                                       PORT_PCR_PE_MASK;  /* Pull (Down) enable */
   PIN_SWCLK_GPIO->PSOR  = PIN_SWCLK;                      /* High level */
   PIN_SWCLK_GPIO->PDDR |= PIN_SWCLK;                      /* Output */
 

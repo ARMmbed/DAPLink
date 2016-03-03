@@ -20,6 +20,7 @@
 #include "target_reset.h"
 
 uint8_t swd_init(void);
+uint8_t swd_off(void);
 uint8_t swd_init_debug(void);
 uint8_t swd_read_dp(uint8_t adr, uint32_t *val);
 uint8_t swd_write_dp(uint8_t adr, uint32_t val);

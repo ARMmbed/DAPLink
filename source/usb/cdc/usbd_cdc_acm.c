@@ -494,12 +494,14 @@ void USBD_CDC_ACM_EP_INTIN_Event (uint32_t event) {
  */
 
 static void USBD_CDC_ACM_EP_BULKOUT_HandleData () {
+  uint32_t len_free_to_recv;
   int32_t len_received;
 
   if ((usbd_cdc_acm_receivebuf_sz - (ptr_data_received - USBD_CDC_ACM_ReceiveBuf)) >= usbd_cdc_acm_maxpacketsize1[USBD_HighSpeed]) {
                                         /* If there is space for 1 max packet */
                                         /* Read received packet to receive buf*/
-    len_received       = USBD_ReadEP(usbd_cdc_acm_ep_bulkout, ptr_data_received);
+    len_free_to_recv = usbd_cdc_acm_receivebuf_sz - (ptr_data_received - USBD_CDC_ACM_ReceiveBuf);
+    len_received       = USBD_ReadEP(usbd_cdc_acm_ep_bulkout, ptr_data_received, len_free_to_recv);
     ptr_data_received += len_received;  /* Correct pointer to received data   */
     if (data_received_pending_pckts &&  /* If packet was pending              */
        !data_receive_int_access) {      /* and not interrupt access           */

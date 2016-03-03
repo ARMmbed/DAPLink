@@ -17,6 +17,7 @@
 #include "rl_usb.h"
 #include "LPC11Uxx.h"
 #include "compiler.h"
+#include "util.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -478,9 +479,10 @@ void USBD_ClearEPBuf (U32 EPNum) {
  *    Return Value:    Number of bytes read
  */
 
-U32 USBD_ReadEP (U32 EPNum, U8 *pData) {
+U32 USBD_ReadEP (U32 EPNum, U8 *pData, U32 size) {
   U32 cnt, i;
-  U32 *dataptr, *ptr;
+  U32 *ptr;
+  U8 *dataptr;
 
   ptr = GetEpCmdStatPtr(EPNum);
 
@@ -488,11 +490,14 @@ U32 USBD_ReadEP (U32 EPNum, U8 *pData) {
   if ((EPNum == 0) && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
 
     cnt =  USBD_MAX_PACKET0;
-    dataptr = (U32 *)(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr + 64);
+    if (size < cnt) {
+      util_assert(0);
+      cnt = size;
+    }
+    dataptr = (U8 *)(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr + 64);
 
-    for (i = 0; i < (cnt + 3) / 4; i++) {
-      *((__packed U32 *)pData) = dataptr[i];
-      pData += 4;
+    for (i = 0; i < cnt; i++) {
+      pData[i] = dataptr[i];
     }
 
     LPC_USB->EPSKIP |= (1 << EP_IN_IDX(EPNum));
@@ -512,11 +517,15 @@ U32 USBD_ReadEP (U32 EPNum, U8 *pData) {
   else {
     ptr = GetEpCmdStatPtr(EPNum);
     cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
-    dataptr = (U32 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
+    dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
-    for (i = 0; i < (cnt + 3) / 4; i++) {
-      *((__packed U32 *)pData) = dataptr[i];
-      pData += 4;
+    if (size < cnt) {
+      util_assert(0);
+      cnt = size;
+    }
+    cnt = cnt < size ? cnt : size;
+    for (i = 0; i < cnt; i++) {
+      pData[i] = dataptr[i];
     }
 
     *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |

@@ -102,6 +102,11 @@ uint8_t swd_init(void) {
     return 1;
 }
 
+uint8_t swd_off(void) {
+    PORT_OFF();
+    return 1;
+}
+
 // Read debug port register.
 uint8_t swd_read_dp(uint8_t adr, uint32_t *val) {
     uint32_t tmp_in;
@@ -804,6 +809,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+            swd_off();
             break;
 
         case RESET_PROGRAM:
@@ -885,6 +891,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+            swd_off();
             break;
 
         case RESET_PROGRAM:

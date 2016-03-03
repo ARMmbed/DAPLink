@@ -116,7 +116,7 @@ BOOL usbd_configured (void) {
  */
 
 void USBD_SetupStage (void) {
-  USBD_ReadEP(0x00, (U8 *)&USBD_SetupPacket);
+  USBD_ReadEP(0x00, (U8 *)&USBD_SetupPacket, sizeof(USBD_SetupPacket));
 }
 
 
@@ -150,7 +150,7 @@ void USBD_DataInStage (void) {
 void USBD_DataOutStage (void) {
   U32 cnt;
 
-  cnt = USBD_ReadEP(0x00, USBD_EP0Data.pData);
+  cnt = USBD_ReadEP(0x00, USBD_EP0Data.pData, USBD_EP0Data.Count);
   USBD_EP0Data.pData += cnt;
   USBD_EP0Data.Count -= cnt;
 }
@@ -174,7 +174,7 @@ void USBD_StatusInStage (void) {
  */
 
 void USBD_StatusOutStage (void) {
-  USBD_ReadEP(0x00, USBD_EP0Buf);
+  USBD_ReadEP(0x00, USBD_EP0Buf, usbd_max_packet0);
 }
 
 

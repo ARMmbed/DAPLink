@@ -29,6 +29,7 @@ U16          DataOutSentLen;
 BOOL         DataOutEndWithShortPacket;
 
 U8          *ptrDataIn;
+U16          DataInReceMax;
 U16          DataInReceLen;
 
 U8          *ptrDataFeat;
@@ -250,9 +251,10 @@ void USBD_HID_EP_INTOUT_Event (U32 event) {
 
   if (!DataInReceLen) {                 /* Check if new reception             */
     ptrDataIn     = USBD_HID_OutReport;
+    DataInReceMax = usbd_hid_outreport_max_sz;
     DataInReceLen = 0;
   }
-  bytes_rece      = USBD_ReadEP(usbd_hid_ep_intout, ptrDataIn);
+  bytes_rece      = USBD_ReadEP(usbd_hid_ep_intout, ptrDataIn, DataInReceMax - DataInReceLen);
   ptrDataIn      += bytes_rece;
   DataInReceLen  += bytes_rece;
   if (!bytes_rece ||
@@ -287,6 +289,7 @@ void USBD_HID_Configure_Event (void) {
   DataOutEndWithShortPacket = __FALSE;
 
   ptrDataIn                 = NULL;
+  DataInReceMax             = 0;
   DataInReceLen             = 0;
 
   ptrDataFeat               = NULL;

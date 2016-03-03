@@ -18,6 +18,7 @@
 #include "string.h"
 #include "usb_for_lib.h"
 #include "util.h"
+#include "macro.h"
 
 BOOL        USBD_MSC_MediaReady   = __FALSE;
 BOOL        USBD_MSC_ReadOnly     = __FALSE;
@@ -782,8 +783,10 @@ void USBD_MSC_ServiceActionIn16 (void) {
 
 void USBD_MSC_GetCBW (void) {
   U32 n;
+  U32 copy_size;
 
-  for (n = 0; n < BulkLen; n++) {
+  copy_size = MIN(BulkLen, sizeof(USBD_MSC_CBW));
+  for (n = 0; n < copy_size; n++) {
     *((U8 *)&USBD_MSC_CBW + n) = USBD_MSC_BulkBuf[n];
   }
   if ((BulkLen == sizeof(USBD_MSC_CBW)) && (USBD_MSC_CBW.dSignature == MSC_CBW_Signature)) {
@@ -1004,7 +1007,7 @@ void USBD_MSC_EP_BULKIN_Event (U32 event) {
  */
 
 void USBD_MSC_EP_BULKOUT_Event (U32 event) {
-  BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf);
+  BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf, USBD_MSC_BulkBufSize);
   USBD_MSC_BulkOut();
 }
 
