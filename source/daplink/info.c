@@ -32,7 +32,7 @@ static const daplink_info_t * const info_if = (daplink_info_t *)(DAPLINK_ROM_IF_
 // Raw variables
 static uint32_t host_id[4];
 static uint32_t target_id[4];
-static uint32_t hif_id = DAPLINK_HIF_ID;
+static uint32_t hic_id = DAPLINK_HIC_ID;
 
 static uint32_t crc_bootloader;
 static uint32_t crc_interface;
@@ -45,7 +45,7 @@ static char string_mac[12 + 1];
 static char string_board_id[4 + 1];
 static char string_host_id[32 + 1];
 static char string_target_id[32 + 1];
-static char string_hif_id[8 + 1];
+static char string_hic_id[8 + 1];
 static char string_version[4 + 1];
 
 static char usb_desc_unique_id[2 + sizeof(string_unique_id) * 2];
@@ -71,9 +71,9 @@ const char * info_get_target_id(void)
     return string_target_id;
 }
 
-const char * info_get_hif_id(void)
+const char * info_get_hic_id(void)
 {
-    return string_hif_id;
+    return string_hic_id;
 }
 const char * info_get_version(void)
 {
@@ -95,7 +95,7 @@ static void setup_basics()
     memset(string_board_id, 0, sizeof(string_board_id));
     memset(string_host_id, 0, sizeof(string_host_id));
     memset(string_target_id, 0, sizeof(string_target_id));
-    memset(string_hif_id, 0, sizeof(string_hif_id));
+    memset(string_hic_id, 0, sizeof(string_hic_id));
     memset(string_board_id, 0, sizeof(string_board_id));
 
     // Host ID
@@ -112,13 +112,14 @@ static void setup_basics()
     }
     string_target_id[idx++] = 0;
 
-    // HIF ID
+    // HIC ID
     idx = 0;
-    idx += util_write_hex32(string_hif_id + idx, hif_id);
-    string_hif_id[idx++] = 0;
+    idx += util_write_hex32(string_hic_id + idx, hic_id);
+    string_hic_id[idx++] = 0;
 
     // Board ID
-    memcpy(string_board_id, target_device.board_id, 4);
+    extern char * board_id; //TODO - remove
+    memcpy(string_board_id, board_id, 4);
     string_board_id[4] = 0;
 
     // Version
@@ -137,7 +138,7 @@ static void setup_unique_id()
     strcat(string_unique_id, string_board_id);
     strcat(string_unique_id, "0000");           // Reserved - was version number
     strcat(string_unique_id, string_host_id);
-    strcat(string_unique_id, string_hif_id);
+    strcat(string_unique_id, string_hic_id);
 }
 
 static void setup_string_descriptor()
@@ -192,7 +193,7 @@ bool info_get_bootloader_present(void)
     if (DAPLINK_BUILD_KEY_BL != info_bl->build_key) {
         present = false;
     }
-    if (DAPLINK_HIF_ID != info_bl->hif_id) {
+    if (DAPLINK_HIC_ID != info_bl->hic_id) {
         present = false;
     }
     return present;
@@ -207,7 +208,7 @@ bool info_get_interface_present(void)
     if (DAPLINK_BUILD_KEY_IF != info_if->build_key) {
         present = false;
     }
-    if (DAPLINK_HIF_ID != info_if->hif_id) {
+    if (DAPLINK_HIC_ID != info_if->hic_id) {
         present = false;
     }
     return present;

@@ -401,13 +401,13 @@ class TestManager(object):
         if self._firmware_filter is not None:
             assert self._firmware_filter == fw_name_set
 
-        # Create a table mapping each hif to a bootloader
-        hif_id_to_bootloader = {}
+        # Create a table mapping each hic to a bootloader
+        hic_id_to_bootloader = {}
         for firmware in bootloader_firmware_list:
-            hif_id = firmware.hif_id
-            assert hif_id not in hif_id_to_bootloader, 'Duplicate ' \
-                'bootloaders for HIF "%s" not allowed'
-            hif_id_to_bootloader[hif_id] = firmware
+            hic_id = firmware.hic_id
+            assert hic_id not in hic_id_to_bootloader, 'Duplicate ' \
+                'bootloaders for HIC "%s" not allowed'
+            hic_id_to_bootloader[hic_id] = firmware
 
         # Create a test configuration for each interface and supported board
         # combination
@@ -415,7 +415,7 @@ class TestManager(object):
         self._untested_firmware = []
         for firmware in filtered_interface_firmware_list:
             board_id = firmware.board_id
-            hif_id = firmware.hif_id
+            hic_id = firmware.hic_id
             bl_firmware = None
             target = None
 
@@ -439,8 +439,8 @@ class TestManager(object):
 
             # Check for a bootloader
             bl_required = self._load_bl or self._test_daplink
-            if hif_id in hif_id_to_bootloader:
-                bl_firmware = hif_id_to_bootloader[hif_id]
+            if hic_id in hic_id_to_bootloader:
+                bl_firmware = hic_id_to_bootloader[hic_id]
             elif bl_required:
                 self._untested_firmware.append(firmware)
                 test_info.info('No bootloader to test firmware %s' %
@@ -450,14 +450,14 @@ class TestManager(object):
             # Create a test configuration for each board
             board_list = board_id_to_board_list[board_id]
             for board in board_list:
-                if firmware.hif_id != board.hif_id:
-                    test_info.warning('FW HIF ID %s != Board HIF ID %s' %
-                                      (firmware.hif_id, board.hif_id))
+                if firmware.hic_id != board.hic_id:
+                    test_info.warning('FW HIC ID %s != Board HIC ID %s' %
+                                      (firmware.hic_id, board.hic_id))
                 if bl_firmware is not None:
-                    if firmware.hif_id != bl_firmware.hif_id:
-                        test_info.warning('FW HIF ID %s != BL HIF ID %s' %
-                                          (firmware.hif_id,
-                                           bl_firmware.hif_id))
+                    if firmware.hic_id != bl_firmware.hic_id:
+                        test_info.warning('FW HIC ID %s != BL HIC ID %s' %
+                                          (firmware.hic_id,
+                                           bl_firmware.hic_id))
                 if target is not None:
                     assert firmware.board_id == target.board_id
 

@@ -1,4 +1,0 @@
-common:
-    sources:
-        microbit:
-            - source/overrides/microbit.c

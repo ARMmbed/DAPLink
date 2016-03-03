@@ -120,11 +120,17 @@ static error_t target_flash_erase_sector(uint32_t sector)
 
 static error_t target_flash_erase_chip(void)
 {
+    error_t status = ERROR_SUCCESS;
     const program_target_t * const flash = target_device.flash_algo;
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
         return ERROR_ERASE_ALL;
     }
-    return ERROR_SUCCESS;
+
+    // Reset and re-initialize the target after the erase if required
+    if (target_device.erase_reset) {
+        status = target_flash_init();
+    }
+    return status;
 }
 
 static uint32_t target_flash_program_page_min_size(uint32_t addr)

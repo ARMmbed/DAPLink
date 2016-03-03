@@ -1,7 +1,0 @@
-common:
-    includes:
-        - source/target/freescale/k20dx
-    sources:
-        target:
-            - source/target/freescale/k20dx/app_config.c
-            - source/target/freescale/target_reset_Kseries.c

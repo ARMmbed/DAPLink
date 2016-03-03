@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/frdmkl02z.c
+        target:
+            - source/target/freescale/kl02z/target.c
+            - source/target/freescale/target_reset_Lseries.c

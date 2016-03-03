@@ -1,7 +1,0 @@
-common:
-    includes:
-        - source/target/freescale/k64f
-    sources:
-        target:
-            - source/target/freescale/k64f/app_config.c
-            - source/target/freescale/target_reset_Kseries.c
