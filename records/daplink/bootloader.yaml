@@ -6,7 +6,7 @@ common:
         - source/daplink
         - source/daplink/bootloader
         - source/cmsis-core
-        - source/hif_hal
+        - source/hic_hal
     sources:
         daplink_bl:
             - source/daplink

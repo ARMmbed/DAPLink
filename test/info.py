@@ -15,8 +15,8 @@
 #
 from __future__ import absolute_import
 
-# Add new HIFs here
-HIF_STRING_TO_ID = {
+# Add new HICs here
+HIC_STRING_TO_ID = {
     'k20dx': 0x97969900,
     'kl26z': 0x97969901,
     'lpc11u35': 0x97969902,

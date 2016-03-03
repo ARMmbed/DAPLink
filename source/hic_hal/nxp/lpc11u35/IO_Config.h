@@ -30,8 +30,8 @@
 #include "LPC11Uxx.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the LPC11U35 HIF
-COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_LPC11U35);
+// This GPIO configuration is only valid for the LPC11U35 HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC11U35);
 
 // Peripheral register bit masks (used for pin inits)
 #define FUNC_0                          0

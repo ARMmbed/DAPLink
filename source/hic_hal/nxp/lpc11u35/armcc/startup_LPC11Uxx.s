@@ -54,7 +54,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     DAPLINK_BUILD_KEY         ; Build type - BL/IF
-                DCD     DAPLINK_HIF_ID            ; Compatibility
+                DCD     DAPLINK_HIC_ID            ; Compatibility
                 DCD     DAPLINK_VERSION           ; Version
                 DCD     SVC_Handler               ; SVCall Handler
                 DCD     0                         ; Reserved

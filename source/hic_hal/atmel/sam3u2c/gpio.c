@@ -21,7 +21,7 @@
 #include "daplink.h"
 
 // This GPIO configuration is only valid for the SAM3U2C
-COMPILER_ASSERT(DAPLINK_HIF_ID == DAPLINK_HIF_ID_SAM3U2C);
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 
 #define _BIT_LED_GREEN       (29)      // PA29
 #define _BIT_BOOT_MODE_PIN   (25)      // PA25

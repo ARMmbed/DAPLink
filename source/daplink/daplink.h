@@ -37,19 +37,19 @@ COMPILER_ASSERT(DAPLINK_RAM_APP_START == DAPLINK_RAM_START);
 COMPILER_ASSERT(DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE == DAPLINK_RAM_SHARED_START);
 COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RAM_START + DAPLINK_RAM_SIZE);
 
-#define DAPLINK_BUILD_KEY_IF        0x9B939E8F  // ~'dlap' - daplink application
-#define DAPLINK_BUILD_KEY_BL        0x9B939D93  // ~'dlbl' - daplink bootloader
+#define DAPLINK_BUILD_KEY_IF        0x9B939E8F
+#define DAPLINK_BUILD_KEY_BL        0x9B939D93
 
-#define DAPLINK_HIF_ID_K20DX        0x97969900  // ~'hif' - hardware interface
-#define DAPLINK_HIF_ID_KL26         0x97969901
-#define DAPLINK_HIF_ID_LPC11U35     0x97969902
-#define DAPLINK_HIF_ID_SAM3U2C      0x97969903
+#define DAPLINK_HIC_ID_K20DX        0x97969900
+#define DAPLINK_HIC_ID_KL26         0x97969901
+#define DAPLINK_HIC_ID_LPC11U35     0x97969902
+#define DAPLINK_HIC_ID_SAM3U2C      0x97969903
 
 #define DAPLINK_INFO_OFFSET         0x20
 
 typedef struct {
     uint32_t build_key;
-    uint32_t hif_id;
+    uint32_t hic_id;
     uint32_t version;
 } daplink_info_t;
 
