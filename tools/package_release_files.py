@@ -8,7 +8,7 @@ PROJECT_RELEASE_INFO = {
     # Project Name                  Legacy      Offset      Extension
     ("k20dx_frdmk22f_if",           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk64f_if",           True,       0x5000,     "bin"       ),
-    ("kl26z_microbit_if",           False,      0x8000,     "bin"       ),
+    ("kl26z_microbit_if",           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",   False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci1114_if",        False,      0x0000,     "bin"       ),
@@ -25,7 +25,7 @@ PROJECT_RELEASE_INFO = {
     ("sam3u2c_nrf51dongle_if",      True,       0x5000,     "bin"       ),
     ("lpc11u35_archble_if",         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",         False,      0x0000,     "bin"       ),
-    ("lpc11u35_archmax_if",         False,      0x0000,     "bin"       ),
+    #("lpc11u35_archmax_if",         False,      0x0000,     "bin"       ),  # Unsupported currently
     ("lpc11u35_hrm1017_if",         False,      0x0000,     "bin"       ),
     ("lpc11u35_sscity_if",          False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci824_if",         False,      0x0000,     "bin"       ),
