@@ -57,32 +57,6 @@ static int USBD_CalcSizeEP (uint32_t size) {
 
 
 /*
- *  Retrieve bank number Function
- *   Called during EndPoint configuration
- *    Return Value:    Bank number for given EP
- */
-
-static int USBD_GetBankEP (uint32_t EPNum) {
-
-  EPNum &= 0x0F;                        /* Set EP number                      */
-  switch (EPNum) {
-    case 0:
-      return (1);                       /* One bank (Bank0)                   */
-    case 1:
-    case 2:
-      return (2);                       /* Double bank (Ping-Pong: Bnk0/Bnk1) */
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-      return (3);                       /* Triple bank (Bank0 / Bank1 / Bank2)*/
-    default:
-      return (0);                       /* Zero bank, the EP not mapped in mem*/
-  }
-}
-
-
-/*
  *  Retrieve maximum EP size Function
  *   Called during EndPoint configuration
  *    Return Value:    maximum size for given EP
@@ -332,19 +306,19 @@ void USBD_Configure (BOOL cfg) {
  */
 
 void USBD_ConfigEP (USB_ENDPOINT_DESCRIPTOR *pEPD) {
-  uint32_t num, type, dir, size, bank, interval;
+  uint32_t num, type, dir, size, banks, interval;
 
   num      = pEPD->bEndpointAddress & 0x0F;
   type     = pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK;
   dir      = pEPD->bEndpointAddress >> 7;
   interval = pEPD->bInterval;
   size     = USBD_CalcSizeEP(pEPD->wMaxPacketSize);
-  bank     = USBD_GetBankEP(num);
+  banks    = 1;
 
   /* Check if MaxPacketSize fits for EndPoint                                 */
   if (pEPD->wMaxPacketSize <= USBD_GetSizeEP(num)) {
     UDPHS->UDPHS_EPT[num].UDPHS_EPTCFG    = (interval << 8) |
-                                            (bank     << 6) |
+                                            (banks    << 6) |
                                             (type     << 4) |
                                             (dir      << 3) |
                                             (size     << 0) ;
