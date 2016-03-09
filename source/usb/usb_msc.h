@@ -54,21 +54,21 @@
 
 /* Bulk-only Command Block Wrapper */
 typedef __packed struct _MSC_CBW {
-  U32 dSignature;
-  U32 dTag;
-  U32 dDataLength;
-  U8  bmFlags;
-  U8  bLUN;
-  U8  bCBLength;
-  U8  CB[16];
+    U32 dSignature;
+    U32 dTag;
+    U32 dDataLength;
+    U8  bmFlags;
+    U8  bLUN;
+    U8  bCBLength;
+    U8  CB[16];
 } MSC_CBW;
 
 /* Bulk-only Command Status Wrapper */
 typedef __packed struct _MSC_CSW {
-  U32 dSignature;
-  U32 dTag;
-  U32 dDataResidue;
-  U8  bStatus;
+    U32 dSignature;
+    U32 dTag;
+    U32 dDataResidue;
+    U8  bStatus;
 } MSC_CSW;
 
 #define MSC_CBW_Signature               0x43425355

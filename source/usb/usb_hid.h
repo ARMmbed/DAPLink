@@ -43,16 +43,16 @@
 
 /* HID Descriptor */
 typedef __packed struct _HID_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U16 bcdHID;
-  U8  bCountryCode;
-  U8  bNumDescriptors;
-  /* Array of one or more descriptors */
-  __packed struct _HID_DESCRIPTOR_LIST {
+    U8  bLength;
     U8  bDescriptorType;
-    U16 wDescriptorLength;
-  } DescriptorList[1];
+    U16 bcdHID;
+    U8  bCountryCode;
+    U8  bNumDescriptors;
+    /* Array of one or more descriptors */
+    __packed struct _HID_DESCRIPTOR_LIST {
+        U8  bDescriptorType;
+        U16 wDescriptorLength;
+    } DescriptorList[1];
 } HID_DESCRIPTOR;
 
 

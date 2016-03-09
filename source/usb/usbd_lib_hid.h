@@ -25,12 +25,12 @@
 
 /*--------------------------- USB Requests -----------------------------------*/
 
-extern BOOL USBD_HID_GetReport   (void);
-extern BOOL USBD_HID_SetReport   (void);
-extern BOOL USBD_HID_GetIdle     (void);
-extern BOOL USBD_HID_SetIdle     (void);
-extern BOOL USBD_HID_GetProtocol (void);
-extern BOOL USBD_HID_SetProtocol (void);
+extern BOOL USBD_HID_GetReport(void);
+extern BOOL USBD_HID_SetReport(void);
+extern BOOL USBD_HID_GetIdle(void);
+extern BOOL USBD_HID_SetIdle(void);
+extern BOOL USBD_HID_GetProtocol(void);
+extern BOOL USBD_HID_SetProtocol(void);
 
 
 #endif  /* __USBD_LIB_HID_H__ */

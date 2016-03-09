@@ -92,9 +92,9 @@ extern        U8  USBD_CDC_ACM_SendBuf       [];
 extern        U8  USBD_CDC_ACM_ReceiveBuf    [];
 extern        U8  USBD_CDC_ACM_NotifyBuf     [10];
 
-extern       void usbd_os_evt_set       (U16 event_flags, U32 task);
-extern       U16  usbd_os_evt_get       (void);
-extern       U32  usbd_os_evt_wait_or   (U16 wait_flags, U16 timeout);
+extern       void usbd_os_evt_set(U16 event_flags, U32 task);
+extern       U16  usbd_os_evt_get(void);
+extern       U32  usbd_os_evt_wait_or(U16 wait_flags, U16 timeout);
 
 extern const BOOL __rtx;
 

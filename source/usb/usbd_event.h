@@ -55,23 +55,23 @@
 #define USBD_EVT_CLR_FEATURE (1 <<  3)  /* Clear Feature                      */
 
 /* USB Device - Device Events Callback Pointers                               */
-extern void (* const USBD_P_Power_Event    )(BOOL power);
-extern void (* const USBD_P_Reset_Event    )(void);
-extern void (* const USBD_P_Suspend_Event  )(void);
-extern void (* const USBD_P_Resume_Event   )(void);
-extern void (* const USBD_P_WakeUp_Event   )(void);
-extern void (* const USBD_P_SOF_Event      )(void);
-extern void (* const USBD_P_Error_Event    )(U32 error);
+extern void (* const USBD_P_Power_Event)(BOOL power);
+extern void (* const USBD_P_Reset_Event)(void);
+extern void (* const USBD_P_Suspend_Event)(void);
+extern void (* const USBD_P_Resume_Event)(void);
+extern void (* const USBD_P_WakeUp_Event)(void);
+extern void (* const USBD_P_SOF_Event)(void);
+extern void (* const USBD_P_Error_Event)(U32 error);
 
 /* USB Device - Endpoint Events Callback Pointers                             */
-extern void (* const USBD_P_EP[16])         (U32 event);
+extern void (* const USBD_P_EP[16])(U32 event);
 
 /* USB Device - Core Events Callback Pointers                                 */
 extern void (* const USBD_P_Configure_Event)(void);
 extern void (* const USBD_P_Interface_Event)(void);
-extern void (* const USBD_P_Feature_Event  )(void);
+extern void (* const USBD_P_Feature_Event)(void);
 
 /* USB Device - RTX version RTX tasks initialization                          */
-extern void USBD_RTX_TaskInit               (void);
+extern void USBD_RTX_TaskInit(void);
 
 #endif  /* __USBD_EVENT_H__ */

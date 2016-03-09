@@ -26,10 +26,10 @@
 /*--------------------------- USB Requests -----------------------------------*/
 
 extern void USBD_MSC_ClrStallEP(U32 EPNum);
-extern BOOL USBD_MSC_Reset     (void);
-extern BOOL USBD_MSC_GetMaxLUN (void);
-extern void USBD_MSC_GetCBW    (void);
-extern void USBD_MSC_SetCSW    (void);
+extern BOOL USBD_MSC_Reset(void);
+extern BOOL USBD_MSC_GetMaxLUN(void);
+extern void USBD_MSC_GetCBW(void);
+extern void USBD_MSC_SetCSW(void);
 
 
 #endif  /* __USBD_LIB_MSC_H__ */

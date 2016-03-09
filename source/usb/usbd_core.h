@@ -27,8 +27,8 @@
 
 /* USB Device Core Endpoint Data Structure */
 typedef struct _USBD_EP_DATA {
-  U8 *pData;
-  U16 Count;
+    U8 *pData;
+    U16 Count;
 } USBD_EP_DATA;
 
 
@@ -55,20 +55,20 @@ extern OS_TID      USBD_RTX_CoreTask;
 
 /*--------------------------- Functions exported to class specific files -----*/
 
-extern void        USBD_SetupStage     (void);
-extern void        USBD_DataInStage    (void);
-extern void        USBD_DataOutStage   (void);
-extern void        USBD_StatusInStage  (void);
-extern void        USBD_StatusOutStage (void);
+extern void        USBD_SetupStage(void);
+extern void        USBD_DataInStage(void);
+extern void        USBD_DataOutStage(void);
+extern void        USBD_StatusInStage(void);
+extern void        USBD_StatusOutStage(void);
 
 
 /*--------------------------- Event handling routines ------------------------*/
 
-extern        void usbd_class_init    (void);
+extern        void usbd_class_init(void);
 
-extern        void USBD_EndPoint0     (U32 event);
+extern        void USBD_EndPoint0(U32 event);
 
-extern __task void USBD_RTX_EndPoint0 (void);
+extern __task void USBD_RTX_EndPoint0(void);
 
 
 #endif  /* __USBD_CORE_H__ */
