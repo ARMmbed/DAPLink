@@ -24,6 +24,7 @@
 
 #include "flash_blob.h"
 #include "target_reset.h"
+#include "debug_cm.h"
 
 #ifdef __cplusplus
 extern "C" {

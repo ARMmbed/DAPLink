@@ -1,3 +1,4 @@
+#! armcc -E
 ;/**
 ; * @file    daplink.sct
 ; * @brief   Memory layout for DAPLink Interface Firmware
@@ -18,8 +19,6 @@
 ; * See the License for the specific language governing permissions and
 ; * limitations under the License.
 ; */
-
-#! armcc -E
 
 #include "daplink_addr.h"
 

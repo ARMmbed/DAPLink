@@ -49,7 +49,7 @@ __asm void $$USBD$$version(void)
 {
     /* Export a version number symbol for a version control. */
     EXPORT  __RL_USBD_VER
-    __RL_USBD_VER   EQU     0x470
+__RL_USBD_VER   EQU     0x470
 }
 
 
