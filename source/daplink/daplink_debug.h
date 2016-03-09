@@ -49,7 +49,7 @@ static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
     uint32_t error_len = strlen(error_msg);
     total_free = USBD_CDC_ACM_DataFree();
 
-    if(total_free < error_len) {
+    if (total_free < error_len) {
         // No space
         return 0;
     }
@@ -59,7 +59,7 @@ static inline uint32_t daplink_debug(uint8_t *buf, uint32_t size)
     size = MIN(write_free, size);
     USBD_CDC_ACM_DataSend(buf, size);
 
-    if(write_free == size) {
+    if (write_free == size) {
         USBD_CDC_ACM_DataSend((uint8_t *)error_msg, error_len);
     }
 
@@ -76,7 +76,7 @@ static inline uint32_t daplink_debug_print(const char *format, ...)
     va_start(arg, format);
     r = vsnprintf(daplink_debug_buf, sizeof(daplink_debug_buf), format, arg);
 
-    if(r >= sizeof(daplink_debug_buf)) {
+    if (r >= sizeof(daplink_debug_buf)) {
         r = snprintf(daplink_debug_buf, sizeof(daplink_debug_buf), "<Error - string length %i exceeds print buffer>\r\n", r);
         ret = 0;
     }

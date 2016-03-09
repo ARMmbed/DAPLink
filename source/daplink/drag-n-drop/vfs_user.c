@@ -86,13 +86,13 @@ void vfs_user_build_filesystem()
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
 
     // FAIL.TXT
-    if(vfs_mngr_get_transfer_status() != ERROR_SUCCESS) {
+    if (vfs_mngr_get_transfer_status() != ERROR_SUCCESS) {
         file_size = get_file_size(read_file_fail_txt);
         vfs_create_file("FAIL    TXT", read_file_fail_txt, 0, file_size);
     }
 
     // ASSERT.TXT
-    if(config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line, &assert_source)) {
+    if (config_ram_get_assert(assert_buf, sizeof(assert_buf), &assert_line, &assert_source)) {
         file_size = get_file_size(read_file_assert_txt);
         file_handle = vfs_create_file(assert_file, read_file_assert_txt, 0, file_size);
         vfs_file_set_attr(file_handle, (vfs_file_attr_bit_t)0); // Remove read only attribute
@@ -102,7 +102,7 @@ void vfs_user_build_filesystem()
     volatile uint32_t bl_start = DAPLINK_ROM_BL_START; // Silence warnings about null pointer
     volatile uint32_t if_start = DAPLINK_ROM_IF_START; // Silence warnings about null pointer
 
-    if(daplink_is_interface() &&
+    if (daplink_is_interface() &&
             (DAPLINK_ROM_BL_SIZE > 0) &&
             (0 == memcmp((void *)bl_start, (void *)if_start, DAPLINK_MIN_WRITE_SIZE))) {
         // If the bootloader contains a copy of the interfaces vector table
@@ -120,53 +120,46 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
     // enabled or if the user is holding the reset button
     bool btn_pressed = !gpio_get_sw_reset();
 
-    if(!btn_pressed && !config_get_automation_allowed()) {
+    if (!btn_pressed && !config_get_automation_allowed()) {
         return;
     }
 
-    if(VFS_FILE_CHANGED == change) {
+    if (VFS_FILE_CHANGED == change) {
         // Unused
     }
 
-    if(VFS_FILE_CREATED == change) {
-        if(!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
-            if(daplink_is_interface()) {
+    if (VFS_FILE_CREATED == change) {
+        if (!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
+            if (daplink_is_interface()) {
                 config_ram_set_hold_in_bl(true);
-
             } else {
                 // Do nothing - bootloader will go to interface by default
             }
 
             vfs_mngr_fs_remount();
-
-        } else if(!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(true);
             vfs_mngr_fs_remount();
-
-        } else if(!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(false);
             vfs_mngr_fs_remount();
-
-        } else if(!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
             // Test asserts
             util_assert(0);
-
-        } else if(!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
             // Remount to update the drive
             vfs_mngr_fs_remount();
-
-        } else if(!memcmp(filename, "AUTO_ON CFG", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_ON CFG", sizeof(vfs_filename_t))) {
             config_set_automation_allowed(true);
             vfs_mngr_fs_remount();
-
-        } else if(!memcmp(filename, "AUTO_OFFCFG", sizeof(vfs_filename_t))) {
+        } else if (!memcmp(filename, "AUTO_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_automation_allowed(false);
             vfs_mngr_fs_remount();
         }
     }
 
-    if(VFS_FILE_DELETED == change) {
-        if(!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
+    if (VFS_FILE_DELETED == change) {
+        if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
             // Clear assert and remount to update the drive
             util_assert_clear();
             vfs_mngr_fs_remount();
@@ -177,12 +170,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
 void vfs_user_disconnecting()
 {
     // Reset if programming was successful  //TODO - move to flash layer
-    if(daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
+    if (daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
         NVIC_SystemReset();
     }
 
     // If hold in bootloader has been set then reset after usb is disconnected
-    if(daplink_is_interface() && config_ram_get_hold_in_bl()) {
+    if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
         NVIC_SystemReset();
     }
 }
@@ -198,7 +191,7 @@ static uint32_t get_file_size(vfs_read_cb_t read_func)
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         return 0;
     }
 
@@ -213,7 +206,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     const char *mode_str;
     char *buf = (char *)data;
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         return 0;
     }
 
@@ -246,13 +239,13 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "\r\n");
 
     // Other builds version (bl or if)
-    if(!daplink_is_bootloader() && info_get_bootloader_present()) {
+    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
         pos += util_write_string(buf + pos, "Bootloader Version: ");
         pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
         pos += util_write_string(buf + pos, "\r\n");
     }
 
-    if(!daplink_is_interface() && info_get_interface_present()) {
+    if (!daplink_is_interface() && info_get_interface_present()) {
         pos += util_write_string(buf + pos, "Interface Version: ");
         pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
         pos += util_write_string(buf + pos, "\r\n");
@@ -280,7 +273,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "\r\n");
 
     // CRC of the bootloader (if there is one)
-    if(info_get_bootloader_present()) {
+    if (info_get_bootloader_present()) {
         pos += util_write_string(buf + pos, "Bootloader CRC: 0x");
         pos += util_write_hex32(buf + pos, info_get_crc_bootloader());
         pos += util_write_string(buf + pos, "\r\n");
@@ -299,7 +292,7 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
     const char *contents = (const char *)error_get_string(vfs_mngr_get_transfer_status());
     uint32_t size = strlen(contents);
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         return 0;
     }
 
@@ -318,18 +311,16 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
     const char *source_str;
     char *buf = (char *)data;
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         return 0;
     }
 
     pos = 0;
 
-    if(ASSERT_SOURCE_BL == assert_source) {
+    if (ASSERT_SOURCE_BL == assert_source) {
         source_str = "Bootloader";
-
-    } else if(ASSERT_SOURCE_APP == assert_source) {
+    } else if (ASSERT_SOURCE_APP == assert_source) {
         source_str = "Application";
-
     } else {
         source_str = 0;
     }
@@ -342,7 +333,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
     pos += util_write_uint32(buf + pos, assert_line);
     pos += util_write_string(buf + pos, "\r\n");
 
-    if(source_str != 0) {
+    if (source_str != 0) {
         pos += util_write_string(buf + pos, "Source: ");
         pos += util_write_string(buf + pos, source_str);
         pos += util_write_string(buf + pos, "\r\n");
@@ -358,7 +349,7 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
                            "Reload the bootloader to fix this error message.\r\n";
     uint32_t size = strlen(contents);
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         return 0;
     }
 
@@ -391,13 +382,13 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
     do {
         // Look for key or the end of the string
-        while((*buf != '@') && (*buf != 0)) {
+        while ((*buf != '@') && (*buf != 0)) {
             buf++;
         }
 
         // If key was found then replace it
-        if('@' == *buf) {
-            switch(*(buf + 1)) {
+        if ('@' == *buf) {
+            switch (*(buf + 1)) {
                 case 'm':
                 case 'M':   // MAC address
                     insert_string = (uint8_t *)info_get_mac();
@@ -445,7 +436,7 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
             insert(buf, insert_string, 2);
         }
-    } while(*buf != '\0');
+    } while (*buf != '\0');
 
     size_left = buf - orig_buf;
     memset(buf, 0, bufsize - size_left);

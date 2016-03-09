@@ -20,7 +20,7 @@
  */
 
 #include "string.h"
- 
+
 #include "settings.h"
 #include "target_config.h"
 #include "compiler.h"
@@ -77,13 +77,13 @@ static uint32_t write_buffer[SECTOR_BUFFER_SIZE / 4];
 static bool config_needs_update()
 {
     // Update if the key is invalid
-    if(CFG_KEY != config_rom.key) {
+    if (CFG_KEY != config_rom.key) {
         return true;
     }
 
     // Update if the config key is valid but
     // has a smaller size.
-    if(config_rom.size < sizeof(config_rom)) {
+    if (config_rom.size < sizeof(config_rom)) {
         return true;
     }
 
@@ -103,7 +103,7 @@ static void program_cfg(cfg_setting_t *new_cfg)
     status = EraseSector(addr);
     cortex_int_restore(state);
 
-    if(status != 0) {
+    if (status != 0) {
         return;
     }
 
@@ -113,7 +113,7 @@ static void program_cfg(cfg_setting_t *new_cfg)
     status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
     cortex_int_restore(state);
 
-    if(0 != status) {
+    if (0 != status) {
         return;
     }
 }
@@ -125,7 +125,7 @@ void config_rom_init()
     memcpy(&config_rom_copy, &config_default, sizeof(config_rom_copy));
 
     // Read settings from flash if the key is valid
-    if(CFG_KEY == config_rom.key) {
+    if (CFG_KEY == config_rom.key) {
         uint32_t size = MIN(config_rom.size, sizeof(config_rom));
         memcpy(&config_rom_copy, (void *)&config_rom, size);
     }
@@ -136,7 +136,7 @@ void config_rom_init()
 
     // Write settings back to flash if they are out of date
     // Note - program_cfg only programs data in bootloader mode
-    if(config_needs_update()) {
+    if (config_needs_update()) {
         // Program with defaults if none are set
         program_cfg(&config_rom_copy);
     }

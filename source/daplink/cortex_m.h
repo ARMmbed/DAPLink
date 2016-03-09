@@ -44,7 +44,7 @@ static cortex_int_state_t cortex_int_get_and_disable(void)
 __attribute__((always_inline))
 static void cortex_int_restore(cortex_int_state_t state)
 {
-    if(!state) {
+    if (!state) {
         __enable_irq();
     }
 }

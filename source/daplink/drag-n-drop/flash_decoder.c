@@ -65,27 +65,25 @@ flash_decoder_type_t flash_decoder_detect_type(const uint8_t *data, uint32_t siz
     // Check if this is a daplink image
     memcpy(&info, data + DAPLINK_INFO_OFFSET, sizeof(info));
 
-    if(DAPLINK_HIC_ID == info.hic_id) {
-        if(DAPLINK_BUILD_KEY_IF == info.build_key) {
+    if (DAPLINK_HIC_ID == info.hic_id) {
+        if (DAPLINK_BUILD_KEY_IF == info.build_key) {
             // Interface update
             return FLASH_DECODER_TYPE_INTERFACE;
-
-        } else if(DAPLINK_BUILD_KEY_BL == info.build_key) {
+        } else if (DAPLINK_BUILD_KEY_BL == info.build_key) {
             // Bootloader update
             return FLASH_DECODER_TYPE_BOOTLOADER;
-
         } else {
             return FLASH_DECODER_TYPE_UNKNOWN;
         }
     }
 
     // Check if a valid vector table for the target can be found
-    if(validate_bin_nvic(data)) {
+    if (validate_bin_nvic(data)) {
         return FLASH_DECODER_TYPE_TARGET;
     }
 
     // If an address is specified then the data can be decoded
-    if(addr_valid) {
+    if (addr_valid) {
         // TODO - future improvement - make sure address is within target's flash
         return FLASH_DECODER_TYPE_TARGET;
     }
@@ -99,7 +97,7 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     uint32_t flash_start_local;
     const flash_intf_t *flash_intf_local = 0;
 
-    if((0 == start_addr) || (0 == flash_intf)) {
+    if ((0 == start_addr) || (0 == flash_intf)) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
@@ -109,59 +107,53 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     flash_start_local = 0;
     flash_intf_local = 0;
 
-    if(daplink_is_bootloader()) {
-        if(FLASH_DECODER_TYPE_INTERFACE == type) {
-            if(addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+    if (daplink_is_bootloader()) {
+        if (FLASH_DECODER_TYPE_INTERFACE == type) {
+            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
                 // Address is wrong so display error message
                 status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
                 flash_start_local = 0;
                 flash_intf_local = 0;
-
             } else {
                 // Setup for update
                 flash_start_local = DAPLINK_ROM_IF_START;
                 flash_intf_local = flash_intf_iap_protected;
             }
-
-        } else if(FLASH_DECODER_TYPE_TARGET == type) {
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
             // "Target" update in this case would be a 3rd party interface application
             flash_start_local = DAPLINK_ROM_IF_START;
             flash_intf_local = flash_intf_iap_protected;
         }
-
-    } else if(daplink_is_interface()) {
-        if(FLASH_DECODER_TYPE_BOOTLOADER == type) {
-            if(addr_valid && (DAPLINK_ROM_BL_START != addr)) {
+    } else if (daplink_is_interface()) {
+        if (FLASH_DECODER_TYPE_BOOTLOADER == type) {
+            if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
                 // Address is wrong so display error message
                 status = ERROR_FD_BL_UPDT_ADDR_WRONG;
                 flash_start_local = 0;
                 flash_intf_local = 0;
-
             } else {
                 // Setup for update
                 flash_start_local = DAPLINK_ROM_BL_START;
                 flash_intf_local = flash_intf_iap_protected;
             }
-
-        } else if(FLASH_DECODER_TYPE_TARGET == type) {
+        } else if (FLASH_DECODER_TYPE_TARGET == type) {
             flash_start_local = target_device.flash_start;
             flash_intf_local = flash_intf_target;
         }
-
     } else {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
     }
 
     // Don't allow bootloader updates unless automation is allowed
-    if(!config_get_automation_allowed() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {
+    if (!config_get_automation_allowed() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
     }
 
-    if(ERROR_SUCCESS != status) {
+    if (ERROR_SUCCESS != status) {
         return status;
     }
 
-    if(0 == flash_intf_local) {
+    if (0 == flash_intf_local) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
@@ -176,7 +168,7 @@ error_t flash_decoder_open(void)
     flash_decoder_printf("flash_decoder_open()\r\n");
 
     // Stream must not be open already
-    if(state != DECODER_STATE_CLOSED) {
+    if (state != DECODER_STATE_CLOSED) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
@@ -197,20 +189,20 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
     error_t status;
     flash_decoder_printf("flash_decoder_write(addr=0x%x, size=0x%x)\r\n", addr, size);
 
-    if(DECODER_STATE_OPEN != state) {
+    if (DECODER_STATE_OPEN != state) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
 
     // Set the initial address the first time through
-    if(!initial_addr_set) {
+    if (!initial_addr_set) {
         initial_addr = addr;
         current_addr = initial_addr;
         flash_decoder_printf("     initial_addr=0x%x\r\n", initial_addr);
         initial_addr_set = true;
     }
 
-    if(!flash_initialized) {
+    if (!flash_initialized) {
         uint32_t copy_size;
         bool flash_type_known = false;
         bool sequential;
@@ -219,7 +211,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
         current_addr += size;
 
         // Buffer data until the flash type is known
-        if(sequential) {
+        if (sequential) {
             // Copy data into buffer
             copy_size = MIN(size, sizeof(flash_buf) - flash_buf_pos);
             memcpy(&flash_buf[flash_buf_pos], data, copy_size);
@@ -231,14 +223,13 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
             addr += copy_size;
 
             // If enough data has been buffered then determine the type
-            if(flash_buf_pos >= sizeof(flash_buf)) {
+            if (flash_buf_pos >= sizeof(flash_buf)) {
                 util_assert(sizeof(flash_buf) == flash_buf_pos);
                 // Determine flash type and get info for it
                 flash_type = flash_decoder_detect_type(flash_buf, flash_buf_pos, initial_addr, true);
                 flash_decoder_printf("    Buffering complete, setting flash_type=%i\r\n", flash_type);
                 flash_type_known = true;
             }
-
         } else {
             flash_type = FLASH_DECODER_TYPE_TARGET;
             flash_decoder_printf("    Non sequential addr, setting flash_type=%i\r\n", flash_type);
@@ -246,12 +237,12 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
         }
 
         // If flash type is known initialize the flash manager
-        if(flash_type_known) {
+        if (flash_type_known) {
             const flash_intf_t *flash_intf;
             uint32_t flash_start_addr;
             status = flash_decoder_get_flash(flash_type, initial_addr, true, &flash_start_addr, &flash_intf);
 
-            if(ERROR_SUCCESS != status) {
+            if (ERROR_SUCCESS != status) {
                 state = DECODER_STATE_ERROR;
                 return status;
             }
@@ -262,7 +253,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
             status = flash_manager_init(flash_intf);
             flash_decoder_printf("    flash_manager_init ret %i\r\n", status);
 
-            if(ERROR_SUCCESS != status) {
+            if (ERROR_SUCCESS != status) {
                 state = DECODER_STATE_ERROR;
                 return status;
             }
@@ -271,12 +262,12 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
         }
 
         // If flash has been initalized then write out buffered data
-        if(flash_initialized) {
+        if (flash_initialized) {
             status = flash_manager_data(initial_addr, flash_buf, flash_buf_pos);
             flash_decoder_printf("    Flushing buffer initial_addr=0x%x, flash_buf_pos=%i, flash_manager_data ret=%i\r\n",
                                  initial_addr, flash_buf_pos, status);
 
-            if(ERROR_SUCCESS != status) {
+            if (ERROR_SUCCESS != status) {
                 state = DECODER_STATE_ERROR;
                 return status;
             }
@@ -284,19 +275,19 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
     }
 
     // Write data as normal if flash has been initialized
-    if(flash_initialized) {
+    if (flash_initialized) {
         status = flash_manager_data(addr, data, size);
         flash_decoder_printf("    Writing data, addr=0x%x, size=0x%x, flash_manager_data ret %i\r\n",
                              addr, size, status);
 
-        if(ERROR_SUCCESS != status) {
+        if (ERROR_SUCCESS != status) {
             state = DECODER_STATE_ERROR;
             return status;
         }
     }
 
     // Check if this is the end of data
-    if(flash_decoder_is_at_end(addr, data, size)) {
+    if (flash_decoder_is_at_end(addr, data, size)) {
         flash_decoder_printf("    End of transfer detected - addr 0x%08x, size 0x%08x\r\n",
                              addr, size);
         state = DECODER_STATE_DONE;
@@ -312,19 +303,19 @@ error_t flash_decoder_close(void)
     decoder_state_t prev_state = state;
     flash_decoder_printf("flash_decoder_close()\r\n");
 
-    if(DECODER_STATE_CLOSED == state) {
+    if (DECODER_STATE_CLOSED == state) {
         util_assert(0);
         return ERROR_INTERNAL;
     }
 
     state = DECODER_STATE_CLOSED;
 
-    if(flash_initialized) {
+    if (flash_initialized) {
         status = flash_manager_uninit();
         flash_decoder_printf("    flash_manager_uninit ret %i\r\n", status);
     }
 
-    if((DECODER_STATE_DONE != prev_state) &&
+    if ((DECODER_STATE_DONE != prev_state) &&
             (flash_type != FLASH_DECODER_TYPE_TARGET) &&
             (status == ERROR_SUCCESS)) {
         status = ERROR_IAP_UPDT_INCOMPLETE;
@@ -337,7 +328,7 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
 {
     uint32_t end_addr;
 
-    switch(flash_type) {
+    switch (flash_type) {
         case FLASH_DECODER_TYPE_BOOTLOADER:
             end_addr = DAPLINK_ROM_BL_START + DAPLINK_ROM_BL_SIZE;
             break;
@@ -354,9 +345,8 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
             return false;
     }
 
-    if(addr + size >= end_addr) {
+    if (addr + size >= end_addr) {
         return true;
-
     } else {
         return false;
     }

@@ -88,11 +88,11 @@ __task void timer_task_30mS(void)
     uint8_t i = 0;
     os_itv_set(3); // 30mS
 
-    while(1) {
+    while (1) {
         os_itv_wait();
         os_evt_set(FLAGS_MAIN_30MS, main_task_id);
 
-        if(!(i++ % 3)) {
+        if (!(i++ % 3)) {
             os_evt_set(FLAGS_MAIN_90MS, main_task_id);
         }
     }
@@ -104,7 +104,7 @@ __task void timer_task_30mS(void)
 __attribute__((weak))
 void target_forward_reset(bool assert_reset)
 {
-    if(assert_reset) {
+    if (assert_reset) {
         target_set_state(RESET_HOLD);
     } else {
         target_set_state(RESET_RUN);
@@ -167,7 +167,7 @@ void HardFault_Handler()
     util_assert(0);
     NVIC_SystemReset();
 
-    while(1);  // Wait for reset
+    while (1); // Wait for reset
 }
 
 os_mbx_declare(serial_mailbox, 20);
@@ -180,11 +180,11 @@ __task void serial_process()
     int32_t len_data = 0;
     void *msg;
 
-    while(1) {
+    while (1) {
         // Check our mailbox to see if we need to set anything up with the UART
         // before we do any sending or receiving
-        if(os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK) {
-            switch((SERIAL_MSG)(unsigned)msg) {
+        if (os_mbx_wait(&serial_mailbox, &msg, 0) == OS_R_OK) {
+            switch ((SERIAL_MSG)(unsigned)msg) {
                 case SERIAL_INITIALIZE:
                     uart_initialize();
                     break;
@@ -209,32 +209,32 @@ __task void serial_process()
 
         len_data = USBD_CDC_ACM_DataFree();
 
-        if(len_data > SIZE_DATA) {
+        if (len_data > SIZE_DATA) {
             len_data = SIZE_DATA;
         }
 
-        if(len_data) {
+        if (len_data) {
             len_data = uart_read_data(data, len_data);
         }
 
-        if(len_data) {
-            if(USBD_CDC_ACM_DataSend(data , len_data)) {
+        if (len_data) {
+            if (USBD_CDC_ACM_DataSend(data , len_data)) {
                 main_blink_cdc_led(MAIN_LED_OFF);
             }
         }
 
         len_data = uart_write_free();
 
-        if(len_data > SIZE_DATA) {
+        if (len_data > SIZE_DATA) {
             len_data = SIZE_DATA;
         }
 
-        if(len_data) {
+        if (len_data) {
             len_data = USBD_CDC_ACM_DataRead(data, len_data);
         }
 
-        if(len_data) {
-            if(uart_write_data(data, len_data)) {
+        if (len_data) {
+            if (uart_write_data(data, len_data)) {
                 main_blink_cdc_led(MAIN_LED_OFF);
             }
         }
@@ -285,7 +285,7 @@ __task void main_task(void)
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 
-    while(1) {
+    while (1) {
         os_evt_wait_or(FLAGS_MAIN_RESET             // Put target in reset state
                        | FLAGS_MAIN_90MS            // 90mS tick
                        | FLAGS_MAIN_30MS            // 30mS tick
@@ -296,15 +296,15 @@ __task void main_task(void)
         // Find out what event happened
         flags = os_evt_get();
 
-        if(flags & FLAGS_MAIN_PROC_USB) {
+        if (flags & FLAGS_MAIN_PROC_USB) {
             USBD_Handler();
         }
 
-        if(flags & FLAGS_MAIN_RESET) {
+        if (flags & FLAGS_MAIN_RESET) {
             target_set_state(RESET_RUN);
         }
 
-        if(flags & FLAGS_MAIN_POWERDOWN) {
+        if (flags & FLAGS_MAIN_POWERDOWN) {
             // Disable debug
             target_set_state(NO_DEBUG);
             // Disconnect USB
@@ -315,20 +315,20 @@ __task void main_task(void)
             gpio_set_msc_led(GPIO_LED_OFF);
 
             // TODO: put the interface chip in sleep mode
-            while(1);
+            while (1);
         }
 
-        if(flags & FLAGS_MAIN_DISABLEDEBUG) {
+        if (flags & FLAGS_MAIN_DISABLEDEBUG) {
             // Disable debug
             target_set_state(NO_DEBUG);
         }
 
-        if(flags & FLAGS_MAIN_90MS) {
+        if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
             vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 
             // Update USB connect status
-            switch(usb_state) {
+            switch (usb_state) {
                 case USB_DISCONNECTING:
                     usb_state = USB_DISCONNECTED;
                     usbd_connect(0);
@@ -337,7 +337,7 @@ __task void main_task(void)
                 case USB_CONNECTING:
 
                     // Wait before connecting
-                    if(DECZERO(usb_state_count) == 0) {
+                    if (DECZERO(usb_state_count) == 0) {
                         usbd_connect(1);
                         usb_state = USB_CHECK_CONNECTED;
                     }
@@ -345,8 +345,8 @@ __task void main_task(void)
                     break;
 
                 case USB_CHECK_CONNECTED:
-                    if(usbd_configured()) {
-                        if(!thread_started) {
+                    if (usbd_configured()) {
+                        if (!thread_started) {
                             os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
                             serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
                             thread_started = 1;
@@ -365,12 +365,12 @@ __task void main_task(void)
         }
 
         // 30mS tick used for flashing LED when USB is busy
-        if(flags & FLAGS_MAIN_30MS) {
+        if (flags & FLAGS_MAIN_30MS) {
             // handle reset button without eventing
-            switch(main_reset_button_state) {
+            switch (main_reset_button_state) {
                 default:
                 case MAIN_RESET_RELEASED:
-                    if(0 == gpio_get_sw_reset()) {
+                    if (0 == gpio_get_sw_reset()) {
                         main_reset_button_state = MAIN_RESET_PRESSED;
                         target_forward_reset(true);
                     }
@@ -378,8 +378,9 @@ __task void main_task(void)
                     break;
 
                 case MAIN_RESET_PRESSED:
+
                     // ToDo: add a counter to do a mass erase or target recovery after xxx seconds of being held
-                    if(1 == gpio_get_sw_reset()) {
+                    if (1 == gpio_get_sw_reset()) {
                         main_reset_button_state = MAIN_RESET_TARGET;
                     }
 
@@ -391,15 +392,14 @@ __task void main_task(void)
                     break;
             }
 
-            if(hid_led_usb_activity && ((hid_led_state == MAIN_LED_FLASH) || (hid_led_state == MAIN_LED_FLASH_PERMANENT))) {
+            if (hid_led_usb_activity && ((hid_led_state == MAIN_LED_FLASH) || (hid_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash DAP LED ONCE
-                if(hid_led_value) {
+                if (hid_led_value) {
                     hid_led_value = GPIO_LED_OFF;
-
                 } else {
                     hid_led_value = GPIO_LED_ON; // Turn on
 
-                    if(hid_led_state == MAIN_LED_FLASH) {
+                    if (hid_led_state == MAIN_LED_FLASH) {
                         hid_led_usb_activity = 0;
                     }
                 }
@@ -408,15 +408,14 @@ __task void main_task(void)
                 gpio_set_hid_led(hid_led_value);
             }
 
-            if(msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
+            if (msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash MSD LED ONCE
-                if(msc_led_value) {
+                if (msc_led_value) {
                     msc_led_value = GPIO_LED_OFF;
-
                 } else {
                     msc_led_value = GPIO_LED_ON; // Turn on
 
-                    if(msc_led_state == MAIN_LED_FLASH) {
+                    if (msc_led_state == MAIN_LED_FLASH) {
                         msc_led_usb_activity = 0;
                     }
                 }
@@ -425,15 +424,14 @@ __task void main_task(void)
                 gpio_set_msc_led(msc_led_value);
             }
 
-            if(cdc_led_usb_activity && ((cdc_led_state == MAIN_LED_FLASH) || (cdc_led_state == MAIN_LED_FLASH_PERMANENT))) {
+            if (cdc_led_usb_activity && ((cdc_led_state == MAIN_LED_FLASH) || (cdc_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash CDC LED ONCE
-                if(cdc_led_value) {
+                if (cdc_led_value) {
                     cdc_led_value = GPIO_LED_OFF;
-
                 } else {
                     cdc_led_value = GPIO_LED_ON; // Turn on
 
-                    if(cdc_led_state == MAIN_LED_FLASH) {
+                    if (cdc_led_state == MAIN_LED_FLASH) {
                         cdc_led_usb_activity = 0;
                     }
                 }

@@ -72,7 +72,7 @@ static uint8_t validate_checksum(hex_line_t *record)
 {
     uint8_t result = 0, i = 0;
 
-    for(; i < (record->byte_count + 5); i++) {
+    for (; i < (record->byte_count + 5); i++) {
         result += record->buf[i];
     }
 
@@ -104,7 +104,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     // we had an exit state where the address was unaligned to the previous record and data count.
     //  Need to pop the last record into the buffer before decoding anthing else since it was
     //  already decoded.
-    if(load_unaligned_record) {
+    if (load_unaligned_record) {
         // need some help...
         load_unaligned_record = 0;
         // move from line buffer back to input buffer
@@ -115,29 +115,28 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
         next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
     }
 
-    while(hex_blob != end) {
-        switch((uint8_t)(*hex_blob)) {
+    while (hex_blob != end) {
+        switch ((uint8_t)(*hex_blob)) {
             // we've hit the end of an ascii line
             // junk we dont care about could also just run the validate_checksum on &line
             case '\r':
             case '\n':
-                if(0 == validate_checksum(&line)) {
+                if (0 == validate_checksum(&line)) {
                     status = HEX_PARSE_CKSUM_FAIL;
                     goto hex_parser_exit;
-
                 } else {
-                    if(!record_processed) {
+                    if (!record_processed) {
                         record_processed = 1;
                         // address byteswap...
                         line.address = swap16(line.address);
 
-                        switch(line.record_type) {
+                        switch (line.record_type) {
                             case DATA_RECORD:
                                 // keeping a record of the last hex record
                                 memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
 
                                 // verify this is a continous block of memory or need to exit and dump
-                                if(((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
+                                if (((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
                                     load_unaligned_record = 1;
                                     status = HEX_PARSE_UNALIGNED;
                                     goto hex_parser_exit;
@@ -190,12 +189,11 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
 
             // decoding lines
             default:
-                if(low_nibble) {
+                if (low_nibble) {
                     line.buf[idx] |= ctoh((uint8_t)(*hex_blob)) & 0xf;
                     idx++;
-
                 } else {
-                    if(idx < sizeof(hex_line_t)) {
+                    if (idx < sizeof(hex_line_t)) {
                         line.buf[idx] = ctoh((uint8_t)(*hex_blob)) << 4;
                     }
                 }

@@ -123,11 +123,11 @@ const char *error_get_string(error_t error)
 {
     const char *msg = 0;
 
-    if(error < ERROR_COUNT) {
+    if (error < ERROR_COUNT) {
         msg = error_message[error];
     }
 
-    if(0 == msg) {
+    if (0 == msg) {
         util_assert(0);
         msg = "";
     }

@@ -151,11 +151,10 @@ void vfs_mngr_fs_enable(bool enable)
 {
     sync_lock();
 
-    if(enable) {
-        if(VFS_MNGR_STATE_DISCONNECTED == vfs_state_next) {
+    if (enable) {
+        if (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next) {
             vfs_state_next = VFS_MNGR_STATE_CONNECTED;
         }
-
     } else {
         vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
     }
@@ -168,7 +167,7 @@ void vfs_mngr_fs_remount(void)
     sync_lock();
 
     // Only start a remount if in the connected state and not in a transition
-    if(!changing_state() && (VFS_MNGR_STATE_CONNECTED == vfs_state)) {
+    if (!changing_state() && (VFS_MNGR_STATE_CONNECTED == vfs_state)) {
         vfs_state_next = VFS_MNGR_STATE_RECONNECTING;
     }
 
@@ -180,11 +179,10 @@ void vfs_mngr_init(bool enable)
     sync_assert_usb_thread();
     build_filesystem();
 
-    if(enable) {
+    if (enable) {
         vfs_state = VFS_MNGR_STATE_CONNECTED;
         vfs_state_next = VFS_MNGR_STATE_CONNECTED;
         USBD_MSC_MediaReady = 1;
-
     } else {
         vfs_state = VFS_MNGR_STATE_DISCONNECTED;
         vfs_state_next = VFS_MNGR_STATE_DISCONNECTED;
@@ -201,20 +199,20 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
     sync_lock();
 
     // Return immediately if the desired state has been reached
-    if(!changing_state()) {
+    if (!changing_state()) {
         sync_unlock();
         return;
     }
 
     change_state = ready_for_state_change();
 
-    if(time_usb_idle < MAX_EVENT_TIME_MS) {
+    if (time_usb_idle < MAX_EVENT_TIME_MS) {
         time_usb_idle += elapsed_ms;
     }
 
     sync_unlock();
 
-    if(!change_state) {
+    if (!change_state) {
         return;
     }
 
@@ -225,7 +223,7 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
     vfs_state_local_prev = vfs_state;
     vfs_state = vfs_state_next;
 
-    switch(vfs_state) {
+    switch (vfs_state) {
         case VFS_MNGR_STATE_RECONNECTING:
             // Transition back to the connected state
             vfs_state_next = VFS_MNGR_STATE_CONNECTED;
@@ -242,7 +240,7 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
     // Processing when leaving a state
     vfs_mngr_printf("    state %i->%i\r\n", vfs_state_local_prev, vfs_state_local);
 
-    switch(vfs_state_local_prev) {
+    switch (vfs_state_local_prev) {
         case VFS_MNGR_STATE_DISCONNECTED:
             // No action needed
             break;
@@ -254,7 +252,7 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
         case VFS_MNGR_STATE_CONNECTED:
 
             // Close ongoing transfer if there is one
-            if(file_transfer_state.transfer_state != TRASNFER_FINISHED) {
+            if (file_transfer_state.transfer_state != TRASNFER_FINISHED) {
                 vfs_mngr_printf("    transfer timeout\r\n");
                 file_transfer_state.transfer_timeout = true;
                 transfer_update_state(ERROR_SUCCESS);
@@ -266,7 +264,7 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
     }
 
     // Processing when entering a state
-    switch(vfs_state_local) {
+    switch (vfs_state_local) {
         case VFS_MNGR_STATE_DISCONNECTED:
             USBD_MSC_MediaReady = 0;
             break;
@@ -305,7 +303,7 @@ void usbd_msc_read_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
     sync_assert_usb_thread();
 
     // dont proceed if we're not ready
-    if(!USBD_MSC_MediaReady) {
+    if (!USBD_MSC_MediaReady) {
         return;
     }
 
@@ -318,7 +316,7 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
 {
     sync_assert_usb_thread();
 
-    if(!USBD_MSC_MediaReady) {
+    if (!USBD_MSC_MediaReady) {
         return;
     }
 
@@ -327,7 +325,7 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
     // transfer.
     time_usb_idle = 0;
 
-    if(TRASNFER_FINISHED == file_transfer_state.transfer_state) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         return;
     }
 
@@ -383,8 +381,8 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
     vfs_mngr_printf("vfs_manager file_change_handler(name=%*s, file=%p, change=%i)\r\n", 11, filename, file, change);
     vfs_user_file_change_handler(filename, change, file, new_file_data);
 
-    if(VFS_FILE_CHANGED == change) {
-        if(file == file_transfer_state.file_to_program) {
+    if (VFS_FILE_CHANGED == change) {
+        if (file == file_transfer_state.file_to_program) {
             stream_type_t stream;
             uint32_t size = vfs_file_get_size(new_file_data);
             vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
@@ -393,14 +391,14 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         }
     }
 
-    if(VFS_FILE_CREATED == change) {
+    if (VFS_FILE_CREATED == change) {
         stream_type_t stream;
 
-        if(STREAM_TYPE_NONE != stream_type_from_name(filename)) {
+        if (STREAM_TYPE_NONE != stream_type_from_name(filename)) {
             // Check for a know file extension to detect the current file being
             // transferred.  Ignore hidden files since MAC uses hidden files with
             // the same extension to keep track of transfer info in some cases.
-            if(!(VFS_FILE_ATTR_HIDDEN & vfs_file_get_attr(new_file_data))) {
+            if (!(VFS_FILE_ATTR_HIDDEN & vfs_file_get_attr(new_file_data))) {
                 stream = stream_type_from_name(filename);
                 uint32_t size = vfs_file_get_size(new_file_data);
                 vfs_sector_t sector = vfs_file_get_start_sector(new_file_data);
@@ -409,7 +407,7 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
         }
     }
 
-    if(VFS_FILE_DELETED == change) {
+    if (VFS_FILE_DELETED == change) {
         // Unused
     }
 }
@@ -423,36 +421,35 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
     // this is the key for starting a file write - we dont care what file types are sent
     //  just look for something unique (NVIC table, hex, srec, etc) until root dir is updated
-    if(!file_transfer_state.stream_started) {
+    if (!file_transfer_state.stream_started) {
         // look for file types we can program
         stream = stream_start_identify((uint8_t *)buf, VFS_SECTOR_SIZE * num_of_sectors);
 
-        if(STREAM_TYPE_NONE != stream) {
+        if (STREAM_TYPE_NONE != stream) {
             transfer_stream_open(stream, sector);
         }
     }
 
-    if(file_transfer_state.stream_started) {
+    if (file_transfer_state.stream_started) {
         // Ignore sectors coming before this file
-        if(sector < file_transfer_state.start_sector) {
+        if (sector < file_transfer_state.start_sector) {
             return;
         }
 
         // sectors must be in order
-        if(sector != file_transfer_state.file_next_sector) {
+        if (sector != file_transfer_state.file_next_sector) {
             vfs_mngr_printf("vfs_manager file_data_handler sector=%i\r\n", sector);
 
-            if(sector < file_transfer_state.file_next_sector) {
+            if (sector < file_transfer_state.file_next_sector) {
                 vfs_mngr_printf("    sector out of order! lowest ooo = %i\r\n",
                                 file_transfer_state.last_ooo_sector);
 
-                if(VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
+                if (VFS_INVALID_SECTOR == file_transfer_state.last_ooo_sector) {
                     file_transfer_state.last_ooo_sector = sector;
                 }
 
                 file_transfer_state.last_ooo_sector =
                     MIN(file_transfer_state.last_ooo_sector, sector);
-
             } else {
                 vfs_mngr_printf("    sector not part of file transfer\r\n");
             }
@@ -468,7 +465,7 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
         file_transfer_state.file_next_sector = sector + num_of_sectors;
 
         // If stream processing is done then discard the data
-        if(file_transfer_state.stream_finished) {
+        if (file_transfer_state.stream_finished) {
             vfs_mngr_printf("vfs_manager file_data_handler\r\n    sector=%i, size=%i\r\n", sector, size);
             vfs_mngr_printf("    discarding data - size transferred=0x%x, data=%x,%x,%x,%x,...\r\n",
                             file_transfer_state.size_transferred, buf[0], buf[1], buf[2], buf[3]);
@@ -485,8 +482,8 @@ static bool ready_for_state_change(void)
     uint32_t timeout_ms = INVALID_TIMEOUT_MS;
     util_assert(vfs_state != vfs_state_next);
 
-    if(VFS_MNGR_STATE_CONNECTED == vfs_state) {
-        switch(file_transfer_state.transfer_state) {
+    if (VFS_MNGR_STATE_CONNECTED == vfs_state) {
+        switch (file_transfer_state.transfer_state) {
             case TRANSFER_NOT_STARTED:
             case TRASNFER_FINISHED:
                 timeout_ms = DISCONNECT_DELAY_MS;
@@ -505,21 +502,18 @@ static bool ready_for_state_change(void)
                 timeout_ms = DISCONNECT_DELAY_MS;
                 break;
         }
-
-    } else if((VFS_MNGR_STATE_DISCONNECTED == vfs_state) &&
-              (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
+    } else if ((VFS_MNGR_STATE_DISCONNECTED == vfs_state) &&
+               (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
         timeout_ms = CONNECT_DELAY_MS;
-
-    } else if((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
-              (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
+    } else if ((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
+               (VFS_MNGR_STATE_CONNECTED == vfs_state_next)) {
         timeout_ms = RECONNECT_DELAY_MS;
-
-    } else if((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
-              (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next)) {
+    } else if ((VFS_MNGR_STATE_RECONNECTING == vfs_state) &&
+               (VFS_MNGR_STATE_DISCONNECTED == vfs_state_next)) {
         timeout_ms = 0;
     }
 
-    if(INVALID_TIMEOUT_MS == timeout_ms) {
+    if (INVALID_TIMEOUT_MS == timeout_ms) {
         util_assert(0);
         timeout_ms = 0;
     }
@@ -532,61 +526,61 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
 {
     vfs_mngr_printf("vfs_manager transfer_update_file_info(file=%p, start_sector=%i, size=%i)\r\n", file, start_sector, size);
 
-    if(TRASNFER_FINISHED == file_transfer_state.transfer_state) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         util_assert(0);
         return;
     }
 
     // Initialize the directory entry if it has not been set
-    if(VFS_FILE_INVALID == file_transfer_state.file_to_program) {
+    if (VFS_FILE_INVALID == file_transfer_state.file_to_program) {
         file_transfer_state.file_to_program = file;
 
-        if(file != VFS_FILE_INVALID) {
+        if (file != VFS_FILE_INVALID) {
             vfs_mngr_printf("    file_to_program=%p\r\n", file);
         }
     }
 
     // Initialize the starting sector if it has not been set
-    if(VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
+    if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
 
-        if(start_sector != VFS_INVALID_SECTOR) {
+        if (start_sector != VFS_INVALID_SECTOR) {
             vfs_mngr_printf("    start_sector=%i\r\n", start_sector);
         }
     }
 
     // Initialize the stream if it has not been set
-    if(STREAM_TYPE_NONE == file_transfer_state.stream) {
+    if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
 
-        if(stream != STREAM_TYPE_NONE) {
+        if (stream != STREAM_TYPE_NONE) {
             vfs_mngr_printf("    stream=%i\r\n", stream);
         }
     }
 
     // Check - File size must be the same or bigger
-    if(size < file_transfer_state.file_size) {
+    if (size < file_transfer_state.file_size) {
         vfs_mngr_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
 
     // Check - Starting sector must be the same  - this is optional for file info since it may not be present initially
-    if((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
+    if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
         vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
 
     // Check - stream must be the same
-    if(stream != file_transfer_state.stream) {
+    if (stream != file_transfer_state.stream) {
         vfs_mngr_printf("    error: changed types during transfer from %i to %i\r\n", stream, file_transfer_state.stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
 
     // Update values - Size is the only value that can change and it can only increase.
-    if(size > file_transfer_state.file_size) {
+    if (size > file_transfer_state.file_size) {
         file_transfer_state.file_size = size;
         vfs_mngr_printf("    updated size=%i\r\n", size);
     }
@@ -604,32 +598,32 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
                     stream, start_sector);
 
     // Initialize the starting sector if it has not been set
-    if(VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
+    if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
         file_transfer_state.start_sector = start_sector;
 
-        if(start_sector != VFS_INVALID_SECTOR) {
+        if (start_sector != VFS_INVALID_SECTOR) {
             vfs_mngr_printf("    start_sector=%i\r\n", start_sector);
         }
     }
 
     // Initialize the stream if it has not been set
-    if(STREAM_TYPE_NONE == file_transfer_state.stream) {
+    if (STREAM_TYPE_NONE == file_transfer_state.stream) {
         file_transfer_state.stream = stream;
 
-        if(stream != STREAM_TYPE_NONE) {
+        if (stream != STREAM_TYPE_NONE) {
             vfs_mngr_printf("    stream=%i\r\n", stream);
         }
     }
 
     // Check - Starting sector must be the same
-    if(start_sector != file_transfer_state.start_sector) {
+    if (start_sector != file_transfer_state.start_sector) {
         vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
 
     // Check - stream must be the same
-    if(stream != file_transfer_state.stream) {
+    if (stream != file_transfer_state.stream) {
         vfs_mngr_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
@@ -639,7 +633,7 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
     status = stream_open(stream);
     vfs_mngr_printf("    stream_open stream=%i ret %i\r\n", stream, status);
 
-    if(ERROR_SUCCESS == status) {
+    if (ERROR_SUCCESS == status) {
         file_transfer_state.file_next_sector = start_sector;
         file_transfer_state.stream_open = true;
         file_transfer_state.stream_started = true;
@@ -656,7 +650,7 @@ static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t 
     vfs_mngr_printf("    size processed=0x%x, data=%x,%x,%x,%x,...\r\n",
                     file_transfer_state.size_processed, data[0], data[1], data[2], data[3]);
 
-    if(file_transfer_state.stream_finished) {
+    if (file_transfer_state.stream_finished) {
         util_assert(0);
         return;
     }
@@ -666,7 +660,7 @@ static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t 
     status = stream_write((uint8_t *)data, size);
     vfs_mngr_printf("    stream_write ret=%i\r\n", status);
 
-    if(ERROR_SUCCESS_DONE == status) {
+    if (ERROR_SUCCESS_DONE == status) {
         // Override status so ERROR_SUCCESS_DONE
         // does not get passed into transfer_update_state
         status = stream_close();
@@ -674,11 +668,9 @@ static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t 
         file_transfer_state.stream_open = false;
         file_transfer_state.stream_finished = true;
         file_transfer_state.stream_optional_finish = true;
-
-    } else if(ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
+    } else if (ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
         status = ERROR_SUCCESS;
         file_transfer_state.stream_optional_finish = true;
-
     } else {
         file_transfer_state.stream_optional_finish = false;
     }
@@ -699,7 +691,7 @@ static void transfer_update_state(error_t status)
     util_assert((status != ERROR_SUCCESS_DONE) &&
                 (status != ERROR_SUCCESS_DONE_OR_CONTINUE));
 
-    if(TRASNFER_FINISHED == file_transfer_state.transfer_state) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         util_assert(0);
         return;
     }
@@ -727,12 +719,12 @@ static void transfer_update_state(error_t status)
                                 file_transfer_state.file_info_optional_finish;
     out_of_order_sector = false;
 
-    if(file_transfer_state.last_ooo_sector != VFS_INVALID_SECTOR) {
+    if (file_transfer_state.last_ooo_sector != VFS_INVALID_SECTOR) {
         util_assert(file_transfer_state.start_sector != VFS_INVALID_SECTOR);
         uint32_t sector_offset = (file_transfer_state.last_ooo_sector -
                                   file_transfer_state.start_sector) * VFS_SECTOR_SIZE;
 
-        if(sector_offset < file_transfer_state.size_processed) {
+        if (sector_offset < file_transfer_state.size_processed) {
             // The out of order sector was within the range of data already
             // processed.
             out_of_order_sector = true;
@@ -740,36 +732,29 @@ static void transfer_update_state(error_t status)
     }
 
     // Set the transfer state and set the status if necessary
-    if(local_status != ERROR_SUCCESS) {
+    if (local_status != ERROR_SUCCESS) {
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
-
-    } else if(transfer_timeout) {
-        if(out_of_order_sector) {
+    } else if (transfer_timeout) {
+        if (out_of_order_sector) {
             local_status = ERROR_OOO_SECTOR;
-
-        } else if(!transfer_started) {
+        } else if (!transfer_started) {
             local_status = ERROR_SUCCESS;
-
-        } else if(transfer_can_be_finished) {
+        } else if (transfer_can_be_finished) {
             local_status = ERROR_SUCCESS;
-
         } else {
             local_status = ERROR_TRANSFER_TIMEOUT;
         }
 
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
-
-    } else if(transfer_must_be_finished) {
+    } else if (transfer_must_be_finished) {
         file_transfer_state.transfer_state = TRASNFER_FINISHED;
-
-    } else if(transfer_can_be_finished) {
+    } else if (transfer_can_be_finished) {
         file_transfer_state.transfer_state = TRANSFER_CAN_BE_FINISHED;
-
-    } else if(transfer_started) {
+    } else if (transfer_started) {
         file_transfer_state.transfer_state = TRANSFER_IN_PROGRESS;
     }
 
-    if(TRASNFER_FINISHED == file_transfer_state.transfer_state) {
+    if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         vfs_mngr_printf("vfs_manager transfer_update_state(status=%i)\r\n", status);
         vfs_mngr_printf("    file=%p, start_sect= %i, size=%i\r\n",
                         file_transfer_state.file_to_program, file_transfer_state.start_sector,
@@ -779,13 +764,13 @@ static void transfer_update_state(error_t status)
                         file_transfer_state.file_info_optional_finish, transfer_timeout);
 
         // Close the file stream if it is open
-        if(file_transfer_state.stream_open) {
+        if (file_transfer_state.stream_open) {
             error_t close_status;
             close_status = stream_close();
             vfs_mngr_printf("    stream closed ret=%i\r\n", close_status);
             file_transfer_state.stream_open = false;
 
-            if(ERROR_SUCCESS == local_status) {
+            if (ERROR_SUCCESS == local_status) {
                 local_status = close_status;
             }
         }
@@ -797,7 +782,7 @@ static void transfer_update_state(error_t status)
 
     // If this state change is not from aborting a transfer
     // due to a remount then trigger a remount
-    if(!transfer_timeout) {
+    if (!transfer_timeout) {
         vfs_mngr_fs_remount();
     }
 }

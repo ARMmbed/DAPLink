@@ -1,6 +1,6 @@
 /**
  * @file    main.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -29,8 +29,8 @@ extern "C" {
 #endif
 
 /**
- @enum main_usb_busy_t
- @brief Defines the filtered activity of the USB connection
+ *  @enum main_usb_busy_t
+ *  @brief Defines the filtered activity of the USB connection
  */
 typedef enum {
     MAIN_USB_IDLE,   /*!< MAIN_USB_IDLE value means no bus activity */
@@ -38,8 +38,8 @@ typedef enum {
 } main_usb_busy_t;
 
 /**
- @enum main_usb_connect_t
- @brief State the USB connection can be in
+ *  @enum main_usb_connect_t
+ *  @brief State the USB connection can be in
  */
 typedef enum {
     MAIN_USB_DISCONNECTED,       /*!< MAIN_USB_DISCONNECTED state for a USB */
@@ -50,8 +50,8 @@ typedef enum {
 } main_usb_connect_t;
 
 /**
- @enum main_led_state_t
- @brief Statest the USB connection can be in
+ *  @enum main_led_state_t
+ *  @brief Statest the USB connection can be in
  */
 typedef enum {
     MAIN_LED_OFF = 0,
@@ -60,31 +60,31 @@ typedef enum {
 } main_led_state_t;
 
 /**
- Allows other parts of the program to request the device to eject physical media
- @param  none
- @return none
-*/
+ *  Allows other parts of the program to request the device to eject physical media
+ *  @param  none
+ *  @return none
+ */
 void main_msc_disconnect_event(void);
 
 /**
- Delay the disconnect if there is one in progress
- @param  none
- @return none
-*/
+ *  Delay the disconnect if there is one in progress
+ *  @param  none
+ *  @return none
+ */
 void main_msc_delay_disconnect_event(void);
 
 /**
- Allows other parts of the program to request the device to immediately eject physical media
- @param  none
- @return none
-*/
+ *  Allows other parts of the program to request the device to immediately eject physical media
+ *  @param  none
+ *  @return none
+ */
 void main_force_msc_disconnect_event(void);
 
 /**
- Allows other parts of the program to request a LED to toggle state
- @param  permanent decides if the led should remain on or flash
- @return none
-*/
+ *  Allows other parts of the program to request a LED to toggle state
+ *  @param  permanent decides if the led should remain on or flash
+ *  @return none
+ */
 void main_blink_msc_led(main_led_state_t permanent);
 
 #ifdef __cplusplus

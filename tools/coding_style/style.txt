@@ -1,0 +1,34 @@
+# coding style
+--style=k&r
+
+# spaces in place of tabs
+-s4
+
+#indent switch statements
+-S
+
+#pad statement blocks
+-f
+
+#pad operators in statements and paren in
+-p
+-U
+-H
+
+#add brackets to single line logic
+-j
+
+#pointers on the name
+-k3
+-W3
+
+#search folders recursivly for source
+-r
+
+#preserve original files date and time
+-Z
+
+#misc
+--delete-empty-lines
+--close-templates
+--lineend=linux

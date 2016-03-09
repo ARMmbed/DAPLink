@@ -254,18 +254,17 @@ static void write_fat(file_allocation_table_t *fat, uint32_t idx, uint16_t val)
     high_idx = idx * 3 / 2 + 1;
 
     // Assert that this is still within the fat table
-    if(high_idx >= ELEMENTS_IN_ARRAY(fat->f)) {
+    if (high_idx >= ELEMENTS_IN_ARRAY(fat->f)) {
         util_assert(0);
         return;
     }
 
-    if(idx & 1) {
+    if (idx & 1) {
         // Odd - lower byte shared
         low_data = (val << 4) & 0xF0;
         high_data = (val >> 4) & 0xFF;
         fat->f[low_idx] = fat->f[low_idx] | low_data;
         fat->f[high_idx] = high_data;
-
     } else {
         // Even - upper byte shared
         low_data = (val >> 0) & 0xFF;
@@ -301,7 +300,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     virtual_media_idx = MEDIA_IDX_COUNT;
     data_start = 0;
 
-    for(i = 0; i < ELEMENTS_IN_ARRAY(virtual_media_tmpl); i++) {
+    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media_tmpl); i++) {
         data_start += virtual_media[i].length;
     }
 
@@ -337,10 +336,10 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     // Write the cluster chain to the fat table
     first_cluster = 0;
 
-    if(len > 0) {
+    if (len > 0) {
         first_cluster = fat_idx;
 
-        for(i = 0; i < clusters - 1; i++) {
+        for (i = 0; i < clusters - 1; i++) {
             write_fat(&fat, fat_idx, fat_idx + 1);
             fat_idx++;
         }
@@ -350,7 +349,7 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     }
 
     // Update directory entry
-    if(dir_idx >= ELEMENTS_IN_ARRAY(dir.f)) {
+    if (dir_idx >= ELEMENTS_IN_ARRAY(dir.f)) {
         util_assert(0);
         return 0;
     }
@@ -364,7 +363,7 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     de->first_cluster_low_16 = (first_cluster >> 0) & 0xFFFF;
 
     // Update virtual media
-    if(virtual_media_idx >= ELEMENTS_IN_ARRAY(virtual_media)) {
+    if (virtual_media_idx >= ELEMENTS_IN_ARRAY(virtual_media)) {
         util_assert(0);
         return 0;
     }
@@ -372,11 +371,11 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     virtual_media[virtual_media_idx].read_cb = read_zero;
     virtual_media[virtual_media_idx].write_cb = write_none;
 
-    if(0 != read_cb) {
+    if (0 != read_cb) {
         virtual_media[virtual_media_idx].read_cb = read_cb;
     }
 
-    if(0 != write_cb) {
+    if (0 != write_cb) {
         virtual_media[virtual_media_idx].write_cb = write_cb;
     }
 
@@ -396,7 +395,7 @@ vfs_sector_t vfs_file_get_start_sector(vfs_file_t file)
 {
     FatDirectoryEntry_t *de = file;
 
-    if(vfs_file_get_size(file) == 0) {
+    if (vfs_file_get_size(file) == 0) {
         return VFS_INVALID_SECTOR;
     }
 
@@ -428,13 +427,13 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
     memset(buf, 0, num_sectors * VFS_SECTOR_SIZE);
     current_sector = 0;
 
-    for(i = 0; i < ELEMENTS_IN_ARRAY(virtual_media); i++) {
+    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media); i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
         uint32_t vm_start = current_sector;
         uint32_t vm_end = current_sector + vm_sectors;
 
         // Data can be used in this sector
-        if((requested_sector >= vm_start) && (requested_sector < vm_end)) {
+        if ((requested_sector >= vm_start) && (requested_sector < vm_end)) {
             uint32_t sector_offset;
             uint32_t sectors_to_write = vm_end - requested_sector;
             sectors_to_write = MIN(sectors_to_write, num_sectors);
@@ -446,7 +445,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
         }
 
         // If there is no more data to be read then break
-        if(num_sectors == 0) {
+        if (num_sectors == 0) {
             break;
         }
 
@@ -461,13 +460,13 @@ void vfs_write(uint32_t requested_sector, const uint8_t *buf, uint32_t num_secto
     uint32_t current_sector;
     current_sector = 0;
 
-    for(i = 0; i < virtual_media_idx; i++) {
+    for (i = 0; i < virtual_media_idx; i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
         uint32_t vm_start = current_sector;
         uint32_t vm_end = current_sector + vm_sectors;
 
         // Data can be used in this sector
-        if((requested_sector >= vm_start) && (requested_sector < vm_end)) {
+        if ((requested_sector >= vm_start) && (requested_sector < vm_end)) {
             uint32_t sector_offset;
             uint32_t sectors_to_read = vm_end - requested_sector;
             sectors_to_read = MIN(sectors_to_read, num_sectors);
@@ -479,7 +478,7 @@ void vfs_write(uint32_t requested_sector, const uint8_t *buf, uint32_t num_secto
         }
 
         // If there is no more data to be read then break
-        if(num_sectors == 0) {
+        if (num_sectors == 0) {
             break;
         }
 
@@ -505,7 +504,7 @@ static uint32_t read_mbr(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
     uint32_t read_size = sizeof(mbr_t);
     COMPILER_ASSERT(sizeof(mbr_t) <= VFS_SECTOR_SIZE);
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         // Don't worry about reading other sectors
         return 0;
     }
@@ -521,7 +520,7 @@ static uint32_t read_fat(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
     uint32_t read_size = sizeof(file_allocation_table_t);
     COMPILER_ASSERT(sizeof(file_allocation_table_t) <= VFS_SECTOR_SIZE);
 
-    if(sector_offset != 0) {
+    if (sector_offset != 0) {
         // Don't worry about reading other sectors
         return 0;
     }
@@ -536,7 +535,7 @@ static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
 {
     uint32_t start_index;
 
-    if((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir)) {
+    if ((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir)) {
         // Trying to read too much of the root directory
         util_assert(0);
         return 0;
@@ -555,7 +554,7 @@ static void write_dir(uint32_t sector_offset, const uint8_t *data, uint32_t num_
     uint32_t num_entries;
     uint32_t i;
 
-    if((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir)) {
+    if ((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir)) {
         // Trying to write too much of the root directory
         util_assert(0);
         return;
@@ -568,10 +567,10 @@ static void write_dir(uint32_t sector_offset, const uint8_t *data, uint32_t num_
     // If this is the first sector start at index 1 to get past drive name
     i = 0 == sector_offset ? 1 : 0;
 
-    for(; i < num_entries; i++) {
+    for (; i < num_entries; i++) {
         bool same_name;
 
-        if(0 == memcmp(&old_entry[i], &new_entry[i], sizeof(FatDirectoryEntry_t))) {
+        if (0 == memcmp(&old_entry[i], &new_entry[i], sizeof(FatDirectoryEntry_t))) {
             continue;
         }
 
@@ -581,13 +580,13 @@ static void write_dir(uint32_t sector_offset, const uint8_t *data, uint32_t num_
         file_change_cb(new_entry[i].filename, VFS_FILE_CHANGED, (vfs_file_t)&old_entry[i], (vfs_file_t)&new_entry[i]);
 
         // Deleted
-        if(0xe5 == (uint8_t)new_entry[i].filename[0]) {
+        if (0xe5 == (uint8_t)new_entry[i].filename[0]) {
             file_change_cb(old_entry[i].filename, VFS_FILE_DELETED, (vfs_file_t)&old_entry[i], (vfs_file_t)&new_entry[i]);
             continue;
         }
 
         // Created
-        if(!same_name && filename_valid(new_entry[i].filename)) {
+        if (!same_name && filename_valid(new_entry[i].filename)) {
             file_change_cb(new_entry[i].filename, VFS_FILE_CREATED, (vfs_file_t)&old_entry[i], (vfs_file_t)&new_entry[i]);
             continue;
         }
@@ -623,15 +622,15 @@ static bool filename_valid(const vfs_filename_t  filename)
     uint32_t i;
 
     // Check for invalid starting characters
-    for(i = 0; i < sizeof(invalid_starting_chars); i++) {
-        if(invalid_starting_chars[i] == filename[0]) {
+    for (i = 0; i < sizeof(invalid_starting_chars); i++) {
+        if (invalid_starting_chars[i] == filename[0]) {
             return false;
         }
     }
 
     // Make sure all the characters are valid
-    for(i = 0; i < sizeof(filename); i++) {
-        if(!filename_character_valid(filename[i])) {
+    for (i = 0; i < sizeof(filename); i++) {
+        if (!filename_character_valid(filename[i])) {
             return false;
         }
     }
@@ -646,18 +645,18 @@ static bool filename_character_valid(char character)
     uint32_t i;
 
     // Lower case characters are not allowed
-    if((character >= 'a') && (character <= 'z')) {
+    if ((character >= 'a') && (character <= 'z')) {
         return false;
     }
 
     // Values less than 0x20 are not allowed except 0x5
-    if((character < 0x20) && (character != 0x5)) {
+    if ((character < 0x20) && (character != 0x5)) {
         return false;
     }
 
     // Check for special characters that are not allowed
-    for(i = 0; i < sizeof(invalid_chars); i++) {
-        if(invalid_chars[i] == character) {
+    for (i = 0; i < sizeof(invalid_chars); i++) {
+        if (invalid_chars[i] == character) {
             return false;
         }
     }

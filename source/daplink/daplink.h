@@ -24,7 +24,7 @@
 
 #include "stdbool.h"
 #include "stdint.h"
- 
+
 #include "daplink_addr.h"
 #include "compiler.h"
 

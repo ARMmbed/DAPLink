@@ -80,11 +80,11 @@ __task void timer_task_30mS(void)
     uint8_t i = 0;
     os_itv_set(3); // 30mS
 
-    while(1) {
+    while (1) {
         os_itv_wait();
         os_evt_set(FLAGS_MAIN_30MS, main_task_id);
 
-        if(!(i++ % 3)) {
+        if (!(i++ % 3)) {
             os_evt_set(FLAGS_MAIN_90MS, main_task_id);
         }
     }
@@ -108,7 +108,7 @@ void HardFault_Handler()
     util_assert(0);
     NVIC_SystemReset();
 
-    while(1);  // Wait for reset
+    while (1); // Wait for reset
 }
 
 __task void main_task(void)
@@ -120,7 +120,7 @@ __task void main_task(void)
     // USB
     uint32_t usb_state_count;
 
-    if(config_ram_get_initial_hold_in_bl()) {
+    if (config_ram_get_initial_hold_in_bl()) {
         // Delay for 1 second for VMs
         os_dly_wait(100);
     }
@@ -144,7 +144,7 @@ __task void main_task(void)
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_task, TIMER_TASK_STACK);
 
-    while(1) {
+    while (1) {
         // need to create a new event for programming failure
         os_evt_wait_or(FLAGS_MAIN_90MS          // 90mS tick
                        | FLAGS_MAIN_30MS        // 30mS tick
@@ -153,17 +153,17 @@ __task void main_task(void)
         // Find out what event happened
         flags = os_evt_get();
 
-        if(flags & FLAGS_MAIN_PROC_USB) {
+        if (flags & FLAGS_MAIN_PROC_USB) {
             USBD_Handler();
         }
 
-        if(flags & FLAGS_MAIN_90MS) {
+        if (flags & FLAGS_MAIN_90MS) {
             vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 
             // Update USB busy status
-            switch(usb_busy) {
+            switch (usb_busy) {
                 case MAIN_USB_ACTIVE:
-                    if(DECZERO(usb_busy_count) == 0) {
+                    if (DECZERO(usb_busy_count) == 0) {
                         usb_busy = MAIN_USB_IDLE;
                     }
 
@@ -175,11 +175,11 @@ __task void main_task(void)
             }
 
             // Update USB connect status
-            switch(usb_state) {
+            switch (usb_state) {
                 case MAIN_USB_DISCONNECTING:
 
                     // Wait until USB is idle before disconnecting
-                    if(usb_busy == MAIN_USB_IDLE && (DECZERO(usb_state_count) == 0)) {
+                    if (usb_busy == MAIN_USB_IDLE && (DECZERO(usb_state_count) == 0)) {
                         usbd_connect(0);
                         usb_state = MAIN_USB_DISCONNECTED;
                     }
@@ -189,7 +189,7 @@ __task void main_task(void)
                 case MAIN_USB_CONNECTING:
 
                     // Wait before connecting
-                    if(DECZERO(usb_state_count) == 0) {
+                    if (DECZERO(usb_state_count) == 0) {
                         usbd_connect(1);
                         usb_state = MAIN_USB_CHECK_CONNECTED;
                     }
@@ -197,7 +197,7 @@ __task void main_task(void)
                     break;
 
                 case MAIN_USB_CHECK_CONNECTED:
-                    if(usbd_configured()) {
+                    if (usbd_configured()) {
                         usb_state = MAIN_USB_CONNECTED;
                     }
 
@@ -214,8 +214,8 @@ __task void main_task(void)
         }
 
         // 30mS tick used for flashing LED when USB is busy
-        if(flags & FLAGS_MAIN_30MS) {
-            if(msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
+        if (flags & FLAGS_MAIN_30MS) {
+            if (msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash MSD LED ONCE
                 msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
                 msc_led_usb_activity = ((GPIO_LED_ON == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) ? 0 : 1;
@@ -235,7 +235,7 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if(gpio_get_sw_reset() && validate_bin_nvic((uint8_t *)target_device.flash_start) && !config_ram_get_initial_hold_in_bl()) {
+    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t *)target_device.flash_start) && !config_ram_get_initial_hold_in_bl()) {
         // change to the new vector table
         SCB->VTOR = target_device.flash_start;
         // modify stack pointer and start app

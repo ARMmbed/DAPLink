@@ -97,7 +97,7 @@ int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
  */
 int32_t USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding)
 {
-    if(serial_get_configuration(&UART_Config)) {
+    if (serial_get_configuration(&UART_Config)) {
         line_coding->dwDTERate   = UART_Config.Baudrate;
         line_coding->bDataBits   = UART_Config.DataBits;
         line_coding->bParityType = UART_Config.Parity;
@@ -114,17 +114,15 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
     uint32_t end_break_time;
 
     // reset and send the unique id over CDC
-    if(dur != 0) {
+    if (dur != 0) {
         start_break_time = os_time_get();
         target_set_state(RESET_HOLD);
-
     } else {
         end_break_time = os_time_get();
 
         // long reset -> send uID over serial (300 -> break > 3s)
-        if((end_break_time - start_break_time) >= (300)) {
+        if ((end_break_time - start_break_time) >= (300)) {
             main_reset_target(1);
-
         } else {
             main_reset_target(0);
         }
@@ -138,7 +136,7 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
  *  The function sets control line state on the port used as the
  *  Virtual COM Port.
  *
- *  @param [in] ctrl_bmp Control line settings 
+ *  @param [in] ctrl_bmp Control line settings
  *      bitmap (0. bit - DTR state, 1. bit - RTS state).
  *  @return 0 Function failed.
  *  @return 1 Function succeeded.

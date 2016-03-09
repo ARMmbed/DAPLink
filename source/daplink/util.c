@@ -20,7 +20,7 @@
  */
 
 #include "string.h"
- 
+
 #include "util.h"
 #include "settings.h"
 #include "vfs_manager.h"
@@ -62,17 +62,17 @@ uint32_t util_write_uint32(char *str, uint32_t value)
     digits = 0;
     temp_val = value;
 
-    while(temp_val > 0) {
+    while (temp_val > 0) {
         temp_val /= 10;
         digits += 1;
     }
 
-    if(digits <= 0) {
+    if (digits <= 0) {
         digits = 1;
     }
 
     // Write the number
-    for(i = 0; i < digits; i++) {
+    for (i = 0; i < digits; i++) {
         str[digits - i - 1] = '0' + (value % 10);
         value /= 10;
     }
@@ -86,7 +86,7 @@ uint32_t util_write_uint32_zp(char *str, uint32_t value, uint16_t total_size)
     // Get the size of value
     size = util_write_uint32(str, value);
 
-    if(size >= total_size) {
+    if (size >= total_size) {
         return size;
     }
 
@@ -101,7 +101,7 @@ uint32_t util_write_string(char *str, const char *data)
 {
     uint32_t pos = 0;
 
-    while(0 != data[pos]) {
+    while (0 != data[pos]) {
         str[pos] = data[pos];
         pos++;
     }
@@ -129,7 +129,7 @@ void _util_assert(bool expression, const char *filename, uint16_t line)
     bool assert_set;
     cortex_int_state_t int_state;
 
-    if(expression) {
+    if (expression) {
         return;
     }
 
@@ -137,7 +137,7 @@ void _util_assert(bool expression, const char *filename, uint16_t line)
     // Only write the assert if there is not already one
     assert_set = config_ram_get_assert(0, 0, 0, 0);
 
-    if(!assert_set) {
+    if (!assert_set) {
         config_ram_set_assert(filename, line);
     }
 
@@ -145,7 +145,7 @@ void _util_assert(bool expression, const char *filename, uint16_t line)
 
     // Start a remount if this is the first assert
     // Do not call vfs_mngr_fs_remount from an ISR!
-    if(!assert_set && !cortex_in_isr()) {
+    if (!assert_set && !cortex_in_isr()) {
         vfs_mngr_fs_remount();
     }
 }

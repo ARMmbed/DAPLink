@@ -39,17 +39,17 @@ uint8_t validate_bin_nvic(const uint8_t *buf)
     // test the initial SP value
     memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
 
-    if(0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
+    if (0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
         return 0;
     }
 
     // Reset_Handler
     // NMI_Handler
     // HardFault_Handler
-    for(; i <= 12; i += 4) {
+    for (; i <= 12; i += 4) {
         memcpy(&nvic_val, buf + i, sizeof(nvic_val));
 
-        if(0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
+        if (0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
             return 0;
         }
     }
