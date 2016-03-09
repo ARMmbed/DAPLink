@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    validation.c
+ * @brief   Implementation of validation.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -32,20 +37,23 @@ uint8_t validate_bin_nvic(const uint8_t *buf)
     //  12 HardFault_Handler(FLASH address)
     uint32_t i = 4, nvic_val = 0;
     // test the initial SP value
-    memcpy(&nvic_val, buf+0, sizeof(nvic_val));
-    if (0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
+    memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
+
+    if(0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
         return 0;
     }
+
     // Reset_Handler
     // NMI_Handler
     // HardFault_Handler
-    for ( ; i <=12; i+=4) {
-        memcpy(&nvic_val, buf+i, sizeof(nvic_val));
-        if (0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
+    for(; i <= 12; i += 4) {
+        memcpy(&nvic_val, buf + i, sizeof(nvic_val));
+
+        if(0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
             return 0;
         }
     }
-    
+
     return 1;
 }
 

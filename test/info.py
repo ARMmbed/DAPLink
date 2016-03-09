@@ -34,7 +34,7 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_efm32gg_stk_if': 0x2015,
     'sam3u2c_nrf51dk_if': 0x1100,
     'k20dx_frdmk20dx_if': 0x0230,
-    'k20dx_frdmk24f_if': 0x0280,
+    'k20dx_frdmkw24f_if': 0x0280,
     'k20dx_frdmkl02z_if': 0x0250,
     'k20dx_frdmkl05z_if': 0x0210,
     'k20dx_frdmkl25z_if': 0x0200,

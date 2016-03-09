@@ -1,20 +1,26 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2015-2015 ARM Limited
+/**
+ * @file    settings_rom.c
+ * @brief   Implementation of settings.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
-#include <string.h>
+#include "string.h"
+ 
 #include "settings.h"
 #include "target_config.h"
 #include "compiler.h"
@@ -30,7 +36,7 @@
 // -Only add new members to end end of this structure
 // -Do not change the order of members in this structure
 // -Structure must remain packed so no padding bytes are added
-typedef struct __attribute__ ((__packed__)) cfg_setting {
+typedef struct __attribute__((__packed__)) cfg_setting {
     uint32_t key;               // Magic key to indicate a valid record
     uint16_t size;              // Size of cfg_setting_t
 
@@ -48,7 +54,7 @@ COMPILER_ASSERT(sizeof(cfg_setting_t) == 8);
 // Sector buffer must be as big or bigger than settings
 COMPILER_ASSERT(sizeof(cfg_setting_t) < SECTOR_BUFFER_SIZE);
 // Sector buffer must be a multiple of 4 bytes at least.
-// ProgramPage for some interfaces, like the k20dx, require that 
+// ProgramPage for some interfaces, like the k20dx, require that
 // the data is a multiple of 4 bytes, otherwise programming will
 // fail.  Assert 8 byte alignement just to be safe.
 COMPILER_ASSERT(SECTOR_BUFFER_SIZE % 8 == 0);
@@ -59,26 +65,25 @@ static volatile const cfg_setting_t config_rom __attribute__((section("cfgrom"),
 static cfg_setting_t config_rom_copy;
 
 // Configuration defaults in flash
-static const cfg_setting_t config_default =
-{
+static const cfg_setting_t config_default = {
     .auto_rst = 0,
     .automation_allowed = 0,
 };
 
 // Buffer for data to flash
-static uint32_t write_buffer[SECTOR_BUFFER_SIZE/4];
+static uint32_t write_buffer[SECTOR_BUFFER_SIZE / 4];
 
 // Check if the configuration in flash needs to be updated
 static bool config_needs_update()
 {
     // Update if the key is invalid
-    if (CFG_KEY != config_rom.key) {
+    if(CFG_KEY != config_rom.key) {
         return true;
     }
 
     // Update if the config key is valid but
     // has a smaller size.
-    if (config_rom.size < sizeof(config_rom)) {
+    if(config_rom.size < sizeof(config_rom)) {
         return true;
     }
 
@@ -88,17 +93,16 @@ static bool config_needs_update()
 }
 
 // Reprogram the new settings if flash writing is allowed
-static void program_cfg(cfg_setting_t* new_cfg)
+static void program_cfg(cfg_setting_t *new_cfg)
 {
     uint32_t status;
     uint32_t addr;
     cortex_int_state_t state;
-
     addr = (uint32_t)&config_rom;
-
     state = cortex_int_get_and_disable();
     status = EraseSector(addr);
     cortex_int_restore(state);
+
     if(status != 0) {
         return;
     }
@@ -108,22 +112,22 @@ static void program_cfg(cfg_setting_t* new_cfg)
     state = cortex_int_get_and_disable();
     status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
     cortex_int_restore(state);
-    if (0 != status) {
+
+    if(0 != status) {
         return;
     }
 }
 
 void config_rom_init()
 {
-    Init(0,0,0);
-
+    Init(0, 0, 0);
     // Fill in the ram copy with the defaults
     memcpy(&config_rom_copy, &config_default, sizeof(config_rom_copy));
 
     // Read settings from flash if the key is valid
-    if (CFG_KEY == config_rom.key) {
+    if(CFG_KEY == config_rom.key) {
         uint32_t size = MIN(config_rom.size, sizeof(config_rom));
-        memcpy(&config_rom_copy, (void*)&config_rom, size);
+        memcpy(&config_rom_copy, (void *)&config_rom, size);
     }
 
     // Fill in special values
@@ -132,7 +136,7 @@ void config_rom_init()
 
     // Write settings back to flash if they are out of date
     // Note - program_cfg only programs data in bootloader mode
-    if (config_needs_update()) {
+    if(config_needs_update()) {
         // Program with defaults if none are set
         program_cfg(&config_rom_copy);
     }
