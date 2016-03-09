@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    lpc43xx_cgu.h
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -86,117 +91,117 @@ extern "C"
  * @brief	CGU clock source enumerate definition
  */
 typedef enum {
-	/* Clock Source */
-	CGU_CLKSRC_32KHZ_OSC = 0,					/**< 32KHz oscillator clock source 	*/
-	CGU_CLKSRC_IRC,								/**< IRC 12 Mhz clock source 		*/
-	CGU_CLKSRC_ENET_RX_CLK,						/**< Ethernet receive clock source 	*/
-	CGU_CLKSRC_ENET_TX_CLK,						/**< Ethernet transmit clock source */
-	CGU_CLKSRC_GP_CLKIN,						/**< General purpose clock source 	*/
-	CGU_CLKSRC_TCK,								/**< TCK clock source 				*/
-	CGU_CLKSRC_XTAL_OSC,						/**< Crystal oscillator clock source*/
-	CGU_CLKSRC_PLL0,							/**< PLL0 (USB0) clock source		*/
-	CGU_CLKSRC_PLL0_AUDIO,
-	CGU_CLKSRC_PLL1,							/**< PLL1 clock source				*/
-	CGU_CLKSRC_IDIVA = CGU_CLKSRC_PLL1 + 3,		/**< IDIVA clock source				*/
-	CGU_CLKSRC_IDIVB,							/**< IDIVB clock source				*/
-	CGU_CLKSRC_IDIVC,							/**< IDIVC clock source				*/
-	CGU_CLKSRC_IDIVD,							/**< IDIVD clock source				*/
-	CGU_CLKSRC_IDIVE,							/**< IDIVE clock source				*/
+    /* Clock Source */
+    CGU_CLKSRC_32KHZ_OSC = 0,					/**< 32KHz oscillator clock source 	*/
+    CGU_CLKSRC_IRC,								/**< IRC 12 Mhz clock source 		*/
+    CGU_CLKSRC_ENET_RX_CLK,						/**< Ethernet receive clock source 	*/
+    CGU_CLKSRC_ENET_TX_CLK,						/**< Ethernet transmit clock source */
+    CGU_CLKSRC_GP_CLKIN,						/**< General purpose clock source 	*/
+    CGU_CLKSRC_TCK,								/**< TCK clock source 				*/
+    CGU_CLKSRC_XTAL_OSC,						/**< Crystal oscillator clock source*/
+    CGU_CLKSRC_PLL0,							/**< PLL0 (USB0) clock source		*/
+    CGU_CLKSRC_PLL0_AUDIO,
+    CGU_CLKSRC_PLL1,							/**< PLL1 clock source				*/
+    CGU_CLKSRC_IDIVA = CGU_CLKSRC_PLL1 + 3,		/**< IDIVA clock source				*/
+    CGU_CLKSRC_IDIVB,							/**< IDIVB clock source				*/
+    CGU_CLKSRC_IDIVC,							/**< IDIVC clock source				*/
+    CGU_CLKSRC_IDIVD,							/**< IDIVD clock source				*/
+    CGU_CLKSRC_IDIVE,							/**< IDIVE clock source				*/
 
-	/* Base */
-	CGU_BASE_SAFE,								/**< Base save clock (always on) for WDT */
-	CGU_BASE_USB0,								/**< USB0 base clock 				*/
-	CGU_BASE_PERIPH,							/**  Peripheral bus (SGPIO)			*/
-	CGU_BASE_USB1,								/**< USB1 base clock 				*/
-	CGU_BASE_M4,								/**< ARM Cortex-M4 Core base clock 	*/
-	CGU_BASE_SPIFI,								/**< SPIFI base clock				*/
-	CGU_BASE_PHY_RX = CGU_BASE_SPIFI + 2, 							/**< Ethernet PHY Rx base clock		*/
-	CGU_BASE_PHY_TX,							/**< Ethernet PHY Tx base clock		*/
-	CGU_BASE_APB1,								/**< APB peripheral block #1 base clock	*/
-	CGU_BASE_APB3,								/**< APB peripheral block #3 base clock	*/
-	CGU_BASE_LCD,								/**< LCD base clock					*/
-	CGU_BASE_ENET_CSR,
-	CGU_BASE_SDIO,								/**< SDIO base clock				*/
-	CGU_BASE_SSP0,								/**< SSP0 base clock				*/
-	CGU_BASE_SSP1,								/**< SSP1 base clock				*/
-	CGU_BASE_UART0,								/**< UART0 base clock				*/
-	CGU_BASE_UART1,								/**< UART1 base clock				*/
-	CGU_BASE_UART2,								/**< UART2 base clock				*/
-	CGU_BASE_UART3,								/**< UART3 base clock				*/
-	CGU_BASE_CLKOUT,							/**< CLKOUT base clock				*/
-	CGU_BASE_APLL = CGU_BASE_CLKOUT + 5,
-	CGU_BASE_OUT0,
-	CGU_BASE_OUT1,
-	CGU_ENTITY_NUM								/**< Number or clock source entity	*/
+    /* Base */
+    CGU_BASE_SAFE,								/**< Base save clock (always on) for WDT */
+    CGU_BASE_USB0,								/**< USB0 base clock 				*/
+    CGU_BASE_PERIPH,							/**  Peripheral bus (SGPIO)			*/
+    CGU_BASE_USB1,								/**< USB1 base clock 				*/
+    CGU_BASE_M4,								/**< ARM Cortex-M4 Core base clock 	*/
+    CGU_BASE_SPIFI,								/**< SPIFI base clock				*/
+    CGU_BASE_PHY_RX = CGU_BASE_SPIFI + 2, 							/**< Ethernet PHY Rx base clock		*/
+    CGU_BASE_PHY_TX,							/**< Ethernet PHY Tx base clock		*/
+    CGU_BASE_APB1,								/**< APB peripheral block #1 base clock	*/
+    CGU_BASE_APB3,								/**< APB peripheral block #3 base clock	*/
+    CGU_BASE_LCD,								/**< LCD base clock					*/
+    CGU_BASE_ENET_CSR,
+    CGU_BASE_SDIO,								/**< SDIO base clock				*/
+    CGU_BASE_SSP0,								/**< SSP0 base clock				*/
+    CGU_BASE_SSP1,								/**< SSP1 base clock				*/
+    CGU_BASE_UART0,								/**< UART0 base clock				*/
+    CGU_BASE_UART1,								/**< UART1 base clock				*/
+    CGU_BASE_UART2,								/**< UART2 base clock				*/
+    CGU_BASE_UART3,								/**< UART3 base clock				*/
+    CGU_BASE_CLKOUT,							/**< CLKOUT base clock				*/
+    CGU_BASE_APLL = CGU_BASE_CLKOUT + 5,
+    CGU_BASE_OUT0,
+    CGU_BASE_OUT1,
+    CGU_ENTITY_NUM								/**< Number or clock source entity	*/
 } CGU_ENTITY_T;
 
 /*
  * @brief 	CGU PPL0 mode enumerate definition
  */
 typedef enum {
-	CGU_PLL0_MODE_1d = 0,
-	CGU_PLL0_MODE_1c,
-	CGU_PLL0_MODE_1b,
-	CGU_PLL0_MODE_1a
-}CGU_PLL0_MODE;
+    CGU_PLL0_MODE_1d = 0,
+    CGU_PLL0_MODE_1c,
+    CGU_PLL0_MODE_1b,
+    CGU_PLL0_MODE_1a
+} CGU_PLL0_MODE;
 
 /*
  * @brief 	CGU peripheral enumerate definition
  */
 typedef enum {
-	CGU_PERIPHERAL_ADC0 = 0,					/**< ADC0 		*/
-	CGU_PERIPHERAL_ADC1,						/**< ADC1 		*/
-	CGU_PERIPHERAL_AES,							/**< AES		*/
+    CGU_PERIPHERAL_ADC0 = 0,					/**< ADC0 		*/
+    CGU_PERIPHERAL_ADC1,						/**< ADC1 		*/
+    CGU_PERIPHERAL_AES,							/**< AES		*/
 //	CGU_PERIPHERAL_ALARMTIMER_CGU_RGU_RTC_WIC,
-	CGU_PERIPHERAL_APB1_BUS,					/**< APB1 bus			*/
-	CGU_PERIPHERAL_APB3_BUS,					/**< APB3 bus			*/
-	CGU_PERIPHERAL_CAN,							/**< CAN 				*/
-	CGU_PERIPHERAL_CREG,						/**< CREG				*/
-	CGU_PERIPHERAL_DAC,							/**< DAC				*/
-	CGU_PERIPHERAL_DMA,							/**< DMA				*/
-	CGU_PERIPHERAL_EMC,							/**< EMC				*/
-	CGU_PERIPHERAL_ETHERNET,					/**< Ethernet			*/
-	CGU_PERIPHERAL_ETHERNET_TX, //HIDE			/**< Ethernet transmit 	*/
-	CGU_PERIPHERAL_GPIO,						/**< GPIO				*/
-	CGU_PERIPHERAL_I2C0,						/**< I2C0				*/
-	CGU_PERIPHERAL_I2C1,						/**< I2C1				*/
-	CGU_PERIPHERAL_I2S,							/**< I2S				*/
-	CGU_PERIPHERAL_LCD,							/**< LCD				*/
-	CGU_PERIPHERAL_M4CORE,						/**< ARM Cortex-M4 Core	*/
-	CGU_PERIPHERAL_M4_BUS,						/**< ARM Cortex-M4 Bus	*/
-	CGU_PERIPHERAL_MOTOCON,						/**< Motor Control 		*/
-	CGU_PERIPHERAL_QEI,							/**< QEI				*/
-	CGU_PERIPHERAL_RITIMER,						/**< RIT Timer			*/
-	CGU_PERIPHERAL_SCT,							/**< SCT				*/
-	CGU_PERIPHERAL_SCU,							/**< SCU				*/
-	CGU_PERIPHERAL_SDIO,						/**< SDIO				*/
-	CGU_PERIPHERAL_SPIFI,						/**< SPIFI				*/
-	CGU_PERIPHERAL_SSP0,						/**< SSP0				*/
-	CGU_PERIPHERAL_SSP1,						/**< SSP1				*/
-	CGU_PERIPHERAL_TIMER0,						/**< TIMER 0 			*/
-	CGU_PERIPHERAL_TIMER1,						/**< TIMER 1			*/
-	CGU_PERIPHERAL_TIMER2,						/**< TIMER 2			*/
-	CGU_PERIPHERAL_TIMER3,						/**< TIMER 3			*/
-	CGU_PERIPHERAL_UART0,						/**< UART0				*/
-	CGU_PERIPHERAL_UART1,						/**< UART1				*/
-	CGU_PERIPHERAL_UART2,						/**< UART2				*/
-	CGU_PERIPHERAL_UART3,						/**< UART3				*/
-	CGU_PERIPHERAL_USB0,						/**< USB0				*/
-	CGU_PERIPHERAL_USB1,						/**< USB1				*/
-	CGU_PERIPHERAL_WWDT,						/**< WWDT				*/
-	CGU_PERIPHERAL_NUM
+    CGU_PERIPHERAL_APB1_BUS,					/**< APB1 bus			*/
+    CGU_PERIPHERAL_APB3_BUS,					/**< APB3 bus			*/
+    CGU_PERIPHERAL_CAN,							/**< CAN 				*/
+    CGU_PERIPHERAL_CREG,						/**< CREG				*/
+    CGU_PERIPHERAL_DAC,							/**< DAC				*/
+    CGU_PERIPHERAL_DMA,							/**< DMA				*/
+    CGU_PERIPHERAL_EMC,							/**< EMC				*/
+    CGU_PERIPHERAL_ETHERNET,					/**< Ethernet			*/
+    CGU_PERIPHERAL_ETHERNET_TX, //HIDE			/**< Ethernet transmit 	*/
+    CGU_PERIPHERAL_GPIO,						/**< GPIO				*/
+    CGU_PERIPHERAL_I2C0,						/**< I2C0				*/
+    CGU_PERIPHERAL_I2C1,						/**< I2C1				*/
+    CGU_PERIPHERAL_I2S,							/**< I2S				*/
+    CGU_PERIPHERAL_LCD,							/**< LCD				*/
+    CGU_PERIPHERAL_M4CORE,						/**< ARM Cortex-M4 Core	*/
+    CGU_PERIPHERAL_M4_BUS,						/**< ARM Cortex-M4 Bus	*/
+    CGU_PERIPHERAL_MOTOCON,						/**< Motor Control 		*/
+    CGU_PERIPHERAL_QEI,							/**< QEI				*/
+    CGU_PERIPHERAL_RITIMER,						/**< RIT Timer			*/
+    CGU_PERIPHERAL_SCT,							/**< SCT				*/
+    CGU_PERIPHERAL_SCU,							/**< SCU				*/
+    CGU_PERIPHERAL_SDIO,						/**< SDIO				*/
+    CGU_PERIPHERAL_SPIFI,						/**< SPIFI				*/
+    CGU_PERIPHERAL_SSP0,						/**< SSP0				*/
+    CGU_PERIPHERAL_SSP1,						/**< SSP1				*/
+    CGU_PERIPHERAL_TIMER0,						/**< TIMER 0 			*/
+    CGU_PERIPHERAL_TIMER1,						/**< TIMER 1			*/
+    CGU_PERIPHERAL_TIMER2,						/**< TIMER 2			*/
+    CGU_PERIPHERAL_TIMER3,						/**< TIMER 3			*/
+    CGU_PERIPHERAL_UART0,						/**< UART0				*/
+    CGU_PERIPHERAL_UART1,						/**< UART1				*/
+    CGU_PERIPHERAL_UART2,						/**< UART2				*/
+    CGU_PERIPHERAL_UART3,						/**< UART3				*/
+    CGU_PERIPHERAL_USB0,						/**< USB0				*/
+    CGU_PERIPHERAL_USB1,						/**< USB1				*/
+    CGU_PERIPHERAL_WWDT,						/**< WWDT				*/
+    CGU_PERIPHERAL_NUM
 } CGU_PERIPHERAL_T;
 
 /**
  *  @brief	CGU error status enumerate definition
  */
 typedef enum {
-	CGU_ERROR_SUCCESS = 0,
-	CGU_ERROR_CONNECT_TOGETHER,
-	CGU_ERROR_INVALID_ENTITY,
-	CGU_ERROR_INVALID_CLOCK_SOURCE,
-	CGU_ERROR_INVALID_PARAM,
-	CGU_ERROR_FREQ_OUTOF_RANGE
+    CGU_ERROR_SUCCESS = 0,
+    CGU_ERROR_CONNECT_TOGETHER,
+    CGU_ERROR_INVALID_ENTITY,
+    CGU_ERROR_INVALID_CLOCK_SOURCE,
+    CGU_ERROR_INVALID_PARAM,
+    CGU_ERROR_FREQ_OUTOF_RANGE
 } CGU_ERROR;
 
 /********************************************************************//**
@@ -206,11 +211,11 @@ typedef enum {
  * @brief	CGU peripheral clock structure
  */
 typedef struct {
-	uint8_t RegBaseEntity;						/**< Base register address 		*/
-	uint16_t RegBranchOffset;					/**< Branch register offset		*/
-	uint8_t PerBaseEntity;						/**< Base peripheral address	*/
-	uint16_t PerBranchOffset;					/**< Base peripheral offset		*/
-	uint8_t next;								/**< Pointer to next structure	*/
+    uint8_t RegBaseEntity;						/**< Base register address 		*/
+    uint16_t RegBranchOffset;					/**< Branch register offset		*/
+    uint8_t PerBaseEntity;						/**< Base peripheral address	*/
+    uint16_t PerBranchOffset;					/**< Base peripheral offset		*/
+    uint8_t next;								/**< Pointer to next structure	*/
 } CGU_PERIPHERAL_S;
 
 /**
@@ -228,8 +233,8 @@ uint32_t	CGU_Init(uint32_t wantedFreq);
 uint32_t	CGU_DeInit(void);
 
 /** Clock Generator and Clock Control */
-uint32_t	CGU_ConfigPWR (CGU_PERIPHERAL_T PPType, FunctionalState en);
-uint32_t	CGU_GetPCLKFrequency (CGU_PERIPHERAL_T Clock);
+uint32_t	CGU_ConfigPWR(CGU_PERIPHERAL_T PPType, FunctionalState en);
+uint32_t	CGU_GetPCLKFrequency(CGU_PERIPHERAL_T Clock);
 
 /** Clock Source and Base Clock operation */
 uint32_t	CGU_SetXTALOSC(uint32_t ClockFrequency);

@@ -1,24 +1,23 @@
-/*----------------------------------------------------------------------------
- * U S B  -  K e r n e l
- *----------------------------------------------------------------------------
- * Name:    usbcfg_SAM3U.h
- * Purpose: USB Custom Configuration
- * Version: V1.21
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
+/**
+ * @file    usbcfg_SAM3U.h
+ * @brief   
  *
- * This software is supplied "AS IS" without warranties of any kind.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright (c) 2009-2011 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------
- * History:
- *          V1.21 Corrected EP Events
- *          V1.20 Added vendor specific support
- *          V1.00 Initial Version
- *----------------------------------------------------------------------------*/
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #ifndef __USBCFG_H_SAM3U
 #define __USBCFG_H_SAM3U
@@ -106,7 +105,7 @@
 //     <o10> Control Interface Number <0-255>
 //     <o11> Bulk Interface Number <0-255>
 //     <o12> Max Communication Device Buffer Size
-//        <8=> 8 Bytes <16=> 16 Bytes <32=> 32 Bytes <64=> 64 Bytes 
+//        <8=> 8 Bytes <16=> 16 Bytes <32=> 32 Bytes <64=> 64 Bytes
 //   </e>
 // </e>
 */

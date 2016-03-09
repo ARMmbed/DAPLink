@@ -1,21 +1,26 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    daplink_addr.h
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
 #ifndef DAPLINK_ADDR_H
-#define DAPLINK_ADDR_H 
+#define DAPLINK_ADDR_H
 
 /* Device sizes */
 
@@ -56,21 +61,21 @@
 
 #if defined(DAPLINK_BL)
 
-    #define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
-    #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
-    #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
-    #define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_IF_SIZE
+#define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
+#define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
+#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
+#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_IF_SIZE
 
 #elif defined(DAPLINK_IF)
 
-    #define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
-    #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
-    #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
-    #define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
+#define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
+#define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
+#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
+#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
 
 #else
 
-    #error "Build must be either bootloader or interface"
+#error "Build must be either bootloader or interface"
 
 #endif
 

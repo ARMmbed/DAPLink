@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    FlashPrg.c
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -44,8 +49,9 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
  *    Return Value:   0 - OK,  1 - Failed
  */
 
-int UnInit (unsigned long fnc) {
-  return (0);
+int UnInit (unsigned long fnc)
+{
+    return (0);
 }
 
 
@@ -94,8 +100,7 @@ int UnInit (unsigned long fnc) {
 int EraseChip (void)
 {
     int status = flash_erase_all(&g_flash, kFlashEraseKey);
-    if (status == kStatus_Success)
-    {
+    if (status == kStatus_Success) {
         status = flash_verify_erase_all(&g_flash, kFlashMargin_Normal);
     }
     flash_cache_clear();
@@ -111,8 +116,7 @@ int EraseChip (void)
 int EraseSector (unsigned long adr)
 {
     int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashEraseKey);
-    if (status == kStatus_Success)
-    {
+    if (status == kStatus_Success) {
         status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);
     }
     flash_cache_clear();
@@ -129,8 +133,7 @@ int EraseSector (unsigned long adr)
 int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
 {
     int status = flash_program(&g_flash, adr, (uint32_t *)buf, sz);
-    if (status == kStatus_Success)
-    {
+    if (status == kStatus_Success) {
         // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
         status = flash_verify_program(&g_flash, adr, sz,
                               (const uint8_t *)buf, kFlashMargin_User,
