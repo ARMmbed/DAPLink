@@ -1,6 +1,6 @@
 /**
- * @file    target.c
- * @brief   Target information for the k20dx
+ * @file    target_reset.c
+ * @brief   Target reset for the lpc4337
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,18 +19,33 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "target_reset.h"
+#include "swd_host.h"
 
-// The file flash_blob.c must only be included in target.c
-#include "flash_blob.c"
+void gpio_set_isp_pin(uint8_t state);
 
-// target information
-const target_cfg_t target_device = {
-    .sector_size    = 1024,
-    .sector_cnt     = (KB(128) / 1024),
-    .flash_start    = 0,
-    .flash_end      = KB(128),
-    .ram_start      = 0x1FFF8000,
-    .ram_end        = 0x20008000,
-    .flash_algo     = (program_target_t *) &flash,
-};
+void target_before_init_debug(void)
+{
+    return;
+}
+
+uint8_t target_unlock_sequence(void)
+{
+    return 1;
+}
+
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    volatile uint8_t res;
+
+    if (state == RESET_PROGRAM) {
+        gpio_set_isp_pin(0);
+        res = swd_set_target_state(state);
+        gpio_set_isp_pin(1);
+    } else {
+        gpio_set_isp_pin(1);
+        res = swd_set_target_state(state);
+    }
+
+    return res;
+}
