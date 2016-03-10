@@ -53,37 +53,32 @@ extern uint32_t getPC(void);
  * @brief  Setup the microcontroller system.
  *         Initialize the System.
  */
-void SystemInit (void)
+void SystemInit(void)
 {
 #if !defined(CORE_M0)
     // Set up Cortex_M3 or M4 VTOR register to point to vector table
     // This code uses a toolchain defined symbol to locate the vector table
     // If this is not completed, interrupts are likely to cause an exception.
-    unsigned int * pSCB_VTOR = (unsigned int *) 0xE000ED08;
+    unsigned int *pSCB_VTOR = (unsigned int *) 0xE000ED08;
 #if defined(__IAR_SYSTEMS_ICC__)
     extern void *__vector_table;
-
     *pSCB_VTOR = (unsigned int)&__vector_table;
 #elif defined(__CODE_RED)
     extern void *g_pfnVectors;
-
     *pSCB_VTOR = (unsigned int)g_pfnVectors;
 #elif defined(__ARMCC_VERSION)
     extern void *__Vectors;
-
     *pSCB_VTOR = (unsigned int)&__Vectors;
 #else
-    #error Unknown compiler
+#error Unknown compiler
 #endif
 #else
     // Cortex M0?
-    #error Cannot configure VTOR on Cortex_M0
+#error Cannot configure VTOR on Cortex_M0
 #endif
-
 #if defined(CORE_M4) && defined(USE_FPU)
     fpuEnable();
 #endif
-
     // In case we are running from internal flash, we configure the flash
     // accelerator. This is a conservative value that should work up to 204
     // MHz on the LPC43xx or 180 MHz on the LPC18xx. This value may change
@@ -92,19 +87,18 @@ void SystemInit (void)
 #define FLASH_ACCELERATOR_SPEED 6
 #ifdef INTERNAL_FLASH
     {
-        uint32_t *MAM,t;
-
+        uint32_t *MAM, t;
         // Set up flash controller for both banks
         // Bank A
         MAM = (uint32_t *)(LPC_CREG_BASE + 0x120);
-        t=*MAM;
-        t &= ~(0xF<<12);
-        *MAM = t | (FLASH_ACCELERATOR_SPEED<<12);
+        t = *MAM;
+        t &= ~(0xF << 12);
+        *MAM = t | (FLASH_ACCELERATOR_SPEED << 12);
         // Bank B
         MAM = (uint32_t *)(LPC_CREG_BASE + 0x124);
-        t=*MAM;
-        t &= ~(0xF<<12);
-        *MAM = t | (FLASH_ACCELERATOR_SPEED<<12);
+        t = *MAM;
+        t &= ~(0xF << 12);
+        *MAM = t | (FLASH_ACCELERATOR_SPEED << 12);
     }
 #endif
 }

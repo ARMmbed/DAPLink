@@ -1,36 +1,28 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    lpc_types.h
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-/* Type group ----------------------------------------------------------- */
-/** @defgroup LPC_Types LPC_Types
- * @ingroup LPC4300CMSIS_FwLib_Drivers
- * @{
  */
 
 #ifndef LPC_TYPES_H
 #define LPC_TYPES_H
 
-/* Includes ------------------------------------------------------------------- */
 #include "stdint.h"
-
-
-/* Public Types --------------------------------------------------------------- */
-/** @defgroup LPC_Types_Public_Types LPC_Types Public Types
- * @{
- */
 
 /**
  * @brief Boolean Type definition
@@ -58,10 +50,9 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
 /**
  * Read/Write transfer type mode (Block or non-block)
  */
-typedef enum
-{
-	NONE_BLOCKING = 0,		/**< None Blocking type */
-	BLOCKING,				/**< Blocking type */
+typedef enum {
+    NONE_BLOCKING = 0,		/**< None Blocking type */
+    BLOCKING,				/**< Blocking type */
 } TRANSFER_BLOCK_Type;
 
 
@@ -70,16 +61,6 @@ typedef void (*PFV)();
 
 /** Pointer to Function returning int32_t (any number of parameters) */
 typedef int32_t(*PFI)();
-
-/**
- * @}
- */
-
-
-/* Public Macros -------------------------------------------------------------- */
-/** @defgroup LPC_Types_Public_Macros  LPC_Types Public Macros
- * @{
- */
 
 /* _BIT(n) sets the bit at position "n"
  * _BIT(n) is intended to be used in "OR" and "AND" expressions:
@@ -134,16 +115,6 @@ typedef int32_t(*PFI)();
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
-/**
- * @}
- */
-
-
-/* Old Type Definition compatibility ------------------------------------------ */
-/** @addtogroup LPC_Types_Public_Types LPC_Types Public Types
- * @{
- */
-
 /** SMA type for character type */
 typedef char CHAR;
 
@@ -185,14 +156,5 @@ typedef Bool BOOL_8;
 #else
 #define INLINE inline
 #endif
-/**
- * @}
- */
 
-
-#endif /* LPC_TYPES_H */
-
-/**
- * @}
- */
-
+#endif

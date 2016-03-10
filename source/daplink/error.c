@@ -1,18 +1,24 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    error.c
+ * @brief   Implementation of error.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "error.h"
 #include "util.h"
 #include "macro.h"
@@ -113,9 +119,10 @@ static const char *const error_message[] = {
 };
 COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
 
-const char * error_get_string(error_t error)
+const char *error_get_string(error_t error)
 {
-    const char * msg = 0;
+    const char *msg = 0;
+
     if (error < ERROR_COUNT) {
         msg = error_message[error];
     }
@@ -124,5 +131,6 @@ const char * error_get_string(error_t error)
         util_assert(0);
         msg = "";
     }
+
     return msg;
 }

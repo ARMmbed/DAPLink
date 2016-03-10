@@ -1,12 +1,12 @@
-Minimum Acceptance Criteria for a release of CMSIS-DAP interface firmware.
+Minimum Acceptance Criteria for a release of DAPLink interface firmware.
  * All tests are pass/fail
 
-HDK Acceptance Test for CMSIS-DAP Firmware
+HIC Acceptance Test for DAPLink Firmware
 The test suite should be ran on each of the following operating systems
  * Operating Systems:
-  * Windows XP, 7, 8.x
-  * Ubuntu Linux 12.04
-  * Mac OS Mavericks
+  * Windows 7, 8.x, 10
+  * Ubuntu Linux > 12.04
+  * Mac OSX > 10.9
 
 The test(s) validates the following functionallities:
  * USB HID: CMSIS-DAP Debugging

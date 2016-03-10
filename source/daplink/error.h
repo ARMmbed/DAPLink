@@ -1,21 +1,30 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    error.h
+ * @brief   collection of known errors and accessor for the friendly string
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ERROR_H
 #define ERROR_H
+
+#ifdef __cplusplus
+}
+#endif
 
 // Keep in sync with the list error_message
 typedef enum {
@@ -23,7 +32,7 @@ typedef enum {
     ERROR_SUCCESS = 0,
     ERROR_FAILURE,
     ERROR_INTERNAL,
-    
+
     /* VFS user errors */
     ERROR_ERROR_DURING_TRANSFER,
     ERROR_TRANSFER_TIMEOUT,
@@ -40,7 +49,7 @@ typedef enum {
     ERROR_ERASE_SECTOR,
     ERROR_ERASE_ALL,
     ERROR_WRITE,
-    
+
     /* File stream errors */
     ERROR_SUCCESS_DONE,
     ERROR_SUCCESS_DONE_OR_CONTINUE,
@@ -72,6 +81,10 @@ typedef enum {
     ERROR_COUNT
 } error_t;
 
-const char * error_get_string(error_t error);
+const char *error_get_string(error_t error);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

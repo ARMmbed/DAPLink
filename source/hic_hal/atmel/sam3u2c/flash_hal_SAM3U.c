@@ -1,18 +1,24 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    flash_hal_SAM3U.c
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 //#include "flash_hal.h"        // FlashOS Structures       //TODO - uncomment
 #include "target_config.h"    // target_device
 
@@ -37,20 +43,21 @@
 #define GPNVMB_BMS            (1)
 
 typedef struct {
-  volatile uint32_t MC_FMR;
-  volatile uint32_t MC_FCR;
-  volatile uint32_t MC_FSR;
-  volatile uint32_t MC_FRR;
+    volatile uint32_t MC_FMR;
+    volatile uint32_t MC_FCR;
+    volatile uint32_t MC_FSR;
+    volatile uint32_t MC_FRR;
 } SFR_TABLE;
 
 __attribute__((section("ram_func")))
-static void _FeedWDT(void) {
-  //
-	// Feed watchdog if enabled
-	//
-  if ((WDT_MR & (1 << 15)) == 0) {      // Is watchdog enabled ?
-    WDT_CR = 0xA5000001;                // Feed it!
-  }
+static void _FeedWDT(void)
+{
+    //
+    // Feed watchdog if enabled
+    //
+    if ((WDT_MR & (1 << 15)) == 0) {      // Is watchdog enabled ?
+        WDT_CR = 0xA5000001;                // Feed it!
+    }
 }
 
 /*********************************************************************
@@ -61,43 +68,48 @@ static void _FeedWDT(void) {
 */
 
 __attribute__((section("ram_func")))
-static void _WritePage(uint32_t Addr, volatile uint32_t* pSrc, int PerformErase) {
-  SFR_TABLE* pSFRs;
-	volatile uint32_t* pDest;
-	uint32_t NumItemsInPageLeft;
-  uint32_t iPage;
-	uint32_t Status;
-  //
-	// Return value 0 == O.K.
-	// Return value 1 == Error
-	// Application assumes that this function always erases 4 KB
-	// Application always calls this function with 4 KB aligned addresses
-	//
-  Addr |= 0x80000;   // Convert to physical flash address
-  pSFRs = (SFR_TABLE*)(EEFC0_BASEADDR);
-  pDest = (volatile uint32_t*)Addr;
-	//
-	// Fill page buffer use blank data in case of erase is requested
-	//
-	iPage = ((Addr - 0x80000) >> 8);
-	NumItemsInPageLeft = (1 << 8) >> 2;
-  if (PerformErase) {
-		do {
-			*pDest++ = 0xFFFFFFFF;
-		} while (--NumItemsInPageLeft);
-	} else {
-		do {
-			*pDest++ = *pSrc++;
-		} while (--NumItemsInPageLeft);
-	}
-	//
-	// Trigger flash operation
-	//
-	pSFRs->MC_FCR = (KEY_VALUE << 24) | (FCMD_EWP << 0) | (iPage << 8);  // Erase page and write with blank data
-	do {
-		_FeedWDT();
-		Status = pSFRs->MC_FSR;
-	} while ((Status & 1) == 0);
+static void _WritePage(uint32_t Addr, volatile uint32_t *pSrc, int PerformErase)
+{
+    SFR_TABLE *pSFRs;
+    volatile uint32_t *pDest;
+    uint32_t NumItemsInPageLeft;
+    uint32_t iPage;
+    uint32_t Status;
+    //
+    // Return value 0 == O.K.
+    // Return value 1 == Error
+    // Application assumes that this function always erases 4 KB
+    // Application always calls this function with 4 KB aligned addresses
+    //
+    Addr |= 0x80000;   // Convert to physical flash address
+    pSFRs = (SFR_TABLE *)(EEFC0_BASEADDR);
+    pDest = (volatile uint32_t *)Addr;
+    //
+    // Fill page buffer use blank data in case of erase is requested
+    //
+    iPage = ((Addr - 0x80000) >> 8);
+    NumItemsInPageLeft = (1 << 8) >> 2;
+
+    if (PerformErase) {
+        do {
+            *pDest++ = 0xFFFFFFFF;
+        } while (--NumItemsInPageLeft);
+
+    } else {
+        do {
+            *pDest++ = *pSrc++;
+        } while (--NumItemsInPageLeft);
+    }
+
+    //
+    // Trigger flash operation
+    //
+    pSFRs->MC_FCR = (KEY_VALUE << 24) | (FCMD_EWP << 0) | (iPage << 8);  // Erase page and write with blank data
+
+    do {
+        _FeedWDT();
+        Status = pSFRs->MC_FSR;
+    } while ((Status & 1) == 0);
 }
 
 /*********************************************************************
@@ -107,74 +119,86 @@ static void _WritePage(uint32_t Addr, volatile uint32_t* pSrc, int PerformErase)
 **********************************************************************
 */
 __attribute__((section("ram_func")))
-uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc) {
-  //
-	// No special init required
-	//
-  return (0);
+uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
+{
+    //
+    // No special init required
+    //
+    return (0);
 }
 
 __attribute__((section("ram_func")))
-uint32_t UnInit(uint32_t fnc) {
-  //
-	// No special uninit required
-	//
-  return (0);
+uint32_t UnInit(uint32_t fnc)
+{
+    //
+    // No special uninit required
+    //
+    return (0);
 }
 
 __attribute__((section("ram_func")))
-uint32_t EraseChip(void) {
-  uint32_t Addr;
-  //
-	// Return value 0 == O.K.
-	// Return value 1 == Error
-  // Erase complete chip by erasing sector-by-sector
-	Addr = target_device.flash_start;
-  do {
-    _WritePage(Addr, (volatile uint32_t*)0, 1);
-    Addr += (1 << 8);
-	} while (Addr < target_device.flash_end);
-  return (0);  // O.K.
+uint32_t EraseChip(void)
+{
+    uint32_t Addr;
+    //
+    // Return value 0 == O.K.
+    // Return value 1 == Error
+    // Erase complete chip by erasing sector-by-sector
+    Addr = target_device.flash_start;
+
+    do {
+        _WritePage(Addr, (volatile uint32_t *)0, 1);
+        Addr += (1 << 8);
+    } while (Addr < target_device.flash_end);
+
+    return (0);  // O.K.
 }
 
 __attribute__((section("ram_func")))
-uint32_t EraseSector(uint32_t adr) {
-  uint32_t NumPagesLeft;
-  //
-	// Return value 0 == O.K.
-	// Return value 1 == Error
-	// Application assumes that this function always erases 1 KB
-	// Application always calls this function with 1 KB aligned addresses
-	//
-	NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB sectors
-  do {
-    _WritePage(adr, (volatile uint32_t*)0, 1);
-    adr += (1 << 8);
-	} while (--NumPagesLeft);
-  return (0);  // O.K.
+uint32_t EraseSector(uint32_t adr)
+{
+    uint32_t NumPagesLeft;
+    //
+    // Return value 0 == O.K.
+    // Return value 1 == Error
+    // Application assumes that this function always erases 1 KB
+    // Application always calls this function with 1 KB aligned addresses
+    //
+    NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, DAPLink BTL/FW assumes 1 KB sectors
+
+    do {
+        _WritePage(adr, (volatile uint32_t *)0, 1);
+        adr += (1 << 8);
+    } while (--NumPagesLeft);
+
+    return (0);  // O.K.
 }
 
 __attribute__((section("ram_func")))
-uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf) {
-  uint32_t NumPagesLeft;
-  unsigned char * temp_buf = (unsigned char *)buf;
-  //
-	// Return value 0 == O.K.
-	// Return value 1 == Error
-  // Seems to program page-wise
-	// 1 page seems to be 1 KB
-	// App always calls this function with 1 KB aligned start-adresses
-  // Always called with multiple of 1 page to program
-  //
-  sz = ROUND_UP(sz, 256);    // Round up to page size
-  NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB pages
-  if (0 == NumPagesLeft) {
-    return 1;
-  }
-  do {
-    _WritePage(adr, (volatile uint32_t*)temp_buf, 0);
-    adr += (1 << 8);
-		temp_buf += (1 << 8);
-	} while (--NumPagesLeft);
-  return (0);                                  // Finished without Errors
+uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
+{
+    uint32_t NumPagesLeft;
+    unsigned char *temp_buf = (unsigned char *)buf;
+    //
+    // Return value 0 == O.K.
+    // Return value 1 == Error
+    // Seems to program page-wise
+    // 1 page seems to be 1 KB
+    // App always calls this function with 1 KB aligned start-adresses
+    // Always called with multiple of 1 page to program
+    //
+    sz = ROUND_UP(sz, 256);    // Round up to page size
+    NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, DAPLink BTL/FW assumes 1 KB pages
+
+    if (0 == NumPagesLeft) {
+        return 1;
+    }
+
+    do {
+        _WritePage(adr, (volatile uint32_t *)temp_buf, 0);
+        adr += (1 << 8);
+        temp_buf += (1 << 8);
+    } while (--NumPagesLeft);
+
+    return (0);                                  // Finished without Errors
 }

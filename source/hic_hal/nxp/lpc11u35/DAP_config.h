@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    DAP_config.h
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -145,25 +150,27 @@ Configures the DAP Hardware I/O pins for JTAG mode:
  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
  - TDO to input mode.
 */
-static __inline void PORT_JTAG_SETUP (void) {
+static __inline void PORT_JTAG_SETUP(void)
+{
 #if (DAP_JTAG != 0)
     LPC_GPIO->SET[PIN_TDI_PORT]  =  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDI_PORT] |=  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDO_PORT] &= ~PIN_TDO;
 #endif
 }
- 
+
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
 */
-static __inline void PORT_SWD_SETUP (void) {
+static __inline void PORT_SWD_SETUP(void)
+{
     LPC_GPIO->SET[PIN_SWCLK_PORT] = PIN_SWCLK;
     LPC_GPIO->SET[PIN_SWDIO_PORT] = PIN_SWDIO;
     // open drain logic
     LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
-    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET; 
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
     LPC_GPIO->DIR[PIN_SWCLK_PORT] |= PIN_SWCLK;
     LPC_GPIO->DIR[PIN_SWDIO_PORT] |= PIN_SWDIO;
 }
@@ -172,10 +179,11 @@ static __inline void PORT_SWD_SETUP (void) {
 Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
-static __inline void PORT_OFF (void) {
+static __inline void PORT_OFF(void)
+{
     LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
-    LPC_GPIO->DIR[PIN_SWCLK_PORT] &= ~PIN_SWCLK; 
-    LPC_GPIO->DIR[PIN_SWDIO_PORT] &= ~PIN_SWDIO; 
+    LPC_GPIO->DIR[PIN_SWCLK_PORT] &= ~PIN_SWCLK;
+    LPC_GPIO->DIR[PIN_SWDIO_PORT] &= ~PIN_SWDIO;
 }
 
 
@@ -184,21 +192,24 @@ static __inline void PORT_OFF (void) {
 /** SWCLK/TCK I/O pin: Get Input.
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWCLK_TCK_IN  (void) {
+static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
+{
     return LPC_GPIO->B[PIN_SWCLK_BIT + PIN_SWCLK_PORT * 32] & 0x1;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
 Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWCLK_TCK_SET (void) {
+static __forceinline void     PIN_SWCLK_TCK_SET(void)
+{
     LPC_GPIO->SET[PIN_SWCLK_PORT] = PIN_SWCLK;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWCLK_TCK_CLR (void) {
+static __forceinline void     PIN_SWCLK_TCK_CLR(void)
+{
     LPC_GPIO->CLR[PIN_SWCLK_PORT] = PIN_SWCLK;
 }
 
@@ -208,46 +219,53 @@ static __forceinline void     PIN_SWCLK_TCK_CLR (void) {
 /** SWDIO/TMS I/O pin: Get Input.
 \return Current status of the SWDIO/TMS DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_TMS_IN  (void) {
+static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
+{
     return LPC_GPIO->B[PIN_SWDIO_BIT + PIN_SWDIO_PORT * 32] & 0x1;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
 Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWDIO_TMS_SET (void) {
+static __forceinline void     PIN_SWDIO_TMS_SET(void)
+{
     LPC_GPIO->SET[PIN_SWDIO_PORT] = PIN_SWDIO;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
 Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWDIO_TMS_CLR (void) {
+static __forceinline void     PIN_SWDIO_TMS_CLR(void)
+{
     LPC_GPIO->CLR[PIN_SWDIO_PORT] = PIN_SWDIO;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
 \return Current status of the SWDIO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_IN      (void) {
+static __forceinline uint32_t PIN_SWDIO_IN(void)
+{
     return LPC_GPIO->B[PIN_SWDIO_BIT + PIN_SWDIO_PORT * 32] & 0x1;
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
 \param bit Output value for the SWDIO DAP hardware I/O pin.
 */
-static __forceinline void     PIN_SWDIO_OUT     (uint32_t bit){
-    if (bit & 0x1)
+static __forceinline void     PIN_SWDIO_OUT(uint32_t bit)
+{
+    if (bit & 0x1) {
         LPC_GPIO->SET[PIN_SWDIO_PORT] = PIN_SWDIO;
-    else
+    } else {
         LPC_GPIO->CLR[PIN_SWDIO_PORT] = PIN_SWDIO;
+    }
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
 Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_ENABLE  (void) {
+static __forceinline void     PIN_SWDIO_OUT_ENABLE(void)
+{
     LPC_GPIO->DIR[PIN_SWDIO_PORT]  |= PIN_SWDIO;
 }
 
@@ -255,7 +273,8 @@ static __forceinline void     PIN_SWDIO_OUT_ENABLE  (void) {
 Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 called prior \ref PIN_SWDIO_IN function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_DISABLE (void) {
+static __forceinline void     PIN_SWDIO_OUT_DISABLE(void)
+{
     LPC_GPIO->DIR[PIN_SWDIO_PORT]  &= ~(PIN_SWDIO);
 }
 
@@ -265,25 +284,30 @@ static __forceinline void     PIN_SWDIO_OUT_DISABLE (void) {
 /** TDI I/O pin: Get Input.
 \return Current status of the TDI DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDI_IN  (void) {
+static __forceinline uint32_t PIN_TDI_IN(void)
+{
 #if (DAP_JTAG != 0)
     return LPC_GPIO->B[PIN_TDI_BIT + PIN_TDI_PORT * 32] & 0x1;
 #else
-  return (0);   // Not available
+    return (0);   // Not available
 #endif
 }
 
 /** TDI I/O pin: Set Output.
 \param bit Output value for the TDI DAP hardware I/O pin.
 */
-static __forceinline void     PIN_TDI_OUT (uint32_t bit) {
+static __forceinline void     PIN_TDI_OUT(uint32_t bit)
+{
 #if (DAP_JTAG != 0)
-    if (bit & 0x1)
+
+    if (bit & 0x1) {
         LPC_GPIO->SET[PIN_TDI_PORT] = PIN_TDI;
-    else
+    } else {
         LPC_GPIO->CLR[PIN_TDI_PORT] = PIN_TDI;
+    }
+
 #else
-  ;             // Not available
+    ;             // Not available
 #endif
 }
 
@@ -293,11 +317,12 @@ static __forceinline void     PIN_TDI_OUT (uint32_t bit) {
 /** TDO I/O pin: Get Input.
 \return Current status of the TDO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDO_IN  (void) {
+static __forceinline uint32_t PIN_TDO_IN(void)
+{
 #if (DAP_JTAG != 0)
     return LPC_GPIO->B[PIN_TDO_BIT + PIN_TDO_PORT * 32] & 0x1;
 #else
-  return (0);   // Not available
+    return (0);   // Not available
 #endif
 }
 
@@ -307,8 +332,9 @@ static __forceinline uint32_t PIN_TDO_IN  (void) {
 /** nTRST I/O pin: Get Input.
 \return Current status of the nTRST DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nTRST_IN   (void) {
-  return (0);   // Not available
+static __forceinline uint32_t PIN_nTRST_IN(void)
+{
+    return (0);   // Not available
 }
 
 /** nTRST I/O pin: Set Output.
@@ -316,8 +342,9 @@ static __forceinline uint32_t PIN_nTRST_IN   (void) {
            - 0: issue a JTAG TRST Test Reset.
            - 1: release JTAG TRST Test Reset.
 */
-static __forceinline void     PIN_nTRST_OUT  (uint32_t bit) {
-  ;             // Not available
+static __forceinline void     PIN_nTRST_OUT(uint32_t bit)
+{
+    ;             // Not available
 }
 
 // nRESET Pin I/O------------------------------------------
@@ -325,7 +352,8 @@ static __forceinline void     PIN_nTRST_OUT  (uint32_t bit) {
 /** nRESET I/O pin: Get Input.
 \return Current status of the nRESET DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nRESET_IN  (void) {
+static __forceinline uint32_t PIN_nRESET_IN(void)
+{
     return LPC_GPIO->B[PIN_nRESET_BIT + PIN_nRESET_PORT * 32] & 0x1;
 }
 
@@ -334,10 +362,14 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 0: issue a device hardware reset.
            - 1: release device hardware reset.
 */
-static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
+{
     // open drain logic
-    if (bit) LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET; // input (pulled high external)
-    else     LPC_GPIO->DIR[PIN_nRESET_PORT] |=  PIN_nRESET; // output (low)
+    if (bit) {
+        LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;    // input (pulled high external)
+    } else {
+        LPC_GPIO->DIR[PIN_nRESET_PORT] |=  PIN_nRESET;    // output (low)
+    }
 }
 
 ///@}
@@ -361,7 +393,8 @@ It is recommended to provide the following LEDs for status indication:
            - 1: Connect LED ON: debugger is connected to CMSIS-DAP Debug Unit.
            - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
 */
-static __inline void LED_CONNECTED_OUT (uint32_t bit) {
+static __inline void LED_CONNECTED_OUT(uint32_t bit)
+{
 }
 
 /** Debug Unit: Set status Target Running LED.
@@ -369,8 +402,9 @@ static __inline void LED_CONNECTED_OUT (uint32_t bit) {
            - 1: Target Running LED ON: program execution in target started.
            - 0: Target Running LED OFF: program execution in target stopped.
 */
-static __inline void LED_RUNNING_OUT (uint32_t bit) {
-  ;             // Not available
+static __inline void LED_RUNNING_OUT(uint32_t bit)
+{
+    ;             // Not available
 }
 
 ///@}
@@ -393,14 +427,15 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
  - for nTRST, nRESET a weak pull-up (if available) is enabled.
  - LED output pins are enabled and LEDs are turned off.
 */
-static __inline void DAP_SETUP (void) {
+static __inline void DAP_SETUP(void)
+{
     // Configure I/O pins
-	PIN_SWCLK_TCK_IOCON = PIN_SWCLK_TCK_IOCON_INIT;  // SWCLK/TCK
-	PIN_SWDIO_TMS_IOCON = PIN_SWDIO_TMS_IOCON_INIT;  // SWDIO/TMS
-	PIN_nRESET_IOCON    = PIN_nRESET_IOCON_INIT;        // nRESET
+    PIN_SWCLK_TCK_IOCON = PIN_SWCLK_TCK_IOCON_INIT;  // SWCLK/TCK
+    PIN_SWDIO_TMS_IOCON = PIN_SWDIO_TMS_IOCON_INIT;  // SWDIO/TMS
+    PIN_nRESET_IOCON    = PIN_nRESET_IOCON_INIT;        // nRESET
 #if (DAP_JTAG != 0)
-	PIN_TDI_IOCON       = PIN_TDI_IOCON_INIT;  // TDI
-	PIN_TDO_IOCON       = PIN_TDO_IOCON_INIT;  // TDO
+    PIN_TDI_IOCON       = PIN_TDI_IOCON_INIT;  // TDI
+    PIN_TDO_IOCON       = PIN_TDO_IOCON_INIT;  // TDO
 #endif
 }
 
@@ -411,8 +446,9 @@ when a device needs a time-critical unlock sequence that enables the debug port.
 \return 0 = no device specific reset sequence is implemented.\n
         1 = a device specific reset sequence is implemented.
 */
-static __inline uint32_t RESET_TARGET (void) {
-  return (0);              // change to '1' when a device reset sequence is implemented
+static __inline uint32_t RESET_TARGET(void)
+{
+    return (0);              // change to '1' when a device reset sequence is implemented
 }
 
 ///@}

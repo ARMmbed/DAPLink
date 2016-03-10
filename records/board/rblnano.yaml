@@ -4,4 +4,4 @@ common:
             - source/board/rblnano.c
         source:
             - source/target/nordic/nrf51822/target_16.c
-            - source/target/nordic/nrf51822/target_reset.c
+            - source/target/nordic/target_reset.c

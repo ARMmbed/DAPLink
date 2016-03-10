@@ -1,19 +1,25 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    info.c
+ * @brief   Implementation of info.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <string.h>
+
+#include "string.h"
 
 #include "main.h"
 #include "info.h"
@@ -26,8 +32,8 @@
 #include "daplink.h"
 
 // Constant variables
-static const daplink_info_t * const info_bl = (daplink_info_t *)(DAPLINK_ROM_BL_START + DAPLINK_INFO_OFFSET);
-static const daplink_info_t * const info_if = (daplink_info_t *)(DAPLINK_ROM_IF_START + DAPLINK_INFO_OFFSET);
+static const daplink_info_t *const info_bl = (daplink_info_t *)(DAPLINK_ROM_BL_START + DAPLINK_INFO_OFFSET);
+static const daplink_info_t *const info_if = (daplink_info_t *)(DAPLINK_ROM_IF_START + DAPLINK_INFO_OFFSET);
 
 // Raw variables
 static uint32_t host_id[4];
@@ -51,40 +57,40 @@ static char string_version[4 + 1];
 static char usb_desc_unique_id[2 + sizeof(string_unique_id) * 2];
 
 
-const char * info_get_unique_id(void)
+const char *info_get_unique_id(void)
 {
     return string_unique_id;
 }
 
-const char * info_get_board_id(void)
+const char *info_get_board_id(void)
 {
     return string_board_id;
 }
 
-const char * info_get_host_id(void)
+const char *info_get_host_id(void)
 {
     return string_host_id;
 }
 
-const char * info_get_target_id(void)
+const char *info_get_target_id(void)
 {
     return string_target_id;
 }
 
-const char * info_get_hic_id(void)
+const char *info_get_hic_id(void)
 {
     return string_hic_id;
 }
-const char * info_get_version(void)
+const char *info_get_version(void)
 {
     return string_version;
 }
-const char * info_get_mac(void)
+const char *info_get_mac(void)
 {
     return string_mac;
 }
 
-const char * info_get_unique_id_string_descriptor(void)
+const char *info_get_unique_id_string_descriptor(void)
 {
     return usb_desc_unique_id;
 }
@@ -97,44 +103,42 @@ static void setup_basics()
     memset(string_target_id, 0, sizeof(string_target_id));
     memset(string_hic_id, 0, sizeof(string_hic_id));
     memset(string_board_id, 0, sizeof(string_board_id));
-
     // Host ID
     idx = 0;
+
     for (i = 0; i < 4; i++) {
         idx += util_write_hex32(string_host_id + idx, host_id[i]);
     }
-    string_host_id[idx++] = 0;
 
+    string_host_id[idx++] = 0;
     // Target ID
     idx = 0;
+
     for (i = 0; i < 4; i++) {
         idx += util_write_hex32(string_target_id + idx, target_id[i]);
     }
-    string_target_id[idx++] = 0;
 
+    string_target_id[idx++] = 0;
     // HIC ID
     idx = 0;
     idx += util_write_hex32(string_hic_id + idx, hic_id);
     string_hic_id[idx++] = 0;
-
     // Board ID
-    extern char * board_id; //TODO - remove
+    extern char *board_id;  //TODO - remove
     memcpy(string_board_id, board_id, 4);
     string_board_id[4] = 0;
-
     // Version
     idx = 0;
     string_version[idx++] = '0' + (DAPLINK_VERSION / 1000) % 10;
-    string_version[idx++] = '0' + (DAPLINK_VERSION / 100 ) % 10;
-    string_version[idx++] = '0' + (DAPLINK_VERSION / 10  ) % 10;
-    string_version[idx++] = '0' + (DAPLINK_VERSION / 1   ) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 100) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 10) % 10;
+    string_version[idx++] = '0' + (DAPLINK_VERSION / 1) % 10;
     string_version[idx++] = 0;
 }
 
 static void setup_unique_id()
 {
     memset(string_unique_id, 0, sizeof(string_unique_id));
-
     strcat(string_unique_id, string_board_id);
     strcat(string_unique_id, "0000");           // Reserved - was version number
     strcat(string_unique_id, string_host_id);
@@ -145,10 +149,8 @@ static void setup_string_descriptor()
 {
     uint8_t i = 0, idx = 0, len = 0;
     len = strlen((const char *)string_unique_id);
-    
     // bLength
-    usb_desc_unique_id[idx++] = len*2 + 2;
-    
+    usb_desc_unique_id[idx++] = len * 2 + 2;
     // bDescriptorType
     usb_desc_unique_id[idx++] = 3;
 
@@ -171,14 +173,11 @@ void info_init(void)
 void info_set_uuid_target(uint32_t *uuid_data)
 {
     uint32_t idx = 0;
-
     // Save the target ID
     memcpy(target_id, uuid_data, 16);
-    
     // patch for MAC use. Make sure MSB bits are set correctly
-    uuid_data[2] |=  (0x2 << 8);
+    uuid_data[2] |= (0x2 << 8);
     uuid_data[2] &= ~(0x1 << 8);
-
     idx += util_write_hex16(string_mac + idx, uuid_data[2] & 0xFFFF);
     idx += util_write_hex32(string_mac + idx, uuid_data[3]);
     string_mac[idx++] = 0;
@@ -187,30 +186,38 @@ void info_set_uuid_target(uint32_t *uuid_data)
 bool info_get_bootloader_present(void)
 {
     bool present = true;
+
     if (0 == DAPLINK_ROM_BL_SIZE) {
         present = false;
     }
+
     if (DAPLINK_BUILD_KEY_BL != info_bl->build_key) {
         present = false;
     }
+
     if (DAPLINK_HIC_ID != info_bl->hic_id) {
         present = false;
     }
+
     return present;
 }
 
 bool info_get_interface_present(void)
 {
     bool present = true;
+
     if (0 == DAPLINK_ROM_IF_SIZE) {
         present = false;
     }
+
     if (DAPLINK_BUILD_KEY_IF != info_if->build_key) {
         present = false;
     }
+
     if (DAPLINK_HIC_ID != info_if->hic_id) {
         present = false;
     }
+
     return present;
 }
 
@@ -252,19 +259,22 @@ void info_crc_compute()
     crc_interface = 0;
     crc_config_admin = 0;
     crc_config_user = 0;
-    
+
     // Compute the CRCs of regions that exist
     if (DAPLINK_ROM_BL_SIZE > 0) {
-        crc_bootloader = crc32((void*)DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4);
+        crc_bootloader = crc32((void *)DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4);
     }
+
     if (DAPLINK_ROM_IF_SIZE > 0) {
-        crc_interface = crc32((void*)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
+        crc_interface = crc32((void *)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
     }
+
     if (DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0) {
-        crc_config_admin = crc32((void*)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
+        crc_config_admin = crc32((void *)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
     }
+
     if (DAPLINK_ROM_CONFIG_USER_SIZE > 0) {
-        crc_config_user = crc32((void*)DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE);
+        crc_config_user = crc32((void *)DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE);
     }
 }
 
@@ -275,7 +285,8 @@ uint32_t info_get_bootloader_version(void)
     if (!info_get_bootloader_present()) {
         return 0;
     }
-    return info_bl->version;    
+
+    return info_bl->version;
 }
 
 uint32_t info_get_interface_version(void)
@@ -284,5 +295,6 @@ uint32_t info_get_interface_version(void)
     if (!info_get_interface_present()) {
         return 0;
     }
+
     return info_if->version;
 }

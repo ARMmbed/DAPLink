@@ -1,18 +1,21 @@
-# CMSIS-DAP Interface Firmware
-# Copyright (c) 2009-2013 ARM Limited
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+ 
 from __future__ import absolute_import
 
 # Add new HICs here
@@ -34,7 +37,7 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_efm32gg_stk_if': 0x2015,
     'sam3u2c_nrf51dk_if': 0x1100,
     'k20dx_frdmk20dx_if': 0x0230,
-    'k20dx_frdmk24f_if': 0x0280,
+    'k20dx_frdmkw24f_if': 0x0280,
     'k20dx_frdmkl02z_if': 0x0250,
     'k20dx_frdmkl05z_if': 0x0210,
     'k20dx_frdmkl25z_if': 0x0200,

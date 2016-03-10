@@ -1,18 +1,24 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usb_def.h
+ * @brief   USB defines
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __USB_DEF_H__
 #define __USB_DEF_H__
 
@@ -37,9 +43,9 @@
 
 /* bmRequestType Definition */
 typedef __packed struct _REQUEST_TYPE {
-  U8 Recipient : 5;                     /* D4..0: Recipient */
-  U8 Type      : 2;                     /* D6..5: Type */
-  U8 Dir       : 1;                     /* D7:    Data Phase Txsfer Direction */
+    U8 Recipient : 5;                     /* D4..0: Recipient */
+    U8 Type      : 2;                     /* D6..5: Type */
+    U8 Dir       : 1;                     /* D7:    Data Phase Txsfer Direction */
 } REQUEST_TYPE;
 
 /* USB Standard Request Codes */
@@ -66,23 +72,23 @@ typedef __packed struct _REQUEST_TYPE {
 
 /* USB Default Control Pipe Setup Packet */
 typedef __packed struct _USB_SETUP_PACKET {
-  REQUEST_TYPE bmRequestType;           /* bmRequestType */
-  U8  bRequest;                         /* bRequest */
-  __packed union {
-    U16        wValue;                  /* wValue */
-    __packed struct {
-      U8         wValueL;
-      U8         wValueH;
+    REQUEST_TYPE bmRequestType;           /* bmRequestType */
+    U8  bRequest;                         /* bRequest */
+    __packed union {
+        U16        wValue;                  /* wValue */
+        __packed struct {
+            U8         wValueL;
+            U8         wValueH;
+        };
     };
-  };
-  __packed union {
-    U16        wIndex;                  /* wIndex */
-    __packed struct {
-      U8         wIndexL;
-      U8         wIndexH;
+    __packed union {
+        U16        wIndex;                  /* wIndex */
+        __packed struct {
+            U8         wIndexL;
+            U8         wIndexH;
+        };
     };
-  };
-  U16          wLength;                 /* wLength */
+    U16          wLength;                 /* wLength */
 } USB_SETUP_PACKET;
 
 
@@ -146,93 +152,93 @@ typedef __packed struct _USB_SETUP_PACKET {
 
 /* USB Standard Device Descriptor */
 typedef __packed struct _USB_DEVICE_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U16 bcdUSB;
-  U8  bDeviceClass;
-  U8  bDeviceSubClass;
-  U8  bDeviceProtocol;
-  U8  bMaxPacketSize0;
-  U16 idVendor;
-  U16 idProduct;
-  U16 bcdDevice;
-  U8  iManufacturer;
-  U8  iProduct;
-  U8  iSerialNumber;
-  U8  bNumConfigurations;
+    U8  bLength;
+    U8  bDescriptorType;
+    U16 bcdUSB;
+    U8  bDeviceClass;
+    U8  bDeviceSubClass;
+    U8  bDeviceProtocol;
+    U8  bMaxPacketSize0;
+    U16 idVendor;
+    U16 idProduct;
+    U16 bcdDevice;
+    U8  iManufacturer;
+    U8  iProduct;
+    U8  iSerialNumber;
+    U8  bNumConfigurations;
 } USB_DEVICE_DESCRIPTOR;
 
 /* USB 2.0 Device Qualifier Descriptor */
 typedef __packed struct _USB_DEVICE_QUALIFIER_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U16 bcdUSB;
-  U8  bDeviceClass;
-  U8  bDeviceSubClass;
-  U8  bDeviceProtocol;
-  U8  bMaxPacketSize0;
-  U8  bNumConfigurations;
-  U8  bReserved;
+    U8  bLength;
+    U8  bDescriptorType;
+    U16 bcdUSB;
+    U8  bDeviceClass;
+    U8  bDeviceSubClass;
+    U8  bDeviceProtocol;
+    U8  bMaxPacketSize0;
+    U8  bNumConfigurations;
+    U8  bReserved;
 } USB_DEVICE_QUALIFIER_DESCRIPTOR;
 
 /* USB Standard Configuration Descriptor */
 typedef __packed struct _USB_CONFIGURATION_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U16 wTotalLength;
-  U8  bNumInterfaces;
-  U8  bConfigurationValue;
-  U8  iConfiguration;
-  U8  bmAttributes;
-  U8  bMaxPower;
+    U8  bLength;
+    U8  bDescriptorType;
+    U16 wTotalLength;
+    U8  bNumInterfaces;
+    U8  bConfigurationValue;
+    U8  iConfiguration;
+    U8  bmAttributes;
+    U8  bMaxPower;
 } USB_CONFIGURATION_DESCRIPTOR;
 
 /* USB Standard Interface Descriptor */
 typedef __packed struct _USB_INTERFACE_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U8  bInterfaceNumber;
-  U8  bAlternateSetting;
-  U8  bNumEndpoints;
-  U8  bInterfaceClass;
-  U8  bInterfaceSubClass;
-  U8  bInterfaceProtocol;
-  U8  iInterface;
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bInterfaceNumber;
+    U8  bAlternateSetting;
+    U8  bNumEndpoints;
+    U8  bInterfaceClass;
+    U8  bInterfaceSubClass;
+    U8  bInterfaceProtocol;
+    U8  iInterface;
 } USB_INTERFACE_DESCRIPTOR;
 
 /* USB Standard Endpoint Descriptor */
 typedef __packed struct _USB_ENDPOINT_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U8  bEndpointAddress;
-  U8  bmAttributes;
-  U16 wMaxPacketSize;
-  U8  bInterval;
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bEndpointAddress;
+    U8  bmAttributes;
+    U16 wMaxPacketSize;
+    U8  bInterval;
 } USB_ENDPOINT_DESCRIPTOR;
 
 /* USB String Descriptor */
 typedef __packed struct _USB_STRING_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U16 bString/*[]*/;
+    U8  bLength;
+    U8  bDescriptorType;
+    U16 bString/*[]*/;
 } USB_STRING_DESCRIPTOR;
 
 /* USB Common Descriptor */
 typedef __packed struct _USB_COMMON_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
+    U8  bLength;
+    U8  bDescriptorType;
 } USB_COMMON_DESCRIPTOR;
 
 /* USB Interface Association Descriptor */
 typedef __packed struct _USB_INTERFACE_ASSOCIATION_DESCRIPTOR {
-  U8  bLength;
-  U8  bDescriptorType;
-  U8  bFirstInterface;
-  U8  bInterfaceCount;
-  U8  bFunctionClass;
-  U8  bFunctionSubclass;
-  U8  bFunctionProtocol;
-  U8  iFunction;
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bFirstInterface;
+    U8  bInterfaceCount;
+    U8  bFunctionClass;
+    U8  bFunctionSubclass;
+    U8  bFunctionProtocol;
+    U8  iFunction;
 } USB_INTERFACE_ASSOCIATION_DESCRIPTOR;
 
 

@@ -6,4 +6,4 @@ common:
             - source/board/efm32gg_stk.c
         target:
             - source/target/siliconlabs/efm32gg/target.c
-            - source/target/siliconlabs/efm32gg/target_reset.c
+            - source/target/siliconlabs/target_reset.c

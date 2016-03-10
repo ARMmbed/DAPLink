@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    swd_host.c
+ * @brief   Implementation of swd_host.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -49,13 +54,13 @@
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
 // DAP operations as they are controlled by the remote debugger.
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(TARGET_NRF51822)
-  // SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
-  #define SOFT_RESET  SYSRESETREQ
+// SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
+#define SOFT_RESET  SYSRESETREQ
 #elif defined(BOARD_LPC4337)
-  // VECTRESET - Software reset of Cortex-M core
-  // For some Cortex-M devices, VECTRESET is the only way to reset the core.
-  // VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
-  #define SOFT_RESET  VECTRESET
+// VECTRESET - Software reset of Cortex-M core
+// For some Cortex-M devices, VECTRESET is the only way to reset the core.
+// VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
+#define SOFT_RESET  VECTRESET
 #endif
 
 typedef struct {
@@ -73,27 +78,34 @@ static DAP_STATE dap_state;
 static uint8_t swd_read_core_register(uint32_t n, uint32_t *val);
 static uint8_t swd_write_core_register(uint32_t n, uint32_t val);
 
-static void int2array(uint8_t * res, uint32_t data, uint8_t len) {
+static void int2array(uint8_t *res, uint32_t data, uint8_t len)
+{
     uint8_t i = 0;
+
     for (i = 0; i < len; i++) {
-        res[i] = (data >> 8*i) & 0xff;
+        res[i] = (data >> 8 * i) & 0xff;
     }
 }
 
-static uint8_t swd_transfer_retry(uint32_t req, uint32_t * data) {
+static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
+{
     uint8_t i, ack;
+
     for (i = 0; i < MAX_SWD_RETRY; i++) {
         ack = SWD_Transfer(req, data);
+
         // if ack != WAIT
         if (ack != DAP_TRANSFER_WAIT) {
             return ack;
         }
     }
+
     return ack;
 }
 
 
-uint8_t swd_init(void) {
+uint8_t swd_init(void)
+{
     //TODO - DAP_Setup puts GPIO pins in a hi-z state which can
     //       cause problems on re-init.  This needs to be investigated
     //       and fixed.
@@ -102,21 +114,21 @@ uint8_t swd_init(void) {
     return 1;
 }
 
-uint8_t swd_off(void) {
+uint8_t swd_off(void)
+{
     PORT_OFF();
     return 1;
 }
 
 // Read debug port register.
-uint8_t swd_read_dp(uint8_t adr, uint32_t *val) {
+uint8_t swd_read_dp(uint8_t adr, uint32_t *val)
+{
     uint32_t tmp_in;
     uint8_t tmp_out[4];
     uint8_t ack;
-	uint32_t tmp;
-
+    uint32_t tmp;
     tmp_in = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(adr);
     ack = swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
-
     *val = 0;
     tmp = tmp_out[3];
     *val |= (tmp << 24);
@@ -125,41 +137,42 @@ uint8_t swd_read_dp(uint8_t adr, uint32_t *val) {
     tmp = tmp_out[1];
     *val |= (tmp << 8);
     tmp = tmp_out[0];
-    *val |= (tmp << 0);	
-
+    *val |= (tmp << 0);
     return (ack == 0x01);
 }
 
 // Write debug port register
-uint8_t swd_write_dp(uint8_t adr, uint32_t val) {
+uint8_t swd_write_dp(uint8_t adr, uint32_t val)
+{
     uint32_t req;
     uint8_t data[4];
     uint8_t ack;
 
-    switch(adr) {
+    switch (adr) {
         case DP_SELECT:
-            if (dap_state.select == val)
+            if (dap_state.select == val) {
                 return 1;
+            }
+
             dap_state.select = val;
             break;
+
         default:
             break;
     }
 
     req = SWD_REG_DP | SWD_REG_W | SWD_REG_ADR(adr);
     int2array(data, val, 4);
-
     ack = swd_transfer_retry(req, (uint32_t *)data);
-
     return (ack == 0x01);
 }
 
 // Read access port register.
-uint8_t swd_read_ap(uint32_t adr, uint32_t *val) {
+uint8_t swd_read_ap(uint32_t adr, uint32_t *val)
+{
     uint8_t tmp_in, ack;
     uint8_t tmp_out[4];
-	uint32_t tmp;
-
+    uint32_t tmp;
     uint32_t apsel = adr & 0xff000000;
     uint32_t bank_sel = adr & APBANKSEL;
 
@@ -168,11 +181,9 @@ uint8_t swd_read_ap(uint32_t adr, uint32_t *val) {
     }
 
     tmp_in = SWD_REG_AP | SWD_REG_R | SWD_REG_ADR(adr);
-
     // first dummy read
     swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
     ack = swd_transfer_retry(tmp_in, (uint32_t *)tmp_out);
-
     *val = 0;
     tmp = tmp_out[3];
     *val |= (tmp << 24);
@@ -181,13 +192,13 @@ uint8_t swd_read_ap(uint32_t adr, uint32_t *val) {
     tmp = tmp_out[1];
     *val |= (tmp << 8);
     tmp = tmp_out[0];
-    *val |= (tmp << 0);	
-
+    *val |= (tmp << 0);
     return (ack == 0x01);
 }
 
 // Write access port register
-uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
+uint8_t swd_write_ap(uint32_t adr, uint32_t val)
+{
     uint8_t data[4];
     uint8_t req, ack;
     uint32_t apsel = adr & 0xff000000;
@@ -197,12 +208,15 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
         return 0;
     }
 
-    switch(adr) {
+    switch (adr) {
         case AP_CSW:
-            if (dap_state.csw == val)
+            if (dap_state.csw == val) {
                 return 1;
+            }
+
             dap_state.csw = val;
             break;
+
         default:
             break;
     }
@@ -216,22 +230,23 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val) {
 
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, NULL);
-
     return (ack == 0x01);
 }
 
 
 // Write 32-bit word aligned values to target memory using address auto-increment.
 // size is in bytes.
-static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size) {
+static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size)
+{
     uint8_t tmp_in[4], req;
     uint32_t size_in_words;
     uint32_t i, ack;
 
-    if (size==0)
+    if (size == 0) {
         return 0;
+    }
 
-    size_in_words = size/4;
+    size_in_words = size / 4;
 
     // CSW register
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
@@ -241,29 +256,32 @@ static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size) {
     // TAR write
     req = SWD_REG_AP | SWD_REG_W | (1 << 2);
     int2array(tmp_in, address, 4);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
         return 0;
     }
 
     // DRW write
     req = SWD_REG_AP | SWD_REG_W | (3 << 2);
+
     for (i = 0; i < size_in_words; i++) {
         if (swd_transfer_retry(req, (uint32_t *)data) != 0x01) {
             return 0;
         }
-        data+=4;
+
+        data += 4;
     }
 
     // dummy read
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, NULL);
-
     return (ack == 0x01);
 }
 
 // Read 32-bit word aligned values from target memory using address auto-increment.
 // size is in bytes.
-static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size) {
+static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size)
+{
     uint8_t tmp_in[4], req, ack;
     uint32_t size_in_words;
     uint32_t i;
@@ -272,7 +290,7 @@ static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size) {
         return 0;
     }
 
-    size_in_words = size/4;
+    size_in_words = size / 4;
 
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
@@ -281,47 +299,51 @@ static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size) {
     // TAR write
     req = SWD_REG_AP | SWD_REG_W | (1 << 2);
     int2array(tmp_in, address, 4);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
         return 0;
     }
 
     // read data
     req = SWD_REG_AP | SWD_REG_R | (3 << 2);
+
     // dummy read
     if (swd_transfer_retry(req, (uint32_t *)data) != 0x01) {
         return 0;
     }
 
-    for (i = 0; i< size_in_words; i++) {
+    for (i = 0; i < size_in_words; i++) {
         if (swd_transfer_retry(req, (uint32_t *)data) != 0x01) {
             return 0;
         }
+
         data += 4;
     }
 
     // dummy read
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, NULL);
-
     return (ack == 0x01);
 }
 
 // Read target memory.
-static uint8_t swd_read_data(uint32_t addr, uint32_t *val) {
+static uint8_t swd_read_data(uint32_t addr, uint32_t *val)
+{
     uint8_t tmp_in[4];
     uint8_t tmp_out[4];
     uint8_t req, ack;
-	uint32_t tmp;
-
+    uint32_t tmp;
     // put addr in TAR register
     int2array(tmp_in, addr, 4);
     req = SWD_REG_AP | SWD_REG_W | (1 << 2);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
         return 0;
     }
 
     // read data
     req = SWD_REG_AP | SWD_REG_R | (3 << 2);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_out) != 0x01) {
         return 0;
     }
@@ -329,7 +351,6 @@ static uint8_t swd_read_data(uint32_t addr, uint32_t *val) {
     // dummy read
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, (uint32_t *)tmp_out);
-
     *val = 0;
     tmp = tmp_out[3];
     *val |= (tmp << 24);
@@ -338,19 +359,19 @@ static uint8_t swd_read_data(uint32_t addr, uint32_t *val) {
     tmp = tmp_out[1];
     *val |= (tmp << 8);
     tmp = tmp_out[0];
-    *val |= (tmp << 0);	
-
+    *val |= (tmp << 0);
     return (ack == 0x01);
 }
 
 // Write target memory.
-static uint8_t swd_write_data(uint32_t address, uint32_t data) {
+static uint8_t swd_write_data(uint32_t address, uint32_t data)
+{
     uint8_t tmp_in[4];
     uint8_t req, ack;
-
     // put addr in TAR register
     int2array(tmp_in, address, 4);
     req = SWD_REG_AP | SWD_REG_W | (1 << 2);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
         return 0;
     }
@@ -358,6 +379,7 @@ static uint8_t swd_write_data(uint32_t address, uint32_t data) {
     // write data
     int2array(tmp_in, data, 4);
     req = SWD_REG_AP | SWD_REG_W | (3 << 2);
+
     if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
         return 0;
     }
@@ -365,12 +387,12 @@ static uint8_t swd_write_data(uint32_t address, uint32_t data) {
     // dummy read
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
     ack = swd_transfer_retry(req, NULL);
-
     return (ack == 0x01) ? 1 : 0;
 }
 
 // Read 32-bit word from target memory.
-static uint8_t swd_read_word(uint32_t addr, uint32_t *val) {
+static uint8_t swd_read_word(uint32_t addr, uint32_t *val)
+{
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -383,7 +405,8 @@ static uint8_t swd_read_word(uint32_t addr, uint32_t *val) {
 }
 
 // Write 32-bit word to target memory.
-static uint8_t swd_write_word(uint32_t addr, uint32_t val) {
+static uint8_t swd_write_word(uint32_t addr, uint32_t val)
+{
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -396,8 +419,10 @@ static uint8_t swd_write_word(uint32_t addr, uint32_t val) {
 }
 
 // Read 8-bit byte from target memory.
-static uint8_t swd_read_byte(uint32_t addr, uint8_t *val) {
+static uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
+{
     uint32_t tmp;
+
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE8)) {
         return 0;
     }
@@ -411,7 +436,8 @@ static uint8_t swd_read_byte(uint32_t addr, uint8_t *val) {
 }
 
 // Write 8-bit byte to target memory.
-static uint8_t swd_write_byte(uint32_t addr, uint8_t val) {
+static uint8_t swd_write_byte(uint32_t addr, uint8_t val)
+{
     uint32_t tmp;
 
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE8)) {
@@ -419,6 +445,7 @@ static uint8_t swd_write_byte(uint32_t addr, uint8_t val) {
     }
 
     tmp = val << ((addr & 0x03) << 3);
+
     if (!swd_write_data(addr, tmp)) {
         return 0;
     }
@@ -428,7 +455,8 @@ static uint8_t swd_write_byte(uint32_t addr, uint8_t val) {
 
 // Read unaligned data from target memory.
 // size is in bytes.
-uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
+uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size)
+{
     uint32_t n;
 
     // Read bytes until word aligned
@@ -436,6 +464,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_read_byte(address, data)) {
             return 0;
         }
+
         address++;
         data++;
         size--;
@@ -445,6 +474,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
     while (size > 3) {
         // Limit to auto increment page size
         n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+
         if (size < n) {
             n = size & 0xFFFFFFFC; // Only count complete words remaining
         }
@@ -463,6 +493,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_read_byte(address, data)) {
             return 0;
         }
+
         address++;
         data++;
         size--;
@@ -473,7 +504,8 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size) {
 
 // Write unaligned data to target memory.
 // size is in bytes.
-uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
+uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size)
+{
     uint32_t n = 0;
 
     // Write bytes until word aligned
@@ -481,6 +513,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_write_byte(address, *data)) {
             return 0;
         }
+
         address++;
         data++;
         size--;
@@ -490,6 +523,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
     while (size > 3) {
         // Limit to auto increment page size
         n = TARGET_AUTO_INCREMENT_PAGE_SIZE - (address & (TARGET_AUTO_INCREMENT_PAGE_SIZE - 1));
+
         if (size < n) {
             n = size & 0xFFFFFFFC; // Only count complete words remaining
         }
@@ -497,6 +531,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_write_block(address, data, n)) {
             return 0;
         }
+
         address += n;
         data += n;
         size -= n;
@@ -507,6 +542,7 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
         if (!swd_write_byte(address, *data)) {
             return 0;
         }
+
         address++;
         data++;
         size--;
@@ -516,9 +552,10 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size) {
 }
 
 // Execute system call.
-static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
+static uint8_t swd_write_debug_state(DEBUG_STATE *state)
+{
     uint32_t i, status;
-    
+
     if (!swd_write_dp(DP_SELECT, 0)) {
         return 0;
     }
@@ -536,7 +573,7 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     }
 
     // R13, R14, R15
-    for (i=13; i<16; i++) {
+    for (i = 13; i < 16; i++) {
         if (!swd_write_core_register(i, state->r[i])) {
             return 0;
         }
@@ -546,10 +583,10 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     if (!swd_write_core_register(16, state->xpsr)) {
         return 0;
     }
-    
-    if (!swd_write_memory(target_device.flash_algo->algo_start, 
-            (uint8_t *)target_device.flash_algo->algo_blob, 
-            target_device.flash_algo->algo_size)){
+
+    if (!swd_write_memory(target_device.flash_algo->algo_start,
+                          (uint8_t *)target_device.flash_algo->algo_blob,
+                          target_device.flash_algo->algo_size)) {
         return 0;
     }
 
@@ -558,7 +595,7 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     }
 
     // check status
-    if (!swd_read_dp(DP_CTRL_STAT, &status)){
+    if (!swd_read_dp(DP_CTRL_STAT, &status)) {
         return 0;
     }
 
@@ -569,15 +606,16 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state) {
     return 1;
 }
 
-static uint8_t swd_read_core_register(uint32_t n, uint32_t *val) {
+static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
+{
     int i = 0, timeout = 100;
+
     if (!swd_write_word(DCRSR, n)) {
         return 0;
     }
 
     // wait for S_REGRDY
     for (i = 0; i < timeout; i++) {
-
         if (!swd_read_word(DHCSR, val)) {
             return 0;
         }
@@ -598,10 +636,13 @@ static uint8_t swd_read_core_register(uint32_t n, uint32_t *val) {
     return 1;
 }
 
-static uint8_t swd_write_core_register(uint32_t n, uint32_t val) {
+static uint8_t swd_write_core_register(uint32_t n, uint32_t val)
+{
     int i = 0, timeout = 100;
-    if (!swd_write_word(DCRDR, val))
+
+    if (!swd_write_word(DCRDR, val)) {
         return 0;
+    }
 
     if (!swd_write_word(DCRSR, n | REGWnR)) {
         return 0;
@@ -609,7 +650,6 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val) {
 
     // wait for S_REGRDY
     for (i = 0; i < timeout; i++) {
-
         if (!swd_read_word(DHCSR, &val)) {
             return 0;
         }
@@ -622,11 +662,12 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val) {
     return 0;
 }
 
-static uint8_t swd_wait_until_halted(void) {
+static uint8_t swd_wait_until_halted(void)
+{
     // Wait for target to stop
     uint32_t val, i, timeout = MAX_TIMEOUT;
-    for (i = 0; i < timeout; i++) {
 
+    for (i = 0; i < timeout; i++) {
         if (!swd_read_word(DBG_HCSR, &val)) {
             return 0;
         }
@@ -635,19 +676,19 @@ static uint8_t swd_wait_until_halted(void) {
             return 1;
         }
     }
+
     return 0;
 }
 
-uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4) {
-    DEBUG_STATE state = {{0},0};
+uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4)
+{
+    DEBUG_STATE state = {{0}, 0};
     // Call flash algorithm function on target and wait for result.
     state.r[0]     = arg1;                   // R0: Argument 1
     state.r[1]     = arg2;                   // R1: Argument 2
     state.r[2]     = arg3;                   // R2: Argument 3
     state.r[3]     = arg4;                   // R3: Argument 4
-
     state.r[9]     = sysCallParam->static_base;    // SB: Static Base
-
     state.r[13]    = sysCallParam->stack_pointer;  // SP: Stack Pointer
     state.r[14]    = sysCallParam->breakpoint;     // LR: Exit Point
     state.r[15]    = entry;                        // PC: Entry Point
@@ -674,37 +715,35 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
 }
 
 // SWD Reset
-static uint8_t swd_reset(void) {
+static uint8_t swd_reset(void)
+{
     uint8_t tmp_in[8];
     uint8_t i = 0;
+
     for (i = 0; i < 8; i++) {
         tmp_in[i] = 0xff;
     }
 
     SWJ_Sequence(51, tmp_in);
-
     return 1;
 }
 
 // SWD Switch
-static uint8_t swd_switch(uint16_t val) {
+static uint8_t swd_switch(uint16_t val)
+{
     uint8_t tmp_in[2];
-
     tmp_in[0] = val & 0xff;
     tmp_in[1] = (val >> 8) & 0xff;
-
     SWJ_Sequence(16, tmp_in);
-
     return 1;
 }
 
 // SWD Read ID
-static uint8_t swd_read_idcode(uint32_t *id) {
+static uint8_t swd_read_idcode(uint32_t *id)
+{
     uint8_t tmp_in[1];
     uint8_t tmp_out[4];
-
     tmp_in[0] = 0x00;
-
     SWJ_Sequence(8, tmp_in);
 
     if (swd_read_dp(0, (uint32_t *)tmp_out) != 0x01) {
@@ -712,12 +751,12 @@ static uint8_t swd_read_idcode(uint32_t *id) {
     }
 
     *id = (tmp_out[3] << 24) | (tmp_out[2] << 16) | (tmp_out[1] << 8) | tmp_out[0];
-
     return 1;
 }
 
 
-static uint8_t JTAG2SWD() {
+static uint8_t JTAG2SWD()
+{
     uint32_t tmp = 0;
 
     if (!swd_reset()) {
@@ -739,7 +778,8 @@ static uint8_t JTAG2SWD() {
     return 1;
 }
 
-uint8_t swd_init_debug(void) {
+uint8_t swd_init_debug(void)
+{
     uint32_t tmp = 0;
     // init dap state with fake values
     dap_state.select = 0xffffffff;
@@ -799,6 +839,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
     uint32_t val;
     swd_init();
+
     switch (state) {
         case RESET_HOLD:
             swd_set_target_reset(1);
@@ -817,63 +858,77 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+
             if (!swd_init_debug()) {
                 return 0;
             }
+
             // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
+
             // Enable halt on reset
             if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
                 return 0;
             }
+
             // Reset again
             swd_set_target_reset(1);
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
                 }
-            } while((val & S_HALT) == 0);
+            } while ((val & S_HALT) == 0);
+
             // Disable halt on reset
             if (!swd_write_word(DBG_EMCR, 0)) {
                 return 0;
             }
+
             break;
 
         case NO_DEBUG:
             if (!swd_write_word(DBG_HCSR, DBGKEY)) {
                 return 0;
             }
+
             break;
 
         case DEBUG:
             if (!JTAG2SWD()) {
                 return 0;
             }
+
             if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
                 return 0;
             }
+
             // Ensure CTRL/STAT register selected in DPBANKSEL
             if (!swd_write_dp(DP_SELECT, 0)) {
                 return 0;
             }
+
             // Power up
             if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
                 return 0;
             }
+
             // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
+
             break;
 
         default:
             return 0;
     }
+
     return 1;
 }
 
@@ -881,6 +936,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
     uint32_t val;
     swd_init();
+
     switch (state) {
         case RESET_HOLD:
             swd_set_target_reset(1);
@@ -898,66 +954,80 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             if (!swd_init_debug()) {
                 return 0;
             }
+
             // Enable debug and halt the core (DHCSR <- 0xA05F0003)
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
                 return 0;
-            }          
+            }
+
             // Wait until core is halted
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
                 }
-            } while((val & S_HALT) == 0);
+            } while ((val & S_HALT) == 0);
+
             // Enable halt on reset
             if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
                 return 0;
             }
+
             // Perform a soft reset
             if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
                 return 0;
             }
+
             os_dly_wait(2);
+
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
                 }
-            } while((val & S_HALT) == 0);
+            } while ((val & S_HALT) == 0);
+
             // Disable halt on reset
             if (!swd_write_word(DBG_EMCR, 0)) {
                 return 0;
             }
-            break;
 
+            break;
 
         case NO_DEBUG:
             if (!swd_write_word(DBG_HCSR, DBGKEY)) {
                 return 0;
             }
+
             break;
 
         case DEBUG:
             if (!JTAG2SWD()) {
                 return 0;
             }
+
             if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
                 return 0;
             }
+
             // Ensure CTRL/STAT register selected in DPBANKSEL
             if (!swd_write_dp(DP_SELECT, 0)) {
                 return 0;
             }
+
             // Power up
             if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
                 return 0;
             }
+
             // Enable debug
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
+
             break;
 
         default:
             return 0;
     }
+
     return 1;
 }

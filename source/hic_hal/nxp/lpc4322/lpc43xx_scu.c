@@ -1,22 +1,22 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    lpc43xx_scu.c
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-/* Peripheral group ----------------------------------------------------------- */
-/** @addtogroup SCU
- * @{
  */
 
 /* Includes ------------------------------------------------------------------- */
@@ -82,10 +82,6 @@
  **********************************************************************/
 void scu_pinmux(uint8_t port, uint8_t pin, uint8_t mode, uint8_t func)
 {
-  uint32_t * scu_base=(uint32_t*)(LPC_SCU_BASE);
-  scu_base[(PORT_OFFSET*port+PIN_OFFSET*pin)/4]=mode+func;
+    uint32_t *scu_base = (uint32_t *)(LPC_SCU_BASE);
+    scu_base[(PORT_OFFSET * port + PIN_OFFSET * pin) / 4] = mode + func;
 } /* scu_pinmux */
-
-/**
- * @}
- */

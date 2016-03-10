@@ -1,15 +1,20 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    DAP_config.h
+ * @brief   
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -134,41 +139,39 @@ Configures the DAP Hardware I/O pins for JTAG mode:
  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
  - TDO to input mode.
 */
-static inline void PORT_JTAG_SETUP (void) {}
+static inline void PORT_JTAG_SETUP(void) {}
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
 */
-static inline void PORT_SWD_SETUP (void) {
+static inline void PORT_SWD_SETUP(void)
+{
     PIN_SWCLK_GPIO->PSOR     = 1 << PIN_SWCLK_BIT;
     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
     PIN_SWDIO_NOE_GPIO->PCOR = 1 << PIN_SWDIO_NOE_BIT;
     PIN_SWD_NOE_GPIO->PCOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
-
-    PIN_SWD_NOE_GPIO->PDDR = PIN_SWD_NOE_GPIO->PDDR | (1<<PIN_SWD_NOE_BIT);
-    PIN_SWD_NOE_GPIO->PCOR = PIN_SWD_NOE_GPIO->PCOR | (1<<PIN_SWD_NOE_BIT);
-    PIN_SWDIO_NOE_GPIO->PCOR = PIN_SWDIO_NOE_GPIO->PCOR | (1<<PIN_SWDIO_NOE_BIT);
-
+    PIN_SWD_NOE_GPIO->PDDR = PIN_SWD_NOE_GPIO->PDDR | (1 << PIN_SWD_NOE_BIT);
+    PIN_SWD_NOE_GPIO->PCOR = PIN_SWD_NOE_GPIO->PCOR | (1 << PIN_SWD_NOE_BIT);
+    PIN_SWDIO_NOE_GPIO->PCOR = PIN_SWDIO_NOE_GPIO->PCOR | (1 << PIN_SWDIO_NOE_BIT);
     PIN_nRESET_GPIO->PSOR = PIN_nRESET;
     PIN_nRESET_GPIO->PDDR |= PIN_nRESET; //output
-
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_MUX(1);
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
 }
 
 /** Disable JTAG/SWD I/O Pins.
 Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
-static inline void PORT_OFF (void) {
+static inline void PORT_OFF(void)
+{
     PIN_SWDIO_NOE_GPIO->PSOR = 1 << PIN_SWDIO_NOE_BIT;
     PIN_SWD_NOE_GPIO->PSOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
-
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK|PORT_PCR_PE_MASK|PORT_PCR_PFE_MASK|PORT_PCR_MUX(1);
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
 }
 
 
@@ -177,21 +180,24 @@ static inline void PORT_OFF (void) {
 /** SWCLK/TCK I/O pin: Get Input.
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWCLK_TCK_IN  (void) {
-  return (0);   // Not available
+static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
+{
+    return (0);   // Not available
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
 Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWCLK_TCK_SET (void) {
+static __forceinline void     PIN_SWCLK_TCK_SET(void)
+{
     PIN_SWCLK_GPIO->PSOR = 1 << PIN_SWCLK_BIT;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWCLK_TCK_CLR (void) {
+static __forceinline void     PIN_SWCLK_TCK_CLR(void)
+{
     PIN_SWCLK_GPIO->PCOR = 1 << PIN_SWCLK_BIT;
 }
 
@@ -201,35 +207,40 @@ static __forceinline void     PIN_SWCLK_TCK_CLR (void) {
 /** SWDIO/TMS I/O pin: Get Input.
 \return Current status of the SWDIO/TMS DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_TMS_IN  (void) {
+static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
+{
     return ((PIN_SWDIO_IN_GPIO->PDIR >> PIN_SWDIO_IN_BIT) & 1);
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
 Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWDIO_TMS_SET (void) {
+static __forceinline void     PIN_SWDIO_TMS_SET(void)
+{
     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
 Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWDIO_TMS_CLR (void) {
+static __forceinline void     PIN_SWDIO_TMS_CLR(void)
+{
     PIN_SWDIO_OUT_GPIO->PCOR = 1 << PIN_SWDIO_OUT_BIT;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
 \return Current status of the SWDIO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_IN      (void) {
+static __forceinline uint32_t PIN_SWDIO_IN(void)
+{
     return (BITBAND_REG(PIN_SWDIO_IN_GPIO->PDIR, PIN_SWDIO_IN_BIT));
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
 \param bit Output value for the SWDIO DAP hardware I/O pin.
 */
-static __forceinline void     PIN_SWDIO_OUT     (uint32_t bit) {
+static __forceinline void     PIN_SWDIO_OUT(uint32_t bit)
+{
     BITBAND_REG(PIN_SWDIO_OUT_GPIO->PDOR, PIN_SWDIO_OUT_BIT) = bit;
 }
 
@@ -237,7 +248,8 @@ static __forceinline void     PIN_SWDIO_OUT     (uint32_t bit) {
 Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_ENABLE  (void) {
+static __forceinline void     PIN_SWDIO_OUT_ENABLE(void)
+{
     PIN_SWDIO_NOE_GPIO->PCOR = 1 << PIN_SWDIO_NOE_BIT;
 }
 
@@ -245,7 +257,8 @@ static __forceinline void     PIN_SWDIO_OUT_ENABLE  (void) {
 Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 called prior \ref PIN_SWDIO_IN function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_DISABLE (void) {
+static __forceinline void     PIN_SWDIO_OUT_DISABLE(void)
+{
     PIN_SWDIO_NOE_GPIO->PSOR = 1 << PIN_SWDIO_NOE_BIT;
 }
 
@@ -255,14 +268,16 @@ static __forceinline void     PIN_SWDIO_OUT_DISABLE (void) {
 /** TDI I/O pin: Get Input.
 \return Current status of the TDI DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDI_IN  (void) {
+static __forceinline uint32_t PIN_TDI_IN(void)
+{
     return (0);   // Not available
 }
 
 /** TDI I/O pin: Set Output.
 \param bit Output value for the TDI DAP hardware I/O pin.
 */
-static __forceinline void     PIN_TDI_OUT (uint32_t bit) {
+static __forceinline void     PIN_TDI_OUT(uint32_t bit)
+{
     ;             // Not available
 }
 
@@ -272,7 +287,8 @@ static __forceinline void     PIN_TDI_OUT (uint32_t bit) {
 /** TDO I/O pin: Get Input.
 \return Current status of the TDO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDO_IN  (void) {
+static __forceinline uint32_t PIN_TDO_IN(void)
+{
     return (0);   // Not available
 }
 
@@ -282,7 +298,8 @@ static __forceinline uint32_t PIN_TDO_IN  (void) {
 /** nTRST I/O pin: Get Input.
 \return Current status of the nTRST DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nTRST_IN   (void) {
+static __forceinline uint32_t PIN_nTRST_IN(void)
+{
     return (0);   // Not available
 }
 
@@ -291,7 +308,8 @@ static __forceinline uint32_t PIN_nTRST_IN   (void) {
            - 0: issue a JTAG TRST Test Reset.
            - 1: release JTAG TRST Test Reset.
 */
-static __forceinline void     PIN_nTRST_OUT  (uint32_t bit) {
+static __forceinline void     PIN_nTRST_OUT(uint32_t bit)
+{
     ;             // Not available
 }
 
@@ -300,7 +318,8 @@ static __forceinline void     PIN_nTRST_OUT  (uint32_t bit) {
 /** nRESET I/O pin: Get Input.
 \return Current status of the nRESET DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nRESET_IN  (void) {
+static __forceinline uint32_t PIN_nRESET_IN(void)
+{
     return ((PIN_nRESET_GPIO->PDIR >> PIN_nRESET_BIT) & 1);
 }
 
@@ -309,7 +328,8 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 0: issue a device hardware reset.
            - 1: release device hardware reset.
 */
-static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
+static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
+{
     BITBAND_REG(PIN_nRESET_GPIO->PDOR, PIN_nRESET_BIT) = bit;
 }
 
@@ -334,7 +354,8 @@ It is recommended to provide the following LEDs for status indication:
            - 1: Connect LED ON: debugger is connected to CMSIS-DAP Debug Unit.
            - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
 */
-static inline void LED_CONNECTED_OUT (uint32_t bit) {
+static inline void LED_CONNECTED_OUT(uint32_t bit)
+{
     BITBAND_REG(LED_CONNECTED_GPIO->PDOR, LED_CONNECTED_BIT) = ~bit;
 }
 
@@ -343,7 +364,8 @@ static inline void LED_CONNECTED_OUT (uint32_t bit) {
            - 1: Target Running LED ON: program execution in target started.
            - 0: Target Running LED OFF: program execution in target stopped.
 */
-static inline void LED_RUNNING_OUT (uint32_t bit) {
+static inline void LED_RUNNING_OUT(uint32_t bit)
+{
     ;             // Not available
 }
 
@@ -367,50 +389,43 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
  - for nTRST, nRESET a weak pull-up (if available) is enabled.
  - LED output pins are enabled and LEDs are turned off.
 */
-static inline void DAP_SETUP (void) {
-
+static inline void DAP_SETUP(void)
+{
     SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK |  /* Enable Port A Clock */
-                SIM_SCGC5_PORTB_MASK |  /* Enable Port B Clock */
-                SIM_SCGC5_PORTC_MASK |  /* Enable Port C Clock */
-                SIM_SCGC5_PORTD_MASK;   /* Enable Port D Clock */
-
+                  SIM_SCGC5_PORTB_MASK |  /* Enable Port B Clock */
+                  SIM_SCGC5_PORTC_MASK |  /* Enable Port C Clock */
+                  SIM_SCGC5_PORTD_MASK;   /* Enable Port D Clock */
     /* Configure I/O pin SWCLK */
     PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT]         = PORT_PCR_MUX(1);    /* GPIO */
     PIN_SWCLK_GPIO->PSOR  = 1 << PIN_SWCLK_BIT;                      /* High level */
     PIN_SWCLK_GPIO->PDDR |= 1 << PIN_SWCLK_BIT;                      /* Output */
-
     /* Configure I/O pin SWDIO_OUT */
     PIN_SWDIO_OUT_PORT->PCR[PIN_SWDIO_OUT_BIT] = PORT_PCR_MUX(1);    /* GPIO */
     PIN_SWDIO_OUT_GPIO->PSOR  = 1 << PIN_SWDIO_OUT_BIT;              /* High level */
     PIN_SWDIO_OUT_GPIO->PDDR |= 1 << PIN_SWDIO_OUT_BIT;              /* Output */
-
     /* Configure I/O pin SWDIO_IN */
     PIN_SWDIO_IN_PORT->PCR[PIN_SWDIO_IN_BIT]   = PORT_PCR_MUX(1)  |  /* GPIO */
-                                               PORT_PCR_PE_MASK |  /* Pull enable */
-                                               PORT_PCR_PS_MASK;   /* Pull-up */
+            PORT_PCR_PE_MASK |  /* Pull enable */
+            PORT_PCR_PS_MASK;   /* Pull-up */
     PIN_SWDIO_IN_GPIO->PDDR &= ~(1 << PIN_SWDIO_IN_BIT);             /* Input */
-
     /* Configure I/O pin SWDIO_NOE */
     PIN_SWDIO_NOE_PORT->PCR[PIN_SWDIO_NOE_BIT] = PORT_PCR_MUX(1);    /* GPIO */
     PIN_SWDIO_NOE_GPIO->PSOR  = 1 << PIN_SWDIO_NOE_BIT;              /* High level */
     PIN_SWDIO_NOE_GPIO->PDDR |= 1 << PIN_SWDIO_NOE_BIT;              /* Output */
-
     /* Configure I/O pin SWD_NOE */
     PIN_SWD_NOE_PORT->PCR[PIN_SWD_NOE_BIT]     = PORT_PCR_MUX(1);    /* GPIO */
     PIN_SWD_NOE_GPIO->PSOR  = 1 << PIN_SWD_NOE_BIT;                  /* High level */
     PIN_SWD_NOE_GPIO->PDDR |= 1 << PIN_SWD_NOE_BIT;                  /* Output */
-
     /* Configure I/O pin nRESET */
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT]       = PORT_PCR_MUX(1)  |  /* GPIO */
-                                               PORT_PCR_PE_MASK |  /* Pull enable */
-                                               PORT_PCR_PS_MASK |  /* Pull-up */
-                                               PORT_PCR_ODE_MASK;  /* Open-drain */
+            PORT_PCR_PE_MASK |  /* Pull enable */
+            PORT_PCR_PS_MASK |  /* Pull-up */
+            PORT_PCR_ODE_MASK;  /* Open-drain */
     PIN_nRESET_GPIO->PSOR  = 1 << PIN_nRESET_BIT;                    /* High level */
     PIN_nRESET_GPIO->PDDR |= 1 << PIN_nRESET_BIT;                    /* Output */
-
     /* Configure LED */
     LED_CONNECTED_PORT->PCR[LED_CONNECTED_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
-                                               PORT_PCR_ODE_MASK;  /* Open-drain */
+            PORT_PCR_ODE_MASK;  /* Open-drain */
     LED_CONNECTED_GPIO->PCOR  = 1 << LED_CONNECTED_BIT;              /* Turned on */
     LED_CONNECTED_GPIO->PDDR |= 1 << LED_CONNECTED_BIT;              /* Output */
 }
@@ -422,7 +437,8 @@ when a device needs a time-critical unlock sequence that enables the debug port.
 \return 0 = no device specific reset sequence is implemented.\n
         1 = a device specific reset sequence is implemented.
 */
-static inline uint32_t RESET_TARGET (void) {
+static inline uint32_t RESET_TARGET(void)
+{
     return (0);              // change to '1' when a device reset sequence is implemented
 }
 
