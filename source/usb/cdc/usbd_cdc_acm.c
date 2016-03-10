@@ -1,21 +1,28 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usbd_cdc_acm.c
+ * @brief   Communication Device Class driver
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "string.h"
+
 #include "RTL.h"
 #include "rl_usb.h"
-#include "string.h"
 #include "usb_for_lib.h"
 
 
@@ -25,24 +32,24 @@
     \defgroup USBD_CDC_ACM_GLOBAL_VAR  Global Variables (GLOBAL_VAR)
     \brief      Global variables used in USBD CDC ACM module
  */
-int32_t  data_send_access;              /*!< Flag active while send data (in the send intermediate buffer) is being accessed */
-int32_t  data_send_active;              /*!< Flag active while data is being sent */
-int32_t  data_send_zlp;                 /*!< Flag active when ZLP needs to be sent */
-int32_t  data_to_send_wr;               /*!< Number of bytes written to the send intermediate buffer */
-int32_t  data_to_send_rd;               /*!< Number of bytes read from the send intermediate buffer */
-uint8_t *ptr_data_to_send;              /*!< Pointer to the send intermediate buffer to the data to be sent */
-uint8_t *ptr_data_sent;                 /*!< Pointer to the send intermediate buffer to the data already sent */
+int32_t data_send_access;              /*!< Flag active while send data (in the send intermediate buffer) is being accessed */
+int32_t data_send_active;              /*!< Flag active while data is being sent */
+int32_t data_send_zlp;                 /*!< Flag active when ZLP needs to be sent */
+int32_t data_to_send_wr;               /*!< Number of bytes written to the send intermediate buffer */
+int32_t data_to_send_rd;               /*!< Number of bytes read from the send intermediate buffer */
+uint8_t *ptr_data_to_send;             /*!< Pointer to the send intermediate buffer to the data to be sent */
+uint8_t *ptr_data_sent;                /*!< Pointer to the send intermediate buffer to the data already sent */
 
-int32_t  data_read_access;              /*!< Flag active while read data (in the receive intermediate buffer) is being accessed */
-int32_t  data_receive_int_access;       /*!< Flag active while read data (in the receive intermediate buffer) is being accessed from the IRQ function*/
-int32_t  data_received_pending_pckts;   /*!< Number of packets received but not handled (pending) */
-int32_t  data_no_space_for_receive;     /*!< Flag active while there is no more space for reception */
-uint8_t *ptr_data_received;             /*!< Pointer to the receive intermediate buffer to the received unread data */
-uint8_t *ptr_data_read;                 /*!< Pointer to the receive intermediate buffer to the received read data */
+int32_t data_read_access;              /*!< Flag active while read data (in the receive intermediate buffer) is being accessed */
+int32_t data_receive_int_access;       /*!< Flag active while read data (in the receive intermediate buffer) is being accessed from the IRQ function*/
+int32_t data_received_pending_pckts;   /*!< Number of packets received but not handled (pending) */
+int32_t data_no_space_for_receive;     /*!< Flag active while there is no more space for reception */
+uint8_t *ptr_data_received;            /*!< Pointer to the receive intermediate buffer to the received unread data */
+uint8_t *ptr_data_read;                /*!< Pointer to the receive intermediate buffer to the received read data */
 
-uint16_t control_line_state;            /*!< Control line state settings bitmap (0. bit - DTR state, 1. bit - RTS state) */
+uint16_t control_line_state;           /*!< Control line state settings bitmap (0. bit - DTR state, 1. bit - RTS state) */
 
-CDC_LINE_CODING line_coding;            /*!< Communication settings */
+CDC_LINE_CODING line_coding;           /*!< Communication settings */
 
 /* end of group USBD_CDC_ACM_GLOBAL_VAR */
 
@@ -52,27 +59,27 @@ CDC_LINE_CODING line_coding;            /*!< Communication settings */
 __weak int32_t USBD_CDC_ACM_PortInitialize(void)
 {
     return (0);
-};
+}
 __weak int32_t USBD_CDC_ACM_PortUninitialize(void)
 {
     return (0);
-};
+}
 __weak int32_t USBD_CDC_ACM_PortReset(void)
 {
     return (0);
-};
+}
 __weak int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
 {
     return (0);
-};
+}
 __weak int32_t USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding)
 {
     return (0);
-};
+}
 __weak int32_t USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp)
 {
     return (0);
-};
+}
 
 /* Functions that can be used by user to use standard Virtual COM port
    functionality                                                              */
@@ -83,7 +90,7 @@ int32_t USBD_CDC_ACM_GetChar(void);
 __weak int32_t USBD_CDC_ACM_DataReceived(int32_t len)
 {
     return (0);
-};
+}
 int32_t USBD_CDC_ACM_DataAvailable(void);
 int32_t USBD_CDC_ACM_Notify(uint16_t stat);
 
@@ -116,8 +123,8 @@ __weak int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
 
 
 /* Local function prototypes                                                  */
-static void    USBD_CDC_ACM_EP_BULKOUT_HandleData(void);
-static void    USBD_CDC_ACM_EP_BULKIN_HandleData(void);
+static void USBD_CDC_ACM_EP_BULKOUT_HandleData(void);
+static void USBD_CDC_ACM_EP_BULKIN_HandleData(void);
 
 
 /*----------------- USB CDC ACM class handling functions ---------------------*/

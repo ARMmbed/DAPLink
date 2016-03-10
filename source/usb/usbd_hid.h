@@ -35,12 +35,12 @@ enum {
 
 /*--------------------------- Event handling routines ------------------------*/
 
-extern        void USBD_HID_Configure_Event(void);
-extern        void USBD_HID_SOF_Event(void);
+extern void USBD_HID_Configure_Event(void);
+extern void USBD_HID_SOF_Event(void);
 
-extern        void USBD_HID_EP_INTIN_Event(U32 event);
-extern        void USBD_HID_EP_INTOUT_Event(U32 event);
-extern        void USBD_HID_EP_INT_Event(U32 event);
+extern void USBD_HID_EP_INTIN_Event(U32 event);
+extern void USBD_HID_EP_INTOUT_Event(U32 event);
+extern void USBD_HID_EP_INT_Event(U32 event);
 
 extern __task void USBD_RTX_HID_EP_INTIN_Event(void);
 extern __task void USBD_RTX_HID_EP_INTOUT_Event(void);

@@ -39,13 +39,13 @@
 
 #if    (USBD_ENABLE)
 
-U8   USBD_AltSetting[USBD_IF_NUM];
-U8   USBD_EP0Buf    [USBD_MAX_PACKET0];
-const   U8   usbd_power                 =  USBD_POWER;
-const   U8   usbd_hs_enable             =  USBD_HS_ENABLE;
-const   U16  usbd_if_num                =  USBD_IF_NUM;
-const   U8   usbd_ep_num                =  USBD_EP_NUM;
-const   U8   usbd_max_packet0           =  USBD_MAX_PACKET0;
+U8 USBD_AltSetting[USBD_IF_NUM];
+U8 USBD_EP0Buf[USBD_MAX_PACKET0];
+const U8 usbd_power = USBD_POWER;
+const U8 usbd_hs_enable = USBD_HS_ENABLE;
+const U16 usbd_if_num = USBD_IF_NUM;
+const U8 usbd_ep_num = USBD_EP_NUM;
+const U8 usbd_max_packet0 = USBD_MAX_PACKET0;
 
 
 /*------------------------------------------------------------------------------
@@ -64,45 +64,45 @@ const   U8   usbd_max_packet0           =  USBD_MAX_PACKET0;
 #endif
 
 #if    (USBD_HID_ENABLE)
-const   U8   usbd_hid_if_num            =  USBD_HID_IF_NUM;
-const   U8   usbd_hid_ep_intin          =  USBD_HID_EP_INTIN;
-const   U8   usbd_hid_ep_intout         =  USBD_HID_EP_INTOUT;
-const   U16  usbd_hid_interval     [2]  = {USBD_HID_INTERVAL,       USBD_HID_HS_INTERVAL};
-const   U16  usbd_hid_maxpacketsize[2]  = {USBD_HID_WMAXPACKETSIZE, USBD_HID_HS_WMAXPACKETSIZE};
-const   U8   usbd_hid_inreport_num      =  USBD_HID_INREPORT_NUM;
-const   U8   usbd_hid_outreport_num     =  USBD_HID_OUTREPORT_NUM;
-const   U16  usbd_hid_inreport_max_sz   =  USBD_HID_INREPORT_MAX_SZ;
-const   U16  usbd_hid_outreport_max_sz  =  USBD_HID_OUTREPORT_MAX_SZ;
-const   U16  usbd_hid_featreport_max_sz =  USBD_HID_FEATREPORT_MAX_SZ;
-U16  USBD_HID_PollingCnt;
-U8   USBD_HID_IdleCnt             [USBD_HID_INREPORT_NUM];
-U8   USBD_HID_IdleReload          [USBD_HID_INREPORT_NUM];
-U8   USBD_HID_IdleSet             [USBD_HID_INREPORT_NUM];
-U8   USBD_HID_InReport            [USBD_HID_INREPORT_MAX_SZ + 1];
-U8   USBD_HID_OutReport           [USBD_HID_OUTREPORT_MAX_SZ + 1];
-U8   USBD_HID_FeatReport          [USBD_HID_FEATREPORT_MAX_SZ + 1];
+const U8 usbd_hid_if_num = USBD_HID_IF_NUM;
+const U8 usbd_hid_ep_intin = USBD_HID_EP_INTIN;
+const U8 usbd_hid_ep_intout = USBD_HID_EP_INTOUT;
+const U16 usbd_hid_interval[2]  = {USBD_HID_INTERVAL, USBD_HID_HS_INTERVAL};
+const U16 usbd_hid_maxpacketsize[2] = {USBD_HID_WMAXPACKETSIZE, USBD_HID_HS_WMAXPACKETSIZE};
+const U8 usbd_hid_inreport_num = USBD_HID_INREPORT_NUM;
+const U8 usbd_hid_outreport_num = USBD_HID_OUTREPORT_NUM;
+const U16 usbd_hid_inreport_max_sz = USBD_HID_INREPORT_MAX_SZ;
+const U16 usbd_hid_outreport_max_sz = USBD_HID_OUTREPORT_MAX_SZ;
+const U16 usbd_hid_featreport_max_sz = USBD_HID_FEATREPORT_MAX_SZ;
+U16 USBD_HID_PollingCnt;
+U8 USBD_HID_IdleCnt[USBD_HID_INREPORT_NUM];
+U8 USBD_HID_IdleReload[USBD_HID_INREPORT_NUM];
+U8 USBD_HID_IdleSet[USBD_HID_INREPORT_NUM];
+U8 USBD_HID_InReport[USBD_HID_INREPORT_MAX_SZ + 1];
+U8 USBD_HID_OutReport[USBD_HID_OUTREPORT_MAX_SZ + 1];
+U8 USBD_HID_FeatReport[USBD_HID_FEATREPORT_MAX_SZ + 1];
 #endif
 
 #if    (USBD_MSC_ENABLE)
-const   U8   usbd_msc_if_num            =  USBD_MSC_IF_NUM;
-const   U8   usbd_msc_ep_bulkin         =  USBD_MSC_EP_BULKIN;
-const   U8   usbd_msc_ep_bulkout        =  USBD_MSC_EP_BULKOUT;
-const   U16  usbd_msc_maxpacketsize[2]  = {USBD_MSC_WMAXPACKETSIZE, USBD_MSC_HS_WMAXPACKETSIZE};
-const   U8  *usbd_msc_inquiry_data      =  USBD_MSC_INQUIRY_DATA;
-const   U16  USBD_MSC_BulkBufSize       = USBD_MSC_MAX_PACKET;
-U8   USBD_MSC_BulkBuf             [USBD_MSC_MAX_PACKET];
+const U8 usbd_msc_if_num = USBD_MSC_IF_NUM;
+const U8 usbd_msc_ep_bulkin = USBD_MSC_EP_BULKIN;
+const U8 usbd_msc_ep_bulkout = USBD_MSC_EP_BULKOUT;
+const U16 usbd_msc_maxpacketsize[2] = {USBD_MSC_WMAXPACKETSIZE, USBD_MSC_HS_WMAXPACKETSIZE};
+const U8 *usbd_msc_inquiry_data = USBD_MSC_INQUIRY_DATA;
+const U16 USBD_MSC_BulkBufSize = USBD_MSC_MAX_PACKET;
+U8 USBD_MSC_BulkBuf[USBD_MSC_MAX_PACKET];
 #endif
 
 #if    (USBD_ADC_ENABLE)
-const   U8   usbd_adc_cif_num           =  USBD_ADC_CIF_NUM;
-const   U8   usbd_adc_sif1_num          =  USBD_ADC_SIF1_NUM;
-const   U8   usbd_adc_sif2_num          =  USBD_ADC_SIF2_NUM;
-const   U8   usbd_adc_ep_isoout         =  USBD_ADC_EP_ISOOUT;
-const   U32  usbd_adc_cfg_datafreq      =  USBD_ADC_TSAMFREQ;
-const   U32  usbd_adc_cfg_p_s           =  USBD_ADC_CFG_P_S;
-const   U32  usbd_adc_cfg_p_c           =  USBD_ADC_CFG_P_C;
-const   U32  usbd_adc_cfg_b_s           = (8 * USBD_ADC_CFG_P_C *USBD_ADC_CFG_P_S);
-S16  USBD_ADC_DataBuf              [8 * USBD_ADC_CFG_P_C * USBD_ADC_CFG_P_S];
+const U8 usbd_adc_cif_num = USBD_ADC_CIF_NUM;
+const U8 usbd_adc_sif1_num = USBD_ADC_SIF1_NUM;
+const U8 usbd_adc_sif2_num = USBD_ADC_SIF2_NUM;
+const U8 usbd_adc_ep_isoout = USBD_ADC_EP_ISOOUT;
+const U32 usbd_adc_cfg_datafreq = USBD_ADC_TSAMFREQ;
+const U32 usbd_adc_cfg_p_s = USBD_ADC_CFG_P_S;
+const U32 usbd_adc_cfg_p_c = USBD_ADC_CFG_P_C;
+const U32 usbd_adc_cfg_b_s = (8 * USBD_ADC_CFG_P_C *USBD_ADC_CFG_P_S);
+S16  USBD_ADC_DataBuf[8 * USBD_ADC_CFG_P_C * USBD_ADC_CFG_P_S];
 #endif
 
 #ifndef USBD_CDC_ACM_ENABLE
@@ -114,18 +114,18 @@ S16  USBD_ADC_DataBuf              [8 * USBD_ADC_CFG_P_C * USBD_ADC_CFG_P_S];
 #endif
 
 #if    (USBD_CDC_ACM_ENABLE)
-const   U8   usbd_cdc_acm_cif_num       =  USBD_CDC_ACM_CIF_NUM;
-const   U8   usbd_cdc_acm_dif_num       =  USBD_CDC_ACM_DIF_NUM;
-const   U8   usbd_cdc_acm_ep_intin      =  USBD_CDC_ACM_EP_INTIN;
-const   U8   usbd_cdc_acm_ep_bulkin     =  USBD_CDC_ACM_EP_BULKIN;
-const   U8   usbd_cdc_acm_ep_bulkout    =  USBD_CDC_ACM_EP_BULKOUT;
-const   U16  usbd_cdc_acm_sendbuf_sz    =  USBD_CDC_ACM_SENDBUF_SIZE;
-const   U16  usbd_cdc_acm_receivebuf_sz =  USBD_CDC_ACM_RECEIVEBUF_SIZE;
-const   U16  usbd_cdc_acm_maxpacketsize [2] = {USBD_CDC_ACM_WMAXPACKETSIZE,  USBD_CDC_ACM_HS_WMAXPACKETSIZE};
-const   U16  usbd_cdc_acm_maxpacketsize1[2] = {USBD_CDC_ACM_WMAXPACKETSIZE1, USBD_CDC_ACM_HS_WMAXPACKETSIZE1};
-U8   USBD_CDC_ACM_SendBuf         [USBD_CDC_ACM_SENDBUF_SIZE];
-U8   USBD_CDC_ACM_ReceiveBuf      [USBD_CDC_ACM_RECEIVEBUF_SIZE];
-U8   USBD_CDC_ACM_NotifyBuf       [10];
+const U8 usbd_cdc_acm_cif_num = USBD_CDC_ACM_CIF_NUM;
+const U8 usbd_cdc_acm_dif_num = USBD_CDC_ACM_DIF_NUM;
+const U8 usbd_cdc_acm_ep_intin = USBD_CDC_ACM_EP_INTIN;
+const U8 usbd_cdc_acm_ep_bulkin = USBD_CDC_ACM_EP_BULKIN;
+const U8 usbd_cdc_acm_ep_bulkout = USBD_CDC_ACM_EP_BULKOUT;
+const U16 usbd_cdc_acm_sendbuf_sz = USBD_CDC_ACM_SENDBUF_SIZE;
+const U16 usbd_cdc_acm_receivebuf_sz = USBD_CDC_ACM_RECEIVEBUF_SIZE;
+const U16 usbd_cdc_acm_maxpacketsize[2] = {USBD_CDC_ACM_WMAXPACKETSIZE, USBD_CDC_ACM_HS_WMAXPACKETSIZE};
+const U16 usbd_cdc_acm_maxpacketsize1[2] = {USBD_CDC_ACM_WMAXPACKETSIZE1, USBD_CDC_ACM_HS_WMAXPACKETSIZE1};
+U8 USBD_CDC_ACM_SendBuf[USBD_CDC_ACM_SENDBUF_SIZE];
+U8 USBD_CDC_ACM_ReceiveBuf[USBD_CDC_ACM_RECEIVEBUF_SIZE];
+U8 USBD_CDC_ACM_NotifyBuf[10];
 #endif
 
 /*------------------------------------------------------------------------------
@@ -614,7 +614,10 @@ BOOL USBD_EndPoint0_Out_HID_ReqToIF(void)
 #endif
 #endif
 #else
-void USBD_ReqClrFeature_MSC(U32 EPNum)                                   { }
+void USBD_ReqClrFeature_MSC(U32 EPNum)
+{
+
+}
 BOOL USBD_EndPoint0_Setup_MSC_ReqToIF(void)
 {
     return (__FALSE);
@@ -979,69 +982,69 @@ void USBD_SOF_Event(void)
 #endif  /* ((USBD_HID_ENABLE) || (USBD_ADC_ENABLE) || (USBD_CDC_ACM_ENABLE) || (USBD_CLS_ENABLE)) */
 
 /* USB Device - Device Events Callback Functions */
-__weak   void USBD_Power_Event(BOOL power);
-__weak   void USBD_Reset_Event(void);
-__weak   void USBD_Suspend_Event(void);
-__weak   void USBD_Resume_Event(void);
-__weak   void USBD_WakeUp_Event(void);
-__weak   void USBD_SOF_Event(void);
-__weak   void USBD_Error_Event(U32 error);
+__weak void USBD_Power_Event(BOOL power);
+__weak void USBD_Reset_Event(void);
+__weak void USBD_Suspend_Event(void);
+__weak void USBD_Resume_Event(void);
+__weak void USBD_WakeUp_Event(void);
+__weak void USBD_SOF_Event(void);
+__weak void USBD_Error_Event(U32 error);
 
 /* USB Device - Device Events Callback Pointers */
 void (* const USBD_P_Power_Event)(BOOL power) = USBD_Power_Event;
-void (* const USBD_P_Reset_Event)(void)       = USBD_Reset_Event;
-void (* const USBD_P_Suspend_Event)(void)       = USBD_Suspend_Event;
-void (* const USBD_P_Resume_Event)(void)       = USBD_Resume_Event;
-void (* const USBD_P_WakeUp_Event)(void)       = USBD_WakeUp_Event;
-void (* const USBD_P_SOF_Event)(void)       = USBD_SOF_Event;
-void (* const USBD_P_Error_Event)(U32 error)  = USBD_Error_Event;
+void (* const USBD_P_Reset_Event)(void) = USBD_Reset_Event;
+void (* const USBD_P_Suspend_Event)(void) = USBD_Suspend_Event;
+void (* const USBD_P_Resume_Event)(void) = USBD_Resume_Event;
+void (* const USBD_P_WakeUp_Event)(void) = USBD_WakeUp_Event;
+void (* const USBD_P_SOF_Event)(void) = USBD_SOF_Event;
+void (* const USBD_P_Error_Event)(U32 error) = USBD_Error_Event;
 
 /* USB Device - Endpoint Events Callback Functions */
-extern   void USBD_EndPoint0(U32 event);
+extern void USBD_EndPoint0(U32 event);
 #ifndef       USBD_EndPoint1
-__weak   void USBD_EndPoint1(U32 event);
+__weak void USBD_EndPoint1(U32 event);
 #endif
 #ifndef       USBD_EndPoint2
-__weak   void USBD_EndPoint2(U32 event);
+__weak void USBD_EndPoint2(U32 event);
 #endif
 #ifndef       USBD_EndPoint3
-__weak   void USBD_EndPoint3(U32 event);
+__weak void USBD_EndPoint3(U32 event);
 #endif
 #ifndef       USBD_EndPoint4
-__weak   void USBD_EndPoint4(U32 event);
+__weak void USBD_EndPoint4(U32 event);
 #endif
 #ifndef       USBD_EndPoint5
-__weak   void USBD_EndPoint5(U32 event);
+__weak void USBD_EndPoint5(U32 event);
 #endif
 #ifndef       USBD_EndPoint6
-__weak   void USBD_EndPoint6(U32 event);
+__weak void USBD_EndPoint6(U32 event);
 #endif
 #ifndef       USBD_EndPoint7
-__weak   void USBD_EndPoint7(U32 event);
+__weak void USBD_EndPoint7(U32 event);
 #endif
 #ifndef       USBD_EndPoint8
-__weak   void USBD_EndPoint8(U32 event);
+__weak void USBD_EndPoint8(U32 event);
 #endif
 #ifndef       USBD_EndPoint9
-__weak   void USBD_EndPoint9(U32 event);
+__weak void USBD_EndPoint9(U32 event);
 #endif
 #ifndef       USBD_EndPoint10
-__weak   void USBD_EndPoint10(U32 event);
+__weak void USBD_EndPoint10(U32 event);
 #endif
 #ifndef       USBD_EndPoint11
-__weak   void USBD_EndPoint11(U32 event);
+__weak void USBD_EndPoint11(U32 event);
 #endif
 #ifndef       USBD_EndPoint12
-__weak   void USBD_EndPoint12(U32 event);
+__weak void USBD_EndPoint12(U32 event);
 #endif
 #ifndef       USBD_EndPoint13
-__weak   void USBD_EndPoint13(U32 event);
+__weak void USBD_EndPoint13(U32 event);
 #endif
 #ifndef       USBD_EndPoint14
-__weak   void USBD_EndPoint14(U32 event);
+__weak void USBD_EndPoint14(U32 event);
 #endif
 #ifndef       USBD_EndPoint15
-__weak   void USBD_EndPoint15(U32 event);
+__weak void USBD_EndPoint15(U32 event);
 #endif
 
 /* USB Device - Endpoint Events Callback Pointers */
@@ -1065,14 +1068,14 @@ void (* const USBD_P_EP[16])(U32 event) = {
 };
 
 /* USB Device - Core Events Callback Functions */
-__weak   void USBD_Configure_Event(void);
-__weak   void USBD_Interface_Event(void);
-__weak   void USBD_Feature_Event(void);
+__weak void USBD_Configure_Event(void);
+__weak void USBD_Interface_Event(void);
+__weak void USBD_Feature_Event(void);
 
 /* USB Device - Core Events Callback Pointers */
-void (* const USBD_P_Configure_Event)(void)       = USBD_Configure_Event;
-void (* const USBD_P_Interface_Event)(void)       = USBD_Interface_Event;
-void (* const USBD_P_Feature_Event)(void)       = USBD_Feature_Event;
+void (* const USBD_P_Configure_Event)(void) = USBD_Configure_Event;
+void (* const USBD_P_Interface_Event)(void) = USBD_Interface_Event;
+void (* const USBD_P_Feature_Event)(void) = USBD_Feature_Event;
 
 #ifdef __RTX
 const BOOL __rtx = __TRUE;
@@ -1222,7 +1225,10 @@ U32  usbd_os_evt_wait_or(U16 wait_flags, U16 timeout)
 #else
 const BOOL __rtx = __FALSE;
 
-void usbd_os_evt_set(U16 event_flags, U32 task)                  { }
+void usbd_os_evt_set(U16 event_flags, U32 task)
+{
+    
+}
 U16  usbd_os_evt_get(void)
 {
     return (0);

@@ -35,38 +35,37 @@ typedef struct _USBD_EP_DATA {
 /*--------------------------- Global variables -------------------------------*/
 
 /* USB Device Core Global Variables */
-extern U16         USBD_DeviceStatus;
-extern U8          USBD_DeviceAddress;
-extern U8          USBD_Configuration;
-extern U32         USBD_EndPointMask;
-extern U32         USBD_EndPointHalt;
-extern U32         USBD_EndPointStall;
-extern U8          USBD_NumInterfaces;
-extern U8          USBD_HighSpeed;
-extern U8          USBD_ZLP;
+extern U16 USBD_DeviceStatus;
+extern U8 USBD_DeviceAddress;
+extern U8 USBD_Configuration;
+extern U32 USBD_EndPointMask;
+extern U32 USBD_EndPointHalt;
+extern U32 USBD_EndPointStall;
+extern U8 USBD_NumInterfaces;
+extern U8 USBD_HighSpeed;
+extern U8 USBD_ZLP;
 
-extern USBD_EP_DATA     USBD_EP0Data;
+extern USBD_EP_DATA USBD_EP0Data;
 extern USB_SETUP_PACKET USBD_SetupPacket;
 
-extern OS_TID      USBD_RTX_DevTask;
-extern OS_TID      USBD_RTX_EPTask[];
-extern OS_TID      USBD_RTX_CoreTask;
+extern OS_TID USBD_RTX_DevTask;
+extern OS_TID USBD_RTX_EPTask[];
+extern OS_TID USBD_RTX_CoreTask;
 
 
 /*--------------------------- Functions exported to class specific files -----*/
 
-extern void        USBD_SetupStage(void);
-extern void        USBD_DataInStage(void);
-extern void        USBD_DataOutStage(void);
-extern void        USBD_StatusInStage(void);
-extern void        USBD_StatusOutStage(void);
+extern void USBD_SetupStage(void);
+extern void USBD_DataInStage(void);
+extern void USBD_DataOutStage(void);
+extern void USBD_StatusInStage(void);
+extern void USBD_StatusOutStage(void);
 
 
 /*--------------------------- Event handling routines ------------------------*/
 
-extern        void usbd_class_init(void);
-
-extern        void USBD_EndPoint0(U32 event);
+extern void usbd_class_init(void);
+extern void USBD_EndPoint0(U32 event);
 
 extern __task void USBD_RTX_EndPoint0(void);
 

@@ -25,23 +25,23 @@
 #include "usb_for_lib.h"
 #include "info.h"
 
-U16               USBD_DeviceStatus;
-U8                USBD_DeviceAddress;
-U8                USBD_Configuration;
-U32               USBD_EndPointMask;
-U32               USBD_EndPointHalt;
-U32               USBD_EndPointStall;          /* EP must stay stalled */
-U8                USBD_NumInterfaces;
-U8                USBD_HighSpeed;
-U8                USBD_ZLP;
+U16 USBD_DeviceStatus;
+U8 USBD_DeviceAddress;
+U8 USBD_Configuration;
+U32 USBD_EndPointMask;
+U32 USBD_EndPointHalt;
+U32 USBD_EndPointStall;          /* EP must stay stalled */
+U8 USBD_NumInterfaces;
+U8 USBD_HighSpeed;
+U8 USBD_ZLP;
 
-USBD_EP_DATA      USBD_EP0Data;
-USB_SETUP_PACKET  USBD_SetupPacket;
+USBD_EP_DATA USBD_EP0Data;
+USB_SETUP_PACKET USBD_SetupPacket;
 
 #ifdef __RTX
-OS_TID            USBD_RTX_DevTask;            /* USB Device Task ID */
-OS_TID            USBD_RTX_EPTask[16];         /* USB Endpoint Task ID's */
-OS_TID            USBD_RTX_CoreTask;           /* USB Core Task ID */
+OS_TID USBD_RTX_DevTask;            /* USB Device Task ID */
+OS_TID USBD_RTX_EPTask[16];         /* USB Endpoint Task ID's */
+OS_TID USBD_RTX_CoreTask;           /* USB Core Task ID */
 #endif
 
 
@@ -61,7 +61,7 @@ __RL_USBD_VER   EQU     0x470
 
 void usbd_init(void)
 {
-    USBD_HighSpeed     = __FALSE;
+    USBD_HighSpeed = __FALSE;
     usbd_class_init();
     USBD_RTX_TaskInit();
     USBD_Init();

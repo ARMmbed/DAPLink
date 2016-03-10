@@ -1,52 +1,71 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usbd_msc.c
+ * @brief   Mass Storage Class driver
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "string.h"
+ 
 #include "RTL.h"
 #include "rl_usb.h"
-#include "string.h"
 #include "usb_for_lib.h"
 #include "util.h"
 #include "macro.h"
 
-BOOL        USBD_MSC_MediaReady   = __FALSE;
-BOOL        USBD_MSC_ReadOnly     = __FALSE;
-U32         USBD_MSC_MemorySize;
-U32         USBD_MSC_BlockSize;
-U32         USBD_MSC_BlockGroup;
-U32         USBD_MSC_BlockCount;
-U8         *USBD_MSC_BlockBuf;
+BOOL USBD_MSC_MediaReady = __FALSE;
+BOOL USBD_MSC_ReadOnly = __FALSE;
+U32 USBD_MSC_MemorySize;
+U32 USBD_MSC_BlockSize;
+U32 USBD_MSC_BlockGroup;
+U32 USBD_MSC_BlockCount;
+U8 *USBD_MSC_BlockBuf;
 
-MSC_CBW     USBD_MSC_CBW;                  /* Command Block Wrapper */
-MSC_CSW     USBD_MSC_CSW;                  /* Command Status Wrapper */
+MSC_CBW USBD_MSC_CBW;       /* Command Block Wrapper */
+MSC_CSW USBD_MSC_CSW;       /* Command Status Wrapper */
 
-BOOL        USBD_MSC_MediaReadyEx = __FALSE; /* Previous state of Media ready */
-BOOL        MemOK;                         /* Memory OK */
+BOOL USBD_MSC_MediaReadyEx = __FALSE;   /* Previous state of Media ready */
+BOOL MemOK;     /* Memory OK */
 
-U32         Block;                         /* R/W Block  */
-U32         Offset;                        /* R/W Offset */
-U32         Length;                        /* R/W Length */
+U32 Block;      /* R/W Block  */
+U32 Offset;     /* R/W Offset */
+U32 Length;     /* R/W Length */
 
-U8          BulkStage;                     /* Bulk Stage */
-U32         BulkLen;                       /* Bulk In/Out Length */
+U8 BulkStage;   /* Bulk Stage */
+U32 BulkLen;    /* Bulk In/Out Length */
 
 
 /* Dummy Weak Functions that need to be provided by user */
-__weak void usbd_msc_init()                                      {};
-__weak void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks) {};
-__weak void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks) {};
-__weak void usbd_msc_start_stop(BOOL start)                            {};
+__weak void usbd_msc_init()
+{
+
+}
+__weak void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
+{
+
+}
+__weak void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
+{
+
+}
+__weak void usbd_msc_start_stop(BOOL start)
+{
+
+}
 
 
 /*

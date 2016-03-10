@@ -25,6 +25,10 @@
 #include "stdint.h"
 #include "stdbool.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     RESET_HOLD,              // Hold target in reset
     RESET_PROGRAM,           // Reset target and setup for flash programming.
@@ -38,5 +42,9 @@ uint8_t target_unlock_sequence(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size);
 void target_forward_reset(bool assert_reset);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
