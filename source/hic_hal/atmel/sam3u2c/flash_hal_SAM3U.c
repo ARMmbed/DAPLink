@@ -164,7 +164,7 @@ uint32_t EraseSector(uint32_t adr)
     // Application assumes that this function always erases 1 KB
     // Application always calls this function with 1 KB aligned addresses
     //
-    NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB sectors
+    NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, DAPLink BTL/FW assumes 1 KB sectors
 
     do {
         _WritePage(adr, (volatile uint32_t *)0, 1);
@@ -188,7 +188,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     // Always called with multiple of 1 page to program
     //
     sz = ROUND_UP(sz, 256);    // Round up to page size
-    NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, CMSIS-DAP BTL/FW assumes 1 KB pages
+    NumPagesLeft = sz >> 8;    // SAM3U has 256 byte pages, DAPLink BTL/FW assumes 1 KB pages
 
     if (0 == NumPagesLeft) {
         return 1;
