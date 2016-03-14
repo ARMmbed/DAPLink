@@ -115,10 +115,23 @@ static error_t target_flash_erase_sector(uint32_t sector)
 
 static error_t target_flash_erase_chip(void)
 {
+	  #define PERSIST_A 0x0003B400
+	  #define PERSIST_B 0x0003B800
+	
+	  static uint8_t bufferA[1024];
+	  static uint8_t bufferB[1024];
+	
+	  swd_read_memory((uint32_t)PERSIST_A, bufferA, 1024);
+	  swd_read_memory((uint32_t)PERSIST_B, bufferB, 1024);
+	
     const program_target_t * const flash = target_device.flash_algo;
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
         return ERROR_ERASE_ALL;
     }
+		
+	  target_flash_program_page((uint32_t)PERSIST_A, bufferA, 1024);
+	  target_flash_program_page((uint32_t)PERSIST_B, bufferB, 1024);
+
     return ERROR_SUCCESS;
 }
 
