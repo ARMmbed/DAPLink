@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/arm_watch_efm32.c
+        target:
+            - source/target/siliconlabs/efm32gg/target.c
+            - source/target/siliconlabs/target_reset.c

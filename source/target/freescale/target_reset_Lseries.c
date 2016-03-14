@@ -1,41 +1,55 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    target_reset_Lseries.c
+ * @brief   Target reset for the Kinetis L series
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "target_reset.h"
 #include "swd_host.h"
+#include "info.h"
 
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004     //
 #define MDM_IDR     0x010000fc     // read-only identification register
-
 #define MDM_ID      0x001c0020     // L series
 
-void target_before_init_debug(void) {
+void target_before_init_debug(void)
+{
     swd_set_target_reset(1);
 }
 
-void board_init(void) {
+void board_init(void)
+{
 }
 
-uint8_t target_unlock_sequence(void) {
+void prerun_target_config(void)
+{
+}
+
+uint8_t target_unlock_sequence(void)
+{
     uint32_t val;
 
     // read the device ID
     if (!swd_read_ap(MDM_IDR, &val)) {
         return 0;
     }
+
     // verify the result
     if (val != MDM_ID) {
         return 0;
@@ -48,11 +62,13 @@ uint8_t target_unlock_sequence(void) {
     // flash in secured mode
     if (val & (1 << 2)) {
         // hold the device in reset
-        target_set_state(RESET_HOLD);
+        swd_set_target_reset(1);
+
         // write the mass-erase enable bit
         if (!swd_write_ap(MDM_CTRL, 1)) {
             return 0;
         }
+
         while (1) {
             // wait until mass erase is started
             if (!swd_read_ap(MDM_STATUS, &val)) {
@@ -63,8 +79,9 @@ uint8_t target_unlock_sequence(void) {
                 break;
             }
         }
+
         // mass erase in progress
-        while (1) {            
+        while (1) {
             // keep reading until procedure is complete
             if (!swd_read_ap(MDM_CTRL, &val)) {
                 return 0;
@@ -100,21 +117,26 @@ uint8_t target_unlock_sequence(void) {
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
     const uint32_t fsec_addr = 0x40C;
+
     if ((addr <= fsec_addr) && (addr + size) > fsec_addr) {
         uint8_t fsec = data[fsec_addr - addr];
+
         // make sure we can unsecure the device or dont program at all
         if ((fsec & 0x30) == 0x20) {
             // Dont allow programming mass-erase disabled state
             return 1;
         }
+
         // Security is OK long as we can mass-erase (comment the following out to enable target security)
         if ((fsec & 0x03) != 0x02) {
             return 1;
         }
     }
+
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state) {
-    return swd_set_target_state(state);
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    return swd_set_target_state_hw(state);
 }

@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/ssci1114.c
+        target:
+            - source/target/nxp/lpc1114/target.c
+            - source/target/nxp/target_reset.c

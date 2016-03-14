@@ -1,21 +1,25 @@
-# CMSIS-DAP Interface Firmware
-# Copyright (c) 2009-2015 ARM Limited
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+ 
 from __future__ import absolute_import
 from __future__ import print_function
 import six
+import sys
 
 
 class TestInfo(object):
@@ -51,8 +55,8 @@ class TestInfo(object):
         assert isinstance(msg, six.string_types)
         self._add_entry(self.INFO, msg)
 
-    def print_msg(self, warning_level, max_recursion=0,
-                  spacing=2, _recursion_level=0):
+    def print_msg(self, warning_level, max_recursion=0, spacing=2,
+                  log_file=sys.stdout, _recursion_level=0):
         """
         Print problems at the given level
 
@@ -80,7 +84,8 @@ class TestInfo(object):
             return
 
         # Print test header
-        self._print_msg(prefix + "Test: %s: %s" % (self.name, result_str))
+        print(prefix + "Test: %s: %s" % (self.name, result_str),
+              file=log_file)
 
         # Check for recursion termination
         if max_recursion is not None and _recursion_level > max_recursion:
@@ -93,11 +98,11 @@ class TestInfo(object):
             if msg_level == self.SUBTEST:
                 test_info = msg
                 test_info.print_msg(warning_level, max_recursion,
-                                    spacing, _recursion_level)
+                                    spacing, log_file, _recursion_level)
             else:
                 fmt = prefix + self._MSG_LEVEL_TO_FMT_STR[msg_level]
                 if msg_level >= warning_level:
-                    self._print_msg(fmt % msg)
+                    print(fmt % msg, file=log_file)
 
     def get_failed(self):
         self._update_counts()
@@ -148,7 +153,7 @@ class TestInfo(object):
 
     def _add_entry(self, entry_type, msg):
         if entry_type is self.SUBTEST:
-            assert isinstance(msg, type(self))
+            assert isinstance(msg, TestInfo)
             self._print_msg("SubTest: " + msg.get_name())
         else:
             assert isinstance(msg, six.string_types)
@@ -158,3 +163,17 @@ class TestInfo(object):
     @staticmethod
     def _print_msg(msg):
         print(msg)
+
+
+class TestInfoStub(TestInfo):
+
+    def __init__(self):
+        super(TestInfoStub, self).__init__('stub test')
+
+    def create_subtest(self, name):
+        assert isinstance(name, six.string_types)
+        return TestInfoStub()
+
+    @staticmethod
+    def _print_msg(msg):
+        pass

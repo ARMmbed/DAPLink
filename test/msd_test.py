@@ -1,15 +1,17 @@
-# CMSIS-DAP Interface Firmware
-# Copyright (c) 2009-2015 ARM Limited
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -20,11 +22,7 @@ import os
 import time
 import shutil
 import six
-
-BOARD_ID_LOCKED_WHEN_ERASED = set([
-    0x0231,  # K22F
-    0x0240,  # K64F
-])
+import info
 
 
 def _same(d1, d2):
@@ -36,6 +34,32 @@ def _same(d1, d2):
     if len(d1) != len(d2):
         return False
     return True
+
+MOCK_DIR_LIST = [
+    "test",
+    "blarg",
+    "very_long_directory_name",
+    "very_long_directory_name/and_subdirectory_name"
+]
+
+MOCK_FILE_LIST = [
+    (".test", "blarg"),
+    ("test/file1", "asdofahweaw"),
+    ("file.jpg", "file contents here")
+]
+
+MOCK_DIR_LIST_AFTER = [
+    "test2",
+    "blarg2",
+    "very_long_directory_name2",
+    "very_long_directory_name2/and_subdirectory_name"
+]
+
+MOCK_FILE_LIST_AFTER = [
+    (".test2", "blarg"),
+    ("test2/file12", "asdofahweaw"),
+    ("file2.jpg", "file contents here")
+]
 
 
 class MassStorageTester(object):
@@ -49,6 +73,11 @@ class MassStorageTester(object):
         self._load_with_shutils = None
         self._flush_size = None
         self._programming_data = None
+        self._mock_file_list = []
+        self._mock_dir_list = []
+        self._mock_file_list_after = []
+        self._mock_dir_list_after = []
+        self._programming_file_name = None
 
     def set_shutils_copy(self, source_file_name):
         """
@@ -74,9 +103,7 @@ class MassStorageTester(object):
                self._load_with_shutils is None)
         self._load_with_shutils = False
         self._programming_data = data
-        mount_point = self.board.get_mount_point()
-        self._programming_file_name = os.path.normpath(mount_point + os.sep +
-                                                       file_name)
+        self._programming_file_name = file_name
 
     def set_flush_size(self, size):
         """Set the block size to simulate a flush of"""
@@ -93,10 +120,47 @@ class MassStorageTester(object):
         assert msg is None or type(msg) is str
         self._expected_failure_msg = msg
 
+    def add_mock_files(self, file_list):
+        """Add a list of tuples containing a file and contents"""
+        self._mock_file_list.extend(file_list)
+
+    def add_mock_dirs(self, dir_list):
+        """Add a list of directoies"""
+        self._mock_dir_list.extend(dir_list)
+
+    def add_mock_files_after_load(self, file_list):
+        """Add a list of tuples containing a file and contents"""
+        self._mock_file_list_after.extend(file_list)
+
+    def add_mock_dirs_after_load(self, dir_list):
+        """Add a list of directoies"""
+        self._mock_dir_list_after.extend(dir_list)
+
+    def _check_data_correct(self, expected_data, test_info):
+        """Return True if the actual data written matches the expected"""
+        data_len = len(expected_data)
+        data_loaded = self.board.read_target_memory(0, data_len)
+        return _same(expected_data, data_loaded)
+
     def run(self):
         # Expected data must be set, even if to None
         assert hasattr(self, '_expected_data')
         test_info = self.parent_test.create_subtest(self.test_name)
+
+        # Copy mock files before test
+        self._mock_file_list = []
+        for dir_name in self._mock_dir_list:
+            dir_path = self.board.get_file_path(dir_name)
+            os.mkdir(dir_path)
+        for file_name, file_contents in self._mock_file_list:
+            file_path = self.board.get_file_path(file_name)
+            with open(file_path, 'wb') as file_handle:
+                file_handle.write(file_contents)
+
+        programming_file_name = None
+        if self._programming_file_name is not None:
+            programming_file_name = \
+                self.board.get_file_path(self._programming_file_name)
 
         # Write data to the file
         start = time.time()
@@ -113,12 +177,12 @@ class MassStorageTester(object):
             size = len(self._programming_data)
             for addr in range(0, size, self._flush_size):
                 data = self._programming_data[addr:addr + self._flush_size]
-                with open(self._programming_file_name, 'ab') as file_handle:
+                with open(programming_file_name, 'ab') as file_handle:
                     file_handle.write(data)
                 time.sleep(self._flush_time)
         else:
             # Perform a normal copy
-            with open(self._programming_file_name, 'wb') as load_file:
+            with open(programming_file_name, 'wb') as load_file:
                 load_file.write(self._programming_data)
         stop = time.time()
         diff = stop - start
@@ -127,8 +191,18 @@ class MassStorageTester(object):
             test_info.info('Programming rate %sB/s' %
                            (len(self._expected_data) / diff))
         if self._programming_data is not None:
-            test_info.info('MSD tranfer rate %sB/s' %
+            test_info.info('MSD transfer rate %sB/s' %
                            (len(self._programming_data) / diff))
+
+        # Copy mock files after loading
+        self._mock_file_list = []
+        for dir_name in self._mock_dir_list_after:
+            dir_path = self.board.get_file_path(dir_name)
+            os.mkdir(dir_path)
+        for file_name, file_contents in self._mock_file_list_after:
+            file_path = self.board.get_file_path(file_name)
+            with open(file_path, 'wb') as file_handle:
+                file_handle.write(file_contents)
 
         self.board.wait_for_remount(test_info)
 
@@ -140,17 +214,18 @@ class MassStorageTester(object):
         failure_expected = self._expected_failure_msg is not None
         failure_occured = msg is not None
         if failure_occured and not failure_expected:
-            test_info.failure('Device reported failure: %s' % msg)
+            test_info.failure('Device reported failure: "%s"' % msg.strip())
             return
         if failure_expected and not failure_occured:
             test_info.failure('Failure expected but did not occur')
             return
         if failure_expected and failure_occured:
             if msg == self._expected_failure_msg:
-                test_info.info('Failure as expected: %s' % msg)
+                test_info.info('Failure as expected: "%s"' % msg.strip())
             else:
-                test_info.failure('Failure but wrong string: %s vs %s' %
-                                  (msg, self._expected_failure_msg))
+                test_info.failure('Failure but wrong string: "%s" vs "%s"' %
+                                  (msg.strip(),
+                                   self._expected_failure_msg.strip()))
             return
 
         # These cases should have been handled above
@@ -159,15 +234,13 @@ class MassStorageTester(object):
 
         # If there is expected data then compare
         if self._expected_data:
-            data_len = len(self._expected_data)
-            data_loaded = self.board.read_target_memory(0, data_len)
-            if not _same(self._expected_data, data_loaded):
-                test_info.failure('Data does not match')
-            else:
+            if self._check_data_correct(self._expected_data, test_info):
                 test_info.info("Data matches")
+            else:
+                test_info.failure('Data does not match')
 
 
-def test_mass_storage(board, parent_test):
+def test_mass_storage(workspace, parent_test):
     """Test the mass storage endpoint
 
     Requirements:
@@ -182,28 +255,33 @@ def test_mass_storage(board, parent_test):
     test_info = parent_test.create_subtest('test_mass_storage')
 
     # Setup test
-    bin_file = board.get_target_bin_path()
-    hex_file = board.get_target_hex_path()
+    board = workspace.board
+    target = workspace.target
+    bin_file = target.bin_path
+    hex_file = target.hex_path
     with open(bin_file, 'rb') as test_file:
         bin_file_contents = bytearray(test_file.read())
     with open(hex_file, 'rb') as test_file:
         hex_file_contents = bytearray(test_file.read())
     blank_bin_contents = bytearray([0xff]) * 0x2000
-    vectors_and_pad = bin_file_contents[0:16] + blank_bin_contents
-    locked_when_erased = board.get_board_id() in BOARD_ID_LOCKED_WHEN_ERASED
+    vectors_and_pad = bin_file_contents[0:32] + blank_bin_contents
+    locked_when_erased = board.get_board_id() in info.BOARD_ID_LOCKED_WHEN_ERASED
+    bad_vector_table = target.name in info.TARGET_WITH_BAD_VECTOR_TABLE_LIST
 
     # Test loading a binary file with shutils
-    test = MassStorageTester(board, test_info, "Shutil binary file load")
-    test.set_shutils_copy(bin_file)
-    test.set_expected_data(bin_file_contents)
-    test.run()
+    if not bad_vector_table:
+        test = MassStorageTester(board, test_info, "Shutil binary file load")
+        test.set_shutils_copy(bin_file)
+        test.set_expected_data(bin_file_contents)
+        test.run()
 
     # Test loading a binary file with flushes
-    test = MassStorageTester(board, test_info, "Load binary with flushes")
-    test.set_programming_data(bin_file_contents, 'image.bin')
-    test.set_expected_data(bin_file_contents)
-    test.set_flush_size(0x1000)
-    test.run()
+    if not bad_vector_table:
+        test = MassStorageTester(board, test_info, "Load binary with flushes")
+        test.set_programming_data(bin_file_contents, 'image.bin')
+        test.set_expected_data(bin_file_contents)
+        test.set_flush_size(0x1000)
+        test.run()
 
     # Test loading a hex file with shutils
     test = MassStorageTester(board, test_info, "Shutil hex file load")
@@ -219,12 +297,13 @@ def test_mass_storage(board, parent_test):
     test.run()
 
     # Test loading a binary smaller than a sector
-    test = MassStorageTester(board, test_info, "Load .bin smaller than sector")
-    test_data_size = 0x789
-    test_data = bin_file_contents[0:0 + test_data_size]
-    test.set_programming_data(test_data, 'image.bin')
-    test.set_expected_data(test_data)
-    test.run()
+    if not bad_vector_table:
+        test = MassStorageTester(board, test_info, "Load .bin smaller than sector")
+        test_data_size = 0x789
+        test_data = bin_file_contents[0:0 + test_data_size]
+        test.set_programming_data(test_data, 'image.bin')
+        test.set_expected_data(test_data)
+        test.run()
 
     # Test loading a blank binary - this image should cause a timeout
     #    since it doesn't have a valid vector table
@@ -236,18 +315,32 @@ def test_mass_storage(board, parent_test):
 
     # Test loading a blank binary with a vector table but padded with 0xFF.
     #    A blank image can lock some devices.
-    test = MassStorageTester(board, test_info, "Load blank binary + vector table")
-    test.set_programming_data(vectors_and_pad, 'image.bin')
-    if locked_when_erased:
-        test.set_expected_failure_msg("The interface firmware ABORTED programming. Image is trying to set security bits\r\n")
-        test.set_expected_data(None)
-    else:
-        test.set_expected_data(vectors_and_pad)
+    if not bad_vector_table:
+        test = MassStorageTester(board, test_info, "Load blank binary + vector table")
+        test.set_programming_data(vectors_and_pad, 'image.bin')
+        if locked_when_erased:
+            test.set_expected_failure_msg("The interface firmware ABORTED programming. Image is trying to set security bits\r\n")
+            test.set_expected_data(None)
+        else:
+            test.set_expected_data(vectors_and_pad)
+        test.run()
+
+    # Test a normal load with dummy files created beforehand
+    test = MassStorageTester(board, test_info, "Extra Files")
+    test.set_programming_data(hex_file_contents, 'image.hex')
+    test.add_mock_dirs(MOCK_DIR_LIST)
+    test.add_mock_files(MOCK_FILE_LIST)
+    test.add_mock_dirs_after_load(MOCK_DIR_LIST_AFTER)
+    test.add_mock_files_after_load(MOCK_FILE_LIST_AFTER)
+    test.set_expected_data(bin_file_contents)
     test.run()
+    # Note - it is not unexpected for an "Extra Files" test to fail
+    #        when a binary file is loaded, since there is no way to
+    #        tell where the end of the file is.
 
     # Finally, load a good binary
-    test = MassStorageTester(board, test_info, "Load good binary to restore state")
-    test.set_programming_data(bin_file_contents, 'image.bin')
+    test = MassStorageTester(board, test_info, "Load good file to restore state")
+    test.set_programming_data(hex_file_contents, 'image.hex')
     test.set_expected_data(bin_file_contents)
     test.run()
 
@@ -258,3 +351,8 @@ def test_mass_storage(board, parent_test):
     # -Very large file
     # -Any MSD regressions
     # -Security bits in hex files
+    # -Hex file with data at the end **
+    # -Hidden files
+    # -change file extension
+    # -Change size (make smaller)
+    # -change starting address

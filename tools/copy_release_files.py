@@ -1,3 +1,21 @@
+#
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 """
 Copy release files from the uvision build directories into a release package
 
@@ -18,7 +36,13 @@ COPY_PATTERN_LIST = [
     "%s_crc.hex",
     "%s.htm",
     "%s.map",
+    "%s_crc.txt",
     ]
+OPTIONAL_COPY_PATTERN_LIST = [
+    "%s_crc_legacy_0x8000.bin",
+    "%s_crc_legacy_0x5000.bin",
+    "%s_crc_legacy.txt",
+]
 
 
 def main():
@@ -59,5 +83,11 @@ def main():
             file_source = os.path.join(src_dir, file_name)
             file_dest = os.path.join(dest_dir, file_name)
             shutil.copy(file_source, file_dest)
+        for file_pattern in OPTIONAL_COPY_PATTERN_LIST:
+            file_name = file_pattern % project
+            file_source = os.path.join(src_dir, file_name)
+            if os.path.isfile(file_source):
+                file_dest = os.path.join(dest_dir, file_name)
+                shutil.copy(file_source, file_dest)
 
 main()

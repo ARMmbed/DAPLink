@@ -1,51 +1,71 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usbd_msc.c
+ * @brief   Mass Storage Class driver
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "string.h"
+ 
 #include "RTL.h"
 #include "rl_usb.h"
-#include "string.h"
 #include "usb_for_lib.h"
 #include "util.h"
+#include "macro.h"
 
-BOOL        USBD_MSC_MediaReady   = __FALSE;
-BOOL        USBD_MSC_ReadOnly     = __FALSE;
-U32         USBD_MSC_MemorySize;
-U32         USBD_MSC_BlockSize;
-U32         USBD_MSC_BlockGroup;
-U32         USBD_MSC_BlockCount;
-U8         *USBD_MSC_BlockBuf;
+BOOL USBD_MSC_MediaReady = __FALSE;
+BOOL USBD_MSC_ReadOnly = __FALSE;
+U32 USBD_MSC_MemorySize;
+U32 USBD_MSC_BlockSize;
+U32 USBD_MSC_BlockGroup;
+U32 USBD_MSC_BlockCount;
+U8 *USBD_MSC_BlockBuf;
 
-MSC_CBW     USBD_MSC_CBW;                  /* Command Block Wrapper */
-MSC_CSW     USBD_MSC_CSW;                  /* Command Status Wrapper */
+MSC_CBW USBD_MSC_CBW;       /* Command Block Wrapper */
+MSC_CSW USBD_MSC_CSW;       /* Command Status Wrapper */
 
-BOOL        USBD_MSC_MediaReadyEx = __FALSE; /* Previous state of Media ready */
-BOOL        MemOK;                         /* Memory OK */
+BOOL USBD_MSC_MediaReadyEx = __FALSE;   /* Previous state of Media ready */
+BOOL MemOK;     /* Memory OK */
 
-U32         Block;                         /* R/W Block  */
-U32         Offset;                        /* R/W Offset */
-U32         Length;                        /* R/W Length */
+U32 Block;      /* R/W Block  */
+U32 Offset;     /* R/W Offset */
+U32 Length;     /* R/W Length */
 
-U8          BulkStage;                     /* Bulk Stage */
-U32         BulkLen;                       /* Bulk In/Out Length */
+U8 BulkStage;   /* Bulk Stage */
+U32 BulkLen;    /* Bulk In/Out Length */
 
 
 /* Dummy Weak Functions that need to be provided by user */
-__weak void usbd_msc_init       ()                                      {};
-__weak void usbd_msc_read_sect  (U32 block, U8 *buf, U32 num_of_blocks) {};
-__weak void usbd_msc_write_sect (U32 block, U8 *buf, U32 num_of_blocks) {};
-__weak void usbd_msc_start_stop (BOOL start)                            {};
+__weak void usbd_msc_init()
+{
+
+}
+__weak void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
+{
+
+}
+__weak void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
+{
+
+}
+__weak void usbd_msc_start_stop(BOOL start)
+{
+
+}
 
 
 /*
@@ -56,9 +76,10 @@ __weak void usbd_msc_start_stop (BOOL start)                            {};
  *    Return Value:    None
  */
 
-void USBD_MSC_SetStallEP (U32 EPNum) {     /* set EP halt status according stall status */
-  USBD_SetStallEP(EPNum);
-  USBD_EndPointHalt  |=  (EPNum & 0x80) ? ((1 << 16) << (EPNum & 0x0F)) : (1 << EPNum);
+void USBD_MSC_SetStallEP(U32 EPNum)        /* set EP halt status according stall status */
+{
+    USBD_SetStallEP(EPNum);
+    USBD_EndPointHalt  |= (EPNum & 0x80) ? ((1 << 16) << (EPNum & 0x0F)) : (1 << EPNum);
 }
 
 
@@ -70,17 +91,18 @@ void USBD_MSC_SetStallEP (U32 EPNum) {     /* set EP halt status according stall
  *    Return Value:    None
  */
 
-void USBD_MSC_ClrStallEP (U32 EPNum) {     /* clear EP halt status according stall status */
-  U32 n,m;
+void USBD_MSC_ClrStallEP(U32 EPNum)        /* clear EP halt status according stall status */
+{
+    U32 n, m;
+    n = USBD_SetupPacket.wIndexL & 0x8F;
+    m = (n & 0x80) ? ((1 << 16) << (n & 0x0F)) : (1 << n);
 
-  n = USBD_SetupPacket.wIndexL & 0x8F;
-  m = (n & 0x80) ? ((1 << 16) << (n & 0x0F)) : (1 << n);
-  if ((n == (usbd_msc_ep_bulkin | 0x80)) && ((USBD_EndPointHalt & m) != 0)) {
-    /* Compliance Test: rewrite CSW after unstall */
-    if (USBD_MSC_CSW.dSignature == MSC_CSW_Signature) {
-      USBD_WriteEP((usbd_msc_ep_bulkin | 0x80), (U8 *)&USBD_MSC_CSW, sizeof(USBD_MSC_CSW));
+    if ((n == (usbd_msc_ep_bulkin | 0x80)) && ((USBD_EndPointHalt & m) != 0)) {
+        /* Compliance Test: rewrite CSW after unstall */
+        if (USBD_MSC_CSW.dSignature == MSC_CSW_Signature) {
+            USBD_WriteEP((usbd_msc_ep_bulkin | 0x80), (U8 *)&USBD_MSC_CSW, sizeof(USBD_MSC_CSW));
+        }
     }
-  }
 }
 
 
@@ -91,14 +113,12 @@ void USBD_MSC_ClrStallEP (U32 EPNum) {     /* clear EP halt status according sta
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL USBD_MSC_Reset (void) {
-
-  USBD_EndPointStall = 0x00000000;         /* EP must stay stalled */
-  USBD_MSC_CSW.dSignature = 0;             /* invalid signature */
-
-  BulkStage = MSC_BS_CBW;
-
-  return (__TRUE);
+BOOL USBD_MSC_Reset(void)
+{
+    USBD_EndPointStall = 0x00000000;         /* EP must stay stalled */
+    USBD_MSC_CSW.dSignature = 0;             /* invalid signature */
+    BulkStage = MSC_BS_CBW;
+    return (__TRUE);
 }
 
 
@@ -109,10 +129,10 @@ BOOL USBD_MSC_Reset (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL USBD_MSC_GetMaxLUN (void) {
-
-  USBD_EP0Buf[0] = 0;                      /* one LUN associated with this device */
-  return (__TRUE);
+BOOL USBD_MSC_GetMaxLUN(void)
+{
+    USBD_EP0Buf[0] = 0;                      /* one LUN associated with this device */
+    return (__TRUE);
 }
 
 
@@ -122,22 +142,25 @@ BOOL USBD_MSC_GetMaxLUN (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL USBD_MSC_CheckMedia (void) {
+BOOL USBD_MSC_CheckMedia(void)
+{
+    USBD_MSC_MediaReadyEx = USBD_MSC_MediaReady;
 
-  USBD_MSC_MediaReadyEx = USBD_MSC_MediaReady;
-  if (!USBD_MSC_MediaReady) {
-    if (USBD_MSC_CBW.dDataLength) {
-      if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
-        USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-      } else {
-        USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-      }
+    if (!USBD_MSC_MediaReady) {
+        if (USBD_MSC_CBW.dDataLength) {
+            if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
+                USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+            } else {
+                USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+            }
+        }
+
+        USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+        USBD_MSC_SetCSW();
+        return (__FALSE);
     }
-    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
-    USBD_MSC_SetCSW();
-    return (__FALSE);
-  }
-  return (__TRUE);
+
+    return (__TRUE);
 }
 
 
@@ -148,56 +171,61 @@ BOOL USBD_MSC_CheckMedia (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_MemoryRead (void) {
-  U32 n, m;
+void USBD_MSC_MemoryRead(void)
+{
+    U32 n, m;
 
-  if (Block >= USBD_MSC_BlockCount) {
-    n = 0;
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-    USBD_MSC_SetCSW();
-  } else {
-    if (Length > usbd_msc_maxpacketsize[USBD_HighSpeed]) {
-      n = usbd_msc_maxpacketsize[USBD_HighSpeed];
+    if (Block >= USBD_MSC_BlockCount) {
+        n = 0;
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+        USBD_MSC_SetCSW();
     } else {
-      n = Length;
+        if (Length > usbd_msc_maxpacketsize[USBD_HighSpeed]) {
+            n = usbd_msc_maxpacketsize[USBD_HighSpeed];
+        } else {
+            n = Length;
+        }
     }
-  }
 
-  if (!USBD_MSC_CheckMedia()) {
-    n = 0;
-  }
-
-  if ((Offset == 0) && (n != 0)) {
-    m = (Length + (USBD_MSC_BlockSize-1)) / USBD_MSC_BlockSize;
-    if (m > USBD_MSC_BlockGroup) {
-      m = USBD_MSC_BlockGroup;
+    if (!USBD_MSC_CheckMedia()) {
+        n = 0;
     }
-    usbd_msc_read_sect(Block, USBD_MSC_BlockBuf, m);
-  }
 
-  if (n) {
-    USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, &USBD_MSC_BlockBuf[Offset], n);
-    Offset += n;
-    Length -= n;
-  }
+    if ((Offset == 0) && (n != 0)) {
+        m = (Length + (USBD_MSC_BlockSize - 1)) / USBD_MSC_BlockSize;
 
-  if (Offset == USBD_MSC_BlockGroup*USBD_MSC_BlockSize) {
-    Offset = 0;
-    Block += USBD_MSC_BlockGroup;
-  }
+        if (m > USBD_MSC_BlockGroup) {
+            m = USBD_MSC_BlockGroup;
+        }
 
-  USBD_MSC_CSW.dDataResidue -= n;
+        usbd_msc_read_sect(Block, USBD_MSC_BlockBuf, m);
+    }
 
-  if (!n) return;
+    if (n) {
+        USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, &USBD_MSC_BlockBuf[Offset], n);
+        Offset += n;
+        Length -= n;
+    }
 
-  if (Length == 0) {
-    BulkStage = MSC_BS_DATA_IN_LAST;
-  }
+    if (Offset == USBD_MSC_BlockGroup * USBD_MSC_BlockSize) {
+        Offset = 0;
+        Block += USBD_MSC_BlockGroup;
+    }
 
-  if (BulkStage != MSC_BS_DATA_IN) {
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-  }
+    USBD_MSC_CSW.dDataResidue -= n;
+
+    if (!n) {
+        return;
+    }
+
+    if (Length == 0) {
+        BulkStage = MSC_BS_DATA_IN_LAST;
+    }
+
+    if (BulkStage != MSC_BS_DATA_IN) {
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+    }
 }
 
 
@@ -208,57 +236,62 @@ void USBD_MSC_MemoryRead (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_MemoryWrite (void) {
-  U32 n;
+void USBD_MSC_MemoryWrite(void)
+{
+    U32 n;
 
-  if (Block >= USBD_MSC_BlockCount) {
-    BulkLen = 0;
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-    USBD_MSC_SetCSW();
-  }
-
-  if (!USBD_MSC_CheckMedia()) {
-    BulkLen = 0;
-  }
-
-  if (Offset + BulkLen - 1 > USBD_MSC_BlockSize) {
-      // This write would have overflowed USBD_MSC_BlockBuf
-      util_assert(0);
-      return;
-  }
-
-  for (n = 0; n < BulkLen; n++) {
-    USBD_MSC_BlockBuf[Offset + n] = USBD_MSC_BulkBuf[n];
-  }
-
-  Offset += BulkLen;
-  Length -= BulkLen;
-
-  if (BulkLen) {
-    if ((Length == 0) && (Offset != 0)) {
-      n = (Offset + (USBD_MSC_BlockSize-1)) / USBD_MSC_BlockSize;
-      if (n > USBD_MSC_BlockGroup) {
-        n = USBD_MSC_BlockGroup;
-      }
-      usbd_msc_write_sect(Block, USBD_MSC_BlockBuf, n);
-      Offset = 0;
-      Block += n;
-    } else if (Offset == USBD_MSC_BlockGroup*USBD_MSC_BlockSize) {
-      usbd_msc_write_sect(Block, USBD_MSC_BlockBuf, USBD_MSC_BlockGroup);
-      Offset = 0;
-      Block += USBD_MSC_BlockGroup;
+    if (Block >= USBD_MSC_BlockCount) {
+        BulkLen = 0;
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+        USBD_MSC_SetCSW();
     }
-  }
 
-  USBD_MSC_CSW.dDataResidue -= BulkLen;
+    if (!USBD_MSC_CheckMedia()) {
+        BulkLen = 0;
+    }
 
-  if (!BulkLen) return;
+    if (Offset + BulkLen - 1 > USBD_MSC_BlockSize) {
+        // This write would have overflowed USBD_MSC_BlockBuf
+        util_assert(0);
+        return;
+    }
 
-  if ((Length == 0) || (BulkStage == MSC_BS_CSW)) {
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-    USBD_MSC_SetCSW();
-  }
+    for (n = 0; n < BulkLen; n++) {
+        USBD_MSC_BlockBuf[Offset + n] = USBD_MSC_BulkBuf[n];
+    }
+
+    Offset += BulkLen;
+    Length -= BulkLen;
+
+    if (BulkLen) {
+        if ((Length == 0) && (Offset != 0)) {
+            n = (Offset + (USBD_MSC_BlockSize - 1)) / USBD_MSC_BlockSize;
+
+            if (n > USBD_MSC_BlockGroup) {
+                n = USBD_MSC_BlockGroup;
+            }
+
+            usbd_msc_write_sect(Block, USBD_MSC_BlockBuf, n);
+            Offset = 0;
+            Block += n;
+        } else if (Offset == USBD_MSC_BlockGroup * USBD_MSC_BlockSize) {
+            usbd_msc_write_sect(Block, USBD_MSC_BlockBuf, USBD_MSC_BlockGroup);
+            Offset = 0;
+            Block += USBD_MSC_BlockGroup;
+        }
+    }
+
+    USBD_MSC_CSW.dDataResidue -= BulkLen;
+
+    if (!BulkLen) {
+        return;
+    }
+
+    if ((Length == 0) || (BulkStage == MSC_BS_CSW)) {
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+        USBD_MSC_SetCSW();
+    }
 }
 
 
@@ -269,53 +302,58 @@ void USBD_MSC_MemoryWrite (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_MemoryVerify (void) {
-  U32 n;
+void USBD_MSC_MemoryVerify(void)
+{
+    U32 n;
 
-  if (Block >= USBD_MSC_BlockCount) {
-    BulkLen = 0;
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-    USBD_MSC_SetCSW();
-  }
-
-  if (!USBD_MSC_CheckMedia()) {
-    BulkLen = 0;
-  }
-
-  if (BulkLen) {
-    if ((Offset == 0) && (BulkLen != 0)) {
-      n = (Length + (USBD_MSC_BlockSize-1)) / USBD_MSC_BlockSize;
-      if (n > USBD_MSC_BlockGroup) {
-        n = USBD_MSC_BlockGroup;
-      }
-      usbd_msc_read_sect(Block, USBD_MSC_BlockBuf, n);
+    if (Block >= USBD_MSC_BlockCount) {
+        BulkLen = 0;
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+        USBD_MSC_SetCSW();
     }
 
-    for (n = 0; n < BulkLen; n++) {
-      if (USBD_MSC_BlockBuf[Offset + n] != USBD_MSC_BulkBuf[n]) {
-        MemOK = __FALSE;
-        break;
-      }
+    if (!USBD_MSC_CheckMedia()) {
+        BulkLen = 0;
     }
-  }
 
-  Offset += BulkLen;
-  Length -= BulkLen;
+    if (BulkLen) {
+        if ((Offset == 0) && (BulkLen != 0)) {
+            n = (Length + (USBD_MSC_BlockSize - 1)) / USBD_MSC_BlockSize;
 
-  if (Offset == USBD_MSC_BlockGroup*USBD_MSC_BlockSize) {
-    Offset = 0;
-    Block += USBD_MSC_BlockGroup;
-  }
+            if (n > USBD_MSC_BlockGroup) {
+                n = USBD_MSC_BlockGroup;
+            }
 
-  USBD_MSC_CSW.dDataResidue -= BulkLen;
+            usbd_msc_read_sect(Block, USBD_MSC_BlockBuf, n);
+        }
 
-  if (!BulkLen) return;
+        for (n = 0; n < BulkLen; n++) {
+            if (USBD_MSC_BlockBuf[Offset + n] != USBD_MSC_BulkBuf[n]) {
+                MemOK = __FALSE;
+                break;
+            }
+        }
+    }
 
-  if ((Length == 0) || (BulkStage == MSC_BS_CSW)) {
-    USBD_MSC_CSW.bStatus = (MemOK) ? CSW_CMD_PASSED : CSW_CMD_FAILED;
-    USBD_MSC_SetCSW();
-  }
+    Offset += BulkLen;
+    Length -= BulkLen;
+
+    if (Offset == USBD_MSC_BlockGroup * USBD_MSC_BlockSize) {
+        Offset = 0;
+        Block += USBD_MSC_BlockGroup;
+    }
+
+    USBD_MSC_CSW.dDataResidue -= BulkLen;
+
+    if (!BulkLen) {
+        return;
+    }
+
+    if ((Length == 0) || (BulkStage == MSC_BS_CSW)) {
+        USBD_MSC_CSW.bStatus = (MemOK) ? CSW_CMD_PASSED : CSW_CMD_FAILED;
+        USBD_MSC_SetCSW();
+    }
 }
 
 
@@ -325,60 +363,64 @@ void USBD_MSC_MemoryVerify (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL USBD_MSC_RWSetup (void) {
-  U32 n;
+BOOL USBD_MSC_RWSetup(void)
+{
+    U32 n;
+    /* Logical Block Address of First Block */
+    n = (USBD_MSC_CBW.CB[2] << 24) |
+        (USBD_MSC_CBW.CB[3] << 16) |
+        (USBD_MSC_CBW.CB[4] <<  8) |
+        (USBD_MSC_CBW.CB[5] <<  0);
+    Block  = n;
+    Offset = 0;
 
-  /* Logical Block Address of First Block */
-  n = (USBD_MSC_CBW.CB[2] << 24) |
-      (USBD_MSC_CBW.CB[3] << 16) |
-      (USBD_MSC_CBW.CB[4] <<  8) |
-      (USBD_MSC_CBW.CB[5] <<  0);
+    /* Number of Blocks to transfer */
+    switch (USBD_MSC_CBW.CB[0]) {
+        case SCSI_WRITE10:
+        case SCSI_VERIFY10:
+            if (!USBD_MSC_CheckMedia()) {
+                return (__FALSE);
+            }
 
-  Block  = n;
-  Offset = 0;
+        case SCSI_READ10:
+            n = (USBD_MSC_CBW.CB[7] <<  8) |
+                (USBD_MSC_CBW.CB[8] <<  0);
+            break;
 
-  /* Number of Blocks to transfer */
-  switch (USBD_MSC_CBW.CB[0]) {
-    case SCSI_WRITE10:
-    case SCSI_VERIFY10:
-      if (!USBD_MSC_CheckMedia()) return (__FALSE);
-    case SCSI_READ10:
-      n = (USBD_MSC_CBW.CB[7] <<  8) |
-          (USBD_MSC_CBW.CB[8] <<  0);
-      break;
+        case SCSI_WRITE12:
+            if (!USBD_MSC_CheckMedia()) {
+                return (__FALSE);
+            }
 
-    case SCSI_WRITE12:
-      if (!USBD_MSC_CheckMedia()) return (__FALSE);
-    case SCSI_READ12:
-      n = (USBD_MSC_CBW.CB[6] << 24) |
-          (USBD_MSC_CBW.CB[7] << 16) |
-          (USBD_MSC_CBW.CB[8] <<  8) |
-          (USBD_MSC_CBW.CB[9] <<  0);
-      break;
-  }
-
-  Length = n * USBD_MSC_BlockSize;
-
-  if (USBD_MSC_CBW.dDataLength == 0) {     /* host requests no data */
-    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
-    USBD_MSC_SetCSW();
-    return (__FALSE);
-  }
-
-  if (USBD_MSC_CBW.dDataLength != Length) {
-    if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {  /* stall appropriate EP */
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-    } else {
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        case SCSI_READ12:
+            n = (USBD_MSC_CBW.CB[6] << 24) |
+                (USBD_MSC_CBW.CB[7] << 16) |
+                (USBD_MSC_CBW.CB[8] <<  8) |
+                (USBD_MSC_CBW.CB[9] <<  0);
+            break;
     }
 
-    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
-    USBD_MSC_SetCSW();
+    Length = n * USBD_MSC_BlockSize;
 
-    return (__FALSE);
-  }
+    if (USBD_MSC_CBW.dDataLength == 0) {     /* host requests no data */
+        USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+        USBD_MSC_SetCSW();
+        return (__FALSE);
+    }
 
-  return (__TRUE);
+    if (USBD_MSC_CBW.dDataLength != Length) {
+        if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {  /* stall appropriate EP */
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+        } else {
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        }
+
+        USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+        USBD_MSC_SetCSW();
+        return (__FALSE);
+    }
+
+    return (__TRUE);
 }
 
 
@@ -388,20 +430,22 @@ BOOL USBD_MSC_RWSetup (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL USBD_MSC_DataInFormat (void) {
+BOOL USBD_MSC_DataInFormat(void)
+{
+    if (USBD_MSC_CBW.dDataLength == 0) {
+        USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+        USBD_MSC_SetCSW();
+        return (__FALSE);
+    }
 
-  if (USBD_MSC_CBW.dDataLength == 0) {
-    USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-    USBD_MSC_SetCSW();
-    return (__FALSE);
-  }
-  if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-    USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-    USBD_MSC_SetCSW();
-    return (__FALSE);
-  }
-  return (__TRUE);
+    if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+        USBD_MSC_SetCSW();
+        return (__FALSE);
+    }
+
+    return (__TRUE);
 }
 
 
@@ -411,20 +455,18 @@ BOOL USBD_MSC_DataInFormat (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_DataInTransfer (void) {
+void USBD_MSC_DataInTransfer(void)
+{
+    if (BulkLen >= USBD_MSC_CBW.dDataLength) {
+        BulkLen = USBD_MSC_CBW.dDataLength;
+        BulkStage = MSC_BS_DATA_IN_LAST;
+    } else {
+        BulkStage = MSC_BS_DATA_IN_LAST_STALL; /* short or zero packet */
+    }
 
-  if (BulkLen >= USBD_MSC_CBW.dDataLength) {
-    BulkLen = USBD_MSC_CBW.dDataLength;
-    BulkStage = MSC_BS_DATA_IN_LAST;
-  }
-  else {
-    BulkStage = MSC_BS_DATA_IN_LAST_STALL; /* short or zero packet */
-  }
-
-  USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
-
-  USBD_MSC_CSW.dDataResidue -= BulkLen;
-  USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+    USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
+    USBD_MSC_CSW.dDataResidue -= BulkLen;
+    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
 }
 
 
@@ -434,23 +476,26 @@ void USBD_MSC_DataInTransfer (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_TestUnitReady (void) {
+void USBD_MSC_TestUnitReady(void)
+{
+    if (USBD_MSC_CBW.dDataLength != 0) {
+        if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+        } else {
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        }
 
-  if (USBD_MSC_CBW.dDataLength != 0) {
-    if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-    } else {
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+        USBD_MSC_SetCSW();
+        return;
     }
-    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+
+    if (!USBD_MSC_CheckMedia()) {
+        return;
+    }
+
+    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
     USBD_MSC_SetCSW();
-    return;
-  }
-
-  if (!USBD_MSC_CheckMedia()) return;
-
-  USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-  USBD_MSC_SetCSW();
 }
 
 
@@ -460,48 +505,51 @@ void USBD_MSC_TestUnitReady (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_RequestSense (void) {
-
-  if (!USBD_MSC_DataInFormat()) return;
-
-  USBD_MSC_BulkBuf[ 0] = 0x70;             /* Response Code */
-  USBD_MSC_BulkBuf[ 1] = 0x00;
-  if ((USBD_MSC_MediaReadyEx ^ USBD_MSC_MediaReady) & USBD_MSC_MediaReady) {  /* If media state changed to ready */
-    USBD_MSC_BulkBuf[ 2] = 0x06;           /* UNIT ATTENTION */
-    USBD_MSC_BulkBuf[12] = 0x28;           /* Additional Sense Code: Not ready to ready transition */
-    USBD_MSC_BulkBuf[13] = 0x00;           /* Additional Sense Code Qualifier */
-    USBD_MSC_MediaReadyEx= USBD_MSC_MediaReady;
-  } else if (!USBD_MSC_MediaReady) {
-    USBD_MSC_BulkBuf[ 2] = 0x02;           /* NOT READY */
-    USBD_MSC_BulkBuf[12] = 0x3A;           /* Additional Sense Code: Medium not present */
-    USBD_MSC_BulkBuf[13] = 0x00;           /* Additional Sense Code Qualifier */
-  } else {
-    if (USBD_MSC_CSW.bStatus == CSW_CMD_PASSED) {
-      USBD_MSC_BulkBuf[ 2] = 0x00;         /* NO SENSE */
-      USBD_MSC_BulkBuf[12] = 0x00;         /* Additional Sense Code: No additional code */
-      USBD_MSC_BulkBuf[13] = 0x00;         /* Additional Sense Code Qualifier */
-    } else {
-      USBD_MSC_BulkBuf[ 2] = 0x05;         /* ILLEGAL REQUEST */
-      USBD_MSC_BulkBuf[12] = 0x20;         /* Additional Sense Code: Invalid command */
-      USBD_MSC_BulkBuf[13] = 0x00;         /* Additional Sense Code Qualifier */
+void USBD_MSC_RequestSense(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
     }
-  }
-  USBD_MSC_BulkBuf[ 3] = 0x00;
-  USBD_MSC_BulkBuf[ 4] = 0x00;
-  USBD_MSC_BulkBuf[ 5] = 0x00;
-  USBD_MSC_BulkBuf[ 6] = 0x00;
-  USBD_MSC_BulkBuf[ 7] = 0x0A;             /* Additional Length */
-  USBD_MSC_BulkBuf[ 8] = 0x00;
-  USBD_MSC_BulkBuf[ 9] = 0x00;
-  USBD_MSC_BulkBuf[10] = 0x00;
-  USBD_MSC_BulkBuf[11] = 0x00;
-  USBD_MSC_BulkBuf[14] = 0x00;
-  USBD_MSC_BulkBuf[15] = 0x00;
-  USBD_MSC_BulkBuf[16] = 0x00;
-  USBD_MSC_BulkBuf[17] = 0x00;
 
-  BulkLen = 18;
-  USBD_MSC_DataInTransfer();
+    USBD_MSC_BulkBuf[ 0] = 0x70;             /* Response Code */
+    USBD_MSC_BulkBuf[ 1] = 0x00;
+
+    if ((USBD_MSC_MediaReadyEx ^ USBD_MSC_MediaReady) & USBD_MSC_MediaReady) {  /* If media state changed to ready */
+        USBD_MSC_BulkBuf[ 2] = 0x06;           /* UNIT ATTENTION */
+        USBD_MSC_BulkBuf[12] = 0x28;           /* Additional Sense Code: Not ready to ready transition */
+        USBD_MSC_BulkBuf[13] = 0x00;           /* Additional Sense Code Qualifier */
+        USBD_MSC_MediaReadyEx = USBD_MSC_MediaReady;
+    } else if (!USBD_MSC_MediaReady) {
+        USBD_MSC_BulkBuf[ 2] = 0x02;           /* NOT READY */
+        USBD_MSC_BulkBuf[12] = 0x3A;           /* Additional Sense Code: Medium not present */
+        USBD_MSC_BulkBuf[13] = 0x00;           /* Additional Sense Code Qualifier */
+    } else {
+        if (USBD_MSC_CSW.bStatus == CSW_CMD_PASSED) {
+            USBD_MSC_BulkBuf[ 2] = 0x00;         /* NO SENSE */
+            USBD_MSC_BulkBuf[12] = 0x00;         /* Additional Sense Code: No additional code */
+            USBD_MSC_BulkBuf[13] = 0x00;         /* Additional Sense Code Qualifier */
+        } else {
+            USBD_MSC_BulkBuf[ 2] = 0x05;         /* ILLEGAL REQUEST */
+            USBD_MSC_BulkBuf[12] = 0x20;         /* Additional Sense Code: Invalid command */
+            USBD_MSC_BulkBuf[13] = 0x00;         /* Additional Sense Code Qualifier */
+        }
+    }
+
+    USBD_MSC_BulkBuf[ 3] = 0x00;
+    USBD_MSC_BulkBuf[ 4] = 0x00;
+    USBD_MSC_BulkBuf[ 5] = 0x00;
+    USBD_MSC_BulkBuf[ 6] = 0x00;
+    USBD_MSC_BulkBuf[ 7] = 0x0A;             /* Additional Length */
+    USBD_MSC_BulkBuf[ 8] = 0x00;
+    USBD_MSC_BulkBuf[ 9] = 0x00;
+    USBD_MSC_BulkBuf[10] = 0x00;
+    USBD_MSC_BulkBuf[11] = 0x00;
+    USBD_MSC_BulkBuf[14] = 0x00;
+    USBD_MSC_BulkBuf[15] = 0x00;
+    USBD_MSC_BulkBuf[16] = 0x00;
+    USBD_MSC_BulkBuf[17] = 0x00;
+    BulkLen = 18;
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -511,32 +559,35 @@ void USBD_MSC_RequestSense (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_Inquiry (void) {
-  U8  i;
-  U8 *ptr_str;
+void USBD_MSC_Inquiry(void)
+{
+    U8  i;
+    U8 *ptr_str;
 
-  if (!USBD_MSC_DataInFormat()) return;
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  USBD_MSC_BulkBuf[ 0] = 0x00;             /* Direct Access Device */
-  USBD_MSC_BulkBuf[ 1] = 0x80;             /* RMB = 1: Removable Medium */
-  USBD_MSC_BulkBuf[ 2] = 0x02;             /* Version: ANSI X3.131: 1994 */
-  USBD_MSC_BulkBuf[ 3] = 0x02;
+    USBD_MSC_BulkBuf[ 0] = 0x00;             /* Direct Access Device */
+    USBD_MSC_BulkBuf[ 1] = 0x80;             /* RMB = 1: Removable Medium */
+    USBD_MSC_BulkBuf[ 2] = 0x02;             /* Version: ANSI X3.131: 1994 */
+    USBD_MSC_BulkBuf[ 3] = 0x02;
+    USBD_MSC_BulkBuf[ 4] = 36 - 4;           /* Additional Length */
+    USBD_MSC_BulkBuf[ 5] = 0x00;             /* SCCS = 0: No Storage Controller Component */
+    USBD_MSC_BulkBuf[ 6] = 0x00;
+    USBD_MSC_BulkBuf[ 7] = 0x00;
+    ptr_str = (U8 *)usbd_msc_inquiry_data;
 
-  USBD_MSC_BulkBuf[ 4] = 36-4;             /* Additional Length */
-  USBD_MSC_BulkBuf[ 5] = 0x00;             /* SCCS = 0: No Storage Controller Component */
-  USBD_MSC_BulkBuf[ 6] = 0x00;
-  USBD_MSC_BulkBuf[ 7] = 0x00;
+    for (i = 8; i < 36; i++) {               /* Product Information    + */
+        if (*ptr_str) {                        /* Product Revision Level   */
+            USBD_MSC_BulkBuf[i] = *ptr_str++;
+        } else {
+            USBD_MSC_BulkBuf[i] = ' ';
+        }
+    }
 
-  ptr_str = (U8 *)usbd_msc_inquiry_data;
-  for (i = 8; i < 36; i++) {               /* Product Information    + */
-    if (*ptr_str)                          /* Product Revision Level   */
-      USBD_MSC_BulkBuf[i] = *ptr_str++;
-    else
-      USBD_MSC_BulkBuf[i] = ' ';
-  }
-
-  BulkLen = 36;
-  USBD_MSC_DataInTransfer();
+    BulkLen = 36;
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -546,18 +597,18 @@ void USBD_MSC_Inquiry (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_StartStopUnit (void) {
+void USBD_MSC_StartStopUnit(void)
+{
+    if (!USBD_MSC_CBW.CB[3]) {               /* If power condition modifier is 0 */
+        USBD_MSC_MediaReady  = USBD_MSC_CBW.CB[4] & 0x01;   /* Media ready = START bit value */
+        usbd_msc_start_stop(USBD_MSC_MediaReady);
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED; /* Start Stop Unit -> pass */
+        USBD_MSC_SetCSW();
+        return;
+    }
 
-  if (!USBD_MSC_CBW.CB[3]) {               /* If power condition modifier is 0 */
-    USBD_MSC_MediaReady  = USBD_MSC_CBW.CB[4] & 0x01;   /* Media ready = START bit value */
-    usbd_msc_start_stop(USBD_MSC_MediaReady);
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED; /* Start Stop Unit -> pass */
+    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;   /* Start Stop Unit -> fail */
     USBD_MSC_SetCSW();
-    return;
-  }
-
-  USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;   /* Start Stop Unit -> fail */
-  USBD_MSC_SetCSW();
 }
 
 
@@ -567,14 +618,15 @@ void USBD_MSC_StartStopUnit (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_MediaRemoval (void) {
+void USBD_MSC_MediaRemoval(void)
+{
+    if (USBD_MSC_CBW.CB[4] & 1) {            /* If prevent */
+        USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;    /* Prevent media removal -> fail */
+    } else {                                 /* If allow */
+        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;    /* Allow media removal -> pass */
+    }
 
-  if (USBD_MSC_CBW.CB[4] & 1)              /* If prevent */
-    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED; /* Prevent media removal -> fail */
-  else                                     /* If allow */
-    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED; /* Allow media removal -> pass */
-
-  USBD_MSC_SetCSW();
+    USBD_MSC_SetCSW();
 }
 
 
@@ -584,24 +636,30 @@ void USBD_MSC_MediaRemoval (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_ModeSense6 (void) {
+void USBD_MSC_ModeSense6(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
-  if (!USBD_MSC_CheckMedia())   return;
+    if (!USBD_MSC_CheckMedia()) {
+        return;
+    }
 
-  USBD_MSC_BulkBuf[ 0] = 0x03;
-  USBD_MSC_BulkBuf[ 1] = 0x00;
-  USBD_MSC_BulkBuf[ 2] =(USBD_MSC_ReadOnly << 7);
-  USBD_MSC_BulkBuf[ 3] = 0x00;
+    USBD_MSC_BulkBuf[ 0] = 0x03;
+    USBD_MSC_BulkBuf[ 1] = 0x00;
+    USBD_MSC_BulkBuf[ 2] = (USBD_MSC_ReadOnly << 7);
+    USBD_MSC_BulkBuf[ 3] = 0x00;
+    BulkLen = 4;
 
-  BulkLen = 4;
-  /* Win host requests maximum number of bytes but as all we have is 4 bytes we have
-     to tell host back that it is all we have, that's why we correct residue */
-  if (USBD_MSC_CSW.dDataResidue > BulkLen) {
-    USBD_MSC_CBW.dDataLength  = BulkLen;
-    USBD_MSC_CSW.dDataResidue = BulkLen;
-  }
-  USBD_MSC_DataInTransfer();
+    /* Win host requests maximum number of bytes but as all we have is 4 bytes we have
+       to tell host back that it is all we have, that's why we correct residue */
+    if (USBD_MSC_CSW.dDataResidue > BulkLen) {
+        USBD_MSC_CBW.dDataLength  = BulkLen;
+        USBD_MSC_CSW.dDataResidue = BulkLen;
+    }
+
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -611,28 +669,34 @@ void USBD_MSC_ModeSense6 (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_ModeSense10 (void) {
+void USBD_MSC_ModeSense10(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
-  if (!USBD_MSC_CheckMedia())   return;
+    if (!USBD_MSC_CheckMedia()) {
+        return;
+    }
 
-  USBD_MSC_BulkBuf[ 0] = 0x00;
-  USBD_MSC_BulkBuf[ 1] = 0x06;
-  USBD_MSC_BulkBuf[ 2] = 0x00;
-  USBD_MSC_BulkBuf[ 3] =(USBD_MSC_ReadOnly << 7);
-  USBD_MSC_BulkBuf[ 4] = 0x00;
-  USBD_MSC_BulkBuf[ 5] = 0x00;
-  USBD_MSC_BulkBuf[ 6] = 0x00;
-  USBD_MSC_BulkBuf[ 7] = 0x00;
+    USBD_MSC_BulkBuf[ 0] = 0x00;
+    USBD_MSC_BulkBuf[ 1] = 0x06;
+    USBD_MSC_BulkBuf[ 2] = 0x00;
+    USBD_MSC_BulkBuf[ 3] = (USBD_MSC_ReadOnly << 7);
+    USBD_MSC_BulkBuf[ 4] = 0x00;
+    USBD_MSC_BulkBuf[ 5] = 0x00;
+    USBD_MSC_BulkBuf[ 6] = 0x00;
+    USBD_MSC_BulkBuf[ 7] = 0x00;
+    BulkLen = 8;
 
-  BulkLen = 8;
-  /* Win host requests maximum number of bytes but as all we have is 8 bytes we have
-     to tell host back that it is all we have, that's why we correct residue */
-  if (USBD_MSC_CSW.dDataResidue > BulkLen) {
-    USBD_MSC_CBW.dDataLength  = BulkLen;
-    USBD_MSC_CSW.dDataResidue = BulkLen;
-  }
-  USBD_MSC_DataInTransfer();
+    /* Win host requests maximum number of bytes but as all we have is 8 bytes we have
+       to tell host back that it is all we have, that's why we correct residue */
+    if (USBD_MSC_CSW.dDataResidue > BulkLen) {
+        USBD_MSC_CBW.dDataLength  = BulkLen;
+        USBD_MSC_CSW.dDataResidue = BulkLen;
+    }
+
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -642,25 +706,28 @@ void USBD_MSC_ModeSense10 (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_ReadCapacity (void) {
+void USBD_MSC_ReadCapacity(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
-  if (!USBD_MSC_CheckMedia())   return;
+    if (!USBD_MSC_CheckMedia()) {
+        return;
+    }
 
-  /* Last Logical Block */
-  USBD_MSC_BulkBuf[ 0] = ((USBD_MSC_BlockCount - 1) >> 24) & 0xFF;
-  USBD_MSC_BulkBuf[ 1] = ((USBD_MSC_BlockCount - 1) >> 16) & 0xFF;
-  USBD_MSC_BulkBuf[ 2] = ((USBD_MSC_BlockCount - 1) >>  8) & 0xFF;
-  USBD_MSC_BulkBuf[ 3] = ((USBD_MSC_BlockCount - 1) >>  0) & 0xFF;
-
-  /* Block Length */
-  USBD_MSC_BulkBuf[ 4] = (USBD_MSC_BlockSize        >> 24) & 0xFF;
-  USBD_MSC_BulkBuf[ 5] = (USBD_MSC_BlockSize        >> 16) & 0xFF;
-  USBD_MSC_BulkBuf[ 6] = (USBD_MSC_BlockSize        >>  8) & 0xFF;
-  USBD_MSC_BulkBuf[ 7] = (USBD_MSC_BlockSize        >>  0) & 0xFF;
-
-  BulkLen = 8;
-  USBD_MSC_DataInTransfer();
+    /* Last Logical Block */
+    USBD_MSC_BulkBuf[ 0] = ((USBD_MSC_BlockCount - 1) >> 24) & 0xFF;
+    USBD_MSC_BulkBuf[ 1] = ((USBD_MSC_BlockCount - 1) >> 16) & 0xFF;
+    USBD_MSC_BulkBuf[ 2] = ((USBD_MSC_BlockCount - 1) >>  8) & 0xFF;
+    USBD_MSC_BulkBuf[ 3] = ((USBD_MSC_BlockCount - 1) >>  0) & 0xFF;
+    /* Block Length */
+    USBD_MSC_BulkBuf[ 4] = (USBD_MSC_BlockSize        >> 24) & 0xFF;
+    USBD_MSC_BulkBuf[ 5] = (USBD_MSC_BlockSize        >> 16) & 0xFF;
+    USBD_MSC_BulkBuf[ 6] = (USBD_MSC_BlockSize        >>  8) & 0xFF;
+    USBD_MSC_BulkBuf[ 7] = (USBD_MSC_BlockSize        >>  0) & 0xFF;
+    BulkLen = 8;
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -670,37 +737,40 @@ void USBD_MSC_ReadCapacity (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_ReadFormatCapacity (void) {
+void USBD_MSC_ReadFormatCapacity(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
-  if (!USBD_MSC_CheckMedia())   return;
+    if (!USBD_MSC_CheckMedia()) {
+        return;
+    }
 
-  USBD_MSC_BulkBuf[ 0] = 0x00;
-  USBD_MSC_BulkBuf[ 1] = 0x00;
-  USBD_MSC_BulkBuf[ 2] = 0x00;
-  USBD_MSC_BulkBuf[ 3] = 0x08;                      /* Capacity List Length */
+    USBD_MSC_BulkBuf[ 0] = 0x00;
+    USBD_MSC_BulkBuf[ 1] = 0x00;
+    USBD_MSC_BulkBuf[ 2] = 0x00;
+    USBD_MSC_BulkBuf[ 3] = 0x08;                      /* Capacity List Length */
+    /* Block Count */
+    USBD_MSC_BulkBuf[ 4] = (USBD_MSC_BlockCount >> 24) & 0xFF;
+    USBD_MSC_BulkBuf[ 5] = (USBD_MSC_BlockCount >> 16) & 0xFF;
+    USBD_MSC_BulkBuf[ 6] = (USBD_MSC_BlockCount >>  8) & 0xFF;
+    USBD_MSC_BulkBuf[ 7] = (USBD_MSC_BlockCount >>  0) & 0xFF;
+    /* Block Length */
+    USBD_MSC_BulkBuf[ 8] = 0x02;                      /* Descriptor Code: Formatted Media */
+    USBD_MSC_BulkBuf[ 9] = (USBD_MSC_BlockSize  >> 16) & 0xFF;
+    USBD_MSC_BulkBuf[10] = (USBD_MSC_BlockSize  >>  8) & 0xFF;
+    USBD_MSC_BulkBuf[11] = (USBD_MSC_BlockSize  >>  0) & 0xFF;
+    BulkLen = 12;
 
-  /* Block Count */
-  USBD_MSC_BulkBuf[ 4] = (USBD_MSC_BlockCount >> 24) & 0xFF;
-  USBD_MSC_BulkBuf[ 5] = (USBD_MSC_BlockCount >> 16) & 0xFF;
-  USBD_MSC_BulkBuf[ 6] = (USBD_MSC_BlockCount >>  8) & 0xFF;
-  USBD_MSC_BulkBuf[ 7] = (USBD_MSC_BlockCount >>  0) & 0xFF;
+    /* Win host requests maximum number of bytes but as all we have is 12 bytes we have
+       to tell host back that it is all we have, that's why we correct residue */
+    if (USBD_MSC_CSW.dDataResidue > BulkLen) {
+        USBD_MSC_CBW.dDataLength  = BulkLen;
+        USBD_MSC_CSW.dDataResidue = BulkLen;
+    }
 
-  /* Block Length */
-  USBD_MSC_BulkBuf[ 8] = 0x02;                      /* Descriptor Code: Formatted Media */
-  USBD_MSC_BulkBuf[ 9] = (USBD_MSC_BlockSize  >> 16) & 0xFF;
-  USBD_MSC_BulkBuf[10] = (USBD_MSC_BlockSize  >>  8) & 0xFF;
-  USBD_MSC_BulkBuf[11] = (USBD_MSC_BlockSize  >>  0) & 0xFF;
-
-  BulkLen = 12;
-  /* Win host requests maximum number of bytes but as all we have is 12 bytes we have
-     to tell host back that it is all we have, that's why we correct residue */
-  if (USBD_MSC_CSW.dDataResidue > BulkLen) {
-    USBD_MSC_CBW.dDataLength  = BulkLen;
-    USBD_MSC_CSW.dDataResidue = BulkLen;
-  }
-
-  USBD_MSC_DataInTransfer();
+    USBD_MSC_DataInTransfer();
 }
 
 
@@ -710,12 +780,12 @@ void USBD_MSC_ReadFormatCapacity (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_SynchronizeCache (void) {
-
-  /* Synchronize check always passes as we always write data dirrectly
-     so cache is always synchronized                                          */
-  USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-  USBD_MSC_SetCSW();
+void USBD_MSC_SynchronizeCache(void)
+{
+    /* Synchronize check always passes as we always write data dirrectly
+       so cache is always synchronized                                          */
+    USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+    USBD_MSC_SetCSW();
 }
 
 
@@ -725,27 +795,27 @@ void USBD_MSC_SynchronizeCache (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_ATAPassThrough (void) {
+void USBD_MSC_ATAPassThrough(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
+    USBD_MSC_BulkBuf[ 0] = 0x02;
+    USBD_MSC_BulkBuf[ 1] = 0x02;
+    BulkLen = 2;
+    BulkStage = MSC_BS_DATA_IN_LAST;
 
-  USBD_MSC_BulkBuf[ 0] = 0x02;
-  USBD_MSC_BulkBuf[ 1] = 0x02;
+    /* Win host requests maximum number of bytes but as all we have is 2 bytes we have
+       to tell host back that it is all we have, that's why we correct residue */
+    if (USBD_MSC_CSW.dDataResidue > BulkLen) {
+        USBD_MSC_CBW.dDataLength  = BulkLen;
+        USBD_MSC_CSW.dDataResidue = BulkLen;
+    }
 
-  BulkLen = 2;
-  BulkStage = MSC_BS_DATA_IN_LAST;
-
-  /* Win host requests maximum number of bytes but as all we have is 2 bytes we have
-     to tell host back that it is all we have, that's why we correct residue */
-  if (USBD_MSC_CSW.dDataResidue > BulkLen) {
-    USBD_MSC_CBW.dDataLength  = BulkLen;
-    USBD_MSC_CSW.dDataResidue = BulkLen;
-  }
-
-  USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
-
-  USBD_MSC_CSW.dDataResidue -= BulkLen;
-  USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+    USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
+    USBD_MSC_CSW.dDataResidue -= BulkLen;
+    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
 }
 
 /*
@@ -755,22 +825,20 @@ void USBD_MSC_ATAPassThrough (void) {
  */
 
 
-void USBD_MSC_ServiceActionIn16 (void) {
+void USBD_MSC_ServiceActionIn16(void)
+{
+    if (!USBD_MSC_DataInFormat()) {
+        return;
+    }
 
-  if (!USBD_MSC_DataInFormat()) return;
-
-  USBD_MSC_BulkBuf[ 0] = 0x20;
-  USBD_MSC_BulkBuf[ 1] = 0x00;
-
-  USBD_MSC_BulkBuf[31] = 0x00;
-
-  BulkLen = 32;
-  BulkStage = MSC_BS_DATA_IN_LAST;
-
-  USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
-
-  USBD_MSC_CSW.dDataResidue -= BulkLen;
-  USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+    USBD_MSC_BulkBuf[ 0] = 0x20;
+    USBD_MSC_BulkBuf[ 1] = 0x00;
+    USBD_MSC_BulkBuf[31] = 0x00;
+    BulkLen = 32;
+    BulkStage = MSC_BS_DATA_IN_LAST;
+    USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, USBD_MSC_BulkBuf, BulkLen);
+    USBD_MSC_CSW.dDataResidue -= BulkLen;
+    USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
 }
 
 
@@ -780,127 +848,155 @@ void USBD_MSC_ServiceActionIn16 (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_GetCBW (void) {
-  U32 n;
+void USBD_MSC_GetCBW(void)
+{
+    U32 n;
+    U32 copy_size;
+    copy_size = MIN(BulkLen, sizeof(USBD_MSC_CBW));
 
-  for (n = 0; n < BulkLen; n++) {
-    *((U8 *)&USBD_MSC_CBW + n) = USBD_MSC_BulkBuf[n];
-  }
-  if ((BulkLen == sizeof(USBD_MSC_CBW)) && (USBD_MSC_CBW.dSignature == MSC_CBW_Signature)) {
-    /* Valid USBD_MSC_CBW */
-    USBD_MSC_CSW.dTag = USBD_MSC_CBW.dTag;
-    USBD_MSC_CSW.dDataResidue = USBD_MSC_CBW.dDataLength;
-    if ((USBD_MSC_CBW.bLUN      >  0) ||
-        (USBD_MSC_CBW.bCBLength <  1) ||
-        (USBD_MSC_CBW.bCBLength > 16)) {
-fail:
-      USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
-      USBD_MSC_SetCSW();
-    } else {
-      switch (USBD_MSC_CBW.CB[0]) {
-        case SCSI_TEST_UNIT_READY:
-          USBD_MSC_TestUnitReady();
-          break;
-        case SCSI_REQUEST_SENSE:
-          USBD_MSC_RequestSense();
-          break;
-        case SCSI_FORMAT_UNIT:
-          goto fail;
-        case SCSI_INQUIRY:
-          USBD_MSC_Inquiry();
-          break;
-        case SCSI_START_STOP_UNIT:
-          USBD_MSC_StartStopUnit();
-          break;
-        case SCSI_MEDIA_REMOVAL:
-          USBD_MSC_MediaRemoval();
-          break;
-        case SCSI_MODE_SELECT6:
-          goto fail;
-        case SCSI_MODE_SENSE6:
-          USBD_MSC_ModeSense6();
-          break;
-        case SCSI_MODE_SELECT10:
-          goto fail;
-        case SCSI_MODE_SENSE10:
-          USBD_MSC_ModeSense10();
-          break;
-        case SCSI_READ_FORMAT_CAPACITIES:
-          USBD_MSC_ReadFormatCapacity();
-          break;
-        case SCSI_READ_CAPACITY:
-          USBD_MSC_ReadCapacity();
-          break;
-        case SCSI_ATA_COMMAND_PASS_THROUGH12:
-          USBD_MSC_ATAPassThrough ();
-          break;
-        case SCSI_SERVICE_ACTION_IN16:
-          USBD_MSC_ServiceActionIn16 ();
-          break;
-        case SCSI_READ10:
-        case SCSI_READ12:
-          if (USBD_MSC_RWSetup()) {
-            if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
-              BulkStage = MSC_BS_DATA_IN;
-              USBD_MSC_MemoryRead();
-            } else {                       /* direction mismatch */
-              USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-              USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-              USBD_MSC_SetCSW();
-            }
-          }
-          break;
-        case SCSI_WRITE10:
-        case SCSI_WRITE12:
-          if (USBD_MSC_RWSetup()) {
-            if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
-              BulkStage = MSC_BS_DATA_OUT;
-            } else {                       /* direction mismatch */
-              USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-              USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-              USBD_MSC_SetCSW();
-            }
-          }
-          break;
-        case SCSI_VERIFY10:
-          if ((USBD_MSC_CBW.CB[1] & 0x02) == 0) {
-            // BYTCHK = 0 -> CRC Check (not implemented)
-            USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
-            USBD_MSC_SetCSW();
-            break;
-          }
-          if (USBD_MSC_RWSetup()) {
-            if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
-              BulkStage = MSC_BS_DATA_OUT;
-              MemOK = __TRUE;
-            } else {
-              USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-              USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-              USBD_MSC_SetCSW();
-            }
-          }
-          break;
-        case SCSI_SYNC_CACHE10:
-        case SCSI_SYNC_CACHE16:
-          USBD_MSC_SynchronizeCache();
-          break;
-        case SCSI_REPORT_ID_INFO:
-          USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-          goto fail;
-        default:
-          goto fail;
-      }
+    for (n = 0; n < copy_size; n++) {
+        *((U8 *)&USBD_MSC_CBW + n) = USBD_MSC_BulkBuf[n];
     }
-  } else {
-    /* Invalid USBD_MSC_CBW */
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-                                           /* set EP to stay stalled */
-    USBD_EndPointStall |=  ((1 << 16) << (usbd_msc_ep_bulkin & 0x0F));
-    USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-                                           /* set EP to stay stalled */
-    USBD_EndPointStall |=  1 << usbd_msc_ep_bulkout;
-    BulkStage = MSC_BS_ERROR;
-  }
+
+    if ((BulkLen == sizeof(USBD_MSC_CBW)) && (USBD_MSC_CBW.dSignature == MSC_CBW_Signature)) {
+        /* Valid USBD_MSC_CBW */
+        USBD_MSC_CSW.dTag = USBD_MSC_CBW.dTag;
+        USBD_MSC_CSW.dDataResidue = USBD_MSC_CBW.dDataLength;
+
+        if ((USBD_MSC_CBW.bLUN      >  0) ||
+                (USBD_MSC_CBW.bCBLength <  1) ||
+                (USBD_MSC_CBW.bCBLength > 16)) {
+fail:
+            USBD_MSC_CSW.bStatus = CSW_CMD_FAILED;
+            USBD_MSC_SetCSW();
+        } else {
+            switch (USBD_MSC_CBW.CB[0]) {
+                case SCSI_TEST_UNIT_READY:
+                    USBD_MSC_TestUnitReady();
+                    break;
+
+                case SCSI_REQUEST_SENSE:
+                    USBD_MSC_RequestSense();
+                    break;
+
+                case SCSI_FORMAT_UNIT:
+                    goto fail;
+
+                case SCSI_INQUIRY:
+                    USBD_MSC_Inquiry();
+                    break;
+
+                case SCSI_START_STOP_UNIT:
+                    USBD_MSC_StartStopUnit();
+                    break;
+
+                case SCSI_MEDIA_REMOVAL:
+                    USBD_MSC_MediaRemoval();
+                    break;
+
+                case SCSI_MODE_SELECT6:
+                    goto fail;
+
+                case SCSI_MODE_SENSE6:
+                    USBD_MSC_ModeSense6();
+                    break;
+
+                case SCSI_MODE_SELECT10:
+                    goto fail;
+
+                case SCSI_MODE_SENSE10:
+                    USBD_MSC_ModeSense10();
+                    break;
+
+                case SCSI_READ_FORMAT_CAPACITIES:
+                    USBD_MSC_ReadFormatCapacity();
+                    break;
+
+                case SCSI_READ_CAPACITY:
+                    USBD_MSC_ReadCapacity();
+                    break;
+
+                case SCSI_ATA_COMMAND_PASS_THROUGH12:
+                    USBD_MSC_ATAPassThrough();
+                    break;
+
+                case SCSI_SERVICE_ACTION_IN16:
+                    USBD_MSC_ServiceActionIn16();
+                    break;
+
+                case SCSI_READ10:
+                case SCSI_READ12:
+                    if (USBD_MSC_RWSetup()) {
+                        if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
+                            BulkStage = MSC_BS_DATA_IN;
+                            USBD_MSC_MemoryRead();
+                        } else {                       /* direction mismatch */
+                            USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+                            USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+                            USBD_MSC_SetCSW();
+                        }
+                    }
+
+                    break;
+
+                case SCSI_WRITE10:
+                case SCSI_WRITE12:
+                    if (USBD_MSC_RWSetup()) {
+                        if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
+                            BulkStage = MSC_BS_DATA_OUT;
+                        } else {                       /* direction mismatch */
+                            USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+                            USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+                            USBD_MSC_SetCSW();
+                        }
+                    }
+
+                    break;
+
+                case SCSI_VERIFY10:
+                    if ((USBD_MSC_CBW.CB[1] & 0x02) == 0) {
+                        // BYTCHK = 0 -> CRC Check (not implemented)
+                        USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
+                        USBD_MSC_SetCSW();
+                        break;
+                    }
+
+                    if (USBD_MSC_RWSetup()) {
+                        if ((USBD_MSC_CBW.bmFlags & 0x80) == 0) {
+                            BulkStage = MSC_BS_DATA_OUT;
+                            MemOK = __TRUE;
+                        } else {
+                            USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+                            USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+                            USBD_MSC_SetCSW();
+                        }
+                    }
+
+                    break;
+
+                case SCSI_SYNC_CACHE10:
+                case SCSI_SYNC_CACHE16:
+                    USBD_MSC_SynchronizeCache();
+                    break;
+
+                case SCSI_REPORT_ID_INFO:
+                    USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+                    goto fail;
+
+                default:
+                    goto fail;
+            }
+        }
+    } else {
+        /* Invalid USBD_MSC_CBW */
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+        /* set EP to stay stalled */
+        USBD_EndPointStall |= ((1 << 16) << (usbd_msc_ep_bulkin & 0x0F));
+        USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+        /* set EP to stay stalled */
+        USBD_EndPointStall |=  1 << usbd_msc_ep_bulkout;
+        BulkStage = MSC_BS_ERROR;
+    }
 }
 
 
@@ -910,11 +1006,11 @@ fail:
  *    Return Value:    None
  */
 
-void USBD_MSC_SetCSW (void) {
-
-  USBD_MSC_CSW.dSignature = MSC_CSW_Signature;
-  USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, (U8 *)&USBD_MSC_CSW, sizeof(USBD_MSC_CSW));
-  BulkStage = MSC_BS_CSW;
+void USBD_MSC_SetCSW(void)
+{
+    USBD_MSC_CSW.dSignature = MSC_CSW_Signature;
+    USBD_WriteEP(usbd_msc_ep_bulkin | 0x80, (U8 *)&USBD_MSC_CSW, sizeof(USBD_MSC_CSW));
+    BulkStage = MSC_BS_CSW;
 }
 
 
@@ -924,28 +1020,32 @@ void USBD_MSC_SetCSW (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_BulkIn (void) {
+void USBD_MSC_BulkIn(void)
+{
+    switch (BulkStage) {
+        case MSC_BS_DATA_IN:
+            switch (USBD_MSC_CBW.CB[0]) {
+                case SCSI_READ10:
+                case SCSI_READ12:
+                    USBD_MSC_MemoryRead();
+                    break;
+            }
 
-  switch (BulkStage) {
-    case MSC_BS_DATA_IN:
-      switch (USBD_MSC_CBW.CB[0]) {
-        case SCSI_READ10:
-        case SCSI_READ12:
-          USBD_MSC_MemoryRead();
-          break;
-      }
-      break;
-    case MSC_BS_DATA_IN_LAST:
-      USBD_MSC_SetCSW();
-      break;
-    case MSC_BS_DATA_IN_LAST_STALL:
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
-      USBD_MSC_SetCSW();
-      break;
-    case MSC_BS_CSW:
-      BulkStage = MSC_BS_CBW;
-      break;
-  }
+            break;
+
+        case MSC_BS_DATA_IN_LAST:
+            USBD_MSC_SetCSW();
+            break;
+
+        case MSC_BS_DATA_IN_LAST_STALL:
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
+            USBD_MSC_SetCSW();
+            break;
+
+        case MSC_BS_CSW:
+            BulkStage = MSC_BS_CBW;
+            break;
+    }
 }
 
 
@@ -955,34 +1055,39 @@ void USBD_MSC_BulkIn (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_BulkOut (void) {
+void USBD_MSC_BulkOut(void)
+{
+    switch (BulkStage) {
+        case MSC_BS_CBW:
+            USBD_MSC_GetCBW();
+            break;
 
-  switch (BulkStage) {
-    case MSC_BS_CBW:
-      USBD_MSC_GetCBW();
-      break;
-    case MSC_BS_DATA_OUT:
-      switch (USBD_MSC_CBW.CB[0]) {
-        case SCSI_WRITE10:
-        case SCSI_WRITE12:
-          USBD_MSC_MemoryWrite();
-          break;
-        case SCSI_VERIFY10:
-          USBD_MSC_MemoryVerify();
-          break;
-      }
-      break;
-    case MSC_BS_CSW:
-      // Previous transfer must be complete
-      // before the next transfer begins
-      util_assert(0);
-      break;
-    default:
-      USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
-      USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
-      USBD_MSC_SetCSW();
-      break;
-  }
+        case MSC_BS_DATA_OUT:
+            switch (USBD_MSC_CBW.CB[0]) {
+                case SCSI_WRITE10:
+                case SCSI_WRITE12:
+                    USBD_MSC_MemoryWrite();
+                    break;
+
+                case SCSI_VERIFY10:
+                    USBD_MSC_MemoryVerify();
+                    break;
+            }
+
+            break;
+
+        case MSC_BS_CSW:
+            // Previous transfer must be complete
+            // before the next transfer begins
+            util_assert(0);
+            break;
+
+        default:
+            USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+            USBD_MSC_CSW.bStatus = CSW_PHASE_ERROR;
+            USBD_MSC_SetCSW();
+            break;
+    }
 }
 
 
@@ -992,8 +1097,9 @@ void USBD_MSC_BulkOut (void) {
  *    Return Value:    None
  */
 
-void USBD_MSC_EP_BULKIN_Event (U32 event) {
-  USBD_MSC_BulkIn();
+void USBD_MSC_EP_BULKIN_Event(U32 event)
+{
+    USBD_MSC_BulkIn();
 }
 
 
@@ -1003,9 +1109,10 @@ void USBD_MSC_EP_BULKIN_Event (U32 event) {
  *    Return Value:    None
  */
 
-void USBD_MSC_EP_BULKOUT_Event (U32 event) {
-  BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf);
-  USBD_MSC_BulkOut();
+void USBD_MSC_EP_BULKOUT_Event(U32 event)
+{
+    BulkLen = USBD_ReadEP(usbd_msc_ep_bulkout, USBD_MSC_BulkBuf, USBD_MSC_BulkBufSize);
+    USBD_MSC_BulkOut();
 }
 
 
@@ -1017,13 +1124,15 @@ void USBD_MSC_EP_BULKOUT_Event (U32 event) {
  *    Return Value:    None
  */
 
-void USBD_MSC_EP_BULK_Event (U32 event) {
-  if (event & USBD_EVT_OUT) {
-    USBD_MSC_EP_BULKOUT_Event (0);
-  }
-  if (event & USBD_EVT_IN) {
-    USBD_MSC_EP_BULKIN_Event (0);
-  }
+void USBD_MSC_EP_BULK_Event(U32 event)
+{
+    if (event & USBD_EVT_OUT) {
+        USBD_MSC_EP_BULKOUT_Event(0);
+    }
+
+    if (event & USBD_EVT_IN) {
+        USBD_MSC_EP_BULKIN_Event(0);
+    }
 }
 
 
@@ -1035,14 +1144,15 @@ void USBD_MSC_EP_BULK_Event (U32 event) {
  *    Return Value:    None
  */
 
-__task void USBD_RTX_MSC_EP_BULKIN_Event (void) {
+__task void USBD_RTX_MSC_EP_BULKIN_Event(void)
+{
+    for (;;) {
+        usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
 
-  for (;;) {
-    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-    if (usbd_os_evt_get() & USBD_EVT_IN) {
-      USBD_MSC_EP_BULKIN_Event (0);
+        if (usbd_os_evt_get() & USBD_EVT_IN) {
+            USBD_MSC_EP_BULKIN_Event(0);
+        }
     }
-  }
 }
 
 
@@ -1052,14 +1162,15 @@ __task void USBD_RTX_MSC_EP_BULKIN_Event (void) {
  *    Return Value:    None
  */
 
-__task void USBD_RTX_MSC_EP_BULKOUT_Event (void) {
+__task void USBD_RTX_MSC_EP_BULKOUT_Event(void)
+{
+    for (;;) {
+        usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
 
-  for (;;) {
-    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-    if (usbd_os_evt_get() & USBD_EVT_OUT) {
-      USBD_MSC_EP_BULKOUT_Event (0);
+        if (usbd_os_evt_get() & USBD_EVT_OUT) {
+            USBD_MSC_EP_BULKOUT_Event(0);
+        }
     }
-  }
 }
 
 
@@ -1069,11 +1180,11 @@ __task void USBD_RTX_MSC_EP_BULKOUT_Event (void) {
  *    Return Value:    None
  */
 
-__task void USBD_RTX_MSC_EP_BULK_Event (void) {
-
-  for (;;) {
-    usbd_os_evt_wait_or (0xFFFF, 0xFFFF);
-    USBD_MSC_EP_BULK_Event (usbd_os_evt_get());
-  }
+__task void USBD_RTX_MSC_EP_BULK_Event(void)
+{
+    for (;;) {
+        usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
+        USBD_MSC_EP_BULK_Event(usbd_os_evt_get());
+    }
 }
 #endif

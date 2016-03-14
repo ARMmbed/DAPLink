@@ -1,18 +1,21 @@
-# CMSIS-DAP Interface Firmware
-# Copyright (c) 2009-2013 ARM Limited
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+ 
 from __future__ import absolute_import
 
 import os
@@ -20,40 +23,44 @@ import re
 import time
 import subprocess
 import sys
-import six
-import mbedapi
+import binascii
+import itertools
 import mbed_lstools
+import info
+import test_daplink
+from test_info import TestInfoStub
 from intelhex import IntelHex
 from pyOCD.board import MbedBoard
 
-TEST_REPO = 'https://developer.mbed.org/users/c1728p9/code/daplink-validation/'
+FILE_IGNORE_PATTERN_LIST = [
+    re.compile("\\._\\.Trashes")
+]
+
 
 # This prevents the following error message from getting
 # displayed on windows if the mbed dismounts unexpectedly
 # during a transfer:
 #   There is no disk in the drive. Please insert a disk into
 #   drive \Device\<Harddiskx>\<rdrive>
-if sys.platform.startswith("win"):
-    import ctypes
-    SEM_FAILCRITICALERRORS = 1
-    GetErrorMode = ctypes.windll.kernel32.GetErrorMode
-    GetErrorMode.restype = ctypes.c_uint
-    GetErrorMode.argtypes = []
-    SetErrorMode = ctypes.windll.kernel32.SetErrorMode
-    SetErrorMode.restype = ctypes.c_uint
-    SetErrorMode.argtypes = [ctypes.c_uint]
+def disable_popup():
+    if sys.platform.startswith("win"):
+        # pylint: disable=invalid-name
+        import ctypes
+        SEM_FAILCRITICALERRORS = 1
+        GetErrorMode = \
+            ctypes.windll.kernel32.GetErrorMode  # @UndefinedVariable
+        GetErrorMode.restype = ctypes.c_uint
+        GetErrorMode.argtypes = []
+        SetErrorMode = \
+            ctypes.windll.kernel32.SetErrorMode  # @UndefinedVariable
+        SetErrorMode.restype = ctypes.c_uint
+        SetErrorMode.argtypes = [ctypes.c_uint]
 
-    err_mode = GetErrorMode()
-    err_mode |= SEM_FAILCRITICALERRORS
-    SetErrorMode(err_mode)
+        err_mode = GetErrorMode()
+        err_mode |= SEM_FAILCRITICALERRORS
+        SetErrorMode(err_mode)
 
-board_id_to_build_target = {
-    0x0231: 'FRDM-K22F',
-    0x1050: 'NXP-LPC800-MAX',
-    0x0240: 'FRDM-K64F',
-    0x9900: 'Microbit',
-    0x1100: 'Nordic-nRF51-DK',
-}
+disable_popup()
 
 
 def get_all_attached_daplink_boards():
@@ -94,6 +101,12 @@ def _get_board_endpoints(unique_id):
     return None
 
 
+def _ranges(i):
+    for _, b in itertools.groupby(enumerate(i), lambda x_y: x_y[1] - x_y[0]):
+        b = list(b)
+        yield b[0][1], b[-1][1]
+
+
 def _parse_kvp_file(file_path, parent_test=None):
     """Parse details.txt and return True if successful"""
     test_info = None
@@ -125,6 +138,7 @@ def _parse_kvp_file(file_path, parent_test=None):
             key = key.lower().replace(" ", "_")
             value = match.group(2)
             value = value.lower()
+            value = value.strip()
             if key in kvp:
                 if test_info is not None:
                     test_info.failure("Duplicate key %s" % key)
@@ -133,30 +147,58 @@ def _parse_kvp_file(file_path, parent_test=None):
     return kvp
 
 
+def _compute_crc(hex_file_path):
+    # Read in hex file
+    new_hex_file = IntelHex()
+    new_hex_file.padding = 0xFF
+    new_hex_file.fromfile(hex_file_path, format='hex')
+
+    # Get the starting and ending address
+    addresses = new_hex_file.addresses()
+    addresses.sort()
+    start_end_pairs = list(_ranges(addresses))
+    regions = len(start_end_pairs)
+    assert regions == 1, ("Error - only 1 region allowed in "
+                          "hex file %i found." % regions)
+    start, end = start_end_pairs[0]
+
+    # Compute checksum over the range (don't include data at location of crc)
+    size = end - start + 1
+    crc_size = size - 4
+    data = new_hex_file.tobinarray(start=start, size=crc_size)
+    data_crc32 = binascii.crc32(data) & 0xFFFFFFFF
+
+    # Grab the crc from the image
+    embedded_crc32 = (((new_hex_file[end - 3] & 0xFF) << 0) |
+                      ((new_hex_file[end - 2] & 0xFF) << 8) |
+                      ((new_hex_file[end - 1] & 0xFF) << 16) |
+                      ((new_hex_file[end - 0] & 0xFF) << 24))
+    return data_crc32, embedded_crc32
+
+
 class AssertInfo(object):
 
-    def __init__(self, file, line):
-        self._file = file
-        self._line = line
-    
+    def __init__(self, file_name, line_number):
+        self._file = file_name
+        self._line = line_number
+
     @property
     def file(self):
         return self._file
-        
+
     @property
     def line(self):
         return self._line
-        
 
-class DaplinkBoard:
 
+class DaplinkBoard(object):
 
     MODE_IF = "interface"
     MODE_BL = "bootloader"
 
     # Keys for details.txt
     KEY_UNIQUE_ID = "unique_id"
-    KEY_HDK_ID = "hdk_id"
+    KEY_HIC_ID = "hic_id"
     KEY_MODE = "daplink_mode"
     KEY_BL_VERSION = "bootloader_version"
     KEY_IF_VERSION = "interface_version"
@@ -170,21 +212,32 @@ class DaplinkBoard:
 
         self.unique_id = unique_id
         self.details_txt = None
-        self._target_firmware_present = False
-        self._username = None
-        self._password = None
-        self._target_dir = None
-        self._target_hex_path = None
-        self._target_bin_path = None
         self._mode = None
         self._assert = None
+        self._check_fs_on_remount = False
+        self._manage_assert = False
         self._update_board_info()
+
+    def __str__(self):
+        return "Name=%s Unique ID=%s" % (self.name, self.get_unique_id())
 
     def get_unique_id(self):
         return self.unique_id
 
     def get_board_id(self):
         return self.board_id
+
+    @property
+    def hic_id(self):
+        return self._hic_id
+
+    @property
+    def name(self):
+        if self.board_id in info.BOARD_ID_TO_BUILD_TARGET:
+            board_target = info.BOARD_ID_TO_BUILD_TARGET[self.board_id]
+        else:
+            board_target = "Unknown"
+        return board_target
 
     def get_serial_port(self):
         return self.serial_port
@@ -216,41 +269,43 @@ class DaplinkBoard:
 
     def get_mode(self):
         """Return either MODE_IF or MODE_BL"""
-        assert self._mode in (DaplinkBoard.MODE_BL, DaplinkBoard.MODE_IF)
+        assert ((self._mode is DaplinkBoard.MODE_BL) or
+                (self._mode is DaplinkBoard.MODE_IF))
         return self._mode
 
-    def get_file_path(self, file):
+    def get_file_path(self, file_name):
         """Convenience function to the path to a file on the drive"""
-        return os.path.normpath(self.mount_point + os.sep + file)
+        return os.path.normpath(self.mount_point + os.sep + file_name)
 
-    def get_target_hex_path(self):
-        assert self._target_firmware_present
-        return self._target_hex_path
-
-    def get_target_bin_path(self):
-        assert self._target_firmware_present
-        return self._target_bin_path
-
-    def set_mode(self, mode, parent_test):
+    def set_mode(self, mode, parent_test=None):
         """Set the mode to either MODE_IF or MODE_BL"""
-        assert mode in (self.MODE_BL, self.MODE_IF)
+        assert ((mode is DaplinkBoard.MODE_BL) or
+                (mode is DaplinkBoard.MODE_IF))
+        if parent_test is None:
+            parent_test = TestInfoStub()
         test_info = parent_test.create_subtest('set_mode')
         current_mode = self.get_mode()
         if current_mode is mode:
             # No mode change needed
             return
 
-        start_bl_path = self.get_file_path('START_BL.CFG')
-        start_if_path = self.get_file_path('START_IF.CFG')
         if mode is self.MODE_BL:
             test_info.info("changing mode IF -> BL")
             # Create file to enter BL mode
+            start_bl_path = self.get_file_path('START_BL.ACT')
+            with open(start_bl_path, 'wb') as _:
+                pass
+            # Create file to enter BL mode - Legacy
             start_bl_path = self.get_file_path('START_BL.CFG')
             with open(start_bl_path, 'wb') as _:
                 pass
         elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
-            # Create file to enter BL mode
+            # Create file to enter IF mode
+            start_if_path = self.get_file_path('START_IF.ACT')
+            with open(start_if_path, 'wb') as _:
+                pass
+            # Create file to enter IF mode - Legacy
             start_if_path = self.get_file_path('START_IF.CFG')
             with open(start_if_path, 'wb') as _:
                 pass
@@ -263,68 +318,24 @@ class DaplinkBoard:
             test_info.failure("Board in wrong mode: %s" % new_mode)
             raise Exception("Could not change board mode")
 
-    def set_build_login(self, username, password):
-        assert isinstance(username, six.string_types)
-        assert isinstance(password, six.string_types)
-        self._username = username
-        self._password = password
+    def set_check_fs_on_remount(self, enabled):
+        assert isinstance(enabled, bool)
+        self._check_fs_on_remount = enabled
+        self.set_assert_auto_manage(enabled)
 
-    def set_build_prebuilt_dir(self, directory):
-        assert isinstance(directory, six.string_types)
-        self._target_dir = directory
+    def set_assert_auto_manage(self, enabled):
+        assert isinstance(enabled, bool)
+        self.clear_assert()
+        self._manage_assert = enabled
 
-    def build_target_firmware(self, parent_test):
-        """
-        Build test firmware for the board
+    def clear_assert(self):
+        assert_path = self.get_file_path("ASSERT.TXT")
+        if os.path.isfile(assert_path):
+            os.remove(assert_path)
+            self.wait_for_remount(TestInfoStub())
 
-        Login credentials must have been set with set_build_login.
-        """
-        prebuilt = self._target_dir is not None
-        build_login = (self._username is not None and
-                       self._password is not None)
-        assert prebuilt or build_login
-        if prebuilt:
-            destdir = self._target_dir
-        else:
-            destdir = 'tmp'
-        build_name = board_id_to_build_target[self.get_board_id()]
-        name_base = os.path.normpath(destdir + os.sep + build_name)
-        self._target_hex_path = name_base + '.hex'
-        self._target_bin_path = name_base + '.bin'
-        # Build target test image if a prebuild location is not specified
-        if not prebuilt:
-            test_info = parent_test.create_subtest('build_target_test_firmware')
-            if not os.path.isdir(destdir):
-                os.mkdir(destdir)
-            # Remove previous build files
-            if os.path.isfile(self._target_hex_path):
-                os.remove(self._target_hex_path)
-            if os.path.isfile(self._target_bin_path):
-                os.remove(self._target_bin_path)
-            test_info.info('Starting remote build')
-            start = time.time()
-            built_file = mbedapi.build_repo(self._username, self._password,
-                                            TEST_REPO, build_name, destdir)
-            stop = time.time()
-            test_info.info("Build took %s seconds" % (stop - start))
-            extension = os.path.splitext(built_file)[1].lower()
-            assert extension == '.hex' or extension == '.bin'
-            if extension == '.hex':
-                intel_hex = IntelHex(built_file)
-                # Only supporting devices with the starting
-                # address at 0 currently
-                assert intel_hex.minaddr() == 0
-                intel_hex.tobinfile(self._target_bin_path)
-                os.rename(built_file, self._target_hex_path)
-            if extension == '.bin':
-                intel_hex = IntelHex()
-                intel_hex.loadbin(built_file, offset=0)
-                intel_hex.tofile(self._target_hex_path, 'hex')
-                os.rename(built_file, self._target_bin_path)
-        # Assert that required files are present
-        assert os.path.isfile(self._target_hex_path)
-        assert os.path.isfile(self._target_bin_path)
-        self._target_firmware_present = True
+    def run_board_test(self, parent_test):
+        test_daplink.daplink_test(self, parent_test)
 
     def read_target_memory(self, addr, size, resume=True):
         assert self.get_mode() == self.MODE_IF
@@ -367,22 +378,33 @@ class DaplinkBoard:
         trail_white_re = re.compile(trail_white)
         end_of_file_re = re.compile(end_of_file)
         for filename in files:
-            filename = self.get_file_path(filename)
-            with open(filename, 'rb') as file_handle:
+            filepath = self.get_file_path(filename)
+            if not os.path.isfile(filepath):
+                test_info.info("Skipping non file item %s" % filepath)
+                continue
+            skip = False
+            for pattern in FILE_IGNORE_PATTERN_LIST:
+                if pattern.match(filename):
+                    skip = True
+                    break
+            if skip:
+                continue
+
+            with open(filepath, 'rb') as file_handle:
                 file_contents = file_handle.read()
             if non_ascii_re.search(file_contents):
-                test_info.failure("Non ascii characters in %s" % filename)
+                test_info.failure("Non ascii characters in %s" % filepath)
             elif non_cr_lf_re.search(file_contents):
                 test_info.failure("File has non-standard line endings %s" %
-                                  filename)
+                                  filepath)
             elif trail_white_re.search(file_contents):
                 test_info.warning("File trailing whitespace %s" %
-                                  filename)
+                                  filepath)
             elif end_of_file_re.search(file_contents) is None:
                 test_info.warning("No newline at end of file %s" %
-                                  filename)
+                                  filepath)
             else:
-                test_info.info("File %s valid" % filename)
+                test_info.info("File %s valid" % filepath)
 
         self.test_details_txt(test_info)
 
@@ -390,6 +412,11 @@ class DaplinkBoard:
         """Load an interface binary or hex"""
         test_info = parent_test.create_subtest('load_interface')
         self.set_mode(self.MODE_BL, test_info)
+
+        data_crc, crc_in_image = _compute_crc(filepath)
+        assert data_crc == crc_in_image, ("CRC in interface is wrong "
+                                          "expected 0x%x, found 0x%x" %
+                                          (data_crc, crc_in_image))
 
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as firmware_file:
@@ -402,11 +429,49 @@ class DaplinkBoard:
         test_info.info("programming took %s s" % (stop - start))
         self.wait_for_remount(test_info)
 
-    def load_bootloader(self):
-        """Load a bootloader binary or hex"""
-        raise Exception("Function not implemented")
+        # Check the CRC
+        self.set_mode(self.MODE_IF, test_info)
+        if DaplinkBoard.KEY_IF_CRC not in self.details_txt:
+            test_info.failure("No interface CRC in details.txt")
+            return
+        details_crc = int(self.details_txt[DaplinkBoard.KEY_IF_CRC], 0)
+        test_info.info("Interface crc: 0x%x" % details_crc)
+        if data_crc != details_crc:
+            test_info.failure("Interface CRC is wrong")
 
-    def wait_for_remount(self, parent_test, wait_time=15):
+    def load_bootloader(self, filepath, parent_test):
+        """Load a bootloader binary or hex"""
+        test_info = parent_test.create_subtest('load_bootloader')
+        self.set_mode(self.MODE_IF, test_info)
+
+        # Check image CRC
+        data_crc, crc_in_image = _compute_crc(filepath)
+        assert data_crc == crc_in_image, ("CRC in bootloader is wrong "
+                                          "expected 0x%x, found 0x%x" %
+                                          (data_crc, crc_in_image))
+
+        filename = os.path.basename(filepath)
+        with open(filepath, 'rb') as firmware_file:
+            data = firmware_file.read()
+        out_file = self.get_file_path(filename)
+        start = time.time()
+        with open(out_file, 'wb') as firmware_file:
+            firmware_file.write(data)
+        stop = time.time()
+        test_info.info("programming took %s s" % (stop - start))
+        self.wait_for_remount(test_info)
+
+        # Check the CRC
+        self.set_mode(self.MODE_IF, test_info)
+        if DaplinkBoard.KEY_BL_CRC not in self.details_txt:
+            test_info.failure("No bootloader CRC in details.txt")
+            return
+        details_crc = int(self.details_txt[DaplinkBoard.KEY_BL_CRC], 0)
+        test_info.info("Bootloader crc: 0x%x" % details_crc)
+        if data_crc != details_crc:
+            test_info.failure("Bootloader CRC is wrong")
+
+    def wait_for_remount(self, parent_test, wait_time=120):
         test_info = parent_test.create_subtest('wait_for_remount')
         elapsed = 0
         start = time.time()
@@ -429,6 +494,17 @@ class DaplinkBoard:
         stop = time.time()
         test_info.info("mount took %s s" % (stop - start))
 
+        # If enabled check the filesystem
+        if self._check_fs_on_remount:
+            self.test_fs(parent_test)
+            self.test_fs_contents(parent_test)
+            self.test_details_txt(parent_test)
+            if self._manage_assert:
+                if self._assert is not None:
+                    test_info.failure('Assert on line %s in file %s' %
+                                      (self._assert.line, self._assert.file))
+                self.clear_assert()
+
     def _update_board_info(self, exptn_on_fail=True):
         """Update board info
 
@@ -440,7 +516,7 @@ class DaplinkBoard:
         endpoints = _get_board_endpoints(self.unique_id)
         if endpoints is None:
             if exptn_on_fail:
-                raise Exception("Cound not update board info: %s" %
+                raise Exception("Could not update board info: %s" %
                                 self.unique_id)
             return False
         self.unique_id, self.serial_port, self.mount_point = endpoints
@@ -448,6 +524,7 @@ class DaplinkBoard:
         assert self.unique_id is not None
         assert self.mount_point is not None
         self.board_id = int(self.unique_id[0:4], 16)
+        self._hic_id = int(self.unique_id[-8:], 16)
 
         # Note - Some legacy boards might not have details.txt
         details_txt_path = self.get_file_path("details.txt")
@@ -456,7 +533,12 @@ class DaplinkBoard:
 
         self.mode = None
         if DaplinkBoard.KEY_MODE in self.details_txt:
-            self._mode = self.details_txt[DaplinkBoard.KEY_MODE]
+            DETAILS_TO_MODE = {
+                "interface": DaplinkBoard.MODE_IF,
+                "bootloader": DaplinkBoard.MODE_BL,
+            }
+            mode_str = self.details_txt[DaplinkBoard.KEY_MODE]
+            self._mode = DETAILS_TO_MODE[mode_str]
         else:
             # TODO - remove file check when old bootloader have been
             # updated
@@ -475,7 +557,7 @@ class DaplinkBoard:
         test_info = parent_test.create_subtest('test_details_txt')
         required_key_and_format = {
             DaplinkBoard.KEY_UNIQUE_ID: re.compile("^[a-f0-9]{48}$"),
-            DaplinkBoard.KEY_HDK_ID: re.compile("^[a-f0-9]{8}$"),
+            DaplinkBoard.KEY_HIC_ID: re.compile("^[a-f0-9]{8}$"),
             DaplinkBoard.KEY_GIT_SHA: re.compile("^[a-f0-9]{40}$"),
             DaplinkBoard.KEY_LOCAL_MODS: re.compile("^[01]{1}$"),
             DaplinkBoard.KEY_USB_INTERFACES: re.compile("^.+$"),
@@ -499,45 +581,50 @@ class DaplinkBoard:
             return
 
         # Check for required keys
-        required_keys = required_key_and_format.keys()
-        for key in required_keys:
-            if not key in details_txt:
+        for key in required_key_and_format:
+            if key not in details_txt:
                 test_info.failure("Missing detail.txt entry: %s" % key)
                 continue
 
             value = details_txt[key]
             pattern = required_key_and_format[key]
             if pattern.match(value) is None:
-                test_info.failure("Bad format detail.txt %s: %s" % (key, value))
+                test_info.failure("Bad format detail.txt %s: %s" %
+                                  (key, value))
 
         # Check format of optional values
-        optional = optional_key_and_format.keys()
         for key in optional_key_and_format:
-            if not key in details_txt:
+            if key not in details_txt:
                 continue
 
             value = details_txt[key]
             pattern = optional_key_and_format[key]
             if pattern.match(value) is None:
-                test_info.failure("Bad format detail.txt %s: %s" % (key, value))
+                test_info.failure("Bad format detail.txt %s: %s" %
+                                  (key, value))
 
         # Check details.txt contents
         details_unique_id = None
-        details_hdk_id = None
+        details_hic_id = None
         if DaplinkBoard.KEY_UNIQUE_ID in details_txt:
             details_unique_id = details_txt[DaplinkBoard.KEY_UNIQUE_ID]
-        if DaplinkBoard.KEY_HDK_ID in details_txt:
-            details_hdk_id = details_txt[DaplinkBoard.KEY_HDK_ID]
+        if DaplinkBoard.KEY_HIC_ID in details_txt:
+            details_hic_id = details_txt[DaplinkBoard.KEY_HIC_ID]
         if details_unique_id is not None:
             if details_unique_id != self.unique_id:
-                test_info.failure("Unique ID mismatch in details.txt")
-            if details_hdk_id is not None:
-                if details_hdk_id != details_unique_id[-8:]:
-                    test_info.failure("HDK ID is not the last 8 "
-                                      "digits of unique ID")
+                test_info.failure("Unique ID mismatch in details.txt "
+                                  "details.txt=%s, usb=%s" %
+                                  (details_unique_id, self.unique_id))
+            if details_hic_id is not None:
+                usb_hic = details_unique_id[-8:]
+                if details_hic_id != usb_hic:
+                    test_info.failure("HIC ID is not the last 8 "
+                                      "digits of unique ID "
+                                      "details.txt=%s, usb=%s" %
+                                      (details_hic_id, usb_hic))
 
     def _parse_assert_txt(self):
-        file_path = self.get_file_path("assert.txt")
+        file_path = self.get_file_path("ASSERT.TXT")
         if not os.path.isfile(file_path):
             self._assert = None
             return

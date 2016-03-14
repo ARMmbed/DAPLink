@@ -1,0 +1,9 @@
+common:
+    includes:
+        - source/target/nxp/lpc824
+    sources:
+        board:
+            - source/board/scci824.c
+        target:
+            - source/target/nxp/lpc824/target.c
+            - source/target/nxp/target_reset.c

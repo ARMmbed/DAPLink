@@ -1,22 +1,24 @@
-# CMSIS-DAP Interface Firmware
-# Copyright (c) 2009-2015 ARM Limited
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# DAPLink Interface Firmware
+# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
 
-
 from __future__ import absolute_import
 from __future__ import division
+from threading import Thread
 import serial
 
 
@@ -58,7 +60,7 @@ def calc_timeout(data, baud):
     return 12 * len(data) / float(baud) + 0.2
 
 
-def test_serial(board, parent_test):
+def test_serial(workspace, parent_test):
     """Test the serial port endpoint
 
     Requirements:
@@ -71,8 +73,13 @@ def test_serial(board, parent_test):
         True if the test passed, False otherwise
     """
     test_info = parent_test.create_subtest("Serial test")
-    port = board.get_serial_port()
+    port = workspace.board.get_serial_port()
     test_info.info("Testing serial port %s" % port)
+
+    # Note: OSX sends a break command when a serial port is closed.
+    # To avoid problems while testing keep the serial port open the
+    # whole time.  Use the property 'baudrate' to change the baud
+    # instead of opening a new instance.
 
     # Generate a 8 KB block of dummy data
     # and test a large block transfer
@@ -91,20 +98,23 @@ def test_serial(board, parent_test):
         if not _same(resp, expected_resp):
             test_info.failure("Fail on init: %s" % resp)
 
-        sp.write(test_data)
+        write_thread = Thread(target=sp.write, args=(test_data,))
+        write_thread.start()
         resp = sp.read(len(test_data))
+        write_thread.join()
         if _same(resp, test_data):
             test_info.info("Block test passed")
         else:
             test_info.failure("Block test failed")
 
-    # Generate a 4KB block of dummy data
-    # and test supported baud rates
-    test_data = [i for i in range(0, 256)] * 4 * 4
-    test_data = str(bytearray(test_data))
-    for baud in standard_baud:
-        # Setup with a baud of 115200
-        with serial.Serial(port, baudrate=115200, timeout=1) as sp:
+        # Generate a 4KB block of dummy data
+        # and test supported baud rates
+        test_data = [i for i in range(0, 256)] * 4 * 4
+        test_data = str(bytearray(test_data))
+        for baud in standard_baud:
+            # Set baud to 115200
+            sp.baudrate = 115200
+            sp.timeout = 1.0
 
             # Reset the target
             sp.sendBreak()
@@ -124,10 +134,11 @@ def test_serial(board, parent_test):
                 test_info.failure("Fail on baud command: %s" % resp)
                 continue
 
-        # Open serial port at the new baud
-        test_info.info("Testing baud %i" % baud)
-        test_time = calc_timeout(test_data, baud)
-        with serial.Serial(port, baudrate=baud, timeout=test_time) as sp:
+            # Update baud for test
+            test_info.info("Testing baud %i" % baud)
+            test_time = calc_timeout(test_data, baud)
+            sp.baudrate = baud
+            sp.timeout = test_time
 
             # Read the response indicating that the baudrate
             # on the target has changed
@@ -138,8 +149,10 @@ def test_serial(board, parent_test):
                 continue
 
             # Perform test
-            sp.write(test_data)
+            write_thread = Thread(target=sp.write, args=(test_data,))
+            write_thread.start()
             resp = sp.read(len(test_data))
+            write_thread.join()
             resp = bytearray(resp)
             if _same(test_data, resp):
                 test_info.info("Pass")

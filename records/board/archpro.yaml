@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/archpro.c
+        target:
+            - source/target/nxp/lpc1768/target.c
+            - source/target/nxp/target_reset.c

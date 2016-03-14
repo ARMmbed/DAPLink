@@ -1,22 +1,27 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2015 ARM Limited
+/**
+ * @file    intelhex.c
+ * @brief   Implementation of intelhex.h
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
-#include "intelhex.h"
-//#include "stdio.h"
 #include "string.h"
+
+#include "intelhex.h"
 
 typedef enum hex_record_t hex_record_t;
 enum hex_record_t {
@@ -26,7 +31,7 @@ enum hex_record_t {
     START_SEG_ADDR_RECORD = 3,
     EXT_LINEAR_ADDR_RECORD = 4,
     START_LINEAR_ADDR_RECORD = 5
-};    
+};
 
 typedef union hex_line_t hex_line_t;
 union __attribute__((packed)) hex_line_t {
@@ -35,7 +40,7 @@ union __attribute__((packed)) hex_line_t {
         uint8_t  byte_count;
         uint16_t address;
         uint8_t  record_type;
-        uint8_t  data[0x25-0x5];
+        uint8_t  data[0x25 - 0x5];
         uint8_t  checksum;
     };
 };
@@ -66,9 +71,11 @@ static uint8_t ctoh(char c)
 static uint8_t validate_checksum(hex_line_t *record)
 {
     uint8_t result = 0, i = 0;
-    for ( ; i < (record->byte_count+5); i++) {
+
+    for (; i < (record->byte_count + 5); i++) {
         result += record->buf[i];
     }
+
     return (result == 0);
 }
 
@@ -95,7 +102,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     *bin_buf_cnt = (uint32_t)0;
 
     // we had an exit state where the address was unaligned to the previous record and data count.
-    //  Need to pop the last record into the buffer before decoding anthing else since it was 
+    //  Need to pop the last record into the buffer before decoding anthing else since it was
     //  already decoded.
     if (load_unaligned_record) {
         // need some help...
@@ -107,7 +114,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
         // Store next address to write
         next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
     }
-    
+
     while (hex_blob != end) {
         switch ((uint8_t)(*hex_blob)) {
             // we've hit the end of an ascii line
@@ -118,22 +125,23 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                     status = HEX_PARSE_CKSUM_FAIL;
                     goto hex_parser_exit;
                 } else {
-                     if (!record_processed) {
+                    if (!record_processed) {
                         record_processed = 1;
                         // address byteswap...
                         line.address = swap16(line.address);
+
                         switch (line.record_type) {
                             case DATA_RECORD:
                                 // keeping a record of the last hex record
                                 memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
-                                
+
                                 // verify this is a continous block of memory or need to exit and dump
                                 if (((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
                                     load_unaligned_record = 1;
                                     status = HEX_PARSE_UNALIGNED;
                                     goto hex_parser_exit;
                                 }
-                                
+
                                 // move from line buffer back to input buffer
                                 memcpy(bin_buf, line.data, line.byte_count);
                                 bin_buf += line.byte_count;
@@ -141,14 +149,14 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                 // Save next address to write
                                 next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
                                 break;
-                            
+
                             case EOF_RECORD:
                                 // pad rest of the buffer with 0xff
                                 //memset(bin_buf, 0xff, (bin_buf_size - (uint32_t)(*bin_buf_cnt)));
                                 //*bin_buf_cnt = bin_buf_size;
                                 status = HEX_PARSE_EOF;
                                 goto hex_parser_exit;
-                            
+
                             case EXT_LINEAR_ADDR_RECORD:
                                 // Could have had data in the buffer so must exit and try to program
                                 //  before updating bin_buf_address with next_address_to_write
@@ -157,21 +165,20 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                 // figure the start address for the buffer before returning
                                 *bin_buf_address = next_address_to_write - (uint32_t)(*bin_buf_cnt);
                                 *hex_parse_cnt = (uint32_t)(hex_blob_size - (end - hex_blob));
-
                                 // update the address msb's
                                 next_address_to_write = (next_address_to_write & 0x00000000) | ((line.data[0] << 24) | (line.data[1] << 16));
-
                                 // Need to exit and program if buffer has been filled
                                 status = HEX_PARSE_UNALIGNED;
                                 return status;
-                            
+
                             default:
                                 break;
                         }
                     }
                 }
+
                 break;
-        
+
             // found start of a new record. reset state variables
             case ':':
                 memset(line.buf, 0, sizeof(hex_line_t));
@@ -179,23 +186,25 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                 idx = 0;
                 record_processed = 0;
                 break;
-            
+
             // decoding lines
             default:
                 if (low_nibble) {
                     line.buf[idx] |= ctoh((uint8_t)(*hex_blob)) & 0xf;
                     idx++;
-                }
-                else {
+                } else {
                     if (idx < sizeof(hex_line_t)) {
                         line.buf[idx] = ctoh((uint8_t)(*hex_blob)) << 4;
                     }
                 }
+
                 low_nibble = !low_nibble;
                 break;
         }
+
         hex_blob++;
     }
+
     // decoded an entire hex block - verify (cant do this hex_parse_cnt is figured below)
     //status = (hex_blob_size == (uint32_t)(*hex_parse_cnt)) ? HEX_PARSE_OK : HEX_PARSE_FAILURE;
     status = HEX_PARSE_OK;

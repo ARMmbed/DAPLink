@@ -1,18 +1,24 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usbd_event.h
+ * @brief   USB Device Event header
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __USBD_EVENT_H__
 #define __USBD_EVENT_H__
 
@@ -49,23 +55,23 @@
 #define USBD_EVT_CLR_FEATURE (1 <<  3)  /* Clear Feature                      */
 
 /* USB Device - Device Events Callback Pointers                               */
-extern void (* const USBD_P_Power_Event    )(BOOL power);
-extern void (* const USBD_P_Reset_Event    )(void);
-extern void (* const USBD_P_Suspend_Event  )(void);
-extern void (* const USBD_P_Resume_Event   )(void);
-extern void (* const USBD_P_WakeUp_Event   )(void);
-extern void (* const USBD_P_SOF_Event      )(void);
-extern void (* const USBD_P_Error_Event    )(U32 error);
+extern void (* const USBD_P_Power_Event)(BOOL power);
+extern void (* const USBD_P_Reset_Event)(void);
+extern void (* const USBD_P_Suspend_Event)(void);
+extern void (* const USBD_P_Resume_Event)(void);
+extern void (* const USBD_P_WakeUp_Event)(void);
+extern void (* const USBD_P_SOF_Event)(void);
+extern void (* const USBD_P_Error_Event)(U32 error);
 
 /* USB Device - Endpoint Events Callback Pointers                             */
-extern void (* const USBD_P_EP[16])         (U32 event);
+extern void (* const USBD_P_EP[16])(U32 event);
 
 /* USB Device - Core Events Callback Pointers                                 */
 extern void (* const USBD_P_Configure_Event)(void);
 extern void (* const USBD_P_Interface_Event)(void);
-extern void (* const USBD_P_Feature_Event  )(void);
+extern void (* const USBD_P_Feature_Event)(void);
 
 /* USB Device - RTX version RTX tasks initialization                          */
-extern void USBD_RTX_TaskInit               (void);
+extern void USBD_RTX_TaskInit(void);
 
 #endif  /* __USBD_EVENT_H__ */

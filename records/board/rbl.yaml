@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/rbl.c
+        target:
+            - source/target/nordic/nrf51822/target_16.c
+            - source/target/nordic/target_reset.c

@@ -1,18 +1,24 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    usb_msc.h
+ * @brief   USB mass storage header
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __USB_MSC_H__
 #define __USB_MSC_H__
 
@@ -48,21 +54,21 @@
 
 /* Bulk-only Command Block Wrapper */
 typedef __packed struct _MSC_CBW {
-  U32 dSignature;
-  U32 dTag;
-  U32 dDataLength;
-  U8  bmFlags;
-  U8  bLUN;
-  U8  bCBLength;
-  U8  CB[16];
+    U32 dSignature;
+    U32 dTag;
+    U32 dDataLength;
+    U8  bmFlags;
+    U8  bLUN;
+    U8  bCBLength;
+    U8  CB[16];
 } MSC_CBW;
 
 /* Bulk-only Command Status Wrapper */
 typedef __packed struct _MSC_CSW {
-  U32 dSignature;
-  U32 dTag;
-  U32 dDataResidue;
-  U8  bStatus;
+    U32 dSignature;
+    U32 dTag;
+    U32 dDataResidue;
+    U8  bStatus;
 } MSC_CSW;
 
 #define MSC_CBW_Signature               0x43425355
