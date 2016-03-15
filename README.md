@@ -1,44 +1,25 @@
 # DAPLink
+DAPLink is firmware that runs on a microcontroller that is connected according to a Hardware Interface Circuit (HIC) guideline. This provides methods to program and debug an application running on ARM processors via JTAG or SWD. The interface firware exposes a USB composite device to the host OS with CDC, HID and MSC endpoints. These endpoints are critical when developing software for microcontrollers. Description of endpoints:
+* MSC - drag-n-drop programming flash memory
+* CDC - virtual com port for log, trace and terminal emulation
+* HID - CMSIS-DAP compliant debug channel
 
-## Setup
-Skip any step where a compatible tool already exists
+For more detailed usability information [see the users guide.](docs/USERS-GUIDE.md)
 
-1. Install [Python 2.7.9 or above](https://www.python.org/downloads/) and make sure it's added to path
-2. Install [Git](https://git-scm.com/downloads) and make sure it's added to path
-3. Install [Keil MDK-ARM](https://www.keil.com/download/product/)
-4. Install virtualenv in python
+This project supersedes the [mbed CMSIS-DAP interface firmware project.](https://github.com/mbedmicro/CMSIS-DAP/)
 
-```
-> git clone https://github.com/mbedmicro/DAPLink
-> pip install virtualenv
-> virtualenv venv
-```
+## Compatibility
+There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards or as part of development kits. Known supported circuits are based on and IO compatible with:
+* Segger J-Link OB (Atmel SAM3U) - coming soon
+* Maxim Epsilon (MAX32550) - coming soon
+* [NXP OpenSDA](http://www.nxp.com/products/software-and-tools/run-time-software/kinetis-software-and-tools/ides-for-kinetis-mcus/opensda-serial-and-debug-adapter:OPENSDA)
+* [NXP Link based on LPC11U35 or LPC4322](https://www.lpcware.com/LPCXpressoBoards)
 
-## Develop
-1. Update tools and generate project files. This should be done everytime you pull new changes
-```
-> "venv/Scripts/activate"
-> pip install -r requirements.txt
-> progen generate -t uvision
-> "venv/Scripts/deactivate"
-```
-
-For adding new targets start from template and use these docs...
-
-## Release
-1. Create a tag with the correct release version and push it to github
-2. Clean the repo you will be building from by running 'git clean -xdf' followed by 'git reset --hard'
-3. Run the script 'build_release_uvision.bat' to create all builds.
-4. All release deliverables will be created and stored in 'uvision_release'.  Save this wherever your builds are stored.
-
-Note: A previous build can be reproduced by using the 'build_requirements.txt' of that build.
-To do this add the additional argument 'build_requirements.txt' when calling 'build_release_uvision.bat' in step 2.
-This will install and build with the exact version of the python packages used to create that build.
+## Releases
+There are many board builds (board = HIC + target combination) created from this repository. Quarterly releases will contain new features and bugfixes. Standalone bugfixes are released once reported, verified and fixed. Both quarterly and bugfix releases will result in the build number being incremented; however, standalone bugfix release builds may only be made for affected boards. Release notes and all release builds can be found under releases. **Products shipping with or compatible with this firmware should have instructions on how to upgrade and the most up to date release build on the product page.**
 
 ## Contribute
-Check out the issue tracker.
+Look for an interesting feature or defect [under issues](https://github.com/mbedmicro/DAPLink/issues) or start a new thread to engage with the developers and maintainers. You must sign the [contributor agreement](https://developer.mbed.org/contributor_agreement/) before any contributions can be accepted.
 
-##ToDo
-- Create a test
-- Document how to use
-- Document how to contribute
+## Develop
+Information for setting up a development environment, running the tests or creating a release build [can be found in the developers guide.](docs/DEVELOPERS-GUIDE.md)
