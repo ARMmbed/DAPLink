@@ -560,7 +560,7 @@ void UDPHS_IRQHandler(void)
 
 void USBD_Handler(void)
 {
-    uint32_t intsta, eptsta, n, i;
+    uint32_t intsta, eptsta, n;
     intsta = UDPHS->UDPHS_INTSTA & UDPHS->UDPHS_IEN;
 
     /* End of Bus Reset Interrupt                                               */
@@ -680,16 +680,7 @@ void USBD_Handler(void)
     }
 
     /* Endpoint Interrupts                                                      */
-    for (i = 0; i <= USBD_EP_NUM; i++) {
-        // Process endpoint 0 last if multiple events are pending at the same time.
-        // This allows other endpoints to process their data before potentially
-        // executing a command sent on endpoint 0.
-        // This fixes a bug that occurs when an MSD SCSI command is aborted
-        // by sending MSC_REQUEST_RESET on the control endpoint.
-        // If there is unprocessed BULK OUT data at the same time this command is sent
-        // then the USB state will be reset to MSC_BS_CBW causing an error when the
-        // previous BULK OUT data is processed.
-        n = i == USBD_EP_NUM ? 0 : i + 1;
+    for (n = 0; n <= USBD_EP_NUM; n++) {
         if (intsta & (1 << (n + 8))) {
             eptsta = UDPHS->UDPHS_EPT[n].UDPHS_EPTSTA;  /* Read EP status           */
 
