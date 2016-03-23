@@ -1,5 +1,5 @@
 # Adding A New Target
-Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/<mfg>/target_reset.c`
+Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
 
 ```c
 /**
@@ -50,7 +50,7 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
 
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
-    // if there are security bits in the programmable flash reigon
+    // if there are security bits in the programmable flash region
     //	a check should be performed. This method is used when programming
     //	by drag-n-drop and should refuse to program an image requesting
     //	to set the device security. This can be performed with the debug channel
@@ -130,7 +130,7 @@ static const program_target_t flash = {
     0x20000000,                // location to write prog_blob in target RAM
     sizeof(targetname_blob),   // prog_blob size
     targetname_blob,           // address of prog_blob
-    0x00000200                 // ram_to_flash_bytes_to_be_written
+    0x00000200                 // program_buffer_size, largest size that can be written in a single call to program page
 };
 
 ```
@@ -166,10 +166,10 @@ The last required file is the target MCU description file `source/targets/<mfg>/
 
 // target information
 const target_cfg_t target_device = {
-    .sector_size    = 4096,
-    .sector_cnt     = (MB(1) / 4096),
+    .sector_size    = 2048,
+    .sector_cnt     = (KB(512) / 2048),
     .flash_start    = 0,
-    .flash_end      = MB(1),
+    .flash_end      = KB(512),
     .ram_start      = 0x20000000,
     .ram_end        = 0x20010000,
     .flash_algo     = (program_target_t *) &flash,
