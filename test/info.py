@@ -35,6 +35,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmkl05z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl25z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl26z_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkl28z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
@@ -60,6 +61,7 @@ PROJECT_RELEASE_INFO = {
 SUPPORTED_CONFIGURATIONS = [
     #   Board ID    Firmware                                    Bootloader          Target
     (   0x200,      'k20dx_frdmkl25z_if',                       'k20dx_bl',         'KL25Z'                                 ),
+    (   0x205,      'k20dx_frdmkl28z_if',                       'k20dx_bl',         None                                    ),
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
@@ -112,6 +114,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0240,  # K64F
     0x0230,  # K20DX
     0x0200,  # KL25Z
+    0x0205,  # KL28Z
     0x0220,  # KL46Z
     0x0210,  # KL05Z
 ])
