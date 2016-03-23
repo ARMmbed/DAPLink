@@ -8,7 +8,7 @@ A board is composed of a Hardware Interface Circuit and target MCU. To create a 
         - records/board/myboardname.yaml
 ```
 
-Next create a new file in the `records/board` dirctory called myboardname.yaml. This file defines the target MCU and allows overrideable board parameters to be configured. The target MCU in this example exists and is a Nordic nRF51822 (16k RAM variant)
+Next create a new file in the `records/board` directory called myboardname.yaml. This file defines the target MCU and allows overrideable board parameters to be configured. The target MCU in this example exists and is a Nordic nRF51822 (16k RAM variant)
 
 ```yaml
 common:
