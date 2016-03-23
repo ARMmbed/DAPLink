@@ -15,7 +15,7 @@
 :: See the License for the specific language governing permissions and
 :: limitations under the License.
 ::
-
+rmdir /q /s uvision_release
 mkdir uvision_release
 git rev-parse --verify HEAD                     > uvision_release\git_info.txt
 git diff --no-ext-diff --quiet --exit-code      >> uvision_release\git_info.txt
@@ -32,4 +32,4 @@ progen generate -t uvision -b
 SET LEVEL=%ERRORLEVEL%
 python tools/copy_release_files.py
 if %errorlevel% neq 0 exit %errorlevel%
-exit %level%
+exit /B %level%
