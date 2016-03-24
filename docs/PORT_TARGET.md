@@ -1,5 +1,5 @@
 # Adding A New Target
-Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/<mfg>/target_reset.c`
+Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
 
 ```c
 /**
@@ -50,7 +50,7 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
 
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
-    // if there are security bits in the programmable flash reigon
+    // if there are security bits in the programmable flash region
     //	a check should be performed. This method is used when programming
     //	by drag-n-drop and should refuse to program an image requesting
     //	to set the device security. This can be performed with the debug channel
@@ -130,7 +130,7 @@ static const program_target_t flash = {
     0x20000000,                // location to write prog_blob in target RAM
     sizeof(targetname_blob),   // prog_blob size
     targetname_blob,           // address of prog_blob
-    0x00000200                 // ram_to_flash_bytes_to_be_written
+    0x00000200                 // program_buffer_size, largest size that can be written in a single call to program page
 };
 
 ```

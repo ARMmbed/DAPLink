@@ -37,7 +37,7 @@ There are three defined ways in which DAPLink can be extended.  These are adding
 
 
 ## Test
-DAPLink has framework that allows automatic loading and testing of software on one or more boards. This can be run on the current development environment or a release package. Test results are written to the current directory, along with printed to the console. Testing is run from the run_test.py script in the test directory. For all testing options, see the run_test.py help output - ``run_test.py --help``. To run basic tests with the current development environment, see the steps below.
+DAPLink has a framework that allows automatic loading and testing of software on one or more boards. This can be run on the current development environment or a release package. Test results are written to the current directory and printed to the console. Tests are launched using the run_test.py script in the test directory. Specify --help to view testing options (``run_test.py --help``). To run basic tests with the current development environment, see the steps below.
 
 * Build the project to be tested.
 * [Enable automation mode](ENABLE_AUTOMATION.md) on the board if is has not been enabled already
