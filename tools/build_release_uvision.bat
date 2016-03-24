@@ -33,3 +33,4 @@ SET LEVEL=%ERRORLEVEL%
 python tools/copy_release_files.py
 if %errorlevel% neq 0 exit %errorlevel%
 exit /B %level%
+
