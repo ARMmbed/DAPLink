@@ -19,8 +19,7 @@ with ".cfg" configure a behavior. The mechanism is case-insensitive.
 Every command completes by remounting the DAPLink MSD drive. Every command 
 is supported in both interface and bootloader mode.
 
-Action commands
----------------
+### Action Commands
 
 `start_bl.act` This file will force DAPLink to remount in bootloader mode. 
 It is equivalent to unplugging the USB cable, and plugging it back in while 
@@ -45,8 +44,7 @@ own right.
 
 `refresh.act` This file forces a remount of the DAPLink MSD drive
 
-Configuration commands
----------------
+### Configuration Commands
 
 `auto_rst.cfg` This file will turn on Auto Reset mode. In this mode, 
 a reset is performed at the end of the programming sequence. From the 
