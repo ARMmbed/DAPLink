@@ -41,7 +41,7 @@ DAPLink has a framework that allows automatic loading and testing of software on
 
 * Build the project to be tested.
 * [Enable automation mode](ENABLE_AUTOMATION.md) on the board if is has not been enabled already
-* Run the command ``python test/run_test.py --user <username> --password <password>``
+* Run the command ``python test/run_test.py --user <username> --password <password>``, using your developer.mbed.org account name and password.
 * Test results will be printed to console 
 
 
