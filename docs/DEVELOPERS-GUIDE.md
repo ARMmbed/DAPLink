@@ -12,6 +12,7 @@ Install the necessary tools listed below. Skip any step where a compatible tool 
 
 ```
 $ git clone https://github.com/mbedmicro/DAPLink
+$ cd DAPLink
 $ pip install virtualenv
 $ virtualenv venv
 ```
