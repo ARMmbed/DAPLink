@@ -573,7 +573,12 @@ def main():
     use_prebuilt = args.targetdir is not None
     use_compile_api = args.user is not None and args.password is not None
 
+    test_info = TestInfo('DAPLink')
+    
     # Validate args
+    
+    # See if user wants to test endpoints. If yes and he didn't provide 
+    # target test binaries, use the Compile API to build them 
     if not args.notestendpt:
         if not use_prebuilt and not use_compile_api:
             print("Endpoint test requires target test images.")
@@ -584,14 +589,12 @@ def main():
             print("  be specified so test images can be built with")
             print("  the compile API.")
             exit(-1)
-
-    firmware_explicitly_specified = len(args.firmware) != 0
-    test_info = TestInfo('DAPLink')
-    if args.targetdir is not None:
-        target_dir = args.targetdir
-    else:
-        target_dir = daplink_dir + os.sep + 'tmp'
-        build_target_bundle(target_dir, args.user, args.password, test_info)
+    
+        if args.targetdir is not None:
+            target_dir = args.targetdir
+        else:
+            target_dir = daplink_dir + os.sep + 'tmp'
+            build_target_bundle(target_dir, args.user, args.password, test_info)
 
     if os.path.exists(args.logdir):
         if args.force:
@@ -620,6 +623,7 @@ def main():
                 print('Unable to switch mode on board: %s' % board.unique_id)
 
     # Make sure firmware is present
+    firmware_explicitly_specified = len(args.firmware) != 0
     if firmware_explicitly_specified:
         all_firmware_names = set(fw.name for fw in all_firmware)
         firmware_missing = False
