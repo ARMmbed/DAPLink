@@ -497,7 +497,7 @@ def get_git_info(project_dir):
         git_sha = subprocess.check_output(["git", "rev-parse",
                                            "--verify", "HEAD"])
         git_sha = git_sha.strip()
-    except (subprocess.CalledProcessError, WindowsError) :
+    except (subprocess.CalledProcessError, WindowsError):
         print("#> ERROR: Failed to get git SHA, do you "
               "have git in your PATH environment variable?")
         exit(-1)
@@ -579,9 +579,12 @@ def main():
             print("  Directory with pre-built target test images")
             print("  must be specified with '--targetdir'")
             print("OR")
-            print("  Mbed login credentials '--user' and '--password' must")
-            print("  be specified so test images can be built with")
-            print("  the compile API.")
+            print("  developer.mbed.org login credentials must be ")
+            print("  specified with '--user' and '--password' so test ")
+            print("  images can be built with the RESTful Compile API.")
+            print("NOTE: you can skip the endpoint tests altogether ")
+            print("with --notestendpt")
+            
             exit(-1)
 
     firmware_explicitly_specified = len(args.firmware) != 0
