@@ -27,23 +27,21 @@ optional arguments:
   --password PASSWORD   MBED password (required for compile-api)
   --firmwaredir FIRMWAREDIR
                         Directory with firmware images to test
-  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,lpc11u35_lpc1114_if,
-              kl26z_microbit_if,lpc11u35_lpc812_if,sam3u2c_nrf51822_if,
-              kl26z_nrf51822_if,k20dx_k22f_if}
+  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,...} (run script with --help to see full list)
                         Firmware to test
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.
   --loadbl              Load bootloader before test.
   --testdl              Run DAPLink specific tests. The DAPLink test tests
-                        bootloader updates so usewith caution
+                        bootloader updates so use with caution
   --testfirst           If multiple boards of the same type are found only
                         test the first one.
   --verbose {Minimal,Normal,Verbose,All}
                         Verbose output
   --dryrun              Print info on configurations but dont actually run
                         tests.
-  --force               Try to run tests even if there are problems
+  --force               Try to run tests even if there are problems. Delete logs from previous run.
 Example usages
 ------------------------
 
@@ -499,9 +497,9 @@ def get_git_info(project_dir):
         git_sha = subprocess.check_output(["git", "rev-parse",
                                            "--verify", "HEAD"])
         git_sha = git_sha.strip()
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, WindowsError):
         print("#> ERROR: Failed to get git SHA, do you "
-              "have git.exe in your PATH environment variable?")
+              "have git in your PATH environment variable?")
         exit(-1)
 
     # Check are there any local, uncommitted modifications.
@@ -523,8 +521,9 @@ def main():
     test_dir = os.path.dirname(self_path)
     daplink_dir = os.path.dirname(test_dir)
 
+    # We make assumptions that break if user copies script file outside the test dir
     if os.path.basename(test_dir) != "test":
-        print("Error - this script must be run from the test directory")
+        print("Error - this script must reside in the test directory")
         exit(-1)
 
     git_sha, local_changes = get_git_info(daplink_dir)
@@ -567,7 +566,7 @@ def main():
                         help='Print info on configurations but dont '
                         'actually run tests.')
     parser.add_argument('--force', action='store_true', default=False,
-                        help='Try to run tests even if there are problems')
+                        help='Try to run tests even if there are problems. Delete logs from previous run.')
     args = parser.parse_args()
 
     use_prebuilt = args.targetdir is not None
@@ -577,12 +576,15 @@ def main():
     if not args.notestendpt:
         if not use_prebuilt and not use_compile_api:
             print("Endpoint test requires target test images.")
-            print("  Directory with pre-build target test images")
+            print("  Directory with pre-built target test images")
             print("  must be specified with '--targetdir'")
             print("OR")
-            print("  Mbed login credentials '--user' and '--password' must")
-            print("  be specified so test images can be built with")
-            print("  the compile API.")
+            print("  developer.mbed.org login credentials must be ")
+            print("  specified with '--user' and '--password' so test ")
+            print("  images can be built with the RESTful Compile API.")
+            print("NOTE: you can skip the endpoint tests altogether ")
+            print("with --notestendpt")
+            
             exit(-1)
 
     firmware_explicitly_specified = len(args.firmware) != 0
