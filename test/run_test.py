@@ -431,7 +431,7 @@ class TestManager(object):
 
             # Get target
             target = None
-            target_required = not self._test_ep and not self._test_daplink
+            target_required = self._test_ep
             if board_id in board_id_to_target:
                 target = board_id_to_target[board_id]
             elif target_required:
@@ -578,11 +578,12 @@ def main():
     # Validate args
     
     # See if user wants to test endpoints. If yes and he didn't provide 
-    # target test binaries, use the Compile API to build them 
+    # target test binaries, use the Compile API to build them
+    all_targets = None 
     if not args.notestendpt:
         if not use_prebuilt and not use_compile_api:
             print("Endpoint test requires target test images.")
-            print("  Directory with pre-build target test images")
+            print("  Directory with pre-built target test images")
             print("  must be specified with '--targetdir'")
             print("OR")
             print("  Mbed login credentials '--user' and '--password' must")
@@ -595,6 +596,9 @@ def main():
         else:
             target_dir = daplink_dir + os.sep + 'tmp'
             build_target_bundle(target_dir, args.user, args.password, test_info)
+            
+        target_bundle = load_target_bundle(target_dir)
+        all_targets = target_bundle.get_target_list()
 
     if os.path.exists(args.logdir):
         if args.force:
@@ -609,10 +613,9 @@ def main():
         firmware_bundle = load_bundle_from_project()
     else:
         firmware_bundle = load_bundle_from_release(args.firmwaredir)
-    target_bundle = load_target_bundle(target_dir)
+
     all_firmware = firmware_bundle.get_firmware_list()
     all_boards = get_all_attached_daplink_boards()
-    all_targets = target_bundle.get_target_list()
 
     for board in all_boards:
         if board.get_mode() == board.MODE_BL:
@@ -639,7 +642,8 @@ def main():
     tester = TestManager()
     tester.add_firmware(all_firmware)
     tester.add_boards(all_boards)
-    tester.add_targets(all_targets)
+    if all_targets is not None:
+        tester.add_targets(all_targets)
     if firmware_explicitly_specified:
         tester.set_firmware_filter(args.firmware)
 
