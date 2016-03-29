@@ -16,12 +16,16 @@
 :: limitations under the License.
 ::
 
-set TOOLS=..\..\..\tools
-set DIR=..\..\..\source\daplink
-REM  Create default version_git.h.  This is so the project 
-REM  builds if python is not installed
+@set TOOLS=..\..\..\tools
+@set DIR=..\..\..\source\daplink
+@REM  Create default version_git.h.  This is so the project 
+@REM  builds if python is not installed
 copy %DIR%\version_git_tmpl.txt %DIR%\version_git.h
-REM  Run python script to delete default version_git.h and create the real one
+@if %errorlevel% neq 0 exit /B %errorlevel%
+
+@python --version 2> nul
+@if %errorlevel% neq 0 echo Error: python not in PATH. If you are manually building the project, make sure to launch uVision from the python venv && exit /B %errorlevel%
+
+@REM  Run python script to delete default version_git.h and create the real one
 python %TOOLS%\pre_build_script.py
-REM Always return success
-exit 0
+@if %errorlevel% neq 0 exit /B %errorlevel%
