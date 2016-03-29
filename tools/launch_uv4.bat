@@ -28,12 +28,12 @@ setlocal
 
 :label0
 
-@rem See if we can find uVision. This logic is concistent with progen
+@rem See if we can find uVision. This logic is consistent with progen
 @set uv4exe=c:\Keil_v5\UV4\UV4.exe
 @if exist %uv4exe% goto label1
 	@if [%UV4%]==[] goto error_nomdk
-label1:
 set uv4exe=%UV4%
+label1:
 
 @set env_exists=0
 @if exist env set env_exists=1
