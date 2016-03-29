@@ -57,3 +57,6 @@ DAPLink contains scripts to automate most of the steps of building a release.  I
 Note: A previous build can be reproduced by using the 'build_requirements.txt' of that build.
 To do this add the additional argument 'build_requirements.txt' when calling 'build_release_uvision.bat' in step 2.
 This will install and build with the exact version of the python packages used to create that build.
+
+## MDK
+If you want to use the MDK (uVision) IDE to work with the DAPLink code, you must launch it in the right environment. The project will fail to build otherwise. To launch uVision properly, use tools\launch_uv4.bat
