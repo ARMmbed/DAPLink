@@ -15,6 +15,12 @@
 :: See the License for the specific language governing permissions and
 :: limitations under the License.
 ::
+:: Launches uVision with the python environment needed to build DAPLink
+::
+:: git and python are expected to be in PATH. Project will fail to build otherwise
+:: 
+
+setlocal
 
 @if exist .gitignore goto label0
 	@echo Error: working directory must be root of DAPLink repository
@@ -22,33 +28,31 @@
 
 :label0
 
-rmdir /q /s uvision_release
-@if %errorlevel% neq 0 exit /B %errorlevel%
+@rem See if we can find uVision. This logic is consistent with progen
+@set uv4exe=c:\Keil_v5\UV4\UV4.exe
+@if exist %uv4exe% goto label1
+	@if [%UV4%]==[] goto error_nomdk
+set uv4exe=%UV4%
+:label1
 
-mkdir uvision_release
-@if %errorlevel% neq 0 exit /B %errorlevel%
-
-@git --version 2> nul
-@if %errorlevel% neq 0 echo Error: git must be in PATH && exit /B %errorlevel%
-
-git rev-parse --verify HEAD                     > uvision_release\git_info.txt
-git diff --no-ext-diff --quiet --exit-code      >> uvision_release\git_info.txt
-
-echo Uncommitted Changes: %errorlevel%          >> uvision_release\git_info.txt
-
-virtualenv env
+@set env_exists=0
+@if exist env set env_exists=1
+@if [%env_exists%]==[0] echo Creating python virtual environment && virtualenv env
 call env\Scripts\activate
 
+@echo Doing pip install
 @REM use project requirements if not specified
 if [%1]==[] pip install -r requirements.txt
 @REM use custom requirements if specified
 if not [%1]==[] pip install -r %1
-pip freeze                                      > uvision_release\build_requirements.txt
 
-@REM build but continue if there are errors
-progen generate -t uvision -b
-@SET level=%errorlevel%
-python tools/copy_release_files.py
-@if %errorlevel% neq 0 exit /B %errorlevel%
+:launch
+%uv4exe%
+exit /B 0
 
-@exit /B %level%
+:error_nomdk
+@echo Error: Keil MDK not installed or not found. If you installed it to a 
+@echo non-default echo location, you need to set environment variable UV4 to 
+@echo the path of the executable
+@exit /B 1
+

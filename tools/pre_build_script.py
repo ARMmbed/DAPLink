@@ -79,7 +79,7 @@ def pre_build():
     print "#> Checking for local changes"
     try:
         check_output("git diff --no-ext-diff --quiet --exit-code")
-    except CalledProcessError as e:
+    except CalledProcessError, WindowsError:
         git_has_changes = 1
     else:
         git_has_changes = 0
