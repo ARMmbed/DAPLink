@@ -24,6 +24,7 @@ PROJECT_RELEASE_INFO = {
     # Project Name                                  Legacy      Offset      Extension
     ("k20dx_frdmk22f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk64f_if",                           True,       0x5000,     "bin"       ),
+    ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
@@ -70,6 +71,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x250,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x280,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
+    (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ),  # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
@@ -112,6 +114,7 @@ HIC_STRING_TO_ID = {
 BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0231,  # K22F
     0x0240,  # K64F
+    0x0311,  # K66F
     0x0230,  # K20DX
     0x0200,  # KL25Z
     0x0205,  # KL28Z
