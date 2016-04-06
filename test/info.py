@@ -36,6 +36,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmkl05z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl25z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl26z_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkl27z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl28z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
@@ -72,6 +73,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     (   0x250,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
+    (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
     (   0x280,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ),  # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
@@ -123,6 +125,10 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0203,  # TWR-KL28Z72M
     0x0220,  # KL46Z
     0x0210,  # KL05Z
+    0x0213,  # FRDM-KE15Z
+    0x0216,  # HVP-KE18F
+    0x0261,  # FRDM-KL27Z
+    0x0262,  # FRDM-KL43Z
 ])
 
 #Hack until these targets have an image with a valid vector table
