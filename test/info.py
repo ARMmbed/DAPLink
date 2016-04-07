@@ -62,6 +62,14 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_archlink_if': 0x9013,
 }
 
+# Maps a target application filename (sans extension) to the ID of the board 
+# it is built to run on. This mapping is also used to display a board name 
+# in the test output. Thus, name the target applications after the  board to
+# avoid confusing results.
+#
+# One-to-many is fine. Many-to-one is fine as long as only one (or none) target 
+# application is found on disk per connected board ID
+#
 TARGET_NAME_TO_BOARD_ID = {
     'FRDM-K22F': 0x0231,
     'NXP-LPC800-MAX': 0x1050,
