@@ -266,7 +266,11 @@ header {
     text-align: center;
     color: #fff;
     background-attachment: scroll;
+<<<<<<< HEAD
     background-image: url(img/header-bg.jpg);
+=======
+    background-image: url('{{ site.baseurl }}/img/header-bg.jpg');
+>>>>>>> f4a84c0de43816db0c7e7a08d2a45c7344e140ad
     background-position: center center;
     background-repeat: none;
     -webkit-background-size: cover;
@@ -655,7 +659,7 @@ aside.clients img {
 
 section#contact {
     background-color: #222;
-    background-image: url(img/map-image.png);
+    background-image: url('{{ site.baseurl }}/img/map-image.png');
     background-position: center;
     background-repeat: no-repeat;
 }
