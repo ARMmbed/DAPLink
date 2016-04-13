@@ -43,7 +43,6 @@ if [%1]==[] pip install -r requirements.txt
 @REM use custom requirements if specified
 if not [%1]==[] pip install -r %1
 
-:launch
 start %uv4exe%
 exit /B 0
 
