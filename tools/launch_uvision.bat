@@ -22,11 +22,8 @@
 
 setlocal
 
-@if exist .gitignore goto label0
-	@echo Error: working directory must be root of DAPLink repository
-	@exit /B 1
-
-:label0
+@rem Script assumes working directory is workspace root. Force it.
+cd %~dp0..\
 
 @rem See if we can find uVision. This logic is consistent with progen
 @set uv4exe=c:\Keil_v5\UV4\UV4.exe
@@ -47,12 +44,12 @@ if [%1]==[] pip install -r requirements.txt
 if not [%1]==[] pip install -r %1
 
 :launch
-%uv4exe%
+start %uv4exe%
 exit /B 0
 
 :error_nomdk
 @echo Error: Keil MDK not installed or not found. If you installed it to a 
-@echo non-default echo location, you need to set environment variable UV4 to 
+@echo non-default location, you need to set environment variable UV4 to 
 @echo the path of the executable
 @exit /B 1
 

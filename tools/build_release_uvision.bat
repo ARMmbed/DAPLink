@@ -16,11 +16,8 @@
 :: limitations under the License.
 ::
 
-@if exist .gitignore goto label0
-	@echo Error: working directory must be root of DAPLink repository
-	@exit /B 1
-
-:label0
+@rem Script assumes working directory is workspace root. Force it.
+cd %~dp0..\
 
 rmdir /q /s uvision_release
 @if %errorlevel% neq 0 exit /B %errorlevel%
