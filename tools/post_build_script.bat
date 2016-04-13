@@ -16,13 +16,23 @@
 :: limitations under the License.
 ::
 
-set KEIL_ARM=%2
-set TOOLS=..\..\..\tools
-REM make sure fromelf is part of path
-set path=%KEIL_ARM%\ARMCC\bin;%path%
-set base_name= %1
-fromelf --bin %base_name%.axf -o %base_name%.bin
-fromelf --i32 %base_name%.axf -o %base_name%.hex
-python %TOOLS%\post_compute_crc.py %base_name%.hex %base_name%_crc
-REM Always return success
-exit 0
+@set PROJECT_DIR=%1
+@set KEIL_ARM=%2
+@set TOOLS=..\..\..\tools
+
+@REM add fromelf to PATH
+@set PATH=%KEIL_ARM%\ARMCC\bin;%path%
+
+@python --version 2> nul
+@if %errorlevel% neq 0 echo Error: python not in PATH. If you are manually building the project, make sure to launch uVision from the python venv && exit /B %errorlevel%
+
+fromelf --bin %PROJECT_DIR%.axf -o %PROJECT_DIR%.bin
+@if %errorlevel% neq 0 exit /b %errorlevel%
+
+fromelf --i32 %PROJECT_DIR%.axf -o %PROJECT_DIR%.hex
+@if %errorlevel% neq 0 exit /b %errorlevel%
+
+python %TOOLS%\post_compute_crc.py %PROJECT_DIR%.hex %PROJECT_DIR%_crc
+@if %errorlevel% neq 0 exit /b %errorlevel%
+
+@exit 0
