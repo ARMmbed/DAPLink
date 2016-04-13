@@ -1,11 +1,11 @@
 # DAPLink Developers Guide
 
 ## Setup
-Install the necessary tools listed below. Skip any step where a compatible tool already exists. All tools **MUST** be added to the system path.
+Install the necessary tools listed below. Skip any step where a compatible tool already exists.
 
-* Install [Python 2.7.9 or above](https://www.python.org/downloads/)
-* Install [Git](https://git-scm.com/downloads)
-* Install [Keil MDK-ARM](https://www.keil.com/download/product/)
+* Install [Python 2.7.9 or above](https://www.python.org/downloads/) . Add to PATH.
+* Install [Git](https://git-scm.com/downloads) . Add to PATH.
+* Install [Keil MDK-ARM](https://www.keil.com/download/product/). Set environment variable "UV4" to the UV4 executable if you don't install to the default location.
 * Install virtualenv in your global Python installation eg: `pip install virtualenv`
 
 **Step 1.** Get the sources and create a virtual environment

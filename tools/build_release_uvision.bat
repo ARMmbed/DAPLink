@@ -31,6 +31,6 @@ REM build but continue if there are errors
 progen generate -t uvision -b
 SET LEVEL=%ERRORLEVEL%
 python tools/copy_release_files.py
-if %errorlevel% neq 0 exit %errorlevel%
+if %errorlevel% neq 0 exit /B %errorlevel%
 exit /B %level%
 
