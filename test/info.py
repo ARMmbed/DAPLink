@@ -62,6 +62,18 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_archlink_if': 0x9013,
 }
 
+# Maps the target test application to the ID of the board it is built to run 
+# on.
+#
+# If the application is built on the fly using the RESTful Compile API, the 
+# map key must correspond to one of the boards on 
+# https://developer.mbed.org/platforms/{board name here}
+#
+# If the application is pre-built and supplied via --targetdir, the map
+# key is the target application filename sans extension. Note that the key
+# is also used as the board name in the test output. Thus, name the target 
+# application after the  board to avoid confusing results.
+#
 TARGET_NAME_TO_BOARD_ID = {
     'FRDM-K22F': 0x0231,
     'NXP-LPC800-MAX': 0x1050,
