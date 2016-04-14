@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 """
 DAPLink validation and testing tool
 
@@ -574,12 +574,12 @@ def main():
     use_compile_api = args.user is not None and args.password is not None
 
     test_info = TestInfo('DAPLink')
-    
+
     # Validate args
-    
-    # See if user wants to test endpoints. If yes and he didn't provide 
+
+    # See if user wants to test endpoints. If yes and he didn't provide
     # target test binaries, use the Compile API to build them
-    all_targets = None 
+    all_targets = None
     if not args.notestendpt:
         if not use_prebuilt and not use_compile_api:
             print("Endpoint test requires target test images.")
@@ -590,13 +590,13 @@ def main():
             print("  be specified so test images can be built with")
             print("  the compile API.")
             exit(-1)
-    
+
         if args.targetdir is not None:
             target_dir = args.targetdir
         else:
             target_dir = daplink_dir + os.sep + 'tmp'
             build_target_bundle(target_dir, args.user, args.password, test_info)
-            
+
         target_bundle = load_target_bundle(target_dir)
         all_targets = target_bundle.get_target_list()
 
