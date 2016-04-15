@@ -50,6 +50,7 @@
 #define MSC_BS_DATA_IN_LAST_STALL       4       /* Data In Last Phase with Stall */
 #define MSC_BS_CSW                      5       /* Command Status Wrapper */
 #define MSC_BS_ERROR                    6       /* Error */
+#define MSC_BS_RESET                    7       /* Bulk-Only Mass Storage Reset */
 
 
 /* Bulk-only Command Block Wrapper */

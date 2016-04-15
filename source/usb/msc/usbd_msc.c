@@ -117,7 +117,7 @@ BOOL USBD_MSC_Reset(void)
 {
     USBD_EndPointStall = 0x00000000;         /* EP must stay stalled */
     USBD_MSC_CSW.dSignature = 0;             /* invalid signature */
-    BulkStage = MSC_BS_CBW;
+    BulkStage = MSC_BS_RESET;
     return (__TRUE);
 }
 
@@ -221,9 +221,6 @@ void USBD_MSC_MemoryRead(void)
 
     if (Length == 0) {
         BulkStage = MSC_BS_DATA_IN_LAST;
-    }
-
-    if (BulkStage != MSC_BS_DATA_IN) {
         USBD_MSC_CSW.bStatus = CSW_CMD_PASSED;
     }
 }
@@ -1045,6 +1042,9 @@ void USBD_MSC_BulkIn(void)
         case MSC_BS_CSW:
             BulkStage = MSC_BS_CBW;
             break;
+
+        default:
+            break;
     }
 }
 
@@ -1073,13 +1073,24 @@ void USBD_MSC_BulkOut(void)
                     USBD_MSC_MemoryVerify();
                     break;
             }
-
             break;
 
         case MSC_BS_CSW:
             // Previous transfer must be complete
             // before the next transfer begins
             util_assert(0);
+            break;
+
+        case MSC_BS_RESET:
+            // If Bulk-Only Mass Storage Reset command was received on
+            // Control Endpoint ignore next Bulk OUT transfer if it was not
+            // a CBW (as it means it was a unprocessed leftover from 
+            // transfer before reset happened)
+            BulkStage = MSC_BS_CBW;
+            if (BulkLen == sizeof(USBD_MSC_CBW)) {
+                // If it is a CBW size packet go process it as CBW
+                USBD_MSC_GetCBW();
+            }
             break;
 
         default:
