@@ -53,8 +53,8 @@ Update `test/into.py`. There are various dictionaries that you will need to add 
 * Add the name of the interface (as specified in the projects.yaml) to FIRMWARE_NAME_TO_BOARD_ID and associate it with the board ID
 
 * Add to TARGET_NAME_TO_BOARD_ID. What you use for the key will depend on whether your board is mbed enabled _and_ registered with mbed.org.
-	* If it is, the automated tests will build the target UART application on the fly using the RESTful Compile API. The source code is in an mbed.org git repository, and it will build the application in the cloud, download it to the PC, then download it to the target.
-	* If it is not, you will need to build the UART application yourself and supply it to `test\run_tests.py` via --targetdir.
+	* If it is, the automated tests will build the target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the resulting image to the target. (The source code for the application is in an mbed.org mercurial repository.) In this case, the dictionary key is the board name as registered in mbed.org.
+	* If it is not, you will need to build the UART application yourself and supply it to `test\run_tests.py` via --targetdir. In this case, the dictionary key is the application image filename sans extension.
 * You may need to update one or more other dictionaries. See comments in the code for guidance.
 
 See [Automated Tests](AUTOMATED_TESTS.md) for more information related to automated testing.

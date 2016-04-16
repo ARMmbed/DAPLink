@@ -16,7 +16,7 @@ Tests are grouped into two categories
 
 The endpoint tests rely on a target application--a small UART program that implements a simple protocol. The target app is used by all three endpoint sub-tests.
 
-For mbed boards that are registered on mbed.org, the test builds the target application code on the fly in the cloud using the mbed RESTful Compile API. It then downloads the resulting image and downloads it to the target. The UART application source is in an mbed git repository (https://developer.mbed.org/users/c1728p9/code/daplink-validation/). For this workflow, you must specify your mbed.org user id and password via --user and --password.
+For mbed boards that are registered on mbed.org, the test builds the target application code on the fly in the cloud using the mbed RESTful Compile API. It then downloads the resulting image and downloads it to the target. The UART application source is in the mbed mercurial repository [daplink-validation](https://developer.mbed.org/users/c1728p9/code/daplink-validation/). For this workflow, you must specify your mbed.org user id and password via --user and --password.
 
 For boards that are not mbed enabled or not registered on mbed.org, the test accepts pre-built applications via the --targetdir option. You will need to build the UART application, porting it to whatever platform is suitable if the board is not mbed enabled.
 
