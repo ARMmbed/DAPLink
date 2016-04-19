@@ -45,7 +45,11 @@ static const flash_intf_t flash_intf = {
     target_flash_uninit,
     target_flash_program_page,
     target_flash_erase_sector,
+#ifdef TARGET_FLASH_ERASE_CHIP_OVERRIDE
+    board_target_flash_erase_chip,
+#else
     target_flash_erase_chip,
+#endif
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
 };
@@ -131,23 +135,12 @@ static error_t target_flash_erase_sector(uint32_t sector)
 
 static error_t target_flash_erase_chip(void)
 {
-    #define PERSIST_A 0x0003B400
-    #define PERSIST_B 0x0003B800
-  
-    static uint8_t bufferA[1024];
-    static uint8_t bufferB[1024];
-  
-    swd_read_memory((uint32_t)PERSIST_A, bufferA, 1024);
-    swd_read_memory((uint32_t)PERSIST_B, bufferB, 1024);
-	
     error_t status = ERROR_SUCCESS;
-    const program_target_t * const flash = target_device.flash_algo;
+    const program_target_t *const flash = target_device.flash_algo;
+
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
         return ERROR_ERASE_ALL;
     }
-		
-    target_flash_program_page((uint32_t)PERSIST_A, bufferA, 1024);
-    target_flash_program_page((uint32_t)PERSIST_B, bufferB, 1024);
 
     // Reset and re-initialize the target after the erase if required
     if (target_device.erase_reset) {

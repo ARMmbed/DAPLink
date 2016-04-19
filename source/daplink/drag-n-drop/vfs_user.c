@@ -111,6 +111,15 @@ void vfs_user_build_filesystem()
         file_size = get_file_size(read_file_need_bl_txt);
         vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
     }
+    
+#ifdef BOARD_VFS_ADD_FILES    
+    if(daplink_is_interface()) {
+        
+        // board-specific vfs files.
+        board_vfs_add_files();
+
+    }
+#endif
 }
 
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
