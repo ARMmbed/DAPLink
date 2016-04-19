@@ -32,18 +32,19 @@
 #include "util.h"
 #include "settings.h"
 
+#define PERSIST_X 0x0003BC00
+#define PERSIST_Y 0x0003B800
+
+static uint8_t bufferX[1024];
+static uint8_t bufferY[1024];
+
 extern const flash_intf_t *const flash_intf_target;
 
 error_t board_target_flash_erase_chip(void)
 {
-    #define PERSIST_A 0x0003BC00
-    #define PERSIST_B 0x0003B800
-  
-    static uint8_t bufferA[1024];
-    static uint8_t bufferB[1024];
-  
-    swd_read_memory((uint32_t)PERSIST_A, bufferA, 1024);
-    swd_read_memory((uint32_t)PERSIST_B, bufferB, 1024);
+   
+    swd_read_memory((uint32_t)PERSIST_X, bufferX, 1024);
+    swd_read_memory((uint32_t)PERSIST_Y, bufferY, 1024);
 	
     error_t status = ERROR_SUCCESS;
     const program_target_t * const flash = target_device.flash_algo;
@@ -51,8 +52,8 @@ error_t board_target_flash_erase_chip(void)
         return ERROR_ERASE_ALL;
     }
 		
-    flash_intf_target->program_page((uint32_t)PERSIST_A, bufferA, 1024);
-    flash_intf_target->program_page((uint32_t)PERSIST_B, bufferB, 1024);
+    flash_intf_target->program_page((uint32_t)PERSIST_X, bufferX, 1024);
+    flash_intf_target->program_page((uint32_t)PERSIST_Y, bufferY, 1024);
 
     // Reset and re-initialize the target after the erase if required
     if (target_device.erase_reset) {
