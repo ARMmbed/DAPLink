@@ -80,3 +80,6 @@ source/daplink/version_git.h
 
 #Misc
 .DS_Store
+
+# automated test results
+test_results
