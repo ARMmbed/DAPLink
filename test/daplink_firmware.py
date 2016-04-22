@@ -80,7 +80,19 @@ class ProjectFirmwareBundle(firmware.FirmwareBundle):
     def __init__(self, directory, tool):
         tool_dir = os.path.abspath(directory + os.sep + 'projectfiles' +
                                    os.sep + tool)
+        errmsg = "Error: DAPLink projects are missing. Did " \
+                   "you forget to generate them by running " \
+                   "'progen generate -t %s'?\nExpecting them at %s" % (tool, tool_dir)
+
+        if not os.path.exists(tool_dir): 
+            print (errmsg)
+            exit(-1) 
+
         project_dir_list = os.listdir(tool_dir)
+        if not project_dir_list:
+            print (errmsg)
+            exit(-1) 
+        
         firmware_list = []
         for name in project_dir_list:
             build_dir = tool_dir + os.sep + name + os.sep + 'build'

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 """
 DAPLink validation and testing tool
 
@@ -27,23 +27,21 @@ optional arguments:
   --password PASSWORD   MBED password (required for compile-api)
   --firmwaredir FIRMWAREDIR
                         Directory with firmware images to test
-  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,lpc11u35_lpc1114_if,
-              kl26z_microbit_if,lpc11u35_lpc812_if,sam3u2c_nrf51822_if,
-              kl26z_nrf51822_if,k20dx_k22f_if}
+  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,...} (run script with --help to see full list)
                         Firmware to test
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.
   --loadbl              Load bootloader before test.
   --testdl              Run DAPLink specific tests. The DAPLink test tests
-                        bootloader updates so usewith caution
+                        bootloader updates so use with caution
   --testfirst           If multiple boards of the same type are found only
                         test the first one.
   --verbose {Minimal,Normal,Verbose,All}
                         Verbose output
   --dryrun              Print info on configurations but dont actually run
                         tests.
-  --force               Try to run tests even if there are problems
+  --force               Try to run tests even if there are problems. Delete logs from previous run.
 Example usages
 ------------------------
 
@@ -431,7 +429,7 @@ class TestManager(object):
 
             # Get target
             target = None
-            target_required = not self._test_ep and not self._test_daplink
+            target_required = self._test_ep
             if board_id in board_id_to_target:
                 target = board_id_to_target[board_id]
             elif target_required:
@@ -499,9 +497,9 @@ def get_git_info(project_dir):
         git_sha = subprocess.check_output(["git", "rev-parse",
                                            "--verify", "HEAD"])
         git_sha = git_sha.strip()
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, WindowsError):
         print("#> ERROR: Failed to get git SHA, do you "
-              "have git.exe in your PATH environment variable?")
+              "have git in your PATH environment variable?")
         exit(-1)
 
     # Check are there any local, uncommitted modifications.
@@ -523,8 +521,9 @@ def main():
     test_dir = os.path.dirname(self_path)
     daplink_dir = os.path.dirname(test_dir)
 
+    # We make assumptions that break if user copies script file outside the test dir
     if os.path.basename(test_dir) != "test":
-        print("Error - this script must be run from the test directory")
+        print("Error - this script must reside in the test directory")
         exit(-1)
 
     git_sha, local_changes = get_git_info(daplink_dir)
@@ -567,31 +566,41 @@ def main():
                         help='Print info on configurations but dont '
                         'actually run tests.')
     parser.add_argument('--force', action='store_true', default=False,
-                        help='Try to run tests even if there are problems')
+                        help='Try to run tests even if there are problems. Delete logs from previous run.')
     args = parser.parse_args()
 
     use_prebuilt = args.targetdir is not None
     use_compile_api = args.user is not None and args.password is not None
 
+    test_info = TestInfo('DAPLink')
+
     # Validate args
+
+    # See if user wants to test endpoints. If yes and he didn't provide
+    # target test binaries, use the Compile API to build them
+    all_targets = None
     if not args.notestendpt:
         if not use_prebuilt and not use_compile_api:
             print("Endpoint test requires target test images.")
-            print("  Directory with pre-build target test images")
+            print("  Directory with pre-built target test images")
             print("  must be specified with '--targetdir'")
             print("OR")
-            print("  Mbed login credentials '--user' and '--password' must")
-            print("  be specified so test images can be built with")
-            print("  the compile API.")
+            print("  developer.mbed.org login credentials must be ")
+            print("  specified with '--user' and '--password' so test ")
+            print("  images can be built with the RESTful Compile API.")
+            print("NOTE: you can skip the endpoint tests altogether ")
+            print("with --notestendpt")
+            
             exit(-1)
 
-    firmware_explicitly_specified = len(args.firmware) != 0
-    test_info = TestInfo('DAPLink')
-    if args.targetdir is not None:
-        target_dir = args.targetdir
-    else:
-        target_dir = daplink_dir + os.sep + 'tmp'
-        build_target_bundle(target_dir, args.user, args.password, test_info)
+        if args.targetdir is not None:
+            target_dir = args.targetdir
+        else:
+            target_dir = daplink_dir + os.sep + 'tmp'
+            build_target_bundle(target_dir, args.user, args.password, test_info)
+
+        target_bundle = load_target_bundle(target_dir)
+        all_targets = target_bundle.get_target_list()
 
     if os.path.exists(args.logdir):
         if args.force:
@@ -606,10 +615,9 @@ def main():
         firmware_bundle = load_bundle_from_project()
     else:
         firmware_bundle = load_bundle_from_release(args.firmwaredir)
-    target_bundle = load_target_bundle(target_dir)
+
     all_firmware = firmware_bundle.get_firmware_list()
     all_boards = get_all_attached_daplink_boards()
-    all_targets = target_bundle.get_target_list()
 
     for board in all_boards:
         if board.get_mode() == board.MODE_BL:
@@ -620,6 +628,7 @@ def main():
                 print('Unable to switch mode on board: %s' % board.unique_id)
 
     # Make sure firmware is present
+    firmware_explicitly_specified = len(args.firmware) != 0
     if firmware_explicitly_specified:
         all_firmware_names = set(fw.name for fw in all_firmware)
         firmware_missing = False
@@ -635,7 +644,8 @@ def main():
     tester = TestManager()
     tester.add_firmware(all_firmware)
     tester.add_boards(all_boards)
-    tester.add_targets(all_targets)
+    if all_targets is not None:
+        tester.add_targets(all_targets)
     if firmware_explicitly_specified:
         tester.set_firmware_filter(args.firmware)
 

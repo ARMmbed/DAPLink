@@ -1,17 +1,18 @@
 # DAPLink Developers Guide
 
 ## Setup
-Install the necessary tools listed below. Skip any step where a compatible tool already exists. All tools **MUST** be added to the system path.
+Install the necessary tools listed below. Skip any step where a compatible tool already exists.
 
-* Install [Python 2.7.9 or above](https://www.python.org/downloads/)
-* Install [Git](https://git-scm.com/downloads)
-* Install [Keil MDK-ARM](https://www.keil.com/download/product/)
+* Install [Python 2.7.9 or above](https://www.python.org/downloads/) . Add to PATH.
+* Install [Git](https://git-scm.com/downloads) . Add to PATH.
+* Install [Keil MDK-ARM](https://www.keil.com/download/product/), preferably version 5. Set environment variable "UV4" to the absolute path of the UV4 executable if you don't install to the default location. Note that "UV4" is what's used for both MDK versions 4 and 5.
 * Install virtualenv in your global Python installation eg: `pip install virtualenv`
 
 **Step 1.** Get the sources and create a virtual environment
 
 ```
 $ git clone https://github.com/mbedmicro/DAPLink
+$ cd DAPLink
 $ pip install virtualenv
 $ virtualenv venv
 ```
@@ -37,12 +38,7 @@ There are three defined ways in which DAPLink can be extended.  These are adding
 
 
 ## Test
-DAPLink has a framework that allows automatic loading and testing of software on one or more boards. This can be run on the current development environment or a release package. Test results are written to the current directory and printed to the console. Tests are launched using the run_test.py script in the test directory. Specify --help to view testing options (``run_test.py --help``). To run basic tests with the current development environment, see the steps below.
-
-* Build the project to be tested.
-* [Enable automation mode](ENABLE_AUTOMATION.md) on the board if is has not been enabled already
-* Run the command ``python test/run_test.py --user <username> --password <password>``
-* Test results will be printed to console 
+DAPLink has an extensive set of automated tests written in Python. They are used for regression testing, but you can use them to validate your DAPLink port. Details are [here](AUTOMATED_TESTS.md)
 
 
 ## Release
@@ -56,3 +52,6 @@ DAPLink contains scripts to automate most of the steps of building a release.  I
 Note: A previous build can be reproduced by using the 'build_requirements.txt' of that build.
 To do this add the additional argument 'build_requirements.txt' when calling 'build_release_uvision.bat' in step 2.
 This will install and build with the exact version of the python packages used to create that build.
+
+## MDK
+If you want to use the MDK (uVision) IDE to work with the DAPLink code, you must launch it in the right environment. The project will fail to build otherwise. To launch uVision properly, use tools\launch_uv4.bat
