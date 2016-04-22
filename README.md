@@ -4,6 +4,7 @@ Arm Mbed DAPLink is an open-source software project that enables programming and
 * MSC - drag-n-drop programming flash memory
 * CDC - virtual com port for log, trace and terminal emulation
 * HID - CMSIS-DAP compliant debug channel
+* WEBUSB HID - CMSIS-DAP compliant debug channel
 
 More features are planned and will show up gradually over time. The project is constantly under heavy development by Arm, its partners, numerous hardware vendors and the open-source community around the world. DAPLink has superseded the mbed CMSIS-DAP interface firmware project. You are free to use and contribute. Enjoy!
 

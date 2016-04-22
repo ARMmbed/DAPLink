@@ -287,6 +287,9 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 #ifdef HID_ENDPOINT
     pos += util_write_string(buf + pos, ", HID");
 #endif
+#if (USBD_WEBUSB_ENABLE)
+    pos += util_write_string(buf + pos, ", WebUSB");
+#endif
     pos += util_write_string(buf + pos, "\r\n");
 
     // CRC of the bootloader (if there is one)
