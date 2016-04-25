@@ -63,7 +63,7 @@ Provides definitions about:
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 /// This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
-#define DAP_JTAG_DEV_CNT        1               ///< Maximum number of JTAG devices on scan chain
+#define DAP_JTAG_DEV_CNT        0               ///< Maximum number of JTAG devices on scan chain
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.
@@ -200,12 +200,15 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 static __inline void PORT_SWD_SETUP(void)
 {
+	// Set SWCLK HIGH
 	pin_out_init(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
 	SWCLK_TCK_PIN_PORT->BSRR = SWCLK_TCK_PIN;
-
+	// Set SWDIO HIGH
 	pin_out_init(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
 	SWDIO_OUT_PIN_PORT->BSRR = SWDIO_OUT_PIN;	
 
+	pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
+	// Set RESET HIGH
 	pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
 	nRESET_PIN_PORT->BSRR = nRESET_PIN;	
 }
