@@ -91,33 +91,11 @@ void		  USBD_IntrEna (void)
 void USBD_Init (void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
-	EXTI_InitTypeDef EXTI_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure; 
 	
 	/* Select USBCLK source */
 	RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
 	/* Enable USB clock */
 	RCC->APB1ENR |= RCC_APB1ENR_USBEN;
-
-	/* Configure the EXTI line 18 connected internally to the USB IP */
-	EXTI_ClearITPendingBit(EXTI_Line18);
-	EXTI_InitStructure.EXTI_Line = EXTI_Line18; 
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
-	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-	EXTI_Init(&EXTI_InitStructure);	
-	
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); 
-	
-	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-	
-	/* Enable the USB Wake-up interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_Init(&NVIC_InitStructure);	
 	
 	/* Enable USB Interrupts */
 	USBD_IntrEna ();			
