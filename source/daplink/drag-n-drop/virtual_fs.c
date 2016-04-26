@@ -295,8 +295,19 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     init_complete = false;
     // Initialize MBR
     memcpy(&mbr, &mbr_tmpl, sizeof(mbr_t));
-    mbr.total_logical_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
-    mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
+    if (((disk_size + KB(64)) / mbr.bytes_per_sector) >= 32768) {
+        mbr.total_logical_sectors = 0;
+        mbr.big_sectors_on_drive = ((disk_size + KB(64)) / mbr.bytes_per_sector);
+        util_assert((mbr.big_sectors_on_drive / 4096) <= 64);
+        mbr.sectors_per_cluster = 0x10;
+        while ((mbr.big_sectors_on_drive / mbr.sectors_per_cluster) >= 4096) {
+            mbr.sectors_per_cluster *= 2;
+        }
+        mbr.logical_sectors_per_fat = (3 * (((mbr.big_sectors_on_drive / mbr.sectors_per_cluster) + 1023) / 1024));
+    } else {
+        mbr.total_logical_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
+        mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
+    }
     // Initailize virtual media
     memcpy(&virtual_media, &virtual_media_tmpl, sizeof(virtual_media_tmpl));
     virtual_media[MEDIA_IDX_FAT1].length = VFS_SECTOR_SIZE * mbr.logical_sectors_per_fat;
@@ -324,7 +335,11 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
 
 uint32_t vfs_get_total_size()
 {
-    return mbr.bytes_per_sector * mbr.total_logical_sectors;
+    if (mbr.total_logical_sectors == 0) {
+        return mbr.bytes_per_sector * mbr.big_sectors_on_drive;
+    } else {
+        return mbr.bytes_per_sector * mbr.total_logical_sectors;
+    }
 }
 
 vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
