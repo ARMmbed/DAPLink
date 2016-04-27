@@ -1,6 +1,6 @@
 /**
  * @file    target_reset.c
- * @brief   Target reset for the lpc812
+ * @brief   Target reset for the lpc4088
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

@@ -1,6 +1,6 @@
 /**
- * @file    lpc824xpresso.c
- * @brief   board ID for the NXP LPC824Xpresso board
+ * @file    lpc4088qsb.c
+ * @brief   board ID for the Embedded Artists LPC4088 QuickStart Board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

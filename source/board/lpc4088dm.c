@@ -1,6 +1,6 @@
 /**
- * @file    lpc824xpresso.c
- * @brief   board ID for the NXP LPC824Xpresso board
+ * @file    lpc4088dm.c
+ * @brief   board ID for the Embedded Artists LPC4088 Display Module
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
