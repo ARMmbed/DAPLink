@@ -122,6 +122,14 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/twrkl28z72m.yaml
+    k20dx_twrke18f_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/twrke18f.yaml
+    k20dx_hvpke18f_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/hvpke18f.yaml
     k20dx_rbl_if:
         - *module_if
         - *module_hic_k20dx
