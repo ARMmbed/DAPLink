@@ -41,6 +41,8 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmke15z_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_twrke18f_if",                           True,       0x8000,     "bin"       ),
+    ("k20dx_hvpke18f_if",                           True,       0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     #("lpc11u35_archmax_if",                        False,      0x0000,     "bin"       ),  # Unsupported currently
@@ -67,8 +69,10 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x200,      'k20dx_frdmkl25z_if',                       'k20dx_bl',         'KL25Z'                                 ),
     (   0x203,      'k20dx_twrkl28z72m_if',                     'k20dx_bl',         None                                    ),
     (   0x205,      'k20dx_frdmkl28z_if',                       'k20dx_bl',         None                                    ),
+    (   0x206,      'k20dx_twrke18f_if',                        'k20dx_bl',         None                                    ),
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
+    (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
@@ -125,6 +129,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0200,  # KL25Z
     0x0205,  # FRDM-KL28Z
     0x0203,  # TWR-KL28Z72M
+    0x0206,  # TWR-KE18F
     0x0220,  # KL46Z
     0x0210,  # KL05Z
     0x0213,  # FRDM-KE15Z
