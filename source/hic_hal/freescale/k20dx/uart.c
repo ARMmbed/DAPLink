@@ -185,14 +185,6 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
     }
 
     if (!tx_in_progress) {
-        // Wait for D register to be free
-        while (!(UART1->S1 & UART_S1_TDRE_MASK)) { }
-
-        tx_in_progress = 1;
-        // Write the first byte into D
-        UART1->D = write_buffer.data[write_buffer.idx_out++];
-        write_buffer.idx_out &= (BUFFER_SIZE - 1);
-        write_buffer.cnt_out++;
         // enable TX interrupt
         UART1->C2 |= UART_C2_TIE_MASK;
     }
