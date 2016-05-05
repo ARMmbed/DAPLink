@@ -29,19 +29,17 @@
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
 //USB control pin
-#define USB_CONNECT_PORT_ENABLE()    (RCC->APB2ENR |= RCC_APB2Periph_GPIOB)
-#define USB_CONNECT_PORT_DISABLE()   (RCC->APB2ENR &= ~RCC_APB2Periph_GPIOB)
-#define USB_CONNECT_PORT             GPIOB
-#define USB_CONNECT_PIN              GPIO_Pin_5
+#define USB_CONNECT_PORT_ENABLE()    (RCC->APB2ENR |= RCC_APB2Periph_GPIOA)
+#define USB_CONNECT_PORT_DISABLE()   (RCC->APB2ENR &= ~RCC_APB2Periph_GPIOA)
+#define USB_CONNECT_PORT             GPIOA
+#define USB_CONNECT_PIN              GPIO_Pin_15
 #define USB_CONNECT_ON()             (USB_CONNECT_PORT->BSRR = USB_CONNECT_PIN)
 #define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BRR  = USB_CONNECT_PIN)
 
-//USB connected LED
-#define CONNECTED_LED_PORT_ENABLE()  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE)
-#define CONNECTED_LED_PORT_DISABLE() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , DISABLE)
-#define CONNECTED_LED_PORT           GPIOC
-#define CONNECTED_LED_PIN            GPIO_Pin_3
-#define CONNECTED_LED_PIN_Bit        3
+//Connected LED
+#define CONNECTED_LED_PORT           GPIOB
+#define CONNECTED_LED_PIN            GPIO_Pin_6
+#define CONNECTED_LED_PIN_Bit        6
 
 //When bootloader, disable the target port(not used)
 #define POWER_EN_PIN_PORT_ENABLE()   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE)
@@ -71,17 +69,22 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define SWDIO_IN_PIN_Bit             12
 
 //LEDs
-#define PIN_HID_LED_PORT             CONNECTED_LED_PORT
-#define PIN_HID_LED                  CONNECTED_LED_PIN
-#define PIN_HID_LED_Bit              CONNECTED_LED_PIN_Bit
+//USB status LED
+#define RUNNING_LED_PORT             GPIOB
+#define RUNNING_LED_PIN              GPIO_Pin_5
+#define RUNNING_LED_Bit              5
 
-#define PIN_CDC_LED_PORT             GPIOC
-#define PIN_CDC_LED                  GPIO_Pin_1
-#define PIN_CDC_LED_Bit              1
+#define PIN_HID_LED_PORT             GPIOB
+#define PIN_HID_LED                  GPIO_Pin_6
+#define PIN_HID_LED_Bit              6
 
-#define PIN_MSC_LED_PORT             GPIOC
-#define PIN_MSC_LED                  GPIO_Pin_13
-#define PIN_MSC_LED_Bit              13
+#define PIN_CDC_LED_PORT             GPIOB
+#define PIN_CDC_LED                  GPIO_Pin_6
+#define PIN_CDC_LED_Bit              6
+
+#define PIN_MSC_LED_PORT             GPIOB
+#define PIN_MSC_LED                  GPIO_Pin_6
+#define PIN_MSC_LED_Bit              6
   
 
 #endif

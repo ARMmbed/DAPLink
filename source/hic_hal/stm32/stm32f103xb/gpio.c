@@ -43,6 +43,12 @@ void gpio_init(void)
     // enable clock to ports
 	RCC->APB2ENR |= RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC;
     // configure LEDs
+	GPIO_InitStructure.GPIO_Pin = RUNNING_LED_PIN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;    
+    GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+    GPIO_ResetBits(RUNNING_LED_PORT, RUNNING_LED_PIN);	
+	
 	GPIO_InitStructure.GPIO_Pin = CONNECTED_LED_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;    
