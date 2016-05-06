@@ -74,7 +74,6 @@ void gpio_init(void)
     if (!daplink_is_bootloader()) {
         // configure pin as GPIO
         // force always on logic 1
-		POWER_EN_PIN_PORT_ENABLE();
         GPIO_InitStructure.GPIO_Pin = POWER_EN_PIN;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  

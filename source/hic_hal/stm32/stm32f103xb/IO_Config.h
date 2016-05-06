@@ -42,15 +42,12 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define CONNECTED_LED_PIN_Bit        6
 
 //When bootloader, disable the target port(not used)
-#define POWER_EN_PIN_PORT_ENABLE()   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE)
-#define POWER_EN_PIN_PORT_DISABLE()  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , DISABLE)
 #define POWER_EN_PIN_PORT            GPIOB
 #define POWER_EN_PIN                 GPIO_Pin_15
+#define POWER_EN_Bit                 15
 
 //Press and power, enter bootloader 7
 //When daplnk_if, reset target board
-#define nRESET_PIN_PORT_ENABLE()     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE)
-#define nRESET_PIN_PORT_DISABLE()    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , DISABLE)
 #define nRESET_PIN_PORT              GPIOB
 #define nRESET_PIN                   GPIO_Pin_7
 #define nRESET_PIN_Bit               7
