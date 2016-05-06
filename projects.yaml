@@ -192,3 +192,7 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/rblnano.yaml
+    stm32f103xb_rblnano2_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/rblnano2.yaml
