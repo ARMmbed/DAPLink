@@ -65,6 +65,7 @@ void swd_set_target_reset(uint8_t asserted)
         //Hold RESET and SWCLK low for a minimum of 100us
         PIN_SWCLK_TCK_CLR();
         PIN_SWDIO_TMS_CLR();
+		LED_CONNECTED_OUT(0);
         //os_dly_wait(1);
     } else {
         swd_read_ap(0x010000FC, &ap_index_return);
@@ -78,5 +79,6 @@ void swd_set_target_reset(uint8_t asserted)
         
         PIN_SWCLK_TCK_SET();
         PIN_SWDIO_TMS_SET();
+		LED_CONNECTED_OUT(1);
     }
 }
