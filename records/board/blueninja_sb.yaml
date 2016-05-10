@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_blueninja_sb
+    sources:
+        board:
+            - source/board/blueninja_sb.c
+        target:
+            - source/target/toshiba/tz10xxmbg/target_remap0.c
+            - source/target/toshiba/target_reset.c
