@@ -129,6 +129,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/efm32gg_stk.yaml
+    lpc11u35_thunderboard_wear_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/thunderboard_wear.yaml
     lpc11u35_archble_if:
         - *module_if
         - *module_hic_lpc11u35

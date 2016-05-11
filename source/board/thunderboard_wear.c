@@ -1,6 +1,6 @@
 /**
- * @file    efm32gg_stk.c
- * @brief   board ID for the Silicon Labs Giant Gecko Starter Kit (STK3700)
+ * @file    thunderboard_wear.c
+ * @brief   board ID for the Silicon Labs Thunderboard Wear
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,4 +19,4 @@
  * limitations under the License.
  */
 
-const char *board_id = "2015";
+const char *board_id = "2040";
