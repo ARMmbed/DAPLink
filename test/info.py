@@ -34,7 +34,7 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'kl26z_nrf51822_if': 0x9900,
     'lpc11u35_lpc812xpresso_if': 0x1050,
     'lpc11u35_ssci1114_if': 0x1114,
-    'lpc11u35_efm32gg_stk_if': 0x2015,
+    'lpc11u35_thunderboard_wear_if': 0x2040,
     'sam3u2c_nrf51dk_if': 0x1100,
     'k20dx_frdmk20dx_if': 0x0230,
     'k20dx_frdmkw24f_if': 0x0280,

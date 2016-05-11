@@ -27,7 +27,7 @@ optional arguments:
   --password PASSWORD   MBED password (required for compile-api)
   --firmwaredir FIRMWAREDIR
                         Directory with firmware images to test
-  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,...} (run script with --help to see full list)
+  --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.

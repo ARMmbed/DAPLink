@@ -3,7 +3,7 @@ common:
         - source/target/siliconlabs/efm32gg
     sources:
         board:
-            - source/board/efm32gg_stk.c
+            - source/board/thunderboard_wear.c
         target:
             - source/target/siliconlabs/efm32gg/target.c
             - source/target/siliconlabs/target_reset.c

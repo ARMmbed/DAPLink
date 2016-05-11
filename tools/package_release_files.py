@@ -30,7 +30,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_lpc812xpresso_if",   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",   False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci1114_if",        False,      0x0000,     "bin"       ),
-    ("lpc11u35_efm32gg_stk_if",     False,      0x0000,     "bin"       ),
+    ("lpc11u35_thunderboard_wear_if", False,    0x0000,     "bin"       ),
     ("sam3u2c_nrf51dk_if",          True,       0x5000,     "bin"       ),
     ("k20dx_frdmk20dx_if",          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkw24f_if",           True,       0x8000,     "bin"       ),
