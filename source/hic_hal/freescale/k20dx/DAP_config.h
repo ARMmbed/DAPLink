@@ -1,6 +1,6 @@
 /**
  * @file    DAP_config.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -396,11 +396,13 @@ static inline void DAP_SETUP(void)
                   SIM_SCGC5_PORTC_MASK |  /* Enable Port C Clock */
                   SIM_SCGC5_PORTD_MASK;   /* Enable Port D Clock */
     /* Configure I/O pin SWCLK */
-    PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT]         = PORT_PCR_MUX(1);    /* GPIO */
+    PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT]         = PORT_PCR_MUX(1) |   /* GPIO */
+             PORT_PCR_DSE_MASK; /* High drive strength */
     PIN_SWCLK_GPIO->PSOR  = 1 << PIN_SWCLK_BIT;                      /* High level */
     PIN_SWCLK_GPIO->PDDR |= 1 << PIN_SWCLK_BIT;                      /* Output */
     /* Configure I/O pin SWDIO_OUT */
-    PIN_SWDIO_OUT_PORT->PCR[PIN_SWDIO_OUT_BIT] = PORT_PCR_MUX(1);    /* GPIO */
+    PIN_SWDIO_OUT_PORT->PCR[PIN_SWDIO_OUT_BIT] = PORT_PCR_MUX(1) |   /* GPIO */
+             PORT_PCR_DSE_MASK; /* High drive strength */
     PIN_SWDIO_OUT_GPIO->PSOR  = 1 << PIN_SWDIO_OUT_BIT;              /* High level */
     PIN_SWDIO_OUT_GPIO->PDDR |= 1 << PIN_SWDIO_OUT_BIT;              /* Output */
     /* Configure I/O pin SWDIO_IN */
@@ -409,11 +411,13 @@ static inline void DAP_SETUP(void)
             PORT_PCR_PS_MASK;   /* Pull-up */
     PIN_SWDIO_IN_GPIO->PDDR &= ~(1 << PIN_SWDIO_IN_BIT);             /* Input */
     /* Configure I/O pin SWDIO_NOE */
-    PIN_SWDIO_NOE_PORT->PCR[PIN_SWDIO_NOE_BIT] = PORT_PCR_MUX(1);    /* GPIO */
+    PIN_SWDIO_NOE_PORT->PCR[PIN_SWDIO_NOE_BIT] = PORT_PCR_MUX(1) |   /* GPIO */
+             PORT_PCR_DSE_MASK; /* High drive strength */
     PIN_SWDIO_NOE_GPIO->PSOR  = 1 << PIN_SWDIO_NOE_BIT;              /* High level */
     PIN_SWDIO_NOE_GPIO->PDDR |= 1 << PIN_SWDIO_NOE_BIT;              /* Output */
     /* Configure I/O pin SWD_NOE */
-    PIN_SWD_NOE_PORT->PCR[PIN_SWD_NOE_BIT]     = PORT_PCR_MUX(1);    /* GPIO */
+    PIN_SWD_NOE_PORT->PCR[PIN_SWD_NOE_BIT]     = PORT_PCR_MUX(1) |   /* GPIO */
+             PORT_PCR_DSE_MASK; /* High drive strength */
     PIN_SWD_NOE_GPIO->PSOR  = 1 << PIN_SWD_NOE_BIT;                  /* High level */
     PIN_SWD_NOE_GPIO->PDDR |= 1 << PIN_SWD_NOE_BIT;                  /* Output */
     /* Configure I/O pin nRESET */
