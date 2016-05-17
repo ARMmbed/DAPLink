@@ -37,11 +37,7 @@
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
-#ifdef OVERRIDE_FS_MB_SIZE
-static const uint32_t disc_size = MB(OVERRIDE_FS_MB_SIZE);
-#else
-static const uint32_t disc_size = MB(8);
-#endif
+static const uint32_t disc_size = MB(68);
 
 static const char mbed_redirect_file[] =
     "<!doctype html>\r\n"

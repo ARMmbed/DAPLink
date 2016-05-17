@@ -3,8 +3,7 @@ common:
         board:
             - source/board/lpc4088qsb.c
         target:
-            - source/target/nxp/lpc4088/target.c
+            - source/target/nxp/lpc4088/target_lpc4088qsb.c
             - source/target/nxp/lpc4088/target_reset.c
     macros:
-        - BOARD_LPC4088QSB
-        - OVERRIDE_FS_MB_SIZE=34
+        - GPIO_RESET_IN_NOT_SUPPORTED

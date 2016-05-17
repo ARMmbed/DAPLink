@@ -1,6 +1,6 @@
 /**
- * @file    lpc4088dm.c
- * @brief   board ID for the Embedded Artists LPC4088 Display Module
+ * @file    target.c
+ * @brief   Target information for the lpc4088
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,5 +19,18 @@
  * limitations under the License.
  */
 
-const char *board_id = "1062";
+#include "target_config.h"
 
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
+
+// The LPC4088 Display Module has 512K internal flash and 16M external QSPI flash
+const target_cfg_t target_device = {
+	.sector_size    = KB(4),
+	.sector_cnt     = ((MB(16) + KB(512)) / KB(4)),
+	.flash_start    = 0,
+	.flash_end      = MB(16) + KB(512),
+	.ram_start      = 0x10000000,
+	.ram_end        = 0x10010000,
+	.flash_algo     = (program_target_t *) &flash,
+};

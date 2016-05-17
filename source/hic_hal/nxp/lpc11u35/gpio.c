@@ -77,24 +77,6 @@ static void busy_wait(uint32_t cycles)
     }
 }
 
-#if defined(BOARD_LPC4088DM) || defined(BOARD_LPC4088QSB)
-void gpio_set_isp_pin(uint8_t state) {
-	#define PIN_ISPCTRL1      (1<<12)
-	#define PIN_ISPCTRL2      (1<<15)
-    if (state) {
-        // High => Both pins are inputs
-        LPC_GPIO->DIR[0] &= ~(PIN_ISPCTRL1);
-        LPC_GPIO->DIR[1] &= ~(PIN_ISPCTRL2);
-    } else {
-        // Low => Both pins are outputs with 0
-        LPC_GPIO->CLR[0] = (PIN_ISPCTRL1);
-        LPC_GPIO->CLR[1] = (PIN_ISPCTRL2);
-        LPC_GPIO->DIR[0] |= (PIN_ISPCTRL1);
-        LPC_GPIO->DIR[1] |= (PIN_ISPCTRL2);
-    }
-}
-#endif
-
 void gpio_init(void)
 {
     // enable clock for GPIO port 0
@@ -112,13 +94,7 @@ void gpio_init(void)
     PIN_CDC_LED_IOCON = PIN_CDC_LED_IOCON_INIT;
     LPC_GPIO->SET[PIN_CDC_LED_PORT] = PIN_CDC_LED;
     LPC_GPIO->DIR[PIN_CDC_LED_PORT] |= PIN_CDC_LED;
-#if defined(BOARD_LPC4088DM) || defined(BOARD_LPC4088QSB)
-    // Configure ISPCTRL as output and high
-    // We use two ISP pins to cover different hardware versions
-    LPC_IOCON->TMS_PIO0_12 |= 0x01;
-    LPC_IOCON->PIO1_15 &= ~0x07;
-    gpio_set_isp_pin(1);
-#else
+#ifndef GPIO_RESET_IN_NOT_SUPPORTED
     // configure Button(s) as input
     PIN_RESET_IN_IOCON = PIN_RESET_IN_IOCON_INIT;
     LPC_GPIO->DIR[PIN_RESET_IN_PORT] &= ~PIN_RESET_IN;
@@ -178,8 +154,8 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {
-#if defined(BOARD_LPC4088DM) || defined(BOARD_LPC4088QSB)
-	  return 1;
+#ifdef GPIO_RESET_IN_NOT_SUPPORTED
+    return 1;
 #else
     static uint8_t last_reset_forward_pressed = 0;
     uint8_t reset_forward_pressed;
