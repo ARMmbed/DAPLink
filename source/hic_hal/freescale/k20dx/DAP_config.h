@@ -170,6 +170,7 @@ static inline void PORT_OFF(void)
     PIN_SWDIO_NOE_GPIO->PSOR = 1 << PIN_SWDIO_NOE_BIT;
     PIN_SWD_NOE_GPIO->PSOR   = 1 << PIN_SWD_NOE_BIT;
     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
+    PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET; //input
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
 }
@@ -426,7 +427,7 @@ static inline void DAP_SETUP(void)
             PORT_PCR_PS_MASK |  /* Pull-up */
             PORT_PCR_ODE_MASK;  /* Open-drain */
     PIN_nRESET_GPIO->PSOR  = 1 << PIN_nRESET_BIT;                    /* High level */
-    PIN_nRESET_GPIO->PDDR |= 1 << PIN_nRESET_BIT;                    /* Output */
+    PIN_nRESET_GPIO->PDDR &= ~(1 << PIN_nRESET_BIT);                    /* Input */
     /* Configure LED */
     LED_CONNECTED_PORT->PCR[LED_CONNECTED_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
             PORT_PCR_ODE_MASK;  /* Open-drain */
