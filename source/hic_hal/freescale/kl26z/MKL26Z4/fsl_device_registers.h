@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Freescale Semiconductor, Inc.
+ * Copyright (c) 2014 - 2015, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,55 +28,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "SSD_FTFx_Common.h"
-#include "flash/flash.h"
-#include "device/fsl_device_registers.h"
-#include "fsl_platform_status.h"
-#include "flash_densities.h"
+#ifndef __FSL_DEVICE_REGISTERS_H__
+#define __FSL_DEVICE_REGISTERS_H__
 
+/*
+ * Include the cpu specific register header files.
+ *
+ * The CPU macro should be declared in the project or makefile.
+ */
+#if (defined(CPU_MKL26Z128CAL4) || defined(CPU_MKL26Z32VFM4) || defined(CPU_MKL26Z64VFM4) || \
+    defined(CPU_MKL26Z128VFM4) || defined(CPU_MKL26Z32VFT4) || defined(CPU_MKL26Z64VFT4) || \
+    defined(CPU_MKL26Z128VFT4) || defined(CPU_MKL26Z32VLH4) || defined(CPU_MKL26Z64VLH4) || \
+    defined(CPU_MKL26Z128VLH4) || defined(CPU_MKL26Z256VLH4) || defined(CPU_MKL26Z128VLL4) || \
+    defined(CPU_MKL26Z256VLL4) || defined(CPU_MKL26Z128VMC4) || defined(CPU_MKL26Z256VMC4) || \
+    defined(CPU_MKL26Z256VMP4))
 
+#define KL26Z4_SERIES
 
-////////////////////////////////////////////////////////////////////////////////
-// Code
-////////////////////////////////////////////////////////////////////////////////
+/* CMSIS-style register definitions */
+#include "MKL26Z4.h"
+/* CPU specific feature definitions */
+#include "MKL26Z4_features.h"
 
-// See flash.h for documentation of this function.
-status_t flash_read_once(flash_driver_t * driver, uint32_t index, uint32_t *dst, uint32_t lengthInBytes)
-{
-    if (dst == NULL)
-    {
-        return kStatus_InvalidArgument;
-    }
+#else
+    #error "No valid CPU defined!"
+#endif
 
-    status_t returnCode = flash_check_access_ifr_range(driver, index, lengthInBytes);
-    if (kStatus_Success != returnCode)
-    {
-        return returnCode;
-    }
+#endif /* __FSL_DEVICE_REGISTERS_H__ */
 
-    // pass paramters to FTFx
-    HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_READ_ONCE);
-    HW_FTFx_FCCOBx_WR(FTFx_BASE, 1, index);
-
-    // calling flash command sequence function to execute the command
-    returnCode = flash_command_sequence();
-
-    if (kStatus_Success == returnCode)
-    {
-        *dst = kFCCOBx[1];
-
-        if (index > FLASH_PROGRAM_ONCE_MAX_ID_4BYTES)
-        {
-            *(dst + 1) = kFCCOBx[2];
-        }
-    }
-
-    return returnCode;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// EOF
-////////////////////////////////////////////////////////////////////////////////
-
-
+/*******************************************************************************
+ * EOF
+ ******************************************************************************/
