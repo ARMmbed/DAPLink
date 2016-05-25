@@ -87,6 +87,8 @@
 #ifndef OS_CLOCK
 #if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z)
 #define OS_CLOCK    48000000
+#elif defined(INTERFACE_K26F)
+#define OS_CLOCK    120000000
 #elif defined(INTERFACE_SAM3U2C)
 #define OS_CLOCK    96000000
 #elif defined(INTERFACE_LPC4322)

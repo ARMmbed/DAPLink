@@ -38,7 +38,7 @@ def ranges(i):
         b = list(b)
         yield b[0][1], b[-1][1]
 
-def post_build_script(input_file, output_file, board_id=None, family_id=None, bin_offset=None):   
+def post_build_script(input_file, output_file, board_id=None, family_id=None, bin_offset=None):
     output_format_file = '-'.join(filter(None, (output_file, board_id, family_id, bin_offset)))
     print(output_format_file)
     output_file_hex = output_format_file + ".hex"
@@ -105,7 +105,7 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
         #board_id is in string hex
         if board_id is not None:
             new_hex_file.puts(target_addr_unpack + 4,struct.pack('4s',"%.04X" % int(board_id, 16)))
-        
+
 
     # CRC the entire image
     #
@@ -179,11 +179,11 @@ if __name__ == '__main__':
     parser.add_argument("input", type=str, help="Hex or bin file to read from.")
     parser.add_argument("output", type=str,
                         help="Output base file name to write crc, board_id and family_id.")
-    parser.add_argument("--board-id", type=str, 
+    parser.add_argument("--board-id", type=str,
                         help="board id to for the target in hex")
-    parser.add_argument("--family-id", type=str, 
+    parser.add_argument("--family-id", type=str,
                         help="family id to for the target in hex")
-    parser.add_argument("--bin-offset", type=str, 
+    parser.add_argument("--bin-offset", type=str,
                         help="binary offset in hex")
     args = parser.parse_args()
     post_build_script(args.input, args.output, args.board_id, args.family_id, args.bin_offset)
