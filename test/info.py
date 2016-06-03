@@ -119,6 +119,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
     (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
+    (   0xC000,     'lpc11u35_cocorico_if',                     None,               None                                    ), # TODO - set target to 'CoCo-ri-Co' when mbed-os supports this
 ]
 
 # Add new HICs here

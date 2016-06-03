@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/cocorico.c
+        target:
+            - source/target/nxp/lpc812/target.c
+            - source/target/nxp/target_reset.c
