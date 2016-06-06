@@ -22,7 +22,7 @@
 #include "IO_Config.h"
 #include "swd_host.h"
 
-const char *board_id = "0000";
+const char *board_id = "7010";
 
 
 void target_set_state_by_board(TARGET_RESET_STATE state)
