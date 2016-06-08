@@ -21,8 +21,9 @@
 
 #include "target_config.h"
 
-// The file flash_blob.c must only be included in target.c
-#include "flash_blob.c"
+// FlashAlgo
+#include "flash_blob.h"
+#include "tz10xx_prog_blob.h"
 
 // target information
 const target_cfg_t target_device = {
