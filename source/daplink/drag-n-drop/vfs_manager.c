@@ -34,7 +34,7 @@
 #include "daplink.h"
 #include "util.h"
 #include "version_git.h"
-#include "IO_config.h"
+#include "IO_Config.h"
 #include "target_reset.h"
 #include "file_stream.h"
 #include "error.h"

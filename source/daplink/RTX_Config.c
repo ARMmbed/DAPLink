@@ -21,7 +21,7 @@
 
 #include "RTL.h"
 #include "util.h"
-#include "IO_config.h" // NVIC_SystemReset
+#include "IO_Config.h" // NVIC_SystemReset
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
