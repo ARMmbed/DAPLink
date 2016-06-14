@@ -34,6 +34,7 @@
 #include "version_git.h"
 #include "info.h"
 #include "gpio.h"           // for gpio_get_sw_reset
+#include "flash_intf.h"     // for flash_intf_target
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomidate for hex file programming.
@@ -71,6 +72,7 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
 
 static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
+static void erase_target(void);
 
 void vfs_user_build_filesystem()
 {
@@ -154,6 +156,9 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
             vfs_mngr_fs_remount();
         } else if (!memcmp(filename, "AUTO_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_automation_allowed(false);
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
+            erase_target();
             vfs_mngr_fs_remount();
         }
     }
@@ -440,4 +445,12 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
     size_left = buf - orig_buf;
     memset(buf, 0, bufsize - size_left);
+}
+
+// Initialize flash algo, erase flash, uninit algo
+static void erase_target(void)
+{
+    flash_intf_target->init();
+    flash_intf_target->erase_chip();
+    flash_intf_target->uninit();
 }
