@@ -71,54 +71,55 @@ PROJECT_RELEASE_INFO = {
 
 # All supported configurations
 SUPPORTED_CONFIGURATIONS = [
-    #   Board ID    Firmware                                    Bootloader          Target
-    (   0x200,      'k20dx_frdmkl25z_if',                       'k20dx_bl',         'KL25Z'                                 ),
+    #   Board ID    Firmware                            Bootloader          Target
+    (   0x200,      'k20dx_frdmkl25z_if',               'k20dx_bl',         'KL25Z'                         ),
     (   0x203,      'k20dx_twrkl28z72m_if',                     'k20dx_bl',         None                                    ),
     (   0x204,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x205,      'k20dx_frdmkl28z_if',                       'k20dx_bl',         None                                    ),
     (   0x206,      'k20dx_twrke18f_if',                        'k20dx_bl',         None                                    ),
-    (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
+    (   0x210,      'k20dx_frdmkl05z_if',               'k20dx_bl',         'FRDM-KL05Z'                    ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
     (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K82F' when mbed-os supports this
-    (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
+    (   0x220,      'k20dx_frdmkl46z_if',               'k20dx_bl',         'FRDM-KL46Z'                    ),
     (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
-    (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
-    (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
-    (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
-    (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
+    (   0x230,      'k20dx_frdmk20dx_if',               'k20dx_bl',         'FRDM-K20D50M'                  ),
+    (   0x231,      'k20dx_frdmk22f_if',                'k20dx_bl',         'FRDM-K22F'                     ),
+    (   0x240,      'k20dx_frdmk64f_if',                'k20dx_bl',         'FRDM-K64F'                     ),
+    (   0x260,      'k20dx_frdmkl26z_if',               'k20dx_bl',         None                            ),
     (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL27Z' when mbed-os supports this
     (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
     (   0x250,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24F' when mbed-os supports this
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
-    (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
-    (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
-    (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
-    (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
-    (   0x1050,     'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
-    (   0x1060,     'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
-    (   0x1062,     'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
+    (   0x824,      'lpc11u35_lpc824xpresso_if',        None,               'LPCXpresso824-MAX'             ),
+    (   0x1017,     'lpc11u35_hrm1017_if',              None,               'mbed-HRM1017'                  ),
+    (   0x1018,     'lpc11u35_ssci824_if',              None,               'Switch-Science-mbed-LPC824'    ),
+    (   0x1019,     'lpc11u35_sscity_if',               None,               'Switch-Science-mbed-TY51822r3' ),
+    (   0x1050,     'lpc11u35_lpc812xpresso_if',        None,               'NXP-LPC800-MAX'                ),
+    (   0x1060,     'lpc11u35_lpc4088qsb_if',           None,               'EA-LPC4088'                    ),
+    (   0x1062,     'lpc11u35_lpc4088dm_if',            None,               'EA-LPC4088-Display-Module'     ),
     (   0x1070,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51822'                       ),
-    (   0x1090,     'k20dx_rbl_if',                             'k20dx_bl',         'RedBearLab-nRF51822'                   ),
-    (   0x1095,     'k20dx_rblnano_if',                         'k20dx_bl',         'RedBearLab-BLE-Nano'                   ),
+    (   0x1090,     'k20dx_rbl_if',                     'k20dx_bl',         'RedBearLab-nRF51822'           ),
+    (   0x1095,     'k20dx_rblnano_if',                 'k20dx_bl',         'RedBearLab-BLE-Nano'           ),
     (   0x1100,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-DK'                       ),
     (   0x1101,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52-DK'                       ),
     (   0x1021,     'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
-    (   0x1114,     'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
+    (   0x1114,     'lpc11u35_ssci1114_if',             None,               'LPC1114FN28'                   ),
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
-    (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
+    (   0x1234,     'lpc11u35_c027_if',                 None,               'u-blox-C027'                   ),
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          None                                    ), # TODO - set target to 'UBLOX_EVA_NINA' when mbed-os supports this
-    (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
-    (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
-    (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
-    (   0x9004,     'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
-    (   0x9009,     'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                        ),
-    (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
-    (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
-    (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
+    (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',  None,               None                            ),
+    (   0x5051,     'lpc11u35_arm_watch_efm32_if',      None,               None                            ),
+    (   0x5052,     'lpc11u35_arm_watch_nrf51_if',      None,               None                            ),
+	(   0x7010,     'lpc11u35_blueninja_if',            None,               'BlueNinja'                     ),
+    (   0x9004,     'lpc11u35_archpro_if',              None,               'Seeeduino-Arch-Pro'            ),
+    (   0x9009,     'lpc11u35_archble_if',              None,               'Seeed-Arch-BLE'                ),
+    (   0x9011,     'lpc11u35_archmax_if',              None,               'Seeed-Arch-Max'                ),
+    (   0x9012,     'lpc11u35_tiny_if',                 None,               'Seeed-Tiny-BLE'                ),
+    (   0x9013,     'lpc11u35_archlink_if',             None,               'Seeed-Arch-Link'               ),
+    (   0x9900,     'kl26z_microbit_if',                'kl26z_bl',         'Microbit'                      ),
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
     (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
