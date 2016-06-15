@@ -1,6 +1,6 @@
 /**
- * @file    flash_hal_SAM3U.c
- * @brief   
+ * @file    flash_hal_stm32f103xb.c
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -57,46 +57,46 @@ uint32_t UnInit(uint32_t fnc)
 __attribute__((section("ram_func")))
 uint32_t EraseChip(void)
 {
-	uint32_t flash_addr;
-	
-	flash_addr = target_device.flash_start;
-	FLASH_Unlock();
-	while(flash_addr < target_device.flash_end)
-	{	
-		FLASH_ErasePage(flash_addr);
-		flash_addr += 0x400;
-	}
-	FLASH_Lock();
+    uint32_t flash_addr;
+
+    flash_addr = target_device.flash_start;
+    FLASH_Unlock();
+    while(flash_addr < target_device.flash_end)
+    {
+        FLASH_ErasePage(flash_addr);
+        flash_addr += 0x400;
+    }
+    FLASH_Lock();
     return (0);  // O.K.
 }
 
 __attribute__((section("ram_func")))
 uint32_t EraseSector(uint32_t adr)
 {
-	FLASH_Unlock();
-	FLASH_ErasePage(adr);
-	FLASH_Lock();
+    FLASH_Unlock();
+    FLASH_ErasePage(adr);
+    FLASH_Lock();
     return (0);  // O.K.
 }
 
 __attribute__((section("ram_func")))
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
-	uint32_t err_code;
-	uint32_t current_addr, len;
-	
-	current_addr = adr;
-	len = sz;
-	FLASH_Unlock();
-	while(len>0)
-	{
-		err_code = FLASH_ProgramWord( current_addr, *buf);
-		if(err_code != FLASH_COMPLETE)
-			return 1;
-		buf++;
-		current_addr += 4;
-		len -= 4;
-	}
-	FLASH_Lock();
+    uint32_t err_code;
+    uint32_t current_addr, len;
+
+    current_addr = adr;
+    len = sz;
+    FLASH_Unlock();
+    while(len>0)
+    {
+        err_code = FLASH_ProgramWord( current_addr, *buf);
+        if(err_code != FLASH_COMPLETE)
+            return 1;
+        buf++;
+        current_addr += 4;
+        len -= 4;
+    }
+    FLASH_Lock();
     return (0);                                  // Finished without Errors
 }

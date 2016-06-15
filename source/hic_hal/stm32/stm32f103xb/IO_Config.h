@@ -1,6 +1,6 @@
 /**
  * @file    IO_Config.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -82,6 +82,6 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define PIN_MSC_LED_PORT             GPIOB
 #define PIN_MSC_LED                  GPIO_Pin_6
 #define PIN_MSC_LED_Bit              6
-  
+
 
 #endif
