@@ -1,6 +1,6 @@
 /**
  * @file    stm32f103_bl.c
- * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on ATSAM3U
+ * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on STM32F103XB
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -25,11 +25,11 @@ const char *board_id = "0000";
 
 // stm32f103 target information
 const target_cfg_t target_device = {
-    .sector_size    = 0x1000,
+    .sector_size    = 0x400,
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((KB(128) - KB(32)) / 0x1000),
+    .sector_cnt     = ((KB(128) - KB(32)) / 0x400),
     .flash_start    = 0x08000000 + KB(32),
     .flash_end      = 0x08000000 + KB(128),
     .ram_start      = 0x20000000,
