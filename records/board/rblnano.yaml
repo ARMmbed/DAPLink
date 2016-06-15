@@ -1,4 +1,6 @@
 common:
+    macros:
+        - RBL_nRF51
     sources:
         board:
             - source/board/rblnano.c
