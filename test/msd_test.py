@@ -304,6 +304,11 @@ def test_mass_storage(workspace, parent_test):
     test.set_flush_size(0x1000)
     test.run()
 
+    if target.name == "BlueNinja":
+        test_info.info("Skip the remaining MSD test.")
+        test_info.info("Writing incomplete binary to TZ10xx MCU, CoreSight becomes unresponsive.")
+        return
+
     # Test loading a binary smaller than a sector
     if not bad_vector_table:
         test = MassStorageTester(board, test_info, "Load .bin smaller than sector")
