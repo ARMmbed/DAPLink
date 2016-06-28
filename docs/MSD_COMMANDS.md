@@ -44,6 +44,8 @@ own right.
 
 `refresh.act` This file forces a remount of the DAPLink MSD drive
 
+`erase.act` This file triggers an erase of the target's flash.
+
 ### Configuration Commands
 
 `auto_rst.cfg` This file will turn on Auto Reset mode. In this mode, 
