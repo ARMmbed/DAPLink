@@ -121,7 +121,14 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {
-    return (uint8_t)GPIO_ReadInputDataBit(nRESET_PIN_PORT, nRESET_PIN);
+    uint8_t status;
+    // Set nRESET_PIN to input pull-up, then read status
+    pin_in_init(nRESET_PIN_PORT, nRESET_PIN_Bit, 1);
+    status = (uint8_t)GPIO_ReadInputDataBit(nRESET_PIN_PORT, nRESET_PIN);
+    // Config nRESET_PIN to output
+    pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
+    nRESET_PIN_PORT->BSRR = nRESET_PIN;
+    return status;
 }
 
 uint8_t GPIOGetButtonState(void)
