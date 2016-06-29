@@ -117,6 +117,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/rblnano.yaml
+    k20dx_xDot-L151_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/xDot-L151.yaml
     lpc11u35_lpc812xpresso_if:
         - *module_if
         - *module_hic_lpc11u35
