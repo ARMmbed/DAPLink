@@ -79,6 +79,13 @@ void gpio_init(void)
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
         GPIO_Init(POWER_EN_PIN_PORT, &GPIO_InitStructure);
         GPIO_SetBits(POWER_EN_PIN_PORT, POWER_EN_PIN);
+        
+        // Config ReadOut protection
+        if(FLASH_GetReadOutProtectionStatus() != SET) {
+            FLASH_Unlock();
+            FLASH_ReadOutProtection(ENABLE);
+            FLASH_Lock();
+        }
     }
 
     // Let the voltage rails stabilize.  This is especailly important
