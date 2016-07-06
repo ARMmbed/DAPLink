@@ -26,11 +26,11 @@
 
 // target information
 const target_cfg_t target_device = {
-    .sector_size    = KB(4),
-    .sector_cnt     = 64,
+    .sector_size    = 256,
+    .sector_cnt     = KB(1),
     .flash_start    = 0x08000000,
     .flash_end      = 0x08000000 + KB(256),
     .ram_start      = 0x20000000,
-    .ram_end        = 0x20008000,
+    .ram_end        = 0x20000000 + KB(32),
     .flash_algo     = (program_target_t *) &flash,
 };
