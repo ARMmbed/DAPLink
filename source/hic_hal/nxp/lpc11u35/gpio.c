@@ -94,11 +94,13 @@ void gpio_init(void)
     PIN_CDC_LED_IOCON = PIN_CDC_LED_IOCON_INIT;
     LPC_GPIO->SET[PIN_CDC_LED_PORT] = PIN_CDC_LED;
     LPC_GPIO->DIR[PIN_CDC_LED_PORT] |= PIN_CDC_LED;
+#ifndef GPIO_RESET_IN_NOT_SUPPORTED
     // configure Button(s) as input
     PIN_RESET_IN_IOCON = PIN_RESET_IN_IOCON_INIT;
     LPC_GPIO->DIR[PIN_RESET_IN_PORT] &= ~PIN_RESET_IN;
     PIN_RESET_IN_FWRD_IOCON = PIN_RESET_IN_FWRD_IOCON_INIT;
     LPC_GPIO->DIR[PIN_RESET_IN_FWRD_PORT] &= ~PIN_RESET_IN_FWRD;
+#endif
     // open drain logic for reset button
     PIN_nRESET_IOCON = PIN_nRESET_IOCON_INIT;
     LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
@@ -152,6 +154,9 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {
+#ifdef GPIO_RESET_IN_NOT_SUPPORTED
+    return 1;
+#else
     static uint8_t last_reset_forward_pressed = 0;
     uint8_t reset_forward_pressed;
     uint8_t reset_pressed;
@@ -172,6 +177,7 @@ uint8_t gpio_get_sw_reset(void)
 
     reset_pressed = reset_forward_pressed || (LPC_GPIO->PIN[PIN_RESET_IN_PORT] & PIN_RESET_IN ? 0 : 1);
     return !reset_pressed;
+#endif
 }
 
 void target_forward_reset(bool assert_reset)

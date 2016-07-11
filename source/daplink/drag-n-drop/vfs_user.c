@@ -37,7 +37,7 @@
 #include "flash_intf.h"     // for flash_intf_target
 
 // Must be bigger than 4x the flash size of the biggest supported
-// device.  This is to accomidate for hex file programming.
+// device.  This is to accomodate for hex file programming.
 static const uint32_t disc_size = MB(64);
 
 static const char mbed_redirect_file[] =
