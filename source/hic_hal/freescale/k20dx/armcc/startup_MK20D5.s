@@ -460,11 +460,11 @@ FOPT            EQU     0xFD
 FSEC            EQU     0xFE
 ;   </h>
 ; </h>
-                IF      :DEF:DAPLINK_IF
+            #if defined(DAPLINK_IF)
                 AREA    |.ARM.__at_0x8400|, CODE, READONLY
-                ELSE
+            #else
                 AREA    |.ARM.__at_0x400 |, CODE, READONLY
-                ENDIF
+            #endif
                 
                 DCB     BackDoorK0, BackDoorK1, BackDoorK2, BackDoorK3
                 DCB     BackDoorK4, BackDoorK5, BackDoorK6, BackDoorK7
