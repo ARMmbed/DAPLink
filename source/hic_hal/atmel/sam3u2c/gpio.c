@@ -63,7 +63,7 @@ void gpio_set_hid_led(gpio_led_state_t state)
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
-  if (GPIO_LED_ON == state) {
+{  if (GPIO_LED_ON == state) {
     PIOA->PIO_CODR = (1 << _BIT_LED_BLUE); //  LED == on
   } else {
     PIOA->PIO_SODR = (1 << _BIT_LED_BLUE); //  LED == off
@@ -81,14 +81,7 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 void PIOA_IRQHandler(void)
 {
-    //
-    // ISR is called when flow control is de-asserted
-    //
-    uint32_t interrupts = PIOA->PIO_ISR;
 
-    if ((interrupts >> 9) & 1) { //CTS
-        uart_software_flow_control();
-    }
 }
 
 uint8_t gpio_get_sw_reset()
