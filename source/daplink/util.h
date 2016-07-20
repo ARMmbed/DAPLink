@@ -42,7 +42,13 @@ uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor);
 uint32_t util_div_round_down(uint32_t dividen, uint32_t divisor);
 uint32_t util_div_round(uint32_t dividen, uint32_t divisor);
 
+#if defined(DAPLINK_IF)
+// Interface assert, with the filename enabled.
 #define util_assert(expression) _util_assert((expression), __FILE__, __LINE__)
+#else
+// Bootloader assert, filename disabled to save code size.
+#define util_assert(expression) _util_assert((expression), "(file)", __LINE__)
+#endif
 void _util_assert(bool expression, const char *filename, uint16_t line);
 
 void util_assert_clear(void);
