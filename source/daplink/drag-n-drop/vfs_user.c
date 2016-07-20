@@ -30,7 +30,7 @@
 #include "settings.h"
 #include "target_reset.h"
 #include "daplink.h"
-#include "IO_config.h"      // for NVIC_SystemReset
+#include "IO_Config.h"      // for NVIC_SystemReset
 #include "version_git.h"
 #include "info.h"
 #include "gpio.h"           // for gpio_get_sw_reset

@@ -78,7 +78,7 @@ def pre_build():
     # Check are there any local, uncommitted modifications.
     print "#> Checking for local changes"
     try:
-        check_output("git diff --no-ext-diff --quiet --exit-code")
+        check_output("git diff --no-ext-diff --quiet --exit-code", shell=True)
     except CalledProcessError, WindowsError:
         git_has_changes = 1
     else:
