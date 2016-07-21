@@ -169,7 +169,8 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'RedBearLab-BLE-Nano',
     'Seeed-Tiny-BLE',
     'Seeed-Arch-Link',
-    'SSCI-MBIT',
+    'SSCI-MBIT'
+    'BlueNinja',
 ]
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[3] for config in
