@@ -10,11 +10,11 @@
 ### Developer documentation
 
 * [Developers’ guide](DEVELOPERS-GUIDE.md)
-    * [Build output variants](BUILD_VARIANTS.md)
+    * [Build output details](BUILD_OUTPUT.md)
 
 Automated tests and automation:
 
-* [Automated tests](AUTOMATED_TEST.md)
+* [Automated tests](AUTOMATED_TESTS.md)
 * [How to enable automation](ENABLE_AUTOMATION.md)
 * [MSD commands](MSD_COMMANDS.md)
 
