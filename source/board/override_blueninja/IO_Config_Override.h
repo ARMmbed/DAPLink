@@ -25,7 +25,9 @@
 #include "LPC11Uxx.h"
 #include "daplink.h"
 
-#define BLUENINJA_SB
+#define TARGET_POWER_HOLD
+#define CONTROLLED_POWER_LED
+#define INTEGRATED_STATUS_LED
 
 // nRESET is FET drive.
 #define PIN_nRESET_FET_DRIVE

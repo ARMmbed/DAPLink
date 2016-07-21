@@ -198,8 +198,8 @@ static __inline void PORT_OFF(void)
     LPC_GPIO->DIR[PIN_SWCLK_PORT] &= ~PIN_SWCLK;
     LPC_GPIO->DIR[PIN_SWDIO_PORT] &= ~PIN_SWDIO;
 
-#if defined(BLUENINJA_SB)
-    //Release PowerHoldSw
+#if defined(TARGET_POWER_HOLD)
+    //Release Target PowerHold
     LPC_GPIO->CLR[PIN_PWH_PORT] = PIN_PWH;
 #endif
 }

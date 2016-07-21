@@ -81,8 +81,25 @@ void gpio_init(void)
 {
     // enable clock for GPIO port 0
     LPC_SYSCON->SYSAHBCLKCTRL |= (1UL << 6);
+#if defined(TARGET_POWER_HOLD)
+    // Target PowerHOLD port
+    PIN_PWH_IOCON = PIN_PWH_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_PWH_PORT] = PIN_PWH;
+    LPC_GPIO->DIR[PIN_PWH_PORT] |= PIN_PWH;
+#endif
     // configure GPIO-LED as output
-#if !defined(BLUENINJA_SB)
+#if defined(CONTROLLED_POWER_LED)
+    // Power led (red)
+    PIN_POW_LED_IOCON = PIN_POW_LED_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_POW_LED_PORT] = PIN_POW_LED;
+    LPC_GPIO->DIR[PIN_POW_LED_PORT] |= PIN_POW_LED;
+#endif
+#if defined(INTEGRATED_STATUS_LED)
+    // DAP/MSD/Serial led (green)
+    PIN_DAP_LED_IOCON = PIN_DAP_LED_IOCON_INIT;
+    LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
+    LPC_GPIO->DIR[PIN_DAP_LED_PORT] |= PIN_DAP_LED;
+#else
     // DAP led (green)
     PIN_DAP_LED_IOCON = PIN_DAP_LED_IOCON_INIT;
     LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
@@ -95,21 +112,6 @@ void gpio_init(void)
     PIN_CDC_LED_IOCON = PIN_CDC_LED_IOCON_INIT;
     LPC_GPIO->SET[PIN_CDC_LED_PORT] = PIN_CDC_LED;
     LPC_GPIO->DIR[PIN_CDC_LED_PORT] |= PIN_CDC_LED;
-#else
-    // PowerSW HOLD
-    PIN_PWH_IOCON = PIN_PWH_IOCON_INIT;
-    LPC_GPIO->CLR[PIN_PWH_PORT] = PIN_PWH;
-    LPC_GPIO->DIR[PIN_PWH_PORT] |= PIN_PWH;
-    
-    // Power led (red)
-    PIN_POW_LED_IOCON = PIN_POW_LED_IOCON_INIT;
-    LPC_GPIO->CLR[PIN_POW_LED_PORT] = PIN_POW_LED;
-    LPC_GPIO->DIR[PIN_POW_LED_PORT] |= PIN_POW_LED;
-    
-    // DAP/MSD/Serial led (green)
-    PIN_DAP_LED_IOCON = PIN_DAP_LED_IOCON_INIT;
-    LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
-    LPC_GPIO->DIR[PIN_DAP_LED_PORT] |= PIN_DAP_LED;
 #endif
     // configure Button(s) as input
     PIN_RESET_IN_IOCON = PIN_RESET_IN_IOCON_INIT;
