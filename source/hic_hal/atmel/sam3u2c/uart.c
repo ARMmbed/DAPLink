@@ -335,6 +335,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
                  | (0 <<  9)                  // Initially disable TxEmpty Interrupt
                  | (0 <<  4)                  // Initially disable ENDTx Interrupt
                  ;
+    _ResetBuffers();
     UART_IntrEna();
     return 1;
 }
