@@ -44,6 +44,7 @@ standard_baud = [
     57600,
     115200,
     ]
+timing_test_baud = standard_baud[3:]
 
 
 def calc_timeout(data, baud):
@@ -158,3 +159,72 @@ def test_serial(workspace, parent_test):
                 test_info.info("Pass")
             else:
                 test_info.failure("Fail on baud %s" % baud)
+
+        # Timing stress test - send data at critical points
+        # in time like right as the transmitter is turned off
+        # ------------------
+        # Test sequence
+        # 1. Send a block of data (vary size for the test)
+        # 2. Wait until 1 bytes is ready back
+        # 3. Write 1 byte
+        # 4. Read back all data
+        test_data = [i for i in range(0, 256)] * 4 * 4
+        test_data = str(bytearray(test_data))
+        for baud in timing_test_baud:
+            # Set baud to 115200
+            sp.baudrate = 115200
+            sp.timeout = 1.0
+
+            # Reset the target
+            sp.sendBreak()
+
+            # Wait until the target is initialized
+            expected_resp = "{init}"
+            resp = sp.read(len(expected_resp))
+            if not _same(resp, expected_resp):
+                test_info.failure("Fail on init: %s" % resp)
+                continue
+
+            # Change baudrate to that of the first test
+            command = "{baud:%i}" % baud
+            sp.write(command)
+            resp = sp.read(len(command))
+            if not _same(resp, command):
+                test_info.failure("Fail on baud command: %s" % resp)
+                continue
+
+            # Update baud for test
+            test_info.info("Timing test baud %i" % baud)
+            test_time = calc_timeout(test_data, baud)
+            sp.baudrate = baud
+            sp.timeout = test_time
+
+            # Read the response indicating that the baudrate
+            # on the target has changed
+            expected_resp = "{change}"
+            resp = sp.read(len(expected_resp))
+            if not _same(resp, expected_resp):
+                test_info.failure("Fail on baud change %s" % resp)
+                continue
+
+            test_pass = True
+            for data_size in range(1, 10):
+                data = test_data[0:data_size + 1]
+                for _ in range(0, 1000):
+                    resp = bytearray()
+
+                    sp.write(data[0:data_size])
+                    resp += sp.read(1)
+                    sp.write(data[-1:])
+                    resp += sp.read(data_size)
+
+                    if not _same(data, resp):
+                        test_pass = False
+                        test_info.info("fail size - %s" % data_size)
+                        break
+
+            if test_pass:
+                test_info.info("Pass")
+            else:
+                test_info.failure("Fail on timing test with baud %s"
+                                  % baud)

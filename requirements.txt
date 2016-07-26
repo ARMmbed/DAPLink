@@ -1,4 +1,4 @@
-project_generator>=0.8.3,<0.8.16
+project_generator>=0.9.8,<0.10.0
 mbed_ls
 pyserial
 pyOCD>=0.7.0
