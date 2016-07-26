@@ -34,6 +34,10 @@
 //   - data written cannot be read back
 //   - data should only be read once
 
+// FAT16 limitations +- safety margin
+#define FAT_CLUSTERS_MAX (65525 - 100)
+#define FAT_CLUSTERS_MIN (4086 + 100)
+
 typedef struct {
     uint8_t boot_sector[11];
     /* DOS 2.0 BPB - Bios Parameter Block, 11 bytes */
@@ -143,7 +147,7 @@ static const mbr_t mbr_tmpl = {
     // needs to match the root dir label
     /*char[11]*/.volume_label               = {'D', 'A', 'P', 'L', 'I', 'N', 'K', '-', 'D', 'N', 'D'},
     // unused by msft - just a label (FAT, FAT12, FAT16)
-    /*char[8] */.file_system_type           = {'F', 'A', 'T', '1', '2', ' ', ' ', ' '},
+    /*char[8] */.file_system_type           = {'F', 'A', 'T', '1', '6', ' ', ' ', ' '},
 
     /* Executable boot code that starts the operating system */
     /*uint8_t[448]*/.bootstrap = {
@@ -251,10 +255,8 @@ static void write_fat(file_allocation_table_t *fat, uint32_t idx, uint16_t val)
 {
     uint32_t low_idx;
     uint32_t high_idx;
-    uint8_t low_data;
-    uint8_t high_data;
-    low_idx = idx * 3 / 2;
-    high_idx = idx * 3 / 2 + 1;
+    low_idx = idx * 2 + 0;
+    high_idx = idx * 2 + 1;
 
     // Assert that this is still within the fat table
     if (high_idx >= ELEMENTS_IN_ARRAY(fat->f)) {
@@ -262,24 +264,15 @@ static void write_fat(file_allocation_table_t *fat, uint32_t idx, uint16_t val)
         return;
     }
 
-    if (idx & 1) {
-        // Odd - lower byte shared
-        low_data = (val << 4) & 0xF0;
-        high_data = (val >> 4) & 0xFF;
-        fat->f[low_idx] = fat->f[low_idx] | low_data;
-        fat->f[high_idx] = high_data;
-    } else {
-        // Even - upper byte shared
-        low_data = (val >> 0) & 0xFF;
-        high_data = (val >> 8) & 0x0F;
-        fat->f[low_idx] =  low_data;
-        fat->f[high_idx] = fat->f[high_idx] | high_data;
-    }
+    fat->f[low_idx] = (val >> 0) & 0xFF;
+    fat->f[high_idx] = (val >> 8) & 0xFF;
 }
 
 void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
 {
     uint32_t i;
+    uint32_t num_clusters;
+    uint32_t total_sectors;
     // Clear everything
     memset(&mbr, 0, sizeof(mbr));
     memset(&fat, 0, sizeof(fat));
@@ -295,8 +288,26 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     init_complete = false;
     // Initialize MBR
     memcpy(&mbr, &mbr_tmpl, sizeof(mbr_t));
-    mbr.total_logical_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
-    mbr.logical_sectors_per_fat = (3 * (((mbr.total_logical_sectors / mbr.sectors_per_cluster) + 1023) / 1024));
+    total_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
+    // Make sure this is the right size for a FAT16 volume
+    if (total_sectors < FAT_CLUSTERS_MIN * mbr.sectors_per_cluster) {
+        util_assert(0);
+        total_sectors = FAT_CLUSTERS_MIN * mbr.sectors_per_cluster;
+    } else if (total_sectors > FAT_CLUSTERS_MAX * mbr.sectors_per_cluster) {
+        util_assert(0);
+        total_sectors = FAT_CLUSTERS_MAX * mbr.sectors_per_cluster;
+    }
+    if (total_sectors >= 0x10000) {
+        mbr.total_logical_sectors = 0;
+        mbr.big_sectors_on_drive  = total_sectors;  
+    } else {
+        mbr.total_logical_sectors = total_sectors;
+        mbr.big_sectors_on_drive  = 0;  
+    }
+    // FAT table will likely be larger than needed, but this is allowed by the
+    // fat specification
+    num_clusters = total_sectors / mbr.sectors_per_cluster;
+    mbr.logical_sectors_per_fat = (num_clusters * 2 + VFS_SECTOR_SIZE - 1) / VFS_SECTOR_SIZE;
     // Initailize virtual media
     memcpy(&virtual_media, &virtual_media_tmpl, sizeof(virtual_media_tmpl));
     virtual_media[MEDIA_IDX_FAT1].length = VFS_SECTOR_SIZE * mbr.logical_sectors_per_fat;
@@ -311,9 +322,9 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
 
     // Initialize FAT
     fat_idx = 0;
-    write_fat(&fat, fat_idx, 0xFF8);    // Media type "media_descriptor"
+    write_fat(&fat, fat_idx, 0xFFF8);    // Media type "media_descriptor"
     fat_idx++;
-    write_fat(&fat, fat_idx, 0xFFF);    // No meaning
+    write_fat(&fat, fat_idx, 0xFFFF);    // FAT12 - always 0xFFF (no meaning), FAT16 - dirty/clean (clean = 0xFFFF)
     fat_idx++;
     // Initialize root dir
     dir_idx = 0;
@@ -324,7 +335,16 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
 
 uint32_t vfs_get_total_size()
 {
-    return mbr.bytes_per_sector * mbr.total_logical_sectors;
+    uint32_t size;
+    if (mbr.total_logical_sectors > 0) {
+        size = mbr.total_logical_sectors * mbr.bytes_per_sector;
+    } else if (mbr.big_sectors_on_drive > 0) {
+        size = mbr.big_sectors_on_drive * mbr.bytes_per_sector;
+    } else {
+        size = 0;
+        util_assert(0);
+    }
+    return size;
 }
 
 vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb, vfs_write_cb_t write_cb, uint32_t len)
@@ -349,7 +369,7 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
             fat_idx++;
         }
 
-        write_fat(&fat, fat_idx, 0xFFF);
+        write_fat(&fat, fat_idx, 0xFFFF);
         fat_idx++;
     }
 

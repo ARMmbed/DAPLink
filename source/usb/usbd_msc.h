@@ -37,6 +37,8 @@ extern U8 *USBD_MSC_BlockBuf;
 
 /*--------------------------- Event handling routines ------------------------*/
 
+extern void USBD_MSC_Reset_Event(void);
+
 extern void USBD_MSC_EP_BULKIN_Event(U32 event);
 extern void USBD_MSC_EP_BULKOUT_Event(U32 event);
 extern void USBD_MSC_EP_BULK_Event(U32 event);

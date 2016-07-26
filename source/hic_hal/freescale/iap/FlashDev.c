@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 #define FLASH_DRV_VERS (0x0100+VERS)   // Driver Version, do not modify!
 #define DEVICE_NAME    "MKXX"
