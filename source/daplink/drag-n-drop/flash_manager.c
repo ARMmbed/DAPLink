@@ -95,6 +95,10 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         return status;
     }
 
+#ifdef FLASH_PARTIAL_ERASE
+    // Processing for low-speed devices of chip erasure.
+    flash_manager_printf("    skip intf->erase_chip\r\n");
+#else
     // Erase flash and unint if there are errors
     status = intf->erase_chip();
     flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
@@ -103,6 +107,7 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         intf->uninit();
         return status;
     }
+#endif
 
     state = STATE_OPEN;
     return status;
@@ -145,6 +150,18 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
         // flush if necessary
         if (addr >= current_write_block_addr + current_write_block_size) {
             // Write out current buffer
+#ifdef FLASH_PARTIAL_ERASE
+            // Processing for low-speed devices of chip erasure.
+            if ((current_write_block_addr % intf->erase_sector_size(current_write_block_addr)) == 0) {
+                uint32_t wk_sector = current_write_block_addr / intf->erase_sector_size(current_write_block_addr);
+                status = intf->erase_sector(wk_sector);
+                flash_manager_printf("    intf->erase_sector(sector=0x%x) ret=%i\r\n", wk_sector, status);
+                if (ERROR_SUCCESS != status) {
+                    state = STATE_ERROR;
+                    return status;
+                }
+            }
+#endif
             status = intf->program_page(current_write_block_addr, buf, current_write_block_size);
             flash_manager_printf("    intf->program_page(addr=0x%x, size=0x%x) ret=%i\r\n", current_write_block_addr, current_write_block_size, status);
 
@@ -205,6 +222,18 @@ error_t flash_manager_uninit(void)
 
     // Write out current page
     if ((STATE_OPEN == state) && (!buf_empty)) {
+#ifdef FLASH_PARTIAL_ERASE
+        // Processing for low-speed devices of chip erasure.
+        if ((current_write_block_addr % intf->erase_sector_size(current_write_block_addr)) == 0) {
+            uint32_t wk_sector = current_write_block_addr / intf->erase_sector_size(current_write_block_addr);
+            error_t status = intf->erase_sector(wk_sector);
+            flash_manager_printf("    intf->erase_sector(sector=0x%x) ret=%i\r\n", wk_sector, status);
+            if (ERROR_SUCCESS != status) {
+                state = STATE_ERROR;
+                return status;
+            }
+        }
+#endif
         flash_write_error = intf->program_page(current_write_block_addr, buf, current_write_block_size);
         flash_manager_printf("    intf->program_page(addr=0x%x, size=0x%x) ret=%i\r\n",
                              current_write_block_addr, current_write_block_size, flash_write_error);
