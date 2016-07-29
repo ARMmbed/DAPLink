@@ -24,7 +24,11 @@
 
 #include "flash_blob.h"
 #include "target_reset.h"
+#ifdef TARGET_MCU_CORTEX_A
+#include "debug_ca.h"
+#else
 #include "debug_cm.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
