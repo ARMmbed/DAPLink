@@ -182,3 +182,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archlink.yaml
+    lpc11u35_gr_peach_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/gr-peach.yaml
