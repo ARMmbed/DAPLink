@@ -205,8 +205,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
         parity = USART_Parity_Even;
     else if(config->Parity == UART_PARITY_NONE)
         parity = USART_Parity_No;
-    else
-    {   //Other not support
+    else {   //Other not support
         parity = USART_Parity_No;
         configuration.Parity = UART_PARITY_NONE;
     }
@@ -218,8 +217,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
         stop_bits = USART_StopBits_1_5;
     else if(config->StopBits == UART_STOP_BITS_1)
         stop_bits = USART_StopBits_1;
-    else
-    {
+    else {
         stop_bits = USART_StopBits_1;
         configuration.StopBits = UART_STOP_BITS_1;
     }

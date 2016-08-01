@@ -61,8 +61,7 @@ uint32_t EraseChip(void)
 
     flash_addr = target_device.flash_start;
     FLASH_Unlock();
-    while(flash_addr < target_device.flash_end)
-    {
+    while(flash_addr < target_device.flash_end) {
         FLASH_ErasePage(flash_addr);
         flash_addr += 0x400;
     }
@@ -88,8 +87,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     current_addr = adr;
     len = sz;
     FLASH_Unlock();
-    while(len>0)
-    {
+    while(len>0) {
         err_code = FLASH_ProgramWord( current_addr, *buf);
         if(err_code != FLASH_COMPLETE)
             return 1;
