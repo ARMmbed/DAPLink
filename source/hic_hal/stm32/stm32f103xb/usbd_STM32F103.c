@@ -1,4 +1,14 @@
-
+/*----------------------------------------------------------------------------
+ *	  RL-ARM - USB
+ *----------------------------------------------------------------------------
+ *	  Name:	usbd_STM32F103.c
+ *	  Purpose: Hardware Layer module for ST STM32F103
+ *	  Rev.:	V4.70
+ *----------------------------------------------------------------------------
+ *	  This code is part of the RealView Run-Time Library.
+ *	  Copyright (c) 2004-2013 KEIL - An ARM Company. All rights reserved.
+ *---------------------------------------------------------------------------*/
+ 
 #include "RTL.h"
 #include "rl_usb.h"
 #include "usbreg.h"

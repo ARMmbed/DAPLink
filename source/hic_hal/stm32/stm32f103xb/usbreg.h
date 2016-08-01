@@ -1,4 +1,12 @@
-
+/*----------------------------------------------------------------------------
+ *      RL-ARM - USB
+ *----------------------------------------------------------------------------
+ *      Name:    usbreg.h
+ *      Purpose: Hardware Layer Definitions for ST STM32F10x
+ *----------------------------------------------------------------------------
+ *      This code is part of the RealView Run-Time Library.
+ *      Copyright (c) 2004-2013 KEIL - An ARM Company. All rights reserved.
+ *---------------------------------------------------------------------------*/
 
 #ifndef __USBREG_H
 #define __USBREG_H
