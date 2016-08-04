@@ -39,6 +39,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmkl27z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl28z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkl43z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmke15z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrke18f_if",                           True,       0x8000,     "bin"       ),
@@ -80,6 +81,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x250,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
+    (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
     (   0x280,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ),  # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
