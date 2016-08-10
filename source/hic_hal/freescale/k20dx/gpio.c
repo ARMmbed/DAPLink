@@ -55,11 +55,7 @@ void gpio_init(void)
     LED_CONNECTED_GPIO->PCOR  |= 1UL << LED_CONNECTED_BIT;
     // reset button configured as gpio input
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
-#if defined(RBL_nRF51)
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
-#else
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
-#endif
 
     // Keep powered off in bootloader mode
     // to prevent the target from effecting the state
@@ -101,25 +97,8 @@ void gpio_set_msc_led(gpio_led_state_t state)
 }
 
 uint8_t gpio_get_sw_reset(void)
-{
-#if defined(RBL_nRF51)
-    uint8_t  status;
-    uint32_t pcr_value;
-    // save the configuration of GPIO
-    pcr_value = PIN_nRESET_PORT->PCR[PIN_nRESET_BIT];
-    // configure pin as GPIO input_pullup
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
-    PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
-    busy_wait(5);
-    status = (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
-    // restore the configuration
-    PIN_nRESET_GPIO->PDDR |= 1 << PIN_nRESET_BIT;
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = pcr_value;
-    
-    return status;
-#else
+{  
     return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
-#endif
 }
 
 uint8_t GPIOGetButtonState(void)
@@ -131,11 +110,4 @@ void target_forward_reset(bool assert_reset)
 {
     // Do nothing - reset button is already tied to the target
     //              reset pin on k20dx interface hardware
-#if defined(RBL_nRF51)
-    if (assert_reset) {
-        target_set_state(RESET_HOLD);
-    } else {
-        target_set_state(RESET_RUN);
-    }
-#endif
 }
