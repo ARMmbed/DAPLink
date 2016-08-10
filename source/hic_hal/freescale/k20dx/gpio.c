@@ -98,7 +98,33 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_sw_reset(void)
 {  
-    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
+    static uint8_t last_reset_forward_pressed = 0;
+    uint8_t reset_forward_pressed;
+    uint8_t reset_pressed;
+    uint32_t pcr_value;
+    // save the configuration of PIN_nRESET
+    pcr_value = PIN_nRESET_PORT->PCR[PIN_nRESET_BIT];    
+    // configure pin as GPIO input_pullup
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
+    PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
+    busy_wait(5);
+    reset_forward_pressed = (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1;
+    if(last_reset_forward_pressed != reset_forward_pressed) {
+        if(reset_forward_pressed) {
+            target_set_state(RESET_HOLD);
+        }
+        else {
+            target_set_state(RESET_RUN);
+        }
+        last_reset_forward_pressed = reset_forward_pressed;
+    }
+    
+    reset_pressed = reset_forward_pressed || ((PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1);
+    // restore the configuration
+    PIN_nRESET_GPIO->PDDR |= 1 << PIN_nRESET_BIT;
+    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = pcr_value;
+    
+    return !reset_pressed; 
 }
 
 uint8_t GPIOGetButtonState(void)
