@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -18,6 +20,7 @@
 
 import argparse
 import itertools
+import os.path
 from intelhex import IntelHex
 
 
@@ -64,7 +67,8 @@ def merge_hex(hex1, hex2):
 parser = argparse.ArgumentParser(description='Hex file merger')
 parser.add_argument("--hex", type=str, default=[], action='append', help="Hex file to add to list of files to merge.  This can be specified multiple times.")
 parser.add_argument("--bin", nargs=2, type=str, default=[], metavar=('FILE', 'ADDR'), action='append', help="Binary file to add to list of files to merge.  This can be specified multiple times.")
-parser.add_argument("--output_file", type=str, default='image.hex', help="Name of output file.")
+parser.add_argument("--output_file", type=str, default='image.hex', help="Name of output hex file.")
+parser.add_argument("--output_bin_file", type=str, help="Name of output binary file. May be specified in addition to --output_file.")
 
 
 def main():
@@ -72,6 +76,7 @@ def main():
     base_hex = IntelHex()
     # Merge in hex files
     for file_name in args.hex:
+        file_name = os.path.expanduser(file_name)
         new_hex_data = IntelHex()
         print "opening file %s" % file_name
         new_hex_data.fromfile(file_name, format='hex')
@@ -79,15 +84,19 @@ def main():
         base_hex = merge_hex(base_hex, new_hex_data)
     # Merge in binary files
     for file_name, addr_str in args.bin:
+        file_name = os.path.expanduser(file_name)
         offset = int(addr_str, 0)
         new_hex_data = IntelHex()
         new_hex_data.loadbin(file_name, offset=offset)
         print_hex_info(file_name, new_hex_data)
         base_hex = merge_hex(base_hex, new_hex_data)
     # Write out data
-    print_hex_info(args.output_file, base_hex)
-    with open(args.output_file, 'wb') as output_file:
+    print_hex_info(os.path.expanduser(args.output_file), base_hex)
+    with open(os.path.expanduser(args.output_file), 'wb') as output_file:
         base_hex.tofile(output_file, 'hex')
+    if args.output_bin_file is not None:
+        with open(os.path.expanduser(args.output_bin_file), 'wb') as output_file:
+            base_hex.tofile(output_file, 'bin')
 
 if __name__ == '__main__':
     main()
