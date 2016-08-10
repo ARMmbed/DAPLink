@@ -126,10 +126,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
-    lpc11u35_efm32gg_stk_if:
+    lpc11u35_thunderboard_wear_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/efm32gg_stk.yaml
+        - records/board/thunderboard_wear.yaml
     lpc11u35_archble_if:
         - *module_if
         - *module_hic_lpc11u35
