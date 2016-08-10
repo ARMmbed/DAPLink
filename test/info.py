@@ -60,6 +60,9 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_arm_watch_efm32_if': 0x5051,
     'lpc11u35_arm_watch_nrf51_if': 0x5052,
     'lpc11u35_archlink_if': 0x9013,
+    'lpc11u35_6LoWPAN_BorderRouterHAT_if': 0x7402
+    'lpc11u35_6LoWPAN_BorderRouterUSB_if': 0x7403
+    'lpc11u35_6LoWPAN_BorderRouterPOE_if': 0x7404
 }
 
 # Maps the target test application to the ID of the board it is built to run 
