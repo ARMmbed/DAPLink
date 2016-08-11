@@ -205,6 +205,7 @@ uint8_t SWD_Transfer##speed (uint32_t request, uint32_t *data) {                
   for (n = DAP_Data.swd_conf.turnaround + 32 + 1; n; n--) {                     \
     SW_CLOCK_CYCLE();                   /* Back off data phase */               \
   }                                                                             \
+  PIN_SWDIO_OUT_ENABLE();                                                       \
   PIN_SWDIO_OUT(1);                                                             \
   return (ack);                                                                 \
 }
