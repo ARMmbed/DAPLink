@@ -18,5 +18,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "virtual_fs.h"
 
 const char *board_id = "1019";
+
+const vfs_filename_t daplink_drive_name =     "MBED       ";
