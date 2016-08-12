@@ -144,14 +144,11 @@ class DAPLinkFirmware(firmware.Firmware):
             'be added to HIC_STRING_TO_ID in info.py' % string_hic
         self._hic_id = info.HIC_STRING_TO_ID[string_hic]
 
-        # Set board ID
-        self._board_id = None
-        if name in info.FIRMWARE_NAME_TO_BOARD_ID:
-            self._board_id = info.FIRMWARE_NAME_TO_BOARD_ID[name]
-        else:
-            assert self._type is not self.TYPE.INTERFACE, 'Unknown board ' \
-                '"%s" must be added to FIRMWARE_NAME_TO_BOARD_ID in '      \
-                'info.py' % name
+        # Check firmware name and type
+        assert self._type in self.TYPE, "Invalid type %s" % self._type
+        if self._type is self.TYPE.INTERFACE:
+            assert name in info.FIRMWARE_SET, 'Unknown board "%s" must be ' \
+                'added to SUPPORTED_CONFIGURATIONS in info.py' % name
 
         # Set file paths
         self._bin_path = self._directory + os.sep + '%s_crc.bin' % name
@@ -170,12 +167,7 @@ class DAPLinkFirmware(firmware.Firmware):
         self._valid = True
 
     def __str__(self):
-        board_id = self.board_id
-        if board_id is None:
-            board_id = 0
-        return "Name=%s Board ID=0x%04x HIC ID=0x%08x" % (self.name,
-                                                          board_id,
-                                                          self.hic_id)
+        return "Name=%s" % (self.name)
 
     @property
     def valid(self):
@@ -189,10 +181,6 @@ class DAPLinkFirmware(firmware.Firmware):
     @property
     def hic_id(self):
         return self._hic_id
-
-    @property
-    def board_id(self):
-        return self._board_id
 
     @property
     def type(self):
