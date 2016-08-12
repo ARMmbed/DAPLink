@@ -23,6 +23,34 @@
 #include "string.h"
 #include "target_config.h"
 
+#ifdef TARGET_MCU_CORTEX_A
+
+uint8_t validate_bin_nvic(const uint8_t *buf)
+{
+    // Very dirty hacking here for ARMv7-A (non Cortex-M) binary detection
+#ifdef BINARY_DETECTION
+    // This returns validated result when start instrunction
+    // of the buffer is BINARY_DETECTION (LDR  PC, Label)
+    // Compared with the high-order 3byte
+    if ((buf[1] == ((BINARY_DETECTION >> 8)  & 0xFF))
+     && (buf[2] == ((BINARY_DETECTION >> 16) & 0xFF))
+     && (buf[3] == ((BINARY_DETECTION >> 24) & 0xFF))) {
+        return 1;
+    } else {
+        return 0;
+    }
+#else
+    return 1;
+#endif
+}
+
+uint8_t validate_hexfile(const uint8_t *buf)
+{
+    return 0;
+}
+
+#else
+
 static inline uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
     return ((test < min) || (test > max)) ? 0 : 1;
@@ -63,3 +91,5 @@ uint8_t validate_hexfile(const uint8_t *buf)
     // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
     return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
 }
+
+#endif

@@ -1,0 +1,12 @@
+common:
+    macros:
+        - TARGET_MCU_CORTEX_A
+        - FLASH_PARTIAL_ERASE          # Processing for low-speed devices of chip erasure.
+        - BINARY_DETECTION=0xE59FF000  # This returns validated result when start instrunction
+                                       # of the buffer is 0xE59FF0** (LDR  PC, Label)
+    sources:
+        board:
+            - source/board/gr-peach.c
+        target:
+            - source/target/renesas/rza1h/gr-peach/target.c
+            - source/target/renesas/target_reset.c

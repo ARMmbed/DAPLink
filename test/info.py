@@ -62,6 +62,7 @@ FIRMWARE_NAME_TO_BOARD_ID = {
     'lpc11u35_arm_watch_efm32_if': 0x5051,
     'lpc11u35_arm_watch_nrf51_if': 0x5052,
     'lpc11u35_archlink_if': 0x9013,
+    'lpc11u35_gr_peach_if': 0x5500,
 }
 
 # Maps the target test application to the ID of the board it is built to run 
@@ -109,6 +110,7 @@ TARGET_NAME_TO_BOARD_ID = {
     #lpc11u35_arm_watch_efm32_if
     #lpc11u35_arm_watch_nrf51_if
     'Seeed-Arch-Link': 0x9013,
+    'Renesas-GR-PEACH': 0x5500,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
