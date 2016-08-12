@@ -158,6 +158,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/ssci1114.yaml
+    lpc11u35_ssci_chibi_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/ssci_chibi.yaml
     lpc11u35_c027_if:
         - *module_if
         - *module_hic_lpc11u35
