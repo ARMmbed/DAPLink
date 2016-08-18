@@ -110,12 +110,14 @@ uint8_t gpio_get_sw_reset(void)
     busy_wait(5);
     reset_forward_pressed = (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1;
     if(last_reset_forward_pressed != reset_forward_pressed) {
+#if defined(DAPLINK_IF)        
         if(reset_forward_pressed) {
             target_set_state(RESET_HOLD);
         }
         else {
             target_set_state(RESET_RUN);
         }
+#endif        
         last_reset_forward_pressed = reset_forward_pressed;
     }
     
