@@ -126,6 +126,14 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
+    lpc11u35_lpc4088dm_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/lpc4088dm.yaml
+    lpc11u35_lpc4088qsb_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/lpc4088qsb.yaml
     lpc11u35_efm32gg_stk_if:
         - *module_if
         - *module_hic_lpc11u35
