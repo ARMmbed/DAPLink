@@ -26,48 +26,7 @@ HIC_STRING_TO_ID = {
     'sam3u2c': 0x97969903,
 }
 
-<<<<<<< HEAD
-# Add new firmware with a hard coded board ID here
-FIRMWARE_NAME_TO_BOARD_ID = {
-    'k20dx_frdmk22f_if': 0x0231,
-    'k20dx_frdmk64f_if': 0x0240,
-    'kl26z_microbit_if': 0x9900,
-    'kl26z_nrf51822_if': 0x9900,
-    'lpc11u35_lpc812xpresso_if': 0x1050,
-    'lpc11u35_ssci1114_if': 0x1114,
-    'lpc11u35_efm32gg_stk_if': 0x2015,
-    'sam3u2c_nrf51dk_if': 0x1100,
-    'k20dx_frdmk20dx_if': 0x0230,
-    'k20dx_frdmkw24f_if': 0x0280,
-    'k20dx_frdmkl02z_if': 0x0250,
-    'k20dx_frdmkl05z_if': 0x0210,
-    'k20dx_frdmkl25z_if': 0x0200,
-    'k20dx_frdmkl26z_if': 0x0260,
-    'k20dx_frdmkl46z_if': 0x0220,
-    'sam3u2c_nrf51mkit_if': 0x1070,
-    'sam3u2c_nrf51dongle_if': 0x1120,
-    'lpc11u35_archble_if': 0x9009,
-    'lpc11u35_archpro_if': 0x9004,
-    'lpc11u35_archmax_if': 0x9011,
-    'lpc11u35_hrm1017_if': 0x1017,
-    'lpc11u35_sscity_if': 0x1019,
-    'lpc11u35_ssci824_if': 0x1018,
-    'lpc11u35_lpc824xpresso_if': 0x0824,
-    'k20dx_rbl_if': 0x1090,
-    'k20dx_rblnano_if': 0x1095,
-    'lpc11u35_tiny_if': 0x9012,
-    'lpc11u35_c027_if': 0x1234,
-    'lpc11u35_arm_watch_stm32f411_if': 0x5050,
-    'lpc11u35_arm_watch_efm32_if': 0x5051,
-    'lpc11u35_arm_watch_nrf51_if': 0x5052,
-    'lpc11u35_archlink_if': 0x9013,
-    'lpc11u35_6LoWPAN_BorderRouterHAT_if': 0x7402
-    'lpc11u35_6LoWPAN_BorderRouterUSB_if': 0x7403
-    'lpc11u35_6LoWPAN_BorderRouterPOE_if': 0x7404
-}
-=======
->>>>>>> 4864068bf12868869d83ae48ccbbffba1602d8c3
-
+    
 SUPPORTED_CONFIGURATIONS = [
     #   Board ID    Firmware                                    Bootloader          Target
     (   0x200,      'k20dx_frdmkl25z_if',                       'k20dx_bl',         'KL25Z'                         ),
