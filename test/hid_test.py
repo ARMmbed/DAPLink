@@ -45,7 +45,7 @@ def test_hid(workspace, parent_test):
         rom_region = memory_map.getBootMemory()
 
         addr = ram_region.start + 1
-            size = 0x502
+        size = 0x502
         addr_bin = rom_region.start
         addr_flash = rom_region.start + rom_region.length // 2
 
