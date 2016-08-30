@@ -32,17 +32,24 @@
 #define CDC_UART_IRQn                USART2_IRQn
 #define CDC_UART_IRQn_Handler        USART2_IRQHandler
 
-#define UART_TX_PORT_ENABLE()        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE)
-#define UART_TX_PORT_DISABLE()       RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, DISABLE)
+#define UART_PINS_PORT_ENABLE()      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE)
+#define UART_PINS_PORT_DISABLE()     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , DISABLE)
+
 #define UART_TX_PORT                 GPIOA
 #define UART_TX_PIN                  GPIO_Pin_2
 #define UART_TX_PIN_SOURCE           GPIO_PinSource2
 
-#define UART_RX_PORT_ENABLE()        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE)
-#define UART_RX_PORT_DISABLE()       RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , DISABLE)
 #define UART_RX_PORT                 GPIOA
 #define UART_RX_PIN                  GPIO_Pin_3
 #define UART_RX_PIN_SOURCE           GPIO_PinSource3
+
+#define UART_CTS_PORT                GPIOA
+#define UART_CTS_PIN                 GPIO_Pin_0
+#define UART_CTS_PIN_SOURCE          GPIO_PinSource0
+
+#define UART_RTS_PORT                GPIOA
+#define UART_RTS_PIN                 GPIO_Pin_1
+#define UART_RTS_PIN_SOURCE          GPIO_PinSource1
 
 // Size must be 2^n for using quick wrap around
 #define  BUFFER_SIZE (512)
@@ -109,8 +116,7 @@ int32_t uart_initialize(void)
     clear_buffers();
 
     CDC_UART_ENABLE();
-    UART_TX_PORT_ENABLE();
-    UART_RX_PORT_ENABLE();
+    UART_PINS_PORT_ENABLE();
 
     //TX pin
     GPIO_InitStructure.GPIO_Pin = UART_TX_PIN;
@@ -121,7 +127,17 @@ int32_t uart_initialize(void)
     GPIO_InitStructure.GPIO_Pin = UART_RX_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(UART_RX_PORT, &GPIO_InitStructure);
-
+    //CTS pin, input
+    GPIO_InitStructure.GPIO_Pin = UART_CTS_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+    GPIO_Init(UART_CTS_PORT, &GPIO_InitStructure);
+    //RTS pin, output low
+    GPIO_InitStructure.GPIO_Pin = UART_RTS_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(UART_RTS_PORT, &GPIO_InitStructure);
+    GPIO_ResetBits(UART_RTS_PORT, UART_RTS_PIN);
+    
     //Only 8 bit support
     data_bits = USART_WordLength_8b;
     // parity
