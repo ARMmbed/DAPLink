@@ -202,7 +202,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/6LoWPAN_BorderRouterPOE.yaml
- lpc11u35_swdap_k64f_if:
+    lpc11u35_swdap_k64f_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/swdap_k64f.yaml
