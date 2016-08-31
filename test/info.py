@@ -65,9 +65,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x7403,     'lpc11u35_6LoWPAN_BorderRouterUSB_if',      None,               None                            ),
     (   0x7404,     'lpc11u35_6LoWPAN_BorderRouterPOE_if',      None,               None                            ),
     (   0x7402,     'lpc11u35_6LoWPAN_BorderRouterHAT_if',      None,               None                            ),
-    (   0x7401,     'lpc11u35_swdap_k64f_if',                   None,               None                            ),
-    (   0x7401,     'lpc11u35_swdap_lpc1768_if',                None,               None                            ),
-    (   0x7401,     'lpc11u35_swdap_nrf51822_if',               None,               None                            ),
     
 ]
 
