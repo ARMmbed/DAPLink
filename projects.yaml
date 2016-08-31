@@ -190,3 +190,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archlink.yaml
+    lpc11u35_6LoWPAN_BorderRouterUSB_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6LoWPAN_BorderRouterUSB.yaml
+    lpc11u35_6LoWPAN_BorderRouterHAT_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6LoWPAN_BorderRouterHAT.yaml
+    lpc11u35_6LoWPAN_BorderRouterPOE_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6LoWPAN_BorderRouterPOE.yaml
