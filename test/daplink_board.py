@@ -277,6 +277,13 @@ class DaplinkBoard(object):
         """Convenience function to the path to a file on the drive"""
         return os.path.normpath(self.mount_point + os.sep + file_name)
 
+    def refresh(self, parent_test):
+        """Remount driver to get updated contents"""
+        refresh_filename = self.get_file_path('REFRESH.ACT')
+        with open(refresh_filename, 'wb') as _:
+            pass
+        self.wait_for_remount(parent_test)
+
     def set_mode(self, mode, parent_test=None):
         """Set the mode to either MODE_IF or MODE_BL"""
         assert ((mode is DaplinkBoard.MODE_BL) or
