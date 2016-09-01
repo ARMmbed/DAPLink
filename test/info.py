@@ -56,16 +56,16 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                            ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                            ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                            ),
+    (   0x7402,     'lpc11u35_6LoWPAN_BorderRouterHAT_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'),
+    (   0x7403,     'lpc11u35_6LoWPAN_BorderRouterUSB_if',      None,               'mbed-6LoWPAN-Border-Router-USB'),
+    (   0x7404,     'lpc11u35_6LoWPAN_BorderRouterPOE_if',      None,               'mbed-6LoWPAN-Border-Router-POE'),
     (   0x9004,     'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'            ),
     (   0x9009,     'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                ),
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                ),
     (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                ),
     (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'               ),
     (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                      ),
-    (   0x7403,     'lpc11u35_6LoWPAN_BorderRouterUSB_if',      None,               None                            ),
-    (   0x7404,     'lpc11u35_6LoWPAN_BorderRouterPOE_if',      None,               None                            ),
-    (   0x7402,     'lpc11u35_6LoWPAN_BorderRouterHAT_if',      None,               None                            ),
-    
+       
 ]
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[3] for config in
