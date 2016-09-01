@@ -22,6 +22,7 @@ import Queue
 import functools
 import serial
 import threading
+import time
 
 ERROR_TIMEOUT_SECONDS = 10.0
 
@@ -176,7 +177,8 @@ def test_serial(workspace, parent_test):
         True if the test passed, False otherwise
     """
     test_info = parent_test.create_subtest("Serial test")
-    port = workspace.board.get_serial_port()
+    board = workspace.board
+    port = board.get_serial_port()
     test_info.info("Testing serial port %s" % port)
 
     # Note: OSX sends a break command when a serial port is closed.
@@ -185,19 +187,6 @@ def test_serial(workspace, parent_test):
     # instead of opening a new instance.
 
     with SerialTester(port) as sp:
-
-        # Generate a 8 KB block of dummy data
-        # and test a large block transfer
-        test_data = [i for i in range(0, 256)] * 4 * 8
-        test_data = str(bytearray(test_data))
-        sp.new_session_with_baud(115200, test_info)
-
-        sp.write(test_data)
-        resp = sp.read(len(test_data))
-        if _same(resp, test_data):
-            test_info.info("Block test passed")
-        else:
-            test_info.failure("Block test failed")
 
         # Generate a 4KB block of dummy data
         # and test supported baud rates
@@ -259,3 +248,37 @@ def test_serial(workspace, parent_test):
             else:
                 test_info.failure("Fail on timing test with baud %s"
                                   % baud)
+
+        # Setting change smoke test - reconfigure settings while
+        # in the middle of a transfer and verify nothing bad
+        test_data = [i for i in range(0, 128)]
+        test_data = str(bytearray(test_data))
+        sp.new_session_with_baud(115200, test_info)
+        sp.set_read_timeout(0)
+        for baud in standard_baud:
+            sp.raw_serial.baudrate = baud
+            sp.write(test_data)
+            xfer_time = float(len(test_data) * 10) / float(baud)
+            time.sleep(xfer_time / 2)
+            # Discard data
+            sp.read(1024)
+        # Read any leftover data
+        sp.raw_serial.baudrate = 115200
+        sp.set_read_timeout(1.0)
+        sp.read(128 * len(standard_baud))
+
+        # Generate a 8 KB block of dummy data
+        # and test a large block transfer
+        test_data = [i for i in range(0, 256)] * 4 * 8
+        test_data = str(bytearray(test_data))
+        sp.new_session_with_baud(115200, test_info)
+
+        sp.write(test_data)
+        resp = sp.read(len(test_data))
+        if _same(resp, test_data):
+            test_info.info("Block test passed")
+        else:
+            test_info.failure("Block test failed")
+
+        # Refresh to check for asserts
+        board.refresh(test_info)
