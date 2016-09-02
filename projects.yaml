@@ -190,3 +190,11 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archlink.yaml
+    lpc11u35_ncs36510rf_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/ncs36510rf.yaml
+    sam3u2c_ncs36510rf_if:
+        - *module_if
+        - *module_hic_sam3u2c
+        - records/board/ncs36510rf.yaml        

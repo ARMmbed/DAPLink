@@ -37,8 +37,6 @@
 #define U16  uint16_t
 #define U32  uint32_t
 
-#define BIT_CDC_USB2UART_CTS  (9)
-#define BIT_CDC_USB2UART_RTS  (10)
 
 #define UART_PID              (8)
 #define UART_RX_PIN           (11)
@@ -212,24 +210,6 @@ void uart_set_control_line_state(uint16_t ctrl_bmp)
 {
 }
 
-void uart_software_flow_control()
-{
-    int v;
-
-    if (((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
-        _TxInProgress = 0;
-        v = _CDC_BUFFER_SIZE - _NumBytesWriteFree(&_WriteBuffer); // NumBytes in write buffer
-
-        if (v == 0) {  // No more characters to send ?: Disable further tx interrupts
-            UART_IER = UART_TX_INT_FLAG;
-        } else {
-            _Send1();    //More bytes to send? Trigger sending of next byte
-        }
-
-    } else {
-        UART_IDR = UART_TX_INT_FLAG;
-    }
-}
 int32_t uart_initialize(void)
 {
     //
@@ -241,7 +221,7 @@ int32_t uart_initialize(void)
     PMC->PMC_WPMR  = 0x504D4301;                     // Enable write protect
     PIOA_PDR   = PIO_UART_PIN_MASK;         // Enable peripheral output signals (disable PIO Port A)
     PIOA_ABSR &= ~PIO_UART_PIN_MASK;        // Select "A" peripherals on PIO A (UART Rx, Tx)
-    PIOA->PIO_MDER = PIO_UART_PIN_MASK;     //Enable Multi Drive Control (Open Drain) on the UART Lines so that they don't power nRF51
+
     UART_CR    = (0)
                  | (1 <<  2)                  // RSTRX: Reset Receiver: 1 = The receiver logic is reset.
                  | (1 <<  3)                  // RSTTX: Reset Transmitter: 1 = The transmitter logic is reset.
@@ -274,17 +254,7 @@ int32_t uart_initialize(void)
                  | (0 <<  9)                  // Initially disable TxEmpty Interrupt
                  | (0 <<  4)                  // Initially disable ENDTx Interrupt
                  ;
-    //
-    //Set "RTS" to LOW to indicate that we are ready to receive
-    //
-    PIOA_CODR      = (1uL << BIT_CDC_USB2UART_RTS);  // RTS low: Ready to receive data
-    PIOA->PIO_OER  = (1uL << BIT_CDC_USB2UART_RTS);  // Pins == output
-    PIOA->PIO_PER  = (1uL << BIT_CDC_USB2UART_RTS);  // Pins == GPIO control
-    //Set CTS as input
-    PIOA->PIO_PER  = (1uL << BIT_CDC_USB2UART_CTS);  // Pins == GPIO control
-    PIOA->PIO_ODR  = (1uL << BIT_CDC_USB2UART_CTS);  // Pins == Input
-    PIOA->PIO_IER  = (1uL << BIT_CDC_USB2UART_CTS);
-    //
+
     // Finally, re-enable UART interrupt
     //
     //NVIC_SetPriority(UART_IRQn, 1);
@@ -359,8 +329,7 @@ int32_t uart_write_free(void)
     //are there still bytes to send?
     if (bytesFree < _CDC_BUFFER_SIZE) {
         bytesFree = 0;
-        //pause to give NRF chip time to assert CTS line if needed
-        //os_dly_wait(4);
+
     }
 
     return bytesFree;
@@ -409,7 +378,8 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
     //
     // Trigger transfer if not already in progress
     //
-    if (_TxInProgress == 0 && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
+    if (_TxInProgress == 0)
+		{	
         _Send1();
     }
 
@@ -426,10 +396,6 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
     U8 *pRead;
     writeFreeBytes = _NumBytesWriteFree(&_ReadBuffer);
 
-    //Check if RTS had been asserted, if there is space on the buffer then deassert RTS
-    if (writeFreeBytes > 0 && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_RTS) & 1)) {
-        PIOA->PIO_CODR = 1 << BIT_CDC_USB2UART_RTS;
-    }
 
     v = _CDC_BUFFER_SIZE - writeFreeBytes;
     size = MIN(v, size);
@@ -488,10 +454,7 @@ void UART_IRQHandler(void)
                 _ReadBuffer.pWrite = _ReadBuffer.acBuffer;
             }
 
-            //If this was the last available byte on the buffer then assert RTS
-            if (v == 1) {
-                PIOA->PIO_SODR = 1 << BIT_CDC_USB2UART_RTS;
-            }
+
         }
     }
 
@@ -503,13 +466,9 @@ void UART_IRQHandler(void)
 
         if (v == 0) {                               // No more characters to send ?: Disable further tx interrupts
             UART_IDR = UART_TX_INT_FLAG;
-            PIOA->PIO_MDER = (1 << UART_TX_PIN);    //enable open-drain
             _TxInProgress = 0;
-        } else if (((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
-            _Send1();                               //More bytes to send? Trigger sending of next byte
         } else {
-            UART_IDR = UART_TX_INT_FLAG;            // disable Tx interrupt
-            PIOA->PIO_MDER = (1 << UART_TX_PIN);    //enable open-drain
+						_Send1();                               //More bytes to send? Trigger sending of next byte
         }
     }
 }
