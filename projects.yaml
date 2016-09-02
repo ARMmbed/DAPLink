@@ -198,7 +198,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/6LoWPAN_BorderRouterHAT.yaml
-    lpc11u35_6LoWPAN_BorderRouterPOE_if:
+    lpc11u35_6LoWPAN_BorderRouterETHERNET_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/6LoWPAN_BorderRouterPOE.yaml
+        - records/board/6LoWPAN_BorderRouterETHERNET.yaml

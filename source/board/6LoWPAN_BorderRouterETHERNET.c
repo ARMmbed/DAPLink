@@ -1,6 +1,6 @@
 /**
- * @file    6LoWPAN_BorderRouterPOE.c
- * @brief   board ID for the 6LoWPAN_BorderRouterPOE
+ * @file    6LoWPAN_BorderRouterETHERNET.c
+ * @brief   board ID for the 6LoWPAN_BorderRouterETHERNET
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

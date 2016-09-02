@@ -58,7 +58,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                            ),
     (   0x7402,     'lpc11u35_6LoWPAN_BorderRouterHAT_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'),
     (   0x7403,     'lpc11u35_6LoWPAN_BorderRouterUSB_if',      None,               'mbed-6LoWPAN-Border-Router-USB'),
-    (   0x7404,     'lpc11u35_6LoWPAN_BorderRouterPOE_if',      None,               'mbed-6LoWPAN-Border-Router-POE'),
+    (   0x7404,     'lpc11u35_6LoWPAN_BorderRouterETHERNET_if',      None,               'mbed-6LoWPAN-Border-Router-ETHERNET'),
     (   0x9004,     'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'            ),
     (   0x9009,     'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                ),
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                ),
