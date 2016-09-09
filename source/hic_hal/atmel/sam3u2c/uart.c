@@ -353,17 +353,7 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 int32_t uart_write_free(void)
 {
-    int32_t bytesFree = 0;
-    bytesFree =  _NumBytesWriteFree(&_WriteBuffer);
-
-    //are there still bytes to send?
-    if (bytesFree < _CDC_BUFFER_SIZE) {
-        bytesFree = 0;
-        //pause to give NRF chip time to assert CTS line if needed
-        //os_dly_wait(4);
-    }
-
-    return bytesFree;
+    return _NumBytesWriteFree(&_WriteBuffer);
 }
 
 
