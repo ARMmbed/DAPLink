@@ -28,5 +28,3 @@ __attribute__((aligned(4)))
 const char daplink_url_name[11] =   "XDOT    HTM";
 __attribute__((aligned(4)))
 const char daplink_drive_name[11] = "XDOT       ";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://developer.mbed.org/platforms/MTS-xDot-L151CC/";
