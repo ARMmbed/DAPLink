@@ -58,18 +58,10 @@ projects:
         - *module_bl
         - *module_hic_sam3u2c
         - records/board/sam3u2c_bl.yaml
-    sam3u2c_nrf51mkit_if:
+    sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c
-        - records/board/nrf51mkit.yaml
-    sam3u2c_nrf51dk_if:
-        - *module_if
-        - *module_hic_sam3u2c
-        - records/board/nrf51dk.yaml
-    sam3u2c_nrf51dongle_if:
-        - *module_if
-        - *module_hic_sam3u2c
-        - records/board/nrf51dongle.yaml
+        - records/board/mkit_dk_dongle_nrf5x.yaml
     kl26z_microbit_if:
         - *module_if
         - *module_hic_kl26z
