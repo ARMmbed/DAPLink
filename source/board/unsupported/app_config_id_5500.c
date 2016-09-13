@@ -23,7 +23,7 @@
 
 // RZ/A1H target information
 
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
     .board_id   = "5500",
     .secret     = "xxxxxxxx",
     .sector_size    = 4096,

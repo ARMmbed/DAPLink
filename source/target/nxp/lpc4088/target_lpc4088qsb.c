@@ -25,7 +25,7 @@
 #include "flash_blob.c"
 
 // The LPC4088 QuickStart Board has 512K internal flash and 8M external QSPI flash
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
 	.sector_size    = KB(4),
 	.sector_cnt     = ((MB(8) + KB(512)) / KB(4)),
 	.flash_start    = 0,
