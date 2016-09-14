@@ -45,7 +45,7 @@ standard_baud = [
     19200,
     28800,
     38400,
-    56000,
+    #56000, #TODO - uncomment once daplink-validation supports 56000 on nrf5x
     57600,
     115200,
     ]
