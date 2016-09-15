@@ -25,7 +25,7 @@
 #include "flash_blob.c"
 
 // The LPC4088 Display Module has 512K internal flash and 16M external QSPI flash
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
 	.sector_size    = KB(4),
 	.sector_cnt     = ((MB(16) + KB(512)) / KB(4)),
 	.flash_start    = 0,

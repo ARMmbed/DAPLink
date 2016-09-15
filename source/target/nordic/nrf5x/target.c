@@ -1,5 +1,5 @@
 /**
- * @file    target_16.c
+ * @file    target.c
  * @brief   Target information for the nrf51
  *
  * DAPLink Interface Firmware
@@ -25,7 +25,7 @@
 #include "flash_blob.c"
 
 // target information
-target_cfg_t target_device = {
+target_cfg_t target_device = {  // Default is nRF51
     .sector_size    = 1024,
     .sector_cnt     = (KB(256) / 1024),
     .flash_start    = 0,
@@ -33,5 +33,16 @@ target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20004000,
     .flash_algo     = (program_target_t *) &flash,
+    .erase_reset    = 1,
+};
+
+target_cfg_t target_device_nrf52 = {
+    .sector_size    = 4096,
+    .sector_cnt     = (KB(512) / 1024),
+    .flash_start    = 0,
+    .flash_end      = KB(512),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20008000,
+    .flash_algo     = (program_target_t *) &flash_nrf52,
     .erase_reset    = 1,
 };

@@ -24,7 +24,7 @@
 const char *board_id = "0000";
 
 // atsam3u2c target information
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
     .sector_size    = 0x1000,
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
