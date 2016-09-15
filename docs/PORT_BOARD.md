@@ -49,7 +49,7 @@ const char *board_id = "0000";
 Now running `progen generate -t uvision` will create project files including the new board that can be developed and debugged. For more information about the yaml format [see the project_generator documentation.](https://github.com/project-generator/project_generator/wiki/Getting_started)
 
 ### Adding Board to Automated Tests
-Update `test/into.py` so the new board has at least one configuration in SUPPORTED_CONFIGURATIONS
+Update `test/info.py` so the new board has at least one configuration in SUPPORTED_CONFIGURATIONS
 ```python
 SUPPORTED_CONFIGURATIONS = [
     #   Board ID    Firmware                            Bootloader          Target
