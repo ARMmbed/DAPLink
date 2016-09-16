@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/xDot-L151.c
+        source:
+            - source/target/st/xDot-L151/target.c
+            - source/target/st/xDot-L151/target_reset.c
