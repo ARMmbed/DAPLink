@@ -1101,6 +1101,15 @@ void USBD_MSC_BulkOut(void)
     }
 }
 
+/** \brief  Handle Reset Events
+
+    The function handles Reset events.
+ */
+
+void USBD_MSC_Reset_Event(void)
+{
+    USBD_MSC_Reset();
+}
 
 /*
  *  USB Device MSC Bulk In Endpoint Event Callback

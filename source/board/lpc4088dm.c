@@ -1,6 +1,6 @@
 /**
- * @file    nrf51dk.c
- * @brief   board ID for the Nordic nRF51822dk board
+ * @file    lpc4088dm.c
+ * @brief   board ID for the Embedded Artists LPC4088 Display Module
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,4 +19,5 @@
  * limitations under the License.
  */
 
-const char *board_id = "1100";
+const char *board_id = "1062";
+

@@ -30,15 +30,15 @@
 #include "settings.h"
 #include "target_reset.h"
 #include "daplink.h"
-#include "IO_config.h"      // for NVIC_SystemReset
+#include "IO_Config.h"      // for NVIC_SystemReset
 #include "version_git.h"
 #include "info.h"
 #include "gpio.h"           // for gpio_get_sw_reset
 #include "flash_intf.h"     // for flash_intf_target
 
 // Must be bigger than 4x the flash size of the biggest supported
-// device.  This is to accomidate for hex file programming.
-static const uint32_t disc_size = MB(8);
+// device.  This is to accomodate for hex file programming.
+static const uint32_t disc_size = MB(64);
 
 static const char mbed_redirect_file[] =
     "<!doctype html>\r\n"

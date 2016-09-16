@@ -1,0 +1,24 @@
+tool_specific:
+    make_armcc:
+        mcu:
+            - cortex-m0
+        macros:
+            -
+        linker_file:
+            - source/daplink/daplink.sct
+        misc:
+            common_flags:
+                - --no_unaligned_access
+            c_flags:
+                - -O2
+                - --gnu
+                - --c99
+                - --split_sections
+                - --interleave
+            linker_options:
+                - nostartfiles
+            pre_build_script:
+                - tools/pre_build_script.sh
+            post_build_script:
+                - tools/post_build_script.sh
+

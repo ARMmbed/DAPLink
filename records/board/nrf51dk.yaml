@@ -1,7 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/nrf51dk.c
-        target:
-            - source/target/nordic/nrf51822/target_32.c
-            - source/target/nordic/target_reset.c

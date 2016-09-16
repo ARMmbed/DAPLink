@@ -957,6 +957,9 @@ void USBD_Reset_Event(void)
 #if    (USBD_CDC_ACM_ENABLE)
     USBD_CDC_ACM_Reset_Event();
 #endif
+#if    (USBD_MSC_ENABLE)
+    USBD_MSC_Reset_Event();
+#endif    
 }
 #endif
 #endif  /* ((USBD_CDC_ACM_ENABLE)) */
@@ -1093,6 +1096,9 @@ __weak __task void USBD_RTX_Device(void)
 #if (USBD_CDC_ACM_ENABLE)
             USBD_CDC_ACM_Reset_Event();
 #endif
+#if (USBD_MSC_ENABLE)
+            USBD_MSC_Reset_Event();
+#endif    
         }
 
         if (evt & USBD_EVT_SOF) {

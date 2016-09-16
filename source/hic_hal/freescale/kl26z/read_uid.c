@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "DAP_Config.h"
+#include "DAP_config.h"
 #include "read_uid.h"
 
 void read_unique_id(uint32_t *id)

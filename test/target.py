@@ -68,7 +68,7 @@ def build_target_bundle(directory, username, password, parent_test=None):
     """Build target firmware package"""
     if parent_test is None:
         parent_test = TestInfoStub()
-    target_names = info.TARGET_NAME_TO_BOARD_ID.keys()
+    target_names = info.TARGET_WITH_COMPILE_API_LIST
     for build_name in target_names:
         name_base = os.path.normpath(directory + os.sep + build_name)
         target_hex_path = name_base + '.hex'
@@ -118,10 +118,8 @@ class Target(object):
         self._valid = False
         self._hex_path = None
         self._bin_path = None
-        self._board_id = None
-        if name not in info.TARGET_NAME_TO_BOARD_ID:
-            return # Error
-        self._board_id = info.TARGET_NAME_TO_BOARD_ID[name]
+        assert name in info.TARGET_SET, 'Unknown target "%s" must be ' \
+            'added to SUPPORTED_CONFIGURATIONS in info.py' % name
         if hex_path is not None:
             self.set_hex_path(hex_path)
         if bin_path is not None:
@@ -129,7 +127,7 @@ class Target(object):
         self._valid = True
 
     def __str__(self):
-        return "Name=%s Board ID=0x%04x" % (self.name, self.board_id)
+        return "Name=%s" % self.name
 
     def set_hex_path(self, path):
         base_name = os.path.basename(path)
@@ -156,10 +154,6 @@ class Target(object):
     @property
     def name(self):
         return self._name
-
-    @property
-    def board_id(self):
-        return self._board_id
 
     @property
     def hex_path(self):

@@ -59,11 +59,6 @@ class Firmware(object):
         raise NotImplementedError()
 
     @property
-    def board_id(self):
-        """Board ID for the type of board this firmware can run on"""
-        raise NotImplementedError()
-
-    @property
     def type(self):
         """Build type - either interface or bootloader"""
         raise NotImplementedError()

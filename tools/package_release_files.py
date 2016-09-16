@@ -17,42 +17,18 @@
 #
 
 import os
+import sys
 import shutil
 import argparse
 
-# Name of all projects ready for public release
-# and info on the file to be distributed
-PROJECT_RELEASE_INFO = {
-    # Project Name                  Legacy      Offset      Extension
-    ("k20dx_frdmk22f_if",           True,       0x8000,     "bin"       ),
-    ("k20dx_frdmk64f_if",           True,       0x5000,     "bin"       ),
-    ("kl26z_microbit_if",           False,      0x8000,     "hex"       ),
-    ("lpc11u35_lpc812xpresso_if",   False,      0x0000,     "bin"       ),
-    ("lpc11u35_lpc824xpresso_if",   False,      0x0000,     "bin"       ),
-    ("lpc11u35_ssci1114_if",        False,      0x0000,     "bin"       ),
-    ("lpc11u35_efm32gg_stk_if",     False,      0x0000,     "bin"       ),
-    ("sam3u2c_nrf51dk_if",          True,       0x5000,     "bin"       ),
-    ("k20dx_frdmk20dx_if",          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkw24f_if",           True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl02z_if",          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl05z_if",          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl25z_if",          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl26z_if",          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl46z_if",          True,       0x8000,     "bin"       ),
-    ("sam3u2c_nrf51mkit_if",        True,       0x5000,     "bin"       ),
-    ("sam3u2c_nrf51dongle_if",      True,       0x5000,     "bin"       ),
-    ("lpc11u35_archble_if",         False,      0x0000,     "bin"       ),
-    ("lpc11u35_archpro_if",         False,      0x0000,     "bin"       ),
-    #("lpc11u35_archmax_if",         False,      0x0000,     "bin"       ),  # Unsupported currently
-    ("lpc11u35_hrm1017_if",         False,      0x0000,     "bin"       ),
-    ("lpc11u35_sscity_if",          False,      0x0000,     "bin"       ),
-    ("lpc11u35_ssci824_if",         False,      0x0000,     "bin"       ),
-    ("k20dx_rbl_if",                True,       0x5000,     "bin"       ),
-    ("k20dx_rblnano_if",            True,       0x5000,     "bin"       ),
-    ("lpc11u35_archlink_if",        False,      0x0000,     "bin"       ),
-    ("lpc11u35_tiny_if",            False,      0x0000,     "bin"       ),
-    #("lpc11u35_c027_if",            False,      0x0000      "bin"       ),  # Unsupported currently
-}
+self_path = os.path.abspath(__file__)
+tools_dir = os.path.dirname(self_path)
+daplink_dir = os.path.dirname(tools_dir)
+test_dir = os.path.join(daplink_dir, "test")
+sys.path.append(test_dir)
+
+import info
+
 
 def main():
     parser = argparse.ArgumentParser(description='Package a release for distribution')
@@ -66,7 +42,7 @@ def main():
     build_number = "%04i" % args.version
 
     os.mkdir(output_dir)
-    for prj_name, legacy, offset, extension in PROJECT_RELEASE_INFO:
+    for prj_name, legacy, offset, extension in info.PROJECT_RELEASE_INFO:
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
         source_name = prj_name + "_crc" + legacy_str + source_offset_str + "." + extension
