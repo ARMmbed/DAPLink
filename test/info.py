@@ -49,6 +49,7 @@ PROJECT_RELEASE_INFO = {
     #("lpc11u35_c027_if",                   False,      0x0000,     "bin"       ),  # Unsupported currently
     ("lpc11u35_lpc4088dm_if",               False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",              False,      0x0000,     "bin"       ),
+    ('lpc11u35_ssci_chibi_if',              False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -75,6 +76,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1095,     'k20dx_rblnano_if',                 'k20dx_bl',         'RedBearLab-BLE-Nano'           ),
     (   0x1100,     'sam3u2c_mkit_dk_dongle_nrf5x_if',  'sam3u2c_bl',       'Nordic-nRF51-DK'               ),
     (   0x1101,     'sam3u2c_mkit_dk_dongle_nrf5x_if',  'sam3u2c_bl',       'Nordic-nRF52-DK'               ),
+    (   0x1021,     'lpc11u35_ssci_chibi_if',           None,               None                            ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
     (   0x1114,     'lpc11u35_ssci1114_if',             None,               'LPC1114FN28'                   ),
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',  'sam3u2c_bl',       'Nordic-nRF51-Dongle'           ),
     (   0x1234,     'lpc11u35_c027_if',                 None,               'u-blox-C027'                   ),
@@ -120,6 +122,7 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'RedBearLab-BLE-Nano',
     'Seeed-Tiny-BLE',
     'Seeed-Arch-Link',
+    'SSCI-MBIT',
 ]
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[3] for config in
