@@ -51,6 +51,9 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
     ('lpc11u35_ssci_chibi_if',                      False,      0x0000,     "bin"       ),
     ("k20dx_xdot_l151_if",                          False,      0x8000,     "bin"       ),
+    ('lpc11u35_6lowpan_borderrouterhat_if',         None,       0x0000,     "bin"       ),
+    ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
+    ('lpc11u35_6lowpan_borderrouterethernet_if',    None,       0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -91,6 +94,9 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
     (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
+    (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
+    (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
+    (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
 ]
 
 # Add new HICs here
