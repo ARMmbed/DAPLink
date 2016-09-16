@@ -110,7 +110,7 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/rblnano.yaml
-    k20dx_xDot-L151_if:
+    k20dx_xdot_l151_if:
         - *module_if
         - *module_hic_k20dx
         - records/board/xDot-L151.yaml
