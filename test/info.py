@@ -48,6 +48,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archlink_if",                False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                    False,      0x0000,     "bin"       ),
     #("lpc11u35_c027_if",                   False,      0x0000      "bin"       ),  # Unsupported currently
+    ("k20dx_xDot-L151_if",                  False,      0x8000,     "bin"       ),
 }
 
 # All supported configurations
@@ -62,6 +63,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x250,      'k20dx_frdmkl02z_if',               'k20dx_bl',         None                            ),
     (   0x260,      'k20dx_frdmkl26z_if',               'k20dx_bl',         None                            ),
     (   0x280,      'k20dx_frdmkw24f_if',               'k20dx_bl',         None                            ),
+    (   0x350,      'k20dx_xDot-L151_if',               'k20dx_bl',         'XDOT_L151CC'                   ),
     (   0x824,      'lpc11u35_lpc824xpresso_if',        None,               'LPCXpresso824-MAX'             ),
     (   0x1017,     'lpc11u35_hrm1017_if',              None,               'mbed-HRM1017'                  ),
     (   0x1018,     'lpc11u35_ssci824_if',              None,               'Switch-Science-mbed-LPC824'    ),
