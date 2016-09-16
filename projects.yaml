@@ -182,3 +182,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archlink.yaml
+    lpc11u35_6lowpan_borderrouter_usb_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6lowpan_borderrouter_usb.yaml
+    lpc11u35_6lowpan_borderrouter_hat_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6lowpan_borderrouter_hat.yaml
+    lpc11u35_6lowpan_borderrouter_eth_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/6lowpan_borderrouter_eth.yaml
