@@ -528,8 +528,14 @@ class DaplinkBoard(object):
             return False
         self.unique_id, self.serial_port, self.mount_point = endpoints
         # Serial port can be missing
-        assert self.unique_id is not None
-        assert self.mount_point is not None
+        if self.unique_id is None:
+            if exptn_on_fail:
+                raise Exception("Mount point is null")
+            return False
+        if self.mount_point is None:
+            if exptn_on_fail:
+                raise Exception("Mount point is null")
+            return False
         self.board_id = int(self.unique_id[0:4], 16)
         self._hic_id = int(self.unique_id[-8:], 16)
 
