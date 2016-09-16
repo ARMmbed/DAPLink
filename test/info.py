@@ -47,7 +47,9 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_rblnano_if",                    True,       0x5000,     "bin"       ),
     ("lpc11u35_archlink_if",                False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                    False,      0x0000,     "bin"       ),
-    #("lpc11u35_c027_if",                   False,      0x0000      "bin"       ),  # Unsupported currently
+    #("lpc11u35_c027_if",                   False,      0x0000,     "bin"       ),  # Unsupported currently
+    ("lpc11u35_lpc4088dm_if",               False,      0x0000,     "bin"       ),
+    ("lpc11u35_lpc4088qsb_if",              False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
