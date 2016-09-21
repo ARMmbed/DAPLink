@@ -25,6 +25,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk22f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk64f_if",                           True,       0x5000,     "bin"       ),
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
+    ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
@@ -75,6 +76,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
+    (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         'FRDM-K28F'                             ),
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
@@ -125,6 +127,7 @@ HIC_STRING_TO_ID = {
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0231,  # K22F
+    0x0224,  # K28F
     0x0240,  # K64F
     0x0311,  # K66F
     0x0230,  # K20DX
