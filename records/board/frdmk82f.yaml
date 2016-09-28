@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/frdmk82f.c
+        target:
+            - source/target/freescale/k82f/target.c
+            - source/target/freescale/target_reset_Kseries.c
