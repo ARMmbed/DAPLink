@@ -26,6 +26,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk64f_if",                           True,       0x5000,     "bin"       ),
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
+    ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
@@ -76,6 +77,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
+    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         'FRDM-K82F'                             ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         'FRDM-K28F'                             ),
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
@@ -141,6 +143,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0210,  # KL05Z
     0x0213,  # FRDM-KE15Z
     0x0216,  # HVP-KE18F
+    0x0217,  # FRDM-K82F
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0291,  # FRDM-KL82Z
