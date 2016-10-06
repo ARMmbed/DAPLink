@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/frdmkw41z.c
+        target:
+            - source/target/freescale/kw41z/target.c
+            - source/target/freescale/target_reset_Lseries.c
