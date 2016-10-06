@@ -72,6 +72,7 @@ SUPPORTED_CONFIGURATIONS = [
     #   Board ID    Firmware                                    Bootloader          Target
     (   0x200,      'k20dx_frdmkl25z_if',                       'k20dx_bl',         'KL25Z'                                 ),
     (   0x203,      'k20dx_twrkl28z72m_if',                     'k20dx_bl',         None                                    ),
+    (   0x204,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x205,      'k20dx_frdmkl28z_if',                       'k20dx_bl',         None                                    ),
     (   0x206,      'k20dx_twrke18f_if',                        'k20dx_bl',         None                                    ),
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
@@ -83,12 +84,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
-    (   0x250,      'k20dx_frdmkl02z_if',                       'k20dx_bl',         None                                    ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
     (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
-    (   0x280,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
-    (   0x291,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
+    (   0x250,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
+    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ),  # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
