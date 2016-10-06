@@ -19,4 +19,4 @@
  * limitations under the License.
  */
 
-const char *board_id = "0250";
+const char *board_id = "0204";
