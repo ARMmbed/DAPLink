@@ -140,8 +140,10 @@ static void build_filesystem(void);
 static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
 static bool ready_for_state_change(void);
+static void abort_remount(void);
 
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream);
+static void transfer_reset_file_info(void);
 static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
 static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t size);
 static void transfer_update_state(error_t status);
@@ -408,7 +410,10 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
     }
 
     if (VFS_FILE_DELETED == change) {
-        // Unused
+        if (file == file_transfer_state.file_to_program) {
+            // The file that was being transferred has been deleted
+            transfer_reset_file_info();
+        }
     }
 }
 
@@ -521,6 +526,19 @@ static bool ready_for_state_change(void)
     return time_usb_idle > timeout_ms ? true : false;
 }
 
+// Abort a remount if one is pending
+void abort_remount(void)
+{
+    sync_lock();
+
+    // Only abort a remount if in the connected state and reconnecting is the next state
+    if ((VFS_MNGR_STATE_RECONNECTING == vfs_state_next) && (VFS_MNGR_STATE_CONNECTED == vfs_state)) {
+        vfs_state_next = VFS_MNGR_STATE_CONNECTED;
+    }
+
+    sync_unlock();
+}
+
 // Update the tranfer state with file information
 static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, uint32_t size, stream_type_t stream)
 {
@@ -558,8 +576,8 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
         }
     }
 
-    // Check - File size must be the same or bigger
-    if (size < file_transfer_state.file_size) {
+    // Check - File size must either grow or be smaller than the size already transferred
+    if ((size < file_transfer_state.file_size) && (size < file_transfer_state.size_transferred)) {
         vfs_mngr_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
@@ -579,13 +597,23 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
         return;
     }
 
-    // Update values - Size is the only value that can change and it can only increase.
-    if (size > file_transfer_state.file_size) {
-        file_transfer_state.file_size = size;
-        vfs_mngr_printf("    updated size=%i\r\n", size);
-    }
+    // Update values - Size is the only value that can change
+    file_transfer_state.file_size = size;
+    vfs_mngr_printf("    updated size=%i\r\n", size);
 
     transfer_update_state(ERROR_SUCCESS);
+}
+
+// Reset the transfer information or error if transfer is already in progress
+static void transfer_reset_file_info()
+{
+    vfs_mngr_printf("vfs_manager transfer_reset_file_info()\r\n");
+    if (file_transfer_state.stream_open) {
+        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
+    } else {
+        file_transfer_state = default_transfer_state;
+        abort_remount();
+    }
 }
 
 // Update the tranfer state with new information
