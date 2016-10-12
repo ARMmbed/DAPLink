@@ -268,9 +268,9 @@ __task void main_task(void)
     // leds
     gpio_init();
     // Turn off LED
-    gpio_set_hid_led(GPIO_LED_ON);
-    gpio_set_cdc_led(GPIO_LED_ON);
-    gpio_set_msc_led(GPIO_LED_ON);
+    gpio_set_hid_led(GPIO_LED_OFF);
+    gpio_set_cdc_led(GPIO_LED_OFF);
+    gpio_set_msc_led(GPIO_LED_OFF);
     // Initialize the DAP
     DAP_Setup();
     // do some init with the target before USB and files are configured
