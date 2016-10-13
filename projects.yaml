@@ -66,6 +66,10 @@ projects:
         - *module_if
         - *module_hic_kl26z
         - records/board/microbit.yaml
+    kl26z_nina_b1_if:
+        - *module_if
+        - *module_hic_kl26z
+        - records/board/nina_b1.yaml
     k20dx_frdmk20dx_if:
         - *module_if
         - *module_hic_k20dx
