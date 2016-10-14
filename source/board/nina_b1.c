@@ -21,7 +21,7 @@
 
 #include "target_config.h"
 
-const char *board_id = "1235";
+const char *board_id = "1238";
 
 void prerun_board_config(void)
 {
