@@ -47,6 +47,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                            False,      0x0000,     "bin"       ),
     #("lpc11u35_c027_if",                           False,      0x0000,     "bin"       ),  # Unsupported currently
+    ("kl26z_nina_b1_if",                            False,      0x8000,     "bin"       ),
     ("lpc11u35_lpc4088dm_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
     ('lpc11u35_ssci_chibi_if',                      False,      0x0000,     "bin"       ),
@@ -85,6 +86,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1114,     'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
+    (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
