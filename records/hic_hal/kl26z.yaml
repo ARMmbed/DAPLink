@@ -6,6 +6,7 @@ common:
         - CPU_MKL26Z128VLH4
         - DAPLINK_HIC_ID=0x97969901  # DAPLINK_HIC_ID_KL26
         - BL_TARGET_FLASH
+        - DAPLINK_NO_ASSERT_FILENAMES
     includes:
         - source/hic_hal/freescale/kl26z
         - source/hic_hal/freescale/iap/devices/MKL26Z4
