@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------------------
- *	  RL-ARM - USB
+ *    RL-ARM - USB
  *----------------------------------------------------------------------------
- *	  Name:	usbd_STM32F103.c
- *	  Purpose: Hardware Layer module for ST STM32F103
- *	  Rev.:	V4.70
+ *    Name: usbd_STM32F103.c
+ *    Purpose: Hardware Layer module for ST STM32F103
+ *    Rev.: V4.70
  *----------------------------------------------------------------------------
- *	  This code is part of the RealView Run-Time Library.
- *	  Copyright (c) 2004-2013 KEIL - An ARM Company. All rights reserved.
+ *    This code is part of the RealView Run-Time Library.
+ *    Copyright (c) 2004-2013 KEIL - An ARM Company. All rights reserved.
  *---------------------------------------------------------------------------*/
- 
+
 #include "RTL.h"
 #include "rl_usb.h"
 #include "usbreg.h"
@@ -100,8 +100,6 @@ void          USBD_IntrEna (void)
  */
 void USBD_Init (void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
-
     /* Select USBCLK source */
     RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
     /* Enable USB clock */
@@ -109,14 +107,8 @@ void USBD_Init (void)
 
     /* Enable USB Interrupts */
     USBD_IntrEna ();
-    /* Enable USB connect pin port */
-    USB_CONNECT_PORT_ENABLE();
+    /* Set USB connect pin to low */
     USB_CONNECT_OFF();
-
-    GPIO_InitStructure.GPIO_Pin = USB_CONNECT_PIN;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);
 }
 
 /*

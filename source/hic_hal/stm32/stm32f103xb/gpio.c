@@ -42,6 +42,16 @@ void gpio_init(void)
     GPIO_InitTypeDef GPIO_InitStructure;
     // enable clock to ports
     RCC->APB2ENR |= RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC;
+    // Enable USB connect pin
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+    GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);
+
+    USB_CONNECT_PORT_ENABLE();
+    USB_CONNECT_OFF();
+    GPIO_InitStructure.GPIO_Pin = USB_CONNECT_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);
     // configure LEDs
     GPIO_InitStructure.GPIO_Pin = RUNNING_LED_PIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -136,7 +146,7 @@ uint8_t gpio_get_sw_reset(void)
     reset_forward_pressed = (nRESET_PIN_PORT->IDR & nRESET_PIN) ? 0 : 1;
     // Forward reset if the state of the button has changed
     //    This must be done on button changes so it does not interfere
-    //    with other reset sources such as programming or CDC Break    
+    //    with other reset sources such as programming or CDC Break
     if(last_reset_forward_pressed != reset_forward_pressed) {
 #if defined(DAPLINK_IF)
         if(reset_forward_pressed) {
@@ -152,7 +162,7 @@ uint8_t gpio_get_sw_reset(void)
     // Config nRESET_PIN to output
     pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
-    
+
     return !reset_pressed;
 }
 
