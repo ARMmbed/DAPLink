@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/gd32f103cb_bl.c
