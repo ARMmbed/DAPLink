@@ -1,6 +1,6 @@
 common:
     target:
-        - gd32f103cb
+        - stm32f103xb
     macros:
         - INTERFACE_GD32F103
         - CPU_GD32F103CBT6 
