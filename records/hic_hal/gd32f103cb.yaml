@@ -1,0 +1,33 @@
+common:
+    target:
+        - gd32f103cb
+    macros:
+        - INTERFACE_GD32F103
+        - CPU_GD32F103CBT6 
+        - DAPLINK_HIC_ID=0x97969905  # DAPLINK_HIC_ID_GD32F103CB
+        - BL_TARGET_FLASH
+        - USE_STDPERIPH_DRIVER
+        - GD32F10X_MD
+        - USE_HSE_16MHZ
+    includes:
+        - source/hic_hal/GigaDevice/GD32F103CBT6
+        - source/hic_hal/GigaDevice/GD32F103CBT6/peripherals/inc
+
+    sources:
+        hic_hal:
+            - source/hic_hal/GigaDevice/GD32F103CBT6
+            - source/hic_hal/GigaDevice/GD32F103CBT6/armcc
+            - source/hic_hal/GigaDevice/GD32F103CBT6/peripherals/inc
+            - source/hic_hal/GigaDevice/GD32F103CBT6/peripherals/src
+            
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\GigaDevice\GD32F103CBT6"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
