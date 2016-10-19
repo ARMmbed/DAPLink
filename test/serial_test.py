@@ -23,6 +23,7 @@ import functools
 import serial
 import threading
 import time
+from time import sleep
 
 ERROR_TIMEOUT_SECONDS = 10.0
 
@@ -180,6 +181,9 @@ def test_serial(workspace, parent_test):
     board = workspace.board
     port = board.get_serial_port()
     test_info.info("Testing serial port %s" % port)
+
+    # Wait for the serial port to initialize
+    sleep(1)
 
     # Note: OSX sends a break command when a serial port is closed.
     # To avoid problems while testing keep the serial port open the
