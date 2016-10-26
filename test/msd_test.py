@@ -111,7 +111,7 @@ class MassStorageTester(object):
         assert isinstance(size, six.integer_types)
         self._flush_size = size
 
-    def set_expected_data(self, data, start):
+    def set_expected_data(self, data, start=0):
         """Data that should have been written to the device"""
         assert data is None or type(data) is bytearray
         self._expected_data = data
@@ -138,11 +138,11 @@ class MassStorageTester(object):
         """Add a list of directoies"""
         self._mock_dir_list_after.extend(dir_list)
 
-    def _check_data_correct(self, expected_data, test_info, start):
+    def _check_data_correct(self, expected_data, test_info):
         """Return True if the actual data written matches the expected"""
         print (test_info)
         data_len = len(expected_data)
-        data_loaded = self.board.read_target_memory(start, data_len)
+        data_loaded = self.board.read_target_memory(self._start, data_len)
         return _same(expected_data, data_loaded)
 
     def run(self):
@@ -237,7 +237,7 @@ class MassStorageTester(object):
 
         # If there is expected data then compare
         if self._expected_data:
-            if self._check_data_correct(self._expected_data, test_info, self._start):
+            if self._check_data_correct(self._expected_data, test_info):
                 test_info.info("Data matches")
             else:
                 test_info.failure('Data does not match')
