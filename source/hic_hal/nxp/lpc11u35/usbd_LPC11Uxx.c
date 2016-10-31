@@ -568,7 +568,8 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
 U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 {
     U32 i;
-    U32 *dataptr, *ptr;
+    volatile U32 *ptr;
+    U32 *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
     EPNum &= ~0x80;
 
