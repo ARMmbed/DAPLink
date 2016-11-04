@@ -28,6 +28,7 @@
 #include "usb_config.c"
 
 #define UDPHS_EPTFIFO_BASE (0x20180000) /* (UDPHS_EPTFIFO) Base Address       */
+uint32_t eptsta_copy[USBD_EP_NUM + 1];
 
 /*
  *  Calculate EP size code Function
@@ -192,6 +193,7 @@ void USBD_Reset(void)
     for (ep = 0; ep <= USBD_EP_NUM; ep++) {
         UDPHS->UDPHS_EPT[ep].UDPHS_EPTCFG    =  0;
         UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLDIS = (0x1 <<  0);     /* Disable EP     */
+        eptsta_copy[ep] = 0;
     }
 
     UDPHS->UDPHS_EPTRST = EPMask;                             /* Reset   EPs    */
@@ -447,9 +449,11 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
 {
     uint32_t cnt, n, copy_sz;
     uint8_t *pEPFIFO;                                /* Pointer to EP FIFO           */
+    uint32_t eptsta;
     EPNum  &= 0x0F;
+    eptsta = eptsta_copy[EPNum];
     pEPFIFO = (uint8_t *)((uint32_t *)UDPHS_EPTFIFO_BASE + (16384 * EPNum));
-    cnt     = (UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA >> 20) & 0x07FF;  /* Get by */
+    cnt     = (eptsta >> 20) & 0x07FF;  /* Get by */
     copy_sz = cnt > size ? size : cnt;
 
     for (n = 0; n < copy_sz; n++) {
@@ -458,12 +462,14 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
 
     util_assert(cnt == copy_sz);
 
-    if (cnt == copy_sz) {
+    if ((cnt == copy_sz) && (eptsta & (0x1 << 9))) {
         UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 9);   /* Rece OUT Clear   */
     }
 
     /* RX_Setup must be cleared after Setup packet is read                      */
-    UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 12);  /* Rece SETUP Clear */
+    if (eptsta & (0x1 << 12)) {
+        UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTCLRSTA = (0x1 << 12);  /* Rece SETUP Clear */
+    }
     UDPHS->UDPHS_IEN |= (1 << (EPNum + 8));     /* Enable EP int after data read*/
     return (cnt);
 }
@@ -483,13 +489,15 @@ uint32_t USBD_WriteEP(uint32_t EPNum, uint8_t *pData, uint32_t cnt)
 {
     uint32_t n;
     uint8_t *pEPFIFO;                          /* Pointer to the endpoint FIFO       */
+    uint32_t eptsta;
     EPNum &= 0x0F;
+    eptsta = eptsta_copy[EPNum];
 
-    if (UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA & (0x1 << 5)) {  /* If EP is stall */
+    if (eptsta & (0x1 << 5)) {  /* If EP is stall */
         return (cnt);
     }
 
-    if (UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA & (0x1 << 11)) { /* Bank not ready */
+    if (eptsta & (0x1 << 11)) { /* Bank not ready */
         return (0);
     }
 
@@ -683,6 +691,7 @@ void USBD_Handler(void)
     for (n = 0; n <= USBD_EP_NUM; n++) {
         if (intsta & (1 << (n + 8))) {
             eptsta = UDPHS->UDPHS_EPT[n].UDPHS_EPTSTA;  /* Read EP status           */
+            eptsta_copy[n] = eptsta;
 
             /* Data Packet Sent Interrupt                                           */
             if (eptsta & (1 << 10)) {         /* Transmitted IN Data Complete Int   */
