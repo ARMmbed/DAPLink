@@ -108,8 +108,7 @@ void USBD_Init(void)
                                  (1UL << 27);
     LPC_USB->DEVCMDSTAT  |= (1UL << 9);     /* PLL ON */
     LPC_IOCON->PIO0_3    &=  ~(0x1F);
-    LPC_IOCON->PIO0_3    |= (1UL << 3) |    /* pull-down */
-                            (1UL << 0);     /* Secondary function VBUS */
+    LPC_IOCON->PIO0_3    |= (1UL << 0);     /* Secondary function VBUS */
     LPC_IOCON->PIO0_6    &=   ~7;
     LPC_IOCON->PIO0_6    |= (1UL << 0);     /* Secondary function USB CON */
     LPC_SYSCON->PDRUNCFG &= ~((1UL << 8) |  /* USB PLL powered */
