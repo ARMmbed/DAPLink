@@ -27,6 +27,7 @@
 #include "usb_config.c"
 #include "DAP_config.h"
 #include "DAP.h"
+#include "util.h"
 
 #include "main.h"
 
@@ -130,6 +131,8 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
                 memcpy(USB_Request[recv_idx], buf, len);
                 recv_idx = (recv_idx + 1) % DAP_PACKET_COUNT;
                 os_sem_send(&proc_sem);
+            } else {
+                util_assert(0);
             }
 
             break;
