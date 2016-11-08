@@ -114,6 +114,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        'ncs36510'                              ),
+    (   0x5002,     'lpc11u35_beetle_if',                       None,               'ARM-IoTEP-Beetle'                      ),
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          None                                    ), # TODO - set target to 'UBLOX_EVA_NINA' when mbed-os supports this
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
