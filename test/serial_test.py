@@ -263,6 +263,7 @@ def test_serial(workspace, parent_test):
             # Discard data
             sp.read(1024)
         # Read any leftover data
+        sp.flush()
         sp.raw_serial.baudrate = 115200
         sp.set_read_timeout(1.0)
         sp.read(128 * len(standard_baud))
