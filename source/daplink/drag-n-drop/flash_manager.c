@@ -49,6 +49,7 @@ __attribute__((aligned(4)))
 static uint8_t buf[1024];
 static bool buf_empty;
 static bool current_sector_valid;
+static bool page_erase_enabled = false;
 static uint32_t current_write_block_addr;
 static uint32_t current_write_block_size;
 static uint32_t current_sector_addr;
@@ -95,13 +96,15 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         return status;
     }
 
-    // Erase flash and unint if there are errors
-    status = intf->erase_chip();
-    flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
+    if (!page_erase_enabled) {
+        // Erase flash and unint if there are errors
+        status = intf->erase_chip();
+        flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
 
-    if (ERROR_SUCCESS != status) {
-        intf->uninit();
-        return status;
+        if (ERROR_SUCCESS != status) {
+            intf->uninit();
+            return status;
+        }
     }
 
     state = STATE_OPEN;
@@ -132,13 +135,13 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
 
     // Setup the current sector if it is not setup already
     if (!current_sector_valid) {
-        current_sector_valid = true;
         status = setup_next_sector(addr);
 
         if (ERROR_SUCCESS != status) {
             state = STATE_ERROR;
             return status;
         }
+        current_sector_valid = true;
     }
 
     while (true) {
@@ -172,8 +175,6 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
                 state = STATE_ERROR;
                 return status;
             }
-
-            //TODO - future improvement - erase sector here
         }
 
         // write buffer
@@ -237,6 +238,11 @@ error_t flash_manager_uninit(void)
     return ERROR_SUCCESS;
 }
 
+void flash_manager_set_page_erase(bool enabled)
+{
+    page_erase_enabled = enabled;
+}
+
 static bool flash_intf_valid(const flash_intf_t *flash_intf)
 {
     // Check for all requried members
@@ -275,6 +281,7 @@ static error_t setup_next_sector(uint32_t addr)
 {
     uint32_t min_prog_size;
     uint32_t sector_size;
+    error_t status;
     min_prog_size = intf->program_page_min_size(addr);
     sector_size = intf->erase_sector_size(addr);
 
@@ -294,6 +301,17 @@ static error_t setup_next_sector(uint32_t addr)
     current_sector_size = sector_size;
     current_write_block_addr = current_sector_addr;
     current_write_block_size = MIN(sector_size, sizeof(buf));
+
+    if(page_erase_enabled) {
+        // Erase the current sector
+        status = intf->erase_sector(current_sector_addr);
+        flash_manager_printf("    intf->erase_sector(addr=0x%x) ret=%i\r\n", current_sector_addr);
+        if (ERROR_SUCCESS != status) {
+            intf->uninit();
+            return status;
+        }         
+    }
+
     // Clear out buffer in case block size changed
     memset(buf, 0xFF, current_write_block_size);
     flash_manager_printf("    setup_next_sector(addr=0x%x) sect_addr=0x%x, write_addr=0x%x,\r\n",

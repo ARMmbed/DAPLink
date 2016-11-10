@@ -53,7 +53,7 @@ typedef enum {
 static error_t init(void);
 static error_t uninit(void);
 static error_t program_page(uint32_t addr, const uint8_t *buf, uint32_t size);
-static error_t erase_sector(uint32_t sector);
+static error_t erase_sector(uint32_t addr);
 static error_t erase_chip(void);
 static uint32_t program_page_min_size(uint32_t addr);
 static uint32_t erase_sector_size(uint32_t addr);
