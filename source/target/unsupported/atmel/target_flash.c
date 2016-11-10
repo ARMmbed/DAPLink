@@ -100,9 +100,14 @@ target_flash_status_t target_flash_init(extension_t ext)
 }
 
 
-target_flash_status_t target_flash_erase_sector(unsigned int sector)
+target_flash_status_t target_flash_erase_sector(unsigned int addr)
 {
-    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector * target_device.sector_size, 0, 0, 0)) {
+    // Check to make sure the address is on a sector boundary
+    if ((addr % target_device.sector_size) != 0) {
+        return TARGET_FAIL_ERASE_SECTOR;
+    }
+
+    if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, addr, 0, 0, 0)) {
         return TARGET_FAIL_ERASE_SECTOR;
     }
 
@@ -132,7 +137,7 @@ target_flash_status_t target_flash_program_page(uint32_t addr, uint8_t *buf, uin
 
     // we need to erase a sector
     if (addr % target_device.sector_size == 0) {
-        status = target_flash_erase_sector(addr / target_device.sector_size);
+        status = target_flash_erase_sector(addr);
 
         if (status != TARGET_OK) {
             return status;
