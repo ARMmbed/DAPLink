@@ -132,10 +132,6 @@ def main():
         offset_update.create_padded_image(output_file_legacy,
                                           output_file_legacy_5000,
                                           start, pad_addr, 0x40)
-    elif start == 0 or start == 0x80000:
-        pass
-    else:
-        assert 0, "Unsupported start address 0x%x" % start
 
 if __name__ == '__main__':
     main()
