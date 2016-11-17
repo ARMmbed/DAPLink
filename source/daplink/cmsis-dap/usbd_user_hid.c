@@ -139,6 +139,22 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
     }
 }
 
+void hid_send_packet(void)
+{
+    OS_RESULT ret;
+    os_mut_wait(&hid_mutex, 0xFFFF);
+
+    ret = os_sem_wait(&send_sem, 0);
+    // There must be data avaiable to send when hid_send_packet is called
+    util_assert(OS_R_OK == ret);
+
+    usbd_hid_get_report_trigger(0, USB_Request[send_idx], DAP_PACKET_SIZE);
+    send_idx = (send_idx + 1) % DAP_PACKET_COUNT;
+    os_sem_send(&free_sem);
+
+    os_mut_release(&hid_mutex);
+}
+
 // CMSIS-DAP task
 __task void hid_process(void *argv)
 {
@@ -149,18 +165,15 @@ __task void hid_process(void *argv)
         memcpy(USB_Request[proc_idx], temp_buf, DAP_PACKET_SIZE);
         proc_idx = (proc_idx + 1) % DAP_PACKET_COUNT;
         os_sem_send(&send_sem);
+
         // Send input report if USB is idle
         os_mut_wait(&hid_mutex, 0xFFFF);
-
         if (USB_ResponseIdle) {
+            main_hid_send_event();
             USB_ResponseIdle = 0;
-            os_sem_wait(&send_sem, 0xFFFF);
-            usbd_hid_get_report_trigger(0, USB_Request[send_idx], DAP_PACKET_SIZE);
-            send_idx = (send_idx + 1) % DAP_PACKET_COUNT;
-            os_sem_send(&free_sem);
         }
-
         os_mut_release(&hid_mutex);
+
         main_blink_hid_led(MAIN_LED_OFF);
     }
 }
