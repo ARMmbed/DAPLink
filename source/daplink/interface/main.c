@@ -50,6 +50,8 @@
 #define FLAGS_MAIN_POWERDOWN    (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG (1 << 5)
 #define FLAGS_MAIN_PROC_USB     (1 << 9)
+// Used by hid when no longer idle
+#define FLAGS_MAIN_HID_SEND     (1 << 10)
 // Used by msd when flashing a new binary
 #define FLAGS_LED_BLINK_30MS    (1 << 6)
 // Timing constants (in 90mS ticks)
@@ -157,6 +159,13 @@ void main_disable_debug_event(void)
     return;
 }
 
+// Send next hid packet
+void main_hid_send_event(void)
+{
+    os_evt_set(FLAGS_MAIN_HID_SEND, main_task_id);
+    return;
+}
+
 void USBD_SignalHandler()
 {
     isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
@@ -242,6 +251,7 @@ __task void serial_process()
 }
 
 extern __task void hid_process(void);
+extern void hid_send_packet(void);
 __attribute__((weak)) void prerun_board_config(void) {}
 __attribute__((weak)) void prerun_target_config(void) {}
 
@@ -294,6 +304,7 @@ __task void main_task(void)
                        | FLAGS_MAIN_POWERDOWN       // Power down interface
                        | FLAGS_MAIN_DISABLEDEBUG    // Disable target debug
                        | FLAGS_MAIN_PROC_USB        // process usb events
+                       | FLAGS_MAIN_HID_SEND        // send hid packet
                        , NO_TIMEOUT);
         // Find out what event happened
         flags = os_evt_get();
@@ -323,6 +334,10 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_DISABLEDEBUG) {
             // Disable debug
             target_set_state(NO_DEBUG);
+        }
+
+        if (flags & FLAGS_MAIN_HID_SEND) {
+            hid_send_packet();
         }
 
         if (flags & FLAGS_MAIN_90MS) {
