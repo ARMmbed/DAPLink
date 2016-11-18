@@ -95,6 +95,10 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         return status;
     }
 
+#ifdef FLASH_PARTIAL_ERASE
+    // Processing for low-speed devices of chip erasure.
+    flash_manager_printf("    skip intf->erase_chip\r\n");
+#else
     // Erase flash and unint if there are errors
     status = intf->erase_chip();
     flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
@@ -103,6 +107,7 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         intf->uninit();
         return status;
     }
+#endif
 
     state = STATE_OPEN;
     return status;
@@ -172,8 +177,6 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
                 state = STATE_ERROR;
                 return status;
             }
-
-            //TODO - future improvement - erase sector here
         }
 
         // write buffer
@@ -300,5 +303,16 @@ static error_t setup_next_sector(uint32_t addr)
                          addr, current_sector_addr, current_write_block_addr);
     flash_manager_printf("        actual_write_size=0x%x, sector_size=0x%x, min_write=0x%x\r\n",
                          current_write_block_size, current_sector_size, min_prog_size);
+#ifdef FLASH_PARTIAL_ERASE
+    // Processing for low-speed devices of chip erasure.
+    {
+        uint32_t sector_number = current_sector_addr / sector_size;
+        error_t status = intf->erase_sector(sector_number);
+        flash_manager_printf("    intf->erase_sector(sector=0x%x) ret=%i\r\n", sector_number, status);
+        if (ERROR_SUCCESS != status) {
+            return ERROR_INTERNAL;
+        }
+    }
+#endif
     return ERROR_SUCCESS;
 }

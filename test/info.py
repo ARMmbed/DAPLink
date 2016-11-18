@@ -54,6 +54,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_6lowpan_borderrouterhat_if',         None,       0x0000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterethernet_if',    None,       0x0000,     "bin"       ),
+    ('lpc11u35_gr_peach_if',                        None,       0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -97,6 +98,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
     (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
+    (   0x5500,     'lpc11u35_gr_peach_if',                     None,               'Renesas-GR-PEACH'                      ),
+
 ]
 
 # Add new HICs here
