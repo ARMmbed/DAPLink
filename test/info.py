@@ -78,19 +78,19 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
-    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         None                                    ),
+    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K82F' when mbed-os supports this
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
-    (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ),
+    (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
-    (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ),
-    (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ),
-    (   0x250,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ),
-    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ),
-    (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ),
-    (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ),  # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
+    (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL27Z' when mbed-os supports this
+    (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
+    (   0x250,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24F' when mbed-os supports this
+    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
+    (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
+    (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
