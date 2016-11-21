@@ -19,6 +19,13 @@
  * limitations under the License.
  */
 
+// Override all defines if IO_CONFIG_OVERRIDE is defined
+#ifdef IO_CONFIG_OVERRIDE
+#include "IO_Config_Override.h"
+#ifndef __IO_CONFIG_H__
+#define __IO_CONFIG_H__
+#endif
+#endif
 
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
