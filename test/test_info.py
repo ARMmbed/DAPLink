@@ -180,4 +180,4 @@ class TestInfoStub(TestInfo):
 
     @staticmethod
     def _print_msg(msg):
-        pass
+        print("%s" % (msg,))
