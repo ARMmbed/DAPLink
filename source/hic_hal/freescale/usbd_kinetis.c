@@ -1,5 +1,5 @@
 /**
- * @file    gpio.h
+ * @file    usbd_kinetis.c
  * @brief   
  *
  * DAPLink Interface Firmware
@@ -21,7 +21,7 @@
 
 #include "RTL.h"
 #include "rl_usb.h"
-#include "MKL26Z4.h"
+#include "fsl_device_registers.h"
 #include "cortex_m.h"
 #include "util.h"
 
@@ -150,7 +150,6 @@ void USBD_Connect(uint32_t con)
     if (con) {
         USB0->CTL  |= USB_CTL_USBENSOFEN_MASK;            /* enable USB           */
         USB0->CONTROL = USB_CONTROL_DPPULLUPNONOTG_MASK;  /* pull up on D+        */
-
     } else {
         USB0->CTL  &= ~USB_CTL_USBENSOFEN_MASK;           /* disable USB          */
         USB0->CONTROL &= ~USB_CONTROL_DPPULLUPNONOTG_MASK;/* pull down on D+      */
@@ -536,6 +535,7 @@ void USB0_IRQHandler(void)
 /*
  *  USB Device Service Routine
  */
+
 void USBD_Handler(void)
 {
     uint32_t istr, num, dir, ev_odd, stat;

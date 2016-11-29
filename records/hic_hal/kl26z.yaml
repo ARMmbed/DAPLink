@@ -13,6 +13,7 @@ common:
         - source/hic_hal/freescale/kl26z/MKL26Z4
     sources:
         hic_hal:
+            - source/hic_hal/freescale
             - source/hic_hal/freescale/kl26z
             - source/hic_hal/freescale/kl26z/MKL26Z4
             - source/hic_hal/freescale/kl26z/armcc
