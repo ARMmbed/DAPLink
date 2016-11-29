@@ -298,32 +298,32 @@ static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size)
     }
 
     // TAR write
-    req = SWD_REG_AP | SWD_REG_W | (1 << 2);
+    req = SWD_REG_AP | SWD_REG_W | AP_TAR;
     int2array(tmp_in, address, 4);
 
-    if (swd_transfer_retry(req, (uint32_t *)tmp_in) != 0x01) {
+    if (swd_transfer_retry(req, (uint32_t *)tmp_in) != DAP_TRANSFER_OK) {
         return 0;
     }
 
     // read data
-    req = SWD_REG_AP | SWD_REG_R | (3 << 2);
+    req = SWD_REG_AP | SWD_REG_R | AP_DRW;
 
-    // dummy read
-    if (swd_transfer_retry(req, (uint32_t *)data) != 0x01) {
+    // initiate first read, data comes back in next read
+    if (swd_transfer_retry(req, NULL) != 0x01) {
         return 0;
     }
 
-    for (i = 0; i < size_in_words; i++) {
-        if (swd_transfer_retry(req, (uint32_t *)data) != 0x01) {
+    for (i = 0; i < (size_in_words - 1); i++) {
+        if (swd_transfer_retry(req, (uint32_t *)data) != DAP_TRANSFER_OK) {
             return 0;
         }
 
         data += 4;
     }
 
-    // dummy read
+    // read last word
     req = SWD_REG_DP | SWD_REG_R | SWD_REG_ADR(DP_RDBUFF);
-    ack = swd_transfer_retry(req, NULL);
+    ack = swd_transfer_retry(req, (uint32_t *)data);
     return (ack == 0x01);
 }
 
@@ -836,17 +836,17 @@ uint8_t swd_uninit_debug(void)
     // Assume debug is powered up already
     // Clear (CSYSPWRUPREQ | CDBGPWRUPREQ) in DP_CTRL_STAT register
     uint32_t ctrl_stat_read;
-    
+
     if (!swd_write_dp(DP_CTRL_STAT, 0x0)) {
         return 0;
     }
-    
+
     do {
         if (!swd_read_dp(DP_CTRL_STAT, &ctrl_stat_read)) {
             return 0;
         }
     } while ((ctrl_stat_read & (CSYSPWRUPREQ | CDBGPWRUPREQ)));
-    
+
     return 1;
 }
 
