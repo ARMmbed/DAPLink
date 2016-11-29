@@ -23,6 +23,7 @@
 #define MAIN_H
 
 #include "stdint.h"
+#include "stdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +52,7 @@ typedef enum main_reset_state {
 } main_reset_state_t;
 
 void main_reset_target(uint8_t send_unique_id);
+void main_usb_set_test_mode(bool enabled);
 void main_usb_configure_event(void);
 void main_usb_busy_event(void);
 void main_powerdown_event(void);
