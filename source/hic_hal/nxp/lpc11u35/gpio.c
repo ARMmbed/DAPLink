@@ -58,8 +58,11 @@ void ReinvokeISP(void)
     /* Set stack pointer to ROM value (reset default) This must be the last
      * piece of code executed before calling ISP, because most C expressions
      * and function returns will fail after the stack pointer is changed.
+     * In addition ensure the CONTROL register is set to 0 so the MSP is
+     * used rather than the PSP.
      */
     __set_MSP(*((volatile uint32_t *)0x00000000));
+    __set_CONTROL(0);
     /* Enter ISP. We call "iap_entry" to enter ISP because the ISP entry is done
      * through the same command interface as IAP.
      */
