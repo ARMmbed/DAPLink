@@ -40,6 +40,8 @@ static struct {
     volatile  int16_t cnt_out;
 } write_buffer, read_buffer;
 
+static int32_t reset(void);
+
 int32_t uart_initialize(void)
 {
     NVIC_DisableIRQ(UART_IRQn);
@@ -57,7 +59,7 @@ int32_t uart_initialize(void)
     // Transmit Enable
     LPC_USART->TER     = 0x80;
     // reset uart
-    uart_reset();
+    reset();
     // enable rx and tx interrupt
     LPC_USART->IER |= (1 << 0) | (1 << 1);
     NVIC_EnableIRQ(UART_IRQn);
@@ -70,40 +72,16 @@ int32_t uart_uninitialize(void)
     LPC_USART->IER &= ~(0x7);
     NVIC_DisableIRQ(UART_IRQn);
     // reset uart
-    uart_reset();
+    reset();
     return 1;
 }
 
 int32_t uart_reset(void)
 {
-    uint8_t *ptr;
-    int32_t  i;
     // disable interrupt
     NVIC_DisableIRQ(UART_IRQn);
-    // Reset FIFOs
-    LPC_USART->FCR = 0x06;
-    baudrate  = 0;
-    dll       = 0;
-    tx_in_progress = 0;
-    ptr = (uint8_t *)&write_buffer;
-
-    for (i = 0; i < sizeof(write_buffer); i++) {
-        *ptr++ = 0;
-    }
-
-    ptr = (uint8_t *)&read_buffer;
-
-    for (i = 0; i < sizeof(read_buffer); i++) {
-        *ptr++ = 0;
-    }
-
-    // Ensure a clean start, no data in either TX or RX FIFO
-    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
-
-    while (LPC_USART->LSR & 0x01) {
-        LPC_USART->RBR;    // Dump data from RX FIFO
-    }
-
+    // reset uart
+    reset();
     // enable interrupt
     NVIC_EnableIRQ(UART_IRQn);
     return 1;
@@ -117,7 +95,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
     // disable interrupt
     NVIC_DisableIRQ(UART_IRQn);
     // reset uart
-    uart_reset();
+    reset();
     baudrate = config->Baudrate;
     // Compute baud rate dividers
     mv = 15;
@@ -379,4 +357,36 @@ void UART_IRQHandler(void)
     }
 
     LPC_USART->LSR;
+}
+
+static int32_t reset(void)
+{
+    uint8_t *ptr;
+    int32_t  i;
+
+    // Reset FIFOs
+    LPC_USART->FCR = 0x06;
+    baudrate  = 0;
+    dll       = 0;
+    tx_in_progress = 0;
+    ptr = (uint8_t *)&write_buffer;
+
+    for (i = 0; i < sizeof(write_buffer); i++) {
+        *ptr++ = 0;
+    }
+
+    ptr = (uint8_t *)&read_buffer;
+
+    for (i = 0; i < sizeof(read_buffer); i++) {
+        *ptr++ = 0;
+    }
+
+    // Ensure a clean start, no data in either TX or RX FIFO
+    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
+
+    while (LPC_USART->LSR & 0x01) {
+        LPC_USART->RBR;    // Dump data from RX FIFO
+    }
+
+    return 1;
 }
