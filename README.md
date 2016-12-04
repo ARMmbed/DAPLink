@@ -3,10 +3,18 @@ DAPLink is firmware that runs on a microcontroller that is connected according t
 * MSC - drag-n-drop programming flash memory
 * CDC - virtual com port for log, trace and terminal emulation
 * HID - CMSIS-DAP compliant debug channel
+* DFU - USB DFU programming flash memory
 
 For more detailed usability information [see the users guide.](docs/USERS-GUIDE.md)
 
-This project supersedes the [mbed CMSIS-DAP interface firmware project.](https://github.com/mbedmicro/CMSIS-DAP/)
+## WebUSB
+This fork/experimental branch adds a USB DFU interface that can be used to flash targets from the browser using [WebUSB](https://wicg.github.io/webusb/). The DFU interface can be used standalone with native tools like [dfu-util](http://dfu-util.sourceforge.net/), but the allowed origin for the WebUSB portion is currently restricted to https://devanlai.github.io/webdfu/dfu-util/ .
+
+### Limitations
+* This has only been tested on LPC11U35 interface chips, specifically with the [Seeed Studio Arch Max](https://www.seeedstudio.com/Arch-Max-v1.1-p-2632.html) board.
+* This has only been tested on Linux - Windows will almost certainly require fiddling with [Zadig](http://zadig.akeo.ie/) to load an appropriate WinUSB/libusb driver.
+* The performance of the current implementation is very bad - ~30 seconds to flash a 20KiB binary, as the DFU implementation has not been optimized.
+* The WebDFU test page doesn't misparses the HID descriptor as a DFU functional descriptor, so the transfer size must be manually reset to 256
 
 ## Compatibility
 There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards or as part of development kits. Known supported circuits are based on and IO compatible with:
