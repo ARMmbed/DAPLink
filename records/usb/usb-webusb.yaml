@@ -1,0 +1,4 @@
+common:
+    sources:
+        usb:
+            - source/usb/webusb

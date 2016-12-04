@@ -1,6 +1,6 @@
 /**
- * @file    usb_for_lib.h
- * @brief   USB driver header
+ * @file    usbd_core_webusb.h
+ * @brief   USB Device Core WebUSB header
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,16 +19,12 @@
  * limitations under the License.
  */
 
-#ifndef __USB_FOR_LIB_H__
-#define __USB_FOR_LIB_H__
+#ifndef __USBD_CORE_WEBUSB_H__
+#define __USBD_CORE_WEBUSB_H__
 
-/* USB Device header files                                                    */
-#include "usbd_lib_cdc.h"
-#include "usbd_lib_hid.h"
-#include "usbd_lib_msc.h"
-#include "usbd_lib_dfu.h"
 
-/* USB System Configuration header file                                       */
-#include "usb_lib.h"
+/*--------------------------- Core overridable vendor specific functions ------*/
 
-#endif  /* __USB_FOR_LIB_H__ */
+extern BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void);
+
+#endif  /* __USBD_CORE_WEBUSB_H__ */

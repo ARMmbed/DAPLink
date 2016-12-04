@@ -1,6 +1,6 @@
 /**
- * @file    usb_for_lib.h
- * @brief   USB driver header
+ * @file    usbd_core_dfu.h
+ * @brief   USB Device Core DFU header
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,16 +19,14 @@
  * limitations under the License.
  */
 
-#ifndef __USB_FOR_LIB_H__
-#define __USB_FOR_LIB_H__
+#ifndef __USBD_CORE_DFU_H__
+#define __USBD_CORE_DFU_H__
 
-/* USB Device header files                                                    */
-#include "usbd_lib_cdc.h"
-#include "usbd_lib_hid.h"
-#include "usbd_lib_msc.h"
-#include "usbd_lib_dfu.h"
 
-/* USB System Configuration header file                                       */
-#include "usb_lib.h"
+/*--------------------------- Core overridable class specific functions ------*/
 
-#endif  /* __USB_FOR_LIB_H__ */
+extern BOOL USBD_EndPoint0_Setup_DFU_ReqToIF(void);
+extern BOOL USBD_EndPoint0_Out_DFU_ReqToIF(void);
+
+
+#endif  /* __USBD_CORE_DFU_H__ */

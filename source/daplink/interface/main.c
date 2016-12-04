@@ -81,6 +81,7 @@ static U64 stk_timer_30_task[TIMER_TASK_30_STACK / sizeof(U64)];
 static U64 stk_dap_task[DAP_TASK_STACK / sizeof(U64)];
 static U64 stk_serial_task[SERIAL_TASK_STACK / sizeof(U64)];
 static U64 stk_main_task[MAIN_TASK_STACK / sizeof(U64)];
+static U64 stk_dfu_task[DFU_TASK_STACK / sizeof(U64)];
 
 // Timer task, set flags every 30mS and 90mS
 __task void timer_task_30mS(void)
@@ -174,6 +175,8 @@ os_mbx_declare(serial_mailbox, 20);
 #define SIZE_DATA (64)
 static uint8_t data[SIZE_DATA];
 
+extern OS_ID dfu_mailbox;
+
 __task void serial_process()
 {
     UART_Configuration config;
@@ -242,6 +245,7 @@ __task void serial_process()
 }
 
 extern __task void hid_process(void);
+extern __task void dfu_process(void);
 __attribute__((weak)) void prerun_board_config(void) {}
 __attribute__((weak)) void prerun_target_config(void) {}
 
@@ -263,6 +267,7 @@ __task void main_task(void)
     config_init();
     // Initialize our serial mailbox
     os_mbx_init(&serial_mailbox, sizeof(serial_mailbox));
+    os_mbx_init(&dfu_mailbox, sizeof(dfu_mailbox));
     // Get a reference to this task
     main_task_id = os_tsk_self();
     // leds
@@ -351,6 +356,7 @@ __task void main_task(void)
                         if (!thread_started) {
                             os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
                             serial_task_id = os_tsk_create_user(serial_process, SERIAL_TASK_PRIORITY, (void *)stk_serial_task, SERIAL_TASK_STACK);
+                            os_tsk_create_user(dfu_process, DFU_TASK_PRIORITY, (void *)stk_dfu_task, DFU_TASK_STACK);
                             thread_started = 1;
                         }
 

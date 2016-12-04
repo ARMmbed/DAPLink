@@ -36,9 +36,10 @@
 //   <i> Define max. number of tasks that will run at the same time.
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-#define OS_TASKCNT    4
+#define OS_TASKCNT    5
 // Threads with user provided stacks:
 // -serial_process
+// -dfu_process
 // -hid_process
 // -timer_task_30mS
 // -main_task
