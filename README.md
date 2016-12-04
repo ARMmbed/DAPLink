@@ -14,7 +14,7 @@ This fork/experimental branch adds a USB DFU interface that can be used to flash
 * This has only been tested on LPC11U35 interface chips, specifically with the [Seeed Studio Arch Max](https://www.seeedstudio.com/Arch-Max-v1.1-p-2632.html) board.
 * This has only been tested on Linux - Windows will almost certainly require fiddling with [Zadig](http://zadig.akeo.ie/) to load an appropriate WinUSB/libusb driver.
 * The performance of the current implementation is very bad - ~30 seconds to flash a 20KiB binary, as the DFU implementation has not been optimized.
-* The WebDFU test page doesn't misparses the HID descriptor as a DFU functional descriptor, so the transfer size must be manually reset to 256
+* The WebDFU test page misparses the HID descriptor as a DFU functional descriptor, so the transfer size must be manually reset to 256
 
 ## Compatibility
 There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards or as part of development kits. Known supported circuits are based on and IO compatible with:
