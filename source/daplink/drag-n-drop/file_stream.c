@@ -58,7 +58,7 @@ typedef struct {
 
 typedef struct {
     bool parsing_complete;
-    uint8_t bin_buffer[256];
+    uint8_t bin_buffer[16];
 } hex_state_t;
 
 typedef union {
