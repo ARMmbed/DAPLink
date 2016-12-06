@@ -52,50 +52,69 @@ void gpio_init(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);
+
+    // Enable MCO output
+#ifdef MCO_PIN
+    RCC_MCOConfig(RCC_MCO_HSE);
+    GPIO_InitStructure.GPIO_Pin = MCO_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_Init(MCO_PIN_PORT, &GPIO_InitStructure);
+#endif
+
     // configure LEDs
+#ifdef RUNNING_LED_PIN
     GPIO_InitStructure.GPIO_Pin = RUNNING_LED_PIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
     GPIO_ResetBits(RUNNING_LED_PORT, RUNNING_LED_PIN);
-
+#endif
+#ifdef CONNECTED_LED_PIN
     GPIO_InitStructure.GPIO_Pin = CONNECTED_LED_PIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(CONNECTED_LED_PORT, &GPIO_InitStructure);
     GPIO_ResetBits(CONNECTED_LED_PORT, CONNECTED_LED_PIN);
-
+#endif
+#ifdef PIN_CDC_LED
     GPIO_InitStructure.GPIO_Pin = PIN_CDC_LED;
     GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
     GPIO_ResetBits(PIN_CDC_LED_PORT, PIN_CDC_LED);
-
+#endif
+#ifdef PIN_HID_LED
+    GPIO_InitStructure.GPIO_Pin = PIN_HID_LED;
+    GPIO_Init(PIN_HID_LED_PORT, &GPIO_InitStructure);
+    GPIO_ResetBits(PIN_HID_LED_PORT, PIN_HID_LED);
+#endif
+#ifdef PIN_MSC_LED
     GPIO_InitStructure.GPIO_Pin = PIN_MSC_LED;
     GPIO_Init(PIN_MSC_LED_PORT, &GPIO_InitStructure);
     GPIO_ResetBits(PIN_MSC_LED_PORT, PIN_MSC_LED);
-
+#endif
     // reset button configured as gpio input_pullup
     GPIO_InitStructure.GPIO_Pin = nRESET_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_Init(nRESET_PIN_PORT, &GPIO_InitStructure);
 
+#ifdef POWER_EN_PIN
     // Keep powered off in bootloader mode
     // to prevent the target from effecting the state
     // of the reset line / reset button
-    if (!daplink_is_bootloader()) {
+    if (!daplink_is_bootloader() || !POWER_DOWN_DURING_BOOTLOADER) {
         // configure pin as GPIO
         // force always on logic 1
         GPIO_InitStructure.GPIO_Pin = POWER_EN_PIN;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
         GPIO_Init(POWER_EN_PIN_PORT, &GPIO_InitStructure);
+#if (POWER_EN_PIN_ACTIVE_HIGH)
         GPIO_SetBits(POWER_EN_PIN_PORT, POWER_EN_PIN);
+#else
+        GPIO_ResetBits(POWER_EN_PIN_PORT, POWER_EN_PIN);
+#endif
     }
-    // Config ReadOut protection
-    if(FLASH_GetReadOutProtectionStatus() != SET) {
-        FLASH_Unlock();
-        FLASH_ReadOutProtection(ENABLE);
-        FLASH_Lock();
-    }
+#endif
     // Let the voltage rails stabilize.  This is especailly important
     // during software resets, since the target's 3.3v rail can take
     // 20-50ms to drain.  During this time the target could be driving
@@ -107,31 +126,41 @@ void gpio_init(void)
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
+#ifdef PIN_HID_LED
     if (state) {
         GPIO_ResetBits(PIN_HID_LED_PORT, PIN_HID_LED); // LED on
     } else {
         GPIO_SetBits(PIN_HID_LED_PORT, PIN_HID_LED);   // LED off
     }
+#else
+    (void)state;
+#endif
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
-    //gpio_set_hid_led(state);
+#ifdef PIN_CDC_LED
     if (state) {
         GPIO_ResetBits(PIN_CDC_LED_PORT, PIN_CDC_LED); // LED on
     } else {
         GPIO_SetBits(PIN_CDC_LED_PORT, PIN_CDC_LED);   // LED off
     }
+#else
+    (void)state;
+#endif
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
-    //gpio_set_hid_led(state);
+#ifdef PIN_MSC_LED
     if (state) {
         GPIO_ResetBits(PIN_MSC_LED_PORT, PIN_MSC_LED); // LED on
     } else {
         GPIO_SetBits(PIN_MSC_LED_PORT, PIN_MSC_LED);   // LED off
     }
+#else
+    (void)state;
+#endif
 }
 
 uint8_t gpio_get_sw_reset(void)
@@ -159,8 +188,8 @@ uint8_t gpio_get_sw_reset(void)
         last_reset_forward_pressed = reset_forward_pressed;
     }
     reset_pressed = reset_forward_pressed || ((nRESET_PIN_PORT->IDR & nRESET_PIN) ? 0 : 1);
-    // Config nRESET_PIN to output
-    pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
+    // Config nRESET_PIN to an open drain output
+    pin_out_init_od(nRESET_PIN_PORT, nRESET_PIN_Bit);
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 
     return !reset_pressed;

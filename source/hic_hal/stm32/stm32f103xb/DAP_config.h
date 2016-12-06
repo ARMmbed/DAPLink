@@ -100,7 +100,7 @@ Provides definitions about:
 ///@}
 
 
-static __inline void pin_out_init(GPIO_TypeDef* GPIOx, uint8_t pin_bit)
+static __inline void pin_out_init_pp(GPIO_TypeDef* GPIOx, uint8_t pin_bit)
 {
     if(pin_bit >= 8)
     {
@@ -113,6 +113,21 @@ static __inline void pin_out_init(GPIO_TypeDef* GPIOx, uint8_t pin_bit)
         GPIOx->CRL |= ( ((uint32_t)(0x00|0x03) & 0x0F) << ((pin_bit) << 2) );
     }
 }
+
+static __inline void pin_out_init_od(GPIO_TypeDef* GPIOx, uint8_t pin_bit)
+{
+    if(pin_bit >= 8)
+    {
+        GPIOx->CRH &= ~(0x0000000F << ((pin_bit-8) << 2));
+        GPIOx->CRH |= ( ((uint32_t)(0x04|0x03) & 0x0F) << ((pin_bit-8) << 2) );
+    }
+    else
+    {
+        GPIOx->CRL &= ~(0x0000000F << ((pin_bit) << 2));
+        GPIOx->CRL |= ( ((uint32_t)(0x04|0x03) & 0x0F) << ((pin_bit) << 2) );
+    }
+}
+
 
 static __inline void pin_in_init(GPIO_TypeDef* GPIOx, uint8_t pin_bit, uint8_t mode)
 {
@@ -201,15 +216,15 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 static __inline void PORT_SWD_SETUP(void)
 {
     // Set SWCLK HIGH
-    pin_out_init(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
+    pin_out_init_pp(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
     SWCLK_TCK_PIN_PORT->BSRR = SWCLK_TCK_PIN;
     // Set SWDIO HIGH
-    pin_out_init(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
+    pin_out_init_pp(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
     SWDIO_OUT_PIN_PORT->BSRR = SWDIO_OUT_PIN;
 
     pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
     // Set RESET HIGH
-    pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
+    pin_out_init_od(nRESET_PIN_PORT, nRESET_PIN_Bit);
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 }
 
@@ -301,7 +316,7 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 static __forceinline void PIN_SWDIO_OUT_ENABLE(void)
 {
-    pin_out_init(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
+    pin_out_init_pp(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
     SWDIO_OUT_PIN_PORT->BRR = SWDIO_OUT_PIN;
 }
 
@@ -411,10 +426,14 @@ It is recommended to provide the following LEDs for status indication:
 */
 static __inline void LED_CONNECTED_OUT(uint32_t bit)
 {
+#ifdef CONNECTED_LED_PIN
     if (bit & 1)
         CONNECTED_LED_PORT->BRR = CONNECTED_LED_PIN; // LED on
     else
         CONNECTED_LED_PORT->BSRR = CONNECTED_LED_PIN;// LED off
+#else
+	(void)bit;
+#endif
 }
 
 /** Debug Unit: Set status Target Running LED.
@@ -424,7 +443,14 @@ static __inline void LED_CONNECTED_OUT(uint32_t bit)
 */
 static __inline void LED_RUNNING_OUT(uint32_t bit)
 {
-    ;             // Not available
+#ifdef RUNNING_LED_PIN
+    if (bit & 1)
+        RUNNING_LED_PORT->BRR = RUNNING_LED_PIN; // LED on
+    else
+        RUNNING_LED_PORT->BSRR = RUNNING_LED_PIN;// LED off
+#else
+	(void)bit;
+#endif
 }
 
 ///@}
@@ -452,19 +478,21 @@ static __inline void DAP_SETUP(void)
     /* Enable port clock */
     RCC->APB2ENR |= RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC;
     /* Configure I/O pin SWCLK */
-    pin_out_init(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
+    pin_out_init_pp(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
     SWCLK_TCK_PIN_PORT->BSRR = SWCLK_TCK_PIN;
 
-    pin_out_init(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
+    pin_out_init_pp(SWDIO_OUT_PIN_PORT, SWDIO_OUT_PIN_Bit);
     SWDIO_OUT_PIN_PORT->BSRR = SWDIO_OUT_PIN;
 
     pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
 
-    pin_out_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
+    pin_out_init_od(nRESET_PIN_PORT, nRESET_PIN_Bit);
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 
-    pin_out_init(CONNECTED_LED_PORT, CONNECTED_LED_PIN_Bit);
+#ifdef CONNECTED_LED_PIN
+    pin_out_init_pp(CONNECTED_LED_PORT, CONNECTED_LED_PIN_Bit);
     CONNECTED_LED_PORT->BSRR = CONNECTED_LED_PIN;
+#endif
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.

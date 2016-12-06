@@ -65,6 +65,10 @@ projects:
         - *module_bl
         - *module_hic_stm32f103xb
         - records/board/stm32f103xb_bl.yaml
+    stm32f103xb_nucleo_bl:
+        - *module_bl
+        - *module_hic_stm32f103xb
+        - records/board/stm32f103xb_nucleo_bl.yaml
     sam3u2c_nrf51mkit_if:
         - *module_if
         - *module_hic_sam3u2c
@@ -197,3 +201,7 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/rblnano2.yaml
+    stm32f103xb_nucleo_f103rb_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/nucleo_f103rb.yaml

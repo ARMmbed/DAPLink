@@ -8,7 +8,6 @@ common:
         - STM32F10X_MD
         - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_STM32F103XB
         - BL_TARGET_FLASH
-        - USE_HSE_16MHZ
     includes:
         - source/hic_hal/stm32/stm32f103xb
         - source/hic_hal/stm32/stm32f103xb/STM32F10x_StdPeriph_Driver/inc

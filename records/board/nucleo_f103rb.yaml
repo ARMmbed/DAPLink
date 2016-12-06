@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_stlink2
+    sources:
+        board:
+            - source/board/nucleo_f103rb.c
+        target:
+            - source/target/st/stm32f103/target.c
+            - source/target/st/target_reset.c

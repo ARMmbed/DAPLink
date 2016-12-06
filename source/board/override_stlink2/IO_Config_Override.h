@@ -1,6 +1,6 @@
 /**
- * @file    IO_Config.h
- * @brief
+ * @file    IO_Config_Override.h
+ * @brief   Alternative IO for STM32F103XB based Hardware Interface Circuit
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,15 +19,6 @@
  * limitations under the License.
  */
 
-// Override all defines if IO_CONFIG_OVERRIDE is defined
-#ifdef IO_CONFIG_OVERRIDE
-#include "IO_Config_Override.h"
-#ifndef __IO_CONFIG_H__
-#define __IO_CONFIG_H__
-#endif
-#endif
-
-
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -35,9 +26,10 @@
 #include "compiler.h"
 #include "daplink.h"
 
+// This GPIO configuration is only valid for the STM32F103XB HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
-//USB control pin
+// USB pullup control
 #define USB_CONNECT_PORT_ENABLE()    (RCC->APB2ENR |= RCC_APB2Periph_GPIOA)
 #define USB_CONNECT_PORT_DISABLE()   (RCC->APB2ENR &= ~RCC_APB2Periph_GPIOA)
 #define USB_CONNECT_PORT             GPIOA
@@ -45,23 +37,24 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define USB_CONNECT_ON()             (USB_CONNECT_PORT->BSRR = USB_CONNECT_PIN)
 #define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BRR  = USB_CONNECT_PIN)
 
-//Connected LED
-#define CONNECTED_LED_PORT           GPIOB
-#define CONNECTED_LED_PIN            GPIO_Pin_6
-#define CONNECTED_LED_PIN_Bit        6
+// Output clock for the target microcontroller
+#define MCO_PIN_PORT                 GPIOA
+#define MCO_PIN                      GPIO_Pin_8
 
-//When bootloader, disable the target port(not used)
+// Target power control pin
 #define POWER_EN_PIN_PORT            GPIOB
 #define POWER_EN_PIN                 GPIO_Pin_15
 #define POWER_EN_Bit                 15
+#define POWER_EN_PIN_ACTIVE_HIGH     0
+#define POWER_DOWN_DURING_BOOTLOADER 0
 
-//Press and power, enter bootloader 7
-//When daplnk_if, reset target board
+// Reset pin - enters the bootloader if held at power up
+// Resets the target when the interface is running
 #define nRESET_PIN_PORT              GPIOB
-#define nRESET_PIN                   GPIO_Pin_7
-#define nRESET_PIN_Bit               7
+#define nRESET_PIN                   GPIO_Pin_0
+#define nRESET_PIN_Bit               0
 
-//SWD
+// SWD
 #define SWCLK_TCK_PIN_PORT           GPIOB
 #define SWCLK_TCK_PIN                GPIO_Pin_13
 #define SWCLK_TCK_PIN_Bit            13
@@ -76,20 +69,8 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
 //LEDs
 //USB status LED
-#define RUNNING_LED_PORT             GPIOB
-#define RUNNING_LED_PIN              GPIO_Pin_5
-#define RUNNING_LED_Bit              5
-
-#define PIN_HID_LED_PORT             GPIOB
-#define PIN_HID_LED                  GPIO_Pin_6
-#define PIN_HID_LED_Bit              6
-
-#define PIN_CDC_LED_PORT             GPIOB
-#define PIN_CDC_LED                  GPIO_Pin_6
-#define PIN_CDC_LED_Bit              6
-
-#define PIN_MSC_LED_PORT             GPIOB
-#define PIN_MSC_LED                  GPIO_Pin_6
-#define PIN_MSC_LED_Bit              6
+#define RUNNING_LED_PORT             GPIOA
+#define RUNNING_LED_PIN              GPIO_Pin_9
+#define RUNNING_LED_Bit              9
 
 #endif
