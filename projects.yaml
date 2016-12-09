@@ -222,3 +222,7 @@ projects:
         - *module_if
         - *module_hic_stlink_v2_1
         - records/board/nucleo_f103rb.yaml
+    stlink_v2_lpc1549_if:
+        - *module_if
+        - *module_hic_stlink_v2_dongle
+        - records/board/stlink_v2_lpc1549.yaml
