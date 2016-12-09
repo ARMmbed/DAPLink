@@ -226,3 +226,7 @@ projects:
         - *module_if
         - *module_hic_stlink_v2_dongle
         - records/board/stlink_v2_lpc1549.yaml
+    stlink_v2_nrf51822_if:
+        - *module_if
+        - *module_hic_stlink_v2_dongle
+        - records/board/stlink_v2_nrf51822.yaml

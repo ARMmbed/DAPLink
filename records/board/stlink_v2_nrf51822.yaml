@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_stlink_v2_dongle
+    sources:
+        board:
+            - source/board/stlink_v2_dongle.c
+        source:
+            - source/target/nordic/nrf51822/target_32.c
+            - source/target/nordic/target_reset.c
