@@ -47,6 +47,12 @@ module:
     hic_stm32f103xb: &module_hic_stm32f103xb
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stm32f103xb.yaml
+    hic_stlink_v2: &module_hic_stlink_v2
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stlink_v2.yaml
+    hic_stlink_v2_1: &module_hic_stlink_v2_1
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stlink_v2_1.yaml
 
 projects:
     kl26z_bl:
@@ -67,8 +73,12 @@ projects:
         - records/board/stm32f103xb_bl.yaml
     stm32f103xb_nucleo_bl:
         - *module_bl
-        - *module_hic_stm32f103xb
-        - records/board/stm32f103xb_nucleo_bl.yaml
+        - *module_hic_stlink_v2_1
+        - records/board/stm32f103xb_bl.yaml
+    stm32f103xb_stlink_v2_bl:
+        - *module_bl
+        - *module_hic_stlink_v2
+        - records/board/stm32f103xb_bl.yaml
     sam3u2c_nrf51mkit_if:
         - *module_if
         - *module_hic_sam3u2c
@@ -203,5 +213,5 @@ projects:
         - records/board/rblnano2.yaml
     stm32f103xb_nucleo_f103rb_if:
         - *module_if
-        - *module_hic_stm32f103xb
+        - *module_hic_stlink_v2_1
         - records/board/nucleo_f103rb.yaml

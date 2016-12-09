@@ -1,6 +1,6 @@
 /**
- * @file    IO_Config_Override.h
- * @brief   Alternative IO for STM32F103XB based Hardware Interface Circuit
+ * @file    IO_Config.h
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,6 +19,15 @@
  * limitations under the License.
  */
 
+// Override all defines if IO_CONFIG_OVERRIDE is defined
+#ifdef IO_CONFIG_OVERRIDE
+#include "IO_Config_Override.h"
+#ifndef __IO_CONFIG_H__
+#define __IO_CONFIG_H__
+#endif
+#endif
+
+
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -26,27 +35,24 @@
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the STM32F103XB HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
+// This GPIO configuration is only valid for the STLINK_V2 HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2);
 
 // USB pullup control
-#define USB_CONNECT_PORT_ENABLE()    (RCC->APB2ENR |= RCC_APB2Periph_GPIOA)
-#define USB_CONNECT_PORT_DISABLE()   (RCC->APB2ENR &= ~RCC_APB2Periph_GPIOA)
-#define USB_CONNECT_PORT             GPIOA
-#define USB_CONNECT_PIN              GPIO_Pin_15
-#define USB_CONNECT_ON()             (USB_CONNECT_PORT->BSRR = USB_CONNECT_PIN)
-#define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BRR  = USB_CONNECT_PIN)
+#define USB_PULLUP_PORT         GPIOA
+#define USB_PULLUP_PIN          GPIO_Pin_12
+#define USB_REENUMERATE()       do { \
+                                    USB_PULLUP_PORT->BRR = USB_PULLUP_PIN; \
+                                    volatile uint32_t i = 800000; \
+                                    while (i > 0) { \
+                                        i--; \
+                                    } \
+                                    USB_PULLUP_PORT->BSRR = USB_PULLUP_PIN; \
+                                 } while(0)
 
 // Output clock for the target microcontroller
 #define MCO_PIN_PORT                 GPIOA
 #define MCO_PIN                      GPIO_Pin_8
-
-// Target power control pin
-#define POWER_EN_PIN_PORT            GPIOB
-#define POWER_EN_PIN                 GPIO_Pin_15
-#define POWER_EN_Bit                 15
-#define POWER_EN_PIN_ACTIVE_HIGH     0
-#define POWER_DOWN_DURING_BOOTLOADER 0
 
 // Reset pin - enters the bootloader if held at power up
 // Resets the target when the interface is running

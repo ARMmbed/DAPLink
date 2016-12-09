@@ -107,8 +107,10 @@ void USBD_Init (void)
 
     /* Enable USB Interrupts */
     USBD_IntrEna ();
+#ifdef USB_CONNECT_PIN
     /* Set USB connect pin to low */
     USB_CONNECT_OFF();
+#endif
 }
 
 /*
@@ -121,17 +123,27 @@ void USBD_Connect (BOOL con)
 {
     if (con)
     {
+
+#ifdef USB_PULLUP_PIN
+  	    USB_REENUMERATE();
+#endif
+
         CNTR = CNTR_FRES;               /* Force USB Reset                      */
         CNTR = 0;
         ISTR = 0;                       /* Clear Interrupt Status               */
         CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM;   /* USB Interrupt Mask   */
 
+#ifdef USB_CONNECT_PIN
         USB_CONNECT_ON();
+#endif
     }
     else
     {
         CNTR = CNTR_FRES | CNTR_PDWN;   /* Switch Off USB Device              */
+
+#ifdef USB_CONNECT_PIN
         USB_CONNECT_OFF();
+#endif
     }
 }
 

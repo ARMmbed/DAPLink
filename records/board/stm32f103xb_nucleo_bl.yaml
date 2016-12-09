@@ -1,8 +1,0 @@
-common:
-    macros:
-        - IO_CONFIG_OVERRIDE
-    includes:
-        - source/board/override_stlink2
-    sources:
-        board:
-            - source/board/stm32f103xb_bl.c

@@ -46,12 +46,21 @@ void gpio_init(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);
 
+#ifdef USB_CONNECT_PIN
     USB_CONNECT_PORT_ENABLE();
     USB_CONNECT_OFF();
     GPIO_InitStructure.GPIO_Pin = USB_CONNECT_PIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);
+#endif
+#ifdef USB_PULLUP_PIN
+    GPIO_InitStructure.GPIO_Pin = USB_PULLUP_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+    GPIO_Init(USB_PULLUP_PORT, &GPIO_InitStructure);
+    GPIO_SetBits(USB_PULLUP_PORT, USB_PULLUP_PIN);
+#endif
 
     // Enable MCO output
 #ifdef MCO_PIN

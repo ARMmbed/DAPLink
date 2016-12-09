@@ -6,12 +6,11 @@ common:
         - CPU_STM32F103RBT6
         - USE_STDPERIPH_DRIVER
         - STM32F10X_MD
-        - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_STM32F103XB
+        - DAPLINK_HIC_ID=0x97969905  # DAPLINK_HIC_ID_STLINK_V2
         - BL_TARGET_FLASH
-        - USE_HSE_16MHZ
     includes:
         - source/hic_hal/stm32/stm32f103xb
-        - source/hic_hal/stm32/stm32f103xb/RBL
+        - source/hic_hal/stm32/stm32f103xb/stlink_v2
         - source/hic_hal/stm32/stm32f103xb/STM32F10x_StdPeriph_Driver/inc
     sources:
         hic_hal:

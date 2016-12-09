@@ -1,6 +1,4 @@
 common:
-    macros:
-        - USE_HSE_16MHZ
     sources:
         board:
             - source/board/rblnano.c
