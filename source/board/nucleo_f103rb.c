@@ -18,5 +18,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Probably should have read the board id out _before_ reflashing the board.
-const char *board_id = "9999";
+
+const char *board_id = "0670";
