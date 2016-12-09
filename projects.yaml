@@ -50,6 +50,9 @@ module:
     hic_stlink_v2: &module_hic_stlink_v2
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stlink_v2.yaml
+    hic_stlink_v2_dongle: &module_hic_stlink_v2_dongle
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stlink_v2_dongle.yaml
     hic_stlink_v2_1: &module_hic_stlink_v2_1
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stlink_v2_1.yaml
@@ -79,6 +82,10 @@ projects:
         - *module_bl
         - *module_hic_stlink_v2
         - records/board/stm32f103xb_bl.yaml
+    stm32f103xb_stlink_v2_dongle_bl:
+        - *module_bl
+        - *module_hic_stlink_v2_dongle
+        - records/board/stlink_v2_dongle_bl.yaml
     sam3u2c_nrf51mkit_if:
         - *module_if
         - *module_hic_sam3u2c

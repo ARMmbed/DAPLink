@@ -1,6 +1,6 @@
 /**
- * @file    IO_Config.h
- * @brief
+ * @file    IO_Config_Override.h
+ * @brief   Alternative IO for STM32F103XB based Hardware Interface Circuit
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,15 +19,6 @@
  * limitations under the License.
  */
 
-// Override all defines if IO_CONFIG_OVERRIDE is defined
-#ifdef IO_CONFIG_OVERRIDE
-#include "IO_Config_Override.h"
-#ifndef __IO_CONFIG_H__
-#define __IO_CONFIG_H__
-#endif
-#endif
-
-
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -35,8 +26,8 @@
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the STLINK_V2 HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2);
+// This GPIO configuration is only valid for the STLINK_V2_DONGLE HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2_DONGLE);
 
 // USB pullup control
 #define USB_PULLUP_PORT         GPIOA
@@ -50,15 +41,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2);
                                     USB_PULLUP_PORT->BSRR = USB_PULLUP_PIN; \
                                  } while(0)
 
-// Output clock for the target microcontroller
-#define MCO_PIN_PORT                 GPIOA
-#define MCO_PIN                      GPIO_Pin_8
-
 // Reset pin - enters the bootloader if held at power up
 // Resets the target when the interface is running
 #define nRESET_PIN_PORT              GPIOB
-#define nRESET_PIN                   GPIO_Pin_0
-#define nRESET_PIN_Bit               0
+#define nRESET_PIN                   GPIO_Pin_6
+#define nRESET_PIN_Bit               6
 
 // SWD
 #define SWCLK_TCK_PIN_PORT           GPIOB
@@ -79,30 +66,17 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2);
 #define RUNNING_LED_PIN              GPIO_Pin_9
 #define RUNNING_LED_Bit              9
 
-// For usart
-#define CDC_UART                     USART2
-#define CDC_UART_ENABLE()            RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE)
-#define CDC_UART_DISABLE()           RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, DISABLE)
-#define CDC_UART_IRQn                USART2_IRQn
-#define CDC_UART_IRQn_Handler        USART2_IRQHandler
+// USART
+#define CDC_UART                     USART3
+#define CDC_UART_ENABLE()            RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE)
+#define CDC_UART_DISABLE()           RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, DISABLE)
+#define CDC_UART_IRQn                USART3_IRQn
+#define CDC_UART_IRQn_Handler        USART3_IRQHandler
 
-#define UART_PINS_PORT_ENABLE()      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE)
-#define UART_PINS_PORT_DISABLE()     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , DISABLE)
+#define UART_PINS_PORT_ENABLE()      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE)
+#define UART_PINS_PORT_DISABLE()     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , DISABLE)
 
-#define UART_TX_PORT                 GPIOA
-#define UART_TX_PIN                  GPIO_Pin_2
-#define UART_TX_PIN_SOURCE           GPIO_PinSource2
-
-#define UART_RX_PORT                 GPIOA
-#define UART_RX_PIN                  GPIO_Pin_3
-#define UART_RX_PIN_SOURCE           GPIO_PinSource3
-
-#define UART_CTS_PORT                GPIOA
-#define UART_CTS_PIN                 GPIO_Pin_0
-#define UART_CTS_PIN_SOURCE          GPIO_PinSource0
-
-#define UART_RTS_PORT                GPIOA
-#define UART_RTS_PIN                 GPIO_Pin_1
-#define UART_RTS_PIN_SOURCE          GPIO_PinSource1
+#define UART_RX_PORT                 GPIOB
+#define UART_RX_PIN                  GPIO_Pin_11
 
 #endif
