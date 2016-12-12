@@ -57,8 +57,6 @@ void swd_set_target_reset(uint8_t asserted)
                                 && board_id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
     if (nrf52_dk_is_used) {
         if (asserted) {
-            swd_init_debug();
-            
             swd_read_ap(0x010000FC, &ap_index_return);
             if (ap_index_return == 0x02880000) {
                 // Device has CTRL-AP
@@ -70,11 +68,8 @@ void swd_set_target_reset(uint8_t asserted)
                 swd_write_memory(0xE000ED0C, (uint8_t *)&swd_mem_write_data, 4);
                 //os_dly_wait(1);
             }
-            swd_uninit_debug();
         }
         else {
-            swd_init_debug();
-            
             swd_read_ap(0x010000FC, &ap_index_return);
             if (ap_index_return == 0x02880000) {
                 // Device has CTRL-AP
@@ -83,13 +78,10 @@ void swd_set_target_reset(uint8_t asserted)
             else {
                 // No CTRL-AP - Soft reset has been performed
             }
-            swd_uninit_debug();
         }
     }
     else {
         if (asserted) {
-            swd_init_debug();
-            
             /*  There is no reset pin on the nRF51822, so we need to use special reset routine, 
                 SWDCLK and SWDIO/nRESET needs to be kept low for a minimum of 100uS. Called of this func needs to make sure of this. */
             //Set POWER->RESET on NRF to 1

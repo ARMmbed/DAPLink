@@ -859,10 +859,13 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
     uint32_t val;
     swd_init();
+    swd_init_debug();
 
     switch (state) {
         case RESET_HOLD:
             swd_set_target_reset(1);
+            swd_uninit_debug();
+            swd_off();
             break;
 
         case RESET_RUN:
@@ -870,6 +873,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+            swd_uninit_debug();
             swd_off();
             break;
 
@@ -956,10 +960,13 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
     uint32_t val;
     swd_init();
+    swd_init_debug();
 
     switch (state) {
         case RESET_HOLD:
             swd_set_target_reset(1);
+            swd_uninit_debug();
+            swd_off();
             break;
 
         case RESET_RUN:
@@ -967,6 +974,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             os_dly_wait(2);
             swd_set_target_reset(0);
             os_dly_wait(2);
+            swd_uninit_debug();
             swd_off();
             break;
 
