@@ -1,6 +1,0 @@
-common:
-    includes:
-        - source/daplink/usb2uart
-    sources:
-        usb2uart:
-            - source/daplink/usb2uart

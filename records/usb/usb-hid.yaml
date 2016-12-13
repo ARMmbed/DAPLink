@@ -1,6 +1,0 @@
-common:
-    macros:
-        - HID_ENDPOINT
-    sources:
-        usb:
-            - source/usb/hid

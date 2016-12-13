@@ -1,8 +1,0 @@
-project_generator>=0.9.8,<0.10.0
-mbed_ls
-pyserial
-pyOCD>=0.7.0
-requests
-intelhex
-six
-enum34

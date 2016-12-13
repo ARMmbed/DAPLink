@@ -1,4 +1,0 @@
-common:
-    sources:
-        settings:
-            - source/daplink/settings/settings_rom_stub.c
