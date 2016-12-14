@@ -42,6 +42,8 @@ OPTIONAL_COPY_PATTERN_LIST = [
     "%s_crc_legacy_0x8000.bin",
     "%s_crc_legacy_0x5000.bin",
     "%s_crc_legacy.txt",
+    "%s_crc_legacy.txt",
+    "%s_crc.c",
 ]
 
 

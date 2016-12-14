@@ -38,6 +38,7 @@
 #include "daplink.h"
 #include "util.h"
 #include "DAP.h"
+#include "bootloader.h"
 
 // Event flags for main task
 // Timers events
@@ -211,8 +212,10 @@ __task void main_task(void)
     uint8_t thread_started = 0;
     // button state
     main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
-    // Initialize settings
+    // Initialize settings - required for asserts to work
     config_init();
+    // Update bootloader if it is out of date
+    bootloader_check_and_update();
     // Get a reference to this task
     main_task_id = os_tsk_self();
     // leds
