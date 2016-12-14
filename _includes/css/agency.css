@@ -349,6 +349,10 @@ section h3.section-subheading {
     }
 }
 
+.click-icon:hover{
+    opacity: 0.7;
+}
+
 .service-heading {
     margin: 15px 0;
     text-transform: none;
