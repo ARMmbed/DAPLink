@@ -14,7 +14,12 @@
   product_code: 1010
   logoURL: https://mbed-media.mbed.com/LPC1768_enabled3.JPG
   website: http://mbed.org/handbook/mbed-NXP-LPC1768-Getting-Started
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions: |
+    1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+    1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+    1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
+    1. Wait for the firmware to program
+    1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
 
 - mbed LPC11U24:
   name: mbed LPC11U24
