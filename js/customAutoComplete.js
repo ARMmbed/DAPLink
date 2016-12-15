@@ -7,7 +7,9 @@ var options = {
 			"name": "{{thing.name}}", 
 			"code": "{{thing.product_code}}",
 			"logoURL": "{{thing.logoURL}}",
-			"instructions": {{thing.instructions | markdownify | jsonify}}
+			"windows_instructions": {{thing.instructions.windows | markdownify | jsonify}},
+			"linux_instructions": {{thing.instructions.linux | markdownify | jsonify}},
+			"osx_instructions": {{thing.instructions.osx | markdownify | jsonify}}
 		},
   		{% endfor %}
  ],
@@ -32,8 +34,33 @@ var options = {
 			time: 300
 		},
 		onChooseEvent: function(){
-			var value = $("#update-search").getSelectedItemData().instructions;
-			$("#update-instructions").html(value)
+			// Display instructions if not already shown
+			if($('#update-instructions').css('display') == 'none'){
+				$('#update-instructions').fadeIn();
+			}
+			// Load instructions to their tabs
+			var winvalue = $("#update-search").getSelectedItemData().windows_instructions;
+			var linvalue = $("#update-search").getSelectedItemData().linux_instructions;
+			var osxvalue = $("#update-search").getSelectedItemData().osx_instructions;
+			$("#update-instructions-windows").html(winvalue)
+			$("#update-instructions-linux").html(linvalue)
+			$("#update-instructions-osx").html(osxvalue)
+
+			// Set default tab based on browser
+			var os = navigator.platform;
+
+			if (navigator.appVersion.indexOf("Win")!=-1){
+				$('.update-instructions-windows').tab('show');
+			}
+			if (navigator.appVersion.indexOf("Mac")!=-1){
+				$('.update-instructions-osx').tab('show');
+			}
+			if (navigator.appVersion.indexOf("X11")!=-1){
+				$('.update-instructions-linux').tab('show');
+			}
+			if (navigator.appVersion.indexOf("Linux")!=-1){
+				$('.update-instructions-linux').tab('show');
+			}
 		}
 	},
 

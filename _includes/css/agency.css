@@ -362,6 +362,10 @@ section h3.section-subheading {
     padding-bottom:5%;
 }
 
+#update #update-instructions{
+    display:none;
+}
+
 #portfolio .portfolio-item {
     right: 0;
     margin: 0 0 15px;

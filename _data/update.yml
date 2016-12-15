@@ -9,317 +9,466 @@
 
 
 ---
+- default:
+  website: http://developer.mbed.org/platforms
+  instructions:
+    osx:
+    windows:
+    linux:
+
 - mbed LPC1768:
   name: mbed LPC1768
   product_code: 1010
   logoURL: https://mbed-media.mbed.com/LPC1768_enabled3.JPG
   website: http://mbed.org/handbook/mbed-NXP-LPC1768-Getting-Started
-  instructions: |
-    1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
-    1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
-    1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
-    1. Wait for the firmware to program
-    1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
+  instructions:
+    windows: |
+      1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+      1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+      1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
+      1. Wait for the firmware to program
+      1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
+    osx: |
+      1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+      1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+      1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
+      1. Wait for the firmware to program
+      1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
+    linux: |
+      1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+      1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+      1. use `cp` command to copy firmware `.bin` file to `BOOTLOADER` usb drive
+      1. Wait for the firmware to program
+      1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
 
 - mbed LPC11U24:
   name: mbed LPC11U24
   product_code: 1040
   logoURL: https://mbed-media.mbed.com/LPC11U24_enabled2.JPG
   website: http://mbed.org/handbook/mbed-NXP-LPC11U24-Getting-Started
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-KL25Z:
   name: FRDM-KL25Z
   product_code: 0200
   logoURL: https://mbed-media.mbed.com/frdm-kl25z.png
   website: http://mbed.org/handbook/mbed-FRDM-KL25Z-Getting-Started
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - NXP LPC800-MAX:
   name: NXP LPC800-MAX
   product_code: 1050
   logoURL: https://mbed-media.mbed.com/LPC812-MAX_enabled.JPG
   website: http://mbed.org/handbook/mbed-NXP-LPC800-MAX
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - EA LPC4088 QuickStart Board:
   name: EA LPC4088 QuickStart Board
   product_code: 1060
   logoURL: https://mbed-media.mbed.com/ea-lpc4088.png
   website: http://mbed.org/handbook/EA-LPC4088-Getting-Started
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - mbed LPC1114FN28:
   name: mbed LPC1114FN28
   product_code: 1114
   logoURL: https://mbed-media.mbed.com/mbedLPC1114_with_mbedEmabled_Logo-01.png
   website: http://mbed.org/platforms/LPC1114FN28/
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - u-blox C027:
   name: u-blox C027
   product_code: 1234
   logoURL: https://mbed-media.mbed.com/ublox_square_1.jpg
   website: https://mbed.org/platforms/u-blox-C027/
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-KL46Z:
   name: FRDM-KL46Z
   product_code: 0220
   logoURL: https://mbed-media.mbed.com/frdm-kl46z.png
   website: http://mbed.org/platforms/FRDM-KL46Z/
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Seeeduino-Arch-Pro:
   name: Seeeduino-Arch-Pro
   product_code: 9004
   logoURL: https://mbed-media.mbed.com/arch_pro_01.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-K64F:
   name: FRDM-K64F
   product_code: 0240
   logoURL: https://mbed-media.mbed.com/FRDM-K64F_400x300_WO6GnVU.png
   website: http://mbed.org/platforms/FRDM-K64F
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Nordic nRF51822:
   name: Nordic nRF51822
   product_code: 1070
   logoURL: https://mbed-media.mbed.com/nRF51822-mKIT_ang.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-KL05Z:
   name: FRDM-KL05Z
   product_code: 0210
   logoURL: https://mbed-media.mbed.com/frdm-kl05z_hMtZPp0.png
   website: http://mbed.org/platforms/FRDM-KL05Z/
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - LPCXpresso1549:
   name: LPCXpresso1549
   product_code: 1549
   logoURL: https://mbed-media.mbed.com/LPCXpresso1549_enabled.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - LPCXpresso11U68:
   name: LPCXpresso11U68
   product_code: 1168
   logoURL: https://mbed-media.mbed.com/LPCXpresso11U68_enabled.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Seeed Arch BLE:
   name: Seeed Arch BLE
   product_code: 9009
   logoURL: https://mbed-media.mbed.com/arch_ble.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - LPCXpresso4337:
   name: LPCXpresso4337
   product_code: 4337
   logoURL: https://mbed-media.mbed.com/LPCXpresso4337_enabled.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - mbed HRM1017:
   name: mbed HRM1017
   product_code: 1017
   logoURL: https://mbed-media.mbed.com/mbedHRM1017_with_mbedEmabled_Logo-01.png
   website: https://mbed.org/platforms/mbed-HRM1017/
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - ARM Cortex-M Prototyping System (MPS2):
   name: ARM Cortex-M Prototyping System (MPS2)
   product_code: 5000
   logoURL: https://mbed-media.mbed.com/V2M-MPS2_revB_colour_large.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - RedBearLab nRF51822:
   name: RedBearLab nRF51822
   product_code: 1090
   logoURL: https://mbed-media.mbed.com/RedBearLab.nRF51822.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Seeed Arch Max:
   name: Seeed Arch Max
   product_code: 9011
   logoURL: https://mbed-media.mbed.com/arch_max_front.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-K20D50M:
   name: FRDM-K20D50M
   product_code: 0230
   logoURL: https://mbed-media.mbed.com/frdm-k20.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - LPCXpresso824-MAX:
   name: LPCXpresso824-MAX
   product_code: 0824
   logoURL: https://mbed-media.mbed.com/LPCXpresso824-MAX_enabled.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - FRDM-K22F:
   name: FRDM-K22F
   product_code: 0231
   logoURL: https://mbed-media.mbed.com/frdm-k22f_YMj1jWh.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Nordic nRF51-DK:
   name: Nordic nRF51-DK
   product_code: 1100
   logoURL: https://mbed-media.mbed.com/nRF51-DK_v1.2.0_with_mbed_logo.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Renesas GR-PEACH:
   name: Renesas GR-PEACH
   product_code: 5500
   logoURL: https://mbed-media.mbed.com/GR-PEACH_C.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - RedBearLab BLE Nano:
   name: RedBearLab BLE Nano
   product_code: 1095
   logoURL: https://mbed-media.mbed.com/RedBearLab-MK20-Nano.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Nordic nRF51-Dongle:
   name: Nordic nRF51-Dongle
   product_code: 1120
   logoURL: https://mbed-media.mbed.com/nRF51-Dongle_v1.1.0_with_mbed_logo.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Ethernet IoT Starter Kit:
   name: Ethernet IoT Starter Kit
   product_code: 0245
   logoURL: https://mbed-media.mbed.com/photo1_mod_small_1.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - JKSoft Wallbot BLE:
   name: JKSoft Wallbot BLE
   product_code: 1140
   logoURL: https://mbed-media.mbed.com/WallBot-BLE_enabled.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Switch Science mbed LPC824:
   name: Switch Science mbed LPC824
   product_code: 1018
   logoURL: https://mbed-media.mbed.com/mbedLPC824_with_mbedEmabled_Logo-01.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - EA LPC4088 Display Module:
   name: EA LPC4088 Display Module
   product_code: 1062
   logoURL: https://mbed-media.mbed.com/lcd_lpc4088_4inch_banner2_170x109.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Seeed Tiny BLE:
   name: Seeed Tiny BLE
   product_code: 9012
   logoURL: https://mbed-media.mbed.com/tiny_ble_zN4c7MC.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Delta DFCM-NNN40:
   name: Delta DFCM-NNN40
   product_code: 4500
   logoURL: https://mbed-media.mbed.com/Delta_NNN40_main_image.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - MAXWSNENV:
   name: MAXWSNENV
   product_code: 0400
   logoURL: https://mbed-media.mbed.com/maxwsnenv-platform_Dq8klJy.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - WIZwiki-W7500:
   name: WIZwiki-W7500
   product_code: 2201
   logoURL: https://mbed-media.mbed.com/WIZwiki_W7500_enabled.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - BBC micro:bit:
   name: BBC micro:bit
   product_code: 9900
   logoURL: https://mbed-media.mbed.com/microbit_combined_image.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - WIZwiki-W7500ECO:
   name: WIZwiki-W7500ECO
   product_code: 2202
   logoURL: https://mbed-media.mbed.com/WIZwiki_W7500ECO_enabled2.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - WIZwiki-W7500P:
   name: WIZwiki-W7500P
   product_code: 2203
   logoURL: https://mbed-media.mbed.com/WIZwiki_W7500P_enabled2.JPG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - IOT Subsystem for Cortex-M:
   name: IOT Subsystem for Cortex-M
   product_code: 5001
   logoURL: https://mbed-media.mbed.com/V2M-MPS2_revB_colour_medium_5cIhjmO.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Switch Science mbed TY51822r3:
   name: Switch Science mbed TY51822r3
   product_code: 1019
   logoURL: https://mbed-media.mbed.com/ty51822r3_enabled.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Hexiwear:
   name: Hexiwear
   product_code: 0214
   logoURL: https://mbed-media.mbed.com/Hexiwear_Platform_Image_19Ja2aX.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - CoCo-ri-Co!:
   name: CoCo-ri-Co!
   product_code: C000
   logoURL: https://mbed-media.mbed.com/platform-photo-logo2.png
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Nordic nRF52-DK:
   name: Nordic nRF52-DK
   product_code: 1101
   logoURL: https://mbed-media.mbed.com/15CDFE31_fw2w4py.PNG
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 - Nuvoton NUC472:
   name: Nuvoton NUC472
   product_code: 1302
   logoURL: https://mbed-media.mbed.com/Nu-mbed-MUC472_copy.jpg
   website:
-  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never.
+  instructions:
+    osx: 
+    windows: 
+    linux: 
 
 ---
