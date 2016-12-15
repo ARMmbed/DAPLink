@@ -7,7 +7,7 @@ var options = {
 			"name": "{{thing.name}}", 
 			"code": "{{thing.product_code}}",
 			"logoURL": "{{thing.logoURL}}",
-			"instructions": "{{thing.instructions}}"
+			"instructions": "{{thing.instructions }}"
 		},
   		{% endfor %}
  ],

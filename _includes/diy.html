@@ -7,7 +7,7 @@
                 <ul>
                     {% for faq in site.data.faq %}
                         <li><h4 class="service-heading">{{faq.question}}</h4></li>
-                        <p class="text-muted">{{faq.answer}}</p>
+                        <p class="text-muted">{{faq.answer | markdownify}}</p>
                     {% endfor %}
                 </ul>
                 </div>

@@ -1,25 +1,21 @@
 ---
 - question1:
-  question: lorum ipsum
-  answer: suade ipsum
+  question: What is DAPLink?
+  answer: DAPLink is an interface firmware project that is focused on making the microcontroller programming experience as smooth as butter.
 
 - question2:
-  question: lorum ipsum
-  answer: suade ipsum
+  question: How do I program a board using DAPLink?
+  answer: The DAPLink interface circuit will show up like a USB Drive to your computer. To program the target chip connected to the DAPLink interface chip simply dag and drop the target binary to the USB drive. DAPLink will then load the program to the target chip.
 
 - question3:
-  question: lorum ipsum
-  answer: suade ipsum
+  question: How do I program different target chips with the same DAPLink interface? (ie use a DIPDAP to program different targets)
+  answer: Currently DAPLink can only program one target. To switch the target you will need change the firmware on the DAPLink interface chip. 
 
 - question4:
-  question: lorum ipsum
-  answer: suade ipsum
+  question: Can I use DAPLink in my project?
+  answer: Sure! Go to the mbed HDK and grab the interface layout files. Make sure to hook up USB on one side, and the 6 pins between the interface circuit and target circuit on the other side.
 
 - question5:
-  question: lorum ipsum
-  answer: suade ipsum
-
-- question6:
-  question: lorum ipsum
-  answer: suade ipsum
+  question: How do I port DAPLink to my chip?
+  answer: Instructions can be found on the [github page](https://github.com/mbedmicro/DAPLink/blob/master/docs/DEVELOPERS-GUIDE.md).
 ---
