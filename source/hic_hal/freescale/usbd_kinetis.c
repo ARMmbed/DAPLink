@@ -44,6 +44,7 @@ uint32_t StatQueueHead = 0;
 uint32_t StatQueueTail = 0;
 uint32_t LastIstat = 0;
 uint8_t UsbSuspended = 0;
+uint8_t Ep0ZlpOut = 0; 
 
 uint32_t Data1  = 0x55555555;
 
@@ -215,6 +216,7 @@ void USBD_Reset(void)
     StatQueueTail = 0;
     LastIstat = 0;
     UsbSuspended = 0;
+    Ep0ZlpOut = 0;
 
     /* EP0 control endpoint                                                     */
     BD[IDX(0, RX, ODD)].bc       = USBD_MAX_PACKET0;
@@ -476,6 +478,14 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
     idx = IDX(EPNum, RX, 0);
     sz  = BD[idx].bc;
 
+    if ((EPNum == 0) && Ep0ZlpOut) {
+        // This packet was a zero length data out packet. It has already
+        // been processed by USB0_IRQHandler. Only toggle the DATAx bit
+        // and return a size of 0.
+        protected_xor(&Data1, (1 << (idx / 2)));
+        return 0;
+    }
+
     if ((EPNum == 0) && (TOK_PID(idx) == SETUP_TOKEN)) {
         setup = 1;
     }
@@ -574,7 +584,7 @@ U32 USBD_GetError(void)
  */
 void USB0_IRQHandler(void)
 {
-    uint32_t istat;
+    uint32_t istat, num, dir, ev_odd;
     uint32_t new_istat;
     uint8_t suspended = 0;
 
@@ -583,7 +593,28 @@ void USB0_IRQHandler(void)
     // Read all tokens
     if (istat & USB_ISTAT_TOKDNE_MASK) {
         while (istat & USB_ISTAT_TOKDNE_MASK) {
-            stat_enque(USB0->STAT);
+            uint8_t stat = USB0->STAT;
+            num    = (stat >> 4) & 0x0F;
+            dir    = (stat >> 3) & 0x01;
+            ev_odd = (stat >> 2) & 0x01;
+
+            // Consume all zero length OUT packets on endpoint 0 to prevent
+            // a subsequent SETUP packet from being dropped
+            if ((0 == num) && (RX == dir)) {
+                uint32_t idx;
+                idx = IDX(num, dir, ev_odd);
+                if ((TOK_PID(idx) == OUT_TOKEN) && (BD[idx].bc == 0)) {
+                    BD[idx].bc = OutEpSize[num];
+                    if (BD[idx].stat & BD_DATA01_MASK) {
+                        BD[idx].stat = BD_OWN_MASK | BD_DTS_MASK;
+                    } else {
+                        BD[idx].stat = BD_OWN_MASK | BD_DTS_MASK | BD_DATA01_MASK;
+                    }
+                    stat |= 1 << 0;
+                }
+            }
+
+            stat_enque(stat);
             USB0->ISTAT = USB_ISTAT_TOKDNE_MASK;
 
             // Check if USB is suspending before checking istat
@@ -726,6 +757,7 @@ void USBD_Handler(void)
                 Data1 &= ~0x02;
                 BD[IDX(0, TX, EVEN)].stat &= ~BD_OWN_MASK;
                 BD[IDX(0, TX, ODD)].stat  &= ~BD_OWN_MASK;
+                Ep0ZlpOut = 0;
 #ifdef __RTX
 
                 if (USBD_RTX_EPTask[num]) {
@@ -743,6 +775,9 @@ void USBD_Handler(void)
             } else {
                 /* OUT packet                                                                 */
                 if (TOK_PID((IDX(num, dir, ev_odd))) == OUT_TOKEN) {
+                    if (0 == num) {
+                        Ep0ZlpOut = stat & (1 << 0);
+                    }
 #ifdef __RTX
 
                     if (USBD_RTX_EPTask[num]) {
