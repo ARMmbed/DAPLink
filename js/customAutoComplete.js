@@ -50,16 +50,16 @@ var options = {
 			var os = navigator.platform;
 
 			if (navigator.appVersion.indexOf("Win")!=-1){
-				$('.update-instructions-windows').tab('show');
+				$('.nav-tabs a[href="#update-instructions-windows"]').tab('show');
 			}
 			if (navigator.appVersion.indexOf("Mac")!=-1){
-				$('.update-instructions-osx').tab('show');
+				$('.nav-tabs a[href="#update-instructions-osx"]').tab('show');
 			}
 			if (navigator.appVersion.indexOf("X11")!=-1){
-				$('.update-instructions-linux').tab('show');
+				$('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
 			}
 			if (navigator.appVersion.indexOf("Linux")!=-1){
-				$('.update-instructions-linux').tab('show');
+				$('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
 			}
 		}
 	},
