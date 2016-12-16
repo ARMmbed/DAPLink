@@ -7,11 +7,22 @@ var options = {
 			"name": "{{thing.name}}", 
 			"code": "{{thing.product_code}}",
 			"logoURL": "{{thing.logoURL}}",
-			"windows_instructions": {{thing.instructions.windows | markdownify | jsonify}},
-			"linux_instructions": {{thing.instructions.linux | markdownify | jsonify}},
+			// load instructions if they exist, otherwise load default instructions (at index 0)
+			"windows_instructions": {% if thing.instructions.windows == nil %}
+								// "test data of awesome"
+								{{site.data.update[0].default.instructions.windows | markdownify | jsonify}},
+								{% else %}
+								{{thing.instructions.windows | markdownify | jsonify}},
+								{% endif %}
+			"linux_instructions": {% if thing.instructions.linux == nil %}
+								// "test data of awesome"
+								{{site.data.update[0].default.instructions.linux | markdownify | jsonify}},
+								{% else %}
+								{{thing.instructions.linux | markdownify | jsonify}},
+								{% endif %}
 			"osx_instructions": {% if thing.instructions.osx == nil %}
 								// "test data of awesome"
-								{{site.data.update[default].instructions.osx | markdownify | jsonify}}
+								{{site.data.update[0].default.instructions.osx | markdownify | jsonify}}
 								{% else %}
 								{{thing.instructions.osx | markdownify | jsonify}}
 								{% endif %}
