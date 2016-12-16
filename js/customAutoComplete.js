@@ -9,7 +9,12 @@ var options = {
 			"logoURL": "{{thing.logoURL}}",
 			"windows_instructions": {{thing.instructions.windows | markdownify | jsonify}},
 			"linux_instructions": {{thing.instructions.linux | markdownify | jsonify}},
-			"osx_instructions": {{thing.instructions.osx | markdownify | jsonify}}
+			"osx_instructions": {% if thing.instructions.osx == nil %}
+								// "test data of awesome"
+								{{site.data.update[default].instructions.osx | markdownify | jsonify}}
+								{% else %}
+								{{thing.instructions.osx | markdownify | jsonify}}
+								{% endif %}
 		},
   		{% endfor %}
  ],

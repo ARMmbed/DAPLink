@@ -10,12 +10,27 @@
 
 ---
 - default:
-  website: http://developer.mbed.org/platforms
-  instructions:
-    osx:
-    windows:
-    linux:
-
+    website: http://developer.mbed.org/platforms
+    instructions:
+      windows: |
+        1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+        1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+        1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
+        1. Wait for the firmware to program
+        1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
+      osx: |
+        1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+        1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+        1. Drag and Drop DAPLink firmware update to the BOOTLOADER usb drive
+        1. Wait for the firmware to program
+        1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'
+      linux: |
+        1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
+        1. Hold down reset button and plug board into computer, it should show up as 'BOOTLOADER'
+        1. use `cp` command to copy firmware `.bin` file to `BOOTLOADER` usb drive
+        1. Wait for the firmware to program
+        1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'    
+  
 - mbed LPC1768:
   name: mbed LPC1768
   product_code: 1010
