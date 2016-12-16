@@ -8,9 +8,18 @@
 #                  print('- %s:\n  name: %s\n  product_code: %s\n  logoURL: %s\n  website: %s\n  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never. \n' %(thing['name'], thing['name'], thing['productcode'],thing['logoURL'],thing['website']))
 
 
+# TODO: add interface_chip, target_chip and offset fields to all entries
+#   ex)
+#   interface_chip: kl26z
+#   target_chip: microbit
+#   offset: 0x8000
+
+
 ---
 - default:
     website: http://developer.mbed.org/platforms
+    fw_version: 0242
+    image_format: .bin
     instructions:
       windows: |
         1. Download [interface firmware](https://github.com/armmbed/DAPLink/releases/latest)
@@ -54,6 +63,9 @@
 - FRDM-KL25Z:
   name: FRDM-KL25Z
   product_code: 0200
+  interface_chip: k20dx
+  target_chip: frdmkl25z
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/frdm-kl25z.png
   website: http://mbed.org/handbook/mbed-FRDM-KL25Z-Getting-Started
   instructions:
@@ -74,6 +86,9 @@
 - EA LPC4088 QuickStart Board:
   name: EA LPC4088 QuickStart Board
   product_code: 1060
+  interface_chip: lpc11u35
+  target_chip: lpc4088qsb
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/ea-lpc4088.png
   website: http://mbed.org/handbook/EA-LPC4088-Getting-Started
   instructions:
@@ -104,6 +119,9 @@
 - FRDM-KL46Z:
   name: FRDM-KL46Z
   product_code: 0220
+  interface_chip: k20dx
+  target_chip: frdmkl46z
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/frdm-kl46z.png
   website: http://mbed.org/platforms/FRDM-KL46Z/
   instructions:
@@ -114,6 +132,9 @@
 - Seeeduino-Arch-Pro:
   name: Seeeduino-Arch-Pro
   product_code: 9004
+  interface_chip: lpc11u35
+  target_chip: archpro
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/arch_pro_01.jpg
   website:
   instructions:
@@ -124,6 +145,9 @@
 - FRDM-K64F:
   name: FRDM-K64F
   product_code: 0240
+  interface_chip: k20dx
+  target_chip: frdmk64f
+  offset: 0x5000
   logoURL: https://mbed-media.mbed.com/FRDM-K64F_400x300_WO6GnVU.png
   website: http://mbed.org/platforms/FRDM-K64F
   instructions:
@@ -144,6 +168,9 @@
 - FRDM-KL05Z:
   name: FRDM-KL05Z
   product_code: 0210
+  interface_chip: k20dx
+  target_chip: frdmkl05z
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/frdm-kl05z_hMtZPp0.png
   website: http://mbed.org/platforms/FRDM-KL05Z/
   instructions:
@@ -174,6 +201,9 @@
 - Seeed Arch BLE:
   name: Seeed Arch BLE
   product_code: 9009
+  interface_chip: lpc11u35
+  target_chip: archble
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/arch_ble.jpg
   website:
   instructions:
@@ -194,6 +224,9 @@
 - mbed HRM1017:
   name: mbed HRM1017
   product_code: 1017
+  interface_chip: lpc11u35
+  target_chip: hrm1017
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/mbedHRM1017_with_mbedEmabled_Logo-01.png
   website: https://mbed.org/platforms/mbed-HRM1017/
   instructions:
@@ -214,6 +247,9 @@
 - RedBearLab nRF51822:
   name: RedBearLab nRF51822
   product_code: 1090
+  interface_chip: k20dx
+  target_chip: rbl
+  offset: 0x5000
   logoURL: https://mbed-media.mbed.com/RedBearLab.nRF51822.jpg
   website:
   instructions:
@@ -234,6 +270,9 @@
 - FRDM-K20D50M:
   name: FRDM-K20D50M
   product_code: 0230
+  interface_chip: k20dx
+  target_chip: frdmk20dx
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/frdm-k20.png
   website:
   instructions:
@@ -244,6 +283,9 @@
 - LPCXpresso824-MAX:
   name: LPCXpresso824-MAX
   product_code: 0824
+  interface_chip: lpc11u35
+  target_chip: lpc824xpresso
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/LPCXpresso824-MAX_enabled.JPG
   website:
   instructions:
@@ -254,6 +296,9 @@
 - FRDM-K22F:
   name: FRDM-K22F
   product_code: 0231
+  interface_chip: k20dx
+  target_chip: frdmk22f
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/frdm-k22f_YMj1jWh.png
   website:
   instructions:
@@ -284,6 +329,9 @@
 - RedBearLab BLE Nano:
   name: RedBearLab BLE Nano
   product_code: 1095
+  interface_chip: k20dx
+  target_chip: rblnano
+  offset: 0x5000
   logoURL: https://mbed-media.mbed.com/RedBearLab-MK20-Nano.jpg
   website:
   instructions:
@@ -324,6 +372,9 @@
 - Switch Science mbed LPC824:
   name: Switch Science mbed LPC824
   product_code: 1018
+  interface_chip: lpc11u35
+  target_chip: ssci824
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/mbedLPC824_with_mbedEmabled_Logo-01.png
   website:
   instructions:
@@ -334,6 +385,9 @@
 - EA LPC4088 Display Module:
   name: EA LPC4088 Display Module
   product_code: 1062
+  interface_chip: lpc11u35
+  target_chip: lpc4088dm
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/lcd_lpc4088_4inch_banner2_170x109.png
   website:
   instructions:
@@ -344,6 +398,9 @@
 - Seeed Tiny BLE:
   name: Seeed Tiny BLE
   product_code: 9012
+  interface_chip: lpc11u35
+  target_chip: tiny
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/tiny_ble_zN4c7MC.jpg
   website:
   instructions:
@@ -384,6 +441,10 @@
 - BBC micro:bit:
   name: BBC micro:bit
   product_code: 9900
+  image_format: .hex
+  interface_chip: kl26z
+  target_chip: microbit
+  offset: 0x8000
   logoURL: https://mbed-media.mbed.com/microbit_combined_image.png
   website:
   instructions:
@@ -424,6 +485,9 @@
 - Switch Science mbed TY51822r3:
   name: Switch Science mbed TY51822r3
   product_code: 1019
+  interface_chip: lpc11u35
+  target_chip: sscity
+  offset: 0x0000
   logoURL: https://mbed-media.mbed.com/ty51822r3_enabled.png
   website:
   instructions:
