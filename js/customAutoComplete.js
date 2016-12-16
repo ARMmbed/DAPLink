@@ -7,9 +7,18 @@ var options = {
 			"name": "{{thing.name}}", 
 			"code": "{{thing.product_code}}",
 			"logoURL": "{{thing.logoURL}}",
+			//  assemble name of firmware file
+			"fw_name":  {% if thing.fw_name != nil%}
+							{%if thing.image_format == nil %}
+							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{site.data.update[0].default.image_format}}",
+							{% else %}
+							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{thing.image_format}}",
+							{%endif%}
+						{%else%}
+							"None",
+						{%endif%}
 			// load instructions if they exist, otherwise load default instructions (at index 0)
 			"windows_instructions": {% if thing.instructions.windows == nil %}
-								// "test data of awesome"
 								{{site.data.update[0].default.instructions.windows | markdownify | jsonify}},
 								{% else %}
 								{{thing.instructions.windows | markdownify | jsonify}},
@@ -61,6 +70,10 @@ var options = {
 			$("#update-instructions-windows").html(winvalue)
 			$("#update-instructions-linux").html(linvalue)
 			$("#update-instructions-osx").html(osxvalue)
+
+			//  Output file name
+			var fw_name = $("#update-search").getSelectedItemData().fw_name;
+			$('#file-name').html(fw_name)
 
 			// Set default tab based on browser
 			var os = navigator.platform;
