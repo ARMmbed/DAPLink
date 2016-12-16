@@ -73,7 +73,7 @@ var options = {
 
 			//  Output file name
 			var fw_name = $("#update-search").getSelectedItemData().fw_name;
-			$('#file-name').html(fw_name)
+			$('#file-name').html('Firmware File: '+fw_name)
 
 			// Set default tab based on browser
 			var os = navigator.platform;
