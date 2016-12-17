@@ -134,14 +134,14 @@ def daplink_test(workspace, parent_test):
     test = DLMassStorageTester(board, test_info, "Shutil binary file load "
                                "interface", board.MODE_BL)
     test.set_shutils_copy(interface.bin_path)
-    test.set_expected_data(bin_data)
+    test.set_expected_data(bin_data, start)
     test.run()
 
     # Test loading a hex file with shutils
     test = DLMassStorageTester(board, test_info, "Shutil hex file load "
                                "interface", board.MODE_BL)
     test.set_shutils_copy(interface.hex_path)
-    test.set_expected_data(bin_data)
+    test.set_expected_data(bin_data, start)
     test.run()
 
     test_file_type('bin', board.MODE_BL, board, test_info, start, bin_data)
@@ -165,14 +165,14 @@ def daplink_test(workspace, parent_test):
     test = DLMassStorageTester(board, test_info, "Shutil binary file load "
                                "bootloader", board.MODE_IF)
     test.set_shutils_copy(firmware.bin_path)
-    test.set_expected_data(bin_data)
+    test.set_expected_data(bin_data, start)
     test.run()
 
     # Test loading a hex file with shutils
     test = DLMassStorageTester(board, test_info, "Shutil hex file load "
                                "bootloader", board.MODE_IF)
     test.set_shutils_copy(firmware.hex_path)
-    test.set_expected_data(bin_data)
+    test.set_expected_data(bin_data, start)
     test.run()
 
     test_file_type('bin', board.MODE_IF, board, test_info, start, bin_data)

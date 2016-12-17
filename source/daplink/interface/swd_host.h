@@ -24,7 +24,11 @@
 
 #include "flash_blob.h"
 #include "target_reset.h"
+#ifdef TARGET_MCU_CORTEX_A
+#include "debug_ca.h"
+#else
 #include "debug_cm.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +37,7 @@ extern "C" {
 uint8_t swd_init(void);
 uint8_t swd_off(void);
 uint8_t swd_init_debug(void);
+uint8_t swd_uninit_debug(void);
 uint8_t swd_read_dp(uint8_t adr, uint32_t *val);
 uint8_t swd_write_dp(uint8_t adr, uint32_t val);
 uint8_t swd_read_ap(uint32_t adr, uint32_t *val);

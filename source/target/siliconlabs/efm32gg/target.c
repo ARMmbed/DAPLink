@@ -25,7 +25,7 @@
 #include "flash_blob.c"
 
 // target information
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
     .sector_size    = 4096,
     .sector_cnt     = (MB(1) / 4096),
     .flash_start    = 0,

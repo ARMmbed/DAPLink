@@ -5,32 +5,19 @@ common:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
         - DAPLINK_HIC_ID=0x97969901  # DAPLINK_HIC_ID_KL26
-        - BL_TARGET_FLASH
+        - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
+        - FLASH_DRIVER_IS_FLASH_RESIDENT=1
+        - DAPLINK_NO_ASSERT_FILENAMES
     includes:
         - source/hic_hal/freescale/kl26z
-        - source/hic_hal/freescale/iap/devices/MKL26Z4
-        - source/hic_hal/freescale/kl26z
-        # fsl_flash_driver
-        - source/hic_hal/freescale/iap/driver
-        - source/hic_hal/freescale/iap/devices
+        - source/hic_hal/freescale/kl26z/MKL26Z4
     sources:
         hic_hal:
             - source/hic_hal/freescale/kl26z
-            - source/hic_hal/freescale/iap/driver/flash_densities_kl_series.c
-            - source/hic_hal/freescale/iap/devices/MKL26Z4
-            - source/hic_hal/freescale/kl26z
+            - source/hic_hal/freescale/kl26z/MKL26Z4
             - source/hic_hal/freescale/kl26z/armcc
         fsl_flash_driver:
             - source/hic_hal/freescale/iap
-            - source/hic_hal/freescale/iap/driver/flash_init.c
-            - source/hic_hal/freescale/iap/driver/flash_erase.c
-            - source/hic_hal/freescale/iap/driver/flash_program.c
-            - source/hic_hal/freescale/iap/driver/flash_erase_all.c
-            - source/hic_hal/freescale/iap/driver/flash_verify_erase.c
-            - source/hic_hal/freescale/iap/driver/flash_get_property.c
-            - source/hic_hal/freescale/iap/driver/flash_verify_program.c
-            - source/hic_hal/freescale/iap/driver/flash_verify_erase_all.c
-            - source/hic_hal/freescale/iap/driver/flash_command_sequence.c
 
 tool_specific:
     uvision:

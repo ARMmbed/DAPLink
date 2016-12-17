@@ -1,0 +1,6 @@
+common:
+    macros:
+        - WEBUSB_INTERFACE
+    sources:
+        usb:
+            - source/usb/webusb

@@ -37,7 +37,7 @@
 #include "flash_intf.h"     // for flash_intf_target
 
 // Must be bigger than 4x the flash size of the biggest supported
-// device.  This is to accomidate for hex file programming.
+// device.  This is to accomodate for hex file programming.
 static const uint32_t disc_size = MB(64);
 
 static const char mbed_redirect_file[] =
@@ -274,6 +274,12 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 #endif
 #ifdef HID_ENDPOINT
     pos += util_write_string(buf + pos, ", HID");
+#endif
+#if (USBD_DFU_ENABLE)
+    pos += util_write_string(buf + pos, ", DFU");
+#endif
+#if (USBD_WEBUSB_ENABLE)
+    pos += util_write_string(buf + pos, ", WebUSB");
 #endif
     pos += util_write_string(buf + pos, "\r\n");
 

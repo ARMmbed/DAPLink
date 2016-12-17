@@ -49,12 +49,23 @@ const char *board_id = "0000";
 Now running `progen generate -t uvision` will create project files including the new board that can be developed and debugged. For more information about the yaml format [see the project_generator documentation.](https://github.com/project-generator/project_generator/wiki/Getting_started)
 
 ### Adding Board to Automated Tests
-Update `test/into.py`. There are various dictionaries that you will need to add to
-* Add the name of the interface (as specified in the projects.yaml) to FIRMWARE_NAME_TO_BOARD_ID and associate it with the board ID
+Update `test/info.py` so the new board has at least one configuration in SUPPORTED_CONFIGURATIONS
+```python
+SUPPORTED_CONFIGURATIONS = [
+    #   Board ID    Firmware                            Bootloader          Target
+    ...
+    (   0x240,      'k20dx_frdmk64f_if',                'k20dx_bl',         'FRDM-K64F'                     ),
+    ...
+]
+```
+Configration Fields
+* Board ID - The ID assigned to the board type.
+* Firmware - The name of the firmware as shown in projects.yaml.
+* Bootloader - The name of the bootloader firmware as shown in projects.yaml. Only required on HICs with a DAPLink bootloader.
+* Target - Name of the target for this board.
+    * If this is an mbed official board then the target should match the name in the mbed platform page URL. For example the K64F is located at https://developer.mbed.org/platforms/FRDM-K64F/ so it would have the target name `FRDM-K64F`.    Using this naming convention allows the automated tests to use the RESTful Compile API. the automated tests will build the    target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the    resulting image to the target. 
+    * If it is not, you will need to build the UART application yourself and supply it to `test\run_tests.py` via --targetdir. In this case, the target is the application image filename sans extension.
 
-* Add to TARGET_NAME_TO_BOARD_ID. What you use for the key will depend on whether your board is mbed enabled _and_ registered with mbed.org.
-	* If it is, the automated tests will build the target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the resulting image to the target. (The source code for the application is in an mbed.org mercurial repository.) In this case, the dictionary key is the board name as registered in mbed.org.
-	* If it is not, you will need to build the UART application yourself and supply it to `test\run_tests.py` via --targetdir. In this case, the dictionary key is the application image filename sans extension.
-* You may need to update one or more other dictionaries. See comments in the code for guidance.
+You may need to update one or more other dictionaries. See comments in the code for guidance.
 
 See [Automated Tests](AUTOMATED_TESTS.md) for more information related to automated testing.

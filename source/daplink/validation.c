@@ -28,7 +28,7 @@ static inline uint32_t test_range(const uint32_t test, const uint32_t min, const
     return ((test < min) || (test > max)) ? 0 : 1;
 }
 
-uint8_t validate_bin_nvic(const uint8_t *buf)
+__weak uint8_t validate_bin_nvic(const uint8_t *buf)
 {
     // test for known required NVIC entries
     //  00 is stack pointer (RAM address)
@@ -57,7 +57,7 @@ uint8_t validate_bin_nvic(const uint8_t *buf)
     return 1;
 }
 
-uint8_t validate_hexfile(const uint8_t *buf)
+__weak uint8_t validate_hexfile(const uint8_t *buf)
 {
     // look here for known hex records
     // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}

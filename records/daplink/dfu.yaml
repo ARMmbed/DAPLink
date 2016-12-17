@@ -1,0 +1,6 @@
+common:
+    includes:
+        - source/daplink/dfu
+    sources:
+        dfu:
+            - source/daplink/dfu

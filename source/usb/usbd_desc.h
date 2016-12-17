@@ -30,6 +30,7 @@
 #define USB_INTERFACE_ASSOC_DESC_SIZE     (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR))
 #define USB_INTERFACE_DESC_SIZE           (sizeof(USB_INTERFACE_DESCRIPTOR))
 #define USB_ENDPOINT_DESC_SIZE            (sizeof(USB_ENDPOINT_DESCRIPTOR))
+#define USB_BOS_DESC_SIZE                 (sizeof(USB_BINARY_OBJECT_STORE_DESCRIPTOR))
 #define USB_HID_DESC_SIZE                 (sizeof(HID_DESCRIPTOR))
 #define USB_HID_REPORT_DESC_SIZE          (sizeof(USBD_HID_ReportDescriptor))
 

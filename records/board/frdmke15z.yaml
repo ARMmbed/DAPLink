@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/frdmke15z.c
+        target:
+            - source/target/freescale/ke15z/target.c
+            - source/target/freescale/target_reset_Lseries.c

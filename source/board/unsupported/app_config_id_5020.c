@@ -22,7 +22,7 @@
 #include "target_config.h"
 
 // frdm-k64f target information
-const target_cfg_t target_device = {
+target_cfg_t target_device = {
     .board_id   = "5020",
     .secret     = "xxxxxxxx",
     .sector_size    = 8192,

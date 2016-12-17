@@ -35,7 +35,7 @@
 static error_t target_flash_init(void);
 static error_t target_flash_uninit(void);
 static error_t target_flash_program_page(uint32_t adr, const uint8_t *buf, uint32_t size);
-static error_t target_flash_erase_sector(uint32_t sector);
+static error_t target_flash_erase_sector(uint32_t addr);
 static error_t target_flash_erase_chip(void);
 static uint32_t target_flash_program_page_min_size(uint32_t addr);
 static uint32_t target_flash_erase_sector_size(uint32_t addr);
@@ -79,6 +79,7 @@ static error_t target_flash_uninit(void)
         target_set_state(RESET_RUN);
     }
 
+    swd_uninit_debug();
     swd_off();
     return ERROR_SUCCESS;
 }
@@ -118,11 +119,16 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
     return ERROR_SUCCESS;
 }
 
-static error_t target_flash_erase_sector(uint32_t sector)
+static error_t target_flash_erase_sector(uint32_t addr)
 {
     const program_target_t *const flash = target_device.flash_algo;
 
-    if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, sector * target_device.sector_size, 0, 0, 0)) {
+    // Check to make sure the address is on a sector boundary
+    if ((addr % target_device.sector_size) != 0) {
+        return ERROR_ERASE_SECTOR;
+    }
+
+    if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, addr, 0, 0, 0)) {
         return ERROR_ERASE_SECTOR;
     }
 

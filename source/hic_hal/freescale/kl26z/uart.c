@@ -39,6 +39,7 @@ struct {
 
 void clear_buffers(void)
 {
+    util_assert(!(UART->C2 & UART_C2_TIE_MASK));
     memset((void *)&read_buffer, 0xBB, sizeof(read_buffer.data));
     read_buffer.idx_in = 0;
     read_buffer.idx_out = 0;
@@ -54,7 +55,6 @@ void clear_buffers(void)
 int32_t uart_initialize(void)
 {
     NVIC_DisableIRQ(UART_RX_TX_IRQn);
-    clear_buffers();
 
     // enable clk port
     if (UART_PORT == PORTA) {
@@ -82,6 +82,13 @@ int32_t uart_initialize(void)
         SIM->SCGC4 |= SIM_SCGC4_UART2_MASK;
     }
 
+    // transmitter and receiver disabled
+    UART->C2 &= ~(UART_C2_RE_MASK | UART_C2_TE_MASK);
+    // disable interrupt
+    UART->C2 &= ~(UART_C2_RIE_MASK | UART_C2_TIE_MASK);
+
+    clear_buffers();
+
     // alternate setting
     UART_PORT->PCR[PIN_UART_RX_BIT] = PORT_PCR_MUX(PIN_UART_RX_MUX_ALT) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
     UART_PORT->PCR[PIN_UART_TX_BIT] = PORT_PCR_MUX(PIN_UART_TX_MUX_ALT);
@@ -108,9 +115,9 @@ int32_t uart_reset(void)
 {
     // disable interrupt
     NVIC_DisableIRQ(UART_RX_TX_IRQn);
-    clear_buffers();
     // disable TIE interrupt
     UART->C2 &= ~(UART_C2_TIE_MASK);
+    clear_buffers();
     // enable interrupt
     NVIC_EnableIRQ(UART_RX_TX_IRQn);
     return 1;
@@ -124,6 +131,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
     uint32_t dll;
     // disable interrupt
     NVIC_DisableIRQ(UART_RX_TX_IRQn);
+    UART->C2 &= ~(UART_C2_RIE_MASK | UART_C2_TIE_MASK);
     // Disable receiver and transmitter while updating
     UART->C2 &= ~(UART_C2_RE_MASK | UART_C2_TE_MASK);
     clear_buffers();
@@ -170,6 +178,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
     // Enable UART interrupt
     NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
     NVIC_EnableIRQ(UART_RX_TX_IRQn);
+    UART->C2 |= UART_C2_RIE_MASK;
     return 1;
 }
 

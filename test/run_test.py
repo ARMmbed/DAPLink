@@ -27,7 +27,7 @@ optional arguments:
   --password PASSWORD   MBED password (required for compile-api)
   --firmwaredir FIRMWAREDIR
                         Directory with firmware images to test
-  --firmware {k20dx_k64f_if,lpc11u35_efm32gg_stk_if,...} (run script with --help to see full list)
+  --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
@@ -74,6 +74,7 @@ from daplink_firmware import load_bundle_from_project, load_bundle_from_release
 from firmware import Firmware
 from target import load_target_bundle, build_target_bundle
 from test_daplink import daplink_test
+import info
 
 DEFAULT_TEST_DIR = './test_results'
 
@@ -376,13 +377,6 @@ class TestManager(object):
                 continue
             board_list.append(board)
 
-        # Create a table mapping each board id to a target
-        board_id_to_target = {}
-        for target in self._target_list:
-            assert target.board_id not in board_id_to_target, 'Multiple ' \
-                'targets found for board id "%s"' % target.board_id
-            board_id_to_target[target.board_id] = target
-
         # Create a list for bootloader firmware and interface firmware
         bootloader_firmware_list = []
         filtered_interface_firmware_list = []
@@ -397,77 +391,68 @@ class TestManager(object):
             else:
                 assert False, 'Unsupported firmware type "%s"' % firmware.type
 
+        # Create a table mapping name to object with that name
+        TARGET_NAME_TO_TARGET = {target.name: target for target in
+                                 self._target_list}
+        FIRMWARE_NAME_TO_FIRMWARE = {firmware.name: firmware for firmware in
+                                     filtered_interface_firmware_list}
+        BL_NAME_TO_BL = {firmware.name: firmware for firmware in
+                         bootloader_firmware_list}
+
         # Explicitly specified boards must be present
         fw_name_set = set(fw.name for fw in filtered_interface_firmware_list)
         if self._firmware_filter is not None:
             assert self._firmware_filter == fw_name_set
 
-        # Create a table mapping each hic to a bootloader
-        hic_id_to_bootloader = {}
-        for firmware in bootloader_firmware_list:
-            hic_id = firmware.hic_id
-            assert hic_id not in hic_id_to_bootloader, 'Duplicate ' \
-                'bootloaders for HIC "%s" not allowed'
-            hic_id_to_bootloader[hic_id] = firmware
-
-        # Create a test configuration for each interface and supported board
-        # combination
+        # Create test configurations for each supported configuration
         test_conf_list = []
-        self._untested_firmware = []
-        for firmware in filtered_interface_firmware_list:
-            board_id = firmware.board_id
-            hic_id = firmware.hic_id
-            bl_firmware = None
+        untested_firmware = set(filtered_interface_firmware_list)
+        for board_id, fw_name, bl_fw_name, target_name in info.SUPPORTED_CONFIGURATIONS:
             target = None
+            if_firmware = None
+            bl_firmware = None
+            if target_name in TARGET_NAME_TO_TARGET:
+                target = TARGET_NAME_TO_TARGET[target_name]
+            if fw_name in FIRMWARE_NAME_TO_FIRMWARE:
+                if_firmware = FIRMWARE_NAME_TO_FIRMWARE[fw_name]
+            if bl_fw_name in BL_NAME_TO_BL:
+                bl_firmware = BL_NAME_TO_BL[bl_fw_name]
 
+            target_required = self._test_ep
+            bl_required = self._load_bl or self._test_daplink
+            if if_firmware is None:
+                # Skip configuration
+                continue
+            if target_required and target is None:
+                # Skip configuration
+                test_info.info('No target to test firmware %s' % fw_name)
+                continue
+            if bl_required and bl_firmware is None:
+                # Skip configuration
+                test_info.info('No bootloader to test firmware %s' % fw_name)
+                continue
             # Check if there is a board to test this firmware
             # and if not skip it
             if board_id not in board_id_to_board_list:
-                self._untested_firmware.append(firmware)
-                test_info.info('No board to test firmware %s' % firmware.name)
-                continue
-
-            # Get target
-            target = None
-            target_required = self._test_ep
-            if board_id in board_id_to_target:
-                target = board_id_to_target[board_id]
-            elif target_required:
-                self._untested_firmware.append(firmware)
-                test_info.info('No target to test firmware %s' %
-                               firmware.name)
-                continue
-
-            # Check for a bootloader
-            bl_required = self._load_bl or self._test_daplink
-            if hic_id in hic_id_to_bootloader:
-                bl_firmware = hic_id_to_bootloader[hic_id]
-            elif bl_required:
-                self._untested_firmware.append(firmware)
-                test_info.info('No bootloader to test firmware %s' %
-                               firmware.name)
+                test_info.info('No board to test firmware %s' % fw_name)
                 continue
 
             # Create a test configuration for each board
             board_list = board_id_to_board_list[board_id]
             for board in board_list:
-                if firmware.hic_id != board.hic_id:
-                    test_info.warning('FW HIC ID %s != Board HIC ID %s' %
-                                      (firmware.hic_id, board.hic_id))
-                if bl_firmware is not None:
-                    if firmware.hic_id != bl_firmware.hic_id:
-                        test_info.warning('FW HIC ID %s != BL HIC ID %s' %
-                                          (firmware.hic_id,
-                                           bl_firmware.hic_id))
-                if target is not None:
-                    assert firmware.board_id == target.board_id
-
-                test_conf = TestConfiguration(firmware.name + ' ' + board.name)
-                test_conf.if_firmware = firmware
+                test_conf = TestConfiguration(if_firmware.name + ' ' +
+                                              board.name)
+                test_conf.if_firmware = if_firmware
                 test_conf.bl_firmware = bl_firmware
                 test_conf.board = board
                 test_conf.target = target
                 test_conf_list.append(test_conf)
+                # remove this from the untested list
+                if if_firmware in untested_firmware:
+                    untested_firmware.remove(if_firmware)
+                assert bl_firmware not in untested_firmware
+
+        self._untested_firmware = list(untested_firmware)
         self._test_configuration_list = test_conf_list
 
 

@@ -35,6 +35,7 @@ extern "C" {
 #define SERIAL_TASK_PRIORITY        (1)
 #define TIMER_TASK_PRIORITY         (11)
 #define DAP_TASK_PRIORITY           (15)
+#define DFU_TASK_PRIORITY           (9)
 #define MSC_TASK_PRIORITY           (5)
 #define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
 
@@ -44,7 +45,8 @@ extern "C" {
 #define TIMER_TASK_30_STACK (136)
 #define DAP_TASK_STACK      (272)
 #define SERIAL_TASK_STACK   (312)
-#define MAIN_TASK_STACK     (800)
+#define MAIN_TASK_STACK     (1000)
+#define DFU_TASK_STACK      (400)
 
 #ifdef __cplusplus
 }

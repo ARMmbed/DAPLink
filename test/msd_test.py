@@ -23,6 +23,7 @@ import time
 import shutil
 import six
 import info
+import intelhex
 
 
 def _same(d1, d2):
@@ -61,7 +62,6 @@ MOCK_FILE_LIST_AFTER = [
     ("file2.jpg", "file contents here")
 ]
 
-
 class MassStorageTester(object):
 
     def __init__(self, board, parent_test, test_name):
@@ -78,6 +78,7 @@ class MassStorageTester(object):
         self._mock_file_list_after = []
         self._mock_dir_list_after = []
         self._programming_file_name = None
+        self._start = 0
 
     def set_shutils_copy(self, source_file_name):
         """
@@ -110,10 +111,11 @@ class MassStorageTester(object):
         assert isinstance(size, six.integer_types)
         self._flush_size = size
 
-    def set_expected_data(self, data):
+    def set_expected_data(self, data, start=0):
         """Data that should have been written to the device"""
         assert data is None or type(data) is bytearray
         self._expected_data = data
+        self._start = start
 
     def set_expected_failure_msg(self, msg):
         """Set the expected failure message as a string"""
@@ -138,8 +140,9 @@ class MassStorageTester(object):
 
     def _check_data_correct(self, expected_data, test_info):
         """Return True if the actual data written matches the expected"""
+        print (test_info)
         data_len = len(expected_data)
-        data_loaded = self.board.read_target_memory(0, data_len)
+        data_loaded = self.board.read_target_memory(self._start, data_len)
         return _same(expected_data, data_loaded)
 
     def run(self):
@@ -268,31 +271,36 @@ def test_mass_storage(workspace, parent_test):
     locked_when_erased = board.get_board_id() in info.BOARD_ID_LOCKED_WHEN_ERASED
     bad_vector_table = target.name in info.TARGET_WITH_BAD_VECTOR_TABLE_LIST
 
+    intel_hex = intelhex.IntelHex(hex_file)
+    addresses = intel_hex.addresses()
+    addresses.sort()
+    start = addresses[0]
+
     # Test loading a binary file with shutils
     if not bad_vector_table:
         test = MassStorageTester(board, test_info, "Shutil binary file load")
         test.set_shutils_copy(bin_file)
-        test.set_expected_data(bin_file_contents)
+        test.set_expected_data(bin_file_contents, start)
         test.run()
 
     # Test loading a binary file with flushes
     if not bad_vector_table:
         test = MassStorageTester(board, test_info, "Load binary with flushes")
         test.set_programming_data(bin_file_contents, 'image.bin')
-        test.set_expected_data(bin_file_contents)
+        test.set_expected_data(bin_file_contents, start)
         test.set_flush_size(0x1000)
         test.run()
 
     # Test loading a hex file with shutils
     test = MassStorageTester(board, test_info, "Shutil hex file load")
     test.set_shutils_copy(hex_file)
-    test.set_expected_data(bin_file_contents)
+    test.set_expected_data(bin_file_contents, start)
     test.run()
 
     # Test loading a hex file with flushes
     test = MassStorageTester(board, test_info, "Load hex with flushes")
     test.set_programming_data(hex_file_contents, 'image.hex')
-    test.set_expected_data(bin_file_contents)
+    test.set_expected_data(bin_file_contents, start)
     test.set_flush_size(0x1000)
     test.run()
 
@@ -302,7 +310,7 @@ def test_mass_storage(workspace, parent_test):
         test_data_size = 0x789
         test_data = bin_file_contents[0:0 + test_data_size]
         test.set_programming_data(test_data, 'image.bin')
-        test.set_expected_data(test_data)
+        test.set_expected_data(test_data, start)
         test.run()
 
     # Test loading a blank binary - this image should cause a timeout
@@ -310,7 +318,7 @@ def test_mass_storage(workspace, parent_test):
     test = MassStorageTester(board, test_info, "Load blank binary")
     test.set_programming_data(blank_bin_contents, 'image.bin')
     test.set_expected_failure_msg("The transfer timed out.\r\n")
-    test.set_expected_data(None)
+    test.set_expected_data(None, start)
     test.run()
 
     # Test loading a blank binary with a vector table but padded with 0xFF.
@@ -320,9 +328,9 @@ def test_mass_storage(workspace, parent_test):
         test.set_programming_data(vectors_and_pad, 'image.bin')
         if locked_when_erased:
             test.set_expected_failure_msg("The interface firmware ABORTED programming. Image is trying to set security bits\r\n")
-            test.set_expected_data(None)
+            test.set_expected_data(None, start)
         else:
-            test.set_expected_data(vectors_and_pad)
+            test.set_expected_data(vectors_and_pad, start)
         test.run()
 
     # Test a normal load with dummy files created beforehand
@@ -332,7 +340,7 @@ def test_mass_storage(workspace, parent_test):
     test.add_mock_files(MOCK_FILE_LIST)
     test.add_mock_dirs_after_load(MOCK_DIR_LIST_AFTER)
     test.add_mock_files_after_load(MOCK_FILE_LIST_AFTER)
-    test.set_expected_data(bin_file_contents)
+    test.set_expected_data(bin_file_contents, start)
     test.run()
     # Note - it is not unexpected for an "Extra Files" test to fail
     #        when a binary file is loaded, since there is no way to
@@ -341,7 +349,7 @@ def test_mass_storage(workspace, parent_test):
     # Finally, load a good binary
     test = MassStorageTester(board, test_info, "Load good file to restore state")
     test.set_programming_data(hex_file_contents, 'image.hex')
-    test.set_expected_data(bin_file_contents)
+    test.set_expected_data(bin_file_contents, start)
     test.run()
 
     # Ideas for future tests - contributions welcome

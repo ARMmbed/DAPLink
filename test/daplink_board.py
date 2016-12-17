@@ -277,6 +277,13 @@ class DaplinkBoard(object):
         """Convenience function to the path to a file on the drive"""
         return os.path.normpath(self.mount_point + os.sep + file_name)
 
+    def refresh(self, parent_test):
+        """Remount driver to get updated contents"""
+        refresh_filename = self.get_file_path('REFRESH.ACT')
+        with open(refresh_filename, 'wb') as _:
+            pass
+        self.wait_for_remount(parent_test)
+
     def set_mode(self, mode, parent_test=None):
         """Set the mode to either MODE_IF or MODE_BL"""
         assert ((mode is DaplinkBoard.MODE_BL) or
@@ -521,8 +528,14 @@ class DaplinkBoard(object):
             return False
         self.unique_id, self.serial_port, self.mount_point = endpoints
         # Serial port can be missing
-        assert self.unique_id is not None
-        assert self.mount_point is not None
+        if self.unique_id is None:
+            if exptn_on_fail:
+                raise Exception("Mount point is null")
+            return False
+        if self.mount_point is None:
+            if exptn_on_fail:
+                raise Exception("Mount point is null")
+            return False
         self.board_id = int(self.unique_id[0:4], 16)
         self._hic_id = int(self.unique_id[-8:], 16)
 

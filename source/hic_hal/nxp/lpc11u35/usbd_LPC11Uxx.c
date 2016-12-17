@@ -53,6 +53,7 @@ EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
 volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __at(EP_LIST_BASE);
 
 static U32 addr = 3 * 64 + EP_BUF_BASE;
+static U32 ctrl_out_next = 0;
 
 /*
  *  Get EP CmdStat pointer
@@ -108,8 +109,7 @@ void USBD_Init(void)
                                  (1UL << 27);
     LPC_USB->DEVCMDSTAT  |= (1UL << 9);     /* PLL ON */
     LPC_IOCON->PIO0_3    &=  ~(0x1F);
-    LPC_IOCON->PIO0_3    |= (1UL << 3) |    /* pull-down */
-                            (1UL << 0);     /* Secondary function VBUS */
+    LPC_IOCON->PIO0_3    |= (1UL << 0);     /* Secondary function VBUS */
     LPC_IOCON->PIO0_6    &=   ~7;
     LPC_IOCON->PIO0_6    |= (1UL << 0);     /* Secondary function USB CON */
     LPC_SYSCON->PDRUNCFG &= ~((1UL << 8) |  /* USB PLL powered */
@@ -156,6 +156,7 @@ void USBD_Reset(void)
         EPList[i] = (1UL << 30);            /* EPs disabled */
     }
 
+    ctrl_out_next = 0;
     EPBufInfo[0].buf_len = USBD_MAX_PACKET0;
     EPBufInfo[0].buf_ptr = EP_BUF_BASE;
     EPBufInfo[1].buf_len = USBD_MAX_PACKET0;
@@ -422,6 +423,11 @@ void USBD_SetStallEP(U32 EPNum)
         }
     }
 
+    if ((EPNum & 0x7F) == 0) {
+        /* Endpoint is stalled so control out won't be next */
+        ctrl_out_next = 0;
+    }
+
     *ptr |=  EP_STALL;
 }
 
@@ -495,14 +501,14 @@ void USBD_ClearEPBuf(U32 EPNum)
 
 U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
 {
-    U32 cnt, i;
-    U32 *ptr;
+    U32 cnt, i, xfer_size;
+    volatile U32 *ptr;
     U8 *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
 
     /* Setup packet */
-    if ((EPNum == 0) && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
-        cnt =  USBD_MAX_PACKET0;
+    if ((EPNum == 0) && !ctrl_out_next && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
+        cnt = USBD_MAX_PACKET0;
 
         if (size < cnt) {
             util_assert(0);
@@ -513,6 +519,16 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
 
         for (i = 0; i < cnt; i++) {
             pData[i] = dataptr[i];
+        }
+
+        xfer_size = (pData[7] << 8) | (pData[6] << 0);
+        if ((xfer_size > 0) && (pData[0] & (1 << 7))) {
+            /* This control transfer has a data IN stage            */
+            /* and ends with a zero length data OUT transfer.       */
+            /* Ensure the data OUT token is not skipped even if     */
+            /* a SETUP token arrives before USBD_ReadEP has         */
+            /* been called.                                         */
+            ctrl_out_next = 1;
         }
 
         LPC_USB->EPSKIP |= (1 << EP_IN_IDX(EPNum));
@@ -536,6 +552,8 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
         cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
         dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
+        util_assert(!(*ptr & BUF_ACTIVE));
+
         if (size < cnt) {
             util_assert(0);
             cnt = size;
@@ -550,6 +568,17 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
         *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |
                BUF_ADDR(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr) |
                BUF_ACTIVE;
+
+        if (EPNum == 0) {
+            /* If ctrl_out_next is set then this should be a zero length        */
+            /* data OUT packet.                                                 */
+            util_assert(!ctrl_out_next || (cnt == 0));
+            ctrl_out_next = 0;
+            if (LPC_USB->DEVCMDSTAT & (1UL << 8))  {
+                // A setup packet is still pending so trigger another interrupt
+                LPC_USB->INTSETSTAT |= (1 << 0);
+            }
+        }
     }
 
     return (cnt);
@@ -569,7 +598,8 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
 U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 {
     U32 i;
-    U32 *dataptr, *ptr;
+    volatile U32 *ptr;
+    U32 *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
     EPNum &= ~0x80;
 
@@ -737,7 +767,7 @@ void USBD_Handler(void)
 
             if (sts & (1UL << num)) {
                 /* Setup */
-                if ((num == 0) && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
+                if ((num == 0) && !ctrl_out_next && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
 #ifdef __RTX
 
                     if (USBD_RTX_EPTask[num / 2]) {
