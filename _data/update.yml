@@ -7,14 +7,7 @@
 #         if otherthing['type']=='CMSIS-DAP':
 #                  print('- %s:\n  name: %s\n  product_code: %s\n  logoURL: %s\n  website: %s\n  instructions: lorum ipsum random phrase thing pineapple amazing build awesome thing need sleep please never. \n' %(thing['name'], thing['name'], thing['productcode'],thing['logoURL'],thing['website']))
 
-
-# TODO: add interface_chip, target_chip and offset fields to all entries
-#   ex)
-#   interface_chip: kl26z
-#   target_chip: microbit
-#   offset: 0x8000
-
-
+#cheat sheet https://github.com/mbedmicro/DAPLink/blob/7101d429a57b6bb287df4d45ba3a07ac3fe2dcd7/test/info.py
 ---
 - default:
     website: http://developer.mbed.org/platforms
