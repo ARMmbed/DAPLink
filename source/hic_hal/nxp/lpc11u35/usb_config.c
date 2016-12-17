@@ -25,7 +25,11 @@
 #define USBD_RTX_CORE_STACK         0
 #define USBD_RTX_DEVICE_STACK       0
 #define USBD_RTX_ENDPOINT0_STACK    0
+#ifdef WEBUSB_INTERFACE
 #define USBD_BOS_ENABLE             1
+#else
+#define USBD_BOS_ENABLE             0
+#endif
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
 #define USBD_HS_ENABLE              0
@@ -345,14 +349,22 @@
 //     </e>
 #define USBD_CLS_ENABLE             0
 //     USB DFU support
+#ifdef DFU_INTERFACE
 #define USBD_DFU_ENABLE             1
+#else
+#define USBD_DFU_ENABLE             0
+#endif
 #define USBD_DFU_DNLOAD_ENABLE      1
 #define USBD_DFU_UPLOAD_ENABLE      0
 #define USBD_DFU_STRDESC            L"USB_DFU"
 #define USBD_DFU_XFERBUF_SIZE       256
 
 //     WebUSB support
+#ifdef WEBUSB_INTERFACE
 #define USBD_WEBUSB_ENABLE          1
+#else
+#define USBD_WEBUSB_ENABLE          0
+#endif
 #define USBD_WEBUSB_VENDOR_CODE     0x21
 #define USBD_WEBUSB_LANDING_URL     "devanlai.github.io/webdfu/dfu-util/"
 #define USBD_WEBUSB_ORIGIN_URL      "devanlai.github.io/"
