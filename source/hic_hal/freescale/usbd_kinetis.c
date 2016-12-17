@@ -502,7 +502,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
     BD[idx].bc = OutEpSize[EPNum];
 
     if ((Data1 >> (idx / 2) & 1) == ((BD[idx].stat >> 6) & 1)) {
-        if (setup && (pData[6] == 0)) {     /* if no setup data stage,            */
+        uint32_t xfer_size = (pData[7] << 8) | (pData[6] << 0);
+        if (setup && (0 == xfer_size)) {     /* if no setup data stage,            */
             protected_and(&Data1, ~1);           /* set DATA0                          */
         } else {
             protected_xor(&Data1, (1 << (idx / 2)));
