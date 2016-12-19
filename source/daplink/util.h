@@ -42,7 +42,7 @@ uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor);
 uint32_t util_div_round_down(uint32_t dividen, uint32_t divisor);
 uint32_t util_div_round(uint32_t dividen, uint32_t divisor);
 
-#if !defined(DAPLINK_NO_ASSERT_FILENAMES)
+#if !(defined(DAPLINK_NO_ASSERT_FILENAMES) && defined(DAPLINK_BL))
 // With the filename enabled.
 #define util_assert(expression) _util_assert((expression), __FILE__, __LINE__)
 #else
