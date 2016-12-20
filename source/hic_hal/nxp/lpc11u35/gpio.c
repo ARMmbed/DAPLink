@@ -25,6 +25,7 @@
 #include "compiler.h"
 #include "target_reset.h"
 #include "IO_Config.h"
+#include "settings.h"
 
 // taken code from the Nxp App Note AN11305
 /* This data must be global so it is not read from the stack */
@@ -111,7 +112,7 @@ void gpio_init(void)
     // Give the cap on the reset button time to charge
     busy_wait(10000);
 
-    if (gpio_get_sw_reset() == 0) {
+    if ((gpio_get_sw_reset() == 0) || config_ram_get_initial_hold_in_bl()) {
         IRQn_Type irq;
         // Disable SYSTICK timer and interrupt before calling into ISP
         SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk);
@@ -120,6 +121,19 @@ void gpio_init(void)
         for (irq = (IRQn_Type)0; irq < (IRQn_Type)32; irq++) {
             NVIC_DisableIRQ(irq);
             NVIC_ClearPendingIRQ(irq);
+        }
+
+        // If switching to "bootloader" mode then setup the watchdog
+        // so it will exit CRP mode after ~30 seconds
+        if (config_ram_get_initial_hold_in_bl()) {
+            LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 15); // Enable watchdog module
+            LPC_SYSCON->PDRUNCFG &= ~(1 << 6);      // Enable watchdog clock (WDOSC)
+            LPC_SYSCON->WDTOSCCTRL = (0xF << 5);    // Set max frequency - 2.3MHz
+            LPC_WWDT->CLKSEL = (1 << 0);            // Select watchdog clock
+            LPC_WWDT->TC = 0x00FFFFFF;              // Set time to reset to ~29s
+            LPC_WWDT->MOD = (1 << 0) | (1 << 1);    // Enable watchdog and set reset
+            LPC_WWDT->FEED = 0xAA;                  // Enable watchdog
+            LPC_WWDT->FEED = 0x55;
         }
 
         ReinvokeISP();
