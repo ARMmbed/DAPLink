@@ -79,7 +79,6 @@ static error_t target_flash_uninit(void)
         target_set_state(RESET_RUN);
     }
 
-    swd_uninit_debug();
     swd_off();
     return ERROR_SUCCESS;
 }
