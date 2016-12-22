@@ -31,13 +31,13 @@
 #include "flash_manager.h"
 #include "flash_intf.h"
 #include "target_config.h"
+#include "settings.h"
 
 #include "main.h"
 #include "target_reset.h"
 
-static volatile uint32_t current_write_addr;
-static volatile U8* buffer_addr;
-static volatile U16 transfer_size;
+static uint32_t current_write_addr;
+static bool initialized = false;
 
 // USB DFU Callback: when system initializes
 void usbd_dfu_init(void)
@@ -46,161 +46,136 @@ void usbd_dfu_init(void)
     current_write_addr = 0;
 }
 
-/* DFU Messages */
-typedef enum {
-    DFU_MSG_INIT_TARGET,
-    DFU_MSG_READ_BLOCK,
-    DFU_MSG_WRITE_BLOCK,
-    DFU_MSG_RESET_TARGET,
-    DFU_MSG_ABORT,
-    DFU_MSG_ERROR,
-} DFU_MSG;
+BOOL USBD_DFU_StartUpgrade(void) {
+    error_t err = flash_manager_init(flash_intf_target);
+    current_write_addr = target_device.flash_start;
+    switch (err) {
+        case ERROR_SUCCESS:
+            initialized = true;
+            break;
+        case ERROR_RESET:
+        case ERROR_ALGO_DL:
+        case ERROR_ALGO_DATA_SEQ:
+        case ERROR_INIT:
+        case ERROR_SECURITY_BITS:
+        case ERROR_UNLOCK:
+            DFU_SetStatus(DFU_STATUS_ERR_PROG);
+            break;
+        case ERROR_ERASE_SECTOR:
+        case ERROR_ERASE_ALL:
+            DFU_SetStatus(DFU_STATUS_ERR_ERASE);
+            break;
+        case ERROR_WRITE:
+            DFU_SetStatus(DFU_STATUS_ERR_WRITE);
+            break;
+        case ERROR_FAILURE:
+        case ERROR_INTERNAL:
+        default:
+            DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
+            break;
+    }
+    
+    return (err == ERROR_SUCCESS) ? (__TRUE) : (__FALSE);
+}
 
-os_mbx_declare(dfu_mailbox, 4);
-
-BOOL USBD_DFU_StartUpgrade(void)
-{
-    os_mbx_send(&dfu_mailbox, (void *)DFU_MSG_INIT_TARGET, 0);
-    return (__TRUE);
+static bool reset_target(bool error_condition) {
+    current_write_addr = 0;
+    if (initialized) {
+        error_t err = flash_manager_uninit();
+        switch (err) {
+            case ERROR_SUCCESS:
+                if (config_get_auto_rst()) {
+                    // Target is reset and run by the uninit
+                } else if (!error_condition) {
+                    // Reset and run the target at the end of a successful upgrade
+                    target_set_state(RESET_RUN);
+                }
+                break;
+            case ERROR_RESET:
+            case ERROR_ALGO_DL:
+            case ERROR_ALGO_DATA_SEQ:
+            case ERROR_INIT:
+            case ERROR_SECURITY_BITS:
+            case ERROR_UNLOCK:
+                DFU_SetStatus(DFU_STATUS_ERR_PROG);
+                break;
+            case ERROR_ERASE_SECTOR:
+            case ERROR_ERASE_ALL:
+                DFU_SetStatus(DFU_STATUS_ERR_ERASE);
+                break;
+            case ERROR_WRITE:
+                DFU_SetStatus(DFU_STATUS_ERR_WRITE);
+                break;
+            case ERROR_FAILURE:
+            case ERROR_INTERNAL:
+            default:
+                DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
+                break;
+        }
+        initialized = false;
+        return (err == ERROR_SUCCESS);
+    }
+    
+    return true;
 }
 
 BOOL USBD_DFU_FinishUpgrade(void) {
-    os_mbx_send(&dfu_mailbox, (void *)DFU_MSG_RESET_TARGET, 0);
-    return (__TRUE);
+    return reset_target(false) ? (__TRUE) : (__FALSE);
 }
 
 BOOL USBD_DFU_WriteBlock(const U8 *buffer, U16 blockSize) {
-    buffer_addr = (U8*)buffer;
-    transfer_size = blockSize;
-    os_mbx_send(&dfu_mailbox, (void *)DFU_MSG_WRITE_BLOCK, 0);
-    return (__TRUE);
+    error_t err = flash_manager_data(current_write_addr, (U8*)buffer, blockSize);
+    switch (err) {
+        case ERROR_SUCCESS:
+            current_write_addr += blockSize;
+            break;
+        case ERROR_RESET:
+        case ERROR_ALGO_DL:
+        case ERROR_ALGO_DATA_SEQ:
+        case ERROR_INIT:
+        case ERROR_SECURITY_BITS:
+        case ERROR_UNLOCK:
+            DFU_SetStatus(DFU_STATUS_ERR_PROG);
+            break;
+        case ERROR_ERASE_SECTOR:
+        case ERROR_ERASE_ALL:
+            DFU_SetStatus(DFU_STATUS_ERR_ERASE);
+            break;
+        case ERROR_WRITE:
+            DFU_SetStatus(DFU_STATUS_ERR_WRITE);
+            break;
+        case ERROR_FAILURE:
+        case ERROR_INTERNAL:
+        default:
+            DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
+            break;
+    }
+    
+    return (err == ERROR_SUCCESS);
 }
 
-void USBD_DFU_SignalAbort(BOOL error) {
+BOOL USBD_DFU_HandleAbort(BOOL error) {
     if (error) {
-        os_mbx_send(&dfu_mailbox, (void *)DFU_MSG_ERROR, 0);
+        return reset_target(true) ? (__TRUE) : (__FALSE);
     } else {
-        os_mbx_send(&dfu_mailbox, (void *)DFU_MSG_ABORT, 0);
+        return reset_target(false) ? (__TRUE) : (__FALSE);
     }
 }
 
-__task void dfu_process(void)
-{
-    void *msg;
-    static BOOL initialized = __FALSE;
-    while (1) {
-        // Wait for a request
-        if (os_mbx_wait(&dfu_mailbox, &msg, 0xFFFF) != OS_R_TMO) {
-            error_t err;
-            BOOL error_condition = __FALSE;
-            switch ((DFU_MSG)(unsigned)msg) {
-                case DFU_MSG_INIT_TARGET:
-                    err = flash_manager_init(flash_intf_target);
-                    current_write_addr = target_device.flash_start;
-                    switch (err) {
-                        case ERROR_SUCCESS:
-                            initialized = __TRUE;
-                            break;
-                        case ERROR_RESET:
-                        case ERROR_ALGO_DL:
-                        case ERROR_ALGO_DATA_SEQ:
-                        case ERROR_INIT:
-                        case ERROR_SECURITY_BITS:
-                        case ERROR_UNLOCK:
-                            DFU_SetStatus(DFU_STATUS_ERR_PROG);
-                            break;
-                        case ERROR_ERASE_SECTOR:
-                        case ERROR_ERASE_ALL:
-                            DFU_SetStatus(DFU_STATUS_ERR_ERASE);
-                            break;
-                        case ERROR_WRITE:
-                            DFU_SetStatus(DFU_STATUS_ERR_WRITE);
-                            break;
-                        case ERROR_FAILURE:
-                        case ERROR_INTERNAL:
-                        default:
-                            DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
-                            break;
-                    }
-
-                    break;
-
-                case DFU_MSG_WRITE_BLOCK:
-                    err = flash_manager_data(current_write_addr, (U8*)buffer_addr, transfer_size);
-                    switch (err) {
-                        case ERROR_SUCCESS:
-                            current_write_addr += transfer_size;
-                            DFU_SetState(DFU_STATE_DFU_DNLOAD_IDLE);
-                            break;
-                        case ERROR_RESET:
-                        case ERROR_ALGO_DL:
-                        case ERROR_ALGO_DATA_SEQ:
-                        case ERROR_INIT:
-                        case ERROR_SECURITY_BITS:
-                        case ERROR_UNLOCK:
-                            DFU_SetStatus(DFU_STATUS_ERR_PROG);
-                            break;
-                        case ERROR_ERASE_SECTOR:
-                        case ERROR_ERASE_ALL:
-                            DFU_SetStatus(DFU_STATUS_ERR_ERASE);
-                            break;
-                        case ERROR_WRITE:
-                            DFU_SetStatus(DFU_STATUS_ERR_WRITE);
-                            break;
-                        case ERROR_FAILURE:
-                        case ERROR_INTERNAL:
-                        default:
-                            DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
-                            break;
-                    }
-                    break;
-
-                case DFU_MSG_ERROR:
-                    error_condition = __TRUE;
-                    // Fall through
-                case DFU_MSG_ABORT:
-                    if (!initialized) {
-                        break;
-                    } else {
-                        // Fall through
-                    }
-                case DFU_MSG_RESET_TARGET:
-                    initialized = __FALSE;
-                    current_write_addr = 0;
-                    err = flash_manager_uninit();
-                    switch (err) {
-                        case ERROR_SUCCESS:
-                            if (!error_condition) {
-                                DFU_SetState(DFU_STATE_DFU_IDLE);
-                                target_set_state(RESET_RUN);
-                            }
-                            break;
-                        case ERROR_RESET:
-                        case ERROR_ALGO_DL:
-                        case ERROR_ALGO_DATA_SEQ:
-                        case ERROR_INIT:
-                        case ERROR_SECURITY_BITS:
-                        case ERROR_UNLOCK:
-                            DFU_SetStatus(DFU_STATUS_ERR_PROG);
-                            break;
-                        case ERROR_ERASE_SECTOR:
-                        case ERROR_ERASE_ALL:
-                            DFU_SetStatus(DFU_STATUS_ERR_ERASE);
-                            break;
-                        case ERROR_WRITE:
-                            DFU_SetStatus(DFU_STATUS_ERR_WRITE);
-                            break;
-                        case ERROR_FAILURE:
-                        case ERROR_INTERNAL:
-                        default:
-                            DFU_SetStatus(DFU_STATUS_ERR_UNKNOWN);
-                            break;
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
+// TODO: these should be overridden on a per-board/target basis
+U32 USBD_DFU_GetInitTimeout(void) {
+    // 200ms is much more than any target should need, but only
+    // the download timeout has a substantial performance impact
+    // impact, so overestimating here is fine.
+    return 200;
 }
+
+U32 USBD_DFU_GetDownloadTimeout(U16 blockSize) {
+    // Allow for 80ms per 1KiB
+    return (blockSize + 1023) / 1024 * 80;
+}
+
+U32 USBD_DFU_GetManifestTimeout(void) {
+    return 200;
+}
+

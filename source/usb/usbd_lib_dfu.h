@@ -24,7 +24,6 @@
 
 /*--------------------------- DFU error/status API ---------------------------*/
 extern void DFU_SetStatus(U8 status);
-extern void DFU_SetState(U8 state);
 extern void DFU_Reset(void);
 
 /*--------------------------- User Hooks -------------------------------------*/
@@ -32,13 +31,15 @@ extern void DFU_Reset(void);
 extern BOOL USBD_DFU_StartUpgrade(void);
 extern BOOL USBD_DFU_FinishUpgrade(void);
 extern BOOL USBD_DFU_WriteBlock(const U8 *buffer, U16 blockSize);
-extern BOOL USBD_DFU_WriteComplete(void);
-extern BOOL USBD_DFU_UpgradeComplete(void);
-extern void USBD_DFU_SignalAbort(BOOL error);
+extern BOOL USBD_DFU_HandleAbort(BOOL error);
+extern U32 USBD_DFU_GetInitTimeout(void);
+extern U32 USBD_DFU_GetDownloadTimeout(uint16_t blockSize);
+extern U32 USBD_DFU_GetManifestTimeout(void);
 
 /*--------------------------- USB Requests -----------------------------------*/
 
 extern BOOL USBD_DFU_GetStatus(void);
+extern void USBD_DFU_GetStatusAction(void);
 extern BOOL USBD_DFU_GetState(void);
 extern BOOL USBD_DFU_StartDnload(U16 transferSize);
 extern BOOL USBD_DFU_SyncDnload(void);

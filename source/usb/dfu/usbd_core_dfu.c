@@ -44,6 +44,7 @@ __weak BOOL USBD_EndPoint0_Setup_DFU_ReqToIF(void)
                     USBD_EP0Data.pData = USBD_EP0Buf;
                     USBD_EP0Data.Count = sizeof(DFU_GETSTATUS_RESPONSE);
                     USBD_DataInStage();
+                    USBD_DFU_GetStatusAction();
                     return (__TRUE);
                 }
 

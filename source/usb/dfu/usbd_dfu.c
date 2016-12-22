@@ -25,17 +25,19 @@
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 
-static volatile U8  dfu_current_state;
-static volatile U8  dfu_current_status;
-static U16 dfu_current_transfer_size;
+static U8   dfu_current_state;
+static U8   dfu_current_status;
+static U16  dfu_current_transfer_size;
+static BOOL dfu_upgrade_started;
 
 void DFU_Reset(void) {
     dfu_current_state = DFU_STATE_DFU_IDLE;
     dfu_current_status = DFU_STATUS_OK;
     dfu_current_transfer_size = 0;
+    dfu_upgrade_started = (__FALSE);
 }
 
-void DFU_SetState(U8 state) {
+static void DFU_SetState(U8 state) {
     dfu_current_state = state;
 }
 
@@ -46,7 +48,7 @@ void DFU_SetStatus(U8 status) {
         }
     } else if (dfu_current_state != DFU_STATE_DFU_ERROR) {
         DFU_SetState(DFU_STATE_DFU_ERROR);
-        USBD_DFU_SignalAbort(__TRUE);
+        USBD_DFU_HandleAbort(__TRUE);
     }
     dfu_current_status = status;
 }
@@ -54,30 +56,16 @@ void DFU_SetStatus(U8 status) {
 BOOL USBD_DFU_GetStatus(void) {
     DFU_GETSTATUS_RESPONSE *resp = (DFU_GETSTATUS_RESPONSE *)(USBD_EP0Buf);
     U32 bwPollTimeout = 0;
-    static BOOL started = __FALSE;
-
     if (dfu_current_state == DFU_STATE_DFU_DNLOAD_SYNC) {
         DFU_SetState(DFU_STATE_DFU_DNBUSY);
-        bwPollTimeout = 100;
-        started = __FALSE;
-    } else if (dfu_current_state == DFU_STATE_DFU_DNBUSY) {
-        // User is responsible for setting state to DFU_STATE_DNLOAD_IDLE on success
-        if (!started) {
-            USBD_DFU_WriteBlock(USBD_DFU_TransferBuf, dfu_current_transfer_size);
-            started = __TRUE;
+        bwPollTimeout = USBD_DFU_GetDownloadTimeout(dfu_current_transfer_size);
+        if (!dfu_upgrade_started) {
+            // Allow extra time for initializing the target
+            bwPollTimeout += USBD_DFU_GetInitTimeout();
         }
-        bwPollTimeout = 100;
     } else if (dfu_current_state == DFU_STATE_DFU_MANIFEST_SYNC) {
         DFU_SetState(DFU_STATE_DFU_MANIFEST);
-        started = __FALSE;
-        bwPollTimeout = 100;
-    } else if (dfu_current_state == DFU_STATE_DFU_MANIFEST) {
-        // User is responsible for setting state to DFU_STATE_DFU_IDLE on success
-        bwPollTimeout = 100;
-        if (!started) {
-            USBD_DFU_FinishUpgrade();
-            started = __TRUE;
-        }
+        bwPollTimeout = USBD_DFU_GetManifestTimeout();
     }
 
     resp->bStatus = dfu_current_status;
@@ -90,6 +78,30 @@ BOOL USBD_DFU_GetStatus(void) {
     return (__TRUE);
 }
 
+// Action to execute after reporting the next state / polling timeout
+void USBD_DFU_GetStatusAction(void) {
+    if (dfu_current_state == DFU_STATE_DFU_DNBUSY) {
+        if (!dfu_upgrade_started) {
+            if (!USBD_DFU_StartUpgrade()) {
+                // USBD_DFU_StartUpgrade is responsible for updating the status on failure
+                return;
+            }
+            dfu_upgrade_started = (__TRUE);
+        }
+        if (USBD_DFU_WriteBlock(USBD_DFU_TransferBuf, dfu_current_transfer_size)) {
+            DFU_SetState(DFU_STATE_DFU_DNLOAD_IDLE);
+        } else {
+            // USBD_DFU_WriteBlock is responsible for updating the status on failure
+        }
+    } else if (dfu_current_state == DFU_STATE_DFU_MANIFEST) {
+        if (USBD_DFU_FinishUpgrade()) {
+            DFU_SetState(DFU_STATE_DFU_IDLE);
+        } else {
+            // USBD_DFU_FinishUpgrade is responsible for updating the status on failure
+        }
+    }
+}
+
 BOOL USBD_DFU_StartDnload(U16 transferSize) {
     if (transferSize > usbd_dfu_transfersize) {
         DFU_SetStatus(DFU_STATUS_ERR_STALLEDPKT);
@@ -97,8 +109,8 @@ BOOL USBD_DFU_StartDnload(U16 transferSize) {
     } else {
         if (dfu_current_state == DFU_STATE_DFU_IDLE) {
             if (transferSize > 0) {
-                USBD_DFU_StartUpgrade();
                 dfu_current_transfer_size = transferSize;
+                dfu_upgrade_started = (__FALSE);
                 return (__TRUE);
             } else {
                 // First block can't be empty
@@ -142,7 +154,9 @@ BOOL USBD_DFU_Abort(void) {
         case DFU_STATE_DFU_DNLOAD_IDLE:
         case DFU_STATE_DFU_MANIFEST_SYNC:
         case DFU_STATE_DFU_UPLOAD_IDLE:
-            USBD_DFU_SignalAbort(__FALSE);
+            if (USBD_DFU_HandleAbort(__FALSE)) {
+                DFU_SetState(DFU_STATE_DFU_IDLE);
+            }
             break;
 
         default:
@@ -157,12 +171,10 @@ __weak BOOL USBD_DFU_StartUpgrade(void) {
 }
 
 __weak BOOL USBD_DFU_FinishUpgrade(void) {
-    DFU_SetState(DFU_STATE_DFU_IDLE);
     return (__TRUE);
 }
 
 __weak BOOL USBD_DFU_WriteBlock(const U8 *buffer, U16 blockSize) {
-    DFU_SetState(DFU_STATE_DFU_DNLOAD_IDLE);
     return (__TRUE);
 }
 
@@ -170,6 +182,19 @@ __weak void usbd_dfu_init(void) {
     DFU_Reset();
 }
 
-__weak void USBD_DFU_SignalAbort(BOOL error) {
+__weak BOOL USBD_DFU_HandleAbort(BOOL error) {
+    return __TRUE;
+}
 
+__weak U32 USBD_DFU_GetInitTimeout(void) {
+    // 200ms is a relatively safe default that will avoid timeouts
+    return 200;
+}
+
+__weak U32 USBD_DFU_GetDownloadTimeout(U16 blockSize) {
+    return 200;
+}
+
+__weak U32 USBD_DFU_GetManifestTimeout(void) {
+    return 200;
 }
