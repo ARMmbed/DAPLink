@@ -70,11 +70,8 @@ void swd_set_target_reset(uint8_t asserted)
                 swd_write_memory(0xE000ED0C, (uint8_t *)&swd_mem_write_data, 4);
                 //os_dly_wait(1);
             }
-            swd_uninit_debug();
         }
-        else {
-            swd_init_debug();
-            
+        else {           
             swd_read_ap(0x010000FC, &ap_index_return);
             if (ap_index_return == 0x02880000) {
                 // Device has CTRL-AP
@@ -83,7 +80,7 @@ void swd_set_target_reset(uint8_t asserted)
             else {
                 // No CTRL-AP - Soft reset has been performed
             }
-            swd_uninit_debug();
+            PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
         }
     }
     else {
