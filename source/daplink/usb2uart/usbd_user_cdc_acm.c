@@ -23,7 +23,6 @@
 #include "rl_usb.h"
 #include "main.h"
 #include "target_reset.h"
-#include "serial.h"
 #include "uart.h"
 
 UART_Configuration UART_Config;
@@ -38,7 +37,9 @@ UART_Configuration UART_Config;
  */
 int32_t USBD_CDC_ACM_PortInitialize(void)
 {
-    return (serial_initialize());
+    uart_initialize();
+    main_cdc_send_event();
+    return 1;
 }
 
 /** @brief  Vitual COM Port uninitialization
@@ -51,7 +52,8 @@ int32_t USBD_CDC_ACM_PortInitialize(void)
  */
 int32_t USBD_CDC_ACM_PortUninitialize(void)
 {
-    return (serial_uninitialize());
+    uart_uninitialize();
+    return 1;
 }
 
 /** @brief  Vitual COM Port reset
@@ -64,7 +66,8 @@ int32_t USBD_CDC_ACM_PortUninitialize(void)
  */
 int32_t USBD_CDC_ACM_PortReset(void)
 {
-    return (serial_reset());
+    uart_reset();
+    return 1;
 }
 
 /** @brief  Virtual COM Port change communication settings
@@ -83,7 +86,7 @@ int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
     UART_Config.Parity      = (UART_Parity)   line_coding->bParityType;
     UART_Config.StopBits    = (UART_StopBits) line_coding->bCharFormat;
     UART_Config.FlowControl = UART_FLOW_CONTROL_NONE;
-    return (serial_set_configuration(&UART_Config));
+    return uart_set_configuration(&UART_Config);
 }
 
 /** @brief  Vitual COM Port retrieve communication settings
@@ -97,15 +100,11 @@ int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
  */
 int32_t USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding)
 {
-    if (serial_get_configuration(&UART_Config)) {
-        line_coding->dwDTERate   = UART_Config.Baudrate;
-        line_coding->bDataBits   = UART_Config.DataBits;
-        line_coding->bParityType = UART_Config.Parity;
-        line_coding->bCharFormat = UART_Config.StopBits;
-        return (1);
-    }
-
-    return (0);
+    line_coding->dwDTERate   = UART_Config.Baudrate;
+    line_coding->bDataBits   = UART_Config.DataBits;
+    line_coding->bParityType = UART_Config.Parity;
+    line_coding->bCharFormat = UART_Config.StopBits;
+    return (1);
 }
 
 static U32 start_break_time = 0;
@@ -144,4 +143,45 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
 int32_t USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp)
 {
     return (1);
+}
+
+void cdc_process_event()
+{
+    int32_t len_data = 0;
+    uint8_t data[64];
+
+    len_data = USBD_CDC_ACM_DataFree();
+
+    if (len_data > sizeof(data)) {
+        len_data = sizeof(data);
+    }
+
+    if (len_data) {
+        len_data = uart_read_data(data, len_data);
+    }
+
+    if (len_data) {
+        if (USBD_CDC_ACM_DataSend(data , len_data)) {
+            main_blink_cdc_led(MAIN_LED_OFF);
+        }
+    }
+
+    len_data = uart_write_free();
+
+    if (len_data > sizeof(data)) {
+        len_data = sizeof(data);
+    }
+
+    if (len_data) {
+        len_data = USBD_CDC_ACM_DataRead(data, len_data);
+    }
+
+    if (len_data) {
+        if (uart_write_data(data, len_data)) {
+            main_blink_cdc_led(MAIN_LED_OFF);
+        }
+    }
+ 
+    // Always process events
+    main_cdc_send_event();
 }
