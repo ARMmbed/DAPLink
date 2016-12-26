@@ -59,6 +59,9 @@ module:
     hic_stlink_v2_1: &module_hic_stlink_v2_1
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stlink_v2_1.yaml
+    hic_stlink_v2_1_native: &module_hic_stlink_v2_1_native
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stlink_v2_1_native.yaml
 
 projects:
     kl26z_bl:
@@ -296,6 +299,10 @@ projects:
     stm32f103xb_nucleo_f103rb_if:
         - *module_if
         - *module_hic_stlink_v2_1
+        - records/board/nucleo_f103rb.yaml
+    stm32f103xb_native_nucleo_f103rb_if:
+        - *module_if
+        - *module_hic_stlink_v2_1_native
         - records/board/nucleo_f103rb.yaml
     stlink_v2_lpc1549_if:
         - *module_if

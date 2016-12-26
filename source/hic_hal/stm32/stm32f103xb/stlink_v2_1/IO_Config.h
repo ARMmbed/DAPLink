@@ -35,8 +35,9 @@
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the STLINK_V2_1 HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2_1);
+// This GPIO configuration is only valid for the STLINK_V2_1 or STLINK_V2_1_NATIVE HIC
+COMPILER_ASSERT((DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2_1) ||
+                (DAPLINK_HIC_ID == DAPLINK_HIC_ID_STLINK_V2_1_NATIVE));
 
 // USB pullup control
 #define USB_CONNECT_PORT_ENABLE()    (RCC->APB2ENR |= RCC_APB2Periph_GPIOA)
