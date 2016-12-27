@@ -41,7 +41,7 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     uint16_t size;              // Offset of the last member from the start
 
     // Configurable values
-    uint8_t hold_in_bl;
+    uint8_t reset_mode;
     char assert_file_name[64 + 1];
     uint16_t assert_line;
     uint8_t assert_source;
@@ -68,12 +68,17 @@ void config_init()
         new_size = MAX(config_ram.size, sizeof(config_ram));
         memcpy(&config_ram_copy, (void *)&config_ram, size);
         config_ram_copy.assert_file_name[sizeof(config_ram_copy.assert_file_name) - 1] = 0;
+        if (!daplink_is_bootloader()) {
+            // Reset mode is only valid for the bootloader - set to to 0 for all other modes
+            config_ram_copy.reset_mode = 0;
+        }
     }
 
     // Initialize RAM
     memset((void *)&config_ram, 0, sizeof(config_ram));
     config_ram.key = CFG_KEY;
     config_ram.size = new_size;
+    config_ram.reset_mode = RESET_MODE_ERR; // If a reset occurs then go to error mode unless otherwise specified
     // Copy assert info back over (must be explicitly cleared)
     memcpy(config_ram.assert_file_name,
            config_ram_copy.assert_file_name,
@@ -83,9 +88,9 @@ void config_init()
     config_rom_init();
 }
 
-void config_ram_set_hold_in_bl(bool hold)
+void config_ram_set_reset_mode(reset_mode_t mode)
 {
-    config_ram.hold_in_bl = hold;
+    config_ram.reset_mode = mode;
 }
 
 void config_ram_set_assert(const char *file, uint16_t line)
@@ -125,14 +130,9 @@ void config_ram_clear_assert()
     config_ram.assert_line = 0;
 }
 
-bool config_ram_get_hold_in_bl()
+reset_mode_t config_ram_get_reset_mode()
 {
-    return config_ram.hold_in_bl;
-}
-
-bool config_ram_get_initial_hold_in_bl()
-{
-    return config_ram_copy.hold_in_bl;
+    return (reset_mode_t)config_ram_copy.reset_mode;
 }
 
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source)

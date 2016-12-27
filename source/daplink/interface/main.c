@@ -164,10 +164,7 @@ void USBD_SignalHandler()
 
 void HardFault_Handler()
 {
-    util_assert(0);
-    NVIC_SystemReset();
-
-    while (1); // Wait for reset
+    util_reset_to_mode(RESET_MODE_ERR);
 }
 
 os_mbx_declare(serial_mailbox, 20);
