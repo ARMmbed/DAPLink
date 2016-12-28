@@ -208,6 +208,8 @@ class DaplinkBoard(object):
     KEY_BL_CRC = "bootloader_crc"
     KEY_IF_CRC = "interface_crc"
 
+    LOAD_RETRY_COUNT = 5
+
     def __init__(self, unique_id):
 
         self.unique_id = unique_id
@@ -415,48 +417,59 @@ class DaplinkBoard(object):
 
         self.test_details_txt(test_info)
 
-    def load_interface(self, filepath, parent_test):
+    def load_interface(self, filepath, parent_test=None, force=True):
         """Load an interface binary or hex"""
-        test_info = parent_test.create_subtest('load_interface')
-        self.set_mode(self.MODE_BL, test_info)
+        for _ in range(self.LOAD_RETRY_COUNT):
+            try:
+                # Make sure the drive is mounted before attempting a load
+                self._wait_for_mount(20.0)
+                if self._load_image(filepath, self.MODE_BL,
+                                    parent_test, force):
+                    return True
+            except Exception:
+                pass
+        return False
 
-        data_crc, crc_in_image = _compute_crc(filepath)
-        assert data_crc == crc_in_image, ("CRC in interface is wrong "
-                                          "expected 0x%x, found 0x%x" %
-                                          (data_crc, crc_in_image))
-
-        filename = os.path.basename(filepath)
-        with open(filepath, 'rb') as firmware_file:
-            data = firmware_file.read()
-        out_file = self.get_file_path(filename)
-        start = time.time()
-        with open(out_file, 'wb') as firmware_file:
-            firmware_file.write(data)
-        stop = time.time()
-        test_info.info("programming took %s s" % (stop - start))
-        self.wait_for_remount(test_info)
-
-        # Check the CRC
-        self.set_mode(self.MODE_IF, test_info)
-        if DaplinkBoard.KEY_IF_CRC not in self.details_txt:
-            test_info.failure("No interface CRC in details.txt")
-            return
-        details_crc = int(self.details_txt[DaplinkBoard.KEY_IF_CRC], 0)
-        test_info.info("Interface crc: 0x%x" % details_crc)
-        if data_crc != details_crc:
-            test_info.failure("Interface CRC is wrong")
-
-    def load_bootloader(self, filepath, parent_test):
+    def load_bootloader(self, filepath, parent_test=None, force=True):
         """Load a bootloader binary or hex"""
-        test_info = parent_test.create_subtest('load_bootloader')
-        self.set_mode(self.MODE_IF, test_info)
+        for _ in range(self.LOAD_RETRY_COUNT):
+            try:
+                # Make sure the drive is mounted before attempting a load
+                self._wait_for_mount(20.0)
+                if self._load_image(filepath, self.MODE_IF,
+                                    parent_test, force):
+                    return True
+            except Exception:
+                pass
+        return False
+
+    def _load_image(self, filepath, mode, parent_test, force):
+        """Load the file in the specified mode. Return True on success"""
+        MODE_TO_CRC_KEY = {
+            self.MODE_BL: self.KEY_IF_CRC,
+            self.MODE_IF: self.KEY_BL_CRC,
+        }
+        assert mode in MODE_TO_CRC_KEY
+        crc_key = MODE_TO_CRC_KEY[mode]
+        if parent_test is None:
+            parent_test = TestInfoStub()
+        test_info = parent_test.create_subtest('load_%s' % mode)
+        self.set_mode(mode, test_info)
 
         # Check image CRC
         data_crc, crc_in_image = _compute_crc(filepath)
-        assert data_crc == crc_in_image, ("CRC in bootloader is wrong "
+        assert data_crc == crc_in_image, ("CRC in image is wrong "
                                           "expected 0x%x, found 0x%x" %
                                           (data_crc, crc_in_image))
 
+        if not force:
+            # CRC is the same so loading can be skipped
+            if crc_key in self.details_txt:
+                details_crc = int(self.details_txt[crc_key], 0)
+                if data_crc == details_crc:
+                    return True
+
+        # Read data from file
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as firmware_file:
             data = firmware_file.read()
@@ -469,37 +482,27 @@ class DaplinkBoard(object):
         self.wait_for_remount(test_info)
 
         # Check the CRC
-        self.set_mode(self.MODE_IF, test_info)
-        if DaplinkBoard.KEY_BL_CRC not in self.details_txt:
+        self.set_mode(mode, test_info)
+        if crc_key not in self.details_txt:
             test_info.failure("No bootloader CRC in details.txt")
-            return
-        details_crc = int(self.details_txt[DaplinkBoard.KEY_BL_CRC], 0)
-        test_info.info("Bootloader crc: 0x%x" % details_crc)
+            return False
+        details_crc = int(self.details_txt[crc_key], 0)
+        test_info.info("Image crc: 0x%x" % details_crc)
         if data_crc != details_crc:
-            test_info.failure("Bootloader CRC is wrong")
+            test_info.failure("Image CRC is wrong")
+            return False
+
+        # Image has been loaded and CRC is correct
+        return True
 
     def wait_for_remount(self, parent_test, wait_time=120):
         test_info = parent_test.create_subtest('wait_for_remount')
-        elapsed = 0
-        start = time.time()
-        while os.path.isdir(self.mount_point):
-            if elapsed > wait_time:
-                raise Exception("Dismount timed out")
-            time.sleep(0.1)
-            elapsed += 0.1
-        stop = time.time()
-        test_info.info("unmount took %s s" % (stop - start))
-        start = time.time()
-        while True:
-            if self._update_board_info(False):
-                if os.path.isdir(self.mount_point):
-                    break
-            if elapsed > wait_time:
-                raise Exception("Mount timed out")
-            time.sleep(0.1)
-            elapsed += 0.1
-        stop = time.time()
-        test_info.info("mount took %s s" % (stop - start))
+
+        event_time = self._wait_for_unmount(wait_time)
+        test_info.info("unmount took %s s" % (event_time))
+
+        event_time = self._wait_for_mount(wait_time)
+        test_info.info("mount took %s s" % (event_time))
 
         # If enabled check the filesystem
         if self._check_fs_on_remount:
@@ -511,6 +514,31 @@ class DaplinkBoard(object):
                     test_info.failure('Assert on line %s in file %s' %
                                       (self._assert.line, self._assert.file))
                 self.clear_assert()
+
+    def _wait_for_unmount(self, wait_time):
+        elapsed = 0.0
+        start = time.time()
+        while os.path.isdir(self.mount_point):
+            if elapsed > wait_time:
+                raise Exception("Dismount timed out")
+            time.sleep(0.1)
+            elapsed += 0.1
+        stop = time.time()
+        return stop - start
+
+    def _wait_for_mount(self, wait_time):
+        elapsed = 0.0
+        start = time.time()
+        while True:
+            if self._update_board_info(False):
+                if os.path.isdir(self.mount_point):
+                    break
+            if elapsed > wait_time:
+                raise Exception("Mount timed out")
+            time.sleep(0.1)
+            elapsed += 0.1
+        stop = time.time()
+        return stop - start
 
     def _update_board_info(self, exptn_on_fail=True):
         """Update board info
