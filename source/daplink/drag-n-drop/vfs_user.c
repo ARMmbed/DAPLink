@@ -160,6 +160,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
             erase_target();
             vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "OVFL_ON CFG", sizeof(vfs_filename_t))) {
+            config_set_overflow_detect(true);
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
+            config_set_overflow_detect(false);
+            vfs_mngr_fs_remount();
         }
     }
 
@@ -231,6 +237,9 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "\r\n");
     pos += util_write_string(buf + pos, "Automation allowed: ");
     pos += util_write_string(buf + pos, config_get_automation_allowed() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Overflow detection: ");
+    pos += util_write_string(buf + pos, config_get_overflow_detect() ? "1" : "0");
     pos += util_write_string(buf + pos, "\r\n");
     // Current mode
     mode_str = daplink_is_bootloader() ? "Bootloader" : "Interface";

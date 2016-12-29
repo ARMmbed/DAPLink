@@ -26,6 +26,7 @@
 #include "cortex_m.h"
 #include "IO_Config.h"
 #include "circ_buf.h"
+#include "settings.h" // for config_get_overflow_detect
 
 #define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
 #define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
@@ -244,7 +245,7 @@ void UART_RX_TX_IRQHandler(void)
             free = circ_buf_count_free(&read_buffer);
             if (free > RX_OVRF_MSG_SIZE) {
                 circ_buf_push(&read_buffer, data);
-            } else if (RX_OVRF_MSG_SIZE == free) {
+            } else if ((RX_OVRF_MSG_SIZE == free) && config_get_overflow_detect()) {
                 circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
             } else {
                 // Drop character
