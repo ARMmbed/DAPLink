@@ -67,3 +67,10 @@ bootloader updates are allowed only in automation-allowed mode.
 
 `auto_off.cfg` This file turns off automation-allowed mode. This mode
 is off by default
+
+
+`ovfl_on.cfg` This file turns on serial overflow reporting. If the host PC is not reading
+data fast enough from DAPLink and an overflow occurs the text ```<DAPLink:Overflow>```
+will show up in the serial data. Serial overflow reporting is turned off by default.
+
+`ovfl_off.cfg` This file turns off serial overflow reporting.

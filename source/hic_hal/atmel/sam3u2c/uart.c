@@ -26,6 +26,7 @@
 #include "circ_buf.h"
 #include "cortex_m.h"
 #include "util.h"
+#include "settings.h" // for config_get_overflow_detect
 
 #define  BUFFER_SIZE  512
 #define _CPU_CLK_HZ   SystemCoreClock
@@ -394,8 +395,10 @@ void UART_IRQHandler(void)
         cnt = (int32_t)circ_buf_count_free(&read_buffer) - RX_OVRF_MSG_SIZE;
         if (cnt > 0) {
             circ_buf_push(&read_buffer, data);
-        } else if (0 == cnt) {
+        } else if ((0 == cnt) && config_get_overflow_detect()) {
             circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+        } else {
+            // Drop character
         }
 
         //If this was the last available byte on the buffer then assert RTS

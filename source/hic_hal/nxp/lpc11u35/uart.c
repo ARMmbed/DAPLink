@@ -23,6 +23,7 @@
 #include "uart.h"
 #include "util.h"
 #include "circ_buf.h"
+#include "settings.h" // for config_get_overflow_detect
 
 static uint32_t baudrate;
 static uint32_t dll;
@@ -312,7 +313,7 @@ void UART_IRQHandler(void)
             free = circ_buf_count_free(&read_buffer);
             if (free > RX_OVRF_MSG_SIZE) {
                 circ_buf_push(&read_buffer, data);
-            } else if (RX_OVRF_MSG_SIZE == free) {
+            } else if ((RX_OVRF_MSG_SIZE == free) && config_get_overflow_detect()) {
                 circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
             } else {
                 // Drop character
