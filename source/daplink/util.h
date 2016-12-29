@@ -24,6 +24,7 @@
 
 #include "stdbool.h"
 #include "stdint.h"
+#include "settings.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,6 +53,7 @@ uint32_t util_div_round(uint32_t dividen, uint32_t divisor);
 void _util_assert(bool expression, const char *filename, uint16_t line);
 
 void util_assert_clear(void);
+void util_reset_to_mode(reset_mode_t mode);
 
 #ifdef __cplusplus
 }

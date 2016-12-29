@@ -28,6 +28,7 @@ from msd_test import (MassStorageTester, MOCK_DIR_LIST, MOCK_FILE_LIST,
 TRIGGER_ASSERT_FILE_NAME = "ASSERT.ACT"
 ASSERT_FILE_NAME = "ASSERT.TXT"
 NEED_BL_FILE_NAME = "NEED_BL.TXT"
+NEED_IF_FILE_NAME = "NEED_IF.TXT"
 DAPLINK_VECTOR_TABLE_OFFSET = 0x00
 DAPLINK_BUILD_KEY_OFFSET = 0x20
 DAPLINK_HIC_ID_OFFSET = 0x24
@@ -111,6 +112,23 @@ class DLMassStorageTester(MassStorageTester):
 
 
 def daplink_test(workspace, parent_test):
+    try:
+        _daplink_test(workspace, parent_test)
+    finally:
+        # Make sure a valid bootloader and interface image is loaded
+        board = workspace.board
+        mode = board.get_mode()
+        # Load first without switching modes
+        if mode == board.MODE_BL:
+            board.load_interface(workspace.if_firmware.hex_path, force=False)
+            board.load_bootloader(workspace.bl_firmware.hex_path, force=False)
+        elif mode == board.MODE_IF:
+            board.load_bootloader(workspace.bl_firmware.hex_path, force=False)
+            board.load_interface(workspace.if_firmware.hex_path, force=False)
+        board.set_mode(board.MODE_IF)
+
+
+def _daplink_test(workspace, parent_test):
     board = workspace.board
     interface = workspace.if_firmware
     test_info = parent_test.create_subtest('daplink_test')
@@ -241,10 +259,13 @@ def test_file_type(file_type, board_mode, board, parent_test,
 
     if board_mode == board.MODE_IF:
         data_type = board.MODE_BL
+        need_image_string = NEED_BL_FILE_NAME
     elif board_mode == board.MODE_BL:
         data_type = board.MODE_IF
+        need_image_string = NEED_IF_FILE_NAME
     else:
         assert False
+    alt_mode = data_type
 
     test_info = parent_test.create_subtest('%s %s filetype test' %
                                            (file_type, data_type))
@@ -262,7 +283,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
 
     # Test partial update
     file_name = get_file_name()
-    local_data = get_file_content(data_start, raw_data[0:len(raw_data) // 2])
+    local_data = get_file_content(data_start, raw_data[0:0x1000])
     test = DLMassStorageTester(board, test_info, "Load partial",
                                board_mode)
     test.set_programming_data(local_data, file_name)
@@ -270,22 +291,20 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.set_expected_failure_msg("In application programming failed because "
                                   "the update sent was incomplete.\r\n")
     test.run()
-    # If bootloader is missing then this should be indicated by a file
-    if board_mode == board.MODE_IF:
-        if not os.path.isfile(board.get_file_path(NEED_BL_FILE_NAME)):
-            test_info.failure("Bootloader missing but file %s not present" %
-                              NEED_BL_FILE_NAME)
-        test_info.info("Testing switch to bootloader")
-        try:
-            board.set_mode(board.MODE_BL)
-            test_info.failure("Board switched to bootloader mode")
-        except Exception:
-            pass
-        finally:
-            if board.get_mode() == board.MODE_IF:
-                test_info.info("Device able to recover from bad BL")
-            else:
-                test_info.failure("Device in wrong mode")
+    test_info.info("Testing mode switch")
+    try:
+        board.set_mode(alt_mode)
+        test_info.failure("Board switched mode")
+    except Exception:
+        pass
+    # If image is missing or corrupt then this should be indicated by a file
+    if not os.path.isfile(board.get_file_path(need_image_string)):
+        test_info.failure("Image missing but file %s not present" %
+                          NEED_IF_FILE_NAME)
+    if board.get_mode() == board_mode:
+        test_info.info("Device able to recover from bad image")
+    else:
+        test_info.failure("Device in wrong mode")
 
     # Test loading a normal image
     file_name = get_file_name()

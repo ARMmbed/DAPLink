@@ -112,7 +112,7 @@ void gpio_init(void)
     // Give the cap on the reset button time to charge
     busy_wait(10000);
 
-    if ((gpio_get_sw_reset() == 0) || config_ram_get_initial_hold_in_bl()) {
+    if ((gpio_get_sw_reset() == 0) || (config_ram_get_reset_mode() == RESET_MODE_BL)) {
         IRQn_Type irq;
         // Disable SYSTICK timer and interrupt before calling into ISP
         SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk);
@@ -125,7 +125,7 @@ void gpio_init(void)
 
         // If switching to "bootloader" mode then setup the watchdog
         // so it will exit CRP mode after ~30 seconds
-        if (config_ram_get_initial_hold_in_bl()) {
+        if (config_ram_get_reset_mode() == RESET_MODE_BL) {
             LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 15); // Enable watchdog module
             LPC_SYSCON->PDRUNCFG &= ~(1 << 6);      // Enable watchdog clock (WDOSC)
             LPC_SYSCON->WDTOSCCTRL = (0xF << 5);    // Set max frequency - 2.3MHz

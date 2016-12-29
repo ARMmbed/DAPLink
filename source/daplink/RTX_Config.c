@@ -21,7 +21,6 @@
 
 #include "RTL.h"
 #include "util.h"
-#include "IO_Config.h" // NVIC_SystemReset
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -208,7 +207,7 @@ void os_error(U32 err_code)
             break;
     }
 
-    NVIC_SystemReset();
+    util_reset_to_mode(RESET_MODE_ERR);
 
     for (;;); // Wait for reset
 }

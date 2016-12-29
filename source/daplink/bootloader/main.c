@@ -106,9 +106,7 @@ void USBD_SignalHandler()
 void HardFault_Handler()
 {
     util_assert(0);
-    NVIC_SystemReset();
-
-    while (1); // Wait for reset
+    util_reset_to_mode(RESET_MODE_ERR);
 }
 
 __task void main_task(void)
@@ -120,10 +118,8 @@ __task void main_task(void)
     // USB
     uint32_t usb_state_count;
 
-    if (config_ram_get_initial_hold_in_bl()) {
-        // Delay for 1 second for VMs
-        os_dly_wait(100);
-    }
+    // Delay for 1 second for VMs
+    os_dly_wait(100);
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
@@ -204,7 +200,7 @@ __task void main_task(void)
                     break;
 
                 case MAIN_USB_DISCONNECTED:
-                    NVIC_SystemReset();
+                    util_reset_to_mode(RESET_MODE_IF);
                     break;
 
                 case MAIN_USB_CONNECTED:
@@ -235,7 +231,7 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t *)target_device.flash_start) && !config_ram_get_initial_hold_in_bl()) {
+    if (gpio_get_sw_reset() && validate_bin_nvic((uint8_t *)target_device.flash_start) && (config_ram_get_reset_mode() == RESET_MODE_IF)) {
         // change to the new vector table
         SCB->VTOR = target_device.flash_start;
         // modify stack pointer and start app

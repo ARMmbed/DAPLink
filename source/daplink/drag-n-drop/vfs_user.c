@@ -30,7 +30,6 @@
 #include "settings.h"
 #include "target_reset.h"
 #include "daplink.h"
-#include "IO_Config.h"      // for NVIC_SystemReset
 #include "version_git.h"
 #include "info.h"
 #include "gpio.h"           // for gpio_get_sw_reset
@@ -61,6 +60,7 @@ static uint8_t file_buffer[VFS_SECTOR_SIZE];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
 static assert_source_t assert_source;
+static reset_mode_t reset_mode = RESET_MODE_NONE;
 
 static uint32_t get_file_size(vfs_read_cb_t read_func);
 
@@ -69,6 +69,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
+static uint32_t read_file_need_if_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 
 static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
@@ -113,6 +114,11 @@ void vfs_user_build_filesystem()
         file_size = get_file_size(read_file_need_bl_txt);
         vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
     }
+
+    if (daplink_is_bootloader() && (config_ram_get_reset_mode() == RESET_MODE_ERR)) {
+        file_size = get_file_size(read_file_need_if_txt);
+        vfs_create_file("NEED_IF TXT", read_file_need_if_txt, 0, file_size);
+    }
 }
 
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
@@ -131,13 +137,11 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
     }
 
     if (VFS_FILE_CREATED == change) {
-        if (!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
-            if (daplink_is_interface()) {
-                config_ram_set_hold_in_bl(true);
-            } else {
-                // Do nothing - bootloader will go to interface by default
-            }
-
+        if (!memcmp(filename, "START_IFACT", sizeof(vfs_filename_t))) {
+            reset_mode = RESET_MODE_IF;
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "START_BLACT", sizeof(vfs_filename_t))) {
+            reset_mode = RESET_MODE_BL;
             vfs_mngr_fs_remount();
         } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
             config_set_auto_rst(true);
@@ -174,14 +178,14 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
 
 void vfs_user_disconnecting()
 {
-    // Reset if programming was successful  //TODO - move to flash layer
-    if (daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
-        NVIC_SystemReset();
+    if (reset_mode != RESET_MODE_NONE) {
+        util_reset_to_mode(reset_mode);
+        // No return from util_reset_to_mode
     }
 
-    // If hold in bootloader has been set then reset after usb is disconnected
-    if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
-        NVIC_SystemReset();
+    // Reset if programming was successful  //TODO - move to flash layer
+    if (daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
+        util_reset_to_mode(RESET_MODE_IF);
     }
 }
 
@@ -352,6 +356,21 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
 {
     const char *contents = "A bootloader update was started but unable to complete.\r\n"
                            "Reload the bootloader to fix this error message.\r\n";
+    uint32_t size = strlen(contents);
+
+    if (sector_offset != 0) {
+        return 0;
+    }
+
+    memcpy(data, contents, size);
+    return size;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_need_if_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
+{
+    const char *contents = "An error was detected with the interface.\r\n"
+                           "Cycle power or reload the interface firmware to fix this error message.\r\n";
     uint32_t size = strlen(contents);
 
     if (sector_offset != 0) {

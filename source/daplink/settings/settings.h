@@ -34,6 +34,17 @@ typedef enum {
     ASSERT_SOURCE_APP = 2
 } assert_source_t;
 
+typedef enum {
+    // Reset to interface mode
+    RESET_MODE_IF = 0,
+    // Reset to bootloader mode
+    RESET_MODE_BL = 1,
+    // Reset to error handling mode
+    RESET_MODE_ERR = 2,
+    // No mode specified
+    RESET_MODE_NONE = 3
+} reset_mode_t;
+
 void config_init(void);
 
 // Get/set settings residing in flash
@@ -43,11 +54,10 @@ bool config_get_auto_rst(void);
 bool config_get_automation_allowed(void);
 
 // Get/set settings residing in shared ram
-void config_ram_set_hold_in_bl(bool hold);
+void config_ram_set_reset_mode(reset_mode_t mode);
 void config_ram_set_assert(const char *file, uint16_t line);
 void config_ram_clear_assert(void);
-bool config_ram_get_hold_in_bl(void);
-bool config_ram_get_initial_hold_in_bl(void);
+reset_mode_t config_ram_get_reset_mode(void);
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source);
 
 // Private - should only be called from settings.c

@@ -157,3 +157,10 @@ void util_assert_clear()
     config_ram_clear_assert();
     cortex_int_restore(int_state);
 }
+
+void util_reset_to_mode(reset_mode_t mode)
+{
+    config_ram_set_reset_mode(mode);
+    NVIC_SystemReset();
+    while (1); // Wait for reset
+}
