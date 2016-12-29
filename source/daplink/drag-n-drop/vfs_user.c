@@ -61,6 +61,7 @@ static uint8_t file_buffer[VFS_SECTOR_SIZE];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
 static assert_source_t assert_source;
+static uint32_t remount_count;
 
 static uint32_t get_file_size(vfs_read_cb_t read_func);
 
@@ -183,6 +184,8 @@ void vfs_user_disconnecting()
     if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
         NVIC_SystemReset();
     }
+
+    remount_count++;
 }
 
 // Get the filesize from a filesize callback.
@@ -287,6 +290,11 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     // CRC of the interface
     pos += util_write_string(buf + pos, "Interface CRC: 0x");
     pos += util_write_hex32(buf + pos, info_get_crc_interface());
+    pos += util_write_string(buf + pos, "\r\n");
+
+    // Number of remounts that have occurred
+    pos += util_write_string(buf + pos, "Remount count: ");
+    pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
     return pos;
 }
