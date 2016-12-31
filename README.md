@@ -18,7 +18,8 @@ Whitelisted origins can access the DFU interface via WebUSB. Currently, only two
 * This has only been tested on a limited selection of DAPLink hardware:
   * LPC11U35 interface chips, specifically with the [Seeed Studio Arch Max](https://www.seeedstudio.com/Arch-Max-v1.1-p-2632.html) board.
   * STM32F103RB interface chips, specifically the embedded STLink/v2-1 on the [Nucleo F103RB](http://www.st.com/en/evaluation-tools/nucleo-f103rb.html) board
-* This has only been tested on Linux and macOS - Windows will almost certainly require fiddling with [Zadig](http://zadig.akeo.ie/) to load an appropriate WinUSB/libusb driver.
+* This has only been tested on Linux and macOS - Windows will almost certainly require fiddling with [Zadig](http://zadig.akeo.ie/) to load an appropriate WinUSB/libusb driver for the DFU interface.
+* The DFU interface cannot be accessed by Chrome on Windows - Chrome's copy of libusb is missing upstream patches to handle control transfers to composite WinUSB devices more robustly.
 
 ## Compatibility
 There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards or as part of development kits. Known supported circuits are based on and IO compatible with:
