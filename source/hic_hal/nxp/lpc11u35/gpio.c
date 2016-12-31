@@ -85,7 +85,19 @@ void gpio_init(void)
 {
     // enable clock for GPIO port 0
     LPC_SYSCON->SYSAHBCLKCTRL |= (1UL << 6);
+#if defined(TARGET_POWER_HOLD)
+    // Target PowerHOLD port
+    PIN_PWH_IOCON = PIN_PWH_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_PWH_PORT] = PIN_PWH;
+    LPC_GPIO->DIR[PIN_PWH_PORT] |= PIN_PWH;
+#endif
     // configure GPIO-LED as output
+#if defined(CONTROLLED_POWER_LED)
+    // Power led (red)
+    PIN_POW_LED_IOCON = PIN_POW_LED_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_POW_LED_PORT] = PIN_POW_LED;
+    LPC_GPIO->DIR[PIN_POW_LED_PORT] |= PIN_POW_LED;
+#endif
     // DAP led (green)
     PIN_DAP_LED_IOCON = PIN_DAP_LED_IOCON_INIT;
     LPC_GPIO->SET[PIN_DAP_LED_PORT] = PIN_DAP_LED;
@@ -103,10 +115,17 @@ void gpio_init(void)
     LPC_GPIO->DIR[PIN_RESET_IN_PORT] &= ~PIN_RESET_IN;
     PIN_RESET_IN_FWRD_IOCON = PIN_RESET_IN_FWRD_IOCON_INIT;
     LPC_GPIO->DIR[PIN_RESET_IN_FWRD_PORT] &= ~PIN_RESET_IN_FWRD;
+#if !defined(PIN_nRESET_FET_DRIVE)
     // open drain logic for reset button
     PIN_nRESET_IOCON = PIN_nRESET_IOCON_INIT;
     LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
     LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
+#else
+    // FET drive logic for reset button
+    PIN_nRESET_IOCON = PIN_nRESET_IOCON_INIT;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+    LPC_GPIO->DIR[PIN_nRESET_PORT] |= PIN_nRESET;
+#endif
     /* Enable AHB clock to the FlexInt, GroupedInt domain. */
     LPC_SYSCON->SYSAHBCLKCTRL |= ((1 << 19) | (1 << 23) | (1 << 24));
     // Give the cap on the reset button time to charge
