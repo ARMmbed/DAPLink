@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#include "macro.h"
+
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
@@ -26,7 +28,11 @@
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
 #define USBD_HS_ENABLE              0
-
+#ifdef WEBUSB_INTERFACE
+#define USBD_BOS_ENABLE             1
+#else
+#define USBD_BOS_ENABLE             0
+#endif
 //   <h> Device Settings
 //     <i> These settings affect Device Descriptor
 //     <o0> Power
@@ -319,16 +325,36 @@
 //       <i> 0xFF - Class Vendor Specific ID
 //     </e>
 #define USBD_CLS_ENABLE             0
+//     USB DFU support
+#ifdef DFU_INTERFACE
+#define USBD_DFU_ENABLE             1
+#else
+#define USBD_DFU_ENABLE             0
+#endif
+#define USBD_DFU_DNLOAD_ENABLE      1
+#define USBD_DFU_UPLOAD_ENABLE      0
+#define USBD_DFU_STRDESC            L"USB_DFU"
+#define USBD_DFU_XFERBUF_SIZE       1024
 
+//     WebUSB support
+#ifdef WEBUSB_INTERFACE
+#define USBD_WEBUSB_ENABLE          1
+#else
+#define USBD_WEBUSB_ENABLE          0
+#endif
+#define USBD_WEBUSB_VENDOR_CODE     0x21
+#define USBD_WEBUSB_BASE_LANDING_URL "devanlai.github.io/webdfu/dfu-util/?vid="
+#define USBD_WEBUSB_LANDING_URL     CONCAT_MACRO_TO_STRING(USBD_WEBUSB_BASE_LANDING_URL, USBD_DEVDESC_IDVENDOR)
+#define USBD_WEBUSB_ORIGIN_URL      "devanlai.github.io/"
+#define USBD_WEBUSB_IF_NUM          USBD_DFU_IF_NUM
 //   </e>
 // </e>
 
 
 /* USB Device Calculations ---------------------------------------------------*/
 
-#define USBD_IF_NUM                (USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
-#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE))
-#define MAX(x, y)                (((x) < (y)) ? (y) : (x))
+#define USBD_IF_NUM                (USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE+USBD_DFU_ENABLE)
+#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_DFU_ENABLE))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
 #define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
 #define USBD_EP_NUM_CALC2           MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
@@ -404,6 +430,7 @@
 #define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
 #define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
 #define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
+#define USBD_DFU_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+0)
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
@@ -412,6 +439,7 @@
 #define USBD_CDC_ACM_DIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+1)
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_DFU_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_MSC_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)
