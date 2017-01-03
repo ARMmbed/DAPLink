@@ -21,6 +21,16 @@
 
 #include "gpio.h"
 
+static void busy_wait(uint32_t cycles)
+{
+    volatile uint32_t i;
+    i = cycles;
+
+    while (i > 0) {
+        i--;
+    }
+}
+
 void gpio_init(void)
 {
     SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK | SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTE_MASK;
@@ -43,6 +53,14 @@ void gpio_init(void)
     PIN_POWER_EN_GPIO->PDDR |= PIN_POWER_EN;
     // set as input
     PIN_SW_RESET_GPIO->PDDR &= ~PIN_SW_RESET;
+    
+    // Let the voltage rails stabilize.  This is especailly important
+    // during software resets, since the target's 3.3v rail can take
+    // 20-50ms to drain.  During this time the target could be driving
+    // the reset pin low, causing the bootloader to think the reset
+    // button is pressed.
+    // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
+    busy_wait(1000000);
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
