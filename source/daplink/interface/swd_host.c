@@ -74,6 +74,7 @@ typedef struct {
     uint32_t xpsr;
 } DEBUG_STATE;
 
+static bool swd_enabled = false;
 static DAP_STATE dap_state;
 
 static uint8_t swd_read_core_register(uint32_t n, uint32_t *val);
@@ -112,12 +113,38 @@ uint8_t swd_init(void)
     //       and fixed.
     DAP_Setup();
     PORT_SWD_SETUP();
+    swd_enabled = true;
     return 1;
 }
 
 uint8_t swd_off(void)
 {
+    // Clear CSYSPWRUPREQ and CDBGPWRUPREQ if SWD had been enabled. This is to ensure we don't
+    // leave the target's debug logic powered up.
+    if (swd_enabled)  {
+
+        // Ensure CTRL/STAT register selected in DPBANKSEL
+        if (!swd_write_dp(DP_SELECT, 0)) {
+            return 0;
+        }
+        if (!swd_write_dp(DP_ABORT, 0x04)) {
+            return 0;
+        }
+
+        // Power down.
+        if (!swd_write_dp(DP_CTRL_STAT, CDBGRSTREQ)) {
+            return 0;
+        }
+
+        //The debugger requires reading from it before it succesfully resets itself
+        uint32_t temp = 0;
+        if (!swd_read_dp(DP_CTRL_STAT, &temp)) {
+            return 0;
+        }
+    }
+
     PORT_OFF();
+    swd_enabled = false;
     return 1;
 }
 
@@ -917,6 +944,16 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
                 return 0;
             }
 
+            // Ensure CTRL/STAT register selected in DPBANKSEL
+            if (!swd_write_dp(DP_SELECT, 0)) {
+                return 0;
+            }
+
+            // Power down, reset the debugger
+            if (!swd_write_dp(DP_CTRL_STAT, CDBGRSTREQ)) {
+                return 0;
+            }
+
             break;
 
         case DEBUG:
@@ -1014,6 +1051,15 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 
         case NO_DEBUG:
             if (!swd_write_word(DBG_HCSR, DBGKEY)) {
+                return 0;
+            }
+            // Ensure CTRL/STAT register selected in DPBANKSEL
+            if (!swd_write_dp(DP_SELECT, 0)) {
+                return 0;
+            }
+
+            // Power down, reset the debugger
+            if (!swd_write_dp(DP_CTRL_STAT, CDBGRSTREQ)) {
                 return 0;
             }
 
