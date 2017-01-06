@@ -46,8 +46,6 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
 void swd_set_target_reset(uint8_t asserted)
 {
     if (asserted) {
-        swd_init_debug();
-
         //Set POWER->RESET on NRF to 1
         if (!swd_write_ap(AP_TAR, 0x40000000 + 0x544)) {
             return;

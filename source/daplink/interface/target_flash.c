@@ -77,10 +77,10 @@ static error_t target_flash_uninit(void)
     // Resume the target if configured to do so
     if (config_get_auto_rst()) {
         target_set_state(RESET_RUN);
+    } else {
+        target_set_state(RESET_HOLD);
     }
 
-    swd_uninit_debug();
-    swd_off();
     return ERROR_SUCCESS;
 }
 
