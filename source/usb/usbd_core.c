@@ -936,6 +936,10 @@ setup_class_ok:                                                          /* requ
                             goto setup_vendor_ok;
                         }
 
+                        if (USBD_EndPoint0_Setup_WinUSB_ReqToDevice()) {
+                            goto setup_vendor_ok;
+                        }
+
                         goto stall;
 
                     default:

@@ -27,6 +27,7 @@ module:
         - records/usb/usb-cdc.yaml
         - records/usb/usb-dfu.yaml
         - records/usb/usb-webusb.yaml
+        - records/usb/usb-winusb.yaml
         - records/daplink/cmsis-dap.yaml
         - records/daplink/drag-n-drop.yaml
         - records/daplink/dfu.yaml

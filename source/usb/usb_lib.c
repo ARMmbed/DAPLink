@@ -135,6 +135,12 @@ const U8 usbd_webusb_vendor_code = USBD_WEBUSB_VENDOR_CODE;
 const U8 usbd_webusb_vendor_code;
 #endif
 
+#if    (USBD_WINUSB_ENABLE)
+const U8 usbd_winusb_vendor_code = USBD_WINUSB_VENDOR_CODE;
+#else
+const U8 usbd_winusb_vendor_code;
+#endif
+
 #if    (USBD_DFU_ENABLE)
 const U8 usbd_dfu_if_num = USBD_DFU_IF_NUM;
 U8 USBD_DFU_TransferBuf[USBD_DFU_XFERBUF_SIZE];
@@ -1674,14 +1680,65 @@ __weak \
 const U8 USBD_DeviceQualifier_HS[] = { 0 };
 #endif
 
+#if (USBD_WINUSB_ENABLE)
+
+#define USBD_WINUSB_DESC_SET_LEN           170
+#define FUNCTION_SUBSET_LEN                160
+#define DEVICE_INTERFACE_GUIDS_FEATURE_LEN 132
+
+const U8 USBD_WinUSBDescriptorSetDescriptor[] = {
+    WBVAL(WINUSB_DESCRIPTOR_SET_HEADER_SIZE), /* wLength */
+    WBVAL(WINUSB_SET_HEADER_DESCRIPTOR_TYPE), /* wDescriptorType */
+    0x00, 0x00, 0x03, 0x06, /* >= Win 8.1 */  /* dwWindowsVersion*/
+    WBVAL(USBD_WINUSB_DESC_SET_LEN),          /* wDescriptorSetTotalLength */
+    WBVAL(WINUSB_FUNCTION_SUBSET_HEADER_SIZE),/* wLength */
+    WBVAL(WINUSB_SUBSET_HEADER_FUNCTION_TYPE),/* wDescriptorType */
+    USBD_WINUSB_IF_NUM,                       /* bFirstInterface */
+    0,                                        /* bReserved */
+    WBVAL(FUNCTION_SUBSET_LEN),               /* wSubsetLength */
+    WBVAL(WINUSB_FEATURE_COMPATIBLE_ID_SIZE), /* wLength */
+    WBVAL(WINUSB_FEATURE_COMPATIBLE_ID_TYPE), /* wDescriptorType */
+    'W', 'I', 'N', 'U', 'S', 'B', 0, 0,       /* CompatibleId*/
+    0, 0, 0, 0, 0, 0, 0, 0,                   /* SubCompatibleId*/
+    WBVAL(DEVICE_INTERFACE_GUIDS_FEATURE_LEN),/* wLength */
+    WBVAL(WINUSB_FEATURE_REG_PROPERTY_TYPE),  /* wDescriptorType */
+    WBVAL(WINUSB_PROP_DATA_TYPE_REG_MULTI_SZ), /* wPropertyDataType */
+    WBVAL(42), /* wPropertyNameLength */
+    'D',0,'e',0,'v',0,'i',0,'c',0,'e',0,
+    'I',0,'n',0,'t',0,'e',0,'r',0,'f',0,'a',0,'c',0,'e',0,
+    'G',0,'U',0,'I',0,'D',0,'s',0,0,0,
+    WBVAL(80), /* wPropertyDataLength */
+    '{',0,
+    '9',0,'2',0,'C',0,'E',0,'6',0,'4',0,'6',0,'2',0,'-',0,
+    '9',0,'C',0,'7',0,'7',0,'-',0,
+    '4',0,'6',0,'F',0,'E',0,'-',0,
+    '9',0,'3',0,'3',0,'B',0,'-',
+    0,'3',0,'1',0,'C',0,'B',0,'9',0,'C',0,'5',0,'A',0,'A',0,'3',0,'B',0,'9',0,
+    '}',0,0,0,0,0
+};
+
+#else
+
+const U8 USBD_WinUSBDescriptorSetDescriptor[] = { 0 };
+
+BOOL USBD_EndPoint0_Setup_WinUSB_ReqToDevice(void)
+{
+    return (__FALSE);
+}
+
+#endif
+
 #if (USBD_BOS_ENABLE)
 
-#define USBD_NUM_DEV_CAPABILITIES         (USBD_WEBUSB_ENABLE)
+#define USBD_NUM_DEV_CAPABILITIES         (USBD_WEBUSB_ENABLE + USBD_WINUSB_ENABLE)
 
 #define USBD_WEBUSB_DESC_LEN              (sizeof(WEBUSB_PLATFORM_CAPABILITY_DESCRIPTOR))
 
+#define USBD_WINUSB_DESC_LEN              (sizeof(WINUSB_PLATFORM_CAPABILITY_DESCRIPTOR))
+
 #define USBD_BOS_WTOTALLENGTH             (USB_BOS_DESC_SIZE +                         \
-                                           USBD_WEBUSB_DESC_LEN * USBD_WEBUSB_ENABLE)
+                                           USBD_WEBUSB_DESC_LEN * USBD_WEBUSB_ENABLE + \
+                                           USBD_WINUSB_DESC_LEN * USBD_WINUSB_ENABLE)
 
 __weak \
 const U8 USBD_BinaryObjectStoreDescriptor[] = {
@@ -1701,6 +1758,20 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = {
 	WBVAL(0x0100), /* 1.00 */               /* bcdVersion */
 	USBD_WEBUSB_VENDOR_CODE,                /* bVendorCode */
 	1,                                      /* iLandingPage */
+#endif
+#if (USBD_WINUSB_ENABLE)
+	USBD_WINUSB_DESC_LEN,                   /* bLength */
+	USB_DEVICE_CAPABILITY_DESCRIPTOR_TYPE,  /* bDescriptorType */
+	USB_DEVICE_CAPABILITY_PLATFORM,         /* bDevCapabilityType */
+	0x00,                                   /* bReserved */
+	0xDF, 0x60, 0xDD, 0xD8,                 /* PlatformCapabilityUUID */
+	0x89, 0x45, 0xC7, 0x4C,
+	0x9C, 0xD2, 0x65, 0x9D,
+	0x9E, 0x64, 0x8A, 0x9F,
+	0x00, 0x00, 0x03, 0x06, /* >= Win 8.1 *//* dwWindowsVersion*/
+	WBVAL(USBD_WINUSB_DESC_SET_LEN),        /* wDescriptorSetTotalLength */
+	USBD_WINUSB_VENDOR_CODE,                /* bVendorCode */
+	0,                                      /* bAltEnumCode */
 #endif
 };
 

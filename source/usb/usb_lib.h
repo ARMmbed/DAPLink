@@ -99,6 +99,8 @@ extern const U8 usbd_dfu_if_num;
 extern U8 USBD_DFU_TransferBuf[];
 extern const U16 usbd_dfu_transfersize;
 
+extern const U8 usbd_winusb_vendor_code;
+
 extern void usbd_os_evt_set(U16 event_flags, U32 task);
 extern U16 usbd_os_evt_get(void);
 extern U32 usbd_os_evt_wait_or(U16 wait_flags, U16 timeout);
@@ -125,5 +127,6 @@ extern const U8 USBD_BinaryObjectStoreDescriptor[];
 extern const U8 USBD_StringDescriptor[];
 extern const U8 USBD_WebUSBAllowedOriginsHeader[];
 extern const U8 USBD_WebUSBURLDescriptor[];
+extern const U8 USBD_WinUSBDescriptorSetDescriptor[];
 
 #endif  /* __USB_LIB_H__ */

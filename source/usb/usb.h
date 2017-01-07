@@ -29,6 +29,8 @@
 #include "usb_msc.h"
 #include "usb_dfu.h"
 #include "usb_webusb.h"
+#include "usb_winusb.h"
+
 
 /* USB Device header files                                                    */
 #include "usbd_core.h"
@@ -37,6 +39,7 @@
 #include "usbd_core_msc.h"
 #include "usbd_core_dfu.h"
 #include "usbd_core_webusb.h"
+#include "usbd_core_winusb.h"
 
 #include "usbd_desc.h"
 #include "usbd_event.h"

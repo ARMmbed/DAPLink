@@ -31,7 +31,7 @@
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
 #define USBD_HS_ENABLE              0
-#ifdef WEBUSB_INTERFACE
+#if (defined(WEBUSB_INTERFACE) || defined(WINUSB_INTERFACE))
 #define USBD_BOS_ENABLE             1
 #else
 #define USBD_BOS_ENABLE             0
@@ -372,6 +372,15 @@
 #define USBD_WEBUSB_LANDING_URL     CONCAT_MACRO_TO_STRING(USBD_WEBUSB_BASE_LANDING_URL, USBD_DEVDESC_IDVENDOR)
 #define USBD_WEBUSB_ORIGIN_URL      "devanlai.github.io/"
 #define USBD_WEBUSB_IF_NUM          USBD_DFU_IF_NUM
+
+//     Microsoft OS Descriptors 2.0 (WinUSB) support
+#ifdef WINUSB_INTERFACE
+#define USBD_WINUSB_ENABLE          1
+#else
+#define USBD_WINUSB_ENABLE          0
+#endif
+#define USBD_WINUSB_VENDOR_CODE     0x20
+#define USBD_WINUSB_IF_NUM          USBD_DFU_IF_NUM
 //   </e>
 // </e>
 
