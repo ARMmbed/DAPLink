@@ -50,7 +50,7 @@ def main():
         items = prj_name.split('_')  # "k20dx_frdmk22f_if" -> ("k20dx", "frdmk22f", "if")
         assert items[-1] == "if", "Unexpected string: %s" % items[2]
         host_mcu = items[0]
-        base_name = items[1]
+        base_name = '_'.join(items[1:-1])
         dest_offset_str = "_0x%04x" % offset
         dest_name = build_number + "_" + host_mcu + "_" + base_name + dest_offset_str + "." + extension
         dest_path = os.path.join(output_dir, dest_name)
