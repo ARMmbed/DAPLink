@@ -248,7 +248,7 @@ void USBD_MSC_MemoryWrite(void)
         BulkLen = 0;
     }
 
-    if (Offset + BulkLen - 1 > USBD_MSC_BlockSize) {
+    if (Offset + BulkLen > USBD_MSC_BlockSize) {
         // This write would have overflowed USBD_MSC_BlockBuf
         util_assert(0);
         return;
