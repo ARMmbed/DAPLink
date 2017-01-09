@@ -3,23 +3,23 @@
   name: k20dx
   picture: none
   url: none
-  description: lorum ipsum random phrase awesome wombats of doom
+  description: The k20dx HDK provides debugging support, a virtual serial port and drag-n-drop programming support over full speed USB. On board level translators allow this HDK to be used with a range of target voltages including 1.8v and 3.3v. It supports a dedicated bootloader allowing automatic DAPLink updates when used in CI.
 
 - kl26z:
   name: kl26z
   picture: none
   url: none
-  description: lorum ipsum random phrase awesome wombats of doom
+  description: The kl26 HDK provides debugging support, a virtual serial port and drag-n-drop programming support over full speed USB. It is a low cost alternative to the k20dx HDK. It supports a dedicated bootloader allowing automatic DAPLink updates when used in CI.
 
 - absam3u:
   name: absam3u
   picture: none
   url: none
-  description: lorum ipsum random phrase awesome wombats of doom
+  description: The absam3u HDK provides debugging support, a virtual serial port and drag-n-drop programming support over high speed USB. It supports a dedicated bootloader allowing automatic DAPLink updates when used in CI.
 
 - lpc11u35:
   name: lpc11u35
   picture: none
   url: none
-  description: lorum ipsum random phrase awesome wombats of doom
+  description: The lpc11u35 HDK provides debugging support, a virtual serial port and drag-n-drop programming support over high speed USB. It has limited ram and does not have a dedicated bootloader. This HDK is not recommended for new designs.
 ---
