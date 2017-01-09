@@ -20,10 +20,10 @@ $ virtualenv venv
 **Step 2.** Update tools and generate project files. **This should be done every time you pull new changes**
 
 ```Windows
-$ "venv/Scripts/activate"
+$ venv/Scripts/activate
 $ pip install -r requirements.txt
 $ progen generate -t uvision
-$ "venv/Scripts/deactivate"
+$ venv/Scripts/deactivate
 ```
 
 **Step 3.** Pull requests should be made once a changeset is [rebased onto Master](https://www.atlassian.com/git/tutorials/merging-vs-rebasing/workflow-walkthrough)
