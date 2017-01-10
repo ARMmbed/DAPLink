@@ -1,4 +1,4 @@
-<!-- Services Section -->
+<!-- hardware Section -->
     <section id="hardware" >
         <div class="container">
             <!-- Hardware section -->
@@ -33,13 +33,18 @@
                 <div class="col-lg-12" >
                     <h2 class="section-heading text-left">Interface Circuits</h2>
                     {% for chip in site.data.interface-chips %}
-                    <div class="col-md-3">
+                    <div class="col-md-3 click-icon">
+                        <a href="#portfolioModal{{ chip.name }}" class="portfolio-link" data-toggle="modal">
                         <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-microchip fa-stack-1x fa-inverse"></i>
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content">
+                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa fa-microchip fa-stack-1x fa-inverse"></i>
+                                </div>
+                            </div>
                         </span>
+                        </a>
                         <h4 class="service-heading">{{chip.name}}</h4>
-                        <p class="text-muted text">{{chip.description}}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -53,6 +58,7 @@
                     <div class="col-md-8">
                         <h3 class="service-heading">{{board.name}}</h4>
                         <p class="text-muted">{{board.description}}</p>
+                        <p class="text-link"><a href="{{board.buy}}">Buy</a> | <a href="{{board.url}}">Design Files.</a></p>
                     </div>
                 </div>
             </div>
