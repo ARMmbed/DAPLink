@@ -33,21 +33,12 @@
         1. Wait for the firmware to program
         1. Reset the board by power cycling it, the board should re-enumerate as 'DAPLink'    
   
-- mbed LPC1768:
-  name: mbed LPC1768
-  product_code: 1010
-  logoURL: https://mbed-media.mbed.com/LPC1768_enabled3.JPG
-  website: http://mbed.org/handbook/mbed-NXP-LPC1768-Getting-Started
-  instructions:
-    windows: 
-    osx: 
-    linux:
-
-- mbed LPC11U24:
-  name: mbed LPC11U24
-  product_code: 1040
-  logoURL: https://mbed-media.mbed.com/LPC11U24_enabled2.JPG
-  website: http://mbed.org/handbook/mbed-NXP-LPC11U24-Getting-Started
+- nRF51822:
+  name: nRF51822
+  product_code: 1070
+  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
+  logoURL: https://mbed-media.mbed.com/nRF51822-mKIT_clean.png
+  website: https://www.nordicsemi.com/eng/Products/Bluetooth-Smart-Bluetooth-low-energy/nRF52832
   instructions:
     osx: 
     windows: 
@@ -67,6 +58,7 @@
 - NXP LPC800-MAX:
   name: NXP LPC800-MAX
   product_code: 1050
+  fw_name: lpc11u35_lpc812xpresso_0x0000
   logoURL: https://mbed-media.mbed.com/LPC812-MAX_enabled.JPG
   website: http://mbed.org/handbook/mbed-NXP-LPC800-MAX
   instructions:
@@ -88,18 +80,9 @@
 - mbed LPC1114FN28:
   name: mbed LPC1114FN28
   product_code: 1114
+  fw_name: lpc11u35_ssci1114_0x0000
   logoURL: https://mbed-media.mbed.com/mbedLPC1114_with_mbedEmabled_Logo-01.png
   website: http://mbed.org/platforms/LPC1114FN28/
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- u-blox C027:
-  name: u-blox C027
-  product_code: 1234
-  logoURL: https://mbed-media.mbed.com/ublox_square_1.jpg
-  website: https://mbed.org/platforms/u-blox-C027/
   instructions:
     osx: 
     windows: 
@@ -141,6 +124,7 @@
 - Nordic nRF51822:
   name: Nordic nRF51822
   product_code: 1070
+  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
   logoURL: https://mbed-media.mbed.com/nRF51822-mKIT_ang.png
   website:
   instructions:
@@ -151,29 +135,9 @@
 - FRDM-KL05Z:
   name: FRDM-KL05Z
   product_code: 0210
-  fw_name:  k20dx_frdmkl05z_0x8000
+  fw_name: k20dx_frdmkl05z_0x8000
   logoURL: https://mbed-media.mbed.com/frdm-kl05z_hMtZPp0.png
   website: http://mbed.org/platforms/FRDM-KL05Z/
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- LPCXpresso1549:
-  name: LPCXpresso1549
-  product_code: 1549
-  logoURL: https://mbed-media.mbed.com/LPCXpresso1549_enabled.JPG
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- LPCXpresso11U68:
-  name: LPCXpresso11U68
-  product_code: 1168
-  logoURL: https://mbed-media.mbed.com/LPCXpresso11U68_enabled.JPG
-  website:
   instructions:
     osx: 
     windows: 
@@ -184,16 +148,6 @@
   product_code: 9009
   fw_name: lpc11u35_archble_0x0000
   logoURL: https://mbed-media.mbed.com/arch_ble.jpg
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- LPCXpresso4337:
-  name: LPCXpresso4337
-  product_code: 4337
-  logoURL: https://mbed-media.mbed.com/LPCXpresso4337_enabled.JPG
   website:
   instructions:
     osx: 
@@ -211,31 +165,11 @@
     windows: 
     linux: 
 
-- ARM Cortex-M Prototyping System (MPS2):
-  name: ARM Cortex-M Prototyping System (MPS2)
-  product_code: 5000
-  logoURL: https://mbed-media.mbed.com/V2M-MPS2_revB_colour_large.jpg
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
 - RedBearLab nRF51822:
   name: RedBearLab nRF51822
   product_code: 1090
   fw_name: k20dx_rbl_0x5000
   logoURL: https://mbed-media.mbed.com/RedBearLab.nRF51822.jpg
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- Seeed Arch Max:
-  name: Seeed Arch Max
-  product_code: 9011
-  logoURL: https://mbed-media.mbed.com/arch_max_front.jpg
   website:
   instructions:
     osx: 
@@ -278,6 +212,7 @@
 - Nordic nRF51-DK:
   name: Nordic nRF51-DK
   product_code: 1100
+  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
   logoURL: https://mbed-media.mbed.com/nRF51-DK_v1.2.0_with_mbed_logo.png
   website:
   instructions:
@@ -288,6 +223,7 @@
 - Renesas GR-PEACH:
   name: Renesas GR-PEACH
   product_code: 5500
+  fw_name: lpc11u35_gr_peach_0x0000
   logoURL: https://mbed-media.mbed.com/GR-PEACH_C.png
   website:
   instructions:
@@ -309,27 +245,8 @@
 - Nordic nRF51-Dongle:
   name: Nordic nRF51-Dongle
   product_code: 1120
+  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
   logoURL: https://mbed-media.mbed.com/nRF51-Dongle_v1.1.0_with_mbed_logo.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- Ethernet IoT Starter Kit:
-  name: Ethernet IoT Starter Kit
-  product_code: 0245
-  logoURL: https://mbed-media.mbed.com/photo1_mod_small_1.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- JKSoft Wallbot BLE:
-  name: JKSoft Wallbot BLE
-  product_code: 1140
-  logoURL: https://mbed-media.mbed.com/WallBot-BLE_enabled.jpg
   website:
   instructions:
     osx: 
@@ -369,30 +286,11 @@
     windows: 
     linux: 
 
-- Delta DFCM-NNN40:
-  name: Delta DFCM-NNN40
-  product_code: 4500
-  logoURL: https://mbed-media.mbed.com/Delta_NNN40_main_image.jpg
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- MAXWSNENV:
-  name: MAXWSNENV
-  product_code: 0400
-  logoURL: https://mbed-media.mbed.com/maxwsnenv-platform_Dq8klJy.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- WIZwiki-W7500:
-  name: WIZwiki-W7500
-  product_code: 2201
-  logoURL: https://mbed-media.mbed.com/WIZwiki_W7500_enabled.JPG
+- Seeed Arch Link:
+  name: Seeed Arch Link
+  product_code: 9013
+  fw_name: lpc11u35_archlink_0x0000
+  logoURL: https://mbed-media.mbed.com/Arch_Link_rQW64G4.jpg
   website:
   instructions:
     osx: 
@@ -411,36 +309,6 @@
     windows: 
     linux: 
 
-- WIZwiki-W7500ECO:
-  name: WIZwiki-W7500ECO
-  product_code: 2202
-  logoURL: https://mbed-media.mbed.com/WIZwiki_W7500ECO_enabled2.JPG
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- WIZwiki-W7500P:
-  name: WIZwiki-W7500P
-  product_code: 2203
-  logoURL: https://mbed-media.mbed.com/WIZwiki_W7500P_enabled2.JPG
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- IOT Subsystem for Cortex-M:
-  name: IOT Subsystem for Cortex-M
-  product_code: 5001
-  logoURL: https://mbed-media.mbed.com/V2M-MPS2_revB_colour_medium_5cIhjmO.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
 - Switch Science mbed TY51822r3:
   name: Switch Science mbed TY51822r3
   product_code: 1019
@@ -452,40 +320,11 @@
     windows: 
     linux: 
 
-- Hexiwear:
-  name: Hexiwear
-  product_code: 0214
-  logoURL: https://mbed-media.mbed.com/Hexiwear_Platform_Image_19Ja2aX.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- CoCo-ri-Co!:
-  name: CoCo-ri-Co!
-  product_code: C000
-  logoURL: https://mbed-media.mbed.com/platform-photo-logo2.png
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
 - Nordic nRF52-DK:
   name: Nordic nRF52-DK
   product_code: 1101
+  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
   logoURL: https://mbed-media.mbed.com/15CDFE31_fw2w4py.PNG
-  website:
-  instructions:
-    osx: 
-    windows: 
-    linux: 
-
-- Nuvoton NUC472:
-  name: Nuvoton NUC472
-  product_code: 1302
-  logoURL: https://mbed-media.mbed.com/Nu-mbed-MUC472_copy.jpg
   website:
   instructions:
     osx: 
