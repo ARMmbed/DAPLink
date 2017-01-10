@@ -14,7 +14,7 @@
    The kl26 HDK provides debugging support, a virtual serial port and drag-n-drop programming support over full speed USB. It is a low cost alternative to the k20dx HDK. It supports a dedicated bootloader allowing automatic DAPLink updates when used in CI.
 
 - absam3u:
-  name: absam3u
+  name: atsam3u
   picture: 
   url: none
   description: |
