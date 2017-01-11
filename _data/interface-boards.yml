@@ -12,7 +12,7 @@
   picture: https://camo.githubusercontent.com/e2530ce6de3e177a1c8a2687338566a7646d6dc5/687474703a2f2f756b2e72732d6f6e6c696e652e636f6d2f6c61726765696d616765732f52393035343130342d30312e6a7067
   url: https://github.com/ARMmbed/mbed-HDK/tree/master/Production%20Design%20Projects/DAPLink/SWDAP
   buy: http://uk.rs-online.com/web/p/processor-microcontroller-development-kits/9054104/
-  description: The DIPDAP is a debug probe based on the NXP LPC11U35, supported by the DAPLink project. It provides a CMSIS-DAP interface for programming and debugging. This design is NRND (not reccomended for new designs) because it does not have COM Port functionality, so it cannot be used for automated testing in the mbed ecosystem, which is required for validation and continuous integration testing. 
+  description: The SWDAP is a debug probe based on the NXP LPC11U35, supported by the DAPLink project. It provides a CMSIS-DAP interface for programming and debugging. This design is NRND (not reccomended for new designs) because it does not have COM Port functionality, so it cannot be used for automated testing in the mbed ecosystem, which is required for validation and continuous integration testing. 
 
 
 ---
