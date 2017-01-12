@@ -43,13 +43,14 @@ typedef struct __attribute__((__packed__)) cfg_setting {
     // Configurable values
     uint8_t auto_rst;
     uint8_t automation_allowed;
+    uint8_t overflow_detect;
 
     // Add new members here
 
 } cfg_setting_t;
 
 // Make sure FORMAT in generate_config.py is updated if size changes
-COMPILER_ASSERT(sizeof(cfg_setting_t) == 8);
+COMPILER_ASSERT(sizeof(cfg_setting_t) == 9);
 
 // Sector buffer must be as big or bigger than settings
 COMPILER_ASSERT(sizeof(cfg_setting_t) < SECTOR_BUFFER_SIZE);
@@ -68,6 +69,7 @@ static cfg_setting_t config_rom_copy;
 static const cfg_setting_t config_default = {
     .auto_rst = 0,
     .automation_allowed = 0,
+    .overflow_detect = 0,
 };
 
 // Buffer for data to flash
@@ -155,6 +157,12 @@ void config_set_automation_allowed(bool on)
     program_cfg(&config_rom_copy);
 }
 
+void config_set_overflow_detect(bool on)
+{
+    config_rom_copy.overflow_detect = on;
+    program_cfg(&config_rom_copy);
+}
+
 bool config_get_auto_rst()
 {
     return config_rom_copy.auto_rst;
@@ -163,4 +171,9 @@ bool config_get_auto_rst()
 bool config_get_automation_allowed(void)
 {
     return config_rom_copy.automation_allowed;
+}
+
+bool config_get_overflow_detect()
+{
+    return config_rom_copy.overflow_detect;
 }

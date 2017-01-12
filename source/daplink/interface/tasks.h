@@ -32,7 +32,6 @@ extern "C" {
 #define HIGHEST_PRIORITY            (254)   /* Priority 255 is reserved by RTX */
 
 #define MAIN_TASK_PRIORITY          (10)
-#define SERIAL_TASK_PRIORITY        (1)
 #define TIMER_TASK_PRIORITY         (11)
 #define DAP_TASK_PRIORITY           (15)
 #define MSC_TASK_PRIORITY           (5)
@@ -43,7 +42,6 @@ extern "C" {
 //  may want to move away from threads for some of these behaviours to optimize mempory usage (RAM)
 #define TIMER_TASK_30_STACK (136)
 #define DAP_TASK_STACK      (272)
-#define SERIAL_TASK_STACK   (312)
 #define MAIN_TASK_STACK     (800)
 
 #ifdef __cplusplus

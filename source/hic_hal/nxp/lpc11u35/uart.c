@@ -22,6 +22,8 @@
 #include "LPC11Uxx.h"
 #include "uart.h"
 #include "util.h"
+#include "circ_buf.h"
+#include "settings.h" // for config_get_overflow_detect
 
 static uint32_t baudrate;
 static uint32_t dll;
@@ -29,16 +31,14 @@ static uint32_t tx_in_progress;
 
 extern uint32_t SystemCoreClock;
 
-// Size must be 2^n
-#define  BUFFER_SIZE (32)
+#define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
+#define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
+#define BUFFER_SIZE         (64)
 
-static struct {
-    uint8_t  data[BUFFER_SIZE];
-    volatile uint16_t idx_in;
-    volatile uint16_t idx_out;
-    volatile  int16_t cnt_in;
-    volatile  int16_t cnt_out;
-} write_buffer, read_buffer;
+circ_buf_t write_buffer;
+uint8_t write_buffer_data[BUFFER_SIZE];
+circ_buf_t read_buffer;
+uint8_t read_buffer_data[BUFFER_SIZE];
 
 static int32_t reset(void);
 
@@ -255,30 +255,14 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 int32_t uart_write_free(void)
 {
-    return BUFFER_SIZE - (write_buffer.cnt_in - write_buffer.cnt_out);
+    return circ_buf_count_free(&write_buffer);
 }
 
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     uint32_t cnt;
-    int16_t  len_in_buf;
 
-    if (size == 0) {
-        return 0;
-    }
-
-    cnt = 0;
-
-    while (size--) {
-        len_in_buf = write_buffer.cnt_in - write_buffer.cnt_out;
-
-        if (len_in_buf < BUFFER_SIZE) {
-            write_buffer.data[write_buffer.idx_in++] = *data++;
-            write_buffer.idx_in &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_in++;
-            cnt++;
-        }
-    }
+    cnt = circ_buf_write(&write_buffer, data, size);
 
     // enable THRE interrupt
     LPC_USART->IER |= (1 << 1);
@@ -294,41 +278,21 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
 
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    uint32_t cnt;
-
-    if (size == 0) {
-        return 0;
-    }
-
-    cnt = 0;
-
-    while (size--) {
-        if (read_buffer.cnt_in != read_buffer.cnt_out) {
-            *data++ = read_buffer.data[read_buffer.idx_out++];
-            read_buffer.idx_out &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_out++;
-            cnt++;
-        }
-    }
-
-    return cnt;
+    return circ_buf_read(&read_buffer, data, size);
 }
 
 
 void UART_IRQHandler(void)
 {
     uint32_t iir;
-    int16_t  len_in_buf;
     // read interrupt status
     iir = LPC_USART->IIR;
 
     // handle character to transmit
-    if (write_buffer.cnt_in != write_buffer.cnt_out) {
+    if (circ_buf_count_used(&write_buffer) > 0) {
         // if THR is empty
         if (LPC_USART->LSR & (1 << 5)) {
-            LPC_USART->THR = write_buffer.data[write_buffer.idx_out++];
-            write_buffer.idx_out &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_out++;
+            LPC_USART->THR = circ_buf_pop(&write_buffer);
             tx_in_progress = 1;
         }
 
@@ -342,16 +306,17 @@ void UART_IRQHandler(void)
     if (((iir & 0x0E) == 0x04)  ||        // Rx interrupt (RDA)
             ((iir & 0x0E) == 0x0C))  {        // Rx interrupt (CTI)
         while (LPC_USART->LSR & 0x01) {
-            len_in_buf = read_buffer.cnt_in - read_buffer.cnt_out;
-            read_buffer.data[read_buffer.idx_in++] = LPC_USART->RBR;
-            read_buffer.idx_in &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_in++;
-
-            // if buffer full: write by dropping oldest characters
-            if (len_in_buf == BUFFER_SIZE) {
-                read_buffer.idx_out++;
-                read_buffer.idx_out &= (BUFFER_SIZE - 1);
-                read_buffer.cnt_out++;
+            uint32_t free;
+            uint8_t data;
+            
+            data = LPC_USART->RBR;
+            free = circ_buf_count_free(&read_buffer);
+            if (free > RX_OVRF_MSG_SIZE) {
+                circ_buf_push(&read_buffer, data);
+            } else if ((RX_OVRF_MSG_SIZE == free) && config_get_overflow_detect()) {
+                circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+            } else {
+                // Drop character
             }
         }
     }
@@ -361,25 +326,14 @@ void UART_IRQHandler(void)
 
 static int32_t reset(void)
 {
-    uint8_t *ptr;
-    int32_t  i;
-
     // Reset FIFOs
     LPC_USART->FCR = 0x06;
     baudrate  = 0;
     dll       = 0;
     tx_in_progress = 0;
-    ptr = (uint8_t *)&write_buffer;
 
-    for (i = 0; i < sizeof(write_buffer); i++) {
-        *ptr++ = 0;
-    }
-
-    ptr = (uint8_t *)&read_buffer;
-
-    for (i = 0; i < sizeof(read_buffer); i++) {
-        *ptr++ = 0;
-    }
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
 
     // Ensure a clean start, no data in either TX or RX FIFO
     while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));

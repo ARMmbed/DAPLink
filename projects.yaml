@@ -289,6 +289,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/gr-peach.yaml
+    lpc11u35_blueninja_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/blueninja.yaml
     stm32f103xb_rblnano_if:
         - *module_if
         - *module_hic_stm32f103xb

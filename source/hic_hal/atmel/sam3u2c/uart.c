@@ -23,9 +23,17 @@
 
 #include "sam3u.h"
 #include "uart.h"
+#include "circ_buf.h"
+#include "cortex_m.h"
+#include "util.h"
+#include "settings.h" // for config_get_overflow_detect
 
+#define  BUFFER_SIZE  512
 #define _CPU_CLK_HZ   SystemCoreClock
-#define _CDC_BUFFER_SIZE (512)
+
+#define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
+#define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
+
 
 #define MIN(a, b)     (((a) < (b)) ? (a) : (b))
 #define MAX(a, b)     (((a) > (b)) ? (a) : (b))
@@ -109,14 +117,11 @@
 #define PIOA_FELLSR          (*(volatile U32*) (PIOA_BASE_ADDR + 0xD0)) // Falling Edge/Low Level Select Register
 #define PIOA_REHLSR          (*(volatile U32*) (PIOA_BASE_ADDR + 0xD4)) // Rising Edge/High Level Select Register
 
-typedef struct {
-    U8 acBuffer[_CDC_BUFFER_SIZE + 1];   // Buffer is max. filled to BufferSize - 1
-    U8 *pRead;
-    U8 *pWrite;
-} CIRCBUFFER;
+circ_buf_t write_buffer;
+uint8_t write_buffer_data[BUFFER_SIZE];
+circ_buf_t read_buffer;
+uint8_t read_buffer_data[BUFFER_SIZE];
 
-static CIRCBUFFER _WriteBuffer;
-static CIRCBUFFER _ReadBuffer;
 static U32        _Baudrate;
 static U8         _FlowControl;
 static U8         _UARTChar0;   // Use static here since PDC starts transferring the byte when we already left this function
@@ -151,21 +156,15 @@ static int _SetBaudrate(U32 Baudrate)
 
 static void _Send1(void)
 {
-    U8 *pWrapAround;
-    U8 *pRead;
+    // Assert that there is data in the buffer
+    util_assert(circ_buf_count_used(&write_buffer) > 0);
+
     //
     // Use PDC for transferring the byte to the UART since direct write to UART_THR does not seem to work properly.
     //
     PIOA->PIO_MDDR = (1 << UART_TX_PIN); //Disable open-drain on TX pin
-    pRead = _WriteBuffer.pRead;
-    _UARTChar0 = *pRead++;
-    pWrapAround = (U8 *)(_WriteBuffer.acBuffer + sizeof(_WriteBuffer.acBuffer));
+    _UARTChar0 = circ_buf_pop(&write_buffer);
 
-    if (pRead == pWrapAround) {
-        pRead = _WriteBuffer.acBuffer;
-    }
-
-    _WriteBuffer.pRead = pRead;
     _TxInProgress = 1;
     UART_PDC_TPR  = (U32)&_UARTChar0;
     UART_PDC_TCR  = 1;
@@ -175,27 +174,10 @@ static void _Send1(void)
 
 static void _ResetBuffers(void)
 {
-    _WriteBuffer.pRead  = _WriteBuffer.acBuffer;
-    _WriteBuffer.pWrite = _WriteBuffer.acBuffer;
-    _ReadBuffer.pRead   = _ReadBuffer.acBuffer;
-    _ReadBuffer.pWrite  = _ReadBuffer.acBuffer;
+    //TODO - assert that transmit is off
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
     _TxInProgress       = 0;
-}
-
-
-static int32_t _NumBytesWriteFree(CIRCBUFFER *pBuffer)
-{
-    //
-    // Return free space in buffer
-    //
-    int32_t v;
-    v = (int32_t)(pBuffer->pRead - pBuffer->pWrite - 1);
-
-    if (v < 0) {
-        v += sizeof(pBuffer->acBuffer);
-    }
-
-    return v;
 }
 
 void UART_IntrEna(void)
@@ -218,7 +200,7 @@ void uart_software_flow_control()
 
     if (((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
         _TxInProgress = 0;
-        v = _CDC_BUFFER_SIZE - _NumBytesWriteFree(&_WriteBuffer); // NumBytes in write buffer
+        v = circ_buf_count_used(&write_buffer); // NumBytes in write buffer
 
         if (v == 0) {  // No more characters to send ?: Disable further tx interrupts
             UART_IER = UART_TX_INT_FLAG;
@@ -230,6 +212,7 @@ void uart_software_flow_control()
         UART_IDR = UART_TX_INT_FLAG;
     }
 }
+
 int32_t uart_initialize(void)
 {
     //
@@ -353,110 +336,51 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 int32_t uart_write_free(void)
 {
-    return _NumBytesWriteFree(&_WriteBuffer);
+    return circ_buf_count_free(&write_buffer);
 }
 
 
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
-    uint16_t NumBytesWritten;
-    uint16_t NumBytesAtOnce;
-    U8 *pWrapAround;
-    U8 *pWrite;
-    //
-    // Early out in case nothing needs to be written or buffer is full
-    //
-    size = MIN(_NumBytesWriteFree(&_WriteBuffer), size);
+    cortex_int_state_t state;
+    uint32_t cnt;
 
-    if (size == 0) {  // Early out
-        return 0;
-    }
+    cnt = circ_buf_write(&write_buffer, data, size);
 
     //
-    // Copy data into buffer. Also consider wrap-around
+    // Atomically trigger transfer if not already in progress
     //
-    NumBytesWritten = size;
-    pWrite = _WriteBuffer.pWrite;
-    pWrapAround = (U8 *)(_WriteBuffer.acBuffer + sizeof(_WriteBuffer.acBuffer));
-
-    if (size) {
-        do {
-            NumBytesAtOnce = MIN(size, (int)(pWrapAround - pWrite));   // Copy as much as possible and consider wrap-around
-            memcpy(pWrite, data, NumBytesAtOnce);
-            pWrite += NumBytesAtOnce;
-
-            if (pWrite == pWrapAround) {
-                pWrite = _WriteBuffer.acBuffer;
-            }
-
-            size -= NumBytesAtOnce;
-            data += NumBytesAtOnce;
-        } while (size);
-    }
-
-    _WriteBuffer.pWrite = pWrite;
-
-    //
-    // Trigger transfer if not already in progress
-    //
+    state = cortex_int_get_and_disable();
     if (_TxInProgress == 0 && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
         _Send1();
     }
+    cortex_int_restore(state);
 
-    return NumBytesWritten;
+    return cnt;
 }
 
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    uint16_t NumBytesRead;
-    uint16_t NumBytesAtOnce;
-    uint16_t v;
-    uint16_t writeFreeBytes;
-    U8 *pWrapAround;
-    U8 *pRead;
-    writeFreeBytes = _NumBytesWriteFree(&_ReadBuffer);
+    cortex_int_state_t state;
+    uint32_t cnt;
 
-    //Check if RTS had been asserted, if there is space on the buffer then deassert RTS
-    if (writeFreeBytes > 0 && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_RTS) & 1)) {
+    cnt = circ_buf_read(&read_buffer, data, size);
+
+    // Atomically check if RTS had been asserted, if there is space on the buffer then deassert RTS
+    state = cortex_int_get_and_disable();
+    if ((circ_buf_count_free(&read_buffer) > RX_OVRF_MSG_SIZE) && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_RTS) & 1)) {
         PIOA->PIO_CODR = 1 << BIT_CDC_USB2UART_RTS;
     }
+    cortex_int_restore(state);
 
-    v = _CDC_BUFFER_SIZE - writeFreeBytes;
-    size = MIN(v, size);
-
-    if (size == 0) {  // Early out
-        return 0;
-    }
-
-    NumBytesRead = size;
-    pWrapAround = (U8 *)(_ReadBuffer.acBuffer + sizeof(_ReadBuffer.acBuffer));
-    pRead = _ReadBuffer.pRead;
-
-    if (size) {
-        do {
-            NumBytesAtOnce = MIN(size, (int)(pWrapAround - pRead));   // Copy as much as possible and consider wrap-around
-            memcpy(data, pRead, NumBytesAtOnce);
-            pRead += NumBytesAtOnce;
-
-            if (pRead == pWrapAround) {
-                pRead = _ReadBuffer.acBuffer;
-            }
-
-            size -= NumBytesAtOnce;
-            data += NumBytesAtOnce;
-        } while (size);
-    }
-
-    _ReadBuffer.pRead = pRead;
-    return NumBytesRead;
+    return cnt;
 }
 
 void UART_IRQHandler(void)
 {
     int Status;
-    uint32_t v;
-    U8 c;
-    U8 *pWrapAround;
+    int32_t cnt;
+    U8 data;
     Status = UART_SR;                                 // Examine status register
 
     if (Status & UART_RX_ERR_FLAGS) {                 // In case of error: Set RSTSTA to reset status bits PARE, FRAME, OVRE and RXBRK
@@ -467,21 +391,19 @@ void UART_IRQHandler(void)
     // Handle Rx event
     //
     if (Status & UART_RXRDY_FLAG) {                   // Data received?
-        c = UART_RHR;
-        v = _NumBytesWriteFree(&_ReadBuffer);
+        data = UART_RHR;
+        cnt = (int32_t)circ_buf_count_free(&read_buffer) - RX_OVRF_MSG_SIZE;
+        if (cnt > 0) {
+            circ_buf_push(&read_buffer, data);
+        } else if ((0 == cnt) && config_get_overflow_detect()) {
+            circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+        } else {
+            // Drop character
+        }
 
-        if (v) {
-            *_ReadBuffer.pWrite++ = c;
-            pWrapAround = (U8 *)(_ReadBuffer.acBuffer + sizeof(_ReadBuffer.acBuffer));
-
-            if (_ReadBuffer.pWrite == pWrapAround) {
-                _ReadBuffer.pWrite = _ReadBuffer.acBuffer;
-            }
-
-            //If this was the last available byte on the buffer then assert RTS
-            if (v == 1) {
-                PIOA->PIO_SODR = 1 << BIT_CDC_USB2UART_RTS;
-            }
+        //If this was the last available byte on the buffer then assert RTS
+        if (cnt == 1) {
+            PIOA->PIO_SODR = 1 << BIT_CDC_USB2UART_RTS;
         }
     }
 
@@ -489,9 +411,8 @@ void UART_IRQHandler(void)
     // Handle Tx event
     //
     if (Status & UART_IMR & UART_TX_INT_FLAG) {       // Byte has been send by UART
-        v = _CDC_BUFFER_SIZE - _NumBytesWriteFree(&_WriteBuffer); // NumBytes in write buffer
-
-        if (v == 0) {                               // No more characters to send ?: Disable further tx interrupts
+        cnt = circ_buf_count_used(&write_buffer); // NumBytes in write buffer
+        if (cnt == 0) {                               // No more characters to send ?: Disable further tx interrupts
             UART_IDR = UART_TX_INT_FLAG;
             PIOA->PIO_MDER = (1 << UART_TX_PIN);    //enable open-drain
             _TxInProgress = 0;

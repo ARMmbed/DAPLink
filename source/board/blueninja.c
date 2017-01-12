@@ -1,6 +1,6 @@
 /**
- * @file    settings_rom_stub.c
- * @brief   Implementation of settings.h
+ * @file    blueninja_sb.c
+ * @brief   board ID for the Cerevo BlueNinja sub board & specific functions.
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -18,42 +18,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <RTL.h>
+#include "IO_Config.h"
+#include "swd_host.h"
 
-#include "stdbool.h"
+const char *board_id = "7010";
 
-#include "settings.h"
 
-void config_rom_init()
+void target_set_state_by_board(TARGET_RESET_STATE state)
 {
-    // Do nothing
-}
-
-void config_set_auto_rst(bool on)
-{
-    // Do nothing
-}
-
-void config_set_automation_allowed(bool on)
-{
-    // Do nothing
-}
-
-void config_set_overflow_detect(bool on)
-{
-    // Do nothing
-}
-
-bool config_get_auto_rst()
-{
-    return false;
-}
-
-bool config_get_automation_allowed()
-{
-    return true;
-}
-
-bool config_get_overflow_detect()
-{
-    return false;
+    
+    if (RESET_PROGRAM == state) {
+        LPC_GPIO->SET[PIN_PWH_PORT] = PIN_PWH;
+        os_dly_wait(10);
+    }
 }

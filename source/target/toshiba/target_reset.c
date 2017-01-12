@@ -1,6 +1,6 @@
 /**
- * @file    settings_rom_stub.c
- * @brief   Implementation of settings.h
+ * @file    target_reset.c
+ * @brief   Target reset for the lpc812
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -18,42 +18,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include <RTL.h>
+#include "target_reset.h"
+#include "swd_host.h"
 
-#include "stdbool.h"
-
-#include "settings.h"
-
-void config_rom_init()
+__attribute__((weak)) void target_set_state_by_board(TARGET_RESET_STATE state)
 {
-    // Do nothing
 }
 
-void config_set_auto_rst(bool on)
-{
-    // Do nothing
+void target_before_init_debug(void) {
+    swd_set_target_reset(1);
+    os_dly_wait(2);
+    swd_set_target_reset(0);
+    os_dly_wait(2);
+    return;
 }
 
-void config_set_automation_allowed(bool on)
-{
-    // Do nothing
+uint8_t target_unlock_sequence(void) {
+    return 1;
 }
 
-void config_set_overflow_detect(bool on)
-{
-    // Do nothing
+uint8_t target_set_state(TARGET_RESET_STATE state) {
+    target_set_state_by_board(state);
+    return swd_set_target_state_sw(state);
 }
 
-bool config_get_auto_rst()
+uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
-    return false;
-}
-
-bool config_get_automation_allowed()
-{
-    return true;
-}
-
-bool config_get_overflow_detect()
-{
-    return false;
+    return 0;
 }

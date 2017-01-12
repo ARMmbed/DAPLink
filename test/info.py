@@ -113,6 +113,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
+    (   0x7010,     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja' when mbed-os supports this
     (   0x9004,     'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
     (   0x9009,     'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                        ),
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
@@ -169,7 +170,7 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'Seeed-Tiny-BLE',
     'Seeed-Arch-Link',
     'SSCI-MBIT',
-]
+    'BlueNinja',]
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[3] for config in
                             SUPPORTED_CONFIGURATIONS}

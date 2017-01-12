@@ -79,7 +79,6 @@ static error_t target_flash_uninit(void)
         target_set_state(RESET_RUN);
     }
 
-    swd_uninit_debug();
     swd_off();
     return ERROR_SUCCESS;
 }
@@ -111,9 +110,27 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
             return ERROR_WRITE;
         }
 
-        addr += write_size;
-        buf += write_size;
-        size -= write_size;
+        if (config_get_automation_allowed()) {
+            // Verify data flashed if in automation mode
+            while (write_size > 0) {
+                uint8_t rb_buf[16];
+                uint32_t verify_size = MIN(write_size, sizeof(rb_buf));
+                if (!swd_read_memory(addr, rb_buf, verify_size)) {
+                    return ERROR_ALGO_DATA_SEQ;
+                }
+                if (memcmp(buf, rb_buf, verify_size) != 0) {
+                    return ERROR_WRITE;
+                }
+                addr += verify_size;
+                buf += verify_size;
+                size -= verify_size;
+                write_size -= verify_size;
+            }
+        } else {
+            addr += write_size;
+            buf += write_size;
+            size -= write_size;
+        }
     }
 
     return ERROR_SUCCESS;

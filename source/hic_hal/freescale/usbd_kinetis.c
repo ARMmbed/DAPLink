@@ -1,5 +1,5 @@
 /**
- * @file    gpio.h
+ * @file    usbd_kinetis.c
  * @brief   
  *
  * DAPLink Interface Firmware
@@ -21,9 +21,10 @@
 
 #include "RTL.h"
 #include "rl_usb.h"
-#include "MKL26Z4.h"
+#include "fsl_device_registers.h"
 #include "cortex_m.h"
 #include "util.h"
+#include "string.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -38,6 +39,12 @@ typedef struct __BUF_DESC {
 BUF_DESC __align(512) BD[(USBD_EP_NUM + 1) * 2 * 2];
 uint8_t EPBuf[(USBD_EP_NUM + 1) * 2 * 2][64];
 uint8_t OutEpSize[USBD_EP_NUM + 1];
+uint8_t StatQueue[(USBD_EP_NUM + 1) * 2 * 2 + 1];
+uint32_t StatQueueHead = 0;
+uint32_t StatQueueTail = 0;
+uint32_t LastIstat = 0;
+uint8_t UsbSuspended = 0;
+uint8_t Ep0ZlpOut = 0; 
 
 uint32_t Data1  = 0x55555555;
 
@@ -79,6 +86,37 @@ inline static void protected_xor(uint32_t *addr, uint32_t val)
     state = cortex_int_get_and_disable();
     *addr = *addr ^ val;
     cortex_int_restore(state);
+}
+
+inline static void stat_enque(uint32_t stat)
+{
+    cortex_int_state_t state;
+    state = cortex_int_get_and_disable();
+    StatQueue[StatQueueTail] = stat;
+    StatQueueTail = (StatQueueTail + 1) % sizeof(StatQueue);
+    cortex_int_restore(state);
+}
+
+inline static uint32_t stat_deque()
+{
+    cortex_int_state_t state;
+    uint32_t stat;
+    state = cortex_int_get_and_disable();
+    stat = StatQueue[StatQueueHead];
+    StatQueueHead = (StatQueueHead + 1) % sizeof(StatQueue);
+    cortex_int_restore(state);
+
+    return stat;
+}
+
+inline static uint32_t stat_is_empty()
+{
+    cortex_int_state_t state;
+    uint32_t empty;
+    state = cortex_int_get_and_disable();
+    empty = StatQueueHead == StatQueueTail;
+    cortex_int_restore(state);
+    return empty;
 }
 
 /*
@@ -150,7 +188,6 @@ void USBD_Connect(uint32_t con)
     if (con) {
         USB0->CTL  |= USB_CTL_USBENSOFEN_MASK;            /* enable USB           */
         USB0->CONTROL = USB_CONTROL_DPPULLUPNONOTG_MASK;  /* pull up on D+        */
-
     } else {
         USB0->CTL  &= ~USB_CTL_USBENSOFEN_MASK;           /* disable USB          */
         USB0->CONTROL &= ~USB_CONTROL_DPPULLUPNONOTG_MASK;/* pull down on D+      */
@@ -168,9 +205,18 @@ void USBD_Reset(void)
 {
     uint32_t i;
 
+    NVIC_DisableIRQ(USB0_IRQn);
+
     for (i = 1; i < 16; i++) {
         USB0->ENDPOINT[i].ENDPT = 0x00;
     }
+
+    memset(StatQueue, 0, sizeof(StatQueue));
+    StatQueueHead = 0;
+    StatQueueTail = 0;
+    LastIstat = 0;
+    UsbSuspended = 0;
+    Ep0ZlpOut = 0;
 
     /* EP0 control endpoint                                                     */
     BD[IDX(0, RX, ODD)].bc       = USBD_MAX_PACKET0;
@@ -188,6 +234,8 @@ void USBD_Reset(void)
     USB0->ERRSTAT =  0xFF;                /* clear all error flags              */
     USB0->ERREN   =  0xFF;                /* enable error interrupt sources     */
     USB0->ADDR    =  0x00;                /* set default address                */
+
+    NVIC_EnableIRQ(USB0_IRQn);
 }
 
 
@@ -430,6 +478,14 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
     idx = IDX(EPNum, RX, 0);
     sz  = BD[idx].bc;
 
+    if ((EPNum == 0) && Ep0ZlpOut) {
+        // This packet was a zero length data out packet. It has already
+        // been processed by USB0_IRQHandler. Only toggle the DATAx bit
+        // and return a size of 0.
+        protected_xor(&Data1, (1 << (idx / 2)));
+        return 0;
+    }
+
     if ((EPNum == 0) && (TOK_PID(idx) == SETUP_TOKEN)) {
         setup = 1;
     }
@@ -446,7 +502,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
     BD[idx].bc = OutEpSize[EPNum];
 
     if ((Data1 >> (idx / 2) & 1) == ((BD[idx].stat >> 6) & 1)) {
-        if (setup && (pData[6] == 0)) {     /* if no setup data stage,            */
+        uint32_t xfer_size = (pData[7] << 8) | (pData[6] << 0);
+        if (setup && (0 == xfer_size)) {     /* if no setup data stage,            */
             protected_and(&Data1, ~1);           /* set DATA0                          */
         } else {
             protected_xor(&Data1, (1 << (idx / 2)));
@@ -461,7 +518,6 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
         BD[idx].stat |= BD_OWN_MASK;
     }
 
-    USB0->CTL &= ~USB_CTL_TXSUSPENDTOKENBUSY_MASK;
     return (sz);
 }
 
@@ -529,20 +585,72 @@ U32 USBD_GetError(void)
  */
 void USB0_IRQHandler(void)
 {
-    NVIC_DisableIRQ(USB0_IRQn);
+    uint32_t istat, num, dir, ev_odd;
+    uint32_t new_istat;
+    uint8_t suspended = 0;
+
+    new_istat = istat = USB0->ISTAT;
+
+    // Read all tokens
+    if (istat & USB_ISTAT_TOKDNE_MASK) {
+        while (istat & USB_ISTAT_TOKDNE_MASK) {
+            uint8_t stat = USB0->STAT;
+            num    = (stat >> 4) & 0x0F;
+            dir    = (stat >> 3) & 0x01;
+            ev_odd = (stat >> 2) & 0x01;
+
+            // Consume all zero length OUT packets on endpoint 0 to prevent
+            // a subsequent SETUP packet from being dropped
+            if ((0 == num) && (RX == dir)) {
+                uint32_t idx;
+                idx = IDX(num, dir, ev_odd);
+                if ((TOK_PID(idx) == OUT_TOKEN) && (BD[idx].bc == 0)) {
+                    BD[idx].bc = OutEpSize[num];
+                    if (BD[idx].stat & BD_DATA01_MASK) {
+                        BD[idx].stat = BD_OWN_MASK | BD_DTS_MASK;
+                    } else {
+                        BD[idx].stat = BD_OWN_MASK | BD_DTS_MASK | BD_DATA01_MASK;
+                    }
+                    stat |= 1 << 0;
+                }
+            }
+
+            stat_enque(stat);
+            USB0->ISTAT = USB_ISTAT_TOKDNE_MASK;
+
+            // Check if USB is suspending before checking istat
+            suspended = suspended || USB0->CTL & USB_CTL_TXSUSPENDTOKENBUSY_MASK;
+            istat = USB0->ISTAT;
+        }
+    }
+
+    // Set global istat and suspended flags
+    new_istat |= istat;
+    protected_or(&LastIstat, new_istat);
+    UsbSuspended |= suspended ? 1 : 0;
+    USB0->ISTAT = istat;
+
     USBD_SignalHandler();
 }
 
 /*
  *  USB Device Service Routine
  */
+
 void USBD_Handler(void)
 {
-    uint32_t istr, num, dir, ev_odd, stat;
-    istr  = USB0->ISTAT;
-    stat  = USB0->STAT;
-    USB0->ISTAT = istr;
-    istr &= USB0->INTEN;
+    uint32_t istr, num, dir, ev_odd;
+    cortex_int_state_t state;
+    uint8_t suspended = 0;
+
+    // Get ISTAT
+    state = cortex_int_get_and_disable();
+    istr = LastIstat;
+    LastIstat = 0;
+    suspended = UsbSuspended;
+    UsbSuspended = 0;
+    cortex_int_restore(state);
+
 
     /* reset interrupt                                                            */
     if (istr & USB_ISTAT_USBRST_MASK) {
@@ -637,65 +745,76 @@ void USBD_Handler(void)
 
     /* token interrupt                                                            */
     if (istr & USB_ISTAT_TOKDNE_MASK) {
-        num    = (stat >> 4) & 0x0F;
-        dir    = (stat >> 3) & 0x01;
-        ev_odd = (stat >> 2) & 0x01;
+        while (!stat_is_empty()) {
+            uint32_t stat;
 
-        /* setup packet                                                               */
-        if ((num == 0) && (TOK_PID((IDX(num, dir, ev_odd))) == SETUP_TOKEN)) {
-            Data1 &= ~0x02;
-            BD[IDX(0, TX, EVEN)].stat &= ~BD_OWN_MASK;
-            BD[IDX(0, TX, ODD)].stat  &= ~BD_OWN_MASK;
-#ifdef __RTX
+            stat = stat_deque();
+            num    = (stat >> 4) & 0x0F;
+            dir    = (stat >> 3) & 0x01;
+            ev_odd = (stat >> 2) & 0x01;
 
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set(USBD_EVT_SETUP, USBD_RTX_EPTask[num]);
-            }
-
-#else
-
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num](USBD_EVT_SETUP);
-            }
-
-#endif
-
-        } else {
-            /* OUT packet                                                                 */
-            if (TOK_PID((IDX(num, dir, ev_odd))) == OUT_TOKEN) {
+            /* setup packet                                                               */
+            if ((num == 0) && (TOK_PID((IDX(num, dir, ev_odd))) == SETUP_TOKEN)) {
+                Data1 &= ~0x02;
+                BD[IDX(0, TX, EVEN)].stat &= ~BD_OWN_MASK;
+                BD[IDX(0, TX, ODD)].stat  &= ~BD_OWN_MASK;
+                Ep0ZlpOut = 0;
 #ifdef __RTX
 
                 if (USBD_RTX_EPTask[num]) {
-                    isr_evt_set(USBD_EVT_OUT, USBD_RTX_EPTask[num]);
+                    isr_evt_set(USBD_EVT_SETUP, USBD_RTX_EPTask[num]);
                 }
 
 #else
 
                 if (USBD_P_EP[num]) {
-                    USBD_P_EP[num](USBD_EVT_OUT);
+                    USBD_P_EP[num](USBD_EVT_SETUP);
                 }
 
 #endif
-            }
 
-            /* IN packet                                                                  */
-            if (TOK_PID((IDX(num, dir, ev_odd))) == IN_TOKEN) {
+            } else {
+                /* OUT packet                                                                 */
+                if (TOK_PID((IDX(num, dir, ev_odd))) == OUT_TOKEN) {
+                    if (0 == num) {
+                        Ep0ZlpOut = stat & (1 << 0);
+                    }
 #ifdef __RTX
 
-                if (USBD_RTX_EPTask[num]) {
-                    isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[num]);
-                }
+                    if (USBD_RTX_EPTask[num]) {
+                        isr_evt_set(USBD_EVT_OUT, USBD_RTX_EPTask[num]);
+                    }
 
 #else
 
-                if (USBD_P_EP[num]) {
-                    USBD_P_EP[num](USBD_EVT_IN);
-                }
+                    if (USBD_P_EP[num]) {
+                        USBD_P_EP[num](USBD_EVT_OUT);
+                    }
 
 #endif
+                }
+
+                /* IN packet                                                                  */
+                if (TOK_PID((IDX(num, dir, ev_odd))) == IN_TOKEN) {
+#ifdef __RTX
+
+                    if (USBD_RTX_EPTask[num]) {
+                        isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[num]);
+                    }
+
+#else
+
+                    if (USBD_P_EP[num]) {
+                        USBD_P_EP[num](USBD_EVT_IN);
+                    }
+
+#endif
+                }
             }
         }
     }
 
-    NVIC_EnableIRQ(USB0_IRQn);
+    if (suspended) {
+        USB0->CTL &= ~USB_CTL_TXSUSPENDTOKENBUSY_MASK;
+    }
 }
