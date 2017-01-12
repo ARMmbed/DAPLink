@@ -309,6 +309,14 @@ projects:
         - *module_if
         - *module_hic_stlink_v2_1_native
         - records/board/nucleo_f103rb.yaml
+    stm32f103xb_nucleo_f303k8_if:
+        - *module_if
+        - *module_hic_stlink_v2_1
+        - records/board/nucleo_f303k8.yaml
+    stm32f103xb_native_nucleo_f303k8_if:
+        - *module_if
+        - *module_hic_stlink_v2_1_native
+        - records/board/nucleo_f303k8.yaml
     stlink_v2_lpc1549_if:
         - *module_if
         - *module_hic_stlink_v2_dongle
