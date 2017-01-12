@@ -57,6 +57,9 @@ typedef struct target_cfg {
 
 extern target_cfg_t target_device;
 
+extern uint32_t target_chip_erase_time(uint32_t chipSize);
+extern uint32_t target_chip_program_time(uint16_t blockSize);
+
 #ifdef __cplusplus
 }
 #endif

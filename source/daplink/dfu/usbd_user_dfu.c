@@ -162,17 +162,24 @@ BOOL USBD_DFU_HandleAbort(BOOL error) {
     }
 }
 
-// TODO: these should be overridden on a per-board/target basis
+__weak uint32_t target_chip_erase_time(uint32_t chipSize) {
+    // Allow 80ms per KiB to erase the chip as a conservative estimate
+    return (chipSize + 1023) / 1024 * 80;
+}
+
+__weak uint32_t target_chip_program_time(uint16_t blockSize) {
+    // Allow for 80ms per KiB for programming as a conservative estimate
+    return (blockSize + 1023) / 1024 * 80;
+}
+
 U32 USBD_DFU_GetInitTimeout(void) {
-    // 200ms is much more than any target should need, but only
-    // the download timeout has a substantial performance impact
-    // impact, so overestimating here is fine.
-    return 200;
+    // Allow for 200ms to initialize SWD
+    U32 chipSize = target_device.sector_size * target_device.sector_cnt;
+    return 200 + target_chip_erase_time(chipSize);
 }
 
 U32 USBD_DFU_GetDownloadTimeout(U16 blockSize) {
-    // Allow for 80ms per 1KiB
-    return (blockSize + 1023) / 1024 * 80;
+    return target_chip_program_time(blockSize);
 }
 
 U32 USBD_DFU_GetManifestTimeout(void) {
