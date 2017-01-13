@@ -34,3 +34,17 @@ target_cfg_t target_device = {
     .ram_end        = 0x20000C00,
     .flash_algo     = (program_target_t *) &flash,
 };
+
+// From table 21 of the Kinetis KL05 datasheet Rev 4
+// t_pgm4 = 145us per word, worst case
+// t_ersall = 500ms total, worst case
+
+uint32_t target_chip_erase_time(uint32_t chipSize) {
+    // Allow for an additional 10ms of overhead
+    return 10 + 500;
+}
+
+uint32_t target_chip_program_time(uint16_t blockSize) {
+    // 145us per word is approximately ~38ms/1KiB sector
+    return (blockSize + 1023) / 1024 * 38;
+}

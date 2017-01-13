@@ -34,3 +34,18 @@ target_cfg_t target_device = {
     .ram_end        = 0x20000000 + KB(20),
     .flash_algo     = (program_target_t *) &flash,
 };
+
+// From table 28 of the STM32F103x8/STM32F103xB datasheet Rev 17
+// t_prog = 70us per half-word, worst case
+// t_ME = 40ms total, worst case
+
+uint32_t target_chip_erase_time(uint32_t chipSize) {
+    // Allow for an additional 10ms of overhead
+    return 10 + 40;
+}
+
+uint32_t target_chip_program_time(uint16_t blockSize) {
+    // 70us per half-word is approximately ~36ms/1KiB sector,
+    // but the flash algorithm seems to need at least 70ms in practice
+    return (blockSize + 1023) / 1024 * 80;
+}
