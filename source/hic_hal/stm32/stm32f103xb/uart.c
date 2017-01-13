@@ -24,24 +24,22 @@
 #include "stm32f10x.h"
 #include "uart.h"
 #include "gpio.h"
+#include "circ_buf.h"
+#include "settings.h" // for config_get_overflow_detect
 
 #include "IO_Config.h"
 
-// Size must be 2^n for using quick wrap around
+#define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
+#define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
 #define  BUFFER_SIZE (512)
 
-typedef struct {
-    volatile uint8_t  data[BUFFER_SIZE];
-    volatile uint32_t head;
-    volatile uint32_t tail;
-}ring_buf_t;
-
 #ifdef UART_TX_PIN
-static ring_buf_t write_buffer;
+circ_buf_t write_buffer;
+uint8_t write_buffer_data[BUFFER_SIZE];
 static uint32_t tx_in_progress = 0;
 #endif
-static ring_buf_t read_buffer;
-
+circ_buf_t read_buffer;
+uint8_t read_buffer_data[BUFFER_SIZE];
 
 static UART_Configuration configuration = {
     .Baudrate = 9600,
@@ -57,30 +55,10 @@ extern uint32_t SystemCoreClock;
 
 static void clear_buffers(void)
 {
-    memset((void *)&read_buffer, 0xBB, sizeof(ring_buf_t));
-    read_buffer.head = 0;
-    read_buffer.tail = 0;
 #ifdef UART_TX_PIN
-    memset((void *)&write_buffer, 0xBB, sizeof(ring_buf_t));
-    write_buffer.head = 0;
-    write_buffer.tail = 0;
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
 #endif
-}
-
-static int16_t read_available(ring_buf_t *buffer)
-{
-    return ((BUFFER_SIZE + buffer->head - buffer->tail) % BUFFER_SIZE);
-}
-
-static int16_t write_free(ring_buf_t *buffer)
-{
-    int16_t cnt;
-
-    cnt = (buffer->tail - buffer->head - 1);
-    if(cnt < 0)
-        cnt += BUFFER_SIZE;
-
-    return cnt;
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
 }
 
 int32_t uart_initialize(void)
@@ -187,6 +165,7 @@ int32_t uart_reset(void)
 #ifdef TX_UART_PIN
     tx_in_progress = 0;
 #endif
+    clear_buffers();
     return 1;
 }
 
@@ -268,39 +247,23 @@ int32_t uart_get_configuration(UART_Configuration *config)
 int32_t uart_write_free(void)
 {
 #ifdef UART_TX_PIN
-    return write_free(&write_buffer);
+    return circ_buf_count_free(&write_buffer);
 #else
-	  return 0;
+	return 0;
 #endif
 }
 
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
 #ifdef UART_TX_PIN
-    uint32_t cnt, len;
-
-    if(size == 0)
-        return 0;
-
-    len = write_free(&write_buffer);
-    if(len > size)
-        len = size;
-
-    cnt = len;
-    while(len--) {
-        write_buffer.data[write_buffer.head++] = *data++;
-        if(write_buffer.head >= BUFFER_SIZE)
-            write_buffer.head = 0;
-    }
+    uint32_t cnt = circ_buf_write(&write_buffer, data, size);
 
     if(!tx_in_progress) {
         // Wait for tx is free
         //while(USART_GetITStatus(CDC_UART, USART_IT_TXE) == RESET);
 
         tx_in_progress = 1;
-        USART_SendData(CDC_UART, write_buffer.data[write_buffer.tail++]);
-        if(write_buffer.tail >= BUFFER_SIZE)
-            write_buffer.tail = 0;
+        USART_SendData(CDC_UART, circ_buf_pop(&write_buffer));
         // Enale tx interrupt
         USART_ITConfig(CDC_UART, USART_IT_TXE, ENABLE);
     }
@@ -313,62 +276,39 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
 
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    uint32_t cnt, len;
-
-    if(size == 0) {
-        return 0;
-    }
-
-    len = read_available(&read_buffer);
-    if(len > size)
-        len = size;
-
-    cnt = len;
-    while(len--) {
-        *data++ = read_buffer.data[read_buffer.tail++];
-        if(read_buffer.tail >= BUFFER_SIZE)
-            read_buffer.tail = 0;
-    }
-
-    return cnt;
+    return circ_buf_read(&read_buffer, data, size);
 }
 
 void CDC_UART_IRQn_Handler(void)
 {
-    uint8_t  dat;
-    uint32_t cnt;
-
     if(USART_GetITStatus(CDC_UART, USART_IT_ERR) != RESET){
         USART_ClearITPendingBit(CDC_UART, USART_IT_ERR|USART_IT_RXNE|USART_IT_TXE);
     }
 
     if(USART_GetITStatus(CDC_UART, USART_IT_RXNE) != RESET) {
         USART_ClearITPendingBit(CDC_UART, USART_IT_RXNE);
-        cnt = write_free(&read_buffer);
-        dat = USART_ReceiveData(CDC_UART);
-        if(cnt) {
-            read_buffer.data[read_buffer.head++] = dat;
-            if(read_buffer.head >= BUFFER_SIZE)
-                read_buffer.head = 0;
-            if(cnt == 1) {
-                // for flow control, need to set RTS = 1
-            }
+
+        uint8_t  data = USART_ReceiveData(CDC_UART);
+        uint32_t free = circ_buf_count_free(&read_buffer);
+
+        if (free > RX_OVRF_MSG_SIZE) {
+            circ_buf_push(&read_buffer, data);
+        } else if ((RX_OVRF_MSG_SIZE == free) && config_get_overflow_detect()) {
+            circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+        } else {
+            // Drop character
         }
     }
 
 #ifdef UART_TX_PIN
     if(USART_GetITStatus(CDC_UART, USART_IT_TXE) != RESET) {
         USART_ClearITPendingBit(CDC_UART, USART_IT_TXE);
-        cnt = read_available(&write_buffer);
-        if(cnt == 0) {
+        if (circ_buf_count_used(&write_buffer) > 0) {
+            USART_SendData(CDC_UART, circ_buf_pop(&write_buffer));
+            tx_in_progress = 1;
+        } else {
             USART_ITConfig(CDC_UART, USART_IT_TXE, DISABLE);
             tx_in_progress = 0;
-        }
-        else {
-            USART_SendData(CDC_UART, write_buffer.data[write_buffer.tail++]);
-            if(write_buffer.tail >= BUFFER_SIZE)
-                write_buffer.tail = 0;
-            tx_in_progress = 1;
         }
     }
 #endif
