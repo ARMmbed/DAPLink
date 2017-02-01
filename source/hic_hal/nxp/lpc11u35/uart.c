@@ -313,10 +313,16 @@ void UART_IRQHandler(void)
             free = circ_buf_count_free(&read_buffer);
             if (free > RX_OVRF_MSG_SIZE) {
                 circ_buf_push(&read_buffer, data);
-            } else if ((RX_OVRF_MSG_SIZE == free) && config_get_overflow_detect()) {
-                circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+            } else if (config_get_overflow_detect()) {
+                if (RX_OVRF_MSG_SIZE == free) {
+                    circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+                } else {
+                    // Drop newest
+                }
             } else {
-                // Drop character
+                // Drop oldest
+                circ_buf_pop(&read_buffer);
+                circ_buf_push(&read_buffer, data);
             }
         }
     }
