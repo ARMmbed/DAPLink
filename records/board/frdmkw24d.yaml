@@ -1,7 +1,7 @@
 common:
     sources:
         board:
-            - source/board/frdmkw24f.c
+            - source/board/frdmkw24d.c
         target:
-            - source/target/freescale/k24f/target.c
+            - source/target/freescale/kw24d/target.c
             - source/target/freescale/target_reset_Kseries.c
