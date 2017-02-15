@@ -782,6 +782,8 @@ static uint8_t JTAG2SWD()
 uint8_t swd_init_debug(void)
 {
     uint32_t tmp = 0;
+    int i = 0;
+    int timeout = 100;
     // init dap state with fake values
     dap_state.select = 0xffffffff;
     dap_state.csw = 0xffffffff;
@@ -809,11 +811,19 @@ uint8_t swd_init_debug(void)
         return 0;
     }
 
-    do {
+    for (i = 0; i < timeout; i++) {
         if (!swd_read_dp(DP_CTRL_STAT, &tmp)) {
             return 0;
         }
-    } while ((tmp & (CDBGPWRUPACK | CSYSPWRUPACK)) != (CDBGPWRUPACK | CSYSPWRUPACK));
+        if ((tmp & (CDBGPWRUPACK | CSYSPWRUPACK)) == (CDBGPWRUPACK | CSYSPWRUPACK)) {
+            // Break from loop if powerup is complete
+            break;
+        }
+    }
+    if (i == timeout) {
+        // Unable to powerup DP
+        return 0;
+    }
 
     if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ | TRNNORMAL | MASKLANE)) {
         return 0;
