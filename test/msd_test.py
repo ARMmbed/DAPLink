@@ -24,6 +24,7 @@ import shutil
 import six
 import info
 import intelhex
+from test_info import TestInfo
 
 
 def _same(d1, d2):
@@ -63,6 +64,9 @@ MOCK_FILE_LIST_AFTER = [
 ]
 
 class MassStorageTester(object):
+
+    RETRY_COUNT = 5
+    DELAY_BEFORE_RETRY_S = 30
 
     def __init__(self, board, parent_test, test_name):
         self.board = board
@@ -146,9 +150,24 @@ class MassStorageTester(object):
         return _same(expected_data, data_loaded)
 
     def run(self):
+        for retry_count in range(self.RETRY_COUNT):
+            test_info = TestInfo(self.test_name)
+            if retry_count > 0:
+                test_info.info('Previous attempts %s' % retry_count)
+            try:
+                self._run(test_info)
+            except IOError:
+                time.sleep(self.DELAY_BEFORE_RETRY_S)
+                continue
+            self.parent_test.attach_subtest(test_info)
+            break
+        else:
+            raise Exception("Flashing failed after %i retries" %
+                            self.RETRY_COUNT)
+
+    def _run(self, test_info):
         # Expected data must be set, even if to None
         assert hasattr(self, '_expected_data')
-        test_info = self.parent_test.create_subtest(self.test_name)
 
         # Copy mock files before test
         self._mock_file_list = []
