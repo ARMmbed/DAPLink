@@ -1,6 +1,46 @@
----
----
-var options = {
+
+function select_daplink_board(board) {
+    // Display instructions if not already shown
+    if($('#update-instructions').css('display') == 'none'){
+        $('#update-instructions').fadeIn();
+    }
+    // Load instructions to their tabs
+    var board_info;
+    for (var i=0; i<_daplink_board_options.data.length; i++) {
+        if (_daplink_board_options.data[i].name == board) {
+            board_info = _daplink_board_options.data[i];
+        }
+    }
+    if (!board_info) return;
+    var winvalue = board_info.windows_instructions;
+    var linvalue = board_info.linux_instructions;
+    var osxvalue = board_info.osx_instructions;
+    $("#update-instructions-windows").html(winvalue)
+    $("#update-instructions-linux").html(linvalue)
+    $("#update-instructions-osx").html(osxvalue)
+
+    //  Output file name
+    var fw_name = board_info.fw_name;
+    $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>')
+
+    // Set default tab based on browser
+    var os = navigator.platform;
+
+    if (navigator.appVersion.indexOf("Win")!=-1){
+        $('.nav-tabs a[href="#update-instructions-windows"]').tab('show');
+    }
+    if (navigator.appVersion.indexOf("Mac")!=-1){
+        $('.nav-tabs a[href="#update-instructions-osx"]').tab('show');
+    }
+    if (navigator.appVersion.indexOf("X11")!=-1){
+        $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
+    }
+    if (navigator.appVersion.indexOf("Linux")!=-1){
+        $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
+    }
+}
+
+var _daplink_board_options = {
 	data:[
 		{% for thing in site.data.update %} 
 		{
@@ -59,37 +99,7 @@ var options = {
 			time: 300
 		},
 		onChooseEvent: function(){
-			// Display instructions if not already shown
-			if($('#update-instructions').css('display') == 'none'){
-				$('#update-instructions').fadeIn();
-			}
-			// Load instructions to their tabs
-			var winvalue = $("#update-search").getSelectedItemData().windows_instructions;
-			var linvalue = $("#update-search").getSelectedItemData().linux_instructions;
-			var osxvalue = $("#update-search").getSelectedItemData().osx_instructions;
-			$("#update-instructions-windows").html(winvalue)
-			$("#update-instructions-linux").html(linvalue)
-			$("#update-instructions-osx").html(osxvalue)
-
-			//  Output file name
-			var fw_name = $("#update-search").getSelectedItemData().fw_name;
-			$('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>')
-
-			// Set default tab based on browser
-			var os = navigator.platform;
-
-			if (navigator.appVersion.indexOf("Win")!=-1){
-				$('.nav-tabs a[href="#update-instructions-windows"]').tab('show');
-			}
-			if (navigator.appVersion.indexOf("Mac")!=-1){
-				$('.nav-tabs a[href="#update-instructions-osx"]').tab('show');
-			}
-			if (navigator.appVersion.indexOf("X11")!=-1){
-				$('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
-			}
-			if (navigator.appVersion.indexOf("Linux")!=-1){
-				$('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
-			}
+            select_daplink_board($("#update-search").val());
 		}
 	},
 
@@ -97,4 +107,4 @@ var options = {
 
 };
 
-$("#update-search").easyAutocomplete(options);
+$("#update-search").easyAutocomplete(_daplink_board_options);
