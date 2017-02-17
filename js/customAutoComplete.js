@@ -5,8 +5,8 @@ function select_daplink_board(board) {
     for (var i=0; i<_daplink_board_options.data.length; i++) {
         if (_daplink_board_options.data[i].name == board) {
             board_info = _daplink_board_options.data[i];
-        }
-    }
+        };
+    };
     if (!board_info) return;
 
     // Display instructions if not already shown
@@ -18,30 +18,30 @@ function select_daplink_board(board) {
     var winvalue = board_info.windows_instructions;
     var linvalue = board_info.linux_instructions;
     var osxvalue = board_info.osx_instructions;
-    $("#update-instructions-windows").html(winvalue)
-    $("#update-instructions-linux").html(linvalue)
-    $("#update-instructions-osx").html(osxvalue)
+    $("#update-instructions-windows").html(winvalue);
+    $("#update-instructions-linux").html(linvalue);
+    $("#update-instructions-osx").html(osxvalue);
 
     //  Output file name
     var fw_name = board_info.fw_name;
-    $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>')
+    $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>');
 
     // Set default tab based on browser
     var os = navigator.platform;
 
     if (navigator.appVersion.indexOf("Win")!=-1){
         $('.nav-tabs a[href="#update-instructions-windows"]').tab('show');
-    }
+    };
     if (navigator.appVersion.indexOf("Mac")!=-1){
         $('.nav-tabs a[href="#update-instructions-osx"]').tab('show');
-    }
+    };
     if (navigator.appVersion.indexOf("X11")!=-1){
         $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
-    }
+    };
     if (navigator.appVersion.indexOf("Linux")!=-1){
         $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
-    }
-}
+    };
+};
 
 var _daplink_board_options = {
 	data:[
@@ -111,3 +111,17 @@ var _daplink_board_options = {
 };
 
 $("#update-search").easyAutocomplete(_daplink_board_options);
+
+// Check ?board=... and get sht done
+var params = [];
+var hashes = window.location.href.replace(/#.+/,'').slice(window.location.href.indexOf('?') + 1).split('&');
+for(var i = 0; i < hashes.length; i++)
+{
+    var hash = hashes[i].split('=');
+    params[hash[0]] = hash[1];
+};
+
+if (typeof params['board'] != 'undefined') {
+    $("#update-search").val(params['board']);
+    select_daplink_board(params['board']);
+};
