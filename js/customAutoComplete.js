@@ -1,10 +1,6 @@
-
+---
+---
 function select_daplink_board(board) {
-    // Display instructions if not already shown
-    if($('#update-instructions').css('display') == 'none'){
-        $('#update-instructions').fadeIn();
-    }
-    // Load instructions to their tabs
     var board_info;
     for (var i=0; i<_daplink_board_options.data.length; i++) {
         if (_daplink_board_options.data[i].name == board) {
@@ -12,6 +8,13 @@ function select_daplink_board(board) {
         }
     }
     if (!board_info) return;
+
+    // Display instructions if not already shown
+    if($('#update-instructions').css('display') == 'none'){
+        $('#update-instructions').fadeIn();
+    }
+
+    // Load instructions to their tabs
     var winvalue = board_info.windows_instructions;
     var linvalue = board_info.linux_instructions;
     var osxvalue = board_info.osx_instructions;
