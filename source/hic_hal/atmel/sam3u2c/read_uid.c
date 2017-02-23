@@ -60,5 +60,6 @@ void create_unique_id(void)
     /*Monitor FRDY*/
     while ((EFC0->EEFC_FSR & EEFC_FSR_FRDY) != EEFC_FSR_FRDY);
 
+    EFC0->EEFC_FMR &= ~(1UL << 16);
     cortex_int_restore(state);
 }
