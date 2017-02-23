@@ -42,17 +42,11 @@
 
  // Clock Macros
 
-#if defined(INTERFACE_SAM3U2C)
-  #define MAX_SWJ_CLOCK(delay_cycles) \
-    (CPU_CLOCK / ((delay_cycles + IO_PORT_WRITE_CYCLES) * 20/*14*/))
-  #define CLOCK_DELAY(swj_clock) \
-    ((CPU_CLOCK / (swj_clock * /*20*/14)) - IO_PORT_WRITE_CYCLES)
-#else
-  #define MAX_SWJ_CLOCK(delay_cycles) \
-    (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
-  #define CLOCK_DELAY(swj_clock) \
-    ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
-#endif
+#define MAX_SWJ_CLOCK(delay_cycles) \
+  (CPU_CLOCK/2 / (IO_PORT_WRITE_CYCLES + delay_cycles))
+
+#define CLOCK_DELAY(swj_clock) \
+  ((CPU_CLOCK/2 / swj_clock) - IO_PORT_WRITE_CYCLES)
 
 
          DAP_Data_t DAP_Data;           // DAP Data
