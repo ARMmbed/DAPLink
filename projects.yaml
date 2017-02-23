@@ -258,3 +258,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/blueninja.yaml
+    lpc11u35_nz32_sc151_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/nz32_sc151.yaml
