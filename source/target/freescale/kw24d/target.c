@@ -1,6 +1,6 @@
 /**
- * @file    frdmkw24f.c
- * @brief   board ID for the NXP FRDM-KW24F board
+ * @file    target.c
+ * @brief   Target information for the kw24d
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,5 +19,18 @@
  * limitations under the License.
  */
 
-const char *board_id = "0250";
+#include "target_config.h"
 
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
+
+// target information
+target_cfg_t target_device = {
+    .sector_size    = 2048,
+    .sector_cnt     = (KB(512) / 2048),
+    .flash_start    = 0,
+    .flash_end      = KB(512),
+    .ram_start      = 0x1FFF8000,
+    .ram_end        = 0x20008000,
+    .flash_algo     = (program_target_t *) &flash,
+};

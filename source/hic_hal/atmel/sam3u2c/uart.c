@@ -395,10 +395,16 @@ void UART_IRQHandler(void)
         cnt = (int32_t)circ_buf_count_free(&read_buffer) - RX_OVRF_MSG_SIZE;
         if (cnt > 0) {
             circ_buf_push(&read_buffer, data);
-        } else if ((0 == cnt) && config_get_overflow_detect()) {
-            circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+        } else if (config_get_overflow_detect()) {
+            if (0 == cnt) {
+                circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+            } else {
+                // Drop newest
+            }
         } else {
-            // Drop character
+            // Drop oldest
+            circ_buf_pop(&read_buffer);
+            circ_buf_push(&read_buffer, data);
         }
 
         //If this was the last available byte on the buffer then assert RTS

@@ -78,10 +78,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/frdmk22f.yaml
-    k20dx_frdmkw24f_if:
+    k20dx_frdmkw24d_if:
         - *module_if
         - *module_hic_k20dx
-        - records/board/frdmkw24f.yaml
+        - records/board/frdmkw24d.yaml
     k20dx_frdmk64f_if:
         - *module_if
         - *module_hic_k20dx

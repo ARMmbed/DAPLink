@@ -1,6 +1,6 @@
 /**
- * @file    target.c
- * @brief   Target information for the k24f
+ * @file    frdmkw24d.c
+ * @brief   board ID for the NXP FRDM-KW24D board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,18 +19,19 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "virtual_fs.h"
 
-// The file flash_blob.c must only be included in target.c
-#include "flash_blob.c"
+const char *board_id = "0250";
 
-// target information
-target_cfg_t target_device = {
-    .sector_size    = 4096,
-    .sector_cnt     = (KB(256) / 4096),
-    .flash_start    = 0,
-    .flash_end      = KB(256),
-    .ram_start      = 0x1FFF0000,
-    .ram_end        = 0x20030000,
-    .flash_algo     = (program_target_t *) &flash,
-};
+// Override default behavior
+//
+// URL_NAME and DRIVE_NAME must be 11 characters excluding
+// the null terminated character
+// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
+__attribute__((aligned(4)))
+const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
+__attribute__((aligned(4)))
+const vfs_filename_t daplink_drive_name =     "FRDM-KW24D";
+__attribute__((aligned(4)))
+const char *const daplink_target_url = "http://www.nxp.com/frdm-kw24d";
+

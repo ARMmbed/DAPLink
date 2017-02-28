@@ -33,7 +33,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_ssci1114_if",                        False,      0x0000,     "bin"       ),
     ("sam3u2c_mkit_dk_dongle_nrf5x_if",             True,       0x5000,     "bin"       ),
     ("k20dx_frdmk20dx_if",                          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkw24f_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkw24d_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl02z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl05z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl25z_if",                          True,       0x8000,     "bin"       ),
@@ -89,7 +89,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL27Z' when mbed-os supports this
     (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
-    (   0x250,      'k20dx_frdmkw24f_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24F' when mbed-os supports this
+    (   0x250,      'k20dx_frdmkw24d_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24D' when mbed-os supports this
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
