@@ -29,22 +29,33 @@
 // This GPIO configuration is only valid for the SAM3U2C
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 
-#define _BIT_LED_GREEN       (29)      // PA29
-#define _BIT_BOOT_MODE_PIN   (25)      // PA25
-
 void gpio_init(void)
 {
     volatile int Cnt;
     //
-    // Initially enable clock for GPIOA and initialize LED port as output with LED == off
+    // Initially enable clock for GPIO and initialize LED ports as output with LED == off
     //
-    PMC->PMC_PCER0 = (1 << 10);  // Enable clock for PIOA
-    PIOA->PIO_PER  = (1 << _BIT_LED_GREEN);  // Pin == GPIO control
-    PIOA->PIO_SODR = (1 << _BIT_LED_GREEN); // Green LED == off
-    PIOA->PIO_OER  = (1 << _BIT_LED_GREEN); // Pin == output
-    PIOA->PIO_PER  = (1 << _BIT_BOOT_MODE_PIN);  // Enable GPIO functionality and disable peripheral function of pin
-    PIOA->PIO_ODR  = (1 << _BIT_BOOT_MODE_PIN); // Disable output
-    PIOA->PIO_PUER = (1 << _BIT_BOOT_MODE_PIN); // Enable pull-up
+    PMC->PMC_PCER0 = (1 << 10) | (1 << 11) | (1 << 12);  // Enable clock for all PIOs
+    
+    // DAP LED
+    PIN_DAP_LED_PORT->PIO_PER = PIN_DAP_LED;
+    PIN_DAP_LED_PORT->PIO_SODR = PIN_DAP_LED;
+    PIN_DAP_LED_PORT->PIO_OER = PIN_DAP_LED;
+
+    // MSD LED
+    PIN_MSD_LED_PORT->PIO_PER = PIN_MSD_LED;
+    PIN_MSD_LED_PORT->PIO_SODR = PIN_MSD_LED;
+    PIN_MSD_LED_PORT->PIO_OER = PIN_MSD_LED;
+
+    // CDC LED
+    PIN_CDC_LED_PORT->PIO_PER = PIN_CDC_LED;
+    PIN_CDC_LED_PORT->PIO_SODR = PIN_CDC_LED;
+    PIN_CDC_LED_PORT->PIO_OER = PIN_CDC_LED;
+
+    // Forwarded reset
+    PIN_RESET_IN_FWRD_PORT->PIO_PER  = PIN_RESET_IN_FWRD; // Pin == GPIO control
+    PIN_RESET_IN_FWRD_PORT->PIO_ODR  = PIN_RESET_IN_FWRD; // Disable output
+    PIN_RESET_IN_FWRD_PORT->PIO_PUER = PIN_RESET_IN_FWRD; // Enable pull-up
     Cnt = 1000000;
     do {} while (--Cnt);    // Give pull-up some time to become active
 
@@ -55,23 +66,27 @@ void gpio_init(void)
 void gpio_set_hid_led(gpio_led_state_t state)
 {
     if (GPIO_LED_ON == state) {
-        PIOA->PIO_CODR = (1 << _BIT_LED_GREEN); // Green LED == on
+        PIN_DAP_LED_PORT->PIO_CODR = PIN_DAP_LED; // LED == on
     } else {
-        PIOA->PIO_SODR = (1 << _BIT_LED_GREEN); // Green LED == off
+        PIN_DAP_LED_PORT->PIO_SODR = PIN_DAP_LED; // LED == off
     }
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
-// Only 1 LED on hardware which is used for DAP/MSD
+    if (GPIO_LED_ON == state) {
+        PIN_CDC_LED_PORT->PIO_CODR = PIN_CDC_LED; //  LED == on
+    } else {
+        PIN_CDC_LED_PORT->PIO_SODR = PIN_CDC_LED; //  LED == off
+    }
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
     if (GPIO_LED_ON == state) {
-        PIOA->PIO_CODR = (1 << _BIT_LED_GREEN); // Green LED == on
+        PIN_MSD_LED_PORT->PIO_CODR = PIN_MSD_LED; //  LED == on
     } else {
-        PIOA->PIO_SODR = (1 << _BIT_LED_GREEN); // Green LED == off
+        PIN_MSD_LED_PORT->PIO_SODR = PIN_MSD_LED; //  LED == off
     }
 }
 
@@ -89,5 +104,5 @@ void PIOA_IRQHandler(void)
 
 uint8_t gpio_get_sw_reset()
 {
-    return (PIOA->PIO_PDSR & (1 << _BIT_BOOT_MODE_PIN)) != 0;
+    return (PIN_RESET_IN_FWRD_PORT->PIO_PDSR & PIN_RESET_IN_FWRD) != 0;
 }
