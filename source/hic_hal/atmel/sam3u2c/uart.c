@@ -126,6 +126,7 @@ static U32        _Baudrate;
 static U8         _FlowControl;
 static U8         _UARTChar0;   // Use static here since PDC starts transferring the byte when we already left this function
 static U32        _TxInProgress;
+static U8         _FlowControlEnabled = 1;
 
 static U32 _DetermineDivider(U32 Baudrate)
 {
@@ -178,6 +179,23 @@ static void _ResetBuffers(void)
     circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
     circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
     _TxInProgress       = 0;
+}
+
+static int get_tx_ready()
+{
+    if (!_FlowControlEnabled) {
+        return 1;
+    } 
+    return ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0;
+}
+
+static void set_rx_ready(int ready)
+{
+    if (ready || !_FlowControlEnabled) {
+        PIOA->PIO_CODR = 1 << BIT_CDC_USB2UART_RTS;
+    } else {
+        PIOA->PIO_SODR = 1 << BIT_CDC_USB2UART_RTS;
+    }
 }
 
 void UART_IntrEna(void)
@@ -351,7 +369,7 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
     // Atomically trigger transfer if not already in progress
     //
     state = cortex_int_get_and_disable();
-    if (_TxInProgress == 0 && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
+    if (_TxInProgress == 0 && get_tx_ready()) {
         _Send1();
     }
     cortex_int_restore(state);
@@ -368,12 +386,17 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
 
     // Atomically check if RTS had been asserted, if there is space on the buffer then deassert RTS
     state = cortex_int_get_and_disable();
-    if ((circ_buf_count_free(&read_buffer) > RX_OVRF_MSG_SIZE) && ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_RTS) & 1)) {
-        PIOA->PIO_CODR = 1 << BIT_CDC_USB2UART_RTS;
+    if (circ_buf_count_free(&read_buffer) > RX_OVRF_MSG_SIZE) {
+        set_rx_ready(1);
     }
     cortex_int_restore(state);
 
     return cnt;
+}
+
+void uart_enable_flow_control(bool enabled)
+{
+    _FlowControlEnabled = (U8)enabled;
 }
 
 void UART_IRQHandler(void)
@@ -409,7 +432,7 @@ void UART_IRQHandler(void)
 
         //If this was the last available byte on the buffer then assert RTS
         if (cnt == 1) {
-            PIOA->PIO_SODR = 1 << BIT_CDC_USB2UART_RTS;
+            set_rx_ready(0);
         }
     }
 
@@ -422,7 +445,7 @@ void UART_IRQHandler(void)
             UART_IDR = UART_TX_INT_FLAG;
             PIOA->PIO_MDER = (1 << UART_TX_PIN);    //enable open-drain
             _TxInProgress = 0;
-        } else if (((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0) {
+        } else if (get_tx_ready()) {
             _Send1();                               //More bytes to send? Trigger sending of next byte
         } else {
             UART_IDR = UART_TX_INT_FLAG;            // disable Tx interrupt
