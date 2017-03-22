@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/lpc4322_bl.c

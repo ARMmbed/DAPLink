@@ -1,6 +1,6 @@
 /**
- * @file    usb_buf.h
- * @brief   
+ * @file    IO_Config.h
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,11 +19,15 @@
  * limitations under the License.
  */
 
-#ifndef USB_BUF_H
-#define USB_BUF_H
 
-#include "stdint.h"
+// Override all defines if IO_CONFIG_OVERRIDE is defined
+#ifndef __IO_CONFIG_H__
+#define __IO_CONFIG_H__
 
-uint32_t usb_buffer[512 / 4];
+#include "daplink.h"
+#include "LPC43xx.h"
+
+// This GPIO configuration is only valid for the LPC4322 HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
 
 #endif

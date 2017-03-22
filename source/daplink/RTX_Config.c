@@ -90,7 +90,7 @@
 #elif defined(INTERFACE_SAM3U2C)
 #define OS_CLOCK    96000000
 #elif defined(INTERFACE_LPC4322)
-#define OS_CLOCK    204000000
+#define OS_CLOCK    96000000
 #endif
 #endif
 

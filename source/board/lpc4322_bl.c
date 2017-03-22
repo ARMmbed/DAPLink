@@ -1,6 +1,6 @@
 /**
- * @file    usb_buf.h
- * @brief   
+ * @file    lpc4322_bl.c
+ * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP LPC4322
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,11 +19,20 @@
  * limitations under the License.
  */
 
-#ifndef USB_BUF_H
-#define USB_BUF_H
+#include "target_config.h"
 
-#include "stdint.h"
+const char *board_id   = "0000";
 
-uint32_t usb_buffer[512 / 4];
-
-#endif
+// lpc4322 target information
+target_cfg_t target_device = {
+    .sector_size    = 65536,
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    //  when variable sized sectors exist
+    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
+    .sector_cnt     = 2,
+    .flash_start    = 0x1A010000,
+    .flash_end      = 0x1A030000,
+    .ram_start      = 0x10000000,
+    .ram_end        = 0x10008000,
+    /* .flash_algo not needed for bootloader */
+};
