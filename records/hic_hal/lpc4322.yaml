@@ -1,0 +1,22 @@
+common:
+    target:
+        - lpc4322_jet100
+    macros:
+        - INTERFACE_LPC4322
+        - CORE_M4
+        - INTERNAL_FLASH
+        - DAPLINK_HIC_ID=0x97969905  # DAPLINK_HIC_ID_LPC4322
+    includes:
+        - source/hic_hal/nxp/lpc4322
+        - source/hic_hal/nxp/lpc4322
+    sources:
+        hic_hal:
+            - source/hic_hal/nxp/lpc4322
+            - source/hic_hal/nxp/lpc4322/armcc
+            - source/hic_hal/nxp/lpc4322
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\nxp\lpc4322"

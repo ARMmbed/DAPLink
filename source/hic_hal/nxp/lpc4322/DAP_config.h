@@ -1,6 +1,6 @@
 /**
  * @file    DAP_config.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -41,7 +41,7 @@ Provides definitions about:
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK             204000000        ///< Specifies the CPU Clock in Hz
+#define CPU_CLOCK             96000000        ///< Specifies the CPU Clock in Hz
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -132,6 +132,10 @@ extern BOOL gpio_reset_pin_is_input;
 #define PORT_RESET_TXE        5
 #define PIN_RESET_TXE_IN_BIT  6
 #define PIN_RESET_TXE         (1<<PIN_RESET_TXE_IN_BIT)
+
+// ISP Control Pin          P2_11:  GPIO1[11]
+#define ISPCTRL_PORT        1
+#define ISPCTRL_BIT         11
 
 #define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
 #define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str

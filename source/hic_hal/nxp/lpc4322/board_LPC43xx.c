@@ -24,8 +24,8 @@
 
 void board_init(void)
 {
-    /* Raise core clock to 204MHz */
-    CGU_Init(204000000);
+    /* Set core clock to 96MHz */
+    CGU_Init(96000000);
     /* Set up USB0 clock */
     /* Disable PLL first */
     CGU_EnableEntity(CGU_CLKSRC_PLL0, DISABLE);

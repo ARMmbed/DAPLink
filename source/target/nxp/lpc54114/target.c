@@ -1,6 +1,6 @@
 /**
- * @file    usb_buf.h
- * @brief   
+ * @file    target.c
+ * @brief   Target information for the lpc812
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,11 +19,18 @@
  * limitations under the License.
  */
 
-#ifndef USB_BUF_H
-#define USB_BUF_H
+#include "target_config.h"
 
-#include "stdint.h"
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
 
-uint32_t usb_buffer[512 / 4];
-
-#endif
+// target information
+target_cfg_t target_device = {
+    .sector_size    = 32768,
+    .sector_cnt     = (KB(256) / 32768),
+    .flash_start    = 0,
+    .flash_end      = KB(256),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20028000,
+    .flash_algo     = (program_target_t *) &flash,
+};

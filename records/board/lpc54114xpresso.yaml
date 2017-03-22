@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/lpc54114xpresso.c
+        target:
+            - source/target/nxp/lpc54114/target.c
+            - source/target/nxp/target_reset.c
