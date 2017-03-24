@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_lpc11u35_reset
+    sources:
+        board:
+            - source/board/mlstl476qe.c
+        target:
+            - source/target/st/stm32l476qe/target.c
+            - source/target/st/target_reset.c
