@@ -496,6 +496,11 @@ void USBD_CDC_ACM_Reset_Event(void)
 
 void USBD_CDC_ACM_SOF_Event(void)
 {
+    if (!USBD_Configuration) {
+        // Don't process events until CDC is
+        // configured and the endpoints enabled
+        return;
+    }
     if ((!data_read_access)         &&    /* If not read active                 */
             (ptr_data_received == ptr_data_read) &&     /* If received and read
                                                      pointers point to same
