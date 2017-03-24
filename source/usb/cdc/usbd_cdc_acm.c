@@ -140,6 +140,24 @@ static void USBD_CDC_ACM_EP_BULKIN_HandleData(void);
 
 __weak int32_t USBD_CDC_ACM_Initialize(void)
 {
+    data_send_access            = 0;
+    data_send_active            = 0;
+    data_send_zlp               = 0;
+    data_to_send_wr             = 0;
+    data_to_send_rd             = 0;
+    ptr_data_to_send            = USBD_CDC_ACM_SendBuf;
+    ptr_data_sent               = USBD_CDC_ACM_SendBuf;
+    data_read_access            = 0;
+    data_receive_int_access     = 0;
+    data_received_pending_pckts = 0;
+    data_no_space_for_receive   = 0;
+    ptr_data_received           = USBD_CDC_ACM_ReceiveBuf;
+    ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
+    control_line_state          = 0;
+    line_coding.dwDTERate       = 9600;
+    line_coding.bCharFormat     = 0;
+    line_coding.bParityType     = 0;
+    line_coding.bDataBits       = 8;
     return (USBD_CDC_ACM_PortInitialize());
 }
 
