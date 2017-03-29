@@ -1,9 +1,9 @@
 /**
- * @file    read_uid.h
+ * @file    iap.h
  * @brief   
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,20 +19,26 @@
  * limitations under the License.
  */
 
-#ifndef READ_UID_H
-#define READ_UID_H
 
-#include "stdint.h"
+#ifndef IAP_H
+#define IAP_H
 
-#ifdef __cplusplus
-}
-#endif
+#include<stdint.h>
 
-void read_unique_id(uint32_t *id);
-void create_unique_id(void);
+#define CMD_SUCCESS 0
 
-#ifdef __cplusplus
-}
-#endif
+typedef struct {
+    uint32_t cmd;
+    uint32_t par[4];
+    uint32_t stat;
+    uint32_t res[4];
+} iap_operation_t;
+
+extern iap_operation_t iap_op;
+
+void iap_lock(void);
+void iap_unlock(void);
+void iap_call(iap_operation_t* operation);
+void iap_reinvoke(void);
 
 #endif
