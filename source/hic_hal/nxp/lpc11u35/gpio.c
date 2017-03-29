@@ -26,50 +26,7 @@
 #include "target_reset.h"
 #include "IO_Config.h"
 #include "settings.h"
-
-// taken code from the Nxp App Note AN11305
-/* This data must be global so it is not read from the stack */
-typedef void (*IAP)(uint32_t [], uint32_t []);
-static IAP iap_entry = (IAP)0x1fff1ff1;
-static uint32_t command[5], result[4];
-#define init_msdstate() *((uint32_t *)(0x10000054)) = 0x0
-
-/* This function resets some microcontroller peripherals to reset
- * hardware configuration to ensure that the USB In-System Programming module
- * will work properly. It is normally called from reset and assumes some reset
- * configuration settings for the MCU.
- * Some of the peripheral configurations may be redundant in your specific
- * project.
- */
-void ReinvokeISP(void)
-{
-    /* make sure USB clock is turned on before calling ISP */
-    LPC_SYSCON->SYSAHBCLKCTRL |= 0x04000;
-    /* make sure 32-bit Timer 1 is turned on before calling ISP */
-    LPC_SYSCON->SYSAHBCLKCTRL |= 0x00400;
-    /* make sure GPIO clock is turned on before calling ISP */
-    LPC_SYSCON->SYSAHBCLKCTRL |= 0x00040;
-    /* make sure IO configuration clock is turned on before calling ISP */
-    LPC_SYSCON->SYSAHBCLKCTRL |= 0x10000;
-    /* make sure AHB clock divider is 1:1 */
-    LPC_SYSCON->SYSAHBCLKDIV = 1;
-    /* Send Reinvoke ISP command to ISP entry point*/
-    command[0] = 57;
-    init_msdstate();					 /* Initialize Storage state machine */
-    /* Set stack pointer to ROM value (reset default) This must be the last
-     * piece of code executed before calling ISP, because most C expressions
-     * and function returns will fail after the stack pointer is changed.
-     * In addition ensure the CONTROL register is set to 0 so the MSP is
-     * used rather than the PSP.
-     */
-    __set_MSP(*((volatile uint32_t *)0x00000000));
-    __set_CONTROL(0);
-    /* Enter ISP. We call "iap_entry" to enter ISP because the ISP entry is done
-     * through the same command interface as IAP.
-     */
-    iap_entry(command, result);
-    // Not supposed to come back!
-}
+#include "iap.h"
 
 static void busy_wait(uint32_t cycles)
 {
@@ -155,7 +112,7 @@ void gpio_init(void)
             LPC_WWDT->FEED = 0x55;
         }
 
-        ReinvokeISP();
+        iap_reinvoke();
     }
 }
 
