@@ -33,11 +33,13 @@ LR_IROM1 DAPLINK_ROM_APP_START DAPLINK_ROM_APP_SIZE {
   RW_IRAM1 DAPLINK_RAM_APP_START DAPLINK_RAM_APP_SIZE {  ; RW data
    .ANY (ram_func)
    .ANY (+RW +ZI)
+   .ANY (RAM1)
   }
 
   #if defined(DAPLINK_RAM_APP2_START)
       RW_IRAM2 DAPLINK_RAM_APP2_START DAPLINK_RAM_APP2_SIZE {  ; RW data
        .ANY (+RW +ZI)
+       .ANY (RAM2)
       }
   #endif
 
