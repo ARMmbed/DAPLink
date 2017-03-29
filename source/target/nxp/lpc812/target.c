@@ -26,10 +26,10 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 1024,
-    .sector_cnt     = (KB(16) / 1024),
+    .sector_size    = 0x1000,
+    .sector_cnt     = (KB(64) / 0x1000),
     .flash_start    = 0,
-    .flash_end      = KB(16),
+    .flash_end      = KB(64),
     .ram_start      = 0x10000000,
     .ram_end        = 0x10001000,
     .flash_algo     = (program_target_t *) &flash,
