@@ -258,6 +258,18 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/blueninja.yaml
+    lpc11u35_wizwiki_w7500_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wizwiki_w7500.yaml
+    lpc11u35_wizwiki_w7500_eco_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wizwiki_w7500_eco.yaml
+    lpc11u35_wizwiki_w7500p_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wizwiki_w7500p.yaml
     sam3u2c_ncs36510rf_if:
         - *module_if
         - *module_hic_sam3u2c
