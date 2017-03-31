@@ -1,4 +1,8 @@
 common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_mkit_dk_dongle_nrf5x
     sources:
         board:
             - source/board/mkit_dk_dongle_nrf5x.c

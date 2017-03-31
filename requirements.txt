@@ -6,3 +6,4 @@ requests
 intelhex
 six
 enum34
+pyusb

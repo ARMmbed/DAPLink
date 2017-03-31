@@ -22,11 +22,6 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
-#include "sam3u.h"
-#include "stdint.h"
-#include "RTL.h"
-#include "debug_cm.h"
-#include "swd_host.h"
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
@@ -38,6 +33,8 @@ Provides definitions about:
  - Debug Access Port communication mode (JTAG or SWD).
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
+
+#include "IO_Config.h"
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
@@ -70,7 +67,7 @@ Provides definitions about:
 /// Default communication speed on the Debug Access Port for SWD and JTAG mode.
 /// Used to initialize the default SWD/JTAG clock frequency.
 /// The command \ref DAP_SWJ_Clock can be used to overwrite this default setting.
-#define DAP_DEFAULT_SWJ_CLOCK   1000000         ///< Default SWD/JTAG clock frequency in Hz.
+#define DAP_DEFAULT_SWJ_CLOCK   2000000         ///< Default SWD/JTAG clock frequency in Hz.
 
 /// Maximum Package Size for Command and Response data.
 /// This configuration settings is used to optimized the communication performance with the
@@ -96,21 +93,6 @@ Provides definitions about:
 #endif
 
 ///@}
-
-
-// Debug Port I/O Pins
-
-// SWCLK Pin => PA17
-#define PIN_SWCLK               (1 << 17)
-#define PIN_SWCLK_IN_BIT        17
-
-// SWDIO In/Out Pin  => PA18
-#define PIN_SWDIO               (1 << 18)
-#define PIN_SWDIO_IN_BIT        18
-
-// nRESET Pin => PA4
-#define PIN_nRESET              (1 << 4)
-#define PIN_nRESET_IN_BIT       4
 
 
 //**************************************************************************************************
@@ -165,12 +147,25 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 static __inline void PORT_SWD_SETUP(void)
 {
-    PMC->PMC_PCER0 = (1 << 10);  // Enable clock for PIOA
-    PIOA->PIO_MDDR = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
-    PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable
-    PIOA->PIO_SODR = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == HIGH
-    PIOA->PIO_OER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == output
-    PIOA->PIO_PER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == GPIO control
+    PMC->PMC_PCER0 = (1 << 10) | (1 << 11) | (1 << 12);  // Enable clock for all PIOs
+    
+    PIN_nRESET_PORT->PIO_MDDR = PIN_nRESET; // Disable multi drive
+    PIN_nRESET_PORT->PIO_PUER = PIN_nRESET; // pull-up enable
+    PIN_nRESET_PORT->PIO_SODR = PIN_nRESET; // HIGH
+    PIN_nRESET_PORT->PIO_OER  = PIN_nRESET; // output
+    PIN_nRESET_PORT->PIO_PER  = PIN_nRESET; // GPIO control
+
+    PIN_SWCLK_PORT->PIO_MDDR = PIN_SWCLK; // Disable multi drive
+    PIN_SWCLK_PORT->PIO_PUER = PIN_SWCLK; // pull-up enable
+    PIN_SWCLK_PORT->PIO_SODR = PIN_SWCLK; // HIGH
+    PIN_SWCLK_PORT->PIO_OER  = PIN_SWCLK; // output
+    PIN_SWCLK_PORT->PIO_PER  = PIN_SWCLK; // GPIO control
+
+    PIN_SWDIO_PORT->PIO_MDDR = PIN_SWDIO; // Disable multi drive
+    PIN_SWDIO_PORT->PIO_PUER = PIN_SWDIO; // pull-up enable
+    PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO; // HIGH
+    PIN_SWDIO_PORT->PIO_OER  = PIN_SWDIO; // output
+    PIN_SWDIO_PORT->PIO_PER  = PIN_SWDIO; // GPIO control
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -179,10 +174,18 @@ Disables the DAP Hardware I/O pins which configures:
 */
 static __inline void PORT_OFF(void)
 {
-    PIOA->PIO_PUER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == pull-up enable
-    PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
-    PIOA->PIO_ODR = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == input
-    PIOA->PIO_PER = PIN_SWCLK | PIN_SWDIO | PIN_nRESET;  // Pins == GPIO control
+    PIN_nRESET_PORT->PIO_PUER = PIN_nRESET; // pull-up enable
+    PIN_nRESET_PORT->PIO_ODR  = PIN_nRESET; // input
+    PIN_nRESET_PORT->PIO_PER  = PIN_nRESET; // GPIO control
+
+    PIN_SWCLK_PORT->PIO_PUER = PIN_SWCLK; // pull-up enable
+    PIN_SWCLK_PORT->PIO_ODR  = PIN_SWCLK; // input
+    PIN_SWCLK_PORT->PIO_PER  = PIN_SWCLK; // GPIO control
+
+    PIN_SWDIO_PORT->PIO_PUER = PIN_SWDIO; // pull-up enable
+    PIN_SWDIO_PORT->PIO_ODR  = PIN_SWDIO; // input
+    PIN_SWDIO_PORT->PIO_PER  = PIN_SWDIO; // GPIO control
+
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
@@ -192,7 +195,7 @@ static __inline void PORT_OFF(void)
 */
 static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
 {
-    return ((PIOA->PIO_PDSR >> PIN_SWCLK_IN_BIT) & 1);
+    return ((PIN_SWCLK_PORT->PIO_PDSR >> PIN_SWCLK_BIT) & 1);
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
@@ -200,7 +203,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 static __forceinline void     PIN_SWCLK_TCK_SET(void)
 {
-    PIOA->PIO_SODR = PIN_SWCLK;
+    PIN_SWCLK_PORT->PIO_SODR = PIN_SWCLK;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
@@ -208,7 +211,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 static __forceinline void     PIN_SWCLK_TCK_CLR(void)
 {
-    PIOA->PIO_CODR = PIN_SWCLK;
+    PIN_SWCLK_PORT->PIO_CODR = PIN_SWCLK;
 }
 
 // SWDIO/TMS Pin I/O --------------------------------------
@@ -218,7 +221,7 @@ static __forceinline void     PIN_SWCLK_TCK_CLR(void)
 */
 static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
 {
-    return ((PIOA->PIO_PDSR >> PIN_SWDIO_IN_BIT) & 1);
+    return ((PIN_SWDIO_PORT->PIO_PDSR >> PIN_SWDIO_BIT) & 1);
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
@@ -226,7 +229,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 static __forceinline void     PIN_SWDIO_TMS_SET(void)
 {
-    PIOA->PIO_SODR = PIN_SWDIO;
+    PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
@@ -234,7 +237,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 static __forceinline void     PIN_SWDIO_TMS_CLR(void)
 {
-    PIOA->PIO_CODR = PIN_SWDIO;
+    PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
@@ -242,7 +245,7 @@ static __forceinline void     PIN_SWDIO_TMS_CLR(void)
 */
 static __forceinline uint32_t PIN_SWDIO_IN(void)
 {
-    return ((PIOA->PIO_PDSR >> PIN_SWDIO_IN_BIT) & 1);
+    return ((PIN_SWDIO_PORT->PIO_PDSR >> PIN_SWDIO_BIT) & 1);
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
@@ -251,10 +254,10 @@ static __forceinline uint32_t PIN_SWDIO_IN(void)
 static __forceinline void     PIN_SWDIO_OUT(uint32_t bit)
 {
     if (bit & 1) {
-        PIOA->PIO_SODR = PIN_SWDIO;
+        PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO;
 
     } else {
-        PIOA->PIO_CODR = PIN_SWDIO;
+        PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
     }
 }
 
@@ -264,7 +267,7 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 static __forceinline void     PIN_SWDIO_OUT_ENABLE(void)
 {
-    PIOA->PIO_OER = PIN_SWDIO;
+    PIN_SWDIO_PORT->PIO_OER = PIN_SWDIO;
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -273,7 +276,7 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 static __forceinline void     PIN_SWDIO_OUT_DISABLE(void)
 {
-    PIOA->PIO_ODR = PIN_SWDIO;
+    PIN_SWDIO_PORT->PIO_ODR = PIN_SWDIO;
 }
 
 
@@ -334,7 +337,7 @@ static __forceinline void     PIN_nTRST_OUT(uint32_t bit)
 */
 static __forceinline uint32_t PIN_nRESET_IN(void)
 {
-    return ((PIOA->PIO_PDSR >> PIN_nRESET_IN_BIT) & 1);
+    return ((PIN_nRESET_PORT->PIO_PDSR >> PIN_nRESET_BIT) & 1);
 }
 
 /** nRESET I/O pin: Set Output.
@@ -351,8 +354,11 @@ static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
     Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs.
      */
     if (bit & 1) {
-        PIOA->PIO_SODR = PIN_SWDIO;
-        PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+        PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO;
+
+        PIN_SWDIO_PORT->PIO_MDER = PIN_SWDIO;
+        PIN_SWCLK_PORT->PIO_MDER = PIN_SWCLK;
+        PIN_nRESET_PORT->PIO_MDER = PIN_nRESET;
 
     } else {
         swd_init_debug();
@@ -367,10 +373,10 @@ static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
         }
 
         //Hold RESET and SWCLK low for a minimum of 100us
-        PIOA->PIO_OER = PIN_SWDIO;
-        PIOA->PIO_OER = PIN_SWCLK;
-        PIOA->PIO_CODR = PIN_SWDIO;
-        PIOA->PIO_CODR = PIN_SWCLK;
+        PIN_SWDIO_PORT->PIO_OER = PIN_SWDIO;
+        PIN_SWCLK_PORT->PIO_OER = PIN_SWCLK;
+        PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
+        PIN_SWCLK_PORT->PIO_CODR = PIN_SWCLK;
         os_dly_wait(1);
     }
 }
@@ -378,10 +384,10 @@ static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
 static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
 {
     if (bit & 1) {
-        PIOA->PIO_SODR = PIN_nRESET;
+        PIN_nRESET_PORT->PIO_SODR = PIN_nRESET;
 
     } else {
-        PIOA->PIO_CODR = PIN_nRESET;
+        PIN_nRESET_PORT->PIO_CODR = PIN_nRESET;
     }
 }
 #endif

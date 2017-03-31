@@ -151,7 +151,10 @@ BOOL USBD_MSC_CheckMedia(void)
             if ((USBD_MSC_CBW.bmFlags & 0x80) != 0) {
                 USBD_MSC_SetStallEP(usbd_msc_ep_bulkin | 0x80);
             } else {
-                USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+                if (USBD_MSC_CSW.dDataResidue != BulkLen) {
+                    // Only stall if this isn't the last transfer
+                    USBD_MSC_SetStallEP(usbd_msc_ep_bulkout);
+                }
             }
         }
 

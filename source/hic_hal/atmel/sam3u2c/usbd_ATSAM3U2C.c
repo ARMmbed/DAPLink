@@ -372,6 +372,7 @@ void USBD_DirCtrlEP(uint32_t dir)
 void USBD_EnableEP(uint32_t EPNum)
 {
     UDPHS->UDPHS_EPT[EPNum & 0x0F].UDPHS_EPTCTLENB = (0x1 << 0);  /* EP Enable  */
+    eptsta_copy[EPNum & 0x0F] = UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSETSTA;
 }
 
 
@@ -386,6 +387,7 @@ void USBD_EnableEP(uint32_t EPNum)
 void USBD_DisableEP(uint32_t EPNum)
 {
     UDPHS->UDPHS_EPT[EPNum & 0x0F].UDPHS_EPTCTLDIS = (0x1 << 0);  /* EP Disable */
+    eptsta_copy[EPNum & 0x0F] = UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSETSTA;
 }
 
 
@@ -404,6 +406,7 @@ void USBD_ResetEP(uint32_t EPNum)
             (0x1 << 5);   /* Stall Req Set    */
     UDPHS->UDPHS_EPTRST |= (1 << EPNum);                    /* Reset endpoint   */
     UDPHS->UDPHS_EPTRST &= ~(1 << EPNum);
+    eptsta_copy[EPNum] = UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSETSTA;
 }
 
 
@@ -418,6 +421,7 @@ void USBD_ResetEP(uint32_t EPNum)
 void USBD_SetStallEP(uint32_t EPNum)
 {
     UDPHS->UDPHS_EPT[EPNum & 0x0F].UDPHS_EPTSETSTA = (0x1 << 5);  /* Stall Set  */
+    eptsta_copy[EPNum & 0x0F] |= 0x1 << 5;
 }
 
 
@@ -433,6 +437,7 @@ void USBD_ClrStallEP(uint32_t EPNum)
 {
     UDPHS->UDPHS_EPT[EPNum & 0x0F].UDPHS_EPTCLRSTA = (0x1 << 6) | /* Clr Toggle */
             (0x1 << 5);  /* Stall Clear*/
+    eptsta_copy[EPNum & 0x0F] &= ~(0x1 << 5);
 }
 
 
@@ -493,13 +498,15 @@ uint32_t USBD_WriteEP(uint32_t EPNum, uint8_t *pData, uint32_t cnt)
     EPNum &= 0x0F;
     eptsta = eptsta_copy[EPNum];
 
+    // Cached value should match the real value
+    util_assert((UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA & (0x1 << 5)) == (eptsta & (0x1 << 5)));
     if (eptsta & (0x1 << 5)) {  /* If EP is stall */
         return (cnt);
     }
 
-    if (eptsta & (0x1 << 11)) { /* Bank not ready */
-        return (0);
-    }
+    // Both register and cached value should indicate that the bank is ready (bit 11 clear)
+    util_assert(!(UDPHS->UDPHS_EPT[EPNum].UDPHS_EPTSTA & (0x1 << 11)));
+    util_assert(!(eptsta & (0x1 << 11)));
 
     pEPFIFO = (uint8_t *)((uint32_t *)UDPHS_EPTFIFO_BASE + (16384 * EPNum));
 

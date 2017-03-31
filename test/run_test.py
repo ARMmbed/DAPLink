@@ -67,6 +67,7 @@ from enum import Enum
 from hid_test import test_hid
 from serial_test import test_serial
 from msd_test import test_mass_storage
+from usb_test import test_usb
 from daplink_board import get_all_attached_daplink_boards
 from project_generator.generate import Generator
 from test_info import TestInfo
@@ -91,6 +92,7 @@ def test_endpoints(workspace, parent_test):
     test_hid(workspace, test_info)
     test_serial(workspace, test_info)
     test_mass_storage(workspace, test_info)
+    test_usb(workspace, test_info)
 
 
 class TestConfiguration(object):

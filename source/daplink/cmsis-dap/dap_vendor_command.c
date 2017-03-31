@@ -28,6 +28,7 @@
 #include "DAP_config.h"
 #include "uart.h"
 #include "DAP.h"
+#include "main.h"
 
 // Process DAP Vendor command and prepare response
 // Default function (can be overridden)
@@ -45,6 +46,16 @@ uint32_t DAP_ProcessVendorCommand(uint8_t *request, uint8_t *response)
         *(response + 1) = len;
         memcpy(response + 2, id_str, len);
         return (len + 2);
+    } else if (*request == ID_DAP_Vendor8) {
+        *response = ID_DAP_Vendor8;
+        *(response + 1) = 1;
+        if (0 == request[1]) {
+            main_usb_set_test_mode(false);
+        } else if (1 == request[1]) {
+            main_usb_set_test_mode(true);
+        } else {
+            *(response + 1) = 0;
+        }
     }
     // else return invalid command
     else {

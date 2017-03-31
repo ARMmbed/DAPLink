@@ -23,6 +23,7 @@
 #define UART_H
 
 #include "stdint.h"
+#include "stdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +85,7 @@ extern int32_t uart_write_data(uint8_t *data, uint16_t size);
 extern int32_t uart_read_data(uint8_t *data, uint16_t size);
 extern void uart_set_control_line_state(uint16_t ctrl_bmp);
 extern void uart_software_flow_control(void);
+extern void uart_enable_flow_control(bool enabled);
 
 #ifdef __cplusplus
 }
