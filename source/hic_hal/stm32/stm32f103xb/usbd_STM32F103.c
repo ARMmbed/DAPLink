@@ -26,12 +26,11 @@
 
 /* Double Buffering is not supported                                         */
 
-#define __STM32
-
 #include <RTL.h>
 #include <rl_usb.h>
+#include "stm32f1xx.h"
 #include "usbreg.h"
-#include <stm32f10x.h>                         /* STM32F10x Definitions      */
+#include "IO_Config.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -119,18 +118,7 @@ void USBD_Init(void)
     RCC->APB1ENR |= (1 << 23);            /* enable clock for USB               */
     USBD_IntrEna();                       /* Enable USB Interrupts              */
     /* Control USB connecting via SW                                            */
-#ifdef __STM32
-    RCC->APB2ENR |= (1 << 5);             /* enable clock for GPIOD             */
-    GPIOD->BSRR =  0x0004;                /* set PD2                            */
-    GPIOD->CRL &= ~0x00000F00;            /* clear port PD2                     */
-    GPIOD->CRL |=  0x00000700;            /* PD2 GP output open-drain, 50 MHz   */
-#endif
-#ifdef __STM32E
-    RCC->APB2ENR |= (1 << 3);             /* enable clock for GPIOB             */
-    GPIOB->BSRR =  0x4000;                /* set PB14                           */
-    GPIOB->CRH &= ~0x0F000000;            /* clear port PB14                    */
-    GPIOB->CRH |=  0x07000000;            /* PB14 GP output open-drain, 50 MHz  */
-#endif
+    USB_CONNECT_OFF();
 }
 
 
@@ -144,24 +132,14 @@ void USBD_Init(void)
 void USBD_Connect(BOOL con)
 {
     if (con) {
-#ifdef __STM32
-        GPIOD->BRR = 0x0004;                /* reset PD2                          */
-#endif
-#ifdef __STM32E
-        GPIOB->BRR = 0x4000;                /* reset PB14                         */
-#endif
         CNTR = CNTR_FRES;                   /* Force USB Reset                    */
         CNTR = 0;
         ISTR = 0;                           /* Clear Interrupt Status             */
         CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+        USB_CONNECT_ON();
     } else {
         CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
-#ifdef __STM32
-        GPIOD->BSRR = 0x0004;               /* set PD2                            */
-#endif
-#ifdef __STM32E
-        GPIOB->BSRR = 0x4000;               /* set PB14                           */
-#endif
+        USB_CONNECT_OFF();
     }
 }
 
@@ -452,13 +430,16 @@ void USBD_ClearEPBuf(U32 EPNum)
  *    Return Value:    Number of bytes read
  */
 
-U32 USBD_ReadEP(U32 EPNum, U8 *pData)
+U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
 {
     /* Double Buffering is not yet supported                                    */
     U32 num, cnt, *pv, n;
     num = EPNum & 0x0F;
     pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_RX));
     cnt = (pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK;
+    if (cnt > bufsz) {
+        cnt = bufsz;
+    }
 
     for (n = 0; n < (cnt + 1) / 2; n++) {
         *((__packed U16 *)pData) = *pv++;
@@ -537,6 +518,12 @@ U32 USBD_GetError(void)
  */
 
 void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+    NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+    USBD_SignalHandler();
+}
+
+void USBD_Handler(void)
 {
     U32 istr, num, val;
     istr = ISTR;
@@ -695,4 +682,6 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
 #endif
         }
     }
+
+    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 }
