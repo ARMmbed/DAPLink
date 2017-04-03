@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 /*----------------------------------------------------------------------------
  *      RL-ARM - USB
  *----------------------------------------------------------------------------
@@ -122,10 +122,10 @@
 
 /* Endpoint Buffer Descriptor */
 typedef struct _EP_BUF_DSCR {
-  U32 ADDR_TX;
-  U32 COUNT_TX;
-  U32 ADDR_RX;
-  U32 COUNT_RX;
+    U32 ADDR_TX;
+    U32 COUNT_TX;
+    U32 ADDR_RX;
+    U32 COUNT_RX;
 } EP_BUF_DSCR;
 
 #define EP_ADDR_MASK    0xFFFE      /* Address Mask */
