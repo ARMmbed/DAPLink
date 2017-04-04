@@ -67,6 +67,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterethernet_if',    None,       0x0000,     "bin"       ),
     ('lpc11u35_gr_peach_if',                        None,       0x0000,     "bin"       ),
+    ('lpc11u35_nz32_sc151_if',                      False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500_eco_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),    
@@ -129,6 +130,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
     (   0xC000,     'lpc11u35_cocorico_if',                     None,               None                                    ), # TODO - set target to 'CoCo-ri-Co' when mbed-os supports this
     (   0x5500,     'lpc11u35_gr_peach_if',                     None,               'Renesas-GR-PEACH'                      ),
+    (   0x6660,     'lpc11u35_nz32_sc151_if',                   None,               'NZ32-SC151'                            ),
     (   0x2201,     'lpc11u35_wizwiki_w7500_if',                None,               'WIZWIKI_W7500'                         ),
     (   0x2202,     'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZWIKI_W7500ECO'                      ),
     (   0x2203,     'lpc11u35_wizwiki_w7500p_if',               None,               'WIZWIKI_W7500P'                        ),

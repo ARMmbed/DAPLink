@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/nz32_sc151.c
+        source:
+            - source/target/st/nz32_sc151/target.c
+            - source/target/st/nz32_sc151/target_reset.c
