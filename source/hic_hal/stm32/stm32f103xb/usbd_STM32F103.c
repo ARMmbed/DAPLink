@@ -82,9 +82,9 @@ void EP_Status(U32 EPNum, U32 stat)
     val = EPxREG(num);
 
     if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        EPxREG(num) = (val ^ (stat & EP_STAT_TX)) & (EP_MASK | EP_STAT_TX);
+        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
     } else {                              /* OUT Endpoint                       */
-        EPxREG(num) = (val ^ (stat & EP_STAT_RX)) & (EP_MASK | EP_STAT_RX);
+        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
     }
 }
 
@@ -649,7 +649,7 @@ void USBD_Handler(void)
         val = EPxREG(num);
 
         if (val & EP_CTR_RX) {
-            EPxREG(num) = val & ~EP_CTR_RX & EP_MASK;
+            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
 #ifdef __RTX
 
             if (USBD_RTX_EPTask[num]) {
@@ -666,7 +666,7 @@ void USBD_Handler(void)
         }
 
         if (val & EP_CTR_TX) {
-            EPxREG(num) = val & ~EP_CTR_TX & EP_MASK;
+            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
 #ifdef __RTX
 
             if (USBD_RTX_EPTask[num]) {

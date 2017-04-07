@@ -96,6 +96,12 @@
 
 /* EndPoint Register Mask (No Toggle Fields) */
 #define EP_MASK         (EP_CTR_RX|EP_SETUP|EP_TYPE|EP_KIND|EP_CTR_TX|EP_EA)
+/* EndPoint Register Mask (Write zero to clear) */
+#define EP_MASK_RC_W0   (EP_CTR_RX|EP_CTR_TX)
+/* Mask off all toggle bits and set write zero to clear bits to 1.          */
+/* This creates a value that can be written back to the EndPoint register   */
+/* which does not change any status bits.                                   */
+#define EP_VAL_UNCHANGED(val)       (((val) & EP_MASK) | EP_MASK_RC_W0)
 
 /* EP_TYPE: EndPoint Types */
 #define EP_BULK         0x0000      /* BULK EndPoint */
