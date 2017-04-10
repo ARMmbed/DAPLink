@@ -648,23 +648,6 @@ void USBD_Handler(void)
         num = istr & ISTR_EP_ID;
         val = EPxREG(num);
 
-        if (val & EP_CTR_RX) {
-            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
-#ifdef __RTX
-
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT, USBD_RTX_EPTask[num]);
-            }
-
-#else
-
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num]((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT);
-            }
-
-#endif
-        }
-
         if (val & EP_CTR_TX) {
             EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
 #ifdef __RTX
@@ -677,6 +660,23 @@ void USBD_Handler(void)
 
             if (USBD_P_EP[num]) {
                 USBD_P_EP[num](USBD_EVT_IN);
+            }
+
+#endif
+        }
+
+        if (val & EP_CTR_RX) {
+            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
+#ifdef __RTX
+
+            if (USBD_RTX_EPTask[num]) {
+                isr_evt_set((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT, USBD_RTX_EPTask[num]);
+            }
+
+#else
+
+            if (USBD_P_EP[num]) {
+                USBD_P_EP[num]((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT);
             }
 
 #endif
