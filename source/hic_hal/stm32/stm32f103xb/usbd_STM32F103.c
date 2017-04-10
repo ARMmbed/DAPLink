@@ -31,9 +31,17 @@
 #include "stm32f1xx.h"
 #include "usbreg.h"
 #include "IO_Config.h"
+#include "cortex_m.h"
+#include "string.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
+
+#define USB_ISTR_W0C_MASK   (ISTR_PMAOVR | ISTR_ERR | ISTR_WKUP | ISTR_SUSP | ISTR_RESET | ISTR_SOF | ISTR_ESOF)
+#define VAL_MASK            0xFFFF
+#define VAL_SHIFT           16 
+#define EP_NUM_MASK         0xFFFF
+#define EP_NUM_SHIFT        0
 
 #define USB_DBL_BUF_EP      0x0000
 
@@ -42,6 +50,43 @@
 EP_BUF_DSCR *pBUF_DSCR = (EP_BUF_DSCR *)USB_PMA_ADDR; /* Ptr to EP Buf Desc   */
 
 U16 FreeBufAddr;                        /* Endpoint Free Buffer Address       */
+
+uint32_t StatQueue[(USBD_EP_NUM + 1) * 2 + 1];
+uint32_t StatQueueHead = 0;
+uint32_t StatQueueTail = 0;
+uint32_t LastIstr = 0;
+
+
+inline static void stat_enque(uint32_t stat)
+{
+    cortex_int_state_t state;
+    state = cortex_int_get_and_disable();
+    StatQueue[StatQueueTail] = stat;
+    StatQueueTail = (StatQueueTail + 1) % (sizeof(StatQueue) / sizeof(StatQueue[0]));
+    cortex_int_restore(state);
+}
+
+inline static uint32_t stat_deque()
+{
+    cortex_int_state_t state;
+    uint32_t stat;
+    state = cortex_int_get_and_disable();
+    stat = StatQueue[StatQueueHead];
+    StatQueueHead = (StatQueueHead + 1) % (sizeof(StatQueue) / sizeof(StatQueue[0]));
+    cortex_int_restore(state);
+
+    return stat;
+}
+
+inline static uint32_t stat_is_empty()
+{
+    cortex_int_state_t state;
+    uint32_t empty;
+    state = cortex_int_get_and_disable();
+    empty = StatQueueHead == StatQueueTail;
+    cortex_int_restore(state);
+    return empty;
+}
 
 
 /*
@@ -152,6 +197,8 @@ void USBD_Connect(BOOL con)
 
 void USBD_Reset(void)
 {
+    NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+
     /* Double Buffering is not yet supported                                    */
     ISTR = 0;                             /* Clear Interrupt Status             */
     CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
@@ -182,6 +229,8 @@ void USBD_Reset(void)
 
     EPxREG(0) = EP_CONTROL | EP_RX_VALID;
     DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
+
+    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 }
 
 
@@ -519,14 +568,60 @@ U32 USBD_GetError(void)
 
 void USB_LP_CAN1_RX0_IRQHandler(void)
 {
-    NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+    uint32_t istr;
+    uint32_t num;
+    uint32_t val;
+
+    istr = ISTR;
+    // Zero out endpoint ID since this is read from the queue
+    LastIstr |= istr & ~(ISTR_DIR | ISTR_EP_ID);
+    // Clear interrupts that are pending
+    ISTR = ~(istr & USB_ISTR_W0C_MASK);
+    if (istr & ISTR_CTR) {
+        while ((istr = ISTR) & ISTR_CTR) {
+            num = istr & ISTR_EP_ID;
+            val = EPxREG(num);
+
+            // Process and filter out the zero length status out endpoint to prevent
+            // the next SETUP packet from being dropped.
+            if ((0 == num) && (val & EP_CTR_RX) && !(val & EP_SETUP)
+                    && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
+                if (val & EP_CTR_TX) {
+                    // Drop the RX event but not TX
+                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) | 
+                               ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
+                } else {
+                    // Drop the event
+                }
+            } else {
+                stat_enque(((val & VAL_MASK) << VAL_SHIFT) | 
+                           ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
+            }
+
+
+            if (val & EP_CTR_RX) {
+                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
+            }
+
+            if (val & EP_CTR_TX) {
+                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
+            }
+        }
+    }
+    
     USBD_SignalHandler();
 }
 
 void USBD_Handler(void)
 {
-    U32 istr, num, val;
-    istr = ISTR;
+    U32 istr, num, val, num_val;
+    cortex_int_state_t state;
+
+    // Get ISTR
+    state = cortex_int_get_and_disable();
+    istr = LastIstr;
+    LastIstr = 0;
+    cortex_int_restore(state);
 
     /* USB Reset Request                                                        */
     if (istr & ISTR_RESET) {
@@ -545,7 +640,6 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_RESET;
     }
 
     /* USB Suspend Request                                                      */
@@ -564,7 +658,6 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_SUSP;
     }
 
     /* USB Wakeup                                                               */
@@ -583,7 +676,6 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_WKUP;
     }
 
     /* Start of Frame                                                           */
@@ -601,7 +693,6 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_SOF;
     }
 
     /* PMA Over/underrun                                                        */
@@ -620,7 +711,6 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_PMAOVR;
     }
 
     /* Error: No Answer, CRC Error, Bit Stuff Error, Frame Format Error         */
@@ -639,17 +729,14 @@ void USBD_Handler(void)
         }
 
 #endif
-        ISTR = ~ISTR_ERR;
     }
 
     /* Endpoint Interrupts                                                      */
-    while ((istr = ISTR) & ISTR_CTR) {
-        ISTR = ~ISTR_CTR;
-        num = istr & ISTR_EP_ID;
-        val = EPxREG(num);
-
+    while ((istr & ISTR_CTR) && !stat_is_empty()) {
+        num_val = stat_deque();
+        num = (num_val >> EP_NUM_SHIFT) & EP_NUM_MASK;
+        val = (num_val >> VAL_SHIFT) & VAL_MASK;
         if (val & EP_CTR_TX) {
-            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
 #ifdef __RTX
 
             if (USBD_RTX_EPTask[num]) {
@@ -666,7 +753,6 @@ void USBD_Handler(void)
         }
 
         if (val & EP_CTR_RX) {
-            EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
 #ifdef __RTX
 
             if (USBD_RTX_EPTask[num]) {
@@ -682,6 +768,4 @@ void USBD_Handler(void)
 #endif
         }
     }
-
-    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 }
