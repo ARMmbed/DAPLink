@@ -1,6 +1,6 @@
 /**
  * @file    daplink_addr.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -34,13 +34,13 @@
 /* ROM sizes */
 
 #define DAPLINK_ROM_BL_START            0x00000000
-#define DAPLINK_ROM_BL_SIZE             0x00007C00
-
-#define DAPLINK_ROM_CONFIG_ADMIN_START  0x00007C00
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00000400
+#define DAPLINK_ROM_BL_SIZE             0x00008000
 
 #define DAPLINK_ROM_IF_START            0x00008000
-#define DAPLINK_ROM_IF_SIZE             0x00017C00
+#define DAPLINK_ROM_IF_SIZE             0x00017800
+
+#define DAPLINK_ROM_CONFIG_ADMIN_START  0x0001F800
+#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00000400
 
 #define DAPLINK_ROM_CONFIG_USER_START   0x0001FC00
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400
