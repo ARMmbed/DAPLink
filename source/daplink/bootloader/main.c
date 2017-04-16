@@ -30,6 +30,7 @@
 #include "target_config.h"
 #include "util.h"
 #include "cortex_m.h"
+#include "sdk.h"
 
 //default msc led settings
 #ifndef MSC_LED_DEF
@@ -239,6 +240,8 @@ __task void main_task(void)
 
 int main(void)
 {
+    // initialize vendor sdk
+    sdk_init();
     // init leds and button
     gpio_init();
     // init settings
