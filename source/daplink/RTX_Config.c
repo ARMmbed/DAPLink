@@ -91,6 +91,8 @@
 #define OS_CLOCK    96000000
 #elif defined(INTERFACE_LPC4322)
 #define OS_CLOCK    96000000
+#elif defined(INTERFACE_STM32F103XB)
+#define OS_CLOCK    72000000
 #endif
 #endif
 

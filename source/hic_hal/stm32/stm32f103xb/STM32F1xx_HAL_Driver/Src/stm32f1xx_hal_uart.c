@@ -670,7 +670,7 @@ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, u
         }
         tmp = (uint16_t*) pData;
         huart->Instance->DR = (*tmp & (uint16_t)0x01FF);
-        if(huart->Init.Parity == UART_PARITY_NONE)
+        if(huart->Init.Parity == HAL_UART_PARITY_NONE)
         {
           pData +=2;
         }
@@ -765,7 +765,7 @@ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, ui
           return HAL_TIMEOUT;
         }
         tmp = (uint16_t*) pData ;
-        if(huart->Init.Parity == UART_PARITY_NONE)
+        if(huart->Init.Parity == HAL_UART_PARITY_NONE)
         {
           *tmp = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
           pData +=2;
@@ -783,7 +783,7 @@ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, ui
         {
           return HAL_TIMEOUT;
         }
-        if(huart->Init.Parity == UART_PARITY_NONE)
+        if(huart->Init.Parity == HAL_UART_PARITY_NONE)
         {
           *pData++ = (uint8_t)(huart->Instance->DR & (uint8_t)0x00FF);
         }
@@ -1732,7 +1732,7 @@ static HAL_StatusTypeDef UART_Transmit_IT(UART_HandleTypeDef *huart)
     {
       tmp = (uint16_t*) huart->pTxBuffPtr;
       huart->Instance->DR = (uint16_t)(*tmp & (uint16_t)0x01FF);
-      if(huart->Init.Parity == UART_PARITY_NONE)
+      if(huart->Init.Parity == HAL_UART_PARITY_NONE)
       {
         huart->pTxBuffPtr += 2;
       }
@@ -1806,7 +1806,7 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
     if(huart->Init.WordLength == UART_WORDLENGTH_9B)
     {
       tmp = (uint16_t*) huart->pRxBuffPtr;
-      if(huart->Init.Parity == UART_PARITY_NONE)
+      if(huart->Init.Parity == HAL_UART_PARITY_NONE)
       {
         *tmp = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
         huart->pRxBuffPtr += 2;
@@ -1819,7 +1819,7 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
     }
     else
     {
-      if(huart->Init.Parity == UART_PARITY_NONE)
+      if(huart->Init.Parity == HAL_UART_PARITY_NONE)
       {
         *huart->pRxBuffPtr++ = (uint8_t)(huart->Instance->DR & (uint8_t)0x00FF);
       }

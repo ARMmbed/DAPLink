@@ -1,0 +1,33 @@
+common:
+    target:
+        - stm32f103xb
+    macros:
+        - INTERFACE_STM32F103XB
+        - USE_HAL_DRIVER
+        - STM32F103xB
+        - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_STM32F103XB
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+    includes:
+        - source/hic_hal/stm32/stm32f103xb
+        - source/hic_hal/stm32/stm32f103xb/cmsis
+        - source/hic_hal/stm32/stm32f103xb/STM32F1xx_HAL_Driver
+        - source/hic_hal/stm32/stm32f103xb/STM32F1xx_HAL_Driver/Inc
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/stm32f103xb
+            - source/hic_hal/stm32/stm32f103xb/cmsis
+            - source/hic_hal/stm32/stm32f103xb/armcc
+            - source/hic_hal/stm32/stm32f103xb/STM32F1xx_HAL_Driver/Src
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f103xb"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access

@@ -192,9 +192,9 @@ typedef struct
 /** @defgroup UART_Parity  UART Parity
   * @{
   */ 
-#define UART_PARITY_NONE                    ((uint32_t)0x00000000)
-#define UART_PARITY_EVEN                    ((uint32_t)USART_CR1_PCE)
-#define UART_PARITY_ODD                     ((uint32_t)(USART_CR1_PCE | USART_CR1_PS)) 
+#define HAL_UART_PARITY_NONE                ((uint32_t)0x00000000)
+#define HAL_UART_PARITY_EVEN                ((uint32_t)USART_CR1_PCE)
+#define HAL_UART_PARITY_ODD                 ((uint32_t)(USART_CR1_PCE | USART_CR1_PS)) 
 /**
   * @}
   */ 
@@ -603,9 +603,9 @@ do{                                         \
 #define IS_UART_STOPBITS(STOPBITS)     (((STOPBITS) == UART_STOPBITS_1) || \
                                         ((STOPBITS) == UART_STOPBITS_2))
 
-#define IS_UART_PARITY(PARITY)         (((PARITY) == UART_PARITY_NONE) || \
-                                        ((PARITY) == UART_PARITY_EVEN) || \
-                                        ((PARITY) == UART_PARITY_ODD))
+#define IS_UART_PARITY(PARITY)         (((PARITY) == HAL_UART_PARITY_NONE) || \
+                                        ((PARITY) == HAL_UART_PARITY_EVEN) || \
+                                        ((PARITY) == HAL_UART_PARITY_ODD))
 
 #define IS_UART_HARDWARE_FLOW_CONTROL(CONTROL)\
                                        (((CONTROL) == UART_HWCONTROL_NONE) || \
