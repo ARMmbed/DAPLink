@@ -21,7 +21,7 @@
 
 #include "RTL.h"
 #include "util.h"
-#include "IO_Config.h" // NVIC_SystemReset
+#include "cortex_m.h"
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -208,7 +208,7 @@ void os_error(U32 err_code)
             break;
     }
 
-    NVIC_SystemReset();
+    SystemReset();
 
     for (;;); // Wait for reset
 }
