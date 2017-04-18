@@ -39,6 +39,7 @@
 #include "util.h"
 #include "DAP.h"
 #include "bootloader.h"
+#include "cortex_m.h"
 
 // Event flags for main task
 // Timers events
@@ -187,7 +188,7 @@ void USBD_SignalHandler()
 void HardFault_Handler()
 {
     util_assert(0);
-    NVIC_SystemReset();
+    SystemReset();
 
     while (1); // Wait for reset
 }
