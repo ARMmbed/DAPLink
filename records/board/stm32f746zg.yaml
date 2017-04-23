@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/stm32f746zg.c
+        target:
+            - source/target/st/stm32f746zg/target.c
+            - source/target/st/target_reset.c

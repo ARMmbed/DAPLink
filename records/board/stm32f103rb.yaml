@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/stm32f103rb.c
+        target:
+            - source/target/st/stm32f103rb/target.c
+            - source/target/st/target_reset.c

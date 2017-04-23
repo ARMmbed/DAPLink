@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/stm32f207zg.c
+        target:
+            - source/target/st/stm32f207zg/target.c
+            - source/target/st/target_reset.c
