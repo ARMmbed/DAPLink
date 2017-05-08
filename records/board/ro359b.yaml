@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/ro359b.c
+        target:
+            - source/target/freescale/k64f/target.c
+            - source/target/nxp/target_reset.c
