@@ -102,7 +102,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
-    (   0x1022,     'lpc11u35_ro359b_if',                       None,               'ro359b'                                ),
+    (   0x1022,     'lpc11u35_ro359b_if',                       None,               None                                    ),
     (   0x1050,     'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1060,     'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
     (   0x1062,     'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
