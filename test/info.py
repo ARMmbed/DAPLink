@@ -53,6 +53,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_hrm1017_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_sscity_if",                          False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci824_if",                         False,      0x0000,     "bin"       ),
+    ("lpc11u35_ro359b_if",                          False,      0x0000,     "bin"       ),
     ("k20dx_rbl_if",                                True,       0x5000,     "bin"       ),
     ("k20dx_rblnano_if",                            True,       0x5000,     "bin"       ),
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
@@ -101,6 +102,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
+    (   0x1022,     'lpc11u35_ro359b_if',                       None,               'ro359b'                                ),
     (   0x1050,     'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1060,     'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
     (   0x1062,     'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
@@ -162,6 +164,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0291,  # FRDM-KL82Z
+    0x1022,  # RO359B (K24F)
 ])
 
 #Hack until these targets have an image with a valid vector table
