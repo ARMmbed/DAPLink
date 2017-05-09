@@ -31,6 +31,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
+    ("lpc4322_lpc54608xpresso_if",                  False,      0x10000,    "bin"       ),
     ("lpc11u35_ssci1114_if",                        False,      0x0000,     "bin"       ),
     ("sam3u2c_mkit_dk_dongle_nrf5x_if",             True,       0x5000,     "bin"       ),
     ("k20dx_frdmk20dx_if",                          True,       0x8000,     "bin"       ),
@@ -71,7 +72,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_nz32_sc151_if',                      False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500_eco_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),    
+    ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
 }
 
@@ -105,6 +106,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
     (   0x1050,     'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1054,     'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'NXP-LPC54114-MAX'                      ),
+    (   0x1056,     'lpc4322_lpc54608xpresso_if',               'lpc4322_bl',       'NXP-LPC54608-MAX'                      ),
     (   0x1060,     'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
     (   0x1062,     'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
     (   0x1070,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51822'                       ),
