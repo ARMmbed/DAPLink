@@ -138,7 +138,7 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
             }
         } else if (FLASH_DECODER_TYPE_TARGET == type) {
             flash_start_local = target_device.flash_start;
-            flash_intf_local = flash_intf_target;
+            flash_intf_local = flash_intf_target_custom == 0 ? flash_intf_target : flash_intf_target_custom;
         }
     } else {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
