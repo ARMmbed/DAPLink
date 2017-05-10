@@ -19,4 +19,88 @@
  * limitations under the License.
  */
 
+#include "flash_intf.h"
+#include "target_reset.h"
+#include "settings.h"
+#include "swd_host.h"
+#include "target_config.h"
+#include "util.h"
+
 const char *board_id = "5002";
+
+static error_t init(void);
+static error_t uninit(void);
+static error_t program_page(uint32_t adr, const uint8_t *buf, uint32_t size);
+static error_t erase_sector(uint32_t addr);
+static error_t erase_chip(void);
+static uint32_t program_page_min_size(uint32_t addr);
+static uint32_t erase_sector_size(uint32_t addr);
+
+static const flash_intf_t flash_intf = {
+    init,
+    uninit,
+    program_page,
+    erase_sector,
+    erase_chip,
+    program_page_min_size,
+    erase_sector_size,
+};
+
+const flash_intf_t *const flash_intf_target_custom = &flash_intf;
+
+static error_t init()
+{
+    if (0 == target_set_state(RESET_PROGRAM)) {
+        return ERROR_RESET;
+    }
+
+    return ERROR_SUCCESS;
+}
+
+static error_t uninit(void)
+{
+    // Resume the target if configured to do so
+    if (config_get_auto_rst()) {
+        target_set_state(RESET_RUN);
+    }
+
+    swd_off();
+    return ERROR_SUCCESS;
+}
+
+static error_t program_page(uint32_t addr, const uint8_t *buf, uint32_t size)
+{
+    // check if security bits were set
+    if (1 == security_bits_set(addr, (uint8_t *)buf, size)) {
+        return ERROR_SECURITY_BITS;
+    }
+
+    // Write data directly to device
+    if (!swd_write_memory(addr, (uint8_t *)buf, size)) {
+        return ERROR_ALGO_DATA_SEQ;
+    }
+
+    return ERROR_SUCCESS;
+}
+
+static error_t erase_sector(uint32_t addr)
+{
+    return ERROR_SUCCESS;
+}
+
+static error_t erase_chip(void)
+{
+    return ERROR_SUCCESS;
+}
+
+static uint32_t program_page_min_size(uint32_t addr)
+{
+    uint32_t size = 256;
+    util_assert(target_device.sector_size >= size);
+    return size;
+}
+
+static uint32_t erase_sector_size(uint32_t addr)
+{
+    return target_device.sector_size;
+}
