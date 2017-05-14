@@ -45,7 +45,11 @@ static const flash_intf_t flash_intf = {
     target_flash_uninit,
     target_flash_program_page,
     target_flash_erase_sector,
+#ifdef TARGET_FLASH_ERASE_CHIP_OVERRIDE
+    board_target_flash_erase_chip,
+#else
     target_flash_erase_chip,
+#endif
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
 };

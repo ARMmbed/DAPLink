@@ -1,7 +1,13 @@
 common:
+    macros:
+        - BOARD_VFS_ADD_FILES
+        - BOARD_TARGET_FLASH_ERASE_CHIP_OVERRIDE
     sources:
         board:
-            - source/board/microbit.c
+            - source/board/microbit/microbit.c
+            - source/board/microbit/microbit_target_flash.c
+            - source/board/microbit/microbit_vfs_user.c
+            - source/board/microbit/microbit_html.c
         target:
             - source/target/nordic/nrf51822/target_16.c
             - source/target/nordic/target_reset.c

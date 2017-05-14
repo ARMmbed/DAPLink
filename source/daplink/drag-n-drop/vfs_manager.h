@@ -68,6 +68,9 @@ error_t vfs_mngr_get_transfer_status(void);
 // Build the filesystem by calling vfs_init and then adding files with vfs_create_file
 void vfs_user_build_filesystem(void);
 
+// Add board-specific functions to the VFS.
+void board_vfs_add_files(void);
+
 // Called when a file on the filesystem changes
 void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data);
 
