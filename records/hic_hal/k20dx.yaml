@@ -8,6 +8,7 @@ common:
         - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
         - FLASH_DRIVER_IS_FLASH_RESIDENT=1
         - DAPLINK_NO_ASSERT_FILENAMES
+        - DAPLINK_BOOTLOADER_UPDATE
     includes:
         - source/hic_hal/freescale/k20dx
         - source/hic_hal/freescale/k20dx/MK20D5

@@ -5,6 +5,7 @@ common:
         - INTERFACE_SAM3U2C
         - __SAM3U2C__
         - DAPLINK_HIC_ID=0x97969903  # DAPLINK_HIC_ID_SAM3U2C
+        - DAPLINK_BOOTLOADER_UPDATE
     includes:
         - source/hic_hal/atmel/sam3u2c
         - source/hic_hal/atmel/sam3u2c
