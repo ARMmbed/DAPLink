@@ -336,6 +336,7 @@ void UART_IRQHandler(void)
 
 static int32_t reset(void)
 {
+    uint32_t mcr;
     // Reset FIFOs
     LPC_USART->FCR = 0x06;
     baudrate  = 0;
@@ -345,8 +346,17 @@ static int32_t reset(void)
     circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
     circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
 
+    // Enable loopback mode to drain remaining bytes (even if flow control is on)
+    mcr = LPC_USART->MCR;
+    LPC_USART->MCR = mcr | (1 << 4);
+
     // Ensure a clean start, no data in either TX or RX FIFO
-    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
+    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6))) {
+        LPC_USART->FCR = (1 << 1) | (1 << 2);
+    }
+
+    // Restore previous mode (loopback off)
+    LPC_USART->MCR = mcr;
 
     while (LPC_USART->LSR & 0x01) {
         LPC_USART->RBR;    // Dump data from RX FIFO
