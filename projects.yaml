@@ -278,3 +278,7 @@ projects:
         - *module_if
         - *module_hic_sam3u2c
         - records/board/ncs36510rf.yaml        
+    sam3u2c_ublox_evk_nina_b1_if:
+        - *module_if
+        - *module_hic_sam3u2c
+        - records/board/ublox_evk_nina_b1.yaml        
