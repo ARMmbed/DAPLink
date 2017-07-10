@@ -345,7 +345,7 @@ class DaplinkBoard(object):
 
     def test_fs(self, parent_test):
         """Check if the raw filesystem is valid"""
-        if sys.platform.startswith("win"):
+        if sys.platform.startswith("win") and False:
             test_info = parent_test.create_subtest('test_fs')
             args = ["chkdsk", self.mount_point]
             process = subprocess.Popen(args, stdin=subprocess.PIPE,
