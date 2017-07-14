@@ -75,6 +75,7 @@ class DLMassStorageTester(MassStorageTester):
         super(DLMassStorageTester, self).__init__(board, parent_test,
                                                   test_name)
         self._expected_mode = None
+        self._actual_mode = None
         self._test_mode = test_mode
         if self._test_mode == board.MODE_IF:
             self._crc_tag = board.KEY_BL_CRC
@@ -83,22 +84,28 @@ class DLMassStorageTester(MassStorageTester):
         else:
             assert False
 
-    def run(self):
+    def _run(self, test_info):
+        assert self._expected_mode is not None
         # Set board to the correct mode before running test
         self.board.set_mode(self._test_mode)
+        self._actual_mode = None
 
-        super(DLMassStorageTester, self).run()
+        super(DLMassStorageTester, self)._run(test_info)
 
-        expected_mode = self._expected_mode
-        actual_mode = self.board.get_mode()
-        if self._expected_mode is not None:
-            if expected_mode is not actual_mode:
-                self._test_mode.failure("Wrong mode after test - Expected "
-                                        " %s got %s" % (expected_mode,
-                                                        actual_mode))
+        if self._actual_mode is None:
+            # Set expected mode if it hasn't been set in _check_data_correct
+            self._actual_mode = self.board.get_mode()
+        if self._expected_mode is not self._actual_mode:
+            test_info.failure("Wrong mode after test - Expected "
+                              " %s got %s" % (self._expected_mode,
+                                              self._actual_mode))
+
+    def set_expected_mode(self, mode):
+        self._expected_mode = mode
 
     def _check_data_correct(self, expected_data, test_info):
         board = self.board
+        self._actual_mode = self.board.get_mode()
         board.set_mode(self._test_mode)
         if self._crc_tag not in board.details_txt:
             test_info.info("CRC not in details.txt")
@@ -135,6 +142,7 @@ def daplink_test(workspace, parent_test):
                                "interface", board.MODE_BL)
     test.set_shutils_copy(interface.bin_path)
     test.set_expected_data(bin_data, start)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Test loading a hex file with shutils
@@ -142,6 +150,7 @@ def daplink_test(workspace, parent_test):
                                "interface", board.MODE_BL)
     test.set_shutils_copy(interface.hex_path)
     test.set_expected_data(bin_data, start)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     test_file_type('bin', board.MODE_BL, board, test_info, start, bin_data)
@@ -166,6 +175,7 @@ def daplink_test(workspace, parent_test):
                                "bootloader", board.MODE_IF)
     test.set_shutils_copy(firmware.bin_path)
     test.set_expected_data(bin_data, start)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Test loading a hex file with shutils
@@ -173,6 +183,7 @@ def daplink_test(workspace, parent_test):
                                "bootloader", board.MODE_IF)
     test.set_shutils_copy(firmware.hex_path)
     test.set_expected_data(bin_data, start)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     test_file_type('bin', board.MODE_IF, board, test_info, start, bin_data)
@@ -269,6 +280,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.set_expected_data(None)
     test.set_expected_failure_msg("In application programming failed because "
                                   "the update sent was incomplete.\r\n")
+    test.set_expected_mode(board_mode)
     test.run()
     # If bootloader is missing then this should be indicated by a file
     if board_mode == board.MODE_IF:
@@ -294,6 +306,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
                                board_mode)
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(raw_data)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Wrong starting address
@@ -311,6 +324,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
         test.set_expected_failure_msg(mode_to_error[board_mode])
         test.set_programming_data(local_data, file_name)
         test.set_expected_data(raw_data)
+        test.set_expected_mode(board_mode)
         test.run()
 
     # Test flushes during update
@@ -321,6 +335,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(raw_data)
     test.set_flush_size(0x1000)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Test bad crc
@@ -338,6 +353,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
         # Interface images can be from other vendors and be missing
         # the crc, so don't treat this as an error
         test.set_expected_data(local_raw_data)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
     # If bootloader is missing then this should be indicated by a file
     if (board_mode == board.MODE_IF and
@@ -352,6 +368,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test = DLMassStorageTester(board, test_info, "Padded load", board_mode)
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(raw_data)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Test bad crc in file data
@@ -366,6 +383,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
         test.set_programming_data(local_data, file_name)
         test.set_expected_failure_msg('The bootloader CRC did not pass.\r\n')
         test.set_expected_data(None)
+        test.set_expected_mode(board.MODE_IF)
         test.run()
         # If bootloader is missing then this should be indicated by a file
         if not os.path.isfile(board.get_file_path(NEED_BL_FILE_NAME)):
@@ -379,6 +397,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
                                    board_mode)
         test.set_programming_data(local_data, file_name)
         test.set_expected_data(raw_data)
+        test.set_expected_mode(board.MODE_IF)
         test.run()
 
     # Test wrong HIC ID
@@ -393,6 +412,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
                                    board_mode)
         test.set_programming_data(local_data, file_name)
         test.set_expected_data(local_raw_data)
+        test.set_expected_mode(board.MODE_IF)
         test.run()
 
     # TODO future - Wrong type
@@ -407,6 +427,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.add_mock_dirs_after_load(MOCK_DIR_LIST_AFTER)
     test.add_mock_files_after_load(MOCK_FILE_LIST_AFTER)
     test.set_expected_data(raw_data)
+    test.set_expected_mode(board.MODE_IF)
     test.run()
 
     # Restore good image
@@ -416,4 +437,6 @@ def test_file_type(file_type, board_mode, board, parent_test,
                                board_mode)
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(raw_data)
+    test.set_expected_mode(board.MODE_IF)
+    test.run()
 
