@@ -207,12 +207,14 @@ class DaplinkBoard(object):
     KEY_USB_INTERFACES = "usb_interfaces"
     KEY_BL_CRC = "bootloader_crc"
     KEY_IF_CRC = "interface_crc"
+    KEY_REMOUNT_COUNT = "remount_count"
 
     def __init__(self, unique_id):
 
         self.unique_id = unique_id
         self.details_txt = None
         self._mode = None
+        self._remount_count = None
         self._assert = None
         self._check_fs_on_remount = False
         self._manage_assert = False
@@ -479,6 +481,8 @@ class DaplinkBoard(object):
             test_info.failure("Bootloader CRC is wrong")
 
     def wait_for_remount(self, parent_test, wait_time=120):
+        mode = self._mode
+        count = self._remount_count
         test_info = parent_test.create_subtest('wait_for_remount')
         elapsed = 0
         start = time.time()
@@ -500,6 +504,13 @@ class DaplinkBoard(object):
             elapsed += 0.1
         stop = time.time()
         test_info.info("mount took %s s" % (stop - start))
+
+        if count is not None and self._remount_count is not None:
+            expected_count = (0 if mode is not self._mode
+                              else (count + 1) & 0xFFFFFFFF)
+            if expected_count != self._remount_count:
+                    test_info.failure('Expected remount count of %s got %s' %
+                                      (expected_count, self._remount_count))
 
         # If enabled check the filesystem
         if self._check_fs_on_remount:
@@ -544,7 +555,10 @@ class DaplinkBoard(object):
         self.details_txt = _parse_kvp_file(details_txt_path)
         self._parse_assert_txt()
 
-        self.mode = None
+        self._remount_count = None
+        if DaplinkBoard.KEY_REMOUNT_COUNT in self.details_txt:
+            self._remount_count = int(self.details_txt[DaplinkBoard.KEY_REMOUNT_COUNT])
+        self._mode = None
         if DaplinkBoard.KEY_MODE in self.details_txt:
             DETAILS_TO_MODE = {
                 "interface": DaplinkBoard.MODE_IF,
