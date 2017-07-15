@@ -847,13 +847,14 @@ void USBD_MSC_ServiceActionIn16(void)
  *    Parameters:      None
  *    Return Value:    None
  */
-
+uint32_t prev_cbw_time_temp;
 void USBD_MSC_GetCBW(void)
 {
     U32 n;
     U32 copy_size;
     copy_size = MIN(BulkLen, sizeof(USBD_MSC_CBW));
 
+    prev_cbw_time_temp = os_time_get();
     for (n = 0; n < copy_size; n++) {
         *((U8 *)&USBD_MSC_CBW + n) = USBD_MSC_BulkBuf[n];
     }
@@ -1058,6 +1059,10 @@ void USBD_MSC_BulkIn(void)
  *    Return Value:    None
  */
 
+extern char prev_cbw_buf[31];
+extern uint32_t prev_cbw_time;
+extern char next_cbw_buf[31];
+extern uint32_t next_cbw_time;
 void USBD_MSC_BulkOut(void)
 {
     switch (BulkStage) {
@@ -1079,6 +1084,13 @@ void USBD_MSC_BulkOut(void)
             break;
 
         case MSC_BS_CSW:
+
+            // Log relevent data to determine failure
+            memcpy(prev_cbw_buf, &USBD_MSC_CBW, sizeof(prev_cbw_buf));
+            prev_cbw_time = prev_cbw_time_temp;
+            memcpy(next_cbw_buf, USBD_MSC_BulkBuf, sizeof(next_cbw_buf));
+            next_cbw_time = os_time_get();
+
             // Previous transfer must be complete
             // before the next transfer begins.
             //

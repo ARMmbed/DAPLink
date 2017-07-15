@@ -573,6 +573,7 @@ void UDPHS_IRQHandler(void)
  *  USB Device Service Routine
  */
 
+extern uint32_t last_reset;
 void USBD_Handler(void)
 {
     uint32_t intsta, eptsta, n;
@@ -593,6 +594,7 @@ void USBD_Handler(void)
 
 #else
 
+        last_reset = os_time_get();
         if (USBD_P_Reset_Event) {
             USBD_P_Reset_Event();
         }

@@ -67,6 +67,7 @@ static uint32_t get_file_size(vfs_read_cb_t read_func);
 
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
+static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
@@ -74,6 +75,13 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
 static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 static void erase_target(void);
+
+uint32_t last_reset;
+uint32_t last_reset_copy;
+char prev_cbw_buf[31];
+uint32_t prev_cbw_time;
+char next_cbw_buf[31];
+uint32_t next_cbw_time;
 
 void vfs_user_build_filesystem()
 {
@@ -87,6 +95,10 @@ void vfs_user_build_filesystem()
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
+    // DEBUG.TXT
+    last_reset_copy = last_reset;
+    file_size = get_file_size(read_file_debug_txt);
+    vfs_create_file("DEBUG   TXT", read_file_debug_txt, 0, file_size);
 
     // FAIL.TXT
     if (vfs_mngr_get_transfer_status() != ERROR_SUCCESS) {
@@ -305,6 +317,45 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "Remount count: ");
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
+    return pos;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
+{
+    uint32_t pos;
+    uint32_t i;
+    char *buf = (char *)data;
+
+    if (sector_offset != 0) {
+        return 0;
+    }
+
+    pos = 0;
+    pos += util_write_string(buf + pos, "Prev CBW: ");
+    for (i = 0; i < sizeof(prev_cbw_buf); i++) {
+        pos += util_write_hex8(buf + pos, prev_cbw_buf[i]);
+    }
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "Prev CBW time: ");
+    pos += util_write_uint32(buf + pos, prev_cbw_time * 10);
+    pos += util_write_string(buf + pos, " ms\r\n");
+
+    pos += util_write_string(buf + pos, "Next CBW: ");
+    for (i = 0; i < sizeof(next_cbw_buf); i++) {
+        pos += util_write_hex8(buf + pos, next_cbw_buf[i]);
+    }
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "Next CBW time: ");
+    pos += util_write_uint32(buf + pos, next_cbw_time * 10);
+    pos += util_write_string(buf + pos, " ms\r\n");
+
+    pos += util_write_string(buf + pos, "Last reset: ");
+    pos += util_write_uint32(buf + pos, last_reset_copy * 10);
+    pos += util_write_string(buf + pos, " ms\r\n");
+
     return pos;
 }
 
