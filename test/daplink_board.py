@@ -497,7 +497,13 @@ class DaplinkBoard(object):
         while True:
             if self._update_board_info(False):
                 if os.path.isdir(self.mount_point):
-                    break
+                    # Information returned by mbed-ls could be old.
+                    # Only break from the loop if the second call to
+                    # mbed-ls returns the same mount point.
+                    tmp_mount = self.mount_point
+                    if self._update_board_info(False):
+                        if tmp_mount == self.mount_point:
+                            break
             if elapsed > wait_time:
                 raise Exception("Mount timed out")
             time.sleep(0.1)
