@@ -99,6 +99,9 @@ int32_t uart_set_configuration(UART_Configuration *config)
     baudrate = config->Baudrate;
     // Compute baud rate dividers
     mv = 15;
+#ifdef BOARD_RTL8195AM
+    config->Baudrate = 38400;
+#endif
     dll = util_div_round_down(SystemCoreClock, 16 * config->Baudrate);
     DivAddVal = util_div_round(SystemCoreClock * mv, dll * config->Baudrate * 16) - mv;
     // set LCR[DLAB] to enable writing to divider registers
@@ -182,6 +185,9 @@ int32_t uart_get_configuration(UART_Configuration *config)
     } else {
         config->Baudrate = br;
     }
+#ifdef BOARD_RTL8195AM
+    config->Baudrate = baudrate;
+#endif
 
     // get data bits
     switch ((lcr >> 0) & 3) {
