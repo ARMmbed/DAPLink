@@ -116,6 +116,7 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
     if (dur != 0) {
         start_break_time = os_time_get();
         target_set_state(RESET_HOLD);
+        uart_uninitialize();
     } else {
         end_break_time = os_time_get();
 
@@ -124,6 +125,8 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
             main_reset_target(1);
         } else {
             main_reset_target(0);
+            // Re-initialize the UART after target reset is cleared.
+            uart_initialize();
         }
     }
 
