@@ -648,26 +648,26 @@ void USBD_Handler(void)
 
     /* Start of Frame Interrupt                                                 */
     if (intsta & UDPHS_INTSTA_INT_SOF) {
-        if (USBD_HighSpeed == 0) {
-#ifdef __RTX
-            UDPHS->UDPHS_CLRINT = UDPHS_CLRINT_INT_SOF;
+        /* Process the SOF interrupt even in high speed mode.
+        The SOF and MICRO_SOF interrupt are never generated at the same
+        time. Instead, when in high speed mode there is 1 SOF
+        interrupt and 7 MICRO_SOF interrupts every 1ms. */
 
-            if (USBD_RTX_DevTask) {
-                isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
-            }
+#ifdef __RTX
+        UDPHS->UDPHS_CLRINT = UDPHS_CLRINT_INT_SOF;
+
+        if (USBD_RTX_DevTask) {
+            isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
+        }
 
 #else
 
-            if (USBD_P_SOF_Event) {
-                USBD_P_SOF_Event();
-            }
-
-            UDPHS->UDPHS_CLRINT = UDPHS_CLRINT_INT_SOF;
-#endif
-
-        } else {
-            UDPHS->UDPHS_CLRINT = UDPHS_CLRINT_INT_SOF;
+        if (USBD_P_SOF_Event) {
+            USBD_P_SOF_Event();
         }
+
+        UDPHS->UDPHS_CLRINT = UDPHS_CLRINT_INT_SOF;
+#endif
     }
 
     /* Micro Frame Interrupt                                                    */
