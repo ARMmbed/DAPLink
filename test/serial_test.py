@@ -93,9 +93,15 @@ class SerialTester(object):
 
         # Set baud to 115200
         self.raw_serial.baudrate = 115200
-        self.raw_serial.timeout = 1.0
+        self.raw_serial.timeout = 0.1
+
+        resp = self.read(1000)
+        if len(resp):
+            test_info.failure("Data pending: %s" % resp)
+            return False
 
         # Reset the target
+        self.raw_serial.timeout = 1.0
         self.raw_serial.sendBreak()
 
         # Wait until the target is initialized
