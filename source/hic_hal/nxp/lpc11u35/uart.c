@@ -40,6 +40,8 @@ uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
+static uint8_t flow_control_enabled = 0;
+
 static int32_t reset(void);
 
 int32_t uart_initialize(void)
@@ -147,7 +149,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
     }
 
-    if (config->FlowControl == UART_FLOW_CONTROL_RTS_CTS) {
+    if (flow_control_enabled) {
         LPC_IOCON->PIO0_17 |= 0x01;     // RTS
         LPC_IOCON->PIO0_7  |= 0x01;     // CTS
         // enable auto RTS and CTS
@@ -249,7 +251,12 @@ int32_t uart_get_configuration(UART_Configuration *config)
     }
 
     // get flow control
-    config->FlowControl = UART_FLOW_CONTROL_NONE;
+    if (flow_control_enabled) {
+    	config->FlowControl = UART_FLOW_CONTROL_RTS_CTS;
+    }
+    else {
+    	config->FlowControl = UART_FLOW_CONTROL_NONE;
+    }
     return 1;
 }
 
@@ -283,7 +290,7 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
 
 void uart_enable_flow_control(bool enabled)
 {
-    // Flow control not implemented for this platform
+    flow_control_enabled = (uint8_t)enabled;
 }
 
 void UART_IRQHandler(void)
