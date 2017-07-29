@@ -29,4 +29,4 @@ const char daplink_url_name[11] =   "HELP    HTM";
 __attribute__((aligned(4)))
 const char daplink_drive_name[11] = "MTCONNEC04S";
 __attribute__((aligned(4)))
-const char *const daplink_target_url = "https://developer.mbed.org/platforms/MtConnect04S/";
+const char *const daplink_target_url = "https://blog.mtmtech.com.tw/mtconnect04s/";
