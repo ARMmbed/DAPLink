@@ -301,3 +301,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/vbluno51.yaml    
+    lpc11u35_mtconnect04s_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtconnect04s.yaml

@@ -75,6 +75,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
     ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -142,6 +143,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2203,     'lpc11u35_wizwiki_w7500p_if',               None,               'WIZWIKI_W7500P'                        ),
     (   0x1237,     'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
     (   0xC006,     'lpc11u35_vbluno51_if',                     None,               'VNG-VBLUno51'                          ),    
+    (   0xC005,     'lpc11u35_mtconnect04s_if',                 None,               'MtM-MtConnect04S'                      ),
 ]
 
 # Add new HICs here
