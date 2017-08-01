@@ -107,6 +107,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
+    ('tmpm366_tmpm066_stk_if',                      None,       0x9000,     "bin"       ),
 }
 
 # All supported configurations
@@ -216,6 +217,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3110,     'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
     (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
+    (   0x7011,     'tmpm366_tmpm066_stk_if',                   'tmpm366_bl',       'AdBun-M066'                            ),
 ]
 
 # Add new HICs here
@@ -225,6 +227,7 @@ HIC_STRING_TO_ID = {
     'lpc11u35': 0x97969902,
     'sam3u2c': 0x97969903,
     'stm32f103xb': 0x97969904,
+    'tmpm366': 0x97969904,
     'lpc4322': 0x97969905,
 }
 

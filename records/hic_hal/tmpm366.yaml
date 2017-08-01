@@ -1,0 +1,23 @@
+common:
+    target:
+        - tmpm366fdfg
+    macros:
+        - INTERFACE_TMPM366
+        - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_TMPM366
+    includes:
+        - source/hic_hal/toshiba/tmpm366
+        - source/hic_hal/toshiba/tmpm366/driver/inc
+    sources:
+        hic_hal:
+            - source/hic_hal/toshiba/tmpm366
+            - source/hic_hal/toshiba/tmpm366/armcc
+            - source/hic_hal/toshiba/tmpm366/driver/src
+
+tool_specific:
+    make_armcc:
+        mcu:
+            - cortex-m3
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\toshiba\tmpm366"

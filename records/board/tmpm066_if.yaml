@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/tmpm066_stk.c
+        target:
+            - source/target/toshiba/tmpm066/target.c
+            - source/target/toshiba/target_reset.c
