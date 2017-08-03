@@ -218,7 +218,7 @@ class DaplinkBoard(object):
         self._assert = None
         self._check_fs_on_remount = False
         self._manage_assert = False
-        self._update_board_info()
+        self.update_board_info()
 
     def __str__(self):
         return "Name=%s Unique ID=%s" % (self.name, self.get_unique_id())
@@ -491,13 +491,13 @@ class DaplinkBoard(object):
         test_info.info("unmount took %s s" % (stop - start))
         start = time.time()
         while True:
-            if self._update_board_info(False):
+            if self.update_board_info(False):
                 if os.path.isdir(self.mount_point):
                     # Information returned by mbed-ls could be old.
                     # Only break from the loop if the second call to
                     # mbed-ls returns the same mount point.
                     tmp_mount = self.mount_point
-                    if self._update_board_info(False):
+                    if self.update_board_info(False):
                         if tmp_mount == self.mount_point:
                             break
             if elapsed > wait_time:
@@ -525,7 +525,7 @@ class DaplinkBoard(object):
                                       (self._assert.line, self._assert.file))
                 self.clear_assert()
 
-    def _update_board_info(self, exptn_on_fail=True):
+    def update_board_info(self, exptn_on_fail=True):
         """Update board info
 
         Update all board information variables that could

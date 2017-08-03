@@ -158,6 +158,8 @@ class MassStorageTester(object):
                 self._run(test_info)
             except IOError:
                 time.sleep(self.DELAY_BEFORE_RETRY_S)
+                # Update board info since a remount could have occurred
+                self.board.update_board_info()
                 continue
             self.parent_test.attach_subtest(test_info)
             break
