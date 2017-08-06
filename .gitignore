@@ -1,4 +1,5 @@
 _site
+.vscode/*
 
 # Windows image file caches
 Thumbs.db

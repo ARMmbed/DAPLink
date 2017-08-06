@@ -1,30 +1,11 @@
-Agency Jekyll theme
-====================
+## DAPLink interface firmware update microsite
 
-Agency theme based on [Agency bootstrap theme ](http://startbootstrap.com/templates/agency/)
+[![Build Status](https://travis-ci.org/sg-/DAPLink.svg?branch=gh-pages)](https://travis-ci.org/sg-/DAPLink)
 
-# How to use
-
-###Portfolio 
-
-Portfolio projects are in '/_posts'
-
-Images are in '/img/portfolio'
-
-###About
-
-Images are in '/img/about/'
-
-###Team
-
-Team members and info are in '_config.yml'
-
-Images are in '/img/team/'
-
-
-# Demo
-
-View this jekyll theme in action [here](https://y7kim.github.io/agency-jekyll-theme)
-
-=========
-For more details, read [documentation](http://jekyllrb.com/)
+#### Updating the microsite content
+1. Checkout the DAPLink `gh-pages` branch
+1. [Download the latest release package](https://github.com/ARMmbed/DAPLink/releases/latest)
+1. Extract files into `./firmware/`
+1. Inside `update.yml` modify the `fw_version` field
+1. Look for any new builds and add entries to `update.yml`
+1. Commit chamges and make a pull request against the `gh-pages` branch

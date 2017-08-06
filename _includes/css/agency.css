@@ -6,7 +6,7 @@
 
 body {
     overflow-x: hidden;
-    font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Calibri";
     color: #{{ site.data.template.color.secondary-dark }};
 }
 
@@ -266,11 +266,12 @@ fieldset[disabled] .btn-xl.active {
 }
 
 header {
-    text-align: center;
-    color: #fff;
+    text-align: left;
+    color: #3a8298;
+    height: 475px;
     background-attachment: scroll;
     background-image: url('{{ site.baseurl }}/img/header-bg.png');
-    background-position: center center;
+    background-position: center top;
     background-repeat: none;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -279,15 +280,14 @@ header {
 }
 
 header {
-    padding-top: 100px;
-    padding-bottom: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 header .intro-text .intro-lead-in {
     margin-bottom: 25px;
-    font-family: {{ site.data.template.font.secondary }};
+    font-family: {{ site.data.template.font.primary }};
     font-size: 22px;
-    font-style: italic;
     line-height: 22px;
 }
 
@@ -308,9 +308,8 @@ header .intro-text .intro-heading {
 
     header .intro-text .intro-lead-in {
         margin-bottom: 25px;
-        font-family: {{ site.data.template.font.secondary }};
+        font-family: {{ site.data.template.font.primary }};
         font-size: 40px;
-        font-style: italic;
         line-height: 40px;
     }
 
@@ -325,7 +324,7 @@ header .intro-text .intro-heading {
 }
 
 section {
-    padding: 100px 0;
+    padding: 10px 0;
 }
 
 section h2.section-heading {
@@ -345,7 +344,7 @@ section h3.section-subheading {
 
 @media(min-width:768px) {
     section {
-        padding: 150px 0;
+        padding: 15px 0;
     }
 }
 
