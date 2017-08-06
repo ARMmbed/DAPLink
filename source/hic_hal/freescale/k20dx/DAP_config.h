@@ -82,6 +82,20 @@ Provides definitions about:
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
 #define DAP_PACKET_COUNT        5              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 
+/// Indicate that UART Serial Wire Output (SWO) trace is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
+
+/// Maximum SWO UART Baudrate
+#define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
+
+/// Indicate that Manchester Serial Wire Output (SWO) trace is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available
+
+/// SWO Trace Buffer Size.
+#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
+
 
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
