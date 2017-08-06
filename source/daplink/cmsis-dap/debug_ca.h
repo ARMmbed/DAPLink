@@ -22,19 +22,11 @@
 #ifndef DEBUG_CA_H
 #define DEBUG_CA_H
 
+#include "DAP.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// Debug Port Register Addresses
-#define DP_IDCODE      0x00        // IDCODE Register (Read only)
-#define DP_ABORT       0x00        // Abort Register (Write only)
-#define DP_CTRL_STAT   0x04        // Control & Status
-#define DP_WCR         0x04        // Wire Control Register (SW Only)
-#define DP_DLCR        0x04        // Data Link Control Register (Renamed WCR)
-#define DP_SELECT      0x08        // Select Register (JTAG R/W & SW W)
-#define DP_RESEND      0x08        // Resend (SW Read Only)
-#define DP_RDBUFF      0x0C        // Read Buffer (Read Only)
 
 // Abort Register definitions
 #define DAPABORT       0x00000001  // DAP Abort
