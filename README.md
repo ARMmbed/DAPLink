@@ -1,6 +1,6 @@
 # DAPLink
 
-<a href="https://developer.mbed.org" tagret="_blank"><img align="right" width="256" src="docs/gfx/arm_mbed_lockup_horizontal.png" /></a>
+<a href="https://developer.mbed.org" tagret="_blank"><img align="right" width="256" src="doc/gfx/arm_mbed_lockup_horizontal.png" /></a>
 
 Welcome to the
 [ARM][arm]
@@ -46,8 +46,6 @@ There are different Host Tools / IDE / SDK that allows you to work with favorite
 * [Keil uVision IDE][keil] (Commercial).
 * [IAR Embedded Workbench IDE][iar] (Commercial).
 * GNU/BSD Free-and-Open-Source-Software utilities ([Eclipse][eclipse], [pyOCD][pyocd], [GNU ARM Embedded Toolchain][gnuarm], etc).
-
-For more details on how to use DAPLink please take a look at [The DAPLink User Guide.](docs/USERS-GUIDE.md)
 
 
 ## Architecture
@@ -111,7 +109,7 @@ If you find a bug, want to send a patch, have an improvement idea, please contac
 
 ## Documentation
 
-All important documentation, The DAPLink Handbook, is stored in the [doc][doc/] directory.
+All important documentation, The DAPLink Handbook, is stored in the [doc](doc/) directory of the source code tree repository.
 
 
 [arm]: https://www.arm.com "ARM Limited website"
