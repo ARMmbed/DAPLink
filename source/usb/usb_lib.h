@@ -40,8 +40,11 @@ extern const U8 usbd_max_packet0;
  *----------------------------------------------------------------------------*/
 extern const U8 usbd_hid_enable;
 extern const U8 usbd_hid_if_num;
+extern const U8 usbd_hid_spoof_if_num;
 extern const U8 usbd_hid_ep_intin;
 extern const U8 usbd_hid_ep_intout;
+extern const U8 usbd_hid_spoof_ep_intin;
+extern const U8 usbd_hid_spoof_ep_intout;
 extern const U16 usbd_hid_interval     [2];
 extern const U16 usbd_hid_maxpacketsize[2];
 extern const U8 usbd_hid_inreport_num;
