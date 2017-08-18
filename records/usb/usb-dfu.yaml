@@ -1,0 +1,6 @@
+common:
+    macros:
+        - DFU_INTERFACE
+    sources:
+        usb:
+            - source/usb/dfu

@@ -1,0 +1,8 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_stlink_v2_dongle
+    sources:
+        board:
+            - source/board/stm32f103xb_bl.c

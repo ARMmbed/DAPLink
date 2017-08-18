@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/rblnano2.c
+        source:
+            - source/target/nordic/nrf52832/target_64.c
+            - source/target/nordic/nrf52_target_reset.c

@@ -112,7 +112,7 @@ def main():
     # Print info on operation
     print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))
 
-    if start == 0x8000 or start == 0x88000:
+    if start == 0x8000 or start == 0x88000 or start == 0x8008000:
         pad_addr = start - 0x3000
         legacy_zero = start + 7 * 4
         legacy_size = 4 * 4

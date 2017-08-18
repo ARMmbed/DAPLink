@@ -1,6 +1,6 @@
 /**
- * @file    target_config.h
- * @brief   Target configuration for the lpc1549
+ * @file    target_16.c
+ * @brief   Target information for the nrf51
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,18 +19,19 @@
  * limitations under the License.
  */
 
-#ifndef TARGET_CONFIG_H
-#define TARGET_CONFIG_H
+#include "target_config.h"
 
-#define FLASH_SECTOR_SIZE           (1024)  /* 1024 is assuming that this value is in number of uint32_t's */
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
 
-#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (0x1000)
-
-#define MIN_FLASH_ADDRESS 0x00000
-#define MAX_FLASH_ADDRESS 0x10000
-
-#define MIN_RAM_ADDRESS 0x20000000
-#define MAX_RAM_ADDRESS 0x20030000
-
-
-#endif
+// target information
+const target_cfg_t target_device = {
+    .sector_size    = 4096,
+    .sector_cnt     = (KB(512) / 4096),
+    .flash_start    = 0,
+    .flash_end      = KB(512),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20010000,
+    .flash_algo     = (program_target_t *) &flash,
+    .erase_reset    = 1,
+};

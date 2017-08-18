@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_stlink_v2_dongle
+    sources:
+        board:
+            - source/board/stlink_v2_dongle.c
+        target:
+            - source/target/nxp/lpc1549/target.c
+            - source/target/nxp/target_reset.c
