@@ -183,11 +183,13 @@ void USBD_Connect(BOOL con)
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
+uint32_t reset_count = 0;
 void USBD_Reset(void)
 {
     uint32_t ep, EPMask;
     EPMask = ((1 << (USBD_EP_NUM + 1)) - 1);
+
+    reset_count++;
 
     /* Reset & Disable USB Endpoints                                            */
     for (ep = 0; ep <= USBD_EP_NUM; ep++) {

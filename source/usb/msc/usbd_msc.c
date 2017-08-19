@@ -112,12 +112,13 @@ void USBD_MSC_ClrStallEP(U32 EPNum)        /* clear EP halt status according sta
  *    Parameters:      None
  *    Return Value:    TRUE - Success, FALSE - Error
  */
-
+uint32_t msc_reset_count = 0;
 BOOL USBD_MSC_Reset(void)
 {
     USBD_EndPointStall = 0x00000000;         /* EP must stay stalled */
     USBD_MSC_CSW.dSignature = 0;             /* invalid signature */
     BulkStage = MSC_BS_RESET;
+    msc_reset_count++;
     return (__TRUE);
 }
 

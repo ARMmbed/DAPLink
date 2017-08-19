@@ -145,12 +145,14 @@ void USBD_Connect(BOOL con)
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
+uint32_t reset_count = 0;
 void USBD_Reset(void)
 {
     U32 i;
     U32 *ptr;
     addr = 3 * 64 + EP_BUF_BASE;
+
+    reset_count++;
 
     for (i = 2; i < (5 * 4); i++) {
         EPList[i] = (1UL << 30);            /* EPs disabled */

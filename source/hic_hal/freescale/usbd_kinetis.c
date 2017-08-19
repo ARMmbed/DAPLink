@@ -200,12 +200,14 @@ void USBD_Connect(uint32_t con)
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
+uint32_t reset_count = 0;
 void USBD_Reset(void)
 {
     uint32_t i;
 
     NVIC_DisableIRQ(USB0_IRQn);
+
+    reset_count++;
 
     for (i = 1; i < 16; i++) {
         USB0->ENDPOINT[i].ENDPT = 0x00;

@@ -182,12 +182,14 @@ void USBD_Connect(uint32_t con)
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
+uint32_t reset_count = 0;
 void USBD_Reset(void)
 {
     uint32_t i;
     uint8_t *ptr;
     cmpl_pnd = 0;
+
+    reset_count++;
 
     for (i = 1; i < USBD_EP_NUM + 1; i++) {
         ENDPTCTRL(i) &= ~((1UL << 7) | (1UL << 23));

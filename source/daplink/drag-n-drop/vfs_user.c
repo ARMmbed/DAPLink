@@ -67,6 +67,7 @@ static uint32_t get_file_size(vfs_read_cb_t read_func);
 
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
+static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
@@ -75,6 +76,10 @@ static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 static void erase_target(void);
 
+extern uint32_t reset_count;
+static uint32_t reset_count_local;
+extern uint32_t msc_reset_count;
+static uint32_t msc_reset_count_local;
 void vfs_user_build_filesystem()
 {
     uint32_t file_size;
@@ -87,6 +92,11 @@ void vfs_user_build_filesystem()
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
+    // DEBUG.TXT
+    reset_count_local = reset_count;
+    msc_reset_count_local = msc_reset_count;
+    file_size = get_file_size(read_file_debug_txt);
+    vfs_create_file("DEBUG   TXT", read_file_debug_txt, 0, file_size);
 
     // FAIL.TXT
     if (vfs_mngr_get_transfer_status() != ERROR_SUCCESS) {
@@ -305,6 +315,28 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "Remount count: ");
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
+    return pos;
+}
+
+// File callback to be used with vfs_add_file to return file contents
+static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
+{
+    uint32_t pos;
+    char *buf = (char *)data;
+
+    if (sector_offset != 0) {
+        return 0;
+    }
+
+    pos = 0;
+    pos += util_write_string(buf + pos, "USB Reset: ");
+    pos += util_write_uint32(buf + pos, reset_count_local);
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "MSC Reset: ");
+    pos += util_write_uint32(buf + pos, msc_reset_count_local);
+    pos += util_write_string(buf + pos, "\r\n");
+
     return pos;
 }
 
