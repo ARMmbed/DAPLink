@@ -82,6 +82,7 @@ extern int32_t uart_set_configuration(UART_Configuration *config);
 extern int32_t uart_get_configuration(UART_Configuration *config);
 extern int32_t uart_write_free(void);
 extern int32_t uart_write_data(uint8_t *data, uint16_t size);
+extern uint32_t uart_read_get_available(void);
 extern int32_t uart_read_data(uint8_t *data, uint16_t size);
 extern void uart_set_control_line_state(uint16_t ctrl_bmp);
 extern void uart_software_flow_control(void);

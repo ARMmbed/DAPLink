@@ -35,6 +35,7 @@
 #include "gpio.h"           // for gpio_get_sw_reset
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
+#include "uart.h"
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
@@ -318,6 +319,12 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     return pos;
 }
 
+#ifdef CDC_ENDPOINT
+extern uint32_t usb_tx_count;
+extern uint32_t usb_tx_buff_free;
+extern uint32_t usb_rx_count;
+#endif
+
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
@@ -336,6 +343,24 @@ static uint32_t read_file_debug_txt(uint32_t sector_offset, uint8_t *data, uint3
     pos += util_write_string(buf + pos, "MSC Reset: ");
     pos += util_write_uint32(buf + pos, msc_reset_count_local);
     pos += util_write_string(buf + pos, "\r\n");
+
+#ifdef CDC_ENDPOINT
+    pos += util_write_string(buf + pos, "tx: ");
+    pos += util_write_hex32(buf + pos, usb_tx_count);
+    pos += util_write_string(buf + pos, "\r\n");
+    
+    pos += util_write_string(buf + pos, "rx: ");
+    pos += util_write_hex32(buf + pos, usb_rx_count);
+    pos += util_write_string(buf + pos, "\r\n");
+    
+    pos += util_write_string(buf + pos, "tx buf free: ");
+    pos += util_write_hex32(buf + pos, usb_tx_buff_free);
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "tx backlog: ");
+    pos += util_write_hex32(buf + pos, uart_read_get_available());
+    pos += util_write_string(buf + pos, "\r\n");
+#endif
 
     return pos;
 }

@@ -394,6 +394,11 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
     return cnt;
 }
 
+uint32_t uart_read_get_available()
+{
+    return circ_buf_count_used(&read_buffer); 
+}
+
 void uart_enable_flow_control(bool enabled)
 {
     _FlowControlEnabled = (U8)enabled;

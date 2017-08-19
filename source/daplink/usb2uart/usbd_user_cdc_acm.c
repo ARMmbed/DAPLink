@@ -27,6 +27,10 @@
 
 UART_Configuration UART_Config;
 
+uint32_t usb_tx_count;
+uint32_t usb_rx_count;
+uint32_t usb_tx_buff_free;
+
 /** @brief  Vitual COM Port initialization
  *
  *  The function inititalizes the hardware resources of the port used as
@@ -151,6 +155,7 @@ void cdc_process_event()
     uint8_t data[64];
 
     len_data = USBD_CDC_ACM_DataFree();
+    usb_tx_buff_free = len_data;
 
     if (len_data > sizeof(data)) {
         len_data = sizeof(data);
@@ -162,6 +167,7 @@ void cdc_process_event()
 
     if (len_data) {
         if (USBD_CDC_ACM_DataSend(data , len_data)) {
+            usb_tx_count += len_data;
             main_blink_cdc_led(MAIN_LED_OFF);
         }
     }
@@ -174,6 +180,7 @@ void cdc_process_event()
 
     if (len_data) {
         len_data = USBD_CDC_ACM_DataRead(data, len_data);
+        usb_rx_count += len_data;
     }
 
     if (len_data) {
