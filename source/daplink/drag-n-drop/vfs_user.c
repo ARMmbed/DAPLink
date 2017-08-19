@@ -36,6 +36,8 @@
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
 #include "uart.h"
+#include "RTL.h"
+#include "rl_usb.h"
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
@@ -178,7 +180,14 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_overflow_detect(false);
             vfs_mngr_fs_remount();
+        } 
+#ifdef CDC_ENDPOINT
+        else if (!memcmp(filename, "SER_TESTACT", sizeof(vfs_filename_t))) {
+            const char msg[] = "<DAPLink serial test data>\r\n";
+            USBD_CDC_ACM_DataSend((uint8_t*)msg , sizeof(msg) - 1);
+            vfs_mngr_fs_remount();
         }
+#endif
     }
 
     if (VFS_FILE_DELETED == change) {
