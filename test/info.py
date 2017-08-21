@@ -78,6 +78,7 @@ PROJECT_RELEASE_INFO = {
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
     ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -126,6 +127,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        'ncs36510'                              ),
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          None                                    ), # TODO - set target to 'UBLOX_EVA_NINA' when mbed-os supports this
+    (   0x2410,     'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
