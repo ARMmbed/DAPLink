@@ -28,7 +28,7 @@ import itertools
 import mbed_lstools
 import info
 import test_daplink
-from test_info import TestInfoStub
+from test_info import TestInfoStub, TestInfo
 from intelhex import IntelHex
 from pyOCD.board import MbedBoard
 
@@ -409,6 +409,9 @@ class DaplinkBoard(object):
 
     def load_interface(self, filepath, parent_test):
         """Load an interface binary or hex"""
+        assert isinstance(filepath, str), "Invalid bootloader image!"
+        assert isinstance(parent_test, TestInfo), "Invalid parent test object!"
+
         test_info = parent_test.create_subtest('load_interface')
         self.set_mode(self.MODE_BL, test_info)
 
@@ -440,6 +443,9 @@ class DaplinkBoard(object):
 
     def load_bootloader(self, filepath, parent_test):
         """Load a bootloader binary or hex"""
+        assert isinstance(filepath, str), "Invalid bootloader image!"
+        assert isinstance(parent_test, TestInfo), "Invalid parent test object!"
+
         test_info = parent_test.create_subtest('load_bootloader')
         self.set_mode(self.MODE_IF, test_info)
 
