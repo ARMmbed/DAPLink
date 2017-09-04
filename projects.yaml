@@ -446,10 +446,22 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/stm32f334r8.yaml
+    stm32f103xb_stm32f401re_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f401re.yaml
     stm32f103xb_stm32f411re_if:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/stm32f411re.yaml
+    stm32f103xb_stm32f429zi_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f429zi.yaml
+    stm32f103xb_ublox_evk_odin_w2_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/ublox_evk_odin_w2.yaml
     stm32f103xb_stm32l476rg_if:
         - *module_if
         - *module_hic_stm32f103xb
