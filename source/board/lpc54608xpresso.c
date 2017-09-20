@@ -31,6 +31,6 @@ const char *board_id = "1056";
 __attribute__((aligned(4)))
 const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
 __attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "LPC54608";
+const vfs_filename_t daplink_drive_name =     "LPC546XX";
 __attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/products/microcontrollers-and-processors/arm-processors/lpc-cortex-m-mcus/lpc54000-series-cortex-m4-mcus/lpcxpresso-development-board-for-lpc5460x-mcus:OM13092?fsrch=1&sr=2&pageNum=1";
+const char *const daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso54608/";
