@@ -33,4 +33,4 @@ const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
 __attribute__((aligned(4)))
 const vfs_filename_t daplink_drive_name =     "LPC54114";
 __attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/products/microcontrollers-and-processors/arm-processors/lpc-mcus/software-tools/lpcxpresso-boards/lpcxpresso54114-board:OM13089";
+const char *const daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso54114/";
