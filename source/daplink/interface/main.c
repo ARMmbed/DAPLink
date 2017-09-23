@@ -192,7 +192,7 @@ void USBD_SignalHandler()
 void HardFault_Handler()
 {
     util_assert(0);
-    SystemReset();
+    //SystemReset();
 
     while (1); // Wait for reset
 }
