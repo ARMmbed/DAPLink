@@ -52,6 +52,11 @@ bool config_ram_get_hold_in_bl(void);
 bool config_ram_get_initial_hold_in_bl(void);
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source);
 
+uint32_t config_ram_get_bl_to_if(void);
+void config_ram_set_bl_to_if(uint32_t val);
+uint32_t config_ram_get_if_to_bl(void);
+void config_ram_set_if_to_bl(uint32_t val);
+
 // Private - should only be called from settings.c
 void config_rom_init(void);
 

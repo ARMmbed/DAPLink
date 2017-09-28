@@ -183,11 +183,13 @@ void vfs_user_disconnecting()
 {
     // Reset if programming was successful  //TODO - move to flash layer
     if (daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
+        config_ram_set_bl_to_if(config_ram_get_bl_to_if() + 1);
         SystemReset();
     }
 
     // If hold in bootloader has been set then reset after usb is disconnected
     if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
+        config_ram_set_if_to_bl(config_ram_get_if_to_bl() + 1);
         SystemReset();
     }
 
@@ -305,6 +307,15 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "Remount count: ");
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "BL to IF: ");
+    pos += util_write_uint32(buf + pos, config_ram_get_bl_to_if());
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "IF to BL: ");
+    pos += util_write_uint32(buf + pos, config_ram_get_if_to_bl());
+    pos += util_write_string(buf + pos, "\r\n");
+
     return pos;
 }
 

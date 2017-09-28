@@ -45,6 +45,8 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     char assert_file_name[64 + 1];
     uint16_t assert_line;
     uint8_t assert_source;
+    uint32_t reset_bl_to_if;
+    uint32_t reset_if_to_bl;
 
     // Add new members here
 
@@ -80,6 +82,8 @@ void config_init()
            sizeof(config_ram_copy.assert_file_name));
     config_ram.assert_line =  config_ram_copy.assert_line;
     config_ram.assert_source =  config_ram_copy.assert_source;
+    config_ram.reset_bl_to_if = config_ram_copy.reset_bl_to_if;
+    config_ram.reset_if_to_bl = config_ram_copy.reset_if_to_bl;
     config_rom_init();
 }
 
@@ -133,6 +137,26 @@ bool config_ram_get_hold_in_bl()
 bool config_ram_get_initial_hold_in_bl()
 {
     return config_ram_copy.hold_in_bl;
+}
+
+uint32_t config_ram_get_bl_to_if()
+{
+    return config_ram.reset_bl_to_if;
+}
+
+void config_ram_set_bl_to_if(uint32_t val)
+{
+    config_ram.reset_bl_to_if = val;
+}
+
+uint32_t config_ram_get_if_to_bl()
+{
+    return config_ram.reset_if_to_bl;
+}
+
+void config_ram_set_if_to_bl(uint32_t val)
+{
+    config_ram.reset_if_to_bl = val;
 }
 
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source)
