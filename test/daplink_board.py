@@ -525,6 +525,13 @@ class DaplinkBoard(object):
                                       (self._assert.line, self._assert.file))
                 self.clear_assert()
 
+
+        test_info.info("remount count %s" % self._remount_count)
+        for key in ("bl_to_if", "if_to_bl"):
+            if key in self.details_txt:
+                test_info.info("  %s: %s" % (key, self.details_txt[key]))
+
+
     def update_board_info(self, exptn_on_fail=True):
         """Update board info
 
