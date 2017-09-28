@@ -208,7 +208,7 @@ void os_error(U32 err_code)
             break;
     }
 
-    SystemReset();
+    //SystemReset();
 
     for (;;); // Wait for reset
 }
