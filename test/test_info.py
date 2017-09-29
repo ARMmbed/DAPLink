@@ -20,6 +20,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 import six
 import sys
+import time
 
 
 class TestInfo(object):
@@ -166,7 +167,7 @@ class TestInfo(object):
 
     @staticmethod
     def _print_msg(msg):
-        print(msg)
+        print(get_timestamp_tag() + msg)
 
 
 class TestInfoStub(TestInfo):
@@ -180,4 +181,7 @@ class TestInfoStub(TestInfo):
 
     @staticmethod
     def _print_msg(msg):
-        print("%s" % (msg,))
+        print(get_timestamp_tag() + "%s"%(msg,))
+
+def get_timestamp_tag():
+    return "[{:0<17f}] ".format(time.time())
