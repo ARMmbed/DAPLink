@@ -531,6 +531,10 @@ class DaplinkBoard(object):
             if key in self.details_txt:
                 test_info.info("  %s: %s" % (key, self.details_txt[key]))
 
+        for key in ("bl_boots", "if_boots"):
+            if key in self.details_txt:
+                test_info.info("  %s: %s" % (key, self.details_txt[key]))
+
 
     def update_board_info(self, exptn_on_fail=True):
         """Update board info
