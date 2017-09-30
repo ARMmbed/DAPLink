@@ -57,6 +57,11 @@ void config_ram_set_bl_to_if(uint32_t val);
 uint32_t config_ram_get_if_to_bl(void);
 void config_ram_set_if_to_bl(uint32_t val);
 
+uint32_t config_ram_get_boot_bl_count(void);
+void config_ram_set_boot_bl_count(uint32_t count);
+uint32_t config_ram_get_boot_if_count(void);
+void config_ram_set_boot_if_count(uint32_t count);
+
 // Private - should only be called from settings.c
 void config_rom_init(void);
 

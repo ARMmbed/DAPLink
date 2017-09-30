@@ -316,6 +316,16 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_uint32(buf + pos, config_ram_get_if_to_bl());
     pos += util_write_string(buf + pos, "\r\n");
 
+    // Number of boot count in bootloader and interface mode.
+    // This may help to track unwanted reboots...
+    pos += util_write_string(buf + pos, "BL boots: ");
+    pos += util_write_uint32(buf + pos, config_ram_get_boot_bl_count());
+    pos += util_write_string(buf + pos, "\r\n");
+
+    pos += util_write_string(buf + pos, "IF boots: ");
+    pos += util_write_uint32(buf + pos, config_ram_get_boot_if_count());
+    pos += util_write_string(buf + pos, "\r\n");
+
     return pos;
 }
 

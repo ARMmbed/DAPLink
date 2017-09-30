@@ -47,6 +47,8 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     uint8_t assert_source;
     uint32_t reset_bl_to_if;
     uint32_t reset_if_to_bl;
+    uint32_t boot_bl_count;
+    uint32_t boot_if_count;
 
     // Add new members here
 
@@ -84,6 +86,8 @@ void config_init()
     config_ram.assert_source =  config_ram_copy.assert_source;
     config_ram.reset_bl_to_if = config_ram_copy.reset_bl_to_if;
     config_ram.reset_if_to_bl = config_ram_copy.reset_if_to_bl;
+    config_ram.boot_bl_count = config_ram_copy.boot_bl_count;
+    config_ram.boot_if_count = config_ram_copy.boot_if_count;
     config_rom_init();
 }
 
@@ -157,6 +161,26 @@ uint32_t config_ram_get_if_to_bl()
 void config_ram_set_if_to_bl(uint32_t val)
 {
     config_ram.reset_if_to_bl = val;
+}
+
+uint32_t config_ram_get_boot_bl_count(void)
+{
+	return config_ram.boot_bl_count;
+}
+
+void config_ram_set_boot_bl_count(uint32_t count)
+{
+	config_ram.boot_bl_count = count;
+}
+
+uint32_t config_ram_get_boot_if_count(void)
+{
+	return config_ram.boot_if_count;
+}
+
+void config_ram_set_boot_if_count(uint32_t count)
+{
+	config_ram.boot_if_count = count;
 }
 
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source)

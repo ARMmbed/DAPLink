@@ -220,6 +220,7 @@ __task void main_task(void)
     main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
     // Initialize settings - required for asserts to work
     config_init();
+    config_ram_set_boot_if_count(config_ram_get_boot_if_count()+1);
     // Update bootloader if it is out of date
     bootloader_check_and_update();
     // Get a reference to this task
