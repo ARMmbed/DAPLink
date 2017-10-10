@@ -191,7 +191,8 @@ void uart_enable_flow_control(bool enabled)
     // Flow control not implemented for this platform
 }
 
-void UART1_RX_TX_IRQHandler(void)
+// This function renamed so it won't be linked in
+void _UART1_RX_TX_IRQHandler(void)
 {
     uint32_t s1;
     volatile uint8_t errorData;

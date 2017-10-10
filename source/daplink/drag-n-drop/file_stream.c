@@ -30,6 +30,8 @@
 #include "error.h"
 #include "RTL.h"
 #include "compiler.h"
+#include "flash_manager.h"
+#include "target_config.h"
 
 typedef enum {
     STREAM_STATE_CLOSED,
@@ -51,8 +53,6 @@ typedef struct {
 } stream_t;
 
 typedef struct {
-    uint8_t vector_buf[FLASH_DECODER_MIN_SIZE];
-    uint8_t buf_pos;
     uint32_t flash_addr;
 } bin_state_t;
 
@@ -71,14 +71,8 @@ static error_t open_bin(void *state);
 static error_t write_bin(void *state, const uint8_t *data, uint32_t size);
 static error_t close_bin(void *state);
 
-static bool detect_hex(const uint8_t *data, uint32_t size);
-static error_t open_hex(void *state);
-static error_t write_hex(void *state, const uint8_t *data, uint32_t size);
-static error_t close_hex(void *state);
-
 stream_t stream[] = {
     {detect_bin, open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
-    {detect_hex, open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
 };
 COMPILER_ASSERT(ELEMENTS_IN_ARRAY(stream) == STREAM_TYPE_COUNT);
 // STREAM_TYPE_NONE must not be included in count
@@ -118,8 +112,6 @@ stream_type_t stream_type_from_name(const vfs_filename_t filename)
     // 8.3 file names must be in upper case
     if (0 == strncmp("BIN", &filename[8], 3)) {
         return STREAM_TYPE_BIN;
-    } else if (0 == strncmp("HEX", &filename[8], 3)) {
-        return STREAM_TYPE_HEX;
     } else {
         return STREAM_TYPE_NONE;
     }
@@ -212,9 +204,9 @@ static bool detect_bin(const uint8_t *data, uint32_t size)
 
 static error_t open_bin(void *state)
 {
-    error_t status;
-    status = flash_decoder_open();
-    return status;
+    bin_state_t *bin_state = (bin_state_t *)state;
+    bin_state->flash_addr = target_device.flash_start;
+    return flash_manager_init(flash_intf_iap_protected);
 }
 
 static error_t write_bin(void *state, const uint8_t *data, uint32_t size)
@@ -222,52 +214,8 @@ static error_t write_bin(void *state, const uint8_t *data, uint32_t size)
     error_t status;
     bin_state_t *bin_state = (bin_state_t *)state;
 
-    if (bin_state->buf_pos < FLASH_DECODER_MIN_SIZE) {
-        flash_decoder_type_t flash_type;
-        uint32_t size_left;
-        uint32_t copy_size;
-        uint32_t start_addr;
-        const flash_intf_t *flash_intf;
-        // Buffer Data
-        size_left = FLASH_DECODER_MIN_SIZE - bin_state->buf_pos;
-        copy_size = MIN(size_left, size);
-        memcpy(bin_state->vector_buf + bin_state->buf_pos, data, copy_size);
-        bin_state->buf_pos += copy_size;
-
-        if (bin_state->buf_pos < FLASH_DECODER_MIN_SIZE) {
-            // Not enough data to determine type
-            return ERROR_SUCCESS;
-        }
-
-        data += copy_size;
-        size -= copy_size;
-        // Determine type
-        flash_type = flash_decoder_detect_type(bin_state->vector_buf, bin_state->buf_pos, 0, false);
-
-        if (FLASH_DECODER_TYPE_UNKNOWN == flash_type) {
-            return ERROR_FD_UNSUPPORTED_UPDATE;
-        }
-
-        // Determine flash addresss
-        status = flash_decoder_get_flash(flash_type, 0, false, &start_addr, &flash_intf);
-
-        if (ERROR_SUCCESS != status) {
-            return status;
-        }
-
-        bin_state->flash_addr = start_addr;
-        // Pass on data to the decoder
-        status = flash_decoder_write(bin_state->flash_addr, bin_state->vector_buf, bin_state->buf_pos);
-
-        if (ERROR_SUCCESS != status) {
-            return status;
-        }
-
-        bin_state->flash_addr += bin_state->buf_pos;
-    }
-
     // Write data
-    status = flash_decoder_write(bin_state->flash_addr, data, size);
+    status = flash_manager_data(bin_state->flash_addr, data, size);
 
     if (ERROR_SUCCESS != status) {
         return status;
@@ -282,86 +230,6 @@ static error_t write_bin(void *state, const uint8_t *data, uint32_t size)
 static error_t close_bin(void *state)
 {
     error_t status;
-    status = flash_decoder_close();
-    return status;
-}
-
-/* Hex file processing */
-
-static bool detect_hex(const uint8_t *data, uint32_t size)
-{
-    return 1 == validate_hexfile(data);
-}
-
-static error_t open_hex(void *state)
-{
-    error_t status;
-    hex_state_t *hex_state = (hex_state_t *)state;
-    memset(hex_state, 0, sizeof(*hex_state));
-    reset_hex_parser();
-    hex_state->parsing_complete = false;
-    status = flash_decoder_open();
-    return status;
-}
-
-static error_t write_hex(void *state, const uint8_t *data, uint32_t size)
-{
-    error_t status = ERROR_SUCCESS;
-    hex_state_t *hex_state = (hex_state_t *)state;
-    hexfile_parse_status_t parse_status = HEX_PARSE_UNINIT;
-    uint32_t bin_start_address = 0; // Decoded from the hex file, the binary buffer data starts at this address
-    uint32_t bin_buf_written = 0;   // The amount of data in the binary buffer starting at address above
-    uint32_t block_amt_parsed = 0;  // amount of data parsed in the block on the last call
-
-    while (1) {
-        // try to decode a block of hex data into bin data
-        parse_status = parse_hex_blob(data, size, &block_amt_parsed, hex_state->bin_buffer, sizeof(hex_state->bin_buffer), &bin_start_address, &bin_buf_written);
-
-        // the entire block of hex was decoded. This is a simple state
-        if (HEX_PARSE_OK == parse_status) {
-            if (bin_buf_written > 0) {
-                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
-            }
-
-            break;
-        } else if (HEX_PARSE_UNALIGNED == parse_status) {
-            if (bin_buf_written > 0) {
-                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
-
-                if (ERROR_SUCCESS != status) {
-                    break;
-                }
-            }
-
-            // incrememntal offset to finish the block
-            size -= block_amt_parsed;
-            data += block_amt_parsed;
-        } else if (HEX_PARSE_EOF == parse_status) {
-            if (bin_buf_written > 0) {
-                status = flash_decoder_write(bin_start_address, hex_state->bin_buffer, bin_buf_written);
-            }
-
-            if (ERROR_SUCCESS == status) {
-                status = ERROR_SUCCESS_DONE;
-            }
-
-            break;
-        } else if (HEX_PARSE_CKSUM_FAIL == parse_status) {
-            status = ERROR_HEX_CKSUM;
-            break;
-        } else if ((HEX_PARSE_UNINIT == parse_status) || (HEX_PARSE_FAILURE == parse_status)) {
-            util_assert(HEX_PARSE_UNINIT != parse_status);
-            status = ERROR_HEX_PARSER;
-            break;
-        }
-    }
-
-    return status;
-}
-
-static error_t close_hex(void *state)
-{
-    error_t status;
-    status = flash_decoder_close();
+    status = flash_manager_uninit();
     return status;
 }

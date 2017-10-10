@@ -90,33 +90,7 @@ void config_ram_set_hold_in_bl(bool hold)
 
 void config_ram_set_assert(const char *file, uint16_t line)
 {
-    // Initialize
-    uint32_t file_name_size = strlen(file) + 1;
-    const char *start;
-    uint32_t assert_buf_size = sizeof(config_ram.assert_file_name);
-    uint32_t copy_size;
-    memset(config_ram.assert_file_name, 0, sizeof(config_ram.assert_file_name));
 
-    // Determine size to copy
-    if (file_name_size <= assert_buf_size) {
-        start = file;
-        copy_size = file_name_size;
-    } else {
-        start = &file[file_name_size - assert_buf_size];
-        copy_size = assert_buf_size;
-    }
-
-    // Write to ram
-    memcpy(config_ram.assert_file_name, start, copy_size);
-    config_ram.assert_line = line;
-
-    if (daplink_is_bootloader()) {
-        config_ram.assert_source = ASSERT_SOURCE_BL;
-    } else if (daplink_is_interface()) {
-        config_ram.assert_source = ASSERT_SOURCE_APP;
-    } else {
-        config_ram.assert_source = ASSERT_SOURCE_NONE;
-    }
 }
 
 void config_ram_clear_assert()
@@ -137,49 +111,5 @@ bool config_ram_get_initial_hold_in_bl()
 
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source)
 {
-    // Initialize
-    const char *start;
-    uint32_t copy_size;
-    uint32_t assert_size = strlen(config_ram.assert_file_name) + 1;
-
-    if (0 != buf) {
-        memset(buf, 0, buf_size);
-    }
-
-    if (0 != line) {
-        *line = 0;
-    }
-
-    if (0 != source) {
-        *source = ASSERT_SOURCE_NONE;
-    }
-
-    // If the string is empty then there is no assert
-    if (0 == config_ram.assert_file_name[0]) {
-        return false;
-    }
-
-    // Determine size to copy
-    if (assert_size <= buf_size) {
-        start = config_ram.assert_file_name;
-        copy_size = assert_size;
-    } else {
-        start = &config_ram.assert_file_name[assert_size - buf_size];
-        copy_size = buf_size;
-    }
-
-    // Copy data over
-    if (0 != buf) {
-        *line = config_ram.assert_line;
-    }
-
-    if (0 != line) {
-        memcpy(buf, start, copy_size);
-    }
-
-    if (0 != source) {
-        *source = (assert_source_t)config_ram.assert_source;
-    }
-
-    return true;
+    return false;
 }
