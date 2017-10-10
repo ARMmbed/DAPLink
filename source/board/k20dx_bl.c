@@ -26,8 +26,8 @@
 const char *board_id   = "0000";
 
 // Warning - changing the interface start will break backwards compatibility
-COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
-COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(95));
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(20));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(107));
 
 // k20dx128 target information
 target_cfg_t target_device = {

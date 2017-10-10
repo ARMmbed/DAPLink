@@ -26,8 +26,8 @@
 const char *board_id = "0000";
 
 // Warning - changing the interface start will break backwards compatibility
-COMPILER_ASSERT(DAPLINK_ROM_IF_START == (0x00080000 + KB(32)));
-COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == (KB(124) - KB(32)));
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == (0x00080000 + KB(20)));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == (KB(124) - KB(20)));
 
 // atsam3u2c target information
 target_cfg_t target_device = {

@@ -24,7 +24,6 @@ import itertools
 import binascii
 import struct
 import intelhex
-import offset_update
 from os.path import dirname, join
 
 VECTOR_FMT = "<7I"
@@ -51,8 +50,7 @@ def main():
     output_file_txt = args.output + ".txt"
     output_file_c = args.output + ".c"
     output_file_c_generic = join(dirname(args.output), "bootloader_image.c")
-    output_file_legacy = args.output + "_legacy_0x8000.bin"
-    output_file_legacy_5000 = args.output + "_legacy_0x5000.bin"
+    output_file_legacy = args.output + "_legacy_0x5000.bin"
     output_file_legacy_txt = args.output + "_legacy.txt"
 
     # Read in hex file
@@ -132,8 +130,7 @@ def main():
     # Print info on operation
     print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))
 
-    if start == 0x8000 or start == 0x88000:
-        pad_addr = start - 0x3000
+    if start == 0x5000 or start == 0x85000:
         legacy_zero = start + 7 * 4
         legacy_size = 4 * 4
         legacy_hex_file = intelhex.IntelHex(new_hex_file)
@@ -149,9 +146,7 @@ def main():
         legacy_hex_file.tofile(output_file_legacy, 'bin')
         with open(output_file_legacy_txt, 'wb') as file_handle:
             file_handle.write("0x%08x\r\n" % crc32)
-        offset_update.create_padded_image(output_file_legacy,
-                                          output_file_legacy_5000,
-                                          start, pad_addr, 0x40)
+
 
 if __name__ == '__main__':
     main()
