@@ -20,8 +20,14 @@
  */
 
 #include "target_config.h"
+#include "daplink_addr.h"
+#include "compiler.h"
 
 const char *board_id   = "0000";
+
+// Warning - changing the interface start will break backwards compatibility
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x1A010000);
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == (0x1A030000 - 0x1A010000));
 
 // lpc4322 target information
 target_cfg_t target_device = {
@@ -30,8 +36,8 @@ target_cfg_t target_device = {
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
     .sector_cnt     = 2,
-    .flash_start    = 0x1A010000,
-    .flash_end      = 0x1A030000,
+    .flash_start    = DAPLINK_ROM_IF_START,
+    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
     .ram_start      = 0x10000000,
     .ram_end        = 0x10008000,
     /* .flash_algo not needed for bootloader */
