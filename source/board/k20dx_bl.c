@@ -27,7 +27,6 @@ const char *board_id   = "0000";
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
-COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(95));
 
 // k20dx128 target information
 target_cfg_t target_device = {
@@ -35,9 +34,9 @@ target_cfg_t target_device = {
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (DAPLINK_ROM_IF_SIZE / 1024),
+    .sector_cnt     = (KB(95) / 1024),
     .flash_start    = DAPLINK_ROM_IF_START,
-    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
+    .flash_end      = DAPLINK_ROM_IF_START + KB(95),
     .ram_start      = 0x1fffe000,
     .ram_end        = 0x20002000,
     /* .flash_algo not needed for bootloader */
