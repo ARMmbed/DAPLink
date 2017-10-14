@@ -123,3 +123,7 @@ void target_forward_reset(bool assert_reset)
 {
     // Do nothing - reset is forwarded in gpio_get_sw_reset
 }
+
+void gpio_set_board_power(bool powerEnabled)
+{
+}
