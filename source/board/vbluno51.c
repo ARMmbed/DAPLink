@@ -36,5 +36,5 @@ const char *const daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/"
 
 void prerun_board_config()
 {
-    uart_enable_flow_control(true);
+    uart_enable_flow_control(false);
 }
