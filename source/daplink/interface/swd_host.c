@@ -51,10 +51,11 @@
 #define MAX_SWD_RETRY 100//10
 #define MAX_TIMEOUT   1000000  // Timeout for syscalls on target
 
-#define SOFT_RESET  SYSRESETREQ
-
 #define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB AIRCR: PRIGROUP Position */
 #define SCB_AIRCR_PRIGROUP_Msk             (7UL << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB AIRCR: PRIGROUP Mask */
+
+#if !defined(SOFT_RESET)
+#define SOFT_RESET  SYSRESETREQ
 
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
 // DAP operations as they are controlled by the remote debugger.
@@ -66,6 +67,8 @@
 // For some Cortex-M devices, VECTRESET is the only way to reset the core.
 // VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
 #define SOFT_RESET  VECTRESET
+#endif
+
 #endif
 
 typedef struct {
@@ -848,7 +851,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
     uint32_t val;
 
-    /* Calling swd_init prior to enterring RUN state causes operations to fail. */
+    /* Calling swd_init prior to entering RUN state causes operations to fail. */
     if (state != RUN) {
         swd_init();
     }

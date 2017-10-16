@@ -1,0 +1,9 @@
+common:
+    macros:
+        - SOFT_RESET=VECTRESET
+    sources:
+        board:
+            - source/board/mimxrt1050_evk.c
+        target:
+            - source/target/freescale/mimxrt1050_hyper_flash/target.c
+            - source/target/freescale/target_reset_mimxrt.c
