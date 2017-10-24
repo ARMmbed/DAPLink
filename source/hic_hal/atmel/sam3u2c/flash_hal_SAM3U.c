@@ -21,6 +21,7 @@
 
 //#include "flash_hal.h"        // FlashOS Structures       //TODO - uncomment
 #include "target_config.h"    // target_device
+#include "cortex_m.h"
 
 #define KEY_VALUE             (0x5A)
 #define FCMD_WP               (0x1)           // "Write page" command
@@ -146,10 +147,12 @@ uint32_t EraseChip(void)
     // Erase complete chip by erasing sector-by-sector
     Addr = target_device.flash_start;
 
+    cortex_int_state_t state = cortex_int_get_and_disable();
     do {
         _WritePage(Addr, (volatile uint32_t *)0, 1);
         Addr += (1 << 8);
     } while (Addr < target_device.flash_end);
+    cortex_int_restore(state);
 
     return (0);  // O.K.
 }
@@ -166,10 +169,12 @@ uint32_t EraseSector(uint32_t adr)
     //
     NumPagesLeft = 0x400 >> 8;                                         // SAM3U has 256 byte pages, DAPLink BTL/FW assumes 1 KB sectors
 
+    cortex_int_state_t state = cortex_int_get_and_disable();
     do {
         _WritePage(adr, (volatile uint32_t *)0, 1);
         adr += (1 << 8);
     } while (--NumPagesLeft);
+    cortex_int_restore(state);
 
     return (0);  // O.K.
 }
@@ -194,11 +199,13 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
         return 1;
     }
 
+    cortex_int_state_t state = cortex_int_get_and_disable();
     do {
         _WritePage(adr, (volatile uint32_t *)temp_buf, 0);
         adr += (1 << 8);
         temp_buf += (1 << 8);
     } while (--NumPagesLeft);
+    cortex_int_restore(state);
 
     return (0);                                  // Finished without Errors
 }
