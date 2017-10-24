@@ -22,11 +22,13 @@
 #include "FlashOS.h"        // FlashOS Structures
 #include "fsl_flash.h"
 #include "string.h"
+#include "cortex_m.h"
 
 flash_config_t g_flash; //!< Storage for flash driver.
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
+    cortex_int_state_t state = cortex_int_get_and_disable();
 #if defined (WDOG)
     /* Write 0xC520 to the unlock register */
     WDOG->UNLOCK = 0xC520;
@@ -37,6 +39,7 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 #else
     SIM->COPC = 0x00u;
 #endif
+    cortex_int_restore(state);
 
     return (FLASH_Init(&g_flash) != kStatus_Success);
 }
@@ -97,11 +100,13 @@ uint32_t UnInit(uint32_t fnc)
  */
 uint32_t EraseChip(void)
 {
+    cortex_int_state_t state = cortex_int_get_and_disable();
     int status = FLASH_EraseAll(&g_flash, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
     {
         status = FLASH_VerifyEraseAll(&g_flash, kFLASH_marginValueNormal);
     }
+    cortex_int_restore(state);
     return status;
 }
 
@@ -112,11 +117,13 @@ uint32_t EraseChip(void)
  */
 uint32_t EraseSector(uint32_t adr)
 {
+    cortex_int_state_t state = cortex_int_get_and_disable();
     int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
     {
         status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_marginValueNormal);
     }
+    cortex_int_restore(state);
     return status;
 }
 
@@ -129,6 +136,7 @@ uint32_t EraseSector(uint32_t adr)
  */
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
+    cortex_int_state_t state = cortex_int_get_and_disable();
     int status = FLASH_Program(&g_flash, adr, buf, sz);
     if (status == kStatus_Success)
     {
@@ -137,6 +145,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
                               buf, kFLASH_marginValueUser,
                               NULL, NULL);
     }
+    cortex_int_restore(state);
     return status;
 }
 
