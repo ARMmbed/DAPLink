@@ -527,7 +527,7 @@ class DaplinkBoard(object):
 
 
         test_info.info("remount count %s" % self._remount_count)
-        for key in ("bl_to_if", "if_to_bl"):
+        for key in ("bl_to_if", "if_to_bl", "rcr"):
             if key in self.details_txt:
                 test_info.info("  %s: %s" % (key, self.details_txt[key]))
 

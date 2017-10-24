@@ -251,24 +251,6 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "Daplink Mode: ");
     pos += util_write_string(buf + pos, mode_str);
     pos += util_write_string(buf + pos, "\r\n");
-    // Current build's version
-    pos += util_write_string(buf + pos, mode_str);
-    pos += util_write_string(buf + pos, " Version: ");
-    pos += util_write_string(buf + pos, info_get_version());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Other builds version (bl or if)
-    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
-        pos += util_write_string(buf + pos, "Bootloader Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    if (!daplink_is_interface() && info_get_interface_present()) {
-        pos += util_write_string(buf + pos, "Interface Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
 
     // GIT sha
     pos += util_write_string(buf + pos, "Git SHA: ");
@@ -325,6 +307,13 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "IF boots: ");
     pos += util_write_uint32(buf + pos, config_ram_get_boot_if_count());
     pos += util_write_string(buf + pos, "\r\n");
+
+    // HACK - only include this code if the defines are present
+    #if defined(RCM_SRS0_WAKEUP_MASK) && defined(RCM_SRS1_JTAG_MASK)
+    pos += util_write_string(buf + pos, "RCR: ");
+    pos += util_write_hex16(buf + pos, (RCM->SRS1 << 8) | (RCM->SRS0 << 0));
+    pos += util_write_string(buf + pos, "\r\n");
+    #endif
 
     return pos;
 }
