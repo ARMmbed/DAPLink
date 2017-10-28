@@ -24,6 +24,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "usb_for_lib.h"
+#include "swd_host.h"
 
 
 /*
@@ -93,9 +94,18 @@ __weak BOOL USBD_EndPoint0_Setup_CDC_ReqToIF(void)
                 break;
 
             case CDC_SEND_BREAK:
+								if (!dap_lock_operation(DAP_LOCK_OPERATION_CDC_BREAK))
+								{
+									util_assert(0);
+									return(__FALSE);
+								}
                 if (USBD_CDC_ACM_SendBreak(USBD_SetupPacket.wValue)) {
                     USBD_StatusInStage();                              /* send Acknowledge */
-                    return (__TRUE);
+										if (!dap_unlock_operation(DAP_LOCK_OPERATION_CDC_BREAK)) {
+											util_assert(0);
+											return(__FALSE);
+										}
+										return (__TRUE);
                 }
 
                 break;

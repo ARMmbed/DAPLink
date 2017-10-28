@@ -32,6 +32,7 @@ typedef enum {
     ERROR_SUCCESS = 0,
     ERROR_FAILURE,
     ERROR_INTERNAL,
+		ERROR_BUSY,
 
     /* VFS user errors */
     ERROR_ERROR_DURING_TRANSFER,

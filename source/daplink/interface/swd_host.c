@@ -107,6 +107,12 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
 
 uint8_t swd_init(void)
 {
+	// Lock SWD Port for current TID, if possible.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
     //TODO - DAP_Setup puts GPIO pins in a hi-z state which can
     //       cause problems on re-init.  This needs to be investigated
     //       and fixed.
@@ -117,13 +123,26 @@ uint8_t swd_init(void)
 
 uint8_t swd_off(void)
 {
-    PORT_OFF();
+	// Unlock SWD Port by current TID, if possible.
+    if (!dap_lock_verify_tid_self())
+    {
+		util_assert(0);
+		return 0;
+    }
+	PORT_OFF();
     return 1;
 }
 
 // Read debug port register.
 uint8_t swd_read_dp(uint8_t adr, uint32_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t tmp_in;
     uint8_t tmp_out[4];
     uint8_t ack;
@@ -145,6 +164,13 @@ uint8_t swd_read_dp(uint8_t adr, uint32_t *val)
 // Write debug port register
 uint8_t swd_write_dp(uint8_t adr, uint32_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t req;
     uint8_t data[4];
     uint8_t ack;
@@ -171,6 +197,13 @@ uint8_t swd_write_dp(uint8_t adr, uint32_t val)
 // Read access port register.
 uint8_t swd_read_ap(uint32_t adr, uint32_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in, ack;
     uint8_t tmp_out[4];
     uint32_t tmp;
@@ -200,6 +233,13 @@ uint8_t swd_read_ap(uint32_t adr, uint32_t *val)
 // Write access port register
 uint8_t swd_write_ap(uint32_t adr, uint32_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t data[4];
     uint8_t req, ack;
     uint32_t apsel = adr & 0xff000000;
@@ -239,6 +279,13 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val)
 // size is in bytes.
 static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[4], req;
     uint32_t size_in_words;
     uint32_t i, ack;
@@ -283,6 +330,13 @@ static uint8_t swd_write_block(uint32_t address, uint8_t *data, uint32_t size)
 // size is in bytes.
 static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[4], req, ack;
     uint32_t size_in_words;
     uint32_t i;
@@ -330,6 +384,13 @@ static uint8_t swd_read_block(uint32_t address, uint8_t *data, uint32_t size)
 // Read target memory.
 static uint8_t swd_read_data(uint32_t addr, uint32_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[4];
     uint8_t tmp_out[4];
     uint8_t req, ack;
@@ -367,6 +428,13 @@ static uint8_t swd_read_data(uint32_t addr, uint32_t *val)
 // Write target memory.
 static uint8_t swd_write_data(uint32_t address, uint32_t data)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[4];
     uint8_t req, ack;
     // put addr in TAR register
@@ -394,6 +462,13 @@ static uint8_t swd_write_data(uint32_t address, uint32_t data)
 // Read 32-bit word from target memory.
 static uint8_t swd_read_word(uint32_t addr, uint32_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -408,6 +483,13 @@ static uint8_t swd_read_word(uint32_t addr, uint32_t *val)
 // Write 32-bit word to target memory.
 static uint8_t swd_write_word(uint32_t addr, uint32_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -422,6 +504,13 @@ static uint8_t swd_write_word(uint32_t addr, uint32_t val)
 // Read 8-bit byte from target memory.
 static uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t tmp;
 
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE8)) {
@@ -439,6 +528,13 @@ static uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
 // Write 8-bit byte to target memory.
 static uint8_t swd_write_byte(uint32_t addr, uint8_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t tmp;
 
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE8)) {
@@ -458,6 +554,13 @@ static uint8_t swd_write_byte(uint32_t addr, uint8_t val)
 // size is in bytes.
 uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t n;
 
     // Read bytes until word aligned
@@ -507,6 +610,13 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size)
 // size is in bytes.
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t n = 0;
 
     // Write bytes until word aligned
@@ -555,6 +665,13 @@ uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size)
 // Execute system call.
 static uint8_t swd_write_debug_state(DEBUG_STATE *state)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t i, status;
 
     if (!swd_write_dp(DP_SELECT, 0)) {
@@ -603,6 +720,13 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state)
 
 static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     int i = 0, timeout = 100;
 
     if (!swd_write_word(DCRSR, n)) {
@@ -633,6 +757,13 @@ static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
 
 static uint8_t swd_write_core_register(uint32_t n, uint32_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     int i = 0, timeout = 100;
 
     if (!swd_write_word(DCRDR, val)) {
@@ -659,6 +790,13 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val)
 
 static uint8_t swd_wait_until_halted(void)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     // Wait for target to stop
     uint32_t val, i, timeout = MAX_TIMEOUT;
 
@@ -677,6 +815,13 @@ static uint8_t swd_wait_until_halted(void)
 
 uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     DEBUG_STATE state = {{0}, 0};
     // Call flash algorithm function on target and wait for result.
     state.r[0]     = arg1;                   // R0: Argument 1
@@ -712,6 +857,13 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
 // SWD Reset
 static uint8_t swd_reset(void)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[8];
     uint8_t i = 0;
 
@@ -726,6 +878,13 @@ static uint8_t swd_reset(void)
 // SWD Switch
 static uint8_t swd_switch(uint16_t val)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[2];
     tmp_in[0] = val & 0xff;
     tmp_in[1] = (val >> 8) & 0xff;
@@ -736,6 +895,13 @@ static uint8_t swd_switch(uint16_t val)
 // SWD Read ID
 static uint8_t swd_read_idcode(uint32_t *id)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint8_t tmp_in[1];
     uint8_t tmp_out[4];
     tmp_in[0] = 0x00;
@@ -752,6 +918,13 @@ static uint8_t swd_read_idcode(uint32_t *id)
 
 static uint8_t JTAG2SWD()
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t tmp = 0;
 
     if (!swd_reset()) {
@@ -775,6 +948,13 @@ static uint8_t JTAG2SWD()
 
 uint8_t swd_init_debug(void)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t tmp = 0;
     int i = 0;
     int timeout = 100;
@@ -837,11 +1017,25 @@ uint8_t swd_init_debug(void)
 
 __attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return;
+	}
+
     (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
 }
 
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t val;
     swd_init();
 
@@ -939,6 +1133,13 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
+	// Verify DAP Lock against our TID.
+	if (!dap_lock_verify_tid_self())
+	{
+		util_assert(0);
+		return 0;
+	}
+
     uint32_t val;
     swd_init();
 

@@ -34,6 +34,8 @@ static const char *const error_message[] = {
     "An error has occurred",
     // ERROR_INTERNAL
     "An internal error has occurred",
+		// ERROR_BUSY
+		"Requested Resource Busy",
 
     /* VFS user errors */
 

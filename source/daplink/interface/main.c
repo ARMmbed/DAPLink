@@ -213,6 +213,9 @@ __task void main_task(void)
     uint8_t thread_started = 0;
     // button state
     main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
+    // Initialize DAP locks.
+    util_assert(dap_lock_mutex_init());
+	  util_assert(dap_lock_operation(DAP_LOCK_OPERATION_HIC_INIT));
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -225,7 +228,7 @@ __task void main_task(void)
     gpio_set_hid_led(GPIO_LED_OFF);
     gpio_set_cdc_led(GPIO_LED_OFF);
     gpio_set_msc_led(GPIO_LED_OFF);
-    // Initialize the DAP
+		// Initialize the DAP
     DAP_Setup();
     // do some init with the target before USB and files are configured
     prerun_board_config();
@@ -238,6 +241,8 @@ __task void main_task(void)
     usbd_connect(0);
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
+    // Unlock SWD Port after possible initial use.
+    util_assert(dap_unlock());
     // Start timer tasks
     os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 

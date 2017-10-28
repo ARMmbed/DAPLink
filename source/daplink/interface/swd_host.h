@@ -22,8 +22,12 @@
 #ifndef SWDHOST_CM_H
 #define SWDHOST_CM_H
 
+#include "util.h"
+#include "tasks.h"
+#include "RTL.h"
 #include "flash_blob.h"
 #include "target_reset.h"
+#include "dap_lock.h"
 #ifdef TARGET_MCU_CORTEX_A
 #include "debug_ca.h"
 #else
