@@ -27,6 +27,7 @@
 #define USBD_RTX_CORE_STACK         0
 #define USBD_RTX_DEVICE_STACK       0
 #define USBD_RTX_ENDPOINT0_STACK    0
+#define HID_ENDPOINT                1
 #define WEBUSB_HID_ENDPOINT         1
 
 
