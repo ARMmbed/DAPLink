@@ -1,10 +1,18 @@
-# Adding A New Target
-Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
+# Adding New Target
+
+In order to add new Target, which needs to be ARM based MCU, you need to create at least 3 files located in `source/target/<vendor>/<target>` directory:
+* `target.c` defines MCU internals, such as RAM/Flash organization and layout, memory programming routines, etc.
+* `target_reset.c` contains reset and other handy routines that can control Target to work with DAPLink.
+* `flash_blob.c` is the code that, when uploaded into RAM, allows rapid Flash programming.
+
+As you can see there is no Debug code specific to a Target, because that part is done by generic DAP (Debug Access Port) accessed over JTAG or SWD, which is common to all ARM Cortex devices.
+
+Below a `source/targets/<vendor>/<targetname>/target.c` is presented This file contains information about the size of ROM, RAM and sector operations needed to be performed on the target MCU while programming an image across the drag-n-drop channel:
 
 ```c
 /**
- * @file    target_reset.c
- * @brief   Target reset for the new target
+ * @file    target.c
+ * @brief   Target information for the target MCU
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -23,6 +31,48 @@ Adding new target support requires creating a flash algo blob and the implementa
  * limitations under the License.
  */
 
+#include "target_config.h"
+
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
+
+// target information
+target_cfg_t target_device = {
+    .sector_size    = 4096,
+    .sector_cnt     = (MB(1) / 4096),
+    .flash_start    = 0,
+    .flash_end      = MB(1),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20010000,
+    .flash_algo     = (program_target_t *) &flash,
+};
+```
+
+
+Then you have `source/target/<vendor>/target_reset.c` that contains code for reset, setup and control Target to work with DAPLink:
+
+```c
+	/**
+	 * @file    target_reset.c
+	 * @brief   Target reset for the new target
+	 *
+	 * DAPLink Interface Firmware
+	 * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+	 * SPDX-License-Identifier: Apache-2.0
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License"); you may
+	 * not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+	 * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 */
+	
 #include "target_reset.h"
 #include "swd_host.h"
 
@@ -59,7 +109,9 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 }
 ```
 
-A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/mbedmicro/FlashAlgo) An example blob is shown below and would be added to `source/target/<mfg>/<targetname>/flash_blob.c`
+A `source/target/<vendor>/<targetname>/flash_blob.c` contains "flash algorithm blob" required to program the target MCU internal (or external) Flash Memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [mbed FlashAlgo project][mbed_flashalgo].
+
+This is quite complex and nice trick to upload a binary image of a program (shellcode?) directly into RAM memory in order to efficiently write into Flash memory a large chunks of data. You don't really want to know how slow it was before to write Flash byte-by-byte with DAP over USB (well you could take a coffee or two only with a single KB if you really want to know) :-)
 
 ```c
 /**
@@ -132,48 +184,10 @@ static const program_target_t flash = {
     targetname_blob,           // address of prog_blob
     0x00000200                 // program_buffer_size, largest size that can be written in a single call to program page
 };
-
 ```
 
-The last required file is the target MCU description file `source/targets/<mfg>/<targetname>/target.c` This file contains information about the size of ROM, RAM and sector operations needed to be performed on the target MCU while programming an image across the drag-n-drop channel.
+You can now add those files to a new Target description (see Adding New Board), build the code, and try it out!
 
-```c
-/**
- * @file    target.c
- * @brief   Target information for the target MCU
- *
- * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+**Note:** We are currently using Keil uVision MDK 5 to build DAPLink firmware because of high quality of the produced code and small footprint of the binary.
 
-#include "target_config.h"
-
-// The file flash_blob.c must only be included in target.c
-#include "flash_blob.c"
-
-// target information
-target_cfg_t target_device = {
-    .sector_size    = 4096,
-    .sector_cnt     = (MB(1) / 4096),
-    .flash_start    = 0,
-    .flash_end      = MB(1),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20010000,
-    .flash_algo     = (program_target_t *) &flash,
-};
-```
-
-At this point these target specific files could be added to a board build and developed.
+[mbed_flashalgo]: https://github.com/mbedmicro/FlashAlgo "ARM mbed FlashAlgo Project"
