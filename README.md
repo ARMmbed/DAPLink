@@ -4,22 +4,26 @@ DAPLink is firmware that runs on a microcontroller that is connected according t
 * CDC - virtual com port for log, trace and terminal emulation
 * HID - CMSIS-DAP compliant debug channel
 * DFU - USB DFU programming flash memory
+* WebUSB HID - CMSIS-DAP compliant debug channel
 
 For more detailed usability information [see the users guide.](docs/USERS-GUIDE.md)
 
 ## WebUSB
-This fork/experimental branch adds a USB DFU interface that can be used to flash targets from the browser using [WebUSB](https://wicg.github.io/webusb/). The DFU interface can be used standalone with native tools like [dfu-util](http://dfu-util.sourceforge.net/).
+This experimental branch is inspired by [WebUSB DFU](https://github.com/devanlai/DAPLink/tree/nucleo_webusb) and adds a WebUSB interface that can be accessed by [DAP.js](https://github.com/ARMmbed/dapjs).
 
-Whitelisted origins can access the DFU interface via WebUSB. Currently, only two demos can access the DFU interface.
-* https://devanlai.github.io/webdfu/dfu-util/ - a dfu-util-like utility
-* https://devanlai.github.io/webdfu/mbed-download/ - a demo to build and flash mbed programs
+Whitelisted origins can access the WebUSB HID interface via WebUSB:
+* https://armmbed.github.io/dapjs-web-demo/
 
 ### Limitations
 * This has only been tested on a limited selection of DAPLink hardware:
-  * LPC11U35 interface chips, specifically with the [Seeed Studio Arch Max](https://www.seeedstudio.com/Arch-Max-v1.1-p-2632.html) board.
-  * STM32F103RB interface chips, specifically the embedded STLink/v2-1 on the [Nucleo F103RB](http://www.st.com/en/evaluation-tools/nucleo-f103rb.html) board
-* This has only been tested on Linux and macOS - Windows will almost certainly require fiddling with [Zadig](http://zadig.akeo.ie/) to load an appropriate WinUSB/libusb driver for the DFU interface.
-* The DFU interface cannot be accessed by Chrome on Windows - Chrome's copy of libusb is missing upstream patches to handle control transfers to composite WinUSB devices more robustly.
+  * NXP k20dx interface chips, specifically with the [FRDM-K64F](https://os.mbed.com/platforms/FRDM-K64F/) board.
+* Chrome version 61+
+* Supported operating systems:
+  * Windows 8.1+
+  * Mac OS
+  * Linux
+* Landing page notification does not work on Windows. It is a current limitation of Chrome running on Windows: https://github.com/WICG/webusb/issues/104
+
 
 ## Compatibility
 There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards or as part of development kits. Known supported circuits are based on and IO compatible with:
