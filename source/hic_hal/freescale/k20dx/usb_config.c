@@ -388,9 +388,9 @@
 #define USBD_WEBUSB_ENABLE          0
 #endif
 #define USBD_WEBUSB_VENDOR_CODE     0x21
-#define USBD_WEBUSB_BASE_LANDING_URL "devanlai.github.io/webdfu/dfu-util/?vid="
+#define USBD_WEBUSB_BASE_LANDING_URL "armmbed.github.io/dapjs-web-demo/?vid="
 #define USBD_WEBUSB_LANDING_URL     CONCAT_MACRO_TO_STRING(USBD_WEBUSB_BASE_LANDING_URL, USBD_DEVDESC_IDVENDOR)
-#define USBD_WEBUSB_ORIGIN_URL      "devanlai.github.io/"
+#define USBD_WEBUSB_ORIGIN_URL      "armmbed.github.io/"
 #define USBD_WEBUSB_IF_NUM          USBD_DFU_IF_NUM
 
 //     Microsoft OS Descriptors 2.0 (WinUSB) support

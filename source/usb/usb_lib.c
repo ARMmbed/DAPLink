@@ -70,7 +70,7 @@ const U8 usbd_hid_spoof_if_num = USBD_HID_SPOOF_IF_NUM;
 const U8 usbd_hid_ep_intin = USBD_HID_EP_INTIN;
 const U8 usbd_hid_spoof_ep_intin = USBD_HID_SPOOF_EP_INTIN;
 const U8 usbd_hid_ep_intout = USBD_HID_EP_INTOUT;
-const U8 usbd_hid_spoof_ep_intout = 5;
+const U8 usbd_hid_spoof_ep_intout = USBD_HID_SPOOF_EP_INTOUT;
 const U16 usbd_hid_interval[2]  = {USBD_HID_INTERVAL, USBD_HID_HS_INTERVAL};
 const U16 usbd_hid_maxpacketsize[2] = {USBD_HID_WMAXPACKETSIZE, USBD_HID_HS_WMAXPACKETSIZE};
 const U8 usbd_hid_inreport_num = USBD_HID_INREPORT_NUM;
@@ -2089,11 +2089,11 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
   USBD_HID_SPOOF_IF_NUM,                /* bInterfaceNumber */                                              \
   0x00,                                 /* bAlternateSetting */                                             \
-  0x01+(USBD_HID_EP_INTOUT != 0),       /* bNumEndpoints */                                                 \
+  0x01+(USBD_HID_SPOOF_EP_INTOUT != 0), /* bNumEndpoints */                                                 \
   USB_DEVICE_CLASS_VENDOR_SPECIFIC,     /* bInterfaceClass */                                               \
   USB_DEVICE_CLASS_HUMAN_INTERFACE,     /* bInterfaceSubClass */                                            \
   HID_PROTOCOL_NONE,                    /* bInterfaceProtocol */                                            \
-  USBD_HID_SPOOF_IF_STR_NUM,                  /* iInterface */                                                    \
+  USBD_HID_SPOOF_IF_STR_NUM,            /* iInterface */                                                    \
 
 #define HID_EP                          /* HID Endpoint for Low-speed/Full-speed */                         \
 /* Endpoint, HID Interrupt In */                                                                            \
