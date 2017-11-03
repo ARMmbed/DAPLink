@@ -17,7 +17,7 @@
         1. While holding down the boards reset button, connect your boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`
         1. Drag-and-drop the interface firmware file onto the mounted drive.
         1. Wait for the file copy operation to complete.
-        1. Power cycle the board. It will now enumerate and mount as `DAPLink`
+        1. Power cycle the board. It will now enumerate and mount as `DAPLINK`
       osx: |
         1. Download interface firmware file.
         1. While holding down the boards reset button, connect your boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`
@@ -25,14 +25,14 @@
           - `sudo mount -u -w -o sync /Volumes/BOOTLOADER ; cp -X <path to interface firmware file> /Volumes/BOOTLOADER/`
           - Note: make sure to change `BOOTLOADER` to the name of the disk on your system. 
         1. Wait for the file copy operation to complete.
-        1. Power cycle the board. It will now enumerate and mount as `DAPLink`
+        1. Power cycle the board. It will now enumerate and mount as `DAPLINK`
       linux: |
         1. Download interface firmware file.
         1. While holding down the boards reset button, connect your boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`
         1. In a terminal execute
           - `cp <path to interface firmware file> <BOOTLOADER> && sync`
           - Note: make sure to change `BOOTLOADER` to the name of the mount point of the drive on your system.
-        1. Power cycle the board. It will now enumerate and mount as `DAPLink`
+        1. Power cycle the board. It will now enumerate and mount as `DAPLINK`
   
 - FRDM-KL25Z :
   name: FRDM-KL25Z
