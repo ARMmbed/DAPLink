@@ -24,9 +24,12 @@
 
 #include "DAP.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// SWD register access
+#define SWD_REG_AP        (1)
+#define SWD_REG_DP        (0)
+#define SWD_REG_R         (1<<1)
+#define SWD_REG_W         (0<<1)
+#define SWD_REG_ADR(a)    (a & 0x0c)
 
 // Abort Register definitions
 #define DAPABORT       0x00000001  // DAP Abort
@@ -159,8 +162,7 @@ extern "C" {
 #define VCATCH         0x00000008  // Vector Catch Flag
 #define EXTERNAL       0x00000010  // External Debug Request
 
-#ifdef __cplusplus
-}
-#endif
+// Data Watchpoint and Trace unit
+#define DWT_PCSR       0xe000101c  // DWT PC Sampling Register
 
 #endif

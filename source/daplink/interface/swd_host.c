@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -35,13 +35,6 @@
 
 // AP CSW register, base value
 #define CSW_VALUE (CSW_RESERVED | CSW_MSTRDBG | CSW_HPROT | CSW_DBGSTAT | CSW_SADDRINC)
-
-// SWD register access
-#define SWD_REG_AP        (1)
-#define SWD_REG_DP        (0)
-#define SWD_REG_R         (1<<1)
-#define SWD_REG_W         (0<<1)
-#define SWD_REG_ADR(a)    (a & 0x0c)
 
 #define DCRDR 0xE000EDF8
 #define DCRSR 0xE000EDF4
@@ -83,10 +76,7 @@ typedef struct {
 
 static DAP_STATE dap_state;
 
-static uint8_t swd_read_core_register(uint32_t n, uint32_t *val);
-static uint8_t swd_write_core_register(uint32_t n, uint32_t val);
-
-static void int2array(uint8_t *res, uint32_t data, uint8_t len)
+void int2array(uint8_t *res, uint32_t data, uint8_t len)
 {
     uint8_t i = 0;
 
@@ -95,7 +85,7 @@ static void int2array(uint8_t *res, uint32_t data, uint8_t len)
     }
 }
 
-static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
+uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
 {
     uint8_t i, ack;
 
@@ -125,6 +115,14 @@ uint8_t swd_init(void)
 uint8_t swd_off(void)
 {
     PORT_OFF();
+    return 1;
+}
+
+uint8_t swd_clear_errors(void)
+{
+    if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+        return 0;
+    }
     return 1;
 }
 
@@ -422,7 +420,7 @@ uint8_t swd_write_word(uint32_t addr, uint32_t val)
 }
 
 // Read 8-bit byte from target memory.
-static uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
+uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
 {
     uint32_t tmp;
 
@@ -439,7 +437,7 @@ static uint8_t swd_read_byte(uint32_t addr, uint8_t *val)
 }
 
 // Write 8-bit byte to target memory.
-static uint8_t swd_write_byte(uint32_t addr, uint8_t val)
+uint8_t swd_write_byte(uint32_t addr, uint8_t val)
 {
     uint32_t tmp;
 
@@ -603,7 +601,7 @@ static uint8_t swd_write_debug_state(DEBUG_STATE *state)
     return 1;
 }
 
-static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
+uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
 {
     int i = 0, timeout = 100;
 
@@ -633,7 +631,7 @@ static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
     return 1;
 }
 
-static uint8_t swd_write_core_register(uint32_t n, uint32_t val)
+uint8_t swd_write_core_register(uint32_t n, uint32_t val)
 {
     int i = 0, timeout = 100;
 
@@ -807,7 +805,7 @@ uint8_t swd_init_debug(void)
             continue;
         }
 
-        if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+        if (!swd_clear_errors()) {
             do_abort = 1;
             continue;
         }
@@ -941,7 +939,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
                 return 0;
             }
 
-            if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+            if (!swd_clear_errors()) {
                 return 0;
             }
 
@@ -1085,7 +1083,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
                 return 0;
             }
 
-            if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+            if (!swd_clear_errors()) {
                 return 0;
             }
 
