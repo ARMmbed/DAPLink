@@ -58,14 +58,6 @@ GIT_VERSION_FILE_PATH = "../../../source/daplink/version_git.h"
 def pre_build():
     print "#> Pre-build script start"
 
-    # First thing to do is delete any existing generated files.
-    try:
-        os.remove(GIT_VERSION_FILE_PATH)
-        print "#> Old git version file removed"
-    except OSError:
-        print "#> No git version file to remove"
-        pass
-
     # Get the git SHA.
     print "#> Getting git SHA"
     try:
@@ -85,11 +77,19 @@ def pre_build():
         git_has_changes = 0
 
 
-    #Create the version file.
-    print "#> Creating new git version file"
-    version_file = open(GIT_VERSION_FILE_PATH, 'a')
-    version_file.write(VERSION_GIT_FILE_TEMPLATE % (git_sha, git_has_changes))
-    version_file.close()
+    # Create the version file. Only overwrite an existing file if it changes.
+    version_text = VERSION_GIT_FILE_TEMPLATE % (git_sha, git_has_changes)
+    try:
+        with open(GIT_VERSION_FILE_PATH, 'r') as version_file:
+            current_version_text = version_file.read()
+    except IOError:
+        current_version_text = ''
+    if version_text != current_version_text:
+        print "#> Writing git version file"
+        with open(GIT_VERSION_FILE_PATH, 'w+') as version_file:
+            version_file.write(version_text)
+    else:
+        print "#> Keeping git version file since it didn't need to change"
 
     print "#> Pre-build script completed"
 
