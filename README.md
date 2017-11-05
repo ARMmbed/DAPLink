@@ -23,3 +23,8 @@ Look for an interesting feature or defect [under issues](https://github.com/mbed
 
 ## Develop
 Information for setting up a development environment, running the tests or creating a release build [can be found in the developers guide.](docs/DEVELOPERS-GUIDE.md)
+
+## Known Issues
+Drag-n-drop program or application flashing fails for the first time after firmware update on Windows machine with failure message "File sent out of order by PC. Target might not be programmed correctly". Windows tries to create "System Volume Information" folder while sending program data, which results in out of order error. Solution to this issue is:
+* Disable creation of "System Volume Information" folder on [USB drives](http://www.thewindowsclub.com/prevent-system-volume-information-folder-usb) and [disable Storage Service](https://www.veritas.com/support/en_US/article.000041497)
+* Re-try flashing once more.
