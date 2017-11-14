@@ -102,9 +102,14 @@ void PIOA_IRQHandler(void)
     }
 }
 
-uint8_t gpio_get_sw_reset()
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_RESET_IN_FWRD_PORT->PIO_PDSR & PIN_RESET_IN_FWRD) != 0;
+    return 0;
+}
+
+uint8_t gpio_get_reset_btn_fwrd()
+{
+    return (PIN_RESET_IN_FWRD_PORT->PIO_PDSR & PIN_RESET_IN_FWRD) == 0;
 }
 
 void gpio_set_board_power(bool powerEnabled)
