@@ -121,7 +121,7 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
 {
     // Allow settings to be changed if automation mode is
     // enabled or if the user is holding the reset button
-    bool btn_pressed = !gpio_get_sw_reset();
+    bool btn_pressed = gpio_get_reset_btn();
 
     if (!btn_pressed && !config_get_automation_allowed()) {
         return;

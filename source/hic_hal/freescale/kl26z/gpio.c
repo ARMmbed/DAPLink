@@ -78,9 +78,14 @@ void gpio_set_msc_led(gpio_led_state_t state)
     (GPIO_LED_ON == state) ? (PIN_MSC_LED_GPIO->PCOR = PIN_MSC_LED) : (PIN_MSC_LED_GPIO->PSOR = PIN_MSC_LED);
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_SW_RESET_GPIO->PDIR & PIN_SW_RESET) ? 1 : 0;
+    return 0;
+}
+
+uint8_t gpio_get_reset_btn_fwrd(void)
+{
+    return (PIN_SW_RESET_GPIO->PDIR & PIN_SW_RESET) ? 0 : 1;
 }
 
 void gpio_set_board_power(bool powerEnabled)

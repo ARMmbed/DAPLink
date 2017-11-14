@@ -106,19 +106,6 @@ __task void timer_task_30mS(void)
     }
 }
 
-// Forward reset from the user pressing the reset button
-// Boards which tie the reset pin directly to the target
-// should override this function with a stub that does nothing
-__attribute__((weak))
-void target_forward_reset(bool assert_reset)
-{
-    if (assert_reset) {
-        target_set_state(RESET_HOLD);
-    } else {
-        target_set_state(RESET_RUN);
-    }
-}
-
 // Functions called from other tasks to trigger events in the main task
 // parameter should be reset type??
 void main_reset_target(uint8_t send_unique_id)
@@ -217,7 +204,7 @@ __task void main_task(void)
     // thread running after usb connected started
     uint8_t thread_started = 0;
     // button state
-    main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
+    uint8_t reset_pressed = 0;
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -355,30 +342,16 @@ __task void main_task(void)
 
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
+
             // handle reset button without eventing
-            switch (main_reset_button_state) {
-                default:
-                case MAIN_RESET_RELEASED:
-                    if (0 == gpio_get_sw_reset()) {
-                        main_reset_button_state = MAIN_RESET_PRESSED;
-                        target_forward_reset(true);
-                    }
-
-                    break;
-
-                case MAIN_RESET_PRESSED:
-
-                    // ToDo: add a counter to do a mass erase or target recovery after xxx seconds of being held
-                    if (1 == gpio_get_sw_reset()) {
-                        main_reset_button_state = MAIN_RESET_TARGET;
-                    }
-
-                    break;
-
-                case MAIN_RESET_TARGET:
-                    target_forward_reset(false);
-                    main_reset_button_state = MAIN_RESET_RELEASED;
-                    break;
+            if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
+                // Reset button pressed
+                target_set_state(RESET_HOLD);
+                reset_pressed = 1;
+            } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
+                // Reset button released
+                target_set_state(RESET_RUN);
+                reset_pressed = 0;
             }
 
             // DAP LED

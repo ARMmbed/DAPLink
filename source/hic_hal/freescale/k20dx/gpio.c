@@ -104,18 +104,13 @@ void gpio_set_msc_led(gpio_led_state_t state)
     gpio_set_hid_led(state);
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
+    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1;
+
 }
 
-uint8_t GPIOGetButtonState(void)
+uint8_t gpio_get_reset_btn_fwrd(void)
 {
     return 0;
-}
-
-void target_forward_reset(bool assert_reset)
-{
-    // Do nothing - reset button is already tied to the target
-    //              reset pin on k20dx interface hardware
 }

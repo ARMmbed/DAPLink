@@ -114,14 +114,14 @@ void gpio_set_isp_pin(uint8_t state)
     }
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return LPC_GPIO_PORT->W[PORT_nRESET * 32 + PIN_nRESET_IN_BIT] ? 1 : 0;
+    return LPC_GPIO_PORT->W[PORT_nRESET * 32 + PIN_nRESET_IN_BIT] ? 0 : 1;
 }
 
-void target_forward_reset(bool assert_reset)
+uint8_t gpio_get_reset_btn_fwrd(void)
 {
-    // Do nothing - reset is forwarded in gpio_get_sw_reset
+    return 0;
 }
 
 void gpio_set_board_power(bool powerEnabled)
