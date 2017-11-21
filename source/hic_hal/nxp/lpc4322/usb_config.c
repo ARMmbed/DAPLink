@@ -365,10 +365,10 @@
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_MSC_ENABLE)
-#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)  || \
-       (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)))|| \
-      ((USBD_HID_EP_INTOUT  != 0)                   && \
-       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)  || \
+#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)      || \
+       (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKOUT)))   || \
+      ((USBD_HID_EP_INTOUT  != 0)                       && \
+       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKOUT)))
 #error "HID and Mass Storage Device Interface can not use same Endpoints!"
 #endif
