@@ -61,6 +61,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                            False,      0x0000,     "bin"       ),
     ("lpc11u35_c027_if",                            False,      0x0000,     "bin"       ),
+    ("sam3u2c_ncs36510rf_if",                       False,      0x8000,     "bin"       ),
     ("kl26z_nina_b1_if",                            False,      0x8000,     "bin"       ),
     ("lpc11u35_lpc4088dm_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
