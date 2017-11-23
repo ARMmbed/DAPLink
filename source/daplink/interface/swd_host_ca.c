@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -777,9 +777,10 @@ uint8_t swd_uninit_debug(void)
     return 1;
 }
 
-__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
+__attribute__((weak)) uint8_t swd_set_target_reset(uint8_t asserted)
 {
     (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
+    return 1;
 }
 
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
@@ -865,6 +866,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
     return 1;
 }
 
+// NOTE: This function does not work on Reneas R7S Cortex-A Target.
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
     uint32_t val;
@@ -949,6 +951,19 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
     }
 
     return 1;
+}
+
+// TODO: Align this code with Cortex-M when deidcated Target code is ready.
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    uint8_t res;
+    // This kind of fallback causes UMS flashing to fail on GR-PEACH!
+    // Reset works with HW/SW but RESET_HALT works only for HW.
+    //res = swd_set_target_state_sw(state);
+    //if (!res) {
+        res = swd_set_target_state_hw(state);
+    //}
+    return res;
 }
 
 #endif

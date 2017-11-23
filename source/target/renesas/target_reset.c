@@ -3,7 +3,7 @@
  * @brief   Target reset for the rza1h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -30,11 +30,6 @@ void target_before_init_debug(void)
 uint8_t target_unlock_sequence(void)
 {
     return 1;
-}
-
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_hw(state);
 }
 
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)

@@ -3,7 +3,7 @@
  * @brief   Target reset for the Kinetis K series
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -30,7 +30,6 @@
 
 void target_before_init_debug(void)
 {
-    swd_set_target_reset(1);
 }
 
 void prerun_target_config(void)
@@ -55,6 +54,12 @@ void board_init(void)
 {
 }
 
+/**
+ * Unlock Sequence clears out the Security Bits and Flash Memory.
+ * NOTE: This leaves Hardware Reset line asserted on exit until halt!
+ * NOTE: During the unlock sequence the hardware reset must be asserted to
+ * ensure device code cannot execute / interfere with the unlocking procedure.
+ */
 uint8_t target_unlock_sequence(void)
 {
     uint32_t val;
@@ -150,7 +155,3 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_hw(state);
-}

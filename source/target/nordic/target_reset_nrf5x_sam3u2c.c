@@ -24,27 +24,26 @@
 #include "DAP_config.h"
 #include "info.h"
 
+// For nRF chips CxxxPWRUPREQ is required, which is part of swd_init_debug().
 void target_before_init_debug(void)
 {
     return;
 }
 
+// TODO: Memory unlock routines can be added here for locked chips.
 uint8_t target_unlock_sequence(void)
 {
     return 1;
 }
 
+// TODO: Memory lock routines can be added here to lock the chip.
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_sw(state);
-}
-
-void swd_set_target_reset(uint8_t asserted)
+// TODO: Take the debug disable quirk from here..
+void nrf_swd_set_target_reset(uint8_t asserted)
 {
     const char *board_id;
     board_id = info_get_board_id();

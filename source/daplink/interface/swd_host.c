@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -27,6 +27,7 @@
 #include "debug_cm.h"
 #include "DAP_config.h"
 #include "DAP.h"
+#include "util.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -115,8 +116,10 @@ uint8_t swd_init(void)
     return 1;
 }
 
+// This will turn off the related SWD GPIO and DAP where possible.
 uint8_t swd_off(void)
 {
+    swd_debug_deinit();
     PORT_OFF();
     return 1;
 }
@@ -773,6 +776,13 @@ static uint8_t JTAG2SWD()
     return 1;
 }
 
+// Sets reset active when asserted is 1. Returns always 1.
+uint8_t swd_set_target_reset(uint8_t asserted)
+{
+    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
+    return 1;
+}
+
 uint8_t swd_init_debug(void)
 {
     uint32_t tmp = 0;
@@ -823,7 +833,7 @@ uint8_t swd_init_debug(void)
         return 0;
     }
 
-    // call a target dependant function:
+    // call a target dependent function:
     // some target can enter in a lock state
     // this function can unlock these targets
     target_unlock_sequence();
@@ -835,200 +845,209 @@ uint8_t swd_init_debug(void)
     return 1;
 }
 
-__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
+// This is target specific routine to disable DAP in order to conserve power.
+// Returns 1 on success, 0 otherwise.
+__attribute__((weak)) uint8_t swd_debug_deinit(void)
 {
-    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
-}
-
-uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
-{
-    uint32_t val;
-    swd_init();
-
-    switch (state) {
-        case RESET_HOLD:
-            swd_set_target_reset(1);
-            break;
-
-        case RESET_RUN:
-            swd_set_target_reset(1);
-            os_dly_wait(2);
-            swd_set_target_reset(0);
-            os_dly_wait(2);
-            swd_off();
-            break;
-
-        case RESET_PROGRAM:
-            if (!swd_init_debug()) {
-                return 0;
-            }
-
-            // Enable debug
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-
-            // Enable halt on reset
-            if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
-                return 0;
-            }
-
-            // Reset again
-            swd_set_target_reset(1);
-            os_dly_wait(2);
-            swd_set_target_reset(0);
-            os_dly_wait(2);
-
-            do {
-                if (!swd_read_word(DBG_HCSR, &val)) {
-                    return 0;
-                }
-            } while ((val & S_HALT) == 0);
-
-            // Disable halt on reset
-            if (!swd_write_word(DBG_EMCR, 0)) {
-                return 0;
-            }
-
-            break;
-
-        case NO_DEBUG:
-            if (!swd_write_word(DBG_HCSR, DBGKEY)) {
-                return 0;
-            }
-
-            break;
-
-        case DEBUG:
-            if (!JTAG2SWD()) {
-                return 0;
-            }
-
-            if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
-                return 0;
-            }
-
-            // Ensure CTRL/STAT register selected in DPBANKSEL
-            if (!swd_write_dp(DP_SELECT, 0)) {
-                return 0;
-            }
-
-            // Power up
-            if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
-                return 0;
-            }
-
-            // Enable debug
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-
-            break;
-
-        default:
-            return 0;
-    }
-
     return 1;
 }
 
-uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
+// Some targets may require quirk before reset program (flashing).
+// Void pointer is used to pass type independent parameter (use casting).
+// Return 1 on success, 0 otherwise.
+__attribute__((weak)) uint8_t target_quirk_reset_pre_program(void *param)
 {
-    uint32_t val;
+    return 1;
+}
+
+// ome targets may require quirk after reset program (flashing).
+// Void pointer is used to pass type independent parameter (use casting).
+// Return 1 on success, 0 otherwise.
+__attribute__((weak)) uint8_t target_quirk_reset_post_program(void *param)
+{
+    return 1;
+}
+
+// Some targets may require quirk before reset run.
+// Void pointer is used to pass type independent parameter (use casting).
+// Return 1 on success, 0 otherwise.
+__attribute__((weak)) uint8_t target_quirk_reset_pre_run(void *param)
+{
+    return 1;
+}
+
+// Some targets may require quirk after reset run.
+// Void pointer is used to pass type independent parameter (use casting).
+// Return 1 on success, 0 otherwise.
+__attribute__((weak)) uint8_t target_quirk_reset_post_run(void *param)
+{
+    return 1;
+}
+
+/**
+ * Set Target State using SWJ access and/or hardware GPIO lines.
+ * Leverage switch(){} to construct multiple entry/exit pointq machine.
+ * First try Software Reset then Hardware Reset if the first fails.
+ * Parameters:
+ *  @param state is one of TARGET_RESET_STATE.
+ *  @returns 1 on success, 0 otherwise.
+ *  TODO: The same reset rework is necessary for Cortex-A SWD Host.
+ *  TODO: Functions prefixed target_ can be moved out to a separate
+ *   source code file and wrap swd_host{,_ca}.c routines.
+ */
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
+    uint32_t rsttype, ret;
     swd_init();
 
     switch (state) {
-        case RESET_HOLD:
-            swd_set_target_reset(1);
-            break;
-
+        case DEBUG:
         case RESET_RUN:
-            swd_set_target_reset(1);
-            os_dly_wait(2);
-            swd_set_target_reset(0);
-            os_dly_wait(2);
-            swd_off();
-            break;
-
+        case RESET_HOLD:
         case RESET_PROGRAM:
+            // Some Targeta may require pre reset quirks.
+            switch (state){
+                case DEBUG:
+                case RESET_HOLD:
+                case RESET_PROGRAM:
+                    if (!target_quirk_reset_pre_program(0)) return 0;
+                    break;
+            default:
+                if (!target_quirk_reset_pre_run(0)) return 0;
+                break;
+            }
+
+            // Initialize SWD DAP Port so we have a known state of the Target.
+            // DAP is essential for both software/hardware halt-on-reset.
             if (!swd_init_debug()) {
                 return 0;
             }
 
             // Enable debug and halt the core (DHCSR <- 0xA05F0003)
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
-                return 0;
-            }
+            if (!target_debug_enable()) return 0;
+            if (!target_debug_halt()) return 0;
 
-            // Wait until core is halted
-            do {
-                if (!swd_read_word(DBG_HCSR, &val)) {
-                    return 0;
-                }
-            } while ((val & S_HALT) == 0);
+            // If we just want to enable debug we can return now.
+            if (state == DEBUG) return 1;
 
             // Enable halt on reset
-            if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
-                return 0;
+            if (!target_debug_halt_on_reset_enable()) return 0;
+
+            // Release possible hardware reset signal assertion that would keep
+            // core in reset state and so prevent software reset.
+            // Hardware reset may be asserted for security block operations.
+            target_reset_hw_assert(0);
+
+            // Try the available reset methods and then verify if core is halted.
+            for (rsttype=TARGET_RESET_SOFTWARE ; rsttype!=TARGET_RESET_NONE ; rsttype--)
+            {
+                if (rsttype == TARGET_RESET_HARDWARE) {
+                    ret = target_reset_hw();
+                } else if (rsttype == TARGET_RESET_SOFTWARE) {
+                    ret = target_reset_sw();
+                } else ret = 0;
+                if (ret == 0) break;
+                ret = target_debug_halt_check();
+                if (ret == 1) break;
+            }
+            // Assert if reset-halt did not work (should not happen).
+            util_assert(ret);
+
+            // Disable halt on reset whether we succeeded or not.
+            if (!target_debug_halt_on_reset_disable()) return 0;
+
+            // Target is now in RESET_HOLD / RESET_HOLD state.
+            // If this is the goal we may apply post halt quirk and return.
+            if (state==RESET_HOLD || state==RESET_PROGRAM) {
+                if (!target_quirk_reset_post_program(0)) return 0;
+                return ret;
             }
 
-            // Perform a soft reset
-            if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
-                return 0;
+            // Continue from RESET_{HOLD,PROGRAM}.
+            // Now debug logic disable and run target.
+            for (int rsttype=TARGET_RESET_SOFTWARE ; rsttype!=TARGET_RESET_NONE ; rsttype--)
+            {
+                if (rsttype == TARGET_RESET_HARDWARE) {
+                    ret = target_reset_hw();
+                } else if (rsttype == TARGET_RESET_SOFTWARE) {
+                    ret = target_reset_sw();
+                } else ret = 0;
+                if (ret == 1) break;
             }
-
-            os_dly_wait(2);
-
-            do {
-                if (!swd_read_word(DBG_HCSR, &val)) {
-                    return 0;
-                }
-            } while ((val & S_HALT) == 0);
-
-            // Disable halt on reset
-            if (!swd_write_word(DBG_EMCR, 0)) {
-                return 0;
-            }
-
-            break;
+            util_assert(ret);
+            // NOTE: no break instruction here code will follow!
 
         case NO_DEBUG:
-            if (!swd_write_word(DBG_HCSR, DBGKEY)) {
-                return 0;
-            }
+            // Some Targets may require post reset run quirks.
+            if (!target_quirk_reset_post_run(0)) return 0;
 
-            break;
-
-        case DEBUG:
-            if (!JTAG2SWD()) {
-                return 0;
-            }
-
-            if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
-                return 0;
-            }
-
-            // Ensure CTRL/STAT register selected in DPBANKSEL
-            if (!swd_write_dp(DP_SELECT, 0)) {
-                return 0;
-            }
-
-            // Power up
-            if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
-                return 0;
-            }
-
-            // Enable debug
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
-            }
-
-            break;
+            // Make sure Target DAP is disabled to conserve power.
+            swd_off();
+            return ret;
 
         default:
-            return 0;
+            break;
     }
 
+    return 0;
+
+}
+
+static uint8_t target_debug_enable()
+{
+    // TODO: Consider using swd_enable_debug() here.
+    // Note: Debug enable may differ for Cortex-M and Cortex-A.
+    return swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN);
+}
+
+static uint8_t target_debug_halt()
+{
+    return swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT);
+}
+
+static uint8_t target_debug_halt_on_reset_enable()
+{
+    return swd_write_word(DBG_EMCR, VC_CORERESET);
+}
+
+static uint8_t target_debug_halt_on_reset_disable()
+{
+    return swd_write_word(DBG_EMCR, 0);
+}
+
+static uint8_t target_debug_halt_check()
+{
+    // TODO: Consider putting/using this code inside swd_host*.c common
+    // function swd_wait_until_halted() and call it here.
+    // Note that code will be different for Cortex-M and Cortex-A!
+    uint32_t val, timeout;
+    uint32_t time_start = os_time_get();
+    do {
+        if (!swd_read_word(DBG_HCSR, &val)) {
+            return 0;
+        }
+        timeout = (os_time_get() - time_start) > TARGET_DELAY_RETRY;
+    } while ( (val & S_HALT)==0 && !timeout );
+    return !timeout;
+}
+
+static uint8_t target_reset_sw()
+{
+    return swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET);
+}
+
+static uint8_t target_reset_hw()
+{
+    target_reset_hw_assert(1);
+    os_dly_wait(TARGET_DELAY_RESET);
+    target_reset_hw_assert(0);
+    os_dly_wait(TARGET_DELAY_RESET);
     return 1;
 }
+
+static uint8_t target_reset_hw_assert(uint8_t asserted)
+{
+    return swd_set_target_reset(asserted);
+}
+
 #endif

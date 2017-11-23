@@ -30,11 +30,11 @@ extern "C" {
 #endif
 
 typedef enum {
-    RESET_HOLD,              // Hold target in reset
+    RESET_HOLD,              // Hold target under reset asserted. TODO: Reset-Halt?
     RESET_PROGRAM,           // Reset target and setup for flash programming.
     RESET_RUN,               // Reset target and run normally
     NO_DEBUG,                // Disable debug on running target
-    DEBUG                    // Enable debug on running target
+    DEBUG,                   // Enable debug on running target
 } TARGET_RESET_STATE;
 
 void target_before_init_debug(void);

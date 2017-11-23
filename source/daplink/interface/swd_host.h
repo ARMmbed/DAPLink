@@ -37,6 +37,7 @@ extern "C" {
 uint8_t swd_init(void);
 uint8_t swd_off(void);
 uint8_t swd_init_debug(void);
+uint8_t swd_debug_deinit(void);
 uint8_t swd_read_dp(uint8_t adr, uint32_t *val);
 uint8_t swd_write_dp(uint8_t adr, uint32_t val);
 uint8_t swd_read_ap(uint32_t adr, uint32_t *val);
@@ -44,9 +45,21 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val);
 uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size);
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size);
 uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4);
-void swd_set_target_reset(uint8_t asserted);
-uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state);
-uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state);
+uint8_t swd_set_target_reset(uint8_t asserted);
+
+static uint8_t target_debug_enable(void);
+static uint8_t target_debug_halt(void);
+static uint8_t target_debug_halt_on_reset_enable(void);
+static uint8_t target_debug_halt_on_reset_disable(void);
+static uint8_t target_debug_halt_check(void);
+static uint8_t target_reset_sw(void);
+static uint8_t target_reset_hw(void);
+static uint8_t target_reset_hw_assert(uint8_t asserted);
+
+uint8_t target_quirk_reset_pre_program(void *param);
+uint8_t target_quirk_reset_post_program(void *param);
+uint8_t target_quirk_reset_pre_run(void *param);
+uint8_t target_quirk_reset_post_run(void *param);
 
 #ifdef __cplusplus
 }

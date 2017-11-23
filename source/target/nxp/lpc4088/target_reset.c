@@ -3,7 +3,7 @@
  * @brief   Target reset for the lpc4088
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -59,22 +59,22 @@ uint8_t target_unlock_sequence(void)
     return 1;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
+uint8_t target_quirk_reset_pre_program(void *param)
 {
-    //return swd_set_target_state_hw(state);
-    uint8_t res;
-    if (state == RESET_PROGRAM)
-    {
-        gpio_set_isp_pin(0);
-        res = swd_set_target_state_hw(state);
-        gpio_set_isp_pin(1);
-    }
-    else
-    {
-        gpio_set_isp_pin(1);
-        res = swd_set_target_state_hw(state);
-    }
-    return res;
+    gpio_set_isp_pin(0);
+    return 1;
+}
+
+uint8_t target_quirk_reset_post_program(void *param)
+{
+    gpio_set_isp_pin(1);
+    return 1;
+}
+
+uint8_t target_quirk_reset_pre_run(void *param)
+{
+    gpio_set_isp_pin(1);
+    return 1;
 }
 
 uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)

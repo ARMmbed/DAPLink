@@ -40,6 +40,15 @@ extern "C" {
 // This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
+/* TARGET RESET RELATED DEFINES */
+#define TARGET_DELAY_RESET  1       // How long do we wait after reset.
+#define TARGET_DELAY_RETRY  100     // How long do we wait with retries.
+enum TARGET_RESET_TYPES {           // Enumerate available reset types.
+    TARGET_RESET_NONE=0,            // No reset is also an option.
+    TARGET_RESET_HARDWARE=1,        // Hardware reset using GPIO.
+    TARGET_RESET_SOFTWARE=2         // Software reset using AIRCR.
+};
+
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.

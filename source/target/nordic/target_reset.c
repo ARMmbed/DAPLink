@@ -3,7 +3,7 @@
  * @brief   Target reset for the nrf51
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -38,12 +38,8 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_sw(state);
-}
-
-void swd_set_target_reset(uint8_t asserted)
+// TODO: REMOVE THAT FUNCTION AFTER GLOBAL WAS INTRODUCED UNWEAK, VERIFY!
+void nrf_swd_set_target_reset(uint8_t asserted)
 {
     if (asserted) {
         swd_init_debug();
