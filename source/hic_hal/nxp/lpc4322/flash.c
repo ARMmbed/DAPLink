@@ -22,6 +22,7 @@
 #include "flash_hal.h"
 #include "system_LPC43xx.h"
 #include "daplink_addr.h"
+#include "cortex_m.h"
 
 #define END_SECTOR     14  /* 15 sectors per bank */
 #define FLASH_BANK_A    0
@@ -55,9 +56,13 @@ uint32_t GetSecNum (uint32_t adr) {
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
+    cortex_int_state_t local_state = cortex_int_get_and_disable();
+
     IAP.cmd    = 49;                            // Initialize
     IAP.par[0] = 0;
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
+
+    cortex_int_restore(local_state);
 
     return 0;
 }
@@ -69,12 +74,15 @@ uint32_t UnInit(uint32_t fnc)
 
 uint32_t EraseChip(void)
 {
+    cortex_int_state_t local_state = cortex_int_get_and_disable();
+
     IAP.cmd    = 50;                            // Prepare Sector for Erase
     IAP.par[0] = 0;                             // Start Sector
     IAP.par[1] = END_SECTOR;                    // End Sector
     IAP.par[2] = FLASH_BANK_A;                  // Flash Bank
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
 
@@ -85,8 +93,11 @@ uint32_t EraseChip(void)
     IAP.par[3] = FLASH_BANK_A;                  // Flash Bank
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
+
+    cortex_int_restore(local_state);
 
     return 0;
 }
@@ -97,12 +108,15 @@ uint32_t EraseSector(uint32_t adr)
 
     n = GetSecNum(adr);                         // Get Sector Number
 
+    cortex_int_state_t local_state = cortex_int_get_and_disable();
+
     IAP.cmd    = 50;                            // Prepare Sector for Erase
     IAP.par[0] = n;                             // Start Sector
     IAP.par[1] = n;                             // End Sector
     IAP.par[2] = FLASH_BANK_A;                  // Flash Bank
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
 
@@ -113,8 +127,11 @@ uint32_t EraseSector(uint32_t adr)
     IAP.par[3] = FLASH_BANK_A;                  // Flash Bank
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
+
+    cortex_int_restore(local_state);
 
     return 0;
 }
@@ -135,12 +152,15 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     }
     n = GetSecNum(adr);                         // Get Sector Number
 
+    cortex_int_state_t local_state = cortex_int_get_and_disable();
+
     IAP.cmd    = 50;                            // Prepare Sector for Write
     IAP.par[0] = n;                             // Start Sector
     IAP.par[1] = n;                             // End Sector
     IAP.par[2] = FLASH_BANK_A;                  // Flash Bank
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
 
@@ -151,8 +171,11 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     IAP.par[3] = SystemCoreClock / 1000;        // CCLK in kHz
     IAP_Call(&IAP.cmd, &IAP.stat);              // Call IAP Command
     if (IAP.stat) {
+        cortex_int_restore(local_state);
         return 1;  // Command Failed
     }
+
+    cortex_int_restore(local_state);
 
     return 0;
 }
