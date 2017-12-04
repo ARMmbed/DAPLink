@@ -63,8 +63,8 @@ Configration Fields
 * Firmware - The name of the firmware as shown in projects.yaml.
 * Bootloader - The name of the bootloader firmware as shown in projects.yaml. Only required on HICs with a DAPLink bootloader.
 * Target - Name of the target for this board.
-    * If this is an mbed official board then the target should match the name in the mbed platform page URL. For example the K64F is located at https://developer.mbed.org/platforms/FRDM-K64F/ so it would have the target name `FRDM-K64F`.    Using this naming convention allows the automated tests to use the RESTful Compile API. the automated tests will build the    target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the    resulting image to the target. 
-    * If it is not, you will need to build the UART application yourself and supply it to `test\run_tests.py` via --targetdir. In this case, the target is the application image filename sans extension.
+    * If this is an mbed official board then the target should match the name in the mbed platform page URL. For example the K64F is located at https://developer.mbed.org/platforms/FRDM-K64F/ so it would have the target name `FRDM-K64F`. Using this naming convention allows the automated tests to use the RESTful Compile API. the automated tests will build the target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the resulting image to the target. 
+    * If it is not, you will need to build the UART application yourself and supply it to `test/run_tests.py` via --targetdir. In this case, the target is the application image filename sans extension.
 
 You may need to update one or more other dictionaries. See comments in the code for guidance.
 
