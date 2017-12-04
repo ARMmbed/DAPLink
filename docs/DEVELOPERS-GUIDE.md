@@ -30,7 +30,7 @@ $ venv/Scripts/deactivate
 
 
 ## Port
-There are three defined ways in which DAPLink can be extended.  These are adding target support, adding board support and adding HIC support.  Details on porting each of these can be found below.
+There are three defined ways in which DAPLink can be extended. These are adding target support, adding board support and adding HIC support. Details on porting each of these can be found below.
 
 * [Adding a new target](PORT_TARGET.md)
 * [Adding a new board](PORT_BOARD.md)
@@ -42,16 +42,16 @@ DAPLink has an extensive set of automated tests written in Python. They are used
 
 
 ## Release
-DAPLink contains scripts to automate most of the steps of building a release.  In addition to building the release, these scripts also save relevant build information such as git SHA and python tool versions so the same build can be reproduced.  The recommended steps for creating a release are below.
+DAPLink contains scripts to automate most of the steps of building a release. In addition to building the release, these scripts also save relevant build information such as git SHA and python tool versions so the same build can be reproduced. The recommended steps for creating a release are below.
 
 * Create a tag with the correct release version and push it to github
 * Clean the repo you will be building from by running 'git clean -xdf' followed by 'git reset --hard'
-* Run the script 'build_release_uvision.bat' to create all builds.
-* All release deliverables will be created and stored in 'uvision_release'.  Save this wherever your builds are stored.
+* Run the script ``build_release_uvision.bat`` to create all builds.
+* All release deliverables will be created and stored in 'uvision_release'. Save this wherever your builds are stored.
 
-Note: A previous build can be reproduced by using the 'build_requirements.txt' of that build.
-To do this add the additional argument 'build_requirements.txt' when calling 'build_release_uvision.bat' in step 2.
+Note: A previous build can be reproduced by using the ``build_requirements.txt`` of that build.
+To do this add the additional argument ``build_requirements.txt`` when calling ``build_release_uvision.bat`` in step 2.
 This will install and build with the exact version of the python packages used to create that build.
 
 ## MDK
-If you want to use the MDK (uVision) IDE to work with the DAPLink code, you must launch it in the right environment. The project will fail to build otherwise. To launch uVision properly, use tools\launch_uv4.bat
+If you want to use the MDK (uVision) IDE to work with the DAPLink code, you must launch it in the right environment. The project will fail to build otherwise. To launch uVision properly, use ``tools/launch_uv4.bat``
