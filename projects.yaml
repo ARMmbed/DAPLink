@@ -189,6 +189,10 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/lpc54608xpresso.yaml
+    lpc11u35_ff_lpc546xx_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/ff_lpc546xx.yaml
     lpc11u35_lpc4088dm_if:
         - *module_if
         - *module_hic_lpc11u35
