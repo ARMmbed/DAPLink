@@ -98,10 +98,6 @@ extern U8 USBD_CDC_ACM_NotifyBuf[10];
 
 extern const U8 usbd_webusb_vendor_code;
 
-extern const U8 usbd_dfu_if_num;
-extern U8 USBD_DFU_TransferBuf[];
-extern const U16 usbd_dfu_transfersize;
-
 extern const U8 usbd_winusb_vendor_code;
 
 extern void usbd_os_evt_set(U16 event_flags, U32 task);
