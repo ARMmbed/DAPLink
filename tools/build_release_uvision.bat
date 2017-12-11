@@ -19,6 +19,17 @@
 @rem Script assumes working directory is workspace root. Force it.
 cd %~dp0..\
 
+@rem See if we can find uVision. This logic is consistent with progen
+@if [%UV4%]==[] (
+	@echo UV4 variable is not set, trying to autodetect..
+	if EXIST c:\keil\uv4\uv4.exe (
+		set UV4=c:\keil\uv4\uv4.exe
+	) else if EXIST c:\keil_v5\uv4\uv4.exe (
+		set UV4=c:\keil_v5\uv4\uv4.exe
+	) else goto error_nomdk
+)
+@echo USING UV4=%UV4%
+
 rmdir /q /s uvision_release
 @if %errorlevel% neq 0 exit /B %errorlevel%
 
@@ -53,3 +64,9 @@ python tools/copy_release_files.py
 @if %errorlevel% neq 0 exit /B %errorlevel%
 
 @exit /B %level%
+
+:error_nomdk
+@echo Error: Keil MDK not installed or not found. If you installed it to a 
+@echo non-default location, you need to set environment variable UV4 to 
+@echo the path of the executable
+@exit /B 1
