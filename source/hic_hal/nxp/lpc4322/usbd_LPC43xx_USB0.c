@@ -23,6 +23,7 @@
 #include "rl_usb.h"
 #include "usb.h"
 #include "LPC43xx.h"
+#include "compiler.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -578,7 +579,7 @@ void USBD_PrimeEp(uint32_t EPNum, uint32_t cnt)
  *    Return Value:    Number of bytes read
  */
 
-uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData)
+uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, U32 size)
 {
     uint32_t cnt  = 0;
     uint32_t i;
@@ -611,6 +612,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData)
         if (Ep[EP_OUT_IDX(EPNum)].buf) {
             cnt = Ep[EP_OUT_IDX(EPNum)].maxPacket -
                   ((dTDx[EP_OUT_IDX(EPNum)].dTD_token >> 16) & 0x7FFF);
+
+            cnt = cnt < size ? cnt : size;
 
             for (i = 0; i < cnt; i++) {
                 pData[i] =  Ep[EP_OUT_IDX(EPNum)].buf[i];
@@ -683,6 +686,12 @@ uint32_t USBD_GetError(void)
  */
 
 void USB0_IRQHandler(void)
+{
+    NVIC_DisableIRQ(USB0_IRQn);
+    USBD_SignalHandler();
+}
+
+void USBD_Handler(void)
 {
     uint32_t sts, cmpl, num;
     sts  = LPC_USBx->USBSTS_D & LPC_USBx->USBINTR_D;
@@ -886,4 +895,6 @@ void USB0_IRQHandler(void)
             }
         }
     }
+
+    NVIC_EnableIRQ(USB0_IRQn);
 }

@@ -18,20 +18,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef USB_BUF_H
 #define USB_BUF_H
 
-#include "compiler.h"
 #include "stdint.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-uint32_t usb_buffer[512 / 4] __at(0x20000000);
-
-#ifdef __cplusplus
-}
-#endif
+uint32_t usb_buffer[512 / 4];
 
 #endif

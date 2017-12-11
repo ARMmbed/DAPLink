@@ -1,6 +1,6 @@
 /**
  * @file    DAP_config.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -41,7 +41,7 @@ Provides definitions about:
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK             204000000        ///< Specifies the CPU Clock in Hz
+#define CPU_CLOCK             96000000        ///< Specifies the CPU Clock in Hz
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -82,6 +82,20 @@ Provides definitions about:
 /// debugger and depends on the USB peripheral. For devices with limited RAM or USB buffer the
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
 #define DAP_PACKET_COUNT      1              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
+
+/// Indicate that UART Serial Wire Output (SWO) trace is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
+
+/// Maximum SWO UART Baudrate
+#define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
+
+/// Indicate that Manchester Serial Wire Output (SWO) trace is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available
+
+/// SWO Trace Buffer Size.
+#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
 
 
 /// Debug Unit is connected to fixed Target Device.
@@ -132,6 +146,10 @@ extern BOOL gpio_reset_pin_is_input;
 #define PORT_RESET_TXE        5
 #define PIN_RESET_TXE_IN_BIT  6
 #define PIN_RESET_TXE         (1<<PIN_RESET_TXE_IN_BIT)
+
+// ISP Control Pin          P2_11:  GPIO1[11]
+#define ISPCTRL_PORT        1
+#define ISPCTRL_BIT         11
 
 #define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
 #define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str

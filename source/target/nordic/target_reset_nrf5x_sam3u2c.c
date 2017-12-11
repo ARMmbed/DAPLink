@@ -50,12 +50,19 @@ void swd_set_target_reset(uint8_t asserted)
     board_id = info_get_board_id();
     uint32_t ap_index_return;
     uint8_t nrf52_dk_is_used;
+    uint8_t ublox_evk_nina_b1_used;
 
     nrf52_dk_is_used =      (   board_id[0] == '1' 
                                 && board_id[1] == '1'
                                 && board_id[2] == '0'
                                 && board_id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
-    if (nrf52_dk_is_used) {
+								
+    ublox_evk_nina_b1_used = (  board_id[0] == '1' 
+                                && board_id[1] == '2'
+                                && board_id[2] == '3'
+                                && board_id[3] == '7') ? 1 : 0;  // ID 1237 is the UBLOX_EVK_NINA_B1 which is based on NRF52
+
+    if (nrf52_dk_is_used || ublox_evk_nina_b1_used) {
         if (asserted) {
             swd_init_debug();
             

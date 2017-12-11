@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,33 +22,31 @@
 #include "LPC43xx.h"
 #include "RTL.h"
 #include "lpc43xx_scu.h"
-
 #include "gpio.h"
+#include "compiler.h"
 #include "DAP_config.h" // For the nRESET and RESET_TXE port/pin info
+#include "IO_Config.h"
 
-static uint16_t isr_flags;
-static OS_TID isr_notify;
 BOOL gpio_reset_pin_is_input  = __TRUE;
-
 
 // Connected LED            P1_1: GPIO0[8]
 #define LED_CONNECTED_PORT  0
 #define LED_CONNECTED_BIT   8
 
-#ifdef BOARD_LPC4337
-// ISP Control Pin          P2_11:  GPIO1[11]
-#define ISPCTRL_PORT        1
-#define ISPCTRL_BIT         11
-#else
-// ISP Control Pin          P2_3:  GPIO5[3]
-#define ISPCTRL_PORT        5
-#define ISPCTRL_BIT         3
-#endif
-
 // LPC43xx peripheral register bit masks (used by macros)
 #define CCU_CLK_CFG_RUN     (1UL << 0)
 #define CCU_CLK_CFG_AUTO    (1UL << 1)
 #define CCU_CLK_STAT_RUN    (1UL << 0)
+
+static void busy_wait(uint32_t cycles)
+{
+    volatile uint32_t i;
+    i = cycles;
+
+    while (i > 0) {
+        i--;
+    }
+}
 
 void gpio_init(void)
 {
@@ -60,11 +58,7 @@ void gpio_init(void)
     /* Configure I/O pins: function number, input buffer enabled,  */
     /*                     no pull-up/down                         */
     scu_pinmux(1, 1, GPIO_NOPULL, FUNC0);   /* LED:      GPIO0[8]  */
-#ifdef BOARD_LPC4337
     scu_pinmux(2, 11, GPIO_NOPULL, FUNC0);  /* ISPCTRL:  GPIO1[11]  */
-#else
-    scu_pinmux(2, 3, GPIO_NOPULL, FUNC4);   /* ISPCTRL:  GPIO5[3]  */
-#endif
     scu_pinmux(2, 5, GPIO_PUP,    FUNC4);   /* nRESET:    GPIO5[5] */
     scu_pinmux(2, 6, GPIO_NOPULL, FUNC4);   /* nRESET_OE: GPIO5[6] */
     /* Configure: LED as output (turned off) */
@@ -80,9 +74,11 @@ void gpio_init(void)
     /* Use Pin Interrupt 0 */
     LPC_SCU->PINTSEL0 &= ~0xff;
     LPC_SCU->PINTSEL0 |= (PORT_nRESET << 5) | (PIN_nRESET_IN_BIT);
+
+    busy_wait(10000);
 }
 
-void gpio_set_dap_led(uint8_t state)
+void gpio_set_hid_led(gpio_led_state_t state)
 {
     if (state) {
         LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
@@ -91,7 +87,7 @@ void gpio_set_dap_led(uint8_t state)
     }
 }
 
-void gpio_set_cdc_led(uint8_t state)
+void gpio_set_cdc_led(gpio_led_state_t state)
 {
     if (state) {
         LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
@@ -100,7 +96,7 @@ void gpio_set_cdc_led(uint8_t state)
     }
 }
 
-void gpio_set_msd_led(uint8_t state)
+void gpio_set_msc_led(gpio_led_state_t state)
 {
     if (state) {
         LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
@@ -118,23 +114,16 @@ void gpio_set_isp_pin(uint8_t state)
     }
 }
 
-void gpio_enable_button_flag(OS_TID task, uint16_t flags)
+uint8_t gpio_get_sw_reset(void)
 {
-    /* When the "reset" button is pressed the ISR will set the */
-    /* event flags "flags" for task "task" */
-    /* Keep a local copy of task & flags */
-    isr_notify = task;
-    isr_flags = flags;
-    LPC_GPIO_PIN_INT->IST = 0x01;   // Clear pending interrupts
-    LPC_GPIO_PIN_INT->ISEL &= ~0x1; // Edge sensitive
-    LPC_GPIO_PIN_INT->SIENF |= 0x1; // Enable falling edge interrupt
-    NVIC_EnableIRQ(PIN_INT0_IRQn);
+    return LPC_GPIO_PORT->W[PORT_nRESET * 32 + PIN_nRESET_IN_BIT] ? 1 : 0;
 }
 
-void GPIO0_IRQHandler()
+void target_forward_reset(bool assert_reset)
 {
-    isr_evt_set(isr_flags, isr_notify);
-    NVIC_DisableIRQ(PIN_INT0_IRQn);
-    // ACK interrupt
-    LPC_GPIO_PIN_INT->IST = 0x01;
+    // Do nothing - reset is forwarded in gpio_get_sw_reset
+}
+
+void gpio_set_board_power(bool powerEnabled)
+{
 }

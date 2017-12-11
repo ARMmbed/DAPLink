@@ -40,6 +40,8 @@ uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
+static uint8_t flow_control_enabled = 0;
+
 static int32_t reset(void);
 
 int32_t uart_initialize(void)
@@ -147,7 +149,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
     }
 
-    if (config->FlowControl == UART_FLOW_CONTROL_RTS_CTS) {
+    if (flow_control_enabled) {
         LPC_IOCON->PIO0_17 |= 0x01;     // RTS
         LPC_IOCON->PIO0_7  |= 0x01;     // CTS
         // enable auto RTS and CTS
@@ -249,7 +251,12 @@ int32_t uart_get_configuration(UART_Configuration *config)
     }
 
     // get flow control
-    config->FlowControl = UART_FLOW_CONTROL_NONE;
+    if (flow_control_enabled) {
+    	config->FlowControl = UART_FLOW_CONTROL_RTS_CTS;
+    }
+    else {
+    	config->FlowControl = UART_FLOW_CONTROL_NONE;
+    }
     return 1;
 }
 
@@ -283,7 +290,7 @@ int32_t uart_read_data(uint8_t *data, uint16_t size)
 
 void uart_enable_flow_control(bool enabled)
 {
-    // Flow control not implemented for this platform
+    flow_control_enabled = (uint8_t)enabled;
 }
 
 void UART_IRQHandler(void)
@@ -336,6 +343,7 @@ void UART_IRQHandler(void)
 
 static int32_t reset(void)
 {
+    uint32_t mcr;
     // Reset FIFOs
     LPC_USART->FCR = 0x06;
     baudrate  = 0;
@@ -345,8 +353,17 @@ static int32_t reset(void)
     circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
     circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
 
+    // Enable loopback mode to drain remaining bytes (even if flow control is on)
+    mcr = LPC_USART->MCR;
+    LPC_USART->MCR = mcr | (1 << 4);
+
     // Ensure a clean start, no data in either TX or RX FIFO
-    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
+    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6))) {
+        LPC_USART->FCR = (1 << 1) | (1 << 2);
+    }
+
+    // Restore previous mode (loopback off)
+    LPC_USART->MCR = mcr;
 
     while (LPC_USART->LSR & 0x01) {
         LPC_USART->RBR;    // Dump data from RX FIFO

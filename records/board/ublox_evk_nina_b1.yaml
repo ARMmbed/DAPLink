@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_ublox_evk_nina_b1
+    sources:
+        board:
+            - source/board/ublox_evk_nina_b1.c
+        target:
+            - source/target/nordic/nrf5x/target.c
+            - source/target/nordic/target_reset_nrf5x_sam3u2c.c

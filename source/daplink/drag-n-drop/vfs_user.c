@@ -30,11 +30,11 @@
 #include "settings.h"
 #include "target_reset.h"
 #include "daplink.h"
-#include "IO_Config.h"      // for NVIC_SystemReset
 #include "version_git.h"
 #include "info.h"
 #include "gpio.h"           // for gpio_get_sw_reset
 #include "flash_intf.h"     // for flash_intf_target
+#include "cortex_m.h"
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
@@ -183,12 +183,12 @@ void vfs_user_disconnecting()
 {
     // Reset if programming was successful  //TODO - move to flash layer
     if (daplink_is_bootloader() && (ERROR_SUCCESS == vfs_mngr_get_transfer_status())) {
-        NVIC_SystemReset();
+        SystemReset();
     }
 
     // If hold in bootloader has been set then reset after usb is disconnected
     if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
-        NVIC_SystemReset();
+        SystemReset();
     }
 
     remount_count++;

@@ -96,9 +96,10 @@ class ProjectFirmwareBundle(firmware.FirmwareBundle):
         firmware_list = []
         for name in project_dir_list:
             build_dir = tool_dir + os.sep + name + os.sep + 'build'
-            daplink_firmware = DAPLinkFirmware(name, self, build_dir)
-            if daplink_firmware.valid:
-                firmware_list.append(daplink_firmware)
+            if os.path.isdir(build_dir):
+                daplink_firmware = DAPLinkFirmware(name, self, build_dir)
+                if daplink_firmware.valid:
+                    firmware_list.append(daplink_firmware)
         self._firmware_list = firmware_list
 
     def get_firmware_list(self):

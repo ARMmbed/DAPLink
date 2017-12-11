@@ -25,6 +25,7 @@ import binascii
 import struct
 import intelhex
 import offset_update
+from os.path import dirname, join
 
 VECTOR_FMT = "<7I"
 CHECKSUM_FMT = "<1I"
@@ -48,6 +49,8 @@ def main():
     output_file_hex = args.output + ".hex"
     output_file_binary = args.output + ".bin"
     output_file_txt = args.output + ".txt"
+    output_file_c = args.output + ".c"
+    output_file_c_generic = join(dirname(args.output), "bootloader_image.c")
     output_file_legacy = args.output + "_legacy_0x8000.bin"
     output_file_legacy_5000 = args.output + "_legacy_0x5000.bin"
     output_file_legacy_txt = args.output + "_legacy.txt"
@@ -108,6 +111,23 @@ def main():
     new_hex_file.tofile(output_file_binary, 'bin')
     with open(output_file_txt, 'wb') as file_handle:
         file_handle.write("0x%08x\r\n" % crc32)
+
+    # Write out data as a C array
+    data = new_hex_file.tobinarray(start=start, size=size)
+    data = list(bytearray(data))
+    output_data = bytearray('static const unsigned int image_start = 0x%08x;\n'
+                            'static const unsigned int image_size = 0x%08x;\n'
+                            'static const char image_data[0x%08x] = {\n    ' %
+                            (start, size, size))
+    for i, byte_val in enumerate(data):
+        output_data.extend('0x%02x' % byte_val + ', ')
+        if ((i + 1) % 0x20) == 0:
+            output_data.extend('\n    ')
+    output_data.extend(bytearray('};\n'))
+    with open(output_file_c, 'wb') as file_handle:
+        file_handle.write(output_data)
+    with open(output_file_c_generic, 'wb') as file_handle:
+        file_handle.write(output_data)
 
     # Print info on operation
     print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))

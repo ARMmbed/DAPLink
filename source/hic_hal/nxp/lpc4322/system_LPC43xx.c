@@ -31,6 +31,7 @@
 
 #include "lpc43xx.h"
 #include "fpu_enable.h"
+#include "board.h"
 
 /*----------------------------------------------------------------------------
   Define clocks
@@ -40,9 +41,9 @@
 /*----------------------------------------------------------------------------
   Clock Variable definitions
  *----------------------------------------------------------------------------*/
-uint32_t SystemCoreClock = 204000000;    /* System Clock Frequency (Core Clock)*/
+uint32_t SystemCoreClock = 96000000;    /* System Clock Frequency (Core Clock)*/
 
-extern uint32_t getPC(void);
+extern uint32_t __Vectors;
 
 /**
  * Initialize the system
@@ -55,37 +56,14 @@ extern uint32_t getPC(void);
  */
 void SystemInit(void)
 {
-#if !defined(CORE_M0)
     // Set up Cortex_M3 or M4 VTOR register to point to vector table
-    // This code uses a toolchain defined symbol to locate the vector table
-    // If this is not completed, interrupts are likely to cause an exception.
-    unsigned int *pSCB_VTOR = (unsigned int *) 0xE000ED08;
-#if defined(__IAR_SYSTEMS_ICC__)
-    extern void *__vector_table;
-    *pSCB_VTOR = (unsigned int)&__vector_table;
-#elif defined(__CODE_RED)
-    extern void *g_pfnVectors;
-    *pSCB_VTOR = (unsigned int)g_pfnVectors;
-#elif defined(__ARMCC_VERSION)
-    extern void *__Vectors;
-    *pSCB_VTOR = (unsigned int)&__Vectors;
-#else
-#error Unknown compiler
-#endif
-#else
-    // Cortex M0?
-#error Cannot configure VTOR on Cortex_M0
-#endif
-#if defined(CORE_M4) && defined(USE_FPU)
+    SCB->VTOR = (unsigned int)&__Vectors;
+
     fpuEnable();
-#endif
+
     // In case we are running from internal flash, we configure the flash
-    // accelerator. This is a conservative value that should work up to 204
-    // MHz on the LPC43xx or 180 MHz on the LPC18xx. This value may change
-    // as the chips are characterized and should also change based on
-    // core clock speed.
+    // accelerator.
 #define FLASH_ACCELERATOR_SPEED 6
-#ifdef INTERNAL_FLASH
     {
         uint32_t *MAM, t;
         // Set up flash controller for both banks
@@ -100,5 +78,23 @@ void SystemInit(void)
         t &= ~(0xF << 12);
         *MAM = t | (FLASH_ACCELERATOR_SPEED << 12);
     }
-#endif
+
+    board_init();
+}
+
+void SystemReset(void)
+{
+    /* Ensure all outstanding memory accesses included buffered write are completed before reset */
+    __DSB();
+
+    LPC_WWDT->MOD |= (1 << 1);
+    LPC_WWDT->MOD |= (1 << 0);
+    LPC_WWDT->FEED = 0xAA;
+    LPC_WWDT->FEED = 0x55;
+
+    /* Ensure completion of memory access */
+    __DSB();
+
+    /* wait until reset */
+    while(1);
 }

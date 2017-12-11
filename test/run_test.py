@@ -223,14 +223,14 @@ class TestManager(object):
                            test_configuration.bl_firmware)
             test_info.info("Target: %s" % test_configuration.target)
 
-            if self._load_if:
-                if_path = test_configuration.if_firmware.hex_path
-                board.load_interface(if_path, test_info)
-
             valid_bl = test_configuration.bl_firmware is not None
             if self._load_bl and valid_bl:
                 bl_path = test_configuration.bl_firmware.hex_path
                 board.load_bootloader(bl_path, test_info)
+
+            if self._load_if:
+                if_path = test_configuration.if_firmware.hex_path
+                board.load_interface(if_path, test_info)
 
             board.set_check_fs_on_remount(True)
 

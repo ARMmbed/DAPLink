@@ -55,6 +55,8 @@ static bool cortex_in_isr(void)
     return (__get_xPSR() & 0x1F) != 0;
 }
 
+extern void SystemReset(void);
+
 #ifdef __cplusplus
 }
 #endif

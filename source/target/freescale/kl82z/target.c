@@ -31,6 +31,6 @@ target_cfg_t target_device = {
     .flash_start    = 0,
     .flash_end      = KB(128),
     .ram_start      = 0x1FFFA000,
-    .ram_end        = 0x2002000,
+    .ram_end        = 0x20012000,
     .flash_algo     = (program_target_t *) &flash,
 };

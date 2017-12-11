@@ -42,6 +42,10 @@ if [%1]==[] pip install -r requirements.txt
 if not [%1]==[] pip install -r %1
 pip freeze                                      > uvision_release\build_requirements.txt
 
+@REM build bootloader images first (In the future this should be done with a pattern like *_bl)
+progen generate -t uvision -b -p kl26z_bl
+progen generate -t uvision -b -p k20dx_bl
+progen generate -t uvision -b -p sam3u2c_bl
 @REM build but continue if there are errors
 progen generate -t uvision -b
 @set level=%errorlevel%
