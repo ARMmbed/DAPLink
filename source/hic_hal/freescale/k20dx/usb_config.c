@@ -27,9 +27,6 @@
 #define USBD_RTX_CORE_STACK         0
 #define USBD_RTX_DEVICE_STACK       0
 #define USBD_RTX_ENDPOINT0_STACK    0
-#define HID_ENDPOINT                1
-#define WEBUSB_HID_ENDPOINT         1
-
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)

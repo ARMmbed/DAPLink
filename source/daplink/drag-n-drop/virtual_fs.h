@@ -32,7 +32,7 @@ extern "C" {
 #define VFS_SECTOR_SIZE         512
 #define VFS_INVALID_SECTOR      0xFFFFFFFF
 #define VFS_FILE_INVALID        0
-#define VFS_MAX_FILES           4
+#define VFS_MAX_FILES           16
 
 typedef char vfs_filename_t[11];
 

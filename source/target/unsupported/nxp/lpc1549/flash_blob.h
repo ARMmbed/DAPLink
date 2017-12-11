@@ -19,10 +19,16 @@
  * limitations under the License.
  */
 
-#include "flash_blob.h"
+#ifndef TARGET_FLASH_H
+#define TARGET_FLASH_H
+
+#include "target_struct.h"
+#include "swd_host.h"
+#include "stdint.h"
 
 static const uint32_t LPC1549_FLM[] = {
-    /*0x000*/ 0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
+    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
+
     /*0x020*/ 0x47700b00, 0x21004842, 0x60416001, 0x64012101, 0x319bf24c, 0x21026441, 0x1c80f840, 0x47702000,
     /*0x040*/ 0x47702000, 0x41f0e92d, 0x20324c3a, 0x2500444c, 0xe884263fL, 0xf1040061L, 0x4f370114, 0x46204688,
     /*0x060*/ 0x696047b8, 0x2034b958, 0x61e884, 0x60e0f642, 0x464160e0, 0x47b84620, 0x28006960, 0x2001d000,
@@ -35,7 +41,7 @@ static const uint32_t LPC1549_FLM[] = {
     /*0x140*/
 };
 
-static const program_target_t flash = {
+static const TARGET_FLASH flash = {
     0x02000025, // Init
     0x02000041, // UnInit
     0x02000045, // EraseChip
@@ -54,3 +60,5 @@ static const program_target_t flash = {
 
     256          // ram_to_flash_bytes_to_be_written
 };
+
+#endif

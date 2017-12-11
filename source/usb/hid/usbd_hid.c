@@ -492,7 +492,7 @@ void USBD_HID_SOF_Event(void)
 
 __task void USBD_RTX_HID_EP_INTIN_Event(void)
 {
-	LastWasWebusb = __FALSE;
+    LastWasWebusb = __FALSE;
 	
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -505,7 +505,7 @@ __task void USBD_RTX_HID_EP_INTIN_Event(void)
 
 __task void USBD_RTX_HID_WEBUSB_EP_INTIN_Event(void)
 {
-	LastWasWebusb = __TRUE;
+    LastWasWebusb = __TRUE;
 	
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -525,7 +525,7 @@ __task void USBD_RTX_HID_WEBUSB_EP_INTIN_Event(void)
 
 __task void USBD_RTX_HID_EP_INTOUT_Event(void)
 {
-	LastWasWebusb = __FALSE;
+    LastWasWebusb = __FALSE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -538,7 +538,7 @@ __task void USBD_RTX_HID_EP_INTOUT_Event(void)
 
 __task void USBD_RTX_HID_WEBUSB_EP_INTOUT_Event(void)
 {
-	LastWasWebusb = __TRUE;
+    LastWasWebusb = __TRUE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -558,7 +558,7 @@ __task void USBD_RTX_HID_WEBUSB_EP_INTOUT_Event(void)
 
 __task void USBD_RTX_HID_EP_INT_Event(void)
 {
-	LastWasWebusb = __FALSE;
+    LastWasWebusb = __FALSE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -568,7 +568,7 @@ __task void USBD_RTX_HID_EP_INT_Event(void)
 
 __task void USBD_RTX_HID_WEBUSB_EP_INT_Event(void)
 {
-	LastWasWebusb = __TRUE;
+    LastWasWebusb = __TRUE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
