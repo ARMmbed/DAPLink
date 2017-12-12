@@ -321,3 +321,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtconnect04s.yaml
+    lpc11u35_96b_nitrogen_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/96b_nitrogen.yaml

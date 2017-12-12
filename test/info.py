@@ -81,6 +81,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
+    ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -140,6 +141,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
+    (   0x9014,     'lpc11u35_96b_nitrogen_if',                 None,               'Seeed-96Boards-Nitrogen'               ),
     (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
