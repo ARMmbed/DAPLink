@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_96b_nitrogen
+    sources:
+        board:
+            - source/board/96b_nitrogen.c
+        target:
+            - source/target/nordic/nrf5x/target.c
+            - source/target/nordic/target_reset_nrf52.c
