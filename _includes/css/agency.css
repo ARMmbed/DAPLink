@@ -6,7 +6,7 @@
 
 body {
     overflow-x: hidden;
-    font-family: "Calibri";
+    font-family: "Lato", sans-serif;
     color: #{{ site.data.template.color.secondary-dark }};
 }
 
