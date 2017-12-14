@@ -142,9 +142,8 @@ class MassStorageTester(object):
         """Add a list of directoies"""
         self._mock_dir_list_after.extend(dir_list)
 
-    def _check_data_correct(self, expected_data, test_info):
+    def _check_data_correct(self, expected_data, _):
         """Return True if the actual data written matches the expected"""
-        print (test_info)
         data_len = len(expected_data)
         data_loaded = self.board.read_target_memory(self._start, data_len)
         return _same(expected_data, data_loaded)
