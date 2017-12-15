@@ -176,6 +176,16 @@ def _compute_crc(hex_file_path):
     return data_crc32, embedded_crc32
 
 
+def _run_chkdsk(drive):
+    args = ["chkdsk", drive]
+    process = subprocess.Popen(args, stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    process.communicate(input='n\r\n')  # Answer no if prompted
+    process.wait()
+    return process.returncode
+
+
 class AssertInfo(object):
 
     def __init__(self, file_name, line_number):
@@ -360,15 +370,38 @@ class DaplinkBoard(object):
         """Check if the raw filesystem is valid"""
         if sys.platform.startswith("win"):
             test_info = parent_test.create_subtest('test_fs')
-            args = ["chkdsk", self.mount_point]
-            process = subprocess.Popen(args, stdin=subprocess.PIPE,
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            process.communicate(input='n\r\n')  # Answer no if prompted
-            process.wait()
-            test_info.info('chkdsk returned %s' % process.returncode)
-            if process.returncode != 0:
+            returncode = _run_chkdsk(self.mount_point)
+            test_info.info('chkdsk returned %s' % returncode)
+            if returncode != 0:
                 test_info.failure('Disk corrupt')
+
+            # Windows 8/10 workaround - rerun chkdsk until disk caching is on
+            # Notes about this problem:
+            # - This is less likely to occur when the "storage" service is
+            #     turned off and/or you are running as administrator
+            # - When creating a directory with os.mkdir the
+            #     following error occurs: "WindowsError: [Error 1392] The
+            #     file or directory is corrupted and unreadable: '<directory>'"
+            # - When creating a file with open(<filename>, "wb") the
+            #     following error occurs: "OError: [Errno 22] invalid
+            #     mode ('wb') or filename: '<filename>'"
+            # - When a file or directory is created on the drive in explorer
+            #     and you preform a refresh, the newly created file or
+            #     directory disappears
+            persist_test_dir = self.get_file_path("persist_test_dir")
+            for _ in range(10):
+                try:
+                    os.mkdir(persist_test_dir)
+                except EnvironmentError as exception:
+                    test_info.info("cache check exception %s" % exception)
+                if os.path.exists(persist_test_dir):
+                    os.rmdir(persist_test_dir)
+                    break
+                test_info.info("running checkdisk to re-enable caching")
+                _run_chkdsk(self.mount_point)
+            else:
+                raise Exception("Unable to re-enable caching")
+
         # TODO - as a future improvement add linux and mac support
 
     # Tests for the following:
