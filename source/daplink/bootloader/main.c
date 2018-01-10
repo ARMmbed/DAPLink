@@ -29,6 +29,7 @@
 #include "info.h"
 #include "target_config.h"
 #include "util.h"
+#include "cortex_m.h"
 
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
@@ -106,7 +107,7 @@ void USBD_SignalHandler()
 void HardFault_Handler()
 {
     util_assert(0);
-    NVIC_SystemReset();
+    SystemReset();
 
     while (1); // Wait for reset
 }
@@ -204,7 +205,7 @@ __task void main_task(void)
                     break;
 
                 case MAIN_USB_DISCONNECTED:
-                    NVIC_SystemReset();
+                    SystemReset();
                     break;
 
                 case MAIN_USB_CONNECTED:

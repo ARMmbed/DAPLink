@@ -1,4 +1,4 @@
-/**
+d/**
  * @file    usb_config.c
  * @brief   
  *
@@ -24,6 +24,9 @@
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
+#define USBD_RTX_CORE_STACK         0
+#define USBD_RTX_DEVICE_STACK       0
+#define USBD_RTX_ENDPOINT0_STACK    0
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
@@ -50,7 +53,7 @@
 //       <i> Device release number in binary-coded decimal (bcdDevice)
 //   </h>
 #define USBD_POWER                  0
-#define USBD_MAX_PACKET0            8
+#define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
 #define USBD_DEVDESC_IDPRODUCT      0x0204
 #define USBD_DEVDESC_BCDDEVICE      0x0100
@@ -83,8 +86,8 @@
 //     </e>
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
-#define USBD_STRDESC_MAN            L"MBED"
-#define USBD_STRDESC_PROD           L"MBED CMSIS-DAP"
+#define USBD_STRDESC_MAN            L"ARM"
+#define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -128,15 +131,42 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#define USBD_HID_ENABLE             1
-#define USBD_HID_EP_INTIN           1
-#define USBD_HID_EP_INTOUT          1
+#ifndef HID_ENDPOINT
+#define HID_ENDPOINT 0
+#else
+#define HID_ENDPOINT 1
+#endif
+
+#ifndef WEBUSB_HID_ENDPOINT
+#define WEBUSB_HID_ENDPOINT 0
+#else
+#define WEBUSB_HID_ENDPOINT 1
+
+#if !HID_ENDPOINT
+#error "HID Endpoint must be enabled if WEBUSB_HID_ENDPOINT is"
+#endif
+#endif
+
+#define USBD_HID_ENABLE             HID_ENDPOINT
+#define USBD_HID_WEBUSB_ENABLE      WEBUSB_HID_ENDPOINT
+#define USBD_HID_EP_INTIN           5
+#define USBD_HID_EP_INTOUT          5
+
+#if WEBUSB_HID_ENDPOINT
+// Pick a unique endpoint for the WEBUSB HID IF.
+#define USBD_HID_WEBUSB_EP_INTIN    1
+#define USBD_HID_WEBUSB_EP_INTOUT   1
+#endif
+
+#define USBD_HID_ENABLE             HID_ENDPOINT
+#define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          0
-#define USBD_HID_HS_WMAXPACKETSIZE  4
+#define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
-#define USBD_HID_STRDESC            L"MBED CMSIS-DAP"
+#define USBD_HID_STRDESC            L"CMSIS-DAP"
+#define USBD_HID_WEBUSB_STRDESC     L"WebUSB: CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
 #define USBD_HID_INREPORT_MAX_SZ    64
@@ -173,17 +203,25 @@
 //         </h>
 //       </h>
 //     </e>
-#define USBD_MSC_ENABLE             1
+#ifndef MSC_ENDPOINT
+#define MSC_ENDPOINT 0
+#else
+#define MSC_ENDPOINT 1
+#endif
+#define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          2
 #define USBD_MSC_EP_BULKOUT         2
+#define USBD_MSC_EP_BULKIN_STACK    0
 #define USBD_MSC_WMAXPACKETSIZE     64
 #define USBD_MSC_HS_ENABLE          0
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
+// Make sure changes to USBD_MSC_INQUIRY_DATA are coordinated with mbed-ls
+// since this is used to detect DAPLink drives
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
-                                    "microcontroller " \
-                                    "1.0 "
+                                    "VFS             " \
+                                    "0.1"
 
 //     <e0.0> Audio Device (ADC)
 //       <i> Enable class support for Audio Device (ADC)
@@ -284,8 +322,15 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
-#define USBD_CDC_ACM_ENABLE             1
+
+#ifndef CDC_ENDPOINT
+#define CDC_ENDPOINT 0
+#else
+#define CDC_ENDPOINT 1
+#endif
+#define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           3
+#define USBD_CDC_ACM_EP_INTIN_STACK     0
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          0
@@ -293,14 +338,15 @@
 #define USBD_CDC_ACM_HS_BINTERVAL       2
 #define USBD_CDC_ACM_EP_BULKIN          4
 #define USBD_CDC_ACM_EP_BULKOUT         4
+#define USBD_CDC_ACM_EP_BULKIN_STACK    0
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
 #define USBD_CDC_ACM_HS_BINTERVAL1      0
-#define USBD_CDC_ACM_CIF_STRDESC        L"USB_CDC"
-#define USBD_CDC_ACM_DIF_STRDESC        L"USB_CDC1"
-#define USBD_CDC_ACM_SENDBUF_SIZE       512
-#define USBD_CDC_ACM_RECEIVEBUF_SIZE    512
+#define USBD_CDC_ACM_CIF_STRDESC        L"mbed Serial Port"
+#define USBD_CDC_ACM_DIF_STRDESC        L"mbed Serial Port"
+#define USBD_CDC_ACM_SENDBUF_SIZE       64
+#define USBD_CDC_ACM_RECEIVEBUF_SIZE    64
 #if (((USBD_CDC_ACM_HS_ENABLE1) && (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_HS_WMAXPACKETSIZE1)) || (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_WMAXPACKETSIZE1))
 #error "Send Buffer size must be larger or equal to Bulk In maximum packet size!"
 #endif
@@ -325,16 +371,6 @@
 //       <i> 0xFF - Class Vendor Specific ID
 //     </e>
 #define USBD_CLS_ENABLE             0
-//     USB DFU support
-#ifdef DFU_INTERFACE
-#define USBD_DFU_ENABLE             1
-#else
-#define USBD_DFU_ENABLE             0
-#endif
-#define USBD_DFU_DNLOAD_ENABLE      1
-#define USBD_DFU_UPLOAD_ENABLE      0
-#define USBD_DFU_STRDESC            L"USB_DFU"
-#define USBD_DFU_XFERBUF_SIZE       1024
 
 //     WebUSB support
 #ifdef WEBUSB_INTERFACE
@@ -343,10 +379,10 @@
 #define USBD_WEBUSB_ENABLE          0
 #endif
 #define USBD_WEBUSB_VENDOR_CODE     0x21
-#define USBD_WEBUSB_BASE_LANDING_URL "devanlai.github.io/webdfu/dfu-util/?vid="
+#define USBD_WEBUSB_BASE_LANDING_URL "armmbed.github.io/dapjs-web-demo/?vid="
 #define USBD_WEBUSB_LANDING_URL     CONCAT_MACRO_TO_STRING(USBD_WEBUSB_BASE_LANDING_URL, USBD_DEVDESC_IDVENDOR)
-#define USBD_WEBUSB_ORIGIN_URL      "devanlai.github.io/"
-#define USBD_WEBUSB_IF_NUM          USBD_DFU_IF_NUM
+#define USBD_WEBUSB_ORIGIN_URL      "armmbed.github.io/"
+#define USBD_WEBUSB_IF_NUM          USBD_HID_WEBUSB_IF_NUM
 
 //     Microsoft OS Descriptors 2.0 (WinUSB) support
 #ifdef WINUSB_INTERFACE
@@ -355,15 +391,15 @@
 #define USBD_WINUSB_ENABLE          0
 #endif
 #define USBD_WINUSB_VENDOR_CODE     0x20
-#define USBD_WINUSB_IF_NUM          USBD_DFU_IF_NUM
+#define USBD_WINUSB_IF_NUM          USBD_HID_WEBUSB_IF_NUM
 //   </e>
 // </e>
 
 
 /* USB Device Calculations ---------------------------------------------------*/
 
-#define USBD_IF_NUM                (USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE+USBD_DFU_ENABLE)
-#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_DFU_ENABLE))
+#define USBD_IF_NUM                (USBD_HID_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
+#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_HID_WEBUSB_ENABLE))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
 #define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
 #define USBD_EP_NUM_CALC2           MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
@@ -371,7 +407,7 @@
 #define USBD_EP_NUM_CALC4           MAX(USBD_EP_NUM_CALC0, USBD_EP_NUM_CALC1)
 #define USBD_EP_NUM_CALC5           MAX(USBD_EP_NUM_CALC2, USBD_EP_NUM_CALC3)
 #define USBD_EP_NUM_CALC6           MAX(USBD_EP_NUM_CALC4, USBD_EP_NUM_CALC5)
-#define USBD_EP_NUM                (USBD_EP_NUM_CALC6)
+#define USBD_EP_NUM                 MAX(USBD_EP_NUM_CALC6, USBD_HID_EP_INTIN*USBD_HID_WEBUSB_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_MSC_ENABLE)
@@ -439,7 +475,8 @@
 #define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
 #define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
 #define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
-#define USBD_DFU_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+0)
+#define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2)
+#define USBD_HID_WEBUSB_IF_NUM      (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
@@ -447,8 +484,8 @@
 #define USBD_CDC_ACM_CIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+0)
 #define USBD_CDC_ACM_DIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+1)
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
-#define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
-#define USBD_DFU_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_MSC_ENABLE)
+#define USBD_HID_WEBUSB_IF_STR_NUM  (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_HID_WEBUSB_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)

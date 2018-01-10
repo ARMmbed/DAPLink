@@ -1,6 +1,6 @@
 /**
  * @file    uart.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -23,6 +23,9 @@
 #include "uart.h"
 #include "lpc43xx_cgu.h"
 #include "lpc43xx_scu.h"
+#include "util.h"
+#include "circ_buf.h"
+#include "settings.h" // for config_get_overflow_detect
 
 static uint32_t baudrate;
 static uint32_t dll;
@@ -30,34 +33,20 @@ static uint32_t tx_in_progress;
 
 extern uint32_t SystemCoreClock;
 
-// Size must be 2^n
+#define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
+#define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
 #define  BUFFER_SIZE    (64)
 
-#ifdef INTERNAL_FLASH
-/* Running on the LPC4322 which uses UART0 */
-#define USE_UART0
-#else
-/* Running on a LPC4370 (i.e. debugging) and it uses UART2 */
-#undef  USE_UART0
-#endif
+circ_buf_t write_buffer;
+uint8_t write_buffer_data[BUFFER_SIZE];
+circ_buf_t read_buffer;
+uint8_t read_buffer_data[BUFFER_SIZE];
 
-#ifdef USE_UART0
+static int32_t reset(void);
+
 #define UART_IRQn  USART0_IRQn
 #define LPC_USART  LPC_USART0
 #define UART_IRQHandler  UART0_IRQHandler
-#else
-#define UART_IRQn  USART2_IRQn
-#define LPC_USART  LPC_USART2
-#define UART_IRQHandler  UART2_IRQHandler
-#endif
-
-static struct {
-    uint8_t  data[BUFFER_SIZE];
-    volatile uint16_t idx_in;
-    volatile uint16_t idx_out;
-    volatile  int16_t cnt_in;
-    volatile  int16_t cnt_out;
-} write_buffer, read_buffer;
 
 // UART Control Pin           P2_2:  GPIO5[2]
 #define PORT_UARTCTRL         5
@@ -68,19 +57,13 @@ static struct {
 int32_t uart_initialize(void)
 {
     NVIC_DisableIRQ(UART_IRQn);
-#ifdef USE_UART0
+
     // The baudrate calculations require the UART to be clocked as SystemCoreClock
     CGU_EntityConnect(CGU_CLKSRC_PLL1, CGU_BASE_UART0);
     CGU_EnableEntity(CGU_BASE_UART0, ENABLE);
     scu_pinmux(2, 0, UART_RX_TX, FUNC1);   /* P2_0: U0_TXD */
     scu_pinmux(2, 1, UART_RX_TX, FUNC1);   /* P2_1: U0_RXD */
-#else
-    // The baudrate calculations require the UART to be clocked as SystemCoreClock
-    CGU_EntityConnect(CGU_CLKSRC_PLL1, CGU_BASE_UART2);
-    CGU_EnableEntity(CGU_BASE_UART2, ENABLE);
-    scu_pinmux(2, 10, UART_RX_TX, FUNC2);   /* P2_10: U2_TXD */
-    scu_pinmux(2, 11, UART_RX_TX, FUNC2);   /* P2_11: U2_RXD */
-#endif
+
     scu_pinmux(2,  2, GPIO_NOPULL, FUNC4);  /* UARTCTRL:  GPIO5[2]  */
     // Control target's UART RX:
     //   UARTCTRL high:  The LPC1549 gets uart input from the LPC4322
@@ -92,13 +75,12 @@ int32_t uart_initialize(void)
     // Transmit Enable
     LPC_USART->TER     = 0x01;
     // reset uart
-    uart_reset();
+    reset();
     // enable rx and tx interrupt
     LPC_USART->IER |= (1 << 0) | (1 << 1);
     NVIC_EnableIRQ(UART_IRQn);
     return 1;
 }
-
 
 int32_t uart_uninitialize(void)
 {
@@ -106,93 +88,35 @@ int32_t uart_uninitialize(void)
     LPC_USART->IER &= ~(0x7);
     NVIC_DisableIRQ(UART_IRQn);
     // reset uart
-    uart_reset();
+    reset();
     return 1;
 }
 
-
 int32_t uart_reset(void)
 {
-    uint8_t *ptr;
-    int32_t  i;
     // disable interrupt
     NVIC_DisableIRQ(UART_IRQn);
-    // Reset FIFOs
-    LPC_USART->FCR = 0x06;
-    baudrate  = 0;
-    dll       = 0;
-    tx_in_progress = 0;
-    ptr = (uint8_t *)&write_buffer;
-
-    for (i = 0; i < sizeof(write_buffer); i++) {
-        *ptr++ = 0;
-    }
-
-    ptr = (uint8_t *)&read_buffer;
-
-    for (i = 0; i < sizeof(read_buffer); i++) {
-        *ptr++ = 0;
-    }
-
-    // Ensure a clean start, no data in either TX or RX FIFO
-    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
-
-    while (LPC_USART->LSR & 0x01) {
-        LPC_USART->RBR;    // Dump data from RX FIFO
-    }
-
+    // reset uart
+    reset();
     // enable interrupt
     NVIC_EnableIRQ(UART_IRQn);
     return 1;
 }
 
-
 int32_t uart_set_configuration(UART_Configuration *config)
 {
     uint8_t DivAddVal = 0;
     uint8_t MulVal = 1;
-    uint16_t dlv;
-    uint8_t mv, dav, hit = 0, data_bits = 8, parity, stop_bits = 0;
-    float ratio, err, calcbaud;
+    uint8_t mv, data_bits = 8, parity, stop_bits = 0;
     // disable interrupt
     NVIC_DisableIRQ(UART_IRQn);
     // reset uart
-    uart_reset();
-    dll =  SystemCoreClock / (16 * config->Baudrate);
+    reset();
     baudrate = config->Baudrate;
-
-    // First we check to see if the basic divide with no DivAddVal/MulVal
-    // ratio gives us an integer result. If it does, we set DivAddVal = 0,
-    // MulVal = 1. Otherwise, we search the valid ratio value range to find
-    // the closest match. This could be more elegant, using search methods
-    // and/or lookup tables, but the brute force method is not that much
-    // slower, and is more maintainable.
-    if ((SystemCoreClock % (16 * config->Baudrate)) != 0) {     // Checking for zero remainder
-        float err_best = (float) config->Baudrate;
-        unsigned short dlmax = dll;
-
-        for (dlv = dlmax / 2; (dlv <= dlmax) && !hit; dlv++) {
-            for (mv = 1; mv <= 15; mv++) {
-                for (dav = 1; dav < mv; dav++) {
-                    ratio = 1.0f + ((float) dav / (float) mv);
-                    calcbaud = (float)SystemCoreClock / (16.0f * (float) dlv * ratio);
-                    err = ((config->Baudrate - calcbaud) > 0) ? (config->Baudrate - calcbaud) : -(config->Baudrate - calcbaud);
-
-                    if (err < err_best) {
-                        dll = dlv;
-                        DivAddVal = dav;
-                        MulVal = mv;
-                        err_best = err;
-
-                        if (err < 10) {
-                            hit = 1;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    // Compute baud rate dividers
+    mv = 15;
+    dll = util_div_round_down(SystemCoreClock, 16 * config->Baudrate);
+    DivAddVal = util_div_round(SystemCoreClock * mv, dll * config->Baudrate * 16) - mv;
     // set LCR[DLAB] to enable writing to divider registers
     LPC_USART->LCR |= (1 << 7);
     // set divider values
@@ -247,7 +171,6 @@ int32_t uart_set_configuration(UART_Configuration *config)
     return 1;
 }
 
-
 int32_t uart_get_configuration(UART_Configuration *config)
 {
     float    br;
@@ -260,7 +183,6 @@ int32_t uart_get_configuration(UART_Configuration *config)
     // If inside +/- 2% tolerance
     if (((br * 100) <= (baudrate * 102)) && ((br * 100) >= (baudrate * 98))) {
         config->Baudrate = baudrate;
-
     } else {
         config->Baudrate = br;
     }
@@ -337,33 +259,18 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 int32_t uart_write_free(void)
 {
-    return BUFFER_SIZE - (write_buffer.cnt_in - write_buffer.cnt_out);
+    return circ_buf_count_free(&write_buffer);
 }
 
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     uint32_t cnt;
-    int16_t  len_in_buf;
 
-    if (size == 0) {
-        return 0;
-    }
-
-    cnt = 0;
-
-    while (size--) {
-        len_in_buf = write_buffer.cnt_in - write_buffer.cnt_out;
-
-        if (len_in_buf < BUFFER_SIZE) {
-            write_buffer.data[write_buffer.idx_in++] = *data++;
-            write_buffer.idx_in &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_in++;
-            cnt++;
-        }
-    }
+    cnt = circ_buf_write(&write_buffer, data, size);
 
     // Make sure that the target LPC1549 can receive the output
     LPC_GPIO_PORT->SET[PORT_UARTCTRL] = PIN_UARTCTRL;
+
     // enable THRE interrupt
     LPC_USART->IER |= (1 << 1);
 
@@ -378,41 +285,25 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
 
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    uint32_t cnt;
-
-    if (size == 0) {
-        return 0;
-    }
-
-    cnt = 0;
-
-    while (size--) {
-        if (read_buffer.cnt_in != read_buffer.cnt_out) {
-            *data++ = read_buffer.data[read_buffer.idx_out++];
-            read_buffer.idx_out &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_out++;
-            cnt++;
-        }
-    }
-
-    return cnt;
+    return circ_buf_read(&read_buffer, data, size);
 }
 
+void uart_enable_flow_control(bool enabled)
+{
+    // Flow control not implemented for this platform
+}
 
 void UART_IRQHandler(void)
 {
     uint32_t iir;
-    int16_t  len_in_buf;
     // read interrupt status
     iir = LPC_USART->IIR;
 
     // handle character to transmit
-    if (write_buffer.cnt_in != write_buffer.cnt_out) {
+    if (circ_buf_count_used(&write_buffer) > 0) {
         // if THR is empty
         if (LPC_USART->LSR & (1 << 5)) {
-            LPC_USART->THR = write_buffer.data[write_buffer.idx_out++];
-            write_buffer.idx_out &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_out++;
+            LPC_USART->THR = circ_buf_pop(&write_buffer);
             tx_in_progress = 1;
         }
 
@@ -428,19 +319,47 @@ void UART_IRQHandler(void)
     if (((iir & 0x0E) == 0x04)  ||        // Rx interrupt (RDA)
             ((iir & 0x0E) == 0x0C))  {        // Rx interrupt (CTI)
         while (LPC_USART->LSR & 0x01) {
-            len_in_buf = read_buffer.cnt_in - read_buffer.cnt_out;
-            read_buffer.data[read_buffer.idx_in++] = LPC_USART->RBR;
-            read_buffer.idx_in &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_in++;
+            uint32_t free;
+            uint8_t data;
 
-            // if buffer full: write by dropping oldest characters
-            if (len_in_buf == BUFFER_SIZE) {
-                read_buffer.idx_out++;
-                read_buffer.idx_out &= (BUFFER_SIZE - 1);
-                read_buffer.cnt_out++;
+            data = LPC_USART->RBR;
+            free = circ_buf_count_free(&read_buffer);
+            if (free > RX_OVRF_MSG_SIZE) {
+                circ_buf_push(&read_buffer, data);
+            } else if (config_get_overflow_detect()) {
+                if (RX_OVRF_MSG_SIZE == free) {
+                    circ_buf_write(&read_buffer, (uint8_t*)RX_OVRF_MSG, RX_OVRF_MSG_SIZE);
+                } else {
+                    // Drop newest
+                }
+            } else {
+                // Drop oldest
+                circ_buf_pop(&read_buffer);
+                circ_buf_push(&read_buffer, data);
             }
         }
     }
 
     LPC_USART->LSR;
+}
+
+static int32_t reset(void)
+{
+    // Reset FIFOs
+    LPC_USART->FCR = 0x06;
+    baudrate  = 0;
+    dll       = 0;
+    tx_in_progress = 0;
+
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
+
+    // Ensure a clean start, no data in either TX or RX FIFO
+    while ((LPC_USART->LSR & ((1 << 5) | (1 << 6))) != ((1 << 5) | (1 << 6)));
+
+    while (LPC_USART->LSR & 0x01) {
+        LPC_USART->RBR;    // Dump data from RX FIFO
+    }
+
+    return 1;
 }

@@ -11,6 +11,7 @@ common:
     includes:
         - source/hic_hal/freescale/kl26z
         - source/hic_hal/freescale/kl26z/MKL26Z4
+        - projectfiles/uvision/kl26z_bl/build
     sources:
         hic_hal:
             - source/hic_hal/freescale

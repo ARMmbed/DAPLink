@@ -1,4 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/stm32f103xb_bl.c

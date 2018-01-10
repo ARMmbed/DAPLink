@@ -32,7 +32,7 @@ BOOL DataOutAsyncReq;
 U32 DataOutUpdateReqMask;
 U8 *ptrDataOut;
 volatile U16 DataOutToSendLen;
-volatile BOOL LastWasSpoofed;
+volatile BOOL LastWasWebusb;
 U16 DataOutSentLen;
 BOOL DataOutEndWithShortPacket;
 
@@ -276,8 +276,8 @@ void USBD_HID_EP_INTIN_Event(U32 event)
 
         // Write the data to the endpoint selected depending on the event parameter.
         // 0: normal HID, 1: WebUSB HID
-        if (LastWasSpoofed) {
-            USBD_WriteEP(usbd_hid_spoof_ep_intin | 0x80, ptrDataOut, bytes_to_send);
+        if (LastWasWebusb) {
+            USBD_WriteEP(usbd_hid_webusb_ep_intin | 0x80, ptrDataOut, bytes_to_send);
         } else {
             USBD_WriteEP(usbd_hid_ep_intin | 0x80, ptrDataOut, bytes_to_send);
         }
@@ -313,8 +313,8 @@ void USBD_HID_EP_INTOUT_Event(U32 event)
     }
 
     // Use parameter event to distinguish between the real HID interface and the WebUSB one.
-    if (LastWasSpoofed) {
-       bytes_rece = USBD_ReadEP(usbd_hid_spoof_ep_intout, ptrDataIn, DataInReceMax - DataInReceLen);
+    if (LastWasWebusb) {
+       bytes_rece = USBD_ReadEP(usbd_hid_webusb_ep_intout, ptrDataIn, DataInReceMax - DataInReceLen);
     } else {
         bytes_rece = USBD_ReadEP(usbd_hid_ep_intout, ptrDataIn, DataInReceMax - DataInReceLen);
     }
@@ -350,7 +350,7 @@ void USBD_HID_Configure_Event(void)
     DataOutUpdateReqMask      = __FALSE;
     ptrDataOut                = NULL;
     DataOutToSendLen          = 0;
-    LastWasSpoofed            = __FALSE;
+    LastWasWebusb             = __FALSE;
     DataOutSentLen            = 0;
     DataOutEndWithShortPacket = __FALSE;
     ptrDataIn                 = NULL;
@@ -371,7 +371,7 @@ void USBD_HID_Configure_Event(void)
 
 void USBD_HID_EP_INT_Event(U32 event)
 {
-    LastWasSpoofed = __FALSE;
+    LastWasWebusb = __FALSE;
 
     if (event & USBD_EVT_IN) {
         USBD_HID_EP_INTIN_Event(event);
@@ -382,9 +382,9 @@ void USBD_HID_EP_INT_Event(U32 event)
     }
 }
 
-void USBD_HID_SPOOF_EP_INT_Event(U32 event)
+void USBD_HID_WEBUSB_EP_INT_Event(U32 event)
 {
-    LastWasSpoofed = __TRUE;
+    LastWasWebusb = __TRUE;
 
     if (event & USBD_EVT_IN) {
         USBD_HID_EP_INTIN_Event(event);
@@ -492,7 +492,7 @@ void USBD_HID_SOF_Event(void)
 
 __task void USBD_RTX_HID_EP_INTIN_Event(void)
 {
-		LastWasSpoofed = __FALSE;
+    LastWasWebusb = __FALSE;
 	
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -503,9 +503,9 @@ __task void USBD_RTX_HID_EP_INTIN_Event(void)
     }
 }
 
-__task void USBD_RTX_HID_SPOOF_EP_INTIN_Event(void)
+__task void USBD_RTX_HID_WEBUSB_EP_INTIN_Event(void)
 {
-		LastWasSpoofed = __TRUE;
+    LastWasWebusb = __TRUE;
 	
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -525,7 +525,7 @@ __task void USBD_RTX_HID_SPOOF_EP_INTIN_Event(void)
 
 __task void USBD_RTX_HID_EP_INTOUT_Event(void)
 {
-		LastWasSpoofed = __FALSE;
+    LastWasWebusb = __FALSE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -536,9 +536,9 @@ __task void USBD_RTX_HID_EP_INTOUT_Event(void)
     }
 }
 
-__task void USBD_RTX_HID_SPOOF_EP_INTOUT_Event(void)
+__task void USBD_RTX_HID_WEBUSB_EP_INTOUT_Event(void)
 {
-	  LastWasSpoofed = __TRUE;
+    LastWasWebusb = __TRUE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -558,7 +558,7 @@ __task void USBD_RTX_HID_SPOOF_EP_INTOUT_Event(void)
 
 __task void USBD_RTX_HID_EP_INT_Event(void)
 {
-	  LastWasSpoofed = __FALSE;
+    LastWasWebusb = __FALSE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -566,9 +566,9 @@ __task void USBD_RTX_HID_EP_INT_Event(void)
     }
 }
 
-__task void USBD_RTX_HID_SPOOF_EP_INT_Event(void)
+__task void USBD_RTX_HID_WEBUSB_EP_INT_Event(void)
 {
-	  LastWasSpoofed = __TRUE;
+    LastWasWebusb = __TRUE;
 
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);

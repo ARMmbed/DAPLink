@@ -90,8 +90,6 @@ extern BOOL  usbd_cls_dev_req(BOOL setup);
 extern BOOL  usbd_cls_if_req(BOOL setup);
 extern BOOL  usbd_cls_ep_req(BOOL setup);
 
-/* USB Device user functions imported to USB DFU Class module              */
-extern void  usbd_dfu_init(void);
 #ifdef __cplusplus
 }
 #endif

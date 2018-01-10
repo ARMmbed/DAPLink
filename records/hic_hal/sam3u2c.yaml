@@ -8,6 +8,7 @@ common:
     includes:
         - source/hic_hal/atmel/sam3u2c
         - source/hic_hal/atmel/sam3u2c
+        - projectfiles/uvision/sam3u2c_bl/build
     sources:
         hic_hal:
             - source/hic_hal/atmel/sam3u2c

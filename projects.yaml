@@ -25,12 +25,10 @@ module:
         - records/usb/usb-hid.yaml
         - records/usb/usb-msc.yaml
         - records/usb/usb-cdc.yaml
-        # - records/usb/usb-dfu.yaml
         - records/usb/usb-webusb.yaml
         - records/usb/usb-winusb.yaml
         - records/daplink/cmsis-dap.yaml
         - records/daplink/drag-n-drop.yaml
-        # - records/daplink/dfu.yaml
         - records/daplink/usb2uart.yaml
         - records/daplink/settings.yaml
         - records/daplink/settings_rom.yaml
@@ -45,24 +43,12 @@ module:
     hic_lpc11u35: &module_hic_lpc11u35
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/lpc11u35.yaml
+    hic_lpc4322: &module_hic_lpc4322
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/lpc4322.yaml
     hic_sam3u2c: &module_hic_sam3u2c
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/sam3u2c.yaml
-    hic_stm32f103xb: &module_hic_stm32f103xb
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stm32f103xb.yaml
-    hic_stlink_v2: &module_hic_stlink_v2
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stlink_v2.yaml
-    hic_stlink_v2_dongle: &module_hic_stlink_v2_dongle
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stlink_v2_dongle.yaml
-    hic_stlink_v2_1: &module_hic_stlink_v2_1
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stlink_v2_1.yaml
-    hic_stlink_v2_1_native: &module_hic_stlink_v2_1_native
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stlink_v2_1_native.yaml
 
 projects:
     kl26z_bl:
@@ -73,26 +59,14 @@ projects:
         - *module_bl
         - *module_hic_k20dx
         - records/board/k20dx_bl.yaml
+    lpc4322_bl:
+        - *module_bl
+        - *module_hic_lpc4322
+        - records/board/lpc4322_bl.yaml
     sam3u2c_bl:
         - *module_bl
         - *module_hic_sam3u2c
         - records/board/sam3u2c_bl.yaml
-    stm32f103xb_bl:
-        - *module_bl
-        - *module_hic_stm32f103xb
-        - records/board/stm32f103xb_bl.yaml
-    stm32f103xb_nucleo_bl:
-        - *module_bl
-        - *module_hic_stlink_v2_1
-        - records/board/stm32f103xb_bl.yaml
-    stm32f103xb_stlink_v2_bl:
-        - *module_bl
-        - *module_hic_stlink_v2
-        - records/board/stm32f103xb_bl.yaml
-    stm32f103xb_stlink_v2_dongle_bl:
-        - *module_bl
-        - *module_hic_stlink_v2_dongle
-        - records/board/stlink_v2_dongle_bl.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c
@@ -197,6 +171,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/xDot-L151.yaml
+    lpc11u35_ff1705_l151_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/FF1705_L151.yaml
     lpc11u35_lpc812xpresso_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -205,6 +183,14 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
+    lpc4322_lpc54114xpresso_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/lpc54114xpresso.yaml
+    lpc4322_lpc54608xpresso_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/lpc54608xpresso.yaml
     lpc11u35_lpc4088dm_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -249,6 +235,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/ssci_chibi.yaml
+    lpc11u35_ro359b_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/ro359b.yaml
     lpc11u35_c027_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -309,7 +299,23 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/wizwiki_w7500p.yaml
+    lpc11u35_mbed_cloud_connect_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mbed_cloud_connect.yaml
     sam3u2c_ncs36510rf_if:
         - *module_if
         - *module_hic_sam3u2c
         - records/board/ncs36510rf.yaml
+    sam3u2c_ublox_evk_nina_b1_if:
+        - *module_if
+        - *module_hic_sam3u2c
+        - records/board/ublox_evk_nina_b1.yaml
+    lpc11u35_vbluno51_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/vbluno51.yaml    
+    lpc11u35_mtconnect04s_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtconnect04s.yaml

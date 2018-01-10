@@ -28,7 +28,7 @@ import itertools
 import mbed_lstools
 import info
 import test_daplink
-from test_info import TestInfoStub
+from test_info import TestInfoStub, TestInfo
 from intelhex import IntelHex
 from pyOCD.board import MbedBoard
 
@@ -207,12 +207,14 @@ class DaplinkBoard(object):
     KEY_USB_INTERFACES = "usb_interfaces"
     KEY_BL_CRC = "bootloader_crc"
     KEY_IF_CRC = "interface_crc"
+    KEY_REMOUNT_COUNT = "remount_count"
 
     def __init__(self, unique_id):
 
         self.unique_id = unique_id
         self.details_txt = None
         self._mode = None
+        self._remount_count = None
         self._assert = None
         self._check_fs_on_remount = False
         self._manage_assert = False
@@ -300,22 +302,12 @@ class DaplinkBoard(object):
             test_info.info("changing mode IF -> BL")
             # Create file to enter BL mode
             start_bl_path = self.get_file_path('START_BL.ACT')
-            with open(start_bl_path, 'wb') as _:
-                pass
-            # Create file to enter BL mode - Legacy
-            start_bl_path = self.get_file_path('START_BL.CFG')
-            with open(start_bl_path, 'wb') as _:
-                pass
+            with open(start_bl_path, 'wb') as _: pass
         elif mode is self.MODE_IF:
             test_info.info("changing mode BL -> IF")
             # Create file to enter IF mode
             start_if_path = self.get_file_path('START_IF.ACT')
-            with open(start_if_path, 'wb') as _:
-                pass
-            # Create file to enter IF mode - Legacy
-            start_if_path = self.get_file_path('START_IF.CFG')
-            with open(start_if_path, 'wb') as _:
-                pass
+            with open(start_if_path, 'wb') as _: pass
         else:
             test_info.warning("Board is in unknown mode")
         self.wait_for_remount(test_info)
@@ -417,6 +409,9 @@ class DaplinkBoard(object):
 
     def load_interface(self, filepath, parent_test):
         """Load an interface binary or hex"""
+        assert isinstance(filepath, str), "Invalid bootloader image!"
+        assert isinstance(parent_test, TestInfo), "Invalid parent test object!"
+
         test_info = parent_test.create_subtest('load_interface')
         self.set_mode(self.MODE_BL, test_info)
 
@@ -448,6 +443,9 @@ class DaplinkBoard(object):
 
     def load_bootloader(self, filepath, parent_test):
         """Load a bootloader binary or hex"""
+        assert isinstance(filepath, str), "Invalid bootloader image!"
+        assert isinstance(parent_test, TestInfo), "Invalid parent test object!"
+
         test_info = parent_test.create_subtest('load_bootloader')
         self.set_mode(self.MODE_IF, test_info)
 
@@ -479,6 +477,8 @@ class DaplinkBoard(object):
             test_info.failure("Bootloader CRC is wrong")
 
     def wait_for_remount(self, parent_test, wait_time=120):
+        mode = self._mode
+        count = self._remount_count
         test_info = parent_test.create_subtest('wait_for_remount')
         elapsed = 0
         start = time.time()
@@ -493,13 +493,26 @@ class DaplinkBoard(object):
         while True:
             if self._update_board_info(False):
                 if os.path.isdir(self.mount_point):
-                    break
+                    # Information returned by mbed-ls could be old.
+                    # Only break from the loop if the second call to
+                    # mbed-ls returns the same mount point.
+                    tmp_mount = self.mount_point
+                    if self._update_board_info(False):
+                        if tmp_mount == self.mount_point:
+                            break
             if elapsed > wait_time:
                 raise Exception("Mount timed out")
             time.sleep(0.1)
             elapsed += 0.1
         stop = time.time()
         test_info.info("mount took %s s" % (stop - start))
+
+        if count is not None and self._remount_count is not None:
+            expected_count = (0 if mode is not self._mode
+                              else (count + 1) & 0xFFFFFFFF)
+            if expected_count != self._remount_count:
+                    test_info.failure('Expected remount count of %s got %s' %
+                                      (expected_count, self._remount_count))
 
         # If enabled check the filesystem
         if self._check_fs_on_remount:
@@ -544,7 +557,10 @@ class DaplinkBoard(object):
         self.details_txt = _parse_kvp_file(details_txt_path)
         self._parse_assert_txt()
 
-        self.mode = None
+        self._remount_count = None
+        if DaplinkBoard.KEY_REMOUNT_COUNT in self.details_txt:
+            self._remount_count = int(self.details_txt[DaplinkBoard.KEY_REMOUNT_COUNT])
+        self._mode = None
         if DaplinkBoard.KEY_MODE in self.details_txt:
             DETAILS_TO_MODE = {
                 "interface": DaplinkBoard.MODE_IF,

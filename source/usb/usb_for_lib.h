@@ -26,7 +26,6 @@
 #include "usbd_lib_cdc.h"
 #include "usbd_lib_hid.h"
 #include "usbd_lib_msc.h"
-#include "usbd_lib_dfu.h"
 
 /* USB System Configuration header file                                       */
 #include "usb_lib.h"

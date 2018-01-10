@@ -3,7 +3,7 @@
 ; *
 ; * Project: LPC18xx CMSIS Package
 ; *
-; * Description: Cortex-M3 Core Device Startup File for the NXP LPC18xx 
+; * Description: Cortex-M3 Core Device Startup File for the NXP LPC18xx
 ; *              Device Series.
 ; *
 ; * Copyright(C) 2011, NXP Semiconductor
@@ -26,7 +26,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000800
+Stack_Size      EQU     0x00000200
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -36,7 +36,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000000
+Heap_Size       EQU     0x00000100
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -61,16 +61,16 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
                 DCD     BusFault_Handler          	; 5 Bus Fault Handler
                 DCD     UsageFault_Handler        	; 6 Usage Fault Handler
                 DCD     Sign_Value                	; 7 Reserved
-                DCD     0                         	; 8 Reserved
-                DCD     0                         	; 9 Reserved
-                DCD     0                         	; 10 Reserved
+                DCD     DAPLINK_BUILD_KEY               ; Build type - BL/IF
+                DCD     DAPLINK_HIC_ID                  ; Compatibility
+                DCD     DAPLINK_VERSION                 ; Version
                 DCD     SVC_Handler               	; 11 SVCall Handler
                 DCD     DebugMon_Handler          	; 12 Debug Monitor Handler
                 DCD     0                         	; 13 Reserved
                 DCD     PendSV_Handler            	; 14 PendSV Handler
                 DCD     SysTick_Handler           	; 15 SysTick Handler
 
-                ; External Interrupts				
+                ; External Interrupts
 				DCD		DAC_IRQHandler	 			; 16 D/A Converter
 				DCD		M0CORE_IRQHandler			; 17 M0 Core
 				DCD		DMA_IRQHandler				; 18 General Purpose DMA
@@ -125,10 +125,12 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
 				DCD		CAN0_IRQHandler				; 67 C_CAN0
 				DCD 	QEI_IRQHandler				; 68 QEI
 
-				  								
+
                 IF      :LNOT::DEF:NO_CRP
-                AREA    |.ARM.__at_0x02FC|, CODE, READONLY
+#if defined(DAPLINK_BL)
+                AREA    |.ARM.__at_0x1A0002FC|, CODE, READONLY
 CRP_Key         DCD     0xFFFFFFFF
+#endif
                 ENDIF
 
                 AREA    |.text|, CODE, READONLY
@@ -145,7 +147,7 @@ Reset_Handler   PROC
                 BX      R0
                 ENDP
 
-; Dummy Exception Handlers (infinite loops which can be modified)                
+; Dummy Exception Handlers (infinite loops which can be modified)
 
 NMI_Handler     PROC
                 EXPORT  NMI_Handler               [WEAK]
@@ -308,13 +310,13 @@ QEI_IRQHandler
 ; User Initial Stack & Heap
 
                 IF      :DEF:__MICROLIB
-                
+
                 EXPORT  __initial_sp
                 EXPORT  __heap_base
                 EXPORT  __heap_limit
-                
+
                 ELSE
-                
+
                 IMPORT  __use_two_region_memory
                 EXPORT  __user_initial_stackheap
 __user_initial_stackheap
@@ -328,14 +330,5 @@ __user_initial_stackheap
                 ALIGN
 
                 ENDIF
-
-                AREA    |.text|,CODE, READONLY
-getPC   		PROC
-				EXPORT  getPC
-
-				MOV     R0,LR
-				BX		LR
-
-				ENDP
 
                 END

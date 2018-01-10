@@ -164,7 +164,7 @@ __task void hid_process(void *argv)
     while (1) {
         // Process DAP Command
         os_sem_wait(&proc_sem, 0xFFFF);
-        DAP_ProcessCommand(USB_Request[proc_idx], temp_buf);
+        DAP_ExecuteCommand(USB_Request[proc_idx], temp_buf);
         memcpy(USB_Request[proc_idx], temp_buf, DAP_PACKET_SIZE);
         proc_idx = (proc_idx + 1) % DAP_PACKET_COUNT;
         os_sem_send(&send_sem);

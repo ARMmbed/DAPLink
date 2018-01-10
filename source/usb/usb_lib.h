@@ -40,11 +40,11 @@ extern const U8 usbd_max_packet0;
  *----------------------------------------------------------------------------*/
 extern const U8 usbd_hid_enable;
 extern const U8 usbd_hid_if_num;
-extern const U8 usbd_hid_spoof_if_num;
+extern const U8 usbd_hid_webusb_if_num;
 extern const U8 usbd_hid_ep_intin;
 extern const U8 usbd_hid_ep_intout;
-extern const U8 usbd_hid_spoof_ep_intin;
-extern const U8 usbd_hid_spoof_ep_intout;
+extern const U8 usbd_hid_webusb_ep_intin;
+extern const U8 usbd_hid_webusb_ep_intout;
 extern const U16 usbd_hid_interval     [2];
 extern const U16 usbd_hid_maxpacketsize[2];
 extern const U8 usbd_hid_inreport_num;
@@ -97,10 +97,6 @@ extern U8 USBD_CDC_ACM_ReceiveBuf[];
 extern U8 USBD_CDC_ACM_NotifyBuf[10];
 
 extern const U8 usbd_webusb_vendor_code;
-
-extern const U8 usbd_dfu_if_num;
-extern U8 USBD_DFU_TransferBuf[];
-extern const U16 usbd_dfu_transfersize;
 
 extern const U8 usbd_winusb_vendor_code;
 
