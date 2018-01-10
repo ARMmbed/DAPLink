@@ -316,7 +316,7 @@ projects:
     lpc11u35_vbluno51_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/vbluno51.yaml    
+        - records/board/vbluno51.yaml
     lpc11u35_mtconnect04s_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -325,3 +325,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/96b_nitrogen.yaml
+    lpc11u35_mtb_wise1510_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1510.yaml
+    lpc11u35_mtb_wise1530_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1530.yaml
+    lpc11u35_mtb_wise1570_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1570.yaml

@@ -108,6 +108,9 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
+    (   0x458,      'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x459,      'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x460,      'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               'L-TEK-FF1705'                          ),
     (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               'L-TEK-FF-LPC546XX'                     ),
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
