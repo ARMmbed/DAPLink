@@ -26,7 +26,7 @@
 }
 #endif
 
-// Keep in sync with the list error_message
+// Keep in sync with the lists error_message and error_type
 typedef enum {
     /* Shared errors */
     ERROR_SUCCESS = 0,
@@ -82,6 +82,7 @@ typedef enum {
 } error_t;
 
 const char *error_get_string(error_t error);
+const char *error_get_type(error_t error);
 
 #ifdef __cplusplus
 }

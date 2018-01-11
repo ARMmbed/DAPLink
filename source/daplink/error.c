@@ -117,6 +117,100 @@ static const char *const error_message[] = {
     "The bootloader CRC did not pass.",
 
 };
+
+static const char *const error_type[] = {
+
+    /* These should always stay the same for each error type. */
+
+    // ERROR_SUCCESS
+    "",
+    // ERROR_FAILURE
+    "internal",
+    // ERROR_INTERNAL
+    "internal",
+
+    /* VFS user errors */
+
+    // ERROR_ERROR_DURING_TRANSFER
+    "transient",
+    // ERROR_TRANSFER_TIMEOUT
+    "user",
+    // ERROR_FILE_BOUNDS
+    "transient",
+    // ERROR_OOO_SECTOR
+    "transient",
+
+    /* Target flash errors */
+
+    // ERROR_RESET
+    "target",
+    // ERROR_ALGO_DL
+    "target",
+    // ERROR_ALGO_DATA_SEQ
+    "target",
+    // ERROR_INIT
+    "target",
+    // ERROR_SECURITY_BITS
+    "user",
+    // ERROR_UNLOCK
+    "target",
+    // ERROR_ERASE_SECTOR
+    "target",
+    // ERROR_ERASE_ALL
+    "target",
+    // ERROR_WRITE
+    "target",
+
+    /* File stream errors */
+
+    // ERROR_SUCCESS_DONE
+    "internal",
+    // ERROR_SUCCESS_DONE_OR_CONTINUE
+    "internal",
+    // ERROR_HEX_CKSUM
+    "user",
+    // ERROR_HEX_PARSER
+    "user",
+    // ERROR_HEX_PROGRAM
+    "user",
+    // ERROR_HEX_INVALID_ADDRESS
+    "user",
+    // ERROR_HEX_INVALID_APP_OFFSET
+    "user",
+
+    /* Flash decoder errors */
+
+    // ERROR_FD_BL_UPDT_ADDR_WRONG
+    "user",
+    // ERROR_FD_INTF_UPDT_ADDR_WRONG
+    "user",
+    // ERROR_FD_UNSUPPORTED_UPDATE
+    "user",
+
+    /* Flash IAP interface */
+
+    // ERROR_IAP_INIT
+    "interface",
+    // ERROR_IAP_UNINIT
+    "interface",
+    // ERROR_IAP_WRITE
+    "interface",
+    // ERROR_IAP_ERASE_SECTOR
+    "interface",
+    // ERROR_IAP_ERASE_ALL
+    "interface",
+    // ERROR_IAP_OUT_OF_BOUNDS
+    "interface",
+    // ERROR_IAP_UPDT_NOT_SUPPORTED
+    "interface",
+    // ERROR_IAP_UPDT_INCOMPLETE
+    "interface",
+    // ERROR_IAP_NO_INTERCEPT
+    "interface",
+    // ERROR_BL_UPDT_BAD_CRC
+    "interface",
+};
+
 COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
 
 const char *error_get_string(error_t error)
@@ -133,4 +227,20 @@ const char *error_get_string(error_t error)
     }
 
     return msg;
+}
+
+const char *error_get_type(error_t error)
+{
+    const char *type = 0;
+
+    if (error < ERROR_COUNT) {
+        type = error_type[error];
+    }
+
+    if (0 == type) {
+        util_assert(0);
+        type = "";
+    }
+
+    return type;
 }

@@ -55,6 +55,9 @@ static const char mbed_redirect_file[] =
     "</body>\r\n"
     "</html>\r\n";
 
+static const char error_prefix[] = "error: ";
+static const char error_type_prefix[] = "error type: ";
+
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 
 static uint8_t file_buffer[VFS_SECTOR_SIZE];
@@ -311,14 +314,27 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    const char *contents = (const char *)error_get_string(vfs_mngr_get_transfer_status());
-    uint32_t size = strlen(contents);
+    uint32_t size = 0;
+    error_t status = vfs_mngr_get_transfer_status();
+    const char *contents = (const char *)error_get_string(status);
+    const char *type = (const char *)error_get_type(status);
 
     if (sector_offset != 0) {
         return 0;
     }
 
-    memcpy(data, contents, size);
+    memcpy(data + size, error_prefix, strlen(error_prefix));
+    size += strlen(error_prefix);
+    memcpy(data + size, contents, strlen(contents));
+    size += strlen(contents);
+    data[size] = '\r';
+    size++;
+    data[size] = '\n';
+    size++;
+    memcpy(data + size, error_type_prefix, strlen(error_type_prefix));
+    size += strlen(error_type_prefix);
+    memcpy(data + size, type, strlen(type));
+    size += strlen(type);
     data[size] = '\r';
     size++;
     data[size] = '\n';
