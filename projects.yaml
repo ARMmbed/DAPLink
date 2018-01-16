@@ -325,6 +325,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/96b_nitrogen.yaml
+    lpc11u35_mtb_mxchip_emw3166_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_mxchip_emw3166.yaml
     lpc11u35_mtb_wise1510_if:
         - *module_if
         - *module_hic_lpc11u35
