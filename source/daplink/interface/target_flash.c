@@ -172,7 +172,9 @@ static error_t target_flash_erase_chip(void)
 static uint32_t target_flash_program_page_min_size(uint32_t addr)
 {
     uint32_t size = 256;
-    util_assert(target_device.sector_size >= size);
+    if (size > target_device.sector_size) {
+        size = target_device.sector_size;
+    }
     return size;
 }
 
