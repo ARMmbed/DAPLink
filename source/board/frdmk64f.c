@@ -18,5 +18,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include "stdbool.h"
+#include "flash_manager.h"
 
 const char *board_id = "0240";
+
+void prerun_board_config(void)
+{
+    flash_manager_set_page_erase(true);
+}
