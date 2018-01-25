@@ -109,6 +109,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0455,     'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0456,     'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x458,      'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x459,      'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this

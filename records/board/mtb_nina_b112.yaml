@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_mtb
+    sources:
+        board:
+            - source/board/mtb_nina_b112.c
+        target:
+            - source/target/nordic/nrf5x/target.c
+            - source/target/nordic/target_reset_nrf52.c

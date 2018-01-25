@@ -329,6 +329,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_mxchip_emw3166.yaml
+    lpc11u35_mtb_nina_b112_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_nina_b112.yaml
     lpc11u35_mtb_murata_abz_078_if:
         - *module_if
         - *module_hic_lpc11u35
