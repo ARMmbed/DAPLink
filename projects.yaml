@@ -93,6 +93,14 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/frdmk64f.yaml
+    k20dx_hexiwear_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/hexiwear.yaml
+    k20dx_rapid_iot_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/rapid_iot.yaml
     k20dx_frdmk66f_if:
         - *module_if
         - *module_hic_k20dx
