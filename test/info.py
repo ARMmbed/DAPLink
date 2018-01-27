@@ -24,6 +24,8 @@ PROJECT_RELEASE_INFO = {
     # Project Name                                  Legacy      Offset      Extension
     ("k20dx_frdmk22f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk64f_if",                           True,       0x5000,     "bin"       ),
+    ("k20dx_hexiwear_if",                           True,       0x8000,     "bin"       ),
+    ("k20dx_rapid_iot_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
@@ -107,6 +109,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
+    (   0x214,      'k20dx_hexiwear_if',                        'k20dx_bl',         'HEXIWEAR'                              ),
+    (   0x228,      'k20dx_rapid_iot_if',                       'k20dx_bl',         'RAPID-IOT'                             ),
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL27Z' when mbed-os supports this
     (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
@@ -182,6 +186,8 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0231,  # K22F
     0x0224,  # K28F
     0x0240,  # K64F
+    0x0214,  # HEXIWEAR
+    0x0228,  # RAPID-IOT
     0x0311,  # K66F
     0x0230,  # K20DX
     0x0200,  # KL25Z
