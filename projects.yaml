@@ -93,6 +93,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/frdmk64f.yaml
+    k20dx_hexiwear_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/hexiwear.yaml
     k20dx_frdmk66f_if:
         - *module_if
         - *module_hic_k20dx
@@ -316,7 +320,7 @@ projects:
     lpc11u35_vbluno51_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/vbluno51.yaml    
+        - records/board/vbluno51.yaml
     lpc11u35_mtconnect04s_if:
         - *module_if
         - *module_hic_lpc11u35

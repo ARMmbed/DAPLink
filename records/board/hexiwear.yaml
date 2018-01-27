@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/hexiwear.c
+        target:
+            - source/target/freescale/hexiwear/target.c
+            - source/target/freescale/target_reset_Kseries.c
