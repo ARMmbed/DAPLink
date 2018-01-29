@@ -82,7 +82,17 @@ typedef enum {
 } error_t;
 
 const char *error_get_string(error_t error);
-const char *error_get_type(error_t error);
+
+typedef unsigned char error_type_t;
+
+#define ERROR_TYPE_INTERNAL 0x1
+#define ERROR_TYPE_TRANSIENT 0x2
+#define ERROR_TYPE_USER 0x4
+#define ERROR_TYPE_TARGET 0x8
+#define ERROR_TYPE_INTERFACE 0x10
+// If you add another error type, update read_file_fail_txt()
+
+error_type_t error_get_type(error_t error);
 
 #ifdef __cplusplus
 }

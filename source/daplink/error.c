@@ -118,97 +118,97 @@ static const char *const error_message[] = {
 
 };
 
-static const char *const error_type[] = {
+static error_type_t error_type[] = {
 
     /* These should always stay the same for each error type. */
 
     // ERROR_SUCCESS
-    "",
+    0,
     // ERROR_FAILURE
-    "internal",
+    ERROR_TYPE_INTERNAL,
     // ERROR_INTERNAL
-    "internal",
+    ERROR_TYPE_INTERNAL,
 
     /* VFS user errors */
 
     // ERROR_ERROR_DURING_TRANSFER
-    "transient",
+    ERROR_TYPE_TRANSIENT,
     // ERROR_TRANSFER_TIMEOUT
-    "user",
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
     // ERROR_FILE_BOUNDS
-    "transient",
+    ERROR_TYPE_TRANSIENT,
     // ERROR_OOO_SECTOR
-    "transient",
+    ERROR_TYPE_TRANSIENT,
 
     /* Target flash errors */
 
     // ERROR_RESET
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_ALGO_DL
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_ALGO_DATA_SEQ
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_INIT
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_SECURITY_BITS
-    "user",
+    ERROR_TYPE_USER,
     // ERROR_UNLOCK
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_ERASE_SECTOR
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_ERASE_ALL
-    "target",
+    ERROR_TYPE_TARGET,
     // ERROR_WRITE
-    "target",
+    ERROR_TYPE_TARGET,
 
     /* File stream errors */
 
     // ERROR_SUCCESS_DONE
-    "internal",
+    ERROR_TYPE_INTERNAL,
     // ERROR_SUCCESS_DONE_OR_CONTINUE
-    "internal",
+    ERROR_TYPE_INTERNAL,
     // ERROR_HEX_CKSUM
-    "user",
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
     // ERROR_HEX_PARSER
-    "user",
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
     // ERROR_HEX_PROGRAM
-    "user",
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
     // ERROR_HEX_INVALID_ADDRESS
-    "user",
+    ERROR_TYPE_USER,
     // ERROR_HEX_INVALID_APP_OFFSET
-    "user",
+    ERROR_TYPE_USER,
 
     /* Flash decoder errors */
 
     // ERROR_FD_BL_UPDT_ADDR_WRONG
-    "user",
+    ERROR_TYPE_USER,
     // ERROR_FD_INTF_UPDT_ADDR_WRONG
-    "user",
+    ERROR_TYPE_USER,
     // ERROR_FD_UNSUPPORTED_UPDATE
-    "user",
+    ERROR_TYPE_USER,
 
     /* Flash IAP interface */
 
     // ERROR_IAP_INIT
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_UNINIT
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_WRITE
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_ERASE_SECTOR
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_ERASE_ALL
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_OUT_OF_BOUNDS
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_UPDT_NOT_SUPPORTED
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_UPDT_INCOMPLETE
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_IAP_NO_INTERCEPT
-    "interface",
+    ERROR_TYPE_INTERFACE,
     // ERROR_BL_UPDT_BAD_CRC
-    "interface",
+    ERROR_TYPE_INTERFACE,
 };
 
 COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
@@ -229,17 +229,12 @@ const char *error_get_string(error_t error)
     return msg;
 }
 
-const char *error_get_type(error_t error)
+error_type_t error_get_type(error_t error)
 {
-    const char *type = 0;
+    error_type_t type = 0;
 
     if (error < ERROR_COUNT) {
         type = error_type[error];
-    }
-
-    if (0 == type) {
-        util_assert(0);
-        type = "";
     }
 
     return type;

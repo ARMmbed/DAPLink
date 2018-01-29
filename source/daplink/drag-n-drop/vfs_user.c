@@ -311,13 +311,22 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     return pos;
 }
 
+// Text representation of each error type, starting from the rightmost bit
+static const char* error_type_names[] = {
+    "internal",
+    "transient",
+    "user",
+    "target",
+    "interface"
+};
+
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t size = 0;
     error_t status = vfs_mngr_get_transfer_status();
     const char *contents = (const char *)error_get_string(status);
-    const char *type = (const char *)error_get_type(status);
+    error_type_t type = error_get_type(status);
 
     if (sector_offset != 0) {
         return 0;
@@ -333,8 +342,25 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
     size++;
     memcpy(data + size, error_type_prefix, strlen(error_type_prefix));
     size += strlen(error_type_prefix);
-    memcpy(data + size, type, strlen(type));
-    size += strlen(type);
+
+    // Write each applicable error type, separated by commas
+    int index = 0;
+    bool first = true;
+    while (type) {
+        if (!first) {
+            memcpy(data + size, ", ", 2);
+            size += 2;
+        }
+        if (type & 1) {
+            size_t len = strlen(error_type_names[index]);
+            memcpy(data + size, error_type_names[index], len);
+            size += len;
+            first = false;
+        }
+        index++;
+        type >>= 1;
+    }
+
     data[size] = '\r';
     size++;
     data[size] = '\n';
