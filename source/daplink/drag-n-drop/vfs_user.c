@@ -78,6 +78,8 @@ static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 static void erase_target(void);
 
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
 void vfs_user_build_filesystem()
 {
     uint32_t file_size;
@@ -324,6 +326,7 @@ static const char* error_type_names[] = {
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t size = 0;
+    char *buf = (char *)data;
     error_t status = vfs_mngr_get_transfer_status();
     const char *contents = (const char *)error_get_string(status);
     error_type_t type = error_get_type(status);
@@ -332,39 +335,27 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
         return 0;
     }
 
-    memcpy(data + size, error_prefix, strlen(error_prefix));
-    size += strlen(error_prefix);
-    memcpy(data + size, contents, strlen(contents));
-    size += strlen(contents);
-    data[size] = '\r';
-    size++;
-    data[size] = '\n';
-    size++;
-    memcpy(data + size, error_type_prefix, strlen(error_type_prefix));
-    size += strlen(error_type_prefix);
+    size += util_write_string(buf + size, error_prefix);
+    size += util_write_string(buf + size, contents);
+    size += util_write_string(buf + size, "\r\n");
+    size += util_write_string(buf + size, error_type_prefix);
 
     // Write each applicable error type, separated by commas
     int index = 0;
     bool first = true;
-    while (type) {
+    while (type && index < ARRAY_SIZE(error_type_names)) {
         if (!first) {
-            memcpy(data + size, ", ", 2);
-            size += 2;
+            size += util_write_string(buf + size, ", ");
         }
         if (type & 1) {
-            size_t len = strlen(error_type_names[index]);
-            memcpy(data + size, error_type_names[index], len);
-            size += len;
+            size += util_write_string(buf + size, error_type_names[index]);
             first = false;
         }
         index++;
         type >>= 1;
     }
 
-    data[size] = '\r';
-    size++;
-    data[size] = '\n';
-    size++;
+    size += util_write_string(buf + size, "\r\n");
     return size;
 }
 
