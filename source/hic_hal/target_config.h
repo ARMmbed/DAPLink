@@ -39,7 +39,6 @@ extern "C" {
 
 // This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
-    
 
 /**
  @struct target_cfg_t
@@ -54,8 +53,6 @@ typedef struct target_cfg {
     uint32_t ram_end;               /*!< Highest contigous RAM address the application uses */
     program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
     uint8_t erase_reset;            /*!< Reset after performing an erase */
-    const sector_info_t* sectors_info; 
-    int sector_info_length;
 } target_cfg_t;
 
 extern target_cfg_t target_device;

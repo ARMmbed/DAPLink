@@ -61,10 +61,6 @@ static const uint32_t K64F_FLM[] = {
     0x00400000, 0x00800000, 0x01000000, 0x01000000, 0x40020004, 0x00000000,
 };
 
-static const sector_info_t sectors_info[] = {
-    {0x00000000, 0x00001000},
- };
-
 static const program_target_t flash = {
     0x20000021, // Init
     0x20000049, // UnInit
