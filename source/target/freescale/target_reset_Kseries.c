@@ -33,24 +33,6 @@ void target_before_init_debug(void)
     swd_set_target_reset(1);
 }
 
-void prerun_target_config(void)
-{
-    // SIM peripheral   0x40047000
-    // address offset   0x    1054
-    uint32_t UUID_LOC = 0x40048054;
-    uint32_t uuid[4] = {0};
-    // get a hold of the target
-    target_set_state(RESET_PROGRAM);
-    // do mass-erase if necessary
-    target_unlock_sequence();
-    // get target UUID
-    swd_read_memory(UUID_LOC, (uint8_t *)&uuid, 16);
-    // stringify and store the MAC generated from a UUID
-    info_set_uuid_target(uuid);
-    // Let the target run
-    target_set_state(RESET_RUN);
-}
-
 void board_init(void)
 {
 }
