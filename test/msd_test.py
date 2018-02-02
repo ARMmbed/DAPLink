@@ -121,10 +121,11 @@ class MassStorageTester(object):
         self._expected_data = data
         self._start = start
 
-    def set_expected_failure_msg(self, msg):
+    def set_expected_failure_msg(self, msg, error_type):
         """Set the expected failure message as a string"""
         assert msg is None or type(msg) is str
         self._expected_failure_msg = msg
+        self._expected_failure_type = error_type
 
     def add_mock_files(self, file_list):
         """Add a list of tuples containing a file and contents"""
@@ -233,7 +234,7 @@ class MassStorageTester(object):
         self.board.test_fs(test_info)
 
         # Check various failure cases
-        msg = self.board.get_failure_message()
+        msg, error_type = self.board.get_failure_message_and_type()
         failure_expected = self._expected_failure_msg is not None
         failure_occured = msg is not None
         if failure_occured and not failure_expected:
@@ -243,12 +244,18 @@ class MassStorageTester(object):
             test_info.failure('Failure expected but did not occur')
             return
         if failure_expected and failure_occured:
-            if msg == self._expected_failure_msg:
-                test_info.info('Failure as expected: "%s"' % msg.strip())
-            else:
+            if msg == self._expected_failure_msg and error_type == self._expected_failure_type:
+                test_info.info(
+                    'Failure as expected: "%s, %s"' %
+                    msg.strip(), error_type.strip())
+            elif msg != self._expected_failure_msg:
                 test_info.failure('Failure but wrong string: "%s" vs "%s"' %
                                   (msg.strip(),
                                    self._expected_failure_msg.strip()))
+            else:
+                test_info.failure(
+                    'Failure but wrong type: "%s" vs "%s"' %
+                    (error_type.strip(), self._expected_failure_type.strip()))
             return
 
         # These cases should have been handled above
@@ -337,7 +344,7 @@ def test_mass_storage(workspace, parent_test):
     #    since it doesn't have a valid vector table
     test = MassStorageTester(board, test_info, "Load blank binary")
     test.set_programming_data(blank_bin_contents, 'image.bin')
-    test.set_expected_failure_msg("The transfer timed out.\r\n")
+    test.set_expected_failure_msg("The transfer timed out.", "transient, user")
     test.set_expected_data(None, start)
     test.run()
 
@@ -347,7 +354,7 @@ def test_mass_storage(workspace, parent_test):
         test = MassStorageTester(board, test_info, "Load blank binary + vector table")
         test.set_programming_data(vectors_and_pad, 'image.bin')
         if locked_when_erased:
-            test.set_expected_failure_msg("The interface firmware ABORTED programming. Image is trying to set security bits\r\n")
+            test.set_expected_failure_msg("The interface firmware ABORTED programming. Image is trying to set security bits", "user")
             test.set_expected_data(None, start)
         else:
             test.set_expected_data(vectors_and_pad, start)
