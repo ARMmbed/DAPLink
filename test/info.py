@@ -82,6 +82,12 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_nina_b112_if',                   False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_murata_abz_078_if',              False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1510_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
