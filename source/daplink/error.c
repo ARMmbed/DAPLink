@@ -231,7 +231,7 @@ const char *error_get_string(error_t error)
 
 error_type_t error_get_type(error_t error)
 {
-    error_type_t type = 0;
+    error_type_t type = ERROR_TYPE_INTERNAL;
 
     if (error < ERROR_COUNT) {
         type = error_type[error];
