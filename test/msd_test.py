@@ -247,7 +247,7 @@ class MassStorageTester(object):
             if msg == self._expected_failure_msg and error_type == self._expected_failure_type:
                 test_info.info(
                     'Failure as expected: "%s, %s"' %
-                    msg.strip(), error_type.strip())
+                    (msg.strip(), error_type.strip()))
             elif msg != self._expected_failure_msg:
                 test_info.failure('Failure but wrong string: "%s" vs "%s"' %
                                   (msg.strip(),
