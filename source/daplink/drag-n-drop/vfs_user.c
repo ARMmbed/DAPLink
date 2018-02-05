@@ -314,13 +314,15 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 }
 
 // Text representation of each error type, starting from the rightmost bit
-static const char* error_type_names[] = {
+static const char* const error_type_names[] = {
     "internal",
     "transient",
     "user",
     "target",
     "interface"
 };
+
+COMPILER_ASSERT(1 << ARRAY_SIZE(error_type_names) == ERROR_TYPE_MASK + 1);
 
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
