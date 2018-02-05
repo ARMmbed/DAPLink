@@ -265,7 +265,7 @@ class DaplinkBoard(object):
             with open(fail_file, 'rb') as fail_file_handle:
                 msg = fail_file_handle.read()
                 lines = msg.splitlines()
-                if lines == 2:
+                if len(lines) == 2:
                     if lines[0].startswith('error: '):
                         error = lines[0][7:]
                     else:
