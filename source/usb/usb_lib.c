@@ -2806,12 +2806,12 @@ const U8 USBD_WebUSBAllowedOriginsHeader[] = {
     U8  bLength;                \
     U8  bDescriptorType;        \
     U8  bScheme;                \
-    U8  URL[sizeof(USBD_##n)-1];\
+    U8  URL[sizeof(USBD_##n)+8];\
   } url##n
 
 #define WEBUSB_HTTP_URL_VAL(n)  \
 {                               \
-    (sizeof(USBD_##n) - 1) + 3, \
+    (sizeof(USBD_##n) + 8) + 3, \
     WEBUSB_URL_TYPE,            \
     WEBUSB_URL_SCHEME_HTTP,     \
     USBD_##n                    \
@@ -2819,14 +2819,14 @@ const U8 USBD_WebUSBAllowedOriginsHeader[] = {
 
 #define WEBUSB_HTTPS_URL_VAL(n) \
 {                               \
-    (sizeof(USBD_##n) - 1) + 3, \
+    (sizeof(USBD_##n) + 8) + 3, \
     WEBUSB_URL_TYPE,            \
     WEBUSB_URL_SCHEME_HTTPS,    \
     USBD_##n                    \
 }
 
 __weak \
-const struct {
+struct {
     WEBUSB_URL_DEF(WEBUSB_LANDING_URL);
     WEBUSB_URL_DEF(WEBUSB_ORIGIN_URL);
 } USBD_WebUSBURLDescriptor
@@ -2838,7 +2838,7 @@ const struct {
 #else
 
 const U8 USBD_WebUSBAllowedOriginsHeader[] = { 0 };
-const U8 USBD_WebUSBURLDescriptor[] = { 0 };
+U8 USBD_WebUSBURLDescriptor[] = { 0 };
 
 BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
 {

@@ -24,6 +24,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "usb_for_lib.h"
+#include "info.h"
 
 /*
  *  USB Device Endpoint 0 Event Callback - WebUSB specific handling (Setup Request To Device)
@@ -63,7 +64,8 @@ __weak BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
                     success = (__FALSE);
                     break;
                 }
-
+                strcat(((WEBUSB_URL_DESCRIPTOR *)pD)->URL, "&bid=");
+                strcat(((WEBUSB_URL_DESCRIPTOR *)pD)->URL, info_get_board_id());
                 USBD_EP0Data.pData = pD;
                 len = ((WEBUSB_URL_DESCRIPTOR *)pD)->bLength;
 
