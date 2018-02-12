@@ -1,3 +1,3 @@
 common:
     macros:
-        - DAPLINK_VERSION=245
+        - DAPLINK_VERSION=246
