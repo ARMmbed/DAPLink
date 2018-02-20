@@ -349,3 +349,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_wise1570.yaml
+    lpc11u35_mtb_laird_bl652_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_laird_bl652.yaml

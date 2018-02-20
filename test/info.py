@@ -88,6 +88,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_wise1510_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_laird_bl652_if',                 False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -120,6 +121,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x458,      'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x459,      'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x460,      'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0461,     'lpc11u35_mtb_laird_bl652_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               'L-TEK-FF1705'                          ),
     (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               'L-TEK-FF-LPC546XX'                     ),
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
