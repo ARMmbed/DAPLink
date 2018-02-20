@@ -345,6 +345,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_murata_abz_078.yaml
+    lpc11u35_mtb_rak811_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_rak811.yaml
     lpc11u35_mtb_wise1510_if:
         - *module_if
         - *module_hic_lpc11u35
