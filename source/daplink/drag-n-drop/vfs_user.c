@@ -56,7 +56,7 @@ static const char mbed_redirect_file[] =
     "</html>\r\n";
 
 static const char error_prefix[] = "error: ";
-static const char error_type_prefix[] = "error type: ";
+static const char error_type_prefix[] = "type: ";
 
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 
@@ -330,7 +330,7 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
     uint32_t size = 0;
     char *buf = (char *)data;
     error_t status = vfs_mngr_get_transfer_status();
-    const char *contents = (const char *)error_get_string(status);
+    const char *contents = error_get_string(status);
     error_type_t type = error_get_type(status);
 
     if (sector_offset != 0) {
