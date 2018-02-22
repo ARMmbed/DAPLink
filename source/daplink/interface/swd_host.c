@@ -925,6 +925,30 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 
             break;
 
+        case HALT:
+            if (!swd_init_debug()) {
+                return 0;
+            }
+
+            // Enable debug and halt the core (DHCSR <- 0xA05F0003)
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
+                return 0;
+            }
+
+            // Wait until core is halted
+            do {
+                if (!swd_read_word(DBG_HCSR, &val)) {
+                    return 0;
+                }
+            } while ((val & S_HALT) == 0);
+            break;
+
+        case RUN:
+            if (!swd_write_word(DBG_HCSR, DBGKEY)) {
+                return 0;
+            }
+            swd_off();
+
         default:
             return 0;
     }
@@ -1024,6 +1048,30 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             }
 
             break;
+
+        case HALT:
+            if (!swd_init_debug()) {
+                return 0;
+            }
+
+            // Enable debug and halt the core (DHCSR <- 0xA05F0003)
+            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
+                return 0;
+            }
+
+            // Wait until core is halted
+            do {
+                if (!swd_read_word(DBG_HCSR, &val)) {
+                    return 0;
+                }
+            } while ((val & S_HALT) == 0);
+            break;
+
+        case RUN:
+            if (!swd_write_word(DBG_HCSR, DBGKEY)) {
+                return 0;
+            }
+            swd_off();
 
         default:
             return 0;
