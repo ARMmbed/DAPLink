@@ -74,9 +74,12 @@ static error_t target_flash_init()
 
 static error_t target_flash_uninit(void)
 {
-    // Resume the target if configured to do so
     if (config_get_auto_rst()) {
+        // Resume the target if configured to do so
         target_set_state(RESET_RUN);
+    } else {
+        // Leave the target halted until a reset occurs
+        target_set_state(RESET_PROGRAM);
     }
 
     swd_off();
