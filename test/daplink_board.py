@@ -271,7 +271,7 @@ class DaplinkBoard(object):
                     else:
                         raise Exception('Can not parse error line in FAIL.TXT')
                     if lines[1].startswith('type: '):
-                        error_type = lines[1][12:]
+                        error_type = lines[1][6:]
                     else:
                         raise Exception('Can not parse type line in FAIL.TXT')
                 else:
