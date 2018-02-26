@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -57,16 +57,12 @@ void gpio_init(void)
     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
 
-    // Keep powered off in bootloader mode
-    // to prevent the target from effecting the state
-    // of the reset line / reset button
-    if (!daplink_is_bootloader()) {
-        // configure pin as GPIO
-        PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
-        // force always on logic 1
-        PIN_POWER_EN_GPIO->PDOR |= 1UL << PIN_POWER_EN_BIT;
-        PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
-    }
+    // configure pin as GPIO
+    PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
+    // set output to 0
+    PIN_POWER_EN_GPIO->PCOR = PIN_POWER_EN;
+    // switch gpio to output
+    PIN_POWER_EN_GPIO->PDDR |= PIN_POWER_EN;
 
     // Let the voltage rails stabilize.  This is especailly important
     // during software resets, since the target's 3.3v rail can take
@@ -75,6 +71,18 @@ void gpio_init(void)
     // button is pressed.
     // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
     busy_wait(1000000);
+}
+
+void gpio_set_board_power(bool powerEnabled)
+{
+    if (powerEnabled) {
+        // enable power switch
+        PIN_POWER_EN_GPIO->PSOR = PIN_POWER_EN;
+    }
+    else {
+        // disable power switch
+        PIN_POWER_EN_GPIO->PCOR = PIN_POWER_EN;
+    }
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
@@ -96,18 +104,13 @@ void gpio_set_msc_led(gpio_led_state_t state)
     gpio_set_hid_led(state);
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 1 : 0;
+    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1;
+
 }
 
-uint8_t GPIOGetButtonState(void)
+uint8_t gpio_get_reset_btn_fwrd(void)
 {
     return 0;
-}
-
-void target_forward_reset(bool assert_reset)
-{
-    // Do nothing - reset button is already tied to the target
-    //              reset pin on k20dx interface hardware
 }

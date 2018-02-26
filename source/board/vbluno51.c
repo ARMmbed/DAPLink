@@ -30,13 +30,11 @@ const char *board_id = "C006";
 // the null terminated character
 // Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
 __attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "VBLUNO51HTM";
-__attribute__((aligned(4)))
 const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
 __attribute__((aligned(4)))
-const char *const daplink_target_url = "https://vngiotlab.github.io/vbluno/";
+const char *const daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/";
 
 void prerun_board_config()
 {
-    uart_enable_flow_control(true);
+    uart_enable_flow_control(false);
 }

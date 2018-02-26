@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -53,7 +53,7 @@ void gpio_init(void)
     PIN_POWER_EN_GPIO->PDDR |= PIN_POWER_EN;
     // set as input
     PIN_SW_RESET_GPIO->PDDR &= ~PIN_SW_RESET;
-    
+
     // Let the voltage rails stabilize.  This is especailly important
     // during software resets, since the target's 3.3v rail can take
     // 20-50ms to drain.  During this time the target could be driving
@@ -78,7 +78,16 @@ void gpio_set_msc_led(gpio_led_state_t state)
     (GPIO_LED_ON == state) ? (PIN_MSC_LED_GPIO->PCOR = PIN_MSC_LED) : (PIN_MSC_LED_GPIO->PSOR = PIN_MSC_LED);
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_SW_RESET_GPIO->PDIR & PIN_SW_RESET) ? 1 : 0;
+    return 0;
+}
+
+uint8_t gpio_get_reset_btn_fwrd(void)
+{
+    return (PIN_SW_RESET_GPIO->PDIR & PIN_SW_RESET) ? 0 : 1;
+}
+
+void gpio_set_board_power(bool powerEnabled)
+{
 }

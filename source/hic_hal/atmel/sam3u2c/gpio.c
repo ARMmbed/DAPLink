@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -36,7 +36,7 @@ void gpio_init(void)
     // Initially enable clock for GPIO and initialize LED ports as output with LED == off
     //
     PMC->PMC_PCER0 = (1 << 10) | (1 << 11) | (1 << 12);  // Enable clock for all PIOs
-    
+
     // DAP LED
     PIN_DAP_LED_PORT->PIO_PER = PIN_DAP_LED;
     PIN_DAP_LED_PORT->PIO_SODR = PIN_DAP_LED;
@@ -102,7 +102,16 @@ void PIOA_IRQHandler(void)
     }
 }
 
-uint8_t gpio_get_sw_reset()
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return (PIN_RESET_IN_FWRD_PORT->PIO_PDSR & PIN_RESET_IN_FWRD) != 0;
+    return 0;
+}
+
+uint8_t gpio_get_reset_btn_fwrd()
+{
+    return (PIN_RESET_IN_FWRD_PORT->PIO_PDSR & PIN_RESET_IN_FWRD) == 0;
+}
+
+void gpio_set_board_power(bool powerEnabled)
+{
 }

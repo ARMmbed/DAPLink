@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 from __future__ import absolute_import
 
 import os
@@ -279,7 +279,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(None)
     test.set_expected_failure_msg("In application programming failed because "
-                                  "the update sent was incomplete.\r\n")
+                                  "the update sent was incomplete.", "interface")
     test.set_expected_mode(board_mode)
     test.run()
     # If bootloader is missing then this should be indicated by a file
@@ -313,15 +313,15 @@ def test_file_type(file_type, board_mode, board, parent_test,
     if file_type != 'bin':
         mode_to_error = {
             board.MODE_IF: ('The starting address for the bootloader '
-                            'update is wrong.\r\n'),
+                            'update is wrong.'),
             board.MODE_BL: ('The starting address for the interface '
-                            'update is wrong.\r\n')
+                            'update is wrong.')
         }
         file_name = get_file_name()
         local_data = get_file_content(data_start + 0x400, raw_data)
         test = DLMassStorageTester(board, test_info, "Wrong Address",
                                    board_mode)
-        test.set_expected_failure_msg(mode_to_error[board_mode])
+        test.set_expected_failure_msg(mode_to_error[board_mode], 'user')
         test.set_programming_data(local_data, file_name)
         test.set_expected_data(raw_data)
         test.set_expected_mode(board_mode)
@@ -347,7 +347,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
                                board_mode)
     test.set_programming_data(local_data, file_name)
     if board_mode == board.MODE_IF:
-        test.set_expected_failure_msg('The bootloader CRC did not pass.\r\n')
+        test.set_expected_failure_msg('The bootloader CRC did not pass.', 'interface')
         test.set_expected_data(None)
     elif board_mode == board.MODE_BL:
         # Interface images can be from other vendors and be missing
@@ -381,7 +381,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
         test = DLMassStorageTester(board, test_info, 'Wrong data CRC',
                                    board_mode)
         test.set_programming_data(local_data, file_name)
-        test.set_expected_failure_msg('The bootloader CRC did not pass.\r\n')
+        test.set_expected_failure_msg('The bootloader CRC did not pass.', 'interface')
         test.set_expected_data(None)
         test.set_expected_mode(board.MODE_IF)
         test.run()

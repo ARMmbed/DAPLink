@@ -48,6 +48,11 @@ typedef struct {
     const uint32_t  program_buffer_size;
 } program_target_t;
 
+typedef struct {
+    const uint32_t start;
+    const uint32_t size;
+} sector_info_t;
+
 #ifdef __cplusplus
 }
 #endif

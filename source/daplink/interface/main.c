@@ -57,13 +57,17 @@
 #define FLAGS_MAIN_CDC_EVENT    (1 << 11)
 // Used by msd when flashing a new binary
 #define FLAGS_LED_BLINK_30MS    (1 << 6)
+
 // Timing constants (in 90mS ticks)
-// USB busy time
+// USB busy time (~3 sec)
 #define USB_BUSY_TIME           (33)
-// Delay before a USB device connect may occur
+// Delay before a USB device connect may occur (~1 sec)
 #define USB_CONNECT_DELAY       (11)
+// Timeout for USB being configured (~2 sec)
+#define USB_CONFIGURE_TIMEOUT   (22)
 // Delay before target may be taken out of reset or reprogrammed after startup
 #define STARTUP_DELAY           (1)
+
 // Decrement to zero
 #define DECZERO(x)              (x ? --x : 0)
 
@@ -99,19 +103,6 @@ __task void timer_task_30mS(void)
         if (!(i++ % 3)) {
             os_evt_set(FLAGS_MAIN_90MS, main_task_id);
         }
-    }
-}
-
-// Forward reset from the user pressing the reset button
-// Boards which tie the reset pin directly to the target
-// should override this function with a stub that does nothing
-__attribute__((weak))
-void target_forward_reset(bool assert_reset)
-{
-    if (assert_reset) {
-        target_set_state(RESET_HOLD);
-    } else {
-        target_set_state(RESET_RUN);
     }
 }
 
@@ -209,10 +200,11 @@ __task void main_task(void)
     gpio_led_state_t msc_led_value = GPIO_LED_OFF;
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
+    uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
     // thread running after usb connected started
     uint8_t thread_started = 0;
     // button state
-    main_reset_state_t main_reset_button_state = MAIN_RESET_RELEASED;
+    uint8_t reset_pressed = 0;
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -270,6 +262,8 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_POWERDOWN) {
             // Disable debug
             target_set_state(NO_DEBUG);
+            // Disable board power before USB is disconnected.
+            gpio_set_board_power(false);
             // Disconnect USB
             usbd_connect(0);
             // Turn off LED
@@ -302,15 +296,18 @@ __task void main_task(void)
             switch (usb_state) {
                 case USB_DISCONNECTING:
                     usb_state = USB_DISCONNECTED;
+                    // Disable board power before USB is disconnected.
+                    gpio_set_board_power(false);
                     usbd_connect(0);
                     break;
 
                 case USB_CONNECTING:
-
                     // Wait before connecting
                     if (DECZERO(usb_state_count) == 0) {
                         usbd_connect(1);
                         usb_state = USB_CHECK_CONNECTED;
+                        // Reset connect timeout
+                        usb_no_config_count = USB_CONFIGURE_TIMEOUT;
                     }
 
                     break;
@@ -322,7 +319,16 @@ __task void main_task(void)
                             thread_started = 1;
                         }
 
+                        // Let the HIC enable power to the target now that high power has been negotiated.
+                        gpio_set_board_power(true);
+
                         usb_state = USB_CONNECTED;
+                    }
+                    else if (DECZERO(usb_no_config_count) == 0) {
+                        // USB configuration timed out, which most likely indicates that the HIC is
+                        // powered by a USB wall wart or similar power source. Go ahead and enable
+                        // board power.
+                        gpio_set_board_power(true);
                     }
 
                     break;
@@ -336,30 +342,16 @@ __task void main_task(void)
 
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
+
             // handle reset button without eventing
-            switch (main_reset_button_state) {
-                default:
-                case MAIN_RESET_RELEASED:
-                    if (0 == gpio_get_sw_reset()) {
-                        main_reset_button_state = MAIN_RESET_PRESSED;
-                        target_forward_reset(true);
-                    }
-
-                    break;
-
-                case MAIN_RESET_PRESSED:
-
-                    // ToDo: add a counter to do a mass erase or target recovery after xxx seconds of being held
-                    if (1 == gpio_get_sw_reset()) {
-                        main_reset_button_state = MAIN_RESET_TARGET;
-                    }
-
-                    break;
-
-                case MAIN_RESET_TARGET:
-                    target_forward_reset(false);
-                    main_reset_button_state = MAIN_RESET_RELEASED;
-                    break;
+            if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
+                // Reset button pressed
+                target_set_state(RESET_HOLD);
+                reset_pressed = 1;
+            } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
+                // Reset button released
+                target_set_state(RESET_RUN);
+                reset_pressed = 0;
             }
 
             // DAP LED

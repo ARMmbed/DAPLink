@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 from __future__ import absolute_import
 
 import os
@@ -218,7 +218,7 @@ class DaplinkBoard(object):
         self._assert = None
         self._check_fs_on_remount = False
         self._manage_assert = False
-        self._update_board_info()
+        self.update_board_info()
 
     def __str__(self):
         return "Name=%s Unique ID=%s" % (self.name, self.get_unique_id())
@@ -251,19 +251,32 @@ class DaplinkBoard(object):
         """Check if the board is connected"""
         return os.path.isdir(self.mount_point)
 
-    def get_failure_message(self):
-        """Get the failure message from fail.txt
+    def get_failure_message_and_type(self):
+        """Get the failure message and types from fail.txt
 
         return None if there there is no failure
         """
-        msg = None
+        error = None
+        error_type = None
         fail_file = self.get_file_path('FAIL.TXT')
         if not self.get_connected():
             raise Exception('Board not connected')
         if os.path.isfile(fail_file):
             with open(fail_file, 'rb') as fail_file_handle:
                 msg = fail_file_handle.read()
-        return msg
+                lines = msg.splitlines()
+                if len(lines) == 2:
+                    if lines[0].startswith('error: '):
+                        error = lines[0][7:]
+                    else:
+                        raise Exception('Can not parse error line in FAIL.TXT')
+                    if lines[1].startswith('type: '):
+                        error_type = lines[1][6:]
+                    else:
+                        raise Exception('Can not parse type line in FAIL.TXT')
+                else:
+                    raise Exception('Wrong number of lines in FAIL.TXT, expected: 2')
+        return error, error_type
 
     def get_assert_info(self):
         """Return an AssertInfo if an assert occurred, else None"""
@@ -491,13 +504,13 @@ class DaplinkBoard(object):
         test_info.info("unmount took %s s" % (stop - start))
         start = time.time()
         while True:
-            if self._update_board_info(False):
+            if self.update_board_info(False):
                 if os.path.isdir(self.mount_point):
                     # Information returned by mbed-ls could be old.
                     # Only break from the loop if the second call to
                     # mbed-ls returns the same mount point.
                     tmp_mount = self.mount_point
-                    if self._update_board_info(False):
+                    if self.update_board_info(False):
                         if tmp_mount == self.mount_point:
                             break
             if elapsed > wait_time:
@@ -525,7 +538,7 @@ class DaplinkBoard(object):
                                       (self._assert.line, self._assert.file))
                 self.clear_assert()
 
-    def _update_board_info(self, exptn_on_fail=True):
+    def update_board_info(self, exptn_on_fail=True):
         """Update board info
 
         Update all board information variables that could

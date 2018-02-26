@@ -189,6 +189,10 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/lpc54608xpresso.yaml
+    lpc11u35_ff_lpc546xx_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/ff_lpc546xx.yaml
     lpc11u35_lpc4088dm_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -316,8 +320,36 @@ projects:
     lpc11u35_vbluno51_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/vbluno51.yaml    
+        - records/board/vbluno51.yaml
     lpc11u35_mtconnect04s_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtconnect04s.yaml
+    lpc11u35_96b_nitrogen_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/96b_nitrogen.yaml
+    lpc11u35_mtb_mxchip_emw3166_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_mxchip_emw3166.yaml
+    lpc11u35_mtb_nina_b112_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_nina_b112.yaml
+    lpc11u35_mtb_murata_abz_078_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_murata_abz_078.yaml
+    lpc11u35_mtb_wise1510_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1510.yaml
+    lpc11u35_mtb_wise1530_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1530.yaml
+    lpc11u35_mtb_wise1570_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_wise1570.yaml

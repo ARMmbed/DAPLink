@@ -20,8 +20,14 @@
  */
 
 #include "target_config.h"
+#include "daplink_addr.h"
+#include "compiler.h"
 
 const char *board_id = "0000";
+
+// Warning - changing the interface start will break backwards compatibility
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == (0x00080000 + KB(32)));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == (KB(124) - KB(32)));
 
 // atsam3u2c target information
 target_cfg_t target_device = {
@@ -29,9 +35,9 @@ target_cfg_t target_device = {
     // Assume memory is regions are same size. Flash algo should ignore requests
     //  when variable sized sectors exist
     // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((KB(128) - KB(32)) / 0x1000),
-    .flash_start    = 0x00080000 + KB(32),
-    .flash_end      = 0x00080000 + KB(128),
+    .sector_cnt     = (DAPLINK_ROM_IF_SIZE / 0x1000),
+    .flash_start    = DAPLINK_ROM_IF_START,
+    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
     .ram_start      = 0x2007C000,
     .ram_end        = 0x20084000
     /* .flash_algo not needed for bootloader */

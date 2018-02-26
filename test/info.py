@@ -61,11 +61,13 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                            False,      0x0000,     "bin"       ),
     ("lpc11u35_c027_if",                            False,      0x0000,     "bin"       ),
+    ("sam3u2c_ncs36510rf_if",                       False,      0x8000,     "bin"       ),
     ("kl26z_nina_b1_if",                            False,      0x8000,     "bin"       ),
     ("lpc11u35_lpc4088dm_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
     ('lpc11u35_ssci_chibi_if',                      False,      0x0000,     "bin"       ),
     ('lpc11u35_ff1705_l151_if',                     False,      0x0000,     "bin"       ),
+    ('lpc11u35_ff_lpc546xx_if',                     False,      0x0000,     "bin"       ),
     ("k20dx_xdot_l151_if",                          False,      0x8000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterhat_if',         None,       0x0000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
@@ -80,6 +82,13 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
     ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
+    ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_nina_b112_if',                   False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_murata_abz_078_if',              False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1510_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -106,7 +115,14 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
-    (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               'L-TEK-FF1705'                          ),  
+    (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0455,     'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0456,     'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x458,      'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x459,      'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x460,      'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               'L-TEK-FF1705'                          ),
+    (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               'L-TEK-FF-LPC546XX'                     ),
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
@@ -139,6 +155,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
+    (   0x9014,     'lpc11u35_96b_nitrogen_if',                 None,               'Seeed-96Boards-Nitrogen'               ),
     (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),

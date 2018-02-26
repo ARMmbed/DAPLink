@@ -55,6 +55,9 @@ static const char mbed_redirect_file[] =
     "</body>\r\n"
     "</html>\r\n";
 
+static const char error_prefix[] = "error: ";
+static const char error_type_prefix[] = "type: ";
+
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 
 static uint8_t file_buffer[VFS_SECTOR_SIZE];
@@ -74,6 +77,8 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
 static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 static void erase_target(void);
+
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 void vfs_user_build_filesystem()
 {
@@ -121,7 +126,7 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
 {
     // Allow settings to be changed if automation mode is
     // enabled or if the user is holding the reset button
-    bool btn_pressed = !gpio_get_sw_reset();
+    bool btn_pressed = gpio_get_reset_btn();
 
     if (!btn_pressed && !config_get_automation_allowed()) {
         return;
@@ -308,21 +313,51 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     return pos;
 }
 
+// Text representation of each error type, starting from the rightmost bit
+static const char* const error_type_names[] = {
+    "internal",
+    "transient",
+    "user",
+    "target",
+    "interface"
+};
+
+COMPILER_ASSERT(1 << ARRAY_SIZE(error_type_names) == ERROR_TYPE_MASK + 1);
+
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    const char *contents = (const char *)error_get_string(vfs_mngr_get_transfer_status());
-    uint32_t size = strlen(contents);
+    uint32_t size = 0;
+    char *buf = (char *)data;
+    error_t status = vfs_mngr_get_transfer_status();
+    const char *contents = error_get_string(status);
+    error_type_t type = error_get_type(status);
 
     if (sector_offset != 0) {
         return 0;
     }
 
-    memcpy(data, contents, size);
-    data[size] = '\r';
-    size++;
-    data[size] = '\n';
-    size++;
+    size += util_write_string(buf + size, error_prefix);
+    size += util_write_string(buf + size, contents);
+    size += util_write_string(buf + size, "\r\n");
+    size += util_write_string(buf + size, error_type_prefix);
+
+    // Write each applicable error type, separated by commas
+    int index = 0;
+    bool first = true;
+    while (type && index < ARRAY_SIZE(error_type_names)) {
+        if (!first) {
+            size += util_write_string(buf + size, ", ");
+        }
+        if (type & 1) {
+            size += util_write_string(buf + size, error_type_names[index]);
+            first = false;
+        }
+        index++;
+        type >>= 1;
+    }
+
+    size += util_write_string(buf + size, "\r\n");
     return size;
 }
 

@@ -26,11 +26,16 @@ setlocal
 cd %~dp0..\
 
 @rem See if we can find uVision. This logic is consistent with progen
-@set uv4exe=c:\Keil_v5\UV4\UV4.exe
-@if exist %uv4exe% goto label1
-	@if [%UV4%]==[] goto error_nomdk
+@if [%UV4%]==[] (
+	@echo UV4 variable is not set, trying to autodetect..
+	if EXIST c:\keil\uv4\uv4.exe (
+		set UV4=c:\keil\uv4\uv4.exe
+	) else if EXIST c:\keil_v5\uv4\uv4.exe (
+		set UV4=c:\keil_v5\uv4\uv4.exe
+	) else goto error_nomdk
+)
+@echo USING UV4=%UV4%
 set uv4exe=%UV4%
-:label1
 
 @set env_exists=0
 @if exist env set env_exists=1

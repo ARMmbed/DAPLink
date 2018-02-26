@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/ff_lpc546xx.c
+        target:
+            - source/target/nxp/lpc54608/target.c
+            - source/target/nxp/target_reset.c
