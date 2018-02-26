@@ -26,7 +26,7 @@
 }
 #endif
 
-// Keep in sync with the list error_message
+// Keep in sync with the lists error_message and error_type
 typedef enum {
     /* Shared errors */
     ERROR_SUCCESS = 0,
@@ -82,6 +82,21 @@ typedef enum {
 } error_t;
 
 const char *error_get_string(error_t error);
+
+typedef unsigned char error_type_t;
+
+#define ERROR_TYPE_INTERNAL 0x1
+#define ERROR_TYPE_TRANSIENT 0x2
+#define ERROR_TYPE_USER 0x4
+#define ERROR_TYPE_TARGET 0x8
+#define ERROR_TYPE_INTERFACE 0x10
+// If you add another error type:
+// 1. update error_type_names, used by read_file_fail_txt()
+// 2. update ERROR_TYPE_MASK
+// 3. make sure that error type bits still fit inside of error_type_t
+#define ERROR_TYPE_MASK 0x1F
+
+error_type_t error_get_type(error_t error);
 
 #ifdef __cplusplus
 }

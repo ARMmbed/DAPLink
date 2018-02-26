@@ -117,6 +117,100 @@ static const char *const error_message[] = {
     "The bootloader CRC did not pass.",
 
 };
+
+static error_type_t error_type[] = {
+
+    /* These should always stay the same for each error type. */
+
+    // ERROR_SUCCESS
+    0,
+    // ERROR_FAILURE
+    ERROR_TYPE_INTERNAL,
+    // ERROR_INTERNAL
+    ERROR_TYPE_INTERNAL,
+
+    /* VFS user errors */
+
+    // ERROR_ERROR_DURING_TRANSFER
+    ERROR_TYPE_TRANSIENT,
+    // ERROR_TRANSFER_TIMEOUT
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
+    // ERROR_FILE_BOUNDS
+    ERROR_TYPE_TRANSIENT,
+    // ERROR_OOO_SECTOR
+    ERROR_TYPE_TRANSIENT,
+
+    /* Target flash errors */
+
+    // ERROR_RESET
+    ERROR_TYPE_TARGET,
+    // ERROR_ALGO_DL
+    ERROR_TYPE_TARGET,
+    // ERROR_ALGO_DATA_SEQ
+    ERROR_TYPE_TARGET,
+    // ERROR_INIT
+    ERROR_TYPE_TARGET,
+    // ERROR_SECURITY_BITS
+    ERROR_TYPE_USER,
+    // ERROR_UNLOCK
+    ERROR_TYPE_TARGET,
+    // ERROR_ERASE_SECTOR
+    ERROR_TYPE_TARGET,
+    // ERROR_ERASE_ALL
+    ERROR_TYPE_TARGET,
+    // ERROR_WRITE
+    ERROR_TYPE_TARGET,
+
+    /* File stream errors */
+
+    // ERROR_SUCCESS_DONE
+    ERROR_TYPE_INTERNAL,
+    // ERROR_SUCCESS_DONE_OR_CONTINUE
+    ERROR_TYPE_INTERNAL,
+    // ERROR_HEX_CKSUM
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
+    // ERROR_HEX_PARSER
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
+    // ERROR_HEX_PROGRAM
+    ERROR_TYPE_USER | ERROR_TYPE_TRANSIENT,
+    // ERROR_HEX_INVALID_ADDRESS
+    ERROR_TYPE_USER,
+    // ERROR_HEX_INVALID_APP_OFFSET
+    ERROR_TYPE_USER,
+
+    /* Flash decoder errors */
+
+    // ERROR_FD_BL_UPDT_ADDR_WRONG
+    ERROR_TYPE_USER,
+    // ERROR_FD_INTF_UPDT_ADDR_WRONG
+    ERROR_TYPE_USER,
+    // ERROR_FD_UNSUPPORTED_UPDATE
+    ERROR_TYPE_USER,
+
+    /* Flash IAP interface */
+
+    // ERROR_IAP_INIT
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_UNINIT
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_WRITE
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_ERASE_SECTOR
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_ERASE_ALL
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_OUT_OF_BOUNDS
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_UPDT_NOT_SUPPORTED
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_UPDT_INCOMPLETE
+    ERROR_TYPE_INTERFACE,
+    // ERROR_IAP_NO_INTERCEPT
+    ERROR_TYPE_INTERFACE,
+    // ERROR_BL_UPDT_BAD_CRC
+    ERROR_TYPE_INTERFACE,
+};
+
 COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
 
 const char *error_get_string(error_t error)
@@ -133,4 +227,15 @@ const char *error_get_string(error_t error)
     }
 
     return msg;
+}
+
+error_type_t error_get_type(error_t error)
+{
+    error_type_t type = ERROR_TYPE_INTERNAL;
+
+    if (error < ERROR_COUNT) {
+        type = error_type[error];
+    }
+
+    return type;
 }
