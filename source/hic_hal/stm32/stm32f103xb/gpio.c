@@ -208,30 +208,16 @@ void gpio_set_msc_led(gpio_led_state_t state)
     HAL_GPIO_WritePin(PIN_MSC_LED_PORT, PIN_MSC_LED, state ? GPIO_PIN_RESET : GPIO_PIN_SET);
 }
 
-uint8_t gpio_get_sw_reset(void)
+uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    static uint8_t last_reset_forward_pressed = 0;
-    uint8_t reset_forward_pressed;
-    uint8_t reset_pressed;
-    reset_forward_pressed = 0; // Forwarded reset not supported yet
-
-    // Forward reset if the state of the button has changed
-    //    This must be done on button changes so it does not interfere
-    //    with other reset sources such as programming or CDC Break
-    if(last_reset_forward_pressed != reset_forward_pressed) {
-#if defined(DAPLINK_IF)
-        if(reset_forward_pressed) {
-            target_set_state(RESET_HOLD);
-        }
-        else {
-            target_set_state(RESET_RUN);
-        }
-#endif
-        last_reset_forward_pressed = reset_forward_pressed;
-    }
-    reset_pressed = reset_forward_pressed || ((nRESET_PIN_PORT->IDR & nRESET_PIN) ? 0 : 1);
-    return !reset_pressed;
+    return (nRESET_PIN_PORT->IDR & nRESET_PIN) ? 0 : 1;
 }
+
+uint8_t gpio_get_reset_btn_fwrd(void)
+{
+    return 0;
+}
+
 
 uint8_t GPIOGetButtonState(void)
 {
@@ -241,4 +227,8 @@ uint8_t GPIOGetButtonState(void)
 void target_forward_reset(bool assert_reset)
 {
     // Do nothing - reset is forwarded in gpio_get_sw_reset
+}
+
+void gpio_set_board_power(bool powerEnabled)
+{
 }
