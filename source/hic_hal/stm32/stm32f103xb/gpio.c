@@ -188,11 +188,6 @@ void gpio_init(void)
     // button is pressed.
     // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
     busy_wait(1000000);
-
-    if (gpio_get_sw_reset() == 0) {
-        // Re-invoke the STLink/v2-1 bootloader if reset button is pressed
-        NVIC_SystemReset();
-    }
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
