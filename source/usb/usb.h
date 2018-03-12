@@ -27,12 +27,17 @@
 #include "usb_cdc.h"
 #include "usb_hid.h"
 #include "usb_msc.h"
+#include "usb_webusb.h"
+#include "usb_winusb.h"
+
 
 /* USB Device header files                                                    */
 #include "usbd_core.h"
 #include "usbd_core_cdc.h"
 #include "usbd_core_hid.h"
 #include "usbd_core_msc.h"
+#include "usbd_core_webusb.h"
+#include "usbd_core_winusb.h"
 
 #include "usbd_desc.h"
 #include "usbd_event.h"

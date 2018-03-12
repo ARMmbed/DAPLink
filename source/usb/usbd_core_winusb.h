@@ -1,6 +1,6 @@
 /**
- * @file    usbd_core_hid.h
- * @brief   USB Device Core HID header
+ * @file    usbd_core_winusb.h
+ * @brief   USB Device Core WinUSB header
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,16 +19,12 @@
  * limitations under the License.
  */
 
-#ifndef __USBD_CORE_HID_H__
-#define __USBD_CORE_HID_H__
+#ifndef __USBD_CORE_WINUSB_H__
+#define __USBD_CORE_WINUSB_H__
 
 
-/*--------------------------- Core overridable class specific functions ------*/
+/*--------------------------- Core overridable vendor specific functions ------*/
 
-extern BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len);
-extern BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void);
-extern BOOL USBD_EndPoint0_Setup_WEBUSB_ReqToIF(void);
-extern BOOL USBD_EndPoint0_Out_HID_ReqToIF(void);
+extern BOOL USBD_EndPoint0_Setup_WinUSB_ReqToDevice(void);
 
-
-#endif  /* __USBD_CORE_HID_H__ */
+#endif  /* __USBD_CORE_WINUSB_H__ */
