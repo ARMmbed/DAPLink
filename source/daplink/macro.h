@@ -40,6 +40,12 @@ extern "C" {
 
 #define ROUND_DOWN(value, boundary)     ((value) - ((value) % (boundary)))
 
+#define STRINGIFY_LITERAL(x) #x
+
+#define STRINGIFY_MACRO(x) STRINGIFY_LITERAL(x)
+
+#define CONCAT_MACRO_TO_STRING(str,x) (str STRINGIFY_MACRO(x))
+
 #ifdef __cplusplus
 }
 #endif

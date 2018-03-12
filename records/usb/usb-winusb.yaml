@@ -1,0 +1,6 @@
+common:
+    macros:
+        - WINUSB_INTERFACE
+    sources:
+        usb:
+            - source/usb/winusb
