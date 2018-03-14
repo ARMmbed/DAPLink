@@ -36,8 +36,9 @@ __weak BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
 {
     switch (USBD_SetupPacket.wValueH) {
         case HID_HID_DESCRIPTOR_TYPE:
-            if (USBD_SetupPacket.wIndexL != usbd_hid_if_num) {
-                return (__FALSE);  /* Only Single HID Interface is supported */
+            if (USBD_SetupPacket.wIndexL != usbd_hid_if_num &&
+                USBD_SetupPacket.wIndexL != usbd_webusb_if_num) {
+                return (__FALSE);
             }
 
             if ((!usbd_hs_enable) && (USBD_HighSpeed == __TRUE)) {
@@ -55,8 +56,9 @@ __weak BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
             break;
 
         case HID_REPORT_DESCRIPTOR_TYPE:
-            if (USBD_SetupPacket.wIndexL != usbd_hid_if_num) {
-                return (__FALSE);  /* Only Single HID Interface is supported */
+            if (USBD_SetupPacket.wIndexL != usbd_hid_if_num &&
+                USBD_SetupPacket.wIndexL != usbd_webusb_if_num) {
+                return (__FALSE);
             }
 
             USBD_EP0Data.pData = (U8 *)USBD_HID_ReportDescriptor;
@@ -82,7 +84,8 @@ __weak BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
 
 __weak BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void)
 {
-    if (USBD_SetupPacket.wIndexL == usbd_hid_if_num) {         /* IF number correct? */
+    if (USBD_SetupPacket.wIndexL == usbd_hid_if_num ||
+        USBD_SetupPacket.wIndexL == usbd_webusb_if_num) {
         switch (USBD_SetupPacket.bRequest) {
             case HID_REQUEST_GET_REPORT:
                 if (USBD_HID_GetReport()) {
@@ -155,7 +158,8 @@ __weak BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void)
 
 __weak BOOL USBD_EndPoint0_Out_HID_ReqToIF(void)
 {
-    if (USBD_SetupPacket.wIndexL == usbd_hid_if_num) {   /* IF number correct? */
+    if (USBD_SetupPacket.wIndexL == usbd_hid_if_num ||
+        USBD_SetupPacket.wIndexL == usbd_webusb_if_num) {
         switch (USBD_SetupPacket.bRequest) {
             case HID_REQUEST_SET_REPORT:
                 if (USBD_HID_SetReport()) {

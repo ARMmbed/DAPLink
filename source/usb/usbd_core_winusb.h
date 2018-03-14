@@ -1,6 +1,6 @@
 /**
- * @file    usb.h
- * @brief   USB Header
+ * @file    usbd_core_winusb.h
+ * @brief   USB Device Core WinUSB header
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,31 +19,12 @@
  * limitations under the License.
  */
 
-#ifndef __USB_H__
-#define __USB_H__
-
-/* General USB header files                                                   */
-#include "usb_def.h"
-#include "usb_cdc.h"
-#include "usb_hid.h"
-#include "usb_msc.h"
-#include "usb_webusb.h"
-#include "usb_winusb.h"
+#ifndef __USBD_CORE_WINUSB_H__
+#define __USBD_CORE_WINUSB_H__
 
 
-/* USB Device header files                                                    */
-#include "usbd_core.h"
-#include "usbd_core_cdc.h"
-#include "usbd_core_hid.h"
-#include "usbd_core_msc.h"
-#include "usbd_core_webusb.h"
-#include "usbd_core_winusb.h"
+/*--------------------------- Core overridable vendor specific functions ------*/
 
-#include "usbd_desc.h"
-#include "usbd_event.h"
-#include "usbd_cdc_acm.h"
-#include "usbd_hid.h"
-#include "usbd_msc.h"
-#include "usbd_hw.h"
+extern BOOL USBD_EndPoint0_Setup_WinUSB_ReqToDevice(void);
 
-#endif  /* __USB_H__ */
+#endif  /* __USBD_CORE_WINUSB_H__ */
