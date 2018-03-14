@@ -1,9 +1,9 @@
 /**
  * @file    target.c
- * @brief   Target information for the stm32l151
+ * @brief   Target information for the nz32_sc151
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,11 +26,11 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 256,
-    .sector_cnt     = KB(1),
-    .flash_start    = 0x08000000,
-    .flash_end      = 0x08000000 + KB(256),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20000000 + KB(32),
-    .flash_algo     = (program_target_t *) &flash,
+    .flash_start        = 0x08000000,
+    .flash_end          = 0x08080000,
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20014000,
+    .flash_algo         = (program_target_t *) &flash,
+    .sectors_info       = sectors_info,
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };

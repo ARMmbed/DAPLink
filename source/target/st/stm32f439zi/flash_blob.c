@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ // Device: stm32f439zi
+ 
+ #include "flash_blob.h"
 
-static const uint32_t STM32F439ZI_flash_prog_blob[] = {
+static const uint32_t _flash_prog_blob[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x03004601, 0x28200e00, 0x0940d302, 0xe0051d00, 0xd3022810, 0x1cc00900, 0x0880e000, 0xd50102c9,
     0x43082110, 0x48464770, 0x60414944, 0x60414945, 0x60012100, 0x22f068c1, 0x60c14311, 0x06806940,
@@ -27,6 +30,22 @@ static const uint32_t STM32F439ZI_flash_prog_blob[] = {
     0x692ce017, 0x612c431c, 0x60046814, 0x03e468ec, 0x692cd4fc, 0x00640864, 0x68ec612c, 0x0f240624,
     0x68e8d004, 0x60e84330, 0xbd702001, 0x1d121d00, 0x29001f09, 0x2000d1e5, 0x0000bd70, 0x45670123,
     0x40023c00, 0xcdef89ab, 0x00005555, 0x40003000, 0x00000fff, 0x0000aaaa, 0x00000201, 0x00000000
+};
+
+/**
+* List of start and size for each size of flash sector - even indexes are start, odd are size
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address flash_start + flash_size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x08000000, 0x00004000},
+    {0x08010000, 0x00010000},
+    {0x08020000, 0x00020000},
+    {0x08100000, 0x00004000},
+    {0x08110000, 0x00010000},
+    {0x08120000, 0x00020000},
 };
 
 static const program_target_t flash = {
@@ -47,7 +66,7 @@ static const program_target_t flash = {
 
     0x20000000 + 0x00000A00,  // mem buffer location
     0x20000000,               // location to write prog_blob in target RAM
-    sizeof(STM32F439ZI_flash_prog_blob),   // prog_blob size
-    STM32F439ZI_flash_prog_blob,           // address of prog_blob
+    sizeof(_flash_prog_blob),   // prog_blob size
+    _flash_prog_blob,           // address of prog_blob
     0x00000400       // ram_to_flash_bytes_to_be_written
 };
