@@ -30,6 +30,13 @@
 extern "C" {
 #endif
 
+typedef enum {
+    FLASH_FUNC_NOP,
+    FLASH_FUNC_ERASE,
+    FLASH_FUNC_PROGRAM,
+    FLASH_FUNC_VERIFY
+} flash_func_t;
+
 typedef error_t (*flash_intf_init_cb_t)(void);
 typedef error_t (*flash_intf_uninit_cb_t)(void);
 typedef error_t (*flash_intf_program_page_cb_t)(uint32_t addr, const uint8_t *buf, uint32_t size);
