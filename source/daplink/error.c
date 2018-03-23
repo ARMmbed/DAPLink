@@ -56,6 +56,8 @@ static const char *const error_message[] = {
     "The interface firmware FAILED to download the flash data contents to be programmed",
     // ERROR_INIT
     "The interface firmware FAILED to initialize the target MCU",
+    // ERROR_UNINIT
+    "The interface firmware FAILED to uninitialize the target MCU",
     // ERROR_SECURITY_BITS
     "The interface firmware ABORTED programming. Image is trying to set security bits",
     // ERROR_UNLOCK
@@ -149,6 +151,8 @@ static error_type_t error_type[] = {
     // ERROR_ALGO_DATA_SEQ
     ERROR_TYPE_TARGET,
     // ERROR_INIT
+    ERROR_TYPE_TARGET,
+    // ERROR_UNINIT
     ERROR_TYPE_TARGET,
     // ERROR_SECURITY_BITS
     ERROR_TYPE_USER,
