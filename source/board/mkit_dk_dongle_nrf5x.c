@@ -22,6 +22,7 @@
 #include "sam3u2c.h"
 #include "target_config.h"
 #include "util.h"
+#include "flash_manager.h"
 
 const char *board_id = "";
 
@@ -103,6 +104,7 @@ void prerun_board_config(void)
         else if (bit2 && !bit1) {
             board_id = board_id_nrf52_dk;  // 1101
             set_target_device(1);
+            flash_manager_set_page_erase(true);
         } else { //(bit2 && bit1)
             board_id = board_id_nrf52840_dk;  // 1102
             set_target_device(2);
