@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the stm32l151cb
+ * @brief   Target information for the stm32l151cbxxa
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018-2018, ARM Limited, All Rights Reserved
@@ -31,6 +31,6 @@ target_cfg_t target_device = {
     .flash_start    = 0x08000000,
     .flash_end      = 0x08000000 + KB(128),
     .ram_start      = 0x20000000,
-    .ram_end        = 0x20000000 + KB(16),
+    .ram_end        = 0x20000000 + KB(32),
     .flash_algo     = (program_target_t *) &flash,
 };
