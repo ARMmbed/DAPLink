@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_mtb
+    sources:
+        board:
+            - source/board/mtb_usi_wm_bn_bm_22.c
+        target:
+            - source/target/st/stm32f412rg/target.c
+            - source/target/st/target_reset.c
