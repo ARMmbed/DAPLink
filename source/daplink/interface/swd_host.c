@@ -843,7 +843,11 @@ __attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
     uint32_t val;
-    swd_init();
+
+    /* Calling swd_init prior to enterring RUN state causes operations to fail. */
+    if (state != RUN) {
+        swd_init();
+    }
 
     switch (state) {
         case RESET_HOLD:
@@ -959,7 +963,11 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
     uint32_t val;
-    swd_init();
+
+    /* Calling swd_init prior to enterring RUN state causes operations to fail. */
+    if (state != RUN) {
+        swd_init();
+    }
 
     switch (state) {
         case RESET_HOLD:
