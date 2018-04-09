@@ -98,7 +98,11 @@ static error_t target_flash_init()
 
 static error_t target_flash_uninit(void)
 {
-    flash_func_start(FLASH_FUNC_NOP);
+    error_t status = flash_func_start(FLASH_FUNC_NOP);
+
+    if (status != ERROR_SUCCESS) {
+        return status;
+    }
     
     if (config_get_auto_rst()) {
         // Resume the target if configured to do so
@@ -114,6 +118,7 @@ static error_t target_flash_uninit(void)
 
 static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint32_t size)
 {
+    error_t status = ERROR_SUCCESS;
     const program_target_t *const flash = target_device.flash_algo;
 
     // check if security bits were set
@@ -121,7 +126,11 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
         return ERROR_SECURITY_BITS;
     }
 
-    flash_func_start(FLASH_FUNC_PROGRAM);
+    status = flash_func_start(FLASH_FUNC_PROGRAM);
+
+    if (status != ERROR_SUCCESS) {
+        return status;
+    }
 
     while (size > 0) {
         uint32_t write_size = MIN(size, flash->program_buffer_size);
@@ -169,6 +178,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
 
 static error_t target_flash_erase_sector(uint32_t addr)
 {
+    error_t status = ERROR_SUCCESS;
     const program_target_t *const flash = target_device.flash_algo;
 
     // Check to make sure the address is on a sector boundary
@@ -176,7 +186,11 @@ static error_t target_flash_erase_sector(uint32_t addr)
         return ERROR_ERASE_SECTOR;
     }
 
-    flash_func_start(FLASH_FUNC_ERASE);
+    status = flash_func_start(FLASH_FUNC_ERASE);
+
+    if (status != ERROR_SUCCESS) {
+        return status;
+    }
 
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, addr, 0, 0, 0)) {
         return ERROR_ERASE_SECTOR;
@@ -190,7 +204,11 @@ static error_t target_flash_erase_chip(void)
     error_t status = ERROR_SUCCESS;
     const program_target_t *const flash = target_device.flash_algo;
 
-    flash_func_start(FLASH_FUNC_PROGRAM);
+    status = flash_func_start(FLASH_FUNC_PROGRAM);
+
+    if (status != ERROR_SUCCESS) {
+        return status;
+    }
 
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
         return ERROR_ERASE_ALL;
