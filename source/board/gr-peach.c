@@ -25,8 +25,3 @@
 const char *board_id = "5500";
 
 const vfs_filename_t daplink_drive_name =     "MBED       ";
-
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}

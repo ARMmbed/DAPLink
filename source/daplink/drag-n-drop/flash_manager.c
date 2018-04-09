@@ -49,7 +49,7 @@ __attribute__((aligned(4)))
 static uint8_t buf[1024];
 static bool buf_empty;
 static bool current_sector_valid;
-static bool page_erase_enabled = false;
+static bool page_erase_enabled = true;
 static uint32_t current_write_block_addr;
 static uint32_t current_write_block_size;
 static uint32_t current_sector_addr;
