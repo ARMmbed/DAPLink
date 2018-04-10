@@ -1,6 +1,8 @@
 # DAPLink Developers Guide
 
 ## Setup
+DAPLink development requires Keil MDK-ARM, which runs on Windows only. The following instructions apply to Windows. See  [here](AUTOMATED_TESTS.md) for test instructions on Linux and Mac.
+
 Install the necessary tools listed below. Skip any step where a compatible tool already exists.
 
 * Install [Python 2, 2.7.9 or above](https://www.python.org/downloads/) . Add to PATH.
