@@ -171,6 +171,35 @@ class MassStorageTester(object):
         # Expected data must be set, even if to None
         assert hasattr(self, '_expected_data')
 
+        # Windows 8/10 workaround
+        # ----
+        # By default Windows 8 and 10 access and write to removable drives
+        # shortly after they are connected. If this occurs at the same time
+        # as a file copy the file could be sent out of order causing DAPLink
+        # programming to terminate early and report an error.
+        #
+        # This causes testing to intermittently fail with errors such as:
+        # - "The transfer timed out."
+        # - "File sent out of order by PC. Target might
+        #     not be programmed correctly."
+        #
+        # To prevent Windows from writing to removable drives on connect
+        # drive indexing can be turned off with the following procedure:
+        # - Start the program "gpedit.msc"
+        # - Navigate to "Computer Configuration \ Administrative Templates
+        #                \ Windows Components \ Search"
+        # - Enable the policy "Do not allow locations on removable drives
+        #                      to be added to  libraries."
+        #
+        # Rather than requiring all testers of DAPLink make this setting
+        # change the below sleep has been added. This added delay allows
+        # windows to complete the writes it performs shortly after connect.
+        # This allows testing to be performed without interruption.
+        #
+        # Note - if drive indexing is turned off as mentioned above then
+        #        this sleep is not needed.
+        time.sleep(2)
+
         # Copy mock files before test
         self._mock_file_list = []
         for dir_name in self._mock_dir_list:
