@@ -1,9 +1,9 @@
 /**
  * @file    target.c
- * @brief   Target information for the lpc812
+ * @brief   Target information for the lpc54114
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,11 +26,11 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 32768,
-    .sector_cnt     = (KB(256) / 32768),
-    .flash_start    = 0,
-    .flash_end      = KB(256),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20028000,
-    .flash_algo     = (program_target_t *) &flash,
+    .flash_start        = 0x00000000,
+    .flash_end          = 0x00040000,
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20028000,
+    .flash_algo         = (program_target_t *) &flash,
+    .sectors_info       = sectors_info,
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };

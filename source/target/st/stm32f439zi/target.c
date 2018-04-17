@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the 
+ * @brief   Target information for the stm32f439zi
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
@@ -26,11 +26,11 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 0x4000,
-    .sector_cnt     = (0x200000 / 0x4000),
-    .flash_start    = 0x08000000,
-    .flash_end      = 0x08200000,
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20030000,
-    .flash_algo     = (program_target_t *) &flash,
+    .flash_start        = 0x08000000,
+    .flash_end          = 0x08200000,
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20030000,
+    .flash_algo         = (program_target_t *) &flash,
+    .sectors_info       = sectors_info,
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };

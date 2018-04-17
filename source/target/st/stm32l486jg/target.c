@@ -26,11 +26,11 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size        = 0x800,
-    .sector_cnt         = (0x100000 / 0x800),
     .flash_start        = 0x08000000,
     .flash_end          = 0x08100000,
     .ram_start          = 0x20000000,
     .ram_end            = 0x20018000,
-    .flash_algo         = (program_target_t *) &flash
+    .flash_algo         = (program_target_t *) &flash,
+    .sectors_info       = sectors_info,
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };

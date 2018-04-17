@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ // Device: stm32l486jg
+ 
  #include "flash_blob.h"
 
 static const uint32_t _flash_prog_blob[] = {
@@ -32,11 +34,6 @@ static const uint32_t _flash_prog_blob[] = {
     0xcdef89ab, 0x0000c3fa, 0x00005555, 0x40003000, 0x00000fff, 0x0000aaaa, 0x00000000
 };
 
-// Start address of flash
-static const uint32_t flash_start = 0x08000000;
-// Size of flash
-static const uint32_t flash_size = 0x00100000;
-
 /**
 * List of start and size for each size of flash sector - even indexes are start, odd are size
 * The size will apply to all sectors between the listed address and the next address
@@ -44,8 +41,8 @@ static const uint32_t flash_size = 0x00100000;
 * The last pair in the list will have sectors starting at that address and ending
 * at address flash_start + flash_size.
 */
-static const uint32_t sectors_info[] = {
-    0x08000000, 0x00000800,
+static const sector_info_t sectors_info[] = {
+    {0x08000000, 0x00000800},
 };
 
 static const program_target_t flash = {
