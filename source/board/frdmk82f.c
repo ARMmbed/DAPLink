@@ -1,6 +1,6 @@
 /**
- * @file    frdmk66f.c
- * @brief   board ID for the NXP FRDM-K64F board
+ * @file    frdmk82f.c
+ * @brief   board ID for the NXP FRDM-K82F board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

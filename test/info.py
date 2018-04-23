@@ -107,7 +107,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
-    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K82F' when mbed-os supports this
+    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         'FRDM-K82F'                             ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
@@ -176,7 +176,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2201,     'lpc11u35_wizwiki_w7500_if',                None,               'WIZWIKI_W7500'                         ),
     (   0x2202,     'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZWIKI_W7500ECO'                      ),
     (   0x2203,     'lpc11u35_wizwiki_w7500p_if',               None,               'WIZWIKI_W7500P'                        ),
-    (   0x1237,     'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
+    (   0x1237,     'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'UBLOX-EVK-NINA-B1'                    ),
     (   0xC006,     'lpc11u35_vbluno51_if',                     None,               'VNG-VBLUno51'                          ),
     (   0xC005,     'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
 ]
