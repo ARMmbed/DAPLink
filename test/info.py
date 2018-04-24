@@ -120,7 +120,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
     (   0x250,      'k20dx_frdmkw24d_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24D' when mbed-os supports this
     (   0x201,      'k20dx_frdmkw41z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW41Z' when mbed-os supports this
-    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
+    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
@@ -209,7 +209,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0217,  # FRDM-K82F
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
-    0x0291,  # FRDM-KL82Z
+    0x0218,  # FRDM-KL82Z
     0x1022,  # RO359B (K24F)
 ])
 
