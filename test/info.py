@@ -107,21 +107,21 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x210,      'k20dx_frdmkl05z_if',                       'k20dx_bl',         'FRDM-KL05Z'                            ),
     (   0x213,      'k20dx_frdmke15z_if',                       'k20dx_bl',         None                                    ),
     (   0x216,      'k20dx_hvpke18f_if',                        'k20dx_bl',         None                                    ),
-    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K82F' when mbed-os supports this
+    (   0x217,      'k20dx_frdmk82f_if',                        'k20dx_bl',         'FRDM-K82F'                             ),
     (   0x220,      'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x224,      'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
     (   0x230,      'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x231,      'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x240,      'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     (   0x214,      'k20dx_hexiwear_if',                        'k20dx_bl',         'HEXIWEAR'                              ),
-    (   0x228,      'k20dx_rapid_iot_if',                       'k20dx_bl',         'RAPID-IOT'                             ),
+    (   0x228,      'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT' when mbed-os supports this
     (   0x260,      'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
-    (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL27Z' when mbed-os supports this
-    (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL43Z' when mbed-os supports this
-    (   0x250,      'k20dx_frdmkw24d_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW24D' when mbed-os supports this
-    (   0x201,      'k20dx_frdmkw41z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KW41Z' when mbed-os supports this
-    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-KL82Z' when mbed-os supports this
-    (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K66F' when mbed-os supports this
+    (   0x261,      'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
+    (   0x262,      'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
+    (   0x250,      'k20dx_frdmkw24d_if',                       'k20dx_bl',         'FRDM-KW24D512'                         ),
+    (   0x201,      'k20dx_frdmkw41z_if',                       'k20dx_bl',         'FRDM-KW41Z'                            ),
+    (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
+    (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0455,     'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
@@ -132,16 +132,16 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x460,      'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0461,     'lpc11u35_mtb_laird_bl652_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0462,     'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               'L-TEK-FF1705'                          ),
-    (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               'L-TEK-FF-LPC546XX'                     ),
+    (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
+    (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
     (   0x1022,     'lpc11u35_ro359b_if',                       None,               None                                    ),
     (   0x1050,     'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
-    (   0x1054,     'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'NXP-LPC54114-MAX'                      ),
-    (   0x1056,     'lpc4322_lpc54608xpresso_if',               'lpc4322_bl',       'NXP-LPC54608-MAX'                      ),
+    (   0x1054,     'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'LPCXpresso54114'                       ),
+    (   0x1056,     'lpc4322_lpc54608xpresso_if',               'lpc4322_bl',       'LPCXpresso54608'                       ),
     (   0x1060,     'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
     (   0x1062,     'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
     (   0x1070,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51822'                       ),
@@ -153,31 +153,31 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1114,     'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
-    (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        'ncs36510'                              ),
-    (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          None                                    ), # TODO - set target to 'UBLOX_EVA_NINA' when mbed-os supports this
+    (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        None                                    ),# TODO - Set to 'ncs36510' when non-zero flash addresses are supported
+    (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
     (   0x2410,     'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
-    (   0x7010,     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja' when mbed-os supports this
+    (   0x7010,     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B' when mbed-os supports this
     (   0x9004,     'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
     (   0x9009,     'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                        ),
     (   0x9011,     'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9014,     'lpc11u35_96b_nitrogen_if',                 None,               'Seeed-96Boards-Nitrogen'               ),
+    (   0x9014,     'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x7402,     'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
     (   0x7404,     'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
-    (   0xC000,     'lpc11u35_cocorico_if',                     None,               None                                    ), # TODO - set target to 'CoCo-ri-Co' when mbed-os supports this
-    (   0x5500,     'lpc11u35_gr_peach_if',                     None,               'Renesas-GR-PEACH'                      ),
-    (   0x6660,     'lpc11u35_nz32_sc151_if',                   None,               'NZ32-SC151'                            ),
-    (   0x2201,     'lpc11u35_wizwiki_w7500_if',                None,               'WIZWIKI_W7500'                         ),
-    (   0x2202,     'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZWIKI_W7500ECO'                      ),
-    (   0x2203,     'lpc11u35_wizwiki_w7500p_if',               None,               'WIZWIKI_W7500P'                        ),
+    (   0xC000,     'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
+    (   0x5500,     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
+    (   0x6660,     'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151' when mbed-os supports this
+    (   0x2201,     'lpc11u35_wizwiki_w7500_if',                None,               'WIZwiki-W7500'                         ),
+    (   0x2202,     'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZwiki-W7500ECO'                      ),
+    (   0x2203,     'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
     (   0x1237,     'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
-    (   0xC006,     'lpc11u35_vbluno51_if',                     None,               'VNG-VBLUno51'                          ),
+    (   0xC006,     'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
 ]
 
