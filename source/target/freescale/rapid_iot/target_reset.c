@@ -54,7 +54,13 @@ void prerun_target_config(void)
     mdm_id = MDM_ID_K64;
 
     // get a hold of the target
-    target_set_state(HALT);
+    if (target_set_state(HALT) == 0) {
+        /*
+         * When the Kinetis flash is empty the reset line toggles. This causes failures
+         * when trying to halt the target. Use the reset halt method in this case.
+         */
+        target_set_state(RESET_PROGRAM);
+    }
 
     // Read the system identification register
     swd_read_memory(SDID, (uint8_t *)&sdid, 4);
