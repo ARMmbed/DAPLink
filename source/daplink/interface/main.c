@@ -51,8 +51,6 @@
 #define FLAGS_MAIN_POWERDOWN    (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG (1 << 5)
 #define FLAGS_MAIN_PROC_USB     (1 << 9)
-// Used by hid when no longer idle
-#define FLAGS_MAIN_HID_SEND     (1 << 10)
 // Used by cdc when an event occurs
 #define FLAGS_MAIN_CDC_EVENT    (1 << 11)
 // Used by msd when flashing a new binary
@@ -87,7 +85,6 @@ main_usb_connect_t usb_state;
 static bool usb_test_mode = false;
 
 static U64 stk_timer_30_task[TIMER_TASK_30_STACK / sizeof(U64)];
-static U64 stk_dap_task[DAP_TASK_STACK / sizeof(U64)];
 static U64 stk_main_task[MAIN_TASK_STACK / sizeof(U64)];
 
 // Timer task, set flags every 30mS and 90mS
@@ -152,13 +149,6 @@ void main_disable_debug_event(void)
     return;
 }
 
-// Send next hid packet
-void main_hid_send_event(void)
-{
-    os_evt_set(FLAGS_MAIN_HID_SEND, main_task_id);
-    return;
-}
-
 // Start CDC processing
 void main_cdc_send_event(void)
 {
@@ -184,8 +174,6 @@ void HardFault_Handler()
     while (1); // Wait for reset
 }
 
-extern __task void hid_process(void);
-extern void hid_send_packet(void);
 extern void cdc_process_event(void);
 __attribute__((weak)) void prerun_board_config(void) {}
 __attribute__((weak)) void prerun_target_config(void) {}
@@ -201,8 +189,6 @@ __task void main_task(void)
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
-    // thread running after usb connected started
-    uint8_t thread_started = 0;
     // button state
     uint8_t reset_pressed = 0;
     // Initialize settings - required for asserts to work
@@ -240,7 +226,6 @@ __task void main_task(void)
                        | FLAGS_MAIN_POWERDOWN       // Power down interface
                        | FLAGS_MAIN_DISABLEDEBUG    // Disable target debug
                        | FLAGS_MAIN_PROC_USB        // process usb events
-                       | FLAGS_MAIN_HID_SEND        // send hid packet
                        | FLAGS_MAIN_CDC_EVENT       // cdc event
                        , NO_TIMEOUT);
         // Find out what event happened
@@ -280,10 +265,6 @@ __task void main_task(void)
             target_set_state(NO_DEBUG);
         }
 
-        if (flags & FLAGS_MAIN_HID_SEND) {
-            hid_send_packet();
-        }
-
         if (flags & FLAGS_MAIN_CDC_EVENT) {
             cdc_process_event();
         }
@@ -314,11 +295,6 @@ __task void main_task(void)
 
                 case USB_CHECK_CONNECTED:
                     if (usbd_configured()) {
-                        if (!thread_started) {
-                            os_tsk_create_user(hid_process, DAP_TASK_PRIORITY, (void *)stk_dap_task, DAP_TASK_STACK);
-                            thread_started = 1;
-                        }
-
                         // Let the HIC enable power to the target now that high power has been negotiated.
                         gpio_set_board_power(true);
 

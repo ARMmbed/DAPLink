@@ -26,7 +26,8 @@
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004
 #define MDM_IDR     0x010000fc
-#define MDM_ID      0x001c0000 // K64, K22 (K series)
+#define MDM_ID_K64  0x001c0000 // K64
+#define MDM_ID_KW4  0x001c0020 // KW4
 
 /* Kinetis series ID */
 #define K_SERIES     0
@@ -35,6 +36,8 @@
 /* KW4 subfamily defines */
 #define KW40         0
 #define KW41         1
+
+static uint32_t mdm_id;
 
 void target_before_init_debug(void)
 {
@@ -48,6 +51,8 @@ void prerun_target_config(void)
     uint32_t SDID = 0x40048024;
     uint32_t sdid;
 
+    mdm_id = MDM_ID_K64;
+
     // get a hold of the target
     target_set_state(HALT);
 
@@ -56,6 +61,8 @@ void prerun_target_config(void)
 
     // Set the target flash algorithm
     if (((sdid >> 20) & 0xF) == KW_SERIES) {
+        mdm_id = MDM_ID_KW4;
+
         if (((sdid >> 24) & 0x3) == KW40) {
             // Program to the KW40 flash
             extern target_cfg_t target_device_kw40;
@@ -85,7 +92,7 @@ uint8_t target_unlock_sequence(void)
     }
 
     // verify the result
-    if (val != MDM_ID) {
+    if (val != mdm_id) {
         return 0;
     }
 

@@ -52,6 +52,10 @@
 #define MAX_TIMEOUT   1000000  // Timeout for syscalls on target
 
 #define SOFT_RESET  SYSRESETREQ
+
+#define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB AIRCR: PRIGROUP Position */
+#define SCB_AIRCR_PRIGROUP_Msk             (7UL << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB AIRCR: PRIGROUP Mask */
+
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
 // DAP operations as they are controlled by the remote debugger.
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(TARGET_NRF51822)
@@ -1005,7 +1009,11 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             }
 
             // Perform a soft reset
-            if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
+            if (!swd_read_word(NVIC_AIRCR, &val)) {
+                return 0;
+            }
+
+            if (!swd_write_word(NVIC_AIRCR, VECTKEY | (val & SCB_AIRCR_PRIGROUP_Msk) | SOFT_RESET)) {
                 return 0;
             }
 
