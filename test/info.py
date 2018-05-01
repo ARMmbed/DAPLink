@@ -211,6 +211,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0262,  # FRDM-KL43Z
     0x0291,  # FRDM-KL82Z
     0x1022,  # RO359B (K24F)
+    0x0201,  # KW41Z
 ])
 
 #Hack until these targets have an image with a valid vector table
