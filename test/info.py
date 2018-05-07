@@ -48,7 +48,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl43z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl82z_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkl82z_if",                          True,       0x5000,     "bin"       ),
     ("k20dx_frdmke15z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrke18f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_hvpke18f_if",                           True,       0x8000,     "bin"       ),
