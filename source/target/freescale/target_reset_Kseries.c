@@ -30,7 +30,7 @@
 
 void target_before_init_debug(void)
 {
-    return;
+    swd_set_target_reset(1);
 }
 
 void board_init(void)
