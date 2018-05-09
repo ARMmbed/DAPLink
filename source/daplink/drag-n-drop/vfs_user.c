@@ -75,6 +75,8 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 
 static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
+static uint32_t insert_info(uint8_t *buf, uint32_t bufsize, const char *content, uint32_t content_size);
+static uint32_t insert_target_url(uint8_t *buf, uint32_t bufsize);
 static void update_html_file(uint8_t *buf, uint32_t bufsize);
 static void erase_target(void);
 
@@ -310,6 +312,13 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     pos += util_write_string(buf + pos, "Remount count: ");
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
+
+    // Target URL, use file_buffer as a temporary storage
+    insert_target_url(file_buffer, ARRAY_SIZE(file_buffer));
+    pos += util_write_string(buf + pos, "Target URL: ");
+    pos += util_write_string(buf + pos, (const char *)file_buffer);
+    pos += util_write_string(buf + pos, "\r\n");
+
     return pos;
 }
 
@@ -426,16 +435,15 @@ static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count)
     memcpy(buf, new_str, str_len);
 }
 
-// Fill buf with the contents of the mbed redirect file by
-// expanding the special characters in mbed_redirect_file.
-static void update_html_file(uint8_t *buf, uint32_t bufsize)
+// Fill buf with content string and the expanded special characters
+static uint32_t insert_info(uint8_t *buf, uint32_t bufsize, const char *content, uint32_t content_size)
 {
     uint32_t size_left;
     uint8_t *orig_buf = buf;
     uint8_t *insert_string;
     // Zero out buffer so strlen operations don't go out of bounds
     memset(buf, 0, bufsize);
-    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
+    memcpy(buf, content, content_size);
 
     do {
         // Look for key or the end of the string
@@ -497,6 +505,21 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
 
     size_left = buf - orig_buf;
     memset(buf, 0, bufsize - size_left);
+    return size_left;
+}
+
+// Fill buf with the expanded target URL
+static  uint32_t insert_target_url(uint8_t *buf, uint32_t bufsize)
+{
+    const char url_expand[] = "@R";
+    return insert_info(buf, bufsize, url_expand, ARRAY_SIZE(url_expand));
+}
+
+// Fill buf with the contents of the mbed redirect file by
+// expanding the special characters in mbed_redirect_file.
+static void update_html_file(uint8_t *buf, uint32_t bufsize)
+{
+    (void)insert_info(buf, bufsize, mbed_redirect_file, ARRAY_SIZE(mbed_redirect_file));
 }
 
 // Initialize flash algo, erase flash, uninit algo
