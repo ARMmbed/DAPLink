@@ -691,6 +691,177 @@
         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 
+- MTB_WISE1510:
+  name: MTB_ADV_WISE_1510
+  product_code: 0458
+  fw_name: lpc11u35_mtb_wise1510_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- NINA_B1:
+  name: MTB_UBLOX_NINA_B1
+  product_code: 0455
+  fw_name: kl26z_nina_b1_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- MTB_WISE1530:
+  name: MTB_ADV_WISE_1530
+  product_code: 0459
+  fw_name: lpc11u35_mtb_wise1530_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- MTB_WISE1570:
+  name: MTB_ADV_WISE_1570
+  product_code: 0460
+  fw_name: lpc11u35_mtb_wise1570_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FRDMK66F:
+  name: K66F
+  product_code: 0311
+  fw_name: k20dx_frdmk66f_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FRDMK82F:
+  name: K82F
+  product_code: 0217
+  fw_name: k20dx_frdmk82f_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- NZ32_SC151:
+  name: NZ32_SC151
+  product_code: 6660
+  fw_name: lpc11u35_nz32_sc151_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- C027:
+  name: C027
+  product_code: 1235
+  fw_name: lpc11u35_c027_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FF_LPC546XX:
+  name: LPC546XX
+  product_code: 1056
+  fw_name: lpc11u35_ff_lpc546xx_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- VBLUNO51:
+  name: VBLUNO51
+  product_code: C006
+  fw_name: lpc11u35_vbluno51_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FRDMKL43Z:
+  name: KL43Z
+  product_code: 0262
+  fw_name: k20dx_frdmkl43z_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FRDMKL82Z:
+  name: KL82Z
+  product_code: 0218
+  fw_name: k20dx_frdmkl82z_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- FRDMKW24D:
+  name: KW24D
+  product_code: 0250
+  fw_name: k20dx_frdmkw24d_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- LPC54114XPRESSO:
+  name: LPC54114
+  product_code: 1054
+  fw_name: lpc4322_lpc54114xpresso_0x10000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- LPC54608XPRESSO:
+  name: LPC546XX
+  product_code: 1056
+  fw_name: lpc4322_lpc54608xpresso_0x10000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- NCS36510RF:
+  name: NCS36510
+  product_code: 1200
+  fw_name: sam3u2c_ncs36510rf_0x8000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- MTB_MURATA_ABZ_078:
+  name: MTB_MURATA_ABZ
+  product_code: 0456
+  fw_name: lpc11u35_mtb_murata_abz_078_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- UBLOX_EVK_NINA_B1:
+  name: UBLOX_EVK_NINA_B1
+  product_code: 1237
+  fw_name: sam3u2c_ublox_evk_nina_b1_0x5000
+  instructions:
+    windows:
+    osx:
+    linux:
+
+- MTB_MXCHIP_EMW3166:
+  name: MTB_MXCHIP_EMW3166
+  product_code: 0451
+  fw_name: lpc11u35_mtb_mxchip_emw3166_0x0000
+  instructions:
+    windows:
+    osx:
+    linux:
+
 # not mainline DAPLink
 #- Realtek RTL8195AM:
 #  name: Realtek RTL8195AM
