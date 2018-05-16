@@ -26,6 +26,7 @@ import info
 import intelhex
 from test_info import TestInfo
 
+from pyOCD.board import MbedBoard
 
 def _same(d1, d2):
     assert type(d1) is bytearray
@@ -296,6 +297,7 @@ def test_mass_storage(workspace, parent_test):
     blank_bin_contents = bytearray([0xff]) * 0x2000
     vectors_and_pad = bin_file_contents[0:32] + blank_bin_contents
     locked_when_erased = board.get_board_id() in info.BOARD_ID_LOCKED_WHEN_ERASED
+    page_erase_supported = board.get_board_id() in info.BOARD_ID_SUPPORTING_PAGE_ERASE
     bad_vector_table = target.name in info.TARGET_WITH_BAD_VECTOR_TABLE_LIST
 
     intel_hex = intelhex.IntelHex(hex_file)
@@ -373,6 +375,56 @@ def test_mass_storage(workspace, parent_test):
     #        when a binary file is loaded, since there is no way to
     #        tell where the end of the file is.
 
+    if page_erase_supported:
+        # Test page erase, a.k.a. sector erase by generating iHex with discrete addresses,
+        # programing the device then comparing device memory against expected content.
+        test = MassStorageTester(board, test_info, "Sector Erase")
+        with MbedBoard.chooseBoard(board_id=board.get_unique_id(), init_board=False) as mbed_board:
+            memory_map = mbed_board.target.getMemoryMap()
+            flash_regions = [region for region in memory_map if region.type == 'flash']
+            number_flash_regions = len(flash_regions)
+            mbed_board.uninit(resume=False, disconnect=False)
+            max_address = intel_hex.maxaddr()
+            # Create an object. We'll add the addresses of unused even blocks to it first, then unused odd blocks for each region
+            ih = intelhex.IntelHex()
+            # Add the content from test bin first
+            expected_bin_contents = bin_file_contents
+            for region_index in range(0, number_flash_regions, 1):
+                flash_start = flash_regions[region_index].start
+                flash_length = flash_regions[region_index].length
+                block_size = flash_regions[region_index].blocksize
+                number_of_blocks = int(flash_length/block_size)
+
+                if max_address >= (flash_start + flash_length):
+                    # This bin image crosses this region, don't modify the content, go to the next region
+                    continue
+                elif max_address >= flash_start:
+                    # This bin image occupies partial region. Skip the used portion to avoid touching any security bits and pad the rest
+                    expected_bin_contents += bytearray([0xff]) * (flash_start + flash_length - max_address - 1)
+                    # Calculate the starting block after the image to avoid stumbling upon security bits
+                    block_start = int((max_address - flash_start)/block_size) + 1
+                else:
+                    # This bin image doesn't reach this region
+                    expected_bin_contents += bytearray([0xff]) * flash_length
+                    block_start = 0
+                # For all even blocks, overwrite all addresses with 0x55; for all odd blocks, overwrite all addresses with 0xAA
+                for pass_number in range (0, 2, 1):
+                    if pass_number == 0:
+                        modifier = 0x55
+                    else:
+                        modifier = 0xAA
+                        block_start += 1
+                    for block_idx in range(block_start, number_of_blocks, 2):
+                        for address_to_modify in range (flash_start + block_idx * block_size, flash_start + (block_idx + 1) * block_size, 1):
+                            expected_bin_contents[address_to_modify] = modifier
+                            ih[address_to_modify] = modifier
+            # Write out the modified iHex to file
+            ih.tofile("tmp/interleave.hex", format='hex')
+            # Load this hex file with shutils
+            test.set_shutils_copy("tmp/interleave.hex")
+            test.set_expected_data(expected_bin_contents, start)
+            test.run()
+        
     # Finally, load a good binary
     test = MassStorageTester(board, test_info, "Load good file to restore state")
     test.set_programming_data(hex_file_contents, 'image.hex')

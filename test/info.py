@@ -214,6 +214,10 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0201,  # KW41Z
 ])
 
+BOARD_ID_SUPPORTING_PAGE_ERASE = set([
+    0x0240,  # K64F
+])
+
 #Hack until these targets have an image with a valid vector table
 TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'Microbit',
