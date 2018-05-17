@@ -48,7 +48,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl43z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
-    ("k20dx_frdmkl82z_if",                          True,       0x8000,     "bin"       ),
+    ("k20dx_frdmkl82z_if",                          True,       0x5000,     "bin"       ),
     ("k20dx_frdmke15z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrke18f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_hvpke18f_if",                           True,       0x8000,     "bin"       ),
@@ -209,7 +209,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0217,  # FRDM-K82F
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
-    0x0291,  # FRDM-KL82Z
+    0x0218,  # FRDM-KL82Z
     0x1022,  # RO359B (K24F)
     0x0201,  # KW41Z
 ])
