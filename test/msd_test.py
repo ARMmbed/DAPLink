@@ -389,11 +389,16 @@ def test_mass_storage(workspace, parent_test):
         ih = intelhex.IntelHex()
         # Add the content from test bin first
         expected_bin_contents = bin_file_contents
-        for region_index in range(0, number_flash_regions, 1):
-            flash_start = flash_regions[region_index].start
-            flash_length = flash_regions[region_index].length
-            block_size = flash_regions[region_index].blocksize
-            number_of_blocks = int(flash_length/block_size)
+        for region_index, the_region in enumerate(flash_regions):
+            flash_start = the_region.start
+            flash_length = the_region.length
+            block_size = the_region.blocksize
+
+            number_of_blocks = flash_length // block_size
+
+            # Sanity check the regions are contiguous
+            if region_index:
+                assert flash_start == (flash_regions[region_index - 1].start + flash_regions[region_index - 1].flash_length)
 
             if max_address >= (flash_start + flash_length):
                 # This bin image crosses this region, don't modify the content, go to the next region
@@ -402,20 +407,20 @@ def test_mass_storage(workspace, parent_test):
                 # This bin image occupies partial region. Skip the used portion to avoid touching any security bits and pad the rest
                 expected_bin_contents += bytearray([0xff]) * (flash_start + flash_length - max_address - 1)
                 # Calculate the starting block after the image to avoid stumbling upon security bits
-                block_start = int((max_address - flash_start)/block_size) + 1
+                block_start = (max_address - flash_start) // block_size + 1
             else:
                 # This bin image doesn't reach this region
                 expected_bin_contents += bytearray([0xff]) * flash_length
                 block_start = 0
             # For all even blocks, overwrite all addresses with 0x55; for all odd blocks, overwrite all addresses with 0xAA
-            for pass_number in range (0, 2, 1):
+            for pass_number in range (2):
                 if pass_number == 0:
                     modifier = 0x55
                 else:
                     modifier = 0xAA
                     block_start += 1
                 for block_idx in range(block_start, number_of_blocks, 2):
-                    for address_to_modify in range (flash_start + block_idx * block_size, flash_start + (block_idx + 1) * block_size, 1):
+                    for address_to_modify in range (flash_start + block_idx * block_size, flash_start + (block_idx + 1) * block_size):
                         expected_bin_contents[address_to_modify] = modifier
                         ih[address_to_modify] = modifier
         # Write out the modified iHex to file
