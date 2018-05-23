@@ -27,7 +27,7 @@
 // target information
 target_cfg_t target_device = {
     .flash_start        = 0x00000000,
-	.flash_end          = 0x00200000,
+    .flash_end          = 0x00200000,
     .ram_start          = 0x1fff0000,
     .ram_end            = 0x20030000,
     .flash_algo         = (program_target_t *) &flash,
