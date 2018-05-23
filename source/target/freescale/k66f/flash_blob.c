@@ -61,6 +61,10 @@ static const uint32_t mk66f18_flash_prog_blob[] = {
     0x00800000, 0x01000000, 0x02000000, 0x00000000,
 };
 
+static const sector_info_t sectors_info[] = {
+    {0x00000000, 0x00001000},
+ };
+
 static const program_target_t flash = {
     0x20000021, // Init
     0x20000049, // UnInit
