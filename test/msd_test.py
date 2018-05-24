@@ -423,6 +423,8 @@ def test_mass_storage(workspace, parent_test):
                     for address_to_modify in range (flash_start + block_idx * block_size, flash_start + (block_idx + 1) * block_size):
                         expected_bin_contents[address_to_modify] = modifier
                         ih[address_to_modify] = modifier
+        if not os.path.exists("tmp"):
+            os.makedirs("tmp")
         # Write out the modified iHex to file
         ih.tofile("tmp/interleave.hex", format='hex')
         # Load this hex file with shutils
