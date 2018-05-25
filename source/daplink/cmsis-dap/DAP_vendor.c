@@ -90,10 +90,9 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
     }
     case ID_DAP_Vendor3:  {
         // uart read
-        int32_t read_len = 64 - 1;
-        uint8_t read_data[64];
-        read_len = uart_read_data(read_data, read_len);
-        memcpy(response, read_data, read_len);
+        int32_t read_len = 62;
+        read_len = uart_read_data(response + 1, read_len);
+        response[0] = read_len;
         // increment request and response count
         num += (read_len + 1);
         break;
