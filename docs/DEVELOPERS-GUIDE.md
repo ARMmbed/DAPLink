@@ -9,7 +9,6 @@ Install the necessary tools listed below. Skip any step where a compatible tool 
 * Install [Git](https://git-scm.com/downloads) . Add to PATH.
 * Install [Keil MDK-ARM](https://www.keil.com/download/product/), preferably version 5. Set environment variable "UV4" to the absolute path of the UV4 executable if you don't install to the default location. Note that "UV4" is what's used for both MDK versions 4 and 5.
 * Install virtualenv in your global Python installation eg: `pip install virtualenv`
-* Install intelhex and enum in your global Python installation eg: `pip install intelhex enum`
 
 **Step 1.** Get the sources and create a virtual environment
 
