@@ -20,13 +20,15 @@ Windows drive indexing needs to be turned off prior to running the tests.
  
 ### Running Tests
  * Open CMD and cd to DAPLink directory.
- * Activate virtual env, launch tests by running ``python test/run_test.py`
+ * Activate virtual env, launch tests by running ``python test/run_test.py``
    Specifying --firmwaredir is optional. For target images, either provide mbed.org authentication or use --targetdir to specify the location of pre-built target app binaries.
  * Test results will be printed to console
 
 ## Test on Linux
 ###  Prepare Host Machine
- Linux has a deamon called modemmanager that sends unsolicitated traffic to DAPLink. This will cause serial port tests to fail, typically at band rate initialization. The easiest way is to remove this deamon with ``sudo apt-get purge modemmanager``
+ Linux may have a daemon called modemmanager that sends unsolicitated traffic to DAPLink. This will cause serial port tests to fail, typically at band rate initialization.
+ To check if modemmanager service is running, run ``systemctl | grep Modem``. Modem Manager will be displayed if so. To disable this service, run ``systemctl disable ModemManager.service``.
+ Alternatively, this daemon can be removed with ``sudo apt-get purge modemmanager``.
 
 **Step 1.** Build Firmware Releases
  The firmware images under test need to be built on Windows. Under tools directory, run ``build_release_uvision.bat``. Then copy the generated  uvision_release directory to Linux.
@@ -60,7 +62,7 @@ Test results will be printed to console.
 
 ## Test on Mac
 ### Prepare Host Machine
-  None
+  Refer to the steps for Linux. 
   
 ### Running Tests
   Refer to the steps for Linux.

@@ -430,6 +430,21 @@ static inline BOOL USBD_ReqGetDescriptor(void)
                     len = ((USB_STRING_DESCRIPTOR *)pD)->bLength;
                     break;
 
+                case USB_BINARY_OBJECT_STORE_DESCRIPTOR_TYPE:
+                    if (!usbd_bos_enable) {
+                        return (__FALSE);  /* High speed not enabled */
+                    }
+
+                    pD = (U8 *)USBD_BinaryObjectStoreDescriptor;
+                    USBD_EP0Data.pData = pD;
+
+                    if (((USB_BINARY_OBJECT_STORE_DESCRIPTOR *)pD)->bLength == 0) {
+                        return (__FALSE);
+                    }
+
+                    len = ((USB_BINARY_OBJECT_STORE_DESCRIPTOR *)pD)->wTotalLength;
+                    break;
+
                 default:
                     return (__FALSE);
             }
@@ -909,6 +924,25 @@ void USBD_EndPoint0(U32 event)
 
 setup_class_ok:                                                          /* request finished successfully */
                 break;  /* end case REQUEST_CLASS */
+
+            case REQUEST_VENDOR:
+                switch (USBD_SetupPacket.bmRequestType.Recipient) {
+                    case REQUEST_TO_DEVICE:
+                        if (USBD_EndPoint0_Setup_WebUSB_ReqToDevice()) {
+                            goto setup_vendor_ok;
+                        }
+
+                        if (USBD_EndPoint0_Setup_WinUSB_ReqToDevice()) {
+                            goto setup_vendor_ok;
+                        }
+
+                        goto stall;
+
+                    default:
+                        goto stall;
+                }
+setup_vendor_ok:
+                break; /* end case REQUEST_VENDOR */
 
             default:
 stall:

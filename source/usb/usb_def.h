@@ -104,6 +104,8 @@ typedef __packed struct _USB_SETUP_PACKET {
 #define USB_OTG_DESCRIPTOR_TYPE                     9
 #define USB_DEBUG_DESCRIPTOR_TYPE                  10
 #define USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE  11
+#define USB_BINARY_OBJECT_STORE_DESCRIPTOR_TYPE    15
+#define USB_DEVICE_CAPABILITY_DESCRIPTOR_TYPE      16
 
 /* USB Device Classes */
 #define USB_DEVICE_CLASS_RESERVED              0x00
@@ -117,6 +119,7 @@ typedef __packed struct _USB_SETUP_PACKET {
 #define USB_DEVICE_CLASS_STORAGE               0x08
 #define USB_DEVICE_CLASS_HUB                   0x09
 #define USB_DEVICE_CLASS_MISCELLANEOUS         0xEF
+#define USB_DEVICE_CLASS_APPLICATION_SPECIFIC  0xFE
 #define USB_DEVICE_CLASS_VENDOR_SPECIFIC       0xFF
 
 /* bmAttributes in Configuration Descriptor */
@@ -149,6 +152,20 @@ typedef __packed struct _USB_SETUP_PACKET {
 #define USB_ENDPOINT_USAGE_FEEDBACK            0x10
 #define USB_ENDPOINT_USAGE_IMPLICIT_FEEDBACK   0x20
 #define USB_ENDPOINT_USAGE_RESERVED            0x30
+
+/* bDevCapabilityType in Device Capability Descriptor */
+#define USB_DEVICE_CAPABILITY_WIRELESS_USB                  1
+#define USB_DEVICE_CAPABILITY_USB_2_0_EXTENSION             2
+#define USB_DEVICE_CAPABILITY_SUPERSPEED_USB                3
+#define USB_DEVICE_CAPABILITY_CONTAINER_ID                  4
+#define USB_DEVICE_CAPABILITY_PLATFORM                      5
+#define USB_DEVICE_CAPABILITY_POWER_DELIVERY_CAPABILITY     6
+#define USB_DEVICE_CAPABILITY_BATTERY_INFO_CAPABILITY       7
+#define USB_DEVICE_CAPABILITY_PD_CONSUMER_PORT_CAPABILITY   8
+#define USB_DEVICE_CAPABILITY_PD_PROVIDER_PORT_CAPABILITY   9
+#define USB_DEVICE_CAPABILITY_SUPERSPEED_PLUS               10
+#define USB_DEVICE_CAPABILITY_PRECISION_TIME_MEASUREMENT    11
+#define USB_DEVICE_CAPABILITY_WIRELESS_USB_EXT              12
 
 /* USB Standard Device Descriptor */
 typedef __packed struct _USB_DEVICE_DESCRIPTOR {
@@ -241,5 +258,19 @@ typedef __packed struct _USB_INTERFACE_ASSOCIATION_DESCRIPTOR {
     U8  iFunction;
 } USB_INTERFACE_ASSOCIATION_DESCRIPTOR;
 
+/* USB Binary Object Store Descriptor */
+typedef __packed struct _USB_BINARY_OBJECT_STORE_DESCRIPTOR {
+    U8  bLength;
+    U8  bDescriptorType;
+    U16 wTotalLength;
+    U8  bNumDeviceCaps;
+} USB_BINARY_OBJECT_STORE_DESCRIPTOR;
+
+/* USB Device Capability Descriptor */
+typedef __packed struct _USB_DEVICE_CAPABILITY_DESCRIPTOR {
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bDevCapabilityType;
+} USB_DEVICE_CAPABILITY_DESCRIPTOR;
 
 #endif  /* __USB_DEF_H__ */
