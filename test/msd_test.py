@@ -382,7 +382,6 @@ def test_mass_storage(workspace, parent_test):
         with MbedBoard.chooseBoard(board_id=board.get_unique_id(), init_board=False) as mbed_board:
             memory_map = mbed_board.target.getMemoryMap()
         flash_regions = [region for region in memory_map if region.type == 'flash']
-        number_flash_regions = len(flash_regions)
 
         max_address = intel_hex.maxaddr()
         # Create an object. We'll add the addresses of unused even blocks to it first, then unused odd blocks for each region
@@ -390,6 +389,8 @@ def test_mass_storage(workspace, parent_test):
         # Add the content from test bin first
         expected_bin_contents = bin_file_contents
         for region_index, the_region in enumerate(flash_regions):
+            if the_region.isBootMemory == False:
+                continue
             flash_start = the_region.start
             flash_length = the_region.length
             block_size = the_region.blocksize
@@ -398,7 +399,7 @@ def test_mass_storage(workspace, parent_test):
 
             # Sanity check the regions are contiguous
             if region_index:
-                assert flash_start == (flash_regions[region_index - 1].start + flash_regions[region_index - 1].flash_length)
+                assert flash_start == (flash_regions[region_index - 1].start + flash_regions[region_index - 1].length)
 
             if max_address >= (flash_start + flash_length):
                 # This bin image crosses this region, don't modify the content, go to the next region
