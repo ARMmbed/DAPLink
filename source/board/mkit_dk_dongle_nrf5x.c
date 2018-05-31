@@ -22,7 +22,6 @@
 #include "sam3u2c.h"
 #include "target_config.h"
 #include "util.h"
-#include "stdbool.h"
 #include "flash_manager.h"
 
 const char *board_id = "";

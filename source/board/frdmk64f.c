@@ -19,7 +19,6 @@
  * limitations under the License.
  */
  
-#include "stdbool.h"
 #include "flash_manager.h"
 
 const char *board_id = "0240";

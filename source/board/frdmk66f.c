@@ -20,7 +20,6 @@
  */
 
 #include "virtual_fs.h"
-#include "stdbool.h"
 #include "flash_manager.h"
 
 const char *board_id = "0311";
