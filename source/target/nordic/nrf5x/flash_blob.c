@@ -44,14 +44,6 @@ static const uint32_t nRF52832AA_FLM[] = {
     0x40010404, 0x40010504, 0x6e524635, 0x00000000, 
 };
 
-static const sector_info_t sectors_info[] = {
-    {0x00000000, 0x00000400},
- };
-
-static const sector_info_t sectors_info_nrf52[] = {
-    {0x00000000, 0x00001000},
- };
-
 static const program_target_t flash = {  // Default is nrf51
     .init = 0x20000021,
     .uninit = 0x20000025,
