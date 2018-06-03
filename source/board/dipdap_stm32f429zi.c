@@ -1,9 +1,9 @@
 /**
- * @file    mbed_cloud_connect.c
- * @brief   board ID for the mbed cloud connect board
+ * @file    dipdap_stm32f429zi.c
+ * @brief   board file for DAPDAP targeting STM32F429ZI
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,7 +19,9 @@
  * limitations under the License.
  */
 
-const char *board_id = "2410";
+#include "flash_manager.h"
+
+const char *board_id = "FFFF";
 
 void prerun_board_config(void)
 {

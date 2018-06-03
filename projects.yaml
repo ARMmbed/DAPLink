@@ -379,3 +379,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/gr-lychee.yaml
+     lpc11u35_dipdap_stm32f429zi_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/dipdap_stm32f429zi.yaml
+    lpc11u35_dipdap_stm32f439zi_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/dipdap_stm32f439zi.yaml
+    lpc11u35_dipdap_nrf52832_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/dipdap_nrf52832.yaml

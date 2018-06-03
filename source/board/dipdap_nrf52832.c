@@ -1,9 +1,9 @@
 /**
- * @file    mbed_cloud_connect.c
- * @brief   board ID for the mbed cloud connect board
+ * @file    dipdap_nrf52832.c
+ * @brief   board file for DIPDAP targeting nRF52832
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,9 +19,15 @@
  * limitations under the License.
  */
 
-const char *board_id = "2410";
+#include "target_config.h"
+#include "flash_manager.h"
+
+const char *board_id = "FFFF";
 
 void prerun_board_config(void)
 {
+    extern target_cfg_t target_device_nrf52;
+    target_device = target_device_nrf52;
+
     flash_manager_set_page_erase(true);
 }
