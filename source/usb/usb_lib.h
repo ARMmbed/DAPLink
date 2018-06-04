@@ -29,6 +29,7 @@ extern U8 USBD_AltSetting[];
 extern U8 USBD_EP0Buf[];
 extern const U8 usbd_power;
 extern const U8 usbd_hs_enable;
+extern const U8 usbd_bos_enable;
 extern const U16 usbd_if_num;
 extern const U8 usbd_ep_num;
 extern const U8 usbd_max_packet0;
@@ -39,6 +40,7 @@ extern const U8 usbd_max_packet0;
  *----------------------------------------------------------------------------*/
 extern const U8 usbd_hid_enable;
 extern const U8 usbd_hid_if_num;
+extern const U8 usbd_webusb_if_num;
 extern const U8 usbd_hid_ep_intin;
 extern const U8 usbd_hid_ep_intout;
 extern const U16 usbd_hid_interval     [2];
@@ -92,6 +94,9 @@ extern U8 USBD_CDC_ACM_SendBuf[];
 extern U8 USBD_CDC_ACM_ReceiveBuf[];
 extern U8 USBD_CDC_ACM_NotifyBuf[10];
 
+extern const U8 usbd_webusb_vendor_code;
+extern const U8 usbd_winusb_vendor_code;
+
 extern void usbd_os_evt_set(U16 event_flags, U32 task);
 extern U16 usbd_os_evt_get(void);
 extern U32 usbd_os_evt_wait_or(U16 wait_flags, U16 timeout);
@@ -114,6 +119,9 @@ extern const U8 USBD_OtherSpeedConfigDescriptor[];
 extern const U8 USBD_OtherSpeedConfigDescriptor_HS[];
 extern const U8 USBD_OtherSpeedConfigDescriptor[];
 extern const U8 USBD_OtherSpeedConfigDescriptor_HS[];
+extern const U8 USBD_BinaryObjectStoreDescriptor[];
 extern const U8 USBD_StringDescriptor[];
+extern const U8 USBD_WebUSBURLDescriptor[];
+extern const U8 USBD_WinUSBDescriptorSetDescriptor[];
 
 #endif  /* __USB_LIB_H__ */

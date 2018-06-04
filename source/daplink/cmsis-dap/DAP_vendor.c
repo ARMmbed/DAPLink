@@ -25,10 +25,13 @@
  *
  *---------------------------------------------------------------------------*/
 
+#include "RTL.h"
+#include "rl_usb.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "info.h"
 #include "main.h"
+#include "uart.h"
 #include <string.h>
 
 //**************************************************************************************************
@@ -62,10 +65,47 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (len + 1); // increment response count by ID length + length byte
         break;
     }
-    case ID_DAP_Vendor1:  break;
-    case ID_DAP_Vendor2:  break;
-    case ID_DAP_Vendor3:  break;
-    case ID_DAP_Vendor4:  break;
+    case ID_DAP_Vendor1: {
+        // get line coding
+        int32_t read_len = sizeof(CDC_LINE_CODING);
+        CDC_LINE_CODING cdc_line_coding;
+        USBD_CDC_ACM_PortGetLineCoding(&cdc_line_coding);
+        memcpy(response, &cdc_line_coding, read_len);
+        num += (read_len + 1);
+        break;
+    }
+    case ID_DAP_Vendor2: {
+        // set uart configuration
+        CDC_LINE_CODING cdc_line_coding;
+        USBD_CDC_ACM_PortGetLineCoding(&cdc_line_coding);
+        //set BaudRate
+        uint32_t baud_rate = 0;
+        memcpy(&baud_rate, request, sizeof(uint32_t));
+        cdc_line_coding.dwDTERate = baud_rate;
+        USBD_CDC_ACM_PortSetLineCoding(&cdc_line_coding);
+        USBD_CDC_ACM_SendBreak(0);
+        *response = 1;
+        num += (sizeof(uint32_t) << 16) | 1;
+        break;
+    }
+    case ID_DAP_Vendor3:  {
+        // uart read
+        int32_t read_len = 62;
+        read_len = uart_read_data(response + 1, read_len);
+        response[0] = read_len;
+        // increment request and response count
+        num += (read_len + 1);
+        break;
+    }
+    case ID_DAP_Vendor4:  {
+        // uart write
+        int32_t write_len = *request;
+        request++;
+        uart_write_data((uint8_t *)request, write_len);
+        *response = 1;
+        num += ((write_len + 1) << 16) | 1;
+        break;
+    }
     case ID_DAP_Vendor5:  break;
     case ID_DAP_Vendor6:  break;
     case ID_DAP_Vendor7:  break;
