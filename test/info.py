@@ -216,6 +216,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
 ])
 
 BOARD_ID_SUPPORTING_PAGE_ERASE = set([
+    0x0214,  # HEXIWEAR
     0x0240,  # K64F
     0x0311,  # K66F
     0x1101,  # Nordic-nRF52-DK

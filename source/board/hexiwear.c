@@ -19,6 +19,7 @@
  */
 
 #include "virtual_fs.h"
+#include "flash_manager.h"
 
 const char *board_id = "0214";
 
@@ -31,3 +32,9 @@ __attribute__((aligned(4)))
 const vfs_filename_t daplink_drive_name =     "HEX-DAPLINK";
 __attribute__((aligned(4)))
 const char *const daplink_target_url = "http://www.hexiwear.com/";
+
+void prerun_board_config(void)
+{
+    flash_manager_set_page_erase(true);
+}
+
