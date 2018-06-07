@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the stm32f412re
+ * @brief   Target information for the stm32f412rg
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
