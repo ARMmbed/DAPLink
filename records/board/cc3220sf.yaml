@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/cc3220sf.c
+        target:
+            - source/target/ti/cc3220sf/target.c
+            - source/target/ti/target_reset.c
