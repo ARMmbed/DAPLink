@@ -7,5 +7,5 @@ common:
         board:
             - source/board/mtb_mxchip_emw3166.c
         target:
-            - source/target/st/stm32f412re/target.c
+            - source/target/st/stm32f412rg/target.c
             - source/target/st/target_reset.c
