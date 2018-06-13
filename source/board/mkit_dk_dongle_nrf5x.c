@@ -22,6 +22,7 @@
 #include "sam3u2c.h"
 #include "target_config.h"
 #include "util.h"
+#include "flash_manager.h"
 
 const char *board_id = "";
 
@@ -112,4 +113,6 @@ void prerun_board_config(void)
     PIOB->PIO_PUDR = (1 << 1); // Disable pull-up 
     PIOB->PIO_PUDR = (1 << 2); // Disable pull-up
     PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
+
+    flash_manager_set_page_erase(true);
 }

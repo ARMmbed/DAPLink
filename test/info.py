@@ -149,6 +149,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1095,     'k20dx_rblnano_if',                         'k20dx_bl',         'RedBearLab-BLE-Nano'                   ),
     (   0x1100,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-DK'                       ),
     (   0x1101,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52-DK'                       ),
+    (   0x1102,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52840-DK'                    ),
     (   0x1021,     'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
     (   0x1114,     'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
@@ -215,8 +216,11 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
 ])
 
 BOARD_ID_SUPPORTING_PAGE_ERASE = set([
+    0x0214,  # HEXIWEAR
     0x0240,  # K64F
     0x0311,  # K66F
+    0x1101,  # Nordic-nRF52-DK
+    0x1102,  # Nordic-nRF52840-DK
 ])
 
 #Hack until these targets have an image with a valid vector table
@@ -224,6 +228,7 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'Microbit',
     'Nordic-nRF51-DK',
     'Nordic-nRF52-DK',
+    'Nordic-nRF52840-DK',
     'Nordic-nRF51822',
     'Nordic-nRF51-Dongle',
     'Seeed-Arch-BLE',

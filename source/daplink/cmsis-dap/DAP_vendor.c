@@ -32,6 +32,9 @@
 #include "info.h"
 #include "main.h"
 #include "uart.h"
+#include "file_stream.h"
+#include "settings.h"
+#include "target_reset.h"
 #include <string.h>
 
 //**************************************************************************************************
@@ -121,10 +124,35 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (1U << 16) | 1U; // increment request and response count each by 1
         break;
     }
-    case ID_DAP_Vendor9:  break;
-    case ID_DAP_Vendor10: break;
-    case ID_DAP_Vendor11: break;
-    case ID_DAP_Vendor12: break;
+    case ID_DAP_Vendor9: {
+        // reset target
+        *response = 1;
+        if (!config_get_auto_rst()) {
+            target_set_state(RESET_RUN);
+        }
+        num += 1;
+        break;
+    }
+    case ID_DAP_Vendor10: {
+        // open mass storage device stream
+        *response = stream_open((stream_type_t)(*request));
+        num += (1 << 16) | 1;
+        break;
+    }
+    case ID_DAP_Vendor11: {
+        // close mass storage device stream
+        *response = stream_close();
+        num += 1;
+        break;
+    }
+    case ID_DAP_Vendor12: {
+        // write to mass storage device
+        uint32_t write_len = *request;
+        request++;
+        *response = stream_write((uint8_t *)request, write_len);
+        num += ((write_len + 1) << 16) | 1;
+        break;
+    }
     case ID_DAP_Vendor13: break;
     case ID_DAP_Vendor14: break;
     case ID_DAP_Vendor15: break;

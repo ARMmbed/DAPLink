@@ -26,34 +26,34 @@
 
 // target information
 target_cfg_t target_device = {  // Default is nRF51
-    .sector_size    = 1024,
-    .sector_cnt     = (KB(256) / 1024),
-    .flash_start    = 0,
-    .flash_end      = KB(256),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20004000,
-    .flash_algo     = (program_target_t *) &flash,
-    .erase_reset    = 1,
+    .sector_size        = 1024,
+    .sector_cnt         = (KB(256) / 1024),
+    .flash_start        = 0,
+    .flash_end          = KB(256),
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20004000,
+    .flash_algo         = (program_target_t *) &flash,
+    .erase_reset        = 1,
 };
 
 target_cfg_t target_device_nrf52 = {
-    .sector_size    = 4096,
-    .sector_cnt     = (KB(512) / 4096),
-    .flash_start    = 0,
-    .flash_end      = KB(512),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20008000,
-    .flash_algo     = (program_target_t *) &flash_nrf52,
-    .erase_reset    = 1,
+    .sector_size        = 4096,
+    .sector_cnt         = (KB(512) / 4096),
+    .flash_start        = 0,
+    .flash_end          = KB(512),
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20008000,
+    .flash_algo         = (program_target_t *) &flash_nrf52,
+    .erase_reset        = 1,
 };
 
 target_cfg_t target_device_nrf52840 = {
-    .sector_size    = 4096,
-    .sector_cnt     = (KB(1024) / 4096),
-    .flash_start    = 0,
-    .flash_end      = KB(1024),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20008000,
-    .flash_algo     = (program_target_t *) &flash_nrf52,
-    .erase_reset    = 1,
+    .sector_size        = 4096,
+    .sector_cnt         = (KB(1024) / 4096),
+    .flash_start        = 0,
+    .flash_end          = KB(1024),
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20008000,
+    .flash_algo         = (program_target_t *) &flash_nrf52,
+    .erase_reset        = 1,
 };

@@ -172,6 +172,35 @@ class MassStorageTester(object):
         # Expected data must be set, even if to None
         assert hasattr(self, '_expected_data')
 
+        # Windows 8/10 workaround
+        # ----
+        # By default Windows 8 and 10 access and write to removable drives
+        # shortly after they are connected. If this occurs at the same time
+        # as a file copy the file could be sent out of order causing DAPLink
+        # programming to terminate early and report an error.
+        #
+        # This causes testing to intermittently fail with errors such as:
+        # - "The transfer timed out."
+        # - "File sent out of order by PC. Target might
+        #     not be programmed correctly."
+        #
+        # To prevent Windows from writing to removable drives on connect
+        # drive indexing can be turned off with the following procedure:
+        # - Start the program "gpedit.msc"
+        # - Navigate to "Computer Configuration \ Administrative Templates
+        #                \ Windows Components \ Search"
+        # - Enable the policy "Do not allow locations on removable drives
+        #                      to be added to  libraries."
+        #
+        # Rather than requiring all testers of DAPLink make this setting
+        # change the below sleep has been added. This added delay allows
+        # windows to complete the writes it performs shortly after connect.
+        # This allows testing to be performed without interruption.
+        #
+        # Note - if drive indexing is turned off as mentioned above then
+        #        this sleep is not needed.
+        time.sleep(2)
+
         # Copy mock files before test
         self._mock_file_list = []
         for dir_name in self._mock_dir_list:
@@ -382,7 +411,6 @@ def test_mass_storage(workspace, parent_test):
         with MbedBoard.chooseBoard(board_id=board.get_unique_id(), init_board=False) as mbed_board:
             memory_map = mbed_board.target.getMemoryMap()
         flash_regions = [region for region in memory_map if region.type == 'flash']
-        number_flash_regions = len(flash_regions)
 
         max_address = intel_hex.maxaddr()
         # Create an object. We'll add the addresses of unused even blocks to it first, then unused odd blocks for each region
@@ -390,6 +418,8 @@ def test_mass_storage(workspace, parent_test):
         # Add the content from test bin first
         expected_bin_contents = bin_file_contents
         for region_index, the_region in enumerate(flash_regions):
+            if the_region.isBootMemory == False:
+                continue
             flash_start = the_region.start
             flash_length = the_region.length
             block_size = the_region.blocksize
@@ -398,7 +428,7 @@ def test_mass_storage(workspace, parent_test):
 
             # Sanity check the regions are contiguous
             if region_index:
-                assert flash_start == (flash_regions[region_index - 1].start + flash_regions[region_index - 1].flash_length)
+                assert flash_start == (flash_regions[region_index - 1].start + flash_regions[region_index - 1].length)
 
             if max_address >= (flash_start + flash_length):
                 # This bin image crosses this region, don't modify the content, go to the next region
