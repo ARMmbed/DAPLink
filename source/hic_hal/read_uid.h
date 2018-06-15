@@ -25,7 +25,7 @@
 #include "stdint.h"
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 void read_unique_id(uint32_t *id);

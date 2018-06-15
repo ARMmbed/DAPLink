@@ -23,7 +23,7 @@
 #define ERROR_H
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 // Keep in sync with the lists error_message and error_type
