@@ -54,7 +54,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_hvpke18f_if",                           True,       0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
-    #("lpc11u35_archmax_if",                        False,      0x0000,     "bin"       ),  # Unsupported currently
+    ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_hrm1017_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_sscity_if",                          False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci824_if",                         False,      0x0000,     "bin"       ),
