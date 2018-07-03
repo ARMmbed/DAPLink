@@ -379,15 +379,23 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/gr-lychee.yaml
-     lpc11u35_dipdap_stm32f429zi_if:
+    lpc11u35_dipdap_sdt32429b_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/dipdap_stm32f429zi.yaml
-    lpc11u35_dipdap_stm32f439zi_if:
+        - records/board/dipdap_sdt32429b.yaml
+    lpc11u35_dipdap_sdt32439b_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/dipdap_stm32f439zi.yaml
-    lpc11u35_dipdap_nrf52832_if:
+        - records/board/dipdap_sdt32439b.yaml
+    lpc11u35_dipdap_std64b_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/dipdap_nrf52832.yaml
+        - records/board/dipdap_sdt64b.yaml
+    lpc11u35_dipdap_sdt51822b_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/dipdap_sdt51822b.yaml
+    lpc11u35_dipdap_sdt52832b_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/dipdap_sdt52832b.yaml

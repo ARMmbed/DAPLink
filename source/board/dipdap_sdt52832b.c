@@ -1,6 +1,6 @@
 /**
- * @file    dipdap_stm32f439zi.c
- * @brief   board file for DAPDAP targeting STM32F439ZI
+ * @file    dipdap_sdt52832b.c
+ * @brief   board file for DIPDAP targeting nRF52832
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018, ARM Limited, All Rights Reserved
@@ -19,11 +19,15 @@
  * limitations under the License.
  */
 
+#include "target_config.h"
 #include "flash_manager.h"
 
-const char *board_id = "FFFF";
+const char *board_id = "3104";
 
 void prerun_board_config(void)
 {
+    extern target_cfg_t target_device_nrf52;
+    target_device = target_device_nrf52;
+
     flash_manager_set_page_erase(true);
 }

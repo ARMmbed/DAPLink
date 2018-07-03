@@ -1,6 +1,6 @@
 /**
- * @file    dipdap_stm32f429zi.c
- * @brief   board file for DAPDAP targeting STM32F429ZI
+ * @file    dipdap_sdt32429b.c
+ * @brief   board file for DIPDAP targeting STM32F429ZI
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018, ARM Limited, All Rights Reserved
@@ -21,7 +21,7 @@
 
 #include "flash_manager.h"
 
-const char *board_id = "FFFF";
+const char *board_id = "3108";
 
 void prerun_board_config(void)
 {
