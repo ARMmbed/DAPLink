@@ -98,7 +98,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_dipdap_sdt52832b_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_sdt32429b_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_sdt32439b_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_std64b_if',                   False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt64b_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_sdt51822b_if',                False,      0x0000,     "bin"       ),
 }
 
@@ -190,7 +190,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3104,     'lpc11u35_dipdap_sdt52832b_if',             None,               None                                    ),
     (   0x3108,     'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),
     (   0x3110,     'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
-    (   0x3105,     'lpc11u35_dipdap_std64b_if',                None,               None                                    ),
+    (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
 ]
 

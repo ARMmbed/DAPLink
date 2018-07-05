@@ -387,7 +387,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/dipdap_sdt32439b.yaml
-    lpc11u35_dipdap_std64b_if:
+    lpc11u35_dipdap_sdt64b_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/dipdap_sdt64b.yaml
