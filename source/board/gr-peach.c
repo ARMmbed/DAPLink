@@ -24,6 +24,12 @@
 
 const char *board_id = "5500";
 
+// Override default behavior
+//
+// URL_NAME and DRIVE_NAME must be 11 characters excluding
+// the null terminated character
+// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
+__attribute__((aligned(4)))
 const vfs_filename_t daplink_drive_name =     "MBED       ";
 
 void prerun_board_config(void)
