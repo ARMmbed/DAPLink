@@ -223,6 +223,8 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
+    0x5500,  # GR-PEACH
+    0x5501,  # GR-LYCHEE
 ])
 
 #Hack until these targets have an image with a valid vector table
