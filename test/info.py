@@ -233,11 +233,11 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
+    0x3103,  # dipdap_sdt51822b
     0x3104,  # dipdap_sdt52832b
+    0x3105,  # dipdap_sdt64b
     0x3108,  # dipdap_sdt32429b
     0x3110,  # dipdap_sdt32439b
-    0x3105,  # dipdap_sdt64b
-    0x3103,  # dipdap_sdt51822b
     0x5500,  # GR-PEACH
     0x5501,  # GR-LYCHEE
 ])
