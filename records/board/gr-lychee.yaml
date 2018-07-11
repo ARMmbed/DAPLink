@@ -3,8 +3,8 @@ common:
         - TARGET_MCU_CORTEX_A
     sources:
         board:
-            - source/board/gr-peach.c
+            - source/board/gr-lychee.c
         target:
-            - source/target/renesas/rza1h/gr-peach/target.c
+            - source/target/renesas/rza1lu/gr-lychee/target.c
             - source/target/renesas/target_reset.c
             - source/target/renesas/validation.c

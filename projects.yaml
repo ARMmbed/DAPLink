@@ -375,3 +375,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_usi_wm_bn_bm_22.yaml
+    lpc11u35_gr_lychee_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/gr-lychee.yaml

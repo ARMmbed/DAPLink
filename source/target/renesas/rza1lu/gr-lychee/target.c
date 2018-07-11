@@ -1,6 +1,6 @@
 /**
- * @file    gr-peach.c
- * @brief   board ID for the GR-PEACH
+ * @file    target.c
+ * @brief   Target information for the GR-LYCHEE
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -18,21 +18,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "stdbool.h"
-#include "virtual_fs.h"
-#include "flash_manager.h"
 
-const char *board_id = "5500";
+#include "target_config.h"
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "MBED       ";
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
 
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
+// target information
+target_cfg_t target_device = {
+    .sector_size    = KB(64),
+    .sector_cnt     = (MB(8) / KB(64)),
+    .flash_start    = 0,
+    .flash_end      = MB(8),
+    .ram_start      = 0x20000000,
+    .ram_end        = 0x20300000,
+    .flash_algo     = (program_target_t *) &flash,
+};

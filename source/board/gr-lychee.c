@@ -1,6 +1,6 @@
 /**
- * @file    gr-peach.c
- * @brief   board ID for the GR-PEACH
+ * @file    gr-lychee.c
+ * @brief   board ID for the GR-LYCHEE
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,7 +22,7 @@
 #include "virtual_fs.h"
 #include "flash_manager.h"
 
-const char *board_id = "5500";
+const char *board_id = "5501";
 
 // Override default behavior
 //
