@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-static const uint32_t STM32F439ZI_flash_prog_blob[] = {
+static const uint32_t STM32F429ZI_flash_prog_blob[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x03004601, 0x28200e00, 0x0940d302, 0xe0051d00, 0xd3022810, 0x1cc00900, 0x0880e000, 0xd50102c9,
     0x43082110, 0x48464770, 0x60414944, 0x60414945, 0x60012100, 0x22f068c1, 0x60c14311, 0x06806940,
@@ -60,7 +60,7 @@ static const program_target_t flash = {
 
     0x20000000 + 0x00000A00,  // mem buffer location
     0x20000000,               // location to write prog_blob in target RAM
-    sizeof(STM32F439ZI_flash_prog_blob),   // prog_blob size
-    STM32F439ZI_flash_prog_blob,           // address of prog_blob
+    sizeof(STM32F429ZI_flash_prog_blob),   // prog_blob size
+    STM32F429ZI_flash_prog_blob,           // address of prog_blob
     0x00000400       // ram_to_flash_bytes_to_be_written
 };

@@ -27,9 +27,9 @@
 // target information
 target_cfg_t target_device = {
     .sector_size        = 0x4000,
-    .sector_cnt         = (0x100000 / 0x4000),
+    .sector_cnt         = (0x80000 / 0x4000),
     .flash_start        = 0x08000000,
-    .flash_end          = 0x08100000,
+    .flash_end          = 0x08080000,
     .ram_start          = 0x20000000,
     .ram_end            = 0x20040000,
     .flash_algo         = (program_target_t *) &flash

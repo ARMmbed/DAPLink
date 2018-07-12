@@ -1,9 +1,9 @@
 /**
- * @file    target.c
- * @brief   Target information for the stm32f412rg
+ * @file    dipdap_sdt32439b.c
+ * @brief   board file for DIPDAP targeting STM32F439ZI
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,18 +19,11 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "flash_manager.h"
 
-// The file flash_blob.c must only be included in target.c
-#include "flash_blob.c"
+const char *board_id = "3110";
 
-// target information
-target_cfg_t target_device = {
-    .sector_size        = 0x4000,
-    .sector_cnt         = (0x100000 / 0x4000),
-    .flash_start        = 0x08000000,
-    .flash_end          = 0x08100000,
-    .ram_start          = 0x20000000,
-    .ram_end            = 0x20040000,
-    .flash_algo         = (program_target_t *) &flash
-};
+void prerun_board_config(void)
+{
+    flash_manager_set_page_erase(true);
+}

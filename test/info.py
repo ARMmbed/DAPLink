@@ -95,6 +95,11 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_laird_bl652_if',                 False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt52832b_if',                False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt32429b_if',                False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt32439b_if',                False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt64b_if',                   False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_sdt51822b_if',                False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -182,6 +187,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1237,     'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
     (   0xC006,     'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
+    (   0x3104,     'lpc11u35_dipdap_sdt52832b_if',             None,               None                                    ),
+    (   0x3108,     'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),
+    (   0x3110,     'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
+    (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
+    (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
 ]
 
 # Add new HICs here
@@ -223,6 +233,11 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
+    0x3103,  # dipdap_sdt51822b
+    0x3104,  # dipdap_sdt52832b
+    0x3105,  # dipdap_sdt64b
+    0x3108,  # dipdap_sdt32429b
+    0x3110,  # dipdap_sdt32439b
     0x5500,  # GR-PEACH
     0x5501,  # GR-LYCHEE
 ])
