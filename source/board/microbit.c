@@ -18,8 +18,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-const char *board_id = "9900";
+#include "MKL26Z4.h"
+#include "IO_Config.h"
 
 // URL_NAME and DRIVE_NAME must be 11 characters excluding
 // the null terminated character
@@ -30,3 +30,47 @@ __attribute__((aligned(4)))
 const char daplink_drive_name[11] = "MICROBIT   ";
 __attribute__((aligned(4)))
 const char *const daplink_target_url = "https://www.microbit.co.uk/device?mbedcode=@B@V";
+
+const char *board_id = "";
+const char * const board_id_mb_1_3 = "9900";
+const char * const board_id_mb_1_5 = "9901";
+
+typedef enum {
+    BOARD_VERSION_1_3 = 0,
+    BOARD_VERSION_1_5 = 1,
+} mb_version_t;
+
+// Enables Board Type Pin, reads it and disables it
+// Depends on gpio_init() to have been executed already
+uint8_t read_board_type_pin(void) {
+    uint8_t pin_state = 0;
+    // GPIO mode, Pull enable, pull down, input
+    PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(0);
+    PIN_BOARD_TYPE_GPIO->PDDR &= ~PIN_BOARD_TYPE;
+    // Read pin
+    pin_state = (PIN_BOARD_TYPE_GPIO->PDIR & PIN_BOARD_TYPE);
+    // Revert and disable
+    PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(0) | PORT_PCR_PE(0);
+    return pin_state;
+}
+
+void set_board_id(mb_version_t board_version) {
+    switch (board_version) {
+        case BOARD_VERSION_1_3:
+            board_id = board_id_mb_1_3;
+            break;
+        case BOARD_VERSION_1_5:
+            board_id = board_id_mb_1_5;
+            break;
+        default:
+            board_id = board_id_mb_1_5;
+            break;
+    }
+}
+
+// Called in main_task() to init before USB and files are configured
+void prerun_board_config(void) {
+    // With only two boards the digital pin read maps directly to the type
+    mb_version_t board_version = (mb_version_t)read_board_type_pin();
+    set_board_id(board_version);
+}
