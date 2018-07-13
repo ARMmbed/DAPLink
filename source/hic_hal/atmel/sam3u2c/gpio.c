@@ -25,6 +25,7 @@
 #include "uart.h"
 #include "compiler.h"
 #include "daplink.h"
+#include "IO_Config.h"
 
 // This GPIO configuration is only valid for the SAM3U2C
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);

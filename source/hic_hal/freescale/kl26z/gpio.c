@@ -20,6 +20,7 @@
  */
 
 #include "gpio.h"
+#include "IO_Config.h"
 
 static void busy_wait(uint32_t cycles)
 {

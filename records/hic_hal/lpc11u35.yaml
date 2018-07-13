@@ -16,5 +16,7 @@ common:
 tool_specific:
     uvision:
         misc:
+            c_flags:
+                - --preinclude="LPC11Uxx.h"
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nxp\lpc11u35"

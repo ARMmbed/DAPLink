@@ -18,5 +18,7 @@ common:
 tool_specific:
     uvision:
         misc:
+            c_flags:
+                - --preinclude="sam3u2c.h"
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\atmel\sam3u2c"
