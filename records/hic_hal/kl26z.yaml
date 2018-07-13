@@ -24,5 +24,7 @@ common:
 tool_specific:
     uvision:
         misc:
+            c_flags:
+                - --preinclude="MKL26Z4.h"
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\kl26z"

@@ -27,6 +27,7 @@ tool_specific:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\k20dx"
             c_flags:
+                - --preinclude="MK20D5.h"
                 - --no_unaligned_access
             cxx_flags:
                 - --no_unaligned_access
