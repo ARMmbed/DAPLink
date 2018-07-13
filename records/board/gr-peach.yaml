@@ -7,4 +7,4 @@ common:
         target:
             - source/target/renesas/rza1h/gr-peach/target.c
             - source/target/renesas/target_reset.c
-            - source/target/renesas/validation.c
+            - source/target/renesas/validation_rza.c
