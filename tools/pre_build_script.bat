@@ -19,11 +19,18 @@
 @set TOOLS=..\..\..\tools
 @set DIR=..\..\..\source\daplink
 
-@python --version 2> nul
+@where py 1> nul
+@if "%errorlevel%"=="0" (
+    set PYTHON_CMD=py -2
+) else (
+    set PYTHON_CMD=python
+)
+
+@%PYTHON_CMD% --version 2> nul
 @if %errorlevel% neq 0 goto nopython
 
 @REM  Run python script to create or update version_git.h
-python %TOOLS%\pre_build_script.py
+%PYTHON_CMD% %TOOLS%\pre_build_script.py
 @if %errorlevel% neq 0 exit /B %errorlevel%
 
 @exit /B 0
