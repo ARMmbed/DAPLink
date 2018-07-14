@@ -1,6 +1,6 @@
 /**
  * @file    rt_TypeDef.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -144,6 +144,7 @@ typedef struct OS_BM {
 /* Definitions */
 #define __TRUE          1
 #define __FALSE         0
+#undef NULL
 #define NULL            ((void *) 0)
 
 /*----------------------------------------------------------------------------

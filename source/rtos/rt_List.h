@@ -1,6 +1,6 @@
 /**
  * @file    rt_List.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,6 +22,12 @@
 /* Definitions */
 
 /* Values for 'cb_type' */
+#undef TCB
+#undef MCB
+#undef SCB
+#undef MUCB
+#undef HCB
+
 #define TCB             0
 #define MCB             1
 #define SCB             2
