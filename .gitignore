@@ -83,3 +83,6 @@ source/daplink/version_git.h
 
 # automated test results
 test_results
+
+#vscode editor
+.vscode
