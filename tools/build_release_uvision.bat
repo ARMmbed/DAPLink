@@ -30,6 +30,13 @@ cd %~dp0..\
 )
 @echo USING UV4=%UV4%
 
+@where py 1> nul
+@if "%errorlevel%"=="0" (
+    set PYTHON_CMD=py -2
+) else (
+    set PYTHON_CMD=python
+)
+
 rmdir /q /s uvision_release
 @if %errorlevel% neq 0 exit /B %errorlevel%
 
@@ -44,7 +51,7 @@ git diff --no-ext-diff --quiet --exit-code      >> uvision_release\git_info.txt
 
 echo Uncommitted Changes: %errorlevel%          >> uvision_release\git_info.txt
 
-virtualenv env
+%PYTHON_CMD% -m virtualenv env
 call env\Scripts\activate
 
 @REM use project requirements if not specified
@@ -66,7 +73,7 @@ python tools/copy_release_files.py
 @exit /B %level%
 
 :error_nomdk
-@echo Error: Keil MDK not installed or not found. If you installed it to a 
-@echo non-default location, you need to set environment variable UV4 to 
+@echo Error: Keil MDK not installed or not found. If you installed it to a
+@echo non-default location, you need to set environment variable UV4 to
 @echo the path of the executable
 @exit /B 1

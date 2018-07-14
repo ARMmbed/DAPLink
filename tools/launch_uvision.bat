@@ -18,7 +18,7 @@
 :: Launches uVision with the python environment needed to build DAPLink
 ::
 :: git and python are expected to be in PATH. Project will fail to build otherwise
-:: 
+::
 
 setlocal
 
@@ -37,9 +37,16 @@ cd %~dp0..\
 @echo USING UV4=%UV4%
 set uv4exe=%UV4%
 
+@where py 1> nul
+@if "%errorlevel%"=="0" (
+    set PYTHON_CMD=py -2
+) else (
+    set PYTHON_CMD=python
+)
+
 @set env_exists=0
 @if exist env set env_exists=1
-@if [%env_exists%]==[0] echo Creating python virtual environment && virtualenv env
+@if [%env_exists%]==[0] echo Creating python virtual environment && %PYTHON_CMD% -m virtualenv env
 call env\Scripts\activate
 
 @echo Doing pip install
@@ -52,8 +59,8 @@ start %uv4exe%
 exit /B 0
 
 :error_nomdk
-@echo Error: Keil MDK not installed or not found. If you installed it to a 
-@echo non-default location, you need to set environment variable UV4 to 
+@echo Error: Keil MDK not installed or not found. If you installed it to a
+@echo non-default location, you need to set environment variable UV4 to
 @echo the path of the executable
 @exit /B 1
 

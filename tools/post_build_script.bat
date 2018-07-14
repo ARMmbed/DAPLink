@@ -23,7 +23,14 @@
 @REM add fromelf to PATH
 @set PATH=%KEIL_ARM%\ARMCC\bin;%path%
 
-@python --version 2> nul
+@where py 1> nul
+@if "%errorlevel%"=="0" (
+    set PYTHON_CMD=py -2
+) else (
+    set PYTHON_CMD=python
+)
+
+@%PYTHON_CMD% --version 2> nul
 @if %errorlevel% neq 0 echo Error: python not in PATH. If you are manually building the project, make sure to launch uVision from the python venv && exit /B %errorlevel%
 
 fromelf --bin %PROJECT_DIR%.axf -o %PROJECT_DIR%.bin
@@ -32,7 +39,7 @@ fromelf --bin %PROJECT_DIR%.axf -o %PROJECT_DIR%.bin
 fromelf --i32 %PROJECT_DIR%.axf -o %PROJECT_DIR%.hex
 @if %errorlevel% neq 0 exit /b %errorlevel%
 
-python %TOOLS%\post_compute_crc.py %PROJECT_DIR%.hex %PROJECT_DIR%_crc
+%PYTHON_CMD% %TOOLS%\post_compute_crc.py %PROJECT_DIR%.hex %PROJECT_DIR%_crc
 @if %errorlevel% neq 0 exit /b %errorlevel%
 
 @exit 0
