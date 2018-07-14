@@ -3,7 +3,7 @@
 ;* Author             : MCD Application Team
 ;* Version            : V4.2.0
 ;* Date               : 31-March-2017
-;* Description        : STM32F103xB Devices vector table for MDK-ARM toolchain. 
+;* Description        : STM32F103xB Devices vector table for MDK-ARM toolchain.
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == Reset_Handler
@@ -38,7 +38,7 @@
 ;* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 ;* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-; 
+;
 ;*******************************************************************************
 
 ; Amount of memory (in bytes) allocated for Stack
@@ -75,6 +75,8 @@ __heap_limit
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
 
+Sign_Value		EQU		0x5A5A5A5A
+
 __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD     Reset_Handler              ; Reset Handler
                 DCD     NMI_Handler                ; NMI Handler
@@ -82,10 +84,10 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD     MemManage_Handler          ; MPU Fault Handler
                 DCD     BusFault_Handler           ; Bus Fault Handler
                 DCD     UsageFault_Handler         ; Usage Fault Handler
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
+                DCD     Sign_Value                 ; Reserved
+                DCD     DAPLINK_BUILD_KEY          ; DapLink Build type - BL/IF
+                DCD     DAPLINK_HIC_ID             ; DapLink Compatibility
+                DCD     DAPLINK_VERSION            ; DapLink Version
                 DCD     SVC_Handler                ; SVCall Handler
                 DCD     DebugMon_Handler           ; Debug Monitor Handler
                 DCD     0                          ; Reserved
@@ -296,17 +298,17 @@ USBWakeUp_IRQHandler
 ;*******************************************************************************
 ; User Stack and Heap initialization
 ;*******************************************************************************
-                 IF      :DEF:__MICROLIB           
-                
+                 IF      :DEF:__MICROLIB
+
                  EXPORT  __initial_sp
                  EXPORT  __heap_base
                  EXPORT  __heap_limit
-                
+
                  ELSE
-                
+
                  IMPORT  __use_two_region_memory
                  EXPORT  __user_initial_stackheap
-                 
+
 __user_initial_stackheap
 
                  LDR     R0, =  Heap_Mem
