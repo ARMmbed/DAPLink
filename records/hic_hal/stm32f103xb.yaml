@@ -1,0 +1,13 @@
+common:
+    macros:
+        - TARGET_STM32F103xB
+        - DAPLINK_HIC_ID=0x97969904 # DAPLINK_HIC_ID_STM32F103xB
+    sources:
+        hic_hal:
+            - source/hic_hal/st/stm32f1xx/armcc/startup_stm32f103xe.s
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-DTARGET_STM32F103xB"
