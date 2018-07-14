@@ -1,0 +1,21 @@
+common:
+    target:
+        - nucleo-f103rb # Just a template file that determines the build project
+    includes:
+        - source/hic_hal/st/stm32f1xx/hal/Inc
+        - source/hic_hal/st/stm32f1xx/Include
+        - source/hic_hal/st/stm32f1xx
+    sources:
+        hic_hal:
+            - source/hic_hal/st/stm32f1xx
+        stm32f1xx_hal:
+            - source/hic_hal/st/stm32f1xx/hal/Src
+
+tool_specific:
+    uvision:
+        misc:
+            c_flags:
+                - --preinclude="pre_stm32f1.h"
+                - --preinclude="stm32f1xx.h"
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\st\stm32f1xx"
