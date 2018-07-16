@@ -1,7 +1,8 @@
 common:
     sources:
         board:
-            - source/board/cc3220sf.c
+            - source/board/dipdap_cc3220sf.c
         target:
             - source/target/ti/cc3220sf/target.c
             - source/target/ti/target_reset.c
+            - source/target/ti/cc3220sf/validation_cc3220sf.c

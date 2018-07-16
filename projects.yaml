@@ -378,7 +378,7 @@ projects:
     lpc11u35_dipdap_cc3220sf_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/cc3220sf.yaml
+        - records/board/dipdap_cc3220sf.yaml
     lpc11u35_gr_lychee_if:
         - *module_if
         - *module_hic_lpc11u35
