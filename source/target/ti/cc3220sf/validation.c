@@ -30,6 +30,7 @@ const uint32_t cookieList[]=
                 0xEFA3247D
 };
 
+
 uint8_t validate_bin_nvic(const uint8_t *buf)
 {
     return memcmp(buf, cookieList, sizeof(cookieList));   
