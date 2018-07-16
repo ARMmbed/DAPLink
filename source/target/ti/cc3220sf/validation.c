@@ -33,5 +33,5 @@ const uint32_t cookieList[]=
 
 uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    return memcmp(buf, cookieList, sizeof(cookieList));   
+    return memcmp(buf, cookieList, sizeof(cookieList)) == 0;   
 }
