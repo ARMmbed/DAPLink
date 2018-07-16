@@ -32,14 +32,5 @@ const uint32_t cookieList[]=
 
 uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    
-    uint32_t i = 0, cookie = 0;
-    // test the initial cookie value that bypass the serial flash
-    while(i < 3) {
-        memcpy(&cookie, buf + 4*i, sizeof(nvic_val));
-        if(cookie != cookieList[i])
-            return 0;
-    }
-
-    return 1;
+    return memcmp(buf, cookieList, sizeof(cookieList));   
 }
