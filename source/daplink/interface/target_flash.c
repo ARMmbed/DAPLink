@@ -107,7 +107,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
         if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                     flash->program_page,
                                     addr,
-                                    flash->program_buffer_size,
+                                    write_size,
                                     flash->program_buffer,
                                     0)) {
             return ERROR_WRITE;

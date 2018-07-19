@@ -81,5 +81,5 @@ static const program_target_t flash = {
     0x20000000,               // location to write prog_blob in target RAM
     sizeof(cc3220sf_flash_prog_blob),   // prog_blob size
     cc3220sf_flash_prog_blob,           // address of prog_blob
-    0x00000800       // ram_to_flash_bytes_to_be_written
+    0x00000400       // ram_to_flash_bytes_to_be_written
 };
