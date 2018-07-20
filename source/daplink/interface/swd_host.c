@@ -61,7 +61,7 @@
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(TARGET_NRF51822)
 // SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
 #define SOFT_RESET  SYSRESETREQ
-#elif defined(BOARD_LPC4337)
+#elif defined(BOARD_LPC4337) || (TARGET_CC3220SF)
 // VECTRESET - Software reset of Cortex-M core
 // For some Cortex-M devices, VECTRESET is the only way to reset the core.
 // VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.

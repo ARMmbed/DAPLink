@@ -82,6 +82,8 @@ static error_t target_flash_uninit(void)
         target_set_state(RESET_PROGRAM);
     }
 
+		target_set_state(SPECIAL_RESET);
+		
     swd_off();
     return ERROR_SUCCESS;
 }

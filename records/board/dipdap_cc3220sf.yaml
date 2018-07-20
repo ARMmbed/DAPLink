@@ -1,5 +1,7 @@
 common:
     sources:
+        macros:
+            - TARGET_CC3220SF
         board:
             - source/board/dipdap_cc3220sf.c
         target:

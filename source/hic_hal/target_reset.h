@@ -36,7 +36,8 @@ typedef enum {
     NO_DEBUG,                // Disable debug on running target
     DEBUG,                   // Enable debug on running target
     HALT,                    // Halt the target without resetting it
-    RUN                      // Resume the target without resetting it
+    RUN,                      // Resume the target without resetting it
+		SPECIAL_RESET
 } TARGET_RESET_STATE;
 
 void target_before_init_debug(void);
