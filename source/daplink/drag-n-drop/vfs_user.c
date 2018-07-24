@@ -74,9 +74,11 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 
-static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count);
-static void update_html_file(uint8_t *buf, uint32_t bufsize);
+static uint32_t update_html_file(uint8_t *data, uint32_t datasize);
+static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize);
 static void erase_target(void);
+
+static uint32_t expand_info(uint8_t *buf, uint32_t bufsize);
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
@@ -214,106 +216,18 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *data, uint32
         return 0;
     }
 
-    update_html_file(data, VFS_SECTOR_SIZE);
-    return strlen((const char *)data);
+    return update_html_file(data, VFS_SECTOR_SIZE);
 }
 
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    uint32_t pos;
-    const char *mode_str;
-    char *buf = (char *)data;
 
     if (sector_offset != 0) {
         return 0;
     }
-
-    pos = 0;
-    pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
-    // Unique ID
-    pos += util_write_string(buf + pos, "Unique ID: ");
-    pos += util_write_string(buf + pos, info_get_unique_id());
-    pos += util_write_string(buf + pos, "\r\n");
-    // HIC ID
-    pos += util_write_string(buf + pos, "HIC ID: ");
-    pos += util_write_string(buf + pos, info_get_hic_id());
-    pos += util_write_string(buf + pos, "\r\n");
-    // Settings
-    pos += util_write_string(buf + pos, "Auto Reset: ");
-    pos += util_write_string(buf + pos, config_get_auto_rst() ? "1" : "0");
-    pos += util_write_string(buf + pos, "\r\n");
-    pos += util_write_string(buf + pos, "Automation allowed: ");
-    pos += util_write_string(buf + pos, config_get_automation_allowed() ? "1" : "0");
-    pos += util_write_string(buf + pos, "\r\n");
-    pos += util_write_string(buf + pos, "Overflow detection: ");
-    pos += util_write_string(buf + pos, config_get_overflow_detect() ? "1" : "0");
-    pos += util_write_string(buf + pos, "\r\n");
-    // Current mode
-    mode_str = daplink_is_bootloader() ? "Bootloader" : "Interface";
-    pos += util_write_string(buf + pos, "Daplink Mode: ");
-    pos += util_write_string(buf + pos, mode_str);
-    pos += util_write_string(buf + pos, "\r\n");
-    // Current build's version
-    pos += util_write_string(buf + pos, mode_str);
-    pos += util_write_string(buf + pos, " Version: ");
-    pos += util_write_string(buf + pos, info_get_version());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Other builds version (bl or if)
-    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
-        pos += util_write_string(buf + pos, "Bootloader Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    if (!daplink_is_interface() && info_get_interface_present()) {
-        pos += util_write_string(buf + pos, "Interface Version: ");
-        pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    // GIT sha
-    pos += util_write_string(buf + pos, "Git SHA: ");
-    pos += util_write_string(buf + pos, GIT_COMMIT_SHA);
-    pos += util_write_string(buf + pos, "\r\n");
-    // Local modifications when making the build
-    pos += util_write_string(buf + pos, "Local Mods: ");
-    pos += util_write_uint32(buf + pos, GIT_LOCAL_MODS);
-    pos += util_write_string(buf + pos, "\r\n");
-    // Supported USB endpoints
-    pos += util_write_string(buf + pos, "USB Interfaces: ");
-#ifdef MSC_ENDPOINT
-    pos += util_write_string(buf + pos, "MSD");
-#endif
-#ifdef CDC_ENDPOINT
-    pos += util_write_string(buf + pos, ", CDC");
-#endif
-#ifdef HID_ENDPOINT
-    pos += util_write_string(buf + pos, ", HID");
-#endif
-#if (WEBUSB_INTERFACE)
-    pos += util_write_string(buf + pos, ", WebUSB");
-#endif
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // CRC of the bootloader (if there is one)
-    if (info_get_bootloader_present()) {
-        pos += util_write_string(buf + pos, "Bootloader CRC: 0x");
-        pos += util_write_hex32(buf + pos, info_get_crc_bootloader());
-        pos += util_write_string(buf + pos, "\r\n");
-    }
-
-    // CRC of the interface
-    pos += util_write_string(buf + pos, "Interface CRC: 0x");
-    pos += util_write_hex32(buf + pos, info_get_crc_interface());
-    pos += util_write_string(buf + pos, "\r\n");
-
-    // Number of remounts that have occurred
-    pos += util_write_string(buf + pos, "Remount count: ");
-    pos += util_write_uint32(buf + pos, remount_count);
-    pos += util_write_string(buf + pos, "\r\n");
-    return pos;
+		
+    return update_details_txt_file(data, VFS_SECTOR_SIZE);
 }
 
 // Text representation of each error type, starting from the rightmost bit
@@ -417,28 +331,117 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
     return size;
 }
 
-// Remove strip_count characters from the start of buf and then insert
-// new_str at the new start of buf.
-static void insert(uint8_t *buf, uint8_t *new_str, uint32_t strip_count)
+
+static uint32_t update_html_file(uint8_t *data, uint32_t datasize)
+{		
+    char *buf = (char *)data;
+    //Needed by expand_info strlen
+    memset(buf, 0, datasize);
+    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
+    //expand
+    return expand_info(data, datasize);
+}
+
+static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
 {
-    uint32_t buf_len = strlen((const char *)buf);
-    uint32_t str_len = strlen((const char *)new_str);
-    // push out string
-    memmove(buf + str_len, buf + strip_count, buf_len - strip_count);
-    // insert
-    memcpy(buf, new_str, str_len);
+    uint32_t pos=0;
+    const char *mode_str;
+	
+    char *buf = (char *)data;
+		
+    //Needed by expand_info strlen
+    memset(buf, 0, datasize);
+		
+    pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
+    // Unique ID
+    pos += util_write_string(buf + pos, "Unique ID: @U\r\n");
+    // HIC ID
+    pos += util_write_string(buf + pos, "HIC ID: @D\r\n");
+    // Settings
+    pos += util_write_string(buf + pos, "Auto Reset: ");
+    pos += util_write_string(buf + pos, config_get_auto_rst() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Automation allowed: ");
+    pos += util_write_string(buf + pos, config_get_automation_allowed() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Overflow detection: ");
+    pos += util_write_string(buf + pos, config_get_overflow_detect() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
+    // Current mode
+    mode_str = daplink_is_bootloader() ? "Bootloader" : "Interface";
+    pos += util_write_string(buf + pos, "Daplink Mode: ");
+    pos += util_write_string(buf + pos, mode_str);
+    pos += util_write_string(buf + pos, "\r\n");
+    // Current build's version
+    pos += util_write_string(buf + pos, mode_str);
+    pos += util_write_string(buf + pos, " Version: @V\r\n");
+
+    // Other builds version (bl or if)
+    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
+        pos += util_write_string(buf + pos, "Bootloader Version: ");
+        pos += util_write_uint32_zp(buf + pos, info_get_bootloader_version(), 4);
+        pos += util_write_string(buf + pos, "\r\n");
+    }
+
+    if (!daplink_is_interface() && info_get_interface_present()) {
+        pos += util_write_string(buf + pos, "Interface Version: ");
+        pos += util_write_uint32_zp(buf + pos, info_get_interface_version(), 4);
+        pos += util_write_string(buf + pos, "\r\n");
+    }
+
+    // GIT sha
+    pos += util_write_string(buf + pos, "Git SHA: ");
+    pos += util_write_string(buf + pos, GIT_COMMIT_SHA);
+    pos += util_write_string(buf + pos, "\r\n");
+    // Local modifications when making the build
+    pos += util_write_string(buf + pos, "Local Mods: ");
+    pos += util_write_uint32(buf + pos, GIT_LOCAL_MODS);
+    pos += util_write_string(buf + pos, "\r\n");
+    // Supported USB endpoints
+    pos += util_write_string(buf + pos, "USB Interfaces: ");
+#ifdef MSC_ENDPOINT
+    pos += util_write_string(buf + pos, "MSD");
+#endif
+#ifdef CDC_ENDPOINT
+    pos += util_write_string(buf + pos, ", CDC");
+#endif
+#ifdef HID_ENDPOINT
+    pos += util_write_string(buf + pos, ", HID");
+#endif
+#if (WEBUSB_INTERFACE)
+    pos += util_write_string(buf + pos, ", WebUSB");
+#endif
+    pos += util_write_string(buf + pos, "\r\n");
+
+    // CRC of the bootloader (if there is one)
+    if (info_get_bootloader_present()) {
+        pos += util_write_string(buf + pos, "Bootloader CRC: 0x");
+        pos += util_write_hex32(buf + pos, info_get_crc_bootloader());
+        pos += util_write_string(buf + pos, "\r\n");
+    }
+
+    // CRC of the interface
+    pos += util_write_string(buf + pos, "Interface CRC: 0x");
+    pos += util_write_hex32(buf + pos, info_get_crc_interface());
+    pos += util_write_string(buf + pos, "\r\n");
+
+    // Number of remounts that have occurred
+    pos += util_write_string(buf + pos, "Remount count: ");
+    pos += util_write_uint32(buf + pos, remount_count);
+    pos += util_write_string(buf + pos, "\r\n");
+		
+    //Target URL
+    pos += util_write_string(buf + pos, "URL: @R\r\n");
+    
+    return expand_info(data, datasize);
 }
 
 // Fill buf with the contents of the mbed redirect file by
 // expanding the special characters in mbed_redirect_file.
-static void update_html_file(uint8_t *buf, uint32_t bufsize)
+static uint32_t expand_info(uint8_t *buf, uint32_t bufsize) 
 {
-    uint32_t size_left;
     uint8_t *orig_buf = buf;
     uint8_t *insert_string;
-    // Zero out buffer so strlen operations don't go out of bounds
-    memset(buf, 0, bufsize);
-    memcpy(buf, mbed_redirect_file, strlen(mbed_redirect_file));
 
     do {
         // Look for key or the end of the string
@@ -494,12 +497,26 @@ static void update_html_file(uint8_t *buf, uint32_t bufsize)
                     break;
             }
 
-            insert(buf, insert_string, 2);
+            // Remove strip_count characters from the start of buf and then insert
+            // insert_string at the new start of buf.
+            uint32_t buf_len = strlen((const char *)buf);
+            uint32_t str_len = strlen((const char *)insert_string);
+            //buffer overflow check on insert
+            if( (buf + str_len + buf_len - 2) < (orig_buf+bufsize)){
+                // push out string
+                memmove(buf + str_len, buf + 2, buf_len - 2);
+                // insert
+                memcpy(buf, insert_string, str_len);
+            }else{
+                //stop the string expansion and leave as it is
+                buf += buf_len; 
+                break;
+            }
+						
         }
     } while (*buf != '\0');
-
-    size_left = buf - orig_buf;
-    memset(buf, 0, bufsize - size_left);
+		
+    return (buf - orig_buf);
 }
 
 // Initialize flash algo, erase flash, uninit algo
