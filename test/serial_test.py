@@ -70,7 +70,7 @@ class SerialTester(object):
     """Helper object to buffer serial and setup baud"""
 
     def __init__(self, port):
-        self.raw_serial = serial.Serial(port)
+        self.raw_serial = serial.Serial(port=port,bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False, write_timeout=None, dsrdtr=False, inter_byte_timeout=None, exclusive=None)
         self.raw_serial.write_timeout = ERROR_TIMEOUT_SECONDS
         self._queue = Queue.Queue()
         self._write_thread = threading.Thread(target=self._serial_main)
@@ -96,6 +96,8 @@ class SerialTester(object):
         self.raw_serial.timeout = 1.0
 
         # Reset the target
+        self.raw_serial.reset_output_buffer()
+        self.raw_serial.reset_input_buffer()
         self.raw_serial.sendBreak()
 
         # Wait until the target is initialized
