@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "MKL26Z4.h"
+#include "fsl_device_registers.h"
 #include "IO_Config.h"
 
 // URL_NAME and DRIVE_NAME must be 11 characters excluding
@@ -47,6 +47,8 @@ uint8_t read_board_type_pin(void) {
     // GPIO mode, Pull enable, pull down, input
     PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(0);
     PIN_BOARD_TYPE_GPIO->PDDR &= ~PIN_BOARD_TYPE;
+    // Wait to stabilise, based on gpio.c busy_wait(), at -O2 10000 iterations delay ~850us
+    for (volatile uint32_t i = 10000; i > 0; i--);
     // Read pin
     pin_state = (PIN_BOARD_TYPE_GPIO->PDIR & PIN_BOARD_TYPE);
     // Revert and disable
