@@ -44,7 +44,9 @@ git diff --no-ext-diff --quiet --exit-code      >> uvision_release\git_info.txt
 
 echo Uncommitted Changes: %errorlevel%          >> uvision_release\git_info.txt
 
-virtualenv env
+@set env_exists=0
+@if exist env set env_exists=1
+@if [%env_exists%]==[0] echo Creating python virtual environment && virtualenv env
 call env\Scripts\activate
 
 @REM use project requirements if not specified
