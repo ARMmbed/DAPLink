@@ -1,5 +1,5 @@
 /**
- * @file    validation_gr-lychee.c
+ * @file    validation_rza.c
  * @brief   Implementation of validation.h
  *
  * DAPLink Interface Firmware
