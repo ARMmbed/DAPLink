@@ -53,6 +53,7 @@ Output
 Lst
 Obj
 build
+targetfw
 
 # cscope
 cscope.*
@@ -70,7 +71,9 @@ debug.txt
 
 # virtualenv
 env/
+env*/
 venv/
+venv*/
 
 # release
 uvision_release/
