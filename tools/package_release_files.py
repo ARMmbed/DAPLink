@@ -32,7 +32,8 @@ test_dir = os.path.join(daplink_dir, "test")
 sys.path.append(test_dir)
 
 import info
-from update_yml import *
+from update_yml import TargetList
+from update_yml import InstructionsText
 
 
 
@@ -48,10 +49,10 @@ def main():
     build_number = "%04i" % args.version
 
     update_yml_entries = [{'default':TargetList([
-            ('website','http://os.mbed.com/platforms'),
-            ('fw_version',build_number),
+            ('website', 'http://os.mbed.com/platforms'),
+            ('fw_version', build_number),
             ('image_format', '.bin'),
-            ('instructions',instructions['default'])
+            ('instructions', InstructionsText['default'])
             ]) }]
 
     if os.path.exists(output_dir):
@@ -74,36 +75,36 @@ def main():
         dest_path = os.path.join(output_dir, dest_name)
         shutil.copyfile(source_path, dest_path)
 
-        product_code='NOT SUPPORTED'
+        product_code = 'NOT SUPPORTED'
         for board_id, fimware, bootloader, target in info.SUPPORTED_CONFIGURATIONS:
             if fimware == prj_name:
-                product_code=board_id
-                if target:
-                    target_name=target
+                product_code = board_id
+                if target is not None:
+                    target_name = target
                 else:
-                    target_name=small_name
+                    target_name = small_name
                 break
 
-        fw_instuction = instructions['default']
-        for fw_name_key in instructions:
+        fw_instuction = InstructionsText['default']
+        for fw_name_key in InstructionsText:
             if fw_name_key in dest_name.lower():
-                fw_instuction = instructions[fw_name_key]
+                fw_instuction = InstructionsText[fw_name_key]
                 break;
 
         if extension == 'bin':
             update_yml_entries.append({target_name:TargetList([
-                ('name',target_name),
-                ('product_code',format(product_code,'04x')),
+                ('name', target_name),
+                ('product_code', format(product_code, '04x')),
                 ('fw_name', host_mcu + "_" + base_name + dest_offset_str),
-                ('instructions',fw_instuction)
-                ]) });
+                ('instructions', fw_instuction)
+                ])});
 
 
     
     #save the yaml file in the build directory
-    with open(os.path.join(proj_dir, 'update.yml'),'w') as yaml_file:
+    with open(os.path.join(proj_dir, 'update.yml'), 'w') as yaml_file:
         #yaml.Dumper.ignore_aliases = lambda *args : True
-        yaml.dump(update_yml_entries,yaml_file,default_flow_style=False)
+        yaml.dump(update_yml_entries, yaml_file, default_flow_style=False)
 
 if __name__ == "__main__":
     main()
