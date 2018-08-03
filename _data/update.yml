@@ -1,15 +1,7 @@
-#import requests
-#x = requests.get('https://os.mbed.com/api/v3/platforms/')
-#for thing in x.json():
-#    for otherthing in thing['features']:
-#        if otherthing['name'] == 'DAPLink':
-#            print'- %s:\n  name: %s\n  product_code: %s\n  fw_name: \n  instructions: \n    windows: \n    osx: \n    linux: \n' % (thing['name'], thing['name'], thing#['productcode'])
-#
-#cheat sheet https://github.com/mbedmicro/DAPLink/blob/7101d429a57b6bb287df4d45ba3a07ac3fe2dcd7/test/info.py
 ---
 - default:
     website: http://os.mbed.com/platforms
-    fw_version: '0246'
+    fw_version: '0247'
     image_format: .bin
     instructions:
       windows: |
@@ -22,168 +14,189 @@
         1. Download the firmware file.
         1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
         1. In a terminal execute
-          - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
-          - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system. 
+           - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+           - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
         1. Wait for the file copy operation to complete.
         1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
       linux: |
         1. Download the firmware file.
         1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
         1. In a terminal execute
-          - `cp <path to firmware file> <MAINTENANCE> && sync`
-          - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+           - `cp <path to firmware file> <MAINTENANCE> && sync`
+           - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
         1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-  
-- KL25Z:
-  name: KL25Z
-  product_code: 0200
-  fw_name: k20dx_frdmkl25z_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- NXP-LPC800-MAX:
-  name: NXP-LPC800-MAX
-  product_code: 1050
-  fw_name: lpc11u35_lpc812xpresso_0x0000
+- LPCXpresso54114:
+  name: LPCXpresso54114
+  product_code: '1054'
+  fw_name: lpc4322_lpc54114xpresso_0x10000
   instructions:
     windows: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- EA-LPC4088:
-  name: EA-LPC4088
-  product_code: 1060
-  fw_name: lpc11u35_lpc4088qsb_0x0000
-  instructions:
-    windows: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    osx: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    linux: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- LPC1114FN28:
-  name: LPC1114FN28
-  product_code: 1114
-  fw_name: lpc11u35_ssci1114_0x0000
-  instructions:
-    windows: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    osx: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    linux: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.:
-
-- FRDM-KL46Z:
-  name: FRDM-KL46Z
-  product_code: 0220
-  fw_name: k20dx_frdmkl46z_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDM-K64F :
-  name: FRDM-K64F
-  product_code: 0240
-  fw_name: k20dx_frdmk64f_0x5000
-  instructions:
-    windows:
-    osx:
-    linux:
-
 - Nordic-nRF51822:
   name: Nordic-nRF51822
-  product_code: 1070
+  product_code: '1070'
   fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
   instructions:
-    windows:
-    osx:
-    linux:
-
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - FRDM-KL05Z:
   name: FRDM-KL05Z
-  product_code: 0210
+  product_code: '0210'
   fw_name: k20dx_frdmkl05z_0x8000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- u-blox-C027:
-  name: u-blox-C027
-  product_code: 1234
-  fw_name: 0244_lpc11u35_c027_0x0000
-  instructions:
     windows: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- HVPKE18F:
+  name: HVPKE18F
+  product_code: '0216'
+  fw_name: k20dx_hvpke18f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-KW24D512:
+  name: FRDM-KW24D512
+  product_code: '0250'
+  fw_name: k20dx_frdmkw24d_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- LPCXpresso54608:
+  name: LPCXpresso54608
+  product_code: '1056'
+  fw_name: lpc4322_lpc54608xpresso_0x10000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- NZ32_SC151:
+  name: NZ32_SC151
+  product_code: '6660'
+  fw_name: lpc11u35_nz32_sc151_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -191,28 +204,25 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- Seeed-Arch-BLE:
-  name: Seeed-Arch-BLE
-  product_code: 9009
-  fw_name: lpc11u35_archble_0x0000
+- EA-LPC4088-Display-Module:
+  name: EA-LPC4088-Display-Module
+  product_code: '1062'
+  fw_name: lpc11u35_lpc4088dm_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -220,28 +230,51 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- mbed-HRM1017:
-  name: mbed-HRM1017
-  product_code: 1017
-  fw_name: lpc11u35_hrm1017_0x0000
+- FRDMKL02Z:
+  name: FRDMKL02Z
+  product_code: '0204'
+  fw_name: k20dx_frdmkl02z_0x8000
   instructions:
     windows: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_WISE1510:
+  name: MTB_WISE1510
+  product_code: 0458
+  fw_name: lpc11u35_mtb_wise1510_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -249,19 +282,321 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
+- u-blox-NINA-B1:
+  name: u-blox-NINA-B1
+  product_code: '1238'
+  fw_name: kl26z_nina_b1_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- WIZwiki-W7500:
+  name: WIZwiki-W7500
+  product_code: '2201'
+  fw_name: lpc11u35_wizwiki_w7500_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- RO359B:
+  name: RO359B
+  product_code: '1022'
+  fw_name: lpc11u35_ro359b_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-K64F:
+  name: FRDM-K64F
+  product_code: '0240'
+  fw_name: k20dx_frdmk64f_0x5000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-K66F:
+  name: FRDM-K66F
+  product_code: '0311'
+  fw_name: k20dx_frdmk66f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDMK28F:
+  name: FRDMK28F
+  product_code: '0224'
+  fw_name: k20dx_frdmk28f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- TWRKE18F:
+  name: TWRKE18F
+  product_code: '0206'
+  fw_name: k20dx_twrke18f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - FRDM-K20D50M:
   name: FRDM-K20D50M
-  product_code: 0230
+  product_code: '0230'
   fw_name: k20dx_frdmk20dx_0x8000
   instructions:
-    windows:
-    osx:
-    linux:
-
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-K82F:
+  name: FRDM-K82F
+  product_code: '0217'
+  fw_name: k20dx_frdmk82f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- RedBearLab-nRF51822:
+  name: RedBearLab-nRF51822
+  product_code: '1090'
+  fw_name: k20dx_rbl_0x5000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-KL43Z:
+  name: FRDM-KL43Z
+  product_code: '0262'
+  fw_name: k20dx_frdmkl43z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- 96B_NITROGEN:
+  name: 96B_NITROGEN
+  product_code: '9014'
+  fw_name: lpc11u35_96b_nitrogen_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - LPCXpresso824-MAX:
   name: LPCXpresso824-MAX
   product_code: 0824
@@ -271,15 +606,13 @@
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -287,55 +620,77 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- FRDM-K22F:
-  name: FRDM-K22F
-  product_code: 0231
-  fw_name: k20dx_frdmk22f_0x8000
+- HEXIWEAR:
+  name: HEXIWEAR
+  product_code: '0214'
+  fw_name: k20dx_hexiwear_0x8000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- RedBearLab-nRF51822:
-  name: RedBearLab-nRF51822
-  product_code: 1090
-  fw_name: k20dx_rbl_0x5000
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-KL46Z:
+  name: FRDM-KL46Z
+  product_code: '0220'
+  fw_name: k20dx_frdmkl46z_0x8000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- Nordic-nRF51-DK:
-  name: Nordic-nRF51-DK
-  product_code: 1100
-  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- Renesas-GR-PEACH:
-  name: Renesas-GR-PEACH
-  product_code: 5500
-  fw_name: lpc11u35_gr_peach_0x0000
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_WISE1570:
+  name: MTB_WISE1570
+  product_code: '0460'
+  fw_name: lpc11u35_mtb_wise1570_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -343,37 +698,51 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.:
-
-- Nordic-nRF51-Dongle:
-  name: Nordic-nRF51-Dongle
-  product_code: 1120
-  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- mbed-6LoWPAN-Border-Router-HAT:
+  name: mbed-6LoWPAN-Border-Router-HAT
+  product_code: '7402'
+  fw_name: lpc11u35_6lowpan_borderrouterhat_0x0000
   instructions:
-    windows:
-    osx:
-    linux:
-
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - Switch-Science-mbed-LPC824:
   name: Switch-Science-mbed-LPC824
-  product_code: 1018
+  product_code: '1018'
   fw_name: lpc11u35_ssci824_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -381,37 +750,103 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
+- DIPDAP_SDT32429B:
+  name: DIPDAP_SDT32429B
+  product_code: '3108'
+  fw_name: lpc11u35_dipdap_sdt32429b_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_WISE1530:
+  name: MTB_WISE1530
+  product_code: 0459
+  fw_name: lpc11u35_mtb_wise1530_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - RedBearLab-BLE-Nano:
   name: RedBearLab-BLE-Nano
-  product_code: 1095
+  product_code: '1095'
   fw_name: k20dx_rblnano_0x5000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- EA-LPC4088-Display-Module:
-  name: EA-LPC4088-Display-Module
-  product_code: 1062
-  fw_name: lpc11u35_lpc4088dm_0x0000
-  instructions:
     windows: |
       1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
       1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_MXCHIP_EMW3166:
+  name: MTB_MXCHIP_EMW3166
+  product_code: '0451'
+  fw_name: lpc11u35_mtb_mxchip_emw3166_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -419,28 +854,25 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- Seeed-Tiny-BLE:
-  name: Seeed-Tiny-BLE
-  product_code: 9012
-  fw_name: lpc11u35_tiny_0x0000
+- DIPDAP_SDT51822B:
+  name: DIPDAP_SDT51822B
+  product_code: '3103'
+  fw_name: lpc11u35_dipdap_sdt51822b_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -448,28 +880,25 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- Seeeduino-Arch-Pro:
-  name: Seeeduino-Arch-Pro
-  product_code: 9004
-  fw_name: lpc11u35_archpro_0x0000
+- DIPDAP_SDT64B:
+  name: DIPDAP_SDT64B
+  product_code: '3105'
+  fw_name: lpc11u35_dipdap_sdt64b_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -477,151 +906,25 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- Seeed-Arch-Link:
-  name: Seeed-Arch-Link
-  product_code: 9013
-  fw_name: lpc11u35_archlink_0x0000
-  instructions:
-    windows: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    osx: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    linux: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- Microbit:
-  name: Microbit
-  product_code: 9900
-  fw_name: kl26z_microbit_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- Nordic-nRF52-DK:
-  name: Nordic-nRF52-DK
-  product_code: 1101
-  fw_name: sam3u2c_mkit_dk_dongle_nrf5x_0x5000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- Switch-Science-mbed-TY51822r3:
-  name: Switch-Science-mbed-TY51822r3
-  product_code: 1019
-  fw_name: lpc11u35_sscity_0x0000
-  instructions:
-    windows: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    osx: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    linux: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- FRDM-KL27Z:
-  name: FRDM-KL27Z
-  product_code: 0261
-  fw_name: k20dx_frdmkl27z_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- MTS-xDot-L151CC:
-  name: MTS-xDot-L151CC
-  product_code: 0350
-  fw_name: k20dx_xdot_l151_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- WIZwiki-W7500:
-  name: WIZwiki-W7500
-  product_code: 2201
-  fw_name: lpc11u35_wizwiki_w7500_0x0000
-  instructions:
-    windows: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    osx: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
-      1. Wait for the file copy operation to complete.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-    linux: |
-      1. Download the firmware file.
-      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
-      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
 - WIZwiki-W7500P:
   name: WIZwiki-W7500P
-  product_code: 2203
+  product_code: '2203'
   fw_name: lpc11u35_wizwiki_w7500p_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -629,28 +932,883 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
+- FRDM-KL82Z:
+  name: FRDM-KL82Z
+  product_code: 0218
+  fw_name: k20dx_frdmkl82z_0x5000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- NXP-LPC800-MAX:
+  name: NXP-LPC800-MAX
+  product_code: '1050'
+  fw_name: lpc11u35_lpc812xpresso_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- mbed-HRM1017:
+  name: mbed-HRM1017
+  product_code: '1017'
+  fw_name: lpc11u35_hrm1017_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- GR_LYCHEE:
+  name: GR_LYCHEE
+  product_code: '5501'
+  fw_name: lpc11u35_gr_lychee_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- SSCI_CHIBI:
+  name: SSCI_CHIBI
+  product_code: '1021'
+  fw_name: lpc11u35_ssci_chibi_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- RAPID_IOT:
+  name: RAPID_IOT
+  product_code: 0228
+  fw_name: k20dx_rapid_iot_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_RAK811:
+  name: MTB_RAK811
+  product_code: '0457'
+  fw_name: lpc11u35_mtb_rak811_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- Seeed-Tiny-BLE:
+  name: Seeed-Tiny-BLE
+  product_code: '9012'
+  fw_name: lpc11u35_tiny_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- Seeed-Arch-BLE:
+  name: Seeed-Arch-BLE
+  product_code: '9009'
+  fw_name: lpc11u35_archble_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- KL25Z:
+  name: KL25Z
+  product_code: '0200'
+  fw_name: k20dx_frdmkl25z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- NCS36510RF:
+  name: NCS36510RF
+  product_code: '1200'
+  fw_name: sam3u2c_ncs36510rf_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_USI_WM_BN_BM_22:
+  name: MTB_USI_WM_BN_BM_22
+  product_code: '0462'
+  fw_name: lpc11u35_mtb_usi_wm_bn_bm_22_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FF1705_L151:
+  name: FF1705_L151
+  product_code: '8080'
+  fw_name: lpc11u35_ff1705_l151_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- Switch-Science-mbed-TY51822r3:
+  name: Switch-Science-mbed-TY51822r3
+  product_code: '1019'
+  fw_name: lpc11u35_sscity_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- DIPDAP_SDT52832B:
+  name: DIPDAP_SDT52832B
+  product_code: '3104'
+  fw_name: lpc11u35_dipdap_sdt52832b_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- U-BLOX-EVK-NINA-B1:
+  name: U-BLOX-EVK-NINA-B1
+  product_code: '1237'
+  fw_name: sam3u2c_ublox_evk_nina_b1_0x5000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-KL27Z:
+  name: FRDM-KL27Z
+  product_code: '0261'
+  fw_name: k20dx_frdmkl27z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_MURATA_ABZ_078:
+  name: MTB_MURATA_ABZ_078
+  product_code: '0456'
+  fw_name: lpc11u35_mtb_murata_abz_078_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- Seeeduino-Arch-Pro:
+  name: Seeeduino-Arch-Pro
+  product_code: '9004'
+  fw_name: lpc11u35_archpro_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- Seeed-Arch-Max:
+  name: Seeed-Arch-Max
+  product_code: '9011'
+  fw_name: lpc11u35_archmax_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- GR_PEACH:
+  name: GR_PEACH
+  product_code: '5500'
+  fw_name: lpc11u35_gr_peach_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- mbed-6LoWPAN-Border-Router-ETHERNET:
+  name: mbed-6LoWPAN-Border-Router-ETHERNET
+  product_code: '7404'
+  fw_name: lpc11u35_6lowpan_borderrouterethernet_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- TWRKL28Z72M:
+  name: TWRKL28Z72M
+  product_code: '0203'
+  fw_name: k20dx_twrkl28z72m_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- LPC1114FN28:
+  name: LPC1114FN28
+  product_code: '1114'
+  fw_name: lpc11u35_ssci1114_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-K22F:
+  name: FRDM-K22F
+  product_code: '0231'
+  fw_name: k20dx_frdmk22f_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- VBLUNO51:
+  name: VBLUNO51
+  product_code: c006
+  fw_name: lpc11u35_vbluno51_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FF_LPC546XX:
+  name: FF_LPC546XX
+  product_code: '8081'
+  fw_name: lpc11u35_ff_lpc546xx_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDMKE15Z:
+  name: FRDMKE15Z
+  product_code: '0213'
+  fw_name: k20dx_frdmke15z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- EA-LPC4088:
+  name: EA-LPC4088
+  product_code: '1060'
+  fw_name: lpc11u35_lpc4088qsb_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDMKL28Z:
+  name: FRDMKL28Z
+  product_code: '0205'
+  fw_name: k20dx_frdmkl28z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- u-blox-C027:
+  name: u-blox-C027
+  product_code: '1234'
+  fw_name: lpc11u35_c027_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- XDOT_L151:
+  name: XDOT_L151
+  product_code: '0350'
+  fw_name: k20dx_xdot_l151_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDM-KW41Z:
+  name: FRDM-KW41Z
+  product_code: '0201'
+  fw_name: k20dx_frdmkw41z_0x8000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - WIZwiki-W7500ECO:
   name: WIZwiki-W7500ECO
-  product_code: 2202
+  product_code: '2202'
   fw_name: lpc11u35_wizwiki_w7500_eco_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -658,28 +1816,103 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
+- Seeed-Arch-Link:
+  name: Seeed-Arch-Link
+  product_code: '9013'
+  fw_name: lpc11u35_archlink_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MBED_CLOUD_CONNECT:
+  name: MBED_CLOUD_CONNECT
+  product_code: '2410'
+  fw_name: lpc11u35_mbed_cloud_connect_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_LAIRD_BL652:
+  name: MTB_LAIRD_BL652
+  product_code: '0461'
+  fw_name: lpc11u35_mtb_laird_bl652_0x0000
+  instructions:
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
 - MtConnect04S:
   name: MtConnect04S
-  product_code: C005
+  product_code: c005
   fw_name: lpc11u35_mtconnect04s_0x0000
   instructions:
     windows: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
-      1. Drag-and-drop the firmware file onto the mounted drive.
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     osx: |
       1. Download the firmware file.
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
-      1. Delete the file named `firmware.bin`
-      1. In a terminal execute
-        - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
       1. Wait for the file copy operation to complete.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
     linux: |
@@ -687,199 +1920,110 @@
       1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
       1. Delete the file named `firmware.bin`
       1. In a terminal execute
-        - `cp <path to firmware file> <CRP DISABLD> && sync`
-        - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
       1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
-
-- MTB_WISE1510:
-  name: MTB_ADV_WISE_1510
-  product_code: 0458
-  fw_name: lpc11u35_mtb_wise1510_0x0000
+- DIPDAP_SDT32439B:
+  name: DIPDAP_SDT32439B
+  product_code: '3110'
+  fw_name: lpc11u35_dipdap_sdt32439b_0x0000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- NINA_B1:
-  name: MTB_UBLOX_NINA_B1
-  product_code: 0455
-  fw_name: kl26z_nina_b1_0x8000
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- MTB_NINA_B112:
+  name: MTB_NINA_B112
+  product_code: '0455'
+  fw_name: lpc11u35_mtb_nina_b112_0x0000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- MTB_WISE1530:
-  name: MTB_ADV_WISE_1530
-  product_code: 0459
-  fw_name: lpc11u35_mtb_wise1530_0x0000
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- mbed-6LoWPAN-Border-Router-USB:
+  name: mbed-6LoWPAN-Border-Router-USB
+  product_code: '7403'
+  fw_name: lpc11u35_6lowpan_borderrouterusb_0x0000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- MTB_WISE1570:
-  name: MTB_ADV_WISE_1570
-  product_code: 0460
-  fw_name: lpc11u35_mtb_wise1570_0x0000
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/CRP\ DISABLD ; rm /Volumes/CRP\ DISABLD/firmware.bin && cp -X <path to firmware file> /Volumes/CRP\ DISABLD/`
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`
+      1. Delete the file named `firmware.bin`
+      1. In a terminal execute
+         - `cp <path to firmware file> <CRP DISABLD> && sync`
+         - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+- FRDMKL26Z:
+  name: FRDMKL26Z
+  product_code: '0260'
+  fw_name: k20dx_frdmkl26z_0x8000
   instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDMK66F:
-  name: K66F
-  product_code: 0311
-  fw_name: k20dx_frdmk66f_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDMK82F:
-  name: K82F
-  product_code: 0217
-  fw_name: k20dx_frdmk82f_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- NZ32_SC151:
-  name: NZ32_SC151
-  product_code: 6660
-  fw_name: lpc11u35_nz32_sc151_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- C027:
-  name: C027
-  product_code: 1235
-  fw_name: lpc11u35_c027_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FF_LPC546XX:
-  name: LPC546XX
-  product_code: 1056
-  fw_name: lpc11u35_ff_lpc546xx_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- VBLUNO51:
-  name: VBLUNO51
-  product_code: C006
-  fw_name: lpc11u35_vbluno51_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDMKL43Z:
-  name: KL43Z
-  product_code: 0262
-  fw_name: k20dx_frdmkl43z_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDMKL82Z:
-  name: KL82Z
-  product_code: 0218
-  fw_name: k20dx_frdmkl82z_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- FRDMKW24D:
-  name: KW24D
-  product_code: 0250
-  fw_name: k20dx_frdmkw24d_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- LPC54114XPRESSO:
-  name: LPC54114
-  product_code: 1054
-  fw_name: lpc4322_lpc54114xpresso_0x10000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- LPC54608XPRESSO:
-  name: LPC546XX
-  product_code: 1056
-  fw_name: lpc4322_lpc54608xpresso_0x10000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- NCS36510RF:
-  name: NCS36510
-  product_code: 1200
-  fw_name: sam3u2c_ncs36510rf_0x8000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- MTB_MURATA_ABZ_078:
-  name: MTB_MURATA_ABZ
-  product_code: 0456
-  fw_name: lpc11u35_mtb_murata_abz_078_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- UBLOX_EVK_NINA_B1:
-  name: UBLOX_EVK_NINA_B1
-  product_code: 1237
-  fw_name: sam3u2c_ublox_evk_nina_b1_0x5000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-- MTB_MXCHIP_EMW3166:
-  name: MTB_MXCHIP_EMW3166
-  product_code: 0451
-  fw_name: lpc11u35_mtb_mxchip_emw3166_0x0000
-  instructions:
-    windows:
-    osx:
-    linux:
-
-# not mainline DAPLink
-#- Realtek RTL8195AM:
-#  name: Realtek RTL8195AM
-#  product_code: 4600
-#  fw_name:
-#  instructions:
-#    windows:
-#    osx:
-#    linux:
-
-# not mainline DAPLink
-#- FRDM-KW41Z:
-#  name: FRDM-KW41Z
-#  product_code: 0201
-#  fw_name:
-#  instructions:
-#    windows:
-#    osx:
-#    linux:
-
----
+    windows: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. Drag-and-drop the firmware file onto the mounted drive.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    osx: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `sudo mount -u -w -o sync /Volumes/MAINTENANCE ; cp -X <path to firmware file> /Volumes/MAINTENANCE/`
+         - Note: If your drive does not mount as `MAINTENANCE` make sure to change this to match the name of the mounted disk attached to your system.
+      1. Wait for the file copy operation to complete.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
+    linux: |
+      1. Download the firmware file.
+      1. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate as `BOOTLOADER` or `MAINTENANCE`. For boards that enumerate as `BOOTLOADER` [see our blog to determine if an update for the DAPLink bootloader is available.](https://os.mbed.com/blog/entry/DAPLink-bootloader-update/)
+      1. In a terminal execute
+         - `cp <path to firmware file> <MAINTENANCE> && sync`
+         - Note: make sure to change `MAINTENANCE` to the name of the mount point of the drive on your system.
+      1. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.
