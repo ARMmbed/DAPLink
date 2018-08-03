@@ -183,6 +183,14 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/xDot-L151.yaml
+    k20dx_mimxrt1050_evk_hyper_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/mimxrt1050_evk_hyper.yaml
+    k20dx_mimxrt1050_evk_qspi_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/mimxrt1050_evk_qspi.yaml
     lpc11u35_ff1705_l151_if:
         - *module_if
         - *module_hic_lpc11u35
