@@ -32,6 +32,7 @@ yaml.add_representer(TargetList, yaml.representer.SafeRepresenter.represent_dict
 #needed block style for the instruction steps
 yaml.add_representer(InstructionList, lambda dumper, data: dumper.represent_scalar(u'tag:yaml.org,2002:str', data, style='|') )
 
+
 #instruction steps for firmware
 InstructionsText = {
     'default':TargetList([
@@ -81,10 +82,10 @@ InstructionsText = {
             '1. Download the firmware file.\n'
             '2. While holding down the boards reset button, connect the boards USB debug port to the computer. It should enumerate and mount as `CRP DISABLD`\n'
             '3. Delete the file named `firmware.bin`\n'
-            '3. In a terminal execute\n'
+            '4. In a terminal execute\n'
             '   - `cp <path to firmware file> <CRP DISABLD> && sync`\n'
             '   - Note: make sure to change `CRP DISABLD` to the name of the mount point on your system.\n'
-            '4. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.\n'
+            '5. Power cycle the board. It will now enumerate and mount as `DAPLINK` or the name of the board.\n'
         ))
     ])
 

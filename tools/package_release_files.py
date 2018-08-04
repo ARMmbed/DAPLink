@@ -21,9 +21,7 @@ import sys
 import shutil
 import argparse
 import yaml
-
-from collections import OrderedDict
-
+import subprocess
 
 self_path = os.path.abspath(__file__)
 tools_dir = os.path.dirname(self_path)
@@ -35,7 +33,17 @@ import info
 from update_yml import TargetList
 from update_yml import InstructionsText
 
+import zipfile
 
+def make_bin_zip(dir,name):
+    working_dir = os.getcwd()
+    os.chdir(dir)
+    with zipfile.ZipFile(name, mode='w') as zipf:
+        for file in os.listdir("./"):
+            if file.endswith(".bin") or file.endswith(".hex"):
+                zipf.write(os.path.join("./", file))
+    #go back
+    os.chdir(working_dir)
 
 def main():
     parser = argparse.ArgumentParser(description='Package a release for distribution')
@@ -55,11 +63,13 @@ def main():
             ('instructions', InstructionsText['default'])
             ]) }]
 
+
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
         print output_dir + ' existed and deleted!!'
 
     os.mkdir(output_dir)
+
     for prj_name, legacy, offset, extension in info.PROJECT_RELEASE_INFO:
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
@@ -68,7 +78,6 @@ def main():
         items = prj_name.split('_')  # "k20dx_frdmk22f_if" -> ("k20dx", "frdmk22f", "if")
         assert items[-1] == "if", "Unexpected string: %s" % items[2]
         host_mcu = items[0]
-        small_name = items[1]
         base_name = '_'.join(items[1:-1])
         dest_offset_str = "_0x%04x" % offset
         dest_name = build_number + "_" + host_mcu + "_" + base_name + dest_offset_str + "." + extension
@@ -82,7 +91,7 @@ def main():
                 if target is not None:
                     target_name = target
                 else:
-                    target_name = small_name
+                    target_name = base_name.upper()
                 break
 
         fw_instuction = InstructionsText['default']
@@ -99,12 +108,12 @@ def main():
                 ('instructions', fw_instuction)
                 ])});
 
-
+    make_bin_zip(output_dir, build_number+'_release_package_'+subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()+'.zip')
     
     #save the yaml file in the build directory
-    with open(os.path.join(proj_dir, 'update.yml'), 'w') as yaml_file:
-        #yaml.Dumper.ignore_aliases = lambda *args : True
-        yaml.dump(update_yml_entries, yaml_file, default_flow_style=False)
+    with open(os.path.join(output_dir, 'update.yml'), 'w') as yaml_file:
+        yaml.Dumper.ignore_aliases = lambda *args : True
+        yaml.dump(update_yml_entries, yaml_file, default_flow_style=False, explicit_start=True)
 
 if __name__ == "__main__":
     main()
