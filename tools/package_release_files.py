@@ -30,12 +30,15 @@ test_dir = os.path.join(daplink_dir, "test")
 sys.path.append(test_dir)
 
 import info
-from update_yml import TargetList
-from update_yml import InstructionsText
+
+from make_update_yml import DefaultList
+from make_update_yml import TargetList
+from make_update_yml import InstructionsText
+from make_update_yml import make_update_yml_file
 
 import zipfile
 
-def make_bin_zip(dir,name):
+def make_bin_zip(dir, name):
     working_dir = os.getcwd()
     os.chdir(dir)
     with zipfile.ZipFile(name, mode='w') as zipf:
@@ -56,13 +59,13 @@ def main():
     output_dir = args.dest
     build_number = "%04i" % args.version
 
-    update_yml_entries = [{'default':TargetList([
+
+    update_yml_entries = [{'default':DefaultList([
             ('website', 'http://os.mbed.com/platforms'),
-            ('fw_version', build_number),
+            ('fw_version', "'" + build_number + "'"),
             ('image_format', '.bin'),
             ('instructions', InstructionsText['default'])
             ]) }]
-
 
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
@@ -108,12 +111,9 @@ def main():
                 ('instructions', fw_instuction)
                 ])});
 
-    make_bin_zip(output_dir, build_number+'_release_package_'+subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()+'.zip')
-    
-    #save the yaml file in the build directory
-    with open(os.path.join(output_dir, 'update.yml'), 'w') as yaml_file:
-        yaml.Dumper.ignore_aliases = lambda *args : True
-        yaml.dump(update_yml_entries, yaml_file, default_flow_style=False, explicit_start=True)
+    make_bin_zip(output_dir, build_number + '_release_package_' + subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip() + '.zip')
+
+    make_update_yml_file(os.path.join(output_dir, 'update.yml'), update_yml_entries, explicit_start=True)
 
 if __name__ == "__main__":
     main()
