@@ -162,7 +162,7 @@ void cdc_process_event()
 
     if (len_data) {
         if (USBD_CDC_ACM_DataSend(data , len_data)) {
-            main_blink_cdc_led(MAIN_LED_OFF);
+            main_blink_cdc_led(MAIN_LED_FLASH);
         }
     }
 
@@ -178,7 +178,7 @@ void cdc_process_event()
 
     if (len_data) {
         if (uart_write_data(data, len_data)) {
-            main_blink_cdc_led(MAIN_LED_OFF);
+            main_blink_cdc_led(MAIN_LED_FLASH);
         }
     }
  
