@@ -133,7 +133,7 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
                 util_assert(0);
             }
 
-            main_blink_hid_led(MAIN_LED_OFF);
+            main_blink_hid_led(MAIN_LED_FLASH);
 
             break;
 

@@ -69,6 +69,21 @@
 // Decrement to zero
 #define DECZERO(x)              (x ? --x : 0)
 
+//default hid led settings
+#ifndef HID_LED_DEF
+#define HID_LED_DEF GPIO_LED_OFF
+#endif
+
+//default cdc led settings
+#ifndef CDC_LED_DEF
+#define CDC_LED_DEF GPIO_LED_OFF
+#endif
+
+//default msc led settings
+#ifndef MSC_LED_DEF
+#define MSC_LED_DEF GPIO_LED_OFF
+#endif
+
 // Reference to our main task
 OS_TID main_task_id;
 
@@ -112,26 +127,26 @@ void main_reset_target(uint8_t send_unique_id)
 }
 
 // Flash HID LED using 30mS tick
-void main_blink_hid_led(main_led_state_t permanent)
+void main_blink_hid_led(main_led_state_t state)
 {
     hid_led_usb_activity = 1;
-    hid_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    hid_led_state = state;
     return;
 }
 
 // Flash CDC LED using 30mS tick
-void main_blink_cdc_led(main_led_state_t permanent)
+void main_blink_cdc_led(main_led_state_t state)
 {
     cdc_led_usb_activity = 1;
-    cdc_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    cdc_led_state = state;
     return;
 }
 
 // Flash MSC LED using 30mS tick
-void main_blink_msc_led(main_led_state_t permanent)
+void main_blink_msc_led(main_led_state_t state)
 {
     msc_led_usb_activity = 1;
-    msc_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    msc_led_state = state;
     return;
 }
 
@@ -199,10 +214,10 @@ __task void main_task(void)
     main_task_id = os_tsk_self();
     // leds
     gpio_init();
-    // Turn off LED
-    gpio_set_hid_led(GPIO_LED_OFF);
-    gpio_set_cdc_led(GPIO_LED_OFF);
-    gpio_set_msc_led(GPIO_LED_OFF);
+    // Turn to LED default settings
+    gpio_set_hid_led(HID_LED_DEF);
+    gpio_set_cdc_led(CDC_LED_DEF);
+    gpio_set_msc_led(MSC_LED_DEF);
     // Initialize the DAP
     DAP_Setup();
     // do some init with the target before USB and files are configured
@@ -337,8 +352,10 @@ __task void main_task(void)
                 hid_led_value = GPIO_LED_ON == hid_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
                 // If in flash mode stop after one cycle
-                if ((GPIO_LED_OFF == hid_led_value) && (MAIN_LED_FLASH == hid_led_state)) {
+                if ((HID_LED_DEF == hid_led_value) && (MAIN_LED_FLASH == hid_led_state)) {
                     hid_led_usb_activity = 0;
+                    //for now the only place to turn off a blinking state
+                    hid_led_state = MAIN_LED_OFF;
                 }
 
                 // Update hardware
@@ -352,8 +369,10 @@ __task void main_task(void)
                 msc_led_value = GPIO_LED_ON == msc_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
                 // If in flash mode stop after one cycle
-                if ((GPIO_LED_OFF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {
+                if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {    
                     msc_led_usb_activity = 0;
+                    //for now the only place to turn off a blinking state
+                    msc_led_state = MAIN_LED_OFF;
                 }
 
                 // Update hardware
@@ -367,8 +386,10 @@ __task void main_task(void)
                 cdc_led_value = GPIO_LED_ON == cdc_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
                 // If in flash mode stop after one cycle
-                if ((GPIO_LED_OFF == cdc_led_value) && (MAIN_LED_FLASH == cdc_led_state)) {
+                if ((CDC_LED_DEF == cdc_led_value) && (MAIN_LED_FLASH == cdc_led_state)) {
                     cdc_led_usb_activity = 0;
+                    //for now the only place to turn off a blinking state
+                    cdc_led_state = MAIN_LED_OFF;
                 }
 
                 // Update hardware
