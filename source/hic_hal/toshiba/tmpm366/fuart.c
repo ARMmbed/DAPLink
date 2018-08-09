@@ -33,7 +33,7 @@ circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
 // Initialize UART
-int32_t uart_initialize (void)
+int32_t uart_initialize(void)
 {
     // Configure UART
     myUART.BaudRate = (uint32_t)9600;
@@ -60,7 +60,7 @@ int32_t uart_initialize (void)
 }
 
 // Uninitialized FUART0
-int32_t uart_uninitialize (void)
+int32_t uart_uninitialize(void)
 {
     // Disable  UART
     FUART_Disable(FUART0);
@@ -70,7 +70,7 @@ int32_t uart_uninitialize (void)
 }
 
 // Reset FUART0
-int32_t uart_reset (void)
+int32_t uart_reset(void)
 {
     FUART_INTStatus clearFlag;
     // Disable Interrupt
@@ -142,7 +142,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 }
 
 // Get UART configuration
-int32_t uart_get_configuration (UART_Configuration *config)
+int32_t uart_get_configuration(UART_Configuration *config)
 {
     // Get configuration from UART
     config->Baudrate = (uint32_t) myUART.BaudRate;
@@ -196,7 +196,7 @@ int32_t uart_write_free(void)
 }
 
 // Write data to transmit buffer
-int32_t uart_write_data (uint8_t *data, uint16_t size)
+int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     uint32_t cnt;
 
@@ -213,19 +213,18 @@ int32_t uart_write_data (uint8_t *data, uint16_t size)
 }
 
 // Read data for receive buffer
-int32_t uart_read_data (uint8_t *data, uint16_t size)
+int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
     return circ_buf_read(&read_buffer, data, size);
 }
 
-
 // Receive Interrupt
-void INTUART_IRQHandler (void)
+void INTUART_IRQHandler(void)
 {
     FUART_StorageStatus FIFOStatus;
     FUART_INTStatus INTStatus_, clearFlag;
     INTStatus_ = FUART_GetMaskedINTStatus(FUART0);
-    if((INTStatus_.All & 0x10) && (!tx_in_progress)) {
+    if ((INTStatus_.All & 0x10) && (!tx_in_progress)) {
         while (FUART_STORAGE_EMPTY != FUART_GetStorageStatus(FUART0, FUART_RX)) {
             uint32_t free;
             uint8_t data;
@@ -248,7 +247,7 @@ void INTUART_IRQHandler (void)
         }
         clearFlag.All |= 0x10;
         FUART_ClearINT(FUART0, clearFlag);
-    }  else if(!(INTStatus_.All & 0x20)) {
+    }  else if (!(INTStatus_.All & 0x20)) {
         if (circ_buf_count_used(&write_buffer) > 0) {
             // if Transmit buffer is empty
             FIFOStatus = FUART_GetStorageStatus(FUART0, FUART_TX);
@@ -260,7 +259,7 @@ void INTUART_IRQHandler (void)
                 clearFlag.All |= 0x20;
                 FUART_ClearINT(FUART0, clearFlag);
             }
-        } else  if (tx_in_progress) {
+        } else if (tx_in_progress) {
             tx_in_progress = 0;
             TSB_UART_CR_TXE = 0;
         }

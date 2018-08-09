@@ -51,7 +51,7 @@ void gpio_init(void)
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
-    if(state == GPIO_LED_OFF) {
+    if (state == GPIO_LED_OFF) {
         TSB_PC_DATA_PC0 = 1;
     } else {
         TSB_PC_DATA_PC0 = 0;
@@ -60,13 +60,12 @@ void gpio_set_hid_led(gpio_led_state_t state)
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
-    if(state == GPIO_LED_OFF) {
+    if (state == GPIO_LED_OFF) {
         TSB_PC_DATA_PC1 = 1;
     } else {
         TSB_PC_DATA_PC1 = 0;
     }
 }
-
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {

@@ -108,11 +108,11 @@
 #define LED_RUNNING            (1 << LED_RUNNING_IN_BIT)
 #define PIN_SWDIO_IN_BIT        0    // SWDIO/TMS In/Out Pin
 #define PIN_SWCLK_IN_BIT        1    // SWCLK/TCK Pin
-// this pin not connected to Port H in M066_STK and M3H6_STK
+// this pin not connected to Port H M066_STK
 #define PIN_TDI_IN_BIT          2    // TDI Pin
 #define PIN_nRESET_IN_BIT       3    // nRESET Pin
 #define PIN_nTRST_IN_BIT        3    // nTRST Pin
-// this pin not connected to Port H in M066_STK/M3H6_STK/M46B_STK
+// this pin not connected to Port H in M066_STK
 #define PIN_TDO_IN_BIT          4    // SWO/TDO Pin
 #define PIN_SWCLK              (1 << PIN_SWCLK_IN_BIT)
 #define PIN_SWDIO              (1 << PIN_SWDIO_IN_BIT)
@@ -122,9 +122,6 @@
 #define PIN_nTRST              (1 << PIN_TDO_IN_BIT)
 // All used pins
 #define PIN_ALL                (PIN_SWCLK | PIN_SWDIO | PIN_nRESET | PIN_TDI | PIN_TDO | PIN_nTRST)
-
-// pin for direction control of reset pin
-
 
 // DAP_Config_PortIO_gr CMSIS-DAP Hardware I/O Pin Access
 // DAP_ConfigIO_gr
@@ -157,7 +154,6 @@
 //  - \ref PIN_SWDIO_IN to read from the SWDIO I/O pin with utmost possible speed.
 //  - \ref PIN_SWDIO_OUT to write to the SWDIO I/O pin with utmost possible speed.
 
-
 // Configure DAP I/O pins
 
 // Setup JTAG I/O pins: TCK, TMS, TDI, TDO, nTRST, and nRESET.
@@ -165,7 +161,7 @@
 //  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
 //  - TDO to input mode.
 
-static __inline void PORT_JTAG_SETUP (void)
+static __inline void PORT_JTAG_SETUP(void)
 {
 #if (DAP_JTAG != 0)
     // SWCLK/TCK                    Output
@@ -191,7 +187,7 @@ static __inline void PORT_JTAG_SETUP (void)
 // Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 // - SWCLK, SWDIO, nRESET to output mode and set to default high level.
 // - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
-static __inline void PORT_SWD_SETUP (void)
+static __inline void PORT_SWD_SETUP(void)
 {
     // SWCLK/TCK                    Output
     // SWDIO/TMS In/Out Pin         Output
@@ -211,25 +207,24 @@ static __inline void PORT_SWD_SETUP (void)
 // Disable JTAG/SWD I/O Pins.
 // Disables the DAP Hardware I/O pins which configures:
 //  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
-static __inline void PORT_OFF (void)
+static __inline void PORT_OFF(void)
 {
     TSB_PH->CR &= ~(PIN_ALL); // Disable output for pin 0, 1, 2, 3, 4, 5
     TSB_PH->IE &= ~(PIN_ALL); // Disable input for pin 0, 1, 2, 3, 4, 5
 }
 
-
 // SWCLK/TCK I/O pin
 
 // SWCLK/TCK I/O pin: Get Input.
 // Current status of the SWCLK/TCK DAP hardware I/O pin.
-static __forceinline uint32_t PIN_SWCLK_TCK_IN  (void)
+static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
 {
     return ((TSB_PH->DATA >> PIN_SWCLK_IN_BIT) & 0x0001U); // Return data
 }
 
 // SWCLK/TCK I/O pin: Set Output to High.
 // Set the SWCLK/TCK DAP hardware I/O pin to high level.
-static __forceinline void PIN_SWCLK_TCK_SET (void)
+static __forceinline void PIN_SWCLK_TCK_SET(void)
 {
     TSB_PH->DATA |= (0x0001U << PIN_SWCLK_IN_BIT); // Set data
 }
@@ -237,7 +232,7 @@ static __forceinline void PIN_SWCLK_TCK_SET (void)
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
-static __forceinline void PIN_SWCLK_TCK_CLR (void)
+static __forceinline void PIN_SWCLK_TCK_CLR(void)
 {
     TSB_PH->DATA &= ~(0x0001U << PIN_SWCLK_IN_BIT); // Clear data
 }
@@ -245,35 +240,35 @@ static __forceinline void PIN_SWCLK_TCK_CLR (void)
 // SWDIO/TMS Pin I/O
 // SWDIO/TMS I/O pin: Get Input.
 // Current status of the SWDIO/TMS DAP hardware I/O pin.
-static __forceinline uint32_t PIN_SWDIO_TMS_IN  (void)
+static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
 {
     return ((TSB_PH->DATA >> PIN_SWDIO_IN_BIT) & 0x0001U); // Return data
 }
 
 // SWDIO/TMS I/O pin: Set Output to High.
 // Set the SWDIO/TMS DAP hardware I/O pin to high level.
-static __forceinline void PIN_SWDIO_TMS_SET (void)
+static __forceinline void PIN_SWDIO_TMS_SET(void)
 {
     TSB_PH->DATA |= (0x0001U << PIN_SWDIO_IN_BIT); // Set data
 }
 
 // SWDIO/TMS I/O pin: Set Output to Low.
 // Set the SWDIO/TMS DAP hardware I/O pin to low level.
-static __forceinline void PIN_SWDIO_TMS_CLR (void)
+static __forceinline void PIN_SWDIO_TMS_CLR(void)
 {
     TSB_PH->DATA &= ~(0x0001U << PIN_SWDIO_IN_BIT); // Clear data
 }
 
 // SWDIO I/O pin: Get Input (used in SWD mode only).
 // Current status of the SWDIO DAP hardware I/O pin.
-static __forceinline uint32_t PIN_SWDIO_IN      (void)
+static __forceinline uint32_t PIN_SWDIO_IN(void)
 {
     return ((TSB_PH->DATA >> PIN_SWDIO_IN_BIT) & 0x0001U); // Return data
 }
 
 // SWDIO I/O pin: Set Output (used in SWD mode only).
 // bit Output value for the SWDIO DAP hardware I/O pin.
-static __forceinline void PIN_SWDIO_OUT     (uint32_t bit)
+static __forceinline void PIN_SWDIO_OUT(uint32_t bit)
 {
     TSB_PH->DATA &= ~(0x0001U << PIN_SWDIO_IN_BIT); // Clear data
     TSB_PH->DATA |= ((bit & 0x0001) << PIN_SWDIO_IN_BIT); // Set data base on bit input
@@ -282,7 +277,7 @@ static __forceinline void PIN_SWDIO_OUT     (uint32_t bit)
 // SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
 // Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 // called prior \ref PIN_SWDIO_OUT function calls.
-static __forceinline void PIN_SWDIO_OUT_ENABLE  (void)
+static __forceinline void PIN_SWDIO_OUT_ENABLE(void)
 {
     TSB_PH->IE &= ~(0x0001U << PIN_SWDIO_IN_BIT); // Disable input
     TSB_PH->CR |=  (0x0001U << PIN_SWDIO_IN_BIT); // Enable output
@@ -292,7 +287,7 @@ static __forceinline void PIN_SWDIO_OUT_ENABLE  (void)
 // Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 // called prior \ref PIN_SWDIO_IN function calls.
 
-static __forceinline void PIN_SWDIO_OUT_DISABLE (void)
+static __forceinline void PIN_SWDIO_OUT_DISABLE(void)
 {
     TSB_PH->CR &= ~(0x0001U << PIN_SWDIO_IN_BIT); // Disable output
     TSB_PH->IE |=  (0x0001U << PIN_SWDIO_IN_BIT); // Enable input
@@ -303,7 +298,7 @@ static __forceinline void PIN_SWDIO_OUT_DISABLE (void)
 // TDI I/O pin: Get Input.
 // Current status of the TDI DAP hardware I/O pin.
 
-static __forceinline uint32_t PIN_TDI_IN  (void)
+static __forceinline uint32_t PIN_TDI_IN(void)
 {
 #if (DAP_JTAG != 0)
     return ((TSB_PH->DATA >> PIN_TDI_IN_BIT) & 0x0001U); // Return data
@@ -314,7 +309,7 @@ static __forceinline uint32_t PIN_TDI_IN  (void)
 
 // TDI I/O pin: Set Output.
 // bit Output value for the TDI DAP hardware I/O pin.
-static __forceinline void PIN_TDI_OUT (uint32_t bit)
+static __forceinline void PIN_TDI_OUT(uint32_t bit)
 {
 #if (DAP_JTAG != 0)
     TSB_PH->DATA &= ~(0x0001U << PIN_TDI_IN_BIT); // Clear data
@@ -324,12 +319,11 @@ static __forceinline void PIN_TDI_OUT (uint32_t bit)
 #endif
 }
 
-
 // TDO Pin I/O ---------------------------------------------
 
 // TDO I/O pin: Get Input.
 // Current status of the TDO DAP hardware I/O pin.
-static __forceinline uint32_t PIN_TDO_IN  (void)
+static __forceinline uint32_t PIN_TDO_IN(void)
 {
 #if (DAP_JTAG != 0)
     return ((TSB_PH->DATA >> PIN_TDO_IN_BIT) & 0x0001U); // Return data
@@ -338,11 +332,10 @@ static __forceinline uint32_t PIN_TDO_IN  (void)
 #endif
 }
 
-
 // nTRST Pin I/O
 // nTRST I/O pin: Get Input.
 // Current status of the nTRST DAP hardware I/O pin.
-static __forceinline uint32_t PIN_nTRST_IN   (void)
+static __forceinline uint32_t PIN_nTRST_IN(void)
 {
     return ((TSB_PH->DATA >> PIN_nTRST_IN_BIT) & 0x0001U); // Return data
 }
@@ -351,7 +344,7 @@ static __forceinline uint32_t PIN_nTRST_IN   (void)
 // bit JTAG TRST Test Reset pin status:
 //   - 0: issue a JTAG TRST Test Reset.
 //   - 1: release JTAG TRST Test Reset.
-static __forceinline void PIN_nTRST_OUT  (uint32_t bit)
+static __forceinline void PIN_nTRST_OUT(uint32_t bit)
 {
     TSB_PH->DATA &= ~(0x0001U << PIN_nTRST_IN_BIT); // Clear data
     TSB_PH->DATA |= ((bit & 0x0001) << PIN_nTRST_IN_BIT); // Set data
@@ -360,7 +353,7 @@ static __forceinline void PIN_nTRST_OUT  (uint32_t bit)
 // nRESET Pin I/O
 // nRESET I/O pin: Get Input.
 // Current status of the nRESET DAP hardware I/O pin.
-static __forceinline uint32_t PIN_nRESET_IN  (void)
+static __forceinline uint32_t PIN_nRESET_IN(void)
 {
     return ((TSB_PH->DATA >> PIN_nRESET_IN_BIT) & 0x0001U); // Return data
 }
@@ -370,7 +363,7 @@ static __forceinline uint32_t PIN_nRESET_IN  (void)
 //           - 0: issue a device hardware reset.
 //           - 1: release device hardware reset.
 // This mode is not needed to config because it is generated by CPU's NVIC register
-static __forceinline void PIN_nRESET_OUT (uint32_t bit)
+static __forceinline void PIN_nRESET_OUT(uint32_t bit)
 {
     TSB_PH->DATA &= ~(0x0001U << PIN_nRESET_IN_BIT); // Clear data
     TSB_PH->DATA |= ((bit & 0x0001) << PIN_nRESET_IN_BIT); // Set data
@@ -386,7 +379,7 @@ static __forceinline void PIN_nRESET_OUT (uint32_t bit)
 // bit status of the Connect LED.
 //           - 1: Connect LED ON: debugger is connected to CMSIS-DAP Debug Unit.
 //           - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
-static __inline void LED_CONNECTED_OUT (uint32_t bit)
+static __inline void LED_CONNECTED_OUT(uint32_t bit)
 {
     TSB_PC->DATA |= ((bit & 0x0001) << LED_CONNECTED_IN_BIT); // Set data
     TSB_PC->DATA &= ~(0x0001U << LED_CONNECTED_IN_BIT); // Clear data
@@ -396,7 +389,7 @@ static __inline void LED_CONNECTED_OUT (uint32_t bit)
 // bit status of the Target Running LED.
 //   - 1: Target Running LED ON: program execution in target started.
 //   - 0: Target Running LED OFF: program execution in target stopped.
-static __inline void LED_RUNNING_OUT (uint32_t bit)
+static __inline void LED_RUNNING_OUT(uint32_t bit)
 {
     TSB_PC->DATA |= ((bit & 0x0001) << LED_RUNNING_IN_BIT); // Set data
     TSB_PC->DATA &= ~(0x0001U << LED_RUNNING_IN_BIT); // Clear data
@@ -411,7 +404,7 @@ static __inline void LED_RUNNING_OUT (uint32_t bit)
 //  - all I/O pins: input buffer enabled, output pins are set to HighZ mode.
 //  - for nTRST, nRESET a weak pull-up (if available) is enabled.
 //  - LED output pins are enabled and LEDs are turned off.
-static __inline void DAP_SETUP (void)
+static __inline void DAP_SETUP(void)
 {
     // Configure I/O pins
     TSB_PH->PUP &= ~(PIN_ALL); // Disable Pull-Up
@@ -441,7 +434,7 @@ static __inline void DAP_SETUP (void)
 // when a device needs a time-critical unlock sequence that enables the debug port.
 //        0 = no device specific reset sequence is implemented.\n
 //        1 = a device specific reset sequence is implemented.
-static __inline uint32_t RESET_TARGET (void)
+static __inline uint32_t RESET_TARGET(void)
 {
     return 0;
 }
