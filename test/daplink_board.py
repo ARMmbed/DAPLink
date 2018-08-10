@@ -522,21 +522,35 @@ class DaplinkBoard(object):
         if data_crc != details_crc:
             test_info.failure("Bootloader CRC is wrong")
 
-    def wait_for_remount(self, parent_test, wait_time=1800):
+    def wait_for_remount(self, parent_test, wait_time=600):
         mode = self._mode
         count = self._remount_count
         test_info = parent_test.create_subtest('wait_for_remount')
+        
         elapsed = 0
         start = time.time()
+        remounted = False
         while os.path.isdir(self.mount_point):
+            if self.update_board_info(False): #check info if it is already mounted
+                if mode is not None and self._mode is not None and mode is not self._mode:
+                    remounted = True
+                    test_info.info("already remounted with change mode")
+                    break
+                elif count is not None and self._remount_count is not None and count != self._remount_count:
+                        remounted = True
+                        test_info.info("already remounted with change mount count")
+                        break 
             if elapsed > wait_time:
                 raise Exception("Dismount timed out")
             time.sleep(0.1)
-            elapsed += 0.1
-        stop = time.time()
-        test_info.info("unmount took %s s" % (stop - start))
+            elapsed += 0.2
+        else:
+            stop = time.time()
+            test_info.info("unmount took %s s" % (stop - start))
+        elapsed = 0
         start = time.time()
-        while True:
+
+        while not remounted:
             if self.update_board_info(False):
                 if os.path.isdir(self.mount_point):
                     # Information returned by mbed-ls could be old.
@@ -615,16 +629,8 @@ class DaplinkBoard(object):
             mode_str = self.details_txt[DaplinkBoard.KEY_MODE]
             self._mode = DETAILS_TO_MODE[mode_str]
         else:
-            # TODO - remove file check when old bootloader have been
-            # updated
-            check_bl_path = self.get_file_path('HELP_FAQ.HTM')
-            check_if_path = self.get_file_path('MBED.HTM')
-            if os.path.isfile(check_bl_path):
-                self._mode = self.MODE_BL
-            elif os.path.isfile(check_if_path):
-                self._mode = self.MODE_IF
-            else:
-                raise Exception("Could not determine board mode!")
+            #check for race condition here
+            return False
         return True
 
     def test_details_txt(self, parent_test):
