@@ -91,11 +91,11 @@ __task void timer_task_30mS(void)
     }
 }
 
-// Flash MSD LED using 30mS tick
-void main_blink_msc_led(main_led_state_t permanent)
+// Flash MSC LED using 30mS tick
+void main_blink_msc_led(main_led_state_t state)
 {
     msc_led_usb_activity = 1;
-    msc_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    msc_led_state = state;
     return;
 }
 
@@ -219,7 +219,12 @@ __task void main_task(void)
             if (msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
                 // Flash MSD LED ONCE
                 msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
-                msc_led_usb_activity = ((GPIO_LED_ON == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) ? 0 : 1;
+                // If in flash mode stop after one cycle but in bootloader LED stays on
+                if ((GPIO_LED_ON == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {    
+                    msc_led_usb_activity = 0;
+                    //for now the only place to turn off a blinking state
+                    msc_led_state = MAIN_LED_OFF;
+                }
                 // Update hardware
                 gpio_set_msc_led(msc_led_value);
             }
