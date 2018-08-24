@@ -163,10 +163,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0250,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmkw24d_if',                       'k20dx_bl',         'FRDM-KW24D512'                         ),
     (   0x0260,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x0261,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
-    (   0x0262,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),        
+    (   0x0262,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
     (   0x0311,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x0350,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x0415,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
+    (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
@@ -194,7 +195,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0796,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f429zi_if',               'stm32f103xb_bl',   'ST-Nucleo-F429ZI'                      ),
     (   0x0816,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f746zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F746ZG'                      ),
     (   0x0824,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
-    (   0x0835,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f207zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F207ZG'                      ),    
+    (   0x0835,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f207zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F207ZG'                      ),
     (   0x1017,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
@@ -223,7 +224,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2203,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
     (   0x2410,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x3104,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_dipdap_sdt52832b_if',             None,               None                                    ),
-    (   0x3108,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),    
+    (   0x3108,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),
     (   0x3105,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
     (   0x3110,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
@@ -253,7 +254,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
-    (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),    
+    (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
 ]
 
 # Add new HICs here
@@ -264,6 +265,7 @@ HIC_STRING_TO_ID = {
     'sam3u2c': 0x97969903,
     'max32620': 0x97969904,
     'lpc4322': 0x97969905,
+    'max32625': 0x97969906,
     'stm32f103xb': 0x97969908,
 }
 
@@ -301,6 +303,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0240,  # K64F
     0x0311,  # K66F
     0x0415,  # MAX32625MBED
+    0x0418,  # MAX32620FTHR
     0x0450,  # mtb_ublox_odin_w2
     0x0456,  # lpc11u35_mtb_murata_abz_078_if
     0x0457,  # lpc11u35_mtb_rak811_if

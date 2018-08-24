@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/max32625_bl.c

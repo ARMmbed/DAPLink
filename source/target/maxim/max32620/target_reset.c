@@ -1,6 +1,6 @@
 /**
  * @file    target_reset.c
- * @brief   Target reset for the MAX32625
+ * @brief   Target reset for the MAX32620
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
