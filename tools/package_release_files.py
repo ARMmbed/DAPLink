@@ -95,21 +95,20 @@ def main():
                     target_name = target
                 else:
                     target_name = base_name.upper()
-                break
 
-        fw_instuction = InstructionsText['default']
-        for fw_name_key in InstructionsText:
-            if fw_name_key in dest_name.lower():
-                fw_instuction = InstructionsText[fw_name_key]
-                break;
+                fw_instuction = InstructionsText['default']
+                for fw_name_key in InstructionsText:
+                    if fw_name_key in dest_name.lower():
+                        fw_instuction = InstructionsText[fw_name_key]
+                        break;
 
-        if extension == 'bin':
-            update_yml_entries.append({target_name:TargetList([
-                ('name', target_name),
-                ('product_code', format(product_code, '04x')),
-                ('fw_name', host_mcu + "_" + base_name + dest_offset_str),
-                ('instructions', fw_instuction)
-                ])});
+                if extension == 'bin':
+                    update_yml_entries.append({target_name:TargetList([
+                        ('name', target_name),
+                        ('product_code', "'" + format(product_code, '04x') + "'"),
+                        ('fw_name', host_mcu + "_" + base_name + dest_offset_str),
+                        ('instructions', fw_instuction)
+                        ])});
 
     make_bin_zip(output_dir, build_number + '_release_package_' + subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip() + '.zip')
 
