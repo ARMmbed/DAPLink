@@ -850,7 +850,7 @@ __attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 {
     uint32_t val;
-
+    int8_t ap_retries = 2;
     /* Calling swd_init prior to entering RUN state causes operations to fail. */
     if (state != RUN) {
         swd_init();
@@ -875,8 +875,14 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             }
 
             // Enable debug
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
-                return 0;
+            while(swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN) == 0) {
+                if( --ap_retries <=0 )
+                    return 0;
+                // Target is in invalid state?
+                swd_set_target_reset(1);
+                os_dly_wait(2);
+                swd_set_target_reset(0);
+                os_dly_wait(2);
             }
 
             // Enable halt on reset
