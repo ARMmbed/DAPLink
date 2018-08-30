@@ -453,6 +453,7 @@ static const program_target_t flash = {
     0x2000035D, // EraseChip
     0x20000381, // EraseSector
     0x20000C21, // ProgramPage
+    0x0,        // Verify
     
     // breakpoint = RAM start + 1
     // RSB : base address is address of Execution Region PrgData in map file

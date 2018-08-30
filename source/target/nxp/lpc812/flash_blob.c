@@ -43,7 +43,8 @@ static const program_target_t flash = {
     0x1000004d, // erase_chip
     0x1000008d, // erase_sector
     0x100000d1, // program_page
-
+    0x0,        // Verify
+    
     {0x10000001, 0x10000300, 0x10001000}, // {breakpoint, RSB, RSP}
 
     0x10000400, // program_buffer

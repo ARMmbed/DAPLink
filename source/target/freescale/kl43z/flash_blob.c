@@ -70,7 +70,8 @@ static const program_target_t flash = {
     0x20000089, // EraseChip
     0x200000A5, // EraseSector
     0x200000CB, // ProgramPage
-
+    0x0,        // Verify
+    
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
     // RSP  : stack pointer

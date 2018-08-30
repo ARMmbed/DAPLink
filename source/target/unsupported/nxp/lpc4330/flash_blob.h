@@ -313,6 +313,7 @@ static const TARGET_FLASH flash = {
     0x1000007F, // EraseChip
     0x1000009F, // EraseSector
     0x100000CD, // ProgramPage
+    0x0,        // Verify
 
     {
         (RAM_START + 0x0001), // breakpoint (RAM start + 1)
