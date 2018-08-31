@@ -593,45 +593,52 @@ class DaplinkBoard(object):
         Note - before this function is set self.unique_id
         must be set.
         """
-        endpoints = _get_board_endpoints(self.unique_id)
-        if endpoints is None:
-            if exptn_on_fail:
-                raise Exception("Could not update board info: %s" %
-                                self.unique_id)
-            return False
-        self.unique_id, self.serial_port, self.mount_point = endpoints
-        # Serial port can be missing
-        if self.unique_id is None:
-            if exptn_on_fail:
-                raise Exception("Mount point is null")
-            return False
-        if self.mount_point is None:
-            if exptn_on_fail:
-                raise Exception("Mount point is null")
-            return False
-        self.board_id = int(self.unique_id[0:4], 16)
-        self._hic_id = int(self.unique_id[-8:], 16)
 
-        # Note - Some legacy boards might not have details.txt
-        details_txt_path = self.get_file_path("details.txt")
-        self.details_txt = _parse_kvp_file(details_txt_path)
-        self._parse_assert_txt()
+        try:
+            endpoints = _get_board_endpoints(self.unique_id)
+            if endpoints is None:
+                if exptn_on_fail:
+                    raise Exception("Could not update board info: %s" %
+                                    self.unique_id)
+                return False
+            self.unique_id, self.serial_port, self.mount_point = endpoints
+            # Serial port can be missing
+            if self.unique_id is None:
+                if exptn_on_fail:
+                    raise Exception("Mount point is null")
+                return False
+            if self.mount_point is None:
+                if exptn_on_fail:
+                    raise Exception("Mount point is null")
+                return False
+            self.board_id = int(self.unique_id[0:4], 16)
+            self._hic_id = int(self.unique_id[-8:], 16)
 
-        self._remount_count = None
-        if DaplinkBoard.KEY_REMOUNT_COUNT in self.details_txt:
-            self._remount_count = int(self.details_txt[DaplinkBoard.KEY_REMOUNT_COUNT])
-        self._mode = None
-        if DaplinkBoard.KEY_MODE in self.details_txt:
-            DETAILS_TO_MODE = {
-                "interface": DaplinkBoard.MODE_IF,
-                "bootloader": DaplinkBoard.MODE_BL,
-            }
-            mode_str = self.details_txt[DaplinkBoard.KEY_MODE]
-            self._mode = DETAILS_TO_MODE[mode_str]
-        else:
-            #check for race condition here
-            return False
-        return True
+            # Note - Some legacy boards might not have details.txt
+            details_txt_path = self.get_file_path("details.txt")
+            self.details_txt = _parse_kvp_file(details_txt_path)
+            self._parse_assert_txt()
+
+            self._remount_count = None
+            if DaplinkBoard.KEY_REMOUNT_COUNT in self.details_txt:
+                self._remount_count = int(self.details_txt[DaplinkBoard.KEY_REMOUNT_COUNT])
+            self._mode = None
+            if DaplinkBoard.KEY_MODE in self.details_txt:
+                DETAILS_TO_MODE = {
+                    "interface": DaplinkBoard.MODE_IF,
+                    "bootloader": DaplinkBoard.MODE_BL,
+                }
+                mode_str = self.details_txt[DaplinkBoard.KEY_MODE]
+                self._mode = DETAILS_TO_MODE[mode_str]
+            else:
+                #check for race condition here
+                return False
+            return True
+        except Exception as e:
+            if exptn_on_fail:
+                raise e
+            else:
+                return False
 
     def test_details_txt(self, parent_test):
         """Check that details.txt has all requied fields"""
