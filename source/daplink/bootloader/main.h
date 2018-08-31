@@ -54,7 +54,7 @@ typedef enum {
  *  @brief Statest the USB connection can be in
  */
 typedef enum {
-    MAIN_LED_OFF = 0,
+    MAIN_LED_DEF = 0,
     MAIN_LED_FLASH,
     MAIN_LED_FLASH_PERMANENT
 } main_led_state_t;

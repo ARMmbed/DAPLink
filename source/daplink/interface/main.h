@@ -31,7 +31,7 @@ extern "C" {
 
 // LED state
 typedef enum main_led_state {
-    MAIN_LED_OFF = 0,
+    MAIN_LED_DEF = 0,
     MAIN_LED_FLASH,
     MAIN_LED_FLASH_PERMANENT
 } main_led_state_t;
