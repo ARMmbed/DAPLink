@@ -20,7 +20,8 @@
  */
 #include "fsl_device_registers.h"
 #include "IO_Config.h"
-
+#include "DAP.h"
+#include "RTL.h"
 // URL_NAME and DRIVE_NAME must be 11 characters excluding
 // the null terminated character
 // Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
@@ -75,4 +76,13 @@ void prerun_board_config(void) {
     // With only two boards the digital pin read maps directly to the type
     mb_version_t board_version = (mb_version_t)read_board_type_pin();
     set_board_id(board_version);
+}
+
+// USB HID override function return 1 if the activity is trivial or response is null 
+uint8_t usbd_hid_no_activity(U8 *buf)
+{
+    if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
+        return 1;
+    else
+        return 0;
 }
