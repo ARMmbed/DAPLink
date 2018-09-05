@@ -1,7 +1,7 @@
 ---
 - default: 
     website: http://os.mbed.com/platforms
-    fw_version: '0247'
+    fw_version: '0248'
     image_format: .bin
     instructions: 
       windows: |
