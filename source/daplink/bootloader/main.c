@@ -31,6 +31,11 @@
 #include "util.h"
 #include "cortex_m.h"
 
+//default msc led settings
+#ifndef MSC_LED_DEF
+#define MSC_LED_DEF GPIO_LED_ON
+#endif
+
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
@@ -91,11 +96,11 @@ __task void timer_task_30mS(void)
     }
 }
 
-// Flash MSD LED using 30mS tick
-void main_blink_msc_led(main_led_state_t permanent)
+// Flash MSC LED using 30mS tick
+void main_blink_msc_led(main_led_state_t state)
 {
     msc_led_usb_activity = 1;
-    msc_led_state = (permanent) ? MAIN_LED_FLASH_PERMANENT : MAIN_LED_FLASH;
+    msc_led_state = state;
     return;
 }
 
@@ -117,7 +122,7 @@ __task void main_task(void)
     // State processing
     uint16_t flags;
     // LED
-    gpio_led_state_t msc_led_value = GPIO_LED_ON;
+    gpio_led_state_t msc_led_value = MSC_LED_DEF;
     // USB
     uint32_t usb_state_count;
 
@@ -128,10 +133,10 @@ __task void main_task(void)
 
     // Get a reference to this task
     main_task_id = os_tsk_self();
-    // Turn on LEDs
+    // Set LED defaults
     gpio_set_hid_led(GPIO_LED_OFF);
     gpio_set_cdc_led(GPIO_LED_OFF);
-    gpio_set_msc_led(GPIO_LED_OFF);
+    gpio_set_msc_led(msc_led_value);
     // Update version information file
     info_init();
     // USB
@@ -216,10 +221,23 @@ __task void main_task(void)
 
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
-            if (msc_led_usb_activity && ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT))) {
-                // Flash MSD LED ONCE
-                msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
-                msc_led_usb_activity = ((GPIO_LED_ON == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) ? 0 : 1;
+            if (msc_led_usb_activity) {
+                
+                if((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)){
+                    // Toggle LED value
+                    msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
+                    // If in flash mode stop after one cycle but in bootloader LED stays on
+                    if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {    
+                        msc_led_usb_activity = 0;
+                        msc_led_state = MAIN_LED_DEF;
+                    }
+
+                }else{
+                    //LED next state is MAIN_LED_DEF
+                    msc_led_value = MSC_LED_DEF;
+                    msc_led_usb_activity = 0;
+                }
+
                 // Update hardware
                 gpio_set_msc_led(msc_led_value);
             }

@@ -103,9 +103,17 @@ int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
     return (0);
 }
 
+// USB HID override function return 1 if the activity is trivial or response is null 
+__attribute__((weak))
+uint8_t usbd_hid_no_activity(U8 *buf)
+{
+    return 0;
+}
+
 // USB HID Callback: when data is received from the host
 void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
 {
+    main_led_state_t led_next_state = MAIN_LED_FLASH;
     switch (rtype) {
         case HID_REPORT_OUTPUT:
             if (len == 0) {
@@ -123,6 +131,10 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
                 free_count--;
                 memcpy(USB_Request[recv_idx], buf, len);
                 DAP_ExecuteCommand(buf, USB_Request[recv_idx]);
+                if(usbd_hid_no_activity(USB_Request[recv_idx]) == 1){
+                    //revert HID LED to default if the response is null
+                    led_next_state = MAIN_LED_DEF;
+                }
                 recv_idx = (recv_idx + 1) % DAP_PACKET_COUNT;
                 send_count++;
                 if (USB_ResponseIdle) {
@@ -132,8 +144,8 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
             } else {
                 util_assert(0);
             }
-
-            main_blink_hid_led(MAIN_LED_FLASH);
+            
+            main_blink_hid_led(led_next_state);
 
             break;
 

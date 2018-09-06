@@ -85,7 +85,13 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"ARM"
+#ifndef USB_PROD_STR
 #define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
+#else
+#define _TOWIDE(x)                   L ## #x
+#define TOWIDE(x)                   _TOWIDE(x)
+#define USBD_STRDESC_PROD           TOWIDE(USB_PROD_STR)
+#endif
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
