@@ -1,0 +1,26 @@
+common:
+    target:
+        - stm32f072cb
+    macros:
+        - INTERFACE_STM32F072CB
+        - DAPLINK_HIC_ID=0x97969909 # DAPLINK_HIC_ID_STM32F072xB
+    includes:
+        - source/hic_hal/st/stm32f072cb/hal/Inc
+        - source/hic_hal/st/stm32f072cb/Include
+        - source/hic_hal/st/stm32f072cb
+    sources:
+        hic_hal:
+            - source/hic_hal/st/stm32f072cb
+            - source/hic_hal/st/stm32f072cb/armcc/startup_stm32f072xb.s
+        stm32f0_hal:
+            - source/hic_hal/st/stm32f072cb/hal/Src
+
+tool_specific:
+    uvision:
+        misc:
+            c_flags:
+                - --preinclude="pre_stm32f0.h"
+                - --preinclude="stm32f0xx.h"
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\st\stm32f072cb"
+                - --predefine="-DINTERFACE_STM32F072CB"

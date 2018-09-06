@@ -49,6 +49,9 @@ module:
     hic_sam3u2c: &module_hic_sam3u2c
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/sam3u2c.yaml
+    hic_stm32f072cb: &module_hic_stm32f072cb
+        - records/rtos/rtos-cm0.yaml
+        - records/hic_hal/stm32f072cb.yaml
 
 projects:
     kl26z_bl:
