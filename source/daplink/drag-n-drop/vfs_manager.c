@@ -615,12 +615,15 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
 static void transfer_reset_file_info()
 {
     vfs_mngr_printf("vfs_manager transfer_reset_file_info()\r\n");
-    if (file_transfer_state.stream_open) {
-        transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
-    } else {
-        file_transfer_state = default_transfer_state;
-        abort_remount();
+    //check if the data started streaming; size can be updated on matching start sector and stream type
+    if(file_transfer_state.stream_started && (TRASNFER_FINISHED != file_transfer_state.transfer_state)){
+        //file to program can change but all fields should be preserved
+        file_transfer_state.file_to_program = VFS_FILE_INVALID;
+    }else{
+          file_transfer_state = default_transfer_state;
+          abort_remount();
     }
+    
 }
 
 // Update the tranfer state with new information
@@ -737,6 +740,7 @@ static void transfer_update_state(error_t status)
     // 1. A file has been detected
     // 2. The size of the file indicated in the root dir has been transferred
     // 3. The file size is greater than zero
+    // 4. Size can zero like in EDGE browser download, in this case any  size transferred can be a file optional finish
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID) &&
         (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
