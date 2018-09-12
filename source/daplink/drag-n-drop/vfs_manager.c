@@ -76,7 +76,8 @@ typedef enum {
 
 typedef struct {
     vfs_file_t file_to_program;     // A pointer to the directory entry of the file being programmed
-    vfs_sector_t start_sector;      // Start sector of the file being programmed
+    vfs_sector_t start_sector;      // Start sector of the file being programmed by stream
+    vfs_sector_t file_start_sector; // Start sector of the file being programmed by vfs
     vfs_sector_t file_next_sector;  // Expected next sector of the file
     vfs_sector_t last_ooo_sector;   // Last out of order sector within the file
     uint32_t size_processed;        // The number of bytes processed by the stream
@@ -100,6 +101,7 @@ typedef enum {
 
 static const file_transfer_state_t default_transfer_state = {
     VFS_FILE_INVALID,
+    VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
     VFS_INVALID_SECTOR,
@@ -566,8 +568,8 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     }
 
     // Initialize the starting sector if it has not been set
-    if (VFS_INVALID_SECTOR == file_transfer_state.start_sector) {
-        file_transfer_state.start_sector = start_sector;
+    if (VFS_INVALID_SECTOR == file_transfer_state.file_start_sector) {
+        file_transfer_state.file_start_sector = start_sector;
 
         if (start_sector != VFS_INVALID_SECTOR) {
             vfs_mngr_printf("    start_sector=%i\r\n", start_sector);
@@ -591,8 +593,8 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     }
 
     // Check - Starting sector must be the same  - this is optional for file info since it may not be present initially
-    if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.start_sector)) {
-        vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.start_sector, start_sector);
+    if ((VFS_INVALID_SECTOR != start_sector) && (start_sector != file_transfer_state.file_start_sector)) {
+        vfs_mngr_printf("    error: starting sector changed from %i to %i\r\n", file_transfer_state.file_start_sector, start_sector);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
@@ -616,9 +618,11 @@ static void transfer_reset_file_info()
 {
     vfs_mngr_printf("vfs_manager transfer_reset_file_info()\r\n");
     //check if the data started streaming; size can be updated on matching start sector and stream type
-    if(file_transfer_state.stream_started && (TRASNFER_FINISHED != file_transfer_state.transfer_state)){
-        //file to program can change but all fields should be preserved
+    if(file_transfer_state.stream_started){
+        //file, start sector and size has to be updated
         file_transfer_state.file_to_program = VFS_FILE_INVALID;
+        file_transfer_state.file_start_sector = VFS_INVALID_SECTOR;
+        file_transfer_state.file_size = 0;
     }else{
           file_transfer_state = default_transfer_state;
           abort_remount();
@@ -740,11 +744,12 @@ static void transfer_update_state(error_t status)
     // 1. A file has been detected
     // 2. The size of the file indicated in the root dir has been transferred
     // 3. The file size is greater than zero
-    // 4. Size can zero like in EDGE browser download, in this case any  size transferred can be a file optional finish
+    // 4. Matching start sector set by stream and vfs changes
     file_transfer_state.file_info_optional_finish =
         (file_transfer_state.file_to_program != VFS_FILE_INVALID) &&
         (file_transfer_state.size_transferred >= file_transfer_state.file_size) &&
-        (file_transfer_state.file_size > 0);
+        (file_transfer_state.file_size > 0) &&
+        (file_transfer_state.start_sector == file_transfer_state.file_start_sector);
     transfer_timeout = file_transfer_state.transfer_timeout;
     transfer_started = (VFS_FILE_INVALID != file_transfer_state.file_to_program) ||
                        (STREAM_TYPE_NONE != file_transfer_state.stream);
@@ -795,9 +800,9 @@ static void transfer_update_state(error_t status)
 
     if (TRASNFER_FINISHED == file_transfer_state.transfer_state) {
         vfs_mngr_printf("vfs_manager transfer_update_state(status=%i)\r\n", status);
-        vfs_mngr_printf("    file=%p, start_sect= %i, size=%i\r\n",
+        vfs_mngr_printf("    file=%p, start_sect= %i %i, size=%i\r\n",
                         file_transfer_state.file_to_program, file_transfer_state.start_sector,
-                        file_transfer_state.file_size);
+                        file_transfer_state.file_start_sector, file_transfer_state.file_size);
         vfs_mngr_printf("    stream=%i, size_processed=%i, opt_finish=%i, timeout=%i\r\n",
                         file_transfer_state.stream, file_transfer_state.size_processed,
                         file_transfer_state.file_info_optional_finish, transfer_timeout);
