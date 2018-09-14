@@ -119,7 +119,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                 if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                     flash->verify,
                                     addr,
-                                    flash->program_buffer_size,
+                                    write_size,
                                     flash->program_buffer,
                                     0)) {
                     return ERROR_WRITE;
@@ -138,13 +138,14 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                     buf += verify_size;
                     size -= verify_size;
                     write_size -= verify_size;
-                }    
+                }
+                continue;
             }
-        } else {
-            addr += write_size;
-            buf += write_size;
-            size -= write_size;
         }
+        addr += write_size;
+        buf += write_size;
+        size -= write_size;
+        
     }
 
     return ERROR_SUCCESS;
