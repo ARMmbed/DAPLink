@@ -14,8 +14,6 @@ common:
 
 tool_specific:
     uvision:
-        linker_file:
-            - source/daplink/daplink.sct
         misc:
             ld_flags:
                 - --predefine="-DDAPLINK_BL"

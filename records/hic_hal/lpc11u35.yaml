@@ -15,6 +15,5 @@ common:
 
 tool_specific:
     uvision:
-        misc:
-            ld_flags:
-                - --predefine="-I..\..\..\source\hic_hal\nxp\lpc11u35"
+        linker_file:
+            - source/hic_hal/nxp/lpc11u35/daplink.sct

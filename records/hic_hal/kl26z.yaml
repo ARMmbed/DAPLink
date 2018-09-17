@@ -23,6 +23,5 @@ common:
 
 tool_specific:
     uvision:
-        misc:
-            ld_flags:
-                - --predefine="-I..\..\..\source\hic_hal\freescale\kl26z"
+        linker_file:
+            - source/hic_hal/freescale/kl26z/daplink.sct
