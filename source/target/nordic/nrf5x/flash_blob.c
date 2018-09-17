@@ -50,6 +50,7 @@ static const program_target_t flash = {  // Default is nrf51
     .erase_chip = 0x20000029,
     .erase_sector = 0x20000049,
     .program_page = 0x20000071,
+    .verify = 0x0,
     {
         .breakpoint = 0x20000001,
         .static_base = 0x20000020 + 0x00000150,
@@ -68,6 +69,7 @@ static const program_target_t flash_nrf52 = {
     .erase_chip = 0x20000029,
     .erase_sector = 0x2000004D,
     .program_page = 0x2000007B,
+    .verify = 0x0,
     {
         .breakpoint = 0x20000001,
         .static_base = 0x20000020 + 0x00000150,

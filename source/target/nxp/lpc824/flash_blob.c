@@ -42,7 +42,8 @@ static const program_target_t flash = {
     0x1000004B, // EraseChip
     0x10000087, // EraseSector
     0x100000C5, // ProgramPage
-
+    0x0,        // Verify
+    
     // static_base : base address is address of Execution Region PrgData in map file
     //               to access global/static data
     // stack_pointer : Initial stack pointer

@@ -39,6 +39,7 @@ static const program_target_t flash = {
     .erase_chip = 0x20000029,
     .erase_sector = 0x20000049,
     .program_page = 0x20000071,
+    .verify = 0x0,
     {
         .breakpoint = 0x20000001,
         .static_base = 0x20000020 + 0x00000150,

@@ -115,25 +115,37 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
 
         if (config_get_automation_allowed()) {
             // Verify data flashed if in automation mode
-            while (write_size > 0) {
-                uint8_t rb_buf[16];
-                uint32_t verify_size = MIN(write_size, sizeof(rb_buf));
-                if (!swd_read_memory(addr, rb_buf, verify_size)) {
-                    return ERROR_ALGO_DATA_SEQ;
-                }
-                if (memcmp(buf, rb_buf, verify_size) != 0) {
+            if (flash->verify != 0) {
+                if (!swd_flash_syscall_exec(&flash->sys_call_s,
+                                    flash->verify,
+                                    addr,
+                                    write_size,
+                                    flash->program_buffer,
+                                    0)) {
                     return ERROR_WRITE;
                 }
-                addr += verify_size;
-                buf += verify_size;
-                size -= verify_size;
-                write_size -= verify_size;
+            } else {
+                while (write_size > 0) {
+                    uint8_t rb_buf[16];
+                    uint32_t verify_size = MIN(write_size, sizeof(rb_buf));
+                    if (!swd_read_memory(addr, rb_buf, verify_size)) {
+                        return ERROR_ALGO_DATA_SEQ;
+                    }
+                    if (memcmp(buf, rb_buf, verify_size) != 0) {
+                        return ERROR_WRITE;
+                    }
+                    addr += verify_size;
+                    buf += verify_size;
+                    size -= verify_size;
+                    write_size -= verify_size;
+                }
+                continue;
             }
-        } else {
-            addr += write_size;
-            buf += write_size;
-            size -= write_size;
         }
+        addr += write_size;
+        buf += write_size;
+        size -= write_size;
+        
     }
 
     return ERROR_SUCCESS;

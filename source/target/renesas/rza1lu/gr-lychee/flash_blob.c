@@ -125,7 +125,7 @@ static const program_target_t flash = {
     0x20020074, // EraseChip
     0x20020084, // EraseSector
     0x20020094, // ProgramPage
-
+    0x0,        // Verify
     // RSB : base address is address of Execution Region PrgData in map file
     //       to access global/static data
     // RSP : Initial stack pointer

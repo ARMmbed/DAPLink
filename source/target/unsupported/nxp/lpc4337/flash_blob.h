@@ -57,6 +57,7 @@ static const TARGET_FLASH flash = {
     0x1000008F, // EraseChip
     0x10000133, // EraseSector
     0x100001AB, // ProgramPage
+    0x0,        // Verify
 
     // static_base : base address is address of Execution Region PrgData in map file
     //               to access global/static data
