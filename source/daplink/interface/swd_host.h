@@ -47,6 +47,8 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
 void swd_set_target_reset(uint8_t asserted);
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state);
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state);
+uint8_t swd_read_word(uint32_t addr, uint32_t *val);
+uint8_t swd_write_word(uint32_t addr, uint32_t val);
 
 #ifdef __cplusplus
 }
