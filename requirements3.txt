@@ -1,0 +1,16 @@
+project_generator
+mbed_ls
+pyserial
+pyOCD
+requests
+intelhex
+six
+enum34
+pyusb
+mbed_cli
+bs4
+numpy
+elftools
+pyelftools
+fuzzywuzzy
+jsonschema
