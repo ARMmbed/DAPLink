@@ -48,17 +48,11 @@ def make_bin_zip(dir, name):
     #go back
     os.chdir(working_dir)
 
-def main():
-    parser = argparse.ArgumentParser(description='Package a release for distribution')
-    parser.add_argument('source', help='Release directory to grab files from')
-    parser.add_argument('dest', help='Directory to create and place files in')
-    parser.add_argument('version', type=int, help='Version number of this release')
-    args = parser.parse_args()
+def package_release_files(source, dest, version, toolchain):
 
-    proj_dir = args.source
-    output_dir = args.dest
-    build_number = "%04i" % args.version
-
+    proj_dir = source
+    output_dir = dest
+    build_number = "%04i" % version
 
     update_yml_entries = [{'default':DefaultList([
             ('website', 'http://os.mbed.com/platforms'),
@@ -69,7 +63,7 @@ def main():
 
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
-        print output_dir + ' existed and deleted!!'
+        print (output_dir + ' existed and deleted!!')
 
     os.mkdir(output_dir)
 
@@ -77,7 +71,10 @@ def main():
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
         source_name = prj_name + "_crc" + legacy_str + source_offset_str + "." + extension
-        source_path = os.path.join(proj_dir, prj_name, source_name)
+        source_path = os.path.join(proj_dir, prj_name, toolchain, source_name)
+        if not os.path.isfile(source_path):
+            print("Warning %s not added to release" % prj_name)
+            continue
         items = prj_name.split('_')  # "k20dx_frdmk22f_if" -> ("k20dx", "frdmk22f", "if")
         assert items[-1] == "if", "Unexpected string: %s" % items[2]
         host_mcu = items[0]
@@ -110,9 +107,18 @@ def main():
                         ('instructions', fw_instuction)
                         ])});
 
-    make_bin_zip(output_dir, build_number + '_release_package_' + subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip() + '.zip')
+    make_bin_zip(output_dir, build_number + '_release_package_' + subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip() + '.zip')
 
     make_update_yml_file(os.path.join(output_dir, 'update.yml'), update_yml_entries, explicit_start=True)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Package a release for distribution')
+    parser.add_argument('source', help='Release directory to grab files from')
+    parser.add_argument('dest', help='Directory to create and place files in')
+    parser.add_argument('version', type=int, help='Version number of this release')
+    parser.add_argument('--toolchain', type=str, default='', help='Toolchain directory if present')
+    args = parser.parse_args()
+
+    print("args",args.source,args.dest,args.version,args.toolchain)
+    
+    package_release_files(args.source,args.dest,args.version,args.toolchain)
