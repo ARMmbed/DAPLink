@@ -530,6 +530,9 @@ def main():
     parser.add_argument('--firmwaredir',
                         help='Directory with firmware images to test',
                         default=None)
+    parser.add_argument('--projecttool', choices=['uvision', 'mbedcli'],
+                        help='Tool used to compile the project',
+                        default='uvision')
     parser.add_argument('--firmware', help='Firmware to test', action='append',
                         choices=firmware_choices, default=[], required=False)
     parser.add_argument('--logdir', help='Directory to log test results to',
@@ -599,7 +602,7 @@ def main():
 
     # Get all relevant info
     if args.firmwaredir is None:
-        firmware_bundle = load_bundle_from_project()
+        firmware_bundle = load_bundle_from_project(args.projecttool)
     else:
         firmware_bundle = load_bundle_from_release(args.firmwaredir)
 

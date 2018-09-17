@@ -255,7 +255,7 @@ class MassStorageTester(object):
             os.mkdir(dir_path)
         for file_name, file_contents in self._mock_file_list_after:
             file_path = self.board.get_file_path(file_name)
-            with open(file_path, 'wb') as file_handle:
+            with open(file_path, 'w') as file_handle:
                 file_handle.write(file_contents)
 
         self.board.wait_for_remount(test_info)

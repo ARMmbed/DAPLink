@@ -18,7 +18,7 @@
 
 from __future__ import absolute_import
 from __future__ import division
-import Queue
+import queue
 import functools
 import serial
 import threading
@@ -28,13 +28,8 @@ ERROR_TIMEOUT_SECONDS = 10.0
 
 
 def _same(d1, d2):
-    d1 = bytearray(d1)
-    d2 = bytearray(d2)
-
-    for i in range(min(len(d1), len(d2))):
-        if d1[i] != d2[i]:
-            return False
-    if len(d1) != len(d2):
+    #Do a string or bytearray compare 
+    if d1 != d2:
         return False
     return True
 
@@ -72,7 +67,7 @@ class SerialTester(object):
     def __init__(self, port):
         self.raw_serial = serial.Serial(port=port,bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False, write_timeout=None, dsrdtr=False, inter_byte_timeout=None, exclusive=None)
         self.raw_serial.write_timeout = ERROR_TIMEOUT_SECONDS
-        self._queue = Queue.Queue()
+        self._queue = queue.Queue()
         self._write_thread = threading.Thread(target=self._serial_main)
         self._write_thread.start()
 
@@ -103,15 +98,15 @@ class SerialTester(object):
         # Wait until the target is initialized
         expected_resp = "{init}"
         resp = self.read(len(expected_resp))
-        if not _same(resp, expected_resp):
+        if not _same(resp.decode(), expected_resp):
             test_info.failure("Fail on init: %s" % resp)
             return False
 
         # Change baudrate to that of the first test
         command = "{baud:%i}" % baud
-        self.write(command)
+        self.write(command.encode())
         resp = self.read(len(command))
-        if not _same(resp, command):
+        if not _same(resp.decode(), command):
             test_info.failure("Fail on baud command: %s" % resp)
             return False
 
@@ -122,7 +117,7 @@ class SerialTester(object):
         # on the target has changed
         expected_resp = "{change}"
         resp = self.read(len(expected_resp))
-        if not _same(resp, expected_resp):
+        if not _same(resp.decode(), expected_resp):
             test_info.failure("Fail on baud change %s" % resp)
             return False
 
@@ -138,7 +133,7 @@ class SerialTester(object):
 
     def write(self, data):
         """Write serial port data in the background"""
-        func = functools.partial(self.raw_serial.write, data[:])
+        func = functools.partial(self.raw_serial.write, data)
         self._queue.put(func)
 
     def set_read_timeout(self, timeout):
@@ -193,7 +188,7 @@ def test_serial(workspace, parent_test):
         # Generate a 4KB block of dummy data
         # and test supported baud rates
         test_data = [i for i in range(0, 256)] * 4 * 4
-        test_data = str(bytearray(test_data))
+        test_data = bytearray(test_data)
         for baud in standard_baud:
 
             test_info.info("Testing baud %i" % baud)
@@ -205,7 +200,6 @@ def test_serial(workspace, parent_test):
             # Perform test
             sp.write(test_data)
             resp = sp.read(len(test_data))
-            resp = bytearray(resp)
             if _same(test_data, resp):
                 test_info.info("Pass")
             else:
@@ -220,7 +214,7 @@ def test_serial(workspace, parent_test):
         # 3. Write 1 byte
         # 4. Read back all data
         test_data = [i for i in range(0, 256)] * 4 * 4
-        test_data = str(bytearray(test_data))
+        test_data = bytearray(test_data)
         for baud in timing_test_baud:
 
             test_info.info("Timing test baud %i" % baud)
@@ -254,7 +248,7 @@ def test_serial(workspace, parent_test):
         # Setting change smoke test - reconfigure settings while
         # in the middle of a transfer and verify nothing bad
         test_data = [i for i in range(0, 128)]
-        test_data = str(bytearray(test_data))
+        test_data = bytearray(test_data)
         sp.new_session_with_baud(115200, test_info)
         sp.set_read_timeout(0)
         for baud in standard_baud:
@@ -273,7 +267,7 @@ def test_serial(workspace, parent_test):
         # Generate a 8 KB block of dummy data
         # and test a large block transfer
         test_data = [i for i in range(0, 256)] * 4 * 8
-        test_data = str(bytearray(test_data))
+        test_data = bytearray(test_data)
         sp.new_session_with_baud(115200, test_info)
 
         sp.write(test_data)
