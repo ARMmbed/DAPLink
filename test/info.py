@@ -88,6 +88,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
+    ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_nina_b112_if',                   False,      0x0000,     "bin"       ),
@@ -169,6 +170,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        None                                    ),# TODO - Set to 'ncs36510' when non-zero flash addresses are supported
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
     (   0x2410,     'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
+    (   0x4600,     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
     (   0x5050,     'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
@@ -268,7 +270,8 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'SSCI-MBIT',
     'BlueNinja',
     'U-BLOX-EVK-NINA-B1',
-    'VNG-VBLUno51']
+    'VNG-VBLUno51',
+    'REALTEK-RTL8195AM']
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[3] for config in
                             SUPPORTED_CONFIGURATIONS}
