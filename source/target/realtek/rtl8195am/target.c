@@ -37,61 +37,16 @@ target_cfg_t target_device = {
 };
 
 // RTL8195AM's main cpu can only talk 38400 with DAP UART
-//#include "string.h"
-#include "RTL.h"
-#include "rl_usb.h"
-#include "usb_for_lib.h"
-
-extern int32_t data_send_access;
-extern int32_t data_send_active;
-extern int32_t data_send_zlp;
-extern int32_t data_to_send_wr;
-extern int32_t data_to_send_rd;
-extern uint8_t *ptr_data_to_send;
-extern uint8_t *ptr_data_sent;
-extern int32_t data_read_access;
-extern int32_t data_receive_int_access;
-extern int32_t data_received_pending_pckts;
-extern int32_t data_no_space_for_receive;
-extern uint8_t *ptr_data_received;
-extern uint8_t *ptr_data_read;
-extern uint16_t control_line_state;
-extern CDC_LINE_CODING line_coding;
-
-extern int32_t USBD_CDC_ACM_PortReset(void);
-extern int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding);
-
-int32_t USBD_CDC_ACM_Reset(void)
-{
-    data_send_access            = 0;
-    data_send_active            = 0;
-    data_send_zlp               = 0;
-    data_to_send_wr             = 0;
-    data_to_send_rd             = 0;
-    ptr_data_to_send            = USBD_CDC_ACM_SendBuf;
-    ptr_data_sent               = USBD_CDC_ACM_SendBuf;
-    data_read_access            = 0;
-    data_receive_int_access     = 0;
-    data_received_pending_pckts = 0;
-    data_no_space_for_receive   = 0;
-    ptr_data_received           = USBD_CDC_ACM_ReceiveBuf;
-    ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
-    control_line_state          = 0;
-    USBD_CDC_ACM_PortReset();
-    line_coding.dwDTERate       = 38400;
-    line_coding.bCharFormat     = 0;
-    line_coding.bParityType     = 0;
-    line_coding.bDataBits       = 8;
-
-    return (USBD_CDC_ACM_PortSetLineCoding(&line_coding));
-}
+#include "uart.h"
+static UART_Configuration UART_Config;
 
 int32_t USBD_CDC_ACM_SetLineCoding(void)
 {
-    line_coding.dwDTERate = 38400;
-    line_coding.bCharFormat =  USBD_EP0Buf[4];
-    line_coding.bParityType =  USBD_EP0Buf[5];
-    line_coding.bDataBits   =  USBD_EP0Buf[6];
+    UART_Config.Baudrate    = 38400;
+    UART_Config.DataBits    = UART_DATA_BITS_8;
+    UART_Config.Parity      = UART_PARITY_NONE;
+    UART_Config.StopBits    = UART_STOP_BITS_1;
+    UART_Config.FlowControl = UART_FLOW_CONTROL_NONE;
 
-    return (USBD_CDC_ACM_PortSetLineCoding(&line_coding));
+    return uart_set_configuration(&UART_Config);
 }
