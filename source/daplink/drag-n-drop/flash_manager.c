@@ -147,19 +147,22 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
     while (true) {
         // flush if necessary
         if (addr >= current_write_block_addr + current_write_block_size) {
-            // Write out current buffer
-            status = intf->program_page(current_write_block_addr, buf, current_write_block_size);
-            flash_manager_printf("    intf->program_page(addr=0x%x, size=0x%x) ret=%i\r\n", current_write_block_addr, current_write_block_size, status);
 
-            if (ERROR_SUCCESS != status) {
-                state = STATE_ERROR;
-                return status;
+            // Write out current buffer if there is data in it
+            if (!buf_empty) {
+                status = intf->program_page(current_write_block_addr, buf, current_write_block_size);
+                flash_manager_printf("    intf->program_page(addr=0x%x, size=0x%x) ret=%i\r\n", current_write_block_addr, current_write_block_size, status);
+
+                if (ERROR_SUCCESS != status) {
+                    state = STATE_ERROR;
+                    return status;
+                }
+                buf_empty = true;
             }
 
             // Setup for next page
             memset(buf, 0xFF, current_write_block_size);
-            buf_empty = true;
-            current_write_block_addr += current_write_block_size;
+            current_write_block_addr = ROUND_DOWN(addr,current_write_block_size);
         }
 
         // Check for end
