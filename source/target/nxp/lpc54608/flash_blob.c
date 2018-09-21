@@ -17,8 +17,8 @@
 static const uint32_t lpc54608_flash_prog_blob[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x21002210, 0xf8c00690, 0x4a2c2630, 0xf0236813, 0x60134380, 0x1280f8c0, 0x1284f8c0, 0x68134a28,
-    0x4370f423, 0xf8c06013, 0x21021380, 0x20006001, 0x20004770, 0xb5104770, 0x20002107, 0xf844f000,
-    0xbf182800, 0x4a1fbd10, 0xe8bd2107, 0x20004010, 0xb864f000, 0x0bc4b510, 0x46084621, 0xf834f000,
+    0x4370f423, 0xf8c06013, 0x21021380, 0x20006001, 0x20004770, 0xb5104770, 0x2000210f, 0xf844f000,
+    0xbf182800, 0x4a1fbd10, 0xe8bd210f, 0x20004010, 0xb864f000, 0x0bc4b510, 0x46084621, 0xf834f000,
     0xbf182800, 0x4a17bd10, 0xe8bd4621, 0x46084010, 0xb854f000, 0x4614b570, 0xd10e0005, 0x0100e9d4,
     0xe9d44408, 0x44111202, 0x69214408, 0x69614408, 0x69a14408, 0x42404408, 0x0be861e0, 0xf0004601,
     0x2800f813, 0xbd70bf18, 0x46214b06, 0xe8bd4628, 0xf44f4070, 0xf0007280, 0x0000b818, 0x40000500,
@@ -31,6 +31,22 @@ static const uint32_t lpc54608_flash_prog_blob[] = {
     0x46684a0e, 0x4790a906, 0x28009806, 0xf600bf18, 0xb00b10c4, 0xb500bd00, 0x2338b08b, 0x93009203,
     0x0101e9cd, 0x46684a05, 0x4790a906, 0x28009806, 0xf600bf18, 0xb00b10c4, 0x0000bd00, 0x03000205,
     0x00000000
+};
+
+// Start address of flash
+static const uint32_t flash_start = 0x00000000;
+// Size of flash
+static const uint32_t flash_size = 0x00080000;
+
+/**
+* List of start and size for each size of flash sector - even indexes are start, odd are size
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address flash_start + flash_size.
+*/
+static const uint32_t sectors_info[] = {
+    0x00000000, 0x00008000,
 };
 
 static const program_target_t flash = {
@@ -47,7 +63,7 @@ static const program_target_t flash = {
     {
         0x20000001,
         0x200001e0,
-        0x20000800
+        0x20000400
     },
 
     0x20000000 + 0x00000A00,  // mem buffer location
