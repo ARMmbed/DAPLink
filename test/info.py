@@ -104,6 +104,9 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_dipdap_sdt32439b_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_sdt64b_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_sdt51822b_if',                False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -136,7 +139,10 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
+    (   0x0450,     'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0453,     'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
+    (   0x0454,     'lpc11u35_mtb_mts_dragonfly_if',            None,               None                                    ),
     (   0x0455,     'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0456,     'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0457,     'lpc11u35_mtb_rak811_if',                   None,               None                                    ), # TODO - set target when mbed-os supports this
@@ -241,6 +247,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0227,  # MIMXRT1050 EVK
     0x0240,  # K64F
     0x0311,  # K66F
+    0x0450,  # mtb_ublox_odin_w2
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
     0x3103,  # dipdap_sdt51822b

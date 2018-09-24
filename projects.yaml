@@ -415,3 +415,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/dipdap_sdt52832b.yaml
+    lpc11u35_mtb_ublox_odin_w2_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_ublox_odin_w2.yaml
+    lpc11u35_mtb_mts_dragonfly_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_mts_dragonfly.yaml
+    lpc11u35_mtb_mts_xdot_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_mts_xdot.yaml
