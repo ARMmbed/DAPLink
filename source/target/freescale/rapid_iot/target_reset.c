@@ -38,6 +38,8 @@
 #define KW41         1
 
 static uint32_t mdm_id;
+extern char *board_id;
+char *board_id_kw41z = "0234";
 
 void target_before_init_debug(void)
 {
@@ -74,9 +76,10 @@ void prerun_target_config(void)
             extern target_cfg_t target_device_kw40;
             target_device = target_device_kw40;
         } else {
-            // Program to the KW40 flash
+            // Program to the KW41 flash
             extern target_cfg_t target_device_kw41;
             target_device = target_device_kw41;
+            board_id = board_id_kw41z;
         }
     }
 
