@@ -29,6 +29,8 @@ optional arguments:
                         Directory with firmware images to test
   --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
+  --projecttool TOOL    choices=['uvision', 'mbedcli'],'Tool used to compile the project',
+                        default='uvision'
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.

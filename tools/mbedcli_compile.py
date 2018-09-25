@@ -56,7 +56,7 @@ def main():
     parser.add_argument('--build_folder', type=str, default='BUILD', help='Release directory to grab files from')
     parser.add_argument('--release_folder', type=str, default='firmware', help='Directory to create and place files in')
     parser.add_argument('--toolchain', type=str, default='ARM', help='Toolchain directory if present')
-    parser.add_argument('--clean', dest='clean', action='store_true')
+    parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
     parser.set_defaults(clean=False)
     args = parser.parse_args()
     self_path = os.path.abspath(__file__)

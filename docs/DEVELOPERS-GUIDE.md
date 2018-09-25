@@ -20,7 +20,7 @@ $ virtualenv venv
 ```
 
 **Step 2.** Update tools and generate project files. **This should be done every time you pull new changes**
-
+Uvision progen compile
 ```Windows
 $ venv/Scripts/activate
 $ pip install -r requirements.txt
@@ -28,7 +28,57 @@ $ progen generate -t uvision
 $ venv/Scripts/deactivate
 ```
 
+Mbedcli project lists compile
+```
+$ venv/Scripts/activate
+$ pip install -r requirements3.txt
+$ tools/mbedcli_compile.py --project project1 project2 project3 --clean
+```
+Valid project names are located in test\info.PROJECT_RELEASE_INFO[0] for interface and test\info.SUPPORTED_CONFIGURATIONS[2] for bootloaders i.e. k20dx_frdmk64f_if k20dx_bl 
+
 **Step 3.** Pull requests should be made once a changeset is [rebased onto Master](https://www.atlassian.com/git/tutorials/merging-vs-rebasing/workflow-walkthrough)
+
+## Mbedcli compile environment
+
+### Features
+- Support both Python 2.x and 3.x versions.
+- Can compile a list of projects or the all of the projects. 
+- Can generate the release directory with one command.
+
+### Prerequisite
+mbedcli should be included in the python package or requirements.txt. Currently requirement3.txt contains the list of python packages needed to be able to compile in the mbedcli environment.
+
+### mbedcli_compile.py script
+Arguments
+* `--project` : Selectively compile only the firmware specified, if this is not specified, environment will build all interfaces and bootloader projects
+* `--release_version` : If assigned a value, create a release with this version
+* `--build_folder` : Build directory to grab files for release, default is `BUILD`
+* `--release_folder` : a folder (`firmware` on default or specified by `--release_folder`, to be concatenated with the version number), will be generated with the bin, update.yml and zip file containing the bins for release
+* `--toolchain` : Toolchain directory, default is ARM 
+* `--clean` : Rebuild or delete build folder before compile
+
+Generate files needed by mbedcli
+* `custom_profile.json` Toolchain profile or compile flags parsed from the yaml files
+* `custom_targets.json` Platform information for specific hics
+* `.mbedignore` Filter all files not needed for the projects
+
+Currently invoking `mbed compile` as a process.
+
+### Changes/Additions
+-Source codes:
+The scatter files are now located to each hic directory (i.e. `source/hic_hal/freescale/k20dx`) rather than source/daplink/daplink.sct
+This is to remove the relative path linker includes in uvision and mbed cli compile
+
+-Tools:
+There is an intermediate step in uvision environment in creating a release directory. This step is not needed in mbedcli environment but to make this equivalent directory invoke
+`copy_release_files.py --tool mbedcli`
+To make a release directory(used by mbedcli_compile.py and uvision environment to make release directory)
+`package_release_files.py SRC_DIR DEST_DIR VERSION_NUMBER --toolchain ARM`
+
+
+-Test:
+An option to search for the daplink firmware build in uvision and mbedcli build folders.
+`run_test.py --projecttool mbedcli`
 
 
 ## Port
@@ -42,8 +92,13 @@ There are three defined ways in which DAPLink can be extended. These are adding 
 ## Test
 DAPLink has an extensive set of automated tests written in Python. They are used for regression testing, but you can use them to validate your DAPLink port. Details are [here](AUTOMATED_TESTS.md)
 
+An option to search for the daplink firmware build in uvision and mbedcli build folders.
+`run_test.py --projecttool mbedcli ...` or `run_test.py --projecttool uvision ...`.
 
 ## Release
+
+###Release using uvision
+
 DAPLink contains scripts to automate most of the steps of building a release. In addition to building the release, these scripts also save relevant build information such as git SHA and python tool versions so the same build can be reproduced. The recommended steps for creating a release are below.
 
 * Create a tag with the correct release version and push it to github
@@ -55,5 +110,21 @@ Note: A previous build can be reproduced by using the ``build_requirements.txt``
 To do this add the additional argument ``build_requirements.txt`` when calling ``build_release_uvision.bat`` in step 2.
 This will install and build with the exact version of the python packages used to create that build.
 
+###Release using mbedcli
+
+If the project list is not specify, all interface and booloader projects will be compiled. If `--release_version` is given, a folder (`firmware` on default or specified by `--release_folder`, to be concatenated with the version number), will be generated with the bin, update.yml and zip file containing the bins for release
+```
+$ venv/Scripts/activate
+$ pip install -r requirements3.txt
+$ tools/mbedcli_compile.py --release_version 0250 --release_folder firmware
+```
+
 ## MDK
 If you want to use the MDK (uVision) IDE to work with the DAPLink code, you must launch it in the right environment. The project will fail to build otherwise. To launch uVision properly, use ``tools/launch_uv4.bat``
+
+This script can take arguments to override default virtual environment and python packages to be installed.
+
+For example in python 2.7
+-tools\launch_uvision.bat env27 requirements.txt
+In python 3.7 
+-tools\launch_uvision.bat env37 requirements3.txt
