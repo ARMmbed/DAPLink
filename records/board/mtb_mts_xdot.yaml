@@ -1,0 +1,11 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_mtb
+    sources:
+        board:
+            - source/board/mtb_mts_xdot.c
+        source:
+            - source/target/st/xDot-L151/target.c
+            - source/target/st/xDot-L151/target_reset.c
