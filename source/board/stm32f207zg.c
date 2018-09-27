@@ -1,6 +1,6 @@
 /**
  * @file    stm32f103rb.c
- * @brief   board ID for the NXP NUCLEO-F103RB board
+ * @brief   board ID for the STM32 NUCLEO-F103RB board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

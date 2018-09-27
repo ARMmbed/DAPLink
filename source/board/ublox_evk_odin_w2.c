@@ -1,6 +1,6 @@
 /**
  * @file    stm32f429zi.c
- * @brief   board ID for the NXP NUCLEO-F429ZI board
+ * @brief   board ID for the STM32 NUCLEO-F429ZI board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved

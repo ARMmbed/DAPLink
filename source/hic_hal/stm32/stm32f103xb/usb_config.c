@@ -29,7 +29,11 @@
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
 #define USBD_HS_ENABLE              0
-
+#if (defined(WEBUSB_INTERFACE) || defined(WINUSB_INTERFACE))
+#define USBD_BOS_ENABLE             1
+#else
+#define USBD_BOS_ENABLE             0
+#endif
 //   <h> Device Settings
 //     <i> These settings affect Device Descriptor
 //     <o0> Power
@@ -130,6 +134,13 @@
 #else
 #define HID_ENDPOINT 1
 #endif
+
+#ifndef WEBUSB_INTERFACE
+#define WEBUSB_INTERFACE 0
+#else
+#define WEBUSB_INTERFACE 1
+#endif
+
 #define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
@@ -140,6 +151,7 @@
 #define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
 #define USBD_HID_STRDESC            L"CMSIS-DAP"
+#define USBD_WEBUSB_STRDESC         L"WebUSB: CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
 #define USBD_HID_INREPORT_MAX_SZ    64
@@ -345,14 +357,24 @@
 //     </e>
 #define USBD_CLS_ENABLE             0
 
+//     WebUSB support
+#define USBD_WEBUSB_ENABLE          WEBUSB_INTERFACE
+#define USBD_WEBUSB_VENDOR_CODE     0x21
+#define USBD_WEBUSB_LANDING_URL     "os.mbed.com/webusb/landing-page/?bid="
+#define USBD_WEBUSB_ORIGIN_URL      "os.mbed.com/"
+
+//     Microsoft OS Descriptors 2.0 (WinUSB) support
+#define USBD_WINUSB_ENABLE          WINUSB_INTERFACE
+#define USBD_WINUSB_VENDOR_CODE     0x20
+#define USBD_WINUSB_IF_NUM          USBD_WEBUSB_IF_NUM
 //   </e>
 // </e>
 
 
 /* USB Device Calculations ---------------------------------------------------*/
 
-#define USBD_IF_NUM                (USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
-#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE))
+#define USBD_IF_NUM                (USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
+#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE))
 #define MAX(x, y)                (((x) < (y)) ? (y) : (x))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
 #define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
@@ -429,6 +451,7 @@
 #define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
 #define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
 #define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
+#define USBD_WEBUSB_IF_NUM         (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
@@ -436,7 +459,8 @@
 #define USBD_CDC_ACM_CIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+0)
 #define USBD_CDC_ACM_DIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+1)
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
-#define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)

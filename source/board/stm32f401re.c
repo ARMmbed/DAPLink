@@ -1,6 +1,6 @@
 /**
  * @file    stm32f401re.c
- * @brief   board ID for the NXP NUCLEO-F401RE board
+ * @brief   board ID for the STM32 NUCLEO-F401RE board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
