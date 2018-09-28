@@ -183,7 +183,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        None                                    ),# TODO - Set to 'ncs36510' when non-zero flash addresses are supported
-    (   0x1236,     'stm32f103xb_ubox_evk_odin_w2_if',         'stm32f103xb_bl',    'ublox-EVK-ODIN-W2'                     ),
+    (   0x1236,     'stm32f103xb_ublox_evk_odin_w2_if',        'stm32f103xb_bl',    'ublox-EVK-ODIN-W2'                     ),
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
     (   0x2410,     'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x4600,     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
