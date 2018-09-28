@@ -5,7 +5,7 @@ common:
         - INTERFACE_STM32F103XB
         - USE_HAL_DRIVER
         - STM32F103xB
-        - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_STM32F103XB
+        - DAPLINK_HIC_ID=0x97969908  # DAPLINK_HIC_ID_STM32F103XB
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
     includes:
