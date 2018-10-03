@@ -341,16 +341,7 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
         case FLASH_DECODER_TYPE_INTERFACE:
             end_addr = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE;
             break;
-
-        case FLASH_DECODER_TYPE_TARGET:
-            if (g_board_info.target_cfg) {
-                end_addr = g_board_info.target_cfg->flash_end;
-            }
-            else {
-                return false;
-            }
-            break;
-
+            
         default:
             return false;
     }
