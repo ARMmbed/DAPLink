@@ -156,22 +156,17 @@ uint8_t swd_write_dp(uint8_t adr, uint32_t val)
     uint8_t data[4];
     uint8_t ack;
 
-    switch (adr) {
-        case DP_SELECT:
-            if (dap_state.select == val) {
-                return 1;
-            }
-
-            dap_state.select = val;
-            break;
-
-        default:
-            break;
+    //check if the right bank is already selected
+    if ((adr == DP_SELECT) && (dap_state.select == val)) {
+        return 1;
     }
 
     req = SWD_REG_DP | SWD_REG_W | SWD_REG_ADR(adr);
     int2array(data, val, 4);
     ack = swd_transfer_retry(req, (uint32_t *)data);
+    if ((ack == DAP_TRANSFER_OK) && (adr == DP_SELECT)) {
+        dap_state.select = val;
+    }
     return (ack == 0x01);
 }
 
@@ -788,58 +783,83 @@ uint8_t swd_init_debug(void)
     // init dap state with fake values
     dap_state.select = 0xffffffff;
     dap_state.csw = 0xffffffff;
-    swd_init();
-    // call a target dependant function
-    // this function can do several stuff before really
-    // initing the debug
-    target_before_init_debug();
-
-    if (!JTAG2SWD()) {
-        return 0;
-    }
-
-    if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
-        return 0;
-    }
-
-    // Ensure CTRL/STAT register selected in DPBANKSEL
-    if (!swd_write_dp(DP_SELECT, 0)) {
-        return 0;
-    }
-
-    // Power up
-    if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
-        return 0;
-    }
-
-    for (i = 0; i < timeout; i++) {
-        if (!swd_read_dp(DP_CTRL_STAT, &tmp)) {
-            return 0;
+    
+    int8_t retries = 4;
+    int8_t do_abort = 0;
+    do {
+        if (do_abort) {
+            //do an abort on stale target, then reset the device
+            swd_write_dp(DP_ABORT, DAPABORT);
+            swd_set_target_reset(1);
+            os_dly_wait(2);
+            swd_set_target_reset(0);
+            os_dly_wait(2);
+            do_abort = 0;
         }
-        if ((tmp & (CDBGPWRUPACK | CSYSPWRUPACK)) == (CDBGPWRUPACK | CSYSPWRUPACK)) {
-            // Break from loop if powerup is complete
-            break;
+        swd_init();
+        // call a target dependant function
+        // this function can do several stuff before really
+        // initing the debug
+        target_before_init_debug();
+
+        if (!JTAG2SWD()) {
+            do_abort = 1;
+            continue;
         }
-    }
-    if (i == timeout) {
-        // Unable to powerup DP
-        return 0;
-    }
 
-    if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ | TRNNORMAL | MASKLANE)) {
-        return 0;
-    }
+        if (!swd_write_dp(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR)) {
+            do_abort = 1;
+            continue;
+        }
 
-    // call a target dependant function:
-    // some target can enter in a lock state
-    // this function can unlock these targets
-    target_unlock_sequence();
+        if (!swd_write_dp(DP_SELECT, 0)) {
+            do_abort = 1;
+            continue;
+            
+        }
+        
+        // Power up
+        if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
+            do_abort = 1;
+            continue;
+        }
 
-    if (!swd_write_dp(DP_SELECT, 0)) {
-        return 0;
-    }
+        for (i = 0; i < timeout; i++) {
+            if (!swd_read_dp(DP_CTRL_STAT, &tmp)) {
+                do_abort = 1;
+                break;
+            }
+            if ((tmp & (CDBGPWRUPACK | CSYSPWRUPACK)) == (CDBGPWRUPACK | CSYSPWRUPACK)) {
+                // Break from loop if powerup is complete
+                break;
+            }
+        }
+        if ((i == timeout) || (do_abort == 1)) {
+            // Unable to powerup DP
+            do_abort = 1;
+            continue;
+        }
 
-    return 1;
+        if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ | TRNNORMAL | MASKLANE)) {
+            do_abort = 1;
+            continue;
+        }
+
+        // call a target dependant function:
+        // some target can enter in a lock state
+        // this function can unlock these targets
+        target_unlock_sequence();
+
+        if (!swd_write_dp(DP_SELECT, 0)) {
+            do_abort = 1;
+            continue;
+        }
+        
+        return 1;
+    
+    } while (--retries > 0);
+    
+    return 0;
 }
 
 __attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
@@ -976,7 +996,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 {
     uint32_t val;
-
+    int8_t ap_retries = 2;
     /* Calling swd_init prior to enterring RUN state causes operations to fail. */
     if (state != RUN) {
         swd_init();
@@ -1001,8 +1021,15 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             }
 
             // Enable debug and halt the core (DHCSR <- 0xA05F0003)
-            if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
-                return 0;
+            while (swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT) == 0) {
+                if ( --ap_retries <=0 ) {
+                    return 0;
+                }
+                // Target is in invalid state?
+                swd_set_target_reset(1);
+                os_dly_wait(2);
+                swd_set_target_reset(0);
+                os_dly_wait(2);
             }
 
             // Wait until core is halted
