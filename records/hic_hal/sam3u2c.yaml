@@ -17,5 +17,10 @@ common:
 
 tool_specific:
     uvision:
-        linker_file:
-            - source\hic_hal\atmel\sam3u2c/daplink.sct
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\atmel\sam3u2c"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\atmel\sam3u2c"

@@ -15,5 +15,10 @@ common:
 
 tool_specific:
     uvision:
-        linker_file:
-            - source/hic_hal/nxp/lpc11u35/daplink.sct
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\nxp\lpc11u35"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\nxp\lpc11u35"
