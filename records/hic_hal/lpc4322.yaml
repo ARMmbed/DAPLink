@@ -1,6 +1,8 @@
 common:
     target:
         - lpc4322_jet100
+    core:
+        - Cortex-M4
     macros:
         - INTERFACE_LPC4322
         - CORE_M4

@@ -48,17 +48,9 @@ def generate_custom_profile(build_dicts, compiler='ARM', tool_search='uvision', 
 
 def generate_custom_targets(target_name, build_dicts, out_ext='hex', filename = 'custom_targets.json'):
 
-    core_target = { 
-        'mk20dx128xxx5'     : 'Cortex-M4', 
-        'mkl26z128xxx4'     : 'Cortex-M0+' ,
-        'lpc11u35_501'      : 'Cortex-M0',
-        'lpc4322_jet100'    : 'Cortex-M4',
-        'atsam3u2c'         : 'Cortex-M3'
-    }
-
     target_dict = { 
         target_name : {
-            "core": core_target[build_dicts['common']['target'][0]],
+            "core": build_dicts['common']['core'][0],
             "supported_toolchains": ["ARM"],
             "inherits": ["Target"],
             "OUTPUT_EXT": out_ext,
@@ -67,7 +59,6 @@ def generate_custom_targets(target_name, build_dicts, out_ext='hex', filename = 
     }
 
     if 'common' in build_dicts:
-        #if key == 'common':
         for entry in build_dicts['common']:
             if entry == 'macros':
                 if entry in target_dict[target_name]:

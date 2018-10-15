@@ -1,6 +1,8 @@
 common:
     target:
         - atsam3u2c
+    core:
+        - Cortex-M3
     macros:
         - INTERFACE_SAM3U2C
         - __SAM3U2C__

@@ -1,6 +1,8 @@
 common:
     target:
         - mk20dx128xxx5
+    core:
+        - Cortex-M4
     macros:
         - INTERFACE_K20D5
         - CPU_MK20DX128VFM5
