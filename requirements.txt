@@ -1,4 +1,4 @@
-project_generator>=0.9.8,<0.10.0
+project_generator>=0.9.8
 mbed_ls
 pyserial
 pyOCD>=0.7.0
@@ -7,3 +7,9 @@ intelhex
 six
 enum34
 pyusb
+mbed_cli
+bs4
+numpy
+pyelftools
+fuzzywuzzy
+jsonschema
