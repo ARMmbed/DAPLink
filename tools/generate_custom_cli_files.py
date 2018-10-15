@@ -19,14 +19,15 @@
 import json
 
 
-def generate_custom_profile(build_dicts, compiler='ARM', tool_search='uvision', filename = 'custom_profile.json'):
+def generate_custom_profile(build_dicts, compiler='ARM', tool_search='make_armcc', filename = 'custom_profile.json'):
+
     profile_dict = {
         compiler: {
-            "common": ["-c", "-g", "-O2", "--apcs=interwork", "--split_sections", "--asm", "--interleave", "--gnu", "--c99", "--no_unaligned_access"],
-            "asm": ["-g", "--apcs=interwork", "--no_unaligned_access"], 
+            "common": [],
+            "asm": [], 
             "c": [], 
-            "cxx": ["--cpp", "--no_rtti", "--no_vla"], 
-            "ld": ["--strict", "--summary_stderr", "--info summarysizes", "--map", "--xref", "--callgraph", "--symbols", "--info sizes", "--info totals", "--info unused", "--info veneers"]
+            "cxx": [], 
+            "ld": []
         }
     }
 
