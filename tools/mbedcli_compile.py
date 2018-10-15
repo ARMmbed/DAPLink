@@ -73,7 +73,7 @@ def main():
     #parse the arguments
     projects = "List of supported projects\n\n" + "\n".join(project_list) #
     parser = argparse.ArgumentParser(description='mbedcli compile support for DAPLink', epilog=projects, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('projects', help='Selectively compile only the firmware specified',
+    parser.add_argument('projects', help='Selectively compile only the firmware specified otherwise all projects',
                         nargs='*', type=str, default=[])
     parser.add_argument('--release', dest='release', action='store_true', help='Create a release with the yaml version file')
     parser.add_argument('--build-folder', type=str, default='BUILD', help='Release directory to grab files from')

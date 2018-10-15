@@ -5,7 +5,7 @@ DAPLink development requires Keil MDK-ARM, which runs on Windows only. The follo
 
 Install the necessary tools listed below. Skip any step where a compatible tool already exists.
 
-* Install [Python 2, 2.7.9 or above](https://www.python.org/downloads/) . Add to PATH.
+* Install [Python 2, 2.7.11 or above](https://www.python.org/downloads/) . Add to PATH.
 * Install [Git](https://git-scm.com/downloads) . Add to PATH.
 * Install [Keil MDK-ARM](https://www.keil.com/download/product/), preferably version 5. Set environment variable "UV4" to the absolute path of the UV4 executable if you don't install to the default location. Note that "UV4" is what's used for both MDK versions 4 and 5.
 * Install virtualenv in your global Python installation eg: `pip install virtualenv`
@@ -32,9 +32,11 @@ Mbedcli project lists compile
 ```
 $ venv/Scripts/activate
 $ pip install -r requirements3.txt
-$ tools/mbedcli_compile.py --project project1 project2 project3 --clean
+$ tools/mbedcli_compile.py project1 project2 project3 --clean
+$ venv/Scripts/deactivate
 ```
-Valid project names are located in test\info.PROJECT_RELEASE_INFO[0] for interface and test\info.SUPPORTED_CONFIGURATIONS[2] for bootloaders i.e. k20dx_frdmk64f_if k20dx_bl 
+Valid project names are listed on help.
+
 
 **Step 3.** Pull requests should be made once a changeset is [rebased onto Master](https://www.atlassian.com/git/tutorials/merging-vs-rebasing/workflow-walkthrough)
 
@@ -50,12 +52,22 @@ mbedcli should be included in the python package or requirements.txt. Currently 
 
 ### mbedcli_compile.py script
 Arguments
-* `--project` : Selectively compile only the firmware specified, if this is not specified, environment will build all interfaces and bootloader projects
-* `--release_version` : If assigned a value, create a release with this version
-* `--build_folder` : Build directory to grab files for release, default is `BUILD`
-* `--release_folder` : a folder (`firmware` on default or specified by `--release_folder`, to be concatenated with the version number), will be generated with the bin, update.yml and zip file containing the bins for release
-* `--toolchain` : Toolchain directory, default is ARM 
-* `--clean` : Rebuild or delete build folder before compile
+```
+positional arguments:
+  projects              Selectively compile only the firmware specified otherwise all projects
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --release             Create a release with the yaml version file
+  --build-folder BUILD_FOLDER
+                        Release directory to grab files from
+  --release-folder RELEASE_FOLDER
+                        Directory to create and place files in
+  --toolchain TOOLCHAIN
+                        Toolchain directory if present
+  --clean               Rebuild or delete build folder before compile
+```
+Valid projects are listed on help.
 
 Generate files needed by mbedcli
 * `custom_profile.json` Toolchain profile or compile flags parsed from the yaml files
@@ -65,10 +77,6 @@ Generate files needed by mbedcli
 Currently invoking `mbed compile` as a process.
 
 ### Changes/Additions
--Source codes:
-The scatter files are now located to each hic directory (i.e. `source/hic_hal/freescale/k20dx`) rather than source/daplink/daplink.sct
-This is to remove the relative path linker includes in uvision and mbed cli compile
-
 -Tools:
 There is an intermediate step in uvision environment in creating a release directory. This step is not needed in mbedcli environment but to make this equivalent directory invoke
 `copy_release_files.py --tool mbedcli`
