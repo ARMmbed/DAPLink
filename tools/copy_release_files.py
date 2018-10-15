@@ -31,7 +31,6 @@ import argparse
 COPY_PATTERN_LIST = [
     "%s_crc.bin",
     "%s_crc.hex",
-    "%s.htm",
     "%s_crc.txt",
     ]
 OPTIONAL_COPY_PATTERN_LIST = [
@@ -44,11 +43,13 @@ OPTIONAL_COPY_PATTERN_LIST = [
     "%s_crc.c",
     "%s.build_log.htm",
     "%s.map",
+    "%s.htm",
+    "%s_map.html",
 ]
 
 TOOL_DIR = { 
     'uvision' : { 'proj_dir': os.path.join('projectfiles', 'uvision') , 'rel_dir' : 'uvision_release', 'build_dir' : 'build' },
-    'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM' }        
+    'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM-CUSTOM_PROFILE' }        
 }
 
 

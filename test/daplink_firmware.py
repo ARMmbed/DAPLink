@@ -48,7 +48,7 @@ def load_bundle_from_project(tool='uvision'):
         build_folder = 'build'
     elif tool == 'mbedcli':
         project_dir = os.path.join(daplink_dir, 'BUILD')
-        build_folder = 'ARM'
+        build_folder = 'ARM-CUSTOM_PROFILE'
 
     return ProjectFirmwareBundle(project_dir, build_folder)
 

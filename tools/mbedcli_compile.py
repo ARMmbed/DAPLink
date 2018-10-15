@@ -40,12 +40,15 @@ def mbedcli_compile(daplink_dir, build_folder, project, toolchain, clean):
     try:
         check_output("mbed compile -m %s -t %s --profile custom_profile.json" % (project, toolchain), shell=True)
         cli_name_out = os.path.basename(daplink_dir)
-        build_dir = os.path.join(project_dir, toolchain)
+        build_dir = os.path.join(project_dir, toolchain+"-CUSTOM_PROFILE")
         for file in os.listdir(build_dir):
             if file.startswith(cli_name_out):
-                os.rename(os.path.join(build_dir, file), os.path.join(build_dir, file.replace(cli_name_out, project, 1)))
-        cli_hex_output = os.path.join(daplink_dir, build_folder, project.upper(), toolchain, project + ".hex")
-        crc_file_output = os.path.join(daplink_dir, build_folder, project.upper(), toolchain, project + "_crc")
+                rename_file = os.path.join(build_dir, file.replace(cli_name_out, project, 1))
+                if os.path.exists(rename_file):
+                    os.remove(rename_file)
+                os.rename(os.path.join(build_dir, file), rename_file)
+        cli_hex_output = os.path.join(build_dir, project + ".hex")
+        crc_file_output = os.path.join(build_dir, project + "_crc")
         post_compute_crc(cli_hex_output, crc_file_output)
     except CalledProcessError:
         print("Error - mbed compile error")
