@@ -56,7 +56,7 @@ TOOL_DIR = {
 def main():
     """Copy imporant files for the current release"""
     parser = argparse.ArgumentParser(description='Copy imporant files for the current release')
-    parser.add_argument('--tool', type=str, default='uvision', choices=['uvision', 'mbedcli'], help='Choose from uvision and mbedcli')
+    parser.add_argument('--project-tool', type=str, default='uvision', choices=['uvision', 'mbedcli'], help='Choose from uvision and mbedcli')
     args = parser.parse_args()
 
     self_path = os.path.abspath(__file__)
@@ -67,9 +67,9 @@ def main():
         print("Error - this script must be run from the tools directory")
         exit(-1)
 
-    proj_dir = os.path.join(daplink_dir, TOOL_DIR[args.tool]['proj_dir'])
-    rel_dir = os.path.join(daplink_dir, TOOL_DIR[args.tool]['rel_dir'])
-    build_dir = TOOL_DIR[args.tool]['build_dir']
+    proj_dir = os.path.join(daplink_dir, TOOL_DIR[args.project_tool]['proj_dir'])
+    rel_dir = os.path.join(daplink_dir, TOOL_DIR[args.project_tool]['rel_dir'])
+    build_dir = TOOL_DIR[args.project_tool]['build_dir']
     # Make sure uvision dir is present
     if not os.path.isdir(proj_dir):
         print("Error - uvision directory '%s' missing" % proj_dir)

@@ -79,14 +79,14 @@ Currently invoking `mbed compile` as a process.
 ### Changes/Additions
 -Tools:
 There is an intermediate step in uvision environment in creating a release directory. This step is not needed in mbedcli environment but to make this equivalent directory invoke
-`copy_release_files.py --tool mbedcli`
+`copy_release_files.py --project-tool mbedcli`
 To make a release directory(used by mbedcli_compile.py and uvision environment to make release directory)
 `package_release_files.py SRC_DIR DEST_DIR VERSION_NUMBER --toolchain ARM`
 
 
 -Test:
 An option to search for the daplink firmware build in uvision and mbedcli build folders.
-`run_test.py --projecttool mbedcli`
+`run_test.py --project-tool mbedcli`
 
 
 ## Port

@@ -102,7 +102,6 @@ class ProjectFirmwareBundle(firmware.FirmwareBundle):
         for name in project_dir_list:
             build_dir = os.path.join(project_dir, name, build_folder)
             if os.path.isdir(build_dir):
-                print(name,build_dir)
                 daplink_firmware = DAPLinkFirmware(name.lower(), self, build_dir)
                 if daplink_firmware.valid:
                     firmware_list.append(daplink_firmware)
