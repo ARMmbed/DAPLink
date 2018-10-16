@@ -28,6 +28,8 @@ import os
 import shutil
 import argparse
 
+from subprocess import check_output, CalledProcessError
+
 COPY_PATTERN_LIST = [
     "%s_crc.bin",
     "%s_crc.hex",
@@ -51,6 +53,46 @@ TOOL_DIR = {
     'uvision' : { 'proj_dir': os.path.join('projectfiles', 'uvision') , 'rel_dir' : 'uvision_release', 'build_dir' : 'build' },
     'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM-CUSTOM_PROFILE' }        
 }
+
+def generate_info_files(dir):
+
+    output_info_file = os.path.join(os.path.normpath(dir),'git_info.txt')
+    output_requirements_file = os.path.join(os.path.normpath(dir),'build_requirements.txt')
+
+    # Get the git SHA.
+    try:
+        git_sha = check_output("git rev-parse --verify HEAD", shell=True)
+        git_sha = git_sha.decode().strip()
+    except:
+        print("ERROR - failed to get git SHA, do you have git.exe in your PATH environment variable?")
+        return 1
+
+    # Check are there any local, uncommitted modifications.
+    try:
+        check_output("git diff --no-ext-diff --quiet --exit-code", shell=True)
+    except (CalledProcessError, WindowsError):
+        git_has_changes = '1'
+    else:
+        git_has_changes = '0'
+
+    # Get the requirements version.
+    try:
+        pip_freeze = check_output("pip list", shell=True).decode().strip()
+    except:
+        print("ERROR - failed requirements, pip not installed?")
+        return 1
+
+
+    # Create the version files
+    try:
+        with open(output_info_file, 'w+') as file:
+            file.write(git_sha + '\n' + 'Uncommitted Changes:' + git_has_changes + '\n' )
+        with open(output_requirements_file, 'w+') as file:
+            file.write(pip_freeze)
+    except IOError:
+        print("Error - failed to write information and version files")
+        return 1;
+    return 0
 
 
 def main():
@@ -80,6 +122,8 @@ def main():
         shutil.rmtree(rel_dir)
 
     os.mkdir(rel_dir)
+
+    generate_info_files(rel_dir)
     
     project_list = os.listdir(proj_dir)
     for project in project_list:
