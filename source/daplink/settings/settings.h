@@ -51,6 +51,8 @@ void config_ram_clear_assert(void);
 bool config_ram_get_hold_in_bl(void);
 bool config_ram_get_initial_hold_in_bl(void);
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source);
+uint8_t config_ram_add_hexdump(uint32_t hexdump);
+uint8_t config_ram_get_hexdumps(uint32_t **hexdumps);
 
 // Private - should only be called from settings.c
 void config_rom_init(void);

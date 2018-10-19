@@ -284,7 +284,10 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
     uint32_t pos;
     const char *source_str;
     char *buf = (char *)data;
-
+    uint32_t * hexdumps = 0;
+    uint8_t valid_hexdumps = 0;
+    uint8_t index = 0;
+    
     if (sector_offset != 0) {
         return 0;
     }
@@ -313,6 +316,16 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
         pos += util_write_string(buf + pos, "\r\n");
     }
 
+    valid_hexdumps = config_ram_get_hexdumps(&hexdumps);
+    if ((valid_hexdumps > 0) && (hexdumps != 0)) {
+        //print hexdumps
+        pos += util_write_string(buf + pos, "Hexdumps\r\n");
+        while ((index < valid_hexdumps) && ((pos + 10) < VFS_SECTOR_SIZE)) { //hexdumps + newline is always 10 characters
+            pos += util_write_hex32(buf + pos, hexdumps[index++]);
+            pos += util_write_string(buf + pos, "\r\n");
+        }
+    }
+    
     return pos;
 }
 
