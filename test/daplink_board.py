@@ -181,7 +181,7 @@ def _run_chkdsk(drive):
     process = subprocess.Popen(args, stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    process.communicate(input='n\r\n')  # Answer no if prompted
+    process.communicate(input=bytearray('n\r\n',encoding='ascii'))  # Answer no if prompted
     process.wait()
     return process.returncode
 
@@ -272,7 +272,7 @@ class DaplinkBoard(object):
         if not self.get_connected():
             raise Exception('Board not connected')
         if os.path.isfile(fail_file):
-            with open(fail_file, 'rb') as fail_file_handle:
+            with open(fail_file, 'r') as fail_file_handle:
                 msg = fail_file_handle.read()
                 lines = msg.splitlines()
                 if len(lines) == 2:
@@ -413,10 +413,10 @@ class DaplinkBoard(object):
     def test_fs_contents(self, parent_test):
         """Check if the file contents are valid"""
         test_info = parent_test.create_subtest('test_fs_contents')
-        non_ascii = r'[^\x20-\x7F\r\n]'
-        non_cr_lf = r'\r[^\n]|[^\r]\n'
-        trail_white = r'(?:\ \r|\ \n)'
-        end_of_file = r'\r\n$'
+        non_ascii = b'[^\x20-\x7F\r\n]'
+        non_cr_lf = b'\r[^\n]|[^\r]\n'
+        trail_white = b'(?:\ \r|\ \n)'
+        end_of_file = b'\r\n$'
         files = os.listdir(self.mount_point)
         non_ascii_re = re.compile(non_ascii)
         non_cr_lf_re = re.compile(non_cr_lf)

@@ -56,7 +56,7 @@ class TargetBundle(object):
                     pass
             else:
                 assert False
-        all_targets = name_to_target.values()
+        all_targets = list(name_to_target.values())
         self._target_list = [target for target in all_targets if target.valid]
 
     def get_target_list(self):

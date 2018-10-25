@@ -29,6 +29,8 @@ optional arguments:
                         Directory with firmware images to test
   --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
+  --project-tool TOOL    choices=['uvision', 'mbedcli'],'Tool used to compile the project',
+                        default='uvision'
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.
@@ -530,6 +532,9 @@ def main():
     parser.add_argument('--firmwaredir',
                         help='Directory with firmware images to test',
                         default=None)
+    parser.add_argument('--project-tool', choices=['uvision', 'mbedcli'],
+                        help='Tool used to compile the project',
+                        default='uvision')
     parser.add_argument('--firmware', help='Firmware to test', action='append',
                         choices=firmware_choices, default=[], required=False)
     parser.add_argument('--logdir', help='Directory to log test results to',
@@ -599,7 +604,7 @@ def main():
 
     # Get all relevant info
     if args.firmwaredir is None:
-        firmware_bundle = load_bundle_from_project()
+        firmware_bundle = load_bundle_from_project(args.project_tool)
     else:
         firmware_bundle = load_bundle_from_release(args.firmwaredir)
 

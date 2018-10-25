@@ -19,3 +19,9 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-DDAPLINK_IF"
+    make_armcc:
+        linker_file:
+            - source/daplink/daplink.sct
+        misc:
+            ld_flags:
+                - --predefine="-DDAPLINK_IF"

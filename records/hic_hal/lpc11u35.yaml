@@ -1,6 +1,8 @@
 common:
     target:
         - lpc11u35_501
+    core:
+        - Cortex-M0
     macros:
         - INTERFACE_LPC11U35
         - DAPLINK_HIC_ID=0x97969902  # DAPLINK_HIC_ID_LPC11U35
@@ -18,3 +20,7 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nxp\lpc11u35"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\nxp\lpc11u35"

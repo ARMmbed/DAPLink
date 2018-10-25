@@ -1,6 +1,8 @@
 common:
     target:
         - lpc4322_jet100
+    core:
+        - Cortex-M4
     macros:
         - INTERFACE_LPC4322
         - CORE_M4
@@ -20,3 +22,7 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nxp\lpc4322"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\nxp\lpc4322"

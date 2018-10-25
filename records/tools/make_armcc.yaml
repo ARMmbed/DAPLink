@@ -8,6 +8,7 @@ tool_specific:
             - source/daplink/daplink.sct
         misc:
             common_flags:
+                - -c
                 - --no_unaligned_access
             c_flags:
                 - -O2

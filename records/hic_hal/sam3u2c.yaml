@@ -1,6 +1,8 @@
 common:
     target:
         - atsam3u2c
+    core:
+        - Cortex-M3
     macros:
         - INTERFACE_SAM3U2C
         - __SAM3U2C__
@@ -20,3 +22,7 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\atmel\sam3u2c"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\atmel\sam3u2c"

@@ -1,6 +1,8 @@
 common:
     target:
         - mkl26z128xxx4
+    core:
+        - Cortex-M0+
     macros:
         - INTERFACE_KL26Z
         - CPU_MKL26Z128VLH4
@@ -26,3 +28,7 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\kl26z"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\freescale\kl26z"

@@ -17,11 +17,17 @@
 #
 
 from __future__ import absolute_import
-
+import future
 import os
 import binascii
 import intelhex
-import cStringIO
+import sys
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 from msd_test import (MassStorageTester, MOCK_DIR_LIST, MOCK_FILE_LIST,
                       MOCK_DIR_LIST_AFTER, MOCK_FILE_LIST_AFTER)
 
@@ -60,12 +66,13 @@ def intel_hex_get_sections(intel_hex):
 def bin_data_to_hex_data(addr, data):
     """Covert binary data to a string in intel hex format"""
     intel_hex = intelhex.IntelHex()
+    if sys.version_info >= (3,0):
+        data = data.decode('latin1')
     intel_hex.puts(addr, data)
-    sio = cStringIO.StringIO()
+    sio = StringIO()
     intel_hex.tofile(sio, format='hex')
     hex_data = sio.getvalue()
-    hex_data = bytearray(hex_data)
-    return hex_data
+    return bytearray(hex_data.encode('latin1'))
 
 
 class DLMassStorageTester(MassStorageTester):
@@ -128,11 +135,11 @@ def daplink_test(workspace, parent_test):
                                     len(section_list))
     start, length = section_list[0]
 
-    bin_data = bytearray(intel_hex.tobinarray(start=start, size=length))
-    sio = cStringIO.StringIO()
+    bin_data = bytearray(intel_hex.tobinarray(start=start, size=length))    
+    sio = StringIO()
     intel_hex.tofile(sio, format='hex')
     hex_data = sio.getvalue()
-    hex_data = bytearray(hex_data)
+    hex_data = bytearray(hex_data.encode('latin1'))
 
     # Make sure asserts work as expected
     test_assert(workspace, test_info)
@@ -165,10 +172,10 @@ def daplink_test(workspace, parent_test):
     start, length = section_list[0]
 
     bin_data = bytearray(intel_hex.tobinarray(start=start, size=length))
-    sio = cStringIO.StringIO()
+    sio = StringIO()
     intel_hex.tofile(sio, format='hex')
     hex_data = sio.getvalue()
-    hex_data = bytearray(hex_data)
+    hex_data = bytearray(hex_data.encode('latin1'))
 
     # Test loading a binary file with shutils
     test = DLMassStorageTester(board, test_info, "Shutil binary file load "
@@ -364,7 +371,7 @@ def test_file_type(file_type, board_mode, board, parent_test,
     # Test load with extra padding
     file_name = get_file_name()
     local_data = get_file_content(data_start, raw_data)
-    local_data.extend('\xFF' * 0x1000)
+    local_data.extend(b'\xFF' * 0x1000)
     test = DLMassStorageTester(board, test_info, "Padded load", board_mode)
     test.set_programming_data(local_data, file_name)
     test.set_expected_data(raw_data)

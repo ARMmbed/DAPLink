@@ -59,7 +59,7 @@ def build_repo(user, password, repo, platform, destdir,
         for pair in replace:
             dest = pair.split(':')[0]
             src = pair.split(':')[1]
-            print dest
+            print(dest)
             cwd = os.getcwd()
             srcfile = open(os.path.join(cwd, src), 'r')
             replace.append({dest: srcfile.read()})

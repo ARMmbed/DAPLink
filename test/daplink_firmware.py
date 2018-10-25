@@ -35,12 +35,22 @@ def load_bundle_from_project(tool='uvision'):
     Note - This does not build the project.  It only returns the
     firmware that has already been built.
     """
+    assert (tool == 'uvision' or tool == 'mbedcli'), 'Input tool %s is not supported' % (tool) 
+
     self_path = os.path.abspath(__file__)
     test_dir = os.path.dirname(self_path)
     daplink_dir = os.path.dirname(test_dir)
     assert os.path.basename(test_dir) == 'test', 'The script "%s" must be ' \
         'located in the "test" directory of daplink to work correctly.'
-    return ProjectFirmwareBundle(daplink_dir, tool)
+
+    if tool == 'uvision':
+        project_dir = os.path.join(daplink_dir, 'projectfiles', tool)
+        build_folder = 'build'
+    elif tool == 'mbedcli':
+        project_dir = os.path.join(daplink_dir, 'BUILD')
+        build_folder = 'ARM-CUSTOM_PROFILE'
+
+    return ProjectFirmwareBundle(project_dir, build_folder)
 
 
 class ReleaseFirmwareBundle(firmware.FirmwareBundle):
@@ -77,27 +87,22 @@ class ReleaseFirmwareBundle(firmware.FirmwareBundle):
 class ProjectFirmwareBundle(firmware.FirmwareBundle):
     """Class to abstract access to daplink's build directory as a bundle"""
 
-    def __init__(self, directory, tool):
-        tool_dir = os.path.abspath(directory + os.sep + 'projectfiles' +
-                                   os.sep + tool)
-        errmsg = "Error: DAPLink projects are missing. Did " \
-                   "you forget to generate them by running " \
-                   "'progen generate -t %s'?\nExpecting them at %s" % (tool, tool_dir)
+    def __init__(self, project_dir, build_folder):
 
-        if not os.path.exists(tool_dir): 
-            print (errmsg)
-            exit(-1) 
+        if not os.path.exists(project_dir):
+            print ("Error: DAPLink project folder %s missing" % project_dir)
+            exit(-1)
 
-        project_dir_list = os.listdir(tool_dir)
+        project_dir_list = os.listdir(project_dir)
         if not project_dir_list:
-            print (errmsg)
-            exit(-1) 
-        
+            print ("Error: DAPLink projects not build yet at %s" % project_dir)
+            exit(-1)
+
         firmware_list = []
         for name in project_dir_list:
-            build_dir = tool_dir + os.sep + name + os.sep + 'build'
+            build_dir = os.path.join(project_dir, name, build_folder)
             if os.path.isdir(build_dir):
-                daplink_firmware = DAPLinkFirmware(name, self, build_dir)
+                daplink_firmware = DAPLinkFirmware(name.lower(), self, build_dir)
                 if daplink_firmware.valid:
                     firmware_list.append(daplink_firmware)
         self._firmware_list = firmware_list
@@ -154,15 +159,11 @@ class DAPLinkFirmware(firmware.Firmware):
         # Set file paths
         self._bin_path = self._directory + os.sep + '%s_crc.bin' % name
         self._hex_path = self._directory + os.sep + '%s_crc.hex' % name
-        self._elf_path = self._directory + os.sep + '%s.axf' % name
         self._bin_path = os.path.abspath(self._bin_path)
         self._hex_path = os.path.abspath(self._hex_path)
-        self._elf_path = os.path.abspath(self._elf_path)
         if not os.path.isfile(self._bin_path):
             return  # Failure
         if not os.path.isfile(self._hex_path):
-            return  # Failure
-        if not os.path.isfile(self._elf_path):
             return  # Failure
 
         self._valid = True

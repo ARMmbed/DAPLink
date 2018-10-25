@@ -37,16 +37,25 @@ cd %~dp0..\
 @echo USING UV4=%UV4%
 set uv4exe=%UV4%
 
-@set env_exists=0
-@if exist env set env_exists=1
-@if [%env_exists%]==[0] echo Creating python virtual environment && virtualenv env
+@rem Select an existing virtualenv as first parameter
+@if not [%1]==[] (
+	echo Using virtualenv %1
+	@if exist %1 call %1\Scripts\activate && goto :env_folder_ok
+) else ( 
+	@if exist env goto :env_ok
+)
+
+
+echo Creating python virtual environment && virtualenv env
+:env_ok
 call env\Scripts\activate
+:env_folder_ok
 
 @echo Doing pip install
 @REM use project requirements if not specified
-if [%1]==[] pip install -r requirements.txt
+if [%2]==[] pip install -r requirements.txt
 @REM use custom requirements if specified
-if not [%1]==[] pip install -r %1
+if not [%2]==[] pip install -r %2
 
 start %uv4exe%
 exit /B 0
