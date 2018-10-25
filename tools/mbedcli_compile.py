@@ -71,7 +71,7 @@ def main():
             print("Found yaml parse error", ex)
 
     #parse the arguments
-    projects = "List of supported projects\n\n" + "\n".join(project_list) #
+    projects = "List of supported projects\n\n" + ", ".join(project_list) #
     parser = argparse.ArgumentParser(description='mbedcli compile support for DAPLink', epilog=projects, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('projects', help='Selectively compile only the firmware specified otherwise all projects',
                         nargs='*', type=str, default=[])
