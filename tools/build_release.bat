@@ -15,23 +15,20 @@
 :: See the License for the specific language governing permissions and
 :: limitations under the License.
 ::
-
+setlocal enabledelayedexpansion
 @rem Script assumes working directory is workspace root. Force it.
 cd %~dp0..\
 
 @rem See if we can find uVision. This logic is consistent with progen
 @if [%UV4%]==[] (
 	@echo UV4 variable is not set, trying to autodetect..
-	@set ARM_PATH=C:\KEIL_V5\ARM\ARMCC
 	if EXIST c:\keil\uv4\uv4.exe (
 		set UV4=c:\keil\uv4\uv4.exe
-		set ARM_PATH=C:\KEIL_V4\ARM\ARMCC
 	) else if EXIST c:\keil_v5\uv4\uv4.exe (
 		set UV4=c:\keil_v5\uv4\uv4.exe
-		set ARM_PATH=C:\KEIL_V5\ARM\ARMCC
 	) else goto error_nomdk
 )
-@echo USING UV4=%UV4% and ARM_PATH=%ARM_PATH%
+@echo USING UV4=%UV4%
 
 @set project_tool=%1
 @set env_folder=%2
@@ -62,11 +59,22 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 @if %project_tool%==mbedcli (
 	@REM setup mbed dependencies
 	echo Building for mbed cli
+
+	@if [%ARM_PATH%]==[] (
+		@echo ARM_PATH variable is not set, trying to autodetect..
+		if EXIST C:\KEIL_V4\ARM\ARMCC\ (
+			set ARM_PATH=C:\KEIL_V4\ARM\ARMCC
+		) else if EXIST C:\KEIL_V5\ARM\ARMCC\ (
+			set ARM_PATH=C:\KEIL_V5\ARM\ARMCC
+		) else goto error_armpath
+	)
+	@echo USING ARM_PATH=!ARM_PATH!
+
 	@REM uncomment these next two lines when the update to mbed-os merge the test dependency
 	@REM mbed deploy
 	@REM mbed update
 	mbed config root .
-	mbed config ARM_PATH=%ARM_PATH%
+	mbed config ARM_PATH=!ARM_PATH!
 	python tools/mbedcli_compile.py --clean --release
 	@if %errorlevel% neq 0 exit /B %errorlevel%
 	python tools/copy_release_files.py --project-tool mbedcli
@@ -92,4 +100,9 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 @echo Error: Keil MDK not installed or not found. If you installed it to a 
 @echo non-default location, you need to set environment variable UV4 to 
 @echo the path of the executable
+@exit /B 1
+
+:error_armpath
+@echo Error: Need to set environment variable ARM_PATH to 
+@echo the path of ARM compiler
 @exit /B 1
