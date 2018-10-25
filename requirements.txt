@@ -1,5 +1,5 @@
-project_generator>=0.9.8
-mbed_ls
+project_generator==0.9.13
+mbed_ls==1.6.0
 pyserial
 pyOCD>=0.7.0
 requests
@@ -7,7 +7,7 @@ intelhex
 six
 enum34
 pyusb
-mbed_cli
+mbed_cli==1.8.2
 bs4
 numpy
 pyelftools
