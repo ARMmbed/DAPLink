@@ -9,7 +9,6 @@ tool_specific:
         misc:
             common_flags:
                 - -c
-                - --no_unaligned_access
             c_flags:
                 - -O2
                 - --gnu
