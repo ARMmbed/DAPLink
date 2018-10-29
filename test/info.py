@@ -154,7 +154,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x700,      'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
-    (   0x720,      'stm32f103xb_stm32f401re_if',               'stm32f401re_bl',   'ST-Nucleo-F401RE'                      ),
+    (   0x720,      'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
     (   0x720,      'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
     (   0x735,      'stm32f103xb_stm32f334r8_if',               'stm32f103xb_bl',   'ST-Nucleo-F334R8'                      ),
     (   0x740,      'stm32f103xb_stm32f411re_if',               'stm32f103xb_bl',   'ST-Nucleo-F411RE'                      ),
