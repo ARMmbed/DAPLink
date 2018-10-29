@@ -1,6 +1,8 @@
 common:
     target:
         - stm32f103xb
+    core:
+        - Cortex-M3
     macros:
         - INTERFACE_STM32F103XB
         - USE_HAL_DRIVER
@@ -25,6 +27,16 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f103xb"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\stm32\stm32f103xb"
             c_flags:
                 - --no_unaligned_access
             cxx_flags:
