@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/stm32f334r8.c
+        target:
+            - source/target/st/stm32f334r8/target.c
+            - source/target/st/target_reset.c

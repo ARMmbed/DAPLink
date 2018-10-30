@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/stm32l476rg.c
+        target:
+            - source/target/st/stm32l476rg/target.c
+            - source/target/st/target_reset.c
