@@ -18,9 +18,7 @@
 
 import json
 
-
 def generate_custom_profile(build_dicts, compiler='ARM', tool_search='make_armcc', filename = 'custom_profile.json'):
-
     profile_dict = {
         compiler: {
             "common": [],
@@ -30,7 +28,6 @@ def generate_custom_profile(build_dicts, compiler='ARM', tool_search='make_armcc
             "ld": []
         }
     }
-
     if 'tool_specific' in build_dicts:
         for entry in build_dicts['tool_specific']:
             if entry == tool_search:
@@ -46,9 +43,7 @@ def generate_custom_profile(build_dicts, compiler='ARM', tool_search='make_armcc
     with open(filename, 'w') as custom_profile:
         json.dump(profile_dict, custom_profile, indent=4, separators=(',', ': '))
 
-
 def generate_custom_targets(target_name, build_dicts, out_ext='hex', filename = 'custom_targets.json'):
-
     target_dict = { 
         target_name : {
             "core": build_dicts['common']['core'][0],
@@ -58,7 +53,6 @@ def generate_custom_targets(target_name, build_dicts, out_ext='hex', filename = 
             "macros" : []
         } 
     }
-
     if 'common' in build_dicts:
         for entry in build_dicts['common']:
             if entry == 'macros':
