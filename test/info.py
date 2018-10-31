@@ -208,7 +208,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
     (   0x3300,     'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
-}
+]
 
 # Add new HICs here
 HIC_STRING_TO_ID = {
