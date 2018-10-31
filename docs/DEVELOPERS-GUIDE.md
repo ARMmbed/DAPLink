@@ -31,7 +31,11 @@ $ venv/Scripts/deactivate
 Mbedcli project lists compile
 ```
 $ venv/Scripts/activate
-$ pip install -r requirements3.txt
+$ pip install -r requirements.txt
+$ mbed deploy
+$ mbed update
+$ mbed config root .
+$ mbed config ARM_PATH FULL_PATH_TO_ARMCC_FOLDER 
 $ tools/mbedcli_compile.py project1 project2 project3 --clean
 $ venv/Scripts/deactivate
 ```
@@ -54,7 +58,8 @@ mbedcli should be included in the python package or requirements.txt. Currently 
 Arguments
 ```
 positional arguments:
-  projects              Selectively compile only the firmware specified otherwise all projects
+  projects              Selectively compile only the firmware specified
+                        otherwise all projects
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -66,6 +71,7 @@ optional arguments:
   --toolchain TOOLCHAIN
                         Toolchain directory if present
   --clean               Rebuild or delete build folder before compile
+  -v                    Pass verbosity level to mbed compile  -vv for more
 ```
 Valid projects are listed on help.
 

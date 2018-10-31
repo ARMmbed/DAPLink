@@ -74,7 +74,7 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 	@REM mbed deploy
 	@REM mbed update
 	mbed config root .
-	mbed config ARM_PATH=!ARM_PATH!
+	mbed config ARM_PATH !ARM_PATH!
 	python tools/mbedcli_compile.py --clean --release
 	@if !errorlevel! neq 0 exit /B !errorlevel!
 	python tools/copy_release_files.py --project-tool mbedcli
