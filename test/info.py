@@ -107,6 +107,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
+    ('lpc11u35_dipdap_cc3220sf_if',                 False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -206,7 +207,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3110,     'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
     (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
-]
+    (   0x3300,     'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
+}
 
 # Add new HICs here
 HIC_STRING_TO_ID = {
@@ -255,6 +257,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x3105,  # dipdap_sdt64b
     0x3108,  # dipdap_sdt32429b
     0x3110,  # dipdap_sdt32439b
+    0x3300,  # dipdap_cc3220sf
     0x5500,  # GR-PEACH
     0x5501,  # GR-LYCHEE
 ])
