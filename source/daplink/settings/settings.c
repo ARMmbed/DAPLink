@@ -31,6 +31,9 @@
 #define CFG_KEY             0x6b766c64
 #define SECTOR_BUFFER_SIZE  16
 
+// For generating hexdumps on faults
+#define ALLOWED_HEXDUMP     16
+
 // WARNING - THIS STRUCTURE RESIDES IN RAM STORAGE!
 // Be careful with changes:
 // -Only add new members to end end of this structure
@@ -45,8 +48,12 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     char assert_file_name[64 + 1];
     uint16_t assert_line;
     uint8_t assert_source;
-
-    // Add new members here
+    
+    // Additional debug information on faults
+    uint8_t  valid_dumps;
+    uint32_t hexdump[ALLOWED_HEXDUMP];  //Alignments checked
+    
+    //Add new entries from here
 
 } cfg_ram_t;
 
@@ -80,6 +87,8 @@ void config_init()
            sizeof(config_ram_copy.assert_file_name));
     config_ram.assert_line =  config_ram_copy.assert_line;
     config_ram.assert_source =  config_ram_copy.assert_source;
+    config_ram.valid_dumps = config_ram_copy.valid_dumps;
+    memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
     config_rom_init();
 }
 
@@ -123,6 +132,7 @@ void config_ram_clear_assert()
 {
     memset(config_ram.assert_file_name, 0, sizeof(config_ram.assert_file_name));
     config_ram.assert_line = 0;
+    config_ram.valid_dumps = 0;
 }
 
 bool config_ram_get_hold_in_bl()
@@ -182,4 +192,26 @@ bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_
     }
 
     return true;
+}
+
+uint8_t config_ram_add_hexdump(uint32_t hexdump)
+{
+    if (config_ram.valid_dumps >= ALLOWED_HEXDUMP) {
+        return 0;
+    }
+
+    //alignment is maintained here
+    config_ram.hexdump[config_ram.valid_dumps++] = hexdump;
+    return config_ram.valid_dumps;
+}
+
+uint8_t config_ram_get_hexdumps(uint32_t **hexdumps)
+{
+    if (config_ram.valid_dumps == 0) {
+        return 0;
+    }
+    
+    //prevent memcopy check alignment
+    *hexdumps = config_ram.hexdump;
+    return config_ram.valid_dumps;
 }

@@ -126,8 +126,12 @@ def post_compute_crc(input_file, output_file):
     # Print info on operation
     print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))
 
-    if start == 0x8000 or start == 0x88000:
-        pad_addr = start - 0x3000
+    if start == 0x8000 or start == 0x88000 or start == 0x0800C000:
+        if start == 0x0800C000:
+            # Adjust for ST-Link
+            pad_addr = start - 0x8000
+        else:
+            pad_addr = start - 0x3000
         legacy_zero = start + 7 * 4
         legacy_size = 4 * 4
         legacy_hex_file = intelhex.IntelHex(new_hex_file)

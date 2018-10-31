@@ -76,9 +76,9 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 	mbed config root .
 	mbed config ARM_PATH=!ARM_PATH!
 	python tools/mbedcli_compile.py --clean --release
-	@if %errorlevel% neq 0 exit /B %errorlevel%
+	@if !errorlevel! neq 0 exit /B !errorlevel!
 	python tools/copy_release_files.py --project-tool mbedcli
-	exit /B %errorlevel%
+	exit /B !errorlevel!
 ) else ( 
 
 	@REM build bootloader images first (In the future this should be done with a pattern like *_bl)
@@ -88,12 +88,9 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 	progen generate -t uvision -b -p sam3u2c_bl
 	@REM build but continue if there are errors
 	progen generate -t uvision -b
-	@set level=%errorlevel%
+	@if !errorlevel! neq 0 exit /B !errorlevel!
 	python tools/copy_release_files.py --project-tool uvision
-	@if %errorlevel% neq 0 exit /B %errorlevel%
-
-	@exit /B %level%
-
+	exit /B !errorlevel!
 )
 
 :error_nomdk

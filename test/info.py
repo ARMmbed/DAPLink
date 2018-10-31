@@ -154,7 +154,16 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0462,     'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
+    (   0x700,      'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
+    (   0x720,      'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
+    (   0x720,      'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
+    (   0x735,      'stm32f103xb_stm32f334r8_if',               'stm32f103xb_bl',   'ST-Nucleo-F334R8'                      ),
+    (   0x740,      'stm32f103xb_stm32f411re_if',               'stm32f103xb_bl',   'ST-Nucleo-F411RE'                      ),
+    (   0x765,      'stm32f103xb_stm32l476rg_if',               'stm32f103xb_bl',   'ST-Nucleo-L476RG'                      ),
+    (   0x796,      'stm32f103xb_stm32f429zi_if',               'stm32f103xb_bl',   'ST-Nucleo-F429ZI'                      ),
+    (   0x816,      'stm32f103xb_stm32f746zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F746ZG'                      ),
     (   0x824,      'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
+    (   0x835,      'stm32f103xb_stm32f207zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F207ZG'                      ),
     (   0x1017,     'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
@@ -175,6 +184,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1120,     'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
     (   0x1234,     'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1200,     'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        None                                    ),# TODO - Set to 'ncs36510' when non-zero flash addresses are supported
+    (   0x1236,     'stm32f103xb_ublox_evk_odin_w2_if',        'stm32f103xb_bl',    'ublox-EVK-ODIN-W2'                     ),
     (   0x1238,     'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
     (   0x2410,     'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x4600,     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
@@ -216,6 +226,7 @@ HIC_STRING_TO_ID = {
     'kl26z': 0x97969901,
     'lpc11u35': 0x97969902,
     'sam3u2c': 0x97969903,
+    'stm32f103xb': 0x97969904,
     'lpc4322': 0x97969905,
 }
 

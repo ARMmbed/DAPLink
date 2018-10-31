@@ -40,6 +40,7 @@
 #include "DAP.h"
 #include "bootloader.h"
 #include "cortex_m.h"
+#include "sdk.h"
 
 // Event flags for main task
 // Timers events
@@ -179,14 +180,6 @@ void main_usb_set_test_mode(bool enabled)
 void USBD_SignalHandler()
 {
     isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
-}
-
-void HardFault_Handler()
-{
-    util_assert(0);
-    SystemReset();
-
-    while (1); // Wait for reset
 }
 
 extern void cdc_process_event(void);
@@ -421,5 +414,7 @@ int main(void)
 #if DAPLINK_ROM_BL_SIZE > 0
     SCB->VTOR = SCB_VTOR_TBLOFF_Msk & DAPLINK_ROM_IF_START;
 #endif
+    // initialize vendor sdk
+    sdk_init();
     os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
 }

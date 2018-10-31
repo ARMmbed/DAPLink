@@ -49,6 +49,9 @@ module:
     hic_sam3u2c: &module_hic_sam3u2c
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/sam3u2c.yaml
+    hic_stm32f103xb: &module_hic_stm32f103xb
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stm32f103xb.yaml
 
 projects:
     kl26z_bl:
@@ -67,6 +70,10 @@ projects:
         - *module_bl
         - *module_hic_sam3u2c
         - records/board/sam3u2c_bl.yaml
+    stm32f103xb_bl:
+        - *module_bl
+        - *module_hic_stm32f103xb
+        - records/board/stm32f103xb_bl.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c
@@ -427,7 +434,51 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_mts_xdot.yaml
+<<<<<<< HEAD
     lpc11u35_dipdap_cc3220sf_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/dipdap_cc3220sf.yaml
+=======
+    stm32f103xb_stm32f103rb_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f103rb.yaml
+    stm32f103xb_stm32f072rb_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f072rb.yaml
+    stm32f103xb_stm32f334r8_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f334r8.yaml
+    stm32f103xb_stm32f401re_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f401re.yaml
+    stm32f103xb_stm32f411re_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f411re.yaml
+    stm32f103xb_stm32f429zi_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f429zi.yaml
+    stm32f103xb_ublox_evk_odin_w2_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/ublox_evk_odin_w2.yaml
+    stm32f103xb_stm32l476rg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32l476rg.yaml
+    stm32f103xb_stm32f746zg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f746zg.yaml
+    stm32f103xb_stm32f207zg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32f207zg.yaml
+
+>>>>>>> 68ea287acbb5230fd0df2cdd43e3263d585b8411
