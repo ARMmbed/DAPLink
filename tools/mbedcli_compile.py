@@ -31,14 +31,18 @@ from package_release_files import package_release_files
 PROJECTS_YAML = "projects.yaml"
 VERSION_YAML = "version.yaml"
 
-def mbedcli_compile(daplink_dir, build_folder, project, toolchain, clean):
+def mbedcli_compile(daplink_dir, build_folder, project, toolchain, clean, verbosity):
     generate_mbedcli_files(os.path.join(daplink_dir, "projects.yaml"), project)
     project_dir=os.path.join(daplink_dir, build_folder, project.upper())
     if clean is True and os.path.exists(project_dir):
         print("Deleting %s" % project_dir)
         shutil.rmtree(project_dir, ignore_errors=True)
     try:
-        check_output("mbed compile -m %s -t %s --profile custom_profile.json" % (project, toolchain), shell=True)
+        compile_out = check_output("mbed compile -m %s -t %s --profile custom_profile.json %s"
+            % (project, toolchain, ("-" + "v" * (verbosity - 1)) if (verbosity is not None and verbosity > 1) else ""), 
+            shell=True)
+        if verbosity is not None:
+            print(compile_out)
         cli_name_out = os.path.basename(daplink_dir)
         build_dir = os.path.join(project_dir, toolchain+"-CUSTOM_PROFILE")
         for file in os.listdir(build_dir):
@@ -50,8 +54,9 @@ def mbedcli_compile(daplink_dir, build_folder, project, toolchain, clean):
         cli_hex_output = os.path.join(build_dir, project + ".hex")
         crc_file_output = os.path.join(build_dir, project + "_crc")
         post_compute_crc(cli_hex_output, crc_file_output)
-    except CalledProcessError:
-        print("Error - mbed compile error")
+    except CalledProcessError as e:
+        print("Error - mbed compile error logs")
+        print(e.output)
         exit(1)
 
 def main():
@@ -80,10 +85,10 @@ def main():
     parser.add_argument('--release-folder', type=str, default='firmware', help='Directory to create and place files in')
     parser.add_argument('--toolchain', type=str, default='ARM', help='Toolchain directory if present')
     parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
+    parser.add_argument('-v', dest='verbosity', action='count', help='Pass verbosity level to mbed compile -vv for more')
     parser.set_defaults(clean=False)
     parser.set_defaults(release=False)
     args = parser.parse_args()
-
 
     self_path = os.path.abspath(__file__)
     tools_dir = os.path.dirname(self_path)
@@ -97,13 +102,13 @@ def main():
 
         for project in args.projects:
             print("Compiling %s" % project)
-            mbedcli_compile(daplink_dir, args.build_folder, project, args.toolchain, args.clean)
+            mbedcli_compile(daplink_dir, args.build_folder, project, args.toolchain, args.clean, args.verbosity)
     else:
         print("compiling all firmware")
 
         for project in project_list:
             print("Compiling %s" % project)
-            mbedcli_compile(daplink_dir, args.build_folder, project, args.toolchain, args.clean)
+            mbedcli_compile(daplink_dir, args.build_folder, project, args.toolchain, args.clean, args.verbosity)
 
     if args.release is True:
         release_version = 0
