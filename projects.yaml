@@ -434,12 +434,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_mts_xdot.yaml
-<<<<<<< HEAD
     lpc11u35_dipdap_cc3220sf_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/dipdap_cc3220sf.yaml
-=======
     stm32f103xb_stm32f103rb_if:
         - *module_if
         - *module_hic_stm32f103xb
@@ -481,4 +479,3 @@ projects:
         - *module_hic_stm32f103xb
         - records/board/stm32f207zg.yaml
 
->>>>>>> 68ea287acbb5230fd0df2cdd43e3263d585b8411
