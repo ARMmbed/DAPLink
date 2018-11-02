@@ -20,7 +20,6 @@ import argparse
 import yaml
 import sys
 import logging
-
 from generate_custom_cli_files import generate_custom_targets
 from generate_custom_cli_files import generate_custom_profile
 from generate_mbedignore import generate_mbedignore

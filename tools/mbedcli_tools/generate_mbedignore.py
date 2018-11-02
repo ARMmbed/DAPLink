@@ -18,7 +18,6 @@
 
 import os
 
-
 def add_list_path(input_path_list, ouput_path_dict):
     for path_list in input_path_list:
         repath = os.path.normpath(path_list)
@@ -49,7 +48,6 @@ def generate_mbedignore(build_dicts, topsource = 'source', filename = '.mbedigno
     for file in os.listdir("./"):
         if file != topsource:
             ignore_list.append(file)
-
     for root, dirs, files in os.walk(topsource):
         if root in src_folder_file_dict:
             if src_folder_file_dict[root] != []:
