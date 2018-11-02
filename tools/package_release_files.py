@@ -71,7 +71,8 @@ def package_release_files(source, dest, version, toolchain):
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
         source_name = prj_name + "_crc" + legacy_str + source_offset_str + "." + extension
-        source_path = os.path.join(proj_dir, prj_name, toolchain, source_name)
+        source_dir_part = os.path.join(proj_dir, prj_name, toolchain).upper()
+        source_path = os.path.join(source_dir_part, source_name)
         if not os.path.isfile(source_path):
             print("Warning %s not added to release" % prj_name)
             continue

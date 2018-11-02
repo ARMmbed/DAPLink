@@ -16,7 +16,7 @@
 #include <string.h>
 #include "target_reset.h"
 #include "swd_host.h"
-#include "DAP_Config.h"
+#include "DAP_config.h"
 
 void target_before_init_debug(void)
 {

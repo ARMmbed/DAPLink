@@ -216,7 +216,7 @@ void WDT_Handler        ( void );
 
 #include "core_cm3.h"
 #if !defined DONT_USE_CMSIS_INIT
-#include "system_sam3u.h"
+#include "system_SAM3U.h"
 #endif /* DONT_USE_CMSIS_INIT */
 
 /*@}*/

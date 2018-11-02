@@ -20,7 +20,7 @@
  */
 
 /* Includes ------------------------------------------------------------------- */
-#include "lpc43xx.h"                    /* lpc43xx definitions                */
+#include "LPC43xx.h"                      /* lpc43xx definitions                */
 #include "lpc_types.h"
 #include "lpc43xx_scu.h"
 
