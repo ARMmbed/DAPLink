@@ -1,9 +1,14 @@
 common:
     target:
-        - tmpm366fdfg
+        - tmpm366fyxbg
+    core:
+        - Cortex-M3
     macros:
         - INTERFACE_TMPM366
-        - DAPLINK_HIC_ID=0x97969904  # DAPLINK_HIC_ID_TMPM366
+        - USE_HAL_DRIVER
+        - DAPLINK_HIC_ID=0x97969909  # DAPLINK_HIC_ID_TMPM366
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
     includes:
         - source/hic_hal/toshiba/tmpm366
         - source/hic_hal/toshiba/tmpm366/driver/inc
@@ -14,10 +19,23 @@ common:
             - source/hic_hal/toshiba/tmpm366/driver/src
 
 tool_specific:
-    make_armcc:
-        mcu:
-            - cortex-m3
     uvision:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\toshiba\tmpm366"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\toshiba\tmpm366"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access

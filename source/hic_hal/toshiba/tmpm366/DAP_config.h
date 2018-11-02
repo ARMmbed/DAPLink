@@ -1,5 +1,5 @@
 /**
- * @file    DAP_config.c
+ * @file    DAP_config.h
  * @brief
  *
  * DAPLink Interface Firmware
@@ -18,8 +18,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
+
+#include "IO_Config.h"
 
 // DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
 // DAP_ConfigIO_gr
@@ -33,7 +36,7 @@
 
 // Processor Clock of the Cortex-M MCU used in the Debug Unit.
 // This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK               48000000 // Specifies the CPU Clock in Hz
+#define CPU_CLOCK               SystemCoreClock        ///< Specifies the CPU Clock in Hz
 
 // Number of processor cycles for I/O Port write operations.
 // This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -49,11 +52,7 @@
 
 // Indicate that JTAG communication mode is available at the Debug Port.
 // This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#if defined(CONF_JTAG)
-#define DAP_JTAG                1               // JTAG Mode: 1 = available
-#else
-#define DAP_JTAG                0               // JTAG Mode: 0 = not available
-#endif
+#define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available.
 
 // Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 // This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
@@ -100,28 +99,13 @@
 
 #define TARGET_DEVICE_FIXED     0            // Target Device: 1 = known, 0 = unknown;
 
-//@}
+#if TARGET_DEVICE_FIXED
+#define TARGET_DEVICE_VENDOR    ""              ///< String indicating the Silicon Vendor
+#define TARGET_DEVICE_NAME      ""              ///< String indicating the Target Device
+#endif
 
-#define LED_CONNECTED_IN_BIT    0    // Connect status led
-#define LED_RUNNING_IN_BIT      1    // Running status led
-#define LED_CONNECTED          (1 << LED_CONNECTED_IN_BIT)
-#define LED_RUNNING            (1 << LED_RUNNING_IN_BIT)
-#define PIN_SWDIO_IN_BIT        0    // SWDIO/TMS In/Out Pin
-#define PIN_SWCLK_IN_BIT        1    // SWCLK/TCK Pin
-// this pin not connected to Port H M066_STK
-#define PIN_TDI_IN_BIT          2    // TDI Pin
-#define PIN_nRESET_IN_BIT       3    // nRESET Pin
-#define PIN_nTRST_IN_BIT        3    // nTRST Pin
-// this pin not connected to Port H in M066_STK
-#define PIN_TDO_IN_BIT          4    // SWO/TDO Pin
-#define PIN_SWCLK              (1 << PIN_SWCLK_IN_BIT)
-#define PIN_SWDIO              (1 << PIN_SWDIO_IN_BIT)
-#define PIN_nRESET             (1 << PIN_nRESET_IN_BIT)
-#define PIN_TDI                (1 << PIN_TDI_IN_BIT)
-#define PIN_TDO                (1 << PIN_TDO_IN_BIT)
-#define PIN_nTRST              (1 << PIN_TDO_IN_BIT)
-// All used pins
-#define PIN_ALL                (PIN_SWCLK | PIN_SWDIO | PIN_nRESET | PIN_TDI | PIN_TDO | PIN_nTRST)
+
+
 
 // DAP_Config_PortIO_gr CMSIS-DAP Hardware I/O Pin Access
 // DAP_ConfigIO_gr
@@ -161,27 +145,7 @@
 //  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
 //  - TDO to input mode.
 
-static __inline void PORT_JTAG_SETUP(void)
-{
-#if (DAP_JTAG != 0)
-    // SWCLK/TCK                    Output
-    // SWDIO/TMS In/Out Pin         Output
-    // nRESET Pin                   Output
-    // nTRST Pin                    Output
-    // TDI Pin                      Output
-    // SWO/TDO Pin                  Input
-    TSB_PH->CR &= ~(PIN_ALL); // Disable output for pin 0, 1, 2, 3, 4, 5
-    // Enable output for pin 0, 1, 2, 3, 4
-    TSB_PH->CR |=  (PIN_SWCLK | PIN_SWDIO | PIN_nRESET | PIN_TDI | PIN_nTRST);
-    TSB_PH->IE &= ~(PIN_ALL); // Disable input for pin 0, 1, 2, 3, 4, 5
-    TSB_PH->IE |=  (PIN_TDO); // Enable input for pin 5
-    TSB_PH->FR1 &= ~(PIN_ALL); // Set function to PORT for pin 0, 1, 2, 3, 4, 5
-    TSB_PH->FR2 &= ~(PIN_ALL); // Set function to PORT for pin 0, 1, 2, 3, 4, 5
-    TSB_PH->FR3 &= ~(PIN_ALL); // Set function to PORT for pin 0, 1, 2, 3, 4, 5
-    // Set to high level for pin 0, 1, 2, 3, 4
-    TSB_PH->DATA |= (PIN_SWCLK | PIN_SWDIO | PIN_nRESET | PIN_TDI | PIN_nTRST);
-#endif
-}
+static __inline void PORT_JTAG_SETUP(void) {}
 
 // Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 // Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
@@ -300,23 +264,14 @@ static __forceinline void PIN_SWDIO_OUT_DISABLE(void)
 
 static __forceinline uint32_t PIN_TDI_IN(void)
 {
-#if (DAP_JTAG != 0)
-    return ((TSB_PH->DATA >> PIN_TDI_IN_BIT) & 0x0001U); // Return data
-#else
     return (0);   // Not available
-#endif
 }
 
 // TDI I/O pin: Set Output.
 // bit Output value for the TDI DAP hardware I/O pin.
 static __forceinline void PIN_TDI_OUT(uint32_t bit)
 {
-#if (DAP_JTAG != 0)
-    TSB_PH->DATA &= ~(0x0001U << PIN_TDI_IN_BIT); // Clear data
-    TSB_PH->DATA |= ((bit & 0x0001) << PIN_TDI_IN_BIT); // Set data
-#else
     // Not available
-#endif
 }
 
 // TDO Pin I/O ---------------------------------------------
@@ -325,11 +280,7 @@ static __forceinline void PIN_TDI_OUT(uint32_t bit)
 // Current status of the TDO DAP hardware I/O pin.
 static __forceinline uint32_t PIN_TDO_IN(void)
 {
-#if (DAP_JTAG != 0)
-    return ((TSB_PH->DATA >> PIN_TDO_IN_BIT) & 0x0001U); // Return data
-#else
     return (0);   // Not available
-#endif
 }
 
 // nTRST Pin I/O
@@ -412,11 +363,6 @@ static __inline void DAP_SETUP(void)
 
     TSB_PH->OD  &= ~(PIN_ALL); // Disable Open-Drain
     TSB_PH->OD  |=  PIN_nRESET; // Enable Open-Drain
-
-#if (DAP_JTAG != 0)
-    TSB_PH->PUP |=  PIN_TDI | PIN_TDO; // Enable Pull-Up
-    TSB_PH->OD  |=  PIN_nTRST; // Enable Open-Drain
-#endif
 
     // Enable led output pin
     TSB_PC->CR |=  (LED_CONNECTED | LED_RUNNING); // Enable output

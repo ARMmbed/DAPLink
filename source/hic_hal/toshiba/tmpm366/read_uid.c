@@ -1,4 +1,8 @@
-/* CMSIS-DAP Interface Firmware
+/**
+ * @file    read_uid.c
+ * @brief   
+ *
+ * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,10 +20,13 @@
  */
 #include "read_uid.h"
 
+#define CHIPID0F            *(uint32_t *)0x41FFF040
+#define CHIPID1F            *(uint32_t *)0x41FFF044
+
 void read_unique_id(uint32_t * id)
 {
-    id[0] = 0;
-    id[1] = 0;
+    id[0] = CHIPID0F;
+    id[1] = CHIPID1F;
     id[2] = 0;
     id[3] = 0;
 }

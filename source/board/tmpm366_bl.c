@@ -18,20 +18,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "target_config.h"
-#include "target_reset.h"
-#include <RTL.h>
-#include "DAP_Config.h"
 
-const char *board_id = "0000";
+#include "target_config.h"
+#include "daplink_addr.h"
+#include "compiler.h"
+
+const char *board_id   = "0000";
+
+// Warning - changing the interface start will break backwards compatibility
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(36));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(92));
 
 // tmpm366_256 target information
 target_cfg_t target_device = {
     .sector_size    = 1024,
-    .sector_cnt     = (KB(256) / 1024),
-    .flash_start    = KB(40),
-    .flash_end      = KB(256),
+    // Assume memory is regions are same size. Flash algo should ignore requests
+    // when variable sized sectors exist
+    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
+    .sector_cnt     = (DAPLINK_ROM_IF_SIZE / 1024),
+    .flash_start    = DAPLINK_ROM_IF_START,
+    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
     .ram_start      = 0x20000000,
-    .ram_end        = 0x2000C000,
+    .ram_end        = 0x20009000,
     /* .flash_algo not needed for bootloader */
 };

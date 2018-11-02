@@ -1,5 +1,10 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/**
+ * @file    fuart.c
+ * @brief   
+ *
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +18,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <TMPM366.h>
+
 #include <string.h>
+#include "TMPM366.h"
 #include "uart.h"
 #include "tmpm366_fuart.h"
+#include "cortex_m.h"
 #include "circ_buf.h"
 #include "settings.h" // for config_get_overflow_detect
 
@@ -32,7 +39,7 @@ uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
-// Initialize UART
+
 int32_t uart_initialize(void)
 {
     // Configure UART
@@ -59,7 +66,6 @@ int32_t uart_initialize(void)
     return 1;
 }
 
-// Uninitialized FUART0
 int32_t uart_uninitialize(void)
 {
     // Disable  UART
@@ -69,7 +75,6 @@ int32_t uart_uninitialize(void)
     return 1;
 }
 
-// Reset FUART0
 int32_t uart_reset(void)
 {
     FUART_INTStatus clearFlag;
@@ -93,7 +98,6 @@ int32_t uart_reset(void)
     return 1;
 }
 
-// Set UART configuration
 int32_t uart_set_configuration(UART_Configuration *config)
 {
     myUART.BaudRate = config->Baudrate;
@@ -141,84 +145,45 @@ int32_t uart_set_configuration(UART_Configuration *config)
     return 1;
 }
 
-// Get UART configuration
 int32_t uart_get_configuration(UART_Configuration *config)
 {
-    // Get configuration from UART
-    config->Baudrate = (uint32_t) myUART.BaudRate;
-    config->FlowControl = UART_FLOW_CONTROL_NONE; // no support flow control
-
-    switch (myUART.DataBits) {
-        case 4:
-            config->DataBits = UART_DATA_BITS_7;
-            break;
-        case 8:
-            config->DataBits = UART_DATA_BITS_8;
-            break;
-        default:
-            break;
-    }
-
-    config->StopBits = (UART_StopBits) myUART.StopBits;
-    switch (myUART.StopBits) {
-        case 0:
-            config->StopBits = UART_STOP_BITS_1;
-            break;
-        case 16:
-            config->StopBits = UART_STOP_BITS_2;
-            break;
-        default:
-            break;
-    }
-
-    config->Parity = (UART_Parity) myUART.Parity;
-    switch (myUART.Parity) {
-        case FUART_NO_PARITY:
-            config->Parity = UART_PARITY_NONE;
-            break;
-        case FUART_EVEN_PARITY:
-            config->Parity = UART_PARITY_EVEN;
-            break;
-        case FUART_ODD_PARITY:
-            config->Parity = UART_PARITY_ODD;
-            break;
-        default:
-            break;
-    }
-
     return 1;
 }
 
-// Get transmit buffer empty length
 int32_t uart_write_free(void)
 {
     return circ_buf_count_free(&write_buffer);
 }
 
-// Write data to transmit buffer
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
+    cortex_int_state_t state;
     uint32_t cnt;
 
     cnt = circ_buf_write(&write_buffer, data, size);
 
-    // enable TX interrupt
+    // Enable TX interrupt
     TSB_UART_CR_TXE = 1;
-
+    state = cortex_int_get_and_disable();
     if (!tx_in_progress) {
-        // force TX interrupt to start
+        // Force TX interrupt to start
         NVIC_SetPendingIRQ(INTUART_IRQn);
     }
+    cortex_int_restore(state);
+
     return cnt;
 }
 
-// Read data for receive buffer
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
     return circ_buf_read(&read_buffer, data, size);
 }
 
-// Receive Interrupt
+void uart_enable_flow_control(bool enabled)
+{
+    // Flow control not implemented for this platform
+}
+
 void INTUART_IRQHandler(void)
 {
     FUART_StorageStatus FIFOStatus;

@@ -158,8 +158,8 @@ void USBD_Suspend (void)
 }
 
 // USB Device Resume Function
-//  Called automatically on USB Device Resume
-//   Return Value:    None
+// Called automatically on USB Device Resume
+// Return Value:    None
 void USBD_Resume (void)
 {
     // Performed by Hardware
@@ -167,24 +167,24 @@ void USBD_Resume (void)
 }
 
 // USB Device Remote Wakeup Function
-//  Called automatically on USB Device Remote Wakeup
-//   Return Value:    None
+// Called automatically on USB Device Remote Wakeup
+// Return Value:    None
 void USBD_WakeUp (void)
 {
     return;
 }
 
 // USB Device Remote Wakeup Configuration Function
-//   Parameters:      cfg:   Device Enable/Disable
-//   Return Value:    None
+// Parameters:      cfg:   Device Enable/Disable
+// Return Value:    None
 void USBD_WakeUpCfg (BOOL cfg)
 {
     return;
 }
 
 // USB Device Set Address Function
-//   Parameters:      adr:   USB Device Address
-//   Return Value:    None
+// Parameters:      adr:   USB Device Address
+// Return Value:    None
 void USBD_SetAddress (U32 adr, U32 setup)
 {
     if (!setup) {

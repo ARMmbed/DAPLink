@@ -20,95 +20,126 @@
  */
 #include "target_config.h"    // target_device
 #include "cortex_m.h"
-#include "tmpm366_fc.h"
 
-#define PAGE_SIZE               (512U)
-
-__attribute__((section("ram_func")))
-static int flash_write(uint32_t addr_dest, uint32_t len, uint32_t *addr_source)
-{
-    uint32_t size;
-    uint32_t *source;
-    uint32_t *dest;
-
-    dest   = (uint32_t *)addr_dest;
-    source = addr_source;
-    size   = len;
-
-    while (size > PAGE_SIZE) {
-        // write one page every time
-        if (FC_SUCCESS == FC_WritePage((uint32_t)dest, source)) {
-            // Do not thing
-        } else {
-            return 1;
-        }
-
-        size = size - PAGE_SIZE;
-        dest = dest + PAGE_SIZE / 4U;
-        source = source + PAGE_SIZE / 4U;
-    }
-
-    // write the last data, no more than one page
-    if (FC_SUCCESS == FC_WritePage((uint32_t)dest, source)) {
-        // Do not thing
-    } else {
-        return 1;
-    }
-
-    return 0;
-}
+#define M32(adr)            (*((volatile unsigned long  *)(adr)))
+#define PAGE_SIZE           512      // Page Size
+// Watchdog Timer Registers
+#define WDMOD               (*((volatile unsigned char  *)0x400F2000))
+#define WDCR                (*((volatile unsigned char  *)0x400F2004))
+// Flash Control/Status Register
+#define FLCSF0              (*((volatile unsigned long  *)0x41FFF020))
+#define FLCS_RDY            0x00000001
+#define FLASH_START_ADDR    ((uint32_t)0x00000000) /* User Boot Mode As Default */
 
 __attribute__((section("ram_func")))
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
-    // Select flash core clock source
-    TSB_CG_PLLSEL_PLLSEL = 1U;
+    // Disable Watchdog
+    WDMOD = 0x00;
+    WDCR  = 0xB1;
+
     return (0);
 }
 
 __attribute__((section("ram_func")))
 uint32_t UnInit(uint32_t fnc)
 {
-    //
-    // No special uninit required
-    //
     return (0);
 }
+
 
 __attribute__((section("ram_func")))
 uint32_t EraseChip(void)
 {
-    int retval = 1;
-    // Return value 0 == O.K.
-    // Return value 1 == Error
     cortex_int_state_t state = cortex_int_get_and_disable();
     // Erase the contents of the entire chip
-    if (FC_SUCCESS == FC_EraseChip()) {
-        retval = 0;
-    }
+    // Start Chip Erase Command
+    M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+    M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+    M32(FLASH_START_ADDR + 0x5400) = 0x80;
+    M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+    M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+    M32(FLASH_START_ADDR + 0x5400) = 0x10;
+    __DSB();
+
+    while ((FLCSF0 & FLCS_RDY) != FLCS_RDY);     // Wait until completed
+
     cortex_int_restore(state);
-    return retval;
+    
+    return (0);
 }
 
 __attribute__((section("ram_func")))
 uint32_t EraseSector(uint32_t adr)
 {
-    int retval = 1;
     cortex_int_state_t state = cortex_int_get_and_disable();
-    // Erase the contents of the specified block
-    if (FC_SUCCESS == FC_EraseBlock(adr)) {
-        retval = 0;
-    }
+
+    // Start Block Erase Command
+    M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+    M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+    M32(FLASH_START_ADDR + 0x5400) = 0x80;
+    M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+    M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+
+    M32(adr) = 0x30;
+    __DSB();
+
+    while ((FLCSF0 & FLCS_RDY) != FLCS_RDY);     // Wait until completed
+
     cortex_int_restore(state);
-    return retval;
+    
+    return (0);  // O.K.
 }
 
 __attribute__((section("ram_func")))
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
-    int retval = 1;
+    uint32_t *source;
+    uint32_t *temp;
+    uint32_t *dest;
+    volatile uint32_t *addr = (uint32_t *) dest;
+    int i = 0;
+    dest   = (uint32_t *)adr;
+    source = buf;
+
     cortex_int_state_t state = cortex_int_get_and_disable();
-    retval = flash_write(adr, sz, buf);
+    while (sz > PAGE_SIZE) {
+        addr = (uint32_t *) dest;
+        temp = source;   
+        // Start Page Programming Command
+        M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+        M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+        M32(FLASH_START_ADDR + 0x5400) = 0xA0;
+
+        // Write Page Data
+        for (i = 0; i < (PAGE_SIZE / 4); i++) {
+            *addr = *temp;
+            temp++;
+        }
+        __DSB();
+        while ((FLCSF0 & FLCS_RDY) != FLCS_RDY);     // Wait until completed      
+        
+        sz = sz - PAGE_SIZE;
+        dest = dest + PAGE_SIZE / 4U;
+        source = source + PAGE_SIZE / 4U;
+    }
+    addr = (uint32_t *) dest;
+    temp = source;   
+    // Start Page Programming Command
+    M32(FLASH_START_ADDR + 0x5400) = 0xAA;
+    M32(FLASH_START_ADDR + 0xAA00) = 0x55;
+    M32(FLASH_START_ADDR + 0x5400) = 0xA0;
+
+    // Write Page Data
+    for (i = 0; i < (PAGE_SIZE/4); i++) {
+        *addr = *temp;
+        temp++;
+    }
+    __DSB();
+
+    while ((FLCSF0 & FLCS_RDY) != FLCS_RDY);     // Wait until completed
+    
     cortex_int_restore(state);
-    return retval;
+
+    return 0;
 }

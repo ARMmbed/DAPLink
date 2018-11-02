@@ -25,12 +25,11 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 1024,
-    .sector_cnt     = (KB(128) / 1024),
-    .flash_start    = 0,
-    .flash_end      = KB(128),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20004000,
-    .flash_algo     = (program_target_t *) &flash,
-    .erase_reset    = 1
+    .flash_start        = 0x00000000,
+    .flash_end          = 0x00020000,
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20004000,
+    .flash_algo         = (program_target_t *) &flash,
+    .sectors_info       = sectors_info,
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };

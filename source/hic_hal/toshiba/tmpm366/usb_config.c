@@ -22,6 +22,9 @@
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
+#define USBD_RTX_CORE_STACK         0
+#define USBD_RTX_DEVICE_STACK       0
+#define USBD_RTX_ENDPOINT0_STACK    0
 
 //   <o0.0> High-speed
 //     <i> Enable high-speed functionality (if device supports it)
@@ -82,7 +85,13 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"ARM"
+#ifndef USB_PROD_STR
 #define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
+#else
+#define _TOWIDE(x)                   L ## #x
+#define TOWIDE(x)                   _TOWIDE(x)
+#define USBD_STRDESC_PROD           TOWIDE(USB_PROD_STR)
+#endif
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -127,24 +136,27 @@
 //       </h>
 //     </e>
 #ifndef HID_ENDPOINT
-#define HID_ENDPOINT 0
+#define HID_ENDPOINT                0
 #else
-#define HID_ENDPOINT 1
+#define HID_ENDPOINT                1
 #endif
 
 #ifndef WEBUSB_INTERFACE
-#define WEBUSB_INTERFACE 0
+#define WEBUSB_INTERFACE            0
 #else
-#define WEBUSB_INTERFACE 1
+#define WEBUSB_INTERFACE            1
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
-#define USBD_HID_EP_INTOUT          2
+#define USBD_HID_EP_INTOUT          0
+
+#define USBD_HID_ENABLE             HID_ENDPOINT
+#define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          0
-#define USBD_HID_HS_WMAXPACKETSIZE  4
+#define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
 #define USBD_HID_STRDESC            L"CMSIS-DAP"
 #define USBD_WEBUSB_STRDESC         L"WebUSB: CMSIS-DAP"
@@ -185,18 +197,21 @@
 //       </h>
 //     </e>
 #ifndef MSC_ENDPOINT
-#define MSC_ENDPOINT 0
+#define MSC_ENDPOINT                0
 #else
-#define MSC_ENDPOINT 1
+#define MSC_ENDPOINT                1
 #endif
 #define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          3
 #define USBD_MSC_EP_BULKOUT         4
+#define USBD_MSC_EP_BULKIN_STACK    0
 #define USBD_MSC_WMAXPACKETSIZE     64
 #define USBD_MSC_HS_ENABLE          0
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
 #define USBD_MSC_STRDESC            L"USB_MSC"
+// Make sure changes to USBD_MSC_INQUIRY_DATA are coordinated with mbed-ls
+// since this is used to detect DAPLink drives
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
                                     "VFS             " \
                                     "0.1"
@@ -300,13 +315,15 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
+
 #ifndef CDC_ENDPOINT
-#define CDC_ENDPOINT 0
+#define CDC_ENDPOINT                    0
 #else
-#define CDC_ENDPOINT 1
+#define CDC_ENDPOINT                    1
 #endif
 #define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           5
+#define USBD_CDC_ACM_EP_INTIN_STACK     0
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          0
@@ -314,14 +331,15 @@
 #define USBD_CDC_ACM_HS_BINTERVAL       2
 #define USBD_CDC_ACM_EP_BULKIN          7
 #define USBD_CDC_ACM_EP_BULKOUT         6
+#define USBD_CDC_ACM_EP_BULKIN_STACK    0
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
 #define USBD_CDC_ACM_HS_BINTERVAL1      0
 #define USBD_CDC_ACM_CIF_STRDESC        L"mbed Serial Port"
 #define USBD_CDC_ACM_DIF_STRDESC        L"mbed Serial Port"
-#define USBD_CDC_ACM_SENDBUF_SIZE       128
-#define USBD_CDC_ACM_RECEIVEBUF_SIZE    128
+#define USBD_CDC_ACM_SENDBUF_SIZE       64
+#define USBD_CDC_ACM_RECEIVEBUF_SIZE    64
 #if (((USBD_CDC_ACM_HS_ENABLE1) && (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_HS_WMAXPACKETSIZE1)) || (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_WMAXPACKETSIZE1))
 #error "Send Buffer size must be larger or equal to Bulk In maximum packet size!"
 #endif
@@ -347,38 +365,38 @@
 //     </e>
 #define USBD_CLS_ENABLE             0
 
-//     WebUSB support
-#define USBD_WEBUSB_ENABLE          WEBUSB_INTERFACE
-#define USBD_WEBUSB_VENDOR_CODE     0x21
-#define USBD_WEBUSB_LANDING_URL     "os.mbed.com/webusb/landing-page/?bid="
-#define USBD_WEBUSB_ORIGIN_URL      "os.mbed.com/"
+// WebUSB support
+#define USBD_WEBUSB_ENABLE        WEBUSB_INTERFACE
+#define USBD_WEBUSB_VENDOR_CODE   0x21
+#define USBD_WEBUSB_LANDING_URL   "os.mbed.com/webusb/landing-page/?bid="
+#define USBD_WEBUSB_ORIGIN_URL    "os.mbed.com/"
 
-//     Microsoft OS Descriptors 2.0 (WinUSB) support
-#define USBD_WINUSB_ENABLE          WINUSB_INTERFACE
-#define USBD_WINUSB_VENDOR_CODE     0x20
-#define USBD_WINUSB_IF_NUM          USBD_WEBUSB_IF_NUM
+// Microsoft OS Descriptors 2.0 (WinUSB) support
+#define USBD_WINUSB_ENABLE        WINUSB_INTERFACE
+#define USBD_WINUSB_VENDOR_CODE   0x20
+#define USBD_WINUSB_IF_NUM        USBD_WEBUSB_IF_NUM
 //   </e>
 // </e>
 
 
-// USB Device Calculations ---------------------------------------------------
+/* USB Device Calculations ---------------------------------------------------*/
 
-#define USBD_IF_NUM                (USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
-#define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE))
-#define MAX(x, y)                (((x) < (y)) ? (y) : (x))
-#define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
-#define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
-#define USBD_EP_NUM_CALC2           MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
-#define USBD_EP_NUM_CALC3           MAX((USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_BULKIN)), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_BULKOUT)))
-#define USBD_EP_NUM_CALC4           MAX(USBD_EP_NUM_CALC0, USBD_EP_NUM_CALC1)
-#define USBD_EP_NUM_CALC5           MAX(USBD_EP_NUM_CALC2, USBD_EP_NUM_CALC3)
-#define USBD_EP_NUM_CALC6           MAX(USBD_EP_NUM_CALC4, USBD_EP_NUM_CALC5)
-#define USBD_EP_NUM                (USBD_EP_NUM_CALC6)
+#define USBD_IF_NUM               (USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
+#define USBD_MULTI_IF             (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE))
+#define MAX(x, y)                 (((x) < (y)) ? (y) : (x))
+#define USBD_EP_NUM_CALC0         MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
+#define USBD_EP_NUM_CALC1         MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
+#define USBD_EP_NUM_CALC2         MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
+#define USBD_EP_NUM_CALC3         MAX((USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_BULKIN)), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_BULKOUT)))
+#define USBD_EP_NUM_CALC4         MAX(USBD_EP_NUM_CALC0, USBD_EP_NUM_CALC1)
+#define USBD_EP_NUM_CALC5         MAX(USBD_EP_NUM_CALC2, USBD_EP_NUM_CALC3)
+#define USBD_EP_NUM_CALC6         MAX(USBD_EP_NUM_CALC4, USBD_EP_NUM_CALC5)
+#define USBD_EP_NUM               (USBD_EP_NUM_CALC6)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_MSC_ENABLE)
 #if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)      || \
-       (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)))    || \
+       (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKOUT)))   || \
       ((USBD_HID_EP_INTOUT  != 0)                       && \
        (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKOUT)))
@@ -434,70 +452,75 @@
 #endif
 #endif
 
-#define USBD_ADC_CIF_NUM           (0)
-#define USBD_ADC_SIF1_NUM          (1)
-#define USBD_ADC_SIF2_NUM          (2)
-#define USBD_MSC_IF_NUM            (USBD_ADC_ENABLE*2+0)
-#define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
-#define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
-#define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
-#define USBD_WEBUSB_IF_NUM         (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_ADC_CIF_NUM          (0)
+#define USBD_ADC_SIF1_NUM         (1)
+#define USBD_ADC_SIF2_NUM         (2)
+#define USBD_MSC_IF_NUM           (USBD_ADC_ENABLE*2+0)
+#define USBD_CDC_ACM_CIF_NUM      (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
+#define USBD_CDC_ACM_DIF_NUM      (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
+#define USBD_HID_IF_NUM           (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
+#define USBD_WEBUSB_IF_NUM        (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 
-#define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
-#define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
-#define USBD_ADC_SIF2_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+2)
-#define USBD_CDC_ACM_CIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+0)
-#define USBD_CDC_ACM_DIF_STR_NUM   (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+1)
-#define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
-#define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
-#define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
+#define USBD_ADC_CIF_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+0)
+#define USBD_ADC_SIF1_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+1)
+#define USBD_ADC_SIF2_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+2)
+#define USBD_CDC_ACM_CIF_STR_NUM  (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+0)
+#define USBD_CDC_ACM_DIF_STR_NUM  (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+1)
+#define USBD_HID_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
+#define USBD_WEBUSB_IF_STR_NUM    (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_MSC_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)
 #define USBD_HID_MAX_PACKET       ((USBD_HID_HS_WMAXPACKETSIZE > USBD_HID_WMAXPACKETSIZE) ? USBD_HID_HS_WMAXPACKETSIZE : USBD_HID_WMAXPACKETSIZE)
 #else
-#define USBD_HID_MAX_PACKET        (USBD_HID_WMAXPACKETSIZE)
+#define USBD_HID_MAX_PACKET       (USBD_HID_WMAXPACKETSIZE)
 #endif
 #else
-#define USBD_HID_MAX_PACKET        (0)
+#define USBD_HID_MAX_PACKET       (0)
 #endif
 #if    (USBD_MSC_ENABLE)
 #if    (USBD_MSC_HS_ENABLE)
 #define USBD_MSC_MAX_PACKET       ((USBD_MSC_HS_WMAXPACKETSIZE > USBD_MSC_WMAXPACKETSIZE) ? USBD_MSC_HS_WMAXPACKETSIZE : USBD_MSC_WMAXPACKETSIZE)
 #else
-#define USBD_MSC_MAX_PACKET        (USBD_MSC_WMAXPACKETSIZE)
+#define USBD_MSC_MAX_PACKET       (USBD_MSC_WMAXPACKETSIZE)
 #endif
 #else
-#define USBD_MSC_MAX_PACKET        (0)
+#define USBD_MSC_MAX_PACKET       (0)
 #endif
 #if    (USBD_ADC_ENABLE)
 #if    (USBD_ADC_HS_ENABLE)
 #define USBD_ADC_MAX_PACKET       ((USBD_ADC_HS_WMAXPACKETSIZE > USBD_ADC_WMAXPACKETSIZE) ? USBD_ADC_HS_WMAXPACKETSIZE : USBD_ADC_WMAXPACKETSIZE)
 #else
-#define USBD_ADC_MAX_PACKET        (USBD_ADC_WMAXPACKETSIZE)
+#define USBD_ADC_MAX_PACKET       (USBD_ADC_WMAXPACKETSIZE)
 #endif
 #else
-#define USBD_ADC_MAX_PACKET        (0)
+#define USBD_ADC_MAX_PACKET       (0)
 #endif
 #if    (USBD_CDC_ACM_ENABLE)
 #if    (USBD_CDC_ACM_HS_ENABLE)
 #define USBD_CDC_ACM_MAX_PACKET   ((USBD_CDC_ACM_HS_WMAXPACKETSIZE > USBD_CDC_ACM_WMAXPACKETSIZE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE : USBD_CDC_ACM_WMAXPACKETSIZE)
 #else
-#define USBD_CDC_ACM_MAX_PACKET    (USBD_CDC_ACM_WMAXPACKETSIZE)
+#define USBD_CDC_ACM_MAX_PACKET   (USBD_CDC_ACM_WMAXPACKETSIZE)
 #endif
 #if    (USBD_CDC_ACM_HS_ENABLE1)
 #define USBD_CDC_ACM_MAX_PACKET1  ((USBD_CDC_ACM_HS_WMAXPACKETSIZE1 > USBD_CDC_ACM_WMAXPACKETSIZE1) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE1 : USBD_CDC_ACM_WMAXPACKETSIZE1)
 #else
-#define USBD_CDC_ACM_MAX_PACKET1   (USBD_CDC_ACM_WMAXPACKETSIZE1)
+#define USBD_CDC_ACM_MAX_PACKET1  (USBD_CDC_ACM_WMAXPACKETSIZE1)
 #endif
 #else
-#define USBD_CDC_ACM_MAX_PACKET    (0)
-#define USBD_CDC_ACM_MAX_PACKET1   (0)
+#define USBD_CDC_ACM_MAX_PACKET   (0)
+#define USBD_CDC_ACM_MAX_PACKET1  (0)
 #endif
 #define USBD_MAX_PACKET_CALC0     ((USBD_HID_MAX_PACKET   > USBD_HID_MAX_PACKET      ) ? (USBD_HID_MAX_PACKET  ) : (USBD_HID_MAX_PACKET      ))
 #define USBD_MAX_PACKET_CALC1     ((USBD_ADC_MAX_PACKET   > USBD_CDC_ACM_MAX_PACKET  ) ? (USBD_ADC_MAX_PACKET  ) : (USBD_CDC_ACM_MAX_PACKET  ))
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))
 #define USBD_MAX_PACKET           ((USBD_MAX_PACKET_CALC2 > USBD_CDC_ACM_MAX_PACKET1 ) ? (USBD_MAX_PACKET_CALC2) : (USBD_CDC_ACM_MAX_PACKET1 ))
+
+
+/*------------------------------------------------------------------------------
+ *      USB Config Functions
+ *----------------------------------------------------------------------------*/
 
 #ifndef  __USB_CONFIG___
 #define  __USB_CONFIG__

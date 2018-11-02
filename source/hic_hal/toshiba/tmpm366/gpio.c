@@ -1,4 +1,8 @@
-/* CMSIS-DAP Interface Firmware
+/**
+ * @file    gpio.c
+ * @brief
+ *
+ * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -14,6 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <TMPM366.h>
 #include "RTL.h"
 #include "gpio.h"
@@ -21,16 +26,7 @@
 #include "compiler.h"
 #include "daplink.h"
 
-static void busy_wait(uint32_t cycles)
-{
-    volatile uint32_t i;
-    i = cycles;
-
-    while (i > 0) {
-        i--;
-    }
-}
-
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_TMPM366);
 void gpio_init(void)
 {
     // Set PC0, PC1 to output, M066 STK
@@ -41,12 +37,6 @@ void gpio_init(void)
     gpio_set_hid_led(GPIO_LED_OFF);
     gpio_set_cdc_led(GPIO_LED_OFF);
     gpio_set_msc_led(GPIO_LED_OFF);
-
-    // Let the voltage rails stabilize.  This is especially important
-    // during software resets, since the target's 3.3v rail can take
-    // 20-50ms to drain.  During this time the target could be driving
-    // the reset pin low, causing the bootloader to think the reset
-    busy_wait(1000000);
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
@@ -89,5 +79,4 @@ uint8_t gpio_get_reset_btn_fwrd()
 
 void gpio_set_board_power(bool powerEnabled)
 {
-
 }
