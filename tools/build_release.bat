@@ -70,9 +70,7 @@ if not [%requirements_file%]==[] pip install -r %requirements_file%
 	)
 	@echo USING ARM_PATH=!ARM_PATH!
 
-	@REM uncomment these next two lines when the update to mbed-os merge the test dependency
-	@REM mbed deploy
-	@REM mbed update
+	mbed deploy
 	mbed config root .
 	mbed config ARM_PATH !ARM_PATH!
 	python tools/mbedcli_compile.py --clean --release
