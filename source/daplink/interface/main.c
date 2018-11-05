@@ -41,6 +41,7 @@
 #include "bootloader.h"
 #include "cortex_m.h"
 #include "sdk.h"
+#include "flash_intf.h"
 
 // Event flags for main task
 // Timers events
@@ -328,7 +329,7 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_30MS) {
 
             // handle reset button without eventing
-            if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
+            if (!reset_pressed && gpio_get_reset_btn_fwrd() && !flash_intf_target->flash_busy()) { //added checking if flashing on target is in progress
                 // Reset button pressed
                 target_set_state(RESET_HOLD);
                 reset_pressed = 1;

@@ -37,6 +37,7 @@ typedef error_t (*flash_intf_erase_sector_cb_t)(uint32_t sector);
 typedef error_t (*flash_intf_erase_chip_cb_t)(void);
 typedef uint32_t (*flash_program_page_min_size_cb_t)(uint32_t addr);
 typedef uint32_t (*flash_erase_sector_size_cb_t)(uint32_t addr);
+typedef uint8_t (*flash_busy_cb_t)(void);
 
 typedef struct {
     flash_intf_init_cb_t init;
@@ -46,6 +47,7 @@ typedef struct {
     flash_intf_erase_chip_cb_t erase_chip;
     flash_program_page_min_size_cb_t program_page_min_size;
     flash_erase_sector_size_cb_t erase_sector_size;
+    flash_busy_cb_t flash_busy;
 } flash_intf_t;
 
 // All flash interfaces.  Unsupported interfaces are NULL.
