@@ -29,7 +29,7 @@
 * this code.
 **********************************************************************/
 
-#include "lpc43xx.h"
+#include "LPC43xx.h"
 #include "fpu_enable.h"
 #include "board.h"
 

@@ -72,7 +72,7 @@ def generate_version_file(version_git_dir):
     print("#> Checking for local changes")
     try:
         check_output("git diff --no-ext-diff --quiet --exit-code", shell=True)
-    except (CalledProcessError, WindowsError):
+    except (CalledProcessError, OSError):
         git_has_changes = 1
     else:
         git_has_changes = 0

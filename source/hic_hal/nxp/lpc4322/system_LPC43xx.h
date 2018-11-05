@@ -1,7 +1,7 @@
 /**********************************************************************
-* $Id$		system_lpc43xx.h			2011-06-02
+* $Id$		system_LPC43xx.h			2011-06-02
 *//**
-* @file		system_lpc43xx.h
+* @file		system_LPC43xx.h
 * @brief	Cortex-M3 Device System Header File for NXP lpc43xx Series.
 * @version	1.0
 * @date		02. June. 2011
