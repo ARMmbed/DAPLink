@@ -26,8 +26,8 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = KB(64),
-    .sector_cnt     = (MB(8) / KB(64)),
+    .sector_size    = KB(4),
+    .sector_cnt     = (MB(8) / KB(4)),
     .flash_start    = 0,
     .flash_end      = MB(8),
     .ram_start      = 0x20000000,
