@@ -985,6 +985,11 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
                 return 0;
             }
             swd_off();
+            break;
+
+        case POST_FLASH_RESET:
+            // This state should be handled in target_reset.c, nothing needs to be done here.
+            break;
 
         default:
             return 0;
@@ -1124,6 +1129,11 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
                 return 0;
             }
             swd_off();
+            break;
+
+        case POST_FLASH_RESET:
+            // This state should be handled in target_reset.c, nothing needs to be done here.
+            break;
 
         default:
             return 0;

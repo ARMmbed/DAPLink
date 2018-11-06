@@ -81,7 +81,9 @@ static error_t target_flash_uninit(void)
         // Leave the target halted until a reset occurs
         target_set_state(RESET_PROGRAM);
     }
-
+    // Check to see if anything needs to be done after programming.
+    // This is usually a no-op for most targets.
+    target_set_state(POST_FLASH_RESET);
     swd_off();
     return ERROR_SUCCESS;
 }
@@ -107,7 +109,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
         if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                     flash->program_page,
                                     addr,
-                                    flash->program_buffer_size,
+                                    write_size,
                                     flash->program_buffer,
                                     0)) {
             return ERROR_WRITE;
