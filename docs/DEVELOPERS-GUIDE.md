@@ -33,7 +33,6 @@ Mbedcli project lists compile
 $ venv/Scripts/activate
 $ pip install -r requirements.txt
 $ mbed deploy
-$ mbed update
 $ mbed config root .
 $ mbed config ARM_PATH FULL_PATH_TO_ARMCC_FOLDER 
 $ tools/mbedcli_compile.py project1 project2 project3 --clean
