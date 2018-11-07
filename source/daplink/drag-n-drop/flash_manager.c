@@ -276,6 +276,10 @@ static bool flash_intf_valid(const flash_intf_t *flash_intf)
     if (0 == flash_intf->erase_sector_size) {
         return false;
     }
+    
+    if (0 == flash_intf->flash_busy) {
+        return false;
+    }
 
     return true;
 }

@@ -32,6 +32,12 @@
 #include "util.h"
 #include "settings.h"
 
+typedef enum {
+    STATE_CLOSED,
+    STATE_OPEN,
+    STATE_ERROR
+} state_t;
+
 static error_t target_flash_init(void);
 static error_t target_flash_uninit(void);
 static error_t target_flash_program_page(uint32_t adr, const uint8_t *buf, uint32_t size);
@@ -39,6 +45,7 @@ static error_t target_flash_erase_sector(uint32_t addr);
 static error_t target_flash_erase_chip(void);
 static uint32_t target_flash_program_page_min_size(uint32_t addr);
 static uint32_t target_flash_erase_sector_size(uint32_t addr);
+static uint8_t target_flash_busy(void);
 
 static const flash_intf_t flash_intf = {
     target_flash_init,
@@ -48,7 +55,10 @@ static const flash_intf_t flash_intf = {
     target_flash_erase_chip,
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
+    target_flash_busy,
 };
+
+static state_t state = STATE_CLOSED;
 
 const flash_intf_t *const flash_intf_target = &flash_intf;
 
@@ -68,7 +78,7 @@ static error_t target_flash_init()
     if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->init, target_device.flash_start, 0, 0, 0)) {
         return ERROR_INIT;
     }
-
+    state = STATE_OPEN;
     return ERROR_SUCCESS;
 }
 
@@ -84,6 +94,7 @@ static error_t target_flash_uninit(void)
     // Check to see if anything needs to be done after programming.
     // This is usually a no-op for most targets.
     target_set_state(POST_FLASH_RESET);
+    state = STATE_CLOSED;
     swd_off();
     return ERROR_SUCCESS;
 }
@@ -206,4 +217,8 @@ static uint32_t target_flash_erase_sector_size(uint32_t addr)
         }
     }
     return target_device.sector_size;
+}
+
+static uint8_t target_flash_busy(void){
+    return (state == STATE_OPEN);
 }
