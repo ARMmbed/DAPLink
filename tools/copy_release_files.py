@@ -70,7 +70,7 @@ def generate_info_files(dir):
     # Check are there any local, uncommitted modifications.
     try:
         check_output("git diff --no-ext-diff --quiet --exit-code", shell=True)
-    except (CalledProcessError, WindowsError):
+    except (CalledProcessError, OSError):
         git_has_changes = '1'
     else:
         git_has_changes = '0'
