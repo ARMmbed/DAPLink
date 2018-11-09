@@ -56,7 +56,7 @@ if [%requirements_file%]==[] pip install -r requirements.txt
 @REM use custom requirements if specified
 if not [%requirements_file%]==[] pip install -r %requirements_file%
 
-@if %project_tool%==mbedcli (
+@if [%project_tool%]==[mbedcli] (
 	@REM setup mbed dependencies
 	echo Building for mbed cli
 
