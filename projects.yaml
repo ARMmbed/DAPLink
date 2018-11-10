@@ -250,6 +250,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archmax.yaml
+    lpc11u35_wio3g_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wio3g.yaml
     lpc11u35_hrm1017_if:
         - *module_if
         - *module_hic_lpc11u35
