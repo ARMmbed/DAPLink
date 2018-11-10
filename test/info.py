@@ -59,6 +59,7 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_wio3g_if",                           False,      0x0000,     "bin"       ),
+    ("lpc11u35_wiobg96_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_hrm1017_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_sscity_if",                          False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci824_if",                         False,      0x0000,     "bin"       ),
