@@ -4,4 +4,4 @@ common:
             - source/board/wiobg96.c
         target:
             - source/target/st/stm32f439zi/target.c
-            - source/target/st/target_reset.c
+            - source/target/st/stm32f439zi/target_reset_f439.c
