@@ -57,3 +57,25 @@ target_cfg_t target_device_nrf52840 = {
     .flash_algo         = (program_target_t *) &flash_nrf52,
     .erase_reset        = 1,
 };
+
+target_cfg_t target_device_nrf52840_256 = {
+    .sector_size        = 4096,
+    .sector_cnt         = (KB(1024) / 4096),
+    .flash_start        = 0,
+    .flash_end          = KB(1024),
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20040000,
+    .flash_algo         = (program_target_t *) &flash_nrf52,
+    .erase_reset        = 1,
+};
+
+target_cfg_t target_device_nrf52_64 = {
+    .sector_size        = 4096,
+    .sector_cnt         = (KB(512) / 4096),
+    .flash_start        = 0,
+    .flash_end          = KB(512),
+    .ram_start          = 0x20000000,
+    .ram_end            = 0x20010000,
+    .flash_algo         = (program_target_t *) &flash_nrf52,
+    .erase_reset        = 1,
+};

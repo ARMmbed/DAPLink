@@ -108,6 +108,9 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_dipdap_cc3220sf_if',                 False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_laird_bl654_if',                 False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_murata_bl241_if',                False,      0x0000,     "bin"       ),
+    ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
 }
 
 # All supported configurations
@@ -152,6 +155,9 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x460,      'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0461,     'lpc11u35_mtb_laird_bl652_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0462,     'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0465,     'lpc11u35_mtb_laird_bl654_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0466,     'lpc11u35_mtb_murata_bl241_if',             None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0467,     'lpc11u35_mtb_stm_s2lp_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x8080,     'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x700,      'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),

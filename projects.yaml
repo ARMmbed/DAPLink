@@ -478,4 +478,15 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/stm32f207zg.yaml
-
+    lpc11u35_mtb_laird_bl654_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_laird_bl654.yaml
+    lpc11u35_mtb_murata_bl241_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_murata_bl241.yaml
+    lpc11u35_mtb_stm_s2lp_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_stm_s2lp.yaml
