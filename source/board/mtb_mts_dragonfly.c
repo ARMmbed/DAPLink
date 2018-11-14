@@ -1,6 +1,6 @@
 /**
  * @file    mtb_mts_dragonfly.c
- * @brief   board ID for the ARM Wearable Reference Design STM32F411 MCU
+ * @brief   board ID for the MTB Dragonfly
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

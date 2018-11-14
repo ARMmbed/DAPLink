@@ -1,6 +1,6 @@
 /**
- * @file    96b_nitrogen.c
- * @brief   board ID for the Seeed Studio 96Boards Nitrogen board
+ * @file    mtb_laird_bl652.c
+ * @brief   board ID for the Laird BL652
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
