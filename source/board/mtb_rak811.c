@@ -1,6 +1,6 @@
 /**
- * @file    96b_nitrogen.c
- * @brief   board ID for the Seeed Studio 96Boards Nitrogen board
+ * @file    mtb_rak811.c
+ * @brief   board ID for the RAK811
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

@@ -1,9 +1,9 @@
 /**
- * @file    mtb_wise1510.c
- * @brief   board ID for the MTB Wise 1510
+ * @file    mtb_murata_bl241.c
+ * @brief   board ID for the Murata bl241
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,4 +21,10 @@
 
 #include "target_config.h"
 
-const char *board_id = "0458";
+const char *board_id = "0466";
+
+extern target_cfg_t target_device_nrf52_64;
+void prerun_board_config(void)
+{
+    target_device = target_device_nrf52_64;
+}

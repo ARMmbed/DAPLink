@@ -1,9 +1,9 @@
 /**
- * @file    mtb_wise1510.c
- * @brief   board ID for the MTB Wise 1510
+ * @file    mtb_stm_s2lp.c
+ * @brief   board ID for the STM S2 LP
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +19,4 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
-
-const char *board_id = "0458";
+const char *board_id = "0467";

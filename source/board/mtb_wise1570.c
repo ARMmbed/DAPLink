@@ -1,6 +1,6 @@
 /**
- * @file    96b_nitrogen.c
- * @brief   board ID for the Seeed Studio 96Boards Nitrogen board
+ * @file    mtb_wise1570.c
+ * @brief   board ID for the MTB Wise 1570
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved

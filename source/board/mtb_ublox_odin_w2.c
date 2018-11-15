@@ -1,6 +1,6 @@
 /**
  * @file    mtb_ublox_odin_w2.c
- * @brief   board file for DIPDAP targeting STM32F439ZI
+ * @brief   board file for UBLOX ODIN W2
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018, ARM Limited, All Rights Reserved
