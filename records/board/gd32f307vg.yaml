@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/gd32f307vg.c
+        target:
+            - source/target/gigadevice/gd32f307/target.c
+            - source/target/gigadevice/target_reset.c
