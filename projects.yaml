@@ -52,6 +52,9 @@ module:
     hic_stm32f103xb: &module_hic_stm32f103xb
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stm32f103xb.yaml
+    hic_gd32f303xe: &module_hic_gd32f303xe
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/gd32f303xe.yaml
 
 projects:
     kl26z_bl:
@@ -490,3 +493,11 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_stm_s2lp.yaml
+    gd32f303xe_bl:
+        - *module_bl
+        - *module_hic_gd32f303xe
+        - records/board/gd32f303xe_bl.yaml
+    gd32f303xe_gd32f307vg_if:
+        - *module_if
+        - *module_hic_gd32f303xe
+        - records/board/gd32f307vg.yaml
