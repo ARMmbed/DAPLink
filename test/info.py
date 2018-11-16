@@ -224,6 +224,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3105,     'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
     (   0x3300,     'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
+    (   0x1701,     'gd32f303xe_gd32f307vg_if',                 'gd32f303xe_bl',    'GD32_F307VG'                           ),
 ]
 
 # Add new HICs here
@@ -234,6 +235,7 @@ HIC_STRING_TO_ID = {
     'sam3u2c': 0x97969903,
     'lpc4322': 0x97969905,
     'stm32f103xb': 0x97969908,
+	'gd32f303xe': 0x97969909,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
