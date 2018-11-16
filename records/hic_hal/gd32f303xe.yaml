@@ -1,0 +1,46 @@
+common:
+    target:
+        - gd32f303xe
+    core:
+        - Cortex-M4
+    macros:
+        - INTERFACE_GD32F303
+        - DAPLINK_HIC_ID=0x97969909 # DAPLINK_HIC_ID_GD32F303
+        - GD32F30X_HD
+        - __packed=__packed         # Prevent redefinition of __packed with ARMCC
+        - FMC_PE
+        - __FPU_PRESENT=1
+        - DAPLINK_NO_ASSERT_FILENAMES
+    includes:
+        - source/hic_hal/gigadevice/gd32f303xe
+        - source/hic_hal/gigadevice/gd32f30x/peripheral/Include
+        - source/hic_hal/gigadevice/gd32f30x/system
+        - source/hic_hal/gigadevice/usbd
+    sources:
+        hic_hal:
+            - source/hic_hal/gigadevice/gd32f303xe
+            - source/hic_hal/gigadevice/gd32f303xe/armcc
+            - source/hic_hal/gigadevice/gd32f30x/peripheral/Source
+            - source/hic_hal/gigadevice/gd32f30x/system
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\gigadevice\gd32f303xe"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\gigadevice\gd32f303xe"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
