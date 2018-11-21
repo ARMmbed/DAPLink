@@ -117,7 +117,6 @@ static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t
 static uint32_t cluster_to_sector(uint32_t cluster_idx);
 static bool filename_valid(const vfs_filename_t filename);
 static bool filename_character_valid(char character);
-static void set_init_done(void);
 
 // If sector size changes update comment below
 COMPILER_ASSERT(0x0200 == VFS_SECTOR_SIZE);
@@ -239,14 +238,12 @@ mbr_t mbr;
 file_allocation_table_t fat;
 virtual_media_t virtual_media[16];
 root_dir_t dir_current;
-FatDirectoryEntry_t dir_initial[VFS_MAX_FILES];
 uint8_t file_count;
 vfs_file_change_cb_t file_change_cb;
 uint32_t virtual_media_idx;
 uint32_t fat_idx;
 uint32_t dir_idx;
 uint32_t data_start;
-bool init_complete;
 
 // Virtual media must be larger than the template
 COMPILER_ASSERT(sizeof(virtual_media) > sizeof(virtual_media_tmpl));
@@ -279,13 +276,11 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     fat_idx = 0;
     memset(&virtual_media, 0, sizeof(virtual_media));
     memset(&dir_current, 0, sizeof(dir_current));
-    memset(&dir_initial, 0, sizeof(dir_initial));
     dir_idx = 0;
     file_count = 0;
     file_change_cb = file_change_cb_stub;
     virtual_media_idx = 0;
     data_start = 0;
-    init_complete = false;
     // Initialize MBR
     memcpy(&mbr, &mbr_tmpl, sizeof(mbr_t));
     total_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
@@ -452,8 +447,6 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
     memset(buf, 0, num_sectors * VFS_SECTOR_SIZE);
     current_sector = 0;
 
-    set_init_done();
-
     for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media); i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
         uint32_t vm_start = current_sector;
@@ -486,8 +479,6 @@ void vfs_write(uint32_t requested_sector, const uint8_t *buf, uint32_t num_secto
     uint8_t i = 0;
     uint32_t current_sector;
     current_sector = 0;
-
-    set_init_done();
 
     for (i = 0; i < virtual_media_idx; i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
@@ -563,23 +554,20 @@ static uint32_t read_fat(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
 static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t start_index;
-    uint32_t copy_size;
 
     if ((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir_current)) {
         // Trying to read too much of the root directory
         util_assert(0);
         return 0;
     }
+   
+    // Zero buffer data is VFS_SECTOR_SIZE max
+    memset(data, 0, VFS_SECTOR_SIZE);
 
-    // Zero buffer
-    memset(data, 0, num_sectors * VFS_SECTOR_SIZE);
-    start_index = sector_offset * VFS_SECTOR_SIZE / sizeof(FatDirectoryEntry_t);
-
-    // Copy data if anything can be copied
-    if (start_index < ELEMENTS_IN_ARRAY(dir_initial)) {
-        util_assert(sizeof(dir_initial) > sector_offset * VFS_SECTOR_SIZE);
-        copy_size = sizeof(dir_initial) - sector_offset * VFS_SECTOR_SIZE;
-        memcpy(data, &dir_initial[start_index], copy_size);
+    if (sector_offset < 2) { //Handle 1024 bytes but only copy VFS_SECTOR_SIZE
+        // Copy data if anything can be copied
+        start_index = sector_offset * VFS_SECTOR_SIZE / sizeof(FatDirectoryEntry_t);
+        memcpy(data, &dir_current.f[start_index], VFS_SECTOR_SIZE);
     }
 
     return num_sectors * VFS_SECTOR_SIZE;
@@ -702,12 +690,4 @@ static bool filename_character_valid(char character)
 
     // All of the checks have passed so this is a valid file name character
     return true;
-}
-
-static void set_init_done(void)
-{
-    if (!init_complete) {
-        memcpy(&dir_initial, &dir_current, MIN(sizeof(dir_initial), sizeof(dir_current)));
-        init_complete = true;
-    }
 }
