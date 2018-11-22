@@ -45,6 +45,11 @@ Provides definitions about:
 #define CONF_JTAG
 #endif
 
+// Configure SWD option by default
+#if !defined(CONF_JTAG) && !defined(CONF_SWD)
+#define CONF_SWD
+#endif
+
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
 #define CPU_CLOCK               48000000        ///< Specifies the CPU Clock in Hz
@@ -59,7 +64,11 @@ Provides definitions about:
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if defined(CONF_SWD)
 #define DAP_SWD                 1               ///< SWD Mode:  1 = available, 0 = not available
+#else
+#define DAP_SWD                 0               ///< SWD Mode:  1 = available, 0 = not available
+#endif
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
@@ -75,7 +84,11 @@ Provides definitions about:
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.
+#if (DAP_SWD != 0)
 #define DAP_DEFAULT_PORT        1               ///< Default JTAG/SWJ Port Mode: 1 = SWD, 2 = JTAG.
+#else
+#define DAP_DEFAULT_PORT        2               ///< Default JTAG/SWJ Port Mode: 1 = SWD, 2 = JTAG.
+#endif
 
 /// Default communication speed on the Debug Access Port for SWD and JTAG mode.
 /// Used to initialize the default SWD/JTAG clock frequency.
@@ -173,6 +186,20 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
 #if (DAP_JTAG != 0)
+    LPC_GPIO->SET[PIN_SWCLK_PORT] = PIN_SWCLK;
+    LPC_GPIO->SET[PIN_SWDIO_PORT] = PIN_SWDIO;
+#if !defined(PIN_nRESET_FET_DRIVE)
+    // open drain logic
+    LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+#else
+    // FET drive logic
+    LPC_GPIO->DIR[PIN_nRESET_PORT] |= PIN_nRESET;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+#endif
+    LPC_GPIO->DIR[PIN_SWCLK_PORT] |= PIN_SWCLK;
+    LPC_GPIO->DIR[PIN_SWDIO_PORT] |= PIN_SWDIO;
+
     LPC_GPIO->SET[PIN_TDI_PORT]  =  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDI_PORT] |=  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDO_PORT] &= ~PIN_TDO;
@@ -392,7 +419,11 @@ __STATIC_FORCEINLINE void     PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
+#if !defined(PIN_nRESET_FET_DRIVE)
     return LPC_GPIO->B[PIN_nRESET_BIT + PIN_nRESET_PORT * 32] & 0x1;
+#else
+    return (LPC_GPIO->B[PIN_nRESET_BIT + PIN_nRESET_PORT * 32] & 0x1) == 1 ? 0 : 1;
+#endif
 }
 
 /** nRESET I/O pin: Set Output.
