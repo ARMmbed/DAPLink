@@ -1,6 +1,6 @@
 # Automated Tests
 
-DAPLink has an extensive automated test suite. It can be run on the current development environment (Windows only) or a release package (Windows, Mac or Linux). Test results are written to the current directory and printed to the console.
+DAPLink has an extensive automated test suite. It can be run on the current development environment (Windows and Linux) or a release package (Windows, Mac or Linux). Test results are written to the current directory and printed to the console.
 
 Tests are launched by running ``python test/run_test.py`` in the Python virtual environment. The test logic discovers connected DAPLink boards and targets only those boards. Likewise, it detects what firmware you have built and targets only that firmware. Specify --help to view testing options (``run_test.py --help``).
 
