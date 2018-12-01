@@ -332,8 +332,9 @@ def test_all(test_info, cdc, hid, msd):
         """MSD thread entry point for parallel testing"""
         try:
             _safe_print("msd started")
+            msd_data = msd.scsi_read10(100, 1)
             while not terminate:
-                msd_data = 'x' * 1024 * 16  # 16KB
+                #msd_data = 'x' * 1024 * 16  # 16KB
                 msd.scsi_write10(100, msd_data)
             _safe_print("msd end")
         except:
