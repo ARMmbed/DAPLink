@@ -553,8 +553,6 @@ static uint32_t read_fat(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
 
 static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    uint32_t start_index;
-
     if ((sector_offset + num_sectors) * VFS_SECTOR_SIZE > sizeof(dir_current)) {
         // Trying to read too much of the root directory
         util_assert(0);
@@ -564,10 +562,9 @@ static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
     // Zero buffer data is VFS_SECTOR_SIZE max
     memset(data, 0, VFS_SECTOR_SIZE);
 
-    if (sector_offset < 2) { //Handle 1024 bytes but only copy VFS_SECTOR_SIZE
-        // Copy data if anything can be copied
-        start_index = sector_offset * VFS_SECTOR_SIZE / sizeof(FatDirectoryEntry_t);
-        memcpy(data, &dir_current.f[start_index], VFS_SECTOR_SIZE);
+    if (sector_offset == 0) { //Handle the first 512 bytes
+        // Copy data that is actually created in the directory
+        memcpy(data, &dir_current.f[0], dir_idx*sizeof(FatDirectoryEntry_t));
     }
 
     return num_sectors * VFS_SECTOR_SIZE;
