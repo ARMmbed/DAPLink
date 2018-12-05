@@ -586,7 +586,7 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     }
 
     // Check - File size must either grow or be smaller than the size already transferred
-    if ((size < file_transfer_state.file_size) && (size < file_transfer_state.size_transferred)) {
+    if ((size < file_transfer_state.file_size) && (size < file_transfer_state.size_transferred) && (size > 0)) {
         vfs_mngr_printf("    error: file size changed from %i to %i\r\n", file_transfer_state.file_size, size);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
