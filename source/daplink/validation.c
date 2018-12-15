@@ -36,21 +36,42 @@ __weak uint8_t validate_bin_nvic(const uint8_t *buf)
     //  08 NMI_Handler      (FLASH address)
     //  12 HardFault_Handler(FLASH address)
     uint32_t i = 4, nvic_val = 0;
+    uint8_t index = 0, in_range = 0;
     // test the initial SP value
     memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
 
     if (0 == test_range(nvic_val, target_device.ram_start, target_device.ram_end)) {
-        return 0;
+        while (!(target_device.extra_ram[index].start == 0 && target_device.extra_ram[index].end == 0)) { //try additional reqions if present
+            if (1 == test_range(nvic_val, target_device.extra_ram[index].start, target_device.extra_ram[index].end)) {
+                in_range = 1;
+                break;
+            }
+            index++;
+        }
+        if (in_range == 0) {
+            return 0;
+        }
     }
+    
+    
 
     // Reset_Handler
     // NMI_Handler
     // HardFault_Handler
     for (; i <= 12; i += 4) {
         memcpy(&nvic_val, buf + i, sizeof(nvic_val));
-
         if (0 == test_range(nvic_val, target_device.flash_start, target_device.flash_end)) {
-            return 0;
+            index = 0, in_range = 0;
+            while (!(target_device.extra_flash[index].start == 0 && target_device.extra_flash[index].end == 0)) { //try additional reqions if present
+                if (1 == test_range(nvic_val, target_device.extra_flash[index].start, target_device.extra_flash[index].end)) {
+                    in_range = 1;
+                    break;
+                }
+                index++;
+            }
+            if (in_range == 0) {
+                return 0;
+            }
         }
     }
 

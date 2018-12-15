@@ -40,6 +40,15 @@ extern "C" {
 // This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
+//Additional flash and ram regions
+#define MAX_EXTRA_FLASH_REGION                3
+#define MAX_EXTRA_RAM_REGION                  3
+
+typedef struct region_info {
+    uint32_t start;
+    uint32_t end;
+} region_info_t;
+
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
@@ -55,6 +64,8 @@ typedef struct target_cfg {
     uint8_t erase_reset;            /*!< Reset after performing an erase */
     const sector_info_t* sectors_info; 
     int sector_info_length;
+    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1]; //!< Extra flash regions.
+    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1]; //!< Extra RAM regions.
 } target_cfg_t;
 
 extern target_cfg_t target_device;
