@@ -40,6 +40,9 @@ static const sector_info_t sectors_info[] = {
     { 0x08000000, 0x00004000 }, // 4 x 16KB
     { 0x08010000, 0x00010000 }, // 1 x 64KB
     { 0x08020000, 0x00020000 }, // 7 x 128KB
+    { 0x08100000, 0x00004000 },
+    { 0x08110000, 0x00010000 },
+    { 0x08120000, 0x00020000 },
 };
 
 static const program_target_t flash = {
