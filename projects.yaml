@@ -498,3 +498,15 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mini_iot_lpc54018.yaml
+    lpc11u35_mtb_stm32l475_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_stm32l475.yaml
+    lpc11u35_mtb_aconno_acn52832_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_aconno_acn52832.yaml
+    lpc11u35_mtb_stm32f439_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mtb_stm32f439.yaml
