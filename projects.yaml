@@ -18,7 +18,7 @@ module:
         - records/daplink/bootloader.yaml
         - records/daplink/drag-n-drop.yaml
         - records/daplink/settings.yaml
-        - records/daplink/settings_rom_stub.yaml
+        - records/daplink/settings_rom.yaml
     if: &module_if
         - *module_tools
         - records/usb/usb-core.yaml
