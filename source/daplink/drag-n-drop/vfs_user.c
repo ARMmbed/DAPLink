@@ -174,6 +174,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_overflow_detect(false);
             vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "MSC_ON  CFG", sizeof(vfs_filename_t))) {
+            config_set_mass_storage_support(true);
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "MSC_OFF CFG", sizeof(vfs_filename_t))) {
+            config_set_mass_storage_support(false);
+            vfs_mngr_fs_remount();
         }
     }
 
