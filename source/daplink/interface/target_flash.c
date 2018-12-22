@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#ifdef DRAG_N_DROP_SUPPORT
 #include "string.h"
 
 #include "target_config.h"
@@ -47,6 +47,7 @@ static error_t target_flash_erase_chip(void);
 static uint32_t target_flash_program_page_min_size(uint32_t addr);
 static uint32_t target_flash_erase_sector_size(uint32_t addr);
 static uint8_t target_flash_busy(void);
+static uint8_t flash_page_erase_support(void);
 
 static const flash_intf_t flash_intf = {
     target_flash_init,
@@ -57,6 +58,7 @@ static const flash_intf_t flash_intf = {
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
     target_flash_busy,
+    flash_page_erase_support,
 };
 
 static state_t state = STATE_CLOSED;
@@ -261,3 +263,4 @@ static uint8_t target_flash_busy(void){
 static uint8_t flash_page_erase_support(void){
     return (g_board_info.flags & kEnablePageErase);
 }
+#endif

@@ -64,6 +64,7 @@ static error_t intercept_page_write(uint32_t addr, const uint8_t *buf, uint32_t 
 static error_t intercept_sector_erase(uint32_t addr);
 static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, uint32_t size);
 static uint8_t target_flash_busy(void);
+static uint8_t flash_page_erase_support(void);
 
 static const flash_intf_t flash_intf = {
     init,
@@ -74,6 +75,7 @@ static const flash_intf_t flash_intf = {
     program_page_min_size,
     erase_sector_size,
     target_flash_busy,
+    flash_page_erase_support,
 };
 
 const flash_intf_t *const flash_intf_iap_protected = &flash_intf;
@@ -502,4 +504,8 @@ static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, ui
 
 static uint8_t target_flash_busy(void){
     return (state == STATE_OPEN);
+}
+
+static uint8_t flash_page_erase_support(void){
+    return 0;
 }

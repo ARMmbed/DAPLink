@@ -82,7 +82,6 @@ void bootloader_check_and_update(void)
 
     same = memcmp((void*)image_start, image_data, image_size) == 0;
     if (!same) {
-        flash_manager_set_page_erase(false);
         ret = flash_manager_init(flash_intf_iap_protected);
         if (ret != ERROR_SUCCESS) {
             util_assert(0);
