@@ -28,7 +28,6 @@
 #include "virtual_fs.h"
 #include "vfs_manager.h"
 #include "daplink_debug.h"
-#include "validation.h"
 #include "info.h"
 #include "settings.h"
 #include "daplink.h"
@@ -117,6 +116,16 @@ static const file_transfer_state_t default_transfer_state = {
     false,
     STREAM_TYPE_NONE,
 };
+
+#ifndef MSC_ENDPOINT
+BOOL USBD_MSC_MediaReady = __FALSE;
+BOOL USBD_MSC_ReadOnly = __FALSE;
+U32 USBD_MSC_MemorySize;
+U32 USBD_MSC_BlockSize;
+U32 USBD_MSC_BlockGroup;
+U32 USBD_MSC_BlockCount;
+U8 *USBD_MSC_BlockBuf;
+#endif
 
 static uint32_t usb_buffer[VFS_SECTOR_SIZE / sizeof(uint32_t)];
 static error_t fail_reason = ERROR_SUCCESS;
