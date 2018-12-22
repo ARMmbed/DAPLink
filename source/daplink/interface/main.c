@@ -43,7 +43,10 @@
 #include "target_family.h"
 #include "target_board.h"
 
+#ifdef DRAG_N_DROP_SUPPORT
+#include "vfs_manager.h"
 #include "flash_intf.h"
+#endif
 
 // Event flags for main task
 // Timers events
@@ -228,7 +231,9 @@ __task void main_task(void)
     info_init();
     // USB
     usbd_init();
-    vfs_mngr_fs_enable(true);
+#ifdef DRAG_N_DROP_SUPPORT
+    vfs_mngr_fs_enable(config_get_mass_storage_support());
+#endif    
     usbd_connect(0);
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
@@ -287,8 +292,11 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
-            vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
-
+#ifdef DRAG_N_DROP_SUPPORT
+            if (config_get_mass_storage_support()){
+                vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
+            }
+#endif
             // Update USB connect status
             switch (usb_state) {
                 case USB_DISCONNECTING:
@@ -336,10 +344,15 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_30MS) {
 
             // handle reset button without eventing
-            if (!reset_pressed && gpio_get_reset_btn_fwrd() && !flash_intf_target->flash_busy()) { //added checking if flashing on target is in progress
-                // Reset button pressed
-                target_set_state(RESET_HOLD);
-                reset_pressed = 1;
+            if (!reset_pressed && gpio_get_reset_btn_fwrd()) { 
+#ifdef DRAG_N_DROP_SUPPORT
+               if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
+#endif                
+                {
+                    // Reset button pressed
+                    target_set_state(RESET_HOLD);
+                    reset_pressed = 1;
+                }
             } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
                 // Reset button released
                 target_set_state(RESET_RUN);

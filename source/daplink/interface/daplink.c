@@ -20,12 +20,17 @@
  */
 
 #include "daplink.h"
+
+#ifdef DRAG_N_DROP_SUPPORT
+
 #include "virtual_fs.h"
 #include "compiler.h"
 
 COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
 
 const vfs_filename_t daplink_mode_file_name = "START_BLACT";
+
+#endif
 
 bool daplink_is_bootloader()
 {

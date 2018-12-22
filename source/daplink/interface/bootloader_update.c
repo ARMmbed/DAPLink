@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#ifdef DRAG_N_DROP_SUPPORT
 #include <stdbool.h>
 #include <string.h>
 #include "flash_manager.h"
@@ -102,3 +103,8 @@ void bootloader_check_and_update(void)
         }
     }
 }
+#else
+
+void bootloader_check_and_update(void) {}
+
+#endif
