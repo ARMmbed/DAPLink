@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/toshiba/target_reset_tz.c

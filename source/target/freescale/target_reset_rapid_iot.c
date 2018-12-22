@@ -1,6 +1,5 @@
 /**
- * @file    target_reset_Kseries.c
- * @brief   Target reset for the Kinetis K series
+ * @file    target_reset.c
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,17 +21,22 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
+#include "target_config.h"
 #include "target_family.h"
 
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004
 #define MDM_IDR     0x010000fc
-#define MDM_ID      0x001c0000 // K64, K22 (K series)
+#define MDM_ID_K64  0x001c0000 // K64
+#define MDM_ID_KW4  0x001c0020 // KW4
 
-static void target_before_init_debug(void)
-{
-    swd_set_target_reset(1);
-}
+/* Kinetis series ID */
+#define K_SERIES     0
+#define KW_SERIES    5
+
+/* KW4 subfamily defines */
+#define KW40         0
+#define KW41         1
 
 static uint8_t target_unlock_sequence(void)
 {
@@ -42,11 +46,12 @@ static uint8_t target_unlock_sequence(void)
     if (!swd_read_ap(MDM_IDR, &val)) {
         return 0;
     }
-
+    /*
     // verify the result
-    if (val != MDM_ID) {
+    if (val != mdm_id) {
         return 0;
     }
+    */
 
     if (!swd_read_ap(MDM_STATUS, &val)) {
         return 0;
@@ -129,10 +134,10 @@ static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-const target_family_descriptor_t g_nxp_kinetis_kseries = {
-    .family_id = NXP_KINETIS_K_SERIES_FAMILY_ID,
+
+const target_family_descriptor_t g_nxp_rapid_iot = {
+    .family_id = NXP_RAPID_IOT_FAMILY_ID,
     .default_reset_type = kHardwareReset,
-    .target_before_init_debug = target_before_init_debug,
     .target_unlock_sequence = target_unlock_sequence,
     .security_bits_set = security_bits_set,
 };

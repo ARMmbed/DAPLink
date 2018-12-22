@@ -1,6 +1,6 @@
 /**
- * @file    target_reset_nrf52.c
- * @brief   Target reset for the nrf52
+ * @file    target_reset.c
+ * @brief   Target reset for the nrf51
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -27,42 +27,36 @@
 
 static void swd_set_target_reset(uint8_t asserted)
 {
-    uint32_t ap_index_return;
-
     if (asserted) {
         swd_init_debug();
 
-        swd_read_ap(0x010000FC, &ap_index_return);
-        if (ap_index_return == 0x02880000) {
-            // Have CTRL-AP
-            swd_write_ap(0x01000000, 1);  // CTRL-AP reset hold
+        //Set POWER->RESET on NRF to 1
+        if (!swd_write_ap(AP_TAR, 0x40000000 + 0x544)) {
+            return;
         }
-        else {
-            // No CTRL-AP - Perform a soft reset
-            // 0x05FA0000 = VECTKEY, 0x4 = SYSRESETREQ
-            uint32_t swd_mem_write_data = 0x05FA0000 | 0x4;
-            swd_write_memory(0xE000ED0C, (uint8_t *) &swd_mem_write_data, 4);
+
+        if (!swd_write_ap(AP_DRW, 1)) {
+            return;
         }
-        if(g_board_info.swd_set_target_reset){ //aditional reset
+
+        //Hold RESET and SWCLK low for a minimum of 100us
+        if(g_board_info.swd_set_target_reset){
             g_board_info.swd_set_target_reset(asserted);
         }
+        PIN_SWCLK_TCK_CLR();
+        PIN_SWDIO_TMS_CLR();
+        //os_dly_wait(1);
     } else {
-        swd_read_ap(0x010000FC, &ap_index_return);
-        if (ap_index_return == 0x02880000) {
-            // Device has CTRL-AP
-            swd_write_ap(0x01000000, 0);  // CTRL-AP reset release
-        }
-        else {
-            // No CTRL-AP - Soft reset has been performed
-        }
+        PIN_SWCLK_TCK_SET();
+        PIN_SWDIO_TMS_SET();
         if(g_board_info.swd_set_target_reset){
             g_board_info.swd_set_target_reset(asserted);
         }
     }
 }
 
-const target_family_descriptor_t g_nordic_nrf52 = {
-    .family_id = NORDIC_NRF52_FAMILY_ID,
+const target_family_descriptor_t g_nordic_nrf51 = {
+    .family_id = NORDIC_NRF51_FAMILY_ID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = SYSRESETREQ,
     .swd_set_target_reset = swd_set_target_reset,

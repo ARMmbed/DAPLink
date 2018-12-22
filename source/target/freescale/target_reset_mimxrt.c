@@ -22,9 +22,9 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
+#include "target_family.h"
 
-
-void target_before_init_debug(void)
+static void target_before_init_debug(void)
 {
     // This is for the hardware conflict (the EVK are not consider >2 debugger connection
     // situation) with another external debugger(such as JLINK). Before drag&pull, to force
@@ -39,21 +39,9 @@ void target_before_init_debug(void)
     target_set_state(RESET_RUN);
 }
 
-void board_init(void)
-{
-}
-
-uint8_t target_unlock_sequence(void)
-{
-    return 1;
-}
-
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
-{
-    return 0;
-}
-
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_sw(state);
-}
+const target_family_descriptor_t g_nxp_mimxrt = {
+    .family_id = NXP_MIMXRT_FAMILY_ID,
+    .default_reset_type = kSoftwareReset,
+    .soft_reset_type = VECTRESET,
+    .target_before_init_debug = target_before_init_debug,
+};
