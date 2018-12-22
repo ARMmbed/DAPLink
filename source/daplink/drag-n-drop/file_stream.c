@@ -23,13 +23,13 @@
 
 #include "file_stream.h"
 #include "util.h"
-#include "validation.h"
 #include "macro.h"
 #include "intelhex.h"
 #include "flash_decoder.h"
 #include "error.h"
 #include "RTL.h"
 #include "compiler.h"
+#include "target_board.h"
 
 typedef enum {
     STREAM_STATE_CLOSED,

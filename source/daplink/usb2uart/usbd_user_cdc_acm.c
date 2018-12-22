@@ -26,6 +26,7 @@
 #include "uart.h"
 #include "flash_intf.h"
 
+#include "target_family.h"
 UART_Configuration UART_Config;
 
 /** @brief  Vitual COM Port initialization

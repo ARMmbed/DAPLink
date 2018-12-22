@@ -35,6 +35,7 @@
 #include "file_stream.h"
 #include "settings.h"
 #include "target_reset.h"
+#include "target_family.h"
 #include <string.h>
 
 //**************************************************************************************************

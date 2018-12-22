@@ -35,7 +35,7 @@
 #include "gpio.h"           // for gpio_get_sw_reset
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
-
+#include "target_board.h"
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
 static const uint32_t disc_size = MB(64);
@@ -87,10 +87,10 @@ void vfs_user_build_filesystem()
     uint32_t file_size;
     vfs_file_t file_handle;
     // Setup the filesystem based on target parameters
-    vfs_init(daplink_drive_name, disc_size);
+    vfs_init(g_board_info.daplink_drive_name, disc_size);
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
-    vfs_create_file(daplink_url_name, read_file_mbed_htm, 0, file_size);
+    vfs_create_file(g_board_info.daplink_url_name, read_file_mbed_htm, 0, file_size);
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
@@ -502,7 +502,7 @@ static uint32_t expand_info(uint8_t *buf, uint32_t bufsize)
 
                 case 'r':
                 case 'R':   // URL replacement
-                    insert_string = (uint8_t *)daplink_target_url;
+                    insert_string = (uint8_t *)g_board_info.daplink_target_url;
                     break;
 
                 default:

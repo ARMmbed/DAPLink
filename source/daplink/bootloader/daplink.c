@@ -29,9 +29,6 @@ COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_BL);
 // daplink_drive_name strings must be 11 characters
 // excluding the null terminated character
 const char daplink_mode_file_name[11] = "START_IFACT";
-const char daplink_url_name[11] =       "HELP_FAQHTM";
-const char daplink_drive_name[11] =     "MAINTENANCE";
-const char *const daplink_target_url = "https://mbed.com/daplink";
 
 bool daplink_is_bootloader()
 {

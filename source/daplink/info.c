@@ -26,10 +26,25 @@
 #include "target_config.h"
 #include "board.h"
 #include "read_uid.h"
-#include "virtual_fs.h"
 #include "util.h"
 #include "crc.h"
 #include "daplink.h"
+#include "settings.h"
+#include "target_board.h"
+
+#if (defined(__ICCARM__))
+#pragma optimize = none
+void flash_cache_clear(flash_config_t *config)
+#elif (defined(__CC_ARM))
+#pragma push
+#pragma O0
+#elif (!defined(__GNUC__))
+/* #pragma GCC push_options */
+/* #pragma GCC optimize("O0") */
+void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
+#else
+#error "Unknown compiler"
+#endif
 
 // Constant variables
 static const daplink_info_t *const info_bl = (daplink_info_t *)(DAPLINK_ROM_BL_START + DAPLINK_INFO_OFFSET);
@@ -49,6 +64,7 @@ static uint32_t crc_config_user;
 static char string_unique_id[48 + 1];
 static char string_mac[12 + 1];
 static char string_board_id[4 + 1];
+static char string_family_id[4 + 1];
 static char string_host_id[32 + 1];
 static char string_target_id[32 + 1];
 static char string_hic_id[8 + 1];
@@ -124,9 +140,15 @@ static void setup_basics()
     idx += util_write_hex32(string_hic_id + idx, hic_id);
     string_hic_id[idx++] = 0;
     // Board ID
-    extern char *board_id;  //TODO - remove
-    memcpy(string_board_id, board_id, 4);
+    memcpy(string_board_id, get_board_id(), 4);
     string_board_id[4] = 0;
+    idx = 0;
+    //Family ID
+    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 12) & 0xF);
+    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 8) & 0xF);
+    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 4) & 0xF);
+    string_family_id[idx++] = '0' + ((g_board_info.family_id) & 0xF);
+    string_family_id[idx++] = 0;
     // Version
     idx = 0;
     string_version[idx++] = '0' + (DAPLINK_VERSION / 1000) % 10;
@@ -140,7 +162,7 @@ static void setup_unique_id()
 {
     memset(string_unique_id, 0, sizeof(string_unique_id));
     strcat(string_unique_id, string_board_id);
-    strcat(string_unique_id, "0000");           // Reserved - was version number
+    strcat(string_unique_id, string_family_id);
     strcat(string_unique_id, string_host_id);
     strcat(string_unique_id, string_hic_id);
 }
@@ -298,3 +320,10 @@ uint32_t info_get_interface_version(void)
 
     return info_if->version;
 }
+
+#if (defined(__CC_ARM))
+#pragma pop
+#endif
+#if (defined(__GNUC__))
+/* #pragma GCC pop_options */
+#endif

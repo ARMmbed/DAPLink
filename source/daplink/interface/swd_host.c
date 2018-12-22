@@ -27,6 +27,7 @@
 #include "debug_cm.h"
 #include "DAP_config.h"
 #include "DAP.h"
+#include "target_family.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -874,11 +875,6 @@ uint8_t swd_init_debug(void)
     } while (--retries > 0);
     
     return 0;
-}
-
-__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
-{
-    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
 }
 
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)

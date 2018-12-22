@@ -68,7 +68,6 @@ typedef struct target_cfg {
     region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1]; //!< Extra RAM regions.
 } target_cfg_t;
 
-extern target_cfg_t target_device;
 
 #ifdef __cplusplus
 }

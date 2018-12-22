@@ -28,7 +28,7 @@
 #include "debug_ca.h"
 #include "DAP_config.h"
 #include "DAP.h"
-
+#include "target_family.h"
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
 #define NVIC_Addr    (0xe000e000)

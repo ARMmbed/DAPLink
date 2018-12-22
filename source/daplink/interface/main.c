@@ -33,7 +33,6 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
-#include "vfs_manager.h"
 #include "settings.h"
 #include "daplink.h"
 #include "util.h"
@@ -41,6 +40,9 @@
 #include "bootloader.h"
 #include "cortex_m.h"
 #include "sdk.h"
+#include "target_family.h"
+#include "target_board.h"
+
 #include "flash_intf.h"
 
 // Event flags for main task
@@ -184,8 +186,6 @@ void USBD_SignalHandler()
 }
 
 extern void cdc_process_event(void);
-__attribute__((weak)) void prerun_board_config(void) {}
-__attribute__((weak)) void prerun_target_config(void) {}
 
 __task void main_task(void)
 {
@@ -200,6 +200,9 @@ __task void main_task(void)
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
     // button state
     uint8_t reset_pressed = 0;
+    
+    //check if the family is define
+    init_family();
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -215,8 +218,12 @@ __task void main_task(void)
     // Initialize the DAP
     DAP_Setup();
     // do some init with the target before USB and files are configured
-    prerun_board_config();
-    prerun_target_config();
+    if (g_board_info.prerun_board_config) {
+        g_board_info.prerun_board_config();
+    }
+    if (g_target_family && g_target_family->prerun_target_config) {
+        g_target_family->prerun_target_config();
+    }
     // Update versions and IDs
     info_init();
     // USB
