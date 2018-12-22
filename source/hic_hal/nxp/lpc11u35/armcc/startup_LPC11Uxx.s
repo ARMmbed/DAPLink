@@ -50,7 +50,7 @@ __heap_limit
 
                 AREA    RESET, DATA, READONLY
                 EXPORT  __Vectors
-
+                IMPORT  g_board_info
 __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     Reset_Handler             ; Reset Handler
                 DCD     NMI_Handler               ; NMI Handler
@@ -64,7 +64,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     DAPLINK_VERSION           ; Version
                 DCD     SVC_Handler               ; SVCall Handler
                 DCD     0                         ; Reserved
-                DCD     0                         ; Reserved
+                DCD     g_board_info              ; Ptr to Board info, family info other target details
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
 
