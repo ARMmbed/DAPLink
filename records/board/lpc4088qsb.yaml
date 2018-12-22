@@ -4,4 +4,4 @@ common:
             - source/board/lpc4088qsb.c
         target:
             - source/target/nxp/lpc4088/target_lpc4088qsb.c
-            - source/target/nxp/lpc4088/target_reset.c
+            - source/target/nxp/target_reset_lpc4088.c

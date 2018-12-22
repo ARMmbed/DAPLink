@@ -25,19 +25,6 @@
 #include "flash_blob.c"
 
 
-uint8_t validate_bin_nvic(const uint8_t *buf)
-{
-    if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-
 // target information
 target_cfg_t target_device = {
     .sector_size    = KB(4),

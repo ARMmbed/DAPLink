@@ -19,12 +19,32 @@
  * limitations under the License.
  */
 
-#include "stdbool.h"
-#include "flash_manager.h"
+#include "string.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "4600";
-
-void prerun_board_config(void)
+static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    flash_manager_set_page_erase(true);
+    const char header[] = {0x99, 0x99, 0x96, 0x96, 0x3F, 0xCC, 0x66, 0xFC,
+                           0xC0, 0x33, 0xCC, 0x03, 0xE5, 0xDC, 0x31, 0x62};
+
+    return !memcmp(header, buf, sizeof(header));
 }
+
+
+
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "4600",
+    .family_id = REALTEK_RTL8195AM_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    //.prerun_board_config = prerun_board_config,
+    .validate_bin_nvic = validate_bin_nvic,
+    .target_cfg = &target_device,
+};
+

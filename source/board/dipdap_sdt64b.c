@@ -19,11 +19,18 @@
  * limitations under the License.
  */
  
-#include "flash_manager.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "3105";
+extern target_cfg_t target_device;
 
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "3105",
+    .family_id = NXP_KINETIS_K_SERIES_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 	"DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};

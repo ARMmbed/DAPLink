@@ -4,4 +4,3 @@ common:
             - source/board/hexiwear.c
         target:
             - source/target/freescale/rapid_iot/target.c
-            - source/target/freescale/rapid_iot/target_reset.c

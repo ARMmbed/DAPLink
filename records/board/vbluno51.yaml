@@ -8,4 +8,3 @@ common:
             - source/board/vbluno51.c
         target:
             - source/target/nordic/nrf51822/target_32.c
-            - source/target/nordic/target_reset.c

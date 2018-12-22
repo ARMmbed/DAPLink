@@ -19,22 +19,24 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
 #include "uart.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "C006";
+extern target_cfg_t target_device;
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/";
-
-void prerun_board_config()
+static void prerun_board_config()
 {
     uart_enable_flow_control(false);
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "C006",
+    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 		"DAPLINK    ",
+    .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
+    .prerun_board_config = prerun_board_config,
+    .target_cfg = &target_device,
+};

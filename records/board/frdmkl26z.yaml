@@ -4,4 +4,3 @@ common:
             - source/board/frdmkl26z.c
         target:
             - source/target/freescale/kl26z/target.c
-            - source/target/freescale/target_reset_Lseries.c

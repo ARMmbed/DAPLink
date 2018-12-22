@@ -19,4 +19,18 @@
  * limitations under the License.
  */
 
-const char *board_id = "7403";
+#include "target_board.h"
+#include "target_family.h"
+
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "7403",
+    .family_id = NXP_KINETIS_K_SERIES_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 	"DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};
+

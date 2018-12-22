@@ -19,12 +19,17 @@
  * limitations under the License.
  */
 
-const char *board_id = "0350";
+#include "target_family.h"
+#include "target_board.h"
 
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const char daplink_url_name[11] =   "XDOT    HTM";
-__attribute__((aligned(4)))
-const char daplink_drive_name[11] = "XDOT       ";
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0350",
+    .family_id = STUB_HW_RESET_FAMILY_ID,
+    .daplink_url_name =       "XDOT    HTM",
+    .daplink_drive_name =       "XDOT       ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};

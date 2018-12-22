@@ -19,18 +19,18 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "0217";
+extern target_cfg_t target_device;
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "FRDM-K82FD";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/frdm-k82f";
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0217",
+    .family_id = NXP_KINETIS_K_SERIES_FAMILY_ID,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name = 	"FRDM-K82FD",
+    .daplink_target_url = "http://www.nxp.com/frdm-k82f",
+    .target_cfg = &target_device,
+};

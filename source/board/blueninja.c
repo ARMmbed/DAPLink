@@ -21,15 +21,29 @@
 #include <RTL.h>
 #include "IO_Config.h"
 #include "swd_host.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "7010";
-
-
-void target_set_state_by_board(TARGET_RESET_STATE state)
+static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
 {
     
     if (RESET_PROGRAM == state) {
         LPC_GPIO->SET[PIN_PWH_PORT] = PIN_PWH;
         os_dly_wait(10);
     }
+    return 1;
 }
+
+
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "7010",
+    .family_id = TOSHIBA_TZ_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_set_state = target_set_state_by_board,
+    .target_cfg = &target_device,
+};

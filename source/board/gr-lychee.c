@@ -18,21 +18,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "stdbool.h"
-#include "virtual_fs.h"
-#include "flash_manager.h"
 
-const char *board_id = "5501";
+#include "target_family.h"
+#include "target_board.h"
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "MBED       ";
+extern target_cfg_t target_device;
 
-void prerun_board_config(void)
+#define BINARY_DETECTION    (0xE59FF000)
+
+static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    flash_manager_set_page_erase(true);
+    // Very dirty hacking here for ARMv7-A (non Cortex-M) binary detection
+    // This returns validated result when start instrunction
+    // of the buffer is BINARY_DETECTION (LDR  PC, Label)
+    // Compared with the high-order 3byte
+    if ((buf[1] == ((BINARY_DETECTION >> 8)  & 0xFF))
+     && (buf[2] == ((BINARY_DETECTION >> 16) & 0xFF))
+     && (buf[3] == ((BINARY_DETECTION >> 24) & 0xFF))) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
+
+static uint8_t validate_hexfile(const uint8_t *buf)
+{
+    return 0;
+}
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "5501",
+    .family_id = STUB_HW_RESET_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "MBED       ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .validate_bin_nvic = validate_bin_nvic,
+    .validate_hexfile = validate_hexfile,
+    .target_cfg = &target_device,
+};

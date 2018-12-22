@@ -19,4 +19,36 @@
  * limitations under the License.
  */
 
-const char *board_id = "2202";
+#include "RTL.h"
+#include "target_family.h"
+#include "target_board.h"
+
+static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
+{
+    if( state == RESET_PROGRAM )
+    {
+        do
+        {
+            swd_set_target_reset(1);
+            os_dly_wait(2);
+
+            swd_set_target_reset(0);
+            os_dly_wait(2);
+        } while(!swd_init_debug());
+    }
+    return 1;
+}
+
+
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "2202",
+    .family_id = WIZNET_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_set_state = target_set_state_by_board,
+    .target_cfg = &target_device,
+};

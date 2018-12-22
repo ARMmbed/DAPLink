@@ -22,19 +22,13 @@
 #include "IO_Config.h"
 #include "DAP.h"
 #include "RTL.h"
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const char daplink_url_name[11] =   "MICROBITHTM";
-__attribute__((aligned(4)))
-const char daplink_drive_name[11] = "MICROBIT   ";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://microbit.org/device/?id=@B&v=@V";
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "";
 const char * const board_id_mb_1_3 = "9900";
 const char * const board_id_mb_1_5 = "9901";
+
+extern target_cfg_t target_device;
 
 typedef enum {
     BOARD_VERSION_1_3 = 0,
@@ -43,7 +37,7 @@ typedef enum {
 
 // Enables Board Type Pin, reads it and disables it
 // Depends on gpio_init() to have been executed already
-uint8_t read_board_type_pin(void) {
+static uint8_t read_board_type_pin(void) {
     uint8_t pin_state = 0;
     // GPIO mode, Pull enable, pull down, input
     PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(0);
@@ -57,22 +51,22 @@ uint8_t read_board_type_pin(void) {
     return pin_state;
 }
 
-void set_board_id(mb_version_t board_version) {
+static void set_board_id(mb_version_t board_version) {
     switch (board_version) {
         case BOARD_VERSION_1_3:
-            board_id = board_id_mb_1_3;
+            target_device.rt_board_id = board_id_mb_1_3;
             break;
         case BOARD_VERSION_1_5:
-            board_id = board_id_mb_1_5;
+            target_device.rt_board_id = board_id_mb_1_5;
             break;
         default:
-            board_id = board_id_mb_1_5;
+            target_device.rt_board_id = board_id_mb_1_5;
             break;
     }
 }
 
 // Called in main_task() to init before USB and files are configured
-void prerun_board_config(void) {
+static void prerun_board_config(void) {
     // With only two boards the digital pin read maps directly to the type
     mb_version_t board_version = (mb_version_t)read_board_type_pin();
     set_board_id(board_version);
@@ -86,3 +80,13 @@ uint8_t usbd_hid_no_activity(U8 *buf)
     else
         return 0;
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .daplink_url_name =       "MICROBITHTM",
+    .daplink_drive_name =       "MICROBIT   ",
+    .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
+    .prerun_board_config = prerun_board_config,
+    .target_cfg = &target_device,
+};

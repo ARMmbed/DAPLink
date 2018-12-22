@@ -8,5 +8,4 @@ common:
             - source/board/6LoWPAN_BorderRouterHAT.c
         target:
             - source/target/freescale/k64f/target.c
-            - source/target/freescale/target_reset_Kseries.c
 

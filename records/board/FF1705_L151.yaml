@@ -4,4 +4,3 @@ common:
             - source/board/FF1705_L151.c
         source:
             - source/target/st/xDot-L151/target.c
-            - source/target/st/xDot-L151/target_reset.c

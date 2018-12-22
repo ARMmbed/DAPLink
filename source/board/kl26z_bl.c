@@ -22,8 +22,7 @@
 #include "target_config.h"
 #include "daplink_addr.h"
 #include "compiler.h"
-
-const char *board_id = "0000";
+#include "target_board.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
@@ -41,4 +40,13 @@ target_cfg_t target_device = {
     .ram_start      = 0x1FFFF000,
     .ram_end        = 0x20003000,
     /* .flash_algo not needed for bootloader */
+};
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0000",
+    .daplink_url_name =       "HELP_FAQHTM",
+    .daplink_drive_name =       "MAINTENANCE",
+    .daplink_target_url = "https://mbed.com/daplink",
+    .target_cfg = &target_device,
 };

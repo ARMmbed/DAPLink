@@ -4,4 +4,3 @@ common:
             - source/board/frdmkw24d.c
         target:
             - source/target/freescale/kw24d/target.c
-            - source/target/freescale/target_reset_Kseries.c

@@ -4,4 +4,3 @@ common:
             - source/board/dipdap_sdt52832b.c
         target:
             - source/target/nordic/nrf5x/target.c
-            - source/target/nordic/target_reset_nrf52.c

@@ -8,4 +8,3 @@ common:
             - source/board/mtb_mts_dragonfly.c
         target:
             - source/target/st/stm32f411/target.c
-            - source/target/st/target_reset.c

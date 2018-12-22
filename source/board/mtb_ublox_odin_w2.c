@@ -22,10 +22,24 @@
 #include "flash_manager.h"
 #include "swd_host.h"
 
-const char *board_id = "0450";
+#include "target_family.h"
+#include "target_board.h"
+
+extern target_cfg_t target_device;
 
 void prerun_board_config(void)
 {
     flash_manager_set_page_erase(true);
     swd_set_reset_connect(CONNECT_UNDER_RESET);
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0450",
+    .family_id = STUB_HW_RESET_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};

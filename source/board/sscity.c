@@ -18,8 +18,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "virtual_fs.h"
 
-const char *board_id = "1019";
+#include "target_family.h"
+#include "target_board.h"
 
-const vfs_filename_t daplink_drive_name =     "MBED       ";
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "1019",
+    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 		"MBED       ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};
+

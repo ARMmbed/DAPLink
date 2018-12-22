@@ -19,5 +19,17 @@
  * limitations under the License.
  */
 
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "5052";
+extern target_cfg_t target_device;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "5052",
+    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 		"DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .target_cfg = &target_device,
+};

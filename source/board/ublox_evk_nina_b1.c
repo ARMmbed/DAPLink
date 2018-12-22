@@ -18,8 +18,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "sam3u2c.h"
-#include "target_config.h"
 
-const char *board_id = "1237";
+#include "DAP_config.h"
+#include "target_board.h"
+#include "target_family.h"
+
+extern target_cfg_t target_device;
+
+static void swd_set_target_reset(uint8_t asserted){
+    if(!asserted) {
+        PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+    }
+}
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "1237",
+    .family_id = NORDIC_NRF52_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 		"DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .swd_set_target_reset = swd_set_target_reset,
+    .target_cfg = &target_device,
+};

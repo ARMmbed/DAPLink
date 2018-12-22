@@ -19,24 +19,31 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
-#include "flash_manager.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "0226";
+extern target_cfg_t target_device;
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "RT1020-EVK";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/imxrt1020evk";
-
-void prerun_board_config(void)
+static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    flash_manager_set_page_erase(true);
+    if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0226",
+    .family_id = NXP_MIMXRT_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name = 		"RT1020-EVK",
+    .daplink_target_url = "http://www.nxp.com/imxrt1020evk",
+    .validate_bin_nvic = validate_bin_nvic,
+    .target_cfg = &target_device,
+};

@@ -8,4 +8,3 @@ common:
             - source/board/nina_b1.c
         target:
             - source/target/nordic/nrf5x/target.c
-            - source/target/nordic/target_reset.c

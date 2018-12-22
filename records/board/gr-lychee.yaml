@@ -6,5 +6,3 @@ common:
             - source/board/gr-lychee.c
         target:
             - source/target/renesas/rza1lu/gr-lychee/target.c
-            - source/target/renesas/target_reset.c
-            - source/target/renesas/validation_rza.c

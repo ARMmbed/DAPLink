@@ -4,4 +4,3 @@ common:
             - source/board/frdmk22f.c
         target:
             - source/target/freescale/k22f/target.c
-            - source/target/freescale/target_reset_Kseries.c

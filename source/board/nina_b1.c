@@ -19,13 +19,17 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "1238";
+extern target_cfg_t target_device_nrf52;
 
-void prerun_board_config(void)
-{
-	// NINA-B1 is based on nrf52
-	extern target_cfg_t target_device_nrf52;
-	target_device = target_device_nrf52;
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "1238",
+    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name = 		"DAPLINK    ",
+    .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
+    .target_cfg = &target_device_nrf52,
+};

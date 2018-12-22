@@ -4,4 +4,3 @@ common:
             - source/board/lpc54608xpresso.c
         target:
             - source/target/nxp/lpc54608/target.c
-            - source/target/nxp/target_reset.c

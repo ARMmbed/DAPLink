@@ -8,5 +8,4 @@ common:
             - source/board/mtb_rak811.c
         target:
             - source/target/st/stm32l151cbxxa/target.c
-            - source/target/st/target_reset.c
 

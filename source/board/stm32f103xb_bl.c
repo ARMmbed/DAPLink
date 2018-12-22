@@ -20,8 +20,8 @@
  */
 
 #include "target_config.h"
+#include "target_board.h"
 
-const char *board_id = "0000";
 
 // stm32f103 target information
 target_cfg_t target_device = {
@@ -35,4 +35,13 @@ target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20005000
     /* .flash_algo not needed for bootloader */
+};
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0000",
+    .daplink_url_name =       "HELP_FAQHTM",
+    .daplink_drive_name = 		"MAINTENANCE",
+    .daplink_target_url = "https://mbed.com/daplink",
+    .target_cfg = &target_device,
 };

@@ -4,4 +4,3 @@ common:
             - source/board/dipdap_sdt32439b.c
         target:
             - source/target/st/stm32f439zi/target.c
-            - source/target/st/target_reset.c

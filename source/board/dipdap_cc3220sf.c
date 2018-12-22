@@ -18,12 +18,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "flash_manager.h"
- 
-const char *board_id = "3300";
 
-void prerun_board_config(void)
+#include "string.h"
+#include "target_family.h"
+#include "target_board.h"
+
+
+extern target_cfg_t target_device;
+
+const uint32_t cookieList[]=
 {
-    flash_manager_set_page_erase(true);
+    0x5AA5A55A,
+    0x000FF800,
+    0xEFA3247D
+};
+
+// Override the weak validate_bin_nvic function. The weak function expects NVIC at the beginning of the flash.
+// On CC3220SF, the beginning of the flash is the cookie list, which allows the boot ROM code to jump into onchip flash directly bypassing external flash.
+static uint8_t validate_bin_nvic(const uint8_t *buf)
+{
+    return (memcmp(buf, cookieList, sizeof(cookieList)) == 0);
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "3300",
+    .family_id = TI_FAMILY_ID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "MBED    HTM",
+    .daplink_drive_name =       "DAPLINK    ",
+    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .validate_bin_nvic = validate_bin_nvic,
+    .target_cfg = &target_device,
+};
