@@ -20,7 +20,6 @@ import os
 import shutil
 import subprocess
 from generate_mbedcli_files import generate_mbedcli_files
-from post_compute_crc import post_compute_crc
 
 def call_and_copy_output(args):
     try:
@@ -54,5 +53,4 @@ def mbedcli_run(daplink_dir, build_folder, project, toolchain, clean, verbosity)
             os.rename(os.path.join(build_dir, file), rename_file)
     cli_hex_output = os.path.join(build_dir, project + ".hex")
     crc_file_output = os.path.join(build_dir, project + "_crc")
-    print("Creating crc padded binaries %s" % os.path.basename(crc_file_output))
-    post_compute_crc(cli_hex_output, crc_file_output)
+    return (cli_hex_output,crc_file_output)

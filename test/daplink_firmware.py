@@ -122,7 +122,7 @@ class ProjectFirmwareBundle(firmware.FirmwareBundle):
 class DAPLinkFirmware(firmware.Firmware):
     """Class to abstract access to a daplink firmware image"""
 
-    _IF_RE = re.compile("^([a-z0-9]+)_([a-z0-9_]+)_if$")
+    _IF_RE = re.compile("^([a-z0-9]+)([_a-z0-9]*)_if$")
     _BL_RE = re.compile("^([a-z0-9]+)_bl$")
 
     def __init__(self, name, bundle, directory):
@@ -153,8 +153,8 @@ class DAPLinkFirmware(firmware.Firmware):
         # Check firmware name and type
         assert self._type in self.TYPE, "Invalid type %s" % self._type
         if self._type is self.TYPE.INTERFACE:
-            assert name in info.FIRMWARE_SET, 'Unknown board "%s" must be ' \
-                'added to SUPPORTED_CONFIGURATIONS in info.py' % name
+            if name not in info.FIRMWARE_SET:
+                print('Warning: board "%s" must be not in SUPPORTED_CONFIGURATIONS in info.py' % name)
 
         # Set file paths
         self._bin_path = self._directory + os.sep + '%s_crc.bin' % name

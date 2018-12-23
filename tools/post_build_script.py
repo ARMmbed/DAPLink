@@ -30,6 +30,7 @@ from os.path import dirname, join
 VECTOR_FMT = "<7I"
 CHECKSUM_FMT = "<1I"
 CHECKSUM_OFFSET = 0x1C
+TARGET_INFO_OFFSET = 13*4
 
 
 def ranges(i):
@@ -37,22 +38,30 @@ def ranges(i):
         b = list(b)
         yield b[0][1], b[-1][1]
 
-
-def post_compute_crc(input_file, output_file):
-
-    output_file_hex = output_file + ".hex"
-    output_file_binary = output_file + ".bin"
-    output_file_txt = output_file + ".txt"
-    output_file_c = output_file + ".c"
+def post_build_script(input_file, output_file, board_id=None, family_id=None, bin_offset=None):   
+    output_format_file = '-'.join(filter(None, (output_file, board_id, family_id, bin_offset)))
+    print(output_format_file)
+    output_file_hex = output_format_file + ".hex"
+    output_file_binary = output_format_file + ".bin"
+    output_file_txt = output_format_file + ".txt"
+    output_file_c = output_format_file + ".c"
     output_file_c_generic = join(dirname(output_file), "bootloader_image.c")
-    output_file_legacy = output_file + "_legacy_0x8000.bin"
-    output_file_legacy_5000 = output_file + "_legacy_0x5000.bin"
-    output_file_legacy_txt = output_file + "_legacy.txt"
+    output_file_legacy = output_format_file + "_legacy_0x8000.bin"
+    output_file_legacy_5000 = output_format_file + "_legacy_0x5000.bin"
+    output_file_legacy_txt = output_format_file + "_legacy.txt"
 
     # Read in hex file
     new_hex_file = intelhex.IntelHex()
     new_hex_file.padding = 0xFF
-    new_hex_file.fromfile(input_file, format='hex')
+
+    if input_file.lower().endswith('.bin'):
+        if bin_offset is not None:
+            new_hex_file.loadbin(input_file, offset=int(bin_offset, 16))
+        else:
+            new_hex_file.loadbin(input_file)
+    else:   #always assume hex format
+        new_hex_file.fromfile(input_file, format='hex')
+
 
     # Get the starting and ending address
     addresses = new_hex_file.addresses()
@@ -77,12 +86,26 @@ def post_compute_crc(input_file, output_file):
     for vector in vectors:
         checksum += vector
     checksum = (~checksum + 1) & 0xFFFFFFFF  # Two's compliment
-
     # Write checksum back to hex
     csum_start = CHECKSUM_OFFSET + start
     csum_data = struct.pack(CHECKSUM_FMT, checksum)
     assert len(csum_data) == 4
     new_hex_file.puts(csum_start, csum_data)
+
+    print("board_id", board_id)
+    print("family_id", family_id)
+    print("bin_offset", bin_offset)
+    if board_id is not None or family_id is not None:
+        target_info_addr = new_hex_file.gets(start + TARGET_INFO_OFFSET, 4)
+        target_addr_unpack = struct.unpack("<1I",target_info_addr)[0]
+        print("board_info addr: ",hex(target_addr_unpack-start))
+        #family_id is in integer hex
+        if family_id is not None:
+            new_hex_file.puts(target_addr_unpack + 4,struct.pack('<1I',int(family_id, 16)))
+        #board_id is in string hex
+        if board_id is not None:
+            new_hex_file.puts(target_addr_unpack + 8,struct.pack('4s',"%.04X" % int(board_id, 16)))
+        
 
     # CRC the entire image
     #
@@ -153,11 +176,14 @@ def post_compute_crc(input_file, output_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Image CRC tool')
-    parser.add_argument("input", type=str, help="Hex file to read from.")
+    parser.add_argument("input", type=str, help="Hex or bin file to read from.")
     parser.add_argument("output", type=str,
-                        help="Output base file name to write CRC32.")
-
+                        help="Output base file name to write crc, board_id and family_id.")
+    parser.add_argument("--board-id", type=str, 
+                        help="board id to for the target in hex")
+    parser.add_argument("--family-id", type=str, 
+                        help="family id to for the target in hex")
+    parser.add_argument("--bin-offset", type=str, 
+                        help="binary offset in hex")
     args = parser.parse_args()
-
-
-    post_compute_crc(args.input,args.output)
+    post_build_script(args.input, args.output, args.board_id, args.family_id, args.bin_offset)
