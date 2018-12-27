@@ -87,10 +87,10 @@ void vfs_user_build_filesystem()
     uint32_t file_size;
     vfs_file_t file_handle;
     // Setup the filesystem based on target parameters
-    vfs_init(g_board_info.daplink_drive_name, disc_size);
+    vfs_init(get_daplink_drive_name(), disc_size);
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
-    vfs_create_file(g_board_info.daplink_url_name, read_file_mbed_htm, 0, file_size);
+    vfs_create_file(get_daplink_url_name(), read_file_mbed_htm, 0, file_size);
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
@@ -508,7 +508,7 @@ static uint32_t expand_info(uint8_t *buf, uint32_t bufsize)
 
                 case 'r':
                 case 'R':   // URL replacement
-                    insert_string = (uint8_t *)g_board_info.daplink_target_url;
+                    insert_string = (uint8_t *)get_daplink_target_url();
                     break;
 
                 default:
