@@ -134,22 +134,24 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
             return status;
         }
         current_sector_valid = true;
+        last_addr = addr;
     }
     
-    if(addr < last_addr){ //non-increasing address support
+    //non-increasing address support
+    if (ROUND_DOWN(addr, current_write_block_size) != ROUND_DOWN(last_addr, current_write_block_size)) {    
         status = flush_current_block(addr);
         if (ERROR_SUCCESS != status) {
             state = STATE_ERROR;
             return status;
         }
-        //always trigger a sector setup
+    }
+    
+    if (ROUND_DOWN(addr, current_sector_size) != ROUND_DOWN(last_addr, current_sector_size)) {
         status = setup_next_sector(addr);
         if (ERROR_SUCCESS != status) {
             state = STATE_ERROR;
             return status;
         }
-        //reset last_addr
-        last_addr = addr;
     }
 
     while (true) {
