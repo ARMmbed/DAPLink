@@ -52,6 +52,9 @@ module:
     hic_stm32f103xb: &module_hic_stm32f103xb
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stm32f103xb.yaml
+    hic_max32620: &module_hic_max32620
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/max32620.yaml
 
 projects:
     kl26z_bl:
@@ -510,3 +513,11 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_stm32f439.yaml
+    max32620_bl:
+        - *module_bl
+        - *module_hic_max32620
+        - records/board/max32620_bl.yaml
+    max32620_max32625mbed_if:
+        - *module_if
+        - *module_hic_max32620
+        - records/board/max32625mbed.yaml

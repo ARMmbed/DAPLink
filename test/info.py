@@ -148,6 +148,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x218,      'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x311,      'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x350,      'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
+    (   0x0415,     'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
     (   0x0450,     'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
@@ -242,6 +243,7 @@ HIC_STRING_TO_ID = {
     'kl26z': 0x97969901,
     'lpc11u35': 0x97969902,
     'sam3u2c': 0x97969903,
+    'max32620': 0x97969904,
     'lpc4322': 0x97969905,
     'stm32f103xb': 0x97969908,
 }
@@ -276,6 +278,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0227,  # MIMXRT1050 EVK
     0x0240,  # K64F
     0x0311,  # K66F
+    0x0415,  # MAX32625MBED
     0x0450,  # mtb_ublox_odin_w2
     0x0468,  # lpc11u35_mtb_stm32l475_if
     0x0469,  # lpc11u35_mtb_stm32f439_if

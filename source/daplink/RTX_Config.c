@@ -93,6 +93,8 @@
 #define OS_CLOCK    96000000
 #elif defined(INTERFACE_STM32F103XB)
 #define OS_CLOCK    72000000
+#elif defined(INTERFACE_MAX32620)
+#define OS_CLOCK    96000000
 #endif
 #endif
 
