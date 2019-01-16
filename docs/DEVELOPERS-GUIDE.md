@@ -23,7 +23,8 @@ $ virtualenv venv
 **Step 2.1** For uvision progen compilation, update tools and generate project files. **This should be done every time you pull new changes**
 
 ```
-$ venv/Scripts/activate
+$ venv/Scripts/activate   (For Linux)
+$ venv/Scripts/activate.bat   (For Windows)
 $ pip install -r requirements.txt
 $ progen generate -t uvision
 $ venv/Scripts/deactivate
@@ -31,7 +32,8 @@ $ venv/Scripts/deactivate
 
 **Step 2.2** For mbed cli project compilation
 ```
-$ venv/Scripts/activate
+$ venv/Scripts/activate   (For Linux)
+$ venv/Scripts/activate.bat   (For Windows)
 $ pip install -r requirements.txt
 $ mbed deploy
 $ mbed config root .
