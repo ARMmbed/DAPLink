@@ -23,7 +23,8 @@ $ virtualenv venv
 **Step 2.1** For uvision progen compilation, update tools and generate project files. **This should be done every time you pull new changes**
 
 ```
-$ venv/Scripts/activate
+$ venv/Scripts/activate   (For Linux)
+$ venv/Scripts/activate.bat   (For Windows)
 $ pip install -r requirements.txt
 $ progen generate -t uvision
 $ venv/Scripts/deactivate
@@ -31,7 +32,8 @@ $ venv/Scripts/deactivate
 
 **Step 2.2** For mbed cli project compilation
 ```
-$ venv/Scripts/activate
+$ venv/Scripts/activate   (For Linux)
+$ venv/Scripts/activate.bat   (For Windows)
 $ pip install -r requirements.txt
 $ mbed deploy
 $ mbed config root .
@@ -96,7 +98,7 @@ An option to search for the daplink firmware build in uvision and mbedcli build 
 
 ## Release
 
-###Release using uvision
+### Release using uvision
 
 DAPLink contains scripts to automate most of the steps of building a release. In addition to building the release, these scripts also save relevant build information such as git SHA and python tool versions so the same build can be reproduced. The recommended steps for creating a release are below.
 
@@ -109,7 +111,7 @@ Note: A previous build can be reproduced by using the ``build_requirements.txt``
 To do this add the additional argument ``build_requirements.txt`` when calling ``build_release_uvision.bat`` in step 2.
 This will install and build with the exact version of the python packages used to create that build.
 
-###Release using mbedcli
+### Release using mbedcli
 
 If the project list is not specify, all interface and booloader projects will be compiled. If `--release_version` is given, a folder (`firmware` on default or specified by `--release_folder`, to be concatenated with the version number), will be generated with the bin, update.yml and zip file containing the bins for release
 ```
