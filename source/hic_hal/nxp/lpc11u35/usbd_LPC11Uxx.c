@@ -505,6 +505,7 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
     volatile U32 *ptr;
     U8 *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
+    int timeout = 256;
 
     /* Setup packet */
     if ((EPNum == 0) && !ctrl_out_next && (LPC_USB->DEVCMDSTAT & (1UL << 8))) {
@@ -552,8 +553,9 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
         cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
         dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
-        util_assert(!(*ptr & BUF_ACTIVE));
-
+        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done        
+        util_assert(!(*ptr & BUF_ACTIVE)); //check for timeout
+        
         if (size < cnt) {
             util_assert(0);
             cnt = size;
