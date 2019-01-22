@@ -892,6 +892,10 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
                 return 0;
             }
 
+            // Assert reset
+            swd_set_target_reset(1); 
+            os_dly_wait(2);
+
             // Enable debug
             while(swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN) == 0) {
                 if( --ap_retries <=0 )
@@ -907,13 +911,11 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
                 return 0;
             }
-
-            // Reset again
-            swd_set_target_reset(1);
-            os_dly_wait(2);
+            
+            // Deassert reset
             swd_set_target_reset(0);
             os_dly_wait(2);
-
+            
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
