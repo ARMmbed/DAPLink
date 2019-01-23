@@ -1,6 +1,6 @@
 # DAPLink users guide
 
-DAPLink provides three interface. These are drag-and-drop programming, a serial port and debugging support. In addition, you can update DAPLink firmware using the drag-and-drop programming interface of the bootloader.
+DAPLink provides three interfaces. These are drag-and-drop programming, a serial port and debugging support. In addition, you can update DAPLink firmware using the drag-and-drop programming interface of the bootloader.
 
 ## Drag-and-drop programming
 
