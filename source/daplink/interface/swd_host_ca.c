@@ -80,6 +80,10 @@ static uint8_t swd_write_core_register(uint32_t n, uint32_t val);
 static uint8_t swd_restart_req(void);
 static uint8_t swd_enable_debug(void);
 
+void swd_set_reset_connect(SWD_CONNECT_TYPE type)
+{
+}
+
 static void int2array(uint8_t *res, uint32_t data, uint8_t len)
 {
     uint8_t i = 0;
