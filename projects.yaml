@@ -490,3 +490,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_stm_s2lp.yaml
+    lpc11u35_mini_iot_lpc54018_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/mini_iot_lpc54018.yaml
