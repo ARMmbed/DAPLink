@@ -26,7 +26,8 @@ import info
 import intelhex
 from test_info import TestInfo
 
-from pyOCD.board import MbedBoard
+from pyocd.core.helpers import ConnectHelper
+from pyocd.core.memory_map import MemoryType
 
 def _same(d1, d2):
     assert type(d1) is bytearray
@@ -408,9 +409,9 @@ def test_mass_storage(workspace, parent_test):
         # Test page erase, a.k.a. sector erase by generating iHex with discrete addresses,
         # programing the device then comparing device memory against expected content.
         test = MassStorageTester(board, test_info, "Sector Erase")
-        with MbedBoard.chooseBoard(board_id=board.get_unique_id(), init_board=False) as mbed_board:
-            memory_map = mbed_board.target.getMemoryMap()
-        flash_regions = [region for region in memory_map if region.type == 'flash']
+        with ConnectHelper.session_with_chosen_probe(unique_id=board.get_unique_id(), open_session=False) as session:
+            memory_map = session.target.memory_map
+        flash_regions = memory_map.get_regions_of_type(MemoryType.FLASH)
 
         max_address = intel_hex.maxaddr()
         # Create an object. We'll add the addresses of unused even blocks to it first, then unused odd blocks for each region
@@ -418,7 +419,7 @@ def test_mass_storage(workspace, parent_test):
         # Add the content from test bin first
         expected_bin_contents = bin_file_contents
         for region_index, the_region in enumerate(flash_regions):
-            if the_region.isBootMemory == False:
+            if the_region.is_boot_memory is False:
                 continue
             flash_start = the_region.start
             flash_length = the_region.length
@@ -461,7 +462,7 @@ def test_mass_storage(workspace, parent_test):
         test.set_shutils_copy("tmp/interleave.hex")
         test.set_expected_data(expected_bin_contents, start)
         test.run()
-        
+
     # Finally, load a good binary
     test = MassStorageTester(board, test_info, "Load good file to restore state")
     test.set_programming_data(hex_file_contents, 'image.hex')

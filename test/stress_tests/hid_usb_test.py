@@ -19,7 +19,7 @@
 import mbed_lstools
 import threading
 import time
-import pyOCD
+import pyocd
 
 should_exit = False
 exit_cond = threading.Condition()
@@ -40,7 +40,7 @@ def hid_main(thread_index, board_id):
     global should_exit
     count = 0
     try:
-        device = pyOCD.pyDAPAccess.DAPAccess.get_device(board_id)
+        device = pyocd.probe.pydapaccess.DAPAccess.get_device(board_id)
         while not should_exit:
             device.open()
             info = device.vendor(0)

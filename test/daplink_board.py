@@ -30,7 +30,7 @@ import info
 import test_daplink
 from test_info import TestInfoStub, TestInfo
 from intelhex import IntelHex
-from pyOCD.board import MbedBoard
+from pyocd.core.helpers import ConnectHelper
 
 FILE_IGNORE_PATTERN_LIST = [
     re.compile("\\._\\.Trashes")
@@ -361,9 +361,9 @@ class DaplinkBoard(object):
 
     def read_target_memory(self, addr, size, resume=True):
         assert self.get_mode() == self.MODE_IF
-        with MbedBoard.chooseBoard(board_id=self.get_unique_id()) as board:
-            data = board.target.readBlockMemoryUnaligned8(addr, size)
-            board.uninit(resume)
+        with ConnectHelper.session_with_chosen_probe(unique_id=self.get_unique_id(),
+                                                     resume_on_disconnect=resume) as session:
+            data = session.target.read_memory_block8(addr, size)
         return bytearray(data)
 
     def test_fs(self, parent_test):
@@ -526,7 +526,7 @@ class DaplinkBoard(object):
         mode = self._mode
         count = self._remount_count
         test_info = parent_test.create_subtest('wait_for_remount')
-        
+
         elapsed = 0
         start = time.time()
         remounted = False
@@ -539,7 +539,7 @@ class DaplinkBoard(object):
                 elif count is not None and self._remount_count is not None and count != self._remount_count:
                         remounted = True
                         test_info.info("already remounted with change mount count")
-                        break 
+                        break
             if elapsed > wait_time:
                 raise Exception("Dismount timed out")
             time.sleep(0.1)
