@@ -214,9 +214,8 @@ void vfs_mngr_periodic(uint32_t elapsed_ms)
         time_usb_idle += elapsed_ms;
     }
 
-    sync_unlock();
-
     if (!change_state) {
+        sync_unlock();
         return;
     }
 
