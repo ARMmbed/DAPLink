@@ -34,6 +34,11 @@
 extern "C" {
 #endif
 
+typedef enum {
+    CONNECT_NORMAL,
+    CONNECT_UNDER_RESET,
+} SWD_CONNECT_TYPE;
+
 uint8_t swd_init(void);
 uint8_t swd_off(void);
 uint8_t swd_init_debug(void);
@@ -56,6 +61,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state);
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state);
 uint8_t swd_transfer_retry(uint32_t req, uint32_t *data);
 void int2array(uint8_t *res, uint32_t data, uint8_t len);
+void swd_set_reset_connect(SWD_CONNECT_TYPE type);
 
 #ifdef __cplusplus
 }
