@@ -22,6 +22,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 
+#include <stdbool.h>
 #include "IO_Config.h"
 
 #ifdef __cplusplus
