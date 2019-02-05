@@ -113,7 +113,7 @@ def test_hid(workspace, parent_test):
         test_info.info("\r\n\r\n------ TEST STEP ------")
 
         test_info.info("reset and halt")
-        target.reset_stop_on_reset()
+        target.reset_and_halt()
         currentPC = target.read_core_register('pc')
         test_info.info("HALT: pc: 0x%X" % currentPC)
         sleep(0.2)
