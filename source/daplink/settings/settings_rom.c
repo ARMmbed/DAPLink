@@ -67,7 +67,7 @@ static cfg_setting_t config_rom_copy;
 
 // Configuration defaults in flash
 static const cfg_setting_t config_default = {
-    .auto_rst = 0,
+    .auto_rst = 1,
     .automation_allowed = 1,
     .overflow_detect = 1,
 };
