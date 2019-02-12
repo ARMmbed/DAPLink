@@ -39,7 +39,7 @@ def ranges(i):
 
 
 def post_compute_crc(input_file, output_file):
-    
+
     output_file_hex = output_file + ".hex"
     output_file_binary = output_file + ".bin"
     output_file_txt = output_file + ".txt"
@@ -109,7 +109,7 @@ def post_compute_crc(input_file, output_file):
     # Write out data as a C array
     data = new_hex_file.tobinarray(start=start, size=size)
     data = list(bytearray(data))
-    output_data = ('static const unsigned int image_start = 0x%08x;\n' 
+    output_data = ('static const unsigned int image_start = 0x%08x;\n'
                     'static const unsigned int image_size = 0x%08x;\n'
                     'static const char image_data[0x%08x] = {\n    ' %
                     (start, size, size))
@@ -126,7 +126,7 @@ def post_compute_crc(input_file, output_file):
     # Print info on operation
     print("Start 0x%x, Length 0x%x, CRC32 0x%08x" % (start, size, crc32))
 
-    if start == 0x8000 or start == 0x88000 or start == 0x0800C000:
+    if start == 0x8000 or start == 0x10000 or start == 0x88000 or start == 0x0800C000:
         if start == 0x0800C000:
             # Adjust for ST-Link
             pad_addr = start - 0x8000

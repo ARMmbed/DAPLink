@@ -1,0 +1,24 @@
+common:
+    target:
+        - max32620
+    core:
+        - Cortex-M4F
+    macros:
+        - INTERFACE_MAX32620
+        - DAPLINK_HIC_ID=0x97969904 # DAPLINK_HIC_ID_MAX32620
+    includes:
+        - source/hic_hal/maxim/max32620
+    sources:
+        hic_hal:
+            - source/hic_hal/maxim/max32620
+            - source/hic_hal/maxim/max32620/armcc
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\maxim\max32620"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\maxim\max32620"
