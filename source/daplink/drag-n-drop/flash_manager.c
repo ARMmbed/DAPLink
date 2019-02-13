@@ -3,7 +3,7 @@
  * @brief   Implementation of flash_manager.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -49,6 +49,7 @@ __attribute__((aligned(4)))
 static uint8_t buf[1024];
 static bool buf_empty;
 static bool current_sector_valid;
+static bool page_erase_enabled = false;
 static uint32_t current_write_block_addr;
 static uint32_t current_write_block_size;
 static uint32_t current_sector_addr;
@@ -95,7 +96,7 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         return status;
     }
 
-    if (!intf->flash_page_erase_support()) {   
+    if (!page_erase_enabled) {   
         // Erase flash and unint if there are errors
         status = intf->erase_chip();
         flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
@@ -240,6 +241,11 @@ error_t flash_manager_uninit(void)
     return ERROR_SUCCESS;
 }
 
+void flash_manager_set_page_erase(bool enabled)
+{
+    page_erase_enabled = enabled;
+}
+
 static bool flash_intf_valid(const flash_intf_t *flash_intf)
 {
     // Check for all requried members
@@ -303,7 +309,7 @@ static error_t setup_next_sector(uint32_t addr)
     current_write_block_addr = current_sector_addr;
     current_write_block_size = MIN(sector_size, sizeof(buf));
 
-    if (intf->flash_page_erase_support()) {
+    if (page_erase_enabled) {
         // Erase the current sector
         status = intf->erase_sector(current_sector_addr);
         flash_manager_printf("    intf->erase_sector(addr=0x%x) ret=%i\r\n", current_sector_addr);

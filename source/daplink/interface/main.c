@@ -3,7 +3,7 @@
  * @brief   Entry point for interface program logic
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -46,6 +46,7 @@
 #ifdef DRAG_N_DROP_SUPPORT
 #include "vfs_manager.h"
 #include "flash_intf.h"
+#include "flash_manager.h"
 #endif
 
 // Event flags for main task
@@ -220,6 +221,15 @@ __task void main_task(void)
     gpio_set_msc_led(msc_led_value);
     // Initialize the DAP
     DAP_Setup();
+    //setup some flags
+    if(g_board_info.flags & kEnableUnderResetConnect){
+        swd_set_reset_connect(CONNECT_UNDER_RESET);
+    }
+    if(g_board_info.flags & kEnablePageErase){
+#ifdef DRAG_N_DROP_SUPPORT        
+        flash_manager_set_page_erase(true);
+#endif        
+    }
     // do some init with the target before USB and files are configured
     if (g_board_info.prerun_board_config) {
         g_board_info.prerun_board_config();

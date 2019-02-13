@@ -3,7 +3,7 @@
  * @brief   Handling of file steam decode and prep for writing
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -34,6 +34,7 @@ extern "C" {
 error_t flash_manager_init(const flash_intf_t *flash_intf);
 error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size);
 error_t flash_manager_uninit(void);
+void flash_manager_set_page_erase(bool enabled);
 
 #ifdef __cplusplus
 }

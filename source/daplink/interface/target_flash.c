@@ -3,7 +3,7 @@
  * @brief   Implementation of target_flash.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -47,7 +47,6 @@ static error_t target_flash_erase_chip(void);
 static uint32_t target_flash_program_page_min_size(uint32_t addr);
 static uint32_t target_flash_erase_sector_size(uint32_t addr);
 static uint8_t target_flash_busy(void);
-static uint8_t flash_page_erase_support(void);
 
 static const flash_intf_t flash_intf = {
     target_flash_init,
@@ -58,7 +57,6 @@ static const flash_intf_t flash_intf = {
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
     target_flash_busy,
-    flash_page_erase_support,
 };
 
 static state_t state = STATE_CLOSED;
@@ -258,9 +256,5 @@ static uint32_t target_flash_erase_sector_size(uint32_t addr)
 
 static uint8_t target_flash_busy(void){
     return (state == STATE_OPEN);
-}
-
-static uint8_t flash_page_erase_support(void){
-    return (g_board_info.flags & kEnablePageErase);
 }
 #endif

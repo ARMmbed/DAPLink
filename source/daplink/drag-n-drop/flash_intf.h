@@ -3,7 +3,7 @@
  * @brief   Interface for implementing differet ways to write an image into memory
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -38,7 +38,6 @@ typedef error_t (*flash_intf_erase_chip_cb_t)(void);
 typedef uint32_t (*flash_program_page_min_size_cb_t)(uint32_t addr);
 typedef uint32_t (*flash_erase_sector_size_cb_t)(uint32_t addr);
 typedef uint8_t (*flash_busy_cb_t)(void);
-typedef uint8_t (*flash_page_erase_support_t)(void);
 
 typedef struct {
     flash_intf_init_cb_t init;
@@ -49,7 +48,6 @@ typedef struct {
     flash_program_page_min_size_cb_t program_page_min_size;
     flash_erase_sector_size_cb_t erase_sector_size;
     flash_busy_cb_t flash_busy;
-    flash_page_erase_support_t flash_page_erase_support;
 } flash_intf_t;
 
 // All flash interfaces.  Unsupported interfaces are NULL.

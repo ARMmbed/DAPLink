@@ -3,7 +3,7 @@
  * @brief   Implementation of flash_intf.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "daplink.h"
 #include "flash_intf.h"
@@ -64,7 +64,6 @@ static error_t intercept_page_write(uint32_t addr, const uint8_t *buf, uint32_t 
 static error_t intercept_sector_erase(uint32_t addr);
 static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, uint32_t size);
 static uint8_t target_flash_busy(void);
-static uint8_t flash_page_erase_support(void);
 
 static const flash_intf_t flash_intf = {
     init,
@@ -75,7 +74,6 @@ static const flash_intf_t flash_intf = {
     program_page_min_size,
     erase_sector_size,
     target_flash_busy,
-    flash_page_erase_support,
 };
 
 const flash_intf_t *const flash_intf_iap_protected = &flash_intf;
@@ -504,8 +502,4 @@ static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, ui
 
 static uint8_t target_flash_busy(void){
     return (state == STATE_OPEN);
-}
-
-static uint8_t flash_page_erase_support(void){
-    return 0;
 }
