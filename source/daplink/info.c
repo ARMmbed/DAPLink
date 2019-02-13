@@ -3,7 +3,7 @@
  * @brief   Implementation of info.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,8 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
-
+#include <string.h>
 #include "main.h"
 #include "info.h"
 #include "target_config.h"
@@ -32,19 +31,13 @@
 #include "settings.h"
 #include "target_board.h"
 
-#if (defined(__ICCARM__))
-#pragma optimize = none
-void flash_cache_clear(flash_config_t *config)
-#elif (defined(__CC_ARM))
-#pragma push
-#pragma O0
-#elif (!defined(__GNUC__))
-/* #pragma GCC push_options */
-/* #pragma GCC optimize("O0") */
-void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
-#else
-#error "Unknown compiler"
-#endif
+//#define HEX_TO_ASCII(x) ('0' + (x>9 ? x+7 : x))
+
+static char hex_to_ascii(uint8_t x)
+{
+    return ('0' + (x>9 ? x+0x27 : x));
+    //return ('0' + (x>9 ? x+0x7 : x));
+}
 
 // Constant variables
 static const daplink_info_t *const info_bl = (daplink_info_t *)(DAPLINK_ROM_BL_START + DAPLINK_INFO_OFFSET);
@@ -111,7 +104,21 @@ const char *info_get_unique_id_string_descriptor(void)
     return usb_desc_unique_id;
 }
 
-static void setup_basics()
+#if (defined(__ICCARM__))
+#pragma optimize = none
+static void setup_basics(void)
+#elif (defined(__CC_ARM))
+#pragma push
+#pragma O0
+static void setup_basics(void)
+#elif (!defined(__GNUC__))
+/* #pragma GCC push_options */
+/* #pragma GCC optimize("O0") */
+static void __attribute__((optimize("O0"))) setup_basics(void)
+#else
+#error "Unknown compiler"
+#endif
+
 {
     uint8_t i = 0, idx = 0;
     memset(string_board_id, 0, sizeof(string_board_id));
@@ -144,10 +151,10 @@ static void setup_basics()
     string_board_id[4] = 0;
     idx = 0;
     //Family ID
-    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 12) & 0xF);
-    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 8) & 0xF);
-    string_family_id[idx++] = '0' + ((g_board_info.family_id >> 4) & 0xF);
-    string_family_id[idx++] = '0' + ((g_board_info.family_id) & 0xF);
+    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 12) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 8) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 4) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id) & 0xF));
     string_family_id[idx++] = 0;
     // Version
     idx = 0;

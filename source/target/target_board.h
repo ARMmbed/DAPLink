@@ -3,7 +3,7 @@
  * @brief   
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,7 +22,7 @@
 #ifndef TARGET_BOARD_H
 #define TARGET_BOARD_H
 
-#include "stdint.h"
+#include <stdint.h>
 #include "target_config.h"
 #include "target_reset.h"
 #include "virtual_fs.h" 
@@ -33,21 +33,21 @@ enum {
     kEnableUnderResetConnect = 1<<1,
 };
 
-typedef struct board_info { 
-	uint32_t infoVersion; // == kCurrentBoardInfoVersion 
-	uint32_t family_id; 
-	char board_id[5]; // 4-char board ID plus null terminator. 
-	uint8_t _padding[3]; 
-	uint32_t flags; 
-	target_cfg_t *target_cfg; // enables MSD when non-NULL 
-	 
-	// fields used by MSD 
-	vfs_filename_t daplink_url_name; 
-	vfs_filename_t daplink_drive_name; 
-	char daplink_target_url[64]; 
-	
-	// some specific board initilization
-	void (*prerun_board_config)(void);
+typedef struct __attribute__((__packed__)) board_info { 
+    uint16_t infoVersion; // == kCurrentBoardInfoVersion 
+    uint16_t family_id; 
+    char board_id[5]; // 4-char board ID plus null terminator. 
+    uint8_t _padding[3]; 
+    uint32_t flags; 
+    target_cfg_t *target_cfg; // enables MSD when non-NULL 
+     
+    // fields used by MSD 
+    vfs_filename_t daplink_url_name; 
+    vfs_filename_t daplink_drive_name; 
+    char daplink_target_url[64]; 
+    
+    // some specific board initilization
+    void (*prerun_board_config)(void);
     void (*swd_set_target_reset)(uint8_t asserted);
     uint8_t (*target_set_state)(TARGET_RESET_STATE state);
     uint8_t (*validate_bin_nvic)(const uint8_t *buf);
@@ -56,13 +56,22 @@ typedef struct board_info {
 } board_info_t;
 
 extern const board_info_t g_board_info;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 const char * get_board_id(void);
 uint8_t flash_algo_valid(void);
 uint8_t validate_bin_nvic(const uint8_t *buf);
 uint8_t validate_hexfile(const uint8_t *buf);
 
-inline const char * get_daplink_url_name ( void ) { return ((g_board_info.daplink_url_name[0] != 0) ? g_board_info.daplink_url_name : "MBED    HTM"); }
-inline const char * get_daplink_drive_name ( void ) { return ((g_board_info.daplink_drive_name[0] != 0) ? g_board_info.daplink_drive_name : "DAPLINK    "); }
-inline const char * get_daplink_target_url ( void ) { return ((g_board_info.daplink_target_url[0] != 0) ? g_board_info.daplink_target_url : "https://mbed.org/device/?code=@U?version=@V?target_id=@T"); }
+static inline const char * get_daplink_url_name ( void ) { return ((g_board_info.daplink_url_name[0] != 0) ? g_board_info.daplink_url_name : "MBED    HTM"); }
+static inline const char * get_daplink_drive_name ( void ) { return ((g_board_info.daplink_drive_name[0] != 0) ? g_board_info.daplink_drive_name : "DAPLINK    "); }
+static inline const char * get_daplink_target_url ( void ) { return ((g_board_info.daplink_target_url[0] != 0) ? g_board_info.daplink_target_url : "https://mbed.org/device/?code=@U?version=@V?target_id=@T"); }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

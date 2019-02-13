@@ -3,7 +3,7 @@
  * @brief   Implementation of target_family.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,18 +26,18 @@
 
 // Stub families 
 const target_family_descriptor_t g_hw_reset_family = { 
-    .family_id = STUB_HW_RESET_FAMILY_ID, 
+    .family_id = kStub_HWReset_FamilyID, 
     .default_reset_type = kHardwareReset, 
 }; 
  
 const target_family_descriptor_t g_sw_vectreset_family = { 
-    .family_id = STUB_SW_VECTRESET_FAMILY_ID, 
+    .family_id = kStub_SWVectReset_FamilyID, 
     .default_reset_type = kSoftwareReset, 
     .soft_reset_type = VECTRESET, 
 }; 
  
 const target_family_descriptor_t g_sw_sysresetreq_family = { 
-    .family_id = STUB_SW_SYSRESETREQ_FAMILY_ID, 
+    .family_id = kStub_SWSysReset_FamilyID, 
     .default_reset_type = kSoftwareReset, 
     .soft_reset_type = SYSRESETREQ, 
 };
@@ -62,6 +62,7 @@ const target_family_descriptor_t g_ti_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_wiznet_family  = {0};
 
+__attribute__((weak))
 const target_family_descriptor_t *g_families[] = { 
     &g_hw_reset_family,
     &g_sw_vectreset_family,
@@ -82,8 +83,14 @@ __attribute__((weak))
 const target_family_descriptor_t *g_target_family = NULL;
 
 
-void init_family(void) {
+void init_family(void)
+{
     uint8_t index = 0;
+    
+    if (g_target_family != NULL){ //already set
+        return;
+    }
+    
     while (g_families[index]!=0) {
         if (g_families[index]->family_id && (g_families[index]->family_id == g_board_info.family_id)) {
             g_target_family = g_families[index];
@@ -93,17 +100,19 @@ void init_family(void) {
     }
 }
 
-uint8_t target_family_valid(void) {
+uint8_t target_family_valid(void)
+{
     return (g_target_family != NULL);
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state){
+uint8_t target_set_state(TARGET_RESET_STATE state)
+{
     if (g_board_info.target_set_state) { //target specific
         g_board_info.target_set_state(state);
     }
     if (g_target_family) { 
         if (g_target_family->target_set_state) {
-            //costumize target state
+            //customize target state
             return g_target_family->target_set_state(state);
         } else {
             if (g_target_family->default_reset_type == kHardwareReset) {

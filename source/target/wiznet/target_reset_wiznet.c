@@ -3,7 +3,7 @@
  * @brief   Target reset for the W7500 
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -51,6 +51,6 @@ static uint8_t target_set_state(TARGET_RESET_STATE state) {
 
 
 const target_family_descriptor_t g_wiznet_family = {
-    .family_id = WIZNET_FAMILY_ID,
+    .family_id = kWiznet_W7500_FamilyID,
     .target_set_state = target_set_state,
 };

@@ -3,7 +3,7 @@
  * @brief   Target reset for the Kinetis L series
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -130,7 +130,7 @@ uint8_t static security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 }
 
 const target_family_descriptor_t g_nxp_kinetis_lseries = {
-    .family_id = NXP_KINETIS_L_SERIES_FAMILY_ID,
+    .family_id = kNXP_KinetisL_FamilyID,
     .default_reset_type = kHardwareReset,
     .target_before_init_debug = target_before_init_debug,
     .target_unlock_sequence = target_unlock_sequence,

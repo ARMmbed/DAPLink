@@ -3,7 +3,7 @@
  * @brief   
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,16 +22,44 @@
 #ifndef TARGET_FAMILY_H
 #define TARGET_FAMILY_H
 
-#include "stdint.h"
+#include <stdint.h>
 #include "swd_host.h"
+
+#define VENDOR_TO_FAMILY(x, y) (x<<8 | y)
 
 typedef enum _reset_type { 
     kHardwareReset=1, 
     kSoftwareReset, 
 } reset_type_t; 
+
+enum _vendor_ids {
+    kStub_VendorID = 0,
+    kNXP_VendorID = 11,
+    kTI_VendorID = 16,
+    kNordic_VendorID = 54,
+    kToshiba_VendorID = 92,
+    kWiznet_VendorID = 122,
+    kRealtek_VendorID = 124,
+};
+
+typedef enum _family_id {
+    kStub_HWReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 1),
+    kStub_SWVectReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 2),
+    kStub_SWSysReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 3),
+    kNXP_KinetisK_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 1),
+    kNXP_KinetisL_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 2),
+    kNXP_Mimxrt_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 3),
+    kNXP_RapidIot_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 4),
+    kNordic_Nrf51_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 1),
+    kNordic_Nrf52_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 2),
+    kRealtek_Rtl8195am_FamilyID = VENDOR_TO_FAMILY(kRealtek_VendorID, 1),
+    kTI_Cc3220sf_FamilyID = VENDOR_TO_FAMILY(kTI_VendorID, 1),
+    kToshiba_Tz_FamilyID = VENDOR_TO_FAMILY(kToshiba_VendorID, 1),
+    kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
+} family_id_t;
  
 typedef struct target_family_descriptor { 
-    uint32_t family_id; 
+    uint16_t family_id; 
     reset_type_t default_reset_type; 
     uint32_t soft_reset_type; 
     void (*target_before_init_debug)(void); 
@@ -42,28 +70,19 @@ typedef struct target_family_descriptor {
     void (*swd_set_target_reset)(uint8_t asserted);
 } target_family_descriptor_t;
 
-
-#define STUB_HW_RESET_FAMILY_ID         0x01
-#define STUB_SW_VECTRESET_FAMILY_ID     0x02
-#define STUB_SW_SYSRESETREQ_FAMILY_ID   0x03
-#define NXP_KINETIS_K_SERIES_FAMILY_ID  0x11
-#define NXP_KINETIS_L_SERIES_FAMILY_ID  0x12
-#define NXP_MIMXRT_FAMILY_ID            0x13
-#define NXP_RAPID_IOT_FAMILY_ID         0x14
-#define NORDIC_NRF51_FAMILY_ID          0x21
-#define NORDIC_NRF52_FAMILY_ID          0x22
-#define REALTEK_RTL8195AM_FAMILY_ID     0x31
-#define TI_FAMILY_ID                    0x41
-#define TOSHIBA_TZ_FAMILY_ID            0x51
-#define WIZNET_FAMILY_ID                0x61
-
-//extern const target_family_descriptor_t g_nxp_kinetis_kseries;
-
 extern const target_family_descriptor_t *g_target_family;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void init_family(void);
 uint8_t target_family_valid(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 void swd_set_target_reset(uint8_t asserted);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

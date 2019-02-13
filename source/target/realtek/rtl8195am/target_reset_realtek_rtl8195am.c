@@ -1,5 +1,5 @@
 /* CMSIS-DAP Interface Firmware
- * Copyright (c) 2015-2017 Realtek Semiconductor Corp.
+ * Copyright (c) 2015-2019 Realtek Semiconductor Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ static void swd_set_target_reset(uint8_t asserted)
 
 
 const target_family_descriptor_t g_realtek_rtl8195am = {
-    .family_id = REALTEK_RTL8195AM_FAMILY_ID,
+    .family_id = kRealtek_Rtl8195am_FamilyID,
     .default_reset_type = kHardwareReset,
     .swd_set_target_reset = swd_set_target_reset,
 };

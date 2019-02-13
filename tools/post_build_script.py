@@ -1,6 +1,6 @@
 #
 # DAPLink Interface Firmware
-# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -101,10 +101,10 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
         print("board_info addr: ",hex(target_addr_unpack-start))
         #family_id is in integer hex
         if family_id is not None:
-            new_hex_file.puts(target_addr_unpack + 4,struct.pack('<1I',int(family_id, 16)))
+            new_hex_file.puts(target_addr_unpack + 2,struct.pack('<1H',int(family_id, 16)))
         #board_id is in string hex
         if board_id is not None:
-            new_hex_file.puts(target_addr_unpack + 8,struct.pack('4s',"%.04X" % int(board_id, 16)))
+            new_hex_file.puts(target_addr_unpack + 4,struct.pack('4s',"%.04X" % int(board_id, 16)))
         
 
     # CRC the entire image

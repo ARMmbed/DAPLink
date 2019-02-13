@@ -3,7 +3,7 @@
  * @brief   Target reset for the cc3220sf
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -42,7 +42,7 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
 }
 
 const target_family_descriptor_t g_ti_family = {
-    .family_id = TI_FAMILY_ID,
+    .family_id = kTI_Cc3220sf_FamilyID,
     .target_set_state = target_set_state,
 };
 

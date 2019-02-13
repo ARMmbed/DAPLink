@@ -3,7 +3,7 @@
  * @brief   Target reset for the i.MX RT series
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -40,7 +40,7 @@ static void target_before_init_debug(void)
 }
 
 const target_family_descriptor_t g_nxp_mimxrt = {
-    .family_id = NXP_MIMXRT_FAMILY_ID,
+    .family_id = kNXP_Mimxrt_FamilyID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = VECTRESET,
     .target_before_init_debug = target_before_init_debug,
