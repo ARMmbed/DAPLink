@@ -1,5 +1,5 @@
 /* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+ * Copyright (c) 2009-2019 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,13 @@
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"ARM"
+#ifndef USB_PROD_STR
 #define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
+#else
+#define _TOWIDE(x)                   L ## #x
+#define TOWIDE(x)                   _TOWIDE(x)
+#define USBD_STRDESC_PROD           TOWIDE(USB_PROD_STR)
+#endif
 #define USBD_STRDESC_SER_ENABLE     1
 #define USBD_STRDESC_SER            L"0001A0000000"
 
@@ -368,7 +374,7 @@
 
 /* USB Device Calculations ---------------------------------------------------*/
 
-#define USBD_IF_NUM                (USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
+#define USBD_IF_NUM_MAX                (USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
 #define USBD_MULTI_IF              (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE))
 #define MAX(x, y)                (((x) < (y)) ? (y) : (x))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
@@ -441,11 +447,13 @@
 #define USBD_ADC_CIF_NUM           (0)
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
-#define USBD_MSC_IF_NUM            (USBD_ADC_ENABLE*2+0)
-#define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+0)
-#define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+1)
-#define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+0)
-#define USBD_WEBUSB_IF_NUM         (USBD_ADC_ENABLE*2+USBD_MSC_ENABLE*1+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+
+//REORDER FOR MSC
+#define USBD_CDC_ACM_CIF_NUM       (USBD_ADC_ENABLE*2+0)
+#define USBD_CDC_ACM_DIF_NUM       (USBD_ADC_ENABLE*2+1)
+#define USBD_HID_IF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2+0)
+#define USBD_WEBUSB_IF_NUM         (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
+#define USBD_MSC_IF_NUM            (USBD_ADC_ENABLE*2+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)

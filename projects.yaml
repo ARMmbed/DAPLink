@@ -661,3 +661,14 @@ projects:
         - *module_if
         - *module_hic_max32620
         - records/board/max32625mbed.yaml
+    max32620_if:
+        - *module_if
+        - *module_hic_max32620
+        - records/family/nxp_kinetis_kseries.yaml
+        - records/family/nxp_kinetis_lseries.yaml
+        - records/family/nxp_mimxrt.yaml
+        - records/family/nordic_nrf51.yaml
+        - records/family/nordic_nrf52.yaml
+        - records/family/realtek_rtl8195am.yaml
+        - records/family/ti_family.yaml
+        - records/family/wiznet_family.yaml

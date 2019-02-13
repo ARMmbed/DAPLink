@@ -151,7 +151,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x218,      0x12,       'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x311,      0x11,       'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x350,      0x01,       'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
-    (   0x0415,     'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
+    (   0x0415,     0x01,       'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
     (   0x0450,     0x01,       'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     0x01,       'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     0x01,       'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
