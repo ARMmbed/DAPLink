@@ -336,7 +336,7 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/lpc54608xpresso.yaml
-    lpc4322_lpc55S69xpresso_if:
+    lpc4322_lpc55s69xpresso_if:
         - *module_if
         - *module_hic_lpc4322
         - records/board/lpc55S69xpresso.yaml

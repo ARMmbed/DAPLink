@@ -3,7 +3,7 @@
  * @brief   Target reset for the lpc812
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include "target_family.h"
 #include "target_reset.h"
 #include "swd_host.h"
 #include "RTL.h"
@@ -36,19 +36,7 @@
 #define DEBUGMB_RET  0x02000008
 #define DEBUGMB_ID   0x020000FC
 
-void target_before_init_debug(void)
-{
-    return;
-}
-
-uint8_t target_unlock_sequence(void)
-{
-    return 1;
-}
-
-
-
-uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t target_set_state(TARGET_RESET_STATE state)
 {
     uint32_t val;
     int8_t ap_retries = 2;
@@ -118,8 +106,9 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
     }
 }
 
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
-{
-    return 0;
-}
+const target_family_descriptor_t g_target_family_lpc55S6X = {
+    .family_id = 0xAA, //TODO: Change this
+    .target_set_state = target_set_state,
+};
 
+const target_family_descriptor_t *g_target_family = &g_target_family_lpc55S6X;
