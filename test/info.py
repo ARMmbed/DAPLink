@@ -167,9 +167,9 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0465,     0x22,       'lpc11u35_mtb_laird_bl654_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0466,     0x22,       'lpc11u35_mtb_murata_bl241_if',             None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0467,     0x01,       'lpc11u35_mtb_stm_s2lp_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0468,     'lpc11u35_mtb_stm32l475_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0469,     'lpc11u35_mtb_stm32f439_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0472,     'lpc11u35_mtb_aconno_acn52832_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0468,     0x01,       'lpc11u35_mtb_stm32l475_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0469,     0x01,       'lpc11u35_mtb_stm32f439_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
+    (   0x0472,     0x22,       'lpc11u35_mtb_aconno_acn52832_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x8080,     0x01,       'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     0x01,       'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x700,      0x01,       'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
@@ -180,7 +180,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x765,      0x01,       'stm32f103xb_stm32l476rg_if',               'stm32f103xb_bl',   'ST-Nucleo-L476RG'                      ),
     (   0x796,      0x01,       'stm32f103xb_stm32f429zi_if',               'stm32f103xb_bl',   'ST-Nucleo-F429ZI'                      ),
     (   0x816,      0x01,       'stm32f103xb_stm32f746zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F746ZG'                      ),
-    (   0x0235,     'lpc11u35_mini_iot_lpc54018_if',            None,               'MINI-54018'                            ),
+    (   0x0235,     0x02,       'lpc11u35_mini_iot_lpc54018_if',            None,               'MINI-54018'                            ),
     (   0x824,      0x01,       'lpc11u35_lpc824xpresso_if',                None,               'LPCXpresso824-MAX'                     ),
     (   0x835,      0x01,       'stm32f103xb_stm32f207zg_if',               'stm32f103xb_bl',   'ST-Nucleo-F207ZG'                      ),
     (   0x1017,     0x21,       'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
@@ -217,8 +217,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9011,     0x01,       'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     0x21,       'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     0x21,       'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9014,     'lpc11u35_wio3g_if',                        None,               None                                    ),
-    (   0x9015,     'lpc11u35_wiobg96_if',                      None,               None                                    ),
+    (   0x9014,     0x01,       'lpc11u35_wio3g_if',                        None,               None                                    ),
+    (   0x9015,     0x01,       'lpc11u35_wiobg96_if',                      None,               None                                    ),
     (   0x9016,     0x22,       'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     0x21,       'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     0x21,       'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),

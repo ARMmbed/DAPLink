@@ -648,6 +648,7 @@ projects:
     lpc11u35_mtb_aconno_acn52832_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/family/nordic_nrf52.yaml
         - records/board/mtb_aconno_acn52832.yaml
     lpc11u35_mtb_stm32f439_if:
         - *module_if

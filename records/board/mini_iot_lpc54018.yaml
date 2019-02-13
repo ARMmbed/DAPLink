@@ -6,4 +6,3 @@ common:
             - source/board/mini_iot_lpc54018.c
         target:
             - source/target/nxp/lpc54018/target.c
-            - source/target/nxp/lpc54018/target_reset.c
