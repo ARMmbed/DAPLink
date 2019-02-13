@@ -3,7 +3,7 @@
  * @brief   board ID for the NXP MIMXRT1020-EVK board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -39,7 +39,7 @@ static uint8_t validate_bin_nvic(const uint8_t *buf)
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "0226",
-    .family_id = NXP_MIMXRT_FAMILY_ID,
+    .family_id = kNXP_Mimxrt_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name = 		"RT1020-EVK",

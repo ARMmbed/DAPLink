@@ -3,7 +3,7 @@
  * @brief   board ID for the Cerevo BlueNinja sub board & specific functions.
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -40,7 +40,7 @@ extern target_cfg_t target_device;
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "7010",
-    .family_id = TOSHIBA_TZ_FAMILY_ID,
+    .family_id = kToshiba_Tz_FamilyID,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "DAPLINK    ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",

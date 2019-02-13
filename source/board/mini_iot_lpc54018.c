@@ -26,7 +26,7 @@ extern target_cfg_t target_device;
 
 const board_info_t g_board_info = {
     .board_id = "0235",
-    .family_id = STUB_SW_VECTRESET_FAMILY_ID,
+    .family_id = kStub_SWVectReset_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name =     "MINI-54018",

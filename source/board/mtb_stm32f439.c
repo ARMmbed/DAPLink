@@ -26,7 +26,7 @@ extern target_cfg_t target_device;
 
 const board_info_t g_board_info = {
     .board_id = "0469",
-    .family_id = STUB_HW_RESET_FAMILY_ID,
+    .family_id = kStub_HWReset_FamilyID,
     .flags = kEnablePageErase|kEnableUnderResetConnect,
     .target_cfg = &target_device,
 };

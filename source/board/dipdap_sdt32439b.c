@@ -27,7 +27,7 @@ extern target_cfg_t target_device;
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "3110",
-    .family_id = STUB_HW_RESET_FAMILY_ID,
+    .family_id = kStub_HWReset_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "DAPLINK    ",

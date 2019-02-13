@@ -28,7 +28,7 @@ extern target_cfg_t target_device;
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "1200",
-    .family_id = STUB_SW_SYSRESETREQ_FAMILY_ID,
+    .family_id = kStub_SWSysReset_FamilyID,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name = 		"DAPLINK    ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",

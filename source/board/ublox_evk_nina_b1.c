@@ -3,7 +3,7 @@
  * @brief   board ID for the UBLOX_EVK_NINA_B1
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -34,7 +34,7 @@ static void swd_set_target_reset(uint8_t asserted){
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "1237",
-    .family_id = NORDIC_NRF52_FAMILY_ID,
+    .family_id = kNordic_Nrf52_FamilyID,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name = 		"DAPLINK    ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",

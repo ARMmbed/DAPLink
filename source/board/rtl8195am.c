@@ -3,7 +3,7 @@
  * @brief   board ID for the Realtek RTL8195AM board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2014-2017, Realtek Semiconductor Corp., All Rights Reserved
+ * Copyright (c) 2014-2019, Realtek Semiconductor Corp., All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -38,7 +38,7 @@ extern target_cfg_t target_device;
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "4600",
-    .family_id = REALTEK_RTL8195AM_FAMILY_ID,
+    .family_id = kRealtek_Rtl8195am_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "DAPLINK    ",

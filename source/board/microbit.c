@@ -3,7 +3,7 @@
  * @brief   board ID for the BBC Microbit board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -83,7 +83,7 @@ uint8_t usbd_hid_no_activity(U8 *buf)
 
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
-    .family_id = NORDIC_NRF51_FAMILY_ID,
+    .family_id = kNordic_Nrf51_FamilyID,
     .daplink_url_name =       "MICROBITHTM",
     .daplink_drive_name =       "MICROBIT   ",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",

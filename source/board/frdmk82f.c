@@ -3,7 +3,7 @@
  * @brief   board ID for the NXP FRDM-K64F board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,7 +28,7 @@ extern target_cfg_t target_device;
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "0217",
-    .family_id = NXP_KINETIS_K_SERIES_FAMILY_ID,
+    .family_id = kNXP_KinetisK_FamilyID,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name = 	"FRDM-K82FD",
     .daplink_target_url = "http://www.nxp.com/frdm-k82f",

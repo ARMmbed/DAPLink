@@ -46,7 +46,7 @@ static void prerun_board_config(void);
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "0228",
-    .family_id = NXP_RAPID_IOT_FAMILY_ID,
+    .family_id = kNXP_RapidIot_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name = 		"IOT-DAPLINK",
