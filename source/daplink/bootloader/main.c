@@ -3,7 +3,7 @@
  * @brief   DAPLink Bootloader application entry point
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -31,6 +31,7 @@
 #include "cortex_m.h"
 #include "sdk.h"
 #include "target_board.h"
+
 //default msc led settings
 #ifndef MSC_LED_DEF
 #define MSC_LED_DEF GPIO_LED_ON

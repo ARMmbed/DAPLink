@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -29,6 +29,7 @@
 #include "DAP_config.h"
 #include "DAP.h"
 #include "target_family.h"
+
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
 #define NVIC_Addr    (0xe000e000)
@@ -912,7 +913,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             }
 
             // Perform a soft reset
-            if (!swd_write_word(NVIC_AIRCR, VECTKEY | soft_reset)) {    
+            if (!swd_write_word(NVIC_AIRCR, VECTKEY | soft_reset)) {
                 return 0;
             }
 

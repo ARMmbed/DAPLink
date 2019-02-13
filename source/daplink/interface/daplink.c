@@ -3,7 +3,7 @@
  * @brief   Implementation of daplink.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -30,7 +30,7 @@ COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
 
 const vfs_filename_t daplink_mode_file_name = "START_BLACT";
 
-#endif
+#endif //DRAG_N_DROP_SUPPORT
 
 bool daplink_is_bootloader()
 {

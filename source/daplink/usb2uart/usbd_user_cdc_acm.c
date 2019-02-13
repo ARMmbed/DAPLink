@@ -3,7 +3,7 @@
  * @brief   implementation of USB CDC ACM middleware
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,6 +28,7 @@
 #include "flash_intf.h"
 #endif
 #include "target_family.h"
+
 UART_Configuration UART_Config;
 
 /** @brief  Vitual COM Port initialization

@@ -3,7 +3,7 @@
  * @brief   Implementation of vfs_user.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -36,6 +36,7 @@
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
 #include "target_board.h"
+
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
 static const uint32_t disc_size = MB(64);
