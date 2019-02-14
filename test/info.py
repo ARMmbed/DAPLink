@@ -284,6 +284,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x0415,  # MAX32625MBED
     0x0450,  # mtb_ublox_odin_w2
+    0x0460,  # WISE-1570
     0x0468,  # lpc11u35_mtb_stm32l475_if
     0x0469,  # lpc11u35_mtb_stm32f439_if
     0x1101,  # Nordic-nRF52-DK
