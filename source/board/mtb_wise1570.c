@@ -18,7 +18,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "target_config.h"
+ 
+#include "flash_manager.h"
+#include "swd_host.h"
 
 const char *board_id = "0460";
+
+void prerun_board_config(void)
+{
+    flash_manager_set_page_erase(true);
+    swd_set_reset_connect(CONNECT_UNDER_RESET);
+}
