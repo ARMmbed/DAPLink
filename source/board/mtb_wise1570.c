@@ -19,18 +19,6 @@
  * limitations under the License.
  */
 
- 
-#include "flash_manager.h"
-#include "swd_host.h"
-
-const char *board_id = "0460";
-
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-    swd_set_reset_connect(CONNECT_UNDER_RESET);
-}
-
 #include "target_family.h"
 #include "target_board.h"
 
@@ -40,6 +28,7 @@ const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "0460",
     .family_id = kStub_HWReset_FamilyID,
+    .flags = kEnablePageErase|kEnableUnderResetConnect,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "DAPLINK    ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",

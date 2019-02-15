@@ -26,6 +26,6 @@ extern target_cfg_t target_device_nrf52_64;
 
 const board_info_t g_board_info = {
     .board_id = "0472",
-    .family_id = NORDIC_NRF52_FAMILY_ID,
+    .family_id = kNordic_Nrf52_FamilyID,
     .target_cfg = &target_device_nrf52_64,
 };
