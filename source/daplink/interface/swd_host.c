@@ -711,6 +711,11 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
     if (!swd_read_core_register(0, &state.r[0])) {
         return 0;
     }
+    
+    //remove the C_MASKINTS
+    if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
+        return 0;
+    }
 
     // Flash functions return 0 if successful.
     if (state.r[0] != 0) {
