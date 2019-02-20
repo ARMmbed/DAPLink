@@ -205,8 +205,6 @@ __task void main_task(void)
     // button state
     uint8_t reset_pressed = 0;
     
-    //check if the family is define
-    init_family();
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -221,6 +219,19 @@ __task void main_task(void)
     gpio_set_msc_led(msc_led_value);
     // Initialize the DAP
     DAP_Setup();
+
+    // do some init with the target before USB and files are configured
+    if (g_board_info.prerun_board_config) {
+        g_board_info.prerun_board_config();
+    }
+    
+    //initialize the family
+    init_family();
+    
+    if (g_target_family && g_target_family->prerun_target_config) {
+        g_target_family->prerun_target_config();
+    }
+    
     //setup some flags
     if(g_board_info.flags & kEnableUnderResetConnect){
         swd_set_reset_connect(CONNECT_UNDER_RESET);
@@ -230,13 +241,7 @@ __task void main_task(void)
         flash_manager_set_page_erase(true);
 #endif        
     }
-    // do some init with the target before USB and files are configured
-    if (g_board_info.prerun_board_config) {
-        g_board_info.prerun_board_config();
-    }
-    if (g_target_family && g_target_family->prerun_target_config) {
-        g_target_family->prerun_target_config();
-    }
+    
     // Update versions and IDs
     info_init();
     // USB

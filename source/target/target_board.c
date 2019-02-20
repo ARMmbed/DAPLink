@@ -42,6 +42,15 @@ const char * get_board_id(void)
     }
 }
 
+uint16_t get_family_id(void)
+{
+    if (g_board_info.target_cfg && g_board_info.target_cfg->rt_family_id) {
+        return g_board_info.target_cfg->rt_family_id; //flexible family id
+    }else{
+        return g_board_info.family_id;
+    }
+}
+
 uint8_t flash_algo_valid(void) 
 {
     return (g_board_info.target_cfg != 0);

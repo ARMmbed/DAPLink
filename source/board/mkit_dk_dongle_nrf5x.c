@@ -91,23 +91,28 @@ static void prerun_board_config(void)
     
     if (bit3) {
         set_target_device(0);
+        target_device.rt_family_id = kNordic_Nrf51_FamilyID;
         target_device.rt_board_id = board_id_nrf51_mkit;  // 1070
         //Note only a setting of 111 is defined
         util_assert(bit2 && bit1);
     } else {
         if (!bit2 && bit1) {
             set_target_device(0);
+            target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dk;  // 1100
         }
         else if (!bit2 && !bit1) {
             set_target_device(0);
+            target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dongle;  // 1120
         }
         else if (bit2 && !bit1) {
             set_target_device(1);
+            target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52_dk;  // 1101
         } else { //(bit2 && bit1)
             set_target_device(2);
+            target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
         }
     }
@@ -128,7 +133,6 @@ static void swd_set_target_reset(uint8_t asserted){
 
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
-    .family_id = kNordic_Nrf52_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name = 		"DAPLINK    ",

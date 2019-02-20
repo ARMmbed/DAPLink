@@ -64,9 +64,10 @@ typedef struct target_cfg {
     uint8_t erase_reset;            /*!< Reset after performing an erase */
     const sector_info_t* sectors_info; 
     int sector_info_length;
-    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  //!< Extra flash regions.
-    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      //!< Extra RAM regions.
+    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
+    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
     const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
+    uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
 } target_cfg_t;
 
 

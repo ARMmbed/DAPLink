@@ -86,13 +86,13 @@ const target_family_descriptor_t *g_target_family = NULL;
 void init_family(void)
 {
     uint8_t index = 0;
-    
+    uint16_t family_id = get_family_id();
     if (g_target_family != NULL){ //already set
         return;
     }
     
     while (g_families[index]!=0) {
-        if (g_families[index]->family_id && (g_families[index]->family_id == g_board_info.family_id)) {
+        if (g_families[index]->family_id && (g_families[index]->family_id == family_id)) {
             g_target_family = g_families[index];
             break;
         }

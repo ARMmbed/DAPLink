@@ -62,6 +62,7 @@ extern "C" {
 #endif
 
 const char * get_board_id(void);
+uint16_t get_family_id(void);
 uint8_t flash_algo_valid(void);
 uint8_t validate_bin_nvic(const uint8_t *buf);
 uint8_t validate_hexfile(const uint8_t *buf);

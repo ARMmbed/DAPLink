@@ -121,6 +121,7 @@ static void __attribute__((optimize("O0"))) setup_basics(void)
 
 {
     uint8_t i = 0, idx = 0;
+    uint16_t family_id = get_family_id();
     memset(string_board_id, 0, sizeof(string_board_id));
     memset(string_host_id, 0, sizeof(string_host_id));
     memset(string_target_id, 0, sizeof(string_target_id));
@@ -151,10 +152,10 @@ static void __attribute__((optimize("O0"))) setup_basics(void)
     string_board_id[4] = 0;
     idx = 0;
     //Family ID
-    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 12) & 0xF));
-    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 8) & 0xF));
-    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id >> 4) & 0xF));
-    string_family_id[idx++] = hex_to_ascii(((g_board_info.family_id) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((family_id >> 8) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((family_id >> 4) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((family_id) & 0xF));
     string_family_id[idx++] = 0;
     // Version
     idx = 0;
