@@ -247,7 +247,7 @@ __task void main_task(void)
     // USB
     usbd_init();
 #ifdef DRAG_N_DROP_SUPPORT
-    vfs_mngr_fs_enable(config_get_mass_storage_support());
+    vfs_mngr_fs_enable((config_ram_get_disable_msd()==0));
 #endif    
     usbd_connect(0);
     usb_state = USB_CONNECTING;
@@ -308,9 +308,7 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
 #ifdef DRAG_N_DROP_SUPPORT
-            if (config_get_mass_storage_support()){
-                vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
-            }
+            vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 #endif
             // Update USB connect status
             switch (usb_state) {

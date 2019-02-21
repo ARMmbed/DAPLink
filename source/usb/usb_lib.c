@@ -2490,7 +2490,7 @@ void usbd_class_init(void)
 {   
 #if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
     //change descriptors here
-    if (config_get_mass_storage_support() == 0 || flash_algo_valid()==0 || target_family_valid()==0){
+    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 || target_family_valid()==0){
         usbd_if_num -= USBD_MSC_ENABLE;
         USB_CONFIGURATION_DESCRIPTOR * usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
         usb_conf_desc->bNumInterfaces = usbd_if_num;

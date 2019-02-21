@@ -53,6 +53,9 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     uint8_t  valid_dumps;
     uint32_t hexdump[ALLOWED_HEXDUMP];  //Alignments checked
     
+    // Disable msd support
+    uint8_t disable_msd;
+    
     //Add new entries from here
 
 } cfg_ram_t;
@@ -89,6 +92,7 @@ void config_init()
     config_ram.assert_source =  config_ram_copy.assert_source;
     config_ram.valid_dumps = config_ram_copy.valid_dumps;
     memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
+    config_ram.disable_msd = config_ram_copy.disable_msd;
     config_rom_init();
 }
 
@@ -215,3 +219,14 @@ uint8_t config_ram_get_hexdumps(uint32_t **hexdumps)
     *hexdumps = config_ram.hexdump;
     return config_ram.valid_dumps;
 }
+
+void config_ram_set_disable_msd(bool disable_msd)
+{
+    config_ram.disable_msd = disable_msd;
+}
+
+uint8_t config_ram_get_disable_msd(void)
+{
+    return config_ram.disable_msd;
+}
+

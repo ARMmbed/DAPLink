@@ -175,11 +175,11 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_overflow_detect(false);
             vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "MSC_ON  CFG", sizeof(vfs_filename_t))) {
-            config_set_mass_storage_support(true);
+        } else if (!memcmp(filename, "MSD_ON  ACT", sizeof(vfs_filename_t))) {
+            config_ram_set_disable_msd(false);
             vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "MSC_OFF CFG", sizeof(vfs_filename_t))) {
-            config_set_mass_storage_support(false);
+        } else if (!memcmp(filename, "MSD_OFF ACT", sizeof(vfs_filename_t))) {
+            config_ram_set_disable_msd(true);
             vfs_mngr_fs_remount();
         }
     }
@@ -201,7 +201,7 @@ void vfs_user_disconnecting()
     }
 
     // If hold in bootloader has been set then reset after usb is disconnected
-    if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
+    if (daplink_is_interface() && (config_ram_get_hold_in_bl() || config_ram_get_disable_msd()==1)) {
         SystemReset();
     }
 
