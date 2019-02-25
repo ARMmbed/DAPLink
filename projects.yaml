@@ -449,6 +449,7 @@ projects:
     lpc11u35_gr_peach_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/family/renesas_family.yaml
         - records/board/gr-peach.yaml
     lpc11u35_blueninja_if:
         - *module_if
@@ -477,6 +478,7 @@ projects:
     lpc11u35_rtl8195am_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/family/realtek_rtl8195am.yaml
         - records/board/rtl8195am.yaml
     sam3u2c_ncs36510rf_if:
         - *module_if
@@ -543,6 +545,7 @@ projects:
     lpc11u35_gr_lychee_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/family/renesas_family.yaml
         - records/board/gr-lychee.yaml
     lpc11u35_dipdap_sdt32429b_if:
         - *module_if
@@ -582,6 +585,7 @@ projects:
     lpc11u35_dipdap_cc3220sf_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/family/ti_family.yaml
         - records/board/dipdap_cc3220sf.yaml
     stm32f103xb_stm32f103rb_if:
         - *module_if

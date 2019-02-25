@@ -4,6 +4,5 @@ common:
             - source/board/rtl8195am.c
         target:
             - source/target/realtek/rtl8195am/target.c
-            - source/target/realtek/rtl8195am/target_reset.c
     macros:
         - BOARD_RTL8195AM

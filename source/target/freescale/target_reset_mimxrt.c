@@ -39,9 +39,22 @@ static void target_before_init_debug(void)
     target_set_state(RESET_RUN);
 }
 
+static uint8_t validate_bin_nvic(const uint8_t *buf)
+{
+    if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 const target_family_descriptor_t g_nxp_mimxrt = {
     .family_id = kNXP_Mimxrt_FamilyID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = VECTRESET,
     .target_before_init_debug = target_before_init_debug,
+    .validate_bin_nvic = validate_bin_nvic,
 };

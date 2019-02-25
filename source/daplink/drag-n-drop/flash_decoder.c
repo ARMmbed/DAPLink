@@ -28,6 +28,7 @@
 #include "flash_manager.h"
 #include "target_config.h"  // for target_device
 #include "settings.h"       // for config_get_automation_allowed
+#include "validation.h"
 #include "target_board.h"
 
 // Set to 1 to enable debugging

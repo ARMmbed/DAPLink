@@ -23,7 +23,8 @@
 #define TARGET_FAMILY_H
 
 #include <stdint.h>
-#include "swd_host.h"
+#include <string.h>
+#include "target_reset.h"
 
 #define VENDOR_TO_FAMILY(x, y) (x<<8 | y)
 
@@ -38,6 +39,7 @@ enum _vendor_ids {
     kTI_VendorID = 16,
     kNordic_VendorID = 54,
     kToshiba_VendorID = 92,
+    kRenesas_VendorID = 117,
     kWiznet_VendorID = 122,
     kRealtek_VendorID = 124,
 };
@@ -56,6 +58,7 @@ typedef enum _family_id {
     kTI_Cc3220sf_FamilyID = VENDOR_TO_FAMILY(kTI_VendorID, 1),
     kToshiba_Tz_FamilyID = VENDOR_TO_FAMILY(kToshiba_VendorID, 1),
     kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
+    kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
 } family_id_t;
  
 typedef struct target_family_descriptor { 
@@ -68,6 +71,8 @@ typedef struct target_family_descriptor {
     uint8_t (*security_bits_set)(uint32_t addr, uint8_t *data, uint32_t size); 
     uint8_t (*target_set_state)(TARGET_RESET_STATE state); 
     void (*swd_set_target_reset)(uint8_t asserted);
+    uint8_t (*validate_bin_nvic)(const uint8_t *buf);
+    uint8_t (*validate_hexfile)(const uint8_t *buf);
 } target_family_descriptor_t;
 
 extern const target_family_descriptor_t *g_target_family;
@@ -80,6 +85,8 @@ void init_family(void);
 uint8_t target_family_valid(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 void swd_set_target_reset(uint8_t asserted);
+uint8_t validate_bin_nvic(const uint8_t *buf);
+uint8_t validate_hexfile(const uint8_t *buf);
 
 #ifdef __cplusplus
 }

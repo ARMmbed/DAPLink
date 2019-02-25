@@ -50,8 +50,6 @@ typedef struct __attribute__((__packed__)) board_info {
     void (*prerun_board_config)(void);
     void (*swd_set_target_reset)(uint8_t asserted);
     uint8_t (*target_set_state)(TARGET_RESET_STATE state);
-    uint8_t (*validate_bin_nvic)(const uint8_t *buf);
-    uint8_t (*validate_hexfile)(const uint8_t *buf);
     uint32_t soft_reset_type; 
 } board_info_t;
 
@@ -64,8 +62,6 @@ extern "C" {
 const char * get_board_id(void);
 uint16_t get_family_id(void);
 uint8_t flash_algo_valid(void);
-uint8_t validate_bin_nvic(const uint8_t *buf);
-uint8_t validate_hexfile(const uint8_t *buf);
 
 static inline const char * get_daplink_url_name ( void ) { return ((g_board_info.daplink_url_name[0] != 0) ? g_board_info.daplink_url_name : "MBED    HTM"); }
 static inline const char * get_daplink_drive_name ( void ) { return ((g_board_info.daplink_drive_name[0] != 0) ? g_board_info.daplink_drive_name : "DAPLINK    "); }

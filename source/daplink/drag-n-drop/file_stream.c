@@ -29,7 +29,7 @@
 #include "error.h"
 #include "RTL.h"
 #include "compiler.h"
-#include "target_board.h"
+#include "validation.h"
 
 typedef enum {
     STREAM_STATE_CLOSED,

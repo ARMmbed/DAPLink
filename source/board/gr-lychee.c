@@ -24,28 +24,6 @@
 
 extern target_cfg_t target_device;
 
-#define BINARY_DETECTION    (0xE59FF000)
-
-static uint8_t validate_bin_nvic(const uint8_t *buf)
-{
-    // Very dirty hacking here for ARMv7-A (non Cortex-M) binary detection
-    // This returns validated result when start instrunction
-    // of the buffer is BINARY_DETECTION (LDR  PC, Label)
-    // Compared with the high-order 3byte
-    if ((buf[1] == ((BINARY_DETECTION >> 8)  & 0xFF))
-     && (buf[2] == ((BINARY_DETECTION >> 16) & 0xFF))
-     && (buf[3] == ((BINARY_DETECTION >> 24) & 0xFF))) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
-static uint8_t validate_hexfile(const uint8_t *buf)
-{
-    return 0;
-}
-
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "5501",
@@ -54,7 +32,5 @@ const board_info_t g_board_info = {
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "MBED       ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
-    .validate_bin_nvic = validate_bin_nvic,
-    .validate_hexfile = validate_hexfile,
     .target_cfg = &target_device,
 };

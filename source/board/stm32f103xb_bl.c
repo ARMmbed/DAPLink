@@ -21,7 +21,7 @@
 
 #include "target_config.h"
 #include "target_board.h"
-
+#include "target_family.h"
 
 // stm32f103 target information
 target_cfg_t target_device = {
@@ -36,6 +36,9 @@ target_cfg_t target_device = {
     .ram_end        = 0x20005000
     /* .flash_algo not needed for bootloader */
 };
+
+//bootloader has no family
+const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
     .infoVersion = 0x0,

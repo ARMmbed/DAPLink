@@ -41,8 +41,23 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
     return swd_set_target_state_sw(state);
 }
 
+const uint32_t cookieList[]=
+{
+    0x5AA5A55A,
+    0x000FF800,
+    0xEFA3247D
+};
+
+// Override the weak validate_bin_nvic function. The weak function expects NVIC at the beginning of the flash.
+// On CC3220SF, the beginning of the flash is the cookie list, which allows the boot ROM code to jump into onchip flash directly bypassing external flash.
+static uint8_t validate_bin_nvic(const uint8_t *buf)
+{
+    return (memcmp(buf, cookieList, sizeof(cookieList)) == 0);
+}
+
 const target_family_descriptor_t g_ti_family = {
     .family_id = kTI_Cc3220sf_FamilyID,
     .target_set_state = target_set_state,
+    .validate_bin_nvic = validate_bin_nvic,
 };
 

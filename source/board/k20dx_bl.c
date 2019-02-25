@@ -23,6 +23,7 @@
 #include "daplink_addr.h"
 #include "compiler.h"
 #include "target_board.h"
+#include "target_family.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
@@ -42,7 +43,8 @@ target_cfg_t target_device = {
     // .flash_algo not needed for bootloader 
 };
 
-//extern target_cfg_t target_device;
+//bootloader has no family
+const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
     .infoVersion = 0x0,

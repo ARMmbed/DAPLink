@@ -128,6 +128,7 @@ VENDOR_ID = {
     'TI': 16,
     'Nordic': 54,
     'Toshiba': 92,
+    'Renesas' : 117,
     'Wiznet': 122,
     'Realtek': 124,
 }
@@ -231,8 +232,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     VENDOR_TO_FAMILY('Stub', 3),        'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
-    (   0x5500,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
-    (   0x5501,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
+    (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
+    (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
     (   0x6660,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151' when mbed-os supports this
     (   0x7010,     VENDOR_TO_FAMILY('Toshiba', 1),     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B' when mbed-os supports this
     (   0x7402,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),

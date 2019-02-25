@@ -21,6 +21,7 @@
 
 #include "daplink.h"
 #include "DAP_config.h"
+#include "swd_host.h"
 #include "target_family.h"
 #include "target_board.h"
 
@@ -61,6 +62,8 @@ __attribute__((weak))
 const target_family_descriptor_t g_ti_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_wiznet_family  = {0};
+__attribute__((weak))
+const target_family_descriptor_t g_renesas_family  = {0};
 
 __attribute__((weak))
 const target_family_descriptor_t *g_families[] = { 
@@ -76,6 +79,7 @@ const target_family_descriptor_t *g_families[] = {
     &g_realtek_rtl8195am,
     &g_ti_family,
     &g_wiznet_family,
+    &g_renesas_family,
     0 // list terminator 
 }; 
 
@@ -141,4 +145,3 @@ void swd_set_target_reset(uint8_t asserted)
         (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
     }
 }
-

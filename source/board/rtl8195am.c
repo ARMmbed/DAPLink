@@ -23,16 +23,6 @@
 #include "target_family.h"
 #include "target_board.h"
 
-static uint8_t validate_bin_nvic(const uint8_t *buf)
-{
-    const char header[] = {0x99, 0x99, 0x96, 0x96, 0x3F, 0xCC, 0x66, 0xFC,
-                           0xC0, 0x33, 0xCC, 0x03, 0xE5, 0xDC, 0x31, 0x62};
-
-    return !memcmp(header, buf, sizeof(header));
-}
-
-
-
 extern target_cfg_t target_device;
 
 const board_info_t g_board_info = {
@@ -43,8 +33,6 @@ const board_info_t g_board_info = {
     .daplink_url_name =       "MBED    HTM",
     .daplink_drive_name =       "DAPLINK    ",
     .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
-    //.prerun_board_config = prerun_board_config,
-    .validate_bin_nvic = validate_bin_nvic,
     .target_cfg = &target_device,
 };
 

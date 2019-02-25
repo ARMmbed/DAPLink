@@ -21,6 +21,7 @@
 
 #include "main.h"
 #include "gpio.h"
+#include "validation.h"
 #include "vfs_manager.h"
 #include "RTL.h"
 #include "rl_usb.h"
