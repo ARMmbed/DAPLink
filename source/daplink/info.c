@@ -31,12 +31,9 @@
 #include "settings.h"
 #include "target_board.h"
 
-//#define HEX_TO_ASCII(x) ('0' + (x>9 ? x+7 : x))
-
 static char hex_to_ascii(uint8_t x)
 {
     return ('0' + (x>9 ? x+0x27 : x));
-    //return ('0' + (x>9 ? x+0x7 : x));
 }
 
 // Constant variables
@@ -104,6 +101,7 @@ const char *info_get_unique_id_string_descriptor(void)
     return usb_desc_unique_id;
 }
 
+//prevent the compiler to optimize boad and family id
 #if (defined(__ICCARM__))
 #pragma optimize = none
 static void setup_basics(void)
