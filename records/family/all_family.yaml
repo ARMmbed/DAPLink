@@ -1,0 +1,14 @@
+common:
+    sources:
+        target:
+            - source/target/freescale/target_reset_Kseries.c
+            - source/target/freescale/target_reset_Lseries.c
+            - source/target/freescale/target_reset_mimxrt.c
+            - source/target/freescale/target_reset_rapid_iot.c
+            - source/target/nordic/target_reset_nrf51.c
+            - source/target/nordic/target_reset_nrf52.c
+            - source/target/realtek/target_reset_realtek_rtl8195am.c
+            - source/target/ti/target_reset_ti.c
+            - source/target/toshiba/target_reset_tz.c
+            - source/target/wiznet/target_reset_wiznet.c
+            - source/target/renesas/target_reset_rza.c
