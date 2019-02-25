@@ -28,8 +28,6 @@ const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "1238",
     .family_id = kNordic_Nrf51_FamilyID,
-    .daplink_url_name =       "MBED    HTM",
-    .daplink_drive_name = 		"DAPLINK    ",
     .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
     .target_cfg = &target_device_nrf52,
 };

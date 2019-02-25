@@ -23,7 +23,6 @@
 #include "target_family.h"
 
 char *board_id_kw41z = "0234";
-extern target_cfg_t target_device;
 
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004

@@ -23,8 +23,6 @@
 #include "target_board.h"
 #include "target_family.h"
 
-extern target_cfg_t target_device;
-
 static void swd_set_target_reset(uint8_t asserted){
     if(!asserted) {
         PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
@@ -35,9 +33,6 @@ const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "1237",
     .family_id = kNordic_Nrf52_FamilyID,
-    .daplink_url_name =       "MBED    HTM",
-    .daplink_drive_name = 		"DAPLINK    ",
-    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
     .swd_set_target_reset = swd_set_target_reset,
     .target_cfg = &target_device,
 };

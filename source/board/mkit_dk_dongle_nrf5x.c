@@ -34,7 +34,6 @@ const char *board_id_nrf51_dongle = "1120";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
-extern target_cfg_t target_device;
 extern target_cfg_t target_device_nrf52;
 extern target_cfg_t target_device_nrf52840;
 static uint8_t device_type;
@@ -134,9 +133,6 @@ static void swd_set_target_reset(uint8_t asserted){
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .flags = kEnablePageErase,
-    .daplink_url_name =       "MBED    HTM",
-    .daplink_drive_name = 		"DAPLINK    ",
-    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
     .prerun_board_config = prerun_board_config,
     .swd_set_target_reset = swd_set_target_reset,
     .target_cfg = &target_device,

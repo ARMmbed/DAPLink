@@ -34,16 +34,10 @@ static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
     return 1;
 }
 
-
-extern target_cfg_t target_device;
-
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "7010",
     .family_id = kToshiba_Tz_FamilyID,
-    .daplink_url_name =       "MBED    HTM",
-    .daplink_drive_name =       "DAPLINK    ",
-    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
     .target_set_state = target_set_state_by_board,
     .target_cfg = &target_device,
 };

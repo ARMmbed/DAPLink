@@ -70,6 +70,8 @@ typedef struct target_cfg {
     uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
 } target_cfg_t;
 
+extern target_cfg_t target_device;
+
 
 #ifdef __cplusplus
 }

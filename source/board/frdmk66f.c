@@ -22,8 +22,6 @@
 #include "target_family.h"
 #include "target_board.h"
 
-extern target_cfg_t target_device;
-
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "0311",

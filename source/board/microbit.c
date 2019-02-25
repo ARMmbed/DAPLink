@@ -28,8 +28,6 @@
 const char * const board_id_mb_1_3 = "9900";
 const char * const board_id_mb_1_5 = "9901";
 
-extern target_cfg_t target_device;
-
 typedef enum {
     BOARD_VERSION_1_3 = 0,
     BOARD_VERSION_1_5 = 1,

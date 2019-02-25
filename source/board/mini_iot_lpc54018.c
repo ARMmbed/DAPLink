@@ -22,8 +22,6 @@
 #include "target_family.h"
 #include "target_board.h"
 
-extern target_cfg_t target_device;
-
 const board_info_t g_board_info = {
     .board_id = "0235",
     .family_id = kStub_SWVectReset_FamilyID,
