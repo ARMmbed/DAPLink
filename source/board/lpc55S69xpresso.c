@@ -19,25 +19,19 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
-#include "flash_manager.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "0236";
+extern target_cfg_t target_device;
 
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "LPC55S69";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso55S69/";
-
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0236",
+    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name =       "LPC55S69",
+    .daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso55S69/",
+    .target_cfg = &target_device,
+};
 
