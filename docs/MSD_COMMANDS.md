@@ -42,9 +42,13 @@ any file operation (addition, deletion, content change) could be used to trigger
 a DAPLink command. Deleting ``ASSERT.TXT`` is actually a DAPLink MSD command in its 
 own right.
 
-``refresh.act`` This file forces a remount of the DAPLink MSD drive
+``refresh.act`` This file forces a remount of the DAPLink MSD drive.
 
 ``erase.act`` This file triggers an erase of the target's flash.
+
+``msd_off.act`` Mass storage device can be disabled by this file command regardless of presence of target flash algo for drag and drop. MSD will always be disabled without the target flash algo.
+
+``msd_on.act`` Mass storage device can be enabled back by this file command on bootloader mode only if there is a target flash algo.
 
 ### Configuration Commands
 

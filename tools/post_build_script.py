@@ -175,7 +175,7 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
                                           start, pad_addr, 0x40)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Image CRC tool')
+    parser = argparse.ArgumentParser(description='Post build tool for Board ID, Family ID and CRC generation')
     parser.add_argument("input", type=str, help="Hex or bin file to read from.")
     parser.add_argument("output", type=str,
                         help="Output base file name to write crc, board_id and family_id.")

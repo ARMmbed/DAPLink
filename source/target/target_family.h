@@ -62,17 +62,17 @@ typedef enum _family_id {
 } family_id_t;
  
 typedef struct target_family_descriptor { 
-    uint16_t family_id; 
-    reset_type_t default_reset_type; 
-    uint32_t soft_reset_type; 
-    void (*target_before_init_debug)(void); 
-    void (*prerun_target_config)(void); 
-    uint8_t (*target_unlock_sequence)(void); 
-    uint8_t (*security_bits_set)(uint32_t addr, uint8_t *data, uint32_t size); 
-    uint8_t (*target_set_state)(TARGET_RESET_STATE state); 
-    void (*swd_set_target_reset)(uint8_t asserted);
-    uint8_t (*validate_bin_nvic)(const uint8_t *buf);
-    uint8_t (*validate_hexfile)(const uint8_t *buf);
+    uint16_t family_id;                         /*!< Use to select or identify target family from defined target family or custom ones */ 
+    reset_type_t default_reset_type;            /*!< Target family can select predefined reset from  kHardwareReset and kSoftwareReset */ 
+    uint32_t soft_reset_type;                   /*!< Families can override software reset type to VECTRESET or SYSRESETREQ */
+    void (*target_before_init_debug)(void);     /*!< Target dependant function before debug initialization */
+    void (*prerun_target_config)(void);         /*!< Target specific initialization */
+    uint8_t (*target_unlock_sequence)(void);    /*!< Unlock targets that can enter lock state */
+    uint8_t (*security_bits_set)(uint32_t addr, uint8_t *data, uint32_t size);  /*!< Check security bits in the programmable flash region */
+    uint8_t (*target_set_state)(TARGET_RESET_STATE state);                      /*!< Families can customize target debug states in target_reset.h */
+    void (*swd_set_target_reset)(uint8_t asserted);                             /*!< Families can customize how to send reset to the target */
+    uint8_t (*validate_bin_nvic)(const uint8_t *buf);                           /*!< Validate a bin file to be flash by drag and drop */
+    uint8_t (*validate_hexfile)(const uint8_t *buf);                            /*!< Validate a hex file to be flash by drag and drop */
 } target_family_descriptor_t;
 
 extern const target_family_descriptor_t *g_target_family;

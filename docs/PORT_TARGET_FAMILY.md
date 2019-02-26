@@ -1,5 +1,5 @@
-# Adding A New Target
-Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/target/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
+# Adding A New Target Family
+Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/family/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
 
 ```c
 /**
@@ -59,7 +59,7 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 }
 ```
 
-A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/mbedmicro/FlashAlgo) An example blob is shown below and would be added to `source/target/<mfg>/<targetname>/flash_blob.c`
+A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/mbedmicro/FlashAlgo) An example blob is shown below and would be added to `source/family/<mfg>/<targetname>/flash_blob.c`
 
 ```c
 /**
@@ -135,7 +135,7 @@ static const program_target_t flash = {
 
 ```
 
-The last required file is the target MCU description file `source/targets/<mfg>/<targetname>/target.c` This file contains information about the size of ROM, RAM and sector operations needed to be performed on the target MCU while programming an image across the drag-n-drop channel.
+The last required file is the target MCU description file `source/family/<mfg>/<targetname>/target.c` This file contains information about the size of ROM, RAM and sector operations needed to be performed on the target MCU while programming an image across the drag-n-drop channel.
 
 ```c
 /**
@@ -175,5 +175,31 @@ target_cfg_t target_device = {
     .flash_algo     = (program_target_t *) &flash,
 };
 ```
-
 At this point these target specific files could be added to a board build and developed.
+
+Complete target configuration api is located in `source/hic_hal_target_config.h`
+```c
+/**
+ @struct target_cfg_t
+ @brief  The firmware configuration struct has unique about the chip its running on.
+ */
+typedef struct target_cfg {
+    uint32_t sector_size;           /*!< Number of bytes in a sector used by flash erase and filesystem */
+    uint32_t sector_cnt;            /*!< Number of sectors a device has */
+    uint32_t flash_start;           /*!< Address of the application entry point */
+    uint32_t flash_end;             /*!< Address where the flash ends */
+    uint32_t ram_start;             /*!< Lowest contigous RAM address the application uses */
+    uint32_t ram_end;               /*!< Highest contigous RAM address the application uses */
+    program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
+    uint8_t erase_reset;            /*!< Reset after performing an erase */
+    const sector_info_t* sectors_info; 
+    int sector_info_length;
+    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
+    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
+    const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
+    uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
+} target_cfg_t;
+```
+
+# Supported Target Families
+A HIC can target all supported families available and a post build script can modify a board's family id to point to the correct family. See [Porting board guide](PORT_BOARD.md) 

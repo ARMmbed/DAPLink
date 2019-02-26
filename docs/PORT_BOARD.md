@@ -8,26 +8,26 @@ A board is composed of a Hardware Interface Circuit and target MCU. To create a 
         - records/board/myboardname.yaml
 ```
 
-Next create a new file in the `records/board` directory called myboardname.yaml. This file defines the target MCU and allows overrideable board parameters to be configured. The target MCU in this example exists and is a Nordic nRF51822 (16k RAM variant)
+Next create a new file in the `records/board` directory called myboardname.yaml. This file defines the target family MCU and allows overrideable board parameters to be configured. The target family MCU in this example exists and is a Nordic nRF51822 (16k RAM variant). More than one target/family can be added to the project and the family can be retargeted by family ID. See `Post-build Board ID and Family ID` section.
 
 ```yaml
 common:
     sources:
         board:
             - source/board/myboardname.c
-        target:
-            - source/target/nordic/nrf51822/target_16.c
-            - source/target/nordic/target_reset.c
+        family:
+            - source/family/nordic/nrf51822/target_16.c
+            - source/family/nordic/target_reset_nrf51.c
 ```
 
-This assumes there is already target support present in the codebase. If adding a new target additional steps below will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. To get a BOARD ID email support@mbed.org
+This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. To get a BOARD ID email support@mbed.org
 ```c
 /**
- * @file    myboardname.c
- * @brief   board ID for myboard
+ * @file   myboard.c
+ * @brief   board_info api for my board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -43,23 +43,59 @@ This assumes there is already target support present in the codebase. If adding 
  * limitations under the License.
  */
 
-const char *board_id = "0000";
-```
+#include "target_family.h"
+#include "target_board.h"
 
-Now running `progen generate -t uvision` will create project files including the new board that can be developed and debugged. For more information about the yaml format [see the project_generator documentation.](https://github.com/project-generator/project_generator/wiki/Getting_started)
+const board_info_t g_board_info = {
+    .board_id = "0x240",
+    .family_id = kStub_HWReset_FamilyID,
+    .flags = kEnablePageErase|kEnableUnderResetConnect,
+    .target_cfg = &target_device,
+};
+```
+The complete fields of board_info api with description is in `source/target/target_board.h`.
+```c
+// Flags for board_info 
+enum { 
+    kEnablePageErase = 1,               /*!< Enable page programming and sector erase for drag and drop */
+    kEnableUnderResetConnect = 1<<1,    /*!< Enable under reset connection when enabling debug mode */
+};
+
+typedef struct __attribute__((__packed__)) board_info { 
+    uint16_t infoVersion;               /*!< Version number of the board */ 
+    uint16_t family_id;                 /*!< Use to select target family from defined target family ids */ 
+    char board_id[5];                   /*!< 4-char board ID plus null terminator */
+    uint8_t _padding[3]; 
+    uint32_t flags;                     /*!< Combination of kEnablePageErase and kEnableUnderResetConnect */
+    target_cfg_t *target_cfg;           /*!< Specific chip configuration for the target and enables MSD when non-NULL */ 
+     
+    // fields used by MSD 
+    vfs_filename_t daplink_url_name;    /*!< Customize the URL file name */
+    vfs_filename_t daplink_drive_name;  /*!< Customize the MSD DAPLink drive name */
+    char daplink_target_url[64];        /*!< Customize the target url in DETAILS.TXT */
+    
+    // some specific board initilization
+    void (*prerun_board_config)(void);                      /*!< Specific board debug/ID related initialization */
+    void (*swd_set_target_reset)(uint8_t asserted);         /*!< Boards can customize how to send reset to the target precedence over target family */
+    uint8_t (*target_set_state)(TARGET_RESET_STATE state);  /*!< Boards can customize target debug states in target_reset.h precedence over target family */
+    uint32_t soft_reset_type;                               /*!< Boards can override software reset type to VECTRESET or SYSRESETREQ */
+} board_info_t;
+```
+Now running `progen generate -t uvision` will create project files including the new board that can be developed and debugged. Complete development guide is in [Developers Guide](DEVELOPERS-GUIDE.md). For more information about the yaml format [see the project_generator documentation.](https://github.com/project-generator/project_generator/wiki/Getting_started)
 
 ### Adding Board to Automated Tests
 Update `test/info.py` so the new board has at least one configuration in SUPPORTED_CONFIGURATIONS
 ```python
 SUPPORTED_CONFIGURATIONS = [
-    #   Board ID    Firmware                            Bootloader          Target
+    #   Board ID    Family ID                           Firmware                                    Bootloader          Target
     ...
-    (   0x240,      'k20dx_frdmk64f_if',                'k20dx_bl',         'FRDM-K64F'                     ),
+    (   0x0240,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     ...
 ]
 ```
 Configration Fields
 * Board ID - The ID assigned to the board type.
+* Family ID - Use to select or identify target family from defined target family or custom ones. Note that common or stub families are supported which supports hw_reset, sw_vectreset or sw_sysreset. More details in [Porting target family guide](PORT_TARGET_FAMILY.md).
 * Firmware - The name of the firmware as shown in projects.yaml.
 * Bootloader - The name of the bootloader firmware as shown in projects.yaml. Only required on HICs with a DAPLink bootloader.
 * Target - Name of the target for this board.
@@ -69,3 +105,40 @@ Configration Fields
 You may need to update one or more other dictionaries. See comments in the code for guidance.
 
 See [Automated Tests](AUTOMATED_TESTS.md) for more information related to automated testing.
+
+# Post-build Board ID and Family ID
+Board ID and Family ID can be overwritten by `tools/post_build_scpript.py`. This is helpful for supporting existing families and adding board IDs to the database without the need to compile DAPLink. Board ID can uniquely identify the target board while family ID can select which target family to support.
+```
+usage: post_build_script.py [-h] [--board-id BOARD_ID] [--family-id FAMILY_ID]
+                            [--bin-offset BIN_OFFSET]
+                            input output
+
+post Build tool for Board ID, Family ID and CRC generation
+
+positional arguments:
+  input                 Hex or bin file to read from.
+  output                Output base file name to write crc, board_id and
+                        family_id.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --board-id BOARD_ID   board id to for the target in hex
+  --family-id FAMILY_ID
+                        family id to for the target in hex
+  --bin-offset BIN_OFFSET
+                        binary offset in hex
+```
+Note however that run time board id and family id can be present in the code and DAPLink will use this if it has non-zero value. From `source/hic_hal_target_config.h`
+```
+/**
+ @struct target_cfg_t
+ @brief  The firmware configuration struct has unique about the chip its running on.
+ */
+ ...
+typedef struct target_cfg {
+    ...
+    const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
+    uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
+} target_cfg_t;
+...
+```
