@@ -2,5 +2,5 @@ common:
     sources:
         board:
             - source/board/lpc812xpresso.c
-        target:
-            - source/target/nxp/lpc812/target.c
+        family:
+            - source/family/nxp/lpc812/target.c

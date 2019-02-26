@@ -6,5 +6,5 @@ common:
     sources:
         board:
             - source/board/mtb_stm32l475.c
-        target:
-            - source/target/st/stm32l4xx_1024/target.c
+        family:
+            - source/family/st/stm32l4xx_1024/target.c

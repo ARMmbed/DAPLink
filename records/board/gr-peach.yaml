@@ -4,5 +4,6 @@ common:
     sources:
         board:
             - source/board/gr-peach.c
-        target:
-            - source/target/renesas/rza1h/gr-peach/target.c
+        family:
+            - source/family/renesas/rza1h/gr-peach/target.c
+            - source/family/renesas/target_reset_rza.c

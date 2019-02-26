@@ -2,5 +2,5 @@ common:
     sources:
         board:
             - source/board/ncs36510rf.c
-        target:
-            - source/target/onsemi/ncs36510/target.c
+        family:
+            - source/family/onsemi/ncs36510/target.c

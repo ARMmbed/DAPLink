@@ -6,5 +6,5 @@ common:
     sources:
         board:
             - source/board/mtb_usi_wm_bn_bm_22.c
-        target:
-            - source/target/st/stm32f412rg/target.c
+        family:
+            - source/family/st/stm32f412rg/target.c

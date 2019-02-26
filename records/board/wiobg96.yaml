@@ -2,5 +2,5 @@ common:
     sources:
         board:
             - source/board/wiobg96.c
-        target:
-            - source/target/st/stm32f439zi/target.c
+        family:
+            - source/family/st/stm32f439zi/target.c

@@ -6,5 +6,5 @@ common:
     sources:
         board:
             - source/board/mtb_mts_xdot.c
-        target:
-            - source/target/st/xDot-L151/target.c
+        family:
+            - source/family/st/xDot-L151/target.c

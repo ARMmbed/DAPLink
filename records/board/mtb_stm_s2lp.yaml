@@ -6,5 +6,5 @@ common:
     sources:
         board:
             - source/board/mtb_stm_s2lp.c
-        target:
-            - source/target/st/stm32f429zi/target.c
+        family:
+            - source/family/st/stm32f429zi/target.c

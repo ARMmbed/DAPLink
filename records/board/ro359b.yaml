@@ -2,5 +2,5 @@ common:
     sources:
         board:
             - source/board/ro359b.c
-        target:
-            - source/target/freescale/k64f/target.c
+        family:
+            - source/family/freescale/k64f/target.c
