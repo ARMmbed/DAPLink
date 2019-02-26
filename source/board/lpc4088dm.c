@@ -25,6 +25,6 @@
 const board_info_t g_board_info = {
     .infoVersion = 0x0,
     .board_id = "1062",
-    .family_id = 0, //custom
+    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //custom
     .target_cfg = &target_device,
 };
