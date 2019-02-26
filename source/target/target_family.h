@@ -85,8 +85,6 @@ void init_family(void);
 uint8_t target_family_valid(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 void swd_set_target_reset(uint8_t asserted);
-uint8_t validate_bin_nvic(const uint8_t *buf);
-uint8_t validate_hexfile(const uint8_t *buf);
 
 #ifdef __cplusplus
 }
