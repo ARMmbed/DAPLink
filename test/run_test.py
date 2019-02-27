@@ -412,7 +412,7 @@ class TestManager(object):
         # Create test configurations for each supported configuration
         test_conf_list = []
         untested_firmware = set(filtered_interface_firmware_list)
-        for board_id, fw_name, bl_fw_name, target_name in info.SUPPORTED_CONFIGURATIONS:
+        for board_id, family_id, fw_name, bl_fw_name, target_name in info.SUPPORTED_CONFIGURATIONS:
             target = None
             if_firmware = None
             bl_firmware = None

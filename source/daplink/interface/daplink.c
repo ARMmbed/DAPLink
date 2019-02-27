@@ -3,7 +3,7 @@
  * @brief   Implementation of daplink.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,21 +20,17 @@
  */
 
 #include "daplink.h"
+
+#ifdef DRAG_N_DROP_SUPPORT
+
 #include "virtual_fs.h"
 #include "compiler.h"
 
 COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
 
-// daplink_mode_file_name, daplink_url_name and
-// daplink_drive_name strings must be 11 characters
-// excluding the null terminated character
 const vfs_filename_t daplink_mode_file_name = "START_BLACT";
-__attribute__((weak))
-const vfs_filename_t daplink_url_name =       "MBED    HTM";
-__attribute__((weak))
-const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
-__attribute__((weak))
-const char *const daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T";
+
+#endif //DRAG_N_DROP_SUPPORT
 
 bool daplink_is_bootloader()
 {

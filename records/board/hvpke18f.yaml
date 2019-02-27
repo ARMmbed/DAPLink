@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/hvpke18f.c
-        target:
-            - source/target/freescale/ke18f/target.c
-            - source/target/freescale/target_reset_Kseries.c
+        family:
+            - source/family/freescale/ke18f/target.c
+            - source/family/freescale/target_reset_Kseries.c

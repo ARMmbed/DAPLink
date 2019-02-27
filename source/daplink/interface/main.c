@@ -3,7 +3,7 @@
  * @brief   Entry point for interface program logic
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -33,7 +33,6 @@
 #include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
-#include "vfs_manager.h"
 #include "settings.h"
 #include "daplink.h"
 #include "util.h"
@@ -41,7 +40,14 @@
 #include "bootloader.h"
 #include "cortex_m.h"
 #include "sdk.h"
+#include "target_family.h"
+#include "target_board.h"
+
+#ifdef DRAG_N_DROP_SUPPORT
+#include "vfs_manager.h"
 #include "flash_intf.h"
+#include "flash_manager.h"
+#endif
 
 // Event flags for main task
 // Timers events
@@ -184,8 +190,6 @@ void USBD_SignalHandler()
 }
 
 extern void cdc_process_event(void);
-__attribute__((weak)) void prerun_board_config(void) {}
-__attribute__((weak)) void prerun_target_config(void) {}
 
 __task void main_task(void)
 {
@@ -200,6 +204,7 @@ __task void main_task(void)
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
     // button state
     uint8_t reset_pressed = 0;
+    
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -214,14 +219,36 @@ __task void main_task(void)
     gpio_set_msc_led(msc_led_value);
     // Initialize the DAP
     DAP_Setup();
+
     // do some init with the target before USB and files are configured
-    prerun_board_config();
-    prerun_target_config();
+    if (g_board_info.prerun_board_config) {
+        g_board_info.prerun_board_config();
+    }
+    
+    //initialize the family
+    init_family();
+    
+    if (g_target_family && g_target_family->prerun_target_config) {
+        g_target_family->prerun_target_config();
+    }
+    
+    //setup some flags
+    if(g_board_info.flags & kEnableUnderResetConnect){
+        swd_set_reset_connect(CONNECT_UNDER_RESET);
+    }
+    if(g_board_info.flags & kEnablePageErase){
+#ifdef DRAG_N_DROP_SUPPORT        
+        flash_manager_set_page_erase(true);
+#endif        
+    }
+    
     // Update versions and IDs
     info_init();
     // USB
     usbd_init();
-    vfs_mngr_fs_enable(true);
+#ifdef DRAG_N_DROP_SUPPORT
+    vfs_mngr_fs_enable((config_ram_get_disable_msd()==0));
+#endif    
     usbd_connect(0);
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
@@ -280,8 +307,9 @@ __task void main_task(void)
 
         if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
+#ifdef DRAG_N_DROP_SUPPORT
             vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
-
+#endif
             // Update USB connect status
             switch (usb_state) {
                 case USB_DISCONNECTING:
@@ -329,10 +357,15 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_30MS) {
 
             // handle reset button without eventing
-            if (!reset_pressed && gpio_get_reset_btn_fwrd() && !flash_intf_target->flash_busy()) { //added checking if flashing on target is in progress
-                // Reset button pressed
-                target_set_state(RESET_HOLD);
-                reset_pressed = 1;
+            if (!reset_pressed && gpio_get_reset_btn_fwrd()) { 
+#ifdef DRAG_N_DROP_SUPPORT
+               if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
+#endif                
+                {
+                    // Reset button pressed
+                    target_set_state(RESET_HOLD);
+                    reset_pressed = 1;
+                }
             } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
                 // Reset button released
                 target_set_state(RESET_RUN);

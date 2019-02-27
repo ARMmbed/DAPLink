@@ -6,7 +6,7 @@ common:
     sources:
         board:
             - source/board/6LoWPAN_BorderRouterHAT.c
-        target:
-            - source/target/freescale/k64f/target.c
-            - source/target/freescale/target_reset_Kseries.c
+        family:
+            - source/family/freescale/k64f/target.c
+            - source/family/freescale/target_reset_Kseries.c
 

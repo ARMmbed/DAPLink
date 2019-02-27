@@ -22,6 +22,7 @@
 #include "RTL.h"
 #include "rl_usb.h"
 #include "usb.h"
+#include "settings.h"
 
 #pragma thumb
 #pragma O3
@@ -39,12 +40,12 @@
 
 #if    (USBD_ENABLE)
 
-U8 USBD_AltSetting[USBD_IF_NUM];
+U8 USBD_AltSetting[USBD_IF_NUM_MAX];
 U8 USBD_EP0Buf[USBD_MAX_PACKET0];
 const U8 usbd_power = USBD_POWER;
 const U8 usbd_hs_enable = USBD_HS_ENABLE;
 const U8 usbd_bos_enable = USBD_BOS_ENABLE;
-const U16 usbd_if_num = USBD_IF_NUM;
+U16 usbd_if_num = USBD_IF_NUM_MAX;
 const U8 usbd_ep_num = USBD_EP_NUM;
 const U8 usbd_max_packet0 = USBD_MAX_PACKET0;
 
@@ -659,7 +660,7 @@ BOOL USBD_EndPoint0_Out_ADC_ReqToEP(void)
 {
     return (__FALSE);
 }
-#endif  /* (USBD_MSC_ENABLE) */
+#endif  /* (USBD_ADC_ENABLE) */
 
 #if    (USBD_CDC_ACM_ENABLE)
 #ifdef __RTX
@@ -1259,25 +1260,6 @@ U32  usbd_os_evt_wait_or(U16 wait_flags, U16 timeout)
 }
 #endif
 
-void usbd_class_init(void)
-{
-#if (USBD_HID_ENABLE)
-    usbd_hid_init();
-#endif
-#if (USBD_MSC_ENABLE)
-    usbd_msc_init();
-#endif
-#if (USBD_ADC_ENABLE)
-    usbd_adc_init();
-#endif
-#if (USBD_CDC_ACM_ENABLE)
-    USBD_CDC_ACM_Initialize();
-#endif
-#if (USBD_CLS_ENABLE)
-    usbd_cls_init();
-#endif
-}
-
 #ifdef __RTX
 
 typedef struct {
@@ -1515,10 +1497,11 @@ void USBD_RTX_TaskInit(void)
                                            USB_INTERFACE_DESC_SIZE + USB_ENDPOINT_DESC_SIZE + USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + USB_HID_DESC_SIZE                                                          + \
                                           (USB_ENDPOINT_DESC_SIZE*(1+(USBD_HID_EP_INTOUT != 0))))
+//REORDER FOR MSC
 #define USBD_HID_DESC_OFS                 (USB_CONFIGUARTION_DESC_SIZE + USB_INTERFACE_DESC_SIZE                                                + \
-                                           USBD_MSC_ENABLE * USBD_MSC_DESC_LEN + USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
-
-#define USBD_WTOTALLENGTH                 (USB_CONFIGUARTION_DESC_SIZE +                 \
+                                           USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
+                                         
+#define USBD_WTOTALLENGTH_MAX              (USB_CONFIGUARTION_DESC_SIZE +                 \
                                            USBD_CDC_ACM_DESC_LEN * USBD_CDC_ACM_ENABLE + \
                                            USBD_HID_DESC_LEN     * USBD_HID_ENABLE     + \
                                            (USB_INTERFACE_DESC_SIZE) * USBD_WEBUSB_ENABLE + \
@@ -2150,12 +2133,12 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
 /* USB Device Configuration Descriptor (for Full Speed) */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-const U8 USBD_ConfigDescriptor[] = {
+U8 USBD_ConfigDescriptor[] = { //make it configurable
     /* Configuration 1 */
     USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
     USB_CONFIGURATION_DESCRIPTOR_TYPE,    /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH),             /* wTotalLength */
-    USBD_IF_NUM,                          /* bNumInterfaces */
+    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
+    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
     0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
     0x00,                                 /* iConfiguration: no string to describe this configuration */
     USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
@@ -2168,11 +2151,6 @@ const U8 USBD_ConfigDescriptor[] = {
 #endif
     ADC_DESC
     ADC_EP
-#endif
-
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP
 #endif
 
 #if (USBD_CDC_ACM_ENABLE)
@@ -2198,6 +2176,11 @@ const U8 USBD_ConfigDescriptor[] = {
     WEBUSB_DESC
 #endif
 
+#if (USBD_MSC_ENABLE)
+    MSC_DESC
+    MSC_EP
+#endif
+
     /* Terminator */                                                                                            \
     0                                     /* bLength */                                                       \
 };
@@ -2214,12 +2197,12 @@ const U8 USBD_OtherSpeedConfigDescriptor_HS[] = { 0 };
 /* USB Device Configuration Descriptor (for High Speed) */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-const U8 USBD_ConfigDescriptor_HS[] = {
+U8 USBD_ConfigDescriptor_HS[] = { //make it configurable
     /* Configuration 1 */
     USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
     USB_CONFIGURATION_DESCRIPTOR_TYPE,    /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH),             /* wTotalLength */
-    USBD_IF_NUM,                          /* bNumInterfaces */
+    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
+    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
     0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
     0x00,                                 /* iConfiguration: no string to describe this configuration */
     USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
@@ -2232,11 +2215,6 @@ const U8 USBD_ConfigDescriptor_HS[] = {
 #endif
     ADC_DESC
     ADC_EP_HS
-#endif
-
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP_HS
 #endif
 
 #if (USBD_CDC_ACM_ENABLE)
@@ -2261,7 +2239,11 @@ const U8 USBD_ConfigDescriptor_HS[] = {
 #if (USBD_WEBUSB_ENABLE)
     WEBUSB_DESC
 #endif
-
+//REORDER FOR MSC
+#if (USBD_MSC_ENABLE)
+    MSC_DESC
+    MSC_EP_HS
+#endif
     /* Terminator */                                                                                            \
     0                                     /* bLength */                                                       \
 };
@@ -2269,12 +2251,12 @@ const U8 USBD_ConfigDescriptor_HS[] = {
 /* USB Device Other Speed Configuration Descriptor (for Full Speed) */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-const U8 USBD_OtherSpeedConfigDescriptor[] = {
+U8 USBD_OtherSpeedConfigDescriptor[] = { //make it configurable
     /* Configuration 1 */
     USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
     USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE, /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH),             /* wTotalLength */
-    USBD_IF_NUM,                          /* bNumInterfaces */
+    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
+    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
     0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
     0x00,                                 /* iConfiguration: no string to describe this configuration */
     USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
@@ -2324,12 +2306,12 @@ const U8 USBD_OtherSpeedConfigDescriptor[] = {
 /* USB Device Other Speed Configuration Descriptor for High Speed */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-const U8 USBD_OtherSpeedConfigDescriptor_HS[] = {
+U8 USBD_OtherSpeedConfigDescriptor_HS[] = { //make it configurable
     /* Configuration 1 */
     USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
     USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE, /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH),             /* wTotalLength */
-    USBD_IF_NUM,                          /* bNumInterfaces */
+    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
+    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
     0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
     0x00,                                 /* iConfiguration: no string to describe this configuration */
     USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
@@ -2498,8 +2480,56 @@ BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
     return (__FALSE);
 }
 
-#endif
+#endif  //USBD_WEBUSB_ENABLE
 
+
+extern uint8_t flash_algo_valid(void);
+extern uint8_t target_family_valid(void);
+
+void usbd_class_init(void)
+{   
+#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
+    //change descriptors here
+    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 || target_family_valid()==0){
+        usbd_if_num -= USBD_MSC_ENABLE;
+        USB_CONFIGURATION_DESCRIPTOR * usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
+        usb_conf_desc->bNumInterfaces = usbd_if_num;
+        U16 usb_wtotal_len = USBD_WTOTALLENGTH_MAX - (USBD_MSC_DESC_LEN     * USBD_MSC_ENABLE);
+        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        USBD_ConfigDescriptor[usb_wtotal_len] = 0;
+#if (USBD_HS_ENABLE == 1)
+        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor_HS;
+        usb_conf_desc->bNumInterfaces = usbd_if_num;
+        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        USBD_ConfigDescriptor_HS[usb_wtotal_len] = 0;
+        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_OtherSpeedConfigDescriptor;
+        usb_conf_desc->bNumInterfaces = usbd_if_num;
+        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        USBD_OtherSpeedConfigDescriptor[usb_wtotal_len] = 0;
+        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_OtherSpeedConfigDescriptor_HS;
+        usb_conf_desc->bNumInterfaces = usbd_if_num;
+        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        USBD_OtherSpeedConfigDescriptor_HS[usb_wtotal_len] = 0;
+#endif         
+    }
 #endif
+#if (USBD_HID_ENABLE)
+    usbd_hid_init();
+#endif
+#if (USBD_MSC_ENABLE)
+    usbd_msc_init();
+#endif
+#if (USBD_ADC_ENABLE)
+    usbd_adc_init();
+#endif
+#if (USBD_CDC_ACM_ENABLE)
+    USBD_CDC_ACM_Initialize();
+#endif
+#if (USBD_CLS_ENABLE)
+    usbd_cls_init();
+#endif
+}
+
+#endif  //USBD_ENABLE
 
 #endif  /* __USB_CONFIG__ */

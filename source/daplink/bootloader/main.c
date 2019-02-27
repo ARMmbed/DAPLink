@@ -3,7 +3,7 @@
  * @brief   DAPLink Bootloader application entry point
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -31,6 +31,7 @@
 #include "util.h"
 #include "cortex_m.h"
 #include "sdk.h"
+#include "target_board.h"
 
 //default msc led settings
 #ifndef MSC_LED_DEF
@@ -249,11 +250,11 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if (!gpio_get_reset_btn() && validate_bin_nvic((uint8_t *)target_device.flash_start) && !config_ram_get_initial_hold_in_bl()) {
+    if (!gpio_get_reset_btn() && g_board_info.target_cfg && validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_start) && !config_ram_get_initial_hold_in_bl()) {
         // change to the new vector table
-        SCB->VTOR = target_device.flash_start;
+        SCB->VTOR = g_board_info.target_cfg->flash_start;
         // modify stack pointer and start app
-        modify_stack_pointer_and_start_app((*(uint32_t *)(target_device.flash_start)), (*(uint32_t *)(target_device.flash_start + 4)));
+        modify_stack_pointer_and_start_app((*(uint32_t *)(g_board_info.target_cfg->flash_start)), (*(uint32_t *)(g_board_info.target_cfg->flash_start + 4)));
     }
 
     // config the usb interface descriptor and web auth token before USB connects

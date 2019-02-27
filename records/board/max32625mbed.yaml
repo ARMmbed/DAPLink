@@ -2,7 +2,6 @@ common:
     sources:
         board:
             - source/board/max32625mbed.c
-        target:
-            - source/target/maxim/max32625/target.c
-            - source/target/maxim/max32625/flash_blob.c
-            - source/target/maxim/max32625/target_reset.c
+        family:
+            - source/family/maxim/max32625/target.c
+            - source/family/maxim/max32625/flash_blob.c

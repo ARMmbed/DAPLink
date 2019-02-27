@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,6 +24,7 @@
 #include "stm32f1xx.h"
 #include "util.h"
 #include "string.h"
+#include "target_board.h"
 
 /*********************************************************************
 *
@@ -59,20 +60,23 @@ uint32_t EraseChip(void)
     FLASH_EraseInitTypeDef erase_init;
     uint32_t error;
     uint32_t ret = 0;  // O.K.
+    if (g_board_info.target_cfg) {
+        HAL_FLASH_Unlock();
 
-    HAL_FLASH_Unlock();
-
-    util_assert((target_device.flash_end - target_device.flash_start) %
-                FLASH_PAGE_SIZE == 0);
-    memset(&erase_init, 0, sizeof(erase_init));
-    erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
-    erase_init.PageAddress = target_device.flash_start;
-    erase_init.NbPages = (target_device.flash_end - target_device.flash_start) % FLASH_PAGE_SIZE;
-    if (HAL_FLASHEx_Erase(&erase_init, &error) != HAL_OK) {
+        util_assert((g_board_info.target_cfg->flash_end - g_board_info.target_cfg->flash_start) %
+                    FLASH_PAGE_SIZE == 0);
+        memset(&erase_init, 0, sizeof(erase_init));
+        erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
+        erase_init.PageAddress =g_board_info.target_cfg->flash_start;
+        erase_init.NbPages = (g_board_info.target_cfg->flash_end - g_board_info.target_cfg->flash_start) % FLASH_PAGE_SIZE;
+        if (HAL_FLASHEx_Erase(&erase_init, &error) != HAL_OK) {
+            ret = 1;
+        }
+        
+        HAL_FLASH_Lock();
+    }else{
         ret = 1;
     }
-    
-    HAL_FLASH_Lock();
     return ret;
 }
 

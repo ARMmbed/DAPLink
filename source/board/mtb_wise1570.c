@@ -3,7 +3,7 @@
  * @brief   board ID for the MTB Wise 1570
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,14 +18,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "flash_manager.h"
-#include "swd_host.h"
 
-const char *board_id = "0460";
+#include "target_family.h"
+#include "target_board.h"
 
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-    swd_set_reset_connect(CONNECT_UNDER_RESET);
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0460",
+    .family_id = kStub_HWReset_FamilyID,
+    .flags = kEnablePageErase|kEnableUnderResetConnect,
+    .target_cfg = &target_device,
+};

@@ -3,7 +3,7 @@
  * @brief   Logic to perform a bootloader update when enabled
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2016-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2016-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#ifdef DRAG_N_DROP_SUPPORT
 #include <stdbool.h>
 #include <string.h>
 #include "flash_manager.h"
@@ -39,11 +40,11 @@
 #if DAPLINK_BOOTLOADER_UPDATE
     // The bootloader must be built first or this header will not be found
     #include "bootloader_image.c"
-#else
+#else //DAPLINK_BOOTLOADER_UPDATE
     static const unsigned int image_start = 0;
     static const unsigned int image_size = 0;
     static const char image_data[1];
-#endif
+#endif //DAPLINK_BOOTLOADER_UPDATE
 
 static bool interface_image_valid()
 {
@@ -81,7 +82,6 @@ void bootloader_check_and_update(void)
 
     same = memcmp((void*)image_start, image_data, image_size) == 0;
     if (!same) {
-        flash_manager_set_page_erase(false);
         ret = flash_manager_init(flash_intf_iap_protected);
         if (ret != ERROR_SUCCESS) {
             util_assert(0);
@@ -102,3 +102,8 @@ void bootloader_check_and_update(void)
         }
     }
 }
+#else //DRAG_N_DROP_SUPPORT
+
+void bootloader_check_and_update(void) {}
+
+#endif //DRAG_N_DROP_SUPPORT

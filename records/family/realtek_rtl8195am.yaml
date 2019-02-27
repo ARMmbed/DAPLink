@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/realtek/target_reset_realtek_rtl8195am.c

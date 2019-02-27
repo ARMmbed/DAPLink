@@ -3,7 +3,7 @@
  * @brief   board ID for the Cerevo BlueNinja sub board & specific functions.
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,15 +21,23 @@
 #include <RTL.h>
 #include "IO_Config.h"
 #include "swd_host.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "7010";
-
-
-void target_set_state_by_board(TARGET_RESET_STATE state)
+static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
 {
     
     if (RESET_PROGRAM == state) {
         LPC_GPIO->SET[PIN_PWH_PORT] = PIN_PWH;
         os_dly_wait(10);
     }
+    return 1;
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "7010",
+    .family_id = kToshiba_Tz_FamilyID,
+    .target_set_state = target_set_state_by_board,
+    .target_cfg = &target_device,
+};

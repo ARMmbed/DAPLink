@@ -3,7 +3,7 @@
  * @brief   Implementation of vfs_user.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -35,6 +35,7 @@
 #include "gpio.h"           // for gpio_get_sw_reset
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
+#include "target_board.h"
 
 // Must be bigger than 4x the flash size of the biggest supported
 // device.  This is to accomodate for hex file programming.
@@ -87,10 +88,10 @@ void vfs_user_build_filesystem()
     uint32_t file_size;
     vfs_file_t file_handle;
     // Setup the filesystem based on target parameters
-    vfs_init(daplink_drive_name, disc_size);
+    vfs_init(get_daplink_drive_name(), disc_size);
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
-    vfs_create_file(daplink_url_name, read_file_mbed_htm, 0, file_size);
+    vfs_create_file(get_daplink_url_name(), read_file_mbed_htm, 0, file_size);
     // DETAILS.TXT
     file_size = get_file_size(read_file_details_txt);
     vfs_create_file("DETAILS TXT", read_file_details_txt, 0, file_size);
@@ -174,6 +175,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
             config_set_overflow_detect(false);
             vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "MSD_ON  ACT", sizeof(vfs_filename_t))) {
+            config_ram_set_disable_msd(false);
+            vfs_mngr_fs_remount();
+        } else if (!memcmp(filename, "MSD_OFF ACT", sizeof(vfs_filename_t))) {
+            config_ram_set_disable_msd(true);
+            vfs_mngr_fs_remount();
         }
     }
 
@@ -194,7 +201,7 @@ void vfs_user_disconnecting()
     }
 
     // If hold in bootloader has been set then reset after usb is disconnected
-    if (daplink_is_interface() && config_ram_get_hold_in_bl()) {
+    if (daplink_is_interface() && (config_ram_get_hold_in_bl() || config_ram_get_disable_msd()==1)) {
         SystemReset();
     }
 
@@ -502,7 +509,7 @@ static uint32_t expand_info(uint8_t *buf, uint32_t bufsize)
 
                 case 'r':
                 case 'R':   // URL replacement
-                    insert_string = (uint8_t *)daplink_target_url;
+                    insert_string = (uint8_t *)get_daplink_target_url();
                     break;
 
                 default:

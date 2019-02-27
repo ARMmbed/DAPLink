@@ -15,10 +15,18 @@
  */
 
 #include "uart.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char * board_id = "1200";
-
-void prerun_board_config()
+static void prerun_board_config()
 {
     uart_enable_flow_control(false);
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "1200",
+    .family_id = kStub_SWSysReset_FamilyID,
+    .prerun_board_config = prerun_board_config,
+    .target_cfg = &target_device,
+};

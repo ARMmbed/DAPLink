@@ -3,7 +3,7 @@
  * @brief   board ID for the NXP LPC54608Xpresso board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,23 +19,15 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
-#include "flash_manager.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "0235";
-
-// Override default behavior
-//
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "MINI-54018";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://os.mbed.com/platforms/LPC54018IoTModule/";
-
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
-
+const board_info_t g_board_info = {
+    .board_id = "0235",
+    .family_id = kStub_SWVectReset_FamilyID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name =     "MINI-54018",
+    .daplink_target_url =  "https://os.mbed.com/platforms/LPC54018IoTModule/",
+    .target_cfg = &target_device,
+};

@@ -6,6 +6,6 @@ common:
     sources:
         board:
             - source/board/blueninja.c
-        target:
-            - source/target/toshiba/tz10xx/target_remap0.c
-            - source/target/toshiba/target_reset.c
+        family:
+            - source/family/toshiba/tz10xx/target_remap0.c
+            - source/family/toshiba/target_reset_tz.c

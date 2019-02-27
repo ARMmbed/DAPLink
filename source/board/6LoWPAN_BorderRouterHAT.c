@@ -3,7 +3,7 @@
  * @brief   board ID for the 6LoWPAN_BorderRouterHAT
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,4 +19,12 @@
  * limitations under the License.
  */
 
-const char *board_id = "7402";
+#include "target_board.h"
+#include "target_family.h"
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "7402",
+    .family_id = kNXP_KinetisK_FamilyID,
+    .target_cfg = &target_device,
+};

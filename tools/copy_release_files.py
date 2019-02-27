@@ -26,23 +26,20 @@ from __future__ import print_function
 
 import os
 import shutil
+import glob
 import argparse
 
 from subprocess import check_output, CalledProcessError
 
 COPY_PATTERN_LIST = [
-    "%s_crc.bin",
-    "%s_crc.hex",
-    "%s_crc.txt",
+    "%s_crc*.bin",
+    "%s_crc*.hex",
+    "%s_crc*.txt",
     ]
 OPTIONAL_COPY_PATTERN_LIST = [
     "%s.axf",
     "%s.elf",
-    "%s_crc_legacy_0x8000.bin",
-    "%s_crc_legacy_0x5000.bin",
-    "%s_crc_legacy.txt",
-    "%s_crc_legacy.txt",
-    "%s_crc.c",
+    "%s_crc*.c",
     "%s.build_log.htm",
     "%s.map",
     "%s.htm",
@@ -143,13 +140,12 @@ def main():
         for file_pattern in COPY_PATTERN_LIST:
             file_name = file_pattern % project.lower()
             file_source = os.path.join(src_dir, file_name)
-            file_dest = os.path.join(dest_dir, file_name)
-            shutil.copy(file_source, file_dest)
+            for file_wild in glob.glob(file_source):
+                shutil.copy(file_wild, dest_dir)
         for file_pattern in OPTIONAL_COPY_PATTERN_LIST:
             file_name = file_pattern % project.lower()
             file_source = os.path.join(src_dir, file_name)
-            if os.path.isfile(file_source):
-                file_dest = os.path.join(dest_dir, file_name)
-                shutil.copy(file_source, file_dest)
+            for file_wild in glob.glob(file_source):
+                shutil.copy(file_wild, dest_dir)
 
 main()

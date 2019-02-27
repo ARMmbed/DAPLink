@@ -3,7 +3,7 @@
  * @brief   Board ID for the VBLUno51 board (VNG Bluetooth Low Energy UNO nRF51822 board)
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,22 +19,20 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
 #include "uart.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "C006";
-
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "DAPLINK    ";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/";
-
-void prerun_board_config()
+static void prerun_board_config()
 {
     uart_enable_flow_control(false);
 }
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "C006",
+    .family_id = kNordic_Nrf51_FamilyID,
+    .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
+    .prerun_board_config = prerun_board_config,
+    .target_cfg = &target_device,
+};

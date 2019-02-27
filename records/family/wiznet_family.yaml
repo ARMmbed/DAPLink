@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/wiznet/target_reset_wiznet.c

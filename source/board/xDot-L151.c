@@ -3,7 +3,7 @@
  * @brief   board ID for the MultiTech xDot
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,12 +19,14 @@
  * limitations under the License.
  */
 
-const char *board_id = "0350";
+#include "target_family.h"
+#include "target_board.h"
 
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const char daplink_url_name[11] =   "XDOT    HTM";
-__attribute__((aligned(4)))
-const char daplink_drive_name[11] = "XDOT       ";
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0350",
+    .family_id = kStub_HWReset_FamilyID,
+    .daplink_url_name =       "XDOT    HTM",
+    .daplink_drive_name =       "XDOT       ",
+    .target_cfg = &target_device,
+};

@@ -3,7 +3,7 @@
  * @brief   Implementation of daplink.h for the bootloader application
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -29,9 +29,6 @@ COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_BL);
 // daplink_drive_name strings must be 11 characters
 // excluding the null terminated character
 const char daplink_mode_file_name[11] = "START_IFACT";
-const char daplink_url_name[11] =       "HELP_FAQHTM";
-const char daplink_drive_name[11] =     "MAINTENANCE";
-const char *const daplink_target_url = "https://mbed.com/daplink";
 
 bool daplink_is_bootloader()
 {

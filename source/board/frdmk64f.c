@@ -3,7 +3,7 @@
  * @brief   board ID for the NXP FRDM-K64F board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,12 +18,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "flash_manager.h"
 
-const char *board_id = "0240";
+#include "target_board.h"
+#include "target_family.h"
 
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0240",
+    .family_id = kNXP_KinetisK_FamilyID,
+    .flags = kEnablePageErase,
+    .target_cfg = &target_device,
+};

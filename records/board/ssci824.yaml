@@ -4,6 +4,5 @@ common:
     sources:
         board:
             - source/board/scci824.c
-        target:
-            - source/target/nxp/lpc824/target.c
-            - source/target/nxp/target_reset.c
+        family:
+            - source/family/nxp/lpc824/target.c

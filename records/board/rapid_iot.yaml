@@ -4,6 +4,6 @@ common:
     sources:
         board:
             - source/board/rapid_iot.c
-        target:
-            - source/target/freescale/rapid_iot/target.c
-            - source/target/freescale/rapid_iot/target_reset.c
+        family:
+            - source/family/freescale/rapid_iot/target.c
+            - source/family/freescale/target_reset_rapid_iot.c

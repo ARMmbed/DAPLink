@@ -18,22 +18,77 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
-#include "stdbool.h"
-#include "flash_manager.h"
+#include "swd_host.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "0228";
-// Override default behavior
-//
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "IOT-DAPLINK";
-//__attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/rapid-iot";
+char *board_id_kw41z = "0234";
 
-void prerun_board_config(void)
+#define MDM_STATUS  0x01000000
+#define MDM_CTRL    0x01000004
+#define MDM_IDR     0x010000fc
+#define MDM_ID_K64  0x001c0000 // K64
+#define MDM_ID_KW4  0x001c0020 // KW4
+
+/* Kinetis series ID */
+#define K_SERIES     0
+#define KW_SERIES    5
+
+/* KW4 subfamily defines */
+#define KW40         0
+#define KW41         1
+
+
+static void prerun_board_config(void);
+
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0228",
+    .family_id = kNXP_RapidIot_FamilyID,
+    .flags = kEnablePageErase,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name = 		"IOT-DAPLINK",
+    .daplink_target_url = "http://www.nxp.com/rapid-iot",
+    .target_cfg = &target_device,
+    .prerun_board_config = prerun_board_config,
+};
+
+static void prerun_board_config(void)
 {
-    flash_manager_set_page_erase(true);
+    // SIM peripheral   0x40047000
+    // address offset   0x    1024
+    uint32_t SDID = 0x40048024;
+    uint32_t sdid;
+
+    // get a hold of the target
+    if (target_set_state(HALT) == 0) {
+        /*
+         * When the Kinetis flash is empty the reset line toggles. This causes failures
+         * when trying to halt the target. Use the reset halt method in this case.
+         */
+        target_set_state(RESET_PROGRAM);
+    }
+
+    // Read the system identification register
+    swd_read_memory(SDID, (uint8_t *)&sdid, 4);
+
+    // Set the target flash algorithm
+    if (((sdid >> 20) & 0xF) == KW_SERIES) {
+        //mdm_id = MDM_ID_KW4;
+
+        if (((sdid >> 24) & 0x3) == KW40) {
+            // Program to the KW40 flash
+            extern target_cfg_t target_device_kw40;
+            target_device = target_device_kw40;
+        } else {
+            // Program to the KW41 flash
+            extern target_cfg_t target_device_kw41;
+            target_device = target_device_kw41;
+            target_device.rt_board_id = board_id_kw41z;
+        }
+    }
+
+    // Let the target run
+    target_set_state(RUN);
 }

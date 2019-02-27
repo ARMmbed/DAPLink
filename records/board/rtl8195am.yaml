@@ -2,8 +2,8 @@ common:
     sources:
         board:
             - source/board/rtl8195am.c
-        target:
-            - source/target/realtek/rtl8195am/target.c
-            - source/target/realtek/rtl8195am/target_reset.c
+        family:
+            - source/family/realtek/rtl8195am/target.c
+            - source/family/realtek/target_reset_realtek_rtl8195am.c
     macros:
         - BOARD_RTL8195AM

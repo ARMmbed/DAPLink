@@ -3,7 +3,7 @@
  * @brief   board ID for the Laird BL654
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,12 +19,15 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
-
-const char *board_id = "0465";
+#include "target_board.h"
+#include "target_family.h"
 
 extern target_cfg_t target_device_nrf52840_256;
-void prerun_board_config(void)
-{
-    target_device = target_device_nrf52840_256;
-}
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0465",
+    .family_id = kNordic_Nrf52_FamilyID,
+    .target_cfg = &target_device_nrf52840_256,
+};
+

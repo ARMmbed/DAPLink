@@ -86,7 +86,7 @@ def package_release_files(source, dest, version, toolchain):
         shutil.copyfile(source_path, dest_path)
 
         product_code = 'NOT SUPPORTED'
-        for board_id, fimware, bootloader, target in info.SUPPORTED_CONFIGURATIONS:
+        for board_id, family_id, fimware, bootloader, target in info.SUPPORTED_CONFIGURATIONS:
             if fimware == prj_name:
                 product_code = board_id
                 if target is not None:

@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/wizwiki_w7500p.c
-        target:
-            - source/target/wiznet/w7500/target.c
-            - source/target/wiznet/target_reset.c
+        family:
+            - source/family/wiznet/w7500/target.c
+            - source/family/wiznet/target_reset_wiznet.c

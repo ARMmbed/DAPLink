@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/nordic/target_reset_nrf52.c

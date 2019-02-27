@@ -3,7 +3,7 @@
  * @brief   board ID for the UBLOX_EVK_NINA_B1
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,8 +18,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "sam3u2c.h"
-#include "target_config.h"
 
-const char *board_id = "1237";
+#include "DAP_config.h"
+#include "target_board.h"
+#include "target_family.h"
+
+static void swd_set_target_reset(uint8_t asserted){
+    if(!asserted) {
+        PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+    }
+}
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "1237",
+    .family_id = kNordic_Nrf52_FamilyID,
+    .swd_set_target_reset = swd_set_target_reset,
+    .target_cfg = &target_device,
+};

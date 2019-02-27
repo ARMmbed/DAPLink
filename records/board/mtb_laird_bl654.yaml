@@ -6,6 +6,6 @@ common:
     sources:
         board:
             - source/board/mtb_laird_bl654.c
-        target:
-            - source/target/nordic/nrf5x/target.c
-            - source/target/nordic/target_reset_nrf52.c
+        family:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c

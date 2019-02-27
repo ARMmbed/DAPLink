@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/hrm1017.c
-        target:
-            - source/target/nordic/nrf51822/target_16.c
-            - source/target/nordic/target_reset.c
+        family:
+            - source/family/nordic/nrf51822/target_16.c
+            - source/family/nordic/target_reset_nrf51.c

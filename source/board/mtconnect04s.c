@@ -3,7 +3,7 @@
  * @brief   board ID for the MtM MtConnect04S developments board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,14 +19,15 @@
  * limitations under the License.
  */
 
-const char *board_id = "C005";
+#include "target_board.h"
+#include "target_family.h"
 
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const char daplink_url_name[11] =   "HELP    HTM";
-__attribute__((aligned(4)))
-const char daplink_drive_name[11] = "MTCONNEC04S";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "https://blog.mtmtech.com.tw/mtconnect04s/";
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "C005",
+    .family_id = kNordic_Nrf51_FamilyID,
+    .daplink_url_name =       "HELP    HTM",
+    .daplink_drive_name = 		"MTCONNEC04S",
+    .daplink_target_url = "https://blog.mtmtech.com.tw/mtconnect04s/",
+    .target_cfg = &target_device,
+};

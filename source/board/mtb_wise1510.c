@@ -3,7 +3,7 @@
  * @brief   board ID for the MTB Wise 1510
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +19,12 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "0458";
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0458",
+    .family_id = kStub_HWReset_FamilyID,
+    .target_cfg = &target_device,
+};

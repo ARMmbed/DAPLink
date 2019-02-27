@@ -19,15 +19,15 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
-#include "flash_manager.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "3104";
+extern target_cfg_t target_device_nrf52;
 
-void prerun_board_config(void)
-{
-    extern target_cfg_t target_device_nrf52;
-    target_device = target_device_nrf52;
-
-    flash_manager_set_page_erase(true);
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "3104",
+    .family_id = kNordic_Nrf52_FamilyID,
+    .flags = kEnablePageErase,
+    .target_cfg = &target_device_nrf52,
+};

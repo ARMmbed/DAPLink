@@ -2,6 +2,5 @@ common:
     sources:
         board:
             - source/board/c027.c
-        target:
-            - source/target/nxp/lpc1768/target.c
-            - source/target/nxp/target_reset.c
+        family:
+            - source/family/nxp/lpc1768/target.c

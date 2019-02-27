@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/lpc55S69xpresso.c
-        target:
-            - source/target/nxp/lpc55S6X/target.c
-            - source/target/nxp/lpc55S6X/target_reset.c
+        family:
+            - source/family/nxp/lpc55S6X/target.c
+            - source/family/nxp/lpc55S6X/target_reset.c

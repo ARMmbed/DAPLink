@@ -4,6 +4,6 @@ common:
     sources:
         board:
             - source/board/mimxrt1020_evk.c
-        target:
-            - source/target/freescale/mimxrt1020_spi_flash/target.c
-            - source/target/freescale/target_reset_mimxrt.c
+        family:
+            - source/family/freescale/mimxrt1020_spi_flash/target.c
+            - source/family/freescale/target_reset_mimxrt.c

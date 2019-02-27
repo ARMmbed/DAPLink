@@ -6,6 +6,6 @@ common:
     sources:
         board:
             - source/board/ublox_evk_nina_b1.c
-        target:
-            - source/target/nordic/nrf5x/target.c
-            - source/target/nordic/target_reset_nrf5x_sam3u2c.c
+        family:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c

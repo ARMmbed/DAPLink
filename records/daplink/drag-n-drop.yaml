@@ -1,4 +1,6 @@
 common:
+    macros:
+        - DRAG_N_DROP_SUPPORT
     includes:
         - source/daplink/drag-n-drop
     sources:

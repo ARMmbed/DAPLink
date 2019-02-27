@@ -25,10 +25,11 @@
 #include "util.h"
 #include "macro.h"
 #include "daplink.h"
-#include "validation.h"
 #include "flash_manager.h"
 #include "target_config.h"  // for target_device
 #include "settings.h"       // for config_get_automation_allowed
+#include "validation.h"
+#include "target_board.h"
 
 // Set to 1 to enable debugging
 #define DEBUG_FLASH_DECODER     0
@@ -135,8 +136,12 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
                 flash_intf_local = flash_intf_iap_protected;
             }
         } else if (FLASH_DECODER_TYPE_TARGET == type) {
-            flash_start_local = target_device.flash_start;
-            flash_intf_local = flash_intf_target;
+            if (g_board_info.target_cfg) {
+                flash_start_local = g_board_info.target_cfg->flash_start;
+                flash_intf_local = flash_intf_target;
+            } else {
+                status = ERROR_FD_UNSUPPORTED_UPDATE;
+            }
         } else {
             status = ERROR_FD_UNSUPPORTED_UPDATE;
         }
@@ -338,7 +343,12 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
             break;
 
         case FLASH_DECODER_TYPE_TARGET:
-            end_addr = target_device.flash_end;
+            if (g_board_info.target_cfg) {
+                end_addr = g_board_info.target_cfg->flash_end;
+            }
+            else {
+                return false;
+            }
             break;
 
         default:

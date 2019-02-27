@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/lpc4088qsb.c
-        target:
-            - source/target/nxp/lpc4088/target_lpc4088qsb.c
-            - source/target/nxp/lpc4088/target_reset.c
+        family:
+            - source/family/nxp/lpc4088/target_lpc4088qsb.c
+            - source/family/nxp/target_reset_lpc4088.c

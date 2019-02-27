@@ -50,7 +50,7 @@ __heap_limit
 
                 AREA    RESET, DATA, READONLY
                 EXPORT  __Vectors
-
+                IMPORT  g_board_info
 Sign_Value		EQU		0x5A5A5A5A
 
 __Vectors       DCD     __initial_sp              	; 0 Top of Stack
@@ -64,11 +64,11 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
                 DCD     DAPLINK_BUILD_KEY               ; Build type - BL/IF
                 DCD     DAPLINK_HIC_ID                  ; Compatibility
                 DCD     DAPLINK_VERSION                 ; Version
-                DCD     SVC_Handler               	; 11 SVCall Handler
-                DCD     DebugMon_Handler          	; 12 Debug Monitor Handler
-                DCD     0                         	; 13 Reserved
-                DCD     PendSV_Handler            	; 14 PendSV Handler
-                DCD     SysTick_Handler           	; 15 SysTick Handler
+                DCD     SVC_Handler                 ; 11 SVCall Handler
+                DCD     DebugMon_Handler            ; 12 Debug Monitor Handler
+                DCD     g_board_info                ; 13 Ptr to Board info, family info other target details
+                DCD     PendSV_Handler              ; 14 PendSV Handler
+                DCD     SysTick_Handler             ; 15 SysTick Handler
 
                 ; External Interrupts
 				DCD		DAC_IRQHandler	 			; 16 D/A Converter

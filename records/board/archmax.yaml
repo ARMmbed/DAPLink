@@ -2,6 +2,5 @@ common:
     sources:
         board:
             - source/board/archmax.c
-        target:
-            - source/target/st/stm32f407/target.c
-            - source/target/st/target_reset.c
+        family:
+            - source/family/st/stm32f407/target.c

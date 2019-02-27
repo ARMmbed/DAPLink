@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,6 +28,7 @@
 #include "debug_ca.h"
 #include "DAP_config.h"
 #include "DAP.h"
+#include "target_family.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -58,7 +59,6 @@
 #define MAX_SWD_RETRY 10
 #define MAX_TIMEOUT   100000  // Timeout for syscalls on target
 
-#define SOFT_RESET  SYSRESETREQ
 
 typedef struct {
     uint32_t select;
@@ -71,6 +71,7 @@ typedef struct {
 } DEBUG_STATE;
 
 static DAP_STATE dap_state;
+static uint32_t  soft_reset = SYSRESETREQ;
 static uint32_t select_state = SELECT_MEM;
 static volatile uint32_t swd_init_debug_flag = 0;
 
@@ -109,6 +110,10 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
     return ack;
 }
 
+void swd_set_soft_reset(uint32_t soft_reset_type)
+{
+    soft_reset = soft_reset_type;
+}
 
 uint8_t swd_init(void)
 {
@@ -734,7 +739,9 @@ uint8_t swd_init_debug(void)
     // call a target dependant function
     // this function can do several stuff before really
     // initing the debug
-    target_before_init_debug();
+    if (g_target_family && g_target_family->target_before_init_debug) {
+        g_target_family->target_before_init_debug();
+    }
 
     if (!JTAG2SWD()) {
         return 0;
@@ -767,7 +774,9 @@ uint8_t swd_init_debug(void)
     // call a target dependant function:
     // some target can enter in a lock state
     // this function can unlock these targets
-    target_unlock_sequence();
+    if (g_target_family && g_target_family->target_unlock_sequence) {
+        g_target_family->target_unlock_sequence();
+    }
 
     if (!swd_write_dp(DP_SELECT, 0)) {
         return 0;
@@ -779,11 +788,6 @@ uint8_t swd_init_debug(void)
 uint8_t swd_uninit_debug(void)
 {
     return 1;
-}
-
-__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
-{
-    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
 }
 
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
@@ -909,7 +913,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
             }
 
             // Perform a soft reset
-            if (!swd_write_word(NVIC_AIRCR, VECTKEY | SOFT_RESET)) {
+            if (!swd_write_word(NVIC_AIRCR, VECTKEY | soft_reset)) {
                 return 0;
             }
 

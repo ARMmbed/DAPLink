@@ -27,6 +27,7 @@
 #include "debug_cm.h"
 #include "DAP_config.h"
 #include "DAP.h"
+#include "target_family.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -47,23 +48,6 @@
 #define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB AIRCR: PRIGROUP Position */
 #define SCB_AIRCR_PRIGROUP_Msk             (7UL << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB AIRCR: PRIGROUP Mask */
 
-#if !defined(SOFT_RESET)
-#define SOFT_RESET  SYSRESETREQ
-
-// Some targets require a soft reset for flash programming (RESET_PROGRAM).
-// DAP operations as they are controlled by the remote debugger.
-#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(TARGET_NRF51822)
-// SYSRESETREQ - Software reset of the Cortex-M core and on-chip peripherals
-#define SOFT_RESET  SYSRESETREQ
-#elif defined(BOARD_LPC4337)
-// VECTRESET - Software reset of Cortex-M core
-// For some Cortex-M devices, VECTRESET is the only way to reset the core.
-// VECTRESET is not supported on Cortex-M0 and Cortex-M1 cores.
-#define SOFT_RESET  VECTRESET
-#endif
-
-#endif
-
 typedef struct {
     uint32_t select;
     uint32_t csw;
@@ -77,6 +61,7 @@ typedef struct {
 static SWD_CONNECT_TYPE reset_connect = CONNECT_NORMAL;
 
 static DAP_STATE dap_state;
+static uint32_t  soft_reset = SYSRESETREQ;
 
 void swd_set_reset_connect(SWD_CONNECT_TYPE type)
 {
@@ -108,6 +93,10 @@ uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
     return ack;
 }
 
+void swd_set_soft_reset(uint32_t soft_reset_type)
+{
+    soft_reset = soft_reset_type;
+}
 
 uint8_t swd_init(void)
 {
@@ -814,7 +803,9 @@ uint8_t swd_init_debug(void)
         // call a target dependant function
         // this function can do several stuff before really
         // initing the debug
-        target_before_init_debug();
+        if (g_target_family && g_target_family->target_before_init_debug) {
+            g_target_family->target_before_init_debug();
+        }
 
         if (!JTAG2SWD()) {
             do_abort = 1;
@@ -862,7 +853,9 @@ uint8_t swd_init_debug(void)
         // call a target dependant function:
         // some target can enter in a lock state
         // this function can unlock these targets
-        target_unlock_sequence();
+        if (g_target_family && g_target_family->target_unlock_sequence) {
+            g_target_family->target_unlock_sequence();
+        }
 
         if (!swd_write_dp(DP_SELECT, 0)) {
             do_abort = 1;
@@ -874,11 +867,6 @@ uint8_t swd_init_debug(void)
     } while (--retries > 0);
     
     return 0;
-}
-
-__attribute__((weak)) void swd_set_target_reset(uint8_t asserted)
-{
-    (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
 }
 
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
@@ -1078,7 +1066,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
                 return 0;
             }
 
-            if (!swd_write_word(NVIC_AIRCR, VECTKEY | (val & SCB_AIRCR_PRIGROUP_Msk) | SOFT_RESET)) {
+            if (!swd_write_word(NVIC_AIRCR, VECTKEY | (val & SCB_AIRCR_PRIGROUP_Msk) | soft_reset)) {
                 return 0;
             }
 

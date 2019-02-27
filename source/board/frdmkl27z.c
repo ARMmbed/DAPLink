@@ -3,7 +3,7 @@
  * @brief   board ID for the NXP FRDM-KL27Z board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,18 +19,15 @@
  * limitations under the License.
  */
 
-#include "virtual_fs.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "0261";
-
-// Override default behavior
-//
-// URL_NAME and DRIVE_NAME must be 11 characters excluding
-// the null terminated character
-// Note - 4 byte alignemnt required as workaround for ARMCC compiler bug with weak references
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_url_name =       "PRODINFOHTM";
-__attribute__((aligned(4)))
-const vfs_filename_t daplink_drive_name =     "FRDM-KL27ZD";
-__attribute__((aligned(4)))
-const char *const daplink_target_url = "http://www.nxp.com/frdm-kl27z";
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0261",
+    .family_id = kNXP_KinetisL_FamilyID,
+    .daplink_url_name =       "PRODINFOHTM",
+    .daplink_drive_name = 	"FRDM-KL27ZD",
+    .daplink_target_url = "http://www.nxp.com/frdm-kl27z",
+    .target_cfg = &target_device,
+};

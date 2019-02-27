@@ -32,7 +32,7 @@ fromelf --bin %PROJECT_DIR%.axf -o %PROJECT_DIR%.bin
 fromelf --i32 %PROJECT_DIR%.axf -o %PROJECT_DIR%.hex
 @if %errorlevel% neq 0 exit /b %errorlevel%
 
-python %TOOLS%\post_compute_crc.py %PROJECT_DIR%.hex %PROJECT_DIR%_crc
+python %TOOLS%\post_build_script.py %PROJECT_DIR%.hex %PROJECT_DIR%_crc
 @if %errorlevel% neq 0 exit /b %errorlevel%
 
 @exit 0

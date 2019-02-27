@@ -36,4 +36,3 @@ uint8_t validate_hexfile(const uint8_t *buf);
 #endif
 
 #endif
-

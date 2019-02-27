@@ -2,6 +2,6 @@ common:
     sources:
         board:
             - source/board/frdmk66f.c
-        target:
-            - source/target/freescale/k66f/target.c
-            - source/target/freescale/target_reset_Kseries.c
+        family:
+            - source/family/freescale/k66f/target.c
+            - source/family/freescale/target_reset_Kseries.c

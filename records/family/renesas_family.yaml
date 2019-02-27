@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/renesas/target_reset_rza.c

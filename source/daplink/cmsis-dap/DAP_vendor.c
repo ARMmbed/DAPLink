@@ -32,10 +32,15 @@
 #include "info.h"
 #include "main.h"
 #include "uart.h"
-#include "file_stream.h"
 #include "settings.h"
 #include "target_reset.h"
+#include "target_family.h"
 #include <string.h>
+
+
+#ifdef DRAG_N_DROP_SUPPORT
+#include "file_stream.h"
+#endif
 
 //**************************************************************************************************
 /**
@@ -133,6 +138,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += 1;
         break;
     }
+#ifdef DRAG_N_DROP_SUPPORT
     case ID_DAP_Vendor10: {
         // open mass storage device stream
         *response = stream_open((stream_type_t)(*request));
@@ -153,6 +159,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += ((write_len + 1) << 16) | 1;
         break;
     }
+#endif
     case ID_DAP_Vendor13: break;
     case ID_DAP_Vendor14: break;
     case ID_DAP_Vendor15: break;
@@ -172,6 +179,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
     case ID_DAP_Vendor29: break;
     case ID_DAP_Vendor30: break;
     case ID_DAP_Vendor31: break;
+    default: break;
   }
 
   return (num);

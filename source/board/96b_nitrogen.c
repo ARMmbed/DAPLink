@@ -3,7 +3,7 @@
  * @brief   board ID for the Seeed Studio 96Boards Nitrogen board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,13 +19,14 @@
  * limitations under the License.
  */
 
-#include "target_config.h"
+#include "target_board.h"
+#include "target_family.h"
 
-const char *board_id = "9014";
+extern target_cfg_t target_device_nrf52;
 
-void prerun_board_config(void)
-{
-    // 96Boards Nitrogen is based on nrf52
-    extern target_cfg_t target_device_nrf52;
-    target_device = target_device_nrf52;
-}
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "9014",
+    .family_id = kNordic_Nrf52_FamilyID,
+    .target_cfg = &target_device_nrf52,
+};
