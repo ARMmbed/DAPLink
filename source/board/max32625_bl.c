@@ -20,6 +20,8 @@
  */
 
 #include "target_config.h"
+#include "target_board.h"
+#include "target_family.h"
 
 const char *board_id = "0000";
 
@@ -35,4 +37,16 @@ target_cfg_t target_device = {
     .ram_start      = 0x20000000,
     .ram_end        = 0x20028000
     /* .flash_algo not needed for bootloader */
+};
+
+//bootloader has no family
+const target_family_descriptor_t *g_target_family = NULL;
+
+const board_info_t g_board_info = {
+    .infoVersion = 0x0,
+    .board_id = "0000",
+    .daplink_url_name =       "HELP_FAQHTM",
+    .daplink_drive_name =       "MAINTENANCE",
+    .daplink_target_url = "https://mbed.com/daplink",
+    .target_cfg = &target_device,
 };

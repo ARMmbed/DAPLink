@@ -19,11 +19,12 @@
  * limitations under the License.
  */
 
-#include "flash_manager.h"
+#include "target_family.h"
+#include "target_board.h"
 
-const char *board_id = "0418";
-
-void prerun_board_config(void)
-{
-    flash_manager_set_page_erase(true);
-}
+const board_info_t g_board_info = {
+    .board_id = "0418",
+    .family_id = kStub_HWReset_FamilyID,
+    .flags = kEnablePageErase,
+    .target_cfg = &target_device,
+};
