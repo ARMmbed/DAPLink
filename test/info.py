@@ -119,6 +119,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_aconno_acn52832_if',             False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm32f439_if',                   False,      0x0000,     "bin"       ),
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
 }
 
 # Add new HICs here
