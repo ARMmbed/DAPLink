@@ -48,23 +48,16 @@
 #define RO_FREQ     96000000
 #endif
 
-#define __SYSTEM_CLOCK   RO_FREQ
-
 #ifndef LP0_POST_HOOK
 #define LP0_POST_HOOK
 #endif
 
-extern void (* const __Vectors[])(void);
+/*
+* Note: When compiling on ARM Keil Toolchain only.
+* If the SystemCoreClock is left uninitialized, post Scatter load
+* the clock will default to system reset value(48MHz)
+*/
 uint32_t SystemCoreClock = RO_FREQ;
-
-void NMI_Handler(void)
-{
-#ifdef DEBUG_MODE
-    printf("NMI\n");
-#endif
-    while(1)
-        __WFI();
-}
 
 void SystemCoreClockUpdate(void)
 {
@@ -92,10 +85,6 @@ void CLKMAN_TrimRO(void)
     uint32_t running;
     uint32_t trim;
 
-    // Reset ADC
-    MXC_PWRMAN->peripheral_reset = MXC_F_PWRMAN_PERIPHERAL_RESET_ADC;
-    MXC_PWRMAN->peripheral_reset = 0;
-
     /* Step 1: enable 32KHz RTC */
     running = MXC_PWRSEQ->reg0 & MXC_F_PWRSEQ_REG0_PWR_RTCEN_RUN;
     MXC_PWRSEQ->reg0 |= MXC_F_PWRSEQ_REG0_PWR_RTCEN_RUN;
@@ -109,15 +98,7 @@ void CLKMAN_TrimRO(void)
     /* Step 3: clear RO calibration complete interrupt */
     MXC_ADC->intr |= MXC_F_ADC_INTR_RO_CAL_DONE_IF;
 
-    // Step 4: read RO flash trim shadow register*/
-    // needed if parts are untrimmed
-#ifdef UNTRIM
-    uint32_t reg;
-    reg = MXC_PWRSEQ->reg6;
-    reg &= ~MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF;
-    reg |= (480 << MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF_POS);
-    MXC_PWRSEQ->reg6 = reg;
-#endif
+    /* Step 4: -- NO LONGER NEEDED / HANDLED BY STARTUP CODE -- */
 
     /* Step 5: write initial trim to frequency calibration initial condition register */
     trim = (MXC_PWRSEQ->reg6 & MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF) >> MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF_POS;
@@ -149,10 +130,8 @@ void CLKMAN_TrimRO(void)
     MXC_PWRSEQ->reg6 = (MXC_PWRSEQ->reg6 & ~MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF) |
                        ((trim << MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF_POS) & MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF);
 
-    // Step 14: restore RTC status
-    if (running) {
-        MXC_PWRSEQ->reg0 |= MXC_F_PWRSEQ_REG0_PWR_RTCEN_RUN;
-    } else {
+    /* Step 14: restore RTC status */
+    if (!running) {
         MXC_PWRSEQ->reg0 &= ~MXC_F_PWRSEQ_REG0_PWR_RTCEN_RUN;
     }
 
@@ -195,6 +174,11 @@ __weak int PreInit(void)
     return 0;
 }
 
+/*
+* Note: When compiling on ARM Keil Toolchain only.
+* If any global variable is modified in this function, post Scatter load
+* it will default to its original value(E.g.: SystemCoreClock)
+*/
 /* This function can be implemented by the application to initialize the board */
 __weak int Board_Init(void)
 {
@@ -202,71 +186,96 @@ __weak int Board_Init(void)
     return 0;
 }
 
-// This function to be implemented by the hal
-extern void low_level_init(void);
-
-void SystemInit(void)
+/* This function is called just before control is transferred to main().
+ *
+ * You may over-ride this function in your program by defining a custom
+ *  SystemInit(), but care should be taken to reproduce the initialization
+ *  steps or a non-functional system may result.
+ */
+__weak void SystemInit(void)
 {
-    uint32_t reg;
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+    /* Copy trim information from shadow registers into power manager registers */
+    /* NOTE: Checks have been added to prevent bad/missing trim values from being loaded */
+    if ((MXC_FLC->ctrl & MXC_F_FLC_CTRL_INFO_BLOCK_VALID) &&
+            (MXC_TRIM->for_pwr_reg5 != 0xffffffff) &&
+            (MXC_TRIM->for_pwr_reg6 != 0xffffffff)) {
+        MXC_PWRSEQ->reg5 = MXC_TRIM->for_pwr_reg5;
+        MXC_PWRSEQ->reg6 = MXC_TRIM->for_pwr_reg6;
+    } else {
+        /* No valid info block, use some reasonable defaults */
+        MXC_PWRSEQ->reg6 &= ~MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF;
+        MXC_PWRSEQ->reg6 |= (0x1e0 << MXC_F_PWRSEQ_REG6_PWR_TRIM_OSC_VREF_POS);
+    }
+
+    /* Improve flash access timing */
+    MXC_FLC->perform |= (MXC_F_FLC_PERFORM_EN_BACK2BACK_RDS |
+                         MXC_F_FLC_PERFORM_EN_MERGE_GRAB_GNT |
+                         MXC_F_FLC_PERFORM_AUTO_TACC |
+                         MXC_F_FLC_PERFORM_AUTO_CLKDIV);
+
+    /* First, eliminate the unnecessary RTC handshake between clock domains. Must be set as a pair. */
+    MXC_RTCTMR->ctrl |= (MXC_F_RTC_CTRL_USE_ASYNC_FLAGS |
+                         MXC_F_RTC_CTRL_AGGRESSIVE_RST);
+    /* Enable fast read of the RTC timer value, and fast write of all other RTC registers */
+    MXC_PWRSEQ->rtc_ctrl2 |= (MXC_F_PWRSEQ_RTC_CTRL2_TIMER_AUTO_UPDATE |
+                              MXC_F_PWRSEQ_RTC_CTRL2_TIMER_ASYNC_WR);
+
+    MXC_PWRSEQ->rtc_ctrl2 &= ~(MXC_F_PWRSEQ_RTC_CTRL2_TIMER_ASYNC_RD);
+
+    /* Clear the GPIO WUD event if not waking up from LP0 */
+    /* this is necessary because WUD flops come up in undetermined state out of POR or SRST*/
+    if(MXC_PWRSEQ->reg0 & MXC_F_PWRSEQ_REG0_PWR_FIRST_BOOT ||
+       !(MXC_PWRMAN->pwr_rst_ctrl & MXC_F_PWRMAN_PWR_RST_CTRL_POR)) {
+        /* Clear GPIO WUD event and configuration registers, globally */
+        MXC_PWRSEQ->reg1 |= (MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH |
+                             MXC_F_PWRSEQ_REG1_PWR_CLR_IO_CFG_LATCH);
+        MXC_PWRSEQ->reg1 &= ~(MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH |
+                              MXC_F_PWRSEQ_REG1_PWR_CLR_IO_CFG_LATCH);
+    } else {
+        /* Unfreeze the GPIO by clearing MBUS_GATE, when returning from LP0 */
+        MXC_PWRSEQ->reg1 &= ~(MXC_F_PWRSEQ_REG1_PWR_MBUS_GATE);
+        /* LP0 wake-up: Turn off special switch to eliminate ~50nA of leakage on VDD12 */
+        MXC_PWRSEQ->reg1 &= ~MXC_F_PWRSEQ_REG1_PWR_SRAM_NWELL_SW;
+    }
+
+    /* Turn on retention regulator */
+    MXC_PWRSEQ->reg0 |= (MXC_F_PWRSEQ_REG0_PWR_RETREGEN_RUN |
+                         MXC_F_PWRSEQ_REG0_PWR_RETREGEN_SLP);
+
+    /* Adjust settings in the retention controller for fastest wake-up time */
+    MXC_PWRSEQ->retn_ctrl0 |= (MXC_F_PWRSEQ_RETN_CTRL0_RC_REL_CCG_EARLY |
+                               MXC_F_PWRSEQ_RETN_CTRL0_RC_POLL_FLASH);
+    MXC_PWRSEQ->retn_ctrl0 &= ~(MXC_F_PWRSEQ_RETN_CTRL0_RC_USE_FLC_TWK);
+
+
+    /* Set retention controller TWake cycle count to 1us to minimize the wake-up time */
+    /* NOTE: flash polling (...PWRSEQ_RETN_CTRL0_RC_POLL_FLASH) must be enabled before changing POR default! */
+    MXC_PWRSEQ->retn_ctrl1 = (MXC_PWRSEQ->retn_ctrl1 & ~MXC_F_PWRSEQ_RETN_CTRL1_RC_TWK) |
+                             (1 << MXC_F_PWRSEQ_RETN_CTRL1_RC_TWK_POS);
+
+    /* Improve wake-up time by changing ROSEL to 140ns */
+    MXC_PWRSEQ->reg3 = (1 << MXC_F_PWRSEQ_REG3_PWR_ROSEL_POS) |
+        (1 << MXC_F_PWRSEQ_REG3_PWR_FAILSEL_POS) |
+        (MXC_PWRSEQ->reg3 & ~(MXC_F_PWRSEQ_REG3_PWR_ROSEL |
+           MXC_F_PWRSEQ_REG3_PWR_FLTRROSEL));
+
+    /* Enable RTOS Mode: Enable 32kHz clock synchronizer to SysTick external clock input */
+    MXC_CLKMAN->clk_ctrl |= MXC_F_CLKMAN_CLK_CTRL_RTOS_MODE;
+
+    /* Set this so all bits of PWR_MSK_FLAGS are active low to mask the corresponding flags */
+    MXC_PWRSEQ->pwr_misc |= MXC_F_PWRSEQ_PWR_MISC_INVERT_4_MASK_BITS;
+
     /* Enable FPU on Cortex-M4, which occupies coprocessor slots 10 & 11 */
-    /* Grant full access, per "Table B3-24 CPACR bit assignments". DDI0403D "ARMv7-M Architecture Reference Manual" */
+    /* Grant full access, per "Table B3-24 CPACR bit assignments". */
+    /* DDI0403D "ARMv7-M Architecture Reference Manual" */
     SCB->CPACR |= SCB_CPACR_CP10_Msk | SCB_CPACR_CP11_Msk;
     __DSB();
     __ISB();
-#endif
 
-    ICC_Enable();
-
-    // Enable real-time clock during sleep mode
-    MXC_PWRSEQ->reg0 |= (MXC_F_PWRSEQ_REG0_PWR_RTCEN_RUN | MXC_F_PWRSEQ_REG0_PWR_RTCEN_SLP);
-    MXC_CLKMAN->clk_ctrl |= MXC_F_CLKMAN_CLK_CTRL_RTOS_MODE;
-    // Turn on retention regulator - this needs some time to turn on before entering sleep
-    MXC_PWRSEQ->reg0 |= (MXC_F_PWRSEQ_REG0_PWR_RETREGEN_RUN | MXC_F_PWRSEQ_REG0_PWR_RETREGEN_SLP);
-
-    // Trim ring oscillator
+    /* Perform an initial trim of the internal ring oscillator */
     CLKMAN_TrimRO();
 
-    // Select 96MHz ring oscillator as clock source
-    reg = MXC_CLKMAN->clk_ctrl;
-    reg &= ~MXC_F_CLKMAN_CLK_CTRL_SYSTEM_SOURCE_SELECT;
-    reg |= 1 << MXC_F_CLKMAN_CLK_CTRL_SYSTEM_SOURCE_SELECT_POS;
-    MXC_CLKMAN->clk_ctrl = reg;
-
-    // The MAX32625 will not enter LP1 or LP0 if any of the GPIO WUD latches
-    // are set, instead it will just wake up.  These are not cleared by reset,
-    // so lets clear them here.
-    // But only if a first boot event is detected, to avoid clearing valid
-    // events when returning from LP0
-    if ( (MXC_PWRSEQ->flags & MXC_F_PWRSEQ_FLAGS_PWR_FIRST_BOOT) ||
-            !(MXC_PWRMAN->pwr_rst_ctrl & MXC_F_PWRMAN_PWR_RST_CTRL_POR) ) {
-        MXC_PWRSEQ->reg1 |= (MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH | MXC_F_PWRSEQ_REG1_PWR_CLR_IO_CFG_LATCH);
-        MXC_PWRSEQ->reg1 &= ~(MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH | MXC_F_PWRSEQ_REG1_PWR_CLR_IO_CFG_LATCH);
-    }
-
-    // NOTE: These must be cleared before clearing IOWAKEUP
-    MXC_PWRSEQ->reg1 |= MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH;
-    MXC_PWRSEQ->reg1 &= ~MXC_F_PWRSEQ_REG1_PWR_CLR_IO_EVENT_LATCH;
-
-    MXC_PWRSEQ->flags |= MXC_F_PWRSEQ_FLAGS_PWR_IOWAKEUP;
-
-    // Clear the firstboot bit, which is generated by a POR event and locks out LPx modes
-    MXC_PWRSEQ->reg0 &= ~(MXC_F_PWRSEQ_REG0_PWR_FIRST_BOOT);
-
-    // Clear all unused wakeup sources
-    // Beware! Do not change any flag not mentioned here, as they will gate important power sequencer signals
-    MXC_PWRSEQ->msk_flags &= ~(MXC_F_PWRSEQ_MSK_FLAGS_PWR_USB_PLUG_WAKEUP |
-                               MXC_F_PWRSEQ_MSK_FLAGS_PWR_USB_REMOVE_WAKEUP);
-
-    // RTC sources are inverted, so a 1 will disable them
-    MXC_PWRSEQ->msk_flags |= (MXC_F_PWRSEQ_MSK_FLAGS_RTC_CMPR1 |
-                              MXC_F_PWRSEQ_MSK_FLAGS_RTC_PRESCALE_CMP);
-
-    // Unfreeze the GPIO by clearing MBUS_GATE
-    // This is always safe to do, and restores our I/O when returning from LP0
-    MXC_PWRSEQ->reg1 &= ~MXC_F_PWRSEQ_REG1_PWR_MBUS_GATE;
-
     SystemCoreClockUpdate();
-
     Board_Init();
+
 }
