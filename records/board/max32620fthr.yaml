@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/max32620fthr.c
+        family:
+            - source/family/maxim/max32620/target.c
+            - source/family/maxim/max32620/flash_blob.c

@@ -233,7 +233,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
     if (sector_offset != 0) {
         return 0;
     }
-		
+
     return update_details_txt_file(data, VFS_SECTOR_SIZE);
 }
 
@@ -353,7 +353,7 @@ static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uin
 
 
 static uint32_t update_html_file(uint8_t *data, uint32_t datasize)
-{		
+{
     char *buf = (char *)data;
     //Needed by expand_info strlen
     memset(buf, 0, datasize);
@@ -366,12 +366,12 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
 {
     uint32_t pos=0;
     const char *mode_str;
-	
+
     char *buf = (char *)data;
-		
+
     //Needed by expand_info strlen
     memset(buf, 0, datasize);
-		
+
     pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
     // Unique ID
     pos += util_write_string(buf + pos, "Unique ID: @U\r\n");
@@ -449,16 +449,16 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
     pos += util_write_string(buf + pos, "Remount count: ");
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
-		
+
     //Target URL
     pos += util_write_string(buf + pos, "URL: @R\r\n");
-    
+
     return expand_info(data, datasize);
 }
 
 // Fill buf with the contents of the mbed redirect file by
 // expanding the special characters in mbed_redirect_file.
-static uint32_t expand_info(uint8_t *buf, uint32_t bufsize) 
+static uint32_t expand_info(uint8_t *buf, uint32_t bufsize)
 {
     uint8_t *orig_buf = buf;
     uint8_t *insert_string;
@@ -529,13 +529,13 @@ static uint32_t expand_info(uint8_t *buf, uint32_t bufsize)
                 memcpy(buf, insert_string, str_len);
             }else{
                 //stop the string expansion and leave as it is
-                buf += buf_len; 
+                buf += buf_len;
                 break;
             }
-						
+
         }
     } while (*buf != '\0');
-		
+
     return (buf - orig_buf);
 }
 
