@@ -609,8 +609,8 @@ static void transfer_update_file_info(vfs_file_t file, uint32_t start_sector, ui
     }
 
     // Check - stream must be the same
-    if (stream != file_transfer_state.stream) {
-        vfs_mngr_printf("    error: changed types during transfer from %i to %i\r\n", stream, file_transfer_state.stream);
+    if ((stream != STREAM_TYPE_NONE) && (stream != file_transfer_state.stream)) {
+        vfs_mngr_printf("    error: changed types during transfer from %i to %i\r\n", file_transfer_state.stream, stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
@@ -675,7 +675,7 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector)
 
     // Check - stream must be the same
     if (stream != file_transfer_state.stream) {
-        vfs_mngr_printf("    error: changed types during tranfer from %i to %i\r\n", stream, file_transfer_state.stream);
+        vfs_mngr_printf("    error: changed types during transfer from %i to %i\r\n", file_transfer_state.stream, stream);
         transfer_update_state(ERROR_ERROR_DURING_TRANSFER);
         return;
     }
