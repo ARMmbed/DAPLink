@@ -42,6 +42,8 @@
 #include "stm32f103xb.h"
 #elif defined (INTERFACE_M48SSIDAE)
 #include "M480.h"
+#elif defined (INTERFACE_PSOC5LP)
+#include "core_cm3_psoc5.h"
 #else
 #error "CMSIS core headers needed"
 #endif

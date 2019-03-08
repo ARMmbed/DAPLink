@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
- * Copyright 2019, Cypress Semiconductor Corporation
- * or a subsidiary of Cypress Semiconductor Corporation.
+ * Copyright (2019-2021) Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -283,9 +283,10 @@ extern uint32_t Manchester_SWO_Control  (uint32_t active);
 extern void     Manchester_SWO_Capture  (uint8_t *buf, uint32_t num);
 extern uint32_t Manchester_SWO_GetCount (void);
 
-extern uint32_t DAP_ProcessVendorCommand (const uint8_t *request, uint8_t *response);
-extern uint32_t DAP_ProcessCommand       (const uint8_t *request, uint8_t *response);
-extern uint32_t DAP_ExecuteCommand       (const uint8_t *request, uint8_t *response);
+extern uint32_t DAP_ProcessVendorCommand  (const uint8_t *request, uint8_t *response);
+extern uint32_t DAP_ProcessVendorCommandEx(const uint8_t *request, uint8_t *response);
+extern uint32_t DAP_ProcessCommand        (const uint8_t *request, uint8_t *response);
+extern uint32_t DAP_ExecuteCommand        (const uint8_t *request, uint8_t *response);
 
 extern void     DAP_Setup (void);
 

@@ -1,0 +1,27 @@
+common:
+    target:
+        - CY8C5868LTI-LP039
+    core:
+        - Cortex-M3
+    macros:
+        - INTERFACE_PSOC5LP
+        - OS_CLOCK=64000000
+        - DAPLINK_HIC_ID=0x2E127069  # DAPLINK_HIC_ID_PSOC5LP
+    includes:
+        - source/hic_hal/infineon/psoc5lp
+        - source/hic_hal/infineon/psoc5lp/PSoC5
+    sources:
+        hic_hal:
+            - source/hic_hal/infineon/psoc5lp
+            - source/hic_hal/infineon/psoc5lp/PSoC5
+            - source/hic_hal/infineon/psoc5lp/armcc
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\infineon\psoc5lp"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\infineon\psoc5lp"

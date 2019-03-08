@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
- * Copyright 2019, Cypress Semiconductor Corporation
- * or a subsidiary of Cypress Semiconductor Corporation.
+ * Copyright (2019-2021) Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
