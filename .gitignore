@@ -87,5 +87,13 @@ source/daplink/version_git.h
 # automated test results
 test_results
 
+# mbedcli build related files
+.mbed
+.mbedignore
+custom_profile.json
+custom_targets.json
+log.txt
+mbed-os/
+
 #vscode editor
 .vscode
