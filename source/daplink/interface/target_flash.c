@@ -67,7 +67,7 @@ static flash_func_t last_flash_func = FLASH_FUNC_NOP;
 
 static error_t flash_func_start(flash_func_t func)
 {
-    const program_target_t *const flash = target_device.flash_algo;
+    const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
 
     if (last_flash_func != func)
     {
@@ -91,7 +91,6 @@ static error_t flash_func_start(flash_func_t func)
 
 static error_t target_flash_init()
 {
-
     if (g_board_info.target_cfg) {
         const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
         
@@ -142,7 +141,6 @@ static error_t target_flash_uninit(void)
 
 static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint32_t size)
 {
-
     if (g_board_info.target_cfg) {
         error_t status = ERROR_SUCCESS;
         const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
@@ -181,6 +179,10 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
             if (config_get_automation_allowed()) {
                 // Verify data flashed if in automation mode
                 if (flash->verify != 0) {
+                    status = flash_func_start(FLASH_FUNC_VERIFY);
+                    if (status != ERROR_SUCCESS) {
+                        return status;
+                    }
                     if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                         flash->verify,
                                         addr,
@@ -222,7 +224,6 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
 
 static error_t target_flash_erase_sector(uint32_t addr)
 {
-
     if (g_board_info.target_cfg) {
         error_t status = ERROR_SUCCESS;
         const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
@@ -254,7 +255,7 @@ static error_t target_flash_erase_chip(void)
         error_t status = ERROR_SUCCESS;
         const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
 
-        status = flash_func_start(FLASH_FUNC_PROGRAM);
+        status = flash_func_start(FLASH_FUNC_ERASE);
         if (status != ERROR_SUCCESS) {
             return status;
         }
