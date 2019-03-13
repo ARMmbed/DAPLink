@@ -20,7 +20,6 @@
  */
 
 #include "LPC11Uxx.h"
-#include "RTL.h"
 #include "gpio.h"
 #include "compiler.h"
 #include "target_reset.h"

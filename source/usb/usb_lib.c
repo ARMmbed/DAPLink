@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "usb.h"
 #include "settings.h"
@@ -1099,7 +1098,7 @@ void (* const USBD_P_Feature_Event)(void) = USBD_Feature_Event;
 const BOOL __rtx = __TRUE;
 
 #if   ((USBD_HID_ENABLE) || (USBD_ADC_ENABLE) || (USBD_CDC_ACM_ENABLE) || (USBD_CLS_ENABLE))
-__weak __task void USBD_RTX_Device(void)
+__weak void USBD_RTX_Device(void)
 {
     U16 evt;
 
@@ -1133,62 +1132,62 @@ __weak __task void USBD_RTX_Device(void)
     }
 }
 #else
-__weak __task void USBD_RTX_Device(void);
+__weak void USBD_RTX_Device(void);
 #endif
 
 /* USB Device - Device Events Callback Pointer */
 void (* const USBD_RTX_P_Device)(void) = USBD_RTX_Device;
 
 /* USB Device Endpoint Events Callback Functions */
-extern __task void USBD_RTX_EndPoint0(void);
+extern void USBD_RTX_EndPoint0(void);
 #ifndef       USBD_RTX_EndPoint1
-__weak __task void USBD_RTX_EndPoint1(void);
+__weak void USBD_RTX_EndPoint1(void);
 #endif
 #ifndef       USBD_RTX_EndPoint2
-__weak __task void USBD_RTX_EndPoint2(void);
+__weak void USBD_RTX_EndPoint2(void);
 #endif
 #ifndef       USBD_RTX_EndPoint3
-__weak __task void USBD_RTX_EndPoint3(void);
+__weak void USBD_RTX_EndPoint3(void);
 #endif
 #ifndef       USBD_RTX_EndPoint4
-__weak __task void USBD_RTX_EndPoint4(void);
+__weak void USBD_RTX_EndPoint4(void);
 #endif
 #ifndef       USBD_RTX_EndPoint5
-__weak __task void USBD_RTX_EndPoint5(void);
+__weak void USBD_RTX_EndPoint5(void);
 #endif
 #ifndef       USBD_RTX_EndPoint6
-__weak __task void USBD_RTX_EndPoint6(void);
+__weak void USBD_RTX_EndPoint6(void);
 #endif
 #ifndef       USBD_RTX_EndPoint7
-__weak __task void USBD_RTX_EndPoint7(void);
+__weak void USBD_RTX_EndPoint7(void);
 #endif
 #ifndef       USBD_RTX_EndPoint8
-__weak __task void USBD_RTX_EndPoint8(void);
+__weak void USBD_RTX_EndPoint8(void);
 #endif
 #ifndef       USBD_RTX_EndPoint9
-__weak __task void USBD_RTX_EndPoint9(void);
+__weak void USBD_RTX_EndPoint9(void);
 #endif
 #ifndef       USBD_RTX_EndPoint10
-__weak __task void USBD_RTX_EndPoint10(void);
+__weak void USBD_RTX_EndPoint10(void);
 #endif
 #ifndef       USBD_RTX_EndPoint11
-__weak __task void USBD_RTX_EndPoint11(void);
+__weak void USBD_RTX_EndPoint11(void);
 #endif
 #ifndef       USBD_RTX_EndPoint12
-__weak __task void USBD_RTX_EndPoint12(void);
+__weak void USBD_RTX_EndPoint12(void);
 #endif
 #ifndef       USBD_RTX_EndPoint13
-__weak __task void USBD_RTX_EndPoint13(void);
+__weak void USBD_RTX_EndPoint13(void);
 #endif
 #ifndef       USBD_RTX_EndPoint14
-__weak __task void USBD_RTX_EndPoint14(void);
+__weak void USBD_RTX_EndPoint14(void);
 #endif
 #ifndef       USBD_RTX_EndPoint15
-__weak __task void USBD_RTX_EndPoint15(void);
+__weak void USBD_RTX_EndPoint15(void);
 #endif
 
 #if    (USBD_HID_ENABLE)
-__weak __task void USBD_RTX_Core(void)
+__weak void USBD_RTX_Core(void)
 {
     U16 evt;
 
@@ -1202,7 +1201,7 @@ __weak __task void USBD_RTX_Core(void)
     }
 }
 #else
-__weak __task void USBD_RTX_Core(void);
+__weak void USBD_RTX_Core(void);
 #endif
 
 /* USB Device - Core Events Callback Pointer */

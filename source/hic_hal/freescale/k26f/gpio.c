@@ -21,7 +21,6 @@
  */
 
 #include "fsl_device_registers.h"
-#include "RTL.h"
 #include "DAP_config.h"
 #include "gpio.h"
 #include "target_reset.h"

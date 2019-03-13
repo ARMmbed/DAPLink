@@ -23,7 +23,7 @@
 #include "stdio.h"
 #include "stdint.h"
 
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main.h"
 #include "board.h"
@@ -93,7 +93,7 @@
 #endif
 
 // Reference to our main task
-OS_TID main_task_id;
+osThreadId_t main_task_id;
 
 // USB busy LED state; when TRUE the LED will flash once using 30mS clock tick
 static uint8_t hid_led_usb_activity = 0;
@@ -107,22 +107,13 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 main_usb_connect_t usb_state;
 static bool usb_test_mode = false;
 
-static U64 stk_timer_30_task[TIMER_TASK_30_STACK / sizeof(U64)];
-static U64 stk_main_task[MAIN_TASK_STACK / sizeof(U64)];
-
 // Timer task, set flags every 30mS and 90mS
-__task void timer_task_30mS(void)
+void timer_task_30mS(void * arg)
 {
-    uint8_t i = 0;
-    os_itv_set(3); // 30mS
-
-    while (1) {
-        os_itv_wait();
-        os_evt_set(FLAGS_MAIN_30MS, main_task_id);
-
-        if (!(i++ % 3)) {
-            os_evt_set(FLAGS_MAIN_90MS, main_task_id);
-        }
+    static uint32_t i = 0;
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_30MS);
+    if (!(i++ % 3)) {
+        osThreadFlagsSet(main_task_id, FLAGS_MAIN_90MS);
     }
 }
 
@@ -130,7 +121,7 @@ __task void timer_task_30mS(void)
 // parameter should be reset type??
 void main_reset_target(uint8_t send_unique_id)
 {
-    os_evt_set(FLAGS_MAIN_RESET, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_RESET);
     return;
 }
 
@@ -161,21 +152,21 @@ void main_blink_msc_led(main_led_state_t state)
 // Power down the interface
 void main_powerdown_event(void)
 {
-    os_evt_set(FLAGS_MAIN_POWERDOWN, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_POWERDOWN);
     return;
 }
 
 // Disable debug on target
 void main_disable_debug_event(void)
 {
-    os_evt_set(FLAGS_MAIN_DISABLEDEBUG, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_DISABLEDEBUG);
     return;
 }
 
 // Start CDC processing
 void main_cdc_send_event(void)
 {
-    os_evt_set(FLAGS_MAIN_CDC_EVENT, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_CDC_EVENT);
     return;
 }
 
@@ -186,12 +177,12 @@ void main_usb_set_test_mode(bool enabled)
 
 void USBD_SignalHandler()
 {
-    isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_PROC_USB);
 }
 
 extern void cdc_process_event(void);
 
-__task void main_task(void)
+void main_task(void * arg)
 {
     // State processing
     uint16_t flags = 0;
@@ -210,7 +201,7 @@ __task void main_task(void)
     // Update bootloader if it is out of date
     bootloader_check_and_update();
     // Get a reference to this task
-    main_task_id = os_tsk_self();
+    main_task_id = osThreadGetId();
     // leds
     gpio_init();
     // Turn to LED default settings
@@ -233,10 +224,10 @@ __task void main_task(void)
     }
     
     //setup some flags
-    if(g_board_info.flags & kEnableUnderResetConnect){
+    if (g_board_info.flags & kEnableUnderResetConnect) {
         swd_set_reset_connect(CONNECT_UNDER_RESET);
     }
-    if(g_board_info.flags & kEnablePageErase){
+    if (g_board_info.flags & kEnablePageErase) {
 #ifdef DRAG_N_DROP_SUPPORT        
         flash_manager_set_page_erase(true);
 #endif        
@@ -252,26 +243,26 @@ __task void main_task(void)
     usbd_connect(0);
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
-    // Start timer tasks
-    os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_30_task, TIMER_TASK_30_STACK);
 
+    // Start timer tasks
+    osTimerId_t tmr_id = osTimerNew(timer_task_30mS, osTimerPeriodic, NULL, NULL);
+    osTimerStart(tmr_id, 3);
     while (1) {
-        os_evt_wait_or(FLAGS_MAIN_RESET             // Put target in reset state
+        flags = osThreadFlagsWait(FLAGS_MAIN_RESET             // Put target in reset state
                        | FLAGS_MAIN_90MS            // 90mS tick
                        | FLAGS_MAIN_30MS            // 30mS tick
                        | FLAGS_MAIN_POWERDOWN       // Power down interface
                        | FLAGS_MAIN_DISABLEDEBUG    // Disable target debug
                        | FLAGS_MAIN_PROC_USB        // process usb events
                        | FLAGS_MAIN_CDC_EVENT       // cdc event
-                       , NO_TIMEOUT);
-        // Find out what event happened
-        flags = os_evt_get();
-
+                       , osFlagsWaitAny
+                       , osWaitForever);
+        
         if (flags & FLAGS_MAIN_PROC_USB) {
             if (usb_test_mode) {
                 // When in USB test mode Insert a delay to
                 // simulate worst-case behavior.
-                os_dly_wait(1);
+                osDelay(1);
             }
             USBD_Handler();
         }
@@ -375,7 +366,7 @@ __task void main_task(void)
             // DAP LED
             if (hid_led_usb_activity) {
 
-                if((hid_led_state == MAIN_LED_FLASH) || (hid_led_state == MAIN_LED_FLASH_PERMANENT)){
+                if ((hid_led_state == MAIN_LED_FLASH) || (hid_led_state == MAIN_LED_FLASH_PERMANENT)) {
                     // Toggle LED value
                     hid_led_value = GPIO_LED_ON == hid_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
@@ -384,7 +375,7 @@ __task void main_task(void)
                         hid_led_usb_activity = 0;
                         hid_led_state = MAIN_LED_DEF;
                     }
-                }else{
+                } else {
                     //LED next state is MAIN_LED_DEF
                     hid_led_value = HID_LED_DEF;
                     hid_led_usb_activity = 0;
@@ -397,7 +388,7 @@ __task void main_task(void)
             // MSD LED
             if (msc_led_usb_activity) {
 
-                if((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)){
+                if ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)) {
                     // Toggle LED value
                     msc_led_value = GPIO_LED_ON == msc_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
@@ -406,7 +397,7 @@ __task void main_task(void)
                         msc_led_usb_activity = 0;
                         msc_led_state = MAIN_LED_DEF;
                     }
-                }else{
+                } else {
                     //LED next state is MAIN_LED_DEF
                     msc_led_value = MSC_LED_DEF;
                     msc_led_usb_activity = 0;
@@ -450,5 +441,9 @@ int main(void)
 #endif
     // initialize vendor sdk
     sdk_init();
-    os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
+
+    osKernelInitialize();                 // Initialize CMSIS-RTOS
+    osThreadNew(main_task, NULL, NULL);    // Create application main thread
+    osKernelStart();                      // Start thread execution
+    for (;;) {}
 }

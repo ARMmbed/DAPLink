@@ -48,10 +48,11 @@ extern U8 USBD_ZLP;
 extern USBD_EP_DATA USBD_EP0Data;
 extern USB_SETUP_PACKET USBD_SetupPacket;
 
+#ifdef __RTX
 extern OS_TID USBD_RTX_DevTask;
 extern OS_TID USBD_RTX_EPTask[];
 extern OS_TID USBD_RTX_CoreTask;
-
+#endif
 
 /*--------------------------- Functions exported to class specific files -----*/
 
@@ -67,7 +68,8 @@ extern void USBD_StatusOutStage(void);
 extern void usbd_class_init(void);
 extern void USBD_EndPoint0(U32 event);
 
-extern __task void USBD_RTX_EndPoint0(void);
-
+#ifdef __RTX
+extern void USBD_RTX_EndPoint0(void);
+#endif
 
 #endif  /* __USBD_CORE_H__ */

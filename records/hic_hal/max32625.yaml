@@ -6,6 +6,7 @@ common:
     macros:
         - INTERFACE_MAX32625
         - DAPLINK_HIC_ID=0x97969906 # DAPLINK_HIC_ID_MAX32625
+        - OS_CLOCK=96000000
     includes:
         - source/hic_hal/maxim/max32625
     sources:

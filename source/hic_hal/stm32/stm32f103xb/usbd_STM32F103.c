@@ -26,7 +26,6 @@
 
 /* Double Buffering is not supported                                         */
 
-#include <RTL.h>
 #include <rl_usb.h>
 #include "stm32f1xx.h"
 #include "usbreg.h"

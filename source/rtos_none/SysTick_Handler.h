@@ -1,9 +1,9 @@
 /**
- * @file    target_reset_f439.c
- * @brief   Target reset for STM32F439ZI
+ * @file    Systick_Handler.h
+ * @brief   
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, Arm Limited, All Rights Reserved
+ * Copyright (c) 2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,27 +19,30 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
-#include "swd_host.h"
+#ifndef SYSTICK_HANDLER_H_
+#define SYSTICK_HANDLER_H_
+
 #include "cmsis_os2.h"
 
-void target_before_init_debug(void)
-{
-    swd_set_target_reset(1);
-    osDelay(2);
-}
 
-uint8_t target_unlock_sequence(void)
+#ifdef  __cplusplus
+extern "C"
 {
-    return 1;
-}
+#endif
 
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
-{
-    return 0;
-}
+//functions based on system tick
+void sysTickInit(void);
+void sysTickRegCallback(osTimerFunc_t callback);
+void sysTickFreqSet(uint32_t ticks);
+void sysTickWait(uint32_t wait);
+void sysTickEvtSet(uint32_t flag);
+uint32_t sysTickEvtWaitOr(uint32_t flag);
+uint32_t sysTickTime(void);
+void sysTickRegMainFunc(osThreadFunc_t func);
+void sysTickStartMain(void);
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
-{
-    return swd_set_target_state_hw(state);
+#ifdef  __cplusplus
 }
+#endif
+
+#endif

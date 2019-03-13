@@ -9,6 +9,7 @@ common:
         - DAPLINK_HIC_ID=0x97969909  # DAPLINK_HIC_ID_K26F
         - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
         - FLASH_DRIVER_IS_FLASH_RESIDENT=1
+        - OS_CLOCK=120000000
     includes:
         - source/hic_hal/freescale/k26f
         - source/hic_hal/freescale/k26f/MK26F18

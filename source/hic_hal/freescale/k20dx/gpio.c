@@ -20,7 +20,6 @@
  */
 
 #include "MK20D5.h"
-#include "RTL.h"
 #include "DAP_config.h"
 #include "gpio.h"
 #include "target_reset.h"

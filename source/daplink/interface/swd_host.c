@@ -20,7 +20,7 @@
  */
 
 #ifndef TARGET_MCU_CORTEX_A
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "target_reset.h"
 #include "target_config.h"
 #include "swd_host.h"
@@ -794,9 +794,9 @@ uint8_t swd_init_debug(void)
             //do an abort on stale target, then reset the device
             swd_write_dp(DP_ABORT, DAPABORT);
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             do_abort = 0;
         }
         swd_init();
@@ -885,9 +885,9 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 
         case RESET_RUN:
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             swd_off();
             break;
 
@@ -899,7 +899,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (reset_connect == CONNECT_UNDER_RESET) {
                 // Assert reset
                 swd_set_target_reset(1); 
-                os_dly_wait(2);
+                osDelay(2);
             }
 
             // Enable debug
@@ -908,9 +908,9 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
                     return 0;
                 // Target is in invalid state?
                 swd_set_target_reset(1);
-                os_dly_wait(2);
+                osDelay(2);
                 swd_set_target_reset(0);
-                os_dly_wait(2);
+                osDelay(2);
             }
 
             // Enable halt on reset
@@ -921,12 +921,12 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (reset_connect == CONNECT_NORMAL) {
                 // Assert reset
                 swd_set_target_reset(1); 
-                os_dly_wait(2);
+                osDelay(2);
             }
             
             // Deassert reset
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
@@ -1026,9 +1026,9 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 
         case RESET_RUN:
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             swd_off();
             break;
 
@@ -1044,9 +1044,9 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
                 }
                 // Target is in invalid state?
                 swd_set_target_reset(1);
-                os_dly_wait(2);
+                osDelay(2);
                 swd_set_target_reset(0);
-                os_dly_wait(2);
+                osDelay(2);
             }
 
             // Wait until core is halted
@@ -1070,7 +1070,7 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
                 return 0;
             }
 
-            os_dly_wait(2);
+            osDelay(2);
 
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {

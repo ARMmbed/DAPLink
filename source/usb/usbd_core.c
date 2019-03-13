@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "string.h"
 #include "usb_for_lib.h"
@@ -1041,7 +1040,7 @@ stall_i:
  */
 
 #ifdef __RTX
-__task void USBD_RTX_EndPoint0(void)
+void USBD_RTX_EndPoint0(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);

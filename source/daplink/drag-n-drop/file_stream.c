@@ -27,7 +27,7 @@
 #include "intelhex.h"
 #include "flash_decoder.h"
 #include "error.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "compiler.h"
 #include "validation.h"
 
@@ -89,14 +89,14 @@ static stream_state_t state = STREAM_STATE_CLOSED;
 static stream_t *current_stream = 0;
 
 // Thread variables (STUB these if RTX is not used)
-static OS_TID stream_thread_tid = 0;
+static osThreadId_t stream_thread_tid = 0;
 static void stream_thread_set(void)
 {
-    stream_thread_tid =  os_tsk_self();
+    stream_thread_tid =  osThreadGetId();
 }
 static void stream_thread_assert(void)
 {
-    util_assert(os_tsk_self() == stream_thread_tid);
+    util_assert(osThreadGetId() == stream_thread_tid);
 }
 
 stream_type_t stream_start_identify(const uint8_t *data, uint32_t size)

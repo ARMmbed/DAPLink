@@ -25,7 +25,6 @@
  *
  *---------------------------------------------------------------------------*/
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "DAP_config.h"
 #include "DAP.h"

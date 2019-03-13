@@ -1,4 +1,6 @@
 common:
+    macros:
+        - OS_TICK=10000
     includes:
         - source/rtos
     sources:
@@ -15,3 +17,5 @@ common:
             - source/rtos/rt_Task.c
             - source/rtos/rt_Time.c
             - source/rtos/rt_Timer.c
+            - source/rtos/RTX_Config.c
+            - source/rtos/cmsis_os2_port.c

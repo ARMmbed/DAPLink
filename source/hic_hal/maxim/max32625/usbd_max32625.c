@@ -15,7 +15,6 @@
  */
 
 #include <string.h>
-#include "RTL.h"
 #include "rl_usb.h"
 #include "util.h"
 

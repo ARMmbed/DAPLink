@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
 
+#include "cmsis_os2.h"
 #include "target_flash.h"
 #include "target_reset.h"
 #include "target_config.h"

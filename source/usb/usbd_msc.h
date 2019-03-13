@@ -43,9 +43,10 @@ extern void USBD_MSC_EP_BULKIN_Event(U32 event);
 extern void USBD_MSC_EP_BULKOUT_Event(U32 event);
 extern void USBD_MSC_EP_BULK_Event(U32 event);
 
-extern __task void USBD_RTX_MSC_EP_BULKIN_Event(void);
-extern __task void USBD_RTX_MSC_EP_BULKOUT_Event(void);
-extern __task void USBD_RTX_MSC_EP_BULK_Event(void);
-
+#ifdef __RTX
+extern void USBD_RTX_MSC_EP_BULKIN_Event(void);
+extern void USBD_RTX_MSC_EP_BULKOUT_Event(void);
+extern void USBD_RTX_MSC_EP_BULK_Event(void);
+#endif
 
 #endif  /* __USBD_MSC_H__ */

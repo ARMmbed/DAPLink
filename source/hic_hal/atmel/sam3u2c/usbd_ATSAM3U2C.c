@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "sam3u.h"
 #include "util.h"

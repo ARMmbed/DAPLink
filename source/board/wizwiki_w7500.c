@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "target_family.h"
 #include "target_board.h"
 
@@ -30,10 +30,10 @@ static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
         do
         {
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
 
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
         } while(!swd_init_debug());
     }
     return 1;

@@ -21,7 +21,7 @@
 #include "target_family.h"
 #include "target_reset.h"
 #include "swd_host.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 
 #define DBG_Addr                (0xE000EDF0)
 #define DWT_COMP0               (0xE0001020)
@@ -52,9 +52,9 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
                 return 0;
             // Target is in invalid state?
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
         }
 
         // Set Trace Enable bit
@@ -86,7 +86,7 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
             return 0;
         }
 
-        os_dly_wait(5);
+        osDelay(5);
 
         do {
             if (!swd_read_word(DBG_HCSR, &val)) {

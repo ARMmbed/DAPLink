@@ -41,10 +41,10 @@ extern void USBD_HID_SOF_Event(void);
 extern void USBD_HID_EP_INTIN_Event(U32 event);
 extern void USBD_HID_EP_INTOUT_Event(U32 event);
 extern void USBD_HID_EP_INT_Event(U32 event);
-
-extern __task void USBD_RTX_HID_EP_INTIN_Event(void);
-extern __task void USBD_RTX_HID_EP_INTOUT_Event(void);
-extern __task void USBD_RTX_HID_EP_INT_Event(void);
-
+#ifdef __RTX
+extern void USBD_RTX_HID_EP_INTIN_Event(void);
+extern void USBD_RTX_HID_EP_INTOUT_Event(void);
+extern void USBD_RTX_HID_EP_INT_Event(void);
+#endif
 
 #endif  /* __USBD_HID_H__ */
