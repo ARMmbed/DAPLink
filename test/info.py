@@ -56,6 +56,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_mimxrt1020_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_hyper_if",               True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_qspi_if",                True,       0x8000,     "bin"       ),
+    ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
@@ -120,6 +121,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_stm32f439_if',                   False,      0x0000,     "bin"       ),
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
 }
 
 # Add new HICs here
@@ -153,6 +155,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0218,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x0220,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
+    (   0x0225,     VENDOR_TO_FAMILY('NXP', 1),         'k26f_frdmk32w042_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32W042' when mbed-os supports this
     (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
     (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
     (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_qspi_if',             'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
@@ -167,6 +170,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0262,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
     (   0x0311,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
     (   0x0350,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
+    (   0x0409,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32630fthr_if',                 'max32625_bl',      'MAX32630'                              ),
     (   0x0415,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
@@ -268,6 +272,7 @@ HIC_STRING_TO_ID = {
     'lpc4322': 0x97969905,
     'max32625': 0x97969906,
     'stm32f103xb': 0x97969908,
+    'k26f': 0x97969909,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
@@ -287,6 +292,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0213,  # FRDM-KE15Z
     0x0216,  # HVP-KE18F
     0x0217,  # FRDM-K82F
+    0x0225,  # FRDM-K32W042
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0218,  # FRDM-KL82Z
@@ -296,6 +302,7 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
 
 BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0214,  # HEXIWEAR
+    0x0225,  # FRDM-K32W042
     0x0226,  # MIMXRT1020 EVK
     0x0227,  # MIMXRT1050 EVK
     0x0228,  # k20dx_rapid_iot_if
@@ -303,6 +310,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0236,  # LPCXpresso55S69
     0x0240,  # K64F
     0x0311,  # K66F
+    0x0409,  # MAX32630FTHR
     0x0415,  # MAX32625MBED
     0x0418,  # MAX32620FTHR
     0x0450,  # mtb_ublox_odin_w2

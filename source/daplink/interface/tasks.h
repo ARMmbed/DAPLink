@@ -33,15 +33,12 @@ extern "C" {
 
 #define MAIN_TASK_PRIORITY          (10)
 #define TIMER_TASK_PRIORITY         (11)
-#define DAP_TASK_PRIORITY           (15)
-#define MSC_TASK_PRIORITY           (5)
 #define TIMER_TASK_30_PRIORITY      (TIMER_TASK_PRIORITY)
 
 // trouble here is that reset for different targets is implemented differently so all targets
 //  have to use the largest stack or these have to be defined in multiple places... Not ideal
 //  may want to move away from threads for some of these behaviours to optimize mempory usage (RAM)
 #define TIMER_TASK_30_STACK (136)
-#define DAP_TASK_STACK      (272)
 #define MAIN_TASK_STACK     (800)
 
 #ifdef __cplusplus
