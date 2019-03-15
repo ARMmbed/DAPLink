@@ -189,7 +189,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                                         write_size,
                                         flash->program_buffer,
                                         0)) {
-                        return ERROR_WRITE;
+                        return ERROR_WRITE_VERIFY;
                     }
                 } else {
                     while (write_size > 0) {
@@ -199,7 +199,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                             return ERROR_ALGO_DATA_SEQ;
                         }
                         if (memcmp(buf, rb_buf, verify_size) != 0) {
-                            return ERROR_WRITE;
+                            return ERROR_WRITE_VERIFY;
                         }
                         addr += verify_size;
                         buf += verify_size;

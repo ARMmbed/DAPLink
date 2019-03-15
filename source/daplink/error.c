@@ -68,6 +68,8 @@ static const char *const error_message[] = {
     "Flash algorithm erase all command FAILURE",
     // ERROR_WRITE
     "Flash algorithm write command FAILURE",
+    // ERROR_WRITE_VERIFY
+    "Flash algorithm write verify command FAILURE",
 
     /* File stream errors */
 
@@ -163,6 +165,8 @@ static error_type_t error_type[] = {
     // ERROR_ERASE_ALL
     ERROR_TYPE_TARGET,
     // ERROR_WRITE
+    ERROR_TYPE_TARGET,
+    // ERROR_WRITE_VERIFY
     ERROR_TYPE_TARGET,
 
     /* File stream errors */
