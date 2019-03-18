@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -42,6 +42,9 @@ void gpio_set_cdc_led(gpio_led_state_t state);
 void gpio_set_msc_led(gpio_led_state_t state);
 uint8_t gpio_get_reset_btn_no_fwrd(void);
 uint8_t gpio_get_reset_btn_fwrd(void);
+#ifdef PBON_BUTTON
+uint8_t gpio_get_pbon_btn(void);
+#endif
 
 static inline uint8_t gpio_get_reset_btn(void)
 {

@@ -195,7 +195,10 @@ void main_task(void * arg)
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
     // button state
     uint8_t reset_pressed = 0;
-    
+#ifdef PBON_BUTTON
+    uint8_t power_on = 1;
+#endif
+
     // Initialize settings - required for asserts to work
     config_init();
     // Update bootloader if it is out of date
@@ -215,31 +218,31 @@ void main_task(void * arg)
     if (g_board_info.prerun_board_config) {
         g_board_info.prerun_board_config();
     }
-    
+
     //initialize the family
     init_family();
-    
+
     if (g_target_family && g_target_family->prerun_target_config) {
         g_target_family->prerun_target_config();
     }
-    
+
     //setup some flags
     if (g_board_info.flags & kEnableUnderResetConnect) {
         swd_set_reset_connect(CONNECT_UNDER_RESET);
     }
     if (g_board_info.flags & kEnablePageErase) {
-#ifdef DRAG_N_DROP_SUPPORT        
+#ifdef DRAG_N_DROP_SUPPORT
         flash_manager_set_page_erase(true);
-#endif        
+#endif
     }
-    
+
     // Update versions and IDs
     info_init();
     // USB
     usbd_init();
 #ifdef DRAG_N_DROP_SUPPORT
     vfs_mngr_fs_enable((config_ram_get_disable_msd()==0));
-#endif    
+#endif
     usbd_connect(0);
     usb_state = USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
@@ -257,7 +260,7 @@ void main_task(void * arg)
                        | FLAGS_MAIN_CDC_EVENT       // cdc event
                        , osFlagsWaitAny
                        , osWaitForever);
-        
+
         if (flags & FLAGS_MAIN_PROC_USB) {
             if (usb_test_mode) {
                 // When in USB test mode Insert a delay to
@@ -348,10 +351,10 @@ void main_task(void * arg)
         if (flags & FLAGS_MAIN_30MS) {
 
             // handle reset button without eventing
-            if (!reset_pressed && gpio_get_reset_btn_fwrd()) { 
+            if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
 #ifdef DRAG_N_DROP_SUPPORT
                if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
-#endif                
+#endif
                 {
                     // Reset button pressed
                     target_set_state(RESET_HOLD);
@@ -362,6 +365,29 @@ void main_task(void * arg)
                 target_set_state(RESET_RUN);
                 reset_pressed = 0;
             }
+
+#ifdef PBON_BUTTON
+            // handle PBON pressed
+            if(gpio_get_pbon_btn())
+            {
+                if(power_on)
+                {
+                    // Loop till PBON is pressed
+                    while (gpio_get_pbon_btn()) {;}
+                    // Power button released when target was running
+                    target_set_state(SHUTDOWN);
+                    power_on = 0;
+                }
+                else
+                {
+                    // Loop till PBON is pressed
+                    while (gpio_get_pbon_btn()) {;}
+                    // Power button released when target was already powered off
+                    target_set_state(POWER_ON);
+                    power_on = 1;
+                }
+            }
+#endif
 
             // DAP LED
             if (hid_led_usb_activity) {
@@ -393,7 +419,7 @@ void main_task(void * arg)
                     msc_led_value = GPIO_LED_ON == msc_led_value ? GPIO_LED_OFF : GPIO_LED_ON;
 
                     // If in flash mode stop after one cycle
-                    if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {    
+                    if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {
                         msc_led_usb_activity = 0;
                         msc_led_state = MAIN_LED_DEF;
                     }
