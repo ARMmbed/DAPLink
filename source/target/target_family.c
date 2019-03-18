@@ -155,3 +155,12 @@ void swd_set_target_reset(uint8_t asserted)
         (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
     }
 }
+
+uint32_t target_get_apsel()
+{
+    if (g_target_family && g_target_family->apsel) {
+        return g_target_family->apsel;
+    } else {
+        return 0;
+    }
+}

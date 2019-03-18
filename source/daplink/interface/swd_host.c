@@ -3,7 +3,7 @@
  * @brief   Implementation of swd_host.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -62,6 +62,15 @@ static SWD_CONNECT_TYPE reset_connect = CONNECT_NORMAL;
 
 static DAP_STATE dap_state;
 static uint32_t  soft_reset = SYSRESETREQ;
+
+static uint32_t swd_get_apsel(uint32_t adr)
+{
+    uint32_t apsel = target_get_apsel();
+    if (!apsel)
+        return adr & 0xff000000;
+    else
+        return apsel;
+}
 
 void swd_set_reset_connect(SWD_CONNECT_TYPE type)
 {
@@ -170,7 +179,7 @@ uint8_t swd_read_ap(uint32_t adr, uint32_t *val)
     uint8_t tmp_in, ack;
     uint8_t tmp_out[4];
     uint32_t tmp;
-    uint32_t apsel = adr & 0xff000000;
+    uint32_t apsel = swd_get_apsel(adr);
     uint32_t bank_sel = adr & APBANKSEL;
 
     if (!swd_write_dp(DP_SELECT, apsel | bank_sel)) {
@@ -198,7 +207,7 @@ uint8_t swd_write_ap(uint32_t adr, uint32_t val)
 {
     uint8_t data[4];
     uint8_t req, ack;
-    uint32_t apsel = adr & 0xff000000;
+    uint32_t apsel = swd_get_apsel(adr);
     uint32_t bank_sel = adr & APBANKSEL;
 
     if (!swd_write_dp(DP_SELECT, apsel | bank_sel)) {

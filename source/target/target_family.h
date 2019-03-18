@@ -74,6 +74,7 @@ typedef struct target_family_descriptor {
     void (*swd_set_target_reset)(uint8_t asserted);                             /*!< Families can customize how to send reset to the target */
     uint8_t (*validate_bin_nvic)(const uint8_t *buf);                           /*!< Validate a bin file to be flash by drag and drop */
     uint8_t (*validate_hexfile)(const uint8_t *buf);                            /*!< Validate a hex file to be flash by drag and drop */
+    uint32_t apsel;                             /*!< APSEL for the family */
 } target_family_descriptor_t;
 
 extern const target_family_descriptor_t *g_target_family;
@@ -86,6 +87,7 @@ void init_family(void);
 uint8_t target_family_valid(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 void swd_set_target_reset(uint8_t asserted);
+uint32_t target_get_apsel(void);
 
 #ifdef __cplusplus
 }

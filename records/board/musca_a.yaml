@@ -1,0 +1,15 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_musca_a
+    sources:
+        board:
+            - source/board/musca_a.c
+        daplink_if:
+            - source/family/arm/musca_a/syscon.c
+            - source/family/arm/musca_a/power_ctrl.c
+            - source/family/arm/musca_a/utils.c
+        family:
+            - source/family/arm/musca_a/target.c
+            - source/family/arm/musca_a/target_reset.c
