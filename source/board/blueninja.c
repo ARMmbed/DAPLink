@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <RTL.h>
+#include "cmsis_os2.h"
 #include "IO_Config.h"
 #include "swd_host.h"
 #include "target_family.h"
@@ -29,7 +29,7 @@ static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
     
     if (RESET_PROGRAM == state) {
         LPC_GPIO->SET[PIN_PWH_PORT] = PIN_PWH;
-        os_dly_wait(10);
+        osDelay(10);
     }
     return 1;
 }

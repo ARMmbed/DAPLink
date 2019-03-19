@@ -21,7 +21,6 @@
 
 #include "string.h"
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 
@@ -762,7 +761,7 @@ void USBD_CDC_ACM_EP_BULK_Event(uint32_t event)
     function (USBD_CDC_ACM_EP_INTIN_Event).
  */
 
-__task void USBD_RTX_CDC_ACM_EP_INTIN_Event(void)
+void USBD_RTX_CDC_ACM_EP_INTIN_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -777,7 +776,7 @@ __task void USBD_RTX_CDC_ACM_EP_INTIN_Event(void)
     function (USBD_CDC_ACM_EP_BULKIN_Event).
  */
 
-__task void USBD_RTX_CDC_ACM_EP_BULKIN_Event(void)
+void USBD_RTX_CDC_ACM_EP_BULKIN_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -795,7 +794,7 @@ __task void USBD_RTX_CDC_ACM_EP_BULKIN_Event(void)
     function (USBD_CDC_ACM_EP_BULKOUT_Event).
  */
 
-__task void USBD_RTX_CDC_ACM_EP_BULKOUT_Event(void)
+void USBD_RTX_CDC_ACM_EP_BULKOUT_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -813,7 +812,7 @@ __task void USBD_RTX_CDC_ACM_EP_BULKOUT_Event(void)
     function (USBD_CDC_ACM_EP_BULK_Event).
  */
 
-__task void USBD_RTX_CDC_ACM_EP_BULK_Event(void)
+void USBD_RTX_CDC_ACM_EP_BULK_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);

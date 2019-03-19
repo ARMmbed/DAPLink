@@ -20,6 +20,7 @@ module:
         - records/daplink/settings.yaml
         - records/daplink/settings_rom_stub.yaml
         - records/daplink/target_board.yaml
+        - records/rtos/rtos-none.yaml
     if: &module_if
         - *module_tools
         - records/usb/usb-core.yaml
@@ -68,7 +69,7 @@ module:
 projects:
     kl26z_bl:
         - *module_bl
-        - *module_hic_kl26z
+        - records/hic_hal/kl26z.yaml
         - records/board/kl26z_bl.yaml
     kl26z_if:
         - *module_if
@@ -76,11 +77,19 @@ projects:
         - records/family/all_family.yaml
     k20dx_bl:
         - *module_bl
-        - *module_hic_k20dx
+        - records/hic_hal/k20dx.yaml
         - records/board/k20dx_bl.yaml
     k20dx_if:
         - *module_if
         - *module_hic_k20dx
+        - records/family/all_family.yaml
+    k26f_bl:
+        - *module_bl
+        - records/hic_hal/k26f.yaml
+        - records/board/k26f_bl.yaml
+    k26f_if:
+        - *module_if
+        - *module_hic_k26f
         - records/family/all_family.yaml
     lpc11u35_if:
         - *module_if
@@ -88,23 +97,31 @@ projects:
         - records/family/all_family.yaml
     lpc4322_bl:
         - *module_bl
-        - *module_hic_lpc4322
+        - records/hic_hal/lpc4322.yaml
         - records/board/lpc4322_bl.yaml
     lpc4322_if:
         - *module_if
         - *module_hic_lpc4322
         - records/family/all_family.yaml
-    k26f_bl:
+    max32620_bl:
         - *module_bl
-        - *module_hic_k26f
-        - records/board/k26f_bl.yaml
-    k26f_if:
+        - records/hic_hal/max32620.yaml
+        - records/board/max32620_bl.yaml
+    max32620_if:
         - *module_if
-        - *module_hic_k26f
+        - *module_hic_max32620
+        - records/family/all_family.yaml
+    max32625_bl:
+        - *module_bl
+        - records/hic_hal/max32625.yaml
+        - records/board/max32625_bl.yaml
+    max32625_if:
+        - *module_if
+        - *module_hic_max32625
         - records/family/all_family.yaml
     sam3u2c_bl:
         - *module_bl
-        - *module_hic_sam3u2c
+        - records/hic_hal/sam3u2c.yaml
         - records/board/sam3u2c_bl.yaml
     sam3u2c_if:
         - *module_if
@@ -112,12 +129,8 @@ projects:
         - records/family/all_family.yaml
     stm32f103xb_bl:
         - *module_bl
-        - *module_hic_stm32f103xb
+        - records/hic_hal/stm32f103xb.yaml
         - records/board/stm32f103xb_bl.yaml
-    max32625_bl:
-        - *module_bl
-        - *module_hic_max32625
-        - records/board/max32625_bl.yaml
     stm32f103xb_if:
         - *module_if
         - *module_hic_stm32f103xb
@@ -570,18 +583,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mtb_stm32f439.yaml
-    max32620_bl:
-        - *module_bl
-        - *module_hic_max32620
-        - records/board/max32620_bl.yaml
     max32620_max32625mbed_if:
         - *module_if
         - *module_hic_max32620
         - records/board/max32625mbed.yaml
-    max32620_if:
-        - *module_if
-        - *module_hic_max32620
-        - records/family/all_family.yaml
     max32625_max32620fthr_if:
         - *module_if
         - *module_hic_max32625
@@ -590,7 +595,3 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
-    max32625_if:
-        - *module_if
-        - *module_hic_max32625
-        - records/family/all_family.yaml

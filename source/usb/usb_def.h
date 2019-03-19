@@ -24,6 +24,44 @@
 
 #pragma anon_unions
 
+#include <stdint.h>
+#include <stddef.h>
+
+#ifndef NULL
+ #ifdef __cplusplus
+  #define NULL          0
+ #else
+  #define NULL          ((void *) 0)
+ #endif
+#endif
+
+#ifndef EOF
+ #define EOF            (-1)
+#endif
+
+#ifndef __size_t
+ #define __size_t       1
+ typedef unsigned int   size_t;
+#endif
+
+typedef signed char     S8;
+typedef unsigned char   U8;
+typedef short           S16;
+typedef unsigned short  U16;
+typedef int             S32;
+typedef unsigned int    U32;
+typedef long long       S64;
+typedef unsigned long long U64;
+typedef unsigned char   BIT;
+typedef unsigned int    BOOL;
+
+#ifndef __TRUE
+ #define __TRUE         1
+#endif
+#ifndef __FALSE
+ #define __FALSE        0
+#endif
+
 
 /* bmRequestType.Dir */
 #define REQUEST_HOST_TO_DEVICE     0

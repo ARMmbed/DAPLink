@@ -20,7 +20,6 @@
  */
 
 #include "LPC43xx.h"
-#include "RTL.h"
 #include "lpc43xx_scu.h"
 #include "gpio.h"
 #include "compiler.h"

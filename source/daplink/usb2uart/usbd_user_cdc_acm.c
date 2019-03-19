@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main.h"
 #include "target_reset.h"
@@ -121,10 +121,10 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
     { //added checking if flashing on target is in progress
         // reset and send the unique id over CDC
         if (dur != 0) {
-            start_break_time = os_time_get();
+            start_break_time = osKernelGetSysTimerCount();
             target_set_state(RESET_HOLD);
         } else {
-            end_break_time = os_time_get();
+            end_break_time = osKernelGetSysTimerCount();
 
             // long reset -> send uID over serial (300 -> break > 3s)
             if ((end_break_time - start_break_time) >= (300)) {

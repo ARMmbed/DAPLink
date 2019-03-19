@@ -21,7 +21,6 @@
 #include "fsl_device_registers.h"
 #include "IO_Config.h"
 #include "DAP.h"
-#include "RTL.h"
 #include "target_family.h"
 #include "target_board.h"
 
@@ -71,7 +70,7 @@ static void prerun_board_config(void) {
 }
 
 // USB HID override function return 1 if the activity is trivial or response is null 
-uint8_t usbd_hid_no_activity(U8 *buf)
+uint8_t usbd_hid_no_activity(uint8_t *buf)
 {
     if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
         return 1;

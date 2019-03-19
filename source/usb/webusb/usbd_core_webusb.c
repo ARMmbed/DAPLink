@@ -21,7 +21,6 @@
 
 #include "string.h"
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 #include "info.h"

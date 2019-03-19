@@ -21,7 +21,6 @@
 
 #include "string.h"
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 
@@ -461,7 +460,7 @@ void USBD_HID_SOF_Event(void)
  *    Return Value:    None
  */
 
-__task void USBD_RTX_HID_EP_INTIN_Event(void)
+void USBD_RTX_HID_EP_INTIN_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -479,7 +478,7 @@ __task void USBD_RTX_HID_EP_INTIN_Event(void)
  *    Return Value:    None
  */
 
-__task void USBD_RTX_HID_EP_INTOUT_Event(void)
+void USBD_RTX_HID_EP_INTOUT_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);
@@ -497,7 +496,7 @@ __task void USBD_RTX_HID_EP_INTOUT_Event(void)
  *    Return Value:    None
  */
 
-__task void USBD_RTX_HID_EP_INT_Event(void)
+void USBD_RTX_HID_EP_INT_Event(void)
 {
     for (;;) {
         usbd_os_evt_wait_or(0xFFFF, 0xFFFF);

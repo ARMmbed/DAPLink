@@ -19,16 +19,16 @@
  * limitations under the License.
  */
  
-#include <RTL.h>
+#include "cmsis_os2.h"
 #include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
 
 void target_before_init_debug(void) {
     swd_set_target_reset(1);
-    os_dly_wait(2);
+    osDelay(2);
     swd_set_target_reset(0);
-    os_dly_wait(2);
+    osDelay(2);
     return;
 }
 
