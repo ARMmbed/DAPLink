@@ -56,6 +56,8 @@ static const char *const error_message[] = {
     "The interface firmware FAILED to download the flash data contents to be programmed",
     // ERROR_INIT
     "The interface firmware FAILED to initialize the target MCU",
+    // ERROR_UNINIT
+    "The interface firmware FAILED to uninitialize the target MCU",
     // ERROR_SECURITY_BITS
     "The interface firmware ABORTED programming. Image is trying to set security bits",
     // ERROR_UNLOCK
@@ -66,6 +68,8 @@ static const char *const error_message[] = {
     "Flash algorithm erase all command FAILURE",
     // ERROR_WRITE
     "Flash algorithm write command FAILURE",
+    // ERROR_WRITE_VERIFY
+    "Flash algorithm write verify command FAILURE",
 
     /* File stream errors */
 
@@ -150,6 +154,8 @@ static error_type_t error_type[] = {
     ERROR_TYPE_TARGET,
     // ERROR_INIT
     ERROR_TYPE_TARGET,
+    // ERROR_UNINIT
+    ERROR_TYPE_TARGET,
     // ERROR_SECURITY_BITS
     ERROR_TYPE_USER,
     // ERROR_UNLOCK
@@ -159,6 +165,8 @@ static error_type_t error_type[] = {
     // ERROR_ERASE_ALL
     ERROR_TYPE_TARGET,
     // ERROR_WRITE
+    ERROR_TYPE_TARGET,
+    // ERROR_WRITE_VERIFY
     ERROR_TYPE_TARGET,
 
     /* File stream errors */
