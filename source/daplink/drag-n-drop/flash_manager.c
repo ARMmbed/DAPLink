@@ -321,6 +321,15 @@ static error_t setup_next_sector(uint32_t addr)
     current_write_block_addr = current_sector_addr;
     current_write_block_size = MIN(sector_size, sizeof(buf));
 
+    //check flash algo every sector change, addresses with different flash algo should be sector aligned
+    if (intf->flash_algo_set) {
+        status = intf->flash_algo_set(current_sector_addr);
+        if (ERROR_SUCCESS != status) {
+            intf->uninit();
+            return status;
+        }
+    }
+    
     if (page_erase_enabled) {
         // Erase the current sector
         status = intf->erase_sector(current_sector_addr);

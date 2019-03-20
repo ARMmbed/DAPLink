@@ -35,6 +35,7 @@ target_cfg_t target_device = {
     .flash_algo           = (program_target_t *) &flash,
     .extra_flash[0].start = 0x10000000,
     .extra_flash[0].end   = 0x10000000 + KB(608),
+    .extra_flash[0].flash_algo = (program_target_t *) &flash, //each extra flash region requires a flash algo
     .extra_ram[0].start   = 0x30000000,
     .extra_ram[0].end     = 0x30000000 + 0x00044000,
 };

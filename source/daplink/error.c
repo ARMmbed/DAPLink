@@ -52,6 +52,8 @@ static const char *const error_message[] = {
     "The interface firmware FAILED to reset/halt the target MCU",
     // ERROR_ALGO_DL
     "The interface firmware FAILED to download the flash programming algorithms to the target MCU",
+    //ERROR_ALGO_MISSING
+    "The flash algo missing for a region",
     // ERROR_ALGO_DATA_SEQ
     "The interface firmware FAILED to download the flash data contents to be programmed",
     // ERROR_INIT
@@ -149,6 +151,8 @@ static error_type_t error_type[] = {
     // ERROR_RESET
     ERROR_TYPE_TARGET,
     // ERROR_ALGO_DL
+    ERROR_TYPE_TARGET,
+    //ERROR_ALGO_MISSING
     ERROR_TYPE_TARGET,
     // ERROR_ALGO_DATA_SEQ
     ERROR_TYPE_TARGET,
