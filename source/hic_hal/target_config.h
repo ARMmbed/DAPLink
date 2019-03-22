@@ -44,10 +44,16 @@ extern "C" {
 #define MAX_EXTRA_FLASH_REGION                3
 #define MAX_EXTRA_RAM_REGION                  3
 
-typedef struct region_info {
+typedef struct flash_region_info {
     uint32_t start;
     uint32_t end;
-} region_info_t;
+    program_target_t *flash_algo;
+} flash_region_info_t;
+
+typedef struct ram_region_info {
+    uint32_t start;
+    uint32_t end;
+} ram_region_info_t;
 
 /**
  @struct target_cfg_t
@@ -64,8 +70,8 @@ typedef struct target_cfg {
     uint8_t erase_reset;            /*!< Reset after performing an erase */
     const sector_info_t* sectors_info; 
     int sector_info_length;
-    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
-    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
+    flash_region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
+    ram_region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
     const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
     uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
 } target_cfg_t;
