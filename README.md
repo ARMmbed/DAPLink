@@ -20,7 +20,16 @@ There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that
 There are many board builds (board = HIC + target combination) created from this repository. Quarterly releases will contain new features and bugfixes. Standalone bugfixes are released once reported, verified and fixed. Both quarterly and bugfix releases will result in the build number being incremented. Many development kits and products ship with DAPLink interface firmware or are capable of running DAPLink firmware. **[The current release builds and instructions for updating DAPLink interface firmware is hosted on the DAPLink release site.](https://armmbed.github.io/DAPLink/)** Release notes and previous release builds can be found under GitHub releases.
 
 ## Contribute
-Look for an interesting feature or defect [under issues](https://github.com/ARMmbed/DAPLink/issues) or start a new thread to engage with the developers and maintainers. You must sign the [contributor agreement](https://os.mbed.com/contributor_agreement/) before any contributions can be accepted.
+
+We welcome contributions to DAPLink in any area. Look for an interesting feature or defect [under
+issues](https://github.com/ARMmbed/DAPLink/issues), or start a new thread to engage with the
+developers and maintainers.
+
+Please see the [contribution guidelines](CONTRIBUTING.md) for detailed requirements for
+contributions.
+
+To report bugs, please [create an issue](https://github.com/ARMmbed/DAPLink/issues/new) in the
+GitHub project.
 
 ## Develop
 Information for setting up a development environment, running the tests or creating a release build [can be found in the developers guide.](docs/DEVELOPERS-GUIDE.md)
