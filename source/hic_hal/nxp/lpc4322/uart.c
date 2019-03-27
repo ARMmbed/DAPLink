@@ -35,7 +35,7 @@ extern uint32_t SystemCoreClock;
 
 #define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
 #define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
-#define  BUFFER_SIZE    (64)
+#define  BUFFER_SIZE    (512)
 
 circ_buf_t write_buffer;
 uint8_t write_buffer_data[BUFFER_SIZE];
