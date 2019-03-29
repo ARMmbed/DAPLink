@@ -37,7 +37,7 @@ $ venv/Scripts/activate.bat   (For Windows)
 $ pip install -r requirements.txt
 $ mbed deploy
 $ mbed config root .
-$ mbed config ARM_PATH FULL_PATH_TO_ARMCC_FOLDER 
+$ mbed config ARM_PATH FULL_PATH_TO_ARMCC_FOLDER
 $ tools/mbedcli_compile.py project1 project2 project3 --clean
 $ venv/Scripts/deactivate
 ```
@@ -50,11 +50,12 @@ Valid project names are listed on help.
 
 ### Features
 - Support both Python 2.x and 3.x versions.
-- Can compile a list of projects or the all of the projects. 
+- Can compile a list of projects or the all of the projects.
 - Can generate the release directory with one command.
 
 ### Prerequisite
-mbedcli should be included in the python package or requirements.txt. Currently requirement3.txt contains the list of python packages needed to be able to compile in the mbedcli environment.
+mbedcli is included in `requirements.txt`, so it will be installed automatically when configuring
+your development environment.
 
 ### mbedcli_compile.py script
 Arguments
