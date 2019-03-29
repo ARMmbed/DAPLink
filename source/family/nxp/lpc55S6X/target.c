@@ -3,7 +3,7 @@
  * @brief   Target information for the lpc55S6X
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,16 +26,17 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size          = 32768,
-    .sector_cnt           = (KB(608) / 32768),
-    .flash_start          = 0,
-    .flash_end            = KB(608),
-    .ram_start            = 0x20000000,
-    .ram_end              = 0x20044000,
-    .flash_algo           = (program_target_t *) &flash,
-    .extra_flash[0].start = 0x10000000,
-    .extra_flash[0].end   = 0x10000000 + KB(608),
-    .extra_flash[0].flash_algo = (program_target_t *) &flash, //each extra flash region requires a flash algo
-    .extra_ram[0].start   = 0x30000000,
-    .extra_ram[0].end     = 0x30000000 + 0x00044000,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = KB(608),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
+    .flash_regions[1].start         = 0x10000000,
+    .flash_regions[1].end           = 0x10000000 + KB(608),
+    .flash_regions[1].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20044000,
+    .ram_regions[1].start           = 0x30000000,
+    .ram_regions[1].end             = 0x30000000 + 0x00044000,
 };

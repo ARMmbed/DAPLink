@@ -21,14 +21,12 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 0x800,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = 0x0000002A0,
-    .flash_start    = 0x00002000,
-    .flash_end      = 0x00151FFF,
-    .ram_start      = 0x3FFF4000,
-    .ram_end        = 0x3FFFFFFF,
-    .flash_algo     = (program_target_t*)&flash,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0x00002000,
+    .flash_regions[0].end           = 0x00151FFF,
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x3FFF4000,
+    .ram_regions[0].end             = 0x3FFFFFFF,
 };

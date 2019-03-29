@@ -3,7 +3,7 @@
  * @brief   Target information for Realtek RTL8195AM
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2016-2017, Realtek Semiconductor Corp., All Rights Reserved
+ * Copyright (c) 2016-2019, Realtek Semiconductor Corp., All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,14 +26,14 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = KB(4),
-    .sector_cnt     = MB(2) / KB(4),
-    .flash_start    = 0x00000000,
-    .flash_end      = 0x00000000 + MB(2),
-    .ram_start      = 0x10007000,
-    .ram_end        = 0x10070000,
-    .flash_algo     = (program_target_t *) &flash,
-    .erase_reset    = 0,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0x00000000,
+    .flash_regions[0].end           = 0x00000000 + MB(2),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x10007000,
+    .ram_regions[0].end             = 0x10070000,
 };
 
 // RTL8195AM's main cpu can only talk 38400 with DAP UART

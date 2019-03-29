@@ -36,38 +36,37 @@ uint8_t validate_bin_nvic(const uint8_t *buf)
         return g_target_family && g_target_family->validate_bin_nvic(buf);
     } else if (g_board_info.target_cfg) {       
         uint32_t i = 4, nvic_val = 0;
-        uint8_t index = 0, in_range = 0;
+        uint8_t in_range = 0;
         // test the initial SP value
         memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
-        if (0 == test_range(nvic_val, g_board_info.target_cfg->ram_start, g_board_info.target_cfg->ram_end)) {
-            while (!(g_board_info.target_cfg->extra_ram[index].start == 0 && g_board_info.target_cfg->extra_ram[index].end == 0)) { //try additional reqions if present
-                if (1 == test_range(nvic_val, g_board_info.target_cfg->extra_ram[index].start, g_board_info.target_cfg->extra_ram[index].end)) {
-                    in_range = 1;
-                    break;
-                }
-                index++;
+
+        region_info_t * region = g_board_info.target_cfg->ram_regions;
+        for (; region->start != 0 || region->end != 0; ++region) {
+            if (1 == test_range(nvic_val, region->start, region->end)) {
+                in_range = 1;
+                break;
             }
-            if (in_range == 0) {
-                return 0;
-            }
-        }    
+        }
+        
+        if (in_range == 0) {
+            return 0;
+        }
+
         // Reset_Handler
         // NMI_Handler
         // HardFault_Handler
         for (; i <= 12; i += 4) {
+            in_range = 0;
             memcpy(&nvic_val, buf + i, sizeof(nvic_val));
-            if (0 == test_range(nvic_val, g_board_info.target_cfg->flash_start, g_board_info.target_cfg->flash_end)) {
-                index = 0, in_range = 0;
-                while (!(g_board_info.target_cfg->extra_flash[index].start == 0 && g_board_info.target_cfg->extra_flash[index].end == 0)) { //try additional reqions if present
-                    if (1 == test_range(nvic_val, g_board_info.target_cfg->extra_flash[index].start, g_board_info.target_cfg->extra_flash[index].end)) {
-                        in_range = 1;
-                        break;
-                    }
-                    index++;
+            region_info_t * region = g_board_info.target_cfg->flash_regions;
+            for (; region->start != 0 || region->end != 0; ++region) {
+                if (1 == test_range(nvic_val, region->start, region->end)) {
+                    in_range = 1;
+                    break;
                 }
-                if (in_range == 0) {
-                    return 0;
-                }
+            }
+            if (in_range == 0) {
+                return 0;
             }
         }
 

@@ -70,7 +70,10 @@ def get_all_attached_daplink_boards():
     for mbed in mbed_list:
         unique_id = mbed['target_id']
         board = DaplinkBoard(unique_id)
-        all_boards.append(board)
+        if board._mode is not None: #Valid daplink should have set this mode
+            all_boards.append(board)
+        else:
+            print("Warning: DAPLink tests cannot be done on board %s" % board.unique_id)
     return all_boards
 
 

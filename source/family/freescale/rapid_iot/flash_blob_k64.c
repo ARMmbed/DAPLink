@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the k64f
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -61,8 +61,15 @@ static const uint32_t K64F_FLM[] = {
     0x00400000, 0x00800000, 0x01000000, 0x01000000, 0x40020004, 0x00000000,
 };
 
-static const sector_info_t sectors_info[] = {
-    {0x00000000, 0x00001000},
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info_k64[] = {
+    {0, 4096},
  };
 
 static const program_target_t flash_k64 = {

@@ -1,6 +1,6 @@
 common:
     includes:
-        - source/target/target_board.h 
+        - source/target/
     sources:
         target:
             - source/target/target_board.c

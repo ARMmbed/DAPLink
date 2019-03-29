@@ -62,13 +62,13 @@ uint32_t EraseChip(void)
     uint32_t ret = 0;  // O.K.
     if (g_board_info.target_cfg) {
         HAL_FLASH_Unlock();
-
-        util_assert((g_board_info.target_cfg->flash_end - g_board_info.target_cfg->flash_start) %
+        //bootloader, interface flashing only concerns 1 flash region
+        util_assert((g_board_info.target_cfg->flash_regions[0].end - g_board_info.target_cfg->flash_regions[0].start) %
                     FLASH_PAGE_SIZE == 0);
         memset(&erase_init, 0, sizeof(erase_init));
         erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
-        erase_init.PageAddress =g_board_info.target_cfg->flash_start;
-        erase_init.NbPages = (g_board_info.target_cfg->flash_end - g_board_info.target_cfg->flash_start) % FLASH_PAGE_SIZE;
+        erase_init.PageAddress = g_board_info.target_cfg->flash_regions[0].start;
+        erase_init.NbPages = (g_board_info.target_cfg->flash_regions[0].end - g_board_info.target_cfg->flash_regions[0].start) % FLASH_PAGE_SIZE;
         if (HAL_FLASHEx_Erase(&erase_init, &error) != HAL_OK) {
             ret = 1;
         }

@@ -23,17 +23,26 @@
 #include "target_board.h"
 #include "target_family.h"
 
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x08000000 + KB(48), 0x400},
+ };
+
 // stm32f103 target information
 target_cfg_t target_device = {
-    .sector_size    = 0x400,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((KB(128) - KB(48)) / 0x400),
-    .flash_start    = 0x08000000 + KB(48),
-    .flash_end      = 0x08000000 + KB(128),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20005000
+    .sectors_info               = sectors_info,
+    .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start     = 0x08000000 + KB(48),
+    .flash_regions[0].end       = 0x08000000 + KB(128),
+    .flash_regions[0].flags     = kRegionIsDefault,  
+    .ram_regions[0].start       = 0x20000000,
+    .ram_regions[0].end         = 0x20005000,
     /* .flash_algo not needed for bootloader */
 };
 

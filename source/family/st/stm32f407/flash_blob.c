@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the stm32f407
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -36,6 +36,17 @@ static const uint32_t STM32F407_FLM[] = {
     /*0x120*/ 0x68ec612c, 0xf240624, 0x68e8d004, 0x60e84330, 0xbd702001L, 0x1d121d00, 0x29001f09, 0x2000d1e5,
     /*0x140*/ 0xbd70, 0x45670123, 0x40023c00, 0xcdef89abL, 0x5555, 0x40003000, 0xfff, 0xaaaa,
     /*0x160*/ 0x201, 0x0,
+};
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x08000000, 1024},
 };
 
 static const program_target_t flash = {

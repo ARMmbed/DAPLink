@@ -3,7 +3,7 @@
  * @brief   Target information for the i.MXRT1050
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,11 +26,12 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = KB(1),
-    .sector_cnt     = 1024,
-    .flash_start    = 0x60002000,
-    .flash_end      = 0x60002000 + MB(64),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20000000 + MB(64),
-    .flash_algo     = (program_target_t *) &flash,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0x60002000,
+    .flash_regions[0].end           = 0x60002000 + MB(64),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20000000 + MB(64),
 };

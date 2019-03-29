@@ -29,18 +29,27 @@
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
 COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(95));
 
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {DAPLINK_ROM_IF_START, 1024},
+ };
+
 // k20dx128 target information
 target_cfg_t target_device = {
-    .sector_size    = 1024,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (DAPLINK_ROM_IF_SIZE / 1024),
-    .flash_start    = DAPLINK_ROM_IF_START,
-    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .ram_start      = 0x1fffe000,
-    .ram_end        = 0x20002000,
-    // .flash_algo not needed for bootloader 
+    .sectors_info               = sectors_info,
+    .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start     = DAPLINK_ROM_IF_START,
+    .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
+    .flash_regions[0].flags     = kRegionIsDefault,  
+    .ram_regions[0].start       = 0x1fffe000,
+    .ram_regions[0].end         = 0x20002000,
+    // flash_algo not needed for bootloader 
 };
 
 //bootloader has no family
