@@ -33,3 +33,9 @@ GitHub project.
 
 ## Develop
 Information for setting up a development environment, running the tests or creating a release build [can be found in the developers guide.](docs/DEVELOPERS-GUIDE.md)
+
+## License
+DAPLink is licensed with the permissive Apache 2.0 license. See the [LICENSE](LICENSE) file for the
+full text of the license.
+
+Copyright © 2006-2019 Arm Ltd

@@ -65,9 +65,8 @@ environment. The [automated tests guide](docs/AUTOMATED_TESTS.md) provides infor
 available types of tests and describes how to run the tests.
 
 
-## Contributor agreement
+## More
 
-For us to accept your pull request, we need you to agree to our [contributor
-agreement](http://os.mbed.com/contributor_agreement/) to give us the necessary rights to use and
-distribute your contributions. (To click through the agreement, create an account on mbed.com, and
-log in.)
+For more information about contributing, see the Mbed OS [contributor
+documentation](http://os.mbed.com/contributing). Although this documentation is written primarily
+with Mbed OS in mind, much of it applies directly to DAPLink, as well.
