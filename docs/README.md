@@ -21,7 +21,7 @@ Automated tests and automation:
 Porting DAPLink to new systems:
 
 * [Adding a new board](PORT_BOARD.md)
-* [Adding a new target device](PORT_TARGET.md)
+* [Adding a new target device](PORT_TARGET_FAMILY.md)
 * [Adding a new HIC](PORT_HIC.md)
 
 
