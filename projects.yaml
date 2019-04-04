@@ -69,6 +69,9 @@ module:
     hic_max32625: &module_hic_max32625
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/max32625.yaml
+    hic_tmpm366: &module_hic_tmpm366
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/tmpm366.yaml
 
 projects:
     kl26z_bl:
@@ -603,3 +606,11 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    tmpm366_bl:
+        - *module_bl
+        - records/hic_hal/tmpm366.yaml
+        - records/board/tmpm366_bl.yaml
+    tmpm366_tmpm46b_stk_if:
+        - *module_if
+        - *module_hic_tmpm366
+        - records/board/tmpm46b_if.yaml

@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/tmpm46b_stk.c
+        family:
+            - source/family/toshiba/tmpm46b/target.c
+            - source/family/toshiba/target_reset_tz.c
