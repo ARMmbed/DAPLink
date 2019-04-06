@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "RTL.h"
 #include "rl_usb.h"
 #include "LPC11Uxx.h"
 #include "compiler.h"

@@ -42,13 +42,16 @@ typedef enum {
     /* Target flash errors */
     ERROR_RESET,
     ERROR_ALGO_DL,
+    ERROR_ALGO_MISSING,
     ERROR_ALGO_DATA_SEQ,
     ERROR_INIT,
+    ERROR_UNINIT,
     ERROR_SECURITY_BITS,
     ERROR_UNLOCK,
     ERROR_ERASE_SECTOR,
     ERROR_ERASE_ALL,
     ERROR_WRITE,
+    ERROR_WRITE_VERIFY,
 
     /* File stream errors */
     ERROR_SUCCESS_DONE,

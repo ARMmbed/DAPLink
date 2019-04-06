@@ -391,7 +391,7 @@ static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
         PIN_SWCLK_PORT->PIO_OER = PIN_SWCLK;
         PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
         PIN_SWCLK_PORT->PIO_CODR = PIN_SWCLK;
-        os_dly_wait(1);
+        osDelay(1);
     }
 }
 #else

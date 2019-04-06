@@ -45,7 +45,7 @@ static void swd_set_target_reset(uint8_t asserted)
         }
         PIN_SWCLK_TCK_CLR();
         PIN_SWDIO_TMS_CLR();
-        //os_dly_wait(1);
+        //osDelay(1);
     } else {
         PIN_SWCLK_TCK_SET();
         PIN_SWDIO_TMS_SET();

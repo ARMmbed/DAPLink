@@ -20,7 +20,6 @@
  */
 
 #include "sam3u.h"
-#include "RTL.h"
 #include "gpio.h"
 #include "uart.h"
 #include "compiler.h"

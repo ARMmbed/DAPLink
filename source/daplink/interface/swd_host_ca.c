@@ -21,7 +21,7 @@
 
 #ifdef TARGET_MCU_CORTEX_A
 
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "target_reset.h"
 #include "target_config.h"
 #include "swd_host.h"
@@ -615,7 +615,7 @@ static uint8_t swd_wait_until_halted(void)
         if ((val & DBGDSCR_HALTED) == DBGDSCR_HALTED) {
             return 1;
         }
-        os_dly_wait(1);
+        osDelay(1);
     }
 
     return 0;
@@ -802,17 +802,17 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
 
         case RESET_RUN:
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             swd_off();
             break;
 
         case RESET_PROGRAM:
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
 
             if (!swd_init_debug()) {
                 return 0;
@@ -826,7 +826,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (!swd_write_word(DBGDRCR, val )) {
                 return 0;
             }
-            os_dly_wait(2);
+            osDelay(2);
             if (!swd_wait_until_halted()) {
                 return 0;
             }
@@ -884,9 +884,9 @@ uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
 
         case RESET_RUN:
             swd_set_target_reset(1);
-            os_dly_wait(2);
+            osDelay(2);
             swd_set_target_reset(0);
-            os_dly_wait(2);
+            osDelay(2);
             swd_off();
             break;
 

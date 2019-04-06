@@ -1,0 +1,8 @@
+common:
+    macros:
+        - OS_TICK=10000
+    includes:
+        - source/rtos_none
+    sources:
+        rtos:
+            - source/rtos_none

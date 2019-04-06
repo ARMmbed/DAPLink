@@ -28,8 +28,8 @@
 #include "stdint.h"
 #include "system_SAM3U.h"
 #include "debug_cm.h"
-#include "RTL.h"
 
+#include "cmsis_os2.h"
 
 
 const uint32_t flash_algorithm_blob[] = {

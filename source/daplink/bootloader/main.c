@@ -23,7 +23,7 @@
 #include "gpio.h"
 #include "validation.h"
 #include "vfs_manager.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "settings.h"
 #include "info.h"
@@ -66,7 +66,7 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 main_usb_connect_t usb_state;
 
 // Reference to our main task
-OS_TID main_task_id;
+osThreadId_t main_task_id;
 
 static uint8_t msc_led_usb_activity = 0;
 static main_led_state_t msc_led_state = MAIN_LED_FLASH;
@@ -74,27 +74,13 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 static main_usb_busy_t usb_busy;
 static uint32_t usb_busy_count;
 
-#define TIMER_TASK_30_PRIORITY  (11)
-#define TIMER_TASK_STACK        (136)
-static uint64_t stk_timer_task[TIMER_TASK_STACK / sizeof(uint64_t)];
-
-#define MAIN_TASK_PRIORITY      (10)
-#define MAIN_TASK_STACK         (800)
-static uint64_t stk_main_task [MAIN_TASK_STACK / sizeof(uint64_t)];
-
 // Timer task, set flags every 30mS and 90mS
-__task void timer_task_30mS(void)
+void timer_task_30mS(void * arg)
 {
-    uint8_t i = 0;
-    os_itv_set(3); // 30mS
-
-    while (1) {
-        os_itv_wait();
-        os_evt_set(FLAGS_MAIN_30MS, main_task_id);
-
-        if (!(i++ % 3)) {
-            os_evt_set(FLAGS_MAIN_90MS, main_task_id);
-        }
+    static uint32_t i = 0;
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_30MS);
+    if (!(i++ % 3)) {
+        osThreadFlagsSet(main_task_id, FLAGS_MAIN_90MS);
     }
 }
 
@@ -108,10 +94,10 @@ void main_blink_msc_led(main_led_state_t state)
 
 void USBD_SignalHandler()
 {
-    isr_evt_set(FLAGS_MAIN_PROC_USB, main_task_id);
+    osThreadFlagsSet(main_task_id, FLAGS_MAIN_PROC_USB);
 }
 
-__task void main_task(void)
+void main_task(void * arg)
 {
     // State processing
     uint16_t flags;
@@ -122,11 +108,11 @@ __task void main_task(void)
 
     if (config_ram_get_initial_hold_in_bl()) {
         // Delay for 1 second for VMs
-        os_dly_wait(100);
+        osDelay(100);
     }
 
     // Get a reference to this task
-    main_task_id = os_tsk_self();
+    main_task_id = osThreadGetId();
     // Set LED defaults
     gpio_set_hid_led(GPIO_LED_OFF);
     gpio_set_cdc_led(GPIO_LED_OFF);
@@ -142,16 +128,16 @@ __task void main_task(void)
     usb_state = MAIN_USB_CONNECTING;
     usb_state_count = USB_CONNECT_DELAY;
     // Start timer tasks
-    os_tsk_create_user(timer_task_30mS, TIMER_TASK_30_PRIORITY, (void *)stk_timer_task, TIMER_TASK_STACK);
+    osTimerId_t tmr_id = osTimerNew(timer_task_30mS, osTimerPeriodic, NULL, NULL);
+    osTimerStart(tmr_id, 3);
 
     while (1) {
         // need to create a new event for programming failure
-        os_evt_wait_or(FLAGS_MAIN_90MS          // 90mS tick
-                       | FLAGS_MAIN_30MS        // 30mS tick
-                       | FLAGS_MAIN_PROC_USB    // process usb events
-                       , NO_TIMEOUT);
-        // Find out what event happened
-        flags = os_evt_get();
+        flags = osThreadFlagsWait(FLAGS_MAIN_90MS     // 90mS tick
+                        | FLAGS_MAIN_30MS            // 30mS tick
+                        | FLAGS_MAIN_PROC_USB       // process usb events
+                        , osFlagsWaitAny, 
+                        osWaitForever);
 
         if (flags & FLAGS_MAIN_PROC_USB) {
             USBD_Handler();
@@ -217,7 +203,7 @@ __task void main_task(void)
         if (flags & FLAGS_MAIN_30MS) {
             if (msc_led_usb_activity) {
                 
-                if((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)){
+                if ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)) {
                     // Toggle LED value
                     msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
                     // If in flash mode stop after one cycle but in bootloader LED stays on
@@ -260,5 +246,8 @@ int main(void)
     // config the usb interface descriptor and web auth token before USB connects
     //unique_string_auth_config();
     // either the rst pin was pressed or we have an empty app region
-    os_sys_init_user(main_task, MAIN_TASK_PRIORITY, stk_main_task, MAIN_TASK_STACK);
+    osKernelInitialize();                 // Initialize CMSIS-RTOS
+    osThreadNew(main_task, NULL, NULL);    // Create application main thread
+    osKernelStart();                      // Start thread execution
+    for (;;) {}
 }

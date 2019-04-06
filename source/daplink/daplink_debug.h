@@ -26,7 +26,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "stdint.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "macro.h"
 

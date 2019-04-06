@@ -20,7 +20,7 @@
  */
 
 #include "sam3u.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "debug_cm.h"
 #include "target_reset.h"
 #include "swd_host.h"
@@ -56,9 +56,9 @@
 //Blink with 50ms interval
 //static void blinkLED(){
 //    gpio_set_dap_led(1);
-//    os_dly_wait(5);
+//    osDelay(5);
 //    gpio_set_dap_led(0);
-//    os_dly_wait(5);
+//    osDelay(5);
 //    gpio_set_dap_led(1);
 //}
 
@@ -134,7 +134,7 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
 
     //Check for 5 Second emergency erase routine
     while (!((PIOA->PIO_PDSR >> 25) & 1)) {
-        os_dly_wait(1);
+        osDelay(1);
         count++;
         gpio_set_dap_led((count >> 4) & 1); //Blink every 160ms
 

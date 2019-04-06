@@ -23,7 +23,7 @@
 #include "ctype.h"
 
 #include "main.h"
-#include "RTL.h"
+#include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "virtual_fs.h"
 #include "vfs_manager.h"
@@ -138,8 +138,8 @@ static vfs_mngr_state_t vfs_state;
 static vfs_mngr_state_t vfs_state_next;
 static uint32_t time_usb_idle;
 
-static OS_MUT sync_mutex;
-static OS_TID sync_thread = 0;
+static osMutexId_t sync_mutex;
+static osThreadId_t sync_thread = 0;
 
 // Synchronization functions
 static void sync_init(void);
@@ -353,23 +353,23 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
 
 static void sync_init(void)
 {
-    sync_thread = os_tsk_self();
-    os_mut_init(&sync_mutex);
+    sync_thread = osThreadGetId();
+    sync_mutex = osMutexNew(NULL);
 }
 
 static void sync_assert_usb_thread(void)
 {
-    util_assert(os_tsk_self() == sync_thread);
+    util_assert(osThreadGetId() == sync_thread);
 }
 
 static void sync_lock(void)
 {
-    os_mut_wait(&sync_mutex, 0xFFFF);
+    osMutexAcquire(sync_mutex, 0);
 }
 
 static void sync_unlock(void)
 {
-    os_mut_release(&sync_mutex);
+    osMutexRelease(sync_mutex);
 }
 
 static bool changing_state()

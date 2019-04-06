@@ -83,28 +83,14 @@
 // =============================
 //   <o>Timer clock value [Hz] <1-1000000000>
 //   <i> Set the timer clock value for selected timer.
-//   <i> Default: 6000000  (6MHz)
 #ifndef OS_CLOCK
-#if defined(INTERFACE_LPC11U35) || defined(INTERFACE_K20D5) || defined (INTERFACE_KL26Z)
-#define OS_CLOCK    48000000
-#elif defined(INTERFACE_K26F)
-#define OS_CLOCK    120000000
-#elif defined(INTERFACE_SAM3U2C)
-#define OS_CLOCK    96000000
-#elif defined(INTERFACE_LPC4322)
-#define OS_CLOCK    96000000
-#elif defined(INTERFACE_STM32F103XB)
-#define OS_CLOCK    72000000
-#elif defined(INTERFACE_MAX32620) || defined(INTERFACE_MAX32625)
-#define OS_CLOCK    96000000
-#endif
+#error "OS_CLOCK should be defined by HIC configuration"
 #endif
 
 //   <o>Timer tick value [us] <1-1000000>
 //   <i> Set the timer tick value for selected timer.
-//   <i> Default: 10000  (10ms)
 #ifndef OS_TICK
-#define OS_TICK        10000
+#error "OS_TICK should be defined by RTOS configuration"
 #endif
 
 // </h>

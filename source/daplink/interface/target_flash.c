@@ -47,6 +47,7 @@ static error_t target_flash_erase_chip(void);
 static uint32_t target_flash_program_page_min_size(uint32_t addr);
 static uint32_t target_flash_erase_sector_size(uint32_t addr);
 static uint8_t target_flash_busy(void);
+static error_t target_flash_set(uint32_t addr);
 
 static const flash_intf_t flash_intf = {
     target_flash_init,
@@ -57,29 +58,99 @@ static const flash_intf_t flash_intf = {
     target_flash_program_page_min_size,
     target_flash_erase_sector_size,
     target_flash_busy,
+    target_flash_set,
 };
 
 static state_t state = STATE_CLOSED;
 
 const flash_intf_t *const flash_intf_target = &flash_intf;
 
+static flash_func_t last_flash_func = FLASH_FUNC_NOP;
+
+//saved flash algo
+static program_target_t * current_flash_algo = NULL;
+
+//saved flash start from flash algo
+static uint32_t flash_start = 0;
+
+static program_target_t * get_flash_algo(uint32_t addr)
+{
+    flash_region_info_t * flash_region = g_board_info.target_cfg->extra_flash;
+
+    for (; flash_region->start != 0 && flash_region->end != 0; ++flash_region) {
+        if (addr >= flash_region->start && addr <= flash_region->end) {
+            flash_start = flash_region->start; //save the flash start
+            if (flash_region->flash_algo) {
+                return flash_region->flash_algo;
+            }else{
+                return NULL;
+            }
+        }
+    }
+    
+    //could not find a flash algo for the region; use default
+    flash_start = g_board_info.target_cfg->flash_start;
+    return g_board_info.target_cfg->flash_algo;
+}
+
+static error_t flash_func_start(flash_func_t func)
+{
+    program_target_t * flash = current_flash_algo;
+
+    if (last_flash_func != func)
+    {
+        // Finish the currently active function.
+        if (FLASH_FUNC_NOP != last_flash_func &&
+            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->uninit, last_flash_func, 0, 0, 0)) {
+            return ERROR_UNINIT;
+        }
+
+        // Start a new function.
+        if (FLASH_FUNC_NOP != func &&
+            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->init, flash_start, 0, func, 0)) {
+            return ERROR_INIT;
+        }
+
+        last_flash_func = func;
+    }
+
+    return ERROR_SUCCESS;
+}
+
+static error_t target_flash_set(uint32_t addr)
+{
+    program_target_t * new_flash_algo = get_flash_algo(addr);
+    if (new_flash_algo == NULL) {
+        return ERROR_ALGO_MISSING;
+    }
+    if(current_flash_algo != new_flash_algo){
+        //run uninit to last func
+        error_t status = flash_func_start(FLASH_FUNC_NOP);
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
+        // Download flash programming algorithm to target
+        if (0 == swd_write_memory(new_flash_algo->algo_start, (uint8_t *)new_flash_algo->algo_blob, new_flash_algo->algo_size)) {
+            return ERROR_ALGO_DL;
+        }
+        
+        current_flash_algo = new_flash_algo;
+        
+    }
+    return ERROR_SUCCESS;
+}
+
 static error_t target_flash_init()
 {
     if (g_board_info.target_cfg) {
-        const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
+        last_flash_func = FLASH_FUNC_NOP;
+        
+        current_flash_algo = NULL;
         
         if (0 == target_set_state(RESET_PROGRAM)) {
             return ERROR_RESET;
         }
 
-        // Download flash programming algorithm to target and initialise.
-        if (0 == swd_write_memory(flash->algo_start, (uint8_t *)flash->algo_blob, flash->algo_size)) {
-            return ERROR_ALGO_DL;
-        }
-
-        if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->init, g_board_info.target_cfg->flash_start, 0, 0, 0)) {
-            return ERROR_INIT;
-        }
         state = STATE_OPEN;
         return ERROR_SUCCESS;
     } else {
@@ -91,6 +162,10 @@ static error_t target_flash_init()
 static error_t target_flash_uninit(void)
 {
     if (g_board_info.target_cfg) {
+        error_t status = flash_func_start(FLASH_FUNC_NOP);
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
         if (config_get_auto_rst()) {
             // Resume the target if configured to do so
             target_set_state(RESET_RUN);
@@ -113,9 +188,13 @@ static error_t target_flash_uninit(void)
 static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint32_t size)
 {
     if (g_board_info.target_cfg) {
+        error_t status = ERROR_SUCCESS;
+        program_target_t * flash = current_flash_algo;
         
-        const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
-
+        if (!flash) {
+            return ERROR_INTERNAL;
+        }
+        
         // check if security bits were set
         if (g_target_family && g_target_family->security_bits_set){
             if (1 == g_target_family->security_bits_set(addr, (uint8_t *)buf, size)) {
@@ -123,6 +202,12 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
             }
         }
 
+        status = flash_func_start(FLASH_FUNC_PROGRAM);
+
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
+        
         while (size > 0) {
             uint32_t write_size = MIN(size, flash->program_buffer_size);
 
@@ -144,13 +229,17 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
             if (config_get_automation_allowed()) {
                 // Verify data flashed if in automation mode
                 if (flash->verify != 0) {
+                    status = flash_func_start(FLASH_FUNC_VERIFY);
+                    if (status != ERROR_SUCCESS) {
+                        return status;
+                    }
                     if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                         flash->verify,
                                         addr,
                                         write_size,
                                         flash->program_buffer,
                                         0)) {
-                        return ERROR_WRITE;
+                        return ERROR_WRITE_VERIFY;
                     }
                 } else {
                     while (write_size > 0) {
@@ -160,7 +249,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                             return ERROR_ALGO_DATA_SEQ;
                         }
                         if (memcmp(buf, rb_buf, verify_size) != 0) {
-                            return ERROR_WRITE;
+                            return ERROR_WRITE_VERIFY;
                         }
                         addr += verify_size;
                         buf += verify_size;
@@ -186,13 +275,24 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
 static error_t target_flash_erase_sector(uint32_t addr)
 {
     if (g_board_info.target_cfg) {
-        const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
+        error_t status = ERROR_SUCCESS;
+        program_target_t * flash = current_flash_algo;
 
+        if (!flash) {
+            return ERROR_INTERNAL;
+        }
+        
         // Check to make sure the address is on a sector boundary
         if ((addr % target_flash_erase_sector_size(addr)) != 0) {
             return ERROR_ERASE_SECTOR;
         }
 
+        status = flash_func_start(FLASH_FUNC_ERASE);
+
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
+        
         if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, addr, 0, 0, 0)) {
             return ERROR_ERASE_SECTOR;
         }
@@ -207,11 +307,39 @@ static error_t target_flash_erase_chip(void)
 {
     if (g_board_info.target_cfg){
         error_t status = ERROR_SUCCESS;
-        const program_target_t *const flash = g_board_info.target_cfg->flash_algo;
-
-        if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
-            return ERROR_ERASE_ALL;
+        program_target_t * flash;
+        flash_region_info_t * flash_region = g_board_info.target_cfg->extra_flash;
+        
+        if (current_flash_algo != g_board_info.target_cfg->flash_algo) {
+            //set the initial flash algo
+            error_t status = target_flash_set(g_board_info.target_cfg->flash_start); 
+            if (status != ERROR_SUCCESS) {
+                return status;
+            }
         }
+        
+        do {           
+            flash = current_flash_algo;
+            status = flash_func_start(FLASH_FUNC_ERASE);
+            if (status != ERROR_SUCCESS) {
+                return status;
+            }
+            if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
+                return ERROR_ERASE_ALL;
+            }
+            
+            while (flash_region->start != 0 && flash_region->end != 0) {
+                if (flash_region->flash_algo) {
+                    status = target_flash_set(flash_region->start); 
+                    if (status != ERROR_SUCCESS) {
+                        return status;
+                    }
+                    flash_region++;
+                    break;
+                }
+                flash_region++;
+            }           
+        } while (flash != current_flash_algo); //call erase on the next flash algo
 
         // Reset and re-initialize the target after the erase if required
         if (g_board_info.target_cfg->erase_reset) {
