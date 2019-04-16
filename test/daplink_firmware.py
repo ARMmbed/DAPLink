@@ -154,7 +154,7 @@ class DAPLinkFirmware(firmware.Firmware):
         assert self._type in self.TYPE, "Invalid type %s" % self._type
         if self._type is self.TYPE.INTERFACE:
             if name not in info.FIRMWARE_SET:
-                print('Warning: board "%s" must be not in SUPPORTED_CONFIGURATIONS in info.py' % name)
+                print('Warning: board "%s" no entry in SUPPORTED_CONFIGURATIONS in info.py' % name)
 
         # Set file paths
         self._bin_path = self._directory + os.sep + '%s_crc.bin' % name

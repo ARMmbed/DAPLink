@@ -3,7 +3,7 @@
  * @brief   Target information for the rapid-iot
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,39 +28,38 @@
 
 // default target information is k64f
 target_cfg_t target_device = {
-    .sector_size    = 4096,
+    .sectors_info                   = sectors_info_k64,
+    .sector_info_length             = (sizeof(sectors_info_k64))/(sizeof(sectors_info_k64)),
 #ifdef BOARD_RAPID_IOT
-    /* Rapid-IoT boards reserve flash at the beginning for bootloader */
-    .sector_cnt         = (0xEC000 / 4096),
-    .flash_start        = 0x00014000,
+    .flash_regions[0].start         = 0x00014000,
 #else
-    /* Hexiwear boards do not have a bootloader at the start of flash */
-    .sector_cnt         = (MB(1) / 4096),
-    .flash_start        = 0x00000000,
-#endif
-    .flash_end          = MB(1),
-    .ram_start          = 0x1fff0000,
-    .ram_end            = 0x20030000,
-    .flash_algo         = (program_target_t *) &flash_k64,
+    .flash_regions[0].start         = 0x00000000,
+#endif    
+    .flash_regions[0].end           = MB(1),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_k64,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20030000,
 };
 
 target_cfg_t target_device_kw40 = {
-    .sector_size    = 1024,
-    .sector_cnt     = (KB(160) / 1024),
-    .flash_start    = 0,
-    .flash_end      = KB(160),
-    .ram_start      = 0x1FFFF000,
-    .ram_end        = 0x20004000,
-    .flash_algo     = (program_target_t *) &flash_kw40,
+    .sectors_info                   = sectors_info_kw40,
+    .sector_info_length             = (sizeof(sectors_info_kw40))/(sizeof(sectors_info_kw40)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = KB(160),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw40,    
+    .ram_regions[0].start           = 0x1FFFF000,
+    .ram_regions[0].end             = 0x20004000,
 };
 
 target_cfg_t target_device_kw41 = {
-    .sector_size    = 2048,
-    /* Rapid-IoT boards reserve flash at the beginning for bootloader */
-    .sector_cnt     = (0x7C000 / 2048),
-    .flash_start    = 0x4000,
-    .flash_end      = KB(512),
-    .ram_start      = 0x1FFF8000,
-    .ram_end        = 0x20018000,
-    .flash_algo     = (program_target_t *) &flash_kw41,
+    .sectors_info                   = sectors_info_kw41,
+    .sector_info_length             = (sizeof(sectors_info_kw41))/(sizeof(sectors_info_kw41)),
+    .flash_regions[0].start         = 0x4000,
+    .flash_regions[0].end           = KB(512),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw41,    
+    .ram_regions[0].start           = 0x1FFF8000,
+    .ram_regions[0].end             = 0x20018000,
 };

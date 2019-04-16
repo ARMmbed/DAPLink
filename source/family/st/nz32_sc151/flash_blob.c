@@ -1,5 +1,5 @@
 /* Flash OS Routines (Automagically Generated)
- * Copyright (c) 2009-2017 ARM Limited
+ * Copyright (c) 2009-2019 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,17 @@ static const uint32_t stm32l1xx_256_flash_prog_blob[] = {
     0x0001f04f, 0x68304770, 0x6080f420, 0x68306030, 0x0008f020, 0xbcf06030, 0x0000f04f, 0x00004770,
     0x40023c18, 0x89abcdef, 0x40023c0c, 0x02030405, 0x8c9daebf, 0x13141516, 0x40023c1c, 0x40003000,
     0x40023c04, 0x40023c10, 0x08040000, 0x00000000
+};
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x08000000, 256},
 };
 
 static const program_target_t flash = {

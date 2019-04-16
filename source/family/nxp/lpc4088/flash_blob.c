@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the lpc4088
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -53,6 +53,17 @@ static const uint32_t lpc4088_flash_prog_blob[] = {
     0x400fc000, 0x1fff1ff8, 0xcccccccd, 0x00000034, 0x00000014, 0x1fff1ff1, 0x4002c000, 0x00000000, 
     0x00000001, 0x00000000, 0x00000000, 0x00000000, 
 };
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, KB(4)},
+ };
 
 static const program_target_t flash = {
     0x200000D5, // Init

@@ -3,7 +3,7 @@
  * @brief   
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -147,15 +147,13 @@ uint32_t EraseChip(void)
         // Return value 0 == O.K.
         // Return value 1 == Error
         // Erase complete chip by erasing sector-by-sector
-        //Addr = target_device.flash_start;
-        Addr = g_board_info.target_cfg->flash_start;
+        Addr = g_board_info.target_cfg->flash_regions[0].start; //bootloader, interface flashing only concerns 1 flash region
 
         cortex_int_state_t state = cortex_int_get_and_disable();
         do {
             _WritePage(Addr, (volatile uint32_t *)0, 1);
             Addr += (1 << 8);
-        //} while (Addr < target_device.flash_end);
-        } while (Addr < g_board_info.target_cfg->flash_end);
+        } while (Addr < g_board_info.target_cfg->flash_regions[0].end);
         cortex_int_restore(state);
 
         return (0);  // O.K.

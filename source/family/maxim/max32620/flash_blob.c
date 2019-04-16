@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the MAX32620
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -55,6 +55,17 @@ const uint32_t flash_algo_blob[] = {
     0x60a04070, 0xf0006a60, 0xb1080002, 0xe76a2001, 0xe7682000, 0x00000004, 0x00000000, 0x00000000,
     FLC_BASE, CLK_DIV, BRST_SIZE, FLASH_BASE, FLASH_SIZE, FLASH_SECTOR,
 };
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, 0x2000},
+ };
 
 const program_target_t flash = {
     0x20000021, // Init

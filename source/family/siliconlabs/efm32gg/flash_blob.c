@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the efm32gg
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -44,6 +44,17 @@ static const uint32_t efm32gg_flash_prog_blob[] = {
     0x480cb186, 0x1000f8d8, 0x22016104, 0x618160c2, 0x60c12108, 0x46102100, 0xff24f7ff, 0x2001b110,
     0x8df0e8bd, 0x68814803, 0x0101f021, 0x20006081, 0x8df0e8bd, 0x400c0000, 0x00989680, 0x68814803,
     0x0105f021, 0x20006081, 0x00004770, 0x400c0000, 0x00000000,
+};
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, 4096},
 };
 
 static const program_target_t flash = {

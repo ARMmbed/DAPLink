@@ -70,14 +70,17 @@ static flash_func_t last_flash_func = FLASH_FUNC_NOP;
 //saved flash algo
 static program_target_t * current_flash_algo = NULL;
 
+//saved default region for default flash algo
+static region_info_t * default_region = NULL;
+
 //saved flash start from flash algo
 static uint32_t flash_start = 0;
 
 static program_target_t * get_flash_algo(uint32_t addr)
 {
-    flash_region_info_t * flash_region = g_board_info.target_cfg->extra_flash;
+    region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
 
-    for (; flash_region->start != 0 && flash_region->end != 0; ++flash_region) {
+    for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
         if (addr >= flash_region->start && addr <= flash_region->end) {
             flash_start = flash_region->start; //save the flash start
             if (flash_region->flash_algo) {
@@ -89,8 +92,12 @@ static program_target_t * get_flash_algo(uint32_t addr)
     }
     
     //could not find a flash algo for the region; use default
-    flash_start = g_board_info.target_cfg->flash_start;
-    return g_board_info.target_cfg->flash_algo;
+    if (default_region) {
+        flash_start = default_region->start;
+        return default_region->flash_algo;
+    } else {
+        return NULL;
+    }
 }
 
 static error_t flash_func_start(flash_func_t func)
@@ -149,6 +156,15 @@ static error_t target_flash_init()
         
         if (0 == target_set_state(RESET_PROGRAM)) {
             return ERROR_RESET;
+        }
+        
+        //get default region
+        region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
+        for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
+            if (flash_region->flags & kRegionIsDefault) {
+                default_region = flash_region;
+                break;
+            }
         }
 
         state = STATE_OPEN;
@@ -307,39 +323,21 @@ static error_t target_flash_erase_chip(void)
 {
     if (g_board_info.target_cfg){
         error_t status = ERROR_SUCCESS;
-        program_target_t * flash;
-        flash_region_info_t * flash_region = g_board_info.target_cfg->extra_flash;
-        
-        if (current_flash_algo != g_board_info.target_cfg->flash_algo) {
-            //set the initial flash algo
-            error_t status = target_flash_set(g_board_info.target_cfg->flash_start); 
+        region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
+
+        for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
+            status = target_flash_set(flash_region->start); 
             if (status != ERROR_SUCCESS) {
                 return status;
             }
-        }
-        
-        do {           
-            flash = current_flash_algo;
             status = flash_func_start(FLASH_FUNC_ERASE);
             if (status != ERROR_SUCCESS) {
                 return status;
             }
-            if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_chip, 0, 0, 0, 0)) {
+            if (0 == swd_flash_syscall_exec(&current_flash_algo->sys_call_s, current_flash_algo->erase_chip, 0, 0, 0, 0)) {
                 return ERROR_ERASE_ALL;
             }
-            
-            while (flash_region->start != 0 && flash_region->end != 0) {
-                if (flash_region->flash_algo) {
-                    status = target_flash_set(flash_region->start); 
-                    if (status != ERROR_SUCCESS) {
-                        return status;
-                    }
-                    flash_region++;
-                    break;
-                }
-                flash_region++;
-            }           
-        } while (flash != current_flash_algo); //call erase on the next flash algo
+        }
 
         // Reset and re-initialize the target after the erase if required
         if (g_board_info.target_cfg->erase_reset) {
@@ -376,7 +374,9 @@ static uint32_t target_flash_erase_sector_size(uint32_t addr)
                 }
             }
         }
-        return g_board_info.target_cfg->sector_size;
+        //sector information should be in sector_info
+        util_assert(0);
+        return 0;
     } else {
         return 0;
     }
