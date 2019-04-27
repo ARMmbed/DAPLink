@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the kl26z
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -60,6 +60,17 @@ static const uint32_t KL26Z_FLM[] = {
     0x2000b501, 0x46c046c0, 0x0002bd02, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040,
     0x00000000, 0x00000000, 0x00000020, 0x40020004, 0x00000000,
 };
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, 1024},
+ };
 
 static const program_target_t flash = {
     0x20000021, // Init

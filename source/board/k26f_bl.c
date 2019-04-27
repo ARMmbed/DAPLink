@@ -3,7 +3,7 @@
  * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP K26F
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,17 +28,26 @@
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(64));
 
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {DAPLINK_ROM_IF_START, DAPLINK_SECTOR_SIZE},
+ };
+
 // k26f target information
 target_cfg_t target_device = {
-    .sector_size    = DAPLINK_SECTOR_SIZE,
-    // Assume memory regions are same size. Flash algo should ignore requests
-    //  when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = (DAPLINK_ROM_IF_SIZE / DAPLINK_SECTOR_SIZE),
-    .flash_start    = DAPLINK_ROM_IF_START,
-    .flash_end      = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .ram_start      = 0x1fff0000,
-    .ram_end        = 0x20030000,
+    .sectors_info               = sectors_info,
+    .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start     = DAPLINK_ROM_IF_START,
+    .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
+    .flash_regions[0].flags     = kRegionIsDefault,  
+    .ram_regions[0].start       = 0x1fff0000,
+    .ram_regions[0].end         = 0x20030000,
     /* .flash_algo not needed for bootloader */
 };
 

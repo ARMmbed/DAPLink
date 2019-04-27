@@ -41,37 +41,34 @@ extern "C" {
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
 //Additional flash and ram regions
-#define MAX_EXTRA_FLASH_REGION                3
-#define MAX_EXTRA_RAM_REGION                  3
+#define MAX_EXTRA_FLASH_REGION                10
+#define MAX_EXTRA_RAM_REGION                  10
 
-typedef struct flash_region_info {
+enum _region_flags {
+    kRegionIsDefault = (1 << 0),        //out of bounds regions will use the same flash algo if this is set
+    kRegionIsSecure  = (1 << 1)
+};
+
+
+typedef struct region_info {
     uint32_t start;
     uint32_t end;
-    program_target_t *flash_algo;
-} flash_region_info_t;
-
-typedef struct ram_region_info {
-    uint32_t start;
-    uint32_t end;
-} ram_region_info_t;
+    uint32_t flags;
+    uint8_t alias_index;            /*!<use with flags; will point to a different index if there is an alias region */
+    program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
+} region_info_t;
 
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
  */
 typedef struct target_cfg {
-    uint32_t sector_size;           /*!< Number of bytes in a sector used by flash erase and filesystem */
-    uint32_t sector_cnt;            /*!< Number of sectors a device has */
-    uint32_t flash_start;           /*!< Address of the application entry point */
-    uint32_t flash_end;             /*!< Address where the flash ends */
-    uint32_t ram_start;             /*!< Lowest contigous RAM address the application uses */
-    uint32_t ram_end;               /*!< Highest contigous RAM address the application uses */
-    program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
-    uint8_t erase_reset;            /*!< Reset after performing an erase */
-    const sector_info_t* sectors_info; 
-    int sector_info_length;
-    flash_region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
-    ram_region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
+    uint32_t version;                                       /*!< Target configuration version */
+    const sector_info_t* sectors_info;                      /*!< Sector start and length list */
+    int sector_info_length;                                 /*!< Sector start and length list total */
+    region_info_t flash_regions[MAX_EXTRA_FLASH_REGION];    /*!< Flash regions */
+    region_info_t ram_regions[MAX_EXTRA_RAM_REGION];        /*!< RAM regions  */
+    uint8_t erase_reset;                                    /*!< Reset after performing an erase */
     const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
     uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
 } target_cfg_t;

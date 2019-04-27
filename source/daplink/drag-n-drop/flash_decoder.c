@@ -143,7 +143,13 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
             }
         } else if (FLASH_DECODER_TYPE_TARGET == type) {
             if (g_board_info.target_cfg) {
-                flash_start_local = g_board_info.target_cfg->flash_start;
+                region_info_t * region = g_board_info.target_cfg->flash_regions;
+                for (; region->start != 0 || region->end != 0; ++region) {
+                    if (addr >= region->start &&  addr <= region->end) {
+                        flash_start_local = region->start;
+                        break;
+                    }
+                }
                 flash_intf_local = flash_intf_target;
             } else {
                 status = ERROR_FD_UNSUPPORTED_UPDATE;
@@ -337,7 +343,7 @@ error_t flash_decoder_close(void)
 
 static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t size)
 {
-    uint32_t end_addr;
+    uint32_t end_addr=0;
 
     switch (flash_type) {
         case FLASH_DECODER_TYPE_BOOTLOADER:
@@ -351,7 +357,17 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
         case FLASH_DECODER_TYPE_TARGET:
             //only if we are sure it is a bin for the target; without check unordered hex files will cause to terminate flashing
             if (flash_type_target_bin && g_board_info.target_cfg) {
-                end_addr = g_board_info.target_cfg->flash_end;
+                region_info_t * region = g_board_info.target_cfg->flash_regions;
+                for (; region->start != 0 || region->end != 0; ++region) {
+                    if (addr >= region->start &&  addr<=region->end) {
+                        end_addr = region->end;
+                        break;
+                    }
+                }
+                if(end_addr == 0){ //invalid end_addr
+                    return false;
+                }
+                
             }
             else {
                 return false;

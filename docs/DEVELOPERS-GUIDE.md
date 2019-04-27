@@ -29,6 +29,13 @@ $ pip install -r requirements.txt
 $ progen generate -t uvision
 $ venv/Scripts/deactivate
 ```
+Only generate one specific project,e.g:
+```generate one project
+progen generate -f projects.yaml -p stm32f103xb_stm32f746zg_if-t uvision
+use option: -f indication the project file
+            -p indication the project name
+            -t   indication the IDE name 
+```
 
 **Step 2.2** For mbed cli project compilation
 ```

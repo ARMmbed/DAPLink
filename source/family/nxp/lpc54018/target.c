@@ -3,7 +3,7 @@
  * @brief   Target information for the lpc54018
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,11 +26,12 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    = 4096,
-    .sector_cnt     = (MB(16) / 4096),
-    .flash_start    = 0x10000000,
-    .flash_end      = 0x11000000,
-    .ram_start      = 0x00000000,
-    .ram_end        = 0x00030000,
-    .flash_algo     = (program_target_t *) &flash,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0x10000000,
+    .flash_regions[0].end           = 0x11000000,
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x00000000,
+    .ram_regions[0].end             = 0x00030000,
 };

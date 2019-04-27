@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the lpc1768
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -37,6 +37,17 @@ static const uint32_t LPC1768_FLM[] = {
     /*0x160*/ 0x28006968, 0x2001d095, 0xe793, 0x4, 0x400fc080, 0x8, 0x1fff1ff1, 0x4e697370,
     /*0x180*/ 0x12345678, 0x87654321L, 0x0, 0x0
 };
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, 1024},
+ };
 
 static const program_target_t flash = {
     0x1000002f, // init

@@ -3,7 +3,7 @@
  * @brief   Target information for the MAX32620
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,15 +21,16 @@
 
 #include "target_config.h"
 
-extern const program_target_t flash;
+#include "flash_blob.c"
 
 /* ME02 -- MAX32620 2MiB Flash, 256KiB RAM */
 target_cfg_t target_device = {
-    .sector_size    = 0x2000,
-    .sector_cnt     = (0x200000 / 0x2000),
-    .flash_start    = 0,
-    .flash_end      = 0x200000,
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20040000,
-    .flash_algo     = (program_target_t *) &flash,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = 0x200000,
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20040000,
 };

@@ -3,7 +3,7 @@
  * @brief   Flash algorithm for the W7500
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,6 +28,17 @@ static const uint32_t w7500_flash_prog_blob[] = {
     0x08496921, 0x61210049, 0x4c104601, 0x46284613, 0x200047a0, 0xb570bd70, 0x4b092422, 0x605d2500, 
     0x175b4d08, 0x4d08602b, 0x085e692b, 0x612e0076, 0x4601460b, 0x4c054620, 0x200047a0, 0x0000bd70, 
     0xe000ed00, 0xe000e180, 0xe000e000, 0x1fff1001, 0x00000000, 
+};
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0, 256},
 };
 
 static const program_target_t flash = {

@@ -1,5 +1,5 @@
 # Adding A New Target Family
-Adding new target support requires creating a flash algo blob and the implementation for some stub functions. Target support is added to the `source/family/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
+Adding new target family support requires creating a flash algo blob and the implementation for target family api. Target support is added to the `source/family/<mfg>/<target>` directory. At minimum, 3 files are needed. The first is `source/target/<mfg>/target_reset.c`
 
 ```c
 /**
@@ -25,30 +25,29 @@ Adding new target support requires creating a flash algo blob and the implementa
 
 #include "target_reset.h"
 #include "swd_host.h"
+#include "target_family.h"
 
-void target_before_init_debug(void)
+static void target_before_init_debug(void)
 {
     // any target specific sequences needed before attaching
     //	to the DAP across JTAG or SWD
     return;
 }
 
-uint8_t target_unlock_sequence(void)
+static uint8_t target_unlock_sequence(void)
 {
     // if the device can secure the flash and there is a way to
     //	erase all it should be implemented here.
     return 1;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t target_set_state(TARGET_RESET_STATE state)
 {
-    // invoke reset by sw (VECT_REQ or SYS_REQ) or hw (hardware IO toggle)
-    //return swd_set_target_state_sw(state);
-    //or 
-    return swd_set_target_state_hw(state);
+    // if a custom state machine is needed to set the TARGET_RESET_STATE state
+    return 1;
 }
 
-uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
+static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
     // if there are security bits in the programmable flash region
     //	a check should be performed. This method is used when programming
@@ -57,6 +56,114 @@ uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     //	if needed.
     return 0;
 }
+
+const target_family_descriptor_t g_target_family = {
+    .family_id = myFamilyID,
+    .default_reset_type = kHardwareReset,
+    .target_before_init_debug = target_before_init_debug,
+    .target_unlock_sequence = target_unlock_sequence,
+    .target_set_state = target_set_state,
+    .security_bits_set = security_bits_set,
+};
+```
+
+The target family api is located in `source/target/target_family.h` and target_reset file can customize the function apis according to the family specification. Family id is a combination of vendor id and an incrementing id. There are predefined family id stubs that can be used for generic reset types; kStub_HWReset_FamilyID, kStub_SWVectReset_FamilyID and kStub_SWSysReset_FamilyID.
+
+```c
+/**
+ * @file    target_family.h
+ * @brief   
+ *
+ * DAPLink Interface Firmware
+ * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef TARGET_FAMILY_H
+#define TARGET_FAMILY_H
+
+#include <stdint.h>
+#include <string.h>
+#include "target_reset.h"
+
+#define VENDOR_TO_FAMILY(x, y) (x<<8 | y)
+
+typedef enum _reset_type { 
+    kHardwareReset=1, 
+    kSoftwareReset, 
+} reset_type_t; 
+
+enum _vendor_ids {
+    kStub_VendorID = 0,
+    kNXP_VendorID = 11,
+    kTI_VendorID = 16,
+    kNordic_VendorID = 54,
+    kToshiba_VendorID = 92,
+    kRenesas_VendorID = 117,
+    kWiznet_VendorID = 122,
+    kRealtek_VendorID = 124,
+};
+
+typedef enum _family_id {
+    kStub_HWReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 1),
+    kStub_SWVectReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 2),
+    kStub_SWSysReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 3),
+    kNXP_KinetisK_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 1),
+    kNXP_KinetisL_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 2),
+    kNXP_Mimxrt_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 3),
+    kNXP_RapidIot_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 4),
+    kNXP_KinetisK32W_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 5),
+    kNordic_Nrf51_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 1),
+    kNordic_Nrf52_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 2),
+    kRealtek_Rtl8195am_FamilyID = VENDOR_TO_FAMILY(kRealtek_VendorID, 1),
+    kTI_Cc3220sf_FamilyID = VENDOR_TO_FAMILY(kTI_VendorID, 1),
+    kToshiba_Tz_FamilyID = VENDOR_TO_FAMILY(kToshiba_VendorID, 1),
+    kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
+    kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
+} family_id_t;
+ 
+typedef struct target_family_descriptor { 
+    uint16_t family_id;                         /*!< Use to select or identify target family from defined target family or custom ones */ 
+    reset_type_t default_reset_type;            /*!< Target family can select predefined reset from  kHardwareReset and kSoftwareReset */ 
+    uint32_t soft_reset_type;                   /*!< Families can override software reset type to VECTRESET or SYSRESETREQ */
+    void (*target_before_init_debug)(void);     /*!< Target dependant function before debug initialization */
+    void (*prerun_target_config)(void);         /*!< Target specific initialization */
+    uint8_t (*target_unlock_sequence)(void);    /*!< Unlock targets that can enter lock state */
+    uint8_t (*security_bits_set)(uint32_t addr, uint8_t *data, uint32_t size);  /*!< Check security bits in the programmable flash region */
+    uint8_t (*target_set_state)(TARGET_RESET_STATE state);                      /*!< Families can customize target debug states in target_reset.h */
+    void (*swd_set_target_reset)(uint8_t asserted);                             /*!< Families can customize how to send reset to the target */
+    uint8_t (*validate_bin_nvic)(const uint8_t *buf);                           /*!< Validate a bin file to be flash by drag and drop */
+    uint8_t (*validate_hexfile)(const uint8_t *buf);                            /*!< Validate a hex file to be flash by drag and drop */
+} target_family_descriptor_t;
+
+extern const target_family_descriptor_t *g_target_family;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void init_family(void);
+uint8_t target_family_valid(void);
+uint8_t target_set_state(TARGET_RESET_STATE state);
+void swd_set_target_reset(uint8_t asserted);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 ```
 
 A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/mbedmicro/FlashAlgo) An example blob is shown below and would be added to `source/family/<mfg>/<targetname>/flash_blob.c`
@@ -109,6 +216,17 @@ static const uint32_t targetname_blob[] = {
     0x8df0e8bd, 0x68814803, 0x0101f021, 0x20006081, 0x8df0e8bd, 0x400c0000, 0x00989680, 0x68814803,
     0x0105f021, 0x20006081, 0x00004770, 0x400c0000, 0x00000000,
 };
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x00000000, 0x00001000},
+ };
 
 static const program_target_t flash = {
     0x200000B5, // Init
@@ -164,42 +282,49 @@ The last required file is the target MCU description file `source/family/<mfg>/<
 // The file flash_blob.c must only be included in target.c
 #include "flash_blob.c"
 
-// target information
 target_cfg_t target_device = {
-    .sector_size    = 4096,
-    .sector_cnt     = (MB(1) / 4096),
-    .flash_start    = 0,
-    .flash_end      = MB(1),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x20010000,
-    .flash_algo     = (program_target_t *) &flash,
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0x00000000,
+    .flash_regions[0].end           = 0x00200000,
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x1fff0000,
+    .ram_regions[0].end             = 0x20030000,
 };
 ```
-At this point these target specific files could be added to a board build and developed.
-
-Complete target configuration api is located in `source/hic_hal_target_config.h`
+Complete target configuration api is located in `source/target/target_config.h`
 ```c
+enum _region_flags {
+    kRegionIsDefault = (1 << 0),        //out of bounds regions will use the same flash algo if this is set
+    kRegionIsSecure  = (1 << 1)
+};
+
+
+typedef struct region_info {
+    uint32_t start;
+    uint32_t end;
+    uint32_t flags;
+    uint8_t alias_index;            /*!<use with flags; will point to a different index if there is an alias region */
+    program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
+} region_info_t;
+
 /**
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
  */
 typedef struct target_cfg {
-    uint32_t sector_size;           /*!< Number of bytes in a sector used by flash erase and filesystem */
-    uint32_t sector_cnt;            /*!< Number of sectors a device has */
-    uint32_t flash_start;           /*!< Address of the application entry point */
-    uint32_t flash_end;             /*!< Address where the flash ends */
-    uint32_t ram_start;             /*!< Lowest contigous RAM address the application uses */
-    uint32_t ram_end;               /*!< Highest contigous RAM address the application uses */
-    program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
-    uint8_t erase_reset;            /*!< Reset after performing an erase */
-    const sector_info_t* sectors_info; 
-    int sector_info_length;
-    region_info_t extra_flash[MAX_EXTRA_FLASH_REGION + 1];  /*!< Extra flash regions */
-    region_info_t extra_ram[MAX_EXTRA_RAM_REGION + 1];      /*!< Extra RAM regions  */
+    uint32_t version;                                       /*!< Target configuration version */
+    const sector_info_t* sectors_info;                      /*!< Sector start and length list */
+    int sector_info_length;                                 /*!< Sector start and length list total */
+    region_info_t flash_regions[MAX_EXTRA_FLASH_REGION];    /*!< Flash regions */
+    region_info_t ram_regions[MAX_EXTRA_RAM_REGION];        /*!< RAM regions  */
+    uint8_t erase_reset;                                    /*!< Reset after performing an erase */
     const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
     uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
 } target_cfg_t;
 ```
+At this point these target specific files could be added to a board build and developed.
 
 # Supported Target Families
 A HIC can target all supported families available and a post build script can modify a board's family id to point to the correct family. See [Porting board guide](PORT_BOARD.md) 

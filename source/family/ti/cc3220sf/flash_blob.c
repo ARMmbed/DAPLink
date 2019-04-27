@@ -1,5 +1,5 @@
 /* Flash OS Routines (Automagically Generated)
- * Copyright (c) 2009-2018 ARM Limited
+ * Copyright (c) 2009-2019 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,17 @@ static const uint32_t cc3220sf_flash_prog_blob[] = {
 static const uint32_t flash_start = 0x01000000;
 // Size of flash
 static const uint32_t flash_size = 0x00100000;
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {0x01000000, 2048},
+};
 
 static const program_target_t flash = {
     0x20000027, // Init

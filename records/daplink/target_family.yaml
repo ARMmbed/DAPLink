@@ -1,6 +1,6 @@
 common:
     includes:
-        - source/target/target_family.h
+        - source/target/
     sources:
         target:
             - source/target/target_family.c
