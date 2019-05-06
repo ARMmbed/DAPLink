@@ -76,7 +76,11 @@ This information includes:
 /// Maximum Package Size for Command and Response data.
 /// This configuration settings is used to optimized the communication performance with the
 /// debugger and depends on the USB peripheral. Change setting to 1024 for High-Speed USB.
-#define DAP_PACKET_SIZE         64              ///< USB: 64 = Full-Speed, 1024 = High-Speed.
+#ifndef HID_ENDPOINT            //HID end points currently set limits to 64
+#define DAP_PACKET_SIZE         512              ///< USB: 64 = Full-Speed, 512 = High-Speed.
+#else
+#define DAP_PACKET_SIZE         64              ///< USB: 64 = Full-Speed, 512 = High-Speed.
+#endif
 
 /// Maximum Package Buffers for Command and Response data.
 /// This configuration settings is used to optimized the communication performance with the

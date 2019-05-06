@@ -150,10 +150,22 @@ static void __attribute__((optimize("O0"))) setup_basics(void)
     string_board_id[4] = 0;
     idx = 0;
     //Family ID
-    string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));
+    string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));    
     string_family_id[idx++] = hex_to_ascii(((family_id >> 8) & 0xF));
+#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)   //need to change the unique id when the msd is disabled 
+    #if defined(MSC_ENDPOINT)
+    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0){
+        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF)); 
+    } else {
+        string_family_id[idx++] = hex_to_ascii(((family_id >> 4) & 0xF));
+    }
+    #else //no msd support always have the most significant bit set for family id 2nd byte
+        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF)); 
+    #endif
+#else
     string_family_id[idx++] = hex_to_ascii(((family_id >> 4) & 0xF));
-    string_family_id[idx++] = hex_to_ascii(((family_id) & 0xF));
+#endif
+    string_family_id[idx++] = hex_to_ascii(((family_id) & 0xF));    
     string_family_id[idx++] = 0;
     // Version
     idx = 0;

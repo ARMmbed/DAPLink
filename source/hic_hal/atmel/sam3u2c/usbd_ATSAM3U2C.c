@@ -176,88 +176,13 @@ void USBD_Connect(BOOL con)
     }
 }
 
-
-//Predefine endpoints are needed to preallocate usb memory dpram for sam3u
-
-#define MSC_EP_HS                       /* MSC Endpoints for High-speed */                                  \
-/* Endpoint, EP Bulk IN */                                                                                  \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_IN(USBD_MSC_EP_BULKIN),  /* bEndpointAddress */                                              \
-  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
-  WBVAL(USBD_MSC_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
-  USBD_MSC_HS_BINTERVAL,                /* bInterval */                                                     \
-                                                                                                            \
-/* Endpoint, EP Bulk OUT */                                                                                 \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_OUT(USBD_MSC_EP_BULKOUT),/* bEndpointAddress */                                              \
-  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
-  WBVAL(USBD_MSC_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
-  USBD_MSC_HS_BINTERVAL,                /* bInterval */
-
-#define HID_EP_HS                       /* HID Endpoint for High-speed */                                   \
-/* Endpoint, HID Interrupt In */                                                                            \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_IN(USBD_HID_EP_INTIN),   /* bEndpointAddress */                                              \
-  USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
-  WBVAL(USBD_HID_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
-  USBD_HID_HS_BINTERVAL,                /* bInterval */
-
-#define CDC_ACM_EP_IF0_HS               /* CDC Endpoints for Interface 0 for High-speed */                  \
-/* Endpoint, EP Interrupt IN */         /* event notification (optional) */                                 \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_IN(USBD_CDC_ACM_EP_INTIN),/* bEndpointAddress */                                             \
-  USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
-  WBVAL(USBD_CDC_ACM_HS_WMAXPACKETSIZE),/* wMaxPacketSize */                                                \
-  USBD_CDC_ACM_HS_BINTERVAL,            /* bInterval */
-
-#define CDC_ACM_EP_IF1_HS               /* CDC Endpoints for Interface 1 for High-speed */                  \
-/* Endpoint, EP Bulk OUT */                                                                                 \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_OUT(USBD_CDC_ACM_EP_BULKOUT),/* bEndpointAddress */                                          \
-  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
-  WBVAL(USBD_CDC_ACM_HS_WMAXPACKETSIZE1),/* wMaxPacketSize */                                               \
-  USBD_CDC_ACM_HS_BINTERVAL1,           /* bInterval */                                                     \
-                                                                                                            \
-/* Endpoint, EP Bulk IN */                                                                                  \
-  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
-  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
-  USB_ENDPOINT_IN(USBD_CDC_ACM_EP_BULKIN),/* bEndpointAddress */                                            \
-  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
-  WBVAL(USBD_CDC_ACM_HS_WMAXPACKETSIZE1),/* wMaxPacketSize */                                               \
-  USBD_CDC_ACM_HS_BINTERVAL1,           /* bInterval */
-
-const U8 PreconfigEndpoints[] = {
-
-#if (USBD_ADC_ENABLE)
-    ADC_EP_HS
-#endif
-#if (USBD_MSC_ENABLE)
-    MSC_EP_HS
-#endif
-#if (USBD_HID_ENABLE)
-#if (USBD_HID_EP_INTOUT != 0)
-    HID_EP_INOUT_HS
-#else
-    HID_EP_HS
-#endif
-#endif    
-#if (USBD_CDC_ACM_ENABLE)
-    CDC_ACM_EP_IF0_HS
-    CDC_ACM_EP_IF1_HS
-#endif                                 /* bLength */
-};
-
 /*
  *  USB Device Reset Function
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
+extern U8 USBD_ConfigDescriptor_HS[];
+extern U8 USBD_ConfigDescriptor[];
 void USBD_Reset(void)
 {
     uint32_t ep, EPMask;
@@ -300,22 +225,30 @@ void USBD_Reset(void)
                                            UDPHS_EPTCTLENB_NYET_DIS            |
                                            UDPHS_EPTCTLENB_EPT_ENABL;
                                            
-    USB_ENDPOINT_DESCRIPTOR *pEPD =  (USB_ENDPOINT_DESCRIPTOR *)PreconfigEndpoints;
+    
+#if (USBD_HS_ENABLE == 1)
+    U8 * config_desc = USBD_ConfigDescriptor_HS;
+#else
+    U8 * config_desc = USBD_ConfigDescriptor;
+#endif
 
-    while ((char *)pEPD < (char *)PreconfigEndpoints + sizeof(PreconfigEndpoints)) {    
-        uint32_t num, type, dir, size, banks, interval;
-        num      = pEPD->bEndpointAddress & 0x0F;
-        type     = pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK;
-        dir      = pEPD->bEndpointAddress >> 7;
-        interval = pEPD->bInterval;
-        size     = USBD_CalcSizeEP(pEPD->wMaxPacketSize);
-        banks    = 1;
-        UDPHS->UDPHS_EPT[num].UDPHS_EPTCFG    = (interval << 8) |
-                                                (banks    << 6) |
-                                                (type     << 4) |
-                                                (dir      << 3) |
-                                                (size     << 0) ;
-        pEPD++;
+    while (((USB_ENDPOINT_DESCRIPTOR *)config_desc)->bLength > 0) {
+        if (((USB_ENDPOINT_DESCRIPTOR *)config_desc)->bDescriptorType == USB_ENDPOINT_DESCRIPTOR_TYPE) {
+            uint32_t num, type, dir, size, banks, interval;
+            USB_ENDPOINT_DESCRIPTOR *pEPD =  (USB_ENDPOINT_DESCRIPTOR *)config_desc;
+            num      = pEPD->bEndpointAddress & 0x0F;
+            type     = pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK;
+            dir      = pEPD->bEndpointAddress >> 7;
+            interval = pEPD->bInterval;
+            size     = USBD_CalcSizeEP(pEPD->wMaxPacketSize);
+            banks    = 1;
+            UDPHS->UDPHS_EPT[num].UDPHS_EPTCFG    = (interval << 8) |
+                                                    (banks    << 6) |
+                                                    (type     << 4) |
+                                                    (dir      << 3) |
+                                                    (size     << 0) ;
+        }
+        config_desc += ((USB_ENDPOINT_DESCRIPTOR *)config_desc)->bLength;
     }
 }
 

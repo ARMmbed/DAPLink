@@ -304,6 +304,22 @@ typedef __packed struct _USB_BINARY_OBJECT_STORE_DESCRIPTOR {
     U8  bNumDeviceCaps;
 } USB_BINARY_OBJECT_STORE_DESCRIPTOR;
 
+/* Union Functional Descriptor */ 
+typedef __packed struct _UNION_FUNCTIONAL_DESCRIPTOR {
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bDescriptorSubtype;
+    U8  bMasterInterface;
+    U8  bSlaveInterface0;
+} UNION_FUNCTIONAL_DESCRIPTOR;
+
+typedef __packed struct _WINUSB_FUNCTION_SUBSET_HEADER {
+    U16 wLength;
+    U16 wDescriptorType; 
+    U8  bFirstInterface;
+    U8  bReserved;
+} WINUSB_FUNCTION_SUBSET_HEADER;
+
 /* USB Device Capability Descriptor */
 typedef __packed struct _USB_DEVICE_CAPABILITY_DESCRIPTOR {
     U8  bLength;
