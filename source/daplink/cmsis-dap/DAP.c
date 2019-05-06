@@ -34,7 +34,7 @@
 #endif
 #include "DAP_config.h"
 #include "DAP.h"
-
+#include "info.h"
 
 #define DAP_FW_VER      "1.10"  // Firmware Version
 
@@ -88,6 +88,7 @@ const char TargetDeviceName   [] = TARGET_DEVICE_NAME;
 //   return:  number of bytes in info data
 static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
   uint8_t length = 0U;
+  const char *data = NULL;
 
   switch (id) {
     case DAP_ID_VENDOR:
@@ -106,11 +107,23 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
 #ifdef DAP_SER_NUM
       memcpy(info, DAP_SerNum, sizeof(DAP_SerNum));
       length = (uint8_t)sizeof(DAP_SerNum);
+// --- begin DAPLink change ---
+#else
+      data = info_get_unique_id();
+      length = (uint8_t)strlen(data) + 1;
+      memcpy(info, data, length);
+// --- end DAPLink change ---
 #endif
       break;
     case DAP_ID_FW_VER:
-      memcpy(info, DAP_FW_Ver, sizeof(DAP_FW_Ver));
-      length = (uint8_t)sizeof(DAP_FW_Ver);
+// --- begin DAPLink change ---
+      data = info_get_version();
+      length = (uint8_t)strlen(data) + 1;
+      memcpy(info, data, length);
+// Original:
+//       memcpy(info, DAP_FW_Ver, sizeof(DAP_FW_Ver));
+//       length = (uint8_t)sizeof(DAP_FW_Ver);
+// --- end DAPLink change ---
       break;
     case DAP_ID_DEVICE_VENDOR:
 #if TARGET_DEVICE_FIXED
