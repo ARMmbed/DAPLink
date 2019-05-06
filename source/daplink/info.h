@@ -37,7 +37,7 @@ void info_crc_compute(void);
 // Get the 48 digit unique ID as a null terminated string.
 // This is the string used as the USB serial number.
 // This string is made up of the following:
-// <board ID><4 reserved bytes><host ID><hic ID>
+// <board ID><family ID><host ID><hic ID>
 const char *info_get_unique_id(void);
 
 // Get the 4 digit board ID as a null terminated string
