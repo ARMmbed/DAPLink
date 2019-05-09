@@ -7,11 +7,16 @@ Install the necessary tools listed below. Skip any step where a compatible tool 
 
 * Install [Python 2, 2.7.11 or above](https://www.python.org/downloads/) . Add to PATH.
 * Install [Git](https://git-scm.com/downloads) . Add to PATH.
-* Install [Keil MDK-ARM](https://www.keil.com/download/product/), preferably version 5. Set environment variable "UV4" to the absolute path of the UV4 executable if you don't install to the default location. Note that "UV4" is what's used for both MDK versions 4 and 5. This step can be skipped if you plan to use mbed cli.
+* Install [Keil MDK-ARM](https://www.keil.com/download/product/), preferably version 5. Set environment variable "UV4" to
+  the absolute path of the UV4 executable if you don't install to the default location. Note that "UV4" is what's used for
+  both MDK versions 4 and 5. This step can be skipped if you plan to use mbed cli, but you still need Arm Compiler 5, and
+  MDK is required to debug.
 * Install virtualenv in your global Python installation eg: `pip install virtualenv`.
 
 
-**Step 1.** Get the sources and create a virtual environment
+**Step 1.** Initial setup.
+
+Get the sources and create a virtual environment
 
 ```
 $ git clone https://github.com/mbedmicro/DAPLink
@@ -20,40 +25,66 @@ $ pip install virtualenv
 $ virtualenv venv
 ```
 
-**Step 2.1** For uvision progen compilation, update tools and generate project files. **This should be done every time you pull new changes**
+**Step 2.** One-time mbed-cli setup.
 
-```
-$ venv/Scripts/activate   (For Linux)
-$ venv/Scripts/activate.bat   (For Windows)
-$ pip install -r requirements.txt
-$ progen generate -t uvision
-$ venv/Scripts/deactivate
-```
-Only generate one specific project,e.g:
-```generate one project
-progen generate -f projects.yaml -p stm32f103xb_stm32f746zg_if-t uvision
-use option: -f indication the project file
-            -p indication the project name
-            -t   indication the IDE name 
-```
+This step is only required once if you are planning to use the mbed-cli build method.
 
-**Step 2.2** For mbed cli project compilation
+First run step 3 below to activate the virtual environment. Then execute these commands.
 ```
-$ venv/Scripts/activate   (For Linux)
-$ venv/Scripts/activate.bat   (For Windows)
-$ pip install -r requirements.txt
 $ mbed deploy
 $ mbed config root .
-$ mbed config ARM_PATH FULL_PATH_TO_ARMCC_FOLDER
-$ tools/mbedcli_compile.py project1 project2 project3 --clean
-$ venv/Scripts/deactivate
+$ mbed config ARM_PATH <FULL_PATH_TO_ARMCC_FOLDER>
 ```
-Valid project names are listed on help.
 
 
-**Step 3.** Pull requests should be made once a changeset is [rebased onto Master](https://www.atlassian.com/git/tutorials/merging-vs-rebasing/workflow-walkthrough)
+## Activate virtual environment
+**Step 3.** Activate the virtual environment and update requirements. This is necessary when you open a new shell. **This should be done every time you pull new changes**
 
-## Mbedcli compile environment
+```
+$ venv/Scripts/activate   (For Linux)
+$ venv/Scripts/activate.bat   (For Windows)
+$ pip install -r requirements.txt
+```
+
+
+## Build
+**This should be done every time you pull new changes**
+
+There are two ways to build DAPLink. You can generate Keil MDK project files and build within MDK. MDK is also used to debug DAPLink running on the interface chip. Or, you can use the `mbedcli_compile.py` script to build projects from the command line without requiring MDK.
+
+
+**Step 4.1.** For MDK progen compilation.
+
+This command generates MDK project files under the `projectfiles/uvision` directory.
+```
+$ progen generate -t uvision
+```
+
+To only generate one specific project, use a command like this:
+```
+progen generate -f projects.yaml -p stm32f103xb_stm32f746zg_if -t uvision
+```
+These options to `progen` set the parameters:
+- `-f` for the input projects file
+- `-p` for the project name
+- `-t` to specify the IDE name 
+
+
+**Step 4.2.** For mbed-cli project compilation
+
+This command will build all projects:
+```
+$ tools/mbedcli_compile.py
+```
+
+To build only a subset of projects, add the project name(s) to the end of the command line. Valid project names are listed
+in the usage text shown with `--help`. The first time you build after each pull you should add `--clean` to perform a
+complete re-build.
+
+## Contribute
+We would love to have your changes! Pull requests should be made once a changeset is [rebased onto Master](https://www.atlassian.com/git/tutorials/merging-vs-rebasing/workflow-walkthrough). See the [contributing guide](../CONTRIBUTING.md) for detailed requirements and guidelines for contributions.
+
+## Mbed-cli compile environment
 
 ### Features
 - Support both Python 2.x and 3.x versions.
@@ -61,10 +92,10 @@ Valid project names are listed on help.
 - Can generate the release directory with one command.
 
 ### Prerequisite
-mbedcli is included in `requirements.txt`, so it will be installed automatically when configuring
-your development environment.
+mbed-cli is included in `requirements.txt`, so it will be installed automatically when configuring
+your development environment using the steps described above.
 
-### mbedcli_compile.py script
+### `tools/mbedcli_compile.py` script
 Arguments
 ```
 positional arguments:
@@ -85,7 +116,7 @@ optional arguments:
 ```
 Valid projects are listed on help.
 
-Generate files needed by mbedcli
+Generate files needed by mbed-cli
 * `custom_profile.json` lists toolchain profile or compile flags parsed from the yaml files
 * `custom_targets.json` contains platform information for specific hics.
 * `.mbedignore` filters all files not needed for the project.
