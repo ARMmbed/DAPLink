@@ -362,8 +362,10 @@ static inline BOOL USBD_ReqGetDescriptor(void)
 
                     if (USBD_HighSpeed == __FALSE) {
                         pD = (U8 *)USBD_ConfigDescriptor;
+                        ((USB_CONFIGURATION_DESCRIPTOR *)pD)->bDescriptorType = USB_CONFIGURATION_DESCRIPTOR_TYPE; //same descriptor is used in other configuration
                     } else {
                         pD = (U8 *)USBD_ConfigDescriptor_HS;
+                        ((USB_CONFIGURATION_DESCRIPTOR *)pD)->bDescriptorType = USB_CONFIGURATION_DESCRIPTOR_TYPE; //same descriptor is used in other configuration
                     }
 
                     for (n = 0; n != USBD_SetupPacket.wValueL; n++) {
@@ -386,9 +388,11 @@ static inline BOOL USBD_ReqGetDescriptor(void)
                     }
 
                     if (USBD_HighSpeed == __FALSE) {
-                        pD = (U8 *)USBD_OtherSpeedConfigDescriptor;
+                        pD = (U8 *)USBD_ConfigDescriptor_HS;
+                        ((USB_CONFIGURATION_DESCRIPTOR *)pD)->bDescriptorType = USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE; //same descriptor is used in main configuration
                     } else {
-                        pD = (U8 *)USBD_OtherSpeedConfigDescriptor_HS;
+                        pD = (U8 *)USBD_ConfigDescriptor;
+                        ((USB_CONFIGURATION_DESCRIPTOR *)pD)->bDescriptorType = USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE; //same descriptor is used in main configuration
                     }
 
                     for (n = 0; n != USBD_SetupPacket.wValueL; n++) {
@@ -522,6 +526,7 @@ static inline BOOL USBD_ReqSetConfiguration(void)
                 while (pD->bLength) {
                     switch (pD->bDescriptorType) {
                         case USB_CONFIGURATION_DESCRIPTOR_TYPE:
+                        case USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE:
                             if (((USB_CONFIGURATION_DESCRIPTOR *)pD)->bConfigurationValue == USBD_SetupPacket.wValueL) {
                                 USBD_Configuration = USBD_SetupPacket.wValueL;
                                 USBD_NumInterfaces = ((USB_CONFIGURATION_DESCRIPTOR *)pD)->bNumInterfaces;
@@ -669,6 +674,7 @@ static inline BOOL USBD_ReqSetInterface(void)
             while (pD->bLength) {
                 switch (pD->bDescriptorType) {
                     case USB_CONFIGURATION_DESCRIPTOR_TYPE:
+                    case USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE:
                         if (((USB_CONFIGURATION_DESCRIPTOR *)pD)->bConfigurationValue != USBD_Configuration) {
                             pD = (USB_COMMON_DESCRIPTOR *)((U8 *)pD + ((USB_CONFIGURATION_DESCRIPTOR *)pD)->wTotalLength);
                             continue;

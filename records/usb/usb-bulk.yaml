@@ -1,0 +1,6 @@
+common:
+    macros:
+        - BULK_ENDPOINT
+    sources:
+        usb:
+            - source/usb/bulk

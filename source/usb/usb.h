@@ -27,6 +27,7 @@
 #include "usb_cdc.h"
 #include "usb_hid.h"
 #include "usb_msc.h"
+#include "usb_bulk.h"
 #include "usb_webusb.h"
 #include "usb_winusb.h"
 
