@@ -108,6 +108,10 @@ void init_family(void)
         }
         index++;
     }
+    
+    if(g_target_family == NULL){ //default family
+        g_target_family = &g_hw_reset_family;
+    }
 }
 
 uint8_t target_family_valid(void)

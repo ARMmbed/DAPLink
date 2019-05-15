@@ -51,7 +51,27 @@ uint16_t get_family_id(void)
     }
 }
 
-uint8_t flash_algo_valid(void) 
+#if (defined(__ICCARM__))
+#pragma optimize = none
+uint8_t flash_algo_valid(void)
+#elif (defined(__CC_ARM))
+#pragma push
+#pragma O0
+uint8_t flash_algo_valid(void)
+#elif (!defined(__GNUC__))
+/* #pragma GCC push_options */
+/* #pragma GCC optimize("O0") */
+uint8_t __attribute__((optimize("O0"))) flash_algo_valid(void)
+#else
+#error "Unknown compiler"
+#endif
 {
     return (g_board_info.target_cfg != 0);
 }
+
+#if (defined(__CC_ARM))
+#pragma pop
+#endif
+#if (defined(__GNUC__))
+/* #pragma GCC pop_options */
+#endif
