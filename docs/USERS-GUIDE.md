@@ -39,3 +39,7 @@ You can debug with any IDE that supports the CMSIS-DAP protocol. Some tools capa
 ## Firmware update
 
 To update the firmware on a device, hold the reset button while attaching USB. The device boots into bootloader mode. From there, copy the appropriate firmware onto the drive. If successful, the device leaves bootloader mode and starts running the new firmware. Otherwise, the bootloader displays `FAIL.TXT` with an explanation of what went wrong.
+
+## No MSD builds
+
+MSD or drag-and-drop support is automatically detected and enabled when the target flash algorithm is in the DAPLink build. But there are builds that does not have a particular target and can retarget any families which have DAPLink support by using a debugger or pyocd without the MSD DAPLink drive. The script `tools/post_build_script.py` can take a board id, family id, flm elf or axf file as flash algo bin and bind it to a DAPLink binary build. The ram boundaries also needed to be specified as parameters. This is useful in all-family builds which has no board target originally but can target all existing families and retarget a particular target. The DAPLink MSD drive will be automatically enabled when there is a flash algoritm embedded in the binary file. The reverse use case of disabling the MSD even with a target support can also be done, please see `docs/MSD_COMMANDS.md` for details.
