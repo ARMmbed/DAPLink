@@ -50,11 +50,11 @@ enum _region_flags {
 };
 
 
-typedef struct region_info {
+typedef struct __attribute__((__packed__)) region_info {
     uint32_t start;
     uint32_t end;
     uint32_t flags;
-    uint8_t alias_index;            /*!<use with flags; will point to a different index if there is an alias region */
+    uint32_t alias_index;            /*!<use with flags; will point to a different index if there is an alias region */
     program_target_t *flash_algo;   /*!< A pointer to the flash algorithm structure */
 } region_info_t;
 
@@ -62,15 +62,16 @@ typedef struct region_info {
  @struct target_cfg_t
  @brief  The firmware configuration struct has unique about the chip its running on.
  */
-typedef struct target_cfg {
+typedef struct __attribute__((__packed__)) target_cfg {
     uint32_t version;                                       /*!< Target configuration version */
     const sector_info_t* sectors_info;                      /*!< Sector start and length list */
-    int sector_info_length;                                 /*!< Sector start and length list total */
+    uint32_t sector_info_length;                            /*!< Sector start and length list total */
     region_info_t flash_regions[MAX_EXTRA_FLASH_REGION];    /*!< Flash regions */
     region_info_t ram_regions[MAX_EXTRA_RAM_REGION];        /*!< RAM regions  */
-    uint8_t erase_reset;                                    /*!< Reset after performing an erase */
     const char *rt_board_id;                                /*!< If assigned, this is a flexible board ID */
-    uint16_t rt_family_id;                                     /*!< If assigned, this is a flexible board ID */
+    uint16_t rt_family_id;                                  /*!< If assigned, this is a flexible board ID */
+    uint8_t erase_reset;                                    /*!< Reset after performing an erase */
+    uint8_t pad;
 } target_cfg_t;
 
 extern target_cfg_t target_device;

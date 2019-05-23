@@ -41,18 +41,22 @@ module:
     hic_k20dx: &module_hic_k20dx
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/k20dx.yaml
+        - records/usb/usb-bulk.yaml
     hic_k26f: &module_hic_k26f
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/k26f.yaml
+        - records/usb/usb-bulk.yaml
     hic_kl26z: &module_hic_kl26z
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/kl26z.yaml
+        - records/usb/usb-bulk.yaml
     hic_lpc11u35: &module_hic_lpc11u35
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/lpc11u35.yaml
     hic_lpc4322: &module_hic_lpc4322
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/lpc4322.yaml
+        - records/usb/usb-bulk.yaml
     hic_sam3u2c: &module_hic_sam3u2c
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/sam3u2c.yaml
@@ -95,6 +99,7 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
     lpc4322_bl:
         - *module_bl
         - records/hic_hal/lpc4322.yaml
@@ -111,6 +116,7 @@ projects:
         - *module_if
         - *module_hic_max32620
         - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
     max32625_bl:
         - *module_bl
         - records/hic_hal/max32625.yaml
@@ -119,6 +125,7 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
     sam3u2c_bl:
         - *module_bl
         - records/hic_hal/sam3u2c.yaml
@@ -135,6 +142,7 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c

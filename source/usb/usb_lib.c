@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include "rl_usb.h"
 #include "usb.h"
 #include "settings.h"
@@ -65,8 +66,7 @@ const U8 usbd_max_packet0 = USBD_MAX_PACKET0;
 #endif
 
 #if    (USBD_HID_ENABLE)
-const U8 usbd_hid_if_num = USBD_HID_IF_NUM;
-const U8 usbd_webusb_if_num = USBD_WEBUSB_IF_NUM;
+U8 usbd_hid_if_num; //assigned during runtime init
 const U8 usbd_hid_ep_intin = USBD_HID_EP_INTIN;
 const U8 usbd_hid_ep_intout = USBD_HID_EP_INTOUT;
 const U16 usbd_hid_interval[2]  = {USBD_HID_INTERVAL, USBD_HID_HS_INTERVAL};
@@ -86,7 +86,7 @@ U8 USBD_HID_FeatReport[USBD_HID_FEATREPORT_MAX_SZ + 1];
 #endif
 
 #if    (USBD_MSC_ENABLE)
-const U8 usbd_msc_if_num = USBD_MSC_IF_NUM;
+U8 usbd_msc_if_num; //assigned during runtime init
 const U8 usbd_msc_ep_bulkin = USBD_MSC_EP_BULKIN;
 const U8 usbd_msc_ep_bulkout = USBD_MSC_EP_BULKOUT;
 const U16 usbd_msc_maxpacketsize[2] = {USBD_MSC_WMAXPACKETSIZE, USBD_MSC_HS_WMAXPACKETSIZE};
@@ -116,8 +116,8 @@ S16  USBD_ADC_DataBuf[8 * USBD_ADC_CFG_P_C * USBD_ADC_CFG_P_S];
 #endif
 
 #if    (USBD_CDC_ACM_ENABLE)
-const U8 usbd_cdc_acm_cif_num = USBD_CDC_ACM_CIF_NUM;
-const U8 usbd_cdc_acm_dif_num = USBD_CDC_ACM_DIF_NUM;
+U8 usbd_cdc_acm_cif_num = 0; //assigned during runtime init
+U8 usbd_cdc_acm_dif_num = 0; //assigned during runtime init
 const U8 usbd_cdc_acm_ep_intin = USBD_CDC_ACM_EP_INTIN;
 const U8 usbd_cdc_acm_ep_bulkin = USBD_CDC_ACM_EP_BULKIN;
 const U8 usbd_cdc_acm_ep_bulkout = USBD_CDC_ACM_EP_BULKOUT;
@@ -131,6 +131,7 @@ U8 USBD_CDC_ACM_NotifyBuf[10];
 #endif
 
 #if    (USBD_WEBUSB_ENABLE)
+U8 usbd_webusb_if_num; //assigned during runtime init
 const U8 usbd_webusb_vendor_code = USBD_WEBUSB_VENDOR_CODE;
 #else
 const U8 usbd_webusb_vendor_code;
@@ -140,6 +141,16 @@ const U8 usbd_webusb_vendor_code;
 const U8 usbd_winusb_vendor_code = USBD_WINUSB_VENDOR_CODE;
 #else
 const U8 usbd_winusb_vendor_code;
+#endif
+
+#if    (USBD_BULK_ENABLE)
+U8 usbd_bulk_if_num  = 0; //assigned during runtime init
+const U8 usbd_bulk_ep_bulkin = USBD_BULK_EP_BULKIN;
+const U8 usbd_bulk_ep_bulkout = USBD_BULK_EP_BULKOUT;
+const U16 usbd_bulk_maxpacketsize[2] = {USBD_BULK_WMAXPACKETSIZE, USBD_BULK_HS_WMAXPACKETSIZE};
+const U16 USBD_Bulk_BulkBufSize = USBD_BULK_MAX_PACKET;
+U8 USBD_Bulk_BulkInBuf[USBD_BULK_MAX_PACKET];
+U8 USBD_Bulk_BulkOutBuf[USBD_BULK_MAX_PACKET];
 #endif
 
 /*------------------------------------------------------------------------------
@@ -284,7 +295,7 @@ void USBD_Configure_Event(void)
 #endif
 #endif
 #else
-#if   ((USBD_HID_EP_INTOUT != 0) && (USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT))
+#if   (USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT)
 #if    (USBD_HID_EP_INTIN == 1)
 #define USBD_EndPoint1                 USBD_HID_EP_INTIN_Event
 #elif  (USBD_HID_EP_INTIN == 2)
@@ -348,7 +359,9 @@ void USBD_Configure_Event(void)
 #elif  (USBD_HID_EP_INTOUT == 15)
 #define USBD_EndPoint15                USBD_HID_EP_INTOUT_Event
 #endif
-#elif    (USBD_HID_EP_INTOUT != 0)
+
+#else
+
 #if    (USBD_HID_EP_INTIN == 1)
 #define USBD_EndPoint1                 USBD_HID_EP_INT_Event
 #elif  (USBD_HID_EP_INTIN == 2)
@@ -380,40 +393,10 @@ void USBD_Configure_Event(void)
 #elif  (USBD_HID_EP_INTIN == 15)
 #define USBD_EndPoint15                USBD_HID_EP_INT_Event
 #endif
-#else
-#if    (USBD_HID_EP_INTIN == 1)
-#define USBD_EndPoint1                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 2)
-#define USBD_EndPoint2                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 3)
-#define USBD_EndPoint3                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 4)
-#define USBD_EndPoint4                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 5)
-#define USBD_EndPoint5                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 6)
-#define USBD_EndPoint6                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 7)
-#define USBD_EndPoint7                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 8)
-#define USBD_EndPoint8                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 9)
-#define USBD_EndPoint9                 USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 10)
-#define USBD_EndPoint10                USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 11)
-#define USBD_EndPoint11                USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 12)
-#define USBD_EndPoint12                USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 13)
-#define USBD_EndPoint13                USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 14)
-#define USBD_EndPoint14                USBD_HID_EP_INTIN_Event
-#elif  (USBD_HID_EP_INTIN == 15)
-#define USBD_EndPoint15                USBD_HID_EP_INTIN_Event
-#endif
-#endif
-#endif
+
+#endif /* (USBD_HID_EP_INTIN != USBD_HID_EP_INTOUT) */
+
+#endif /*#ifdef __RTX*/
 #else
 BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
 {
@@ -935,6 +918,110 @@ BOOL USBD_EndPoint0_Out_CDC_ReqToIF(void)
     return (__FALSE);
 }
 #endif  /* (USBD_CDC_ACM_ENABLE) */
+
+#if    (USBD_BULK_ENABLE)
+
+#if    (USBD_BULK_EP_BULKIN != USBD_BULK_EP_BULKOUT)
+
+#if    (USBD_BULK_EP_BULKIN == 1)
+#define USBD_EndPoint1                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 2)
+#define USBD_EndPoint2                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 3)
+#define USBD_EndPoint3                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 4)
+#define USBD_EndPoint4                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 5)
+#define USBD_EndPoint5                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 6)
+#define USBD_EndPoint6                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 7)
+#define USBD_EndPoint7                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 8)
+#define USBD_EndPoint8                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 9)
+#define USBD_EndPoint9                 USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 10)
+#define USBD_EndPoint10                USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 11)
+#define USBD_EndPoint11                USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 12)
+#define USBD_EndPoint12                USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 13)
+#define USBD_EndPoint13                USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 14)
+#define USBD_EndPoint14                USBD_BULK_EP_BULKIN_Event
+#elif  (USBD_BULK_EP_BULKIN == 15)
+#define USBD_EndPoint15                USBD_BULK_EP_BULKIN_Event
+#endif
+
+#if    (USBD_BULK_EP_BULKOUT == 1)
+#define USBD_EndPoint1                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 2)
+#define USBD_EndPoint2                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 3)
+#define USBD_EndPoint3                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 4)
+#define USBD_EndPoint4                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 5)
+#define USBD_EndPoint5                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 6)
+#define USBD_EndPoint6                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 7)
+#define USBD_EndPoint7                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 8)
+#define USBD_EndPoint8                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 9)
+#define USBD_EndPoint9                 USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 10)
+#define USBD_EndPoint10                USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 11)
+#define USBD_EndPoint11                USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 12)
+#define USBD_EndPoint12                USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 13)
+#define USBD_EndPoint13                USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 14)
+#define USBD_EndPoint14                USBD_BULK_EP_BULKOUT_Event
+#elif  (USBD_BULK_EP_BULKOUT == 15)
+#define USBD_EndPoint15                USBD_BULK_EP_BULKOUT_Event
+#endif
+
+#else
+#if    (USBD_BULK_EP_BULKIN == 1)
+#define USBD_EndPoint1                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 2)
+#define USBD_EndPoint2                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 3)
+#define USBD_EndPoint3                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 4)
+#define USBD_EndPoint4                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 5)
+#define USBD_EndPoint5                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 6)
+#define USBD_EndPoint6                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 7)
+#define USBD_EndPoint7                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 8)
+#define USBD_EndPoint8                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 9)
+#define USBD_EndPoint9                 USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 10)
+#define USBD_EndPoint10                USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 11)
+#define USBD_EndPoint11                USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 12)
+#define USBD_EndPoint12                USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 13)
+#define USBD_EndPoint13                USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 14)
+#define USBD_EndPoint14                USBD_BULK_EP_BULK_Event
+#elif  (USBD_BULK_EP_BULKIN == 15)
+#define USBD_EndPoint15                USBD_BULK_EP_BULK_Event
+#endif
+#endif
+
+#endif  /* (USBD_BULK_ENABLE) */
 
 #if    (USBD_CLS_ENABLE)
 #else
@@ -1495,15 +1582,17 @@ void USBD_RTX_TaskInit(void)
                                            /* CDC Interface 2 */                                                                                  \
                                            USB_INTERFACE_DESC_SIZE + USB_ENDPOINT_DESC_SIZE + USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + USB_HID_DESC_SIZE                                                          + \
-                                          (USB_ENDPOINT_DESC_SIZE*(1+(USBD_HID_EP_INTOUT != 0))))
-//REORDER FOR MSC
+                                          (USB_ENDPOINT_DESC_SIZE*((USBD_HID_EP_INTIN != 0)+(USBD_HID_EP_INTOUT != 0))))
+#define USBD_BULK_DESC_LEN                (USB_INTERFACE_DESC_SIZE + 2*USB_ENDPOINT_DESC_SIZE)
+
 #define USBD_HID_DESC_OFS                 (USB_CONFIGUARTION_DESC_SIZE + USB_INTERFACE_DESC_SIZE                                                + \
-                                           USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
-                                         
+                                           USBD_MSC_ENABLE * USBD_MSC_DESC_LEN + USBD_CDC_ACM_ENABLE * USBD_CDC_ACM_DESC_LEN)
+  
 #define USBD_WTOTALLENGTH_MAX              (USB_CONFIGUARTION_DESC_SIZE +                 \
                                            USBD_CDC_ACM_DESC_LEN * USBD_CDC_ACM_ENABLE + \
                                            USBD_HID_DESC_LEN     * USBD_HID_ENABLE     + \
                                            (USB_INTERFACE_DESC_SIZE) * USBD_WEBUSB_ENABLE + \
+                                           USBD_BULK_DESC_LEN     * USBD_BULK_ENABLE + \
                                            USBD_MSC_DESC_LEN     * USBD_MSC_ENABLE)
 
 /*------------------------------------------------------------------------------
@@ -1557,7 +1646,7 @@ __weak \
 const U16 USBD_HID_ReportDescriptorSize = sizeof(USBD_HID_ReportDescriptor);
 
 __weak \
-const U16 USBD_HID_DescriptorOffset     = USBD_HID_DESC_OFS;
+U16 USBD_HID_DescriptorOffset     = USBD_HID_DESC_OFS;
 
 /* USB Device Standard Descriptor */
 __weak \
@@ -1642,18 +1731,46 @@ const U8 USBD_DeviceQualifier_HS[] = { 0 };
 
 #if (USBD_WINUSB_ENABLE)
 
-#define USBD_WINUSB_DESC_SET_LEN           170
-#define FUNCTION_SUBSET_LEN                160
-#define DEVICE_INTERFACE_GUIDS_FEATURE_LEN 132
+#define FUNCTION_SUBSET_LEN                 160
+#define DEVICE_INTERFACE_GUIDS_FEATURE_LEN  132
 
-const U8 USBD_WinUSBDescriptorSetDescriptor[] = {
+#define USBD_WINUSB_DESC_SET_LEN            (WINUSB_DESCRIPTOR_SET_HEADER_SIZE + USBD_WEBUSB_ENABLE * FUNCTION_SUBSET_LEN + USBD_BULK_ENABLE * FUNCTION_SUBSET_LEN)
+
+U8 USBD_WinUSBDescriptorSetDescriptor[] = {
     WBVAL(WINUSB_DESCRIPTOR_SET_HEADER_SIZE), /* wLength */
     WBVAL(WINUSB_SET_HEADER_DESCRIPTOR_TYPE), /* wDescriptorType */
     0x00, 0x00, 0x03, 0x06, /* >= Win 8.1 */  /* dwWindowsVersion*/
     WBVAL(USBD_WINUSB_DESC_SET_LEN),          /* wDescriptorSetTotalLength */
+#if (USBD_WEBUSB_ENABLE)    
+    WBVAL(WINUSB_FUNCTION_SUBSET_HEADER_SIZE),// wLength 
+    WBVAL(WINUSB_SUBSET_HEADER_FUNCTION_TYPE),// wDescriptorType 
+    0,                                        // bFirstInterface USBD_WINUSB_IF_NUM
+    0,                                        // bReserved 
+    WBVAL(FUNCTION_SUBSET_LEN),               // wSubsetLength 
+    WBVAL(WINUSB_FEATURE_COMPATIBLE_ID_SIZE), // wLength 
+    WBVAL(WINUSB_FEATURE_COMPATIBLE_ID_TYPE), // wDescriptorType 
+    'W', 'I', 'N', 'U', 'S', 'B', 0, 0,       // CompatibleId
+    0, 0, 0, 0, 0, 0, 0, 0,                   // SubCompatibleId
+    WBVAL(DEVICE_INTERFACE_GUIDS_FEATURE_LEN),// wLength 
+    WBVAL(WINUSB_FEATURE_REG_PROPERTY_TYPE),  // wDescriptorType 
+    WBVAL(WINUSB_PROP_DATA_TYPE_REG_MULTI_SZ), // wPropertyDataType 
+    WBVAL(42), // wPropertyNameLength 
+    'D',0,'e',0,'v',0,'i',0,'c',0,'e',0,
+    'I',0,'n',0,'t',0,'e',0,'r',0,'f',0,'a',0,'c',0,'e',0,
+    'G',0,'U',0,'I',0,'D',0,'s',0,0,0,
+    WBVAL(80), // wPropertyDataLength 
+    '{',0,
+    '9',0,'2',0,'C',0,'E',0,'6',0,'4',0,'6',0,'2',0,'-',0,
+    '9',0,'C',0,'7',0,'7',0,'-',0,
+    '4',0,'6',0,'F',0,'E',0,'-',0,
+    '9',0,'3',0,'3',0,'B',0,'-',
+    0,'3',0,'1',0,'C',0,'B',0,'9',0,'C',0,'5',0,'A',0,'A',0,'3',0,'B',0,'9',0,
+    '}',0,0,0,0,0,
+#endif 
+#if (USBD_BULK_ENABLE)    
     WBVAL(WINUSB_FUNCTION_SUBSET_HEADER_SIZE),/* wLength */
     WBVAL(WINUSB_SUBSET_HEADER_FUNCTION_TYPE),/* wDescriptorType */
-    USBD_WINUSB_IF_NUM,                       /* bFirstInterface */
+    0,                                        /* bFirstInterface USBD_BULK_IF_NUM*/
     0,                                        /* bReserved */
     WBVAL(FUNCTION_SUBSET_LEN),               /* wSubsetLength */
     WBVAL(WINUSB_FEATURE_COMPATIBLE_ID_SIZE), /* wLength */
@@ -1669,12 +1786,13 @@ const U8 USBD_WinUSBDescriptorSetDescriptor[] = {
     'G',0,'U',0,'I',0,'D',0,'s',0,0,0,
     WBVAL(80), /* wPropertyDataLength */
     '{',0,
-    '9',0,'2',0,'C',0,'E',0,'6',0,'4',0,'6',0,'2',0,'-',0,
-    '9',0,'C',0,'7',0,'7',0,'-',0,
-    '4',0,'6',0,'F',0,'E',0,'-',0,
-    '9',0,'3',0,'3',0,'B',0,'-',
-    0,'3',0,'1',0,'C',0,'B',0,'9',0,'C',0,'5',0,'A',0,'A',0,'3',0,'B',0,'9',0,
-    '}',0,0,0,0,0
+    'C',0,'D',0,'B',0,'3',0,'B',0,'5',0,'A',0,'D',0,'-',0,
+    '2',0,'9',0,'3',0,'B',0,'-',0,
+    '4',0,'6',0,'6',0,'3',0,'-',0,
+    'A',0,'A',0,'3',0,'6',0,'-',
+    0,'1',0,'A',0,'A',0,'E',0,'4',0,'6',0,'4',0,'6',0,'3',0,'7',0,'7',0,'6',0,
+    '}',0,0,0,0,0,
+#endif    
 };
 
 #else
@@ -1745,9 +1863,9 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   /* Interface, Alternate Setting 0, HID Class */                                                           \
   USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
-  USBD_HID_IF_NUM,                      /* bInterfaceNumber */                                              \
+  0x00,                                 /* bInterfaceNumber USBD_HID_IF_NUM*/                               \
   0x00,                                 /* bAlternateSetting */                                             \
-  0x01+(USBD_HID_EP_INTOUT != 0),       /* bNumEndpoints */                                                 \
+  0x00+(USBD_HID_EP_INTIN != 0)+(USBD_HID_EP_INTOUT != 0), /*0x01+(USBD_HID_EP_INTOUT != 0),*/       /* bNumEndpoints */                                                 \
   USB_DEVICE_CLASS_HUMAN_INTERFACE,     /* bInterfaceClass */                                               \
   HID_SUBCLASS_NONE,                    /* bInterfaceSubClass */                                            \
   HID_PROTOCOL_NONE,                    /* bInterfaceProtocol */                                            \
@@ -1762,23 +1880,42 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   HID_REPORT_DESCRIPTOR_TYPE,           /* bDescriptorType */                                               \
   WBVAL(USB_HID_REPORT_DESC_SIZE),      /* wDescriptorLength */
 
+#define VENDOR_DESC_IAD(first,num_of_ifs)  /* Vendor: Interface Association Descriptor */                     \
+  USB_INTERFACE_ASSOC_DESC_SIZE,        /* bLength */                                                       \
+  USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,  /* bDescriptorType */                                         \
+ (first),                               /* bFirstInterface */                                               \
+ (num_of_ifs),                          /* bInterfaceCount */                                               \
+  USB_DEVICE_CLASS_VENDOR_SPECIFIC,    /* bFunctionClass     */                       \
+  0x00,           /* bFunctionSubclass */                    \
+  0x00,                                 /* bFunctionProtocol */               \
+  0x00,             /* iFunction */
+
 #define WEBUSB_DESC                                                                                            \
 /* Interface, Alternate Setting 0, VENDOR_SPECIFIC Class */                                                           \
   USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
-  USBD_WEBUSB_IF_NUM,                /* bInterfaceNumber */                                              \
+  0x00,                                 /* bInterfaceNumber USBD_WEBUSB_IF_NUM */                           \
   0x00,                                 /* bAlternateSetting */                                             \
   0x00,                                 /* bNumEndpoints */                                                 \
   USB_DEVICE_CLASS_VENDOR_SPECIFIC,     /* bInterfaceClass */                                               \
   USB_DEVICE_CLASS_HUMAN_INTERFACE,     /* bInterfaceSubClass */                                            \
   HID_PROTOCOL_NONE,                    /* bInterfaceProtocol */                                            \
-  USBD_WEBUSB_IF_STR_NUM,                  /* iInterface */                                                    \
+  USBD_WEBUSB_IF_STR_NUM,               /* iInterface */                                                    \
 
-#define HID_EP                          /* HID Endpoint for Low-speed/Full-speed */                         \
+#define HID_EP_IN                       /* HID Endpoint for Low-speed/Full-speed */                         \
 /* Endpoint, HID Interrupt In */                                                                            \
   USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
   USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
   USB_ENDPOINT_IN(USBD_HID_EP_INTIN),   /* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
+  WBVAL(USBD_HID_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
+  USBD_HID_BINTERVAL,                   /* bInterval */
+
+#define HID_EP_OUT                          /* HID Endpoint for Low-speed/Full-speed */                         \
+/* Endpoint, HID Interrupt Out */                                                                           \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_OUT(USBD_HID_EP_INTOUT), /* bEndpointAddress */                                              \
   USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
   WBVAL(USBD_HID_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
   USBD_HID_BINTERVAL,                   /* bInterval */
@@ -1800,11 +1937,20 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   WBVAL(USBD_HID_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
   USBD_HID_BINTERVAL,                   /* bInterval */
 
-#define HID_EP_HS                       /* HID Endpoint for High-speed */                                   \
+#define HID_EP_IN_HS                       /* HID Endpoint for High-speed */                                   \
 /* Endpoint, HID Interrupt In */                                                                            \
   USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
   USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
   USB_ENDPOINT_IN(USBD_HID_EP_INTIN),   /* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
+  WBVAL(USBD_HID_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
+  USBD_HID_HS_BINTERVAL,                /* bInterval */
+
+#define HID_EP_OUT_HS                       /* HID Endpoint for High-speed */                                   \
+/* Endpoint, HID Interrupt Out */                                                                           \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_OUT(USBD_HID_EP_INTOUT), /* bEndpointAddress */                                              \
   USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
   WBVAL(USBD_HID_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
   USBD_HID_HS_BINTERVAL,                /* bInterval */
@@ -1830,7 +1976,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
 /* Interface, Alternate Setting 0, MSC Class */                                                             \
   USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
-  USBD_MSC_IF_NUM,                      /* bInterfaceNumber */                                              \
+  0x00,                                 /* bInterfaceNumber USBD_MSC_IF_NUM*/                               \
   0x00,                                 /* bAlternateSetting */                                             \
   0x02,                                 /* bNumEndpoints */                                                 \
   USB_DEVICE_CLASS_STORAGE,             /* bInterfaceClass */                                               \
@@ -1871,6 +2017,52 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
   WBVAL(USBD_MSC_HS_WMAXPACKETSIZE),    /* wMaxPacketSize */                                                \
   USBD_MSC_HS_BINTERVAL,                /* bInterval */
+  
+#define BULK_DESC                                                                                            \
+/* Interface, Alternate Setting 0, MSC Class */                                                             \
+  USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
+  USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
+  0x00,                                 /* bInterfaceNumber USBD_BULK_IF_NUM*/                             \
+  0x00,                                 /* bAlternateSetting */                                             \
+  0x02,                                 /* bNumEndpoints */                                                 \
+  USB_DEVICE_CLASS_VENDOR_SPECIFIC,     /* bInterfaceClass */                                               \
+  0x00,                                 /* bInterfaceSubClass */                                            \
+  0x00,                                 /* bInterfaceProtocol */                                            \
+  USBD_BULK_IF_STR_NUM,                  /* iInterface */
+
+#define BULK_EP                          /* MSC Endpoints for Low-speed/Full-speed */                        \
+/* Endpoint, EP Bulk OUT */                                                                                 \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_OUT(USBD_BULK_EP_BULKOUT),/* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
+  WBVAL(USBD_BULK_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
+  0x00,                                 /* bInterval: ignore for Bulk transfer */                           \
+                                                                                                            \
+/* Endpoint, EP Bulk IN */                                                                                  \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_IN(USBD_BULK_EP_BULKIN),  /* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
+  WBVAL(USBD_BULK_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
+  0x00,                                 /* bInterval: ignore for Bulk transfer */                           
+
+#define BULK_EP_HS                          /* MSC Endpoints for Low-speed/Full-speed */                        \
+/* Endpoint, EP Bulk OUT */                                                                                  \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_OUT(USBD_BULK_EP_BULKOUT),  /* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
+  WBVAL(USBD_BULK_HS_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
+  0x00,                                 /* bInterval: ignore for Bulk transfer */                           \
+                                                                                                            \
+/* Endpoint, EP Bulk IN */                                                                                 \
+  USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
+  USB_ENDPOINT_DESCRIPTOR_TYPE,         /* bDescriptorType */                                               \
+  USB_ENDPOINT_IN(USBD_BULK_EP_BULKIN),/* bEndpointAddress */                                              \
+  USB_ENDPOINT_TYPE_BULK,               /* bmAttributes */                                                  \
+  WBVAL(USBD_BULK_HS_WMAXPACKETSIZE),       /* wMaxPacketSize */                                                \
+  0x00,                                 /* bInterval: ignore for Bulk transfer */                           
 
 #define ADC_DESC_IAD(first,num_of_ifs)  /* ADC: Interface Association Descriptor */                         \
   USB_INTERFACE_ASSOC_DESC_SIZE,        /* bLength */                                                       \
@@ -2034,7 +2226,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
 /* Interface, Alternate Setting 0, CDC Class */                                                             \
   USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
-  USBD_CDC_ACM_CIF_NUM,                 /* bInterfaceNumber: Number of Interface */                         \
+  0x00,                                 /* bInterfaceNumber: Number of Interface USBD_CDC_ACM_CIF_NUM*/    \
   0x00,                                 /* bAlternateSetting: Alternate setting */                          \
   0x01,                                 /* bNumEndpoints: One endpoint used */                              \
   CDC_COMMUNICATION_INTERFACE_CLASS,    /* bInterfaceClass: Communication Interface Class */                \
@@ -2062,8 +2254,8 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   CDC_UNION_SIZE,                       /* bFunctionLength */                                               \
   CDC_CS_INTERFACE,                     /* bDescriptorType: CS_INTERFACE */                                 \
   CDC_UNION,                            /* bDescriptorSubtype: Union func desc */                           \
-  USBD_CDC_ACM_CIF_NUM,                 /* bMasterInterface: Communication class interface is master */     \
-  USBD_CDC_ACM_DIF_NUM,                 /* bSlaveInterface0: Data class interface is slave 0 */
+  0x00,                                 /* bMasterInterface: Communication class interface is master USBD_CDC_ACM_CIF_NUM*/ \
+  0x00,                                 /* bSlaveInterface0: Data class interface is slave 0 USBD_CDC_ACM_DIF_NUM*/
 
 #define CDC_ACM_EP_IF0                  /* CDC Endpoints for Interface 0 for Low-speed/Full-speed */        \
 /* Endpoint, EP Interrupt IN */         /* event notification (optional) */                                 \
@@ -2087,7 +2279,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
 /* Interface, Alternate Setting 0, Data class interface descriptor*/                                        \
   USB_INTERFACE_DESC_SIZE,              /* bLength */                                                       \
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
-  USBD_CDC_ACM_DIF_NUM,                 /* bInterfaceNumber: Number of Interface */                         \
+  0x00,                                 /* bInterfaceNumber: Number of Interface USBD_CDC_ACM_DIF_NUM*/      \
   0x00,                                 /* bAlternateSetting: no alternate setting */                       \
   0x02,                                 /* bNumEndpoints: two endpoints used */                             \
   CDC_DATA_INTERFACE_CLASS,             /* bInterfaceClass: Data Interface Class */                         \
@@ -2132,230 +2324,17 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
 /* USB Device Configuration Descriptor (for Full Speed) */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-U8 USBD_ConfigDescriptor[] = { //make it configurable
-    /* Configuration 1 */
-    USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
-    USB_CONFIGURATION_DESCRIPTOR_TYPE,    /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
-    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
-    0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
-    0x00,                                 /* iConfiguration: no string to describe this configuration */
-    USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
-    (USBD_POWER << 6),
-    USBD_CFGDESC_BMAXPOWER,               /* bMaxPower, device power consumption */
-
-#if (USBD_ADC_ENABLE)
-#if (USBD_MULTI_IF)
-    ADC_DESC_IAD(USBD_ADC_CIF_NUM, 2)
-#endif
-    ADC_DESC
-    ADC_EP
-#endif
-
-#if (USBD_CDC_ACM_ENABLE)
-#if (USBD_MULTI_IF)
-    CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM, 2)
-#endif
-    CDC_ACM_DESC_IF0
-    CDC_ACM_EP_IF0
-    CDC_ACM_DESC_IF1
-    CDC_ACM_EP_IF1
-#endif
-
-#if (USBD_HID_ENABLE)
-    HID_DESC
-#if (USBD_HID_EP_INTOUT != 0)
-    HID_EP_INOUT
-#else
-    HID_EP
-#endif
-#endif
-
-#if (USBD_WEBUSB_ENABLE)
-    WEBUSB_DESC
-#endif
-
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP
-#endif
-
-    /* Terminator */                                                                                            \
-    0                                     /* bLength */                                                       \
-};
+U8 USBD_ConfigDescriptor[200] = { 0 };
 
 #if (USBD_HS_ENABLE == 0)               /* If High-speed not enabled, declare dummy descriptors for High-speed */
 __weak \
-const U8 USBD_ConfigDescriptor_HS[] = { 0 };
-__weak \
-const U8 USBD_OtherSpeedConfigDescriptor[] = { 0 };
-__weak \
-const U8 USBD_OtherSpeedConfigDescriptor_HS[] = { 0 };
+U8 USBD_ConfigDescriptor_HS[] = { 0 };
 #else
-
 /* USB Device Configuration Descriptor (for High Speed) */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
 __weak \
-U8 USBD_ConfigDescriptor_HS[] = { //make it configurable
-    /* Configuration 1 */
-    USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
-    USB_CONFIGURATION_DESCRIPTOR_TYPE,    /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
-    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
-    0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
-    0x00,                                 /* iConfiguration: no string to describe this configuration */
-    USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
-    (USBD_POWER << 6),
-    USBD_CFGDESC_BMAXPOWER,               /* bMaxPower, device power consumption */
+U8 USBD_ConfigDescriptor_HS[200] = { 0 };
 
-#if (USBD_ADC_ENABLE)
-#if (USBD_MULTI_IF)
-    ADC_DESC_IAD(USBD_ADC_CIF_NUM, 2)
-#endif
-    ADC_DESC
-    ADC_EP_HS
-#endif
-
-#if (USBD_CDC_ACM_ENABLE)
-#if (USBD_MULTI_IF)
-    CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM, 2)
-#endif
-    CDC_ACM_DESC_IF0
-    CDC_ACM_EP_IF0_HS
-    CDC_ACM_DESC_IF1
-    CDC_ACM_EP_IF1_HS
-#endif
-
-#if (USBD_HID_ENABLE)
-    HID_DESC
-#if (USBD_HID_EP_INTOUT != 0)
-    HID_EP_INOUT_HS
-#else
-    HID_EP_HS
-#endif
-#endif
-
-#if (USBD_WEBUSB_ENABLE)
-    WEBUSB_DESC
-#endif
-//REORDER FOR MSC
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP_HS
-#endif
-    /* Terminator */                                                                                            \
-    0                                     /* bLength */                                                       \
-};
-
-/* USB Device Other Speed Configuration Descriptor (for Full Speed) */
-/*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
-__weak \
-U8 USBD_OtherSpeedConfigDescriptor[] = { //make it configurable
-    /* Configuration 1 */
-    USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
-    USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE, /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
-    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
-    0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
-    0x00,                                 /* iConfiguration: no string to describe this configuration */
-    USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
-    (USBD_POWER << 6),
-    USBD_CFGDESC_BMAXPOWER,               /* bMaxPower, device power consumption */
-
-#if (USBD_ADC_ENABLE)
-#if (USBD_MULTI_IF)
-    ADC_DESC_IAD(USBD_ADC_CIF_NUM, 2)
-#endif
-    ADC_DESC
-    ADC_EP_HS
-#endif
-
-#if (USBD_CDC_ACM_ENABLE)
-#if (USBD_MULTI_IF)
-    CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM, 2)
-#endif
-    CDC_ACM_DESC_IF0
-    CDC_ACM_EP_IF0_HS
-    CDC_ACM_DESC_IF1
-    CDC_ACM_EP_IF1_HS
-#endif
-
-#if (USBD_HID_ENABLE)
-    HID_DESC
-#if (USBD_HID_EP_INTOUT != 0)
-    HID_EP_INOUT_HS
-#else
-    HID_EP_HS
-#endif
-#endif
-
-#if (USBD_WEBUSB_ENABLE)
-    WEBUSB_DESC
-#endif
-
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP_HS
-#endif
-
-    /* Terminator */
-    0                                     /* bLength */
-};
-
-/* USB Device Other Speed Configuration Descriptor for High Speed */
-/*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor) */
-__weak \
-U8 USBD_OtherSpeedConfigDescriptor_HS[] = { //make it configurable
-    /* Configuration 1 */
-    USB_CONFIGUARTION_DESC_SIZE,          /* bLength */
-    USB_OTHER_SPEED_CONFIG_DESCRIPTOR_TYPE, /* bDescriptorType */
-    WBVAL(USBD_WTOTALLENGTH_MAX),             /* wTotalLength */
-    USBD_IF_NUM_MAX,                          /* bNumInterfaces */
-    0x01,                                 /* bConfigurationValue: 0x01 is used to select this configuration */
-    0x00,                                 /* iConfiguration: no string to describe this configuration */
-    USBD_CFGDESC_BMATTRIBUTES |           /* bmAttributes */
-    (USBD_POWER << 6),
-    USBD_CFGDESC_BMAXPOWER,               /* bMaxPower, device power consumption */
-
-#if (USBD_ADC_ENABLE)
-#if (USBD_MULTI_IF)
-    ADC_DESC_IAD(USBD_ADC_CIF_NUM, 2)
-#endif
-    ADC_DESC
-    ADC_EP
-#endif
-
-#if (USBD_CDC_ACM_ENABLE)
-#if (USBD_MULTI_IF)
-    CDC_ACM_DESC_IAD(USBD_CDC_ACM_CIF_NUM, 2)
-#endif
-    CDC_ACM_DESC_IF0
-    CDC_ACM_EP_IF0
-    CDC_ACM_DESC_IF1
-    CDC_ACM_EP_IF1
-#endif
-
-#if (USBD_HID_ENABLE)
-    HID_DESC
-#if (USBD_HID_EP_INTOUT != 0)
-    HID_EP_INOUT
-#else
-    HID_EP
-#endif
-#endif
-
-#if (USBD_WEBUSB_ENABLE)
-    WEBUSB_DESC
-#endif
-
-#if (USBD_MSC_ENABLE)
-    MSC_DESC
-    MSC_EP
-#endif
-
-    /* Terminator */
-    0                                     /* bLength */
-};
 #endif
 
 /* USB Device Create String Descriptor */
@@ -2399,6 +2378,9 @@ const struct {
 #if (USBD_MSC_ENABLE)
     USBD_STR_DEF(MSC_STRDESC);
 #endif
+#if (USBD_BULK_ENABLE)
+    USBD_STR_DEF(BULK_STRDESC);
+#endif
 } USBD_StringDescriptor
 = {
     { 4, USB_STRING_DESCRIPTOR_TYPE, USBD_STRDESC_LANGID },
@@ -2424,6 +2406,9 @@ const struct {
 #endif
 #if (USBD_MSC_ENABLE)
     USBD_STR_VAL(MSC_STRDESC),
+#endif
+#if (USBD_BULK_ENABLE)
+    USBD_STR_VAL(BULK_STRDESC),
 #endif
 };
 
@@ -2485,48 +2470,271 @@ BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
 extern uint8_t flash_algo_valid(void);
 extern uint8_t target_family_valid(void);
 
+static U16 start_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 start_desc[] = { 
+        /* Configuration 1 */
+        USB_CONFIGUARTION_DESC_SIZE,                // bLength 
+        USB_CONFIGURATION_DESCRIPTOR_TYPE,          // bDescriptorType 
+        WBVAL(USBD_WTOTALLENGTH_MAX),               // wTotalLength 
+        USBD_IF_NUM_MAX,                            // bNumInterfaces 
+        0x01,                                       // bConfigurationValue: 0x01 is used to select this configuration 
+        0x00,                                       // iConfiguration: no string to describe this configuration 
+        USBD_CFGDESC_BMATTRIBUTES |                 // bmAttributes 
+        (USBD_POWER << 6),
+        USBD_CFGDESC_BMAXPOWER                      // bMaxPower, device power consumption 
+    };
+    pD = config_desc;
+    memcpy(pD, start_desc, sizeof(start_desc));
+    
+#if (USBD_HS_ENABLE == 1)
+    pD = config_desc_hs;
+    memcpy(pD, start_desc, sizeof(start_desc));
+#endif
+    
+    return sizeof(start_desc);
+}
+
+static U16 hid_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 hid_desc[] = {
+        HID_DESC
+    #if ((USBD_HID_EP_INTOUT != 0) && (USBD_HID_EP_INTIN != 0))
+        HID_EP_INOUT
+    #elif (USBD_HID_EP_INTIN != 0)
+        HID_EP_IN
+    #elif (USBD_HID_EP_INTOUT != 0)
+        HID_EP_OUT
+    #endif
+    };
+    pD = config_desc;
+    memcpy(pD, hid_desc, sizeof(hid_desc));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#if (USBD_HS_ENABLE == 1)  
+    const U8 hid_desc_hs[] = {
+        HID_DESC
+    #if ((USBD_HID_EP_INTOUT != 0) && (USBD_HID_EP_INTIN != 0))
+        HID_EP_INOUT_HS
+    #elif (USBD_HID_EP_INTIN != 0) //#else
+        HID_EP_IN_HS
+    #elif (USBD_HID_EP_INTOUT != 0)
+        HID_EP_OUT_HS
+    #endif
+    };
+    pD = config_desc_hs;
+    memcpy(pD, hid_desc_hs, sizeof(hid_desc_hs));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#endif    
+    return sizeof(hid_desc);
+}
+
+static U16 acm_cdc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 cdc_desc[] = {
+    #if (USBD_MULTI_IF)
+        CDC_ACM_DESC_IAD(0, 2)
+    #endif
+        CDC_ACM_DESC_IF0
+        CDC_ACM_EP_IF0
+        CDC_ACM_DESC_IF1
+        CDC_ACM_EP_IF1
+    };
+    pD = config_desc;
+    memcpy(pD, cdc_desc, sizeof(cdc_desc));
+
+#if (USBD_MULTI_IF)
+    ((USB_INTERFACE_ASSOCIATION_DESCRIPTOR *)pD)->bFirstInterface = if_num;
+    pD += USB_INTERFACE_ASSOC_DESC_SIZE;
+#endif    
+    
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
+    ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
+    ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
+    pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num + 1;
+
+#if (USBD_HS_ENABLE == 1)    
+    const U8 cdc_desc_hs[] = {
+    #if (USBD_MULTI_IF)
+        CDC_ACM_DESC_IAD(0, 2)
+    #endif
+        CDC_ACM_DESC_IF0
+        CDC_ACM_EP_IF0_HS
+        CDC_ACM_DESC_IF1
+        CDC_ACM_EP_IF1_HS
+    };
+     pD = config_desc_hs;
+    memcpy(pD, cdc_desc_hs, sizeof(cdc_desc_hs));
+    
+#if (USBD_MULTI_IF)
+    ((USB_INTERFACE_ASSOCIATION_DESCRIPTOR *)pD)->bFirstInterface = if_num;
+    pD += USB_INTERFACE_ASSOC_DESC_SIZE;
+#endif    
+    
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
+    ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
+    ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
+    pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num +1 ;
+#endif  //(USBD_HS_ENABLE == 1)    
+    return sizeof(cdc_desc);
+}
+
+static U16 msc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 msc_desc[] = { 
+        MSC_DESC
+        MSC_EP
+    };
+    pD = config_desc;
+    memcpy(pD, msc_desc, sizeof(msc_desc));
+    
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+
+#if (USBD_HS_ENABLE == 1)     
+    const U8 msc_desc_hs[] = { 
+        MSC_DESC
+        MSC_EP_HS
+    };
+    pD = config_desc_hs;
+    memcpy(pD, msc_desc_hs, sizeof(msc_desc_hs));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#endif
+    
+    return sizeof(msc_desc);
+}
+
+#if (USBD_WEBUSB_ENABLE)
+static U16 webusb_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 webusb_desc[] = {
+        WEBUSB_DESC
+    };
+    pD = config_desc;
+    memcpy(pD, webusb_desc, sizeof(webusb_desc));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+    
+#if (USBD_HS_ENABLE == 1)
+    pD = config_desc_hs;
+    memcpy(pD, webusb_desc, sizeof(webusb_desc));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#endif
+    
+#if (USBD_WINUSB_ENABLE)
+    pD = USBD_WinUSBDescriptorSetDescriptor + WINUSB_DESCRIPTOR_SET_HEADER_SIZE;
+    ((WINUSB_FUNCTION_SUBSET_HEADER*)pD)->bFirstInterface = if_num;
+#else
+#error "WEBUSB requires WINUSB!"
+#endif
+    
+    return sizeof(webusb_desc); 
+}
+#endif
+
+#if (USBD_BULK_ENABLE)
+static U16 bulk_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
+    U8 * pD = 0;
+    const U8 bulk_desc[] = { 
+        BULK_DESC
+        BULK_EP
+    };
+    pD = config_desc;
+    memcpy(pD, bulk_desc, sizeof(bulk_desc));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#if (USBD_HS_ENABLE == 1)   
+    const U8 bulk_desc_hs[] = { 
+        BULK_DESC
+        BULK_EP_HS
+    };
+     pD = config_desc_hs;
+    memcpy(pD, bulk_desc_hs, sizeof(bulk_desc_hs));
+    ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
+#endif
+
+#if (USBD_WINUSB_ENABLE)
+    pD = USBD_WinUSBDescriptorSetDescriptor + WINUSB_DESCRIPTOR_SET_HEADER_SIZE;
+#if (USBD_WEBUSB_ENABLE)
+    pD += WINUSB_FUNCTION_SUBSET_HEADER_SIZE + WINUSB_FEATURE_COMPATIBLE_ID_SIZE + DEVICE_INTERFACE_GUIDS_FEATURE_LEN;
+#endif
+    ((WINUSB_FUNCTION_SUBSET_HEADER*)pD)->bFirstInterface = if_num;
+#else
+#error "BULK interfaces requires WINUSB!"
+#endif
+    
+    return sizeof(bulk_desc);
+}
+#endif
+
 void usbd_class_init(void)
 {   
+    U8  if_num = 0;
+    U16 desc_ptr = 0;
+    
+    desc_ptr += start_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], if_num);    
+    
+#if (USBD_ADC_ENABLE)
+    usbd_adc_init();
+#endif
+
+
+#if (USBD_MSC_ENABLE)        
+    
 #if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
     //change descriptors here
-    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 || target_family_valid()==0){
+    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 ){
         usbd_if_num -= USBD_MSC_ENABLE;
         USB_CONFIGURATION_DESCRIPTOR * usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
         usb_conf_desc->bNumInterfaces = usbd_if_num;
         U16 usb_wtotal_len = USBD_WTOTALLENGTH_MAX - (USBD_MSC_DESC_LEN     * USBD_MSC_ENABLE);
-        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        usb_conf_desc->wTotalLength = usb_wtotal_len;
         USBD_ConfigDescriptor[usb_wtotal_len] = 0;
+        USBD_HID_DescriptorOffset -= USBD_MSC_ENABLE * USBD_MSC_DESC_LEN;
 #if (USBD_HS_ENABLE == 1)
         usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor_HS;
         usb_conf_desc->bNumInterfaces = usbd_if_num;
-        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
+        usb_conf_desc->wTotalLength = usb_wtotal_len;
         USBD_ConfigDescriptor_HS[usb_wtotal_len] = 0;
-        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_OtherSpeedConfigDescriptor;
-        usb_conf_desc->bNumInterfaces = usbd_if_num;
-        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
-        USBD_OtherSpeedConfigDescriptor[usb_wtotal_len] = 0;
-        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_OtherSpeedConfigDescriptor_HS;
-        usb_conf_desc->bNumInterfaces = usbd_if_num;
-        usb_conf_desc->wTotalLength = WBVAL(usb_wtotal_len);
-        USBD_OtherSpeedConfigDescriptor_HS[usb_wtotal_len] = 0;
 #endif         
-    }
+    } else
 #endif
-#if (USBD_HID_ENABLE)
-    usbd_hid_init();
-#endif
-#if (USBD_MSC_ENABLE)
+    {
+    usbd_msc_if_num = if_num++;
+    desc_ptr += msc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_msc_if_num);
     usbd_msc_init();
-#endif
-#if (USBD_ADC_ENABLE)
-    usbd_adc_init();
-#endif
+
+    }
+#endif //#if (USBD_MSC_ENABLE)  
+
 #if (USBD_CDC_ACM_ENABLE)
+    usbd_cdc_acm_cif_num = if_num++;
+    usbd_cdc_acm_dif_num = if_num++;
+    desc_ptr += acm_cdc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_cdc_acm_cif_num);
     USBD_CDC_ACM_Initialize();
 #endif
+
+#if (USBD_HID_ENABLE) 
+    usbd_hid_if_num = if_num++;
+    desc_ptr += hid_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_hid_if_num);
+    usbd_hid_init();
+#endif
+
+#if (USBD_WEBUSB_ENABLE)
+    usbd_webusb_if_num = if_num++;   
+    desc_ptr += webusb_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_webusb_if_num);
+#endif
+
+#if (USBD_BULK_ENABLE)
+    usbd_bulk_if_num = if_num++;  
+    desc_ptr += bulk_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_bulk_if_num);
+    usbd_bulk_init();
+#endif
+
 #if (USBD_CLS_ENABLE)
     usbd_cls_init();
 #endif
+
 }
 
 #endif  //USBD_ENABLE

@@ -122,6 +122,15 @@ PROJECT_RELEASE_INFO = {
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
+    ('kl26z_if',                                    False,      0x0000,     "bin"       ),
+    ('k20dx_if',                                    False,      0x0000,     "bin"       ),
+    ('k26f_if',                                     False,      0x0000,     "bin"       ),
+    ('lpc11u35_if',                                 False,      0x0000,     "bin"       ),
+    ('lpc4322_if',                                  False,      0x0000,     "bin"       ),
+    ('max32620_if',                                 False,      0x0000,     "bin"       ),
+    ('max32625_if',                                 False,      0x0000,     "bin"       ),
+    ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
+    ('stm32f103xb_if',                              False,      0x0000,     "bin"       ),
 }
 
 # Add new HICs here
@@ -260,6 +269,15 @@ SUPPORTED_CONFIGURATIONS = [
     (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_if',                                 None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k26f_if',                                  None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_if',                              None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_if',                               None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_if',                              None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),
 ]
 
 # Add new HICs here

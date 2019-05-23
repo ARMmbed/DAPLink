@@ -272,8 +272,11 @@ void USBD_HID_EP_INTIN_Event(U32 event)
         if (bytes_to_send > usbd_hid_maxpacketsize[USBD_HighSpeed]) {
             bytes_to_send = usbd_hid_maxpacketsize[USBD_HighSpeed];
         }
-
-        USBD_WriteEP(usbd_hid_ep_intin | 0x80, ptrDataOut, bytes_to_send);
+        
+        if (usbd_hid_ep_intin != 0) { //control ep does the sending to host
+            USBD_WriteEP(usbd_hid_ep_intin | 0x80, ptrDataOut, bytes_to_send);
+        }
+        
         ptrDataOut     += bytes_to_send;
         DataOutSentLen += bytes_to_send;
 
