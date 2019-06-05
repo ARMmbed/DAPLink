@@ -1,0 +1,18 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+        - MUSCA_B_BOOT_QSPI_FLASH
+    includes:
+        - source/board/override_musca_b
+        - source/family/arm/musca_b
+    sources:
+        board:
+            - source/board/musca_b.c
+        daplink_if:
+            - source/family/arm/musca_b/syscon.c
+            - source/family/arm/musca_b/power_ctrl.c
+            - source/family/arm/musca_b/utils.c
+            - source/family/arm/musca_b/i2c_gpio.c
+        family:
+            - source/family/arm/musca_b/target.c
+            - source/family/arm/musca_b/target_reset.c
