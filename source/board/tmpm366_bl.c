@@ -20,25 +20,36 @@
  */
 
 #include "target_config.h"
+#include "daplink_addr.h"
+#include "compiler.h"
 #include "target_board.h"
 #include "target_family.h"
 
 
 // Warning - changing the interface start will break backwards compatibility
-//COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(64));
-//COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(92));
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(64));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(92));
+
+/**
+* List of start and size for each size of flash sector
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address start + size.
+*/
+static const sector_info_t sectors_info[] = {
+    {DAPLINK_ROM_IF_START, 0x1000},
+};
 
 // tmpm366_256 target information
 target_cfg_t target_device = {
-    .sector_size    = 0x200,
-    // Assume memory is regions are same size. Flash algo should ignore requests
-    // when variable sized sectors exist
-    // .sector_cnt = ((.flash_end - .flash_start) / .sector_size);
-    .sector_cnt     = ((KB(256) -  0x10000) / 0x200),
-    .flash_start    = 0x00000000 + 0x10000,
-    .flash_end      = 0x00000000 + KB(256),
-    .ram_start      = 0x20000000,
-    .ram_end        = 0x2000C000
+    .sectors_info               = sectors_info,
+    .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start     = DAPLINK_ROM_IF_START,
+    .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
+    .flash_regions[0].flags     = kRegionIsDefault,  
+    .ram_regions[0].start       = 0x20000000,
+    .ram_regions[0].end         = 0x2000C000,
     /* .flash_algo not needed for bootloader */
 };
 

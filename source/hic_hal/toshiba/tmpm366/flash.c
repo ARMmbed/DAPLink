@@ -70,16 +70,16 @@ uint32_t EraseChip(void)
     cortex_int_state_t state = cortex_int_get_and_disable();
     
     if (g_board_info.target_cfg) {
-        util_assert((g_board_info.target_cfg->flash_end - g_board_info.target_cfg->flash_start) %
+        util_assert((g_board_info.target_cfg->flash_regions[0].end - g_board_info.target_cfg->flash_regions[0].start) %
                     PAGE_SIZE == 0);
         // Erase the contents of the entire chip
         // Start Chip Erase Command
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-        M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0x80;
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-        M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0x10;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0x80;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0x10;
         __DSB();
 
         while ((FLCSF0 & FLCS_RDY) != FLCS_RDY); // Wait until completed
@@ -97,11 +97,11 @@ uint32_t EraseSector(uint32_t adr)
     cortex_int_state_t state = cortex_int_get_and_disable();
 
     // Start Block Erase Command
-    M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-    M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
-    M32(g_board_info.target_cfg->flash_start + 0x5400) = 0x80;
-    M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-    M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0x80;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
 
     M32(adr) = 0x30;
     __DSB();
@@ -129,9 +129,9 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
         addr = (uint32_t *) dest;
         temp = source;   
         // Start Page Programming Command
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-        M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
-        M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xA0;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
+        M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xA0;
 
         // Write Page Data
         for (i = 0; i < (PAGE_SIZE / 4); i++) {
@@ -148,9 +148,9 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     addr = (uint32_t *) dest;
     temp = source;   
     // Start Page Programming Command
-    M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xAA;
-    M32(g_board_info.target_cfg->flash_start + 0xAA00) = 0x55;
-    M32(g_board_info.target_cfg->flash_start + 0x5400) = 0xA0;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xAA;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0xAA00) = 0x55;
+    M32(g_board_info.target_cfg->flash_regions[0].start + 0x5400) = 0xA0;
 
     // Write Page Data
     for (i = 0; i < (PAGE_SIZE / 4); i++) {

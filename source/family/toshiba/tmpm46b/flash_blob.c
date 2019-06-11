@@ -67,7 +67,7 @@ static const program_target_t flash = {
     {
         0x20000001,
         0x20000248,
-        0x20000800
+        0x20000500
     },
 
     0x20000000 + 0x00000A00,  // mem buffer location

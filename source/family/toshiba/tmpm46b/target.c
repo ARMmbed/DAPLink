@@ -18,6 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "target_config.h"
 
 // FlashAlgo
@@ -25,14 +26,12 @@
 
 // target information
 target_cfg_t target_device = {
-    .sector_size    	= 0x200,
-    .sector_cnt     	= (KB(1024) / 0x200),
-    .flash_start        = 0x00000000,
-    .flash_end          = 0x00100000,
-    .ram_start          = 0x20000000,
-    .ram_end            = 0x20080000,
-    .flash_algo         = (program_target_t *) &flash,
-    .erase_reset        = 1,
-    .sectors_info       = sectors_info,
-    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
+    .sectors_info                   = sectors_info,
+    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = KB(1024),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20080000,
 };
