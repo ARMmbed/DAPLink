@@ -124,7 +124,7 @@ Generate files needed by mbed-cli
 ## Port
 There are three defined ways in which DAPLink can be extended. These are adding target support, adding board support and adding HIC support. Details on porting each of these can be found below.
 
-* [Adding a new target](PORT_TARGET.md)
+* [Adding a new target](PORT_TARGET_FAMILY.md)
 * [Adding a new board](PORT_BOARD.md)
 * [Adding a new HIC](PORT_HIC.md)
 
