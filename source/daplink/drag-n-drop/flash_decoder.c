@@ -145,7 +145,7 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
             if (g_board_info.target_cfg) {
                 region_info_t * region = g_board_info.target_cfg->flash_regions;
                 for (; region->start != 0 || region->end != 0; ++region) {
-                    if (addr >= region->start &&  addr <= region->end) {
+                    if (kRegionIsDefault == region->flags) {
                         flash_start_local = region->start;
                         break;
                     }
