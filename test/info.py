@@ -1,6 +1,6 @@
 #
 # DAPLink Interface Firmware
-# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -119,6 +119,9 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_stm32l475_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_aconno_acn52832_if',             False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm32f439_if',                   False,      0x0000,     "bin"       ),
+    ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
+    ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
+    ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
@@ -244,6 +247,9 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3110,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
     (   0x3300,     VENDOR_TO_FAMILY('TI', 1),          'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
+    (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
+    (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
+    (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_eflash_if',               None,               'ARM_MUSCA_B1'                          ),
     (   0x5050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5051,     VENDOR_TO_FAMILY('Stub', 3),        'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
