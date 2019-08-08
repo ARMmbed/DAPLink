@@ -322,6 +322,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/xDot-L151.yaml
+    k26f_frdmk32l3a6_if:
+        - *module_if
+        - *module_hic_k26f
+        - records/board/frdmk32l3a6.yaml
     k26f_frdmk32w042_if:
         - *module_if
         - *module_hic_k26f
