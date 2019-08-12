@@ -3,4 +3,4 @@ common:
         board:
             - source/board/archmax.c
         family:
-            - source/family/st/stm32f407/target.c
+            - source/family/st/stm32f407ve/target.c
