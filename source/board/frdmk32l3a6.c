@@ -25,7 +25,7 @@
 const board_info_t g_board_info = {
     .info_version = 0x0,
     .board_id = "0237",
-    .family_id = kNXP_KinetisK32L_FamilyID,
+    .family_id = kNXP_KinetisK32_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =   "PRODINFOHTM",
     .daplink_drive_name = "K32L3A6",
