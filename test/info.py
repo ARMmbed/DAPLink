@@ -56,7 +56,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_mimxrt1020_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_hyper_if",               True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_qspi_if",                True,       0x8000,     "bin"       ),
-    ('k20dx_ep_agora_if',                           False,      0x0000,     "bin"       ),
+    ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
     ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
