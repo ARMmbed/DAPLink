@@ -42,7 +42,7 @@ enum _vendor_ids {
     kRenesas_VendorID = 117,
     kWiznet_VendorID = 122,
     kRealtek_VendorID = 124,
-    kAmbiq_VendorID = 127,
+    kAmbiq_VendorID = 120,
 };
 
 typedef enum _family_id {
