@@ -271,6 +271,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/mimxrt1050_evk_qspi.yaml
+    k20dx_ep_agora_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/ep_agora.yaml
     k26f_frdmk32w042_if:
         - *module_if
         - *module_hic_k26f
@@ -615,3 +619,7 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    lpc11u35_wio_emw3166_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wio_emw3166.yaml
