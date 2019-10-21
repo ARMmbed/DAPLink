@@ -19,7 +19,7 @@
  * limitations under the License.
  */
  
-#include "Systick_Handler.h"
+#include "SysTick_Handler.h"
 
 #if defined (INTERFACE_K20D5)
 #include "MK20D5.h"
