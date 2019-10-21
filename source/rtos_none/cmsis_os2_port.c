@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 #include "cmsis_os2.h"
-#include "Systick_Handler.h"
+#include "SysTick_Handler.h"
 
 osStatus_t osKernelInitialize(void)
 {
