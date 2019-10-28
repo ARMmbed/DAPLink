@@ -62,6 +62,10 @@ module:
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/lpc4322.yaml
         - records/usb/usb-bulk.yaml
+    hic_lpc55s69: &module_hic_lpc55s69
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/lpc55s69.yaml
+        - records/usb/usb-bulk.yaml
     hic_sam3u2c: &module_hic_sam3u2c
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/sam3u2c.yaml
@@ -123,6 +127,14 @@ projects:
     lpc4322_if:
         - *module_if
         - *module_hic_lpc4322
+        - records/family/all_family.yaml
+    lpc55s69_bl:
+        - *module_bl
+        - records/hic_hal/lpc55s69.yaml
+        - records/board/lpc55s69_bl.yaml
+    lpc55s69_if:
+        - *module_if
+        - *module_hic_lpc55s69
         - records/family/all_family.yaml
     max32620_bl:
         - *module_bl

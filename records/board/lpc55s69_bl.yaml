@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/lpc55s69_bl.c
