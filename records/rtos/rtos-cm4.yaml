@@ -49,7 +49,6 @@ tool_specific:
         includes:
             - source/rtos2/Include
             - source/rtos2/RTX/Include
-            - source/rtos2/RTX/Config
         sources:
             rtos:
                 - source/rtos2/RTX/Source/ARM/irq_cm3.s
@@ -70,7 +69,6 @@ tool_specific:
         includes:
             - source/rtos2/Include
             - source/rtos2/RTX/Include
-            - source/rtos2/RTX/Config
         sources:
             rtos:
                 - source/rtos2/RTX/Source/GCC/irq_cm3.S
