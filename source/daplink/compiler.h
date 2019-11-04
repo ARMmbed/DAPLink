@@ -22,6 +22,8 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#include "cmsis_compiler.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
