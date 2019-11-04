@@ -37,7 +37,7 @@
 #define WINUSB_PROP_DATA_TYPE_REG_MULTI_SZ          0x07
 
 /* WinUSB Microsoft OS 2.0 descriptor Platform Capability Descriptor */
-typedef __packed struct _WINUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
+typedef __PACKED_STRUCT _WINUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
     U8  bLength;
     U8  bDescriptorType;
     U8  bDevCapabilityType;
@@ -50,7 +50,7 @@ typedef __packed struct _WINUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
 } WINUSB_PLATFORM_CAPABILITY_DESCRIPTOR;
 
 /* WinUSB Microsoft OS 2.0 descriptor set header */
-typedef __packed struct _WINUSB_DESCRIPTOR_SET_HEADER {
+typedef __PACKED_STRUCT _WINUSB_DESCRIPTOR_SET_HEADER {
     U16 wLength;
     U16 wDescriptorType;
     U32 dwWindowsVersion;
