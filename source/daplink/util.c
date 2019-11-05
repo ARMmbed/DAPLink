@@ -26,7 +26,7 @@
 #include "cortex_m.h"
 
 //remove dependency from vfs_manager
-__attribute__((weak)) void vfs_mngr_fs_remount(void) {}
+__WEAK void vfs_mngr_fs_remount(void) {}
 
 uint32_t util_write_hex8(char *str, uint8_t value)
 {

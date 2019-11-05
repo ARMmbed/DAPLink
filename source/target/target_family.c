@@ -70,7 +70,7 @@ extern __WEAK const target_family_descriptor_t g_ambiq_ama3b1kk;
 //! the family ID set in the board info or target config structs. Because each of the family
 //! descriptors has a weak reference defined above, the entry in this list for a family whose
 //! descriptor is not included in the link will resolve to NULL and init_family() can skip it.
-__attribute__((weak))
+__WEAK
 const target_family_descriptor_t *g_families[] = {
     &g_hw_reset_family,
     &g_sw_vectreset_family,
@@ -91,7 +91,7 @@ const target_family_descriptor_t *g_families[] = {
     FAMILY_LIST_TERMINATOR // list terminator
 };
 
-__attribute__((weak))
+__WEAK
 const target_family_descriptor_t *g_target_family = NULL;
 
 

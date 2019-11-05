@@ -23,7 +23,7 @@
 #include "target_board.h"
 
 // Default empty board info.
-__attribute__((weak))
+__WEAK
 const board_info_t g_board_info = {
 		.info_version = kBoardInfoVersion,
 		.board_id = "0000",
