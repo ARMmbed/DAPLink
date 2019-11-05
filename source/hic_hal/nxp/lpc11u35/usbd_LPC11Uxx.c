@@ -1,6 +1,6 @@
 /**
  * @file    usbd_LPC11Uxx.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -552,9 +552,9 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
         cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
         dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
-        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done        
+        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done
         util_assert(!(*ptr & BUF_ACTIVE)); //check for timeout
-        
+
         if (size < cnt) {
             util_assert(0);
             cnt = size;
@@ -612,7 +612,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     dataptr = (U32 *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
 
     for (i = 0; i < (cnt + 3) / 4; i++) {
-        dataptr[i] = * ((__packed U32 *)pData);
+        dataptr[i] = __UNALIGNED_UINT32_READ(pData);
         pData += 4;
     }
 

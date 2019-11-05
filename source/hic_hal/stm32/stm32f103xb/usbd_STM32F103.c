@@ -38,7 +38,7 @@
 
 #define USB_ISTR_W0C_MASK   (ISTR_PMAOVR | ISTR_ERR | ISTR_WKUP | ISTR_SUSP | ISTR_RESET | ISTR_SOF | ISTR_ESOF)
 #define VAL_MASK            0xFFFF
-#define VAL_SHIFT           16 
+#define VAL_SHIFT           16
 #define EP_NUM_MASK         0xFFFF
 #define EP_NUM_SHIFT        0
 
@@ -490,7 +490,7 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
     }
 
     for (n = 0; n < (cnt + 1) / 2; n++) {
-        *((__packed U16 *)pData) = *pv++;
+        __UNALIGNED_UINT16_WRITE(pData, *pv++);
         pData += 2;
     }
 
@@ -518,7 +518,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_TX));
 
     for (n = 0; n < (cnt + 1) / 2; n++) {
-        *pv++ = *((__packed U16 *)pData);
+        *pv++ = __UNALIGNED_UINT16_READ(pData);
         pData += 2;
     }
 
@@ -587,13 +587,13 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
                     && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
                 if (val & EP_CTR_TX) {
                     // Drop the RX event but not TX
-                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) | 
+                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) |
                                ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
                 } else {
                     // Drop the event
                 }
             } else {
-                stat_enque(((val & VAL_MASK) << VAL_SHIFT) | 
+                stat_enque(((val & VAL_MASK) << VAL_SHIFT) |
                            ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
             }
 
@@ -607,7 +607,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
             }
         }
     }
-    
+
     USBD_SignalHandler();
 }
 
