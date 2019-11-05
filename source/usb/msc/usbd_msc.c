@@ -48,19 +48,19 @@ U32 BulkLen;    /* Bulk In/Out Length */
 
 
 /* Dummy Weak Functions that need to be provided by user */
-__weak void usbd_msc_init()
+__WEAK void usbd_msc_init()
 {
 
 }
-__weak void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
+__WEAK void usbd_msc_read_sect(U32 block, U8 *buf, U32 num_of_blocks)
 {
 
 }
-__weak void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
+__WEAK void usbd_msc_write_sect(U32 block, U8 *buf, U32 num_of_blocks)
 {
 
 }
-__weak void usbd_msc_start_stop(BOOL start)
+__WEAK void usbd_msc_start_stop(BOOL start)
 {
 
 }

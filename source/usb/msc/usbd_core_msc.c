@@ -31,7 +31,7 @@
  *    Return Value:    None
  */
 
-__weak void USBD_ReqClrFeature_MSC(U32 EPNum)
+__WEAK void USBD_ReqClrFeature_MSC(U32 EPNum)
 {
     USBD_MSC_ClrStallEP(EPNum);
 }
@@ -43,7 +43,7 @@ __weak void USBD_ReqClrFeature_MSC(U32 EPNum)
  *    Return Value:    TRUE - Setup class request ok, FALSE - Setup class request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Setup_MSC_ReqToIF(void)
+__WEAK BOOL USBD_EndPoint0_Setup_MSC_ReqToIF(void)
 {
     if (USBD_SetupPacket.wIndexL == usbd_msc_if_num) {         /* IF number correct? */
         switch (USBD_SetupPacket.bRequest) {

@@ -31,7 +31,7 @@
  *    Return Value:    TRUE - Setup class request ok, FALSE - Setup class request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Setup_CDC_ReqToIF(void)
+__WEAK BOOL USBD_EndPoint0_Setup_CDC_ReqToIF(void)
 {
     if ((USBD_SetupPacket.wIndexL == usbd_cdc_acm_cif_num)  || /* IF number correct? */
             (USBD_SetupPacket.wIndexL == usbd_cdc_acm_dif_num)) {
@@ -111,7 +111,7 @@ __weak BOOL USBD_EndPoint0_Setup_CDC_ReqToIF(void)
  *    Return Value:    TRUE - Out class request ok, FALSE - Out class request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Out_CDC_ReqToIF(void)
+__WEAK BOOL USBD_EndPoint0_Out_CDC_ReqToIF(void)
 {
     if ((USBD_SetupPacket.wIndexL == usbd_cdc_acm_cif_num) || /* IF number correct? */
             (USBD_SetupPacket.wIndexL == usbd_cdc_acm_dif_num)) {

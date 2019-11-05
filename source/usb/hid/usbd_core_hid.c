@@ -31,7 +31,7 @@
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-__weak BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
+__WEAK BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
 {
     switch (USBD_SetupPacket.wValueH) {
         case HID_HID_DESCRIPTOR_TYPE:
@@ -81,7 +81,7 @@ __weak BOOL USBD_ReqGetDescriptor_HID(U8 **pD, U32 *len)
  *    Return Value:    TRUE - Setup class request ok, FALSE - Setup class request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void)
+__WEAK BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void)
 {
     if (USBD_SetupPacket.wIndexL == usbd_hid_if_num ||
         USBD_SetupPacket.wIndexL == usbd_webusb_if_num) {
@@ -155,7 +155,7 @@ __weak BOOL USBD_EndPoint0_Setup_HID_ReqToIF(void)
  *    Return Value:    TRUE - Out class request ok, FALSE - Out class request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Out_HID_ReqToIF(void)
+__WEAK BOOL USBD_EndPoint0_Out_HID_ReqToIF(void)
 {
     if (USBD_SetupPacket.wIndexL == usbd_hid_if_num ||
         USBD_SetupPacket.wIndexL == usbd_webusb_if_num) {
