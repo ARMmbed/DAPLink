@@ -53,8 +53,8 @@ typedef struct __EP {
     uint32_t maxPacket;
 } EP;
 
-EPQH __align(2048) EPQHx[(USBD_EP_NUM + 1) * 2];
-dTD  __align(32) dTDx[(USBD_EP_NUM + 1) * 2];
+EPQH __ALIGNED(2048) EPQHx[(USBD_EP_NUM + 1) * 2];
+dTD  __ALIGNED(32) dTDx[(USBD_EP_NUM + 1) * 2];
 
 EP Ep[(USBD_EP_NUM + 1) * 2];
 uint32_t BufUsed;
@@ -71,10 +71,10 @@ uint32_t cmpl_pnd;
 #if USBD_VENDOR_ENABLE
 /* custom class: user defined buffer size */
 #define EP_BUF_POOL_SIZE 0x1000
-uint8_t __align(4096) EPBufPool[EP_BUF_POOL_SIZE]
+uint8_t __ALIGNED(4096) EPBufPool[EP_BUF_POOL_SIZE]
 #else
 /* supported classes are used */
-uint8_t __align(4096) EPBufPool[
+uint8_t __ALIGNED(4096) EPBufPool[
     USBD_MAX_PACKET0                                                                                                     * 2 +
     USBD_HID_ENABLE     *  (HS(USBD_HID_HS_ENABLE)      ? USBD_HID_HS_WMAXPACKETSIZE     : USBD_HID_WMAXPACKETSIZE)      * 2 +
     USBD_MSC_ENABLE     *  (HS(USBD_MSC_HS_ENABLE)      ? USBD_MSC_HS_WMAXPACKETSIZE     : USBD_MSC_WMAXPACKETSIZE)      * 2 +
@@ -168,7 +168,7 @@ void USBD_Init(void)
  *    Return Value:    None
  */
 
-void USBD_Connect(uint32_t con)
+void USBD_Connect(BOOL con)
 {
     if (con) {
         LPC_USBx->USBCMD_D |= 1;            /* run */
@@ -291,7 +291,7 @@ void USBD_WakeUp(void)
  *    Return Value:    None
  */
 
-void USBD_WakeUpCfg(uint32_t cfg)
+void USBD_WakeUpCfg(BOOL cfg)
 {
     /* Not needed */
 }
@@ -318,7 +318,7 @@ void USBD_SetAddress(uint32_t adr, uint32_t setup)
  *    Return Value:    None
  */
 
-void USBD_Configure(uint32_t cfg)
+void USBD_Configure(BOOL cfg)
 {
     uint32_t i;
 
