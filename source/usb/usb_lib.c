@@ -23,6 +23,7 @@
 #include "rl_usb.h"
 #include "usb.h"
 #include "settings.h"
+#include "compiler.h"
 
 #pragma thumb
 #pragma O3
@@ -2337,12 +2338,15 @@ U8 USBD_ConfigDescriptor_HS[200] = { 0 };
 
 #endif
 
+// Verify that wchar_t is UTF-16.
+COMPILER_ASSERT(sizeof(wchar_t) == 2);
+
 /* USB Device Create String Descriptor */
 #define USBD_STR_DEF(n)                 \
   struct {                              \
     U8  len;                            \
     U8  type;                           \
-    U16 str[sizeof(USBD_##n)/2-1];      \
+    wchar_t str[sizeof(USBD_##n)/2-1];      \
   } desc##n
 
 #define USBD_STR_VAL(n)                  \
