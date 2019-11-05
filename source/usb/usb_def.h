@@ -45,14 +45,14 @@
  typedef unsigned int   size_t;
 #endif
 
-typedef signed char     S8;
-typedef unsigned char   U8;
-typedef short           S16;
-typedef unsigned short  U16;
-typedef int             S32;
-typedef unsigned int    U32;
-typedef long long       S64;
-typedef unsigned long long U64;
+typedef int8_t   S8;
+typedef uint8_t  U8;
+typedef int16_t  S16;
+typedef uint16_t U16;
+typedef int32_t  S32;
+typedef uint32_t U32;
+typedef int64_t  S64;
+typedef uint64_t U64;
 typedef unsigned char   BIT;
 typedef unsigned int    BOOL;
 
