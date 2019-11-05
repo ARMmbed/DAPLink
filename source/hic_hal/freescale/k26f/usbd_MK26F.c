@@ -79,8 +79,8 @@ uint8_t __align(4096) EPBufPool[
     USBD_MSC_ENABLE     *  (HS(USBD_MSC_HS_ENABLE)      ? USBD_MSC_HS_WMAXPACKETSIZE     : USBD_MSC_WMAXPACKETSIZE)      * 2 +
     USBD_ADC_ENABLE     *  (HS(USBD_ADC_HS_ENABLE)      ? USBD_ADC_HS_WMAXPACKETSIZE     : USBD_ADC_WMAXPACKETSIZE)          +
     USBD_CDC_ACM_ENABLE * ((HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE  : USBD_CDC_ACM_WMAXPACKETSIZE)      +
-                           (HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE1 : USBD_CDC_ACM_WMAXPACKETSIZE1) * 2) + 
-    USBD_BULK_ENABLE     *  (HS(USBD_BULK_HS_ENABLE)      ? USBD_BULK_HS_WMAXPACKETSIZE     : USBD_BULK_WMAXPACKETSIZE)      * 2 
+                           (HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE1 : USBD_CDC_ACM_WMAXPACKETSIZE1) * 2) +
+    USBD_BULK_ENABLE     *  (HS(USBD_BULK_HS_ENABLE)      ? USBD_BULK_HS_WMAXPACKETSIZE     : USBD_BULK_WMAXPACKETSIZE)      * 2
 ];
 #endif
 
@@ -582,8 +582,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
         while (USBHS->EPSETUPSR & 1);
 
         do {
-            *((__packed uint32_t *) pData)      = EPQHx[EP_OUT_IDX(0)].setup[0];
-            *((__packed uint32_t *)(pData + 4)) = EPQHx[EP_OUT_IDX(0)].setup[1];
+            __UNALIGNED_UINT32_WRITE(pData, EPQHx[EP_OUT_IDX(0)].setup[0]);
+            __UNALIGNED_UINT32_WRITE(pData + 4, EPQHx[EP_OUT_IDX(0)].setup[1]);
             cnt = 8;
             USBHS->USBCMD |= (1UL << 13);
         } while (!(USBHS->USBCMD & (1UL << 13)));
