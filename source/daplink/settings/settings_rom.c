@@ -61,7 +61,11 @@ COMPILER_ASSERT(sizeof(cfg_setting_t) < SECTOR_BUFFER_SIZE);
 COMPILER_ASSERT(SECTOR_BUFFER_SIZE % 8 == 0);
 
 // Configuration ROM
-static volatile const cfg_setting_t config_rom __attribute__((section("cfgrom"), zero_init));
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+static volatile cfg_setting_t config_rom __attribute__((section("cfgrom"),zero_init));
+#else
+static volatile cfg_setting_t config_rom __attribute__((section("cfgrom")));
+#endif
 // Ram copy of ROM config
 static cfg_setting_t config_rom_copy;
 
