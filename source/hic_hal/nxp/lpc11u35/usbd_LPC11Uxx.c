@@ -49,7 +49,11 @@ typedef struct BUF_INFO {
 } EP_BUF_INFO;
 
 EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
-volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __at(EP_LIST_BASE);
+#if defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
+volatile U32 EPList[(USBD_EP_NUM + 1) * 2] __attribute__((at(EP_LIST_BASE)));
+#else
+#error "Unsupported compiler!"
+#endif
 
 static U32 addr = 3 * 64 + EP_BUF_BASE;
 static U32 ctrl_out_next = 0;
