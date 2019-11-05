@@ -2102,7 +2102,7 @@ void flash_cache_clear(flash_config_t *config)
 #pragma push
 #pragma O0
 void flash_cache_clear(flash_config_t *config)
-#elif (!defined(__GNUC__))
+#elif (defined(__GNUC__))
 /* #pragma GCC push_options */
 /* #pragma GCC optimize("O0") */
 void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
