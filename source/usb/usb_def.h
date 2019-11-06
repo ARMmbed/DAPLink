@@ -22,7 +22,9 @@
 #ifndef __USB_DEF_H__
 #define __USB_DEF_H__
 
+#if defined ( __CC_ARM)
 #pragma anon_unions
+#endif
 
 #include "compiler.h"
 #include <stdint.h>

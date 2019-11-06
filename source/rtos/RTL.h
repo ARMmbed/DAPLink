@@ -565,8 +565,10 @@ typedef struct sockaddr {         /* << Generic Socket Address structure >>  */
   char sa_data[14];               /* Direct address (up to 14 bytes)         */
 } SOCKADDR;
 
+#if defined ( __CC_ARM)
 #pragma push
 #pragma anon_unions
+#endif
 
 typedef struct in_addr {          /* << Generic IPv4 Address structure >>    */
   union {
@@ -579,7 +581,9 @@ typedef struct in_addr {          /* << Generic IPv4 Address structure >>    */
     U32 s_addr;                   /* IP address in network byte order        */
   };
 } IN_ADDR;
+#if defined ( __CC_ARM)
 #pragma pop
+#endif
 
 typedef struct sockaddr_in {      /* << IPv4 Socket Address structure >>     */
   S16 sin_family;                 /* Socket domain                           */
