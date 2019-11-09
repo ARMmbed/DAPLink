@@ -1,6 +1,6 @@
 #
 # DAPLink Interface Firmware
-# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,6 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+from __future__ import absolute_import
+from __future__ import print_function
 
 import sys
 import os
