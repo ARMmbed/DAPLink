@@ -35,6 +35,6 @@ tool_specific:
             pre_build_script:
                 - tools/pre_build_script.sh
             post_build_script:
-                - tools/post_build_script.sh
+                - tools/post_build_script_gcc.sh
 
 
