@@ -38,11 +38,29 @@
 #define MSC_LED_DEF GPIO_LED_ON
 #endif
 
+#if defined(__CC_ARM)
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
     BX R1
 }
+#elif defined(__GNUC__)
+void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
+{
+    uint32_t z = 0;
+    asm volatile (  "msr    control, %[z]   \n\t"
+                    "isb                    \n\t"
+                    "mov    sp, %[r0_sp]    \n\t"
+                    "bx     %[r1_pc]"
+                    :
+                    :   [z] "l" (z),
+                        [r0_sp] "l" (r0_sp),
+                        [r1_pc] "l" (r1_pc)
+                    );
+}
+#else
+#error "Unknown compiler!"
+#endif
 
 // Event flags for main task
 // Timers events
@@ -136,7 +154,7 @@ void main_task(void * arg)
         flags = osThreadFlagsWait(FLAGS_MAIN_90MS     // 90mS tick
                         | FLAGS_MAIN_30MS            // 30mS tick
                         | FLAGS_MAIN_PROC_USB       // process usb events
-                        , osFlagsWaitAny, 
+                        , osFlagsWaitAny,
                         osWaitForever);
 
         if (flags & FLAGS_MAIN_PROC_USB) {
@@ -202,12 +220,12 @@ void main_task(void * arg)
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
             if (msc_led_usb_activity) {
-                
+
                 if ((msc_led_state == MAIN_LED_FLASH) || (msc_led_state == MAIN_LED_FLASH_PERMANENT)) {
                     // Toggle LED value
                     msc_led_value = (GPIO_LED_ON == msc_led_value) ? GPIO_LED_OFF : GPIO_LED_ON;
                     // If in flash mode stop after one cycle but in bootloader LED stays on
-                    if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {    
+                    if ((MSC_LED_DEF == msc_led_value) && (MAIN_LED_FLASH == msc_led_state)) {
                         msc_led_usb_activity = 0;
                         msc_led_state = MAIN_LED_DEF;
                     }
@@ -236,11 +254,15 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if (!gpio_get_reset_btn() && g_board_info.target_cfg && validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_regions[0].start) && !config_ram_get_initial_hold_in_bl()) {
+    if (!gpio_get_reset_btn()
+            && g_board_info.target_cfg
+            && validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_regions[0].start)
+            && !config_ram_get_initial_hold_in_bl()) {
         // change to the new vector table
         SCB->VTOR = g_board_info.target_cfg->flash_regions[0].start; //bootloaders should only have one flash region for interface
         // modify stack pointer and start app
-        modify_stack_pointer_and_start_app((*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start)), (*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start + 4)));
+        modify_stack_pointer_and_start_app((*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start)),
+                (*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start + 4)));
     }
 
     // config the usb interface descriptor and web auth token before USB connects
