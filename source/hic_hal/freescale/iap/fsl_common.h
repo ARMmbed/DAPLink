@@ -31,11 +31,12 @@
 #ifndef _FSL_COMMON_H_
 #define _FSL_COMMON_H_
 
-#include <assert.h>
+// #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 #include "fsl_device_registers.h"
+#include "util.h"
 
 /*!
  * @addtogroup ksdk_common
@@ -45,6 +46,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+
+// Redefine assert to DAPLink's assert utility for code size savings.
+#define assert(x) util_assert((x));
 
 /*! @brief Construct a status code value from a group and code number. */
 #define MAKE_STATUS(group, code) ((((group)*100) + (code)))
