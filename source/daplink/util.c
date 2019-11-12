@@ -110,21 +110,6 @@ uint32_t util_write_string(char *str, const char *data)
     return pos;
 }
 
-uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor)
-{
-    return (dividen + divisor - 1) / divisor;
-}
-
-uint32_t util_div_round_down(uint32_t dividen, uint32_t divisor)
-{
-    return dividen / divisor;
-}
-
-uint32_t util_div_round(uint32_t dividen, uint32_t divisor)
-{
-    return (dividen + divisor / 2) / divisor;
-}
-
 void _util_assert(bool expression, const char *filename, uint16_t line)
 {
     bool assert_set;
