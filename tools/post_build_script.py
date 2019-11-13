@@ -69,8 +69,13 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
     addresses.sort()
     start_end_pairs = list(ranges(addresses))
     regions = len(start_end_pairs)
-    assert regions == 1, ("Error - only 1 region allowed in "
-                          "hex file %i found." % regions)
+    if regions > 1:
+        print("Error - only 1 region allowed in hex file %i found." % regions)
+        print("Regions:")
+        for i, se in enumerate(start_end_pairs):
+            s, e = se
+            print(" %d: 0x%08x - 0x%08x" % (i, s, e))
+        exit(1)
     start, end = start_end_pairs[0]
 
     pack_flash_algo = None
