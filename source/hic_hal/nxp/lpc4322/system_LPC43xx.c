@@ -31,7 +31,6 @@
 
 #include "LPC43xx.h"
 #include "fpu_enable.h"
-#include "board.h"
 
 /*----------------------------------------------------------------------------
   Define clocks
@@ -78,8 +77,6 @@ void SystemInit(void)
         t &= ~(0xF << 12);
         *MAM = t | (FLASH_ACCELERATOR_SPEED << 12);
     }
-
-    board_init();
 }
 
 void SystemReset(void)

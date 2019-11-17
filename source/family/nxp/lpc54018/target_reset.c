@@ -28,10 +28,6 @@ void target_before_init_debug(void)
     return;
 }
 
-void board_init(void)
-{
-}
-
 uint8_t target_unlock_sequence(void)
 {
     return 1;
