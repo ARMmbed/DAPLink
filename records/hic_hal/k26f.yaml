@@ -52,3 +52,11 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k26f/armcc
+    make_gcc_arm:
+        linker_file:
+            - source/hic_hal/freescale/kinetis.ld
+        includes:
+            - source/hic_hal/freescale/k26f/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k26f/gcc

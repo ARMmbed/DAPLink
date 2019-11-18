@@ -37,3 +37,9 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
+    make_gcc_arm:
+        includes:
+            - source/hic_hal/stm32/stm32f103xb/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f103xb/gcc

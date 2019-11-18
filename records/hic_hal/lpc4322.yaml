@@ -30,3 +30,9 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
+    make_gcc_arm:
+        includes:
+            - source/hic_hal/nxp/lpc4322/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc4322/gcc

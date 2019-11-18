@@ -34,3 +34,9 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc
+    make_gcc_arm:
+        includes:
+            - source/hic_hal/nuvoton/m48ssidae/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/nuvoton/m48ssidae/gcc
