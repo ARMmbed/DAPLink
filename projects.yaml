@@ -634,3 +634,7 @@ projects:
         - *module_if
         - *module_hic_m48ssidae
         - records/board/numaker_m252kg.yaml
+    m48ssidae_numaker_iot_m263a_if:
+        - *module_if
+        - *module_hic_m48ssidae
+        - records/board/numaker_iot_m263a.yaml

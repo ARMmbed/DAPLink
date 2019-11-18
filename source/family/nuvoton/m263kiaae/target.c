@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the m252kg6ae
+ * @brief   Target information for the m263kiaae
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
@@ -29,13 +29,13 @@ target_cfg_t target_device = {
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0x00000000,
-    .flash_regions[0].end           = 0x00040000,
+    .flash_regions[0].end           = 0x00080000,
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *)&M251_AP_256_flash,
+    .flash_regions[0].flash_algo    = (program_target_t *)&M261_AP_512_flash,
     .flash_regions[1].start         = 0x00100000,
     .flash_regions[1].end           = 0x00101000,
     .flash_regions[1].flags         = kRegionIsDefault,
-    .flash_regions[1].flash_algo    = (program_target_t *)&M251_LD_4_flash,
+    .flash_regions[1].flash_algo    = (program_target_t *)&M261_LD_4_flash,
     .ram_regions[0].start           = 0x20000000,
-    .ram_regions[0].end             = 0x20008000,
+    .ram_regions[0].end             = 0x20018000,
 };
