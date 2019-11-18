@@ -28,6 +28,14 @@
 #include "DAP_config.h"
 #include "DAP.h"
 
+#if defined(__CC_ARM)
+#pragma push
+#pragma O3
+#pragma Otime
+#elif defined(__GNUC__)
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+#endif
 
 // SW Macros
 
@@ -284,3 +292,10 @@ uint8_t  SWD_Transfer(uint32_t request, uint32_t *data) {
 
 
 #endif  /* (DAP_SWD != 0) */
+
+
+#if defined(__CC_ARM)
+#pragma pop
+#elif defined(__GNUC__)
+#pragma GCC pop_options
+#endif
