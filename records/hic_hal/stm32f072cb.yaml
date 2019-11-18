@@ -1,0 +1,45 @@
+common:
+    target:
+        - stm32f072cb
+    core:
+        - Cortex-M0
+    macros:
+        - INTERFACE_STM32F072CB
+        - DAPLINK_HIC_ID=0x97969909 # DAPLINK_HIC_ID_STM32F072xB
+        - OS_CLOCK=48000000
+    includes:
+        - source/hic_hal/stm32/stm32f072cb/hal/Inc
+        - source/hic_hal/stm32/stm32f072cb/Include
+        - source/hic_hal/stm32/stm32f072cb
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/stm32f072cb
+            - source/hic_hal/stm32/stm32f072cb/armcc/startup_stm32f072xb.s
+        stm32f0_hal:
+            - source/hic_hal/stm32/stm32f072cb/hal/Src
+
+tool_specific:
+    uvision:
+        misc:
+            c_flags:
+                - --preinclude="pre_stm32f0.h"
+                - --preinclude="stm32f0xx.h"
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f072cb"
+                - --predefine="-DINTERFACE_STM32F072CB"
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f072cb"
+                - --predefine="-DINTERFACE_STM32F072CB"
+            c_flags:
+                - --preinclude="pre_stm32f0.h"
+                - --preinclude="stm32f0xx.h"
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
