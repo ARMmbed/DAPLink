@@ -37,7 +37,14 @@ __attribute__((always_inline))
 static cortex_int_state_t cortex_int_get_and_disable(void)
 {
     cortex_int_state_t state;
+
+#if defined(__CC_ARM)
     state = __disable_irq();
+#else
+    // todo - get irq state, __disable_irq() doesn't have a return value
+    state = 0;
+   __disable_irq();
+#endif
     return state;
 }
 
