@@ -53,6 +53,9 @@ module:
     hic_lpc11u35: &module_hic_lpc11u35
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/lpc11u35.yaml
+    hic_lpc11u35_bm: &module_hic_lpc11u35_bm
+        - records/rtos/rtos-none.yaml
+        - records/hic_hal/lpc11u35.yaml
     hic_lpc4322: &module_hic_lpc4322
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/lpc4322.yaml
@@ -321,6 +324,10 @@ projects:
     lpc11u35_archble_if:
         - *module_if
         - *module_hic_lpc11u35
+        - records/board/archble.yaml
+    lpc11u35_archble_if_bm:
+        - *module_if
+        - *module_hic_lpc11u35_bm
         - records/board/archble.yaml
     lpc11u35_tiny_if:
         - *module_if
