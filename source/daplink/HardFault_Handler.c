@@ -24,6 +24,7 @@
 #include "util.h"
 #include "cortex_m.h"
 
+#if defined(__CC_ARM)
 register unsigned int _psp __asm("psp");
 register unsigned int _msp __asm("msp");
 register unsigned int _lr __asm("lr");
@@ -76,3 +77,12 @@ void HardFault_Handler()
 
     while (1); // Wait for reset
 }
+#else
+void HardFault_Handler()
+{
+    util_assert(0);
+    SystemReset();
+
+    while (1); // Wait for reset
+}
+#endif
