@@ -109,7 +109,7 @@ static void setup_basics(void)
 #pragma push
 #pragma O0
 static void setup_basics(void)
-#elif (!defined(__GNUC__))
+#elif (defined(__GNUC__))
 /* #pragma GCC push_options */
 /* #pragma GCC optimize("O0") */
 static void __attribute__((optimize("O0"))) setup_basics(void)

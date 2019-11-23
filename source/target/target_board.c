@@ -58,7 +58,7 @@ uint8_t flash_algo_valid(void)
 #pragma push
 #pragma O0
 uint8_t flash_algo_valid(void)
-#elif (!defined(__GNUC__))
+#elif (defined(__GNUC__))
 /* #pragma GCC push_options */
 /* #pragma GCC optimize("O0") */
 uint8_t __attribute__((optimize("O0"))) flash_algo_valid(void)
