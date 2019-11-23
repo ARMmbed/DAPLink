@@ -3,20 +3,23 @@ tool_specific:
         mcu:
             - cortex-m0
         macros:
-            -
+            - __weak=__attribute__\(\(weak\)\)
+            - __forceinline=inline\ __attribute__\(\(always_inline\)\)
         misc:
             libraries:
                 - m
                 - gcc
                 - c
                 - nosys
-            optimization:
-                - O3
-            compiler_options:
-                - Wall
-                - ffunction-sections
-                - fdata-sections
-            linker_options:
-                - nostartfiles
+            c_flags:
+                - -std=gnu99
+                - -fshort-wchar
+            common_flags:
+                - -Os
+                - -Wall
+                - -ffunction-sections
+                - -fdata-sections
+            ld_flags:
+                - -nostartfiles
 
 
