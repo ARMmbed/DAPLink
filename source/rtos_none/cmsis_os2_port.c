@@ -87,3 +87,8 @@ osThreadId_t osThreadGetId (void)
 {
     return (osThreadId_t)1;
 }
+
+uint32_t osKernelGetSysTimerCount (void)
+{
+    return sysTickTime();
+}
