@@ -48,21 +48,21 @@ static const char *const error_message[] = {
     /* Target flash errors */
 
     // ERROR_RESET
-    "The interface firmware FAILED to reset/halt the target MCU",
+    "Failed to reset/halt the target MCU",
     // ERROR_ALGO_DL
-    "The interface firmware FAILED to download the flash programming algorithms to the target MCU",
+    "Failed to download flash algorithm to target MCU",
     //ERROR_ALGO_MISSING
-    "The flash algo missing for a region",
+    "Flash algorithm missing for a region",
     // ERROR_ALGO_DATA_SEQ
-    "The interface firmware FAILED to download the flash data contents to be programmed",
+    "Failed to download the flash data contents to be programmed",
     // ERROR_INIT
-    "The interface firmware FAILED to initialize the target MCU",
+    "Failed to initialize the target MCU",
     // ERROR_UNINIT
-    "The interface firmware FAILED to uninitialize the target MCU",
+    "Failed to uninitialize the target MCU",
     // ERROR_SECURITY_BITS
-    "The interface firmware ABORTED programming. Image is trying to set security bits",
+    "Programming aborted: image would lock target MCU",
     // ERROR_UNLOCK
-    "The interface firmware FAILED to unlock the target for programming",
+    "Failed to unlock target MCU for programming",
     // ERROR_ERASE_SECTOR
     "Flash algorithm erase sector command FAILURE",
     // ERROR_ERASE_ALL
