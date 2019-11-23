@@ -5,8 +5,10 @@
 
 MEMORY
 {
-  irom  (rx)      : ORIGIN = 0x0,         LENGTH = 0x10000 /* 64k */
-  isram (rwx)     : ORIGIN = 0x10000000,  LENGTH = 0x2000  /* 8k   */
+  irom  (rx)      : ORIGIN = 0x0,         LENGTH = 0xF000  /* 60k  */
+  icfgrom  (rx)   : ORIGIN = 0x0000F000,  LENGTH = 0x1000  /* 4k   */
+  isram (rwx)     : ORIGIN = 0x10000000,  LENGTH = 0x1ED0  /* 8k - 0x120 */
+  icfgram (rwx)   : ORIGIN = 0x10001ED0,  LENGTH = 0x100   /* 0x120   */
   isramUsb (rwx)  : ORIGIN = 0x20004000,  LENGTH = 0x800   /* 2k   */
 }
 
@@ -48,6 +50,19 @@ SECTIONS
     KEEP(*(.ARM.exidx* .gnu.linkonce.armexidx.*))
   } > irom
   __exidx_end = .;
+
+  /* cfg rom */
+  .cfgrom : ALIGN(4)
+  {
+    KEEP(*(cfgrom))
+  } > icfgrom
+
+
+  /* cfg rom */
+  .cfgram : ALIGN(4)
+  {
+    KEEP(*(cfgram))
+  } > icfgram
 
   /* This is used for USB RAM section */
   .usb_ram (NOLOAD): ALIGN(4)
