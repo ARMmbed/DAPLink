@@ -51,7 +51,7 @@ static void prerun_target_config(void)
 }
 
 
-static uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t lpc4088_target_set_state(TARGET_RESET_STATE state)
 {
     //return swd_set_target_state_hw(state);
     uint8_t res;
@@ -72,7 +72,7 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
 const target_family_descriptor_t g_nxp_lpc4088 = {
     .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
     .prerun_target_config = prerun_target_config,
-    .target_set_state = target_set_state,
+    .target_set_state = lpc4088_target_set_state,
 };
 
 const target_family_descriptor_t *g_target_family = &g_nxp_lpc4088;

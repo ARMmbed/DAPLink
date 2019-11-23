@@ -23,7 +23,7 @@
 #include "target_board.h"
 #include "target_family.h"
 
-static void prerun_board_config()
+static void vbluno_prerun_board_config()
 {
     uart_enable_flow_control(false);
 }
@@ -33,6 +33,6 @@ const board_info_t g_board_info = {
     .board_id = "C006",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
-    .prerun_board_config = prerun_board_config,
+    .prerun_board_config = vbluno_prerun_board_config,
     .target_cfg = &target_device,
 };

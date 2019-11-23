@@ -36,7 +36,7 @@
 #define DEBUGMB_RET  0x02000008
 #define DEBUGMB_ID   0x020000FC
 
-static uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t lpc55s6x_target_set_state(TARGET_RESET_STATE state)
 {
     uint32_t val;
     int8_t ap_retries = 2;
@@ -108,7 +108,7 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
 
 const target_family_descriptor_t g_target_family_lpc55S6X = {
     .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
-    .target_set_state = target_set_state,
+    .target_set_state = lpc55s6x_target_set_state,
 };
 
 const target_family_descriptor_t *g_target_family = &g_target_family_lpc55S6X;
