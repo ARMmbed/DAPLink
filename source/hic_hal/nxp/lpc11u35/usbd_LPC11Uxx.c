@@ -49,7 +49,8 @@ typedef struct BUF_INFO {
 } EP_BUF_INFO;
 
 EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
-volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __at(EP_LIST_BASE);
+// volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __at(EP_LIST_BASE);
+volatile U32 *EPList = (U32 *)EP_LIST_BASE;
 
 static U32 addr = 3 * 64 + EP_BUF_BASE;
 static U32 ctrl_out_next = 0;
@@ -600,7 +601,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 {
     U32 i;
     volatile U32 *ptr;
-    U32 *dataptr;
+    U8 *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
     EPNum &= ~0x80;
 
@@ -609,11 +610,16 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     *ptr &= ~(0x3FFFFFF);
     *ptr |=  BUF_ADDR(EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr) |
              N_BYTES(cnt);
-    dataptr = (U32 *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
+    dataptr = (U8 *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
 
-    for (i = 0; i < (cnt + 3) / 4; i++) {
-        dataptr[i] = * ((__packed U32 *)pData);
-        pData += 4;
+    // accessing unaligned address will cause a fault (bus fault?)
+    // for (i = 0; i < (cnt + 3) / 4; i++) {
+    //     dataptr[i] = * ((PRE_PACK U32 POST_PACK *)pData);
+    //     pData += 4;
+    // }
+
+    for (i = 0; i < cnt; i++) {
+        dataptr[i] = pData[i];
     }
 
     if (EPNum && (*ptr & EP_STALL)) {
