@@ -62,6 +62,9 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     uint8_t page_erase_enable;
 } cfg_ram_t;
 
+// Ensure hexdump field is word aligned.
+COMPILER_ASSERT((offsetof(cfg_ram_t, hexdump) % sizeof(uint32_t)) == 0);
+
 // Configuration RAM
 static cfg_ram_t config_ram __attribute__((section("cfgram"), zero_init));
 // Ram copy of RAM config
@@ -218,8 +221,11 @@ uint8_t config_ram_get_hexdumps(uint32_t **hexdumps)
         return 0;
     }
 
-    //prevent memcopy check alignment
-    *hexdumps = config_ram.hexdump;
+    // this hack prevents a gcc compiler warning about possible unaligned word pointer.
+    // we know in advance that the pointer to the hexdump field is word aligned due to the
+    // compiler assert at the top of this file.
+    uint32_t hd_addr = (uint32_t)&config_ram.hexdump;
+    *hexdumps = (uint32_t *)hd_addr;
     return config_ram.valid_dumps;
 }
 
