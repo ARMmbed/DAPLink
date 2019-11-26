@@ -75,8 +75,6 @@ static uint32_t  soft_reset = SYSRESETREQ;
 static uint32_t select_state = SELECT_MEM;
 static volatile uint32_t swd_init_debug_flag = 0;
 
-static uint8_t swd_read_core_register(uint32_t n, uint32_t *val);
-static uint8_t swd_write_core_register(uint32_t n, uint32_t val);
 /* Add static functions */
 static uint8_t swd_restart_req(void);
 static uint8_t swd_enable_debug(void);
@@ -85,7 +83,7 @@ void swd_set_reset_connect(SWD_CONNECT_TYPE type)
 {
 }
 
-static void int2array(uint8_t *res, uint32_t data, uint8_t len)
+void int2array(uint8_t *res, uint32_t data, uint8_t len)
 {
     uint8_t i = 0;
 
@@ -94,7 +92,7 @@ static void int2array(uint8_t *res, uint32_t data, uint8_t len)
     }
 }
 
-static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
+uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
 {
     uint8_t i, ack;
 
@@ -380,7 +378,7 @@ static uint8_t swd_write_data(uint32_t address, uint32_t data)
 }
 
 // Read 32-bit word from target memory.
-static uint8_t swd_read_word(uint32_t addr, uint32_t *val)
+uint8_t swd_read_word(uint32_t addr, uint32_t *val)
 {
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
@@ -394,7 +392,7 @@ static uint8_t swd_read_word(uint32_t addr, uint32_t *val)
 }
 
 // Write 32-bit word to target memory.
-static uint8_t swd_write_word(uint32_t addr, uint32_t val)
+uint8_t swd_write_word(uint32_t addr, uint32_t val)
 {
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
@@ -576,7 +574,7 @@ static uint8_t swd_enable_debug(void) {
     return 1;
 }
 
-static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
+uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
 {
     if (!swd_write_word(DBGITR, CMD_MCR | (n << 12))) {
         return 0;
@@ -589,7 +587,7 @@ static uint8_t swd_read_core_register(uint32_t n, uint32_t *val)
     return 1;
 }
 
-static uint8_t swd_write_core_register(uint32_t n, uint32_t val)
+uint8_t swd_write_core_register(uint32_t n, uint32_t val)
 {
     if (!swd_write_word(DBGDTRRX, val)){
         return 0;
