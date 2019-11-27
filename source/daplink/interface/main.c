@@ -26,7 +26,6 @@
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main.h"
-#include "board.h"
 #include "gpio.h"
 #include "uart.h"
 #include "tasks.h"

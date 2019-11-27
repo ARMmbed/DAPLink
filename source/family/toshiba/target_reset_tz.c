@@ -18,13 +18,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "cmsis_os2.h"
 #include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
 
-void target_before_init_debug(void) {
+static void target_before_init_debug_tz(void) {
     swd_set_target_reset(1);
     osDelay(2);
     swd_set_target_reset(0);
@@ -37,5 +37,5 @@ const target_family_descriptor_t g_toshiba_tz_family = {
     .family_id = kToshiba_Tz_FamilyID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = SYSRESETREQ,
-    .target_before_init_debug = target_before_init_debug,
+    .target_before_init_debug = target_before_init_debug_tz,
 };

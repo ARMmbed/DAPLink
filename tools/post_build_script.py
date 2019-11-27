@@ -32,7 +32,7 @@ VECTOR_FMT = "<7I"
 CHECKSUM_FMT = "<1I"
 CHECKSUM_OFFSET = 0x1C
 TARGET_INFO_OFFSET = 13*4
-ALLIGN_PADS = 4
+ALIGN_PADS = 4
 
 def ranges(i):
     for _, b in itertools.groupby(enumerate(i), lambda x_y: x_y[1] - x_y[0]):
@@ -115,13 +115,13 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
             blob_header = (0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2)
             stack_size = 0x200
             region_info_fmt = '5I'
-            region_info_total = 10            
+            region_info_total = 10
             target_cfg_fmt = '3I'+ region_info_fmt*region_info_total*2 + 'IHBB'
             sector_info_fmt = '2I'
             sector_info_len = len(pack_flash_algo.sector_sizes)
             program_target_fmt = '14I'
             flash_blob_entry = int(flash_blob_entry, 16)
-            blob_pad_size = ((len(pack_flash_algo.algo_data) + ALLIGN_PADS -1) // ALLIGN_PADS * ALLIGN_PADS) - len(pack_flash_algo.algo_data)
+            blob_pad_size = ((len(pack_flash_algo.algo_data) + ALIGN_PADS -1) // ALIGN_PADS * ALIGN_PADS) - len(pack_flash_algo.algo_data)
             blob_header_size = len(blob_header) * 4
             total_struct_size = blob_header_size + len(pack_flash_algo.algo_data) + blob_pad_size + sector_info_len*struct.calcsize(sector_info_fmt) + struct.calcsize(program_target_fmt) + struct.calcsize(target_cfg_fmt)
             flash_blob_addr = end + 1 - 4 -  total_struct_size #make room for crc
@@ -141,10 +141,10 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
             new_hex_file.puts(program_target_addr,struct.pack('<' + program_target_fmt,
                                                             pack_flash_algo.symbols['Init'] + blob_header_size + flash_blob_entry,
                                                             pack_flash_algo.symbols['UnInit'] + blob_header_size + flash_blob_entry,
-                                                            pack_flash_algo.symbols['EraseChip'] + blob_header_size + flash_blob_entry if pack_flash_algo.symbols['EraseChip'] != 0xffffffffL else 0,
+                                                            pack_flash_algo.symbols['EraseChip'] + blob_header_size + flash_blob_entry if pack_flash_algo.symbols['EraseChip'] != 0xffffffff else 0,
                                                             pack_flash_algo.symbols['EraseSector'] + blob_header_size + flash_blob_entry,
                                                             pack_flash_algo.symbols['ProgramPage'] + blob_header_size + flash_blob_entry,
-                                                            pack_flash_algo.symbols['Verify'] + blob_header_size + flash_blob_entry if pack_flash_algo.symbols['Verify'] != 0xffffffffL else 0,
+                                                            pack_flash_algo.symbols['Verify'] + blob_header_size + flash_blob_entry if pack_flash_algo.symbols['Verify'] != 0xffffffff else 0,
                                                             flash_blob_entry + 1, #BKPT : start of blob + 1
                                                             flash_blob_entry + blob_header_size + pack_flash_algo.rw_start, #RSB  : blob start + header + rw data offset
                                                             stack_pointer, #RSP  : stack pointer
@@ -170,7 +170,7 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
                                                             sector_info_len,    #Sector start and length list total
                                                             *regions_flags
                                                             ))
-            board_info_flag = 1 if pack_flash_algo.symbols['EraseSector'] != 0xffffffffL else 0  #kEnablePageErase                     
+            board_info_flag = 1 if pack_flash_algo.symbols['EraseSector'] != 0xffffffff else 0  #kEnablePageErase
             new_hex_file.puts(target_addr_unpack + 12,struct.pack('<1I', board_info_flag)) #always enable page erase EraseSector is a required symbol in flash algo
             new_hex_file.puts(target_addr_unpack + 16,struct.pack('<1I', target_cfg_addr))
 

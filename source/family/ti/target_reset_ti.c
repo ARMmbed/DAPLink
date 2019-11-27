@@ -27,7 +27,7 @@
 #define GPRCM_0_RESET_MCU_VALUE        0x1
 #define GPRCM_0_RESET_MCU_PERIPH_VALUE 0x2
 
-static uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t target_set_state_ti(TARGET_RESET_STATE state)
 {
     swd_set_soft_reset(VECTRESET);
     if (state == POST_FLASH_RESET)
@@ -50,14 +50,14 @@ const uint32_t cookieList[]=
 
 // Override the weak validate_bin_nvic function. The weak function expects NVIC at the beginning of the flash.
 // On CC3220SF, the beginning of the flash is the cookie list, which allows the boot ROM code to jump into onchip flash directly bypassing external flash.
-static uint8_t validate_bin_nvic(const uint8_t *buf)
+static uint8_t validate_bin_nvic_ti(const uint8_t *buf)
 {
     return (memcmp(buf, cookieList, sizeof(cookieList)) == 0);
 }
 
 const target_family_descriptor_t g_ti_family = {
     .family_id = kTI_Cc3220sf_FamilyID,
-    .target_set_state = target_set_state,
-    .validate_bin_nvic = validate_bin_nvic,
+    .target_set_state = target_set_state_ti,
+    .validate_bin_nvic = validate_bin_nvic_ti,
 };
 

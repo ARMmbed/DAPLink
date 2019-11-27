@@ -53,10 +53,10 @@ static const uint32_t flash_size = 0x00080000;
 * The last pair in the list will have sectors starting at that address and ending
 * at address flash_start + flash_size.
 */
-static const uint32_t sectors_info[] = {
-    0x08000000, 0x00004000,
-    0x08010000, 0x00010000,
-    0x08020000, 0x00020000,
+static const sector_info_t sectors_info[] = {
+    { 0x08000000, 0x00004000 },
+    { 0x08010000, 0x00010000 },
+    { 0x08020000, 0x00020000 },
 };
 
 static const program_target_t flash = {

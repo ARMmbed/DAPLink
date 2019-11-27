@@ -22,6 +22,7 @@
 #include "cmsis_os2.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "swd_host.h"
 
 static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
 {

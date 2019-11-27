@@ -19,14 +19,14 @@
 #include "DAP_config.h"
 #include "target_family.h"
 
-static void swd_set_target_reset(uint8_t asserted)
+static void swd_set_target_reset_realtek(uint8_t asserted)
 {
     if (asserted) {
         swd_write_word(0xE000ED0C, 0x05FA0004);
     }
 }
 
-static uint8_t validate_bin_nvic(const uint8_t *buf)
+static uint8_t validate_bin_nvic_realtek(const uint8_t *buf)
 {
     const char header[] = {0x99, 0x99, 0x96, 0x96, 0x3F, 0xCC, 0x66, 0xFC,
                            0xC0, 0x33, 0xCC, 0x03, 0xE5, 0xDC, 0x31, 0x62};
@@ -37,6 +37,6 @@ static uint8_t validate_bin_nvic(const uint8_t *buf)
 const target_family_descriptor_t g_realtek_rtl8195am = {
     .family_id = kRealtek_Rtl8195am_FamilyID,
     .default_reset_type = kHardwareReset,
-    .swd_set_target_reset = swd_set_target_reset,
-    .validate_bin_nvic = validate_bin_nvic,
+    .swd_set_target_reset = swd_set_target_reset_realtek,
+    .validate_bin_nvic = validate_bin_nvic_realtek,
 };

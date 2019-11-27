@@ -25,7 +25,7 @@
 #include "target_family.h"
 #include "target_board.h"
 
-static void swd_set_target_reset(uint8_t asserted)
+static void swd_set_target_reset_nrf(uint8_t asserted)
 {
     if (asserted) {
         swd_init_debug();
@@ -59,5 +59,5 @@ const target_family_descriptor_t g_nordic_nrf51 = {
     .family_id = kNordic_Nrf51_FamilyID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = SYSRESETREQ,
-    .swd_set_target_reset = swd_set_target_reset,
+    .swd_set_target_reset = swd_set_target_reset_nrf,
 };
