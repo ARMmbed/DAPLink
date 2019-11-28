@@ -1,27 +1,24 @@
-/**
- * @file    DAP.h
- * @brief   Access to ARM DAP using CMSIS-DAP protocol
+/*
+ * Copyright (c) 2013-2019 ARM Limited. All rights reserved.
  *
- * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * Licensed under the Apache License, Version 2.0 (the License); you may
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  * ----------------------------------------------------------------------
  *
- * $Date:        20. May 2015
- * $Revision:    V1.10
+ * $Date:        26. November 2019
+ * $Revision:    V2.0.0
  *
  * Project:      CMSIS-DAP Include
  * Title:        DAP.h Definitions
@@ -31,8 +28,12 @@
 #ifndef __DAP_H__
 #define __DAP_H__
 
-#ifdef __cplusplus
-extern "C" {
+
+// DAP Firmware Version
+#ifdef  DAP_FW_V1
+#define DAP_FW_VER                      "1.2.0"
+#else
+#define DAP_FW_VER                      "2.0.0"
 #endif
 
 // DAP Command IDs
@@ -51,6 +52,7 @@ extern "C" {
 #define ID_DAP_SWJ_Clock                0x11U
 #define ID_DAP_SWJ_Sequence             0x12U
 #define ID_DAP_SWD_Configure            0x13U
+#define ID_DAP_SWD_Sequence             0x1DU
 #define ID_DAP_JTAG_Sequence            0x14U
 #define ID_DAP_JTAG_Configure           0x15U
 #define ID_DAP_JTAG_IDCODE              0x16U
@@ -59,6 +61,7 @@ extern "C" {
 #define ID_DAP_SWO_Baudrate             0x19U
 #define ID_DAP_SWO_Control              0x1AU
 #define ID_DAP_SWO_Status               0x1BU
+#define ID_DAP_SWO_ExtendedStatus       0x1EU
 #define ID_DAP_SWO_Data                 0x1CU
 
 #define ID_DAP_QueueCommands            0x7EU
@@ -112,6 +115,7 @@ extern "C" {
 #define DAP_ID_DEVICE_VENDOR            5U
 #define DAP_ID_DEVICE_NAME              6U
 #define DAP_ID_CAPABILITIES             0xF0U
+#define DAP_ID_TIMESTAMP_CLOCK          0xF1U
 #define DAP_ID_SWO_BUFFER_SIZE          0xFDU
 #define DAP_ID_PACKET_COUNT             0xFEU
 #define DAP_ID_PACKET_SIZE              0xFFU
@@ -141,6 +145,7 @@ extern "C" {
 #define DAP_TRANSFER_A3                 (1U<<3)
 #define DAP_TRANSFER_MATCH_VALUE        (1U<<4)
 #define DAP_TRANSFER_MATCH_MASK         (1U<<5)
+#define DAP_TRANSFER_TIMESTAMP          (1U<<7)
 
 // DAP Transfer Response
 #define DAP_TRANSFER_OK                 (1U<<0)
@@ -182,17 +187,25 @@ extern "C" {
 #define JTAG_SEQUENCE_TMS               0x40U   // TMS value
 #define JTAG_SEQUENCE_TDO               0x80U   // TDO capture
 
+// SWD Sequence Info
+#define SWD_SEQUENCE_CLK                0x3FU   // SWCLK count
+#define SWD_SEQUENCE_DIN                0x80U   // SWDIO capture
+
 
 #include <stddef.h>
 #include <stdint.h>
+#include "cmsis_compiler.h"
 
 // DAP Data structure
 typedef struct {
   uint8_t     debug_port;                       // Debug Port
   uint8_t     fast_clock;                       // Fast Clock Flag
+  uint8_t     padding[2];
   uint32_t   clock_delay;                       // Clock Delay
+  uint32_t     timestamp;                       // Last captured Timestamp
   struct {                                      // Transfer Configuration
     uint8_t   idle_cycles;                      // Idle cycles after transfer
+    uint8_t    padding[3];
     uint16_t  retry_count;                      // Number of retries after WAIT response
     uint16_t  match_retry;                      // Number of retries if read value does not match
     uint32_t  match_mask;                       // Match Mask
@@ -220,9 +233,15 @@ extern          DAP_Data_t DAP_Data;            // DAP Data
 extern volatile uint8_t    DAP_TransferAbort;   // Transfer Abort Flag
 
 
+#ifdef  __cplusplus
+extern "C"
+{
+#endif
+
 // Functions
 extern void     SWJ_Sequence    (uint32_t count, const uint8_t *data);
-extern void     JTAG_Sequence   (uint32_t info,  const uint8_t *tdi, uint8_t *tdo);
+extern void     SWD_Sequence    (uint32_t info,  const uint8_t *swdo, uint8_t *swdi);
+extern void     JTAG_Sequence   (uint32_t info,  const uint8_t *tdi,  uint8_t *tdo);
 extern void     JTAG_IR         (uint32_t ir);
 extern uint32_t JTAG_ReadIDCode (void);
 extern void     JTAG_WriteAbort (uint32_t data);
@@ -231,12 +250,29 @@ extern uint8_t  SWD_Transfer    (uint32_t request, uint32_t *data);
 
 extern void     Delayms         (uint32_t delay);
 
-extern uint32_t SWO_Transport   (const uint8_t *request, uint8_t *response);
-extern uint32_t SWO_Mode        (const uint8_t *request, uint8_t *response);
-extern uint32_t SWO_Baudrate    (const uint8_t *request, uint8_t *response);
-extern uint32_t SWO_Control     (const uint8_t *request, uint8_t *response);
-extern uint32_t SWO_Status                              (uint8_t *response);
-extern uint32_t SWO_Data        (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Transport      (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Mode           (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Baudrate       (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Control        (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Status                                 (uint8_t *response);
+extern uint32_t SWO_ExtendedStatus (const uint8_t *request, uint8_t *response);
+extern uint32_t SWO_Data           (const uint8_t *request, uint8_t *response);
+
+extern void     SWO_QueueTransfer    (uint8_t *buf, uint32_t num);
+extern void     SWO_AbortTransfer    (void);
+extern void     SWO_TransferComplete (void);
+
+extern uint32_t UART_SWO_Mode     (uint32_t enable);
+extern uint32_t UART_SWO_Baudrate (uint32_t baudrate);
+extern uint32_t UART_SWO_Control  (uint32_t active);
+extern void     UART_SWO_Capture  (uint8_t *buf, uint32_t num);
+extern uint32_t UART_SWO_GetCount (void);
+
+extern uint32_t Manchester_SWO_Mode     (uint32_t enable);
+extern uint32_t Manchester_SWO_Baudrate (uint32_t baudrate);
+extern uint32_t Manchester_SWO_Control  (uint32_t active);
+extern void     Manchester_SWO_Capture  (uint8_t *buf, uint32_t num);
+extern uint32_t Manchester_SWO_GetCount (void);
 
 extern uint32_t DAP_ProcessVendorCommand (const uint8_t *request, uint8_t *response);
 extern uint32_t DAP_ProcessCommand       (const uint8_t *request, uint8_t *response);
@@ -248,31 +284,42 @@ extern void     DAP_Setup (void);
 #ifndef DELAY_SLOW_CYCLES
 #define DELAY_SLOW_CYCLES       3U      // Number of cycles for one iteration
 #endif
-static __forceinline void PIN_DELAY_SLOW (uint32_t delay) {
-  uint32_t count;
-
-  count = delay;
+#if defined(__CC_ARM)
+__STATIC_FORCEINLINE void PIN_DELAY_SLOW (uint32_t delay) {
+  uint32_t count = delay;
   while (--count);
 }
+#else
+__STATIC_FORCEINLINE void PIN_DELAY_SLOW (uint32_t delay) {
+  __ASM volatile (
+  ".syntax unified\n"
+  "0:\n\t"
+    "subs %0,%0,#1\n\t"
+    "bne  0b\n"
+  : "+l" (delay) : : "cc"
+  );
+}
+#endif
 
 // Fixed delay for fast clock generation
 #ifndef DELAY_FAST_CYCLES
 #define DELAY_FAST_CYCLES       0U      // Number of cycles: 0..3
 #endif
-static __forceinline void PIN_DELAY_FAST (void) {
+__STATIC_FORCEINLINE void PIN_DELAY_FAST (void) {
 #if (DELAY_FAST_CYCLES >= 1U)
-  __nop();
+  __NOP();
 #endif
 #if (DELAY_FAST_CYCLES >= 2U)
-  __nop();
+  __NOP();
 #endif
 #if (DELAY_FAST_CYCLES >= 3U)
-  __nop();
+  __NOP();
 #endif
 }
 
-#ifdef __cplusplus
+#ifdef  __cplusplus
 }
 #endif
+
 
 #endif  /* __DAP_H__ */

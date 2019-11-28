@@ -28,6 +28,7 @@
 #include "DAP_config.h"
 #include "DAP.h"
 #include "target_family.h"
+#include "device.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -45,8 +46,11 @@
 #define MAX_SWD_RETRY 100//10
 #define MAX_TIMEOUT   1000000  // Timeout for syscalls on target
 
-#define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB AIRCR: PRIGROUP Position */
+// Use the CMSIS-Core definition if available.
+#if !defined(SCB_AIRCR_PRIGROUP_Pos)
+#define SCB_AIRCR_PRIGROUP_Pos              8U                                            /*!< SCB AIRCR: PRIGROUP Position */
 #define SCB_AIRCR_PRIGROUP_Msk             (7UL << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB AIRCR: PRIGROUP Mask */
+#endif
 
 typedef struct {
     uint32_t select;
@@ -709,7 +713,7 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
     if (!swd_read_core_register(0, &state.r[0])) {
         return 0;
     }
-    
+
     //remove the C_MASKINTS
     if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT)) {
         return 0;
@@ -795,7 +799,7 @@ uint8_t swd_init_debug(void)
     // init dap state with fake values
     dap_state.select = 0xffffffff;
     dap_state.csw = 0xffffffff;
-    
+
     int8_t retries = 4;
     int8_t do_abort = 0;
     do {
@@ -829,9 +833,9 @@ uint8_t swd_init_debug(void)
         if (!swd_write_dp(DP_SELECT, 0)) {
             do_abort = 1;
             continue;
-            
+
         }
-        
+
         // Power up
         if (!swd_write_dp(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ)) {
             do_abort = 1;
@@ -870,11 +874,11 @@ uint8_t swd_init_debug(void)
             do_abort = 1;
             continue;
         }
-        
+
         return 1;
-    
+
     } while (--retries > 0);
-    
+
     return 0;
 }
 
@@ -904,10 +908,10 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (!swd_init_debug()) {
                 return 0;
             }
-            
+
             if (reset_connect == CONNECT_UNDER_RESET) {
                 // Assert reset
-                swd_set_target_reset(1); 
+                swd_set_target_reset(1);
                 osDelay(2);
             }
 
@@ -926,17 +930,17 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
             if (!swd_write_word(DBG_EMCR, VC_CORERESET)) {
                 return 0;
             }
-            
+
             if (reset_connect == CONNECT_NORMAL) {
                 // Assert reset
-                swd_set_target_reset(1); 
+                swd_set_target_reset(1);
                 osDelay(2);
             }
-            
+
             // Deassert reset
             swd_set_target_reset(0);
             osDelay(2);
-            
+
             do {
                 if (!swd_read_word(DBG_HCSR, &val)) {
                     return 0;
