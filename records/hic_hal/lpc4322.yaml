@@ -11,11 +11,8 @@ common:
         - OS_CLOCK=96000000
     includes:
         - source/hic_hal/nxp/lpc4322
-        - source/hic_hal/nxp/lpc4322
     sources:
         hic_hal:
-            - source/hic_hal/nxp/lpc4322
-            - source/hic_hal/nxp/lpc4322/armcc
             - source/hic_hal/nxp/lpc4322
 
 tool_specific:
@@ -23,7 +20,13 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nxp\lpc4322"
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc4322/armcc
     make_armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\nxp\lpc4322"
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc4322/armcc

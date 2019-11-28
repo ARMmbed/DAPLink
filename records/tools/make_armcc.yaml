@@ -7,18 +7,48 @@ tool_specific:
         linker_file:
             - source/daplink/daplink.sct
         misc:
-            common_flags:
-                - -c
+            asm_flags:
+                - -g
             c_flags:
                 - -O2
+                - -Ospace
                 - --gnu
                 - --c99
+                - --asm
                 - --split_sections
                 - --interleave
-            linker_options:
-                - nostartfiles
+                - -g
+            ld_flags:
+                - --bestdebug
+                - --summary_stderr
+                - --info summarysizes
+                - --map
+                - --load_addr_map_info
+                - --xref
+                - --callgraph
+                - --symbols
+                - --info sizes
+                - --info totals
+                - --info unused
+                - --info veneers
+                - --list "$@.map"
             pre_build_script:
                 - tools/pre_build_script.sh
             post_build_script:
                 - tools/post_build_script.sh
+    uvision:
+        misc:
+            asm_flags:
+                - -g
+            c_flags:
+                # uvision.uvproj.tmpl specifies:
+                # - O2, space
+                # - C99
+                # - split sections
+                - --gnu
+                - --asm
+                - --interleave
+                - -g
+            ld_flags:
+                - --bestdebug
 

@@ -20,7 +20,6 @@ common:
             - source/hic_hal/freescale
             - source/hic_hal/freescale/k20dx
             - source/hic_hal/freescale/k20dx/MK20D5
-            - source/hic_hal/freescale/k20dx/armcc
         fsl_flash_driver:
             - source/hic_hal/freescale/iap
 
@@ -29,19 +28,13 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\k20dx"
-            c_flags:
-                - --no_unaligned_access
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k20dx/armcc
     make_armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\freescale\k20dx"
-            c_flags:
-                - --no_unaligned_access
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k20dx/armcc

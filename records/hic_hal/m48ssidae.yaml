@@ -17,7 +17,6 @@ common:
         hic_hal:
             - source/hic_hal/nuvoton/m48ssidae
             - source/hic_hal/nuvoton/m48ssidae/Device/Nuvoton/M480/Source
-            - source/hic_hal/nuvoton/m48ssidae/Device/Nuvoton/M480/Source/ARM
             - source/hic_hal/nuvoton/m48ssidae/StdDriver/src
 
 tool_specific:
@@ -25,19 +24,13 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nuvoton\m48ssidae"
-            c_flags:
-                - --no_unaligned_access
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/nuvoton/m48ssidae/armcc
     make_armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\nuvoton\m48ssidae"
-            c_flags:
-                - --no_unaligned_access
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/nuvoton/m48ssidae/armcc

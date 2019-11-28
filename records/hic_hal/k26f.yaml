@@ -19,7 +19,6 @@ common:
         hic_hal:
             - source/hic_hal/freescale/k26f
             - source/hic_hal/freescale/k26f/MK26F18
-            - source/hic_hal/freescale/k26f/armcc
         fsl_flash_driver:
             - source/hic_hal/freescale/iap
 
@@ -35,6 +34,9 @@ tool_specific:
                 - --no_unaligned_access
             asm_flags:
                 - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k26f/armcc
     make_armcc:
         misc:
             ld_flags:
@@ -46,3 +48,6 @@ tool_specific:
                 - --no_unaligned_access
             asm_flags:
                 - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k26f/armcc

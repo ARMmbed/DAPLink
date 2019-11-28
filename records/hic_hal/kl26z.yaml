@@ -20,7 +20,6 @@ common:
             - source/hic_hal/freescale
             - source/hic_hal/freescale/kl26z
             - source/hic_hal/freescale/kl26z/MKL26Z4
-            - source/hic_hal/freescale/kl26z/armcc
         fsl_flash_driver:
             - source/hic_hal/freescale/iap
 
@@ -29,7 +28,13 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\kl26z"
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/kl26z/armcc
     make_armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\freescale\kl26z"
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/kl26z/armcc
