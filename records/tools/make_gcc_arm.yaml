@@ -4,19 +4,37 @@ tool_specific:
             - cortex-m0
         macros:
             -
+        linker_file:
+            - source/daplink/daplink.ld
         misc:
             libraries:
                 - m
                 - gcc
                 - c
                 - nosys
-            optimization:
-                - O3
-            compiler_options:
-                - Wall
-                - ffunction-sections
-                - fdata-sections
-            linker_options:
-                - nostartfiles
+            common_flags:
+                - -Os
+                - -g3
+#                 - -Wall
+                - -ffunction-sections
+                - -fdata-sections
+                - -std=gnu99
+                - -fshort-wchar
+                - -fno-common
+                - -ffreestanding
+                - -Wa,-adln=$@.lst
+                - -fverbose-asm
+                - -mno-unaligned-access
+            ld_flags:
+                - -Wl,--no-wchar-size-warning
+                - --specs=nano.specs
+                - --specs=nosys.specs
+                - -Wl,--gc-sections
+                - -Wl,--defsym=__stack_size__=0x200
+                - -Wl,--defsym=__heap_size__=0x0
+            pre_build_script:
+                - tools/pre_build_script.sh
+            post_build_script:
+                - tools/post_build_script.sh
 
 
