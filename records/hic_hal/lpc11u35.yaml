@@ -28,3 +28,11 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc11u35/armcc
+    make_gcc_arm:
+        linker_file:
+            - source/hic_hal/nxp/lpc11u35/gcc/lpc11u35.ld
+        includes:
+            - source/hic_hal/nxp/lpc11u35/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc11u35/gcc

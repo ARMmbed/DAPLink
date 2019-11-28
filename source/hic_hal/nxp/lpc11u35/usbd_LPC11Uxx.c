@@ -50,7 +50,9 @@ typedef struct BUF_INFO {
 
 EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
 #if defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
-volatile U32 EPList[(USBD_EP_NUM + 1) * 2] __attribute__((at(EP_LIST_BASE)));
+volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((at(EP_LIST_BASE)));
+#elif defined ( __GNUC__ )
+volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((section(".usbram")));
 #else
 #error "Unsupported compiler!"
 #endif
@@ -143,13 +145,16 @@ void USBD_Connect(BOOL con)
 }
 
 
+// Disable optimization of this function. It gets a "iteration 8 invokes undefined behavior
+// [-Waggressive-loop-optimizations]" warning in gcc if optimisation is enabled, for the first
+// loop where EPList[i] is written to disable EPs.
+NO_OPTIMIZE_PRE
 /*
  *  USB Device Reset Function
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
-void USBD_Reset(void)
+void NO_OPTIMIZE_INLINE USBD_Reset(void)
 {
     U32 i;
     U32 *ptr;
@@ -177,7 +182,7 @@ void USBD_Reset(void)
                       (1UL << 1)     | /* EP0 IN intr enable */
                       (1UL << 31));    /* stat change int en */
 }
-
+NO_OPTIMIZE_POST
 
 /*
  *  USB Device Suspend Function
