@@ -21,6 +21,7 @@
 
 #include <string.h>
 #include "target_board.h"
+#include "compiler.h"
 
 // Default empty board info.
 __WEAK
