@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,11 +22,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "stdint.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
 
 /**
  *  @enum main_usb_busy_t
@@ -58,6 +54,10 @@ typedef enum {
     MAIN_LED_FLASH,
     MAIN_LED_FLASH_PERMANENT
 } main_led_state_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  *  Allows other parts of the program to request the device to eject physical media
