@@ -54,7 +54,7 @@ enum _board_info_flags {
  * The board initialization function pointers allow the board to override the routines defined
  * by the device family.
  */
-typedef struct __attribute__((__packed__)) board_info {
+typedef struct board_info {
     uint16_t info_version;              /*!< Version number of the board info */ 
     uint16_t family_id;                 /*!< Use to select or identify target family from defined target family or custom ones */
     char board_id[5];                   /*!< 4-char board ID plus null terminator */
