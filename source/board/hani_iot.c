@@ -25,7 +25,7 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0360",
-    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
+    .family_id = kNXP_LPC55xx_FamilyID, //ID not maching the predefined family ids
     .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name =       "HANI_IOT",
